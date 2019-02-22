@@ -1,6 +1,8 @@
+import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import HomeLayout from '@/layouts/HomeLayout/HomeLayout.vue';
 import { Tooling } from '@@/helpers';
+import { state, getters } from '@@/helpers/mockStore';
 
 const RouterLinkStub = {
   name: 'router-link',
@@ -15,7 +17,11 @@ describe('HomeLayout.vue', () => {
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
     store = baseSetup.store;
-    store.replaceState({ online: true });
+
+    store = new Vuex.Store({
+      getters,
+      state
+    });
   });
 
   beforeEach(() => {
@@ -30,9 +36,7 @@ describe('HomeLayout.vue', () => {
     });
   });
 
-  xit('[FAILING] should render correct contents', () => {
-    expect(wrapper.vm.$data.online).toBe(true);
+  it('should render correct contents', () => {
+    expect(wrapper.vm.online).toBe(true);
   });
-
-  describe('HomeLayout.vue Methods', () => {});
 });

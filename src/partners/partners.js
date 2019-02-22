@@ -2,13 +2,18 @@ import BigNumber from 'bignumber.js';
 import { checkInvalidOrMissingValue, utils } from './helpers';
 import {
   BASE_CURRENCY,
-  baseCurrencyEntry,
-  EthereumTokens
+  TOP_OPTIONS_ORDER,
+  EthereumTokens,
+  OtherCoins,
+  fiat
 } from './partnersConfig';
 
 function comparator(a, b) {
   a = a.symbol;
   b = b.symbol;
+  if (TOP_OPTIONS_ORDER.includes(a) || TOP_OPTIONS_ORDER.includes(b)) {
+    return TOP_OPTIONS_ORDER.indexOf(b) - TOP_OPTIONS_ORDER.indexOf(a);
+  }
   return a < b ? -1 : a > b ? 1 : 0;
 }
 
@@ -96,13 +101,9 @@ export default class SwapProviders {
     this.providers.forEach(provider => {
       provider.getInitialCurrencyEntries(collectMapFrom, collectMapTo);
     });
-    if (collectMapTo.has(BASE_CURRENCY)) collectMapTo.delete(BASE_CURRENCY);
-    if (collectMapFrom.has(BASE_CURRENCY)) collectMapFrom.delete(BASE_CURRENCY);
 
     const toArray = Array.from(collectMapTo.values()).sort(comparator);
     const fromArray = Array.from(collectMapFrom.values()).sort(comparator);
-    toArray.splice(0, 0, baseCurrencyEntry);
-    fromArray.splice(0, 0, baseCurrencyEntry);
     return { toArray, fromArray };
   }
 
@@ -111,9 +112,7 @@ export default class SwapProviders {
     this.providers.forEach(provider => {
       provider.getUpdatedFromCurrencyEntries(value, collectMap);
     });
-    if (collectMap.has(BASE_CURRENCY)) collectMap.delete(BASE_CURRENCY);
-    const toArray = Array.from(collectMap.values()).sort(comparator);
-    return [baseCurrencyEntry, ...toArray];
+    return Array.from(collectMap.values()).sort(comparator);
   }
 
   setToCurrencyBuilder(value) {
@@ -121,9 +120,7 @@ export default class SwapProviders {
     this.providers.forEach(provider => {
       provider.getUpdatedToCurrencyEntries(value, collectMap);
     });
-    if (collectMap.has(BASE_CURRENCY)) collectMap.delete(BASE_CURRENCY);
-    const toArray = Array.from(collectMap.values()).sort(comparator);
-    return [baseCurrencyEntry, ...toArray];
+    return Array.from(collectMap.values()).sort(comparator);
   }
 
   async updateRateEstimate(fromCurrency, toCurrency, fromValue) {
@@ -157,24 +154,38 @@ export default class SwapProviders {
     throw Error('Not an Ethereum Token');
   }
 
-  calculateFromValue(toValue, bestRate) {
+  calculateFromValue(toValue, bestRate, currency) {
+    const decimals = this.decimalForCalculation(currency);
     return checkInvalidOrMissingValue(
       new BigNumber(toValue)
-        .div(bestRate)
-        .toFixed(6)
+        .div(new BigNumber(bestRate))
+        .toFixed(decimals)
         .toString(10),
       false
     );
   }
 
-  calculateToValue(fromValue, bestRate) {
+  calculateToValue(fromValue, bestRate, currency) {
+    const decimals = this.decimalForCalculation(currency);
     return checkInvalidOrMissingValue(
       new BigNumber(fromValue)
-        .times(bestRate)
-        .toFixed(6)
+        .times(new BigNumber(bestRate))
+        .toFixed(decimals)
         .toString(10),
       true
     );
+  }
+
+  decimalForCalculation(currency) {
+    if (!currency) return 6;
+    if (fiat.find(entry => entry.symbol === currency)) {
+      return 2;
+    } else if (this.isToken(currency)) {
+      const decimal = this.getTokenDecimals(currency);
+      if (decimal < 6) return decimal;
+      return 6;
+    }
+    return 6;
   }
 
   convertToTokenWei(token, value) {
@@ -195,6 +206,8 @@ export default class SwapProviders {
   getTokenDecimals(currency) {
     if (this.isToken(currency)) {
       return EthereumTokens[currency].decimals;
+    } else if (currency === 'ETH') {
+      return 18;
     }
     throw Error('Not an Ethereum Token');
   }
@@ -205,6 +218,31 @@ export default class SwapProviders {
 
   hasKnownTokenBalance() {
     return;
+  }
+
+  static isNotToken(currency) {
+    return !EthereumTokens[currency];
+  }
+
+  // Get address explorer base url for non-ethereum blockchain
+  static getAddressLookupUrl(coin, address) {
+    if (OtherCoins[coin] && OtherCoins[coin].addressLookup) {
+      if (address) {
+        return OtherCoins[coin].addressLookup.replace('[[address]]', address);
+      }
+      return OtherCoins[coin].addressLookup;
+    }
+    return '';
+  }
+  // Get transaction explorer base url for non-ethereum blockchain
+  static getBlockChainExplorerUrl(coin, hash) {
+    if (OtherCoins[coin] && OtherCoins[coin].explorer) {
+      if (hash) {
+        return OtherCoins[coin].explorer.replace('[[txHash]]', hash);
+      }
+      return OtherCoins[coin].explorer;
+    }
+    return '';
   }
 
   async startSwap({

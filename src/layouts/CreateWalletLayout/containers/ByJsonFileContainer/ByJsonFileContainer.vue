@@ -63,7 +63,8 @@ import ByJsonBlock from '../../components/ByJsonBlock';
 import noLose from '@/assets/images/icons/no-lose.svg';
 import noShare from '@/assets/images/icons/no-share.svg';
 import makeBackup from '@/assets/images/icons/make-a-backup.svg';
-import Worker from 'worker-loader!@/workers/wallet.worker.js';
+import walletWorker from 'worker-loader!@/workers/wallet.worker.js';
+import { Toast, Wallet, Configs } from '@/helpers';
 
 export default {
   components: {
@@ -101,29 +102,45 @@ export default {
     };
   },
   mounted() {
-    const worker = new Worker();
-    worker.postMessage({ type: 'createWallet', data: [this.password] });
-    worker.onmessage = e => {
-      const createBlob = (mime, str) => {
-        const string = typeof str === 'object' ? JSON.stringify(str) : str;
-        if (string === null) return '';
-        const blob = new Blob([string], {
-          type: mime
-        });
+    if (window.Worker) {
+      const worker = new walletWorker();
+      worker.postMessage({ type: 'createWallet', data: [this.password] });
+      worker.onmessage = e => {
+        this.walletJson = this.createBlob('mime', e.data.walletJson);
         this.downloadable = true;
-        return window.URL.createObjectURL(blob);
+        this.name = e.data.name.toString();
       };
-      this.walletJson = createBlob('mime', e.data.walletJson);
-      this.name = e.data.name.toString();
-    };
-    worker.onerror = function() {
-      // eslint-disable-next-line no-console
-      console.error('onerror received from worker'); // replace with debugger
-    };
+      worker.onerror = function(e) {
+        Toast.responseHandler(e, false);
+      };
+    } else {
+      const _wallet = this.createWallet(this.password);
+      this.walletJson = this.createBlob('mime', _wallet.walletJson);
+      this.downloadable = true;
+      this.name = _wallet.name.toString();
+    }
   },
   methods: {
     downloadDone() {
       this.$refs.successModal.$refs.success.show();
+    },
+    createWallet(password) {
+      const createdWallet = {};
+      const wallet = new Wallet.generate();
+      createdWallet.walletJson = wallet.toV3(password, {
+        kdf: Configs.wallet.kdf,
+        n: Configs.wallet.n
+      });
+      createdWallet.name = wallet.getV3Filename();
+      return createdWallet;
+    },
+    createBlob(mime, str) {
+      const string = typeof str === 'object' ? JSON.stringify(str) : str;
+      if (string === null) return '';
+      const blob = new Blob([string], {
+        type: mime
+      });
+      return window.URL.createObjectURL(blob);
     }
   }
 };

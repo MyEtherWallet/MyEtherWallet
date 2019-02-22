@@ -11,7 +11,7 @@ const getSanitizedTx = tx => {
     try {
       tx = formatters.inputCallFormatter(tx);
       const transaction = tx;
-      transaction.to = tx.to || '0x';
+      if (tx.to) transaction.to = tx.to;
       transaction.data = tx.data || '0x';
       transaction.value = tx.value || '0x';
       transaction.chainId = tx.chainId;

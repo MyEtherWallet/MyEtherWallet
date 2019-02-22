@@ -1,10 +1,14 @@
 @import '~@/scss/GlobalVariables';
 @media all and (min-width: calc(#{$tablet-width} + 1px)) {
+  .modal-content-container {
+    padding: 40px;
+  }
+
   .modal-hardware {
     .button-options {
       display: grid;
       grid-gap: 10px;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr;
       margin-bottom: 40px;
 
       &.hardware-button-options {
@@ -12,11 +16,13 @@
       }
 
       li {
+        border: 1px solid $light-grey-3;
+        border-radius: 5px;
         align-items: center;
         color: $dark-grey-11;
         cursor: pointer;
         display: flex;
-        padding: 20px;
+        padding: 15px;
         text-align: left;
         user-select: none;
 
@@ -28,8 +34,12 @@
           line-height: 16px;
         }
 
+        div {
+          flex: 1;
+        }
+
         &.active {
-          box-shadow: 0 3px 15px $box-shadow-color-1;
+          border: 1px solid $mew-green;
           color: $text-black;
           font-weight: 500;
 
@@ -38,11 +48,12 @@
           }
 
           .icon-hover {
-            display: block;
+            display: inline-block;
           }
         }
 
         &:hover {
+          border: 1px solid $mew-green;
           color: $text-black;
           font-weight: 500;
 
@@ -51,7 +62,7 @@
           }
 
           .icon-hover {
-            display: block;
+            display: inline-block;
           }
         }
 

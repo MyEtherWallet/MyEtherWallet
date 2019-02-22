@@ -25,7 +25,7 @@ describe('InterfaceContainerTitle.vue', () => {
     });
   });
 
-  it('should render correct contents', () => {
+  it('should render correct title', () => {
     expect(
       wrapper.vm.$el.querySelector('.content-title h2').textContent.trim()
     ).toEqual(title);

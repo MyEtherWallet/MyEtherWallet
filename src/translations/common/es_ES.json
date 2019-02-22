@@ -12,7 +12,7 @@
   "balance": "Saldo",
   "terms": "Terms",
   "continue": "Continuar",
-  "jsonF": "Archivo Keystore",
+  "jsonF": "Keystore File",
   "mnemonicP": "Frase mnemotécnica",
   "privKey": "Clave privada",
   "mewConnect": "MEWconnect",
@@ -58,5 +58,8 @@
   "logOutWallet": "Log Out Wallet",
   "goBack": "Go back",
   "logoutWarning": "It seems like you forgot to logout your wallet. For your wallet security, please log out your wallet to continue, or go back to your wallet.",
-  "waitingForHash": "Esperando transacción"
+  "waitingForHash": "Esperando transacción",
+  "edit": "Edit",
+  "okay": "Okay",
+  "ok": "OK"
 }

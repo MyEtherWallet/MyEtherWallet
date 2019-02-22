@@ -28,7 +28,7 @@ describe('HardwareModal.vue', () => {
     });
   });
 
-  it('should render correct contents', () => {
+  xit('should render correct contents', () => {
     const liElements = wrapper.findAll('li');
 
     let liElement = liElements.at(0);
@@ -37,15 +37,19 @@ describe('HardwareModal.vue', () => {
 
     liElement = liElements.at(1);
     liElement.trigger('click');
-    expect(wrapper.vm.$data.selected).toEqual('trezor');
+    expect(wrapper.vm.$data.selected).toEqual('bitbox');
 
     liElement = liElements.at(2);
     liElement.trigger('click');
-    expect(wrapper.vm.$data.selected).toEqual('bitbox');
+    expect(wrapper.vm.$data.selected).toEqual('secalot');
 
     liElement = liElements.at(3);
     liElement.trigger('click');
-    expect(wrapper.vm.$data.selected).toEqual('secalot');
+    expect(wrapper.vm.$data.selected).toEqual('trezor');
+
+    liElement = liElements.at(4);
+    liElement.trigger('click');
+    expect(wrapper.vm.$data.selected).toEqual('keepkey');
 
     wrapper.find('.mid-round-button-green-filled').trigger('click');
     wrapper.find('.mid-round-button-green-filled').trigger('click');

@@ -49,6 +49,10 @@
       :phrase="phrase"
     />
 
+    <wallet-password-modal />
+
+    <enter-pin-number-modal />
+
     <div class="wrap">
       <div class="page-container">
         <div class="title">
@@ -66,6 +70,7 @@
             :key="button.title + index"
             :func="button.func"
             :img="button.img"
+            :img-disabled="button.imgDisabled"
             :title="button.title"
             :desc="button.desc"
             :recommend="button.recommend"
@@ -91,17 +96,21 @@ import PrivateKeyModal from '../../components/PrivateKeyModal';
 import SoftwareModal from '../../components/SoftwareModal';
 import MnemonicPasswordModal from '../../components/MnemonicPasswordModal';
 import MnemonicModal from '../../components/MnemonicModal';
+import WalletPasswordModal from '@/components/WalletPasswordModal';
+import EnterPinNumberModal from '@/components/EnterPinNumberModal';
 
 import mewConnectImg from '@/assets/images/icons/button-mewconnect.svg';
 import hardwareImg from '@/assets/images/icons/button-hardware.svg';
 import metamaskImg from '@/assets/images/icons/button-metamask.svg';
 import softwareImg from '@/assets/images/icons/button-software.svg';
 
-import mewConnectDisabledImg from '@/assets/images/icons/mewconnect-disable.svg';
-import hardwareDisabledImg from '@/assets/images/icons/hardware-disable.svg';
-import metamaskDisabledImg from '@/assets/images/icons/metamask-disable.svg';
+import mewConnectImgDisabled from '@/assets/images/icons/button-mewconnect-disabled.svg';
+import hardwareImgDisabled from '@/assets/images/icons/button-hardware-disabled.svg';
+import metamaskImgDisabled from '@/assets/images/icons/button-metamask-disabled.svg';
+import softwareImgDisabled from '@/assets/images/icons/button-software-disabled.svg';
 
 import { mapGetters } from 'vuex';
+import { Toast, Misc } from '@/helpers';
 
 export default {
   components: {
@@ -115,7 +124,9 @@ export default {
     'private-key-modal': PrivateKeyModal,
     'mnemonic-modal': MnemonicModal,
     'mnemonic-password-modal': MnemonicPasswordModal,
-    'access-wallet-button': AccessWalletButton
+    'access-wallet-button': AccessWalletButton,
+    'wallet-password-modal': WalletPasswordModal,
+    'enter-pin-number-modal': EnterPinNumberModal
   },
   data() {
     return {
@@ -131,19 +142,21 @@ export default {
           title: this.$t('common.mewConnect'),
           desc: this.$t('accessWallet.mewConnectDesc'),
           recommend: '',
-          tooltip: this.$t('common.toolTip3'),
-          img: !this.online ? mewConnectImg : mewConnectDisabledImg,
-          disabled: !this.online,
+          tooltip: '',
+          img: mewConnectImg,
+          imgDisabled: mewConnectImgDisabled,
+          disabled: false,
           classname: 'button-mewconnect'
         },
         {
           func: this.hardwareModalOpen,
           title: this.$t('common.hardware'),
-          desc: 'Ledger wallet, Trezor, Digital bitbox, Secalot',
+          desc: 'Ledger wallet, Trezor, Digital bitbox, Secalot, Keepkey',
           recommend: '',
-          tooltip: this.$t('common.toolTip3'),
-          img: !this.online ? hardwareImg : hardwareDisabledImg,
-          disabled: !this.online,
+          tooltip: '',
+          img: hardwareImg,
+          imgDisabled: hardwareImgDisabled,
+          disabled: false,
           classname: 'button-hardware'
         },
         {
@@ -151,19 +164,21 @@ export default {
           title: 'MetaMask',
           desc: this.$t('accessWallet.metaMaskDesc'),
           recommend: '',
-          tooltip: this.$t('common.toolTip3'),
-          img: !this.online ? metamaskImg : metamaskDisabledImg,
-          disabled: !this.online,
-          classname: window.web3 ? 'button-metamask' : 'hide'
+          tooltip: '',
+          img: metamaskImg,
+          imgDisabled: metamaskImgDisabled,
+          disabled: false,
+          classname: 'button-metamask'
         },
         {
           func: this.softwareModalOpen,
           title: this.$t('accessWallet.software'),
           desc: this.$t('accessWallet.softwareDesc'),
           recommend: this.$t('accessWallet.notRecommended'),
-          tooltip: this.$t('common.toolTip3'),
+          tooltip: '',
           img: softwareImg,
-          disabled: true,
+          imgDisabled: softwareImgDisabled,
+          disabled: false,
           classname: 'button-software'
         }
       ]
@@ -174,7 +189,29 @@ export default {
       online: 'online'
     })
   },
+  mounted() {
+    this.$nextTick(() => {
+      this.buttons.forEach(btn => {
+        btn.disabled = this.isDisabled(btn.classname);
+      });
+    });
+  },
   methods: {
+    isDisabled(className) {
+      switch (className) {
+        case 'button-mewconnect':
+          return (
+            !this.online ||
+            (Misc.browserName() !== 'chrome' &&
+              Misc.browserName() !== 'firefox' &&
+              Misc.browserName() !== 'safari')
+          );
+        case 'button-hardware':
+          return !this.online;
+        default:
+          return false;
+      }
+    },
     mewConnectModalOpen() {
       this.$refs.mewconnectModal.$refs.mewConnect.show();
     },
@@ -191,6 +228,7 @@ export default {
       this.$refs.softwareModal.$refs.software.show();
     },
     passwordOpen() {
+      this.$refs.softwareModal.$refs.software.hide();
       this.$refs.passwordModal.$refs.password.show();
     },
     privateKeyOpen() {
@@ -225,9 +263,7 @@ export default {
         this.hardwareWallet = wallet;
         this.networkAndAddressOpen();
       } catch (e) {
-        // eslint-disable-next-line
-        console.error(e); // todo replace with proper error
-        // close the open modal and present the user with a reason for the error (if appropriate)
+        Toast.responseHandler(e, false);
       }
     }
   }

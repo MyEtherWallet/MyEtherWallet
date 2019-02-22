@@ -6,7 +6,22 @@ const EnsResolver = {
       const _this = vnode.context;
       const errorPar = document.createElement('p');
       errorPar.classList.add('resolver-error');
-      const ens = _this.ens;
+      const ens = _this.$store.state.ens;
+      const checkDarklist = function(addr) {
+        const isDarklisted = Misc.isDarklisted(addr);
+        if (isDarklisted.error) {
+          removeElements();
+          _this.isValidAddress = false;
+          _this.hexAddress = '';
+          errorPar.innerText =
+            isDarklisted.msg.length > 0
+              ? isDarklisted.msg
+              : 'Address has been reported. Please make sure you are sending funds to the correct address.';
+          el.parentNode.parentNode.appendChild(errorPar);
+          return true;
+        }
+        return false;
+      };
       const removeElements = function() {
         const child = el.parentNode.parentNode.lastChild;
         Object.keys(child.classList).forEach(item => {
@@ -17,9 +32,11 @@ const EnsResolver = {
       };
       if (Misc.isValidENSorEtherAddress(e)) {
         if (Misc.isValidETHAddress(e)) {
-          _this.isValidAddress = true;
-          _this.hexAddress = _this.web3.utils.toChecksumAddress(e);
-          removeElements();
+          if (!checkDarklist(e)) {
+            _this.isValidAddress = true;
+            _this.hexAddress = _this.web3.utils.toChecksumAddress(e);
+            removeElements();
+          }
         } else {
           if (
             _this.network.type.ens === '' ||
@@ -36,11 +53,15 @@ const EnsResolver = {
               .resolver(normalise(e))
               .addr()
               .then(address => {
-                removeElements();
-                _this.hexAddress = _this.web3.utils.toChecksumAddress(address);
-                _this.isValidAddress = true;
-                errorPar.innerText = address;
-                vnode.elm.parentNode.parentNode.appendChild(errorPar);
+                if (!checkDarklist(address)) {
+                  removeElements();
+                  _this.hexAddress = _this.web3.utils.toChecksumAddress(
+                    address
+                  );
+                  _this.isValidAddress = true;
+                  errorPar.innerText = address;
+                  vnode.elm.parentNode.parentNode.appendChild(errorPar);
+                }
               })
               .catch(() => {
                 removeElements();
@@ -53,6 +74,7 @@ const EnsResolver = {
         }
       } else {
         _this.isValidAddress = false;
+        _this.hexAddress = '';
         removeElements();
         errorPar.innerText = 'Invalid address';
         el.parentNode.parentNode.appendChild(errorPar);

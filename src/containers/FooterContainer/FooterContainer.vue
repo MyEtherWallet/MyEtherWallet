@@ -27,15 +27,17 @@
                   :key="content.text + index"
                   class="content"
                 >
-                  <router-link v-if="content.to !== undefined" :to="content.to"
-                    ><p>{{ content.text }}</p></router-link
-                  >
+                  <router-link v-if="content.to !== undefined" :to="content.to">
+                    <p>{{ content.text }}</p>
+                  </router-link>
                   <a
                     v-if="content.to === undefined"
                     :href="content.href"
                     target="_blank"
-                    ><p>{{ content.text }}</p></a
+                    rel="noopener noreferrer"
                   >
+                    <p>{{ content.text }}</p>
+                  </a>
                 </div>
               </div>
             </div>
@@ -98,10 +100,10 @@
             <p>
               {{ $t('footer.pricingP') }}
               <a
-                href="https://coinmarketcap.com/"
+                href="https://coingecko.com/"
                 target="_blank"
                 rel="noopener noreferrer"
-                >CoinMarketCap</a
+                >CoinGecko</a
               >
               <br />
               {{ $t('footer.copyright') }}
@@ -171,6 +173,10 @@ export default {
               text: this.$t('footer.extension'),
               href:
                 'https://chrome.google.com/webstore/detail/myetherwallet/nlbmnnijcnlegkjjpcfjclmcfggfefdm?hl=en'
+            },
+            {
+              text: this.$t('footer.sendOffline'),
+              to: '/send-offline-helper'
             }
           ]
         },
@@ -180,8 +186,7 @@ export default {
           contents: [
             {
               text: this.$t('footer.ledger'),
-              href:
-                'https://www.ledgerwallet.com/products/?utm_source=&utm_medium=affiliate&utm_campaign=fa4b&utm_content='
+              href: 'https://www.ledger.com?r=fa4b'
             },
             {
               text: this.$t('footer.digital'),
@@ -191,6 +196,10 @@ export default {
               text: this.$t('footer.ethCard'),
               href:
                 'https://ether.cards/?utm_source=mew&utm_medium=cpm&utm_campaign=site'
+            },
+            {
+              text: 'KeepKey',
+              href: 'http://keepkey.go2cloud.org/aff_c?offer_id=1&aff_id=5561'
             },
             {
               text: this.$t('footer.trezor'),
@@ -217,6 +226,10 @@ export default {
             {
               text: this.$t('common.faqs'),
               to: '/#faqs'
+            },
+            {
+              text: this.$t('common.vintage'),
+              href: 'https://vintage.myetherwallet.com'
             },
             {
               text: this.$t('common.customerSupport'),

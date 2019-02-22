@@ -3,86 +3,70 @@
     ref="hardware"
     :title="$t('accessWallet.accessByHardware')"
     hide-footer
-    class="bootstrap-modal modal-hardware"
+    class="bootstrap-modal modal-hardware nopadding"
     centered
   >
-    <div class="d-block text-center">
-      <b-alert :show="mayNotBeAttached" fade variant="warning">
-        Please make sure your device is connected
-      </b-alert>
-      <ul ref="hardwareList" class="button-options hardware-button-options">
-        <li
-          :class="selected === 'ledger' ? 'active' : ''"
-          @click="select('ledger')"
+    <div class="modal-content-container">
+      <div class="d-block text-center">
+        <b-alert :show="mayNotBeAttached" fade variant="warning"
+          >Please make sure your device is connected</b-alert
         >
-          <img class="icon" src="~@/assets/images/icons/button-ledger.png" />
-          <img
-            class="icon-hover"
-            src="~@/assets/images/icons/button-ledger-hover.png"
+        <div class="button-options hardware-button-options">
+          <wallet-option
+            v-for="(item, idx) in items"
+            :key="item.name + idx"
+            :selected="selected === item.name"
+            :select="select"
+            :regular-icon="item.imgPath"
+            :hover-icon="item.imgHoverPath"
+            :text="item.text"
+            :name="item.name"
+            :disabled="item.disabled"
           />
-          <span>Ledger Wallet</span>
-        </li>
-        <li
-          :class="selected === 'trezor' ? 'active' : ''"
-          @click="select('trezor')"
-        >
-          <img class="icon" src="~@/assets/images/icons/button-trezor.png" />
-          <img
-            class="icon-hover"
-            src="~@/assets/images/icons/button-trezor-hover.png"
-          />
-          <span>Trezor</span>
-        </li>
-        <li
-          :class="selected === 'bitbox' ? 'active' : ''"
-          @click="select('bitbox')"
-        >
-          <img class="icon" src="~@/assets/images/icons/button-bitbox.png" />
-          <img
-            class="icon-hover"
-            src="~@/assets/images/icons/button-bitbox-hover.png"
-          />
-          <span>Digital Bitbox</span>
-        </li>
-        <li
-          :class="selected === 'secalot' ? 'active' : ''"
-          @click="select('secalot')"
-        >
-          <img class="icon" src="~@/assets/images/icons/button-secalot.png" />
-          <img
-            class="icon-hover"
-            src="~@/assets/images/icons/button-secalot-hover.png"
-          />
-          <span>Secalot</span>
-        </li>
-      </ul>
-    </div>
-    <div class="button-container">
-      <div
-        :class="[
-          selected !== '' ? 'enabled' : 'disabled',
-          'mid-round-button-green-filled'
-        ]"
-        @click="continueAccess"
-      >
-        {{ $t('accessWallet.accessDeviceAddresses') }}
+        </div>
       </div>
+      <div class="button-container">
+        <div
+          :class="[
+            selected !== '' ? 'enabled' : 'disabled',
+            'mid-round-button-green-filled'
+          ]"
+          @click="continueAccess"
+        >
+          {{ $t('accessWallet.accessDeviceAddresses') }}
+        </div>
+      </div>
+      <customer-support />
     </div>
-    <customer-support />
   </b-modal>
 </template>
 
 <script>
 import CustomerSupport from '@/components/CustomerSupport';
+import ledger from '@/assets/images/icons/button-ledger.png';
+import ledgerHov from '@/assets/images/icons/button-ledger-hover.png';
+import bitbox from '@/assets/images/icons/button-bitbox.png';
+import bitboxHov from '@/assets/images/icons/button-bitbox-hover.png';
+import secalot from '@/assets/images/icons/button-secalot.png';
+import secalotHov from '@/assets/images/icons/button-secalot-hover.png';
+import trezor from '@/assets/images/icons/button-trezor.png';
+import trezorHov from '@/assets/images/icons/button-trezor-hover.png';
+import keepkey from '@/assets/images/icons/button-keepkey.png';
+import keepkeyHov from '@/assets/images/icons/button-keepkey-hover.png';
+import WalletOption from '../WalletOption';
+import { Toast, Misc } from '@/helpers';
+import { isSupported } from 'u2f-api';
 import {
   LedgerWallet,
+  KeepkeyWallet,
   TrezorWallet,
   BitBoxWallet,
   SecalotWallet
 } from '@/wallets';
 export default {
   components: {
-    'customer-support': CustomerSupport
+    'customer-support': CustomerSupport,
+    'wallet-option': WalletOption
   },
   props: {
     networkAndAddressOpen: {
@@ -97,31 +81,96 @@ export default {
   data() {
     return {
       selected: '',
-      mayNotBeAttached: false
+      mayNotBeAttached: false,
+      isU2FSupported: false,
+      items: [
+        {
+          name: 'ledger',
+          imgPath: ledger,
+          imgHoverPath: ledgerHov,
+          text: 'Ledger',
+          disabled: false
+        },
+        {
+          name: 'bitbox',
+          imgPath: bitbox,
+          imgHoverPath: bitboxHov,
+          text: 'Digital Bitbox',
+          disabled: false
+        },
+        {
+          name: 'secalot',
+          imgPath: secalot,
+          imgHoverPath: secalotHov,
+          text: 'Secalot',
+          disabled: false
+        },
+        {
+          name: 'trezor',
+          imgPath: trezor,
+          imgHoverPath: trezorHov,
+          text: 'Trezor',
+          disabled:
+            Misc.browserName() !== 'chrome' && Misc.browserName() !== 'firefox'
+        },
+        {
+          name: 'keepkey',
+          imgPath: keepkey,
+          imgHoverPath: keepkeyHov,
+          text: 'KeepKey',
+          disabled:
+            window.location.protocol === 'https:' &&
+            Misc.browserName() !== 'chrome'
+        }
+      ]
     };
   },
   mounted() {
+    isSupported().then(res => {
+      this.items.forEach(item => {
+        const u2fhw = ['secalot', 'ledger', 'bitbox'];
+        const inMobile = ['secalot', 'keepkey'];
+
+        if (u2fhw.includes(item.name))
+          item.disabled = !(
+            (Misc.browserName() === 'chrome' ||
+              Misc.browserName() === 'opera') &&
+            res
+          );
+        if (this.isMobile()) item.disabled = !inMobile.includes(item.name);
+      });
+    });
     this.$refs.hardware.$on('hidden', () => {
       this.selected = '';
     });
   },
   methods: {
+    isMobile() {
+      return (
+        typeof window.orientation !== 'undefined' ||
+        navigator.userAgent.indexOf('IEMobile') !== -1
+      );
+    },
     continueAccess() {
       const showPluggedInReminder = setTimeout(() => {
         this.mayNotBeAttached = true;
       }, 1000);
       switch (this.selected) {
         case 'ledger':
-          LedgerWallet().then(_newWallet => {
-            clearTimeout(showPluggedInReminder);
-            this.$emit('hardwareWalletOpen', _newWallet);
-          });
+          LedgerWallet()
+            .then(_newWallet => {
+              clearTimeout(showPluggedInReminder);
+              this.$emit('hardwareWalletOpen', _newWallet);
+            })
+            .catch(LedgerWallet.errorHandler);
           break;
         case 'trezor':
-          TrezorWallet().then(_newWallet => {
-            clearTimeout(showPluggedInReminder);
-            this.$emit('hardwareWalletOpen', _newWallet);
-          });
+          TrezorWallet()
+            .then(_newWallet => {
+              clearTimeout(showPluggedInReminder);
+              this.$emit('hardwareWalletOpen', _newWallet);
+            })
+            .catch(TrezorWallet.errorHandler);
           break;
         case 'bitbox':
           this.$emit('hardwareRequiresPassword', {
@@ -135,9 +184,18 @@ export default {
             hardwareBrand: 'Secalot'
           });
           break;
+        case 'keepkey':
+          KeepkeyWallet(false, this.$eventHub)
+            .then(_newWallet => {
+              this.$emit('hardwareWalletOpen', _newWallet);
+            })
+            .catch(KeepkeyWallet.errorHandler);
+          break;
         default:
-          // eslint-disable-next-line
-          console.error('something not right'); // todo remove dev item
+          Toast.responseHandler(
+            new Error('No switch address for given account.'),
+            Toast.ERROR
+          );
           break;
       }
     },
@@ -147,14 +205,6 @@ export default {
       } else {
         this.selected = '';
       }
-    },
-    hardwareButtonActivate(e) {
-      const buttonEls = this.$refs.hardwareList.children;
-      for (let i = 0; i < buttonEls.length; i++) {
-        buttonEls[i].classList.remove('active');
-      }
-
-      e.target.classList.add('active');
     }
   }
 };

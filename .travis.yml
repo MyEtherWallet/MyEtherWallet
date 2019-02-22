@@ -31,6 +31,8 @@ stages:
     if: branch =~ /^v.*$/
   - name: deploy to production
     if: branch =~ /^v.*$/
+  - name: deploy to production history
+    if: branch =~ /^v.*$/
 jobs:
   fast_finish: true
   include:
@@ -93,7 +95,6 @@ jobs:
         on:
           tags: true
           branch: master
-          repo: myetherwallet/myetherwallet
     - stage: deploy to production
       script: skip
       before_deploy:
@@ -108,5 +109,19 @@ jobs:
         on:
           branch: master
           tags: true
-          repo: myetherwallet/myetherwallet
         target-branch: gh-pages
+    - stage: deploy to production history
+      script: skip
+      before_deploy:
+        - docker run -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm install
+          && npm run build:history"
+      deploy:
+        provider: pages
+        skip-cleanup: true
+        github-token: '$GITHUB_TOKEN'
+        keep-history: false
+        local-dir: './dist'
+        on:
+          branch: master
+          tags: true
+        target-branch: gh-pages-history

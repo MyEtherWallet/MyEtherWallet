@@ -12,7 +12,7 @@
   "balance": "Баланс",
   "terms": "Условия",
   "continue": "Продолжить",
-  "jsonF": "Keystore-файл",
+  "jsonF": "Keystore File",
   "mnemonicP": "Мнемоническая фраза",
   "privKey": "Закрытый ключ",
   "mewConnect": "MEWconnect",
@@ -58,5 +58,8 @@
   "logOutWallet": "Выйти из кошелька",
   "goBack": "Вернуться",
   "logoutWarning": "Похоже, что вы забыли выйти из вашего кошелька. Для безопасности вашего кошелька выйдите из него, чтобы продолжить, либо вернитесь в ваш кошелек.",
-  "waitingForHash": "Ожидание хеша транзакции"
+  "waitingForHash": "Ожидание хеша транзакции",
+  "edit": "Edit",
+  "okay": "Okay",
+  "ok": "OK"
 }

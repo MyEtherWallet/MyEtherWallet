@@ -2,7 +2,11 @@
   <div class="notification-container">
     <div class="notification-logo" @click="showNotifications">
       <img class="logo-large" src="~@/assets/images/icons/notification.svg" />
-      <div v-show="unreadCount > 0" class="notification-dot" />
+      <div v-show="unreadCount > 0" class="notification-dot">
+        <div class="parent">
+          <div class="heart"></div>
+        </div>
+      </div>
     </div>
     <b-modal
       ref="notification"
@@ -11,6 +15,7 @@
       no-padding
       class="bootstrap-modal-wide nopadding"
       @show="countUnread"
+      @hide="hiddenModal"
     >
       <template slot="modal-title">
         <div>
@@ -20,8 +25,9 @@
               <span>{{ unreadCount }}</span>
             </div>
           </div>
-          <div v-else class="modal-title" @click="hideDetails">
-            <i class="fa fa-long-arrow-left" aria-hidden="true" /> Back
+          <div v-else class="modal-title show-pointer" @click="hideDetails">
+            <i class="fa fa-long-arrow-left" aria-hidden="true" />
+            {{ $t('common.back') }}
           </div>
         </div>
       </template>
@@ -41,7 +47,7 @@
           </li>
           <li
             v-for="(notification, idx) in sortedNotifications"
-            :key="notification.title + notification.timestamp + idx"
+            :key="notification.id + idx"
             class="notification-item"
           >
             <keep-alive
@@ -113,7 +119,13 @@ import {
   detailComponentMapping
 } from './components/config';
 
-import { INVESTIGATE_FAILURE_KEY } from '@/helpers/notificationFormatters';
+import {
+  INVESTIGATE_FAILURE_KEY,
+  notificationStatuses,
+  notificationType
+} from '@/helpers/notificationFormatters';
+
+import { Swap } from '@/partners';
 
 export default {
   components: {
@@ -124,6 +136,7 @@ export default {
   },
   data() {
     return {
+      cancelHide: false,
       shown: false,
       unreadCount: 0,
       ethPrice: new BigNumber(0),
@@ -137,14 +150,12 @@ export default {
       web3: 'web3',
       network: 'network',
       notifications: 'notifications',
-      wallet: 'wallet'
+      account: 'account'
     }),
     sortedNotifications() {
-      this.countUnread();
-      if (!this.notifications[this.wallet.getChecksumAddressString()])
-        return [];
-      // eslint-disable-next-line
-      return this.notifications[this.wallet.getChecksumAddressString()]
+      if (!this.notifications[this.account.address]) return [];
+      const notifications = this.notifications[this.account.address];
+      return notifications
         .sort((a, b) => {
           a = a.timestamp;
           b = b.timestamp;
@@ -160,31 +171,90 @@ export default {
     }
   },
   mounted() {
-    if (
-      this.notifications[this.wallet.getChecksumAddressString()] === undefined
-    ) {
-      this.notifications[this.wallet.getChecksumAddressString()] = [];
+    if (this.notifications[this.account.address] === undefined) {
+      this.notifications[this.account.address] = [];
       store.set('notifications', this.notifications);
     }
     this.countUnread();
     this.fetchBalanceData();
-    this.$refs.notification.$on('hide', () => {
-      this.shown = false;
-      this.hideDetails();
-    });
+    this.checkForUnResolvedTxNotifications();
   },
   methods: {
+    hiddenModal(/*evt*/) {
+      // if (!this.cancelHide) {
+      this.shown = false;
+      this.hideDetails();
+      // } else {
+      //   evt.cancel();
+      // }
+    },
+    toggleCanhide() {
+      setTimeout(() => {
+        this.cancelHide = false;
+      }, 100);
+    },
+    checkForUnResolvedTxNotifications() {
+      if (!this.notifications[this.account.address]) return [];
+      const check = this.notifications[this.account.address]
+        .filter(entry => entry.network === this.network.type.name)
+        .filter(entry => {
+          const isOlder =
+            (new Date().getTime() - new Date(entry.timestamp).getTime()) /
+              1000 >
+            6000;
+          const isUnResolved = entry.status === notificationStatuses.PENDING;
+          const notExternalSwap =
+            entry.type === notificationType.TRANSACTION ||
+            (entry.type === notificationType.SWAP && entry.body.isDex === true);
+          const hasHash = entry.hash !== '' && entry.hash !== undefined;
+          return isOlder && isUnResolved && hasHash && notExternalSwap;
+        });
+      check.forEach(entry => {
+        this.web3.eth.getTransactionReceipt(entry.hash).then(result => {
+          if (result === null) return;
+          const noticeIdx = this.notifications[this.account.address].findIndex(
+            noticeEntry => entry.id === noticeEntry.id
+          );
+          if (noticeIdx >= 0) {
+            entry.status = result.status
+              ? notificationStatuses.COMPLETE
+              : notificationStatuses.FAILED;
+            entry.body.error = !result.status;
+            entry.body.errorMessage = result.status
+              ? ''
+              : INVESTIGATE_FAILURE_KEY;
+            entry.body.gasUsed = new BigNumber(result.gasUsed).toString();
+            entry.body.blockNumber = new BigNumber(
+              result.blockNumber
+            ).toString();
+            if (entry.body.isDex) {
+              entry.swapStatus = result.status
+                ? notificationStatuses.COMPLETE
+                : notificationStatuses.FAILED;
+              entry.body.timeRemaining = -1;
+            }
+            this.$store.dispatch('updateNotification', [
+              this.account.address,
+              noticeIdx,
+              entry
+            ]);
+          }
+        });
+      });
+    },
     showNotifications() {
       this.shown = true;
       this.$refs.notification.show();
     },
     showDetails(details) {
+      this.cancelHide = true;
       this.detailsShown = true;
       this.detailType = details[0];
       this.notificationDetails = details[1];
       if (details.length === 3) {
         this.notificationDetails.index = details[2];
       }
+      // this.toggleCanhide();
     },
     hideDetails() {
       this.detailsShown = false;
@@ -204,17 +274,10 @@ export default {
       return 'transaction-details';
     },
     countUnread() {
-      const self = this;
-      self.unreadCount = 0;
-      if (
-        self.notifications[this.wallet.getChecksumAddressString()] !==
-          undefined &&
-        self.notifications[this.wallet.getChecksumAddressString()].length > 0
-      ) {
-        self.notifications[this.wallet.getChecksumAddressString()].map(item => {
-          if (item.read === false) {
-            self.unreadCount++;
-          }
+      this.unreadCount = 0;
+      if (this.sortedNotifications.length) {
+        this.sortedNotifications.forEach(notif => {
+          if (notif.read === false) this.unreadCount++;
         });
       }
     },
@@ -229,46 +292,42 @@ export default {
         }
 
         this.$store.dispatch('updateNotification', [
-          this.wallet.getChecksumAddressString(),
+          this.account.address,
           idx,
           updatedNotif
         ]);
       };
     },
     expandAll() {
-      this.notifications[this.wallet.getChecksumAddressString()].forEach(
-        (notice, idx) => {
-          const updatedNotif = notice;
-          if (notice.expanded !== true) {
-            updatedNotif.read = true;
-            updatedNotif.expanded = true;
-          }
-          this.$store.dispatch('updateNotification', [
-            this.wallet.getChecksumAddressString(),
-            idx,
-            updatedNotif
-          ]);
+      this.notifications[this.account.address].forEach((notice, idx) => {
+        const updatedNotif = notice;
+        if (notice.expanded !== true) {
+          updatedNotif.read = true;
+          updatedNotif.expanded = true;
         }
-      );
+        this.$store.dispatch('updateNotification', [
+          this.account.address,
+          idx,
+          updatedNotif
+        ]);
+      });
     },
     CallapseAll() {
-      this.notifications[this.wallet.getChecksumAddressString()].forEach(
-        (notice, idx) => {
-          const updatedNotif = notice;
-          updatedNotif.expanded = false;
-          this.$store.dispatch('updateNotification', [
-            this.wallet.getChecksumAddressString(),
-            idx,
-            updatedNotif
-          ]);
-        }
-      );
+      this.notifications[this.account.address].forEach((notice, idx) => {
+        const updatedNotif = notice;
+        updatedNotif.expanded = false;
+        this.$store.dispatch('updateNotification', [
+          this.account.address,
+          idx,
+          updatedNotif
+        ]);
+      });
     },
     childUpdateNotification(idx) {
       if (typeof idx === 'undefined') return () => {};
       return updatedNotif => {
         this.$store.dispatch('updateNotification', [
-          this.wallet.getChecksumAddressString(),
+          this.account.address,
           idx,
           updatedNotif
         ]);
@@ -286,12 +345,18 @@ export default {
       }
       return notice.body.errorMessage;
     },
-    hashLink(hash) {
+    hashLink(hash, currency) {
+      if (currency && Swap.isNotToken(currency)) {
+        return Swap.getBlockChainExplorerUrl(currency, hash);
+      }
       if (this.network.type.blockExplorerTX) {
         return this.network.type.blockExplorerTX.replace('[[txHash]]', hash);
       }
     },
-    addressLink(addr) {
+    addressLink(addr, currency) {
+      if (currency && Swap.isNotToken(currency)) {
+        return Swap.getAddressLookupUrl(currency, addr);
+      }
       if (this.network.type.blockExplorerAddr) {
         return this.network.type.blockExplorerAddr.replace('[[address]]', addr);
       }
@@ -313,11 +378,11 @@ export default {
       return '';
     },
     async fetchBalanceData() {
-      const url = 'https://cryptorates.mewapi.io/convert/ETH';
+      const url = 'https://cryptorates.mewapi.io/ticker';
       const fetchValues = await fetch(url);
       const values = await fetchValues.json();
-      if (!values['DAI']) return 0;
-      this.ethPrice = new BigNumber(values['DAI']);
+      if (!values['ETH']) return 0;
+      this.ethPrice = new BigNumber(values['ETH'].quotes.USD.price);
     },
     convertToGwei(value) {
       if (this.notValidNumber(value)) return '';
