@@ -1,47 +1,6 @@
 <template>
-  <div class="faqs">
-    <!-- <div id="faqs" class="wrap">
-      <div class="page-container">
-        <div class="flex-col-vertical-bottom top-title">
-          <div class="title">
-            <h2>{{ $t('common.faqs') }}</h2>
-            <h5>
-              {{ $t('home.faqsSubheading') }}
-              <a
-                target="_blank"
-                rel="noopener noreferrer"
-                href="https://kb.myetherwallet.com/"
-              >
-                {{ $t('home.faqsSeeMore') }}
-              </a>
-            </h5>
-          </div>
-          <customer-support />
-        </div>
-
-        <div class="qa-cards">
-          <ul class="qa__contents">
-            <li v-for="prop in Object.keys(faqs)" :key="prop">
-              <div class="qa__contents--title" @click="openFAQ(prop)">
-                <h3>{{ faqs[prop].title }}</h3>
-                <div class="show-more-buttons">
-                  <span :class="faqs[prop].open ? 'show-less' : 'show-more'">
-                    {{ faqs[prop].open ? '-' : '+' }}
-                  </span>
-                </div>
-              </div>
-              <div v-if="faqs[prop].open" class="qa__contents--content">
-                {{ faqs[prop].content }}
-                <a :href="faqs[prop].link" target="_blank">
-                  {{ faqs[prop].linkText }}
-                </a>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div> -->
-    <!-- </div> -->
-  <!-- </div> -->
+  <div class="faqs" />
+  
 </template>
 
 <script>
