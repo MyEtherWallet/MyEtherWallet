@@ -82,9 +82,9 @@ describe('PrivateKeyModal.vue', () => {
       const button = wrapper.find('button');
       wrapper.setData({ privateKey });
       button.trigger('click');
-      expect(wrapper.vm.$data.privateKey).toBe(
-        'b7420d4287f425479375c7f6eab7338cabd8a61c7b85fd51b00dac3d7443a8ea'
-      );
+      wrapper.vm.$nextTick(() => {
+        expect(wrapper.vm.$data.privateKey).toBe('');
+      });
     });
 
     it('should navigate to interface page', () => {
@@ -93,11 +93,11 @@ describe('PrivateKeyModal.vue', () => {
       const button = wrapper.find('button');
       wrapper.setData({ privateKey });
       button.trigger('click');
-      expect(wrapper.vm.$data.privateKey).toBe(
-        'b7420d4287f425479375c7f6eab7338cabd8a61c7b85fd51b00dac3d7443a8ea'
-      );
-      button.trigger('click');
-      expect(spy.calledWith({ path: 'interface' })).toBe(false);
+      wrapper.vm.$nextTick(() => {
+        expect(wrapper.vm.$data.privateKey).toBe('');
+        button.trigger('click');
+        expect(spy.calledWith({ path: 'interface' })).toBe(true);
+      });
     });
   });
 });

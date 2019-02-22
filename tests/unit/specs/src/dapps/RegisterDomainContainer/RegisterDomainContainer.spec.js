@@ -2,9 +2,6 @@ import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils';
 import RegisterDomain from '@/dapps/RegisterDomain/RegisterDomain.vue';
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton/BackButton.vue';
-import Vuex from 'vuex';
-import { state, getters } from '@@/helpers/mockStore';
-
 import { Tooling } from '@@/helpers';
 
 describe('RegisterDomain.vue', () => {
@@ -30,11 +27,6 @@ describe('RegisterDomain.vue', () => {
     store = baseSetup.store;
     Vue.config.warnHandler = () => {};
     Vue.config.errorHandler = () => {};
-
-    store = new Vuex.Store({
-      getters,
-      state
-    });
   });
 
   beforeEach(() => {
