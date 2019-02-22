@@ -435,7 +435,7 @@ export default {
     },
     showRefundAddress() {
       return (
-        !this.swap.isToken(this.fromCurrency) &&
+        !SwapProviders.isToken(this.fromCurrency) &&
         this.selectedProvider.provider === this.providerNames.changelly
       );
     },
@@ -464,7 +464,7 @@ export default {
     },
     hasEnough() {
       if (
-        this.swap.isToken(this.fromCurrency) &&
+        SwapProviders.isToken(this.fromCurrency) &&
         this.fromCurrency !== this.baseCurrency
       ) {
         const enteredVal = this.swap.convertToTokenWei(
@@ -609,7 +609,7 @@ export default {
       );
     },
     async getBalance(currency) {
-      if (this.swap.isToken(currency) && currency !== this.baseCurrency) {
+      if (SwapProviders.isToken(currency) && currency !== this.baseCurrency) {
         const balance = await new this.web3.eth.Contract(
           ERC20,
           this.swap.getTokenAddress(currency)
@@ -789,7 +789,7 @@ export default {
             toValue: this.toValue,
             toAddress: this.toAddress || this.currentAddress,
             fromAddress: this.currentAddress,
-            refundAddress: this.swap.isToken(providerDetails.fromCurrency)
+            refundAddress: SwapProviders.isToken(providerDetails.fromCurrency)
               ? this.currentAddress
               : this.refundAddress,
             exitFromAddress:
