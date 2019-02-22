@@ -8,6 +8,7 @@
 
 ### Bug
 
+- Fix header UI bug [#701](https://github.com/MyEtherWallet/MyEtherWallet/pull/701)
 - Fix NaN issue on settings modal [#682](https://github.com/MyEtherWallet/MyEtherWallet/pull/682)
 - Multiple Sentry fixes, custom paths, Safari worker fix [#680](https://github.com/MyEtherWallet/MyEtherWallet/pull/680)
 
