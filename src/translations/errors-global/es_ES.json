@@ -1,4 +1,6 @@
 {
   "notAValidAmountTotal": "Not enough ",
-  "toSend": "to send."
+  "toSend": "to send.",
+  "invalidValue": "Invalid value",
+  "wrongPassPhrase": "Passphrase given is incorrect!"
 }
