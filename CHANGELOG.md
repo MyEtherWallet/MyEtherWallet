@@ -1,5 +1,9 @@
 ### Release v5.0.4
 
+### Feature
+
+- Add animation to FAQs [#691](https://github.com/MyEtherWallet/MyEtherWallet/pull/691)
+
 ### Devop
 
 - Fix list fetching issue on travis and couple of sentry issues [#692](https://github.com/MyEtherWallet/MyEtherWallet/pull/692)
@@ -51,7 +55,6 @@
 
 ### Feature
 
-- Add animation to FAQs [#691](https://github.com/MyEtherWallet/MyEtherWallet/pull/691)
 - Add reusable global toasts. Add examples [#617](https://github.com/MyEtherWallet/MyEtherWallet/pull/617)
 
 ### Devop
