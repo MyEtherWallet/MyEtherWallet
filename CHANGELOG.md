@@ -6,7 +6,7 @@
 
 ### Feature
 
-- Print ENS bid details [](https://github.com/MyEtherWallet/MyEtherWallet/pull/)
+- Print ENS bid details [#699](https://github.com/MyEtherWallet/MyEtherWallet/pull/699)
 
 ### Release v5.0.3
 
