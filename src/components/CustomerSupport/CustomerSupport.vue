@@ -1,12 +1,16 @@
 <template>
   <div class="support">
-    <div class="support-content" @click="showModal">
-      <div class="support-icon">
+    <div
+      :class="['support-content', !noIcon ? 'with-icon' : 'without-icon']"
+      @click="showModal"
+    >
+      <div v-if="!noIcon" class="support-icon">
         <img src="~@/assets/images/icons/help-center.svg" />
       </div>
-      <div class="support-label">
+      <div v-if="!noIcon" class="support-label">
         <h5>{{ $t('common.customerSupport') }}</h5>
       </div>
+      <p v-else>{{ $t('common.customerSupport') }}</p>
     </div>
     <b-modal
       ref="emailPrefill"
@@ -38,6 +42,12 @@
 import { Misc } from '@/helpers';
 
 export default {
+  props: {
+    noIcon: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       browser: '',

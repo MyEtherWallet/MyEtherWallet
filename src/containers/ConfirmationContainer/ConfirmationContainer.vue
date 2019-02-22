@@ -337,7 +337,7 @@ export default {
       this.reset();
       if (message !== null) this.successMessage = message;
       if (linkMessage !== null) this.linkMessage = linkMessage;
-      this.$refs.errorModal.$refs.success.show();
+      this.$refs.errorModal.$refs.errorModal.show();
     },
     parseRawTx(tx) {
       this.raw = tx;
