@@ -85,9 +85,16 @@ export default class Changelly {
       .toNumber();
   }
 
+  fixedEnabled(currency) {
+    return (
+      typeof this.currencies[currency].fixRateEnabled === 'boolean' &&
+      this.currencies[currency].fixRateEnabled
+    );
+  }
+
   async getRate(fromCurrency, toCurrency, fromValue) {
     if (this.useFixed && this.currencies[toCurrency]) {
-      if (this.currencies[toCurrency].fixRateEnabled) {
+      if (this.fixedEnabled(toCurrency)) {
         return this.getFixedRate(fromCurrency, toCurrency, fromValue);
       }
       return this.getMarketRate(fromCurrency, toCurrency, fromValue);
@@ -237,7 +244,7 @@ export default class Changelly {
       refundAddress
     };
     if (this.useFixed && this.currencies[toCurrency]) {
-      if (this.currencies[toCurrency].fixRateEnabled) {
+      if (this.fixedEnabled(toCurrency)) {
         return this.createFixedTransaction(transactionDetails);
       }
       return this.createMarketTransaction(transactionDetails);
