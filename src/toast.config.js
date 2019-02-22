@@ -25,9 +25,7 @@ const error = {
       return `<div><img src="${toastErr}" /> &nbsp; Oops.. Something Went Wrong..</div>`;
     }
     // if there is a message show it with the message
-    return `<div><img src="${toastErr}" /> &nbsp; Oops.. ${
-      payload.message
-    }</div>`;
+    return `<div><img src="${toastErr}" /> &nbsp; ${payload.message}</div>`;
   },
   options: Object.assign({}, toastObject, {
     className: 'toast-error'
