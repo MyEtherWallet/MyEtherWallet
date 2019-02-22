@@ -57,6 +57,12 @@ export default class SwapProviders {
     return this.initialCurrencyArrays;
   }
 
+  get haveProviderRates() {
+    return Object.keys(this.providerRateUpdates).every(providerName => {
+      return this.providerRatesRecieved.includes(providerName);
+    });
+  }
+
   getProviders() {
     return utils.mapToObject(this.providers);
   }
@@ -71,11 +77,7 @@ export default class SwapProviders {
     return this.providers.has(name);
   }
 
-  get haveProviderRates() {
-    return Object.keys(this.providerRateUpdates).every(providerName => {
-      return this.providerRatesRecieved.includes(providerName);
-    });
-  }
+
 
   updateNetwork(network) {
     this.providers.forEach(provider => {
@@ -145,7 +147,7 @@ export default class SwapProviders {
   }
 
   getTokenAddress(currency, noError) {
-    if (this.isToken(currency)) {
+    if (SwapProviders.isToken(currency)) {
       return EthereumTokens[currency].contractAddress;
     }
     if (noError) {
@@ -180,8 +182,8 @@ export default class SwapProviders {
     if (!currency) return 6;
     if (fiat.find(entry => entry.symbol === currency)) {
       return 2;
-    } else if (this.isToken(currency)) {
-      const decimal = this.getTokenDecimals(currency);
+    } else if (SwapProviders.isToken(currency)) {
+      const decimal = SwapProviders.getTokenDecimals(currency);
       if (decimal < 6) return decimal;
       return 6;
     }
@@ -189,7 +191,7 @@ export default class SwapProviders {
   }
 
   convertToTokenWei(token, value) {
-    const decimals = this.getTokenDecimals(token);
+    const decimals = SwapProviders.getTokenDecimals(token);
     const denominator = new BigNumber(10).pow(decimals);
     return new BigNumber(value)
       .times(denominator)
@@ -198,52 +200,16 @@ export default class SwapProviders {
   }
 
   convertToTokenBase(token, value) {
-    const decimals = this.getTokenDecimals(token);
+    const decimals = SwapProviders.getTokenDecimals(token);
     const denominator = new BigNumber(10).pow(decimals);
     return new BigNumber(value).div(denominator).toString(10);
   }
 
-  getTokenDecimals(currency) {
-    if (this.isToken(currency)) {
-      return EthereumTokens[currency].decimals;
-    } else if (currency === 'ETH') {
-      return 18;
-    }
-    throw Error('Not an Ethereum Token');
-  }
 
-  isToken(currency) {
-    return !!EthereumTokens[currency];
-  }
 
-  hasKnownTokenBalance() {
-    return;
-  }
-
-  static isNotToken(currency) {
-    return !EthereumTokens[currency];
-  }
-
-  // Get address explorer base url for non-ethereum blockchain
-  static getAddressLookupUrl(coin, address) {
-    if (OtherCoins[coin] && OtherCoins[coin].addressLookup) {
-      if (address) {
-        return OtherCoins[coin].addressLookup.replace('[[address]]', address);
-      }
-      return OtherCoins[coin].addressLookup;
-    }
-    return '';
-  }
-  // Get transaction explorer base url for non-ethereum blockchain
-  static getBlockChainExplorerUrl(coin, hash) {
-    if (OtherCoins[coin] && OtherCoins[coin].explorer) {
-      if (hash) {
-        return OtherCoins[coin].explorer.replace('[[txHash]]', hash);
-      }
-      return OtherCoins[coin].explorer;
-    }
-    return '';
-  }
+  // callProviderMethod(methodName, argObject) {
+  //   return;
+  // }
 
   async startSwap({
     providerDetails,
@@ -270,11 +236,51 @@ export default class SwapProviders {
       };
       if (this.providers.has(swapDetails.provider)) {
         const provider = this.providers.get(swapDetails.provider);
-        swapDetails.maybeToken = this.isToken(swapDetails.fromCurrency);
+        swapDetails.maybeToken = SwapProviders.isToken(swapDetails.fromCurrency);
         return provider.startSwap(swapDetails);
       }
     } catch (e) {
       throw e;
     }
+  }
+
+  // Static Methods
+
+  static isToken(currency) {
+    return !!EthereumTokens[currency];
+  }
+
+  static isNotToken(currency) {
+    return !EthereumTokens[currency];
+  }
+
+  static getTokenDecimals(currency) {
+    if (SwapProviders.isToken(currency)) {
+      return EthereumTokens[currency].decimals;
+    } else if (currency === 'ETH') {
+      return 18;
+    }
+    throw Error('Not an Ethereum Token');
+  }
+
+  // Get address explorer base url for non-ethereum blockchain
+  static getAddressLookupUrl(coin, address) {
+    if (OtherCoins[coin] && OtherCoins[coin].addressLookup) {
+      if (address) {
+        return OtherCoins[coin].addressLookup.replace('[[address]]', address);
+      }
+      return OtherCoins[coin].addressLookup;
+    }
+    return '';
+  }
+  // Get transaction explorer base url for non-ethereum blockchain
+  static getBlockChainExplorerUrl(coin, hash) {
+    if (OtherCoins[coin] && OtherCoins[coin].explorer) {
+      if (hash) {
+        return OtherCoins[coin].explorer.replace('[[txHash]]', hash);
+      }
+      return OtherCoins[coin].explorer;
+    }
+    return '';
   }
 }
