@@ -23,7 +23,10 @@
           rel="noopener noreferrer"
           >Website</a
         >
-        · <a href="https://www.bitfinex.com/support">Support</a>
+        ·
+        <a rel="noopener noreferrer" href="https://www.bitfinex.com/support"
+          >Support</a
+        >
       </li>
       <li>
         Bittrex:
@@ -33,7 +36,10 @@
           rel="noopener noreferrer"
           >Website</a
         >
-        · <a href="https://bittrex.com/Home/Contact">Support</a>
+        ·
+        <a rel="noopener noreferrer" href="https://bittrex.com/Home/Contact"
+          >Support</a
+        >
       </li>
       <li>
         Bity:
@@ -43,7 +49,8 @@
           rel="noopener noreferrer"
           >Website</a
         >
-        · <a href="mailto:support@bity.com">Support</a>
+        ·
+        <a rel="noopener noreferrer" href="mailto:support@bity.com">Support</a>
       </li>
       <li>
         Changelly:
@@ -53,7 +60,10 @@
           rel="noopener noreferrer"
           >Website</a
         >
-        · <a href="mailto:support@changelly.com">Support</a>
+        ·
+        <a rel="noopener noreferrer" href="mailto:support@changelly.com"
+          >Support</a
+        >
       </li>
       <li>
         Coinbase:
@@ -72,7 +82,12 @@
           rel="noopener noreferrer"
           >Support</a
         >
-        · <a href="https://gemini24.zendesk.com/hc/en-us">FAQ</a>
+        ·
+        <a
+          rel="noopener noreferrer"
+          href="https://gemini24.zendesk.com/hc/en-us"
+          >FAQ</a
+        >
       </li>
       <li>
         Kraken:

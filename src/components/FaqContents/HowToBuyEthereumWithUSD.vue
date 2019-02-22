@@ -31,7 +31,9 @@
           <p>
             <strong
               >Scams and
-              <a href="https://www.google.com/safebrowsing/static/faq.html#q1"
+              <a
+                rel="noopener noreferrer"
+                href="https://www.google.com/safebrowsing/static/faq.html#q1"
                 >phishing sites</a
               >
               and malicious links exist. Trust messages and random links about
@@ -65,6 +67,7 @@
         <li>
           <p>
             <a
+              rel="noopener noreferrer"
               href="https://kb.myetherwallet.com/getting-started/whats-the-difference-between-an-exchange-and-myetherwallet.html"
               >Understand the difference between a hosted wallet / exchange and
               client-side wallet before moving your ETH to your own wallet.</a
@@ -74,6 +77,7 @@
         <li>
           <p>
             <a
+              rel="noopener noreferrer"
               href="https://kb.myetherwallet.com/getting-started/protecting-yourself-and-your-funds.html"
               >Learn how to protect your funds!</a
             >
@@ -82,11 +86,13 @@
         <li>
           <p>
             <a
+              rel="noopener noreferrer"
               href="https://kb.myetherwallet.com/getting-started/getting-back-to-basics-tips-for-newbies.html"
               >10 Tips for Noobs</a
             >
             &amp;
             <a
+              rel="noopener noreferrer"
               href="https://kb.myetherwallet.com/getting-started/ethereum-glossary.html"
               >Words are Hard</a
             >
@@ -95,7 +101,9 @@
         </li>
         <li>
           <p>
-            <a href="https://kb.myetherwallet.com/diving-deeper/"
+            <a
+              rel="noopener noreferrer"
+              href="https://kb.myetherwallet.com/diving-deeper/"
               >And even more links to awesome things just because</a
             >
           </p>
@@ -142,7 +150,9 @@
           <p>
             ...While you are waiting for your verification and transfer,
             download and install
-            <a href="https://github.com/ethereum/mist/releases"
+            <a
+              rel="noopener noreferrer"
+              href="https://github.com/ethereum/mist/releases"
               >Mist / Ethereum Wallet</a
             >. Run it so it can sync the blockchain.
           </p>
@@ -205,6 +215,7 @@
         of these wallets to back up your information. In Jaxx, that is a
         mnemonic. In MyEtherWallet,
         <a
+          rel="noopener noreferrer"
           href="https://kb.myetherwallet.com/how-do-i-move-from-coinbase-to-myetherwallet-exchange-slash-hosted-wallet-mew"
         >
           read this </a
@@ -215,19 +226,26 @@
 
       <ul>
         <li>
-          <a href="http://www.myetherwallet.com/">MyEtherWallet.com</a> or
+          <a rel="noopener noreferrer" href="http://www.myetherwallet.com/"
+            >MyEtherWallet.com</a
+          >
+          or
           <a
+            rel="noopener noreferrer"
             href="https://www.reddit.com/r/ethereum/comments/44vbef/myetherwallet_chrome_extension_the_beta_has/"
           >
             MEW Chrome Extension
           </a>
         </li>
         <li>
-          <a href="http://jaxx.io/">JAXX</a> - multi-platform, multi-currency
+          <a rel="noopener noreferrer" href="http://jaxx.io/">JAXX</a> -
+          multi-platform, multi-currency
         </li>
         <li>
-          <a href="https://www.exodus.io/">Exodus.io</a> - multi-currency
-          desktop app
+          <a rel="noopener noreferrer" href="https://www.exodus.io/"
+            >Exodus.io</a
+          >
+          - multi-currency desktop app
         </li>
       </ul>
 
@@ -246,6 +264,7 @@
         <li>
           <p>
             <a
+              rel="noopener noreferrer"
               href="https://kb.myetherwallet.com/getting-started/whats-the-difference-between-an-exchange-and-myetherwallet.html"
               >Understand the difference between a hosted wallet / exchange and
               client-side wallet before moving your ETH to your own wallet.</a
@@ -255,6 +274,7 @@
         <li>
           <p>
             <a
+              rel="noopener noreferrer"
               href="https://kb.myetherwallet.com/getting-started/protecting-yourself-and-your-funds.html"
               >Learn how to protect your funds!</a
             >
@@ -263,11 +283,13 @@
         <li>
           <p>
             <a
+              rel="noopener noreferrer"
               href="https://kb.myetherwallet.com/getting-started/getting-back-to-basics-tips-for-newbies.html"
               >10 Tips for Noobs</a
             >
             &amp;
             <a
+              rel="noopener noreferrer"
               href="https://kb.myetherwallet.com/getting-started/ethereum-glossary.html"
               >Words are Hard</a
             >
@@ -276,7 +298,9 @@
         </li>
         <li>
           <p>
-            <a href="https://kb.myetherwallet.com/diving-deeper/"
+            <a
+              rel="noopener noreferrer"
+              href="https://kb.myetherwallet.com/diving-deeper/"
               >And even more links to awesome things just because</a
             >
           </p>
@@ -288,6 +312,7 @@
         <em
           >Originally posted on StackExchange:
           <a
+            rel="noopener noreferrer"
             href="https://ethereum.stackexchange.com/questions/1915/how-do-i-buy-ethereum-with-usd"
           >
             https://ethereum.stackexchange.com/questions/1915/how-do-i-buy-ethereum-with-usd
