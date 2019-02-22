@@ -82,11 +82,11 @@
           </p>
         </div>
       </div>
-      <div class="bottom-image-container">
+      <!-- <div class="bottom-image-container">
         <a href="https://mewconnect.myetherwallet.com/#/" target="_blank">
           <img class="icon" src="~@/assets/images/etc/mewconnect.jpeg" />
         </a>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
