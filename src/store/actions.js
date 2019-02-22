@@ -104,9 +104,9 @@ const setAccountBalance = function({ commit }, balance) {
   commit('SET_ACCOUNT_BALANCE', balance);
 };
 
-const setAccountTokens = function({commit}, tokens){
-
-}
+const setAccountTokens = function({ commit }, tokens) {
+  commit('SET_ACCOUNT_TOKENS', tokens);
+};
 
 const setGasPrice = function({ commit }, gasPrice) {
   commit('SET_GAS_PRICE', gasPrice);
