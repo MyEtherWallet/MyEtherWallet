@@ -1,9 +1,7 @@
-import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import InterfaceTokensModal from '@/layouts/InterfaceLayout/components/InterfaceTokensModal/InterfaceTokensModal.vue';
 import sinon from 'sinon';
 import { Tooling } from '@@/helpers';
-import { state, getters } from '@@/helpers/mockStore';
 
 describe('InterfaceTokensModal.vue', () => {
   let localVue, i18n, wrapper, store;
@@ -16,11 +14,6 @@ describe('InterfaceTokensModal.vue', () => {
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
     store = baseSetup.store;
-
-    store = new Vuex.Store({
-      getters,
-      state
-    });
   });
 
   beforeEach(() => {
