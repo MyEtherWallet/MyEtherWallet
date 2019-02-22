@@ -20,7 +20,7 @@
           </div>
         </div>
         <div ref="tokenTableContainer" class="token-table-container">
-          <table v-show="customTokens.length > 0">
+          <table v-show="customTokens.length > 0 && receivedTokens">
             <tr
               v-for="(token, index) in customTokens"
               :key="token.name + index"
@@ -36,11 +36,12 @@
             </tr>
           </table>
 
-          <table v-show="localTokens.length > 0">
+          <table v-show="localTokens.length > 0 && receivedTokens">
             <tr v-for="(token, index) in localTokens" :key="token.name + index">
               <td>{{ token.name }}</td>
               <td
                 v-if="token.balance === 'Load'"
+                class="load-token"
                 @click="getSpecificTokenBalance(token, index)"
               >
                 {{ token.balance }}
@@ -50,7 +51,9 @@
           </table>
 
           <div
-            v-show="search === '' && localTokens.length === 0 && receivedTokens"
+            v-show="
+              search === '' && localTokens.length === 0 && !receivedTokens
+            "
             class="spinner-container"
           >
             <i class="fa fa-spinner fa-spin" />
@@ -80,7 +83,9 @@
         </div>
       </div>
       <div class="bottom-image-container">
-        <img class="icon" src="~@/assets/images/etc/mewconnectad.png" />
+        <a href="https://mewconnect.myetherwallet.com/#/" target="_blank">
+          <img class="icon" src="~@/assets/images/etc/mewconnect.jpeg" />
+        </a>
       </div>
     </div>
   </div>
@@ -89,9 +94,11 @@
 <script>
 import store from 'store';
 import { mapGetters } from 'vuex';
+import { Toast } from '@/helpers';
 import InterfaceTokensModal from '../InterfaceTokensModal';
 import sortByBalance from '@/helpers/sortByBalance.js';
 import utils from 'web3-utils';
+import * as networkTypes from '@/networks/types';
 
 export default {
   components: {
@@ -112,10 +119,6 @@ export default {
       type: Function,
       default: function() {}
     },
-    triggerAlert: {
-      type: Function,
-      default: function() {}
-    },
     fetchTokens: {
       type: Function,
       default: function() {}
@@ -132,34 +135,61 @@ export default {
   },
   computed: {
     ...mapGetters({
-      network: 'network'
+      network: 'network',
+      web3: 'web3'
     })
   },
   watch: {
+    receivedTokens() {
+      this.getCustomTokens();
+    },
     tokens(newVal) {
       this.assignTokens(newVal, this.search);
+      this.getCustomTokens();
     },
     search(newVal) {
       this.assignTokens(this.tokens, newVal);
-    },
-    customTokens(newVal) {
-      this.customTokens = newVal;
-    },
-    network(newVal) {
-      if (
-        store.get('customTokens') !== undefined &&
-        store.get('customTokens')[newVal.type.name] !== undefined
-      ) {
-        this.customTokens = store.get('customTokens')[newVal.type.name];
-      } else {
-        this.customTokens = [];
-      }
+      this.getCustomTokens();
     }
   },
-  mounted() {
-    this.assignTokens(this.tokens, this.search);
-  },
   methods: {
+    getV3Tokens() {
+      const v3Tokens = store.get('localTokens');
+      const v5CustomTokens = store.get('customTokens');
+      v3Tokens.forEach(token => {
+        const newObj = {
+          address: token.contractAddress,
+          decimals: token.decimal,
+          email: '',
+          name: token.symbol,
+          symbol: token.symbol,
+          website: '',
+          type: 'custom'
+        };
+        Object.keys(networkTypes).forEach(network => {
+          if (
+            networkTypes[network].name.toLowerCase() ===
+              token.network.toLowerCase() ||
+            networkTypes[network].name_long.toLowerCase() ===
+              token.network.toLowerCase()
+          ) {
+            if (this.tokenError(newObj.address, newObj.symbol, '')) {
+              v5CustomTokens[networkTypes[network].name].push(newObj);
+            }
+          }
+        });
+      });
+      store.set('customTokens', v5CustomTokens);
+      store.remove('localTokens');
+    },
+    getCustomTokens() {
+      if (store.get('localTokens') !== undefined) {
+        this.getV3Tokens();
+      }
+      const storedTokens =
+        store.get('customTokens')[this.network.type.name] || [];
+      this.customTokens = storedTokens;
+    },
     async getSpecificTokenBalance(token, idx) {
       this.tokens[idx].balance = await this.getTokenBalance(token);
       this.tokens.sort(sortByBalance);
@@ -172,19 +202,66 @@ export default {
       this.customTokens.splice(idx, 1);
       storedTokens[this.network.type.name] = this.customTokens;
       store.set('customTokens', storedTokens);
+      this.fetchTokens();
+    },
+    searchBySymbol(symbol) {
+      const searchNetwork = this.localTokens.find(item => {
+        return item.symbol.toLowerCase() === symbol.toLowerCase();
+      });
+
+      const searchCustom = this.customTokens.find(item => {
+        return item.symbol.toLowerCase() === symbol.toLowerCase();
+      });
+
+      if (searchNetwork !== undefined || searchCustom !== undefined) {
+        return false;
+      }
+      return true;
+    },
+    searchByAddr(addr) {
+      const searchNetwork = this.localTokens.find(item => {
+        return (
+          utils.toChecksumAddress(item.address) ===
+          utils.toChecksumAddress(addr)
+        );
+      });
+
+      const searchCustom = this.customTokens.find(item => {
+        return (
+          utils.toChecksumAddress(item.address) ===
+          utils.toChecksumAddress(addr)
+        );
+      });
+
+      if (searchNetwork !== undefined || searchCustom !== undefined) {
+        return false;
+      }
+      return true;
+    },
+    tokenError(address, symbol, addType) {
+      const findTokenBySymbol = this.searchBySymbol(symbol);
+      const findTokenByAddr = this.searchByAddr(address);
+      if (!findTokenByAddr && addType !== '') {
+        this.$refs.tokenModal.$refs.token.hide();
+        Toast.responseHandler(
+          'A default or custom token with this contract address already exists!',
+          Toast.ERROR
+        );
+        return false;
+      } else if (!findTokenBySymbol && addType !== '') {
+        this.$refs.tokenModal.$refs.token.hide();
+        Toast.responseHandler(
+          "A default or custom token with this symbol already exists! The token in our list may have the same symbol but a different contract address, try adding it again with a '2' after the symbol!",
+          Toast.ERROR
+        );
+        return false;
+      }
+      return findTokenByAddr || findTokenBySymbol;
     },
     async addToken(address, symbol, decimal) {
-      if (
-        this.localTokens.find(item => {
-          return (
-            utils.toChecksumAddress(item.address) ===
-            utils.toChecksumAddress(address)
-          );
-        }) !== undefined
-      ) {
-        const localStorageName = {};
+      if (this.tokenError(address, symbol, 'manual')) {
         const token = {
-          addr: address,
+          address: address,
           decimals: decimal,
           email: '',
           name: symbol,
@@ -192,26 +269,22 @@ export default {
           website: '',
           type: 'custom'
         };
-        let newArray = [];
+        const currentCustomToken = store.get('customTokens');
+        this.customTokens =
+          this.customTokens.length > 0 ? this.customTokens : [];
         token['balance'] = await this.getTokenBalance(token);
         if (token['balance'] === undefined) {
-          // eslint-disable-next-line
-          console.error('Token Balance Returned Undefined');
+          Toast.responseHandler(
+            new Error('Token Balance Returned Undefined'),
+            Toast.ERROR
+          );
         }
-
-        if (this.customTokens.length > 0) {
-          newArray = this.customTokens.map(item => item);
-        }
-        newArray.push(token);
-        this.customTokens = newArray;
-        localStorageName[this.network.type.name] = this.customTokens;
-
-        store.set('customTokens', localStorageName);
+        this.customTokens.push(token);
+        currentCustomToken[this.network.type.name] = this.customTokens;
+        store.set('customTokens', currentCustomToken);
         this.$refs.tokenModal.$refs.token.hide();
-        this.triggerAlert('Successfully added token!');
-      } else {
-        this.$refs.tokenModal.$refs.token.hide();
-        this.triggerAlert('Token Already Exists!', 'danger');
+        Toast.responseHandler('Successfully added token!', Toast.SUCCESS);
+        this.fetchTokens();
       }
     },
     tokenListExpend() {
@@ -220,7 +293,7 @@ export default {
       this.$refs.expendUp.classList.toggle('hidden');
     },
     async assignTokens(arr, query) {
-      const oldArray = this.customTokens.slice();
+      const oldArray = this.customTokens ? this.customTokens.slice() : [];
       if (query !== '') {
         this.customTokens = oldArray
           .filter(token => {
@@ -238,12 +311,6 @@ export default {
           .sort(sortByBalance);
       } else {
         this.localTokens = arr;
-        if (
-          store.get('customTokens') !== undefined &&
-          store.get('customTokens')[this.network.type.name] !== undefined
-        ) {
-          this.customTokens = store.get('customTokens')[this.network.type.name];
-        }
       }
     }
   }

@@ -10,7 +10,8 @@ import {
   kyberNetworkENS,
   walletDepositeAddress,
   kyberAddressFallback,
-  KyberCurrencies
+  KyberCurrencies,
+  FEE_RATE
 } from './config';
 import kyberNetworkABI from './kyberNetwork.abi';
 import { ERC20 } from '../../partnersConfig';
@@ -29,5 +30,6 @@ export {
   kyberTokenInfoList,
   kyberValidNetworks,
   kyberNetworkABI,
-  ERC20
+  ERC20,
+  FEE_RATE
 };

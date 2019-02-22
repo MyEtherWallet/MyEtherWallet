@@ -8,9 +8,10 @@
           :key="localDapps[dapp].title"
           :title="$t(localDapps[dapp].title)"
           :icon="localDapps[dapp].icon"
+          :icon-disabled="localDapps[dapp].iconDisabled"
           :desc="$t(localDapps[dapp].desc)"
-          :active="localDapps[dapp].active"
           :param="localDapps[dapp].route"
+          :supported-networks="localDapps[dapp].supportedNetworks"
         />
       </div>
     </div>
@@ -23,6 +24,7 @@ import DappButtons from '../../components/DappButtons';
 import dapps from '@/dapps';
 
 export default {
+  name: 'DappsContainer',
   components: {
     'interface-container-title': InterfaceContainerTitle,
     'dapp-buttons': DappButtons

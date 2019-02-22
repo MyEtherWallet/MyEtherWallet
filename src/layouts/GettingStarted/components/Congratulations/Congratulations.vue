@@ -23,7 +23,10 @@
             {{ $t('gettingStarted.congratulationsDescCont') }}
           </p>
 
-          <div class="mid-round-button-green-filled-green-border" @click="done">
+          <div
+            class="done-button mid-round-button-green-filled-green-border"
+            @click="done"
+          >
             Get Started
           </div>
         </div>
@@ -47,8 +50,9 @@ export default {
   },
   methods: {
     done() {
-      store.set('skipTutorial', true);
+      store.set('skipTutorial', 'done');
       this.$router.push({ path: 'create-wallet' });
+      this.$store.dispatch('gettingStartedDone');
     }
   }
 };

@@ -12,7 +12,7 @@
   "balance": "保有数",
   "terms": "Terms",
   "continue": "続ける",
-  "jsonF": "Keystoreファイル",
+  "jsonF": "Keystore File",
   "mnemonicP": "暗号化フレーズ",
   "privKey": "秘密鍵",
   "mewConnect": "MEWconnect",
@@ -58,5 +58,8 @@
   "logOutWallet": "Log Out Wallet",
   "goBack": "Go back",
   "logoutWarning": "It seems like you forgot to logout your wallet. For your wallet security, please log out your wallet to continue, or go back to your wallet.",
-  "waitingForHash": "トランザクション ハッシュを待っています。"
+  "waitingForHash": "トランザクション ハッシュを待っています。",
+  "edit": "Edit",
+  "okay": "Okay",
+  "ok": "OK"
 }

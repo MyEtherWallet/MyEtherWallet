@@ -11,55 +11,84 @@
         <h1>{{ timeRemaining }}</h1>
         <p>{{ $t('interface.timeRemaining') }}</p>
       </div>
-      <div class="swap-detail">
-        <div class="from-address">
-          <div class="icon">
-            <i :class="['cc', fromAddress.name, 'cc-icon']" />
+      <div>
+        <div class="swap-detail">
+          <div class="from-address">
+            <div class="icon">
+              <i :class="['cc', fromAddress.name, 'cc-icon']" />
+            </div>
+            <p class="value">
+              {{ fromAddress.value }} <span>{{ fromAddress.name }}</span>
+            </p>
+            <p
+              v-show="fromAddress.address !== '' && !isFromFiat"
+              class="block-title"
+            >
+              {{ $t('interface.fromAddr') }}
+            </p>
+            <p
+              v-show="fromAddress.address !== '' && !isFromFiat"
+              class="address"
+            >
+              {{ fromAddress.address }}
+            </p>
           </div>
-          <p class="value">
-            {{ fromAddress.value }} <span>{{ fromAddress.name }}</span>
-          </p>
-          <p
-            v-show="fromAddress.address !== '' && !isFromFiat"
-            class="block-title"
-          >
-            {{ $t('interface.fromAddr') }}
-          </p>
-          <p v-show="fromAddress.address !== '' && !isFromFiat" class="address">
-            {{ fromAddress.address }}
-          </p>
-        </div>
-        <div class="right-arrow"><img :src="arrowImage" /></div>
-        <div class="to-address">
-          <div class="icon">
-            <i :class="['cc', toAddress.name, 'cc-icon']" />
+          <div class="right-arrow"><img :src="arrowImage" /></div>
+          <!-- Fiat to Crypto-->
+          <div v-if="!toFiat" class="to-address">
+            <div class="icon">
+              <i :class="['cc', toAddress.name, 'cc-icon']" />
+            </div>
+            <p class="value">
+              {{ toAddress.value }} <span>{{ toAddress.name }}</span>
+            </p>
+            <p v-show="toAddress.address !== ''" class="block-title">
+              {{ $t('interface.sendTxToAddr') }}
+            </p>
+            <p v-show="toAddress.address !== ''" class="address">
+              {{ toAddress.address }}
+            </p>
           </div>
-          <p class="value">
-            {{ toAddress.value }} <span>{{ toAddress.name }}</span>
-          </p>
-          <p v-show="toAddress.address !== ''" class="block-title">
-            {{ $t('interface.sendTxToAddr') }}
-          </p>
-          <p v-show="toAddress.address !== ''" class="address">
-            {{ toAddress.address }}
-          </p>
+          <!-- Crypto to Crypto -->
+          <div v-else class="to-address">
+            <div class="icon">
+              <i :class="['cc', toAddress.name, 'cc-icon']" />
+            </div>
+            <p class="value">
+              {{ toAddress.value }} <span>{{ toAddress.name }}</span>
+            </p>
+            <p class="block-title">{{ $t('common.to') }}</p>
+            <p class="address">{{ fiatDest }}</p>
+          </div>
         </div>
+
         <ul v-show="!isFromFiat" class="confirm-send-button">
           <li>
-            <div>
+            <div class="provider-address-details">
               <h4>
-                {{ $t('interface.send') }} {{ fromAddress.value }}
-                {{ fromAddress.name }} {{ $t('interface.articleTo') }}
+                {{
+                  $t('interface.notFromEthSwap', {
+                    value: fromAddress.value,
+                    currency: fromAddress.name
+                  })
+                }}
                 <span class="address">{{ qrcode }}</span>
               </h4>
-              <qrcode :value="qrcode" :options="{ size: 200 }" />
+              <p>{{ swapDetails.providerAddress }}</p>
+
+              <qrcode
+                :value="qrcodeContent"
+                :options="{ size: 200, level: 'H', padding: 25 }"
+              />
             </div>
           </li>
           <li>
             <div @click="sentTransaction">
               <button-with-qrcode
                 :qrcode="qrcode"
-                :buttonname="$t('interface.sentCoins')"
+                :buttonname="
+                  $t('interface.sentCoins', { currency: fromAddress.name })
+                "
               />
             </div>
           </li>
@@ -120,6 +149,23 @@ export default {
     },
     isFromFiat() {
       return this.fiatCurrencies.includes(this.rawSwapDetails.fromCurrency);
+    },
+    toFiat() {
+      return this.fiatCurrencies.includes(this.rawSwapDetails.toCurrency);
+    },
+    fiatDest() {
+      if (this.swapDetails.orderDetails) {
+        return this.swapDetails.orderDetails.output.owner.name;
+      }
+      return '';
+    },
+    qrcodeContent() {
+      if (this.swapDetails.dataForInitialization) {
+        return qrcodeBuilder(
+          this.swapDetails.providerAddress,
+          this.swapDetails.fromCurrency
+        );
+      }
     }
   },
   watch: {
@@ -157,10 +203,14 @@ export default {
   methods: {
     timeUpdater(swapDetails) {
       clearInterval(this.timerInterval);
-      this.timeRemaining = utils.getTimeRemainingString(swapDetails.timestamp);
+      this.timeRemaining = utils.getTimeRemainingString(
+        swapDetails.timestamp,
+        swapDetails.validFor
+      );
       this.timerInterval = setInterval(() => {
         this.timeRemaining = utils.getTimeRemainingString(
-          swapDetails.timestamp
+          swapDetails.timestamp,
+          swapDetails.validFor
         );
         if (this.timeRemaining === 'expired') {
           clearInterval(this.timerInterval);
@@ -180,30 +230,10 @@ export default {
     },
     swapStarted(swapDetails) {
       this.timeUpdater(swapDetails);
-      if (swapDetails.dataForInitialization) {
-        switch (swapDetails.provider) {
-          case 'changelly':
-            this.changellySwap(swapDetails);
-            break;
-          case 'bity':
-            this.bitySwap(swapDetails);
-            break;
-        }
-      } else {
+      if (!swapDetails.dataForInitialization) {
+        this.$refs.swapconfirmation.hide();
         throw Error('Invalid details from swap provider');
       }
-    },
-    buildQrCodeContent(swapDetails) {
-      this.qrcode = qrcodeBuilder(
-        swapDetails.providerAddress,
-        swapDetails.fromCurrency
-      );
-    },
-    bitySwap(swapDetails) {
-      this.buildQrCodeContent(swapDetails);
-    },
-    changellySwap(swapDetails) {
-      this.buildQrCodeContent(swapDetails);
     },
     sentTransaction() {
       this.$store

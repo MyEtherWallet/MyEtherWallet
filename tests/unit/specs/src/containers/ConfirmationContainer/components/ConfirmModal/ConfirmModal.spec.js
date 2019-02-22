@@ -1,11 +1,10 @@
 import Vue from 'vue';
+import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import ConfirmModal from '@/containers/ConfirmationContainer/components/ConfirmModal/ConfirmModal.vue';
 import VueQrcode from '@xkeshi/vue-qrcode';
-import nodeList from '@/networks';
-import url from 'url';
-import Web3 from 'web3';
 import { Tooling } from '@@/helpers';
+import { state, getters } from '@@/helpers/mockStore';
 
 const AddressBlockStub = {
   name: 'address-block',
@@ -31,6 +30,10 @@ describe('ConfirmModal.vue', () => {
     i18n = baseSetup.i18n;
     store = baseSetup.store;
     Vue.config.errorHandler = () => {};
+    store = new Vuex.Store({
+      getters,
+      state
+    });
   });
 
   beforeEach(() => {
@@ -57,23 +60,9 @@ describe('ConfirmModal.vue', () => {
         isHardwareWallet
       }
     });
-
-    const network = nodeList['ETH'][2];
-    const hostUrl = url.parse(network.url);
-
-    const newWeb3 = new Web3(
-      `${hostUrl.protocol}//${hostUrl.hostname}:${network.port}${
-        hostUrl.pathname
-      }`
-    );
-
-    store.replaceState({
-      web3: newWeb3,
-      network: network
-    });
   });
 
-  xit('[FAILING] should render correct gas props', () => {
+  it('should render correct gas props', () => {
     wrapper.setData({ modalDetailInformation: true });
     expect(
       wrapper.vm.$el
@@ -83,7 +72,7 @@ describe('ConfirmModal.vue', () => {
     ).toEqual(wrapper.props().gas + ' wei');
   });
 
-  xit('[FAILING] should render correct gasPrice props', () => {
+  it('should render correct gasPrice props', () => {
     wrapper.setData({ modalDetailInformation: true });
     expect(
       wrapper.vm.$el
@@ -93,7 +82,7 @@ describe('ConfirmModal.vue', () => {
     ).toEqual(wrapper.props().gasPrice + ' gwei');
   });
 
-  xit('[FAILING] should render correct fee props', () => {
+  it('should render correct fee props', () => {
     wrapper.setData({ modalDetailInformation: true });
     expect(
       wrapper.vm.$el
@@ -103,7 +92,7 @@ describe('ConfirmModal.vue', () => {
     ).toEqual(wrapper.props().fee + ' ETH');
   });
 
-  xit('[FAILING] should render correct nonce props', () => {
+  it('should render correct nonce props', () => {
     wrapper.setData({ modalDetailInformation: true });
     expect(
       wrapper.vm.$el
@@ -113,7 +102,7 @@ describe('ConfirmModal.vue', () => {
     ).toEqual(String(wrapper.props().nonce));
   });
 
-  xit('[FAILING] should render correct data props', () => {
+  it('should render correct data props', () => {
     wrapper.setData({ modalDetailInformation: true });
     expect(
       wrapper.vm.$el
@@ -123,7 +112,7 @@ describe('ConfirmModal.vue', () => {
     ).toEqual(wrapper.props().data);
   });
 
-  xit('[FAILING] should render correct sendTx props', () => {
+  it('should render correct sendTx props', () => {
     expect(
       wrapper
         .find('.submit-button')
@@ -139,7 +128,7 @@ describe('ConfirmModal.vue', () => {
     ).toBeGreaterThan(-1);
   });
 
-  xit('[FAILING] should render correct from props', () => {
+  it('should render correct from props', () => {
     expect(
       wrapper
         .findAll('.address-block')
@@ -148,7 +137,7 @@ describe('ConfirmModal.vue', () => {
     ).toEqual(from);
   });
 
-  xit('[FAILING] should render correct to props', () => {
+  it('should render correct to props', () => {
     expect(
       wrapper
         .findAll('.address-block')
@@ -157,7 +146,7 @@ describe('ConfirmModal.vue', () => {
     ).toEqual(to);
   });
 
-  xit('[FAILING] should render correct value props', () => {
+  it('should render correct value props', () => {
     expect(
       wrapper
         .findAll('.address-block')
@@ -166,7 +155,7 @@ describe('ConfirmModal.vue', () => {
     ).toEqual(String(value));
   });
 
-  xit('[FAILING] should render correct isHardwareWallet props', () => {
+  it('should render correct isHardwareWallet props', () => {
     expect(wrapper.vm.signedTransaction).toEqual('');
     wrapper.setProps({ isHardwareWallet: true });
     expect(wrapper.vm.signedTransaction).toEqual(
@@ -175,13 +164,13 @@ describe('ConfirmModal.vue', () => {
   });
 
   describe('ConfirmModal.vue Methods', () => {
-    xit('[FAILING] should confirm sendtx when click submit button', () => {
+    it('should confirm sendtx when click submit button', () => {
       const submitButton = wrapper.find('div.submit-button');
       submitButton.trigger('click');
       expect(confirmSendTx).toHaveBeenCalled();
     });
 
-    xit('[FAILING] should change modalDetailInformation data when checked', () => {
+    it('should change modalDetailInformation data when checked', () => {
       const checkboxElement = wrapper.find(
         '.sliding-switch-white .switch input'
       );

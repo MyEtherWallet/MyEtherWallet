@@ -70,7 +70,20 @@ import ConfirmSignModal from './components/ConfirmSignModal';
 import { mapGetters } from 'vuex';
 import Web3PromiEvent from 'web3-core-promievent';
 import { type as noticeTypes } from '@/helpers/notificationFormatters';
-import { WEB3_WALLET } from '@/wallets/bip44/walletTypes';
+import { WEB3_WALLET, KEEPKEY } from '@/wallets/bip44/walletTypes';
+import { Toast, Misc } from '@/helpers';
+import locStore from 'store';
+
+const events = {
+  showSuccessModal: 'showSuccessModal',
+  showErrorModal: 'showErrorModal',
+  showTxConfirmModal: 'showTxConfirmModal',
+  showSendSignedTx: 'showSendSignedTx',
+  showWeb3Wallet: 'showWeb3Wallet',
+  showTxCollectionConfirmModal: 'showTxCollectionConfirmModal',
+  showMessageConfirmModal: 'showMessageConfirmModal'
+};
+
 export default {
   components: {
     'confirm-modal': ConfirmModal,
@@ -95,17 +108,17 @@ export default {
     return {
       isHardwareWallet: false,
       responseFunction: null,
-      advancedExpend: false,
+      advancedExpand: false,
       addressValid: true,
-      amount: 0,
+      amount: '',
       amountValid: true,
-      nonce: 0,
-      gasLimit: 21000,
+      nonce: '',
+      gasLimit: '21000',
       data: '0x',
       gasAmount: this.gasPrice,
       parsedBalance: 0,
       toAddress: '',
-      transactionFee: 0,
+      transactionFee: '',
       raw: {},
       lastRaw: {},
       ens: {},
@@ -128,13 +141,19 @@ export default {
     ...mapGetters({
       gasPrice: 'gasPrice',
       wallet: 'wallet',
-      web3: 'web3'
+      web3: 'web3',
+      account: 'account'
     }),
     fromAddress() {
-      if (this.wallet) {
-        return this.wallet.getChecksumAddressString();
+      if (this.account) {
+        return this.account.address;
       }
     }
+  },
+  beforeDestroy() {
+    Object.values(events).forEach(evt => {
+      this.$eventHub.$off(evt);
+    });
   },
   created() {
     this.$eventHub.$on('showSuccessModal', (message, linkMessage) => {
@@ -152,21 +171,28 @@ export default {
       if (tx.hasOwnProperty('ensObj')) {
         delete tx['ensObj'];
       }
-
-      this.isHardwareWallet = this.wallet.isHardware;
+      this.isHardwareWallet = this.account.isHardware;
       this.responseFunction = resolve;
       this.successMessage = 'Sending Transaction';
-      this.wallet.signTransaction(tx).then(_response => {
-        this.signedTxObject = _response;
-        this.signedTx = this.signedTxObject.rawTransaction;
-      });
-
-      this.confirmationModalOpen();
+      const signPromise = this.wallet.signTransaction(tx);
+      signPromise
+        .then(_response => {
+          this.signedTxObject = _response;
+          this.signedTx = this.signedTxObject.rawTransaction;
+        })
+        .catch(this.wallet.errorHandler);
+      if (this.account.identifier === KEEPKEY) {
+        signPromise.then(() => {
+          this.confirmationModalOpen();
+        });
+      } else {
+        this.confirmationModalOpen();
+      }
     });
 
     this.$eventHub.$on('showSendSignedTx', (tx, resolve) => {
       const newTx = new ethTx(tx);
-      this.isHardwareWallet = this.wallet.isHardware;
+      this.isHardwareWallet = this.account.isHardware;
       this.responseFunction = resolve;
       this.successMessage = 'Sending Transaction';
       this.signedTxObject = {
@@ -207,13 +233,24 @@ export default {
               this.showSuccessModal('Transaction sent!', 'Okay');
             });
         })
-        .then(receipt => {
+        .on('receipt', receipt => {
           this.$store.dispatch('addNotification', [
             noticeTypes.TRANSACTION_RECEIPT,
             this.fromAddress,
             this.lastRaw,
             receipt
           ]);
+        })
+        .on('error', err => {
+          this.$store.dispatch('addNotification', [
+            noticeTypes.TRANSACTION_ERROR,
+            this.fromAddress,
+            this.lastRaw,
+            err
+          ]);
+        })
+        .catch(err => {
+          Toast.responseHandler(err, Toast.ERROR);
         });
       this.showSuccessModal(
         'Continue transaction with Web3 Wallet Provider.',
@@ -232,7 +269,7 @@ export default {
         this.signCallback = signCallback;
 
         this.confirmationCollectionModalOpen();
-        if (this.wallet.identifier !== WEB3_WALLET) {
+        if (this.account.identifier !== WEB3_WALLET) {
           for (let i = 0; i < tx.length; i++) {
             const _signedTx = await this.wallet.signTransaction(tx[i]);
             signed.push(_signedTx);
@@ -249,10 +286,16 @@ export default {
     this.$eventHub.$on('showMessageConfirmModal', (data, resolve) => {
       this.responseFunction = resolve;
       this.messageToSign = data;
-      this.wallet.signMessage(data).then(_response => {
+      const signPromise = this.wallet.signMessage(data).then(_response => {
         this.signedMessage = '0x' + _response.toString('hex');
       });
-      this.signConfirmationModalOpen();
+      if (this.account.identifier === KEEPKEY) {
+        signPromise.then(() => {
+          this.signConfirmationModalOpen();
+        });
+      } else {
+        this.signConfirmationModalOpen();
+      }
     });
   },
   mounted() {
@@ -298,17 +341,14 @@ export default {
     },
     parseRawTx(tx) {
       this.raw = tx;
-      this.nonce = tx.nonce === '0x' ? 0 : new BigNumber(tx.nonce).toNumber();
+      this.nonce = tx.nonce === '0x' ? 0 : new BigNumber(tx.nonce).toFixed();
       this.data = tx.data;
-      this.gasLimit = new BigNumber(tx.gas).toNumber();
+      this.gasLimit = new BigNumber(tx.gas).toFixed();
       this.toAddress = tx.to;
-      this.amount = tx.value === '0x' ? 0 : new BigNumber(tx.value).toNumber();
-      this.transactionFee = Number(
-        unit.fromWei(
-          new BigNumber(tx.gas).times(tx.gasPrice).toString(),
-          'ether'
-        )
-      );
+      this.amount = tx.value === '0x' ? 0 : new BigNumber(tx.value).toFixed();
+      this.transactionFee = unit
+        .fromWei(new BigNumber(tx.gas).times(tx.gasPrice).toString(), 'ether')
+        .toString();
       this.ens = {};
       if (tx.hasOwnProperty('ensObj')) {
         this.ens = Object.assign({}, tx.ensObj);
@@ -330,14 +370,14 @@ export default {
       const web3 = this.web3;
       const batch = new web3.eth.BatchRequest();
       const _method =
-        this.wallet.identifier === WEB3_WALLET
+        this.account.identifier === WEB3_WALLET
           ? 'sendTransaction'
           : 'sendSignedTransaction';
       const _arr = this.signedArray;
       const promises = _arr.map(tx => {
         const promiEvent = new Web3PromiEvent(false);
         const _tx = tx.tx;
-        _tx.from = this.wallet.getAddressString();
+        _tx.from = this.account.address;
         const _rawTx = tx.rawTransaction;
         const req = web3.eth[_method].request(_rawTx, (err, data) => {
           if (err !== null) {
@@ -358,6 +398,7 @@ export default {
             err
           ]);
           this.showErrorModal('Transaction Error!', 'Return');
+          promiEvent.reject(err);
         });
         promiEvent.eventEmitter.once('transactionHash', hash => {
           this.$store
@@ -377,6 +418,15 @@ export default {
               );
               this.showSuccessModal('Transaction sent!', 'Okay');
             });
+          const localStoredObj = locStore.get(
+            web3.utils.sha3(this.account.address)
+          );
+          locStore.set(web3.utils.sha3(this.account.address), {
+            nonce: Misc.sanitizeHex(
+              new BigNumber(localStoredObj.nonce).plus(1).toString(16)
+            ),
+            timestamp: localStoredObj.timestamp
+          });
         });
         promiEvent.eventEmitter.once('receipt', receipt => {
           promiEvent.resolve(receipt);
@@ -389,6 +439,9 @@ export default {
             receipt
           ]);
         });
+        promiEvent.eventEmitter.catch(err => {
+          Toast.responseHandler(err, Toast.ERROR);
+        });
         batch.add(req);
         return promiEvent.eventEmitter;
       });
@@ -398,6 +451,7 @@ export default {
       this.sending = true;
     },
     sendBatchTransactions() {
+      this.$refs.confirmCollectionModal.$refs.confirmCollection.hide();
       this.doBatchTransactions();
     },
     sendTx() {
@@ -409,17 +463,17 @@ export default {
     },
     reset() {
       this.responseFunction = null;
-      this.advancedExpend = false;
+      this.advancedExpand = false;
       this.addressValid = true;
-      this.amount = 0;
+      this.amount = '';
       this.amountValid = true;
-      this.nonce = 0;
-      this.gasLimit = 21000;
+      this.nonce = '';
+      this.gasLimit = '21000';
       this.data = '0x';
       this.gasAmount = this.gasPrice;
       this.parsedBalance = 0;
       this.toAddress = '';
-      this.transactionFee = 0;
+      this.transactionFee = '';
       this.raw = {};
       this.signedTx = '';
       this.messageToSign = '';

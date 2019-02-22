@@ -1,6 +1,10 @@
+const { detect } = require('detect-browser');
 import normalise from '@/helpers/normalise';
-import web3 from 'web3';
 import nodeList from '@/networks';
+import { isAddress } from './addressUtils';
+import utils from 'web3-utils';
+import store from '@/store';
+import { uint, address, string, bytes, bool } from './solidityTypes';
 /* Accepts string, returns boolean */
 const isJson = str => {
   try {
@@ -10,6 +14,12 @@ const isJson = str => {
   }
 
   return true;
+};
+
+const browserName = () => {
+  const browser = detect();
+  if (browser && browser.name) return browser.name;
+  return undefined;
 };
 
 const doesExist = val => val !== undefined && val !== null;
@@ -43,7 +53,7 @@ const formatDate = date => {
   return `${day}. ${dateString} ${GMTtime} - ${localTime} ${stripTimezone}`;
 };
 const isValidETHAddress = address => {
-  return web3.utils.isAddress(address);
+  return isAddress(address);
 };
 const isValidENSorEtherAddress = address => {
   return isValidETHAddress(address) || isValidENSAddress(address);
@@ -94,7 +104,7 @@ const reorderNetworks = () => {
   delete oldObject['ETH'];
   delete oldObject['RIN'];
   delete oldObject['ROP'];
-  return Object.assign(
+  const newObject = Object.assign(
     {},
     {
       ETH: nodeList['ETH'],
@@ -103,6 +113,50 @@ const reorderNetworks = () => {
       ...oldObject
     }
   );
+  for (const net in newObject) {
+    if (newObject[net].length === 0) delete newObject[net];
+  }
+  return newObject;
+};
+
+const solidityType = inputType => {
+  if (!inputType) inputType = '';
+  if (inputType.includes('[') && inputType.includes(']')) {
+    if (inputType.includes(uint))
+      return { type: 'string', solidityType: `${uint}[]` };
+    if (inputType.includes(address))
+      return { type: 'text', solidityType: `${address}[]` };
+    if (inputType.includes(string))
+      return { type: 'text', solidityType: `${string}[]` };
+    if (inputType.includes(bytes))
+      return { type: 'text', solidityType: `${bytes}[]` };
+    if (inputType.includes(bool))
+      return { type: 'string', solidityType: `${bool}[]` };
+    return { type: 'text', solidityType: `${string}[]` };
+  }
+  if (inputType.includes(uint)) return { type: 'number', solidityType: uint };
+  if (inputType.includes(address))
+    return { type: 'text', solidityType: address };
+  if (inputType.includes(string)) return { type: 'text', solidityType: string };
+  if (inputType.includes(bytes)) return { type: 'text', solidityType: bytes };
+  if (inputType.includes(bool)) return { type: 'radio', solidityType: bool };
+  return { type: 'text', solidityType: string };
+};
+
+const isDarklisted = addr => {
+  const darklisted = store.getters.darklist.data.findIndex(item => {
+    return (
+      utils.toChecksumAddress(item.address.toLowerCase()) ===
+      utils.toChecksumAddress(addr.toLowerCase())
+    );
+  });
+  const errMsg =
+    darklisted === -1 ? '' : store.getters.darklist.data[darklisted].comment;
+  const errObject = {
+    error: darklisted === -1 ? false : true,
+    msg: errMsg
+  };
+  return errObject;
 };
 
 export default {
@@ -116,5 +170,8 @@ export default {
   sanitizeHex,
   validateHexString,
   scrollToTop,
-  reorderNetworks
+  reorderNetworks,
+  isDarklisted,
+  solidityType,
+  browserName
 };

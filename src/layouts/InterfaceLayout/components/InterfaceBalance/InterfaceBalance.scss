@@ -1,5 +1,12 @@
 @import '../InformationBlock';
 
+.icon-border {
+  padding-right: 10px;
+  img {
+    height: 60px;
+  }
+}
+
 .balance {
   background-color: $transaction-block-balance;
 
@@ -19,7 +26,7 @@
     }
 
     p:first-child {
-      max-width: 150px;
+      max-width: 100px;
     }
   }
 }

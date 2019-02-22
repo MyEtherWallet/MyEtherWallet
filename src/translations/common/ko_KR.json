@@ -12,7 +12,7 @@
   "balance": "잔고 ",
   "terms": "Terms",
   "continue": "계속",
-  "jsonF": "Keystore 파일",
+  "jsonF": "Keystore File",
   "mnemonicP": "연상기호 어구 ",
   "privKey": "비밀 키",
   "mewConnect": "MEWconnect",
@@ -58,5 +58,8 @@
   "logOutWallet": "Log Out Wallet",
   "goBack": "Go back",
   "logoutWarning": "It seems like you forgot to logout your wallet. For your wallet security, please log out your wallet to continue, or go back to your wallet.",
-  "waitingForHash": "Waiting for Transaction Hash"
+  "waitingForHash": "Waiting for Transaction Hash",
+  "edit": "변경",
+  "okay": "Okay",
+  "ok": "OK"
 }

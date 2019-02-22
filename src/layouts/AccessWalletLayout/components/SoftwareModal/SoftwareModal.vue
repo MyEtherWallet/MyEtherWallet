@@ -3,57 +3,46 @@
     ref="software"
     :title="$t('accessWallet.accessBySoftware')"
     hide-footer
-    class="bootstrap-modal padding-25-20 modal-software"
+    class="bootstrap-modal nopadding modal-software"
     centered
   >
-    <div class="d-block content-container text-center">
-      <ul class="button-options">
-        <li
-          v-for="(item, idx) in items"
-          :key="item.name + idx"
-          :class="selected === item.name ? 'selected' : ''"
-          @click="select(item.name)"
-        >
-          <div>
-            <img
-              :src="selected === item.name ? item.imgHoverPath : item.imgPath"
-              class="icon"
-            />
-            <img :src="item.imgHoverPath" class="hover-icon" />
-            <span>{{ item.text }}</span>
-          </div>
-          <i
-            :class="[
-              selected === item.name ? '' : 'not-good',
-              'fa fa-check-circle good-button'
-            ]"
-            aria-hidden="true"
+    <div class="modal-content">
+      <div class="d-block content-container text-center">
+        <div class="button-options">
+          <wallet-option
+            v-for="(item, idx) in items"
+            :key="item.name + idx"
+            :selected="selected === item.name"
+            :select="select"
+            :regular-icon="item.imgPath"
+            :hover-icon="item.imgHoverPath"
+            :text="item.text"
+            :name="item.name"
           />
-        </li>
-      </ul>
-      <input
-        ref="jsonInput"
-        type="file"
-        name="file"
-        style="display: none"
-        @change="uploadFile"
-      />
+        </div>
+        <input
+          ref="jsonInput"
+          type="file"
+          name="file"
+          style="display: none"
+          @change="uploadFile"
+        />
+      </div>
+      <div class="not-recommended">
+        {{ $t('accessWallet.notARecommendedWay') }}
+      </div>
+      <div class="button-container">
+        <b-btn
+          :class="[
+            selected !== '' ? 'enabled' : 'disabled',
+            'mid-round-button-green-filled'
+          ]"
+          @click="continueAccess"
+          >{{ $t('common.continue') }}</b-btn
+        >
+      </div>
+      <customer-support />
     </div>
-    <div class="not-recommended">
-      {{ $t('accessWallet.notARecommendedWay') }}
-    </div>
-    <div class="button-container">
-      <b-btn
-        :class="[
-          selected !== '' ? 'enabled' : 'disabled',
-          'mid-round-button-green-filled'
-        ]"
-        @click="continueAccess"
-      >
-        {{ $t('common.continue') }}
-      </b-btn>
-    </div>
-    <customer-support />
   </b-modal>
 </template>
 
@@ -65,10 +54,13 @@ import byMnemImgHov from '@/assets/images/icons/button-mnemonic-hover.svg';
 import byMnemImg from '@/assets/images/icons/button-mnemonic.svg';
 import privKeyImgHov from '@/assets/images/icons/button-key-hover.svg';
 import privKeyImg from '@/assets/images/icons/button-key.svg';
+import WalletOption from '../WalletOption';
+import { Toast } from '@/helpers';
 
 export default {
   components: {
-    'customer-support': CustomerSupport
+    'customer-support': CustomerSupport,
+    'wallet-option': WalletOption
   },
   props: {
     value: {
@@ -130,14 +122,22 @@ export default {
       }
     },
     select(ref) {
-      this.selected = ref;
+      if (this.selected !== ref) {
+        this.selected = ref;
+      } else {
+        this.selected = '';
+      }
     },
     uploadFile(e) {
       const self = this;
       const reader = new FileReader();
       reader.onloadend = function(evt) {
-        self.$emit('file', JSON.parse(evt.target.result));
-        self.file = JSON.parse(evt.target.result);
+        try {
+          self.$emit('file', JSON.parse(evt.target.result));
+          self.file = JSON.parse(evt.target.result);
+        } catch (e) {
+          Toast.responseHandler(e, Toast.ERROR);
+        }
       };
       reader.readAsBinaryString(e.target.files[0]);
     }

@@ -1,6 +1,7 @@
+import Vuex from 'vuex';
 import { mount } from '@vue/test-utils';
 import FooterContainer from '@/containers/FooterContainer/FooterContainer.vue';
-
+import { state, getters } from '@@/helpers/mockStore';
 // const $t = () => {};
 
 const RouterLinkStub = {
@@ -19,6 +20,11 @@ describe('FooterContainer.vue', () => {
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
     store = baseSetup.store;
+
+    store = new Vuex.Store({
+      getters,
+      state
+    });
   });
 
   beforeEach(() => {
@@ -38,7 +44,7 @@ describe('FooterContainer.vue', () => {
     for (let i = 0; i < linkWrappers.length; i++) {
       const linkWrapper = linkWrappers.at(i);
       if (
-        linkWrapper.vm.$el.parentElement.parentElement.parentElement.className.indexOf(
+        linkWrapper.vm.$el.parentElement.parentElement.className.indexOf(
           'foot-note'
         ) > -1
       ) {
@@ -46,20 +52,14 @@ describe('FooterContainer.vue', () => {
       }
     }
 
-    for (let i = 0; i < wrapper.vm.$data.lowerLinks.length; i++) {
+    for (let i = 0; i < lowerLinkWrappers.length; i++) {
       const lowerLink = wrapper.vm.$data.lowerLinks[i];
       const lowerLinkWrapper = lowerLinkWrappers[i];
-      if (
-        lowerLinkWrapper !== undefined &&
-        lowerLinkWrapper.hasOwnProperty('vm') &&
-        lowerLinkWrapper.vm.hasOwnProperty('to')
-      ) {
-        expect(lowerLinkWrapper.vm.to).toEqual(lowerLink.to);
-      }
+      expect(lowerLinkWrapper.vm.to).toEqual(lowerLink.to);
     }
   });
 
-  xit('[FAILING] should render correct links', () => {
+  it('should render correct links', () => {
     const socialElement = wrapper.vm.$el.querySelector('.social');
     const linksElements = socialElement.getElementsByTagName('a');
 
@@ -80,7 +80,6 @@ describe('FooterContainer.vue', () => {
     const contentsElements = [];
     for (let i = 0; i < contentWrappers.length; i++) {
       const contentWrapper = contentWrappers.at(i);
-
       if (
         contentWrapper.vm.$el.parentElement.parentElement.className.indexOf(
           'content-links'
@@ -104,6 +103,4 @@ describe('FooterContainer.vue', () => {
       expect(contents[i].to).toEqual(contentsElements[i].vm.to);
     }
   });
-
-  describe('FooterContainer.vue Methods', () => {});
 });

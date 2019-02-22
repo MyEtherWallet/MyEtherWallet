@@ -1,15 +1,15 @@
 <template>
   <div class="manage-ens-container">
-    <h3>{{ $t('dapps.manage') }} {{ domainName }}.eth</h3>
+    <h3>{{ $t('dapps.manage') }} {{ domainName }}.{{ tld }}</h3>
     <div class="inputs-container">
       <div class="form-container">
         <form class="manage-form">
           <div class="input-container">
-            <label for="updateResolver">
-              {{ $t('dapps.updateResolver') }}:
-            </label>
+            <label for="updateResolver"
+              >{{ $t('dapps.updateResolver') }}:</label
+            >
             <input
-              v-model="resolverAddress"
+              v-model="locResolverAddr"
               type="text"
               name="updateResolver"
               placeholder="0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D"
@@ -17,9 +17,9 @@
           </div>
           <div class="submit-container">
             <button
-              :class="!web3.utils.isAddress(resolverAddress) ? 'disabled' : ''"
+              :class="!isAddress(locResolverAddr) ? 'disabled' : ''"
               type="submit"
-              @click.prevent="updateResolver(resolverAddress)"
+              @click.prevent="updateResolver(locResolverAddr)"
             >
               Update
             </button>
@@ -29,7 +29,7 @@
       <div class="form-container">
         <form class="manage-form">
           <div class="input-container">
-            <label for="transferEns"> {{ $t('dapps.transferEnsTo') }}: </label>
+            <label for="transferEns">{{ $t('dapps.transferEnsTo') }}:</label>
             <input
               v-model="transferTo"
               type="text"
@@ -39,7 +39,7 @@
           </div>
           <div class="submit-container">
             <button
-              :class="!web3.utils.isAddress(transferTo) ? 'disabled' : ''"
+              :class="!isAddress(transferTo) ? 'disabled' : ''"
               type="submit"
               @click.prevent="transferDomain(transferTo)"
             >
@@ -58,6 +58,7 @@
 </template>
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText';
+import { isAddress } from '@/helpers/addressUtils';
 import { mapGetters } from 'vuex';
 export default {
   components: {
@@ -75,12 +76,21 @@ export default {
     transferDomain: {
       type: Function,
       default: function() {}
+    },
+    resolverAddress: {
+      type: String,
+      default: ''
+    },
+    tld: {
+      type: String,
+      default: ''
     }
   },
   data() {
     return {
-      resolverAddress: '',
-      transferTo: ''
+      locResolverAddr: this.resolverAddress,
+      transferTo: '',
+      isAddress: isAddress
     };
   },
   computed: {

@@ -5,20 +5,22 @@
     <div class="name-available-container">
       <div v-if="$route.fullPath.includes('auction')" class="content-header">
         <div>
-          <h3>{{ domainName }}.eth</h3>
+          <h3>{{ domainName }}.{{ tld }}</h3>
           <p>{{ $t('dapps.domainIsAvailable') }}</p>
         </div>
       </div>
       <div v-if="$route.fullPath.includes('bid')" class="auction-started">
         <div>
-          <h3>{{ $t('dapps.auctionStarted') }} {{ domainName }}.eth</h3>
+          <h3>{{ $t('dapps.auctionStarted') }} {{ domainName }}.{{ tld }}</h3>
         </div>
       </div>
       <div v-if="$route.fullPath.includes('reveal')" class="auction-started">
         <h3>
-          {{ $t('dapps.revealBid') }} {{ domainName }}.eth
+          {{ $t('dapps.revealBid') }} {{ domainName }}.{{ tld }}
           {{ $t('dapps.revealBidCont') }}. <br />
-          {{ highestBidder }} ETH ({{ $t('dapps.currentHighestBid') }})
+          {{ highestBidder }} {{ networkName }} ({{
+            $t('dapps.currentHighestBid')
+          }})
         </h3>
       </div>
       <div class="timer-container">
@@ -42,7 +44,7 @@
           :class="[showDetail ? 'done' : '', 'accordion-header']"
           header-tag="header"
         >
-          <div><span> 1 </span> &nbsp; ({{ $t('dapps.bidInfo') }})</div>
+          <div><span> 1 </span> &nbsp; {{ $t('dapps.bidInfo') }}</div>
           <div v-show="showDetail" class="edit" @click="editInputs">
             {{ $t('dapps.edit') }}
           </div>
@@ -58,6 +60,7 @@
               <label for="localBidAmount">{{ $t('dapps.actualBid') }}</label>
               <input
                 v-model="localBidAmount"
+                :class="[localBidAmount < MIN_BID ? 'errored' : '']"
                 type="number"
                 name="localBidAmount"
               />
@@ -76,10 +79,12 @@
             </div>
             <div class="input-container">
               <label for="localSecretPhrase" class="secret-phrase-label">
-                <span> {{ $t('dapps.secretPhrase') }} </span>
-                <span class="random" @click.prevent="generateKeyPhrase">
-                  <i class="fa fa-lg fa-refresh" /> {{ $t('dapps.random') }}
+                <span class="input-title">
+                  {{ $t('dapps.secretPhrase') }}
                 </span>
+                <button class="title-button" @click.prevent="generateKeyPhrase">
+                  <i class="fa fa-lg fa-refresh" /> {{ $t('dapps.random') }}
+                </button>
               </label>
               <input
                 v-model="localSecretPhrase"
@@ -111,7 +116,9 @@
             <div id="printableData" class="detail-info">
               <div class="detail-info-item">
                 <span class="detail-title">{{ $t('dapps.actualBid') }}</span>
-                <span class="detail-value">{{ raw.bidAmount }} ETH</span>
+                <span class="detail-value"
+                  >{{ raw.bidAmount }} {{ networkName }}</span
+                >
               </div>
               <div class="detail-info-item">
                 <span class="detail-title">{{ $t('dapps.secretPhrase') }}</span>
@@ -125,7 +132,9 @@
               </div>
               <div class="detail-info-item">
                 <span class="detail-title">{{ $t('dapps.bidMask') }}</span>
-                <span class="detail-value">{{ raw.bidMask }} ETH</span>
+                <span class="detail-value"
+                  >{{ raw.bidMask }} {{ networkName }}</span
+                >
               </div>
               <div class="detail-info-item">
                 <span class="detail-title">{{ $t('dapps.auctionEnd') }}</span>
@@ -137,9 +146,9 @@
               <div class="json-container">
                 <div class="json-label-container">
                   <span class="json-title">{{ $t('dapps.jsonString') }}</span>
-                  <span class="json-copy" @click="copyString">{{
-                    $t('common.copy')
-                  }}</span>
+                  <button class="title-button" @click="copyString">
+                    {{ $t('common.copy') }}
+                  </button>
                 </div>
                 <textarea ref="json" v-model="jsonText" class="json-content" />
               </div>
@@ -154,11 +163,12 @@
           >
             {{ $t('dapps.jsonString') }}
           </button>
-          <button
+          <div
             v-show="showInfo"
-            name="submit"
-            class="submit"
-            role="tab"
+            :class="[
+              validInputs ? '' : 'disabled',
+              'submit-button large-round-button-green-filled'
+            ]"
             @click.prevent="
               $route.fullPath.includes('auction')
                 ? startAuctionAndBid()
@@ -167,16 +177,22 @@
                 : revealBid()
             "
           >
-            <span v-if="loading === false"> Next </span>
-            <i v-else class="fa fa-spinner fa-spin" />
-          </button>
+            Next
+          </div>
           <button
             v-show="showDetail"
             class="submit"
             role="tab"
-            @click.prevent="downloadAndSend"
+            @click.prevent="send"
           >
-            {{ $t('dapps.saveAndNext') }}
+            Submit
+          </button>
+          <button
+            v-show="showDetail"
+            class="mid-round-button-green-border print-button"
+            @click="download"
+          >
+            Print
           </button>
         </div>
       </div>
@@ -187,9 +203,10 @@
 <script>
 import Timer from '../../components/Timer';
 import JsonStringModal from '../../components/JsonStringModal';
-import { Misc } from '@/helpers';
+import { Misc, Toast } from '@/helpers';
 import PrintModal from '../../components/PrintModal';
 import { mapGetters } from 'vuex';
+import BigNumber from 'bignumber.js';
 
 export default {
   components: {
@@ -242,6 +259,14 @@ export default {
       type: String,
       default: ''
     },
+    tld: {
+      type: String,
+      default: ''
+    },
+    networkName: {
+      type: String,
+      default: ''
+    },
     step: {
       type: Number,
       default: 1
@@ -262,13 +287,34 @@ export default {
       showDetail: false,
       showInfo: true,
       formatDate: Misc.formatDate,
-      jsonText: ''
+      jsonText: '',
+      MIN_BID: 0.01
     };
   },
   computed: {
     ...mapGetters({
       web3: 'web3'
-    })
+    }),
+    validInputs() {
+      return (
+        this.secretPhrase.length > 0 &&
+        new BigNumber(this.bidAmount).gte(this.MIN_BID) &&
+        new BigNumber(this.bidMask).gte(this.bidAmount)
+      );
+    },
+    constructedRaw() {
+      const raw = {
+        data: this.raw['data'],
+        from: this.raw['from'],
+        to: this.raw['to'],
+        value: this.raw['value'],
+        gasPrice: this.raw['gasPrice'],
+        gas: this.raw['gas'],
+        nonce: this.raw['nonce']
+      };
+
+      return raw;
+    }
   },
   watch: {
     localSecretPhrase(newVal) {
@@ -294,6 +340,10 @@ export default {
     raw(newVal) {
       this.parseRaw(newVal);
     }
+  },
+  mounted() {
+    if (this.domainName === '')
+      this.$router.replace('/interface/dapps/register-domain');
   },
   methods: {
     openJsonModal() {
@@ -324,23 +374,13 @@ export default {
       document.execCommand('copy');
       window.getSelection().removeAllRanges();
     },
-    downloadAndSend() {
-      const raw = {
-        data: this.raw['data'],
-        from: this.raw['from'],
-        to: this.raw['to'],
-        value: this.raw['value'],
-        gasPrice: this.raw['gasPrice'],
-        gas: this.raw['gas'],
-        nonce: this.raw['nonce']
-      };
-      if (!this.$route.fullPath.includes('reveal')) {
-        this.$refs.printModal.$refs.print.show();
-      }
-
-      this.$refs.printModal.$refs.print.$on('hidden', () => {
-        this.web3.eth.sendTransaction(raw);
+    send() {
+      this.web3.eth.sendTransaction(this.constructedRaw).catch(err => {
+        Toast.responseHandler(err, false);
       });
+    },
+    download() {
+      this.$refs.printModal.$refs.print.show();
     }
   }
 };

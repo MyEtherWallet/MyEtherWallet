@@ -13,9 +13,12 @@
             <span>{{ $t('interface.network') }}</span>
             {{ network.type.name }} by {{ network.service }}
           </p>
-          <div><div class="line" /></div>
+          <div>
+            <div class="line" />
+          </div>
           <p>
-            <span>{{ $t('confirmation.txTotal') }}:</span> {{ txTotal }}
+            <span>{{ $t('confirmation.txTotal') }}:</span>
+            {{ txTotal }}
             {{ network.type.name }}
           </p>
         </div>
@@ -27,11 +30,7 @@
           >
             <div v-b-toggle.prevent="`accordion${idx}`" class="header">
               <div class="header-item">
-                <img
-                  :src="
-                    require(`@/assets/images/currency/${network.type.name.toLowerCase()}.svg`)
-                  "
-                />
+                <img :src="network.type.icon ? network.type.icon : ''" />
                 <div>
                   <p>
                     - {{ web3.utils.hexToNumberString(item.value) }}
@@ -39,7 +38,7 @@
                   </p>
                   <div>
                     <span>{{ $t('common.from') }}</span>
-                    {{ wallet.getChecksumAddressString() | concatAddr }}
+                    {{ account.address | concatAddr }}
                   </div>
                 </div>
               </div>
@@ -50,11 +49,7 @@
                 <img src="~@/assets/images/icons/right-arrow.svg" />
               </div>
               <div class="header-item">
-                <img
-                  :src="
-                    require(`@/assets/images/currency/${network.type.name.toLowerCase()}.svg`)
-                  "
-                />
+                <img :src="network.type.icon ? network.type.icon : ''" />
                 <div>
                   <p>
                     + {{ web3.utils.hexToNumberString(item.value) }}
@@ -79,11 +74,7 @@
               <div class="body-item">
                 <span class="item-title">{{ $t('common.gasPrice') }}</span>
                 <span>
-                  {{
-                    web3.utils.hexToNumberString(
-                      web3.utils.fromWei(item.gasPrice, 'gwei')
-                    )
-                  }}
+                  {{ web3.utils.fromWei(item.gasPrice, 'gwei') }}
                   Gwei
                 </span>
               </div>
@@ -189,7 +180,7 @@ export default {
     ...mapGetters({
       web3: 'web3',
       network: 'network',
-      wallet: 'wallet'
+      account: 'account'
     }),
     buttonText() {
       if (!this.allSigned && this.isHardwareWallet) {

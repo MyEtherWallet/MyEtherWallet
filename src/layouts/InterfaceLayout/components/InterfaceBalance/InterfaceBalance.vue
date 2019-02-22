@@ -3,7 +3,9 @@
     <interface-balance-modal ref="balance" :balance="balance" />
     <div class="info-block balance">
       <div class="block-image">
-        <img class="icon" src="~@/assets/images/icons/balance.svg" />
+        <div class="icon-border">
+          <img class="icon" src="~@/assets/images/icons/wallet.svg" />
+        </div>
       </div>
       <div class="block-content">
         <div class="information-container">
@@ -11,7 +13,7 @@
           <div class="balance-text-container">
             <div v-show="balance !== undefined" class="balance-text">
               <p>{{ balance }}</p>
-              <p>&nbsp; {{ network.type.name }}</p>
+              <p>{{ network.type.name }}</p>
             </div>
             <i v-show="balance === undefined" class="fa fa-spin fa-spinner" />
           </div>

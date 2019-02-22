@@ -1,22 +1,22 @@
+import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import InterfaceAddress from '@/layouts/InterfaceLayout/components/InterfaceAddress/InterfaceAddress.vue';
-
+import { state, getters } from '@@/helpers/mockStore';
 import { Tooling } from '@@/helpers';
 
 describe('InterfaceAddress.vue', () => {
   let localVue, i18n, wrapper, store;
   const address = 'InterfaceAddress address';
-  const triggerAlert = () => {
-    console.log('I got clicked');
-  };
-  const print = () => {
-    console.log('I got clicked');
-  };
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
     store = baseSetup.store;
+
+    store = new Vuex.Store({
+      getters,
+      state
+    });
   });
 
   beforeEach(() => {
@@ -26,19 +26,21 @@ describe('InterfaceAddress.vue', () => {
       store,
       attachToDocument: true,
       propsData: {
-        address: address,
-        triggerAlert: triggerAlert,
-        print: print
+        address: address
       }
     });
   });
 
-  it('should render correct content', () => {
+  xit('should render correct address props', () => {
     expect(
       wrapper.vm.$el
         .querySelector('.information-container p.address')
         .textContent.trim()
     ).toEqual(address);
+  });
+
+  xit('should render correct hasMultipleAddr data', () => {
+    expect(wrapper.vm.$data.hasMultipleAddr).toBe(false);
   });
 
   describe('InterfaceAddress.vue Methods', () => {});

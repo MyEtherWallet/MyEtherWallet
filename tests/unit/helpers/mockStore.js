@@ -1,11 +1,15 @@
 const state = {
   account: {
-    balance: 0
+    balance: 0,
+    address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
+    identifier: 'keystore',
+    isHardware: false
   },
   customPaths: {},
   ens: true,
   Errors: {},
   ethDonationAddress: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
+  gasPrice: 41,
   Networks: {},
   network: {},
   notifications: {},
@@ -19,7 +23,7 @@ const state = {
 
 const getters = {
   account: () => {
-    return { balance: 0 };
+    return state.account;
   },
   customPaths: () => {},
   ens: () => {},
@@ -42,9 +46,14 @@ const getters = {
         homePage: 'https://ethereum.org',
         name: 'ETH',
         name_long: 'Ethereum',
-        tokens: []
+        tokens: [],
+        ens: {
+          registry: '0x123456789',
+          registrarTLD: 'eth',
+          registrarType: 'auction'
+        }
       },
-      url: 'https://mainnet.infura.io/mew'
+      url: 'https://api.myetherwallet.com/eth'
     };
   },
   notifications: () => {},
@@ -52,8 +61,7 @@ const getters = {
   Transactions: () => {},
   wallet: () => {
     return {
-      getChecksumAddressString: () => '',
-      wallet: 'wallet'
+      getChecksumAddressString: () => ''
     };
   },
   web3: () => {

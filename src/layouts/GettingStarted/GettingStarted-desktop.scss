@@ -89,6 +89,14 @@
     }
   }
 
+  .create-wallet-warnings__continue-button {
+    text-align: center;
+    margin-bottom: 28px;
+    > *:first-child {
+      margin-right: 15px;
+    }
+  }
+
   .create-wallet-warnings__footer {
     width: 650px;
     margin: 0 auto;

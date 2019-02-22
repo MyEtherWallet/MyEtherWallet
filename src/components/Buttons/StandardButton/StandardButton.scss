@@ -60,13 +60,28 @@ $blue-border-button-background--click: #f2f4fd;
 // Common Style
 //=======================================================================
 
+button {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  display: block;
+  width: 100%;
+}
+
+button[disabled] {
+  background-color: $disabled !important;
+  border-color: $disabled !important;
+  cursor: default !important;
+}
+
 @mixin btn-mixin-1() {
   text-align: center;
   user-select: none;
 }
 
 @mixin btn-mixin-2() {
-  padding: 18px 45px;
+  padding: 18px 35px;
   font-weight: 500;
   cursor: pointer;
   font-size: 14px;
@@ -102,16 +117,16 @@ $blue-border-button-background--click: #f2f4fd;
 
   .arrow-right {
     position: absolute;
-    top: 23px;
+    top: 21px;
     right: 20px;
-    height: 11px;
+    height: 15px;
   }
 
   .arrow-left {
     position: absolute;
-    top: 23px;
+    top: 21px;
     left: 20px;
-    height: 11px;
+    height: 15px;
   }
 }
 
@@ -121,6 +136,13 @@ $blue-border-button-background--click: #f2f4fd;
 
   &.full-width {
     display: block;
+  }
+
+  &.mobile-full-width {
+    // Mobile
+    @media all and (max-width: $mobile-width) {
+      width: 100%;
+    }
   }
 }
 
@@ -309,7 +331,6 @@ $blue-border-button-background--click: #f2f4fd;
   @include btn-mixin-1();
 
   .the-button-box {
-    cursor: initial;
     background-color: transparent;
     border: 1px solid $green-filled-button-background;
     color: $green-filled-button-background;
@@ -357,3 +378,27 @@ $blue-border-button-background--click: #f2f4fd;
     }
   }
 } // .standard-button__blue-border
+
+//=======================================================================
+// Accept Terms Checkbox
+//=======================================================================
+.accept-terms-Check-Box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+//=======================================================================
+// Customer support block
+//=======================================================================
+.customer-support-block {
+  margin-top: 20px;
+}
+
+//=======================================================================
+// Help Center block
+//=======================================================================
+.help-center-block {
+  margin-top: 20px;
+}

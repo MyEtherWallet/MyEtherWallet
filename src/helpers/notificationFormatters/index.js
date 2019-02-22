@@ -18,10 +18,12 @@ import {
   formatTransactionHash,
   formatTransactionReciept
 } from './formatters';
+
 import {
   getNotificationIndex,
   getSwapEntryIndex,
-  getSwapEntryIndexForTxReceipt
+  getSwapEntryIndexForTxReceipt,
+  extractEvmErrorData
 } from './utils';
 
 const transactionHash = (notifArray, val, network) => {
@@ -42,12 +44,19 @@ const transactionReceipt = (notifArray, val, network) => {
 };
 
 const transactionError = (notifArray, val, network) => {
+  let notUpdated = true;
+  val[txIndexes.response] = extractEvmErrorData(val[txIndexes.response]);
   const idx = notifArray.findIndex(entry => getNotificationIndex(entry, val));
   if (idx >= 0 && !val[txIndexes.response].message) {
-    notifArray[idx] = formatTransactionErrorUpdate(notifArray[idx]);
+    notUpdated = false;
+    notifArray[idx] = formatTransactionErrorUpdate(notifArray[idx], val);
+    return notifArray;
+  } else if (idx >= 0 && val[txIndexes.response].details) {
+    notUpdated = false;
+    notifArray[idx] = formatTransactionErrorUpdate(notifArray[idx], val);
     return notifArray;
   }
-  notifArray.push(formatTransactionError(val, network));
+  if (notUpdated) notifArray.push(formatTransactionError(val, network));
   return notifArray;
 };
 
@@ -71,12 +80,14 @@ const swapOrder = (notifArray, val, network) => {
 };
 
 const swapError = (notifArray, val, network) => {
+  val[swapIndexes.response] = extractEvmErrorData(val[swapIndexes.response]);
   const idx = notifArray.findIndex(entry => getSwapEntryIndex(entry, val));
-
   if (!/known transaction/.test(val[swapIndexes.response]).message) {
     if (idx >= 0) {
-      notifArray[idx] = formatSwapErrorUpdate(notifArray[idx]);
+      notifArray[idx] = formatSwapErrorUpdate(notifArray[idx], val);
       return notifArray;
+    } else if (val[swapIndexes.response].details) {
+      notifArray[idx] = formatSwapErrorUpdate(notifArray[idx], val);
     }
     notifArray.push(formatSwapError(val, network));
     return notifArray;

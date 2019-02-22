@@ -15,14 +15,22 @@
           type="text"
           name=""
         />
-        <span>.eth</span>
+        <span>.{{ tld }}</span>
       </div>
-      <p v-show="domainNameErr" class="erroredMsg">
-        <span v-if="localDomainName.length < 7 && localDomainName !== ''">
-          {{ $t('dapps.registerEnsWarn1') }}
-        </span>
-        <span v-else> {{ $t('dapps.registerEnsWarn2') }} </span>
-      </p>
+      <div class="error-message-container">
+        <p
+          v-show="contractInitiated === false"
+          class="contract-loading-warning"
+        >
+          {{ $t('dapps.registerEnsContractNotReady') }}
+        </p>
+        <p v-show="domainNameErr" class="erroredMsg">
+          <span v-if="localDomainName.length < 7 && localDomainName !== ''">
+            {{ $t('dapps.registerEnsWarn1') }}
+          </span>
+          <span v-else> {{ $t('dapps.registerEnsWarn2') }} </span>
+        </p>
+      </div>
       <div class="submit-button-container">
         <button
           :class="[
@@ -35,9 +43,6 @@
           <i v-show="loading" class="fa fa-spinner fa-spin" />
         </button>
       </div>
-      <p v-show="contractInitiated === false" class="contract-loading-warning">
-        {{ $t('dapps.registerEnsContractNotReady') }}
-      </p>
     </form>
 
     <interface-bottom-text
@@ -68,6 +73,10 @@ export default {
       default: false
     },
     domainName: {
+      type: String,
+      default: ''
+    },
+    tld: {
       type: String,
       default: ''
     },

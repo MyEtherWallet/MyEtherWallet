@@ -1,0 +1,27 @@
+@import '~@/scss/GlobalVariables';
+
+$swap-custom-mobile-colleps-width: 700px;
+
+ul {
+  li {
+    padding: 15px 0;
+    border-bottom: 2px dotted $light-grey-3;
+    text-align: center;
+    .provider-image {
+      img {
+        height: 30px;
+      }
+    }
+    p {
+      color: $light-grey-12;
+    }
+
+    &:first-child {
+      border-top: 2px dotted $light-grey-3;
+    }
+
+    &:last-child {
+      border-bottom: 0;
+    }
+  }
+}

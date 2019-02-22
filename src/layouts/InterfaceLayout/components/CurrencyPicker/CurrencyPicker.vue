@@ -74,8 +74,7 @@ export default {
   },
   data() {
     return {
-      localCurrency: [],
-      selectedCurrency: [],
+      selectedCurrency: { name: 'Select an item', abi: '', address: '' },
       open: false,
       search: '',
       abi: '',
@@ -91,6 +90,22 @@ export default {
         name: this.network.type.name_long,
         symbol: this.network.type.name
       };
+    },
+    localCurrency() {
+      if (this.search !== '') {
+        return this.currency.filter(curr => {
+          if (curr.name.toLowerCase().includes(this.search.toLowerCase())) {
+            return curr;
+          }
+        });
+      }
+      if (this.token) {
+        return [this.networkToken, ...this.currency];
+      }
+      return [
+        { name: 'Select an item', abi: '', address: '' },
+        ...this.currency
+      ];
     }
   },
   watch: {
@@ -99,46 +114,13 @@ export default {
     },
     selectedCurrency(newVal) {
       this.$emit('selectedCurrency', newVal);
-    },
-    currency(newVal) {
-      if (this.token) {
-        this.localCurrency = [this.networkToken];
-      } else {
-        this.localCurrency = [{ name: 'Select an item' }];
-      }
-      newVal.forEach(curr => this.localCurrency.push(curr));
-    },
-    search(newVal) {
-      if (newVal !== '') {
-        this.localCurrency = this.localCurrency.filter(curr => {
-          if (curr.name.toLowerCase().includes(newVal.toLowerCase())) {
-            return curr;
-          }
-        });
-      } else {
-        if (this.token) {
-          this.localCurrency = [this.networkToken];
-        } else {
-          this.localCurrency = [
-            { name: 'Select an item', abi: '', address: '' }
-          ];
-        }
-        this.currency.forEach(curr => this.localCurrency.push(curr));
-      }
     }
   },
   mounted() {
-    this.localCurrency =
-      this.token === true
-        ? [this.networkToken]
-        : [{ name: 'Select an item', abi: '', address: '' }];
     this.selectedCurrency =
       this.token === true
         ? this.networkToken
         : { name: 'Select an item', abi: '', address: '' };
-    if (this.currency) {
-      this.currency.forEach(curr => this.localCurrency.push(curr));
-    }
   },
   methods: {
     openDropdown() {

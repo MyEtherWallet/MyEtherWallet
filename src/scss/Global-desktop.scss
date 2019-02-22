@@ -656,6 +656,7 @@
   .qrcode-modal {
     .popover {
       max-width: 180px;
+      text-align: center;
     }
   }
 
@@ -1209,6 +1210,8 @@
     color: $button--background-color-1;
     display: inline-block;
     font-size: 20px;
+    background-color: $white;
+    border-radius: 100%;
 
     &.not-good {
       color: $text-good-button-not-good;
@@ -1325,4 +1328,80 @@
   background-color: $dark-grey-11;
   border-color: $dark-grey-11;
   opacity: 1;
+}
+
+.btn-secondary:not(:disabled):not(.disabled):active {
+  background-color: $white;
+}
+
+// *********************************************************************
+// Interface: buttons next to title
+// *********************************************************************
+.title-button {
+  color: $grey-1;
+  cursor: pointer;
+  margin-left: auto;
+  background-color: $background-color-white;
+  border: 0;
+  font-size: 14px;
+  font-weight: 400;
+
+  &:hover {
+    // Desktop
+    @media all and (min-width: calc(#{$tablet-width} + 1px)) {
+      color: $text--link-color;
+    }
+  }
+
+  &:active {
+    color: $text--link-color;
+  }
+}
+
+%toast {
+  border-radius: 4px !important;
+  cursor: pointer;
+  min-height: 75px !important;
+  opacity: 0.96;
+  width: 325px !important;
+
+  .toast-action {
+    color: $white !important;
+    font-size: 20px !important;
+  }
+}
+
+.toast-success {
+  @extend %toast;
+
+  background-color: $mew-green !important;
+}
+
+.toast-warn {
+  @extend %toast;
+
+  background-color: $light-yellow !important;
+}
+
+.toast-error {
+  @extend %toast;
+
+  background-color: $red-7 !important;
+}
+
+.toast-info {
+  @extend %toast;
+
+  background-color: $light-blue-4 !important;
+}
+
+// *********************************************************************
+// No margin to remove margins from elements
+// *********************************************************************
+.no-margin {
+  margin: 0 !important;
+  margin-top: 0 !important;
+  margin-right: 0 !important;
+  margin-bottom: 0 !important;
+  margin-left: 0 !important;
 }
