@@ -21,6 +21,7 @@ import {
   chainCurrencies,
   fiat,
   EthereumTokens,
+  OtherCoins,
   BASE_CURRENCY,
   MIN_SWAP_AMOUNT
 } from './partnersConfig';
@@ -72,6 +73,7 @@ export {
   chainCurrencies,
   fiat,
   EthereumTokens,
+  OtherCoins,
   ERC20,
   utils,
   bestRateForQuantity,
