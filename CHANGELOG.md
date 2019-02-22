@@ -13,6 +13,7 @@
 ### Feature
 
 - Print ENS bid details [#699](https://github.com/MyEtherWallet/MyEtherWallet/pull/699)
+- Add Prefilled form for contact support [#697](https://github.com/MyEtherWallet/MyEtherWallet/pull/697)
 
 ### Release v5.0.3
 
@@ -21,10 +22,6 @@
 - Fix Send TX confirmation modal [#694](https://github.com/MyEtherWallet/MyEtherWallet/pull/694)
 - Fix NaN issue on settings modal [#682](https://github.com/MyEtherWallet/MyEtherWallet/pull/682)
 - Multiple Sentry fixes, custom paths, Safari worker fix [#680](https://github.com/MyEtherWallet/MyEtherWallet/pull/680)
-
-### Feature
-
-- Add Prefilled form for contact support [](<>)
 
 ### Devop
 
