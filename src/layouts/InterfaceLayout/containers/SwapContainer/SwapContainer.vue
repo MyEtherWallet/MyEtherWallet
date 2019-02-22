@@ -227,7 +227,7 @@ import SwapExitToFiat from './components/SwapExitToFiat';
 import SwapSendToModal from './components/SwapSendToModal';
 
 import {
-  Swap,
+  SwapProviders,
   providers,
   bestProviderForQuantity,
   bestRateForQuantity,
