@@ -2,12 +2,13 @@ import { createLocalVue } from '@vue/test-utils';
 import VueI18n from 'vue-i18n';
 import BootstrapVue from 'bootstrap-vue';
 import veeValidate from 'vee-validate';
+// import languages from '@/translations';
 import VueX from 'vuex';
 
 import ClickOutside from '@/directives/ClickOutside';
 import EnsResolver from '@/directives/EnsResolver';
 import en_US from '@/translations/en_US';
-
+import { state, getters } from '@@/helpers/mockStore';
 function createLocalVueInstance() {
   const localVue = createLocalVue();
   localVue.use(VueI18n);
@@ -28,13 +29,31 @@ function createLocalVueInstance() {
     silentTranslationWarn: true
   });
 
-  const store = new VueX.Store();
+  const actions = {
+    clearWallet: jest.fn(),
+    decryptWallet: jest.fn(),
+    setGasPrice: jest.fn(),
+    addSwapNotification: jest.fn()
+  };
+
+  const store = new VueX.Store({
+    actions,
+    getters,
+    state
+  });
+
   return {
     localVue,
     i18n,
     store
   };
 }
+
+const RouterLinkStub = {
+  name: 'router-link',
+  template: '<div class="routerlink"><slot></slot></div>',
+  props: ['to']
+};
 
 // likely will remove this function
 // function createShallowMountWrapper(component, suppliedOptions, baseOptions = {}){
@@ -44,7 +63,7 @@ function createLocalVueInstance() {
 //
 //   return shallowMount(component, {baseOptions, ...suppliedOptions});
 // }
-
+export { RouterLinkStub };
 export default {
   createLocalVueInstance
 };

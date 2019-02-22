@@ -1,11 +1,8 @@
-import Vuex from 'vuex';
 import sinon from 'sinon';
 import { shallowMount } from '@vue/test-utils';
 import AlreadyOwnedENSContainer from '@/dapps/RegisterDomain/containers/AlreadyOwnedENSContainer/AlreadyOwnedENSContainer.vue';
 import FinalizeModal from '@/dapps/RegisterDomain/components/FinalizeModal/FinalizeModal.vue';
 import { Tooling } from '@@/helpers';
-import { state, getters } from '@@/helpers/mockStore';
-
 const showModal = sinon.stub();
 
 const BModalStub = {
@@ -31,11 +28,6 @@ describe('AlreadyOwnedENSContainer.vue', () => {
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
     store = baseSetup.store;
-
-    store = new Vuex.Store({
-      state,
-      getters
-    });
   });
 
   beforeEach(() => {

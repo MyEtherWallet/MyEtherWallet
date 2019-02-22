@@ -22,6 +22,13 @@ describe('MewConnectModal.vue', () => {
   });
 
   beforeEach(() => {
+    const mockRouter = {
+      history: {
+        current: {
+          fullPath: '/'
+        }
+      }
+    };
     wrapper = mount(MewConnectModal, {
       localVue,
       i18n,
@@ -29,6 +36,9 @@ describe('MewConnectModal.vue', () => {
       attachToDocument: true,
       stubs: {
         qrcode: VueQrcode
+      },
+      mocks: {
+        $router: mockRouter
       }
     });
   });

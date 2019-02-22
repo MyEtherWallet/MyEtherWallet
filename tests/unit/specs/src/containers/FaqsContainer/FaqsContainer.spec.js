@@ -1,6 +1,5 @@
 import { shallowMount } from '@vue/test-utils';
 import FaqsContainer from '@/containers/FaqsContainer/FaqsContainer.vue';
-
 import { Tooling } from '@@/helpers';
 
 describe('FaqsContainer.vue', () => {
@@ -26,23 +25,23 @@ describe('FaqsContainer.vue', () => {
     const linkWrappers = wrapper.findAll('.qa__contents--title');
     let linkWrapper = linkWrappers.at(0);
     linkWrapper.trigger('click');
-    expect(wrapper.vm.$data.faqs.faq1.open).toBe(true);
+    expect(wrapper.vm.$data.faqs.faq1['open']).toBe(true);
 
     linkWrapper = linkWrappers.at(1);
     linkWrapper.trigger('click');
-    expect(wrapper.vm.$data.faqs.faq2.open).toBe(true);
+    expect(wrapper.vm.$data.faqs.faq2['open']).toBe(true);
 
     linkWrapper = linkWrappers.at(2);
     linkWrapper.trigger('click');
-    expect(wrapper.vm.$data.faqs.faq3.open).toBe(true);
+    expect(wrapper.vm.$data.faqs.faq3['open']).toBe(true);
 
     linkWrapper = linkWrappers.at(3);
     linkWrapper.trigger('click');
-    expect(wrapper.vm.$data.faqs.faq4.open).toBe(true);
+    expect(wrapper.vm.$data.faqs.faq4['open']).toBe(true);
 
     linkWrapper = linkWrappers.at(4);
     linkWrapper.trigger('click');
-    expect(wrapper.vm.$data.faqs.faq5.open).toBe(true);
+    expect(wrapper.vm.$data.faqs.faq5['open']).toBe(true);
   });
 
   describe('FaqsContainer.vue Methods', () => {});
