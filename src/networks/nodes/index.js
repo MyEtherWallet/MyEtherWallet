@@ -25,7 +25,7 @@ import poa from './poa';
 // import go from './go';
 // import kovethscan from './kov-ethscan';
 // import kovinfura from './kov' +-infura';
-                      '// import music from './music';
+// import music from './music';
 // import pirl from './pirl';
 
 import rskpublic from './rsk-public';
