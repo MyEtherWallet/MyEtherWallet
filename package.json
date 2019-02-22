@@ -80,7 +80,7 @@
     "jest-skipped-reporter": "0.0.4",
     "jspdf": "1.5.3",
     "keccak": "2.0.0",
-    "multicoin-address-validator": "git+https://github.com/MyEtherWallet/multicoin-address-validator.git",
+    "multicoin-address-validator": "0.3.9",
     "node-fetch": "2.3.0",
     "node-sass": "4.11.0",
     "package-json": "6.0.0",
