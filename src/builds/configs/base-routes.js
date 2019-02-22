@@ -1,5 +1,5 @@
 const ConvertUnits = () => import('@/layouts/ConvertUnits');
-const TeamLayout = () => import('@/layouts/TeamLayout');
+// const TeamLayout = () => import('@/layouts/TeamLayout');
 const PrivacyPolicyLayout = () => import('@/layouts/PrivacyPolicyLayout');
 const TermsAndConditionsLayout = () =>
   import('@/layouts/TermsAndConditionsLayout');
@@ -20,8 +20,8 @@ const SendCurrencyContainer = () =>
   import('@/layouts/InterfaceLayout/containers/SendCurrencyContainer');
 const SendOfflineContainer = () =>
   import('@/layouts/InterfaceLayout/containers/SendOfflineContainer');
-const SwapContainer = () =>
-  import('@/layouts/InterfaceLayout/containers/SwapContainer');
+// const SwapContainer = () =>
+//   import('@/layouts/InterfaceLayout/containers/SwapContainer');
 const SignMessageContainer = () =>
   import('@/layouts/InterfaceLayout/containers/SignMessageContainer');
 const VerifyMessageContainer = () =>
@@ -30,12 +30,12 @@ const VerifyMessageContainer = () =>
 import dapps from '@/dapps/routes';
 
 const router = [
-  {
-    path: '/team',
-    name: 'TeamLayout',
-    component: TeamLayout,
-    meta: { requiresAuth: false }
-  },
+  // {
+  //   path: '/team',
+  //   name: 'TeamLayout',
+  //   component: TeamLayout,
+  //   meta: { requiresAuth: false }
+  // },
   {
     path: '/privacy-policy',
     name: 'PrivacyPolicyLayout',
@@ -118,11 +118,11 @@ const router = [
         name: 'Send Offline Container',
         component: SendOfflineContainer
       },
-      {
-        path: 'swap',
-        name: 'Swap',
-        component: SwapContainer
-      },
+      // {
+      //   path: 'swap',
+      //   name: 'Swap',
+      //   component: SwapContainer
+      // },
       {
         path: 'sign-message',
         name: 'Sign Message',
