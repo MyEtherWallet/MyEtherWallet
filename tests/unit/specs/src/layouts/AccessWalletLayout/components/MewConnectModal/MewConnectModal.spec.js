@@ -29,6 +29,15 @@ describe('MewConnectModal.vue', () => {
       attachToDocument: true,
       stubs: {
         qrcode: VueQrcode
+      },
+      mocks: {
+        $router: {
+          history: {
+            current: {
+              fullPath: '/'
+            }
+          }
+        }
       }
     });
   });
