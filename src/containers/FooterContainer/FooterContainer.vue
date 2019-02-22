@@ -5,12 +5,13 @@
     <div class="wrap">
       <div class="page-container">
         <div class="grid-col-1-1-1-2 footer-contents">
-          <div
+          <!-- <div 
             v-for="(item, index) in footerContent"
             :ref="item.class"
             :class="item.class"
-            :key="item.title + index">
-          </div>
+            :key="item.title + index"
+          >
+          </div> -->
         </div>
         <div class="flex-space-between foot-note">
           <div class="links">
