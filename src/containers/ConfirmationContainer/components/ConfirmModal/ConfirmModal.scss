@@ -25,9 +25,11 @@ $confirmation-modal-mobile-width: 500px;
 
     .direction {
       display: flex;
+      align-items: center;
+      justify-content: center;
 
       img {
-        margin: 0 auto;
+        height: 25px;
       }
     }
 
@@ -147,29 +149,6 @@ $confirmation-modal-mobile-width: 500px;
     .submit-button-container {
       padding: 50px 0 20px;
       text-align: center;
-
-      .flex-center-align {
-        display: flex;
-
-        .button-with-helper {
-          align-items: center;
-          display: flex;
-          margin: 0 auto;
-
-          .submit-button {
-            display: inline-block;
-          }
-
-          .tooltip-box-2 {
-            margin-left: 15px;
-            text-align: center;
-          }
-        }
-      }
-
-      .learn-more {
-        margin-top: 20px;
-      }
     }
   }
 }
