@@ -9,6 +9,10 @@
 
 - Fix offline Worker issue [#690](https://github.com/MyEtherWallet/MyEtherWallet/pull/690)
 
+### Feature
+
+- Print ENS bid details [#699](https://github.com/MyEtherWallet/MyEtherWallet/pull/699)
+
 ### Release v5.0.3
 
 ### Bug
