@@ -16,15 +16,6 @@
             </div>
           </li>
           <li>
-            <div class="qa__contents--title" @click="openFAQ('faq2')">
-              <h3>
-                Does XinFin Wallet support Bitcoin or other coins (LTC STEEM ZEC)?
-              </h3>
-              <div class="show-more-buttons">
-                <span v-if="showFAQs.faq2 == false" class="show-more">+</span>
-                <span v-if="showFAQs.faq2 == true" class="show-less">-</span>
-              </div>
-            </div>
             <div v-if="showFAQs.faq2" class="qa__contents--content">
               <faq-does-myetherwallet-support-bitcoin />
             </div>
