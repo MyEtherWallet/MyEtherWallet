@@ -92,6 +92,13 @@ export default {
       return this.network.type.ens.registrarType;
     }
   },
+  watch: {
+    ens(newVal) {
+      if (newVal) {
+        this.setRegistrar();
+      }
+    }
+  },
   mounted() {
     this.$nextTick(() => {
       this.setup();
@@ -99,8 +106,6 @@ export default {
   },
   methods: {
     async setup() {
-      const web3 = this.web3;
-
       this.domainName = '';
       this.loading = false;
       this.bidAmount = 0.01;
@@ -119,6 +124,14 @@ export default {
       this.contractInitiated = false;
       this.step = 1;
       this.contractInitiated = false;
+      this.contractInitiated = true;
+      this.domainNameErr = false;
+      if (this.ens) {
+        this.setRegistrar();
+      }
+    },
+    async setRegistrar() {
+      const web3 = this.web3;
       this.registrarAddress = await this.getRegistrarAddress();
       this.auctionRegistrarContract = new web3.eth.Contract(
         RegistrarAbi,
@@ -128,8 +141,6 @@ export default {
         FifsRegistrarAbi,
         this.registrarAddress
       );
-      this.contractInitiated = true;
-      this.domainNameErr = false;
       this.ensRegistryContract = new web3.eth.Contract(
         RegistryAbi,
         this.network.type.ens.registry
@@ -301,7 +312,7 @@ export default {
       try {
         normalise(value);
       } catch (e) {
-        Toast.responseHandler(e, false);
+        Toast.responseHandler(e, Toast.WARN);
         this.domainNameErr = true;
         return;
       }
@@ -330,7 +341,6 @@ export default {
           .addr();
       } catch (e) {
         resolverAddress = '0x';
-        Toast.responseHandler(e, Toast.ERROR);
       }
 
       this.nameHash = nameHashPckg.hash(

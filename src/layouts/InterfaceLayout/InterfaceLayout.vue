@@ -74,6 +74,7 @@
             :get-balance="getBalance"
             :tokens="tokens"
             :highest-gas="highestGas"
+            :nonce="nonce"
           />
           <div v-if="online" class="tokens">
             <interface-tokens
@@ -132,6 +133,7 @@ import {
   MNEMONIC as MNEMONIC_TYPE
 } from '@/wallets/bip44/walletTypes';
 export default {
+  name: 'Interface',
   components: {
     'interface-side-menu': InterfaceSideMenu,
     'interface-address': InterfaceAddress,
@@ -158,7 +160,7 @@ export default {
       pollNetwork: () => {},
       pollBlock: () => {},
       pollAddress: () => {},
-      highestGas: 0,
+      highestGas: '0',
       alert: {
         show: false,
         msg: ''
@@ -172,7 +174,8 @@ export default {
       hwInstance: {},
       walletConstructor: () => {},
       hardwareBrand: '',
-      phrase: ''
+      phrase: '',
+      nonce: '0'
     };
   },
   computed: {
@@ -198,8 +201,8 @@ export default {
     web3() {
       this.setupOnlineEnvironment();
     },
-    address() {
-      this.setupOnlineEnvironment();
+    address(val) {
+      if (val) this.setupOnlineEnvironment();
     }
   },
   mounted() {
@@ -307,7 +310,10 @@ export default {
         nonce: '0x00',
         timestamp: 0
       });
-      await this.web3.eth.getTransactionCount(this.account.address);
+      const fetchedNonce = await this.web3.eth.getTransactionCount(
+        this.account.address
+      );
+      this.nonce = new BigNumber(fetchedNonce).toString();
     },
     async getTokenBalance(token) {
       const web3 = this.web3;
@@ -332,13 +338,8 @@ export default {
           if (Number(res) === 0 || res === '0x') {
             tokenBalance = 0;
           } else {
-            const denominator = web3.utils
-              .toBN(10)
-              .pow(web3.utils.toBN(token.decimals));
-            tokenBalance = web3.utils
-              .toBN(res)
-              .div(denominator)
-              .toString(10);
+            const denominator = new BigNumber(10).pow(token.decimals);
+            tokenBalance = new BigNumber(res).div(denominator).toString();
           }
           return tokenBalance;
         })
@@ -405,13 +406,17 @@ export default {
             store.set('customTokens', customStore);
             resolve(res);
           });
-        }).then(res => {
-          const allTokens = this.tokens
-            .filter(token => token.balance > 0)
-            .concat(res.filter(token => token.balance > 0));
-          this.tokensWithBalance = allTokens;
-          this.receivedTokens = true;
-        });
+        })
+          .then(res => {
+            const allTokens = this.tokens
+              .filter(token => token.balance > 0)
+              .concat(res.filter(token => token.balance > 0));
+            this.tokensWithBalance = allTokens;
+            this.receivedTokens = true;
+          })
+          .catch(e => {
+            Toast.responseHandler(e, Toast.ERROR);
+          });
       } else {
         this.receivedTokens = true;
         this.tokensWithBalance = this.tokens.filter(token => token.balance > 0);
@@ -467,8 +472,12 @@ export default {
       }, 500);
     },
     matchWeb3WalletNetwork() {
+      if (
+        !window.web3.eth.net ||
+        typeof window.web3.eth.net.getId !== 'function'
+      )
+        return;
       this.pollNetwork = setInterval(() => {
-        if (!window.web3.eth.net) return;
         window.web3.eth.net
           .getId()
           .then(netId => {
@@ -522,7 +531,7 @@ export default {
         .then(res => {
           this.highestGas = new BigNumber(
             this.web3.utils.fromWei(res, 'gwei')
-          ).toNumber();
+          ).toString();
         })
         .catch(e => {
           Toast.responseHandler(e, Toast.ERROR);

@@ -20,6 +20,8 @@
   font-weight: 600;
   font-size: 14px;
   border-radius: 5px;
+  cursor: pointer;
+  user-select: none;
   > div {
     color: $white;
   }
@@ -32,6 +34,7 @@
     margin-left: auto;
     display: block;
     cursor: pointer;
+    text-align: right;
   }
 
   .title-number {
@@ -73,9 +76,16 @@
   overflow: hidden;
   transition: all 0.2s linear;
   background-color: $white;
+  //background-color: $grey-1;
 
   .padding-block {
-    padding: 30px 30px;
+    padding: 30px;
+    @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+      padding: 20px;
+    }
+    @media all and (max-width: $mobile-width) {
+      padding: 10px;
+    }
   }
 }
 
