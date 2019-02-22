@@ -37,17 +37,17 @@
               />
               <i
                 :class="[
-                  !isValidAmount || errors.has('value') ? 'not-good' : '',
+                  !isValidAmount.valid || errors.has('value') ? 'not-good' : '',
                   'fa fa-check-circle good-button'
                 ]"
                 aria-hidden="true"
               />
             </div>
             <div
-              v-if="!isValidAmount || errors.has('value')"
+              v-if="!isValidAmount.valid || errors.has('value')"
               class="error-message-container"
             >
-              <p>{{ $t('common.notAValidAmount') }}</p>
+              <p>{{ isValidAmount.msg }}</p>
             </div>
           </div>
         </div>
@@ -233,18 +233,58 @@ export default {
         this.gasLimit || 0
       );
       const txFeeEth = ethUnit.fromWei(txFee, 'ether');
-      if (new BigNumber(this.value).lt(0)) return false;
-      if (this.isToken) {
-        return (
-          new BigNumber(this.value).lte(this.selectedCurrency.balance) &&
-          new BigNumber(txFeeEth).lte(this.balanceDefault) &&
-          this.isValidDecimals
-        );
-      }
-      return (
-        new BigNumber(this.value).plus(txFeeEth).lte(this.balanceDefault) &&
-        this.isValidDecimals
+      const notEnoughGasMsg =
+        this.$t('errorsGlobal.notAValidAmountTotal') +
+        ' Gas ' +
+        this.$t('errorsGlobal.toSend');
+      const notEnoughTokenMsg =
+        this.$t('errorsGlobal.notAValidAmountTotal') +
+        ' ' +
+        this.selectedCurrency.symbol +
+        ' ' +
+        this.$t('errorsGlobal.toSend');
+      const notEnoughCurrencyMsg =
+        this.$t('errorsGlobal.notAValidAmountTotal') +
+        ' ' +
+        this.network.type.name +
+        ' ' +
+        this.$t('errorsGlobal.toSend');
+      const invalidValueMsg = this.$t('errorsGlobal.invalidValue');
+      const enoughTokenBalance = new BigNumber(this.value).lte(
+        this.selectedCurrency.balance
       );
+      const enoughCurrency = new BigNumber(this.value)
+        .plus(txFeeEth)
+        .lte(this.balanceDefault);
+      const enoughGas = new BigNumber(txFeeEth).lte(this.balanceDefault);
+      const validDecimal = this.isValidDecimals;
+      if (new BigNumber(this.value).lt(0)) {
+        return {
+          msg: invalidValueMsg,
+          valid: false
+        };
+      }
+      if (this.isToken) {
+        const enoughBalance = enoughTokenBalance && enoughGas && validDecimal;
+        return {
+          valid: enoughBalance,
+          msg: enoughBalance
+            ? ''
+            : !enoughTokenBalance
+            ? notEnoughTokenMsg
+            : !enoughGas
+            ? notEnoughGasMsg
+            : invalidValueMsg
+        };
+      }
+      return {
+        valid: enoughCurrency && validDecimal,
+        msg: enoughCurrency
+          ? ''
+          : !enoughCurrency
+          ? notEnoughCurrencyMsg
+          : invalidValueMsg
+      };
     },
     isValidDecimals() {
       const decimals = (this.value + '').split('.')[1];
@@ -265,7 +305,7 @@ export default {
     },
     validInputs() {
       return (
-        this.isValidAmount &&
+        this.isValidAmount.valid &&
         this.isValidAddress &&
         (new BigNumber(this.gasLimit).gte(0) || this.gasLimit == -1) &&
         Misc.validateHexString(this.data)

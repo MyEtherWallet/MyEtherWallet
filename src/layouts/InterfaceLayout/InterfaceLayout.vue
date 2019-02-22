@@ -338,13 +338,8 @@ export default {
           if (Number(res) === 0 || res === '0x') {
             tokenBalance = 0;
           } else {
-            const denominator = web3.utils
-              .toBN(10)
-              .pow(web3.utils.toBN(token.decimals));
-            tokenBalance = web3.utils
-              .toBN(res)
-              .div(denominator)
-              .toString(10);
+            const denominator = new BigNumber(10).pow(token.decimals);
+            tokenBalance = new BigNumber(res).div(denominator).toString();
           }
           return tokenBalance;
         })
