@@ -139,9 +139,10 @@ export default {
         if (webUsb.includes(item.name)) {
           const disable =
             window.location.protocol === 'https:' &&
-            Misc.browserName() !== 'chrome' &&
-            Misc.browserName() !== 'opera';
-          item.disable = disable;
+            !(
+              Misc.browserName() === 'chrome' || Misc.browserName() === 'opera'
+            );
+          item.disabled = disable;
           item.msg = disable ? this.$t('errorsGlobal.browserNonWebUsb') : '';
         }
 
