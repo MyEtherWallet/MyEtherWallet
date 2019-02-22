@@ -142,8 +142,7 @@ export default {
       gasPrice: 'gasPrice',
       wallet: 'wallet',
       web3: 'web3',
-      account: 'account',
-      network: 'network'
+      account: 'account'
     }),
     fromAddress() {
       if (this.account) {
@@ -186,12 +185,11 @@ export default {
           if (tokenInfo) {
             tx.currency = {
               symbol: tokenInfo.symbol,
-              decimal: tokenInfo.decimals,
+              decimals: tokenInfo.decimals,
               address: tokenInfo.address
             };
           }
         }
-        console.log('tx', tx); // todo remove dev item
         signPromise = this.wallet.signTransaction(tx);
       } else {
         signPromise = this.wallet.signTransaction(tx);
@@ -199,7 +197,6 @@ export default {
 
       signPromise
         .then(_response => {
-          console.log('_response', _response); // todo remove dev item
           this.signedTxObject = _response;
           this.signedTx = this.signedTxObject.rawTransaction;
         })
