@@ -47,7 +47,7 @@
               v-if="!isValidAmount.valid || errors.has('value')"
               class="error-message-container"
             >
-              <p>{{ errMsg }}</p>
+              <p>{{ isValidAmount.msg }}</p>
             </div>
           </div>
         </div>
