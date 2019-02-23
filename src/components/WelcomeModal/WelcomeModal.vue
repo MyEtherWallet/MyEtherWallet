@@ -15,7 +15,7 @@
           <h3>{{ $t('home.welcomeTov5') }}</h3>
           <i18n path="home.welcomeToV5Desc1" tag="p" for="home.welcomeToLink1">
             <a
-              href="https://medium.com/@myetherwallet/lets-make-it-official-mew5-myetherwallet-s-all-new-interface-is-here-2063117180a4"
+              href="https://xinfin.org"
               target="_blank"
               rel="noopener noreferrer"
               >{{ $t('home.welcomeToLink1') }}</a
