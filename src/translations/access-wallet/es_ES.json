@@ -14,7 +14,7 @@
   "pleaseTypeInMnemonicPhrase": "Por favor escriba su frase mnemónica.",
   "accessDeviceAddresses": "Choose a Hardware",
   "password": "Contraseña",
-  "mewConnectDesc": "Usar MEW Connect para acceder a mi billetera",
+  "mewConnectDesc": "Usar XinFin Wallet Connect para acceder a mi billetera",
   "metaMaskDesc": "Utilizar la extensión MetaMask a mi cartera",
   "installMetaMaskModalDesc": "Por favor, instala la extensión Metamask y actualizar su página.",
   "refresh": "Actualizar",
