@@ -16,8 +16,8 @@ import ETH from './ETH.js';
 // import KOV from './KOV.js';
 // import MUSIC from './MUSIC.js';
 // import PIRL from './PIRL.js';
-import RSK from './RSK.js';
-import RSKTEST from './RSKTEST.js';
+// import RSK from './RSK.js';
+// import RSKTEST from './RSKTEST.js';
 // import TOMO from './TOMO.js';
 // import UBQ from './UBQ.js';
 // import GOERLI from './GOERLI';
@@ -26,8 +26,8 @@ export {
   RIN,
   ROP,
   ETH,
-  RSK,
-  RSKTEST,
+  // RSK,
+  // RSKTEST,
   POA
   // AKA,
   // ATH,
