@@ -142,7 +142,8 @@ export default {
       gasPrice: 'gasPrice',
       wallet: 'wallet',
       web3: 'web3',
-      account: 'account'
+      account: 'account',
+      network: 'network'
     }),
     fromAddress() {
       if (this.account) {
@@ -177,19 +178,19 @@ export default {
 
       let signPromise;
       if (this.account.identifier === MEW_CONNECT) {
-        let tokenInfo;
-        if (tx.data.slice(0, 10) === '0xa9059cbb') {
-          tokenInfo = this.account.tokens.find(
-            entry => entry.address === tx.to
-          );
-          if (tokenInfo) {
-            tx.currency = {
-              symbol: tokenInfo.symbol,
-              decimals: tokenInfo.decimals,
-              address: tokenInfo.address
-            };
-          }
-        }
+        // let tokenInfo;
+        // if (tx.data.slice(0, 10) === '0xa9059cbb') {
+        //   tokenInfo = this.network.type.tokens.find(
+        //     entry => entry.address === tx.to
+        //   );
+        //   if (tokenInfo) {
+        //     tx.currency = {
+        //       symbol: tokenInfo.symbol,
+        //       decimals: tokenInfo.decimals,
+        //       address: tokenInfo.address
+        //     };
+        //   }
+        // }
         signPromise = this.wallet.signTransaction(tx);
       } else {
         signPromise = this.wallet.signTransaction(tx);
