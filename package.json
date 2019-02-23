@@ -32,16 +32,22 @@
     "detect-browser": "4.1.0",
     "html2canvas": "1.0.0-alpha.12",
     "idna-uts46": "1.1.0",
+    "luxon": "1.11.3",
+    "moment": "2.24.0",
+    "moment-timezone": "0.5.23",
     "print-js": "1.0.54",
     "register-service-worker": "1.6.1",
     "vee-validate": "2.1.7",
     "vue": "2.6.6",
+    "vue-datetime": "1.0.0-beta.10",
     "vue-mq": "1.0.1",
     "vue-router": "3.0.2",
     "vue-toasted": "1.1.26",
-    "vuex": "3.1.0"
+    "vuex": "3.1.0",
+    "weekstart": "1.0.0"
   },
   "devDependencies": {
+    "@ethereum-alarm-clock/lib": "0.3.4",
     "@keepkey/keepkey.js": "1.2.0",
     "@ledgerhq/hw-app-eth": "4.39.0",
     "@ledgerhq/hw-transport-u2f": "4.39.0",
