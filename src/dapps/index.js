@@ -4,7 +4,7 @@ import registerDomain from '@/assets/images/icons/domain.svg';
 import registerDomainHov from '@/assets/images/icons/domain-hov.svg';
 import secureTransaction from '@/assets/images/icons/button-key-hover.svg';
 import secureTransactionHov from '@/assets/images/icons/button-key.svg';
-import { ETH, GOERLI, ROP, RIN } from '@/networks/types';
+import { XDC, ETH, ROP } from '@/networks/types';
 
 const dapps = {
   registerDomain: {
@@ -13,7 +13,7 @@ const dapps = {
     iconDisabled: registerDomainHov,
     title: 'interface.registerEns',
     desc: 'interface.registerENSDescShort',
-    supportedNetworks: [ETH.name, GOERLI.name, ROP.name, RIN.name]
+    supportedNetworks: [ETH.name, ROP.name, XDC.name]
   },
   domainSale: {
     route: '/interface/dapps/buy-subdomain',
