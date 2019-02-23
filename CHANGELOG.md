@@ -4,6 +4,7 @@
 
 - Fix list fetching issue on travis and couple of sentry issues [#692](https://github.com/MyEtherWallet/MyEtherWallet/pull/692)
 - Redo wallet errors, include translations [#685](https://github.com/MyEtherWallet/MyEtherWallet/pull/685)
+- Identical build for production and gh-pages-history [#712](https://github.com/MyEtherWallet/MyEtherWallet/pull/712)
 
 ### Bug
 
