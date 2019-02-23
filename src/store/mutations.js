@@ -67,10 +67,6 @@ const SET_ACCOUNT_BALANCE = function(state, balance) {
   state.account.balance = balance;
 };
 
-const SET_ACCOUNT_TOKENS = function(state, tokens) {
-  state.account.tokens = tokens;
-};
-
 const SET_ENS = function(state, ens) {
   state.ens = ens;
 };
@@ -120,7 +116,6 @@ export default {
   DECRYPT_WALLET,
   INIT_STATES,
   SET_ACCOUNT_BALANCE,
-  SET_ACCOUNT_TOKENS,
   SET_LAST_PATH,
   SET_GAS_PRICE,
   SET_ENS,

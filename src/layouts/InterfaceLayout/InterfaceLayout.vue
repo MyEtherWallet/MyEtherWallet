@@ -413,7 +413,6 @@ export default {
               .concat(res.filter(token => token.balance > 0));
             this.tokensWithBalance = allTokens;
             this.receivedTokens = true;
-            this.$store.dispatch('setAccountTokens', this.tokensWithBalance);
           })
           .catch(e => {
             Toast.responseHandler(e, Toast.ERROR);
@@ -421,7 +420,6 @@ export default {
       } else {
         this.receivedTokens = true;
         this.tokensWithBalance = this.tokens.filter(token => token.balance > 0);
-        this.$store.dispatch('setAccountTokens', this.tokensWithBalance);
       }
     },
     getBlock() {

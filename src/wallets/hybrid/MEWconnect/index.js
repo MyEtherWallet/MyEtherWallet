@@ -1,4 +1,5 @@
 import MEWconnect from '@myetherwallet/mewconnect-web-client';
+import store from '@/store';
 import ethTx from 'ethereumjs-tx';
 import WalletInterface from '@/wallets/WalletInterface';
 import { MEW_CONNECT as mewConnectType } from '../../bip44/walletTypes';
@@ -44,6 +45,19 @@ class MEWconnectWallet {
   async init(qrcode) {
     this.mewConnect.on('codeDisplay', qrcode);
     const txSigner = async tx => {
+      let tokenInfo;
+      if (tx.data.slice(0, 10) === '0xa9059cbb') {
+        tokenInfo = store.getters.network.type.tokens.find(
+          entry => entry.address === tx.to
+        );
+        if (tokenInfo) {
+          tx.currency = {
+            symbol: tokenInfo.symbol,
+            decimals: tokenInfo.decimals,
+            address: tokenInfo.address
+          };
+        }
+      }
       const networkId = tx.chainId;
       return new Promise(resolve => {
         this.mewConnect.sendRtcMessage('signTx', JSON.stringify(tx));
