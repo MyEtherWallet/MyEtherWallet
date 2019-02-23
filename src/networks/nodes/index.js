@@ -1,16 +1,16 @@
 import xdc from './xdc-testnet';
-import ethethscan from './eth-ethscan';
-import ethinfura from './eth-infura';
-import ethinfuraws from './eth-infura-ws';
+// import ethethscan from './eth-ethscan';
+// import ethinfura from './eth-infura';
+// import ethinfuraws from './eth-infura-ws';
 import ethmew from './eth-mew';
 import ethmewws from './eth-mew-ws';
-import rinethscan from './rin-ethscan';
-import rininfura from './rin-infura';
+// import rinethscan from './rin-ethscan';
+// import rininfura from './rin-infura';
 import ropinfura from './rop-infura';
-import rininfuraws from './rin-infura-ws';
+// import rininfuraws from './rin-infura-ws';
 import ropinfuraws from './rop-infura-ws';
 import ropmew from './rop-mew';
-import poa from './poa';
+// import poa from './poa';
 
 // import akaremote from './aka-remote';
 // import ath from './ath';
@@ -28,26 +28,26 @@ import poa from './poa';
 // import music from './music';
 // import pirl from './pirl';
 
-import rskpublic from './rsk-public';
-import rsktestpublic from './rsk-test-public';
+// import rskpublic from './rsk-public';
+// import rsktestpublic from './rsk-test-public';
 // import tomo from './tomo';
 // import ubq from './ubq';
 // import goerli from './goerli-mew-ws';
 export {
   xdc,
-  ethethscan,
-  ethinfura,
-  ethinfuraws,
+  // ethethscan,
+  // ethinfura,
+  // ethinfuraws,
   ethmew,
   ethmewws,
-  poa,
-  rinethscan,
-  rininfura,
+  // poa,
+  // rinethscan,
+  // rininfura,
   ropinfura,
-  rininfuraws,
+  // rininfuraws,
   ropinfuraws,
-  rskpublic,
-  rsktestpublic,
+  // rskpublic,
+  // rsktestpublic,
   ropmew
   // akaremote,
   // ath,
