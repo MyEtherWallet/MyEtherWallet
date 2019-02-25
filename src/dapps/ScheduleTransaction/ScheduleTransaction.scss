@@ -120,7 +120,8 @@ $mew-green-light: #05c7aa;
 .mode-container,
 .time-bounty-selector,
 .timezone-selector,
-.scheduling-currency-picker {
+.scheduling-currency-picker,
+.to-address {
   padding: 12px 0;
 }
 
@@ -204,4 +205,57 @@ h2 {
 
 .tx-scheduled-notification {
   overflow-wrap: break-word;
+}
+
+.to-address {
+  position: relative;
+
+  .blockie-image {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    right: -41px;
+    top: -4px;
+  }
+
+  .title {
+    align-items: center;
+    display: flex;
+    position: relative;
+
+    h4 {
+      position: relative;
+    }
+
+    img {
+      height: 50px;
+      left: 98px;
+      position: absolute;
+      top: -14px;
+    }
+
+    .copy-button {
+      color: $text--link-color;
+      cursor: pointer;
+      margin-left: auto;
+    }
+  }
+
+  .address-block {
+    position: relative;
+
+    i {
+      bottom: 13px;
+      position: absolute;
+      right: 13px;
+    }
+
+    input {
+      background-color: #f9f9f9;
+      border: 0;
+      padding: 13px 45px 13px 15px;
+      resize: none;
+      width: 100%;
+    }
+  }
 }
