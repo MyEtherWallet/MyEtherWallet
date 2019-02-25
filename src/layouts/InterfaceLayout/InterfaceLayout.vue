@@ -497,8 +497,9 @@ export default {
       }, 500);
     },
     clearIntervals() {
+      if (this.pollBlock.unsubscribe) this.pollBlock.unsubscribe();
+      else clearInterval(this.pollBlock);
       clearInterval(this.pollNetwork);
-      clearInterval(this.pollBlock);
       clearInterval(this.pollAddress);
     },
     setupOnlineEnvironment: web3Utils._.debounce(function() {
@@ -518,13 +519,29 @@ export default {
           this.setENS();
           this.getBlock();
           this.getBalance();
-          this.pollBlock = setInterval(this.getBlock, 14000);
           this.setTokens();
           this.setNonce();
           this.getHighestGas();
+          this.getBlockUpdater().then(_sub => {
+            this.pollBlock = _sub;
+          });
         }
       }
     }),
+    async getBlockUpdater() {
+      return new Promise(resolve => {
+        let subscription = this.web3.eth
+          .subscribe('newBlockHeaders', err => {
+            if (err) {
+              subscription = setInterval(this.getBlock, 14000);
+            }
+            resolve(subscription);
+          })
+          .on('data', headers => {
+            this.blockNumber = headers.number;
+          });
+      });
+    },
     getHighestGas() {
       this.web3.eth
         .getGasPrice()
