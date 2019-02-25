@@ -1,10 +1,8 @@
-import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import InterfaceBalance from '@/layouts/InterfaceLayout/components/InterfaceBalance/InterfaceBalance.vue';
 import InterfaceBalanceModal from '@/layouts/InterfaceLayout/components/InterfaceBalanceModal/InterfaceBalanceModal.vue';
 import sinon from 'sinon';
 import { Tooling } from '@@/helpers';
-import { state, getters } from '@@/helpers/mockStore';
 
 const showModal = sinon.stub();
 const BModalStub = {
@@ -16,7 +14,6 @@ const BModalStub = {
   }
 };
 
-// const $t = () => {};
 describe('InterfaceBalance.vue', () => {
   let localVue, i18n, wrapper, store;
   const balance = '100';
@@ -26,11 +23,6 @@ describe('InterfaceBalance.vue', () => {
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
     store = baseSetup.store;
-
-    store = new Vuex.Store({
-      getters,
-      state
-    });
   });
 
   beforeEach(() => {

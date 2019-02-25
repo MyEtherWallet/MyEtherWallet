@@ -1,21 +1,12 @@
 import Vue from 'vue';
-import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import MetamaskModal from '@/layouts/AccessWalletLayout/components/MetamaskModal/MetamaskModal.vue';
 import { Tooling } from '@@/helpers';
-
-import nodeList from '@/networks';
-import url from 'url';
-import Web3 from 'web3';
-
-const RouterLinkStub = {
-  name: 'router-link',
-  template: '<div class="routerlink"><slot></slot></div>',
-  props: ['to']
-};
+import { state } from '@@/helpers/mockStore';
+import { RouterLinkStub } from '@@/helpers/setupTooling';
 
 describe('MetamaskModal.vue', () => {
-  let localVue, i18n, wrapper, store, getters, newWeb3;
+  let localVue, i18n, wrapper, store;
 
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
@@ -24,42 +15,6 @@ describe('MetamaskModal.vue', () => {
 
     Vue.config.warnHandler = () => {};
     Vue.config.errorHandler = () => {};
-
-    const wallet = {
-      getAddressString: function() {
-        return '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D';
-      }
-    };
-    const network = nodeList['ETH'][3];
-    const hostUrl = url.parse(network.url);
-
-    getters = {
-      network: () => {
-        return network;
-      },
-      wallet: () => {
-        return wallet;
-      }
-    };
-
-    const actions = {
-      setGasPrice: jest.fn()
-    };
-
-    newWeb3 = new Web3(
-      `${hostUrl.protocol}//${hostUrl.hostname}:${network.port}${
-        hostUrl.pathname
-      }`
-    );
-
-    store = new Vuex.Store({
-      actions,
-      getters,
-      state: {
-        web3: newWeb3,
-        network: network
-      }
-    });
   });
 
   beforeEach(() => {
@@ -135,7 +90,7 @@ describe('MetamaskModal.vue', () => {
 
   describe('MetamaskModal.vue Methods', () => {
     it('should render correct getWeb3Wallet methods', () => {
-      window.web3 = newWeb3;
+      window.web3 = state.newWeb3;
       wrapper.vm.getWeb3Wallet();
     });
   });
