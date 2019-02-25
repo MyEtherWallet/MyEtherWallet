@@ -14,6 +14,12 @@ import interfaceTranslations from './interface/ja_JP';
 import team from './team/ja_JP';
 import popover from './popover/ja_JP';
 import withoutWallet from './without-wallet/ja_JP';
+import errorsGlobal from './errors-global/ja_JP';
+import trezorError from './errors-trezor/ja_JP';
+import ledgerError from './errors-ledger/ja_JP';
+import secalotError from './errors-secalot/ja_JP';
+import keepkeyError from './errors-keepkey/ja_JP';
+import bitboxError from './errors-bitbox/ja_JP';
 
 const ja_JP = {
   common: common,
@@ -30,6 +36,12 @@ const ja_JP = {
   createWallet: createWallet,
   interface: interfaceTranslations,
   popover: popover,
-  withoutWallet: withoutWallet
+  withoutWallet: withoutWallet,
+  errorsGlobal: errorsGlobal,
+  trezorError: trezorError,
+  ledgerError: ledgerError,
+  secalotError: secalotError,
+  keepkeyError: keepkeyError,
+  bitboxError: bitboxError
 };
 export default ja_JP;

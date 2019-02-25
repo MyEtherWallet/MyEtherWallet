@@ -1,12 +1,9 @@
 import Vue from 'vue';
-import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import EnsBidContainer from '@/dapps/RegisterDomain/containers/EnsBidContainer/EnsBidContainer.vue';
 import JsonStringModal from '@/dapps/RegisterDomain/components/JsonStringModal/JsonStringModal.vue';
 import sinon from 'sinon';
 import { Misc } from '@/helpers';
-import { state, getters } from '@@/helpers/mockStore';
-
 import { Tooling } from '@@/helpers';
 
 const TimerStub = {
@@ -39,18 +36,19 @@ describe('EnsBidContainer.vue', () => {
   const mockRoute = {
     fullPath: 'auction'
   };
-
+  const mockRouter = {
+    replace: sinon.stub(),
+    history: {
+      current: {
+        path: '/interface/dapps/register-domain'
+      }
+    }
+  };
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
     store = baseSetup.store;
-
-    store = new Vuex.Store({
-      getters,
-      state
-    });
-
     Vue.config.errorHandler = () => {};
   });
 
@@ -67,14 +65,7 @@ describe('EnsBidContainer.vue', () => {
       },
       mocks: {
         $route: mockRoute,
-        $router: {
-          replace: sinon.stub(),
-          history: {
-            current: {
-              path: '/interface/dapps/register-domain'
-            }
-          }
-        }
+        $router: mockRouter
       },
       stubs: {
         timer: TimerStub,
