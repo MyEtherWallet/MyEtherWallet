@@ -9,7 +9,7 @@
       size="lg"
     >
       <div class="print-container">
-        <div id="printContainer">
+        <div ref="printContainer">
           <div class="content">
             <div class="header">
               <img src="~@/assets/images/logo.png" height="30px" />
@@ -98,7 +98,7 @@ export default {
   },
   methods: {
     async print() {
-      const element = document.getElementById('printContainer');
+      const element = this.$refs.printContainer;
       const screen = await html2canvas(element, {
         async: true,
         logging: false

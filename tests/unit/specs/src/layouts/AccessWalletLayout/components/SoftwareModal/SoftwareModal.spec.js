@@ -1,14 +1,8 @@
 import { shallowMount, mount } from '@vue/test-utils';
 import SoftwareModal from '@/layouts/AccessWalletLayout/components/SoftwareModal/SoftwareModal.vue';
 import sinon from 'sinon';
-
 import { Tooling } from '@@/helpers';
-
-const RouterLinkStub = {
-  name: 'router-link',
-  template: '<p> <slot> </slot></p>',
-  props: ['to']
-};
+import { RouterLinkStub } from '@@/helpers/setupTooling';
 
 const BModalStub = {
   name: 'b-modal',

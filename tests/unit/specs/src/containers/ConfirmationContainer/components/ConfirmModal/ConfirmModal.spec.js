@@ -1,10 +1,8 @@
 import Vue from 'vue';
-import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import ConfirmModal from '@/containers/ConfirmationContainer/components/ConfirmModal/ConfirmModal.vue';
 import VueQrcode from '@xkeshi/vue-qrcode';
 import { Tooling } from '@@/helpers';
-import { state, getters } from '@@/helpers/mockStore';
 
 const AddressBlockStub = {
   name: 'address-block',
@@ -30,10 +28,6 @@ describe('ConfirmModal.vue', () => {
     i18n = baseSetup.i18n;
     store = baseSetup.store;
     Vue.config.errorHandler = () => {};
-    store = new Vuex.Store({
-      getters,
-      state
-    });
   });
 
   beforeEach(() => {
