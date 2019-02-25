@@ -4,7 +4,6 @@ import { Util } from '@ethereum-alarm-clock/lib';
 import * as unit from 'ethjs-unit';
 
 const EAC_SCHEDULING_CONFIG = {
-  FUTURE_GAS_PRICE_MIN: 1, // Gwei
   FEE: new BigNumber('0'),
   TOKEN_TRANSFER_ADDITIONAL_GAS: new BigNumber('20000'),
   TOKEN_SCHEDULING_GAS_LIMIT: new BigNumber('1500000'),

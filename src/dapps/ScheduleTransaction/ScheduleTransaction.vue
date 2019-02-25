@@ -39,12 +39,45 @@
             </b-col>
           </b-row>
 
-          <standard-input
-            :options="toAddressInputOptions()"
-            @changedValue="toAddress = $event"
-          />
-          <div v-show="!isValidAddress && toAddress !== ''" class="text-danger">
-            Invalid Address
+          <div class="to-address">
+            <div class="title input-title">
+              <h4>
+                To Address
+                <blockie
+                  v-show="isValidAddress"
+                  :address="hexAddress"
+                  :size="8"
+                  :scale="16"
+                  width="32px"
+                  height="32px"
+                  class="blockie-image"
+                />
+              </h4>
+
+              <p
+                class="copy-button prevent-user-select"
+                @click="copyToClipboard('address')"
+              >
+                {{ $t('common.copy') }}
+              </p>
+            </div>
+            <div class="the-form address-block">
+              <input
+                v-ens-resolver="'address'"
+                ref="address"
+                v-model="address"
+                type="text"
+                name="name"
+                autocomplete="off"
+              />
+              <i
+                :class="[
+                  isValidAddress && hexAddress.length !== 0 ? '' : 'not-good',
+                  'fa fa-check-circle good-button'
+                ]"
+                aria-hidden="true"
+              />
+            </div>
           </div>
 
           <hr />
@@ -337,7 +370,7 @@ import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
 import CurrencyPicker from '../../layouts/InterfaceLayout/components/CurrencyPicker';
 import StandardInput from '@/components/StandardInput';
 import StandardDropdown from '@/components/StandardDropdown';
-import { isAddress } from '@/helpers/addressUtils';
+import Blockie from '@/components/Blockie';
 import { ERC20 } from '@/partners';
 import {
   calcSchedulingTotalCost,
@@ -355,7 +388,8 @@ export default {
     'standard-input': StandardInput,
     'standard-dropdown': StandardDropdown,
     'datetime-picker': Datetime,
-    'scheduled-transaction-explorer-link': ScheduledTransactionExplorerLink
+    'scheduled-transaction-explorer-link': ScheduledTransactionExplorerLink,
+    blockie: Blockie
   },
   props: {
     tokensWithBalance: {
@@ -370,13 +404,15 @@ export default {
       eac: null,
       advancedExpand: false,
       advancedTimeBounty: false,
-      toAddress: '',
+      hexAddress: '',
+      address: '',
+      isValidAddress: false,
       amount: '0',
       gasLimit: EAC_SCHEDULING_CONFIG.FUTURE_GAS_LIMIT,
       futureGasLimit: EAC_SCHEDULING_CONFIG.FUTURE_GAS_LIMIT,
       minGasLimit: 0,
       futureGasPrice: '1',
-      minGasPrice: EAC_SCHEDULING_CONFIG.FUTURE_GAS_PRICE_MIN,
+      minGasPrice: 0.1,
       data: '',
       datetime: '',
       currentBlockNumber: '',
@@ -399,14 +435,6 @@ export default {
           title: 'Amount',
           value: this.amount,
           type: 'number'
-        };
-      },
-      toAddressInputOptions() {
-        return {
-          title: 'To Address',
-          buttonCopy: true,
-          value: this.toAddress,
-          placeHolder: 'e.g. 0xa554Bb3d545C6F08909D5DD15cFe2d3c7513F597'
         };
       },
       customTimeBountyInputOptions() {
@@ -609,13 +637,6 @@ export default {
         ? isValidDateTime
         : isValidBlockNumber;
     },
-    isValidAddress() {
-      return (
-        this.toAddress !== '' &&
-        this.toAddress.length !== 0 &&
-        isAddress(this.toAddress)
-      );
-    },
     isValidTimeBounty() {
       const convertibleToWei = canBeConvertedToWei(this.web3, this.timeBounty);
       const invalidFutureGasPrice = canBeConvertedToWei(
@@ -743,7 +764,7 @@ export default {
         ? EAC_SCHEDULING_CONFIG.TOKEN_SCHEDULING_GAS_LIMIT
         : EAC_SCHEDULING_CONFIG.FUTURE_GAS_LIMIT;
     },
-    async toAddress() {
+    async hexAddress() {
       this.futureGasLimit = await this.estimateGas();
     }
   },
@@ -863,7 +884,7 @@ export default {
             : unit.toWei(this.amount.toString(), 'ether'),
           to: this.isTokenTransfer
             ? this.selectedCurrency.address
-            : this.toAddress,
+            : this.hexAddress,
           data: this.isTokenTransfer ? tokenTransferData : inputData
         };
 
@@ -898,7 +919,7 @@ export default {
         );
 
         return tokenContract.methods
-          .transferFrom(coinbase, this.toAddress, tokenAmount.toString())
+          .transferFrom(coinbase, this.hexAddress, tokenAmount.toString())
           .encodeABI();
       }
 
@@ -907,7 +928,7 @@ export default {
     async scheduleTx() {
       const {
         amount,
-        toAddress,
+        hexAddress,
         futureGasPrice,
         futureGasLimit,
         gasLimit,
@@ -938,7 +959,7 @@ export default {
       };
 
       const schedulingOptions = {
-        toAddress: isTokenTransfer ? selectedCurrency.address : toAddress,
+        toAddress: isTokenTransfer ? selectedCurrency.address : hexAddress,
         windowStart: new BigNumber(
           timestampScheduling ? timestamp : selectedBlockNumber
         ),
@@ -966,6 +987,10 @@ export default {
       }
 
       this.eac.schedule(schedulingOptions);
+    },
+    copyToClipboard(ref) {
+      this.$refs[ref].select();
+      document.execCommand('copy');
     }
   }
 };
