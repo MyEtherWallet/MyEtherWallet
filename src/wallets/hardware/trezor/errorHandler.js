@@ -1,23 +1,34 @@
 import { Toast } from '@/helpers';
+import Vue from 'vue';
+
 const ERRORS = {
-  POPUP_CLOSED: 'Popup closed',
-  DEVICE_DISCONNECTED: 'Device disconnected',
-  DEVICE_DISCONNECTED_ACTION: 'device disconnected during action',
-  ACTION_CANCELLED: 'Action cancelled by user',
-  NO_PERMISSION: 'Permissions not granted',
-  DEVICE_CALL_IN_PROGRESS: 'Device call in progress',
-  TRANSPORT_MISSING: 'Transport is missing'
+  'Popup closed': 'trezorError.popupClosed',
+  'Device disconnected': 'trezorError.deviceDisconnect',
+  'device disconnected during action': 'trezorError.deviceDisconnectAction',
+  'Action cancelled by user': 'trezorError.userCancelledAction',
+  'Permissions not granted': 'trezorError.noPermission',
+  'Device call in progress': 'trezorError.callInProgress',
+  'Transport is missing': 'trezorError.transportMissing',
+  Cancelled: 'trezorError.cancelled'
 };
 
 const WARNING = {};
 
 export default err => {
-  const errorValues = Object.values(ERRORS);
-  const warningValues = Object.values(WARNING);
-  if (errorValues.includes(err.message)) {
-    Toast.responseHandler(err, Toast.ERROR);
-  } else if (warningValues.includes(err.message)) {
-    Toast.responseHandler(err, Toast.WARN);
+  const errorValues = Object.keys(ERRORS);
+  const warningValues = Object.keys(WARNING);
+  const foundError = errorValues.find(item => {
+    return item.includes(err.message);
+  });
+
+  const foundWarning = warningValues.find(item => {
+    return item.includes(err.message);
+  });
+
+  if (foundError) {
+    Toast.responseHandler(Vue.$i18n.t(ERRORS[foundError]), Toast.ERROR);
+  } else if (foundWarning) {
+    Toast.responseHandler(Vue.$i18n.t(WARNING[foundWarning]), Toast.WARN);
   } else {
     Toast.responseHandler(err, false);
   }

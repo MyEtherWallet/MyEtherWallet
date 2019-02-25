@@ -1,5 +1,6 @@
 <template lang="html">
   <div>
+    <print-modal ref="printModal" :json-string="raw" />
     <json-string-modal ref="jsonStringModal" :update-json-string="updateJson" />
     <div class="name-available-container">
       <div v-if="$route.fullPath.includes('auction')" class="content-header">
@@ -182,9 +183,16 @@
             v-show="showDetail"
             class="submit"
             role="tab"
-            @click.prevent="downloadAndSend"
+            @click.prevent="send"
           >
-            {{ $t('dapps.saveAndNext') }}
+            Submit
+          </button>
+          <button
+            v-show="showDetail"
+            class="mid-round-button-green-border print-button"
+            @click="download"
+          >
+            Print
           </button>
         </div>
       </div>
@@ -196,13 +204,14 @@
 import Timer from '../../components/Timer';
 import JsonStringModal from '../../components/JsonStringModal';
 import { Misc, Toast } from '@/helpers';
-import printJS from 'print-js';
+import PrintModal from '../../components/PrintModal';
 import { mapGetters } from 'vuex';
 import BigNumber from 'bignumber.js';
 
 export default {
   components: {
     timer: Timer,
+    'print-modal': PrintModal,
     'json-string-modal': JsonStringModal
   },
   props: {
@@ -292,6 +301,19 @@ export default {
         new BigNumber(this.bidAmount).gte(this.MIN_BID) &&
         new BigNumber(this.bidMask).gte(this.bidAmount)
       );
+    },
+    constructedRaw() {
+      const raw = {
+        data: this.raw['data'],
+        from: this.raw['from'],
+        to: this.raw['to'],
+        value: this.raw['value'],
+        gasPrice: this.raw['gasPrice'],
+        gas: this.raw['gas'],
+        nonce: this.raw['nonce']
+      };
+
+      return raw;
     }
   },
   watch: {
@@ -335,7 +357,7 @@ export default {
     },
     parseRaw(raw) {
       this.jsonText = JSON.stringify({
-        name: raw.name,
+        name: `${raw.name}.eth`,
         nameSHA3: raw.nameSHA3,
         bidAmount: raw.bidAmount,
         bidMask: raw.bidMask,
@@ -352,26 +374,13 @@ export default {
       document.execCommand('copy');
       window.getSelection().removeAllRanges();
     },
-    downloadAndSend() {
-      const raw = {
-        data: this.raw['data'],
-        from: this.raw['from'],
-        to: this.raw['to'],
-        value: this.raw['value'],
-        gasPrice: this.raw['gasPrice'],
-        gas: this.raw['gas'],
-        nonce: this.raw['nonce']
-      };
-      if (!this.$route.fullPath.includes('reveal')) {
-        printJS({
-          printable: 'printableData',
-          type: 'html',
-          header: 'MyEtherWallet - ENS reveal bid'
-        });
-      }
-      this.web3.eth.sendTransaction(raw).catch(err => {
+    send() {
+      this.web3.eth.sendTransaction(this.constructedRaw).catch(err => {
         Toast.responseHandler(err, false);
       });
+    },
+    download() {
+      this.$refs.printModal.$refs.print.show();
     }
   }
 };

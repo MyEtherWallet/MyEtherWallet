@@ -8,7 +8,7 @@
       class="nopadding print-mod"
       size="lg"
     >
-      <div id="printContainer" class="print-modal">
+      <div ref="printContainer" class="print-modal">
         <div class="top-container">
           <div class="left-section">
             <div class="blockie-contianer">
@@ -186,7 +186,7 @@ export default {
   },
   methods: {
     async print() {
-      const element = document.getElementById('printContainer');
+      const element = this.$refs.printContainer;
       const screen = await html2canvas(element, {
         async: true,
         logging: false
