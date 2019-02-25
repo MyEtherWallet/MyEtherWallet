@@ -54,9 +54,6 @@ export default {
         return 0;
       });
     }
-  },
-  mounted() {
-    console.log(this.sortedObject);
   }
 };
 </script>
