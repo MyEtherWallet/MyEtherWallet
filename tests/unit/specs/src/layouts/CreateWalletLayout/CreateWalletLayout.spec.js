@@ -11,11 +11,7 @@ import ScanToDownloadModal from '@/layouts/CreateWalletLayout/components/ScanToD
 import CreateWalletInputFooter from '@/layouts/CreateWalletLayout/components/CreateWalletInputFooter/CreateWalletInputFooter.vue';
 import sinon from 'sinon';
 import { Tooling } from '@@/helpers';
-const RouterLinkStub = {
-  name: 'router-link',
-  template: '<div><slot></slot></div>',
-  props: ['to']
-};
+import { RouterLinkStub } from '@@/helpers/setupTooling';
 
 //xdescribe
 describe('CreateWalletLayout.vue', () => {

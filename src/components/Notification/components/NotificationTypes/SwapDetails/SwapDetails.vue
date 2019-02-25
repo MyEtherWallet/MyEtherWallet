@@ -150,7 +150,11 @@
           <p>{{ $t('header.transactionHash') }}:</p>
           <div class="detail-data">
             <p>
-              <a :href="hashLink(notice.hash)" target="_blank">
+              <a
+                :href="hashLink(notice.hash)"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
                 {{ notice.hash }}
               </a>
             </p>

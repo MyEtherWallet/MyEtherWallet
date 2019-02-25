@@ -51,7 +51,9 @@
       >
         <div v-if="$route.fullPath === '/'" class="vintage-header">
           Missing the vintage MEW?
-          <a href="https://vintage.myetherwallet.com">Click here to go back!</a>
+          <a rel="noopener noreferrer" href="https://vintage.myetherwallet.com"
+            >Click here to go back!</a
+          >
         </div>
         <div
           :class="[

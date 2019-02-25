@@ -1,23 +1,10 @@
-describe('[failing] SwapContainer.vue', () => {
-  xit('placeholder', () => {});
-});
-
-/*
-import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import SwapContainer from '@/layouts/InterfaceLayout/containers/SwapContainer/SwapContainer.vue';
 import { Tooling } from '@@/helpers';
 import CurrencyPicker from '@/layouts/InterfaceLayout/components/CurrencyPicker/CurrencyPicker.vue';
 import SwapConfirmationModal from '@/layouts/InterfaceLayout/containers/SwapContainer/components/SwapConfirmationModal/SwapConfirmationModal.vue';
-import { state, getters } from '@@/helpers/mockStore';
-
 import sinon from 'sinon';
-const RouterLinkStub = {
-  name: 'router-link',
-  template: '<p> <slot> </slot></p>',
-  // render: ()=>{},
-  props: ['to']
-};
+import { RouterLinkStub } from '@@/helpers/setupTooling';
 
 const showModal = sinon.spy();
 
@@ -30,19 +17,13 @@ const BModalStub = {
   }
 };
 
-//xdescribe
-describe('[failing] SwapContainer.vue', () => {
+describe('SwapContainer.vue', () => {
   let localVue, i18n, wrapper, store;
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
     store = baseSetup.store;
-
-    store = new Vuex.Store({
-      getters,
-      state
-    });
   });
 
   beforeEach(() => {
@@ -100,36 +81,36 @@ describe('[failing] SwapContainer.vue', () => {
     }
   });
 
-  describe('SwapContainer.vue Methods', () => {
-    let localVue, i18n, wrapper, store;
+  // describe('SwapContainer.vue Methods', () => {
+  //   let localVue, i18n, wrapper, store;
 
-    beforeAll(() => {
-      const baseSetup = Tooling.createLocalVueInstance();
-      localVue = baseSetup.localVue;
-      i18n = baseSetup.i18n;
-      store = baseSetup.store;
-    });
+  //   beforeAll(() => {
+  //     const baseSetup = Tooling.createLocalVueInstance();
+  //     localVue = baseSetup.localVue;
+  //     i18n = baseSetup.i18n;
+  //     store = baseSetup.store;
+  //   });
+  // });
 
-    beforeEach(() => {
-      wrapper = shallowMount(SwapContainer, {
-        localVue,
-        i18n,
-        store,
-        attachToDocument: true,
-        stubs: {
-          'currency-picker': CurrencyPicker,
-          'swap-confirmation-modal': SwapConfirmationModal,
-          'router-link': RouterLinkStub,
-          'b-modal': BModalStub
-        }
-      });
-    });
+  //   beforeEach(() => {
+  //     wrapper = shallowMount(SwapContainer, {
+  //       localVue,
+  //       i18n,
+  //       store,
+  //       attachToDocument: true,
+  //       stubs: {
+  //         'currency-picker': CurrencyPicker,
+  //         'swap-confirmation-modal': SwapConfirmationModal,
+  //         'router-link': RouterLinkStub,
+  //         'b-modal': BModalStub
+  //       }
+  //     });
+  //   });
 
-    xit('[Failing] should open swapConfirmationModal when click button', () => {
-      const btnSubmit = wrapper.find('.submit-button');
-      btnSubmit.trigger('click');
-      expect(showModal.called).toBe(true);
-    });
-  });
+  //   xit('[Failing] should open swapConfirmationModal when click button', () => {
+  //     const btnSubmit = wrapper.find('.submit-button');
+  //     btnSubmit.trigger('click');
+  //     expect(showModal.called).toBe(true);
+  //   });
+  // });
 });
-*/
