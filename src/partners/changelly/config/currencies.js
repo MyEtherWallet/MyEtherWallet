@@ -52,7 +52,7 @@ const ChangellyCurrencies = {
   RCN: { symbol: 'RCN', name: 'Ripio Credit Network', fixRateEnabled: true },
   REP: { symbol: 'REP', name: 'Augur', fixRateEnabled: true },
   RFR: { symbol: 'RFR', name: 'Refereum', fixRateEnabled: false },
-  RLC: { symbol: 'RLC', name: 'iEx.ec', fixRateEnabled: true },
+  RLC: { symbol: 'RLC', name: 'iExec RLC', fixRateEnabled: true },
   SALT: { symbol: 'SALT', name: 'Salt', fixRateEnabled: true },
   SNM: { symbol: 'SNM', name: 'SONM', fixRateEnabled: false },
   STORJ: { symbol: 'STORJ', name: 'Storj', fixRateEnabled: true },

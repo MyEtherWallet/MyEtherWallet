@@ -1,11 +1,9 @@
 import Vue from 'vue';
-import VueX from 'vuex';
 import sinon from 'sinon';
 import { shallowMount } from '@vue/test-utils';
 import InterfaceTokens from '@/layouts/InterfaceLayout/components/InterfaceTokens/InterfaceTokens.vue';
 import InterfaceTokensModal from '@/layouts/InterfaceLayout/components/InterfaceTokensModal/InterfaceTokensModal.vue';
 import { Tooling } from '@@/helpers';
-import { state, getters } from '@@/helpers/mockStore';
 
 const showModal = sinon.stub();
 const hideModal = sinon.stub();
@@ -39,12 +37,6 @@ describe('InterfaceTokens.vue', () => {
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
     store = baseSetup.store;
-
-    store = new VueX.Store({
-      getters,
-      state
-    });
-
     Vue.config.warnHandler = () => {};
   });
 
