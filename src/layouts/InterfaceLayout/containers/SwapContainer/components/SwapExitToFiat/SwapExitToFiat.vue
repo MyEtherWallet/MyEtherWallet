@@ -12,7 +12,7 @@
         <div class="accordion-menu-container">
           <!-- Phone Number - accordion-menu ******************************** -->
           <accordion-menu
-            :isopen="steps.step1"
+            :isopen="steps['step1']"
             :title="$t('interface.phoneNumber')"
             :greytitle="false"
             :editbutton="false"
@@ -42,7 +42,7 @@
           </accordion-menu>
           <!-- Tan Code - accordion-menu ******************************** -->
           <accordion-menu
-            :isopen="steps.verifyStep"
+            :isopen="steps['verifyStep']"
             :greytitle="false"
             :editbutton="false"
             :title="$t('interface.enterVerification')"
@@ -69,7 +69,7 @@
           </accordion-menu>
           <!-- Bank Details - accordion-menu ******************************** -->
           <accordion-menu
-            :isopen="steps.step2"
+            :isopen="steps['step2']"
             :title="$t('interface.bankInfo')"
             :greytitle="false"
             :editbutton="true"
@@ -105,7 +105,7 @@
           </accordion-menu>
           <!-- Personal Details - accordion-menu ******************************** -->
           <accordion-menu
-            :isopen="steps.step3"
+            :isopen="steps['step3']"
             :title="$t('interface.personalInfo')"
             :greytitle="false"
             :editbutton="true"
@@ -167,19 +167,19 @@
         <!-- .accordion-menu-container -->
         <div class="button-container">
           <standard-button
-            v-if="steps.step1"
+            v-if="steps['step1']"
             :options="button1"
             :button-disabled="!isValidPhoneNumber"
             @click.native="registerPhone()"
           />
           <standard-button
-            v-if="steps.verifyStep"
+            v-if="steps['verifyStep']"
             :options="verifyButton"
             :button-disabled="!validTan"
             @click.native="confirmUser()"
           />
           <standard-button
-            v-if="steps.step2"
+            v-if="steps['step2']"
             :options="button2"
             @click.native="
               updateStep('step3');
@@ -187,7 +187,7 @@
             "
           />
           <standard-button
-            v-if="steps.step3"
+            v-if="steps['step3']"
             :options="button3"
             :button-disabled="!canSwap"
             @click.native="
