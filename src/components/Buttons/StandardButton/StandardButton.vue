@@ -64,7 +64,12 @@
     <div v-if="options.helpCenter" class="help-center-block">
       <p>
         Having issues?
-        <a href="https://kb.myetherwallet.com/" target="_blank">Help Center</a>
+        <a
+          href="https://kb.myetherwallet.com/"
+          rel="noopener noreferrer"
+          target="_blank"
+          >Help Center</a
+        >
       </p>
     </div>
   </div>
