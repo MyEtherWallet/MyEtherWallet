@@ -150,7 +150,7 @@ const setWeb3Instance = function({ dispatch, commit, state }, provider) {
         };
         arr[i].nonce = await (arr[i].nonce === undefined
           ? web3Instance.eth.getTransactionCount(
-              state.wallet.getChecksumAddressString()
+              state.wallet.getAddressString()
             )
           : arr[i].nonce);
         arr[i].nonce = +arr[i].nonce + i;
