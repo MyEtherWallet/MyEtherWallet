@@ -27,11 +27,17 @@
                   :key="content.text + index"
                   class="content"
                 >
-                  <router-link v-if="content.to !== undefined" :to="content.to">
+                  <div v-if="content.text === $t('common.customerSupport')">
+                    <customer-support :no-icon="true" />
+                  </div>
+                  <router-link
+                    v-else-if="content.to !== undefined"
+                    :to="content.to"
+                  >
                     <p>{{ content.text }}</p>
                   </router-link>
                   <a
-                    v-if="content.to === undefined"
+                    v-else-if="content.to === undefined"
                     :href="content.href"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -129,11 +135,13 @@
 <script>
 import { mapGetters } from 'vuex';
 import FeedbackModal from '@/components/FeedbackModal';
+import CustomerSupport from '@/components/CustomerSupport';
 const version = VERSION;
 
 export default {
   components: {
-    'feedback-modal': FeedbackModal
+    'feedback-modal': FeedbackModal,
+    'customer-support': CustomerSupport
   },
   data() {
     return {

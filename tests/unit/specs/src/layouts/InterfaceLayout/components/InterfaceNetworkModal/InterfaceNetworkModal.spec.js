@@ -1,9 +1,8 @@
 import Vue from 'vue';
-import Vuex from 'vuex';
+
 import { shallowMount } from '@vue/test-utils';
 import InterfaceNetworkModal from '@/layouts/InterfaceLayout/components/InterfaceNetworkModal/InterfaceNetworkModal.vue';
 import InterfaceBottomText from '@/components/InterfaceBottomText/InterfaceBottomText.vue';
-import { state, getters } from '@@/helpers/mockStore';
 
 import { Tooling } from '@@/helpers';
 
@@ -18,19 +17,6 @@ describe('InterfaceNetworkModal.vue', () => {
 
     Vue.config.errorHandler = () => {};
     Vue.config.warnHandler = () => {};
-
-    const actions = {
-      switchNetwork: jest.fn(),
-      setWeb3Instance: jest.fn()
-    };
-
-    store = new Vuex.Store({
-      getters,
-      state,
-      actions
-    });
-
-    Vue.config.errorHandler = () => {};
   });
 
   beforeEach(() => {

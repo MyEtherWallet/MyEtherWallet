@@ -1,8 +1,6 @@
-import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import CurrencyPicker from '@/layouts/InterfaceLayout/components/CurrencyPicker/CurrencyPicker.vue';
 import { Tooling } from '@@/helpers';
-import { state, getters } from '@@/helpers/mockStore';
 
 const currency = [
   { symbol: 'BTC', name: 'Bitcoin' },
@@ -17,11 +15,6 @@ describe('CurrencyPicker.vue', () => {
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
     store = baseSetup.store;
-
-    store = new Vuex.Store({
-      getters,
-      state
-    });
   });
 
   beforeEach(() => {
@@ -138,9 +131,9 @@ describe('CurrencyPicker.vue', () => {
   describe('CurrencyPicker.vue Methods', () => {
     it('should change open data when open dropdown method is called', () => {
       wrapper.find('.dropdown-container').trigger('click');
-      expect(wrapper.vm.$data.open).toBe(true);
+      expect(wrapper.vm.$data['open']).toBe(true);
       wrapper.find('.dropdown-container').trigger('click');
-      expect(wrapper.vm.$data.open).toBe(false);
+      expect(wrapper.vm.$data['open']).toBe(false);
     });
 
     xit('should render correct localCurrency data', () => {

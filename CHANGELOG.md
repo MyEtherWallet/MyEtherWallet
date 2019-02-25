@@ -2,15 +2,32 @@
 
 ### Devop
 
+- Add noscript page [#710](https://github.com/MyEtherWallet/MyEtherWallet/pull/710)
 - Fix list fetching issue on travis and couple of sentry issues [#692](https://github.com/MyEtherWallet/MyEtherWallet/pull/692)
+- Redo wallet errors, include translations [#685](https://github.com/MyEtherWallet/MyEtherWallet/pull/685)
+- Optimized batch transaction processing and ws block subscription [#704](https://github.com/MyEtherWallet/MyEtherWallet/pull/704)
+
+### Bug
+
+- Fix Send TX confirmation modal [#694](https://github.com/MyEtherWallet/MyEtherWallet/pull/694)
+- Fix offline Worker issue [#690](https://github.com/MyEtherWallet/MyEtherWallet/pull/690)
+- Fix header UI bug [#701](https://github.com/MyEtherWallet/MyEtherWallet/pull/701)
+- Update Inteface side menu button UI [#698](https://github.com/MyEtherWallet/MyEtherWallet/pull/698)
+
+### Feature
+
+- Print ENS bid details [#699](https://github.com/MyEtherWallet/MyEtherWallet/pull/699)
 
 ### Release v5.0.3
 
 ### Bug
 
-- Fix header UI bug [#701](https://github.com/MyEtherWallet/MyEtherWallet/pull/701)
 - Fix NaN issue on settings modal [#682](https://github.com/MyEtherWallet/MyEtherWallet/pull/682)
 - Multiple Sentry fixes, custom paths, Safari worker fix [#680](https://github.com/MyEtherWallet/MyEtherWallet/pull/680)
+
+### Feature
+
+- Add Prefilled form for contact support [](<>)
 
 ### Devop
 
