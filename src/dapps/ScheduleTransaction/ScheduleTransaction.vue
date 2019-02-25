@@ -787,12 +787,15 @@ export default {
     this.datetime = moment()
       .add(1, 'days')
       .toISOString();
-    this.futureGasPrice = this.gasPrice.toString();
+    this.futureGasPrice = (this.gasPrice >= this.minGasPrice
+      ? this.gasPrice
+      : this.minGasPrice
+    ).toString();
 
     this.timeBountyPresets = [
-      estimateBountyForGasPrice(this.gasPrice * 5, this.futureGasLimit),
-      estimateBountyForGasPrice(this.gasPrice * 8, this.futureGasLimit),
-      estimateBountyForGasPrice(this.gasPrice * 13, this.futureGasLimit)
+      estimateBountyForGasPrice(this.futureGasPrice * 5, this.futureGasLimit),
+      estimateBountyForGasPrice(this.futureGasPrice * 8, this.futureGasLimit),
+      estimateBountyForGasPrice(this.futureGasPrice * 13, this.futureGasLimit)
     ];
 
     this.timeBounty = this.timeBountyPresets[0];

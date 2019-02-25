@@ -64,7 +64,7 @@ const canBeConvertedToWei = (web3, string, denomination = 'ether') => {
 
 const estimateBountyForGasPrice = (gasPrice, futureGasLimit) => {
   const estimatedWei = Util.estimateBountyForExecutionGasPrice(
-    new BigNumber(unit.toWei(gasPrice.toString(), 'gwei')),
+    new BigNumber(unit.toWei(Math.round(gasPrice).toString(), 'gwei')),
     new BigNumber(futureGasLimit.toString()),
     new BigNumber(unit.toWei('0', 'gwei'))
   );
