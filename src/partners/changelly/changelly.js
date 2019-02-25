@@ -94,7 +94,7 @@ export default class Changelly {
 
   async getRate(fromCurrency, toCurrency, fromValue) {
     if (this.useFixed && this.currencies[toCurrency]) {
-      if (this.fixedEnabled(toCurrency)) {
+      if (this.fixedEnabled(toCurrency) && this.fixedEnabled(fromCurrency)) {
         return this.getFixedRate(fromCurrency, toCurrency, fromValue);
       }
       return this.getMarketRate(fromCurrency, toCurrency, fromValue);
@@ -183,13 +183,11 @@ export default class Changelly {
   getUpdatedFromCurrencyEntries(value, collectMap) {
     if (this.currencies[value.symbol]) {
       for (const prop in this.currencies) {
-        // if (prop !== value.symbol) {
         if (this.currencies[prop])
           collectMap.set(prop, {
             symbol: prop,
             name: this.currencies[prop].name
           });
-        // }
       }
     }
   }
@@ -197,13 +195,11 @@ export default class Changelly {
   getUpdatedToCurrencyEntries(value, collectMap) {
     if (this.currencies[value.symbol]) {
       for (const prop in this.currencies) {
-        // if (prop !== value.symbol) {
         if (this.currencies[prop])
           collectMap.set(prop, {
             symbol: prop,
             name: this.currencies[prop].name
           });
-        // }
       }
     }
   }
@@ -244,7 +240,7 @@ export default class Changelly {
       refundAddress
     };
     if (this.useFixed && this.currencies[toCurrency]) {
-      if (this.fixedEnabled(toCurrency)) {
+      if (this.fixedEnabled(toCurrency) && this.fixedEnabled(fromCurrency)) {
         return this.createFixedTransaction(transactionDetails);
       }
       return this.createMarketTransaction(transactionDetails);

@@ -6,10 +6,11 @@ const errorLogger = debugLogger('v5-error:kyber-api');
 
 const retrieveRatesFromAPI = async (
   network,
-  rates = new Map(),
-  tokenDetails = {}
+  rates = new Map()
 ) => {
+
   try {
+    const tokenDetails = {};
     const apiRates = await kyberCalls.getRates(network);
     const data = Object.keys(apiRates);
     data.forEach(key => {

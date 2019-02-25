@@ -273,7 +273,7 @@ export default {
       selectedProvider: {},
       swapDetails: {},
       currencyDetails: {},
-      swap: new Swap(providers, {
+      swap: new SwapProviders(providers, {
         network: this.$store.state.network.type.name,
         web3: this.$store.state.web3,
         getRateForUnit: true
@@ -443,16 +443,10 @@ export default {
       const validBaseToAddress = this.toAddress !== '' && this.validAddress;
 
       if (this.isExitToFiat) {
-        // const validExitAddress =
         if (this.fromCurrency === this.baseCurrency) {
-          // this.exitFromAddress = this.currentAddress;
           return true;
         }
         return this.exitFromAddress !== '' && this.validExitAddress;
-        // return (
-        //   (validBaseToAddress && validExitAddress) ||
-        //   this.fromCurrency === this.baseCurrency
-        // );
       }
       if (this.showRefundAddress) {
         const validRefundAddress =
@@ -518,7 +512,7 @@ export default {
       this.providerData = [];
       this.haveProviderRates = false;
       this.loadingData = false;
-      this.swap = new Swap(providers, {
+      this.swap = new SwapProviders(providers, {
         network: newVal.type.name,
         web3: this.web3
       });
@@ -574,9 +568,6 @@ export default {
     },
     setExitFromAddress(address) {
       this.exitFromAddress = address;
-    },
-    setAddressValid(value) {
-      this.validAddress = value;
     },
     swapAll() {
       this.fromValue = this.swap.convertToTokenBase(
