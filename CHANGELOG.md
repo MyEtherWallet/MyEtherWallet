@@ -1,5 +1,9 @@
 ### Release v5.0.4
 
+### Feature
+
+- Add animation to FAQs [#691](https://github.com/MyEtherWallet/MyEtherWallet/pull/691)
+
 ### Devop
 
 - Add noscript page [#710](https://github.com/MyEtherWallet/MyEtherWallet/pull/710)
