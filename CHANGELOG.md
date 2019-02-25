@@ -6,6 +6,7 @@
 - Add noscript page [#710](https://github.com/MyEtherWallet/MyEtherWallet/pull/710)
 - Fix list fetching issue on travis and couple of sentry issues [#692](https://github.com/MyEtherWallet/MyEtherWallet/pull/692)
 - Redo wallet errors, include translations [#685](https://github.com/MyEtherWallet/MyEtherWallet/pull/685)
+- Optimized batch transaction processing and ws block subscription [#704](https://github.com/MyEtherWallet/MyEtherWallet/pull/704)
 
 ### Bug
 
