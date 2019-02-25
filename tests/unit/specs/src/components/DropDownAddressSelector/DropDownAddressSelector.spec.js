@@ -10,7 +10,7 @@ function shortenAddress(address) {
 }
 
 describe('DropDownAddressSelector.vue', () => {
-  let localVue, i18n, store;
+  let localVue, i18n, store, wrapper;
 
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
@@ -29,7 +29,6 @@ describe('DropDownAddressSelector.vue', () => {
   });
 
   xit('render correct addresses', () => {
-    const wrapper = shallowMount(DropDownAddressSelector);
     const dropdownOpen = wrapper.find('.dropdown-open-button');
     dropdownOpen.trigger('click');
     expect(wrapper.vm.$data.dropdownOpen).toBe(true);

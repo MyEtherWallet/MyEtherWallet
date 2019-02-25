@@ -22,6 +22,12 @@ const browserName = () => {
   return undefined;
 };
 
+const browserOs = () => {
+  const browser = detect();
+  if (browser && browser.os) return browser.os;
+  return undefined;
+};
+
 const doesExist = val => val !== undefined && val !== null;
 
 const padLeftEven = hex => {
@@ -173,5 +179,6 @@ export default {
   reorderNetworks,
   isDarklisted,
   solidityType,
-  browserName
+  browserName,
+  browserOs
 };
