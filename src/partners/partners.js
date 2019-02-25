@@ -77,8 +77,6 @@ export default class SwapProviders {
     return this.providers.has(name);
   }
 
-
-
   updateNetwork(network) {
     this.providers.forEach(provider => {
       provider.setNetwork(network);
@@ -143,7 +141,10 @@ export default class SwapProviders {
         return { providersFound, callsToMake };
       }
     }
-    return { providersFound: [], callsToMake: [] };
+    return {
+      providersFound: [],
+      callsToMake: []
+    };
   }
 
   getTokenAddress(currency, noError) {
@@ -205,12 +206,6 @@ export default class SwapProviders {
     return new BigNumber(value).div(denominator).toString(10);
   }
 
-
-
-  // callProviderMethod(methodName, argObject) {
-  //   return;
-  // }
-
   async startSwap({
     providerDetails,
     fromValue,
@@ -236,7 +231,9 @@ export default class SwapProviders {
       };
       if (this.providers.has(swapDetails.provider)) {
         const provider = this.providers.get(swapDetails.provider);
-        swapDetails.maybeToken = SwapProviders.isToken(swapDetails.fromCurrency);
+        swapDetails.maybeToken = SwapProviders.isToken(
+          swapDetails.fromCurrency
+        );
         return provider.startSwap(swapDetails);
       }
     } catch (e) {
