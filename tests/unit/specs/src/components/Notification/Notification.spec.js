@@ -1,7 +1,5 @@
-import VueX from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import Notification from '@/components/Notification/Notification.vue';
-import { state, getters } from '@@/helpers/mockStore';
 import { Tooling } from '@@/helpers';
 
 const showModal = jest.fn();
@@ -25,11 +23,6 @@ describe('Notification.vue', () => {
   });
 
   beforeEach(() => {
-    store = new VueX.Store({
-      getters,
-      state
-    });
-
     wrapper = shallowMount(Notification, {
       localVue,
       i18n,
@@ -52,7 +45,7 @@ describe('Notification.vue', () => {
   });
 
   describe('Notification.vue Methods', () => {
-    xit('should show notification when button click', () => {
+    it('should show notification when button click', () => {
       const notificationLogo = wrapper.find('.notification-logo');
       notificationLogo.trigger('click');
       expect(showModal).toHaveBeenCalled();

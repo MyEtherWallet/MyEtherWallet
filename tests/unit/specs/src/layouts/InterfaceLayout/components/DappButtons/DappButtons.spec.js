@@ -1,6 +1,5 @@
 import { shallowMount } from '@vue/test-utils';
 import DappButtons from '@/layouts/InterfaceLayout/components/DappButtons/DappButtons.vue';
-
 import { Tooling } from '@@/helpers';
 
 const RouterLinkStub = {
@@ -39,25 +38,25 @@ describe('DappButtons.vue', () => {
     });
   });
 
-  xit('[01/30/19] should render correct title', () => {
+  it('should render correct title', () => {
     expect(
       wrapper.vm.$el.querySelector('.dapps-button h4').textContent.trim()
     ).toEqual(title);
   });
 
-  xit('[01/30/19] should render correct description', () => {
+  it('should render correct description', () => {
     expect(
       wrapper.vm.$el.querySelector('.dapps-button p').textContent.trim()
     ).toEqual(desc);
   });
 
-  xit('[01/30/19] should render correct icon', () => {
+  it('should render correct icon', () => {
     expect(
       wrapper.vm.$el.querySelector('.dapps-button img').src.trim()
     ).toEqual(icon);
   });
 
-  xit('[01/30/19] should render correct param', () => {
+  it('should render correct param', () => {
     expect(wrapper.vm.$el.querySelector('.param').textContent.trim()).toEqual(
       param
     );

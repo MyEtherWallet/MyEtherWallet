@@ -1,7 +1,4 @@
-import {
-  TIME_SWAP_VALID_DEFAULT,
-  swapNotificationStatuses as notificationStatuses
-} from '../../partnersConfig/config';
+import { swapNotificationStatuses as notificationStatuses } from '../../partnersConfig/config';
 
 const changellyMethods = {
   ETH: {
@@ -30,7 +27,7 @@ const statuses = {
   hold: 'hold'
 };
 
-const TIME_SWAP_VALID = TIME_SWAP_VALID_DEFAULT;
+const TIME_SWAP_VALID = 300;
 const PROVIDER_NAME = 'changelly';
 const FEE_RATE = 0;
 
