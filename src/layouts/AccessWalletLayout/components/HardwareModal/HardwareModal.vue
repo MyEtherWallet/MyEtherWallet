@@ -138,8 +138,10 @@ export default {
 
         if (webUsb.includes(item.name)) {
           const disable =
-            window.location.protocol === 'https:' &&
-            (!window || !window.navigator || !window.navigator.usb);
+            window.location.protocol !== 'https:' ||
+            !window ||
+            !window.navigator ||
+            !window.navigator.usb;
           item.disabled = disable;
           item.msg = disable ? this.$t('errorsGlobal.browserNonWebUsb') : '';
         }
