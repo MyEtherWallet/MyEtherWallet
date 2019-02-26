@@ -9,6 +9,7 @@
 - Add noscript page [#710](https://github.com/MyEtherWallet/MyEtherWallet/pull/710)
 - Fix list fetching issue on travis and couple of sentry issues [#692](https://github.com/MyEtherWallet/MyEtherWallet/pull/692)
 - Redo wallet errors, include translations [#685](https://github.com/MyEtherWallet/MyEtherWallet/pull/685)
+- Identical build for production and gh-pages-history [#712](https://github.com/MyEtherWallet/MyEtherWallet/pull/712)
 - Optimized batch transaction processing and ws block subscription [#704](https://github.com/MyEtherWallet/MyEtherWallet/pull/704)
 
 ### Bug
@@ -16,11 +17,13 @@
 - Fix Send TX confirmation modal [#694](https://github.com/MyEtherWallet/MyEtherWallet/pull/694)
 - Fix offline Worker issue [#690](https://github.com/MyEtherWallet/MyEtherWallet/pull/690)
 - Update notification dot animation [#700](https://github.com/MyEtherWallet/MyEtherWallet/pull/700)
+- Fix information block UI [#693](https://github.com/MyEtherWallet/MyEtherWallet/pull/693)
 - Fix header UI bug [#701](https://github.com/MyEtherWallet/MyEtherWallet/pull/701)
 - Update Inteface side menu button UI [#698](https://github.com/MyEtherWallet/MyEtherWallet/pull/698)
 
 ### Feature
 
+- Sort by network support, add row gap [#720](https://github.com/MyEtherWallet/MyEtherWallet/pull/720)
 - Print ENS bid details [#699](https://github.com/MyEtherWallet/MyEtherWallet/pull/699)
 
 ### Release v5.0.3
