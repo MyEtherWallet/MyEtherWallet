@@ -3,7 +3,9 @@ import { checkInvalidOrMissingValue, utils } from './helpers';
 import {
   BASE_CURRENCY,
   TOP_OPTIONS_ORDER,
-  EthereumTokens
+  EthereumTokens,
+  OtherCoins,
+  fiat
 } from './partnersConfig';
 
 function comparator(a, b) {
@@ -152,24 +154,38 @@ export default class SwapProviders {
     throw Error('Not an Ethereum Token');
   }
 
-  calculateFromValue(toValue, bestRate) {
+  calculateFromValue(toValue, bestRate, currency) {
+    const decimals = this.decimalForCalculation(currency);
     return checkInvalidOrMissingValue(
       new BigNumber(toValue)
-        .div(bestRate)
-        .toFixed(6)
+        .div(new BigNumber(bestRate))
+        .toFixed(decimals)
         .toString(10),
       false
     );
   }
 
-  calculateToValue(fromValue, bestRate) {
+  calculateToValue(fromValue, bestRate, currency) {
+    const decimals = this.decimalForCalculation(currency);
     return checkInvalidOrMissingValue(
       new BigNumber(fromValue)
-        .times(bestRate)
-        .toFixed(6)
+        .times(new BigNumber(bestRate))
+        .toFixed(decimals)
         .toString(10),
       true
     );
+  }
+
+  decimalForCalculation(currency) {
+    if (!currency) return 6;
+    if (fiat.find(entry => entry.symbol === currency)) {
+      return 2;
+    } else if (this.isToken(currency)) {
+      const decimal = this.getTokenDecimals(currency);
+      if (decimal < 6) return decimal;
+      return 6;
+    }
+    return 6;
   }
 
   convertToTokenWei(token, value) {
@@ -190,6 +206,8 @@ export default class SwapProviders {
   getTokenDecimals(currency) {
     if (this.isToken(currency)) {
       return EthereumTokens[currency].decimals;
+    } else if (currency === 'ETH') {
+      return 18;
     }
     throw Error('Not an Ethereum Token');
   }
@@ -200,6 +218,31 @@ export default class SwapProviders {
 
   hasKnownTokenBalance() {
     return;
+  }
+
+  static isNotToken(currency) {
+    return !EthereumTokens[currency];
+  }
+
+  // Get address explorer base url for non-ethereum blockchain
+  static getAddressLookupUrl(coin, address) {
+    if (OtherCoins[coin] && OtherCoins[coin].addressLookup) {
+      if (address) {
+        return OtherCoins[coin].addressLookup.replace('[[address]]', address);
+      }
+      return OtherCoins[coin].addressLookup;
+    }
+    return '';
+  }
+  // Get transaction explorer base url for non-ethereum blockchain
+  static getBlockChainExplorerUrl(coin, hash) {
+    if (OtherCoins[coin] && OtherCoins[coin].explorer) {
+      if (hash) {
+        return OtherCoins[coin].explorer.replace('[[txHash]]', hash);
+      }
+      return OtherCoins[coin].explorer;
+    }
+    return '';
   }
 
   async startSwap({

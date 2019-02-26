@@ -8,6 +8,7 @@ const InterfaceLayout = () => import('@/layouts/InterfaceLayout');
 const HelpCenterLayout = () => import('@/layouts/HelpCenterLayout');
 const NotFoundLayout = () => import('@/layouts/NotFoundLayout');
 const GettingStarted = () => import('@/layouts/GettingStarted');
+const SendOfflineHelper = () => import('@/layouts/SendOfflineHelper');
 
 const DappsContainer = () =>
   import('@/layouts/InterfaceLayout/containers/DappsContainer');
@@ -27,7 +28,6 @@ const VerifyMessageContainer = () =>
   import('@/layouts/InterfaceLayout/containers/VerifyMessageContainer');
 
 import dapps from '@/dapps/routes';
-import offlineRoutes from '@/layouts/InterfaceLayout/containers/SendOfflineContainer/routes';
 
 const router = [
   {
@@ -73,6 +73,12 @@ const router = [
     meta: { requiresAuth: false }
   },
   {
+    path: '/send-offline-helper',
+    name: 'SendOfflineHelper',
+    component: SendOfflineHelper,
+    meta: { requiresAuth: false }
+  },
+  {
     path: '*',
     name: '404',
     component: NotFoundLayout,
@@ -109,8 +115,8 @@ const router = [
       },
       {
         path: 'send-offline',
-        component: SendOfflineContainer,
-        children: offlineRoutes.children
+        name: 'Send Offline Container',
+        component: SendOfflineContainer
       },
       {
         path: 'swap',

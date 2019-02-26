@@ -23,8 +23,24 @@
         <li>
           <p>{{ $t('common.toAddress') }}:</p>
           <p>
-            <a :href="addressLink(details.to)" target="_blank">
+            <a
+              :href="addressLink(details.to)"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
               {{ details.to }}
+            </a>
+          </p>
+        </li>
+        <li v-if="isContractCreation">
+          <p>{{ $t('common.createdContract') }}:</p>
+          <p>
+            <a
+              :href="addressLink(details.contractAddress)"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              {{ details.contractAddress }}
             </a>
           </p>
         </li>
@@ -40,7 +56,11 @@
           <p>{{ $t('header.transactionHash') }}:</p>
         </li>
         <li v-if="notice.hash">
-          <a :href="hashLink(notice.hash)" target="_blank">
+          <a
+            :href="hashLink(notice.hash)"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
             {{ notice.hash }}
           </a>
         </li>
@@ -48,7 +68,9 @@
           <p>{{ $t('header.errorMessage') }}:</p>
           <p>{{ errorMessage }}</p>
         </li>
-        <li @click="emitShowDetails">{{ $t('header.more') }}</li>
+        <li class="show-pointer" @click="emitShowDetails">
+          {{ $t('header.more') }}
+        </li>
       </ul>
     </div>
   </div>
@@ -127,6 +149,12 @@ export default {
     },
     isError() {
       return this.notice.body.error;
+    },
+    isContractCreation() {
+      return (
+        this.notice.body.contractAddress !== undefined &&
+        this.notice.body.contractAddress !== null
+      );
     },
     details() {
       return this.notice.body;

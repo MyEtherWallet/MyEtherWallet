@@ -49,7 +49,11 @@
           <p>{{ $t('header.transactionHash') }}:</p>
         </li>
         <li v-if="notice.hash" class="tx-hash">
-          <a :href="hashLink(notice.hash)" target="_blank">
+          <a
+            :href="hashLink(notice.hash)"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
             {{ notice.hash }}
           </a>
         </li>
@@ -58,7 +62,9 @@
           <p>{{ errorMessage }}</p>
         </li>
         <li>
-          <p @click="emitShowDetails">{{ $t('header.more') }}</p>
+          <p class="show-pointer" @click="emitShowDetails">
+            {{ $t('header.more') }}
+          </p>
         </li>
       </ul>
     </div>

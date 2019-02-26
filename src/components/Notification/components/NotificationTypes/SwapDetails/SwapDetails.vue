@@ -4,6 +4,15 @@
     <div class="notification-content">
       <ul>
         <li>
+          <!-- Change to use provider logo-->
+          <p>{{ $t('header.provider') }}:</p>
+          <div class="detail-data">
+            <p>
+              {{ details.provider }}
+            </p>
+          </div>
+        </li>
+        <li>
           <ul>
             <li>
               <p class="icon from-swap-icon">
@@ -14,7 +23,9 @@
               <p class="from-swap-text">
                 {{ details.fromValue }} {{ details.fromCurrency }}
               </p>
-              <p class="address">{{ details.from | concatAddress }}</p>
+              <p v-if="!isFromOtherChain" class="address">
+                {{ details.from | concatAddress }}
+              </p>
             </li>
             <li>
               <p class="swap-right-arrow"><img :src="arrowImage" /></p>
@@ -28,11 +39,10 @@
               <p class="to-swap-text">
                 {{ details.toValue }} {{ details.toCurrency }}
               </p>
-              <p class="address">{{ details.from | concatAddress }}</p>
+              <p class="address">{{ details.to | concatAddress }}</p>
             </li>
           </ul>
         </li>
-
         <li>
           <p>{{ $t('header.time') }}:</p>
           <div class="time-date">
@@ -56,13 +66,51 @@
             <p :class="['status', txStatus.class]">({{ txStatus.text }})</p>
           </div>
         </li>
-        <li>
+        <li v-if="isEthereum">
           <p>{{ $t('common.toAddress') }}:</p>
           <div class="detail-data">
             <p>
-              <a :href="addressLink(details.to)" target="_blank">
+              <a
+                :href="addressLink(details.to, details.toCurrency)"
+                target="_blank"
+              >
                 {{ details.to }}
               </a>
+            </p>
+          </div>
+        </li>
+        <li v-if="isFromOtherChain">
+          <p>
+            {{
+              $t('header.providerDepositAddress', {
+                provider: notice.body.provider
+              })
+            }}:
+          </p>
+          <div class="detail-data">
+            <p>
+              <a
+                :href="
+                  addressLink(details.providerAddress, details.fromCurrency)
+                "
+                target="_blank"
+              >
+                {{ details.providerAddress }}
+              </a>
+            </p>
+          </div>
+        </li>
+        <li v-if="notice.body.provider === providerNames.bity">
+          <p>
+            {{
+              $t('header.providerDepositAddress', {
+                provider: notice.body.provider
+              })
+            }}:
+          </p>
+          <div class="detail-data">
+            <p>
+              {{ details.orderId }}
             </p>
           </div>
         </li>
@@ -102,7 +150,11 @@
           <p>{{ $t('header.transactionHash') }}:</p>
           <div class="detail-data">
             <p>
-              <a :href="hashLink(notice.hash)" target="_blank">
+              <a
+                :href="hashLink(notice.hash)"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
                 {{ notice.hash }}
               </a>
             </p>
@@ -126,7 +178,7 @@ import '@/assets/images/currency/coins/asFont/cryptocoins.css';
 import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
 import Arrow from '@/assets/images/etc/single-arrow.svg';
 
-import { providerMap, fiat, EthereumTokens } from '@/partners';
+import { providerMap, providerNames, fiat, EthereumTokens } from '@/partners';
 
 import {
   swapOnlyStatuses,
@@ -195,6 +247,7 @@ export default {
   },
   data() {
     return {
+      providerNames: providerNames,
       timerInterval: null,
       statusInterval: null,
       arrowImage: Arrow,
@@ -231,6 +284,12 @@ export default {
     },
     isEthereum() {
       return EthereumTokens[this.notice.body.fromCurrency] !== undefined;
+    },
+    isToOtherChain() {
+      return EthereumTokens[this.notice.body.toCurrency] === undefined;
+    },
+    isFromOtherChain() {
+      return EthereumTokens[this.notice.body.fromCurrency] === undefined;
     },
     isFromFiat() {
       return this.fiatCurrencies.includes(this.notice.body.fromCurrency);

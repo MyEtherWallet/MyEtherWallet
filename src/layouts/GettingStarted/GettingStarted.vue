@@ -6,15 +6,20 @@
 
     <div class="wrap">
       <div class="nav-dots">
-        <p><i class="fa fa-angle-up" aria-hidden="true" /></p>
+        <p>
+          <i class="fa fa-angle-up" aria-hidden="true" />
+        </p>
         <ul>
-          <li :class="cwwCurrent == 0 ? 'active' : ''" />
-          <li :class="cwwCurrent == 1 ? 'active' : ''" />
-          <li :class="cwwCurrent == 2 ? 'active' : ''" />
-          <li :class="cwwCurrent == 3 ? 'active' : ''" />
-          <li :class="cwwCurrent == 4 ? 'active' : ''" />
+          <li :class="cwwCurrent === 0 ? 'active' : ''" />
+          <li :class="cwwCurrent === 1 ? 'active' : ''" />
+          <li :class="cwwCurrent === 2 ? 'active' : ''" />
+          <li :class="cwwCurrent === 3 ? 'active' : ''" />
+          <li :class="cwwCurrent === 4 ? 'active' : ''" />
+          <li :class="cwwCurrent === 5 ? 'active' : ''" />
         </ul>
-        <p><i class="fa fa-angle-down" aria-hidden="true" /></p>
+        <p>
+          <i class="fa fa-angle-down" aria-hidden="true" />
+        </p>
       </div>
 
       <what-is-mew
@@ -49,21 +54,34 @@
       />
 
       <div class="create-wallet-warnings__footer-container">
-        <div class="create-wallet-warnings__mouse-scroll">
-          <img src="~@/assets/images/icons/mouse.svg" />
-          <p>{{ $t('gettingStarted.scroll') }}</p>
+        <div class="create-wallet-warnings__continue-button">
+          <standard-button
+            v-if="cwwCurrent != '0'"
+            :options="backButton"
+            @click.native="mouseScrollUp"
+          />
+          <standard-button
+            v-if="cwwCurrent !== 5"
+            :options="nextButton"
+            @click.native="mouseScrollDown"
+          />
+          <standard-button
+            v-if="cwwCurrent == 5"
+            :options="getStartedButton"
+            @click.native="done"
+          />
         </div>
         <div class="create-wallet-warnings__footer">
           <div class="create-wallet-warnings__links">
-            <router-link class="footer-color" to="/">{{
-              $t('header.home')
-            }}</router-link>
-            <router-link class="footer-color" to="/privacy-policy">{{
-              $t('footer.privacy')
-            }}</router-link>
-            <router-link class="footer-color" to="/terms-and-conditions">{{
-              $t('common.terms')
-            }}</router-link>
+            <router-link class="footer-color" to="/">
+              {{ $t('header.home') }}
+            </router-link>
+            <router-link class="footer-color" to="/privacy-policy">
+              {{ $t('footer.privacy') }}
+            </router-link>
+            <router-link class="footer-color" to="/terms-and-conditions">
+              {{ $t('common.terms') }}
+            </router-link>
           </div>
           <div class="create-wallet-warnings__copyright">
             <p class="footer-color">{{ $t('footer.copyright') }}</p>
@@ -85,7 +103,8 @@ import WhatIfILoseMyKeysOrPassword from './components/WhatIfILoseMyKeysOrPasswor
 import SomeHelpfulTips from './components/SomeHelpfulTips';
 import WhatIsUpside from './components/WhatIsUpside';
 import Congratulations from './components/Congratulations';
-import utils from 'web3-utils';
+import StandardButton from '@/components/Buttons/StandardButton';
+import store from 'store';
 
 export default {
   components: {
@@ -94,37 +113,41 @@ export default {
     'what-if-i-lose-key': WhatIfILoseMyKeysOrPassword,
     'some-helpful-tips': SomeHelpfulTips,
     'what-is-upside': WhatIsUpside,
-    congratulations: Congratulations
+    congratulations: Congratulations,
+    'standard-button': StandardButton
   },
   data() {
     return {
       cwwCurrent: 0,
       cwwRefs: ['cww1', 'cww2', 'cww3', 'cww4', 'cww5', 'cww6'],
-      scrollListener: function() {}
-    };
-  },
-  mounted: function() {
-    this.scrollListener = e => {
-      if (e.deltaY < -6) {
-        this.mouseScrollUp();
+      nextButton: {
+        title: this.$t('common.next'),
+        buttonStyle: 'green',
+        rightArrow: true,
+        noMinWidth: false
+      },
+      backButton: {
+        title: this.$t('common.back'),
+        buttonStyle: 'green-transparent',
+        rightArrow: false,
+        noMinWidth: true,
+        buttonDisabled: false
+      },
+      getStartedButton: {
+        title: 'Get Started',
+        buttonStyle: 'green',
+        rightArrow: false,
+        noMinWidth: true,
+        buttonDisabled: false
       }
-      if (e.deltaY > 6) {
-        this.mouseScrollDown();
-      }
     };
-
-    window.addEventListener(
-      'wheel',
-      utils._.throttle(this.scrollListener, 600)
-    );
-  },
-  beforeDestroy() {
-    window.removeEventListener(
-      'wheel',
-      utils._.throttle(this.scrollListener, 600)
-    );
   },
   methods: {
+    done() {
+      store.set('skipTutorial', 'done');
+      this.$router.push({ path: 'create-wallet' });
+      this.$store.dispatch('gettingStartedDone');
+    },
     mouseScrollDown: function() {
       if (this.cwwCurrent < this.cwwRefs.length - 1) {
         this.cwwCurrent++;

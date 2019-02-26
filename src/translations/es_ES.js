@@ -13,6 +13,13 @@ import accessWallet from './access-wallet/es_ES';
 import interfaceTranslations from './interface/es_ES';
 import team from './team/es_ES';
 import popover from './popover/es_ES';
+import withoutWallet from './without-wallet/es_ES';
+import errorsGlobal from './errors-global/es_ES';
+import trezorError from './errors-trezor/es_ES';
+import ledgerError from './errors-ledger/es_ES';
+import secalotError from './errors-secalot/es_ES';
+import keepkeyError from './errors-keepkey/es_ES';
+import bitboxError from './errors-bitbox/es_ES';
 
 const es_ES = {
   common: common,
@@ -28,6 +35,13 @@ const es_ES = {
   accessWallet: accessWallet,
   createWallet: createWallet,
   interface: interfaceTranslations,
-  popover: popover
+  popover: popover,
+  withoutWallet: withoutWallet,
+  errorsGlobal: errorsGlobal,
+  trezorError: trezorError,
+  ledgerError: ledgerError,
+  secalotError: secalotError,
+  keepkeyError: keepkeyError,
+  bitboxError: bitboxError
 };
 export default es_ES;

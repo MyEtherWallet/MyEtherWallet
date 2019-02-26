@@ -74,7 +74,10 @@
   display: flex;
 
   > li {
-    //position: relative;
     margin: 0 auto;
+    .provider-address-details {
+      text-align: center;
+      margin-right: 15px;
+    }
   }
 }

@@ -1,5 +1,9 @@
 @import '~@/scss/GlobalVariables';
 @media all and (min-width: calc(#{$tablet-width} + 1px)) {
+  .mobile-interface-address-block {
+    display: none;
+  }
+
   .wrap {
     display: grid;
     grid-column-gap: 0;
@@ -7,6 +11,10 @@
 
     @media all and (max-width: $interface--mobile-side-menu--width) {
       grid-template-columns: 0 1fr;
+    }
+
+    .sidemenu {
+      background-color: $white;
     }
 
     .contents {
@@ -19,6 +27,12 @@
         grid-template-areas: 'info-1 info-2 info-3' 'main main tokens';
         grid-template-columns: 1fr 1fr 1fr;
         grid-template-rows: auto;
+
+        .content-container {
+          > * {
+            height: 100%;
+          }
+        }
 
         .tokens {
           border-radius: 5px;
@@ -65,4 +79,8 @@
       }
     }
   }
+}
+
+.interface-layout {
+  background-color: $light-grey-2;
 }
