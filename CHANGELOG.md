@@ -17,6 +17,7 @@
 
 ### Bug
 
+- Fix Mnemonic Phrase print page UI [#721](https://github.com/MyEtherWallet/MyEtherWallet/pull/721)
 - Fix Send TX confirmation modal [#694](https://github.com/MyEtherWallet/MyEtherWallet/pull/694)
 - Fix offline Worker issue [#690](https://github.com/MyEtherWallet/MyEtherWallet/pull/690)
 - Fix information block UI [#693](https://github.com/MyEtherWallet/MyEtherWallet/pull/693)
