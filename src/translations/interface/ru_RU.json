@@ -3,7 +3,7 @@
   "save": "Сохранить",
   "dontKnow": "Не знаете, что это?",
   "helpCenter": "Help Center",
-  "httpBasicAccess": "Базовая аутентификация HTTP",
+  "httpBasicAccess": "HTTP Basic Access Authentication",
   "tokens": "Токены",
   "customToken": "Произвольные токены",
   "dataGas": "Data & Gas Limit",
