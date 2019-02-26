@@ -1,12 +1,7 @@
 import { shallowMount } from '@vue/test-utils';
 import HardwareModal from '@/layouts/AccessWalletLayout/components/HardwareModal/HardwareModal.vue';
 import { Tooling } from '@@/helpers';
-
-const RouterLinkStub = {
-  name: 'router-link',
-  template: '<div class="routerlink"><slot> </slot></div>',
-  props: ['to']
-};
+import { RouterLinkStub } from '@@/helpers/setupTooling';
 
 describe('HardwareModal.vue', () => {
   let localVue, i18n, wrapper, store;

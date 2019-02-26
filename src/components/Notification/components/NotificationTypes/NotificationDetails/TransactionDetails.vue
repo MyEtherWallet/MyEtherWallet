@@ -21,7 +21,11 @@
         <li>
           <p>{{ $t('common.toAddress') }}:</p>
           <p>
-            <a :href="addressLink(details.to)" target="_blank">
+            <a
+              :href="addressLink(details.to)"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
               {{ details.to }}
             </a>
           </p>
@@ -59,7 +63,11 @@
         </li>
         <li v-if="notice.hash">
           <p>
-            <a :href="hashLink(notice.hash)" target="_blank">
+            <a
+              :href="hashLink(notice.hash)"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
               {{ notice.hash }}
             </a>
           </p>

@@ -70,7 +70,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      path: 'path'
+      path: 'path',
+      online: 'online'
     })
   },
   watch: {
@@ -82,7 +83,7 @@ export default {
     unlockWallet() {
       this.spinner = true;
 
-      if (window.Worker) {
+      if (this.online && window.Worker) {
         const worker = new walletWorker();
         const self = this;
         worker.postMessage({

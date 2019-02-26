@@ -100,10 +100,10 @@
             </p>
           </div>
         </li>
-        <li v-if="notice.body.provider === providerNames.bity">
+        <li v-if="showId && details.orderId">
           <p>
             {{
-              $t('header.providerDepositAddress', {
+              $t('header.orderID', {
                 provider: notice.body.provider
               })
             }}:
@@ -150,7 +150,11 @@
           <p>{{ $t('header.transactionHash') }}:</p>
           <div class="detail-data">
             <p>
-              <a :href="hashLink(notice.hash)" target="_blank">
+              <a
+                :href="hashLink(notice.hash)"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
                 {{ notice.hash }}
               </a>
             </p>
@@ -289,6 +293,12 @@ export default {
     },
     isFromFiat() {
       return this.fiatCurrencies.includes(this.notice.body.fromCurrency);
+    },
+    showId() {
+      return (
+        this.notice.body.provider === providerNames.bity ||
+        this.notice.body.provider === providerNames.changelly
+      );
     }
   },
   beforeDestroy() {

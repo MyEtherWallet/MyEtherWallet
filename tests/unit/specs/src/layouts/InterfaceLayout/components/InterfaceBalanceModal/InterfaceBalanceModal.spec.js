@@ -25,7 +25,7 @@ describe('InterfaceBalanceModal.vue', () => {
     });
   });
 
-  xit('[2-7-19] should render correct content', () => {
+  it('should render correct content', () => {
     expect(
       wrapper.vm.$el
         .querySelector('.total-balance-amount span')

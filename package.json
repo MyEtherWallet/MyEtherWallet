@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "5.0.3",
+  "version": "5.0.4",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build:offline": "WEBPACK_INTEGRITY=false npm run build:hash",
@@ -16,12 +16,13 @@
     "lint:md": "remark . -o -f",
     "lint:styles": "prettier --write 'src/**/*.{scss,css}' && stylelint 'src/**/*.{scss,css}' --fix",
     "lint:tests": "eslint --fix tests/",
-    "start": "npm run update && npm run dev",
+    "start": "npm run update && npm run update:mainlists && npm run dev",
     "test:unit": "vue-cli-service test:unit",
     "update:packages": "node package-test.js",
-    "update:lists": "node fetchEthListData.js",
+    "update:lists": "node fetchLists/index.js",
     "update:swap": "node compileBaseSwapOptions.js",
-    "update": "npm run update:packages && npm run update:lists"
+    "update": "npm run update:packages && npm run update:lists",
+    "update:mainlists": "node fetchLists/fetchMainLists.js"
   },
   "gitHooks": {
     "pre-commit": "npm run lint && npm run test"
@@ -32,7 +33,7 @@
     "html2canvas": "1.0.0-alpha.12",
     "idna-uts46": "1.1.0",
     "print-js": "1.0.54",
-    "register-service-worker": "1.6.1",
+    "register-service-worker": "1.6.2",
     "vee-validate": "2.1.7",
     "vue": "2.6.6",
     "vue-mq": "1.0.1",
@@ -41,11 +42,11 @@
     "vuex": "3.1.0"
   },
   "devDependencies": {
-    "@keepkey/keepkey.js": "1.2.0",
+    "@keepkey/keepkey.js": "1.2.1",
     "@ledgerhq/hw-app-eth": "4.39.0",
     "@ledgerhq/hw-transport-u2f": "4.39.0",
     "@myetherwallet/eth-token-balance": "0.1.4",
-    "@myetherwallet/mewconnect-web-client": "1.0.12",
+    "@myetherwallet/mewconnect-web-client": "1.0.14",
     "@vue/cli-plugin-babel": "3.4.0",
     "@vue/cli-plugin-eslint": "3.4.0",
     "@vue/cli-plugin-pwa": "3.4.0",
@@ -91,7 +92,7 @@
     "rskjs-util": "1.0.3",
     "sass-loader": "7.1.0",
     "secp256k1": "3.6.2",
-    "sinon": "7.2.3",
+    "sinon": "7.2.4",
     "store": "2.0.12",
     "stylelint": "9.10.1",
     "stylelint-config-prettier": "4.0.0",
@@ -101,7 +102,7 @@
     "uglify-es": "3.3.9",
     "unused-files-webpack-plugin": "3.4.0",
     "uuid": "3.3.2",
-    "vue-i18n": "8.8.1",
+    "vue-i18n": "8.8.2",
     "vue-tel-input": "2.0.13",
     "vue-template-compiler": "2.6.6",
     "vue-worker": "1.2.1",
