@@ -1,5 +1,5 @@
 <template>
-  <div ref="printContainer" class="print-modal">
+  <div class="account-to-print">
     <div class="top-container">
       <div class="left-section">
         <div class="blockie-contianer">

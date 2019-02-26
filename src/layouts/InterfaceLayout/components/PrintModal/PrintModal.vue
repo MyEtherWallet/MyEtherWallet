@@ -8,16 +8,18 @@
       class="nopadding print-mod"
       size="lg"
     >
-      <div ref="printContainer" class="print-modal">
-        <div class="to-print">
-          <account-content-to-print :address="address" />
+      <div class="modal-content-container">
+        <div ref="printContainer" class="print-modal">
+          <div class="to-print">
+            <account-content-to-print :address="address" />
+          </div>
         </div>
-      </div>
-      <div class="to-display">
-        <account-content-to-display :address="address" />
-      </div>
-      <div class="button-container">
-        <div class="print-button" @click="print">Print</div>
+        <div class="to-display">
+          <account-content-to-display :address="address" />
+        </div>
+        <div class="button-container">
+          <div class="print-button" @click="print">Print</div>
+        </div>
       </div>
     </b-modal>
   </div>
