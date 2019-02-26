@@ -100,10 +100,30 @@
             </p>
           </div>
         </li>
-        <li v-if="notice.body.provider === providerNames.bity">
+        <li
+          v-if="notice.body.provider === providerNames.bity && details.orderId"
+        >
           <p>
             {{
-              $t('header.providerDepositAddress', {
+              $t('header.orderID', {
+                provider: notice.body.provider
+              })
+            }}:
+          </p>
+          <div class="detail-data">
+            <p>
+              {{ details.orderId }}
+            </p>
+          </div>
+        </li>
+        <li
+          v-if="
+            notice.body.provider === providerNames.changelly && details.orderId
+          "
+        >
+          <p>
+            {{
+              $t('header.orderID', {
                 provider: notice.body.provider
               })
             }}:

@@ -3,12 +3,11 @@ import BigNumber from 'bignumber.js';
 import { networkSymbols } from '../partnersConfig';
 import { Toast } from '@/helpers';
 
-// import { utils } from '../helpers';
 import {
   notificationStatuses,
   ChangellyCurrencies,
   statuses,
-  // TIME_SWAP_VALID,
+  TIME_SWAP_VALID,
   PROVIDER_NAME,
   FEE_RATE
 } from './config';
@@ -31,7 +30,6 @@ export default class Changelly {
     this.tokenDetails = {};
     this.rateDetails = {};
     this.getSupportedCurrencies(this.network);
-    this.fixedRates = new Map();
   }
 
   static getName() {
@@ -295,10 +293,6 @@ export default class Changelly {
   }
 
   static parseOrder(order) {
-    // let validFor;
-    // if (order.payTill) {
-    //   validFor = utils.getTimeRemaining(order.payTill);
-    // }
     return {
       orderId: order.id,
       statusId: order.id,
@@ -307,7 +301,7 @@ export default class Changelly {
       sendValue: order.amountExpectedFrom,
       status: order.status,
       timestamp: order.createdAt,
-      validFor: 300 // validFor || TIME_SWAP_VALID // Rates provided are only an estimate, and
+      validFor: TIME_SWAP_VALID // validFor ||  // Rates provided are only an estimate, and
     };
   }
 
