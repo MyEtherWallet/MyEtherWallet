@@ -61,11 +61,13 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
+      padding-left: 15px;
     }
 
     span {
-      font-weight: lighter;
+      font-weight: 500;
       word-break: break-word;
+      overflow-wrap: break-word;
     }
   }
 }
@@ -180,6 +182,15 @@
 .my-address-container {
   background-color: $light-green-1;
   margin: 50px 0 10px 0;
+}
+
+.my-address-qrcode {
+  padding: 8px;
+  background-color: $white;
+  height: 120px;
+  > * {
+    height: 100%;
+  }
 }
 
 .my-priv-container {

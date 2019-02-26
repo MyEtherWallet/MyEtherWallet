@@ -51,8 +51,7 @@
           <div class="text-container">
             <h4>{{ myAddress }}</h4>
             <span>
-              {{ address.slice(0, 21) }} <br />
-              {{ address.slice(21, 42) }}
+              {{ address }}
             </span>
           </div>
         </div>

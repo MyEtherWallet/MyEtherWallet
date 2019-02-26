@@ -9,6 +9,11 @@
       size="lg"
     >
       <div ref="printContainer" class="print-modal">
+        <div class="to-print">
+          <account-content-to-print :address="address" />
+        </div>
+      </div>
+      <div class="to-display">
         <account-content-to-display :address="address" />
       </div>
       <div class="button-container">
@@ -23,11 +28,13 @@ import printJS from 'print-js';
 import html2canvas from 'html2canvas';
 import { mapGetters } from 'vuex';
 import AccountContentToDisplay from './components/AccountContentToDisplay';
+import AccountContentToPrint from './components/AccountContentToPrint';
 
 export default {
   components: {
     blockie: Blockie,
-    'account-content-to-display': AccountContentToDisplay
+    'account-content-to-display': AccountContentToDisplay,
+    'account-content-to-print': AccountContentToPrint
   },
   props: {
     address: {
