@@ -3,7 +3,6 @@ import BigNumber from 'bignumber.js';
 import ENS from 'ethereum-ens';
 import { utils } from '../helpers';
 import { networkSymbols } from '../partnersConfig';
-// import kyberApi from './kyber-api';
 import {
   ERC20,
   kyberBaseCurrency,
@@ -44,8 +43,6 @@ export default class Kyber {
     this.kyberNetworkABI = kyberNetworkABI || [];
     this.kyberNetworkAddress =
       props.kyberAddress || kyberAddressFallback[this.network];
-    // this.rates = new Map();
-    // this.retrieveRates();
     this.getSupportedTokenList();
     this.getMainNetAddress(this.kyberNetworkAddress);
   }
@@ -65,7 +62,6 @@ export default class Kyber {
   get currencies() {
     if (this.isValidNetwork && this.tokenDetails !== undefined) {
       if (Object.keys(this.tokenDetails).length > 5) {
-        console.log('this.tokenDetails', this.tokenDetails['CNN']); // todo remove dev item
         return this.tokenDetails;
       }
       return this.defaultCurrencyList;
@@ -208,7 +204,6 @@ export default class Kyber {
       fromValueWei
     );
     logger(rates);
-    console.log('rates', rates); // todo remove dev item
     if (new BigNumber(rates['expectedRate']).eq(new BigNumber(0))) {
       return -1;
     }

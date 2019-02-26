@@ -125,7 +125,7 @@ import {
   notificationType
 } from '@/helpers/notificationFormatters';
 
-import { Swap } from '@/partners';
+import { SwapProviders } from '@/partners';
 
 export default {
   components: {
@@ -180,18 +180,9 @@ export default {
     this.checkForUnResolvedTxNotifications();
   },
   methods: {
-    hiddenModal(/*evt*/) {
-      // if (!this.cancelHide) {
+    hiddenModal() {
       this.shown = false;
       this.hideDetails();
-      // } else {
-      //   evt.cancel();
-      // }
-    },
-    toggleCanhide() {
-      setTimeout(() => {
-        this.cancelHide = false;
-      }, 100);
     },
     checkForUnResolvedTxNotifications() {
       if (!this.notifications[this.account.address]) return [];
@@ -254,7 +245,6 @@ export default {
       if (details.length === 3) {
         this.notificationDetails.index = details[2];
       }
-      // this.toggleCanhide();
     },
     hideDetails() {
       this.detailsShown = false;
@@ -346,16 +336,16 @@ export default {
       return notice.body.errorMessage;
     },
     hashLink(hash, currency) {
-      if (currency && Swap.isNotToken(currency)) {
-        return Swap.getBlockChainExplorerUrl(currency, hash);
+      if (currency && SwapProviders.isNotToken(currency)) {
+        return SwapProviders.getBlockChainExplorerUrl(currency, hash);
       }
       if (this.network.type.blockExplorerTX) {
         return this.network.type.blockExplorerTX.replace('[[txHash]]', hash);
       }
     },
     addressLink(addr, currency) {
-      if (currency && Swap.isNotToken(currency)) {
-        return Swap.getAddressLookupUrl(currency, addr);
+      if (currency && SwapProviders.isNotToken(currency)) {
+        return SwapProviders.getAddressLookupUrl(currency, addr);
       }
       if (this.network.type.blockExplorerAddr) {
         return this.network.type.blockExplorerAddr.replace('[[address]]', addr);
