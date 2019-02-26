@@ -3,7 +3,7 @@
   "save": "Guardar",
   "dontKnow": "¿No sabes lo que es?",
   "helpCenter": "Centro de ayuda",
-  "httpBasicAccess": "Autenticación de acceso básica HTTP",
+  "httpBasicAccess": "HTTP Basic Access Authentication",
   "tokens": "Tokens",
   "customToken": "Tokens personalizados",
   "dataGas": "Data & Gas Limit",
