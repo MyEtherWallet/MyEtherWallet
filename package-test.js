@@ -5,19 +5,7 @@ const SAFE_TIME = 1000 * 1 * 60 * 60 * 24 * 7; //7days
 // babel-jest 24.0.0 is breaking all the tests [2-1-19]
 // 'web3', 'web3-core-helpers', 'web3-core-method', 'web3-utils' 1.0.0-beta.41 introduced breaking changes [2-4-19]
 //@xkeshi/vue-qrcode no longer maintained, forked out to mew
-const EXCEPTIONS = [
-  '@myetherwallet/mewconnect-web-client',
-  'babel-jest',
-  'canvas',
-  'ethereum-ens',
-  'multicoin-address-validator',
-  'webpack',
-  'web3',
-  'web3-core-helpers',
-  'web3-core-method',
-  'web3-utils',
-  '@xkeshi/vue-qrcode'
-];
+const EXCEPTIONS = ['@myetherwallet/mewconnect-web-client', 'canvas', 'ethereum-ens', 'webpack', 'babel-jest', 'web3', 'web3-core-helpers', 'web3-core-method', 'web3-utils', '@xkeshi/vue-qrcode', 'multicoin-address-validator'];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
 };
