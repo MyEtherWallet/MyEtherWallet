@@ -76,7 +76,6 @@ const isJson = str => {
     } catch (e) {
       return false;
     }
-    // return false;
   }
 };
 
