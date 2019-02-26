@@ -3,7 +3,7 @@
   "save": "保存",
   "dontKnow": "何かわからないですか？",
   "helpCenter": "Help Center",
-  "httpBasicAccess": "HTTPベーシックアクセス認証",
+  "httpBasicAccess": "HTTP Basic Access Authentication",
   "tokens": "トークン",
   "customToken": "カスタムトークン",
   "dataGas": "Data & Gas Limit",
