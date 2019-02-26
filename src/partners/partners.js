@@ -8,20 +8,38 @@ import {
   fiat
 } from './partnersConfig';
 
-function comparator(a, b) {
-  a = a.symbol;
-  b = b.symbol;
-  if (TOP_OPTIONS_ORDER.includes(a) || TOP_OPTIONS_ORDER.includes(b)) {
-    return TOP_OPTIONS_ORDER.indexOf(b) - TOP_OPTIONS_ORDER.indexOf(a);
-  }
-  return a < b ? -1 : a > b ? 1 : 0;
+function comparator(arrayForSort) {
+  if (!arrayForSort) arrayForSort = TOP_OPTIONS_ORDER;
+  return (a, b) => {
+    a = a.symbol;
+    b = b.symbol;
+    if (arrayForSort.includes(a) || arrayForSort.includes(b)) {
+      return arrayForSort.indexOf(b) - arrayForSort.indexOf(a);
+    }
+    return a < b ? -1 : a > b ? 1 : 0;
+  };
 }
 
+// function balanceComparator(tokens) {
+//   const tokenNameMap = tokens
+//     .sort((a, b) => {
+//       if (a.hasOwnProperty('balance') && b.hasOwnProperty('balance')) {
+//         return b.balance - a.balance;
+//       }
+//       return 0;
+//     })
+//     .map(item => item.name)
+//     .reverse();
+//   const arraysForSort = [...tokenNameMap, ...TOP_OPTIONS_ORDER];
+//   return comparator(arraysForSort);
+// }
+
 export default class SwapProviders {
-  constructor(providers, environmentSupplied) {
+  constructor(providers, environmentSupplied, misc = {}) {
     this.updateProviderRates = 0;
     this.providers = new Map();
     this.providerRateUpdates = {};
+    this.ownedTokenList = misc.tokensWithBalance || [];
 
     providers.forEach(entry => {
       this.providerRateUpdates[entry.getName()] = 0;
@@ -63,6 +81,10 @@ export default class SwapProviders {
     });
   }
 
+  ownedTokens(tokens) {
+    this.ownedTokenList = tokens;
+  }
+
   getProviders() {
     return utils.mapToObject(this.providers);
   }
@@ -95,6 +117,22 @@ export default class SwapProviders {
     });
   }
 
+  optionSorting(array) {
+    const tokens = [...this.ownedTokenList];
+    const tokenNameMap = tokens
+      .sort((a, b) => {
+        if (a.hasOwnProperty('balance') && b.hasOwnProperty('balance')) {
+          return b.balance - a.balance;
+        }
+        return 0;
+      })
+      .map(item => item.name)
+      .reverse();
+    const arraysForSort = [...tokenNameMap, ...TOP_OPTIONS_ORDER];
+    return array.sort(comparator(arraysForSort));
+    // return array.sort(comparator);
+  }
+
   buildInitialCurrencyArrays() {
     const collectMapTo = new Map();
     const collectMapFrom = new Map();
@@ -102,8 +140,8 @@ export default class SwapProviders {
       provider.getInitialCurrencyEntries(collectMapFrom, collectMapTo);
     });
 
-    const toArray = Array.from(collectMapTo.values()).sort(comparator);
-    const fromArray = Array.from(collectMapFrom.values()).sort(comparator);
+    const toArray = this.optionSorting(Array.from(collectMapTo.values()));
+    const fromArray = this.optionSorting(Array.from(collectMapFrom.values()));
     return { toArray, fromArray };
   }
 
@@ -112,7 +150,7 @@ export default class SwapProviders {
     this.providers.forEach(provider => {
       provider.getUpdatedFromCurrencyEntries(value, collectMap);
     });
-    return Array.from(collectMap.values()).sort(comparator);
+    return this.optionSorting(Array.from(collectMap.values()));
   }
 
   setToCurrencyBuilder(value) {
@@ -120,7 +158,7 @@ export default class SwapProviders {
     this.providers.forEach(provider => {
       provider.getUpdatedToCurrencyEntries(value, collectMap);
     });
-    return Array.from(collectMap.values()).sort(comparator);
+    return this.optionSorting(Array.from(collectMap.values()));
   }
 
   async updateRateEstimate(fromCurrency, toCurrency, fromValue) {

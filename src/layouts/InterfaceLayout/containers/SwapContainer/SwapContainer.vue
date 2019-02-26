@@ -255,6 +255,14 @@ export default {
     'swap-send-form': SwapSendForm,
     'swap-send-to-modal': SwapSendToModal
   },
+  props: {
+    tokensWithBalance: {
+      type: Array,
+      default: function() {
+        return [];
+      }
+    }
+  },
   data() {
     return {
       baseCurrency: BASE_CURRENCY,
@@ -273,11 +281,15 @@ export default {
       selectedProvider: {},
       swapDetails: {},
       currencyDetails: {},
-      swap: new SwapProviders(providers, {
-        network: this.$store.state.network.type.name,
-        web3: this.$store.state.web3,
-        getRateForUnit: true
-      }),
+      swap: new SwapProviders(
+        providers,
+        {
+          network: this.$store.state.network.type.name,
+          web3: this.$store.state.web3,
+          getRateForUnit: true
+        },
+        { tokensWithBalance: this.tokensWithBalance }
+      ),
       images: {
         kybernetowrk: ImageKybernetowrk,
         bity: ImageBity,
