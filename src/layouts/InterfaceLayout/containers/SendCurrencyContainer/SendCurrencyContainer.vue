@@ -11,7 +11,7 @@
             </div>
             <currency-picker
               :currency="tokensWithBalance"
-              :page="'sendEgasAmountthAndTokens'"
+              :page="'sendEthAndTokens'"
               :token="true"
               @selectedCurrency="selectedCurrency = $event"
             />
@@ -37,17 +37,17 @@
               />
               <i
                 :class="[
-                  !isValidAmount || errors.has('value') ? 'not-good' : '',
+                  !isValidAmount.valid || errors.has('value') ? 'not-good' : '',
                   'fa fa-check-circle good-button'
                 ]"
                 aria-hidden="true"
               />
             </div>
             <div
-              v-if="!isValidAmount || errors.has('value')"
+              v-if="!isValidAmount.valid || errors.has('value')"
               class="error-message-container"
             >
-              <p>{{ $t('common.dontHaveEnough') }}</p>
+              <p>{{ isValidAmount.msg }}</p>
             </div>
           </div>
         </div>
@@ -127,7 +127,7 @@
               />
               <i
                 :class="[
-                  data.length !== 0 ? '' : 'not-good',
+                  isValidData ? '' : 'not-good',
                   'fa fa-check-circle good-button'
                 ]"
                 aria-hidden="true"
@@ -139,7 +139,15 @@
                 v-model="gasLimit"
                 :placeholder="$t('common.gasLimit')"
                 type="number"
+                min="0"
                 name
+              />
+              <i
+                :class="[
+                  isValidGasLimit ? '' : 'not-good',
+                  'fa fa-check-circle good-button'
+                ]"
+                aria-hidden="true"
               />
             </div>
           </div>
@@ -173,7 +181,7 @@ import CurrencyPicker from '../../components/CurrencyPicker';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
 import EthTx from 'ethereumjs-tx';
-import { Misc } from '@/helpers';
+import { Misc, Toast } from '@/helpers';
 import BigNumber from 'bignumber.js';
 import ethUnit from 'ethjs-unit';
 import utils from 'web3-utils';
@@ -197,8 +205,8 @@ export default {
       default: function() {}
     },
     highestGas: {
-      type: Number,
-      default: 0
+      type: String,
+      default: '0'
     }
   },
   data() {
@@ -222,26 +230,84 @@ export default {
     }),
     isValidAmount() {
       const txFee = new BigNumber(ethUnit.toWei(this.gasPrice, 'gwei')).times(
-        this.gasLimit
+        this.gasLimit || 0
       );
       const txFeeEth = ethUnit.fromWei(txFee, 'ether');
-
-      if (this.isToken) {
-        return (
-          new BigNumber(this.value).lte(this.selectedCurrency.balance) &&
-          new BigNumber(txFeeEth).lte(this.balanceDefault)
-        );
+      const notEnoughGasMsg =
+        this.$t('errorsGlobal.notAValidAmountTotal') +
+        ' Gas ' +
+        this.$t('errorsGlobal.toSend');
+      const notEnoughTokenMsg =
+        this.$t('errorsGlobal.notAValidAmountTotal') +
+        ' ' +
+        this.selectedCurrency.symbol +
+        ' ' +
+        this.$t('errorsGlobal.toSend');
+      const notEnoughCurrencyMsg =
+        this.$t('errorsGlobal.notAValidAmountTotal') +
+        ' ' +
+        this.network.type.name +
+        ' ' +
+        this.$t('errorsGlobal.toSend');
+      const invalidValueMsg = this.$t('errorsGlobal.invalidValue');
+      const enoughTokenBalance = new BigNumber(this.value).lte(
+        this.selectedCurrency.balance
+      );
+      const enoughCurrency = new BigNumber(this.value)
+        .plus(txFeeEth)
+        .lte(this.balanceDefault);
+      const enoughGas = new BigNumber(txFeeEth).lte(this.balanceDefault);
+      const validDecimal = this.isValidDecimals;
+      if (new BigNumber(this.value).lt(0)) {
+        return {
+          msg: invalidValueMsg,
+          valid: false
+        };
       }
-      return new BigNumber(this.value).plus(txFeeEth).lte(this.balanceDefault);
+      if (this.isToken) {
+        const enoughBalance = enoughTokenBalance && enoughGas && validDecimal;
+        return {
+          valid: enoughBalance,
+          msg: enoughBalance
+            ? ''
+            : !enoughTokenBalance
+            ? notEnoughTokenMsg
+            : !enoughGas
+            ? notEnoughGasMsg
+            : invalidValueMsg
+        };
+      }
+      return {
+        valid: enoughCurrency && validDecimal,
+        msg: enoughCurrency
+          ? ''
+          : !enoughCurrency
+          ? notEnoughCurrencyMsg
+          : invalidValueMsg
+      };
+    },
+    isValidDecimals() {
+      const decimals = (this.value + '').split('.')[1];
+      if (!decimals) return true;
+      if (this.isToken) {
+        return decimals.length <= this.selectedCurrency.decimals;
+      }
+      return decimals.length <= 18;
+    },
+    isValidData() {
+      return Misc.validateHexString(this.data);
+    },
+    isValidGasLimit() {
+      return new BigNumber(this.gasLimit).gte(0);
     },
     balanceDefault() {
       return new BigNumber(ethUnit.fromWei(this.account.balance, 'ether'));
     },
     validInputs() {
       return (
-        this.isValidAmount &&
+        this.isValidAmount.valid &&
         this.isValidAddress &&
-        new BigNumber(this.gasLimit).gte(0) &&
+        (new BigNumber(this.gasLimit).gte(0) || this.gasLimit == -1) &&
         Misc.validateHexString(this.data)
       );
     },
@@ -326,9 +392,20 @@ export default {
         from: coinbase,
         value: this.txValue,
         to: this.txTo,
+        gasPrice: Misc.sanitizeHex(
+          ethUnit.toWei(this.gasPrice, 'gwei').toString(16)
+        ),
         data: this.txData
       };
-      this.gasLimit = await this.web3.eth.estimateGas(params);
+      this.web3.eth
+        .estimateGas(params)
+        .then(gasLimit => {
+          this.gasLimit = gasLimit;
+        })
+        .catch(err => {
+          this.gasLimit = -1;
+          Toast.responseHandler(err, Toast.ERROR);
+        });
     },
     async submitTransaction() {
       window.scrollTo(0, 0);
@@ -348,9 +425,11 @@ export default {
         });
         const json = _tx.toJSON(true);
         json.from = coinbase;
-        this.web3.eth.sendTransaction(json);
+        this.web3.eth.sendTransaction(json).catch(err => {
+          Toast.responseHandler(err, Toast.ERROR);
+        });
       } catch (e) {
-        throw e;
+        Toast.responseHandler(e, Toast.ERROR);
       }
     },
     copyToClipboard(ref) {

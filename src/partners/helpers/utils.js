@@ -37,8 +37,8 @@ const getTimeRemaining = (timestamp, validFor = 600) => {
   );
 };
 
-const getTimeRemainingString = timestamp => {
-  const timeRemaining = getTimeRemaining(timestamp);
+const getTimeRemainingString = (timestamp, validFor = 600) => {
+  const timeRemaining = getTimeRemaining(timestamp, validFor);
   if (timeRemaining < 0) {
     return 'expired';
   }
@@ -80,6 +80,20 @@ const isJson = str => {
   }
 };
 
+const handleOrThrow = (e, source) => {
+  if (source) {
+    throw Error('abort');
+  }
+  // typeErrors
+  if (e instanceof TypeError) {
+    if (e.message === 'Failed to fetch') {
+      return;
+    }
+    throw e;
+  }
+  throw e;
+};
+
 export {
   isJson,
   mapToObject,
@@ -89,5 +103,6 @@ export {
   getTimeRemainingString,
   buildPayload,
   isValidEntry,
-  checkInvalidOrMissingValue
+  checkInvalidOrMissingValue,
+  handleOrThrow
 };

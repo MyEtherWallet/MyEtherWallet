@@ -56,9 +56,18 @@ export default class Kyber {
     return true;
   }
 
+  get defaultCurrencyList() {
+    return KyberCurrencies[this.network];
+  }
+
   get currencies() {
-    if (this.isValidNetwork) {
-      return this.tokenDetails;
+    if (this.isValidNetwork && this.tokenDetails !== undefined) {
+      if (Object.keys(this.tokenDetails).length > 5) {
+        return this.tokenDetails;
+      }
+      return this.defaultCurrencyList;
+    } else if (this.isValidNetwork) {
+      return this.defaultCurrencyList;
     }
     return {};
   }
@@ -97,17 +106,21 @@ export default class Kyber {
     if (fromConstructor) {
       this.tokenDetails = fromConstructor;
     } else if (KyberCurrencies[this.network]) {
-      this.tokenDetails = KyberCurrencies[this.network];
+      this.tokenDetails = this.defaultCurrencyList;
     }
   }
 
   async retrieveRates() {
-    const { rates, tokenDetails } = await kyberApi.retrieveRatesFromAPI(
+    const ratesAndDetails = await kyberApi.retrieveRatesFromAPI(
       this.network,
       this.rates,
       this.tokenDetails
     );
 
+    if (!ratesAndDetails) return;
+
+    // throws error if fetch fails and returned value is undefined
+    const { rates, tokenDetails } = ratesAndDetails;
     this.rates = rates;
     this.tokenDetails = tokenDetails;
     this.hasRates =
@@ -153,6 +166,7 @@ export default class Kyber {
 
   validSwap(fromCurrency, toCurrency) {
     if (this.isValidNetwork) {
+      if (!this.currencies) return false;
       return this.currencies[fromCurrency] && this.currencies[toCurrency];
     }
   }
@@ -306,8 +320,12 @@ export default class Kyber {
         .allowance(fromAddress, this.getKyberNetworkAddress())
         .call();
 
-      if (currentAllowance > 0) {
-        if (currentAllowance < fromValueWei) {
+      if (new BigNumber(currentAllowance).gt(new BigNumber(0))) {
+        if (
+          new BigNumber(currentAllowance)
+            .minus(new BigNumber(fromValueWei))
+            .lt(new BigNumber(0))
+        ) {
           return { approve: true, reset: true };
         }
         return { approve: false, reset: false };
@@ -367,12 +385,13 @@ export default class Kyber {
     }
     const reason = !userCap ? 'user cap value' : 'current token balance';
     const errorMessage = `User is not eligible to use kyber network. Current swap value exceeds ${reason}`;
+    // errorLogger(errorMessage);
     throw Error(errorMessage);
   }
 
   async getTradeData(
     { fromCurrency, toCurrency, fromValueWei, toAddress },
-    minRateWei
+    minRateWei // eslint-disable-line
   ) {
     const data = this.getKyberContractObject()
       .methods.trade(
@@ -381,7 +400,7 @@ export default class Kyber {
         await this.getTokenAddress(toCurrency),
         toAddress,
         MAX_DEST_AMOUNT,
-        minRateWei,
+        '0x00',
         walletDepositeAddress
       )
       .encodeABI();
@@ -464,10 +483,10 @@ export default class Kyber {
   getTokenAddress(token) {
     try {
       if (utils.stringEqual(networkSymbols.ETH, token)) {
-        return this.tokenDetails[token].contractAddress;
+        return this.currencies[token].contractAddress;
       }
       return this.web3.utils.toChecksumAddress(
-        this.tokenDetails[token].contractAddress
+        this.currencies[token].contractAddress
       );
     } catch (e) {
       errorLogger(e);
@@ -479,7 +498,7 @@ export default class Kyber {
 
   getTokenDecimals(token) {
     try {
-      return +this.tokenDetails[token].decimals;
+      return +this.currencies[token].decimals;
     } catch (e) {
       errorLogger(e);
       throw Error(

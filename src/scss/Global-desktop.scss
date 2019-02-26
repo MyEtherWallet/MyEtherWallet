@@ -1357,3 +1357,51 @@
     color: $text--link-color;
   }
 }
+
+%toast {
+  border-radius: 4px !important;
+  cursor: pointer;
+  min-height: 75px !important;
+  opacity: 0.96;
+  width: 325px !important;
+
+  .toast-action {
+    color: $white !important;
+    font-size: 20px !important;
+  }
+}
+
+.toast-success {
+  @extend %toast;
+
+  background-color: $mew-green !important;
+}
+
+.toast-warn {
+  @extend %toast;
+
+  background-color: $light-yellow !important;
+}
+
+.toast-error {
+  @extend %toast;
+
+  background-color: $red-7 !important;
+}
+
+.toast-info {
+  @extend %toast;
+
+  background-color: $light-blue-4 !important;
+}
+
+// *********************************************************************
+// No margin to remove margins from elements
+// *********************************************************************
+.no-margin {
+  margin: 0 !important;
+  margin-top: 0 !important;
+  margin-right: 0 !important;
+  margin-bottom: 0 !important;
+  margin-left: 0 !important;
+}

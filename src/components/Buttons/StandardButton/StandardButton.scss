@@ -81,7 +81,7 @@ button[disabled] {
 }
 
 @mixin btn-mixin-2() {
-  padding: 18px 45px;
+  padding: 18px 35px;
   font-weight: 500;
   cursor: pointer;
   font-size: 14px;
@@ -117,16 +117,16 @@ button[disabled] {
 
   .arrow-right {
     position: absolute;
-    top: 23px;
+    top: 21px;
     right: 20px;
-    height: 11px;
+    height: 15px;
   }
 
   .arrow-left {
     position: absolute;
-    top: 23px;
+    top: 21px;
     left: 20px;
-    height: 11px;
+    height: 15px;
   }
 }
 
@@ -136,6 +136,13 @@ button[disabled] {
 
   &.full-width {
     display: block;
+  }
+
+  &.mobile-full-width {
+    // Mobile
+    @media all and (max-width: $mobile-width) {
+      width: 100%;
+    }
   }
 }
 
@@ -324,7 +331,6 @@ button[disabled] {
   @include btn-mixin-1();
 
   .the-button-box {
-    cursor: initial;
     background-color: transparent;
     border: 1px solid $green-filled-button-background;
     color: $green-filled-button-background;
@@ -387,5 +393,12 @@ button[disabled] {
 // Customer support block
 //=======================================================================
 .customer-support-block {
+  margin-top: 20px;
+}
+
+//=======================================================================
+// Help Center block
+//=======================================================================
+.help-center-block {
   margin-top: 20px;
 }

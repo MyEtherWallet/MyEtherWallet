@@ -1,14 +1,8 @@
 import Vue from 'vue';
 import PopOver from '@/components/PopOver/PopOver.vue';
 import { shallowMount } from '@vue/test-utils';
-
 import { Tooling } from '@@/helpers';
-
-const RouterLinkStub = {
-  name: 'title',
-  template: '<p></p>',
-  props: ['to']
-};
+import { RouterLinkStub } from '@@/helpers/setupTooling';
 
 const BBtnStub = {
   name: 'b-btn',

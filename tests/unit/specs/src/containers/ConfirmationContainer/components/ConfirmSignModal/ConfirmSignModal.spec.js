@@ -1,8 +1,6 @@
-import VueX from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import ConfirmSignModal from '@/containers/ConfirmationContainer/components/ConfirmSignModal/ConfirmSignModal.vue';
 import VueQrcode from '@xkeshi/vue-qrcode';
-import { state, getters } from '@@/helpers/mockStore';
 import { Tooling } from '@@/helpers';
 const confirmSignMessage = jest.fn();
 
@@ -30,11 +28,6 @@ describe('ConfirmSignModal.vue', () => {
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
     store = baseSetup.store;
-
-    store = new VueX.Store({
-      getters,
-      state
-    });
   });
 
   beforeEach(() => {

@@ -29,6 +29,7 @@ $swap-custom-mobile-colleps-width: 700px;
 }
 
 .radio-button-container {
+  position: relative;
   padding: 0 15px;
   background-color: $background-color-1;
   border-radius: 4px;
@@ -37,6 +38,15 @@ $swap-custom-mobile-colleps-width: 700px;
   .no-provider-message {
     text-align: center;
     padding: 30px;
+  }
+
+  .unavailable {
+    width: 100%;
+    //color: $dark-grey-7;
+    background-color: $light-grey-4;
+    &:first-child {
+      border-top: 2px solid $light-grey-3;
+    }
   }
 
   ul {
@@ -63,9 +73,9 @@ $swap-custom-mobile-colleps-width: 700px;
 
 .provider-image {
   img {
-    height: 30px;
+    width: 100px;
     @media all and (max-width: $swap-custom-mobile-colleps-width) {
-      height: 30px;
+      width: 80px;
     }
   }
 }
