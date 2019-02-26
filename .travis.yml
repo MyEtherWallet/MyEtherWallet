@@ -25,8 +25,6 @@ stages:
     if: type != pull_request and tag IS blank
   - name: add to mewbuilds develop
     if: branch = develop and type != pull_request
-  - name: add to mewbuilds staging
-    if: branch =~ /^v.*$/
   - name: create release
     if: branch =~ /^v.*$/
   - name: deploy to production
@@ -44,14 +42,6 @@ jobs:
       script:
         - docker run $ci_env -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm install
           && npm run codecov"
-    - stage: add to mewbuilds staging
-      before_script:
-        - docker run -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm install
-          && npm run build:history"
-        - pip install --user awscli
-      script:
-        - aws s3 rm s3://mewbuilds/staging/ --recursive
-        - aws s3 sync --acl public-read dist/ s3://mewbuilds/staging/
     - stage: add to mewbuilds develop
       before_script:
         - docker run -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm install
@@ -115,6 +105,9 @@ jobs:
       before_deploy:
         - docker run -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm install
           && npm run build:history"
+        - pip install --user awscli
+        - aws s3 rm s3://mewbuilds/staging/ --recursive
+        - aws s3 sync --acl public-read dist/ s3://mewbuilds/staging/
       deploy:
         provider: pages
         skip-cleanup: true
