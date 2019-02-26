@@ -3,7 +3,7 @@
   "save": "保存",
   "dontKnow": "不知道这个是什么？",
   "helpCenter": "Help Center",
-  "httpBasicAccess": "HTTP 基础服访问验证",
+  "httpBasicAccess": "HTTP Basic Access Authentication",
   "tokens": "代币",
   "customToken": "自定义代币",
   "dataGas": "Data & Gas Limit",
