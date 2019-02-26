@@ -314,7 +314,6 @@ export default class BitySwap {
       swapDetails.dataForInitialization = false;
       swapDetails.isExitToFiat = true;
       return swapDetails;
-      // throw Error('Exit to Fiat not yet implemented');
     } else if (this.checkIfExit(swapDetails) && swapDetails.bypass) {
       const preOrder = await this.buildExitOrder(swapDetails);
       if (preOrder.created) {

@@ -25,20 +25,31 @@
               <div class="qa__contents--title" @click="openFAQ(prop)">
                 <h3>{{ faqs[prop].title }}</h3>
                 <div class="show-more-buttons">
-                  <span :class="faqs[prop].open ? 'show-less' : 'show-more'">
+                  <div
+                    :class="faqs[prop].open ? 'faq-open' : ''"
+                    class="animated-button"
+                  >
+                    <div class="bar bar1"></div>
+                    <div class="bar bar2"></div>
+                  </div>
+                  <span
+                    v-if="false"
+                    :class="faqs[prop].open ? 'show-less' : 'show-more'"
+                  >
                     {{ faqs[prop].open ? '-' : '+' }}
                   </span>
                 </div>
               </div>
-              <div v-if="faqs[prop].open" class="qa__contents--content">
-                {{ faqs[prop].content }}
-                <a
-                  :href="faqs[prop].link"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  {{ faqs[prop].linkText }}
-                </a>
+              <div
+                :class="faqs[prop].open ? 'faq-open' : ''"
+                class="qa__contents--content"
+              >
+                <div class="qa-text">
+                  {{ faqs[prop].content }}
+                  <a :href="faqs[prop].link" target="_blank">
+                    {{ faqs[prop].linkText }}
+                  </a>
+                </div>
               </div>
             </li>
           </ul>
@@ -109,7 +120,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'FaqsContainer-desktop.scss';
-@import 'FaqsContainer-tablet.scss';
-@import 'FaqsContainer-mobile.scss';
+@import 'FaqsContainer.scss';
 </style>
