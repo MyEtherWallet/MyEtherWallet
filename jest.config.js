@@ -25,7 +25,7 @@ module.exports = {
     '^@/tests/(.*)$': '<rootDir>/tests/$1',
     '\\.worker.js': '<rootDir>/tests/unit/__mocks__/workerMock.js'
   },
-  transformIgnorePatterns: ['node_modules/(?!(vue-router|bootstrap|register-service-worker))'],
+  transformIgnorePatterns: ['node_modules/(?!(vue-router|bootstrap|register-service-worker|vue-tel-input))'],
   moduleDirectories: ['node_modules'],
   snapshotSerializers: ['jest-serializer-vue'],
   testMatch: [

@@ -1,9 +1,6 @@
-import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import FinalizeModal from '@/dapps/RegisterDomain/components/FinalizeModal/FinalizeModal.vue';
 import { Tooling } from '@@/helpers';
-
-import { state, getters } from '@@/helpers/mockStore';
 import sinon from 'sinon';
 
 const hideModal = sinon.stub();
@@ -25,11 +22,6 @@ describe('FinalizeModal.vue', () => {
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
     store = baseSetup.store;
-
-    store = new Vuex.Store({
-      getters,
-      state
-    });
   });
 
   beforeEach(() => {

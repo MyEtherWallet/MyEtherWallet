@@ -1,12 +1,9 @@
 import Vue from 'vue';
-import VueX from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import SendCurrencyContainer from '@/layouts/InterfaceLayout/containers/SendCurrencyContainer/SendCurrencyContainer.vue';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle/InterfaceContainerTitle.vue';
 import PopOver from '@/components/PopOver/PopOver.vue';
 import CurrencyPicker from '@/layouts/InterfaceLayout/components/CurrencyPicker/CurrencyPicker.vue';
-import { state, getters } from '@@/helpers/mockStore';
-
 import { Tooling } from '@@/helpers';
 
 describe('SendCurrencyContainer.vue', () => {
@@ -29,16 +26,6 @@ describe('SendCurrencyContainer.vue', () => {
   afterAll(() => setTimeout(() => process.exit(), 1000));
 
   beforeEach(() => {
-    const actions = {
-      setGasPrice: jest.fn()
-    };
-
-    store = new VueX.Store({
-      getters,
-      actions,
-      state
-    });
-
     wrapper = shallowMount(SendCurrencyContainer, {
       localVue,
       i18n,
@@ -90,7 +77,7 @@ describe('SendCurrencyContainer.vue', () => {
       });
     });
 
-    xit('should render correct selectedCurrency data', () => {
+    it('should render correct selectedCurrency data', () => {
       const currencyElements = wrapper.findAll(
         '.currency-picker-container .item-container div'
       );
@@ -98,8 +85,14 @@ describe('SendCurrencyContainer.vue', () => {
         const currencyElement = currencyElements.at(i);
         currencyElement.trigger('click');
         const selectedCurrency = wrapper.vm.$data.selectedCurrency;
+        console.log(JSON.stringify(selectedCurrency));
+        console.log(currencyElement.find('p').text());
+
         expect(selectedCurrency.symbol + ' - ' + selectedCurrency.name).toEqual(
-          currencyElement.find('p').text()
+          currencyElement
+            .find('p')
+            .text()
+            .trim()
         );
       }
     });
