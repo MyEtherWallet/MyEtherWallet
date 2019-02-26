@@ -6,6 +6,7 @@
 
 ### Devop
 
+- Update keepkey, add popovers on disabled options [#709](https://github.com/MyEtherWallet/MyEtherWallet/pull/709)
 - Add noscript page [#710](https://github.com/MyEtherWallet/MyEtherWallet/pull/710)
 - Fix list fetching issue on travis and couple of sentry issues [#692](https://github.com/MyEtherWallet/MyEtherWallet/pull/692)
 - Redo wallet errors, include translations [#685](https://github.com/MyEtherWallet/MyEtherWallet/pull/685)
@@ -24,6 +25,7 @@
 
 - Sort by network support, add row gap [#720](https://github.com/MyEtherWallet/MyEtherWallet/pull/720)
 - Print ENS bid details [#699](https://github.com/MyEtherWallet/MyEtherWallet/pull/699)
+- Add Prefilled form for contact support [#697](https://github.com/MyEtherWallet/MyEtherWallet/pull/697)
 
 ### Release v5.0.3
 
@@ -31,10 +33,6 @@
 
 - Fix NaN issue on settings modal [#682](https://github.com/MyEtherWallet/MyEtherWallet/pull/682)
 - Multiple Sentry fixes, custom paths, Safari worker fix [#680](https://github.com/MyEtherWallet/MyEtherWallet/pull/680)
-
-### Feature
-
-- Add Prefilled form for contact support [](<>)
 
 ### Devop
 

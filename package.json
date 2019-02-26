@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "5.0.3",
+  "version": "5.0.4",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build:offline": "WEBPACK_INTEGRITY=false npm run build:hash",
@@ -42,7 +42,7 @@
     "vuex": "3.1.0"
   },
   "devDependencies": {
-    "@keepkey/keepkey.js": "1.2.0",
+    "@keepkey/keepkey.js": "1.2.1",
     "@ledgerhq/hw-app-eth": "4.39.0",
     "@ledgerhq/hw-transport-u2f": "4.39.0",
     "@myetherwallet/eth-token-balance": "0.1.4",

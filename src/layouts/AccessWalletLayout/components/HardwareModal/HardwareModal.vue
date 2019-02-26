@@ -22,6 +22,7 @@
             :text="item.text"
             :name="item.name"
             :disabled="item.disabled"
+            :tooltip-msg="item.msg"
           />
         </div>
       </div>
@@ -89,21 +90,24 @@ export default {
           imgPath: ledger,
           imgHoverPath: ledgerHov,
           text: 'Ledger',
-          disabled: false
+          disabled: false,
+          msg: ''
         },
         {
           name: 'bitbox',
           imgPath: bitbox,
           imgHoverPath: bitboxHov,
           text: 'Digital Bitbox',
-          disabled: false
+          disabled: false,
+          msg: ''
         },
         {
           name: 'secalot',
           imgPath: secalot,
           imgHoverPath: secalotHov,
           text: 'Secalot',
-          disabled: false
+          disabled: false,
+          msg: ''
         },
         {
           name: 'trezor',
@@ -111,16 +115,16 @@ export default {
           imgHoverPath: trezorHov,
           text: 'Trezor',
           disabled:
-            Misc.browserName() !== 'chrome' && Misc.browserName() !== 'firefox'
+            Misc.browserName() !== 'chrome' && Misc.browserName() !== 'firefox',
+          msg: ''
         },
         {
           name: 'keepkey',
           imgPath: keepkey,
           imgHoverPath: keepkeyHov,
           text: 'KeepKey',
-          disabled:
-            window.location.protocol === 'https:' &&
-            Misc.browserName() !== 'chrome'
+          disabled: false,
+          msg: ''
         }
       ]
     };
@@ -130,14 +134,32 @@ export default {
       this.items.forEach(item => {
         const u2fhw = ['secalot', 'ledger', 'bitbox'];
         const inMobile = ['secalot', 'keepkey'];
+        const webUsb = ['keepkey'];
 
-        if (u2fhw.includes(item.name))
-          item.disabled = !(
+        if (webUsb.includes(item.name)) {
+          const disable =
+            window.location.protocol === 'https:' &&
+            (!window || !window.navigator || !window.navigator.usb);
+          item.disabled = disable;
+          item.msg = disable ? this.$t('errorsGlobal.browserNonWebUsb') : '';
+        }
+
+        if (u2fhw.includes(item.name)) {
+          const disable = !(
             (Misc.browserName() === 'chrome' ||
               Misc.browserName() === 'opera') &&
             res
           );
-        if (this.isMobile()) item.disabled = !inMobile.includes(item.name);
+
+          item.disabled = disable;
+          item.msg = disable ? this.$t('errorsGlobal.browserNonU2f') : '';
+        }
+
+        if (this.isMobile()) {
+          const disable = !inMobile.includes(item.name);
+          item.disabled = disable;
+          item.msg = disable ? this.$t('errorsGlobal.noMobileSupport') : '';
+        }
       });
     });
     this.$refs.hardware.$on('hidden', () => {
