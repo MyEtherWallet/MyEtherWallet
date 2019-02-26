@@ -371,8 +371,9 @@ export default {
       const url = 'https://cryptorates.mewapi.io/ticker';
       const fetchValues = await fetch(url);
       const values = await fetchValues.json();
-      if (!values['ETH']) return 0;
-      this.ethPrice = new BigNumber(values['ETH'].quotes.USD.price);
+      if (!values) return 0;
+      if (!values.data['ETH']) return 0;
+      this.ethPrice = new BigNumber(values.data['ETH'].quotes.USD.price);
     },
     convertToGwei(value) {
       if (this.notValidNumber(value)) return '';
