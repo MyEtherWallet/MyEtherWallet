@@ -14,7 +14,7 @@
       </div>
 
       <div class="buttons">
-        <a :href="linkTo" target="_blank"
+        <a v-if="etherscanLink" :href="etherscanLink" target="_blank"
           ><standard-button :options="buttonCheckEtherscan"
         /></a>
         <standard-button :options="buttonOk" @click.native="hideModal" />
@@ -43,6 +43,10 @@ export default {
     linkTo: {
       type: String,
       default: '/'
+    },
+    etherscanLink: {
+      type: String,
+      default: null
     }
   },
   data() {

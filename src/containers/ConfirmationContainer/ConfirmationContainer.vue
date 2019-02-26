@@ -50,6 +50,7 @@
       :message="successMessage"
       :link-message="linkMessage"
       :link-to="linkTo"
+      :etherscan-link="etherscanLink"
     />
     <error-modal
       ref="errorModal"
@@ -131,6 +132,7 @@ export default {
       successMessage: 'Success',
       linkMessage: 'OK',
       linkTo: '/',
+      etherscanLink: null,
       dismissed: true,
       signedArray: [],
       txBatch: null,
@@ -159,10 +161,13 @@ export default {
     });
   },
   created() {
-    this.$eventHub.$on('showSuccessModal', (message, linkMessage, linkTo) => {
-      if (!message) message = null;
-      this.showSuccessModal(message, linkMessage, linkTo);
-    });
+    this.$eventHub.$on(
+      'showSuccessModal',
+      (message, linkMessage, etherscanLink) => {
+        if (!message) message = null;
+        this.showSuccessModal(message, linkMessage, etherscanLink);
+      }
+    );
 
     this.$eventHub.$on('showErrorModal', (message, linkMessage) => {
       if (!message) message = null;
@@ -330,11 +335,11 @@ export default {
       window.scrollTo(0, 0);
       this.$refs.signConfirmModal.$refs.signConfirmation.show();
     },
-    showSuccessModal(message, linkMessage, linkTo) {
+    showSuccessModal(message, linkMessage, etherscanLink) {
       this.reset();
       if (message !== null) this.successMessage = message;
       if (linkMessage !== null) this.linkMessage = linkMessage;
-      if (linkTo !== null) this.linkTo = linkTo;
+      if (etherscanLink !== null) this.etherscanLink = etherscanLink;
       this.$refs.successModal.$refs.success.show();
     },
     showErrorModal(message, linkMessage) {
