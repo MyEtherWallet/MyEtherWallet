@@ -68,7 +68,6 @@ import SuccessModal from './components/SuccessModal';
 import ErrorModal from './components/ErrorModal';
 import ConfirmSignModal from './components/ConfirmSignModal';
 import { mapGetters } from 'vuex';
-import Web3PromiEvent from 'web3-core-promievent';
 import { type as noticeTypes } from '@/helpers/notificationFormatters';
 import { WEB3_WALLET, KEEPKEY, MEW_CONNECT } from '@/wallets/bip44/walletTypes';
 import { Toast, Misc } from '@/helpers';
@@ -389,27 +388,16 @@ export default {
     },
     async doBatchTransactions() {
       const web3 = this.web3;
-      const batch = new web3.eth.BatchRequest();
       const _method =
         this.account.identifier === WEB3_WALLET
           ? 'sendTransaction'
           : 'sendSignedTransaction';
       const _arr = this.signedArray;
       const promises = _arr.map(tx => {
-        const promiEvent = new Web3PromiEvent(false);
         const _tx = tx.tx;
         _tx.from = this.account.address;
         const _rawTx = tx.rawTransaction;
-        const req = web3.eth[_method].request(_rawTx, (err, data) => {
-          if (err !== null) {
-            promiEvent.eventEmitter.emit('error', err);
-            promiEvent.reject(err);
-          }
-          if (err === null) {
-            promiEvent.eventEmitter.emit('transactionHash', data);
-          }
-        });
-        promiEvent.eventEmitter.on('error', err => {
+        const onError = err => {
           this.$store.dispatch('addNotification', [
             noticeTypes.TRANSACTION_ERROR,
             _tx.from,
@@ -418,27 +406,20 @@ export default {
             ) || _tx,
             err
           ]);
-          this.showErrorModal('Transaction Error!', 'Return');
-          promiEvent.reject(err);
-        });
-        promiEvent.eventEmitter.once('transactionHash', hash => {
-          this.$store
-            .dispatch('addNotification', [
-              noticeTypes.TRANSACTION_HASH,
-              _tx.from,
-              this.unSignedArray.find(entry =>
-                new BigNumber(_tx.nonce).eq(entry.nonce)
-              ),
-              hash
-            ])
-            .then(() => {
-              web3.eth.sendTransaction.method._confirmTransaction(
-                promiEvent,
-                hash,
-                req
-              );
-              this.showSuccessModal('Transaction sent!', 'Okay');
-            });
+          Toast.responseHandler(err, Toast.ERROR);
+        };
+        const promiEvent = web3.eth[_method](_rawTx);
+        promiEvent.catch(onError);
+        promiEvent.on('error', onError);
+        promiEvent.once('transactionHash', hash => {
+          this.$store.dispatch('addNotification', [
+            noticeTypes.TRANSACTION_HASH,
+            _tx.from,
+            this.unSignedArray.find(entry =>
+              new BigNumber(_tx.nonce).eq(entry.nonce)
+            ),
+            hash
+          ]);
           const localStoredObj = locStore.get(
             web3.utils.sha3(this.account.address)
           );
@@ -449,8 +430,7 @@ export default {
             timestamp: localStoredObj.timestamp
           });
         });
-        promiEvent.eventEmitter.once('receipt', receipt => {
-          promiEvent.resolve(receipt);
+        promiEvent.then(receipt => {
           this.$store.dispatch('addNotification', [
             noticeTypes.TRANSACTION_RECEIPT,
             _tx.from,
@@ -460,15 +440,9 @@ export default {
             receipt
           ]);
         });
-        promiEvent.eventEmitter.catch(err => {
-          Toast.responseHandler(err, Toast.ERROR);
-        });
-        batch.add(req);
-        return promiEvent.eventEmitter;
+        return promiEvent;
       });
-
       this.signCallback(promises);
-      batch.execute();
       this.sending = true;
     },
     sendBatchTransactions() {

@@ -81,9 +81,9 @@ describe('SwapCurrencyPicker.vue', () => {
   describe('SwapCurrencyPicker.vue Methods', () => {
     it('should render correct openDropdown method', () => {
       wrapper.find('.dropdown-container').trigger('click');
-      expect(wrapper.vm.$data.open).toBe(true);
+      expect(wrapper.vm.$data['open']).toBe(true);
       wrapper.find('.dropdown-container').trigger('click');
-      expect(wrapper.vm.$data.open).toBe(false);
+      expect(wrapper.vm.$data['open']).toBe(false);
     });
   });
 });
