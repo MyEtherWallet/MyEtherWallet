@@ -69,7 +69,7 @@ import ErrorModal from './components/ErrorModal';
 import ConfirmSignModal from './components/ConfirmSignModal';
 import { mapGetters } from 'vuex';
 import { type as noticeTypes } from '@/helpers/notificationFormatters';
-import { WEB3_WALLET, KEEPKEY, MEW_CONNECT } from '@/wallets/bip44/walletTypes';
+import { WEB3_WALLET, KEEPKEY } from '@/wallets/bip44/walletTypes';
 import { Toast, Misc } from '@/helpers';
 import locStore from 'store';
 
@@ -175,25 +175,7 @@ export default {
       this.responseFunction = resolve;
       this.successMessage = 'Sending Transaction';
 
-      let signPromise;
-      if (this.account.identifier === MEW_CONNECT) {
-        // let tokenInfo;
-        // if (tx.data.slice(0, 10) === '0xa9059cbb') {
-        //   tokenInfo = this.network.type.tokens.find(
-        //     entry => entry.address === tx.to
-        //   );
-        //   if (tokenInfo) {
-        //     tx.currency = {
-        //       symbol: tokenInfo.symbol,
-        //       decimals: tokenInfo.decimals,
-        //       address: tokenInfo.address
-        //     };
-        //   }
-        // }
-        signPromise = this.wallet.signTransaction(tx);
-      } else {
-        signPromise = this.wallet.signTransaction(tx);
-      }
+      const signPromise = this.wallet.signTransaction(tx);
 
       signPromise
         .then(_response => {
