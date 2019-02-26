@@ -6,6 +6,7 @@
 
 ### Devop
 
+- Reverse the tx order for metamask batch txs [#723](https://github.com/MyEtherWallet/MyEtherWallet/pull/723)
 - Add minimum buffer to Kyber Swaps, improve changelly fixed rate check, show swap reference number in notifications [#711](https://github.com/MyEtherWallet/MyEtherWallet/pull/711)
 - Update keepkey, add popovers on disabled options [#709](https://github.com/MyEtherWallet/MyEtherWallet/pull/709)
 - Add noscript page [#710](https://github.com/MyEtherWallet/MyEtherWallet/pull/710)
@@ -16,6 +17,7 @@
 
 ### Bug
 
+- Fix Mnemonic Phrase print page UI [#721](https://github.com/MyEtherWallet/MyEtherWallet/pull/721)
 - Fix Send TX confirmation modal [#694](https://github.com/MyEtherWallet/MyEtherWallet/pull/694)
 - Fix offline Worker issue [#690](https://github.com/MyEtherWallet/MyEtherWallet/pull/690)
 - Fix information block UI [#693](https://github.com/MyEtherWallet/MyEtherWallet/pull/693)
