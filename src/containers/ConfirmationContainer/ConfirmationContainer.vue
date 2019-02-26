@@ -141,7 +141,8 @@ export default {
       gasPrice: 'gasPrice',
       wallet: 'wallet',
       web3: 'web3',
-      account: 'account'
+      account: 'account',
+      network: 'network'
     }),
     fromAddress() {
       if (this.account) {
@@ -173,7 +174,9 @@ export default {
       this.isHardwareWallet = this.account.isHardware;
       this.responseFunction = resolve;
       this.successMessage = 'Sending Transaction';
+
       const signPromise = this.wallet.signTransaction(tx);
+
       signPromise
         .then(_response => {
           this.signedTxObject = _response;
