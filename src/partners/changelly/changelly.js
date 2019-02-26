@@ -3,12 +3,11 @@ import BigNumber from 'bignumber.js';
 import { networkSymbols } from '../partnersConfig';
 import { Toast } from '@/helpers';
 
-// import { utils } from '../helpers';
 import {
   notificationStatuses,
   ChangellyCurrencies,
   statuses,
-  // TIME_SWAP_VALID,
+  TIME_SWAP_VALID,
   PROVIDER_NAME,
   FEE_RATE
 } from './config';
@@ -31,7 +30,6 @@ export default class Changelly {
     this.tokenDetails = {};
     this.rateDetails = {};
     this.getSupportedCurrencies(this.network);
-    this.fixedRates = new Map();
   }
 
   static getName() {
@@ -85,9 +83,16 @@ export default class Changelly {
       .toNumber();
   }
 
+  fixedEnabled(currency) {
+    return (
+      typeof this.currencies[currency].fixRateEnabled === 'boolean' &&
+      this.currencies[currency].fixRateEnabled
+    );
+  }
+
   async getRate(fromCurrency, toCurrency, fromValue) {
     if (this.useFixed && this.currencies[toCurrency]) {
-      if (this.currencies[toCurrency].fixRateEnabled) {
+      if (this.fixedEnabled(toCurrency) && this.fixedEnabled(fromCurrency)) {
         return this.getFixedRate(fromCurrency, toCurrency, fromValue);
       }
       return this.getMarketRate(fromCurrency, toCurrency, fromValue);
@@ -176,13 +181,11 @@ export default class Changelly {
   getUpdatedFromCurrencyEntries(value, collectMap) {
     if (this.currencies[value.symbol]) {
       for (const prop in this.currencies) {
-        // if (prop !== value.symbol) {
         if (this.currencies[prop])
           collectMap.set(prop, {
             symbol: prop,
             name: this.currencies[prop].name
           });
-        // }
       }
     }
   }
@@ -190,13 +193,11 @@ export default class Changelly {
   getUpdatedToCurrencyEntries(value, collectMap) {
     if (this.currencies[value.symbol]) {
       for (const prop in this.currencies) {
-        // if (prop !== value.symbol) {
         if (this.currencies[prop])
           collectMap.set(prop, {
             symbol: prop,
             name: this.currencies[prop].name
           });
-        // }
       }
     }
   }
@@ -237,7 +238,7 @@ export default class Changelly {
       refundAddress
     };
     if (this.useFixed && this.currencies[toCurrency]) {
-      if (this.currencies[toCurrency].fixRateEnabled) {
+      if (this.fixedEnabled(toCurrency) && this.fixedEnabled(fromCurrency)) {
         return this.createFixedTransaction(transactionDetails);
       }
       return this.createMarketTransaction(transactionDetails);
@@ -292,10 +293,6 @@ export default class Changelly {
   }
 
   static parseOrder(order) {
-    // let validFor;
-    // if (order.payTill) {
-    //   validFor = utils.getTimeRemaining(order.payTill);
-    // }
     return {
       orderId: order.id,
       statusId: order.id,
@@ -304,7 +301,7 @@ export default class Changelly {
       sendValue: order.amountExpectedFrom,
       status: order.status,
       timestamp: order.createdAt,
-      validFor: 300 // validFor || TIME_SWAP_VALID // Rates provided are only an estimate, and
+      validFor: TIME_SWAP_VALID // validFor ||  // Rates provided are only an estimate, and
     };
   }
 
