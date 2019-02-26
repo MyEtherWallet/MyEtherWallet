@@ -100,9 +100,7 @@
             </p>
           </div>
         </li>
-        <li
-          v-if="showId && details.orderId"
-        >
+        <li v-if="showId && details.orderId">
           <p>
             {{
               $t('header.orderID', {
@@ -296,8 +294,11 @@ export default {
     isFromFiat() {
       return this.fiatCurrencies.includes(this.notice.body.fromCurrency);
     },
-    showId(){
-      return this.notice.body.provider === providerNames.bity || this.notice.body.provider === providerNames.changelly;
+    showId() {
+      return (
+        this.notice.body.provider === providerNames.bity ||
+        this.notice.body.provider === providerNames.changelly
+      );
     }
   },
   beforeDestroy() {
