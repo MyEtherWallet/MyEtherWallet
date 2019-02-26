@@ -15,6 +15,7 @@
 
 - Fix Send TX confirmation modal [#694](https://github.com/MyEtherWallet/MyEtherWallet/pull/694)
 - Fix offline Worker issue [#690](https://github.com/MyEtherWallet/MyEtherWallet/pull/690)
+- Fix information block UI [#693](https://github.com/MyEtherWallet/MyEtherWallet/pull/693)
 - Fix header UI bug [#701](https://github.com/MyEtherWallet/MyEtherWallet/pull/701)
 - Update Inteface side menu button UI [#698](https://github.com/MyEtherWallet/MyEtherWallet/pull/698)
 
