@@ -40,8 +40,10 @@
       <div class="right-section">
         <div class="header-text">
           <b>
-            <img src="~@/assets/images/logo-small.png" height="30px" />
-            {{ mew }}
+            <img
+              src="~@/assets/images/short-hand-logo-white.png"
+              height="30px"
+            />
           </b>
           <span class="header-line" /> <span> {{ paper }} </span>
         </div>
@@ -69,13 +71,16 @@
     </div>
     <div class="between">
       <div class="text">
-        <img height="15px" src="~@/assets/images/icons/scissor.svg" /> Cut Here
+        <img height="15px" src="~@/assets/images/icons/scissor.svg" />
+        <p>Cut Here</p>
       </div>
       <div class="dash"></div>
     </div>
     <div class="bottom-container">
       <div class="header-container">
-        <blockie :address="address" width="55px" height="55px" />
+        <div class="blockie-image">
+          <blockie :address="address" width="55px" height="55px" />
+        </div>
         <div class="header-content">
           <h3>{{ myAddress }}</h3>
           <p>{{ subheader }}</p>
@@ -120,7 +125,7 @@
         </p>
       </div>
       <div class="logo-container">
-        <img src="~@/assets/images/logo.png" height="25px" />
+        <img src="~@/assets/images/short-hand-logo.png" height="25px" />
         <p class="border-line"></p>
         <p>{{ paper }}</p>
       </div>

@@ -40,7 +40,10 @@
       <div class="right-section">
         <div class="header-text">
           <b>
-            <img src="~@/assets/images/logo-small.png" height="30px" />
+            <img
+              src="~@/assets/images/short-hand-logo-white.png"
+              height="30px"
+            />
             {{ mew }}
           </b>
           <span class="header-line" /> <span> {{ paper }} </span>
@@ -120,7 +123,7 @@
         </p>
       </div>
       <div class="logo-container">
-        <img src="~@/assets/images/logo.png" height="25px" />
+        <img src="~@/assets/images/short-hand-logo.png" height="25px" />
         <p class="border-line"></p>
         <p>{{ paper }}</p>
       </div>

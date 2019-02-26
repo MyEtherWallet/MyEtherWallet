@@ -1,13 +1,23 @@
 @import '~@/scss/GlobalVariables';
 
 .top-container {
+  padding: 30px;
   background-color: $dark-blue-2;
   color: $white;
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas: "left right";
   min-height: 290px;
   position: relative;
   overflow: hidden;
+  position: relative;
+
+  // Mobile
+  @media all and (max-width: 991px) {
+    padding: 30px;
+    grid-template-areas: "right" "left";
+    grid-template-columns: 1fr;
+  }
 }
 
 .floating-img {
@@ -22,6 +32,14 @@
   right: 390px;
   width: 75px;
   z-index: 3;
+  // Mobile
+  @media all and (max-width: 991px) {
+    right: 10px;
+    bottom: 5px;
+    width: 82px;
+    z-index: 0;
+    transform: scaleX(-1);
+  }
 }
 
 .right-section,
@@ -36,7 +54,11 @@
 }
 
 .right-section {
-  padding: 30px 30px 30px 0;
+  grid-area: right;
+  // Mobile
+  @media all and (max-width: 991px) {
+    margin-bottom: 30px;
+  }
 
   .header-text {
     display: flex;
@@ -47,6 +69,18 @@
     .header-line {
       border-right: 1px solid $white;
       height: 25px;
+    }
+
+    // Mobile
+    @media all and (max-width: 991px) {
+      justify-content: flex-start;
+
+      .header-line {
+        background-color: $white;
+        width: 1px;
+        height: 25px;
+        margin: 0 10px;
+      }
     }
   }
 
@@ -73,10 +107,10 @@
 }
 
 .left-section {
-  padding: 30px 0 30px 30px;
-
+  grid-area: left;
   .blockie-contianer {
     display: flex;
+
 
     .blockie {
       border: 3px solid $white;
@@ -93,8 +127,14 @@
   }
 
   .left-text {
-    // padding-top: 50px;
     padding-right: 50px;
+
+
+    // Mobile
+    @media all and (max-width: 991px) {
+      padding-right: 0;
+      margin: 20px 0;
+    }
 
     span {
       color: $red-1;
@@ -116,8 +156,18 @@
 
   .text {
     padding-left: 30px;
-    position: relative;
-    z-index: 2;
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 3;
+
+    p {
+      margin-left: 5px;
+      font-weight: 400;
+      color: $black;
+    }
   }
 
   .dash {
@@ -133,11 +183,16 @@
   padding: 15px 30px 30px;
 
   .header-container {
-    display: flex;
+    display: grid;
+    grid-template-columns: 70px 1fr;
+  }
+
+  .blockie-image {
+    //width: 70px;
   }
 
   .header-content {
-    padding: 5px 0 0 25px;
+    //padding: 5px 0 0 25px;
 
     h3 {
       font-weight: bold;
@@ -177,14 +232,32 @@
       font-weight: bold;
     }
   }
+
+  // Mobile
+  @media all and (max-width: 991px) {
+    display: block;
+    word-break: break-word;
+    overflow-wrap: break-word;
+
+    .text-container {
+      margin-bottom: 10px;
+    }
+  }
+
 }
 
 .my-address-container {
   background-color: $light-green-1;
   margin: 50px 0 10px 0;
+
+  // Mobile
+  @media all and (max-width: 991px) {
+    margin-top: 20px;
+  }
 }
 
 .my-address-qrcode {
+  display: inline-block;
   padding: 8px;
   background-color: $white;
   height: 120px;
@@ -207,6 +280,10 @@
   display: flex;
   justify-content: space-between;
   padding: 15px 30px;
+
+  @media all and (max-width: 991px) {
+    display: block;
+  }
 
   .link-container {
     display: flex;
@@ -231,6 +308,17 @@
     .border-line {
       border-right: 1px solid $mew-green;
       height: 25px;
+    }
+
+    @media all and (max-width: 991px) {
+      justify-content: flex-start;
+      margin-top: 20px;
+      .border-line {
+        border: 0;
+        width: 1px;
+        margin: 0 10px;
+        background-color: $black;
+      }
     }
   }
 }
