@@ -14,6 +14,7 @@
 
 ### Feature
 
+- Sort by network support, add row gap [#720](https://github.com/MyEtherWallet/MyEtherWallet/pull/720)
 - Print ENS bid details [#699](https://github.com/MyEtherWallet/MyEtherWallet/pull/699)
 
 ### Release v5.0.3
