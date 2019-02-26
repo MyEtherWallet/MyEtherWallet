@@ -156,6 +156,7 @@
                         :address="account.address"
                         width="35px"
                         height="35px"
+                        class="blockie-image"
                       />
                       <i class="fa fa-angle-down" aria-hidden="true" />
                     </div>
