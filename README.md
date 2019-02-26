@@ -22,7 +22,6 @@ MyEtherWallet is a doorway to the Ethereum blockchain, allowing users to manage 
 - **Private**: No tracking!!! No emails. No ads. No demographics. We don't even know how many wallets have been generated, let alone who / what / where you are.
 - **Open source & auditable**
 
-
 ## MEW Around the Web
 
 - [Website: https://www.myetherwallet.com/](https://www.myetherwallet.com/)
@@ -41,7 +40,6 @@ MyEtherWallet is a doorway to the Ethereum blockchain, allowing users to manage 
 ## Bug / Feature Request
 
 If you find a bug, or want a new feature added, please submit it on the [Github Issues](https://github.com/MyEtherWallet/MyEtherWallet/issues)
-
 
 ## Getting started
 
