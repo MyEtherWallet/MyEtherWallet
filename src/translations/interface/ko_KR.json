@@ -3,7 +3,7 @@
   "save": "저장 ",
   "dontKnow": "무언가 모르는 것이 있으신가요?",
   "helpCenter": "Help Center",
-  "httpBasicAccess": "HTTP 기본접근 인증 ",
+  "httpBasicAccess": "HTTP Basic Access Authentication",
   "tokens": "토큰 ",
   "customToken": "사용자지정 토큰 ",
   "dataGas": "Data & Gas Limit",
