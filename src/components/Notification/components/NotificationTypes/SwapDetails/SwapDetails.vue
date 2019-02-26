@@ -101,25 +101,7 @@
           </div>
         </li>
         <li
-          v-if="notice.body.provider === providerNames.bity && details.orderId"
-        >
-          <p>
-            {{
-              $t('header.orderID', {
-                provider: notice.body.provider
-              })
-            }}:
-          </p>
-          <div class="detail-data">
-            <p>
-              {{ details.orderId }}
-            </p>
-          </div>
-        </li>
-        <li
-          v-if="
-            notice.body.provider === providerNames.changelly && details.orderId
-          "
+          v-if="showId && details.orderId"
         >
           <p>
             {{
@@ -313,6 +295,9 @@ export default {
     },
     isFromFiat() {
       return this.fiatCurrencies.includes(this.notice.body.fromCurrency);
+    },
+    showId(){
+      return this.notice.body.provider === providerNames.bity || this.notice.body.provider === providerNames.changelly;
     }
   },
   beforeDestroy() {
