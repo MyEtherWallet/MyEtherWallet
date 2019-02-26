@@ -1,9 +1,5 @@
 @import '~@/scss/GlobalVariables';
 
-.mnemonic-table-container {
-
-}
-
 .header {
   align-items: center;
   display: flex;
@@ -28,7 +24,6 @@
       margin-left: 5px;
     }
   }
-
 } // .header
 
 .warnings {
@@ -51,14 +46,12 @@
 .content {
   border: 1px solid $light-grey-3;
   padding: 50px 60px;
-
 }
 
 .mnemonic {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-gap: 20px 50px;
-
 }
 
 .item {
