@@ -1,9 +1,5 @@
 @import '~@/scss/GlobalVariables';
 
-.mnemonic-table-container {
-
-}
-
 .header {
   align-items: center;
   display: flex;
@@ -37,7 +33,6 @@
       margin-left: 5px;
     }
   }
-
 } // .header
 
 .warnings {
@@ -63,7 +58,6 @@
   @media all and (max-width: $tablet-width) {
     padding: 20px;
   }
-
 }
 
 .mnemonic {
