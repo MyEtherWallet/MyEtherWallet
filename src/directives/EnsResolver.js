@@ -1,5 +1,6 @@
 import normalise from '@/helpers/normalise';
 import { Misc } from '@/helpers';
+import { toChecksumAddress } from '@/helpers/addressUtils';
 const EnsResolver = {
   bind: function(el, binding, vnode) {
     vnode.context.$watch(binding.value, function(e) {
@@ -34,7 +35,7 @@ const EnsResolver = {
         if (Misc.isValidETHAddress(e)) {
           if (!checkDarklist(e)) {
             _this.isValidAddress = true;
-            _this.hexAddress = _this.web3.utils.toChecksumAddress(e);
+            _this.hexAddress = toChecksumAddress(e);
             removeElements();
           }
         } else {
@@ -56,9 +57,7 @@ const EnsResolver = {
               .then(address => {
                 if (!checkDarklist(address)) {
                   removeElements();
-                  _this.hexAddress = _this.web3.utils.toChecksumAddress(
-                    address
-                  );
+                  _this.hexAddress = toChecksumAddress(address);
                   _this.isValidAddress = true;
                   errorPar.innerText = address;
                   vnode.elm.parentNode.parentNode.appendChild(errorPar);
