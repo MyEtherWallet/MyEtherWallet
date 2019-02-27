@@ -6,16 +6,15 @@
   color: $white;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-areas: "left right";
+  grid-template-areas: 'left right';
   min-height: 290px;
-  position: relative;
   overflow: hidden;
   position: relative;
 
   // Mobile
   @media all and (max-width: 991px) {
     padding: 30px;
-    grid-template-areas: "right" "left";
+    grid-template-areas: 'right' 'left';
     grid-template-columns: 1fr;
   }
 }
@@ -111,7 +110,6 @@
   .blockie-contianer {
     display: flex;
 
-
     .blockie {
       border: 3px solid $white;
     }
@@ -128,7 +126,6 @@
 
   .left-text {
     padding-right: 50px;
-
 
     // Mobile
     @media all and (max-width: 991px) {
@@ -159,8 +156,8 @@
     display: flex;
     align-items: center;
     position: absolute;
-    top: 0px;
-    left: 0px;
+    top: 0;
+    left: 0;
     z-index: 3;
 
     p {
@@ -243,7 +240,6 @@
       margin-bottom: 10px;
     }
   }
-
 }
 
 .my-address-container {
