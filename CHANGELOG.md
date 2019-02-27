@@ -2,7 +2,6 @@
 
 - Update README instructions, fix #731 and #727 [#732](https://github.com/MyEtherWallet/MyEtherWallet/pull/732)
 
-
 ### Release v5.0.4
 
 ### Feature
