@@ -46,7 +46,8 @@ const EnsResolver = {
             removeElements();
             _this.isValidAddress = false;
             _this.hexAddress = '';
-            errorPar.innerText = 'No ENS resolver in this node';
+            // eslint-disable-next-line
+            errorPar.innerText = `No ${_this.network.type.name[0]}NS resolver in this node`;
             el.parentNode.parentNode.appendChild(errorPar);
           } else {
             ens
@@ -65,7 +66,8 @@ const EnsResolver = {
               })
               .catch(() => {
                 removeElements();
-                errorPar.innerText = 'ENS name is invalid or not found';
+                // eslint-disable-next-line
+                errorPar.innerText = `${_this.network.type.name[0]}NS name is invalid or not found`;
                 _this.isValidAddress = false;
                 _this.hexAddress = '';
                 vnode.elm.parentNode.parentNode.appendChild(errorPar);
