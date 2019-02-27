@@ -1,11 +1,15 @@
 <template>
   <div class="scheduled-success-container">
-    <h3 class="page-title">{{ isTokenTransfer && approved ? 'Approved' : 'Scheduled' }}</h3>
+    <h3 class="page-title">
+      {{ isTokenTransfer && approved ? 'Approved' : 'Scheduled' }}
+    </h3>
 
     <div class="page-container">
       <div class="break-word">
         Your TX has been scheduled with the transaction hash
-        <scheduled-transaction-explorer-link :tx-hash="txHash" />{{ !mined ? ' and is waiting to be mined' : '' }}.
+        <scheduled-transaction-explorer-link :tx-hash="txHash" />{{
+          !mined ? ' and is waiting to be mined' : ''
+        }}.
       </div>
 
       <b-alert
@@ -34,15 +38,14 @@
             The transaction has been mined. Please
             <strong>approve</strong> the token transfer now.
           </div>
-          <div class="submit-button large-round-button-green-filled mt-3" @click="approveToken()">
+          <div
+            class="submit-button large-round-button-green-filled mt-3"
+            @click="approveToken()"
+          >
             Approve Token Transfer
           </div>
         </div>
       </b-alert>
-
-      <h3 v-if="isTokenTransfer && approved" class="approved-transfer horizontal-center m-4">
-        
-      </h3>
     </div>
   </div>
 </template>
@@ -102,7 +105,10 @@ export default {
       const latestNotification = notifications[0];
 
       if (latestNotification.hash) {
-        if (latestNotification.status === 'complete' && this.txHash === latestNotification.hash) {
+        if (
+          latestNotification.status === 'complete' &&
+          this.txHash === latestNotification.hash
+        ) {
           const receipt = await this.web3.eth.getTransactionReceipt(
             this.txHash
           );
@@ -130,7 +136,9 @@ export default {
               EAC_SCHEDULING_CONFIG.APPROVE_TOKEN_TRANSFER_METHOD_ID
             )
           ) {
-            if (transaction.input.includes(this.scheduledTxAddress.substring(2))) {
+            if (
+              transaction.input.includes(this.scheduledTxAddress.substring(2))
+            ) {
               this.approved = true;
             }
           }
@@ -157,7 +165,7 @@ export default {
       const tokenAmount = new BigNumber(
         this.amount * Math.pow(10, this.selectedCurrency.decimals)
       );
-      
+
       const approveTokensData = tokenContract.methods
         .approve(this.scheduledTxAddress, tokenAmount.toString())
         .encodeABI();
