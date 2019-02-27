@@ -642,7 +642,7 @@ export default {
               );
               return;
             }
-            
+
             const isTokenTransfer = transaction.input.includes(
               EAC_SCHEDULING_CONFIG.TOKEN_TRANSFER_METHOD_ID
             );
