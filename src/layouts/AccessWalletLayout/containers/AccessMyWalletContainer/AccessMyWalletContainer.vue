@@ -254,6 +254,7 @@ export default {
     hardwarePasswordModalOpen(hardwareNeedingPassword) {
       this.walletConstructor = hardwareNeedingPassword.walletConstructor;
       this.hardwareBrand = hardwareNeedingPassword.hardwareBrand;
+      this.$refs.hardwareModal.$refs.hardware.hide();
       this.$refs.hardwarePasswordModal.$refs.password.show();
     },
     hardwareWalletOpen(wallet) {
