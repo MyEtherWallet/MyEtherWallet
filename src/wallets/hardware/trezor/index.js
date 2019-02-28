@@ -16,6 +16,11 @@ const NEED_PASSWORD = false;
 
 class TrezorWallet {
   constructor() {
+    Trezor.manifest({
+      email: 'info@myetherwallet.com',
+      appUrl: 'https://www.myetherwallet.com'
+    });
+
     this.identifier = trezorType;
     this.isHardware = true;
     this.needPassword = NEED_PASSWORD;
