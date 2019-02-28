@@ -1,0 +1,10 @@
+{
+  "popupClosed": "Popup Closed",
+  "deviceDisconnect": "Device disconnected",
+  "deviceDisconnectAction": "device disconnected during action",
+  "userCancelledAction": "Action cancelled by user",
+  "noPermission": "Permissions not granted",
+  "callInProgress": "Device call in progress",
+  "transportMissing": "Transport is missing",
+  "cancelled": "Event cancelled by user"
+}

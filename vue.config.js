@@ -136,7 +136,6 @@ if (process.env.NODE_ENV === 'production') {
           'src/assets/images/icons/github-black.png',
           'src/assets/images/icons/slack.png',
           'src/assets/images/mew-screen.png',
-          'src/assets/images/networks/esn.svg',
           'src/assets/images/networks/etsc.svg',
           'src/assets/images/networks/exp.svg',
           'src/assets/images/icons/up.svg',

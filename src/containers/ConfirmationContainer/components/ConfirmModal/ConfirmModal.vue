@@ -76,39 +76,11 @@
         </div>
 
         <div class="submit-button-container">
-          <div class="flex-center-align">
-            <div class="button-with-helper">
-              <div
-                ref="ConfirmAndSendButton"
-                :class="[
-                  signedTx !== '' ? '' : 'disabled',
-                  'submit-button large-round-button-green-filled clickable'
-                ]"
-                @click="sendTx"
-              >
-                {{ $t('common.confirmAndSend') }}
-              </div>
-              <div class="tooltip-box-2">
-                <b-btn id="exPopover9">
-                  <img class="icon" src="~@/assets/images/icons/qr-code.svg" />
-                </b-btn>
-                <b-popover
-                  target="exPopover9"
-                  triggers="hover focus"
-                  placement="top"
-                ></b-popover>
-              </div>
-            </div>
-          </div>
-          <p class="learn-more">
-            Have any issues?
-            <a
-              href="https:/kb.myetherwallet.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              >Learn more</a
-            >
-          </p>
+          <standard-button
+            :options="buttonSendTx"
+            :button-disabled="signedTx !== '' ? false : true"
+            @click.native="sendTx"
+          />
         </div>
       </div>
     </b-modal>
@@ -120,10 +92,12 @@ import AddressBlock from '../AddressBlock';
 import BigNumber from 'bignumber.js';
 import { mapGetters } from 'vuex';
 import store from 'store';
+import StandardButton from '@/components/Buttons/StandardButton';
 
 export default {
   components: {
-    'address-block': AddressBlock
+    'address-block': AddressBlock,
+    'standard-button': StandardButton
   },
   props: {
     confirmSendTx: {
@@ -177,7 +151,13 @@ export default {
       transactionSigned: false,
       tokenTransferTo: '',
       tokenTransferVal: '',
-      tokenSymbol: ''
+      tokenSymbol: '',
+      buttonSendTx: {
+        title: 'Confirm and Send',
+        buttonStyle: 'green',
+        mobileFullWidth: true,
+        helpCenter: true
+      }
     };
   },
   computed: {

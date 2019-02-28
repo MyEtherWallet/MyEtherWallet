@@ -1,10 +1,8 @@
 import Vue from 'vue';
-import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import sinon from 'sinon';
 import ManageENSContainer from '@/dapps/RegisterDomain/containers/ManageENSContainer/ManageENSContainer.vue';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
-import { state, getters } from '@@/helpers/mockStore';
 import { Tooling } from '@@/helpers';
 
 describe('ManageENSContainer.vue', () => {
@@ -19,11 +17,6 @@ describe('ManageENSContainer.vue', () => {
     i18n = baseSetup.i18n;
     store = baseSetup.store;
     Vue.config.warnHandler = () => {};
-
-    store = new Vuex.Store({
-      getters,
-      state
-    });
   });
 
   beforeEach(() => {

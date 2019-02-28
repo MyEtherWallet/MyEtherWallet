@@ -12,7 +12,7 @@
   }
 }
 .wrap {
-  padding-top: 99px;
+  padding-top: 85px;
 
   // Tablet
   @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
@@ -312,6 +312,14 @@
 .settings-container {
   display: flex;
   align-items: center;
+  position: relative;
+  padding-left: 20px;
+
+  .blockie-image {
+    position: absolute;
+    top: -9px;
+    right: 20px;
+  }
 
   i {
     color: $dark-blue-1;

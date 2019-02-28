@@ -1,4 +1,3 @@
-import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import ConfirmationContainer from '@/containers/ConfirmationContainer/ConfirmationContainer.vue';
 import AddressBlock from '@/containers/ConfirmationContainer/components/AddressBlock/AddressBlock.vue';
@@ -8,7 +7,6 @@ import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessM
 import ConfirmCollectionModal from '@/containers/ConfirmationContainer/components/ConfirmCollectionModal/ConfirmCollectionModal.vue';
 import VueQrcode from '@xkeshi/vue-qrcode';
 import sinon from 'sinon';
-import { state, getters } from '@@/helpers/mockStore';
 import Web3 from 'web3';
 
 import { Tooling } from '@@/helpers';
@@ -34,11 +32,6 @@ xdescribe('[Failing] ConfirmationContainer.vue', () => {
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
     store = baseSetup.store;
-
-    store = new Vuex.Store({
-      getters,
-      state
-    });
   });
 
   beforeEach(() => {

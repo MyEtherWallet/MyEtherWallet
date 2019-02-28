@@ -1,8 +1,43 @@
-### Release v5.0.4
+### Bug
+
+- Update success modal for transaction and swap [#666](https://github.com/MyEtherWallet/MyEtherWallet/pull/666)
+- Fix Interface -> Address block UI & Print sheet UI [#733](https://github.com/MyEtherWallet/MyEtherWallet/pull/733)
 
 ### Devop
 
+- Update README instructions, fix #731 and #727 [#732](https://github.com/MyEtherWallet/MyEtherWallet/pull/732)
+
+### Release v5.0.4
+
+### Feature
+
+- Add animation to FAQs [#691](https://github.com/MyEtherWallet/MyEtherWallet/pull/691)
+
+### Devop
+
+- Reverse the tx order for metamask batch txs [#723](https://github.com/MyEtherWallet/MyEtherWallet/pull/723)
+- Add minimum buffer to Kyber Swaps, improve changelly fixed rate check, show swap reference number in notifications [#711](https://github.com/MyEtherWallet/MyEtherWallet/pull/711)
+- Update keepkey, add popovers on disabled options [#709](https://github.com/MyEtherWallet/MyEtherWallet/pull/709)
+- Add noscript page [#710](https://github.com/MyEtherWallet/MyEtherWallet/pull/710)
 - Fix list fetching issue on travis and couple of sentry issues [#692](https://github.com/MyEtherWallet/MyEtherWallet/pull/692)
+- Redo wallet errors, include translations [#685](https://github.com/MyEtherWallet/MyEtherWallet/pull/685)
+- Identical build for production and gh-pages-history [#712](https://github.com/MyEtherWallet/MyEtherWallet/pull/712)
+- Optimized batch transaction processing and ws block subscription [#704](https://github.com/MyEtherWallet/MyEtherWallet/pull/704)
+
+### Bug
+
+- Fix Mnemonic Phrase print page UI [#721](https://github.com/MyEtherWallet/MyEtherWallet/pull/721)
+- Fix Send TX confirmation modal [#694](https://github.com/MyEtherWallet/MyEtherWallet/pull/694)
+- Fix offline Worker issue [#690](https://github.com/MyEtherWallet/MyEtherWallet/pull/690)
+- Fix information block UI [#693](https://github.com/MyEtherWallet/MyEtherWallet/pull/693)
+- Fix header UI bug [#701](https://github.com/MyEtherWallet/MyEtherWallet/pull/701)
+- Update Inteface side menu button UI [#698](https://github.com/MyEtherWallet/MyEtherWallet/pull/698)
+
+### Feature
+
+- Sort by network support, add row gap [#720](https://github.com/MyEtherWallet/MyEtherWallet/pull/720)
+- Print ENS bid details [#699](https://github.com/MyEtherWallet/MyEtherWallet/pull/699)
+- Add Prefilled form for contact support [#697](https://github.com/MyEtherWallet/MyEtherWallet/pull/697)
 
 ### Release v5.0.3
 
@@ -31,7 +66,6 @@
 
 ### Bug
 
-- Update success modal for transaction and swap [#666](https://github.com/MyEtherWallet/MyEtherWallet/pull/666)
 - Fix Popover UI bugs [#676](https://github.com/MyEtherWallet/MyEtherWallet/pull/676)
 - Fix mobile settings [#651](https://github.com/MyEtherWallet/MyEtherWallet/pull/651)
 - Mandatory password input for Get a New Wallet -> Mnemonic Phrase [#649](https://github.com/MyEtherWallet/MyEtherWallet/pull/649)
