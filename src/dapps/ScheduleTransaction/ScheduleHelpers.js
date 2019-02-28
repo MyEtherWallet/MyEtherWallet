@@ -4,7 +4,6 @@ import { Util } from '@ethereum-alarm-clock/lib';
 import * as unit from 'ethjs-unit';
 
 const EAC_SCHEDULING_CONFIG = {
-  FUTURE_GAS_PRICE_MIN: 1, // Gwei
   FEE: new BigNumber('0'),
   TOKEN_TRANSFER_ADDITIONAL_GAS: new BigNumber('20000'),
   TOKEN_SCHEDULING_GAS_LIMIT: new BigNumber('1500000'),
@@ -65,7 +64,7 @@ const canBeConvertedToWei = (web3, string, denomination = 'ether') => {
 
 const estimateBountyForGasPrice = (gasPrice, futureGasLimit) => {
   const estimatedWei = Util.estimateBountyForExecutionGasPrice(
-    new BigNumber(unit.toWei(gasPrice.toString(), 'gwei')),
+    new BigNumber(unit.toWei(Math.round(gasPrice).toString(), 'gwei')),
     new BigNumber(futureGasLimit.toString()),
     new BigNumber(unit.toWei('0', 'gwei'))
   );
