@@ -1,3 +1,7 @@
+### Bug
+
+- - Fix Interface -> Address block UI & Print sheet UI [#733](https://github.com/MyEtherWallet/MyEtherWallet/pull/733)
+
 ### Devop
 
 - Update README instructions, fix #731 and #727 [#732](https://github.com/MyEtherWallet/MyEtherWallet/pull/732)
