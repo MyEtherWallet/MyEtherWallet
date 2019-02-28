@@ -44,11 +44,20 @@
             </a>
           </p>
         </li>
-        <li>
+        <li v-if="notice.body.gasUsed">
           <p>{{ $t('common.txFee') }}:</p>
           <p>
-            {{ details.gasLimit }} WEI (${{
-              getFiatValue(details.gasPrice * details.gasUsed)
+            {{ convertToEth(details.gasPrice * details.gasUsed) }} ETH
+            <span>
+              (${{ getFiatValue(details.gasPrice * details.gasUsed) }})
+            </span>
+          </p>
+        </li>
+        <li>
+          <p>{{ $t('header.maxTxFee') }}:</p>
+          <p>
+            {{ convertToEth(details.gasPrice * details.gasLimit) }} ETH (${{
+              getFiatValue(details.gasPrice * details.gasLimit)
             }})
           </p>
         </li>
