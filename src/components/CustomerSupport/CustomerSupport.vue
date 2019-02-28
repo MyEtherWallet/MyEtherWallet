@@ -76,6 +76,7 @@ export default {
   mounted() {
     this.browser = this.$options.filters.capitalize(Misc.browserName());
     this.os = Misc.browserOs();
+    this.device = Misc.browserProduct();
     this.url = this.$router.history.current.fullPath;
   },
   methods: {
