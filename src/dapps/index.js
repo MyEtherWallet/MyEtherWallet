@@ -30,6 +30,14 @@ const dapps = {
     title: 'dapps.safesend_title',
     desc: 'dapps.safesend_desc',
     supportedNetworks: [ETH.name]
+  },
+  maker: {
+    route: '/interface/dapps/maker-dai',
+    icon: secureTransaction,
+    iconDisabled: secureTransactionHov,
+    title: 'dapps.maker_title',
+    desc: 'dapps.maker_desc',
+    supportedNetworks: [ETH.name]
   }
 };
 
