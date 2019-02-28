@@ -1,0 +1,67 @@
+@import '~@/scss/GlobalVariables';
+
+.header {
+  align-items: center;
+  display: flex;
+
+  .block-title {
+    align-items: center;
+    display: flex;
+    span {
+      color: $mew-green;
+      margin-left: 10px;
+      padding-left: 10px;
+      border-left: 2px solid $mew-green;
+      font-weight: 700;
+    }
+  }
+
+  .support {
+    margin-left: auto;
+    align-items: center;
+    display: flex;
+    p {
+      margin-left: 5px;
+    }
+  }
+} // .header
+
+.warnings {
+  margin-top: 30px;
+  margin-bottom: 50px;
+  h3 {
+    font-size: 16px;
+    font-weight: 700;
+  }
+  p {
+    margin-top: 10px;
+    line-height: 16px;
+    span {
+      font-weight: 700;
+      color: $red-1;
+    }
+  }
+} // .warnings
+
+.content {
+  border: 1px solid $light-grey-3;
+  padding: 50px 60px;
+}
+
+.mnemonic {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 20px 50px;
+}
+
+.item {
+  border-bottom: 1px solid $light-grey-14;
+  padding: 10px;
+  width: 100%;
+
+  span {
+    margin-right: 5px;
+    color: $light-grey-14;
+    font-weight: 500;
+  }
+}

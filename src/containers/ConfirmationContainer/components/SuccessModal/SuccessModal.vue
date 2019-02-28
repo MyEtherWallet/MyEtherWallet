@@ -12,24 +12,25 @@
         <h2 class="title">{{ $t('confirmation.success') }}</h2>
         <p>{{ message }}</p>
       </div>
-      <div class="button-container">
-        <div
-          class="mid-round-button-green-filled close-button"
-          @click="hideModal"
-        >
-          {{ linkMessage === '' ? 'Ok' : linkMessage }}
-        </div>
+
+      <div class="buttons">
+        <a v-if="etherscanLink" :href="etherscanLink" target="_blank"
+          ><standard-button :options="buttonCheckEtherscan"
+        /></a>
+        <standard-button :options="buttonOk" @click.native="hideModal" />
       </div>
     </div>
     <!-- .modal-content-block -->
   </b-modal>
 </template>
 
-<style lang="scss" scoped>
-@import 'SuccessModal';
-</style>
 <script>
+import StandardButton from '@/components/Buttons/StandardButton';
+
 export default {
+  components: {
+    'standard-button': StandardButton
+  },
   props: {
     message: {
       type: String,
@@ -42,15 +43,35 @@ export default {
     linkTo: {
       type: String,
       default: '/'
+    },
+    etherscanLink: {
+      type: String,
+      default: null
     }
   },
+  data() {
+    return {
+      buttonCheckEtherscan: {
+        title: 'Check Status on Etherscan',
+        buttonStyle: 'green-border',
+        fullWidth: true
+      },
+      buttonOk: {
+        title: this.linkMessage === '' ? 'Ok' : this.linkMessage,
+        buttonStyle: 'green',
+        fullWidth: true
+      }
+    };
+  },
+  mounted() {},
   methods: {
     hideModal() {
-      if (this.linkTo !== '/') {
-        this.$router.push({ path: this.linkTo });
-      }
       this.$refs.success.hide();
     }
   }
 };
 </script>
+
+<style lang="scss" scoped>
+@import 'SuccessModal';
+</style>

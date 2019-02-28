@@ -81,8 +81,7 @@ export default {
           title: this.$t('home.whatIsMewConnectTitle'),
           content: this.$t('home.whatIsMewConnectDesc'),
           linkText: this.$t('home.here'),
-          link:
-            'https://kb.myetherwallet.com/mewconnect/mew-connect-user-guide.html'
+          link: 'https://mewconnect.myetherwallet.com/'
         },
         faq3: {
           open: false,

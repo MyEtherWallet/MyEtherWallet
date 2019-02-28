@@ -346,6 +346,10 @@ export default {
         .catch(e => {
           Toast.responseHandler(e, false);
         });
+
+      if (balance > 0) {
+        this.setTokens();
+      }
       return balance;
     },
     setCustomTokenStore() {
