@@ -9,6 +9,12 @@ const swapConfigFolder = './src/partners/partnersConfig';
 const changellyConfigFolder = './src/partners/changelly/config';
 const kyberConfigFolder = './src/partners/kyber/config';
 
+const explicitStringReplacements = {
+  RLC: {
+    fullName: 'iExec RLC'
+  }
+};
+
 class CompileSwapOptions {
   constructor() {
     this.web3 = new web3('https://api.myetherwallet.com/eth');
@@ -28,7 +34,7 @@ class CompileSwapOptions {
         .call();
     } catch (e) {
       console.error(e);
-      return {}
+      return {};
     }
   }
 
@@ -153,7 +159,13 @@ class CompileSwapOptions {
 
   processChangelly(accumulator, currentValue) {
     const regex = /https:\/\/etherscan\.io/;
-    if(!currentValue.enabled) return accumulator;
+    if (!currentValue.enabled) return accumulator;
+    if (explicitStringReplacements[currentValue.name.toUpperCase()]) {
+      currentValue = {
+        ...currentValue,
+        ...explicitStringReplacements[currentValue.name.toUpperCase()]
+      };
+    }
     if (regex.test(currentValue.transactionUrl)) {
       accumulator.ETH[currentValue.name.toUpperCase()] = this.createEntry(
         currentValue
@@ -163,10 +175,14 @@ class CompileSwapOptions {
         accumulator.other[currentValue.name.toUpperCase()] = {
           symbol: currentValue.name.toUpperCase(),
           name: currentValue.fullName,
-          addressLookup: currentValue.addressUrl ? currentValue.addressUrl.replace('%1$s', '[[address]]') : currentValue.addressUrl,
-          explorer: currentValue.transactionUrl ? currentValue.transactionUrl.replace('%1$s', '[[txHash]]') : currentValue.transactionUrl,
+          addressLookup: currentValue.addressUrl
+            ? currentValue.addressUrl.replace('%1$s', '[[address]]')
+            : currentValue.addressUrl,
+          explorer: currentValue.transactionUrl
+            ? currentValue.transactionUrl.replace('%1$s', '[[txHash]]')
+            : currentValue.transactionUrl,
           fixRateEnabled: currentValue.fixRateEnabled
-      };
+        };
       }
     }
     return accumulator;

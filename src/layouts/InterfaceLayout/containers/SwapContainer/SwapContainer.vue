@@ -227,7 +227,7 @@ import SwapExitToFiat from './components/SwapExitToFiat';
 import SwapSendToModal from './components/SwapSendToModal';
 
 import {
-  Swap,
+  SwapProviders,
   providers,
   bestProviderForQuantity,
   bestRateForQuantity,
@@ -273,7 +273,7 @@ export default {
       selectedProvider: {},
       swapDetails: {},
       currencyDetails: {},
-      swap: new Swap(providers, {
+      swap: new SwapProviders(providers, {
         network: this.$store.state.network.type.name,
         web3: this.$store.state.web3,
         getRateForUnit: true
@@ -435,7 +435,7 @@ export default {
     },
     showRefundAddress() {
       return (
-        !this.swap.isToken(this.fromCurrency) &&
+        !SwapProviders.isToken(this.fromCurrency) &&
         this.selectedProvider.provider === this.providerNames.changelly
       );
     },
@@ -443,16 +443,10 @@ export default {
       const validBaseToAddress = this.toAddress !== '' && this.validAddress;
 
       if (this.isExitToFiat) {
-        // const validExitAddress =
         if (this.fromCurrency === this.baseCurrency) {
-          // this.exitFromAddress = this.currentAddress;
           return true;
         }
         return this.exitFromAddress !== '' && this.validExitAddress;
-        // return (
-        //   (validBaseToAddress && validExitAddress) ||
-        //   this.fromCurrency === this.baseCurrency
-        // );
       }
       if (this.showRefundAddress) {
         const validRefundAddress =
@@ -464,7 +458,7 @@ export default {
     },
     hasEnough() {
       if (
-        this.swap.isToken(this.fromCurrency) &&
+        SwapProviders.isToken(this.fromCurrency) &&
         this.fromCurrency !== this.baseCurrency
       ) {
         const enteredVal = this.swap.convertToTokenWei(
@@ -518,7 +512,7 @@ export default {
       this.providerData = [];
       this.haveProviderRates = false;
       this.loadingData = false;
-      this.swap = new Swap(providers, {
+      this.swap = new SwapProviders(providers, {
         network: newVal.type.name,
         web3: this.web3
       });
@@ -575,9 +569,6 @@ export default {
     setExitFromAddress(address) {
       this.exitFromAddress = address;
     },
-    setAddressValid(value) {
-      this.validAddress = value;
-    },
     swapAll() {
       this.fromValue = this.swap.convertToTokenBase(
         this.fromCurrency,
@@ -609,7 +600,7 @@ export default {
       );
     },
     async getBalance(currency) {
-      if (this.swap.isToken(currency) && currency !== this.baseCurrency) {
+      if (SwapProviders.isToken(currency) && currency !== this.baseCurrency) {
         const balance = await new this.web3.eth.Contract(
           ERC20,
           this.swap.getTokenAddress(currency)
@@ -789,7 +780,7 @@ export default {
             toValue: this.toValue,
             toAddress: this.toAddress || this.currentAddress,
             fromAddress: this.currentAddress,
-            refundAddress: this.swap.isToken(providerDetails.fromCurrency)
+            refundAddress: SwapProviders.isToken(providerDetails.fromCurrency)
               ? this.currentAddress
               : this.refundAddress,
             exitFromAddress:
