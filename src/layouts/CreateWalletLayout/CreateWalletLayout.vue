@@ -136,7 +136,7 @@ import CreateWalletInputFooter from './components/CreateWalletInputFooter';
 import PageFooter from './components/PageFooter';
 import PageTitle from './components/PageTitle';
 import store from 'store';
-import Misc from '@/helpers/misc';
+import { Misc } from '@/helpers';
 import IpadModal from '@/components/IpadModal';
 
 export default {
@@ -161,7 +161,9 @@ export default {
     };
   },
   mounted() {
-    this.canDownloadApple = !window.navigator.userAgent.includes('iPad');
+    this.canDownloadApple =
+      !window.navigator.userAgent.includes('iPad') &&
+      Misc.browserOs() !== 'iOS';
     const skipTutorial = store.get('skipTutorial');
     if (
       skipTutorial === undefined ||
