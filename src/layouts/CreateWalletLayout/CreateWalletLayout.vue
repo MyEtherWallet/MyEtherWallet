@@ -161,7 +161,8 @@ export default {
     };
   },
   mounted() {
-    this.canDownloadApple = Misc.browserProduct() !== 'ipad';
+    this.canDownloadApple =
+      Misc.browserProduct() !== null && Misc.browserProduct() !== 'ipad';
     const skipTutorial = store.get('skipTutorial');
     if (
       skipTutorial === undefined ||

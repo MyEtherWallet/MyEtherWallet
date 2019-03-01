@@ -1,7 +1,7 @@
 ### Bug
 
 - Fix network addresses with discussed concat, fixes settings dollar amount [#752](https://github.com/MyEtherWallet/MyEtherWallet/pull/752)
-- Token manual load fix []()
+- Token manual load fix, Ipad modal catch, Mozilla value error [](<>)
 
 ### Release v5.0.5
 
