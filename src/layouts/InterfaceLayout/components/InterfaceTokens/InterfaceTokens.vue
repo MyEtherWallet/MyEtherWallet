@@ -292,8 +292,8 @@ export default {
         currentCustomToken[this.network.type.name] = this.customTokens;
         store.set('customTokens', currentCustomToken);
         this.$refs.tokenModal.$refs.token.hide();
+        await this.fetchTokens();
         Toast.responseHandler('Successfully added token!', Toast.SUCCESS);
-        this.fetchTokens();
       }
     },
     tokenListExpend() {
