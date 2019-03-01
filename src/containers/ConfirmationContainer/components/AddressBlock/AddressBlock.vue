@@ -1,10 +1,7 @@
 <template lang="html">
   <div class="address-container">
     <div class="currency-container">
-      <img
-        v-if="tokenSymbol !== ''"
-        :src="require(`@/assets/images/currency/${lowerCaseCurrency}.svg`)"
-      />
+      <img v-if="tokenSymbol !== ''" :src="iconFetcher" />
       <div v-else class="icon-matcher">
         <img :src="icon" />
       </div>
@@ -64,8 +61,18 @@ export default {
     }
   },
   computed: {
+    iconFetcher() {
+      let icon;
+      try {
+        // eslint-disable-next-line
+        icon = require(`@/assets/images/currency/${lowerCaseCurrency}.svg`);
+      } catch (e) {
+        icon = this.icon;
+      }
+      return icon;
+    },
     lowerCaseCurrency() {
-      return this.currency.toLowerCase();
+      return this.tokenSymbol.toLowerCase();
     },
     checksumAddress() {
       if (isAddress(this.tokenTransferTo))

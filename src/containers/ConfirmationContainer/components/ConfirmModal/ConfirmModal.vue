@@ -244,7 +244,7 @@ export default {
               .toFixed()
               .toString()
           : value.toString();
-        this.tokenSymbol = !token ? 'Unknown Token' : token.symbol;
+        this.tokenSymbol = token ? token.symbol : 'Unidentified Token';
       }
     }
   }

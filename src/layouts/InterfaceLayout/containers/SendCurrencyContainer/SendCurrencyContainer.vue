@@ -331,7 +331,9 @@ export default {
       return Misc.sanitizeHex(ethUnit.toWei(this.value, 'ether').toString(16));
     },
     txTo() {
-      return this.isToken ? this.selectedCurrency.address : this.hexAddress;
+      return this.isToken
+        ? this.selectedCurrency.address.toLowerCase()
+        : this.hexAddress.toLowerCase();
     },
     multiWatch() {
       return (
@@ -382,7 +384,7 @@ export default {
       const contract = new this.web3.eth.Contract(jsonInterface);
       return contract.methods
         .transfer(
-          this.hexAddress,
+          this.hexAddress.toLowerCase(),
           new BigNumber(amount).times(new BigNumber(10).pow(decimals)).toFixed()
         )
         .encodeABI();
