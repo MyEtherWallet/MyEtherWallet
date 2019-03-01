@@ -48,6 +48,7 @@
                   type="number"
                   name
                   value
+                  step="any"
                   placeholder="Deposit Amount"
                   @input="amountChanged('from')"
                 />
@@ -80,6 +81,7 @@
                   type="number"
                   name
                   value
+                  step="any"
                   placeholder="Received Amount"
                   @input="amountChanged('to')"
                 />
