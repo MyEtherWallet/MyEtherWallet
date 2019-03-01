@@ -66,6 +66,10 @@ const { MKR, DAI, ETH, WETH, PETH, USD_ETH, USD_MKR, USD_DAI } = Maker;
 const toBigNumber = num => {
   return new BigNumber(num);
 };
+
+const bnOver = (one, two, three) =>{
+  return (toBigNumber(one).times(toBigNumber(two))).div(toBigNumber(three));
+}
 export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
@@ -123,6 +127,14 @@ export default {
       type: Function,
       default: function(){}
     },
+    priceService:{
+      type: Object,
+      default: function(){ return {};}
+    },
+    cdpService:{
+      type: Object,
+      default: function(){ return {};}
+    },
     maker: {
       type: Object,
       default: function(){ return {};}
@@ -130,6 +142,9 @@ export default {
   },
   data() {
     return {
+      // maker: {},
+      // priceService: {},
+      // cdpService: {},
       wethToPethRatio: 0,
       daiPrice: 0,
       priceFloor: 0,
@@ -173,19 +188,20 @@ export default {
     },
     maxDaiDraw() {
       if (this.ethQty <= 0) return 0;
-      return (this.ethPrice * this.ethQty) / this.liquidationRatio;
+      return bnOver(this.ethPrice, this.ethQty, this.liquidationRatio)
     },
     minEthDeposit() {
       if (this.daiQty <= 0) return 0;
-      return (this.liquidationRatio * this.daiQty) / this.ethPrice;
-    }
+      return bnOver(this.liquidationRatio, this.daiQty, this.ethPrice)
+    },
   },
   async mounted() {
+    console.log(USD_DAI); // todo remove dev item
     console.log('this.maker', this.maker); // todo remove dev item
   },
   methods: {
     async dothing() {
-      console.log(this.ethPrice); // todo remove dev item
+      console.log(this.ethPrice.toString()); // todo remove dev item
       console.log(this.liquidationRatio); // todo remove dev item
     },
     calcRatioForDraw() {},
@@ -205,5 +221,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'MakerDai';
+@import 'ImportCDP';
 </style>

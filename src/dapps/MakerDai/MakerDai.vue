@@ -2,7 +2,20 @@
   <div class="register-domain-container">
     <back-button />
     <button @click="gotoCreate">Create</button>
-    <router-view />
+    <router-view
+      :eth-price="ethPrice"
+      :peth-price="pethPrice"
+      :liquidation-penalty="liquidationPenalty"
+      :stability-fee="stabilityFee"
+      :liquidation-ratio="liquidationRatio"
+      :calc-min-collat-ratio="calcMinCollatRatio"
+      :calc-draw-amt="calcDrawAmt"
+      :calc-collat-ratio="calcCollatRatio"
+      :calc-liquidation-price="calcLiquidationPrice"
+      :maker="maker"
+      :price-service="priceService"
+      :cdp-service="cdpService"
+    />
   </div>
 </template>
 
@@ -22,6 +35,14 @@ const { MKR, DAI, ETH, WETH, PETH, USD_ETH, USD_MKR, USD_DAI } = Maker;
 const toBigNumber = num => {
   return new BigNumber(num);
 };
+
+const bnOver = (one, two, three) =>{
+  return (toBigNumber(one).times(toBigNumber(two))).div(toBigNumber(three));
+}
+
+const bnDiv = (one, two) =>{
+  return toBigNumber(one).div(toBigNumber(two));
+}
 export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
@@ -49,12 +70,12 @@ export default {
     return {
       maker: {},
       priceService: {},
-      cpdService: {},
-      liquidationRatio: 0,
-      liquidationPenalty: 0,
-      stabilityFee: 0,
-      ethPrice: 0,
-      pethPrice: 0,
+      cdpService: {},
+      liquidationRatio: toBigNumber(0),
+      liquidationPenalty: toBigNumber(0),
+      stabilityFee: toBigNumber(0),
+      ethPrice: toBigNumber(0),
+      pethPrice: toBigNumber(0),
       wethToPethRatio: 0,
       daiPrice: 0,
       priceFloor: 0,
@@ -98,12 +119,15 @@ export default {
     },
     maxDaiDraw() {
       if (this.ethQty <= 0) return 0;
-      return (this.ethPrice * this.ethQty) / this.liquidationRatio;
+      return bnOver(this.ethPrice, this.ethQty, this.liquidationRatio)
+      // return bnDiv(bnMult(this.ethPrice * this.ethQty), this.liquidationRatio);
     },
     minEthDeposit() {
       if (this.daiQty <= 0) return 0;
-      return (this.liquidationRatio * this.daiQty) / this.ethPrice;
-    }
+      return bnOver(this.liquidationRatio, this.daiQty, this.ethPrice)
+      // return bnDiv(bnMult(this.liquidationRatio * this.daiQty), this.ethPrice);
+      // return (this.liquidationRatio * this.daiQty) / this.ethPrice;
+    },
   },
   async mounted() {
     this.maker = await Maker.create('http', {
@@ -117,7 +141,14 @@ export default {
     console.log(USD_DAI); // todo remove dev item
     await this.maker.authenticate();
     console.log('this.maker', this.maker); // todo remove dev item
-    this.setup();
+    this.priceService = this.maker.service('price');
+    this.cdpService = await this.maker.service('cdp');
+    this.ethPrice = toBigNumber((await this.priceService.getEthPrice()).toNumber());
+    this.pethPrice = toBigNumber((await this.priceService.getPethPrice()).toNumber());
+    // // this.ethPrice = toBigNumber(136.290);
+    this.liquidationRatio = toBigNumber((await this.cdpService.getLiquidationRatio()));
+    this.liquidationPenalty = toBigNumber((await this.cdpService.getLiquidationPenalty()));
+    this.stabilityFee = toBigNumber((await this.cdpService.getAnnualGovernanceFee()));
   },
   methods: {
     gotoCreate(){
@@ -125,31 +156,22 @@ export default {
         path: 'maker-dai/create'
       });
     },
-    async setup() {
-      this.priceService = this.maker.service('price');
-      this.cpdService = await this.maker.service('cdp');
-      // this.ethPrice = (await this.priceService.getEthPrice()).toNumber();
-      this.pethPrice = (await this.priceService.getPethPrice()).toNumber();
-      this.ethPrice = 136.290;
-      this.liquidationRatio = await this.cpdService.getLiquidationRatio();
-      this.liquidationPenalty = await this.cpdService.getLiquidationPenalty();
-      this.stabilityFee = await this.cpdService.getAnnualGovernanceFee();
-    },
     calcMinCollatRatio(priceFloor) {
-      return (this.ethPrice * this.liquidationRatio) / priceFloor;
+      return bnOver(this.ethPrice, this.liquidationRatio, priceFloor)
     },
     calcDrawAmt(principal, collatRatio) {
-      return Math.floor((principal * this.ethPrice) / collatRatio);
+      return Math.floor(bnOver(principal, this.ethPrice, collatRatio).toNumber());
     },
     calcCollatRatio(ethQty, daiQty) {
       if (ethQty <= 0 || daiQty <= 0) return 0;
-      return (this.ethPrice * ethQty) / daiQty;
+      return bnOver(this.ethPrice, ethQty, daiQty)
     },
     calcLiquidationPrice(ethQty, daiQty) {
       if (ethQty <= 0 || daiQty <= 0) return 0;
       const getInt = parseInt(this.ethPrice);
       for (let i = getInt; i > 0; i--) {
-        if ((i * ethQty) / daiQty <= this.liquidationRatio) {
+        const atValue = bnOver(i, ethQty, daiQty).lte(this.liquidationRatio)
+        if(atValue){
           return i;
         }
       }
