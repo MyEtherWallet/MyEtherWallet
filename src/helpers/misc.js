@@ -1,4 +1,3 @@
-const platform = require('platform');
 import normalise from '@/helpers/normalise';
 import nodeList from '@/networks';
 import { isAddress } from './addressUtils';
@@ -14,22 +13,6 @@ const isJson = str => {
   }
 
   return true;
-};
-
-const browserName = () => {
-  if (window) return platform.name ? platform.name.toLowerCase() : null;
-  return undefined;
-};
-
-const browserOs = () => {
-  if (window)
-    return platform.os.family ? platform.os.family.toLowerCase() : null;
-  return undefined;
-};
-
-const browserProduct = () => {
-  if (window) return platform.product ? platform.product.toLowerCase() : null;
-  return undefined;
 };
 
 const doesExist = val => val !== undefined && val !== null;
@@ -182,8 +165,5 @@ export default {
   scrollToTop,
   reorderNetworks,
   isDarklisted,
-  solidityType,
-  browserName,
-  browserOs,
-  browserProduct
+  solidityType
 };
