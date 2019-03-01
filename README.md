@@ -57,5 +57,5 @@ If you find a bug, or want a new feature added, please submit it on the [Github 
 3. run `git checkout develop`
 4. run `npm i` to install node packages.
 5. run `npm run build`. You can also use the offline version by opening the index file from the dist folder with your preferred browser
-6. start `npm dev`
+6. start `npm run dev`
 7. App should be running in `https://localhost:8080`
