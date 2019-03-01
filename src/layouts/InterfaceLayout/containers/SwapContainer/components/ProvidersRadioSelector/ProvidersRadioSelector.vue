@@ -296,7 +296,6 @@ export default {
         }
       });
 
-      // console.log(this.providerData.length); // todo remove dev item
       const activeProviders = [];
       this.providerData.forEach(entry => {
         activeProviders.push(entry.provider);

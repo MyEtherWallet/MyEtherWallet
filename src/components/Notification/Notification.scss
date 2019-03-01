@@ -122,10 +122,10 @@
 
 .notification-dot {
   position: absolute;
-  right: 7px;
-  top: 7px;
+  right: 3px;
+  top: 3px;
 
-  $size: 7px;
+  $size: 17px;
   $duration: 1.5s;
   $timing: ease;
 
@@ -183,6 +183,7 @@
     }
 
     &::after {
+      display: none;
       z-index: -1;
       animation: beat-after $duration $timing 200ms infinite;
     }
@@ -190,11 +191,15 @@
 
   @keyframes beat {
     0% {
-      transform: scale(1);
+      transform: scale(0.4);
     }
 
     50% {
-      transform: scale(1.5);
+      transform: scale(1);
+    }
+
+    100% {
+      transform: scale(0.4);
     }
   }
 

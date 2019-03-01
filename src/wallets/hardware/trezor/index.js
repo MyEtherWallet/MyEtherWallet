@@ -16,6 +16,11 @@ const NEED_PASSWORD = false;
 
 class TrezorWallet {
   constructor() {
+    Trezor.manifest({
+      email: 'dev@myetherwallet.com',
+      appUrl: 'https://www.myetherwallet.com'
+    });
+
     this.identifier = trezorType;
     this.isHardware = true;
     this.needPassword = NEED_PASSWORD;
@@ -85,7 +90,7 @@ const createWallet = async basePath => {
 };
 createWallet.errorHandler = errorHandler;
 const getRootPubKey = async _path => {
-  const result = await Trezor.getPublicKey({ path: _path });
+  const result = await Trezor.ethereumGetPublicKey({ path: _path });
   if (!result.success) throw new Error(result.payload.error);
   return {
     publicKey: result.payload.publicKey,

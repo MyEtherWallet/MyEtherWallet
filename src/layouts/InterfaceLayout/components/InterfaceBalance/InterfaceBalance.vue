@@ -12,8 +12,9 @@
           <h2>{{ $t('common.balance') }}</h2>
           <div class="balance-text-container">
             <div v-show="balance !== undefined" class="balance-text">
-              <p>{{ balance }}</p>
-              <p>{{ network.type.name }}</p>
+              <p>
+                {{ balance }} <span>{{ network.type.name }}</span>
+              </p>
             </div>
             <i v-show="balance === undefined" class="fa fa-spin fa-spinner" />
           </div>
@@ -52,7 +53,9 @@
             title
           />
         </div>
+        <!-- .icon-container -->
       </div>
+      <!-- .block-content -->
     </div>
   </div>
 </template>
