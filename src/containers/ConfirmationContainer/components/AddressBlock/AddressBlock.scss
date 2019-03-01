@@ -44,3 +44,17 @@
     word-wrap: break-word;
   }
 }
+
+.icon-matcher {
+  align-items: center;
+  background-color: #497391;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  height: 36px;
+  width: 36px;
+
+  img {
+    width: 26px !important;
+  }
+}

@@ -26,6 +26,8 @@
 
 <script>
 import StandardButton from '@/components/Buttons/StandardButton';
+import { mapGetters } from 'vuex';
+import url from 'url';
 
 export default {
   components: {
@@ -49,24 +51,40 @@ export default {
       default: null
     }
   },
-  data() {
-    return {
-      buttonCheckEtherscan: {
-        title: 'Check Status on Etherscan',
+  computed: {
+    ...mapGetters({
+      network: 'network'
+    }),
+    buttonCheckEtherscan() {
+      return {
+        // eslint-disable-next-line
+        title: `Check Status on ${this.explorrerName}`,
         buttonStyle: 'green-border',
         fullWidth: true
-      },
-      buttonOk: {
+      };
+    },
+    buttonOk() {
+      return {
         title: this.linkMessage === '' ? 'Ok' : this.linkMessage,
         buttonStyle: 'green',
         fullWidth: true
-      }
-    };
+      };
+    },
+    explorrerName() {
+      return this.getService(this.network.type.blockExplorerTX);
+    }
   },
-  mounted() {},
   methods: {
     hideModal() {
       this.$refs.success.hide();
+    },
+    getService(parsableUrl) {
+      const parsedUrl = url.parse(parsableUrl).hostname;
+      const splitUrl = parsedUrl.split('.');
+      if (splitUrl.length > 2)
+        // eslint-disable-next-line
+        return this.$options.filters.capitalize(`${splitUrl[1]}.${splitUrl[2]}`);
+      return this.$options.filters.capitalize(splitUrl.join('.'));
     }
   }
 };
