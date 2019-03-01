@@ -281,13 +281,13 @@ export default {
         const currentCustomToken = store.get('customTokens');
         this.customTokens =
           this.customTokens.length > 0 ? this.customTokens : [];
-        token['balance'] = await this.getTokenBalance(token);
-        if (token['balance'] === undefined) {
-          Toast.responseHandler(
-            new Error('Token Balance Returned Undefined'),
-            Toast.ERROR
-          );
-        }
+        // token['balance'] = await this.getTokenBalance(token);
+        // if (token['balance'] === undefined) {
+        //   Toast.responseHandler(
+        //     new Error('Token Balance Returned Undefined'),
+        //     Toast.ERROR
+        //   );
+        // }
         this.customTokens.push(token);
         currentCustomToken[this.network.type.name] = this.customTokens;
         store.set('customTokens', currentCustomToken);
