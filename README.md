@@ -20,16 +20,7 @@ MyEtherWallet is a doorway to the Ethereum blockchain, allowing users to manage 
 - **If it can be hacked, it will be hacked**: Never save, store, or transmit secret info, like passwords or keys.
 - **Offline / Client-Side**: User should be able to run locally and offline without issue.
 - **Private**: No tracking!!! No emails. No ads. No demographics. We don't even know how many wallets have been generated, let alone who / what / where you are.
-- **Open source & audit-able**
-
-## Getting started
-
-1. Open terminal
-2. Clone the repo: `git clone git@github.com:MyEtherWallet/MyEtherWallet.git`
-3. run `npm i` to install node packages.
-4. run `npm run build`. You can also use the offline version by opening the index file from the dist folder with your preferred browser
-5. start `npm start`
-6. App should be running in `https://localhost:8080`
+- **Open source & auditable**
 
 ## MEW Around the Web
 
@@ -49,3 +40,22 @@ MyEtherWallet is a doorway to the Ethereum blockchain, allowing users to manage 
 ## Bug / Feature Request
 
 If you find a bug, or want a new feature added, please submit it on the [Github Issues](https://github.com/MyEtherWallet/MyEtherWallet/issues)
+
+## Getting started
+
+1. Open terminal
+2. Clone the repo: `git clone git@github.com:MyEtherWallet/MyEtherWallet.git`
+3. run `npm i` to install node packages.
+4. run `npm run build`. You can also use the offline version by opening the index file from the dist folder with your preferred browser
+5. start `npm start`
+6. App should be running in `https://localhost:8080`
+
+## Developers
+
+1. Open terminal
+2. Clone the repo: `git clone git@github.com:MyEtherWallet/MyEtherWallet.git`
+3. run `git checkout develop`
+4. run `npm i` to install node packages.
+5. run `npm run build`. You can also use the offline version by opening the index file from the dist folder with your preferred browser
+6. start `npm run dev`
+7. App should be running in `https://localhost:8080`
