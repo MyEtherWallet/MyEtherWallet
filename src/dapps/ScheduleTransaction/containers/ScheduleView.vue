@@ -445,14 +445,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters([
-      'web3',
-      'network',
-      'wallet',
-      'gasPrice',
-      'notifications',
-      'account'
-    ]),
+    ...mapGetters(['web3', 'network', 'gasPrice', 'notifications', 'account']),
     isTokenTransfer() {
       return this.selectedCurrency.symbol !== this.network.type.name;
     },
