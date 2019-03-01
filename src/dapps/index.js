@@ -4,7 +4,7 @@ import registerDomain from '@/assets/images/icons/domain.svg';
 import registerDomainHov from '@/assets/images/icons/domain-hov.svg';
 import secureTransaction from '@/assets/images/icons/button-key-hover.svg';
 import secureTransactionHov from '@/assets/images/icons/button-key.svg';
-import { ETH, GOERLI, ROP, RIN } from '@/networks/types';
+import { ETH, GOERLI, ROP, RIN, KOV } from '@/networks/types';
 
 const dapps = {
   registerDomain: {
@@ -37,7 +37,7 @@ const dapps = {
     iconDisabled: secureTransactionHov,
     title: 'dapps.maker_title',
     desc: 'dapps.maker_desc',
-    supportedNetworks: [ETH.name]
+    supportedNetworks: [ETH.name, KOV.name]
   }
 };
 

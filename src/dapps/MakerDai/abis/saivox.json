@@ -1,0 +1,267 @@
+{
+  "abi": [
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "prod",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "owner_",
+          "type": "address"
+        }
+      ],
+      "name": "setOwner",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "era",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "how",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "par",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "ray",
+          "type": "uint256"
+        }
+      ],
+      "name": "tell",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "way",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "authority_",
+          "type": "address"
+        }
+      ],
+      "name": "setAuthority",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "param",
+          "type": "bytes32"
+        },
+        {
+          "name": "val",
+          "type": "uint256"
+        }
+      ],
+      "name": "mold",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "fix",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "ray",
+          "type": "uint256"
+        }
+      ],
+      "name": "tune",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "authority",
+      "outputs": [
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "tau",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": true,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "sig",
+          "type": "bytes4"
+        },
+        {
+          "indexed": true,
+          "name": "guy",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "foo",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "name": "bar",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "name": "wad",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "fax",
+          "type": "bytes"
+        }
+      ],
+      "name": "LogNote",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "authority",
+          "type": "address"
+        }
+      ],
+      "name": "LogSetAuthority",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "owner",
+          "type": "address"
+        }
+      ],
+      "name": "LogSetOwner",
+      "type": "event"
+    }
+  ],
+  "bytecode": "0x6060604052341561000f57600080fd5b60018054600160a060020a03191633600160a060020a03169081179091557fce241d7ca1f669fee44b6fc00b8eba2df3bb514eed0f6f668f8f89096e81ed9460405160405180910390a26b033b2e3c9fd0803ce8000000600481905560028190556003556100886401000000006103a561009082021704565b600655610094565b4290565b6108fd806100a36000396000f3006060604052600436106100cf5763ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416630302c68881146100d457806313af4035146100e9578063143e55e0146101085780633a4a42331461012d578063495d32cb1461014057806355deb8fc146101535780635d6542af146101695780637a9e5e4b1461017c5780638da5cb5b1461019b57806392b0d721146101ca578063a551878e146101e3578063becda0ea146101f6578063bf7e214f1461020c578063cfc4af551461021f575b600080fd5b34156100df57600080fd5b6100e7610232565b005b34156100f457600080fd5b6100e7600160a060020a0360043516610326565b341561011357600080fd5b61011b6103a5565b60405190815260200160405180910390f35b341561013857600080fd5b61011b6103a9565b341561014b57600080fd5b61011b6103af565b341561015e57600080fd5b6100e76004356103c0565b341561017457600080fd5b61011b61043e565b341561018757600080fd5b6100e7600160a060020a036004351661044f565b34156101a657600080fd5b6101ae6104ce565b604051600160a060020a03909116815260200160405180910390f35b34156101d557600080fd5b6100e76004356024356104dd565b34156101ee57600080fd5b61011b610584565b341561020157600080fd5b6100e760043561058a565b341561021757600080fd5b6101ae610608565b341561022a57600080fd5b61011b610617565b6000806004356024358082600160a060020a033316600160e060020a031986351634873660405183815260406020820181815290820183905260608201848480828437820191505094505050505060405180910390a46006546102936103a5565b0393508315156102a257610320565b6102aa6103a5565b6006556003546b033b2e3c9fd0803ce8000000146102dd576102d96002546102d46003548761061d565b61067f565b6002555b60055415156102eb57610320565b8360055402925061031c60025460045410610309578360000361030b565b835b6103166003546106c2565b01610714565b6003555b50505050565b61033c33600035600160e060020a031916610765565b151561034757600080fd5b6001805473ffffffffffffffffffffffffffffffffffffffff1916600160a060020a038381169190911791829055167fce241d7ca1f669fee44b6fc00b8eba2df3bb514eed0f6f668f8f89096e81ed9460405160405180910390a250565b4290565b60055481565b60006103b9610232565b5060025490565b600435602435808233600160a060020a031660008035600160e060020a0319169034903660405183815260406020820181815290820183905260608201848480828437820191505094505050505060405180910390a461042c33600035600160e060020a031916610765565b151561043757600080fd5b5050600455565b6000610448610232565b5060035490565b61046533600035600160e060020a031916610765565b151561047057600080fd5b6000805473ffffffffffffffffffffffffffffffffffffffff1916600160a060020a038381169190911791829055167f1abebea81bfa2637f28358c371278fb15ede7ea8dd28d2e03b112ff6d936ada460405160405180910390a250565b600154600160a060020a031681565b600435602435808233600160a060020a031660008035600160e060020a0319169034903660405183815260406020820181815290820183905260608201848480828437820191505094505050505060405180910390a461054933600035600160e060020a031916610765565b151561055457600080fd5b7f776179000000000000000000000000000000000000000000000000000000000084141561032057505060035550565b60045481565b600435602435808233600160a060020a031660008035600160e060020a0319169034903660405183815260406020820181815290820183905260608201848480828437820191505094505050505060405180910390a46105f633600035600160e060020a031916610765565b151561060157600080fd5b5050600555565b600054600160a060020a031681565b60065481565b600060028206151561063b576b033b2e3c9fd0803ce800000061063d565b825b90506002820491505b811561067957610656838461067f565b9250600282061561066e5761066b818461067f565b90505b600282049150610646565b92915050565b60006b033b2e3c9fd0803ce80000006106b161069b8585610875565b60026b033b2e3c9fd0803ce80000005b0461089d565b8115156106ba57fe5b049392505050565b60006b033b2e3c9fd0803ce8000000821015610701576106ee6b033b2e3c9fd0803ce8000000836108ad565b6b033b2e3c9fd0803ce800000003610679565b506b033b2e3c9fd0803ce7ffffff190190565b60008082600f0b12156107505761074b6b033b2e3c9fd0803ce800000083600003600f0b6b033b2e3c9fd0803ce8000000016108ad565b610679565b50600f0b6b033b2e3c9fd0803ce80000000190565b600030600160a060020a031683600160a060020a0316141561078957506001610679565b600154600160a060020a03848116911614156107a757506001610679565b600054600160a060020a031615156107c157506000610679565b60008054600160a060020a03169063b700961390859030908690604051602001526040517c010000000000000000000000000000000000000000000000000000000063ffffffff8616028152600160a060020a039384166004820152919092166024820152600160e060020a03199091166044820152606401602060405180830381600087803b151561085357600080fd5b6102c65a03f1151561086457600080fd5b505050604051805190509050610679565b600081158061089257505080820282828281151561088f57fe5b04145b151561067957600080fd5b8082018281101561067957600080fd5b6000816106b16108c9856b033b2e3c9fd0803ce8000000610875565b6002856106ab5600a165627a7a72305820a21e57359c6fa8da8b853b00ad7dedea22933e5b6216d400f21e7c0b127ccaef0029"
+}
