@@ -17,17 +17,18 @@ const isJson = str => {
 };
 
 const browserName = () => {
-  if (window) return platform.name;
+  if (window) return platform.name ? platform.name.toLowerCase() : null;
   return undefined;
 };
 
 const browserOs = () => {
-  if (window) return platform.os;
+  if (window)
+    return platform.os.family ? platform.os.family.toLowerCase() : null;
   return undefined;
 };
 
 const browserProduct = () => {
-  if (window) return platform.product;
+  if (window) return platform.product ? platform.product.toLowerCase() : null;
   return undefined;
 };
 

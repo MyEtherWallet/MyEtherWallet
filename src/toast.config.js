@@ -13,8 +13,8 @@ const toastObject = {
     onClick: (e, toastObject) => {
       toastObject.goAway(0);
     }
-  },
-  duration: 5000
+  }
+  // duration: 5000
 };
 
 const error = {
@@ -22,10 +22,12 @@ const error = {
   payloadFunc: payload => {
     // if there is no message passed show default message
     if (!payload.message) {
-      return `<div><img src="${toastErr}" /> &nbsp; Oops.. Something Went Wrong..</div>`;
+      return `<div class="custom-toast-container"><img src="${toastErr}" /> &nbsp; Oops.. Something Went Wrong..</div>`;
     }
     // if there is a message show it with the message
-    return `<div><img src="${toastErr}" /> &nbsp; ${payload.message}</div>`;
+    return `<div class="custom-toast-container"><img src="${toastErr}" /> &nbsp; ${
+      payload.message
+    }</div>`;
   },
   options: Object.assign({}, toastObject, {
     className: 'toast-error'
@@ -37,10 +39,10 @@ const warn = {
   payloadFunc: payload => {
     // if there is no message passed show default message
     if (!payload.message) {
-      return `<div><img src="${toastWarn}" /> &nbsp; Something minor happened. Don't be alarmed</div>`;
+      return `<div class="custom-toast-container"><img src="${toastWarn}" /> &nbsp; Something minor happened. Don't be alarmed</div>`;
     }
     // if there is a message show it with the message
-    return `<div><img src="${toastWarn}" /> &nbsp; Warning: ${
+    return `<div class="custom-toast-container"><img src="${toastWarn}" /> &nbsp; Warning: ${
       payload.message
     }</div>`;
   },
@@ -54,10 +56,12 @@ const info = {
   payloadFunc: payload => {
     // if there is no message passed show default message
     if (!payload.message) {
-      return `<div><img src="${toastSuccess}" /> Good job! </div>`;
+      return `<div class="custom-toast-container"><img src="${toastSuccess}" /> Good job! </div>`;
     }
     // if there is a message show it with the message
-    return `<div><img src="${toastSuccess}" /> &nbsp; ${payload.message}</div>`;
+    return `<div class="custom-toast-container"><img src="${toastSuccess}" /> &nbsp; ${
+      payload.message
+    }</div>`;
   },
   options: Object.assign({}, toastObject, {
     className: 'toast-info'
@@ -69,10 +73,12 @@ const success = {
   payloadFunc: payload => {
     // if there is no message passed show default message
     if (!payload.message) {
-      return `<div><img src="${toastSuccess}" /> &nbsp; Success!</div>`;
+      return `<div class="custom-toast-container"><img src="${toastSuccess}" /> &nbsp; Success!</div>`;
     }
     // if there is a message show it with the message
-    return `<div><img src="${toastSuccess}" /> &nbsp; ${payload.message}</div>`;
+    return `<div class="custom-toast-container"><img src="${toastSuccess}" /> &nbsp; ${
+      payload.message
+    }</div>`;
   },
   options: Object.assign({}, toastObject, {
     className: 'toast-success'
