@@ -1,9 +1,8 @@
 <template lang="html">
   <div class="address-container">
     <div class="currency-container">
-      <img v-if="tokenSymbol !== ''" :src="iconFetcher" />
-      <div v-else class="icon-matcher">
-        <img :src="icon" />
+      <div class="icon-matcher">
+        <img :src="iconFetcher" />
       </div>
       <p>
         <span class="currency-amt">
@@ -66,6 +65,7 @@ export default {
       try {
         // eslint-disable-next-line
         icon = require(`@/assets/images/currency/${lowerCaseCurrency}.svg`);
+        console.log(icon);
       } catch (e) {
         icon = this.icon;
       }

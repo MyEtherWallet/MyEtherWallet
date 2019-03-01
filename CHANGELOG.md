@@ -1,3 +1,5 @@
+### Hotfix v5.0.5-hotfix.1
+
 ### Bug
 
 - Fix network addresses with discussed concat, fixes settings dollar amount, Token manual load fix, Ipad modal catch, Mozilla value error, update packages, fix verify feedback, and signed msg copy, await token fetch [#752](https://github.com/MyEtherWallet/MyEtherWallet/pull/752)
