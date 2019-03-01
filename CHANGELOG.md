@@ -1,5 +1,6 @@
 ### Bug
-- Fix network addresses with discussed concat, fixes settings dollar amount []()
+
+- Fix network addresses with discussed concat, fixes settings dollar amount [#752](https://github.com/MyEtherWallet/MyEtherWallet/pull/752)
 
 ### Release v5.0.5
 
