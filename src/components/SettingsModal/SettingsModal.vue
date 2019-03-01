@@ -413,9 +413,7 @@ export default {
     },
     convert(price) {
       const convertedPrice = new BigNumber(price * this.ethPrice).toFixed();
-      if (convertedPrice.length > 10)
-        return this.$options.filters.concatAddr(convertedPrice);
-      return convertedPrice;
+      return this.$options.filters.concatAddr(convertedPrice);
     },
     async getEthPrice() {
       const price = await fetch(

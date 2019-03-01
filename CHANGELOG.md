@@ -1,3 +1,6 @@
+### Bug
+- Fix network addresses with discussed concat, fixes settings dollar amount []()
+
 ### Release v5.0.5
 
 ### Bug
