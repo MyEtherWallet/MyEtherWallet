@@ -6,7 +6,7 @@ export default {
   name: 'ILT',
   name_long: 'IOLITE',
   homePage: 'https://iolite.io/',
-  blockExplorerTX: '"https://scan.iolite.io/txs/[[txHash]]',
+  blockExplorerTX: 'https://scan.iolite.io/txs/[[txHash]]',
   blockExplorerAddr: 'https://scan.iolite.io/addrs/[[address]]',
   chainID: 18289463,
   tokens: tokens,

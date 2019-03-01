@@ -71,6 +71,10 @@
               grid-template-columns: 1fr 1fr 1fr;
               margin-bottom: 20px;
 
+              @media all and (max-width: 550px) {
+                grid-template-columns: 1fr 1fr;
+              }
+
               li {
                 border-bottom: 1px solid
                   $border-bottom--mnemonic-phrase-key-color;

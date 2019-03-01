@@ -1,3 +1,15 @@
+### Release v5.0.5
+
+### Bug
+
+- Update success modal for transaction and swap [#666](https://github.com/MyEtherWallet/MyEtherWallet/pull/666)
+- Fix Interface -> Address block UI & Print sheet UI [#733](https://github.com/MyEtherWallet/MyEtherWallet/pull/733)
+
+### Devop
+
+- Update notification dot animation [#700](https://github.com/MyEtherWallet/MyEtherWallet/pull/700)
+- Update README instructions, fix #731 and #727 [#732](https://github.com/MyEtherWallet/MyEtherWallet/pull/732)
+
 ### Release v5.0.4
 
 ### Feature
@@ -6,6 +18,8 @@
 
 ### Devop
 
+- Reverse the tx order for metamask batch txs [#723](https://github.com/MyEtherWallet/MyEtherWallet/pull/723)
+- Add minimum buffer to Kyber Swaps, improve changelly fixed rate check, show swap reference number in notifications [#711](https://github.com/MyEtherWallet/MyEtherWallet/pull/711)
 - Update keepkey, add popovers on disabled options [#709](https://github.com/MyEtherWallet/MyEtherWallet/pull/709)
 - Add noscript page [#710](https://github.com/MyEtherWallet/MyEtherWallet/pull/710)
 - Fix list fetching issue on travis and couple of sentry issues [#692](https://github.com/MyEtherWallet/MyEtherWallet/pull/692)
@@ -15,6 +29,7 @@
 
 ### Bug
 
+- Fix Mnemonic Phrase print page UI [#721](https://github.com/MyEtherWallet/MyEtherWallet/pull/721)
 - Fix Send TX confirmation modal [#694](https://github.com/MyEtherWallet/MyEtherWallet/pull/694)
 - Fix offline Worker issue [#690](https://github.com/MyEtherWallet/MyEtherWallet/pull/690)
 - Fix information block UI [#693](https://github.com/MyEtherWallet/MyEtherWallet/pull/693)
