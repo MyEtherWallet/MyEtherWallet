@@ -7,6 +7,7 @@
 
 ### Devop
 
+- Update notification dot animation [#700](https://github.com/MyEtherWallet/MyEtherWallet/pull/700)
 - Update README instructions, fix #731 and #727 [#732](https://github.com/MyEtherWallet/MyEtherWallet/pull/732)
 
 ### Release v5.0.4
@@ -31,7 +32,6 @@
 - Fix Mnemonic Phrase print page UI [#721](https://github.com/MyEtherWallet/MyEtherWallet/pull/721)
 - Fix Send TX confirmation modal [#694](https://github.com/MyEtherWallet/MyEtherWallet/pull/694)
 - Fix offline Worker issue [#690](https://github.com/MyEtherWallet/MyEtherWallet/pull/690)
-- Update notification dot animation [#700](https://github.com/MyEtherWallet/MyEtherWallet/pull/700)
 - Fix information block UI [#693](https://github.com/MyEtherWallet/MyEtherWallet/pull/693)
 - Fix header UI bug [#701](https://github.com/MyEtherWallet/MyEtherWallet/pull/701)
 - Update Inteface side menu button UI [#698](https://github.com/MyEtherWallet/MyEtherWallet/pull/698)
