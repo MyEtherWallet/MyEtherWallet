@@ -1,3 +1,15 @@
+### Release v5.0.5
+
+### Bug
+
+- Update success modal for transaction and swap [#666](https://github.com/MyEtherWallet/MyEtherWallet/pull/666)
+- Fix Interface -> Address block UI & Print sheet UI [#733](https://github.com/MyEtherWallet/MyEtherWallet/pull/733)
+
+### Devop
+
+- Update notification dot animation [#700](https://github.com/MyEtherWallet/MyEtherWallet/pull/700)
+- Update README instructions, fix #731 and #727 [#732](https://github.com/MyEtherWallet/MyEtherWallet/pull/732)
+
 ### Release v5.0.4
 
 ### Feature
