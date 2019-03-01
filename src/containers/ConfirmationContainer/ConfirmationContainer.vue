@@ -49,6 +49,8 @@
       ref="successModal"
       :message="successMessage"
       :link-message="linkMessage"
+      :link-to="linkTo"
+      :etherscan-link="etherscanLink"
     />
     <error-modal
       ref="errorModal"
@@ -128,6 +130,8 @@ export default {
       signedMessage: '',
       successMessage: 'Success',
       linkMessage: 'OK',
+      linkTo: '/',
+      etherscanLink: null,
       dismissed: true,
       signedArray: [],
       txBatch: null,
@@ -141,7 +145,8 @@ export default {
       gasPrice: 'gasPrice',
       wallet: 'wallet',
       web3: 'web3',
-      account: 'account'
+      account: 'account',
+      network: 'network'
     }),
     fromAddress() {
       if (this.account) {
@@ -155,10 +160,13 @@ export default {
     });
   },
   created() {
-    this.$eventHub.$on('showSuccessModal', (message, linkMessage) => {
-      if (!message) message = null;
-      this.showSuccessModal(message, linkMessage);
-    });
+    this.$eventHub.$on(
+      'showSuccessModal',
+      (message, linkMessage, etherscanLink) => {
+        if (!message) message = null;
+        this.showSuccessModal(message, linkMessage, etherscanLink);
+      }
+    );
 
     this.$eventHub.$on('showErrorModal', (message, linkMessage) => {
       if (!message) message = null;
@@ -173,7 +181,9 @@ export default {
       this.isHardwareWallet = this.account.isHardware;
       this.responseFunction = resolve;
       this.successMessage = 'Sending Transaction';
+
       const signPromise = this.wallet.signTransaction(tx);
+
       signPromise
         .then(_response => {
           this.signedTxObject = _response;
@@ -326,10 +336,11 @@ export default {
       window.scrollTo(0, 0);
       this.$refs.signConfirmModal.$refs.signConfirmation.show();
     },
-    showSuccessModal(message, linkMessage) {
+    showSuccessModal(message, linkMessage, etherscanLink) {
       this.reset();
       if (message !== null) this.successMessage = message;
       if (linkMessage !== null) this.linkMessage = linkMessage;
+      if (etherscanLink !== null) this.etherscanLink = etherscanLink;
       this.$refs.successModal.$refs.success.show();
     },
     showErrorModal(message, linkMessage) {
@@ -371,7 +382,10 @@ export default {
         this.account.identifier === WEB3_WALLET
           ? 'sendTransaction'
           : 'sendSignedTransaction';
-      const _arr = this.signedArray;
+      const _arr =
+        this.account.identifier === WEB3_WALLET
+          ? this.signedArray.reverse()
+          : this.signedArray;
       const promises = _arr.map(tx => {
         const _tx = tx.tx;
         _tx.from = this.account.address;
@@ -432,8 +446,16 @@ export default {
       this.dismissed = false;
       this.responseFunction(this.signedTxObject);
       this.$refs.confirmModal.$refs.confirmation.hide();
+
       if (this.raw.generateOnly) return;
-      this.showSuccessModal('Transaction sent!', 'Okay');
+      this.showSuccessModal(
+        'Transaction sent!',
+        'Okay',
+        this.network.type.blockExplorerTX.replace(
+          '[[txHash]]',
+          this.signedTxObject.tx.hash
+        )
+      );
     },
     reset() {
       this.responseFunction = null;

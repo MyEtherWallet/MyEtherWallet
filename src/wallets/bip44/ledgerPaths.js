@@ -3,12 +3,16 @@ import {
   ledgerLiveEthereum,
   ledgerEthereumClassic,
   ledgerLiveEthereumClassic,
-  ropsten
+  ropsten,
+  rskMainnet,
+  rskTestnet
 } from './paths';
 export default [
   ledgerEthereum,
   ledgerLiveEthereum,
   ledgerEthereumClassic,
   ledgerLiveEthereumClassic,
-  ropsten
+  ropsten,
+  rskMainnet,
+  rskTestnet
 ];

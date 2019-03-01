@@ -33,6 +33,9 @@
               <div class="barcode-image"></div>
             </div>
           </button>
+          <button @click="print">
+            <img src="~@/assets/images/icons/printer-white.svg" />
+          </button>
           <button @click="copy">
             <img src="~@/assets/images/icons/copy.svg" />
           </button>
