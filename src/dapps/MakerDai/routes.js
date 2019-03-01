@@ -1,6 +1,6 @@
 const MakerDai = () => import('./MakerDai');
 const MakerHome = () => import('./components/MakerHome');
-const CreateCPD = () => import('./components/CreateCDP');
+const CreateCDP = () => import('./components/CreateCDP');
 
 export default {
   path: 'dapps/maker-dai',
@@ -16,9 +16,9 @@ export default {
     },
     {
       path: 'create',
-      name: 'ENS initial state',
-      component: CreateCPD,
+      name: 'Create CDP',
+      component: CreateCDP,
       props: true
     }
-    ]
-}
+  ]
+};

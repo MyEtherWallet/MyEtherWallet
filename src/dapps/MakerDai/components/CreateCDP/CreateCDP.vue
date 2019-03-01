@@ -66,6 +66,10 @@ const { MKR, DAI, ETH, WETH, PETH, USD_ETH, USD_MKR, USD_DAI } = Maker;
 const toBigNumber = num => {
   return new BigNumber(num);
 };
+
+const bnOver = (one, two, three) =>{
+  return (toBigNumber(one).times(toBigNumber(two))).div(toBigNumber(three));
+}
 export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
@@ -86,18 +90,61 @@ export default {
     highestGas: {
       type: String,
       default: '0'
+    },
+    ethPrice: {
+      type: BigNumber,
+      default: toBigNumber(0)
+    },
+    pethPrice:{
+      type: BigNumber,
+      default: toBigNumber(0)
+    },
+    liquidationPenalty:{
+      type: BigNumber,
+      default: toBigNumber(0)
+    },
+    stabilityFee: {
+      type: BigNumber,
+      default: toBigNumber(0)
+    },
+    liquidationRatio: {
+      type: BigNumber,
+      default: toBigNumber(0)
+    },
+    calcMinCollatRatio:{
+      type: Function,
+      default: function(){}
+    },
+    calcDrawAmt:{
+      type: Function,
+      default: function(){}
+    },
+    calcCollatRatio:{
+      type: Function,
+      default: function(){}
+    },
+    calcLiquidationPrice:{
+      type: Function,
+      default: function(){}
+    },
+    priceService:{
+      type: Object,
+      default: function(){ return {};}
+    },
+    cdpService:{
+      type: Object,
+      default: function(){ return {};}
+    },
+    maker: {
+      type: Object,
+      default: function(){ return {};}
     }
   },
   data() {
     return {
-      maker: {},
-      priceService: {},
-      cpdService: {},
-      liquidationRatio: 0,
-      liquidationPenalty: 0,
-      stabilityFee: 0,
-      ethPrice: 0,
-      pethPrice: 0,
+      // maker: {},
+      // priceService: {},
+      // cdpService: {},
       wethToPethRatio: 0,
       daiPrice: 0,
       priceFloor: 0,
@@ -141,60 +188,21 @@ export default {
     },
     maxDaiDraw() {
       if (this.ethQty <= 0) return 0;
-      return (this.ethPrice * this.ethQty) / this.liquidationRatio;
+      return bnOver(this.ethPrice, this.ethQty, this.liquidationRatio)
     },
     minEthDeposit() {
       if (this.daiQty <= 0) return 0;
-      return (this.liquidationRatio * this.daiQty) / this.ethPrice;
-    }
+      return bnOver(this.liquidationRatio, this.daiQty, this.ethPrice)
+    },
   },
   async mounted() {
-    this.maker = await Maker.create('http', {
-      url: this.network.url,
-      provider: {
-        type: 'HTTP', // or 'TEST'
-        network: 'kovan'
-      },
-      log: true
-    });
     console.log(USD_DAI); // todo remove dev item
-    await this.maker.authenticate();
     console.log('this.maker', this.maker); // todo remove dev item
-    this.setup();
   },
   methods: {
     async dothing() {
-      console.log(this.ethPrice); // todo remove dev item
+      console.log(this.ethPrice.toString()); // todo remove dev item
       console.log(this.liquidationRatio); // todo remove dev item
-    },
-    async setup() {
-      this.priceService = this.maker.service('price');
-      this.cpdService = await this.maker.service('cdp');
-      // this.ethPrice = (await this.priceService.getEthPrice()).toNumber();
-      this.pethPrice = (await this.priceService.getPethPrice()).toNumber();
-      this.ethPrice = 136.290;
-      this.liquidationRatio = await this.cpdService.getLiquidationRatio();
-      this.liquidationPenalty = await this.cpdService.getLiquidationPenalty();
-      this.stabilityFee = await this.cpdService.getAnnualGovernanceFee();
-    },
-    calcMinCollatRatio(priceFloor) {
-      return (this.ethPrice * this.liquidationRatio) / priceFloor;
-    },
-    calcDrawAmt(principal, collatRatio) {
-      return Math.floor((principal * this.ethPrice) / collatRatio);
-    },
-    calcCollatRatio(ethQty, daiQty) {
-      if (ethQty <= 0 || daiQty <= 0) return 0;
-      return (this.ethPrice * ethQty) / daiQty;
-    },
-    calcLiquidationPrice(ethQty, daiQty) {
-      if (ethQty <= 0 || daiQty <= 0) return 0;
-      const getInt = parseInt(this.ethPrice);
-      for (let i = getInt; i > 0; i--) {
-        if ((i * ethQty) / daiQty <= this.liquidationRatio) {
-          return i;
-        }
-      }
     },
     calcRatioForDraw() {},
     collecting() {

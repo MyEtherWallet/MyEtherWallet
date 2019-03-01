@@ -1,4 +1,3 @@
-
 import tub from './saitub.json';
 import top from './saitop.json';
 import tap from './saitap.json';
@@ -10,7 +9,6 @@ import dstoken from './dstoken.json';
 import dsvalue from './dsvalue.json';
 import saiProxyCreateAndExecute from './saiProxyCreateAndExecute.json';
 import saivaluesaggregator from './saivaluesaggregator.json';
-
 
 const schema = {
   tub,
