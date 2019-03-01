@@ -17,15 +17,18 @@ const isJson = str => {
 };
 
 const browserName = () => {
-  return platform.name;
+  if (window) return platform.name;
+  return undefined;
 };
 
 const browserOs = () => {
-  return platform.os;
+  if (window) return platform.os;
+  return undefined;
 };
 
 const browserProduct = () => {
-  return platform.product;
+  if (window) return platform.product;
+  return undefined;
 };
 
 const doesExist = val => val !== undefined && val !== null;

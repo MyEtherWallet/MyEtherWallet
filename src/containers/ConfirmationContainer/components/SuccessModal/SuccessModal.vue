@@ -14,9 +14,14 @@
       </div>
 
       <div class="buttons">
-        <a v-if="etherscanLink" :href="etherscanLink" target="_blank"
-          ><standard-button :options="buttonCheckEtherscan"
-        /></a>
+        <a
+          v-if="etherscanLink"
+          :href="etherscanLink"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <standard-button :options="buttonCheckEtherscan" />
+        </a>
         <standard-button :options="buttonOk" @click.native="hideModal" />
       </div>
     </div>

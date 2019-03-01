@@ -1,3 +1,5 @@
+### Release v5.0.5
+
 ### Bug
 
 - Update success modal for transaction and swap [#666](https://github.com/MyEtherWallet/MyEtherWallet/pull/666)
