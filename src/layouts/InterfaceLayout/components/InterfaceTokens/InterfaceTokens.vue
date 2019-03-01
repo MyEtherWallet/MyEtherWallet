@@ -126,6 +126,10 @@ export default {
     fetchTokens: {
       type: Function,
       default: function() {}
+    },
+    resetTokenSelection: {
+      type: Function,
+      default: function() {}
     }
   },
   data() {
@@ -197,6 +201,7 @@ export default {
     async getSpecificTokenBalance(token, idx) {
       this.tokens[idx].balance = await this.getTokenBalance(token);
       this.tokens.sort(sortByBalance);
+      this.resetTokenSelection();
     },
     addTokenModal() {
       this.$refs.tokenModal.$refs.token.show();

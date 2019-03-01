@@ -34,6 +34,7 @@
                 placeholder="Amount"
                 min="0"
                 name="value"
+                step="any"
               />
               <i
                 :class="[
