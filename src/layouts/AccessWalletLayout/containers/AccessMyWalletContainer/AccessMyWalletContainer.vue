@@ -202,10 +202,10 @@ export default {
         case 'button-mewconnect':
           return (
             !this.online ||
-            (Misc.browserName() !== 'chrome' &&
-              Misc.browserName() !== 'firefox' &&
-              Misc.browserName() !== 'safari' &&
-              Misc.browserName() !== 'opera')
+            (Misc.browserName() === 'chrome' ||
+              Misc.browserName() === 'firefox' ||
+              Misc.browserName() === 'safari' ||
+              Misc.browserName() === 'opera')
           );
         case 'button-hardware':
           return !this.online;
@@ -254,6 +254,7 @@ export default {
     hardwarePasswordModalOpen(hardwareNeedingPassword) {
       this.walletConstructor = hardwareNeedingPassword.walletConstructor;
       this.hardwareBrand = hardwareNeedingPassword.hardwareBrand;
+      this.$refs.hardwareModal.$refs.hardware.hide();
       this.$refs.hardwarePasswordModal.$refs.password.show();
     },
     hardwareWalletOpen(wallet) {

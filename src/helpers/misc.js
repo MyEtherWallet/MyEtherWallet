@@ -1,4 +1,4 @@
-const { detect } = require('detect-browser');
+const platform = require('platform');
 import normalise from '@/helpers/normalise';
 import nodeList from '@/networks';
 import { isAddress } from './addressUtils';
@@ -17,14 +17,17 @@ const isJson = str => {
 };
 
 const browserName = () => {
-  const browser = detect();
-  if (browser && browser.name) return browser.name;
+  if (window) return platform.name;
   return undefined;
 };
 
 const browserOs = () => {
-  const browser = detect();
-  if (browser && browser.os) return browser.os;
+  if (window) return platform.os;
+  return undefined;
+};
+
+const browserProduct = () => {
+  if (window) return platform.product;
   return undefined;
 };
 
@@ -180,5 +183,6 @@ export default {
   isDarklisted,
   solidityType,
   browserName,
-  browserOs
+  browserOs,
+  browserProduct
 };
