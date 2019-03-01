@@ -65,7 +65,6 @@ export default {
       try {
         // eslint-disable-next-line
         icon = require(`@/assets/images/currency/${lowerCaseCurrency}.svg`);
-        console.log(icon);
       } catch (e) {
         icon = this.icon;
       }
