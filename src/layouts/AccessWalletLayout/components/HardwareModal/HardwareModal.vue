@@ -115,7 +115,7 @@ export default {
           imgHoverPath: trezorHov,
           text: 'Trezor',
           disabled:
-            Misc.browserName() !== 'chrome' && Misc.browserName() !== 'firefox',
+            Misc.browserName() === 'chrome' || Misc.browserName() === 'firefox',
           msg: ''
         },
         {
@@ -147,11 +147,10 @@ export default {
         }
 
         if (u2fhw.includes(item.name)) {
-          const disable = !(
+          const disable =
             (Misc.browserName() === 'chrome' ||
               Misc.browserName() === 'opera') &&
-            res
-          );
+            res;
 
           item.disabled = disable;
           item.msg = disable ? this.$t('errorsGlobal.browserNonU2f') : '';

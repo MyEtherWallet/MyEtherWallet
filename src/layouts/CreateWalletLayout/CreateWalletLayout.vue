@@ -2,7 +2,7 @@
   <div class="your-password">
     <tutorial-modal ref="tutorialModal" :skip="skip" />
     <scan-to-download-modal ref="scanToDownloadModal" />
-
+    <ipad-modal ref="ipadModal" />
     <by-json-page-title />
     <div class="wrap">
       <div class="page-container">
@@ -26,6 +26,7 @@
               <div class="appstores">
                 <div class="icons">
                   <a
+                    v-if="canDownloadApple"
                     href="https://itunes.apple.com/us/app/mewconnect/id1391097156?mt=8"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -35,6 +36,12 @@
                       height="40"
                     />
                   </a>
+                  <div v-else @click="openIpadModal">
+                    <img
+                      src="~@/assets/images/icons/appstore.svg"
+                      height="40"
+                    />
+                  </div>
                   <a
                     href="http://play.google.com/store/apps/details?id=com.myetherwallet.mewconnect"
                     target="_blank"
@@ -129,7 +136,8 @@ import CreateWalletInputFooter from './components/CreateWalletInputFooter';
 import PageFooter from './components/PageFooter';
 import PageTitle from './components/PageTitle';
 import store from 'store';
-import Misc from '@/helpers/misc';
+import { Misc } from '@/helpers';
+import IpadModal from '@/components/IpadModal';
 
 export default {
   components: {
@@ -140,17 +148,20 @@ export default {
     'by-json-page-title': PageTitle,
     'create-wallet-input': CreateWalletInput,
     'create-wallet-input-footer': CreateWalletInputFooter,
-    'by-json-page-footer': PageFooter
+    'by-json-page-footer': PageFooter,
+    'ipad-modal': IpadModal
   },
   data() {
     return {
       byJson: false,
       byMnemonic: false,
       password: '',
-      showProgressBar: false
+      showProgressBar: false,
+      canDownloadApple: true
     };
   },
   mounted() {
+    this.canDownloadApple = Misc.browserProduct() !== 'ipad';
     const skipTutorial = store.get('skipTutorial');
     if (
       skipTutorial === undefined ||
@@ -180,6 +191,9 @@ export default {
     },
     scanToDownloadModalOpen() {
       this.$refs.scanToDownloadModal.$refs.scantodownload.show();
+    },
+    openIpadModal() {
+      this.$refs.ipadModal.$refs.ipadModal.show();
     }
   }
 };
