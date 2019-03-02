@@ -79,7 +79,7 @@
 %message {
   border-radius: 5px;
   margin-top: 10px;
-  padding: 10px 5px;
+  padding: 20px;
   text-align: center;
 }
 
@@ -87,6 +87,7 @@
   @extend %message;
 
   background-color: $light-green-1;
+  border: 1px solid $mew-green;
 }
 
 .error-message {
