@@ -23,14 +23,15 @@
           />
         </div>
         <div>
-          <p v-if="message !== '' && showMessage === true">
+          <p
+            v-if="message !== '' && showMessage === true"
+            class="success-message"
+          >
             {{ JSON.parse(message).address }}
-            {{ $t('interface.verifiedMessage') }}:<br
-              v-if="JSON.parse(message).msg.length > 20"
-            />
+            {{ $t('interface.verifiedMessage') }}:
+            <br v-if="JSON.parse(message).msg.length > 20" />
             <b>{{ JSON.parse(message).msg }}</b>
           </p>
-          <p v-if="message !== '' && error.show === true">{{ error.show }}</p>
           <p v-if="errors.has('verify')">{{ errors.first('verify') }}</p>
         </div>
       </div>
@@ -39,9 +40,7 @@
         <div class="buttons">
           <button
             :class="[
-              errors.has('verify') || error.show === true || message === ''
-                ? 'disabled'
-                : '',
+              errors.has('verify') || message === '' ? 'disabled' : '',
               'submit-button large-round-button-green-filled clickable'
             ]"
             @click="verifyMessage"
@@ -62,7 +61,7 @@
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
-import { MessageUtil } from '@/helpers';
+import { MessageUtil, Toast } from '@/helpers';
 import { mapGetters } from 'vuex';
 // eslint-disable-next-line
 const createKeccakHash = require('keccak');
@@ -75,10 +74,6 @@ export default {
   data() {
     return {
       message: '',
-      error: {
-        show: false,
-        msg: ''
-      },
       showMessage: false
     };
   },
@@ -90,10 +85,6 @@ export default {
   watch: {
     message(newVal) {
       this.message = newVal;
-      this.error = {
-        show: false,
-        msg: ''
-      };
     }
   },
   methods: {
@@ -112,8 +103,7 @@ export default {
       );
       const sig = Buffer.from(MessageUtil.getNakedAddress(json.sig), 'hex');
       if (sig.length !== 65) {
-        this.error.show = true;
-        this.error.msg = 'Something went terribly WRONG!!!!'; // Should be replaced with actual error message
+        Toast.responseHandler('Something went wrong!', Toast.ERROR);
         return;
       }
 
@@ -138,8 +128,7 @@ export default {
         MessageUtil.getNakedAddress(json.address) !==
         MessageUtil.pubToAddress(pubKey).toString('hex')
       ) {
-        this.error.show = true;
-        this.error.msg = 'Something went terribly WRONG!!!!'; // Should be replaced with actual error message
+        Toast.responseHandler('Something went wrong!', Toast.ERROR);
       } else {
         this.showMessage = true;
       }

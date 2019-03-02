@@ -88,3 +88,10 @@
     }
   }
 } // @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width)
+
+.appstore-button-container {
+  .links-container {
+    display: flex;
+    justify-content: center;
+  }
+}
