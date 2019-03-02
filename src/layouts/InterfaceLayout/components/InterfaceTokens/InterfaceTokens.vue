@@ -126,6 +126,10 @@ export default {
     fetchTokens: {
       type: Function,
       default: function() {}
+    },
+    resetTokenSelection: {
+      type: Function,
+      default: function() {}
     }
   },
   data() {
@@ -197,6 +201,7 @@ export default {
     async getSpecificTokenBalance(token, idx) {
       this.tokens[idx].balance = await this.getTokenBalance(token);
       this.tokens.sort(sortByBalance);
+      this.resetTokenSelection();
     },
     addTokenModal() {
       this.$refs.tokenModal.$refs.token.show();
@@ -276,19 +281,19 @@ export default {
         const currentCustomToken = store.get('customTokens');
         this.customTokens =
           this.customTokens.length > 0 ? this.customTokens : [];
-        token['balance'] = await this.getTokenBalance(token);
-        if (token['balance'] === undefined) {
-          Toast.responseHandler(
-            new Error('Token Balance Returned Undefined'),
-            Toast.ERROR
-          );
-        }
+        // token['balance'] = await this.getTokenBalance(token);
+        // if (token['balance'] === undefined) {
+        //   Toast.responseHandler(
+        //     new Error('Token Balance Returned Undefined'),
+        //     Toast.ERROR
+        //   );
+        // }
         this.customTokens.push(token);
         currentCustomToken[this.network.type.name] = this.customTokens;
         store.set('customTokens', currentCustomToken);
         this.$refs.tokenModal.$refs.token.hide();
+        await this.fetchTokens();
         Toast.responseHandler('Successfully added token!', Toast.SUCCESS);
-        this.fetchTokens();
       }
     },
     tokenListExpend() {

@@ -33,8 +33,11 @@
 
     .appstores {
       .icons {
-        text-align: center;
+        display: flex;
+        justify-content: center;
         margin-bottom: 25px;
+        text-align: center;
+
         img {
           height: 40px;
           margin: 0 3px;
