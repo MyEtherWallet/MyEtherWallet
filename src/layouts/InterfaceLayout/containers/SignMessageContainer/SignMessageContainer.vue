@@ -46,7 +46,7 @@
           </div>
         </div>
         <div class="the-form domain-name">
-          <textarea ref="signature" disabled class="custom-textarea-1" />
+          <textarea ref="signature" class="custom-textarea-1" />
         </div>
       </div>
 
@@ -122,6 +122,7 @@ export default {
       this.$refs[ref].select();
       document.execCommand('copy');
       window.getSelection().removeAllRanges();
+      Toast.responseHandler('Copied', Toast.INFO);
     },
     deleteInputText(ref) {
       this.$refs[ref].value = '';

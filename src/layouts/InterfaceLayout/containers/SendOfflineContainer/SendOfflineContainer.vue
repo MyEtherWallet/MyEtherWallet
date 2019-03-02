@@ -26,6 +26,7 @@
                     :value="toAmt"
                     :placeholder="$t('interface.depAmount')"
                     type="number"
+                    step="any"
                     name
                     @input="debouncedAmount"
                   />
