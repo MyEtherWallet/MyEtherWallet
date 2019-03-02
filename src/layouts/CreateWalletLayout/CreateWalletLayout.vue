@@ -138,6 +138,7 @@ import PageTitle from './components/PageTitle';
 import store from 'store';
 import { Misc } from '@/helpers';
 import IpadModal from '@/components/IpadModal';
+import platform from 'platform';
 
 export default {
   components: {
@@ -161,7 +162,8 @@ export default {
     };
   },
   mounted() {
-    this.canDownloadApple = Misc.browserProduct() !== 'ipad';
+    this.canDownloadApple =
+      platform.product && platform.product.toLowerCase() !== 'ipad';
     const skipTutorial = store.get('skipTutorial');
     if (
       skipTutorial === undefined ||
