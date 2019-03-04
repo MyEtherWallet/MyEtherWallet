@@ -14,7 +14,7 @@ import {
   SimplexCurrencies,
   PROVIDER_NAME as simplex
 } from './simplex';
-import Swap from './partners';
+import SwapProviders from './partners';
 import {
   ERC20,
   networkSymbols,
@@ -54,7 +54,7 @@ const providerNames = {
 const supportedProviders = Object.values(providerNames);
 
 export {
-  Swap,
+  SwapProviders,
   providers,
   providerMap,
   supportedProviders,

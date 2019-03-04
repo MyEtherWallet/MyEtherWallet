@@ -3,13 +3,13 @@ import BigNumber from 'bignumber.js';
 import ENS from 'ethereum-ens';
 import { utils } from '../helpers';
 import { networkSymbols } from '../partnersConfig';
-import kyberApi from './kyber-api';
 import {
   ERC20,
   kyberBaseCurrency,
   PROVIDER_NAME,
   TIME_SWAP_VALID,
   MAX_DEST_AMOUNT,
+  MIN_RATE_BUFFER,
   defaultValues,
   KyberCurrencies,
   kyberAddressFallback,
@@ -19,6 +19,7 @@ import {
   walletDepositeAddress,
   FEE_RATE
 } from './config';
+import kyberCalls from './kyber-calls';
 
 const logger = debugLogger('v5:kyber-swap');
 const errorLogger = debugLogger('v5-error:kyber');
@@ -42,8 +43,6 @@ export default class Kyber {
     this.kyberNetworkABI = kyberNetworkABI || [];
     this.kyberNetworkAddress =
       props.kyberAddress || kyberAddressFallback[this.network];
-    this.rates = new Map();
-    this.retrieveRates();
     this.getSupportedTokenList();
     this.getMainNetAddress(this.kyberNetworkAddress);
   }
@@ -110,23 +109,6 @@ export default class Kyber {
     }
   }
 
-  async retrieveRates() {
-    const ratesAndDetails = await kyberApi.retrieveRatesFromAPI(
-      this.network,
-      this.rates,
-      this.tokenDetails
-    );
-
-    if (!ratesAndDetails) return;
-
-    // throws error if fetch fails and returned value is undefined
-    const { rates, tokenDetails } = ratesAndDetails;
-    this.rates = rates;
-    this.tokenDetails = tokenDetails;
-    this.hasRates =
-      Object.keys(this.tokenDetails).length > 0 ? this.hasRates + 1 : 0;
-  }
-
   getMainNetAddress(initialAddress) {
     if (this.network === networkSymbols.ETH) {
       try {
@@ -147,9 +129,32 @@ export default class Kyber {
     }
   }
 
+  async retrieveSupportedTokenList(network) {
+    try {
+      const tokenList = await kyberCalls.getTokenList(network);
+      const tokenDetails = {};
+      for (let i = 0; i < tokenList.length; i++) {
+        if (
+          tokenList[i].symbol &&
+          tokenList[i].name &&
+          tokenList[i].decimals &&
+          tokenList[i].contractAddress
+        ) {
+          // otherwise the entry is invalid
+          const symbol = tokenList[i].symbol.toUpperCase();
+          tokenDetails[symbol] = tokenList[i];
+        }
+      }
+      return tokenDetails;
+    } catch (e) {
+      utils.handleOrThrow(e);
+      errorLogger(e);
+    }
+  }
+
   async getSupportedTokenList() {
     try {
-      this.tokenDetails = await kyberApi.getSupportedTokenList(this.network);
+      this.tokenDetails = await this.retrieveSupportedTokenList(this.network);
       this.hasRates =
         Object.keys(this.tokenDetails).length > 0 ? this.hasRates + 1 : 0;
     } catch (e) {
@@ -199,8 +204,7 @@ export default class Kyber {
       fromValueWei
     );
     logger(rates);
-    this.rates.set(`${fromToken}/${toToken}`, rates['expectedRate']);
-    if (+rates['expectedRate'] === 0) {
+    if (new BigNumber(rates['expectedRate']).eq(new BigNumber(0))) {
       return -1;
     }
     return rates['expectedRate'];
@@ -233,13 +237,11 @@ export default class Kyber {
   getUpdatedCurrencyEntries(value, collectMap) {
     if (this.currencies[value.symbol]) {
       for (const prop in this.currencies) {
-        // if (prop !== value.symbol) {
         if (this.currencies[prop])
           collectMap.set(prop, {
             symbol: prop,
             name: this.currencies[prop].name
           });
-        // }
       }
     }
   }
@@ -385,13 +387,19 @@ export default class Kyber {
     }
     const reason = !userCap ? 'user cap value' : 'current token balance';
     const errorMessage = `User is not eligible to use kyber network. Current swap value exceeds ${reason}`;
-    // errorLogger(errorMessage);
     throw Error(errorMessage);
+  }
+
+  MinRateWeiAdjustment(minRateWei) {
+    const minRateWeiBN = new BigNumber(minRateWei);
+    return minRateWeiBN
+      .minus(minRateWeiBN.times(new BigNumber(MIN_RATE_BUFFER)))
+      .toString();
   }
 
   async getTradeData(
     { fromCurrency, toCurrency, fromValueWei, toAddress },
-    minRateWei // eslint-disable-line
+    minRateWei
   ) {
     const data = this.getKyberContractObject()
       .methods.trade(
@@ -400,7 +408,7 @@ export default class Kyber {
         await this.getTokenAddress(toCurrency),
         toAddress,
         MAX_DEST_AMOUNT,
-        '0x00',
+        this.MinRateWeiAdjustment(minRateWei),
         walletDepositeAddress
       )
       .encodeABI();

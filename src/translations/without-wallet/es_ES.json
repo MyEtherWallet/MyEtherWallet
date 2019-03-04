@@ -3,9 +3,11 @@
   "txFeeAndNonce": "Transaction Fee & Nonce",
   "signedTx": "Signed Transaction",
   "rawTx": "Raw Transaction",
-  "fromAddress": "From Address",
-  "txFee": "Transaction Fee",
+  "txFee": "Gas Limit",
   "nonce": "Nonce",
   "fromAddress": "From Address",
-  "confirmAndSend": "Confirm & Send"
+  "confirmAndSend": "Confirm & Send",
+  "selectNetwork": "Select Network",
+  "txDetails": "Transaction Details",
+  "txStatus": "Transaction Status"
 }

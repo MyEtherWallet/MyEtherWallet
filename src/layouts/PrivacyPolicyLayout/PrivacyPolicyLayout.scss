@@ -29,14 +29,18 @@
 } // .wrap
 
 .content {
-  h6 {
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 25px;
-  }
-
   p {
     font-size: 14px;
     font-weight: 400;
+    padding: 10px;
+  }
+
+  h3 {
+    padding-top: 30px;
+    text-align: center;
+  }
+
+  h4 {
+    padding: 10px;
   }
 }
