@@ -175,6 +175,7 @@
           </div>
           <input
             v-model="value"
+            step="any"
             type="text"
             name
             placeholder="ETH"

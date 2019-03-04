@@ -132,7 +132,12 @@
           </div>
         </div>
         <div class="the-form contract-name">
-          <input ref="value" v-model="value" placeholder="Value in ETH" />
+          <input
+            ref="value"
+            v-model="value"
+            step="any"
+            placeholder="Value in ETH"
+          />
         </div>
       </div>
       <div class="send-form">

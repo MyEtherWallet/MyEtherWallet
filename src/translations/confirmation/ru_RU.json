@@ -4,6 +4,6 @@
   "signingAddr": "Адрес подписывающий транзакцию",
   "confirmSigning": "Подтвердить подписание",
   "approveOnDevice": "Please Approve on Hardware Wallet",
-  "success": "Успех",
+  "success": "Succeed",
   "error": "Ошибка"
 }
