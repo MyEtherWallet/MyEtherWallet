@@ -14,34 +14,41 @@
     <div>
       <ul>
         <li>
-          Max Dai: <span>{{ maxDaiDraw }}</span>
+          <span>pethCollateral: {{ pethCollateral }}</span>
         </li>
         <li>
-          Min Eth: <span>{{ minEthDeposit }}</span>
-        </li>
-        <li>Min ETH required: <span></span></li>
-        <li>
-          Liquidation price(ETH/USD): <span>{{ liquidationPrice }}</span>
+          <span>usdCollateral: {{ usdCollateral }}</span>
         </li>
         <li>
-          Current price information(ETH/USD): <span>{{ ethPrice }}</span>
+          <span>ethCollateral: {{ ethCollateral }}</span>
         </li>
         <li>
-          Liquidation penalty <span> {{ liquidationPenalty }}</span>
+          <span>isSafe: {{ isSafe }}</span>
         </li>
         <li>
-          Collateralization Ratio: <span>{{ collatRatio * 100 }}</span>
+          <span>getDebtValue: {{ debtValue }}</span>
         </li>
         <li>
-          Minimum Ratio
+          <span>collatRatio: {{ collatRatio }}</span>
         </li>
         <li>
-          Liquidation Ratio: <span>{{ liquidationRatio * 100 }}%</span>
+          Deposited:
+          <ul>
+            <li>{{ ethCollateral }} ETH</li>
+            <li>{{ pethCollateral }} PETH / {{ usdCollateral }} USD</li>
+          </ul>
         </li>
         <li>
-          <p>Collateralization ratio that will achieve the given price floor</p>
-          Collateralization Ratio: <span>{{ liquidationRatio * 100 }}%</span>
+          Max. available to withdraw:
+          <ul>
+            <li>{{ maxEthDraw }} ETH</li>
+            <li>{{ maxPethDraw }} PETH / {{ maxDaiDraw }} USD</li>
+          </ul>
         </li>
+        <li>
+          -----------------
+        </li>
+        <li>{{ pethCollateral }}</li>
       </ul>
     </div>
   </div>
@@ -60,16 +67,18 @@ import BigNumber from 'bignumber.js';
 // import { Toast, Misc } from '@/helpers';
 import Maker from '@makerdao/dai';
 import { MIN_DEPOSIT, settings } from '../../config';
-
+const KOVAN_SERVER_URL = 'https://sai-kovan.makerfoundation.com/v1';
 const { MKR, DAI, ETH, WETH, PETH, USD_ETH, USD_MKR, USD_DAI } = Maker;
 
 const toBigNumber = num => {
   return new BigNumber(num);
 };
 
-const bnOver = (one, two, three) =>{
-  return (toBigNumber(one).times(toBigNumber(two))).div(toBigNumber(three));
-}
+const bnOver = (one, two, three) => {
+  return toBigNumber(one)
+    .times(toBigNumber(two))
+    .div(toBigNumber(three));
+};
 export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
@@ -87,6 +96,10 @@ export default {
       type: Function,
       default: function() {}
     },
+    makerActive: {
+      type: Boolean,
+      default: false
+    },
     highestGas: {
       type: String,
       default: '0'
@@ -95,11 +108,11 @@ export default {
       type: BigNumber,
       default: toBigNumber(0)
     },
-    pethPrice:{
+    pethPrice: {
       type: BigNumber,
       default: toBigNumber(0)
     },
-    liquidationPenalty:{
+    liquidationPenalty: {
       type: BigNumber,
       default: toBigNumber(0)
     },
@@ -111,63 +124,77 @@ export default {
       type: BigNumber,
       default: toBigNumber(0)
     },
-    calcMinCollatRatio:{
+    calcMinCollatRatio: {
       type: Function,
-      default: function(){}
+      default: function() {}
     },
-    calcDrawAmt:{
+    calcDrawAmt: {
       type: Function,
-      default: function(){}
+      default: function() {}
     },
-    calcCollatRatio:{
+    calcCollatRatio: {
       type: Function,
-      default: function(){}
+      default: function() {}
     },
-    calcLiquidationPrice:{
+    calcLiquidationPrice: {
       type: Function,
-      default: function(){}
+      default: function() {}
     },
-    priceService:{
+    priceService: {
       type: Object,
-      default: function(){ return {};}
+      default: function() {
+        return {};
+      }
     },
-    cdpService:{
+    cdpService: {
       type: Object,
-      default: function(){ return {};}
+      default: function() {
+        return {};
+      }
     },
     maker: {
       type: Object,
-      default: function(){ return {};}
+      default: function() {
+        return {};
+      }
     }
   },
   data() {
     return {
-      // maker: {},
-      // priceService: {},
-      // cdpService: {},
+      loaded: false,
+      serverUrl: KOVAN_SERVER_URL,
       wethToPethRatio: 0,
       daiPrice: 0,
       priceFloor: 0,
       ethQty: 0,
       daiQty: 0,
-      makerVars: {
-        step: 1,
-        eth: toBigNumber(0),
-        ethText: '',
-        skr: toBigNumber(0),
-        dai: toBigNumber(0),
-        daiText: '',
-        maxDaiAvail: null,
-        minETHReqText: null,
-        liqPrice: null,
-        ratio: null,
-        error: false,
-        warning: false,
-        submitEnabled: false,
-        checkTerms: false,
-        stepsExpanded: false
-      }
+      cdp: {},
+      step: 1,
+      eth: toBigNumber(0),
+      skr: toBigNumber(0),
+      dai: toBigNumber(0),
+      debtValue: toBigNumber(0),
+      collatRatio: toBigNumber(0),
+      pethCollateral: toBigNumber(0),
+      usdCollateral: toBigNumber(0),
+      ethCollateral: toBigNumber(0),
+      maxDaiAvail: null,
+      liqPrice: null,
+      ratio: null,
+      error: false,
+      isSafe: false,
+      maxDaiDraw: toBigNumber(0),
+      maxPethDraw: toBigNumber(0),
+      maxEthDraw: toBigNumber(0)
     };
+  },
+  watch: {
+    makerActive() {
+      if (!this.loaded) {
+        const cdpId = 5168;
+        this.getCdp(cdpId);
+      }
+    }
   },
   computed: {
     ...mapGetters({
@@ -180,41 +207,65 @@ export default {
     atSetFloor() {
       return this.calcMinCollatRatio(this.priceFloor);
     },
-    collatRatio() {
-      return this.calcCollatRatio(this.ethQty, this.daiQty);
-    },
     liquidationPrice() {
       return this.calcLiquidationPrice(this.ethQty, this.daiQty);
     },
-    maxDaiDraw() {
-      if (this.ethQty <= 0) return 0;
-      return bnOver(this.ethPrice, this.ethQty, this.liquidationRatio)
-    },
     minEthDeposit() {
-      if (this.daiQty <= 0) return 0;
-      return bnOver(this.liquidationRatio, this.daiQty, this.ethPrice)
+      if (toBigNumber(this.usdCollateral).gt(new BigNumber(0))) return 0;
+      return bnOver(
+        this.liquidationRatio,
+        this.usdCollateral,
+        this.ethPrice
+      ).toString();
     },
+    atRisk() {
+      if (this.calcCollatRatio(this.ethQty, this.daiQty).lte(2)) {
+        return true;
+      }
+      return false;
+    }
   },
   async mounted() {
-    console.log(USD_DAI); // todo remove dev item
-    console.log('this.maker', this.maker); // todo remove dev item
+    if (this.makerActive) {
+      this.loaded = true;
+      const cdpId = 5168;
+      this.getCdp(cdpId);
+    }
   },
   methods: {
     async dothing() {
       console.log(this.ethPrice.toString()); // todo remove dev item
       console.log(this.liquidationRatio); // todo remove dev item
     },
-    calcRatioForDraw() {},
-    collecting() {
-      // Liquidation price (ETH/USD):  { this.state.liqPrice ? printNumber(this.state.liqPrice) : "--" } USD
-      // Current price information (ETH/USD): { printNumber(this.props.system.pip.val) } USD
-      // Liquidation penalty: { printNumber(this.props.system.tub.axe.minus(WAD).times(100)) }%
-      // Collateralization ratio: this.state.ratio ? printNumber(this.state.ratio.times(100)) : "--" }%
-      // Stability fee: @{ printNumber(toWei(fromWei(this.props.system.tub.fee).pow(60 * 60 * 24 * 365)).times(100).minus(toWei(100)), 1, true, true) }%/year in MKR
-      // Minimum ratio: { printNumber(this.props.system.tub.mat.times(100)) }%
-      // calculate how much Dai we need to draw in order
-      // to achieve the desired collateralization ratio
-      // let drawAmt = Math.floor(principal * priceEth / collatRatio);
+    async getCdp(id) {
+      this.cdp = await this.maker.getCdp(id);
+      this.liqPrice = await this.cdp.getLiquidationPrice();
+      this.isSafe = await this.cdp.isSafe();
+      this.debtValue = (await this.cdp.getDebtValue()).toBigNumber();
+      this.collatRatio = await this.cdp.getCollateralizationRatio();
+      this.ethCollateral = (await this.cdp.getCollateralValue()).toBigNumber();
+      this.pethCollateral = (await this.cdp.getCollateralValue(
+        Maker.PETH
+      )).toBigNumber();
+      this.usdCollateral = (await this.cdp.getCollateralValue(
+        Maker.USD
+      )).toBigNumber();
+      this.maxEthDraw = bnOver(
+        this.liquidationRatio,
+        this.usdCollateral,
+        this.ethPrice
+      ).toString();
+      this.maxPethDraw = bnOver(
+        this.pethPrice,
+        this.pethCollateral,
+        this.liquidationRatio
+      ).toString();
+      this.maxDaiDraw = bnOver(
+        this.ethPrice,
+        this.ethCollateral,
+        this.liquidationRatio
+      ).minus(this.debtValue).toString();
+
     }
   }
 };
