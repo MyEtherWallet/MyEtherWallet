@@ -186,7 +186,9 @@
                     height="30px"
                   />
                 </li>
-                <li>{{ account.account.getChecksumAddressString() }}</li>
+                <li>
+                  {{ account.account.getChecksumAddressString() | concatAddr }}
+                </li>
                 <li>{{ convertBalance(account.balance) }}</li>
                 <li class="user-input-checkbox">
                   <label class="checkbox-container checkbox-container-small">

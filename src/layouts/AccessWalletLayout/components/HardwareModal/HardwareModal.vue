@@ -55,8 +55,9 @@ import trezorHov from '@/assets/images/icons/button-trezor-hover.png';
 import keepkey from '@/assets/images/icons/button-keepkey.png';
 import keepkeyHov from '@/assets/images/icons/button-keepkey-hover.png';
 import WalletOption from '../WalletOption';
-import { Toast, Misc } from '@/helpers';
+import { Toast } from '@/helpers';
 import { isSupported } from 'u2f-api';
+import platform from 'platform';
 import {
   LedgerWallet,
   KeepkeyWallet,
@@ -115,8 +116,13 @@ export default {
           imgHoverPath: trezorHov,
           text: 'Trezor',
           disabled:
-            Misc.browserName() !== 'chrome' && Misc.browserName() !== 'firefox',
-          msg: ''
+            platform.name.toLowerCase() !== 'chrome' &&
+            platform.name.toLowerCase() !== 'firefox',
+          msg:
+            platform.name.toLowerCase() !== 'chrome' &&
+            platform.name.toLowerCase() !== 'firefox'
+              ? 'Browser not supported by Trezor'
+              : ''
         },
         {
           name: 'keepkey',
@@ -147,11 +153,10 @@ export default {
         }
 
         if (u2fhw.includes(item.name)) {
-          const disable = !(
-            (Misc.browserName() === 'chrome' ||
-              Misc.browserName() === 'opera') &&
-            res
-          );
+          const disable =
+            platform.name.toLowerCase() !== 'chrome' &&
+            platform.name.toLowerCase() !== 'opera' &&
+            res;
 
           item.disabled = disable;
           item.msg = disable ? this.$t('errorsGlobal.browserNonU2f') : '';

@@ -110,7 +110,9 @@ import metamaskImgDisabled from '@/assets/images/icons/button-metamask-disabled.
 import softwareImgDisabled from '@/assets/images/icons/button-software-disabled.svg';
 
 import { mapGetters } from 'vuex';
-import { Toast, Misc } from '@/helpers';
+import { Toast } from '@/helpers';
+
+import platform from 'platform';
 
 export default {
   components: {
@@ -202,10 +204,10 @@ export default {
         case 'button-mewconnect':
           return (
             !this.online ||
-            (Misc.browserName() !== 'chrome' &&
-              Misc.browserName() !== 'firefox' &&
-              Misc.browserName() !== 'safari' &&
-              Misc.browserName() !== 'opera')
+            (platform.name.toLowerCase() !== 'chrome' &&
+              platform.name.toLowerCase() !== 'firefox' &&
+              platform.name.toLowerCase() !== 'safari' &&
+              platform.name.toLowerCase() !== 'opera')
           );
         case 'button-hardware':
           return !this.online;
@@ -254,6 +256,7 @@ export default {
     hardwarePasswordModalOpen(hardwareNeedingPassword) {
       this.walletConstructor = hardwareNeedingPassword.walletConstructor;
       this.hardwareBrand = hardwareNeedingPassword.hardwareBrand;
+      this.$refs.hardwareModal.$refs.hardware.hide();
       this.$refs.hardwarePasswordModal.$refs.password.show();
     },
     hardwareWalletOpen(wallet) {
