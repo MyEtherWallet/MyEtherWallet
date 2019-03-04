@@ -54,17 +54,19 @@
 
   .block-content {
     display: flex;
-    flex-direction: column;
-    justify-content: space-around;
+    position: relative;
+    height: 100%;
   }
 
   .information-container {
-    min-height: 82px;
+    margin-bottom: 40px;
   }
 
   .icon-container {
     display: flex;
-    //max-height: 19px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
 
     img {
       height: 25px;
