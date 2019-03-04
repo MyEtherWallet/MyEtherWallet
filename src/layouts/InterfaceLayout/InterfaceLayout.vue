@@ -82,6 +82,7 @@
               :get-token-balance="getTokenBalance"
               :tokens="tokens"
               :received-tokens="receivedTokens"
+              :reset-token-selection="setTokensWithBalance"
             />
           </div>
         </div>
@@ -346,6 +347,7 @@ export default {
         .catch(e => {
           Toast.responseHandler(e, false);
         });
+
       return balance;
     },
     setCustomTokenStore() {
@@ -358,7 +360,6 @@ export default {
       store.set('customTokens', customTokenStore);
     },
     async setTokens() {
-      const customStore = store.get('customTokens');
       this.tokens = [];
       let tokens = await this.fetchTokens();
       tokens = tokens
@@ -388,7 +389,10 @@ export default {
         });
 
       this.tokens = tokens.sort(sortByBalance);
-
+      this.setTokensWithBalance();
+    },
+    setTokensWithBalance() {
+      const customStore = store.get('customTokens');
       if (
         customStore !== undefined &&
         customStore[this.network.type.name] !== undefined &&

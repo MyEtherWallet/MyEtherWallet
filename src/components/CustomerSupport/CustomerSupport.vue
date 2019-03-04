@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import { Misc } from '@/helpers';
+import platform from 'platform';
 
 export default {
   props: {
@@ -74,8 +74,9 @@ export default {
     }
   },
   mounted() {
-    this.browser = this.$options.filters.capitalize(Misc.browserName());
-    this.os = Misc.browserOs();
+    this.browser = platform.name;
+    this.os = platform.os.family;
+    this.device = platform.product;
     this.url = this.$router.history.current.fullPath;
   },
   methods: {

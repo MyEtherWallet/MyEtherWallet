@@ -175,6 +175,7 @@
           </div>
           <input
             v-model="value"
+            step="any"
             type="text"
             name
             placeholder="ETH"
@@ -344,6 +345,8 @@ export default {
           if (item.type === 'bytes32[]') {
             const parsedItem = this.formatInput(this.inputs[item.name]);
             _contractArgs.push(parsedItem);
+          } else if (item.type === 'address') {
+            _contractArgs.push(this.inputs[item.name].toLowerCase());
           } else {
             _contractArgs.push(this.inputs[item.name]);
           }
@@ -417,10 +420,13 @@ export default {
     },
     selectedFunction(method) {
       if (!method.hasOwnProperty('constant')) return;
-      const contract = new this.web3.eth.Contract([method], this.address);
+      const contract = new this.web3.eth.Contract(
+        [method],
+        this.address.toLowerCase()
+      );
       if (method.constant === true && method.inputs.length === 0) {
         contract.methods[method.name]()
-          .call({ from: this.account.address })
+          .call({ from: this.account.address.toLowerCase() })
           .then(res => {
             this.result = res;
           })
@@ -474,12 +480,12 @@ export default {
       const web3 = this.web3;
       const contract = new web3.eth.Contract(
         [this.selectedMethod],
-        this.address
+        this.address.toLowerCase()
       );
       this.loading = true;
       if (this.selectedMethod.constant === true) {
         contract.methods[this.selectedMethod.name](...this.contractArgs)
-          .call({ from: this.account.address })
+          .call({ from: this.account.address.toLowerCase() })
           .then(res => {
             this.result = res;
             this.loading = false;
@@ -489,12 +495,14 @@ export default {
             Toast.responseHandler(e, false);
           });
       } else {
-        const nonce = await web3.eth.getTransactionCount(this.account.address);
+        const nonce = await web3.eth.getTransactionCount(
+          this.account.address.toLowerCase()
+        );
         let errored = false;
         const gasLimit = await contract.methods[this.selectedMethod.name](
           ...this.contractArgs
         )
-          .estimateGas({ from: this.account.address })
+          .estimateGas({ from: this.account.address.toLowerCase() })
           .then(res => {
             return res;
           })
@@ -508,12 +516,12 @@ export default {
           ).encodeABI();
 
           const raw = {
-            from: this.account.address,
+            from: this.account.address.toLowerCase(),
             gas: gasLimit,
             nonce: nonce,
             gasPrice: Number(unit.toWei(this.gasPrice, 'gwei')),
             value: 0,
-            to: this.address,
+            to: this.address.toLowerCase(),
             data: data
           };
           web3.eth.sendTransaction(raw).catch(err => {

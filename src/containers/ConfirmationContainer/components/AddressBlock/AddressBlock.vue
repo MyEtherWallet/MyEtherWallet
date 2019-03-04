@@ -1,9 +1,9 @@
 <template lang="html">
   <div class="address-container">
     <div class="currency-container">
-      <img
-        :src="require(`@/assets/images/currency/${lowerCaseCurrency}.svg`)"
-      />
+      <div class="icon-matcher">
+        <img :src="iconFetcher" />
+      </div>
       <p>
         <span class="currency-amt">
           {{ direction === 'from' ? '-' : '+' }}
@@ -53,11 +53,25 @@ export default {
     tokenSymbol: {
       type: String,
       default: ''
+    },
+    icon: {
+      type: String,
+      default: ''
     }
   },
   computed: {
+    iconFetcher() {
+      let icon;
+      try {
+        // eslint-disable-next-line
+        icon = require(`@/assets/images/currency/${lowerCaseCurrency}.svg`);
+      } catch (e) {
+        icon = this.icon;
+      }
+      return icon;
+    },
     lowerCaseCurrency() {
-      return this.currency.toLowerCase();
+      return this.tokenSymbol.toLowerCase();
     },
     checksumAddress() {
       if (isAddress(this.tokenTransferTo))

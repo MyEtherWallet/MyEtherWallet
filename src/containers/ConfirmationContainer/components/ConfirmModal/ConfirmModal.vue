@@ -10,6 +10,8 @@
       <div class="modal-content qrcode-modal">
         <div class="tx-info">
           <address-block
+            :currency="network.type.name"
+            :icon="network.type.icon"
             :address="from"
             :value="value"
             :token-transfer-val="tokenTransferVal"
@@ -21,6 +23,8 @@
           </div>
           <address-block
             v-show="to !== '' && to !== undefined"
+            :currency="network.type.name"
+            :icon="network.type.icon"
             :address="to"
             :token-transfer-to="tokenTransferTo"
             :token-transfer-val="tokenTransferVal"
@@ -240,7 +244,7 @@ export default {
               .toFixed()
               .toString()
           : value.toString();
-        this.tokenSymbol = token ? token.symbol : 'Unknown Token';
+        this.tokenSymbol = token ? token.symbol : 'Unidentified Token';
       }
     }
   }
