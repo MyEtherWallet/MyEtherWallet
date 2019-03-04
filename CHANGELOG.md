@@ -1,3 +1,8 @@
+### Bug
+
+- Fix block 0 on mobile []()
+
+
 ### Hotfix v5.0.5-hotfix.1
 
 ### Bug
