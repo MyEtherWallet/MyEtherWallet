@@ -1,6 +1,7 @@
 ### Bug
 
-- Fix block 0 on mobile []()
+- Fix block 0 on mobile [#767](https://github.com/MyEtherWallet/MyEtherWallet/pull/767)
+- Update infura endpoint [#763](https://github.com/MyEtherWallet/MyEtherWallet/pull/763)
 
 
 ### Hotfix v5.0.5-hotfix.1
