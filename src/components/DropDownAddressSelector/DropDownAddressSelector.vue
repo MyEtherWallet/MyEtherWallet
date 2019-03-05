@@ -25,7 +25,7 @@
         <div v-if="validAddress" class="selected-address-blockie">
           <blockie :address="selectedAddress" width="30px" height="30px" />
           <div v-if="isToken(currency)">
-            <img class="currency-icon" src="@/assets/images/currency/eth.svg" />
+            <img class="currency-icon" src="@/assets/images/currency/xdc.svg" />
           </div>
           <div v-else>
             <i
@@ -53,7 +53,7 @@
               <blockie :address="addr.address" width="30px" height="30px" />
               <img
                 class="currency-icon"
-                src="@/assets/images/currency/eth.svg"
+                src="@/assets/images/currency/xdc.svg"
               />
             </div>
             <div class="address-block">
