@@ -23,7 +23,7 @@
                 <p>{{ $t('createWallet.mewConnectDesc') }}</p>
               </div>
 
-              <div class="appstores">
+              <!-- <div class="appstores">
                 <div class="icons">
                   <a
                     href="https://itunes.apple.com/us/app/mewconnect/id1391097156?mt=8"
@@ -51,11 +51,11 @@
                     {{ $t('createWallet.scanToDownload') }}
                   </p>
                 </div>
-              </div>
+              </div> -->
 
-              <div class="bottom-image">
+              <!-- <div class="bottom-image">
                 <img src="@/assets/images/etc/phones.png" />
-              </div>
+              </div> -->
             </b-tab>
             <b-tab
               :title="$t('createWallet.byJsonFile')"
