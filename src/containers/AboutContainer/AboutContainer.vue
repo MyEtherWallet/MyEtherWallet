@@ -45,24 +45,6 @@
                 <p>{{ $t('home.aboutHardwareWalletDesc') }}</p>
               </div>
             </dir>
-            <dir class="content">
-              <div class="image">
-                <img src="~@/assets/images/home/icon-swap.svg" />
-              </div>
-              <div class="text">
-                <h3>{{ $t('common.swap') }}</h3>
-                <p>{{ $t('home.aboutSwapDesc') }}</p>
-              </div>
-            </dir>
-            <dir class="content">
-              <div class="image">
-                <img src="~@/assets/images/home/icon-mew-connect.svg" />
-              </div>
-              <div class="text">
-                <h3>{{ $t('common.mewConnect') }}</h3>
-                <p>{{ $t('home.aboutMewConnectDesc') }}</p>
-              </div>
-            </dir>
           </div>
         </div>
       </div>
