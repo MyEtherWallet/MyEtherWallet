@@ -1,5 +1,5 @@
 <template>
-  <div :class="['dapps-button', supported ? '' : 'disabled']">
+  <div :class="['dapps-button', supported ? '' : 'disabled', customClass]">
     <router-link :to="param" tag="div">
       <img :src="supported ? icon : iconDisabled" />
       <div>
@@ -40,6 +40,10 @@ export default {
       default: () => {
         return [];
       }
+    },
+    customClass: {
+      type: String,
+      default: ''
     }
   },
   computed: {

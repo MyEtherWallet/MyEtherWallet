@@ -23,6 +23,14 @@ const dapps = {
     desc: 'interface.buySubDomains',
     supportedNetworks: [ETH.name]
   },
+  ens: {
+    route: '/interface/dapps/ens',
+    icon: domainSale,
+    iconDisabled: domainSaleHov,
+    title: 'Ens',
+    desc: 'One stop place to do everything ENS related!',
+    supportedNetworks: [ETH.name]
+  },
   secureTransaction: {
     route: '/interface/dapps/secure-transaction',
     icon: secureTransaction,

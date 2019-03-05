@@ -1,0 +1,36 @@
+@import '~@/scss/GlobalVariables';
+
+%template-container {
+  padding: 24px 56px;
+  border-radius: 5px;
+
+  // Tablet
+  @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+    padding: 20px;
+  }
+
+  // Mobile
+  @media all and (max-width: $mobile-width) {
+    padding: 20px 10px;
+  }
+}
+
+.ens-container {
+  background-color: $background-color-white;
+  border-radius: 5px;
+  grid-area: main;
+  overflow: hidden;
+  padding-bottom: 10px;
+
+  .option-container {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    padding-top: 30px;
+
+    .option-item {
+      margin: 0 auto;
+      width: 190px;
+    }
+  }
+}
