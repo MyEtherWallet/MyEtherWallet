@@ -182,10 +182,6 @@ export default {
     blockie: Blockie
   },
   props: {
-    cpdId: {
-      type: String,
-      default: ''
-    },
     tokensWithBalance: {
       type: Array,
       default: function() {
@@ -394,5 +390,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'ManageCDP';
+@import 'SelectCDP';
 </style>
