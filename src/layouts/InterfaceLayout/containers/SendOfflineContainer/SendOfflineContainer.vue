@@ -152,7 +152,7 @@
             <div class="title">
               <div class="title-helper">
                 <h4>{{ $t('common.gasPrice') }}</h4>
-                <popover :popcontent="$t('popover.txSpeed')" />
+                <popover :popcontent="txSpeedMsg" />
               </div>
             </div>
           </div>
@@ -266,6 +266,12 @@ export default {
       network: 'network',
       web3: 'web3'
     }),
+    txSpeedMsg() {
+      const net = this.network.type.name;
+      // eslint-disable-next-line
+      const msg = `${this.$t('popover.txSpeedPt1').replace('{0}', net)} ${this.$t('popover.txSpeedPt2').replace('{0}', net)}`;
+      return msg;
+    },
     validAddress() {
       return isAddress(this.address);
     },
