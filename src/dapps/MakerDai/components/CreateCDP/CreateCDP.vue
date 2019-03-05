@@ -1,48 +1,112 @@
 <template>
-  <div>
+  <div class="container-maker">
     <interface-container-title :title="'MAKER'" />
-
-    <label for="Collateral">Collateral</label>
-    <input id="Collateral" v-model="ethQty" type="number" />
-    <br />
-    <label for="Generate">Generate</label>
-    <input id="Generate" v-model="daiQty" type="number" />
-    <br />
-    <br />
-
-    <button @click="dothing">BUTTON</button>
-    <div>
-      <ul>
-        <li>
-          Max Dai: <span>{{ maxDaiDraw }}</span>
-        </li>
-        <li>
-          Min Eth: <span>{{ minEthDeposit }}</span>
-        </li>
-        <li>Min ETH required: <span></span></li>
-        <li>
-          Liquidation price(ETH/USD): <span>{{ liquidationPrice }}</span>
-        </li>
-        <li>
-          Current price information(ETH/USD): <span>{{ ethPrice }}</span>
-        </li>
-        <li>
-          Liquidation penalty <span> {{ liquidationPenalty }}</span>
-        </li>
-        <li>
-          Collateralization Ratio: <span>{{ collatRatio * 100 }}</span>
-        </li>
-        <li>
-          Minimum Ratio
-        </li>
-        <li>
-          Liquidation Ratio: <span>{{ liquidationRatio * 100 }}%</span>
-        </li>
-        <li>
-          <p>Collateralization ratio that will achieve the given price floor</p>
-          Collateralization Ratio: <span>{{ liquidationRatio * 100 }}%</span>
-        </li>
-      </ul>
+    <div class="manage-container">
+      <p class="top-title">
+        <b>{{ $t('dapps.maker_title') }}</b>
+      </p>
+      <p class="top-title">
+        Please text something here, please text something here, please text
+        something.
+      </p>
+      <div class="currency-ops">
+        <div class="left-top">
+          <p class="currency-label">
+            <b>{{ $t('dapps.collateral') }}</b>
+          </p>
+          <div class="currency-picker-container">
+            <div>
+              <div class="dropdown-text-container dropdown-container">
+                <p>
+                  <span class="cc ETH cc-icon currency-symbol" />
+                  ETH
+                  <span class="subname">- Ethereum </span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="left-bottom">
+          <input
+            v-model="ethQty"
+            class="currency-picker-container dropdown-text-container dropdown-container"
+          />
+          <p>{{ $t('dapps.minCollat') }} <b>0.029</b> ETH</p>
+          <p>0.0048 PETH</p>
+        </div>
+        <div class="arrow">
+          fgdfgdfgfd
+        </div>
+        <div class="right-top">
+          <p class="currency-label">
+            <b>{{ $t('dapps.generate') }}</b>
+          </p>
+          <div class="currency-picker-container">
+            <div>
+              <div class="dropdown-text-container dropdown-container">
+                <p>
+                  <span class="cc DAI cc-icon currency-symbol" />
+                  DAI
+                  <span class="subname">- Maker DAI </span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="right-bottom">
+          <input
+            v-model="daiQty"
+            :class="[
+            risky ? 'red-border' : '',
+              'currency-picker-container',
+              'dropdown-text-container',
+              'dropdown-container'
+            ]"
+          />
+          <p>
+            {{ $t('dapps.maxGenerate') }} <b>{{ maxDaiDraw }}</b> DAI
+          </p>
+        </div>
+      </div>
+      <div class="cdp-info-block cdp-info-entry">
+        <ul>
+          <li>
+            <p>{{ $t('dapps.minEthReq') }}</p>
+            <p>0.00 ETH</p>
+          </li>
+          <li>
+            <p>{{ $t('dapps.liquidPrice') }}</p>
+            <p>
+              <b>{{ liquidationPrice }}</b> USD
+            </p>
+          </li>
+          <li>
+            <p>{{ $t('dapps.currentPriceInfo') }}</p>
+            <p>{{ ethPrice }} USD</p>
+          </li>
+          <li>
+            <p>{{ $t('dapps.liquidationPenalty') }}</p>
+            <p>{{ displayPercentValue(liquidationPenalty) }}%</p>
+          </li>
+          <li>
+            <p>{{ $t('dapps.collateralRatio') }}</p>
+            <p>
+              <b>{{ displayPercentValue(collatRatio) }}%</b>
+            </p>
+          </li>
+          <li>
+            <p>{{ $t('dapps.minimumRatio') }}</p>
+            <p>{{ displayPercentValue(liquidationRatio) }}%</p>
+          </li>
+        </ul>
+      </div>
+      <div class="cdp-info-block cdp-info-entry">
+        <ul>
+          <li>
+            <p>{{ $t('dapps.stabilityFeeInMkr', { value: 2.5 }) }}</p>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -67,9 +131,11 @@ const toBigNumber = num => {
   return new BigNumber(num);
 };
 
-const bnOver = (one, two, three) =>{
-  return (toBigNumber(one).times(toBigNumber(two))).div(toBigNumber(three));
-}
+const bnOver = (one, two, three) => {
+  return toBigNumber(one)
+    .times(toBigNumber(two))
+    .div(toBigNumber(three));
+};
 export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
@@ -95,11 +161,11 @@ export default {
       type: BigNumber,
       default: toBigNumber(0)
     },
-    pethPrice:{
+    pethPrice: {
       type: BigNumber,
       default: toBigNumber(0)
     },
-    liquidationPenalty:{
+    liquidationPenalty: {
       type: BigNumber,
       default: toBigNumber(0)
     },
@@ -111,33 +177,39 @@ export default {
       type: BigNumber,
       default: toBigNumber(0)
     },
-    calcMinCollatRatio:{
+    calcMinCollatRatio: {
       type: Function,
-      default: function(){}
+      default: function() {}
     },
-    calcDrawAmt:{
+    calcDrawAmt: {
       type: Function,
-      default: function(){}
+      default: function() {}
     },
-    calcCollatRatio:{
+    calcCollatRatio: {
       type: Function,
-      default: function(){}
+      default: function() {}
     },
-    calcLiquidationPrice:{
+    calcLiquidationPrice: {
       type: Function,
-      default: function(){}
+      default: function() {}
     },
-    priceService:{
+    priceService: {
       type: Object,
-      default: function(){ return {};}
+      default: function() {
+        return {};
+      }
     },
-    cdpService:{
+    cdpService: {
       type: Object,
-      default: function(){ return {};}
+      default: function() {
+        return {};
+      }
     },
     maker: {
       type: Object,
-      default: function(){ return {};}
+      default: function() {
+        return {};
+      }
     }
   },
   data() {
@@ -188,21 +260,32 @@ export default {
     },
     maxDaiDraw() {
       if (this.ethQty <= 0) return 0;
-      return bnOver(this.ethPrice, this.ethQty, this.liquidationRatio)
+      return bnOver(this.ethPrice, this.ethQty, this.liquidationRatio);
     },
     minEthDeposit() {
       if (this.daiQty <= 0) return 0;
-      return bnOver(this.liquidationRatio, this.daiQty, this.ethPrice)
+      return bnOver(this.liquidationRatio, this.daiQty, this.ethPrice);
     },
+    risky(){
+      const collRatio = this.collatRatio;
+      if(toBigNumber(collRatio).gt(0)){
+        console.log(toBigNumber(collRatio).lte(200)); // todo remove dev item
+        return toBigNumber(collRatio).lte(200)
+      }
+      return false;
+    }
   },
   async mounted() {
     console.log(USD_DAI); // todo remove dev item
     console.log('this.maker', this.maker); // todo remove dev item
   },
   methods: {
-    async dothing() {
-      console.log(this.ethPrice.toString()); // todo remove dev item
-      console.log(this.liquidationRatio); // todo remove dev item
+    displayPercentValue(raw) {
+      if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);
+      return raw
+        .times(100)
+        .toFixed(2)
+        .toString();
     },
     calcRatioForDraw() {},
     collecting() {

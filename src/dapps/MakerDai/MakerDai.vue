@@ -179,7 +179,7 @@ export default {
     const cdps = await this.maker.getCdpIds(
       toChecksumAddress(this.account.address)
     );
-    console.log(cdps); // todo remove dev item
+    console.log('cdps', cdps); // todo remove dev item
   },
   methods: {
     gotoCreate() {
@@ -189,7 +189,7 @@ export default {
     },
     gotoImport() {
       this.$router.push({
-        name: 'import'
+        name: 'manage'
       });
     },
     calcMinCollatRatio(priceFloor) {

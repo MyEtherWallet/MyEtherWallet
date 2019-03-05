@@ -1,82 +1,183 @@
 @import '~@/scss/GlobalVariables';
 
-%interface-container {
+
+.currency-picker-container {
+  margin-bottom: 5px;
+  min-width: 150px;
+  position: relative;
+}
+
+.top-title{
+  padding-left: 10px;
+  padding-bottom: 10px;
+}
+
+.red-border{
+  border: red 1px solid !important;
+}
+
+.subname {
+  color: $light-blue-6;
+}
+
+.dropdown-container {
+  border-radius: 4px;
+  display: flex;
+  position: relative;
+
+  .currency-symbol {
+    width: 40px;
+    margin-right: 0;
+  }
+
+  p {
+    display: flex;
+    align-items: center;
+  }
+
+}
+
+%dropdown-text-container-base {
+  border: 1px solid $white;
+  border-bottom: 0;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 13px 15px;
+  user-select: none;
+  width: 100%;
+
+  i {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+  }
+
+  p {
+    padding-right: 15px;
+  }
+}
+
+.dropdown-text-container {
+  @extend %dropdown-text-container-base;
+
+  background-color: $background-color-1;
+}
+
+.dropdown-text-container-white {
+  @extend %dropdown-text-container-base;
+
+  background-color: $white;
+}
+
+.cc-icon {
+  font-size: 26px;
+}
+
+.container-maker {
   border-radius: 5px;
-  grid-area: main;
+  //grid-area: main;
   overflow: hidden;
 
   > div {
     background: $background-color-white;
   }
-}
 
-%send-form-base {
-  padding: 40px 60px 0;
+  .manage-container {
+    padding: 42px;
 
-  .title-container {
-    align-items: flex-end;
-    display: flex;
-    margin-bottom: 5px;
+    .currency-label {
+      margin-bottom: 15px;
+    }
+
+    .currency-ops {
+      padding-left: 10px;
+      display: grid;
+      grid-template-columns: repeat(14, [col] 50px);
+      grid-template-rows: repeat(2, [row] auto);
+      grid-column-gap: 10px;
+      grid-row-gap: 2px;
+      padding-bottom: 20px;
+    }
+
+    .left-top {
+      grid-column: col / span 5;
+      grid-row: row;
+    }
+
+    .left-bottom {
+      grid-column: col / span 5;
+      grid-row: row 2;
+    }
+
+    .arrow {
+      grid-column: col 6 / span 2;
+      grid-row: row /span 2;
+    }
+
+    .right-top {
+      grid-column: col 8 / span 5;
+      grid-row: row;
+    }
+
+    .right-bottom {
+      grid-column: col 8 / span 5;
+      grid-row: row 2;
+    }
+
+    .cdp-info-block {
+      padding-top: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+    .cdp-info-entry{
+      justify-content: space-between;
+      position: relative;
+      padding-top: 20px;
+
+      &::before {
+        margin: auto;
+        box-sizing: initial;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        content: '';
+        width: 100%;
+        border-top: 1px solid $light-grey-3;
+      }
+
+      display: flex;
+      align-items: center;
+      padding-left: 10px;
+      padding-right: 10px;
+      //padding: 10px 30px;
+
+      > ul {
+        display: block;
+        width: 100%;
+        > li {
+          display: flex;
+          align-items: center;
+          padding-bottom: 5px;
+
+          p:nth-child(1) {
+            min-width: 100px;
+          }
+
+          p:nth-child(2) {
+            margin-left: auto;
+            word-break: break-all;
+
+            a {
+              color: $light-blue-1;
+            }
+          }
+        }
+      }
+
+    }
+
   }
-}
 
-%form-block-base {
-  border-radius: 5px;
 
-  .the-form {
-    background-color: $background-color-1;
-    border-radius: 5px;
-  }
-}
-
-.select-contract .dropdown-toggle {
-  border: 0;
-  display: none;
-}
-
-.container-maker {
-  @extend %interface-container;
-
-  .Collateralize-Gene {
-    width: 341px;
-    height: 22px;
-    font-family: AvenirNext;
-    font-size: 16px;
-    font-weight: 600;
-    font-style: normal;
-    font-stretch: normal;
-    line-height: normal;
-    letter-spacing: normal;
-    color: #0b2840;
-  }
-
-  .Please-text-somethin {
-    width: 535px;
-    height: 51px;
-    font-family: AvenirNext;
-    font-size: 14px;
-    font-weight: normal;
-    font-style: normal;
-    font-stretch: normal;
-    line-height: normal;
-    letter-spacing: normal;
-    color: #506175;
-  }
-
-  .Please-text-somethin .text-style-1 {
-    font-family: PingFangSC;
-  }
-
-  .Collateral {
-    width: 199px;
-    height: 22px;
-    font-family: AvenirNext;
-    font-size: 16px;
-    font-weight: 600;
-    font-style: normal;
-    font-stretch: normal;
-    line-height: normal;
-    letter-spacing: normal;
-    color: #0b2840;
-  }
 }
