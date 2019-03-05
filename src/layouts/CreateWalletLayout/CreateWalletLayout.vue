@@ -10,54 +10,6 @@
           <b-tabs class="x100">
             <div v-if="showProgressBar" class="progress-bar" />
             <b-tab
-              class="mew-connect-block"
-              title="MEWconnect"
-              active
-              @click="showProgressBar = false"
-            >
-              <div class="title-block">
-                <div class="title-popover">
-                  <h3>{{ $t('createWallet.titleMEWConnect') }}</h3>
-                  <popover :popcontent="$t('home.aboutMewConnectDesc')" />
-                </div>
-                <p>{{ $t('createWallet.mewConnectDesc') }}</p>
-              </div>
-
-              <!-- <div class="appstores">
-                <div class="icons">
-                  <a
-                    href="https://itunes.apple.com/us/app/mewconnect/id1391097156?mt=8"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <img
-                      src="~@/assets/images/icons/appstore.svg"
-                      height="40"
-                    />
-                  </a>
-                  <a
-                    href="http://play.google.com/store/apps/details?id=com.myetherwallet.mewconnect"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <img
-                      src="~@/assets/images/icons/google-play.svg"
-                      height="40"
-                    />
-                  </a>
-                </div>
-                <div class="download">
-                  <p @click="scanToDownloadModalOpen">
-                    {{ $t('createWallet.scanToDownload') }}
-                  </p>
-                </div>
-              </div> -->
-
-              <!-- <div class="bottom-image">
-                <img src="@/assets/images/etc/phones.png" />
-              </div> -->
-            </b-tab>
-            <b-tab
               :title="$t('createWallet.byJsonFile')"
               @click="showProgressBar = true"
             >
