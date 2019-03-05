@@ -2,7 +2,7 @@
   <div class="register-domain-container">
     <back-button />
     <button @click="gotoCreate">Create</button>
-    <button @click="gotoImport">Import</button>
+    <button @click="gotoImport">Manage</button>
     <router-view
       :maker-active="makerActive"
       :eth-price="ethPrice"
@@ -87,6 +87,7 @@ export default {
       priceFloor: 0,
       ethQty: 0,
       daiQty: 0,
+      cdps: [],
       makerVars: {
         step: 1,
         eth: toBigNumber(0),
@@ -176,9 +177,20 @@ export default {
     console.log(this.cdpService); // todo remove dev item
     this.makerActive = true;
     console.log(toChecksumAddress(this.account.address)); // todo remove dev item
+    const proxy = await this.maker
+      .service('proxy')
+      .getProxyAddress(this.account.address);
+    let searchAddress;
+    if (proxy) {
+      searchAddress = proxy;
+    } else {
+      searchAddress = this.account.address;
+    }
+    console.log(proxy); // todo remove dev item
     const cdps = await this.maker.getCdpIds(
-      toChecksumAddress(this.account.address)
+      searchAddress //proxy
     );
+    this.cdps = cdps;
     console.log('cdps', cdps); // todo remove dev item
   },
   methods: {
@@ -188,9 +200,15 @@ export default {
       });
     },
     gotoImport() {
-      this.$router.push({
-        name: 'manage'
-      });
+      if (this.cdps.length > 1) {
+        this.$router.push({
+          name: 'select'
+        });
+      } else if (this.cdps.length === 1) {
+        this.$router.push({
+          name: 'manage/' + this.cdps[0]
+        });
+      }
     },
     calcMinCollatRatio(priceFloor) {
       return bnOver(this.ethPrice, this.liquidationRatio, priceFloor);

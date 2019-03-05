@@ -2,6 +2,7 @@ const MakerDai = () => import('./MakerDai');
 const MakerHome = () => import('./components/MakerHome');
 const CreateCDP = () => import('./components/CreateCDP');
 const ManageCDP = () => import('./components/ManageCDP');
+const SelectCDP = () => import('./components/SelectCDP');
 
 export default {
   path: 'dapps/maker-dai',
@@ -22,7 +23,13 @@ export default {
       props: true
     },
     {
-      path: 'manage',
+      path: 'select',
+      name: 'select',
+      component: SelectCDP,
+      props: true
+    },
+    {
+      path: 'manage/:cdpId',
       name: 'manage',
       component: ManageCDP,
       props: true
