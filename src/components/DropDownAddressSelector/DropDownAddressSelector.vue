@@ -109,7 +109,7 @@ export default {
     },
     currency: {
       type: String,
-      default: 'ETH'
+      default: 'XDC'
     }
   },
   data() {
