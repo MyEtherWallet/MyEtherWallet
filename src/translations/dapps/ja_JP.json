@@ -5,7 +5,7 @@
   "subDomainPlaceholder": "Please Enter Sub Domain Name",
   "areYouFinalizingCont": "and claim this name?",
   "confirm": "確定する",
-  "nodeProvider": "The ETH node you are sending through is provided by",
+  "nodeProvider": "The XDC node you are sending through is provided by",
   "finalize": "完成させる",
   "alreadyOwned": "is already owned",
   "labelHash": "Labelhash",

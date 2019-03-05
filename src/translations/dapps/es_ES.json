@@ -5,7 +5,7 @@
   "subDomainPlaceholder": "Please Enter Sub Domain Name",
   "areYouFinalizingCont": "and claim this name?",
   "confirm": "Confirmar",
-  "nodeProvider": "The ETH node you are sending through is provided by",
+  "nodeProvider": "The XDC node you are sending through is provided by",
   "finalize": "Concluir",
   "alreadyOwned": "is already owned",
   "labelHash": "Labelhash",
