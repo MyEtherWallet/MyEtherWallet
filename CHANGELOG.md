@@ -1,3 +1,16 @@
+### Release v5.0.6
+
+### Feature
+
+- DApp: Schedule transaction using Ethereum Alarm Clock [#545](https://github.com/MyEtherWallet/MyEtherWallet/pull/545)
+
+### Bug
+
+- Fix block 0 on mobile [#767](https://github.com/MyEtherWallet/MyEtherWallet/pull/767)
+- Update infura endpoint [#763](https://github.com/MyEtherWallet/MyEtherWallet/pull/763)
+- Chrome 72 compatibility for Secalot [#766](https://github.com/MyEtherWallet/MyEtherWallet/pull/766)
+
+
 ### Hotfix v5.0.5-hotfix.1
 
 ### Bug
