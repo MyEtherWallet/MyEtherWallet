@@ -222,6 +222,10 @@ const setLastPath = function({ commit }, val) {
   commit('SET_LAST_PATH', val);
 };
 
+const updateBlockNumber = function({ commit }, val) {
+  commit('UPDATE_BLOCK_NUMBER', val);
+};
+
 export default {
   addNotification,
   addSwapNotification,
@@ -240,5 +244,6 @@ export default {
   switchNetwork,
   updateNotification,
   updateTransaction,
-  gettingStartedDone
+  gettingStartedDone,
+  updateBlockNumber
 };

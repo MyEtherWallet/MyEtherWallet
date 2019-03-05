@@ -431,6 +431,7 @@ export default {
         .getBlockNumber()
         .then(res => {
           this.blockNumber = res;
+          this.$store.dispatch('updateBlockNumber', res);
         })
         .catch(e => {
           Toast.responseHandler(e, Toast.ERROR);
