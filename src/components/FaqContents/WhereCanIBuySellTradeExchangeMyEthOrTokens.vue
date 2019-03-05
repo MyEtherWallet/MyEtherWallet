@@ -2,7 +2,7 @@
   <div>
     <p>
       Here is a list of reputable services you can use the following services to
-      buy and sell ETH / Tokens / fiat (USD, EUR, etc.). There are many, many
+      buy and sell XDC / Tokens / fiat (USD, EUR, etc.). There are many, many
       more out there but these are the ones I am familar with.
     </p>
     <p>

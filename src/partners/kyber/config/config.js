@@ -1,4 +1,4 @@
-// TODO: look into only using kyberTokenInfoList for ETH and parsing results differently if ROP?
+// TODO: look into only using kyberTokenInfoList for XDC and parsing results differently if ROP?
 import { TIME_SWAP_VALID_DEFAULT } from '../../partnersConfig/config';
 
 const kyberTokenList = {

@@ -128,11 +128,11 @@
       >
         <div class="title-container">
           <div class="title">
-            <h4>Value in ETH:</h4>
+            <h4>Value in XDC:</h4>
           </div>
         </div>
         <div class="the-form contract-name">
-          <input ref="value" v-model="value" placeholder="Value in ETH" />
+          <input ref="value" v-model="value" placeholder="Value in XDC" />
         </div>
       </div>
       <div class="send-form">

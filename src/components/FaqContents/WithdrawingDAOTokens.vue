@@ -38,7 +38,7 @@
     <h5>Walkthru for DAO Main withdraw</h5>
     <ol>
       <li>
-        Have ETH in the account that has DAO tokens in it so you can collect the
+        Have XDC in the account that has DAO tokens in it so you can collect the
         refund.
       </li>
       <li>
@@ -52,7 +52,7 @@
         (the current version)
       </li>
       <li>
-        Make sure the ETH node in the top right corner is selected (Try out
+        Make sure the XDC node in the top right corner is selected (Try out
         Giveth.io's donated node ;-) )
       </li>
       <li>
@@ -100,7 +100,7 @@
     <p>5e. Click Generate Tx and then click Send Tx</p>
     <p>
       Now wait for the Ethereum Blockchain to work its magic and you will have a
-      bunch of ETH delivered to you :-) Remember that a lot of people worked
+      bunch of XDC delivered to you :-) Remember that a lot of people worked
       hard to make this possible, the whole Ethereum network hard forked for
       this! Pay it forward to the people around you, if this was built on
       Bitcoin, you would have lost all your funds #gratitude ;-D
@@ -125,7 +125,7 @@
     </p>
 
     <ol>
-      <li>Have ETH in the account that can collect the refund.</li>
+      <li>Have XDC in the account that can collect the refund.</li>
       <li>
         Go to
         <a
@@ -137,7 +137,7 @@
         (the current version)
       </li>
       <li>
-        Make sure the ETH node in the top right corner is selected (Try out
+        Make sure the XDC node in the top right corner is selected (Try out
         Giveth.io's donated node ;-) )
       </li>
       <li>
@@ -184,7 +184,7 @@
     <p>5e. Click Generate Tx and then click Send Tx</p>
     <p>
       Now wait for the Ethereum Blockchain to work its magic and you will have a
-      bunch of ETH delivered to you :-) Remember that a lot of people worked
+      bunch of XDC delivered to you :-) Remember that a lot of people worked
       hard to make this possible, the whole Ethereum network hard forked for
       this! Pay it forward to the people around you, if this was built on
       Bitcoin, this wouldn't have happened. ;-D
@@ -315,7 +315,7 @@
 
     <p>
       <strong>
-        Note: You will need minimum 0.01 ETH and 0.01 ETC in order to cover the
+        Note: You will need minimum 0.01 XDC and 0.01 ETC in order to cover the
         cost of gas necessary to process the withdrawals.
       </strong>
     </p>

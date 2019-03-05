@@ -35,7 +35,7 @@
           <li>
             <div class="qa__contents--title" @click="openFAQ('faq4')">
               <h3>
-                Where Can I Buy / Sell / Trade / Exchange my ETH or Tokens?
+                Where Can I Buy / Sell / Trade / Exchange my XDC or Tokens?
               </h3>
               <div class="show-more-buttons">
                 <span v-if="showFAQs.faq4 == false" class="show-more">+</span>

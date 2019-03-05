@@ -70,7 +70,7 @@
           <p>{{ $t('common.txFee') }}:</p>
           <div class="detail-data">
             <p>
-              {{ convertToEth(details.gasPrice * details.gasUsed) }} ETH (${{
+              {{ convertToEth(details.gasPrice * details.gasUsed) }} XDC (${{
                 getFiatValue(details.gasPrice * details.gasUsed)
               }})
             </p>
@@ -80,7 +80,7 @@
           <p>{{ $t('header.maxTxFee') }}:</p>
           <div class="detail-data">
             <p>
-              {{ convertToEth(details.gasPrice * details.gasLimit) }} ETH (${{
+              {{ convertToEth(details.gasPrice * details.gasLimit) }} XDC (${{
                 getFiatValue(details.gasPrice * details.gasLimit)
               }})
             </p>

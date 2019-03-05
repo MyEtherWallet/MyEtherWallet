@@ -67,7 +67,7 @@
             <a
               href="https://kb.myetherwallet.com/getting-started/whats-the-difference-between-an-exchange-and-myetherwallet.html"
               >Understand the difference between a hosted wallet / exchange and
-              client-side wallet before moving your ETH to your own wallet.</a
+              client-side wallet before moving your XDC to your own wallet.</a
             >
           </p>
         </li>
@@ -127,12 +127,12 @@
         </li>
         <li>
           <p>
-            Now you have USD in your exchange account and can buy ETH with it.
+            Now you have USD in your exchange account and can buy XDC with it.
           </p>
         </li>
         <li>
           <p>
-            Once you have all the ETH you want, withdraw that ETH into a wallet
+            Once you have all the XDC you want, withdraw that XDC into a wallet
             that you control. Exchanges are notorious for being hacked (although
             the ones mentioned above are very reputable) and you want your funds
             in a place that you have the private key to. So...
@@ -152,7 +152,7 @@
             When you run it, it'll prompt you to make a new account. Create a
             password that you will never ever forget and create the account.
             Then, it'll give you an address that starts with 0x.. This what you
-            will enter on your exchange to move your ETH from their account to
+            will enter on your exchange to move your XDC from their account to
             your own.
           </p>
         </li>
@@ -187,15 +187,15 @@
       <p>
         If you already have BTC, you can use Shapeshift.io, Bity.com, or
         Changelly to convert your BTC into ETH. Start a BTC
-        <i class="fa fa-long-arrow-right" aria-hidden="true" /> ETH exchange and
+        <i class="fa fa-long-arrow-right" aria-hidden="true" /> XDC exchange and
         it'll tell you where to send your BTC. (If you have your BTC on an
-        exchange, you can likely exchange them for ETH on that exchange without
+        exchange, you can likely exchange them for XDC on that exchange without
         the need for Shapeshift.)
       </p>
       <p>
         Then create a XinFin Wallet account and back it up. In Circle or
-        Coinbase, send all the BTC to that address. The ETH will appear in your
-        ETH wallet in ~20 minutes.
+        Coinbase, send all the BTC to that address. The XDC will appear in your
+        XDC wallet in ~20 minutes.
       </p>
       <h5>Alternative steps 6-8:</h5>
       <p>
@@ -248,7 +248,7 @@
             <a
               href="https://kb.myetherwallet.com/getting-started/whats-the-difference-between-an-exchange-and-myetherwallet.html"
               >Understand the difference between a hosted wallet / exchange and
-              client-side wallet before moving your ETH to your own wallet.</a
+              client-side wallet before moving your XDC to your own wallet.</a
             >
           </p>
         </li>

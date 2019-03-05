@@ -286,7 +286,7 @@ xdescribe('kyber.js', () => {
     });
 
     // requires network to function
-    it('should throw error if fromValue is in ETH and above user cap', async () => {
+    it('should throw error if fromValue is in XDC and above user cap', async () => {
       expect.assertions(1);
       const web3 = new Web3(nodeUrl);
       const ens = new ENS(web3.currentProvider);
@@ -310,7 +310,7 @@ xdescribe('kyber.js', () => {
     });
 
     // requires network to function
-    it('should throw error if toValue is in ETH and above user cap', async () => {
+    it('should throw error if toValue is in XDC and above user cap', async () => {
       expect.assertions(1);
       const web3 = new Web3(nodeUrl);
       const ens = new ENS(web3.currentProvider);
