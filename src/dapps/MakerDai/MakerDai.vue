@@ -206,7 +206,10 @@ export default {
         });
       } else if (this.cdps.length === 1) {
         this.$router.push({
-          name: 'manage/' + this.cdps[0]
+          name: 'manage',
+          params: {
+            cdpId: this.cdps[0]
+          }
         });
       }
     },
