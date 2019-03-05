@@ -1,6 +1,7 @@
 {
   "signature": "A personal identifier to accompany your transaction",
-  "txSpeed": "This field regulates speed of transaction, which is always paid in ETH.  We recommend having at least .01 ETH before making transactions.",
+  "txSpeedPt1": "This field regulates speed of transaction, which is always paid in {0}.",
+  "txSpeedPt2": "We recommend having at least .01 {0} before making transactions.",
   "print": "打印",
   "copy": "复制",
   "switchAddress": "切换地址",
