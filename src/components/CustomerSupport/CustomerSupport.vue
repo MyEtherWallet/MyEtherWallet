@@ -23,6 +23,7 @@
         <input v-model="browser" placeholder="Browser" />
         <input v-model="os" placeholder="Operating System" />
         <input v-model="device" placeholder="Device/Wallet type (If any)" />
+        <input v-model="address" placeholder="Wallet PUBLIC address (If any)" />
         <input v-model="url" placeholder="Url" />
         <textarea v-model="description" placeholder="Describe the issue" />
         <a
@@ -54,7 +55,8 @@ export default {
       os: '',
       device: '',
       url: '',
-      description: ''
+      description: '',
+      address: ''
     };
   },
   computed: {
@@ -65,6 +67,7 @@ export default {
         Os: ${this.os},
         Device: ${this.device},
         url: ${this.url}
+        Wallet Address: ${this.url}
 
 
         ${this.description}
