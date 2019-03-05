@@ -162,12 +162,12 @@ export default {
   },
   data() {
     return {
-      header: 'MY ADDRESS ICON',
+      header: 'MY XinFin ADDRESS ICON',
       subheader: 'Always look for this icon when sending to this wallet',
-      mew: 'MyEtherWallet',
+      mew: 'XinFin Wallet',
       paper: 'Paper Wallet',
-      link1: 'support@myetherwallet.com',
-      link2: 'https://www.myetherwallet.com',
+      link1: 'support@xinfin.org',
+      link2: 'https://XinFin.Network/#webWallet',
       myAddress: 'MY ADDRESS',
       myPriv: 'MY PRIVATE KEY',
       content: {
