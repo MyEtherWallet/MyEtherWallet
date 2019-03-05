@@ -1,3 +1,9 @@
+### Release v5.0.6
+
+### Feature
+
+- DApp: Schedule transaction using Ethereum Alarm Clock [#545](https://github.com/MyEtherWallet/MyEtherWallet/pull/545)
+
 ### Bug
 
 - Fix block 0 on mobile [#767](https://github.com/MyEtherWallet/MyEtherWallet/pull/767)
