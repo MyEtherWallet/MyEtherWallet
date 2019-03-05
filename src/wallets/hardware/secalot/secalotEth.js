@@ -70,6 +70,14 @@ SecalotEth.prototype.getAddress = function(path, callback) {
     }
   };
 
+  buffer = Buffer.alloc(4);
+  buffer[0] = 0x80;
+  buffer[1] = 0xc4;
+  buffer[2] = 0x00;
+  buffer[3] = 0x00;
+
+  apdus.push(buffer.toString('hex'));
+
   if (typeof this.pinCode !== 'undefined') {
     const pin = Buffer.from(this.pinCode, 'utf8');
     buffer = Buffer.alloc(5 + pin.length);

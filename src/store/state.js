@@ -40,7 +40,8 @@ const state = {
   web3: {},
   sidemenuOpen: false,
   darklist: darklist,
-  gettingStartedDone: gettingStartedDone
+  gettingStartedDone: gettingStartedDone,
+  blockNumber: 0
 };
 
 export default state;
