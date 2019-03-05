@@ -72,7 +72,7 @@
         <ul>
           <li>
             <p>{{ $t('dapps.minEthReq') }}</p>
-            <p>0.00 ETH</p>
+            <p>{{minEth}} ETH</p>
           </li>
           <li>
             <p>{{ $t('dapps.liquidPrice') }}</p>
@@ -214,9 +214,7 @@ export default {
   },
   data() {
     return {
-      // maker: {},
-      // priceService: {},
-      // cdpService: {},
+      minEth: 0,
       wethToPethRatio: 0,
       daiPrice: 0,
       priceFloor: 0,
@@ -268,9 +266,10 @@ export default {
     },
     risky(){
       const collRatio = this.collatRatio;
+      console.log(collRatio.toString()); // todo remove dev item
       if(toBigNumber(collRatio).gt(0)){
-        console.log(toBigNumber(collRatio).lte(200)); // todo remove dev item
-        return toBigNumber(collRatio).lte(200)
+        console.log(toBigNumber(collRatio).lte(2)); // todo remove dev item
+        return toBigNumber(collRatio).lte(2)
       }
       return false;
     }
