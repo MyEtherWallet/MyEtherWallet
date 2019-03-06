@@ -124,6 +124,7 @@ import BigNumber from 'bignumber.js';
 // import { Toast, Misc } from '@/helpers';
 import Maker from '@makerdao/dai';
 import { MIN_DEPOSIT, settings } from '../../config';
+import Arrow from '@/assets/images/etc/single-arrow.svg';
 
 const { MKR, DAI, ETH, WETH, PETH, USD_ETH, USD_MKR, USD_DAI } = Maker;
 
