@@ -5,154 +5,102 @@
       <div class="manage-container">
         <div class="content-container">
           <p class="cpd-title">{{ $t('dapps.cdpPortal') }}</p>
-          <p class="cdp-id">{{ $t('dapps.positionLabel') }} #4831</p>
-        </div>
-        <div class="manage-container-info-block">
-          <div class="info-label-one-left">
-            <p>{{ $t('dapps.liquidPrice') }} (ETH/USD)</p>
+          <div class="cdp-id">
             <p>
-              <span class="blue-bold">{{ liqPrice }}</span>
-              <span class="liq-usd"> USD</span>
+              {{ $t('dapps.currentPrice') }}:
+              <b>{{ ethPrice.toString() }}</b> USD
             </p>
           </div>
-          <div class="info-content-one-left">
-            <div class="info-content-one-inner-top">
-              <p>{{ $t('dapps.currentPrice') }}(ETH/USD)</p>
-              <p>
-                <b>{{ ethPrice.toString() }}</b> USD
-              </p>
-            </div>
-            <div class="info-content-one-inner-bottom">
-              <p>{{ $t('dapps.liquidationPenalty') }}</p>
-              <p>
-                <b>{{ displayPercentValue(liquidationPenalty) }}%</b>
-              </p>
-            </div>
-          </div>
-          <div class="info-label-one-right">
-            <p>{{ $t('dapps.collateralRatio') }}</p>
-            <p class="blue-bold">{{ displayPercentValue(collatRatio) }}%</p>
-          </div>
-          <div class="info-content-one-right">
-            <div class="info-content-one-inner-top">
-              <p>{{ $t('dapps.minimumRatio') }}</p>
-              <p>
-                <b>{{ displayPercentValue(liquidationRatio) }}%</b>
-              </p>
-            </div>
-            <div class="info-content-one-inner-bottom">
-              <p>{{ $t('dapps.stabilityFee') }}</p>
-              <p>
-                <b
-                  >{{
-                    displayFixedValue(displayPercentValue(stabilityFee))
-                  }}%</b
-                >
-              </p>
-            </div>
-          </div>
         </div>
-        <div class="manage-container-blocks">
-          <div class="label-one-left">
-            <p>{{ $t('dapps.ethCollateral') }}</p>
-          </div>
-          <div class="content-one-left">
-            <div class="content-one-inner-left">
-              <p>{{ $t('dapps.deposited') }}</p>
-              <p>
-                <b>{{ displayFixedValue(ethCollateral) }}</b> ETH
-              </p>
-              <p>
-                <b>{{ displayFixedValue(pethCollateral) }}</b> PETH /
-                <b>{{ displayFixedValue(usdCollateral, 2) }}</b> USD
-              </p>
-              <p>{{ $t('dapps.deposit') }}</p>
-            </div>
-            <div class="content-border">
-              <div class="Line-8"></div>
-            </div>
-            <div class="content-one-inner-right">
-              <p>{{ $t('dapps.maxWithDraw') }}</p>
-              <p>
-                <b>{{ displayFixedValue(maxWithDraw()) }}</b> ETH
-              </p>
-              <p><b>0.00</b> PETH / <b>0.00</b> USD</p>
-              <p>{{ $t('dapps.withdraw') }}</p>
-            </div>
-          </div>
+        <div v-if="!cdpDetailsLoaded">
+          Loading CDP Details
         </div>
-        <div class="manage-container-blocks">
-          <div class="label-one-left">
-            <p>{{ $t('dapps.daiPosition') }}</p>
-          </div>
-          <div class="content-one-left">
-            <div class="content-one-inner-left">
-              <p>{{ $t('dapps.generated') }}</p>
-              <p>
-                <b>{{ debtValue }}</b> DAI
-              </p>
-              <p>
-                <b>{{ displayFixedValue(debtValue, 2) }}</b> USD
-              </p>
-              <p>{{ $t('dapps.payBack') }}</p>
-            </div>
-            <div class="content-border">
-              <div class="Line-8"></div>
-            </div>
-            <div class="content-one-inner-right">
-              <p>{{ $t('dapps.maxAvailable') }}</p>
-              <p><b>0.00</b> ETH</p>
-              <p><b>0.00</b> USD</p>
-              <p>{{ $t('dapps.generate') }}</p>
-            </div>
-          </div>
-        </div>
+        <div v-if="cdpDetailsLoaded">
+          <div v-for="(cdp, idx) in cdps" :key="cdp + idx">
+            <!--availableCdps-->
+            <div class="manage-container-blocks">
+              <div class="label-one-left">
+                <div class="select-label">
+                  <p>Collateralized debt position #{{ cdp }}</p>
 
-        <!--      <label for="Collateral">Collateral</label>
-        <input id="Collateral" v-model="ethQty" type="number" />
-        <br />
-        <label for="Generate">Generate</label>
-        <input id="Generate" v-model="daiQty" type="number" />
-        <br />
-        <br />
-        <ul>
-          <li>
-            <span>pethCollateral: {{ pethCollateral }}</span>
-          </li>
-          <li>
-            <span>usdCollateral: {{ usdCollateral }}</span>
-          </li>
-          <li>
-            <span>ethCollateral: {{ ethCollateral }}</span>
-          </li>
-          <li>
-            <span>isSafe: {{ isSafe }}</span>
-          </li>
-          <li>
-            <span>getDebtValue: {{ debtValue }}</span>
-          </li>
-          <li>
-            <span>collatRatio: {{ collatRatio }}</span>
-          </li>
-          <li>
-            Deposited:
-            <ul>
-              <li>{{ ethCollateral }} ETH</li>
-              <li>{{ pethCollateral }} PETH / {{ usdCollateral }} USD</li>
-            </ul>
-          </li>
-          <li>
-            Max. available to withdraw:
-            <ul>
-              <li>{{ maxEthDraw }} ETH</li>
-              <li>{{ maxPethDraw }} PETH / {{ maxDaiDraw }} USD</li>
-            </ul>
-          </li>
-          <li>
-             -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;
-          </li>
-          <li>{{ pethCollateral }}</li>
-        </ul>-->
+                  <p>
+                    <span class="standard-button__green-border">
+                      <button class="the-button-box" @click="openManage(cdp)">
+                        Manage
+                      </button>
+                    </span>
+                  </p>
+                </div>
+              </div>
+              <div class="content-one-left">
+                <div class="content-one-inner-left">
+                  <p>{{ $t('dapps.deposited') }}</p>
+                  <p>
+                    <b>{{
+                      availableCdps[cdp]
+                        ? displayFixedValue(availableCdps[cdp].ethCollateral)
+                        : 0
+                    }}</b>
+                    ETH
+                  </p>
+                  <p>
+                    <b>{{
+                      availableCdps[cdp]
+                        ? displayFixedValue(availableCdps[cdp].pethCollateral)
+                        : 0
+                    }}</b>
+                    PETH /
+                    <b>{{
+                      availableCdps[cdp]
+                        ? displayFixedValue(availableCdps[cdp].usdCollateral, 2)
+                        : 0
+                    }}</b>
+                    USD
+                  </p>
+                  <br />
+                  <p>{{ $t('dapps.liquidPrice') }} (ETH/USD)</p>
+                  <p>
+                    <span class="blue-bold">{{
+                      availableCdps[cdp]
+                        ? displayFixedValue(availableCdps[cdp].liqPrice, 2)
+                        : 0
+                    }}</span>
+                    <span class="liq-usd"> USD</span>
+                  </p>
+                </div>
+                <div class="content-border">
+                  <div class="Line-8"></div>
+                </div>
+                <div class="content-one-inner-right">
+                  <p>{{ $t('dapps.generated') }}</p>
+                  <p>
+                    <b>{{
+                      availableCdps[cdp] ? availableCdps[cdp].debtValue : 0
+                    }}</b>
+                    DAI
+                  </p>
+                  <p>
+                    <b>{{
+                      availableCdps[cdp]
+                        ? displayFixedValue(availableCdps[cdp].debtValue, 2)
+                        : 0
+                    }}</b>
+                    USD
+                  </p>
+                  <br />
+                  <p>{{ $t('dapps.collateralRatio') }}</p>
+                  <p class="blue-bold">
+                    {{
+                      availableCdps[cdp]
+                        ? displayPercentValue(availableCdps[cdp].collatRatio)
+                        : 0
+                    }}%
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -256,11 +204,21 @@ export default {
         return {};
       }
     },
-    cdps:{
+    cdps: {
       type: Array,
-      default: function(){
+      default: function() {
         return [];
       }
+    },
+    availableCdps: {
+      type: Object,
+      default: function() {
+        return {};
+      }
+    },
+    cdpDetailsLoaded: {
+      type: Boolean,
+      default: false
     },
     maker: {
       type: Object,
@@ -272,6 +230,7 @@ export default {
   data() {
     return {
       loaded: false,
+      // cdpDetailsLoaded: false,
       serverUrl: KOVAN_SERVER_URL,
       wethToPethRatio: 0,
       daiPrice: 0,
@@ -279,6 +238,7 @@ export default {
       ethQty: 0,
       daiQty: 0,
       selectedCdp: '',
+      // availableCdps: {},
       cdp: {},
       step: 1,
       eth: toBigNumber(0),
@@ -300,12 +260,22 @@ export default {
     };
   },
   watch: {
-    makerActive() {
-      if (!this.loaded) {
-        // const cdpId = 5168;
-        const cdpId = 5178;
-        this.getCdp(cdpId);
-      }
+    async cdps() {
+      // console.log('cdps'); // todo remove dev item
+      // const cdpId = 5178;
+      // for (let i = 0; i < this.cdps.length; i++) {
+      //   this.availableCdps[this.cdps[i]] = await this.getCdp(this.cdps[i]);
+      //   console.log(this.availableCdps); // todo remove dev item
+      // }
+      // if (!this.loaded) {
+      //   if (this.makerActive) {
+      //     this.loaded = true;
+      //     const cdpId = 5178;
+      //     for (let i = 0; i < this.cdps.length; i++) {
+      //       this.availableCdps[this.cdps[i]] = await this.getCdp(this.cdps[i]);
+      //     }
+      //   }
+      // }
     }
   },
   computed: {
@@ -338,13 +308,21 @@ export default {
     }
   },
   async mounted() {
-    if (this.makerActive) {
-      this.loaded = true;
-      const cdpId = 5178;
-      this.getCdp(cdpId);
+    if (!this.makerActive) {
+      this.$router.push({
+        name: 'Maker'
+      });
     }
   },
   methods: {
+    openManage(cdp) {
+      this.$router.push({
+        name: 'manage',
+        params: {
+          cdpId: cdp
+        }
+      });
+    },
     displayPercentValue(raw) {
       if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);
       return raw.times(100).toString();
@@ -359,39 +337,41 @@ export default {
       return tl.minus(tr).div(this.ethPrice);
     },
     async getCdp(id) {
-      this.cdp = await this.maker.getCdp(id);
-      const liqPrice = await this.cdp.getLiquidationPrice();
-      this.liqPrice = liqPrice.toBigNumber().toFixed(2);
-      this.isSafe = await this.cdp.isSafe();
-      this.debtValue = (await this.cdp.getDebtValue()).toBigNumber();
-      console.log(this.debtValue.toString()); // todo remove dev item
-      this.collatRatio = await this.cdp.getCollateralizationRatio();
-      this.ethCollateral = (await this.cdp.getCollateralValue()).toBigNumber();
-      this.pethCollateral = (await this.cdp.getCollateralValue(
+      const cdpDetails = {};
+      const cdp = await this.maker.getCdp(id);
+      const liqPrice = await cdp.getLiquidationPrice();
+      cdpDetails.liqPrice = liqPrice.toBigNumber().toFixed(2);
+      cdpDetails.isSafe = await cdp.isSafe();
+      cdpDetails.debtValue = (await cdp.getDebtValue()).toBigNumber();
+      console.log(cdpDetails.debtValue.toString()); // todo remove dev item
+      cdpDetails.collatRatio = await cdp.getCollateralizationRatio();
+      cdpDetails.ethCollateral = (await cdp.getCollateralValue()).toBigNumber();
+      cdpDetails.pethCollateral = (await cdp.getCollateralValue(
         Maker.PETH
       )).toBigNumber();
-      this.usdCollateral = (await this.cdp.getCollateralValue(
+      cdpDetails.usdCollateral = (await cdp.getCollateralValue(
         Maker.USD
       )).toBigNumber();
-      this.maxEthDraw = bnOver(
+      cdpDetails.maxEthDraw = bnOver(
         this.liquidationRatio,
-        this.usdCollateral,
+        cdpDetails.usdCollateral,
         this.ethPrice
       ).toString();
-      this.maxPethDraw = bnOver(
+      cdpDetails.maxPethDraw = bnOver(
         this.pethPrice,
-        this.pethCollateral,
+        cdpDetails.pethCollateral,
         this.liquidationRatio
       ).toString();
-      this.maxDaiDraw = bnOver(
+      cdpDetails.maxDaiDraw = bnOver(
         this.ethPrice,
-        this.ethCollateral,
+        cdpDetails.ethCollateral,
         this.liquidationRatio
       )
-        .minus(this.debtValue)
+        .minus(cdpDetails.debtValue)
         .toString();
 
-      console.log(this.maxDaiDraw.toString()); // todo remove dev item
+      console.log(cdpDetails.maxDaiDraw.toString()); // todo remove dev item
+      return cdpDetails;
     }
   }
 };
