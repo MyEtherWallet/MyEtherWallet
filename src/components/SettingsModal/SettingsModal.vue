@@ -392,7 +392,7 @@ export default {
         notifications: notifications
       };
 
-      this.fileName = `mew-export-${time}.json`;
+      this.fileName = `xow-export-${time}.json`;
 
       const file = new Blob([JSON.stringify(exportableObject)], {
         type: 'application/json'
