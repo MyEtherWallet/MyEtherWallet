@@ -5,7 +5,7 @@
       <div class="manage-container">
         <div class="content-container">
           <p class="cpd-title">{{ $t('dapps.cdpPortal') }}</p>
-          <p class="cdp-id">{{ $t('dapps.positionLabel') }} #4831</p>
+          <p class="cdp-id">{{ $t('dapps.positionLabel') }} #{{ cdpId }}</p>
         </div>
         <div class="manage-container-info-block">
           <div class="info-label-one-left">
@@ -107,52 +107,6 @@
             </div>
           </div>
         </div>
-
-        <!--      <label for="Collateral">Collateral</label>
-        <input id="Collateral" v-model="ethQty" type="number" />
-        <br />
-        <label for="Generate">Generate</label>
-        <input id="Generate" v-model="daiQty" type="number" />
-        <br />
-        <br />
-        <ul>
-          <li>
-            <span>pethCollateral: {{ pethCollateral }}</span>
-          </li>
-          <li>
-            <span>usdCollateral: {{ usdCollateral }}</span>
-          </li>
-          <li>
-            <span>ethCollateral: {{ ethCollateral }}</span>
-          </li>
-          <li>
-            <span>isSafe: {{ isSafe }}</span>
-          </li>
-          <li>
-            <span>getDebtValue: {{ debtValue }}</span>
-          </li>
-          <li>
-            <span>collatRatio: {{ collatRatio }}</span>
-          </li>
-          <li>
-            Deposited:
-            <ul>
-              <li>{{ ethCollateral }} ETH</li>
-              <li>{{ pethCollateral }} PETH / {{ usdCollateral }} USD</li>
-            </ul>
-          </li>
-          <li>
-            Max. available to withdraw:
-            <ul>
-              <li>{{ maxEthDraw }} ETH</li>
-              <li>{{ maxPethDraw }} PETH / {{ maxDaiDraw }} USD</li>
-            </ul>
-          </li>
-          <li>
-             -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;
-          </li>
-          <li>{{ pethCollateral }}</li>
-        </ul>-->
       </div>
     </div>
   </div>
@@ -190,10 +144,6 @@ export default {
     blockie: Blockie
   },
   props: {
-    cpdId: {
-      type: String,
-      default: ''
-    },
     tokensWithBalance: {
       type: Array,
       default: function() {
@@ -260,10 +210,16 @@ export default {
         return {};
       }
     },
-    cdps:{
+    cdps: {
       type: Array,
-      default: function(){
+      default: function() {
         return [];
+      }
+    },
+    availableCdps: {
+      type: Object,
+      default: function() {
+        return {};
       }
     },
     maker: {
@@ -283,6 +239,7 @@ export default {
       ethQty: 0,
       daiQty: 0,
       selectedCdp: '',
+      cdpId: '',
       cdp: {},
       step: 1,
       eth: toBigNumber(0),
@@ -302,15 +259,6 @@ export default {
       maxPethDraw: toBigNumber(0),
       maxEthDraw: toBigNumber(0)
     };
-  },
-  watch: {
-    makerActive() {
-      if (!this.loaded) {
-        // const cdpId = 5168;
-        const cdpId = 5178;
-        this.getCdp(cdpId);
-      }
-    }
   },
   computed: {
     ...mapGetters({
@@ -342,10 +290,15 @@ export default {
     }
   },
   async mounted() {
+    this.cdpId = this.$route.params.cdpId;
     if (this.makerActive) {
       this.loaded = true;
-      const cdpId = 5178;
-      this.getCdp(cdpId);
+      // const cdpId = 5178;
+      if (this.cdpId) {
+        this.setInitialValues(this.availableCdps[this.cdpId]);
+        const num = toBigNumber(this.cdpId).toNumber();
+        this.getCdp(num);
+      }
     }
   },
   methods: {
@@ -361,6 +314,18 @@ export default {
       const tl = this.ethPrice.times(this.ethCollateral);
       const tr = this.debtValue.times(this.liquidationRatio);
       return tl.minus(tr).div(this.ethPrice);
+    },
+    setInitialValues(fromParent) {
+      this.liqPrice = fromParent.liqPrice;
+      this.isSafe = fromParent.isSafe;
+      this.debtValue = fromParent.debtValue;
+      this.collatRatio = fromParent.collatRatio;
+      this.ethCollateral = fromParent.ethCollateral;
+      this.pethCollateral = fromParent.pethCollateral;
+      this.usdCollateral = fromParent.usdCollateral;
+      this.maxEthDraw = fromParent.maxEthDraw;
+      this.maxPethDraw = fromParent.maxPethDraw;
+      this.maxDaiDraw = fromParent.maxDaiDraw;
     },
     async getCdp(id) {
       this.cdp = await this.maker.getCdp(id);

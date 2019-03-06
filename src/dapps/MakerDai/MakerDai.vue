@@ -17,6 +17,9 @@
       :maker="maker"
       :price-service="priceService"
       :cdp-service="cdpService"
+      :cdps="cdps"
+      :available-cdps="availableCdps"
+      :cdp-details-loaded="cdpDetailsLoaded"
     />
   </div>
 </template>
@@ -88,6 +91,8 @@ export default {
       ethQty: 0,
       daiQty: 0,
       cdps: [],
+      availableCdps: {},
+      cdpDetailsLoaded: false,
       makerVars: {
         step: 1,
         eth: toBigNumber(0),
@@ -191,6 +196,16 @@ export default {
       searchAddress //proxy
     );
     this.cdps = cdps;
+    if (this.cdps.length > 0) {
+      this.gotoImport();
+      for (let i = 0; i < this.cdps.length; i++) {
+        this.availableCdps[this.cdps[i]] = await this.getCdp(this.cdps[i]);
+        console.log(this.availableCdps); // todo remove dev item
+      }
+      this.cdpDetailsLoaded = true;
+    } else {
+      this.gotoCreate();
+    }
     console.log('cdps', cdps); // todo remove dev item
   },
   methods: {
@@ -234,6 +249,43 @@ export default {
           return i;
         }
       }
+    },
+    async getCdp(id) {
+      const cdpDetails = {};
+      const cdp = await this.maker.getCdp(id);
+      const liqPrice = await cdp.getLiquidationPrice();
+      cdpDetails.liqPrice = liqPrice.toBigNumber().toFixed(2);
+      cdpDetails.isSafe = await cdp.isSafe();
+      cdpDetails.debtValue = (await cdp.getDebtValue()).toBigNumber();
+      console.log(cdpDetails.debtValue.toString()); // todo remove dev item
+      cdpDetails.collatRatio = await cdp.getCollateralizationRatio();
+      cdpDetails.ethCollateral = (await cdp.getCollateralValue()).toBigNumber();
+      cdpDetails.pethCollateral = (await cdp.getCollateralValue(
+        Maker.PETH
+      )).toBigNumber();
+      cdpDetails.usdCollateral = (await cdp.getCollateralValue(
+        Maker.USD
+      )).toBigNumber();
+      cdpDetails.maxEthDraw = bnOver(
+        this.liquidationRatio,
+        cdpDetails.usdCollateral,
+        this.ethPrice
+      ).toString();
+      cdpDetails.maxPethDraw = bnOver(
+        this.pethPrice,
+        cdpDetails.pethCollateral,
+        this.liquidationRatio
+      ).toString();
+      cdpDetails.maxDaiDraw = bnOver(
+        this.ethPrice,
+        cdpDetails.ethCollateral,
+        this.liquidationRatio
+      )
+        .minus(cdpDetails.debtValue)
+        .toString();
+
+      console.log(cdpDetails.maxDaiDraw.toString()); // todo remove dev item
+      return cdpDetails;
     }
   }
 };
