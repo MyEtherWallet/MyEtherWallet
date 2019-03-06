@@ -1,18 +1,17 @@
 @import '~@/scss/GlobalVariables';
 
-
 .currency-picker-container {
   margin-bottom: 5px;
   min-width: 150px;
   position: relative;
 }
 
-.top-title{
+.top-title {
   padding-left: 10px;
   padding-bottom: 10px;
 }
 
-.red-border{
+.red-border {
   border: red 1px solid !important;
 }
 
@@ -34,7 +33,6 @@
     display: flex;
     align-items: center;
   }
-
 }
 
 %dropdown-text-container-base {
@@ -111,7 +109,7 @@
 
     .arrow {
       grid-column: col 6 / span 2;
-      grid-row: row /span 2;
+      grid-row: row / span 2;
     }
 
     .right-top {
@@ -129,7 +127,7 @@
       display: flex;
       flex-direction: column;
     }
-    .cdp-info-entry{
+    .cdp-info-entry {
       justify-content: space-between;
       position: relative;
       padding-top: 20px;
@@ -174,10 +172,6 @@
           }
         }
       }
-
     }
-
   }
-
-
 }

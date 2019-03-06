@@ -142,7 +142,6 @@ export default {
     return {
       localGasPrice: '10',
       balance: 0,
-      blockNumber: 0,
       isOnTop: true,
       isMenuOpen: false,
       isHomePage: true,
@@ -153,7 +152,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      account: 'account'
+      account: 'account',
+      blockNumber: 'blockNumber'
     })
   },
   watch: {

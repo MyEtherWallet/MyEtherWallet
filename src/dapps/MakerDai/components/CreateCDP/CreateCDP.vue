@@ -57,7 +57,7 @@
           <input
             v-model="daiQty"
             :class="[
-            risky ? 'red-border' : '',
+              risky ? 'red-border' : '',
               'currency-picker-container',
               'dropdown-text-container',
               'dropdown-container'
@@ -72,7 +72,7 @@
         <ul>
           <li>
             <p>{{ $t('dapps.minEthReq') }}</p>
-            <p>{{minEth}} ETH</p>
+            <p>{{ minEth }} ETH</p>
           </li>
           <li>
             <p>{{ $t('dapps.liquidPrice') }}</p>
