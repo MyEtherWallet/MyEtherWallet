@@ -1,0 +1,32 @@
+@import '~@/scss/GlobalVariables';
+.content-container {
+  align-items: center;
+  display: flex;
+  justify-content: space-around;
+  padding: 30px;
+  min-height: 350px;
+
+  .finney-img {
+    flex: 60;
+  }
+
+  .finney-text-container {
+    display: flex;
+    flex: auto;
+    flex-direction: column;
+    justify-content: space-around;
+    min-height: inherit;
+
+    .qr-container {
+      flex: auto;
+    }
+
+    span {
+      font-size: 20px;
+    }
+
+    h3 {
+      font-size: 35px;
+    }
+  }
+}

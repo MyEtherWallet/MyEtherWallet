@@ -7,6 +7,7 @@
     centered
   >
     <div class="modal-content-container">
+      <finney-modal ref="finney" />
       <div class="d-block text-center">
         <b-alert :show="mayNotBeAttached" fade variant="warning"
           >Please make sure your device is connected</b-alert
@@ -43,6 +44,7 @@
 </template>
 
 <script>
+import FinneyModal from '../FinneyModal';
 import CustomerSupport from '@/components/CustomerSupport';
 import ledger from '@/assets/images/icons/button-ledger.png';
 import ledgerHov from '@/assets/images/icons/button-ledger-hover.png';
@@ -68,7 +70,8 @@ import {
 export default {
   components: {
     'customer-support': CustomerSupport,
-    'wallet-option': WalletOption
+    'wallet-option': WalletOption,
+    'finney-modal': FinneyModal
   },
   props: {
     networkAndAddressOpen: {
@@ -129,6 +132,14 @@ export default {
           imgPath: keepkey,
           imgHoverPath: keepkeyHov,
           text: 'KeepKey',
+          disabled: false,
+          msg: ''
+        },
+        {
+          name: 'Finney',
+          imgPath: keepkey,
+          imgHoverPath: keepkeyHov,
+          text: 'Finney',
           disabled: false,
           msg: ''
         }
@@ -229,7 +240,9 @@ export default {
       }
     },
     select(ref) {
-      if (this.selected !== ref) {
+      if (ref.toLowerCase() === 'finney') {
+        this.$refs.finney.$refs.finneyModal.show();
+      } else if (this.selected !== ref) {
         this.selected = ref;
       } else {
         this.selected = '';
