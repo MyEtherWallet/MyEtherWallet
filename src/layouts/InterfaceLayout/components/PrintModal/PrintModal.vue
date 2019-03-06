@@ -71,11 +71,6 @@
             width="100%"
             class="floating-img"
           />
-          <img
-            src="~@/assets/images/etc/spaceman.png"
-            width="100%"
-            class="floating-spaceman"
-          />
         </div>
         <div class="between">
           <div class="text">
