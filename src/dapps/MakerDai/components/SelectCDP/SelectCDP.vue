@@ -43,7 +43,11 @@
             <div class="info-content-one-inner-bottom">
               <p>{{ $t('dapps.stabilityFee') }}</p>
               <p>
-                <b>{{ displayFixedValue(displayPercentValue(stabilityFee)) }}%</b>
+                <b
+                  >{{
+                    displayFixedValue(displayPercentValue(stabilityFee))
+                  }}%</b
+                >
               </p>
             </div>
           </div>
@@ -84,8 +88,12 @@
           <div class="content-one-left">
             <div class="content-one-inner-left">
               <p>{{ $t('dapps.generated') }}</p>
-              <p><b>{{debtValue}}</b> DAI</p>
-              <p><b>{{displayFixedValue(debtValue, 2)}}</b> USD</p>
+              <p>
+                <b>{{ debtValue }}</b> DAI
+              </p>
+              <p>
+                <b>{{ displayFixedValue(debtValue, 2) }}</b> USD
+              </p>
               <p>{{ $t('dapps.payBack') }}</p>
             </div>
             <div class="content-border">

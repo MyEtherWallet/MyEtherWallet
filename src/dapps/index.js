@@ -4,6 +4,8 @@ import registerDomain from '@/assets/images/icons/domain.svg';
 import registerDomainHov from '@/assets/images/icons/domain-hov.svg';
 import secureTransaction from '@/assets/images/icons/button-key-hover.svg';
 import secureTransactionHov from '@/assets/images/icons/button-key.svg';
+import scheduleTransaction from '@/assets/images/icons/eac.svg';
+import scheduleTransactionHov from '@/assets/images/icons/eac-hov.svg';
 import { ETH, GOERLI, ROP, RIN, KOV } from '@/networks/types';
 
 const dapps = {
@@ -30,6 +32,15 @@ const dapps = {
     title: 'dapps.safesend_title',
     desc: 'dapps.safesend_desc',
     supportedNetworks: [ETH.name]
+  },
+  scheduleTransaction: {
+    route: '/interface/dapps/schedule-transaction',
+    icon: scheduleTransaction,
+    iconDisabled: scheduleTransactionHov,
+    title: 'Schedule a transaction',
+    desc:
+      'Schedule a transaction using the decentralized Ethereum Alarm Clock protocol',
+    supportedNetworks: [ETH.name, ROP.name, KOV.name]
   },
   maker: {
     route: '/interface/dapps/maker-dai',

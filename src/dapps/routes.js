@@ -7,6 +7,7 @@ const routes = {
   secureTransaction: secureTransactionRoutes,
   registerDomain: registerDomainRoutes,
   buySubDomain: buySubDomainRoutes,
+  scheduleTransaction: scheduleTransactionRoutes,
   makerDaiRoutes: makerDaiRoutes
 };
 
