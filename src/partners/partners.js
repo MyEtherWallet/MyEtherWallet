@@ -106,6 +106,8 @@ export default class SwapProviders {
     });
   }
 
+  // Note: Seems to not always float user held tokens to the top??
+  // Does in general, but have observed some instances where it did not.
   optionSorting(array) {
     const tokens = [...this.ownedTokenList];
     const tokenNameMap = tokens

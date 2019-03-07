@@ -11,6 +11,7 @@ import {
   MAX_DEST_AMOUNT,
   MIN_RATE_BUFFER,
   defaultValues,
+  specialGasLimits,
   KyberCurrencies,
   kyberAddressFallback,
   kyberNetworkABI,
@@ -31,6 +32,7 @@ export default class Kyber {
     this.getRateForUnit =
       typeof props.getRateForUnit === 'boolean' ? props.getRateForUnit : false;
     this.hasRates = 0;
+    this.specialGasLimits = specialGasLimits;
     this.tradeGasLimit = defaultValues.tradeGasLimit;
     this.tokenToTokenGasLimit = defaultValues.tokenToTokenGasLimit;
     this.tokenApprovalGas = defaultValues.tokenApprovalGasLimit;
@@ -398,6 +400,15 @@ export default class Kyber {
       .toString();
   }
 
+  getGeneralGasLimits(fromCurrency, toCurrency) {
+    if (this.specialGasLimits[toCurrency]) {
+      return this.specialGasLimits[toCurrency];
+    } else if (this.isTokenToToken(fromCurrency, toCurrency)) {
+      return this.tokenToTokenGasLimit;
+    }
+    return this.tradeGasLimit;
+  }
+
   async getTradeData(
     { fromCurrency, toCurrency, fromValueWei, toAddress },
     minRateWei
@@ -419,9 +430,7 @@ export default class Kyber {
       value: Object.values(networkSymbols).includes(fromCurrency)
         ? fromValueWei
         : 0,
-      gas: this.isTokenToToken(fromCurrency, toCurrency)
-        ? this.tokenToTokenGasLimit
-        : this.tradeGasLimit,
+      gas: this.getGeneralGasLimits(fromCurrency, toCurrency),
       data
     };
   }
