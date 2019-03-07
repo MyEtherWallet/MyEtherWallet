@@ -439,7 +439,7 @@ export default {
           .then(balance => {
             account.balance = balance;
           })
-          .catch(e =>{
+          .catch(e => {
             Toast.responseHandler(e, Toast.ERROR);
           });
       });
