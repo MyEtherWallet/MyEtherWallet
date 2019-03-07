@@ -332,9 +332,10 @@ export default {
         this.selectedCoinType.symbol === this.network.type.name
           ? 18
           : this.selectedCoinType.decimals;
-      this.toAmt = new BigNumber(e.target.value)
-        .decimalPlaces(decimals)
-        .toFixed();
+      this.toAmt =
+        e.target.valueAsNumber < 0 || isNaN(e.target.valueAsNumber)
+          ? 0
+          : new BigNumber(e.target.value).decimalPlaces(decimals).toFixed();
       e.target.value = this.toAmt;
     }, 300),
     async createDataHex(amount, address, currency) {
