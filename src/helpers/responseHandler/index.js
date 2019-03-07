@@ -29,7 +29,6 @@ const responseHandler = (err, expected, options) => {
     });
     return err;
   }
-  console.log('expected: ', expected, 'err: ', err); // todo remove dev item
   Sentry.captureException(err);
   return;
 };
