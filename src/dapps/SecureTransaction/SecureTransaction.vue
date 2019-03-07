@@ -193,7 +193,8 @@ import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
 import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
-import utils from 'web3-utils';
+import { fromWei } from 'web3-utils';
+import _ from 'underscore';
 import { Toast, Misc } from '@/helpers';
 
 export default {
@@ -251,7 +252,7 @@ export default {
       );
     },
     transactionFee() {
-      return this.web3.utils.fromWei(
+      return fromWei(
         new BigNumber(this.gasAmount)
           .times(CoralConfig.gasLimitSuggestion)
           .toFixed(0),
@@ -267,7 +268,7 @@ export default {
     this.web3.eth
       .getBalance(coinbase)
       .then(res => {
-        this.balance = this.web3.utils.fromWei(res, 'ether');
+        this.balance = fromWei(res, 'ether');
         this.$store.dispatch('setAccountBalance', res);
       })
       .catch(err => {
@@ -289,7 +290,7 @@ export default {
     this.gasAmount = this.gasPrice;
   },
   methods: {
-    debouncedAmount: utils._.debounce(function(e) {
+    debouncedAmount: _.debounce(function(e) {
       this.amount = e.target.value;
       if (this.validAmount) this.getSafeSendFee();
     }, 501),

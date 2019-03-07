@@ -64,6 +64,7 @@ import { mapGetters } from 'vuex';
 import _ from 'underscore';
 import StandardButton from '@/components/Buttons/StandardButton';
 import { Toast } from '@/helpers';
+import { fromWei, sha3 } from 'web3-utils';
 
 export default {
   components: {

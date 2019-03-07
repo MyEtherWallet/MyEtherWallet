@@ -1,4 +1,4 @@
-import { sha3, toHex } from 'web3-utils';
+import { sha3 } from 'web3-utils';
 import { toPayload } from './jsonrpc';
 import EthCalls from '../web3Calls';
 import store from 'store';
@@ -10,14 +10,14 @@ export default async ({ payload, requestManager }, res, next) => {
   const ethCalls = EthCalls(requestManager);
   const addr = payload.params[0];
   let cached = {};
-  if (store.get(utils.sha3(addr)) === undefined) {
+  if (store.get(sha3(addr)) === undefined) {
     cached = {
       nonce: '0x00',
       timestamp: 0
     };
-    store.set(utils.sha3(addr), cached);
+    store.set(sha3(addr), cached);
   } else {
-    cached = store.get(utils.sha3(addr));
+    cached = store.get(sha3(addr));
   }
   const timeDiff =
     Math.round((new Date().getTime() - cached.timestamp) / 1000) / 60;
@@ -36,7 +36,7 @@ export default async ({ payload, requestManager }, res, next) => {
         timestamp: +new Date()
       };
     }
-    store.set(utils.sha3(addr), cached);
+    store.set(sha3(addr), cached);
   }
   res(null, toPayload(payload.id, cached.nonce));
 };

@@ -333,7 +333,7 @@ import ethTx from 'ethereumjs-tx';
 import { mapGetters } from 'vuex';
 import Misc from '@/helpers/misc';
 import BigNumber from 'bignumber.js';
-import web3Utils from 'web3-utils';
+import { fromWei, toWei } from 'web3-utils';
 import * as networkTypes from '@/networks/types';
 
 import TitleTextContentsLayout from '@/layouts/InformationPages/Components/TitleTextContentsLayout';
@@ -548,15 +548,15 @@ export default {
     },
     toEth(val) {
       if (!val || isNaN(val)) return 0;
-      return web3Utils.fromWei(new BigNumber(val).toFixed(), 'ether');
+      return fromWei(new BigNumber(val).toFixed(), 'ether');
     },
     toWei(val) {
       if (!val) return 0;
-      return web3Utils.toWei(new BigNumber(val).toFixed(), 'gwei');
+      return toWei(new BigNumber(val).toFixed(), 'gwei');
     },
     toGwei(val) {
       if (!val) return 0;
-      return web3Utils.fromWei(new BigNumber(val).toFixed(), 'gwei');
+      return fromWei(new BigNumber(val).toFixed(), 'gwei');
     },
     dateTimeDisplay(unixTimeStamp) {
       return new Date(unixTimeStamp).toString();

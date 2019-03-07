@@ -1,5 +1,5 @@
 import unit from 'ethjs-unit';
-import utils from 'web3-utils';
+import { sha3 } from 'web3-utils';
 import EthCalls from '../web3Calls';
 import { WEB3_WALLET } from '../../bip44/walletTypes';
 import EventNames from '../events';
@@ -61,10 +61,10 @@ export default async (
             .once('transactionHash', hash => {
               if (store.state.wallet !== null) {
                 const localStoredObj = locStore.get(
-                  utils.sha3(store.state.wallet.getChecksumAddressString())
+                  sha3(store.state.wallet.getChecksumAddressString())
                 );
                 locStore.set(
-                  utils.sha3(store.state.wallet.getChecksumAddressString()),
+                  sha3(store.state.wallet.getChecksumAddressString()),
                   {
                     nonce: Misc.sanitizeHex(
                       new BigNumber(localStoredObj.nonce).plus(1).toString(16)

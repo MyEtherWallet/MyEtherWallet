@@ -92,7 +92,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import Ens from 'ethereum-ens';
+import ENS from 'ethereum-ens';
 import WalletPasswordModal from '@/components/WalletPasswordModal';
 import EnterPinNumberModal from '@/components/EnterPinNumberModal';
 import NetworkAndAddressModal from '@/layouts/AccessWalletLayout/components/NetworkAndAddressModal';
@@ -115,7 +115,7 @@ import store from 'store';
 import TokenBalance from '@myetherwallet/eth-token-balance';
 import sortByBalance from '@/helpers/sortByBalance.js';
 import AddressQrcodeModal from '@/components/AddressQrcodeModal';
-import web3Utils from 'web3-utils';
+import _ from 'underscore';
 import {
   LedgerWallet,
   TrezorWallet,
@@ -132,7 +132,7 @@ import {
   KEEPKEY as KEEPKEY_TYPE,
   MNEMONIC as MNEMONIC_TYPE
 } from '@/wallets/bip44/walletTypes';
-import { sha3, fromWei, toBN } from 'web3-utils';
+import { fromWei } from 'web3-utils';
 export default {
   name: 'Interface',
   components: {
@@ -508,7 +508,7 @@ export default {
       clearInterval(this.pollNetwork);
       clearInterval(this.pollAddress);
     },
-    setupOnlineEnvironment: web3Utils._.debounce(function() {
+    setupOnlineEnvironment: _.debounce(function() {
       this.clearIntervals();
       if (store.get('customTokens') === undefined) {
         store.set('customTokens', {});
@@ -545,6 +545,10 @@ export default {
           })
           .on('data', headers => {
             this.blockNumber = headers.number;
+          })
+          .catch(() => {
+            subscription = setInterval(this.getBlock, 14000);
+            resolve(subscription);
           });
       });
     },

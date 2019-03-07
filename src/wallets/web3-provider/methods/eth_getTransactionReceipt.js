@@ -17,11 +17,13 @@ export default async ({ payload, requestManager }, res, next) => {
         timestamp: new Date().getTime(),
         receipt: JSON.stringify(receipt)
       };
+      console.log('MISS', JSON.stringify(receipt));
       res(null, toPayload(payload.id, receipt));
     } catch (e) {
       res(null, toPayload(payload.id, null));
     }
   } else {
+    console.log('HIT', memcache[txHash].receipt);
     res(
       null,
       toPayload(payload.id, JSON.parse(memcache[txHash].receipt) || null)

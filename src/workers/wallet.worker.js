@@ -1,4 +1,5 @@
-import { Wallet, Configs } from '@/helpers';
+import Wallet from 'ethereumjs-wallet';
+import Configs from '@/helpers/configs';
 
 const create = password => {
   const createdWallet = {};
@@ -16,7 +17,6 @@ const unlock = (file, password) => {
   Object.keys(file).forEach(key => {
     newFile[key.toLowerCase()] = file[key];
   });
-
   return Wallet.fromV3(newFile, password, true);
 };
 

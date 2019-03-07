@@ -9,7 +9,7 @@ const getSanitizedTx = tx => {
       );
 
     try {
-      tx = formatters.inputCallFormatter(tx);
+      tx = formatters.inputCallFormatter(tx, {});
       const transaction = tx;
       if (tx.to) transaction.to = tx.to;
       transaction.data = tx.data || '0x';

@@ -102,6 +102,7 @@ export default {
         worker.onerror = function(e) {
           e.preventDefault();
           self.spinner = false;
+          console.log(e);
           Toast.responseHandler(e, Toast.ERROR);
         };
       } else {

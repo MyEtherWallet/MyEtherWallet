@@ -101,7 +101,7 @@ import { mapGetters } from 'vuex';
 import { Toast } from '@/helpers';
 import InterfaceTokensModal from '../InterfaceTokensModal';
 import sortByBalance from '@/helpers/sortByBalance.js';
-import utils from 'web3-utils';
+import { toChecksumAddress } from '@/helpers/addressUtils';
 import * as networkTypes from '@/networks/types';
 
 export default {
@@ -133,7 +133,6 @@ export default {
       search: '',
       localTokens: [],
       customTokens: [],
-      util: utils,
       tokenExists: false
     };
   },
@@ -224,17 +223,11 @@ export default {
     },
     searchByAddr(addr) {
       const searchNetwork = this.localTokens.find(item => {
-        return (
-          utils.toChecksumAddress(item.address) ===
-          utils.toChecksumAddress(addr)
-        );
+        return toChecksumAddress(item.address) === toChecksumAddress(addr);
       });
 
       const searchCustom = this.customTokens.find(item => {
-        return (
-          utils.toChecksumAddress(item.address) ===
-          utils.toChecksumAddress(addr)
-        );
+        return toChecksumAddress(item.address) === toChecksumAddress(addr);
       });
 
       if (searchNetwork !== undefined || searchCustom !== undefined) {

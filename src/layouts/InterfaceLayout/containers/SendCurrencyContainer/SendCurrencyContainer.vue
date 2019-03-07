@@ -426,6 +426,7 @@ export default {
         const json = _tx.toJSON(true);
         json.from = coinbase;
         this.web3.eth.sendTransaction(json).catch(err => {
+          console.log(err);
           Toast.responseHandler(err, Toast.ERROR);
         });
       } catch (e) {

@@ -245,10 +245,10 @@
 import CustomerSupport from '@/components/CustomerSupport';
 import { mapGetters } from 'vuex';
 import { Misc, Toast } from '@/helpers';
-import web3utils from 'web3-utils';
 import BigNumber from 'bignumber.js';
 import Blockie from '@/components/Blockie';
 import { fromWei } from 'web3-utils';
+import _ from 'underscore';
 const MAX_ADDRESSES = 5;
 export default {
   components: {

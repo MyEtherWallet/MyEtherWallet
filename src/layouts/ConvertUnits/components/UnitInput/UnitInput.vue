@@ -42,7 +42,7 @@
 import { BigNumber } from 'bignumber.js';
 import { mapGetters } from 'vuex';
 import DropDownUnitSelector from '../DropDownUnitSelector';
-import utils from 'web3-utils';
+import * as ethjsUnit from 'ethjs-unit';
 
 export default {
   components: {
@@ -102,7 +102,7 @@ export default {
   methods: {
     getValueOfUnit(unit) {
       unit = unit ? unit.toLowerCase() : 'ether';
-      const unitValue = utils.unitMap[unit];
+      const unitValue = ethjsUnit.unitMap[unit];
       return new BigNumber(unitValue, 10);
     },
     convertFromTo(amt, from, to) {

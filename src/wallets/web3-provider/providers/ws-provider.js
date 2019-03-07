@@ -1,5 +1,4 @@
-import Web3WSProvider from './ws-web3-provider';
-import { Manager as Web3RequestManager } from 'web3-core-requestmanager';
+import { WebsocketProvider as Web3WSProvider } from 'web3-providers';
 import MiddleWare from '../middleware';
 import workerTimer from '@/helpers/webWorkerTimer';
 import {
@@ -41,40 +40,33 @@ class WSProvider {
       }
     };
     this.keepAliveTimer = workerTimer.setInterval(keepAlive, 5000);
-    const _this = this.wsProvider;
-    delete this.wsProvider['send'];
-    this.wsProvider.send = (payload, callback) => {
-      this.lastMessage = new Date().getTime();
-      if (_this.connection.readyState === _this.connection.CONNECTING) {
-        setTimeout(() => {
-          this.wsProvider.send(payload, callback);
-        }, 10);
-        return;
-      }
-      if (_this.connection.readyState !== _this.connection.OPEN) {
-        if (typeof _this.connection.onerror === 'function') {
-          _this.connection.onerror(new Error('connection not open'));
-        }
-        callback(new Error('connection not open'));
-        return;
-      }
-      const req = {
-        payload,
-        store,
-        requestManager: new Web3RequestManager(this.oWSProvider),
-        eventHub
-      };
-      const middleware = new MiddleWare();
-      middleware.use(ethSendTransaction);
-      middleware.use(ethSignTransaction);
-      middleware.use(ethSign);
-      middleware.use(ethAccounts);
-      middleware.use(ethGetTransactionCount);
-      middleware.use(ethCoinbase);
-      middleware.use(netVersion);
-      middleware.run(req, callback).then(() => {
-        _this.connection.send(JSON.stringify(payload));
-        _this._addResponseCallback(payload, callback);
+    delete this.wsProvider['sendPayload'];
+    this.wsProvider.sendPayload = payload => {
+      return new Promise((resolve, reject) => {
+        const callback = (err, res) => {
+          if (err) return reject(new Error(err));
+          return resolve(res);
+        };
+        const req = {
+          payload,
+          store,
+          requestManager: this.oWSProvider,
+          eventHub
+        };
+        const middleware = new MiddleWare();
+        middleware.use(ethSendTransaction);
+        middleware.use(ethSignTransaction);
+        middleware.use(ethSign);
+        middleware.use(ethAccounts);
+        middleware.use(ethGetTransactionCount);
+        middleware.use(ethCoinbase);
+        middleware.use(netVersion);
+        middleware.run(req, callback).then(() => {
+          this.oWSProvider
+            .sendPayload(payload)
+            .then(resolve)
+            .catch(reject);
+        });
       });
     };
     return this.wsProvider;
