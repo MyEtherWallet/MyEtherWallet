@@ -438,6 +438,9 @@ export default {
           .getBalance(account.account.getAddressString())
           .then(balance => {
             account.balance = balance;
+          })
+          .catch(e =>{
+            Toast.responseHandler(e, Toast.ERROR);
           });
       });
     }, 1000),

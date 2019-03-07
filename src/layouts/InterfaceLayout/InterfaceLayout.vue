@@ -446,7 +446,8 @@ export default {
           this.$store.dispatch('setAccountBalance', res);
         })
         .catch(e => {
-          Toast.responseHandler(e, false);
+          // Toast.responseHandler(e, false);
+          Toast.responseHandler(e, Toast.ERROR);
         });
     },
     checkWeb3WalletAddrChange() {
