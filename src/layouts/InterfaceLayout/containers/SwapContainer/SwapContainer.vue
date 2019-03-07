@@ -463,9 +463,18 @@ export default {
         return this.exitFromAddress !== '' && this.validExitAddress;
       }
       if (this.showRefundAddress) {
-        const validRefundAddress =
-          this.refundAddress === '' && this.validRefundAddress;
-        return validBaseToAddress && validRefundAddress;
+        if (
+          this.fromCurrency === this.baseCurrency ||
+          SwapProviders.isToken(this.fromCurrency)
+        ) {
+          const validRefundAddress =
+            this.refundAddress === '' && this.validRefundAddress;
+          return validBaseToAddress && validRefundAddress;
+        }
+        return SwapProviders.checkAddress(
+          this.refundAddress,
+          this.fromCurrency
+        );
       }
 
       return validBaseToAddress;

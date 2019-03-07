@@ -319,6 +319,6 @@ export default class SwapProviders {
         validAddress = false;
       }
     }
-    return validAddress
+    return validAddress;
   }
 }
