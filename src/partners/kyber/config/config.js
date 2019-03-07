@@ -41,7 +41,7 @@ const kyberBaseCurrency = 'ETH';
 
 const specialGasLimits = {
   DGX: 750000
-}
+};
 
 export {
   kyberBaseCurrency,
