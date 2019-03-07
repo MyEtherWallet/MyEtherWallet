@@ -394,6 +394,7 @@ export default class Kyber {
     const minRateWeiBN = new BigNumber(minRateWei);
     return minRateWeiBN
       .minus(minRateWeiBN.times(new BigNumber(MIN_RATE_BUFFER)))
+      .toFixed(0)
       .toString();
   }
 
