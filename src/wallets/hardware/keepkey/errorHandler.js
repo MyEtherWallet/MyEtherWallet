@@ -3,7 +3,9 @@ import Vue from 'vue';
 const ERRORS = {
   'No device selected.': 'keepkeyError.noDeviceSelected',
   'Invalid PIN': 'keepkeyError.invalidPin',
-  'Unable to claim interface.': 'keepKey.cantClaim'
+  'Unable to claim interface.': 'keepKey.cantClaim',
+  'WebUSB is not available in this browser. We recommend trying Chrome.':
+    'keepKey.browserNotSupported'
 };
 const WARNING = {};
 export default err => {
