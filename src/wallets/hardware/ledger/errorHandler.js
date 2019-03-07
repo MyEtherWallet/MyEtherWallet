@@ -17,7 +17,9 @@ const ERRORS = {
 };
 const WARNING = {
   'Ledger device: Condition of use not satisfied (denied by the user?) (0x6985)':
-    'ledgerError.deniedByUser0x6985'
+    'ledgerError.deniedByUser0x6985',
+  "U2F browser support is needed for Ledger. Please use Chrome, Opera or Firefox with a U2F extension. Also make sure you're on an HTTPS connection":
+    'ledgerError.unsupportedBrowserU2f'
 };
 
 export default err => {
