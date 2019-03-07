@@ -1,4 +1,6 @@
 import BigNumber from 'bignumber.js';
+import WAValidator from 'wallet-address-validator';
+import MAValidator from 'multicoin-address-validator';
 import { checkInvalidOrMissingValue, utils } from './helpers';
 import {
   BASE_CURRENCY,
@@ -304,5 +306,19 @@ export default class SwapProviders {
       return OtherCoins[coin].explorer;
     }
     return '';
+  }
+
+  static checkAddress(address, currency) {
+    let validAddress = false;
+    try {
+      validAddress = WAValidator.validate(address, currency);
+    } catch (e) {
+      try {
+        validAddress = MAValidator.validate(address, currency);
+      } catch (e) {
+        validAddress = false;
+      }
+    }
+    return validAddress
   }
 }
