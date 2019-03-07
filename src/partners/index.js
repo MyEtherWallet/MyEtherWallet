@@ -14,13 +14,14 @@ import {
   SimplexCurrencies,
   PROVIDER_NAME as simplex
 } from './simplex';
-import Swap from './partners';
+import SwapProviders from './partners';
 import {
   ERC20,
   networkSymbols,
   chainCurrencies,
   fiat,
   EthereumTokens,
+  OtherCoins,
   BASE_CURRENCY,
   MIN_SWAP_AMOUNT
 } from './partnersConfig';
@@ -53,7 +54,7 @@ const providerNames = {
 const supportedProviders = Object.values(providerNames);
 
 export {
-  Swap,
+  SwapProviders,
   providers,
   providerMap,
   supportedProviders,
@@ -72,6 +73,7 @@ export {
   chainCurrencies,
   fiat,
   EthereumTokens,
+  OtherCoins,
   ERC20,
   utils,
   bestRateForQuantity,

@@ -22,8 +22,8 @@
           </div>
           <div class="results-container">
             <div
-              v-for="item in sortedResults"
-              :key="domainName + item.domain"
+              v-for="(item, index) in sortedResults"
+              :key="domainName + item.domain + index"
               :class="[item.active ? '' : 'disabled', 'result-item']"
             >
               <span class="domain-name"
@@ -63,7 +63,8 @@ import BigNumber from 'bignumber.js';
 import { mapGetters } from 'vuex';
 import _ from 'underscore';
 import StandardButton from '@/components/Buttons/StandardButton';
-import { fromWei, sha3 } from 'web3-utils';
+import { Toast } from '@/helpers';
+
 export default {
   components: {
     'interface-bottom-text': InterfaceBottomText,
@@ -178,7 +179,9 @@ export default {
         value: item.price
       };
 
-      this.web3.eth.sendTransaction(raw);
+      this.web3.eth.sendTransaction(raw).catch(err => {
+        Toast.responseHandler(err, false);
+      });
     }
   }
 };

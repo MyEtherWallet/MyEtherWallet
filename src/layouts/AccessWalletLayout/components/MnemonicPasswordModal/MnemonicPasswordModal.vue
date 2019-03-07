@@ -46,6 +46,7 @@
 
 <script>
 import { MnemonicWallet } from '@/wallets';
+import { Toast } from '@/helpers';
 export default {
   props: {
     hardwareWalletOpen: {
@@ -80,9 +81,11 @@ export default {
           this.spinner = false;
           this.hardwareWalletOpen(wallet);
         })
-        .catch(_error => {
-          // eslint-disable-next-line no-console
-          console.error(_error); // todo replace with proper error
+        .catch(e => {
+          this.password = '';
+          this.spinner = false;
+          this.error = e;
+          Toast.responseHandler(e, Toast.ERROR);
         });
     },
     switchViewPassword() {

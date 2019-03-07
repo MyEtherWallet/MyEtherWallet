@@ -30,11 +30,7 @@
           >
             <div v-b-toggle.prevent="`accordion${idx}`" class="header">
               <div class="header-item">
-                <img
-                  :src="
-                    require(`@/assets/images/currency/${network.type.name.toLowerCase()}.svg`)
-                  "
-                />
+                <img :src="network.type.icon ? network.type.icon : ''" />
                 <div>
                   <p>
                     - {{ hexToNumberString(item.value) }}
@@ -53,11 +49,7 @@
                 <img src="~@/assets/images/icons/right-arrow.svg" />
               </div>
               <div class="header-item">
-                <img
-                  :src="
-                    require(`@/assets/images/currency/${network.type.name.toLowerCase()}.svg`)
-                  "
-                />
+                <img :src="network.type.icon ? network.type.icon : ''" />
                 <div>
                   <p>
                     + {{ hexToNumberString(item.value) }}
@@ -82,7 +74,7 @@
               <div class="body-item">
                 <span class="item-title">{{ $t('common.gasPrice') }}</span>
                 <span>
-                  {{ hexToNumberString(fromWei(item.gasPrice, 'gwei')) }}
+                  {{ web3.utils.fromWei(item.gasPrice, 'gwei') }}
                   Gwei
                 </span>
               </div>

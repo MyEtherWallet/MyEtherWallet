@@ -1,7 +1,9 @@
+const platform = require('platform');
 import normalise from '@/helpers/normalise';
 import nodeList from '@/networks';
 import { isAddress } from './addressUtils';
 import store from '@/store';
+import { uint, address, string, bytes, bool } from './solidityTypes';
 /* Accepts string, returns boolean */
 const isJson = str => {
   try {
@@ -11,6 +13,21 @@ const isJson = str => {
   }
 
   return true;
+};
+
+const browserName = () => {
+  if (window) return platform.name;
+  return undefined;
+};
+
+const browserOs = () => {
+  if (window) return platform.os;
+  return undefined;
+};
+
+const browserProduct = () => {
+  if (window) return platform.product;
+  return undefined;
 };
 
 const doesExist = val => val !== undefined && val !== null;
@@ -95,7 +112,7 @@ const reorderNetworks = () => {
   delete oldObject['ETH'];
   delete oldObject['RIN'];
   delete oldObject['ROP'];
-  return Object.assign(
+  const newObject = Object.assign(
     {},
     {
       ETH: nodeList['ETH'],
@@ -104,6 +121,34 @@ const reorderNetworks = () => {
       ...oldObject
     }
   );
+  for (const net in newObject) {
+    if (newObject[net].length === 0) delete newObject[net];
+  }
+  return newObject;
+};
+
+const solidityType = inputType => {
+  if (!inputType) inputType = '';
+  if (inputType.includes('[') && inputType.includes(']')) {
+    if (inputType.includes(uint))
+      return { type: 'string', solidityType: `${uint}[]` };
+    if (inputType.includes(address))
+      return { type: 'text', solidityType: `${address}[]` };
+    if (inputType.includes(string))
+      return { type: 'text', solidityType: `${string}[]` };
+    if (inputType.includes(bytes))
+      return { type: 'text', solidityType: `${bytes}[]` };
+    if (inputType.includes(bool))
+      return { type: 'string', solidityType: `${bool}[]` };
+    return { type: 'text', solidityType: `${string}[]` };
+  }
+  if (inputType.includes(uint)) return { type: 'number', solidityType: uint };
+  if (inputType.includes(address))
+    return { type: 'text', solidityType: address };
+  if (inputType.includes(string)) return { type: 'text', solidityType: string };
+  if (inputType.includes(bytes)) return { type: 'text', solidityType: bytes };
+  if (inputType.includes(bool)) return { type: 'radio', solidityType: bool };
+  return { type: 'text', solidityType: string };
 };
 
 const isDarklisted = addr => {
@@ -131,5 +176,9 @@ export default {
   validateHexString,
   scrollToTop,
   reorderNetworks,
-  isDarklisted
+  isDarklisted,
+  solidityType,
+  browserName,
+  browserOs,
+  browserProduct
 };

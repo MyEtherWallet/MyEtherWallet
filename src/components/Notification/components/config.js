@@ -13,28 +13,32 @@ const notificationHeaderLabels = {
   swap: 'header.swap',
   swapError: 'header.swap',
   transactionError: 'header.transaction',
-  transaction: 'header.transaction'
+  transaction: 'header.transaction',
+  contractCreation: 'header.contractCreation'
 };
 
 const listComponentMapping = {
   swap: 'swap-notification',
   swapError: 'swap-notification',
   transactionError: 'transaction-notification',
-  transaction: 'transaction-notification'
+  transaction: 'transaction-notification',
+  contractCreation: 'transaction-notification'
 };
 
 const detailComponentMapping = {
   swap: 'swap-details',
   swapError: 'swap-details',
   transactionError: 'transaction-details',
-  transaction: 'transaction-details'
+  transaction: 'transaction-details',
+  contractCreation: 'transaction-details'
 };
 
 const noticeStatusFields = {
   swap: 'swapStatus',
   swapError: 'swapStatus',
   transactionError: 'status',
-  transaction: 'status'
+  transaction: 'status',
+  contractCreation: 'status'
 };
 
 const notificationStatuses = {
@@ -47,7 +51,8 @@ const notificationType = {
   TRANSACTION: 'transaction',
   SWAP: 'swap',
   SWAP_ERROR: 'swapError',
-  ERROR: 'transactionError'
+  ERROR: 'transactionError',
+  CONTRACT_CREATION: 'contractCreation'
 };
 
 export {

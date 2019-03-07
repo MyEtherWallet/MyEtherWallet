@@ -11,6 +11,11 @@
   display: flex;
   align-items: center;
 
+  // Mobile
+  @media all and (max-width: $mobile-width) {
+    padding: 20px 20px;
+  }
+
   .menu-title-component {
     margin-right: 10px;
   }
@@ -27,6 +32,9 @@
 
   .padding-block {
     padding: 0 30px 20px 30px;
+    @media all and (max-width: $mobile-width) {
+      padding: 0 20px 20px 20px;
+    }
   }
 
   &.opened {

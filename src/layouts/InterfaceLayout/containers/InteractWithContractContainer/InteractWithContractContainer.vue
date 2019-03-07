@@ -10,7 +10,7 @@
             </h4>
             <div class="select-contract no-border">
               <currency-picker
-                :currency="network.type.contracts"
+                :currency="mergedContracts"
                 :token="false"
                 page="interactWContract"
                 @selectedCurrency="selectedContract"
@@ -44,9 +44,9 @@
             <h4>{{ $t('interface.abiJsonInt') }}</h4>
             <div class="copy-buttons">
               <span @click="deleteInput('abi')">{{ $t('common.clear') }}</span>
-              <span @click="copyToClipboard('abi')">
-                {{ $t('common.copy') }}
-              </span>
+              <span @click="copyToClipboard('abi')">{{
+                $t('common.copy')
+              }}</span>
             </div>
           </div>
         </div>
@@ -167,10 +167,10 @@
             />
           </div>
         </div>
-        <div v-show="selectedMethod.constant === false">
+        <div v-show="selectedMethod.payable">
           <div class="title-container">
             <div class="title">
-              <h4>{{ $t('common.value') }}:</h4>
+              <h4>{{ $t('common.value') }} in ETH:</h4>
             </div>
           </div>
           <input
@@ -181,13 +181,19 @@
             class="non-bool-input"
           />
         </div>
-        <div v-if="result !== ''">
+        <div v-if="selectedMethod.constant">
           <div class="title-container">
-            <div class="title"><h4>Result:</h4></div>
+            <div class="title">
+              <h4>Result:</h4>
+            </div>
           </div>
           <div class="result-inputs">
             <input
-              v-if="resType === 'string'"
+              v-if="
+                resType === 'string' ||
+                  resType === 'boolean' ||
+                  resType === 'number'
+              "
               v-model="result"
               type="text"
               name
@@ -204,9 +210,9 @@
                 :key="item.name + idx"
                 class="result-container"
               >
-                <label :name="item.name !== '' ? item.name : item.type + idx">
-                  {{ item.name !== '' ? item.name : item.type | capitalize }}
-                </label>
+                <label :name="item.name !== '' ? item.name : item.type + idx">{{
+                  item.name !== '' ? item.name : item.type | capitalize
+                }}</label>
                 <input
                   :name="item.name !== '' ? item.name : item.type + idx"
                   :value="result[idx]"
@@ -231,7 +237,9 @@
           <div
             v-if="
               selectedMethod.hasOwnProperty('inputs') &&
-                selectedMethod.inputs.length > 0
+                ((selectedMethod.constant &&
+                  selectedMethod.inputs.length > 0) ||
+                  !selectedMethod.constant)
             "
             :class="[
               allValid ? '' : 'disabled',
@@ -240,9 +248,9 @@
             ]"
             @click="write"
           >
-            <span v-show="!loading && !selectedMethod.constant">{{
-              $t('interface.write')
-            }}</span>
+            <span v-show="!loading && !selectedMethod.constant">
+              {{ $t('interface.write') }}
+            </span>
             <span v-show="!loading && selectedMethod.constant">{{
               $t('interface.read')
             }}</span>
@@ -264,10 +272,11 @@ import { mapGetters } from 'vuex';
 import CurrencyPicker from '../../components/CurrencyPicker';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
-import { Misc } from '@/helpers';
+import { Misc, Toast } from '@/helpers';
 import { isAddress } from '@/helpers/addressUtils';
-
+import { uint, address, string, bytes, bool } from '@/helpers/solidityTypes.js';
 import * as unit from 'ethjs-unit';
+import store from 'store';
 
 export default {
   components: {
@@ -295,6 +304,10 @@ export default {
       account: 'account',
       web3: 'web3'
     }),
+    mergedContracts() {
+      const customContracts = store.get('customContracts') || [];
+      return this.network.type.contracts.concat(customContracts);
+    },
     isValidAbi() {
       return Misc.isJson(this.abi);
     },
@@ -328,7 +341,14 @@ export default {
       const _contractArgs = [];
       if (this.selectedMethod) {
         this.selectedMethod.inputs.forEach(item => {
-          _contractArgs.push(this.inputs[item.name]);
+          if (item.type === 'bytes32[]') {
+            const parsedItem = this.formatInput(this.inputs[item.name]);
+            _contractArgs.push(parsedItem);
+          } else if (item.type === 'address') {
+            _contractArgs.push(this.inputs[item.name].toLowerCase());
+          } else {
+            _contractArgs.push(this.inputs[item.name]);
+          }
         });
       }
       return _contractArgs;
@@ -345,8 +365,40 @@ export default {
     }
   },
   methods: {
+    resetDefaults() {
+      this.abi = '';
+      this.address = '';
+      this.interact = false;
+      this.contractMethods = [];
+      this.selectedMethod = {};
+      this.result = '';
+      this.loading = false;
+      this.value = 0;
+      this.inputs = {};
+    },
     isValidInput(value, solidityType) {
       if (!value) value = '';
+      if (solidityType.includes('[') && solidityType.includes(']')) {
+        const values = [];
+        if (value[0] === '[') {
+          const strToArr =
+            value[0] === '[' ? value.substr(0, value.length - 1) : value;
+          strToArr.split(',').forEach(item => {
+            if (solidityType.includes(uint)) {
+              values.push(value !== '' && !isNaN(value));
+            } else if (solidityType.includes(address)) {
+              values.push(isAddress(value));
+            } else if (solidityType.includes(string)) {
+              values.push(isAddress(true));
+            } else if (solidityType.includes(bool)) {
+              values.push(typeof value === typeof true || value === '');
+            } else if (solidityType.includes(bytes)) {
+              values.push(Misc.validateHexString(item));
+            }
+          });
+        }
+        return !values.includes(false);
+      }
       if (solidityType === 'uint') return value != '' && !isNaN(value);
       if (solidityType === 'address') return isAddress(value);
       if (solidityType === 'string') return true;
@@ -356,20 +408,7 @@ export default {
         return typeof value == typeof true || value === '';
       return false;
     },
-    getType(inputType) {
-      if (!inputType) inputType = '';
-      if (inputType.includes('uint'))
-        return { type: 'number', solidityType: 'uint' };
-      if (inputType.includes('address'))
-        return { type: 'text', solidityType: 'address' };
-      if (inputType.includes('string'))
-        return { type: 'text', solidityType: 'string' };
-      if (inputType.includes('bytes'))
-        return { type: 'text', solidityType: 'bytes' };
-      if (inputType.includes('bool'))
-        return { type: 'radio', solidityType: 'bool' };
-      return { type: 'text', solidityType: 'string' };
-    },
+    getType: Misc.solidityType,
     selectedContract(selected) {
       if (selected.abi === '') {
         this.abi = '';
@@ -379,25 +418,39 @@ export default {
       this.address = selected.address;
     },
     selectedFunction(method) {
-      const contract = new this.web3.eth.Contract([method], this.address);
+      if (!method.hasOwnProperty('constant')) return;
+      const contract = new this.web3.eth.Contract(
+        [method],
+        this.address.toLowerCase()
+      );
       if (method.constant === true && method.inputs.length === 0) {
         contract.methods[method.name]()
-          .call({ from: this.account.address })
+          .call({ from: this.account.address.toLowerCase() })
           .then(res => {
             this.result = res;
           })
-          .catch(err => {
-            // eslint-disable-next-line
-            console.error(err); // todo replace with proper error
+          .catch(e => {
+            this.loading = false;
+            Toast.responseHandler(e, Toast.WARN);
           });
       } else {
         this.result = '';
       }
+      this.loading = false;
       this.selectedMethod = method;
       this.selectedMethod.inputs.forEach(input => {
         if (input.type === 'bool') {
           this.inputs[input.name] = false;
         }
+      });
+    },
+    formatInput(str) {
+      if (str[0] === '[') {
+        return str;
+      }
+      const newArr = str.split(',');
+      return newArr.map(function(item) {
+        return item.replace(' ', '');
       });
     },
     copyToClipboard(ref) {
@@ -416,58 +469,65 @@ export default {
             }
           });
           this.interact = true;
+          this.loading = false;
           break;
         default:
-          this.interact = false;
+          this.resetDefaults();
       }
     },
     async write() {
       const web3 = this.web3;
       const contract = new web3.eth.Contract(
         [this.selectedMethod],
-        this.address
+        this.address.toLowerCase()
       );
       this.loading = true;
       if (this.selectedMethod.constant === true) {
         contract.methods[this.selectedMethod.name](...this.contractArgs)
-          .call({ from: this.account.address })
+          .call({ from: this.account.address.toLowerCase() })
           .then(res => {
             this.result = res;
             this.loading = false;
           })
-          .catch(err => {
-            // eslint-disable-next-line
-            console.error(err); // todo replace with proper error
+          .catch(e => {
             this.loading = false;
+            Toast.responseHandler(e, false);
           });
       } else {
-        const nonce = await web3.eth.getTransactionCount(this.account.address);
+        const nonce = await web3.eth.getTransactionCount(
+          this.account.address.toLowerCase()
+        );
+        let errored = false;
         const gasLimit = await contract.methods[this.selectedMethod.name](
           ...this.contractArgs
         )
-          .estimateGas({ from: this.account.address })
+          .estimateGas({ from: this.account.address.toLowerCase() })
           .then(res => {
             return res;
           })
-          .catch(err => {
-            // eslint-disable-next-line
-            console.error(err);
+          .catch(e => {
+            Toast.responseHandler(e, Toast.ERROR);
+            errored = true;
           });
-        const data = contract.methods[this.selectedMethod.name](
-          ...this.contractArgs
-        ).encodeABI();
+        if (!errored) {
+          const data = contract.methods[this.selectedMethod.name](
+            ...this.contractArgs
+          ).encodeABI();
 
-        const raw = {
-          from: this.account.address,
-          gas: gasLimit,
-          nonce: nonce,
-          gasPrice: Number(unit.toWei(this.gasPrice, 'gwei')),
-          value: 0,
-          to: this.address,
-          data: data
-        };
-
-        await web3.eth.sendTransaction(raw);
+          const raw = {
+            from: this.account.address.toLowerCase(),
+            gas: gasLimit,
+            nonce: nonce,
+            gasPrice: Number(unit.toWei(this.gasPrice, 'gwei')),
+            value: 0,
+            to: this.address.toLowerCase(),
+            data: data
+          };
+          web3.eth.sendTransaction(raw).catch(err => {
+            this.loading = false;
+            Toast.responseHandler(err, Toast.ERROR);
+          });
+        }
       }
     }
   }

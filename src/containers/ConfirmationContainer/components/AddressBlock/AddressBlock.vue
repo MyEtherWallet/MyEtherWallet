@@ -2,8 +2,12 @@
   <div class="address-container">
     <div class="currency-container">
       <img
+        v-if="tokenSymbol !== ''"
         :src="require(`@/assets/images/currency/${lowerCaseCurrency}.svg`)"
       />
+      <div v-else class="icon-matcher">
+        <img :src="icon" />
+      </div>
       <p>
         <span class="currency-amt">
           {{ direction === 'from' ? '-' : '+' }}
@@ -35,8 +39,8 @@ export default {
       default: ''
     },
     value: {
-      type: Number,
-      default: 0
+      type: String,
+      default: ''
     },
     currency: {
       type: String,
@@ -51,6 +55,10 @@ export default {
       default: ''
     },
     tokenSymbol: {
+      type: String,
+      default: ''
+    },
+    icon: {
       type: String,
       default: ''
     }

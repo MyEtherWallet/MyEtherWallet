@@ -1,5 +1,13 @@
 @import '~@/scss/GlobalVariables';
 @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+  .modal-content {
+    padding: 20px;
+  }
+
+  .input-container {
+    margin-bottom: 20px;
+  }
+
   .private-key-form {
     display: flex;
     flex-direction: column;
@@ -8,7 +16,6 @@
       background-color: $background-color-1;
       border: 0;
       font-size: 14px;
-      margin-bottom: 40px;
       padding: 20px;
       width: 100%;
     }

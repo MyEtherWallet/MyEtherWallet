@@ -11,13 +11,20 @@ export default async ({ payload, requestManager }, res, next) => {
     (memcache[txHash] &&
       memcache[txHash].timestamp < new Date().getTime() - WAIT_TIME)
   ) {
-    const receipt = await ethCalls.getTransactionReceipt(txHash);
-    memcache[txHash] = {
-      timestamp: new Date().getTime(),
-      receipt
-    };
-    res(null, toPayload(payload.id, receipt));
+    try {
+      const receipt = await ethCalls.getTransactionReceipt(txHash);
+      memcache[txHash] = {
+        timestamp: new Date().getTime(),
+        receipt: JSON.stringify(receipt)
+      };
+      res(null, toPayload(payload.id, receipt));
+    } catch (e) {
+      res(null, toPayload(payload.id, null));
+    }
   } else {
-    res(null, toPayload(payload.id, memcache[txHash].receipt || null));
+    res(
+      null,
+      toPayload(payload.id, JSON.parse(memcache[txHash].receipt) || null)
+    );
   }
 };

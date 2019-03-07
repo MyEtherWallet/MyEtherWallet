@@ -21,6 +21,8 @@
             :hover-icon="item.imgHoverPath"
             :text="item.text"
             :name="item.name"
+            :disabled="item.disabled"
+            :tooltip-msg="item.msg"
           />
         </div>
       </div>
@@ -53,6 +55,8 @@ import trezorHov from '@/assets/images/icons/button-trezor-hover.png';
 import keepkey from '@/assets/images/icons/button-keepkey.png';
 import keepkeyHov from '@/assets/images/icons/button-keepkey-hover.png';
 import WalletOption from '../WalletOption';
+import { Toast, Misc } from '@/helpers';
+import { isSupported } from 'u2f-api';
 import {
   LedgerWallet,
   KeepkeyWallet,
@@ -79,62 +83,117 @@ export default {
     return {
       selected: '',
       mayNotBeAttached: false,
+      isU2FSupported: false,
       items: [
         {
           name: 'ledger',
           imgPath: ledger,
           imgHoverPath: ledgerHov,
-          text: 'Ledger'
+          text: 'Ledger',
+          disabled: false,
+          msg: ''
         },
         {
           name: 'bitbox',
           imgPath: bitbox,
           imgHoverPath: bitboxHov,
-          text: 'Digital Bitbox'
+          text: 'Digital Bitbox',
+          disabled: false,
+          msg: ''
         },
         {
           name: 'secalot',
           imgPath: secalot,
           imgHoverPath: secalotHov,
-          text: 'Secalot'
+          text: 'Secalot',
+          disabled: false,
+          msg: ''
         },
         {
           name: 'trezor',
           imgPath: trezor,
           imgHoverPath: trezorHov,
-          text: 'Trezor'
+          text: 'Trezor',
+          disabled:
+            Misc.browserName() === 'chrome' || Misc.browserName() === 'firefox',
+          msg: ''
         },
         {
           name: 'keepkey',
           imgPath: keepkey,
           imgHoverPath: keepkeyHov,
-          text: 'KeepKey'
+          text: 'KeepKey',
+          disabled: false,
+          msg: ''
         }
       ]
     };
   },
   mounted() {
+    isSupported().then(res => {
+      this.items.forEach(item => {
+        const u2fhw = ['secalot', 'ledger', 'bitbox'];
+        const inMobile = ['secalot', 'keepkey'];
+        const webUsb = ['keepkey'];
+
+        if (webUsb.includes(item.name)) {
+          const disable =
+            window.location.protocol !== 'https:' ||
+            !window ||
+            !window.navigator ||
+            !window.navigator.usb;
+          item.disabled = disable;
+          item.msg = disable ? this.$t('errorsGlobal.browserNonWebUsb') : '';
+        }
+
+        if (u2fhw.includes(item.name)) {
+          const disable =
+            (Misc.browserName() === 'chrome' ||
+              Misc.browserName() === 'opera') &&
+            res;
+
+          item.disabled = disable;
+          item.msg = disable ? this.$t('errorsGlobal.browserNonU2f') : '';
+        }
+
+        if (this.isMobile()) {
+          const disable = !inMobile.includes(item.name);
+          item.disabled = disable;
+          item.msg = disable ? this.$t('errorsGlobal.noMobileSupport') : '';
+        }
+      });
+    });
     this.$refs.hardware.$on('hidden', () => {
       this.selected = '';
     });
   },
   methods: {
+    isMobile() {
+      return (
+        typeof window.orientation !== 'undefined' ||
+        navigator.userAgent.indexOf('IEMobile') !== -1
+      );
+    },
     continueAccess() {
       const showPluggedInReminder = setTimeout(() => {
         this.mayNotBeAttached = true;
       }, 1000);
       switch (this.selected) {
         case 'ledger':
-          LedgerWallet().then(_newWallet => {
-            clearTimeout(showPluggedInReminder);
-            this.$emit('hardwareWalletOpen', _newWallet);
-          });
+          LedgerWallet()
+            .then(_newWallet => {
+              clearTimeout(showPluggedInReminder);
+              this.$emit('hardwareWalletOpen', _newWallet);
+            })
+            .catch(LedgerWallet.errorHandler);
           break;
         case 'trezor':
-          TrezorWallet().then(_newWallet => {
-            clearTimeout(showPluggedInReminder);
-            this.$emit('hardwareWalletOpen', _newWallet);
-          });
+          TrezorWallet()
+            .then(_newWallet => {
+              clearTimeout(showPluggedInReminder);
+              this.$emit('hardwareWalletOpen', _newWallet);
+            })
+            .catch(TrezorWallet.errorHandler);
           break;
         case 'bitbox':
           this.$emit('hardwareRequiresPassword', {
@@ -149,13 +208,17 @@ export default {
           });
           break;
         case 'keepkey':
-          KeepkeyWallet(false, this.$eventHub).then(_newWallet => {
-            this.$emit('hardwareWalletOpen', _newWallet);
-          });
+          KeepkeyWallet(false, this.$eventHub)
+            .then(_newWallet => {
+              this.$emit('hardwareWalletOpen', _newWallet);
+            })
+            .catch(KeepkeyWallet.errorHandler);
           break;
         default:
-          // eslint-disable-next-line
-          console.error('something not right'); // todo remove dev item
+          Toast.responseHandler(
+            new Error('No switch address for given account.'),
+            Toast.ERROR
+          );
           break;
       }
     },

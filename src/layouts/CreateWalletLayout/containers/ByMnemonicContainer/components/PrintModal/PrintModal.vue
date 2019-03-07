@@ -8,54 +8,18 @@
       class="nopadding print-mod"
       size="lg"
     >
-      <div class="print-container">
-        <div id="printContainer">
-          <div class="content">
-            <div class="header">
-              <img src="~@/assets/images/logo.png" height="30px" />
-              <div></div>
-              <span>Mnemonic Phrase</span>
-            </div>
-            <div v-show="isTwentyFour" class="full-mnemonic">
-              <div>
-                <div
-                  v-for="(item, idx) in mnemonic.slice(0, 12)"
-                  :key="item"
-                  class="item"
-                >
-                  <span>{{ idx + 1 }}. </span>{{ item }}
-                </div>
-              </div>
-              <div>
-                <div
-                  v-for="(item, idx) in mnemonic.slice(12, 24)"
-                  :key="item"
-                  class="item"
-                >
-                  <span>{{ idx + 13 }}.</span> {{ item }}
-                </div>
-              </div>
-            </div>
-            <div v-show="!isTwentyFour" class="half-mnemonic">
-              <div
-                v-for="(item, idx) in mnemonic.slice(0, 12)"
-                :key="item"
-                class="item"
-              >
-                <span>{{ idx + 1 }}. </span>{{ item }}
-              </div>
-            </div>
-          </div>
-          <div class="footer">
-            <div>
-              <img src="~@/assets/images/icons/support.svg" />
-              support@myetherwallet.com
-            </div>
-            <div>
-              <img src="~@/assets/images/icons/web-solution.svg" />
-              https://www.myetherwallet.com
-            </div>
-          </div>
+      <div class="modal-content-container">
+        <div ref="printContainer" class="mnemonic-to-print">
+          <mnemonic-table-to-print
+            :mnemonic="mnemonic"
+            :is-twenty-four="isTwentyFour"
+          />
+        </div>
+        <div class="mnemonic-to-display">
+          <mnemonic-table-to-display
+            :mnemonic="mnemonic"
+            :is-twenty-four="isTwentyFour"
+          />
         </div>
         <div class="button-container">
           <standard-button
@@ -64,6 +28,7 @@
           />
         </div>
       </div>
+      <!-- .modal-content-container -->
     </b-modal>
   </div>
 </template>
@@ -71,10 +36,14 @@
 import StandardButton from '@/components/Buttons/StandardButton';
 import printJS from 'print-js';
 import html2canvas from 'html2canvas';
+import MnemonicTableToPrint from './components/MnemonicTableToPrint';
+import MnemonicTableToDisplay from './components/MnemonicTableToDisplay';
 
 export default {
   components: {
-    'standard-button': StandardButton
+    'standard-button': StandardButton,
+    'mnemonic-table-to-print': MnemonicTableToPrint,
+    'mnemonic-table-to-display': MnemonicTableToDisplay
   },
   props: {
     mnemonic: {
@@ -98,7 +67,7 @@ export default {
   },
   methods: {
     async print() {
-      const element = document.getElementById('printContainer');
+      const element = this.$refs.printContainer;
       const screen = await html2canvas(element, {
         async: true,
         logging: false

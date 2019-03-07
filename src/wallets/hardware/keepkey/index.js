@@ -14,9 +14,10 @@ import {
   getSignTransactionObject,
   calculateChainIdFromV
 } from '../../utils';
-import * as HDKey from 'hdkey';
-import ethUtil from 'ethereumjs-util';
+import HDKey from 'hdkey';
+import { toBuffer } from 'ethereumjs-util';
 import ethTx from 'ethereumjs-tx';
+import errorHandler from './errorHandler';
 
 const { MessageType } = Messages;
 const {
@@ -45,7 +46,7 @@ class KeepkeyWallet {
         'showHardwarePinMatrix',
         { name: this.identifier },
         pin => {
-          this.keepkey.acknowledgeWithPin(pin);
+          this.keepkey.acknowledgeWithPin(pin).catch(errorHandler);
         }
       );
     });
@@ -54,7 +55,9 @@ class KeepkeyWallet {
         'showHardwarePassword',
         { name: this.identifier },
         passPhrase => {
-          this.keepkey.acknowledgeWithPassphrase(passPhrase);
+          this.keepkey
+            .acknowledgeWithPassphrase(passPhrase)
+            .catch(errorHandler);
         }
       );
     });
@@ -113,7 +116,7 @@ class KeepkeyWallet {
     const msgSigner = async msg => {
       const signMessage = new Messages.EthereumSignMessage();
       signMessage.setAddressNList(bip32ToAddressNList(accountPath));
-      signMessage.setMessage(new Uint8Array(ethUtil.toBuffer(msg)));
+      signMessage.setMessage(new Uint8Array(toBuffer(msg)));
       const [, response] = await this.keepkey.device.exchange(
         Messages.MessageType.MESSAGETYPE_ETHEREUMSIGNMESSAGE,
         signMessage
@@ -125,6 +128,7 @@ class KeepkeyWallet {
       derivedKey.publicKey,
       this.isHardware,
       this.identifier,
+      errorHandler,
       txSigner,
       msgSigner
     );
@@ -141,6 +145,8 @@ const createWallet = async (basePath, eventHub) => {
   await _keepkeyWallet.init(basePath);
   return _keepkeyWallet;
 };
+createWallet.errorHandler = errorHandler;
+
 const getRootPubKey = async (_keepkey, _path) => {
   const pubObj = await _keepkey.getPublicKey({
     addressNList: bip32ToAddressNList(_path),

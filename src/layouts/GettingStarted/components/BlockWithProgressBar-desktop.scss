@@ -17,6 +17,13 @@
       border-radius: 4px;
       overflow: hidden;
       padding: 0;
+
+      /*
+      position: absolute;
+      top: 15px;
+      left: 0;
+      right: 0;
+      */
     }
 
     .block-progressbar__title {
@@ -109,6 +116,9 @@
     .block-progressbar__content {
       background-color: $white;
       padding: 50px 60px;
+      overflow-y: auto;
+      max-height: calc(100vh - 250px);
+      //height: calc(100vh - 250px);
 
       &.text-cented {
         text-align: center;
@@ -205,4 +215,8 @@
       }
     }
   } // .block-progressbar
+
+  .done-button {
+    display: none;
+  }
 } // @media all and (min-width: calc(#{$tablet-width} + 1px))

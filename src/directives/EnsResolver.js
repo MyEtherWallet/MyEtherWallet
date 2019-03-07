@@ -1,6 +1,5 @@
 import normalise from '@/helpers/normalise';
 import { Misc } from '@/helpers';
-import store from '@/store';
 import { toChecksumAddress } from '@/helpers/addressUtils';
 const EnsResolver = {
   bind: function(el, binding, vnode) {
@@ -8,8 +7,7 @@ const EnsResolver = {
       const _this = vnode.context;
       const errorPar = document.createElement('p');
       errorPar.classList.add('resolver-error');
-      const ens = store.getters.ens;
-      console.log(ens);
+      const ens = _this.$store.state.ens;
       const checkDarklist = function(addr) {
         const isDarklisted = Misc.isDarklisted(addr);
         if (isDarklisted.error) {
@@ -49,7 +47,8 @@ const EnsResolver = {
             removeElements();
             _this.isValidAddress = false;
             _this.hexAddress = '';
-            errorPar.innerText = 'No ENS resolver in this node';
+            // eslint-disable-next-line
+            errorPar.innerText = `No ${_this.network.type.name[0]}NS resolver in this node`;
             el.parentNode.parentNode.appendChild(errorPar);
           } else {
             ens
@@ -66,7 +65,8 @@ const EnsResolver = {
               })
               .catch(() => {
                 removeElements();
-                errorPar.innerText = 'ENS name is invalid or not found';
+                // eslint-disable-next-line
+                errorPar.innerText = `${_this.network.type.name[0]}NS name is invalid or not found`;
                 _this.isValidAddress = false;
                 _this.hexAddress = '';
                 vnode.elm.parentNode.parentNode.appendChild(errorPar);

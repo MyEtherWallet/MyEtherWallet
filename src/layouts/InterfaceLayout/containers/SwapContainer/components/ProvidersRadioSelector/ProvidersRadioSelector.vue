@@ -8,10 +8,12 @@
           :key="provider.provider + idx"
           :class="provider.provider"
           class="providers"
+          @click="setSelectedProvider(provider.provider)"
         >
           <div class="mew-custom-form__radio-button">
             <input
               v-show="providerData.length > 0"
+              v-model="providerChosen"
               :id="provider.provider"
               :value="provider.provider"
               type="radio"
@@ -234,6 +236,7 @@ export default {
   },
   data() {
     return {
+      providerChosen: '',
       otherProviderList: [],
       logos: {
         mew: MEW,
@@ -285,6 +288,14 @@ export default {
       });
     },
     listActiveProviders() {
+      this.$nextTick(() => {
+        if (this.providerData.length === 1) {
+          this.setSelectedProvider(this.providerData[0].provider);
+        } else {
+          this.providerChosen = '';
+        }
+      });
+
       const activeProviders = [];
       this.providerData.forEach(entry => {
         activeProviders.push(entry.provider);
@@ -305,6 +316,7 @@ export default {
       return +this.fromValue > details.maxValue && details.maxValue > 0;
     },
     setSelectedProvider(provider) {
+      this.providerChosen = provider;
       const providerEls = document.getElementsByClassName('providers');
       Array.prototype.forEach.call(providerEls, function(el) {
         el.classList.remove('radio-selected');
@@ -315,16 +327,9 @@ export default {
     },
     providerLogo(details) {
       if (details.provider) {
-        if (this.useBetaLogo(details)) return this.betaLogos[details.provider];
         return this.logos[details.provider];
       }
       return this.logos[details];
-    },
-    useBetaLogo(details) {
-      return (
-        details.provider === 'bity' &&
-        (details.toCurrency === 'EUR' || details.toCurrency === 'CHF')
-      );
     },
     minNote(details) {
       if (details.minValue > 0) {
@@ -352,14 +357,6 @@ export default {
         .times(rate)
         .toFixed(6)
         .toString(10);
-    },
-    withDefaultSelectedProvider(provider, idx) {
-      return (
-        provider.provider === this.providerSelected.provider ||
-        (!this.providerSelected.provider && idx === 0)
-      );
-      // if (this.providerSelected === '' && idx === 0) {
-      // }
     }
   }
 };

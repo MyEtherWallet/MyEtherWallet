@@ -1,3 +1,5 @@
+import web3 from 'web3';
+import { Toast } from '@/helpers';
 const secp256k1 = require('secp256k1');
 const assert = require('assert');
 const createKeccakHash = require('keccak');
@@ -22,7 +24,8 @@ function toBuffer(v) {
       // converts a BN to a Buffer
       v = Buffer.from(v.toArray());
     } else {
-      throw new Error('invalid type');
+      const err = new Error('invalid type');
+      Toast.responseHandler(err, false);
     }
   }
   return v;
@@ -100,7 +103,8 @@ function ecrecover(hash, v, r, s) {
   const signature = Buffer.concat([setLength(r, 32), setLength(s, 32)], 64);
   const recovery = v - 27;
   if (recovery !== 0 && recovery !== 1) {
-    throw new Error('Invalid signature v value');
+    const e = new Error('Invalid signature v value');
+    Toast.responseHandler(e, false);
   }
   const senderPubKey = secp256k1.recover(hash, signature, recovery);
   return secp256k1.publicKeyConvert(senderPubKey, false).slice(1);

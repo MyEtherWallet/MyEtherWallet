@@ -1,0 +1,48 @@
+@import '~@/scss/GlobalVariables';
+
+//********************************************************
+// Wrap
+//********************************************************
+.wrap {
+  background-color: $light-blue-4;
+  color: $white;
+  margin: 0 10px;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+//********************************************************
+// Top Block
+//********************************************************
+.top-block {
+  display: flex;
+  align-items: flex-start;
+  .block-title {
+    line-height: initial;
+    font-size: 24px;
+    font-weight: 500;
+    color: $white;
+  }
+  .change-button {
+    margin-left: auto;
+    background-color: transparent;
+    border: 1px solid $white;
+    border-radius: 4px;
+    color: $white;
+    padding: 7px 20px;
+
+    &:active {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+  }
+}
+
+.bottom-block {
+  margin-top: 0;
+  p {
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 400;
+    color: $white;
+  }
+}

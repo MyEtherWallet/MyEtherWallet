@@ -36,8 +36,8 @@
                     </label>
                   </div>
                   <p>
-                    {{ gasPriceInputs[key].eth }} ETH
-                    <span v-if="ethPrice !== 0">
+                    {{ gasPriceInputs[key].eth }} {{ network.type.name }}
+                    <span v-if="ethPrice !== 0 && network.type.name === 'ETH'">
                       ($
                       {{ convert(gasPriceInputs[key].eth) | concatAddr }})
                     </span>
@@ -62,7 +62,7 @@
                     <p class="gwei">Gwei</p>
                   </div>
                   <p>
-                    {{ customGasEth }} ETH
+                    {{ customGasEth }} {{ network.type.name }}
                     <span v-if="ethPrice !== 0 && customGasEth !== 0"
                       >($ {{ convert(customGasEth) | concatAddr }})</span
                     >
@@ -90,7 +90,9 @@
               file from your local computer.
             </p>
             <div class="import-button-block">
-              <standard-input :options="inputFileName" />
+              <div class="filename">
+                <standard-input :options="inputFileName" />
+              </div>
               <input
                 ref="uploadInput"
                 type="file"
@@ -120,9 +122,9 @@
               into your local computer.
             </p>
             <div class="button-block">
-              <a :href="file" :download="fileName" class="export-button"
-                >Export</a
-              >
+              <a :href="file" :download="fileName" class="export-button">
+                <standard-button :options="buttonExport" />
+              </a>
             </div>
           </full-width-dropdown>
         </div>
@@ -136,6 +138,8 @@ import FullWidthDropdownMenu from '@/components/FullWidthDropdownMenu';
 import BigNumber from 'bignumber.js';
 import { fromWei, toWei } from 'web3-utils';
 import store from 'store';
+import { Toast } from '@/helpers';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'Settings',
@@ -146,6 +150,10 @@ export default {
     gasPrice: {
       type: String,
       default: '0'
+    },
+    address: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -155,7 +163,14 @@ export default {
         buttonStyle: 'green',
         rightArrow: false,
         leftArrow: false,
-        fullWidth: false
+        mobileFullWidth: true
+      },
+      buttonExport: {
+        title: 'Export',
+        buttonStyle: 'green',
+        rightArrow: false,
+        leftArrow: false,
+        mobileFullWidth: true
       },
       buttonUploadFile: {
         title: 'Upload File...',
@@ -183,7 +198,8 @@ export default {
         topTextInfo: '',
         popover: '',
         placeHolder: '',
-        rightInputText: ''
+        rightInputText: '',
+        readOnly: true
       },
       selectedGasType: 'regular',
       customGas: 0,
@@ -196,6 +212,9 @@ export default {
     };
   },
   computed: {
+    ...mapGetters({
+      network: 'network'
+    }),
     gasPriceInputs() {
       return {
         economy: {
@@ -233,6 +252,9 @@ export default {
           `${fromWei(toGwei, 'ether')}`
         ).toFixed();
       }
+    },
+    gasPrice() {
+      this.saveGasChanges();
     }
   },
   mounted() {
@@ -242,28 +264,37 @@ export default {
   methods: {
     setDataFromImportedFile() {
       const reader = new FileReader();
+      const notifObj = {};
+      notifObj[this.address] = [];
       reader.onloadend = evt => {
-        const notifications = store.get('notifications');
-        const file = JSON.parse(evt.target.result);
-        file.notifications.forEach(objAddr => {
-          const addr = Object.keys(objAddr)[0];
-          notifications[addr] = objAddr[addr];
-        });
-        store.set('notifications', notifications);
-        store.set('skipTutorial', file.main.skipTutorial);
-        store.set('customTokens', file.main.customTokens);
-        store.set('customTokens', file.main.customTokens);
-        store.set('customNetworks', file.main.customNetworks);
-        store.set('customNetworks', file.main.customNetworks);
-        store.set('customDeriviationPaths', file.main.customDeriviationPaths);
-        store.set('customDeriviationPaths', file.main.customDeriviationPaths);
-        store.set('gas', file.main.gas);
+        try {
+          const notifications = store.get('notifications') || notifObj;
+          const file = JSON.parse(evt.target.result);
+          const fNotifications = file.notifications || [];
+          fNotifications.forEach(objAddr => {
+            const addr = Object.keys(objAddr)[0];
+            notifications[addr] = objAddr[addr];
+          });
+          store.set('notifications', notifications);
+          store.set('skipTutorial', file.main.skipTutorial);
+          store.set('customTokens', file.main.customTokens);
+          store.set('customNetworks', file.main.customNetworks);
+          store.set('customDeriviationPaths', file.main.customDeriviationPaths);
+          store.set('gas', file.main.gas);
 
-        this.popup = true;
+          this.popup = true;
 
-        setTimeout(() => {
-          this.popup = false;
-        }, 1500);
+          setTimeout(() => {
+            this.popup = false;
+          }, 1500);
+        } catch (e) {
+          Toast.responseHandler(
+            new Error(
+              'Something went wrong while importing file, please make sure it is a valid file'
+            ),
+            Toast.ERROR
+          );
+        }
       };
       reader.readAsBinaryString(this.importedFile);
     },
@@ -312,7 +343,7 @@ export default {
     exportConfig() {
       const time = new Date().toISOString();
       const notifications = [];
-      const storedNotifs = store.get('notifications');
+      const storedNotifs = store.get('notifications') || {};
       Object.keys(storedNotifs).forEach(item => {
         if (storedNotifs[item].length > 0) {
           const obj = {};
@@ -337,7 +368,7 @@ export default {
           customTokens:
             store.get('customTokens') !== undefined
               ? store.get('customTokens')
-              : [],
+              : {},
           customDeriviationPaths:
             store.get('customDeriviationPaths') !== undefined
               ? store.get('customDeriviationPaths')
@@ -359,13 +390,17 @@ export default {
       return new BigNumber(price * this.ethPrice).toFixed();
     },
     async getEthPrice() {
-      await fetch('https://cryptorates.mewapi.io/ticker?filter=ETH')
+      const price = await fetch(
+        'https://cryptorates.mewapi.io/ticker?filter=ETH'
+      )
         .then(res => {
-          this.ethPrice = res.json().data[1027].quotes.USD.price;
+          return res.json();
         })
-        .catch(err => {
-          return err;
+        .catch(e => {
+          Toast.responseHandler(e, Toast.ERROR);
         });
+
+      this.ethPrice = price.data.ETH.quotes.USD.price;
     }
   }
 };

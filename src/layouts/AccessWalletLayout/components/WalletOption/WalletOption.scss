@@ -27,3 +27,19 @@
     width: 50px;
   }
 }
+
+.inactive {
+  background-color: $white !important;
+
+  div {
+    background-color: $white !important;
+  }
+
+  .wallet-option-container {
+    &:hover,
+    &.selected {
+      border: 1px solid $light-grey-14 !important;
+      color: $light-grey-14 !important;
+    }
+  }
+}

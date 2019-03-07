@@ -1,4 +1,5 @@
 import MEWconnect from '@myetherwallet/mewconnect-web-client';
+import store from '@/store';
 import ethTx from 'ethereumjs-tx';
 import WalletInterface from '@/wallets/WalletInterface';
 import { MEW_CONNECT as mewConnectType } from '../../bip44/walletTypes';
@@ -8,7 +9,8 @@ import {
   getBufferFromHex,
   calculateChainIdFromV
 } from '../../utils';
-import * as ethUtil from 'ethereumjs-util';
+import { hashPersonalMessage, toBuffer } from 'ethereumjs-util';
+import errorHandler from './errorHandler';
 
 const SIGNALER_URL = 'https://connect.mewapi.io';
 const IS_HARDWARE = true;
@@ -17,6 +19,7 @@ const IS_HARDWARE = true;
 class MEWconnectWalletInterface extends WalletInterface {
   constructor(pubkey, isHardware, identifier, txSigner, msgSigner, mewConnect) {
     super(pubkey, true, identifier);
+    this.errorHandler = errorHandler;
     this.txSigner = txSigner;
     this.msgSigner = msgSigner;
     this.isHardware = isHardware;
@@ -42,6 +45,19 @@ class MEWconnectWallet {
   async init(qrcode) {
     this.mewConnect.on('codeDisplay', qrcode);
     const txSigner = async tx => {
+      let tokenInfo;
+      if (tx.data.slice(0, 10) === '0xa9059cbb') {
+        tokenInfo = store.getters.network.type.tokens.find(
+          entry => entry.address === tx.to
+        );
+        if (tokenInfo) {
+          tx.currency = {
+            symbol: tokenInfo.symbol,
+            decimals: tokenInfo.decimals,
+            address: tokenInfo.address
+          };
+        }
+      }
       const networkId = tx.chainId;
       return new Promise(resolve => {
         this.mewConnect.sendRtcMessage('signTx', JSON.stringify(tx));
@@ -62,7 +78,7 @@ class MEWconnectWallet {
     };
     const msgSigner = async msg => {
       return new Promise(resolve => {
-        const msgHash = ethUtil.hashPersonalMessage(ethUtil.toBuffer(msg));
+        const msgHash = hashPersonalMessage(toBuffer(msg));
         this.mewConnect.sendRtcMessage('signMessage', {
           hash: msgHash.toString('hex'),
           text: msg
@@ -72,6 +88,10 @@ class MEWconnectWallet {
         });
       });
     };
+
+    const mewConnect = () => {
+      return this.mewConnect;
+    };
     const address = await signalerConnect(SIGNALER_URL, this.mewConnect);
 
     return new MEWconnectWalletInterface(
@@ -80,7 +100,7 @@ class MEWconnectWallet {
       this.identifier,
       txSigner,
       msgSigner,
-      this.mewConnect
+      mewConnect // <- using this.mewConnect here was causing a circular reference and data clone error
     );
   }
 }
@@ -89,6 +109,7 @@ const createWallet = async qrcode => {
   const _tWallet = await _MEWconnectWallet.init(qrcode);
   return _tWallet;
 };
+createWallet.errorHandler = errorHandler;
 const signalerConnect = (url, mewConnect) => {
   return new Promise(resolve => {
     mewConnect.initiatorStart(url);

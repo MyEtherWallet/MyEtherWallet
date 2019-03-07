@@ -28,7 +28,6 @@
           @click.prevent="switchViewPassword"
         />
       </div>
-      <p v-show="error !== ''" class="error">{{ error }}</p>
       <div class="not-recommended">
         {{ $t('accessWallet.notARecommendedWay') }}
       </div>
@@ -40,7 +39,7 @@
         type="submit"
         @click.prevent="unlockWallet"
       >
-        <span v-show="!spinner"> {{ $t('common.accessWallet') }} </span>
+        <span v-show="!spinner">{{ $t('common.accessWallet') }}</span>
         <i v-show="spinner" class="fa fa-spin fa-spinner fa-lg" />
       </button>
     </form>
@@ -50,8 +49,9 @@
 <script>
 import { WalletInterface } from '@/wallets';
 import { KEYSTORE as keyStoreType } from '@/wallets/bip44/walletTypes';
-import Worker from 'worker-loader!@/workers/wallet.worker.js';
+import walletWorker from 'worker-loader!@/workers/wallet.worker.js';
 import { mapGetters } from 'vuex';
+import { Toast, Wallet } from '@/helpers';
 export default {
   props: {
     file: {
@@ -65,13 +65,13 @@ export default {
     return {
       show: false,
       password: '',
-      error: '',
       spinner: false
     };
   },
   computed: {
     ...mapGetters({
-      path: 'path'
+      path: 'path',
+      online: 'online'
     })
   },
   watch: {
@@ -82,30 +82,56 @@ export default {
   methods: {
     unlockWallet() {
       this.spinner = true;
-      const worker = new Worker();
-      const self = this;
-      worker.postMessage({
-        type: 'unlockWallet',
-        data: [this.file, this.password]
-      });
-      worker.onmessage = function(e) {
-        // Regenerate the wallet since the worker only return an object instance. Not the whole wallet instance
-        self.$store.dispatch('decryptWallet', [
-          new WalletInterface(Buffer.from(e.data._privKey), false, keyStoreType)
-        ]);
-        self.spinner = false;
-        self.$router.push({
-          path: 'interface'
+
+      if (this.online && window.Worker) {
+        const worker = new walletWorker();
+        const self = this;
+        worker.postMessage({
+          type: 'unlockWallet',
+          data: [this.file, this.password]
         });
-      };
-      worker.onerror = function(e) {
-        self.error = e.message;
-      };
+        worker.onmessage = function(e) {
+          self.setUnlockedWallet(
+            new WalletInterface(
+              Buffer.from(e.data._privKey),
+              false,
+              keyStoreType
+            )
+          );
+        };
+        worker.onerror = function(e) {
+          e.preventDefault();
+          self.spinner = false;
+          Toast.responseHandler(e, Toast.ERROR);
+        };
+      } else {
+        const newFile = {};
+        Object.keys(this.file).forEach(key => {
+          newFile[key.toLowerCase()] = this.file[key];
+        });
+        const _wallet = Wallet.fromV3(newFile, this.password, true);
+        this.setUnlockedWallet(
+          new WalletInterface(
+            Buffer.from(_wallet._privKey),
+            false,
+            keyStoreType
+          )
+        );
+      }
+    },
+    setUnlockedWallet(wallet) {
+      this.$store.dispatch('decryptWallet', [wallet]);
+      this.spinner = false;
+      this.password = '';
+      this.$router.push({
+        path: 'interface'
+      });
     },
     switchViewPassword() {
       this.show = !this.show;
     },
     focusInput() {
+      this.password = '';
       this.$refs.passwordInput.focus();
     }
   }
