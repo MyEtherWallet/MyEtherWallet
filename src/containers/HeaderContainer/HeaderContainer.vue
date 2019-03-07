@@ -353,7 +353,6 @@ export default {
           this.gasPrice = new BigNumber(res).toString();
         })
         .catch(e => {
-          // Toast.responseHandler(e, false);
           Toast.responseHandler(e, Toast.ERROR);
         });
     },
