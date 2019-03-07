@@ -20,20 +20,6 @@ function comparator(arrayForSort) {
   };
 }
 
-// function balanceComparator(tokens) {
-//   const tokenNameMap = tokens
-//     .sort((a, b) => {
-//       if (a.hasOwnProperty('balance') && b.hasOwnProperty('balance')) {
-//         return b.balance - a.balance;
-//       }
-//       return 0;
-//     })
-//     .map(item => item.name)
-//     .reverse();
-//   const arraysForSort = [...tokenNameMap, ...TOP_OPTIONS_ORDER];
-//   return comparator(arraysForSort);
-// }
-
 export default class SwapProviders {
   constructor(providers, environmentSupplied, misc = {}) {
     this.updateProviderRates = 0;
@@ -68,6 +54,7 @@ export default class SwapProviders {
         }
       }, 150);
     }
+
     this.initialCurrencyArrays = this.buildInitialCurrencyArrays();
   }
 
