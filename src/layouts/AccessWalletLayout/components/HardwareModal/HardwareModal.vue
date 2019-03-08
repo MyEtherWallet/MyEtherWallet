@@ -100,6 +100,14 @@ export default {
           msg: ''
         },
         {
+          name: 'finney',
+          imgPath: finney,
+          imgHoverPath: finneyHov,
+          text: 'Finney',
+          disabled: false,
+          msg: ''
+        },
+        {
           name: 'bitbox',
           imgPath: bitbox,
           imgHoverPath: bitboxHov,
@@ -134,14 +142,6 @@ export default {
           imgPath: keepkey,
           imgHoverPath: keepkeyHov,
           text: 'KeepKey',
-          disabled: false,
-          msg: ''
-        },
-        {
-          name: 'finney',
-          imgPath: finney,
-          imgHoverPath: finneyHov,
-          text: 'Finney',
           disabled: false,
           msg: ''
         }
