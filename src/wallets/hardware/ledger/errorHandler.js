@@ -25,7 +25,6 @@ const WARNING = {
 };
 
 export default err => {
-  console.log(err, err.message);
   const expected = err.message
     ? err.message.substr(err.message.indexOf('Expected'), err.message.length)
     : err.substr(err.indexOf('Expected'), err.message);
