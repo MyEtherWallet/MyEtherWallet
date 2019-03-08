@@ -197,12 +197,12 @@ export default {
               href: 'https://www.ledger.com?r=fa4b'
             },
             {
-              text: this.$t('footer.digital'),
-              href: 'https://digitalbitbox.com/?ref=mew'
-            },
-            {
               text: this.$t('footer.finney'),
               href: 'https://sirinlabs.refersion.com/?oid=55932'
+            },
+            {
+              text: this.$t('footer.digital'),
+              href: 'https://digitalbitbox.com/?ref=mew'
             },
             {
               text: this.$t('footer.ethCard'),
