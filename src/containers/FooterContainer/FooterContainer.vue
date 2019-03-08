@@ -201,6 +201,10 @@ export default {
               href: 'https://digitalbitbox.com/?ref=mew'
             },
             {
+              text: this.$t('footer.finney'),
+              href: 'https://sirinlabs.refersion.com/?oid=55932'
+            },
+            {
               text: this.$t('footer.ethCard'),
               href:
                 'https://ether.cards/?utm_source=mew&utm_medium=cpm&utm_campaign=site'
@@ -216,6 +220,11 @@ export default {
             {
               text: this.$t('footer.bity'),
               href: 'https://bity.com/af/jshkb37v'
+            },
+            {
+              text: this.$t('footer.billfodl'),
+              href:
+                'https://billfodl.com/?afmc=2j&utm_campaign=2j&utm_source=leaddyno&utm_medium=affiliate'
             }
           ]
         },

@@ -52,7 +52,6 @@ export default {
   },
   computed: {
     ...mapGetters({
-      path: 'path',
       web3: 'web3'
     })
   },
