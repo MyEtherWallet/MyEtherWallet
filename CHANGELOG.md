@@ -1,3 +1,7 @@
+### Feature
+
+- Add Finney Modal []()
+
 ### Release v5.0.6
 
 ### Feature

@@ -56,6 +56,8 @@ import trezor from '@/assets/images/icons/button-trezor.png';
 import trezorHov from '@/assets/images/icons/button-trezor-hover.png';
 import keepkey from '@/assets/images/icons/button-keepkey.png';
 import keepkeyHov from '@/assets/images/icons/button-keepkey-hover.png';
+import finney from '@/assets/images/icons/button-finney.png';
+import finneyHov from '@/assets/images/icons/button-finney-hover.png';
 import WalletOption from '../WalletOption';
 import { Toast } from '@/helpers';
 import { isSupported } from 'u2f-api';
@@ -136,9 +138,9 @@ export default {
           msg: ''
         },
         {
-          name: 'Finney',
-          imgPath: keepkey,
-          imgHoverPath: keepkeyHov,
+          name: 'finney',
+          imgPath: finney,
+          imgHoverPath: finneyHov,
           text: 'Finney',
           disabled: false,
           msg: ''
@@ -202,7 +204,10 @@ export default {
               clearTimeout(showPluggedInReminder);
               this.$emit('hardwareWalletOpen', _newWallet);
             })
-            .catch(LedgerWallet.errorHandler);
+            .catch(() => {
+              this.mayNotBeAttached = true;
+              LedgerWallet.errorHandler;
+            });
           break;
         case 'trezor':
           TrezorWallet()
@@ -210,7 +215,10 @@ export default {
               clearTimeout(showPluggedInReminder);
               this.$emit('hardwareWalletOpen', _newWallet);
             })
-            .catch(TrezorWallet.errorHandler);
+            .catch(() => {
+              this.mayNotBeAttached = true;
+              TrezorWallet.errorHandler;
+            });
           break;
         case 'bitbox':
           this.$emit('hardwareRequiresPassword', {
@@ -229,7 +237,13 @@ export default {
             .then(_newWallet => {
               this.$emit('hardwareWalletOpen', _newWallet);
             })
-            .catch(KeepkeyWallet.errorHandler);
+            .catch(() => {
+              this.mayNotBeAttached = true;
+              KeepkeyWallet.errorHandler;
+            });
+          break;
+        case 'finney':
+          this.$refs.finney.$refs.finneyModal.show();
           break;
         default:
           Toast.responseHandler(
@@ -240,9 +254,7 @@ export default {
       }
     },
     select(ref) {
-      if (ref.toLowerCase() === 'finney') {
-        this.$refs.finney.$refs.finneyModal.show();
-      } else if (this.selected !== ref) {
+      if (this.selected !== ref) {
         this.selected = ref;
       } else {
         this.selected = '';

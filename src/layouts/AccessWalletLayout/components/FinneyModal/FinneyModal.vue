@@ -3,47 +3,51 @@
     ref="finneyModal"
     title="FINNEY Connect"
     hide-footer
-    class="bootstrap-modal nopadding modal-finney"
+    class="bootstrap-modal nopadding"
     centered
   >
-    <div class="content-container">
-      <div class="finney-img">
-        <img />
-      </div>
-      <div class="finney-text-container">
-        <div class="qr-container">
-          <qrcode :value="qrcode" :options="{ size: 200 }" />
+    <div class="finney-modal-content">
+      <div class="content-container">
+        <div class="finney-img">
+          <img :src="finneyImg" />
         </div>
-        <div>
-          <span>
-            Get your
-          </span>
-          <h3>
-            FINNEY™
-          </h3>
-          <span>
-            now
-          </span>
+        <div class="finney-text-container">
+          <div class="qr-container">
+            <div class="large">
+              <qrcode :value="qrcode" :options="{ size: 200 }" />
+            </div>
+            <div class="small">
+              <qrcode :value="qrcode" :options="{ size: 125 }" />
+            </div>
+          </div>
+          <div class="text-container">
+            <span>
+              Get your
+            </span>
+            <h3>
+              FINNEY™
+            </h3>
+            <span>
+              now
+            </span>
+          </div>
         </div>
       </div>
     </div>
-    <customer-support />
   </b-modal>
 </template>
 
 <script>
-import CustomerSupport from '@/components/CustomerSupport';
 import { MewConnectWallet } from '@/wallets';
 import { Toast } from '@/helpers';
 import { mapGetters } from 'vuex';
+import finneyImg from '@/assets/images/etc/finney.png';
 
 export default {
-  components: {
-    'customer-support': CustomerSupport
-  },
   data() {
     return {
-      qrcode: ''
+      qrcode: '',
+      finneyImg: finneyImg
     };
   },
   computed: {
@@ -54,7 +58,7 @@ export default {
   },
   mounted() {
     this.$refs.finneyModal.$on('show', () => {
-      new MewConnectWallet(this.codeDisplay)
+      new MewConnectWallet(this.generateQr)
         .then(wallet => {
           if (!this.web3.eth) this.$store.dispatch('setWeb3Instance');
           this.$store.dispatch('decryptWallet', [wallet]).then(() => {
@@ -68,7 +72,7 @@ export default {
         });
     });
   },
-  method: {
+  methods: {
     generateQr(code) {
       this.qrcode = code;
     }
