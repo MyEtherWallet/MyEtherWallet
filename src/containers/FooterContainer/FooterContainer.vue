@@ -198,7 +198,8 @@ export default {
             },
             {
               text: this.$t('footer.finney'),
-              href: 'https://sirinlabs.refersion.com/?oid=55932'
+              href:
+                'http://shop.sirinlabs.com?rfsn=2397639.54fdf&utm_source=refersion&utm_medium=affiliate&utm_campaign=2397639.54fdf'
             },
             {
               text: this.$t('footer.digital'),
