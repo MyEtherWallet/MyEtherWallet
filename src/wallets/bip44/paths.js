@@ -116,8 +116,8 @@ const keepkeyEthereumClassic = {
   label: 'Ethereum Classic'
 };
 const thundercore = {
-    path = "m/44'/1001'/0'/0",
-    label: 'ThunderCore
+  path: "m/44'/1001'/0'/0",
+  label: 'ThunderCore'
 };
 export {
   ethereum,
