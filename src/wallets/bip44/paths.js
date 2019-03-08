@@ -115,6 +115,10 @@ const keepkeyEthereumClassic = {
   path: "m/44'/61'",
   label: 'Ethereum Classic'
 };
+const thundercore = {
+    path = "m/44'/1001'/0'/0",
+    label: 'ThunderCore
+};
 export {
   ethereum,
   ethereumClassic,
@@ -144,5 +148,6 @@ export {
   rskMainnet,
   rskTestnet,
   keepkeyEthereum,
-  keepkeyEthereumClassic
+  keepkeyEthereumClassic,
+  thundercore
 };
