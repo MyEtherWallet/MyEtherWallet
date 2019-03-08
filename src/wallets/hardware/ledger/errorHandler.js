@@ -3,13 +3,12 @@ import Vue from 'vue';
 const ERRORS = {
   'Failed to sign with Ledger device: U2F TIMEOUT': 'ledgerError.failedToSign',
   'No Ledger device found (timeout)': 'ledgerError.noDevice',
-  'Ledger Device is busy (lock signPersonalMessage)': 'ledgerError.deviceBusy',
+  'Ledger Device is busy': 'ledgerError.deviceBusy',
   'Ledger device: UNKNOWN_ERROR (0x6804)': 'ledgerError.unknown0x6804',
   'TransportError: Failed to sign with Ledger device: U2F OTHER_ERROR':
     'ledgerError.failedToSignOther',
   'Failed to sign with Ledger device: U2F DEVICE_INELIGIBLE':
     'ledgerError.failedSignIneligible',
-  'Ledger Device is busy (lock signTransaction)': 'ledgerError.deviceBusyTx',
   'Ledger device: UNKNOWN_ERROR (0x6801)': 'ledgerError.unknown0x6801',
   'Ledger device: Invalid data received (0x6a80)':
     'ledgerError.invalidData0x6a80',
