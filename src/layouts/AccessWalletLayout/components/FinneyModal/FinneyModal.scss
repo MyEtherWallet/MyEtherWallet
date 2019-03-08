@@ -9,7 +9,7 @@
   display: flex;
   justify-content: space-around;
   min-height: 400px;
-  padding: 15px 15px 0px;
+  padding: 15px 15px 0;
 
   .finney-img {
     flex: 60;
@@ -34,7 +34,6 @@
     z-index: 3;
 
     .qr-container {
-
       .large {
         display: block;
       }
@@ -55,14 +54,13 @@
         font-size: 30px;
       }
     }
-
   }
 }
 
 @media screen and (max-width: 450px) {
   .content-container {
     min-height: 235px !important;
-    padding: 15px 15px 0px !important;
+    padding: 15px 15px 0 !important;
   }
 
   .finney-img {
