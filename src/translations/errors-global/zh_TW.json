@@ -1,0 +1,9 @@
+{
+  "notAValidAmountTotal": "不足 ",
+  "toSend": "來發送。",
+  "invalidValue": "數值不合法",
+  "wrongPassPhrase": "密碼不正確!",
+  "browserNonU2f": "瀏覽器不允許 u2f 。請使用 Chrome 或者 Opera!",
+  "browserNonWebUsb": "瀏覽器不支援 WebUSB. 請使用 Chrome 或者 Opera!",
+  "noMobileSupport": "移動版瀏覽器不支援硬體錢包!"
+}
