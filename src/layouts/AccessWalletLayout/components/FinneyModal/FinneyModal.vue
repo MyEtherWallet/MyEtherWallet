@@ -14,7 +14,7 @@
         <div class="finney-text-container">
           <div class="qr-container">
             <div class="large">
-              <qrcode :value="qrcode" :options="{ size: 200 }" />
+              <qrcode :value="qrcode" :options="{ size: 186 }" />
             </div>
             <div class="small">
               <qrcode :value="qrcode" :options="{ size: 125 }" />
@@ -41,7 +41,7 @@
 import { MewConnectWallet } from '@/wallets';
 import { Toast } from '@/helpers';
 import { mapGetters } from 'vuex';
-import finneyImg from '@/assets/images/etc/finney.png';
+import finneyImg from '@/assets/images/etc/FinnyPhone.png';
 
 export default {
   data() {
