@@ -103,7 +103,7 @@ export default {
           name: 'finney',
           imgPath: finney,
           imgHoverPath: finneyHov,
-          text: 'Finney',
+          text: 'FINNEY',
           disabled: false,
           msg: ''
         },
