@@ -21,15 +21,21 @@
             </div>
           </div>
           <div class="text-container">
-            <span>
-              Get your
-            </span>
-            <h3>
-              FINNEY™
-            </h3>
-            <span>
-              now
-            </span>
+            <a
+              href="http://shop.sirinlabs.com?rfsn=2397639.54fdf&utm_source=refersion&utm_medium=affiliate&utm_campaign=2397639.54fdf"
+              target="blank"
+              rel="noopener noreferrer"
+            >
+              <span>
+                Get your
+              </span>
+              <h3>
+                FINNEY™
+              </h3>
+              <span>
+                now
+              </span>
+            </a>
           </div>
         </div>
       </div>
@@ -41,7 +47,7 @@
 import { MewConnectWallet } from '@/wallets';
 import { Toast } from '@/helpers';
 import { mapGetters } from 'vuex';
-import finneyImg from '@/assets/images/etc/FinnyPhone.png';
+import finneyImg from '@/assets/images/etc/finney.png';
 
 export default {
   data() {
