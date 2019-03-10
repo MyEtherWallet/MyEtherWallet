@@ -16,10 +16,9 @@
     position: relative;
 
     img {
-      left: -120px; // -225px;
-      top: -195px; // -206px;
+      left: 20px;
+      top: -195px;
       position: absolute;
-      width: 505px; // 740px;
     }
   }
 
@@ -46,6 +45,14 @@
     .text-container {
       padding-left: 15px;
 
+      a {
+        color: $dark-grey-3 !important;
+
+        &:hover {
+          text-decoration: none !important;
+        }
+      }
+
       span {
         font-size: 18px;
       }
@@ -68,10 +75,10 @@
     position: relative;
 
     img {
-      left: -110px !important;
-      top: -117px !important;
+      left: 0px !important;
+      top: -130px !important;
       position: absolute;
-      width: 436px !important;
+      width: 145px !important;
     }
   }
 
