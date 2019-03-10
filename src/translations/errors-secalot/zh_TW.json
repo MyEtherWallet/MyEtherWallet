@@ -1,0 +1,4 @@
+{
+  "signFailed": "簽署失敗",
+  "notConnected": "無法讀取空白的 `requestId` 屬性"
+}

@@ -1,3 +1,7 @@
+### Devop
+
+- Add zh_TW (Traditional Chinese) translation [#820](https://github.com/MyEtherWallet/MyEtherWallet/pull/820)
+
 ### Release v5.0.7
 
 ### Feature
