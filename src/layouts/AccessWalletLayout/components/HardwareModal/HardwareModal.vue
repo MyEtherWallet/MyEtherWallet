@@ -154,12 +154,11 @@ export default {
 
         if (u2fhw.includes(item.name)) {
           const disable =
-            platform.name.toLowerCase() !== 'chrome' &&
-            platform.name.toLowerCase() !== 'opera' &&
+            (platform.name.toLowerCase() === 'chrome' ||
+              platform.name.toLowerCase() === 'opera') &&
             res;
-
-          item.disabled = disable;
-          item.msg = disable ? this.$t('errorsGlobal.browserNonU2f') : '';
+          item.disabled = !disable;
+          item.msg = !disable ? this.$t('errorsGlobal.browserNonU2f') : '';
         }
 
         if (this.isMobile()) {
