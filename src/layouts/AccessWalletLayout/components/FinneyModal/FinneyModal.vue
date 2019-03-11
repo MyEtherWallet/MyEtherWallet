@@ -12,6 +12,11 @@
           <img :src="finneyImg" />
         </div>
         <div class="finney-text-container">
+          <div class="scan-container">
+            <p>
+              Please scan the barcode using your FINNEY mobile
+            </p>
+          </div>
           <div class="qr-container">
             <div class="large">
               <qrcode :value="qrcode" :options="{ size: 186 }" />

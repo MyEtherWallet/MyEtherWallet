@@ -1,14 +1,9 @@
 @import '~@/scss/GlobalVariables';
-
-.finney-modal-content {
-  // padding: 15px 15px 0px;
-}
-
 .content-container {
   align-items: center;
   display: flex;
   justify-content: space-around;
-  min-height: 400px;
+  min-height: 420px;
   padding: 15px 15px 0;
 
   .finney-img {
@@ -16,9 +11,10 @@
     position: relative;
 
     img {
-      left: 20px;
-      top: -195px;
+      left: -330px;
       position: absolute;
+      top: -245px;
+      width: 850px;
     }
   }
 
@@ -31,6 +27,10 @@
     min-height: inherit;
     position: relative;
     z-index: 3;
+
+    .scan-container {
+      width: 200px !important;
+    }
 
     .qr-container {
       .large {
@@ -75,10 +75,10 @@
     position: relative;
 
     img {
-      left: 0 !important;
-      top: -130px !important;
+      left: -220px !important;
       position: absolute;
-      width: 145px !important;
+      top: -135px !important;
+      width: 510px !important;
     }
   }
 
@@ -91,7 +91,12 @@
   }
 
   .finney-text-container {
-    span {
+    .scan-container {
+      width: 130px !important;
+    }
+
+    span,
+    p {
       font-size: 12px !important;
     }
 
