@@ -82,9 +82,9 @@ class SecalotWallet {
 const createWallet = async (basePath, password) => {
   const _secalotWallet = new SecalotWallet(password);
   await _secalotWallet.init(basePath);
+  _secalotWallet.errorHandler = errorHandler;
   return _secalotWallet;
 };
-createWallet.errorHandler = errorHandler;
 const getRootPubKey = (_secalot, _path) => {
   return new Promise((resolve, reject) => {
     _secalot.getAddress(_path, (result, error) => {

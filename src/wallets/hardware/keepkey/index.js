@@ -143,9 +143,9 @@ class KeepkeyWallet {
 const createWallet = async (basePath, eventHub) => {
   const _keepkeyWallet = new KeepkeyWallet(eventHub);
   await _keepkeyWallet.init(basePath);
+  _keepkeyWallet.errorHandler = errorHandler;
   return _keepkeyWallet;
 };
-createWallet.errorHandler = errorHandler;
 
 const getRootPubKey = async (_keepkey, _path) => {
   const pubObj = await _keepkey.getPublicKey({

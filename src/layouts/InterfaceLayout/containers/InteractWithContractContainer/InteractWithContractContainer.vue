@@ -386,7 +386,7 @@ export default {
             value[0] === '[' ? value.substr(0, value.length - 1) : value;
           strToArr.split(',').forEach(item => {
             if (solidityType.includes(uint)) {
-              values.push(value !== '' && !isNaN(value));
+              values.push(value !== '' && !isNaN(value) && Misc.isInt(value));
             } else if (solidityType.includes(address)) {
               values.push(isAddress(value));
             } else if (solidityType.includes(string)) {
@@ -400,13 +400,14 @@ export default {
         }
         return !values.includes(false);
       }
-      if (solidityType === 'uint') return value != '' && !isNaN(value);
+      if (solidityType === 'uint')
+        return value !== '' && !isNaN(value) && Misc.isInt(value);
       if (solidityType === 'address') return isAddress(value);
       if (solidityType === 'string') return true;
       if (solidityType === 'bytes')
-        return value.substr(0, 2) == '0x' && Misc.validateHexString(value);
+        return value.substr(0, 2) === '0x' && Misc.validateHexString(value);
       if (solidityType === 'bool')
-        return typeof value == typeof true || value === '';
+        return typeof value === typeof true || value === '';
       return false;
     },
     getType: Misc.solidityType,
