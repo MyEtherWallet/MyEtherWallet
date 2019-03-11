@@ -260,7 +260,6 @@ export default {
       this.$refs.hardwarePasswordModal.$refs.password.show();
     },
     hardwareWalletOpen(wallet) {
-      console.log(wallet);
       if (this.$refs.mnemonicPhrasePassword.$refs.password.visible) {
         this.$refs.mnemonicPhrasePassword.$refs.password.hide();
       }
