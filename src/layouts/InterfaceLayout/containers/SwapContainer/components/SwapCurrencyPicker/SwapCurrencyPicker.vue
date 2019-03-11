@@ -174,8 +174,8 @@ export default {
         // eslint-disable-next-line
         icon = require(`@/assets/images/currency/coins/AllImages/${currency}.svg`);
       } catch (e) {
+        // eslint-disable-next-line
         return require(`@/assets/images/currency/coins/AllImages/MEW.png`);
-        // icon = this.icon;
       }
       return icon;
     },
