@@ -22,7 +22,7 @@
             <img
               :src="iconFetcher(selectedCurrency.symbol)"
               class="icon-image"
-          />
+            />
           </span>
 
           {{ selectedCurrency.symbol }}
