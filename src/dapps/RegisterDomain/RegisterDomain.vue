@@ -29,6 +29,7 @@
       :tld="network.type.ens.registrarTLD"
       :network-name="network.type.name"
       :register-fifs-name="registerFifsName"
+      :multi-tld="multiTld"
       @updateSecretPhrase="updateSecretPhrase"
       @updateBidAmount="updateBidAmount"
       @updateBidMask="updateBidMask"
@@ -51,6 +52,8 @@ import * as nameHashPckg from 'eth-ens-namehash';
 import normalise from '@/helpers/normalise';
 import { mapGetters } from 'vuex';
 import { Toast } from '@/helpers';
+import DNSRegistrar from '@ensdomains/dnsregistrar';
+
 export default {
   components: {
     'back-button': BackButton
@@ -90,6 +93,9 @@ export default {
     },
     registrarType() {
       return this.network.type.ens.registrarType;
+    },
+    multiTld() {
+      return this.network.type.name_long.toLowerCase() === 'goerli';
     }
   },
   watch: {
@@ -236,33 +242,45 @@ export default {
       const registrarAddress = await this.ens.owner(this.registrarTLD);
       return registrarAddress;
     },
+    parsedTld() {
+      const name = this.domainName.split('.');
+      return name[name.length - 1];
+    },
     async checkDomain() {
-      const web3 = this.web3;
-      this.loading = true;
-      this.labelHash = web3.utils.sha3(this.domainName);
-      try {
-        let domainStatus = [];
-        if (this.registrarType === 'auction') {
-          domainStatus = await this.auctionRegistrarContract.methods
-            .entries(this.labelHash)
-            .call();
-          this.processResult(domainStatus);
-        } else if (this.registrarType === 'fifs') {
-          const expiryTime = await this.fifsRegistrarContract.methods
-            .expiryTimes(this.labelHash)
-            .call();
-          const isAvailable = expiryTime * 1000 < new Date().getTime();
-          if (isAvailable) {
-            this.$router.push({ path: 'register-domain/fifs' });
-            this.loading = false;
-          } else {
-            this.getMoreInfo();
-            this.loading = false;
+      if (!this.multiTld) {
+        const web3 = this.web3;
+        this.loading = true;
+        this.labelHash = web3.utils.sha3(this.domainName);
+        try {
+          let domainStatus = [];
+          if (this.registrarType === 'auction') {
+            domainStatus = await this.auctionRegistrarContract.methods
+              .entries(this.labelHash)
+              .call();
+            this.processResult(domainStatus);
+          } else if (this.registrarType === 'fifs') {
+            const expiryTime = await this.fifsRegistrarContract.methods
+              .expiryTimes(this.labelHash)
+              .call();
+            const isAvailable = expiryTime * 1000 < new Date().getTime();
+            if (isAvailable) {
+              this.$router.push({ path: 'register-domain/fifs' });
+              this.loading = false;
+            } else {
+              this.getMoreInfo();
+              this.loading = false;
+            }
           }
+        } catch (e) {
+          Toast.responseHandler(e, false);
+          this.loading = false;
         }
-      } catch (e) {
-        Toast.responseHandler(e, false);
-        this.loading = false;
+      } else {
+        const registrarAddr = await this.ens.owner(this.parsedTld());
+        const registrar = new DNSRegistrar(this.web3.currentProvider, registrarAddr)
+        registrar.claim(this.domainName).then(claim => {
+          console.log(claim);
+        });
       }
     },
     updateStep(val) {
@@ -301,9 +319,10 @@ export default {
     },
     updateDomainName(value) {
       if (
-        value.substr(0, 2) === '0x' ||
-        value.length < 7 ||
-        value.indexOf('.') !== -1
+        !this.multiTld &&
+        (value.substr(0, 2) === '0x' ||
+          value.length < 7 ||
+          value.indexOf('.') !== -1)
       ) {
         this.domainNameErr = true;
       } else {
