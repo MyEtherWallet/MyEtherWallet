@@ -10,7 +10,6 @@
 - Update infura endpoint [#763](https://github.com/MyEtherWallet/MyEtherWallet/pull/763)
 - Chrome 72 compatibility for Secalot [#766](https://github.com/MyEtherWallet/MyEtherWallet/pull/766)
 
-
 ### Hotfix v5.0.5-hotfix.1
 
 ### Bug
