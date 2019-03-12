@@ -104,8 +104,8 @@ const getRootPubKey = (_bitbox, _path) => {
 const createWallet = async (basePath, password) => {
   const _bitboxWallet = new BitBoxWallet(password);
   await _bitboxWallet.init(basePath);
-  _bitboxWallet.errorHandler = errorHandler;
   return _bitboxWallet;
 };
+createWallet.errorHandler = errorHandler;
 
 export default createWallet;

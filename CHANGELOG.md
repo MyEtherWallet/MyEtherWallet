@@ -1,3 +1,7 @@
+### Feature
+
+- Add Finney Modal [#782](https://github.com/MyEtherWallet/MyEtherWallet/pull/782)
+
 ### Release v5.0.6
 
 ### Feature

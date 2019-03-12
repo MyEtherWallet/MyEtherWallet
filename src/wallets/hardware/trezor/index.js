@@ -86,9 +86,9 @@ class TrezorWallet {
 const createWallet = async basePath => {
   const _trezorWallet = new TrezorWallet();
   await _trezorWallet.init(basePath);
-  _trezorWallet.errorHandler = errorHandler;
   return _trezorWallet;
 };
+createWallet.errorHandler = errorHandler;
 const getRootPubKey = async _path => {
   const result = await Trezor.ethereumGetPublicKey({ path: _path });
   if (!result.success) throw new Error(result.payload.error);
