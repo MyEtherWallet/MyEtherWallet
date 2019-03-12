@@ -7,6 +7,7 @@
     centered
   >
     <div class="modal-content-container">
+      <finney-modal ref="finney" />
       <div class="d-block text-center">
         <b-alert :show="mayNotBeAttached" fade variant="warning"
           >Please make sure your device is connected</b-alert
@@ -43,6 +44,7 @@
 </template>
 
 <script>
+import FinneyModal from '../FinneyModal';
 import CustomerSupport from '@/components/CustomerSupport';
 import ledger from '@/assets/images/icons/button-ledger.png';
 import ledgerHov from '@/assets/images/icons/button-ledger-hover.png';
@@ -54,6 +56,8 @@ import trezor from '@/assets/images/icons/button-trezor.png';
 import trezorHov from '@/assets/images/icons/button-trezor-hover.png';
 import keepkey from '@/assets/images/icons/button-keepkey.png';
 import keepkeyHov from '@/assets/images/icons/button-keepkey-hover.png';
+import finney from '@/assets/images/icons/button-finney.png';
+import finneyHov from '@/assets/images/icons/button-finney-hover.png';
 import WalletOption from '../WalletOption';
 import { Toast } from '@/helpers';
 import { isSupported } from 'u2f-api';
@@ -68,7 +72,8 @@ import {
 export default {
   components: {
     'customer-support': CustomerSupport,
-    'wallet-option': WalletOption
+    'wallet-option': WalletOption,
+    'finney-modal': FinneyModal
   },
   props: {
     networkAndAddressOpen: {
@@ -91,6 +96,14 @@ export default {
           imgPath: ledger,
           imgHoverPath: ledgerHov,
           text: 'Ledger',
+          disabled: false,
+          msg: ''
+        },
+        {
+          name: 'finney',
+          imgPath: finney,
+          imgHoverPath: finneyHov,
+          text: 'FINNEY',
           disabled: false,
           msg: ''
         },
@@ -191,7 +204,10 @@ export default {
               clearTimeout(showPluggedInReminder);
               this.$emit('hardwareWalletOpen', _newWallet);
             })
-            .catch(LedgerWallet.errorHandler);
+            .catch(() => {
+              this.mayNotBeAttached = true;
+              LedgerWallet.errorHandler;
+            });
           break;
         case 'trezor':
           TrezorWallet()
@@ -199,7 +215,10 @@ export default {
               clearTimeout(showPluggedInReminder);
               this.$emit('hardwareWalletOpen', _newWallet);
             })
-            .catch(TrezorWallet.errorHandler);
+            .catch(() => {
+              this.mayNotBeAttached = true;
+              TrezorWallet.errorHandler;
+            });
           break;
         case 'bitbox':
           this.$emit('hardwareRequiresPassword', {
@@ -218,7 +237,13 @@ export default {
             .then(_newWallet => {
               this.$emit('hardwareWalletOpen', _newWallet);
             })
-            .catch(KeepkeyWallet.errorHandler);
+            .catch(() => {
+              this.mayNotBeAttached = true;
+              KeepkeyWallet.errorHandler;
+            });
+          break;
+        case 'finney':
+          this.$refs.finney.$refs.finneyModal.show();
           break;
         default:
           Toast.responseHandler(
