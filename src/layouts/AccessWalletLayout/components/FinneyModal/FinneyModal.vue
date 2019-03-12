@@ -14,7 +14,8 @@
         <div class="finney-text-container">
           <div class="scan-container">
             <p>
-              Please scan the barcode using your FINNEY mobile
+              To connect please scan the QR code from FinneyWallet app on your
+              FINNEY device
             </p>
           </div>
           <div class="qr-container">

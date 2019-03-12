@@ -108,6 +108,12 @@ export default class Changelly {
       this.network
     );
 
+    if (!Array.isArray(changellyDetails)) {
+      throw Error(
+        `Failed to retrieve changelly rate from ${fromCurrency} to ${toCurrency}`
+      );
+    }
+
     return {
       fromCurrency,
       toCurrency,
