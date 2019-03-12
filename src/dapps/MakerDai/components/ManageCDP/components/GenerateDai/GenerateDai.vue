@@ -1,11 +1,11 @@
 <template>
   <div class="modal-container">
     <b-modal
-      ref="swapconfirmation"
+      ref="modal"
       hide-footer
       centered
       class="bootstrap-modal bootstrap-modal-wide padding-40-20"
-      title="Confirmation"
+      title="Generate"
     >
       <help-center-button />
     </b-modal>
@@ -19,7 +19,14 @@ export default {
   components: {
     'help-center-button': HelpCenterButton
   },
-  props: {},
+  props: {
+    activeCdp: {
+      type: Object,
+      default: function() {
+        return {};
+      }
+    }
+  },
   data() {
     return {};
   },
@@ -30,5 +37,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'WithdrawCollateral.scss';
+@import 'GenerateDai.scss';
 </style>

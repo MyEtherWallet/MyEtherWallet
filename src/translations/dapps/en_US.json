@@ -55,7 +55,7 @@
   "liquidationPenalty": "Liquidation penalty",
   "minimumRatio": "Minimum ratio",
   "stabilityFee": "Stability fee",
-  "ethCollateral": "ETH Collateral",
+  "_ethCollateral": "ETH Collateral",
   "deposited": "Deposited",
   "deposit": "Deposit",
   "maxWithDraw": "Max. available to withdraw",

@@ -2,7 +2,7 @@
   <div>
     <interface-container-title :title="'MAKER'" />
 
-    <label for="Collateral">Collateral</label>
+<!--    <label for="Collateral">Collateral</label>
     <input id="Collateral" v-model="ethQty" type="number" />
     <br />
     <label for="Generate">Generate</label>
@@ -43,7 +43,7 @@
           Collateralization Ratio: <span>{{ liquidationRatio * 100 }}%</span>
         </li>
       </ul>
-    </div>
+    </div>-->
   </div>
 </template>
 
