@@ -11,7 +11,7 @@
         <div class="input-container">
           <label>How much ETH would you like to deposit?</label>
           <div class="input-box">
-            <input /> <span class="input-unit">ETH</span>
+            <input v-model="amount"/> <span class="input-unit">ETH</span>
           </div>
         </div>
       </div>
@@ -19,7 +19,7 @@
         <button class="cancel-btn">
           Submit
         </button>
-        <button class="submit-btn">
+        <button class="submit-btn"  @click="lockEth">
           Submit
         </button>
       </div>
@@ -49,14 +49,19 @@ export default {
     }
   },
   data() {
-    return {};
+    return {
+      amount: 0
+    };
   },
   computed: {},
   watch: {},
   methods: {
-    async lockEth(amount) {
-      if (toBigNumber(amount).gte(0)) {
-        return await this.activeCdp.lockEth(amount);
+    async lockEth() {
+      if (toBigNumber(this.amount).gte(0)) {
+        console.log(this.amount); // todo remove dev item
+        const locked = await this.activeCdp.lockEth(this.amount);
+        console.log(locked); // todo remove dev item
+        return locked;
       }
     }
   }

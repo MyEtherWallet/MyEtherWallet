@@ -36,6 +36,7 @@ import BigNumber from 'bignumber.js';
 import Maker from '@makerdao/dai';
 import { toChecksumAddress } from '@/helpers/addressUtils';
 import MakerCDP from './MakerCDP';
+import MewPlugin from './dai-plugin-mew'
 
 const { MKR, DAI, ETH, WETH, PETH, USD_ETH, USD_MKR, USD_DAI } = Maker;
 
@@ -150,11 +151,18 @@ export default {
   },
   async mounted() {
     this.gotoHome();
+    const MewMakerPlugin = MewPlugin(this.web3, this.account.address);
+    console.log('provider', this.web3.currentProvider); // todo remove dev item
+    // this.maker = new Maker({preset: {web3: {provider: this.web3.currentProvider}}})
     this.maker = await Maker.create('http', {
       url: this.network.url,
       provider: {
         type: 'HTTP', // or 'TEST'
         network: 'kovan'
+      },
+      plugins: [MewMakerPlugin],
+      accounts: {
+        myLedger1: { type: 'mew' }
       },
       log: true
     });
@@ -199,7 +207,6 @@ export default {
     );
     this.cdps = cdps;
     if (this.cdps.length > 0) {
-      this.gotoImport();
       const sysVars = {
         ethPrice: this.ethPrice,
         pethPrice: this.pethPrice,
@@ -214,6 +221,7 @@ export default {
         console.log(this.availableCdps); // todo remove dev item
       }
       this.cdpDetailsLoaded = true;
+      this.gotoImport();
     } else {
       this.gotoCreate();
     }

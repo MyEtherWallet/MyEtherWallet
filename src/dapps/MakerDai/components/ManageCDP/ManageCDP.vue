@@ -298,6 +298,8 @@ export default {
       // const cdpId = 5178;
       if (this.cdpId) {
         this.activeCdp = this.availableCdps[this.cdpId];
+        console.log((await this.activeCdp.getProxy())); // todo remove dev item
+
       }
     }
   },

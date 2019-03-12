@@ -1,46 +1,17 @@
-export default function(web3) {
+import MewSubProvider from './mew-subprovider';
 
-  return (maker) =>{
-    maker.service('accounts', true).addAccountType('ledger', async settings => {
-      const subprovider =
+export default function(web3, address, options) {
+  const subprovider = MewSubProvider(web3, address, options);
 
-      let address;
-
-      if (settings.accountsLength && settings.accountsLength > 1) {
-        if (!settings.choose) {
-          throw new Error(
-            'If accountsLength > 1, "choose" must be defined in account options.'
-          );
-        }
-
-        const addresses = await new Promise((resolve, reject) =>
-          subprovider.getAccounts((err, addresses) =>
-            err ? reject(err) : resolve(addresses)
-          )
-        );
-
-        address = await new Promise((resolve, reject) => {
-          const callback = (err, address) =>
-            err ? reject(err) : resolve(address);
-
-          // this chooser function allows the app using the plugin to display the
-          // list of addresses to a human user and let them make a choice.
-          settings.choose(
-            Object.keys(addresses).map(k => addresses[k]),
-            callback
-          );
-        });
-        setChosenAddress(address);
-      } else {
-        address = await new Promise((resolve, reject) =>
-          subprovider.getAccounts((err, addresses) =>
-            err ? reject(err) : resolve(addresses[0])
-          )
-        );
-      }
-
+  return maker => {
+    maker.service('accounts', true).addAccountType('mew', async settings => {
+      console.log('maker.service settings', settings); // todo remove dev item
+      address = await new Promise((resolve, reject) =>
+        subprovider.getAccounts((err /*, addresses*/) =>
+          err ? reject(err) : resolve(address)
+        )
+      );
       return { subprovider, address };
     });
-  }
-
+  };
 }

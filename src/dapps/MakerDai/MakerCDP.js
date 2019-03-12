@@ -3,6 +3,8 @@ import Maker from '@makerdao/dai';
 import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
 
+const { MKR, DAI, ETH, WETH, PETH, USD_ETH, USD_MKR, USD_DAI } = Maker;
+
 const toBigNumber = num => {
   return new BigNumber(num);
 };
@@ -15,6 +17,7 @@ const bnOver = (one, two, three) => {
 
 export default class MakerCDP {
   constructor(cdpId, maker, priceService, cdpService, sysVars, toInit) {
+    this.txMgr = maker.service('transactionManager');
     this.cdpId = cdpId;
     this.cdp = {};
     this.maker = maker;
@@ -108,9 +111,40 @@ export default class MakerCDP {
     return !!this._collatRatio.lte(2);
   }
 
-  lockEth(amount){
-    const inWei = unit.toWei(amount, 'ether');
-    return this.cdp.lockEth(inWei, ETH.wei);
+  async getProxy() {
+    console.log((await this.maker.service('proxy'))); // todo remove dev item
+    return this.maker.service('proxy').currentProxy();
+  }
+
+  async buildProxy() {
+    const proxyService = this.maker.service('proxy');
+    if (!proxyService.currentProxy()) {
+      return await proxyService.build();
+    }
+  }
+
+  useProxy(tubContractAddress, cdpId, daiAmount, ethAmount){
+    // function lockAndDraw(tubContractAddress, cdpId, daiAmount, ethAmount) {
+      const saiProxy = this.maker.service('smartContract').getContractByName('SAI_PROXY');
+
+      return saiProxy.lockAndDraw(
+        tubContractAddress,
+        cdpId,
+        daiAmount,
+        {
+          value: ethAmount,
+          dsProxy: true
+        }
+      );
+    // }
+  }
+
+  async lockEth(amount){
+    console.log('lockEth MakerCDP amount', amount); // todo remove dev item
+    // const inWei = unit.toWei(amount, 'ether');
+    const result = await this.cdp.lockEth(amount, ETH.wei);
+    console.log('lockEth MakerCDP result', result); // todo remove dev item
+    return result;
   }
 
   toUSD(eth){
