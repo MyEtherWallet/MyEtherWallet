@@ -108,10 +108,9 @@ class ledgerWallet {
 const createWallet = async basePath => {
   const _ledgerWallet = new ledgerWallet();
   await _ledgerWallet.init(basePath);
-  _ledgerWallet.errorHandler = errorHandler;
   return _ledgerWallet;
 };
-// createWallet.errorHandler = errorHandler;
+createWallet.errorHandler = errorHandler;
 const getLedgerTransport = async () => {
   const transport = await u2fTransport.create(3000, 3000);
   return transport;
