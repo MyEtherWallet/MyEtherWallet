@@ -520,6 +520,9 @@ export default {
     },
     ['swap.haveProviderRates']() {
       this.haveProviderRates = this.swap.haveProviderRates;
+      const { toArray, fromArray } = this.swap.buildInitialCurrencyArrays();
+      this.toArray = toArray;
+      this.fromArray = fromArray;
       this.lastBestRate = bestRateForQuantity(
         [...this.providerList],
         this.fromValue
