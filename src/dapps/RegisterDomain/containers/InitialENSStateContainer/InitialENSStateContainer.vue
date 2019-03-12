@@ -15,7 +15,7 @@
           type="text"
           name=""
         />
-        <span>.{{ tld }}</span>
+        <span v-show="!multiTld">.{{ tld }}</span>
       </div>
       <div class="error-message-container">
         <p
@@ -81,6 +81,10 @@ export default {
       default: ''
     },
     domainNameErr: {
+      type: Boolean,
+      default: false
+    },
+    multiTld: {
       type: Boolean,
       default: false
     }
