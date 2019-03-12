@@ -277,7 +277,10 @@ export default {
         }
       } else {
         const registrarAddr = await this.ens.owner(this.parsedTld());
-        const registrar = new DNSRegistrar(this.web3.currentProvider, registrarAddr)
+        const registrar = new DNSRegistrar(
+          this.web3.currentProvider,
+          registrarAddr
+        );
         registrar.claim(this.domainName).then(claim => {
           console.log(claim);
         });
