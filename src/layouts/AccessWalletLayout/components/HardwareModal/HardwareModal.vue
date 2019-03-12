@@ -167,12 +167,11 @@ export default {
 
         if (u2fhw.includes(item.name)) {
           const disable =
-            platform.name.toLowerCase() !== 'chrome' &&
-            platform.name.toLowerCase() !== 'opera' &&
+            (platform.name.toLowerCase() === 'chrome' ||
+              platform.name.toLowerCase() === 'opera') &&
             res;
-
-          item.disabled = disable;
-          item.msg = disable ? this.$t('errorsGlobal.browserNonU2f') : '';
+          item.disabled = !disable;
+          item.msg = !disable ? this.$t('errorsGlobal.browserNonU2f') : '';
         }
 
         if (this.isMobile()) {
@@ -204,9 +203,9 @@ export default {
               clearTimeout(showPluggedInReminder);
               this.$emit('hardwareWalletOpen', _newWallet);
             })
-            .catch(() => {
+            .catch(e => {
               this.mayNotBeAttached = true;
-              LedgerWallet.errorHandler;
+              LedgerWallet.errorHandler(e);
             });
           break;
         case 'trezor':
@@ -215,9 +214,9 @@ export default {
               clearTimeout(showPluggedInReminder);
               this.$emit('hardwareWalletOpen', _newWallet);
             })
-            .catch(() => {
+            .catch(e => {
               this.mayNotBeAttached = true;
-              TrezorWallet.errorHandler;
+              TrezorWallet.errorHandler(e);
             });
           break;
         case 'bitbox':
@@ -237,9 +236,9 @@ export default {
             .then(_newWallet => {
               this.$emit('hardwareWalletOpen', _newWallet);
             })
-            .catch(() => {
+            .catch(e => {
               this.mayNotBeAttached = true;
-              KeepkeyWallet.errorHandler;
+              KeepkeyWallet.errorHandler(e);
             });
           break;
         case 'finney':

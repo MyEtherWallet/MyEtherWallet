@@ -279,7 +279,8 @@ export default {
   methods: {
     isValidInput(value, solidityType) {
       if (!value) value = '';
-      if (solidityType === 'uint') return value != '' && !isNaN(value);
+      if (solidityType === 'uint')
+        return value !== '' && !isNaN(value) && Misc.isInt(value);
       if (solidityType === 'address') return isAddress(value);
       if (solidityType === 'string') return true;
       if (solidityType === 'bytes')
