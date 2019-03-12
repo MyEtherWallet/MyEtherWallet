@@ -17,88 +17,10 @@
         </div>
         <div v-if="cdpDetailsLoaded">
           <div v-for="(cdp, idx) in cdps" :key="cdp + idx">
-            <!--availableCdps-->
-            <div class="manage-container-blocks">
-              <div class="label-one-left">
-                <div class="select-label">
-                  <p>Collateralized debt position #{{ cdp }}</p>
-
-                  <p>
-                    <span class="standard-button__green-border">
-                      <button class="the-button-box" @click="openManage(cdp)">
-                        Manage
-                      </button>
-                    </span>
-                  </p>
-                </div>
-              </div>
-              <div class="content-one-left">
-                <div class="content-one-inner-left">
-                  <p>{{ $t('dapps.deposited') }}</p>
-                  <p>
-                    <b>{{
-                      availableCdps[cdp]
-                        ? displayFixedValue(availableCdps[cdp].ethCollateral)
-                        : 0
-                    }}</b>
-                    ETH
-                  </p>
-                  <p>
-                    <b>{{
-                      availableCdps[cdp]
-                        ? displayFixedValue(availableCdps[cdp].pethCollateral)
-                        : 0
-                    }}</b>
-                    PETH /
-                    <b>{{
-                      availableCdps[cdp]
-                        ? displayFixedValue(availableCdps[cdp].usdCollateral, 2)
-                        : 0
-                    }}</b>
-                    USD
-                  </p>
-                  <br />
-                  <p>{{ $t('dapps.liquidPrice') }} (ETH/USD)</p>
-                  <p>
-                    <span class="blue-bold">{{
-                      availableCdps[cdp]
-                        ? displayFixedValue(availableCdps[cdp].liqPrice, 2)
-                        : 0
-                    }}</span>
-                    <span class="liq-usd"> USD</span>
-                  </p>
-                </div>
-                <div class="content-border">
-                  <div class="Line-8"></div>
-                </div>
-                <div class="content-one-inner-right">
-                  <p>{{ $t('dapps.generated') }}</p>
-                  <p>
-                    <b>{{
-                      availableCdps[cdp] ? availableCdps[cdp].debtValue : 0
-                    }}</b>
-                    DAI
-                  </p>
-                  <p>
-                    <b>{{
-                      availableCdps[cdp]
-                        ? displayFixedValue(availableCdps[cdp].debtValue, 2)
-                        : 0
-                    }}</b>
-                    USD
-                  </p>
-                  <br />
-                  <p>{{ $t('dapps.collateralRatio') }}</p>
-                  <p class="blue-bold">
-                    {{
-                      availableCdps[cdp]
-                        ? displayPercentValue(availableCdps[cdp].collatRatio)
-                        : 0
-                    }}%
-                  </p>
-                </div>
-              </div>
-            </div>
+            <select-cdp-entry
+              :a-cdp="availableCdps[cdp]"
+              :cdp-id="cdp"
+            ></select-cdp-entry>
           </div>
         </div>
       </div>
@@ -118,6 +40,7 @@ import BigNumber from 'bignumber.js';
 // import utils from 'web3-utils';
 // import { Toast, Misc } from '@/helpers';
 import Maker from '@makerdao/dai';
+import SelectCdpEntry from '../SelectCdpEntry';
 import { MIN_DEPOSIT, settings } from '../../config';
 const KOVAN_SERVER_URL = 'https://sai-kovan.makerfoundation.com/v1';
 const { MKR, DAI, ETH, WETH, PETH, USD_ETH, USD_MKR, USD_DAI } = Maker;
@@ -135,7 +58,8 @@ export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
     'interface-bottom-text': InterfaceBottomText,
-    blockie: Blockie
+    blockie: Blockie,
+    'select-cdp-entry': SelectCdpEntry
   },
   props: {
     tokensWithBalance: {

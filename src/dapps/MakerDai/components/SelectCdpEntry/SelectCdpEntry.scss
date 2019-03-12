@@ -1,5 +1,54 @@
 @import '~@/scss/GlobalVariables';
 
+// Colors
+$color-white: #fff;
+
+// Green Bordered Button Colors
+$green-border-button-border: #33c2a7;
+$green-border-button-border--hover: #55f0d6;
+$green-border-button-border--click: #56b7a9;
+$green-border-button-background--click: #f3fafa;
+
+@mixin btn-mixin-1() {
+  text-align: center;
+  user-select: none;
+}
+
+.select-label {
+  width: 100%;
+  display: flex;
+  align-items: stretch;
+  align-content: space-between;
+  flex-direction: row;
+
+  .standard-button__green-border {
+    @include btn-mixin-1();
+
+    margin-left: 100%;
+
+    .the-button-box {
+      background-color: $color-white;
+      border-radius: 5px;
+      border: 1px solid $green-border-button-border;
+      color: $green-border-button-border;
+
+      &:hover {
+        background-color: $color-white;
+        border: 1px solid $green-border-button-border--hover;
+        color: $green-border-button-border--hover;
+      }
+
+      &:active {
+        background-color: $green-border-button-background--click;
+        border: 1px solid $green-border-button-border--click;
+        color: $green-border-button-border--click;
+      }
+    }
+  }
+
+  // .standard-button__green-border
+}
+
 .container-maker {
   border-radius: 5px;
   grid-area: main;
@@ -8,6 +57,7 @@
   > div {
     background: $background-color-white;
   }
+
   .manage-container {
     padding: 42px;
 
@@ -21,16 +71,24 @@
       font-size: 16px;
       font-weight: 400;
     }
+
     .cpd-title {
-      padding-bottom: 14px;
       padding-left: 22px;
       font-size: 16px;
       font-weight: 600;
       color: #0b2840;
     }
+
     .cdp-id {
+      p {
+        font-size: 10px;
+      }
+
+      b {
+        font-size: 10px;
+      }
+
       padding-left: 22px;
-      font-size: 14px;
       color: #506175;
     }
 
@@ -52,6 +110,7 @@
       font-weight: 600;
       color: #0b2840;
     }
+
     .info-label-one-right {
       grid-column: col 2;
       grid-row: row;
@@ -60,6 +119,7 @@
       font-weight: 600;
       color: #0b2840;
     }
+
     .info-content-one-left {
       border-radius: 4px;
       background-color: #f2fafa;
@@ -70,6 +130,7 @@
       grid-gap: 10px;
       grid-template-rows: repeat(2, [row] auto);
     }
+
     .info-content-one-right {
       border-radius: 4px;
       background-color: #f2fafa;
@@ -80,9 +141,11 @@
       grid-gap: 10px;
       grid-template-rows: repeat(2, [row] auto);
     }
+
     .info-content-one-inner-top {
       grid-row: row;
     }
+
     .info-content-one-inner-bottom {
       grid-row: row 2;
     }
@@ -120,6 +183,7 @@
       grid-gap: 10px;
       grid-template-columns: repeat(9, [col] 50px);
     }
+
     .content-one-inner-left {
       grid-column: col / span 4;
       grid-row: row;
@@ -130,21 +194,14 @@
         font-weight: normal;
         color: #334758;
       }
-      p:last-child {
-        margin-top: 10px;
-        font-size: 14px;
-        font-weight: 500;
-        color: #05c0a5;
-        padding-bottom: 23px;
-        span:hover{
-          cursor: pointer;
-        }
-      }
+
+
     }
 
     .content-border {
       grid-column: col 5 / span 1;
       grid-row: row;
+
       .Line-8 {
         margin-left: 95%;
         width: 1px;
@@ -158,76 +215,24 @@
       grid-column: col 6 / span 4;
       grid-row: row;
       margin-left: 12px;
+
       p:first-child {
         margin-bottom: 10px;
         font-size: 14px;
         font-weight: normal;
         color: #334758;
       }
-      p:last-child {
-        margin-top: 10px;
-        font-size: 14px;
-        font-weight: 500;
-        color: #05c0a5;
-        padding-bottom: 23px;
 
-        span:hover{
-          cursor: pointer;
-        }
-      }
     }
+
     .content-one-inner-middle-right {
       grid-column: col 6 / span 3;
       grid-row: row 2;
     }
+
     .content-one-inner-bottom-right {
       grid-column: col 6 / span 3;
       grid-row: row 3;
     }
   }
 }
-
-/*
-
-.Collateralize-Gene {
-  width: 341px;
-  height: 22px;
-  font-family: AvenirNext;
-  font-size: 16px;
-  font-weight: 600;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: normal;
-  letter-spacing: normal;
-  color: #0b2840;
-}
-
-.Please-text-somethin {
-  width: 535px;
-  height: 51px;
-  font-family: AvenirNext;
-  font-size: 14px;
-  font-weight: normal;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: normal;
-  letter-spacing: normal;
-  color: #506175;
-}
-
-.Please-text-somethin .text-style-1 {
-  font-family: PingFangSC;
-}
-
-.Collateral {
-  width: 199px;
-  height: 22px;
-  font-family: AvenirNext;
-  font-size: 16px;
-  font-weight: 600;
-  font-style: normal;
-  font-stretch: normal;
-  line-height: normal;
-  letter-spacing: normal;
-  color: #0b2840;
-} */

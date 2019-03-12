@@ -1,6 +1,6 @@
 <template>
   <div class="register-domain-container">
-    <back-button />
+    <back-button/>
     <button @click="gotoCreate">Create</button>
     <button @click="gotoImport">Manage</button>
     <router-view
@@ -35,6 +35,7 @@ import Blockie from '@/components/Blockie';
 import BigNumber from 'bignumber.js';
 import Maker from '@makerdao/dai';
 import { toChecksumAddress } from '@/helpers/addressUtils';
+import MakerCDP from './MakerCDP';
 
 const { MKR, DAI, ETH, WETH, PETH, USD_ETH, USD_MKR, USD_DAI } = Maker;
 
@@ -148,6 +149,7 @@ export default {
     }
   },
   async mounted() {
+    this.gotoHome();
     this.maker = await Maker.create('http', {
       url: this.network.url,
       provider: {
@@ -198,8 +200,17 @@ export default {
     this.cdps = cdps;
     if (this.cdps.length > 0) {
       this.gotoImport();
+      const sysVars = {
+        ethPrice: this.ethPrice,
+        pethPrice: this.pethPrice,
+        liquidationRatio: this.liquidationRatio,
+        liquidationPenalty: this.liquidationPenalty,
+        stabilityFee: this.stabilityFee
+      };
       for (let i = 0; i < this.cdps.length; i++) {
-        this.availableCdps[this.cdps[i]] = await this.getCdp(this.cdps[i]);
+        const makerCDP = new MakerCDP(this.cdps[i], this.maker, this.priceService, this.cdpService, sysVars);
+        this.availableCdps[this.cdps[i]] = await makerCDP.init(this.cdps[i]);
+        // this.availableCdps[this.cdps[i]] = await this.getCdp(this.cdps[i]);
         console.log(this.availableCdps); // todo remove dev item
       }
       this.cdpDetailsLoaded = true;
@@ -209,6 +220,11 @@ export default {
     console.log('cdps', cdps); // todo remove dev item
   },
   methods: {
+    gotoHome() {
+      this.$router.push({
+        name: 'Maker'
+      });
+    },
     gotoCreate() {
       this.$router.push({
         name: 'create'

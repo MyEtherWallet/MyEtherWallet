@@ -4,6 +4,70 @@
   font-size: 36px;
 }
 
+.inputs-container {
+  display: flex;
+  flex-direction: column;
+
+  .input-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+
+    label {
+      color: $dark-blue-2;
+      font-size: 16px;
+      font-weight: 600;
+      padding: 10px 7px;
+
+      i {
+        font-size: 14px;
+        margin-right: 2px;
+      }
+
+      .input-title {
+        font-size: 16px;
+      }
+    }
+
+    input {
+      background-color: $background-color-1;
+      border: 0;
+      font-size: 14px;
+      height: 52px;
+      padding: 20px;
+      width: 100%;
+    }
+  }
+}
+
+.buttons-container {
+  text-align: center;
+  margin-top: 60px;
+
+  // Mobile
+  @media all and (max-width: $mobile-width) {
+    margin-top: 30px;
+  }
+
+  button {
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 20px;
+    width: 260px;
+
+    // Mobile
+    @media all and (max-width: $mobile-width) {
+      width: 100%;
+    }
+  }
+
+  .submit {
+    background-color: $mew-green;
+    border: 1px solid $mew-green;
+    color: $white;
+  }
+}
+
 .time-remaining {
   text-align: center;
 
