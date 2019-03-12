@@ -53,6 +53,7 @@ import normalise from '@/helpers/normalise';
 import { mapGetters } from 'vuex';
 import { Toast } from '@/helpers';
 import DNSRegistrar from '@ensdomains/dnsregistrar';
+import DNSProve from '@ensdomains/dnsprovejs';
 
 export default {
   components: {
@@ -276,7 +277,21 @@ export default {
           this.loading = false;
         }
       } else {
+        // const dnsprove = new DNSProve(this.web3.currentProvider);
+        // const textDomain = `_ens.${this.domainName}`;
+        // const dnsResult = await dnsprove.lookup('TXT', textDomain);
+
+        // console.log(dnsResult, textDomain);
+
+        // if (dnsResult.found) {
+        //   this.processResult(['1']);
+        // } else if (dnsResult.nsec) {
+        //   this.processResult(['1']);
+        // } else {
+        //   Toast.responseHandler("Node doesn't support DNSSEC!!!", Toast.ERROR);
+        // }
         const registrarAddr = await this.ens.owner(this.parsedTld());
+
         const registrar = new DNSRegistrar(
           this.web3.currentProvider,
           registrarAddr
