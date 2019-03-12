@@ -1,6 +1,6 @@
-import { THUNDERCORE } from '../types';
+import { TT } from '../types';
 export default {
-  type: THUNDERCORE,
+  type: TT,
   service: 'THUNDERCORE',
   url: 'https://mainnet-rpc.thundercore.com',
   port: 443,

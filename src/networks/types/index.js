@@ -24,7 +24,7 @@ import RSKTEST from './RSKTEST.js';
 import TOMO from './TOMO.js';
 import UBQ from './UBQ.js';
 import WEB from './WEB.js';
-import THUNDERCORE from './THUNDERCORE.js';
+import TT from './TT.js';
 export {
   AKA,
   ATH,
@@ -52,5 +52,5 @@ export {
   TOMO,
   UBQ,
   WEB,
-  THUNDERCORE
+  TT
 };
