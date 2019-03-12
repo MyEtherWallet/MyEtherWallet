@@ -29,7 +29,13 @@
           </div>
           <div v-else>
             <i
-              :class="['currency-icon', 'as-font', 'cc', currency, 'cc-icon']"
+              :class="[
+                'currency-icon',
+                'as-font',
+                'cc',
+                getIcon(currency),
+                'cc-icon'
+              ]"
             />
           </div>
         </div>
@@ -91,7 +97,7 @@ import debugLogger from 'debug';
 import WAValidator from 'wallet-address-validator';
 import MAValidator from 'multicoin-address-validator';
 import Blockie from '@/components/Blockie';
-import { EthereumTokens, BASE_CURRENCY } from '@/partners';
+import { EthereumTokens, BASE_CURRENCY, hasIcon } from '@/partners';
 
 const errorLogger = debugLogger('v5:error');
 
@@ -143,6 +149,9 @@ export default {
     }
   },
   methods: {
+    getIcon(currency) {
+      return hasIcon(currency);
+    },
     copyToClipboard(ref) {
       ref.select();
       document.execCommand('copy');
