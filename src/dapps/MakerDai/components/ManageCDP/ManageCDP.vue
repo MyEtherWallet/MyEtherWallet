@@ -112,10 +112,10 @@
             <div class="content-one-inner-left">
               <p>{{ $t('dapps.generated') }}</p>
               <p>
-                <b>{{ activeCdp.debtValue }}</b> DAI
+                <b>{{ activeCdp._debtValue }}</b> DAI
               </p>
               <p>
-                <b>{{ displayFixedValue(activeCdp.debtValue, 2) }}</b> USD
+                <b>{{ displayFixedValue(activeCdp._debtValue, 2) }}</b> USD
               </p>
               <p>
                 <span @click="showPayback">{{ $t('dapps.payBack') }}</span>
