@@ -112,7 +112,7 @@ export default class MakerCDP {
   }
 
   async getProxy() {
-    console.log((await this.maker.service('proxy'))); // todo remove dev item
+    console.log(await this.maker.service('proxy')); // todo remove dev item
     return this.maker.service('proxy').currentProxy();
   }
 
@@ -123,31 +123,41 @@ export default class MakerCDP {
     }
   }
 
-  useProxy(tubContractAddress, cdpId, daiAmount, ethAmount){
-    // function lockAndDraw(tubContractAddress, cdpId, daiAmount, ethAmount) {
-      const saiProxy = this.maker.service('smartContract').getContractByName('SAI_PROXY');
-
-      return saiProxy.lockAndDraw(
-        tubContractAddress,
-        cdpId,
-        daiAmount,
-        {
-          value: ethAmount,
-          dsProxy: true
-        }
-      );
-    // }
-  }
-
-  async lockEth(amount){
+  async lockEth(amount) {
     console.log('lockEth MakerCDP amount', amount); // todo remove dev item
     // const inWei = unit.toWei(amount, 'ether');
-    const result = await this.cdp.lockEth(amount, ETH.wei);
+    // const result = this.cdp.lockEth(amount, ETH.wei);
+    const result = this.cdp.lockEth(amount, {
+      waitForConfirm: true
+    });
     console.log('lockEth MakerCDP result', result); // todo remove dev item
+    this.txMgr.listen(result, {
+      pending: tx => {
+        console.log('pending', tx); // todo remove dev item
+        const { contract, method } = tx.metadata;
+        if (contract === 'WETH' && method === 'deposit') {
+          console.log(tx.hash); // print hash for WETH.deposit
+        }
+        // do something when tx is pending
+      },
+      mined: tx => {
+        console.log('mined', tx); // todo remove dev item
+        // do something when tx is mined
+      },
+      confirmed: tx => {
+        console.log('confirmed', tx); // todo remove dev item
+        // do something when tx is confirmed
+      },
+      error: tx => {
+        console.log('ERROR', tx); // todo remove dev item
+        // do someting when tx fails
+      }
+    });
+
     return result;
   }
 
-  toUSD(eth){
+  toUSD(eth) {
     return this._ethPrice.times(toBigNumber(eth));
   }
 

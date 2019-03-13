@@ -58,10 +58,7 @@ export default {
   methods: {
     async lockEth() {
       if (toBigNumber(this.amount).gte(0)) {
-        console.log(this.amount); // todo remove dev item
-        const locked = await this.activeCdp.lockEth(this.amount);
-        console.log(locked); // todo remove dev item
-        return locked;
+        return await this.activeCdp.lockEth(this.amount);
       }
     }
   }
