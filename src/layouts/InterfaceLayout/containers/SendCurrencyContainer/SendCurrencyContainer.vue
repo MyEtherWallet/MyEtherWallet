@@ -350,6 +350,26 @@ export default {
       if (this.validInputs) this.estimateGas();
     }, 500)
   },
+  mounted() {
+    if (Object.keys(this.linkQuery).length > 0) {
+      const { data, to, value, gaslimit, tokensymbol } = this.linkQuery;
+      const foundToken = this.tokens.find(item => {
+        return item.symbol.toLowerCase() === tokensymbol.toLowerCase();
+      });
+      this.value = new BigNumber(value).toFixed();
+      this.data = data;
+      this.hexAddress = to;
+      this.address = to;
+      this.gasLimit = new BigNumber(gaslimit).toString();
+      this.selectedCurrency = foundToken ? foundToken : this.selectedCurrency;
+
+      Toast.responseHandler(
+        'Form has been prefilled. Please proceed with caution!',
+        Toast.WARN
+      );
+      this.$store.dispatch('saveQueryVal', {});
+    }
+  },
   methods: {
     sendEntireBalance() {
       if (this.isToken) this.value = this.selectedCurrency.balance;

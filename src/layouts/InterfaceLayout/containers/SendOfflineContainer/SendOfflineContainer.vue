@@ -264,7 +264,8 @@ export default {
     ...mapGetters({
       wallet: 'wallet',
       network: 'network',
-      web3: 'web3'
+      web3: 'web3',
+      linkQuery: 'linkQuery'
     }),
     txSpeedMsg() {
       const net = this.network.type.name;
@@ -326,6 +327,26 @@ export default {
       this.createDataHex(null, null, newVal);
     }
   },
+  mounted() {
+    if (Object.keys(this.linkQuery).length > 0) {
+      const { data, to, value, gaslimit, gas, tokensymbol } = this.linkQuery;
+      const foundToken = this.tokens.find(item => {
+        return item.symbol.toLowerCase() === tokensymbol.toLowerCase();
+      });
+      this.toAmt = new BigNumber(value).toFixed();
+      this.toData = data;
+      this.address = to;
+      this.gasLimit = new BigNumber(gaslimit).toFixed();
+      this.localGasPrice = new BigNumber(gas).toFixed();
+      this.selectedCoinType = foundToken ? foundToken : this.selectedCoinType;
+
+      Toast.responseHandler(
+        'Form has been prefilled. Please proceed with caution!',
+        Toast.WARN
+      );
+      this.$store.dispatch('saveQueryVal', {});
+    }
+  },
   methods: {
     debouncedAmount: utils._.debounce(function(e) {
       const decimals =
@@ -367,7 +388,11 @@ export default {
           type: 'function'
         }
       ];
-      if (locCurrency.symbol !== this.network.type.name && locAddress !== '') {
+      if (
+        locCurrency.symbol &&
+        locCurrency.symbol !== this.network.type.name &&
+        locAddress !== ''
+      ) {
         const locVal = locAmount === '' || locAmount === null ? '0' : locAmount;
         const contract = new this.web3.eth.Contract(abi, locCurrency.address);
         const convertedAmount = new BigNumber(locVal).times(
