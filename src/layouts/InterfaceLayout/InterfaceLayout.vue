@@ -311,44 +311,52 @@ export default {
         nonce: '0x00',
         timestamp: 0
       });
-      const fetchedNonce = await this.web3.eth.getTransactionCount(
-        this.account.address
-      );
+      const fetchedNonce = await this.web3.eth
+        .getTransactionCount(this.account.address)
+        .catch(e => {
+          Toast.responseHandler(e, Toast.ERROR);
+        });
       this.nonce = new BigNumber(fetchedNonce).toString();
     },
     async getTokenBalance(token) {
-      const web3 = this.web3;
-      const contractAbi = [
-        {
-          name: 'balanceOf',
-          type: 'function',
-          constant: true,
-          inputs: [{ name: 'address', type: 'address' }],
-          outputs: [{ name: 'out', type: 'uint256' }]
-        }
-      ];
-      const contract = new web3.eth.Contract(contractAbi);
-      const data = contract.methods.balanceOf(this.account.address).encodeABI();
-      const balance = await web3.eth
-        .call({
-          to: token.address,
-          data: data
-        })
-        .then(res => {
-          let tokenBalance;
-          if (Number(res) === 0 || res === '0x') {
-            tokenBalance = 0;
-          } else {
-            const denominator = new BigNumber(10).pow(token.decimals);
-            tokenBalance = new BigNumber(res).div(denominator).toString();
+      try {
+        const web3 = this.web3;
+        const contractAbi = [
+          {
+            name: 'balanceOf',
+            type: 'function',
+            constant: true,
+            inputs: [{ name: 'address', type: 'address' }],
+            outputs: [{ name: 'out', type: 'uint256' }]
           }
-          return tokenBalance;
-        })
-        .catch(e => {
-          Toast.responseHandler(e, false);
-        });
+        ];
+        const contract = new web3.eth.Contract(contractAbi);
+        const data = contract.methods
+          .balanceOf(this.account.address)
+          .encodeABI();
+        const balance = await web3.eth
+          .call({
+            to: token.address,
+            data: data
+          })
+          .then(res => {
+            let tokenBalance;
+            if (Number(res) === 0 || res === '0x') {
+              tokenBalance = 0;
+            } else {
+              const denominator = new BigNumber(10).pow(token.decimals);
+              tokenBalance = new BigNumber(res).div(denominator).toString();
+            }
+            return tokenBalance;
+          })
+          .catch(e => {
+            Toast.responseHandler(e, false);
+          });
 
-      return balance;
+        return balance;
+      } catch (e) {
+        Toast.responseHandler(e, Toast.ERROR);
+      }
     },
     setCustomTokenStore() {
       const customTokenStore = store.get('customTokens');
@@ -446,7 +454,7 @@ export default {
           this.$store.dispatch('setAccountBalance', res);
         })
         .catch(e => {
-          Toast.responseHandler(e, false);
+          Toast.responseHandler(e, Toast.ERROR);
         });
     },
     checkWeb3WalletAddrChange() {
