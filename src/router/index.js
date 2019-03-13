@@ -16,7 +16,6 @@ const router = new Router({
 });
 
 router.beforeResolve((to, ___, next) => {
-  console.log();
   if (
     to.hasOwnProperty('meta') &&
     to.meta.hasOwnProperty('requiresAuth') &&

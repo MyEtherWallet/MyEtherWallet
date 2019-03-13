@@ -1,4 +1,5 @@
 import store from 'store';
+import { Toast } from '@/helpers';
 
 const ADD_NOTIFICATION = function(state, newNotif) {
   state.notifications = newNotif;
@@ -33,8 +34,7 @@ const CHECK_IF_ONLINE = async function(state) {
     )
       .then(res => res.json())
       .catch(e => {
-        // eslint-disable-next-line no-console
-        console.log(e);
+        Toast.responseHandler(e, Toast.ERROR);
       });
     state.darklist = {
       data: darkList,
