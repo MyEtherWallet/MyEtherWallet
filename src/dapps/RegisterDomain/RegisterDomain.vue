@@ -53,7 +53,7 @@ import normalise from '@/helpers/normalise';
 import { mapGetters } from 'vuex';
 import { Toast } from '@/helpers';
 import DNSRegistrar from '@ensdomains/dnsregistrar';
-import DNSProve from '@ensdomains/dnsprovejs';
+// import DNSProve from '@ensdomains/dnsprovejs';
 
 export default {
   components: {

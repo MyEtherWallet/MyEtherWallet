@@ -32,7 +32,8 @@ import {
   isValidEntry,
   checkInvalidOrMissingValue,
   dynamicSortMultiple,
-  qrcodeBuilder
+  qrcodeBuilder,
+  hasIcon
 } from './helpers';
 
 // Array of currently supported providers
@@ -81,5 +82,6 @@ export {
   isValidEntry,
   dynamicSortMultiple,
   checkInvalidOrMissingValue,
-  qrcodeBuilder
+  qrcodeBuilder,
+  hasIcon
 };
