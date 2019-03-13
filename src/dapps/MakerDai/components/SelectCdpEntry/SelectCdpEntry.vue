@@ -44,11 +44,11 @@
             <div class="content-one-inner-right">
               <p>{{ $t('dapps.generated') }}</p>
               <p>
-                <b>{{ aCdp ? aCdp.debtValue : 0 }}</b>
+                <b>{{ aCdp ? aCdp._debtValue : 0 }}</b>
                 DAI
               </p>
               <p>
-                <b>{{ aCdp ? displayFixedValue(aCdp.debtValue, 2) : 0 }}</b>
+                <b>{{ aCdp ? displayFixedValue(aCdp._debtValue, 2) : 0 }}</b>
                 USD
               </p>
               <br />

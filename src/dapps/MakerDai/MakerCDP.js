@@ -40,24 +40,25 @@ export default class MakerCDP {
 
     this.liqPrice = toBigNumber(0);
     this.isSafe = false;
-    this.debtValue = toBigNumber(0);
+    this._debtValue = toBigNumber(0);
     this._collatRatio = 0;
     this._ethCollateral = toBigNumber(0);
     this._pethCollateral = toBigNumber(0);
     this.usdCollateral = toBigNumber(0);
     this.maxEthDraw = '0';
     this.maxPethDraw = '0';
-    this.maxDaiDraw = '0';
+    this._maxDaiDraw = '0';
 
     if (toInit) this.init(this.cdpId);
   }
 
   async init(cdpId = this.cdpId) {
     this.cdp = await this.maker.getCdp(cdpId);
+    this.proxyAddress = await this.maker.service('proxy').currentProxy();
     const liqPrice = await this.cdp.getLiquidationPrice();
     this.liqPrice = liqPrice.toBigNumber().toFixed(2);
     this.isSafe = await this.cdp.isSafe();
-    this.debtValue = (await this.cdp.getDebtValue()).toBigNumber();
+    this._debtValue = (await this.cdp.getDebtValue()).toBigNumber();
     this._collatRatio = await this.cdp.getCollateralizationRatio();
     this._ethCollateral = (await this.cdp.getCollateralValue()).toBigNumber();
     this._pethCollateral = (await this.cdp.getCollateralValue(
@@ -79,12 +80,12 @@ export default class MakerCDP {
       this.liquidationRatio
     ).toString();
 
-    this.maxDaiDraw = bnOver(
+    this._maxDaiDraw = bnOver(
       this._ethPrice,
       this._ethCollateral,
       this.liquidationRatio
     )
-      .minus(this.debtValue)
+      .minus(this._debtValue)
       .toString();
 
     this.ready = true;
@@ -107,6 +108,18 @@ export default class MakerCDP {
     return this._collatRatio;
   }
 
+  get debtValue() {
+    return this._debtValue;
+  }
+
+  get maxDaiDraw(){
+    return this._maxDaiDraw;
+  }
+
+  get maxDai(){
+    return this._maxDaiDraw;
+  }
+
   atRisk() {
     return !!this._collatRatio.lte(2);
   }
@@ -124,37 +137,54 @@ export default class MakerCDP {
   }
 
   async lockEth(amount) {
-    console.log('lockEth MakerCDP amount', amount); // todo remove dev item
-    // const inWei = unit.toWei(amount, 'ether');
-    // const result = this.cdp.lockEth(amount, ETH.wei);
-    const result = this.cdp.lockEth(amount, {
-      waitForConfirm: true
-    });
-    console.log('lockEth MakerCDP result', result); // todo remove dev item
-    this.txMgr.listen(result, {
-      pending: tx => {
-        console.log('pending', tx); // todo remove dev item
-        const { contract, method } = tx.metadata;
-        if (contract === 'WETH' && method === 'deposit') {
-          console.log(tx.hash); // print hash for WETH.deposit
-        }
-        // do something when tx is pending
-      },
-      mined: tx => {
-        console.log('mined', tx); // todo remove dev item
-        // do something when tx is mined
-      },
-      confirmed: tx => {
-        console.log('confirmed', tx); // todo remove dev item
-        // do something when tx is confirmed
-      },
-      error: tx => {
-        console.log('ERROR', tx); // todo remove dev item
-        // do someting when tx fails
-      }
-    });
+    const result = this.cdpService.lockEthProxy(
+      this.proxyAddress,
+      this.cdpId,
+      amount
+    );
+    try {
+      // this.txMgr.listen(result, {
+      //   pending: tx => {
+      //     console.log('pending', tx); // todo remove dev item
+      //     const { contract, method } = tx.metadata;
+      //     if (contract === 'WETH' && method === 'deposit') {
+      //       console.log(tx.hash); // print hash for WETH.deposit
+      //     }
+      //     // do something when tx is pending
+      //   },
+      //   mined: tx => {
+      //     console.log('mined', tx); // todo remove dev item
+      //     // do something when tx is mined
+      //   },
+      //   confirmed: tx => {
+      //     console.log('confirmed', tx); // todo remove dev item
+      //     // do something when tx is confirmed
+      //   },
+      //   error: tx => {
+      //     console.log('ERROR', tx); // todo remove dev item
+      //     // do someting when tx fails
+      //   }
+      // });
+    } catch (e) {
+      console.log(e)
+    }
 
     return result;
+  }
+
+
+  drawDai(amount, acknowledgeBypass = false) {
+    if (this.calcCollatRatio(this.ethCollateral, this.debtValue.plus(amount)).gt(2) || acknowledgeBypass) {
+      try {
+        const result = this.cdpService.drawDaiProxy(
+          this.proxyAddress,
+          this.cdpId,
+          amount
+        );
+      } catch (e) {
+        console.log(e)
+      }
+    }
   }
 
   toUSD(eth) {
@@ -163,7 +193,7 @@ export default class MakerCDP {
 
   maxWithDraw() {
     const tl = this._ethPrice.times(this._ethCollateral);
-    const tr = this.debtValue.times(this.liquidationRatio);
+    const tr = this._debtValue.times(this.liquidationRatio);
     return tl.minus(tr).div(this._ethPrice);
   }
 

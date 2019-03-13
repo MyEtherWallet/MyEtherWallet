@@ -14,9 +14,9 @@ export default function createLedgerSubprovider(web3, address) {
 
   async function signTransaction(txData) {
     txData.generateOnly = true;
-    txData.dsProxy = true;
-    const signedTx = await web3.eth.signTransaction(txData);
-    return signedTx.rawTransaction;
+    const signedTx = await web3.eth.sendTransaction(txData);
+    // const signedTx = await web3.eth.signTransaction(txData);
+    return signedTx;
   }
 
   return new HookedWalletSubprovider({
