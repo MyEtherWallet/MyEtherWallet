@@ -11,7 +11,7 @@
         <div class="input-container">
           <label>How much ETH would you like to deposit?</label>
           <div class="input-box">
-            <input v-model="amount"/> <span class="input-unit">ETH</span>
+            <input v-model="amount" /> <span class="input-unit">ETH</span>
           </div>
         </div>
       </div>
@@ -19,7 +19,7 @@
         <button class="cancel-btn">
           Submit
         </button>
-        <button class="submit-btn"  @click="lockEth">
+        <button class="submit-btn" @click="lockEth">
           Submit
         </button>
       </div>
