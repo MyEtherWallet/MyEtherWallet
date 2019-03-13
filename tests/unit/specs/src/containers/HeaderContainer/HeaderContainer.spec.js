@@ -1,5 +1,4 @@
 import Vue from 'vue';
-
 import { shallowMount } from '@vue/test-utils';
 import HeaderContainer from '@/containers/HeaderContainer/HeaderContainer.vue';
 import Blockie from '@/components/Blockie';

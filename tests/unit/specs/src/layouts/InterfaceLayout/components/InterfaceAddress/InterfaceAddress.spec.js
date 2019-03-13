@@ -54,4 +54,6 @@ describe('InterfaceAddress.vue', () => {
       wrapper.find('#popover-ref-copy').trigger('click');
     });
   });
+
+  describe('InterfaceAddress.vue Methods', () => {});
 });

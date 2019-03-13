@@ -67,6 +67,13 @@ describe('SoftwareModal.vue', () => {
       store = baseSetup.store;
     });
     beforeEach(() => {
+      const mockRouter = {
+        history: {
+          current: {
+            fullPath: '/'
+          }
+        }
+      };
       wrapper = mount(SoftwareModal, {
         localVue,
         i18n,
@@ -78,6 +85,9 @@ describe('SoftwareModal.vue', () => {
         },
         stubs: {
           'router-link': RouterLinkStub
+        },
+        mocks: {
+          $router: mockRouter
         }
       });
     });

@@ -1,5 +1,4 @@
 import Vue from 'vue';
-
 import { shallowMount } from '@vue/test-utils';
 import NetworkAndAddressModal from '@/layouts/AccessWalletLayout/components/NetworkAndAddressModal/NetworkAndAddressModal.vue';
 import sinon from 'sinon';

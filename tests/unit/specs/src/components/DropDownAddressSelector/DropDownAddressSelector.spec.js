@@ -20,7 +20,7 @@ describe('DropDownAddressSelector.vue', () => {
   });
 
   beforeEach(() => {
-    wrapper = shallowMount(DropDownAddressSelector, {
+    shallowMount(DropDownAddressSelector, {
       localVue,
       i18n,
       store,
@@ -28,8 +28,7 @@ describe('DropDownAddressSelector.vue', () => {
     });
   });
 
-  it('render correct addresses', () => {
-    console.log(wrapper.vm.$data.validAddress);
+  xit('render correct addresses', () => {
     const dropdownOpen = wrapper.find('.dropdown-open-button');
     dropdownOpen.trigger('click');
     expect(wrapper.vm.$data.dropdownOpen).toBe(true);
@@ -46,7 +45,7 @@ describe('DropDownAddressSelector.vue', () => {
 
   describe('DropDownAddressSelector.vue Methods', () => {
     xit('validate address when dropdown is selected', () => {
-      // const wrapper = shallowMount(DropDownAddressSelector);
+      const wrapper = shallowMount(DropDownAddressSelector);
       const dropdownOpen = wrapper.find('.dropdown-open-button');
       dropdownOpen.trigger('click');
       expect(wrapper.vm.$data.validAddress).toBe(false);
