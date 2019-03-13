@@ -343,7 +343,7 @@ export default {
           .call();
       } catch (e) {
         this.safeSendPriceEstimate = new BigNumber(0).toFixed();
-        Toast.responseHandler(e, true);
+        Toast.responseHandler(e, Toast.ERROR);
       }
     }
   }
