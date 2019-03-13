@@ -14,12 +14,22 @@ describe('FooterContainer.vue', () => {
   });
 
   beforeEach(() => {
+    const mockRoute = {
+      history: {
+        current: {
+          fullPath: '/'
+        }
+      }
+    };
     wrapper = mount(FooterContainer, {
       localVue,
       i18n,
       store,
       attachToDocument: true,
-      stubs: { 'router-link': RouterLinkStub }
+      stubs: { 'router-link': RouterLinkStub },
+      mocks: {
+        $router: mockRoute
+      }
     });
   });
 

@@ -26,7 +26,6 @@ describe('[Needs Cleaned Up 1-16-19] InteractWithContractContainer.vue', () => {
     store = baseSetup.store;
     Vue.config.warnHandler = () => {};
   });
-
   beforeEach(() => {
     wrapper = shallowMount(DeployContractContainer, {
       localVue,
@@ -41,6 +40,36 @@ describe('[Needs Cleaned Up 1-16-19] InteractWithContractContainer.vue', () => {
         resetView: resetView
       }
     });
+    wrapper.find('div'); // added to suppress eslint warning
+  });
+  it('should render correct bytecode', () => {
+    const bytecode = 'bytecode';
+    wrapper.setData({ bytecode });
+    expect(wrapper.vm.$el.querySelectorAll('textarea')[0].value).toEqual(
+      wrapper.vm.$data.bytecode
+    );
+  });
+
+  it('should render correct abi', () => {
+    const abi = 'abi';
+    wrapper.setData({ abi });
+    expect(wrapper.vm.$el.querySelectorAll('textarea')[1].value).toEqual(
+      wrapper.vm.$data.abi
+    );
+  });
+
+  xit('should render correct contractName', () => {
+    const contractName = 'contractName';
+    wrapper.setData({ contractName });
+    expect(
+      wrapper.vm.$el.querySelectorAll('.domain-name input')[0].value
+    ).toEqual(contractName);
+  });
+
+  xit('should render correct contractName placeholder', () => {
+    expect(
+      wrapper.vm.$el.querySelectorAll('.domain-name input')[0].placeholder
+    ).toEqual(wrapper.vm.$data.contractNamePlaceholder);
   });
 
   it('should render correct bytecode', () => {
