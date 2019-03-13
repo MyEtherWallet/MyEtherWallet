@@ -1,6 +1,10 @@
+### Release v5.0.7
+
 ### Feature
 
 - Add Finney Modal [#782](https://github.com/MyEtherWallet/MyEtherWallet/pull/782)
+- Sentry Fixes [#777](https://github.com/MyEtherWallet/MyEtherWallet/pull/777)
+- Add Thundercore node [#780](https://github.com/MyEtherWallet/MyEtherWallet/pull/780)
 
 ### Release v5.0.6
 
