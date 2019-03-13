@@ -145,6 +145,7 @@ const createWallet = async (basePath, eventHub) => {
   await _keepkeyWallet.init(basePath);
   return _keepkeyWallet;
 };
+
 createWallet.errorHandler = errorHandler;
 
 const getRootPubKey = async (_keepkey, _path) => {
