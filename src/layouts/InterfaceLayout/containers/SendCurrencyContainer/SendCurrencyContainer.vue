@@ -227,7 +227,8 @@ export default {
       account: 'account',
       gasPrice: 'gasPrice',
       web3: 'web3',
-      network: 'network'
+      network: 'network',
+      linkQuery: 'linkQuery'
     }),
     isValidAmount() {
       const txFee = new BigNumber(ethUnit.toWei(this.gasPrice, 'gwei')).times(
@@ -353,7 +354,7 @@ export default {
   mounted() {
     if (Object.keys(this.linkQuery).length > 0) {
       const { data, to, value, gaslimit, tokensymbol } = this.linkQuery;
-      const foundToken = this.tokens.find(item => {
+      const foundToken = this.tokensWithBalance.find(item => {
         return item.symbol.toLowerCase() === tokensymbol.toLowerCase();
       });
       this.value = new BigNumber(value).toFixed();
