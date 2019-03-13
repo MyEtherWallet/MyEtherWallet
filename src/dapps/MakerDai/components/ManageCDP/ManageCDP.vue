@@ -1,7 +1,13 @@
 <template>
   <div>
-    <deposit-collateral ref="deposit" :active-cdp="activeCdp"></deposit-collateral>
-    <withdraw-collateral ref="withdraw" :active-cdp="activeCdp"></withdraw-collateral>
+    <deposit-collateral
+      ref="deposit"
+      :active-cdp="activeCdp"
+    ></deposit-collateral>
+    <withdraw-collateral
+      ref="withdraw"
+      :active-cdp="activeCdp"
+    ></withdraw-collateral>
     <payback-dai ref="payback" :active-cdp="activeCdp"></payback-dai>
     <generate-dai ref="generate" :active-cdp="activeCdp"></generate-dai>
     <interface-container-title :title="'MAKER'" />
@@ -76,7 +82,9 @@
                 <b>{{ displayFixedValue(activeCdp.pethCollateral) }}</b> PETH /
                 <b>{{ displayFixedValue(activeCdp.usdCollateral, 2) }}</b> USD
               </p>
-              <p><span @click="showDeposit">{{ $t('dapps.deposit') }}</span></p>
+              <p>
+                <span @click="showDeposit">{{ $t('dapps.deposit') }}</span>
+              </p>
             </div>
             <div class="content-border">
               <div class="Line-8"></div>
@@ -86,8 +94,13 @@
               <p>
                 <b>{{ displayFixedValue(maxWithDraw) }}</b> ETH
               </p>
-              <p><b>{{ displayFixedValue(maxWithDraw) }}</b> PETH / <b>{{ displayFixedValue(maxWithDrawUSD, 2) }}</b> USD</p>
-              <p><span @click="showWithdraw">{{ $t('dapps.withdraw') }}</span></p>
+              <p>
+                <b>{{ displayFixedValue(maxWithDraw) }}</b> PETH /
+                <b>{{ displayFixedValue(maxWithDrawUSD, 2) }}</b> USD
+              </p>
+              <p>
+                <span @click="showWithdraw">{{ $t('dapps.withdraw') }}</span>
+              </p>
             </div>
           </div>
         </div>
@@ -104,16 +117,24 @@
               <p>
                 <b>{{ displayFixedValue(activeCdp.debtValue, 2) }}</b> USD
               </p>
-              <p><span @click="showPayback">{{ $t('dapps.payBack') }}</span></p>
+              <p>
+                <span @click="showPayback">{{ $t('dapps.payBack') }}</span>
+              </p>
             </div>
             <div class="content-border">
               <div class="Line-8"></div>
             </div>
             <div class="content-one-inner-right">
               <p>{{ $t('dapps.maxAvailable') }}</p>
-              <p><b>{{ displayFixedValue(activeCdp.maxDaiDraw)}}</b> DAI</p>
-              <p><b>{{ displayFixedValue(activeCdp.maxDaiDraw, 2)}}</b> USD</p>
-              <p><span @click="showGenerate">{{ $t('dapps.generate') }}</span></p>
+              <p>
+                <b>{{ displayFixedValue(activeCdp.maxDaiDraw) }}</b> DAI
+              </p>
+              <p>
+                <b>{{ displayFixedValue(activeCdp.maxDaiDraw, 2) }}</b> USD
+              </p>
+              <p>
+                <span @click="showGenerate">{{ $t('dapps.generate') }}</span>
+              </p>
             </div>
           </div>
         </div>
@@ -129,23 +150,17 @@ import { mapGetters } from 'vuex';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
-import GenerateDai from './components/GenerateDai'
-import DepositeCollateral from './components/DepositCollateral'
-import PaybackDai from './components/PaybackDai'
-import WithdrawCollateral from './components/WithdrawCollateral'
+import GenerateDai from './components/GenerateDai';
+import DepositeCollateral from './components/DepositCollateral';
+import PaybackDai from './components/PaybackDai';
+import WithdrawCollateral from './components/WithdrawCollateral';
 import BigNumber from 'bignumber.js';
-import { MIN_DEPOSIT, settings } from '../../config';
-const KOVAN_SERVER_URL = 'https://sai-kovan.makerfoundation.com/v1';
 
 const toBigNumber = num => {
   return new BigNumber(num);
 };
 
-const bnOver = (one, two, three) => {
-  return toBigNumber(one)
-    .times(toBigNumber(two))
-    .div(toBigNumber(three));
-};
+
 export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
@@ -171,58 +186,6 @@ export default {
       type: Boolean,
       default: false
     },
-    highestGas: {
-      type: String,
-      default: '0'
-    },
-    ethPrice: {
-      type: BigNumber,
-      default: toBigNumber(0)
-    },
-    pethPrice: {
-      type: BigNumber,
-      default: toBigNumber(0)
-    },
-    liquidationPenalty: {
-      type: BigNumber,
-      default: toBigNumber(0)
-    },
-    stabilityFee: {
-      type: BigNumber,
-      default: toBigNumber(0)
-    },
-    liquidationRatio: {
-      type: BigNumber,
-      default: toBigNumber(0)
-    },
-    calcMinCollatRatio: {
-      type: Function,
-      default: function() {}
-    },
-    calcDrawAmt: {
-      type: Function,
-      default: function() {}
-    },
-    calcCollatRatio: {
-      type: Function,
-      default: function() {}
-    },
-    calcLiquidationPrice: {
-      type: Function,
-      default: function() {}
-    },
-    priceService: {
-      type: Object,
-      default: function() {
-        return {};
-      }
-    },
-    cdpService: {
-      type: Object,
-      default: function() {
-        return {};
-      }
-    },
     cdps: {
       type: Array,
       default: function() {
@@ -246,35 +209,16 @@ export default {
     return {
       activeCdp: {},
       loaded: false,
-      serverUrl: KOVAN_SERVER_URL,
-      wethToPethRatio: 0,
-      daiPrice: 0,
-      priceFloor: 0,
       ethQty: 0,
       daiQty: 0,
       selectedCdp: '',
       cdpId: '',
       cdp: {},
-      step: 1,
-      eth: toBigNumber(0),
-      skr: toBigNumber(0),
-      dai: toBigNumber(0),
-      debtValue: toBigNumber(0),
-      collatRatio: toBigNumber(0),
-      pethCollateral: toBigNumber(0),
-      usdCollateral: toBigNumber(0),
-      ethCollateral: toBigNumber(0),
-      maxDaiAvail: null,
-      liqPrice: null,
-      ratio: null,
-      error: false,
-      isSafe: false,
       maxDaiDraw: toBigNumber(0),
       maxWithDraw: toBigNumber(0),
       maxWithDrawUSD: toBigNumber(0),
       maxPethDraw: toBigNumber(0),
-      maxEthDraw: toBigNumber(0),
-
+      maxEthDraw: toBigNumber(0)
     };
   },
   watch: {
@@ -295,25 +239,22 @@ export default {
     this.cdpId = this.$route.params.cdpId;
     if (this.makerActive) {
       this.loaded = true;
-      // const cdpId = 5178;
       if (this.cdpId) {
         this.activeCdp = this.availableCdps[this.cdpId];
-        console.log((await this.activeCdp.getProxy())); // todo remove dev item
-
       }
     }
   },
   methods: {
-    showDeposit(){
+    showDeposit() {
       this.$refs.deposit.$refs.modal.show();
     },
-    showWithdraw(){
+    showWithdraw() {
       this.$refs.withdraw.$refs.modal.show();
     },
-    showPayback(){
+    showPayback() {
       this.$refs.payback.$refs.modal.show();
     },
-    showGenerate(){
+    showGenerate() {
       this.$refs.generate.$refs.modal.show();
     },
     displayPercentValue(raw) {
@@ -327,7 +268,6 @@ export default {
     isReady() {
       this.maxWithDraw = this.activeCdp.maxWithDraw();
       this.maxWithDrawUSD = this.activeCdp.toUSD(this.maxWithDraw);
-      console.log(this.maxWithDraw); // todo remove dev item
     }
   }
 };

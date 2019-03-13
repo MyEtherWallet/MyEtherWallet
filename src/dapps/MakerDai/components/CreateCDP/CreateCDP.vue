@@ -31,11 +31,11 @@
             v-model="ethQty"
             class="currency-picker-container dropdown-text-container dropdown-container"
           />
-          <p>{{ $t('dapps.minCollat') }} <b>0.029</b> ETH</p>
-          <p>0.0048 PETH</p>
+          <p>{{ $t('dapps.minCollat') }} <b>0.0TODO</b> ETH</p>
+          <p>0.00TODO PETH</p>
         </div>
         <div class="arrow">
-          fgdfgdfgfd
+          <img :src="arrowImage">
         </div>
         <div class="right-top">
           <p class="currency-label">
@@ -72,7 +72,7 @@
         <ul>
           <li>
             <p>{{ $t('dapps.minEthReq') }}</p>
-            <p>{{ minEth }} ETH</p>
+            <p> 0TODO ETH</p>
           </li>
           <li>
             <p>{{ $t('dapps.liquidPrice') }}</p>
@@ -103,7 +103,7 @@
       <div class="cdp-info-block cdp-info-entry">
         <ul>
           <li>
-            <p>{{ $t('dapps.stabilityFeeInMkr', { value: 2.5 }) }}</p>
+            <p>{{ $t('dapps.stabilityFeeInMkr', { value: displayPercentValue(stabilityFee) }) }}</p>
           </li>
         </ul>
       </div>
@@ -119,14 +119,7 @@ import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/Interf
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
 import BigNumber from 'bignumber.js';
-// import * as unit from 'ethjs-unit';
-// import utils from 'web3-utils';
-// import { Toast, Misc } from '@/helpers';
-import Maker from '@makerdao/dai';
-import { MIN_DEPOSIT, settings } from '../../config';
 import Arrow from '@/assets/images/etc/single-arrow.svg';
-
-const { MKR, DAI, ETH, WETH, PETH, USD_ETH, USD_MKR, USD_DAI } = Maker;
 
 const toBigNumber = num => {
   return new BigNumber(num);
@@ -215,29 +208,13 @@ export default {
   },
   data() {
     return {
-      minEth: 0,
+      arrowImage: Arrow,
+      minEth: 0, // TODO
       wethToPethRatio: 0,
       daiPrice: 0,
       priceFloor: 0,
       ethQty: 0,
       daiQty: 0,
-      makerVars: {
-        step: 1,
-        eth: toBigNumber(0),
-        ethText: '',
-        skr: toBigNumber(0),
-        dai: toBigNumber(0),
-        daiText: '',
-        maxDaiAvail: null,
-        minETHReqText: null,
-        liqPrice: null,
-        ratio: null,
-        error: false,
-        warning: false,
-        submitEnabled: false,
-        checkTerms: false,
-        stepsExpanded: false
-      }
     };
   },
   computed: {
@@ -265,20 +242,15 @@ export default {
       if (this.daiQty <= 0) return 0;
       return bnOver(this.liquidationRatio, this.daiQty, this.ethPrice);
     },
-    risky(){
+    risky() {
       const collRatio = this.collatRatio;
-      console.log(collRatio.toString()); // todo remove dev item
-      if(toBigNumber(collRatio).gt(0)){
-        console.log(toBigNumber(collRatio).lte(2)); // todo remove dev item
-        return toBigNumber(collRatio).lte(2)
+      if (toBigNumber(collRatio).gt(0)) {
+        return toBigNumber(collRatio).lte(2);
       }
       return false;
     }
   },
-  async mounted() {
-    console.log(USD_DAI); // todo remove dev item
-    console.log('this.maker', this.maker); // todo remove dev item
-  },
+  async mounted() {},
   methods: {
     displayPercentValue(raw) {
       if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);
@@ -287,17 +259,9 @@ export default {
         .toFixed(2)
         .toString();
     },
-    calcRatioForDraw() {},
-    collecting() {
-      // Liquidation price (ETH/USD):  { this.state.liqPrice ? printNumber(this.state.liqPrice) : "--" } USD
-      // Current price information (ETH/USD): { printNumber(this.props.system.pip.val) } USD
-      // Liquidation penalty: { printNumber(this.props.system.tub.axe.minus(WAD).times(100)) }%
-      // Collateralization ratio: this.state.ratio ? printNumber(this.state.ratio.times(100)) : "--" }%
-      // Stability fee: @{ printNumber(toWei(fromWei(this.props.system.tub.fee).pow(60 * 60 * 24 * 365)).times(100).minus(toWei(100)), 1, true, true) }%/year in MKR
-      // Minimum ratio: { printNumber(this.props.system.tub.mat.times(100)) }%
-      // calculate how much Dai we need to draw in order
-      // to achieve the desired collateralization ratio
-      // let drawAmt = Math.floor(principal * priceEth / collatRatio);
+    displayFixedValue(raw, decimals = 3) {
+      if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);
+      return raw.toFixed(decimals).toString();
     }
   }
 };
