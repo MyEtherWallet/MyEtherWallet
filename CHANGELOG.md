@@ -1,6 +1,6 @@
 ### Feature
 
-- Reimplement query params for send offline and regular send [](<>)
+- Reimplement query params for send offline and regular send [#803](https://github.com/MyEtherWallet/MyEtherWallet/pull/803)
 
 ### Release v5.0.7
 
