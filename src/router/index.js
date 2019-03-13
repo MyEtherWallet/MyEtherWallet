@@ -16,6 +16,7 @@ const router = new Router({
 });
 
 router.beforeResolve((to, ___, next) => {
+  console.log();
   if (
     to.hasOwnProperty('meta') &&
     to.meta.hasOwnProperty('requiresAuth') &&
@@ -23,6 +24,9 @@ router.beforeResolve((to, ___, next) => {
   ) {
     next();
   } else {
+    if (Object.keys(to.query).length > 1) {
+      store.dispatch('saveQueryVal', to.query);
+    }
     if (store.state.wallet === null) {
       store.dispatch('setLastPath', to.path);
       next({ name: 'AccessWalletLayout' });

@@ -1,3 +1,7 @@
+### Feature
+
+- Reimplement query params for send offline and regular send [](<>)
+
 ### Release v5.0.7
 
 ### Feature

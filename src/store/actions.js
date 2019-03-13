@@ -226,6 +226,10 @@ const updateBlockNumber = function({ commit }, val) {
   commit('UPDATE_BLOCK_NUMBER', val);
 };
 
+const saveQueryVal = function({ commit }, val) {
+  commit('SAVE_QUERY_VAL', val);
+};
+
 export default {
   addNotification,
   addSwapNotification,
@@ -245,5 +249,6 @@ export default {
   updateNotification,
   updateTransaction,
   gettingStartedDone,
-  updateBlockNumber
+  updateBlockNumber,
+  saveQueryVal
 };
