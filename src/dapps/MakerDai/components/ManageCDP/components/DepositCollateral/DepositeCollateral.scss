@@ -4,7 +4,6 @@
   font-size: 36px;
 }
 
-
 .inputs-container {
   display: flex;
   flex-direction: column;
@@ -30,7 +29,7 @@
       }
     }
 
-    .input-box{
+    .input-box {
       display: flex;
       flex-direction: row;
       align-items: baseline;
@@ -52,16 +51,14 @@
         height: 52px;
         padding: 17px 22px 20px;
         width: 10%;
-        color: #999999;
+        color: #999;
         font-weight: 600;
       }
     }
-
   }
 }
 
 .buttons-container {
-
   margin-top: 60px;
   margin-bottom: 60px;
   display: flex;

@@ -1,7 +1,6 @@
 <template>
   <div>
     <interface-container-title :title="'MAKER'" />
-
   </div>
 </template>
 

@@ -35,7 +35,7 @@
           <p>0.00TODO PETH</p>
         </div>
         <div class="arrow">
-          <img :src="arrowImage">
+          <img :src="arrowImage" />
         </div>
         <div class="right-top">
           <p class="currency-label">
@@ -72,7 +72,7 @@
         <ul>
           <li>
             <p>{{ $t('dapps.minEthReq') }}</p>
-            <p> 0TODO ETH</p>
+            <p>0TODO ETH</p>
           </li>
           <li>
             <p>{{ $t('dapps.liquidPrice') }}</p>
@@ -103,7 +103,13 @@
       <div class="cdp-info-block cdp-info-entry">
         <ul>
           <li>
-            <p>{{ $t('dapps.stabilityFeeInMkr', { value: displayPercentValue(stabilityFee) }) }}</p>
+            <p>
+              {{
+                $t('dapps.stabilityFeeInMkr', {
+                  value: displayPercentValue(stabilityFee)
+                })
+              }}
+            </p>
           </li>
         </ul>
       </div>

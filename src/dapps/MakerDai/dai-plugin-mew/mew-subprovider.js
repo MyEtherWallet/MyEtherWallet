@@ -1,7 +1,6 @@
 import HookedWalletSubprovider from 'web3-provider-engine/dist/es5/subproviders/hooked-wallet';
 
 export default function createLedgerSubprovider(web3, address) {
-
   async function getAccounts() {
     const addresses = {};
     addresses[address] = address;
