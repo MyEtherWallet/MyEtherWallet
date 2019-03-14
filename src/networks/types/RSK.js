@@ -15,5 +15,6 @@ export default {
     registry: '0xcb868aeabd31e2b66f74e9a55cf064abb31a4ad5',
     registrarTLD: 'rsk'
   },
-  icon: rsk
+  icon: rsk,
+  symbol: 'RBTC'
 };
