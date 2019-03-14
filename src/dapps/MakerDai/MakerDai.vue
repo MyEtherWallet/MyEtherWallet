@@ -92,7 +92,8 @@ export default {
       daiQty: 0,
       cdps: [],
       availableCdps: {},
-      cdpDetailsLoaded: false
+      cdpDetailsLoaded: false,
+      makerCdp: {}
     };
   },
   computed: {
@@ -143,7 +144,7 @@ export default {
     // this.ethPrice = toBigNumber(
     //   (await this.priceService.getEthPrice()).toNumber()
     // );
-    this.ethPrice = toBigNumber(133.7);
+    this.ethPrice = toBigNumber(132.93);
 
     this.pethPrice = toBigNumber(
       (await this.priceService.getPethPrice()).toNumber()
@@ -157,44 +158,23 @@ export default {
     this.stabilityFee = toBigNumber(
       await this.cdpService.getAnnualGovernanceFee()
     );
-    this.makerActive = true;
 
-    const directCdps = await this.maker.getCdpIds(
-      this.account.address //proxy
+    this.wethToPethRatio = toBigNumber(
+      await this.priceService.getWethToPethRatio()
     );
-    const proxy = await this.maker
-      .service('proxy')
-      .getProxyAddress(this.account.address);
-    let searchAddress;
-    if (proxy) {
-      searchAddress = proxy;
-    } else {
-      searchAddress = this.account.address;
-    }
-    const cdps = await this.maker.getCdpIds(
-      searchAddress //proxy
-    );
-    this.cdps = cdps.concat(directCdps);
+
+
+
+    this.cdps = await this.locateCdps();
     if (this.cdps.length > 0) {
-      const sysVars = {
-        ethPrice: this.ethPrice,
-        pethPrice: this.pethPrice,
-        liquidationRatio: this.liquidationRatio,
-        liquidationPenalty: this.liquidationPenalty,
-        stabilityFee: this.stabilityFee
-      };
-      for (let i = 0; i < this.cdps.length; i++) {
-        const makerCDP = new MakerCDP(
-          this.cdps[i],
-          this.maker,
-          this.priceService,
-          this.cdpService,
-          sysVars
-        );
-        this.availableCdps[this.cdps[i]] = await makerCDP.init(this.cdps[i]);
-      }
+      await this.loadCdpDetails();
       this.cdpDetailsLoaded = true;
-      this.gotoImport();
+      this.makerActive = true;
+      console.log(this.$route.name); // todo remove dev item
+      console.log(this.cdps.length); // todo remove dev item
+      if (this.$route.name !== 'create') {
+        this.gotoImport();
+      }
     } else {
       this.gotoCreate();
     }
@@ -212,6 +192,7 @@ export default {
     },
     gotoImport() {
       if (this.cdps.length > 1) {
+        console.log('go to select'); // todo remove dev item
         this.$router.push({
           name: 'select'
         });
@@ -222,6 +203,45 @@ export default {
             cdpId: this.cdps[0]
           }
         });
+      }
+    },
+    async locateCdps() {
+      const directCdps = await this.maker.getCdpIds(
+        this.account.address //proxy
+      );
+      const proxy = await this.maker
+        .service('proxy')
+        .getProxyAddress(this.account.address);
+      let searchAddress;
+      if (proxy) {
+        searchAddress = proxy;
+      } else {
+        searchAddress = this.account.address;
+      }
+      const cdps = await this.maker.getCdpIds(
+        searchAddress //proxy
+      );
+
+      return cdps.concat(directCdps);
+    },
+    async loadCdpDetails() {
+      const sysVars = {
+        ethPrice: this.ethPrice,
+        pethPrice: this.pethPrice,
+        liquidationRatio: this.liquidationRatio,
+        liquidationPenalty: this.liquidationPenalty,
+        stabilityFee: this.stabilityFee,
+        wethToPethRatio: this.wethToPethRatio
+      };
+      for (let i = 0; i < this.cdps.length; i++) {
+        const makerCDP = new MakerCDP(
+          this.cdps[i],
+          this.maker,
+          this.priceService,
+          this.cdpService,
+          sysVars
+        );
+        this.availableCdps[this.cdps[i]] = await makerCDP.init(this.cdps[i]);
       }
     },
     calcMinCollatRatio(priceFloor) {

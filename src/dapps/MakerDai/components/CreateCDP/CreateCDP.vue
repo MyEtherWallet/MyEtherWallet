@@ -1,6 +1,5 @@
 <template>
   <div class="container-maker">
-    <interface-container-title :title="'MAKER'" />
     <div class="manage-container">
       <p class="top-title">
         <b>{{ $t('dapps.maker_title') }}</b>
@@ -82,11 +81,11 @@
           </li>
           <li>
             <p>{{ $t('dapps.currentPriceInfo') }}</p>
-            <p>{{ ethPrice }} USD</p>
+            <p>{{ makerCDP.ethPrice }} USD</p>
           </li>
           <li>
             <p>{{ $t('dapps.liquidationPenalty') }}</p>
-            <p>{{ displayPercentValue(liquidationPenalty) }}%</p>
+            <p>{{ displayPercentValue(makerCDP.liquidationPenalty) }}%</p>
           </li>
           <li>
             <p>{{ $t('dapps.collateralRatio') }}</p>
@@ -96,7 +95,7 @@
           </li>
           <li>
             <p>{{ $t('dapps.minimumRatio') }}</p>
-            <p>{{ displayPercentValue(liquidationRatio) }}%</p>
+            <p>{{ displayPercentValue(makerCDP.liquidationRatio) }}%</p>
           </li>
         </ul>
       </div>
@@ -106,12 +105,24 @@
             <p>
               {{
                 $t('dapps.stabilityFeeInMkr', {
-                  value: displayPercentValue(stabilityFee)
+                  value: displayPercentValue(makerCDP.stabilityFee).toString()
                 })
               }}
             </p>
           </li>
         </ul>
+      </div>
+
+      <div class="buttons-container">
+        <div
+          :class="[
+          validInputs ? '' : 'disabled',
+          'submit-button large-round-button-green-filled'
+        ]"
+          @click="openCdp"
+        >
+          Collateralize & Generate
+        </div>
       </div>
     </div>
   </div>
@@ -121,9 +132,12 @@
 /* eslint-disable */
 
 import { mapGetters } from 'vuex';
+import ethUnit from 'ethjs-unit';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
+import MakerCDP from '../../MakerCDP';
+
 import BigNumber from 'bignumber.js';
 import Arrow from '@/assets/images/etc/single-arrow.svg';
 
@@ -221,6 +235,7 @@ export default {
       priceFloor: 0,
       ethQty: 0,
       daiQty: 0,
+      makerCDP: {}
     };
   },
   computed: {
@@ -231,22 +246,34 @@ export default {
       network: 'network',
       ens: 'ens'
     }),
+    validInputs(){
+
+      if(toBigNumber(this.ethQty).gt(0)){
+        console.log(ethUnit.toWei(this.ethQty, 'ether').toString()); // todo remove dev item
+        console.log(this.account.balance); // todo remove dev item
+        return toBigNumber(ethUnit.toWei(this.ethQty, 'ether').toString()).lte(this.account.balance)
+      }
+      return false;
+    },
     atSetFloor() {
-      return this.calcMinCollatRatio(this.priceFloor);
+      if (this.priceFloor <= 0) return 0;
+      return this.makerCDP.calcMinCollatRatio(this.priceFloor);
     },
     collatRatio() {
-      return this.calcCollatRatio(this.ethQty, this.daiQty);
+      if (this.daiQty <= 0 || this.ethQty <= 0) return 0;
+      return this.makerCDP.calcCollatRatio(this.ethQty, this.daiQty);
     },
     liquidationPrice() {
-      return this.calcLiquidationPrice(this.ethQty, this.daiQty);
+      if (this.daiQty <= 0 || this.ethQty <= 0) return 0;
+      return this.makerCDP.calcLiquidationPrice(this.ethQty, this.daiQty);
     },
     maxDaiDraw() {
       if (this.ethQty <= 0) return 0;
-      return bnOver(this.ethPrice, this.ethQty, this.liquidationRatio);
+      return this.makerCDP.calcDaiDraw(this.ethQty);
     },
     minEthDeposit() {
       if (this.daiQty <= 0) return 0;
-      return bnOver(this.liquidationRatio, this.daiQty, this.ethPrice);
+      return this.makerCDP.calcMinEthDeposit(this.daiQty);
     },
     risky() {
       const collRatio = this.collatRatio;
@@ -256,8 +283,27 @@ export default {
       return false;
     }
   },
-  async mounted() {},
+  async mounted() {
+    this.buildEmpty();
+  },
   methods: {
+    buildEmpty() {
+      const sysVars = {
+        ethPrice: this.ethPrice,
+        pethPrice: this.pethPrice,
+        liquidationRatio: this.liquidationRatio,
+        liquidationPenalty: this.liquidationPenalty,
+        stabilityFee: this.stabilityFee,
+        wethToPethRatio: this.wethToPethRatio
+      };
+      this.makerCDP = new MakerCDP(
+        null,
+        this.maker,
+        this.priceService,
+        this.cdpService,
+        sysVars
+      );
+    },
     displayPercentValue(raw) {
       if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);
       return raw
@@ -268,6 +314,12 @@ export default {
     displayFixedValue(raw, decimals = 3) {
       if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);
       return raw.toFixed(decimals).toString();
+    },
+    async openCdp() {
+      if (this.ethQty <= 0) return 0;
+      const newCdp = await this.makerCDP.openCdp(this.ethQty, this.daiQty);
+      console.log(newCdp); // todo remove dev item
+      await this.makerCDP.init(newCdp.id)
     }
   }
 };

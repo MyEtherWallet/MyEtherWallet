@@ -14,7 +14,7 @@ $confirmation-modal-mobile-width: 500px;
   .input-container {
     display: flex;
     flex-direction: column;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
 
     label {
       color: $dark-blue-2;
@@ -37,6 +37,10 @@ $confirmation-modal-mobile-width: 500px;
       flex-direction: row;
       align-items: baseline;
       margin-bottom: 20px;
+
+      &.danger {
+        border: 1px solid red;
+      }
 
       input {
         background-color: $background-color-1;
@@ -62,7 +66,29 @@ $confirmation-modal-mobile-width: 500px;
 }
 
 .sub-text{
-  padding-bottom: 20px;
+  .btn{
+    color: #05c0a5;
+    &:hover{
+      cursor: pointer;
+    }
+  }
+  padding-bottom: 10px;
+}
+
+
+.detail-container{
+  display: flex;
+  flex-direction: column;
+  //border-bottom: 1px solid #f9f9f9;
+  border-bottom: 2px solid #eaeaea;
+  .input-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+
+
+  }
+
 }
 
 .detail-info {

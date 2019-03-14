@@ -1,16 +1,25 @@
 <template>
   <div>
-    <deposit-collateral
+    <action-modal
       ref="deposit"
+      :action="'deposit'"
       :active-cdp="activeCdp"
-    ></deposit-collateral>
-    <withdraw-collateral
+    ></action-modal>
+    <action-modal
+      ref="generate"
+      :action="'generate'"
+      :active-cdp="activeCdp"
+    ></action-modal>
+    <action-modal
       ref="withdraw"
+      :action="'withdraw'"
       :active-cdp="activeCdp"
-    ></withdraw-collateral>
-    <payback-dai ref="payback" :active-cdp="activeCdp"></payback-dai>
-    <generate-dai ref="generate" :active-cdp="activeCdp"></generate-dai>
-    <interface-container-title :title="'MAKER'" />
+    ></action-modal>
+    <action-modal
+      ref="payback"
+      :action="'payback'"
+      :active-cdp="activeCdp"
+    ></action-modal>
     <div class="container-maker">
       <div class="manage-container">
         <div class="content-container">
@@ -23,7 +32,9 @@
           <div class="info-label-one-left">
             <p>{{ $t('dapps.liquidPrice') }} (ETH/USD)</p>
             <p>
-              <span class="blue-bold">{{ activeCdp.liqPrice }}</span>
+              <span class="blue-bold">{{
+                displayFixedValue(activeCdp.liquidationPrice, 2)
+              }}</span>
               <span class="liq-usd"> USD</span>
             </p>
           </div>
@@ -37,21 +48,27 @@
             <div class="info-content-one-inner-bottom">
               <p>{{ $t('dapps.liquidationPenalty') }}</p>
               <p>
-                <b>{{ displayPercentValue(activeCdp.liquidationPenalty) }}%</b>
+                <b
+                  >{{
+                  displayFixedValue(
+                  displayPercentValue(activeCdp._liquidationPenalty)
+                  )
+                  }}%</b
+                >
               </p>
             </div>
           </div>
           <div class="info-label-one-right">
             <p>{{ $t('dapps.collateralRatio') }}</p>
             <p class="blue-bold">
-              {{ displayPercentValue(activeCdp.collatRatio) }}%
+              {{ displayFixedValue(displayPercentValue(activeCdp.collatRatio)) }}%
             </p>
           </div>
           <div class="info-content-one-right">
             <div class="info-content-one-inner-top">
               <p>{{ $t('dapps.minimumRatio') }}</p>
               <p>
-                <b>{{ displayPercentValue(activeCdp.liquidationRatio) }}%</b>
+                <b>{{ displayFixedValue(displayPercentValue(activeCdp._liquidationRatio)) }}%</b>
               </p>
             </div>
             <div class="info-content-one-inner-bottom">
@@ -59,9 +76,9 @@
               <p>
                 <b
                   >{{
-                    displayFixedValue(
-                      displayPercentValue(activeCdp.stabilityFee)
-                    )
+                  displayFixedValue(
+                  displayPercentValue(activeCdp._stabilityFee)
+                  )
                   }}%</b
                 >
               </p>
@@ -76,11 +93,11 @@
             <div class="content-one-inner-left">
               <p>{{ $t('dapps.deposited') }}</p>
               <p>
-                <b>{{ displayFixedValue(activeCdp.ethCollateral) }}</b> ETH
+                <b>{{ displayFixedValue(activeCdp.ethCollateral, 5, false) }}</b> ETH
               </p>
               <p>
-                <b>{{ displayFixedValue(activeCdp.pethCollateral) }}</b> PETH /
-                <b>{{ displayFixedValue(activeCdp.usdCollateral, 2) }}</b> USD
+                <b>{{ displayFixedValue(activeCdp.pethCollateral, 5, true) }}</b> PETH /
+                <b>{{ displayFixedValue(activeCdp._usdCollateral, 2) }}</b> USD
               </p>
               <p>
                 <span @click="showDeposit">{{ $t('dapps.deposit') }}</span>
@@ -92,10 +109,10 @@
             <div class="content-one-inner-right">
               <p>{{ $t('dapps.maxWithDraw') }}</p>
               <p>
-                <b>{{ displayFixedValue(maxWithDraw) }}</b> ETH
+                <b>{{ displayFixedValue(maxWithDraw, 5) }}</b> ETH
               </p>
               <p>
-                <b>{{ displayFixedValue(maxWithDraw) }}</b> PETH /
+                <b>{{ displayFixedValue(maxWithDraw, 5) }}</b> PETH /
                 <b>{{ displayFixedValue(maxWithDrawUSD, 2) }}</b> USD
               </p>
               <p>
@@ -112,10 +129,10 @@
             <div class="content-one-inner-left">
               <p>{{ $t('dapps.generated') }}</p>
               <p>
-                <b>{{ activeCdp._debtValue }}</b> DAI
+                <b>{{ activeCdp.debtValue }}</b> DAI
               </p>
               <p>
-                <b>{{ displayFixedValue(activeCdp._debtValue, 2) }}</b> USD
+                <b>{{ displayFixedValue(activeCdp.debtValue, 2) }}</b> USD
               </p>
               <p>
                 <span @click="showPayback">{{ $t('dapps.payBack') }}</span>
@@ -127,10 +144,10 @@
             <div class="content-one-inner-right">
               <p>{{ $t('dapps.maxAvailable') }}</p>
               <p>
-                <b>{{ displayFixedValue(activeCdp.maxDaiDraw) }}</b> DAI
+                <b>{{ displayFixedValue(activeCdp.maxDai) }}</b> DAI
               </p>
               <p>
-                <b>{{ displayFixedValue(activeCdp.maxDaiDraw, 2) }}</b> USD
+                <b>{{ displayFixedValue(activeCdp.maxDai, 2) }}</b> USD
               </p>
               <p>
                 <span @click="showGenerate">{{ $t('dapps.generate') }}</span>
@@ -152,14 +169,12 @@ import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
 import GenerateDai from './components/GenerateDai';
 import DepositeCollateral from './components/DepositCollateral';
-import PaybackDai from './components/PaybackDai';
-import WithdrawCollateral from './components/WithdrawCollateral';
+import ActionModal from './components/ActionsModal';
 import BigNumber from 'bignumber.js';
 
 const toBigNumber = num => {
   return new BigNumber(num);
 };
-
 
 export default {
   components: {
@@ -167,8 +182,7 @@ export default {
     'interface-bottom-text': InterfaceBottomText,
     'generate-dai': GenerateDai,
     'deposit-collateral': DepositeCollateral,
-    'payback-dai': PaybackDai,
-    'withdraw-collateral': WithdrawCollateral,
+    'action-modal': ActionModal,
     blockie: Blockie
   },
   props: {
@@ -241,12 +255,14 @@ export default {
       this.loaded = true;
       if (this.cdpId) {
         this.activeCdp = this.availableCdps[this.cdpId];
+        console.log(this.activeCdp); // todo remove dev item
       }
     }
   },
   methods: {
     showDeposit() {
       this.$refs.deposit.$refs.modal.show();
+      // this.$refs.action.$refs.modal.show();
     },
     showWithdraw() {
       this.$refs.withdraw.$refs.modal.show();
@@ -261,12 +277,13 @@ export default {
       if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);
       return raw.times(100).toString();
     },
-    displayFixedValue(raw, decimals = 3) {
+    displayFixedValue(raw, decimals = 3, round = true) {
       if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);
+      if(round) return raw.toFixed(decimals, BigNumber.ROUND_DOWN).toString();
       return raw.toFixed(decimals).toString();
     },
     isReady() {
-      this.maxWithDraw = this.activeCdp.maxWithDraw();
+      this.maxWithDraw = this.activeCdp.maxDaiDraw();
       this.maxWithDrawUSD = this.activeCdp.toUSD(this.maxWithDraw);
     }
   }

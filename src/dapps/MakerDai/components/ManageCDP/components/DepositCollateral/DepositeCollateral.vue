@@ -15,6 +15,54 @@
           </div>
         </div>
       </div>
+      <div class="sub-text">
+        <p>0.000 PETH</p>
+      </div>
+      <div class="detail-info">
+        <div class="info">
+          <h4>Detail Information</h4>
+          <div class="sliding-switch-white">
+            <label class="switch">
+              <input
+                type="checkbox"
+                @click="modalDetailInformation = !modalDetailInformation"
+              />
+              <span class="slider round" />
+            </label>
+          </div>
+        </div>
+        <div
+          :class="modalDetailInformation && 'expended-info-open'"
+          class="expended-info"
+        >
+          <div class="padding-container">
+            <div class="grid-block">
+              <p>{{ $t('interface.network') }}</p>
+              <!--<p>{{ network.type.name }} by {{ network.service }}</p>-->
+            </div>
+            <div class="grid-block">
+              <p>{{ $t('common.gasLimit') }}</p>
+              <!--<p>{{ gas }} wei</p>-->
+            </div>
+            <div class="grid-block">
+              <p>{{ $t('common.gasPrice') }}</p>
+              <!--<p>{{ gasPrice }} gwei</p>-->
+            </div>
+            <div class="grid-block">
+              <p>{{ $t('common.txFee') }}</p>
+              <!--<p>{{ fee }} {{ network.type.name }}</p>-->
+            </div>
+            <div class="grid-block">
+              <p>Nonce</p>
+              <!--<p>{{ nonce }}</p>-->
+            </div>
+            <div class="grid-block">
+              <p>{{ $t('common.data') }}</p>
+              <!--<p>{{ data }}</p>-->
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="buttons-container">
         <button class="cancel-btn">
           Submit
@@ -50,7 +98,8 @@ export default {
   },
   data() {
     return {
-      amount: 0
+      amount: 0,
+      modalDetailInformation: false
     };
   },
   computed: {},

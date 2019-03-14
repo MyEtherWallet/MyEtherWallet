@@ -55,7 +55,7 @@
   "liquidationPenalty": "Liquidation penalty",
   "minimumRatio": "Minimum ratio",
   "stabilityFee": "Stability fee",
-  "_ethCollateral": "ETH Collateral",
+  "ethCollateral": "ETH Collateral",
   "deposited": "Deposited",
   "deposit": "Deposit",
   "maxWithDraw": "Max. available to withdraw",
@@ -70,5 +70,8 @@
   "collateral": "Collateral",
   "currentPriceInfo": "Current price information",
   "minEthReq": "Min ETH required",
-  "stabilityFeeInMkr": "Stability fee @{value}%/year in MKR"
+  "stabilityFeeInMkr": "Stability fee @{value}%/year in MKR",
+  "depositActionText": "How much ETH would you like to withdraw?",
+  "projectedLiquidation": "Projected liquidation price (ETH/USD)",
+  "projectedCollatRatio": "Projected collateralization ratio"
 }
