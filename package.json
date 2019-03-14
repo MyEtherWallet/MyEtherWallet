@@ -39,7 +39,7 @@
     "moment-timezone": "0.5.23",
     "print-js": "1.0.54",
     "register-service-worker": "1.6.2",
-    "vee-validate": "2.1.7",
+    "vee-validate": "2.2.0",
     "vue": "2.6.8",
     "vue-datetime": "1.0.0-beta.10",
     "vue-mq": "1.0.1",
