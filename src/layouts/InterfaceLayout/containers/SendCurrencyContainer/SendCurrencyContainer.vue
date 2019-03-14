@@ -247,7 +247,7 @@ export default {
       const notEnoughCurrencyMsg =
         this.$t('errorsGlobal.notAValidAmountTotal') +
         ' ' +
-        this.network.type.name +
+        (this.network.type.symbol || this.network.type.name) +
         ' ' +
         this.$t('errorsGlobal.toSend');
       const invalidValueMsg = this.$t('errorsGlobal.invalidValue');
@@ -313,7 +313,8 @@ export default {
       );
     },
     isToken() {
-      return this.selectedCurrency.symbol !== this.network.type.name;
+      const symbol = this.network.type.symbol || this.network.type.name;
+      return this.selectedCurrency.symbol !== symbol;
     },
     txData() {
       if (this.isToken) {

@@ -10,7 +10,7 @@
       <div class="modal-content qrcode-modal">
         <div class="tx-info">
           <address-block
-            :currency="network.type.name"
+            :currency="network.type.symbol || network.type.name"
             :icon="network.type.icon"
             :address="from"
             :value="value"
@@ -23,7 +23,7 @@
           </div>
           <address-block
             v-show="to !== '' && to !== undefined"
-            :currency="network.type.name"
+            :currency="network.type.symbol || network.type.name"
             :icon="network.type.icon"
             :address="to"
             :token-transfer-to="tokenTransferTo"
@@ -65,7 +65,7 @@
               </div>
               <div class="grid-block">
                 <p>{{ $t('common.txFee') }}</p>
-                <p>{{ fee }} {{ network.type.name }}</p>
+                <p>{{ fee }} {{ network.type.symbol || network.type.name }}</p>
               </div>
               <div class="grid-block">
                 <p>Nonce</p>
