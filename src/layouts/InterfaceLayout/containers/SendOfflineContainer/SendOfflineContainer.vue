@@ -328,7 +328,7 @@ export default {
   },
   methods: {
     debouncedAmount: utils._.debounce(function(e) {
-      const symbol = this.network.type.symbol || this.network.type.name;
+      const symbol = this.network.type.currencyName || this.network.type.name;
       const decimals =
         this.selectedCoinType.symbol === symbol
           ? 18
@@ -368,7 +368,7 @@ export default {
           type: 'function'
         }
       ];
-      const symbol = this.network.type.symbol || this.network.type.name;
+      const symbol = this.network.type.currencyName || this.network.type.name;
       if (locCurrency.symbol !== symbol && locAddress !== '') {
         const locVal = locAmount === '' || locAmount === null ? '0' : locAmount;
         const contract = new this.web3.eth.Contract(abi, locCurrency.address);
@@ -406,7 +406,7 @@ export default {
       reader.readAsBinaryString(e.target.files[0]);
     },
     async generateTx() {
-      const symbol = this.network.type.symbol || this.network.type.name;
+      const symbol = this.network.type.currencyName || this.network.type.name;
       const isToken = this.selectedCoinType.symbol !== symbol;
       const amt = unit.toWei(this.toAmt, 'ether');
       const raw = {
@@ -427,7 +427,7 @@ export default {
       window.scrollTo(0, 0);
     },
     setSelectedCurrency(e) {
-      const symbol = this.network.type.symbol || this.network.type.name;
+      const symbol = this.network.type.currencyName || this.network.type.name;
       this.selectedCoinType = e;
       if (e.symbol === symbol) {
         this.toData = '0x';

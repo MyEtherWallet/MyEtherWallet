@@ -12,7 +12,7 @@
           <h4 class="modal-title">{{ $t('common.totalBalance') }}</h4>
           <div class="margin-left-auto total-balance-amount">
             <span>{{ balance }}</span>
-            {{ network.type.symbol || network.type.name }}
+            {{ network.type.currencyName || network.type.name }}
           </div>
         </div>
       </div>
