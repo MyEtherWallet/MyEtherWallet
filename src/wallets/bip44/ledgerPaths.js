@@ -3,6 +3,7 @@ import {
   ledgerLiveEthereum,
   ledgerEthereumClassic,
   ledgerLiveEthereumClassic,
+  ledgerEthereumClassicVintage,
   ropsten,
   rskMainnet,
   rskTestnet
@@ -12,6 +13,7 @@ export default [
   ledgerLiveEthereum,
   ledgerEthereumClassic,
   ledgerLiveEthereumClassic,
+  ledgerEthereumClassicVintage,
   ropsten,
   rskMainnet,
   rskTestnet
