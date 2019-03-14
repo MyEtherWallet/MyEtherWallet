@@ -104,7 +104,7 @@ export default class MakerCDP {
     return this._wethToPethRatio;
   }
 
-  get usdCollateral(){
+  get usdCollateral() {
     return this._usdCollateral;
   }
 
@@ -160,9 +160,9 @@ export default class MakerCDP {
   async buildProxy() {
     const proxyService = this.maker.service('proxy');
     if (!proxyService.currentProxy()) {
-      const details =  await proxyService.build();
+      const details = await proxyService.build();
       console.log(details); // todo remove dev item
-      this.proxyAddress =  await this.maker.service('proxy').currentProxy();
+      this.proxyAddress = await this.maker.service('proxy').currentProxy();
       return this.proxyAddress;
     }
     this.proxyAddress = proxyService.currentProxy();
@@ -172,7 +172,11 @@ export default class MakerCDP {
   async openCdp(ethQty, daiQty) {
     if (ethQty <= 0) return 0;
     const proxyAddress = await this.buildProxy();
-    const newCdp = await this.cdpService.openProxyCdpLockEthAndDrawDai(ethQty, daiQty, proxyAddress);
+    const newCdp = await this.cdpService.openProxyCdpLockEthAndDrawDai(
+      ethQty,
+      daiQty,
+      proxyAddress
+    );
     console.log(newCdp); // todo remove dev item
     return newCdp.id;
   }
@@ -216,8 +220,12 @@ export default class MakerCDP {
   }
 
   maxDaiDraw() {
-    const tl = toBigNumber(this._ethPrice).times(toBigNumber(this._ethCollateral));
-    const tr = toBigNumber(this._debtValue).times(toBigNumber(this._liquidationRatio));
+    const tl = toBigNumber(this._ethPrice).times(
+      toBigNumber(this._ethCollateral)
+    );
+    const tr = toBigNumber(this._debtValue).times(
+      toBigNumber(this._liquidationRatio)
+    );
     return tl.minus(tr).div(toBigNumber(this._ethPrice));
   }
 

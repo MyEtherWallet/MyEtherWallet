@@ -50,9 +50,9 @@
               <p>
                 <b
                   >{{
-                  displayFixedValue(
-                  displayPercentValue(activeCdp._liquidationPenalty)
-                  )
+                    displayFixedValue(
+                      displayPercentValue(activeCdp._liquidationPenalty)
+                    )
                   }}%</b
                 >
               </p>
@@ -61,14 +61,22 @@
           <div class="info-label-one-right">
             <p>{{ $t('dapps.collateralRatio') }}</p>
             <p class="blue-bold">
-              {{ displayFixedValue(displayPercentValue(activeCdp.collatRatio)) }}%
+              {{
+                displayFixedValue(displayPercentValue(activeCdp.collatRatio))
+              }}%
             </p>
           </div>
           <div class="info-content-one-right">
             <div class="info-content-one-inner-top">
               <p>{{ $t('dapps.minimumRatio') }}</p>
               <p>
-                <b>{{ displayFixedValue(displayPercentValue(activeCdp._liquidationRatio)) }}%</b>
+                <b
+                  >{{
+                    displayFixedValue(
+                      displayPercentValue(activeCdp._liquidationRatio)
+                    )
+                  }}%</b
+                >
               </p>
             </div>
             <div class="info-content-one-inner-bottom">
@@ -76,9 +84,9 @@
               <p>
                 <b
                   >{{
-                  displayFixedValue(
-                  displayPercentValue(activeCdp._stabilityFee)
-                  )
+                    displayFixedValue(
+                      displayPercentValue(activeCdp._stabilityFee)
+                    )
                   }}%</b
                 >
               </p>
@@ -93,10 +101,16 @@
             <div class="content-one-inner-left">
               <p>{{ $t('dapps.deposited') }}</p>
               <p>
-                <b>{{ displayFixedValue(activeCdp.ethCollateral, 5, false) }}</b> ETH
+                <b>{{
+                  displayFixedValue(activeCdp.ethCollateral, 5, false)
+                }}</b>
+                ETH
               </p>
               <p>
-                <b>{{ displayFixedValue(activeCdp.pethCollateral, 5, true) }}</b> PETH /
+                <b>{{
+                  displayFixedValue(activeCdp.pethCollateral, 5, true)
+                }}</b>
+                PETH /
                 <b>{{ displayFixedValue(activeCdp._usdCollateral, 2) }}</b> USD
               </p>
               <p>
@@ -279,7 +293,7 @@ export default {
     },
     displayFixedValue(raw, decimals = 3, round = true) {
       if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);
-      if(round) return raw.toFixed(decimals, BigNumber.ROUND_DOWN).toString();
+      if (round) return raw.toFixed(decimals, BigNumber.ROUND_DOWN).toString();
       return raw.toFixed(decimals).toString();
     },
     isReady() {

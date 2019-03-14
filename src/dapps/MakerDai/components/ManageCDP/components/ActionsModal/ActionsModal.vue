@@ -110,9 +110,7 @@
               <p>Max Available to Generate</p>
               <p>
                 <b>{{
-                  activeCdp.maxDai
-                    ? displayFixedValue(activeCdp.maxDai)
-                    : 0
+                  activeCdp.maxDai ? displayFixedValue(activeCdp.maxDai) : 0
                 }}</b>
                 DAI
               </p>
@@ -143,9 +141,9 @@
               <p>
                 <b>{{
                   activeCdp.maxDaiDraw
-                  ? displayFixedValue(activeCdp.maxDaiDraw(), 3)
-                  : 0
-                  }}</b>
+                    ? displayFixedValue(activeCdp.maxDaiDraw(), 3)
+                    : 0
+                }}</b>
                 ETH
               </p>
             </div>

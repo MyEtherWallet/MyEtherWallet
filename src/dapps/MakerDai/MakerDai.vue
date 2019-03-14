@@ -163,8 +163,6 @@ export default {
       await this.priceService.getWethToPethRatio()
     );
 
-
-
     this.cdps = await this.locateCdps();
     if (this.cdps.length > 0) {
       await this.loadCdpDetails();
