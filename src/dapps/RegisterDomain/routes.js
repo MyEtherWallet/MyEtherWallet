@@ -9,6 +9,12 @@ const AlreadyOwnedENSContainer = () =>
 const FinalizeContainer = () => import('./containers/FinalizeContainer');
 const ManageENSContainer = () => import('./containers/ManageENSContainer');
 const FifsBuyContainer = () => import('./containers/FifsBuyContainer');
+const AlreadyOwnedDNSContainer = () =>
+  import('./containers/AlreadyOwnedDNSContainer');
+const ClaimDNSContainer = () => import('./containers/ClaimDNSContainer');
+const DNSProcessErrorContainer = () =>
+  import('./containers/DNSProcessErrorContainer');
+const DNSMissingTXT = () => import('./containers/DNSMissingTXT');
 
 export default {
   path: 'dapps/register-domain',
@@ -68,6 +74,30 @@ export default {
       path: 'fifs',
       name: 'Reserve on FIFS',
       component: FifsBuyContainer,
+      props: true
+    },
+    {
+      path: 'dns-owned',
+      name: 'DNS found',
+      component: AlreadyOwnedDNSContainer,
+      props: true
+    },
+    {
+      path: 'claim',
+      name: 'Claim DNS',
+      component: ClaimDNSContainer,
+      props: true
+    },
+    {
+      path: 'dns-error',
+      name: 'DNS Process error',
+      component: DNSProcessErrorContainer,
+      props: true
+    },
+    {
+      path: 'no-txt-setup',
+      name: 'No TXT setup for DNS',
+      component: DNSMissingTXT,
       props: true
     }
   ]

@@ -30,6 +30,7 @@
       :network-name="network.type.name"
       :register-fifs-name="registerFifsName"
       :multi-tld="multiTld"
+      :claim-func="claimFunc"
       @updateSecretPhrase="updateSecretPhrase"
       @updateBidAmount="updateBidAmount"
       @updateBidMask="updateBidMask"
@@ -52,8 +53,8 @@ import * as nameHashPckg from 'eth-ens-namehash';
 import normalise from '@/helpers/normalise';
 import { mapGetters } from 'vuex';
 import { Toast } from '@/helpers';
+// import { toChecksumAddress } from '@/helpers/addressUtils';
 import DNSRegistrar from '@ensdomains/dnsregistrar';
-// import DNSProve from '@ensdomains/dnsprovejs';
 
 export default {
   components: {
@@ -79,7 +80,8 @@ export default {
       contractInitiated: false,
       step: 1,
       domainNameErr: false,
-      ensRegistryContract: {}
+      ensRegistryContract: {},
+      dnsRegistrar: {}
     };
   },
   computed: {
@@ -96,7 +98,14 @@ export default {
       return this.network.type.ens.registrarType;
     },
     multiTld() {
-      return this.network.type.name_long.toLowerCase() === 'goerli';
+      return (
+        this.network.type.name_long.toLowerCase() === 'goerli' ||
+        this.network.type.name_long.toLowerCase() === 'ethereum'
+      );
+    },
+    parsedTld() {
+      const name = this.domainName.split('.');
+      return name.length > 1 ? name[name.length - 1] : '';
     }
   },
   watch: {
@@ -133,13 +142,17 @@ export default {
       this.contractInitiated = false;
       this.contractInitiated = true;
       this.domainNameErr = false;
+      this.dnsRegistrar = {};
+
       if (this.ens) {
         this.setRegistrar();
       }
     },
     async setRegistrar() {
       const web3 = this.web3;
-      this.registrarAddress = await this.getRegistrarAddress();
+      const tld =
+        this.parsedTld.length > 0 ? this.parsedTld : this.registrarTLD;
+      this.registrarAddress = await this.getRegistrarAddress(tld);
       this.auctionRegistrarContract = new web3.eth.Contract(
         RegistrarAbi,
         this.registrarAddress
@@ -239,19 +252,19 @@ export default {
         Toast.responseHandler(err, false);
       });
     },
-    async getRegistrarAddress() {
-      const registrarAddress = await this.ens.owner(this.registrarTLD);
+    async getRegistrarAddress(tld) {
+      const registrarAddress = await this.ens.owner(tld);
       return registrarAddress;
     },
-    parsedTld() {
-      const name = this.domainName.split('.');
-      return name[name.length - 1];
-    },
     async checkDomain() {
-      if (!this.multiTld) {
-        const web3 = this.web3;
-        this.loading = true;
-        this.labelHash = web3.utils.sha3(this.domainName);
+      this.loading = true;
+      const web3 = this.web3;
+
+      this.labelHash = web3.utils.sha3(
+        this.domainName.replace(this.parsedTld, '')
+      );
+
+      if (this.parsedTld === this.registrarTLD) {
         try {
           let domainStatus = [];
           if (this.registrarType === 'auction') {
@@ -277,32 +290,62 @@ export default {
           this.loading = false;
         }
       } else {
-        // const dnsprove = new DNSProve(this.web3.currentProvider);
-        // const textDomain = `_ens.${this.domainName}`;
-        // const dnsResult = await dnsprove.lookup('TXT', textDomain);
-
-        // console.log(dnsResult, textDomain);
-
-        // if (dnsResult.found) {
-        //   this.processResult(['1']);
-        // } else if (dnsResult.nsec) {
-        //   this.processResult(['1']);
-        // } else {
-        //   Toast.responseHandler("Node doesn't support DNSSEC!!!", Toast.ERROR);
-        // }
-        const registrarAddr = await this.ens.owner(this.parsedTld());
-
-        const registrar = new DNSRegistrar(
-          this.web3.currentProvider,
-          registrarAddr
-        );
-        registrar.claim(this.domainName).then(claim => {
-          console.log(claim);
-        });
+        try {
+          const registrarAddr = await this.ens.owner(this.parsedTld);
+          this.dnsRegistrar = new DNSRegistrar(
+            this.web3.currentProvider,
+            registrarAddr
+          );
+          const query = await this.dnsRegistrar.claim(this.domainName);
+          if (query.result.found && query.result.nsec) {
+            this.processDNSresult('dnsOwned'); // Owned
+          } else if (query.result.found && !query.result.nsec) {
+            this.processDNSresult('dnsClaimable'); // Claimable
+          } else if (!query.result.found && query.result.nsec) {
+            this.processDNSresult('dnsMissingTXT'); // DNSEC not setup properly
+          } else {
+            this.processDNSresult('dnsNotSetup'); // DNSEC not setup properly
+          }
+        } catch (e) {
+          this.loading = false;
+          Toast.responseHandler(e, Toast.ERROR);
+        }
+      }
+    },
+    async claimFunc(obj) {
+      try {
+        this.dnsRegistrar
+          .claim(this.domainName)
+          .then(claim => {
+            claim.submit(obj);
+          })
+          .catch(e => {
+            Toast.responseHandler(e, Toast.ERROR);
+          });
+      } catch (e) {
+        this.loading = false;
+        Toast.responseHandler(e, Toast.ERROR);
       }
     },
     updateStep(val) {
       this.step = val;
+    },
+    processDNSresult(type) {
+      this.loading = false;
+      switch (type) {
+        case 'dnsOwned':
+          this.$router.push({ path: 'register-domain/dns-owned' });
+          break;
+        case 'dnsClaimable':
+          this.$router.push({ path: 'register-domain/claim' });
+          break;
+        case 'dnsNotSetup':
+          this.$router.push({ path: 'register-domain/dns-error' });
+          break;
+        case 'dnsMissingTXT':
+          this.$router.push({ path: 'register-domain/no-txt-setup' });
+          break;
+      }
     },
     processResult(res) {
       this.auctionDateEnd = res[2] * 1000;

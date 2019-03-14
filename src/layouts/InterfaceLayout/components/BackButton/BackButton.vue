@@ -13,12 +13,12 @@
 export default {
   methods: {
     back() {
-      if (this.$router.history.current.path.includes('interface')) {
-        const stringifiedPath = this.$router.history.current.path.split('/');
-        this.$router.replace(`/${stringifiedPath[1]}/${stringifiedPath[2]}`);
-      } else {
-        this.$router.go(-1);
-      }
+      // if (this.$router.history.current.path.includes('interface')) {
+      //   const stringifiedPath = this.$router.history.current.path.split('/');
+      //   this.$router.replace(`/${stringifiedPath[1]}/${stringifiedPath[2]}`);
+      // } else {
+      //   }
+      this.$router.go(-1);
     }
   }
 };

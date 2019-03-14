@@ -5,18 +5,18 @@
     <div class="name-available-container">
       <div v-if="$route.fullPath.includes('auction')" class="content-header">
         <div>
-          <h3>{{ domainName }}.{{ tld }}</h3>
+          <h3>{{ domainName }}</h3>
           <p>{{ $t('dapps.domainIsAvailable') }}</p>
         </div>
       </div>
       <div v-if="$route.fullPath.includes('bid')" class="auction-started">
         <div>
-          <h3>{{ $t('dapps.auctionStarted') }} {{ domainName }}.{{ tld }}</h3>
+          <h3>{{ $t('dapps.auctionStarted') }} {{ domainName }}</h3>
         </div>
       </div>
       <div v-if="$route.fullPath.includes('reveal')" class="auction-started">
         <h3>
-          {{ $t('dapps.revealBid') }} {{ domainName }}.{{ tld }}
+          {{ $t('dapps.revealBid') }} {{ domainName }}
           {{ $t('dapps.revealBidCont') }}. <br />
           {{ highestBidder }} {{ networkName }} ({{
             $t('dapps.currentHighestBid')
