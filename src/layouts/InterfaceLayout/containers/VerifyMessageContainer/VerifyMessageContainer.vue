@@ -1,58 +1,59 @@
 <template>
-  <div class="deploy-contract-container">
+  <div class="verify-message-container">
     <interface-container-title :title="$t('common.verifyMessage')" />
 
-    <div class="send-form">
-      <div class="title-container">
-        <div class="title">
-          <h4>Signature:</h4>
-          <div class="copy-buttons">
-            <span @click="deleteInput">{{ $t('common.clear') }}</span>
-            <span @click="copyToClipboard">{{ $t('common.copy') }}</span>
+    <div class="content-container">
+      <div class="send-form">
+        <div class="title-container">
+          <div class="title">
+            <h4>Signature:</h4>
+            <div class="copy-buttons">
+              <span @click="deleteInput">{{ $t('common.clear') }}</span>
+              <span @click="copyToClipboard">{{ $t('common.copy') }}</span>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="the-form domain-name">
-        <textarea
-          v-validate="'required'"
-          ref="signature"
-          v-model="message"
-          name="verify"
-          class="custom-textarea-1"
-        />
-      </div>
-      <div>
-        <p v-if="message !== '' && showMessage === true">
-          {{ JSON.parse(message).address }}
-          {{ $t('interface.verifiedMessage') }}:<br
-            v-if="JSON.parse(message).msg.length > 20"
+        <div class="the-form signature">
+          <textarea
+            v-validate="'required'"
+            ref="signature"
+            v-model="message"
+            name="verify"
+            class="custom-textarea-1"
           />
-          <b>{{ JSON.parse(message).msg }}</b>
-        </p>
-        <p v-if="message !== '' && error.show === true">{{ error.show }}</p>
-        <p v-if="errors.has('verify')">{{ errors.first('verify') }}</p>
-      </div>
-    </div>
-
-    <div class="submit-button-container">
-      <div class="buttons">
-        <div
-          :class="[
-            errors.has('verify') || error.show === true || message === ''
-              ? 'disabled'
-              : '',
-            'submit-button large-round-button-green-filled clickable'
-          ]"
-          @click="verifyMessage"
-        >
-          {{ $t('common.verifyMessage') }}
+        </div>
+        <div>
+          <p
+            v-if="message !== '' && showMessage === true"
+            class="success-message"
+          >
+            {{ JSON.parse(message).address }}
+            {{ $t('interface.verifiedMessage') }}:
+            <br v-if="JSON.parse(message).msg.length > 20" />
+            <b>{{ JSON.parse(message).msg }}</b>
+          </p>
+          <p v-if="errors.has('verify')">{{ errors.first('verify') }}</p>
         </div>
       </div>
-      <interface-bottom-text
-        :link-text="$t('interface.helpCenter')"
-        :question="$t('interface.haveIssues')"
-        link="https://kb.myetherwallet.com"
-      />
+
+      <div class="submit-button-container">
+        <div class="buttons">
+          <button
+            :class="[
+              errors.has('verify') || message === '' ? 'disabled' : '',
+              'submit-button large-round-button-green-filled clickable'
+            ]"
+            @click="verifyMessage"
+          >
+            {{ $t('common.verifyMessage') }}
+          </button>
+        </div>
+        <interface-bottom-text
+          :link-text="$t('interface.helpCenter')"
+          :question="$t('interface.haveIssues')"
+          link="https://kb.myetherwallet.com"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -60,7 +61,7 @@
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
-import { MessageUtil } from '@/helpers';
+import { MessageUtil, Toast } from '@/helpers';
 import { mapGetters } from 'vuex';
 // eslint-disable-next-line
 const createKeccakHash = require('keccak');
@@ -73,10 +74,6 @@ export default {
   data() {
     return {
       message: '',
-      error: {
-        show: false,
-        msg: ''
-      },
       showMessage: false
     };
   },
@@ -88,10 +85,6 @@ export default {
   watch: {
     message(newVal) {
       this.message = newVal;
-      this.error = {
-        show: false,
-        msg: ''
-      };
     }
   },
   methods: {
@@ -110,8 +103,7 @@ export default {
       );
       const sig = Buffer.from(MessageUtil.getNakedAddress(json.sig), 'hex');
       if (sig.length !== 65) {
-        this.error.show = true;
-        this.error.msg = 'Something went terribly WRONG!!!!'; // Should be replaced with actual error message
+        Toast.responseHandler('Something went wrong!', Toast.ERROR);
         return;
       }
 
@@ -136,8 +128,7 @@ export default {
         MessageUtil.getNakedAddress(json.address) !==
         MessageUtil.pubToAddress(pubKey).toString('hex')
       ) {
-        this.error.show = true;
-        this.error.msg = 'Something went terribly WRONG!!!!'; // Should be replaced with actual error message
+        Toast.responseHandler('Something went wrong!', Toast.ERROR);
       } else {
         this.showMessage = true;
       }

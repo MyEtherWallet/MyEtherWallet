@@ -27,15 +27,23 @@
                   :key="content.text + index"
                   class="content"
                 >
-                  <router-link v-if="content.to !== undefined" :to="content.to"
-                    ><p>{{ content.text }}</p></router-link
+                  <div v-if="content.text === $t('common.customerSupport')">
+                    <customer-support :no-icon="true" />
+                  </div>
+                  <router-link
+                    v-else-if="content.to !== undefined"
+                    :to="content.to"
                   >
+                    <p>{{ content.text }}</p>
+                  </router-link>
                   <a
-                    v-if="content.to === undefined"
+                    v-else-if="content.to === undefined"
                     :href="content.href"
                     target="_blank"
-                    ><p>{{ content.text }}</p></a
+                    rel="noopener noreferrer"
                   >
+                    <p>{{ content.text }}</p>
+                  </a>
                 </div>
               </div>
             </div>
@@ -98,10 +106,10 @@
             <p>
               {{ $t('footer.pricingP') }}
               <a
-                href="https://coinmarketcap.com/"
+                href="https://coingecko.com/"
                 target="_blank"
                 rel="noopener noreferrer"
-                >CoinMarketCap</a
+                >CoinGecko</a
               >
               <br />
               {{ $t('footer.copyright') }}
@@ -127,11 +135,13 @@
 <script>
 import { mapGetters } from 'vuex';
 import FeedbackModal from '@/components/FeedbackModal';
+import CustomerSupport from '@/components/CustomerSupport';
 const version = VERSION;
 
 export default {
   components: {
-    'feedback-modal': FeedbackModal
+    'feedback-modal': FeedbackModal,
+    'customer-support': CustomerSupport
   },
   data() {
     return {
@@ -171,6 +181,10 @@ export default {
               text: this.$t('footer.extension'),
               href:
                 'https://chrome.google.com/webstore/detail/myetherwallet/nlbmnnijcnlegkjjpcfjclmcfggfefdm?hl=en'
+            },
+            {
+              text: this.$t('footer.sendOffline'),
+              to: '/send-offline-helper'
             }
           ]
         },
@@ -180,8 +194,12 @@ export default {
           contents: [
             {
               text: this.$t('footer.ledger'),
+              href: 'https://www.ledger.com?r=fa4b'
+            },
+            {
+              text: this.$t('footer.finney'),
               href:
-                'https://www.ledgerwallet.com/products/?utm_source=&utm_medium=affiliate&utm_campaign=fa4b&utm_content='
+                'http://shop.sirinlabs.com?rfsn=2397639.54fdf&utm_source=refersion&utm_medium=affiliate&utm_campaign=2397639.54fdf'
             },
             {
               text: this.$t('footer.digital'),
@@ -193,12 +211,21 @@ export default {
                 'https://ether.cards/?utm_source=mew&utm_medium=cpm&utm_campaign=site'
             },
             {
+              text: 'KeepKey',
+              href: 'http://keepkey.go2cloud.org/aff_c?offer_id=1&aff_id=5561'
+            },
+            {
               text: this.$t('footer.trezor'),
               href: 'https://trezor.io/?a=myetherwallet.com'
             },
             {
               text: this.$t('footer.bity'),
               href: 'https://bity.com/af/jshkb37v'
+            },
+            {
+              text: this.$t('footer.billfodl'),
+              href:
+                'https://billfodl.com/?afmc=2j&utm_campaign=2j&utm_source=leaddyno&utm_medium=affiliate'
             }
           ]
         },
@@ -217,6 +244,10 @@ export default {
             {
               text: this.$t('common.faqs'),
               to: '/#faqs'
+            },
+            {
+              text: this.$t('common.vintage'),
+              href: 'https://vintage.myetherwallet.com'
             },
             {
               text: this.$t('common.customerSupport'),

@@ -3,6 +3,16 @@
 %template-container {
   padding: 24px 56px;
   border-radius: 5px;
+
+  // Tablet
+  @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+    padding: 20px;
+  }
+
+  // Mobile
+  @media all and (max-width: $mobile-width) {
+    padding: 20px 10px;
+  }
 }
 
 .auction-started {
@@ -24,6 +34,9 @@
     margin: 0 auto;
     text-align: center;
     width: 300px;
+    @media all and (max-width: $mobile-width) {
+      width: 100%;
+    }
   }
 }
 

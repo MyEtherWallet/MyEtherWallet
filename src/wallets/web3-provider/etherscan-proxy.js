@@ -159,7 +159,6 @@ class EtherscanProxy {
           break;
         case 'eth_gasPrice':
           this.etherscanXHR(true, {
-            address: payload.params[0],
             module: 'proxy',
             action: 'eth_gasPrice'
           })

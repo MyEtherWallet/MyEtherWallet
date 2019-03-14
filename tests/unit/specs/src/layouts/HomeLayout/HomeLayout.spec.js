@@ -1,13 +1,8 @@
-import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import HomeLayout from '@/layouts/HomeLayout/HomeLayout.vue';
 import { Tooling } from '@@/helpers';
+import { RouterLinkStub } from '@@/helpers/setupTooling';
 
-const RouterLinkStub = {
-  name: 'router-link',
-  template: '<div class="routerlink"><slot> </slot></div>',
-  props: ['to']
-};
 describe('HomeLayout.vue', () => {
   let localVue, i18n, wrapper, store;
 
@@ -16,16 +11,6 @@ describe('HomeLayout.vue', () => {
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
     store = baseSetup.store;
-
-    const getters = {
-      online: () => {
-        return true;
-      }
-    };
-
-    store = new Vuex.Store({
-      getters
-    });
   });
 
   beforeEach(() => {

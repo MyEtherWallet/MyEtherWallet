@@ -1,0 +1,13 @@
+{
+  "generateInfo": "Generate Information",
+  "txFeeAndNonce": "Transaction Fee & Nonce",
+  "signedTx": "Signed Transaction",
+  "rawTx": "Raw Transaction",
+  "txFee": "Gas Limit",
+  "nonce": "Nonce",
+  "fromAddress": "From Address",
+  "confirmAndSend": "Confirm & Send",
+  "selectNetwork": "Select Network",
+  "txDetails": "Transaction Details",
+  "txStatus": "Transaction Status"
+}

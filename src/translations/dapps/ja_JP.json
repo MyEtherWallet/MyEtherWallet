@@ -12,7 +12,7 @@
   "nameHash": "Namehash",
   "owner": "所有者",
   "deedOwner": "Highest Bidder(Deed Owner)",
-  "resolverAddr": "Resolver Address",
+  "resolverAddr": "Address",
   "revealsBid": "Reveals Bid",
   "auctionCloses": "Auction Closes",
   "manage": "管理する",
@@ -40,7 +40,9 @@
   "registerEnsWarn1": "Domain name is less than 7 characters.",
   "registerEnsWarn2": "Invalid symbols on domain",
   "registerEnsContractNotReady": "Contract is not ready yet, transaction might fail.",
-  "updateResolver": "Update Resolver address",
+  "updateResolver": "Update Resolving address",
   "transferEnsTo": "Transfer ENS domain to",
-  "ensNotAvailable": "is not available yet"
+  "ensNotAvailable": "is not available yet",
+  "safesend_title": "SafeSend ETH Transaction",
+  "safesend_desc": "Protect and Secure your ETH transaction using SafeSend"
 }

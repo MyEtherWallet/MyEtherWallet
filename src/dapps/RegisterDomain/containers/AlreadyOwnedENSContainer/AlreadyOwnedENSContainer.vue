@@ -5,9 +5,11 @@
       :domain-name="domainName"
       :finalize="finalize"
     />
-    <h3>{{ domainName }}.eth {{ $t('dapps.alreadyOwned') }}.</h3>
+    <h3>{{ domainName }}.{{ tld }} {{ $t('dapps.alreadyOwned') }}.</h3>
     <div class="content-container">
-      <p class="label">{{ $t('dapps.labelHash') }}({{ domainName }}.eth):</p>
+      <p class="label">
+        {{ $t('dapps.labelHash') }}({{ domainName }}.{{ tld }}):
+      </p>
       <p class="content">{{ labelHash }}</p>
     </div>
     <div class="content-container">
@@ -18,7 +20,7 @@
       <p class="label">{{ $t('dapps.owner') }}:</p>
       <p class="content">{{ owner }}</p>
     </div>
-    <div class="content-container">
+    <div v-if="deedOwner != '0x'" class="content-container">
       <p class="label">{{ $t('dapps.deedOwner') }}:</p>
       <p class="content">{{ deedOwner }}</p>
     </div>
@@ -29,7 +31,7 @@
     <div class="owner-options">
       <button
         v-if="
-          deedOwner === wallet.getChecksumAddressString() &&
+          deedOwner === account.address &&
             owner === '0x0000000000000000000000000000000000000000'
         "
         class="finalize-button"
@@ -38,7 +40,7 @@
         {{ $t('dapps.finalize') }}
       </button>
       <button
-        v-if="owner === wallet.getChecksumAddressString()"
+        v-if="owner.toLowerCase() === account.address.toLowerCase()"
         class="manage-button"
         @click="manageEns"
       >
@@ -88,6 +90,10 @@ export default {
       type: String,
       default: ''
     },
+    tld: {
+      type: String,
+      default: ''
+    },
     finalize: {
       type: Function,
       default: () => {}
@@ -98,7 +104,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      wallet: 'wallet'
+      account: 'account'
     })
   },
   mounted() {

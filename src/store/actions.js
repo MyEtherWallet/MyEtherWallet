@@ -1,9 +1,10 @@
 import url from 'url';
 import web3 from 'web3';
+import Vue from 'vue';
 import MEWProvider from '@/wallets/web3-provider';
+import { MEW_CONNECT } from '@/wallets/bip44/walletTypes';
 import * as unit from 'ethjs-unit';
 import { formatters } from 'web3-core-helpers';
-
 import {
   txIndexes,
   swapIndexes,
@@ -15,7 +16,7 @@ const addNotification = function({ commit, state }, val) {
   let address;
 
   if (val[1] != undefined) {
-    address = web3.utils.toChecksumAddress(val[txIndexes.address]);
+    address = val[txIndexes.address].toLowerCase();
   } else {
     throw Error('Unable to determine sending address for notification.');
   }
@@ -36,7 +37,7 @@ const addNotification = function({ commit, state }, val) {
 };
 
 const addSwapNotification = async function({ commit, state }, val) {
-  const address = web3.utils.toChecksumAddress(val[swapIndexes.address]);
+  const address = val[swapIndexes.address].toLowerCase();
   const newNotif = {};
   Object.keys(state.notifications).forEach(item => {
     newNotif[item] = state.notifications[item];
@@ -55,7 +56,13 @@ const addSwapNotification = async function({ commit, state }, val) {
 
 const addCustomPath = function({ commit, state }, val) {
   const newPaths = { ...state.customPaths };
-  newPaths[val.dpath] = { label: val.label, dpath: val.dpath };
+  newPaths[val.label] = { label: val.label, path: val.path };
+  commit('ADD_CUSTOM_PATH', newPaths);
+};
+
+const removeCustomPath = function({ commit, state }, val) {
+  const newPaths = { ...state.customPaths };
+  delete newPaths[val.label];
   commit('ADD_CUSTOM_PATH', newPaths);
 };
 
@@ -63,10 +70,15 @@ const checkIfOnline = function({ commit }) {
   commit('CHECK_IF_ONLINE');
 };
 
+const gettingStartedDone = function({ commit }) {
+  commit('GETTING_STARTED_DONE');
+};
+
 const clearWallet = function({ commit, state }) {
-  if (state.wallet.identifier === 'MEWconnect') {
-    state.wallet.wallet.mewConnectDisconnect();
+  if (state.wallet.identifier === MEW_CONNECT) {
+    state.wallet.mewConnect().disconnectRTC();
   }
+  Vue.router.push('/');
   commit('CLEAR_WALLET');
 };
 
@@ -76,6 +88,14 @@ const createAndSignTx = function({ commit }, val) {
 
 const decryptWallet = function({ commit, dispatch }, params) {
   // params[0] = wallet, params[1] = provider
+  if (params[0].identifier === MEW_CONNECT) {
+    params[0].mewConnect().on('RtcClosedEvent', () => {
+      if (params[0].mewConnect().getConnectonState()) {
+        this._vm.$eventHub.$emit('mewConnectDisconnected');
+        dispatch('clearWallet');
+      }
+    });
+  }
   commit('DECRYPT_WALLET', params[0]);
   dispatch('setWeb3Instance', params[1]);
 };
@@ -130,7 +150,7 @@ const setWeb3Instance = function({ dispatch, commit, state }, provider) {
         };
         arr[i].nonce = await (arr[i].nonce === undefined
           ? web3Instance.eth.getTransactionCount(
-              state.wallet.getChecksumAddressString()
+              state.wallet.getAddressString()
             )
           : arr[i].nonce);
         arr[i].nonce = +arr[i].nonce + i;
@@ -171,7 +191,7 @@ const setENS = function({ commit }, ens) {
 
 const updateNotification = function({ commit, state }, val) {
   // address, index, object
-  const address = web3.utils.toChecksumAddress(val[0]);
+  const address = val[0].toLowerCase();
   const newNotif = {};
   Object.keys(state.notifications).forEach(item => {
     newNotif[item] = state.notifications[item];
@@ -184,7 +204,7 @@ const updateNotification = function({ commit, state }, val) {
 const updateTransaction = function({ commit, state }, val) {
   // address, index, object
 
-  const address = web3.utils.toChecksumAddress(val[0]);
+  const address = val[0].toLowerCase();
   const newNotif = {};
   Object.keys(state.transactions).forEach(item => {
     newNotif[item] = state.transactions[item];
@@ -202,6 +222,10 @@ const setLastPath = function({ commit }, val) {
   commit('SET_LAST_PATH', val);
 };
 
+const updateBlockNumber = function({ commit }, val) {
+  commit('UPDATE_BLOCK_NUMBER', val);
+};
+
 export default {
   addNotification,
   addSwapNotification,
@@ -210,6 +234,7 @@ export default {
   clearWallet,
   createAndSignTx,
   decryptWallet,
+  removeCustomPath,
   setAccountBalance,
   setGasPrice,
   setState,
@@ -218,5 +243,7 @@ export default {
   setWeb3Instance,
   switchNetwork,
   updateNotification,
-  updateTransaction
+  updateTransaction,
+  gettingStartedDone,
+  updateBlockNumber
 };

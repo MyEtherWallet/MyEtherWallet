@@ -1,8 +1,6 @@
 import Vue from 'vue';
-import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import sinon from 'sinon';
-import nodeList from '@/networks';
 import AccessMyWalletContainer from '@/layouts/AccessWalletLayout/containers/AccessMyWalletContainer/AccessMyWalletContainer.vue';
 import HardwarePasswordModal from '@/layouts/AccessWalletLayout/components/HardwarePasswordModal/HardwarePasswordModal.vue';
 import AccessWalletButton from '@/layouts/AccessWalletLayout/components/AccessWalletButton/AccessWalletButton.vue';
@@ -14,7 +12,7 @@ import MnemonicModal from '@/layouts/AccessWalletLayout/components/MnemonicModal
 import NetworkAndAddressModal from '@/layouts/AccessWalletLayout/components/NetworkAndAddressModal/NetworkAndAddressModal.vue';
 import PasswordModal from '@/layouts/AccessWalletLayout/components/PasswordModal/PasswordModal.vue';
 import PrivateKeyModal from '@/layouts/AccessWalletLayout/components/PrivateKeyModal/PrivateKeyModal.vue';
-import { Tooling, ETH_NETWORK_INDEX } from '@@/helpers';
+import { Tooling } from '@@/helpers';
 
 const BBtnStub = {
   name: 'b-btn',
@@ -33,26 +31,6 @@ describe('AccessMyWalletContainer.vue', () => {
     store = baseSetup.store;
     Vue.config.errorHandler = () => {};
     Vue.config.warnHandler = () => {};
-
-    const network = nodeList['ETH'][ETH_NETWORK_INDEX];
-
-    const getters = {
-      customPaths: () => {},
-      network: () => {
-        return network;
-      },
-      Networks: () => {
-        return nodeList;
-      },
-      path: () => {}
-    };
-
-    store = new Vuex.Store({
-      getters,
-      state: {
-        network: network
-      }
-    });
   });
 
   function resetWrapper() {
@@ -94,7 +72,7 @@ describe('AccessMyWalletContainer.vue', () => {
     resetWrapper();
   });
 
-  xit('[Failing] should render correct hardwareBrand props', () => {
+  it('[Failing] should render correct hardwareBrand props', () => {
     const hardwareBrand = 'hardwareBrand';
     wrapper.setData({ hardwareBrand });
     expect(

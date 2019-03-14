@@ -17,21 +17,36 @@
             <i :class="['cc', fromAddress.name, 'cc-icon']" />
           </div>
           <p class="value">
-            {{ fromAddress.value }} <span>{{ fromAddress.name }}</span>
+            {{ fromAddress.value }}
+            <span>{{ fromAddress.name }}</span>
           </p>
           <p class="block-title">{{ $t('interface.fromAddr') }}</p>
           <p class="address">{{ fromAddress.address }}</p>
         </div>
-        <div class="right-arrow"><img :src="arrowImage" /></div>
-        <div class="to-address">
+        <div class="right-arrow">
+          <img :src="arrowImage" />
+        </div>
+        <div v-if="!toFiat" class="to-address">
           <div class="icon">
             <i :class="['cc', toAddress.name, 'cc-icon']" />
           </div>
           <p class="value">
-            {{ toAddress.value }} <span>{{ toAddress.name }}</span>
+            {{ toAddress.value }}
+            <span>{{ toAddress.name }}</span>
           </p>
           <p class="block-title">{{ $t('interface.sendTxToAddr') }}</p>
           <p class="address">{{ toAddress.address }}</p>
+        </div>
+        <div v-else class="to-address">
+          <div class="icon">
+            <i :class="['cc', toAddress.name, 'cc-icon']" />
+          </div>
+          <p class="value">
+            {{ toAddress.value }}
+            <span>{{ toAddress.name }}</span>
+          </p>
+          <p class="block-title">{{ $t('common.to') }}</p>
+          <p class="address">{{ fiatDest }}</p>
         </div>
       </div>
 
@@ -64,9 +79,10 @@ import iconEth from '@/assets/images/currency/eth.svg';
 import ButtonWithQrCode from '@/components/Buttons/ButtonWithQrCode';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
 
-import { EthereumTokens, BASE_CURRENCY, ERC20, utils } from '@/partners';
+import { EthereumTokens, BASE_CURRENCY, ERC20, fiat, utils } from '@/partners';
 import { WEB3_WALLET } from '@/wallets/bip44/walletTypes';
 import { type as noticeTypes } from '@/helpers/notificationFormatters';
+import { Toast } from '@/helpers';
 
 export default {
   components: {
@@ -99,7 +115,8 @@ export default {
       qrcode: '',
       arrowImage: Arrow,
       fromAddress: {},
-      toAddress: {}
+      toAddress: {},
+      fiatCurrenciesArray: fiat.map(entry => entry.symbol)
     };
   },
   computed: {
@@ -107,21 +124,31 @@ export default {
       ens: 'ens',
       gasPrice: 'gasPrice',
       web3: 'web3',
+      account: 'account',
       wallet: 'wallet',
       network: 'network'
-    })
+    }),
+    toFiat() {
+      return this.fiatCurrenciesArray.includes(this.toAddress.name);
+    },
+    fiatDest() {
+      if (this.swapDetails.orderDetails) {
+        return this.swapDetails.orderDetails.output.owner.name;
+      }
+      return '';
+    }
   },
   watch: {
     swapDetails(newValue) {
       this.fromAddress = {
-        value: newValue.fromValue,
+        value: newValue.sendValue || newValue.fromValue,
         name: newValue.fromCurrency,
         address: newValue.fromAddress
           ? newValue.fromAddress
           : this.currentAddress
       };
       this.toAddress = {
-        value: newValue.toValue,
+        value: newValue.recValue || newValue.toValue,
         name: newValue.toCurrency,
         address: newValue.toAddress
       };
@@ -132,10 +159,14 @@ export default {
   methods: {
     timeUpdater(swapDetails) {
       clearInterval(this.timerInterval);
-      this.timeRemaining = utils.getTimeRemainingString(swapDetails.timestamp);
+      this.timeRemaining = utils.getTimeRemainingString(
+        swapDetails.timestamp,
+        swapDetails.validFor
+      );
       this.timerInterval = setInterval(() => {
         this.timeRemaining = utils.getTimeRemainingString(
-          swapDetails.timestamp
+          swapDetails.timestamp,
+          swapDetails.validFor
         );
         if (this.timeRemaining === 'expired') {
           clearInterval(this.timerInterval);
@@ -155,16 +186,15 @@ export default {
               .sendBatchTransactions(this.preparedSwap)
               .then(_result => {
                 let tradeIndex;
-                if (this.wallet.identifier === WEB3_WALLET) {
+                if (this.account.identifier === WEB3_WALLET) {
                   tradeIndex = 0;
                 } else {
                   tradeIndex = [_result.length - 1];
                 }
                 _result.map((entry, idx) => {
                   if (idx !== tradeIndex) {
-                    entry.catch(err => {
-                      // eslint-disable-next-line no-console
-                      console.error(err);
+                    entry.catch(e => {
+                      Toast.responseHandler(e, false);
                     });
                   }
                 });
@@ -197,7 +227,9 @@ export default {
                       err
                     ]);
                   })
-                  .catch(() => {});
+                  .catch(err => {
+                    Toast.responseHandler(err, false);
+                  });
               });
           } else {
             this.web3.eth
@@ -228,6 +260,9 @@ export default {
                   this.preparedSwap[0],
                   err
                 ]);
+              })
+              .catch(err => {
+                Toast.responseHandler(err, Toast.ERROR);
               });
           }
         } else {
@@ -259,6 +294,9 @@ export default {
                 this.preparedSwap,
                 err
               ]);
+            })
+            .catch(err => {
+              Toast.responseHandler(err, Toast.Error);
             });
         }
         this.$emit('swapStarted', [this.currentAddress, this.swapDetails]);
@@ -266,6 +304,7 @@ export default {
       }
     },
     async swapStarted(swapDetails) {
+      if (swapDetails.isExitToFiat && !swapDetails.bypass) return;
       this.timeUpdater(swapDetails);
       this.swapReady = false;
       this.preparedSwap = {};
@@ -280,7 +319,7 @@ export default {
           const tokenInfo = EthereumTokens[swapDetails.fromCurrency];
           if (!tokenInfo) throw Error('Selected Token not known to MEW Swap');
           this.preparedSwap = {
-            from: this.wallet.getChecksumAddressString(),
+            from: this.account.address,
             to: tokenInfo.contractAddress,
             value: 0,
             data: new this.web3.eth.Contract(
@@ -300,6 +339,15 @@ export default {
           swapDetails.fromCurrency === BASE_CURRENCY
         ) {
           this.preparedSwap = {
+            from: this.account.address,
+            to: swapDetails.providerAddress,
+            value: unit.toWei(swapDetails.providerReceives, 'ether')
+          };
+        } else if (
+          swapDetails.maybeToken &&
+          this.fiatCurrenciesArray.includes(swapDetails.toCurrency)
+        ) {
+          this.preparedSwap = {
             from: this.wallet.getChecksumAddressString(),
             to: swapDetails.providerAddress,
             value: unit.toWei(swapDetails.providerReceives, 'ether')
@@ -307,7 +355,7 @@ export default {
         }
       } else {
         this.preparedSwap = swapDetails.dataForInitialization.map(entry => {
-          entry.from = this.wallet.getChecksumAddressString();
+          entry.from = this.account.address;
           if (
             +unit.toWei(this.gasPrice, 'gwei').toString() >
             +swapDetails.kyberMaxGas

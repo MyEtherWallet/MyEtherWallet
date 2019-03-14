@@ -1,6 +1,5 @@
 import { shallowMount } from '@vue/test-utils';
 import DappButtons from '@/layouts/InterfaceLayout/components/DappButtons/DappButtons.vue';
-
 import { Tooling } from '@@/helpers';
 
 const RouterLinkStub = {
@@ -17,7 +16,10 @@ describe('DappButtons.vue', () => {
   const desc = 'DappButtons desc';
   const icon =
     'https://media.kasperskydaily.com/wp-content/uploads/sites/92/2016/09/06021623/bitcoin-easy-explanation-featured.jpg';
+  const iconDisabled =
+    'https://media.kasperskydaily.com/wp-content/uploads/sites/92/2016/09/06021623/bitcoin-easy-explanation-featured.jpg';
   const param = 'DappButtons param';
+  const supportedNetworks = ['ETH'];
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
@@ -31,7 +33,7 @@ describe('DappButtons.vue', () => {
       i18n,
       store,
       attachToDocument: true,
-      propsData: { title, desc, icon, param },
+      propsData: { title, desc, icon, param, iconDisabled, supportedNetworks },
       stubs: { 'router-link': RouterLinkStub }
     });
   });
@@ -59,22 +61,5 @@ describe('DappButtons.vue', () => {
       param
     );
   });
-
-  it('should render correct active', () => {
-    expect(
-      wrapper
-        .find('.dapps-button')
-        .classes()
-        .indexOf('disabled')
-    ).toBe(-1);
-    wrapper.setProps({ active: false });
-    expect(
-      wrapper
-        .find('.dapps-button')
-        .classes()
-        .indexOf('disabled')
-    ).toBeGreaterThan(-1);
-  });
-
   describe('DappButtons.vue Methods', () => {});
 });

@@ -1,16 +1,7 @@
-import Vuex from 'vuex';
 import { mount } from '@vue/test-utils';
 import FooterContainer from '@/containers/FooterContainer/FooterContainer.vue';
-
-// const $t = () => {};
-
-const RouterLinkStub = {
-  name: 'router-link',
-  template: '<p> <slot> </slot></p>',
-  props: ['to']
-};
-
 import { Tooling } from '@@/helpers';
+import { RouterLinkStub } from '@@/helpers/setupTooling';
 
 describe('FooterContainer.vue', () => {
   let localVue, i18n, wrapper, store;
@@ -20,23 +11,25 @@ describe('FooterContainer.vue', () => {
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
     store = baseSetup.store;
-
-    const getters = {
-      ethDonationAddress: () => {}
-    };
-
-    store = new Vuex.Store({
-      getters
-    });
   });
 
   beforeEach(() => {
+    const mockRoute = {
+      history: {
+        current: {
+          fullPath: '/'
+        }
+      }
+    };
     wrapper = mount(FooterContainer, {
       localVue,
       i18n,
       store,
       attachToDocument: true,
-      stubs: { 'router-link': RouterLinkStub }
+      stubs: { 'router-link': RouterLinkStub },
+      mocks: {
+        $router: mockRoute
+      }
     });
   });
 

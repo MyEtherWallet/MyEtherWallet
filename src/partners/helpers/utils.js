@@ -37,8 +37,8 @@ const getTimeRemaining = (timestamp, validFor = 600) => {
   );
 };
 
-const getTimeRemainingString = timestamp => {
-  const timeRemaining = getTimeRemaining(timestamp);
+const getTimeRemainingString = (timestamp, validFor = 600) => {
+  const timeRemaining = getTimeRemaining(timestamp, validFor);
   if (timeRemaining < 0) {
     return 'expired';
   }
@@ -64,7 +64,37 @@ function stringEqual(strA, strB) {
   return mismatch === 0;
 }
 
+const isJson = str => {
+  try {
+    JSON.parse(str);
+    return true;
+  } catch (e) {
+    try {
+      const asStr = JSON.stringify(str);
+      JSON.parse(asStr);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+};
+
+const handleOrThrow = (e, source) => {
+  if (source) {
+    throw Error('abort');
+  }
+  // typeErrors
+  if (e instanceof TypeError) {
+    if (e.message === 'Failed to fetch') {
+      return;
+    }
+    throw e;
+  }
+  throw e;
+};
+
 export {
+  isJson,
   mapToObject,
   objectToMap,
   stringEqual,
@@ -72,5 +102,6 @@ export {
   getTimeRemainingString,
   buildPayload,
   isValidEntry,
-  checkInvalidOrMissingValue
+  checkInvalidOrMissingValue,
+  handleOrThrow
 };

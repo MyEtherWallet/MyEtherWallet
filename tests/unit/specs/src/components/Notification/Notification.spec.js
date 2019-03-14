@@ -1,7 +1,5 @@
-import VueX from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import Notification from '@/components/Notification/Notification.vue';
-
 import { Tooling } from '@@/helpers';
 
 const showModal = jest.fn();
@@ -16,7 +14,7 @@ const BModalStub = {
 };
 
 describe('Notification.vue', () => {
-  let localVue, i18n, wrapper, store, getters;
+  let localVue, i18n, wrapper, store;
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
@@ -25,25 +23,6 @@ describe('Notification.vue', () => {
   });
 
   beforeEach(() => {
-    const wallet = {
-      getChecksumAddressString: jest.fn(() => 0)
-    };
-    getters = {
-      notifications: () => [],
-      wallet: () => {
-        return wallet;
-      }
-    };
-
-    store = new VueX.Store({
-      getters,
-      state: {
-        wallet: {
-          getAddressString: jest.fn(() => 0)
-        }
-      }
-    });
-
     wrapper = shallowMount(Notification, {
       localVue,
       i18n,
@@ -57,11 +36,14 @@ describe('Notification.vue', () => {
 
   it('should render correct unreadCount', () => {
     expect(wrapper.find('.notification-dot').isVisible()).toBe(false);
-    wrapper.setData({ unreadCount: 1 });
+    wrapper.setData({ unreadCount: 1 , detailsShown: false});
     expect(wrapper.find('.notification-dot').isVisible()).toBe(true);
   });
 
-  it('should show no notification item text', () => {
+  it('should render correct detailsShown', () => {
+    wrapper.setData({detailsShown : true});
+    expect(wrapper.find('.notification-item-container').isVisible()).toBe(true);
+    wrapper.setData({detailsShown : false});
     expect(wrapper.find('.notification-no-item').isVisible()).toBe(true);
   });
 

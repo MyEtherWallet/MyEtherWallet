@@ -1,12 +1,15 @@
 import BigNumber from 'bignumber.js';
 
 import { networkSymbols } from '../partnersConfig';
+import { Toast } from '@/helpers';
+
 import {
   notificationStatuses,
   ChangellyCurrencies,
   statuses,
   TIME_SWAP_VALID,
-  PROVIDER_NAME
+  PROVIDER_NAME,
+  FEE_RATE
 } from './config';
 import changellyCalls from './changelly-calls';
 import changellyApi from './changelly-api';
@@ -23,6 +26,7 @@ export default class Changelly {
       typeof props.getRateForUnit === 'boolean' ? props.getRateForUnit : false;
     this.hasRates = 0;
     this.currencyDetails = props.currencies || ChangellyCurrencies;
+    this.useFixed = true;
     this.tokenDetails = {};
     this.rateDetails = {};
     this.getSupportedCurrencies(this.network);
@@ -73,7 +77,55 @@ export default class Changelly {
     return false;
   }
 
+  calculateTrueRate(topRate) {
+    return new BigNumber(topRate)
+      .minus(new BigNumber(topRate).times(new BigNumber(FEE_RATE)))
+      .toNumber();
+  }
+
+  fixedEnabled(currency) {
+    return (
+      typeof this.currencies[currency].fixRateEnabled === 'boolean' &&
+      this.currencies[currency].fixRateEnabled
+    );
+  }
+
   async getRate(fromCurrency, toCurrency, fromValue) {
+    if (this.useFixed && this.currencies[toCurrency]) {
+      if (this.fixedEnabled(toCurrency) && this.fixedEnabled(fromCurrency)) {
+        return this.getFixedRate(fromCurrency, toCurrency, fromValue);
+      }
+      return this.getMarketRate(fromCurrency, toCurrency, fromValue);
+    }
+    return this.getMarketRate(fromCurrency, toCurrency, fromValue);
+  }
+
+  async getFixedRate(fromCurrency, toCurrency, fromValue) {
+    const changellyDetails = await changellyCalls.getFixRate(
+      fromCurrency,
+      toCurrency,
+      fromValue,
+      this.network
+    );
+
+    if (!Array.isArray(changellyDetails)) {
+      throw Error(
+        `Failed to retrieve changelly rate from ${fromCurrency} to ${toCurrency}`
+      );
+    }
+
+    return {
+      fromCurrency,
+      toCurrency,
+      provider: this.name,
+      minValue: changellyDetails[0].min,
+      maxValue: changellyDetails[0].max,
+      rate: changellyDetails[0].result,
+      rateId: changellyDetails[0].id
+    };
+  }
+
+  async getMarketRate(fromCurrency, toCurrency, fromValue) {
     if (
       this.rateDetails[`${fromCurrency}/${toCurrency}`] &&
       this.getRateForUnit
@@ -83,7 +135,9 @@ export default class Changelly {
         toCurrency,
         provider: this.name,
         minValue: this.rateDetails[`${fromCurrency}/${toCurrency}`].minAmount,
-        rate: this.rateDetails[`${fromCurrency}/${toCurrency}`].rate
+        rate: this.calculateTrueRate(
+          this.rateDetails[`${fromCurrency}/${toCurrency}`].rate
+        )
       };
     }
 
@@ -112,7 +166,7 @@ export default class Changelly {
       toCurrency,
       provider: this.name,
       minValue: minAmount,
-      rate: changellyDetails[1]
+      rate: this.calculateTrueRate(changellyDetails[1])
     };
   }
 
@@ -133,13 +187,11 @@ export default class Changelly {
   getUpdatedFromCurrencyEntries(value, collectMap) {
     if (this.currencies[value.symbol]) {
       for (const prop in this.currencies) {
-        // if (prop !== value.symbol) {
         if (this.currencies[prop])
           collectMap.set(prop, {
             symbol: prop,
             name: this.currencies[prop].name
           });
-        // }
       }
     }
   }
@@ -147,13 +199,11 @@ export default class Changelly {
   getUpdatedToCurrencyEntries(value, collectMap) {
     if (this.currencies[value.symbol]) {
       for (const prop in this.currencies) {
-        // if (prop !== value.symbol) {
         if (this.currencies[prop])
           collectMap.set(prop, {
             symbol: prop,
             name: this.currencies[prop].name
           });
-        // }
       }
     }
   }
@@ -161,7 +211,8 @@ export default class Changelly {
   async startSwap(swapDetails) {
     let details;
     if (+swapDetails.minValue <= +swapDetails.fromValue) {
-      details = await await this.createTransaction(swapDetails);
+      details = await this.createTransaction(swapDetails);
+      if (!details) throw Error('abort');
       if (details.message) throw Error(details.message);
       swapDetails.providerReceives = details.amountExpectedFrom;
       swapDetails.providerSends = details.amountExpectedTo;
@@ -170,12 +221,64 @@ export default class Changelly {
       swapDetails.providerAddress = details.payinAddress;
       swapDetails.dataForInitialization = details;
       swapDetails.isDex = Changelly.isDex();
+      swapDetails.validFor = swapDetails.parsed.validFor;
       return swapDetails;
     }
-    throw Error('From amount below changelly minimun for currency pair');
+    return Error('From amount below changelly minimun for currency pair');
   }
 
   async createTransaction({
+    fromCurrency,
+    toCurrency,
+    toAddress,
+    fromAddress,
+    fromValue,
+    refundAddress
+  }) {
+    const transactionDetails = {
+      fromCurrency,
+      toCurrency,
+      toAddress,
+      fromAddress,
+      fromValue,
+      refundAddress
+    };
+    if (this.useFixed && this.currencies[toCurrency]) {
+      if (this.fixedEnabled(toCurrency) && this.fixedEnabled(fromCurrency)) {
+        return this.createFixedTransaction(transactionDetails);
+      }
+      return this.createMarketTransaction(transactionDetails);
+    }
+    return this.createMarketTransaction(transactionDetails);
+  }
+
+  async createFixedTransaction({
+    fromCurrency,
+    toCurrency,
+    toAddress,
+    fromAddress,
+    fromValue,
+    refundAddress
+  }) {
+    const finalDetails = await this.getFixedRate(
+      fromCurrency,
+      toCurrency,
+      fromValue
+    );
+    const swapParams = {
+      from: fromCurrency.toLowerCase(),
+      to: toCurrency.toLowerCase(),
+      address: toAddress,
+      extraId: null,
+      amount: fromValue,
+      refundAddress: refundAddress === '' ? fromAddress : refundAddress,
+      refundExtraId: null,
+      rateId: finalDetails.rateId
+    };
+    return await changellyCalls.createFixTransaction(swapParams, this.network);
+  }
+
+  async createMarketTransaction({
     fromCurrency,
     toCurrency,
     toAddress,
@@ -204,7 +307,7 @@ export default class Changelly {
       sendValue: order.amountExpectedFrom,
       status: order.status,
       timestamp: order.createdAt,
-      validFor: TIME_SWAP_VALID // Rates provided are only an estimate, and
+      validFor: TIME_SWAP_VALID // validFor ||  // Rates provided are only an estimate, and
     };
   }
 
@@ -216,8 +319,7 @@ export default class Changelly {
       );
       return Changelly.parseChangellyStatus(status);
     } catch (e) {
-      // eslint-disable-next-line
-      console.error(e);
+      Toast.responseHandler(e, false);
     }
   }
 

@@ -2,12 +2,7 @@ import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils';
 import RegisterDomain from '@/dapps/RegisterDomain/RegisterDomain.vue';
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton/BackButton.vue';
-import Vuex from 'vuex';
-import nodeList from '@/networks';
-import url from 'url';
-import Web3 from 'web3';
-
-import { Tooling, ETH_NETWORK_INDEX } from '@@/helpers';
+import { Tooling } from '@@/helpers';
 
 describe('RegisterDomain.vue', () => {
   let localVue, i18n, wrapper, store;
@@ -32,32 +27,6 @@ describe('RegisterDomain.vue', () => {
     store = baseSetup.store;
     Vue.config.warnHandler = () => {};
     Vue.config.errorHandler = () => {};
-
-    const network = nodeList['ETH'][ETH_NETWORK_INDEX];
-    const hostUrl = url.parse(network.url);
-
-    const newWeb3 = new Web3(
-      `${hostUrl.protocol}//${hostUrl.hostname}:${network.port}${
-        hostUrl.pathname
-      }`
-    );
-
-    const getters = {
-      Networks: () => {
-        return nodeList;
-      },
-      network: () => {
-        return network;
-      },
-      web3: () => {
-        return newWeb3;
-      },
-      ens: () => {}
-    };
-
-    store = new Vuex.Store({
-      getters
-    });
   });
 
   beforeEach(() => {

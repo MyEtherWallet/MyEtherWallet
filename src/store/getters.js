@@ -43,6 +43,16 @@ const web3 = state => {
 const sidemenuOpen = state => {
   return state.sidemenuOpen;
 };
+const darklist = state => {
+  return state.darklist;
+};
+const gettingStartedDone = state => {
+  return state.gettingStartedDone;
+};
+
+const blockNumber = state => {
+  return state.blockNumber;
+};
 
 export default {
   account,
@@ -59,5 +69,8 @@ export default {
   transactions,
   wallet,
   web3,
-  sidemenuOpen
+  sidemenuOpen,
+  darklist,
+  gettingStartedDone,
+  blockNumber
 };

@@ -1,11 +1,6 @@
-import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import FinalizeModal from '@/dapps/RegisterDomain/components/FinalizeModal/FinalizeModal.vue';
-import { Tooling, ETH_NETWORK_INDEX } from '@@/helpers';
-
-import nodeList from '@/networks';
-import url from 'url';
-import Web3 from 'web3';
+import { Tooling } from '@@/helpers';
 import sinon from 'sinon';
 
 const hideModal = sinon.stub();
@@ -27,31 +22,6 @@ describe('FinalizeModal.vue', () => {
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
     store = baseSetup.store;
-    const network = nodeList['ETH'][ETH_NETWORK_INDEX];
-    const hostUrl = url.parse(network.url);
-
-    const newWeb3 = new Web3(
-      `${hostUrl.protocol}//${hostUrl.hostname}:${network.port}${
-        hostUrl.pathname
-      }`
-    );
-
-    const getters = {
-      Networks: () => {
-        return nodeList;
-      },
-      network: () => {
-        return network;
-      },
-      web3: () => {
-        return newWeb3;
-      },
-      ens: () => {}
-    };
-
-    store = new Vuex.Store({
-      getters
-    });
   });
 
   beforeEach(() => {

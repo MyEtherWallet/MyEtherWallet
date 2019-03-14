@@ -4,6 +4,6 @@
   "signingAddr": "Signing Address",
   "confirmSigning": "Confirm Signing",
   "approveOnDevice": "Please Approve on Hardware Wallet",
-  "success": "Success",
+  "success": "Succeed",
   "error": "Error"
 }

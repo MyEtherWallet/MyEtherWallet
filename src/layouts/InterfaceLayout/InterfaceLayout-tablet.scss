@@ -1,5 +1,17 @@
 @import '~@/scss/GlobalVariables';
 @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+  .mobile-interface-address-block {
+    margin: 0 10px;
+  }
+
+  .interface-layout {
+    padding-top: 10px;
+  }
+
+  .info-block-container {
+    margin: 0 10px 0 10px;
+  }
+
   .wrap {
     .contents {
       background-color: $light-grey-2;

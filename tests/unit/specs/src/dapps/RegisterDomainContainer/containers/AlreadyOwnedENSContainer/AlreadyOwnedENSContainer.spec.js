@@ -1,14 +1,8 @@
-import Vuex from 'vuex';
 import sinon from 'sinon';
 import { shallowMount } from '@vue/test-utils';
 import AlreadyOwnedENSContainer from '@/dapps/RegisterDomain/containers/AlreadyOwnedENSContainer/AlreadyOwnedENSContainer.vue';
 import FinalizeModal from '@/dapps/RegisterDomain/components/FinalizeModal/FinalizeModal.vue';
-import { Tooling, ETH_NETWORK_INDEX } from '@@/helpers';
-
-import nodeList from '@/networks';
-import url from 'url';
-import Web3 from 'web3';
-
+import { Tooling } from '@@/helpers';
 const showModal = sinon.stub();
 
 const BModalStub = {
@@ -34,40 +28,6 @@ describe('AlreadyOwnedENSContainer.vue', () => {
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
     store = baseSetup.store;
-
-    const wallet = {
-      getChecksumAddressString: jest.fn(() => 0),
-      getAddressString: function() {
-        return '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D';
-      }
-    };
-    const network = nodeList['ETH'][ETH_NETWORK_INDEX];
-    const hostUrl = url.parse(network.url);
-
-    const newWeb3 = new Web3(
-      `${hostUrl.protocol}//${hostUrl.hostname}:${network.port}${
-        hostUrl.pathname
-      }`
-    );
-    const getters = {
-      wallet: () => {
-        return wallet;
-      },
-      Networks: () => {
-        return nodeList;
-      },
-      network: () => {
-        return network;
-      },
-      web3: () => {
-        return newWeb3;
-      },
-      ens: () => {}
-    };
-
-    store = new Vuex.Store({
-      getters
-    });
   });
 
   beforeEach(() => {
