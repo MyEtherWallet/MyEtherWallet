@@ -1,14 +1,13 @@
 <template>
   <div>
-    <interface-container-title :title="'MAKER'"/>
+    <interface-container-title :title="'MAKER'" />
     <div class="container-maker">
       <div class="manage-container">
         <div class="content-container">
           <p class="cpd-title">{{ $t('dapps.cdpPortal') }}</p>
           <div class="cdp-id">
             <p>
-              {{ $t('dapps.currentPrice') }}:
-              <b>{{ ethPrice }}</b> USD
+              {{ $t('dapps.currentPrice') }}: <b>{{ ethPrice }}</b> USD
             </p>
           </div>
         </div>
@@ -64,7 +63,7 @@ export default {
         return new BigNumber(0);
       }
     },
-    makerActive:{
+    makerActive: {
       type: Boolean,
       default: false
     },

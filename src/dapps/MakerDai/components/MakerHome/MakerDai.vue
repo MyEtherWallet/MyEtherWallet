@@ -16,19 +16,13 @@ export default {
     'interface-bottom-text': InterfaceBottomText,
     blockie: Blockie
   },
-  props: {
-
-  },
+  props: {},
   data() {
-    return {
-    };
+    return {};
   },
-  computed: {
-  },
-  async mounted() {
-  },
-  methods: {
-  }
+  computed: {},
+  async mounted() {},
+  methods: {}
 };
 </script>
 

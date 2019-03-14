@@ -1,6 +1,5 @@
 @import '~@/scss/GlobalVariables';
 
-
 $confirmation-modal-mobile-width: 500px;
 
 .cc-icon {
@@ -65,18 +64,18 @@ $confirmation-modal-mobile-width: 500px;
   }
 }
 
-.sub-text{
-  .btn{
+.sub-text {
+  .btn {
     color: #05c0a5;
-    &:hover{
+    &:hover {
       cursor: pointer;
     }
   }
+
   padding-bottom: 10px;
 }
 
-
-.detail-container{
+.detail-container {
   display: flex;
   flex-direction: column;
   //border-bottom: 1px solid #f9f9f9;
@@ -85,10 +84,7 @@ $confirmation-modal-mobile-width: 500px;
     display: flex;
     flex-direction: column;
     margin-bottom: 20px;
-
-
   }
-
 }
 
 .detail-info {

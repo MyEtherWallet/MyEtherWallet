@@ -116,9 +116,9 @@
       <div class="buttons-container">
         <div
           :class="[
-          validInputs ? '' : 'disabled',
-          'submit-button large-round-button-green-filled'
-        ]"
+            validInputs ? '' : 'disabled',
+            'submit-button large-round-button-green-filled'
+          ]"
           @click="openCdp"
         >
           Collateralize & Generate
@@ -246,12 +246,13 @@ export default {
       network: 'network',
       ens: 'ens'
     }),
-    validInputs(){
-
-      if(toBigNumber(this.ethQty).gt(0)){
+    validInputs() {
+      if (toBigNumber(this.ethQty).gt(0)) {
         console.log(ethUnit.toWei(this.ethQty, 'ether').toString()); // todo remove dev item
         console.log(this.account.balance); // todo remove dev item
-        return toBigNumber(ethUnit.toWei(this.ethQty, 'ether').toString()).lte(this.account.balance)
+        return toBigNumber(ethUnit.toWei(this.ethQty, 'ether').toString()).lte(
+          this.account.balance
+        );
       }
       return false;
     },
@@ -319,7 +320,7 @@ export default {
       if (this.ethQty <= 0) return 0;
       const newCdp = await this.makerCDP.openCdp(this.ethQty, this.daiQty);
       console.log(newCdp); // todo remove dev item
-      await this.makerCDP.init(newCdp.id)
+      await this.makerCDP.init(newCdp.id);
     }
   }
 };
