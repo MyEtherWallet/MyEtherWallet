@@ -9,11 +9,6 @@
     height: 100vh;
   }
 
-  @media all and (max-width: $mobile-width) {
-    width: 100vw;
-    height: 100vh;
-  }
-
   ul {
     li {
       cursor: pointer;

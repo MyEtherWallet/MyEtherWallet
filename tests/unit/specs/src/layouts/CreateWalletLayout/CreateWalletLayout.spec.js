@@ -94,7 +94,7 @@ describe('CreateWalletLayout.vue', () => {
       expect(showModal.called).toBe(true);
     });
 
-    it('should render correct switcher method', () => {      
+    it('should render correct switcher method', () => {
         wrapper.vm.switcher('Json');
         expect(wrapper.vm.$data.byJson).toBe(true);
         expect(wrapper.vm.$data.byMnemonic).toBe(false);

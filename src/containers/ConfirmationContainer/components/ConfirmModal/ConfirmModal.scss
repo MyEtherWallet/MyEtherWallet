@@ -46,19 +46,6 @@ $confirmation-modal-mobile-width: 500px;
       }
     }
 
-    @media all and (max-width: $tablet-width) {
-      .direction {
-        padding: 20px 0;
-        display: flex;
-
-        img {
-          transform: rotate(90deg);
-          margin: 0 auto;
-          height: 20px;
-        }
-      }
-    }
-
     .tx-info {
       $tx-info-grid-size: 270px;
 

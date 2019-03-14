@@ -1,0 +1,303 @@
+@import '~@/scss/GlobalVariables';
+
+%interface-container {
+  border-radius: 5px;
+  grid-area: main;
+  overflow: hidden;
+
+  > div {
+    background: $background-color-white;
+  }
+}
+
+%send-form-base {
+  padding: 40px 60px 0;
+
+  .title-container {
+    align-items: flex-end;
+    display: flex;
+    margin-bottom: 5px;
+  }
+}
+
+%form-block-base {
+  border-radius: 5px;
+
+  .the-form {
+    background-color: $background-color-1;
+    border-radius: 5px;
+  }
+}
+
+.select-contract .dropdown-toggle {
+  border: 0;
+  display: none;
+}
+
+.send-currency-container-safe-send {
+  @extend %interface-container;
+
+  .inner-safesend-text-container {
+    width: 55%;
+    font-size: 16px;
+  }
+  .inner-safesend-text {
+    color: #05c0a5;
+    font-size: 16px;
+  }
+  .protection-fee-text {
+    color: #506175;
+    line-height: 21px;
+    padding: 0 8px;
+    margin-bottom: 6px;
+  }
+  .minimum-amount-text {
+    padding-left: 8px;
+  }
+
+  .send-form {
+    @extend %send-form-base;
+
+    .title {
+      margin-bottom: 12px;
+    }
+    .title-container {
+      .title {
+        display: flex;
+        flex-direction: column;
+        padding: 0 8px;
+
+        .title-button {
+          color: $text--link-color;
+          cursor: pointer;
+          margin-left: auto;
+
+          &:hover {
+            color: $text-black;
+          }
+        }
+
+        .title-helper {
+          display: flex;
+          margin-bottom: 2px;
+        }
+      }
+
+      .buttons {
+        margin-bottom: 3px;
+        margin-left: auto;
+      }
+    }
+
+    .form-block {
+      @extend %form-block-base;
+    }
+
+    .amount-to-address {
+      display: grid;
+      grid-column-gap: 5px;
+      grid-template-columns: 1fr 2fr;
+
+      .title {
+        display: flex;
+        justify-content: space-between;
+        padding: 0 8px;
+
+        .title-button {
+          color: $text--link-color;
+          cursor: pointer;
+          margin-left: auto;
+
+          &:hover {
+            color: $text-black;
+          }
+        }
+      }
+
+      .amount {
+        .dropdown-select-search-1 {
+          background-color: $background-color-1;
+          margin-bottom: 5px;
+          position: relative;
+
+          i {
+            color: $text-color-2;
+            left: 14px;
+            position: absolute;
+            top: 16px;
+          }
+        }
+
+        &:hover {
+          color: $text-black;
+        }
+
+        .amount-number {
+          position: relative;
+
+          input {
+            background-color: transparent;
+            border: 0;
+            padding: 13px 15px;
+            width: 100%;
+          }
+
+          i {
+            position: absolute;
+            right: 13px;
+            top: 13px;
+          }
+        }
+      }
+
+      .to-address {
+        position: relative;
+
+        .blockie-image {
+          width: 30px;
+          height: 30px;
+          position: absolute;
+          right: -41px;
+          top: -4px;
+        }
+
+        .title {
+          align-items: center;
+          display: flex;
+          position: relative;
+
+          h4 {
+            position: relative;
+          }
+
+          img {
+            height: 50px;
+            left: 98px;
+            position: absolute;
+            top: -14px;
+          }
+
+          .copy-button {
+            color: $text--link-color;
+            cursor: pointer;
+            margin-left: auto;
+          }
+        }
+
+        .address-block {
+          position: relative;
+
+          i {
+            bottom: 13px;
+            position: absolute;
+            right: 13px;
+          }
+
+          input {
+            background-color: transparent;
+            border: 0;
+            padding: 13px 45px 13px 15px;
+            resize: none;
+            width: 100%;
+          }
+        }
+      }
+    }
+
+    .gas-amount,
+    .fee-amount,
+    .user-input {
+      position: relative;
+
+      input {
+        background-color: $background-color-1;
+        border: 0;
+        padding: 13px 15px;
+        width: 100%;
+      }
+
+      .good-button-container {
+        align-items: center;
+        display: flex;
+        position: absolute;
+        right: 10px;
+        top: 12px;
+
+        p {
+          color: $text--link-color;
+          margin-right: 10px;
+        }
+      }
+    }
+
+    .error-message-container {
+      p {
+        color: $text-color-red;
+        margin: 7px 0 0 15px;
+      }
+    }
+  } // .send-form
+
+  .safe-send-container {
+    .input-container {
+      padding: 0 8px;
+    }
+  }
+
+  .advanced {
+    padding-top: 10px;
+
+    .advanced-content {
+      padding: 20px 0;
+      border-bottom: 2px solid $background-color-1;
+      border-top: 2px solid $background-color-1;
+
+      .toggle-button-container {
+        display: flex;
+
+        h4 {
+          padding: 0 8px;
+        }
+
+        .toggle-button {
+          align-items: center;
+          display: flex;
+          margin-left: auto;
+          user-select: none;
+
+          > span {
+            margin-right: 15px;
+          }
+        } // .toggle-button
+      } // .toggle-button-container
+
+      .input-container {
+        margin-top: 20px;
+        margin-bottom: -15px;
+
+        .user-input {
+          margin-bottom: 5px;
+        }
+      }
+    }
+  }
+
+  .submit-button-container {
+    padding: 20px 0;
+    text-align: center;
+
+    .bottom-text {
+      margin-top: 20px;
+    }
+
+    .submit-button {
+      margin: 0 auto;
+      text-align: center;
+      width: 300px;
+    }
+
+    p {
+      margin-top: 20px;
+    }
+  }
+}
