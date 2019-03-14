@@ -1,6 +1,6 @@
 <template>
   <div class="manage-ens-container">
-    <h3>{{ $t('dapps.manage') }} {{ domainName }}.{{ tld }}</h3>
+    <h3>{{ $t('dapps.manage') }} {{ fullDomain }}</h3>
     <div class="inputs-container">
       <div class="form-container">
         <form class="manage-form">
@@ -96,7 +96,10 @@ export default {
   computed: {
     ...mapGetters({
       web3: 'web3'
-    })
+    }),
+    fullDomain() {
+      return `${this.domainName}.${this.tld}`;
+    }
   },
   mounted() {
     if (this.domainName === '') {

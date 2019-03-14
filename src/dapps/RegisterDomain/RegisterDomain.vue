@@ -8,7 +8,7 @@
       :bid-mask="bidMask"
       :secret-phrase="secretPhrase"
       :start-auction-and-bid="startAuctionAndBid"
-      :domain-name="domainName"
+      :domain-name="parsedDomainName"
       :auction-date-end="auctionDateEnd"
       :loading="loading"
       :name-hash="nameHash"
@@ -26,7 +26,7 @@
       :finalize="finalize"
       :update-resolver="updateResolver"
       :transfer-domain="transferDomain"
-      :tld="network.type.ens.registrarTLD"
+      :tld="parsedTld === '' ? network.type.ens.registrarTLD : parsedTld"
       :network-name="network.type.name"
       :register-fifs-name="registerFifsName"
       :multi-tld="multiTld"
@@ -104,8 +104,12 @@ export default {
       );
     },
     parsedTld() {
-      const name = this.domainName.split('.');
-      return name.length > 1 ? name[name.length - 1] : '';
+      const tld = this.domainName.split('.');
+      return tld.length > 1 ? tld[tld.length - 1] : '';
+    },
+    parsedDomainName() {
+      const domainName = this.domainName.split('.');
+      return domainName.length > 1 ? domainName[0] : this.domainName;
     }
   },
   watch: {
@@ -257,14 +261,27 @@ export default {
       return registrarAddress;
     },
     async checkDomain() {
+      const supportedTlds = this.network.type.ens.supportedTld;
+      const isSupported = supportedTlds.find(item => {
+        return item === this.parsedTld;
+      });
+
       this.loading = true;
       const web3 = this.web3;
 
       this.labelHash = web3.utils.sha3(
         this.domainName.replace(this.parsedTld, '')
       );
-
-      if (this.parsedTld === this.registrarTLD) {
+      if (isSupported === undefined) {
+        Toast.responseHandler(
+          `Domain TLD ${this.parsedTld} is not supported in this node!`,
+          Toast.ERROR
+        );
+        this.loading = false;
+      } else if (
+        this.parsedTld === this.registrarTLD ||
+        this.parsedTld === ''
+      ) {
         try {
           let domainStatus = [];
           if (this.registrarType === 'auction') {
@@ -308,7 +325,10 @@ export default {
           }
         } catch (e) {
           this.loading = false;
-          Toast.responseHandler(e, Toast.ERROR);
+          Toast.responseHandler(
+            'Something went wrong! Please try again.',
+            Toast.ERROR
+          );
         }
       }
     },
@@ -319,12 +339,18 @@ export default {
           .then(claim => {
             claim.submit(obj);
           })
-          .catch(e => {
-            Toast.responseHandler(e, Toast.ERROR);
+          .catch(() => {
+            Toast.responseHandler(
+              'Something went wrong! Please try again.',
+              Toast.ERROR
+            );
           });
       } catch (e) {
         this.loading = false;
-        Toast.responseHandler(e, Toast.ERROR);
+        Toast.responseHandler(
+          'Something went wrong! Please try again.',
+          Toast.ERROR
+        );
       }
     },
     updateStep(val) {

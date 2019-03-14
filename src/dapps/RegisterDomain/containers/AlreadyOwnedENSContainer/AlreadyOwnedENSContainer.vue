@@ -5,11 +5,9 @@
       :domain-name="domainName"
       :finalize="finalize"
     />
-    <h3>{{ domainName }}.{{ tld }} {{ $t('dapps.alreadyOwned') }}.</h3>
+    <h3>{{ fullDomainName }} {{ $t('dapps.alreadyOwned') }}.</h3>
     <div class="content-container">
-      <p class="label">
-        {{ $t('dapps.labelHash') }}({{ domainName }}.{{ tld }}):
-      </p>
+      <p class="label">{{ $t('dapps.labelHash') }}({{ fullDomainName }}):</p>
       <p class="content">{{ labelHash }}</p>
     </div>
     <div class="content-container">
@@ -105,7 +103,10 @@ export default {
   computed: {
     ...mapGetters({
       account: 'account'
-    })
+    }),
+    fullDomainName() {
+      return `${this.domainName}.${this.tld}`;
+    }
   },
   mounted() {
     if (this.domainName === '') {

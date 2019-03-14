@@ -20,6 +20,8 @@
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import { mapGetters } from 'vuex';
+import utils from 'web3-utils';
+import BigNumber from 'bignumber.js';
 
 export default {
   components: {
@@ -48,7 +50,12 @@ export default {
   },
   methods: {
     claimDNS() {
-      this.claimFunc({ from: this.account.address, gas: this.gasPrice });
+      const gpRounded = new BigNumber(Math.round(this.gasPrice)).toString();
+      this.claimFunc({
+        from: this.account.address,
+        gasPrice: utils.toWei(gpRounded, 'gwei'),
+        gas: 5000000
+      });
     }
   }
 };

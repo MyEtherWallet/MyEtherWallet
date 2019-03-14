@@ -3,7 +3,7 @@
     <div class="name-available-container">
       <div class="content-header">
         <div>
-          <h3>{{ domainName }}.{{ tld }}</h3>
+          <h3>{{ fullDomain }}</h3>
           <p>{{ $t('dapps.domainIsAvailable') }}</p>
         </div>
       </div>
@@ -32,8 +32,10 @@ export default {
       default: function() {}
     }
   },
-  data() {
-    return {};
+  computed: {
+    fullDomain() {
+      return `${this.domainName}.${this.tld}`;
+    }
   },
   mounted() {
     if (this.domainName === '')
