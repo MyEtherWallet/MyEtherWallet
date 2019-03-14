@@ -1,0 +1,132 @@
+@import '~@/scss/GlobalVariables';
+
+$mobile-width: 530px;
+
+//***************************************************
+// DEVELOPMENT USE ONLY "Modal open button"
+//***************************************************
+.div-only-button {
+  position: fixed;
+  bottom: 15px;
+  left: 15px;
+  background-color: red;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 13px;
+  z-index: 9999999;
+  user-select: none;
+}
+
+//***************************************************
+// tx-speed
+//***************************************************
+.tx-speed {
+  .radio-buttons {
+    ul {
+      li {
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        @media all and (max-width: $mobile-width) {
+          display: block;
+        }
+
+        div {
+          position: relative;
+          display: flex;
+          align-items: center;
+
+          input {
+            margin-right: 10px;
+          }
+
+          input[type='number'] {
+            padding: 12px;
+            position: absolute;
+            left: 25px;
+            top: -12px;
+            border: 0;
+            background-color: $light-grey-1;
+            display: block;
+            width: 150px;
+            @media all and (max-width: $mobile-width) {
+              top: -1px;
+              padding: 4px;
+            }
+          }
+
+          .gwei {
+            margin-left: 170px;
+            @media all and (max-width: $mobile-width) {
+              margin-left: 160px;
+            }
+          }
+        }
+
+        p {
+          margin-left: auto;
+          @media all and (max-width: $mobile-width) {
+            margin-top: 4px;
+            margin-left: 24px;
+            font-size: 13px;
+          }
+        }
+      }
+
+      .selected * {
+        font-weight: 600;
+      }
+    }
+  }
+
+  .button-block {
+    margin-top: 45px;
+    text-align: center;
+  }
+}
+
+//***************************************************
+// Import Configurations
+//***************************************************
+.import-config {
+  .import-button-block {
+    margin-top: 30px;
+    display: grid;
+    align-items: center;
+    grid-gap: 10px;
+    grid-template-columns: 1fr 183px;
+
+    @media all and (max-width: $mobile-width) {
+      margin-top: 10px;
+      display: block;
+      width: 100%;
+      text-align: center;
+
+      .filename {
+        margin-bottom: 10px;
+      }
+      .upload-file-button {
+        margin-top: 10px;
+      }
+    }
+  }
+
+  .button-block {
+    text-align: center;
+    margin-top: 10px;
+    @media all and (max-width: $mobile-width) {
+      margin-top: 10px;
+    }
+  }
+}
+
+//***************************************************
+// Export Configurations
+//***************************************************
+.export-config {
+  .button-block {
+    text-align: center;
+    margin-top: 40px;
+  }
+}

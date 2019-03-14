@@ -1,12 +1,8 @@
 <template>
-  <div
-    class="back-container"
-    @click.prevent="back">
+  <div class="back-container" @click.prevent="back">
     <div class="content-title">
       <div class="back-icon-container">
-        <i
-          class="fa fa-arrow-left"
-          aria-hidden="true"/>
+        <i class="fa fa-arrow-left" aria-hidden="true" />
       </div>
       <p>{{ $t('common.back') }}</p>
     </div>
@@ -17,7 +13,12 @@
 export default {
   methods: {
     back() {
-      this.$router.go(-1);
+      if (this.$router.history.current.path.includes('interface')) {
+        const stringifiedPath = this.$router.history.current.path.split('/');
+        this.$router.replace(`/${stringifiedPath[1]}/${stringifiedPath[2]}`);
+      } else {
+        this.$router.go(-1);
+      }
     }
   }
 };

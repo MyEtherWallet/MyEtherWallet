@@ -1,23 +1,19 @@
 <template>
   <div class="create-wallet-by-json-file">
     <success-modal
+      ref="successModal"
       message="You have created a wallet successfully"
       link-to="/access-my-wallet"
-      link-message="Access My Wallet"/>
+      link-message="Access My Wallet"
+    />
     <div class="wrap">
       <div class="nav-tab-user-input-box">
         <b-tabs>
-          <div class="progress-bar"/>
-          <b-tab
-            title="By JSON File"
-            active>
-
+          <div class="progress-bar" />
+          <b-tab :title="$t('createWallet.byJsonFile')" active>
             <div class="title-block">
               <div class="title-popover">
-                <h3>
-                  {{ $t('createWallet.byJsonFileSaveKeystore') }}
-                </h3>
-                <popover :popcontent="$t('popover.whatIsMessageContent')"/>
+                <h3>{{ $t('createWallet.byJsonFileSaveKeystore') }}</h3>
               </div>
             </div>
             <div class="contents">
@@ -26,36 +22,36 @@
                 :img="content.img"
                 :title="content.title"
                 :desc="content.desc"
-                :key="content.title"/>
+                :key="content.title"
+              />
             </div>
             <div class="user-input-container">
               <div class="user-input">
                 <div class="user-button">
                   <a
                     :href="walletJson"
-                    :class="[{disable: !downloadable} ,'next-button', 'large-round-button-green-filled']"
+                    :class="[
+                      { disable: !downloadable },
+                      'next-button',
+                      'large-round-button-green-filled',
+                      'nopadding'
+                    ]"
                     :download="name"
-                    @click="downloadDone()">
-                    <span v-if="downloadable"> {{ $t('createWallet.byJsonFileDownloadKeyFile') }} </span>
+                    @click="downloadDone()"
+                  >
+                    <span v-if="downloadable">
+                      {{ $t('createWallet.byJsonFileDownloadKeyFile') }}
+                    </span>
                     <div v-if="!downloadable">
-                      <i class="fa fa-spinner fa-lg fa-spin"/>
+                      <i class="fa fa-spinner fa-lg fa-spin" />
                     </div>
                   </a>
                 </div>
-                <div class="printer-icon">
-                  <router-link to="/">
-                    <img
-                      class="icon"
-                      src="~@/assets/images/icons/printer.svg">
-                  </router-link>
-                </div>
               </div>
             </div>
-
           </b-tab>
         </b-tabs>
       </div>
-
     </div>
   </div>
 </template>
@@ -67,7 +63,9 @@ import ByJsonBlock from '../../components/ByJsonBlock';
 import noLose from '@/assets/images/icons/no-lose.svg';
 import noShare from '@/assets/images/icons/no-share.svg';
 import makeBackup from '@/assets/images/icons/make-a-backup.svg';
-import Worker from 'worker-loader!@/workers/wallet.worker.js';
+import walletWorker from 'worker-loader!@/workers/wallet.worker.js';
+import { Toast, Wallet, Configs } from '@/helpers';
+import { mapGetters } from 'vuex';
 
 export default {
   components: {
@@ -104,30 +102,51 @@ export default {
       name: ''
     };
   },
+  computed: {
+    ...mapGetters({
+      online: 'online'
+    })
+  },
   mounted() {
-    const worker = new Worker();
-    worker.postMessage({ type: 'createWallet', data: [this.password] });
-    worker.onmessage = e => {
-      const createBlob = (mime, str) => {
-        const string = typeof str === 'object' ? JSON.stringify(str) : str;
-        if (string === null) return '';
-        const blob = new Blob([string], {
-          type: mime
-        });
+    if (this.online && window.Worker) {
+      const worker = new walletWorker();
+      worker.postMessage({ type: 'createWallet', data: [this.password] });
+      worker.onmessage = e => {
+        this.walletJson = this.createBlob('mime', e.data.walletJson);
         this.downloadable = true;
-        return window.URL.createObjectURL(blob);
+        this.name = e.data.name.toString();
       };
-      this.walletJson = createBlob('mime', e.data.walletJson);
-      this.name = e.data.name.toString();
-    };
-    worker.onerror = function() {
-      // eslint-disable-next-line no-console
-      console.error('onerror received from worker'); // replace with debugger
-    };
+      worker.onerror = function(e) {
+        Toast.responseHandler(e, false);
+      };
+    } else {
+      const _wallet = this.createWallet(this.password);
+      this.walletJson = this.createBlob('mime', _wallet.walletJson);
+      this.downloadable = true;
+      this.name = _wallet.name.toString();
+    }
   },
   methods: {
     downloadDone() {
-      this.$children[0].$refs.success.show();
+      this.$refs.successModal.$refs.success.show();
+    },
+    createWallet(password) {
+      const createdWallet = {};
+      const wallet = new Wallet.generate();
+      createdWallet.walletJson = wallet.toV3(password, {
+        kdf: Configs.wallet.kdf,
+        n: Configs.wallet.n
+      });
+      createdWallet.name = wallet.getV3Filename();
+      return createdWallet;
+    },
+    createBlob(mime, str) {
+      const string = typeof str === 'object' ? JSON.stringify(str) : str;
+      if (string === null) return '';
+      const blob = new Blob([string], {
+        type: mime
+      });
+      return window.URL.createObjectURL(blob);
     }
   }
 };

@@ -1,0 +1,67 @@
+@import '../InformationPages';
+
+.extensions-container {
+  & > div {
+    background-color: $white;
+    padding: 25px;
+    border-radius: 4px;
+    display: flex;
+  }
+}
+
+.logo {
+  padding-right: 20px;
+  img {
+    height: 50px;
+  }
+}
+
+.text {
+  // Empty
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.description {
+  margin-top: 10px;
+}
+
+.link {
+  display: block;
+  margin-top: 25px;
+  font-weight: 500;
+  color: $mew-green;
+}
+
+// Desktop
+@media all and (min-width: calc(#{$tablet-width} + 1px)) {
+  .extensions-container {
+    margin-top: 30px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 15px;
+  }
+}
+
+// Tablet
+@media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+  .extensions-container {
+    margin-top: 30px;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: 15px;
+  }
+}
+
+// Mobile
+@media all and (max-width: $mobile-width) {
+  .extensions-container {
+    margin-top: 30px;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: 15px;
+  }
+}

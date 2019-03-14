@@ -1,6 +1,7 @@
 @import '~@/scss/GlobalVariables';
 
 .button-block {
+  user-select: none;
   background-color: $background-color-white;
   border-radius: 5px;
   cursor: pointer;
@@ -8,6 +9,7 @@
   position: relative;
   top: 0;
   transition: all 0.3s ease;
+  border: 0;
 
   .button-image {
     font-size: 90px;
@@ -19,7 +21,7 @@
   }
 
   .small-note {
-    color: $link-text-color-2;
+    color: $red-7;
     font-size: 11px;
     margin-top: 5px;
   }
@@ -47,8 +49,11 @@
   &:hover {
     background-color: $background-color-2;
     box-shadow: 0 5px 20px $box-shadow-color-1;
-    color: $text-white;
     top: -8px;
+
+    @media all and (max-width: $tablet-width) {
+      top: 0;
+    }
 
     h3,
     p {
@@ -62,11 +67,24 @@
   }
 }
 
+.button-software {
+  &:hover {
+    background-color: $red-7;
+    color: $text-white;
+  }
+}
+
 .disabled {
   color: $light-grey-10;
   pointer-events: none;
 
   p {
     color: $light-grey-10;
+  }
+}
+
+@media all and (max-width: $tablet-width) {
+  .hide {
+    display: none;
   }
 }

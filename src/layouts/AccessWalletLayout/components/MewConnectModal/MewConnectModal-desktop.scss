@@ -1,18 +1,13 @@
 @import '~@/scss/GlobalVariables';
 @media all and (min-width: calc(#{$tablet-width} + 1px)) {
+  .modal-container {
+    padding: 40px;
+  }
+
   .modal-large-text {
     font-weight: 400;
     max-width: 330px;
     display: inline-block;
-  }
-
-  .appstore-button-container {
-    margin-bottom: 20px;
-
-    img {
-      margin: 0 5px 20px;
-      width: 160px;
-    }
   }
 
   .bootstrap-modal .content-container {
@@ -93,3 +88,20 @@
     }
   }
 } // @media all and (min-width: calc(#{$tablet-width} + 1px))
+
+.modal-icon {
+  display: flex;
+  justify-content: center;
+}
+
+.appstore-button-container {
+  img {
+    &:last-child {
+      padding-left: 10px;
+    }
+  }
+}
+
+.download-now {
+  margin-top: 20px;
+}

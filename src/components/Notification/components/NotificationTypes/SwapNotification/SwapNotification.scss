@@ -1,0 +1,271 @@
+@import '~@/scss/GlobalVariables';
+
+/* stylelint-disable */
+.modal-body {
+  padding: 0 !important;
+}
+/* stylelint-enable */
+
+.notification-count {
+  //background: $red-1;
+  border-radius: 50%;
+  color: $white;
+  display: inline-block;
+  padding: 0 10px;
+
+  &::before {
+    content: '(';
+    font-size: 20px;
+  }
+
+  &::after {
+    content: ')';
+    font-size: 20px;
+  }
+
+  span {
+    font-size: 20px;
+  }
+}
+
+.notification-container {
+  margin-left: 30px;
+}
+
+.notification-item-container {
+  background-color: $white;
+  height: 300px;
+  overflow-y: scroll;
+
+  > ul {
+    > li {
+      &:nth-child(odd) {
+        background-color: $light-grey-2;
+      }
+    }
+  }
+
+  .notification-item {
+    display: flex;
+    flex-direction: column;
+
+    .notification-header,
+    .notification-body {
+      padding: 10px 20px;
+    }
+
+    .notification-header {
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .notification-body {
+      padding-top: 0;
+    }
+
+    .unread {
+      font-weight: bold;
+    }
+
+    .unexpanded {
+      display: none;
+    }
+  }
+
+  .notification-no-item {
+    text-align: center;
+  }
+
+  .notification-item:nth-child(odd) {
+    background-color: $light-green-1;
+  }
+}
+
+.notification-logo {
+  cursor: pointer;
+  position: relative;
+
+  .notification-dot {
+    background-color: $notification-dot-background-color;
+    border-radius: 40px;
+    height: 8px;
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    width: 8px;
+  }
+}
+
+.show-pointer {
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+//*******************************************************
+// Notification header
+//*******************************************************
+.notification-header {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+}
+
+.notification-type-status {
+  display: flex;
+  align-items: center;
+
+  .type {
+    margin-right: 10px;
+    font-weight: 600;
+  }
+
+  .status {
+    font-weight: 600;
+
+    &.status-succeed {
+      color: $mew-green;
+    }
+
+    &.status-processing {
+      color: $light-orange-2;
+    }
+
+    &.status-failed {
+      color: $red-2;
+    }
+  }
+}
+
+.time-date {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+
+  > p {
+    margin-left: 10px;
+  }
+
+  .expender-icon {
+    cursor: pointer;
+    padding: 0 5px;
+    margin-left: 15px;
+    color: $dark-blue-1;
+  }
+}
+
+//*******************************************************
+// Notification content
+//*******************************************************
+.notification-content {
+  position: relative;
+
+  &::before {
+    margin: auto;
+    box-sizing: initial;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    content: '';
+    width: calc(100% - 30px);
+    border-top: 1px solid $light-grey-3;
+  }
+
+  display: flex;
+  //align-items: center;
+  padding: 10px 30px;
+
+  > ul {
+    display: block;
+    width: 100%;
+    > li {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      > ul {
+        display: flex;
+        align-items: center;
+        flex-direction: row;
+        justify-content: space-between;
+
+        > li {
+          padding-top: 10px;
+          .from-swap-icon {
+            padding-left: 10px;
+            padding-right: 10px;
+            min-width: 50px;
+          }
+          .from-swap-text {
+            padding-right: 20px;
+            //min-width: 300px;
+          }
+
+          .swap-right-arrow {
+            padding-right: 20px;
+            padding-left: 20px;
+          }
+
+          .to-swap-icon {
+            padding-left: 10px;
+            padding-right: 10px;
+            min-width: 50px;
+          }
+        }
+      }
+      .cc-icon {
+        font-size: 36px;
+      }
+
+      &:last-child {
+        justify-content: flex-end;
+        color: #455061;
+        font-weight: 600;
+      }
+    }
+  }
+
+  .tx-hash {
+    p {
+      margin-top: 10px;
+    }
+
+    align-items: self-start;
+    left: 0 !important;
+    justify-content: flex-start;
+  }
+
+  .tx-info {
+    margin-top: 10px;
+    justify-content: space-between;
+  }
+}
+
+//*******************************************************
+// Swap Notification
+//*******************************************************
+.cc-icon {
+  font-size: 36px;
+}
+
+.swap-detail {
+  display: grid;
+  grid-template-columns: 1fr 80px 1fr;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.swap-from-address,
+.swap-to-address {
+  background-color: $background-color-1;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.swap-right-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}

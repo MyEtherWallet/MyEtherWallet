@@ -1,0 +1,11 @@
+{
+  "signature": "A personal identifier to accompany your transaction",
+  "txSpeedPt1": "This field regulates speed of transaction, which is always paid in {0}.",
+  "txSpeedPt2": "We recommend having at least .01 {0} before making transactions.",
+  "print": "인쇄 ",
+  "copy": "복사 ",
+  "switchAddress": "주소 전환 ",
+  "password": "This password encrypts your private key. This does not act as a seed to generate your keys.",
+  "nonce": "This refers to the number of the transaction you are making. If you have never made a transaction before, this will be 0. Add +1 for each transaction you make. Reference an ETH blockchain explorer if you do not know your current nonce.",
+  "gasLimit": "This refers to the maximum allowance of gas you will give for a transaction. All excess gas will be refunded from successful transactions.  This field should autogenerate based on network congestion."
+}

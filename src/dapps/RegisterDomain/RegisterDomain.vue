@@ -1,6 +1,6 @@
 <template>
   <div class="register-domain-container">
-    <back-button/>
+    <back-button />
     <router-view
       :contract-initiated="contractInitiated"
       :check-domain="checkDomain"
@@ -16,12 +16,19 @@
       :owner="owner"
       :resolver-address="resolverAddress"
       :deed-owner="deedOwner"
-      :highest-bidder="highestBidder"
+      :highest-bidder="highestBid"
       :raw="raw"
       :step="step"
       :send-bid="sendBid"
       :reveal-bid="revealBid"
+      :domain-name-err="domainNameErr"
       :generate-key-phrase="generateKeyPhrase"
+      :finalize="finalize"
+      :update-resolver="updateResolver"
+      :transfer-domain="transferDomain"
+      :tld="network.type.ens.registrarTLD"
+      :network-name="network.type.name"
+      :register-fifs-name="registerFifsName"
       @updateSecretPhrase="updateSecretPhrase"
       @updateBidAmount="updateBidAmount"
       @updateBidMask="updateBidMask"
@@ -33,13 +40,17 @@
 
 <script>
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
-import RegistrarAbi from '@/helpers/registrarAbi';
+import RegistrarAbi from './ABI/registrarAbi';
+import DeedContractAbi from './ABI/deedContractAbi';
+import RegistryAbi from './ABI/registryAbi.js';
+import FifsRegistrarAbi from './ABI/fifsRegistrarAbi.js';
+import ResolverAbi from './ABI/resolverAbi.js';
 import bip39 from 'bip39';
 import * as unit from 'ethjs-unit';
 import * as nameHashPckg from 'eth-ens-namehash';
-
-const ETH_TLD = '.eth';
-
+import normalise from '@/helpers/normalise';
+import { mapGetters } from 'vuex';
+import { Toast } from '@/helpers';
 export default {
   components: {
     'back-button': BackButton
@@ -58,15 +69,40 @@ export default {
       secretPhrase: '',
       registrarAddress: '',
       auctionDateEnd: 0,
-      auctionRegistrarContract: function() {},
+      auctionRegistrarContract: {},
       raw: {},
-      highestBidder: '',
+      highestBid: '',
       contractInitiated: false,
-      step: 1
+      step: 1,
+      domainNameErr: false,
+      ensRegistryContract: {}
     };
   },
+  computed: {
+    ...mapGetters({
+      web3: 'web3',
+      network: 'network',
+      account: 'account',
+      ens: 'ens'
+    }),
+    registrarTLD() {
+      return this.network.type.ens.registrarTLD;
+    },
+    registrarType() {
+      return this.network.type.ens.registrarType;
+    }
+  },
+  watch: {
+    ens(newVal) {
+      if (newVal) {
+        this.setRegistrar();
+      }
+    }
+  },
   mounted() {
-    this.setup();
+    this.$nextTick(() => {
+      this.setup();
+    });
   },
   methods: {
     async setup() {
@@ -82,36 +118,150 @@ export default {
       this.secretPhrase = '';
       this.registrarAddress = '';
       this.auctionDateEnd = 0;
-      this.auctionRegistrarContract = function() {};
+      this.auctionRegistrarContract = {};
       this.raw = {};
-      this.highestBidder = '';
+      this.highestBid = '';
       this.contractInitiated = false;
       this.step = 1;
       this.contractInitiated = false;
+      this.contractInitiated = true;
+      this.domainNameErr = false;
+      if (this.ens) {
+        this.setRegistrar();
+      }
+    },
+    async setRegistrar() {
+      const web3 = this.web3;
       this.registrarAddress = await this.getRegistrarAddress();
-      this.auctionRegistrarContract = new this.$store.state.web3.eth.Contract(
+      this.auctionRegistrarContract = new web3.eth.Contract(
         RegistrarAbi,
         this.registrarAddress
       );
-      this.contractInitiated = true;
+      this.fifsRegistrarContract = new web3.eth.Contract(
+        FifsRegistrarAbi,
+        this.registrarAddress
+      );
+      this.ensRegistryContract = new web3.eth.Contract(
+        RegistryAbi,
+        this.network.type.ens.registry
+      );
+    },
+    async transferDomain(toAddress) {
+      let to, data;
+      if (this.registrarType === 'auction') {
+        data = await this.auctionRegistrarContract.methods
+          .transfer(this.labelHash, toAddress)
+          .encodeABI();
+        to = this.registrarAddress;
+      } else if (this.registrarType === 'fifs') {
+        data = await this.ensRegistryContract.methods
+          .setOwner(this.nameHash, toAddress)
+          .encodeABI();
+        to = this.network.type.ens.registry;
+      }
+      const raw = {
+        from: this.account.address,
+        to,
+        data,
+        value: 0
+      };
+      this.web3.eth.sendTransaction(raw).catch(err => {
+        Toast.responseHandler(err, false);
+      });
+    },
+    async updateResolver(newResolverAddr) {
+      const web3 = this.web3;
+      const from = this.account.address;
+
+      // Public resolver address
+      const resolver = await this.ens.resolver('resolver.eth');
+      const publicResolverAddress = await resolver.addr();
+      const publicResolverContract = new web3.eth.Contract(
+        ResolverAbi,
+        publicResolverAddress
+      );
+      const rawTx1 = {
+        to: this.network.type.ens.registry,
+        from: from,
+        data: this.ensRegistryContract.methods
+          .setResolver(this.nameHash, publicResolverAddress)
+          .encodeABI(),
+        value: 0
+      };
+      const rawTx2 = {
+        to: publicResolverAddress,
+        from: from,
+        data: publicResolverContract.methods
+          .setAddr(this.nameHash, newResolverAddr)
+          .encodeABI(),
+        value: 0
+      };
+      web3.mew.sendBatchTransactions([rawTx1, rawTx2]);
+    },
+    async finalize() {
+      const address = this.account.address;
+      const web3 = this.web3;
+      const data = await this.auctionRegistrarContract.methods
+        .finalizeAuction(this.labelHash)
+        .encodeABI();
+
+      const raw = {
+        from: address,
+        value: 0,
+        to: this.registrarAddress,
+        data: data
+      };
+
+      web3.eth.sendTransaction(raw).catch(err => {
+        Toast.responseHandler(err, false);
+      });
+    },
+    async registerFifsName() {
+      const address = this.account.address;
+      const web3 = this.web3;
+      const data = await this.fifsRegistrarContract.methods
+        .register(this.labelHash, address)
+        .encodeABI();
+      const raw = {
+        from: address,
+        value: 0,
+        to: this.registrarAddress,
+        data: data
+      };
+      web3.eth.sendTransaction(raw).catch(err => {
+        Toast.responseHandler(err, false);
+      });
     },
     async getRegistrarAddress() {
-      const registrarAddress = await this.$store.state.ens.owner(
-        ETH_TLD.replace('.', '')
-      );
+      const registrarAddress = await this.ens.owner(this.registrarTLD);
       return registrarAddress;
     },
     async checkDomain() {
-      const web3 = this.$store.state.web3;
+      const web3 = this.web3;
       this.loading = true;
       this.labelHash = web3.utils.sha3(this.domainName);
-
       try {
-        const domainStatus = await this.auctionRegistrarContract.methods
-          .entries(this.labelHash)
-          .call();
-        this.processResult(domainStatus);
+        let domainStatus = [];
+        if (this.registrarType === 'auction') {
+          domainStatus = await this.auctionRegistrarContract.methods
+            .entries(this.labelHash)
+            .call();
+          this.processResult(domainStatus);
+        } else if (this.registrarType === 'fifs') {
+          const expiryTime = await this.fifsRegistrarContract.methods
+            .expiryTimes(this.labelHash)
+            .call();
+          const isAvailable = expiryTime * 1000 < new Date().getTime();
+          if (isAvailable) {
+            this.$router.push({ path: 'register-domain/fifs' });
+            this.loading = false;
+          } else {
+            this.getMoreInfo();
+            this.loading = false;
+          }
+        }
       } catch (e) {
+        Toast.responseHandler(e, false);
         this.loading = false;
       }
     },
@@ -120,7 +270,6 @@ export default {
     },
     processResult(res) {
       this.auctionDateEnd = res[2] * 1000;
-      this.highestBidder = unit.fromWei(res[4], 'ether').toString();
       switch (res[0]) {
         case '0':
           this.generateKeyPhrase();
@@ -145,46 +294,71 @@ export default {
           break;
         case '4':
           this.loading = false;
+          this.highestBid = unit.fromWei(res[4], 'ether').toString();
           this.$router.push({ path: 'register-domain/reveal' });
           break;
       }
     },
     updateDomainName(value) {
-      this.domainName = value;
+      if (
+        value.substr(0, 2) === '0x' ||
+        value.length < 7 ||
+        value.indexOf('.') !== -1
+      ) {
+        this.domainNameErr = true;
+      } else {
+        this.domainNameErr = false;
+      }
+      try {
+        normalise(value);
+      } catch (e) {
+        Toast.responseHandler(e, Toast.WARN);
+        this.domainNameErr = true;
+        return;
+      }
+      this.domainName = normalise(value);
     },
     async getMoreInfo(deedOwner) {
+      let highestBidder = '0x';
+      if (this.registrarType === 'auction') {
+        const deedContract = new this.web3.eth.Contract(
+          DeedContractAbi,
+          deedOwner
+        );
+        highestBidder = await deedContract.methods.owner().call();
+      }
       let owner;
       let resolverAddress;
       try {
-        owner = await this.$store.state.ens.owner(this.domainName + ETH_TLD);
+        owner = await this.ens.owner(`${this.domainName}.${this.registrarTLD}`);
       } catch (e) {
         owner = '0x';
+        Toast.responseHandler(e, false);
       }
-
       try {
-        resolverAddress = await this.$store.state.ens
-          .resolver(this.domainName + ETH_TLD)
-          .resolverAddress();
+        resolverAddress = await this.ens
+          .resolver(`${this.domainName}.${this.registrarTLD}`)
+          .addr();
       } catch (e) {
         resolverAddress = '0x';
       }
 
-      this.nameHash = nameHashPckg.hash(this.domainName + ETH_TLD);
-
-      this.deedOwner = deedOwner;
-      this.owner = owner;
+      this.nameHash = nameHashPckg.hash(
+        `${this.domainName}.${this.registrarTLD}`
+      );
       this.resolverAddress = resolverAddress;
+      this.deedOwner = highestBidder;
+      this.owner = owner;
       this.$router.push({ path: 'register-domain/owned' });
       this.loading = false;
     },
     async createTransaction(type) {
       this.loading = true;
-      const address = this.$store.state.wallet.getAddressString();
-      const utils = this.$store.state.web3.utils;
-      const domainName = utils.sha3(this.domainName);
+      const address = this.account.address;
+      const utils = this.web3.utils;
       const bidHash = await this.auctionRegistrarContract.methods
         .shaBid(
-          domainName,
+          this.labelHash,
           address,
           utils.toWei(this.bidAmount.toString(), 'ether'),
           utils.sha3(this.secretPhrase)
@@ -194,7 +368,7 @@ export default {
       let contractReference;
       if (type === 'start') {
         contractReference = this.auctionRegistrarContract.methods.startAuctionsAndBid(
-          [domainName],
+          [this.labelHash],
           bidHash
         );
       } else if (type === 'bid') {
@@ -203,8 +377,7 @@ export default {
         );
       } else if (type === 'reveal') {
         contractReference = this.auctionRegistrarContract.methods.unsealBid(
-          domainName,
-          address,
+          this.labelHash,
           utils.toWei(this.bidAmount.toString(), 'ether'),
           utils.sha3(this.secretPhrase)
         );
@@ -215,7 +388,8 @@ export default {
       const revealDate = date.setDate(date.getDate() - 2);
       const raw = {
         from: address,
-        value: unit.toWei(this.bidMask, 'ether').toString(),
+        value:
+          type === 'reveal' ? 0 : unit.toWei(this.bidMask, 'ether').toString(),
         to: this.registrarAddress,
         data: contractReference.encodeABI(),
         name: this.domainName,

@@ -1,0 +1,506 @@
+.ADA {
+  color: #3cc8c8;
+}
+.ADC {
+  color: #3cb0e5;
+}
+.AEON {
+  color: #164450;
+}
+.AMP {
+  color: #048dd2;
+}
+.ANC {
+  color: #000;
+}
+.ARCH {
+  color: #002652;
+}
+.ARDR {
+  color: #1162a1;
+}
+.ARK {
+  color: #f70000;
+}
+.AST {
+  color: #18f18f;
+}
+.AUR {
+  color: #136c5e;
+}
+.BANX {
+  color: #225ba6;
+}
+.BAT {
+  color: #9e1f63;
+}
+.BAY {
+  color: #584ba1;
+}
+.BC {
+  color: #202121;
+}
+.BCN {
+  color: #964f51;
+}
+.BCY {
+  color: #123a5a;
+}
+.BELA {
+  color: #009ef9;
+}
+.BFT {
+  color: #4fc3f7;
+}
+.BLZ {
+  color: #6be6be;
+}
+.BRK {
+  color: #194fa0;
+}
+.BRX {
+  color: #a8c300;
+}
+.BSD {
+  color: #1186e7;
+}
+.BTA {
+  color: #210094;
+}
+.BTC,
+.BCH {
+  color: #f7931a;
+}
+.BTCD {
+  color: #2a72dc;
+}
+.BTCP {
+  color: #272d63;
+}
+.BTM {
+  color: #9fa8b4;
+}
+.BTS {
+  color: #03a9e0;
+}
+.BURST {
+  color: #2d2d2d;
+}
+.CLAM {
+  color: #d6ab31;
+}
+.CLOAK {
+  color: #df3f1e;
+}
+.CVC {
+  color: #3ab03e;
+}
+.DAO {
+  color: #ff3b3b;
+}
+.DASH {
+  color: #1c75bc;
+}
+.DCR {
+  color: #3b7cfb;
+}
+.DCT {
+  color: #008770;
+}
+.DGB {
+  color: #06c;
+}
+.DGD,
+.DGX {
+  color: #d8a24a;
+}
+.DMD {
+  color: #5497b2;
+}
+.DOGE {
+  color: #ba9f33;
+}
+.EMC {
+  color: #674c8c;
+}
+.EMC2 {
+  color: #0cf;
+}
+.EOS {
+  color: #19191a;
+}
+.ERC {
+  color: #101e84;
+}
+.ETC {
+  color: #669073;
+}
+.ETH {
+  color: #282828;
+}
+.EXP {
+  color: #ffaa5c;
+}
+.FC2 {
+  color: #040405;
+}
+.FCT {
+  color: #2175bb;
+}
+.FLDC {
+  color: #c40e09;
+}
+.FLO {
+  color: #1358c8;
+}
+.FRK {
+  color: #0633cd;
+}
+.FTC {
+  color: #679ef1;
+}
+.FUN {
+  color: #ef3a5c;
+}
+.GAME {
+  color: #ed1b24;
+}
+.GBYTE {
+  color: #2c3e50;
+}
+.GDC {
+  color: #e9a226;
+}
+.GEMZ {
+  color: #e86060;
+}
+.GLD {
+  color: #e8be24;
+}
+.GNO {
+  color: #00a6c4;
+}
+.GNT {
+  color: #00d6e3;
+}
+.GOLOS {
+  color: #2670b7;
+}
+.GRC {
+  color: #88a13c;
+}
+.GRS {
+  color: #648fa0;
+}
+.HEAT {
+  color: #ff5606;
+}
+.HUC {
+  color: #ffc018;
+}
+.ICN {
+  color: #4c6f8c;
+}
+.IFC {
+  color: #ed272d;
+}
+.INCNT {
+  color: #f2932f;
+}
+.IOC {
+  color: #2fa3de;
+}
+.IOTA {
+  color: #fff;
+}
+.JBS {
+  color: #1a8bcd;
+}
+.KMD {
+  color: #326464;
+}
+.KOBO {
+  color: #80c342;
+}
+.KORE {
+  color: #df4124;
+}
+.LBC {
+  color: #015c47;
+}
+.LDOGE {
+  color: #fc0;
+}
+.LSK {
+  color: #0d4ea0;
+}
+.LTC {
+  color: #838383;
+}
+.MAID {
+  color: #5492d6;
+}
+.MARKS {
+  color: #504c4c;
+}
+.MCO {
+  color: #0d3459;
+}
+.MINT {
+  color: #006835;
+}
+.MONA {
+  color: #a99364;
+}
+.MRC {
+  color: #4279bd;
+}
+.MSC {
+  color: #1d4983;
+}
+.MTL {
+  color: #242424;
+}
+.MTR {
+  color: #b92429;
+}
+.MUE {
+  color: #f5a10e;
+}
+.NAV {
+  color: #7d59b5;
+}
+.MYST {
+  color: #f5a10e;
+}
+.NBT {
+  color: #ffc93d;
+}
+.NEO {
+  color: #58bf00;
+}
+.NEOS {
+  color: #1d1d1b;
+}
+.NEU {
+  color: #2983c0;
+}
+.NLG {
+  color: #003e7e;
+}
+.NMC {
+  color: #6787b7;
+}
+.NMR {
+  color: #8de8de;
+}
+.NOTE {
+  color: #42daff;
+}
+.NVC {
+  color: #ecab41;
+}
+.NXT {
+  color: #008fbb;
+}
+.OK {
+  color: #0165a4;
+}
+.OMG {
+  color: #1a53f0;
+}
+.OMNI {
+  color: #18347e;
+}
+.OPAL {
+  color: #7193aa;
+}
+.PART {
+  color: #05d5a3;
+}
+.PASC {
+  color: #f7931e;
+}
+.PIGGY {
+  color: #f27a7a;
+}
+.PINK {
+  color: #ed31ca;
+}
+.PIVX {
+  color: #3b2f4d;
+}
+.POT {
+  color: #105b2f;
+}
+.PPC {
+  color: #3fa30c;
+}
+.QRK {
+  color: #22aabf;
+}
+.QTUM {
+  color: #359bce;
+}
+.RADS {
+  color: #924cea;
+}
+.RBIES {
+  color: #c62436;
+}
+.RBT {
+  color: #0d4982;
+}
+.RBY {
+  color: #d31f26;
+}
+.RDD {
+  color: #ed1c24;
+}
+.REP {
+  color: #40a2cb;
+}
+.RIC {
+  color: #60e4dd;
+}
+.RHOC {
+  color: #c26c26;
+}
+.RISE {
+  color: #43cea2;
+}
+.SALT {
+  color: #373c43;
+}
+.SAR {
+  color: #1b72b8;
+}
+.SCOT {
+  color: #3498db;
+}
+.SDC {
+  color: #981d2d;
+}
+.SIA {
+  color: #00cba0;
+}
+.SJCX {
+  color: #036;
+}
+.SLG {
+  color: #5a6875;
+}
+.SLS {
+  color: #1eb549;
+}
+.SNRG {
+  color: #160363;
+}
+.START {
+  color: #01aef0;
+}
+.STEEM {
+  color: #1a5099;
+}
+.STRAT {
+  color: #2398dd;
+}
+.SWIFT {
+  color: #428bca;
+}
+.SYNC {
+  color: #008dd2;
+}
+.SYS {
+  color: #0098da;
+}
+.TRIG {
+  color: #1fbff4;
+}
+.TX {
+  color: #1f8bcc;
+}
+.UBQ {
+  color: #00ec8d;
+}
+.UNITY {
+  color: #ed8527;
+}
+.USDT {
+  color: #2ca07a;
+}
+.VIA {
+  color: #565656;
+}
+.VIOR {
+  color: #1f52a4;
+}
+.VNL {
+  color: #404249;
+}
+.VPN {
+  color: #589700;
+}
+.VRC {
+  color: #418bca;
+}
+.VTC {
+  color: #1b5c2e;
+}
+.WAVES {
+  color: #24aad6;
+}
+.XAI {
+  color: #2ef99f;
+}
+.XBC {
+  color: #f7931a;
+}
+.XBS {
+  color: #d3261d;
+}
+.XCP {
+  color: #ec1550;
+}
+.XEM {
+  color: #41bf76;
+}
+.XLM {
+  color: #08b5e5;
+}
+.XMR {
+  color: #f60;
+}
+.XMY {
+  color: #bc3182;
+}
+.XPM {
+  color: #e5b625;
+}
+.XRP {
+  color: #346aa9;
+}
+.XTZ {
+  color: #a6df00;
+}
+.XVC {
+  color: #b50126;
+}
+.XVG {
+  color: #42afb2;
+}
+.XZC {
+  color: #23b852;
+}
+.YBC {
+  color: #d6c154;
+}
+.ZEC {
+  color: #e5a93d;
+}
+.ZEIT {
+  color: #acacac;
+}
+.ZRX {
+  color: #302c2c;
+}

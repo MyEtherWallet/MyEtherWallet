@@ -1,12 +1,20 @@
-import RegisterDomain from './RegisterDomain';
-import EnsBidContainer from './containers/EnsBidContainer';
-import InitialENSStateContainer from './containers/InitialENSStateContainer';
-import NameForbiddenENSContainer from './containers/NameForbiddenENSContainer';
-import AlreadyOwnedENSContainer from './containers/AlreadyOwnedENSContainer';
+const RegisterDomain = () => import('./RegisterDomain');
+const EnsBidContainer = () => import('./containers/EnsBidContainer');
+const InitialENSStateContainer = () =>
+  import('./containers/InitialENSStateContainer');
+const NameForbiddenENSContainer = () =>
+  import('./containers/NameForbiddenENSContainer');
+const AlreadyOwnedENSContainer = () =>
+  import('./containers/AlreadyOwnedENSContainer');
+const FinalizeContainer = () => import('./containers/FinalizeContainer');
+const ManageENSContainer = () => import('./containers/ManageENSContainer');
+const FifsBuyContainer = () => import('./containers/FifsBuyContainer');
+
 export default {
   path: 'dapps/register-domain',
   component: RegisterDomain,
   props: true,
+  meta: { requiresAuth: true },
   children: [
     {
       path: '',
@@ -42,6 +50,24 @@ export default {
       path: 'forbidden',
       name: 'ENS forbidden',
       component: NameForbiddenENSContainer,
+      props: true
+    },
+    {
+      path: 'finalize',
+      name: 'ENS finalize',
+      component: FinalizeContainer,
+      props: true
+    },
+    {
+      path: 'manage',
+      name: 'Manage ENS',
+      component: ManageENSContainer,
+      props: true
+    },
+    {
+      path: 'fifs',
+      name: 'Reserve on FIFS',
+      component: FifsBuyContainer,
       props: true
     }
   ]

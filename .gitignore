@@ -14,4 +14,12 @@ selenium-debug.log
 *.ntvs*
 *.njsproj
 *.sln
+.npm
+.config
 /tests/unit/coverage/
+release
+
+# Generated files
+src/contracts/
+src/tokens/
+src/darklist/

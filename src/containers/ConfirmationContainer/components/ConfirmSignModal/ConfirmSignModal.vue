@@ -5,22 +5,31 @@
       hide-footer
       centered
       class="bootstrap-modal-wide confirmation-modal nopadding"
-      title="Confirmation">
+      title="Confirmation"
+    >
       <div class="modal-content qrcode-modal">
         <div class="tx-info">
           <div class="tx-data tx-from">
             <div class="address-info">
-              <p class="address-title">Signing Address</p>
-              <p>{{ from }}</p>
+              <p class="title address-title">
+                {{ $t('confirmation.signingAddr') }}
+              </p>
+              <div class="from-address">
+                <blockie
+                  :address="account.address"
+                  width="30px"
+                  height="30px"
+                />
+                <span>{{ from }}</span>
+              </div>
             </div>
-          </div>
-          <div class="direction">
-            <img src="~@/assets/images/icons/right-arrow.svg">
           </div>
           <div class="tx-data tx-to">
             <div class="address-info">
-              <p class="address-title">Message</p>
-              <p>{{ messageToSign }}</p>
+              <p class="title address-title">
+                {{ $t('interface.txSideMenuMessage') }}
+              </p>
+              <p class="message-to-sign">{{ messageToSign }}</p>
             </div>
           </div>
         </div>
@@ -29,34 +38,26 @@
             <div class="button-with-helper">
               <div
                 ref="ConfirmAndSendButton"
-                :class="[signedMessage !== ''? '': 'disabled','submit-button large-round-button-green-filled clickable']"
-                @click="signMessage">
-                Confirm Signing
-              </div>
-              <div class="tooltip-box-2">
-                <b-btn id="exPopover9">
-                  <img
-                    class="icon"
-                    src="~@/assets/images/icons/qr-code.svg">
-                </b-btn>
-                <b-popover
-                  target="exPopover9"
-                  triggers="hover focus"
-                  placement="top">
-                  <div class="qrcode-contents">
-                    <p class="qrcode-title">Scan QR code to send/swap instantly</p>
-                    <div class="qrcode-block">
-                      <qrcode
-                        :options="{ size: 100 }"
-                        value="Hello, World!"/>
-                    </div>
-                    <p class="qrcode-helper">What is that?</p>
-                  </div>
-                </b-popover>
+                :class="[
+                  signedMessage !== '' ? '' : 'disabled',
+                  'submit-button large-round-button-green-filled clickable'
+                ]"
+                @click="signMessage"
+              >
+                {{ $t('confirmation.confirmSigning') }}
               </div>
             </div>
           </div>
-          <p class="learn-more">Have any issues? <a href="/">Learn more</a></p>
+          <p class="learn-more">
+            Have any issues?
+            <a
+              href="https:/kb.myetherwallet.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Learn more
+            </a>
+          </p>
         </div>
       </div>
     </b-modal>
@@ -64,7 +65,13 @@
 </template>
 
 <script>
+import Blockie from '@/components/Blockie';
+import { mapGetters } from 'vuex';
+
 export default {
+  components: {
+    blockie: Blockie
+  },
   props: {
     confirmSignMessage: {
       type: Function,
@@ -94,6 +101,9 @@ export default {
     };
   },
   computed: {
+    ...mapGetters({
+      account: 'account'
+    }),
     signedMessageSignature() {
       if (this.signedMessage) {
         return this.signedMessage;

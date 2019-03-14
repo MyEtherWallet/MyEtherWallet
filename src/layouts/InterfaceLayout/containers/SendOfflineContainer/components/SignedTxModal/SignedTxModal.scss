@@ -1,0 +1,54 @@
+@import '~@/scss/GlobalVariables';
+
+.signed-tx-modal {
+  .title-block {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
+  }
+
+  .modal-body {
+    padding: 30px 35px;
+  }
+
+  .signed-tx-container,
+  .scan-download-container,
+  .raw-tx-container {
+    background: $light-grey-1;
+    border-radius: 4px;
+    padding: 20px 20px;
+    margin-top: 10px;
+
+    &.collapsed {
+      padding: 5px 0 0;
+
+      code {
+        display: none;
+      }
+    }
+  }
+
+  .raw {
+    margin-top: 15px;
+    margin-bottom: 30px;
+    padding: 15px 0;
+    border-bottom: 2px solid $light-grey-1;
+    border-top: 2px solid $light-grey-1;
+
+    code {
+      color: $black;
+      font-weight: 200;
+    }
+  }
+
+  .scan-download-container {
+    background-color: $white;
+    .scan-download-items {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+}

@@ -1,0 +1,86 @@
+@import '~@/scss/GlobalVariables';
+@media all and (min-width: calc(#{$tablet-width} + 1px)) {
+  .mobile-interface-address-block {
+    display: none;
+  }
+
+  .wrap {
+    display: grid;
+    grid-column-gap: 0;
+    grid-template-columns: 270px 1fr;
+
+    @media all and (max-width: $interface--mobile-side-menu--width) {
+      grid-template-columns: 0 1fr;
+    }
+
+    .sidemenu {
+      background-color: $white;
+    }
+
+    .contents {
+      background-color: $light-grey-2;
+      padding: 20px;
+
+      .tx-contents {
+        display: grid;
+        grid-gap: 15px;
+        grid-template-areas: 'info-1 info-2 info-3' 'main main tokens';
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-rows: auto;
+
+        .content-container {
+          > * {
+            height: 100%;
+          }
+        }
+
+        .tokens {
+          border-radius: 5px;
+        }
+      }
+    }
+  }
+
+  @media all and (max-width: $interface--mobile-side-menu--width) {
+    .side-nav {
+      min-width: 350px;
+      height: 100%;
+      position: fixed;
+      left: -500px;
+      top: 0;
+      background-color: $white;
+      z-index: 9999;
+      transition: all 0.2s linear;
+
+      &.side-nav-open .side-nav-background {
+        opacity: 1;
+      }
+
+      &.side-nav-open {
+        left: 0;
+      }
+    }
+
+    .side-nav-background {
+      background-color: $menu-under-background-color;
+      position: fixed;
+      left: 0;
+      top: 0;
+      height: 100vh;
+      width: 100vw;
+      z-index: 9990;
+      pointer-events: none;
+      opacity: 0;
+      transition: all 0.2s linear;
+
+      &.side-nav-open {
+        opacity: 1;
+        pointer-events: initial;
+      }
+    }
+  }
+}
+
+.interface-layout {
+  background-color: $light-grey-2;
+}

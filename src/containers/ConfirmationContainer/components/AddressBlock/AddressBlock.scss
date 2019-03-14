@@ -6,6 +6,7 @@
   color: $dark-blue-1;
   padding: 18px 24px;
   width: 248px;
+  word-break: break-word;
 
   .currency-container {
     align-items: baseline;
@@ -41,5 +42,20 @@
   .address {
     width: 100%;
     word-wrap: break-word;
+  }
+}
+
+.icon-matcher {
+  align-items: center;
+  background-color: #497391;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  height: 36px;
+  width: 36px;
+
+  img {
+    height: 26px !important;
+    width: auto !important;
   }
 }

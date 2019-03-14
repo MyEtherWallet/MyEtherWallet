@@ -1,101 +1,129 @@
 <template>
   <div class="footer">
+    <!-- Modal -->
+    <feedback-modal />
     <div class="wrap">
       <div class="page-container">
         <div class="grid-col-1-1-1-2 footer-contents">
           <div
             v-for="(item, index) in footerContent"
-            :ref="item.class" 
+            :ref="item.class"
             :class="item.class"
-            :key="item.title + index">
-            <div 
-              class="content-title" 
-              @click="toggler(item.class)">
+            :key="item.title + index"
+          >
+            <div class="content-title" @click="toggler(item.class)">
               <h3 class="lite">{{ item.title }}</h3>
-              <p
-                class="open"
-                @click="openContent(item.class)">
-                <i
-                  class="fa fa-plus"
-                  aria-hidden="true"/>
+              <p class="open" @click="openContent(item.class)">
+                <i class="fa fa-plus" aria-hidden="true" />
               </p>
-              <p
-                class="close"
-                @click="closeContent(item.class)">
-                <i
-                  class="fa fa-minus"
-                  aria-hidden="true"/>
+              <p class="close" @click="closeContent(item.class)">
+                <i class="fa fa-minus" aria-hidden="true" />
               </p>
             </div>
             <div class="content-links">
-              <div
-                v-for="(content, index) in item.contents"
-                :key="content.text+index">
-                <router-link
-                  v-if="content.to !== undefined"
-                  :to="content.to"><p>{{ content.text }}</p></router-link>
-                <a
-                  v-if="content.to === undefined"
-                  :href="content.href"
-                  target="_blank"><p>{{ content.text }}</p></a>
+              <div class="content-links-animation-block">
+                <div
+                  v-for="(content, index) in item.contents"
+                  :key="content.text + index"
+                  class="content"
+                >
+                  <div v-if="content.text === $t('common.customerSupport')">
+                    <customer-support :no-icon="true" />
+                  </div>
+                  <router-link
+                    v-else-if="content.to !== undefined"
+                    :to="content.to"
+                  >
+                    <p>{{ content.text }}</p>
+                  </router-link>
+                  <a
+                    v-else-if="content.to === undefined"
+                    :href="content.href"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <p>{{ content.text }}</p>
+                  </a>
+                </div>
               </div>
             </div>
           </div>
           <div class="donate-us">
             <div class="content-title">
               <h3 class="lite">
-                {{ $t("footer.love") }}
-                <img src="~@/assets/images/icons/heart.svg">
-                {{ $t("footer.donate") }}
+                {{ $t('footer.love') }}
+                <img src="~@/assets/images/icons/heart.svg" />
+                {{ $t('footer.donate') }}
               </h3>
             </div>
-            <div class="">
-              <p>{{ $t("footer.welcomeDes") }}</p>
+            <div class="links">
+              <p>{{ $t('footer.welcomeDes') }}</p>
 
               <a
-                href="https://etherscan.io/address/0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D"
-                target="_blank">
-                <p
-                  class="crypto-link"
-                  data-eth="0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D">
-                  <img src="~@/assets/images/icons/eth.svg">
-                  &nbsp;Ethereum Donation
+                :href="'https://etherscan.io/address/' + ethDonationAddress"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <p :data-eth="ethDonationAddress" class="crypto-link">
+                  <img src="~@/assets/images/icons/eth.svg" /> &nbsp;Ethereum
+                  Donation
                 </p>
               </a>
 
               <a
                 href="https://blockchain.info/address/1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9"
-                target="_blank">
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <p
-                  class="crypto-link"
-                  data-btc="1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9">
-                  <img src="~@/assets/images/icons/btc.svg">
-                  &nbsp;Bitcoin Donation
+                  class="crypto-link no-padding"
+                  data-btc="1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9"
+                >
+                  <img src="~@/assets/images/icons/btc.svg" /> &nbsp;Bitcoin
+                  Donation
                 </p>
               </a>
-
             </div>
           </div>
         </div>
         <div class="flex-space-between foot-note">
           <div class="links">
-            <router-link
-              v-for="(link, index) in lowerLinks"
-              :key="link.title + index"
-              :to="link.to"><span>{{ link.title }}</span></router-link>
+            <div v-for="(link, index) in lowerLinks" :key="link.title + index">
+              <router-link v-if="link.hasOwnProperty('to')" :to="link.to">
+                <span>{{ link.title }}</span>
+              </router-link>
+              <a
+                v-else
+                :href="link.href"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span>{{ link.title }}</span>
+              </a>
+            </div>
           </div>
           <div class="copyright">
             <p>
-              Pricing taken from <span>CoinMarketCap</span> <br>
-              {{ $t("footer.copyright") }}
+              {{ $t('footer.pricingP') }}
+              <a
+                href="https://coingecko.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                >CoinGecko</a
+              >
+              <br />
+              {{ $t('footer.copyright') }}
             </p>
           </div>
           <div class="social">
             <a
               v-for="link in links"
               :href="link.to"
-              :key="link.class">
-              <i :class="'fa '+ link.class"/>
+              :key="link.class"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <i :class="'fa ' + link.class" />
             </a>
           </div>
         </div>
@@ -105,13 +133,23 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+import FeedbackModal from '@/components/FeedbackModal';
+import CustomerSupport from '@/components/CustomerSupport';
+const version = VERSION;
+
 export default {
+  components: {
+    'feedback-modal': FeedbackModal,
+    'customer-support': CustomerSupport
+  },
   data() {
     return {
+      version: version,
       lowerLinks: [
         {
           title: this.$t('footer.feedback'),
-          to: '/'
+          href: 'mailto:support@myetherwallet.com'
         },
         {
           title: this.$t('footer.privacy'),
@@ -120,6 +158,10 @@ export default {
         {
           title: this.$t('common.terms'),
           to: '/terms-and-conditions'
+        },
+        {
+          title: `v${version}`,
+          href: `https://github.com/MyEtherWallet/MyEtherWallet/releases/tag/v${version}`
         }
       ],
       footerContent: [
@@ -131,21 +173,18 @@ export default {
               text: this.$t('footer.units'),
               to: '/convert-units'
             },
-            {
-              text: this.$t('footer.txStat'),
-              to: '/'
-            },
-            {
-              text: this.$t('footer.debugs'),
-              to: '/'
-            },
+            // {
+            //   text: this.$t('footer.advanced'),
+            //   to: '/advanced-tools'
+            // },
             {
               text: this.$t('footer.extension'),
-              to: '/'
+              href:
+                'https://chrome.google.com/webstore/detail/myetherwallet/nlbmnnijcnlegkjjpcfjclmcfggfefdm?hl=en'
             },
             {
-              text: this.$t('footer.others'),
-              to: '/'
+              text: this.$t('footer.sendOffline'),
+              to: '/send-offline-helper'
             }
           ]
         },
@@ -155,8 +194,12 @@ export default {
           contents: [
             {
               text: this.$t('footer.ledger'),
+              href: 'https://www.ledger.com?r=fa4b'
+            },
+            {
+              text: this.$t('footer.finney'),
               href:
-                'https://www.ledgerwallet.com/products/?utm_source=&utm_medium=affiliate&utm_campaign=fa4b&utm_content='
+                'http://shop.sirinlabs.com?rfsn=2397639.54fdf&utm_source=refersion&utm_medium=affiliate&utm_campaign=2397639.54fdf'
             },
             {
               text: this.$t('footer.digital'),
@@ -168,12 +211,21 @@ export default {
                 'https://ether.cards/?utm_source=mew&utm_medium=cpm&utm_campaign=site'
             },
             {
+              text: 'KeepKey',
+              href: 'http://keepkey.go2cloud.org/aff_c?offer_id=1&aff_id=5561'
+            },
+            {
               text: this.$t('footer.trezor'),
               href: 'https://trezor.io/?a=myetherwallet.com'
             },
             {
               text: this.$t('footer.bity'),
               href: 'https://bity.com/af/jshkb37v'
+            },
+            {
+              text: this.$t('footer.billfodl'),
+              href:
+                'https://billfodl.com/?afmc=2j&utm_campaign=2j&utm_source=leaddyno&utm_medium=affiliate'
             }
           ]
         },
@@ -194,12 +246,16 @@ export default {
               to: '/#faqs'
             },
             {
+              text: this.$t('common.vintage'),
+              href: 'https://vintage.myetherwallet.com'
+            },
+            {
               text: this.$t('common.customerSupport'),
-              to: '/'
+              href: 'mailto:support@myetherwallet.com'
             },
             {
               text: 'Help Center',
-              to: '/help-center'
+              href: 'https://kb.myetherwallet.com'
             }
           ]
         }
@@ -236,7 +292,15 @@ export default {
       ]
     };
   },
+  computed: {
+    ...mapGetters({
+      ethDonationAddress: 'ethDonationAddress'
+    })
+  },
   methods: {
+    openFeedbackModal() {
+      this.$children[0].$refs.feedback.show();
+    },
     openContent(element) {
       const openButton = document.querySelector('.' + element + ' .open');
       const closeButton = document.querySelector('.' + element + ' .close');
@@ -254,8 +318,6 @@ export default {
       content.classList.add('mobile-hide');
     },
     toggler(ref) {
-      // console.log(this.$refs);
-      // console.log(this.$refs[ref][0]);
       const el = this.$refs[ref][0];
       el.classList.toggle('content-open');
     }

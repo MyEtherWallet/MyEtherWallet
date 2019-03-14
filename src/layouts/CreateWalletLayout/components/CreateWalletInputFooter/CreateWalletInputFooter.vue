@@ -1,18 +1,24 @@
 <template>
   <div class="footer-text">
     <p>
-      <span>{{ $t("createWallet.doNotForget") }}</span>
-      {{ $t("createWallet.doNotForgetDesc") }}
-      <span>{{ $t("createWallet.keyPass") }}</span>
-      {{ $t("createWallet.keyPassDesc") }}
+      <span>{{ $t('createWallet.doNotForget') }}</span>
+      {{ $t('createWallet.doNotForgetDesc') }}<span> {{ combo }}</span>
+      {{ desc }}
     </p>
   </div>
 </template>
 
 <script>
 export default {
-  data() {
-    return {};
+  props: {
+    combo: {
+      type: String,
+      default: ''
+    },
+    desc: {
+      type: String,
+      default: ''
+    }
   }
 };
 </script>

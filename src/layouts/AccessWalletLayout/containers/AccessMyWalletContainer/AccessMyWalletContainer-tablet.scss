@@ -1,22 +1,17 @@
 @import '~@/scss/GlobalVariables';
 @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
-  .wrap {
-    background-color: $background-color-1;
-    padding: 80px 0;
-  }
-
-  .title {
-    margin-bottom: 50px;
-    text-align: center;
-  }
-
   .buttons-container {
+    user-select: none;
     display: grid;
     grid-column-gap: 20px;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: repeat(4, auto);
+    @media all and (max-width: 750px) {
+      grid-template-columns: repeat(4, 200px);
+    }
+
     margin: 0 auto;
-    max-width: 900px;
+    overflow-y: auto;
     position: relative;
     text-align: center;
   }
-} // @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width)
+}

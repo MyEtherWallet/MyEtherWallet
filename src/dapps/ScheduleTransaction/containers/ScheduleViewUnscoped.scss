@@ -1,0 +1,54 @@
+@import '~@/scss/GlobalVariables';
+
+.vdatetime-calendar__month__day--selected > span > span,
+.vdatetime-calendar__month__day--selected:hover > span > span {
+  background: $mew-green;
+}
+
+.vdatetime-popup__header {
+  background: $dark-grey-1;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.vdatetime-year-picker__item--selected,
+.vdatetime-time-picker__item--selected,
+.vdatetime-popup__actions__button {
+  color: $mew-green;
+}
+
+.vdatetime-popup {
+  border-radius: 5px;
+}
+
+.vdatetime-input {
+  background-color: #f9f9f9;
+  border: 1px solid #f9f9f9;
+  padding: 17px 20px;
+  width: 100%;
+}
+
+.bounty-usd-display .input-container input {
+  text-align: center;
+}
+
+.timezone-selector {
+  p {
+    color: black;
+  }
+  .dropdown-list {
+    li {
+      padding: 10px 14px;
+      cursor: pointer;
+    }
+  }
+  .dropdown-button .placeholder {
+    color: black;
+  }
+}
+
+.scheduling-currency-picker {
+  .dropdown-text-container {
+    padding: 17px 20px;
+  }
+}

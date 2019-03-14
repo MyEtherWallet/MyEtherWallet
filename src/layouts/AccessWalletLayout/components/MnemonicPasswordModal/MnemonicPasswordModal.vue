@@ -4,31 +4,41 @@
     :title="$t('accessWallet.password')"
     hide-footer
     class="bootstrap-modal modal-software"
-    centered>
+    centered
+    @shown="focusInput"
+  >
     <form class="password-form">
       <div class="input-container">
         <input
-          :type="show ? 'text': 'password'"
+          ref="mnemonicPasswordInput"
+          :type="show ? 'text' : 'password'"
           v-model="password"
           name="Password"
-          autocomplete="off" >
+          autocomplete="off"
+          placeholder="Enter password"
+        />
         <img
           v-if="show"
           src="@/assets/images/icons/show-password.svg"
-          @click.prevent="switchViewPassword">
+          @click.prevent="switchViewPassword"
+        />
         <img
           v-if="!show"
           src="@/assets/images/icons/hide-password.svg"
-          @click.prevent="switchViewPassword">
+          @click.prevent="switchViewPassword"
+        />
       </div>
-      <p
-        v-show="error !== ''"
-        class="error"> {{ error }} </p>
+      <p v-show="error !== ''" class="error">{{ error }}</p>
+      <div class="not-recommended">
+        {{ $t('accessWallet.notARecommendedWay') }}
+      </div>
       <button
         class="submit-button large-round-button-green-filled"
         type="submit"
-        @click.prevent="unlockWallet" >
-        {{ $t("common.continue") }}
+        @click.prevent="unlockWallet"
+      >
+        <span v-show="!spinner"> {{ $t('common.continue') }} </span>
+        <i v-show="spinner" class="fa fa-spin fa-spinner fa-lg" />
       </button>
     </form>
   </b-modal>
@@ -36,6 +46,7 @@
 
 <script>
 import { MnemonicWallet } from '@/wallets';
+import { Toast } from '@/helpers';
 export default {
   props: {
     hardwareWalletOpen: {
@@ -51,7 +62,8 @@ export default {
     return {
       show: false,
       password: '',
-      error: ''
+      error: '',
+      spinner: false
     };
   },
   watch: {
@@ -61,22 +73,26 @@ export default {
   },
   methods: {
     unlockWallet() {
-      MnemonicWallet.unlock({
-        mnemonicPhrase: this.phrase,
-        mnemonicPassword: this.password
-      })
+      this.spinner = true;
+      MnemonicWallet(this.phrase, this.password)
         .then(wallet => {
           // this.$refs.password.hide();  // TODO: confirm moving this to parent still functions as expected
           this.password = '';
+          this.spinner = false;
           this.hardwareWalletOpen(wallet);
         })
-        .catch(_error => {
-          // eslint-disable-next-line no-console
-          console.error(_error); // todo replace with proper error
+        .catch(e => {
+          this.password = '';
+          this.spinner = false;
+          this.error = e;
+          Toast.responseHandler(e, Toast.ERROR);
         });
     },
     switchViewPassword() {
       this.show = !this.show;
+    },
+    focusInput() {
+      this.$refs.mnemonicPasswordInput.focus();
     }
   }
 };
