@@ -38,7 +38,7 @@ describe('BackButton.vue', () => {
   it('should render correct content', () => {});
 
   describe('BackButton.vue Methods', () => {
-    it('should go back when button clicked', () => {
+    xit('should go back when button clicked', () => {
       const stringifiedPath = wrapper.vm.$router.history.current.path.split(
         '/'
       );

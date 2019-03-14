@@ -106,7 +106,7 @@ describe('EnsBidContainer.vue', () => {
     const domainNameElement = wrapper.vm.$el.querySelector(
       '.content-header h3'
     );
-    expect(domainNameElement.textContent.trim()).toEqual(domainName + '.');
+    expect(domainNameElement.textContent.trim()).toEqual(domainName);
   });
 
   xit('should show/hide span or spinner icon according to loading props', () => {
