@@ -26,14 +26,16 @@
               <p>
                 <b>{{ aCdp ? displayFixedValue(aCdp.pethCollateral) : 0 }}</b>
                 PETH /
-                <b>{{ aCdp ? displayFixedValue(aCdp.usdCollateral, 2) : 0 }}</b>
+                <b>{{
+                  aCdp ? displayFixedValue(aCdp._usdCollateral, 2) : 0
+                }}</b>
                 USD
               </p>
               <br />
               <p>{{ $t('dapps.liquidPrice') }} (ETH/USD)</p>
               <p>
                 <span class="blue-bold">{{
-                  aCdp ? displayFixedValue(aCdp.liqPrice, 2) : 0
+                  aCdp ? displayFixedValue(aCdp.liquidationPrice, 2) : 0
                 }}</span>
                 <span class="liq-usd"> USD</span>
               </p>
@@ -44,17 +46,21 @@
             <div class="content-one-inner-right">
               <p>{{ $t('dapps.generated') }}</p>
               <p>
-                <b>{{ aCdp ? aCdp._debtValue : 0 }}</b>
+                <b>{{ aCdp ? displayFixedValue(aCdp.debtValue) : 0 }}</b>
                 DAI
               </p>
               <p>
-                <b>{{ aCdp ? displayFixedValue(aCdp._debtValue, 2) : 0 }}</b>
+                <b>{{ aCdp ? displayFixedValue(aCdp.usdCollateral, 2) : 0 }}</b>
                 USD
               </p>
               <br />
               <p>{{ $t('dapps.collateralRatio') }}</p>
               <p class="blue-bold">
-                {{ aCdp ? displayPercentValue(aCdp.collatRatio) : 0 }}%
+                {{
+                  aCdp
+                    ? displayFixedValue(displayPercentValue(aCdp.collatRatio))
+                    : 0
+                }}%
               </p>
             </div>
           </div>

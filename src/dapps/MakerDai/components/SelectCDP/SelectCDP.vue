@@ -1,6 +1,6 @@
 <template>
   <div>
-    <interface-container-title :title="'MAKER'" />
+    <interface-container-title :title="'MAKER'"/>
     <div class="container-maker">
       <div class="manage-container">
         <div class="content-container">
@@ -8,7 +8,7 @@
           <div class="cdp-id">
             <p>
               {{ $t('dapps.currentPrice') }}:
-              <b>{{ ethPrice.toString() }}</b> USD
+              <b>{{ ethPrice }}</b> USD
             </p>
           </div>
         </div>
@@ -38,6 +38,7 @@ import Blockie from '@/components/Blockie';
 import BigNumber from 'bignumber.js';
 import Maker from '@makerdao/dai';
 import SelectCdpEntry from '../SelectCdpEntry';
+
 const KOVAN_SERVER_URL = 'https://sai-kovan.makerfoundation.com/v1';
 
 const toBigNumber = num => {
@@ -57,6 +58,16 @@ export default {
     'select-cdp-entry': SelectCdpEntry
   },
   props: {
+    ethPrice: {
+      type: BigNumber,
+      default: function() {
+        return new BigNumber(0);
+      }
+    },
+    makerActive:{
+      type: Boolean,
+      default: false
+    },
     cdps: {
       type: Array,
       default: function() {

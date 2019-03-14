@@ -1,6 +1,6 @@
 <template>
   <div>
-    <interface-container-title :title="'MAKER'" />
+    LOADING
   </div>
 </template>
 
