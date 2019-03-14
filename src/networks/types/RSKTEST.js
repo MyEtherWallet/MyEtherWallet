@@ -12,5 +12,5 @@ export default {
   tokens: tokens,
   contracts: contracts,
   icon: rsk,
-  symbol: 'tRBTC'
+  currencyName: 'tRBTC'
 };

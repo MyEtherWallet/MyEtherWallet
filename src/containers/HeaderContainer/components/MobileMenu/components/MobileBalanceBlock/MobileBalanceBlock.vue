@@ -10,7 +10,8 @@
       </div>
       <div class="bottom-block">
         <p class="the-address">
-          {{ accountBalance }} {{ network.type.symbol || network.type.name }}
+          {{ accountBalance }}
+          {{ network.type.currencyName || network.type.name }}
         </p>
       </div>
     </div>
