@@ -3,7 +3,7 @@
   "units": "Единицы",
   "txStat": "Статус транзакции",
   "debugs": "Отладка",
-  "extension": "Расширение",
+  "extension": "MyEtherWallet CX",
   "others": "Другие",
   "affiliates": "Партнеры",
   "ledger": "Кошелек Ledger",
@@ -21,5 +21,8 @@
   "love": "Нравится",
   "donate": "MEW? Сделайте пожертвование!",
   "pricingP": "Pricing taken from",
-  "advanced": "Advanced"
+  "advanced": "Advanced",
+  "sendOffline": "Send Offline Helper",
+  "finney": "Finney",
+  "billfodl": "Billfodl"
 }

@@ -13,7 +13,17 @@ const webpackConfig = {
     https: true,
     host: 'localhost',
     hotOnly: true,
-    port: 8080
+    port: 8080,
+    headers: {
+      'Strict-Transport-Security':
+        'max-age=63072000; includeSubdomains; preload',
+      'Content-Security-Policy':
+        "default-src 'self' blob:; frame-src 'self' connect.trezor.io:443; img-src 'self' data: blob:; script-src 'unsafe-eval' 'unsafe-inline' blob: https:; style-src 'self' 'unsafe-inline' https:; object-src 'none'; connect-src *;",
+      'X-Content-Type-Options': 'nosniff',
+      'X-Frame-Options': 'DENY',
+      'X-XSS-Protection': '1; mode=block',
+      'Referrer-Policy': 'same-origin'
+    }
   },
   plugins: [
     new webpack.DefinePlugin(env_vars),
@@ -49,7 +59,7 @@ if (process.env.BUILD_TYPE === 'mewcx') {
     new CopyWebpackPlugin([
       {
         from: 'src/builds/mewcx/files',
-        transform: function(content, filePath) {
+        transform: function (content, filePath) {
           if (filePath.split('.').pop() === ('js' || 'JS'))
             return UglifyJS.minify(content.toString()).code;
           if (filePath.replace(/^.*[\\\/]/, '') === 'manifest.json') {
@@ -71,6 +81,10 @@ if (process.env.NODE_ENV === 'production') {
       failOnUnused: true,
       globOptions: {
         ignore: [
+          // Are we using these
+          'src/components/DropDownAddressSelector/#####DropDownAddressSelector.vue',
+          'src/components/DropDownAddressSelector/DropDownAddressSelector.scss',
+          'src/components/DropDownAddressSelector/index.js',
           // Unknown
           'src/contracts/contract-abi-etsc.json',
           'src/contracts/contract-abi-exp.json',
@@ -122,7 +136,6 @@ if (process.env.NODE_ENV === 'production') {
           'src/assets/images/icons/github-black.png',
           'src/assets/images/icons/slack.png',
           'src/assets/images/mew-screen.png',
-          'src/assets/images/networks/esn.svg',
           'src/assets/images/networks/etsc.svg',
           'src/assets/images/networks/exp.svg',
           'src/assets/images/icons/up.svg',
@@ -144,7 +157,9 @@ if (process.env.NODE_ENV === 'production') {
 const pwa = {
   name: 'MyEtherWallet',
   workboxOptions: {
-    importWorkboxFrom: 'local'
+    importWorkboxFrom: 'local',
+    skipWaiting: true,
+    clientsClaim: true
   }
 };
 module.exports = {
@@ -153,5 +168,5 @@ module.exports = {
   pwa: pwa,
   lintOnSave: process.env.NODE_ENV === 'production' ? 'error' : true,
   integrity: process.env.WEBPACK_INTEGRITY === 'false' ? false : true,
-  chainWebpack: config => {}
+  chainWebpack: config => { }
 };

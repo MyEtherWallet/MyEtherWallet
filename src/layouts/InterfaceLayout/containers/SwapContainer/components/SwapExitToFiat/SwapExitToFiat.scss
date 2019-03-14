@@ -1,0 +1,134 @@
+@import '~@/scss/GlobalVariables';
+
+// *********************************************************************
+// .wrap
+// *********************************************************************
+.wrap {
+  padding-top: 20px;
+  background-color: $light-grey-2;
+}
+
+// *********************************************************************
+// .content-container
+// *********************************************************************
+.form-content-container {
+  background-color: $background-color-white;
+  padding: 40px;
+}
+
+.accordion-menu-container {
+  //margin-bottom: 40px;
+  .accordion-menu {
+    margin-bottom: 20px;
+  }
+}
+
+ul {
+  li {
+    margin-bottom: 30px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+// *********************************************************************
+// .content-container
+// *********************************************************************
+.button-container {
+  margin-top: 10px;
+  margin-bottom: 0;
+  padding-bottom: 0;
+  text-align: center;
+}
+
+// *********************************************************************
+// Grid
+// *********************************************************************
+.grid-phone-number {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-gap: 10px;
+  grid-template-areas: 'phoneNumber  phoneNumber phoneNumber phoneNumber phoneNumber phoneNumber';
+}
+
+.country-code {
+  grid-area: countryCode;
+}
+
+.phone-number {
+  grid-area: phoneNumber;
+}
+
+.grid-billing-address {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-gap: 10px;
+  grid-template-areas:
+    'address1 address1 address1 address1 address1 address1'
+    'address2 address2 address2 address2 address2 address2'
+    'city city state state zip zip'
+    'country country country country country country';
+}
+
+.address1 {
+  grid-area: address1;
+}
+
+.address2 {
+  grid-area: address2;
+}
+
+.city {
+  grid-area: city;
+}
+
+.state {
+  grid-area: state;
+}
+
+.zip {
+  grid-area: zip;
+}
+
+.country {
+  grid-area: country;
+}
+
+// *********************************************************************
+// Extra Space
+// *********************************************************************
+//@mixin btn-mixin-2() {
+//  padding: 18px 35px;
+//  font-weight: 500;
+//  cursor: pointer;
+//  font-size: 14px;
+//  border-radius: 4px;
+//  position: relative;
+//  min-width: 250px;
+//
+//  @media all and (max-width: $mobile-width) {
+//    min-width: initial;
+//  }
+//}
+
+.extraSpace {
+  min-height: 200px;
+  margin: 0;
+}
+
+.beta-notice {
+  color: #05c0a5;
+  padding-bottom: 10px;
+}
+
+.arrow-left {
+  //display: block;
+  color: black;
+  //@include btn-mixin-2();
+  //position: absolute;
+  //top: 21px;
+  //left: 20px;
+  //height: 15px;
+}

@@ -1,7 +1,4 @@
-import {
-  TIME_SWAP_VALID_DEFAULT,
-  swapNotificationStatuses as notificationStatuses
-} from '../../partnersConfig/config';
+import { swapNotificationStatuses as notificationStatuses } from '../../partnersConfig/config';
 
 const changellyMethods = {
   ETH: {
@@ -11,7 +8,9 @@ const changellyMethods = {
     min: 'getMinAmount',
     validate: 'validateAddress',
     createTransaction: 'createTransaction',
-    status: 'getStatus'
+    status: 'getStatus',
+    createFixTransaction: 'createFixTransaction',
+    getFixRate: 'getFixRate'
   }
 };
 
@@ -28,8 +27,9 @@ const statuses = {
   hold: 'hold'
 };
 
-const TIME_SWAP_VALID = TIME_SWAP_VALID_DEFAULT;
+const TIME_SWAP_VALID = 300;
 const PROVIDER_NAME = 'changelly';
+const FEE_RATE = 0;
 
 const requireExtraId = ['XRP', 'STEEM', 'SBD', 'XLM', 'DCT', 'XEM'];
 
@@ -39,5 +39,6 @@ export {
   statuses,
   requireExtraId,
   TIME_SWAP_VALID,
-  PROVIDER_NAME
+  PROVIDER_NAME,
+  FEE_RATE
 };

@@ -1,6 +1,7 @@
-import ethUtil from 'ethereumjs-util';
+import { bufferToInt } from 'ethereumjs-util';
 
 const getBufferFromHex = hex => {
+  hex = sanitizeHex(hex);
   const _hex = hex.toLowerCase().replace('0x', '');
   return new Buffer(_hex, 'hex');
 };
@@ -45,7 +46,7 @@ const getSignTransactionObject = tx => {
   };
 };
 const calculateChainIdFromV = v => {
-  const sigV = ethUtil.bufferToInt(v);
+  const sigV = bufferToInt(v);
   let chainId = Math.floor((sigV - 35) / 2);
   if (chainId < 0) chainId = 0;
   return chainId;

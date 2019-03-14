@@ -8,10 +8,12 @@
           :key="provider.provider + idx"
           :class="provider.provider"
           class="providers"
+          @click="setSelectedProvider(provider.provider)"
         >
           <div class="mew-custom-form__radio-button">
             <input
               v-show="providerData.length > 0"
+              v-model="providerChosen"
               :id="provider.provider"
               :value="provider.provider"
               type="radio"
@@ -22,7 +24,7 @@
             <label :for="provider.provider" />
           </div>
           <div class="provider-image">
-            <img :src="providerLogo(provider.provider)" />
+            <img :src="providerLogo(provider)" />
           </div>
           <div
             :class="[
@@ -64,6 +66,11 @@
           </div>
         </li>
       </ul>
+      <!-- list of other providers who don't support the selected currency pair -->
+      <provider-info-list
+        :all-supported-providers="allSupportedProviders"
+        :unavailable-providers="unavailableProviders"
+      />
     </div>
     <!-- Animation while retrieving rates for available providers when switching to and from currencies-->
     <div
@@ -98,6 +105,11 @@
           <div class="background-masker" />
         </li>
       </ul>
+      <provider-info-list
+        v-show="!loadingProviderRates"
+        :all-supported-providers="allSupportedProviders"
+        :unavailable-providers="unavailableProviders"
+      />
     </div>
     <!-- Animation while retrieving the supporting providers rates -->
     <!-- =========================================================================== -->
@@ -105,16 +117,13 @@
       v-show="loadingProviderRates"
       class="radio-button-container animated-background"
     >
-      <ul>
-        <li>
-          <div class="mew-custom-form__radio-button">
-            <input type="radio" name="provider" />
-          </div>
-          <div class="provider-image"><img :src="providerLogo('mew')" /></div>
-          <div>{{ $t('interface.loadingProviders') }}</div>
-          <div class="background-masker" />
-        </li>
-      </ul>
+      <div class="provider-loading-message">
+        {{ $t('interface.loadingProviders') }}
+      </div>
+      <provider-info-list
+        :all-supported-providers="allSupportedProviders"
+        :unavailable-providers="unavailableProviders"
+      />
     </div>
     <!-- Message When Error Seems to have occured while retrieving rate -->
     <!-- =========================================================================== -->
@@ -140,17 +149,14 @@
     <!-- Message when no valid provider is found for the selected pair -->
     <!-- =========================================================================== -->
     <div v-show="noAvaliableProviders" class="radio-button-container">
+      <div class="no-provider-message">
+        {{ $t('interface.noProviderFound') }}
+      </div>
       <ul>
-        <li>
-          <div class="mew-custom-form__radio-button" />
-          <div class="provider-image" />
-          <div>
-            {{ $t('interface.noProviderFound') }}
-            {{ noProvidersPair.fromCurrency }} {{ $t('interface.articleTo') }}
-            {{ noProvidersPair.toCurrency }}
-          </div>
-          <div />
-        </li>
+        <provider-info-list
+          :all-supported-providers="allSupportedProviders"
+          :unavailable-providers="unavailableProviders"
+        />
       </ul>
     </div>
     <!-- =========================================================================== -->
@@ -160,14 +166,25 @@
 <script>
 import BigNumber from 'bignumber.js';
 import MEW from '@/assets/images/logo.png';
-import KyberNetwork from '@/assets/images/etc/kybernetowrk.png';
+import KyberNetwork from '@/assets/images/etc/kybernetwork.png';
 import Bity from '@/assets/images/etc/bity.png';
 import Simplex from '@/assets/images/etc/simplex.png';
 import Changelly from '@/assets/images/etc/changelly.png';
-import { providerNames } from '@/partners';
+import bityBeta from '@/assets/images/etc/bitybeta.png';
+
+import ProviderInfoList from './ProviderInfoList';
 
 export default {
+  components: {
+    'provider-info-list': ProviderInfoList
+  },
   props: {
+    allSupportedProviders: {
+      type: Array,
+      default: function() {
+        return [];
+      }
+    },
     providerData: {
       type: Array,
       default: function() {
@@ -219,12 +236,17 @@ export default {
   },
   data() {
     return {
+      providerChosen: '',
+      otherProviderList: [],
       logos: {
         mew: MEW,
         kybernetwork: KyberNetwork,
         bity: Bity,
         simplex: Simplex,
         changelly: Changelly
+      },
+      betaLogos: {
+        bity: bityBeta
       }
     };
   },
@@ -234,9 +256,59 @@ export default {
         (this.providersFound.length === 0 || this.providerData.length === 0) &&
         !this.loadingData
       );
+    },
+    unavailableProviders() {
+      if (this.loadingData) {
+        const activeProviders = this.listPotentialProviders();
+        return this.allSupportedProviders.filter(entry => {
+          return !activeProviders.includes(entry);
+        });
+      } else if (this.providerData.length !== 0) {
+        const activeProviders = this.listActiveProviders();
+
+        return this.allSupportedProviders.filter(entry => {
+          return !activeProviders.includes(entry);
+        });
+      } else if (this.noAvaliableProviders) {
+        return this.allSupportedProviders;
+      }
     }
   },
   methods: {
+    otherProviders() {
+      const activeProviders = this.listActiveProviders();
+      return this.allSupportedProviders.filter(entry => {
+        return !activeProviders.includes(entry);
+      });
+    },
+    otherInactiveProviders() {
+      const activeProviders = this.listPotentialProviders();
+      return this.allSupportedProviders.filter(entry => {
+        return !activeProviders.includes(entry);
+      });
+    },
+    listActiveProviders() {
+      this.$nextTick(() => {
+        if (this.providerData.length === 1) {
+          this.setSelectedProvider(this.providerData[0].provider);
+        } else {
+          this.providerChosen = '';
+        }
+      });
+
+      const activeProviders = [];
+      this.providerData.forEach(entry => {
+        activeProviders.push(entry.provider);
+      });
+      return activeProviders;
+    },
+    listPotentialProviders() {
+      const activeProviders = [];
+      this.providersFound.forEach(entry => {
+        activeProviders.push(entry);
+      });
+      return activeProviders;
+    },
     minCheck(details) {
       return details.minValue > +this.fromValue;
     },
@@ -244,6 +316,7 @@ export default {
       return +this.fromValue > details.maxValue && details.maxValue > 0;
     },
     setSelectedProvider(provider) {
+      this.providerChosen = provider;
       const providerEls = document.getElementsByClassName('providers');
       Array.prototype.forEach.call(providerEls, function(el) {
         el.classList.remove('radio-selected');
@@ -252,26 +325,20 @@ export default {
       clickedEl.classList.add('radio-selected');
       this.$emit('selectedProvider', provider);
     },
-    providerLogo(name) {
-      return this.logos[name];
+    providerLogo(details) {
+      if (details.provider) {
+        return this.logos[details.provider];
+      }
+      return this.logos[details];
     },
     minNote(details) {
       if (details.minValue > 0) {
-        if (details.provider === providerNames.bity) {
-          return [
-            `${details.minValue} ${details.fromCurrency} (From Min.)`,
-            `${details.minValue} ${details.toCurrency} (From Min.)`
-          ];
-        }
         return [`${details.minValue} ${details.fromCurrency} (From Min.)`];
       }
       return '';
     },
     maxNote(details) {
       if (details.maxValue > 0) {
-        if (details.provider === providerNames.bity) {
-          return `${details.maxValue} ${details.fromCurrency} (Max.)`;
-        }
         return `${details.maxValue} ${details.fromCurrency} (Max.)`;
       }
       return '';
@@ -290,14 +357,6 @@ export default {
         .times(rate)
         .toFixed(6)
         .toString(10);
-    },
-    withDefaultSelectedProvider(provider, idx) {
-      return (
-        provider.provider === this.providerSelected.provider ||
-        (!this.providerSelected.provider && idx === 0)
-      );
-      // if (this.providerSelected === '' && idx === 0) {
-      // }
     }
   }
 };

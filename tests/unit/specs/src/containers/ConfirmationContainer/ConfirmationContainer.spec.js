@@ -1,4 +1,3 @@
-import Vuex from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import ConfirmationContainer from '@/containers/ConfirmationContainer/ConfirmationContainer.vue';
 import AddressBlock from '@/containers/ConfirmationContainer/components/AddressBlock/AddressBlock.vue';
@@ -8,11 +7,9 @@ import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessM
 import ConfirmCollectionModal from '@/containers/ConfirmationContainer/components/ConfirmCollectionModal/ConfirmCollectionModal.vue';
 import VueQrcode from '@xkeshi/vue-qrcode';
 import sinon from 'sinon';
-import nodeList from '@/networks';
-import url from 'url';
 import Web3 from 'web3';
 
-import { Tooling, ETH_NETWORK_INDEX } from '@@/helpers';
+import { Tooling } from '@@/helpers';
 
 const showModal = sinon.stub();
 const hideModal = sinon.stub();
@@ -27,51 +24,18 @@ const BModalStub = {
   }
 };
 
-xdescribe('[Failing] ConfirmationContainer.vue', () => {
-  let localVue, i18n, wrapper, store, newWeb3;
+const eventHub = {
+  $on:sinon.stub()
+};
+
+describe('[Failing] ConfirmationContainer.vue', () => {
+  let localVue, i18n, wrapper, store;
 
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
     store = baseSetup.store;
-
-    const network = nodeList['ETH'][ETH_NETWORK_INDEX];
-    const hostUrl = url.parse(network.url);
-
-    newWeb3 = new Web3(
-      `${hostUrl.protocol}//${hostUrl.hostname}:${network.port}${
-        hostUrl.pathname
-      }`
-    );
-
-    const wallet = {
-      getChecksumAddressString: function() {
-        return '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D';
-      }
-    };
-
-    const getters = {
-      Networks: () => {
-        return nodeList;
-      },
-      network: () => {
-        return network;
-      },
-      web3: () => {
-        return newWeb3;
-      },
-      wallet: () => {
-        return wallet;
-      },
-      gasPrice: () => {
-        return 100;
-      }
-    };
-
-    store = new Vuex.Store({
-      getters
-    });
   });
 
   beforeEach(() => {
@@ -92,6 +56,9 @@ xdescribe('[Failing] ConfirmationContainer.vue', () => {
         'confirm-collection-modal': ConfirmCollectionModal,
         'success-modal': SuccessModal,
         'confirm-sign-modal': ConfirmSignModal
+      },
+      mocks: {
+        $eventHub: eventHub
       }
     });
   }
@@ -114,12 +81,6 @@ xdescribe('[Failing] ConfirmationContainer.vue', () => {
         .querySelector('.address-container .address')
         .textContent.trim()
     ).toEqual(wrapper.vm.fromAddress);
-  });
-
-  it('should render correct linkMessage data', () => {
-    expect(
-      wrapper.vm.$el.querySelector('.button-container').textContent.trim()
-    ).toEqual(wrapper.vm.$data.linkMessage);
   });
 
   it('should render correct successMessage data', () => {
@@ -175,8 +136,8 @@ xdescribe('[Failing] ConfirmationContainer.vue', () => {
   it('should render correct amount data', () => {
     const eth = Web3.utils.fromWei(String(wrapper.vm.$data.amount), 'ether');
     expect(
-      wrapper.vm.$el.querySelector('.currency-amt').textContent.trim()
-    ).toEqual('- ' + eth);
+      wrapper.vm.$el.querySelector('.currency-amt').textContent.trim().indexOf(eth)
+    ).toBeGreaterThan(-1);
   });
 
   it('should render correct toAddress data', () => {
@@ -256,7 +217,7 @@ xdescribe('[Failing] ConfirmationContainer.vue', () => {
   //     initWrapper();
   //     wrapper.vm.showSuccessModal();
   //     expect(showModal.called).toBe(true);
-  //     expect(wrapper.vm.$data.advancedExpend).toBe(false);
+  //     expect(wrapper.vm.$data.advancedExpand).toBe(false);
   //     expect(wrapper.vm.$data.addressValid).toBe(true);
   //     expect(wrapper.vm.$data.amountValid).toBe(true);
   //     expect(wrapper.vm.$data.amount).toBe(0);
@@ -281,7 +242,7 @@ xdescribe('[Failing] ConfirmationContainer.vue', () => {
 
   //   it('should render correct reset method', () => {
   //     wrapper.vm.reset();
-  //     expect(wrapper.vm.$data.advancedExpend).toBe(false);
+  //     expect(wrapper.vm.$data.advancedExpand).toBe(false);
   //     expect(wrapper.vm.$data.addressValid).toBe(true);
   //     expect(wrapper.vm.$data.amountValid).toBe(true);
   //     expect(wrapper.vm.$data.amount).toBe(0);

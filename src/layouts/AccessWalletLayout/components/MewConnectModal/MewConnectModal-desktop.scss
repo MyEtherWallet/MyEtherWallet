@@ -1,5 +1,9 @@
 @import '~@/scss/GlobalVariables';
 @media all and (min-width: calc(#{$tablet-width} + 1px)) {
+  .modal-container {
+    padding: 40px;
+  }
+
   .modal-large-text {
     font-weight: 400;
     max-width: 330px;
@@ -96,4 +100,8 @@
       padding-left: 10px;
     }
   }
+}
+
+.download-now {
+  margin-top: 20px;
 }

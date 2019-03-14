@@ -1,14 +1,10 @@
 import Vue from 'vue';
-import Vuex from 'vuex';
-import nodeList from '@/networks';
-import url from 'url';
-import Web3 from 'web3';
 import { shallowMount } from '@vue/test-utils';
 import InterfaceNetwork from '@/layouts/InterfaceLayout/components/InterfaceNetwork/InterfaceNetwork.vue';
 import InterfaceNetworkModal from '@/layouts/InterfaceLayout/components/InterfaceNetworkModal/InterfaceNetworkModal.vue';
 import InterfaceBalance from '@/layouts/InterfaceLayout/components/InterfaceBalance/InterfaceBalance.vue';
 import sinon from 'sinon';
-import { Tooling, ETH_NETWORK_INDEX } from '@@/helpers';
+import { Tooling } from '@@/helpers';
 
 const showModal = sinon.stub();
 
@@ -30,40 +26,6 @@ describe('InterfaceNetwork.vue', () => {
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
     store = baseSetup.store;
-
-    const network = nodeList['ETH'][ETH_NETWORK_INDEX];
-    const hostUrl = url.parse(network.url);
-
-    const wallet = {
-      getChecksumAddressString: jest.fn(() => 0)
-    };
-
-    const newWeb3 = new Web3(
-      `${hostUrl.protocol}//${hostUrl.hostname}:${network.port}${
-        hostUrl.pathname
-      }`
-    );
-
-    const getters = {
-      Networks: () => {
-        return nodeList;
-      },
-      network: () => {
-        return network;
-      },
-      wallet: () => {
-        return wallet;
-      }
-    };
-
-    store = new Vuex.Store({
-      getters,
-      state: {
-        web3: newWeb3,
-        Networks: nodeList,
-        network: network
-      }
-    });
 
     Vue.config.errorHandler = () => {};
     Vue.config.warnHandler = () => {};

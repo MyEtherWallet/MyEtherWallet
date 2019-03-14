@@ -3,7 +3,9 @@
     <back-button />
     <div class="buy-subdomain-content">
       <div class="buy-subdomain-form-container">
-        <p>{{ $t('interface.subdomains') }}</p>
+        <div class="title">
+          <h4>{{ $t('interface.subdomains') }}</h4>
+        </div>
         <div class="form">
           <div class="subdomain-input">
             <input
@@ -15,24 +17,29 @@
           </div>
         </div>
         <div v-show="results.length > 0" class="result-section">
-          <p>{{ $t('dapps.allSubDomains') }}</p>
+          <div class="title">
+            <h4>{{ $t('dapps.allSubDomains') }}</h4>
+          </div>
           <div class="results-container">
             <div
-              v-for="item in sortedResults"
-              :key="domainName + item.domain"
+              v-for="(item, index) in sortedResults"
+              :key="domainName + item.domain + index"
               :class="[item.active ? '' : 'disabled', 'result-item']"
             >
-              <span>{{ domainName }}.{{ item.domain }}.eth</span>
-              <span>
+              <span class="domain-name"
+                >{{ domainName }}.{{ item.domain }}.eth</span
+              >
+              <div class="buy-button-container">
                 <span class="amt"
-                  >{{ web3.utils.fromWei(item.price, 'ether') }}
-                </span>
-                <span class="currency">ETH </span>
+                  >{{ web3.utils.fromWei(item.price, 'ether') }} ETH</span
+                >
                 <button @click="buyDomain(item)">
-                  <span v-if="item.active"> {{ $t('dapps.buy') }} </span>
-                  <span v-else> <i class="fa fa-times" /> </span>
+                  <span v-if="item.active">{{ $t('dapps.buy') }}</span>
+                  <span v-else>
+                    <i class="fa fa-times" />
+                  </span>
                 </button>
-              </span>
+              </div>
             </div>
           </div>
         </div>
@@ -57,11 +64,14 @@ import normalise from '@/helpers/normalise';
 import BigNumber from 'bignumber.js';
 import web3 from 'web3';
 import { mapGetters } from 'vuex';
+import StandardButton from '@/components/Buttons/StandardButton';
+import { Toast } from '@/helpers';
 
 export default {
   components: {
     'interface-bottom-text': InterfaceBottomText,
-    'back-button': BackButton
+    'back-button': BackButton,
+    'standard-button': StandardButton
   },
   data() {
     return {
@@ -76,7 +86,7 @@ export default {
     ...mapGetters({
       ethDonationAddress: 'ethDonationAddress',
       ens: 'ens',
-      wallet: 'wallet',
+      account: 'account',
       web3: 'web3'
     }),
     sortedResults() {
@@ -140,7 +150,7 @@ export default {
     async buyDomain(item) {
       const domain = this.web3.utils.sha3(item.domain);
       const subdomain = this.domainName;
-      const ownerAddress = this.wallet.getAddressString();
+      const ownerAddress = this.account.address;
       const referrerAddress = this.ethDonationAddress;
       const resolverAddress = await this.ens.resolver('resolver.eth').addr();
       const itemContract = this.knownRegistrarInstances[item.domain];
@@ -171,7 +181,9 @@ export default {
         value: item.price
       };
 
-      this.web3.eth.sendTransaction(raw);
+      this.web3.eth.sendTransaction(raw).catch(err => {
+        Toast.responseHandler(err, false);
+      });
     }
   }
 };

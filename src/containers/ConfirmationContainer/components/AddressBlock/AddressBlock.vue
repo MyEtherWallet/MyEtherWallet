@@ -1,9 +1,9 @@
 <template lang="html">
   <div class="address-container">
     <div class="currency-container">
-      <img
-        :src="require(`@/assets/images/currency/${lowerCaseCurrency}.svg`)"
-      />
+      <div class="icon-matcher">
+        <img :src="iconFetcher" />
+      </div>
       <p>
         <span class="currency-amt">
           {{ direction === 'from' ? '-' : '+' }}
@@ -22,8 +22,8 @@
 </template>
 
 <script>
+import { isAddress, toChecksumAddress } from '@/helpers/addressUtils';
 import web3 from 'web3';
-// import BigNumber from 'bignumber.js';
 export default {
   props: {
     address: {
@@ -35,8 +35,8 @@ export default {
       default: ''
     },
     value: {
-      type: Number,
-      default: 0
+      type: String,
+      default: ''
     },
     currency: {
       type: String,
@@ -53,17 +53,30 @@ export default {
     tokenSymbol: {
       type: String,
       default: ''
+    },
+    icon: {
+      type: String,
+      default: ''
     }
   },
   computed: {
+    iconFetcher() {
+      let icon;
+      try {
+        // eslint-disable-next-line
+        icon = require(`@/assets/images/currency/${lowerCaseCurrency}.svg`);
+      } catch (e) {
+        icon = this.icon;
+      }
+      return icon;
+    },
     lowerCaseCurrency() {
-      return this.currency.toLowerCase();
+      return this.tokenSymbol.toLowerCase();
     },
     checksumAddress() {
-      if (web3.utils.isAddress(this.tokenTransferTo))
-        return web3.utils.toChecksumAddress(this.tokenTransferTo);
-      if (web3.utils.isAddress(this.address))
-        return web3.utils.toChecksumAddress(this.address);
+      if (isAddress(this.tokenTransferTo))
+        return toChecksumAddress(this.tokenTransferTo);
+      if (isAddress(this.address)) return toChecksumAddress(this.address);
       return '';
     }
   },

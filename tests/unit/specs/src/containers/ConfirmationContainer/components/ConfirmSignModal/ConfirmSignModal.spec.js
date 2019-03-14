@@ -1,8 +1,6 @@
-import VueX from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import ConfirmSignModal from '@/containers/ConfirmationContainer/components/ConfirmSignModal/ConfirmSignModal.vue';
 import VueQrcode from '@xkeshi/vue-qrcode';
-
 import { Tooling } from '@@/helpers';
 const confirmSignMessage = jest.fn();
 
@@ -30,22 +28,6 @@ describe('ConfirmSignModal.vue', () => {
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
     store = baseSetup.store;
-
-    const wallet = {
-      getChecksumAddressString: function() {
-        return '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D';
-      }
-    };
-
-    const getters = {
-      wallet: () => {
-        return wallet;
-      }
-    };
-
-    store = new VueX.Store({
-      getters
-    });
   });
 
   beforeEach(() => {
