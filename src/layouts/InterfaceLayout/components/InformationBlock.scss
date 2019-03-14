@@ -1,13 +1,18 @@
 @import '~@/scss/GlobalVariables';
 
+.info-block-container {
+  height: 100%;
+}
+
 .info-block {
   border-radius: 5px;
   color: $text-white;
   display: flex;
-  min-height: 140px;
-  min-width: 360px;
+  height: 100%;
+  //min-width: 360px;
   padding: 25px;
   position: relative;
+  align-items: flex-start;
 
   h2,
   h4 {
@@ -18,7 +23,7 @@
   }
 
   h2 {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 500;
   }
 
@@ -30,40 +35,68 @@
   p {
     color: $text-white;
     font-weight: 300;
-    overflow: hidden;
-    word-wrap: break-word;
+    word-break: break-all;
   }
 
   .block-image {
     display: flex;
     flex-direction: column;
-    height: 90px;
+    //height: 90px;
     justify-content: center;
     margin-right: 15px;
     position: relative;
+    padding-top: 10px;
 
     img {
-      height: 100%;
+      //height: 100%;
     }
   }
 
   .block-content {
     display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    max-width: 230px;
+    position: relative;
+    height: 100%;
   }
 
   .information-container {
-    min-height: 82px;
+    margin-bottom: 40px;
   }
 
   .icon-container {
     display: flex;
-    min-height: 23px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
 
-    .custom-tooltip {
-      margin-right: 13px;
+    img {
+      height: 25px;
     }
+  }
+
+  .custom-tooltip {
+    margin-right: 15px;
+    background: none;
+    border: 0;
+    padding: 0;
+
+    &:active {
+      background-color: transparent;
+    }
+  }
+}
+
+.change-button {
+  background-color: transparent;
+  border: 1px solid $white;
+  border-radius: 4px;
+  color: $white;
+  padding: 13px 7px;
+  font-size: 12px;
+  line-height: 0;
+  margin-right: 20px;
+  cursor: pointer;
+
+  &:active {
+    background-color: rgba(0, 0, 0, 0.1);
   }
 }

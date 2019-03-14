@@ -1,0 +1,50 @@
+@import '~@/scss/GlobalVariables';
+
+// *********************************************************************
+// .expending-option
+// *********************************************************************
+.expending-option {
+  border-top: 2px solid $light-grey-1;
+  border-bottom: 2px solid $light-grey-1;
+  padding: 20px 0;
+
+  &.hide-bottom-border {
+    border-bottom: 0;
+  }
+}
+
+// *********************************************************************
+// .title-bar-container
+// *********************************************************************
+.title-bar-container {
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+
+  .input-title {
+    font-weight: 600;
+    font-size: 16px;
+    line-height: initial;
+    margin-right: 8px;
+    color: #212529;
+  }
+
+  .switch {
+    margin-left: auto;
+  }
+}
+
+// *********************************************************************
+// .contnet-container
+// *********************************************************************
+.contnet-container {
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  &.expanded {
+    max-height: 800px;
+  }
+  .content-block {
+    padding-top: 20px;
+  }
+}

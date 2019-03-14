@@ -1,0 +1,32 @@
+@import '~@/scss/GlobalVariables';
+
+//***************************************************
+// .modal-contents
+//***************************************************
+.modal-contents {
+  padding: 40px;
+  @media all and (max-width: $mobile-width) {
+    padding: 40px 20px;
+  }
+}
+
+h2 {
+  font-size: 35px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 20px;
+}
+p {
+  text-align: center;
+  padding-bottom: 30px;
+}
+
+.buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 15px;
+
+  @media all and (max-width: $mobile-width) {
+    grid-template-columns: 1fr;
+  }
+}

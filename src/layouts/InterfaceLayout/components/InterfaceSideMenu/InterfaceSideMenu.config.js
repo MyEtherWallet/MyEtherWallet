@@ -5,7 +5,10 @@ export default {
       routes: [
         '/interface/send-transaction',
         '/interface',
-        '/interface/send-offline-transaction'
+        '/interface/send-offline',
+        '/interface/send-offline/generate-info',
+        '/interface/send-offline/generate-tx',
+        '/interface/send-offline/send-tx'
       ],
       icons: {
         active: require('@/assets/images/sidemenu/send-active.svg'),
@@ -23,8 +26,13 @@ export default {
           titleKey: 'common.sendTx'
         },
         {
-          name: 'send-offline-transaction',
-          routes: ['/interface/send-offline-transaction'],
+          name: 'send-offline',
+          routes: [
+            '/interface/send-offline',
+            '/interface/send-offline/generate-info',
+            '/interface/send-offline/generate-tx',
+            '/interface/send-offline/send-tx'
+          ],
           icons: {
             active: '',
             inactive: ''

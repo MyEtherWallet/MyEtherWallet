@@ -13,9 +13,18 @@
       display: flex;
       margin-bottom: 10px;
 
+      .title-container {
+        display: flex;
+      }
+
       h4 {
         font-size: 14px;
         font-weight: 400;
+      }
+
+      img {
+        cursor: pointer;
+        padding-left: 5px;
       }
 
       p {
@@ -71,6 +80,10 @@
           padding: 6px 0;
         }
 
+        .load-token {
+          cursor: pointer;
+        }
+
         td:nth-child(2) {
           text-align: right;
         }
@@ -94,7 +107,7 @@
 .bottom-image-container {
   background-color: $background-color-white;
   border-radius: 5px;
-  margin-top: 15px;
+  margin-top: 10px;
   overflow: hidden;
 
   img {

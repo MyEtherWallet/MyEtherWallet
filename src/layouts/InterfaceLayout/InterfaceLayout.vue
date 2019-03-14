@@ -1,67 +1,155 @@
 <template>
-  <div
-    v-if="$store.state.wallet !== null"
-    class="send-eth-and-tokens">
+  <div class="interface-layout">
+    <!-- Modals ******************************************************** -->
+    <!-- Modals ******************************************************** -->
+    <!-- Modals ******************************************************** -->
+    <wallet-password-modal />
+    <enter-pin-number-modal />
+    <mnemonic-modal
+      ref="mnemonicPhraseModal"
+      :mnemonic-phrase-password-modal-open="mnemonicphrasePasswordModalOpen"
+    />
+
+    <mnemonic-password-modal
+      ref="mnemonicPhrasePassword"
+      :hardware-wallet-open="toggleNetworkAddrModal"
+      :phrase="phrase"
+    />
+    <network-and-address-modal
+      ref="networkAddress"
+      :hardware-wallet="hwInstance"
+    />
+    <hardware-password-modal
+      ref="hardwareModal"
+      :wallet-constructor="walletConstructor"
+      :hardware-brand="hardwareBrand"
+      @hardwareWalletOpen="toggleNetworkAddrModal"
+    />
+    <print-modal
+      ref="printModal"
+      :priv-key="!wallet.isPubOnly"
+      :address="account.address"
+    />
+    <address-qrcode-modal ref="addressQrcodeModal" :address="account.address" />
+    <!-- Modals ******************************************************** -->
+    <!-- Modals ******************************************************** -->
+    <!-- Modals ******************************************************** -->
+    <div class="mobile-interface-address-block">
+      <mobile-interface-address
+        :address="address"
+        :print="print"
+        :switch-addr="switchAddress"
+      />
+    </div>
+
     <div class="wrap">
-      <div class="side-nav">
-        <interface-side-menu/>
+      <div class="sidemenu">
+        <div
+          :class="isSidemenuOpen && 'side-nav-open'"
+          class="side-nav-background"
+          @click="toggleSideMenu;"
+        />
+        <div :class="isSidemenuOpen && 'side-nav-open'" class="side-nav">
+          <interface-side-menu />
+        </div>
       </div>
       <div class="contents">
         <div class="tx-contents">
-          <div>
-            <interface-address :address="address" />
+          <div class="content-container mobile-hide">
+            <interface-address
+              :address="address"
+              :print="print"
+              :switch-addr="switchAddress"
+              :qrcode="openAddressQrcode"
+            />
           </div>
-          <div>
-            <interface-balance :balance="balance"/>
+          <div class="content-container mobile-hide">
+            <interface-balance :balance="balance" :get-balance="getBalance" />
           </div>
-          <div>
+          <div class="content-container mobile-hide">
             <interface-network :block-number="blockNumber" />
           </div>
           <router-view
             :tokens-with-balance="tokensWithBalance"
-            :get-balance="getBalance"/>
-          <div
-            v-if="$store.state.online"
-            class="tokens">
+            :get-balance="getBalance"
+            :tokens="tokens"
+            :highest-gas="highestGas"
+            :nonce="nonce"
+          />
+          <div v-if="online" class="tokens">
             <interface-tokens
+              :fetch-tokens="setTokens"
               :get-token-balance="getTokenBalance"
               :tokens="tokens"
-              :received-tokens="receivedTokens"/>
+              :received-tokens="receivedTokens"
+              :reset-token-selection="setTokensWithBalance"
+            />
           </div>
         </div>
       </div>
     </div>
   </div>
-  <div v-else>
-    <wallet-not-found-container/>
-  </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
-import { parseTokensHex } from '@/helpers';
 import ENS from 'ethereum-ens';
-
-import WalletNotFoundContainer from './containers/WalletNotFoundContainer';
-
+import WalletPasswordModal from '@/components/WalletPasswordModal';
+import EnterPinNumberModal from '@/components/EnterPinNumberModal';
+import NetworkAndAddressModal from '@/layouts/AccessWalletLayout/components/NetworkAndAddressModal';
+import HardwarePasswordModal from '@/layouts/AccessWalletLayout/components/HardwarePasswordModal';
+import MnemonicPasswordModal from '@/layouts/AccessWalletLayout/components/MnemonicPasswordModal';
+import MnemonicModal from '@/layouts/AccessWalletLayout/components/MnemonicModal';
 import InterfaceAddress from './components/InterfaceAddress';
 import InterfaceBalance from './components/InterfaceBalance';
 import InterfaceNetwork from './components/InterfaceNetwork';
 import InterfaceSideMenu from './components/InterfaceSideMenu';
 import InterfaceTokens from './components/InterfaceTokens';
+import MobileInterfaceAddress from './components/MobileInterfaceAddress';
+import PrintModal from './components/PrintModal';
 import { Web3Wallet } from '@/wallets/software';
+import { Toast } from '@/helpers';
+import { toChecksumAddress } from '@/helpers/addressUtils';
 import * as networkTypes from '@/networks/types';
 import { BigNumber } from 'bignumber.js';
 import store from 'store';
-
+import TokenBalance from '@myetherwallet/eth-token-balance';
+import sortByBalance from '@/helpers/sortByBalance.js';
+import AddressQrcodeModal from '@/components/AddressQrcodeModal';
+import web3Utils from 'web3-utils';
+import {
+  LedgerWallet,
+  TrezorWallet,
+  BitBoxWallet,
+  SecalotWallet,
+  KeepkeyWallet
+} from '@/wallets';
+import {
+  WEB3_WALLET as WEB3_TYPE,
+  LEDGER as LEDGER_TYPE,
+  TREZOR as TREZOR_TYPE,
+  BITBOX as BITBOX_TYPE,
+  SECALOT as SECALOT_TYPE,
+  KEEPKEY as KEEPKEY_TYPE,
+  MNEMONIC as MNEMONIC_TYPE
+} from '@/wallets/bip44/walletTypes';
 export default {
+  name: 'Interface',
   components: {
     'interface-side-menu': InterfaceSideMenu,
     'interface-address': InterfaceAddress,
     'interface-balance': InterfaceBalance,
     'interface-network': InterfaceNetwork,
     'interface-tokens': InterfaceTokens,
-    'wallet-not-found-container': WalletNotFoundContainer
+    'wallet-password-modal': WalletPasswordModal,
+    'print-modal': PrintModal,
+    'network-and-address-modal': NetworkAndAddressModal,
+    'hardware-password-modal': HardwarePasswordModal,
+    'mnemonic-modal': MnemonicModal,
+    'mnemonic-password-modal': MnemonicPasswordModal,
+    'enter-pin-number-modal': EnterPinNumberModal,
+    'mobile-interface-address': MobileInterfaceAddress,
+    'address-qrcode-modal': AddressQrcodeModal
   },
   data() {
     return {
@@ -72,26 +160,50 @@ export default {
       tokensWithBalance: [],
       pollNetwork: () => {},
       pollBlock: () => {},
-      pollAddress: () => {}
+      pollAddress: () => {},
+      highestGas: '0',
+      alert: {
+        show: false,
+        msg: ''
+      },
+      hws: {
+        ledger: LedgerWallet,
+        trezor: TrezorWallet,
+        bitbox: BitBoxWallet,
+        secalot: SecalotWallet
+      },
+      hwInstance: {},
+      walletConstructor: () => {},
+      hardwareBrand: '',
+      phrase: '',
+      nonce: '0'
     };
   },
   computed: {
+    isSidemenuOpen() {
+      return this.sidemenuOpen;
+    },
     address() {
       if (this.wallet !== null) {
-        return this.wallet.getAddressString();
+        return toChecksumAddress(this.account.address);
       }
     },
     ...mapGetters({
       network: 'network',
+      account: 'account',
+      online: 'online',
+      web3: 'web3',
+      Networks: 'Networks',
+      sidemenuOpen: 'sidemenuOpen',
       wallet: 'wallet'
     })
   },
   watch: {
-    network() {
+    web3() {
       this.setupOnlineEnvironment();
     },
-    address() {
-      this.setupOnlineEnvironment();
+    address(val) {
+      if (val) this.setupOnlineEnvironment();
     }
   },
   mounted() {
@@ -101,260 +213,368 @@ export default {
     this.clearIntervals();
   },
   methods: {
-    async fetchTokens() {
-      this.receivedTokens = true;
-      const abi = [
-        {
-          constant: true,
-          inputs: [
-            {
-              name: '_owner',
-              type: 'address'
-            },
-            {
-              name: 'name',
-              type: 'bool'
-            },
-            {
-              name: 'website',
-              type: 'bool'
-            },
-            {
-              name: 'email',
-              type: 'bool'
-            },
-            {
-              name: '_count',
-              type: 'uint256'
-            }
-          ],
-          name: 'getAllBalance',
-          outputs: [
-            {
-              name: '',
-              type: 'bytes'
-            }
-          ],
-          payable: false,
-          stateMutability: 'view',
-          type: 'function'
-        }
-      ];
-      const contract = new this.$store.state.web3.eth.Contract(abi);
-      const data = contract.methods
-        .getAllBalance(this.wallet.getAddressString(), true, true, true, 0)
-        .encodeABI();
-      const response = this.$store.state.web3.eth
-        .call({
-          to: '0xdAFf2b3BdC710EB33A847CCb30A24789c0Ef9c5b',
-          data: data
-        })
-        .then(response => {
-          return response;
-        })
-        .catch(err => {
-          // eslint-disable-next-line no-console
-          console.error(err); // todo replace with proper error
-        });
+    openAddressQrcode() {
+      this.$refs.addressQrcodeModal.$refs.addressQrcode.show();
+    },
+    mnemonicphrasePasswordModalOpen(phrase) {
+      this.phrase = phrase;
+      this.$refs.mnemonicPhraseModal.$refs.mnemonicPhrase.hide();
+      this.$refs.mnemonicPhrasePassword.$refs.password.show();
+    },
+    toggleNetworkAddrModal(walletInstance) {
+      this.$refs.hardwareModal.$refs.password.hide();
+      this.$refs.mnemonicPhrasePassword.$refs.password.hide();
+      this.hwInstance = walletInstance;
+      this.$refs.networkAddress.$refs.networkAndAddress.show();
+    },
+    togglePasswordModal(construct, brand) {
+      this.walletConstructor = construct;
+      this.hardwareBrand = brand;
+      this.$refs.hardwareModal.$refs.password.show();
+    },
 
-      return response;
+    switchAddress() {
+      switch (this.account.identifier) {
+        case LEDGER_TYPE:
+          LedgerWallet()
+            .then(_newWallet => {
+              this.toggleNetworkAddrModal(_newWallet);
+            })
+            .catch(LedgerWallet.errorHandler);
+          break;
+        case TREZOR_TYPE:
+          TrezorWallet()
+            .then(_newWallet => {
+              this.toggleNetworkAddrModal(_newWallet);
+            })
+            .catch(TrezorWallet.errorHandler);
+          break;
+        case BITBOX_TYPE:
+          this.togglePasswordModal(BitBoxWallet, 'DigitalBitbox');
+          break;
+        case SECALOT_TYPE:
+          this.togglePasswordModal(SecalotWallet, 'Secalot');
+          break;
+        case MNEMONIC_TYPE:
+          this.$refs.mnemonicPhraseModal.$refs.mnemonicPhrase.show();
+          break;
+        case KEEPKEY_TYPE:
+          KeepkeyWallet(false, this.$eventHub)
+            .then(_newWallet => {
+              this.toggleNetworkAddrModal(_newWallet);
+            })
+            .catch(KeepkeyWallet.errorHandler);
+          break;
+        default:
+          Toast.responseHandler(
+            new Error(
+              `Wallet type ${this.account.identifier} can't switch addresses`
+            ),
+            false
+          );
+      }
+    },
+    print() {
+      this.$refs.printModal.$refs.print.show();
+    },
+    toggleSideMenu() {
+      this.$store.commit('TOGGLE_SIDEMENU');
+    },
+    async fetchTokens() {
+      this.receivedTokens = false;
+      let tokens = [];
+      if (this.network.type.chainID === 1 || this.network.type.chainID === 3) {
+        const tb = new TokenBalance(this.web3.currentProvider);
+        try {
+          tokens = await tb.getBalance(this.account.address);
+          tokens = tokens.map(token => {
+            token.address = token.addr;
+            delete token.addr;
+            return token;
+          });
+        } catch (e) {
+          tokens = this.network.type.tokens.map(token => {
+            token.balance = 'Load';
+            return token;
+          });
+        }
+      } else {
+        tokens = this.network.type.tokens.map(token => {
+          token.balance = 'Load';
+          return token;
+        });
+      }
+      return tokens;
+    },
+    async setNonce() {
+      store.set(this.web3.utils.sha3(this.account.address), {
+        nonce: '0x00',
+        timestamp: 0
+      });
+      const fetchedNonce = await this.web3.eth
+        .getTransactionCount(this.account.address)
+        .catch(e => {
+          Toast.responseHandler(e, Toast.ERROR);
+        });
+      this.nonce = new BigNumber(fetchedNonce).toString();
     },
     async getTokenBalance(token) {
-      const web3 = this.$store.state.web3;
-      const contractAbi = [
-        {
-          name: 'balanceOf',
-          type: 'function',
-          constant: true,
-          inputs: [{ name: 'address', type: 'address' }],
-          outputs: [{ name: 'out', type: 'uint256' }]
-        }
-      ];
-      const contract = new web3.eth.Contract(contractAbi);
-      const data = contract.methods
-        .balanceOf(this.wallet.getAddressString())
-        .encodeABI();
-      const balance = await web3.eth
-        .call({
-          to: token.address
-            ? web3.utils.toChecksumAddress(token.address)
-            : web3.utils.toChecksumAddress(token.addr),
-          data: data
-        })
-        .then(res => {
-          let tokenBalance;
-          if (Number(res) === 0 || res === '0x') {
-            tokenBalance = 0;
-          } else {
-            const denominator = web3.utils
-              .toBN(10)
-              .pow(web3.utils.toBN(token.decimals));
-            tokenBalance = web3.utils
-              .toBN(res)
-              .div(denominator)
-              .toString(10);
+      try {
+        const web3 = this.web3;
+        const contractAbi = [
+          {
+            name: 'balanceOf',
+            type: 'function',
+            constant: true,
+            inputs: [{ name: 'address', type: 'address' }],
+            outputs: [{ name: 'out', type: 'uint256' }]
           }
-          return tokenBalance;
-        })
-        .catch(err => {
-          // eslint-disable-next-line no-console
-          console.error(err);
-        });
-      return balance;
+        ];
+        const contract = new web3.eth.Contract(contractAbi);
+        const data = contract.methods
+          .balanceOf(this.account.address)
+          .encodeABI();
+        const balance = await web3.eth
+          .call({
+            to: token.address,
+            data: data
+          })
+          .then(res => {
+            let tokenBalance;
+            if (Number(res) === 0 || res === '0x') {
+              tokenBalance = 0;
+            } else {
+              const denominator = new BigNumber(10).pow(token.decimals);
+              tokenBalance = new BigNumber(res).div(denominator).toString();
+            }
+            return tokenBalance;
+          })
+          .catch(e => {
+            Toast.responseHandler(e, false);
+          });
+
+        return balance;
+      } catch (e) {
+        Toast.responseHandler(e, Toast.ERROR);
+      }
+    },
+    setCustomTokenStore() {
+      const customTokenStore = store.get('customTokens');
+      Object.keys(networkTypes).forEach(network => {
+        if (customTokenStore[networkTypes[network].name] === undefined) {
+          customTokenStore[networkTypes[network].name] = [];
+        }
+      });
+      store.set('customTokens', customTokenStore);
     },
     async setTokens() {
-      const utils = this.$store.state.web3.utils;
-      if (this.network.type.chainID === 1) {
-        this.receivedTokens = false;
-        const hex = await this.fetchTokens();
-        const parsedTokens = parseTokensHex(hex)
-          .sort((a, b) => {
-            if (a.name.toUpperCase() < b.name.toUpperCase()) {
-              return -1;
-            } else if (a.name.toUpperCase() > b.name.toUpperCase()) {
-              return 1;
-            }
-            return 0;
-          })
-          .map(token => {
-            const balance = new BigNumber(token.balance);
-            const convertedToken = {
-              addr: token.addr,
-              balance: balance
-                .div(new BigNumber(10).pow(token.decimals))
-                .toString(),
-              decimals: token.decimals,
-              email: utils.hexToAscii(token.email),
-              name: utils.hexToAscii(token.name),
-              symbol: utils.hexToAscii(token.symbol),
-              website: utils.hexToAscii(token.website)
-            };
-            return convertedToken;
-          });
-        this.tokens = parsedTokens;
-      } else {
-        const tokenWithBalance = [];
-        this.network.type.tokens.map(async token => {
-          token.balance = await this.getTokenBalance(token);
-          tokenWithBalance.push(token);
+      this.tokens = [];
+      let tokens = await this.fetchTokens();
+      tokens = tokens
+        .sort((a, b) => {
+          if (a.name.toUpperCase() < b.name.toUpperCase()) {
+            return -1;
+          } else if (a.name.toUpperCase() > b.name.toUpperCase()) {
+            return 1;
+          }
+          return 0;
+        })
+        .map(token => {
+          const balanceCheck = new BigNumber(token.balance);
+          const balance = balanceCheck.isNaN()
+            ? token.balance
+            : balanceCheck.div(new BigNumber(10).pow(token.decimals)).toFixed();
+          const convertedToken = {
+            address: token.address,
+            balance: balance,
+            decimals: token.decimals,
+            email: token.email,
+            name: token.name,
+            symbol: token.symbol,
+            website: token.website
+          };
+          return convertedToken;
         });
-        this.receivedTokens = false;
-        this.tokens = tokenWithBalance;
-      }
 
-      let customTokens = [];
+      this.tokens = tokens.sort(sortByBalance);
+      this.setTokensWithBalance();
+    },
+    setTokensWithBalance() {
+      const customStore = store.get('customTokens');
       if (
-        store.get('customTokens') !== undefined &&
-        store.get('customTokens')[this.network.type.name] !== undefined &&
-        store.get('customTokens')[this.network.type.name].length > 0
+        customStore !== undefined &&
+        customStore[this.network.type.name] !== undefined &&
+        customStore[this.network.type.name].length > 0
       ) {
-        customTokens = store.get('customTokens')[
-          // eslint-disable-next-line
-          this.network.type.name
-        ].filter(token => token.balance > 0);
+        new Promise(resolve => {
+          const newArr = customStore[this.network.type.name].map(
+            async token => {
+              token.balance = await this.getTokenBalance(token);
+              return token;
+            }
+          );
+          Promise.all(newArr).then(res => {
+            customStore[this.network.type.name] = res;
+            store.set('customTokens', customStore);
+            resolve(res);
+          });
+        })
+          .then(res => {
+            const allTokens = this.tokens
+              .filter(token => token.balance > 0)
+              .concat(res.filter(token => token.balance > 0));
+            this.tokensWithBalance = allTokens;
+            this.receivedTokens = true;
+          })
+          .catch(e => {
+            Toast.responseHandler(e, Toast.ERROR);
+          });
+      } else {
+        this.receivedTokens = true;
+        this.tokensWithBalance = this.tokens.filter(token => token.balance > 0);
       }
-      const allTokens = this.tokens
-        .filter(token => token.balance > 0)
-        .concat(customTokens);
-      this.tokensWithBalance = allTokens;
     },
     getBlock() {
-      this.$store.state.web3.eth
+      this.web3.eth
         .getBlockNumber()
         .then(res => {
           this.blockNumber = res;
+          this.$store.dispatch('updateBlockNumber', res);
         })
-        .catch(err => {
-          // eslint-disable-next-line no-console
-          console.error(err);
+        .catch(e => {
+          Toast.responseHandler(e, Toast.ERROR);
         });
     },
     getBalance() {
-      const web3 = this.$store.state.web3;
+      const web3 = this.web3;
       web3.eth
-        .getBalance(this.address)
+        .getBalance(this.address.toLowerCase())
         .then(res => {
           this.balance = web3.utils.fromWei(res, 'ether');
-          this.$store.dispatch('setAccountBalance', this.balance);
+          this.$store.dispatch('setAccountBalance', res);
         })
-        .catch(err => {
-          // eslint-disable-next-line no-console
-          console.error(err);
+        .catch(e => {
+          Toast.responseHandler(e, Toast.ERROR);
         });
     },
     checkWeb3WalletAddrChange() {
       this.pollAddress = setInterval(() => {
         window.web3.eth.getAccounts((err, accounts) => {
           if (err) {
-            // eslint-disable-next-line no-console
-            console.error(err);
-            return;
+            return Toast.responseHandler(err, false);
           }
           if (!accounts.length) {
-            // eslint-disable-next-line no-console
-            console.error('Please unlock metamask');
-            return;
+            return Toast.responseHandler(
+              new Error('Please unlock metamask'),
+              Toast.ERROR
+            );
           }
           const address = accounts[0];
           if (
-            this.wallet !== null &&
-            address !== this.wallet.getAddressString()
+            this.account.address !== null &&
+            address.toLowerCase() !== this.account.address.toLowerCase()
           ) {
             const wallet = new Web3Wallet(address);
-            this.$store.dispatch('setWeb3Wallet', wallet);
+            this.$store.dispatch('decryptWallet', [
+              wallet,
+              window.web3.currentProvider
+            ]);
             clearInterval(this.pollAddress);
           }
         });
       }, 500);
     },
     matchWeb3WalletNetwork() {
+      if (
+        !window.web3.eth.net ||
+        typeof window.web3.eth.net.getId !== 'function'
+      )
+        return;
       this.pollNetwork = setInterval(() => {
-        window.web3.version.getNetwork((err, netId) => {
-          if (err) return;
-          if (this.$store.state.network.type.chainID.toString() !== netId) {
-            Object.keys(networkTypes).forEach(net => {
-              if (networkTypes[net].chainID.toString() === netId) {
-                this.$store.dispatch(
-                  'switchNetwork',
-                  this.$store.state.Networks[net][0]
-                );
-                clearInterval(this.pollNetwork);
-              }
-            });
-          }
-        });
+        window.web3.eth.net
+          .getId()
+          .then(netId => {
+            if (this.network.type.chainID.toString() !== netId) {
+              Object.keys(networkTypes).some(net => {
+                if (networkTypes[net].chainID === netId && this.Networks[net]) {
+                  this.$store.dispatch('switchNetwork', this.Networks[net][0]);
+                  clearInterval(this.pollNetwork);
+                  return true;
+                }
+              });
+            }
+          })
+          .catch(e => {
+            Toast.responseHandler(e, false);
+          });
       }, 500);
     },
     clearIntervals() {
-      const self = this;
-      if (self.wallet === null) {
-        clearInterval(self.pollNetwork);
-        clearInterval(self.pollBlock);
-        clearInterval(self.pollAddress);
-      }
+      if (this.pollBlock.unsubscribe) this.pollBlock.unsubscribe();
+      else clearInterval(this.pollBlock);
+      clearInterval(this.pollNetwork);
+      clearInterval(this.pollAddress);
     },
-    setupOnlineEnvironment() {
-      if (this.$store.state.online === true) {
-        if (this.wallet !== null) {
-          if (this.wallet.identifier === 'Web3') {
+    setupOnlineEnvironment: web3Utils._.debounce(function() {
+      this.clearIntervals();
+      if (store.get('customTokens') === undefined) {
+        store.set('customTokens', {});
+        this.setCustomTokenStore();
+      } else {
+        this.setCustomTokenStore();
+      }
+      if (this.online === true) {
+        if (this.account.address !== null) {
+          if (this.account.identifier === WEB3_TYPE) {
             this.checkWeb3WalletAddrChange();
             this.matchWeb3WalletNetwork();
           }
-          this.getBalance();
-          this.pollBlock = setInterval(this.getBlock, 10000);
-          this.setTokens();
           this.setENS();
+          this.getBlock();
+          this.getBalance();
+          this.setTokens();
+          this.setNonce();
+          this.getHighestGas();
+          this.getBlockUpdater().then(_sub => {
+            this.pollBlock = _sub;
+          });
         }
       }
+    }),
+    async getBlockUpdater() {
+      return new Promise(resolve => {
+        let subscription = this.web3.eth
+          .subscribe('newBlockHeaders', err => {
+            if (err) {
+              subscription = setInterval(this.getBlock, 14000);
+            }
+            resolve(subscription);
+          })
+          .on('data', headers => {
+            this.blockNumber = headers.number;
+          });
+      });
+    },
+    getHighestGas() {
+      this.web3.eth
+        .getGasPrice()
+        .then(res => {
+          this.highestGas = new BigNumber(
+            this.web3.utils.fromWei(res, 'gwei')
+          ).toString();
+        })
+        .catch(e => {
+          Toast.responseHandler(e, Toast.ERROR);
+        });
     },
     setENS() {
-      if (this.wallet.identifier === 'Web3') {
-        this.$store.dispatch('setENS', new ENS(window.web3.currentProvider));
-      } else {
+      if (this.network.type.ens) {
         this.$store.dispatch(
           'setENS',
-          new ENS(this.$store.state.web3.currentProvider)
+          new ENS(this.web3.currentProvider, this.network.type.ens.registry)
         );
+      } else {
+        this.$store.dispatch('setENS', null);
       }
     }
   }
@@ -362,5 +582,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'InterfaceLayout.scss';
+@import 'InterfaceLayout-desktop.scss';
+@import 'InterfaceLayout-tablet.scss';
+@import 'InterfaceLayout-mobile.scss';
 </style>

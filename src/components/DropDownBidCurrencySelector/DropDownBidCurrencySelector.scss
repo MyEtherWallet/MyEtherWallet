@@ -1,0 +1,148 @@
+@import '~@/scss/GlobalVariables';
+
+.drop-down-bid-currency-selector {
+  position: relative;
+  user-select: none;
+  width: 100px;
+}
+
+.form-title-container {
+  margin-bottom: 10px;
+  padding: 0 10px;
+
+  .title {
+    font-weight: 600;
+    font-size: 16px;
+    line-height: initial;
+    margin-right: 8px;
+    color: #212529;
+  }
+}
+
+.coin-selector-click-safe-zone {
+  position: relative;
+}
+
+.dropdown-input-box {
+  position: relative;
+  border: 1px solid $grey-1;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  height: 57px;
+  //background-color: $background-color-1;
+  cursor: pointer;
+
+  &.dropdown-open {
+    background-color: $white;
+    border: 1px solid $grey-1;
+    border-bottom: 1px solid $background-color-1;
+    border-radius: 4px 4px 0 0;
+  }
+
+  .selected-coin {
+    padding: 17px;
+    padding-right: 70px;
+
+    img {
+      margin-right: 10px;
+    }
+
+    span {
+      font-size: 12px;
+      color: $mew-green;
+      margin-left: 5px;
+    }
+  }
+
+  .dropdown-open-button {
+    user-select: none;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    i {
+      font-size: 9px;
+      padding: 10px 22px;
+      color: #3766aa;
+      margin-top: 11px;
+    }
+  }
+} // .dropdown-input-box
+
+.dropdown-list-box {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+  width: 100%;
+  position: absolute;
+  user-select: none;
+  background-color: $background-color-1;
+  border: 1px solid $grey-1;
+  border-radius: 0 0 4px 4px;
+  z-index: 2;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 230px;
+  transition: all 0.2s ease;
+  opacity: 0;
+  pointer-events: none;
+  top: 56px;
+  left: 0;
+
+  &.show-dropdown {
+    background-color: $white;
+    opacity: 1;
+    pointer-events: initial;
+  }
+
+  .search-block {
+    padding: 10px;
+    position: relative;
+
+    input {
+      background-color: $background-color-1;
+      border-radius: 5px;
+      border: 0;
+      padding: 10px;
+      width: 100%;
+      padding-left: 40px;
+    }
+
+    img {
+      position: absolute;
+      top: 21px;
+      left: 20px;
+    }
+  }
+
+  ul {
+    li {
+      cursor: pointer;
+      padding: 10px 15px;
+      position: relative;
+      display: flex;
+      align-items: center;
+
+      &:nth-child(odd) {
+        //background-color: $white;
+      }
+
+      &:hover {
+        background-color: $light-grey-3;
+      }
+
+      img {
+        margin-right: 10px;
+      }
+
+      span {
+        font-size: 12px;
+        color: $mew-green;
+        margin-left: 5px;
+      }
+
+      .list-blockie {
+        margin-right: 10px;
+      }
+    }
+  }
+}

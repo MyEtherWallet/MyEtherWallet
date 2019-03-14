@@ -1,0 +1,22 @@
+@import '~@/scss/GlobalVariables';
+@media all and (min-width: calc(#{$tablet-width} + 1px)) {
+  .modal-content {
+    padding: 40px;
+  }
+
+  .modal-software {
+    .button-options {
+      display: grid;
+      grid-row-gap: 9px;
+    }
+  }
+}
+
+.button-container {
+  width: 100%;
+
+  button {
+    width: inherit;
+    margin: 0;
+  }
+}

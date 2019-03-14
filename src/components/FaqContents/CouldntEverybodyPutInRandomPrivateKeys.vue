@@ -1,64 +1,85 @@
 <template>
   <div>
     <h5>Short version</h5>
-    <p>Yes, but finding an account with a balance would take longer than the universe...so...no.</p>
+    <p>
+      Yes, but finding an account with a balance would take longer than the
+      universe...so...no.
+    </p>
     <h5 id="long-eli5-version">Long ELI5 Version</h5>
 
     <p>
       Ethereum is based on
-      <a href="https://en.wikipedia.org/wiki/Public-key_cryptography">Public Key Cryptography</a>, specifically
-      <a href="https://eprint.iacr.org/2013/734.pdf">Elliptic curve cryptography</a>
-      which is very widely used, not just in Ethereum. Most servers are protected via ECC.
-      Bitcoin uses the same, as well as SSH and TLS and a lot of other stuff. The Ethereum keys
-      specifically are 256-bit keys, which are stronger than 128-bit and 192-bit, which are
-      also widely used and still considered secure by experts.
+      <a
+        href="https://en.wikipedia.org/wiki/Public-key_cryptography"
+        rel="noopener noreferrer"
+        target="_blank"
+        >Public Key Cryptography</a
+      >, specifically
+      <a
+        href="https://eprint.iacr.org/2013/734.pdf"
+        rel="noopener noreferrer"
+        target="_blank"
+        >Elliptic curve cryptography</a
+      >
+      which is very widely used, not just in Ethereum. Most servers are
+      protected via ECC. Bitcoin uses the same, as well as SSH and TLS and a lot
+      of other stuff. The Ethereum keys specifically are 256-bit keys, which are
+      stronger than 128-bit and 192-bit, which are also widely used and still
+      considered secure by experts.
     </p>
     <p>
-      In this you have a private key and a public key. The private key can derive
-      the public key, but the public key cannot be turned back into the private key.
-      The fact that the internet and the world's secrets are using this cryptography
-      means that if there is a way to go from public key to private key, your lost ether
-      is the least of everyone's problems.
+      In this you have a private key and a public key. The private key can
+      derive the public key, but the public key cannot be turned back into the
+      private key. The fact that the internet and the world's secrets are using
+      this cryptography means that if there is a way to go from public key to
+      private key, your lost ether is the least of everyone's problems.
     </p>
     <p>
       Now, that said, YES if someone else has your private key then they can
-      indeed send ether from your account. Just like if someone has your password
-      to your email, they can read and send your email, or the password to your bank
-      account, they could make transfers. You could download the Keystore version of
-      your private key which is the private key that is encrypted with a password.
-      This is like having a password that is also protected by another password.
+      indeed send ether from your account. Just like if someone has your
+      password to your email, they can read and send your email, or the password
+      to your bank account, they could make transfers. You could download the
+      Keystore version of your private key which is the private key that is
+      encrypted with a password. This is like having a password that is also
+      protected by another password.
     </p>
     <p>
       And YES, in theory you could just type in a string of 64 hexadecimal
-      characters until you got one that matched. In fact, smart people could write
-      a program to very quickly check random private keys. This is known as "brute-forcing"
-      or "mining" private keys. People have thought about this long and hard. With a few
-      very high end servers, they may be able to check 100k keys / second. However,
-      even checking that many per second would not yield access to make the cost of
-      running those servers even close to worthwhile - it is more likely you, and your
-      great-grandchildren, will die before getting a match.
+      characters until you got one that matched. In fact, smart people could
+      write a program to very quickly check random private keys. This is known
+      as "brute-forcing" or "mining" private keys. People have thought about
+      this long and hard. With a few very high end servers, they may be able to
+      check 100k keys / second. However, even checking that many per second
+      would not yield access to make the cost of running those servers even
+      close to worthwhile - it is more likely you, and your great-grandchildren,
+      will die before getting a match.
     </p>
     <p>
       If you know anything about Bitcoin,
-      <a href="http://bitcoin.stackexchange.com/questions/32331/two-people-with-same-public-address-how-will-people-network-know-how-to-deliver">
-        this will put it in perspective:
-      </a>
+      <a
+        href="http://bitcoin.stackexchange.com/questions/32331/two-people-with-same-public-address-how-will-people-network-know-how-to-deliver"
+        rel="noopener noreferrer"
+        target="_blank"
+        >this will put it in perspective:</a
+      >
     </p>
 
     <blockquote>
       <p>
-        To illustrate how unlikely this is: suppose every satoshi
-        of every bitcoin ever to be generated was sent to its own unique
-        private keys. The probability that among those keys there could
-        be two that would correspond to the same address is roughly one
-        in 100 quintillion.
+        To illustrate how unlikely this is: suppose every satoshi of every
+        bitcoin ever to be generated was sent to its own unique private keys.
+        The probability that among those keys there could be two that would
+        correspond to the same address is roughly one in 100 quintillion.
       </p>
     </blockquote>
 
     <p>
-      <a href="http://security.stackexchange.com/questions/25375/why-not-use-larger-cipher-keys/25392#25392">
-        If you want something a bit more technical:
-      </a>
+      <a
+        href="http://security.stackexchange.com/questions/25375/why-not-use-larger-cipher-keys/25392#25392"
+        rel="noopener noreferrer"
+        target="_blank"
+        >If you want something a bit more technical:</a
+      >
     </p>
 
     <blockquote>
@@ -72,69 +93,96 @@
     </blockquote>
 
     <p>
-      Of course, this all assumes that keys are generated in a truly
-      random way &amp; with sufficient entropy. The keys generated here
-      meet that criteria, as do Jaxx and Mist/geth. The Ethereum wallets
-      are all pretty good. Keys generated by brainwallets do not, as a person's
-      brain is not capable of creating a truly random seed. There have been a
-      number of other issues regarding lack of entropy or seeds not being generated
-      in a truly random way in Bitcoin-land, but that's a separate issue that
-      can wait for another day.
+      Of course, this all assumes that keys are generated in a truly random way
+      &amp; with sufficient entropy. The keys generated here meet that criteria,
+      as do Jaxx and Mist/geth. The Ethereum wallets are all pretty good. Keys
+      generated by brainwallets do not, as a person's brain is not capable of
+      creating a truly random seed. There have been a number of other issues
+      regarding lack of entropy or seeds not being generated in a truly random
+      way in Bitcoin-land, but that's a separate issue that can wait for another
+      day.
     </p>
 
     <h5>Related Reading</h5>
     <ul>
       <li>
-        <a href="https://www.reddit.com/r/ledgerwallet/comments/6cjvam/probability_of_seed_phrase_collisionbrute_forcing/">
-          BIP-39s (mnemonic phrases &amp; Ledger Hardware Wallets)
-        </a>
+        <a
+          href="https://www.reddit.com/r/ledgerwallet/comments/6cjvam/probability_of_seed_phrase_collisionbrute_forcing/"
+          target="_blank"
+          rel="noopener noreferrer"
+          >BIP-39s (mnemonic phrases &amp; Ledger Hardware Wallets)</a
+        >
       </li>
       <li>
-        <a href="https://kb.myetherwallet.com/security/ethereum-two-people-same-private-key.html">
-          How does it ensure that it doesn't give different people the same key?
-        </a>
+        <a
+          href="https://kb.myetherwallet.com/security/ethereum-two-people-same-private-key.html"
+          target="_blank"
+          rel="noopener noreferrer"
+          >How does it ensure that it doesn't give different people the same
+          key?</a
+        >
       </li>
       <li>
-        <a href="https://crypto.stackexchange.com/questions/30269/are-all-possible-ec-private-keys-valid">
-          Not all private keys are valid on the curve
-        </a>
+        <a
+          href="https://crypto.stackexchange.com/questions/30269/are-all-possible-ec-private-keys-valid"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Not all private keys are valid on the curve</a
+        >
       </li>
       <li>
-        <a href="https://en.wikipedia.org/wiki/Public-key_cryptography">
-          https://en.wikipedia.org/wiki/Public-key_cryptography
-        </a>
+        <a
+          href="https://en.wikipedia.org/wiki/Public-key_cryptography"
+          target="_blank"
+          rel="noopener noreferrer"
+          >https://en.wikipedia.org/wiki/Public-key_cryptography</a
+        >
       </li>
       <li>
-        <a href="https://eprint.iacr.org/2013/734.pdf">
-          https://eprint.iacr.org/2013/734.pdf
-        </a>
+        <a
+          href="https://eprint.iacr.org/2013/734.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+          >https://eprint.iacr.org/2013/734.pdf</a
+        >
       </li>
       <li>
-        <a href="https://www.reddit.com/r/ethereum/comments/6s1wzp/probably_a_stupid_question_about_mew_vulnerability/">
-          Randomness of Private Keys Explained
-        </a>
+        <a
+          href="https://www.reddit.com/r/ethereum/comments/6s1wzp/probably_a_stupid_question_about_mew_vulnerability/"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Randomness of Private Keys Explained</a
+        >
       </li>
     </ul>
 
     <h5>Sources</h5>
     <ul>
       <li>
-        <a href="https://www.reddit.com/r/ledgerwallet/comments/6cjvam/probability_of_seed_phrase_collisionbrute_forcing/">
-          https://www.reddit.com/r/ledgerwallet/comments/6cjvam/probability_of_seed_phrase_collisionbrute_forcing/
-        </a>
+        <a
+          href="https://www.reddit.com/r/ledgerwallet/comments/6cjvam/probability_of_seed_phrase_collisionbrute_forcing/"
+          target="_blank"
+          rel="noopener noreferrer"
+          >https://www.reddit.com/r/ledgerwallet/comments/6cjvam/probability_of_seed_phrase_collisionbrute_forcing/</a
+        >
       </li>
       <li>
-        <a href="http://security.stackexchange.com/questions/25375/why-not-use-larger-cipher-keys/25392#25392">
-          http://security.stackexchange.com/questions/25375/why-not-use-larger-cipher-keys/25392#25392
-        </a>
+        <a
+          href="http://security.stackexchange.com/questions/25375/why-not-use-larger-cipher-keys/25392#25392"
+          target="_blank"
+          rel="noopener noreferrer"
+          >http://security.stackexchange.com/questions/25375/why-not-use-larger-cipher-keys/25392#25392</a
+        >
       </li>
       <li>
-        <a href="http://bitcoin.stackexchange.com/questions/32331/two-people-with-same-public-address-how-will-people-network-know-how-to-deliver">
-          http://bitcoin.stackexchange.com/questions/32331/two-people-with-same-public-address-how-will-people-network-know-how-to-deliver
-        </a>
+        <a
+          href="http://bitcoin.stackexchange.com/questions/32331/two-people-with-same-public-address-how-will-people-network-know-how-to-deliver"
+          target="_blank"
+          rel="noopener noreferrer"
+          >http://bitcoin.stackexchange.com/questions/32331/two-people-with-same-public-address-how-will-people-network-know-how-to-deliver</a
+        >
       </li>
     </ul>
-
   </div>
 </template>
 

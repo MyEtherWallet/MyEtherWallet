@@ -1,10 +1,10 @@
 <template>
   <form class="user-input">
-
-    <!--=== MEW custom form ========================================-->
+    <!-- === MEW custom form ======================================== -->
     <div class="mew-custom-form mew-custom-form__password">
       <div class="user-input-field">
         <input
+          v-validate="param === 'Json' ? 'required|min:9' : ''"
           :class="strengthClass"
           :type="password.showPassword ? 'text' : 'password'"
           :value="value"
@@ -12,35 +12,46 @@
           placeholder="Please Enter At Least 9 Characters"
           autocomplete="off"
           @input="updateValue($event.target.value)"
-        >
+        />
       </div>
       <div
         class="password-icons"
-        @click="password.showPassword = !password.showPassword">
+        @click="password.showPassword = !password.showPassword"
+      >
         <img
           v-if="!password.showPassword"
           class="hide-password"
-          src="~@/assets/images/icons/hide-password.svg" >
+          src="~@/assets/images/icons/hide-password.svg"
+        />
         <img
           v-if="password.showPassword"
           class="show-password"
-          src="~@/assets/images/icons/show-password.svg" >
+          src="~@/assets/images/icons/show-password.svg"
+        />
       </div>
 
-      <p
-        v-show="value.length > 0"
-        class="passwd-strength">
-        Password strength:<span :class="strengthClass">{{ strength }}</span>
+      <p v-show="value.length > 0" class="passwd-strength">
+        Password strength: <span :class="strengthClass">{{ strength }}</span>
+      </p>
+      <p v-if="value.length > 0" class="passwd-strength">
+        {{ errors.first('password') }}
       </p>
     </div>
-    <!--=== MEW custom form ========================================-->
-
+    <!-- === MEW custom form ======================================== -->
     <button
-      :disabled="value.length === 0 && value.length < 9 && strength === ''"
-      class="next-button large-round-button-green-filled"
+      :class="[
+        errors.has('password') ||
+        value.length === 0 ||
+        strengthClass !== 'strong'
+          ? 'disabled'
+          : '',
+        'large-round-button-green-filled next-button'
+      ]"
       type="submit"
-      @click.prevent="switcher(param)">
-      {{ $t("common.next") }}<img src="~@/assets/images/icons/right-arrow.png">
+      @click.prevent="switcher(param)"
+    >
+      {{ $t('common.next') }}
+      <img src="~@/assets/images/icons/right-arrow.png" />
     </button>
   </form>
 </template>
@@ -86,8 +97,8 @@ export default {
           this.strengthClass = 'weak';
           break;
         case 3:
-          this.strength = 'Weak';
-          this.strengthClass = 'weak';
+          this.strength = 'Good';
+          this.strengthClass = 'strong';
           break;
         case 4:
           this.strength = 'Strong';
@@ -104,5 +115,4 @@ export default {
 
 <style lang="scss" scoped>
 @import 'CreateWalletInput.scss';
-/*@import ''*/ /*TODO check if redering correctly*/
 </style>

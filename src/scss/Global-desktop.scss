@@ -217,7 +217,7 @@
   .page-container {
     margin: 0 auto;
     max-width: 1024px;
-    padding: 0;
+    padding: 0 20px;
   }
 
   .page-container2 {
@@ -566,11 +566,12 @@
   // *********************************************************************
   .modal {
     z-index: $z-bootstrap-modal;
+    z-index: 9999;
   }
 
-  .modal-backdrop {
-    z-index: $z-bootstrap-modal-backdrop;
-  }
+  // .modal-backdrop {
+  //   z-index: $z-bootstrap-modal-backdrop;
+  // }
 
   .language-menu-container {
     position: relative;
@@ -624,6 +625,10 @@
   // *********************************************************************
   // Tooltip
   // *********************************************************************
+  .popover-button {
+    background-color: transparent;
+    border: 0;
+  }
 
   .popover {
     pointer-events: none;
@@ -651,6 +656,7 @@
   .qrcode-modal {
     .popover {
       max-width: 180px;
+      text-align: center;
     }
   }
 
@@ -733,7 +739,7 @@
 
   .modal-body {
     background-color: $background-color-white;
-    padding: 60px 70px 50px;
+    // padding: 60px 70px 50px;
 
     .title {
       color: $text-color-6;
@@ -791,7 +797,7 @@
     }
 
     .modal-body {
-      padding: 40px;
+      padding: 20px 43px;
     }
   }
 
@@ -816,6 +822,7 @@
       border-radius: 0;
       font-size: 14px;
       padding: 20px 0;
+      color: #999;
 
       &.active {
         background-color: $nav-tab--button--active--background-color;
@@ -830,6 +837,11 @@
       .nav-item {
         flex: 1;
         text-align: center;
+      }
+
+      .nav-item:nth-child(2) {
+        border-right: 2px solid $white;
+        border-left: 2px solid $white;
       }
     }
   }
@@ -1198,6 +1210,8 @@
     color: $button--background-color-1;
     display: inline-block;
     font-size: 20px;
+    background-color: $white;
+    border-radius: 100%;
 
     &.not-good {
       color: $text-good-button-not-good;
@@ -1249,3 +1263,150 @@
     pointer-events: none;
   }
 } //@media all and ( min-width: calc(#{$tablet-width} + 1px) )
+
+// **********************************************************************************************************
+// Global elements for all sizes (Desktop, Tablet, Mobile)
+// **********************************************************************************************************
+
+// *********************************************************************
+// Not recommended
+// *********************************************************************
+.not-recommended {
+  border: 1px solid $red-1;
+  background-color: $light-red-1;
+  border-radius: 5px;
+  margin-bottom: 25px;
+  padding: 10px;
+  text-align: center;
+}
+
+// *********************************************************************
+// Input error message
+// *********************************************************************
+.global__input-error-message {
+  color: $red-1;
+  font-weight: 500;
+  padding: 10px 0 0 15px;
+  line-height: 15px;
+  font-size: 13px;
+}
+
+// *********************************************************************
+// [Temporary fix] for Settings modal's expending menu's
+// max-height.
+// *********************************************************************
+.settings-modal .contents-container.opened {
+  max-height: 600px !important;
+}
+
+// *********************************************************************
+// Temprary fix for Network and Address dropdown menu size
+// *********************************************************************
+.dropdown-button-2 .dropdown-menu {
+  max-height: 300px;
+  overflow: auto;
+}
+
+// *********************************************************************
+// Bootstrap modal close button color fix
+// *********************************************************************
+.close:not(:disabled):not(.disabled):hover,
+.close:not(:disabled):not(.disabled):focus {
+  color: $white;
+  opacity: 1;
+}
+
+.modal-content {
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.22);
+}
+
+// *********************************************************************
+// Global disabled button style
+// *********************************************************************
+.btn-secondary.disabled {
+  color: $white;
+  background-color: $dark-grey-11;
+  border-color: $dark-grey-11;
+  opacity: 1;
+}
+
+.btn-secondary:not(:disabled):not(.disabled):active {
+  background-color: $white;
+}
+
+// *********************************************************************
+// Interface: buttons next to title
+// *********************************************************************
+.title-button {
+  color: $grey-1;
+  cursor: pointer;
+  margin-left: auto;
+  background-color: $background-color-white;
+  border: 0;
+  font-size: 14px;
+  font-weight: 400;
+
+  &:hover {
+    // Desktop
+    @media all and (min-width: calc(#{$tablet-width} + 1px)) {
+      color: $text--link-color;
+    }
+  }
+
+  &:active {
+    color: $text--link-color;
+  }
+}
+
+%toast {
+  border-radius: 4px !important;
+  cursor: pointer;
+  min-height: 75px !important;
+  opacity: 0.96;
+  width: 325px !important;
+
+  .toast-action {
+    color: $white !important;
+    font-size: 20px !important;
+  }
+
+  .custom-toast-container {
+    height: 100% !important;
+    width: 100% !important;
+  }
+}
+
+.toast-success {
+  @extend %toast;
+
+  background-color: $mew-green !important;
+}
+
+.toast-warn {
+  @extend %toast;
+
+  background-color: $light-yellow !important;
+}
+
+.toast-error {
+  @extend %toast;
+
+  background-color: $red-7 !important;
+}
+
+.toast-info {
+  @extend %toast;
+
+  background-color: $light-blue-4 !important;
+}
+
+// *********************************************************************
+// No margin to remove margins from elements
+// *********************************************************************
+.no-margin {
+  margin: 0 !important;
+  margin-top: 0 !important;
+  margin-right: 0 !important;
+  margin-bottom: 0 !important;
+  margin-left: 0 !important;
+}

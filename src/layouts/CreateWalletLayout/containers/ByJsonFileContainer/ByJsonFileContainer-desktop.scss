@@ -99,6 +99,10 @@
       display: flex;
       margin: 0 auto;
       align-items: center;
+
+      h3 {
+        margin-right: 7px;
+      }
     }
   }
 } // @media all and (min-width: calc(#{$tablet-width} + 1px))

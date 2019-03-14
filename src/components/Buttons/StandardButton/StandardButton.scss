@@ -1,0 +1,404 @@
+@import '~@/scss/GlobalVariables';
+
+// Colors
+$color-white: #fff;
+
+// Disabled Button Colors
+$disabled-button-background: #9a9a9a;
+$disabled-button-border: #ababab;
+
+// Grey Filled Button Colors
+$grey-filled-button-background: #9a9a9a;
+$grey-filled-button-background--hover: #9a9a9a;
+$grey-filled-button-background--click: #9a9a9a;
+
+// Grey Bordered Button Colors
+$grey-border-button-border: #9a9a9a;
+$grey-border-button-border--hover: #9a9a9a;
+$grey-border-button-border--click: #9a9a9a;
+$grey-border-button-background--click: #fff;
+
+// White Filled Button Colors
+$white-filled-button-background: #fff;
+$white-filled-button-background--hover: #fff;
+$white-filled-button-background--click: #fff;
+
+// White Bordered Button Colors
+$white-border-button-border: #fff;
+$white-border-button-border--hover: #fff;
+$white-border-button-border--click: #fff;
+$white-border-button-background--click: transparent;
+
+// Red Filled Button Colors
+$red-filled-button-background: #ff436d;
+$red-filled-button-background--hover: #ff7795;
+$red-filled-button-background--click: #ff5a7f;
+
+// Green Filled Button Colors
+$green-filled-button-background: #3bc1aa;
+$green-filled-button-background--hover: #3ed7bc;
+$green-filled-button-background--click: #269983;
+
+// Green Bordered Button Colors
+$green-border-button-border: #33c2a7;
+$green-border-button-border--hover: #55f0d6;
+$green-border-button-border--click: #56b7a9;
+$green-border-button-background--click: #f3fafa;
+
+// Blue Filled Button Colors
+$blue-filled-button-background: #587cf5;
+$blue-filled-button-background--hover: #6d8bf0;
+$blue-filled-button-background--click: #4460bc;
+
+// Green Bordered Button Colors
+$blue-border-button-border: #5b7ef5;
+$blue-border-button-border--hover: #b9c7fc;
+$blue-border-button-border--click: #7e90d1;
+$blue-border-button-background--click: #f2f4fd;
+
+//=======================================================================
+// Common Style
+//=======================================================================
+
+button {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  display: block;
+  width: 100%;
+}
+
+button[disabled] {
+  background-color: $disabled !important;
+  border-color: $disabled !important;
+  cursor: default !important;
+}
+
+@mixin btn-mixin-1() {
+  text-align: center;
+  user-select: none;
+}
+
+@mixin btn-mixin-2() {
+  padding: 18px 35px;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 14px;
+  border-radius: 4px;
+  position: relative;
+  min-width: 250px;
+
+  @media all and (max-width: $mobile-width) {
+    min-width: initial;
+  }
+}
+
+.the-button-box {
+  display: block;
+  @include btn-mixin-2();
+
+  &.no-min-width {
+    min-width: initial;
+  }
+
+  &.mobile-bottom-button {
+    @media all and (max-width: $mobile-width) {
+      border-radius: 0;
+    }
+  }
+
+  .loading-left {
+    position: absolute;
+    top: 16px;
+    left: calc(50% - 85px);
+    height: 25px;
+  }
+
+  .arrow-right {
+    position: absolute;
+    top: 21px;
+    right: 20px;
+    height: 15px;
+  }
+
+  .arrow-left {
+    position: absolute;
+    top: 21px;
+    left: 20px;
+    height: 15px;
+  }
+}
+
+.standard-button {
+  display: inline-block;
+  transition: opacity 0.3s ease;
+
+  &.full-width {
+    display: block;
+  }
+
+  &.mobile-full-width {
+    // Mobile
+    @media all and (max-width: $mobile-width) {
+      width: 100%;
+    }
+  }
+}
+
+//=======================================================================
+// Hide Mobile Button when user scroll down to bottom of the page
+//=======================================================================
+@media all and (max-width: $mobile-width) {
+  .hide-mobile-button {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+//=======================================================================
+// Animation
+//=======================================================================
+
+@keyframes loading-icon {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-left {
+  animation-name: loading-icon;
+  animation-duration: 0.7s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+//=======================================================================
+// Buttons
+//=======================================================================
+
+.standard-button__grey {
+  @include btn-mixin-1();
+
+  .the-button-box {
+    cursor: initial;
+    background-color: $grey-filled-button-background;
+    border: 1px solid $grey-filled-button-background;
+    color: $color-white;
+
+    &:hover {
+      background-color: $grey-filled-button-background--hover;
+      border: 1px solid $grey-filled-button-background--hover;
+    }
+
+    &:active {
+      background-color: $grey-filled-button-background--click;
+      border: 1px solid $grey-filled-button-background--click;
+    }
+  }
+} // .standard-button__grey
+
+.standard-button__grey-border {
+  @include btn-mixin-1();
+
+  .the-button-box {
+    cursor: initial;
+    background-color: $color-white;
+    border: 1px solid $grey-border-button-border;
+    color: $grey-border-button-border;
+
+    &:hover {
+      background-color: $color-white;
+      border: 1px solid $grey-border-button-border--hover;
+      color: $grey-border-button-border--hover;
+    }
+
+    &:active {
+      background-color: $grey-border-button-background--click;
+      border: 1px solid $grey-border-button-border--click;
+      color: $grey-border-button-border--click;
+    }
+  }
+} // .standard-button__grey-border
+
+.standard-button__white {
+  @include btn-mixin-1();
+
+  .the-button-box {
+    background-color: $white-filled-button-background;
+    border: 1px solid $white-filled-button-background;
+    color: #003945;
+
+    &:hover {
+      background-color: $white-filled-button-background--hover;
+      border: 1px solid $white-filled-button-background--hover;
+    }
+
+    &:active {
+      background-color: $white-filled-button-background--click;
+      border: 1px solid $white-filled-button-background--click;
+    }
+  }
+}
+
+.standard-button__white-border {
+  @include btn-mixin-1();
+
+  .the-button-box {
+    background-color: transparent;
+    border: 1px solid $white-border-button-border;
+    color: $white-border-button-border;
+  }
+}
+
+.standard-button__red {
+  @include btn-mixin-1();
+
+  .the-button-box {
+    background-color: $red-filled-button-background;
+    border: 1px solid $red-filled-button-background;
+    color: $color-white;
+
+    &:hover {
+      background-color: $red-filled-button-background--hover;
+      border: 1px solid $red-filled-button-background--hover;
+    }
+
+    &:active {
+      background-color: $red-filled-button-background--click;
+      border: 1px solid $red-filled-button-background--click;
+    }
+  }
+} // .standard-button__red
+
+.standard-button__green {
+  @include btn-mixin-1();
+
+  .the-button-box {
+    background-color: $green-filled-button-background;
+    border: 1px solid $green-filled-button-background;
+    color: $color-white;
+
+    &:hover {
+      background-color: $green-filled-button-background--hover;
+      border: 1px solid $green-filled-button-background--hover;
+    }
+
+    &:active {
+      background-color: $green-filled-button-background--click;
+      border: 1px solid $green-filled-button-background--click;
+    }
+  }
+} // .standard-button__green
+
+.standard-button__green-border {
+  @include btn-mixin-1();
+
+  .the-button-box {
+    background-color: $color-white;
+    border: 1px solid $green-border-button-border;
+    color: $green-border-button-border;
+
+    &:hover {
+      background-color: $color-white;
+      border: 1px solid $green-border-button-border--hover;
+      color: $green-border-button-border--hover;
+    }
+
+    &:active {
+      background-color: $green-border-button-background--click;
+      border: 1px solid $green-border-button-border--click;
+      color: $green-border-button-border--click;
+    }
+  }
+} // .standard-button__green-border
+
+.standard-button__green-noclick {
+  @include btn-mixin-1();
+
+  .the-button-box {
+    cursor: initial;
+    background-color: $green-filled-button-background;
+    border: 1px solid $green-filled-button-background;
+    color: $color-white;
+  }
+} // .standard-button__green
+
+.standard-button__green-transparent {
+  @include btn-mixin-1();
+
+  .the-button-box {
+    background-color: transparent;
+    border: 1px solid $green-filled-button-background;
+    color: $green-filled-button-background;
+  }
+} // .standard-button__green-transparent
+
+.standard-button__blue {
+  @include btn-mixin-1();
+
+  .the-button-box {
+    background-color: $blue-filled-button-background;
+    border: 1px solid $blue-filled-button-background;
+    color: $color-white;
+
+    &:hover {
+      background-color: $blue-filled-button-background--hover;
+      border: 1px solid $blue-filled-button-background--hover;
+    }
+
+    &:active {
+      background-color: $blue-filled-button-background--click;
+      border: 1px solid $blue-filled-button-background--click;
+    }
+  }
+} // .standard-button__blue
+
+.standard-button__blue-border {
+  @include btn-mixin-1();
+
+  .the-button-box {
+    background-color: $color-white;
+    border: 1px solid $blue-border-button-border;
+    color: $blue-border-button-border;
+
+    &:hover {
+      background-color: $color-white;
+      border: 1px solid $blue-border-button-border--hover;
+      color: $blue-border-button-border--hover;
+    }
+
+    &:active {
+      background-color: $blue-border-button-background--click;
+      border: 1px solid $blue-border-button-border--click;
+      color: $blue-border-button-border--click;
+    }
+  }
+} // .standard-button__blue-border
+
+//=======================================================================
+// Accept Terms Checkbox
+//=======================================================================
+.accept-terms-Check-Box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+//=======================================================================
+// Customer support block
+//=======================================================================
+.customer-support-block {
+  margin-top: 20px;
+}
+
+//=======================================================================
+// Help Center block
+//=======================================================================
+.help-center-block {
+  margin-top: 20px;
+}

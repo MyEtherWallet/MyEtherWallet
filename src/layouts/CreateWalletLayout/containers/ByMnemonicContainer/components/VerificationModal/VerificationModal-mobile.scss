@@ -13,7 +13,7 @@
           display: grid;
           grid-column-gap: 20px;
           grid-row-gap: 20px;
-          grid-template-columns: 1fr 1fr 1fr;
+          grid-template-columns: 1fr 1fr;
 
           li {
             border-bottom: 1px solid $border-bottom--mnemonic-phrase-key-color;
@@ -29,6 +29,7 @@
             input {
               border: 0;
               width: calc(100% - 25px);
+              margin-left: 10px;
             }
           }
 
@@ -44,7 +45,7 @@
 
         .verify-button {
           display: inline-block;
-          margin-top: 20px;
+          margin-top: 40px;
           padding: 20px 100px;
         }
       }

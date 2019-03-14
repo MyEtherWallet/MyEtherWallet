@@ -5,23 +5,26 @@
       hide-footer
       centered
       class="bootstrap-modal-wide confirmation-modal nopadding"
-      title="Confirmation">
+      title="Confirmation"
+    >
       <div class="modal-content qrcode-modal">
         <div class="tx-info">
           <address-block
+            :currency="network.type.name"
+            :icon="network.type.icon"
             :address="from"
             :value="value"
             :token-transfer-val="tokenTransferVal"
             :token-symbol="tokenSymbol"
             direction="from"
           />
-          <div
-            v-show="to !== '' && to !== undefined"
-            class="direction">
-            <img src="~@/assets/images/icons/right-arrow.svg">
+          <div v-show="to !== '' && to !== undefined" class="direction">
+            <img src="~@/assets/images/icons/right-arrow.svg" />
           </div>
           <address-block
             v-show="to !== '' && to !== undefined"
+            :currency="network.type.name"
+            :icon="network.type.icon"
             :address="to"
             :token-transfer-to="tokenTransferTo"
             :token-transfer-val="tokenTransferVal"
@@ -37,71 +40,51 @@
               <label class="switch">
                 <input
                   type="checkbox"
-                  @click="modalDetailInformation = !modalDetailInformation" >
-                <span class="slider round"/>
+                  @click="modalDetailInformation = !modalDetailInformation"
+                />
+                <span class="slider round" />
               </label>
             </div>
           </div>
           <div
-            v-if="modalDetailInformation"
-            class="expended-info">
-            <div class="grid-block">
-              <p>Network</p><p>{{ $store.state.network.type.name }} by {{ $store.state.network.service }}</p>
-            </div>
-            <!-- <div class="grid-block">
-              <p>Value</p><p>{{ unit.fromWei(value,'ether') }} eth</p>
-            </div> -->
-            <div class="grid-block">
-              <p>Gas Limit</p><p>{{ gas }} wei</p>
-            </div>
-            <div class="grid-block">
-              <p>Gas Price</p><p>{{ gasPrice }} gwei</p>
-            </div>
-            <div class="grid-block">
-              <p>Transaction Fee</p><p> {{ fee }} ETH</p>
-            </div>
-            <div class="grid-block">
-              <p>Nonce</p><p>{{ nonce }}</p>
-            </div>
-            <div class="grid-block">
-              <p>Data</p><p>{{ data }}</p>
+            :class="modalDetailInformation && 'expended-info-open'"
+            class="expended-info"
+          >
+            <div class="padding-container">
+              <div class="grid-block">
+                <p>{{ $t('interface.network') }}</p>
+                <p>{{ network.type.name }} by {{ network.service }}</p>
+              </div>
+              <div class="grid-block">
+                <p>{{ $t('common.gasLimit') }}</p>
+                <p>{{ gas }} wei</p>
+              </div>
+              <div class="grid-block">
+                <p>{{ $t('common.gasPrice') }}</p>
+                <p>{{ gasPrice }} gwei</p>
+              </div>
+              <div class="grid-block">
+                <p>{{ $t('common.txFee') }}</p>
+                <p>{{ fee }} {{ network.type.name }}</p>
+              </div>
+              <div class="grid-block">
+                <p>Nonce</p>
+                <p>{{ nonce }}</p>
+              </div>
+              <div class="grid-block">
+                <p>{{ $t('common.data') }}</p>
+                <p>{{ data }}</p>
+              </div>
             </div>
           </div>
         </div>
 
         <div class="submit-button-container">
-          <div class="flex-center-align">
-            <div class="button-with-helper">
-              <div
-                ref="ConfirmAndSendButton"
-                :class="[signedTx !== ''? '': 'disabled','submit-button large-round-button-green-filled clickable']"
-                @click="sendTx">
-                Confirm and Send
-              </div>
-              <div class="tooltip-box-2">
-                <b-btn id="exPopover9">
-                  <img
-                    class="icon"
-                    src="~@/assets/images/icons/qr-code.svg">
-                </b-btn>
-                <b-popover
-                  target="exPopover9"
-                  triggers="hover focus"
-                  placement="top">
-                  <div class="qrcode-contents">
-                    <p class="qrcode-title">Scan QR code to send/swap instantly</p>
-                    <div class="qrcode-block">
-                      <qrcode
-                        :options="{ size: 100 }"
-                        value="Hello, World!"/>
-                    </div>
-                    <p class="qrcode-helper">What is that?</p>
-                  </div>
-                </b-popover>
-              </div>
-            </div>
-          </div>
-          <p class="learn-more">Have any issues? <a href="/">Learn more</a></p>
+          <standard-button
+            :options="buttonSendTx"
+            :button-disabled="signedTx !== '' ? false : true"
+            @click.native="sendTx"
+          />
         </div>
       </div>
     </b-modal>
@@ -110,12 +93,15 @@
 
 <script>
 import AddressBlock from '../AddressBlock';
-import * as unit from 'ethjs-unit';
 import BigNumber from 'bignumber.js';
+import { mapGetters } from 'vuex';
+import store from 'store';
+import StandardButton from '@/components/Buttons/StandardButton';
 
 export default {
   components: {
-    'address-block': AddressBlock
+    'address-block': AddressBlock,
+    'standard-button': StandardButton
   },
   props: {
     confirmSendTx: {
@@ -123,8 +109,8 @@ export default {
       default: function() {}
     },
     fee: {
-      type: Number,
-      default: 0
+      type: String,
+      default: ''
     },
     signedTx: {
       type: String,
@@ -139,24 +125,24 @@ export default {
       default: ''
     },
     gas: {
-      type: Number,
-      default: 0
+      type: String,
+      default: ''
     },
     gasPrice: {
       type: Number,
       default: 0
     },
     nonce: {
-      type: Number,
-      default: 0
+      type: String,
+      default: ''
     },
     to: {
       type: String,
       default: ''
     },
     value: {
-      type: Number,
-      default: 0
+      type: String,
+      default: ''
     },
     isHardwareWallet: {
       type: Boolean,
@@ -167,18 +153,27 @@ export default {
     return {
       modalDetailInformation: false,
       transactionSigned: false,
-      unit,
       tokenTransferTo: '',
       tokenTransferVal: '',
-      tokenSymbol: ''
+      tokenSymbol: '',
+      buttonSendTx: {
+        title: 'Confirm and Send',
+        buttonStyle: 'green',
+        mobileFullWidth: true,
+        helpCenter: true
+      }
     };
   },
   computed: {
+    ...mapGetters({
+      web3: 'web3',
+      network: 'network'
+    }),
     signedTransaction() {
       if (this.signedMessage) {
         return this.signedMessage;
       } else if (this.isHardwareWallet) {
-        return 'Please Approve on Hardware Wallet';
+        return this.$t('confirmation.approveOnDevice');
       }
       return '';
     }
@@ -200,12 +195,24 @@ export default {
       }
     },
     async parseData(data) {
-      const web3 = this.$store.state.web3;
-      const networkToken = this.$store.state.network.type.tokens;
-      const tokenIndex = networkToken.findIndex(el => {
+      const web3 = this.web3;
+      const networkToken = this.network.type.tokens;
+
+      let token = networkToken.find(el => {
         return el.address.toLowerCase() === this.to.toLowerCase();
       });
-
+      if (!token) {
+        const customStore = store.get('customTokens');
+        if (
+          customStore !== undefined &&
+          customStore[this.network.type.name] !== undefined &&
+          customStore[this.network.type.name].length
+        ) {
+          token = customStore[this.network.type.name].find(el => {
+            return el.address.toLowerCase() === this.to.toLowerCase();
+          });
+        }
+      }
       const jsonInterface = {
         constant: false,
         inputs: [
@@ -221,6 +228,9 @@ export default {
       const transferFuncSig = web3.eth.abi.encodeFunctionSignature(
         jsonInterface
       );
+      this.tokenTransferTo = '';
+      this.tokenTransferVal = '';
+      this.tokenSymbol = '';
       if (data.substr(0, 10) === transferFuncSig) {
         const params = web3.eth.abi.decodeParameters(
           ['address', 'uint256'],
@@ -228,14 +238,13 @@ export default {
         );
         const value = new BigNumber(params[1]);
         this.tokenTransferTo = params[0];
-        this.tokenTransferVal =
-          tokenIndex !== -1
-            ? value
-                .div(new BigNumber(10).pow(networkToken[tokenIndex].decimals))
-                .toFixed()
-            : value;
-        this.tokenSymbol =
-          tokenIndex !== -1 ? networkToken[tokenIndex].symbol : 'Unknown Token';
+        this.tokenTransferVal = token
+          ? value
+              .div(new BigNumber(10).pow(token.decimals))
+              .toFixed()
+              .toString()
+          : value.toString();
+        this.tokenSymbol = token ? token.symbol : 'Unidentified Token';
       }
     }
   }

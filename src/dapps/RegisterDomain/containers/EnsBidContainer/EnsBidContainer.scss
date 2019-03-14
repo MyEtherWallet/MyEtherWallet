@@ -1,14 +1,17 @@
 @import '../../RegisterDomain';
 
+$ens-bid-mobile-width: 600px;
+
 %accordion-template {
   background-color: $dark-blue-12 !important;
   border: 0;
-  border-radius: 4px;
+  border-radius: 4px !important;
   color: $white;
   font-size: 16px !important;
   height: 36px;
   padding: 7px 11px;
   text-align: left;
+  font-weight: 600;
 
   span {
     border: 1px solid $white;
@@ -38,7 +41,7 @@
 }
 
 .content-header {
-  border-bottom: 1px dashed $light-grey-3;
+  //border-bottom: 1px dashed $light-grey-3;
   padding: 10px 0 15px;
 
   h3 {
@@ -61,13 +64,22 @@
   .input-container {
     display: flex;
     flex-direction: column;
-    margin-top: 32px;
+    margin-bottom: 20px;
 
     label {
       color: $dark-blue-2;
       font-size: 16px;
-      font-weight: bold;
+      font-weight: 600;
       padding: 10px 7px;
+
+      i {
+        font-size: 14px;
+        margin-right: 2px;
+      }
+
+      .input-title {
+        font-size: 16px;
+      }
     }
 
     input {
@@ -82,15 +94,24 @@
 }
 
 .buttons-container {
-  display: flex;
-  justify-content: space-around;
-  padding: 20px 10px;
+  text-align: center;
+  margin-top: 60px;
+
+  // Mobile
+  @media all and (max-width: $mobile-width) {
+    margin-top: 30px;
+  }
 
   button {
     border-radius: 5px;
     cursor: pointer;
     padding: 20px;
     width: 260px;
+
+    // Mobile
+    @media all and (max-width: $mobile-width) {
+      width: 100%;
+    }
   }
 
   .submit {
@@ -145,12 +166,21 @@
 }
 
 .detail-info {
-  padding: 20px 17px;
+  //padding: 20px 17px;
 
   .detail-info-item {
     display: flex;
     justify-content: space-between;
     padding: 7px 10px;
+
+    // Mobile
+    @media all and (max-width: $ens-bid-mobile-width) {
+      display: block;
+
+      > * {
+        display: block;
+      }
+    }
 
     .detail-title {
       color: $dark-grey-11;
@@ -200,4 +230,8 @@
   display: flex;
   justify-content: space-between;
   width: 100%;
+}
+
+.print-button {
+  margin-top: 20px;
 }

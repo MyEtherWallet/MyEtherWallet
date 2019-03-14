@@ -1,5 +1,9 @@
 @import '~@/scss/GlobalVariables';
 @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+  .wrap {
+    margin-bottom: 50px;
+  }
+
   .banner {
     padding: 30px;
     padding-right: 0;
@@ -58,7 +62,7 @@
     .card-block {
       border-radius: 4px;
       color: $text-color-1;
-      margin-bottom: 0;
+      margin-bottom: 10px;
       padding: 30px 40px;
       position: relative;
 
@@ -87,7 +91,7 @@
       .card-image {
         padding-right: 40px;
 
-        @media all and (max-width: $mobile-width) {
+        @media all and (max-width: 550px) {
           display: none;
         }
 

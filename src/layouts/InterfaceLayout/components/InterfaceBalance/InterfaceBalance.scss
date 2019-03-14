@@ -1,15 +1,20 @@
 @import '../InformationBlock';
 
+.icon-border {
+  padding-right: 10px;
+  img {
+    height: 60px;
+  }
+}
+
 .balance {
   background-color: $transaction-block-balance;
-  cursor: pointer;
 
   .balance-text-container {
     display: inline-block;
   }
 
   .balance-text {
-    display: flex;
     font-size: 20px;
     font-weight: 300;
 
@@ -17,10 +22,9 @@
       font-size: 20px;
       text-overflow: ellipsis;
       word-wrap: normal;
-    }
-
-    p:first-child {
-      max-width: 150px;
+      span {
+        margin-left: 5px;
+      }
     }
   }
 }
