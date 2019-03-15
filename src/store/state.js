@@ -20,7 +20,6 @@ const gasPrice =
     : regularGasPrice !== undefined
     ? regularGasPrice
     : 41;
-const minimumGasPrice = network.type.minimumGasPrice || 0;
 const customPaths =
   store.get('customPaths') !== undefined ? store.get('customPaths') : {};
 const state = {
@@ -35,7 +34,6 @@ const state = {
   Errors: {},
   ethDonationAddress: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
   gasPrice: gasPrice,
-  minimumGasPrice: minimumGasPrice,
   Networks: nodeList,
   network: network,
   notifications: notifications,

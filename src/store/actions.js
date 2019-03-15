@@ -108,10 +108,6 @@ const setGasPrice = function({ commit }, gasPrice) {
   commit('SET_GAS_PRICE', gasPrice);
 };
 
-const setMinimumGasPrice = function({ commit }, minimumGasPrice) {
-  commit('SET_MINIMUM_GAS_PRICE', minimumGasPrice);
-};
-
 const setState = function({ commit }, stateObj) {
   commit('INIT_STATES', stateObj);
 };
@@ -241,7 +237,6 @@ export default {
   removeCustomPath,
   setAccountBalance,
   setGasPrice,
-  setMinimumGasPrice,
   setState,
   setENS,
   setLastPath,
