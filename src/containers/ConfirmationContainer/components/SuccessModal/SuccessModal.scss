@@ -12,10 +12,21 @@
 }
 
 .modal-content-block {
-  padding: 40px 0;
+  padding: 40px 40px;
+  @media all and (max-width: $mobile-width) {
+    padding: 40px 20px;
+  }
 }
 
-.button-container {
+.buttons {
+  max-width: 300px;
+  margin: 0 auto;
   margin-bottom: 0 !important;
-  margin-top: 20px;
+  margin-top: 30px;
+
+  > * {
+    text-decoration: none;
+    display: block;
+    margin-top: 10px;
+  }
 }

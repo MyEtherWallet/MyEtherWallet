@@ -1,0 +1,133 @@
+@import '~@/scss/GlobalVariables';
+
+.wrap {
+  padding: 80px 0;
+
+  @media all and (max-width: $tablet-width) {
+    padding: 50px 0;
+  }
+} // .wrap
+
+.top-title {
+  @media all and (max-width: $tablet-width) {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .title {
+    h5 {
+      line-height: 19px;
+    }
+
+    @media all and (max-width: $tablet-width) {
+      margin-bottom: 30px;
+    }
+  }
+
+  .support {
+    margin-left: auto;
+
+    @media all and (max-width: $tablet-width) {
+      margin-bottom: 20px;
+      margin-left: 0;
+    }
+
+    a {
+      align-items: center;
+      display: flex;
+
+      img {
+        margin-right: 7px;
+        width: 29px;
+      }
+
+      h5 {
+        color: $text--link-color;
+      }
+    }
+  } // .support
+} // .top-title
+
+.qa-cards {
+  grid-column-gap: 20px;
+  grid-row-gap: 20px;
+  margin-top: 30px;
+
+  @media all and (max-width: $tablet-width) {
+    grid-template-columns: 1fr;
+  }
+} // .qa-cards
+
+.qa__contents {
+  border-top: 1px solid #e8e8e8;
+
+  li {
+    border-bottom: 1px solid #e8e8e8;
+    padding: 30px 10px;
+  }
+
+  .qa__contents--title {
+    display: flex;
+    cursor: pointer;
+    user-select: none;
+
+    h3 {
+      font-size: 18px;
+      padding-right: 45px;
+      line-height: 27px;
+    }
+  }
+}
+
+.qa__contents--content {
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.4s ease;
+  &.faq-open {
+    max-height: 500px;
+  }
+  .qa-text {
+    padding-top: 20px;
+  }
+} // .qa__contents--content
+
+.show-more-buttons {
+  margin-left: auto;
+  position: relative;
+
+  .animated-button {
+    position: absolute;
+    top: -5px;
+    left: -30px;
+    width: 20px;
+    height: 20px;
+
+    .bar {
+      height: 4px;
+      width: 20px;
+      background-color: $black;
+      position: absolute;
+      top: 14px;
+      left: 0;
+      transition: all 0.8s ease;
+    }
+
+    .bar1 {
+      // empty
+    }
+
+    .bar2 {
+      transform: rotate(90deg);
+    }
+
+    &.faq-open {
+      .bar1 {
+        transform: rotate(720deg);
+      }
+      .bar2 {
+        transform: rotate(720deg);
+        opacity: 0;
+      }
+    }
+  }
+} // .show-more-buttons

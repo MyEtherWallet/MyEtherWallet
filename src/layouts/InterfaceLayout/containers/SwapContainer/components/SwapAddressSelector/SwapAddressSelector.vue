@@ -29,7 +29,13 @@
           </div>
           <div v-else>
             <i
-              :class="['currency-icon', 'as-font', 'cc', currency, 'cc-icon']"
+              :class="[
+                'currency-icon',
+                'as-font',
+                'cc',
+                getIcon(currency),
+                'cc-icon'
+              ]"
             />
           </div>
         </div>
@@ -89,8 +95,9 @@ import '@/assets/images/currency/coins/asFont/cryptocoins.css';
 import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
 import debugLogger from 'debug';
 import WAValidator from 'wallet-address-validator';
+import MAValidator from 'multicoin-address-validator';
 import Blockie from '@/components/Blockie';
-import { EthereumTokens, BASE_CURRENCY } from '@/partners';
+import { EthereumTokens, BASE_CURRENCY, hasIcon } from '@/partners';
 
 const errorLogger = debugLogger('v5:error');
 
@@ -114,6 +121,7 @@ export default {
   },
   data() {
     return {
+      EthereumTokens: EthereumTokens,
       selectedAddress: '',
       validAddress: false,
       dropdownOpen: false,
@@ -141,6 +149,9 @@ export default {
     }
   },
   methods: {
+    getIcon(currency) {
+      return hasIcon(currency);
+    },
     copyToClipboard(ref) {
       ref.select();
       document.execCommand('copy');
@@ -165,8 +176,15 @@ export default {
               this.currency
             );
           } catch (e) {
-            errorLogger(e);
-            this.validAddress = false;
+            try {
+              this.validAddress = MAValidator.validate(
+                checkAddress,
+                this.currency
+              );
+            } catch (e) {
+              errorLogger(e);
+              this.validAddress = false;
+            }
           }
         }
 

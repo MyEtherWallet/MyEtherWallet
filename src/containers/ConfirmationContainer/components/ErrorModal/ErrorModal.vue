@@ -1,6 +1,6 @@
 <template>
   <b-modal
-    ref="success"
+    ref="errorModal"
     centered
     hide-footer
     hide-header

@@ -2,9 +2,11 @@
   <div class="info-block-container">
     <interface-network-modal ref="network" />
     <div class="info-block network">
-      <div class="block-image network-type">
-        <div class="icon-block">
-          <img :src="network.type.icon" class="icon" />
+      <div class="block-image">
+        <div class="network-type">
+          <div class="icon-block">
+            <img :src="network.type.icon" class="icon" />
+          </div>
         </div>
       </div>
       <div class="block-content">
@@ -23,14 +25,14 @@
           </p>
         </div>
         <div class="icon-container">
-          <b-btn
+          <button
             v-if="account.identifier !== identifier"
             id="networkModal"
-            class="custom-tooltip"
+            class="change-button"
             @click="networkModalOpen"
           >
-            <img src="~@/assets/images/icons/change.svg" />
-          </b-btn>
+            Change
+          </button>
           <b-popover
             content="Open Networks"
             target="networkModal"

@@ -23,7 +23,11 @@
         <li>
           <p>{{ $t('common.toAddress') }}:</p>
           <p>
-            <a :href="addressLink(details.to)" target="_blank">
+            <a
+              :href="addressLink(details.to)"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
               {{ details.to }}
             </a>
           </p>
@@ -31,16 +35,29 @@
         <li v-if="isContractCreation">
           <p>{{ $t('common.createdContract') }}:</p>
           <p>
-            <a :href="addressLink(details.contractAddress)" target="_blank">
+            <a
+              :href="addressLink(details.contractAddress)"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
               {{ details.contractAddress }}
             </a>
           </p>
         </li>
-        <li>
+        <li v-if="notice.body.gasUsed">
           <p>{{ $t('common.txFee') }}:</p>
           <p>
-            {{ details.gasLimit }} WEI (${{
-              getFiatValue(details.gasPrice * details.gasUsed)
+            {{ convertToEth(details.gasPrice * details.gasUsed) }} ETH
+            <span>
+              (${{ getFiatValue(details.gasPrice * details.gasUsed) }})
+            </span>
+          </p>
+        </li>
+        <li>
+          <p>{{ $t('header.maxTxFee') }}:</p>
+          <p>
+            {{ convertToEth(details.gasPrice * details.gasLimit) }} ETH (${{
+              getFiatValue(details.gasPrice * details.gasLimit)
             }})
           </p>
         </li>
@@ -48,7 +65,11 @@
           <p>{{ $t('header.transactionHash') }}:</p>
         </li>
         <li v-if="notice.hash">
-          <a :href="hashLink(notice.hash)" target="_blank">
+          <a
+            :href="hashLink(notice.hash)"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
             {{ notice.hash }}
           </a>
         </li>
@@ -56,7 +77,9 @@
           <p>{{ $t('header.errorMessage') }}:</p>
           <p>{{ errorMessage }}</p>
         </li>
-        <li @click="emitShowDetails">{{ $t('header.more') }}</li>
+        <li class="show-pointer" @click="emitShowDetails">
+          {{ $t('header.more') }}
+        </li>
       </ul>
     </div>
   </div>

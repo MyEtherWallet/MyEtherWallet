@@ -15,6 +15,14 @@ const ADD_CUSTOM_PATH = function(state, paths) {
   store.set('customPaths', paths);
 };
 
+const GETTING_STARTED_DONE = function(state) {
+  state.gettingStartedDone = true;
+};
+
+const UPDATE_BLOCK_NUMBER = function(state, blockNumber) {
+  state.blockNumber = blockNumber;
+};
+
 const CHECK_IF_ONLINE = async function(state) {
   state.online =
     window.location.protocol === 'http:' ||
@@ -45,9 +53,10 @@ const CLEAR_WALLET = function(state) {
   };
 };
 
+//
 const DECRYPT_WALLET = function(state, wallet) {
   state.wallet = wallet;
-  state.account['address'] = wallet.getChecksumAddressString();
+  state.account['address'] = wallet.getAddressString();
   state.account['isHardware'] = wallet.isHardware;
   state.account['identifier'] = wallet.identifier;
 };
@@ -86,7 +95,11 @@ const SET_WEB3_INSTANCE = function(state, web3) {
 
 const SWITCH_NETWORK = function(state, networkObj) {
   state.network = networkObj;
-  store.set('network', networkObj);
+  const _netObj = Object.assign({}, networkObj);
+  _netObj.type = {
+    name: networkObj.type.name
+  };
+  store.set('network', _netObj);
 };
 
 const UPDATE_NOTIFICATION = function(state, newNotif) {
@@ -120,5 +133,7 @@ export default {
   SWITCH_NETWORK,
   UPDATE_NOTIFICATION,
   UPDATE_SWAP_TRANSACTION,
-  TOGGLE_SIDEMENU
+  TOGGLE_SIDEMENU,
+  GETTING_STARTED_DONE,
+  UPDATE_BLOCK_NUMBER
 };

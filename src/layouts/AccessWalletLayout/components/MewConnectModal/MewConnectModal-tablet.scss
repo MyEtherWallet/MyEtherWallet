@@ -1,5 +1,9 @@
 @import '~@/scss/GlobalVariables';
 @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+  .modal-container {
+    padding: 20px;
+  }
+
   .modal-large-text {
     font-weight: 400;
     max-width: 330px;
@@ -84,3 +88,10 @@
     }
   }
 } // @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width)
+
+.appstore-button-container {
+  .links-container {
+    display: flex;
+    justify-content: center;
+  }
+}

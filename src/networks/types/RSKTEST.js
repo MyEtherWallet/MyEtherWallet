@@ -11,8 +11,6 @@ export default {
   chainID: 31,
   tokens: tokens,
   contracts: contracts,
-  ensResolver: '',
-  ensAbi: '',
   icon: rsk,
   regularGasPrice: 0.000001,
   minimumGasPrice: 0.000001

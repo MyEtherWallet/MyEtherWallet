@@ -1,3 +1,12 @@
+import nodeList from '@/networks';
+import url from 'url';
+import Web3 from 'web3';
+const network = nodeList['ETH'][3];
+const hostUrl = url.parse(network.url);
+
+const newWeb3 = new Web3(
+  `${hostUrl.protocol}//${hostUrl.hostname}:${network.port}${hostUrl.pathname}`
+);
 const state = {
   account: {
     balance: 0,
@@ -10,15 +19,15 @@ const state = {
   Errors: {},
   ethDonationAddress: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
   gasPrice: 41,
-  Networks: {},
-  network: {},
+  Networks: nodeList,
+  network: network,
   notifications: {},
   online: true,
   Transactions: {},
-  wallet: null,
-  web3: {
-    eth: {}
-  }
+  wallet: {
+    getAddressString: jest.fn()
+  },
+  web3: newWeb3
 };
 
 const getters = {
@@ -30,7 +39,9 @@ const getters = {
   Errors: () => {},
   ethDonationAddress: () => '',
   gasPrice: () => 41,
-  Networks: () => {},
+  Networks: () => {
+    return nodeList;
+  },
   network: () => {
     return {
       auth: false,
@@ -46,24 +57,32 @@ const getters = {
         homePage: 'https://ethereum.org',
         name: 'ETH',
         name_long: 'Ethereum',
-        tokens: []
+        tokens: [],
+        ens: {
+          registry: '0x123456789',
+          registrarTLD: 'eth',
+          registrarType: 'auction'
+        }
       },
       url: 'https://mainnet.infura.io/mew'
     };
   },
-  notifications: () => {},
+  notifications: () => [],
   online: () => true,
+  sidemenuOpen: () => {
+    return false;
+  },
   Transactions: () => {},
   wallet: () => {
     return {
-      getChecksumAddressString: () => ''
+      getChecksumAddressString: () =>
+        '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
     };
   },
   web3: () => {
-    return {
-      eth: {}
-    };
-  }
+    return newWeb3;
+  },
+  path: () => {}
 };
 
 export { state, getters };

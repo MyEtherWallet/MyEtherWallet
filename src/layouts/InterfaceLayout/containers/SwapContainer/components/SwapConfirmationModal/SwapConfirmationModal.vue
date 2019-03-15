@@ -17,18 +17,22 @@
             <i :class="['cc', fromAddress.name, 'cc-icon']" />
           </div>
           <p class="value">
-            {{ fromAddress.value }} <span>{{ fromAddress.name }}</span>
+            {{ fromAddress.value }}
+            <span>{{ fromAddress.name }}</span>
           </p>
           <p class="block-title">{{ $t('interface.fromAddr') }}</p>
           <p class="address">{{ fromAddress.address }}</p>
         </div>
-        <div class="right-arrow"><img :src="arrowImage" /></div>
+        <div class="right-arrow">
+          <img :src="arrowImage" />
+        </div>
         <div v-if="!toFiat" class="to-address">
           <div class="icon">
             <i :class="['cc', toAddress.name, 'cc-icon']" />
           </div>
           <p class="value">
-            {{ toAddress.value }} <span>{{ toAddress.name }}</span>
+            {{ toAddress.value }}
+            <span>{{ toAddress.name }}</span>
           </p>
           <p class="block-title">{{ $t('interface.sendTxToAddr') }}</p>
           <p class="address">{{ toAddress.address }}</p>
@@ -38,7 +42,8 @@
             <i :class="['cc', toAddress.name, 'cc-icon']" />
           </div>
           <p class="value">
-            {{ toAddress.value }} <span>{{ toAddress.name }}</span>
+            {{ toAddress.value }}
+            <span>{{ toAddress.name }}</span>
           </p>
           <p class="block-title">{{ $t('common.to') }}</p>
           <p class="address">{{ fiatDest }}</p>
@@ -77,7 +82,7 @@ import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
 import { EthereumTokens, BASE_CURRENCY, ERC20, fiat, utils } from '@/partners';
 import { WEB3_WALLET } from '@/wallets/bip44/walletTypes';
 import { type as noticeTypes } from '@/helpers/notificationFormatters';
-import { ErrorHandler } from '@/helpers';
+import { Toast } from '@/helpers';
 
 export default {
   components: {
@@ -136,14 +141,14 @@ export default {
   watch: {
     swapDetails(newValue) {
       this.fromAddress = {
-        value: newValue.fromValue,
+        value: newValue.sendValue || newValue.fromValue,
         name: newValue.fromCurrency,
         address: newValue.fromAddress
           ? newValue.fromAddress
           : this.currentAddress
       };
       this.toAddress = {
-        value: newValue.toValue,
+        value: newValue.recValue || newValue.toValue,
         name: newValue.toCurrency,
         address: newValue.toAddress
       };
@@ -154,10 +159,14 @@ export default {
   methods: {
     timeUpdater(swapDetails) {
       clearInterval(this.timerInterval);
-      this.timeRemaining = utils.getTimeRemainingString(swapDetails.timestamp);
+      this.timeRemaining = utils.getTimeRemainingString(
+        swapDetails.timestamp,
+        swapDetails.validFor
+      );
       this.timerInterval = setInterval(() => {
         this.timeRemaining = utils.getTimeRemainingString(
-          swapDetails.timestamp
+          swapDetails.timestamp,
+          swapDetails.validFor
         );
         if (this.timeRemaining === 'expired') {
           clearInterval(this.timerInterval);
@@ -185,7 +194,7 @@ export default {
                 _result.map((entry, idx) => {
                   if (idx !== tradeIndex) {
                     entry.catch(e => {
-                      ErrorHandler(e, false);
+                      Toast.responseHandler(e, false);
                     });
                   }
                 });
@@ -218,7 +227,9 @@ export default {
                       err
                     ]);
                   })
-                  .catch(() => {});
+                  .catch(err => {
+                    Toast.responseHandler(err, false);
+                  });
               });
           } else {
             this.web3.eth
@@ -249,6 +260,9 @@ export default {
                   this.preparedSwap[0],
                   err
                 ]);
+              })
+              .catch(err => {
+                Toast.responseHandler(err, Toast.ERROR);
               });
           }
         } else {
@@ -280,6 +294,9 @@ export default {
                 this.preparedSwap,
                 err
               ]);
+            })
+            .catch(err => {
+              Toast.responseHandler(err, Toast.Error);
             });
         }
         this.$emit('swapStarted', [this.currentAddress, this.swapDetails]);

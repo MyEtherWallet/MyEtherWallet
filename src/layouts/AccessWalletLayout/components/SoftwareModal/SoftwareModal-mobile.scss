@@ -1,5 +1,9 @@
 @import '~@/scss/GlobalVariables';
 @media all and (max-width: $mobile-width) {
+  .modal-content {
+    padding: 20px 10px;
+  }
+
   .modal-software {
     .button-options {
       display: grid;

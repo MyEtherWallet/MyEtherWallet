@@ -132,7 +132,12 @@
           </div>
         </div>
         <div class="the-form contract-name">
-          <input ref="value" v-model="value" placeholder="Value in ETH" />
+          <input
+            ref="value"
+            v-model="value"
+            step="any"
+            placeholder="Value in ETH"
+          />
         </div>
       </div>
       <div class="send-form">
@@ -175,13 +180,13 @@
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
-import { Misc, ErrorHandler } from '@/helpers';
+import { Misc, Toast } from '@/helpers';
 import { isAddress } from '@/helpers/addressUtils';
 import ethUnit from 'ethjs-unit';
 import EthTx from 'ethereumjs-tx';
 import BigNumber from 'bignumber.js';
 import store from 'store';
-import EthUtil from 'ethereumjs-util';
+import { generateAddress, bufferToHex } from 'ethereumjs-util';
 import { mapGetters } from 'vuex';
 
 export default {
@@ -274,7 +279,8 @@ export default {
   methods: {
     isValidInput(value, solidityType) {
       if (!value) value = '';
-      if (solidityType === 'uint') return value != '' && !isNaN(value);
+      if (solidityType === 'uint')
+        return value !== '' && !isNaN(value) && Misc.isInt(value);
       if (solidityType === 'address') return isAddress(value);
       if (solidityType === 'string') return true;
       if (solidityType === 'bytes')
@@ -301,13 +307,13 @@ export default {
         const json = _tx.toJSON(true);
         delete json.to;
         json.from = coinbase;
-        this.web3.eth.sendTransaction(json);
-        const contractAddr = EthUtil.bufferToHex(
-          EthUtil.generateAddress(coinbase, nonce)
-        );
+        this.web3.eth.sendTransaction(json).catch(err => {
+          Toast.responseHandler(err, Toast.WARN);
+        });
+        const contractAddr = bufferToHex(generateAddress(coinbase, nonce));
         this.pushContractToStore(contractAddr);
       } catch (e) {
-        ErrorHandler(e, false);
+        Toast.responseHandler(e, false);
       }
     },
     pushContractToStore(addr) {
@@ -343,7 +349,9 @@ export default {
         from: coinbase,
         data: this.txData
       };
-      this.gasLimit = await this.web3.eth.estimateGas(params);
+      this.gasLimit = await this.web3.eth.estimateGas(params).catch(err => {
+        Toast.responseHandler(err, Toast.WARN);
+      });
     },
     copyToClipboard(ref) {
       this.$refs[ref].select();

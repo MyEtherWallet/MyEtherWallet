@@ -1,15 +1,16 @@
 @import '~@/scss/GlobalVariables';
 
 .round-button button {
-  color: $mew-green;
-  border: 1px solid $mew-green;
+  color: $white;
+  border: 1px solid $white;
   border-radius: 30px;
-  padding: 6px 12px;
+  padding: 8px 12px;
   font-size: 12px;
-  background-color: $white;
+  background-color: $mew-green;
 
   &:active {
-    color: $white;
-    background-color: $mew-green;
+    color: $mew-green;
+    background-color: $white;
+    border: 1px solid $mew-green;
   }
 }

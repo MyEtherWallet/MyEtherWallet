@@ -1,0 +1,109 @@
+@import '~@/scss/GlobalVariables';
+
+.print-modal {
+  min-height: 300px;
+  min-width: 300px;
+  padding: 50px 54px;
+}
+
+.print-modal-header {
+  align-items: center;
+  border-bottom: 1px solid $light-grey-3;
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 30px;
+}
+
+.logo-container {
+  align-items: center;
+  display: flex;
+  flex: 1;
+  justify-content: space-around;
+
+  span,
+  p {
+    color: $mew-green;
+  }
+
+  span {
+    border-right: 1px solid $mew-green;
+    height: 30px;
+  }
+
+  p {
+    font-size: 14px;
+    font-weight: normal;
+  }
+}
+
+.date-container {
+  flex: 1;
+  text-align: right;
+}
+
+.print-modal-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+
+  .print-item {
+    align-items: center;
+    border-bottom: 1px solid $light-grey-3;
+    display: flex;
+    height: 70px;
+    justify-content: space-between;
+
+    .print-item-title {
+      font-size: inherit;
+      font-weight: bold;
+    }
+  }
+
+  .json-string-container {
+    p {
+      @extend .print-item;
+
+      border-bottom: none;
+      font-size: inherit;
+      font-weight: bold;
+    }
+
+    div {
+      padding-bottom: 120px;
+      word-break: break-all;
+    }
+  }
+}
+
+.print-modal-footer {
+  display: flex;
+  justify-content: space-between;
+
+  &:first-child {
+    flex: 1;
+  }
+
+  &:last-child {
+    flex: 2;
+  }
+
+  span {
+    padding-left: 5px;
+  }
+}
+
+.button-container {
+  align-items: center;
+  display: flex;
+
+  .print-button {
+    background-color: $mew-green;
+    border-radius: 5px;
+    color: $white;
+    cursor: pointer;
+    padding: 20px;
+    margin: 20px;
+    text-align: center;
+    width: 200px;
+  }
+}

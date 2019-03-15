@@ -22,8 +22,8 @@
           </div>
           <div class="results-container">
             <div
-              v-for="item in sortedResults"
-              :key="domainName + item.domain"
+              v-for="(item, index) in sortedResults"
+              :key="domainName + item.domain + index"
               :class="[item.active ? '' : 'disabled', 'result-item']"
             >
               <span class="domain-name"
@@ -34,8 +34,10 @@
                   >{{ web3.utils.fromWei(item.price, 'ether') }} ETH</span
                 >
                 <button @click="buyDomain(item)">
-                  <span v-if="item.active"> {{ $t('dapps.buy') }} </span>
-                  <span v-else> <i class="fa fa-times" /> </span>
+                  <span v-if="item.active">{{ $t('dapps.buy') }}</span>
+                  <span v-else>
+                    <i class="fa fa-times" />
+                  </span>
                 </button>
               </div>
             </div>
@@ -63,6 +65,7 @@ import BigNumber from 'bignumber.js';
 import web3 from 'web3';
 import { mapGetters } from 'vuex';
 import StandardButton from '@/components/Buttons/StandardButton';
+import { Toast } from '@/helpers';
 
 export default {
   components: {
@@ -178,7 +181,9 @@ export default {
         value: item.price
       };
 
-      this.web3.eth.sendTransaction(raw);
+      this.web3.eth.sendTransaction(raw).catch(err => {
+        Toast.responseHandler(err, false);
+      });
     }
   }
 };

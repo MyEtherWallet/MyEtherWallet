@@ -1,10 +1,13 @@
 <template>
   <div class="header">
+    <!-- Modals ***************************************** -->
+    <disconnected-modal ref="mewConnectDisconnected" />
     <settings-modal
       v-if="wallet !== null"
       ref="settings"
       :gas-price="gasPrice"
       :minimum-gas-price="minimumGasPrice"
+      :address="account.address"
     />
     <notifications-modal ref="notifications" />
     <logout-modal ref="logout" />
@@ -14,103 +17,30 @@
       :error="error"
       :resolver="resolver"
     />
-    <logout-warning-modal ref="logoutWarningModal" />
-
-    <div
-      :class="isPageOnTop == false ? 'active' : ''"
-      class="scrollup-container"
-    >
-      <router-link
-        v-show="
-          $route.fullPath === '/create-wallet' ||
-            $route.fullPath === '/access-my-wallet'
-        "
-        to="/getting-started"
+    <!-- Modals ***************************************** -->
+    <!-- Scroll up button ******************************* -->
+    <div class="scroll-up-button">
+      <div
+        :class="isPageOnTop == false ? 'active' : ''"
+        class="scrollup-container"
       >
-        <user-reminder-button />
-      </router-link>
-      <scroll-up-button />
-    </div>
-    <div
-      :class="isMobileMenuOpen && 'mobile-menu-open'"
-      class="mobile-menu-underblock"
-    />
-    <!-- Fixed position mobile menu starts here ------------- -->
-    <div
-      :class="isMobileMenuOpen && 'mobile-menu-open-height-change'"
-      class="mobile-menu-content"
-    >
-      <div class="page-container">
-        <ul>
-          <li>
-            <router-link
-              to="/"
-              @click.native="
-                scrollTop();
-                isMobileMenuOpen = false;
-              "
-            >
-              {{ $t('header.home') }}
-            </router-link>
-          </li>
-          <li v-if="isHomePage">
-            <router-link
-              to="/#about-mew"
-              @click.native="isMobileMenuOpen = false"
-            >
-              {{ $t('header.about') }}
-            </router-link>
-          </li>
-          <li>
-            <a
-              href="https://kb.myetherwallet.com"
-              target="_blank"
-              @click="isMobileMenuOpen = false"
-              >Help Center</a
-            >
-          </li>
-          <li>
-            <div class="mobile-language-menu-container">
-              <b-nav-item-dropdown
-                class="mobile-language-menu"
-                extra-toggle-classes="nav-link-custom"
-                right
-              >
-                <template slot="button-content">
-                  <div class="current-language-flag">
-                    <p>{{ currentName }}</p>
-                    <img
-                      :src="require(`@/assets/images/flags/${currentFlag}.svg`)"
-                      class="show"
-                    />
-                  </div>
-                </template>
-                <b-dropdown-item
-                  v-for="language in supportedLanguages"
-                  :active="$root._i18n.locale === language.flag"
-                  :key="language.key"
-                  :data-language-code="language.langCode"
-                  :data-flag-name="language.flag"
-                  @click="languageItemClicked"
-                  >{{ language.name }}</b-dropdown-item
-                >
-              </b-nav-item-dropdown>
-              <div class="arrows">
-                <i class="fa fa-angle-right" aria-hidden="true" />
-              </div>
-            </div>
-          </li>
-          <li v-if="wallet !== null">
-            <div class="cursor-pointer" @click="openSettings">Settings</div>
-          </li>
-          <li v-if="wallet !== null">
-            <div class="cursor-pointer" @click="logout">Log out</div>
-          </li>
-        </ul>
+        <router-link
+          v-show="
+            ($route.fullPath === '/create-wallet' ||
+              $route.fullPath === '/access-my-wallet') &&
+              !gettingStartedDone
+          "
+          to="/getting-started"
+        >
+          <user-reminder-button />
+        </router-link>
+        <scroll-up-button />
       </div>
     </div>
-    <!-- .mobile-menu-content -->
-    <!-- Fixed position mobile menu ends here ------------- -->
+    <!-- Scroll up button ******************************* -->
+    <mobile-menu :opensettings="openSettings" :logout="logout" />
+
+    <!-- Desktop menu *********************************** -->
     <div class="fixed-header-wrap">
       <div
         ref="fixedHeader"
@@ -120,6 +50,12 @@
         ]"
         class="fixed-header"
       >
+        <div v-if="$route.fullPath === '/'" class="vintage-header">
+          Missing the vintage MEW?
+          <a rel="noopener noreferrer" href="https://vintage.myetherwallet.com"
+            >Click here to go back!</a
+          >
+        </div>
         <div
           :class="[
             (isMobileMenuOpen || !isPageOnTop) && 'mobile-menu-boxshadow',
@@ -140,11 +76,6 @@
                   class="logo-large"
                   src="~@/assets/images/short-hand-logo.png"
                 />
-                <img
-                  :class="!isPageOnTop && !isMobileMenuOpen ? 'logo-small' : ''"
-                  class="beta-tag"
-                  src="~@/assets/images/beta.png"
-                />
               </div>
             </router-link>
             <div class="top-menu">
@@ -156,9 +87,9 @@
                   @click="scrollTop()"
                   >{{ $t('header.home') }}</b-nav-item
                 >
-                <b-nav-item v-if="isHomePage" to="/#about-mew">
-                  {{ $t('header.about') }}
-                </b-nav-item>
+                <b-nav-item v-if="isHomePage" to="/#about-mew">{{
+                  $t('header.about')
+                }}</b-nav-item>
                 <b-nav-item to="/#faqs">{{ $t('common.faqs') }}</b-nav-item>
                 <div class="language-menu-container">
                   <div class="arrows">
@@ -198,7 +129,7 @@
                   v-if="showButtons && !isPageOnTop"
                   :class="[
                     showGetFreeWallet ? 'show' : 'hide',
-                    'get-free-wallet nopadding'
+                    'get-free-wallet first-button nopadding'
                   ]"
                   to="/create-wallet"
                 >
@@ -226,6 +157,7 @@
                         :address="account.address"
                         width="35px"
                         height="35px"
+                        class="blockie-image"
                       />
                       <i class="fa fa-angle-down" aria-hidden="true" />
                     </div>
@@ -238,25 +170,13 @@
               </b-nav>
             </div>
             <!-- .top-menu -->
-            <div class="mobile-menu">
-              <div
-                class="mobile-menu-button"
-                @click="isMobileMenuOpen = !isMobileMenuOpen"
-              >
-                <div class="bar-1" />
-                <div class="bar-2" />
-                <div class="bar-3" />
-              </div>
-            </div>
-            <!-- .mobile-menu -->
           </div>
           <!-- .header-container -->
         </div>
         <!-- .page-container -->
       </div>
-      <!-- .fixed-header -->
     </div>
-    <!-- .wrap -->
+    <!-- Desktop menu *********************************** -->
   </div>
   <!-- .header -->
 </template>
@@ -264,7 +184,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import store from 'store';
-import { Misc, ErrorHandler } from '@/helpers';
+import { Misc, Toast } from '@/helpers';
 import Blockie from '@/components/Blockie';
 import Notification from '@/components/Notification';
 import ScrollUpButton from '@/components/ScrollUpButton';
@@ -272,9 +192,15 @@ import UserReminderButton from '@/components/UserReminderButton';
 import SettingsModal from '@/components/SettingsModal';
 import NotificationsModal from '@/components/NotificationsModal';
 import LogoutModal from '@/components/LogoutModal';
-import LogoutWarningModal from '@/components/LogoutWarningModal';
 import IssueLogModal from '@/components/IssueLogModal';
 import BigNumber from 'bignumber.js';
+import MobileMenu from './components/MobileMenu';
+import DisconnectedModal from '@/components/DisconnectedModal';
+
+const events = {
+  issueModal: 'issueModal',
+  mewConnectDisconnected: 'mewConnectDisconnected'
+};
 
 export default {
   components: {
@@ -284,9 +210,10 @@ export default {
     'settings-modal': SettingsModal,
     'notifications-modal': NotificationsModal,
     'logout-modal': LogoutModal,
-    'logout-warning-modal': LogoutWarningModal,
     'issue-log-modal': IssueLogModal,
-    'user-reminder-button': UserReminderButton
+    'user-reminder-button': UserReminderButton,
+    'mobile-menu': MobileMenu,
+    'disconnected-modal': DisconnectedModal
   },
   data() {
     return {
@@ -323,7 +250,8 @@ export default {
       gasPrice: '0',
       minimumGasPrice: '0',
       error: {},
-      resolver: () => {}      
+      resolver: () => {},
+      showGettingStarted: ''
     };
   },
   computed: {
@@ -331,7 +259,8 @@ export default {
       wallet: 'wallet',
       online: 'online',
       web3: 'web3',
-      account: 'account'
+      account: 'account',
+      gettingStartedDone: 'gettingStartedDone'
     }),
     showButtons() {
       if (
@@ -356,18 +285,10 @@ export default {
       }
     },
     wallet() {
-      this.web3.eth
-        .getGasPrice()
-        .then(res => {
-          if (res === '0') {
-            this.gasPrice = new BigNumber('1').toString();
-          } else {
-            this.gasPrice = new BigNumber(res).toString();
-          }
-        })
-        .catch(e => {
-          ErrorHandler(e, false);
-        });
+      this.setHighGasPrice();
+    },
+    web3() {
+      this.setHighGasPrice();
 
       this.minimumGasPrice =
         this.$store.state.network.type.minimumGasPrice !== undefined
@@ -389,12 +310,6 @@ export default {
       store.set('locale', storedLocale.langCode);
       this.currentFlag = storedLocale.flag;
     }
-
-    // https://github.com/MyEtherWallet/MyEtherWallet/projects/2#card-12172489
-    // trivial statement to convert dialects to primary language tags, with the exception of Chinese
-    // if (!/zh[-_]/.test(this.currentFlag)) {
-    //   this.currentFlag = this.currentFlag.split(/[-_]/)[0];
-    // }
 
     this.currentName = this.supportedLanguages.find(
       item => item.flag === this.currentFlag
@@ -420,25 +335,34 @@ export default {
         this.resolver = resolve;
       }
     });
+
+    // this.disconnectMewConnectModal();
+
+    this.$eventHub.$on('mewConnectDisconnected', () => {
+      this.isMobileMenuOpen = false;
+      this.$refs.mewConnectDisconnected.$refs.disconnected.show();
+      this.$refs.mewConnectDisconnected.$refs.disconnected.$on('hidden', () => {
+        this.$router.push('/access-my-wallet');
+      });
+    });
   },
-  created() {
-    try {
-      window.addEventListener(
-        'popstate',
-        event => {
-          if (
-            this.wallet !== null &&
-            !event.target.location.hash.includes('interface')
-          )
-            this.$refs.logoutWarningModal.$refs.logoutWarningModal.show();
-        },
-        false
-      );
-    } catch (e) {
-      ErrorHandler(e, false);
-    }
+  beforeDestroy() {
+    Object.values(events).forEach(evt => {
+      this.$eventHub.$off(evt);
+    });
+    // this.$eventHub.$off('issueModal');
   },
   methods: {
+    setHighGasPrice() {
+      this.web3.eth
+        .getGasPrice()
+        .then(res => {
+          this.gasPrice = new BigNumber(res).toString();
+        })
+        .catch(e => {
+          Toast.responseHandler(e, Toast.ERROR);
+        });
+    },
     openSettings() {
       this.$refs.settings.$refs.settings.show();
       this.$refs.settings.$refs.settings.$on('hidden', () => {
@@ -462,9 +386,6 @@ export default {
       this.$refs.logout.$refs.logout.$on('hidden', () => {
         this.isMobileMenuOpen = false;
       });
-    },
-    showNotifications() {
-      this.$refs.notifications.$refs.notification.show();
     },
     onPageScroll() {
       const topPos = this.$root.$el.getBoundingClientRect().top;
