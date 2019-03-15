@@ -70,7 +70,6 @@ export default {
   },
   methods: {
     claimDNS() {
-      console.log(this.domainName);
       const gpRounded = new BigNumber(Math.round(this.gasPrice)).toString();
       this.claimFunc({
         from: this.account.address.toLowerCase(),

@@ -100,8 +100,8 @@ export default {
     },
     multiTld() {
       return (
-        this.network.type.hasOwnProperty('supportedTld') &&
-        this.network.type.supportedTld.length > 1
+        this.network.type.ens.hasOwnProperty('supportedTld') &&
+        this.network.type.ens.supportedTld.length > 1
       );
     },
     parsedTld() {
@@ -343,8 +343,6 @@ export default {
     async claimFunc(obj) {
       this.loading = true;
       try {
-        // const proven = await this.dnsResult.getProven();
-        // console.log(this.dnsResult);
         await this.dnsResult.submit(obj);
         this.loading = false;
       } catch (e) {
