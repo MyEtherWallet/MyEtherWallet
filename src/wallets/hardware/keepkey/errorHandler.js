@@ -3,18 +3,20 @@ import Vue from 'vue';
 const ERRORS = {
   'No device selected.': 'keepkeyError.noDeviceSelected',
   'Invalid PIN': 'keepkeyError.invalidPin',
-  'Unable to claim interface.': 'keepKey.cantClaim'
+  'Unable to claim interface.': 'keepKey.cantClaim',
+  'WebUSB is not available in this browser. We recommend trying Chrome.':
+    'keepKey.browserNotSupported'
 };
 const WARNING = {};
 export default err => {
   const errorValues = Object.keys(ERRORS);
   const warningValues = Object.keys(WARNING);
   const foundError = errorValues.find(item => {
-    return item.includes(err.message);
+    return item.includes(err.message) || item.includes(err);
   });
 
   const foundWarning = warningValues.find(item => {
-    return item.includes(err.message);
+    return item.includes(err.message) || item.includes(err);
   });
 
   if (foundError) {

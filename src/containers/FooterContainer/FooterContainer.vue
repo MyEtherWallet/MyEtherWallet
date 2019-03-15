@@ -197,6 +197,11 @@ export default {
               href: 'https://www.ledger.com?r=fa4b'
             },
             {
+              text: this.$t('footer.finney'),
+              href:
+                'http://shop.sirinlabs.com?rfsn=2397639.54fdf&utm_source=refersion&utm_medium=affiliate&utm_campaign=2397639.54fdf'
+            },
+            {
               text: this.$t('footer.digital'),
               href: 'https://digitalbitbox.com/?ref=mew'
             },
@@ -216,6 +221,11 @@ export default {
             {
               text: this.$t('footer.bity'),
               href: 'https://bity.com/af/jshkb37v'
+            },
+            {
+              text: this.$t('footer.billfodl'),
+              href:
+                'https://billfodl.com/?afmc=2j&utm_campaign=2j&utm_source=leaddyno&utm_medium=affiliate'
             }
           ]
         },

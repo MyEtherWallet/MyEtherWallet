@@ -22,6 +22,10 @@ const padLeftEven = hex => {
   return hex;
 };
 
+const isInt = num => {
+  return num % 1 === 0;
+};
+
 const formatDate = date => {
   const days = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'];
   const day = days[new Date(date).getDay()];
@@ -165,5 +169,6 @@ export default {
   scrollToTop,
   reorderNetworks,
   isDarklisted,
-  solidityType
+  solidityType,
+  isInt
 };
