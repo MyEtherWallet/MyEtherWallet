@@ -1,3 +1,7 @@
+### Feature
+
+- Implement DNS for ENS [#792](https://github.com/MyEtherWallet/MyEtherWallet/pull/792)
+
 ### Release v5.0.7
 
 ### Feature
