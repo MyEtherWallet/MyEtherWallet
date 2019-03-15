@@ -1,6 +1,6 @@
 ### Bug
 
-- Better Ipad Catch []()
+- Better Ipad Catch [#814](https://github.com/MyEtherWallet/MyEtherWallet/pull/814)
 
 ### Release v5.0.7
 
