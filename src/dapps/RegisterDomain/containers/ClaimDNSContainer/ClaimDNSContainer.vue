@@ -2,10 +2,19 @@
   <div class="claim-dns-container">
     <div class="claim-dns-content">
       <h3>Cheers!</h3>
-      <p>{{ domainName }} is claimable!</p>
+      <p>{{ fullDomainName }} is claimable!</p>
       <div class="claim-dns-button">
-        <button class="large-round-button-green-filled" @click="claimDNS">
-          Claim
+        <button
+          :class="[
+            'large-round-button-green-filled',
+            loading ? 'disabled' : ''
+          ]"
+          @click="claimDNS"
+        >
+          <span v-show="!loading">
+            Claim
+          </span>
+          <i v-show="loading" class="fa fa-spinner fa-spin" />
         </button>
       </div>
     </div>
@@ -35,13 +44,24 @@ export default {
     claimFunc: {
       type: Function,
       default: function() {}
+    },
+    loading: {
+      type: Boolean,
+      default: false
+    },
+    tld: {
+      type: String,
+      default: ''
     }
   },
   computed: {
     ...mapGetters({
       account: 'account',
       gasPrice: 'gasPrice'
-    })
+    }),
+    fullDomainName() {
+      return `${this.domainName}.${this.tld}`;
+    }
   },
   mounted() {
     if (this.domainName === '') {
@@ -50,11 +70,13 @@ export default {
   },
   methods: {
     claimDNS() {
+      console.log(this.domainName);
       const gpRounded = new BigNumber(Math.round(this.gasPrice)).toString();
       this.claimFunc({
-        from: this.account.address,
+        from: this.account.address.toLowerCase(),
         gasPrice: utils.toWei(gpRounded, 'gwei'),
-        gas: 5000000
+        gas: 3000000,
+        value: 0
       });
     }
   }

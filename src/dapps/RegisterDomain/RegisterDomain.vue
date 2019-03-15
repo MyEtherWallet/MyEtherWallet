@@ -81,7 +81,8 @@ export default {
       step: 1,
       domainNameErr: false,
       ensRegistryContract: {},
-      dnsRegistrar: {}
+      dnsRegistrar: {},
+      dnsResult: {}
     };
   },
   computed: {
@@ -99,8 +100,8 @@ export default {
     },
     multiTld() {
       return (
-        this.network.type.name_long.toLowerCase() === 'goerli' ||
-        this.network.type.name_long.toLowerCase() === 'ethereum'
+        this.network.type.hasOwnProperty('supportedTld') &&
+        this.network.type.supportedTld.length > 1
       );
     },
     parsedTld() {
@@ -147,6 +148,7 @@ export default {
       this.contractInitiated = true;
       this.domainNameErr = false;
       this.dnsRegistrar = {};
+      this.dnsResult = {};
 
       if (this.ens) {
         this.setRegistrar();
@@ -313,12 +315,18 @@ export default {
             this.web3.currentProvider,
             registrarAddr
           );
-          const query = await this.dnsRegistrar.claim(this.domainName);
-          if (query.result.found && query.result.nsec) {
+          this.dnsResult = await this.dnsRegistrar.claim(`${this.domainName}`);
+          if (this.dnsResult.result.found && this.dnsResult.result.nsec) {
             this.processDNSresult('dnsOwned'); // Owned
-          } else if (query.result.found && !query.result.nsec) {
+          } else if (
+            this.dnsResult.result.found &&
+            !this.dnsResult.result.nsec
+          ) {
             this.processDNSresult('dnsClaimable'); // Claimable
-          } else if (!query.result.found && query.result.nsec) {
+          } else if (
+            !this.dnsResult.result.found &&
+            this.dnsResult.result.nsec
+          ) {
             this.processDNSresult('dnsMissingTXT'); // DNSEC not setup properly
           } else {
             this.processDNSresult('dnsNotSetup'); // DNSEC not setup properly
@@ -333,18 +341,12 @@ export default {
       }
     },
     async claimFunc(obj) {
+      this.loading = true;
       try {
-        this.dnsRegistrar
-          .claim(this.domainName)
-          .then(claim => {
-            claim.submit(obj);
-          })
-          .catch(() => {
-            Toast.responseHandler(
-              'Something went wrong! Please try again.',
-              Toast.ERROR
-            );
-          });
+        // const proven = await this.dnsResult.getProven();
+        // console.log(this.dnsResult);
+        await this.dnsResult.submit(obj);
+        this.loading = false;
       } catch (e) {
         this.loading = false;
         Toast.responseHandler(
