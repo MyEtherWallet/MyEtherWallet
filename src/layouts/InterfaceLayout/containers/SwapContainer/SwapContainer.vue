@@ -19,12 +19,6 @@
 
       <div class="title-block">
         <interface-container-title :title="$t('common.swap')" />
-        <!--        <div class="buy-eth">
-          <a href="https://ccswap.myetherwallet.com" target="_blank">
-            <span>{{ $t('interface.buyEth') }}</span>
-            <img :src="images.visaMaster" />
-          </a>
-        </div>-->
       </div>
 
       <div class="form-content-container">
@@ -54,13 +48,14 @@
                   type="number"
                   name
                   value
+                  step="any"
                   placeholder="Deposit Amount"
                   @input="amountChanged('from')"
                 />
               </div>
               <div class="error-message-container">
                 <p v-if="fromBelowMinAllowed">{{ fromBelowMinAllowed }}</p>
-                <p v-if="notEnough && !fromBelowMinAllowed">
+                <p v-if="!hasEnough && !fromBelowMinAllowed">
                   {{ $t('common.dontHaveEnough') }}
                 </p>
                 <p v-if="fromAboveMaxAllowed">{{ fromAboveMaxAllowed }}</p>
@@ -86,6 +81,7 @@
                   type="number"
                   name
                   value
+                  step="any"
                   placeholder="Received Amount"
                   @input="amountChanged('to')"
                 />
@@ -107,10 +103,10 @@
               :copybutton="true"
               :title="$t('common.toAddress')"
               @toAddress="setToAddress"
-              @validAddress="setAddressValid"
+              @validAddress="validAddress = $event"
             />
           </div>
-          <div v-show="!isValidAddress" class="error-message-container">
+          <div v-show="!validAddress" class="error-message-container">
             <p>{{ $t('interface.notValidAddr', { currency: toCurrency }) }}</p>
           </div>
         </div>
@@ -126,10 +122,10 @@
               :copybutton="true"
               :title="$t('interface.fromAddr')"
               @toAddress="setExitFromAddress"
-              @validAddress="setAddressValid"
+              @validAddress="validExitAddress = $event"
             />
           </div>
-          <div v-show="!isValidAddress" class="error-message-container">
+          <div v-show="!validExitAddress" class="error-message-container">
             <p>
               {{ $t('interface.notValidAddrSrc', { currency: fromCurrency }) }}
             </p>
@@ -144,8 +140,13 @@
               :copybutton="true"
               :title="$t('interface.refund', { currency: fromCurrency })"
               @toAddress="setRefundAddress"
-              @validAddress="setAddressValid"
+              @validAddress="validRefundAddress = $event"
             />
+          </div>
+          <div v-show="!validRefundAddress" class="error-message-container">
+            <p>
+              {{ $t('interface.notValidAddr', { currency: fromCurrency }) }}
+            </p>
           </div>
         </div>
 
@@ -212,7 +213,7 @@ import BigNumber from 'bignumber.js';
 import debug from 'debug';
 import { mapGetters } from 'vuex';
 
-import { ErrorHandler } from '@/helpers';
+import { Toast } from '@/helpers';
 import ProvidersRadioSelector from './components/ProvidersRadioSelector';
 import DropDownAddressSelector from './components/SwapAddressSelector';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
@@ -228,7 +229,7 @@ import SwapExitToFiat from './components/SwapExitToFiat';
 import SwapSendToModal from './components/SwapSendToModal';
 
 import {
-  Swap,
+  SwapProviders,
   providers,
   bestProviderForQuantity,
   bestRateForQuantity,
@@ -256,6 +257,14 @@ export default {
     'swap-send-form': SwapSendForm,
     'swap-send-to-modal': SwapSendToModal
   },
+  props: {
+    tokensWithBalance: {
+      type: Array,
+      default: function() {
+        return [];
+      }
+    }
+  },
   data() {
     return {
       baseCurrency: BASE_CURRENCY,
@@ -265,17 +274,24 @@ export default {
       exitFromAddress: '',
       fromCurrency: 'ETH',
       toCurrency: 'ETH',
+      displayToValue: 1,
+      displayFromValue: 1,
       fromValue: 1,
       toValue: 1,
       invalidFrom: 'none',
+      lastBestRate: 0,
       selectedProvider: {},
       swapDetails: {},
       currencyDetails: {},
-      swap: new Swap(providers, {
-        network: this.$store.state.network.type.name,
-        web3: this.$store.state.web3,
-        getRateForUnit: true
-      }),
+      swap: new SwapProviders(
+        providers,
+        {
+          network: this.$store.state.network.type.name,
+          web3: this.$store.state.web3,
+          getRateForUnit: true
+        },
+        { tokensWithBalance: this.tokensWithBalance }
+      ),
       images: {
         kybernetowrk: ImageKybernetowrk,
         bity: ImageBity,
@@ -297,6 +313,8 @@ export default {
       fiatCurrenciesArray: fiat.map(entry => entry.symbol),
       finalizingSwap: false,
       validAddress: true,
+      validRefundAddress: true,
+      validExitAddress: true,
       ratesRetrived: false,
       issueRecievingRates: false,
       loadingData: true,
@@ -325,33 +343,54 @@ export default {
           }
           return bestRateForQuantity([...this.providerList], this.fromValue);
         }
+        return this.lastBestRate;
       } catch (e) {
         errorLogger(e);
       }
     },
     fromBelowMinAllowed() {
-      if (MIN_SWAP_AMOUNT > +this.fromValue)
+      if (new BigNumber(MIN_SWAP_AMOUNT).gt(new BigNumber(this.fromValue)))
         return `${this.$t('interface.belowMin')} ${MIN_SWAP_AMOUNT}`;
-      if (this.selectedProvider.minValue > +this.fromValue)
-        return this.$t('interface.belowMin');
+      if (
+        new BigNumber(this.selectedProvider.minValue).gt(
+          new BigNumber(this.fromValue)
+        )
+      )
+        return this.$t('interface.belowMin', {
+          value: this.selectedProvider.maxValue,
+          currency: this.fromCurrency
+        });
       return false;
     },
     fromAboveMaxAllowed() {
       if (this.selectedProvider.provider === this.providerNames.bity) {
-        return this.toAboveMaxAllowed;
+        if (this.checkBityMax) {
+          return this.$t('interface.aboveMax', {
+            value: this.selectedProvider.maxValue,
+            currency: this.fromCurrency
+          });
+        }
+        return false;
       } else if (
-        +this.fromValue > this.selectedProvider.maxValue &&
-        this.selectedProvider.maxValue > 0
+        new BigNumber(this.fromValue).gt(
+          new BigNumber(this.selectedProvider.maxValue)
+        ) &&
+        new BigNumber(this.selectedProvider.maxValue).gt(new BigNumber(0))
       )
-        return this.$t('interface.aboveMaxSwap');
+        return this.$t('interface.aboveMaxSwap', {
+          value: this.selectedProvider.maxValue,
+          currency: this.fromCurrency
+        });
       return false;
     },
     toBelowMinAllowed() {
-      if (this.checkBityMin) return this.$t('interface.belowMin');
+      if (this.checkBityMin) return this.$t('interface.belowMinGeneral');
+      if (new BigNumber(0).gte(new BigNumber(this.toValue)))
+        return this.$t('interface.belowMinGeneral');
       return false;
     },
     toAboveMaxAllowed() {
-      if (this.checkBityMax) return this.$t('interface.aboveMax');
+      if (this.checkBityMax) return this.$t('interface.aboveMaxGeneral');
       return false;
     },
     providerList() {
@@ -370,8 +409,9 @@ export default {
           ? this.exitFromAddress !== ''
           : true;
       return (
-        !this.notEnough &&
+        this.hasEnough &&
         (this.toAddress !== '' || canExit) &&
+        this.allAddressesValid &&
         this.selectedProvider.minValue <= +this.fromValue &&
         (+this.fromValue <= this.selectedProvider.maxValue ||
           this.selectedProvider.maxValue === 0)
@@ -409,16 +449,39 @@ export default {
     },
     showRefundAddress() {
       return (
-        !this.swap.isToken(this.fromCurrency) &&
+        !SwapProviders.isToken(this.fromCurrency) &&
         this.selectedProvider.provider === this.providerNames.changelly
       );
     },
-    isValidAddress() {
-      return this.validAddress;
+    allAddressesValid() {
+      const validBaseToAddress = this.toAddress !== '' && this.validAddress;
+
+      if (this.isExitToFiat) {
+        if (this.fromCurrency === this.baseCurrency) {
+          return true;
+        }
+        return this.exitFromAddress !== '' && this.validExitAddress;
+      }
+      if (this.showRefundAddress) {
+        if (
+          this.fromCurrency === this.baseCurrency ||
+          SwapProviders.isToken(this.fromCurrency)
+        ) {
+          const validRefundAddress =
+            this.refundAddress === '' && this.validRefundAddress;
+          return validBaseToAddress && validRefundAddress;
+        }
+        return SwapProviders.checkAddress(
+          this.refundAddress,
+          this.fromCurrency
+        );
+      }
+
+      return validBaseToAddress;
     },
-    notEnough() {
+    hasEnough() {
       if (
-        this.swap.isToken(this.fromCurrency) &&
+        SwapProviders.isToken(this.fromCurrency) &&
         this.fromCurrency !== this.baseCurrency
       ) {
         const enteredVal = this.swap.convertToTokenWei(
@@ -426,16 +489,19 @@ export default {
           this.fromValue
         );
 
-        if (+this.tokenBalances[this.fromCurrency] === +enteredVal) {
-          return false;
-        }
-        return new BigNumber(this.tokenBalances[this.fromCurrency]).lte(
+        return new BigNumber(this.tokenBalances[this.fromCurrency]).gte(
           new BigNumber(enteredVal)
         );
       } else if (this.fromCurrency === this.baseCurrency) {
-        return new BigNumber(this.account.balance).lt(this.fromValue);
+        const enteredVal = this.swap.convertToTokenWei(
+          this.fromCurrency,
+          this.fromValue
+        );
+        return new BigNumber(this.account.balance).gt(
+          new BigNumber(enteredVal)
+        );
       }
-      return false;
+      return true;
     },
     exitSourceAddress() {
       return this.isExitToFiat && this.fromCurrency === this.baseCurrency
@@ -454,6 +520,13 @@ export default {
     },
     ['swap.haveProviderRates']() {
       this.haveProviderRates = this.swap.haveProviderRates;
+      const { toArray, fromArray } = this.swap.buildInitialCurrencyArrays();
+      this.toArray = toArray;
+      this.fromArray = fromArray;
+      this.lastBestRate = bestRateForQuantity(
+        [...this.providerList],
+        this.fromValue
+      );
       this.updateRateEstimate(
         this.fromCurrency,
         this.toCurrency,
@@ -465,7 +538,7 @@ export default {
       this.providerData = [];
       this.haveProviderRates = false;
       this.loadingData = false;
-      this.swap = new Swap(providers, {
+      this.swap = new SwapProviders(providers, {
         network: newVal.type.name,
         web3: this.web3
       });
@@ -522,14 +595,12 @@ export default {
     setExitFromAddress(address) {
       this.exitFromAddress = address;
     },
-    setAddressValid(value) {
-      this.validAddress = value;
-    },
     swapAll() {
       this.fromValue = this.swap.convertToTokenBase(
         this.fromCurrency,
         this.tokenBalances[this.fromCurrency]
       );
+      this.amountChanged('from');
     },
     setFromCurrency(value, dir = 'from') {
       this.currencyDetails.from = value;
@@ -555,7 +626,7 @@ export default {
       );
     },
     async getBalance(currency) {
-      if (this.swap.isToken(currency) && currency !== this.baseCurrency) {
+      if (SwapProviders.isToken(currency) && currency !== this.baseCurrency) {
         const balance = await new this.web3.eth.Contract(
           ERC20,
           this.swap.getTokenAddress(currency)
@@ -583,10 +654,6 @@ export default {
         } else {
           this.web3.utils._.debounce(this.updateEstimate(direction), 200);
         }
-      } else if (direction === 'from') {
-        this.toValue = '';
-      } else if (direction === 'to') {
-        this.fromValue = '';
       }
     },
     async updateEstimate(input) {
@@ -595,13 +662,15 @@ export default {
         case 'to':
           this.fromValue = this.swap.calculateFromValue(
             this.toValue,
-            this.bestRate
+            this.bestRate,
+            this.fromCurrency
           );
           break;
         case 'from':
           this.toValue = this.swap.calculateToValue(
             this.fromValue,
-            this.bestRate
+            this.bestRate,
+            this.toCurrency
           );
           break;
         case `${this.providerNames.simplex}to`:
@@ -613,9 +682,27 @@ export default {
               this.toCurrency,
               this.toValue
             );
+
             this.fromValue = simplexRateDetails.fromValue;
             this.toValue = simplexRateDetails.toValue;
+          } else {
+            simplexRateDetails = await simplexProvider.updateFiat(
+              this.fromCurrency,
+              this.toCurrency,
+              51
+            );
+
+            const rate = new BigNumber(simplexRateDetails.toValue)
+              .div(simplexRateDetails.fromValue)
+              .toString(10);
+
+            this.fromValue = this.swap.calculateFromValue(
+              this.toValue,
+              rate,
+              this.fromCurrency
+            );
           }
+
           break;
         case `${this.providerNames.simplex}from`:
           simplexProvider = this.swap.getProvider(this.providerNames.simplex);
@@ -625,9 +712,23 @@ export default {
               this.toCurrency,
               this.fromValue
             );
+
             this.fromValue = simplexRateDetails.fromValue;
             this.toValue = simplexRateDetails.toValue;
+          } else {
+            simplexRateDetails = await simplexProvider.updateFiat(
+              this.fromCurrency,
+              this.toCurrency,
+              51
+            );
+
+            const rate = new BigNumber(simplexRateDetails.toValue)
+              .div(simplexRateDetails.fromValue)
+              .toString(10);
+
+            this.toValue = this.swap.calculateToValue(this.fromValue, rate);
           }
+
           break;
         default:
           toValue = this.swap.calculateToValue(this.fromValue, this.bestRate);
@@ -705,7 +806,7 @@ export default {
             toValue: this.toValue,
             toAddress: this.toAddress || this.currentAddress,
             fromAddress: this.currentAddress,
-            refundAddress: this.swap.isToken(providerDetails.fromCurrency)
+            refundAddress: SwapProviders.isToken(providerDetails.fromCurrency)
               ? this.currentAddress
               : this.refundAddress,
             exitFromAddress:
@@ -728,11 +829,16 @@ export default {
           }
         }
       } catch (e) {
+        //abort (empty response from provider or failure to finalize details)
+        if (e.message === 'abort') {
+          this.finalizingSwap = false;
+          return;
+        }
         this.$refs.swapConfirmation.$refs.swapconfirmation.hide();
         this.$refs.swapSendTo.$refs.swapconfirmation.hide();
         this.finalizingSwap = false;
         errorLogger(e);
-        ErrorHandler(e, false);
+        Toast.responseHandler(e, false);
       }
     },
     openConfirmModal(swapDetails) {

@@ -175,6 +175,7 @@
           </div>
           <input
             v-model="value"
+            step="any"
             type="text"
             name
             placeholder="ETH"
@@ -237,7 +238,9 @@
           <div
             v-if="
               selectedMethod.hasOwnProperty('inputs') &&
-                selectedMethod.inputs.length > 0
+                ((selectedMethod.constant &&
+                  selectedMethod.inputs.length > 0) ||
+                  !selectedMethod.constant)
             "
             :class="[
               allValid ? '' : 'disabled',
@@ -249,9 +252,9 @@
             <span v-show="!loading && !selectedMethod.constant">
               {{ $t('interface.write') }}
             </span>
-            <span v-show="!loading && selectedMethod.constant">
-              {{ $t('interface.read') }}
-            </span>
+            <span v-show="!loading && selectedMethod.constant">{{
+              $t('interface.read')
+            }}</span>
             <i v-show="loading" class="fa fa-spinner fa-spin fa-lg" />
           </div>
         </div>
@@ -270,7 +273,7 @@ import { mapGetters } from 'vuex';
 import CurrencyPicker from '../../components/CurrencyPicker';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
-import { Misc, ErrorHandler } from '@/helpers';
+import { Misc, Toast } from '@/helpers';
 import { isAddress } from '@/helpers/addressUtils';
 import { uint, address, string, bytes, bool } from '@/helpers/solidityTypes.js';
 import * as unit from 'ethjs-unit';
@@ -342,6 +345,8 @@ export default {
           if (item.type === 'bytes32[]') {
             const parsedItem = this.formatInput(this.inputs[item.name]);
             _contractArgs.push(parsedItem);
+          } else if (item.type === 'address') {
+            _contractArgs.push(this.inputs[item.name].toLowerCase());
           } else {
             _contractArgs.push(this.inputs[item.name]);
           }
@@ -381,7 +386,7 @@ export default {
             value[0] === '[' ? value.substr(0, value.length - 1) : value;
           strToArr.split(',').forEach(item => {
             if (solidityType.includes(uint)) {
-              values.push(value !== '' && !isNaN(value));
+              values.push(value !== '' && !isNaN(value) && Misc.isInt(value));
             } else if (solidityType.includes(address)) {
               values.push(isAddress(value));
             } else if (solidityType.includes(string)) {
@@ -395,13 +400,14 @@ export default {
         }
         return !values.includes(false);
       }
-      if (solidityType === 'uint') return value != '' && !isNaN(value);
+      if (solidityType === 'uint')
+        return value !== '' && !isNaN(value) && Misc.isInt(value);
       if (solidityType === 'address') return isAddress(value);
       if (solidityType === 'string') return true;
       if (solidityType === 'bytes')
-        return value.substr(0, 2) == '0x' && Misc.validateHexString(value);
+        return value.substr(0, 2) === '0x' && Misc.validateHexString(value);
       if (solidityType === 'bool')
-        return typeof value == typeof true || value === '';
+        return typeof value === typeof true || value === '';
       return false;
     },
     getType: Misc.solidityType,
@@ -415,15 +421,19 @@ export default {
     },
     selectedFunction(method) {
       if (!method.hasOwnProperty('constant')) return;
-      const contract = new this.web3.eth.Contract([method], this.address);
+      const contract = new this.web3.eth.Contract(
+        [method],
+        this.address.toLowerCase()
+      );
       if (method.constant === true && method.inputs.length === 0) {
         contract.methods[method.name]()
-          .call({ from: this.account.address })
+          .call({ from: this.account.address.toLowerCase() })
           .then(res => {
             this.result = res;
           })
           .catch(e => {
-            ErrorHandler(e, false);
+            this.loading = false;
+            Toast.responseHandler(e, Toast.WARN);
           });
       } else {
         this.result = '';
@@ -471,47 +481,55 @@ export default {
       const web3 = this.web3;
       const contract = new web3.eth.Contract(
         [this.selectedMethod],
-        this.address
+        this.address.toLowerCase()
       );
       this.loading = true;
       if (this.selectedMethod.constant === true) {
         contract.methods[this.selectedMethod.name](...this.contractArgs)
-          .call({ from: this.account.address })
+          .call({ from: this.account.address.toLowerCase() })
           .then(res => {
             this.result = res;
             this.loading = false;
           })
           .catch(e => {
             this.loading = false;
-            ErrorHandler(e, false);
+            Toast.responseHandler(e, false);
           });
       } else {
-        const nonce = await web3.eth.getTransactionCount(this.account.address);
+        const nonce = await web3.eth.getTransactionCount(
+          this.account.address.toLowerCase()
+        );
+        let errored = false;
         const gasLimit = await contract.methods[this.selectedMethod.name](
           ...this.contractArgs
         )
-          .estimateGas({ from: this.account.address })
+          .estimateGas({ from: this.account.address.toLowerCase() })
           .then(res => {
             return res;
           })
           .catch(e => {
-            ErrorHandler(e, false);
+            Toast.responseHandler(e, Toast.ERROR);
+            errored = true;
           });
-        const data = contract.methods[this.selectedMethod.name](
-          ...this.contractArgs
-        ).encodeABI();
+        if (!errored) {
+          const data = contract.methods[this.selectedMethod.name](
+            ...this.contractArgs
+          ).encodeABI();
 
-        const raw = {
-          from: this.account.address,
-          gas: gasLimit,
-          nonce: nonce,
-          gasPrice: Number(unit.toWei(this.gasPrice, 'gwei')),
-          value: 0,
-          to: this.address,
-          data: data
-        };
-
-        await web3.eth.sendTransaction(raw);
+          const raw = {
+            from: this.account.address.toLowerCase(),
+            gas: gasLimit,
+            nonce: nonce,
+            gasPrice: Number(unit.toWei(this.gasPrice, 'gwei')),
+            value: 0,
+            to: this.address.toLowerCase(),
+            data: data
+          };
+          web3.eth.sendTransaction(raw).catch(err => {
+            this.loading = false;
+            Toast.responseHandler(err, Toast.ERROR);
+          });
+        }
       }
     }
   }

@@ -32,11 +32,16 @@ const defaultValues = {
   gasPrice: 2000000000 // 2 Gwei
 };
 
-const FEE_RATE = 0.0025;
+const FEE_RATE = 0;
+const MIN_RATE_BUFFER = 0.05; // 5%
 const MAX_DEST_AMOUNT = '1000000000000000000000000000000000000';
 const TIME_SWAP_VALID = TIME_SWAP_VALID_DEFAULT;
 const PROVIDER_NAME = 'kybernetwork';
 const kyberBaseCurrency = 'ETH';
+
+const specialGasLimits = {
+  DGX: 750000
+};
 
 export {
   kyberBaseCurrency,
@@ -44,7 +49,9 @@ export {
   PROVIDER_NAME,
   TIME_SWAP_VALID,
   MAX_DEST_AMOUNT,
+  MIN_RATE_BUFFER,
   defaultValues,
+  specialGasLimits,
   kyberTokenList,
   kyberTokenInfoList,
   kyberValidNetworks,

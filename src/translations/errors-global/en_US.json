@@ -1,0 +1,10 @@
+{
+  "notAValidAmountTotal": "Not enough ",
+  "toSend": "to send.",
+  "invalidValue": "Invalid value",
+  "wrongPassPhrase": "Passphrase given is incorrect!",
+  "browserNonU2f": "Browser not u2f compliant. Try using Chrome or Opera!",
+  "browserNonWebUsb": "Browser does not support WebUSB. Try using Chrome or Opera!",
+  "noMobileSupport": "Hardware wallet not supported by mobile browser!",
+  "failedToFetch": "Failed to fetch"
+}

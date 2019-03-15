@@ -3,6 +3,7 @@
   "about": "About",
   "transaction": "Transaction",
   "swap": "Swap",
+  "security": "Security",
   "detailInfo": "Detail Information",
   "transactionDetail": "Transaction Detail",
   "swapDetail": "Swap Detail",
@@ -17,5 +18,10 @@
   "errorMessage": "Error Message",
   "maxTxFee": "Max Transaction Fee",
   "investigate": "Use the transaction hash to investigate why this transaction failed.",
-  "contractCreation": "Contract Creation"
+  "contractCreation": "Contract Creation",
+  "mewConnectDisconnected": "Seems like you are disconnected from MEWconnect, please reconnect using the App.",
+  "providerDepositAddress": "Deposit Address",
+  "orderID": "{provider} order ID",
+  "provider": "Provider",
+  "invalidIBAN": "Invalid IBAN"
 }

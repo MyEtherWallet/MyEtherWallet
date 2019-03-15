@@ -46,7 +46,7 @@
           </div>
         </div>
         <div class="the-form domain-name">
-          <textarea ref="signature" disabled class="custom-textarea-1" />
+          <textarea ref="signature" class="custom-textarea-1" />
         </div>
       </div>
 
@@ -74,7 +74,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { ErrorHandler } from '@/helpers';
+import { Toast } from '@/helpers';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessModal/SuccessModal.vue';
@@ -115,13 +115,14 @@ export default {
           );
         })
         .catch(e => {
-          ErrorHandler(e, false);
+          Toast.responseHandler(e, false);
         });
     },
     copyToClipboard(ref) {
       this.$refs[ref].select();
       document.execCommand('copy');
       window.getSelection().removeAllRanges();
+      Toast.responseHandler('Copied', Toast.INFO);
     },
     deleteInputText(ref) {
       this.$refs[ref].value = '';

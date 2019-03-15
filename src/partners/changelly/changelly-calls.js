@@ -8,85 +8,185 @@ function buildPath() {
 }
 
 const getCurrencies = async network => {
-  if (changellyMethods[network]) {
-    const results = await post(
-      buildPath(),
-      utils.buildPayload(changellyMethods[network].currenciesFull, {})
-    );
-    return results.result;
+  try {
+    if (changellyMethods[network]) {
+      const results = await post(
+        buildPath(),
+        utils.buildPayload(changellyMethods[network].currenciesFull, {})
+      );
+
+      if (results.error) {
+        throw Error(results.error.message);
+      }
+
+      return results.result;
+    }
+    return Promise.resolve({});
+  } catch (e) {
+    utils.handleOrThrow(e);
   }
-  return Promise.resolve({});
 };
 
 const getRate = async (fromCurrency, toCurrency, fromValue, network) => {
-  if (changellyMethods[network]) {
-    const results = await post(
-      buildPath(),
-      utils.buildPayload(changellyMethods[network].rate, {
-        from: fromCurrency,
-        to: toCurrency,
-        amount: fromValue
-      })
-    );
-    return results.result;
+  try {
+    if (changellyMethods[network]) {
+      const results = await post(
+        buildPath(),
+        utils.buildPayload(changellyMethods[network].rate, {
+          from: fromCurrency,
+          to: toCurrency,
+          amount: fromValue
+        })
+      );
+
+      if (results.error) {
+        throw Error(results.error.message);
+      }
+      return results.result;
+    }
+    return Promise.resolve(-1);
+  } catch (e) {
+    utils.handleOrThrow(e);
   }
-  return Promise.resolve(-1);
 };
 
 const getMin = async (fromCurrency, toCurrency, fromValue, network) => {
-  if (changellyMethods[network]) {
-    const results = await post(
-      buildPath(),
-      utils.buildPayload(changellyMethods[network].min, {
-        from: fromCurrency,
-        to: toCurrency
-      })
-    );
-    return results.result;
+  try {
+    if (changellyMethods[network]) {
+      const results = await post(
+        buildPath(),
+        utils.buildPayload(changellyMethods[network].min, {
+          from: fromCurrency,
+          to: toCurrency
+        })
+      );
+
+      if (results.error) {
+        throw Error(results.error.message);
+      }
+
+      return results.result;
+    }
+    return Promise.resolve(-1);
+  } catch (e) {
+    utils.handleOrThrow(e);
   }
-  return Promise.resolve(-1);
 };
 
 const validateAddress = async (addressDetails, network) => {
-  if (changellyMethods[network]) {
-    const results = await post(
-      buildPath(),
-      utils.buildPayload(changellyMethods[network].validate, addressDetails)
-    );
-    return results.result;
+  try {
+    if (changellyMethods[network]) {
+      const results = await post(
+        buildPath(),
+        utils.buildPayload(changellyMethods[network].validate, addressDetails)
+      );
+
+      if (results.error) {
+        throw Error(results.error.message);
+      }
+
+      return results.result;
+    }
+    return Promise.resolve(-1);
+  } catch (e) {
+    utils.handleOrThrow(e);
   }
-  return Promise.resolve(-1);
 };
 
 const createTransaction = async (transactionParams, network) => {
-  if (changellyMethods[network]) {
-    const results = await post(
-      buildPath(),
-      utils.buildPayload(
-        changellyMethods[network].createTransaction,
-        transactionParams
-      )
-    );
-    return results.result;
+  try {
+    if (changellyMethods[network]) {
+      const results = await post(
+        buildPath(),
+        utils.buildPayload(
+          changellyMethods[network].createTransaction,
+          transactionParams
+        )
+      );
+
+      if (results.error) {
+        throw Error(results.error.message);
+      }
+
+      return results.result;
+    }
+    return Promise.resolve(-1);
+  } catch (e) {
+    utils.handleOrThrow(e);
   }
-  return Promise.resolve(-1);
 };
 
 const getStatus = async (orderId, network) => {
-  if (changellyMethods[network]) {
-    const results = await post(
-      buildPath(),
-      utils.buildPayload(changellyMethods[network].status, {
-        id: orderId
-      })
-    );
-    return results.result;
+  try {
+    if (changellyMethods[network]) {
+      const results = await post(
+        buildPath(),
+        utils.buildPayload(changellyMethods[network].status, {
+          id: orderId
+        })
+      );
+
+      if (results.error) {
+        throw Error(results.error.message);
+      }
+
+      return results.result;
+    }
+    throw Error(`Changelly does not support ${network} network`);
+  } catch (e) {
+    utils.handleOrThrow(e);
   }
-  throw Error(`Changelly does not support ${network} network`);
 };
 
 const login = () => {
   return Promise.resolve({});
+};
+
+const getFixRate = async (fromCurrency, toCurrency, fromValue, network) => {
+  try {
+    if (changellyMethods[network]) {
+      const results = await post(
+        buildPath(),
+        utils.buildPayload(changellyMethods[network].getFixRate, [
+          {
+            from: fromCurrency,
+            to: toCurrency
+          }
+        ])
+      );
+
+      if (results.error) {
+        throw Error(results.error.message);
+      }
+      return results.result;
+    }
+    return Promise.resolve(-1);
+  } catch (e) {
+    utils.handleOrThrow(e);
+  }
+};
+
+const createFixTransaction = async (transactionParams, network) => {
+  try {
+    if (changellyMethods[network]) {
+      const results = await post(
+        buildPath(),
+        utils.buildPayload(
+          changellyMethods[network].createFixTransaction,
+          transactionParams
+        )
+      );
+
+      if (results.error) {
+        throw Error(results.error.message);
+      }
+
+      return results.result;
+    }
+    return Promise.resolve(-1);
+  } catch (e) {
+    utils.handleOrThrow(e);
+  }
 };
 
 export default {
@@ -96,5 +196,7 @@ export default {
   validateAddress,
   createTransaction,
   getStatus,
-  login
+  login,
+  getFixRate,
+  createFixTransaction
 };

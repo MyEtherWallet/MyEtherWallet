@@ -1,13 +1,15 @@
 <template>
   <div
-    @click="select(name)"
+    v-b-popover.hover.top="tooltipMsg"
+    :class="disabled ? 'inactive' : ''"
+    @click="disabled ? () => {} : select(name)"
     @mouseover="isHovered = true"
     @mouseout="isHovered = false"
   >
     <div :class="[selected ? 'selected' : '', 'wallet-option-container']">
       <div>
         <img
-          :src="isHovered || selected ? hoverIcon : regularIcon"
+          :src="(isHovered || selected) && !disabled ? hoverIcon : regularIcon"
           class="icon"
         />
         <span>{{ text }}</span>
@@ -43,6 +45,14 @@ export default {
       default: ''
     },
     name: {
+      type: String,
+      default: ''
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    },
+    tooltipMsg: {
       type: String,
       default: ''
     }

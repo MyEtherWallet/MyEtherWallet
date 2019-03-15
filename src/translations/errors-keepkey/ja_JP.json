@@ -1,0 +1,6 @@
+{
+  "noDeviceSelected": "No device was selected. Please make sure your device is plugged in.",
+  "invalidPin": "Invalid PIN",
+  "cantClaim": "Unable to claim interface.",
+  "browserNotSupported": "Browser does not support WebUSB. Please try Chrome."
+}

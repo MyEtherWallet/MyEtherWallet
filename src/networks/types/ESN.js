@@ -1,5 +1,6 @@
 import tokens from '@/tokens/tokens-esn.json';
 import contracts from '@/contracts/contract-abi-esn.json';
+import esn from '@/assets/images/networks/esn.svg';
 
 export default {
   name: 'ESN',
@@ -10,6 +11,5 @@ export default {
   chainID: 31102,
   tokens: tokens,
   contracts: contracts,
-  ensResolver: '',
-  ensAbi: ''
+  icon: esn
 };

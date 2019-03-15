@@ -1,9 +1,11 @@
 <template>
   <button
-    :class="[!disabled ? 'disabled' : '', 'button-block', classname]"
+    :class="[disabled ? 'disabled' : '', 'button-block', classname]"
     @click="func"
   >
-    <div class="button-image"><img :src="img" class="icon" /></div>
+    <div class="button-image">
+      <img :src="disabled ? imgDisabled : img" class="icon" />
+    </div>
     <h3>{{ title }}</h3>
     <p class="desc">{{ desc }}</p>
     <p :v-if="recommend !== ''" class="small-note">{{ recommend }}</p>
@@ -18,6 +20,10 @@ export default {
       default: function() {}
     },
     img: {
+      type: String,
+      default: ''
+    },
+    imgDisabled: {
       type: String,
       default: ''
     },

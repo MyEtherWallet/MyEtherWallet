@@ -7,7 +7,7 @@ import {
   swapNotificationStatuses
 } from '../partnersConfig';
 import { utils } from '../helpers';
-import { ErrorHandler } from '@/helpers';
+import { Toast } from '@/helpers';
 import {
   getRates,
   openOrder,
@@ -156,10 +156,10 @@ export default class BitySwap {
       rate: rate,
       minValue: this.fiatCurrencies.includes(toCurrency)
         ? this.getChfEquivalentMaxMin(fromCurrency, false)
-        : this.minValue,
+        : this.getBtcEquivalentMaxMin(fromCurrency, false),
       maxValue: this.fiatCurrencies.includes(toCurrency)
         ? this.getChfEquivalentMaxMin(fromCurrency, true)
-        : this.getBtcEquivalentMax(fromCurrency)
+        : this.getBtcEquivalentMaxMin(fromCurrency, true)
     };
   }
 
@@ -184,14 +184,18 @@ export default class BitySwap {
     );
   }
 
-  getBtcEquivalentMax(currency) {
+  getBtcEquivalentMaxMin(currency, max) {
     if (currency === BASE_EQUIVALENT_CURRENCY) {
-      return this.maxValue;
+      return max ? this.maxValue : this.minValue;
     }
     const btcRate = this._getRate(currency, BASE_EQUIVALENT_CURRENCY);
-    return new BigNumber(this.maxValue)
-      .div(new BigNumber(btcRate))
-      .toFixed(6, BigNumber.ROUND_UP);
+    return max
+      ? new BigNumber(this.maxValue)
+          .div(new BigNumber(btcRate))
+          .toFixed(6, BigNumber.ROUND_UP)
+      : new BigNumber(this.minValue)
+          .div(new BigNumber(btcRate))
+          .toFixed(6, BigNumber.ROUND_UP);
   }
 
   getChfEquivalentMaxMin(cryptoCurrency, max) {
@@ -310,7 +314,6 @@ export default class BitySwap {
       swapDetails.dataForInitialization = false;
       swapDetails.isExitToFiat = true;
       return swapDetails;
-      // throw Error('Exit to Fiat not yet implemented');
     } else if (this.checkIfExit(swapDetails) && swapDetails.bypass) {
       const preOrder = await this.buildExitOrder(swapDetails);
       if (preOrder.created) {
@@ -327,13 +330,21 @@ export default class BitySwap {
           swapDetails.parsed = BitySwap.parseExitOrder(
             swapDetails.dataForInitialization
           );
+          swapDetails.timestamp = swapDetails.parsed.timestamp.replace(
+            'ZZ',
+            'Z'
+          );
           swapDetails.providerAddress =
             swapDetails.dataForInitialization.payment_address;
           swapDetails.isDex = BitySwap.isDex();
+          swapDetails.validFor = swapDetails.parsed.validFor;
+        } else {
+          throw Error('abort');
         }
       }
     } else if (!this.checkIfExit(swapDetails)) {
       swapDetails.dataForInitialization = await this.buildOrder(swapDetails);
+      if (!swapDetails.dataForInitialization) throw Error('abort');
       swapDetails.providerReceives =
         swapDetails.dataForInitialization.input.amount;
       swapDetails.providerSends =
@@ -344,6 +355,7 @@ export default class BitySwap {
       swapDetails.providerAddress =
         swapDetails.dataForInitialization.payment_address;
       swapDetails.isDex = BitySwap.isDex();
+      swapDetails.validFor = swapDetails.parsed.validFor;
     }
 
     return swapDetails;
@@ -435,7 +447,7 @@ export default class BitySwap {
       };
       return buildCyptoToFiatOrderData(orderData);
     } catch (e) {
-      ErrorHandler(e, false);
+      Toast.responseHandler(e, false);
     }
   }
 
@@ -447,8 +459,8 @@ export default class BitySwap {
 
   static parseOrder(order) {
     return {
-      orderId: order.id,
-      statusId: order.reference,
+      orderId: order.reference,
+      statusId: order.id,
       sendToAddress: order.payment_address,
       recValue: order.output.amount,
       sendValue: order.payment_amount,
@@ -460,7 +472,7 @@ export default class BitySwap {
 
   static parseExitOrder(order) {
     return {
-      orderId: order.id,
+      orderId: order.reference,
       statusId: order.id,
       sendToAddress: order.payment_address,
       recValue: order.amount,
@@ -505,7 +517,7 @@ export default class BitySwap {
         }
       }
     } catch (e) {
-      ErrorHandler(e, false);
+      Toast.responseHandler(e, false);
     }
     return swapNotificationStatuses.PENDING;
   }
@@ -544,7 +556,7 @@ export default class BitySwap {
           return swapNotificationStatuses.CANCELLED;
       }
     } catch (e) {
-      ErrorHandler(e, false);
+      Toast.responseHandler(e, false);
     }
     return swapNotificationStatuses.PENDING;
   }

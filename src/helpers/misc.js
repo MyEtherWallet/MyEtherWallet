@@ -22,6 +22,10 @@ const padLeftEven = hex => {
   return hex;
 };
 
+const isInt = num => {
+  return num % 1 === 0;
+};
+
 const formatDate = date => {
   const days = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'];
   const day = days[new Date(date).getDay()];
@@ -97,7 +101,7 @@ const reorderNetworks = () => {
   delete oldObject['ETH'];
   delete oldObject['RIN'];
   delete oldObject['ROP'];
-  return Object.assign(
+  const newObject = Object.assign(
     {},
     {
       ETH: nodeList['ETH'],
@@ -106,6 +110,10 @@ const reorderNetworks = () => {
       ...oldObject
     }
   );
+  for (const net in newObject) {
+    if (newObject[net].length === 0) delete newObject[net];
+  }
+  return newObject;
 };
 
 const solidityType = inputType => {
@@ -161,5 +169,6 @@ export default {
   scrollToTop,
   reorderNetworks,
   isDarklisted,
-  solidityType
+  solidityType,
+  isInt
 };
