@@ -398,10 +398,6 @@ export default {
             'setGasPrice',
             Number(network.type.regularGasPrice || 41)
           );
-          this.$store.dispatch(
-            'setMinimumGasPrice',
-            Number(network.type.minimumGasPrice)
-          );
         });
       });
 
