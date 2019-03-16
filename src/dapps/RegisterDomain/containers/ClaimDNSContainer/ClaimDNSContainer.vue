@@ -3,13 +3,14 @@
     <div class="claim-dns-content">
       <h3>Cheers!</h3>
       <p>{{ fullDomainName }} is claimable!</p>
+      <p>Ownership will be set to: {{ dnsOwner }}</p>
       <div class="claim-dns-button">
         <button
           :class="[
             'large-round-button-green-filled',
             loading ? 'disabled' : ''
           ]"
-          @click="claimDNS"
+          @click="claimFunc"
         >
           <span v-show="!loading">
             Claim
@@ -28,9 +29,6 @@
 
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText';
-import { mapGetters } from 'vuex';
-import utils from 'web3-utils';
-import BigNumber from 'bignumber.js';
 
 export default {
   components: {
@@ -38,6 +36,10 @@ export default {
   },
   props: {
     domainName: {
+      type: String,
+      default: ''
+    },
+    dnsOwner: {
       type: String,
       default: ''
     },
@@ -55,10 +57,6 @@ export default {
     }
   },
   computed: {
-    ...mapGetters({
-      account: 'account',
-      gasPrice: 'gasPrice'
-    }),
     fullDomainName() {
       return `${this.domainName}.${this.tld}`;
     }
@@ -66,17 +64,6 @@ export default {
   mounted() {
     if (this.domainName === '') {
       this.$router.push('/interface/dapps/register-domain');
-    }
-  },
-  methods: {
-    claimDNS() {
-      const gpRounded = new BigNumber(Math.round(this.gasPrice)).toString();
-      this.claimFunc({
-        from: this.account.address.toLowerCase(),
-        gasPrice: utils.toWei(gpRounded, 'gwei'),
-        gas: 3000000,
-        value: 0
-      });
     }
   }
 };

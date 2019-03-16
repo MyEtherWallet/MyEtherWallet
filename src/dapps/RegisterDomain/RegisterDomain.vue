@@ -31,6 +31,7 @@
       :register-fifs-name="registerFifsName"
       :multi-tld="multiTld"
       :claim-func="claimFunc"
+      :dns-owner="dnsOwner"
       @updateSecretPhrase="updateSecretPhrase"
       @updateBidAmount="updateBidAmount"
       @updateBidMask="updateBidMask"
@@ -53,7 +54,6 @@ import * as nameHashPckg from 'eth-ens-namehash';
 import normalise from '@/helpers/normalise';
 import { mapGetters } from 'vuex';
 import { Toast } from '@/helpers';
-// import { toChecksumAddress } from '@/helpers/addressUtils';
 import DNSRegistrar from '@ensdomains/dnsregistrar';
 
 export default {
@@ -82,7 +82,8 @@ export default {
       domainNameErr: false,
       ensRegistryContract: {},
       dnsRegistrar: {},
-      dnsResult: {}
+      dnsResult: {},
+      dnsOwner: ''
     };
   },
   computed: {
@@ -90,6 +91,7 @@ export default {
       web3: 'web3',
       network: 'network',
       account: 'account',
+      gasPrice: 'gasPrice',
       ens: 'ens'
     }),
     registrarTLD() {
@@ -315,19 +317,18 @@ export default {
             this.web3.currentProvider,
             registrarAddr
           );
-          this.dnsResult = await this.dnsRegistrar.claim(`${this.domainName}`);
-          if (this.dnsResult.result.found && this.dnsResult.result.nsec) {
-            this.processDNSresult('dnsOwned'); // Owned
-          } else if (
+          this.dnsResult = await this.dnsRegistrar.claim(this.domainName);
+          const _owner = await this.ens.owner(this.domainName);
+          if (
             this.dnsResult.result.found &&
-            !this.dnsResult.result.nsec
+            this.dnsResult.getOwner().toLowerCase() === _owner.toLowerCase()
           ) {
+            this.getMoreInfo();
+          } else if (this.dnsResult.result.found) {
+            this.dnsOwner = this.dnsResult.getOwner();
             this.processDNSresult('dnsClaimable'); // Claimable
-          } else if (
-            !this.dnsResult.result.found &&
-            this.dnsResult.result.nsec
-          ) {
-            this.processDNSresult('dnsMissingTXT'); // DNSEC not setup properly
+          } else if (this.dnsResult.result.nsec) {
+            this.processDNSresult('dnsMissingTXT'); // TXT missing/unclaim
           } else {
             this.processDNSresult('dnsNotSetup'); // DNSEC not setup properly
           }
@@ -340,10 +341,12 @@ export default {
         }
       }
     },
-    async claimFunc(obj) {
+    async claimFunc() {
       this.loading = true;
       try {
-        await this.dnsResult.submit(obj);
+        await this.dnsResult.submit({
+          from: this.account.address
+        });
         this.loading = false;
       } catch (e) {
         this.loading = false;
@@ -426,7 +429,10 @@ export default {
     },
     async getMoreInfo(deedOwner) {
       let highestBidder = '0x';
-      if (this.registrarType === 'auction') {
+      if (
+        this.registrarType === 'auction' &&
+        (this.parsedTld === this.registrarTLD || this.parsedTld === '')
+      ) {
         const deedContract = new this.web3.eth.Contract(
           DeedContractAbi,
           deedOwner
@@ -436,22 +442,18 @@ export default {
       let owner;
       let resolverAddress;
       try {
-        owner = await this.ens.owner(`${this.domainName}.${this.registrarTLD}`);
+        owner = await this.ens.owner(this.domainName);
       } catch (e) {
         owner = '0x';
         Toast.responseHandler(e, false);
       }
       try {
-        resolverAddress = await this.ens
-          .resolver(`${this.domainName}.${this.registrarTLD}`)
-          .addr();
+        resolverAddress = await this.ens.resolver(this.domainName).addr();
       } catch (e) {
         resolverAddress = '0x';
       }
 
-      this.nameHash = nameHashPckg.hash(
-        `${this.domainName}.${this.registrarTLD}`
-      );
+      this.nameHash = nameHashPckg.hash(this.domainName);
       this.resolverAddress = resolverAddress;
       this.deedOwner = highestBidder;
       this.owner = owner;

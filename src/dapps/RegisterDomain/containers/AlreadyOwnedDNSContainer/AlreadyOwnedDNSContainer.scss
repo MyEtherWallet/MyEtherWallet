@@ -1,9 +1,0 @@
-@import '../../RegisterDomain';
-
-.already-owned-dns-container {
-  @extend %template-container;
-
-  .already-owned-dns-content {
-    min-height: 600px;
-  }
-}
