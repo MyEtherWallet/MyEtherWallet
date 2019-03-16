@@ -87,6 +87,7 @@ export default {
       pethPrice: toBigNumber(0),
       wethToPethRatio: 0,
       daiPrice: 0,
+      targetPrice: 0,
       priceFloor: 0,
       ethQty: 0,
       daiQty: 0,
@@ -124,7 +125,14 @@ export default {
   },
   async mounted() {
     this.gotoHome();
-    const MewMakerPlugin = MewPlugin(this.web3, this.account.address);
+    const MewMakerPlugin = MewPlugin(this.web3, this.account.address, async () =>{
+      console.log('do update'); // todo remove dev item
+      for(let idProp in this.availableCdps){
+        if(this.availableCdps[idProp].needsUpdate){
+          await this.availableCdps[idProp].update();
+        }
+      }
+    });
     this.maker = await Maker.create('http', {
       url: this.network.url,
       provider: {
@@ -149,6 +157,11 @@ export default {
     this.pethPrice = toBigNumber(
       (await this.priceService.getPethPrice()).toNumber()
     );
+
+    this.targetPrice = toBigNumber(
+      (await this.cdpService.getTargetPrice()).toNumber()
+    );
+
     this.liquidationRatio = toBigNumber(
       await this.cdpService.getLiquidationRatio()
     );
@@ -168,8 +181,6 @@ export default {
       await this.loadCdpDetails();
       this.cdpDetailsLoaded = true;
       this.makerActive = true;
-      console.log(this.$route.name); // todo remove dev item
-      console.log(this.cdps.length); // todo remove dev item
       if (this.$route.name !== 'create') {
         this.gotoImport();
       }
@@ -226,6 +237,7 @@ export default {
       const sysVars = {
         ethPrice: this.ethPrice,
         pethPrice: this.pethPrice,
+        targetPrice: this.targetPrice,
         liquidationRatio: this.liquidationRatio,
         liquidationPenalty: this.liquidationPenalty,
         stabilityFee: this.stabilityFee,

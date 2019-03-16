@@ -1,7 +1,7 @@
 import MewSubProvider from './mew-subprovider';
 
-export default function(web3, address, options) {
-  const subprovider = MewSubProvider(web3, address, options);
+export default function(web3, address, callback, options) {
+  const subprovider = MewSubProvider(web3, address, callback, options);
 
   return maker => {
     maker.service('accounts', true).addAccountType('mew', async () => {
