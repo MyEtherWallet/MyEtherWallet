@@ -9,8 +9,6 @@ const AlreadyOwnedENSContainer = () =>
 const FinalizeContainer = () => import('./containers/FinalizeContainer');
 const ManageENSContainer = () => import('./containers/ManageENSContainer');
 const FifsBuyContainer = () => import('./containers/FifsBuyContainer');
-const AlreadyOwnedDNSContainer = () =>
-  import('./containers/AlreadyOwnedDNSContainer');
 const ClaimDNSContainer = () => import('./containers/ClaimDNSContainer');
 const DNSProcessErrorContainer = () =>
   import('./containers/DNSProcessErrorContainer');
@@ -74,12 +72,6 @@ export default {
       path: 'fifs',
       name: 'Reserve on FIFS',
       component: FifsBuyContainer,
-      props: true
-    },
-    {
-      path: 'dns-owned',
-      name: 'DNS found',
-      component: AlreadyOwnedDNSContainer,
       props: true
     },
     {
