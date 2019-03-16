@@ -20,7 +20,17 @@
       :action="'payback'"
       :active-cdp="activeCdp"
     ></action-modal>
+    <close-cdp-modal
+      ref="closeCdp"
+      :active-cdp="activeCdp">
+
+    </close-cdp-modal>
     <div class="container-maker">
+      <div>
+        <button @click="showClose">
+          CLOSE
+        </button>
+      </div>
       <div class="manage-container">
         <div class="content-container">
           <p class="cpd-title">{{ $t('dapps.cdpPortal') }}</p>
@@ -49,10 +59,10 @@
               <p>{{ $t('dapps.liquidationPenalty') }}</p>
               <p>
                 <b
-                  >{{
-                    displayFixedValue(
-                      displayPercentValue(activeCdp._liquidationPenalty)
-                    )
+                >{{
+                  displayFixedValue(
+                  displayPercentValue(activeCdp._liquidationPenalty)
+                  )
                   }}%</b
                 >
               </p>
@@ -62,7 +72,7 @@
             <p>{{ $t('dapps.collateralRatio') }}</p>
             <p class="blue-bold">
               {{
-                displayFixedValue(displayPercentValue(activeCdp.collatRatio))
+              displayFixedValue(displayPercentValue(activeCdp.collatRatio))
               }}%
             </p>
           </div>
@@ -71,10 +81,10 @@
               <p>{{ $t('dapps.minimumRatio') }}</p>
               <p>
                 <b
-                  >{{
-                    displayFixedValue(
-                      displayPercentValue(activeCdp._liquidationRatio)
-                    )
+                >{{
+                  displayFixedValue(
+                  displayPercentValue(activeCdp.liquidationRatio)
+                  )
                   }}%</b
                 >
               </p>
@@ -83,10 +93,10 @@
               <p>{{ $t('dapps.stabilityFee') }}</p>
               <p>
                 <b
-                  >{{
-                    displayFixedValue(
-                      displayPercentValue(activeCdp._stabilityFee)
-                    )
+                >{{
+                  displayFixedValue(
+                  displayPercentValue(activeCdp.stabilityFee)
+                  )
                   }}%</b
                 >
               </p>
@@ -103,15 +113,15 @@
               <p>
                 <b>{{
                   displayFixedValue(activeCdp.ethCollateral, 5, false)
-                }}</b>
+                  }}</b>
                 ETH
               </p>
               <p>
                 <b>{{
                   displayFixedValue(activeCdp.pethCollateral, 5, true)
-                }}</b>
+                  }}</b>
                 PETH /
-                <b>{{ displayFixedValue(activeCdp._usdCollateral, 2) }}</b> USD
+                <b>{{ displayFixedValue(activeCdp.usdCollateral, 2) }}</b> USD
               </p>
               <p>
                 <span @click="showDeposit">{{ $t('dapps.deposit') }}</span>
@@ -123,11 +133,11 @@
             <div class="content-one-inner-right">
               <p>{{ $t('dapps.maxWithDraw') }}</p>
               <p>
-                <b>{{ displayFixedValue(maxWithDraw, 5) }}</b> ETH
+                <b>{{ displayFixedValue(activeCdp.maxEthDraw, 5) }}</b> ETH
               </p>
               <p>
-                <b>{{ displayFixedValue(maxWithDraw, 5) }}</b> PETH /
-                <b>{{ displayFixedValue(maxWithDrawUSD, 2) }}</b> USD
+                <b>{{ displayFixedValue(activeCdp.maxPethDraw, 5) }}</b> PETH /
+                <b>{{ displayFixedValue(activeCdp.maxUsdDraw, 2) }}</b> USD
               </p>
               <p>
                 <span @click="showWithdraw">{{ $t('dapps.withdraw') }}</span>
@@ -184,6 +194,7 @@ import Blockie from '@/components/Blockie';
 import GenerateDai from './components/GenerateDai';
 import DepositeCollateral from './components/DepositCollateral';
 import ActionModal from './components/ActionsModal';
+import CloseCdpModal from './components/CloseCdpModal';
 import BigNumber from 'bignumber.js';
 
 const toBigNumber = num => {
@@ -197,6 +208,7 @@ export default {
     'generate-dai': GenerateDai,
     'deposit-collateral': DepositeCollateral,
     'action-modal': ActionModal,
+    'close-cdp-modal': CloseCdpModal,
     blockie: Blockie
   },
   props: {
@@ -287,6 +299,9 @@ export default {
     showGenerate() {
       this.$refs.generate.$refs.modal.show();
     },
+    showClose() {
+      this.$refs.closeCdp.$refs.modal.show();
+    },
     displayPercentValue(raw) {
       if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);
       return raw.times(100).toString();
@@ -296,7 +311,7 @@ export default {
       if (round) return raw.toFixed(decimals, BigNumber.ROUND_DOWN).toString();
       return raw.toFixed(decimals).toString();
     },
-    isReady() {
+    async isReady() {
       this.maxWithDraw = this.activeCdp.maxDaiDraw();
       this.maxWithDrawUSD = this.activeCdp.toUSD(this.maxWithDraw);
     }

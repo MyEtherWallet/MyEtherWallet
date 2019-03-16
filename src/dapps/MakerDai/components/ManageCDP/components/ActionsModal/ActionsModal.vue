@@ -209,7 +209,6 @@
           </div>
         </div>
       </div>
-      {{ newCollateralRatioSafe }}
       <div class="buttons-container">
         <button class="cancel-btn">
           Submit
@@ -367,6 +366,12 @@ export default {
         case 'generate':
           this.drawDai();
           break;
+        case 'withdraw':
+          this.freeEth();
+          break;
+        case 'payback':
+          this.wipeDai();
+          break;
         default:
           return {};
       }
@@ -395,6 +400,17 @@ export default {
         return await this.activeCdp.drawDai(this.amount);
       }
     },
+    async freeEth() {
+      if (toBigNumber(this.amount).gte(0)) {
+        return await this.activeCdp.freeEth(this.amount);
+      }
+    },
+    async wipeDai() {
+      if (toBigNumber(this.amount).gte(0)) {
+        return await this.activeCdp.wipeDai(this.amount);
+      }
+    },
+
     getTitleText() {
       switch (this.action) {
         case 'deposit':

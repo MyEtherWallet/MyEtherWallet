@@ -1,6 +1,6 @@
 import HookedWalletSubprovider from 'web3-provider-engine/dist/es5/subproviders/hooked-wallet';
 
-export default function createLedgerSubprovider(web3, address) {
+export default function createLedgerSubprovider(web3, address, callback) {
   async function getAccounts() {
     const addresses = {};
     addresses[address] = address;
@@ -12,10 +12,11 @@ export default function createLedgerSubprovider(web3, address) {
   }
 
   async function signTransaction(txData) {
-    txData.generateOnly = true;
-    const signedTx = await web3.eth.sendTransaction(txData);
-    // const signedTx = await web3.eth.signTransaction(txData);
-    return signedTx;
+    const signedTx = web3.eth.sendTransaction(txData);
+    signedTx.then(results => {
+      callback(results);
+    });
+    return {};
   }
 
   return new HookedWalletSubprovider({
