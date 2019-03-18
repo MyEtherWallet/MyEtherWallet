@@ -290,7 +290,9 @@ export default {
         // }
         this.customTokens.push(token);
         currentCustomToken[this.network.type.name] = this.customTokens;
+        console.log(currentCustomToken); // todo remove dev item
         store.set('customTokens', currentCustomToken);
+        console.log('set', currentCustomToken); // todo remove dev item
         this.$refs.tokenModal.$refs.token.hide();
         await this.fetchTokens();
         Toast.responseHandler('Successfully added token!', Toast.SUCCESS);

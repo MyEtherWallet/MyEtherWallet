@@ -50,7 +50,7 @@
                 DAI
               </p>
               <p>
-                <b>{{ aCdp ? displayFixedValue(aCdp.usdCollateral, 2) : 0 }}</b>
+                <b>{{ aCdp ? displayFixedValue(aCdp.debtValue, 2) : 0 }}</b>
                 USD
               </p>
               <br />
@@ -126,7 +126,10 @@ export default {
     },
     displayFixedValue(raw, decimals = 3) {
       if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);
-      return raw.toFixed(decimals).toString();
+      if(raw.isFinite()){
+        return raw.toFixed(decimals).toString();
+      }
+      return '--'
     }
   }
 };

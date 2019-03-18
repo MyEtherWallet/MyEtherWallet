@@ -20,7 +20,7 @@
       :action="'payback'"
       :active-cdp="activeCdp"
     ></action-modal>
-    <close-cdp-modal ref="closeCdp" :active-cdp="activeCdp"> </close-cdp-modal>
+    <close-cdp-modal ref="closeCdp" :active-cdp="activeCdp" :tokens-with-balance="tokensWithBalance"> </close-cdp-modal>
     <div class="container-maker">
       <div>
         <button @click="showClose">
