@@ -321,6 +321,7 @@ export default {
       const newCdp = await this.makerCDP.openCdp(this.ethQty, this.daiQty);
       console.log(newCdp); // todo remove dev item
       await this.makerCDP.init(newCdp.id);
+      this.$emit('cdpOpened', {maker: this.makerCDP, id: newCdp.id});
     }
   }
 };

@@ -1,8 +1,9 @@
 <template>
   <div class="register-domain-container">
-    <back-button />
+    <!--<back-button />-->
     <button @click="gotoCreate">Create</button>
     <button @click="gotoImport">Manage</button>
+    <button @click="refresh">Refresh</button>
     <router-view
       :maker-active="makerActive"
       :eth-price="ethPrice"
@@ -20,6 +21,9 @@
       :cdps="cdps"
       :available-cdps="availableCdps"
       :cdp-details-loaded="cdpDetailsLoaded"
+      :tokens-with-balance="tokensWithBalance"
+      @cdpOpened="addCdp"
+      @cdpClosed="removeCdp"
     />
   </div>
 </template>
@@ -130,10 +134,19 @@ export default {
       this.account.address,
       async () => {
         console.log('do update'); // todo remove dev item
+        let afterClose = false;
         for (let idProp in this.availableCdps) {
           if (this.availableCdps[idProp].needsUpdate) {
-            await this.availableCdps[idProp].update();
+            if (this.availableCdps[idProp].closing) {
+              afterClose = true;
+              delete this.availableCdps[idProp];
+            } else {
+              await this.availableCdps[idProp].update();
+            }
           }
+        }
+        if (afterClose) {
+          this.gotoImport();
         }
       }
     );
@@ -216,6 +229,45 @@ export default {
             cdpId: this.cdps[0]
           }
         });
+      }
+    },
+    addCdp(vals) {
+      this.availableCdps[vals.id] = vals.maker;
+    },
+    removeCdp(vals) {
+      try {
+        delete this.availableCdps[vals.id];
+      } catch (e) {
+        console.error(e);
+      }
+
+    },
+    async refresh() {
+      const allCdps = await this.locateCdps();
+      const newCdps = allCdps.filter(item => !Object.keys(this.availableCdps).includes(item));
+      const sysVars = {
+        ethPrice: this.ethPrice,
+        pethPrice: this.pethPrice,
+        targetPrice: this.targetPrice,
+        liquidationRatio: this.liquidationRatio,
+        liquidationPenalty: this.liquidationPenalty,
+        stabilityFee: this.stabilityFee,
+        wethToPethRatio: this.wethToPethRatio
+      };
+      for (let i = 0; i < newCdps.length; i++) {
+        const makerCDP = new MakerCDP(
+          newCdps[i],
+          this.maker,
+          this.priceService,
+          this.cdpService,
+          sysVars
+        );
+        this.availableCdps[newCdps[i]] = await makerCDP.init(newCdps[i]);
+      }
+      for (let idProp in this.availableCdps) {
+        if (this.availableCdps[idProp].needsUpdate) {
+          await this.availableCdps[idProp].update();
+        }
       }
     },
     async locateCdps() {

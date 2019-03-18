@@ -12,7 +12,7 @@
           <div class="expended-info expended-info-open">
             <div class="grid-block">
               <p>My MKR balance:</p>
-              <p>0.000 MKR</p>
+              <p>{{ mkrBalance }} MKR</p>
               <p>Get MKR</p>
             </div>
             <div class="grid-block top-board">
@@ -22,11 +22,11 @@
             <div class="grid-block btm-board">
               <p>
                 {{
-                  $t('dapps.stabilityFeeInMkr', {
-                    value: displayFixedValue(
-                      displayPercentValue(activeCdp.stabilityFee)
-                    )
-                  })
+                $t('dapps.stabilityFeeInMkr', {
+                value: displayFixedValue(
+                displayPercentValue(activeCdp.stabilityFee)
+                )
+                })
                 }}
               </p>
               <p>{{ getfeeOwed }} MKR</p>
@@ -39,11 +39,11 @@
         <button class="cancel-btn">
           Submit
         </button>
-        <button class="submit-btn" @click="submitBtn">
+        <button class="submit-btn" @click="closeCdp">
           Submit
         </button>
       </div>
-      <help-center-button />
+      <help-center-button/>
     </b-modal>
   </div>
 </template>
@@ -63,6 +63,12 @@ export default {
     'help-center-button': HelpCenterButton
   },
   props: {
+    tokensWithBalance: {
+      type: Array,
+      default: function() {
+        return [];
+      }
+    },
     action: {
       type: String,
       default: ''
@@ -81,7 +87,8 @@ export default {
       amountDai: 0,
       govFee: 0,
       modalDetailInformation: false,
-      textValues: {}
+      textValues: {},
+      mkrToken: {}
     };
   },
   computed: {
@@ -110,28 +117,28 @@ export default {
         return this.activeCdp.liquidationPrice;
       }
       return 0;
+    },
+    mkrBalance() {
+      if (this.mkrToken) {
+        return this.mkrToken.balance;
+      }
+      return 0;
     }
   },
   watch: {},
-  mounted() {},
+  mounted() {
+    this.mkrToken = this.tokensWithBalance.find(item => {
+      return (
+        item.symbol === 'MKR' ||
+        item.address.toLowerCase() ===
+        '0xAaF64BFCC32d0F15873a02163e7E500671a4ffcD'.toLowerCase()
+      );
+    });
+    console.log(this.tokensWithBalance); // todo remove dev item
+  },
   methods: {
-    submitBtn() {
-      switch (this.action) {
-        case 'deposit':
-          this.lockEth();
-          break;
-        case 'generate':
-          this.drawDai();
-          break;
-        case 'withdraw':
-          this.freeEth();
-          break;
-        case 'payback':
-          this.wipeDai();
-          break;
-        default:
-          return {};
-      }
+    closeCdp() {
+      this.activeCdp.closeCdp();
     },
     displayPercentValue(raw) {
       if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);
@@ -151,36 +158,6 @@ export default {
     },
     currentDai() {
       this.amount = this.activeCdp.debtValue;
-    },
-    async drawDai() {
-      if (toBigNumber(this.amount).gte(0)) {
-        return await this.activeCdp.drawDai(this.amount);
-      }
-    },
-    async freeEth() {
-      if (toBigNumber(this.amount).gte(0)) {
-        return await this.activeCdp.freeEth(this.amount);
-      }
-    },
-    async wipeDai() {
-      if (toBigNumber(this.amount).gte(0)) {
-        return await this.activeCdp.wipeDai(this.amount);
-      }
-    },
-
-    getTitleText() {
-      switch (this.action) {
-        case 'deposit':
-          return 'Deposit Collateral';
-        case 'generate':
-          return 'Generate DAI';
-        case 'withdraw':
-          return 'Withdraw Collateral';
-        case 'payback':
-          return 'Payback DAI';
-        default:
-          return '';
-      }
     }
   }
 };

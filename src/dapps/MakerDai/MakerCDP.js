@@ -36,6 +36,7 @@ export default class MakerCDP {
     this.cdps = [];
     this.cdpDetailsLoaded = false;
     this.needsUpdate = false;
+    this.closing = false;
 
     this._liqPrice = toBigNumber(0);
     this.isSafe = false;
@@ -211,6 +212,13 @@ export default class MakerCDP {
     return this._governanceFee;
   }
 
+  toNumber(val){
+    if(BigNumber.isBigNumber(val)){
+      return val.toNumber();
+    }
+    return toBigNumber(val).toNumber();
+  }
+
   atRisk() {
     return !!this._collatRatio.lte(2);
   }
@@ -288,17 +296,30 @@ export default class MakerCDP {
   }
 
   async closeCdp() {
-    if (await this.enoughMkrToWipe()) {
+    this.needsUpdate = true;
+    this.closing = true;
+    // return this.wipeDai(this.debtValue)
+    const value = this.debtValue.toNumber()
+    console.log(value); // todo remove dev item
+    const enoughToWipe = await this.cdp.enoughMkrToWipe(value, DAI.wei);
+    if (enoughToWipe) {
       try {
         await this.cdpService.shutProxy(this.proxyAddress, this.cdpId);
       } catch (e) {
         console.error(e);
       }
     }
+    // if (await this.enoughMkrToWipe()) {
+    //   try {
+    //     await this.cdpService.shutProxy(this.proxyAddress, this.cdpId);
+    //   } catch (e) {
+    //     console.error(e);
+    //   }
+    // }
   }
 
   enoughMkrToWipe(amount) {
-    return this.cdpService.enoughMkrToWipe(amount);
+    return this.cdpService.enoughMkrToWipe(amount, DAI.wei);
   }
 
   toUSD(eth) {
