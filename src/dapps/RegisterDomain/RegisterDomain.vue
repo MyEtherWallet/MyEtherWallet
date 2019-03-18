@@ -107,8 +107,10 @@ export default {
       );
     },
     parsedTld() {
-      const tld = this.domainName.split('.');
-      return tld.length > 1 ? tld[tld.length - 1] : '';
+      const hasTld = this.domainName.lastIndexOf('.');
+      return hasTld !== -1
+        ? this.domainName.substr(hasTld + 1, this.domainName.length)
+        : '';
     },
     parsedDomainName() {
       const domainName = this.domainName.split('.');
@@ -276,7 +278,8 @@ export default {
       this.labelHash = web3.utils.sha3(
         this.domainName.replace(this.parsedTld, '')
       );
-      if (isSupported === undefined) {
+
+      if (this.parsedTld !== '' && isSupported === undefined) {
         Toast.responseHandler(
           `Domain TLD ${this.parsedTld} is not supported in this node!`,
           Toast.ERROR

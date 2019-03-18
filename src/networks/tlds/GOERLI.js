@@ -1099,7 +1099,6 @@ export default [
   'telefonica',
   'temasek',
   'tennis',
-  'test',
   'teva',
   'tf',
   'th',
