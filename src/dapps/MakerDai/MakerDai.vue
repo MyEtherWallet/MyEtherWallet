@@ -125,14 +125,18 @@ export default {
   },
   async mounted() {
     this.gotoHome();
-    const MewMakerPlugin = MewPlugin(this.web3, this.account.address, async () =>{
-      console.log('do update'); // todo remove dev item
-      for(let idProp in this.availableCdps){
-        if(this.availableCdps[idProp].needsUpdate){
-          await this.availableCdps[idProp].update();
+    const MewMakerPlugin = MewPlugin(
+      this.web3,
+      this.account.address,
+      async () => {
+        console.log('do update'); // todo remove dev item
+        for (let idProp in this.availableCdps) {
+          if (this.availableCdps[idProp].needsUpdate) {
+            await this.availableCdps[idProp].update();
+          }
         }
       }
-    });
+    );
     this.maker = await Maker.create('http', {
       url: this.network.url,
       provider: {

@@ -20,11 +20,7 @@
       :action="'payback'"
       :active-cdp="activeCdp"
     ></action-modal>
-    <close-cdp-modal
-      ref="closeCdp"
-      :active-cdp="activeCdp">
-
-    </close-cdp-modal>
+    <close-cdp-modal ref="closeCdp" :active-cdp="activeCdp"> </close-cdp-modal>
     <div class="container-maker">
       <div>
         <button @click="showClose">
@@ -59,10 +55,10 @@
               <p>{{ $t('dapps.liquidationPenalty') }}</p>
               <p>
                 <b
-                >{{
-                  displayFixedValue(
-                  displayPercentValue(activeCdp._liquidationPenalty)
-                  )
+                  >{{
+                    displayFixedValue(
+                      displayPercentValue(activeCdp._liquidationPenalty)
+                    )
                   }}%</b
                 >
               </p>
@@ -72,7 +68,7 @@
             <p>{{ $t('dapps.collateralRatio') }}</p>
             <p class="blue-bold">
               {{
-              displayFixedValue(displayPercentValue(activeCdp.collatRatio))
+                displayFixedValue(displayPercentValue(activeCdp.collatRatio))
               }}%
             </p>
           </div>
@@ -81,10 +77,10 @@
               <p>{{ $t('dapps.minimumRatio') }}</p>
               <p>
                 <b
-                >{{
-                  displayFixedValue(
-                  displayPercentValue(activeCdp.liquidationRatio)
-                  )
+                  >{{
+                    displayFixedValue(
+                      displayPercentValue(activeCdp.liquidationRatio)
+                    )
                   }}%</b
                 >
               </p>
@@ -93,10 +89,10 @@
               <p>{{ $t('dapps.stabilityFee') }}</p>
               <p>
                 <b
-                >{{
-                  displayFixedValue(
-                  displayPercentValue(activeCdp.stabilityFee)
-                  )
+                  >{{
+                    displayFixedValue(
+                      displayPercentValue(activeCdp.stabilityFee)
+                    )
                   }}%</b
                 >
               </p>
@@ -113,13 +109,13 @@
               <p>
                 <b>{{
                   displayFixedValue(activeCdp.ethCollateral, 5, false)
-                  }}</b>
+                }}</b>
                 ETH
               </p>
               <p>
                 <b>{{
                   displayFixedValue(activeCdp.pethCollateral, 5, true)
-                  }}</b>
+                }}</b>
                 PETH /
                 <b>{{ displayFixedValue(activeCdp.usdCollateral, 2) }}</b> USD
               </p>

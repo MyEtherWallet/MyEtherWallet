@@ -134,7 +134,7 @@ const getTimer = () => {
     return createTimerObject();
   } else if (
     typeof WorkerGlobalScope !== 'undefined' &&
-        self instanceof WorkerGlobalScope // eslint-disable-line
+    self instanceof WorkerGlobalScope // eslint-disable-line
   ) {
     return createTimerObject();
   } else if (worker === undefined) {

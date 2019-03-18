@@ -44,7 +44,7 @@ export default class MakerCDP {
     this._ethCollateral = toBigNumber(0);
     this._pethCollateral = toBigNumber(0);
     this._usdCollateral = toBigNumber(0);
-    this._governanceFee= toBigNumber(0);
+    this._governanceFee = toBigNumber(0);
     // this.maxEthDraw = '0';
     // this.maxPethDraw = '0';
     // this._maxDaiDraw = '0';
@@ -68,7 +68,10 @@ export default class MakerCDP {
     this._usdCollateral = (await this.cdp.getCollateralValue(
       Maker.USD
     )).toBigNumber();
-    this._governanceFee = (await this.cdpService.getGovernanceFee(this.cdpId, MKR)).toBigNumber();
+    this._governanceFee = (await this.cdpService.getGovernanceFee(
+      this.cdpId,
+      MKR
+    )).toBigNumber();
 
     // this.maxEthDraw = bnOver(
     //   this._liquidationRatio,
@@ -143,7 +146,7 @@ export default class MakerCDP {
     return this._debtValue;
   }
 
-  get targetPrice(){
+  get targetPrice() {
     return this._targetPrice;
   }
 
@@ -204,7 +207,7 @@ export default class MakerCDP {
     return this._liqPrice;
   }
 
-  get governanceFeeOwed(){
+  get governanceFeeOwed() {
     return this._governanceFee;
   }
 
@@ -285,7 +288,7 @@ export default class MakerCDP {
   }
 
   async closeCdp() {
-    if(await this.enoughMkrToWipe()){
+    if (await this.enoughMkrToWipe()) {
       try {
         await this.cdpService.shutProxy(this.proxyAddress, this.cdpId);
       } catch (e) {

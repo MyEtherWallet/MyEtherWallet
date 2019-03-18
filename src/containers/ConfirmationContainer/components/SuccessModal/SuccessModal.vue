@@ -88,7 +88,9 @@ export default {
       const splitUrl = parsedUrl.split('.');
       if (splitUrl.length > 2)
         // eslint-disable-next-line
-        return this.$options.filters.capitalize(`${splitUrl[1]}.${splitUrl[2]}`);
+        return this.$options.filters.capitalize(
+          `${splitUrl[1]}.${splitUrl[2]}`
+        );
       return this.$options.filters.capitalize(splitUrl.join('.'));
     }
   }
