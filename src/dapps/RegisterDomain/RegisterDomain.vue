@@ -32,6 +32,7 @@
       :multi-tld="multiTld"
       :claim-func="claimFunc"
       :dns-owner="dnsOwner"
+      :dns-claim="dnsClaim"
       @updateSecretPhrase="updateSecretPhrase"
       @updateBidAmount="updateBidAmount"
       @updateBidMask="updateBidMask"
@@ -82,7 +83,7 @@ export default {
       domainNameErr: false,
       ensRegistryContract: {},
       dnsRegistrar: {},
-      dnsResult: {},
+      dnsClaim: {},
       dnsOwner: ''
     };
   },
@@ -152,7 +153,7 @@ export default {
       this.contractInitiated = true;
       this.domainNameErr = false;
       this.dnsRegistrar = {};
-      this.dnsResult = {};
+      this.dnsClaim = {};
 
       if (this.ens) {
         this.setRegistrar();
@@ -320,17 +321,17 @@ export default {
             this.web3.currentProvider,
             registrarAddr
           );
-          this.dnsResult = await this.dnsRegistrar.claim(this.domainName);
+          this.dnsClaim = await this.dnsRegistrar.claim(this.domainName);
           const _owner = await this.ens.owner(this.domainName);
           if (
-            this.dnsResult.result.found &&
-            this.dnsResult.getOwner().toLowerCase() === _owner.toLowerCase()
+            this.dnsClaim.result.found &&
+            this.dnsClaim.getOwner().toLowerCase() === _owner.toLowerCase()
           ) {
             this.getMoreInfo();
-          } else if (this.dnsResult.result.found) {
-            this.dnsOwner = this.dnsResult.getOwner();
+          } else if (this.dnsClaim.result.found) {
+            this.dnsOwner = this.dnsClaim.getOwner();
             this.processDNSresult('dnsClaimable'); // Claimable
-          } else if (this.dnsResult.result.nsec) {
+          } else if (this.dnsClaim.result.nsec) {
             this.processDNSresult('dnsMissingTXT'); // TXT missing/unclaim
           } else {
             this.processDNSresult('dnsNotSetup'); // DNSEC not setup properly
@@ -347,7 +348,7 @@ export default {
     async claimFunc() {
       this.loading = true;
       try {
-        await this.dnsResult.submit({
+        await this.dnsClaim.submit({
           from: this.account.address
         });
         this.loading = false;

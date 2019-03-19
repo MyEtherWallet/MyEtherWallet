@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="dns-process-error">
-    <div class="dns-process-content">
+    <div v-if="owner === ''" class="dns-process-content">
       <h3>No TXT setup found for {{ domainName }}!</h3>
       <p>
         On your DNS management console, please add a TXT type DNS entry "{{
@@ -9,7 +9,7 @@
         "a=YOURETHREUMADDRESS"
       </p>
     </div>
-    <div class="dns-process-content">
+    <div v-else class="dns-process-content">
       <h3>
         This name is currently owned in ENS by {{ owner }} but TXT record is no
         longer available for {{ domainName }}!
@@ -27,7 +27,7 @@
           @click="claimFunc"
         >
           <span v-show="!loading">
-            UnClaim
+            Unclaim
           </span>
           <i v-show="loading" class="fa fa-spinner fa-spin" />
         </button>
@@ -60,6 +60,12 @@ export default {
     claimFunc: {
       type: Function,
       default: function() {}
+    },
+    dnsClaim: {
+      type: Object,
+      default: () => {
+        return {};
+      }
     }
   },
   mounted() {
