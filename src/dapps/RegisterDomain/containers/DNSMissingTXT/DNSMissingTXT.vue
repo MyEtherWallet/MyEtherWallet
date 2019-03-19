@@ -1,6 +1,9 @@
 <template lang="html">
   <div class="dns-process-error">
-    <div v-if="owner === ''" class="dns-process-content">
+    <div
+      v-if="owner === '0x0000000000000000000000000000000000000000'"
+      class="dns-process-content"
+    >
       <h3>No TXT setup found for {{ domainName }}!</h3>
       <p>
         On your DNS management console, please add a TXT type DNS entry "{{
