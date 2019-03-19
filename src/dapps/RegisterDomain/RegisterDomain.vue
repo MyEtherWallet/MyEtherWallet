@@ -287,7 +287,7 @@ export default {
       const web3 = this.web3;
 
       this.labelHash = web3.utils.sha3(this.parsedHostName);
-
+      console.log(this.parsedHostName);
       if (this.parsedTld !== '' && isSupported === undefined) {
         Toast.responseHandler(
           `Domain TLD ${this.parsedTld} is not supported in this node!`,
@@ -445,13 +445,13 @@ export default {
       let owner;
       let resolverAddress;
       try {
-        owner = await this.ens.owner(this.domainName);
+        owner = await this.ens.owner(this.parsedDomainName);
       } catch (e) {
         owner = '0x';
         Toast.responseHandler(e, false);
       }
       try {
-        resolverAddress = await this.ens.resolver(this.domainName).addr();
+        resolverAddress = await this.ens.resolver(this.parsedDomainName).addr();
       } catch (e) {
         resolverAddress = '0x';
       }

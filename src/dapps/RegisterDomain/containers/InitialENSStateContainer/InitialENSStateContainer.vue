@@ -4,7 +4,7 @@
       <div class="title-container">
         <div class="title">
           <h4>
-            {{ $t('interface.registerEns') }}
+            {{ $t('interface.ensManager') }}
           </h4>
           <p>{{ $t('interface.registerEnsDesc') }}</p>
         </div>

@@ -69,6 +69,10 @@ export default {
       default: () => {
         return {};
       }
+    },
+    loading: {
+      type: Boolean,
+      default: false
     }
   },
   mounted() {
