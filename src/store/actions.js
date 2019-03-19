@@ -149,9 +149,7 @@ const setWeb3Instance = function({ dispatch, commit, state }, provider) {
           gasPrice: arr[i].gasPrice
         };
         arr[i].nonce = await (arr[i].nonce === undefined
-          ? web3Instance.eth.getTransactionCount(
-              state.wallet.getAddressString()
-            )
+          ? web3Instance.eth.getTransactionCount(state.account.address)
           : arr[i].nonce);
         arr[i].nonce = +arr[i].nonce + i;
         arr[i].gas = await (arr[i].gas === undefined

@@ -13,7 +13,7 @@ const dapps = {
     route: '/interface/dapps/register-domain',
     icon: registerDomain,
     iconDisabled: registerDomainHov,
-    title: 'interface.registerEns',
+    title: 'interface.ensManager',
     desc: 'interface.registerENSDescShort',
     supportedNetworks: [ETH.name, GOERLI.name, ROP.name, RIN.name]
   },
