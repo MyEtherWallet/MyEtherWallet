@@ -1,4 +1,5 @@
 import Ledger from '@ledgerhq/hw-app-eth';
+import { byContractAddress } from '@ledgerhq/hw-app-eth/erc20';
 import ethTx from 'ethereumjs-tx';
 import u2fTransport from '@ledgerhq/hw-transport-u2f';
 import { LEDGER as ledgerType } from '../../bip44/walletTypes';
@@ -57,6 +58,9 @@ class ledgerWallet {
       tx.raw[6] = Buffer.from([networkId]);
       tx.raw[7] = Buffer.from([]);
       tx.raw[8] = Buffer.from([]);
+      console.log('0x' + tx.to.toString('hex'));
+      const tokenInfo = byContractAddress('0x' + tx.to.toString('hex'));
+      if (tokenInfo) await this.ledger.provideERC20TokenInformation(tokenInfo);
       const result = await this.ledger.signTransaction(
         accountPath,
         tx.serialize().toString('hex')
