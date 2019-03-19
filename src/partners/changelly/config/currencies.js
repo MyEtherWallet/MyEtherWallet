@@ -6,6 +6,7 @@ const ChangellyCurrencies = {
   ARN: { symbol: 'ARN', name: 'Aeron', fixRateEnabled: true },
   BAT: { symbol: 'BAT', name: 'Basic Attention Token', fixRateEnabled: true },
   BETR: { symbol: 'BETR', name: 'BetterBetting', fixRateEnabled: false },
+  BKB: { symbol: 'BKB', name: 'BitKeep Token', fixRateEnabled: true },
   BKX: { symbol: 'BKX', name: 'Bankex', fixRateEnabled: false },
   BNB: { symbol: 'BNB', name: 'Binance token', fixRateEnabled: true },
   BNT: { symbol: 'BNT', name: 'Bancor Network Token', fixRateEnabled: true },

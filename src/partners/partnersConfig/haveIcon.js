@@ -64,6 +64,7 @@ const haveIcon = [
   'BFT-alt',
   'BFT',
   'BIX',
+  'BKB',
   'BKX',
   'BLCN',
   'BLK',

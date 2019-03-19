@@ -436,6 +436,12 @@ const KyberCurrenciesETH = {
     name: 'CoinDash',
     decimals: 18,
     contractAddress: '0x177d39ac676ed1c67a2b268ad7f1e58826e5b0af'
-  }
+  },
+  BKB: {
+    symbol: 'BKB',
+    name: 'BitKeep Token',
+    decimals: 18,
+    contractAddress: '0x5c39bc68e58a242a624e4fc96be77a383c52002d'
+  },
 };
 export { KyberCurrenciesETH };
