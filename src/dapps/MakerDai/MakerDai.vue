@@ -133,6 +133,7 @@ export default {
       this.web3,
       this.account.address,
       async () => {
+        // eslint-disable-next-line
         console.log('do update'); // todo remove dev item
         let afterClose = false;
         for (let idProp in this.availableCdps) {
@@ -140,6 +141,7 @@ export default {
             if (this.availableCdps[idProp].closing) {
               afterClose = true;
               delete this.availableCdps[idProp];
+              this.cdps = this.cdps.filter(item => item !== idProp);
             } else {
               await this.availableCdps[idProp].update();
             }
@@ -218,6 +220,7 @@ export default {
     },
     gotoImport() {
       if (this.cdps.length > 1) {
+        // eslint-disable-next-line
         console.log('go to select'); // todo remove dev item
         this.$router.push({
           name: 'select'
@@ -238,13 +241,15 @@ export default {
       try {
         delete this.availableCdps[vals.id];
       } catch (e) {
+        // eslint-disable-next-line
         console.error(e);
       }
-
     },
     async refresh() {
       const allCdps = await this.locateCdps();
-      const newCdps = allCdps.filter(item => !Object.keys(this.availableCdps).includes(item));
+      const newCdps = allCdps.filter(
+        item => !Object.keys(this.availableCdps).includes(item)
+      );
       const sysVars = {
         ethPrice: this.ethPrice,
         pethPrice: this.pethPrice,

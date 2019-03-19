@@ -2,47 +2,11 @@
   <div class="modal-container">
     <b-modal
       ref="modal"
-      :title="'Close CDP'"
+      hide-footer
       centered
       class="bootstrap-modal bootstrap-modal-wide padding-40-20"
-      hide-footer
+      title="Move CDP"
     >
-      <div class="detail-info">
-        <div class="info">
-          <div class="expended-info expended-info-open">
-            <div class="grid-block">
-              <p>My MKR balance:</p>
-              <p>{{ mkrBalance }} MKR</p>
-              <p>Get MKR</p>
-            </div>
-            <div class="grid-block top-board">
-              <p>Outstanding DAI generated</p>
-              <p>{{ activeCdp.debtValue }} DAI</p>
-            </div>
-            <div class="grid-block btm-board">
-              <p>
-                {{
-                  $t('dapps.stabilityFeeInMkr', {
-                    value: displayFixedValue(
-                      displayPercentValue(activeCdp.stabilityFee)
-                    )
-                  })
-                }}
-              </p>
-              <p>{{ getfeeOwed }} MKR</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="buttons-container">
-        <button class="cancel-btn">
-          Submit
-        </button>
-        <button class="submit-btn" @click="closeCdp">
-          Submit
-        </button>
-      </div>
       <help-center-button />
     </b-modal>
   </div>
@@ -165,5 +129,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'CloseCdpModal.scss';
+@import 'MoveCdp.scss';
 </style>

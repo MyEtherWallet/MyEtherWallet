@@ -212,8 +212,8 @@ export default class MakerCDP {
     return this._governanceFee;
   }
 
-  toNumber(val){
-    if(BigNumber.isBigNumber(val)){
+  toNumber(val) {
+    if (BigNumber.isBigNumber(val)) {
       return val.toNumber();
     }
     return toBigNumber(val).toNumber();
@@ -224,6 +224,7 @@ export default class MakerCDP {
   }
 
   async getProxy() {
+    // eslint-disable-next-line
     console.log(await this.maker.service('proxy')); // todo remove dev item
     return this.maker.service('proxy').currentProxy();
   }
@@ -232,6 +233,7 @@ export default class MakerCDP {
     const proxyService = this.maker.service('proxy');
     if (!proxyService.currentProxy()) {
       const details = await proxyService.build();
+      // eslint-disable-next-line
       console.log(details); // todo remove dev item
       this.proxyAddress = await this.maker.service('proxy').currentProxy();
       return this.proxyAddress;
@@ -248,6 +250,7 @@ export default class MakerCDP {
       daiQty,
       proxyAddress
     );
+    // eslint-disable-next-line
     console.log(newCdp); // todo remove dev item
     return newCdp.id;
   }
@@ -257,6 +260,7 @@ export default class MakerCDP {
       this.needsUpdate = true;
       await this.cdpService.lockEthProxy(this.proxyAddress, this.cdpId, amount);
     } catch (e) {
+      // eslint-disable-next-line
       console.log(e);
     }
   }
@@ -272,6 +276,7 @@ export default class MakerCDP {
       try {
         this.cdpService.drawDaiProxy(this.proxyAddress, this.cdpId, amount);
       } catch (e) {
+        // eslint-disable-next-line
         console.log(e);
       }
     }
@@ -282,6 +287,7 @@ export default class MakerCDP {
     try {
       await this.cdpService.freeEthProxy(this.proxyAddress, this.cdpId, amount);
     } catch (e) {
+      // eslint-disable-next-line
       console.log(e);
     }
   }
@@ -291,6 +297,7 @@ export default class MakerCDP {
     try {
       await this.cdpService.wipeDaiProxy(this.proxyAddress, this.cdpId, amount);
     } catch (e) {
+      // eslint-disable-next-line
       console.log(e);
     }
   }
@@ -299,13 +306,15 @@ export default class MakerCDP {
     this.needsUpdate = true;
     this.closing = true;
     // return this.wipeDai(this.debtValue)
-    const value = this.debtValue.toNumber()
+    const value = this.debtValue.toNumber();
+    // eslint-disable-next-line
     console.log(value); // todo remove dev item
     const enoughToWipe = await this.cdp.enoughMkrToWipe(value, DAI.wei);
     if (enoughToWipe) {
       try {
         await this.cdpService.shutProxy(this.proxyAddress, this.cdpId);
       } catch (e) {
+        // eslint-disable-next-line
         console.error(e);
       }
     }
@@ -359,6 +368,7 @@ export default class MakerCDP {
     liquidationRatio = this.liquidationRatio
   ) {
     if (ethQty <= 0) return 0;
+    // eslint-disable-next-line
     console.log(ethPrice.toString(), ethQty, liquidationRatio.toString()); // todo remove dev item
     return bnOver(ethPrice, toBigNumber(ethQty), liquidationRatio);
   }

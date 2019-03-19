@@ -17,7 +17,7 @@
         <div v-if="cdpDetailsLoaded">
           <div v-for="(cdp, idx) in cdps" :key="cdp + idx">
             <select-cdp-entry
-              :a-cdp="availableCdps[cdp]"
+              :a-cdp="cdpOptions[cdp]"
               :cdp-id="cdp"
             ></select-cdp-entry>
           </div>
@@ -122,7 +122,10 @@ export default {
       web3: 'web3',
       network: 'network',
       ens: 'ens'
-    })
+    }),
+    cdpOptions() {
+      return this.availableCdps;
+    }
   },
   async mounted() {
     if (!this.makerActive) {

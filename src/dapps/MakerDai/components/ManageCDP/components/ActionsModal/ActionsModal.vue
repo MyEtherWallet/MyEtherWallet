@@ -309,11 +309,6 @@ export default {
               )
               .gte(2);
           case 'payback':
-            console.log(
-              this.activeCdp.calcCollatRatioDaiChg(
-                this.activeCdp.debtValue.minus(this.amount)
-              )
-            ); // todo remove dev item
             return this.activeCdp
               .calcCollatRatioDaiChg(
                 this.activeCdp.debtValue.minus(this.amount)

@@ -248,7 +248,9 @@ export default {
     }),
     validInputs() {
       if (toBigNumber(this.ethQty).gt(0)) {
+        // eslint-disable-next-line
         console.log(ethUnit.toWei(this.ethQty, 'ether').toString()); // todo remove dev item
+        // eslint-disable-next-line
         console.log(this.account.balance); // todo remove dev item
         return toBigNumber(ethUnit.toWei(this.ethQty, 'ether').toString()).lte(
           this.account.balance
@@ -319,9 +321,10 @@ export default {
     async openCdp() {
       if (this.ethQty <= 0) return 0;
       const newCdp = await this.makerCDP.openCdp(this.ethQty, this.daiQty);
+      // eslint-disable-next-line
       console.log(newCdp); // todo remove dev item
       await this.makerCDP.init(newCdp.id);
-      this.$emit('cdpOpened', {maker: this.makerCDP, id: newCdp.id});
+      this.$emit('cdpOpened', { maker: this.makerCDP, id: newCdp.id });
     }
   }
 };
