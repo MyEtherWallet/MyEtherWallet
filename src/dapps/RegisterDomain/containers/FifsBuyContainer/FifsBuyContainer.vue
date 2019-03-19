@@ -3,7 +3,7 @@
     <div class="name-available-container">
       <div class="content-header">
         <div>
-          <h3>{{ fullDomain }}</h3>
+          <h3>{{ domainName }}</h3>
           <p>{{ $t('dapps.domainIsAvailable') }}</p>
         </div>
       </div>
@@ -23,18 +23,9 @@ export default {
       type: String,
       default: ''
     },
-    tld: {
-      type: String,
-      default: ''
-    },
     registerFifsName: {
       type: Function,
       default: function() {}
-    }
-  },
-  computed: {
-    fullDomain() {
-      return `${this.domainName}.${this.tld}`;
     }
   },
   mounted() {

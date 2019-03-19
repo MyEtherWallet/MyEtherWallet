@@ -3,7 +3,9 @@
     <form class="send-form">
       <div class="title-container">
         <div class="title">
-          <h4>{{ $t('interface.registerEns') }}</h4>
+          <h4>
+            {{ $t('interface.registerEns') }}
+          </h4>
           <p>{{ $t('interface.registerEnsDesc') }}</p>
         </div>
       </div>
@@ -72,7 +74,7 @@ export default {
       type: Boolean,
       default: false
     },
-    domainName: {
+    hostName: {
       type: String,
       default: ''
     },
@@ -91,7 +93,7 @@ export default {
   },
   data() {
     return {
-      localDomainName: this.domainName
+      localDomainName: this.hostName
     };
   },
   watch: {

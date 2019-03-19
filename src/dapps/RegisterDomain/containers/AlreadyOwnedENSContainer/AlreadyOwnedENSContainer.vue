@@ -2,7 +2,7 @@
   <div class="already-owned-container">
     <finalize-modal
       ref="finalizeModal"
-      :domain-name="domainName"
+      :domain-name="hostName"
       :finalize="finalize"
     />
     <h3>{{ fullDomainName }} {{ $t('dapps.alreadyOwned') }}.</h3>
@@ -11,7 +11,7 @@
       <p class="content">{{ labelHash }}</p>
     </div>
     <div class="content-container">
-      <p class="label">{{ $t('dapps.nameHash') }}({{ domainName }}):</p>
+      <p class="label">{{ $t('dapps.nameHash') }}({{ hostName }}):</p>
       <p class="content">{{ nameHash }}</p>
     </div>
     <div class="content-container">
@@ -84,7 +84,7 @@ export default {
       type: String,
       default: ''
     },
-    domainName: {
+    hostName: {
       type: String,
       default: ''
     },
@@ -105,11 +105,11 @@ export default {
       account: 'account'
     }),
     fullDomainName() {
-      return `${this.domainName}.${this.tld}`;
+      return `${this.hostName}.${this.tld}`;
     }
   },
   mounted() {
-    if (this.domainName === '') {
+    if (this.hostName === '') {
       this.$router.push('/interface/dapps/register-domain');
     }
   },

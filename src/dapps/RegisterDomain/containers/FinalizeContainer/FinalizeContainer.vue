@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="finalize-container">
-      <h3>{{ $t('dapps.finalizeDesc') }}: {{ domainName }}.eth</h3>
+      <h3>{{ $t('dapps.finalizeDesc') }}: {{ domainName }}</h3>
       <button class="finalize-button" @click="finalize">
         {{ $t('dapps.finalize') }}
       </button>

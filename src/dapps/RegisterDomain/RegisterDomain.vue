@@ -8,6 +8,7 @@
       :bid-mask="bidMask"
       :secret-phrase="secretPhrase"
       :start-auction-and-bid="startAuctionAndBid"
+      :host-name="parsedHostName"
       :domain-name="parsedDomainName"
       :auction-date-end="auctionDateEnd"
       :loading="loading"
@@ -108,14 +109,24 @@ export default {
       );
     },
     parsedTld() {
-      const hasTld = this.domainName.lastIndexOf('.');
-      return hasTld !== -1
-        ? this.domainName.substr(hasTld + 1, this.domainName.length)
-        : '';
+      if (this.parsedHostName.length) {
+        const hasTld = this.domainName.lastIndexOf('.');
+        return hasTld > -1
+          ? this.domainName.substr(hasTld + 1, this.domainName.length)
+          : this.registrarTLD;
+      }
+      return '';
+    },
+    parsedHostName() {
+      return this.domainName.substr(
+        0,
+        this.domainName.lastIndexOf('.') > -1
+          ? this.domainName.lastIndexOf('.')
+          : this.domainName.length
+      );
     },
     parsedDomainName() {
-      const domainName = this.domainName.split('.');
-      return domainName.length > 1 ? domainName[0] : this.domainName;
+      return this.parsedHostName + '.' + this.parsedTld;
     }
   },
   watch: {
@@ -161,8 +172,7 @@ export default {
     },
     async setRegistrar() {
       const web3 = this.web3;
-      const tld =
-        this.parsedTld.length > 0 ? this.parsedTld : this.registrarTLD;
+      const tld = this.registrarTLD;
       this.registrarAddress = await this.getRegistrarAddress(tld);
       this.auctionRegistrarContract = new web3.eth.Contract(
         RegistrarAbi,
@@ -276,9 +286,7 @@ export default {
       this.loading = true;
       const web3 = this.web3;
 
-      this.labelHash = web3.utils.sha3(
-        this.domainName.replace(this.parsedTld, '')
-      );
+      this.labelHash = web3.utils.sha3(this.parsedHostName);
 
       if (this.parsedTld !== '' && isSupported === undefined) {
         Toast.responseHandler(
@@ -286,10 +294,7 @@ export default {
           Toast.ERROR
         );
         this.loading = false;
-      } else if (
-        this.parsedTld === this.registrarTLD ||
-        this.parsedTld === ''
-      ) {
+      } else if (this.parsedTld === this.registrarTLD) {
         try {
           let domainStatus = [];
           if (this.registrarType === 'auction') {
@@ -321,8 +326,8 @@ export default {
             this.web3.currentProvider,
             registrarAddr
           );
-          this.dnsClaim = await this.dnsRegistrar.claim(this.domainName);
-          const _owner = await this.ens.owner(this.domainName);
+          this.dnsClaim = await this.dnsRegistrar.claim(this.parsedDomainName);
+          const _owner = await this.ens.owner(this.parsedDomainName);
           if (
             this.dnsClaim.result.found &&
             this.dnsClaim.getOwner().toLowerCase() === _owner.toLowerCase()
@@ -412,30 +417,24 @@ export default {
       }
     },
     updateDomainName(value) {
-      if (
-        !this.multiTld &&
-        (value.substr(0, 2) === '0x' ||
-          value.length < 7 ||
-          value.indexOf('.') !== -1)
-      ) {
-        this.domainNameErr = true;
+      if (this.parsedTld === this.registrarTLD) {
+        this.domainNameErr = value.substr(0, 2) === '0x' || value.length < 7;
       } else {
         this.domainNameErr = false;
       }
       try {
-        normalise(value);
+        this.domainName = normalise(value);
       } catch (e) {
         Toast.responseHandler(e, Toast.WARN);
         this.domainNameErr = true;
         return;
       }
-      this.domainName = normalise(value);
     },
     async getMoreInfo(deedOwner) {
       let highestBidder = '0x';
       if (
         this.registrarType === 'auction' &&
-        (this.parsedTld === this.registrarTLD || this.parsedTld === '')
+        this.parsedTld === this.registrarTLD
       ) {
         const deedContract = new this.web3.eth.Contract(
           DeedContractAbi,
