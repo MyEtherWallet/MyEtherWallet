@@ -58,7 +58,6 @@ class ledgerWallet {
       tx.raw[6] = Buffer.from([networkId]);
       tx.raw[7] = Buffer.from([]);
       tx.raw[8] = Buffer.from([]);
-      console.log('0x' + tx.to.toString('hex'));
       const tokenInfo = byContractAddress('0x' + tx.to.toString('hex'));
       if (tokenInfo) await this.ledger.provideERC20TokenInformation(tokenInfo);
       const result = await this.ledger.signTransaction(
