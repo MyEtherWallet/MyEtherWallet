@@ -35,7 +35,7 @@ export default {
     'interface-bottom-text': InterfaceBottomText
   },
   props: {
-    domainName: {
+    hostName: {
       type: String,
       default: ''
     },
@@ -58,11 +58,11 @@ export default {
   },
   computed: {
     fullDomainName() {
-      return `${this.domainName}.${this.tld}`;
+      return `${this.hostName}.${this.tld}`;
     }
   },
   mounted() {
-    if (this.domainName === '') {
+    if (this.hostName === '') {
       this.$router.push('/interface/dapps/register-domain');
     }
   }
