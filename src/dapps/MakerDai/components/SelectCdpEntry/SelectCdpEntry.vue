@@ -126,10 +126,10 @@ export default {
     },
     displayFixedValue(raw, decimals = 3) {
       if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);
-      if(raw.isFinite()){
+      if (raw.isFinite()) {
         return raw.toFixed(decimals).toString();
       }
-      return '--'
+      return '--';
     }
   }
 };

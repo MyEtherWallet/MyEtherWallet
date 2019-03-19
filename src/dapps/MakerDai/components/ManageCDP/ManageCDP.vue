@@ -20,7 +20,18 @@
       :action="'payback'"
       :active-cdp="activeCdp"
     ></action-modal>
-    <close-cdp-modal ref="closeCdp" :active-cdp="activeCdp" :tokens-with-balance="tokensWithBalance"> </close-cdp-modal>
+    <close-cdp-modal
+      ref="closeCdp"
+      :active-cdp="activeCdp"
+      :tokens-with-balance="tokensWithBalance"
+    >
+    </close-cdp-modal>
+    <move-cdp-modal
+      ref="moveCdp"
+      :active-cdp="activeCdp"
+      :tokens-with-balance="tokensWithBalance"
+    >
+    </move-cdp-modal>
     <div class="container-maker">
       <div>
         <button @click="showClose">
@@ -191,6 +202,8 @@ import GenerateDai from './components/GenerateDai';
 import DepositeCollateral from './components/DepositCollateral';
 import ActionModal from './components/ActionsModal';
 import CloseCdpModal from './components/CloseCdpModal';
+import MoveCdpModal from './components/MoveCdpModal';
+
 import BigNumber from 'bignumber.js';
 
 const toBigNumber = num => {
@@ -205,6 +218,7 @@ export default {
     'deposit-collateral': DepositeCollateral,
     'action-modal': ActionModal,
     'close-cdp-modal': CloseCdpModal,
+    'move-cdp-modal': MoveCdpModal,
     blockie: Blockie
   },
   props: {
@@ -277,6 +291,7 @@ export default {
       this.loaded = true;
       if (this.cdpId) {
         this.activeCdp = this.availableCdps[this.cdpId];
+        // eslint-disable-next-line
         console.log(this.activeCdp); // todo remove dev item
       }
     }
@@ -298,6 +313,10 @@ export default {
     showClose() {
       this.$refs.closeCdp.$refs.modal.show();
     },
+    showClose() {
+      this.$refs.moveCdp.$refs.modal.show();
+    },
+
     displayPercentValue(raw) {
       if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);
       return raw.times(100).toString();
