@@ -1,5 +1,5 @@
 import { shallowMount } from '@vue/test-utils';
-import NameForbiddenENSContainer from '@/dapps/RegisterDomain/containers/NameForbiddenENSContainer/NameForbiddenENSContainer.vue';
+import NameForbiddenENSContainer from '@/dapps/ManageENS/containers/NameForbiddenENSContainer/NameForbiddenENSContainer.vue';
 import { Tooling } from '@@/helpers';
 
 describe('NameForbiddenENSContainer.vue', () => {

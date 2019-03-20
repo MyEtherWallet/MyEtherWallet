@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils';
 import sinon from 'sinon';
-import ManageENSContainer from '@/dapps/RegisterDomain/containers/ManageENSContainer/ManageENSContainer.vue';
+import ManageENSContainer from '@/dapps/ManageENS/containers/ManageENSContainer/ManageENSContainer.vue';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import { Tooling } from '@@/helpers';
 
@@ -35,7 +35,7 @@ describe('ManageENSContainer.vue', () => {
   });
 
   it('should push correct route', () => {
-    expect(push.calledWith('/interface/dapps/register-domain'));
+    expect(push.calledWith('/interface/dapps/manage-ens'));
   });
 
   it('should render correct domainName props', () => {

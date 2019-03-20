@@ -1,5 +1,5 @@
 import { shallowMount } from '@vue/test-utils';
-import Timer from '@/dapps/RegisterDomain/components/Timer/Timer.vue';
+import Timer from '@/dapps/ManageENS/components/Timer/Timer.vue';
 import { Tooling } from '@@/helpers';
 import { Misc } from '@/helpers';
 

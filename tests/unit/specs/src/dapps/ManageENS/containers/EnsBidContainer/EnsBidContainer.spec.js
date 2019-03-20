@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils';
-import EnsBidContainer from '@/dapps/RegisterDomain/containers/EnsBidContainer/EnsBidContainer.vue';
-import JsonStringModal from '@/dapps/RegisterDomain/components/JsonStringModal/JsonStringModal.vue';
+import EnsBidContainer from '@/dapps/ManageENS/containers/EnsBidContainer/EnsBidContainer.vue';
+import JsonStringModal from '@/dapps/ManageENS/components/JsonStringModal/JsonStringModal.vue';
 import sinon from 'sinon';
 import { Misc } from '@/helpers';
 import { Tooling } from '@@/helpers';
@@ -40,7 +40,7 @@ describe('EnsBidContainer.vue', () => {
     replace: sinon.stub(),
     history: {
       current: {
-        path: '/interface/dapps/register-domain'
+        path: '/interface/dapps/manage-ens'
       }
     }
   };
@@ -143,7 +143,7 @@ describe('EnsBidContainer.vue', () => {
           replace: sinon.stub(),
           history: {
             current: {
-              path: '/interface/dapps/register-domain'
+              path: '/interface/dapps/manage-ens'
             }
           }
         }
@@ -169,7 +169,7 @@ describe('EnsBidContainer.vue', () => {
           replace: sinon.stub(),
           history: {
             current: {
-              path: '/interface/dapps/register-domain'
+              path: '/interface/dapps/manage-ens'
             }
           }
         }
@@ -200,7 +200,7 @@ describe('EnsBidContainer.vue', () => {
           replace: sinon.stub(),
           history: {
             current: {
-              path: '/interface/dapps/register-domain'
+              path: '/interface/dapps/manage-ens'
             }
           }
         }
@@ -310,7 +310,7 @@ describe('EnsBidContainer.vue', () => {
             replace: sinon.stub(),
             history: {
               current: {
-                path: '/interface/dapps/register-domain'
+                path: '/interface/dapps/manage-ens'
               }
             }
           }
