@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="dns-process-error">
     <div
-      v-if="owner !== '0x0000000000000000000000000000000000000000'"
+      v-if="owner === '0x0000000000000000000000000000000000000000'"
       class="dns-process-content"
     >
       <h3>No TXT setup found for {{ domainName }}!</h3>
@@ -76,7 +76,7 @@ export default {
     }
   },
   mounted() {
-    if (this.domainName === '') {
+    if (this.domainName === '.') {
       this.$router.push('/interface/dapps/manage-ens');
     }
   }
