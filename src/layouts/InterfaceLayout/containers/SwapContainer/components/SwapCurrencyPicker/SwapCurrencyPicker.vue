@@ -11,14 +11,20 @@
       >
         <p>
           <span
-            :class="[
-              'cc',
-              selectedCurrency.symbol,
-              'alt-' + selectedCurrency.symbol,
-              'cc-icon'
-            ]"
+            v-if="getIcon(selectedCurrency.symbol) !== ''"
+            :class="['cc', getIcon(selectedCurrency.symbol), 'cc-icon']"
             class="currency-symbol"
           />
+          <span
+            v-if="getIcon(selectedCurrency.symbol) === ''"
+            class="currency-symbol"
+          >
+            <img
+              :src="iconFetcher(selectedCurrency.symbol)"
+              class="icon-image"
+            />
+          </span>
+
           {{ selectedCurrency.symbol }}
           <span class="subname">- {{ selectedCurrency.name }}</span>
         </p>
@@ -49,7 +55,16 @@
             @click="selectCurrency(curr)"
           >
             <p>
-              <i :class="['cc', curr.symbol, 'cc-icon']" /> {{ curr.symbol }}
+              <span
+                v-if="getIcon(curr.symbol) !== ''"
+                :class="['cc', getIcon(curr.symbol), 'cc-icon']"
+                class="currency-symbol"
+              />
+              <span v-if="getIcon(curr.symbol) === ''" class="currency-symbol">
+                <img :src="iconFetcher(curr.symbol)" class="icon-image" />
+              </span>
+              <!--<i :class="['cc', getIcon(curr.symbol), 'cc-icon']" />-->
+              {{ curr.symbol }}
               <span class="subname">- {{ curr.name }}</span>
             </p>
             <p />
@@ -64,6 +79,7 @@
 <script>
 import '@/assets/images/currency/coins/asFont/cryptocoins.css';
 import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
+import { hasIcon } from '@/partners';
 export default {
   props: {
     currencies: {
@@ -99,6 +115,7 @@ export default {
   },
   data() {
     return {
+      icon: '',
       localCurrencies: [],
       selectedCurrency: { name: 'Select an item', abi: '', address: '' },
       open: false,
@@ -151,6 +168,20 @@ export default {
     }
   },
   methods: {
+    iconFetcher(currency) {
+      let icon;
+      try {
+        // eslint-disable-next-line
+        icon = require(`@/assets/images/currency/coins/AllImages/${currency}.svg`);
+      } catch (e) {
+        // eslint-disable-next-line
+        return require(`@/assets/images/currency/coins/AllImages/MEW.png`);
+      }
+      return icon;
+    },
+    getIcon(currency) {
+      return hasIcon(currency);
+    },
     openDropdown() {
       this.open = !this.open;
     },

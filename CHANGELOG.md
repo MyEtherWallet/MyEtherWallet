@@ -1,3 +1,31 @@
+### Feature
+
+- Implement DNS for ENS [#792](https://github.com/MyEtherWallet/MyEtherWallet/pull/792)
+
+### Devop
+
+- Add zh_TW (Traditional Chinese) translation [#820](https://github.com/MyEtherWallet/MyEtherWallet/pull/820)
+
+### Release v5.0.7
+
+### Feature
+
+- Add Finney Modal [#782](https://github.com/MyEtherWallet/MyEtherWallet/pull/782)
+- Sentry Fixes [#777](https://github.com/MyEtherWallet/MyEtherWallet/pull/777)
+- Add Thundercore node [#780](https://github.com/MyEtherWallet/MyEtherWallet/pull/780)
+
+### Release v5.0.6
+
+### Feature
+
+- DApp: Schedule transaction using Ethereum Alarm Clock [#545](https://github.com/MyEtherWallet/MyEtherWallet/pull/545)
+
+### Bug
+
+- Fix block 0 on mobile [#767](https://github.com/MyEtherWallet/MyEtherWallet/pull/767)
+- Update infura endpoint [#763](https://github.com/MyEtherWallet/MyEtherWallet/pull/763)
+- Chrome 72 compatibility for Secalot [#766](https://github.com/MyEtherWallet/MyEtherWallet/pull/766)
+
 ### Hotfix v5.0.5-hotfix.1
 
 ### Bug

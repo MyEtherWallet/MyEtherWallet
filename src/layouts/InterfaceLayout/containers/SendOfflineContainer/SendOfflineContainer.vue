@@ -152,7 +152,7 @@
             <div class="title">
               <div class="title-helper">
                 <h4>{{ $t('common.gasPrice') }}</h4>
-                <popover :popcontent="$t('popover.txSpeed')" />
+                <popover :popcontent="txSpeedMsg" />
               </div>
             </div>
           </div>
@@ -266,6 +266,12 @@ export default {
       network: 'network',
       web3: 'web3'
     }),
+    txSpeedMsg() {
+      const net = this.network.type.name;
+      // eslint-disable-next-line
+      const msg = `${this.$t('popover.txSpeedPt1').replace('{0}', net)} ${this.$t('popover.txSpeedPt2').replace('{0}', net)}`;
+      return msg;
+    },
     validAddress() {
       return isAddress(this.address);
     },
@@ -326,9 +332,10 @@ export default {
         this.selectedCoinType.symbol === this.network.type.name
           ? 18
           : this.selectedCoinType.decimals;
-      this.toAmt = new BigNumber(e.target.value)
-        .decimalPlaces(decimals)
-        .toFixed();
+      this.toAmt =
+        e.target.valueAsNumber < 0 || isNaN(e.target.valueAsNumber)
+          ? 0
+          : new BigNumber(e.target.value).decimalPlaces(decimals).toFixed();
       e.target.value = this.toAmt;
     }, 300),
     async createDataHex(amount, address, currency) {

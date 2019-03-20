@@ -34,6 +34,7 @@ import iolite from './iolite';
 import mix from './mix';
 import reosc from './reosc';
 import web from './web';
+import thundercore from './thundercore';
 
 export {
   akaremote,
@@ -71,5 +72,6 @@ export {
   rsktestpublic,
   tomo,
   ubq,
-  web
+  web,
+  thundercore
 };

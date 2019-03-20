@@ -11,6 +11,7 @@ import {
   addUpdateNotification,
   addUpdateSwapNotification
 } from '@/helpers/notificationFormatters';
+import BigNumber from 'bignumber.js';
 
 const addNotification = function({ commit, state }, val) {
   let address;
@@ -148,15 +149,14 @@ const setWeb3Instance = function({ dispatch, commit, state }, provider) {
           value: arr[i].value,
           gasPrice: arr[i].gasPrice
         };
-        arr[i].nonce = await (arr[i].nonce === undefined
-          ? web3Instance.eth.getTransactionCount(
-              state.wallet.getAddressString()
-            )
-          : arr[i].nonce);
-        arr[i].nonce = +arr[i].nonce + i;
-        arr[i].gas = await (arr[i].gas === undefined
+        const gas = await (arr[i].gas === undefined
           ? web3Instance.eth.estimateGas(localTx)
           : arr[i].gas);
+        const nonce = await (arr[i].nonce === undefined
+          ? web3Instance.eth.getTransactionCount(state.account.address)
+          : arr[i].nonce);
+        arr[i].nonce = new BigNumber(nonce + i).toFixed();
+        arr[i].gas = gas;
         arr[i].chainId = !arr[i].chainId
           ? state.network.type.chainID
           : arr[i].chainId;
@@ -222,6 +222,10 @@ const setLastPath = function({ commit }, val) {
   commit('SET_LAST_PATH', val);
 };
 
+const updateBlockNumber = function({ commit }, val) {
+  commit('UPDATE_BLOCK_NUMBER', val);
+};
+
 export default {
   addNotification,
   addSwapNotification,
@@ -240,5 +244,6 @@ export default {
   switchNetwork,
   updateNotification,
   updateTransaction,
-  gettingStartedDone
+  gettingStartedDone,
+  updateBlockNumber
 };
