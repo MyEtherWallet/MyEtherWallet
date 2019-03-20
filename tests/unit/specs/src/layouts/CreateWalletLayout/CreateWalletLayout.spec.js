@@ -51,17 +51,18 @@ describe('CreateWalletLayout.vue', () => {
       store,
       sync: sync,
       stubs: {
-          'by-json-file-container': ByJsonFileContainer,
-          'by-mnemonic-container': ByMnemonicContainer,
-          'tutorial-modal': TutorialModal,
-          'scan-to-download-modal': ScanToDownloadModal,
-          'by-json-page-title': PageTitle,
-          'create-wallet-input': CreateWalletInput,
-          'create-wallet-input-footer': CreateWalletInputFooter,
-          'by-json-page-footer': PageFooter,
-          'ipad-modal': IpadModal,
-          'router-link': RouterLinkStub,
-          'b-modal': BModalStub      }
+        'by-json-file-container': ByJsonFileContainer,
+        'by-mnemonic-container': ByMnemonicContainer,
+        'tutorial-modal': TutorialModal,
+        'scan-to-download-modal': ScanToDownloadModal,
+        'by-json-page-title': PageTitle,
+        'create-wallet-input': CreateWalletInput,
+        'create-wallet-input-footer': CreateWalletInputFooter,
+        'by-json-page-footer': PageFooter,
+        'ipad-modal': IpadModal,
+        'router-link': RouterLinkStub,
+        'b-modal': BModalStub
+      }
     });
   }
   it('should render correct byMnemonic data', () => {
@@ -95,15 +96,15 @@ describe('CreateWalletLayout.vue', () => {
     });
 
     it('should render correct switcher method', () => {
-        wrapper.vm.switcher('Json');
-        expect(wrapper.vm.$data.byJson).toBe(true);
-        expect(wrapper.vm.$data.byMnemonic).toBe(false);
-        wrapper.vm.switcher('Mnemonic');
-        expect(wrapper.vm.$data.byJson).toBe(false);
-        expect(wrapper.vm.$data.byMnemonic).toBe(true);
-        wrapper.vm.switcher('Mnemonic111');
-        expect(wrapper.vm.$data.byJson).toBe(false);
-        expect(wrapper.vm.$data.byMnemonic).toBe(false);
+      wrapper.vm.switcher('Json');
+      expect(wrapper.vm.$data.byJson).toBe(true);
+      expect(wrapper.vm.$data.byMnemonic).toBe(false);
+      wrapper.vm.switcher('Mnemonic');
+      expect(wrapper.vm.$data.byJson).toBe(false);
+      expect(wrapper.vm.$data.byMnemonic).toBe(true);
+      wrapper.vm.switcher('Mnemonic111');
+      expect(wrapper.vm.$data.byJson).toBe(false);
+      expect(wrapper.vm.$data.byMnemonic).toBe(false);
     });
   });
 });
