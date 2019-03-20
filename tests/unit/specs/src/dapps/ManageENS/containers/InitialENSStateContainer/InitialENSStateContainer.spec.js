@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils';
 import sinon from 'sinon';
-import InitialENSStateContainer from '@/dapps/RegisterDomain/containers/InitialENSStateContainer/InitialENSStateContainer.vue';
+import InitialENSStateContainer from '@/dapps/ManageENS/containers/InitialENSStateContainer/InitialENSStateContainer.vue';
 import { Tooling } from '@@/helpers';
 
 describe('InitialENSStateContainer.vue', () => {

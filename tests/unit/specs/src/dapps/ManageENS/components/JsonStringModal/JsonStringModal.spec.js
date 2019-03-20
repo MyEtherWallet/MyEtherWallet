@@ -1,5 +1,5 @@
 import { shallowMount } from '@vue/test-utils';
-import JsonStringModal from '@/dapps/RegisterDomain/components/JsonStringModal/JsonStringModal.vue';
+import JsonStringModal from '@/dapps/ManageENS/components/JsonStringModal/JsonStringModal.vue';
 import { Tooling } from '@@/helpers';
 
 const hideModal = jest.fn();

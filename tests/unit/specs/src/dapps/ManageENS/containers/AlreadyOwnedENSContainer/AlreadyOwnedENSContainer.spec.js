@@ -1,7 +1,7 @@
 import sinon from 'sinon';
 import { shallowMount } from '@vue/test-utils';
-import AlreadyOwnedENSContainer from '@/dapps/RegisterDomain/containers/AlreadyOwnedENSContainer/AlreadyOwnedENSContainer.vue';
-import FinalizeModal from '@/dapps/RegisterDomain/components/FinalizeModal/FinalizeModal.vue';
+import AlreadyOwnedENSContainer from '@/dapps/ManageENS/containers/AlreadyOwnedENSContainer/AlreadyOwnedENSContainer.vue';
+import FinalizeModal from '@/dapps/ManageENS/components/FinalizeModal/FinalizeModal.vue';
 import { Tooling } from '@@/helpers';
 const showModal = sinon.stub();
 
@@ -30,7 +30,7 @@ describe('AlreadyOwnedENSContainer.vue', () => {
     push: () => {},
     history: {
       current: {
-        path: '/interface/dapps/register-domain'
+        path: '/interface/dapps/manage-ens'
       }
     }
   };
