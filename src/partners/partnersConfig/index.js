@@ -2,6 +2,7 @@ import { chainCurrencies, fiat } from './currencyDetails';
 import EthereumTokens from './EthereumTokens';
 import OtherCoins from './OtherCoins';
 import ERC20 from './ERC20Token.abi';
+import haveIcon from './haveIcon';
 import {
   networkSymbols,
   TIME_SWAP_VALID_DEFAULT,
@@ -24,6 +25,7 @@ export {
   baseCurrencyEntry,
   EthereumTokens,
   OtherCoins,
+  haveIcon,
   networkSymbols,
   chainCurrencies,
   fiat,

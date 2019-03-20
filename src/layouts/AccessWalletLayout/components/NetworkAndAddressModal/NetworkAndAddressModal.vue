@@ -428,7 +428,7 @@ export default {
         .catch(error => {
           // if HD path is not supported by the hardware
           this.HDAccounts = [];
-          Toast.responseHandler(error, Toast.ERROR);
+          this.hardwareWallet.errorHandler(error);
         });
       this.selectedPath = this.hardwareWallet.getCurrentPath();
     },
@@ -438,6 +438,9 @@ export default {
           .getBalance(account.account.getAddressString())
           .then(balance => {
             account.balance = balance;
+          })
+          .catch(e => {
+            Toast.responseHandler(e, Toast.ERROR);
           });
       });
     }, 1000),

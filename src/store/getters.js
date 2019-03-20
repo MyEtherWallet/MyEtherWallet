@@ -50,6 +50,10 @@ const gettingStartedDone = state => {
   return state.gettingStartedDone;
 };
 
+const blockNumber = state => {
+  return state.blockNumber;
+};
+
 export default {
   account,
   customPaths,
@@ -67,5 +71,6 @@ export default {
   web3,
   sidemenuOpen,
   darklist,
-  gettingStartedDone
+  gettingStartedDone,
+  blockNumber
 };

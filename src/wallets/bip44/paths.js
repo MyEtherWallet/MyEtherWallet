@@ -95,6 +95,10 @@ const ledgerEthereumClassic = {
   path: "m/44'/60'/160720'/0",
   label: 'Ethereum Classic'
 };
+const ledgerEthereumClassicVintage = {
+  path: "m/44'/60'/160720'/0'",
+  label: 'Ethereum Classic MEW Vintage'
+};
 const ledgerLiveEthereumClassic = {
   path: "m/44'/61'",
   label: 'Ethereum Classic - Ledger Live'
@@ -115,6 +119,10 @@ const keepkeyEthereumClassic = {
   path: "m/44'/61'",
   label: 'Ethereum Classic'
 };
+const thundercore = {
+  path: "m/44'/1001'/0'/0",
+  label: 'ThunderCore'
+};
 export {
   ethereum,
   ethereumClassic,
@@ -122,6 +130,7 @@ export {
   ledgerLiveEthereum,
   ledgerEthereumClassic,
   ledgerLiveEthereumClassic,
+  ledgerEthereumClassicVintage,
   ropsten,
   singularDTV,
   expanse,
@@ -144,5 +153,6 @@ export {
   rskMainnet,
   rskTestnet,
   keepkeyEthereum,
-  keepkeyEthereumClassic
+  keepkeyEthereumClassic,
+  thundercore
 };

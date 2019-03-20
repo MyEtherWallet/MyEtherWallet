@@ -5,7 +5,7 @@ import {
 } from './sortAndIdentify';
 import * as utils from './utils';
 import qrcodeBuilder from './qrCodeBuilder';
-
+import hasIcon from './haveIcon';
 const isValidEntry = utils.isValidEntry;
 const checkInvalidOrMissingValue = utils.checkInvalidOrMissingValue;
 
@@ -16,5 +16,6 @@ export {
   isValidEntry,
   checkInvalidOrMissingValue,
   dynamicSortMultiple,
-  qrcodeBuilder
+  qrcodeBuilder,
+  hasIcon
 };

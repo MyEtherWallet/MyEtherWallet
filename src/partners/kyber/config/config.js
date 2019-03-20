@@ -39,6 +39,10 @@ const TIME_SWAP_VALID = TIME_SWAP_VALID_DEFAULT;
 const PROVIDER_NAME = 'kybernetwork';
 const kyberBaseCurrency = 'ETH';
 
+const specialGasLimits = {
+  DGX: 750000
+};
+
 export {
   kyberBaseCurrency,
   FEE_RATE,
@@ -47,6 +51,7 @@ export {
   MAX_DEST_AMOUNT,
   MIN_RATE_BUFFER,
   defaultValues,
+  specialGasLimits,
   kyberTokenList,
   kyberTokenInfoList,
   kyberValidNetworks,
