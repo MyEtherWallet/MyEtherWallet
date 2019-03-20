@@ -95,6 +95,10 @@ const ledgerEthereumClassic = {
   path: "m/44'/60'/160720'/0",
   label: 'Ethereum Classic'
 };
+const ledgerEthereumClassicVintage = {
+  path: "m/44'/60'/160720'/0'",
+  label: 'Ethereum Classic MEW Vintage'
+};
 const ledgerLiveEthereumClassic = {
   path: "m/44'/61'",
   label: 'Ethereum Classic - Ledger Live'
@@ -126,6 +130,7 @@ export {
   ledgerLiveEthereum,
   ledgerEthereumClassic,
   ledgerLiveEthereumClassic,
+  ledgerEthereumClassicVintage,
   ropsten,
   singularDTV,
   expanse,
