@@ -342,7 +342,7 @@ export default {
     }
   },
   mounted() {
-    if (this.domainName === '')
+    if (this.domainName === '.')
       this.$router.replace('/interface/dapps/register-domain');
   },
   methods: {
