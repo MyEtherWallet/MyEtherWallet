@@ -40,7 +40,6 @@ export default async (
         )
       : tx.nonce;
     tx.gas = !tx.gas ? await ethCalls.estimateGas(localTx) : tx.gas;
-    console.log(Object.assign({}, tx));
   } catch (e) {
     res(e);
     return;
@@ -73,11 +72,6 @@ export default async (
                     ),
                     timestamp: localStoredObj.timestamp
                   }
-                );
-                console.log(
-                  locStore.get(
-                    utils.sha3(store.state.wallet.getChecksumAddressString())
-                  )
                 );
               }
               res(null, toPayload(payload.id, hash));
