@@ -1,4 +1,4 @@
-const RegisterDomain = () => import('./RegisterDomain');
+const ManageENS = () => import('./ManageENS');
 const EnsBidContainer = () => import('./containers/EnsBidContainer');
 const InitialENSStateContainer = () =>
   import('./containers/InitialENSStateContainer');
@@ -15,8 +15,8 @@ const DNSProcessErrorContainer = () =>
 const DNSMissingTXT = () => import('./containers/DNSMissingTXT');
 
 export default {
-  path: 'dapps/register-domain',
-  component: RegisterDomain,
+  path: 'dapps/manage-ens',
+  component: ManageENS,
   props: true,
   meta: { requiresAuth: true },
   children: [
