@@ -112,7 +112,7 @@
     "uuid": "3.3.2",
     "vue-i18n": "8.9.0",
     "vue-tel-input": "2.0.17",
-    "vue-template-compiler": "2.6.8",
+    "vue-template-compiler": "2.6.10",
     "vue-worker": "1.2.1",
     "wallet-address-validator": "0.2.4",
     "web3": "1.0.0-beta.37",
