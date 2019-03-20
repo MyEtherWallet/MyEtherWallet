@@ -7,6 +7,25 @@
       class="bootstrap-modal bootstrap-modal-wide padding-40-20"
       title="Move CDP"
     >
+      <div class="inputs-container">
+        <div class="input-container">
+          <label>How much ETH would you like to deposit?</label>
+          <div class="input-box">
+            <input v-model="address" />
+          </div>
+        </div>
+      </div>
+      <div class="buttons-container">
+        <button class="cancel-btn">
+          Cancel
+        </button>
+        <button
+          :class="['submit-btn', btnActive ? '' : 'disabled']"
+          @click="moveCdp"
+        >
+          Submit
+        </button>
+      </div>
       <help-center-button />
     </b-modal>
   </div>
@@ -17,6 +36,8 @@ import { mapGetters } from 'vuex';
 
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
 import BigNumber from 'bignumber.js';
+
+import { Misc } from '@/helpers';
 
 const toBigNumber = num => {
   return new BigNumber(num);
@@ -46,7 +67,7 @@ export default {
   },
   data() {
     return {
-      amount: 0,
+      address: '',
       amountEth: 0,
       amountDai: 0,
       govFee: 0,
@@ -60,33 +81,8 @@ export default {
       web3: 'web3',
       network: 'network'
     }),
-    getfeeOwed() {
-      const result = this.activeCdp.governanceFeeOwed;
-      return this.displayFixedValue(result, 8);
-    },
-    newCollateralRatio() {
-      if (this.activeCdp) {
-        return this.activeCdp.collatRatio;
-      }
-      return 0;
-    },
-    newCollateralRatioSafe() {
-      if (this.activeCdp) {
-        return toBigNumber(this.activeCdp.collatRatio).gte(2);
-      }
-      return true;
-    },
-    newLiquidationPrice() {
-      if (this.activeCdp) {
-        return this.activeCdp.liquidationPrice;
-      }
-      return 0;
-    },
-    mkrBalance() {
-      if (this.mkrToken) {
-        return this.mkrToken.balance;
-      }
-      return 0;
+    btnActive() {
+      return this.address !== '';
     }
   },
   watch: {},
@@ -113,16 +109,14 @@ export default {
       if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);
       return raw.toFixed(decimals, BigNumber.ROUND_DOWN).toString();
     },
-    async lockEth() {
-      if (toBigNumber(this.amount).gte(0)) {
-        return await this.activeCdp.lockEth(this.amount);
+    async moveCdp() {
+      if (Misc.isValidETHAddress(this.address)) {
+        await this.activeCdp.moveCdp(this.address);
+        this.closeModal();
       }
     },
-    maxDai() {
-      this.amount = this.activeCdp.maxDai;
-    },
-    currentDai() {
-      this.amount = this.activeCdp.debtValue;
+    closeModal() {
+      this.$refs.modal.hide();
     }
   }
 };

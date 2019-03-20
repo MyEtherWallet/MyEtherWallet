@@ -211,7 +211,7 @@
       </div>
       <div class="buttons-container">
         <button class="cancel-btn">
-          Submit
+          Cancel
         </button>
         <button class="submit-btn" @click="submitBtn">
           Submit
@@ -379,30 +379,34 @@ export default {
       if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);
       return raw.toFixed(decimals, BigNumber.ROUND_DOWN).toString();
     },
-    async lockEth() {
-      if (toBigNumber(this.amount).gte(0)) {
-        return await this.activeCdp.lockEth(this.amount);
-      }
-    },
     maxDai() {
       this.amount = this.activeCdp.maxDai;
     },
     currentDai() {
       this.amount = this.activeCdp.debtValue;
     },
+    async lockEth() {
+      if (toBigNumber(this.amount).gte(0)) {
+        await this.activeCdp.lockEth(this.amount);
+        this.closeModal();
+      }
+    },
     async drawDai() {
       if (toBigNumber(this.amount).gte(0)) {
-        return await this.activeCdp.drawDai(this.amount);
+        await this.activeCdp.drawDai(this.amount);
+        this.closeModal();
       }
     },
     async freeEth() {
       if (toBigNumber(this.amount).gte(0)) {
-        return await this.activeCdp.freeEth(this.amount);
+        await this.activeCdp.freeEth(this.amount);
+        this.closeModal();
       }
     },
     async wipeDai() {
       if (toBigNumber(this.amount).gte(0)) {
-        return await this.activeCdp.wipeDai(this.amount);
+        await this.activeCdp.wipeDai(this.amount);
+        this.closeModal();
       }
     },
 
@@ -419,6 +423,9 @@ export default {
         default:
           return '';
       }
+    },
+    closeModal() {
+      this.$refs.modal.hide();
     }
   }
 };
