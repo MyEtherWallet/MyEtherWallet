@@ -2,6 +2,10 @@
 
 - Better Ipad Catch [#814](https://github.com/MyEtherWallet/MyEtherWallet/pull/814)
 
+### Feature
+
+- Implement DNS for ENS [#792](https://github.com/MyEtherWallet/MyEtherWallet/pull/792)
+
 ### Devop
 
 - Add zh_TW (Traditional Chinese) translation [#820](https://github.com/MyEtherWallet/MyEtherWallet/pull/820)

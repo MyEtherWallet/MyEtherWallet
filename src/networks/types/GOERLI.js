@@ -1,5 +1,6 @@
 import tokens from '@/tokens/tokens-goerli.json';
 import contracts from '@/contracts/contract-abi-goerli.json';
+import { GOERLI } from '../tlds';
 
 export default {
   name: 'GöETH',
@@ -13,6 +14,7 @@ export default {
   ens: {
     registry: '0x112234455c3a32fd11230c42e7bccd4a84e02010',
     registrarTLD: 'test',
-    registrarType: 'fifs'
+    registrarType: 'fifs',
+    supportedTld: GOERLI
   }
 };
