@@ -1,6 +1,6 @@
 <template>
-  <div class="back-container" @click.prevent="back">
-    <div class="content-title">
+  <div class="back-container">
+    <div class="content-title" @click.prevent="back">
       <div class="back-icon-container">
         <i class="fa fa-arrow-left" aria-hidden="true" />
       </div>

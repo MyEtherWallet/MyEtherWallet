@@ -10,6 +10,7 @@ export default async ({ payload, requestManager }, res, next) => {
   const ethCalls = new EthCalls(requestManager);
   const addr = payload.params[0];
   let cached = {};
+  console.log('asdfasdf');
   if (store.get(utils.sha3(addr)) === undefined) {
     cached = {
       nonce: '0x00',

@@ -29,6 +29,7 @@ export default async (
   if (payload.method !== 'eth_sendTransaction') return next();
   const tx = payload.params[0];
   const localTx = Object.assign({}, tx);
+  console.log(localTx, 'called 2nd?');
   delete localTx['gas'];
   delete localTx['nonce'];
   const ethCalls = new EthCalls(requestManager);
@@ -39,6 +40,7 @@ export default async (
         )
       : tx.nonce;
     tx.gas = !tx.gas ? await ethCalls.estimateGas(localTx) : tx.gas;
+    console.log(Object.assign({}, tx));
   } catch (e) {
     res(e);
     return;
@@ -71,6 +73,11 @@ export default async (
                     ),
                     timestamp: localStoredObj.timestamp
                   }
+                );
+                console.log(
+                  locStore.get(
+                    utils.sha3(store.state.wallet.getChecksumAddressString())
+                  )
                 );
               }
               res(null, toPayload(payload.id, hash));

@@ -57,6 +57,7 @@ import normalise from '@/helpers/normalise';
 import { mapGetters } from 'vuex';
 import { Toast } from '@/helpers';
 import DNSRegistrar from '@ensdomains/dnsregistrar';
+import BigNumber from 'bignumber.js';
 
 export default {
   components: {
@@ -212,8 +213,7 @@ export default {
     },
     async updateResolver(newResolverAddr) {
       const web3 = this.web3;
-      const from = this.account.address;
-
+      const address = this.account.address;
       // Public resolver address
       const resolver = await this.ens.resolver('resolver.eth');
       const publicResolverAddress = await resolver.addr();
@@ -222,20 +222,22 @@ export default {
         publicResolverAddress
       );
       const rawTx1 = {
+        from: address,
         to: this.network.type.ens.registry,
-        from: from,
-        data: this.ensRegistryContract.methods
+        data: await this.ensRegistryContract.methods
           .setResolver(this.nameHash, publicResolverAddress)
           .encodeABI(),
-        value: 0
+        value: 0,
+        gasPrice: new BigNumber(unit.toWei(this.gasPrice, 'gwei')).toFixed()
       };
       const rawTx2 = {
+        from: address,
         to: publicResolverAddress,
-        from: from,
-        data: publicResolverContract.methods
+        data: await publicResolverContract.methods
           .setAddr(this.nameHash, newResolverAddr)
           .encodeABI(),
-        value: 0
+        value: 0,
+        gasPrice: new BigNumber(unit.toWei(this.gasPrice, 'gwei')).toFixed()
       };
       web3.mew.sendBatchTransactions([rawTx1, rawTx2]);
     },
@@ -287,7 +289,6 @@ export default {
       const web3 = this.web3;
 
       this.labelHash = web3.utils.sha3(this.parsedHostName);
-      console.log(this.parsedHostName);
       if (this.parsedTld !== '' && isSupported === undefined) {
         Toast.responseHandler(
           `Domain TLD ${this.parsedTld} is not supported in this node!`,
@@ -456,7 +457,7 @@ export default {
         resolverAddress = '0x';
       }
 
-      this.nameHash = nameHashPckg.hash(this.domainName);
+      this.nameHash = nameHashPckg.hash(this.parsedDomainName);
       this.resolverAddress = resolverAddress;
       this.deedOwner = highestBidder;
       this.owner = owner;

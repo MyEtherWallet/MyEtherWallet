@@ -30,8 +30,7 @@
     "pre-commit": "npm run lint && npm run test"
   },
   "dependencies": {
-    "@ensdomains/dnsprovejs": "0.1.0",
-    "@ensdomains/dnsregistrar": "0.3.0",
+    "@ensdomains/dnsregistrar": "0.3.1",
     "@sentry/browser": "4.6.4",
     "html2canvas": "1.0.0-alpha.12",
     "idna-uts46": "1.1.0",
