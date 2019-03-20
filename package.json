@@ -51,7 +51,7 @@
   "devDependencies": {
     "@ethereum-alarm-clock/lib": "0.3.4",
     "@keepkey/keepkey.js": "1.2.1",
-    "@ledgerhq/hw-app-eth": "4.45.0",
+    "@ledgerhq/hw-app-eth": "4.47.0",
     "@ledgerhq/hw-transport-u2f": "4.45.0",
     "@myetherwallet/eth-token-balance": "0.1.4",
     "@myetherwallet/mewconnect-web-client": "1.0.14",
