@@ -116,7 +116,7 @@ export default {
           img: katya
         },
         {
-          name: 'Sam',
+          name: 'Samantha',
           position: 'Media & Communication',
           img: samantha
         }
