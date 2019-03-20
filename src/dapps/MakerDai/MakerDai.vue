@@ -143,6 +143,7 @@ export default {
               delete this.availableCdps[idProp];
               this.cdps = this.cdps.filter(item => item !== idProp);
             } else {
+              console.log('UPDATE CDP', idProp); // todo remove dev item
               await this.availableCdps[idProp].update();
             }
           }
@@ -196,6 +197,7 @@ export default {
     );
 
     this.cdps = await this.locateCdps();
+
     if (this.cdps.length > 0) {
       await this.loadCdpDetails();
       this.cdpDetailsLoaded = true;
@@ -246,8 +248,9 @@ export default {
       }
     },
     async refresh() {
-      const allCdps = await this.locateCdps();
-      const newCdps = allCdps.filter(
+      this.cdps = await this.locateCdps();
+      console.log(this.cdps); // todo remove dev item
+      const newCdps = this.cdps.filter(
         item => !Object.keys(this.availableCdps).includes(item)
       );
       const sysVars = {
@@ -274,14 +277,17 @@ export default {
           await this.availableCdps[idProp].update();
         }
       }
+      this.gotoImport();
     },
     async locateCdps() {
       const directCdps = await this.maker.getCdpIds(
         this.account.address //proxy
       );
+      console.log(directCdps); // todo remove dev item
       const proxy = await this.maker
         .service('proxy')
         .getProxyAddress(this.account.address);
+      console.log(proxy); // todo remove dev item
       let searchAddress;
       if (proxy) {
         searchAddress = proxy;

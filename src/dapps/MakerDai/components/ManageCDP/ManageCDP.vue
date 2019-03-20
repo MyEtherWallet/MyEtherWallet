@@ -37,6 +37,9 @@
         <button @click="showClose">
           CLOSE
         </button>
+        <button @click="showMove">
+          MOVE
+        </button>
       </div>
       <div class="manage-container">
         <div class="content-container">
@@ -313,10 +316,9 @@ export default {
     showClose() {
       this.$refs.closeCdp.$refs.modal.show();
     },
-    showClose() {
+    showMove() {
       this.$refs.moveCdp.$refs.modal.show();
     },
-
     displayPercentValue(raw) {
       if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);
       return raw.times(100).toString();

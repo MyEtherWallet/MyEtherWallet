@@ -257,8 +257,8 @@ export default class MakerCDP {
 
   async lockEth(amount) {
     try {
-      this.needsUpdate = true;
       await this.cdpService.lockEthProxy(this.proxyAddress, this.cdpId, amount);
+      this.needsUpdate = true;
     } catch (e) {
       // eslint-disable-next-line
       console.log(e);
@@ -266,7 +266,6 @@ export default class MakerCDP {
   }
 
   drawDai(amount, acknowledgeBypass = false) {
-    this.needsUpdate = true;
     if (
       this.calcCollatRatio(this.ethCollateral, this.debtValue.plus(amount)).gt(
         2
@@ -275,6 +274,7 @@ export default class MakerCDP {
     ) {
       try {
         this.cdpService.drawDaiProxy(this.proxyAddress, this.cdpId, amount);
+        this.needsUpdate = true;
       } catch (e) {
         // eslint-disable-next-line
         console.log(e);
@@ -283,9 +283,9 @@ export default class MakerCDP {
   }
 
   async freeEth(amount) {
-    this.needsUpdate = true;
     try {
       await this.cdpService.freeEthProxy(this.proxyAddress, this.cdpId, amount);
+      this.needsUpdate = true;
     } catch (e) {
       // eslint-disable-next-line
       console.log(e);
@@ -293,9 +293,9 @@ export default class MakerCDP {
   }
 
   async wipeDai(amount) {
-    this.needsUpdate = true;
     try {
       await this.cdpService.wipeDaiProxy(this.proxyAddress, this.cdpId, amount);
+      this.needsUpdate = true;
     } catch (e) {
       // eslint-disable-next-line
       console.log(e);
@@ -303,8 +303,6 @@ export default class MakerCDP {
   }
 
   async closeCdp() {
-    this.needsUpdate = true;
-    this.closing = true;
     // return this.wipeDai(this.debtValue)
     const value = this.debtValue.toNumber();
     // eslint-disable-next-line
@@ -313,6 +311,8 @@ export default class MakerCDP {
     if (enoughToWipe) {
       try {
         await this.cdpService.shutProxy(this.proxyAddress, this.cdpId);
+        this.needsUpdate = true;
+        this.closing = true;
       } catch (e) {
         // eslint-disable-next-line
         console.error(e);
@@ -325,6 +325,27 @@ export default class MakerCDP {
     //     console.error(e);
     //   }
     // }
+  }
+
+  async moveCdp(address){
+    const proxy = await this.maker
+      .service('proxy')
+      .getProxyAddress(address);
+    console.log(proxy); // todo remove dev item
+    if(proxy){
+      await this.cdpService.giveProxy(this.proxyAddress, this.cdpId, proxy)
+      this.needsUpdate = true;
+      this.closing = true; // for the purpose of displaying to the user closing and moving are the same
+    } else {
+      // const proxyService = this.maker.service('proxy')
+      // const newProxy = proxyService._proxyRegistry().build()
+      // console.log(newProxy); // todo remove dev item
+      // return await proxyService.setOwner(newOwner, proxyAddress);
+     await this.cdpService.giveProxy(this.proxyAddress, this.cdpId, address)
+      this.needsUpdate = true;
+      this.closing = true;
+    }
+    // this.cdpService.giveProxy(this.proxyAddress, this.cdpId, address)
   }
 
   enoughMkrToWipe(amount) {
