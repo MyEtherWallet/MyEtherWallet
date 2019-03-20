@@ -66,8 +66,7 @@ export default {
         },
         {
           name: 'Stephen',
-          position: 'Customer Support',
-          otherInfo: '#MEWForce',
+          position: 'Educational Project Lead',
           img: stephen
         },
         {
@@ -78,8 +77,7 @@ export default {
         },
         {
           name: 'Brittany',
-          position: 'Blockchain Specialist',
-          otherInfo: '#MEWForce',
+          position: 'Operations Coordinator',
           img: brittany
         },
         {
@@ -118,8 +116,8 @@ export default {
           img: katya
         },
         {
-          name: 'Samantha',
-          position: 'Media & Communication Officer',
+          name: 'Sam',
+          position: 'Media & Communication',
           img: samantha
         }
       ]
