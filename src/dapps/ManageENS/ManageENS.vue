@@ -338,6 +338,7 @@ export default {
             this.dnsOwner = this.dnsClaim.getOwner();
             this.processDNSresult('dnsClaimable'); // Claimable
           } else if (this.dnsClaim.result.nsec) {
+            this.owner = _owner;
             this.processDNSresult('dnsMissingTXT'); // TXT missing/unclaim
           } else {
             this.processDNSresult('dnsNotSetup'); // DNSEC not setup properly
