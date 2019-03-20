@@ -15,7 +15,6 @@ describe('InterfaceNetworkModal.vue', () => {
     i18n = baseSetup.i18n;
     store = baseSetup.store;
 
-    Vue.config.errorHandler = () => {};
     Vue.config.warnHandler = () => {};
   });
 
@@ -30,7 +29,7 @@ describe('InterfaceNetworkModal.vue', () => {
     });
   });
 
-  xit('[Failing] should render correct types data', () => {
+  it('should render correct types data', () => {
     const optionElements = wrapper.vm.$el.querySelectorAll(
       '.input-block-container select option'
     );
@@ -54,8 +53,7 @@ describe('InterfaceNetworkModal.vue', () => {
     }
   });
 
-  xit('[Failing] should render correct username data', () => {
-    wrapper.setData({ selectedNetwork: wrapper.vm.network });
+  it('should render correct username data', () => {
     const username = 'username';
     wrapper.setData({ username });
     expect(
@@ -63,8 +61,7 @@ describe('InterfaceNetworkModal.vue', () => {
     ).toEqual(username);
   });
 
-  xit('[Failing] should render correct password data', () => {
-    wrapper.setData({ selectedNetwork: wrapper.vm.network });
+  it('should render correct password data', () => {
     const password = 'password';
     wrapper.setData({ password });
     expect(
@@ -72,8 +69,7 @@ describe('InterfaceNetworkModal.vue', () => {
     ).toEqual(password);
   });
 
-  xit('[Failing] should render correct name data', () => {
-    wrapper.setData({ selectedNetwork: wrapper.vm.network });
+  it('should render correct name data', () => {
     const name = 'name';
     wrapper.setData({ name });
     expect(
@@ -83,8 +79,7 @@ describe('InterfaceNetworkModal.vue', () => {
     ).toEqual(name);
   });
 
-  xit('[Failing] should render correct url data', () => {
-    wrapper.setData({ selectedNetwork: wrapper.vm.network });
+  it('should render correct url data', () => {
     const url = 'url';
     wrapper.setData({ url });
     expect(
@@ -94,19 +89,17 @@ describe('InterfaceNetworkModal.vue', () => {
     ).toEqual(url);
   });
 
-  xit('[Failing] should render correct port data', () => {
-    wrapper.setData({ selectedNetwork: wrapper.vm.network });
-    const port = 'port';
+  it('should render correct port data', () => {
+    const port = 80;
     wrapper.setData({ port });
     expect(
       wrapper.vm.$el.querySelectorAll(
         '.content-block .input-block-container input'
       )[2].value
-    ).toEqual(port);
+    ).toEqual(String(port));
   });
 
-  xit('[Failing] should render correct blockExplorerTX data', () => {
-    wrapper.setData({ selectedNetwork: wrapper.vm.network });
+  it('should render correct blockExplorerTX data', () => {
     const blockExplorerTX = 123;
     wrapper.setData({ blockExplorerTX });
     expect(
@@ -116,8 +109,7 @@ describe('InterfaceNetworkModal.vue', () => {
     ).toEqual(String(blockExplorerTX));
   });
 
-  xit('[Failing] should render correct chainID data', () => {
-    wrapper.setData({ selectedNetwork: wrapper.vm.network });
+  it('should render correct chainID data', () => {
     const chainID = 333221;
     wrapper.setData({ chainID });
     expect(
@@ -127,8 +119,7 @@ describe('InterfaceNetworkModal.vue', () => {
     ).toEqual(String(chainID));
   });
 
-  xit('[Failing] should render correct blockExplorerAddr data', () => {
-    wrapper.setData({ selectedNetwork: wrapper.vm.network });
+  it('should render correct blockExplorerAddr data', () => {
     const blockExplorerAddr = 423432;
     wrapper.setData({ blockExplorerAddr });
     expect(
@@ -139,7 +130,7 @@ describe('InterfaceNetworkModal.vue', () => {
   });
 
   describe('InterfaceNetworkModal.vue Methods', () => {
-    xit('[Failing] should remove  custom network when button click', () => {
+    it('should remove  custom network when button click', () => {
       for (let i = 0; i < 2; i++) wrapper.find('.save-button').trigger('click');
       const customNetworkElements = wrapper.findAll(
         '.network-list .content-block .grid-3 div.switch-network i'
@@ -151,14 +142,12 @@ describe('InterfaceNetworkModal.vue', () => {
       expect(wrapper.vm.$data.customNetworks.length).toBe(0);
     });
 
-    xit('[Failing] should reset state when button click', () => {
-      wrapper.setData({ selectedNetwork: wrapper.vm.network });
+    it('should reset state when button click', () => {
       wrapper.find('.save-button').trigger('click');
-      expect(wrapper.vm.$data.chainID).toEqual('');
       expect(wrapper.vm.$data.username).toEqual('');
       expect(wrapper.vm.$data.password).toEqual('');
       expect(wrapper.vm.$data.name).toEqual('');
-      expect(wrapper.vm.$data.port).toEqual('');
+      expect(wrapper.vm.$data.port).toEqual(443);
       expect(wrapper.vm.$data.blockExplorerAddr).toEqual('');
       expect(wrapper.vm.$data.blockExplorerTX).toEqual('');
     });

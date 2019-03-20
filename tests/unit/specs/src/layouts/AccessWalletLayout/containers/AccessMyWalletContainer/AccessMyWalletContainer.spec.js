@@ -72,7 +72,7 @@ describe('AccessMyWalletContainer.vue', () => {
     resetWrapper();
   });
 
-  xit('[Failing] should render correct hardwareBrand props', () => {
+  it('[Failing] should render correct hardwareBrand props', () => {
     const hardwareBrand = 'hardwareBrand';
     wrapper.setData({ hardwareBrand });
     expect(
