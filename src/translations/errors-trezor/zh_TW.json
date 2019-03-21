@@ -1,0 +1,10 @@
+{
+  "popupClosed": "Popup Closed",
+  "deviceDisconnect": "裝置斷線",
+  "deviceDisconnectAction": "裝置在動作中斷線",
+  "userCancelledAction": "動作被使用者取消",
+  "noPermission": "尚未確保權限",
+  "callInProgress": "Device call in progress",
+  "transportMissing": "Transport is missing",
+  "cancelled": "事件被使用者取消"
+}

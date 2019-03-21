@@ -1,0 +1,10 @@
+{
+  "signature": "A personal identifier to accompany your transaction",
+  "txSpeed": "This field regulates speed of transaction, which is always paid in ETH.  We recommend having at least .01 ETH before making transactions.",
+  "print": "列印",
+  "copy": "複製",
+  "switchAddress": "切換地址",
+  "password": "本密碼將用於加密您的私鑰。並不會作為您鑰匙的生產種子。",
+  "nonce": "This refers to the number of the transaction you are making. If you have never made a transaction before, this will be 0. Add +1 for each transaction you make. Reference an ETH blockchain explorer if you do not know your current nonce.",
+  "gasLimit": "This refers to the maximum allowance of gas you will give for a transaction. All excess gas will be refunded from successful transactions.  This field should autogenerate based on network congestion."
+}
