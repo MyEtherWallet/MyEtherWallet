@@ -25,7 +25,7 @@ const BModalStub = {
 };
 
 const eventHub = {
-  $on:sinon.stub()
+  $on: sinon.stub()
 };
 
 describe('[Failing] ConfirmationContainer.vue', () => {
@@ -136,7 +136,10 @@ describe('[Failing] ConfirmationContainer.vue', () => {
   it('should render correct amount data', () => {
     const eth = Web3.utils.fromWei(String(wrapper.vm.$data.amount), 'ether');
     expect(
-      wrapper.vm.$el.querySelector('.currency-amt').textContent.trim().indexOf(eth)
+      wrapper.vm.$el
+        .querySelector('.currency-amt')
+        .textContent.trim()
+        .indexOf(eth)
     ).toBeGreaterThan(-1);
   });
 

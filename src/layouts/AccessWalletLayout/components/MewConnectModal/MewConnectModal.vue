@@ -72,7 +72,9 @@ export default {
   },
   mounted() {
     this.canDownloadApple =
-      platform.product && platform.product.toLowerCase() !== 'ipad';
+      platform.product !== null
+        ? platform.product.toLowerCase() !== 'ipad'
+        : true;
     this.$refs.mewConnect.$on('show', () => {
       new MewConnectWallet(this.codeDisplay)
         .then(wallet => {
