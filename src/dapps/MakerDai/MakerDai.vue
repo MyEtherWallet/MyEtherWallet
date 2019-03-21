@@ -96,10 +96,16 @@ export default {
       ethQty: 0,
       daiQty: 0,
       cdps: [],
+      cdpsWithoutProxy: [],
       availableCdps: {},
       cdpDetailsLoaded: false,
       makerCdp: {}
     };
+  },
+  watch: {
+    ['account.address']() {
+      this.setup();
+    }
   },
   computed: {
     ...mapGetters({
@@ -128,88 +134,94 @@ export default {
     }
   },
   async mounted() {
-    this.gotoHome();
-    const MewMakerPlugin = MewPlugin(
-      this.web3,
-      this.account.address,
-      async () => {
-        // eslint-disable-next-line
-        console.log('do update'); // todo remove dev item
-        let afterClose = false;
-        for (let idProp in this.availableCdps) {
-          if (this.availableCdps[idProp].needsUpdate) {
-            if (this.availableCdps[idProp].closing) {
-              afterClose = true;
-              delete this.availableCdps[idProp];
-              this.cdps = this.cdps.filter(item => item !== idProp);
-            } else {
-              console.log('UPDATE CDP', idProp); // todo remove dev item
-              await this.availableCdps[idProp].update();
-            }
-          }
-        }
-        if (afterClose) {
-          this.gotoImport();
-        }
-      }
-    );
-    this.maker = await Maker.create('http', {
-      url: this.network.url,
-      provider: {
-        type: 'HTTP', // or 'TEST'
-        network: 'kovan'
-      },
-      plugins: [MewMakerPlugin],
-      accounts: {
-        myLedger1: { type: 'mew' }
-      },
-      log: true
-    });
-    await this.maker.authenticate();
-    this.priceService = this.maker.service('price');
-    this.cdpService = await this.maker.service('cdp');
-
-    // this.ethPrice = toBigNumber(
-    //   (await this.priceService.getEthPrice()).toNumber()
-    // );
-    this.ethPrice = toBigNumber(132.93);
-
-    this.pethPrice = toBigNumber(
-      (await this.priceService.getPethPrice()).toNumber()
-    );
-
-    this.targetPrice = toBigNumber(
-      (await this.cdpService.getTargetPrice()).toNumber()
-    );
-
-    this.liquidationRatio = toBigNumber(
-      await this.cdpService.getLiquidationRatio()
-    );
-    this.liquidationPenalty = toBigNumber(
-      await this.cdpService.getLiquidationPenalty()
-    );
-    this.stabilityFee = toBigNumber(
-      await this.cdpService.getAnnualGovernanceFee()
-    );
-
-    this.wethToPethRatio = toBigNumber(
-      await this.priceService.getWethToPethRatio()
-    );
-
-    this.cdps = await this.locateCdps();
-
-    if (this.cdps.length > 0) {
-      await this.loadCdpDetails();
-      this.cdpDetailsLoaded = true;
-      this.makerActive = true;
-      if (this.$route.name !== 'create') {
-        this.gotoImport();
-      }
-    } else {
-      this.gotoCreate();
-    }
+    await this.setup();
   },
   methods: {
+    async setup() {
+      this.gotoHome();
+      const MewMakerPlugin = MewPlugin(
+        this.web3,
+        this.account.address,
+        async () => {
+          // eslint-disable-next-line
+          console.log('do update'); // todo remove dev item
+          let afterClose = false;
+          for (let idProp in this.availableCdps) {
+            if (this.availableCdps[idProp].needsUpdate) {
+              if (this.availableCdps[idProp].closing) {
+                afterClose = true;
+                delete this.availableCdps[idProp];
+                this.cdps = this.cdps.filter(item => item !== idProp);
+              } else {
+                console.log('UPDATE CDP', idProp); // todo remove dev item
+                await this.availableCdps[idProp].update();
+              }
+            }
+          }
+          if (afterClose) {
+            this.gotoImport();
+          }
+        }
+      );
+      this.maker = await Maker.create('http', {
+        url: this.network.url,
+        provider: {
+          type: 'HTTP', // or 'TEST'
+          network: 'kovan'
+        },
+        plugins: [MewMakerPlugin],
+        accounts: {
+          myLedger1: { type: 'mew' }
+        },
+        log: true
+      });
+      await this.maker.authenticate();
+      this.priceService = this.maker.service('price');
+      this.cdpService = await this.maker.service('cdp');
+
+      // this.ethPrice = toBigNumber(
+      //   (await this.priceService.getEthPrice()).toNumber()
+      // );
+      this.ethPrice = toBigNumber(132.93);
+
+      this.pethPrice = toBigNumber(
+        (await this.priceService.getPethPrice()).toNumber()
+      );
+
+      this.targetPrice = toBigNumber(
+        (await this.cdpService.getTargetPrice()).toNumber()
+      );
+
+      this.liquidationRatio = toBigNumber(
+        await this.cdpService.getLiquidationRatio()
+      );
+      this.liquidationPenalty = toBigNumber(
+        await this.cdpService.getLiquidationPenalty()
+      );
+      this.stabilityFee = toBigNumber(
+        await this.cdpService.getAnnualGovernanceFee()
+      );
+
+      this.wethToPethRatio = toBigNumber(
+        await this.priceService.getWethToPethRatio()
+      );
+
+      // this.cdps = await this.locateCdps();
+      const {withProxy, withoutProxy} = await this.locateCdps();
+      this.cdps = withProxy;
+      this.cdpsWithoutProxy = withoutProxy;
+
+      if (this.cdps.length > 0) {
+        await this.loadCdpDetails();
+        this.cdpDetailsLoaded = true;
+        this.makerActive = true;
+        if (this.$route.name !== 'create') {
+          this.gotoImport();
+        }
+      } else {
+        this.gotoCreate();
+      }
+    },
     gotoHome() {
       this.$router.push({
         name: 'Maker'
@@ -248,7 +260,8 @@ export default {
       }
     },
     async refresh() {
-      this.cdps = await this.locateCdps();
+      const {withProxy, withoutProxy} = await this.locateCdps();
+      this.cdps = withProxy;
       console.log(this.cdps); // todo remove dev item
       const newCdps = this.cdps.filter(
         item => !Object.keys(this.availableCdps).includes(item)
@@ -279,26 +292,37 @@ export default {
       }
       this.gotoImport();
     },
-    async locateCdps() {
+    async locateCdpsWithoutProxy() {
       const directCdps = await this.maker.getCdpIds(
         this.account.address //proxy
       );
+      const directCdpsCheckSum = await this.maker.getCdpIds(
+        toChecksumAddress(this.account.address)
+      );
       console.log(directCdps); // todo remove dev item
+
+      return directCdps.concat(directCdpsCheckSum);
+    },
+    async locateCdpsProxy() {
+      const proxy = await this.maker
+        .service('proxy')
+        .getProxyAddress(this.account.address);
+
+      return await this.maker.getCdpIds(
+        proxy //proxy
+      );
+    },
+    async locateCdps() {
+      const directCdps = await this.locateCdpsWithoutProxy();
+
       const proxy = await this.maker
         .service('proxy')
         .getProxyAddress(this.account.address);
       console.log(proxy); // todo remove dev item
-      let searchAddress;
-      if (proxy) {
-        searchAddress = proxy;
-      } else {
-        searchAddress = this.account.address;
-      }
-      const cdps = await this.maker.getCdpIds(
-        searchAddress //proxy
-      );
 
-      return cdps.concat(directCdps);
+      const cdps = await this.locateCdpsProxy();
+
+      return { withProxy: cdps, withoutProxy: directCdps };
     },
     async loadCdpDetails() {
       const sysVars = {
