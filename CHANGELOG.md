@@ -1,3 +1,9 @@
+### Hotfix v5.0.8-hotfix.1
+
+### Bug
+
+- Display final re-calculated values on swap confirmation[#841](https://github.com/MyEtherWallet/MyEtherWallet/pull/841) 
+
 ### Release v5.0.8
 
 ### Bug
