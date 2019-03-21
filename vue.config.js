@@ -5,6 +5,7 @@ const { UnusedFilesWebpackPlugin } = require('unused-files-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const UglifyJS = require('uglify-es');
 const env_vars = require('./ENV_VARS');
+const path = require('path');
 const webpackConfig = {
   node: {
     process: true
@@ -169,11 +170,10 @@ module.exports = {
   lintOnSave: process.env.NODE_ENV === 'production' ? 'error' : true,
   integrity: process.env.WEBPACK_INTEGRITY === 'false' ? false : true,
   chainWebpack: config => {
-    config.module.rule('replace').test(/\.js$/).use('string-replace-loader').loader('string-replace-loader').tap(options => {
+    config.module.rule('replace').test(/\.js$/).include.add(path.resolve(__dirname, 'node_modules/@ensdomains/dnsprovejs')).end().use('string-replace-loader').loader('string-replace-loader').tap(options => {
       return {
         search: 'https://dns.google.com/experimental?ct=application/dns-udpwireformat&dns=',
-        replace: 'https://cloudflare-dns.com/dns-query?ct=application/dns-udpwireformat&dns=',
-        flags: 'g'
+        replace: 'https://cloudflare-dns.com/dns-query?ct=application/dns-udpwireformat&dns='
       }
     })
   }
