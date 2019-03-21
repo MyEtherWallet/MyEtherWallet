@@ -5,6 +5,7 @@
 - Better Ipad Catch [#814](https://github.com/MyEtherWallet/MyEtherWallet/pull/814)
 - Fix success modal not linking to unlock wallet page [#825](https://github.com/MyEtherWallet/MyEtherWallet/pull/825)
 - Currency in notifications shown correctly [#824](https://github.com/MyEtherWallet/MyEtherWallet/pull/824)
+- Fix Token details not sending to mewconnect [#839](https://github.com/MyEtherWallet/MyEtherWallet/pull/839)
 
 ### Feature
 
