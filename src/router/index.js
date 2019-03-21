@@ -1,6 +1,7 @@
 import Router from 'vue-router';
 import store from '@/store';
 import { getMode, getRoutes } from '@/builds/configs';
+import xss from 'xss';
 
 const router = new Router({
   mode: getMode(),
@@ -23,8 +24,14 @@ router.beforeResolve((to, ___, next) => {
   ) {
     next();
   } else {
-    if (Object.keys(to.query).length > 1) {
-      store.dispatch('saveQueryVal', to.query);
+    const queryKeys = Object.keys(to.query);
+    if (queryKeys.length > 1) {
+      const blankObj = {};
+      for (const key in to.query) {
+        blankObj[key] = xss(to.query);
+      }
+
+      store.dispatch('saveQueryVal', blankObj);
     }
     if (store.state.wallet === null) {
       store.dispatch('setLastPath', to.path);
