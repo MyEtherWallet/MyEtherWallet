@@ -12,7 +12,7 @@ describe('kyber.js', () => {
       done();
     }, 500);
   });
-  
+
   it('should instanciate a new instance', () => {
     const web3 = new Web3(nodeUrl);
     const ens = new ENS(web3.currentProvider);
