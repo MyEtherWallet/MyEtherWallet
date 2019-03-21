@@ -4,6 +4,8 @@ dist: xenial
 cache:
   directories:
     - node_modules
+before_cache:
+  - rm -rf node_modules/.cache
 install: docker build -t mew-build-container .
 env:
   global:
