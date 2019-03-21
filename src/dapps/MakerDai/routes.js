@@ -11,7 +11,7 @@ export default {
   meta: { requiresAuth: true },
   children: [
     {
-      path: 'dapps/maker-dai',
+      path: '',
       name: 'Maker',
       component: MakerHome,
       props: true

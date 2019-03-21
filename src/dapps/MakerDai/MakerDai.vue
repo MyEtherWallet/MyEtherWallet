@@ -1,9 +1,38 @@
 <template>
-  <div class="register-domain-container">
+  <div class="container-maker">
+    <interface-container-title :title="'MAKER'" />
+
     <!--<back-button />-->
-    <button @click="gotoCreate">Create</button>
-    <button @click="gotoImport">Manage</button>
-    <button @click="refresh">Refresh</button>
+    <!--<button @click="gotoCreate">Create</button>-->
+    <!--<button @click="gotoImport">Manage</button>-->
+    <!--<button @click="refresh">Refresh</button>-->
+    <div class="buttons-container">
+
+      <div class="dapps-button">
+        <!--<img :src="supported ? icon : iconDisabled" />-->
+        <div  @click="gotoCreate">
+          <h4>Create</h4>
+        </div>
+      </div>
+      <div class="dapps-button">
+        <!--<img :src="supported ? icon : iconDisabled" />-->
+        <div @click="gotoImport">
+          <h4>Manage</h4>
+        </div>
+      </div>
+      <div class="dapps-button">
+        <!--<img :src="supported ? icon : iconDisabled" />-->
+        <div @click="gotoImport">
+          <h4>Migrate</h4>
+        </div>
+      </div>
+      <div class="dapps-button">
+        <!--<img :src="supported ? icon : iconDisabled" />-->
+        <div @click="refresh">
+          <h4>Refresh</h4>
+        </div>
+      </div>
+    </div>
     <router-view
       :maker-active="makerActive"
       :eth-price="ethPrice"
@@ -24,7 +53,9 @@
       :tokens-with-balance="tokensWithBalance"
       @cdpOpened="addCdp"
       @cdpClosed="removeCdp"
-    />
+    >
+      asdfasdfsdfsdfsadfsadfsfdsdf
+    </router-view>
   </div>
 </template>
 
@@ -207,11 +238,11 @@ export default {
       );
 
       // this.cdps = await this.locateCdps();
-      const {withProxy, withoutProxy} = await this.locateCdps();
+      const { withProxy, withoutProxy } = await this.locateCdps();
       this.cdps = withProxy;
       this.cdpsWithoutProxy = withoutProxy;
 
-      if (this.cdps.length > 0) {
+      if (this.cdps.length > 0 || this.cdpsWithoutProxy.length > 0) {
         await this.loadCdpDetails();
         this.cdpDetailsLoaded = true;
         this.makerActive = true;
@@ -260,7 +291,7 @@ export default {
       }
     },
     async refresh() {
-      const {withProxy, withoutProxy} = await this.locateCdps();
+      const { withProxy, withoutProxy } = await this.locateCdps();
       this.cdps = withProxy;
       console.log(this.cdps); // todo remove dev item
       const newCdps = this.cdps.filter(
@@ -276,14 +307,15 @@ export default {
         wethToPethRatio: this.wethToPethRatio
       };
       for (let i = 0; i < newCdps.length; i++) {
-        const makerCDP = new MakerCDP(
-          newCdps[i],
-          this.maker,
-          this.priceService,
-          this.cdpService,
-          sysVars
-        );
-        this.availableCdps[newCdps[i]] = await makerCDP.init(newCdps[i]);
+        // const makerCDP = new MakerCDP(
+        //   newCdps[i],
+        //   this.maker,
+        //   this.priceService,
+        //   this.cdpService,
+        //   sysVars
+        // );
+        // this.availableCdps[newCdps[i]] = await makerCDP.init(newCdps[i]);
+        this.availableCdps[newCdps[i]] = await this.buildCdpObject(newCdps[i], sysVars)
       }
       for (let idProp in this.availableCdps) {
         if (this.availableCdps[idProp].needsUpdate) {
@@ -335,15 +367,37 @@ export default {
         wethToPethRatio: this.wethToPethRatio
       };
       for (let i = 0; i < this.cdps.length; i++) {
-        const makerCDP = new MakerCDP(
-          this.cdps[i],
-          this.maker,
-          this.priceService,
-          this.cdpService,
-          sysVars
-        );
-        this.availableCdps[this.cdps[i]] = await makerCDP.init(this.cdps[i]);
+        // const makerCDP = new MakerCDP(
+        //   this.cdps[i],
+        //   this.maker,
+        //   this.priceService,
+        //   this.cdpService,
+        //   sysVars
+        // );
+        // this.availableCdps[this.cdps[i]] = await makerCDP.init(this.cdps[i]);
+        this.availableCdps[this.cdps[i]] = await this.buildCdpObject(this.cdps[i], sysVars)
       }
+      for(let i = 0; i< this.cdpsWithoutProxy.length; i++){
+        // const makerCDP = new MakerCDP(
+        //   this.cdpsWithoutProxy[i],
+        //   this.maker,
+        //   this.priceService,
+        //   this.cdpService,
+        //   sysVars
+        // );
+        // this.availableCdps[this.cdpsWithoutProxy[i]] = await makerCDP.init(this.cdpsWithoutProxy[i]);
+        this.availableCdps[this.cdpsWithoutProxy[i]] = await this.buildCdpObject(this.cdpsWithoutProxy[i], sysVars)
+      }
+    },
+    async buildCdpObject(cdpId, sysVars){
+      const makerCDP = new MakerCDP(
+        cdpId,
+        this.maker,
+        this.priceService,
+        this.cdpService,
+        sysVars
+      );
+      return await makerCDP.init(cdpId);
     },
     calcMinCollatRatio(priceFloor) {
       return bnOver(this.ethPrice, this.liquidationRatio, priceFloor);

@@ -87,8 +87,8 @@ export default {
   },
   props: {
     cdpId: {
-      type: Number,
-      default: 0
+      type: String,
+      default: '0'
     },
     aCdp: {
       type: Object,

@@ -1,6 +1,5 @@
 <template>
   <div>
-    <interface-container-title :title="'MAKER'" />
     <div class="container-maker">
       <div class="manage-container">
         <div class="content-container">
@@ -15,7 +14,7 @@
           Loading CDP Details
         </div>
         <div v-if="cdpDetailsLoaded">
-          <div v-for="(cdp, idx) in cdps" :key="cdp + idx">
+          <div v-for="(cdp, idx) in Object.keys(availableCdps)" :key="cdp + idx">
             <select-cdp-entry
               :a-cdp="cdpOptions[cdp]"
               :cdp-id="cdp"
@@ -36,7 +35,7 @@ import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
 import BigNumber from 'bignumber.js';
 import Maker from '@makerdao/dai';
-import SelectCdpEntry from '../SelectCdpEntry';
+import SelectCdpEntry from './components/SelectCdpEntry';
 
 const KOVAN_SERVER_URL = 'https://sai-kovan.makerfoundation.com/v1';
 
