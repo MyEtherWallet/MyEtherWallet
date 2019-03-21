@@ -1,31 +1,31 @@
 <template>
   <div class="container-maker">
-    <interface-container-title :title="'MAKER'" />
+    <interface-container-title :title="'MAKER'"/>
 
     <!--<back-button />-->
     <!--<button @click="gotoCreate">Create</button>-->
     <!--<button @click="gotoImport">Manage</button>-->
     <!--<button @click="refresh">Refresh</button>-->
-    <div class="buttons-container">
+    <div v-show="makerActive" class="buttons-container">
 
-      <div class="dapps-button">
+      <div v-if="showCreate" class="dapps-button">
         <!--<img :src="supported ? icon : iconDisabled" />-->
-        <div  @click="gotoCreate">
+        <div @click="gotoCreate">
           <h4>Create</h4>
         </div>
       </div>
-      <div class="dapps-button">
+      <div v-if="showManage" class="dapps-button">
         <!--<img :src="supported ? icon : iconDisabled" />-->
         <div @click="gotoImport">
           <h4>Manage</h4>
         </div>
       </div>
-      <div class="dapps-button">
-        <!--<img :src="supported ? icon : iconDisabled" />-->
-        <div @click="gotoImport">
-          <h4>Migrate</h4>
-        </div>
-      </div>
+      <!--      <div class="dapps-button">
+              &lt;!&ndash;<img :src="supported ? icon : iconDisabled" />&ndash;&gt;
+              <div @click="gotoImport">
+                <h4>Migrate</h4>
+              </div>
+            </div>-->
       <div class="dapps-button">
         <!--<img :src="supported ? icon : iconDisabled" />-->
         <div @click="refresh">
@@ -54,7 +54,6 @@
       @cdpOpened="addCdp"
       @cdpClosed="removeCdp"
     >
-      asdfasdfsdfsdfsadfsadfsfdsdf
     </router-view>
   </div>
 </template>
@@ -162,6 +161,12 @@ export default {
     minEthDeposit() {
       if (this.daiQty <= 0) return 0;
       return bnOver(this.liquidationRatio, this.daiQty, this.ethPrice);
+    },
+    showManage() {
+      return this.cdps.length > 1 || this.cdpsWithoutProxy.length > 1;
+    },
+    showCreate() {
+      return this.cdps.length === 0 && this.cdpsWithoutProxy.length === 0;
     }
   },
   async mounted() {
@@ -237,7 +242,6 @@ export default {
         await this.priceService.getWethToPethRatio()
       );
 
-      // this.cdps = await this.locateCdps();
       const { withProxy, withoutProxy } = await this.locateCdps();
       this.cdps = withProxy;
       this.cdpsWithoutProxy = withoutProxy;
@@ -264,7 +268,7 @@ export default {
       });
     },
     gotoImport() {
-      if (this.cdps.length > 1) {
+      if (this.showManage) {
         // eslint-disable-next-line
         console.log('go to select'); // todo remove dev item
         this.$router.push({
@@ -275,6 +279,13 @@ export default {
           name: 'manage',
           params: {
             cdpId: this.cdps[0]
+          }
+        });
+      } else if (this.cdpsWithoutProxy.length === 1) {
+        this.$router.push({
+          name: 'manage',
+          params: {
+            cdpId: this.cdpsWithoutProxy[0]
           }
         });
       }
@@ -293,29 +304,12 @@ export default {
     async refresh() {
       const { withProxy, withoutProxy } = await this.locateCdps();
       this.cdps = withProxy;
-      console.log(this.cdps); // todo remove dev item
+
       const newCdps = this.cdps.filter(
         item => !Object.keys(this.availableCdps).includes(item)
       );
-      const sysVars = {
-        ethPrice: this.ethPrice,
-        pethPrice: this.pethPrice,
-        targetPrice: this.targetPrice,
-        liquidationRatio: this.liquidationRatio,
-        liquidationPenalty: this.liquidationPenalty,
-        stabilityFee: this.stabilityFee,
-        wethToPethRatio: this.wethToPethRatio
-      };
       for (let i = 0; i < newCdps.length; i++) {
-        // const makerCDP = new MakerCDP(
-        //   newCdps[i],
-        //   this.maker,
-        //   this.priceService,
-        //   this.cdpService,
-        //   sysVars
-        // );
-        // this.availableCdps[newCdps[i]] = await makerCDP.init(newCdps[i]);
-        this.availableCdps[newCdps[i]] = await this.buildCdpObject(newCdps[i], sysVars)
+        this.availableCdps[newCdps[i]] = await this.buildCdpObject(newCdps[i]);
       }
       for (let idProp in this.availableCdps) {
         if (this.availableCdps[idProp].needsUpdate) {
@@ -331,7 +325,6 @@ export default {
       const directCdpsCheckSum = await this.maker.getCdpIds(
         toChecksumAddress(this.account.address)
       );
-      console.log(directCdps); // todo remove dev item
 
       return directCdps.concat(directCdpsCheckSum);
     },
@@ -341,22 +334,27 @@ export default {
         .getProxyAddress(this.account.address);
 
       return await this.maker.getCdpIds(
-        proxy //proxy
+        proxy
       );
     },
     async locateCdps() {
       const directCdps = await this.locateCdpsWithoutProxy();
-
-      const proxy = await this.maker
-        .service('proxy')
-        .getProxyAddress(this.account.address);
-      console.log(proxy); // todo remove dev item
+      console.log(directCdps); // todo remove dev item
 
       const cdps = await this.locateCdpsProxy();
 
       return { withProxy: cdps, withoutProxy: directCdps };
     },
     async loadCdpDetails() {
+
+      for (let i = 0; i < this.cdps.length; i++) {
+        this.availableCdps[this.cdps[i]] = await this.buildCdpObject(this.cdps[i]);
+      }
+      for (let i = 0; i < this.cdpsWithoutProxy.length; i++) {
+        this.availableCdps[this.cdpsWithoutProxy[i]] = await this.buildCdpObject(this.cdpsWithoutProxy[i], { noProxy: true });
+      }
+    },
+    async buildCdpObject(cdpId, options = {}) {
       const sysVars = {
         ethPrice: this.ethPrice,
         pethPrice: this.pethPrice,
@@ -364,32 +362,10 @@ export default {
         liquidationRatio: this.liquidationRatio,
         liquidationPenalty: this.liquidationPenalty,
         stabilityFee: this.stabilityFee,
-        wethToPethRatio: this.wethToPethRatio
+        wethToPethRatio: this.wethToPethRatio,
+        ...options
       };
-      for (let i = 0; i < this.cdps.length; i++) {
-        // const makerCDP = new MakerCDP(
-        //   this.cdps[i],
-        //   this.maker,
-        //   this.priceService,
-        //   this.cdpService,
-        //   sysVars
-        // );
-        // this.availableCdps[this.cdps[i]] = await makerCDP.init(this.cdps[i]);
-        this.availableCdps[this.cdps[i]] = await this.buildCdpObject(this.cdps[i], sysVars)
-      }
-      for(let i = 0; i< this.cdpsWithoutProxy.length; i++){
-        // const makerCDP = new MakerCDP(
-        //   this.cdpsWithoutProxy[i],
-        //   this.maker,
-        //   this.priceService,
-        //   this.cdpService,
-        //   sysVars
-        // );
-        // this.availableCdps[this.cdpsWithoutProxy[i]] = await makerCDP.init(this.cdpsWithoutProxy[i]);
-        this.availableCdps[this.cdpsWithoutProxy[i]] = await this.buildCdpObject(this.cdpsWithoutProxy[i], sysVars)
-      }
-    },
-    async buildCdpObject(cdpId, sysVars){
+
       const makerCDP = new MakerCDP(
         cdpId,
         this.maker,

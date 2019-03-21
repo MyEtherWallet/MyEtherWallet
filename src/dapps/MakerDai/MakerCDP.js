@@ -23,6 +23,7 @@ export default class MakerCDP {
     this.web3 = sysVars.web3 || {};
     this.priceService = priceService;
     this.cdpService = cdpService;
+    this.proxyService = this.maker.service('proxy');
     this.ready = false;
     this._liquidationRatio = sysVars.liquidationRatio || toBigNumber(0);
     this._liquidationPenalty = sysVars.liquidationPenalty || toBigNumber(0);
@@ -34,10 +35,11 @@ export default class MakerCDP {
     this.daiPrice = 0;
     this.priceFloor = 0;
     this.cdps = [];
-    this.noProxy = false;
+    this.noProxy = sysVars.noProxy || false;
     this.cdpDetailsLoaded = false;
     this.needsUpdate = false;
     this.closing = false;
+    this.migrated = false;
 
     this._liqPrice = toBigNumber(0);
     this.isSafe = false;
@@ -57,7 +59,7 @@ export default class MakerCDP {
   async init(cdpId = this.cdpId) {
     this.txMgr = this.maker.service('transactionManager');
     this.cdp = await this.maker.getCdp(cdpId);
-    this.proxyAddress = await this.maker.service('proxy').currentProxy();
+    this.proxyAddress = await this.proxyService.currentProxy();
     const liqPrice = await this.cdp.getLiquidationPrice();
     this._liqPrice = liqPrice.toBigNumber().toFixed(2);
     this.isSafe = await this.cdp.isSafe();
@@ -98,6 +100,13 @@ export default class MakerCDP {
   }
 
   async update() {
+    if(this.migrated){
+      const currentProxy = await this.proxyService.currentProxy();
+      if (currentProxy) {
+        this.migrated = false;
+        await this.cdpService.give(this.cdpId, this.proxyAddress);
+      }
+    }
     if (this.needsUpdate) {
       this.needsUpdate = false;
       await this.init(this.cdpId);
@@ -225,22 +234,34 @@ export default class MakerCDP {
   }
 
   async getProxy() {
-    // eslint-disable-next-line
-    console.log(await this.maker.service('proxy')); // todo remove dev item
     return this.maker.service('proxy').currentProxy();
   }
 
   async buildProxy() {
-    const proxyService = this.maker.service('proxy');
-    if (!proxyService.currentProxy()) {
-      const details = await proxyService.build();
+    const currentProxy = await this.proxyService.currentProxy();
+    if (!currentProxy) {
+      await proxyService.build();
       // eslint-disable-next-line
-      console.log(details); // todo remove dev item
       this.proxyAddress = await this.maker.service('proxy').currentProxy();
       return this.proxyAddress;
     }
-    this.proxyAddress = proxyService.currentProxy();
+    this.proxyAddress = await this.proxyService.currentProxy();
     return this.proxyAddress;
+  }
+
+  get needToFinishMigrating(){
+    return this.proxyAddress && this.noProxy;
+  }
+
+  async migrateCdp(){
+    const currentProxy = await this.proxyService.currentProxy();
+    if (!currentProxy) {
+      this.needsUpdate = true;
+      const details = await this.proxyService.ensureProxy()
+    } else if(this.needToFinishMigrating){
+      await this.cdpService.give(this.cdpId, this.proxyAddress);
+      this.needsUpdate = true;
+    }
   }
 
   async openCdp(ethQty, daiQty) {
@@ -258,6 +279,9 @@ export default class MakerCDP {
 
   async lockEth(amount) {
     try {
+      if (this.noProxy) {
+        return;
+      }
       await this.cdpService.lockEthProxy(this.proxyAddress, this.cdpId, amount);
       this.needsUpdate = true;
     } catch (e) {
@@ -274,6 +298,9 @@ export default class MakerCDP {
       acknowledgeBypass
     ) {
       try {
+        if (this.noProxy) {
+          return;
+        }
         this.cdpService.drawDaiProxy(this.proxyAddress, this.cdpId, amount);
         this.needsUpdate = true;
       } catch (e) {
@@ -285,6 +312,9 @@ export default class MakerCDP {
 
   async freeEth(amount) {
     try {
+      if (this.noProxy) {
+        return;
+      }
       await this.cdpService.freeEthProxy(this.proxyAddress, this.cdpId, amount);
       this.needsUpdate = true;
     } catch (e) {
@@ -295,6 +325,9 @@ export default class MakerCDP {
 
   async wipeDai(amount) {
     try {
+      if (this.noProxy) {
+        return;
+      }
       await this.cdpService.wipeDaiProxy(this.proxyAddress, this.cdpId, amount);
       this.needsUpdate = true;
     } catch (e) {
@@ -304,10 +337,7 @@ export default class MakerCDP {
   }
 
   async closeCdp() {
-    // return this.wipeDai(this.debtValue)
     const value = this.debtValue.toNumber();
-    // eslint-disable-next-line
-    console.log(value); // todo remove dev item
     const enoughToWipe = await this.cdp.enoughMkrToWipe(value, DAI.wei);
     if (enoughToWipe) {
       try {
@@ -319,34 +349,22 @@ export default class MakerCDP {
         console.error(e);
       }
     }
-    // if (await this.enoughMkrToWipe()) {
-    //   try {
-    //     await this.cdpService.shutProxy(this.proxyAddress, this.cdpId);
-    //   } catch (e) {
-    //     console.error(e);
-    //   }
-    // }
   }
 
-  async moveCdp(address){
-    const proxy = await this.maker
-      .service('proxy')
-      .getProxyAddress(address);
-    console.log(proxy); // todo remove dev item
-    if(proxy){
-      await this.cdpService.giveProxy(this.proxyAddress, this.cdpId, proxy)
+  async moveCdp(address) {
+    const proxy = await this.maker.service('proxy').getProxyAddress(address);
+    if (proxy) {
+      await this.cdpService.giveProxy(this.proxyAddress, this.cdpId, proxy);
       this.needsUpdate = true;
       this.closing = true; // for the purpose of displaying to the user closing and moving are the same
-    } else {
-      // const proxyService = this.maker.service('proxy')
-      // const newProxy = proxyService._proxyRegistry().build()
-      // console.log(newProxy); // todo remove dev item
-      // return await proxyService.setOwner(newOwner, proxyAddress);
-     await this.cdpService.giveProxy(this.proxyAddress, this.cdpId, address)
+    } else if(!this.noProxy){
+      await this.cdpService.giveProxy(this.proxyAddress, this.cdpId, address);
       this.needsUpdate = true;
       this.closing = true;
+    } else {
+      await this.cdpService.give(this.cdpId, address);
+      this.needsUpdate = true;
     }
-    // this.cdpService.giveProxy(this.proxyAddress, this.cdpId, address)
   }
 
   enoughMkrToWipe(amount) {

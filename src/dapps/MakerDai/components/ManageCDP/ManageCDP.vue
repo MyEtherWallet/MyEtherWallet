@@ -40,14 +40,23 @@
       <button @click="showMove">
         MOVE
       </button>
+      <div class="migrate-cdp-container">
+        <div v-if="noProxy && !finishMigration" class="migrate-cdp">
+          <button @click="migrateCdp">Migrate Existing CDP</button>
+        </div>
+        <div v-if="finishMigration" class="migrate-cdp">
+          <button @click="migrateCdp">Finish Migrating CDP</button>
+        </div>
+      </div>
     </div>
-    <div class="manage-container">
+    <div v-show="!finishMigration" class="manage-container">
       <div class="content-container">
         <p class="cpd-title">{{ $t('dapps.cdpPortal') }}</p>
         <p class="cdp-id">
           {{ $t('dapps.positionLabel') }} #{{ activeCdp.cdpId }}
         </p>
       </div>
+
       <div class="manage-container-info-block">
         <div class="info-label-one-left">
           <p>{{ $t('dapps.liquidPrice') }} (ETH/USD)</p>
@@ -280,7 +289,17 @@ export default {
       web3: 'web3',
       network: 'network',
       ens: 'ens'
-    })
+    }),
+    noProxy() {
+      if (this.activeCdp) {
+        return this.activeCdp.noProxy;
+      }
+    },
+    finishMigration(){
+      if (this.activeCdp) {
+        return this.activeCdp.needToFinishMigrating;
+      }
+    }
   },
   async mounted() {
     this.cdpId = this.$route.params.cdpId;
@@ -325,6 +344,9 @@ export default {
     async isReady() {
       this.maxWithDraw = this.activeCdp.maxDaiDraw();
       this.maxWithDrawUSD = this.activeCdp.toUSD(this.maxWithDraw);
+    },
+    async migrateCdp() {
+      await this.activeCdp.migrateCdp();
     }
   }
 };
