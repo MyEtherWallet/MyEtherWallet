@@ -1,3 +1,23 @@
+### Release v5.0.8
+
+### Bug
+
+- Better Ipad Catch [#814](https://github.com/MyEtherWallet/MyEtherWallet/pull/814)
+- Fix success modal not linking to unlock wallet page [#825](https://github.com/MyEtherWallet/MyEtherWallet/pull/825)
+- Currency in notifications shown correctly [#824](https://github.com/MyEtherWallet/MyEtherWallet/pull/824)
+- Fix Token details not sending to mewconnect [#839](https://github.com/MyEtherWallet/MyEtherWallet/pull/839)
+
+### Feature
+
+- Implement DNS for ENS [#792](https://github.com/MyEtherWallet/MyEtherWallet/pull/792)
+- Add ethereum classic path as presented in mew v3 [#812](https://github.com/MyEtherWallet/MyEtherWallet/pull/812)
+- Shows the recipient and the contract address [#822](https://github.com/MyEtherWallet/MyEtherWallet/pull/822)
+- Add ledger support for ThunderCore [#827](https://github.com/MyEtherWallet/MyEtherWallet/pull/827)
+
+### Devop
+
+- Add zh_TW (Traditional Chinese) translation [#820](https://github.com/MyEtherWallet/MyEtherWallet/pull/820)
+
 ### Release v5.0.7
 
 ### Feature
