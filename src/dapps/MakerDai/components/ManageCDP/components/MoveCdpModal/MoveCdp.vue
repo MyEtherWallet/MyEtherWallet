@@ -9,14 +9,14 @@
     >
       <div class="inputs-container">
         <div class="input-container">
-          <label>How much ETH would you like to deposit?</label>
+          <label>Enter the address to send the cdp?</label>
           <div class="input-box">
             <input v-model="address" />
           </div>
         </div>
       </div>
       <div class="buttons-container">
-        <button class="cancel-btn">
+        <button class="cancel-btn" @click="closeModal">
           Cancel
         </button>
         <button
