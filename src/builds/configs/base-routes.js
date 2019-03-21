@@ -9,6 +9,7 @@ const HelpCenterLayout = () => import('@/layouts/HelpCenterLayout');
 const NotFoundLayout = () => import('@/layouts/NotFoundLayout');
 const GettingStarted = () => import('@/layouts/GettingStarted');
 const SendOfflineHelper = () => import('@/layouts/SendOfflineHelper');
+const VerifyMessageLayout = () => import('@/layouts/VerifyMessageLayout');
 
 const DappsContainer = () =>
   import('@/layouts/InterfaceLayout/containers/DappsContainer');
@@ -24,8 +25,6 @@ const SwapContainer = () =>
   import('@/layouts/InterfaceLayout/containers/SwapContainer');
 const SignMessageContainer = () =>
   import('@/layouts/InterfaceLayout/containers/SignMessageContainer');
-const VerifyMessageContainer = () =>
-  import('@/layouts/InterfaceLayout/containers/VerifyMessageContainer');
 
 import dapps from '@/dapps/routes';
 
@@ -79,6 +78,12 @@ const router = [
     meta: { requiresAuth: false }
   },
   {
+    path: '/verify-message',
+    name: 'VerifyMessageLayout',
+    component: VerifyMessageLayout,
+    meta: { requiresAuth: false }
+  },
+  {
     path: '*',
     name: '404',
     component: NotFoundLayout,
@@ -127,11 +132,6 @@ const router = [
         path: 'sign-message',
         name: 'Sign Message',
         component: SignMessageContainer
-      },
-      {
-        path: 'verify-message',
-        name: 'Verify Message',
-        component: VerifyMessageContainer
       }
     ]
   }

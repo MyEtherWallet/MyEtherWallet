@@ -120,15 +120,6 @@ export default {
             inactive: ''
           },
           titleKey: 'common.signMessage'
-        },
-        {
-          name: 'verify-message',
-          routes: ['/interface/verify-message'],
-          icons: {
-            active: '',
-            inactive: ''
-          },
-          titleKey: 'common.verifyMessage'
         }
       ]
     }
