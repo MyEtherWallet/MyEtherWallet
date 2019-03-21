@@ -334,6 +334,7 @@ export default class BitySwap {
             'ZZ',
             'Z'
           );
+          swapDetails.providerSends = swapDetails.parsed.recValue;
           swapDetails.providerAddress =
             swapDetails.dataForInitialization.payment_address;
           swapDetails.isDex = BitySwap.isDex();
@@ -352,6 +353,7 @@ export default class BitySwap {
       swapDetails.parsed = BitySwap.parseOrder(
         swapDetails.dataForInitialization
       );
+      swapDetails.providerSends = swapDetails.parsed.recValue;
       swapDetails.providerAddress =
         swapDetails.dataForInitialization.payment_address;
       swapDetails.isDex = BitySwap.isDex();
