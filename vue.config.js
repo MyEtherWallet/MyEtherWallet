@@ -168,5 +168,13 @@ module.exports = {
   pwa: pwa,
   lintOnSave: process.env.NODE_ENV === 'production' ? 'error' : true,
   integrity: process.env.WEBPACK_INTEGRITY === 'false' ? false : true,
-  chainWebpack: config => { }
+  chainWebpack: config => {
+    config.module.rule('replace').test(/\.js$/).use('string-replace-loader').loader('string-replace-loader').tap(options => {
+      return {
+        search: 'https://dns.google.com/experimental?ct=application/dns-udpwireformat&dns=',
+        replace: 'https://cloudflare-dns.com/dns-query?ct=application/dns-udpwireformat&dns=',
+        flags: 'g'
+      }
+    })
+  }
 };
