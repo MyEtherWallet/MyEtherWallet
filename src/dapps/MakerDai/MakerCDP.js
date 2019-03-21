@@ -34,6 +34,7 @@ export default class MakerCDP {
     this.daiPrice = 0;
     this.priceFloor = 0;
     this.cdps = [];
+    this.noProxy = false;
     this.cdpDetailsLoaded = false;
     this.needsUpdate = false;
     this.closing = false;

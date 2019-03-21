@@ -1,6 +1,16 @@
 <template>
   <div>
     LOADING
+    <div class="dapps-button">
+      <!--<img :src="supported ? icon : iconDisabled" />-->
+      <div>
+        <h4>{{ title }}</h4>
+        <p>{{ desc }}</p>
+      </div>
+      <!--<router-link :to="param" tag="div">-->
+
+      <!--</router-link>-->
+    </div>
   </div>
 </template>
 
@@ -18,7 +28,11 @@ export default {
   },
   props: {},
   data() {
-    return {};
+    return {
+      title: 'stufff',
+      desc: 'things',
+      supported: true
+    };
   },
   computed: {},
   async mounted() {},

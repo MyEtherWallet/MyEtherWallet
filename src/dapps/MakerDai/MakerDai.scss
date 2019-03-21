@@ -1,5 +1,108 @@
 @import '~@/scss/GlobalVariables';
 
+
+
+$dapp-button-mobile-width: 650px;
+$dapps-container-mobile-width: 650px;
+
+
+
+%interface-container {
+  border-radius: 5px;
+  grid-area: main;
+  overflow: hidden;
+
+  > div {
+    background: $background-color-white;
+  }
+}
+
+
+.dapps-button {
+  background: $light-green-4;
+  border: 1px solid $light-green-4;
+  border-radius: 5px;
+  color: $black;
+  cursor: pointer;
+  height: 100%;
+  padding: 10px 5px;
+  text-align: center;
+
+  @media all and (max-width: $dapp-button-mobile-width) {
+    display: flex;
+    align-items: center;
+    text-align: left;
+    padding: 5px 10px;
+  }
+
+  &:hover {
+    border: 1px solid $mew-green;
+    background-color: $light-green-6;
+  }
+
+  img {
+    //margin-bottom: 15px;
+    @media all and (max-width: $dapp-button-mobile-width) {
+      margin-top: 0;
+      margin-left: -10px;
+      margin-right: 5px;
+    }
+  }
+
+  h4 {
+    margin-bottom: 5px;
+    font-size: 18px;
+    font-weight: 500;
+  }
+}
+
+.disabled {
+  background-color: $white;
+  border: 1px solid $light-grey-6;
+  color: $light-grey-6;
+  pointer-events: none;
+
+  p {
+    color: $light-grey-6;
+  }
+}
+
+
+.dapps-container {
+  //@extend %interface-container;
+
+  min-height: 15px;
+}
+
+.buttons-container {
+  display: grid;
+  grid-column-gap: 5px;
+  grid-row-gap: 5px;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  padding: 10px;
+
+  @media all and (max-width: $dapps-container-mobile-width) {
+    > * {
+      margin-bottom: 10px;
+    }
+  }
+
+  > *:last-child {
+    margin-bottom: 0;
+  }
+
+  // Tablet
+  @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+    padding: 20px;
+  }
+
+  @media all and (max-width: $dapps-container-mobile-width) {
+    display: block;
+    padding: 10px;
+  }
+}
+
+
 %send-form-base {
   padding: 40px 60px 0;
 
@@ -25,7 +128,7 @@
 }
 
 .container-maker {
-  grid-area: main;
+  @extend %interface-container;
 
   .Collateralize-Gene {
     width: 341px;
@@ -70,3 +173,4 @@
     color: #0b2840;
   }
 }
+
