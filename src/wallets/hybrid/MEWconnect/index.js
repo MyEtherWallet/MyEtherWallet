@@ -48,7 +48,7 @@ class MEWconnectWallet {
       let tokenInfo;
       if (tx.data.slice(0, 10) === '0xa9059cbb') {
         tokenInfo = store.getters.network.type.tokens.find(
-          entry => entry.address === tx.to
+          entry => entry.address.toLowerCase() === tx.to.toLowerCase()
         );
         if (tokenInfo) {
           tx.currency = {
