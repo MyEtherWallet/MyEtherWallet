@@ -324,7 +324,8 @@ export default {
       blockExplorerAddr: '',
       chainID: networkTypes['ETH'].chainID,
       tokens: [],
-      contracts: []
+      contracts: [],
+      currencyName: 'CUS'
     };
     this.selectedNetworkName = this.network.type.name;
   },
