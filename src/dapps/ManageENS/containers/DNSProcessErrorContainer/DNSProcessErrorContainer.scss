@@ -1,0 +1,15 @@
+@import '../../ManageENS';
+
+.dns-process-error {
+  @extend %template-container;
+
+  min-height: 600px;
+}
+
+.dns-process-content {
+  padding-bottom: 50px;
+}
+
+h3 {
+  color: $red-1;
+}

@@ -1,0 +1,24 @@
+@import '../../ManageENS';
+
+.claim-dns-container {
+  @extend %template-container;
+
+  .claim-dns-content {
+    min-height: 600px;
+  }
+}
+
+.claim-dns-button {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+h3 {
+  color: $mew-green;
+}
+
+p {
+  font-weight: 300;
+  padding-bottom: 50px;
+}

@@ -216,7 +216,7 @@ export default {
             },
             {
               text: this.$t('footer.trezor'),
-              href: 'https://trezor.io/?a=myetherwallet.com'
+              href: 'https://trezor.io/?offer_id=12&aff_id=2029'
             },
             {
               text: this.$t('footer.bity'),
