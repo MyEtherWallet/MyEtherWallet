@@ -63,7 +63,7 @@
                   </div>
                   <p>
                     {{ customGasEth }}
-                    {{ network.type.currencyName || network.type.name }}
+                    {{ network.type.currencyName }}
                     <span
                       v-if="
                         ethPrice !== 0 &&

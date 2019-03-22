@@ -16,5 +16,6 @@ export default {
     registrarTLD: 'test',
     registrarType: 'fifs'
   },
-  icon: rin
+  icon: rin,
+  currencyName: 'RIN'
 };

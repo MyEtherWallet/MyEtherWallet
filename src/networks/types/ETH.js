@@ -16,5 +16,6 @@ export default {
     registrarTLD: 'eth',
     registrarType: 'auction'
   },
-  icon: eth
+  icon: eth,
+  currencyName: 'ETH'
 };

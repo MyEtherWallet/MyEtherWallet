@@ -88,7 +88,7 @@ export default {
     networkToken() {
       return {
         name: this.network.type.name_long,
-        symbol: this.network.type.currencyName || this.network.type.name
+        symbol: this.network.type.currencyName
       };
     },
     localCurrency() {

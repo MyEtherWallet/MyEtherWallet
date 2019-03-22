@@ -11,7 +11,7 @@
       <div class="bottom-block">
         <p class="the-address">
           {{ accountBalance }}
-          {{ network.type.currencyName || network.type.name }}
+          {{ network.type.currencyName }}
         </p>
       </div>
     </div>
