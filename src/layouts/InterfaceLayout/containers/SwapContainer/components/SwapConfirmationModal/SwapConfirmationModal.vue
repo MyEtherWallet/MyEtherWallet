@@ -49,7 +49,7 @@
           <p class="address">{{ fiatDest }}</p>
         </div>
       </div>
-
+      <!--<p> Exchange Rate: 0.000</p>-->
       <div
         :class="[swapReady ? '' : 'disable', 'confirm-send-button']"
         @click="sendTransaction"
@@ -148,7 +148,7 @@ export default {
           : this.currentAddress
       };
       this.toAddress = {
-        value: newValue.recValue || newValue.toValue,
+        value: newValue.providerSends || newValue.toValue,
         name: newValue.toCurrency,
         address: newValue.toAddress
       };
