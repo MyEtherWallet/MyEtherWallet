@@ -11,5 +11,6 @@ export default {
   chainID: 61,
   tokens: tokens,
   contracts: contracts,
-  icon: etc
+  icon: etc,
+  currencyName: 'ETC'
 };

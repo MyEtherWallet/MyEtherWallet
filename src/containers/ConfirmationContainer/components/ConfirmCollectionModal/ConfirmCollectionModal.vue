@@ -19,7 +19,7 @@
           <p>
             <span>{{ $t('confirmation.txTotal') }}:</span>
             {{ txTotal }}
-            {{ network.type.currencyName || network.type.name }}
+            {{ network.type.currencyName }}
           </p>
         </div>
         <div class="modal-content-body">
@@ -35,7 +35,7 @@
                   <p>
                     - {{ web3.utils.hexToNumberString(item.value) }}
                     <span>
-                      {{ network.type.currencyName || network.type.name }}
+                      {{ network.type.currencyName }}
                     </span>
                   </p>
                   <div>
@@ -56,7 +56,7 @@
                   <p>
                     + {{ web3.utils.hexToNumberString(item.value) }}
                     <span>
-                      {{ network.type.currencyName || network.type.name }}
+                      {{ network.type.currencyName }}
                     </span>
                   </p>
                   <div>

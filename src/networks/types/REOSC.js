@@ -11,5 +11,6 @@ export default {
   chainID: 2894,
   tokens: tokens,
   contracts: contracts,
-  icon: reosc
+  icon: reosc,
+  currencyName: 'REOSC'
 };
