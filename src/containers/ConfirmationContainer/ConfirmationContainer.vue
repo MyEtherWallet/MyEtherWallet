@@ -406,6 +406,11 @@ export default {
         promiEvent.catch(onError);
         promiEvent.on('error', onError);
         promiEvent.once('transactionHash', hash => {
+          this.showSuccessModal(
+            'Transaction sent!',
+            'Okay',
+            this.network.type.blockExplorerTX.replace('[[txHash]]', hash)
+          );
           this.$store.dispatch('addNotification', [
             noticeTypes.TRANSACTION_HASH,
             _tx.from,

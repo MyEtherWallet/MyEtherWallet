@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "5.0.8",
+  "version": "5.0.8-hotfix.1",
   "description": "Client side ethereum wallet",
   "licsense": "MIT",
   "repository": "https://github.com/myetherwallet/myetherwallet",
@@ -30,7 +30,6 @@
     "pre-commit": "npm run lint && npm run test"
   },
   "dependencies": {
-    "@ensdomains/dnsregistrar": "0.3.1",
     "@sentry/browser": "4.6.4",
     "html2canvas": "1.0.0-alpha.12",
     "idna-uts46": "1.1.0",
@@ -50,6 +49,7 @@
     "weekstart": "1.0.0"
   },
   "devDependencies": {
+    "@ensdomains/dnsregistrar": "0.3.1",
     "@ethereum-alarm-clock/lib": "0.3.5",
     "@keepkey/keepkey.js": "1.2.1",
     "@ledgerhq/hw-app-eth": "4.47.0",
