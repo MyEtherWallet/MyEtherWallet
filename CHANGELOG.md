@@ -1,9 +1,13 @@
+### Devop
+
+- Add Gage on team page []()
+
 ### Hotfix v5.0.8-hotfix.1
 
 ### Bug
 
-- Display final re-calculated values on swap confirmation[#841](https://github.com/MyEtherWallet/MyEtherWallet/pull/841) 
-- Fix batch send success modal[#843](https://github.com/MyEtherWallet/MyEtherWallet/pull/843) 
+- Display final re-calculated values on swap confirmation[#841](https://github.com/MyEtherWallet/MyEtherWallet/pull/841)
+- Fix batch send success modal[#843](https://github.com/MyEtherWallet/MyEtherWallet/pull/843)
 
 ### Release v5.0.8
 
