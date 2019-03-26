@@ -1,8 +1,9 @@
 <template>
   <div class="sign-message-container">
+    <verify-modal ref="verifyModal" :signature="signature" />
     <interface-container-title :title="$t('common.signMessage')" />
     <div class="content-container">
-      <div class="send-form">
+      <div v-show="signature === ''" class="send-form">
         <p>{{ $t('interface.signMessageDesc') }}</p>
         <div class="title-container">
           <div class="title">
@@ -23,36 +24,35 @@
         </div>
       </div>
 
-      <div class="send-form">
+      <div v-show="signature !== ''" class="send-form">
         <div class="title-container">
           <div class="title">
             <h4>{{ $t('common.signature') }}</h4>
             <popover :popcontent="$t('popover.signature')" />
 
             <div class="copy-buttons">
-              <button
-                class="title-button"
-                @click="deleteInputText('signature')"
-              >
+              <button class="title-button" @click="deleteInputText">
                 {{ $t('common.clear') }}
               </button>
-              <button
-                class="title-button"
-                @click="copyToClipboard('signature')"
-              >
+              <button class="title-button" @click="copyToClipboard">
                 {{ $t('common.copy') }}
               </button>
             </div>
           </div>
         </div>
         <div class="the-form domain-name">
-          <textarea ref="signature" class="custom-textarea-1" />
+          <textarea
+            ref="signature"
+            v-model="signature"
+            class="custom-textarea-1"
+          />
         </div>
       </div>
 
       <div class="submit-button-container">
         <div class="buttons">
           <button
+            v-show="signature === ''"
             :class="[
               message.length > 0 ? '' : 'disabled',
               'submit-button large-round-button-green-filled clickable'
@@ -60,6 +60,13 @@
             @click="signMessage"
           >
             {{ $t('common.sign') }}
+          </button>
+          <button
+            v-show="signature !== ''"
+            :class="['submit-button large-round-button-green-filled clickable']"
+            @click="openVerify"
+          >
+            {{ $t('common.verify') }}
           </button>
         </div>
         <interface-bottom-text
@@ -77,18 +84,19 @@ import { mapGetters } from 'vuex';
 import { Toast } from '@/helpers';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
-import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessModal/SuccessModal.vue';
+import VerifyModal from '../../components/VerifyModal';
 
 export default {
   name: 'SignMessage',
   components: {
     'interface-bottom-text': InterfaceBottomText,
     'interface-container-title': InterfaceContainerTitle,
-    'success-modal': SuccessModal
+    'verify-modal': VerifyModal
   },
   data() {
     return {
-      message: ''
+      message: '',
+      signature: ''
     };
   },
   computed: {
@@ -102,7 +110,7 @@ export default {
       this.web3.eth
         .sign(this.message, this.account.address)
         .then(_signedMessage => {
-          this.$refs.signature.value = JSON.stringify(
+          this.signature = JSON.stringify(
             {
               address: this.account.address,
               msg: this.message,
@@ -118,14 +126,18 @@ export default {
           Toast.responseHandler(e, false);
         });
     },
-    copyToClipboard(ref) {
-      this.$refs[ref].select();
+    copyToClipboard() {
+      this.$refs.signature.select();
       document.execCommand('copy');
       window.getSelection().removeAllRanges();
       Toast.responseHandler('Copied', Toast.INFO);
     },
-    deleteInputText(ref) {
-      this.$refs[ref].value = '';
+    deleteInputText() {
+      this.signature = '';
+      this.message = '';
+    },
+    openVerify() {
+      this.$refs.verifyModal.$refs.verifyModal.show();
     }
   }
 };
