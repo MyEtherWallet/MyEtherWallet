@@ -9,10 +9,18 @@
 
               <p>
                 <span class="standard-button__green-border">
-                  <button v-if="hasProxy" class="the-button-box" @click="openManage(cdpId)">
+                  <button
+                    v-if="hasProxy"
+                    class="the-button-box"
+                    @click="openManage(cdpId)"
+                  >
                     Manage
                   </button>
-                  <button v-if="!hasProxy" class="the-button-box" @click="openMigrate(cdpId)">
+                  <button
+                    v-if="!hasProxy"
+                    class="the-button-box"
+                    @click="openMigrate(cdpId)"
+                  >
                     Manage
                   </button>
                 </span>

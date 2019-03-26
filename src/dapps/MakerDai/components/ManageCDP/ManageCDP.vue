@@ -78,10 +78,10 @@
             <p>{{ $t('dapps.liquidationPenalty') }}</p>
             <p>
               <b
-              >{{
-                displayFixedValue(
-                displayPercentValue(activeCdp._liquidationPenalty)
-                )
+                >{{
+                  displayFixedValue(
+                    displayPercentValue(activeCdp._liquidationPenalty)
+                  )
                 }}%</b
               >
             </p>
@@ -98,10 +98,10 @@
             <p>{{ $t('dapps.minimumRatio') }}</p>
             <p>
               <b
-              >{{
-                displayFixedValue(
-                displayPercentValue(activeCdp.liquidationRatio)
-                )
+                >{{
+                  displayFixedValue(
+                    displayPercentValue(activeCdp.liquidationRatio)
+                  )
                 }}%</b
               >
             </p>
@@ -110,10 +110,10 @@
             <p>{{ $t('dapps.stabilityFee') }}</p>
             <p>
               <b
-              >{{
-                displayFixedValue(
-                displayPercentValue(activeCdp.stabilityFee)
-                )
+                >{{
+                  displayFixedValue(
+                    displayPercentValue(activeCdp.stabilityFee)
+                  )
                 }}%</b
               >
             </p>

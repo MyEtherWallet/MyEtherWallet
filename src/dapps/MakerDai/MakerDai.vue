@@ -1,13 +1,12 @@
 <template>
   <div class="container-maker">
-    <interface-container-title :title="'MAKER'"/>
+    <interface-container-title :title="'MAKER'" />
 
     <!--<back-button />-->
     <!--<button @click="gotoCreate">Create</button>-->
     <!--<button @click="gotoImport">Manage</button>-->
     <!--<button @click="refresh">Refresh</button>-->
     <div v-show="makerActive" class="buttons-container">
-
       <div v-if="showCreate" class="dapps-button">
         <!--<img :src="supported ? icon : iconDisabled" />-->
         <div @click="gotoCreate">

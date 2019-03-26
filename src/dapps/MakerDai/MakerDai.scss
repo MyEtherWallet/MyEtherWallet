@@ -1,11 +1,7 @@
 @import '~@/scss/GlobalVariables';
 
-
-
 $dapp-button-mobile-width: 650px;
 $dapps-container-mobile-width: 650px;
-
-
 
 %interface-container {
   border-radius: 5px;
@@ -16,7 +12,6 @@ $dapps-container-mobile-width: 650px;
     background: $background-color-white;
   }
 }
-
 
 .dapps-button {
   background: $light-green-4;
@@ -67,7 +62,6 @@ $dapps-container-mobile-width: 650px;
   }
 }
 
-
 .dapps-container {
   //@extend %interface-container;
 
@@ -101,7 +95,6 @@ $dapps-container-mobile-width: 650px;
     padding: 10px;
   }
 }
-
 
 %send-form-base {
   padding: 40px 60px 0;
@@ -173,4 +166,3 @@ $dapps-container-mobile-width: 650px;
     color: #0b2840;
   }
 }
-
