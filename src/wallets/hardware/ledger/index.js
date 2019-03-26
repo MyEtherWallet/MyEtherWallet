@@ -115,7 +115,7 @@ const createWallet = async basePath => {
 };
 createWallet.errorHandler = errorHandler;
 const getLedgerTransport = async () => {
-  const transport = await u2fTransport.create(3000, 3000);
+  const transport = await u2fTransport.create(3000, 10000);
   return transport;
 };
 const getLedgerAppConfig = async _ledger => {
