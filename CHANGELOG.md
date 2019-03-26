@@ -1,6 +1,6 @@
 ### Bug
 
-- Resolve spinner on interact contract []()
+- Resolve spinner on interact contract [](<>)
 
 ### Hotfix v5.0.8-hotfix.1
 
