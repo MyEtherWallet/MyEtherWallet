@@ -1,7 +1,10 @@
 @import '~@/scss/GlobalVariables';
 
 .verify-message-layout {
+  align-items: center;
   background-color: $light-grey-2;
+  display: flex;
+  justify-content: center;
   padding: 100px 0;
   text-align: center;
 
@@ -10,5 +13,12 @@
   }
   @media all and (max-width: $mobile-width) {
     padding: 20px 10px;
+  }
+
+  .verify-message-content {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+    max-width: 800px;
   }
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="content-container">
+  <div class="verify-content-container">
     <div class="send-form">
       <div class="title-container">
         <div class="title">
@@ -15,7 +15,7 @@
           v-validate="'required'"
           ref="signature"
           v-model="message"
-          name="verify"
+          name="signature"
           class="custom-textarea-1"
         />
       </div>
@@ -29,7 +29,7 @@
           <br v-if="JSON.parse(message).msg.length > 20" />
           <b>{{ JSON.parse(message).msg }}</b>
         </p>
-        <p v-if="errors.has('verify')">{{ errors.first('verify') }}</p>
+        <p v-if="errors.has('signature')">{{ errors.first('signature') }}</p>
       </div>
     </div>
 
@@ -37,7 +37,7 @@
       <div class="buttons">
         <button
           :class="[
-            errors.has('verify') || message === '' ? 'disabled' : '',
+            errors.has('signature') || message === '' ? 'disabled' : '',
             'submit-button large-round-button-green-filled clickable'
           ]"
           @click="verifyMessage"
@@ -45,11 +45,6 @@
           {{ $t('common.verifyMessage') }}
         </button>
       </div>
-      <interface-bottom-text
-        :link-text="$t('interface.helpCenter')"
-        :question="$t('interface.haveIssues')"
-        link="https://kb.myetherwallet.com"
-      />
     </div>
   </div>
 </template>
@@ -61,9 +56,15 @@ import { mapGetters } from 'vuex';
 const createKeccakHash = require('keccak');
 
 export default {
+  props: {
+    signature: {
+      type: String,
+      default: ''
+    }
+  },
   data() {
     return {
-      message: '',
+      message: this.signature,
       showMessage: false
     };
   },
@@ -75,6 +76,9 @@ export default {
   watch: {
     message(newVal) {
       this.message = newVal;
+    },
+    signature(newVal) {
+      this.message = newVal;
     }
   },
   methods: {
@@ -84,43 +88,52 @@ export default {
       window.getSelection().removeAllRanges();
     },
     deleteInput() {
-      this.$refs.signature.value = '';
+      this.showMessage = false;
+      this.message = '';
     },
     verifyMessage() {
-      const json = JSON.parse(this.message);
-      let hash = MessageUtil.hashPersonalMessage(
-        MessageUtil.toBuffer(json.msg)
-      );
-      const sig = Buffer.from(MessageUtil.getNakedAddress(json.sig), 'hex');
-      if (sig.length !== 65) {
-        Toast.responseHandler('Something went wrong!', Toast.ERROR);
-        return;
-      }
-
-      sig[64] = sig[64] === 0 || sig[64] === 1 ? sig[64] + 27 : sig[64];
-      if (json.version === '3') {
-        if (json.signer === 'trezor') {
-          hash = MessageUtil.getTrezorHash(json.msg);
-        } else if (json.signer === 'ledger') {
-          hash = MessageUtil.hashPersonalMessage(Buffer.from(json.msg));
+      try {
+        const json = JSON.parse(this.message);
+        let hash = MessageUtil.hashPersonalMessage(
+          MessageUtil.toBuffer(json.msg)
+        );
+        const sig = Buffer.from(MessageUtil.getNakedAddress(json.sig), 'hex');
+        if (sig.length !== 65) {
+          Toast.responseHandler('Something went wrong!', Toast.ERROR);
+          return;
         }
-      } else if (json.version === '1') {
-        hash = this.web3.utils.sha3(json.msg);
-      }
 
-      const pubKey = MessageUtil.ecrecover(
-        hash,
-        sig[64],
-        sig.slice(0, 32),
-        sig.slice(32, 64)
-      );
-      if (
-        MessageUtil.getNakedAddress(json.address) !==
-        MessageUtil.pubToAddress(pubKey).toString('hex')
-      ) {
-        Toast.responseHandler('Something went wrong!', Toast.ERROR);
-      } else {
-        this.showMessage = true;
+        sig[64] = sig[64] === 0 || sig[64] === 1 ? sig[64] + 27 : sig[64];
+        if (json.version === '3') {
+          if (json.signer === 'trezor') {
+            hash = MessageUtil.getTrezorHash(json.msg);
+          } else if (json.signer === 'ledger') {
+            hash = MessageUtil.hashPersonalMessage(Buffer.from(json.msg));
+          }
+        } else if (json.version === '1') {
+          hash = this.web3.utils.sha3(json.msg);
+        }
+
+        const pubKey = MessageUtil.ecrecover(
+          hash,
+          sig[64],
+          sig.slice(0, 32),
+          sig.slice(32, 64)
+        );
+        if (
+          MessageUtil.getNakedAddress(json.address) !==
+          MessageUtil.pubToAddress(pubKey).toString('hex')
+        ) {
+          this.showMessage = false;
+          Toast.responseHandler(
+            'Signer address is different from the derived address!',
+            Toast.ERROR
+          );
+        } else {
+          this.showMessage = true;
+        }
+      } catch (e) {
+        Toast.responseHandler(e, Toast.ERROR);
       }
     }
   }
