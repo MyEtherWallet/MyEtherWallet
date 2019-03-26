@@ -1,6 +1,6 @@
 ### Feature
 
-- Update verify message []()
+- Update verify message [#854](https://github.com/MyEtherWallet/MyEtherWallet/pull/854)
 
 ### Hotfix v5.0.8-hotfix.1
 
