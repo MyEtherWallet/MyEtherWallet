@@ -26,7 +26,7 @@
                 <h4>Migrate</h4>
               </div>
             </div>-->
-      <div class="dapps-button">
+      <div v-if="showRefresh" class="dapps-button">
         <!--<img :src="supported ? icon : iconDisabled" />-->
         <div @click="refresh">
           <h4>Refresh</h4>
@@ -47,6 +47,7 @@
       :maker="maker"
       :price-service="priceService"
       :cdp-service="cdpService"
+      :proxy-service="proxyService"
       :cdps="cdps"
       :available-cdps="availableCdps"
       :cdp-details-loaded="cdpDetailsLoaded"
@@ -113,6 +114,7 @@ export default {
       maker: {},
       priceService: {},
       cdpService: {},
+      proxyService: {},
       makerActive: false,
       liquidationRatio: toBigNumber(0),
       liquidationPenalty: toBigNumber(0),
@@ -129,6 +131,7 @@ export default {
       cdpsWithoutProxy: [],
       availableCdps: {},
       cdpDetailsLoaded: false,
+      migrationInProgress: false,
       makerCdp: {}
     };
   },
@@ -165,6 +168,9 @@ export default {
     showManage() {
       return this.cdps.length > 1 || this.cdpsWithoutProxy.length > 1;
     },
+    showRefresh() {
+      return this.cdps.length > 0 || this.cdpsWithoutProxy.length > 0;
+    },
     showCreate() {
       return this.cdps.length === 0 && this.cdpsWithoutProxy.length === 0;
     }
@@ -181,22 +187,25 @@ export default {
         async () => {
           // eslint-disable-next-line
           console.log('do update'); // todo remove dev item
-          let afterClose = false;
-          for (let idProp in this.availableCdps) {
-            if (this.availableCdps[idProp].needsUpdate) {
-              if (this.availableCdps[idProp].closing) {
-                afterClose = true;
-                delete this.availableCdps[idProp];
-                this.cdps = this.cdps.filter(item => item !== idProp);
-              } else {
-                console.log('UPDATE CDP', idProp); // todo remove dev item
-                await this.availableCdps[idProp].update();
-              }
-            }
-          }
-          if (afterClose) {
-            this.gotoImport();
-          }
+          await this.doUpdate()
+          // let afterClose = false;
+          // for (let idProp in this.availableCdps) {
+          //   if (this.availableCdps[idProp].needsUpdate) {
+          //     if (this.availableCdps[idProp].closing) {
+          //       afterClose = true;
+          //       delete this.availableCdps[idProp];
+          //       this.cdps = this.cdps.filter(item => item !== idProp);
+          //     } else if(this.availableCdps[idProp].migrateCdpActive){
+          //       await this.availableCdps[idProp].migrateCdpComplete()
+          //     } else {
+          //       console.log('UPDATE CDP', idProp); // todo remove dev item
+          //       this.availableCdps[idProp] = await this.availableCdps[idProp].update();
+          //     }
+          //   }
+          // }
+          // if (afterClose) {
+          //   this.gotoImport();
+          // }
         }
       );
       this.maker = await Maker.create('http', {
@@ -214,6 +223,7 @@ export default {
       await this.maker.authenticate();
       this.priceService = this.maker.service('price');
       this.cdpService = await this.maker.service('cdp');
+      this.proxyService = await this.maker.service('proxy');
 
       // this.ethPrice = toBigNumber(
       //   (await this.priceService.getEthPrice()).toNumber()
@@ -250,7 +260,8 @@ export default {
         await this.loadCdpDetails();
         this.cdpDetailsLoaded = true;
         this.makerActive = true;
-        if (this.$route.name !== 'create') {
+        console.log(this.$route); // todo remove dev item
+        if (this.$route.name !== 'create' && this.$route.path.includes('maker-dai')) {
           this.gotoImport();
         }
       } else {
@@ -263,32 +274,39 @@ export default {
       });
     },
     gotoCreate() {
-      this.$router.push({
-        name: 'create'
-      });
-    },
-    gotoImport() {
-      if (this.showManage) {
-        // eslint-disable-next-line
-        console.log('go to select'); // todo remove dev item
+      if(this.$route.path.includes('maker-dai')) {
         this.$router.push({
-          name: 'select'
-        });
-      } else if (this.cdps.length === 1) {
-        this.$router.push({
-          name: 'manage',
-          params: {
-            cdpId: this.cdps[0]
-          }
-        });
-      } else if (this.cdpsWithoutProxy.length === 1) {
-        this.$router.push({
-          name: 'manage',
-          params: {
-            cdpId: this.cdpsWithoutProxy[0]
-          }
+          name: 'create'
         });
       }
+    },
+    gotoImport() {
+      if(this.$route.path.includes('maker-dai')){
+        if (this.showManage) {
+          // eslint-disable-next-line
+          console.log('go to select'); // todo remove dev item
+          this.$router.push({
+            name: 'select'
+          });
+        } else if (this.cdps.length === 1) {
+          this.$router.push({
+            name: 'manage',
+            params: {
+              cdpId: this.cdps[0]
+            }
+          });
+        } else if (this.cdpsWithoutProxy.length === 1) {
+          this.$router.push({
+            name: 'migrate',
+            params: {
+              cdpId: this.cdpsWithoutProxy[0]
+            }
+          });
+        } else {
+          this.gotoCreate();
+        }
+      }
+
     },
     addCdp(vals) {
       this.availableCdps[vals.id] = vals.maker;
@@ -302,6 +320,7 @@ export default {
       }
     },
     async refresh() {
+      console.log('refresh'); // todo remove dev item
       const { withProxy, withoutProxy } = await this.locateCdps();
       this.cdps = withProxy;
 
@@ -311,12 +330,60 @@ export default {
       for (let i = 0; i < newCdps.length; i++) {
         this.availableCdps[newCdps[i]] = await this.buildCdpObject(newCdps[i]);
       }
+      console.log(withProxy.length, withoutProxy.length); // todo remove dev item
+      if(withProxy.length > 0 || withoutProxy.length > 0){
+        await this.doUpdate()
+      } else {
+        this.availableCdps = {};
+        this.gotoCreate();
+      }
+    },
+    async doUpdate(){
+      console.log('updating'); // todo remove dev item
+      let afterClose = false;
+      this.migrationInProgress = false;
       for (let idProp in this.availableCdps) {
         if (this.availableCdps[idProp].needsUpdate) {
-          await this.availableCdps[idProp].update();
+          if (this.availableCdps[idProp].closing) {
+            afterClose = true;
+            this.$delete(this.availableCdps, idProp);
+            this.cdps = this.cdps.filter(item => item !== idProp);
+          } else if(this.availableCdps[idProp].migrateCdpActive){
+            this.migrationInProgress = true;
+            await this.availableCdps[idProp].migrateCdpComplete();
+          } else {
+            console.log('UPDATE CDP', idProp); // todo remove dev item
+            this.availableCdps[idProp] = await this.availableCdps[idProp].update();
+          }
         }
       }
-      this.gotoImport();
+      if (afterClose) {
+        console.log('after close or move'); // todo remove dev item
+        const { withProxy, withoutProxy } = await this.locateCdps();
+        this.cdps = withProxy;
+        this.cdpsWithoutProxy = withoutProxy;
+        this.gotoImport();
+      }
+
+      const cdpKeys = Object.keys(this.availableCdps);
+      if(cdpKeys.length === 1){
+        if(this.availableCdps[cdpKeys[0]].migrateCdpStage === 3){
+          this.availableCdps[cdpKeys[0]].migrateCdpStage = 4;
+          this.migrationInProgress = false;
+          console.log('migrate to manage'); // todo remove dev item
+          this.$router.push({
+            name: 'manage',
+            params: {
+              cdpId: cdpKeys[0]
+            }
+          });
+        }
+      } else if(this.migrationInProgress){
+        console.log('migrate to refresh to import'); // todo remove dev item
+        this.migrationInProgress = false;
+        await this.refresh();
+        this.gotoImport();
+      }
     },
     async locateCdpsWithoutProxy() {
       const directCdps = await this.maker.getCdpIds(
@@ -363,14 +430,20 @@ export default {
         liquidationPenalty: this.liquidationPenalty,
         stabilityFee: this.stabilityFee,
         wethToPethRatio: this.wethToPethRatio,
+        currentAddress: this.account.address,
         ...options
       };
+
+      const services = {
+        priceService:   this.priceService,
+        cdpService: this.cdpService,
+        proxyService: this.proxyService
+      }
 
       const makerCDP = new MakerCDP(
         cdpId,
         this.maker,
-        this.priceService,
-        this.cdpService,
+        services,
         sysVars
       );
       return await makerCDP.init(cdpId);
