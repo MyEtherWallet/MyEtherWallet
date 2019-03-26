@@ -219,6 +219,12 @@ export default {
         return {};
       }
     },
+    proxyService: {
+      type: Object,
+      default: function() {
+        return {};
+      }
+    },
     maker: {
       type: Object,
       default: function() {
@@ -297,15 +303,17 @@ export default {
         liquidationRatio: this.liquidationRatio,
         liquidationPenalty: this.liquidationPenalty,
         stabilityFee: this.stabilityFee,
-        wethToPethRatio: this.wethToPethRatio
+        wethToPethRatio: this.wethToPethRatio,
+        currentAddress: this.account.address
       };
-      this.makerCDP = new MakerCDP(
-        null,
-        this.maker,
-        this.priceService,
-        this.cdpService,
-        sysVars
-      );
+
+      const services = {
+        priceService: this.priceService,
+        cdpService: this.cdpService,
+        proxyService: this.proxyService
+      };
+
+      this.makerCDP = new MakerCDP(null, this.maker, services, sysVars);
     },
     displayPercentValue(raw) {
       if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);

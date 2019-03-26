@@ -3,6 +3,7 @@ const MakerHome = () => import('./components/MakerHome');
 const CreateCDP = () => import('./components/CreateCDP');
 const ManageCDP = () => import('./components/ManageCDP');
 const SelectCDP = () => import('./components/SelectCDP');
+const ProxyMigrateCDP = () => import('./components/ProxyMigrateCDP')
 
 export default {
   path: 'dapps/maker-dai',
@@ -32,6 +33,12 @@ export default {
       path: 'manage/:cdpId',
       name: 'manage',
       component: ManageCDP,
+      props: true
+    },
+    {
+      path: 'migrate/:cdpId',
+      name: 'migrate',
+      component: ProxyMigrateCDP,
       props: true
     }
   ]

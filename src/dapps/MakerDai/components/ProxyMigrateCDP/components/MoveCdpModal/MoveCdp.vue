@@ -111,7 +111,7 @@ export default {
     },
     async moveCdp() {
       if (Misc.isValidETHAddress(this.address)) {
-        this.activeCdp.moveCdp(this.address);
+        await this.activeCdp.moveCdp(this.address);
         this.closeModal();
       }
     },

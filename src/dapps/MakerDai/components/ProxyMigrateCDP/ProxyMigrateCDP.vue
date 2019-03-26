@@ -1,25 +1,5 @@
 <template>
   <div>
-    <action-modal
-      ref="deposit"
-      :action="'deposit'"
-      :active-cdp="activeCdp"
-    ></action-modal>
-    <action-modal
-      ref="generate"
-      :action="'generate'"
-      :active-cdp="activeCdp"
-    ></action-modal>
-    <action-modal
-      ref="withdraw"
-      :action="'withdraw'"
-      :active-cdp="activeCdp"
-    ></action-modal>
-    <action-modal
-      ref="payback"
-      :action="'payback'"
-      :active-cdp="activeCdp"
-    ></action-modal>
     <close-cdp-modal
       ref="closeCdp"
       :active-cdp="activeCdp"
@@ -40,6 +20,24 @@
       <button @click="showMove">
         MOVE
       </button>
+      <div>
+        <div
+          :class="[
+            'step-indicator',
+            !(noProxy && !finishMigration) ? 'complete' : 'incomplete'
+          ]"
+        >
+          <span>Step 1</span>
+        </div>
+        <div
+          :class="[
+            'step-indicator',
+            !noProxy && finishMigration ? 'complete' : 'incomplete'
+          ]"
+        >
+          <span>Step 2</span>
+        </div>
+      </div>
       <div class="migrate-cdp-container">
         <div v-if="noProxy && !finishMigration" class="migrate-cdp">
           <button @click="migrateCdpToProxy">Migrate Existing CDP</button>
@@ -78,10 +76,10 @@
             <p>{{ $t('dapps.liquidationPenalty') }}</p>
             <p>
               <b
-              >{{
-                displayFixedValue(
-                displayPercentValue(activeCdp._liquidationPenalty)
-                )
+                >{{
+                  displayFixedValue(
+                    displayPercentValue(activeCdp._liquidationPenalty)
+                  )
                 }}%</b
               >
             </p>
@@ -98,10 +96,10 @@
             <p>{{ $t('dapps.minimumRatio') }}</p>
             <p>
               <b
-              >{{
-                displayFixedValue(
-                displayPercentValue(activeCdp.liquidationRatio)
-                )
+                >{{
+                  displayFixedValue(
+                    displayPercentValue(activeCdp.liquidationRatio)
+                  )
                 }}%</b
               >
             </p>
@@ -110,10 +108,10 @@
             <p>{{ $t('dapps.stabilityFee') }}</p>
             <p>
               <b
-              >{{
-                displayFixedValue(
-                displayPercentValue(activeCdp.stabilityFee)
-                )
+                >{{
+                  displayFixedValue(
+                    displayPercentValue(activeCdp.stabilityFee)
+                  )
                 }}%</b
               >
             </p>
@@ -136,9 +134,7 @@
               PETH /
               <b>{{ displayFixedValue(activeCdp.usdCollateral, 2) }}</b> USD
             </p>
-            <p>
-              <span @click="showDeposit">{{ $t('dapps.deposit') }}</span>
-            </p>
+            <p></p>
           </div>
           <div class="content-border">
             <div class="Line-8"></div>
@@ -152,9 +148,7 @@
               <b>{{ displayFixedValue(activeCdp.maxPethDraw, 5) }}</b> PETH /
               <b>{{ displayFixedValue(activeCdp.maxUsdDraw, 2) }}</b> USD
             </p>
-            <p>
-              <span @click="showWithdraw">{{ $t('dapps.withdraw') }}</span>
-            </p>
+            <p></p>
           </div>
         </div>
       </div>
@@ -171,9 +165,7 @@
             <p>
               <b>{{ displayFixedValue(activeCdp.debtValue, 2) }}</b> USD
             </p>
-            <p>
-              <span @click="showPayback">{{ $t('dapps.payBack') }}</span>
-            </p>
+            <p></p>
           </div>
           <div class="content-border">
             <div class="Line-8"></div>
@@ -186,9 +178,7 @@
             <p>
               <b>{{ displayFixedValue(activeCdp.maxDai, 2) }}</b> USD
             </p>
-            <p>
-              <span @click="showGenerate">{{ $t('dapps.generate') }}</span>
-            </p>
+            <p></p>
           </div>
         </div>
       </div>
@@ -281,9 +271,9 @@ export default {
     ['activeCdp.ready']() {
       this.isReady();
     },
-    async ['activeCdp.doUpdate'](val){
-      if(val > 0){
-        this.activeCdp = await this.activeCdp.update()
+    async ['activeCdp.doUpdate'](val) {
+      if (val > 0) {
+        this.activeCdp = await this.activeCdp.update();
       }
     }
   },
@@ -321,19 +311,6 @@ export default {
     async migrateCdpToProxy() {
       const migrate = await this.activeCdp.migrateCdpComplete();
     },
-    showDeposit() {
-      this.$refs.deposit.$refs.modal.show();
-      // this.$refs.action.$refs.modal.show();
-    },
-    showWithdraw() {
-      this.$refs.withdraw.$refs.modal.show();
-    },
-    showPayback() {
-      this.$refs.payback.$refs.modal.show();
-    },
-    showGenerate() {
-      this.$refs.generate.$refs.modal.show();
-    },
     showClose() {
       this.$refs.closeCdp.$refs.modal.show();
     },
@@ -362,5 +339,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'ManageCDP';
+@import 'ProxyMigrateCDP';
 </style>

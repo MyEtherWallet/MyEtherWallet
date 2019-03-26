@@ -9,7 +9,10 @@
 
               <p>
                 <span class="standard-button__green-border">
-                  <button class="the-button-box" @click="openManage(cdpId)">
+                  <button v-if="hasProxy" class="the-button-box" @click="openManage(cdpId)">
+                    Manage
+                  </button>
+                  <button v-if="!hasProxy" class="the-button-box" @click="openMigrate(cdpId)">
                     Manage
                   </button>
                 </span>
@@ -108,17 +111,35 @@ export default {
       web3: 'web3',
       network: 'network',
       ens: 'ens'
-    })
+    }),
+    hasProxy(){
+      if(this.aCdp){
+        return !this.aCdp.noProxy
+      }
+      return true;
+    }
   },
   async mounted() {},
   methods: {
     openManage() {
-      this.$router.push({
-        name: 'manage',
-        params: {
-          cdpId: this.cdpId
-        }
-      });
+      if(this.$route.path.includes('maker-dai')){
+        this.$router.push({
+          name: 'manage',
+          params: {
+            cdpId: this.cdpId
+          }
+        });
+      }
+    },
+    openMigrate() {
+      if(this.$route.path.includes('maker-dai')){
+        this.$router.push({
+          name: 'migrate',
+          params: {
+            cdpId: this.cdpId
+          }
+        });
+      }
     },
     displayPercentValue(raw) {
       if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);

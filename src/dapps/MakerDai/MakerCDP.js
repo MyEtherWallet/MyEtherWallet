@@ -16,15 +16,16 @@ const bnOver = (one, two, three) => {
 };
 
 export default class MakerCDP {
-  constructor(cdpId, maker, priceService, cdpService, sysVars, toInit) {
+  constructor(cdpId, maker, services, sysVars, toInit) {
     this.cdpId = cdpId;
     this.cdp = {};
     this.maker = maker;
     this.web3 = sysVars.web3 || {};
-    this.priceService = priceService;
-    this.cdpService = cdpService;
-    this.proxyService = this.maker.service('proxy');
+    this.priceService = services.priceService || {};
+    this.cdpService = services.cdpService || {};
+    this.proxyService = services.proxyService || {};
     this.ready = false;
+    this.doUpdate = 0;
     this._liquidationRatio = sysVars.liquidationRatio || toBigNumber(0);
     this._liquidationPenalty = sysVars.liquidationPenalty || toBigNumber(0);
     this._stabilityFee = sysVars.stabilityFee || toBigNumber(0);
@@ -32,6 +33,7 @@ export default class MakerCDP {
     this._pethPrice = sysVars.pethPrice || toBigNumber(0);
     this._wethToPethRatio = sysVars.wethToPethRatio || toBigNumber(0);
     this._targetPrice = sysVars.targetPrice || toBigNumber(0);
+    this._currentAddress = sysVars.currentAddress || null;
     this.daiPrice = 0;
     this.priceFloor = 0;
     this.cdps = [];
@@ -40,6 +42,8 @@ export default class MakerCDP {
     this.needsUpdate = false;
     this.closing = false;
     this.migrated = false;
+    this.migrateCdpActive = false;
+    this.migrateCdpStage = 0;
 
     this._liqPrice = toBigNumber(0);
     this.isSafe = false;
@@ -58,6 +62,9 @@ export default class MakerCDP {
 
   async init(cdpId = this.cdpId) {
     this.txMgr = this.maker.service('transactionManager');
+    this.priceService = this.maker.service('price');
+    this.cdpService = await this.maker.service('cdp');
+    this.proxyService = await this.maker.service('proxy');
     this.cdp = await this.maker.getCdp(cdpId);
     this.proxyAddress = await this.proxyService.currentProxy();
     const liqPrice = await this.cdp.getLiquidationPrice();
@@ -100,7 +107,7 @@ export default class MakerCDP {
   }
 
   async update() {
-    if(this.migrated){
+    if (this.migrated) {
       const currentProxy = await this.proxyService.currentProxy();
       if (currentProxy) {
         this.migrated = false;
@@ -110,7 +117,9 @@ export default class MakerCDP {
     if (this.needsUpdate) {
       this.needsUpdate = false;
       await this.init(this.cdpId);
+      return this;
     }
+    return this;
   }
 
   get liquidationPenalty() {
@@ -234,7 +243,14 @@ export default class MakerCDP {
   }
 
   async getProxy() {
-    return this.maker.service('proxy').currentProxy();
+    this.proxyAddress = await this.proxyService.currentProxy();
+    if (!this.proxyAddress) {
+      this.proxyAddress = await this.proxyService.getProxyAddress(
+        this._currentAddress
+      );
+      if (this.proxyAddress) this.noProxy = false;
+    }
+    return this.proxyAddress;
   }
 
   async buildProxy() {
@@ -242,23 +258,63 @@ export default class MakerCDP {
     if (!currentProxy) {
       await proxyService.build();
       // eslint-disable-next-line
-      this.proxyAddress = await this.maker.service('proxy').currentProxy();
+      this.proxyAddress = await this.proxyService.currentProxy();
       return this.proxyAddress;
     }
     this.proxyAddress = await this.proxyService.currentProxy();
     return this.proxyAddress;
   }
 
-  get needToFinishMigrating(){
+  get needToFinishMigrating() {
     return this.proxyAddress && this.noProxy;
   }
 
-  async migrateCdp(){
+  async migrateCdpComplete() {
+    this.needsUpdate = true;
+    if (!this.migrateCdpActive && !this.proxyAddress) {
+      this.migrateCdpActive = true;
+      this.migrateCdpStage = 1;
+      await this.proxyService.ensureProxy();
+    } else {
+      if (this.migrateCdpStage === 1) {
+        let checking;
+        this.migrateCdpStage = 2;
+        console.log('migrateCdpComplete'); // todo remove dev item
+        const currentProxy = await this.proxyService.getProxyAddress(
+          this._currentAddress
+        );
+        if (currentProxy) {
+          this.migrateCdpActive = false;
+          this.doUpdate++;
+          this.migrateCdpStage = 3;
+          this.noProxy = false;
+          await this.cdpService.give(this.cdpId, currentProxy);
+        } else {
+          checking = setInterval(async () => {
+            const currentProxy = await this.proxyService.getProxyAddress(
+              this._currentAddress
+            );
+            console.log('currentProxy', currentProxy); // todo remove dev item
+            if (currentProxy) {
+              clearInterval(checking);
+              this.migrateCdpActive = false;
+              this.doUpdate++;
+              this.migrateCdpStage = 3;
+              this.noProxy = false;
+              await this.cdpService.give(this.cdpId, currentProxy);
+            }
+          }, 500);
+        }
+      }
+    }
+  }
+
+  async migrateCdp() {
     const currentProxy = await this.proxyService.currentProxy();
     if (!currentProxy) {
       this.needsUpdate = true;
-      const details = await this.proxyService.ensureProxy()
-    } else if(this.needToFinishMigrating){
+      return await this.proxyService.ensureProxy();
+    } else if (this.needToFinishMigrating) {
       await this.cdpService.give(this.cdpId, this.proxyAddress);
       this.needsUpdate = true;
     }
@@ -352,18 +408,21 @@ export default class MakerCDP {
   }
 
   async moveCdp(address) {
-    const proxy = await this.maker.service('proxy').getProxyAddress(address);
+    console.log(address); // todo remove dev item
+    await this.getProxy();
+    const proxy = await this.proxyService.getProxyAddress(address);
     if (proxy) {
-      await this.cdpService.giveProxy(this.proxyAddress, this.cdpId, proxy);
       this.needsUpdate = true;
       this.closing = true; // for the purpose of displaying to the user closing and moving are the same
-    } else if(!this.noProxy){
-      await this.cdpService.giveProxy(this.proxyAddress, this.cdpId, address);
+      await this.cdpService.giveProxy(this.proxyAddress, this.cdpId, proxy);
+    } else if (!this.noProxy) {
       this.needsUpdate = true;
       this.closing = true;
+      await this.cdpService.giveProxy(this.proxyAddress, this.cdpId, address);
     } else {
-      await this.cdpService.give(this.cdpId, address);
       this.needsUpdate = true;
+      this.closing = true;
+      await this.cdpService.give(this.cdpId, address);
     }
   }
 
