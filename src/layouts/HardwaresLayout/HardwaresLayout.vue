@@ -3,7 +3,7 @@
     <div class="hardware-container">
       <div class="hardware-text">
         <h2>Hardwares</h2>
-        <p>lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum</p>
+        <p>Purchase a hardware wallet for the highest security when accessing your crypto.</p>
       </div>
       <div class="hardware-items-container">
         <div v-for="item in items" :key="item.name" class="hardware-item">
