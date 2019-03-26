@@ -1,6 +1,6 @@
 ### Bug
 
-- Resolve spinner on interact contract [](<>)
+- Resolve spinner on interact contract [#861](https://github.com/MyEtherWallet/MyEtherWallet/pull/841)
 
 ### Hotfix v5.0.8-hotfix.1
 

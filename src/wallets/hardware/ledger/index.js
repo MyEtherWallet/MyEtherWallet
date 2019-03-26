@@ -15,6 +15,8 @@ import {
 import errorHandler from './errorHandler';
 
 const NEED_PASSWORD = false;
+const OPEN_TIMEOUT = 3000;
+const LISTENER_TIMEOUT = 10000;
 
 class ledgerWallet {
   constructor() {
@@ -115,7 +117,7 @@ const createWallet = async basePath => {
 };
 createWallet.errorHandler = errorHandler;
 const getLedgerTransport = async () => {
-  const transport = await u2fTransport.create(3000, 10000);
+  const transport = await u2fTransport.create(OPEN_TIMEOUT, LISTENER_TIMEOUT);
   return transport;
 };
 const getLedgerAppConfig = async _ledger => {
