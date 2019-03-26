@@ -9,7 +9,7 @@
   "dataGas": "Data & Gas Limit",
   "sendTx": "トランザクションを送る",
   "haveIssues": "問題がありますか？",
-  "registerEns": "Register ENS",
+  "ensManager": "ENS Manager",
   "registerEnsDesc": "Once you have a domain name, you can tell your friends to send ETH to mewtopia.eth instead of your address(0x7cB57B5A97eAbe942....)",
   "checkDomain": "ドメインを確認",
   "subDomain": "サブドメイン",

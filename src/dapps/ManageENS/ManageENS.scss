@@ -1,0 +1,64 @@
+@import '~@/scss/GlobalVariables';
+
+%template-container {
+  padding: 24px 56px;
+  border-radius: 5px;
+
+  // Tablet
+  @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+    padding: 20px;
+  }
+
+  // Mobile
+  @media all and (max-width: $mobile-width) {
+    padding: 20px 10px;
+  }
+}
+
+.auction-started {
+  color: $light-blue-1;
+  padding: 10px 0 15px;
+}
+
+.manage-ens-container {
+  border-radius: 5px;
+  grid-area: main;
+  overflow: hidden;
+  padding-bottom: 10px;
+
+  > div {
+    background-color: $background-color-white;
+  }
+
+  .submit-button {
+    margin: 0 auto;
+    text-align: center;
+    width: 300px;
+    @media all and (max-width: $mobile-width) {
+      width: 100%;
+    }
+  }
+}
+
+.back-button {
+  display: flex;
+  justify-content: center;
+  margin: 36px 0 25px;
+
+  button {
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 20px;
+    width: 300px;
+  }
+}
+
+.errored {
+  border: 1px solid $red-1 !important;
+  border-radius: 5px;
+  padding: 11px 13px;
+}
+
+.erroredMsg {
+  color: $red-1;
+}

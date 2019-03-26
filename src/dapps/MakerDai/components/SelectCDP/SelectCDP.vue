@@ -14,7 +14,10 @@
           Loading CDP Details
         </div>
         <div v-if="cdpDetailsLoaded">
-          <div v-for="(cdp, idx) in Object.keys(availableCdps)" :key="cdp + idx">
+          <div
+            v-for="(cdp, idx) in Object.keys(availableCdps)"
+            :key="cdp + idx"
+          >
             <select-cdp-entry
               :a-cdp="cdpOptions[cdp]"
               :cdp-id="cdp"

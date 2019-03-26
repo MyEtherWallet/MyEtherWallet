@@ -3,7 +3,7 @@ const MakerHome = () => import('./components/MakerHome');
 const CreateCDP = () => import('./components/CreateCDP');
 const ManageCDP = () => import('./components/ManageCDP');
 const SelectCDP = () => import('./components/SelectCDP');
-const ProxyMigrateCDP = () => import('./components/ProxyMigrateCDP')
+const ProxyMigrateCDP = () => import('./components/ProxyMigrateCDP');
 
 export default {
   path: 'dapps/maker-dai',

@@ -1,23 +1,21 @@
 @import '~@/scss/GlobalVariables';
 
-
 .migrate-cdp-container {
   position: relative;
   text-align: right;
   padding-right: 20px;
   width: 100%;
-.migrate-cdp{
-  position: relative;
-  right: 0;
-  p{
-    background-color: aqua;
-    //width: fit-content;
-    &:hover {
-      cursor: pointer;
+  .migrate-cdp {
+    position: relative;
+    right: 0;
+    p {
+      background-color: aqua;
+      //width: fit-content;
+      &:hover {
+        cursor: pointer;
+      }
     }
   }
-
-}
 }
 
 .container-maker {
@@ -36,8 +34,6 @@
       font-weight: 600;
       color: #5a78f0;
     }
-
-
 
     .liq-usd {
       font-size: 16px;
