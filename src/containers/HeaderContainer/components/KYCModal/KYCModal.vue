@@ -874,17 +874,11 @@
             Reset
           </button>
           <div v-show="set > 0 && set < 6" class="move-on-buttons">
-            <span
-              :class="[setHasError ? 'disable-forward' : '', 'back']"
-              @click="back(set)"
-            >
+            <span class="back" @click="back(set)">
               &#60; Back
             </span>
             <span class="border-span"></span>
-            <span
-              :class="[setHasError ? 'disable-forward' : '', 'next']"
-              @click="next(set)"
-            >
+            <span class="next" @click="next(set)">
               Next >
             </span>
           </div>

@@ -293,9 +293,10 @@ export default {
     }
   },
   mounted() {
+    const td = new Date();
     const x = store.get('x') || 0;
     if (x <= 5) {
-      if (new Date() >= 1554102000000 && new Date() < 1554188400000) {
+      if (td.getTime() >= 1554102000000 && td.getTime() < 1554188400000) {
         this.$refs.kycModal.$refs.kycModal.show();
       }
     }
