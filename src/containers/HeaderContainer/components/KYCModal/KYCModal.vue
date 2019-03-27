@@ -885,7 +885,7 @@
 
 <script>
 import store from 'store';
-import { gs } from '../../helpers.js';
+import { gs } from './helpers.js';
 export default {
   data() {
     return {
