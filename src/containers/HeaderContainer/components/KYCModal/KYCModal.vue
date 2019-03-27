@@ -656,7 +656,7 @@
           <div class="kyc-string-input">
             <label for="question30">
               <p>30. Who is this guy?</p>
-              <img src="@/assets/images/team/Kosala.jpg" width="200px" />
+              <img src="@/assets/images/team/kosala.jpeg" width="200px" />
             </label>
             <input
               v-validate="'required'"
