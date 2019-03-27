@@ -89,6 +89,16 @@
 }
 
 .final-final-card {
+  align-items: center;
   background-image: url('~@/assets/images/home/stars.svg');
   background-size: 40%;
+  display: flex;
+
+  h2 {
+    flex: 1;
+  }
+
+  img {
+    max-width: 175px;
+  }
 }

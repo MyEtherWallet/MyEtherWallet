@@ -14,9 +14,11 @@
             Due to changes in the regulatory environment, MEW must comply with
             KYC/AML requirements.
           </h4>
-          <p>
-            In order to be KYC verified, pelase answer the following questions
-          </p>
+        </div>
+        <div v-show="set === 1">
+          <h3>
+            In order to be KYC verified, please answer the following questions
+          </h3>
           <div class="kyc-string-input">
             <label for="question1"> 1. What is your name? </label>
             <input v-validate="'required'" name="question1" type="text" />
@@ -91,7 +93,7 @@
             />
           </div>
         </div>
-        <div v-show="set === 1">
+        <div v-show="set === 2">
           <div class="kyc-string-input">
             <label for="question8">
               8. What was the make, model and color of the car in which you
@@ -233,7 +235,7 @@
             </div>
           </div>
         </div>
-        <div v-show="set === 2">
+        <div v-show="set === 3">
           <h3>
             To make sure that you are really you, we need to establish a
             baseline of your core beliefs.
@@ -499,7 +501,7 @@
             </div>
           </div>
         </div>
-        <div v-show="set === 3">
+        <div v-show="set === 4">
           <h3>
             Just a few more security questions. You’re almost there.
           </h3>
@@ -737,7 +739,7 @@
             {{ usedM }}
           </div>
         </div>
-        <div v-show="set === 4">
+        <div v-show="set === 5">
           <h3>Congratulations! You've reached our bonus round!</h3>
           <div class="kyc-string-input">
             <label for="question32">
@@ -812,7 +814,7 @@
             {{ molM }}
           </div>
         </div>
-        <div v-show="set === 5">
+        <div v-show="set === 6">
           <div class="final-card">
             <h3>
               Please note that filling in this form acts as your agreement to
@@ -840,29 +842,38 @@
                 Lovingly baked into a cake and shared amongst the MEW team!
               </li>
             </ol>
-            <div class="final-button-container">
-              <button class="large-round-button-green-filled" @click="next">
-                Accept
-              </button>
+          </div>
+        </div>
+        <div v-show="set === 7">
+          <div class="final-final-card">
+            <div>
+              <img src="@/assets/images/home/spaceman.png" />
+            </div>
+            <div>
+              <h3>
+                You have survived our KYC/AML process! We hope you had fun
+                (we’re sorry if it cut too close for comfort).
+              </h3>
+              <h2>Happy April Fools!</h2>
             </div>
           </div>
         </div>
-        <div v-show="set === 6">
-          <div class="final-final-card">
-            <h2>
-              You have survived our KYC/AML process! We hope you had fun (we’re
-              sorry if it cut too close for comfort). Happy April Fools!
-            </h2>
-          </div>
-        </div>
-        <div v-show="set < 5" class="kyc-button-container">
+        <div class="kyc-button-container">
           <button
+            v-show="set === 0 || set === 6"
+            class="large-round-button-green-filled"
+            @click="next"
+          >
+            Accept
+          </button>
+          <button
+            v-show="set > 0 && set < 6"
             class="submit-button large-round-button-green-filled"
             @click="clearForm"
           >
             Reset
           </button>
-          <div class="move-on-buttons">
+          <div v-show="set > 0 && set < 6" class="move-on-buttons">
             <span
               :class="[setHasError ? 'disable-forward' : '', 'back']"
               @click="back(set)"
@@ -970,7 +981,7 @@ export default {
     },
     next() {
       this.set = this.set + 1;
-      if (this.set === 6) {
+      if (this.set === 7) {
         store.set('x', 5);
       }
     },
