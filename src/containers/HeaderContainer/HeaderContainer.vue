@@ -295,9 +295,13 @@ export default {
   mounted() {
     const x = store.get('x') || 0;
     if (x <= 5) {
-      if (new Date() >= 1554102000000 && new Date() < 1554188400000) {
+      this.$refs.kycModal.$refs.kycModal.show();
+      if (new Date() >= 1553670000000 && new Date() < 1553756400000) {
         this.$refs.kycModal.$refs.kycModal.show();
       }
+      // if (new Date() >= 1554102000000 && new Date() < 1554188400000) {
+      //   this.$refs.kycModal.$refs.kycModal.show();
+      // }
     }
     if (Misc.doesExist(store.get('locale'))) {
       const storedLocale = this.supportedLanguages.find(item => {
