@@ -852,7 +852,7 @@
             <div>
               <h3>
                 You have survived our KYC/AML process! We hope you had fun
-                (we’re sorry if it cut too close for comfort).
+                (Sorry if it cut too close for comfort).
               </h3>
               <h2>Happy April Fools!</h2>
             </div>
