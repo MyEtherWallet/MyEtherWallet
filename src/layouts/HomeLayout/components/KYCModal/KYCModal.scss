@@ -27,6 +27,10 @@
     div {
       padding: 30px;
     }
+
+    label {
+      padding-right: 10px;
+    }
   }
 }
 
@@ -63,4 +67,28 @@
   display: flex;
   flex-direction: column;
   padding-top: 30px;
+}
+
+.final-card {
+  padding: 30px;
+
+  h3 {
+    padding-bottom: 30px;
+  }
+
+  ol {
+    padding-left: 25px;
+  }
+
+  .final-button-container {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    padding-top: 10px;
+  }
+}
+
+.final-final-card {
+  background-image: url('~@/assets/images/home/stars.svg');
+  background-size: 40%;
 }
