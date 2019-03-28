@@ -1,6 +1,6 @@
 ### Feature
 
-- Add Browser options for Metamask on Safari [](<>)
+- Add Browser options for Metamask on Safari [#867](https://github.com/MyEtherWallet/MyEtherWallet/pull/867)
 
 ### Hotfix v5.0.8-hotfix.1
 
