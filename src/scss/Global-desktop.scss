@@ -615,7 +615,7 @@
   .dropdown-item:active {
     background-color: $background-color-white;
     color: $text-color-6;
-    font-weight: 600 !important;
+    //font-weight: 600 !important;
   }
 
   .nav-link-custom span {
@@ -1410,3 +1410,24 @@
   margin-bottom: 0 !important;
   margin-left: 0 !important;
 }
+
+
+
+// *********************************************************************
+// Settings dropdown menu position fix
+// *********************************************************************
+.settings-menu {
+  .dropdown-menu {
+    transform: translate3d(-73px, 50px, 0px) !important;
+  }
+}
+
+.tx-history-menu {
+  .dropdown-menu {
+    transform: translate3d(12px, 48px, 0px) !important;
+  }
+}
+
+
+
+

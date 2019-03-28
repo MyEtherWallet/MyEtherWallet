@@ -89,6 +89,24 @@
                 <b-nav-item v-if="isHomePage" to="/#about-mew">{{
                   $t('header.about')
                 }}</b-nav-item>
+                <b-nav-item-dropdown
+                  v-if="wallet !== null"
+                  right
+                  no-caret
+                  class="tx-history-menu"
+                >
+                  <template slot="button-content">
+                    <p>Transaction History</p>
+                  </template>
+                  <b-dropdown-item :href="blockExplorerURL" target="_blank">
+                    <p>Etherscan (ETH)</p></b-dropdown-item
+                  >
+                  <b-dropdown-item
+                    :href="'https://ethplorer.io/address/' + address"
+                    target="_blank"
+                    >Ethplorer (Tokens)</b-dropdown-item
+                  >
+                </b-nav-item-dropdown>
                 <b-nav-item to="/#faqs">{{ $t('common.faqs') }}</b-nav-item>
                 <div class="language-menu-container">
                   <div class="arrows">
@@ -149,6 +167,7 @@
                   right
                   no-caret
                   extra-toggle-classes="identicon-dropdown"
+                  class="settings-menu"
                 >
                   <template slot="button-content">
                     <div class="settings-container">
@@ -249,11 +268,14 @@ export default {
       gasPrice: '0',
       error: {},
       resolver: () => {},
-      showGettingStarted: ''
+      showGettingStarted: '',
+      address: '',
+      blockExplorerURL: ''
     };
   },
   computed: {
     ...mapGetters({
+      network: 'network',
       wallet: 'wallet',
       online: 'online',
       web3: 'web3',
@@ -283,7 +305,24 @@ export default {
       }
     },
     wallet() {
+      this.address = this.account.address;
       this.setHighGasPrice();
+
+      // Update blockExplorerURL when load
+      const addressTemplate = this.network.type.blockExplorerAddr;
+      this.blockExplorerURL = addressTemplate.replace(
+        '[[address]]',
+        this.address
+      );
+      console.log(this.network.type);
+    },
+    network(newNetworkValue) {
+      // Update blockExplorerURL when network changes
+      const addressTemplate = newNetworkValue.type.blockExplorerAddr;
+      this.blockExplorerURL = addressTemplate.replace(
+        '[[address]]',
+        this.address
+      );
     },
     web3() {
       this.setHighGasPrice();

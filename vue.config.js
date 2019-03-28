@@ -12,7 +12,7 @@ const webpackConfig = {
   },
   devServer: {
     https: true,
-    host: 'localhost',
+    host: '0.0.0.0',
     hotOnly: true,
     port: 8080,
     headers: {
