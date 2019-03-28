@@ -1411,23 +1411,17 @@
   margin-left: 0 !important;
 }
 
-
-
 // *********************************************************************
 // Settings dropdown menu position fix
 // *********************************************************************
 .settings-menu {
   .dropdown-menu {
-    transform: translate3d(-73px, 50px, 0px) !important;
+    transform: translate3d(-73px, 50px, 0) !important;
   }
 }
 
 .tx-history-menu {
   .dropdown-menu {
-    transform: translate3d(12px, 48px, 0px) !important;
+    transform: translate3d(12px, 48px, 0) !important;
   }
 }
-
-
-
-
