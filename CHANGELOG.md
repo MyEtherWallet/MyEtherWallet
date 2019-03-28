@@ -5,6 +5,10 @@
 - Display final re-calculated values on swap confirmation[#841](https://github.com/MyEtherWallet/MyEtherWallet/pull/841) 
 - Fix batch send success modal[#843](https://github.com/MyEtherWallet/MyEtherWallet/pull/843) 
 
+### Feature
+
+- Add TX history menu[#865](https://github.com/MyEtherWallet/MyEtherWallet/pull/865)
+
 ### Release v5.0.8
 
 ### Bug
