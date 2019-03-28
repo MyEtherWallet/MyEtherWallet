@@ -314,7 +314,6 @@ export default {
         '[[address]]',
         this.address
       );
-      console.log(this.network.type);
     },
     network(newNetworkValue) {
       // Update blockExplorerURL when network changes
