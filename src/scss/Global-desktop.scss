@@ -1378,7 +1378,7 @@
 
 // Limit maximum 5 notifications to show
 .toasted-container {
-  .toasted:nth-last-child(n+6) {
+  .toasted:nth-last-child(n + 6) {
     display: none !important;
   }
 }
