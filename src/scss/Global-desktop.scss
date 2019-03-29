@@ -1376,6 +1376,14 @@
   }
 }
 
+
+// Limit maximum 5 notifications to show
+.toasted-container {
+  .toasted:nth-child(5):after {
+    display: none !important;
+  }
+}
+
 .toast-success {
   @extend %toast;
 
