@@ -6,7 +6,7 @@
 
 ### Bug
 
-- Display final re-calculated values on swap confirmation [#841](https://github.com/MyEtherWallet/MyEtherWallet/pull/841)
+- Display final re-calculated values on swap confirmation[#841](https://github.com/MyEtherWallet/MyEtherWallet/pull/841)
 - Fix batch send success modal[#843](https://github.com/MyEtherWallet/MyEtherWallet/pull/843)
 
 ### Release v5.0.8
