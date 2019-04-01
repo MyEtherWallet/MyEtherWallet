@@ -39,7 +39,7 @@
         </div>
       </div>
       <div class="migrate-cdp-container">
-        {{migrationState}}
+        {{ migrationState }}
         <div v-if="migrationState === 0" class="migrate-cdp">
           <button @click="migrateCdpToProxy">Migrate Existing CDP</button>
         </div>
@@ -77,10 +77,10 @@
             <p>{{ $t('dapps.liquidationPenalty') }}</p>
             <p>
               <b
-              >{{
-                displayFixedValue(
-                displayPercentValue(activeCdp._liquidationPenalty)
-                )
+                >{{
+                  displayFixedValue(
+                    displayPercentValue(activeCdp._liquidationPenalty)
+                  )
                 }}%</b
               >
             </p>
@@ -97,10 +97,10 @@
             <p>{{ $t('dapps.minimumRatio') }}</p>
             <p>
               <b
-              >{{
-                displayFixedValue(
-                displayPercentValue(activeCdp.liquidationRatio)
-                )
+                >{{
+                  displayFixedValue(
+                    displayPercentValue(activeCdp.liquidationRatio)
+                  )
                 }}%</b
               >
             </p>
@@ -109,10 +109,10 @@
             <p>{{ $t('dapps.stabilityFee') }}</p>
             <p>
               <b
-              >{{
-                displayFixedValue(
-                displayPercentValue(activeCdp.stabilityFee)
-                )
+                >{{
+                  displayFixedValue(
+                    displayPercentValue(activeCdp.stabilityFee)
+                  )
                 }}%</b
               >
             </p>

@@ -1,6 +1,7 @@
 <template>
   <div class="header">
     <!-- Modals ***************************************** -->
+    <kyc-modal ref="kycModal" />
     <disconnected-modal ref="mewConnectDisconnected" />
     <settings-modal
       v-if="wallet !== null"
@@ -195,6 +196,7 @@ import IssueLogModal from '@/components/IssueLogModal';
 import BigNumber from 'bignumber.js';
 import MobileMenu from './components/MobileMenu';
 import DisconnectedModal from '@/components/DisconnectedModal';
+import KYCModal from './components/KYCModal';
 
 const events = {
   issueModal: 'issueModal',
@@ -212,7 +214,8 @@ export default {
     'issue-log-modal': IssueLogModal,
     'user-reminder-button': UserReminderButton,
     'mobile-menu': MobileMenu,
-    'disconnected-modal': DisconnectedModal
+    'disconnected-modal': DisconnectedModal,
+    'kyc-modal': KYCModal
   },
   data() {
     return {
@@ -290,6 +293,13 @@ export default {
     }
   },
   mounted() {
+    const td = new Date();
+    const x = store.get('x') || 0;
+    if (x <= 5) {
+      if (td.getTime() >= 1554102000000 && td.getTime() < 1554188400000) {
+        this.$refs.kycModal.$refs.kycModal.show();
+      }
+    }
     if (Misc.doesExist(store.get('locale'))) {
       const storedLocale = this.supportedLanguages.find(item => {
         return item.langCode === store.get('locale');
