@@ -1,6 +1,6 @@
 ### Release v5.0.8-kyc
 
-- Implement KYC quiz []()
+- Implement KYC quiz [](<>)
 
 ### Hotfix v5.0.8-hotfix.1
 
