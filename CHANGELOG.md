@@ -1,6 +1,6 @@
 ### Release v5.0.8-kyc
 
-- Implement KYC quiz [](<>)
+- Implement KYC quiz [#881](https://github.com/MyEtherWallet/MyEtherWallet/pull/881)
 
 ### Hotfix v5.0.8-hotfix.1
 
