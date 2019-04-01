@@ -25,8 +25,7 @@ export default {
   data() {
     return {
       address: '',
-      resolvedAddress: '',
-      message: 'pogchamp'
+      resolvedAddress: ''
     };
   },
   computed: {

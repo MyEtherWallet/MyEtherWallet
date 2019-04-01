@@ -357,11 +357,11 @@ export default {
       const foundToken = this.tokensWithBalance.find(item => {
         return item.symbol.toLowerCase() === tokensymbol.toLowerCase();
       });
-      this.value = new BigNumber(value).toFixed();
-      this.data = data;
-      this.hexAddress = to;
-      this.address = to;
-      this.gasLimit = new BigNumber(gaslimit).toString();
+      this.value = value ? new BigNumber(value).toFixed() : 0;
+      this.data = data ? data : '0x';
+      this.hexAddress = to ? to : '';
+      this.address = to ? to : '';
+      this.gasLimit = gaslimit ? new BigNumber(gaslimit).toString() : '2100';
       this.selectedCurrency = foundToken ? foundToken : this.selectedCurrency;
 
       Toast.responseHandler(
