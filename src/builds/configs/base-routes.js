@@ -74,7 +74,7 @@ const router = [
     meta: { requiresAuth: false }
   },
   {
-    path: '/hardwares',
+    path: '/harware-wallet-affiliates',
     name: 'HardwaresLayout',
     component: HardwaresLayout,
     meta: { requiresAuth: false }

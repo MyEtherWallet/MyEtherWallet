@@ -184,7 +184,7 @@ export default {
             },
             {
               text: 'Hardwares',
-              to: '/hardwares'
+              to: '/harware-wallet-affiliates'
             },
             {
               text: this.$t('footer.sendOffline'),

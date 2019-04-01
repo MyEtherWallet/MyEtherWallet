@@ -2,6 +2,7 @@
 
 - Add hardware page [#862](https://github.com/MyEtherWallet/MyEtherWallet/pull/862)
 
+
 ### Hotfix v5.0.8-hotfix.1
 
 ### Bug
