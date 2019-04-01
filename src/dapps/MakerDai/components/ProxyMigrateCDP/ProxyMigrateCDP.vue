@@ -39,7 +39,8 @@
         </div>
       </div>
       <div class="migrate-cdp-container">
-        <div v-if="noProxy && !finishMigration" class="migrate-cdp">
+        {{migrationState}}
+        <div v-if="migrationState === 0" class="migrate-cdp">
           <button @click="migrateCdpToProxy">Migrate Existing CDP</button>
         </div>
         <div v-if="finishMigration" class="migrate-cdp">
@@ -76,10 +77,10 @@
             <p>{{ $t('dapps.liquidationPenalty') }}</p>
             <p>
               <b
-                >{{
-                  displayFixedValue(
-                    displayPercentValue(activeCdp._liquidationPenalty)
-                  )
+              >{{
+                displayFixedValue(
+                displayPercentValue(activeCdp._liquidationPenalty)
+                )
                 }}%</b
               >
             </p>
@@ -96,10 +97,10 @@
             <p>{{ $t('dapps.minimumRatio') }}</p>
             <p>
               <b
-                >{{
-                  displayFixedValue(
-                    displayPercentValue(activeCdp.liquidationRatio)
-                  )
+              >{{
+                displayFixedValue(
+                displayPercentValue(activeCdp.liquidationRatio)
+                )
                 }}%</b
               >
             </p>
@@ -108,10 +109,10 @@
             <p>{{ $t('dapps.stabilityFee') }}</p>
             <p>
               <b
-                >{{
-                  displayFixedValue(
-                    displayPercentValue(activeCdp.stabilityFee)
-                  )
+              >{{
+                displayFixedValue(
+                displayPercentValue(activeCdp.stabilityFee)
+                )
                 }}%</b
               >
             </p>
@@ -249,6 +250,12 @@ export default {
       default: function() {
         return {};
       }
+    },
+    migrationInProgress: {
+      type: Object,
+      default: function() {
+        return {};
+      }
     }
   },
   data() {
@@ -294,10 +301,14 @@ export default {
       if (this.activeCdp) {
         return this.activeCdp.needToFinishMigrating;
       }
+    },
+    migrationState() {
+      return this.migrationInProgress[this.cdpId];
     }
   },
   async mounted() {
     this.cdpId = this.$route.params.cdpId;
+
     if (this.makerActive) {
       this.loaded = true;
       if (this.cdpId) {
