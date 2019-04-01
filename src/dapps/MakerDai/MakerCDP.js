@@ -256,7 +256,7 @@ export default class MakerCDP {
   async buildProxy() {
     const currentProxy = await this.proxyService.currentProxy();
     if (!currentProxy) {
-      await proxyService.build();
+      await this.proxyService.build();
       // eslint-disable-next-line
       this.proxyAddress = await this.proxyService.currentProxy();
       return this.proxyAddress;
@@ -411,6 +411,7 @@ export default class MakerCDP {
     console.log(address); // todo remove dev item
     await this.getProxy();
     const proxy = await this.proxyService.getProxyAddress(address);
+    console.log(this.proxyAddress); // todo remove dev item
     if (proxy) {
       this.needsUpdate = true;
       this.closing = true; // for the purpose of displaying to the user closing and moving are the same

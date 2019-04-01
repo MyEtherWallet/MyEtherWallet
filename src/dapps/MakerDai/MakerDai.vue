@@ -16,7 +16,7 @@
       <div v-if="showManage" class="dapps-button">
         <!--<img :src="supported ? icon : iconDisabled" />-->
         <div @click="gotoImport">
-          <h4>Manage</h4>
+          <h4>List All</h4>
         </div>
       </div>
       <!--      <div class="dapps-button">
@@ -29,6 +29,22 @@
         <!--<img :src="supported ? icon : iconDisabled" />-->
         <div @click="refresh">
           <h4>Refresh</h4>
+        </div>
+      </div>
+      <div v-if="!hasProxy && !onCreate" class="dapps-button">
+        <!--<img :src="supported ? icon : iconDisabled" />-->
+        <div @click="buildProxy">
+          <h4>Create Proxy</h4>
+        </div>
+      </div>
+      <div v-if="showCdpMigrateButtons">
+        <div v-for="(value, idx) in cdpsWithoutProxy" :key="idx + value">
+          <div class="dapps-button">
+            <!--<img :src="supported ? icon : iconDisabled" />-->
+            <div @click="migrateCdp(value)">
+              <h4>Migrate CDP {{ value }}</h4>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -51,6 +67,7 @@
       :available-cdps="availableCdps"
       :cdp-details-loaded="cdpDetailsLoaded"
       :tokens-with-balance="tokensWithBalance"
+      :migration-in-progress="migrationInProgress"
       @cdpOpened="addCdp"
       @cdpClosed="removeCdp"
     >
@@ -130,7 +147,8 @@ export default {
       cdpsWithoutProxy: [],
       availableCdps: {},
       cdpDetailsLoaded: false,
-      migrationInProgress: false,
+      currentProxy: null,
+      migrationInProgress: {},
       makerCdp: {}
     };
   },
@@ -165,13 +183,26 @@ export default {
       return bnOver(this.liquidationRatio, this.daiQty, this.ethPrice);
     },
     showManage() {
-      return this.cdps.length > 1 || this.cdpsWithoutProxy.length > 1;
+      return (
+        this.cdps.length > 1 ||
+        this.cdpsWithoutProxy.length > 1 ||
+        (this.cdps.length >= 1 && this.cdpsWithoutProxy.length >= 1)
+      );
     },
     showRefresh() {
       return this.cdps.length > 0 || this.cdpsWithoutProxy.length > 0;
     },
     showCreate() {
       return this.cdps.length === 0 && this.cdpsWithoutProxy.length === 0;
+    },
+    onCreate() {
+      return this.$route.name === 'create';
+    },
+    hasProxy() {
+      return this.currentProxy !== null;
+    },
+    showCdpMigrateButtons() {
+      return this.hasProxy && this.cdpsWithoutProxy.length >= 1;
     }
   },
   async mounted() {
@@ -186,25 +217,7 @@ export default {
         async () => {
           // eslint-disable-next-line
           console.log('do update'); // todo remove dev item
-          await this.doUpdate()
-          // let afterClose = false;
-          // for (let idProp in this.availableCdps) {
-          //   if (this.availableCdps[idProp].needsUpdate) {
-          //     if (this.availableCdps[idProp].closing) {
-          //       afterClose = true;
-          //       delete this.availableCdps[idProp];
-          //       this.cdps = this.cdps.filter(item => item !== idProp);
-          //     } else if(this.availableCdps[idProp].migrateCdpActive){
-          //       await this.availableCdps[idProp].migrateCdpComplete()
-          //     } else {
-          //       console.log('UPDATE CDP', idProp); // todo remove dev item
-          //       this.availableCdps[idProp] = await this.availableCdps[idProp].update();
-          //     }
-          //   }
-          // }
-          // if (afterClose) {
-          //   this.gotoImport();
-          // }
+          await this.doUpdate();
         }
       );
       this.maker = await Maker.create('http', {
@@ -251,6 +264,9 @@ export default {
         await this.priceService.getWethToPethRatio()
       );
 
+      this.currentProxy = await this.proxyService.currentProxy();
+      console.log(this.currentProxy); // todo remove dev item
+
       const { withProxy, withoutProxy } = await this.locateCdps();
       this.cdps = withProxy;
       this.cdpsWithoutProxy = withoutProxy;
@@ -260,7 +276,10 @@ export default {
         this.cdpDetailsLoaded = true;
         this.makerActive = true;
         console.log(this.$route); // todo remove dev item
-        if (this.$route.name !== 'create' && this.$route.path.includes('maker-dai')) {
+        if (
+          this.$route.name !== 'create' &&
+          this.$route.path.includes('maker-dai')
+        ) {
           this.gotoImport();
         }
       } else {
@@ -273,14 +292,14 @@ export default {
       });
     },
     gotoCreate() {
-      if(this.$route.path.includes('maker-dai')) {
+      if (this.$route.path.includes('maker-dai')) {
         this.$router.push({
           name: 'create'
         });
       }
     },
     gotoImport() {
-      if(this.$route.path.includes('maker-dai')){
+      if (this.$route.path.includes('maker-dai')) {
         if (this.showManage) {
           // eslint-disable-next-line
           console.log('go to select'); // todo remove dev item
@@ -305,7 +324,6 @@ export default {
           this.gotoCreate();
         }
       }
-
     },
     addCdp(vals) {
       this.availableCdps[vals.id] = vals.maker;
@@ -318,45 +336,78 @@ export default {
         console.error(e);
       }
     },
+    async buildProxy() {
+      const currentProxy = await this.proxyService.currentProxy();
+      if (!currentProxy) {
+        await this.proxyService.build();
+        // eslint-disable-next-line
+        this.proxyAddress = await this.proxyService.currentProxy();
+        return this.proxyAddress;
+      }
+      this.proxyAddress = await this.proxyService.currentProxy();
+      return this.proxyAddress;
+    },
+    async migrateCdp(cdpId) {
+      const currentProxy = await this.proxyService.currentProxy();
+      if (currentProxy) {
+        await this.cdpService.give(cdpId, currentProxy);
+      }
+    },
     async refresh() {
       console.log('refresh'); // todo remove dev item
       const { withProxy, withoutProxy } = await this.locateCdps();
       this.cdps = withProxy;
+      this.cdpsWithoutProxy = withoutProxy;
 
       const newCdps = this.cdps.filter(
         item => !Object.keys(this.availableCdps).includes(item)
       );
+
+      const newCdpsWithoutProxy = this.cdpsWithoutProxy.filter(
+        item => !Object.keys(this.availableCdps).includes(item)
+      );
+
       for (let i = 0; i < newCdps.length; i++) {
         this.availableCdps[newCdps[i]] = await this.buildCdpObject(newCdps[i]);
       }
-      console.log(withProxy.length, withoutProxy.length); // todo remove dev item
-      if(withProxy.length > 0 || withoutProxy.length > 0){
-        await this.doUpdate()
+
+      for (let i = 0; i < newCdpsWithoutProxy.length; i++) {
+        this.availableCdps[newCdpsWithoutProxy[i]] = await this.buildCdpObject(
+          newCdpsWithoutProxy[i],
+          { noProxy: true }
+        );
+      }
+
+      if (withProxy.length > 0 || withoutProxy.length > 0) {
+        await this.doUpdate();
+        this.gotoImport();
       } else {
         this.availableCdps = {};
         this.gotoCreate();
       }
     },
-    async doUpdate(){
+    async doUpdate(withRefresh = false) {
       console.log('updating'); // todo remove dev item
       let afterClose = false;
-      this.migrationInProgress = false;
+      // this.migrationInProgress = false;
       for (let idProp in this.availableCdps) {
         if (this.availableCdps[idProp].needsUpdate) {
           if (this.availableCdps[idProp].closing) {
             afterClose = true;
             this.$delete(this.availableCdps, idProp);
             this.cdps = this.cdps.filter(item => item !== idProp);
-          } else if(this.availableCdps[idProp].migrateCdpActive){
-            this.migrationInProgress = true;
-            await this.availableCdps[idProp].migrateCdpComplete();
+          } else if (this.availableCdps[idProp].migrateCdpActive) {
+            // await this.availableCdps[idProp].migrateCdpComplete();
           } else {
             console.log('UPDATE CDP', idProp); // todo remove dev item
-            this.availableCdps[idProp] = await this.availableCdps[idProp].update();
+            this.availableCdps[idProp] = await this.availableCdps[
+              idProp
+            ].update();
           }
         }
       }
-      if (afterClose) {
+
+      if (afterClose || this.migrationInProgress) {
         console.log('after close or move'); // todo remove dev item
         const { withProxy, withoutProxy } = await this.locateCdps();
         this.cdps = withProxy;
@@ -364,25 +415,30 @@ export default {
         this.gotoImport();
       }
 
-      const cdpKeys = Object.keys(this.availableCdps);
-      if(cdpKeys.length === 1){
-        if(this.availableCdps[cdpKeys[0]].migrateCdpStage === 3){
-          this.availableCdps[cdpKeys[0]].migrateCdpStage = 4;
-          this.migrationInProgress = false;
-          console.log('migrate to manage'); // todo remove dev item
-          this.$router.push({
-            name: 'manage',
-            params: {
-              cdpId: cdpKeys[0]
-            }
-          });
-        }
-      } else if(this.migrationInProgress){
-        console.log('migrate to refresh to import'); // todo remove dev item
-        this.migrationInProgress = false;
-        await this.refresh();
-        this.gotoImport();
-      }
+      // this.migratingUpdate();
+    },
+    migratingUpdate() {
+      // const entries = Object.entries(this.migrationInProgress);
+      // const cdpKeyEntry = entries.filter(item => {
+      //   return item[1];
+      // });
+      //
+      // if (cdpKeyEntry.length === 1) {
+      //   const cdpKeys = cdpKeyEntry[1];
+      //   if (this.availableCdps[cdpKeys[0]].migrateCdpStage === 3) {
+      //     this.availableCdps[cdpKeys[0]].migrateCdpStage = 4;
+      //     console.log('migrate to manage'); // todo remove dev item
+      //     this.$router.push({
+      //       name: 'manage',
+      //       params: {
+      //         cdpId: cdpKeys[0]
+      //       }
+      //     });
+      //   }
+      // } else if (cdpKeyEntry.length > 1) {
+      //   console.log('migrate to refresh to import'); // todo remove dev item
+      //   this.gotoImport();
+      // }
     },
     async locateCdpsWithoutProxy() {
       const directCdps = await this.maker.getCdpIds(
@@ -399,9 +455,7 @@ export default {
         .service('proxy')
         .getProxyAddress(this.account.address);
 
-      return await this.maker.getCdpIds(
-        proxy
-      );
+      return await this.maker.getCdpIds(proxy);
     },
     async locateCdps() {
       const directCdps = await this.locateCdpsWithoutProxy();
@@ -412,12 +466,17 @@ export default {
       return { withProxy: cdps, withoutProxy: directCdps };
     },
     async loadCdpDetails() {
-
       for (let i = 0; i < this.cdps.length; i++) {
-        this.availableCdps[this.cdps[i]] = await this.buildCdpObject(this.cdps[i]);
+        this.availableCdps[this.cdps[i]] = await this.buildCdpObject(
+          this.cdps[i]
+        );
       }
       for (let i = 0; i < this.cdpsWithoutProxy.length; i++) {
-        this.availableCdps[this.cdpsWithoutProxy[i]] = await this.buildCdpObject(this.cdpsWithoutProxy[i], { noProxy: true });
+        this.availableCdps[
+          this.cdpsWithoutProxy[i]
+        ] = await this.buildCdpObject(this.cdpsWithoutProxy[i], {
+          noProxy: true
+        });
       }
     },
     async buildCdpObject(cdpId, options = {}) {
@@ -434,17 +493,12 @@ export default {
       };
 
       const services = {
-        priceService:   this.priceService,
+        priceService: this.priceService,
         cdpService: this.cdpService,
         proxyService: this.proxyService
-      }
+      };
 
-      const makerCDP = new MakerCDP(
-        cdpId,
-        this.maker,
-        services,
-        sysVars
-      );
+      const makerCDP = new MakerCDP(cdpId, this.maker, services, sysVars);
       return await makerCDP.init(cdpId);
     },
     calcMinCollatRatio(priceFloor) {
