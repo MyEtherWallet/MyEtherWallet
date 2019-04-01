@@ -556,7 +556,6 @@ export default class Kyber {
   }
 
   getGasLimits(token) {
-    console.log(this.GAS_LIMITS); // todo remove dev item
     const address = this.getTokenAddress(token);
     const gasLimit = this.GAS_LIMITS.find(entry => {
       return entry.address === address;
