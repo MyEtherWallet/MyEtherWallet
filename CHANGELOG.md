@@ -2,6 +2,7 @@
 
 - Reimplement query params for send offline and regular send [#803](https://github.com/MyEtherWallet/MyEtherWallet/pull/803)
 
+
 ### Hotfix v5.0.8-hotfix.1
 
 ### Bug

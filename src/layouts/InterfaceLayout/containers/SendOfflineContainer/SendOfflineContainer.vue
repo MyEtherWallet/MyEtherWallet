@@ -333,11 +333,11 @@ export default {
       const foundToken = this.tokens.find(item => {
         return item.symbol.toLowerCase() === tokensymbol.toLowerCase();
       });
-      this.toAmt = new BigNumber(value).toFixed();
-      this.toData = data;
-      this.address = to;
-      this.gasLimit = new BigNumber(gaslimit).toFixed();
-      this.localGasPrice = new BigNumber(gas).toFixed();
+      this.toAmt = value ? new BigNumber(value).toFixed() : 0;
+      this.toData = data ? data : '0x';
+      this.address = to ? to : '';
+      this.gasLimit = gaslimit ? new BigNumber(gaslimit).toString() : '2100';
+      this.localGasPrice = gas ? new BigNumber(gas).toFixed() : 0;
       this.selectedCoinType = foundToken ? foundToken : this.selectedCoinType;
 
       Toast.responseHandler(
