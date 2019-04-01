@@ -52,8 +52,6 @@
 <script>
 import { MessageUtil, Toast } from '@/helpers';
 import { mapGetters } from 'vuex';
-// eslint-disable-next-line
-const createKeccakHash = require('keccak');
 
 export default {
   props: {
