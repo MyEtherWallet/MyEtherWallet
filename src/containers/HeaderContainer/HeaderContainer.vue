@@ -277,7 +277,6 @@ export default {
     ...mapGetters({
       network: 'network',
       wallet: 'wallet',
-      online: 'online',
       web3: 'web3',
       account: 'account',
       gettingStartedDone: 'gettingStartedDone'
