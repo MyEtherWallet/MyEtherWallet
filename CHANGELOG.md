@@ -1,6 +1,6 @@
 ### Devop
 
-- Fixes Bitbox error and Hardware wallet error handling []()
+- Fixes Bitbox error and Hardware wallet error handling [#893](https://github.com/MyEtherWallet/MyEtherWallet/pull/893)
 
 ### Release v5.0.8-kyc
 
