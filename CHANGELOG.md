@@ -1,6 +1,11 @@
+### Release v5.0.9
+
 ### Devop
 
 - Fixes Bitbox error and Hardware wallet error handling [#893](https://github.com/MyEtherWallet/MyEtherWallet/pull/893)
+
+- Use Kyber supplied gas limits [#892](https://github.com/MyEtherWallet/MyEtherWallet/pull/892)
+
 
 ### Release v5.0.8-kyc
 
