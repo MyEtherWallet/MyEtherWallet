@@ -1,6 +1,11 @@
+### Release v5.0.9
+
+- Use Kyber supplied gas limits [#892](https://github.com/MyEtherWallet/MyEtherWallet/pull/892)
+
 ### Bug
 
 - Fix hardware wallet scroll bug[#890](https://github.com/MyEtherWallet/MyEtherWallet/pull/890)
+
 
 ### Release v5.0.8-kyc
 
