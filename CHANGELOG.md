@@ -1,5 +1,8 @@
+### Release v5.0.9
+
 ### Devop
 
+- Use Kyber supplied gas limits [#892](https://github.com/MyEtherWallet/MyEtherWallet/pull/892)
 - Add Gage on team page [#853](https://github.com/MyEtherWallet/MyEtherWallet/pull/853)
 
 ### Hotfix v5.0.8-hotfix.1
