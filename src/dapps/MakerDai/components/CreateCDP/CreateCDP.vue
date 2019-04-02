@@ -191,22 +191,6 @@ export default {
       type: BigNumber,
       default: toBigNumber(0)
     },
-    calcMinCollatRatio: {
-      type: Function,
-      default: function() {}
-    },
-    calcDrawAmt: {
-      type: Function,
-      default: function() {}
-    },
-    calcCollatRatio: {
-      type: Function,
-      default: function() {}
-    },
-    calcLiquidationPrice: {
-      type: Function,
-      default: function() {}
-    },
     priceService: {
       type: Object,
       default: function() {
@@ -333,6 +317,28 @@ export default {
       console.log(newCdp); // todo remove dev item
       await this.makerCDP.init(newCdp.id);
       this.$emit('cdpOpened', { maker: this.makerCDP, id: newCdp.id });
+    },
+    calcMinCollatRatio(priceFloor) {
+      return bnOver(this.ethPrice, this.liquidationRatio, priceFloor);
+    },
+    calcDrawAmt(principal, collatRatio) {
+      return Math.floor(
+        bnOver(principal, this.ethPrice, collatRatio).toNumber()
+      );
+    },
+    calcCollatRatio(ethQty, daiQty) {
+      if (ethQty <= 0 || daiQty <= 0) return 0;
+      return bnOver(this.ethPrice, ethQty, daiQty);
+    },
+    calcLiquidationPrice(ethQty, daiQty) {
+      if (ethQty <= 0 || daiQty <= 0) return 0;
+      const getInt = parseInt(this.ethPrice);
+      for (let i = getInt; i > 0; i--) {
+        const atValue = bnOver(i, ethQty, daiQty).lte(this.liquidationRatio);
+        if (atValue) {
+          return i;
+        }
+      }
     }
   }
 };

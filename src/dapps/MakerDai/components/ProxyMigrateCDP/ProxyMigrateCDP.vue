@@ -195,9 +195,6 @@ import { mapGetters } from 'vuex';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
-import GenerateDai from './components/GenerateDai';
-import DepositeCollateral from './components/DepositCollateral';
-import ActionModal from './components/ActionsModal';
 import CloseCdpModal from './components/CloseCdpModal';
 import MoveCdpModal from './components/MoveCdpModal';
 
@@ -211,9 +208,6 @@ export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
     'interface-bottom-text': InterfaceBottomText,
-    'generate-dai': GenerateDai,
-    'deposit-collateral': DepositeCollateral,
-    'action-modal': ActionModal,
     'close-cdp-modal': CloseCdpModal,
     'move-cdp-modal': MoveCdpModal,
     blockie: Blockie
