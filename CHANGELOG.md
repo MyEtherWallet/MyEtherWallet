@@ -1,5 +1,6 @@
 ### Release v5.0.8-kyc
 
+- Change mobile side menu button title from "Change" to "Menu" [#887](https://github.com/MyEtherWallet/MyEtherWallet/pull/887)
 - Implement KYC quiz [#881](https://github.com/MyEtherWallet/MyEtherWallet/pull/881)
 
 ### Hotfix v5.0.8-hotfix.1
