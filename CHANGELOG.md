@@ -6,6 +6,7 @@
 
 ### Bug
 
+- Fix hardware wallet scroll bug[#890](https://github.com/MyEtherWallet/MyEtherWallet/pull/890)
 - Display final re-calculated values on swap confirmation[#841](https://github.com/MyEtherWallet/MyEtherWallet/pull/841)
 - Fix batch send success modal[#843](https://github.com/MyEtherWallet/MyEtherWallet/pull/843)
 
