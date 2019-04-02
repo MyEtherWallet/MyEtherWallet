@@ -140,7 +140,7 @@
               <i
                 :class="[
                   'fa fa-check-circle good-button',
-                  nonce > 0 ? '' : 'not-good'
+                  nonce >= 0 ? '' : 'not-good'
                 ]"
                 aria-hidden="true"
               />
