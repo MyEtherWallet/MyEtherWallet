@@ -13,7 +13,6 @@ describe('CreateWalletInput.vue', () => {
     store = baseSetup.store;
 
     Vue.config.warnHandler = () => {};
-
   });
 
   beforeEach(() => {

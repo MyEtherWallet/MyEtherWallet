@@ -16,6 +16,8 @@ const BBtnStub = {
   props: ['to']
 };
 
+jest.mock('platform');
+
 describe('SoftwareModal.vue', () => {
   const openMnemonicPhraseInput = sinon.stub();
   const openPrivateKeyInput = sinon.stub();
