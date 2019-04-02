@@ -1,11 +1,21 @@
+### Release v5.0.9
+
+### Devop
+
+- Use Kyber supplied gas limits [#892](https://github.com/MyEtherWallet/MyEtherWallet/pull/892)
+
 ### Feature
 
 - Reimplement query params for send offline and regular send [#803](https://github.com/MyEtherWallet/MyEtherWallet/pull/803)
-
-
-### Hotfix v5.0.8-hotfix.1
+- Add Browser options for Metamask on Safari [#867](https://github.com/MyEtherWallet/MyEtherWallet/pull/867)
 
 ### Bug
+
+- Fix hardware wallet scroll bug[#890](https://github.com/MyEtherWallet/MyEtherWallet/pull/890)
+- Allow zero as nonce for offline transaction [#860](https://github.com/MyEtherWallet/MyEtherWallet/pull/860)
+- Resolve spinner on interact contract [#861](https://github.com/MyEtherWallet/MyEtherWallet/pull/841)
+
+### Hotfix v5.0.8-hotfix.1
 
 - Display final re-calculated values on swap confirmation[#841](https://github.com/MyEtherWallet/MyEtherWallet/pull/841)
 - Fix batch send success modal[#843](https://github.com/MyEtherWallet/MyEtherWallet/pull/843)
