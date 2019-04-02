@@ -392,6 +392,11 @@ export default class MakerCDP {
     }
   }
 
+  async canCloseCdp(){
+    const value = this.debtValue.toNumber();
+    return await this.cdp.enoughMkrToWipe(value, DAI.wei);
+  }
+
   async closeCdp() {
     const value = this.debtValue.toNumber();
     const enoughToWipe = await this.cdp.enoughMkrToWipe(value, DAI.wei);

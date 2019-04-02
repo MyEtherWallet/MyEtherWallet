@@ -36,8 +36,8 @@
       </div>
 
       <div class="buttons-container">
-        <button class="cancel-btn">
-          Submit
+        <button class="cancel-btn" @click="closeModal">
+          Cancel
         </button>
         <button class="submit-btn" @click="closeCdp">
           Submit
@@ -159,6 +159,9 @@ export default {
     },
     currentDai() {
       this.amount = this.activeCdp.debtValue;
+    },
+    closeModal() {
+      this.$refs.modal.hide();
     }
   }
 };
