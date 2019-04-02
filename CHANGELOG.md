@@ -2,6 +2,9 @@
 
 - Use Kyber supplied gas limits [#892](https://github.com/MyEtherWallet/MyEtherWallet/pull/892)
 
+### Bug
+- Add network icon background[#897](https://github.com/MyEtherWallet/MyEtherWallet/pull/897)
+
 ### Release v5.0.8-kyc
 
 - Implement KYC quiz [#881](https://github.com/MyEtherWallet/MyEtherWallet/pull/881)
