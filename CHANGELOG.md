@@ -1,6 +1,15 @@
+### Release v5.0.9
+
+- Use Kyber supplied gas limits [#892](https://github.com/MyEtherWallet/MyEtherWallet/pull/892)
+
 ### Bug
 
+- Allow zero as nonce for offline transaction [#860](https://github.com/MyEtherWallet/MyEtherWallet/pull/860)
 - Resolve spinner on interact contract [#861](https://github.com/MyEtherWallet/MyEtherWallet/pull/841)
+
+### Release v5.0.8-kyc
+
+- Implement KYC quiz [#881](https://github.com/MyEtherWallet/MyEtherWallet/pull/881)
 
 ### Hotfix v5.0.8-hotfix.1
 
