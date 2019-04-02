@@ -12,6 +12,9 @@
 ### Bug
 
 - Change mobile side menu button title from "Change" to "Menu" [#887](https://github.com/MyEtherWallet/MyEtherWallet/pull/887)
+- Fix notification to show max 5 notification popups[#873](https://github.com/MyEtherWallet/MyEtherWallet/pull/873)
+- Display final re-calculated values on swap confirmation[#841](https://github.com/MyEtherWallet/MyEtherWallet/pull/841)
+- Fix batch send success modal[#843](https://github.com/MyEtherWallet/MyEtherWallet/pull/843)
 - Fix hardware wallet scroll bug[#890](https://github.com/MyEtherWallet/MyEtherWallet/pull/890)
 - Allow zero as nonce for offline transaction [#860](https://github.com/MyEtherWallet/MyEtherWallet/pull/860)
 - Resolve spinner on interact contract [#861](https://github.com/MyEtherWallet/MyEtherWallet/pull/841)
