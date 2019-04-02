@@ -88,7 +88,7 @@ import { mapGetters } from 'vuex';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
-import BigNumber from 'bignumber.js';
+import BigNumber from 'bignumber.js/bignumber.js';
 
 export default {
   components: {

@@ -336,6 +336,7 @@ export default class MakerCDP {
   async lockEth(amount) {
     try {
       if (this.noProxy) {
+        console.log(amount); // todo remove dev item
         return;
       }
       await this.cdpService.lockEthProxy(this.proxyAddress, this.cdpId, amount);
