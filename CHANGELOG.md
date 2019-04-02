@@ -11,13 +11,13 @@
 
 ### Bug
 
+- Change mobile side menu button title from "Change" to "Menu" [#887](https://github.com/MyEtherWallet/MyEtherWallet/pull/887)
 - Fix hardware wallet scroll bug[#890](https://github.com/MyEtherWallet/MyEtherWallet/pull/890)
 - Allow zero as nonce for offline transaction [#860](https://github.com/MyEtherWallet/MyEtherWallet/pull/860)
 - Resolve spinner on interact contract [#861](https://github.com/MyEtherWallet/MyEtherWallet/pull/841)
 
 ### Release v5.0.8-kyc
 
-- Change mobile side menu button title from "Change" to "Menu" [#887](https://github.com/MyEtherWallet/MyEtherWallet/pull/887)
 - Implement KYC quiz [#881](https://github.com/MyEtherWallet/MyEtherWallet/pull/881)
 
 ### Hotfix v5.0.8-hotfix.1
