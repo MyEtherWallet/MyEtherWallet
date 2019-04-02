@@ -21,7 +21,7 @@
                     class="the-button-box"
                     @click="openMigrate(cdpId)"
                   >
-                    Manage
+                    View
                   </button>
                 </span>
               </p>

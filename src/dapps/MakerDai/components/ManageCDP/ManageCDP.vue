@@ -204,8 +204,6 @@ import { mapGetters } from 'vuex';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
-import GenerateDai from './components/GenerateDai';
-import DepositeCollateral from './components/DepositCollateral';
 import ActionModal from './components/ActionsModal';
 import CloseCdpModal from './components/CloseCdpModal';
 import MoveCdpModal from './components/MoveCdpModal';
@@ -220,8 +218,6 @@ export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
     'interface-bottom-text': InterfaceBottomText,
-    'generate-dai': GenerateDai,
-    'deposit-collateral': DepositeCollateral,
     'action-modal': ActionModal,
     'close-cdp-modal': CloseCdpModal,
     'move-cdp-modal': MoveCdpModal,
@@ -285,6 +281,12 @@ export default {
       if(val > 0){
         this.activeCdp = await this.activeCdp.update()
       }
+    },
+    ['$route.params.cdpId'](val){
+      console.log(val); // todo remove dev item
+      if(this.availableCdps[val]){
+        this.activeCdp = this.availableCdps[val];
+      }
     }
   },
   computed: {
@@ -304,7 +306,8 @@ export default {
       if (this.activeCdp) {
         return this.activeCdp.needToFinishMigrating;
       }
-    }
+    },
+
   },
   async mounted() {
     this.cdpId = this.$route.params.cdpId;

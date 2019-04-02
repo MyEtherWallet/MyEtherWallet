@@ -140,6 +140,7 @@ export default {
   methods: {
     closeCdp() {
       this.activeCdp.closeCdp();
+      this.closeModal();
     },
     displayPercentValue(raw) {
       if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);

@@ -413,14 +413,17 @@ export default class MakerCDP {
     const proxy = await this.proxyService.getProxyAddress(address);
     console.log(this.proxyAddress); // todo remove dev item
     if (proxy) {
+      console.log('moveCdp 1'); // todo remove dev item
       this.needsUpdate = true;
       this.closing = true; // for the purpose of displaying to the user closing and moving are the same
       await this.cdpService.giveProxy(this.proxyAddress, this.cdpId, proxy);
     } else if (!this.noProxy) {
+      console.log('moveCdp 2'); // todo remove dev item
       this.needsUpdate = true;
       this.closing = true;
       await this.cdpService.giveProxy(this.proxyAddress, this.cdpId, address);
     } else {
+      console.log('moveCdp 3'); // todo remove dev item
       this.needsUpdate = true;
       this.closing = true;
       await this.cdpService.give(this.cdpId, address);

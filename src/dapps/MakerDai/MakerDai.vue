@@ -2,48 +2,42 @@
   <div class="container-maker">
     <interface-container-title :title="'MAKER'" />
 
-    <!--<back-button />-->
-    <!--<button @click="gotoCreate">Create</button>-->
-    <!--<button @click="gotoImport">Manage</button>-->
-    <!--<button @click="refresh">Refresh</button>-->
     <div v-show="makerActive" class="buttons-container">
       <div v-if="showCreate" class="dapps-button">
-        <!--<img :src="supported ? icon : iconDisabled" />-->
         <div @click="gotoCreate">
           <h4>Create</h4>
         </div>
       </div>
-      <div v-if="showManage" class="dapps-button">
-        <!--<img :src="supported ? icon : iconDisabled" />-->
-        <div @click="gotoImport">
+      <div v-if="showManage">
+        <div class="dapps-button" @click="goToManage">
           <h4>List All</h4>
         </div>
       </div>
-      <!--      <div class="dapps-button">
-              &lt;!&ndash;<img :src="supported ? icon : iconDisabled" />&ndash;&gt;
-              <div @click="gotoImport">
-                <h4>Migrate</h4>
-              </div>
-            </div>-->
-      <div v-if="showRefresh" class="dapps-button">
-        <!--<img :src="supported ? icon : iconDisabled" />-->
-        <div @click="refresh">
+      <div v-if="showRefresh">
+        <div class="dapps-button" @click="refresh">
           <h4>Refresh</h4>
         </div>
       </div>
-      <div v-if="!hasProxy && !onCreate" class="dapps-button">
-        <!--<img :src="supported ? icon : iconDisabled" />-->
-        <div @click="buildProxy">
+      <div v-if="!hasProxy && !onCreate">
+        <div class="dapps-button" @click="buildProxy">
           <h4>Create Proxy</h4>
         </div>
       </div>
       <div v-if="showCdpMigrateButtons">
         <div v-for="(value, idx) in cdpsWithoutProxy" :key="idx + value">
           <div class="dapps-button">
-            <!--<img :src="supported ? icon : iconDisabled" />-->
             <div @click="migrateCdp(value)">
               <h4>Migrate CDP {{ value }}</h4>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div v-show="makerActive" class="buttons-container">
+      <div v-for="(value, idx) in cdps" :key="idx + value">
+        <div class="dapps-button">
+          <div @click="openManage(value)">
+            <h4>CDP #{{ value }}</h4>
           </div>
         </div>
       </div>
@@ -55,10 +49,6 @@
       :liquidation-penalty="liquidationPenalty"
       :stability-fee="stabilityFee"
       :liquidation-ratio="liquidationRatio"
-      :calc-min-collat-ratio="calcMinCollatRatio"
-      :calc-draw-amt="calcDrawAmt"
-      :calc-collat-ratio="calcCollatRatio"
-      :calc-liquidation-price="calcLiquidationPrice"
       :maker="maker"
       :price-service="priceService"
       :cdp-service="cdpService"
@@ -165,15 +155,6 @@ export default {
       network: 'network',
       ens: 'ens'
     }),
-    atSetFloor() {
-      return this.calcMinCollatRatio(this.priceFloor);
-    },
-    collatRatio() {
-      return this.calcCollatRatio(this.ethQty, this.daiQty);
-    },
-    liquidationPrice() {
-      return this.calcLiquidationPrice(this.ethQty, this.daiQty);
-    },
     maxDaiDraw() {
       if (this.ethQty <= 0) return 0;
       return bnOver(this.ethPrice, this.ethQty, this.liquidationRatio);
@@ -237,10 +218,10 @@ export default {
       this.cdpService = await this.maker.service('cdp');
       this.proxyService = await this.maker.service('proxy');
 
-      // this.ethPrice = toBigNumber(
-      //   (await this.priceService.getEthPrice()).toNumber()
-      // );
-      this.ethPrice = toBigNumber(132.93);
+      this.ethPrice = toBigNumber(
+        (await this.priceService.getEthPrice()).toNumber()
+      );
+      // this.ethPrice = toBigNumber(132.93);
 
       this.pethPrice = toBigNumber(
         (await this.priceService.getPethPrice()).toNumber()
@@ -280,7 +261,7 @@ export default {
           this.$route.name !== 'create' &&
           this.$route.path.includes('maker-dai')
         ) {
-          this.gotoImport();
+          this.goToManage();
         }
       } else {
         this.gotoCreate();
@@ -298,7 +279,7 @@ export default {
         });
       }
     },
-    gotoImport() {
+    goToManage() {
       if (this.$route.path.includes('maker-dai')) {
         if (this.showManage) {
           // eslint-disable-next-line
@@ -323,6 +304,16 @@ export default {
         } else {
           this.gotoCreate();
         }
+      }
+    },
+    openManage(cdpId) {
+      if (this.$route.path.includes('maker-dai')) {
+        this.$router.push({
+          name: 'manage',
+          params: {
+            cdpId: cdpId
+          }
+        });
       }
     },
     addCdp(vals) {
@@ -380,13 +371,14 @@ export default {
 
       if (withProxy.length > 0 || withoutProxy.length > 0) {
         await this.doUpdate();
-        this.gotoImport();
+        this.goToManage();
       } else {
         this.availableCdps = {};
         this.gotoCreate();
       }
     },
     async doUpdate(withRefresh = false) {
+      this.proxyAddress = await this.proxyService.currentProxy();
       console.log('updating'); // todo remove dev item
       let afterClose = false;
       // this.migrationInProgress = false;
@@ -412,33 +404,8 @@ export default {
         const { withProxy, withoutProxy } = await this.locateCdps();
         this.cdps = withProxy;
         this.cdpsWithoutProxy = withoutProxy;
-        this.gotoImport();
+        this.goToManage();
       }
-
-      // this.migratingUpdate();
-    },
-    migratingUpdate() {
-      // const entries = Object.entries(this.migrationInProgress);
-      // const cdpKeyEntry = entries.filter(item => {
-      //   return item[1];
-      // });
-      //
-      // if (cdpKeyEntry.length === 1) {
-      //   const cdpKeys = cdpKeyEntry[1];
-      //   if (this.availableCdps[cdpKeys[0]].migrateCdpStage === 3) {
-      //     this.availableCdps[cdpKeys[0]].migrateCdpStage = 4;
-      //     console.log('migrate to manage'); // todo remove dev item
-      //     this.$router.push({
-      //       name: 'manage',
-      //       params: {
-      //         cdpId: cdpKeys[0]
-      //       }
-      //     });
-      //   }
-      // } else if (cdpKeyEntry.length > 1) {
-      //   console.log('migrate to refresh to import'); // todo remove dev item
-      //   this.gotoImport();
-      // }
     },
     async locateCdpsWithoutProxy() {
       const directCdps = await this.maker.getCdpIds(
