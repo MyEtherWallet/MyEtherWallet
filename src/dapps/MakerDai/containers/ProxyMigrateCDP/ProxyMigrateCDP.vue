@@ -195,8 +195,8 @@ import { mapGetters } from 'vuex';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
-import CloseCdpModal from './components/CloseCdpModal';
-import MoveCdpModal from './components/MoveCdpModal';
+import CloseCdpModal from '../../components/CloseCdpModal';
+import MoveCdpModal from '../../components/MoveCdpModal';
 
 import BigNumber from 'bignumber.js';
 

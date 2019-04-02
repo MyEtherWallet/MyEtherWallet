@@ -52,7 +52,7 @@
 import { mapGetters } from 'vuex';
 
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
-import BigNumber from 'bignumber.js';
+import BigNumber from 'bignumber.js/bignumber.js';
 
 const toBigNumber = num => {
   return new BigNumber(num);
@@ -165,5 +165,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'CloseCdpModal.scss';
+@import 'CloseCdpModal';
 </style>

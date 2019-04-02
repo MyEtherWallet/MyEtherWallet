@@ -38,7 +38,7 @@ import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
 import BigNumber from 'bignumber.js';
 import Maker from '@makerdao/dai';
-import SelectCdpEntry from './components/SelectCdpEntry';
+import SelectCdpEntry from '../../components/SelectCdpEntry';
 
 const KOVAN_SERVER_URL = 'https://sai-kovan.makerfoundation.com/v1';
 

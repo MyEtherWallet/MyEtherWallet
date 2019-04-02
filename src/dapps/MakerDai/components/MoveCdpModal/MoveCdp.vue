@@ -2,44 +2,27 @@
   <div class="modal-container">
     <b-modal
       ref="modal"
-      :title="'Close CDP'"
+      hide-footer
       centered
       class="bootstrap-modal bootstrap-modal-wide padding-40-20"
-      hide-footer
+      title="Move CDP"
     >
-      <div class="detail-info">
-        <div class="info">
-          <div class="expended-info expended-info-open">
-            <div class="grid-block">
-              <p>My MKR balance:</p>
-              <p>{{ mkrBalance }} MKR</p>
-              <p>Get MKR</p>
-            </div>
-            <div class="grid-block top-board">
-              <p>Outstanding DAI generated</p>
-              <p>{{ activeCdp.debtValue }} DAI</p>
-            </div>
-            <div class="grid-block btm-board">
-              <p>
-                {{
-                  $t('dapps.stabilityFeeInMkr', {
-                    value: displayFixedValue(
-                      displayPercentValue(activeCdp.stabilityFee)
-                    )
-                  })
-                }}
-              </p>
-              <p>{{ getfeeOwed }} MKR</p>
-            </div>
+      <div class="inputs-container">
+        <div class="input-container">
+          <label>Enter the address to send the cdp?</label>
+          <div class="input-box">
+            <input v-model="address" />
           </div>
         </div>
       </div>
-
       <div class="buttons-container">
-        <button class="cancel-btn">
-          Submit
+        <button class="cancel-btn" @click="closeModal">
+          Cancel
         </button>
-        <button class="submit-btn" @click="closeCdp">
+        <button
+          :class="['submit-btn', btnActive ? '' : 'disabled']"
+          @click="moveCdp"
+        >
           Submit
         </button>
       </div>
@@ -52,7 +35,9 @@
 import { mapGetters } from 'vuex';
 
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
-import BigNumber from 'bignumber.js';
+import BigNumber from 'bignumber.js/bignumber.js';
+
+import { Misc } from '@/helpers';
 
 const toBigNumber = num => {
   return new BigNumber(num);
@@ -82,7 +67,7 @@ export default {
   },
   data() {
     return {
-      amount: 0,
+      address: '',
       amountEth: 0,
       amountDai: 0,
       govFee: 0,
@@ -96,33 +81,8 @@ export default {
       web3: 'web3',
       network: 'network'
     }),
-    getfeeOwed() {
-      const result = this.activeCdp.governanceFeeOwed;
-      return this.displayFixedValue(result, 8);
-    },
-    newCollateralRatio() {
-      if (this.activeCdp) {
-        return this.activeCdp.collatRatio;
-      }
-      return 0;
-    },
-    newCollateralRatioSafe() {
-      if (this.activeCdp) {
-        return toBigNumber(this.activeCdp.collatRatio).gte(2);
-      }
-      return true;
-    },
-    newLiquidationPrice() {
-      if (this.activeCdp) {
-        return this.activeCdp.liquidationPrice;
-      }
-      return 0;
-    },
-    mkrBalance() {
-      if (this.mkrToken) {
-        return this.mkrToken.balance;
-      }
-      return 0;
+    btnActive() {
+      return this.address !== '';
     }
   },
   watch: {},
@@ -140,7 +100,6 @@ export default {
   methods: {
     closeCdp() {
       this.activeCdp.closeCdp();
-      this.closeModal();
     },
     displayPercentValue(raw) {
       if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);
@@ -150,21 +109,19 @@ export default {
       if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);
       return raw.toFixed(decimals, BigNumber.ROUND_DOWN).toString();
     },
-    async lockEth() {
-      if (toBigNumber(this.amount).gte(0)) {
-        return await this.activeCdp.lockEth(this.amount);
+    async moveCdp() {
+      if (Misc.isValidETHAddress(this.address)) {
+        this.activeCdp.moveCdp(this.address);
+        this.closeModal();
       }
     },
-    maxDai() {
-      this.amount = this.activeCdp.maxDai;
-    },
-    currentDai() {
-      this.amount = this.activeCdp.debtValue;
+    closeModal() {
+      this.$refs.modal.hide();
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-@import 'CloseCdpModal.scss';
+@import 'MoveCdp';
 </style>
