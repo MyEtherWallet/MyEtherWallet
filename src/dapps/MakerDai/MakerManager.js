@@ -89,6 +89,10 @@ export default class MakerManager {
     const { withProxy, withoutProxy } = await this.locateCdps();
     this.cdps = withProxy;
     this.cdpsWithoutProxy = withoutProxy;
+
+    if (this.cdps.length > 0 || this.cdpsWithoutProxy.length > 0) {
+      await this.loadCdpDetails();
+    }
   }
 
   async locateCdpsWithoutProxy() {
@@ -154,5 +158,65 @@ export default class MakerManager {
 
     const makerCDP = new MakerCDP(cdpId, this.maker, services, sysVars);
     return await makerCDP.init(cdpId);
+  }
+
+  async refresh() {
+    console.log('refresh'); // todo remove dev item
+    const { withProxy, withoutProxy } = await this.locateCdps();
+    this.cdps = withProxy;
+    this.cdpsWithoutProxy = withoutProxy;
+
+    const newCdps = this.cdps.filter(
+      item => !Object.keys(this.activeCdps).includes(item)
+    );
+
+    const newCdpsWithoutProxy = this.cdpsWithoutProxy.filter(
+      item => !Object.keys(this.activeCdps).includes(item)
+    );
+
+    for (let i = 0; i < newCdps.length; i++) {
+      this.activeCdps[newCdps[i]] = await this.buildCdpObject(newCdps[i]);
+    }
+
+    for (let i = 0; i < newCdpsWithoutProxy.length; i++) {
+      this.activeCdps[newCdpsWithoutProxy[i]] = await this.buildCdpObject(
+        newCdpsWithoutProxy[i],
+        { noProxy: true }
+      );
+    }
+
+    if (withProxy.length > 0 || withoutProxy.length > 0) {
+      await this.doUpdate();
+      this.goToManage();
+    } else {
+      this.activeCdps = {};
+      this.gotoCreate();
+    }
+  }
+  async doUpdate(withRefresh = false) {
+    this.proxyAddress = await this.proxyService.currentProxy();
+    console.log('updating'); // todo remove dev item
+    let afterClose = false;
+    // this.migrationInProgress = false;
+    for (let idProp in this.activeCdps) {
+      if (this.activeCdps[idProp].needsUpdate) {
+        if (this.activeCdps[idProp].closing) {
+          afterClose = true;
+          delete this.activeCdps[idProp];
+          this.cdps = this.cdps.filter(item => item !== idProp);
+        } else {
+          console.log('UPDATE CDP', idProp); // todo remove dev item
+          this.activeCdps[idProp] = await this.activeCdps[idProp].update();
+        }
+      }
+    }
+
+    if (afterClose) {
+      console.log('after close or move'); // todo remove dev item
+      const { withProxy, withoutProxy } = await this.locateCdps();
+      this.cdps = withProxy;
+      this.cdpsWithoutProxy = withoutProxy;
+      // this.goToManage();
+    }
   }
 }
