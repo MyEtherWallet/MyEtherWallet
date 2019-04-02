@@ -26,7 +26,6 @@ describe('RegisterDomain.vue', () => {
     i18n = baseSetup.i18n;
     store = baseSetup.store;
     Vue.config.warnHandler = () => {};
-    Vue.config.errorHandler = () => {};
   });
 
   beforeEach(() => {
