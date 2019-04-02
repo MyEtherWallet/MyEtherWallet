@@ -255,6 +255,12 @@ export default {
       default: function() {
         return {};
       }
+    },
+    makerManager:{
+      type: Object,
+      default: function(){
+        return {};
+      }
     }
   },
   data() {
@@ -284,8 +290,9 @@ export default {
     },
     ['$route.params.cdpId'](val){
       console.log(val); // todo remove dev item
-      if(this.availableCdps[val]){
-        this.activeCdp = this.availableCdps[val];
+      if(this.makerManager.hasCdp(val)){
+        this.activeCdp = this.makerManager.getCdp(val)
+        // this.activeCdp = this.availableCdps[val];
       }
     }
   },
@@ -314,7 +321,8 @@ export default {
     if (this.makerActive) {
       this.loaded = true;
       if (this.cdpId) {
-        this.activeCdp = this.availableCdps[this.cdpId];
+        this.activeCdp = this.makerManager.getCdp(this.cdpId)
+        // this.activeCdp = this.availableCdps[this.cdpId];
         // eslint-disable-next-line
         console.log('this.activeCdp', this.activeCdp); // todo remove dev item
       }

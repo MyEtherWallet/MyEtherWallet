@@ -31,7 +31,7 @@
             class="currency-picker-container dropdown-text-container dropdown-container"
           />
           <p>{{ $t('dapps.minCollat') }} <b>0.0TODO</b> ETH</p>
-          <p>0.00TODO PETH</p>
+          <p>{{ depositInPeth }} PETH</p>
         </div>
         <div class="arrow">
           <img :src="arrowImage" />
@@ -214,6 +214,12 @@ export default {
       default: function() {
         return {};
       }
+    },
+    makerManager: {
+      type: Object,
+      default: function() {
+        return {};
+      }
     }
   },
   data() {
@@ -274,6 +280,10 @@ export default {
         return toBigNumber(collRatio).lte(2);
       }
       return false;
+    },
+    depositInPeth() {
+      if (this.ethQty <= 0) return 0;
+      return this.makerCDP.toPeth(this.ethQty);
     }
   },
   async mounted() {
@@ -282,12 +292,12 @@ export default {
   methods: {
     buildEmpty() {
       const sysVars = {
-        ethPrice: this.ethPrice,
-        pethPrice: this.pethPrice,
-        liquidationRatio: this.liquidationRatio,
-        liquidationPenalty: this.liquidationPenalty,
-        stabilityFee: this.stabilityFee,
-        wethToPethRatio: this.wethToPethRatio,
+        ethPrice: this.makerManager.ethPrice,
+        pethPrice: this.makerManager.pethPrice,
+        liquidationRatio: this.makerManager.liquidationRatio,
+        liquidationPenalty: this.makerManager.liquidationPenalty,
+        stabilityFee: this.makerManager.stabilityFee,
+        wethToPethRatio: this.makerManager.wethToPethRatio,
         currentAddress: this.account.address
       };
 
@@ -296,6 +306,8 @@ export default {
         cdpService: this.cdpService,
         proxyService: this.proxyService
       };
+
+      console.log(sysVars); // todo remove dev item
 
       this.makerCDP = new MakerCDP(null, this.maker, services, sysVars);
     },
@@ -317,28 +329,6 @@ export default {
       console.log(newCdp); // todo remove dev item
       await this.makerCDP.init(newCdp.id);
       this.$emit('cdpOpened', { maker: this.makerCDP, id: newCdp.id });
-    },
-    calcMinCollatRatio(priceFloor) {
-      return bnOver(this.ethPrice, this.liquidationRatio, priceFloor);
-    },
-    calcDrawAmt(principal, collatRatio) {
-      return Math.floor(
-        bnOver(principal, this.ethPrice, collatRatio).toNumber()
-      );
-    },
-    calcCollatRatio(ethQty, daiQty) {
-      if (ethQty <= 0 || daiQty <= 0) return 0;
-      return bnOver(this.ethPrice, ethQty, daiQty);
-    },
-    calcLiquidationPrice(ethQty, daiQty) {
-      if (ethQty <= 0 || daiQty <= 0) return 0;
-      const getInt = parseInt(this.ethPrice);
-      for (let i = getInt; i > 0; i--) {
-        const atValue = bnOver(i, ethQty, daiQty).lte(this.liquidationRatio);
-        if (atValue) {
-          return i;
-        }
-      }
     }
   }
 };
