@@ -1,10 +1,20 @@
+### Release v5.0.9
+
+- Use Kyber supplied gas limits [#892](https://github.com/MyEtherWallet/MyEtherWallet/pull/892)
+
+### Bug
+- Allow zero as nonce for offline transaction [#860](https://github.com/MyEtherWallet/MyEtherWallet/pull/860)
+
+### Release v5.0.8-kyc
+
+- Implement KYC quiz [#881](https://github.com/MyEtherWallet/MyEtherWallet/pull/881)
+
 ### Hotfix v5.0.8-hotfix.1
 
 ### Bug
 
 - Display final re-calculated values on swap confirmation[#841](https://github.com/MyEtherWallet/MyEtherWallet/pull/841) 
 - Fix batch send success modal[#843](https://github.com/MyEtherWallet/MyEtherWallet/pull/843) 
-- Allow zero as nonce for offline transaction [#860](https://github.com/MyEtherWallet/MyEtherWallet/pull/860)
 
 ### Release v5.0.8
 
