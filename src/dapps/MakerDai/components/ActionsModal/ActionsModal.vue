@@ -210,7 +210,7 @@
         </div>
       </div>
       <div class="buttons-container">
-        <button class="cancel-btn">
+        <button class="cancel-btn" @click="closeModal">
           Cancel
         </button>
         <button class="submit-btn" @click="submitBtn">
@@ -226,7 +226,7 @@
 import { mapGetters } from 'vuex';
 
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
-import BigNumber from 'bignumber.js';
+import BigNumber from 'bignumber.js/bignumber.js';
 
 const toBigNumber = num => {
   return new BigNumber(num);
@@ -386,6 +386,7 @@ export default {
       this.amount = this.activeCdp.debtValue;
     },
     async lockEth() {
+      console.log('lockEth'); // todo remove dev item
       if (toBigNumber(this.amount).gte(0)) {
         await this.activeCdp.lockEth(this.amount);
         this.closeModal();
@@ -432,5 +433,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'ActionsModal.scss';
+@import 'ActionsModal';
 </style>

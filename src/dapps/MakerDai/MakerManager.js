@@ -32,7 +32,7 @@ export default class MakerManager {
     return this.activeCdps;
   }
 
-  get proxy(){
+  get proxy() {
     return this.currentProxy;
   }
 
@@ -213,7 +213,7 @@ export default class MakerManager {
     }
   }
 
-  async doUpdate(withRefresh = false) {
+  async doUpdate() {
     this.proxyAddress = await this.proxyService.currentProxy();
     console.log('updating'); // todo remove dev item
     let afterClose = false;
@@ -241,9 +241,7 @@ export default class MakerManager {
   }
 
   calcDrawAmt(principal, collatRatio) {
-    return Math.floor(
-      bnOver(principal, this.ethPrice, collatRatio).toNumber()
-    );
+    return Math.floor(bnOver(principal, this.ethPrice, collatRatio).toNumber());
   }
 
   calcMinCollatRatio(priceFloor) {
@@ -278,14 +276,13 @@ export default class MakerManager {
     };
   }
 
-  getSysServices(){
+  getSysServices() {
     return {
       priceService: this.priceService,
       cdpService: this.cdpService,
       proxyService: this.proxyService
-    }
+    };
   }
-
 
   // getMkrBalance(){
   //   const methodObject = new this.web3.eth.Contract(
