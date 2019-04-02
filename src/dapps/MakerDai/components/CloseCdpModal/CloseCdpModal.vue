@@ -36,8 +36,8 @@
       </div>
 
       <div class="buttons-container">
-        <button class="cancel-btn">
-          Submit
+        <button class="cancel-btn" @click="closeModal">
+          Cancel
         </button>
         <button class="submit-btn" @click="closeCdp">
           Submit
@@ -52,7 +52,7 @@
 import { mapGetters } from 'vuex';
 
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
-import BigNumber from 'bignumber.js';
+import BigNumber from 'bignumber.js/bignumber.js';
 
 const toBigNumber = num => {
   return new BigNumber(num);
@@ -140,7 +140,6 @@ export default {
   methods: {
     closeCdp() {
       this.activeCdp.closeCdp();
-      this.closeModal();
     },
     displayPercentValue(raw) {
       if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);
@@ -160,11 +159,14 @@ export default {
     },
     currentDai() {
       this.amount = this.activeCdp.debtValue;
+    },
+    closeModal() {
+      this.$refs.modal.hide();
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-@import 'CloseCdpModal.scss';
+@import 'CloseCdpModal';
 </style>

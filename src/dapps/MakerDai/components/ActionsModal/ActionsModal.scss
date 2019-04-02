@@ -9,6 +9,7 @@ $confirmation-modal-mobile-width: 500px;
 .inputs-container {
   display: flex;
   flex-direction: column;
+  margin: 20px;
 
   .input-container {
     display: flex;
@@ -185,10 +186,6 @@ $confirmation-modal-mobile-width: 500px;
     border-radius: 4px;
     border: solid 1px #506175;
     color: #506175;
-  }
-
-  .disabled {
-    background-color: #898989;
   }
 }
 
