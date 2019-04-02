@@ -1,3 +1,7 @@
+### Devop
+
+- Fixes Bitbox error and Hardware wallet error handling []()
+
 ### Release v5.0.8-kyc
 
 - Implement KYC quiz [#881](https://github.com/MyEtherWallet/MyEtherWallet/pull/881)
