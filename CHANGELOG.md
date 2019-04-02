@@ -1,6 +1,13 @@
+
 ### Release v5.0.9
 
+### Devop
+
 - Use Kyber supplied gas limits [#892](https://github.com/MyEtherWallet/MyEtherWallet/pull/892)
+
+### Feature
+
+- Add Browser options for Metamask on Safari [#867](https://github.com/MyEtherWallet/MyEtherWallet/pull/867)
 
 ### Bug
 
