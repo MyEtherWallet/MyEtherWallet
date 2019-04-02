@@ -32,7 +32,7 @@
           class="content-block"
         >
           <div class="network-title">
-            <img :src="Networks[key][0].type.icon" />
+            <div class="network-icon"><img :src="Networks[key][0].type.icon" /></div>
             <h4 :class="key.toLowerCase()">{{ key }}</h4>
           </div>
           <div class="grid-3">
