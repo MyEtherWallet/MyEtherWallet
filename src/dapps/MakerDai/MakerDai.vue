@@ -33,7 +33,7 @@
         </div>
       </div>
     </div>
-    <div v-show="makerActive" class="buttons-container">
+    <div v-show="makerActive && listCdps" class="buttons-container">
       <div v-for="(value, idx) in cdps" :key="idx + value">
         <div class="dapps-button">
           <div @click="openManage(value)">
@@ -43,6 +43,7 @@
       </div>
     </div>
     <router-view
+      :maker-manager="makerManager"
       :maker-active="makerActive"
       :eth-price="ethPrice"
       :peth-price="pethPrice"
@@ -77,7 +78,7 @@ import BigNumber from 'bignumber.js';
 import Maker from '@makerdao/dai';
 import { toChecksumAddress } from '@/helpers/addressUtils';
 import MakerCDP from './MakerCDP';
-import MakerManager from './MakerManager'
+import MakerManager from './MakerManager';
 import MewPlugin from './dai-plugin-mew';
 
 const toBigNumber = num => {
@@ -141,7 +142,9 @@ export default {
       currentProxy: null,
       migrationInProgress: {},
       makerCdp: {},
-      makerManager: {}
+      makerManager: {},
+      sysVars: {},
+      sysServices: {}
     };
   },
   watch: {
@@ -167,8 +170,7 @@ export default {
     },
     showManage() {
       return (
-        this.cdps.length > 1 ||
-        this.cdpsWithoutProxy.length > 1 ||
+        this.listCdps ||
         (this.cdps.length >= 1 && this.cdpsWithoutProxy.length >= 1)
       );
     },
@@ -186,6 +188,9 @@ export default {
     },
     showCdpMigrateButtons() {
       return this.hasProxy && this.cdpsWithoutProxy.length >= 1;
+    },
+    listCdps() {
+      return this.cdps.length > 1 || this.cdpsWithoutProxy.length > 1;
     }
   },
   async mounted() {
@@ -218,7 +223,12 @@ export default {
 
       this.makerManager = new MakerManager({
         account: this.account,
-        maker: this.maker
+        maker: this.maker,
+        routeHandlers: {
+          home: this.gotoHome,
+          create: this.gotoCreate,
+          manage: this.goToManage
+        }
       });
 
       await this.makerManager.init();
@@ -226,6 +236,21 @@ export default {
       this.cdps = this.makerManager.cdps;
       this.cdpsWithoutProxy = this.makerManager.cdpsWithoutProxy;
       this.availableCdps = this.makerManager.availableCdps;
+      this.sysVars = this.makerManager.getSysVars();
+      this.ethPrice = this.sysVars.ethPrice;
+      this.pethPrice = this.sysVars.pethPrice;
+      this.liquidationRatio = this.sysVars.liquidationRatio;
+      this.liquidationPenalty = this.sysVars.liquidationPenalty;
+      this.stabilityFee = this.sysVars.stabilityFee;
+      this.wethToPethRatio = this.sysVars.wethToPethRatio;
+      this.currentAddress = this.account.address;
+
+      this.sysServices = this.makerManager.getSysServices();
+      this.priceService = this.sysServices.priceService;
+      this.cdpService = this.sysServices.cdpService;
+      this.proxyService = this.sysServices.proxyService;
+
+      this.currentProxy = this.makerManager.proxy;
 
       if (this.cdps.length > 0 || this.cdpsWithoutProxy.length > 0) {
         // await this.loadCdpDetails();
@@ -292,7 +317,8 @@ export default {
       }
     },
     addCdp(vals) {
-      this.availableCdps[vals.id] = vals.maker;
+      this.makerManager.addOpenedCdp(vals.maker, vals.id);
+      this.availableCdps = this.makerManager.availableCdps;
     },
     removeCdp(vals) {
       try {
@@ -303,84 +329,76 @@ export default {
       }
     },
     async buildProxy() {
-      const currentProxy = await this.proxyService.currentProxy();
-      if (!currentProxy) {
-        await this.proxyService.build();
-        // eslint-disable-next-line
-        this.proxyAddress = await this.proxyService.currentProxy();
-        return this.proxyAddress;
-      }
-      this.proxyAddress = await this.proxyService.currentProxy();
-      return this.proxyAddress;
+      await this.makerManager.buildProxy();
     },
     async migrateCdp(cdpId) {
-      const currentProxy = await this.proxyService.currentProxy();
-      if (currentProxy) {
-        await this.cdpService.give(cdpId, currentProxy);
-      }
+      await this.makerManager.migrateCdp(cdpId);
     },
     async refresh() {
       console.log('refresh'); // todo remove dev item
-      const { withProxy, withoutProxy } = await this.locateCdps();
-      this.cdps = withProxy;
-      this.cdpsWithoutProxy = withoutProxy;
-
-      const newCdps = this.cdps.filter(
-        item => !Object.keys(this.availableCdps).includes(item)
-      );
-
-      const newCdpsWithoutProxy = this.cdpsWithoutProxy.filter(
-        item => !Object.keys(this.availableCdps).includes(item)
-      );
-
-      for (let i = 0; i < newCdps.length; i++) {
-        this.availableCdps[newCdps[i]] = await this.buildCdpObject(newCdps[i]);
-      }
-
-      for (let i = 0; i < newCdpsWithoutProxy.length; i++) {
-        this.availableCdps[newCdpsWithoutProxy[i]] = await this.buildCdpObject(
-          newCdpsWithoutProxy[i],
-          { noProxy: true }
-        );
-      }
-
-      if (withProxy.length > 0 || withoutProxy.length > 0) {
-        await this.doUpdate();
-        this.goToManage();
-      } else {
-        this.availableCdps = {};
-        this.gotoCreate();
-      }
+      await this.makerManager.refresh();
+      // const { withProxy, withoutProxy } = await this.makerManager.locateCdps();
+      // this.cdps = withProxy;
+      // this.cdpsWithoutProxy = withoutProxy;
+      //
+      // const newCdps = this.cdps.filter(
+      //   item => !Object.keys(this.availableCdps).includes(item)
+      // );
+      //
+      // const newCdpsWithoutProxy = this.cdpsWithoutProxy.filter(
+      //   item => !Object.keys(this.availableCdps).includes(item)
+      // );
+      //
+      // for (let i = 0; i < newCdps.length; i++) {
+      //   this.availableCdps[newCdps[i]] = await this.buildCdpObject(newCdps[i]);
+      // }
+      //
+      // for (let i = 0; i < newCdpsWithoutProxy.length; i++) {
+      //   this.availableCdps[newCdpsWithoutProxy[i]] = await this.buildCdpObject(
+      //     newCdpsWithoutProxy[i],
+      //     { noProxy: true }
+      //   );
+      // }
+      //
+      // if (withProxy.length > 0 || withoutProxy.length > 0) {
+      //   await this.doUpdate();
+      //   this.goToManage();
+      // } else {
+      //   this.availableCdps = {};
+      //   this.gotoCreate();
+      // }
     },
-    async doUpdate(withRefresh = false) {
+    async doUpdate() {
       this.proxyAddress = await this.proxyService.currentProxy();
-      console.log('updating'); // todo remove dev item
-      let afterClose = false;
-      // this.migrationInProgress = false;
-      for (let idProp in this.availableCdps) {
-        if (this.availableCdps[idProp].needsUpdate) {
-          if (this.availableCdps[idProp].closing) {
-            afterClose = true;
-            this.$delete(this.availableCdps, idProp);
-            this.cdps = this.cdps.filter(item => item !== idProp);
-          } else if (this.availableCdps[idProp].migrateCdpActive) {
-            // await this.availableCdps[idProp].migrateCdpComplete();
-          } else {
-            console.log('UPDATE CDP', idProp); // todo remove dev item
-            this.availableCdps[idProp] = await this.availableCdps[
-              idProp
-            ].update();
-          }
-        }
-      }
-
-      if (afterClose || this.migrationInProgress) {
-        console.log('after close or move'); // todo remove dev item
-        const { withProxy, withoutProxy } = await this.locateCdps();
-        this.cdps = withProxy;
-        this.cdpsWithoutProxy = withoutProxy;
-        this.goToManage();
-      }
+      await this.makerManager.doUpdate();
+      this.availableCdps = this.makerManager.availableCdps;
+      // console.log('updating'); // todo remove dev item
+      // let afterClose = false;
+      // // this.migrationInProgress = false;
+      // for (let idProp in this.availableCdps) {
+      //   if (this.availableCdps[idProp].needsUpdate) {
+      //     if (this.availableCdps[idProp].closing) {
+      //       afterClose = true;
+      //       this.$delete(this.availableCdps, idProp);
+      //       this.cdps = this.cdps.filter(item => item !== idProp);
+      //     } else if (this.availableCdps[idProp].migrateCdpActive) {
+      //       // await this.availableCdps[idProp].migrateCdpComplete();
+      //     } else {
+      //       console.log('UPDATE CDP', idProp); // todo remove dev item
+      //       this.availableCdps[idProp] = await this.availableCdps[
+      //         idProp
+      //       ].update();
+      //     }
+      //   }
+      // }
+      //
+      // if (afterClose || this.migrationInProgress) {
+      //   console.log('after close or move'); // todo remove dev item
+      //   const { withProxy, withoutProxy } = await this.locateCdps();
+      //   this.cdps = withProxy;
+      //   this.cdpsWithoutProxy = withoutProxy;
+      //   this.goToManage();
+      // }
     },
     // async locateCdpsWithoutProxy() {
     //   const directCdps = await this.maker.getCdpIds(

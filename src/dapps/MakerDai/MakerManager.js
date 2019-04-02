@@ -3,6 +3,7 @@ import Maker from '@makerdao/dai';
 import { toChecksumAddress } from '@/helpers/addressUtils';
 import MakerCDP from './MakerCDP';
 import MewPlugin from './dai-plugin-mew';
+import { ERC20 } from '../../partners/partnersConfig';
 
 const toBigNumber = num => {
   return new BigNumber(num);
@@ -18,39 +19,38 @@ export default class MakerManager {
   constructor(props) {
     this.currentAddress = props.account.address;
     this.maker = props.maker;
+    this.currentProxy = null;
     this.activeCdps = {};
+    this.routeHandlers = props.routeHandlers || {
+      home: () => {},
+      create: () => {},
+      manage: () => {}
+    };
   }
 
   get availableCdps() {
     return this.activeCdps;
   }
 
+  get proxy(){
+    return this.currentProxy;
+  }
+
+  get makerActive() {}
+
+  hasCdp(cdpId) {
+    return Object.keys(this.activeCdps).includes(cdpId);
+  }
+
   getCdp(cdpId) {
     return this.activeCdps[cdpId];
   }
 
+  addOpenedCdp(makerCdp, cdpId) {
+    this.activeCdps[cdpId] = makerCdp;
+  }
+
   async init() {
-    // const MewMakerPlugin = MewPlugin(
-    //   this.web3,
-    //   this.account.address,
-    //   async () => {
-    //     // eslint-disable-next-line
-    //     console.log('do update'); // todo remove dev item
-    //     await this.doUpdate();
-    //   }
-    // );
-    // this.maker = await Maker.create('http', {
-    //   url: this.network.url,
-    //   provider: {
-    //     type: 'HTTP', // or 'TEST'
-    //     network: 'kovan'
-    //   },
-    //   plugins: [MewMakerPlugin],
-    //   accounts: {
-    //     myLedger1: { type: 'mew' }
-    //   },
-    //   log: true
-    // });
     await this.maker.authenticate();
     this.priceService = this.maker.service('price');
     this.cdpService = await this.maker.service('cdp');
@@ -82,7 +82,7 @@ export default class MakerManager {
     this.wethToPethRatio = toBigNumber(
       await this.priceService.getWethToPethRatio()
     );
-
+    console.log(this.wethToPethRatio.toString()); // todo remove dev item
     this.currentProxy = await this.proxyService.currentProxy();
     console.log(this.currentProxy); // todo remove dev item
 
@@ -115,12 +115,12 @@ export default class MakerManager {
   }
 
   async locateCdps() {
-    const directCdps = await this.locateCdpsWithoutProxy();
-    console.log(directCdps); // todo remove dev item
+    this.withoutProxy = await this.locateCdpsWithoutProxy();
+    console.log(this.withoutProxy); // todo remove dev item
 
-    const cdps = await this.locateCdpsProxy();
+    this.cdps = await this.locateCdpsProxy();
 
-    return { withProxy: cdps, withoutProxy: directCdps };
+    return { withProxy: this.cdps, withoutProxy: this.withoutProxy };
   }
 
   async loadCdpDetails() {
@@ -160,6 +160,25 @@ export default class MakerManager {
     return await makerCDP.init(cdpId);
   }
 
+  async buildProxy() {
+    const currentProxy = await this.proxyService.currentProxy();
+    if (!currentProxy) {
+      await this.proxyService.build();
+      // eslint-disable-next-line
+      this.proxyAddress = await this.proxyService.currentProxy();
+      return this.proxyAddress;
+    }
+    this.proxyAddress = await this.proxyService.currentProxy();
+    return this.proxyAddress;
+  }
+
+  async migrateCdp(cdpId) {
+    const currentProxy = await this.proxyService.currentProxy();
+    if (currentProxy) {
+      await this.cdpService.give(cdpId, currentProxy);
+    }
+  }
+
   async refresh() {
     console.log('refresh'); // todo remove dev item
     const { withProxy, withoutProxy } = await this.locateCdps();
@@ -187,12 +206,13 @@ export default class MakerManager {
 
     if (withProxy.length > 0 || withoutProxy.length > 0) {
       await this.doUpdate();
-      this.goToManage();
+      this.routeHandlers.manage();
     } else {
       this.activeCdps = {};
-      this.gotoCreate();
+      this.routeHandlers.create();
     }
   }
+
   async doUpdate(withRefresh = false) {
     this.proxyAddress = await this.proxyService.currentProxy();
     console.log('updating'); // todo remove dev item
@@ -216,7 +236,61 @@ export default class MakerManager {
       const { withProxy, withoutProxy } = await this.locateCdps();
       this.cdps = withProxy;
       this.cdpsWithoutProxy = withoutProxy;
-      // this.goToManage();
+      this.routeHandlers.manage();
     }
   }
+
+  calcDrawAmt(principal, collatRatio) {
+    return Math.floor(
+      bnOver(principal, this.ethPrice, collatRatio).toNumber()
+    );
+  }
+
+  calcMinCollatRatio(priceFloor) {
+    return bnOver(this.ethPrice, this.liquidationRatio, priceFloor);
+  }
+
+  calcCollatRatio(ethQty, daiQty) {
+    if (ethQty <= 0 || daiQty <= 0) return 0;
+    return bnOver(this.ethPrice, ethQty, daiQty);
+  }
+
+  calcLiquidationPrice(ethQty, daiQty) {
+    if (ethQty <= 0 || daiQty <= 0) return 0;
+    const getInt = parseInt(this.ethPrice);
+    for (let i = getInt; i > 0; i--) {
+      const atValue = bnOver(i, ethQty, daiQty).lte(this.liquidationRatio);
+      if (atValue) {
+        return i;
+      }
+    }
+  }
+
+  getSysVars() {
+    return {
+      ethPrice: this.ethPrice,
+      pethPrice: this.pethPrice,
+      liquidationRatio: this.liquidationRatio,
+      liquidationPenalty: this.liquidationPenalty,
+      stabilityFee: this.stabilityFee,
+      wethToPethRatio: this.wethToPethRatio,
+      currentAddress: this.currentAddress
+    };
+  }
+
+  getSysServices(){
+    return {
+      priceService: this.priceService,
+      cdpService: this.cdpService,
+      proxyService: this.proxyService
+    }
+  }
+
+
+  // getMkrBalance(){
+  //   const methodObject = new this.web3.eth.Contract(
+  //     ERC20,
+  //     this.getTokenAddress(fromToken)
+  //   ).methods.approve(this.getKyberNetworkAddress(), fromValueWei);
+  // }
 }
