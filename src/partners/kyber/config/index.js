@@ -17,6 +17,7 @@ import {
 } from './config';
 import kyberNetworkABI from './kyberNetwork.abi';
 import { ERC20 } from '../../partnersConfig';
+import GAS_LIMITS from './gasLimits';
 
 export {
   kyberBaseCurrency,
@@ -35,5 +36,6 @@ export {
   kyberValidNetworks,
   kyberNetworkABI,
   ERC20,
-  FEE_RATE
+  FEE_RATE,
+  GAS_LIMITS
 };
