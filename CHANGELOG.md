@@ -7,6 +7,7 @@
 
 ### Feature
 
+- Add curency symbol to config [#809](https://github.com/MyEtherWallet/MyEtherWallet/pull/809)
 - Add Browser options for Metamask on Safari [#867](https://github.com/MyEtherWallet/MyEtherWallet/pull/867)
 
 ### Bug
