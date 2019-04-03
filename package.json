@@ -30,7 +30,7 @@
     "pre-commit": "npm run lint && npm run test"
   },
   "dependencies": {
-    "@sentry/browser": "5.0.0",
+    "@sentry/browser": "5.0.3",
     "html2canvas": "1.0.0-alpha.12",
     "idna-uts46": "1.1.0",
     "luxon": "1.12.0",
@@ -113,7 +113,7 @@
     "unused-files-webpack-plugin": "3.4.0",
     "uuid": "3.3.2",
     "vue-i18n": "8.10.0",
-    "vue-tel-input": "2.0.19",
+    "vue-tel-input": "2.0.21",
     "vue-template-compiler": "2.6.10",
     "vue-worker": "1.2.1",
     "wallet-address-validator": "0.2.4",
