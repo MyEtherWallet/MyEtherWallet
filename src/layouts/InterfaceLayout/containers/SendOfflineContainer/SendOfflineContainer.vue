@@ -336,7 +336,7 @@ export default {
       this.toAmt = value ? new BigNumber(value).toFixed() : 0;
       this.toData = data ? data : '0x';
       this.address = to ? to : '';
-      this.gasLimit = gaslimit ? new BigNumber(gaslimit).toString() : '2100';
+      this.gasLimit = gaslimit ? new BigNumber(gaslimit).toString() : '21000';
       this.localGasPrice = gas ? new BigNumber(gas).toFixed() : 0;
       this.selectedCoinType = foundToken ? foundToken : this.selectedCoinType;
 

@@ -361,7 +361,7 @@ export default {
       this.data = data ? data : '0x';
       this.hexAddress = to ? to : '';
       this.address = to ? to : '';
-      this.gasLimit = gaslimit ? new BigNumber(gaslimit).toString() : '2100';
+      this.gasLimit = gaslimit ? new BigNumber(gaslimit).toString() : '21000';
       this.selectedCurrency = foundToken ? foundToken : this.selectedCurrency;
 
       Toast.responseHandler(
