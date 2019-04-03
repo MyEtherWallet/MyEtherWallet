@@ -267,10 +267,7 @@ export default {
       showGetFreeWallet: false,
       gasPrice: '0',
       error: {},
-      resolver: () => {},
-      showGettingStarted: '',
-      address: '',
-      blockExplorerURL: ''
+      resolver: () => {}
     };
   },
   computed: {
