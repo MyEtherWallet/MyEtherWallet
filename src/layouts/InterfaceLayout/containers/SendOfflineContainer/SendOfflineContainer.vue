@@ -140,7 +140,7 @@
               <i
                 :class="[
                   'fa fa-check-circle good-button',
-                  nonce > 0 ? '' : 'not-good'
+                  nonce >= 0 ? '' : 'not-good'
                 ]"
                 aria-hidden="true"
               />
@@ -328,8 +328,9 @@ export default {
   },
   methods: {
     debouncedAmount: utils._.debounce(function(e) {
+      const symbol = this.network.type.currencyName;
       const decimals =
-        this.selectedCoinType.symbol === this.network.type.name
+        this.selectedCoinType.symbol === symbol
           ? 18
           : this.selectedCoinType.decimals;
       this.toAmt =
@@ -367,7 +368,8 @@ export default {
           type: 'function'
         }
       ];
-      if (locCurrency.symbol !== this.network.type.name && locAddress !== '') {
+      const symbol = this.network.type.currencyName;
+      if (locCurrency.symbol !== symbol && locAddress !== '') {
         const locVal = locAmount === '' || locAmount === null ? '0' : locAmount;
         const contract = new this.web3.eth.Contract(abi, locCurrency.address);
         const convertedAmount = new BigNumber(locVal).times(
@@ -404,7 +406,8 @@ export default {
       reader.readAsBinaryString(e.target.files[0]);
     },
     async generateTx() {
-      const isToken = this.selectedCoinType.symbol !== this.network.type.name;
+      const symbol = this.network.type.currencyName;
+      const isToken = this.selectedCoinType.symbol !== symbol;
       const amt = unit.toWei(this.toAmt, 'ether');
       const raw = {
         nonce: Misc.sanitizeHex(new BigNumber(this.localNonce).toString(16)),
@@ -424,8 +427,9 @@ export default {
       window.scrollTo(0, 0);
     },
     setSelectedCurrency(e) {
+      const symbol = this.network.type.currencyName;
       this.selectedCoinType = e;
-      if (e.symbol === this.network.type.name) {
+      if (e.symbol === symbol) {
         this.toData = '0x';
       }
     }
