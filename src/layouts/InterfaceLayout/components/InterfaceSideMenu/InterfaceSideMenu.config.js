@@ -62,7 +62,8 @@ export default {
         '/interface/dapps/manage-ens/forbidden',
         '/interface/dapps/manage-ens/auction',
         '/interface/dapps/manage-ens/confirm',
-        '/interface/dapps/domain-sale'
+        '/interface/dapps/domain-sale',
+        '/interface/dapps/schedule-transaction'
       ],
       icons: {
         active: require('@/assets/images/sidemenu/dapps-active.svg'),
@@ -120,15 +121,6 @@ export default {
             inactive: ''
           },
           titleKey: 'common.signMessage'
-        },
-        {
-          name: 'verify-message',
-          routes: ['/interface/verify-message'],
-          icons: {
-            active: '',
-            inactive: ''
-          },
-          titleKey: 'common.verifyMessage'
         }
       ]
     }

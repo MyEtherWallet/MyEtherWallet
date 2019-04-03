@@ -45,23 +45,7 @@ export default {
     }
   },
   data() {
-    return {
-      header: 'MY ADDRESS ICON',
-      subheader: 'Always look for this icon when sending to this wallet',
-      mew: 'MyEtherWallet',
-      paper: 'Paper Wallet',
-      link1: 'support@myetherwallet.com',
-      link2: 'https://www.myetherwallet.com',
-      myAddress: 'MY ADDRESS',
-      myPriv: 'MY PRIVATE KEY',
-      content: {
-        text1: 'Please Keep Your Paper Wallet at a',
-        text2: 'Place! Please',
-        text3: 'Share Your Private Key With Anyone!',
-        red1: 'SAFE',
-        red2: 'DO NOT'
-      }
-    };
+    return {};
   },
   computed: {
     ...mapGetters({

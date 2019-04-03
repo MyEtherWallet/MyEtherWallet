@@ -11,5 +11,6 @@ export default {
   chainID: 8,
   tokens: tokens,
   contracts: contracts,
-  icon: ubq
+  icon: ubq,
+  currencyName: 'UBQ'
 };
