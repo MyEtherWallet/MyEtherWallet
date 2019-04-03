@@ -16,5 +16,6 @@ export default {
     registrarTLD: 'test',
     registrarType: 'fifs',
     supportedTld: GOERLI
-  }
+  },
+  currencyName: 'GöETH'
 };
