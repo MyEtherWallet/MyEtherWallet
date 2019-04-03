@@ -11,5 +11,6 @@ export default {
   chainID: 200625,
   tokens: tokens,
   contracts: contracts,
-  icon: aka
+  icon: aka,
+  currencyName: 'AKA'
 };
