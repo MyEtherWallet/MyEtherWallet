@@ -1,12 +1,33 @@
+### Release v5.0.9
+
+### Devop
+
+- Fixes Bitbox error and Hardware wallet error handling [#893](https://github.com/MyEtherWallet/MyEtherWallet/pull/893)
+- Use Kyber supplied gas limits [#892](https://github.com/MyEtherWallet/MyEtherWallet/pull/892)
+
+### Feature
+
+- Add Browser options for Metamask on Safari [#867](https://github.com/MyEtherWallet/MyEtherWallet/pull/867)
+
+### Bug
+
+- Fix side menu bugs, logout warning modal bug[#896](https://github.com/MyEtherWallet/MyEtherWallet/pull/896)
+- Add network icon background[#897](https://github.com/MyEtherWallet/MyEtherWallet/pull/897)
+- Fix custom token validation [#852](https://github.com/MyEtherWallet/MyEtherWallet/pull/852)
+- Change mobile side menu button title from "Change" to "Menu" [#887](https://github.com/MyEtherWallet/MyEtherWallet/pull/887)
+- Fix notification to show max 5 notification popups[#873](https://github.com/MyEtherWallet/MyEtherWallet/pull/873)
+- Display final re-calculated values on swap confirmation[#841](https://github.com/MyEtherWallet/MyEtherWallet/pull/841)
+- Fix batch send success modal[#843](https://github.com/MyEtherWallet/MyEtherWallet/pull/843)
+- Fix hardware wallet scroll bug[#890](https://github.com/MyEtherWallet/MyEtherWallet/pull/890)
+- Allow zero as nonce for offline transaction [#860](https://github.com/MyEtherWallet/MyEtherWallet/pull/860)
+- Resolve spinner on interact contract [#861](https://github.com/MyEtherWallet/MyEtherWallet/pull/841)
+
 ### Release v5.0.8-kyc
 
 - Implement KYC quiz [#881](https://github.com/MyEtherWallet/MyEtherWallet/pull/881)
 
 ### Hotfix v5.0.8-hotfix.1
 
-### Bug
-
-- Fix side menu bugs, logout warning modal bug[#896](https://github.com/MyEtherWallet/MyEtherWallet/pull/896)
 - Display final re-calculated values on swap confirmation[#841](https://github.com/MyEtherWallet/MyEtherWallet/pull/841)
 - Fix batch send success modal[#843](https://github.com/MyEtherWallet/MyEtherWallet/pull/843)
 
