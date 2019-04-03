@@ -24,7 +24,7 @@ class MnemonicWallet {
   async init(basePath) {
     this.basePath = basePath ? basePath : this.supportedPaths[0].path;
     this.hdKey = HDKey.fromMasterSeed(
-      bip39.mnemonicToSeed(this.mnemonic, this.password)
+      bip39.mnemonicToSeedSync(this.mnemonic, this.password)
     );
   }
   getAccount(idx) {
