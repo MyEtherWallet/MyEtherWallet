@@ -11,6 +11,7 @@
 
 ### Bug
 
+- Fix side menu bugs, logout warning modal bug[#896](https://github.com/MyEtherWallet/MyEtherWallet/pull/896)
 - Add network icon background[#897](https://github.com/MyEtherWallet/MyEtherWallet/pull/897)
 - Fix custom token validation [#852](https://github.com/MyEtherWallet/MyEtherWallet/pull/852)
 - Change mobile side menu button title from "Change" to "Menu" [#887](https://github.com/MyEtherWallet/MyEtherWallet/pull/887)
