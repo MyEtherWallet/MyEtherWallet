@@ -63,7 +63,8 @@ const getters = {
           registry: '0x123456789',
           registrarTLD: 'eth',
           registrarType: 'auction'
-        }
+        },
+        currencyName: 'ETH'
       },
       url: 'https://mainnet.infura.io/mew'
     };
