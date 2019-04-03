@@ -376,7 +376,8 @@ export default {
           homePage: '',
           name: this.selectedNetwork.name,
           name_long: this.selectedNetwork.name_long,
-          tokens: []
+          tokens: [],
+          currencyName: this.selectedNetwork.currencyName,
         },
         url: this.url,
         username: this.username
