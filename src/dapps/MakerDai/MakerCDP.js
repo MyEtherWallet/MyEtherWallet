@@ -34,13 +34,11 @@ export default class MakerCDP {
     this._wethToPethRatio = sysVars.wethToPethRatio || toBigNumber(0);
     this._targetPrice = sysVars.targetPrice || toBigNumber(0);
     this._currentAddress = sysVars.currentAddress || null;
-    this.daiPrice = 0;
-    this.priceFloor = 0;
     this.cdps = [];
     this.noProxy = sysVars.noProxy || false;
-    this.cdpDetailsLoaded = false;
     this.needsUpdate = false;
     this.closing = false;
+    this.opening = false;
     this.migrated = false;
     this.migrateCdpActive = false;
     this.migrateCdpStage = 0;
@@ -53,9 +51,6 @@ export default class MakerCDP {
     this._pethCollateral = toBigNumber(0);
     this._usdCollateral = toBigNumber(0);
     this._governanceFee = toBigNumber(0);
-    // this.maxEthDraw = '0';
-    // this.maxPethDraw = '0';
-    // this._maxDaiDraw = '0';
 
     if (toInit) this.init(this.cdpId);
   }
@@ -65,20 +60,7 @@ export default class MakerCDP {
     this.priceService = this.maker.service('price');
     this.cdpService = await this.maker.service('cdp');
     this.proxyService = await this.maker.service('proxy');
-    this.cdp = await this.maker.getCdp(cdpId);
-    this.proxyAddress = await this.proxyService.currentProxy();
-    const liqPrice = await this.cdp.getLiquidationPrice();
-    this._liqPrice = liqPrice.toBigNumber().toFixed(2);
-    this.isSafe = await this.cdp.isSafe();
-    this._debtValue = (await this.cdp.getDebtValue()).toBigNumber();
-    this._collatRatio = await this.cdp.getCollateralizationRatio();
-    this._ethCollateral = (await this.cdp.getCollateralValue()).toBigNumber();
-    this._pethCollateral = (await this.cdp.getCollateralValue(
-      Maker.PETH
-    )).toBigNumber();
-    this._usdCollateral = (await this.cdp.getCollateralValue(
-      Maker.USD
-    )).toBigNumber();
+    await this.updateValues(cdpId);
     this._governanceFee = (await this.cdpService.getGovernanceFee(
       this.cdpId,
       MKR
@@ -106,6 +88,24 @@ export default class MakerCDP {
     return this;
   }
 
+  async updateValues(cdpId = this.cdpId) {
+    this.cdp = await this.maker.getCdp(cdpId);
+    this.proxyAddress = await this.proxyService.currentProxy();
+    this.noProxy = this.proxyAddress === null;
+    const liqPrice = await this.cdp.getLiquidationPrice();
+    this._liqPrice = liqPrice.toBigNumber().toFixed(2);
+    this.isSafe = await this.cdp.isSafe();
+    this._debtValue = (await this.cdp.getDebtValue()).toBigNumber();
+    this._collatRatio = await this.cdp.getCollateralizationRatio();
+    this._ethCollateral = (await this.cdp.getCollateralValue()).toBigNumber();
+    this._pethCollateral = (await this.cdp.getCollateralValue(
+      Maker.PETH
+    )).toBigNumber();
+    this._usdCollateral = (await this.cdp.getCollateralValue(
+      Maker.USD
+    )).toBigNumber();
+  }
+
   async update() {
     if (this.migrated) {
       const currentProxy = await this.proxyService.currentProxy();
@@ -115,8 +115,10 @@ export default class MakerCDP {
       }
     }
     if (this.needsUpdate) {
+      this.opening = false;
       this.needsUpdate = false;
-      await this.init(this.cdpId);
+      console.log('Updating MakerCDP:', this.cdpId); // todo remove dev item
+      await this.updateValues(this.cdpId);
       return this;
     }
     return this;
@@ -323,6 +325,8 @@ export default class MakerCDP {
   async openCdp(ethQty, daiQty) {
     if (ethQty <= 0) return 0;
     const proxyAddress = await this.buildProxy();
+    this.opening = true;
+    this.needsUpdate = true;
     const newCdp = await this.cdpService.openProxyCdpLockEthAndDrawDai(
       ethQty,
       daiQty,
@@ -393,14 +397,16 @@ export default class MakerCDP {
     }
   }
 
-  async canCloseCdp(){
+  async canCloseCdp() {
     const value = this.debtValue.toNumber();
     return await this.cdp.enoughMkrToWipe(value, DAI.wei);
   }
 
   async closeCdp() {
     const value = this.debtValue.toNumber();
+    console.log(value); // todo remove dev item
     const enoughToWipe = await this.cdp.enoughMkrToWipe(value, DAI.wei);
+    console.log(enoughToWipe); // todo remove dev item
     if (enoughToWipe) {
       try {
         await this.cdpService.shutProxy(this.proxyAddress, this.cdpId);

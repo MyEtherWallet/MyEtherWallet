@@ -388,26 +388,26 @@ export default {
     async lockEth() {
       console.log('lockEth'); // todo remove dev item
       if (toBigNumber(this.amount).gte(0)) {
+        this.delayCloseModal();
         await this.activeCdp.lockEth(this.amount);
-        this.closeModal();
       }
     },
     async drawDai() {
       if (toBigNumber(this.amount).gte(0)) {
+        this.delayCloseModal();
         await this.activeCdp.drawDai(this.amount);
-        this.closeModal();
       }
     },
     async freeEth() {
       if (toBigNumber(this.amount).gte(0)) {
+        this.delayCloseModal();
         await this.activeCdp.freeEth(this.amount);
-        this.closeModal();
       }
     },
     async wipeDai() {
       if (toBigNumber(this.amount).gte(0)) {
+        this.delayCloseModal();
         await this.activeCdp.wipeDai(this.amount);
-        this.closeModal();
       }
     },
 
@@ -427,6 +427,11 @@ export default {
     },
     closeModal() {
       this.$refs.modal.hide();
+    },
+    delayCloseModal() {
+      setTimeout(() => {
+        this.closeModal();
+      }, 200);
     }
   }
 };
