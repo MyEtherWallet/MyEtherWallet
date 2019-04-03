@@ -185,6 +185,10 @@ export default {
             {
               text: this.$t('footer.sendOffline'),
               to: '/send-offline-helper'
+            },
+            {
+              text: this.$t('footer.verifyMessage'),
+              to: '/verify-message'
             }
           ]
         },

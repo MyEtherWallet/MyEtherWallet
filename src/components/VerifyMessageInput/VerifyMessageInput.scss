@@ -1,11 +1,25 @@
-@import '../InterfaceContainer';
+@import '~@/scss/GlobalVariables';
 
-.content-container {
-  @extend %send-form-base;
-}
+.verify-content-container {
+  background-color: $white;
+  border-radius: 5px;
+  margin: 30px auto 0;
+  width: 100%;
 
-.verify-message-container {
-  @extend %interface-container;
+  // Desktop
+  @media all and (min-width: calc(#{$tablet-width} + 1px)) {
+    padding: 40px;
+  }
+
+  // Tablet
+  @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+    padding: 20px;
+  }
+
+  // Mobile
+  @media all and (max-width: $mobile-width) {
+    padding: 20px 10px;
+  }
 }
 
 .send-form {
@@ -15,7 +29,6 @@
       align-items: center;
       margin-bottom: 10px;
       padding: 0 8px;
-      width: 100%;
 
       .copy-buttons {
         color: $text-color-3;
@@ -38,7 +51,6 @@
       background-color: $background-color-1;
       border: 0;
       padding: 13px 15px;
-      width: 100%;
     }
 
     span {

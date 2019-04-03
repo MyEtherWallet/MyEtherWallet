@@ -11,5 +11,6 @@ export default {
   chainID: 3125659152,
   tokens: tokens,
   contracts: contracts,
-  icon: pirl
+  icon: pirl,
+  currencyName: 'PIRL'
 };
