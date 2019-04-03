@@ -399,13 +399,11 @@ export default class MakerCDP {
 
   async canCloseCdp() {
     const value = this.debtValue.toNumber();
-    return await this.cdp.enoughMkrToWipe(value, DAI.wei);
+    return await this.cdpService.enoughMkrToWipe(this.cdpId, value, DAI.wei);
   }
 
   async closeCdp() {
-    const value = this.debtValue.toNumber();
-    console.log(value); // todo remove dev item
-    const enoughToWipe = await this.cdp.enoughMkrToWipe(value, DAI.wei);
+    const enoughToWipe = await this.canCloseCdp();
     console.log(enoughToWipe); // todo remove dev item
     if (enoughToWipe) {
       try {

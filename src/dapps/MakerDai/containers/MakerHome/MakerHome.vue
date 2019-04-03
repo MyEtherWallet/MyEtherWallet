@@ -1,12 +1,8 @@
 <template>
   <div>
-    LOADING
-    <div class="dapps-button">
-      <!--<img :src="supported ? icon : iconDisabled" />-->
-      <div>
-        <h4>{{ title }}</h4>
-        <p>{{ desc }}</p>
-      </div>
+
+    <div class="">
+      LOADING
     </div>
   </div>
 </template>

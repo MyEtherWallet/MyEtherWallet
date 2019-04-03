@@ -153,7 +153,7 @@ export default {
   methods: {
     async closeCdp() {
       await this.activeCdp.closeCdp();
-      // this.closeModal();
+      this.closeModal();
     },
     displayPercentValue(raw) {
       if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);
