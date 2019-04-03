@@ -62,7 +62,8 @@
                     <p class="gwei">Gwei</p>
                   </div>
                   <p>
-                    {{ customGasEth }} {{ network.type.name }}
+                    {{ customGasEth }}
+                    {{ network.type.currencyName }}
                     <span
                       v-if="
                         ethPrice !== 0 &&
