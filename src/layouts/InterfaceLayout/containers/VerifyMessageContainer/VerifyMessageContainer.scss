@@ -1,0 +1,68 @@
+@import '../InterfaceContainer';
+
+p {
+  margin-bottom: 40px;
+  padding: $interface-text-padding-1;
+}
+
+.content-container {
+  @extend %send-form-base;
+}
+
+.sign-message-container {
+  @extend %interface-container;
+
+  .send-form {
+    margin-bottom: 30px;
+    .title-container {
+      .title {
+        align-items: center;
+        display: flex;
+        margin-bottom: 10px;
+        padding: $interface-text-padding-1;
+        width: 100%;
+
+        h4 {
+          margin-right: 7px;
+        }
+
+        .copy-buttons {
+          color: $text-color-3;
+          margin-left: auto;
+        }
+      }
+    }
+
+    .form-block {
+      @extend %form-block-base;
+    }
+  }
+
+  .submit-button-container {
+    margin-top: 60px;
+
+    // Mobile
+    @media all and (max-width: $mobile-width) {
+      margin-top: 30px;
+    }
+
+    .bottom-text {
+      text-align: center;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+
+      .submit-button {
+        margin: 0 5px;
+        text-align: center;
+        min-width: 300px;
+
+        @media all and (max-width: $mobile-width) {
+          width: 100%;
+        }
+      }
+    }
+  }
+}

@@ -100,6 +100,10 @@
 
   background-color: $light-green-1;
   border: 1px solid $mew-green;
+
+  b {
+    word-wrap: break-word;
+  }
 }
 
 .error-message {
