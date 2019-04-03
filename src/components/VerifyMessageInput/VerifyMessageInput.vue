@@ -50,8 +50,14 @@
 </template>
 
 <script>
-import { MessageUtil, Toast } from '@/helpers';
+import { Toast } from '@/helpers';
 import { mapGetters } from 'vuex';
+import {
+  toBuffer,
+  hashPersonalMessage,
+  ecrecover,
+  pubToAddress
+} from 'ethereumjs-util';
 
 export default {
   props: {
@@ -92,35 +98,25 @@ export default {
     verifyMessage() {
       try {
         const json = JSON.parse(this.message);
-        let hash = MessageUtil.hashPersonalMessage(
-          MessageUtil.toBuffer(json.msg)
-        );
-        const sig = Buffer.from(MessageUtil.getNakedAddress(json.sig), 'hex');
+        let hash = hashPersonalMessage(toBuffer(json.msg));
+        const sig = Buffer.from(json.sig.replace('0x', ''), 'hex');
         if (sig.length !== 65) {
           Toast.responseHandler('Something went wrong!', Toast.ERROR);
           return;
         }
-
         sig[64] = sig[64] === 0 || sig[64] === 1 ? sig[64] + 27 : sig[64];
-        if (json.version === '3') {
-          if (json.signer === 'trezor') {
-            hash = MessageUtil.getTrezorHash(json.msg);
-          } else if (json.signer === 'ledger') {
-            hash = MessageUtil.hashPersonalMessage(Buffer.from(json.msg));
-          }
-        } else if (json.version === '1') {
+        if (json.version === '1') {
           hash = this.web3.utils.sha3(json.msg);
         }
-
-        const pubKey = MessageUtil.ecrecover(
+        const pubKey = ecrecover(
           hash,
           sig[64],
           sig.slice(0, 32),
           sig.slice(32, 64)
         );
         if (
-          MessageUtil.getNakedAddress(json.address) !==
-          MessageUtil.pubToAddress(pubKey).toString('hex')
+          json.address.replace('0x', '') !==
+          pubToAddress(pubKey).toString('hex')
         ) {
           this.showMessage = false;
           Toast.responseHandler(
