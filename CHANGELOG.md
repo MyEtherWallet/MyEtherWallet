@@ -4,7 +4,6 @@
 
 - Fixes Bitbox error and Hardware wallet error handling [#893](https://github.com/MyEtherWallet/MyEtherWallet/pull/893)
 - Use Kyber supplied gas limits [#892](https://github.com/MyEtherWallet/MyEtherWallet/pull/892)
-- Use Kyber supplied gas limits [#892](https://github.com/MyEtherWallet/MyEtherWallet/pull/892)
 
 ### Feature
 
