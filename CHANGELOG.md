@@ -8,6 +8,7 @@
 ### Feature
 
 - Update verify message [#854](https://github.com/MyEtherWallet/MyEtherWallet/pull/854)
+- Show token transfer data in notification body [#840](https://github.com/MyEtherWallet/MyEtherWallet/pull/840)
 - Add curency symbol to config [#809](https://github.com/MyEtherWallet/MyEtherWallet/pull/809)
 - Add Browser options for Metamask on Safari [#867](https://github.com/MyEtherWallet/MyEtherWallet/pull/867)
 
