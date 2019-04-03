@@ -1,9 +1,9 @@
 <template>
   <div class="sign-message-container">
-    <verify-modal ref="verifyModal" :signature="signature" />
+    <signature-modal-modal ref="signatureModal" :signature="signature" />
     <interface-container-title :title="$t('common.signMessage')" />
     <div class="content-container">
-      <div v-show="signature === ''" class="send-form">
+      <div class="send-form">
         <p>{{ $t('interface.signMessageDesc') }}</p>
         <div class="title-container">
           <div class="title">
@@ -24,35 +24,9 @@
         </div>
       </div>
 
-      <div v-show="signature !== ''" class="send-form">
-        <div class="title-container">
-          <div class="title">
-            <h4>{{ $t('common.signature') }}</h4>
-            <popover :popcontent="$t('popover.signature')" />
-
-            <div class="copy-buttons">
-              <button class="title-button" @click="deleteInputText">
-                {{ $t('common.clear') }}
-              </button>
-              <button class="title-button" @click="copyToClipboard">
-                {{ $t('common.copy') }}
-              </button>
-            </div>
-          </div>
-        </div>
-        <div class="the-form domain-name">
-          <textarea
-            ref="signature"
-            v-model="signature"
-            class="custom-textarea-1"
-          />
-        </div>
-      </div>
-
       <div class="submit-button-container">
         <div class="buttons">
           <button
-            v-show="signature === ''"
             :class="[
               message.length > 0 ? '' : 'disabled',
               'submit-button large-round-button-green-filled clickable'
@@ -60,13 +34,6 @@
             @click="signMessage"
           >
             {{ $t('common.sign') }}
-          </button>
-          <button
-            v-show="signature !== ''"
-            :class="['submit-button large-round-button-green-filled clickable']"
-            @click="openVerify"
-          >
-            {{ $t('common.verify') }}
           </button>
         </div>
         <interface-bottom-text
@@ -84,14 +51,14 @@ import { mapGetters } from 'vuex';
 import { Toast } from '@/helpers';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
-import VerifyModal from '../../components/VerifyModal';
+import SignatureModal from '../../components/SignatureModal';
 
 export default {
   name: 'SignMessage',
   components: {
     'interface-bottom-text': InterfaceBottomText,
     'interface-container-title': InterfaceContainerTitle,
-    'verify-modal': VerifyModal
+    'signature-modal-modal': SignatureModal
   },
   data() {
     return {
@@ -121,6 +88,7 @@ export default {
             null,
             2
           );
+          this.$refs.signatureModal.$refs.signatureModal.show();
         })
         .catch(e => {
           Toast.responseHandler(e, false);
@@ -135,9 +103,6 @@ export default {
     deleteInputText() {
       this.signature = '';
       this.message = '';
-    },
-    openVerify() {
-      this.$refs.verifyModal.$refs.verifyModal.show();
     }
   }
 };

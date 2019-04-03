@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "@sentry/browser": "5.0.3",
+    "@sentry/integrations": "5.0.4",
     "html2canvas": "1.0.0-alpha.12",
     "idna-uts46": "1.1.0",
     "luxon": "1.12.0",

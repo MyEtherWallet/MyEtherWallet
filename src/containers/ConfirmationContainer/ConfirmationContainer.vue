@@ -381,7 +381,7 @@ export default {
       this.dismissed = false;
       this.responseFunction(this.signedMessage);
       this.$refs.signConfirmModal.$refs.signConfirmation.hide();
-      this.showSuccessModal();
+      // this.showSuccessModal();
     },
     generateTx() {
       this.dismissed = false;

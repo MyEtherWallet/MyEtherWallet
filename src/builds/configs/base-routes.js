@@ -25,6 +25,8 @@ const SwapContainer = () =>
   import('@/layouts/InterfaceLayout/containers/SwapContainer');
 const SignMessageContainer = () =>
   import('@/layouts/InterfaceLayout/containers/SignMessageContainer');
+const VerifyMessageContainer = () =>
+  import('@/layouts/InterfaceLayout/containers/VerifyMessageContainer');
 
 import dapps from '@/dapps/routes';
 
@@ -132,6 +134,11 @@ const router = [
         path: 'sign-message',
         name: 'Sign Message',
         component: SignMessageContainer
+      },
+      {
+        path: 'verify-message',
+        name: 'Verify Message',
+        component: VerifyMessageContainer
       }
     ]
   }
