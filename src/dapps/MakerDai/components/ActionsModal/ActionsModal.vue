@@ -34,6 +34,16 @@
             <p>
               {{ displayFixedValue(displayPercentValue(newCollateralRatio)) }}%
             </p>
+            <div v-if="!newCollateralRatioSafe && notZero(amount)">
+              <check-box>
+                <template v-slot:terms>
+                  I understand the new collateral ratio of
+                  {{
+                    displayFixedValue(displayPercentValue(newCollateralRatio))
+                  }}% may place my cdp at risk of liquidation.
+                </template>
+              </check-box>
+            </div>
           </div>
         </div>
         <div v-if="action === 'withdraw'" class="input-container">
@@ -210,7 +220,7 @@
         </div>
       </div>
       <div class="buttons-container">
-        <button class="cancel-btn" @click="closeModal">
+        <button  :class="['cancel-btn', canProceed ? '' : 'disable']" @click="closeModal">
           Cancel
         </button>
         <button class="submit-btn" @click="submitBtn">
@@ -226,6 +236,7 @@
 import { mapGetters } from 'vuex';
 
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
+import CheckBox from '../CheckBox';
 import BigNumber from 'bignumber.js/bignumber.js';
 
 const toBigNumber = num => {
@@ -234,7 +245,8 @@ const toBigNumber = num => {
 
 export default {
   components: {
-    'help-center-button': HelpCenterButton
+    'help-center-button': HelpCenterButton,
+    'check-box': CheckBox
   },
   props: {
     action: {
@@ -253,6 +265,7 @@ export default {
       amount: 0,
       amountEth: 0,
       amountDai: 0,
+      riskyBypass: false,
       modalDetailInformation: false,
       textValues: {}
     };
@@ -262,6 +275,9 @@ export default {
       web3: 'web3',
       network: 'network'
     }),
+    canProceed() {
+      return toBigNumber(this.newCollateralRatio).gt(1.5);
+    },
     newCollateralRatio() {
       if (this.activeCdp && this.amount > 0) {
         switch (this.action) {
@@ -354,6 +370,7 @@ export default {
   mounted() {},
   methods: {
     submitBtn() {
+      if (!this.canProceed) return;
       switch (this.action) {
         case 'deposit':
           this.lockEth();
@@ -371,6 +388,9 @@ export default {
           return {};
       }
     },
+    checkBoxClicked() {
+      this.riskyBypass = !this.riskyBypass;
+    },
     displayPercentValue(raw) {
       if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);
       return raw.times(100).toString();
@@ -378,6 +398,9 @@ export default {
     displayFixedValue(raw, decimals = 3) {
       if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);
       return raw.toFixed(decimals, BigNumber.ROUND_DOWN).toString();
+    },
+    notZero(val) {
+      return toBigNumber(val).gt(0);
     },
     maxDai() {
       this.amount = this.activeCdp.maxDai;

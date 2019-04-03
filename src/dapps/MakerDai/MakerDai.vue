@@ -394,7 +394,7 @@ export default {
     async doUpdate() {
       console.log('vue doUpdate'); // todo remove dev item
       this.proxyAddress = await this.proxyService.currentProxy();
-      await this.makerManager.doUpdate();
+      await this.makerManager.doUpdate(this.$route.name);
       this.availableCdps = this.makerManager.availableCdps;
       this.cdps = this.makerManager.cdpsWithProxy;
       this.cdpsWithoutProxy = this.makerManager.cdpsNoProxy;

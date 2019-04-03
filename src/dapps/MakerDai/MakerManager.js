@@ -187,7 +187,7 @@ export default class MakerManager {
   }
 
   async refresh() {
-    console.log('refresh'); // todo remove dev item
+    console.log('refreshing'); // todo remove dev item
     await this.locateCdps();
 
     const newCdps = this.cdps.filter(
@@ -218,7 +218,7 @@ export default class MakerManager {
     }
   }
 
-  async doUpdate() {
+  async doUpdate(route) {
     this.proxyAddress = await this.proxyService.currentProxy();
     console.log('updating'); // todo remove dev item
     let afterClose = false;
@@ -229,11 +229,11 @@ export default class MakerManager {
           afterClose = true;
           delete this.activeCdps[idProp];
           this.cdps = this.cdps.filter(item => item !== idProp);
+          this.cdpsWithoutProxy = this.cdpsWithoutProxy.filter(
+            item => item !== idProp
+          );
         } else if (this.activeCdps[idProp].opening) {
           await this.refresh();
-          // afterClose = true;
-          // delete this.activeCdps[idProp];
-          // this.cdps = this.cdps.filter(item => item !== idProp);
         } else {
           console.log('UPDATE CDP', idProp); // todo remove dev item
           this.activeCdps[idProp] = await this.activeCdps[idProp].update();
