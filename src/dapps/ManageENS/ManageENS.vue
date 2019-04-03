@@ -50,7 +50,6 @@ import DeedContractAbi from './ABI/deedContractAbi';
 import RegistryAbi from './ABI/registryAbi.js';
 import FifsRegistrarAbi from './ABI/fifsRegistrarAbi.js';
 import ResolverAbi from './ABI/resolverAbi.js';
-import bip39 from 'bip39';
 import * as unit from 'ethjs-unit';
 import * as nameHashPckg from 'eth-ens-namehash';
 import normalise from '@/helpers/normalise';
@@ -58,6 +57,8 @@ import { mapGetters } from 'vuex';
 import { Toast } from '@/helpers';
 import DNSRegistrar from '@ensdomains/dnsregistrar';
 import BigNumber from 'bignumber.js';
+
+const bip39 = require('bip39');
 
 export default {
   components: {
