@@ -5,7 +5,7 @@ import Vue from 'vue';
 
 describe('MenuTitle.vue', () => {
   let localVue, i18n, wrapper, store;
-  const title = 'title'
+  const title = 'title';
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
@@ -20,7 +20,7 @@ describe('MenuTitle.vue', () => {
       i18n,
       store,
       attachToDocument: true,
-      props: {title}
+      props: { title }
     });
   });
 

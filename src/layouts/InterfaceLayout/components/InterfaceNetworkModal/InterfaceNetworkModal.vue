@@ -379,7 +379,7 @@ export default {
           name: this.selectedNetwork.name,
           name_long: this.selectedNetwork.name_long,
           tokens: [],
-          currencyName: this.selectedNetwork.currencyName,
+          currencyName: this.selectedNetwork.currencyName
         },
         url: this.url,
         username: this.username
