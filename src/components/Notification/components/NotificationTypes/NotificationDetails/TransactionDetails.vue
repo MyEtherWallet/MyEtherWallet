@@ -14,12 +14,28 @@
           <p>{{ $t('header.status') }}:</p>
           <p :class="['status', txStatus.class]">({{ txStatus.text }})</p>
         </li>
-        <li>
+        <li v-if="isTokenTransfer">
+          <p>{{ $t('header.amount') }}:</p>
+          <p>{{ details.tokenTransferVal }} {{ details.tokenSymbol }}</p>
+        </li>
+        <li v-if="!isTokenTransfer">
           <p>{{ $t('header.amount') }}:</p>
           <p>{{ convertToEth(details.amount) }} {{ network.type.name }}</p>
         </li>
         <li>
           <p>{{ $t('common.toAddress') }}:</p>
+          <p>
+            <a
+              :href="addressLink(details.tokenTransferTo || details.to)"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              {{ details.tokenTransferTo || details.to }}
+            </a>
+          </p>
+        </li>
+        <li v-if="isTokenTransfer">
+          <p>Via contract:</p>
           <p>
             <a
               :href="addressLink(details.to)"
@@ -148,6 +164,12 @@ export default {
     },
     isError() {
       return this.notice.body.error;
+    },
+    isTokenTransfer() {
+      return (
+        this.notice.body.tokenTransferTo !== undefined &&
+        this.notice.body.tokenTransferTo !== null
+      );
     },
     details() {
       return this.notice.body;
