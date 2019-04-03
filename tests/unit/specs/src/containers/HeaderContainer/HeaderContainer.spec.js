@@ -39,7 +39,6 @@ describe('HeaderContainer.vue', () => {
     store = baseSetup.store;
 
     Vue.config.warnHandler = () => {};
-    Vue.config.errorHandler = () => {};
 
     dispatch = sinon.stub();
     store.dispatch = dispatch;

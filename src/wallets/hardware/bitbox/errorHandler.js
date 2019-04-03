@@ -15,12 +15,12 @@ export default err => {
   const errorValues = Object.keys(ERRORS);
   const warningValues = Object.keys(WARNING);
   const foundError = errorValues.find(item => {
-    if (err && err.includes(item)) return item;
+    if (err) return item;
     return item.includes(err.message) || item.includes(err);
   });
 
   const foundWarning = warningValues.find(item => {
-    if (err && err.includes(item)) return item;
+    if (err) return item;
     return item.includes(err.message) || item.includes(err);
   });
 
