@@ -39,9 +39,9 @@ import BigNumber from 'bignumber.js/bignumber.js';
 
 import { Misc } from '@/helpers';
 
-const toBigNumber = num => {
-  return new BigNumber(num);
-};
+// const toBigNumber = num => {
+//   return new BigNumber(num);
+// };
 
 export default {
   components: {

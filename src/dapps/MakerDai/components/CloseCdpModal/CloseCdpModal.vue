@@ -34,7 +34,7 @@
           </div>
         </div>
       </div>
-
+      {{ canClose }}
       <div class="buttons-container">
         <button class="cancel-btn" @click="closeModal">
           Cancel
@@ -86,6 +86,7 @@ export default {
       amountEth: 0,
       amountDai: 0,
       govFee: 0,
+      closable: false,
       modalDetailInformation: false,
       textValues: {},
       mkrToken: {}
@@ -98,6 +99,7 @@ export default {
     }),
     getfeeOwed() {
       const result = this.activeCdp.governanceFeeOwed;
+      console.log('fee owed', result); // todo remove dev item
       return this.displayFixedValue(result, 8);
     },
     newCollateralRatio() {
@@ -123,10 +125,13 @@ export default {
         return this.mkrToken.balance;
       }
       return 0;
+    },
+    canClose() {
+      return this.closable;
     }
   },
   watch: {},
-  mounted() {
+  async mounted() {
     this.mkrToken = this.tokensWithBalance.find(item => {
       return (
         item.symbol === 'MKR' ||
@@ -134,12 +139,21 @@ export default {
           '0xAaF64BFCC32d0F15873a02163e7E500671a4ffcD'.toLowerCase()
       );
     });
+    this.$refs.modal.$on('shown', async () => {
+      if (this.activeCdp) {
+        this.closable = await this.activeCdp.canCloseCdp();
+        console.log('can close', this.closable); // todo remove dev item
+        return this.closable;
+      }
+      this.closable = false;
+    });
     // eslint-disable-next-line
     console.log(this.tokensWithBalance); // todo remove dev item
   },
   methods: {
-    closeCdp() {
-      this.activeCdp.closeCdp();
+    async closeCdp() {
+      await this.activeCdp.closeCdp();
+      // this.closeModal();
     },
     displayPercentValue(raw) {
       if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);

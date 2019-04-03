@@ -7,9 +7,6 @@
         <h4>{{ title }}</h4>
         <p>{{ desc }}</p>
       </div>
-      <!--<router-link :to="param" tag="div">-->
-
-      <!--</router-link>-->
     </div>
   </div>
 </template>
@@ -41,5 +38,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'MakerDai';
+@import 'MakerHome';
 </style>

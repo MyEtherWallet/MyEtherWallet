@@ -34,12 +34,12 @@
     </move-cdp-modal>
     <!--<div class="container-maker">-->
     <div>
-      <button @click="showClose">
-        CLOSE
-      </button>
-      <button @click="showMove">
-        MOVE
-      </button>
+      <!--      <button @click="showClose">-->
+      <!--        CLOSE-->
+      <!--      </button>-->
+      <!--      <button @click="showMove">-->
+      <!--        MOVE-->
+      <!--      </button>-->
       <div class="migrate-cdp-container">
         <div v-if="noProxy && !finishMigration" class="migrate-cdp">
           <button @click="migrateCdpToProxy">Migrate Existing CDP</button>
@@ -224,6 +224,14 @@ export default {
     blockie: Blockie
   },
   props: {
+    openCloseModal:{
+      type: Boolean,
+      default: false
+    },
+    openMoveModal:{
+      type: Boolean,
+      default: false
+    },
     tokensWithBalance: {
       type: Array,
       default: function() {
@@ -289,10 +297,22 @@ export default {
       }
     },
     ['$route.params.cdpId'](val){
-      console.log(val); // todo remove dev item
+      console.log('val', val); // todo remove dev item
       if(this.makerManager.hasCdp(val)){
         this.activeCdp = this.makerManager.getCdp(val)
+        console.log(this.activeCdp.cdpId); // todo remove dev item
         // this.activeCdp = this.availableCdps[val];
+      }
+    },
+    openCloseModal(val){
+      console.log('openCloseModal', val); // todo remove dev item
+      if(val){
+        this.showClose();
+      }
+    },
+    openMoveModal(val){
+      if(val){
+        this.showMove();
       }
     }
   },
@@ -327,6 +347,8 @@ export default {
         console.log('this.activeCdp', this.activeCdp); // todo remove dev item
       }
     }
+
+
   },
   methods: {
     async migrateCdpToProxy() {
@@ -334,6 +356,7 @@ export default {
     },
     showDeposit() {
       this.$refs.deposit.$refs.modal.show();
+
       // this.$refs.action.$refs.modal.show();
     },
     showWithdraw() {
@@ -346,9 +369,15 @@ export default {
       this.$refs.generate.$refs.modal.show();
     },
     showClose() {
+      this.$refs.closeCdp.$refs.modal.$on('hidden', () =>{
+        this.$emit('modalHidden')
+      })
       this.$refs.closeCdp.$refs.modal.show();
     },
     showMove() {
+      this.$refs.moveCdp.$refs.modal.$on('hidden', () =>{
+        this.$emit('modalHidden')
+      })
       this.$refs.moveCdp.$refs.modal.show();
     },
     displayPercentValue(raw) {

@@ -1,9 +1,6 @@
 import BigNumber from 'bignumber.js';
-import Maker from '@makerdao/dai';
 import { toChecksumAddress } from '@/helpers/addressUtils';
 import MakerCDP from './MakerCDP';
-import MewPlugin from './dai-plugin-mew';
-import { ERC20 } from '../../partners/partnersConfig';
 
 const toBigNumber = num => {
   return new BigNumber(num);
@@ -36,10 +33,20 @@ export default class MakerManager {
     return this.currentProxy;
   }
 
+  get cdpsWithProxy() {
+    return this.cdps;
+  }
+
+  get cdpsNoProxy() {
+    return this.cdpsWithoutProxy;
+  }
+
   get makerActive() {}
 
   hasCdp(cdpId) {
-    return Object.keys(this.activeCdps).includes(cdpId);
+    console.log(`${cdpId}`); // todo remove dev item
+    console.log(Object.keys(this.activeCdps)); // todo remove dev item
+    return Object.keys(this.activeCdps).includes(toBigNumber(cdpId).toString());
   }
 
   getCdp(cdpId) {
@@ -181,9 +188,7 @@ export default class MakerManager {
 
   async refresh() {
     console.log('refresh'); // todo remove dev item
-    const { withProxy, withoutProxy } = await this.locateCdps();
-    this.cdps = withProxy;
-    this.cdpsWithoutProxy = withoutProxy;
+    await this.locateCdps();
 
     const newCdps = this.cdps.filter(
       item => !Object.keys(this.activeCdps).includes(item)
@@ -204,7 +209,7 @@ export default class MakerManager {
       );
     }
 
-    if (withProxy.length > 0 || withoutProxy.length > 0) {
+    if (this.cdps.length > 0 || this.cdpsWithoutProxy.length > 0) {
       await this.doUpdate();
       this.routeHandlers.manage();
     } else {
@@ -224,6 +229,11 @@ export default class MakerManager {
           afterClose = true;
           delete this.activeCdps[idProp];
           this.cdps = this.cdps.filter(item => item !== idProp);
+        } else if (this.activeCdps[idProp].opening) {
+          await this.refresh();
+          // afterClose = true;
+          // delete this.activeCdps[idProp];
+          // this.cdps = this.cdps.filter(item => item !== idProp);
         } else {
           console.log('UPDATE CDP', idProp); // todo remove dev item
           this.activeCdps[idProp] = await this.activeCdps[idProp].update();

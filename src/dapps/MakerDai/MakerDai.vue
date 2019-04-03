@@ -1,6 +1,19 @@
 <template>
   <div class="container-maker">
-    <interface-container-title :title="'MAKER'" />
+    <interface-container-title :title="'MAKER'">
+      <template v-slot:right>
+        <div v-if="showMoveOrClose" class="header-buttons-container">
+          <div class="inner-container">
+            <button class="move-btn" @click="showMove">
+              <h4>Move CDP</h4>
+            </button>
+            <button class="close-btn" @click="showClose">
+              <h4>Close CDP</h4>
+            </button>
+          </div>
+        </div>
+      </template>
+    </interface-container-title>
 
     <div v-show="makerActive" class="buttons-container">
       <div v-if="showCreate" class="dapps-button">
@@ -13,6 +26,7 @@
           <h4>List All</h4>
         </div>
       </div>
+      {{ showRefresh }}
       <div v-if="showRefresh">
         <div class="dapps-button" @click="refresh">
           <h4>Refresh</h4>
@@ -59,8 +73,11 @@
       :cdp-details-loaded="cdpDetailsLoaded"
       :tokens-with-balance="tokensWithBalance"
       :migration-in-progress="migrationInProgress"
+      :open-close-modal="openCloseModal"
+      :open-move-modal="openMoveModal"
       @cdpOpened="addCdp"
       @cdpClosed="removeCdp"
+      @modalHidden="modalHidden"
     >
     </router-view>
   </div>
@@ -74,6 +91,8 @@ import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
+import CloseCdpModal from './components/CloseCdpModal';
+import MoveCdpModal from './components/MoveCdpModal';
 import BigNumber from 'bignumber.js';
 import Maker from '@makerdao/dai';
 import { toChecksumAddress } from '@/helpers/addressUtils';
@@ -99,7 +118,9 @@ export default {
     'interface-container-title': InterfaceContainerTitle,
     'interface-bottom-text': InterfaceBottomText,
     blockie: Blockie,
-    'back-button': BackButton
+    'back-button': BackButton,
+    'close-cdp-modal': CloseCdpModal,
+    'move-cdp-modal': MoveCdpModal
   },
   props: {
     tokensWithBalance: {
@@ -140,7 +161,10 @@ export default {
       availableCdps: {},
       cdpDetailsLoaded: false,
       currentProxy: null,
+      openCloseModal: false,
+      openMoveModal: false,
       migrationInProgress: {},
+      activeCdp: {},
       makerCdp: {},
       makerManager: {},
       sysVars: {},
@@ -149,6 +173,7 @@ export default {
   },
   watch: {
     ['account.address']() {
+      this.makerActive = false;
       this.setup();
     }
   },
@@ -167,6 +192,9 @@ export default {
     minEthDeposit() {
       if (this.daiQty <= 0) return 0;
       return bnOver(this.liquidationRatio, this.daiQty, this.ethPrice);
+    },
+    showMoveOrClose(){
+      return this.$route.name === 'manage' || this.$route.name === 'migrate'
     },
     showManage() {
       return (
@@ -193,10 +221,32 @@ export default {
       return this.cdps.length > 1 || this.cdpsWithoutProxy.length > 1;
     }
   },
+  destroyed(){
+    this.maker = {};
+    this.priceService = {};
+    this.cdpService = {};
+    this.proxyService = {};
+    this.availableCdps = {};
+    this.activeCdp = {};
+    this.makerCdp = {};
+    this.makerManager = {};
+    this.sysVars = {};
+    this.sysServices = {};
+  },
   async mounted() {
     await this.setup();
   },
   methods: {
+    showClose() {
+      this.openCloseModal = true;
+    },
+    showMove() {
+      this.openMoveModal = true;
+    },
+    modalHidden() {
+      this.openCloseModal = false;
+      this.openMoveModal = false;
+    },
     async setup() {
       this.gotoHome();
       const MewMakerPlugin = MewPlugin(
@@ -217,6 +267,9 @@ export default {
         plugins: [MewMakerPlugin],
         accounts: {
           myLedger1: { type: 'mew' }
+        },
+        web3: {
+          statusTimerDelay: 10000,
         },
         log: true
       });
@@ -335,110 +388,17 @@ export default {
       await this.makerManager.migrateCdp(cdpId);
     },
     async refresh() {
-      console.log('refresh'); // todo remove dev item
+      console.log('vue refresh'); // todo remove dev item
       await this.makerManager.refresh();
-      // const { withProxy, withoutProxy } = await this.makerManager.locateCdps();
-      // this.cdps = withProxy;
-      // this.cdpsWithoutProxy = withoutProxy;
-      //
-      // const newCdps = this.cdps.filter(
-      //   item => !Object.keys(this.availableCdps).includes(item)
-      // );
-      //
-      // const newCdpsWithoutProxy = this.cdpsWithoutProxy.filter(
-      //   item => !Object.keys(this.availableCdps).includes(item)
-      // );
-      //
-      // for (let i = 0; i < newCdps.length; i++) {
-      //   this.availableCdps[newCdps[i]] = await this.buildCdpObject(newCdps[i]);
-      // }
-      //
-      // for (let i = 0; i < newCdpsWithoutProxy.length; i++) {
-      //   this.availableCdps[newCdpsWithoutProxy[i]] = await this.buildCdpObject(
-      //     newCdpsWithoutProxy[i],
-      //     { noProxy: true }
-      //   );
-      // }
-      //
-      // if (withProxy.length > 0 || withoutProxy.length > 0) {
-      //   await this.doUpdate();
-      //   this.goToManage();
-      // } else {
-      //   this.availableCdps = {};
-      //   this.gotoCreate();
-      // }
     },
     async doUpdate() {
+      console.log('vue doUpdate'); // todo remove dev item
       this.proxyAddress = await this.proxyService.currentProxy();
       await this.makerManager.doUpdate();
       this.availableCdps = this.makerManager.availableCdps;
-      // console.log('updating'); // todo remove dev item
-      // let afterClose = false;
-      // // this.migrationInProgress = false;
-      // for (let idProp in this.availableCdps) {
-      //   if (this.availableCdps[idProp].needsUpdate) {
-      //     if (this.availableCdps[idProp].closing) {
-      //       afterClose = true;
-      //       this.$delete(this.availableCdps, idProp);
-      //       this.cdps = this.cdps.filter(item => item !== idProp);
-      //     } else if (this.availableCdps[idProp].migrateCdpActive) {
-      //       // await this.availableCdps[idProp].migrateCdpComplete();
-      //     } else {
-      //       console.log('UPDATE CDP', idProp); // todo remove dev item
-      //       this.availableCdps[idProp] = await this.availableCdps[
-      //         idProp
-      //       ].update();
-      //     }
-      //   }
-      // }
-      //
-      // if (afterClose || this.migrationInProgress) {
-      //   console.log('after close or move'); // todo remove dev item
-      //   const { withProxy, withoutProxy } = await this.locateCdps();
-      //   this.cdps = withProxy;
-      //   this.cdpsWithoutProxy = withoutProxy;
-      //   this.goToManage();
-      // }
+      this.cdps = this.makerManager.cdpsWithProxy;
+      this.cdpsWithoutProxy = this.makerManager.cdpsNoProxy;
     },
-    // async locateCdpsWithoutProxy() {
-    //   const directCdps = await this.maker.getCdpIds(
-    //     this.account.address //proxy
-    //   );
-    //   const directCdpsCheckSum = await this.maker.getCdpIds(
-    //     toChecksumAddress(this.account.address)
-    //   );
-    //
-    //   return directCdps.concat(directCdpsCheckSum);
-    // },
-    // async locateCdpsProxy() {
-    //   const proxy = await this.maker
-    //     .service('proxy')
-    //     .getProxyAddress(this.account.address);
-    //
-    //   return await this.maker.getCdpIds(proxy);
-    // },
-    // async locateCdps() {
-    //   const directCdps = await this.locateCdpsWithoutProxy();
-    //   console.log(directCdps); // todo remove dev item
-    //
-    //   const cdps = await this.locateCdpsProxy();
-    //
-    //   return { withProxy: cdps, withoutProxy: directCdps };
-    // },
-    // async loadCdpDetails() {
-    //   for (let i = 0; i < this.cdps.length; i++) {
-    //     this.availableCdps[this.cdps[i]] = await this.buildCdpObject(
-    //       this.cdps[i]
-    //     );
-    //   }
-    //   for (let i = 0; i < this.cdpsWithoutProxy.length; i++) {
-    //     this.availableCdps[
-    //       this.cdpsWithoutProxy[i]
-    //     ] = await this.buildCdpObject(this.cdpsWithoutProxy[i], {
-    //       noProxy: true
-    //     });
-    //   }
-    // },
     async buildCdpObject(cdpId, options = {}) {
       const sysVars = {
         ethPrice: this.ethPrice,

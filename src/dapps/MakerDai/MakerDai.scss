@@ -2,6 +2,7 @@
 
 $dapp-button-mobile-width: 650px;
 $dapps-container-mobile-width: 650px;
+$confirmation-modal-mobile-width: 500px;
 
 %interface-container {
   border-radius: 5px;
@@ -10,6 +11,80 @@ $dapps-container-mobile-width: 650px;
 
   > div {
     background: $background-color-white;
+  }
+}
+
+//.content-title {
+//  align-items: center;
+//  background-color: $background-color-white;
+//  border-bottom: 2px solid $background-color-1;
+//  display: flex;
+//  padding: 15px 0;
+//
+//  h2 {
+//    border-left: 5px solid $background-color-2;
+//    font-size: 24px;
+//    font-weight: 500;
+//    line-height: 37px;
+//    margin: 0;
+//    padding: 0;
+//    padding-left: 27px;
+//
+//    @media all and (max-width: $mobile-width) {
+//      line-height: 23px;
+//      font-size: 18px;
+//      padding-left: 10px;
+//    }
+//  }
+//}
+
+//.side-menu-button {
+//  display: none;
+//  margin-left: auto;
+//  margin-right: 20px;
+//
+//  @media all and (max-width: $interface--mobile-side-menu--width) {
+//    display: block;
+//  }
+//}
+
+.header-buttons-container {
+  margin-left: 500px;
+  display: flex;
+  flex-direction: row;
+  align-content: flex-end;
+  justify-content: right;
+
+  .inner-container {
+    display: flex;
+    // Mobile
+    @media all and (max-width: $mobile-width) {
+      margin-top: 30px;
+    }
+
+    button {
+      margin-left: 10px;
+      text-align: center;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .move-btn {
+      background-color: $white;
+      width: 120px;
+      height: 34px;
+      border-radius: 4px;
+      border: solid 1px #05c0a5;
+      color: #05c0a5;
+    }
+    .close-btn {
+      background-color: $white;
+      width: 120px;
+      height: 34px;
+      border-radius: 4px;
+      border: solid 1px #e96071;
+      color: #e96071;
+    }
   }
 }
 

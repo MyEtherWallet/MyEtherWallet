@@ -1,3 +1,3 @@
-import MakerDai from './MakerDai';
+import MakerDai from './MakerHome';
 
 export default MakerDai;
