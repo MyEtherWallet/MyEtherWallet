@@ -2,6 +2,10 @@
 
 - Use Kyber supplied gas limits [#892](https://github.com/MyEtherWallet/MyEtherWallet/pull/892)
 
+### Devop
+
+- Add monospace font[#898](https://github.com/MyEtherWallet/MyEtherWallet/pull/898)
+
 ### Release v5.0.8-kyc
 
 - Implement KYC quiz [#881](https://github.com/MyEtherWallet/MyEtherWallet/pull/881)
