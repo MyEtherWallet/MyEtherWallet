@@ -11,6 +11,7 @@
 
 ### Bug
 
+- Fix custom token validation [#852](https://github.com/MyEtherWallet/MyEtherWallet/pull/852)
 - Change mobile side menu button title from "Change" to "Menu" [#887](https://github.com/MyEtherWallet/MyEtherWallet/pull/887)
 - Fix notification to show max 5 notification popups[#873](https://github.com/MyEtherWallet/MyEtherWallet/pull/873)
 - Display final re-calculated values on swap confirmation[#841](https://github.com/MyEtherWallet/MyEtherWallet/pull/841)
