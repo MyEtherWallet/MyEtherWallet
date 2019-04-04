@@ -2,7 +2,7 @@
   <div class="hardware-layout">
     <div class="hardware-container">
       <div class="hardware-text">
-        <h2>Hardwares</h2>
+        <h2>Buy a Hardware wallet</h2>
         <p>
           Purchase a hardware wallet for the highest security when accessing
           your crypto.
