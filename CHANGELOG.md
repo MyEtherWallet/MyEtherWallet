@@ -2,6 +2,10 @@
 
 - Use Kyber supplied gas limits [#892](https://github.com/MyEtherWallet/MyEtherWallet/pull/892)
 
+### Bug
+
+- Fix wide header bug[#907](https://github.com/MyEtherWallet/MyEtherWallet/pull/907)
+
 ### Release v5.0.8-kyc
 
 - Implement KYC quiz [#881](https://github.com/MyEtherWallet/MyEtherWallet/pull/881)
