@@ -26,7 +26,6 @@
           <h4>List All</h4>
         </div>
       </div>
-      {{ showRefresh }}
       <div v-if="showRefresh">
         <div class="dapps-button" @click="refresh">
           <h4>Refresh</h4>

@@ -276,7 +276,9 @@ export default {
       network: 'network'
     }),
     canProceed() {
-      return toBigNumber(this.newCollateralRatio).gt(1.5);
+      console.log('newCollateralRatio', this.newCollateralRatio.toString()); // todo remove dev item
+      const ratio = toBigNumber(this.newCollateralRatio);
+      return ratio.gt(1.5) || ratio.eq(0);
     },
     newCollateralRatio() {
       if (this.activeCdp && this.amount > 0) {
