@@ -398,8 +398,6 @@ export default {
 
 
 
-
-
       // eslint-disable-next-line
       console.log('vue doUpdate'); // todo remove dev item
       this.proxyAddress = await this.proxyService.currentProxy();
