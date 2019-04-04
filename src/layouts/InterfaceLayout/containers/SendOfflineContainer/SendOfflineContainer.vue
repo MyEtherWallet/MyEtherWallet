@@ -368,7 +368,6 @@ export default {
       const locAmount = amount !== null ? amount : this.toAmt;
       const locAddress = address !== null ? address : this.address;
       const locCurrency = currency !== null ? currency : this.selectedCoinType;
-      console.log(locAmount, locAddress, locCurrency);
       const abi = [
         {
           constant: false,
