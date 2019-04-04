@@ -8,6 +8,7 @@
 
 ### Feature
 
+- Add hardware page [#862](https://github.com/MyEtherWallet/MyEtherWallet/pull/862)
 - Reimplement query params for send offline and regular send [#803](https://github.com/MyEtherWallet/MyEtherWallet/pull/803)
 - Show token transfer data in notification body [#840](https://github.com/MyEtherWallet/MyEtherWallet/pull/840)
 - Add curency symbol to config [#809](https://github.com/MyEtherWallet/MyEtherWallet/pull/809)
