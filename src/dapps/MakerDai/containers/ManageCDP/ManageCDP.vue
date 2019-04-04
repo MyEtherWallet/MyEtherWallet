@@ -32,14 +32,7 @@
       :tokens-with-balance="tokensWithBalance"
     >
     </move-cdp-modal>
-    <!--<div class="container-maker">-->
     <div>
-      <!--      <button @click="showClose">-->
-      <!--        CLOSE-->
-      <!--      </button>-->
-      <!--      <button @click="showMove">-->
-      <!--        MOVE-->
-      <!--      </button>-->
       <div class="migrate-cdp-container">
         <div v-if="noProxy && !finishMigration" class="migrate-cdp">
           <button @click="migrateCdpToProxy">Migrate Existing CDP</button>
@@ -62,7 +55,7 @@
           <p>{{ $t('dapps.liquidPrice') }} (ETH/USD)</p>
           <p>
             <span class="blue-bold">{{
-              displayFixedValue(activeCdp.liquidationPrice, 2)
+              liquidationPriceDisplay
             }}</span>
             <span class="liq-usd"> USD</span>
           </p>
@@ -90,7 +83,7 @@
         <div class="info-label-one-right">
           <p>{{ $t('dapps.collateralRatio') }}</p>
           <p class="blue-bold">
-            {{ displayFixedValue(displayPercentValue(activeCdp.collatRatio)) }}%
+            {{ collaterlizationRatioDisplay }}%
           </p>
         </div>
         <div class="info-content-one-right">
@@ -334,7 +327,20 @@ export default {
         return this.activeCdp.needToFinishMigrating;
       }
     },
-
+    liquidationPriceDisplay() {
+      const value = this.displayFixedValue(this.activeCdp.liquidationPrice, 2)
+      if (value > 0) {
+        return value;
+      }
+      return '--'
+    },
+    collaterlizationRatioDisplay(){
+      const value = this.displayFixedValue(this.displayPercentValue(this.activeCdp.collatRatio))
+      if(isFinite(value)){
+        return value;
+      }
+      return '--'
+    }
   },
   async mounted() {
     this.cdpId = this.$route.params.cdpId;
