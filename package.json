@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "5.0.8-kyc",
+  "version": "5.0.9",
   "description": "Client side ethereum wallet",
   "licsense": "MIT",
   "repository": "https://github.com/myetherwallet/myetherwallet",
@@ -46,7 +46,8 @@
     "vue-router": "3.0.2",
     "vue-toasted": "1.1.26",
     "vuex": "3.1.0",
-    "weekstart": "1.0.0"
+    "weekstart": "1.0.0",
+    "xss": "1.0.6"
   },
   "devDependencies": {
     "@ensdomains/dnsregistrar": "0.3.1",
@@ -56,7 +57,7 @@
     "@ledgerhq/hw-transport-u2f": "4.48.0",
     "@myetherwallet/eth-token-balance": "0.1.4",
     "@myetherwallet/mewconnect-web-client": "1.0.14",
-    "@vue/cli-plugin-babel": "3.5.3",
+    "@vue/cli-plugin-babel": "3.5.5",
     "@vue/cli-plugin-eslint": "3.5.1",
     "@vue/cli-plugin-pwa": "3.5.1",
     "@vue/cli-plugin-unit-jest": "3.5.3",
@@ -69,10 +70,10 @@
     "babel-eslint": "10.0.1",
     "babel-jest": "23.6.0",
     "bignumber.js": "8.1.1",
-    "bip39": "2.5.0",
+    "bip39": "3.0.0",
     "bootstrap-vue": "2.0.0-rc.16",
     "canvas": "1.6.13",
-    "codecov": "3.2.0",
+    "codecov": "3.3.0",
     "copy-webpack-plugin": "5.0.2",
     "eslint-plugin-security": "1.4.0",
     "eth-ens-namehash": "2.0.8",
@@ -113,7 +114,7 @@
     "unused-files-webpack-plugin": "3.4.0",
     "uuid": "3.3.2",
     "vue-i18n": "8.10.0",
-    "vue-tel-input": "2.0.19",
+    "vue-tel-input": "2.0.21",
     "vue-template-compiler": "2.6.10",
     "vue-worker": "1.2.1",
     "wallet-address-validator": "0.2.4",

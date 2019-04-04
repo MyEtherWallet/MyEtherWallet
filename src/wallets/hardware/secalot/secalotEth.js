@@ -1,4 +1,5 @@
 'use strict';
+import { toBuffer } from 'ethereumjs-util';
 
 const SecalotEth = function(comm, pinCode) {
   this.comm = comm;
@@ -231,10 +232,9 @@ SecalotEth.prototype.signMessage = function(path, message, callback) {
       }
     }
   };
-
-  message =
-    '\x19Ethereum Signed Message:\n' + message.length.toString() + message;
-  rawData = Buffer.from(Buffer.from(message).toString('hex'), 'hex');
+  message = toBuffer(message);
+  const prefix = '\x19Ethereum Signed Message:\n' + message.length.toString();
+  rawData = Buffer.concat([toBuffer(prefix), message]);
 
   while (offset !== rawData.length) {
     const maxChunkSize = 64;

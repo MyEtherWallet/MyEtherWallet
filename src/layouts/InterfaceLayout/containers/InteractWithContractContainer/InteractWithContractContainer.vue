@@ -508,6 +508,7 @@ export default {
             return res;
           })
           .catch(e => {
+            this.loading = false;
             Toast.responseHandler(e, Toast.ERROR);
             errored = true;
           });
@@ -525,8 +526,8 @@ export default {
             to: this.address.toLowerCase(),
             data: data
           };
+          this.loading = false;
           web3.eth.sendTransaction(raw).catch(err => {
-            this.loading = false;
             Toast.responseHandler(err, Toast.ERROR);
           });
         }

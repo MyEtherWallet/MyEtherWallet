@@ -11,5 +11,6 @@ export default {
   chainID: 64,
   tokens: tokens,
   contracts: contracts,
-  icon: ella
+  icon: ella,
+  currencyName: 'ELLA'
 };
