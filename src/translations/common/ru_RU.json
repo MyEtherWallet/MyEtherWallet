@@ -3,7 +3,7 @@
   "accessMyWallet": "Войти в мой кошелек",
   "accessWallet": "Получить доступ к кошельку",
   "faqs": "ЧаВо",
-  "sendTx": "Отправить ETH и токены",
+  "sendTx": "Send Transaction",
   "sendSafeSendTx": "Protect Your ETH Transaction Using SafeSend",
   "swap": "Обменять",
   "unlockWallet": "Разблокировать кошелек",
@@ -75,5 +75,6 @@
   "nonce": "Nonce",
   "vintage": "Vintage",
   "okay": "Okay",
-  "ok": "OK"
+  "ok": "OK",
+  "menu": "Menu"
 }

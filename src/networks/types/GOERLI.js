@@ -18,5 +18,6 @@ export default {
     registrarType: 'fifs',
     supportedTld: GOERLI
   },
-  icon: goerli
+  icon: goerli,
+  currencyName: 'GöETH'
 };
