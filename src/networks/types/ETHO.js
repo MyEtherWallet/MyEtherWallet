@@ -11,5 +11,6 @@ export default {
   chainID: 1313114,
   tokens: tokens,
   contracts: contracts,
-  icon: etho
+  icon: etho,
+  currencyName: 'ETHO'
 };
