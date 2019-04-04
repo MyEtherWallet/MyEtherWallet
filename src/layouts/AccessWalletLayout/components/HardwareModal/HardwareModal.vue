@@ -251,6 +251,7 @@ export default {
           );
           break;
       }
+      this.$refs.hardware.hide();
     },
     select(ref) {
       if (this.selected !== ref) {

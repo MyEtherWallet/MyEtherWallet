@@ -11,5 +11,6 @@ export default {
   chainID: 88,
   tokens: tokens,
   contracts: contracts,
-  icon: tomo
+  icon: tomo,
+  currencyName: 'TOMO'
 };

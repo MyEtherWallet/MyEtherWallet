@@ -227,7 +227,8 @@ export default {
       account: 'account',
       gasPrice: 'gasPrice',
       web3: 'web3',
-      network: 'network'
+      network: 'network',
+      linkQuery: 'linkQuery'
     }),
     isValidAmount() {
       const txFee = new BigNumber(ethUnit.toWei(this.gasPrice, 'gwei')).times(
@@ -247,7 +248,7 @@ export default {
       const notEnoughCurrencyMsg =
         this.$t('errorsGlobal.notAValidAmountTotal') +
         ' ' +
-        this.network.type.name +
+        this.network.type.currencyName +
         ' ' +
         this.$t('errorsGlobal.toSend');
       const invalidValueMsg = this.$t('errorsGlobal.invalidValue');
@@ -313,7 +314,8 @@ export default {
       );
     },
     isToken() {
-      return this.selectedCurrency.symbol !== this.network.type.name;
+      const symbol = this.network.type.currencyName;
+      return this.selectedCurrency.symbol !== symbol;
     },
     txData() {
       if (this.isToken) {
@@ -349,6 +351,26 @@ export default {
     multiWatch: utils._.debounce(function() {
       if (this.validInputs) this.estimateGas();
     }, 500)
+  },
+  mounted() {
+    if (Object.keys(this.linkQuery).length > 0) {
+      const { data, to, value, gaslimit, tokensymbol } = this.linkQuery;
+      const foundToken = this.tokensWithBalance.find(item => {
+        return item.symbol.toLowerCase() === tokensymbol.toLowerCase();
+      });
+      this.value = value ? new BigNumber(value).toFixed() : 0;
+      this.data = data ? data : '0x';
+      this.hexAddress = to ? to : '';
+      this.address = to ? to : '';
+      this.gasLimit = gaslimit ? new BigNumber(gaslimit).toString() : '21000';
+      this.selectedCurrency = foundToken ? foundToken : this.selectedCurrency;
+
+      Toast.responseHandler(
+        'Form has been prefilled. Please proceed with caution!',
+        Toast.WARN
+      );
+      this.$store.dispatch('saveQueryVal', {});
+    }
   },
   methods: {
     sendEntireBalance() {
