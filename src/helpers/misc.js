@@ -1,9 +1,16 @@
 import normalise from '@/helpers/normalise';
 import nodeList from '@/networks';
 import { isAddress } from './addressUtils';
+import url from 'url';
 import utils from 'web3-utils';
 import store from '@/store';
 import { uint, address, string, bytes, bool } from './solidityTypes';
+
+const capitalize = value => {
+  if (!value) return '';
+  value = value.toString();
+  return value.charAt(0).toUpperCase() + value.slice(1);
+};
 /* Accepts string, returns boolean */
 const isJson = str => {
   try {
@@ -13,6 +20,15 @@ const isJson = str => {
   }
 
   return true;
+};
+
+const getService = parsableUrl => {
+  const parsedUrl = url.parse(parsableUrl).hostname;
+  const splitUrl = parsedUrl.split('.');
+  if (splitUrl.length > 2)
+    // eslint-disable-next-line
+    return capitalize(`${splitUrl[1]}.${splitUrl[2]}`);
+  return capitalize(splitUrl.join('.'));
 };
 
 const doesExist = val => val !== undefined && val !== null;
@@ -170,5 +186,7 @@ export default {
   reorderNetworks,
   isDarklisted,
   solidityType,
-  isInt
+  isInt,
+  capitalize,
+  getService
 };

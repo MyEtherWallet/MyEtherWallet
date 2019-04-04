@@ -7,6 +7,10 @@
     centered
   >
     <div class="modal-content-container">
+      <p class="hardware-link">
+        Want to get a Hardware wallet?
+        <router-link to="/hardware-wallet-affiliates">Click here!</router-link>
+      </p>
       <finney-modal ref="finney" />
       <div class="d-block text-center">
         <b-alert :show="mayNotBeAttached" fade variant="warning"
@@ -251,6 +255,7 @@ export default {
           );
           break;
       }
+      this.$refs.hardware.hide();
     },
     select(ref) {
       if (this.selected !== ref) {
