@@ -63,7 +63,7 @@ import { Toast } from '@/helpers';
 import { isSupported } from 'u2f-api';
 import platform from 'platform';
 import {
-  LedgerWallet,
+  // LedgerWallet,
   KeepkeyWallet,
   TrezorWallet,
   BitBoxWallet,
@@ -81,6 +81,10 @@ export default {
       default: function() {}
     },
     hardwareWalletOpen: {
+      type: Function,
+      default: function() {}
+    },
+    ledgerAppOpen: {
       type: Function,
       default: function() {}
     }
@@ -198,15 +202,17 @@ export default {
       }, 1000);
       switch (this.selected) {
         case 'ledger':
-          LedgerWallet()
-            .then(_newWallet => {
-              clearTimeout(showPluggedInReminder);
-              this.$emit('hardwareWalletOpen', _newWallet);
-            })
-            .catch(e => {
-              this.mayNotBeAttached = true;
-              LedgerWallet.errorHandler(e);
-            });
+          this.$refs.hardware.hide();
+          this.ledgerAppOpen();
+          // LedgerWallet()
+          //   .then(_newWallet => {
+          //     clearTimeout(showPluggedInReminder);
+          //     this.$emit('hardwareWalletOpen', _newWallet);
+          //   })
+          //   .catch(e => {
+          //     this.mayNotBeAttached = true;
+          //     LedgerWallet.errorHandler(e);
+          //   });
           break;
         case 'trezor':
           TrezorWallet()

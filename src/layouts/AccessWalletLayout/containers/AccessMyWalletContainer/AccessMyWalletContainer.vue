@@ -1,5 +1,10 @@
 <template>
   <div class="access-my-wallet-options">
+    <ledger-app-modal
+      ref="ledgerAppModal"
+      :select-app="selectApp"
+      :networks="Networks"
+    />
     <mew-connect-modal
       ref="mewconnectModal"
       :network-and-address-open="networkAndAddressOpen"
@@ -7,6 +12,7 @@
 
     <hardware-modal
       ref="hardwareModal"
+      :ledger-app-open="ledgerAppModalOpen"
       :network-and-address-open="networkAndAddressOpen"
       @hardwareRequiresPassword="hardwarePasswordModalOpen"
       @hardwareWalletOpen="hardwareWalletOpen"
@@ -96,6 +102,7 @@ import PrivateKeyModal from '../../components/PrivateKeyModal';
 import SoftwareModal from '../../components/SoftwareModal';
 import MnemonicPasswordModal from '../../components/MnemonicPasswordModal';
 import MnemonicModal from '../../components/MnemonicModal';
+import LedgerAppModal from '../../components/LedgerAppModal';
 import WalletPasswordModal from '@/components/WalletPasswordModal';
 import EnterPinNumberModal from '@/components/EnterPinNumberModal';
 
@@ -128,7 +135,8 @@ export default {
     'mnemonic-password-modal': MnemonicPasswordModal,
     'access-wallet-button': AccessWalletButton,
     'wallet-password-modal': WalletPasswordModal,
-    'enter-pin-number-modal': EnterPinNumberModal
+    'enter-pin-number-modal': EnterPinNumberModal,
+    'ledger-app-modal': LedgerAppModal
   },
   data() {
     return {
@@ -189,7 +197,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      online: 'online'
+      online: 'online',
+      Networks: 'Networks'
     })
   },
   mounted() {
@@ -198,8 +207,12 @@ export default {
         btn.disabled = this.isDisabled(btn.classname);
       });
     });
+    this.selectApp();
   },
   methods: {
+    selectApp() {
+      console.log(this.Networks);
+    },
     isDisabled(className) {
       switch (className) {
         case 'button-mewconnect':
@@ -218,6 +231,9 @@ export default {
     },
     mewConnectModalOpen() {
       this.$refs.mewconnectModal.$refs.mewConnect.show();
+    },
+    ledgerAppModalOpen() {
+      this.$refs.ledgerAppModal.$refs.ledgerApp.show();
     },
     networkAndAddressOpen() {
       this.$refs.networkandaddressModal.$refs.networkAndAddress.show();

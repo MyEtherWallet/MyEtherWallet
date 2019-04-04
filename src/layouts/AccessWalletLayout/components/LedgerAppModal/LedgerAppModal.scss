@@ -1,0 +1,58 @@
+@import '~@/scss/GlobalVariables';
+
+.ledger-app-container {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.ledger-app {
+  align-items: center;
+  border: 1px solid $dark-grey-11;
+  border-radius: 5px;
+  display: flex;
+  cursor: pointer;
+  flex-direction: column;
+  height: 100px;
+  justify-content: center;
+  margin: 5px;
+  width: 100px;
+
+  .app-image-container {
+    align-items: center;
+    background-color: $dark-blue-1;
+    border-radius: 100%;
+    display: flex;
+    justify-content: center;
+    height: 50px;
+    width: 50px;
+
+    img {
+      height: 30px;
+    }
+  }
+
+  &:hover {
+    @extend %active;
+  }
+
+}
+
+.selected {
+  @extend %active;
+}
+
+%active {
+  border: 1px solid $white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  transform: scale(1.05);
+
+  .app-image-container {
+    background-color: $mew-green;
+  }
+
+  span {
+    color: $mew-green;
+  }
+}
