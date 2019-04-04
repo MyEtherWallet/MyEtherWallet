@@ -1,6 +1,7 @@
 <template>
   <div class="providers-radio-selector">
     <!-- =========================================================================== -->
+    {{providerChosen}}
     <div v-show="providerData.length > 0" class="radio-button-container">
       <ul>
         <li
@@ -232,6 +233,10 @@ export default {
     switchCurrencyOrder: {
       type: Boolean,
       default: false
+    },
+    reselectProvider: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -274,6 +279,15 @@ export default {
       }
     }
   },
+  watch: {
+    reselectProvider(value) {
+      console.log('reselectProvider', value); // todo remove dev item
+      if (value !== '' && value) {
+        this.setSelectedProvider(value);
+        this.providerChosen = value;
+      }
+    }
+  },
   methods: {
     otherProviders() {
       const activeProviders = this.listActiveProviders();
@@ -288,11 +302,16 @@ export default {
       });
     },
     listActiveProviders() {
+      console.log('listActive'); // todo remove dev item
       this.$nextTick(() => {
         if (this.providerData.length === 1) {
           this.setSelectedProvider(this.providerData[0].provider);
         } else {
           this.providerChosen = '';
+          if (this.reselectProvider !== '' && this.reselectProvider) {
+            this.setSelectedProvider(this.reselectProvider);
+            // this.providerChosen = this.reselectProvider;
+          }
         }
       });
 
@@ -316,6 +335,7 @@ export default {
       return +this.fromValue > details.maxValue && details.maxValue > 0;
     },
     setSelectedProvider(provider) {
+      console.log('set selected'); // todo remove dev item
       this.providerChosen = provider;
       const providerEls = document.getElementsByClassName('providers');
       Array.prototype.forEach.call(providerEls, function(el) {
