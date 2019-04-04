@@ -28,7 +28,7 @@ router.beforeResolve((to, ___, next) => {
     if (queryKeys.length > 1) {
       const blankObj = {};
       for (const key in to.query) {
-        blankObj[key] = xss(to.query);
+        blankObj[key] = xss(to.query[key]);
       }
 
       store.dispatch('saveQueryVal', blankObj);

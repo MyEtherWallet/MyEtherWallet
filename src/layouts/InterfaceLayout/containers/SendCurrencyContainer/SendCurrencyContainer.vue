@@ -358,6 +358,7 @@ export default {
       const foundToken = this.tokensWithBalance.find(item => {
         return item.symbol.toLowerCase() === tokensymbol.toLowerCase();
       });
+
       this.value = value ? new BigNumber(value).toFixed() : 0;
       this.data = data ? data : '0x';
       this.hexAddress = to ? to : '';
