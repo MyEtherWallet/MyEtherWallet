@@ -387,10 +387,12 @@ export default {
       await this.makerManager.migrateCdp(cdpId);
     },
     async refresh() {
+      // eslint-disable-next-line
       console.log('vue refresh'); // todo remove dev item
       await this.makerManager.refresh();
     },
     async doUpdate() {
+      // eslint-disable-next-line
       console.log('vue doUpdate'); // todo remove dev item
       this.proxyAddress = await this.proxyService.currentProxy();
       await this.makerManager.doUpdate(this.$route.name);
