@@ -2,12 +2,16 @@
 
 ### Devop
 
+- Add monospace font[#898](https://github.com/MyEtherWallet/MyEtherWallet/pull/898)
+- Add Gage on team page [#853](https://github.com/MyEtherWallet/MyEtherWallet/pull/853)
 - Fixes Bitbox error and Hardware wallet error handling [#893](https://github.com/MyEtherWallet/MyEtherWallet/pull/893)
 - Use Kyber supplied gas limits [#892](https://github.com/MyEtherWallet/MyEtherWallet/pull/892)
 
 ### Feature
 
 - Update verify message [#854](https://github.com/MyEtherWallet/MyEtherWallet/pull/854)
+- Add hardware page [#862](https://github.com/MyEtherWallet/MyEtherWallet/pull/862)
+- Reimplement query params for send offline and regular send [#803](https://github.com/MyEtherWallet/MyEtherWallet/pull/803)
 - Show token transfer data in notification body [#840](https://github.com/MyEtherWallet/MyEtherWallet/pull/840)
 - Add curency symbol to config [#809](https://github.com/MyEtherWallet/MyEtherWallet/pull/809)
 - Add Browser options for Metamask on Safari [#867](https://github.com/MyEtherWallet/MyEtherWallet/pull/867)
@@ -25,8 +29,6 @@
 - Allow zero as nonce for offline transaction [#860](https://github.com/MyEtherWallet/MyEtherWallet/pull/860)
 - Resolve spinner on interact contract [#861](https://github.com/MyEtherWallet/MyEtherWallet/pull/841)
 - Fix incorrect signing of messages starts with 0x [#899](https://github.com/MyEtherWallet/MyEtherWallet/pull/899)
-
-### Release v5.0.8-kyc
 
 ### Hotfix v5.0.8-hotfix.1
 
