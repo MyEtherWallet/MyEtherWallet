@@ -264,7 +264,8 @@ export default {
     ...mapGetters({
       wallet: 'wallet',
       network: 'network',
-      web3: 'web3'
+      web3: 'web3',
+      linkQuery: 'linkQuery'
     }),
     txSpeedMsg() {
       const net = this.network.type.name;
@@ -324,6 +325,26 @@ export default {
     },
     selectedCoinType(newVal) {
       this.createDataHex(null, null, newVal);
+    }
+  },
+  mounted() {
+    if (Object.keys(this.linkQuery).length > 0) {
+      const { data, to, value, gaslimit, gas, tokensymbol } = this.linkQuery;
+      const foundToken = this.tokens.find(item => {
+        return item.symbol.toLowerCase() === tokensymbol.toLowerCase();
+      });
+      this.toAmt = value ? new BigNumber(value).toFixed() : 0;
+      this.toData = data ? data : '0x';
+      this.address = to ? to : '';
+      this.gasLimit = gaslimit ? new BigNumber(gaslimit).toString() : '21000';
+      this.localGasPrice = gas ? new BigNumber(gas).toFixed() : 0;
+      this.selectedCoinType = foundToken ? foundToken : this.selectedCoinType;
+
+      Toast.responseHandler(
+        'Form has been prefilled. Please proceed with caution!',
+        Toast.WARN
+      );
+      this.$store.dispatch('saveQueryVal', {});
     }
   },
   methods: {
