@@ -13,7 +13,10 @@
           <div class="balance-text-container">
             <div v-show="balance !== undefined" class="balance-text">
               <p>
-                {{ balance }} <span>{{ network.type.name }}</span>
+                {{ balance }}
+                <span>
+                  {{ network.type.currencyName }}
+                </span>
               </p>
             </div>
             <i v-show="balance === undefined" class="fa fa-spin fa-spinner" />

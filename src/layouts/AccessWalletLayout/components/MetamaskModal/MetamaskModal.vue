@@ -7,7 +7,23 @@
     centered
   >
     <div class="modal-content">
-      <div v-if="web3WalletExists">
+      <div v-if="isSafari" class="browser-catch">
+        <h4>
+          MetaMask is only available in these browsers:
+        </h4>
+        <div class="browser-logo-container">
+          <a
+            v-for="browser in browsers"
+            :key="browser.name"
+            :href="browser.link"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <img :src="browser.logo" />
+          </a>
+        </div>
+      </div>
+      <div v-else-if="web3WalletExists">
         <div class="modal-multi-icons">
           <img
             class="icon"
@@ -101,6 +117,11 @@ import { Web3Wallet } from '@/wallets/software';
 import { Toast } from '@/helpers';
 import Web3 from 'web3';
 import { mapGetters } from 'vuex';
+import platform from 'platform';
+import brave from '@/assets/images/browser/brave.png';
+import chrome from '@/assets/images/browser/chrome.png';
+import firefox from '@/assets/images/browser/firefox.png';
+import opera from '@/assets/images/browser/opera.png';
 
 export default {
   components: {
@@ -117,7 +138,30 @@ export default {
       accessMyWalletBtnDisabled: true,
       unlockWeb3Wallet: false,
       web3WalletExists: false,
-      refreshPage: false
+      refreshPage: false,
+      isSafari: false,
+      browsers: [
+        {
+          logo: brave,
+          link: 'https://brave.com/',
+          name: 'brave'
+        },
+        {
+          logo: firefox,
+          link: 'https://www.mozilla.org/en-US/firefox/?v=b',
+          name: 'firefox'
+        },
+        {
+          logo: opera,
+          link: 'https://www.opera.com/',
+          name: 'opera'
+        },
+        {
+          logo: chrome,
+          link: 'https://www.google.com/chrome/',
+          name: 'chrome'
+        }
+      ]
     };
   },
   computed: {
@@ -126,6 +170,7 @@ export default {
     })
   },
   mounted() {
+    this.isSafari = platform.name.toLowerCase() === 'safari';
     this.web3WalletExists = this.checkWeb3();
   },
   methods: {
