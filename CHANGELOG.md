@@ -2,7 +2,7 @@
 
 ### Devop
 
-- Update hardwares []()
+- Update hardwares [#906](https://github.com/MyEtherWallet/MyEtherWallet/pull/906)
 - Add monospace font[#898](https://github.com/MyEtherWallet/MyEtherWallet/pull/898)
 - Add Gage on team page [#853](https://github.com/MyEtherWallet/MyEtherWallet/pull/853)
 - Fixes Bitbox error and Hardware wallet error handling [#893](https://github.com/MyEtherWallet/MyEtherWallet/pull/893)
