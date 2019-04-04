@@ -59,7 +59,7 @@
         <div
           :class="[
             (isMobileMenuOpen || !isPageOnTop) && 'mobile-menu-boxshadow',
-            wallet !== null ? '' : 'page-container'
+            isWideHeader ? '' : 'page-container'
           ]"
         >
           <div class="header-container">
@@ -252,7 +252,8 @@ export default {
       gasPrice: '0',
       error: {},
       resolver: () => {},
-      showGettingStarted: ''
+      showGettingStarted: '',
+      isWideHeader: this.widthHeader
     };
   },
   computed: {
@@ -261,7 +262,8 @@ export default {
       online: 'online',
       web3: 'web3',
       account: 'account',
-      gettingStartedDone: 'gettingStartedDone'
+      gettingStartedDone: 'gettingStartedDone',
+      widthHeader: 'widthHeader'
     }),
     showButtons() {
       if (
@@ -290,6 +292,10 @@ export default {
     },
     web3() {
       this.setHighGasPrice();
+    },
+    widthHeader(newState) {
+      this.isWideHeader = newState;
+      console.log(this.isWideHeader);
     }
   },
   mounted() {

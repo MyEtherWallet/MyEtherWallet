@@ -208,9 +208,11 @@ export default {
   },
   mounted() {
     this.setupOnlineEnvironment();
+    this.$store.commit('SET_WIDE_HEADER', true);
   },
   destroyed() {
     this.clearIntervals();
+    this.$store.commit('SET_WIDE_HEADER', false);
   },
   methods: {
     openAddressQrcode() {

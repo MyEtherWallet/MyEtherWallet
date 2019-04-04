@@ -43,6 +43,9 @@ const web3 = state => {
 const sidemenuOpen = state => {
   return state.sidemenuOpen;
 };
+const widthHeader = state => {
+  return state.widthHeader;
+};
 const darklist = state => {
   return state.darklist;
 };
@@ -72,5 +75,6 @@ export default {
   sidemenuOpen,
   darklist,
   gettingStartedDone,
-  blockNumber
+  blockNumber,
+  widthHeader
 };

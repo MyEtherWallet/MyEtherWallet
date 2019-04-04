@@ -111,6 +111,10 @@ const TOGGLE_SIDEMENU = function(state) {
   state.sidemenuOpen = !state.sidemenuOpen;
 };
 
+const SET_WIDE_HEADER = function(state, newState) {
+  state.widthHeader = newState;
+};
+
 export default {
   ADD_NOTIFICATION,
   ADD_SWAP_TRANSACTION,
@@ -129,5 +133,6 @@ export default {
   UPDATE_SWAP_TRANSACTION,
   TOGGLE_SIDEMENU,
   GETTING_STARTED_DONE,
-  UPDATE_BLOCK_NUMBER
+  UPDATE_BLOCK_NUMBER,
+  SET_WIDE_HEADER
 };
