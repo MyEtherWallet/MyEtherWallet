@@ -183,8 +183,8 @@ export default {
                 'https://chrome.google.com/webstore/detail/myetherwallet/nlbmnnijcnlegkjjpcfjclmcfggfefdm?hl=en'
             },
             {
-              text: 'Hardwares',
-              to: '/harware-wallet-affiliates'
+              text: 'Buy a Hardware wallet',
+              to: '/hardware-wallet-affiliates'
             },
             {
               text: this.$t('footer.sendOffline'),
