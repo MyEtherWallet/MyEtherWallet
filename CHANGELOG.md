@@ -2,6 +2,7 @@
 
 ### Devop
 
+- Add Gage on team page [#853](https://github.com/MyEtherWallet/MyEtherWallet/pull/853)
 - Fixes Bitbox error and Hardware wallet error handling [#893](https://github.com/MyEtherWallet/MyEtherWallet/pull/893)
 - Use Kyber supplied gas limits [#892](https://github.com/MyEtherWallet/MyEtherWallet/pull/892)
 
