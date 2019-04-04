@@ -1,0 +1,76 @@
+@import '~@/scss/GlobalVariables';
+
+.hardware-layout {
+  background-color: $light-grey-2;
+}
+
+.hardware-container {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  padding: 70px 30px;
+
+  .hardware-text {
+    text-align: center;
+
+    h2 {
+      color: $dark-blue-6;
+    }
+
+    p {
+      color: $dark-blue-1;
+      padding-bottom: 30px;
+    }
+  }
+
+  .hardware-item {
+    align-items: center;
+    background-color: $white;
+    border-radius: 5px;
+    display: flex;
+    // height: 170px;
+    max-width: 720px;
+    margin: 14px 0;
+    padding: 26px 34px;
+
+    @media all and (max-width: $mobile-width) {
+      flex-direction: column-reverse;
+    }
+
+    .hardware-item-text {
+      flex: 1;
+
+      .item-description {
+        padding-top: 11px;
+      }
+
+      .starting-from {
+        color: $dark-grey-11;
+        font-size: 11px;
+      }
+
+      .price-container {
+        font-weight: bold;
+
+        p {
+          color: $dark-blue-2;
+          font-size: 20px;
+          left: 15px;
+          position: relative;
+        }
+
+        span {
+          position: absolute;
+          left: -15px;
+          top: -2px;
+        }
+      }
+    }
+
+    .hardware-item-logo {
+      img {
+        height: 124px;
+      }
+    }
+  }
+}

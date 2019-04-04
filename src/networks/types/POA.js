@@ -11,5 +11,6 @@ export default {
   chainID: 99,
   tokens: tokens,
   contracts: contracts,
-  icon: poa
+  icon: poa,
+  currencyName: 'POA'
 };

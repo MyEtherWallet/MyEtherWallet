@@ -9,5 +9,6 @@ export default {
   blockExplorerAddr: 'https://blocks.mix-blockchain.org/address/[[address]]',
   chainID: 76,
   tokens: tokens,
-  contracts: contracts
+  contracts: contracts,
+  currencyName: 'MIX'
 };

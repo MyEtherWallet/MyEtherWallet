@@ -417,6 +417,7 @@ export default {
       } else {
         selectedPath = this.selectedPath;
       }
+
       this.hardwareWallet
         .init(selectedPath)
         .then(() => {
@@ -428,7 +429,7 @@ export default {
         .catch(error => {
           // if HD path is not supported by the hardware
           this.HDAccounts = [];
-          this.hardwareWallet.errorHandler(error);
+          Toast.responseHandler(error, Toast.ERROR);
         });
       this.selectedPath = this.hardwareWallet.getCurrentPath();
     },
