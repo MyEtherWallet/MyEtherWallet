@@ -392,6 +392,14 @@ export default {
       await this.makerManager.refresh();
     },
     async doUpdate() {
+
+
+      //lkhkjhkljhljhkloj
+
+
+
+
+
       // eslint-disable-next-line
       console.log('vue doUpdate'); // todo remove dev item
       this.proxyAddress = await this.proxyService.currentProxy();
