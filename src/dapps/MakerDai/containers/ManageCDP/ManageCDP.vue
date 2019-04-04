@@ -54,9 +54,7 @@
         <div class="info-label-one-left">
           <p>{{ $t('dapps.liquidPrice') }} (ETH/USD)</p>
           <p>
-            <span class="blue-bold">{{
-              liquidationPriceDisplay
-            }}</span>
+            <span class="blue-bold">{{ liquidationPriceDisplay }}</span>
             <span class="liq-usd"> USD</span>
           </p>
         </div>
@@ -82,9 +80,7 @@
         </div>
         <div class="info-label-one-right">
           <p>{{ $t('dapps.collateralRatio') }}</p>
-          <p class="blue-bold">
-            {{ collaterlizationRatioDisplay }}%
-          </p>
+          <p class="blue-bold">{{ collaterlizationRatioDisplay }}%</p>
         </div>
         <div class="info-content-one-right">
           <div class="info-content-one-inner-top">

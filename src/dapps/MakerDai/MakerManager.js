@@ -218,7 +218,7 @@ export default class MakerManager {
     }
   }
 
-  async doUpdate(route) {
+  async doUpdate(/*route*/) {
     this.proxyAddress = await this.proxyService.currentProxy();
     console.log('updating'); // todo remove dev item
     let afterClose = false;
@@ -294,10 +294,4 @@ export default class MakerManager {
     };
   }
 
-  // getMkrBalance(){
-  //   const methodObject = new this.web3.eth.Contract(
-  //     ERC20,
-  //     this.getTokenAddress(fromToken)
-  //   ).methods.approve(this.getKyberNetworkAddress(), fromValueWei);
-  // }
 }
