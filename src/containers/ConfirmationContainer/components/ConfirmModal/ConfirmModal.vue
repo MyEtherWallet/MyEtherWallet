@@ -179,24 +179,12 @@ export default {
   },
   watch: {
     data(newVal) {
-      parseTokensData(
-        newVal,
-        this.to,
-        this.web3,
-        this.network.type.tokens,
-        this.network.type.name
-      );
+      this.parseData(newVal);
     }
   },
   mounted() {
     if (this.data !== '0x') {
-      parseTokensData(
-        this.data,
-        this.to,
-        this.web3,
-        this.network.type.tokens,
-        this.network.type.name
-      );
+      this.parseData();
     }
   },
   methods: {
@@ -204,6 +192,19 @@ export default {
       if (this.signedTx !== '') {
         this.confirmSendTx();
       }
+    },
+    parseData(val) {
+      const localVal = val ? val : this.data;
+      const tokenInfo = parseTokensData(
+        localVal,
+        this.to,
+        this.web3,
+        this.network.type.tokens,
+        this.network.type.name
+      );
+      this.tokenTransferTo = tokenInfo.tokenTransferTo;
+      this.tokenTransferVal = tokenInfo.tokenTransferVal;
+      this.tokenSymbol = tokenInfo.tokenSymbol;
     }
   }
 };
