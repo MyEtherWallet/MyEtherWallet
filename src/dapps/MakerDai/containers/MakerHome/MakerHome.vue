@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <div class="">
       LOADING
     </div>

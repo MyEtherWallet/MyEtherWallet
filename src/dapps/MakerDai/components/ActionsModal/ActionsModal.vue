@@ -220,7 +220,10 @@
         </div>
       </div>
       <div class="buttons-container">
-        <button  :class="['cancel-btn', canProceed ? '' : 'disable']" @click="closeModal">
+        <button
+          :class="['cancel-btn', canProceed ? '' : 'disable']"
+          @click="closeModal"
+        >
           Cancel
         </button>
         <button class="submit-btn" @click="submitBtn">
