@@ -1,8 +1,9 @@
 import HDWalletInterface from '@/wallets/HDWalletInterface';
 import * as HDKey from 'hdkey';
-const bip39 = require('bip39');
 import { hashPersonalMessage, ecsign, toBuffer } from 'ethereumjs-util';
 import ethTx from 'ethereumjs-tx';
+
+const bip39 = require('bip39');
 const ETH_PATH = "m/44'/60'/0'/0";
 const mnemonic =
   'board shadow cave liquid sand hour maid capable stand candy frog slogan intact error glimpse project galaxy tackle table sausage salute west airport umbrella';
