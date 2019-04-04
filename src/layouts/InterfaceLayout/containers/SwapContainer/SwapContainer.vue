@@ -168,6 +168,7 @@
             :provider-selected="selectedProvider"
             :switch-currency-order="switchCurrencyOrder"
             :all-supported-providers="supportedProviders"
+            :reselect-provider="reselectProvider"
             @selectedProvider="setSelectedProvider"
           />
         </div>
@@ -288,7 +289,7 @@ export default {
         {
           network: this.$store.state.network.type.name,
           web3: this.$store.state.web3,
-          getRateForUnit: true
+          getRateForUnit: false
         },
         { tokensWithBalance: this.tokensWithBalance }
       ),
@@ -322,7 +323,11 @@ export default {
       loadingError: false,
       switchCurrencyOrder: false,
       bityExitToFiat: false,
-      exitToFiatCallback: () => {}
+      revisingRate: false,
+      reselectProvider: '',
+      exitToFiatCallback: () => {},
+      debounceUpdateEstimate: {},
+      debounceDoThing: {}
     };
   },
   computed: {
@@ -349,6 +354,7 @@ export default {
       }
     },
     fromBelowMinAllowed() {
+      if (this.revisingRate) return false;
       if (new BigNumber(MIN_SWAP_AMOUNT).gt(new BigNumber(this.fromValue)))
         return `${this.$t('interface.belowMin')} ${MIN_SWAP_AMOUNT}`;
       if (
@@ -363,6 +369,7 @@ export default {
       return false;
     },
     fromAboveMaxAllowed() {
+      if (this.revisingRate) return false;
       if (this.selectedProvider.provider === this.providerNames.bity) {
         if (this.checkBityMax) {
           return this.$t('interface.aboveMax', {
@@ -384,12 +391,14 @@ export default {
       return false;
     },
     toBelowMinAllowed() {
+      if (this.revisingRate) return false;
       if (this.checkBityMin) return this.$t('interface.belowMinGeneral');
       if (new BigNumber(0).gte(new BigNumber(this.toValue)))
         return this.$t('interface.belowMinGeneral');
       return false;
     },
     toAboveMaxAllowed() {
+      // if(this.revisingRate) return false;
       if (this.checkBityMax) return this.$t('interface.aboveMaxGeneral');
       return false;
     },
@@ -404,18 +413,19 @@ export default {
     },
     validSwap() {
       // initial chack.  will provide an alert on the next screen if no address is provided
-      const canExit =
-        this.isExitToFiat && this.fromCurrency !== this.baseCurrency
-          ? this.exitFromAddress !== ''
-          : true;
-      return (
-        this.hasEnough &&
-        (this.toAddress !== '' || canExit) &&
-        this.allAddressesValid &&
-        this.selectedProvider.minValue <= +this.fromValue &&
-        (+this.fromValue <= this.selectedProvider.maxValue ||
-          this.selectedProvider.maxValue === 0)
-      );
+      // const canExit =
+      //   this.isExitToFiat && this.fromCurrency !== this.baseCurrency
+      //     ? this.exitFromAddress !== ''
+      //     : true;
+      // return (
+      //   this.hasEnough &&
+      //   (this.toAddress !== '' || canExit) &&
+      //   this.allAddressesValid &&
+      //   this.selectedProvider.minValue <= +this.fromValue &&
+      //   (+this.fromValue <= this.selectedProvider.maxValue ||
+      //     this.selectedProvider.maxValue === 0)
+      // );
+      return true;
     },
     checkBityMin() {
       if (this.swap.isProvider(this.providerNames.bity)) {
@@ -549,6 +559,14 @@ export default {
     this.toArray = toArray;
     this.fromArray = fromArray;
     this.currentAddress = this.account.address;
+    this.debounceUpdateEstimate = this.web3.utils._.debounce(
+      this.updateEstimate,
+      300
+    );
+    this.debounceReviseRateEstimate = this.web3.utils._.debounce(
+      this.updateRateEstimate,
+      2000
+    );
   },
   methods: {
     reset() {
@@ -638,6 +656,12 @@ export default {
       }
     },
     amountChanged(direction) {
+      // const debounceUpdateEstimate = this.web3.utils._.debounce(
+      //   this.updateEstimate,
+      //   200
+      // );
+      // const debounceDoThing = this.web3.utils._.debounce(this.doThing, 1000);
+      console.log('amountChanged', direction); // todo remove dev item
       if (
         (isValidEntry(this.fromValue) && direction === 'from') ||
         (isValidEntry(this.toValue) && direction === 'to')
@@ -652,11 +676,19 @@ export default {
             200
           );
         } else {
-          this.web3.utils._.debounce(this.updateEstimate(direction), 200);
+          // this.updateEstimate(direction)
+          this.debounceUpdateEstimate(direction);
+          const fromCur = this.fromCurrency;
+          const toCur = this.toCurrency;
+          const fromVal = this.fromValue;
+          this.debounceReviseRateEstimate(fromCur, toCur, fromVal, direction);
+          // this.web3.utils._.debounce(this.updateEstimate(direction), 200);
+          // this.web3.utils._.throttle(this.doThing(), 1000);
         }
       }
     },
     async updateEstimate(input) {
+      console.log('update estimate'); // todo remove dev item
       let fromValue, toValue, simplexProvider, simplexRateDetails;
       switch (input) {
         case 'to':
