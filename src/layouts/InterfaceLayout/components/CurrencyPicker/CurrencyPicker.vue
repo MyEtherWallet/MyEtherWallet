@@ -70,6 +70,12 @@ export default {
     token: {
       type: Boolean,
       default: true
+    },
+    default: {
+      type: Object,
+      default: () => {
+        return {};
+      }
     }
   },
   data() {
@@ -114,6 +120,9 @@ export default {
     },
     selectedCurrency(newVal) {
       this.$emit('selectedCurrency', newVal);
+    },
+    default(newVal) {
+      if (newVal.hasOwnProperty('symbol')) this.selectedCurrency = newVal;
     }
   },
   mounted() {
