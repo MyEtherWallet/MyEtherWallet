@@ -9,6 +9,7 @@
 
 ### Feature
 
+- Update verify message [#854](https://github.com/MyEtherWallet/MyEtherWallet/pull/854)
 - Add hardware page [#862](https://github.com/MyEtherWallet/MyEtherWallet/pull/862)
 - Reimplement query params for send offline and regular send [#803](https://github.com/MyEtherWallet/MyEtherWallet/pull/803)
 - Show token transfer data in notification body [#840](https://github.com/MyEtherWallet/MyEtherWallet/pull/840)
@@ -27,6 +28,7 @@
 - Fix hardware wallet scroll bug[#890](https://github.com/MyEtherWallet/MyEtherWallet/pull/890)
 - Allow zero as nonce for offline transaction [#860](https://github.com/MyEtherWallet/MyEtherWallet/pull/860)
 - Resolve spinner on interact contract [#861](https://github.com/MyEtherWallet/MyEtherWallet/pull/841)
+- Fix incorrect signing of messages starts with 0x [#899](https://github.com/MyEtherWallet/MyEtherWallet/pull/899)
 
 ### Hotfix v5.0.8-hotfix.1
 
