@@ -1,4 +1,5 @@
 import store from 'store';
+import { Toast } from '@/helpers';
 
 const ADD_NOTIFICATION = function(state, newNotif) {
   state.notifications = newNotif;
@@ -33,8 +34,7 @@ const CHECK_IF_ONLINE = async function(state) {
     )
       .then(res => res.json())
       .catch(e => {
-        // eslint-disable-next-line no-console
-        console.log(e);
+        Toast.responseHandler(e, Toast.ERROR);
       });
     state.darklist = {
       data: darkList,
@@ -111,6 +111,10 @@ const TOGGLE_SIDEMENU = function(state) {
   state.sidemenuOpen = !state.sidemenuOpen;
 };
 
+const SAVE_QUERY_VAL = function(state, newQuery) {
+  state.linkQuery = newQuery;
+};
+
 export default {
   ADD_NOTIFICATION,
   ADD_SWAP_TRANSACTION,
@@ -129,5 +133,6 @@ export default {
   UPDATE_SWAP_TRANSACTION,
   TOGGLE_SIDEMENU,
   GETTING_STARTED_DONE,
-  UPDATE_BLOCK_NUMBER
+  UPDATE_BLOCK_NUMBER,
+  SAVE_QUERY_VAL
 };

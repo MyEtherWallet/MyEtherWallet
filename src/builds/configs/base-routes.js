@@ -27,6 +27,7 @@ const SignMessageContainer = () =>
   import('@/layouts/InterfaceLayout/containers/SignMessageContainer');
 const VerifyMessageContainer = () =>
   import('@/layouts/InterfaceLayout/containers/VerifyMessageContainer');
+const HardwaresLayout = () => import('@/layouts/HardwaresLayout');
 
 import dapps from '@/dapps/routes';
 
@@ -71,6 +72,12 @@ const router = [
     path: '/getting-started',
     name: 'GettingStarted',
     component: GettingStarted,
+    meta: { requiresAuth: false }
+  },
+  {
+    path: '/harware-wallet-affiliates',
+    name: 'HardwaresLayout',
+    component: HardwaresLayout,
     meta: { requiresAuth: false }
   },
   {
