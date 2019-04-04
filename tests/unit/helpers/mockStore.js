@@ -27,7 +27,8 @@ const state = {
   wallet: {
     getAddressString: jest.fn()
   },
-  web3: newWeb3
+  web3: newWeb3,
+  linkQuery: {}
 };
 
 const getters = {
@@ -83,7 +84,8 @@ const getters = {
   web3: () => {
     return newWeb3;
   },
-  path: () => {}
+  path: () => {},
+  linkQuery: () => {}
 };
 
 export { state, getters };
