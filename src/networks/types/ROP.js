@@ -18,5 +18,6 @@ export default {
     registrarType: 'fifs',
     supportedTld: ROP
   },
-  icon: rop
+  icon: rop,
+  currencyName: 'ROP'
 };

@@ -18,5 +18,6 @@ export default {
     registrarType: 'fifs',
     supportedTld: RIN
   },
-  icon: rin
+  icon: rin,
+  currencyName: 'RIN'
 };
