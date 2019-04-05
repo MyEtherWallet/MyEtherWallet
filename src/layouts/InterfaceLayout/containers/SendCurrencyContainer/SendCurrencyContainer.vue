@@ -359,8 +359,8 @@ export default {
           return item.symbol.toLowerCase() === tokensymbol.toLowerCase();
         });
 
+        this.data = Misc.validateHexString(data) ? data : '';
         this.value = value ? new BigNumber(value).toFixed() : 0;
-        this.data = data ? data : '0x';
         this.hexAddress = to ? to : '';
         this.address = to ? to : '';
         this.gasLimit = gaslimit ? new BigNumber(gaslimit).toString() : '21000';
