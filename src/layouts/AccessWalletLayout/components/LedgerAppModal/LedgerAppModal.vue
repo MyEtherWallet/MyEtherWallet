@@ -6,25 +6,46 @@
       hide-footer
       class="bootstrap-modal modal-software"
       centered
+      @hidden="reset"
     >
       <div>
         <div class="ledger-app-container">
           <div
-            v-for="type in getTypes"
-            :key="type.name"
-            :class="[selected === type.name ? 'selected' : '', 'ledger-app']"
-            @click="setType(type.name)"
+            v-for="app in apps"
+            :key="app.name"
+            :class="[selected === app.name ? 'selected' : '', 'ledger-app']"
+            @click="setType(app)"
           >
             <div class="app-image-container">
-              <img :src="type.icon" />
+              <img :src="app.icon" />
             </div>
-            <span> {{ type.name }} </span>
+            <span> {{ app.name }} </span>
           </div>
+        </div>
+        <div class="path-dropdown-container">
+          <b-dropdown
+            v-show="
+              selectedApp.hasOwnProperty('paths') &&
+                selectedApp.paths.length > 1
+            "
+            id="hd-derivation-path"
+            :text="selectedPathText"
+            left
+            class="dropdown-button-2"
+          >
+            <b-dropdown-item
+              v-for="path in selectedApp.paths"
+              :key="path.path"
+              @click="setSelectedPath(path)"
+            >
+              {{ path.label }} - {{ path.path }}
+            </b-dropdown-item>
+          </b-dropdown>
         </div>
         <div class="button-container">
           <div
             :class="[
-              selected === '' ? 'disabled' : '',
+              fieldsFilled ? 'disabled' : '',
               'large-round-button-green-filled'
             ]"
             @click="next"
@@ -38,6 +59,8 @@
 </template>
 
 <script>
+import apps from './apps.js';
+import { LedgerWallet } from '@/wallets';
 export default {
   props: {
     networks: {
@@ -45,31 +68,58 @@ export default {
       default: () => {
         return {};
       }
-    },
-    selectApp: {
-      type: Function,
-      default: () => {}
     }
   },
   data() {
     return {
-      selected: ''
+      selected: '',
+      apps: apps,
+      selectedPathText: 'Select Path',
+      selectedPath: '',
+      selectedApp: {}
     };
   },
   computed: {
-    getTypes() {
-      const networks = Object.keys(this.networks);
-      const types = networks.map(network => {
-        if (this.networks[network][0].type.hasOwnProperty('path')) {
-          return this.networks[network][0].type;
-        }
-      });
-      return types;
+    fieldsFilled() {
+      const emptyApp = Object.keys(this.selectedApp).length;
+      return (
+        this.selected === '' &&
+        emptyApp === 0 &&
+        this.selectedPathText === 'Select Path' &&
+        this.selectedPath === ''
+      );
     }
   },
   methods: {
-    setType(name) {
-      this.selected === name ? (this.selected = '') : (this.selected = name);
+    setType(app) {
+      this.selectedApp = app;
+      this.selected === app.name
+        ? (this.selected = '')
+        : (this.selected = app.name);
+      if (app.paths.length > 0) {
+        this.setSelectedPath(app.paths[0]);
+      }
+    },
+    setSelectedPath(path) {
+      this.selectedPath = path;
+      this.selectedPathText = `${path.label} - ${path.path}`;
+    },
+    next() {
+      this.$refs.ledgerApp.hide();
+      LedgerWallet(this.selectedPath.path)
+        .then(_newWallet => {
+          this.$emit('hardwareWalletOpen', _newWallet);
+        })
+        .catch(e => {
+          console.log(e);
+          LedgerWallet.errorHandler(e);
+        });
+    },
+    reset() {
+      this.selected = '';
+      this.selectedPathText = 'Select Path';
+      this.selectedPath = '';
+      this.selectedApp = {};
     }
   }
 };
