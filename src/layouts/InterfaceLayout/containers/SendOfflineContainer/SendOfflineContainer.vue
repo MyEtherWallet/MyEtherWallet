@@ -323,11 +323,13 @@ export default {
     tokens(newVal) {
       if (newVal.length > 0 && Object.keys(this.linkQuery).length > 0) {
         const { data, to, value, gaslimit, gas, tokensymbol } = this.linkQuery;
-        const foundToken = newVal.find(item => {
-          return item.symbol.toLowerCase() === tokensymbol.toLowerCase();
-        });
+        const foundToken = tokensymbol
+          ? newVal.find(item => {
+              return item.symbol.toLowerCase() === tokensymbol.toLowerCase();
+            })
+          : undefined;
         this.toAmt = value ? new BigNumber(value).toFixed() : 0;
-        this.toData = data ? data : '0x';
+        this.toData = data ? (Misc.validateHexString(data) ? data : '') : '';
         this.address = to ? to : '';
         this.gasLimit = gaslimit ? new BigNumber(gaslimit).toString() : '21000';
         this.localGasPrice = gas ? new BigNumber(gas).toFixed() : 0;
