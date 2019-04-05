@@ -18,8 +18,7 @@ import {
   pirl,
   atheios,
   mixBlockchain,
-  rskMainnet,
-  rskTestnet
+  rskMainnet
 } from '@/wallets/bip44/paths.js';
 
 import eth from '@/assets/images/networks/eth.svg';
@@ -135,7 +134,7 @@ const MIX = {
 
 const RSK = {
   name: 'RSK',
-  paths: [rskMainnet, rskTestnet],
+  paths: [rskMainnet],
   icon: rsk
 };
 

@@ -256,6 +256,7 @@ export default {
     },
     mnemonicphraseModalOpen() {
       this.$refs.mnemonicPhraseModal.$refs.mnemonicPhrase.show();
+      this.$refs.softwareModal.$refs.software.hide();
     },
     mnemonicphrasePasswordModalOpen(phrase) {
       this.phrase = phrase;

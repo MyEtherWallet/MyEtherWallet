@@ -111,7 +111,6 @@ export default {
           this.$emit('hardwareWalletOpen', _newWallet);
         })
         .catch(e => {
-          console.log(e);
           LedgerWallet.errorHandler(e);
         });
     },
