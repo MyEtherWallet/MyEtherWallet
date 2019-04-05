@@ -17,5 +17,6 @@ export default {
     registrarTLD: 'rsk',
     supportedTld: RSK
   },
-  icon: rsk
+  icon: rsk,
+  currencyName: 'RBTC'
 };
