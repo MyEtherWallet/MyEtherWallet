@@ -355,11 +355,11 @@ export default {
     tokensWithBalance() {
       if (Object.keys(this.linkQuery).length > 0) {
         const { data, to, value, gaslimit, tokensymbol } = this.linkQuery;
-        const foundToken = this.tokensWithBalance.find(item => {
+        const foundToken = tokensymbol ? this.tokensWithBalance.find(item => {
           return item.symbol.toLowerCase() === tokensymbol.toLowerCase();
-        });
+        }) : undefined;
 
-        this.data = Misc.validateHexString(data) ? data : '';
+        this.data = data ? Misc.validateHexString(data) ? data : ''  : '';
         this.value = value ? new BigNumber(value).toFixed() : 0;
         this.hexAddress = to ? to : '';
         this.address = to ? to : '';
