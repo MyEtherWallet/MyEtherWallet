@@ -80,7 +80,10 @@
           class="collapse-content"
         >
           <!-- Derivation Path Drop down -->
-          <div class="content-container-1">
+          <div
+            v-show="hardwareWallet.identifier !== 'ledger'"
+            class="content-container-1"
+          >
             <div class="hd-derivation">
               <h4>{{ $t('accessWallet.hdDerivationPath') }}</h4>
               <div class="dropdown-button-container">
