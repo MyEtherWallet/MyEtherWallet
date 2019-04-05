@@ -2,8 +2,8 @@
   <div class="access-my-wallet-options">
     <ledger-app-modal
       ref="ledgerAppModal"
-      :select-app="selectApp"
       :networks="Networks"
+      @hardwareWalletOpen="hardwareWalletOpen"
     />
     <mew-connect-modal
       ref="mewconnectModal"
@@ -207,12 +207,8 @@ export default {
         btn.disabled = this.isDisabled(btn.classname);
       });
     });
-    this.selectApp();
   },
   methods: {
-    selectApp() {
-      console.log(this.Networks);
-    },
     isDisabled(className) {
       switch (className) {
         case 'button-mewconnect':

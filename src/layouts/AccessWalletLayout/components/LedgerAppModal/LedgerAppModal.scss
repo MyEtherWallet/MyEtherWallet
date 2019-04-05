@@ -36,7 +36,6 @@
   &:hover {
     @extend %active;
   }
-
 }
 
 .selected {
@@ -54,5 +53,13 @@
 
   span {
     color: $mew-green;
+  }
+}
+
+.path-dropdown-container {
+  padding: 10px 4px;
+
+  .dropdown-button-2 {
+    width: 100%;
   }
 }

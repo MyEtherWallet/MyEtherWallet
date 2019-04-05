@@ -208,15 +208,6 @@ export default {
         case 'ledger':
           this.$refs.hardware.hide();
           this.ledgerAppOpen();
-          // LedgerWallet()
-          //   .then(_newWallet => {
-          //     clearTimeout(showPluggedInReminder);
-          //     this.$emit('hardwareWalletOpen', _newWallet);
-          //   })
-          //   .catch(e => {
-          //     this.mayNotBeAttached = true;
-          //     LedgerWallet.errorHandler(e);
-          //   });
           break;
         case 'trezor':
           TrezorWallet()
