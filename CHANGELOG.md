@@ -1,3 +1,7 @@
+### Bug
+
+- Better Ledger app support flow [#910](https://github.com/MyEtherWallet/MyEtherWallet/pull/910)
+
 ### Release v5.0.9
 
 ### Devop
