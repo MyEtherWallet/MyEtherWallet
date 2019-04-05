@@ -2,6 +2,7 @@
 
 ### Devop
 
+- Better data catch for url params [#909](https://github.com/MyEtherWallet/MyEtherWallet/pull/909)
 - Update hardwares [#906](https://github.com/MyEtherWallet/MyEtherWallet/pull/906)
 - Add monospace font[#898](https://github.com/MyEtherWallet/MyEtherWallet/pull/898)
 - Add Gage on team page [#853](https://github.com/MyEtherWallet/MyEtherWallet/pull/853)

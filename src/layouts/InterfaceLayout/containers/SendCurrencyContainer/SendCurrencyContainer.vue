@@ -13,6 +13,7 @@
               :currency="tokensWithBalance"
               :page="'sendEthAndTokens'"
               :token="true"
+              :default="selectedCurrency !== '' ? selectedCurrency : {}"
               @selectedCurrency="selectedCurrency = $event"
             />
           </div>
@@ -350,26 +351,29 @@ export default {
   watch: {
     multiWatch: utils._.debounce(function() {
       if (this.validInputs) this.estimateGas();
-    }, 500)
-  },
-  mounted() {
-    if (Object.keys(this.linkQuery).length > 0) {
-      const { data, to, value, gaslimit, tokensymbol } = this.linkQuery;
-      const foundToken = this.tokensWithBalance.find(item => {
-        return item.symbol.toLowerCase() === tokensymbol.toLowerCase();
-      });
-      this.value = value ? new BigNumber(value).toFixed() : 0;
-      this.data = data ? data : '0x';
-      this.hexAddress = to ? to : '';
-      this.address = to ? to : '';
-      this.gasLimit = gaslimit ? new BigNumber(gaslimit).toString() : '21000';
-      this.selectedCurrency = foundToken ? foundToken : this.selectedCurrency;
+    }, 500),
+    tokensWithBalance() {
+      if (Object.keys(this.linkQuery).length > 0) {
+        const { data, to, value, gaslimit, tokensymbol } = this.linkQuery;
+        const foundToken = tokensymbol
+          ? this.tokensWithBalance.find(item => {
+              return item.symbol.toLowerCase() === tokensymbol.toLowerCase();
+            })
+          : undefined;
 
-      Toast.responseHandler(
-        'Form has been prefilled. Please proceed with caution!',
-        Toast.WARN
-      );
-      this.$store.dispatch('saveQueryVal', {});
+        this.data = data ? (Misc.validateHexString(data) ? data : '') : '';
+        this.value = value ? new BigNumber(value).toFixed() : 0;
+        this.hexAddress = to ? to : '';
+        this.address = to ? to : '';
+        this.gasLimit = gaslimit ? new BigNumber(gaslimit).toString() : '21000';
+        this.selectedCurrency = foundToken ? foundToken : this.selectedCurrency;
+
+        Toast.responseHandler(
+          'Form has been prefilled. Please proceed with caution!',
+          Toast.WARN
+        );
+        this.$store.dispatch('saveQueryVal', {});
+      }
     }
   },
   methods: {
