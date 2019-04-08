@@ -22,3 +22,11 @@
     text-align: center;
   }
 }
+
+.invalid-address {
+  border: 1px solid $red-1;
+}
+
+.error-message {
+  color: $red-1;
+}

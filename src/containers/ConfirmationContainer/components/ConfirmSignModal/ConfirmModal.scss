@@ -115,6 +115,8 @@
   .message-to-sign {
     background-color: $light-grey-1;
     padding: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .from-address {
