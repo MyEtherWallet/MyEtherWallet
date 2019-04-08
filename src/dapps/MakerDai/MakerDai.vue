@@ -2,6 +2,13 @@
   <div class="container-maker">
     <interface-container-title :title="'MAKER'">
       <template v-slot:right>
+        <div style="padding-left: 20px; cursor: pointer;">
+          <i
+            v-show="showRefresh"
+            class="fa fa-refresh"
+            @click="refresh"
+          ></i>
+        </div>
         <div v-if="showMoveOrClose" class="header-buttons-container">
           <div class="inner-container">
             <button class="move-btn" @click="showMove">
@@ -16,21 +23,21 @@
     </interface-container-title>
 
     <div v-show="makerActive" class="buttons-container">
-      <div v-if="showCreate" class="dapps-button">
-        <div @click="gotoCreate">
-          <h4>Create</h4>
-        </div>
-      </div>
+      <!--      <div v-if="showCreate" class="dapps-button">-->
+      <!--        <div @click="gotoCreate">-->
+      <!--          <h4>Create</h4>-->
+      <!--        </div>-->
+      <!--      </div>-->
       <div v-if="showManage">
         <div class="dapps-button" @click="goToManage">
           <h4>List All</h4>
         </div>
       </div>
-      <div v-if="showRefresh">
+<!--      <div v-if="showRefresh">
         <div class="dapps-button" @click="refresh">
           <h4>Refresh</h4>
         </div>
-      </div>
+      </div>-->
       <div v-if="!hasProxy && !onCreate">
         <div class="dapps-button" @click="buildProxy">
           <h4>Create Proxy</h4>
@@ -94,7 +101,7 @@ import CloseCdpModal from './components/CloseCdpModal';
 import MoveCdpModal from './components/MoveCdpModal';
 import BigNumber from 'bignumber.js';
 import Maker from '@makerdao/dai';
-import { toChecksumAddress } from '@/helpers/addressUtils';
+import { Toast } from '@/helpers';
 import MakerCDP from './MakerCDP';
 import MakerManager from './MakerManager';
 import MewPlugin from './dai-plugin-mew';
@@ -160,6 +167,7 @@ export default {
       availableCdps: {},
       cdpDetailsLoaded: false,
       currentProxy: null,
+      creatingCdp: false,
       openCloseModal: false,
       openMoveModal: false,
       migrationInProgress: {},
@@ -192,8 +200,8 @@ export default {
       if (this.daiQty <= 0) return 0;
       return bnOver(this.liquidationRatio, this.daiQty, this.ethPrice);
     },
-    showMoveOrClose(){
-      return this.$route.name === 'manage' || this.$route.name === 'migrate'
+    showMoveOrClose() {
+      return this.$route.name === 'manage' || this.$route.name === 'migrate';
     },
     showManage() {
       return (
@@ -220,7 +228,7 @@ export default {
       return this.cdps.length > 1 || this.cdpsWithoutProxy.length > 1;
     }
   },
-  destroyed(){
+  destroyed() {
     this.maker = {};
     this.priceService = {};
     this.cdpService = {};
@@ -231,6 +239,7 @@ export default {
     this.makerManager = {};
     this.sysVars = {};
     this.sysServices = {};
+
   },
   async mounted() {
     await this.setup();
@@ -252,9 +261,9 @@ export default {
         this.web3,
         this.account.address,
         async () => {
-          // eslint-disable-next-line
-          console.log('do update'); // todo remove dev item
-          await this.doUpdate();
+          if(this.$route.path.includes('maker-dai')){
+            await this.doUpdate();
+          }
         }
       );
       this.maker = await Maker.create('http', {
@@ -268,7 +277,7 @@ export default {
           myLedger1: { type: 'mew' }
         },
         web3: {
-          statusTimerDelay: 10000,
+          statusTimerDelay: 10000
         },
         log: true
       });
@@ -339,18 +348,18 @@ export default {
           this.$router.push({
             name: 'select'
           });
-        } else if (this.cdps.length === 1) {
+        } else if (this.makerManager.cdps.length === 1) {
           this.$router.push({
             name: 'manage',
             params: {
-              cdpId: this.cdps[0]
+              cdpId: this.makerManager.cdps[0]
             }
           });
-        } else if (this.cdpsWithoutProxy.length === 1) {
+        } else if (this.makerManager.cdpsWithoutProxy.length === 1) {
           this.$router.push({
             name: 'migrate',
             params: {
-              cdpId: this.cdpsWithoutProxy[0]
+              cdpId: this.makerManager.cdpsWithoutProxy[0]
             }
           });
         } else {
@@ -369,12 +378,14 @@ export default {
       }
     },
     addCdp(vals) {
-      this.makerManager.addOpenedCdp(vals.maker, vals.id);
-      this.availableCdps = this.makerManager.availableCdps;
+      this.creatingCdp = true;
+      // this.makerManager.addOpenedCdp(vals.maker, vals.id);
+      // this.availableCdps = this.makerManager.availableCdps;
     },
     removeCdp(vals) {
       try {
         delete this.availableCdps[vals.id];
+        Toast.responseHandler('CDP Closed', Toast.INFO);
       } catch (e) {
         // eslint-disable-next-line
         console.error(e);
@@ -392,19 +403,19 @@ export default {
       await this.makerManager.refresh();
     },
     async doUpdate() {
-
-
-      //lkhkjhkljhljhkloj
-
-
-
       // eslint-disable-next-line
       console.log('vue doUpdate'); // todo remove dev item
+      if (this.creatingCdp) {
+        this.creatingCdp = false;
+        await this.makerManager.updateActiveCdp();
+        Toast.responseHandler('CDP Created', Toast.INFO);
+      }
       this.proxyAddress = await this.proxyService.currentProxy();
       await this.makerManager.doUpdate(this.$route.name);
       this.availableCdps = this.makerManager.availableCdps;
       this.cdps = this.makerManager.cdpsWithProxy;
       this.cdpsWithoutProxy = this.makerManager.cdpsNoProxy;
+      Toast.responseHandler('CDP Updated', Toast.INFO);
     },
     async buildCdpObject(cdpId, options = {}) {
       const sysVars = {
