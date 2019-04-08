@@ -3,11 +3,7 @@
     <interface-container-title :title="'MAKER'">
       <template v-slot:right>
         <div style="padding-left: 20px; cursor: pointer;">
-          <i
-            v-show="showRefresh"
-            class="fa fa-refresh"
-            @click="refresh"
-          ></i>
+          <i v-show="showRefresh" class="fa fa-refresh" @click="refresh"></i>
         </div>
         <div v-if="showMoveOrClose" class="header-buttons-container">
           <div class="inner-container">
@@ -33,7 +29,7 @@
           <h4>List All</h4>
         </div>
       </div>
-<!--      <div v-if="showRefresh">
+      <!--      <div v-if="showRefresh">
         <div class="dapps-button" @click="refresh">
           <h4>Refresh</h4>
         </div>

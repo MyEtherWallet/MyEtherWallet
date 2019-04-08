@@ -36,10 +36,7 @@
       </div>
       {{ canClose }}
       <div class="buttons-container">
-        <div
-          class="cancel-btn"
-          @click="closeModal"
-        >
+        <div class="cancel-btn" @click="closeModal">
           Cancel<!-- TODO FOR TRANSLATE -->
         </div>
         <div

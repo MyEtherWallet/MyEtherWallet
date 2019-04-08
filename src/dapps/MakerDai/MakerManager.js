@@ -187,8 +187,6 @@ export default class MakerManager {
   }
 
   async refresh() {
-
-
     if (this.cdps.length > 0 || this.cdpsWithoutProxy.length > 0) {
       await this.doUpdate();
       this.routeHandlers.manage();
@@ -198,7 +196,7 @@ export default class MakerManager {
     }
   }
 
-  async updateActiveCdp(){
+  async updateActiveCdp() {
     console.log('refreshing'); // todo remove dev item
     await this.locateCdps();
 
