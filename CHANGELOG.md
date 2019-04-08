@@ -1,6 +1,7 @@
 ### Bug
 
-- Fixes send offline token value and deploy contract errors []()
+- Fixes send offline token value and deploy contract errors [#920](https://github.com/MyEtherWallet/MyEtherWallet/pull/920)
+- Update TOMO explorrer links [#918](https://github.com/MyEtherWallet/MyEtherWallet/pull/918)
 
 ### Release v5.0.9
 
