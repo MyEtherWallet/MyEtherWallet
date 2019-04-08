@@ -74,6 +74,7 @@ import { type as noticeTypes } from '@/helpers/notificationFormatters';
 import { WEB3_WALLET, KEEPKEY } from '@/wallets/bip44/walletTypes';
 import { Toast, Misc } from '@/helpers';
 import locStore from 'store';
+import parseTokensData from '@/helpers/parseTokensData.js';
 
 const events = {
   showSuccessModal: 'showSuccessModal',
@@ -351,6 +352,16 @@ export default {
       this.$refs.errorModal.$refs.errorModal.show();
     },
     parseRawTx(tx) {
+      const tokenData = parseTokensData(
+        tx.data,
+        tx.to,
+        this.web3,
+        this.network.type.tokens,
+        this.network.type.name
+      );
+      tx.tokenTransferTo = tokenData.tokenTransferTo;
+      tx.tokenTransferVal = tokenData.tokenTransferVal;
+      tx.tokenSymbol = tokenData.tokenSymbol;
       this.raw = tx;
       this.nonce = tx.nonce === '0x' ? 0 : new BigNumber(tx.nonce).toFixed();
       this.data = tx.data;
@@ -371,7 +382,7 @@ export default {
       this.dismissed = false;
       this.responseFunction(this.signedMessage);
       this.$refs.signConfirmModal.$refs.signConfirmation.hide();
-      this.showSuccessModal();
+      // this.showSuccessModal();
     },
     generateTx() {
       this.dismissed = false;
