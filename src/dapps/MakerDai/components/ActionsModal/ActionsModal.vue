@@ -10,17 +10,20 @@
       <div class="inputs-container">
         <!-- Deposit ETH -->
         <div v-if="action === 'deposit'" class="input-container">
-          <label>How much ETH would you like to deposit?</label><!-- TODO FOR TRANSLATE -->
+          <label>How much ETH would you like to deposit?</label
+          ><!-- TODO FOR TRANSLATE -->
           <div :class="['input-box', hasEnoughEth ? '' : 'danger']">
-            <input v-model="amount"/> <span class="input-unit">{{digitalCurrency}}</span>
+            <input v-model="amount" />
+            <span class="input-unit">{{ digitalCurrency }}</span>
           </div>
           <div class="sub-text">
-            <p v-if="!hasEnoughEth">Not Enough Balance</p><!-- TODO FOR TRANSLATE -->
+            <p v-if="!hasEnoughEth">Not Enough Balance</p>
+            <!-- TODO FOR TRANSLATE -->
             <p>
               {{
-              activeCdp.toPeth
-              ? displayFixedValue(activeCdp.toPeth(amount), 5, false)
-              : 0
+                activeCdp.toPeth
+                  ? displayFixedValue(activeCdp.toPeth(amount), 5, false)
+                  : 0
               }}
               PETH
             </p>
@@ -28,18 +31,21 @@
         </div>
         <!-- Generate Dai -->
         <div v-if="action === 'generate'" class="input-container">
-          <label>How much DAI would you like to generate?</label><!-- TODO FOR TRANSLATE -->
+          <label>How much DAI would you like to generate?</label
+          ><!-- TODO FOR TRANSLATE -->
           <div
             :class="[
               'input-box',
               newCollateralRatioSafe && canGenerateDaiAmount ? '' : 'danger'
             ]"
           >
-            <input v-model="amount"/> <span class="input-unit">DAI</span>
+            <input v-model="amount" /> <span class="input-unit">DAI</span>
           </div>
           <div class="sub-text">
-            <p v-if="!canGenerateDaiAmount">Above Max Dai Amount</p><!-- TODO FOR TRANSLATE -->
-            <p class="btn" @click="maxDai">Max</p><!-- TODO FOR TRANSLATE -->
+            <p v-if="!canGenerateDaiAmount">Above Max Dai Amount</p>
+            <!-- TODO FOR TRANSLATE -->
+            <p class="btn" @click="maxDai">Max</p>
+            <!-- TODO FOR TRANSLATE -->
             <p>
               {{ displayFixedValue(displayPercentValue(newCollateralRatio)) }}%
             </p>
@@ -48,34 +54,33 @@
                 <template v-slot:terms>
                   I understand the new collateral ratio of
                   {{
-                  displayFixedValue(displayPercentValue(newCollateralRatio))
-                  }}% may place my cdp at risk of liquidation.
-                </template><!-- TODO FOR TRANSLATE -->
+                    displayFixedValue(displayPercentValue(newCollateralRatio))
+                  }}% may place my cdp at risk of liquidation. </template
+                ><!-- TODO FOR TRANSLATE -->
               </check-box>
             </div>
           </div>
         </div>
         <!-- Withdraw ETH -->
         <div v-if="action === 'withdraw'" class="input-container">
-          <p><!-- TODO FOR TRANSLATE -->
+          <p>
+            <!-- TODO FOR TRANSLATE -->
             You might be requested to sign up to three trasactions if there is
             not enough allowance in DAI and/or MKR to complete this transaction.
           </p>
-          <label>How much {{digitalCurrency}} would you like to withdraw?</label><!-- TODO FOR TRANSLATE -->
-          <div
-            :class="[
-              'input-box',
-              newCollateralRatioSafe ? '' : 'danger'
-            ]"
-          >
-            <input v-model="amount"/> <span class="input-unit">{{digitalCurrency}}</span>
+          <label
+            >How much {{ digitalCurrency }} would you like to withdraw?</label
+          ><!-- TODO FOR TRANSLATE -->
+          <div :class="['input-box', newCollateralRatioSafe ? '' : 'danger']">
+            <input v-model="amount" />
+            <span class="input-unit">{{ digitalCurrency }}</span>
           </div>
           <div class="sub-text">
             <p>
               {{
-              activeCdp.toPeth
-              ? displayFixedValue(activeCdp.toPeth(amount), 5, false)
-              : 0
+                activeCdp.toPeth
+                  ? displayFixedValue(activeCdp.toPeth(amount), 5, false)
+                  : 0
               }}
               PETH
             </p>
@@ -83,12 +88,14 @@
         </div>
         <!-- Payback DAI -->
         <div v-if="action === 'payback'" class="input-container">
-          <label>How much DAI would you like to payback?</label><!-- TODO FOR TRANSLATE -->
+          <label>How much DAI would you like to payback?</label
+          ><!-- TODO FOR TRANSLATE -->
           <div class="input-box">
-            <input v-model="amount"/> <span class="input-unit">DAI</span>
+            <input v-model="amount" /> <span class="input-unit">DAI</span>
           </div>
           <div class="sub-text">
-            <p class="btn" @click="currentDai">Set Max</p><!-- TODO FOR TRANSLATE -->
+            <p class="btn" @click="currentDai">Set Max</p>
+            <!-- TODO FOR TRANSLATE -->
           </div>
         </div>
       </div>
@@ -102,7 +109,7 @@
                 type="checkbox"
                 @click="modalDetailInformation = !modalDetailInformation"
               />
-              <span class="slider round"/>
+              <span class="slider round" />
             </label>
           </div>
         </div>
@@ -113,26 +120,29 @@
           <!-- Deposit ETH -->
           <div v-if="action === 'deposit'" class="padding-container">
             <div class="grid-block">
-              <p>Currently Deposited</p><!-- TODO FOR TRANSLATE -->
+              <p>Currently Deposited</p>
+              <!-- TODO FOR TRANSLATE -->
               <p>
-                <b>{{ displayFixedValue(activeCdp.ethCollateralNum, 2) }}</b> {{digitalCurrency}}
+                <b>{{ displayFixedValue(activeCdp.ethCollateralNum, 2) }}</b>
+                {{ digitalCurrency }}
               </p>
             </div>
             <div class="grid-block">
               <p>{{ $t('dapps.projectedLiquidation') }}</p>
               <p>
-                <b>{{ displayFixedValue(newLiquidationPrice, 2) }}</b> {{fiatCurrency}}
+                <b>{{ displayFixedValue(newLiquidationPrice, 2) }}</b>
+                {{ fiatCurrency }}
               </p>
             </div>
             <div class="grid-block">
               <p>{{ $t('dapps.projectedCollatRatio') }}</p>
               <p>
                 <b
-                >{{
-                  displayFixedValue(
-                  displayPercentValue(newCollateralRatio),
-                  3
-                  )
+                  >{{
+                    displayFixedValue(
+                      displayPercentValue(newCollateralRatio),
+                      3
+                    )
                   }}%</b
                 >
               </p>
@@ -141,29 +151,31 @@
           <!-- Generate Dai -->
           <div v-if="action === 'generate'" class="padding-container">
             <div class="grid-block">
-              <p>Max Available to Generate</p><!-- TODO FOR TRANSLATE -->
+              <p>Max Available to Generate</p>
+              <!-- TODO FOR TRANSLATE -->
               <p>
                 <b>{{
                   activeCdp.maxDai ? displayFixedValue(activeCdp.maxDai) : 0
-                  }}</b>
+                }}</b>
                 DAI
               </p>
             </div>
             <div class="grid-block">
               <p>{{ $t('dapps.projectedLiquidation') }}</p>
               <p>
-                <b>{{ displayFixedValue(newLiquidationPrice, 2) }}</b> {{fiatCurrency}}
+                <b>{{ displayFixedValue(newLiquidationPrice, 2) }}</b>
+                {{ fiatCurrency }}
               </p>
             </div>
             <div class="grid-block">
               <p>{{ $t('dapps.projectedCollatRatio') }}</p>
               <p>
                 <b
-                >{{
-                  displayFixedValue(
-                  displayPercentValue(newCollateralRatio),
-                  3
-                  )
+                  >{{
+                    displayFixedValue(
+                      displayPercentValue(newCollateralRatio),
+                      3
+                    )
                   }}%</b
                 >
               </p>
@@ -172,32 +184,34 @@
           <!-- Withdraw ETH -->
           <div v-if="action === 'withdraw'" class="padding-container">
             <div class="grid-block">
-              <p>Max Available to Withdraw</p><!-- TODO FOR TRANSLATE -->
+              <p>Max Available to Withdraw</p>
+              <!-- TODO FOR TRANSLATE -->
               <p>
                 <b>{{
                   activeCdp.maxDaiDraw
-                  ? displayFixedValue(activeCdp.maxDaiDraw(), 3)
-                  : 0
-                  }}</b>
-                {{digitalCurrency}}
+                    ? displayFixedValue(activeCdp.maxDaiDraw(), 3)
+                    : 0
+                }}</b>
+                {{ digitalCurrency }}
               </p>
             </div>
 
             <div class="grid-block">
               <p>{{ $t('dapps.projectedLiquidation') }}</p>
               <p>
-                <b>{{ displayFixedValue(newLiquidationPrice, 2) }}</b> {{fiatCurrency}}
+                <b>{{ displayFixedValue(newLiquidationPrice, 2) }}</b>
+                {{ fiatCurrency }}
               </p>
             </div>
             <div class="grid-block">
               <p>{{ $t('dapps.projectedCollatRatio') }}</p>
               <p>
                 <b
-                >{{
-                  displayFixedValue(
-                  displayPercentValue(newCollateralRatio),
-                  3
-                  )
+                  >{{
+                    displayFixedValue(
+                      displayPercentValue(newCollateralRatio),
+                      3
+                    )
                   }}%</b
                 >
               </p>
@@ -206,39 +220,36 @@
           <!-- Payback DAI-->
           <div v-if="action === 'payback'" class="padding-container">
             <div class="grid-block">
-              <p>
-                Outstanding Dai Generated<!-- TODO FOR TRANSLATE -->
-              </p>
+              <p>Outstanding Dai Generated<!-- TODO FOR TRANSLATE --></p>
               <p>
                 <b>{{
                   activeCdp.debtValue
-                  ? displayFixedValue(activeCdp.debtValue, 3)
-                  : 0
-                  }}</b>
+                    ? displayFixedValue(activeCdp.debtValue, 3)
+                    : 0
+                }}</b>
                 DAI
               </p>
             </div>
             <div class="grid-block">
-              <p>
-                Stability Fee Owed<!-- TODO FOR TRANSLATE -->
-              </p>
+              <p>Stability Fee Owed<!-- TODO FOR TRANSLATE --></p>
               <p><b>0.00%</b> MKR</p>
             </div>
             <div class="grid-block">
               <p>{{ $t('dapps.projectedLiquidation') }}</p>
               <p>
-                <b>{{ displayFixedValue(newLiquidationPrice, 2) }}</b> {{fiatCurrency}}
+                <b>{{ displayFixedValue(newLiquidationPrice, 2) }}</b>
+                {{ fiatCurrency }}
               </p>
             </div>
             <div class="grid-block">
               <p>{{ $t('dapps.projectedCollatRatio') }}</p>
               <p>
                 <b
-                >{{
-                  displayFixedValue(
-                  displayPercentValue(newCollateralRatio),
-                  3
-                  )
+                  >{{
+                    displayFixedValue(
+                      displayPercentValue(newCollateralRatio),
+                      3
+                    )
                   }}%</b
                 >
               </p>
@@ -251,17 +262,15 @@
           <template v-slot:terms>
             <span v-if="!newCollateralRatioInvalid">
               I understand the new collateral ratio of
-            {{
-            displayFixedValue(displayPercentValue(newCollateralRatio))
-            }}% may place my cdp at risk of liquidation.
+              {{ displayFixedValue(displayPercentValue(newCollateralRatio)) }}%
+              may place my cdp at risk of liquidation.
             </span>
             <span v-if="newCollateralRatioInvalid" style="color: red;">
               I understand the new collateral ratio of
-            {{
-            displayFixedValue(displayPercentValue(newCollateralRatio))
-            }}% WILL place my cdp at risk of liquidation.
-            </span>
-          </template><!-- TODO FOR TRANSLATE -->
+              {{ displayFixedValue(displayPercentValue(newCollateralRatio)) }}%
+              WILL place my cdp at risk of liquidation.
+            </span> </template
+          ><!-- TODO FOR TRANSLATE -->
         </check-box>
       </div>
       <div class="buttons-container">
@@ -271,11 +280,14 @@
         >
           Cancel<!-- TODO FOR TRANSLATE -->
         </div>
-        <div :class="['submit-btn', canProceed ? '' : 'disable']" @click="submitBtn">
+        <div
+          :class="['submit-btn', canProceed ? '' : 'disable']"
+          @click="submitBtn"
+        >
           Submit<!-- TODO FOR TRANSLATE -->
         </div>
       </div>
-      <help-center-button/>
+      <help-center-button />
     </b-modal>
   </div>
 </template>
