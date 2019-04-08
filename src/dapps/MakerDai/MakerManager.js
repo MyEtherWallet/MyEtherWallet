@@ -187,6 +187,18 @@ export default class MakerManager {
   }
 
   async refresh() {
+
+
+    if (this.cdps.length > 0 || this.cdpsWithoutProxy.length > 0) {
+      await this.doUpdate();
+      this.routeHandlers.manage();
+    } else {
+      this.activeCdps = {};
+      this.routeHandlers.create();
+    }
+  }
+
+  async updateActiveCdp(){
     console.log('refreshing'); // todo remove dev item
     await this.locateCdps();
 
@@ -208,23 +220,18 @@ export default class MakerManager {
         { noProxy: true }
       );
     }
-
-    if (this.cdps.length > 0 || this.cdpsWithoutProxy.length > 0) {
-      await this.doUpdate();
-      this.routeHandlers.manage();
-    } else {
-      this.activeCdps = {};
-      this.routeHandlers.create();
-    }
   }
 
-  async doUpdate(/*route*/) {
+  async doUpdate(route) {
     this.proxyAddress = await this.proxyService.currentProxy();
     console.log('updating'); // todo remove dev item
     let afterClose = false;
+    const afterOpen = route === 'create';
     // this.migrationInProgress = false;
     for (const idProp in this.activeCdps) {
+      console.log(`checking if ${idProp} needs update`); // todo remove dev item
       if (this.activeCdps[idProp].needsUpdate) {
+        console.log('updating: ', idProp); // todo remove dev item
         if (this.activeCdps[idProp].closing) {
           afterClose = true;
           delete this.activeCdps[idProp];
@@ -241,13 +248,19 @@ export default class MakerManager {
       }
     }
 
-    if (afterClose) {
-      console.log('after close or move'); // todo remove dev item
-      const { withProxy, withoutProxy } = await this.locateCdps();
-      this.cdps = withProxy;
-      this.cdpsWithoutProxy = withoutProxy;
-      this.routeHandlers.manage();
+    if (afterClose || afterOpen) {
+      console.log('after close, move, or open'); // todo remove dev item
+      // const { withProxy, withoutProxy } = await this.locateCdps();
+      // this.cdps = withProxy;
+      // this.cdpsWithoutProxy = withoutProxy;
+      await this.updateActiveCdp();
+      if (this.cdps.length > 0 || this.cdpsWithoutProxy.length > 0) {
+        this.routeHandlers.manage();
+      } else {
+        this.routeHandlers.create();
+      }
     }
+    console.log('onUpdate route: ', route); // todo remove dev item
   }
 
   calcDrawAmt(principal, collatRatio) {
@@ -293,5 +306,4 @@ export default class MakerManager {
       proxyService: this.proxyService
     };
   }
-
 }

@@ -324,11 +324,15 @@ export default {
     },
     async openCdp() {
       if (this.ethQty <= 0) return 0;
-      const newCdp = await this.makerCDP.openCdp(this.ethQty, this.daiQty);
-      // eslint-disable-next-line
-      console.log(newCdp); // todo remove dev item
-      await this.makerCDP.init(newCdp.id);
-      this.$emit('cdpOpened', { maker: this.makerCDP, id: newCdp.id });
+      this.$emit('cdpOpened');
+      await this.makerCDP.openCdp(this.ethQty, this.daiQty);
+
+      // const newCdp = await this.makerCDP.openCdp(this.ethQty, this.daiQty);
+      // // eslint-disable-next-line
+      // console.log(newCdp); // todo remove dev item
+      // await this.makerCDP.init(newCdp.id);
+      // // this.makerManager.addOpenedCdp(this.makerCDP, newCdp.id)
+      // this.$emit('cdpOpened', { maker: this.makerCDP, id: newCdp.id });
     }
   }
 };

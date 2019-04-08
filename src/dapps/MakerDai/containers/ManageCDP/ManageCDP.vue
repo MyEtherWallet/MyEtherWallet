@@ -4,21 +4,25 @@
       ref="deposit"
       :action="'deposit'"
       :active-cdp="activeCdp"
+      :tokens-with-balance="tokensWithBalance"
     ></action-modal>
     <action-modal
       ref="generate"
       :action="'generate'"
       :active-cdp="activeCdp"
+      :tokens-with-balance="tokensWithBalance"
     ></action-modal>
     <action-modal
       ref="withdraw"
       :action="'withdraw'"
       :active-cdp="activeCdp"
+      :tokens-with-balance="tokensWithBalance"
     ></action-modal>
     <action-modal
       ref="payback"
       :action="'payback'"
       :active-cdp="activeCdp"
+      :tokens-with-balance="tokensWithBalance"
     ></action-modal>
     <close-cdp-modal
       ref="closeCdp"

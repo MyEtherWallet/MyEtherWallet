@@ -157,7 +157,7 @@ $confirmation-modal-mobile-width: 500px;
     margin-top: 30px;
   }
 
-  button {
+  div {
     margin: auto;
     text-align: center;
     border-radius: 5px;
@@ -178,8 +178,9 @@ $confirmation-modal-mobile-width: 500px;
     background-color: #05c0a5;
     color: $white;
 
-    .disable {
+    &.disable {
       background-color: #506175;
+      cursor: not-allowed;
     }
   }
 
