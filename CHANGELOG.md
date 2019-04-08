@@ -1,3 +1,7 @@
+### Bug
+
+- Fixes send offline token value and deploy contract errors []()
+
 ### Release v5.0.9
 
 ### Devop
