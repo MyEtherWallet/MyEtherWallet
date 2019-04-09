@@ -7,7 +7,7 @@
   cursor: pointer;
   justify-content: space-between;
   display: flex;
-  padding: 5px 20px;
+  padding: 20px 30px;
   text-align: left;
   user-select: none;
 
@@ -20,11 +20,25 @@
   &.selected {
     border: 1px solid $mew-green;
     color: $text-black;
+
+    span {
+      font-weight: 700;
+    }
   }
 
   .icon {
     margin-right: 8px;
     width: 50px;
+  }
+
+  .img-title-container {
+    align-items: center;
+    display: flex;
+  }
+
+  .title-link-container {
+    display: flex;
+    flex-direction: column;
   }
 }
 
