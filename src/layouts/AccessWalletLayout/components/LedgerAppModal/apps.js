@@ -3,7 +3,6 @@ import {
   ledgerLiveEthereum,
   ropsten,
   ledgerEthereumClassic,
-  ledgerEthereumClassicVintage,
   ledgerLiveEthereumClassic,
   tomoChain,
   etherGem,
@@ -46,11 +45,7 @@ const ETH = {
 
 const ETC = {
   name: 'ETC',
-  paths: [
-    ledgerEthereumClassic,
-    ledgerEthereumClassicVintage,
-    ledgerLiveEthereumClassic
-  ],
+  paths: [ledgerEthereumClassic, ledgerLiveEthereumClassic],
   icon: etc
 };
 
