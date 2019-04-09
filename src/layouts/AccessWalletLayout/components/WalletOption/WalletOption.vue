@@ -1,17 +1,13 @@
 <template>
   <div
     v-b-popover.hover.top="tooltipMsg"
-    :class="disabled ? 'inactive' : ''"
-    @click="disabled ? () => {} : select(name)"
+    @click="select(name)"
     @mouseover="isHovered = true"
     @mouseout="isHovered = false"
   >
     <div :class="[selected ? 'selected' : '', 'wallet-option-container']">
       <div class="img-title-container">
-        <img
-          :src="(isHovered || selected) && !disabled ? hoverIcon : regularIcon"
-          class="icon"
-        />
+        <img :src="hoverIcon" class="icon" />
         <div class="title-link-container">
           <span>{{ text }}</span>
           <a v-show="link !== ''" :href="link" target="_blank" @click.stop>
@@ -30,17 +26,9 @@
 <script>
 export default {
   props: {
-    select: {
-      type: Function,
-      default: () => {}
-    },
     selected: {
       type: Boolean,
       default: false
-    },
-    regularIcon: {
-      type: String,
-      default: ''
     },
     hoverIcon: {
       type: String,
@@ -71,6 +59,11 @@ export default {
     return {
       isHovered: false
     };
+  },
+  methods: {
+    select(name) {
+      this.$emit('updateSelected', name);
+    }
   }
 };
 </script>

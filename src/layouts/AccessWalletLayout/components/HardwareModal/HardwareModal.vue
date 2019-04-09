@@ -17,7 +17,6 @@
             v-for="(item, idx) in items"
             :key="item.name + idx"
             :selected="selected === item.name"
-            :select="select"
             :regular-icon="item.imgPath"
             :hover-icon="item.imgHoverPath"
             :text="item.text"
@@ -25,6 +24,7 @@
             :disabled="item.disabled"
             :tooltip-msg="item.msg"
             :link="item.link"
+            @updateSelected="updateSelected"
           />
         </div>
       </div>
@@ -261,7 +261,7 @@ export default {
       }
       this.$refs.hardware.hide();
     },
-    select(ref) {
+    updateSelected(ref) {
       if (this.selected !== ref) {
         this.selected = ref;
       } else {
