@@ -14,12 +14,6 @@
     </move-cdp-modal>
     <!--<div class="container-maker">-->
     <div>
-      <button @click="showClose">
-        CLOSE
-      </button>
-      <button @click="showMove">
-        MOVE
-      </button>
       <div>
         <div
           :class="[
@@ -223,6 +217,14 @@ export default {
       type: Function,
       default: function() {}
     },
+    openCloseModal:{
+      type: Boolean,
+      default: false
+    },
+    openMoveModal:{
+      type: Boolean,
+      default: false
+    },
     makerActive: {
       type: Boolean,
       default: false
@@ -275,6 +277,17 @@ export default {
     async ['activeCdp.doUpdate'](val) {
       if (val > 0) {
         this.activeCdp = await this.activeCdp.update();
+      }
+    },
+    openCloseModal(val){
+      console.log('openCloseModal', val); // todo remove dev item
+      if(val){
+        this.showClose();
+      }
+    },
+    openMoveModal(val){
+      if(val){
+        this.showMove();
       }
     }
   },
