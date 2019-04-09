@@ -6,6 +6,8 @@ import { LEDGER as ledgerType } from '../../bip44/walletTypes';
 import bip44Paths from '../../bip44';
 import HDWalletInterface from '@/wallets/HDWalletInterface';
 import * as HDKey from 'hdkey';
+import appPaths from './appPaths';
+console.log(appPaths);
 import {
   getSignTransactionObject,
   getBufferFromHex,
