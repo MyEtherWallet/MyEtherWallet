@@ -16,7 +16,7 @@ export default class MakerManager {
   constructor(props) {
     this.currentAddress = props.account.address;
     this.maker = props.maker;
-    this.currentProxy = null;
+    this.currentProxy = props.currentProxy || null;
     this.activeCdps = {};
     this.routeHandlers = props.routeHandlers || {
       home: () => {},
@@ -114,11 +114,12 @@ export default class MakerManager {
   }
 
   async locateCdpsProxy() {
-    const proxy = await this.maker
-      .service('proxy')
-      .getProxyAddress(this.currentAddress);
+    await this.getProxy();
+    // const proxy = await this.maker
+    //   .service('proxy')
+    //   .getProxyAddress(this.currentAddress);
 
-    return await this.maker.getCdpIds(proxy);
+    return await this.maker.getCdpIds(this.currentProxy);
   }
 
   async locateCdps() {
@@ -186,6 +187,17 @@ export default class MakerManager {
     }
   }
 
+  async getProxy() {
+    this.proxyAddress = await this.proxyService.currentProxy();
+    if (!this.proxyAddress) {
+      this.proxyAddress = await this.proxyService.getProxyAddress(
+        this.currentAddress
+      );
+      if (this.proxyAddress) this.noProxy = false;
+    }
+    return this.proxyAddress;
+  }
+
   async refresh() {
     if (this.cdps.length > 0 || this.cdpsWithoutProxy.length > 0) {
       await this.doUpdate();
@@ -198,7 +210,18 @@ export default class MakerManager {
 
   async updateActiveCdp() {
     console.log('refreshing'); // todo remove dev item
+    const currentCdpIds = Object.keys(this.activeCdps);
     await this.locateCdps();
+
+    if (this.cdps.length === 0 && this.cdpsWithoutProxy.length === 0) {
+      this.routeHandlers.create();
+      return;
+    }
+
+    if (this.cdpsWithoutProxy.length === 0) {
+      this.routeHandlers.create();
+      return;
+    }
 
     const newCdps = this.cdps.filter(
       item => !Object.keys(this.activeCdps).includes(item)
@@ -207,6 +230,15 @@ export default class MakerManager {
     const newCdpsWithoutProxy = this.cdpsWithoutProxy.filter(
       item => !Object.keys(this.activeCdps).includes(item)
     );
+
+    const removedCdps = currentCdpIds.filter(
+      item =>
+        !(this.cdps.includes(item) || this.cdpsWithoutProxy.includes(item))
+    );
+
+    if (removedCdps.length > 0) {
+      removedCdps.forEach(item => delete this.activeCdps[item]);
+    }
 
     for (let i = 0; i < newCdps.length; i++) {
       this.activeCdps[newCdps[i]] = await this.buildCdpObject(newCdps[i]);
@@ -226,6 +258,7 @@ export default class MakerManager {
     let afterClose = false;
     const afterOpen = route === 'create';
     // this.migrationInProgress = false;
+    await this.updateActiveCdp();
     for (const idProp in this.activeCdps) {
       console.log(`checking if ${idProp} needs update`); // todo remove dev item
       if (this.activeCdps[idProp].needsUpdate) {
@@ -251,7 +284,7 @@ export default class MakerManager {
       // const { withProxy, withoutProxy } = await this.locateCdps();
       // this.cdps = withProxy;
       // this.cdpsWithoutProxy = withoutProxy;
-      await this.updateActiveCdp();
+      // await this.updateActiveCdp();
       if (this.cdps.length > 0 || this.cdpsWithoutProxy.length > 0) {
         this.routeHandlers.manage();
       } else {
