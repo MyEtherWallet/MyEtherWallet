@@ -93,6 +93,20 @@
             />
           </div>
         </div>
+        <div class="tx-fee">
+          <div class="title">
+            <h4>
+              {{ $t('common.txFee') }}
+            </h4>
+            <p class="copy-button prevent-user-select" @click="openSettings">
+              {{ $t('common.edit') }}
+            </p>
+          </div>
+          <div class="fee-value">
+            <div class="gwei">{{ gasPrice }} Gwei (Economic)</div>
+            <div class="usd">Cost 0.0000013 ETH = $1.234</div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -223,6 +237,7 @@ export default {
       selectedCurrency: ''
     };
   },
+
   computed: {
     ...mapGetters({
       account: 'account',
@@ -376,7 +391,11 @@ export default {
       }
     }
   },
+  mounted() {},
   methods: {
+    openSettings() {
+      this.$eventHub.$emit('open-settings');
+    },
     sendEntireBalance() {
       if (this.isToken) this.value = this.selectedCurrency.balance;
       else

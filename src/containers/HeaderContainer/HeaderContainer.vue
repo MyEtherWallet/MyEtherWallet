@@ -322,6 +322,9 @@ export default {
       this.setHighGasPrice();
     }
   },
+  created() {
+    this.$eventHub.$on('open-settings', this.openSettings);
+  },
   mounted() {
     if (Misc.doesExist(store.get('locale'))) {
       const storedLocale = this.supportedLanguages.find(item => {
@@ -374,6 +377,7 @@ export default {
     Object.values(events).forEach(evt => {
       this.$eventHub.$off(evt);
     });
+    this.$eventHub.$off('open-settings');
   },
   methods: {
     setHighGasPrice() {
