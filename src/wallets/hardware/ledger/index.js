@@ -6,8 +6,6 @@ import { LEDGER as ledgerType } from '../../bip44/walletTypes';
 import bip44Paths from '../../bip44';
 import HDWalletInterface from '@/wallets/HDWalletInterface';
 import * as HDKey from 'hdkey';
-import appPaths from './appPaths';
-console.log(appPaths);
 import {
   getSignTransactionObject,
   getBufferFromHex,
@@ -76,9 +74,9 @@ class ledgerWallet {
       if (signedChainId !== networkId)
         throw new Error(
           'Invalid networkId signature returned. Expected: ' +
-            networkId +
-            ', Got: ' +
-            signedChainId,
+          networkId +
+          ', Got: ' +
+          signedChainId,
           'InvalidNetworkId'
         );
       return getSignTransactionObject(tx);
