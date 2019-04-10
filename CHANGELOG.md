@@ -1,3 +1,7 @@
+### Devop
+
+- Fix Nsend offline helper, update webchain [#932](https://github.com/MyEtherWallet/MyEtherWallet/pull/932)
+
 ### Release v5.0.9
 
 ### Devop
