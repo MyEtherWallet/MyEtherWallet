@@ -3,7 +3,7 @@
   "accessMyWallet": "访问我的钱包",
   "accessWallet": "Access Wallet",
   "faqs": "常见问题",
-  "sendTx": "发送以太币和代币",
+  "sendTx": "Send Transaction",
   "sendSafeSendTx": "Protect Your ETH Transaction Using SafeSend",
   "swap": "货币交换",
   "unlockWallet": "解锁钱包",
@@ -75,5 +75,6 @@
   "nonce": "Nonce",
   "vintage": "Vintage",
   "okay": "Okay",
-  "ok": "OK"
+  "ok": "OK",
+  "menu": "Menu"
 }

@@ -7,6 +7,10 @@
     centered
   >
     <div class="modal-content">
+      <p class="hardware-link">
+        Want to get a Hardware wallet?
+        <router-link to="/hardware-wallet-affiliates">Click here!</router-link>
+      </p>
       <div class="d-block content-container text-center">
         <div class="button-options">
           <wallet-option

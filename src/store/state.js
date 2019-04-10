@@ -41,7 +41,8 @@ const state = {
   sidemenuOpen: false,
   darklist: darklist,
   gettingStartedDone: gettingStartedDone,
-  blockNumber: 0
+  blockNumber: 0,
+  linkQuery: {}
 };
 
 export default state;

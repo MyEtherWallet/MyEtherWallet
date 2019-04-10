@@ -70,6 +70,12 @@ export default {
     token: {
       type: Boolean,
       default: true
+    },
+    default: {
+      type: Object,
+      default: () => {
+        return {};
+      }
     }
   },
   data() {
@@ -88,7 +94,7 @@ export default {
     networkToken() {
       return {
         name: this.network.type.name_long,
-        symbol: this.network.type.name
+        symbol: this.network.type.currencyName
       };
     },
     localCurrency() {
@@ -114,6 +120,9 @@ export default {
     },
     selectedCurrency(newVal) {
       this.$emit('selectedCurrency', newVal);
+    },
+    default(newVal) {
+      if (newVal.hasOwnProperty('symbol')) this.selectedCurrency = newVal;
     }
   },
   mounted() {
