@@ -406,6 +406,7 @@ export default {
               this.activeCdp.ethCollateral.plus(this.amount)
             );
           case 'generate':
+            console.log(this.activeCdp.debtValue.plus(this.amount).toString()); // todo remove dev item
             return this.activeCdp.calcCollatRatioDaiChg(
               this.activeCdp.debtValue.plus(this.amount)
             );

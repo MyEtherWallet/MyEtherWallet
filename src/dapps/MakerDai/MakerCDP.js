@@ -89,7 +89,6 @@ export default class MakerCDP {
     console.log('this.cdp.id', this.cdp.id); // todo remove dev item
     console.log('updated: this._ethCollateral', this._ethCollateral); // todo remove dev item
     console.log('updated: this._debtValue', this._debtValue); // todo remove dev item
-
   }
 
   async update() {
@@ -159,7 +158,13 @@ export default class MakerCDP {
   }
 
   // get maxDaiDraw() {
-  //   return this._maxDaiDraw;
+  //   const tl = toBigNumber(this._ethPrice).times(
+  //     toBigNumber(this._ethCollateral)
+  //   );
+  //   const tr = toBigNumber(this._debtValue).times(
+  //     toBigNumber(this._liquidationRatio)
+  //   );
+  //   return tl.minus(tr).div(toBigNumber(this._ethPrice));
   // }
 
   get maxDai() {
@@ -395,8 +400,8 @@ export default class MakerCDP {
     if (enoughToWipe) {
       try {
         this.needsUpdate = true;
-        this.closing = true
-        await this.cdpService.shutProxy(this.proxyAddress, this.cdpId);;
+        this.closing = true;
+        await this.cdpService.shutProxy(this.proxyAddress, this.cdpId);
       } catch (e) {
         // eslint-disable-next-line
         console.error(e);
@@ -432,6 +437,7 @@ export default class MakerCDP {
   }
 
   toUSD(eth) {
+    if (eth === undefined || eth === null) return toBigNumber(0);
     return this._ethPrice.times(toBigNumber(eth));
   }
 
@@ -495,9 +501,11 @@ export default class MakerCDP {
       }
     }
     for (let i = 100; i > 0; i--) {
-      const atValue = bnOver((i/100), ethQty, daiQty).lte(this._liquidationRatio);
+      const atValue = bnOver(i / 100, ethQty, daiQty).lte(
+        this._liquidationRatio
+      );
       if (atValue) {
-        return (i/100);
+        return i / 100;
       }
     }
     return 0;

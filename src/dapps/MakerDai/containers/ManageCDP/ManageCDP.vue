@@ -1,29 +1,29 @@
 <template>
   <div>
-    <action-modal
+    <deposit-modal
       ref="deposit"
       :action="'deposit'"
       :active-cdp="activeCdp"
       :tokens-with-balance="tokensWithBalance"
-    ></action-modal>
-    <action-modal
+    ></deposit-modal>
+    <generate-modal
       ref="generate"
       :action="'generate'"
       :active-cdp="activeCdp"
       :tokens-with-balance="tokensWithBalance"
-    ></action-modal>
-    <action-modal
+    ></generate-modal>
+    <withdraw-modal
       ref="withdraw"
       :action="'withdraw'"
       :active-cdp="activeCdp"
       :tokens-with-balance="tokensWithBalance"
-    ></action-modal>
-    <action-modal
+    ></withdraw-modal>
+    <payback-modal
       ref="payback"
       :action="'payback'"
       :active-cdp="activeCdp"
       :tokens-with-balance="tokensWithBalance"
-    ></action-modal>
+    ></payback-modal>
     <close-cdp-modal
       ref="closeCdp"
       :active-cdp="activeCdp"
@@ -188,6 +188,10 @@ import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/Interf
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
 import ActionModal from '../../components/ActionsModal';
+import GenerateModal from '../../components/GenerateModal';
+import DepositModal from '../../components/DepositModal';
+import WithdrawModal from '../../components/WithdrawModal';
+import PaybackModal from '../../components/PaybackModal';
 import CloseCdpModal from '../../components/CloseCdpModal';
 import MoveCdpModal from '../../components/MoveCdpModal';
 import {displayFixedPercent, displayFixedValue, displayPercentValue} from '../../helpers'
@@ -203,6 +207,10 @@ export default {
     'interface-container-title': InterfaceContainerTitle,
     'interface-bottom-text': InterfaceBottomText,
     'action-modal': ActionModal,
+    'generate-modal': GenerateModal,
+    'deposit-modal': DepositModal,
+    'withdraw-modal': WithdrawModal,
+    'payback-modal': PaybackModal,
     'close-cdp-modal': CloseCdpModal,
     'move-cdp-modal': MoveCdpModal,
     blockie: Blockie
@@ -332,13 +340,11 @@ export default {
     if (this.makerActive) {
       this.loaded = true;
       if (this.cdpId) {
-        this.activeCdp = this.makerManager.getCdp(this.cdpId)
+        this.activeCdp = this.makerManager.getCdp(this.cdpId);
         // eslint-disable-next-line
         console.log('this.activeCdp', this.activeCdp); // todo remove dev item
       }
     }
-
-
   },
   methods: {
     async migrateCdpToProxy() {
@@ -372,8 +378,8 @@ export default {
     displayFixedValue,
     async isReady() {
       console.log('isReady', this.activeCdp); // todo remove dev item
-      this.maxWithDraw = this.activeCdp.maxDaiDraw();
-      this.maxWithDrawUSD = this.activeCdp.toUSD(this.maxWithDraw);
+      // this.maxWithDraw = this.activeCdp.maxDaiDraw();
+      this.maxWithDrawUSD = this.activeCdp.toUSD(this.activeCdp.maxDai);
     },
     async migrateCdp() {
       await this.activeCdp.migrateCdp();
