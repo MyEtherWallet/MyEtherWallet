@@ -74,9 +74,9 @@ class ledgerWallet {
       if (signedChainId !== networkId)
         throw new Error(
           'Invalid networkId signature returned. Expected: ' +
-          networkId +
-          ', Got: ' +
-          signedChainId,
+            networkId +
+            ', Got: ' +
+            signedChainId,
           'InvalidNetworkId'
         );
       return getSignTransactionObject(tx);
