@@ -518,4 +518,15 @@ export default class MakerCDP {
   calcLiquidationPriceEthChg(ethQty) {
     return toBigNumber(this.calcLiquidationPrice(ethQty, this._debtValue));
   }
+
+  static displayPercentValue(raw) {
+    if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);
+    return raw.times(100).toString();
+  }
+
+  static displayFixedValue(raw, decimals = 3, round = true) {
+    if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);
+    if (round) return raw.toFixed(decimals, BigNumber.ROUND_DOWN).toString();
+    return raw.toFixed(decimals).toString();
+  }
 }

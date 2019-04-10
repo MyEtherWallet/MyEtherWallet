@@ -177,7 +177,6 @@
         </div>
       </div>
     </div>
-    <!--</div>-->
   </div>
 </template>
 
@@ -191,6 +190,7 @@ import Blockie from '@/components/Blockie';
 import ActionModal from '../../components/ActionsModal';
 import CloseCdpModal from '../../components/CloseCdpModal';
 import MoveCdpModal from '../../components/MoveCdpModal';
+import {displayFixedPercent, displayFixedValue, displayPercentValue} from '../../helpers'
 
 import BigNumber from 'bignumber.js';
 
@@ -284,8 +284,6 @@ export default {
       console.log('val', val); // todo remove dev item
       if(this.makerManager.hasCdp(val)){
         this.activeCdp = this.makerManager.getCdp(val)
-        console.log(this.activeCdp.cdpId); // todo remove dev item
-        // this.activeCdp = this.availableCdps[val];
       }
     },
     openCloseModal(val){
@@ -319,18 +317,14 @@ export default {
       }
     },
     liquidationPriceDisplay() {
-      const value = this.displayFixedValue(this.activeCdp.liquidationPrice, 2)
-      if (value > 0) {
+      const value = displayFixedValue(this.activeCdp.liquidationPrice, 2)
+      if (new BigNumber(value).gt(0)) {
         return value;
       }
       return '--'
     },
     collaterlizationRatioDisplay(){
-      const value = this.displayFixedValue(this.displayPercentValue(this.activeCdp.collatRatio))
-      if(isFinite(value)){
-        return value;
-      }
-      return '--'
+      return displayFixedPercent(this.activeCdp.collatRatio)
     }
   },
   async mounted() {
@@ -339,7 +333,6 @@ export default {
       this.loaded = true;
       if (this.cdpId) {
         this.activeCdp = this.makerManager.getCdp(this.cdpId)
-        // this.activeCdp = this.availableCdps[this.cdpId];
         // eslint-disable-next-line
         console.log('this.activeCdp', this.activeCdp); // todo remove dev item
       }
@@ -353,8 +346,6 @@ export default {
     },
     showDeposit() {
       this.$refs.deposit.$refs.modal.show();
-
-      // this.$refs.action.$refs.modal.show();
     },
     showWithdraw() {
       this.$refs.withdraw.$refs.modal.show();
@@ -377,15 +368,8 @@ export default {
       })
       this.$refs.moveCdp.$refs.modal.show();
     },
-    displayPercentValue(raw) {
-      if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);
-      return raw.times(100).toString();
-    },
-    displayFixedValue(raw, decimals = 3, round = true) {
-      if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);
-      if (round) return raw.toFixed(decimals, BigNumber.ROUND_DOWN).toString();
-      return raw.toFixed(decimals).toString();
-    },
+    displayPercentValue,
+    displayFixedValue,
     async isReady() {
       console.log('isReady', this.activeCdp); // todo remove dev item
       this.maxWithDraw = this.activeCdp.maxDaiDraw();

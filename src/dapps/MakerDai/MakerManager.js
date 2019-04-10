@@ -88,10 +88,10 @@ export default class MakerManager /*extends EventEmitter*/ {
     this.cdpService = await this.maker.service('cdp');
     this.proxyService = await this.maker.service('proxy');
 
-    this.ethPrice = toBigNumber(
-      (await this.priceService.getEthPrice()).toNumber()
-    );
-    // this.ethPrice = toBigNumber(132.93);
+    // this.ethPrice = toBigNumber(
+    //   (await this.priceService.getEthPrice()).toNumber()
+    // );
+    this.ethPrice = toBigNumber(180.72);
 
     this.pethPrice = toBigNumber(
       (await this.priceService.getPethPrice()).toNumber()

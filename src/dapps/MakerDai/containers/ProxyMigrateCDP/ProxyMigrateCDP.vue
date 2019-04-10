@@ -162,6 +162,7 @@ import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
 import CloseCdpModal from '../../components/CloseCdpModal';
 import MoveCdpModal from '../../components/MoveCdpModal';
+import {displayFixedPercent, displayFixedValue, displayPercentValue} from '../../helpers'
 
 import BigNumber from 'bignumber.js';
 
@@ -279,9 +280,6 @@ export default {
       if (this.activeCdp) {
         return this.activeCdp.needToFinishMigrating;
       }
-    },
-    migrationState() {
-      return this.migrationInProgress[this.cdpId];
     }
   },
   async mounted() {
@@ -306,15 +304,8 @@ export default {
     showMove() {
       this.$refs.moveCdp.$refs.modal.show();
     },
-    displayPercentValue(raw) {
-      if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);
-      return raw.times(100).toString();
-    },
-    displayFixedValue(raw, decimals = 3, round = true) {
-      if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);
-      if (round) return raw.toFixed(decimals, BigNumber.ROUND_DOWN).toString();
-      return raw.toFixed(decimals).toString();
-    },
+    displayPercentValue,
+    displayFixedValue,
     async isReady() {
       console.log('isReady', this.activeCdp); // todo remove dev item
       this.maxWithDraw = this.activeCdp.maxDaiDraw();

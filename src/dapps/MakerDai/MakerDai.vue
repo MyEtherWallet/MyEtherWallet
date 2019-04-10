@@ -221,9 +221,6 @@ export default {
     showRefresh() {
       return this.cdps.length > 0 || this.cdpsWithoutProxy.length > 0;
     },
-    showCreate() {
-      return this.cdps.length === 0 && this.cdpsWithoutProxy.length === 0;
-    },
     onCreate() {
       return this.$route.name === 'create';
     },
@@ -330,7 +327,6 @@ export default {
         this.makerManager.cdps.length > 0 ||
         this.makerManager.cdpsWithoutProxy.length > 0
       ) {
-        // await this.loadCdpDetails();
         this.cdpDetailsLoaded = true;
         this.makerActive = true;
         console.log(this.$route); // todo remove dev item
@@ -436,7 +432,6 @@ export default {
       await this.makerManager.refresh();
     },
     async doUpdate() {
-      const maybeMigrate = this.makerManager.cdpsWithoutProxy.length > 0;
       // eslint-disable-next-line
       console.log('vue doUpdate'); // todo remove dev item
       if (this.creatingCdp) {
@@ -447,18 +442,11 @@ export default {
 
       const complete = await this.makerManager.doUpdate(this.$route.name);
       if (complete) {
-        // this.availableCdps = {};
-        // this.cdps = [];
-        // this.cdpsWithoutProxy = [];
         this.currentProxy = this.makerManager.currentProxy;
         console.log(this.currentProxy); // todo remove dev item
         this.availableCdps = this.makerManager.availableCdps;
         this.cdps = this.makerManager.cdpsWithProxy;
         this.cdpsWithoutProxy = this.makerManager.cdpsNoProxy;
-
-        // if(this.cdpsWithoutProxy.length === 0 && maybeMigrate){
-        //   this.goToManage();
-        // }
         await this.runAfterUpdateActions();
         Toast.responseHandler('CDP Updated', Toast.INFO);
       } else {

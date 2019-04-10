@@ -299,6 +299,8 @@ import ethUnit from 'ethjs-unit';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
 import CheckBox from '../CheckBox';
 import BigNumber from 'bignumber.js/bignumber.js';
+import {displayFixedValue, displayPercentValue} from '../../helpers'
+
 
 const toBigNumber = num => {
   return new BigNumber(num);
@@ -542,14 +544,8 @@ export default {
     checkBoxClicked() {
       this.riskyBypass = !this.riskyBypass;
     },
-    displayPercentValue(raw) {
-      if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);
-      return raw.times(100).toString();
-    },
-    displayFixedValue(raw, decimals = 3) {
-      if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);
-      return raw.toFixed(decimals, BigNumber.ROUND_DOWN).toString();
-    },
+    displayPercentValue,
+    displayFixedValue,
     notZero(val) {
       return toBigNumber(val).gt(0);
     },
