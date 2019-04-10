@@ -140,6 +140,8 @@ if (process.env.NODE_ENV === 'production') {
           'src/assets/images/networks/etsc.svg',
           'src/assets/images/networks/exp.svg',
           'src/assets/images/icons/up.svg',
+          'src/assets/images/icons/button-json.svg',
+          'src/assets/images/icons/button-mnemonic.svg',
           // Chrome Extension
           'src/builds/mewcx/app.vue',
           'src/builds/mewcx/files/img/icons/icon128.png',
