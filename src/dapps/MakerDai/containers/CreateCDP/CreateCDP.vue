@@ -137,6 +137,8 @@ import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/Interf
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
 import MakerCDP from '../../MakerCDP';
+import {displayFixedPercent, displayFixedValue, displayPercentValue} from '../../helpers'
+
 
 import BigNumber from 'bignumber.js';
 import Arrow from '@/assets/images/etc/single-arrow.svg';
@@ -311,28 +313,12 @@ export default {
 
       this.makerCDP = new MakerCDP(null, this.maker, services, sysVars);
     },
-    displayPercentValue(raw) {
-      if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);
-      return raw
-        .times(100)
-        .toFixed(2)
-        .toString();
-    },
-    displayFixedValue(raw, decimals = 3) {
-      if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);
-      return raw.toFixed(decimals).toString();
-    },
+    displayPercentValue,
+    displayFixedValue,
     async openCdp() {
       if (this.ethQty <= 0) return 0;
       this.$emit('cdpOpened');
       await this.makerCDP.openCdp(this.ethQty, this.daiQty);
-
-      // const newCdp = await this.makerCDP.openCdp(this.ethQty, this.daiQty);
-      // // eslint-disable-next-line
-      // console.log(newCdp); // todo remove dev item
-      // await this.makerCDP.init(newCdp.id);
-      // // this.makerManager.addOpenedCdp(this.makerCDP, newCdp.id)
-      // this.$emit('cdpOpened', { maker: this.makerCDP, id: newCdp.id });
     }
   }
 };
