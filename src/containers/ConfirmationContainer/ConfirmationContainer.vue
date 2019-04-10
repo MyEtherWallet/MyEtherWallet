@@ -351,16 +351,20 @@ export default {
       this.$refs.errorModal.$refs.errorModal.show();
     },
     parseRawTx(tx) {
-      const tokenData = parseTokensData(
-        tx.data,
-        tx.to,
-        this.web3,
-        this.network.type.tokens,
-        this.network.type.name
-      );
-      tx.tokenTransferTo = tokenData.tokenTransferTo;
-      tx.tokenTransferVal = tokenData.tokenTransferVal;
-      tx.tokenSymbol = tokenData.tokenSymbol;
+      let tokenData = '';
+      if (tx.to && tx.data) {
+        tokenData = parseTokensData(
+          tx.data,
+          tx.to,
+          this.web3,
+          this.network.type.tokens,
+          this.network.type.name
+        );
+        tx.tokenTransferTo = tokenData.tokenTransferTo;
+        tx.tokenTransferVal = tokenData.tokenTransferVal;
+        tx.tokenSymbol = tokenData.tokenSymbol;
+      }
+
       this.raw = tx;
       this.nonce = tx.nonce === '0x' ? 0 : new BigNumber(tx.nonce).toFixed();
       this.data = tx.data;
