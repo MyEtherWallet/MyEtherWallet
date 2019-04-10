@@ -97,18 +97,6 @@ export default class SwapProviders {
     this.providers.forEach(provider => {
       provider.setNetwork(network);
     });
-    // async updateNetwork(environmentSupplied, misc) {
-    //   // const iterator = this.providers.entries();
-    //   // let val = iterator.next();
-    //   // while(!val.done){
-    //   //   await val.value.setNetwork(network);
-    //   //   val = iterator.next();
-    //   //   console.log(val); // todo remove dev item
-    //   // }
-    //   // this.providers.forEach(provider => {
-    //   //   provider.setNetwork(network);
-    //   // });
-    //   this.setup(this.providerConstructors, environmentSupplied, misc);
   }
 
   checkIfRatesPresent() {
