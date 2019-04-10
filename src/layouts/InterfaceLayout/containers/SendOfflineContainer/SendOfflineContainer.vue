@@ -445,7 +445,7 @@ export default {
           new BigNumber(unit.toWei(this.localGasPrice, 'gwei')).toString(16)
         ),
         to: isToken ? this.selectedCoinType.address : this.address,
-        value: isToken ? this.toAmt : amtWei,
+        value: isToken ? 0 : amtWei,
         data: this.toData,
         chainId: this.network.type.chainID
       };
