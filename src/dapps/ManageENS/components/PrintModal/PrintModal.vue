@@ -29,6 +29,18 @@
           <p>JSON String</p>
           <div>{{ jsonString }}</div>
         </div>
+        <div class="print-warning">
+          <div class="print-warning-img">
+            <img src="@/assets/images/icons/orange-warn.png" />
+          </div>
+          <div>
+            <b>SAVE</b> this information. When the auction ends in
+            <b>3</b> days, you will have <b>48</b> hours to reveal your bid.
+            When it's time, search the ENS domain on our site and enter your
+            Actual Bid Amount and Secret Phrase to reveal your bid. If you won,
+            you will be notified to finalize the process.
+          </div>
+        </div>
       </div>
       <div class="print-modal-footer">
         <div>

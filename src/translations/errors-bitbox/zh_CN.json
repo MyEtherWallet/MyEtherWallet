@@ -1,5 +1,5 @@
 {
   "signFailed": "Sign failed",
-  "invalidPassword": "Password provided is incorrect! Remaining Attempts: ",
+  "invalidPassword": "Password provided is incorrect! Attempts remaining: ",
   "userAbortedAction": "User aborted action"
 }
