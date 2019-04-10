@@ -12,36 +12,7 @@
       :tokens-with-balance="tokensWithBalance"
     >
     </move-cdp-modal>
-    <!--<div class="container-maker">-->
-    <div>
-      <div>
-        <div
-          :class="[
-            'step-indicator',
-            !(noProxy && !finishMigration) ? 'complete' : 'incomplete'
-          ]"
-        >
-          <span>Step 1</span>
-        </div>
-        <div
-          :class="[
-            'step-indicator',
-            !noProxy && finishMigration ? 'complete' : 'incomplete'
-          ]"
-        >
-          <span>Step 2</span>
-        </div>
-      </div>
-      <div class="migrate-cdp-container">
-        {{ migrationState }}
-        <div v-if="migrationState === 0" class="migrate-cdp">
-          <button @click="migrateCdpToProxy">Migrate Existing CDP</button>
-        </div>
-        <div v-if="finishMigration" class="migrate-cdp">
-          <button @click="migrateCdp">Finish Migrating CDP</button>
-        </div>
-      </div>
-    </div>
+
     <div v-show="!finishMigration" class="manage-container">
       <div class="content-container">
         <p class="cpd-title">{{ $t('dapps.cdpPortal') }}</p>

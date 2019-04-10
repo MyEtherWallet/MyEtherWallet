@@ -1,4 +1,5 @@
 import BigNumber from 'bignumber.js';
+// import {EventEmitter} from 'events';
 import { toChecksumAddress } from '@/helpers/addressUtils';
 import MakerCDP from './MakerCDP';
 
@@ -12,11 +13,14 @@ const bnOver = (one, two, three) => {
     .div(toBigNumber(three));
 };
 
-export default class MakerManager {
+
+export default class MakerManager /*extends EventEmitter*/ {
   constructor(props) {
+    // super();
+    this.creatingProxy = false;
     this.currentAddress = props.account.address;
     this.maker = props.maker;
-    this.currentProxy = props.currentProxy || null;
+    this._proxyAddress = props.currentProxy || null;
     this.activeCdps = {};
     this.routeHandlers = props.routeHandlers || {
       home: () => {},
@@ -30,8 +34,21 @@ export default class MakerManager {
   }
 
   get proxy() {
-    return this.currentProxy;
+    return this._proxyAddress;
   }
+
+  get isCreatingProxy() {
+    if (this._proxyAddress !== null) {
+      return false;
+    }
+    return this.creatingProxy;
+  }
+
+  // get needToMigrateCdps(){
+  //   if (this._proxyAddress === null && this.creatingProxy) {
+  //     return true;
+  //   }
+  // }
 
   get cdpsWithProxy() {
     return this.cdps;
@@ -41,6 +58,13 @@ export default class MakerManager {
     return this.cdpsWithoutProxy;
   }
 
+  get proxyAddress() {
+    if (!this._proxyAddress) {
+      return null;
+    }
+    return this._proxyAddress;
+  }
+
   get makerActive() {}
 
   hasCdp(cdpId) {
@@ -48,6 +72,7 @@ export default class MakerManager {
     console.log(Object.keys(this.activeCdps)); // todo remove dev item
     return Object.keys(this.activeCdps).includes(toBigNumber(cdpId).toString());
   }
+
 
   getCdp(cdpId) {
     return this.activeCdps[cdpId];
@@ -90,8 +115,8 @@ export default class MakerManager {
       await this.priceService.getWethToPethRatio()
     );
     console.log(this.wethToPethRatio.toString()); // todo remove dev item
-    this.currentProxy = await this.proxyService.currentProxy();
-    console.log(this.currentProxy); // todo remove dev item
+    this._proxyAddress = await this.proxyService.currentProxy();
+    console.log(this._proxyAddress); // todo remove dev item
 
     const { withProxy, withoutProxy } = await this.locateCdps();
     this.cdps = withProxy;
@@ -102,100 +127,35 @@ export default class MakerManager {
     }
   }
 
-  async locateCdpsWithoutProxy() {
-    const directCdps = await this.maker.getCdpIds(
-      this.currentAddress //proxy
-    );
-    const directCdpsCheckSum = await this.maker.getCdpIds(
-      toChecksumAddress(this.currentAddress)
-    );
-
-    return directCdps.concat(directCdpsCheckSum);
-  }
-
-  async locateCdpsProxy() {
-    await this.getProxy();
-    // const proxy = await this.maker
-    //   .service('proxy')
-    //   .getProxyAddress(this.currentAddress);
-
-    return await this.maker.getCdpIds(this.currentProxy);
-  }
-
-  async locateCdps() {
-    this.withoutProxy = await this.locateCdpsWithoutProxy();
-    console.log(this.withoutProxy); // todo remove dev item
-
-    this.cdps = await this.locateCdpsProxy();
-
-    return { withProxy: this.cdps, withoutProxy: this.withoutProxy };
-  }
-
-  async loadCdpDetails() {
-    for (let i = 0; i < this.cdps.length; i++) {
-      this.activeCdps[this.cdps[i]] = await this.buildCdpObject(this.cdps[i]);
-    }
-    for (let i = 0; i < this.cdpsWithoutProxy.length; i++) {
-      this.activeCdps[this.cdpsWithoutProxy[i]] = await this.buildCdpObject(
-        this.cdpsWithoutProxy[i],
-        {
-          noProxy: true
-        }
-      );
-    }
-  }
-
-  async buildCdpObject(cdpId, options = {}) {
-    const sysVars = {
-      ethPrice: this.ethPrice,
-      pethPrice: this.pethPrice,
-      targetPrice: this.targetPrice,
-      liquidationRatio: this.liquidationRatio,
-      liquidationPenalty: this.liquidationPenalty,
-      stabilityFee: this.stabilityFee,
-      wethToPethRatio: this.wethToPethRatio,
-      currentAddress: this.currentAddress,
-      ...options
-    };
-
-    const services = {
-      priceService: this.priceService,
-      cdpService: this.cdpService,
-      proxyService: this.proxyService
-    };
-
-    const makerCDP = new MakerCDP(cdpId, this.maker, services, sysVars);
-    return await makerCDP.init(cdpId);
-  }
-
   async buildProxy() {
-    const currentProxy = await this.proxyService.currentProxy();
-    if (!currentProxy) {
+    this.creatingProxy = true;
+    this._proxyAddress = await this.getProxy();
+    if (!this._proxyAddress) {
       await this.proxyService.build();
       // eslint-disable-next-line
-      this.proxyAddress = await this.proxyService.currentProxy();
-      return this.proxyAddress;
+      this._proxyAddress = await this.proxyService.currentProxy();
+      return this._proxyAddress;
     }
-    this.proxyAddress = await this.proxyService.currentProxy();
-    return this.proxyAddress;
+    this._proxyAddress = await this.proxyService.currentProxy();
+    return this._proxyAddress;
   }
 
   async migrateCdp(cdpId) {
-    const currentProxy = await this.proxyService.currentProxy();
+    const currentProxy = await this.getProxy();
     if (currentProxy) {
       await this.cdpService.give(cdpId, currentProxy);
     }
   }
 
   async getProxy() {
-    this.proxyAddress = await this.proxyService.currentProxy();
-    if (!this.proxyAddress) {
-      this.proxyAddress = await this.proxyService.getProxyAddress(
+    this._proxyAddress = await this.proxyService.currentProxy();
+    if (!this._proxyAddress) {
+      this._proxyAddress = await this.proxyService.getProxyAddress(
         this.currentAddress
       );
-      if (this.proxyAddress) this.noProxy = false;
+      if (this._proxyAddress) this.noProxy = false;
     }
-    return this.proxyAddress;
+    return this._proxyAddress;
   }
 
   async refresh() {
@@ -213,15 +173,17 @@ export default class MakerManager {
     const currentCdpIds = Object.keys(this.activeCdps);
     await this.locateCdps();
 
-    if (this.cdps.length === 0 && this.cdpsWithoutProxy.length === 0) {
-      this.routeHandlers.create();
-      return;
-    }
+    // const dups = this.cdps.filter(item => {
+    //   return this.cdpsWithoutProxy.includes(item);
+    // });
 
-    if (this.cdpsWithoutProxy.length === 0) {
-      this.routeHandlers.create();
-      return;
-    }
+    // if (dups.length > 0) {
+    //   dups.forEach(item => {
+    //     console.log(' this.cdpsWithoutProxy', this.cdpsWithoutProxy); // todo remove dev item
+    //     const idx = this.cdpsWithoutProxy.findIndex(item);
+    //     this.cdpsWithoutProxy.splice(idx, 1);
+    //   });
+    // }
 
     const newCdps = this.cdps.filter(
       item => !Object.keys(this.activeCdps).includes(item)
@@ -250,10 +212,21 @@ export default class MakerManager {
         { noProxy: true }
       );
     }
+
+    console.log(' this.cdpsWithoutProxy', this.cdpsWithoutProxy); // todo remove dev item
+    if (this.cdps.length === 0 && this.cdpsWithoutProxy.length === 0) {
+      this.routeHandlers.create();
+      return;
+    }
+
+    // // const currentCdpIds = Object.keys(this.activeCdps);
+    // if (this.cdpsWithoutProxy.length === 0) {
+    //   this.routeHandlers.goToManage();
+    // }
   }
 
   async doUpdate(route) {
-    this.proxyAddress = await this.proxyService.currentProxy();
+    this._proxyAddress = await this.proxyService.currentProxy();
     console.log('updating'); // todo remove dev item
     let afterClose = false;
     const afterOpen = route === 'create';
@@ -292,6 +265,7 @@ export default class MakerManager {
       }
     }
     console.log('onUpdate route: ', route); // todo remove dev item
+    return true;
   }
 
   calcDrawAmt(principal, collatRatio) {
@@ -329,12 +303,71 @@ export default class MakerManager {
       currentAddress: this.currentAddress
     };
   }
-
   getSysServices() {
     return {
       priceService: this.priceService,
       cdpService: this.cdpService,
       proxyService: this.proxyService
     };
+  }
+
+  async locateCdps() {
+    this.cdpsWithoutProxy = [];
+    this.cdpsWithoutProxy = await this.locateCdpsWithoutProxy();
+    this.cdps = [];
+    this.cdps = await this.locateCdpsProxy();
+
+    return { withProxy: this.cdps, withoutProxy: this.cdpsWithoutProxy };
+  }
+
+  async locateCdpsWithoutProxy() {
+    const directCdps = await this.maker.getCdpIds(this.currentAddress);
+    const directCdpsCheckSum = await this.maker.getCdpIds(
+      toChecksumAddress(this.currentAddress)
+    );
+
+    return directCdps.concat(directCdpsCheckSum);
+  }
+
+  async locateCdpsProxy() {
+    await this.getProxy();
+    return await this.maker.getCdpIds(this._proxyAddress);
+  }
+
+  async loadCdpDetails() {
+    for (let i = 0; i < this.cdps.length; i++) {
+      this.activeCdps[this.cdps[i]] = await this.buildCdpObject(this.cdps[i]);
+    }
+    for (let i = 0; i < this.cdpsWithoutProxy.length; i++) {
+      this.activeCdps[this.cdpsWithoutProxy[i]] = await this.buildCdpObject(
+        this.cdpsWithoutProxy[i],
+        {
+          noProxy: true
+        }
+      );
+    }
+  }
+
+  async buildCdpObject(cdpId, options = {}) {
+    const sysVars = {
+      ethPrice: this.ethPrice,
+      pethPrice: this.pethPrice,
+      targetPrice: this.targetPrice,
+      liquidationRatio: this.liquidationRatio,
+      liquidationPenalty: this.liquidationPenalty,
+      stabilityFee: this.stabilityFee,
+      wethToPethRatio: this.wethToPethRatio,
+      currentAddress: this.currentAddress,
+      ...options
+    };
+
+    const services = {
+      priceService: this.priceService,
+      cdpService: this.cdpService,
+      proxyService: this.proxyService
+    };
+
+    const makerCDP = new MakerCDP(cdpId, this.maker, services, sysVars);
+    return await makerCDP.init(cdpId);
   }
 }
