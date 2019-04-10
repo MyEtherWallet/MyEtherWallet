@@ -172,7 +172,7 @@ export default {
       makerManager: {},
       sysVars: {},
       sysServices: {},
-      updateActions: []
+      afterUpdate: []
     };
   },
   watch: {
@@ -228,11 +228,14 @@ export default {
       return this.$route.name === 'create';
     },
     hasProxy() {
-      console.log('hasProxy'); // todo remove dev item
+      console.log('hasProxy', this.currentProxy !== null); // todo remove dev item
       return this.currentProxy !== null;
     },
     showCdpMigrateButtons() {
-      console.log('showCdpMigrateButtons'); // todo remove dev item
+      console.log(
+        'showCdpMigrateButtons',
+        this.hasProxy && this.cdpsWithoutProxy.length >= 1
+      ); // todo remove dev item
       return this.hasProxy && this.cdpsWithoutProxy.length >= 1;
     },
     listCdps() {
@@ -323,7 +326,10 @@ export default {
 
       this.currentProxy = this.makerManager.proxy;
 
-      if (this.cdps.length > 0 || this.cdpsWithoutProxy.length > 0) {
+      if (
+        this.makerManager.cdps.length > 0 ||
+        this.makerManager.cdpsWithoutProxy.length > 0
+      ) {
         // await this.loadCdpDetails();
         this.cdpDetailsLoaded = true;
         this.makerActive = true;
@@ -389,14 +395,6 @@ export default {
     },
     addCdp(vals) {
       this.creatingCdp = true;
-      // await this.makerManager.updateActiveCdp();
-      // Toast.responseHandler('CDP Created', Toast.INFO);
-      this.updateActions.push(this.makerManager.updateActiveCdp);
-      this.updateActions.push([
-        Toast.responseHandler,
-        'CDP Created',
-        Toast.INFO
-      ]);
       // this.makerManager.addOpenedCdp(vals.maker, vals.id);
       // this.availableCdps = this.makerManager.availableCdps;
     },
@@ -410,23 +408,20 @@ export default {
       }
     },
     async buildProxy() {
-      this.updateActions.push(this.maker.service('proxy').currentProxy);
       await this.makerManager.buildProxy();
     },
     async migrateCdp(cdpId) {
-      this.updateActions.push(this.goToManage);
+      this.afterUpdate.push(this.goToManage);
+      this.afterUpdate.push(() => {
+        if (this.makerManager.cdpsWithoutProxy.length === 0) {
+          this.cdpsWithoutProxy = [];
+        }
+      });
       await this.makerManager.migrateCdp(cdpId);
     },
-
-
-    async refresh() {
-      // eslint-disable-next-line
-      console.log('vue refresh'); // todo remove dev item
-      await this.makerManager.refresh();
-    },
-    async runStackedActions(){
-      for (let i = 0; i < this.updateActions.length; i++) {
-        const item = this.updateActions[i];
+    async runAfterUpdateActions() {
+      for (let i = 0; i < this.afterUpdate.length; i++) {
+        const item = this.afterUpdate[i];
         if (Array.isArray(item)) {
           const func = item.shift();
           await func.apply(this, item);
@@ -435,36 +430,42 @@ export default {
         }
       }
     },
-    async updateValues(){
-      this.proxyAddress = this.makerManager.currentProxy;
-      console.log(this.proxyAddress); // todo remove dev item
-      this.availableCdps = this.makerManager.availableCdps;
-      this.cdps = this.makerManager.cdpsWithProxy;
-      this.cdpsWithoutProxy = this.makerManager.cdpsNoProxy;
+    async refresh() {
+      // eslint-disable-next-line
+      console.log('vue refresh'); // todo remove dev item
+      await this.makerManager.refresh();
     },
     async doUpdate() {
-      const maybeMigrate = this.cdpsWithoutProxy.length > 0;
+      const maybeMigrate = this.makerManager.cdpsWithoutProxy.length > 0;
       // eslint-disable-next-line
       console.log('vue doUpdate'); // todo remove dev item
-      // if (this.creatingCdp) {
-      //   this.creatingCdp = false;
-      //   await this.makerManager.updateActiveCdp();
-      //   Toast.responseHandler('CDP Created', Toast.INFO);
-      // }
-      await this.runStackedActions();
-
-      await this.makerManager.doUpdate(this.$route.name);
-
-
-      // await this.maker.service('proxy')
-      if (this.cdpsWithoutProxy.length === 0 && this.cdps.length === 0) {
-        this.gotoCreate();
-      } else if (this.cdpsWithoutProxy.length === 0 && maybeMigrate) {
-        this.goToManage();
+      if (this.creatingCdp) {
+        this.creatingCdp = false;
+        await this.makerManager.updateActiveCdp();
+        Toast.responseHandler('CDP Created', Toast.INFO);
       }
-      Toast.responseHandler('CDP Updated', Toast.INFO);
-    },
 
+      const complete = await this.makerManager.doUpdate(this.$route.name);
+      if (complete) {
+        // this.availableCdps = {};
+        // this.cdps = [];
+        // this.cdpsWithoutProxy = [];
+        this.currentProxy = this.makerManager.currentProxy;
+        console.log(this.currentProxy); // todo remove dev item
+        this.availableCdps = this.makerManager.availableCdps;
+        this.cdps = this.makerManager.cdpsWithProxy;
+        this.cdpsWithoutProxy = this.makerManager.cdpsNoProxy;
+
+        // if(this.cdpsWithoutProxy.length === 0 && maybeMigrate){
+        //   this.goToManage();
+        // }
+        await this.runAfterUpdateActions();
+        Toast.responseHandler('CDP Updated', Toast.INFO);
+      } else {
+        Toast.responseHandler('Update encountered an issue', Toast.INFO);
+      }
+      console.log(this.cdpsWithoutProxy); // todo remove dev item
+    },
     async buildCdpObject(cdpId, options = {}) {
       const sysVars = {
         ethPrice: this.ethPrice,
