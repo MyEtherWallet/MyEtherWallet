@@ -15,6 +15,7 @@ import etho from './etho';
 import go from './go';
 import kovethscan from './kov-ethscan';
 import kovinfura from './kov-infura';
+import metadium from './meta';
 import music from './music';
 import pirl from './pirl';
 import poa from './poa';
@@ -57,6 +58,7 @@ export {
   iolite,
   kovethscan,
   kovinfura,
+  metadium,
   mix,
   music,
   pirl,
