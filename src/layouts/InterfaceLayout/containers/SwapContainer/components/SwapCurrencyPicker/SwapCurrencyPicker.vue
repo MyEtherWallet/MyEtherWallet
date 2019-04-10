@@ -63,7 +63,6 @@
               <span v-if="getIcon(curr.symbol) === ''" class="currency-symbol">
                 <img :src="iconFetcher(curr.symbol)" class="icon-image" />
               </span>
-              <!--<i :class="['cc', getIcon(curr.symbol), 'cc-icon']" />-->
               {{ curr.symbol }}
               <span class="subname">- {{ curr.name }}</span>
             </p>
@@ -175,7 +174,7 @@ export default {
         icon = require(`@/assets/images/currency/coins/AllImages/${currency}.svg`);
       } catch (e) {
         // eslint-disable-next-line
-        return require(`@/assets/images/currency/coins/AllImages/MEW.png`);
+        return require(`@/assets/images/icons/web-solution.svg`);
       }
       return icon;
     },
