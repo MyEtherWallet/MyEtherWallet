@@ -8,7 +8,7 @@ export default {
   homePage: 'https://webchain.network/',
   blockExplorerTX: 'https://explorer.webchain.network/tx/[[txHash]]',
   blockExplorerAddr: 'https://explorer.webchain.network/addr/[[address]]',
-  chainID: 101,
+  chainID: 24484,
   tokens: tokens,
   contracts: contracts,
   icon: web,
