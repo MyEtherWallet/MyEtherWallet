@@ -16,6 +16,9 @@
     "default_popup": "index.html#/browser-action"
   },
   "background": {},
-  "permissions": ["storage", "tabs"],
+  "permissions": [
+    "storage",
+    "tabs"
+  ],
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 }
