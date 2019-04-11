@@ -86,9 +86,6 @@ export default class MakerCDP {
     this._usdCollateral = (await this.cdp.getCollateralValue(
       Maker.USD
     )).toBigNumber();
-    console.log('this.cdp.id', this.cdp.id); // todo remove dev item
-    console.log('updated: this._ethCollateral', this._ethCollateral); // todo remove dev item
-    console.log('updated: this._debtValue', this._debtValue); // todo remove dev item
   }
 
   async update() {
@@ -102,7 +99,6 @@ export default class MakerCDP {
     if (this.needsUpdate) {
       this.opening = false;
       this.needsUpdate = false;
-      console.log('Updating MakerCDP:', this.cdpId); // todo remove dev item
       await this.updateValues(this.cdpId);
       return this;
     }
@@ -273,7 +269,6 @@ export default class MakerCDP {
       if (this.migrateCdpStage === 1) {
         let checking;
         this.migrateCdpStage = 2;
-        console.log('migrateCdpComplete'); // todo remove dev item
         const currentProxy = await this.proxyService.getProxyAddress(
           this._currentAddress
         );
@@ -288,7 +283,6 @@ export default class MakerCDP {
             const currentProxy = await this.proxyService.getProxyAddress(
               this._currentAddress
             );
-            console.log('currentProxy', currentProxy); // todo remove dev item
             if (currentProxy) {
               clearInterval(checking);
               this.migrateCdpActive = false;
@@ -325,14 +319,12 @@ export default class MakerCDP {
       proxyAddress
     );
     // eslint-disable-next-line
-    console.log(newCdp); // todo remove dev item
     return newCdp.id;
   }
 
   async lockEth(amount) {
     try {
       if (this.noProxy) {
-        console.log(amount); // todo remove dev item
         return;
       }
       this.needsUpdate = true;
@@ -396,7 +388,6 @@ export default class MakerCDP {
 
   async closeCdp() {
     const enoughToWipe = await this.canCloseCdp();
-    console.log(enoughToWipe); // todo remove dev item
     if (enoughToWipe) {
       try {
         this.needsUpdate = true;
@@ -410,22 +401,17 @@ export default class MakerCDP {
   }
 
   async moveCdp(address) {
-    console.log(address); // todo remove dev item
     await this.getProxy();
     const proxy = await this.proxyService.getProxyAddress(address);
-    console.log(this.proxyAddress); // todo remove dev item
     if (proxy) {
-      console.log('moveCdp 1'); // todo remove dev item
       this.needsUpdate = true;
       this.closing = true; // for the purpose of displaying to the user closing and moving are the same
       await this.cdpService.giveProxy(this.proxyAddress, this.cdpId, proxy);
     } else if (!this.noProxy) {
-      console.log('moveCdp 2'); // todo remove dev item
       this.needsUpdate = true;
       this.closing = true;
       await this.cdpService.giveProxy(this.proxyAddress, this.cdpId, address);
     } else {
-      console.log('moveCdp 3'); // todo remove dev item
       this.needsUpdate = true;
       this.closing = true;
       await this.cdpService.give(this.cdpId, address);

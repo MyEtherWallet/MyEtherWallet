@@ -179,18 +179,6 @@ export default {
     ['account.address']() {
       this.makerActive = false;
       this.setup();
-    },
-    ['cdp'](val) {
-      console.log('cdp', val); // todo remove dev item
-    },
-    ['cdpsWithoutProxy'](val) {
-      console.log('cdpsWithoutProxy', val); // todo remove dev item
-    },
-    ['currentProxy'](val) {
-      console.log('currentProxy', val); // todo remove dev item
-    },
-    ['makerManager.currentProxy'](val) {
-      console.log('makerManager.currentProxy', val); // todo remove dev item
     }
   },
   computed: {
@@ -225,14 +213,9 @@ export default {
       return this.$route.name === 'create';
     },
     hasProxy() {
-      console.log('hasProxy', this.currentProxy !== null); // todo remove dev item
       return this.currentProxy !== null;
     },
     showCdpMigrateButtons() {
-      console.log(
-        'showCdpMigrateButtons',
-        this.hasProxy && this.cdpsWithoutProxy.length >= 1
-      ); // todo remove dev item
       return this.hasProxy && this.cdpsWithoutProxy.length >= 1;
     },
     listCdps() {
@@ -329,7 +312,6 @@ export default {
       ) {
         this.cdpDetailsLoaded = true;
         this.makerActive = true;
-        console.log(this.$route); // todo remove dev item
         if (
           this.$route.name !== 'create' &&
           this.$route.path.includes('maker-dai')
@@ -370,7 +352,6 @@ export default {
           });
         } else if (this.showManage) {
           // eslint-disable-next-line
-          console.log('go to select'); // todo remove dev item
           this.$router.push({
             name: 'select'
           });
@@ -428,12 +409,10 @@ export default {
     },
     async refresh() {
       // eslint-disable-next-line
-      console.log('vue refresh'); // todo remove dev item
       await this.makerManager.refresh();
     },
     async doUpdate() {
       // eslint-disable-next-line
-      console.log('vue doUpdate'); // todo remove dev item
       if (this.creatingCdp) {
         this.creatingCdp = false;
         await this.makerManager.updateActiveCdp();
@@ -443,7 +422,6 @@ export default {
       const complete = await this.makerManager.doUpdate(this.$route.name);
       if (complete) {
         this.currentProxy = this.makerManager.currentProxy;
-        console.log(this.currentProxy); // todo remove dev item
         this.availableCdps = this.makerManager.availableCdps;
         this.cdps = this.makerManager.cdpsWithProxy;
         this.cdpsWithoutProxy = this.makerManager.cdpsNoProxy;
@@ -452,7 +430,6 @@ export default {
       } else {
         Toast.responseHandler('Update encountered an issue', Toast.INFO);
       }
-      console.log(this.cdpsWithoutProxy); // todo remove dev item
     },
     async buildCdpObject(cdpId, options = {}) {
       const sysVars = {

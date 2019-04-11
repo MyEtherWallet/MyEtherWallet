@@ -8,7 +8,6 @@
       hide-footer
     >
       <div class="inputs-container">
-
         <!-- Withdraw ETH -->
         <div v-if="action === 'withdraw'" class="input-container">
           <p>
@@ -133,8 +132,7 @@ import ethUnit from 'ethjs-unit';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
 import CheckBox from '../CheckBox';
 import BigNumber from 'bignumber.js/bignumber.js';
-import {displayFixedValue, displayPercentValue} from '../../helpers'
-
+import { displayFixedValue, displayPercentValue } from '../../helpers';
 
 const toBigNumber = num => {
   return new BigNumber(num);
@@ -191,10 +189,9 @@ export default {
     hasEnoughDai() {
       // TODO Figure out how to learn how much dai a user has (the code below should work)
       if (this.amount || this.amount !== '') {
-        const daiToken = this.tokensWithBalance.find(item => {
-          return item.symbol.toUpperCase() === 'DAI';
-        });
-        console.log('daiToken', daiToken); // todo remove dev item
+        // const daiToken = this.tokensWithBalance.find(item => {
+        //   return item.symbol.toUpperCase() === 'DAI';
+        // });
         const asEth = ethUnit.fromWei(this.account.balance, 'ether');
         return toBigNumber(this.amount).lte(toBigNumber(asEth));
       }
@@ -202,7 +199,6 @@ export default {
     },
     canWithdrawEthAmount() {
       if (this.amount || this.amount !== '') {
-        console.log(this.activeCdp.ethCollateral.toString()); // todo remove dev item
         return toBigNumber(this.amount).lte(
           toBigNumber(this.activeCdp.ethCollateral)
         );

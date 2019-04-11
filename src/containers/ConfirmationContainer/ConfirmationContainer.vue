@@ -175,7 +175,6 @@ export default {
     });
 
     this.$eventHub.$on('showTxConfirmModal', (tx, resolve) => {
-      console.log('showTxConfirmModal tx: ', tx); // todo remove dev item
       this.parseRawTx(tx);
       if (tx.hasOwnProperty('ensObj')) {
         delete tx['ensObj'];

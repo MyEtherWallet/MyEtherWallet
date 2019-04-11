@@ -25,9 +25,7 @@
             <!-- TODO FOR TRANSLATE -->
             <p class="btn" @click="maxDai">Max</p>
             <!-- TODO FOR TRANSLATE -->
-            <p>
-              {{ newCollateralRatio }}%
-            </p>
+            <p>{{ newCollateralRatio }}%</p>
           </div>
         </div>
       </div>
@@ -71,11 +69,7 @@
             <div class="grid-block">
               <p>{{ $t('dapps.projectedCollatRatio') }}</p>
               <p>
-                <b
-                  >{{
-                  newCollateralRatio
-                  }}%</b
-                >
+                <b>{{ newCollateralRatio }}%</b>
               </p>
             </div>
           </div>
@@ -86,13 +80,12 @@
           <template v-slot:terms>
             <span v-if="!newCollateralRatioInvalid">
               I understand the new collateral ratio of
-              {{ newCollateralRatio }}%
-              may place my cdp at risk of liquidation.
+              {{ newCollateralRatio }}% may place my cdp at risk of liquidation.
             </span>
             <span v-if="newCollateralRatioInvalid" style="color: red;">
               I understand the new collateral ratio of
-              {{ newCollateralRatio }}%
-              WILL place my cdp at risk of liquidation.
+              {{ newCollateralRatio }}% WILL place my cdp at risk of
+              liquidation.
             </span> </template
           ><!-- TODO FOR TRANSLATE -->
         </check-box>
@@ -180,10 +173,9 @@ export default {
     hasEnoughDai() {
       // TODO Figure out how to learn how much dai a user has (the code below should work)
       if (this.amount || this.amount !== '') {
-        const daiToken = this.tokensWithBalance.find(item => {
-          return item.symbol.toUpperCase() === 'DAI';
-        });
-        console.log('daiToken', daiToken); // todo remove dev item
+        // const daiToken = this.tokensWithBalance.find(item => {
+        //   return item.symbol.toUpperCase() === 'DAI';
+        // });
         const asEth = ethUnit.fromWei(this.account.balance, 'ether');
         return toBigNumber(this.amount).lte(toBigNumber(asEth));
       }
@@ -191,7 +183,6 @@ export default {
     },
     canWithdrawEthAmount() {
       if (this.amount || this.amount !== '') {
-        console.log(this.activeCdp.ethCollateral.toString()); // todo remove dev item
         return toBigNumber(this.amount).lte(
           toBigNumber(this.activeCdp.ethCollateral)
         );
@@ -211,9 +202,7 @@ export default {
       return this.canGenerateDaiAmount && (ratioOk || this.riskyBypass);
     },
     newCollateralRatio() {
-      console.log('newCollateralRatio'); // todo remove dev item
       if (this.activeCdp && this.amount > 0) {
-        console.log(this.activeCdp.debtValue.plus(this.amount).toString()); // todo remove dev item
         return this.displayFixedValue(
           this.displayPercentValue(
             this.activeCdp.calcCollatRatioDaiChg(
@@ -223,9 +212,7 @@ export default {
         );
       } else if (this.activeCdp) {
         return this.displayFixedValue(
-          this.displayPercentValue(
-            this.activeCdp.collatRatio
-          )
+          this.displayPercentValue(this.activeCdp.collatRatio)
         );
       }
       return '--';
