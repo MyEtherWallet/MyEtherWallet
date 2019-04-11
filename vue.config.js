@@ -65,7 +65,7 @@ const webpackConfig = {
         commons: {
           test: /[\\/]node_modules[\\/]/,
           name: 'vendors',
-          chunks: 'all'
+          chunks: 'initial'
         }
       }
     }
@@ -75,7 +75,7 @@ if (process.env.NODE_ENV === 'production') {
   webpackConfig.plugins.push(
     new UnusedFilesWebpackPlugin({
       patterns: ['src/**/*.*'],
-      failOnUnused: false,
+      failOnUnused: true,
       globOptions: {
         ignore: [
           // Are we using these
@@ -155,6 +155,7 @@ const pwa = {
   name: 'MyEtherWallet',
   workboxOptions: {
     importWorkboxFrom: 'local',
+    exclude: [/\.map$/, /^manifest.*\.js$/, /\.svg$/],
     skipWaiting: true,
     clientsClaim: true,
     navigateFallback: '/index.html'
