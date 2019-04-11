@@ -156,7 +156,8 @@ const pwa = {
   workboxOptions: {
     importWorkboxFrom: 'local',
     skipWaiting: true,
-    clientsClaim: true
+    clientsClaim: true,
+    navigateFallback: '/index.html'
   }
 };
 const exportObj = {
