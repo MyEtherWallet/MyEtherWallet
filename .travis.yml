@@ -86,8 +86,8 @@ jobs:
     - |
       curl -H "Authorization: token ${GITHUB_TOKEN}" -X POST \
       -d "{\"body\": \"Copy of this build can be found at <br/>https://www.mewbuilds.com/build/${TRAVIS_COMMIT}/index.html<br/> \
-                        https://www.cloudflare-ipfs.com/ipfs/$HASH <br/>
-                        Virus Total analysis <br/>
+                        https://www.cloudflare-ipfs.com/ipfs/$HASH <br/> \
+                        Virus Total analysis <br/> \
                         $VIRUS_TOTAL_URL\"}" \
                         "https://api.github.com/repos/${TRAVIS_REPO_SLUG}/commits/${TRAVIS_COMMIT}/comments"
   - stage: create release
