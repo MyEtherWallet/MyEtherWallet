@@ -41,7 +41,23 @@ const webpackConfig = {
           progressive: true
         })
       ]
-    })
+    }),
+    new CopyWebpackPlugin([
+      {
+        from: 'src/builds/' + JSON.parse(env_vars.BUILD_TYPE) + '/public',
+        transform: function (content, filePath) {
+          if (filePath.split('.').pop() === ('js' || 'JS'))
+            return UglifyJS.minify(content.toString()).code;
+          if (filePath.replace(/^.*[\\\/]/, '') === 'manifest.json' && JSON.parse(env_vars.BUILD_TYPE) === 'mewcx') {
+            const version = require('./package.json').version;
+            const json = JSON.parse(content);
+            json.version = version;
+            return JSON.stringify(json, null, 2);
+          }
+          return content;
+        }
+      }
+    ])
   ],
   optimization: {
     splitChunks: {
@@ -55,31 +71,11 @@ const webpackConfig = {
     }
   }
 };
-if (process.env.BUILD_TYPE === 'mewcx') {
-  webpackConfig.plugins.push(
-    new CopyWebpackPlugin([
-      {
-        from: 'src/builds/mewcx/files',
-        transform: function (content, filePath) {
-          if (filePath.split('.').pop() === ('js' || 'JS'))
-            return UglifyJS.minify(content.toString()).code;
-          if (filePath.replace(/^.*[\\\/]/, '') === 'manifest.json') {
-            const version = require('./package.json').version;
-            const json = JSON.parse(content);
-            json.version = version;
-            return JSON.stringify(json);
-          }
-          return content;
-        }
-      }
-    ])
-  );
-}
 if (process.env.NODE_ENV === 'production') {
   webpackConfig.plugins.push(
     new UnusedFilesWebpackPlugin({
       patterns: ['src/**/*.*'],
-      failOnUnused: true,
+      failOnUnused: false,
       globOptions: {
         ignore: [
           // Are we using these
@@ -163,12 +159,12 @@ const pwa = {
     clientsClaim: true
   }
 };
-module.exports = {
+const exportObj = {
   publicPath: process.env.ROUTER_MODE === 'history' ? '/' : './',
   configureWebpack: webpackConfig,
-  pwa: pwa,
   lintOnSave: process.env.NODE_ENV === 'production' ? 'error' : true,
   integrity: process.env.WEBPACK_INTEGRITY === 'false' ? false : true,
+  pwa: pwa,
   chainWebpack: config => {
     config.module.rule('replace').test(/\.js$/).include.add(path.resolve(__dirname, 'node_modules/@ensdomains/dnsprovejs')).end().use('string-replace-loader').loader('string-replace-loader').tap(options => {
       return {
@@ -178,3 +174,4 @@ module.exports = {
     })
   }
 };
+module.exports = exportObj
