@@ -75,7 +75,7 @@ if (process.env.NODE_ENV === 'production') {
   webpackConfig.plugins.push(
     new UnusedFilesWebpackPlugin({
       patterns: ['src/**/*.*'],
-      failOnUnused: true,
+      failOnUnused: false,
       globOptions: {
         ignore: [
           // Are we using these
@@ -138,12 +138,12 @@ if (process.env.NODE_ENV === 'production') {
           'src/assets/images/icons/up.svg',
           // Chrome Extension
           'src/builds/mewcx/app.vue',
-          'src/builds/mewcx/files/img/icons/icon128.png',
-          'src/builds/mewcx/files/img/icons/icon16.png',
-          'src/builds/mewcx/files/img/icons/icon192.png',
-          'src/builds/mewcx/files/img/icons/icon32.png',
-          'src/builds/mewcx/files/img/icons/icon48.png',
-          'src/builds/mewcx/files/manifest.json',
+          'src/builds/mewcx/public/img/icons/icon128.png',
+          'src/builds/mewcx/public/img/icons/icon16.png',
+          'src/builds/mewcx/public/img/icons/icon192.png',
+          'src/builds/mewcx/public/img/icons/icon32.png',
+          'src/builds/mewcx/public/img/icons/icon48.png',
+          'src/builds/mewcx/public/manifest.json',
           'src/builds/mewcx/index.js',
           'src/builds/web/storage/index.js'
         ]
