@@ -61,6 +61,7 @@ if (process.env.BUILD_TYPE === 'mewcx') {
       {
         from: 'src/builds/mewcx/files',
         transform: function (content, filePath) {
+          console.log("yowotm8");
           if (filePath.split('.').pop() === ('js' || 'JS'))
             return UglifyJS.minify(content.toString()).code;
           if (filePath.replace(/^.*[\\\/]/, '') === 'manifest.json') {
@@ -75,14 +76,14 @@ if (process.env.BUILD_TYPE === 'mewcx') {
     ])
   );
 }
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'production' && process.env.BUILD_TYPE !== 'mewcx') {
   webpackConfig.plugins.push(
     new UnusedFilesWebpackPlugin({
       patterns: ['src/**/*.*'],
       failOnUnused: true,
       globOptions: {
         ignore: [
-          // Are we using these
+          // Are we using thesea
           'src/components/DropDownAddressSelector/#####DropDownAddressSelector.vue',
           'src/components/DropDownAddressSelector/DropDownAddressSelector.scss',
           'src/components/DropDownAddressSelector/index.js',
