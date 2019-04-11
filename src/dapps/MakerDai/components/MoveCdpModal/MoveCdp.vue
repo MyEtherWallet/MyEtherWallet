@@ -95,7 +95,6 @@ export default {
       );
     });
     // eslint-disable-next-line
-    console.log(this.tokensWithBalance); // todo remove dev item
   },
   methods: {
     closeCdp() {

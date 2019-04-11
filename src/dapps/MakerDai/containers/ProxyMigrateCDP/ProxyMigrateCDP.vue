@@ -252,7 +252,6 @@ export default {
       }
     },
     openCloseModal(val){
-      console.log('openCloseModal', val); // todo remove dev item
       if(val){
         this.showClose();
       }
@@ -290,7 +289,6 @@ export default {
       if (this.cdpId) {
         this.activeCdp = this.availableCdps[this.cdpId];
         // eslint-disable-next-line
-        console.log('this.activeCdp', this.activeCdp); // todo remove dev item
       }
     }
   },
@@ -307,7 +305,6 @@ export default {
     displayPercentValue,
     displayFixedValue,
     async isReady() {
-      console.log('isReady', this.activeCdp); // todo remove dev item
       this.maxWithDraw = this.activeCdp.maxDaiDraw();
       this.maxWithDrawUSD = this.activeCdp.toUSD(this.maxWithDraw);
     },

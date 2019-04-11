@@ -13,7 +13,6 @@ const bnOver = (one, two, three) => {
     .div(toBigNumber(three));
 };
 
-
 export default class MakerManager /*extends EventEmitter*/ {
   constructor(props) {
     // super();
@@ -68,11 +67,8 @@ export default class MakerManager /*extends EventEmitter*/ {
   get makerActive() {}
 
   hasCdp(cdpId) {
-    console.log(`${cdpId}`); // todo remove dev item
-    console.log(Object.keys(this.activeCdps)); // todo remove dev item
     return Object.keys(this.activeCdps).includes(toBigNumber(cdpId).toString());
   }
-
 
   getCdp(cdpId) {
     return this.activeCdps[cdpId];
@@ -114,9 +110,7 @@ export default class MakerManager /*extends EventEmitter*/ {
     this.wethToPethRatio = toBigNumber(
       await this.priceService.getWethToPethRatio()
     );
-    console.log(this.wethToPethRatio.toString()); // todo remove dev item
     this._proxyAddress = await this.proxyService.currentProxy();
-    console.log(this._proxyAddress); // todo remove dev item
 
     const { withProxy, withoutProxy } = await this.locateCdps();
     this.cdps = withProxy;
@@ -169,7 +163,6 @@ export default class MakerManager /*extends EventEmitter*/ {
   }
 
   async updateActiveCdp() {
-    console.log('refreshing'); // todo remove dev item
     const currentCdpIds = Object.keys(this.activeCdps);
     await this.locateCdps();
 
@@ -213,7 +206,6 @@ export default class MakerManager /*extends EventEmitter*/ {
       );
     }
 
-    console.log(' this.cdpsWithoutProxy', this.cdpsWithoutProxy); // todo remove dev item
     if (this.cdps.length === 0 && this.cdpsWithoutProxy.length === 0) {
       this.routeHandlers.create();
       return;
@@ -227,15 +219,12 @@ export default class MakerManager /*extends EventEmitter*/ {
 
   async doUpdate(route) {
     this._proxyAddress = await this.proxyService.currentProxy();
-    console.log('updating'); // todo remove dev item
     let afterClose = false;
     const afterOpen = route === 'create';
     // this.migrationInProgress = false;
     await this.updateActiveCdp();
     for (const idProp in this.activeCdps) {
-      console.log(`checking if ${idProp} needs update`); // todo remove dev item
       if (this.activeCdps[idProp].needsUpdate) {
-        console.log('updating: ', idProp); // todo remove dev item
         if (this.activeCdps[idProp].closing) {
           afterClose = true;
           delete this.activeCdps[idProp];
@@ -246,14 +235,12 @@ export default class MakerManager /*extends EventEmitter*/ {
         } else if (this.activeCdps[idProp].opening) {
           await this.refresh();
         } else {
-          console.log('UPDATE CDP', idProp); // todo remove dev item
           this.activeCdps[idProp] = await this.activeCdps[idProp].update();
         }
       }
     }
 
     if (afterClose || afterOpen) {
-      console.log('after close, move, or open'); // todo remove dev item
       // const { withProxy, withoutProxy } = await this.locateCdps();
       // this.cdps = withProxy;
       // this.cdpsWithoutProxy = withoutProxy;
@@ -264,7 +251,6 @@ export default class MakerManager /*extends EventEmitter*/ {
         this.routeHandlers.create();
       }
     }
-    console.log('onUpdate route: ', route); // todo remove dev item
     return true;
   }
 

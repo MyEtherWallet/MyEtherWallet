@@ -247,9 +247,7 @@ export default {
     validInputs() {
       if (toBigNumber(this.ethQty).gt(0)) {
         // eslint-disable-next-line
-        console.log(ethUnit.toWei(this.ethQty, 'ether').toString()); // todo remove dev item
         // eslint-disable-next-line
-        console.log(this.account.balance); // todo remove dev item
         return toBigNumber(ethUnit.toWei(this.ethQty, 'ether').toString()).lte(
           this.account.balance
         );
@@ -309,7 +307,6 @@ export default {
         proxyService: this.proxyService
       };
 
-      console.log(sysVars); // todo remove dev item
 
       this.makerCDP = new MakerCDP(null, this.maker, services, sysVars);
     },

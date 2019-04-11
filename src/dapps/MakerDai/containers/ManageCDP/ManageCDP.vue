@@ -289,13 +289,11 @@ export default {
       }
     },
     ['$route.params.cdpId'](val){
-      console.log('val', val); // todo remove dev item
       if(this.makerManager.hasCdp(val)){
         this.activeCdp = this.makerManager.getCdp(val)
       }
     },
     openCloseModal(val){
-      console.log('openCloseModal', val); // todo remove dev item
       if(val){
         this.showClose();
       }
@@ -342,7 +340,6 @@ export default {
       if (this.cdpId) {
         this.activeCdp = this.makerManager.getCdp(this.cdpId);
         // eslint-disable-next-line
-        console.log('this.activeCdp', this.activeCdp); // todo remove dev item
       }
     }
   },
@@ -377,7 +374,6 @@ export default {
     displayPercentValue,
     displayFixedValue,
     async isReady() {
-      console.log('isReady', this.activeCdp); // todo remove dev item
       // this.maxWithDraw = this.activeCdp.maxDaiDraw();
       this.maxWithDrawUSD = this.activeCdp.toUSD(this.activeCdp.maxDai);
     },

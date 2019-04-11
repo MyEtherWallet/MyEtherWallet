@@ -123,8 +123,7 @@ import ethUnit from 'ethjs-unit';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
 import CheckBox from '../CheckBox';
 import BigNumber from 'bignumber.js/bignumber.js';
-import {displayFixedValue, displayPercentValue} from '../../helpers'
-
+import { displayFixedValue, displayPercentValue } from '../../helpers';
 
 const toBigNumber = num => {
   return new BigNumber(num);
@@ -181,10 +180,9 @@ export default {
     hasEnoughDai() {
       // TODO Figure out how to learn how much dai a user has (the code below should work)
       if (this.amount || this.amount !== '') {
-        const daiToken = this.tokensWithBalance.find(item => {
-          return item.symbol.toUpperCase() === 'DAI';
-        });
-        console.log('daiToken', daiToken); // todo remove dev item
+        // const daiToken = this.tokensWithBalance.find(item => {
+        //   return item.symbol.toUpperCase() === 'DAI';
+        // });
         const asEth = ethUnit.fromWei(this.account.balance, 'ether');
         return toBigNumber(this.amount).lte(toBigNumber(asEth));
       }
@@ -192,7 +190,6 @@ export default {
     },
     canWithdrawEthAmount() {
       if (this.amount || this.amount !== '') {
-        console.log(this.activeCdp.ethCollateral.toString()); // todo remove dev item
         return toBigNumber(this.amount).lte(
           toBigNumber(this.activeCdp.ethCollateral)
         );
@@ -210,7 +207,6 @@ export default {
       const ratio = toBigNumber(this.newCollateralRatio);
       const ratioOk = ratio.gt(1.5) || ratio.eq(0);
       return this.hasEnoughEth && (ratioOk || this.riskyBypass);
-
     },
     newCollateralRatio() {
       if (this.activeCdp && this.amount > 0) {
@@ -225,9 +221,7 @@ export default {
     newCollateralRatioSafe() {
       if (this.activeCdp && this.amount > 0) {
         return this.activeCdp
-          .calcCollatRatioEthChg(
-            this.activeCdp.ethCollateral.plus(this.amount)
-          )
+          .calcCollatRatioEthChg(this.activeCdp.ethCollateral.plus(this.amount))
           .gte(2);
       } else if (this.activeCdp) {
         return toBigNumber(this.activeCdp.collatRatio).gte(2);
@@ -237,9 +231,7 @@ export default {
     newCollateralRatioInvalid() {
       if (this.activeCdp && this.amount > 0) {
         return this.activeCdp
-          .calcCollatRatioEthChg(
-            this.activeCdp.ethCollateral.plus(this.amount)
-          )
+          .calcCollatRatioEthChg(this.activeCdp.ethCollateral.plus(this.amount))
           .lte(1.5);
       } else if (this.activeCdp) {
         return toBigNumber(this.activeCdp.collatRatio).lte(1.5);
@@ -281,7 +273,6 @@ export default {
       this.amount = this.activeCdp.debtValue;
     },
     async lockEth() {
-      console.log('lockEth'); // todo remove dev item
       if (toBigNumber(this.amount).gte(0)) {
         this.delayCloseModal();
         await this.activeCdp.lockEth(this.amount);

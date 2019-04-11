@@ -103,7 +103,6 @@ export default {
     }),
     getfeeOwed() {
       const result = this.activeCdp.governanceFeeOwed;
-      console.log('fee owed', result); // todo remove dev item
       return this.displayFixedValue(result, 8);
     },
     newCollateralRatio() {
@@ -146,13 +145,11 @@ export default {
     this.$refs.modal.$on('shown', async () => {
       if (this.activeCdp) {
         this.closable = await this.activeCdp.canCloseCdp();
-        console.log('can close', this.closable); // todo remove dev item
         return this.closable;
       }
       this.closable = false;
     });
     // eslint-disable-next-line
-    console.log(this.tokensWithBalance); // todo remove dev item
   },
   methods: {
     async closeCdp() {
