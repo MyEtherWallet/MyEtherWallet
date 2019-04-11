@@ -75,7 +75,7 @@ if (process.env.NODE_ENV === 'production') {
   webpackConfig.plugins.push(
     new UnusedFilesWebpackPlugin({
       patterns: ['src/**/*.*'],
-      failOnUnused: false,
+      failOnUnused: true,
       globOptions: {
         ignore: [
           // Are we using these
@@ -145,7 +145,22 @@ if (process.env.NODE_ENV === 'production') {
           'src/builds/mewcx/public/img/icons/icon48.png',
           'src/builds/mewcx/public/manifest.json',
           'src/builds/mewcx/index.js',
-          'src/builds/web/storage/index.js'
+          'src/builds/web/public/img/icons/android-chrome-192x192.png',
+          'src/builds/web/public/img/icons/android-chrome-512x512.png',
+          'src/builds/web/public/img/icons/apple-touch-icon-120x120.png',
+          'src/builds/web/public/img/icons/apple-touch-icon-152x152.png',
+          'src/builds/web/public/img/icons/apple-touch-icon-180x180.png',
+          'src/builds/web/public/img/icons/apple-touch-icon-60x60.png',
+          'src/builds/web/public/img/icons/apple-touch-icon-76x76.png',
+          'src/builds/web/public/img/icons/apple-touch-icon.png',
+          'src/builds/web/public/img/icons/favicon-16x16.png',
+          'src/builds/web/public/img/icons/favicon-32x32.png',
+          'src/builds/web/public/img/icons/msapplication-icon-144x144.png',
+          'src/builds/web/public/img/icons/mstile-150x150.png',
+          'src/builds/web/public/img/icons/safari-pinned-tab.svg',
+          'src/builds/web/public/img/spaceman.png',
+          'src/builds/web/public/manifest.json',
+          'src/builds/web/public/robots.txt'
         ]
       }
     })
