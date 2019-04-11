@@ -1,4 +1,3 @@
-
 ### Bug
 
 - Fixes send offline token value and deploy contract errors [#920](https://github.com/MyEtherWallet/MyEtherWallet/pull/920)
@@ -6,8 +5,11 @@
 
 ### Devop
 
-- Fix Nsend offline helper, update webchain [#932](https://github.com/MyEtherWallet/MyEtherWallet/pull/932)
+- Fix send offline helper, update webchain [#932](https://github.com/MyEtherWallet/MyEtherWallet/pull/932)
 
+### Feature
+
+- Scan each mewbuild with virustotal [#934](https://github.com/MyEtherWallet/MyEtherWallet/pull/934)
 
 ### Release v5.0.9
 
