@@ -1,3 +1,7 @@
+### Devop
+
+- MEWCX build fix [#935](https://github.com/MyEtherWallet/MyEtherWallet/pull/935)
+
 ### Release v5.0.9
 
 ### Devop
