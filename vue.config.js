@@ -61,7 +61,6 @@ if (process.env.BUILD_TYPE === 'mewcx') {
       {
         from: 'src/builds/mewcx/files',
         transform: function (content, filePath) {
-          console.log("yowotm8");
           if (filePath.split('.').pop() === ('js' || 'JS'))
             return UglifyJS.minify(content.toString()).code;
           if (filePath.replace(/^.*[\\\/]/, '') === 'manifest.json') {
