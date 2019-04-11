@@ -18,6 +18,7 @@
     "lint:md": "remark . -o -f",
     "lint:styles": "prettier --write 'src/**/*.{scss,css}' && stylelint 'src/**/*.{scss,css}' --fix",
     "lint:tests": "eslint --fix tests/",
+    "fix:packages": "npm-force-resolutions",
     "start": "npm run update:mainlists && npm run dev",
     "test:unit": "vue-cli-service test:unit",
     "update:packages": "node package-test.js",
@@ -93,6 +94,7 @@
     "multicoin-address-validator": "git+https://github.com/MyEtherWallet/multicoin-address-validator.git",
     "node-fetch": "2.3.0",
     "node-sass": "4.11.0",
+    "npm-force-resolutions": "0.0.2",
     "package-json": "6.3.0",
     "postcss-import": "12.0.1",
     "postcss-url": "8.0.0",
@@ -145,5 +147,8 @@
       "web3-providers-ws",
       "web3-utils"
     ]
+  },
+  "resolutions": {
+    "tar": "4.4.8"
   }
 }
