@@ -1,6 +1,6 @@
 ### Devop
 
-- Sentry migration []()
+- Sentry migration [#922](https://github.com/MyEtherWallet/MyEtherWallet/pull/922)
 
 ### Feature
 
