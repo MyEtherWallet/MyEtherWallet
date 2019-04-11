@@ -2,6 +2,10 @@
 
 - Scan each mewbuild with virustotal [#934](https://github.com/MyEtherWallet/MyEtherWallet/pull/934)
 
+### Devop
+
+- MEWCX build fix [#935](https://github.com/MyEtherWallet/MyEtherWallet/pull/935)
+
 ### Release v5.0.9
 
 ### Devop
