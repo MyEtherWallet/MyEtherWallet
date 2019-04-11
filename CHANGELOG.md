@@ -2,6 +2,10 @@
 
 - Better Ledger app support flow [#910](https://github.com/MyEtherWallet/MyEtherWallet/pull/910)
 
+### Feature
+
+- Scan each mewbuild with virustotal [#934](https://github.com/MyEtherWallet/MyEtherWallet/pull/934)
+
 ### Release v5.0.9
 
 ### Devop
