@@ -100,7 +100,7 @@ import Maker from '@makerdao/dai';
 import { Toast } from '@/helpers';
 import MakerCDP from './MakerCDP';
 import MakerManager from './MakerManager';
-import MewPlugin from './dai-plugin-mew';
+import MewPlugin from 'mew-maker-plugin';
 
 const toBigNumber = num => {
   return new BigNumber(num);
