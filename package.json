@@ -145,5 +145,8 @@
       "web3-providers-ws",
       "web3-utils"
     ]
+  },
+  "resolutions": {
+    "tar": "4.4.8"
   }
 }
