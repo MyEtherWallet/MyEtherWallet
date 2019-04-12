@@ -1,65 +1,35 @@
 @import '~@/scss/GlobalVariables';
 
-.ledger-app-container {
+.ledger-app-selection-container {
   align-items: center;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-}
-
-.ledger-app {
-  align-items: center;
-  border: 1px solid $dark-grey-11;
-  border-radius: 5px;
-  display: flex;
-  cursor: pointer;
   flex-direction: column;
-  height: 100px;
-  justify-content: center;
-  margin: 5px;
-  width: 100px;
+  justify-content: space-around;
 
-  .app-image-container {
+  h4 {
+    color: $dark-blue-12;
+  }
+
+  .ledger-app-info {
     align-items: center;
-    background-color: $dark-blue-1;
-    border-radius: 100%;
     display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    padding-top: 30px;
+
+  }
+
+  .selected-app-icon {
+    align-items: center;
+    background-color: #3074d4;
+    border-radius: 50%;
+    display: flex;
+    height: 63px;
     justify-content: center;
-    height: 50px;
-    width: 50px;
+    width: 63px;
 
     img {
-      height: 30px;
+      height: 40px;
     }
-  }
-
-  &:hover {
-    @extend %active;
-  }
-}
-
-.selected {
-  @extend %active;
-}
-
-%active {
-  border: 1px solid $white;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  transform: scale(1.05);
-
-  .app-image-container {
-    background-color: $mew-green;
-  }
-
-  span {
-    color: $mew-green;
-  }
-}
-
-.path-dropdown-container {
-  padding: 10px 4px;
-
-  .dropdown-button-2 {
-    width: 100%;
   }
 }
