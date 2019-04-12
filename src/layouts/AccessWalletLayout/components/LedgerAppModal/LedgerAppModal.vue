@@ -2,56 +2,19 @@
   <div>
     <b-modal
       ref="ledgerApp"
-      title="Choose Opened App"
+      title="Choose the App"
       hide-footer
-      class="bootstrap-modal modal-software"
+      class="bootstrap-modal"
       centered
       @hidden="reset"
     >
-      <div>
-        <div class="ledger-app-container">
-          <div
-            v-for="app in apps"
-            :key="app.name"
-            :class="[selected === app.name ? 'selected' : '', 'ledger-app']"
-            @click="setType(app)"
-          >
-            <div class="app-image-container">
-              <img :src="app.icon" />
-            </div>
-            <span> {{ app.name }} </span>
+      <div class="ledger-app-selection-container">
+        <h4>Please choose the App you have opened in Ledger</h4>
+        <div class="ledger-app-info">
+          <div class="selected-app-icon">
+            <img :src="selectedApp.icon" />
           </div>
-        </div>
-        <div class="path-dropdown-container">
-          <b-dropdown
-            v-show="
-              selectedApp.hasOwnProperty('paths') &&
-                selectedApp.paths.length > 1
-            "
-            id="hd-derivation-path"
-            :text="selectedPathText"
-            left
-            class="dropdown-button-2"
-          >
-            <b-dropdown-item
-              v-for="path in selectedApp.paths"
-              :key="path.path"
-              @click="setSelectedPath(path)"
-            >
-              {{ path.label }} - {{ path.path }}
-            </b-dropdown-item>
-          </b-dropdown>
-        </div>
-        <div class="button-container">
-          <div
-            :class="[
-              fieldsFilled ? 'disabled' : '',
-              'large-round-button-green-filled'
-            ]"
-            @click="next"
-          >
-            Next
-          </div>
+          <h3>{{ selectedApp.name }}</h3>
         </div>
       </div>
     </b-modal>
@@ -59,7 +22,7 @@
 </template>
 
 <script>
-import apps from './apps.js';
+import apps from '@/wallets/hardware/ledger/appPaths.js';
 import { LedgerWallet } from '@/wallets';
 export default {
   props: {
@@ -72,11 +35,12 @@ export default {
   },
   data() {
     return {
-      selected: '',
       apps: apps,
-      selectedPathText: 'Select Path',
-      selectedPath: '',
-      selectedApp: {}
+      selectedApp: {
+        name: apps[0].network.name_long,
+        paths: apps[0].paths,
+        icon: apps[0].network.icon
+      }
     };
   },
   computed: {
