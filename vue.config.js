@@ -170,24 +170,8 @@ const pwa = {
   name: 'MyEtherWallet',
   workboxOptions: {
     importWorkboxFrom: 'local',
-    // exclude: [/\.map$/, /^manifest.*\.js$/, /\.svg$/],
     skipWaiting: true,
     clientsClaim: true,
-    runtimeCaching: [{
-      urlPattern: /\.svg$/,
-      handler: 'cacheFirst',
-      options: {
-        backgroundSync: {
-          name: 'svg-files',
-          options: {
-            maxRetentionTime: 60 * 60,
-          },
-        },
-        cacheableResponse: {
-          statuses: [200]
-        }
-      }
-    }],
     navigateFallback: '/index.html'
   }
 };
