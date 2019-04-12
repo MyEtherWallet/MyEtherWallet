@@ -30,8 +30,8 @@
     "pre-commit": "npm run lint && npm run test"
   },
   "dependencies": {
-    "@sentry/browser": "5.0.7",
-    "@sentry/integrations": "5.0.7",
+    "@sentry/browser": "5.0.8",
+    "@sentry/integrations": "5.0.8",
     "html2canvas": "1.0.0-rc.1",
     "idna-uts46": "1.1.0",
     "luxon": "1.12.1",
@@ -44,7 +44,7 @@
     "vue": "2.6.10",
     "vue-datetime": "1.0.0-beta.10",
     "vue-mq": "1.0.1",
-    "vue-router": "3.0.3",
+    "vue-router": "3.0.2",
     "vue-toasted": "1.1.26",
     "vuex": "3.1.0",
     "weekstart": "1.0.0",
