@@ -174,7 +174,7 @@ const pwa = {
     skipWaiting: true,
     clientsClaim: true,
     runtimeCaching: [{
-      urlPattern: /\.$/,
+      urlPattern: /\.svg$/,
       handler: 'cacheFirst',
       options: {
         backgroundSync: {
