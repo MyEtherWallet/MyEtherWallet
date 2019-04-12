@@ -1,5 +1,12 @@
+### Bug
+
+- Fixes send offline token value and deploy contract errors [#920](https://github.com/MyEtherWallet/MyEtherWallet/pull/920)
+- Update TOMO explorrer links [#918](https://github.com/MyEtherWallet/MyEtherWallet/pull/918)
+
 ### Devop
 
+- Fix send offline helper, update webchain [#932](https://github.com/MyEtherWallet/MyEtherWallet/pull/932)
+- MEWCX build fix [#935](https://github.com/MyEtherWallet/MyEtherWallet/pull/935)
 - Sentry migration [#922](https://github.com/MyEtherWallet/MyEtherWallet/pull/922)
 
 ### Feature
