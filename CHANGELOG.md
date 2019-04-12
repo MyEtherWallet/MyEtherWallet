@@ -7,6 +7,7 @@
 
 - Fix send offline helper, update webchain [#932](https://github.com/MyEtherWallet/MyEtherWallet/pull/932)
 - MEWCX build fix [#935](https://github.com/MyEtherWallet/MyEtherWallet/pull/935)
+- Update Metamask Integration with listeners [#938](https://github.com/MyEtherWallet/MyEtherWallet/pull/938)
 
 ### Feature
 
