@@ -59,7 +59,7 @@
     "@myetherwallet/mewconnect-web-client": "1.0.14",
     "@vue/cli-plugin-babel": "3.5.5",
     "@vue/cli-plugin-eslint": "3.5.1",
-    "@vue/cli-plugin-pwa": "3.5.1",
+    "@vue/cli-plugin-pwa": "3.6.0",
     "@vue/cli-plugin-unit-jest": "3.5.3",
     "@vue/cli-service": "3.5.3",
     "@vue/eslint-config-prettier": "4.0.1",
