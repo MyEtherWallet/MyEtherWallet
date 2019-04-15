@@ -41,16 +41,16 @@ export default {
         }
       ]
     },
-    {
-      name: 'swap',
-      routes: ['/interface/swap'],
-      icons: {
-        active: require('@/assets/images/sidemenu/swap-active.svg'),
-        inactive: require('@/assets/images/sidemenu/swap.svg')
-      },
-      titleKey: 'common.swap',
-      children: []
-    },
+    // {
+    //   name: 'swap',
+    //   routes: ['/interface/swap'],
+    //   icons: {
+    //     active: require('@/assets/images/sidemenu/swap-active.svg'),
+    //     inactive: require('@/assets/images/sidemenu/swap.svg')
+    //   },
+    //   titleKey: 'common.swap',
+    //   children: []
+    // },
     {
       name: 'dapps',
       routes: [

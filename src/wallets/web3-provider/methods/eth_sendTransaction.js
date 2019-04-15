@@ -56,7 +56,7 @@ export default async (
           const _promiObj = store.state.web3.eth.sendSignedTransaction(
             _response.rawTransaction
           );
-
+        
           _promiObj
             .once('transactionHash', hash => {
               const localStoredObj = locStore.get(

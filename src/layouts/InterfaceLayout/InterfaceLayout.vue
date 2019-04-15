@@ -3,8 +3,8 @@
     <!-- Modals ******************************************************** -->
     <!-- Modals ******************************************************** -->
     <!-- Modals ******************************************************** -->
-    <wallet-password-modal />
-    <enter-pin-number-modal />
+    <wallet-password-modal/>
+    <enter-pin-number-modal/>
     <mnemonic-modal
       ref="mnemonicPhraseModal"
       :mnemonic-phrase-password-modal-open="mnemonicphrasePasswordModalOpen"
@@ -15,31 +15,23 @@
       :hardware-wallet-open="toggleNetworkAddrModal"
       :phrase="phrase"
     />
-    <network-and-address-modal
-      ref="networkAddress"
-      :hardware-wallet="hwInstance"
-    />
+    <network-and-address-modal ref="networkAddress" :hardware-wallet="hwInstance"/>
     <hardware-password-modal
       ref="hardwareModal"
       :wallet-constructor="walletConstructor"
       :hardware-brand="hardwareBrand"
       @hardwareWalletOpen="toggleNetworkAddrModal"
     />
-    <print-modal
-      ref="printModal"
-      :priv-key="!wallet.isPubOnly"
-      :address="account.address"
+    <print-modal ref="printModal" :priv-key="!wallet.isPubOnly" :address="account.address"/>
+    <address-qrcode-modal
+      ref="addressQrcodeModal"
+      :address="  'xdc' + account.address.substring(2)"
     />
-    <address-qrcode-modal ref="addressQrcodeModal" :address="account.address" />
     <!-- Modals ******************************************************** -->
     <!-- Modals ******************************************************** -->
     <!-- Modals ******************************************************** -->
     <div class="mobile-interface-address-block">
-      <mobile-interface-address
-        :address="address"
-        :print="print"
-        :switch-addr="switchAddress"
-      />
+      <mobile-interface-address :address="address" :print="print" :switch-addr="switchAddress"/>
     </div>
 
     <div class="wrap">
@@ -50,7 +42,7 @@
           @click="toggleSideMenu;"
         />
         <div :class="isSidemenuOpen && 'side-nav-open'" class="side-nav">
-          <interface-side-menu />
+          <interface-side-menu/>
         </div>
       </div>
       <div class="contents">
@@ -64,10 +56,10 @@
             />
           </div>
           <div class="content-container mobile-hide">
-            <interface-balance :balance="balance" :get-balance="getBalance" />
+            <interface-balance :balance="balance" :get-balance="getBalance"/>
           </div>
           <div class="content-container mobile-hide">
-            <interface-network :block-number="blockNumber" />
+            <interface-network :block-number="blockNumber"/>
           </div>
           <router-view
             :tokens-with-balance="tokensWithBalance"
@@ -422,6 +414,7 @@ export default {
         .getBlockNumber()
         .then(res => {
           this.blockNumber = res;
+          this.$store.dispatch('updateBlockNumber', res);
         })
         .catch(e => {
           Toast.responseHandler(e, Toast.ERROR);

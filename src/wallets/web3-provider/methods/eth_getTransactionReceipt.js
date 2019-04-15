@@ -12,10 +12,24 @@ export default async ({ payload, requestManager }, res, next) => {
       memcache[txHash].timestamp < new Date().getTime() - WAIT_TIME)
   ) {
     const receipt = await ethCalls.getTransactionReceipt(txHash);
+    if (receipt !== null) {
+      if (receipt.contractAddress !== null) {
+        if (receipt.contractAddress.substring(0, 2) !== "0x") {
+          receipt.contractAddress = "0x" + receipt.contractAddress.substring(3)
+        }
+      } else {
+        receipt.to = "0x" + receipt.to.substring(3)
+        if (receipt.logs[0] !== undefined) {
+          receipt.logs[0].address = "0x" + receipt.logs[0].address.substring(3)
+        }
+      }
+      receipt.from = "0x" + receipt.from.substring(3)
+    }
     memcache[txHash] = {
       timestamp: new Date().getTime(),
       receipt: JSON.stringify(receipt)
     };
+
     res(null, toPayload(payload.id, receipt));
   } else {
     res(
