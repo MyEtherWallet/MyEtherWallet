@@ -11,5 +11,6 @@ export default {
   chainID: 72106,
   tokens: tokens,
   contracts: contracts,
-  icon: sum
+  icon: sum,
+  currencyName: 'SUM'
 };
