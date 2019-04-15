@@ -1,5 +1,3 @@
-import tokens from '@/tokens/tokens-sum.json';
-import contracts from '@/contracts/contract-abi-sum.json';
 import sum from '@/assets/images/networks/sum.svg';
 
 export default {
