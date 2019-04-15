@@ -322,6 +322,7 @@ export default {
       this.$store.dispatch('switchNetwork', network).then(() => {
         this.$store.dispatch('setWeb3Instance');
         this.currentIndex = 0;
+        this.getPaths();
         this.setHDAccounts();
       });
     },
@@ -463,11 +464,20 @@ export default {
         i++
       ) {
         const account = await this.hardwareWallet.getAccount(i);
-        this.HDAccounts.push({
-          index: i,
-          account: account,
-          balance: 'loading'
-        });
+        let included = false;
+        for (let j = 0; j < this.HDAccounts.length; j++) {
+          if (this.HDAccounts[j].index == i) {
+            included = true;
+            break;
+          }
+        }
+        if (!included) {
+          this.HDAccounts.push({
+            index: i,
+            account: account,
+            balance: 'loading'
+          });
+        }
         this.setBalances();
       }
       this.currentIndex += MAX_ADDRESSES;
@@ -496,8 +506,20 @@ export default {
       return 'Unknown';
     },
     getPaths() {
-      this.selectedPath = this.hardwareWallet.getCurrentPath();
-      this.availablePaths = this.hardwareWallet.getSupportedPaths();
+      if (
+        this.$store.state.network.type.dPathDefault &&
+        this.selectedPath === ''
+      ) {
+        this.selectedPath = this.$store.state.network.type.dPathDefault;
+        this.hardwareWallet.basePath = this.selectedPath;
+        this.availablePaths = this.hardwareWallet.getSupportedPaths();
+        this.changePath();
+      } else {
+        if (this.selectedPath !== this.hardwareWallet.getCurrentPath()) {
+          this.selectedPath = this.hardwareWallet.getCurrentPath();
+          this.availablePaths = this.hardwareWallet.getSupportedPaths();
+        }
+      }
     }
   }
 };
