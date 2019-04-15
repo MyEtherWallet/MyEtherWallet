@@ -103,8 +103,13 @@
             </p>
           </div>
           <div class="fee-value">
-            <div class="gwei">{{ gasPrice }} Gwei (Economic)</div>
-            <div class="usd">Cost 0.0000013 ETH = $1.234</div>
+            <div class="gwei">
+              {{ gasPrice }} Gwei
+              <!--(Economic)-->
+            </div>
+            <div class="usd">
+              Cost {{ txFeeEth }} ETH = ${{ convert }}
+            </div>
           </div>
         </div>
       </div>
@@ -201,6 +206,7 @@ import { Misc, Toast } from '@/helpers';
 import BigNumber from 'bignumber.js';
 import ethUnit from 'ethjs-unit';
 import utils from 'web3-utils';
+import fetch from 'node-fetch';
 
 export default {
   components: {
@@ -234,7 +240,8 @@ export default {
       value: '0',
       gasLimit: '21000',
       data: '',
-      selectedCurrency: ''
+      selectedCurrency: '',
+      ethPrice: 0
     };
   },
 
@@ -246,6 +253,17 @@ export default {
       network: 'network',
       linkQuery: 'linkQuery'
     }),
+    txFee() {
+      return new BigNumber(ethUnit.toWei(this.gasPrice, 'gwei')).times(
+        this.gasLimit || 0
+      );
+    },
+    txFeeEth() {
+      if (new BigNumber(this.txFee).gt(0)) {
+        return ethUnit.fromWei(this.txFee, 'ether');
+      }
+      return 0;
+    },
     isValidAmount() {
       const txFee = new BigNumber(ethUnit.toWei(this.gasPrice, 'gwei')).times(
         this.gasLimit || 0
@@ -361,6 +379,18 @@ export default {
         this.selectedCurrency,
         new Date().getTime() / 1000
       );
+    },
+    convert() {
+      if (this.ethPrice) {
+        return new BigNumber(
+          new BigNumber(this.txFeeEth).times(
+            new BigNumber(this.ethPrice)
+          )
+        )
+          .toFixed(2)
+          .toString();
+      }
+      return '--';
     }
   },
   watch: {
@@ -391,7 +421,9 @@ export default {
       }
     }
   },
-  mounted() {},
+  mounted() {
+    this.getEthPrice();
+  },
   methods: {
     openSettings() {
       this.$eventHub.$emit('open-settings');
@@ -479,6 +511,18 @@ export default {
       } catch (e) {
         Toast.responseHandler(e, Toast.ERROR);
       }
+    },
+    async getEthPrice() {
+      const price = await fetch(
+        'https://cryptorates.mewapi.io/ticker?filter=ETH'
+      )
+        .then(res => {
+          return res.json();
+        })
+        .catch(e => {
+          Toast.responseHandler(e, Toast.ERROR);
+        });
+      this.ethPrice = price.data.ETH.quotes.USD.price;
     },
     copyToClipboard(ref) {
       this.$refs[ref].select();
