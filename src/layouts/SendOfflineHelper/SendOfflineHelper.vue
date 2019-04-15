@@ -214,8 +214,9 @@
             <li class="detail-container">
               <span class="detail-name">Value:</span>
               <span class="detail-text"
-                >{{ toEth(value) }} {{ selectedNetwork.type.name }}</span
-              >
+                >{{ toEth(value) }}
+                {{ selectedNetwork.type.currencyName }}
+              </span>
             </li>
             <li class="detail-container">
               <span class="detail-name">Data:</span>
@@ -246,8 +247,9 @@
             <li class="detail-container">
               <span class="detail-name">Fee:</span>
               <span class="detail-text">
-                {{ toEth(fee) }} {{ selectedNetwork.type.name }} ($
-                {{ calculateCost(fee) }})
+                {{ toEth(fee) }}
+                {{ selectedNetwork.type.currencyName }}
+                ($ {{ calculateCost(fee) }})
               </span>
             </li>
           </ul>

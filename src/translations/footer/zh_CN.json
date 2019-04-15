@@ -17,12 +17,13 @@
   "welcomeDes": "MyEtherWallet 是一个开源且免费的社区。你的捐款会对产品的保持开源与免费使用将大有助益。",
   "feedback": "用户反馈",
   "privacy": "隐私条款",
-  "copyright": "© 2018 MyEtherWallet 版权所有。",
+  "copyright": "© 2019 MyEtherWallet. All Rights reserved.",
   "love": "爱",
   "donate": "MEW？捐赠我们！",
   "pricingP": "Pricing taken from",
   "advanced": "Advanced",
   "sendOffline": "Send Offline Helper",
   "finney": "Finney",
-  "billfodl": "Billfodl"
+  "billfodl": "Billfodl",
+  "verifyMessage": "Verify Message"
 }

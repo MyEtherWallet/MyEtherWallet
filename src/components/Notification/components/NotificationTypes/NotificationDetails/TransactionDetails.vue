@@ -20,7 +20,7 @@
         </li>
         <li v-if="!isTokenTransfer">
           <p>{{ $t('header.amount') }}:</p>
-          <p>{{ convertToEth(details.amount) }} ETH</p>
+          <p>{{ convertToEth(details.amount) }} {{ network.type.name }}</p>
         </li>
         <li>
           <p>{{ $t('common.toAddress') }}:</p>
@@ -57,7 +57,8 @@
         <li v-if="notice.body.gasUsed">
           <p>{{ $t('common.txFee') }}:</p>
           <p>
-            {{ convertToEth(details.gasPrice * details.gasUsed) }} ETH (${{
+            {{ convertToEth(details.gasPrice * details.gasUsed) }}
+            {{ network.type.name }} (${{
               getFiatValue(details.gasPrice * details.gasUsed)
             }})
           </p>
@@ -65,7 +66,8 @@
         <li>
           <p>{{ $t('header.maxTxFee') }}:</p>
           <p>
-            {{ convertToEth(details.gasPrice * details.gasLimit) }} ETH (${{
+            {{ convertToEth(details.gasPrice * details.gasLimit) }}
+            {{ network.type.name }} (${{
               getFiatValue(details.gasPrice * details.gasLimit)
             }})
           </p>

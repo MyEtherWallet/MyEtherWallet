@@ -3,7 +3,7 @@
   "accessMyWallet": "マイウォレットへアクセス",
   "accessWallet": "マイウォレットへアクセス",
   "faqs": "よくある質問",
-  "sendTx": "ETHとトークンを送信",
+  "sendTx": "Send Transaction",
   "sendSafeSendTx": "Protect Your ETH Transaction Using SafeSend",
   "swap": "スワップ",
   "unlockWallet": "ウォレットをアンロック",
@@ -75,5 +75,6 @@
   "nonce": "Nonce",
   "vintage": "Vintage",
   "okay": "Okay",
-  "ok": "OK"
+  "ok": "OK",
+  "menu": "Menu"
 }

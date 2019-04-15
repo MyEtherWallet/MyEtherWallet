@@ -12,5 +12,6 @@ export default {
   tokens: tokens,
   contracts: contracts,
   icon: rsk,
-  dPathDefault: "m/44'/37310'/0'/0"
+  dPathDefault: "m/44'/37310'/0'/0",
+  currencyName: 'tRBTC'
 };

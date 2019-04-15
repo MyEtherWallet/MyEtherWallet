@@ -351,22 +351,27 @@ export default {
       this.$refs.errorModal.$refs.errorModal.show();
     },
     parseRawTx(tx) {
-      const tokenData = parseTokensData(
-        tx.data,
-        tx.to,
-        this.web3,
-        this.network.type.tokens,
-        this.network.type.name
-      );
-      tx.tokenTransferTo = tokenData.tokenTransferTo;
-      tx.tokenTransferVal = tokenData.tokenTransferVal;
-      tx.tokenSymbol = tokenData.tokenSymbol;
+      let tokenData = '';
+      if (tx.to && tx.data) {
+        tokenData = parseTokensData(
+          tx.data,
+          tx.to,
+          this.web3,
+          this.network.type.tokens,
+          this.network.type.name
+        );
+        tx.tokenTransferTo = tokenData.tokenTransferTo;
+        tx.tokenTransferVal = tokenData.tokenTransferVal;
+        tx.tokenSymbol = tokenData.tokenSymbol;
+      }
+
       this.raw = tx;
       this.nonce = tx.nonce === '0x' ? 0 : new BigNumber(tx.nonce).toFixed();
       this.data = tx.data;
       this.gasLimit = new BigNumber(tx.gas).toFixed();
       this.toAddress = tx.to;
-      this.amount = tx.value === '0x' ? 0 : new BigNumber(tx.value).toFixed();
+      this.amount =
+        tx.value === '0x' ? '0' : new BigNumber(tx.value).toString();
       this.transactionFee = unit
         .fromWei(new BigNumber(tx.gas).times(tx.gasPrice).toString(), 'ether')
         .toString();
@@ -380,7 +385,7 @@ export default {
       this.dismissed = false;
       this.responseFunction(this.signedMessage);
       this.$refs.signConfirmModal.$refs.signConfirmation.hide();
-      this.showSuccessModal();
+      // this.showSuccessModal();
     },
     generateTx() {
       this.dismissed = false;
@@ -416,6 +421,11 @@ export default {
         promiEvent.catch(onError);
         promiEvent.on('error', onError);
         promiEvent.once('transactionHash', hash => {
+          this.showSuccessModal(
+            'Transaction sent!',
+            'Okay',
+            this.network.type.blockExplorerTX.replace('[[txHash]]', hash)
+          );
           this.$store.dispatch('addNotification', [
             noticeTypes.TRANSACTION_HASH,
             _tx.from,
