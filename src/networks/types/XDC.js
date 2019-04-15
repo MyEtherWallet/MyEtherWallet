@@ -9,7 +9,7 @@ export default {
   blockExplorerAddr:
     'https://explorer_testnet.xinfin.network/account/[[address]]',
   blockExplorerTX: 'https://explorer_testnet.xinfin.network/tx/[[txHash]]',
-  chainID: 853,
+  chainID: 1151,
   tokens: tokens,
   contracts: contracts,
   ens: {

@@ -1,6 +1,6 @@
 <template>
   <div class="send-currency-container">
-    <interface-container-title :title="$t('common.sendTx')" />
+    <interface-container-title :title="$t('common.sendTx')"/>
 
     <div class="send-form">
       <div class="form-block amount-to-address">
@@ -19,12 +19,7 @@
           <div class="single-input-block">
             <div class="title">
               <h4>{{ $t('interface.sendTxAmount') }}</h4>
-              <p
-                class="title-button prevent-user-select"
-                @click="sendEntireBalance"
-              >
-                Entire Balance
-              </p>
+              <p class="title-button prevent-user-select" @click="sendEntireBalance">Entire Balance</p>
             </div>
             <div class="the-form amount-number">
               <input
@@ -34,7 +29,7 @@
                 placeholder="Amount"
                 min="0"
                 name="value"
-              />
+              >
               <i
                 :class="[
                   !isValidAmount || errors.has('value') ? 'not-good' : '',
@@ -43,10 +38,7 @@
                 aria-hidden="true"
               />
             </div>
-            <div
-              v-if="!isValidAmount || errors.has('value')"
-              class="error-message-container"
-            >
+            <div v-if="!isValidAmount || errors.has('value')" class="error-message-container">
               <p>{{ $t('common.notAValidAmount') }}</p>
             </div>
           </div>
@@ -55,6 +47,8 @@
           <div class="title">
             <h4>
               {{ $t('interface.sendTxToAddr') }}
+              <p>{{ newAdd }}</p>
+
               <blockie
                 v-show="isValidAddress"
                 :address="hexAddress"
@@ -69,19 +63,17 @@
             <p
               class="copy-button prevent-user-select"
               @click="copyToClipboard('address')"
-            >
-              {{ $t('common.copy') }}
-            </p>
+            >{{ $t('common.copy') }}</p>
           </div>
           <div class="the-form address-block">
             <input
               v-ens-resolver="'address'"
-              ref="address"
-              v-model="address"
+              ref="oldAddress"
+              v-model="oldAddress"
               type="text"
               name="name"
               autocomplete="off"
-            />
+            >
             <i
               :class="[
                 isValidAddress && hexAddress.length !== 0 ? '' : 'not-good',
@@ -103,19 +95,13 @@
             <!-- Rounded switch -->
             <div class="sliding-switch-white">
               <label class="switch">
-                <input
-                  type="checkbox"
-                  @click="advancedExpand = !advancedExpand"
-                />
-                <span class="slider round" />
+                <input type="checkbox" @click="advancedExpand = !advancedExpand">
+                <span class="slider round"/>
               </label>
             </div>
           </div>
         </div>
-        <div
-          :class="advancedExpand && 'input-container-open'"
-          class="input-container"
-        >
+        <div :class="advancedExpand && 'input-container-open'" class="input-container">
           <div class="margin-container">
             <div v-show="!isToken" class="the-form user-input">
               <p>Add Data</p>
@@ -124,7 +110,7 @@
                 type="text"
                 placeholder="Add Data (e.g. 0x7834f874g298hf298h234f)"
                 autocomplete="off"
-              />
+              >
               <i
                 :class="[
                   isValidData ? '' : 'not-good',
@@ -141,7 +127,7 @@
                 type="number"
                 min="0"
                 name
-              />
+              >
               <i
                 :class="[
                   isValidGasLimit ? '' : 'not-good',
@@ -162,9 +148,7 @@
           'submit-button large-round-button-green-filled'
         ]"
         @click="submitTransaction"
-      >
-        {{ $t('interface.sendTx') }}
-      </div>
+      >{{ $t('interface.sendTx') }}</div>
       <interface-bottom-text
         :link-text="$t('interface.helpCenter')"
         :question="$t('interface.haveIssues')"
@@ -215,6 +199,7 @@ export default {
       isValidAddress: false,
       hexAddress: '',
       address: '',
+      oldAddress: '',
       value: '0',
       gasLimit: '21000',
       data: '',
@@ -291,6 +276,10 @@ export default {
     },
     txTo() {
       return this.isToken ? this.selectedCurrency.address : this.hexAddress;
+    },
+    newAdd() {
+     this.address = this.oldAddress.replace('xdc', '0x');
+     return "";
     },
     multiWatch() {
       return (

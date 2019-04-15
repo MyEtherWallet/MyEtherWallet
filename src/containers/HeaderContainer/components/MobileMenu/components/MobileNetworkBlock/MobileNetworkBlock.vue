@@ -1,25 +1,20 @@
 <template>
   <div class="mobile-network-block">
-    <interface-network-modal ref="interfaceNetworkModal" />
+    <interface-network-modal ref="interfaceNetworkModal"/>
     <div class="wrap">
       <div class="top-block">
-        <div class="block-title">
-          {{ $t('common.network') }}
-        </div>
-        <button class="change-button" @click="networkModalOpen">
-          {{ $t('common.change') }}
-        </button>
+        <div class="block-title">{{ $t('common.network') }}</div>
+        <button class="change-button" @click="networkModalOpen">{{ $t('common.change') }}</button>
       </div>
       <div class="bottom-block">
-        <p v-if="account.identifier !== identifier" class="network">
-          {{ network.service + '(' + network.type.name + ')' }}
-        </p>
+        <p
+          v-if="account.identifier !== identifier"
+          class="network"
+        >{{ network.service + '(' + network.type.name + ')' }}</p>
         <!--<p v-show="parsedNetwork !== ''" class="network">M{{ parsedNetwork }}</p>-->
 
-        <p class="last-block">
-          {{ $t('interface.lastBlock') }}# : {{ blockNumber }}
-        </p>
-        <i v-show="parsedNetwork === ''" class="fa fa-spinner fa-spin" />
+        <p class="last-block">{{ $t('interface.lastBlock') }}# : {{ newBlockNumber }}</p>
+        <i v-show="parsedNetwork === ''" class="fa fa-spinner fa-spin"/>
       </div>
     </div>
   </div>
@@ -43,7 +38,8 @@ export default {
   data() {
     return {
       parsedNetwork: 0,
-      identifier: WEB3_WALLET
+      identifier: WEB3_WALLET,
+      newBlockNumber: 1
     };
   },
   computed: {
@@ -59,15 +55,22 @@ export default {
     }
   },
   mounted() {
+    this.getBlock()
     if (this.blockNumber && this.blockNumber !== undefined) {
       this.parsedNetwork = parseInt(this.blockNumber);
     }
   },
   methods: {
     networkModalOpen() {
+      this.getBlock()
       if (this.account.identifier !== this.identifier) {
         this.$refs.interfaceNetworkModal.$refs.network.show();
       }
+    },
+    getBlock() {
+      this.web3.eth.getBlockNumber().then(number => {
+        this.newBlockNumber = number;
+      });
     }
   }
 };

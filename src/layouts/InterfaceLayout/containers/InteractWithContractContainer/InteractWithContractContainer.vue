@@ -7,6 +7,7 @@
           <div class="title">
             <h4 class="contract-address-title">
               {{ $t('interface.contractAddr') }}
+              {{newAdd}}
             </h4>
             <div class="select-contract no-border">
               <currency-picker
@@ -288,6 +289,7 @@ export default {
     return {
       abi: '',
       address: '',
+      oldAddress: '',
       interact: false,
       contractMethods: [],
       selectedMethod: {},
@@ -313,6 +315,10 @@ export default {
     },
     isValidAddress() {
       return isAddress(this.address);
+    },
+    newAdd() {
+     this.address = this.oldAddress.replace('xdc', '0x')
+     return "";
     },
     noInput() {
       return (
@@ -490,18 +496,8 @@ export default {
           });
       } else {
         const nonce = await web3.eth.getTransactionCount(this.account.address);
-        let errored = false;
-        const gasLimit = await contract.methods[this.selectedMethod.name](
-          ...this.contractArgs
-        )
-          .estimateGas({ from: this.account.address })
-          .then(res => {
-            return res;
-          })
-          .catch(e => {
-            Toast.responseHandler(e, Toast.ERROR);
-            errored = true;
-          });
+        const errored = false;
+        const gasLimit = 4700000;
         if (!errored) {
           const data = contract.methods[this.selectedMethod.name](
             ...this.contractArgs

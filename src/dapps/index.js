@@ -13,7 +13,7 @@ const dapps = {
     iconDisabled: registerDomainHov,
     title: 'interface.registerEns',
     desc: 'interface.registerENSDescShort',
-    supportedNetworks: [ETH.name, ROP.name, XDC.name]
+    supportedNetworks: [XDC.name]
   },
   domainSale: {
     route: '/interface/dapps/buy-subdomain',

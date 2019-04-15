@@ -8,10 +8,7 @@
     />
 
     <!-- Mobile menu header ************************************ -->
-    <div
-      :class="!isOnTop && !isMenuOpen ? 'small-menu' : ''"
-      class="mobile-menu-header"
-    >
+    <div :class="!isOnTop && !isMenuOpen ? 'small-menu' : ''" class="mobile-menu-header">
       <router-link
         to="/"
         @click.native="
@@ -19,36 +16,24 @@
           isMenuOpen = false;
         "
       >
-        <div
-          :class="!isOnTop && !isMenuOpen ? 'small-menu' : ''"
-          class="logo-image--container"
-        >
-          <img class="logo" src="" />
+        <div :class="!isOnTop && !isMenuOpen ? 'small-menu' : ''" class="logo-image--container">
+          <img class="logo" src>
         </div>
       </router-link>
       <div class="mobile-menu-button--container">
-        <mobile-menu-button
-          :ismenuopen="isMenuOpen"
-          @click.native="isMenuOpen = !isMenuOpen"
-        />
+        <mobile-menu-button :ismenuopen="isMenuOpen" @click.native="isMenuOpen = !isMenuOpen"/>
       </div>
     </div>
     <!-- Mobile menu header ************************************ -->
     <!-- Mobile menu shadow backdrop ************************************ -->
-    <div
-      :class="isMenuOpen ? 'menu-open' : ''"
-      class="mobile-menu-shadow-backdrop"
-    ></div>
+    <div :class="isMenuOpen ? 'menu-open' : ''" class="mobile-menu-shadow-backdrop"></div>
     <!-- Mobile menu shadow backdrop ************************************ -->
     <!-- Mobile menu content ************************************ -->
-    <div
-      :class="isMenuOpen ? 'menu-open' : ''"
-      class="mobile-menu-content--container"
-    >
+    <div :class="isMenuOpen ? 'menu-open' : ''" class="mobile-menu-content--container">
       <div class="mobile-menu-content">
         <div v-if="account.address" class="block--container">
-          <mobile-balance-block />
-          <mobile-network-block :block-number="blockNumber" />
+          <mobile-balance-block/>
+          <mobile-network-block :block-number="blockNumber"/>
         </div>
         <ul>
           <li>
@@ -82,16 +67,11 @@
             </router-link>
           </li>
           <li>
-            <div
-              class="menu-link-block"
-              @click="langSelectorOpen = !langSelectorOpen"
-            >
+            <div class="menu-link-block" @click="langSelectorOpen = !langSelectorOpen">
               <div>{{ $t('common.language') }}</div>
               <div class="selected-lang">
                 <div>{{ currentLang }}</div>
-                <img
-                  :src="require(`@/assets/images/flags/${currentFlag}.svg`)"
-                />
+                <img :src="require(`@/assets/images/flags/${currentFlag}.svg`)">
               </div>
               <i class="fa fa-angle-right" aria-hidden="true"></i>
             </div>
@@ -142,7 +122,6 @@ export default {
     return {
       localGasPrice: '10',
       balance: 0,
-      blockNumber: 0,
       isOnTop: true,
       isMenuOpen: false,
       isHomePage: true,
@@ -153,7 +132,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      account: 'account'
+      account: 'account',
+      blockNumber: 'blockNumber'
     })
   },
   watch: {

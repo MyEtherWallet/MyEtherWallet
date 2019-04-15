@@ -12,9 +12,8 @@ import {
   addUpdateSwapNotification
 } from '@/helpers/notificationFormatters';
 
-const addNotification = function({ commit, state }, val) {
+const addNotification = function ({ commit, state }, val) {
   let address;
-
   if (val[1] != undefined) {
     address = val[txIndexes.address].toLowerCase();
   } else {
@@ -36,7 +35,7 @@ const addNotification = function({ commit, state }, val) {
   commit('ADD_NOTIFICATION', newNotif);
 };
 
-const addSwapNotification = async function({ commit, state }, val) {
+const addSwapNotification = async function ({ commit, state }, val) {
   const address = val[swapIndexes.address].toLowerCase();
   const newNotif = {};
   Object.keys(state.notifications).forEach(item => {
@@ -54,27 +53,27 @@ const addSwapNotification = async function({ commit, state }, val) {
   commit('ADD_NOTIFICATION', newNotif);
 };
 
-const addCustomPath = function({ commit, state }, val) {
+const addCustomPath = function ({ commit, state }, val) {
   const newPaths = { ...state.customPaths };
   newPaths[val.path] = { label: val.label, path: val.path };
   commit('ADD_CUSTOM_PATH', newPaths);
 };
 
-const removeCustomPath = function({ commit, state }, val) {
+const removeCustomPath = function ({ commit, state }, val) {
   const newPaths = { ...state.customPaths };
   delete newPaths[val.path];
   commit('ADD_CUSTOM_PATH', newPaths);
 };
 
-const checkIfOnline = function({ commit }) {
+const checkIfOnline = function ({ commit }) {
   commit('CHECK_IF_ONLINE');
 };
 
-const gettingStartedDone = function({ commit }) {
+const gettingStartedDone = function ({ commit }) {
   commit('GETTING_STARTED_DONE');
 };
 
-const clearWallet = function({ commit, state }) {
+const clearWallet = function ({ commit, state }) {
   if (state.wallet.identifier === MEW_CONNECT) {
     state.wallet.mewConnect().disconnectRTC();
   }
@@ -82,11 +81,11 @@ const clearWallet = function({ commit, state }) {
   commit('CLEAR_WALLET');
 };
 
-const createAndSignTx = function({ commit }, val) {
+const createAndSignTx = function ({ commit }, val) {
   commit('CREATE_AND_SIGN_TX', val);
 };
 
-const decryptWallet = function({ commit, dispatch }, params) {
+const decryptWallet = function ({ commit, dispatch }, params) {
   // params[0] = wallet, params[1] = provider
   if (params[0].identifier === MEW_CONNECT) {
     params[0].mewConnect().on('RtcClosedEvent', () => {
@@ -100,31 +99,31 @@ const decryptWallet = function({ commit, dispatch }, params) {
   dispatch('setWeb3Instance', params[1]);
 };
 
-const setAccountBalance = function({ commit }, balance) {
+const setAccountBalance = function ({ commit }, balance) {
   commit('SET_ACCOUNT_BALANCE', balance);
 };
 
-const setGasPrice = function({ commit }, gasPrice) {
+const setGasPrice = function ({ commit }, gasPrice) {
   commit('SET_GAS_PRICE', gasPrice);
 };
 
-const setState = function({ commit }, stateObj) {
+const setState = function ({ commit }, stateObj) {
   commit('INIT_STATES', stateObj);
 };
 
-const setWeb3Instance = function({ dispatch, commit, state }, provider) {
+const setWeb3Instance = function ({ dispatch, commit, state }, provider) {
   const hostUrl = url.parse(state.network.url);
   const options = {};
   // eslint-disable-next-line
   const parsedUrl = `${hostUrl.protocol}//${hostUrl.host}${
     state.network.port ? ':' + state.network.port : ''
-  }${hostUrl.pathname}`;
+    }${hostUrl.pathname}`;
   state.network.username !== '' && state.network.password !== ''
     ? (options['headers'] = {
-        authorization: `Basic: ${btoa(
-          state.network.username + ':' + state.network.password
-        )}`
-      })
+      authorization: `Basic: ${btoa(
+        state.network.username + ':' + state.network.password
+      )}`
+    })
     : {};
   const web3Instance = new web3(
     new MEWProvider(
@@ -150,8 +149,8 @@ const setWeb3Instance = function({ dispatch, commit, state }, provider) {
         };
         arr[i].nonce = await (arr[i].nonce === undefined
           ? web3Instance.eth.getTransactionCount(
-              state.wallet.getChecksumAddressString()
-            )
+            state.wallet.getChecksumAddressString()
+          )
           : arr[i].nonce);
         arr[i].nonce = +arr[i].nonce + i;
         arr[i].gas = await (arr[i].gas === undefined
@@ -181,15 +180,15 @@ const setWeb3Instance = function({ dispatch, commit, state }, provider) {
   commit('SET_WEB3_INSTANCE', web3Instance);
 };
 
-const switchNetwork = function({ commit }, networkObj) {
+const switchNetwork = function ({ commit }, networkObj) {
   // check if wallet is hardware.  if true, check if it supports this network. if not, do nothing
   commit('SWITCH_NETWORK', networkObj);
 };
-const setENS = function({ commit }, ens) {
+const setENS = function ({ commit }, ens) {
   commit('SET_ENS', ens);
 };
 
-const updateNotification = function({ commit, state }, val) {
+const updateNotification = function ({ commit, state }, val) {
   // address, index, object
   const address = val[0].toLowerCase();
   const newNotif = {};
@@ -199,9 +198,14 @@ const updateNotification = function({ commit, state }, val) {
 
   newNotif[address][val[1]] = val[2];
   commit('UPDATE_NOTIFICATION', newNotif);
+
 };
 
-const updateTransaction = function({ commit, state }, val) {
+const updateBlockNumber = function({ commit }, val) {
+  commit('UPDATE_BLOCK_NUMBER', val);
+};
+
+const updateTransaction = function ({ commit, state }, val) {
   // address, index, object
 
   const address = val[0].toLowerCase();
@@ -218,7 +222,7 @@ const updateTransaction = function({ commit, state }, val) {
   commit('UPDATE_SWAP_TRANSACTION', newNotif);
 };
 
-const setLastPath = function({ commit }, val) {
+const setLastPath = function ({ commit }, val) {
   commit('SET_LAST_PATH', val);
 };
 
@@ -240,5 +244,6 @@ export default {
   switchNetwork,
   updateNotification,
   updateTransaction,
-  gettingStartedDone
+  gettingStartedDone,
+  updateBlockNumber
 };

@@ -1,40 +1,30 @@
 <template>
   <div class="mobile-interface-address">
-    <address-qrcode-modal ref="qrcode" :address="account.address" />
+    <address-qrcode-modal ref="qrcode" :address="newAddress"/>
     <div class="wrap">
       <div class="top-block">
         <div class="blockie-container">
-          <blockie
-            :address="address"
-            :size="8"
-            :scale="16"
-            class="blockie-image"
-          />
+          <blockie :address="newAddress" :size="8" :scale="16" class="blockie-image"/>
         </div>
-        <div class="address">{{ account.address }}</div>
-        <input
-          ref="copyAddress"
-          :value="account.address"
-          class="hidden-input"
-          autocomplete="off"
-        />
+        <div class="address">{{ newAddress }}</div>
+        <input ref="copyAddress" :value="newAddress" class="hidden-input" autocomplete="off">
         <div class="address-end">
           {{
-            account.address.substring(
-              account.address.length - 4,
-              account.address.length
-            )
+         newAddress.substring(
+          newAddress.length - 4,
+          newAddress.length
+          )
           }}
         </div>
         <div class="buttons-container">
           <button @click="openQrcode">
-            <img src="~@/assets/images/icons/qr-code-white.svg" />
+            <img src="~@/assets/images/icons/qr-code-white.svg">
             <div class="floating-barcode">
               <div class="barcode-image"></div>
             </div>
           </button>
           <button @click="copy">
-            <img src="~@/assets/images/icons/copy.svg" />
+            <img src="~@/assets/images/icons/copy.svg">
           </button>
         </div>
       </div>
@@ -79,7 +69,8 @@ export default {
   },
   data() {
     return {
-      hasMultipleAddr: false
+      hasMultipleAddr: false,
+      newAddress: 'xdc' + this.$props.address.substring(2)
     };
   },
   computed: {
