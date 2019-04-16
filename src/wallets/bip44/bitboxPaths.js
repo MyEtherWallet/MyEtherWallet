@@ -42,6 +42,5 @@ export default [
   atheios,
   tomoChain,
   mixBlockchain,
-  iolite,
-  solidum
+  iolite
 ];
