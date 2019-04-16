@@ -50,6 +50,14 @@ const gettingStartedDone = state => {
   return state.gettingStartedDone;
 };
 
+const blockNumber = state => {
+  return state.blockNumber;
+};
+
+const linkQuery = state => {
+  return state.linkQuery;
+};
+
 export default {
   account,
   customPaths,
@@ -67,5 +75,7 @@ export default {
   web3,
   sidemenuOpen,
   darklist,
-  gettingStartedDone
+  gettingStartedDone,
+  blockNumber,
+  linkQuery
 };

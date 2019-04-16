@@ -1,8 +1,8 @@
-import AbstractCallMethod from '../AbstractCallMethod';
+import { AbstractMethod } from 'web3-core-method';
 
-export default class GetTransactionReceiptMethod extends AbstractCallMethod {
-  constructor(utils, formatters) {
-    super('eth_getTransactionReceipt', 1, utils, formatters);
+export default class GetTransactionReceiptMethod extends AbstractMethod {
+  constructor(utils, formatters, moduleInstance) {
+    super('eth_getTransactionReceipt', 1, utils, formatters, moduleInstance);
   }
   afterExecution(response) {
     return response;

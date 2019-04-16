@@ -1,6 +1,7 @@
 import tokens from '@/tokens/tokens-rsk.json';
 import contracts from '@/contracts/contract-abi-rsk.json';
 import rsk from '@/assets/images/networks/rsk.svg';
+import { RSK } from '../tlds';
 
 export default {
   name: 'RSK',
@@ -13,7 +14,9 @@ export default {
   contracts: contracts,
   ens: {
     registry: '0xcb868aeabd31e2b66f74e9a55cf064abb31a4ad5',
-    registrarTLD: 'rsk'
+    registrarTLD: 'rsk',
+    supportedTld: RSK
   },
-  icon: rsk
+  icon: rsk,
+  currencyName: 'RBTC'
 };

@@ -16,7 +16,7 @@
           <p class="button-number">1</p>
           <div class="network">
             <p>Network</p>
-            <p class="network-name">
+            <p class="network-name monospace">
               ({{ selectedNetwork.type.name }} - {{ selectedNetwork.service }})
             </p>
           </div>
@@ -129,7 +129,7 @@
                 $t('accessWallet.invalidPathDesc', { path: invalidPath.path })
               }}
             </p>
-            <p v-show="!customPathInput" class="derivation-brands">
+            <p v-show="!customPathInput" class="derivation-brands monospace">
               {{ getPathLabel(selectedPath) }} ({{ selectedPath }})
             </p>
             <div v-show="customPathInput" class="custom-path-container">
@@ -186,8 +186,10 @@
                     height="30px"
                   />
                 </li>
-                <li>{{ account.account.getChecksumAddressString() }}</li>
-                <li>{{ convertBalance(account.balance) }}</li>
+                <li class="monospace">
+                  {{ account.account.getChecksumAddressString() | concatAddr }}
+                </li>
+                <li class="monospace">{{ convertBalance(account.balance) }}</li>
                 <li class="user-input-checkbox">
                   <label class="checkbox-container checkbox-container-small">
                     <input
@@ -415,6 +417,7 @@ export default {
       } else {
         selectedPath = this.selectedPath;
       }
+
       this.hardwareWallet
         .init(selectedPath)
         .then(() => {
@@ -436,6 +439,9 @@ export default {
           .getBalance(account.account.getAddressString())
           .then(balance => {
             account.balance = balance;
+          })
+          .catch(e => {
+            Toast.responseHandler(e, Toast.ERROR);
           });
       });
     }, 1000),

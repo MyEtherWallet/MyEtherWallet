@@ -1,14 +1,16 @@
-import { ProvidersModuleFactory } from 'web3-providers';
-import { MethodModuleFactory } from 'web3-core-method';
 import { formatters } from 'web3-core-helpers';
 import * as Utils from 'web3-utils';
-import web3CallsFactory from './factories/web3CallsFactory';
+import Web3Calls from './web3Calls2';
+import MethodFactory from './factories/methodFactory';
 
-export default (provider, options) => {
-  return new web3CallsFactory(Utils, formatters).createNetworkModule(
+// eslint-disable-next-line no-unused-vars
+export default (provider, net = null, options = {}) => {
+  return new Web3Calls(
     provider,
-    new ProvidersModuleFactory(),
-    new MethodModuleFactory(),
-    options
+    new MethodFactory(Utils, formatters),
+    Utils,
+    formatters,
+    options,
+    null
   );
 };

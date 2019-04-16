@@ -132,7 +132,12 @@
           </div>
         </div>
         <div class="the-form contract-name">
-          <input ref="value" v-model="value" placeholder="Value in ETH" />
+          <input
+            ref="value"
+            v-model="value"
+            step="any"
+            placeholder="Value in ETH"
+          />
         </div>
       </div>
       <div class="send-form">
@@ -274,7 +279,8 @@ export default {
   methods: {
     isValidInput(value, solidityType) {
       if (!value) value = '';
-      if (solidityType === 'uint') return value != '' && !isNaN(value);
+      if (solidityType === 'uint')
+        return value !== '' && !isNaN(value) && Misc.isInt(value);
       if (solidityType === 'address') return isAddress(value);
       if (solidityType === 'string') return true;
       if (solidityType === 'bytes')

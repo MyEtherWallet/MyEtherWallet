@@ -615,7 +615,7 @@
   .dropdown-item:active {
     background-color: $background-color-white;
     color: $text-color-6;
-    font-weight: 600 !important;
+    //font-weight: 600 !important;
   }
 
   .nav-link-custom span {
@@ -1024,7 +1024,7 @@
 
     // On mouse-over, add a grey background color
     &:hover input ~ .checkmark {
-      $check-box-hover-color: $light-grey-12;
+      $check-box-hover-color: $dark-grey-11;
 
       background-color: $check-box-hover-color;
     }
@@ -1259,7 +1259,7 @@
   }
 
   .disabled {
-    background-color: $light-grey-12;
+    background-color: $dark-grey-11;
     pointer-events: none;
   }
 } //@media all and ( min-width: calc(#{$tablet-width} + 1px) )
@@ -1369,6 +1369,18 @@
     color: $white !important;
     font-size: 20px !important;
   }
+
+  .custom-toast-container {
+    height: 100% !important;
+    width: 100% !important;
+  }
+}
+
+// Limit maximum 5 notifications to show
+.toasted-container {
+  .toasted:nth-last-child(n + 6) {
+    display: none !important;
+  }
 }
 
 .toast-success {
@@ -1380,7 +1392,7 @@
 .toast-warn {
   @extend %toast;
 
-  background-color: $light-yellow !important;
+  background-color: $light-yellow-1 !important;
 }
 
 .toast-error {
@@ -1404,4 +1416,24 @@
   margin-right: 0 !important;
   margin-bottom: 0 !important;
   margin-left: 0 !important;
+}
+
+// *********************************************************************
+// Settings dropdown menu position fix
+// *********************************************************************
+.settings-menu {
+  .dropdown-menu {
+    transform: translate3d(-73px, 50px, 0) !important;
+  }
+}
+
+.tx-history-menu {
+  .dropdown-menu {
+    transform: translate3d(12px, 48px, 0) !important;
+  }
+}
+// Monospace font
+// *********************************************************************
+.monospace {
+  font-family: 'Inconsolata', monospace;
 }

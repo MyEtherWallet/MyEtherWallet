@@ -1,9 +1,15 @@
-const platform = require('platform');
 import normalise from '@/helpers/normalise';
 import nodeList from '@/networks';
 import { isAddress } from './addressUtils';
+import url from 'url';
 import store from '@/store';
 import { uint, address, string, bytes, bool } from './solidityTypes';
+
+const capitalize = value => {
+  if (!value) return '';
+  value = value.toString();
+  return value.charAt(0).toUpperCase() + value.slice(1);
+};
 /* Accepts string, returns boolean */
 const isJson = str => {
   try {
@@ -15,19 +21,13 @@ const isJson = str => {
   return true;
 };
 
-const browserName = () => {
-  if (window) return platform.name;
-  return undefined;
-};
-
-const browserOs = () => {
-  if (window) return platform.os;
-  return undefined;
-};
-
-const browserProduct = () => {
-  if (window) return platform.product;
-  return undefined;
+const getService = parsableUrl => {
+  const parsedUrl = url.parse(parsableUrl).hostname;
+  const splitUrl = parsedUrl.split('.');
+  if (splitUrl.length > 2)
+    // eslint-disable-next-line
+    return capitalize(`${splitUrl[1]}.${splitUrl[2]}`);
+  return capitalize(splitUrl.join('.'));
 };
 
 const doesExist = val => val !== undefined && val !== null;
@@ -35,6 +35,10 @@ const doesExist = val => val !== undefined && val !== null;
 const padLeftEven = hex => {
   hex = hex.length % 2 !== 0 ? '0' + hex : hex;
   return hex;
+};
+
+const isInt = num => {
+  return num % 1 === 0;
 };
 
 const formatDate = date => {
@@ -178,7 +182,7 @@ export default {
   reorderNetworks,
   isDarklisted,
   solidityType,
-  browserName,
-  browserOs,
-  browserProduct
+  isInt,
+  capitalize,
+  getService
 };

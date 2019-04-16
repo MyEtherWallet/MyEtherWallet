@@ -11,7 +11,12 @@
           />
         </div>
         <div>
-          <input v-model="valueLeft" type="number" placeholder="Amount" />
+          <input
+            v-model="valueLeft"
+            type="number"
+            step="any"
+            placeholder="Amount"
+          />
         </div>
       </div>
 
@@ -31,7 +36,12 @@
           />
         </div>
         <div>
-          <input v-model="valueRight" type="number" placeholder="Amount" />
+          <input
+            v-model="valueRight"
+            type="number"
+            placeholder="Amount"
+            step="any"
+          />
         </div>
       </div>
     </div>

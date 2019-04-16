@@ -1,3 +1,103 @@
+### Bug
+
+- Fixes send offline token value and deploy contract errors [#920](https://github.com/MyEtherWallet/MyEtherWallet/pull/920)
+- Update TOMO explorrer links [#918](https://github.com/MyEtherWallet/MyEtherWallet/pull/918)
+
+### Devop
+
+- Fix send offline helper, update webchain [#932](https://github.com/MyEtherWallet/MyEtherWallet/pull/932)
+- MEWCX build fix [#935](https://github.com/MyEtherWallet/MyEtherWallet/pull/935)
+
+### Feature
+
+- Scan each mewbuild with virustotal [#934](https://github.com/MyEtherWallet/MyEtherWallet/pull/934)
+
+### Release v5.0.9
+
+### Devop
+
+- Better data catch for url params [#909](https://github.com/MyEtherWallet/MyEtherWallet/pull/909)
+- Update hardwares [#906](https://github.com/MyEtherWallet/MyEtherWallet/pull/906)
+- Add monospace font[#898](https://github.com/MyEtherWallet/MyEtherWallet/pull/898)
+- Add Gage on team page [#853](https://github.com/MyEtherWallet/MyEtherWallet/pull/853)
+- Fixes Bitbox error and Hardware wallet error handling [#893](https://github.com/MyEtherWallet/MyEtherWallet/pull/893)
+- Use Kyber supplied gas limits [#892](https://github.com/MyEtherWallet/MyEtherWallet/pull/892)
+
+### Feature
+
+- Update verify message [#854](https://github.com/MyEtherWallet/MyEtherWallet/pull/854)
+- Add hardware page [#862](https://github.com/MyEtherWallet/MyEtherWallet/pull/862)
+- Reimplement query params for send offline and regular send [#803](https://github.com/MyEtherWallet/MyEtherWallet/pull/803)
+- Show token transfer data in notification body [#840](https://github.com/MyEtherWallet/MyEtherWallet/pull/840)
+- Add curency symbol to config [#809](https://github.com/MyEtherWallet/MyEtherWallet/pull/809)
+- Add Browser options for Metamask on Safari [#867](https://github.com/MyEtherWallet/MyEtherWallet/pull/867)
+- Add TX history menu[#865](https://github.com/MyEtherWallet/MyEtherWallet/pull/865)
+
+### Bug
+
+- Fix side menu bugs, logout warning modal bug[#896](https://github.com/MyEtherWallet/MyEtherWallet/pull/896)
+- Add network icon background[#897](https://github.com/MyEtherWallet/MyEtherWallet/pull/897)
+- Fix custom token validation [#852](https://github.com/MyEtherWallet/MyEtherWallet/pull/852)
+- Change mobile side menu button title from "Change" to "Menu" [#887](https://github.com/MyEtherWallet/MyEtherWallet/pull/887)
+- Fix notification to show max 5 notification popups[#873](https://github.com/MyEtherWallet/MyEtherWallet/pull/873)
+- Display final re-calculated values on swap confirmation[#841](https://github.com/MyEtherWallet/MyEtherWallet/pull/841)
+- Fix batch send success modal[#843](https://github.com/MyEtherWallet/MyEtherWallet/pull/843)
+- Fix hardware wallet scroll bug[#890](https://github.com/MyEtherWallet/MyEtherWallet/pull/890)
+- Allow zero as nonce for offline transaction [#860](https://github.com/MyEtherWallet/MyEtherWallet/pull/860)
+- Resolve spinner on interact contract [#861](https://github.com/MyEtherWallet/MyEtherWallet/pull/841)
+- Fix incorrect signing of messages starts with 0x [#899](https://github.com/MyEtherWallet/MyEtherWallet/pull/899)
+
+### Hotfix v5.0.8-hotfix.1
+
+- Display final re-calculated values on swap confirmation[#841](https://github.com/MyEtherWallet/MyEtherWallet/pull/841)
+- Fix batch send success modal[#843](https://github.com/MyEtherWallet/MyEtherWallet/pull/843)
+
+### Release v5.0.8
+
+### Bug
+
+- Better Ipad Catch [#814](https://github.com/MyEtherWallet/MyEtherWallet/pull/814)
+- Fix success modal not linking to unlock wallet page [#825](https://github.com/MyEtherWallet/MyEtherWallet/pull/825)
+- Currency in notifications shown correctly [#824](https://github.com/MyEtherWallet/MyEtherWallet/pull/824)
+- Fix Token details not sending to mewconnect [#839](https://github.com/MyEtherWallet/MyEtherWallet/pull/839)
+
+### Feature
+
+- Implement DNS for ENS [#792](https://github.com/MyEtherWallet/MyEtherWallet/pull/792)
+- Add ethereum classic path as presented in mew v3 [#812](https://github.com/MyEtherWallet/MyEtherWallet/pull/812)
+- Shows the recipient and the contract address [#822](https://github.com/MyEtherWallet/MyEtherWallet/pull/822)
+- Add ledger support for ThunderCore [#827](https://github.com/MyEtherWallet/MyEtherWallet/pull/827)
+
+### Devop
+
+- Add zh_TW (Traditional Chinese) translation [#820](https://github.com/MyEtherWallet/MyEtherWallet/pull/820)
+
+### Release v5.0.7
+
+### Feature
+
+- Add Finney Modal [#782](https://github.com/MyEtherWallet/MyEtherWallet/pull/782)
+- Sentry Fixes [#777](https://github.com/MyEtherWallet/MyEtherWallet/pull/777)
+- Add Thundercore node [#780](https://github.com/MyEtherWallet/MyEtherWallet/pull/780)
+
+### Release v5.0.6
+
+### Feature
+
+- DApp: Schedule transaction using Ethereum Alarm Clock [#545](https://github.com/MyEtherWallet/MyEtherWallet/pull/545)
+
+### Bug
+
+- Fix block 0 on mobile [#767](https://github.com/MyEtherWallet/MyEtherWallet/pull/767)
+- Update infura endpoint [#763](https://github.com/MyEtherWallet/MyEtherWallet/pull/763)
+- Chrome 72 compatibility for Secalot [#766](https://github.com/MyEtherWallet/MyEtherWallet/pull/766)
+
+### Hotfix v5.0.5-hotfix.1
+
+### Bug
+
+- Fix network addresses with discussed concat, fixes settings dollar amount, Token manual load fix, Ipad modal catch, Mozilla value error, update packages, fix verify feedback, and signed msg copy, await token fetch [#752](https://github.com/MyEtherWallet/MyEtherWallet/pull/752)
+
 ### Release v5.0.5
 
 ### Bug

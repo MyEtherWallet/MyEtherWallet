@@ -11,5 +11,6 @@ export default {
   chainID: 31102,
   tokens: tokens,
   contracts: contracts,
-  icon: esn
+  icon: esn,
+  currencyName: 'ESN'
 };

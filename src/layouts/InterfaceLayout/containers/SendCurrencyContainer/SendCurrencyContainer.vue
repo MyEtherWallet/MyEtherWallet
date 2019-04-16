@@ -13,6 +13,7 @@
               :currency="tokensWithBalance"
               :page="'sendEthAndTokens'"
               :token="true"
+              :default="selectedCurrency !== '' ? selectedCurrency : {}"
               @selectedCurrency="selectedCurrency = $event"
             />
           </div>
@@ -34,6 +35,7 @@
                 placeholder="Amount"
                 min="0"
                 name="value"
+                step="any"
               />
               <i
                 :class="[
@@ -226,7 +228,8 @@ export default {
       account: 'account',
       gasPrice: 'gasPrice',
       web3: 'web3',
-      network: 'network'
+      network: 'network',
+      linkQuery: 'linkQuery'
     }),
     isValidAmount() {
       const txFee = new BigNumber(ethUnit.toWei(this.gasPrice, 'gwei')).times(
@@ -246,7 +249,7 @@ export default {
       const notEnoughCurrencyMsg =
         this.$t('errorsGlobal.notAValidAmountTotal') +
         ' ' +
-        this.network.type.name +
+        this.network.type.currencyName +
         ' ' +
         this.$t('errorsGlobal.toSend');
       const invalidValueMsg = this.$t('errorsGlobal.invalidValue');
@@ -312,7 +315,8 @@ export default {
       );
     },
     isToken() {
-      return this.selectedCurrency.symbol !== this.network.type.name;
+      const symbol = this.network.type.currencyName;
+      return this.selectedCurrency.symbol !== symbol;
     },
     txData() {
       if (this.isToken) {
@@ -330,7 +334,9 @@ export default {
       return Misc.sanitizeHex(ethUnit.toWei(this.value, 'ether').toString(16));
     },
     txTo() {
-      return this.isToken ? this.selectedCurrency.address : this.hexAddress;
+      return this.isToken
+        ? this.selectedCurrency.address.toLowerCase()
+        : this.hexAddress.toLowerCase();
     },
     multiWatch() {
       return (
@@ -345,7 +351,30 @@ export default {
   watch: {
     multiWatch: _.debounce(function() {
       if (this.validInputs) this.estimateGas();
-    }, 500)
+    }, 500),
+    tokensWithBalance() {
+      if (Object.keys(this.linkQuery).length > 0) {
+        const { data, to, value, gaslimit, tokensymbol } = this.linkQuery;
+        const foundToken = tokensymbol
+          ? this.tokensWithBalance.find(item => {
+              return item.symbol.toLowerCase() === tokensymbol.toLowerCase();
+            })
+          : undefined;
+
+        this.data = data ? (Misc.validateHexString(data) ? data : '') : '';
+        this.value = value ? new BigNumber(value).toFixed() : 0;
+        this.hexAddress = to ? to : '';
+        this.address = to ? to : '';
+        this.gasLimit = gaslimit ? new BigNumber(gaslimit).toString() : '21000';
+        this.selectedCurrency = foundToken ? foundToken : this.selectedCurrency;
+
+        Toast.responseHandler(
+          'Form has been prefilled. Please proceed with caution!',
+          Toast.WARN
+        );
+        this.$store.dispatch('saveQueryVal', {});
+      }
+    }
   },
   methods: {
     sendEntireBalance() {
@@ -381,7 +410,7 @@ export default {
       const contract = new this.web3.eth.Contract(jsonInterface);
       return contract.methods
         .transfer(
-          this.hexAddress,
+          this.hexAddress.toLowerCase(),
           new BigNumber(amount).times(new BigNumber(10).pow(decimals)).toFixed()
         )
         .encodeABI();

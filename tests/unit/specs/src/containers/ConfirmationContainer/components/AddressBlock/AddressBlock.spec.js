@@ -19,12 +19,13 @@ describe('AddressBlock.vue', () => {
   const tokenSymbol = 'tokenSymbol';
   const tokenTransferVal = '100';
   const value = '1000000000000';
+
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
     store = baseSetup.store;
-    Vue.config.errorHandler = () => {};
+
     Vue.config.warnHandler = () => {};
   });
 

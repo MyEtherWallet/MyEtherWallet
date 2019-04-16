@@ -12,7 +12,8 @@ export default async ({ payload, requestManager }, res, next) => {
       memcache[txHash].timestamp < new Date().getTime() - WAIT_TIME)
   ) {
     try {
-      const receipt = await ethCalls.getTransactionReceipt(txHash);
+      let receipt = await ethCalls.getTransactionReceipt(txHash);
+      if (receipt !== null && !receipt.blockNumber) receipt = null;
       memcache[txHash] = {
         timestamp: new Date().getTime(),
         receipt: JSON.stringify(receipt)
@@ -23,7 +24,7 @@ export default async ({ payload, requestManager }, res, next) => {
       res(null, toPayload(payload.id, null));
     }
   } else {
-    console.log('HIT', memcache[txHash].receipt);
+    console.log('HIT', JSON.parse(memcache[txHash].receipt));
     res(
       null,
       toPayload(payload.id, JSON.parse(memcache[txHash].receipt) || null)

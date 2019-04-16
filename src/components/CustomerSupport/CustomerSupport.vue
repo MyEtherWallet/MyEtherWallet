@@ -23,6 +23,7 @@
         <input v-model="browser" placeholder="Browser" />
         <input v-model="os" placeholder="Operating System" />
         <input v-model="device" placeholder="Device/Wallet type (If any)" />
+        <input v-model="address" placeholder="Wallet PUBLIC address (If any)" />
         <input v-model="url" placeholder="Url" />
         <textarea v-model="description" placeholder="Describe the issue" />
         <a
@@ -39,7 +40,7 @@
 </template>
 
 <script>
-import { Misc } from '@/helpers';
+import platform from 'platform';
 
 export default {
   props: {
@@ -54,7 +55,8 @@ export default {
       os: '',
       device: '',
       url: '',
-      description: ''
+      description: '',
+      address: ''
     };
   },
   computed: {
@@ -65,6 +67,7 @@ export default {
         Os: ${this.os},
         Device: ${this.device},
         url: ${this.url}
+        Wallet Address: ${this.url}
 
 
         ${this.description}
@@ -74,9 +77,9 @@ export default {
     }
   },
   mounted() {
-    this.browser = this.$options.filters.capitalize(Misc.browserName());
-    this.os = this.$options.filters.capitalize(Misc.browserOs());
-    this.device = Misc.browserProduct();
+    this.browser = platform.name;
+    this.os = platform.os.family;
+    this.device = platform.product;
     this.url = this.$router.history.current.fullPath;
   },
   methods: {

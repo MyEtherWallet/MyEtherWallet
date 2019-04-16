@@ -48,6 +48,7 @@
                   type="number"
                   name
                   value
+                  step="any"
                   placeholder="Deposit Amount"
                   @input="amountChanged('from')"
                 />
@@ -80,6 +81,7 @@
                   type="number"
                   name
                   value
+                  step="any"
                   placeholder="Received Amount"
                   @input="amountChanged('to')"
                 />
@@ -257,6 +259,14 @@ export default {
     'swap-send-form': SwapSendForm,
     'swap-send-to-modal': SwapSendToModal
   },
+  props: {
+    tokensWithBalance: {
+      type: Array,
+      default: function() {
+        return [];
+      }
+    }
+  },
   data() {
     return {
       baseCurrency: BASE_CURRENCY,
@@ -275,11 +285,15 @@ export default {
       selectedProvider: {},
       swapDetails: {},
       currencyDetails: {},
-      swap: new SwapProviders(providers, {
-        network: this.$store.state.network.type.name,
-        web3: this.$store.state.web3,
-        getRateForUnit: true
-      }),
+      swap: new SwapProviders(
+        providers,
+        {
+          network: this.$store.state.network.type.name,
+          web3: this.$store.state.web3,
+          getRateForUnit: true
+        },
+        { tokensWithBalance: this.tokensWithBalance }
+      ),
       images: {
         kybernetowrk: ImageKybernetowrk,
         bity: ImageBity,
@@ -451,9 +465,18 @@ export default {
         return this.exitFromAddress !== '' && this.validExitAddress;
       }
       if (this.showRefundAddress) {
-        const validRefundAddress =
-          this.refundAddress === '' && this.validRefundAddress;
-        return validBaseToAddress && validRefundAddress;
+        if (
+          this.fromCurrency === this.baseCurrency ||
+          SwapProviders.isToken(this.fromCurrency)
+        ) {
+          const validRefundAddress =
+            this.refundAddress === '' && this.validRefundAddress;
+          return validBaseToAddress && validRefundAddress;
+        }
+        return SwapProviders.checkAddress(
+          this.refundAddress,
+          this.fromCurrency
+        );
       }
 
       return validBaseToAddress;
@@ -499,6 +522,9 @@ export default {
     },
     ['swap.haveProviderRates']() {
       this.haveProviderRates = this.swap.haveProviderRates;
+      const { toArray, fromArray } = this.swap.buildInitialCurrencyArrays();
+      this.toArray = toArray;
+      this.fromArray = fromArray;
       this.lastBestRate = bestRateForQuantity(
         [...this.providerList],
         this.fromValue

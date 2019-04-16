@@ -17,7 +17,6 @@ export default class Web3Calls extends AbstractWeb3Module {
       methodFactory,
       options
     );
-
     this.utils = utils;
     this.formatters = formatters;
   }

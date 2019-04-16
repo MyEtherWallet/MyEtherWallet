@@ -27,7 +27,7 @@ const kyberValidNetworks = ['ETH', 'ROP'];
 const defaultValues = {
   tradeGasLimit: 400000,
   tokenToTokenGasLimit: 400000,
-  tokenApprovalGasLimit: 50000, //40205,
+  tokenApprovalGasLimit: 100000, //40205,
   maxGasPrice: 30000000000, // 30 Gwei
   gasPrice: 2000000000 // 2 Gwei
 };
@@ -39,6 +39,10 @@ const TIME_SWAP_VALID = TIME_SWAP_VALID_DEFAULT;
 const PROVIDER_NAME = 'kybernetwork';
 const kyberBaseCurrency = 'ETH';
 
+const specialGasLimits = {
+  DGX: 750000
+};
+
 export {
   kyberBaseCurrency,
   FEE_RATE,
@@ -47,6 +51,7 @@ export {
   MAX_DEST_AMOUNT,
   MIN_RATE_BUFFER,
   defaultValues,
+  specialGasLimits,
   kyberTokenList,
   kyberTokenInfoList,
   kyberValidNetworks,

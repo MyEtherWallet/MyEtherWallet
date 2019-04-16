@@ -12,6 +12,7 @@ import { Misc } from '@/helpers';
 const setEvents = (promiObj, tx, dispatch) => {
   promiObj
     .once('transactionHash', hash => {
+      console.log('hash', hash);
       dispatch('addNotification', ['Hash', tx.from, tx, hash]);
     })
     .once('receipt', res => {
@@ -27,7 +28,7 @@ export default async (
   next
 ) => {
   if (payload.method !== 'eth_sendTransaction') return next();
-  const tx = payload.params[0];
+  const tx = Object.assign({}, payload.params[0]);
   const localTx = Object.assign({}, tx);
   delete localTx['gas'];
   delete localTx['nonce'];

@@ -183,8 +183,16 @@ export default {
                 'https://chrome.google.com/webstore/detail/myetherwallet/nlbmnnijcnlegkjjpcfjclmcfggfefdm?hl=en'
             },
             {
+              text: 'Buy a Hardware wallet',
+              to: '/hardware-wallet-affiliates'
+            },
+            {
               text: this.$t('footer.sendOffline'),
               to: '/send-offline-helper'
+            },
+            {
+              text: this.$t('footer.verifyMessage'),
+              to: '/verify-message'
             }
           ]
         },
@@ -195,6 +203,11 @@ export default {
             {
               text: this.$t('footer.ledger'),
               href: 'https://www.ledger.com?r=fa4b'
+            },
+            {
+              text: this.$t('footer.finney'),
+              href:
+                'http://shop.sirinlabs.com?rfsn=2397639.54fdf&utm_source=refersion&utm_medium=affiliate&utm_campaign=2397639.54fdf'
             },
             {
               text: this.$t('footer.digital'),
@@ -211,11 +224,16 @@ export default {
             },
             {
               text: this.$t('footer.trezor'),
-              href: 'https://trezor.io/?a=myetherwallet.com'
+              href: 'https://trezor.io/?offer_id=12&aff_id=2029'
             },
             {
               text: this.$t('footer.bity'),
               href: 'https://bity.com/af/jshkb37v'
+            },
+            {
+              text: this.$t('footer.billfodl'),
+              href:
+                'https://billfodl.com/?afmc=2j&utm_campaign=2j&utm_source=leaddyno&utm_medium=affiliate'
             }
           ]
         },

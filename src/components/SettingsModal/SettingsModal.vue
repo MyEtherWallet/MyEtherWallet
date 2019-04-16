@@ -39,7 +39,7 @@
                     {{ gasPriceInputs[key].eth }} {{ network.type.name }}
                     <span v-if="ethPrice !== 0 && network.type.name === 'ETH'">
                       ($
-                      {{ convert(gasPriceInputs[key].eth) | concatAddr }})
+                      {{ convert(gasPriceInputs[key].eth) }})
                     </span>
                   </p>
                 </li>
@@ -62,9 +62,15 @@
                     <p class="gwei">Gwei</p>
                   </div>
                   <p>
-                    {{ customGasEth }} {{ network.type.name }}
-                    <span v-if="ethPrice !== 0 && customGasEth !== 0"
-                      >($ {{ convert(customGasEth) | concatAddr }})</span
+                    {{ customGasEth }}
+                    {{ network.type.currencyName }}
+                    <span
+                      v-if="
+                        ethPrice !== 0 &&
+                          customGasEth !== 0 &&
+                          network.type.name === 'ETH'
+                      "
+                      >($ {{ convert(customGasEth) }})</span
                     >
                   </p>
                 </li>
@@ -387,7 +393,8 @@ export default {
       this.file = window.URL.createObjectURL(file);
     },
     convert(price) {
-      return new BigNumber(price * this.ethPrice).toFixed();
+      const convertedPrice = new BigNumber(price * this.ethPrice).toFixed();
+      return this.$options.filters.concatAddr(convertedPrice);
     },
     async getEthPrice() {
       const price = await fetch(
