@@ -129,16 +129,13 @@
 </template>
 
 <script>
-/* eslint-disable */
-
 import { mapGetters } from 'vuex';
 import ethUnit from 'ethjs-unit';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
 import MakerCDP from '../../MakerCDP';
-import {displayFixedPercent, displayFixedValue, displayPercentValue} from '../../helpers'
-
+import { displayFixedValue, displayPercentValue } from '../../helpers';
 
 import BigNumber from 'bignumber.js';
 import Arrow from '@/assets/images/etc/single-arrow.svg';
@@ -147,11 +144,6 @@ const toBigNumber = num => {
   return new BigNumber(num);
 };
 
-const bnOver = (one, two, three) => {
-  return toBigNumber(one)
-    .times(toBigNumber(two))
-    .div(toBigNumber(three));
-};
 export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
@@ -306,7 +298,6 @@ export default {
         cdpService: this.cdpService,
         proxyService: this.proxyService
       };
-
 
       this.makerCDP = new MakerCDP(null, this.maker, services, sysVars);
     },

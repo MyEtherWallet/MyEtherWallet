@@ -1,5 +1,4 @@
 import BigNumber from 'bignumber.js';
-// import {EventEmitter} from 'events';
 import { toChecksumAddress } from '@/helpers/addressUtils';
 import MakerCDP from './MakerCDP';
 
