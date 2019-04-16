@@ -1,9 +1,7 @@
-/* eslint-disable */
 import Maker from '@makerdao/dai';
 import BigNumber from 'bignumber.js';
-import * as unit from 'ethjs-unit';
 
-const { MKR, DAI, ETH, WETH, PETH, USD_ETH, USD_MKR, USD_DAI } = Maker;
+const { MKR, DAI } = Maker;
 
 const toBigNumber = num => {
   return new BigNumber(num);
@@ -86,8 +84,6 @@ export default class MakerCDP {
     this._usdCollateral = (await this.cdp.getCollateralValue(
       Maker.USD
     )).toBigNumber();
-    console.log('dai', this._debtValue.toString()); // todo remove dev item
-    console.log('eth', this._ethCollateral.toString()); // todo remove dev item
   }
 
   async update() {
@@ -169,16 +165,6 @@ export default class MakerCDP {
     return this._governanceFee;
   }
 
-  // get maxDaiDraw() {
-  //   const tl = toBigNumber(this._ethPrice).times(
-  //     toBigNumber(this._ethCollateral)
-  //   );
-  //   const tr = toBigNumber(this._debtValue).times(
-  //     toBigNumber(this._liquidationRatio)
-  //   );
-  //   return tl.minus(tr).div(toBigNumber(this._ethPrice));
-  // }
-
   get maxDai() {
     if (
       this._ethPrice &&
@@ -223,7 +209,6 @@ export default class MakerCDP {
     }
     return toBigNumber(0);
   }
-
 
   toNumber(val) {
     if (BigNumber.isBigNumber(val)) {

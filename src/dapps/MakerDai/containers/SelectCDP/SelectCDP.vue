@@ -30,14 +30,11 @@
 </template>
 
 <script>
-/* eslint-disable */
-
 import { mapGetters } from 'vuex';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
 import BigNumber from 'bignumber.js';
-import Maker from '@makerdao/dai';
 import SelectCdpEntry from '../../components/SelectCdpEntry';
 
 const KOVAN_SERVER_URL = 'https://sai-kovan.makerfoundation.com/v1';
@@ -46,11 +43,6 @@ const toBigNumber = num => {
   return new BigNumber(num);
 };
 
-const bnOver = (one, two, three) => {
-  return toBigNumber(one)
-    .times(toBigNumber(two))
-    .div(toBigNumber(three));
-};
 export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,

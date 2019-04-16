@@ -181,8 +181,6 @@
 </template>
 
 <script>
-/* eslint-disable */
-
 import { mapGetters } from 'vuex';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
@@ -287,36 +285,6 @@ export default {
       maxEthDraw: toBigNumber(0)
     };
   },
-  watch: {
-    ['activeCdp.ready']() {
-      this.isReady();
-    },
-    async ['activeCdp.doUpdate'](val) {
-      if (val > 0) {
-        this.activeCdp = this.makerManager.getCdp(this.cdpId);
-      }
-    },
-    valuesUpdated(){
-      if (this.makerManager.hasCdp(this.cdpId)) {
-        this.activeCdp = this.makerManager.getCdp(this.cdpId);
-      }
-    },
-    ['$route.params.cdpId'](val) {
-      if (this.makerManager.hasCdp(val)) {
-        this.activeCdp = this.makerManager.getCdp(val);
-      }
-    },
-    openCloseModal(val) {
-      if (val) {
-        this.showClose();
-      }
-    },
-    openMoveModal(val) {
-      if (val) {
-        this.showMove();
-      }
-    }
-  },
   computed: {
     ...mapGetters({
       account: 'account',
@@ -346,6 +314,36 @@ export default {
       return displayFixedPercent(this.activeCdp.collatRatio);
     }
   },
+  watch: {
+    ['activeCdp.ready']() {
+      this.isReady();
+    },
+    async ['activeCdp.doUpdate'](val) {
+      if (val > 0) {
+        this.activeCdp = this.makerManager.getCdp(this.cdpId);
+      }
+    },
+    valuesUpdated() {
+      if (this.makerManager.hasCdp(this.cdpId)) {
+        this.activeCdp = this.makerManager.getCdp(this.cdpId);
+      }
+    },
+    ['$route.params.cdpId'](val) {
+      if (this.makerManager.hasCdp(val)) {
+        this.activeCdp = this.makerManager.getCdp(val);
+      }
+    },
+    openCloseModal(val) {
+      if (val) {
+        this.showClose();
+      }
+    },
+    openMoveModal(val) {
+      if (val) {
+        this.showMove();
+      }
+    }
+  },
   async mounted() {
     this.cdpId = this.$route.params.cdpId;
     if (this.makerActive) {
@@ -358,7 +356,7 @@ export default {
   },
   methods: {
     async migrateCdpToProxy() {
-      const migrate = await this.activeCdp.migrateCdpComplete();
+      await this.activeCdp.migrateCdpComplete();
     },
     showDeposit() {
       this.$refs.deposit.$refs.modal.show();
@@ -388,7 +386,7 @@ export default {
     displayFixedValue,
     async isReady() {
       // this.maxWithDraw = this.activeCdp.maxDaiDraw();
-      if(this.activeCdp){
+      if (this.activeCdp) {
         this.maxWithDrawUSD = this.activeCdp.toUSD(this.activeCdp.maxDai);
       }
       this.maxWithDrawUSD = '--';

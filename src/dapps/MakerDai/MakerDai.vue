@@ -19,21 +19,11 @@
     </interface-container-title>
 
     <div v-show="makerActive" class="buttons-container">
-      <!--      <div v-if="showCreate" class="dapps-button">-->
-      <!--        <div @click="gotoCreate">-->
-      <!--          <h4>Create</h4>-->
-      <!--        </div>-->
-      <!--      </div>-->
       <div v-if="showManage">
         <div class="dapps-button" @click="goToManage">
           <h4>List All</h4>
         </div>
       </div>
-      <!--      <div v-if="showRefresh">
-        <div class="dapps-button" @click="refresh">
-          <h4>Refresh</h4>
-        </div>
-      </div>-->
       <div v-if="!hasProxy && !onCreate">
         <div class="dapps-button" @click="buildProxy">
           <h4>Create Proxy</h4>
@@ -87,8 +77,6 @@
 </template>
 
 <script>
-/* eslint-disable */
-
 import { mapGetters } from 'vuex';
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
@@ -113,9 +101,6 @@ const bnOver = (one, two, three) => {
     .div(toBigNumber(three));
 };
 
-const bnDiv = (one, two) => {
-  return toBigNumber(one).div(toBigNumber(two));
-};
 export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
@@ -177,12 +162,6 @@ export default {
       valuesUpdated: 0
     };
   },
-  watch: {
-    ['account.address']() {
-      this.makerActive = false;
-      this.setup();
-    }
-  },
   computed: {
     ...mapGetters({
       account: 'account',
@@ -222,6 +201,12 @@ export default {
     },
     listCdps() {
       return this.cdps.length > 1 || this.cdpsWithoutProxy.length > 1;
+    }
+  },
+  watch: {
+    ['account.address']() {
+      this.makerActive = false;
+      this.setup();
     }
   },
   destroyed() {
@@ -373,7 +358,7 @@ export default {
         });
       }
     },
-    addCdp(vals) {
+    addCdp() {
       this.creatingCdp = true;
       // this.makerManager.addOpenedCdp(vals.maker, vals.id);
       // this.availableCdps = this.makerManager.availableCdps;
