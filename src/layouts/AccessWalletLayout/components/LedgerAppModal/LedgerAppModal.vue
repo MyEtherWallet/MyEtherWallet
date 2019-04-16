@@ -12,9 +12,49 @@
         <h4>Please choose the App you have opened in Ledger</h4>
         <div class="ledger-app-info">
           <div class="selected-app-icon">
-            <img :src="selectedApp.icon" />
+            <img :src="selectedApp.network.icon" />
           </div>
-          <h3>{{ selectedApp.name }}</h3>
+          <div class="toggle-apps" @click="toggled = !toggled">
+            <div>
+              <h2>{{ selectedApp.network.name_long }}</h2>
+            </div>
+            <div class="toggle-indicator-container">
+              <i
+                :class="[toggled ? 'fa-chevron-up' : 'fa-chevron-down', 'fa']"
+              />
+            </div>
+          </div>
+          <div
+            :class="[toggled ? 'shown' : 'hide-box', 'app-selection-container']"
+          >
+            <div
+              v-for="app in apps"
+              :key="app.network.name"
+              :class="[
+                selectedApp.network.name_long === app.network.name_long
+                  ? 'selected'
+                  : '',
+                'item'
+              ]"
+              @click="selectDapp(app)"
+            >
+              <i class="fa fa-check-circle"></i>
+              <span> {{ app.network.name_long }} </span>
+            </div>
+          </div>
+          <b-dropdown :text="dropDownDefaultText" class="dropdown-button-3">
+            <b-dropdown-item
+              v-for="path in selectedApp.paths"
+              :key="path.label"
+              @click="setPath(path)"
+              :active="path.path === selectedPath.path"
+            >
+              {{ path.label }} - {{ path.path }}
+            </b-dropdown-item>
+          </b-dropdown>
+          <button class="mid-round-button-green-filled-green-border next-button" @click="next">
+            Next
+          </button>
         </div>
       </div>
     </b-modal>
@@ -37,10 +77,14 @@ export default {
     return {
       apps: apps,
       selectedApp: {
-        name: apps[0].network.name_long,
-        paths: apps[0].paths,
-        icon: apps[0].network.icon
-      }
+        network: {
+          name_long: apps[0].network.name_long,
+          icon: apps[0].network.icon
+        },
+        paths: apps[0].paths
+      },
+      toggled: false,
+      selectedPath: apps[0].paths[0]
     };
   },
   computed: {
@@ -52,21 +96,22 @@ export default {
         this.selectedPathText === 'Select Path' &&
         this.selectedPath === ''
       );
+    },
+    dropDownDefaultText() {
+      return `${this.selectedPath.label} - ${this.selectedPath.path}`;
+    }
+  },
+  watch: {
+    selectedApp(newVal) {
+      this.selectedPath = newVal.paths[0];
     }
   },
   methods: {
-    setType(app) {
+    selectDapp(app) {
       this.selectedApp = app;
-      this.selected === app.name
-        ? (this.selected = '')
-        : (this.selected = app.name);
-      if (app.paths.length > 0) {
-        this.setSelectedPath(app.paths[0]);
-      }
     },
-    setSelectedPath(path) {
+    setPath(path) {
       this.selectedPath = path;
-      this.selectedPathText = `${path.label} - ${path.path}`;
     },
     next() {
       this.$refs.ledgerApp.hide();
@@ -79,10 +124,8 @@ export default {
         });
     },
     reset() {
-      this.selected = '';
-      this.selectedPathText = 'Select Path';
-      this.selectedPath = '';
-      this.selectedApp = {};
+      this.selectedApp = this.apps[0];
+      this.selectedPath = this.apps[0].paths[0];
     }
   }
 };

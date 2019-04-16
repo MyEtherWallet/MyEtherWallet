@@ -1437,3 +1437,15 @@
 .monospace {
   font-family: 'Inconsolata', monospace;
 }
+
+
+.dropdown-button-3 {
+  > button {
+    background-color: $background-color-white;
+    border: solid 1px $light-grey-3;
+    color: $text-color-6;
+    min-width: 235px;
+    padding: 13px 15px;
+    text-align: left;
+  }
+}

@@ -16,7 +16,6 @@
     flex-direction: column;
     justify-content: space-around;
     padding-top: 30px;
-
   }
 
   .selected-app-icon {
@@ -32,4 +31,91 @@
       height: 40px;
     }
   }
+
+  .toggle-apps {
+    align-items: center;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-around;
+    position: relative;
+
+    h2 {
+      margin-right: 5px;
+    }
+
+    .toggle-indicator-container {
+      border-radius: 50%;
+      border: 1px solid $dark-grey-2;
+      height: 17px;
+      padding: 3px;
+      position: absolute;
+      top: 15px;
+      right: -20px;
+      width: 17px;
+
+      i {
+        color: $dark-grey-2;
+        cursor: pointer;
+        position: absolute;
+        top: 0;
+        right: 1px;
+      }
+    }
+  }
+}
+
+.app-selection-container {
+  display: flex;
+  flex-flow: row wrap;
+  // display: none;
+  max-height: 0;
+  overflow: hidden;
+  padding: 0 30px;
+  width: 400px;
+
+  .item {
+    color: $dark-grey-2;
+    cursor: pointer;
+    flex-basis: 50%;
+    flex-grow: 1;
+    flex-shrink: 0;
+    padding: 5px;
+    position: relative;
+
+    i {
+      color: $mew-green;
+      display: none;
+      font-size: 16px;
+      left: -12px;
+      position: absolute;
+      top: 7px;
+    }
+  }
+
+  .selected {
+    color: $dark-blue-12;
+    font-weight: bold;
+
+    i {
+      display: inline-block !important;
+    }
+  }
+}
+
+.shown {
+  border-top: 1px solid $light-grey-3;
+  border-bottom: 1px solid $light-grey-3;
+  max-height: 350px;
+  transition: max-height 0.5s ease-out;
+  margin: 20px 0;
+}
+
+.hide-box {
+  max-height: 0;
+  transition: max-height 0.5s ease-out;
+}
+
+.next-button {
+  margin-top: 20px;
+  width: 235px;
 }
