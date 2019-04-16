@@ -123,6 +123,10 @@ const thundercore = {
   path: "m/44'/1001'/0'/0",
   label: 'ThunderCore'
 };
+const solidum = {
+  path: "m/44'/997'/0'/0",
+  label: 'Solidum'
+};
 export {
   ethereum,
   ethereumClassic,
@@ -154,5 +158,6 @@ export {
   rskTestnet,
   keepkeyEthereum,
   keepkeyEthereumClassic,
-  thundercore
+  thundercore,
+  solidum
 };
