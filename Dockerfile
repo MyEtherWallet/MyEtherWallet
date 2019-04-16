@@ -5,6 +5,8 @@ RUN npm install npm@6.5 -g
 RUN node -v && npm -v
 RUN apk add --update --no-cache git python g++ make cairo-dev jpeg-dev giflib-dev bash nasm autoconf automake libtool build-base
 COPY package*.json ./
-RUN npm config set audit-level high
-RUN npm audit && rm -rf package*.json
+COPY package-audit.js ./
+RUN  node package-audit.js
+RUN rm package-audit.js
+RUN rm -rf package*.json*
 WORKDIR /home
