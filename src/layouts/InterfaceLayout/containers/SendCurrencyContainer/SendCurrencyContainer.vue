@@ -107,9 +107,7 @@
               {{ gasPrice }} Gwei
               <!--(Economic)-->
             </div>
-            <div class="usd">
-              Cost {{ txFeeEth }} ETH = ${{ convert }}
-            </div>
+            <div class="usd">Cost {{ txFeeEth }} ETH = ${{ convert }}</div>
           </div>
         </div>
       </div>
@@ -383,9 +381,7 @@ export default {
     convert() {
       if (this.ethPrice) {
         return new BigNumber(
-          new BigNumber(this.txFeeEth).times(
-            new BigNumber(this.ethPrice)
-          )
+          new BigNumber(this.txFeeEth).times(new BigNumber(this.ethPrice))
         )
           .toFixed(2)
           .toString();
