@@ -91,7 +91,9 @@
               I understand the new collateral ratio of
               {{ displayFixedValue(displayPercentValue(newCollateralRatio)) }}%
               WILL place my cdp at risk of liquidation.
-            </span> </template> <!-- TODO FOR TRANSLATE -->
+            </span>
+          </template>
+          <!-- TODO FOR TRANSLATE -->
         </check-box>
       </div>
       <div class="buttons-container">

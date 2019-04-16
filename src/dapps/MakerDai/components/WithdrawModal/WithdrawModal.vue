@@ -188,8 +188,8 @@ export default {
         (this.amount || this.amount !== '') && !toBigNumber(this.amount).lte(0)
       );
     },
-    canCompute(){
-      return this.activeCdp && this.amountPresent
+    canCompute() {
+      return this.activeCdp && this.amountPresent;
     },
     hasEnoughEth() {
       if (this.amountPresent) {

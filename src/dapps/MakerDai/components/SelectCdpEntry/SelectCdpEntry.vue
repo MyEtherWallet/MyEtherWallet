@@ -37,9 +37,7 @@
               <p>
                 <b>{{ aCdp ? displayFixedValue(aCdp.pethCollateral) : 0 }}</b>
                 PETH /
-                <b>{{
-                  aCdp ? displayFixedValue(aCdp.usdCollateral, 2) : 0
-                }}</b>
+                <b>{{ aCdp ? displayFixedValue(aCdp.usdCollateral, 2) : 0 }}</b>
                 USD
               </p>
               <br />
