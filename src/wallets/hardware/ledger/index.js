@@ -61,7 +61,7 @@ class ledgerWallet {
     const txSigner = async tx => {
       tx = new ethTx(tx);
       const networkId = tx._chainId;
-      tx.raw[6] = Buffer.from([networkId]);
+      tx.raw[6] = networkId;
       tx.raw[7] = Buffer.from([]);
       tx.raw[8] = Buffer.from([]);
       const tokenInfo = byContractAddress('0x' + tx.to.toString('hex'));
@@ -70,7 +70,17 @@ class ledgerWallet {
         accountPath,
         tx.serialize().toString('hex')
       );
-      tx.v = getBufferFromHex(result.v);
+
+      // EIP155 support. check/recalc signature v value.
+      let v = result.v;
+      const rv = parseInt(v, 16);
+      let cv = networkId * 2 + 35;
+      if (rv !== cv && (rv & cv) !== rv) {
+        cv += 1; // add signature v bit.
+      }
+      v = cv.toString(16);
+
+      tx.v = getBufferFromHex(v);
       tx.r = getBufferFromHex(result.r);
       tx.s = getBufferFromHex(result.s);
       const signedChainId = calculateChainIdFromV(tx.v);
