@@ -41,7 +41,23 @@ const webpackConfig = {
           progressive: true
         })
       ]
-    })
+    }),
+    new CopyWebpackPlugin([
+      {
+        from: 'src/builds/' + JSON.parse(env_vars.BUILD_TYPE) + '/public',
+        transform: function (content, filePath) {
+          if (filePath.split('.').pop() === ('js' || 'JS'))
+            return UglifyJS.minify(content.toString()).code;
+          if (filePath.replace(/^.*[\\\/]/, '') === 'manifest.json' && JSON.parse(env_vars.BUILD_TYPE) === 'mewcx') {
+            const version = require('./package.json').version;
+            const json = JSON.parse(content);
+            json.version = version;
+            return JSON.stringify(json, null, 2);
+          }
+          return content;
+        }
+      }
+    ])
   ],
   optimization: {
     splitChunks: {
@@ -49,32 +65,12 @@ const webpackConfig = {
         commons: {
           test: /[\\/]node_modules[\\/]/,
           name: 'vendors',
-          chunks: 'all'
+          chunks: 'initial'
         }
       }
     }
   }
 };
-if (process.env.BUILD_TYPE === 'mewcx') {
-  webpackConfig.plugins.push(
-    new CopyWebpackPlugin([
-      {
-        from: 'src/builds/mewcx/files',
-        transform: function (content, filePath) {
-          if (filePath.split('.').pop() === ('js' || 'JS'))
-            return UglifyJS.minify(content.toString()).code;
-          if (filePath.replace(/^.*[\\\/]/, '') === 'manifest.json') {
-            const version = require('./package.json').version;
-            const json = JSON.parse(content);
-            json.version = version;
-            return JSON.stringify(json);
-          }
-          return content;
-        }
-      }
-    ])
-  );
-}
 if (process.env.NODE_ENV === 'production') {
   webpackConfig.plugins.push(
     new UnusedFilesWebpackPlugin({
@@ -144,14 +140,29 @@ if (process.env.NODE_ENV === 'production') {
           'src/assets/images/icons/button-mnemonic.svg',
           // Chrome Extension
           'src/builds/mewcx/app.vue',
-          'src/builds/mewcx/files/img/icons/icon128.png',
-          'src/builds/mewcx/files/img/icons/icon16.png',
-          'src/builds/mewcx/files/img/icons/icon192.png',
-          'src/builds/mewcx/files/img/icons/icon32.png',
-          'src/builds/mewcx/files/img/icons/icon48.png',
-          'src/builds/mewcx/files/manifest.json',
+          'src/builds/mewcx/public/img/icons/icon128.png',
+          'src/builds/mewcx/public/img/icons/icon16.png',
+          'src/builds/mewcx/public/img/icons/icon192.png',
+          'src/builds/mewcx/public/img/icons/icon32.png',
+          'src/builds/mewcx/public/img/icons/icon48.png',
+          'src/builds/mewcx/public/manifest.json',
           'src/builds/mewcx/index.js',
-          'src/builds/web/storage/index.js'
+          'src/builds/web/public/img/icons/android-chrome-192x192.png',
+          'src/builds/web/public/img/icons/android-chrome-512x512.png',
+          'src/builds/web/public/img/icons/apple-touch-icon-120x120.png',
+          'src/builds/web/public/img/icons/apple-touch-icon-152x152.png',
+          'src/builds/web/public/img/icons/apple-touch-icon-180x180.png',
+          'src/builds/web/public/img/icons/apple-touch-icon-60x60.png',
+          'src/builds/web/public/img/icons/apple-touch-icon-76x76.png',
+          'src/builds/web/public/img/icons/apple-touch-icon.png',
+          'src/builds/web/public/img/icons/favicon-16x16.png',
+          'src/builds/web/public/img/icons/favicon-32x32.png',
+          'src/builds/web/public/img/icons/msapplication-icon-144x144.png',
+          'src/builds/web/public/img/icons/mstile-150x150.png',
+          'src/builds/web/public/img/icons/safari-pinned-tab.svg',
+          'src/builds/web/public/img/spaceman.png',
+          'src/builds/web/public/manifest.json',
+          'src/builds/web/public/robots.txt'
         ]
       }
     })
@@ -162,15 +173,16 @@ const pwa = {
   workboxOptions: {
     importWorkboxFrom: 'local',
     skipWaiting: true,
-    clientsClaim: true
+    clientsClaim: true,
+    navigateFallback: '/index.html'
   }
 };
-module.exports = {
+const exportObj = {
   publicPath: process.env.ROUTER_MODE === 'history' ? '/' : './',
   configureWebpack: webpackConfig,
-  pwa: pwa,
   lintOnSave: process.env.NODE_ENV === 'production' ? 'error' : true,
   integrity: process.env.WEBPACK_INTEGRITY === 'false' ? false : true,
+  pwa: pwa,
   chainWebpack: config => {
     config.module.rule('replace').test(/\.js$/).include.add(path.resolve(__dirname, 'node_modules/@ensdomains/dnsprovejs')).end().use('string-replace-loader').loader('string-replace-loader').tap(options => {
       return {
@@ -180,3 +192,4 @@ module.exports = {
     })
   }
 };
+module.exports = exportObj
