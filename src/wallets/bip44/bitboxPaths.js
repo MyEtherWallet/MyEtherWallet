@@ -19,8 +19,7 @@ import {
   atheios,
   tomoChain,
   mixBlockchain,
-  iolite,
-  solidum
+  iolite
 } from './paths';
 export default [
   ethereum,
