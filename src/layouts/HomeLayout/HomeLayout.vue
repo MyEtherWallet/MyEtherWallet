@@ -13,7 +13,6 @@ import FaqsContainer from '@/containers/FaqsContainer';
 import Social from './components/Social';
 import TopBanner from './components/TopBanner';
 import { mapGetters } from 'vuex';
-import { Toast } from '@/helpers';
 
 export default {
   name: 'HomeContainer',
@@ -33,9 +32,6 @@ export default {
     ...mapGetters({
       online: 'online'
     })
-  },
-  mounted() {
-    Toast.responseHandler('asdfasd', false);
   }
 };
 </script>
