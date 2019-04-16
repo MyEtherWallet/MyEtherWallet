@@ -17,7 +17,7 @@
             <span class="input-unit">{{ digitalCurrency }}</span>
           </div>
           <div class="sub-text">
-            <p v-if="!hasEnoughEth">Not Enough Balance</p>
+            <!--            <p class="btn" @click="maxDeposit">Max</p>-->
             <!-- TODO FOR TRANSLATE -->
             <p>
               {{
@@ -88,13 +88,15 @@
               I understand the new collateral ratio of
               {{ displayFixedValue(displayPercentValue(newCollateralRatio)) }}%
               may place my cdp at risk of liquidation.
+              <!-- TODO FOR TRANSLATE -->
             </span>
             <span v-if="newCollateralRatioInvalid" style="color: red;">
               I understand the new collateral ratio of
               {{ displayFixedValue(displayPercentValue(newCollateralRatio)) }}%
               WILL place my cdp at risk of liquidation.
-            </span> </template
-          ><!-- TODO FOR TRANSLATE -->
+            </span>
+          </template>
+          <!-- TODO FOR TRANSLATE -->
         </check-box>
       </div>
       <div class="buttons-container">
@@ -177,17 +179,6 @@ export default {
       }
       return true;
     },
-    hasEnoughDai() {
-      // TODO Figure out how to learn how much dai a user has (the code below should work)
-      if (this.amount || this.amount !== '') {
-        // const daiToken = this.tokensWithBalance.find(item => {
-        //   return item.symbol.toUpperCase() === 'DAI';
-        // });
-        const asEth = ethUnit.fromWei(this.account.balance, 'ether');
-        return toBigNumber(this.amount).lte(toBigNumber(asEth));
-      }
-      return true;
-    },
     canWithdrawEthAmount() {
       if (this.amount || this.amount !== '') {
         return toBigNumber(this.amount).lte(
@@ -195,12 +186,6 @@ export default {
         );
       }
       return false;
-    },
-    canGenerateDaiAmount() {
-      if (this.amount || this.amount !== '') {
-        return toBigNumber(this.amount).lte(toBigNumber(this.activeCdp.maxDai));
-      }
-      return true;
     },
     canProceed() {
       if (toBigNumber(this.amount).lte(0)) return false;
@@ -264,10 +249,10 @@ export default {
     notZero(val) {
       return toBigNumber(val).gt(0);
     },
-    maxDai() {
-      this.amount = this.activeCdp.maxDai.minus(
-        this.activeCdp.maxDai.times(0.01)
-      );
+    maxDeposit() {
+      // this.amount = this.activeCdp.maxDai.minus(
+      //   this.activeCdp.maxDai.times(0.01)
+      // );
     },
     currentDai() {
       this.amount = this.activeCdp.debtValue;
@@ -281,6 +266,7 @@ export default {
 
     getTitleText() {
       return 'Deposit Collateral';
+      // <!-- TODO FOR TRANSLATE -->
     },
     closeModal() {
       this.$refs.modal.hide();

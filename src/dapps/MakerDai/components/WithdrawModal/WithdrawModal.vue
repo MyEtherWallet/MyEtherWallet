@@ -9,7 +9,7 @@
     >
       <div class="inputs-container">
         <!-- Withdraw ETH -->
-        <div v-if="action === 'withdraw'" class="input-container">
+        <div class="input-container">
           <p>
             <!-- TODO FOR TRANSLATE -->
             You might be requested to sign up to three trasactions if there is
@@ -23,6 +23,10 @@
             <span class="input-unit">{{ digitalCurrency }}</span>
           </div>
           <div class="sub-text">
+            <!--            <p v-if="!canGenerateDaiAmount">Above Max Dai Amount</p>-->
+            <!-- TODO FOR TRANSLATE -->
+            <p class="btn" @click="maxWithdraw">Max</p>
+            <!-- TODO FOR TRANSLATE -->
             <p>
               {{
                 activeCdp.toPeth
@@ -179,8 +183,16 @@ export default {
       network: 'network',
       account: 'account'
     }),
+    amountPresent() {
+      return (
+        (this.amount || this.amount !== '') && !toBigNumber(this.amount).lte(0)
+      );
+    },
+    canCompute(){
+      return this.activeCdp && this.amountPresent
+    },
     hasEnoughEth() {
-      if (this.amount || this.amount !== '') {
+      if (this.amountPresent) {
         const asEth = ethUnit.fromWei(this.account.balance, 'ether');
         return toBigNumber(this.amount).lte(toBigNumber(asEth));
       }
@@ -188,7 +200,7 @@ export default {
     },
     hasEnoughDai() {
       // TODO Figure out how to learn how much dai a user has (the code below should work)
-      if (this.amount || this.amount !== '') {
+      if (this.amountPresent) {
         // const daiToken = this.tokensWithBalance.find(item => {
         //   return item.symbol.toUpperCase() === 'DAI';
         // });
@@ -198,7 +210,7 @@ export default {
       return true;
     },
     canWithdrawEthAmount() {
-      if (this.amount || this.amount !== '') {
+      if (this.amountPresent) {
         return toBigNumber(this.amount).lte(
           toBigNumber(this.activeCdp.ethCollateral)
         );
@@ -206,19 +218,26 @@ export default {
       return false;
     },
     canGenerateDaiAmount() {
-      if (this.amount || this.amount !== '') {
+      if (this.amountPresent) {
         return toBigNumber(this.amount).lte(toBigNumber(this.activeCdp.maxDai));
       }
       return true;
     },
     canProceed() {
-      if (toBigNumber(this.amount).lte(0)) return false;
-      const ratio = toBigNumber(this.newCollateralRatio);
-      const ratioOk = ratio.gt(1.5) || ratio.eq(0);
-      return this.canWithdrawEthAmount && (ratioOk || this.riskyBypass);
+      if (this.amountPresent) {
+        if (toBigNumber(this.amount).lte(0)) return false;
+        // if (!ratioOk) return false;
+        return (
+          (this.newCollateralRatioSafe && this.canGenerateDaiAmount) ||
+          (!this.newCollateralRatioInvalid &&
+            this.canGenerateDaiAmount &&
+            this.riskyBypass)
+        );
+      }
+      return false;
     },
     newCollateralRatio() {
-      if (this.activeCdp && this.amount > 0) {
+      if (this.canCompute) {
         return this.activeCdp.calcCollatRatioEthChg(
           this.activeCdp.ethCollateral.minus(this.amount)
         );
@@ -228,7 +247,7 @@ export default {
       return 0;
     },
     newCollateralRatioSafe() {
-      if (this.activeCdp && this.amount > 0) {
+      if (this.canCompute) {
         return this.activeCdp
           .calcCollatRatioEthChg(
             this.activeCdp.ethCollateral.minus(this.amount)
@@ -240,7 +259,7 @@ export default {
       return true;
     },
     newCollateralRatioInvalid() {
-      if (this.activeCdp && this.amount > 0) {
+      if (this.canCompute) {
         return this.activeCdp
           .calcCollatRatioEthChg(
             this.activeCdp.ethCollateral.minus(this.amount)
@@ -252,7 +271,7 @@ export default {
       return true;
     },
     newLiquidationPrice() {
-      if (this.activeCdp && this.amount > 0) {
+      if (this.canCompute) {
         return this.activeCdp.calcLiquidationPriceEthChg(
           this.activeCdp.ethCollateral.minus(this.amount)
         );
@@ -269,18 +288,19 @@ export default {
       if (!this.canProceed) return;
       this.freeEth();
     },
-    checkBoxClicked() {
-      this.riskyBypass = !this.riskyBypass;
+    checkBoxClicked(checked) {
+      this.riskyBypass = checked;
     },
     displayPercentValue,
     displayFixedValue,
     notZero(val) {
       return toBigNumber(val).gt(0);
     },
-    maxDai() {
-      this.amount = this.activeCdp.maxDai.minus(
-        this.activeCdp.maxDai.times(0.01)
+    maxWithdraw() {
+      this.amount = this.activeCdp.maxEthDraw.minus(
+        this.activeCdp.maxEthDraw.times(0.0001)
       );
+      this.$forceUpdate();
     },
     currentDai() {
       this.amount = this.activeCdp.debtValue;
@@ -293,6 +313,7 @@ export default {
     },
     getTitleText() {
       return 'Withdraw Collateral';
+      // <!-- TODO FOR TRANSLATE -->
     },
     closeModal() {
       this.$refs.modal.hide();

@@ -7,6 +7,7 @@ export function displayPercentValue(raw) {
 
 export function displayFixedValue(raw, decimals = 3, round = true) {
   if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);
+  if (!isFinite(raw) || isNaN(raw)) return '--';
   if (round) return raw.toFixed(decimals, BigNumber.ROUND_DOWN).toString();
   return raw.toFixed(decimals).toString();
 }

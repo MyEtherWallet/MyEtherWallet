@@ -9,7 +9,7 @@
     >
       <div class="inputs-container">
         <!-- Generate Dai -->
-        <div v-if="action === 'generate'" class="input-container">
+        <div class="input-container">
           <label>How much DAI would you like to generate?</label
           ><!-- TODO FOR TRANSLATE -->
           <div
@@ -163,6 +163,16 @@ export default {
       network: 'network',
       account: 'account'
     }),
+    allOk() {
+      return this.newCollateralRatioSafe && this.canGenerateDaiAmount;
+    },
+    showWarning() {
+      return (
+        !this.newCollateralRatioInvalid &&
+        this.canGenerateDaiAmount &&
+        this.riskyBypass
+      );
+    },
     hasEnoughEth() {
       if (this.amount || this.amount !== '') {
         const asEth = ethUnit.fromWei(this.account.balance, 'ether');
@@ -181,14 +191,6 @@ export default {
       }
       return true;
     },
-    canWithdrawEthAmount() {
-      if (this.amount || this.amount !== '') {
-        return toBigNumber(this.amount).lte(
-          toBigNumber(this.activeCdp.ethCollateral)
-        );
-      }
-      return false;
-    },
     canGenerateDaiAmount() {
       if (this.amount || this.amount !== '') {
         return toBigNumber(this.amount).lte(toBigNumber(this.activeCdp.maxDai));
@@ -196,10 +198,17 @@ export default {
       return true;
     },
     canProceed() {
-      if (toBigNumber(this.amount).lte(0)) return false;
-      const ratio = toBigNumber(this.newCollateralRatio);
-      const ratioOk = ratio.gt(1.5) || ratio.eq(0);
-      return this.canGenerateDaiAmount && (ratioOk || this.riskyBypass);
+      if (this.amount || this.amount !== '') {
+        if (toBigNumber(this.amount).lte(0)) return false;
+        // if (!ratioOk) return false;
+        return (
+          (this.newCollateralRatioSafe && this.canGenerateDaiAmount) ||
+          (!this.newCollateralRatioInvalid &&
+            this.canGenerateDaiAmount &&
+            this.riskyBypass)
+        );
+      }
+      return false;
     },
     newCollateralRatio() {
       if (this.activeCdp && this.amount > 0) {
@@ -255,8 +264,9 @@ export default {
       if (!this.canProceed) return;
       this.drawDai();
     },
-    checkBoxClicked() {
-      this.riskyBypass = !this.riskyBypass;
+    checkBoxClicked(checked) {
+      console.log(checked); // todo remove dev item
+      this.riskyBypass = checked; //!this.riskyBypass;
     },
     displayPercentValue,
     displayFixedValue,
@@ -280,6 +290,7 @@ export default {
     },
     getTitleText() {
       return 'Generate DAI';
+      // <!-- TODO FOR TRANSLATE -->
     },
     closeModal() {
       this.$refs.modal.hide();
