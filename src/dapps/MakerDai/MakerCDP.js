@@ -86,6 +86,8 @@ export default class MakerCDP {
     this._usdCollateral = (await this.cdp.getCollateralValue(
       Maker.USD
     )).toBigNumber();
+    console.log('dai', this._debtValue.toString()); // todo remove dev item
+    console.log('eth', this._ethCollateral.toString()); // todo remove dev item
   }
 
   async update() {
@@ -100,6 +102,7 @@ export default class MakerCDP {
       this.opening = false;
       this.needsUpdate = false;
       await this.updateValues(this.cdpId);
+      this.doUpdate++;
       return this;
     }
     return this;
@@ -122,7 +125,8 @@ export default class MakerCDP {
   }
 
   get usdCollateral() {
-    return this._usdCollateral;
+    return this.toUSD(this._ethCollateral);
+    // return this._usdCollateral;
   }
 
   get ethCollateral() {
@@ -151,6 +155,18 @@ export default class MakerCDP {
 
   get targetPrice() {
     return this._targetPrice;
+  }
+
+  get liquidationRatio() {
+    return this._liquidationRatio;
+  }
+
+  get liquidationPrice() {
+    return this._liqPrice;
+  }
+
+  get governanceFeeOwed() {
+    return this._governanceFee;
   }
 
   // get maxDaiDraw() {
@@ -208,17 +224,6 @@ export default class MakerCDP {
     return toBigNumber(0);
   }
 
-  get liquidationRatio() {
-    return this._liquidationRatio;
-  }
-
-  get liquidationPrice() {
-    return this._liqPrice;
-  }
-
-  get governanceFeeOwed() {
-    return this._governanceFee;
-  }
 
   toNumber(val) {
     if (BigNumber.isBigNumber(val)) {

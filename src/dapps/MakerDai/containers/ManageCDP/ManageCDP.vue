@@ -194,7 +194,11 @@ import WithdrawModal from '../../components/WithdrawModal';
 import PaybackModal from '../../components/PaybackModal';
 import CloseCdpModal from '../../components/CloseCdpModal';
 import MoveCdpModal from '../../components/MoveCdpModal';
-import {displayFixedPercent, displayFixedValue, displayPercentValue} from '../../helpers'
+import {
+  displayFixedPercent,
+  displayFixedValue,
+  displayPercentValue
+} from '../../helpers';
 
 import BigNumber from 'bignumber.js';
 
@@ -216,11 +220,11 @@ export default {
     blockie: Blockie
   },
   props: {
-    openCloseModal:{
+    openCloseModal: {
       type: Boolean,
       default: false
     },
-    openMoveModal:{
+    openMoveModal: {
       type: Boolean,
       default: false
     },
@@ -250,15 +254,19 @@ export default {
         return {};
       }
     },
+    valuesUpdated: {
+      type: Number,
+      default: 0
+    },
     maker: {
       type: Object,
       default: function() {
         return {};
       }
     },
-    makerManager:{
+    makerManager: {
       type: Object,
-      default: function(){
+      default: function() {
         return {};
       }
     }
@@ -283,23 +291,28 @@ export default {
     ['activeCdp.ready']() {
       this.isReady();
     },
-    async ['activeCdp.doUpdate'](val){
-      if(val > 0){
-        this.activeCdp = await this.activeCdp.update()
+    async ['activeCdp.doUpdate'](val) {
+      if (val > 0) {
+        this.activeCdp = this.makerManager.getCdp(this.cdpId);
       }
     },
-    ['$route.params.cdpId'](val){
-      if(this.makerManager.hasCdp(val)){
-        this.activeCdp = this.makerManager.getCdp(val)
+    valuesUpdated(){
+      if (this.makerManager.hasCdp(this.cdpId)) {
+        this.activeCdp = this.makerManager.getCdp(this.cdpId);
       }
     },
-    openCloseModal(val){
-      if(val){
+    ['$route.params.cdpId'](val) {
+      if (this.makerManager.hasCdp(val)) {
+        this.activeCdp = this.makerManager.getCdp(val);
+      }
+    },
+    openCloseModal(val) {
+      if (val) {
         this.showClose();
       }
     },
-    openMoveModal(val){
-      if(val){
+    openMoveModal(val) {
+      if (val) {
         this.showMove();
       }
     }
@@ -323,14 +336,14 @@ export default {
       }
     },
     liquidationPriceDisplay() {
-      const value = displayFixedValue(this.activeCdp.liquidationPrice, 2)
+      const value = displayFixedValue(this.activeCdp.liquidationPrice, 2);
       if (new BigNumber(value).gt(0)) {
         return value;
       }
-      return '--'
+      return '--';
     },
-    collaterlizationRatioDisplay(){
-      return displayFixedPercent(this.activeCdp.collatRatio)
+    collaterlizationRatioDisplay() {
+      return displayFixedPercent(this.activeCdp.collatRatio);
     }
   },
   async mounted() {
@@ -360,22 +373,25 @@ export default {
       this.$refs.generate.$refs.modal.show();
     },
     showClose() {
-      this.$refs.closeCdp.$refs.modal.$on('hidden', () =>{
-        this.$emit('modalHidden')
-      })
+      this.$refs.closeCdp.$refs.modal.$on('hidden', () => {
+        this.$emit('modalHidden');
+      });
       this.$refs.closeCdp.$refs.modal.show();
     },
     showMove() {
-      this.$refs.moveCdp.$refs.modal.$on('hidden', () =>{
-        this.$emit('modalHidden')
-      })
+      this.$refs.moveCdp.$refs.modal.$on('hidden', () => {
+        this.$emit('modalHidden');
+      });
       this.$refs.moveCdp.$refs.modal.show();
     },
     displayPercentValue,
     displayFixedValue,
     async isReady() {
       // this.maxWithDraw = this.activeCdp.maxDaiDraw();
-      this.maxWithDrawUSD = this.activeCdp.toUSD(this.activeCdp.maxDai);
+      if(this.activeCdp){
+        this.maxWithDrawUSD = this.activeCdp.toUSD(this.activeCdp.maxDai);
+      }
+      this.maxWithDrawUSD = '--';
     },
     async migrateCdp() {
       await this.activeCdp.migrateCdp();

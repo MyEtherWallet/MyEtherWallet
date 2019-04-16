@@ -87,29 +87,24 @@ export default class MakerManager /*extends EventEmitter*/ {
     // this.ethPrice = toBigNumber(
     //   (await this.priceService.getEthPrice()).toNumber()
     // );
-    this.ethPrice = toBigNumber(183.25);
+    this.ethPrice = toBigNumber(166.16);
 
-    this.pethPrice = toBigNumber(
-      (await this.priceService.getPethPrice()).toNumber()
-    );
+    const pethPrice = await this.priceService.getPethPrice();
+    const targetPrice = await this.priceService.getPethPrice();
+    const liquidationRatio = await this.cdpService.getLiquidationRatio();
+    const liquidationPenalty = await this.cdpService.getLiquidationPenalty();
+    const stabilityFee = await this.cdpService.getAnnualGovernanceFee();
+    const wethToPethRatio = await this.priceService.getWethToPethRatio();
 
-    this.targetPrice = toBigNumber(
-      (await this.cdpService.getTargetPrice()).toNumber()
-    );
+    this.pethPrice = toBigNumber(pethPrice.toNumber());
 
-    this.liquidationRatio = toBigNumber(
-      await this.cdpService.getLiquidationRatio()
-    );
-    this.liquidationPenalty = toBigNumber(
-      await this.cdpService.getLiquidationPenalty()
-    );
-    this.stabilityFee = toBigNumber(
-      await this.cdpService.getAnnualGovernanceFee()
-    );
+    this.targetPrice = toBigNumber(targetPrice.toNumber());
 
-    this.wethToPethRatio = toBigNumber(
-      await this.priceService.getWethToPethRatio()
-    );
+    this.liquidationRatio = toBigNumber(liquidationRatio);
+    this.liquidationPenalty = toBigNumber(liquidationPenalty);
+    this.stabilityFee = toBigNumber(stabilityFee);
+
+    this.wethToPethRatio = toBigNumber(wethToPethRatio);
     this._proxyAddress = await this.proxyService.currentProxy();
 
     const { withProxy, withoutProxy } = await this.locateCdps();
@@ -119,6 +114,9 @@ export default class MakerManager /*extends EventEmitter*/ {
     if (this.cdps.length > 0 || this.cdpsWithoutProxy.length > 0) {
       await this.loadCdpDetails();
     }
+
+    console.log('init complete'); // todo remove dev item
+    console.log('proxy address: ', this._proxyAddress); // todo remove dev item
   }
 
   async buildProxy() {
@@ -153,13 +151,7 @@ export default class MakerManager /*extends EventEmitter*/ {
   }
 
   async refresh() {
-    if (this.cdps.length > 0 || this.cdpsWithoutProxy.length > 0) {
-      await this.doUpdate();
-      this.routeHandlers.manage();
-    } else {
-      this.activeCdps = {};
-      this.routeHandlers.create();
-    }
+    await this.doUpdate();
   }
 
   async updateActiveCdp() {
@@ -233,7 +225,7 @@ export default class MakerManager /*extends EventEmitter*/ {
             item => item !== idProp
           );
         } else if (this.activeCdps[idProp].opening) {
-          await this.refresh();
+          await this.activeCdps[idProp].updateValues();
         } else {
           this.activeCdps[idProp] = await this.activeCdps[idProp].update();
         }

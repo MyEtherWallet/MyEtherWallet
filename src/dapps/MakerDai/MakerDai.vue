@@ -77,6 +77,7 @@
       :migration-in-progress="migrationInProgress"
       :open-close-modal="openCloseModal"
       :open-move-modal="openMoveModal"
+      :values-updated="valuesUpdated"
       @cdpOpened="addCdp"
       @cdpClosed="removeCdp"
       @modalHidden="modalHidden"
@@ -172,7 +173,8 @@ export default {
       makerManager: {},
       sysVars: {},
       sysServices: {},
-      afterUpdate: []
+      afterUpdate: [],
+      valuesUpdated: 0
     };
   },
   watch: {
@@ -286,6 +288,7 @@ export default {
       });
 
       await this.makerManager.init();
+      console.log('init complete?'); // todo remove dev item
 
       this.cdps = this.makerManager.cdps;
       this.cdpsWithoutProxy = this.makerManager.cdpsWithoutProxy;
@@ -409,7 +412,7 @@ export default {
     },
     async refresh() {
       // eslint-disable-next-line
-      await this.makerManager.refresh();
+      await this.doUpdate();
     },
     async doUpdate() {
       // eslint-disable-next-line
@@ -426,8 +429,10 @@ export default {
         this.cdps = this.makerManager.cdpsWithProxy;
         this.cdpsWithoutProxy = this.makerManager.cdpsNoProxy;
         await this.runAfterUpdateActions();
+        this.valuesUpdated++;
         Toast.responseHandler('CDP Updated', Toast.INFO);
       } else {
+        this.valuesUpdated++;
         Toast.responseHandler('Update encountered an issue', Toast.INFO);
       }
     },

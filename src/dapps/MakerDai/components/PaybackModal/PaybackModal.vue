@@ -91,8 +91,7 @@
               I understand the new collateral ratio of
               {{ displayFixedValue(displayPercentValue(newCollateralRatio)) }}%
               WILL place my cdp at risk of liquidation.
-            </span> </template
-          ><!-- TODO FOR TRANSLATE -->
+            </span> </template> <!-- TODO FOR TRANSLATE -->
         </check-box>
       </div>
       <div class="buttons-container">
@@ -203,8 +202,13 @@ export default {
     canProceed() {
       if (toBigNumber(this.amount).lte(0)) return false;
       const ratio = toBigNumber(this.newCollateralRatio);
+      const ratioSafe = ratio.gt(2) || ratio.eq(0);
       const ratioOk = ratio.gt(1.5) || ratio.eq(0);
-      return this.hasEnoughDai && (ratioOk || this.riskyBypass);
+      if (!ratioOk) return false;
+      return (
+        (this.canWithdrawEthAmount && ratioSafe) ||
+        (this.canWithdrawEthAmount && ratioOk && this.riskyBypass)
+      );
     },
     newCollateralRatio() {
       if (this.activeCdp && this.amount > 0) {
@@ -218,9 +222,13 @@ export default {
     },
     newCollateralRatioSafe() {
       if (this.activeCdp && this.amount > 0) {
-        return this.activeCdp
-          .calcCollatRatioDaiChg(this.activeCdp.debtValue.minus(this.amount))
-          .gte(2);
+        const ratio = this.activeCdp.calcCollatRatioDaiChg(
+          this.activeCdp.debtValue.minus(this.amount)
+        );
+        if (ratio.lte(new BigNumber(0.000009))) {
+          return true;
+        }
+        return ratio.gte(2);
       } else if (this.activeCdp) {
         return toBigNumber(this.activeCdp.collatRatio).gte(2);
       }
@@ -228,9 +236,14 @@ export default {
     },
     newCollateralRatioInvalid() {
       if (this.activeCdp && this.amount > 0) {
-        return this.activeCdp
-          .calcCollatRatioDaiChg(this.activeCdp.debtValue.minus(this.amount))
-          .lte(1.5);
+        const ratio = this.activeCdp.calcCollatRatioDaiChg(
+          this.activeCdp.debtValue.minus(this.amount)
+        );
+        console.log(ratio.toString()); // todo remove dev item
+        if (ratio.lte(new BigNumber(0.000009))) {
+          return true;
+        }
+        return ratio.gte(1.5);
       } else if (this.activeCdp) {
         return toBigNumber(this.activeCdp.collatRatio).lte(1.5);
       }
