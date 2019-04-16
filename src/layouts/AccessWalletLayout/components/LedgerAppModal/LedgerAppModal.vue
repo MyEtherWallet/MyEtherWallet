@@ -46,13 +46,16 @@
             <b-dropdown-item
               v-for="path in selectedApp.paths"
               :key="path.label"
-              @click="setPath(path)"
               :active="path.path === selectedPath.path"
+              @click="setPath(path)"
             >
               {{ path.label }} - {{ path.path }}
             </b-dropdown-item>
           </b-dropdown>
-          <button class="mid-round-button-green-filled-green-border next-button" @click="next">
+          <button
+            class="mid-round-button-green-filled-green-border next-button"
+            @click="next"
+          >
             Next
           </button>
         </div>
