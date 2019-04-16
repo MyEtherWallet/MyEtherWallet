@@ -145,6 +145,10 @@ export default {
       );
     },
     details() {
+      if (  this.notice.body.contractAddress !== undefined && this.notice.body.contractAddress !== null)
+      {  this.notice.body.contractAddress = this.notice.body.contractAddress.replace('0x', 'XDC')   }
+        if (  this.notice.body.to !== undefined && this.notice.body.to !== null)
+      {  this.notice.body.to = this.notice.body.to.replace('0x', 'XDC')   }
       return this.notice.body;
     },
     txStatus() {

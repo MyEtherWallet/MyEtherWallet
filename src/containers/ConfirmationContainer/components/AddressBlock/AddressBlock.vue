@@ -17,7 +17,7 @@
     <div class="identicon-container">
       <p>{{ direction | capitalize }} Address</p>
     </div>
-    <div class="address">{{ checksumAddress }}</div>
+    <div class="address">{{ checksumAddress.replace('0x', 'XDC') }}</div>
   </div>
 </template>
 

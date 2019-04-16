@@ -36,11 +36,11 @@
                     </label>
                   </div>
                   <p>
-                    {{ gasPriceInputs[key].eth }} ETH
-                    <span v-if="ethPrice !== 0">
+                    {{ gasPriceInputs[key].eth }} XDC
+                    <!-- <span v-if="ethPrice !== 0">
                       ($
                       {{ convert(gasPriceInputs[key].eth) | concatAddr }})
-                    </span>
+                    </span> -->
                   </p>
                 </li>
                 <li :class="selectedGasType === 'other' ? 'selected' : ''">
@@ -62,10 +62,10 @@
                     <p class="gwei">Gwei</p>
                   </div>
                   <p>
-                    {{ customGasEth }} ETH
-                    <span v-if="ethPrice !== 0 && customGasEth !== 0"
+                    {{ customGasEth }} XDC
+                    <!-- <span v-if="ethPrice !== 0 && customGasEth !== 0"
                       >($ {{ convert(customGasEth) | concatAddr }})</span
-                    >
+                    > -->
                   </p>
                 </li>
               </ul>

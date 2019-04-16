@@ -171,14 +171,14 @@
         <div v-show="selectedMethod.payable">
           <div class="title-container">
             <div class="title">
-              <h4>{{ $t('common.value') }} in ETH:</h4>
+              <h4>{{ $t('common.value') }} in XDC:</h4>
             </div>
           </div>
           <input
             v-model="value"
             type="text"
             name
-            placeholder="ETH"
+            placeholder="XDC"
             class="non-bool-input"
           />
         </div>
@@ -351,7 +351,9 @@ export default {
             const parsedItem = this.formatInput(this.inputs[item.name]);
             _contractArgs.push(parsedItem);
           } else {
+          this.inputs[item.name] = this.getType(item.type).solidityType === 'address'? this.inputs[item.name].replace('xdc', '0x'): this.inputs[item.name];
             _contractArgs.push(this.inputs[item.name]);
+          this.inputs[item.name] = this.getType(item.type).solidityType === 'address'? this.inputs[item.name].replace('0x', 'xdc'): this.inputs[item.name];
           }
         });
       }
