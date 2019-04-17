@@ -1,17 +1,18 @@
 import app from './app';
-import AccessWalletLayout from '@/layouts/AccessWalletLayout';
+import ExtensionPopup from '@/layouts/ExtensionPopup';
+import ExtensionBrowserAction from '@/layouts/ExtensionBrowserAction';
 
 const cxRoutes = [
   {
     path: '/',
-    name: 'Home',
-    component: AccessWalletLayout,
+    name: 'Popup',
+    component: ExtensionPopup,
     meta: { requiresAuth: false }
   },
   {
     path: '/browser-action',
     name: 'BrowserAction',
-    component: AccessWalletLayout,
+    component: ExtensionBrowserAction,
     meta: { requiresAuth: false }
   }
 ];
