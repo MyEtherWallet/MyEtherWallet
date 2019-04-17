@@ -51,6 +51,7 @@ export default class Kyber {
       props.kyberAddress || kyberAddressFallback[this.network];
     this.getSupportedTokenList();
     this.getMainNetAddress(this.kyberNetworkAddress);
+    this.retrieveGasLimits();
   }
 
   static getName() {
@@ -155,6 +156,17 @@ export default class Kyber {
     } catch (e) {
       utils.handleOrThrow(e);
       errorLogger(e);
+    }
+  }
+
+  async retrieveGasLimits(network) {
+    try {
+      const tokenList = await kyberCalls.getGasLimits(network);
+      console.log(tokenList); // todo remove dev item
+      // return tokenDetails;
+    } catch (e) {
+      // utils.handleOrThrow(e);
+      // errorLogger(e);
     }
   }
 

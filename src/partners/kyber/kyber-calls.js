@@ -1,5 +1,5 @@
 import { get } from '@/helpers/httpRequests';
-import { kyberTokenList, kyberTokenInfoList } from './config';
+import { kyberTokenList, kyberTokenInfoList, kyberGasLimitList } from './config';
 import { utils } from '../helpers';
 
 const getTokenList = async network => {
@@ -24,4 +24,15 @@ const getRates = async network => {
   }
 };
 
-export default { getTokenList, getRates };
+const getGasLimits = async network => {
+  try {
+    if (kyberGasLimitList[network]) {
+      return get(kyberGasLimitList[network]);
+    }
+    return Promise.resolve({});
+  } catch (e) {
+    utils.handleOrThrow(e);
+  }
+};
+
+export default { getTokenList, getRates, getGasLimits };

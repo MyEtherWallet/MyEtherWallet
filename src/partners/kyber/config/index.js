@@ -12,6 +12,7 @@ import {
   kyberNetworkENS,
   walletDepositeAddress,
   kyberAddressFallback,
+  kyberGasLimitList,
   KyberCurrencies,
   FEE_RATE
 } from './config';
@@ -31,6 +32,7 @@ export {
   kyberNetworkENS,
   KyberCurrencies,
   kyberAddressFallback,
+  kyberGasLimitList,
   kyberTokenList,
   kyberTokenInfoList,
   kyberValidNetworks,

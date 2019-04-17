@@ -1,14 +1,25 @@
 // TODO: look into only using kyberTokenInfoList for ETH and parsing results differently if ROP?
 import { TIME_SWAP_VALID_DEFAULT } from '../../partnersConfig/config';
 
+// const ETH_ENDPINT = 'https://tracker.kyber.network';
+// const ROP_ENDPOINT = '';
+
+const ETH_ENDPINT = 'https://api.kyber.network';
+const ROP_ENDPOINT = 'https://ropsten-api.kyber.network';
+
 const kyberTokenList = {
-  ETH: 'https://tracker.kyber.network/api/tokens/supported',
-  ROP: 'https://tracker.kyber.network/api/tokens/supported?chain=ropsten'
+  ETH: `${ETH_ENDPINT}/api/tokens/supported`,
+  ROP: `${ETH_ENDPINT}/api/tokens/supported?chain=ropsten`
 };
 
 const kyberTokenInfoList = {
-  ETH: 'https://tracker.kyber.network/api/tokens/pairs'
+  ETH: `${ETH_ENDPINT}/api/tokens/pairs`
 };
+
+const kyberGasLimitList = {
+  ETH: `${ETH_ENDPINT}/gasLimitConfig`,
+  ROP: `${ROP_ENDPOINT}/gasLimitConfig`
+}
 
 const kyberAddressFallback = {
   ETH: '0x818e6fecd516ecc3849daf6845e3ec868087b755',
@@ -58,5 +69,6 @@ export {
   kyberNetworkENS,
   walletDepositeAddress,
   KyberCurrencies,
+  kyberGasLimitList,
   kyberAddressFallback
 };
