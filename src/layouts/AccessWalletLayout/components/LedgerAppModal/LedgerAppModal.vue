@@ -42,7 +42,11 @@
               <span> {{ app.network.name_long }} </span>
             </div>
           </div>
-          <b-dropdown :text="dropDownDefaultText" class="dropdown-button-3">
+          <b-dropdown :no-caret="true" class="dropdown-button-3">
+            <template slot="button-content">
+              <span> {{ dropDownDefaultText }} </span>
+              <i :class="[flipButton ? 'fa-chevron-up' : 'fa-chevron-down','fa']"></i>
+            </template>
             <b-dropdown-item
               v-for="path in selectedApp.paths"
               :key="path.label"
@@ -87,7 +91,8 @@ export default {
         paths: apps[0].paths
       },
       toggled: false,
-      selectedPath: apps[0].paths[0]
+      selectedPath: apps[0].paths[0],
+      flipButton: false
     };
   },
   computed: {
@@ -108,6 +113,15 @@ export default {
     selectedApp(newVal) {
       this.selectedPath = newVal.paths[0];
     }
+  },
+  mounted() {
+    this.$root.$on('bv::dropdown::show', () => {
+      this.flipButton = true;
+    });
+    this.$root.$on('bv::dropdown::hide', () => {
+      this.flipButton = false;
+    });
+
   },
   methods: {
     selectDapp(app) {

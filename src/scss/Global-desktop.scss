@@ -1443,8 +1443,16 @@
     background-color: $background-color-white;
     border: solid 1px $light-grey-3;
     color: $text-color-6;
+    display: flex;
+    justify-content: space-between;
     min-width: 235px;
-    padding: 13px 15px;
+    padding: 13px 20px;
     text-align: left;
+  }
+
+  i {
+    font-size: 15px;
+    margin-top: 2px;
+    margin-left: 5px;
   }
 }
