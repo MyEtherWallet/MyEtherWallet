@@ -1,3 +1,20 @@
+### Bug
+
+- Fixes send offline token value and deploy contract errors [#920](https://github.com/MyEtherWallet/MyEtherWallet/pull/920)
+- Update TOMO explorrer links [#918](https://github.com/MyEtherWallet/MyEtherWallet/pull/918)
+
+### Devop
+
+- Fix send offline helper, update webchain [#932](https://github.com/MyEtherWallet/MyEtherWallet/pull/932)
+- MEWCX build fix [#935](https://github.com/MyEtherWallet/MyEtherWallet/pull/935)
+- Sentry migration [#922](https://github.com/MyEtherWallet/MyEtherWallet/pull/922)
+- remove utf8 convertion for hex strings [#941](https://github.com/MyEtherWallet/MyEtherWallet/pull/941)
+
+### Feature
+
+- Scan each mewbuild with virustotal [#934](https://github.com/MyEtherWallet/MyEtherWallet/pull/934)
+- Can debug via [VSCODE](https://github.com/Microsoft/vscode-recipes/tree/master/vuejs-cli) [#960](https://github.com/MyEtherWallet/MyEtherWallet/pull/960)
+
 ### Release v5.0.9
 
 ### Devop
