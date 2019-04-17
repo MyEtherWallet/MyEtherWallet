@@ -249,7 +249,8 @@ export default {
       this.maker = await Maker.create('http', {
         url: this.network.url,
         provider: {
-          type: 'HTTP', // or 'TEST'
+          type: 'HTTP',//'INJECT', // or 'HTTP'
+          // inject: this.web3
           network: 'kovan'
         },
         plugins: [MewMakerPlugin],
@@ -257,7 +258,8 @@ export default {
           myLedger1: { type: 'mew' }
         },
         web3: {
-          statusTimerDelay: 10000
+          statusTimerDelay: 10000,
+          pollingInterval: 100000
         },
         log: true
       });
