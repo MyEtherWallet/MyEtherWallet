@@ -170,7 +170,6 @@ const pwa = {
   name: 'MyEtherWallet',
   workboxOptions: {
     importWorkboxFrom: 'local',
-    exclude: [/\.map$/, /^manifest.*\.js$/, /\.svg$/],
     skipWaiting: true,
     clientsClaim: true,
     navigateFallback: '/index.html'
