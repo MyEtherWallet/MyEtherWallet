@@ -12,6 +12,7 @@ const webpackConfig = {
   },
   devtool: 'source-map',
   devServer: {
+    disableHostCheck: JSON.parse(env_vars.BUILD_TYPE) === 'mewcx', // Dev purposes only, should be commented out before release
     https: true,
     host: 'localhost',
     hotOnly: true,

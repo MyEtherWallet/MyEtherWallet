@@ -1,0 +1,27 @@
+@import '~@/scss/GlobalVariables';
+
+.extension-header-container {
+  box-shadow: 0 2px 13px $tiny-header-shadow-color;
+  display: flex;
+  justify-content: space-between;
+  padding: 30px;
+  width: 100%;
+
+  .extension-logo {
+    align-items: center;
+    display: flex;
+    justify-content: space-around;
+    flex: 1;
+
+    img {
+      align-self: flex-end;
+      height: 24px;
+    }
+
+    .title {
+      border-left: 1px solid $mew-green;
+      color: $mew-green;
+      padding-left: 10px;
+    }
+  }
+}
