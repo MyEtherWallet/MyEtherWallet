@@ -45,7 +45,12 @@
           <b-dropdown :no-caret="true" class="dropdown-button-3">
             <template slot="button-content">
               <span> {{ dropDownDefaultText }} </span>
-              <i :class="[flipButton ? 'fa-chevron-up' : 'fa-chevron-down','fa']"></i>
+              <i
+                :class="[
+                  flipButton ? 'fa-chevron-up' : 'fa-chevron-down',
+                  'fa'
+                ]"
+              ></i>
             </template>
             <b-dropdown-item
               v-for="path in selectedApp.paths"
@@ -121,7 +126,6 @@ export default {
     this.$root.$on('bv::dropdown::hide', () => {
       this.flipButton = false;
     });
-
   },
   methods: {
     selectDapp(app) {
