@@ -16,6 +16,7 @@ const webpackConfig = {
     host: 'localhost',
     hotOnly: true,
     port: 8080,
+    writeToDisk: true,
     headers: {
       'Strict-Transport-Security':
         'max-age=63072000; includeSubdomains; preload',
