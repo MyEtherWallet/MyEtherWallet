@@ -9,16 +9,17 @@
     "32": "img/icons/icon32.png",
     "192": "img/icons/icon192.png"
   },
-  "options_page": "index.html",
   "browser_action": {
     "default_icon": "img/icons/icon32.png",
     "default_title": "MyEtherWallet CX",
-    "default_popup": "index.html#/browser-action"
+    "default_popup": "index.html#/popup"
   },
-  "background": {},
+  "options_ui": {
+    "page": "index.html",
+    "open_in_tab": true
+  },
   "permissions": [
     "storage",
     "tabs"
-  ],
-  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+  ]
 }

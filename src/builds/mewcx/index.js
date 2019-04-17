@@ -4,13 +4,13 @@ import ExtensionBrowserAction from '@/layouts/ExtensionBrowserAction';
 
 const cxRoutes = [
   {
-    path: '/',
+    path: '/popup',
     name: 'Popup',
     component: ExtensionPopup,
     meta: { requiresAuth: false }
   },
   {
-    path: '/browser-action',
+    path: '/',
     name: 'BrowserAction',
     component: ExtensionBrowserAction,
     meta: { requiresAuth: false }

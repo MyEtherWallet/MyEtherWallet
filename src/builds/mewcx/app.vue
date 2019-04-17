@@ -1,21 +1,12 @@
 <template>
   <div id="app">
-    <header-container v-if="$route.fullPath !== '/browser-action'" />
     <router-view />
-    <footer-container v-if="$route.fullPath !== '/browser-action'" />
   </div>
 </template>
 
 <script>
-import FooterContainer from '@/containers/FooterContainer';
-import HeaderContainer from '@/containers/HeaderContainer';
-
 export default {
-  name: 'App',
-  components: {
-    'header-container': HeaderContainer,
-    'footer-container': FooterContainer
-  }
+  name: 'App'
 };
 </script>
 
