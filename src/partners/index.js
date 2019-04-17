@@ -14,6 +14,7 @@ import {
   SimplexCurrencies,
   PROVIDER_NAME as simplex
 } from './simplex';
+import { FaastCurrencies, FaastSwap, PROVIDER_NAME as faast } from './faast';
 import SwapProviders from './partners';
 import {
   ERC20,
@@ -37,7 +38,7 @@ import {
 } from './helpers';
 
 // Array of currently supported providers
-const providers = [BitySwap, KyberSwap, ChangellySwap, Simplex];
+const providers = [BitySwap, KyberSwap, ChangellySwap, Simplex, FaastSwap];
 
 const providerMap = providers.reduce(
   (accumulator, currentValue) =>
@@ -49,7 +50,8 @@ const providerNames = {
   simplex: simplex,
   kyber: kybernetwork,
   changelly: changelly,
-  bity: bity
+  bity: bity,
+  faast: faast
 };
 
 const supportedProviders = Object.values(providerNames);
@@ -70,6 +72,8 @@ export {
   SimplexCurrencies,
   ChangellySwap,
   ChangellyCurrencies,
+  FaastSwap,
+  FaastCurrencies,
   networkSymbols,
   chainCurrencies,
   fiat,

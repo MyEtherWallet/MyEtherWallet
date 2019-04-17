@@ -448,9 +448,10 @@ export default {
       return false;
     },
     showRefundAddress() {
+      const { changelly, faast } = this.providerNames;
       return (
         !SwapProviders.isToken(this.fromCurrency) &&
-        this.selectedProvider.provider === this.providerNames.changelly
+        [changelly, faast].includes(this.selectedProvider.provider)
       );
     },
     allAddressesValid() {

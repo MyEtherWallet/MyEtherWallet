@@ -16,6 +16,7 @@ const swapApiEndpoints = {
   bity: '/bity'
 };
 const mewSimplex = 'https://apiccswap.myetherwallet.com';
+const faastApi = 'https://api.faa.st';
 
 const swapNotificationStatuses = {
   new: 'new',
@@ -38,5 +39,6 @@ export {
   baseCurrencyEntry,
   networkSymbols,
   swapApiEndpoints,
-  mewSimplex
+  mewSimplex,
+  faastApi
 };

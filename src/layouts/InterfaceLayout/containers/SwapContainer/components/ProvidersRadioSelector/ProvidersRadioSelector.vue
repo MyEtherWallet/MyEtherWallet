@@ -171,6 +171,7 @@ import Bity from '@/assets/images/etc/bity.png';
 import Simplex from '@/assets/images/etc/simplex.png';
 import Changelly from '@/assets/images/etc/changelly.png';
 import bityBeta from '@/assets/images/etc/bitybeta.png';
+import Faast from '@/assets/images/etc/faast.png';
 
 import ProviderInfoList from './ProviderInfoList';
 
@@ -243,7 +244,8 @@ export default {
         kybernetwork: KyberNetwork,
         bity: Bity,
         simplex: Simplex,
-        changelly: Changelly
+        changelly: Changelly,
+        faast: Faast
       },
       betaLogos: {
         bity: bityBeta

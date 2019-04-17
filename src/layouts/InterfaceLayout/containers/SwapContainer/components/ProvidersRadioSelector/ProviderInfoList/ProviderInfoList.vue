@@ -22,6 +22,7 @@ import KyberNetwork from '@/assets/images/etc/kybernetwork_gray.png';
 import Bity from '@/assets/images/etc/bity_gray.png';
 import Simplex from '@/assets/images/etc/simplex_gray.png';
 import Changelly from '@/assets/images/etc/changelly_gray.png';
+import Faast from '@/assets/images/etc/faast_gray.png';
 
 export default {
   props: {
@@ -46,7 +47,8 @@ export default {
         kybernetwork: KyberNetwork,
         bity: Bity,
         simplex: Simplex,
-        changelly: Changelly
+        changelly: Changelly,
+        faast: Faast
       },
       betaLogos: {}
     };
