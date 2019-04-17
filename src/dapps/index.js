@@ -6,6 +6,7 @@ import secureTransaction from '@/assets/images/icons/button-key-hover.svg';
 import secureTransactionHov from '@/assets/images/icons/button-key.svg';
 import scheduleTransaction from '@/assets/images/icons/eac.svg';
 import scheduleTransactionHov from '@/assets/images/icons/eac-hov.svg';
+import makerdai from '@/assets/images/icons/dapps/makerdai.svg';
 import { ETH, GOERLI, ROP, RIN, KOV } from '@/networks/types';
 
 const dapps = {
@@ -44,7 +45,7 @@ const dapps = {
   },
   maker: {
     route: '/interface/dapps/maker-dai',
-    icon: secureTransaction,
+    icon: makerdai,
     iconDisabled: secureTransactionHov,
     title: 'dapps.maker_title',
     desc: 'dapps.maker_desc',
