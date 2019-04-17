@@ -246,12 +246,12 @@ export default {
           }
         }
       );
+
       this.maker = await Maker.create('http', {
         url: this.network.url,
         provider: {
-          type: 'HTTP',//'INJECT', // or 'HTTP'
-          // inject: this.web3
-          network: 'kovan'
+          type: 'HTTP',
+          url: this.network.url
         },
         plugins: [MewMakerPlugin],
         accounts: {
