@@ -1,33 +1,25 @@
 <template>
   <div>
-    <div class="">
-      LOADING
-    </div>
+    <loading-sign
+      loadingmessage1="Loading MakerDAI..."
+      loadingmessage2="Please wait for a moment."
+    />
   </div>
 </template>
 
 <script>
-/* eslint-disable */
-import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
-import InterfaceBottomText from '@/components/InterfaceBottomText';
-import Blockie from '@/components/Blockie';
+import LoadingSign from '@/components/LoadingSign';
 
 export default {
   components: {
-    'interface-container-title': InterfaceContainerTitle,
-    'interface-bottom-text': InterfaceBottomText,
-    blockie: Blockie
+    'loading-sign': LoadingSign
   },
   props: {},
   data() {
-    return {
-      title: 'stufff',
-      desc: 'things',
-      supported: true
-    };
+    return {};
   },
   computed: {},
-  async mounted() {},
+  mounted() {},
   methods: {}
 };
 </script>

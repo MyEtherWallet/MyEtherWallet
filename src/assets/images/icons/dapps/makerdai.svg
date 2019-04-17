@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="74px" height="75px" viewBox="0 0 74 75" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 54.1 (76490) - https://sketchapp.com -->
+    <title>Group 5</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Dapps" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="DAI-b" transform="translate(-842.000000, -428.000000)" fill-rule="nonzero" stroke="#003945" stroke-width="4.5">
+            <g id="Group-28" transform="translate(317.000000, 284.000000)">
+                <g id="metamask-copy-3" transform="translate(469.000000, 104.000000)">
+                    <g id="Group-5" transform="translate(56.000000, 40.000000)">
+                        <rect id="Rectangle" fill="#FFFFFF" transform="translate(37.062446, 37.355339) rotate(45.000000) translate(-37.062446, -37.355339) " x="13.3124458" y="13.6053391" width="47.5" height="47.5"></rect>
+                        <g id="Group-4" transform="translate(21.000000, 20.000000)" stroke-linecap="square">
+                            <path d="M0.5,16.1604938 L16,0.660493827" id="Line-3"></path>
+                            <path d="M16.5,16.1604938 L32,0.660493827" id="Line-3" transform="translate(24.000000, 8.500000) scale(-1, 1) translate(-24.000000, -8.500000) "></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
