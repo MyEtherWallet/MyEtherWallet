@@ -16,7 +16,7 @@ const webpackConfig = {
     host: 'localhost',
     hotOnly: true,
     port: 8080,
-    writeToDisk: true,
+    writeToDisk: JSON.parse(env_vars.BUILD_TYPE) === 'mewcx',
     headers: {
       'Strict-Transport-Security':
         'max-age=63072000; includeSubdomains; preload',

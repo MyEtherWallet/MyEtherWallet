@@ -5,9 +5,9 @@
   border-radius: 5px;
   color: $text-black;
   cursor: pointer;
-  justify-content: space-between;
   display: flex;
-  padding: 20px 30px;
+  justify-content: space-between;
+  padding: 5px 20px;
   text-align: left;
   user-select: none;
 
@@ -51,4 +51,8 @@
   div {
     background-color: $white !important;
   }
+}
+
+.has-link {
+  padding: 20px 30px !important;
 }
