@@ -10,6 +10,7 @@ const webpackConfig = {
   node: {
     process: true
   },
+  devtool: 'source-map',
   devServer: {
     https: true,
     host: 'localhost',
@@ -45,10 +46,13 @@ const webpackConfig = {
     new CopyWebpackPlugin([
       {
         from: 'src/builds/' + JSON.parse(env_vars.BUILD_TYPE) + '/public',
-        transform: function (content, filePath) {
+        transform: function(content, filePath) {
           if (filePath.split('.').pop() === ('js' || 'JS'))
             return UglifyJS.minify(content.toString()).code;
-          if (filePath.replace(/^.*[\\\/]/, '') === 'manifest.json' && JSON.parse(env_vars.BUILD_TYPE) === 'mewcx') {
+          if (
+            filePath.replace(/^.*[\\\/]/, '') === 'manifest.json' &&
+            JSON.parse(env_vars.BUILD_TYPE) === 'mewcx'
+          ) {
             const version = require('./package.json').version;
             const json = JSON.parse(content);
             json.version = version;
@@ -182,12 +186,23 @@ const exportObj = {
   integrity: process.env.WEBPACK_INTEGRITY === 'false' ? false : true,
   pwa: pwa,
   chainWebpack: config => {
-    config.module.rule('replace').test(/\.js$/).include.add(path.resolve(__dirname, 'node_modules/@ensdomains/dnsprovejs')).end().use('string-replace-loader').loader('string-replace-loader').tap(options => {
-      return {
-        search: 'https://dns.google.com/experimental?ct=application/dns-udpwireformat&dns=',
-        replace: 'https://cloudflare-dns.com/dns-query?ct=application/dns-udpwireformat&dns='
-      }
-    })
+    config.module
+      .rule('replace')
+      .test(/\.js$/)
+      .include.add(
+        path.resolve(__dirname, 'node_modules/@ensdomains/dnsprovejs')
+      )
+      .end()
+      .use('string-replace-loader')
+      .loader('string-replace-loader')
+      .tap(options => {
+        return {
+          search:
+            'https://dns.google.com/experimental?ct=application/dns-udpwireformat&dns=',
+          replace:
+            'https://cloudflare-dns.com/dns-query?ct=application/dns-udpwireformat&dns='
+        };
+      });
   }
 };
-module.exports = exportObj
+module.exports = exportObj;
