@@ -14,6 +14,7 @@
 
 - Scan each mewbuild with virustotal [#934](https://github.com/MyEtherWallet/MyEtherWallet/pull/934)
 - Can debug via [VSCODE](https://github.com/Microsoft/vscode-recipes/tree/master/vuejs-cli) [#960](https://github.com/MyEtherWallet/MyEtherWallet/pull/960)
+- Update hardware modal options [#923](https://github.com/MyEtherWallet/MyEtherWallet/pull/923)
 
 ### Release v5.0.9
 
