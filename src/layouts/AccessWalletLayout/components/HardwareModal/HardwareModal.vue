@@ -67,12 +67,18 @@ import { Toast } from '@/helpers';
 import { isSupported } from 'u2f-api';
 import platform from 'platform';
 import {
-  // LedgerWallet,
   KeepkeyWallet,
   TrezorWallet,
   BitBoxWallet,
   SecalotWallet
 } from '@/wallets';
+import {
+  LEDGER as LEDGER_TYPE,
+  TREZOR as TREZOR_TYPE,
+  BITBOX as BITBOX_TYPE,
+  SECALOT as SECALOT_TYPE,
+  KEEPKEY as KEEPKEY_TYPE
+} from '@/wallets/bip44/walletTypes';
 export default {
   components: {
     'customer-support': CustomerSupport,
@@ -100,7 +106,7 @@ export default {
       isU2FSupported: false,
       items: [
         {
-          name: 'ledger',
+          name: LEDGER_TYPE,
           imgPath: ledger,
           imgHoverPath: ledgerHov,
           text: 'Ledger',
@@ -116,7 +122,7 @@ export default {
           msg: ''
         },
         {
-          name: 'bitbox',
+          name: BITBOX_TYPE,
           imgPath: bitbox,
           imgHoverPath: bitboxHov,
           text: 'Digital Bitbox',
@@ -124,7 +130,7 @@ export default {
           msg: ''
         },
         {
-          name: 'secalot',
+          name: SECALOT_TYPE,
           imgPath: secalot,
           imgHoverPath: secalotHov,
           text: 'Secalot',
@@ -132,7 +138,7 @@ export default {
           msg: ''
         },
         {
-          name: 'trezor',
+          name: TREZOR_TYPE,
           imgPath: trezor,
           imgHoverPath: trezorHov,
           text: 'Trezor',
@@ -146,7 +152,7 @@ export default {
               : ''
         },
         {
-          name: 'keepkey',
+          name: KEEPKEY_TYPE,
           imgPath: keepkey,
           imgHoverPath: keepkeyHov,
           text: 'KeepKey',
@@ -159,9 +165,9 @@ export default {
   mounted() {
     isSupported().then(res => {
       this.items.forEach(item => {
-        const u2fhw = ['secalot', 'ledger', 'bitbox'];
-        const inMobile = ['secalot', 'keepkey'];
-        const webUsb = ['keepkey'];
+        const u2fhw = [SECALOT_TYPE, LEDGER_TYPE, BITBOX_TYPE];
+        const inMobile = [SECALOT_TYPE, KEEPKEY_TYPE];
+        const webUsb = [KEEPKEY_TYPE];
 
         if (webUsb.includes(item.name)) {
           const disable =
@@ -205,11 +211,11 @@ export default {
         this.mayNotBeAttached = true;
       }, 1000);
       switch (this.selected) {
-        case 'ledger':
+        case LEDGER_TYPE:
           this.$refs.hardware.hide();
           this.ledgerAppOpen();
           break;
-        case 'trezor':
+        case TREZOR_TYPE:
           TrezorWallet()
             .then(_newWallet => {
               clearTimeout(showPluggedInReminder);
@@ -220,19 +226,19 @@ export default {
               TrezorWallet.errorHandler(e);
             });
           break;
-        case 'bitbox':
+        case BITBOX_TYPE:
           this.$emit('hardwareRequiresPassword', {
             walletConstructor: BitBoxWallet,
             hardwareBrand: 'DigitalBitbox'
           });
           break;
-        case 'secalot':
+        case SECALOT_TYPE:
           this.$emit('hardwareRequiresPassword', {
             walletConstructor: SecalotWallet,
             hardwareBrand: 'Secalot'
           });
           break;
-        case 'keepkey':
+        case KEEPKEY_TYPE:
           KeepkeyWallet(false, this.$eventHub)
             .then(_newWallet => {
               this.$emit('hardwareWalletOpen', _newWallet);
