@@ -158,9 +158,7 @@ export default {
       tokens: [],
       receivedTokens: false,
       tokensWithBalance: [],
-      pollNetwork: () => {},
       pollBlock: () => {},
-      pollAddress: () => {},
       highestGas: '0',
       alert: {
         show: false,
@@ -208,9 +206,6 @@ export default {
   },
   mounted() {
     this.setupOnlineEnvironment();
-  },
-  destroyed() {
-    this.clearIntervals();
   },
   methods: {
     openAddressQrcode() {
@@ -458,65 +453,28 @@ export default {
         });
     },
     checkWeb3WalletAddrChange() {
-      this.pollAddress = setInterval(() => {
-        window.web3.eth.getAccounts((err, accounts) => {
-          if (err) {
-            return Toast.responseHandler(err, false);
-          }
-          if (!accounts.length) {
-            return Toast.responseHandler(
-              new Error('Please unlock metamask'),
-              Toast.ERROR
-            );
-          }
-          const address = accounts[0];
-          if (
-            this.account.address !== null &&
-            address.toLowerCase() !== this.account.address.toLowerCase()
-          ) {
-            const wallet = new Web3Wallet(address);
-            this.$store.dispatch('decryptWallet', [
-              wallet,
-              window.web3.currentProvider
-            ]);
-            clearInterval(this.pollAddress);
-          }
-        });
-      }, 500);
+      const web3 = this.web3;
+      window.ethereum.on('accountsChanged', account => {
+        const wallet = new Web3Wallet(account[0]);
+        this.$store.dispatch('decryptWallet', [wallet, web3]);
+      });
     },
     matchWeb3WalletNetwork() {
-      if (
-        !window.web3.eth.net ||
-        typeof window.web3.eth.net.getId !== 'function'
-      )
-        return;
-      this.pollNetwork = setInterval(() => {
-        window.web3.eth.net
-          .getId()
-          .then(netId => {
-            if (this.network.type.chainID.toString() !== netId) {
-              Object.keys(networkTypes).some(net => {
-                if (networkTypes[net].chainID === netId && this.Networks[net]) {
-                  this.$store.dispatch('switchNetwork', this.Networks[net][0]);
-                  clearInterval(this.pollNetwork);
-                  return true;
-                }
-              });
+      window.ethereum.on('networkChanged', netId => {
+        if (this.network.type.chainID.toString() !== netId) {
+          Object.keys(networkTypes).some(net => {
+            if (
+              networkTypes[net].chainID.toString() === netId &&
+              this.Networks[net]
+            ) {
+              this.$store.dispatch('switchNetwork', this.Networks[net][0]);
+              return true;
             }
-          })
-          .catch(e => {
-            Toast.responseHandler(e, false);
           });
-      }, 500);
-    },
-    clearIntervals() {
-      if (this.pollBlock.unsubscribe) this.pollBlock.unsubscribe();
-      else clearInterval(this.pollBlock);
-      clearInterval(this.pollNetwork);
-      clearInterval(this.pollAddress);
+        }
+      });
     },
     setupOnlineEnvironment: web3Utils._.debounce(function() {
-      this.clearIntervals();
       if (store.get('customTokens') === undefined) {
         store.set('customTokens', {});
         this.setCustomTokenStore();
