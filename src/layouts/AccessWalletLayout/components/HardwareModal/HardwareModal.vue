@@ -7,10 +7,6 @@
     centered
   >
     <div class="modal-content-container">
-      <p class="hardware-link">
-        Want to get a Hardware wallet?
-        <router-link to="/hardware-wallet-affiliates">Click here!</router-link>
-      </p>
       <finney-modal ref="finney" />
       <div class="d-block text-center">
         <b-alert :show="mayNotBeAttached" fade variant="warning"
@@ -21,13 +17,14 @@
             v-for="(item, idx) in items"
             :key="item.name + idx"
             :selected="selected === item.name"
-            :select="select"
             :regular-icon="item.imgPath"
             :hover-icon="item.imgHoverPath"
             :text="item.text"
             :name="item.name"
             :disabled="item.disabled"
             :tooltip-msg="item.msg"
+            :link="item.link"
+            @updateSelected="updateSelected"
           />
         </div>
       </div>
@@ -101,7 +98,8 @@ export default {
           imgHoverPath: ledgerHov,
           text: 'Ledger',
           disabled: false,
-          msg: ''
+          msg: '',
+          link: 'https://www.ledger.com?r=fa4b'
         },
         {
           name: 'finney',
@@ -109,7 +107,9 @@ export default {
           imgHoverPath: finneyHov,
           text: 'FINNEY',
           disabled: false,
-          msg: ''
+          msg: '',
+          link:
+            'http://shop.sirinlabs.com?rfsn=2397639.54fdf&utm_source=refersion&utm_medium=affiliate&utm_campaign=2397639.54fdf'
         },
         {
           name: 'bitbox',
@@ -117,15 +117,8 @@ export default {
           imgHoverPath: bitboxHov,
           text: 'Digital Bitbox',
           disabled: false,
-          msg: ''
-        },
-        {
-          name: 'secalot',
-          imgPath: secalot,
-          imgHoverPath: secalotHov,
-          text: 'Secalot',
-          disabled: false,
-          msg: ''
+          msg: '',
+          link: 'https://digitalbitbox.com/?ref=mew'
         },
         {
           name: 'trezor',
@@ -139,7 +132,17 @@ export default {
             platform.name.toLowerCase() !== 'chrome' &&
             platform.name.toLowerCase() !== 'firefox'
               ? 'Browser not supported by Trezor'
-              : ''
+              : '',
+          link: 'https://trezor.io/?offer_id=12&aff_id=2029'
+        },
+        {
+          name: 'secalot',
+          imgPath: secalot,
+          imgHoverPath: secalotHov,
+          text: 'Secalot',
+          disabled: false,
+          msg: '',
+          link: 'https://www.secalot.com/'
         },
         {
           name: 'keepkey',
@@ -147,7 +150,8 @@ export default {
           imgHoverPath: keepkeyHov,
           text: 'KeepKey',
           disabled: false,
-          msg: ''
+          msg: '',
+          link: 'http://keepkey.go2cloud.org/aff_c?offer_id=1&aff_id=5561'
         }
       ]
     };
@@ -257,7 +261,7 @@ export default {
       }
       this.$refs.hardware.hide();
     },
-    select(ref) {
+    updateSelected(ref) {
       if (this.selected !== ref) {
         this.selected = ref;
       } else {
