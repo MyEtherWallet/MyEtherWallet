@@ -5,7 +5,13 @@
     @mouseover="isHovered = true"
     @mouseout="isHovered = false"
   >
-    <div :class="[selected ? 'selected' : '', 'wallet-option-container']">
+    <div
+      :class="[
+        selected ? 'selected' : '',
+        'wallet-option-container',
+        link !== '' ? 'has-link' : ''
+      ]"
+    >
       <div class="img-title-container">
         <img :src="hoverIcon" class="icon" />
         <div class="title-link-container">
