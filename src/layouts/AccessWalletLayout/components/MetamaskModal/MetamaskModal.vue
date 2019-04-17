@@ -180,7 +180,7 @@ export default {
     async getWeb3Wallet() {
       if (this.checkWeb3() !== true) return;
       if (window.ethereum) {
-        window.web3 = new Web3(window.ethereum);
+        const web3 = new Web3(window.ethereum);
         try {
           await window.ethereum.enable();
         } catch (e) {
@@ -188,7 +188,7 @@ export default {
           this.web3WalletExists = false;
           return;
         }
-        this.signIn(window.web3);
+        this.signIn(web3);
       } else if (window.web3) {
         this.signIn(window.web3);
       }
@@ -197,6 +197,7 @@ export default {
       new Web3(web3.currentProvider).eth
         .getAccounts()
         .then(accounts => {
+          window.ethereum.autoRefreshOnNetworkChange = false;
           if (!accounts.length) return (this.unlockWeb3Wallet = true);
           const address = accounts[0];
           const wallet = new Web3Wallet(address);
@@ -211,12 +212,7 @@ export default {
         });
     },
     checkWeb3() {
-      if (window.ethereum) {
-        return true;
-      } else if (window.web3) {
-        return true;
-      }
-      return false;
+      return window.ethereum !== 'undefined' || window.web3 !== 'undefined';
     }
   }
 };

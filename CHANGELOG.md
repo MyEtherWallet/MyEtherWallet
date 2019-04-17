@@ -1,6 +1,4 @@
-### Feature
-
-- Scan each mewbuild with virustotal [#934](https://github.com/MyEtherWallet/MyEtherWallet/pull/934)
+### Release v5.0.10
 
 ### Bug
 
@@ -9,8 +7,10 @@
 
 ### Devop
 
+- only clone the most recent commit [#937](https://github.com/MyEtherWallet/MyEtherWallet/pull/937)
 - Fix send offline helper, update webchain [#932](https://github.com/MyEtherWallet/MyEtherWallet/pull/932)
 - MEWCX build fix [#935](https://github.com/MyEtherWallet/MyEtherWallet/pull/935)
+- Update Metamask Integration with listeners [#938](https://github.com/MyEtherWallet/MyEtherWallet/pull/938)
 - Sentry migration [#922](https://github.com/MyEtherWallet/MyEtherWallet/pull/922)
 - remove utf8 convertion for hex strings [#941](https://github.com/MyEtherWallet/MyEtherWallet/pull/941)
 
@@ -18,6 +18,7 @@
 
 - Scan each mewbuild with virustotal [#934](https://github.com/MyEtherWallet/MyEtherWallet/pull/934)
 - Can debug via [VSCODE](https://github.com/Microsoft/vscode-recipes/tree/master/vuejs-cli) [#960](https://github.com/MyEtherWallet/MyEtherWallet/pull/960)
+- Update hardware modal options [#923](https://github.com/MyEtherWallet/MyEtherWallet/pull/923)
 
 ### Release v5.0.9
 
