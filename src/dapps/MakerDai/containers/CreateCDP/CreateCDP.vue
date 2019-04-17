@@ -2,57 +2,42 @@
   <div class="container-maker">
     <div class="manage-container">
       <p class="top-title">
-        <b>{{ $t('dapps.maker_title') }}</b>
+        {{ $t('dapps.maker_title') }}
       </p>
-      <p class="top-title">
-        Please text something here, please text something here, please text
-        something.
+      <p class="top-title-sub">
+        Please set a value of ETH for collateral, to determine how much DAI you
+        would like to generate.
       </p>
-      <div class="currency-ops">
-        <div class="left-top">
-          <p class="currency-label">
-            <b>{{ $t('dapps.collateral') }}</b>
-          </p>
-          <div class="currency-picker-container">
-            <div>
-              <div class="dropdown-text-container dropdown-container">
-                <p>
-                  <span class="cc ETH cc-icon currency-symbol" />
-                  ETH
-                  <span class="subname">- Ethereum </span>
-                </p>
-              </div>
-            </div>
+
+      <div class="currency-ops-new">
+        <div class="currency-picker-container">
+          <div class="interface__block-title">{{ $t('dapps.collateral') }}</div>
+          <div class="dropdown-text-container dropdown-container">
+            <p>
+              <span class="cc ETH cc-icon currency-symbol" />
+              ETH
+              <span class="subname">- Ethereum </span>
+            </p>
           </div>
-        </div>
-        <div class="left-bottom">
           <input
             v-model="ethQty"
             class="currency-picker-container dropdown-text-container dropdown-container"
           />
-          <p>{{ $t('dapps.minCollat') }} <b>0.0TODO</b> ETH</p>
-          <p>{{ depositInPeth }} PETH</p>
-        </div>
-        <div class="arrow">
-          <img :src="arrowImage" />
-        </div>
-        <div class="right-top">
-          <p class="currency-label">
-            <b>{{ $t('dapps.generate') }}</b>
-          </p>
-          <div class="currency-picker-container">
-            <div>
-              <div class="dropdown-text-container dropdown-container">
-                <p>
-                  <span class="cc DAI cc-icon currency-symbol" />
-                  DAI
-                  <span class="subname">- Maker DAI </span>
-                </p>
-              </div>
-            </div>
+          <div class="input-block-message">
+            <p>{{ $t('dapps.minCollat') }} <b>0.0TODO</b> ETH</p>
+            <p>{{ depositInPeth }} PETH</p>
           </div>
         </div>
-        <div class="right-bottom">
+        <div class="arrow"><img :src="arrowImage" /></div>
+        <div>
+          <div class="interface__block-title">{{ $t('dapps.generate') }}</div>
+          <div class="dropdown-text-container dropdown-container">
+            <p>
+              <span class="cc DAI cc-icon currency-symbol" />
+              DAI
+              <span class="subname">- Maker DAI </span>
+            </p>
+          </div>
           <input
             v-model="daiQty"
             :class="[
@@ -62,11 +47,14 @@
               'dropdown-container'
             ]"
           />
-          <p>
-            {{ $t('dapps.maxGenerate') }} <b>{{ maxDaiDraw }}</b> DAI
-          </p>
+          <div class="input-block-message">
+            <p>
+              {{ $t('dapps.maxGenerate') }} <b>{{ maxDaiDraw }}</b> DAI
+            </p>
+          </div>
         </div>
       </div>
+
       <div class="cdp-info-block cdp-info-entry">
         <ul>
           <li>

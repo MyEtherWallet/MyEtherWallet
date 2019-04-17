@@ -1,5 +1,7 @@
 @import '~@/scss/GlobalVariables';
 
+$this-page-mobile-width: 700px;
+
 .currency-picker-container {
   margin-bottom: 5px;
   min-width: 150px;
@@ -7,8 +9,15 @@
 }
 
 .top-title {
-  padding-left: 10px;
-  padding-bottom: 10px;
+  padding-left: 0px;
+  padding-bottom: 0px;
+  font-size: 20px;
+  line-height: 30px;
+}
+
+.top-title-sub {
+  margin-bottom: 20px;
+  line-height: 17px;
 }
 
 .red-border {
@@ -36,6 +45,7 @@
 }
 
 %dropdown-text-container-base {
+  margin-bottom: 5px;
   border: 1px solid $white;
   border-bottom: 0;
   border-radius: 4px;
@@ -81,45 +91,13 @@
   }
 
   .manage-container {
-    padding: 42px;
+    padding: 40px;
+    @media all and (max-width: $this-page-mobile-width) {
+      padding: 20px;
+    }
 
     .currency-label {
       margin-bottom: 15px;
-    }
-
-    .currency-ops {
-      padding-left: 10px;
-      display: grid;
-      grid-template-columns: repeat(14, [col] 50px);
-      grid-template-rows: repeat(2, [row] auto);
-      grid-column-gap: 10px;
-      grid-row-gap: 2px;
-      padding-bottom: 20px;
-    }
-
-    .left-top {
-      grid-column: col / span 5;
-      grid-row: row;
-    }
-
-    .left-bottom {
-      grid-column: col / span 5;
-      grid-row: row 2;
-    }
-
-    .arrow {
-      grid-column: col 6 / span 2;
-      grid-row: row / span 2;
-    }
-
-    .right-top {
-      grid-column: col 8 / span 5;
-      grid-row: row;
-    }
-
-    .right-bottom {
-      grid-column: col 8 / span 5;
-      grid-row: row 2;
     }
 
     .cdp-info-block {
@@ -130,7 +108,7 @@
     .cdp-info-entry {
       justify-content: space-between;
       position: relative;
-      padding-top: 20px;
+      padding: 17px;
 
       &::before {
         margin: auto;
@@ -156,7 +134,7 @@
         > li {
           display: flex;
           align-items: center;
-          padding-bottom: 5px;
+          padding: 5px 0;
 
           p:nth-child(1) {
             min-width: 100px;
@@ -220,3 +198,27 @@
     }
   }
 }
+
+
+.currency-ops-new {
+  display: grid;
+  grid-template-columns: 1fr 100px 1fr;
+  margin-bottom: 20px;
+  @media all and (max-width: $this-page-mobile-width) {
+    display: block;
+  }
+}
+
+.arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  img {
+    height: 20px;
+    margin-top: -10px;
+    @media all and (max-width: $this-page-mobile-width) {
+      transform: rotate(90deg);
+    }
+  }
+}
+
