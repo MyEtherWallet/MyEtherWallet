@@ -1,0 +1,24 @@
+@import '../../ManageENS';
+
+.transfer-registrar-container {
+  @extend %template-container;
+
+  .transfer-registrar-content {
+    min-height: 400px;
+  }
+}
+
+.transfer-registrar-button {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+h3 {
+  color: $mew-green;
+}
+
+p {
+  font-weight: 300;
+  padding-bottom: 50px;
+}
