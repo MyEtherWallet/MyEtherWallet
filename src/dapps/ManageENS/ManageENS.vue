@@ -46,6 +46,8 @@
 <script>
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
 import RegistrarAbi from './ABI/registrarAbi';
+import PermanentRegistrarControllerAbi from './ABI/permanentRegistrarController';
+import baseRegistrarAbi from './ABI/baseRegistrarAbi';
 import DeedContractAbi from './ABI/deedContractAbi';
 import RegistryAbi from './ABI/registryAbi.js';
 import FifsRegistrarAbi from './ABI/fifsRegistrarAbi.js';
@@ -60,6 +62,17 @@ import BigNumber from 'bignumber.js';
 
 const bip39 = require('bip39');
 
+const permanentRegistrar = {
+  INTERFACE_CONTROLLER: '0x018fac06',
+  INTERFACE_LEGACY_REGISTRAR: '0x7ba18ba1'
+};
+
+const REGISTRAR_TYPES = {
+  AUCTION: 'acution',
+  FIFS: 'fifs',
+  PERMANENT: 'permanent'
+};
+const TEMP_TLD = 'eth';
 export default {
   components: {
     'back-button': BackButton
@@ -78,7 +91,6 @@ export default {
       secretPhrase: '',
       registrarAddress: '',
       auctionDateEnd: 0,
-      auctionRegistrarContract: {},
       raw: {},
       highestBid: '',
       contractInitiated: false,
@@ -142,8 +154,30 @@ export default {
     this.$nextTick(() => {
       this.setup();
     });
+    this.test();
   },
   methods: {
+    async test() {
+      const registrarAddress = await this.getRegistrarAddress(TEMP_TLD);
+      console.log(registrarAddress);
+      const resolver = await this.ens.resolver(TEMP_TLD, ResolverAbi);
+      const controller = await resolver.interfaceImplementer('0x7ba18ba1');
+      // const publicResolverContract = new this.web3.eth.Contract(
+      //   ResolverAbi,
+      //   registrarAddress
+      // );
+      console.log(controller);
+
+      // const resolverAddress = await this.ens.resolver(TEMP_TLD);
+      // console.log(resolverAddress);
+      // const ensRegistryContract = new this.web3.eth.Contract(
+      //   RegistryAbi,
+      //   this.network.type.ens.registry
+      // );
+      // const resolver = await this.ens.resolver(TEMP_TLD);
+      // const publicResolverAddress = await resolver.addr();
+      // console.log(resolver);
+    },
     async setup() {
       this.domainName = '';
       this.loading = false;
@@ -157,7 +191,6 @@ export default {
       this.secretPhrase = '';
       this.registrarAddress = '';
       this.auctionDateEnd = 0;
-      this.auctionRegistrarContract = {};
       this.raw = {};
       this.highestBid = '';
       this.contractInitiated = false;
@@ -176,31 +209,51 @@ export default {
       const web3 = this.web3;
       const tld = this.registrarTLD;
       this.registrarAddress = await this.getRegistrarAddress(tld);
-      this.auctionRegistrarContract = new web3.eth.Contract(
-        RegistrarAbi,
-        this.registrarAddress
-      );
-      this.fifsRegistrarContract = new web3.eth.Contract(
-        FifsRegistrarAbi,
-        this.registrarAddress
-      );
       this.ensRegistryContract = new web3.eth.Contract(
         RegistryAbi,
         this.network.type.ens.registry
       );
+      if (this.registrarType === REGISTRAR_TYPES.AUCTION) {
+        this.registrarContract = new web3.eth.Contract(
+          RegistrarAbi,
+          this.registrarAddress
+        );
+      } else if (this.registrarType === REGISTRAR_TYPES.FIFS) {
+        this.registrarContract = new web3.eth.Contract(
+          FifsRegistrarAbi,
+          this.registrarAddress
+        );
+      } else if (this.registrarType === REGISTRAR_TYPES.PERMANENT) {
+        const controllerAddress = await this.ens
+          .resolver(this.registrarTLD, ResolverAbi)
+          .interfaceImplementer(permanentRegistrar.INTERFACE_CONTROLLER);
+        this.registrarControllerContract = await new this.web3.eth.Contract(
+          PermanentRegistrarControllerAbi,
+          controllerAddress
+        );
+        this.registrarContract = await new this.web3.eth.Contract(
+          baseRegistrarAbi,
+          this.registrarAddress
+        );
+      }
     },
     async transferDomain(toAddress) {
       let to, data;
-      if (this.registrarType === 'auction') {
-        data = await this.auctionRegistrarContract.methods
+      if (this.registrarType === REGISTRAR_TYPES.AUCTION) {
+        data = await this.registrarContract.methods
           .transfer(this.labelHash, toAddress)
           .encodeABI();
         to = this.registrarAddress;
-      } else if (this.registrarType === 'fifs') {
+      } else if (this.registrarType === REGISTRAR_TYPES.FIFS) {
         data = await this.ensRegistryContract.methods
           .setOwner(this.nameHash, toAddress)
           .encodeABI();
         to = this.network.type.ens.registry;
+      } else if (this.registrarType === REGISTRAR_TYPES.PERMANENT) {
+        data = await this.registrarContract.methods
+          .safeTransferFrom(this.account.address, toAddress, this.labelHash)
+          .encodeABI();
+        to = this.registrarAddress;
       }
       const raw = {
         from: this.account.address,
@@ -218,20 +271,14 @@ export default {
       // Public resolver address
       const resolver = await this.ens.resolver('resolver.eth');
       const publicResolverAddress = await resolver.addr();
+      const currentResolverAddress = await this.ensRegistryContract.methods.resolver(
+        this.nameHash
+      );
       const publicResolverContract = new web3.eth.Contract(
         ResolverAbi,
         publicResolverAddress
       );
-      const rawTx1 = {
-        from: address,
-        to: this.network.type.ens.registry,
-        data: await this.ensRegistryContract.methods
-          .setResolver(this.nameHash, publicResolverAddress)
-          .encodeABI(),
-        value: 0,
-        gasPrice: new BigNumber(unit.toWei(this.gasPrice, 'gwei')).toFixed()
-      };
-      const rawTx2 = {
+      const setAddrTx = {
         from: address,
         to: publicResolverAddress,
         data: await publicResolverContract.methods
@@ -240,12 +287,30 @@ export default {
         value: 0,
         gasPrice: new BigNumber(unit.toWei(this.gasPrice, 'gwei')).toFixed()
       };
-      web3.mew.sendBatchTransactions([rawTx1, rawTx2]);
+      if (
+        currentResolverAddress.toLowerCase() ===
+        publicResolverAddress.toLowerCase()
+      ) {
+        web3.eth.sendTransaction(setAddrTx).catch(err => {
+          Toast.responseHandler(err, false);
+        });
+      } else {
+        const setResolverTx = {
+          from: address,
+          to: this.network.type.ens.registry,
+          data: await this.ensRegistryContract.methods
+            .setResolver(this.nameHash, publicResolverAddress)
+            .encodeABI(),
+          value: 0,
+          gasPrice: new BigNumber(unit.toWei(this.gasPrice, 'gwei')).toFixed()
+        };
+        web3.mew.sendBatchTransactions([setResolverTx, setAddrTx]);
+      }
     },
     async finalize() {
       const address = this.account.address;
       const web3 = this.web3;
-      const data = await this.auctionRegistrarContract.methods
+      const data = await this.registrarContract.methods
         .finalizeAuction(this.labelHash)
         .encodeABI();
 
@@ -263,7 +328,7 @@ export default {
     async registerFifsName() {
       const address = this.account.address;
       const web3 = this.web3;
-      const data = await this.fifsRegistrarContract.methods
+      const data = await this.registrarContract.methods
         .register(this.labelHash, address)
         .encodeABI();
       const raw = {
@@ -299,13 +364,13 @@ export default {
       } else if (this.parsedTld === this.registrarTLD) {
         try {
           let domainStatus = [];
-          if (this.registrarType === 'auction') {
-            domainStatus = await this.auctionRegistrarContract.methods
+          if (this.registrarType === REGISTRAR_TYPES.AUCTION) {
+            domainStatus = await this.registrarContract.methods
               .entries(this.labelHash)
               .call();
             this.processResult(domainStatus);
-          } else if (this.registrarType === 'fifs') {
-            const expiryTime = await this.fifsRegistrarContract.methods
+          } else if (this.registrarType === REGISTRAR_TYPES.FIFS) {
+            const expiryTime = await this.registrarContract.methods
               .expiryTimes(this.labelHash)
               .call();
             const isAvailable = expiryTime * 1000 < new Date().getTime();
@@ -315,6 +380,36 @@ export default {
             } else {
               this.getMoreInfo();
               this.loading = false;
+            }
+          } else if (this.registrarType === REGISTRAR_TYPES.PERMANENT) {
+            const oldRegistrarAddress = await this.ens
+              .resolver(TEMP_TLD, ResolverAbi)
+              .interfaceImplementer(
+                permanentRegistrar.INTERFACE_LAGACY_REGISTRAR
+              );
+            const legacyRegistrar = await new this.web3.eth.Contract(
+              RegistrarAbi,
+              oldRegistrarAddress
+            ).methods.state(this.labelHash);
+            const legacyState = await legacyRegistrar.methods.state(
+              this.labelHash
+            );
+            if (legacyState === 2) {
+              //2 is owned
+              // send the user to transferRegistrars
+              //legacyRegistrar.methods.transferRegistrars(this.labelHash)
+            } else {
+              const isAvailable = await this.registrarControllerContract.methods
+                .available(this.parsedHostName)
+                .call();
+              if (!isAvailable) this.getMoreInfo();
+              else {
+                //create commitment const commitment =  await this.registrarControllerContract.methods.makeCommitment('myetherwallet.eth',this.account.address, 'random secret')
+                //submit commitment this.registrarControllerContract.methods.commit(commitment)
+                //wait minCommitmentAge
+                //this.registrarControllerContract.methods.register('myetherwallet.eth', account.address, duration in seconds, 'random secret')
+                //https://github.com/ensdomains/ethregistrar/blob/master/contracts/ETHRegistrarController.sol
+              }
             }
           }
         } catch (e) {
@@ -388,6 +483,7 @@ export default {
           break;
       }
     },
+    processPermanentRegistrar() {},
     processResult(res) {
       this.auctionDateEnd = res[2] * 1000;
       switch (res[0]) {
@@ -436,7 +532,7 @@ export default {
     async getMoreInfo(deedOwner) {
       let highestBidder = '0x';
       if (
-        this.registrarType === 'auction' &&
+        this.registrarType === REGISTRAR_TYPES.AUCTION &&
         this.parsedTld === this.registrarTLD
       ) {
         const deedContract = new this.web3.eth.Contract(
@@ -470,7 +566,7 @@ export default {
       this.loading = true;
       const address = this.account.address;
       const utils = this.web3.utils;
-      const bidHash = await this.auctionRegistrarContract.methods
+      const bidHash = await this.registrarContract.methods
         .shaBid(
           this.labelHash,
           address,
@@ -481,16 +577,14 @@ export default {
 
       let contractReference;
       if (type === 'start') {
-        contractReference = this.auctionRegistrarContract.methods.startAuctionsAndBid(
+        contractReference = this.registrarContract.methods.startAuctionsAndBid(
           [this.labelHash],
           bidHash
         );
       } else if (type === 'bid') {
-        contractReference = this.auctionRegistrarContract.methods.newBid(
-          bidHash
-        );
+        contractReference = this.registrarContract.methods.newBid(bidHash);
       } else if (type === 'reveal') {
-        contractReference = this.auctionRegistrarContract.methods.unsealBid(
+        contractReference = this.registrarContract.methods.unsealBid(
           this.labelHash,
           utils.toWei(this.bidAmount.toString(), 'ether'),
           utils.sha3(this.secretPhrase)
