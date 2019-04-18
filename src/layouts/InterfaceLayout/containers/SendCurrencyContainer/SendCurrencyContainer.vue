@@ -93,7 +93,7 @@
             />
           </div>
         </div>
-        <div class="tx-fee">
+        <div v-show="network.type.name === 'ETH'" class="tx-fee">
           <div class="title">
             <h4>
               {{ $t('common.txFee') }}
@@ -263,10 +263,6 @@ export default {
       return 0;
     },
     isValidAmount() {
-      const txFee = new BigNumber(ethUnit.toWei(this.gasPrice, 'gwei')).times(
-        this.gasLimit || 0
-      );
-      const txFeeEth = ethUnit.fromWei(txFee, 'ether');
       const notEnoughGasMsg =
         this.$t('errorsGlobal.notAValidAmountTotal') +
         ' Gas ' +
@@ -288,9 +284,9 @@ export default {
         this.selectedCurrency.balance
       );
       const enoughCurrency = new BigNumber(this.value)
-        .plus(txFeeEth)
+        .plus(this.txFeeEth)
         .lte(this.balanceDefault);
-      const enoughGas = new BigNumber(txFeeEth).lte(this.balanceDefault);
+      const enoughGas = new BigNumber(this.txFeeEth).lte(this.balanceDefault);
       const validDecimal = this.isValidDecimals;
       if (new BigNumber(this.value).lt(0)) {
         return {
@@ -415,10 +411,13 @@ export default {
         );
         this.$store.dispatch('saveQueryVal', {});
       }
+    },
+    network(newVal) {
+      if (newVal.type.name === 'ETH') this.getEthPrice();
     }
   },
   mounted() {
-    this.getEthPrice();
+    if (this.network.type.name === 'ETH') this.getEthPrice();
   },
   methods: {
     openSettings() {
