@@ -34,6 +34,7 @@
       :claim-func="claimFunc"
       :dns-owner="dnsOwner"
       :dns-claim="dnsClaim"
+      :transfer-func="transferFunc"
       @updateSecretPhrase="updateSecretPhrase"
       @updateBidAmount="updateBidAmount"
       @updateBidMask="updateBidMask"
@@ -99,7 +100,8 @@ export default {
       ensRegistryContract: {},
       dnsRegistrar: {},
       dnsClaim: {},
-      dnsOwner: ''
+      dnsOwner: '',
+      legacyRegistrar: {}
     };
   },
   computed: {
@@ -154,7 +156,6 @@ export default {
     this.$nextTick(() => {
       this.setup();
     });
-    this.test();
   },
   methods: {
     async setup() {
@@ -179,6 +180,7 @@ export default {
       this.domainNameErr = false;
       this.dnsRegistrar = {};
       this.dnsClaim = {};
+      this.legacyRegistrar = {};
 
       if (this.ens) {
         this.setRegistrar();
@@ -342,9 +344,8 @@ export default {
         this.loading = false;
       } else if (this.parsedTld === this.registrarTLD) {
         try {
-          let domainStatus = [];
           if (this.registrarType === REGISTRAR_TYPES.AUCTION) {
-            domainStatus = await this.registrarContract.methods
+            const domainStatus = await this.registrarContract.methods
               .entries(this.labelHash)
               .call();
             this.processResult(domainStatus);
@@ -364,25 +365,24 @@ export default {
             const oldRegistrarAddress = await this.ens
               .resolver(TEMP_TLD, ResolverAbi)
               .interfaceImplementer(
-                permanentRegistrar.INTERFACE_LAGACY_REGISTRAR
+                permanentRegistrar.INTERFACE_LEGACY_REGISTRAR
               );
-            const legacyRegistrar = await new this.web3.eth.Contract(
+            this.legacyRegistrar = await new this.web3.eth.Contract(
               RegistrarAbi,
               oldRegistrarAddress
-            ).methods.state(this.labelHash);
-            const legacyState = await legacyRegistrar.methods.state(
+            );
+            const legacyState = await this.legacyRegistrar.methods.state(
               this.labelHash
             );
             if (legacyState === 2) {
-              //2 is owned
-              // send the user to transferRegistrars
-              //legacyRegistrar.methods.transferRegistrars(this.labelHash)
+              this.$router.push({ path: 'manage-ens/transfer-registrar' });
             } else {
               const isAvailable = await this.registrarControllerContract.methods
                 .available(this.parsedHostName)
                 .call();
               if (!isAvailable) this.getMoreInfo();
               else {
+                console.log('REEEEEEEEEEEEEE');
                 //create commitment const commitment =  await this.registrarControllerContract.methods.makeCommitment('myetherwallet.eth',this.account.address, 'random secret').call()
                 //mincommitment age =  await this.registrarControllerContract.method.minCommitmentAge().call()
                 //submit commitment this.registrarControllerContract.methods.commit(commitment)
@@ -426,6 +426,19 @@ export default {
             Toast.ERROR
           );
         }
+      }
+    },
+    transferFunc() {
+      this.loading = true;
+      try {
+        this.legacyRegistrar.methods.transferRegistrars(this.labelHash);
+        Toast.responseHandler('Transfer Success!', Toast.SUCCESS);
+      } catch (e) {
+        this.loading = false;
+        Toast.responseHandler(
+          'Something went wrong! Please try again.',
+          Toast.ERROR
+        );
       }
     },
     async claimFunc() {

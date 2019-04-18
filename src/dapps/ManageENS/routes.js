@@ -13,6 +13,7 @@ const ClaimDNSContainer = () => import('./containers/ClaimDNSContainer');
 const DNSProcessErrorContainer = () =>
   import('./containers/DNSProcessErrorContainer');
 const DNSMissingTXT = () => import('./containers/DNSMissingTXT');
+const TransferRegistrars = () => import('./containers/TransferRegistrars');
 
 export default {
   path: 'dapps/manage-ens',
@@ -90,6 +91,12 @@ export default {
       path: 'no-txt-setup',
       name: 'No TXT setup for DNS',
       component: DNSMissingTXT,
+      props: true
+    },
+    {
+      path: 'transfer-registrar',
+      name: 'Transfer ENS Registrar',
+      component: TransferRegistrars,
       props: true
     }
   ]
