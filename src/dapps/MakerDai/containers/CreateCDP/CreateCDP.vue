@@ -1,6 +1,10 @@
 <template>
   <div class="container-maker">
-    <dai-confirmation-modal ref="daiconfirmation" :opencdp="openCdp" :txinfo="txInfo" />
+    <dai-confirmation-modal
+      ref="daiconfirmation"
+      :opencdp="openCdp"
+      :txinfo="txInfo"
+    />
     <div class="manage-container">
       <p class="top-title">
         {{ $t('dapps.maker_title') }}

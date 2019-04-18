@@ -43,4 +43,19 @@
 
 .detail-info {
   margin-top: 30px;
+  ul {
+    padding: 0 10px;
+    li {
+      padding: 5px 0;
+      display: flex;
+      align-items: center;
+
+      p:nth-child(2){
+        margin-left: auto;
+      }
+      .bold {
+        font-weight: 600;
+      }
+    }
+  }
 }
