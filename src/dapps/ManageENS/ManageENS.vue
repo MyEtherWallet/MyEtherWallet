@@ -382,8 +382,7 @@ export default {
                 .call();
               if (!isAvailable) this.getMoreInfo();
               else {
-                console.log('REEEEEEEEEEEEEE');
-                const
+                this.$router.push({ path: 'manage-ens/create-commitment' });
                 //create commitment const commitment =  await this.registrarControllerContract.methods.makeCommitment('myetherwallet.eth',this.account.address, 'random secret').call()
                 //mincommitment age =  await this.registrarControllerContract.method.minCommitmentAge().call()
                 //submit commitment this.registrarControllerContract.methods.commit(commitment)
@@ -429,8 +428,32 @@ export default {
         }
       }
     },
-    async createCommitment() {
-
+    async createCommitment(secret) {
+      this.loading = true;
+      const commitment = await this.registrarControllerContract.methods
+        .makeCommitment(this.parsedDomain, this.account.address, secret)
+        .call();
+      this.minimumAge = await this.registrarControllerContract.method
+        .minCommitmentAge()
+        .call();
+      this.registrarControllerContract.methods.commit(commitment);
+      this.loading = false;
+      this.$router.push({ path: 'manage-ens/permanent-registration' });
+    },
+    async registerWithDuration(secret, duration) {
+      this.loading = true;
+      try {
+        await this.registrarControllerContract.methods
+          .register(this.parsedDomain, this.account.address, duration, secret)
+          .call();
+        Toast.responseHandler('Successfully Registered!', Toast.SUCCESS);
+      } catch (e) {
+        this.loading = false;
+        Toast.responseHandler(
+          'Something went wrong! Please try again.',
+          Toast.ERROR
+        );
+      }
     },
     transferFunc() {
       this.loading = true;
