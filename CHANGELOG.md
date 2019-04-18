@@ -12,7 +12,8 @@
 - MEWCX build fix [#935](https://github.com/MyEtherWallet/MyEtherWallet/pull/935)
 - Update Metamask Integration with listeners [#938](https://github.com/MyEtherWallet/MyEtherWallet/pull/938)
 - Sentry migration [#922](https://github.com/MyEtherWallet/MyEtherWallet/pull/922)
-- remove utf8 convertion for hex strings [#941](https://github.com/MyEtherWallet/MyEtherWallet/pull/941)
+- Remove utf8 convertion for hex strings [#941](https://github.com/MyEtherWallet/MyEtherWallet/pull/941)
+- Additional update of swap rates following user input [#905](https://github.com/MyEtherWallet/MyEtherWallet/pull/905)
 
 ### Feature
 
