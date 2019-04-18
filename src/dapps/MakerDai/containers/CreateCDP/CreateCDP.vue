@@ -5,6 +5,7 @@
       :opencdp="openCdp"
       :txinfo="txInfo"
     />
+    <loading-overlay v-if="loading" loadingmessage="Creating CDP..." />
     <div class="manage-container">
       <p class="top-title">
         {{ $t('dapps.maker_title') }}
@@ -129,6 +130,7 @@ import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
 import MakerCDP from '../../MakerCDP';
 import DaiConfirmationModal from '../../components/DaiConfirmationModal';
+import LoadingOverlay from '@/components/LoadingOverlay';
 import { displayFixedValue, displayPercentValue } from '../../helpers';
 
 import BigNumber from 'bignumber.js';
@@ -143,7 +145,8 @@ export default {
     'interface-container-title': InterfaceContainerTitle,
     'interface-bottom-text': InterfaceBottomText,
     blockie: Blockie,
-    'dai-confirmation-modal': DaiConfirmationModal
+    'dai-confirmation-modal': DaiConfirmationModal,
+    'loading-overlay': LoadingOverlay
   },
   props: {
     tokensWithBalance: {
@@ -221,7 +224,8 @@ export default {
       ethQty: 0,
       daiQty: 0,
       makerCDP: {},
-      txInfo: {}
+      txInfo: {},
+      loading: false
     };
   },
   computed: {
@@ -300,8 +304,20 @@ export default {
     displayPercentValue,
     displayFixedValue,
     async openCdp() {
+      this.loading = true;
+
       if (this.ethQty <= 0) return 0;
       this.$emit('cdpOpened');
+
+      // [Note from David to Steve] This should be implemented on TX core.
+      // Close DAI confirmation modal
+      this.$eventHub.$on('showTxConfirmModal', () => {
+        if (this.loading) {
+          this.$refs.daiconfirmation.$refs.modal.hide();
+          this.loading = false;
+        }
+      });
+
       await this.makerCDP.openCdp(this.ethQty, this.daiQty);
     },
     openDaiConfirmation() {

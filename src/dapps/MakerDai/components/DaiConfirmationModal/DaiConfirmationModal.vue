@@ -61,8 +61,11 @@
             </ul>
           </expending-option>
         </div>
-        <div>
-          <standard-button @click="opencdp" />
+        <div class="button-container">
+          <standard-button
+            :options="confirmButton"
+            @click.native="confirmClicked"
+          />
         </div>
       </div>
     </b-modal>
@@ -85,12 +88,22 @@ export default {
     }
   },
   data() {
-    return {};
+    return {
+      confirmButton: {
+        title: 'Confirm and Create CDP',
+        buttonStyle: 'green',
+        helpCenter: true
+      }
+    };
   },
   computed: {},
   watch: {},
   mounted() {},
-  methods: {}
+  methods: {
+    confirmClicked() {
+      this.opencdp();
+    }
+  }
 };
 </script>
 

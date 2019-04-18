@@ -19,6 +19,26 @@
   font-size: 12px;
 }
 
+.loading-container.black .lds-spinner div::after{
+  background: #000;
+  
+}
+
+.loading-container.black p {
+  color: #000;
+}
+
+.loading-container.white .lds-spinner div::after {
+  background: #fff;
+  
+}
+
+.loading-container.white p {
+  color: #fff;
+}
+
+
+
 //***************************************************
 // Pure CSS Loading Sign
 // https://loading.io/css/
@@ -42,8 +62,9 @@
   width: 5px;
   height: 14px;
   border-radius: 20%;
-  background: #000;
 }
+
+
 .lds-spinner div:nth-child(1) {
   transform: rotate(0deg);
   animation-delay: -1.1s;

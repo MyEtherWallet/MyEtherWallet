@@ -91,10 +91,6 @@ $this-page-mobile-width: 700px;
   //grid-area: main;
   overflow: hidden;
 
-  > div {
-    background: $background-color-white;
-  }
-
   .manage-container {
     padding: 40px;
     @media all and (max-width: $this-page-mobile-width) {

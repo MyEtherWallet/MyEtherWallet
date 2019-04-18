@@ -1,6 +1,6 @@
 <template>
   <div class="loading-sign">
-    <div class="loading-container">
+    <div :class="color" class="loading-container">
       <div class="lds-spinner">
         <div></div>
         <div></div>
@@ -41,6 +41,10 @@ export default {
     loadingmessage2: {
       type: String,
       default: ''
+    },
+    color: {
+      type: String,
+      default: 'black'
     }
   },
   data() {
