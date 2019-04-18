@@ -1,18 +1,10 @@
 export default {
-  AION: {
-    symbol: 'AION',
-    name: 'Aion',
-    addressLookup: 'https://mainnet.aion.network/#/account/[[address]]',
-    explorer: 'https://mainnet.aion.network/#/transaction/[[txHash]]',
-    fixRateEnabled: false
-  },
-  AMP: {
-    symbol: 'AMP',
-    name: 'Synereo',
-    addressLookup:
-      'https://omniexplorer.info/lookupadd.aspx?address=[[address]]',
-    explorer: 'https://omniexplorer.info/lookuptx.aspx?txid=[[txHash]]',
-    fixRateEnabled: false
+  ADA: {
+    symbol: 'ADA',
+    name: 'Cardano',
+    addressLookup: 'https://cardanoexplorer.com/address/[[address]]',
+    explorer: 'https://cardanoexplorer.com/tx/[[txHash]]',
+    fixRateEnabled: true
   },
   ARK: {
     symbol: 'ARK',
@@ -27,7 +19,7 @@ export default {
     addressLookup:
       'http://explorer.btcd.io/#/address?loading=true&address=[[address]]',
     explorer: 'http://explorer.btcd.io/#/TX?loading=true&TX=[[txHash]]',
-    fixRateEnabled: false
+    fixRateEnabled: true
   },
   BCHABC: {
     symbol: 'BCHABC',
@@ -50,13 +42,6 @@ export default {
     explorer: 'https://www.blockchain.com/btc/tx/[[txHash]]',
     fixRateEnabled: true
   },
-  BTCP: {
-    symbol: 'BTCP',
-    name: 'Bitcoin Private',
-    addressLookup: 'https://explorer.btcprivate.org/address/[[address]]',
-    explorer: 'https://explorer.btcprivate.org/tx/[[txHash]]',
-    fixRateEnabled: false
-  },
   BTG: {
     symbol: 'BTG',
     name: 'Bitcoin Gold',
@@ -70,13 +55,14 @@ export default {
     name: 'BitTorrent',
     addressLookup: 'https://tronscan.org/#/address/[[address]]/token-balances',
     explorer: 'https://tronscan.org/#/transaction/[[txHash]]',
-    fixRateEnabled: false
+    fixRateEnabled: true
   },
   DASH: {
     symbol: 'DASH',
     name: 'Dash',
-    addressLookup: 'https://insight.dash.org/insight/address/[[address]]',
-    explorer: 'https://insight.dash.org/insight/tx/[[txHash]]',
+    addressLookup:
+      'https://chainz.cryptoid.info/dash/address.dws?[[address]].htm.htm',
+    explorer: 'https://chainz.cryptoid.info/dash/tx.dws?[[txHash]].htm',
     fixRateEnabled: true
   },
   DCR: {
@@ -89,8 +75,9 @@ export default {
   DGB: {
     symbol: 'DGB',
     name: 'DigiByte',
-    addressLookup: 'https://digiexplorer.info/address/[[address]]',
-    explorer: 'https://digiexplorer.info/tx/[[txHash]]',
+    addressLookup:
+      'https://chainz.cryptoid.info/dgb/address.dws?[[address]].htm',
+    explorer: 'https://chainz.cryptoid.info/dgb/tx.dws?[[txHash]].htm',
     fixRateEnabled: true
   },
   DOGE: {
@@ -107,11 +94,19 @@ export default {
     explorer: 'http://gastracker.io/tx/[[txHash]]',
     fixRateEnabled: true
   },
-  EXP: {
-    symbol: 'EXP',
-    name: 'Expanse',
-    addressLookup: 'https://gander.tech/address/[[address]]',
-    explorer: 'https://gander.tech/tx/[[txHash]]',
+  ETH: {
+    symbol: 'ETH',
+    name: 'Ethereum',
+    addressLookup:
+      'https://changelly.enjinx.io/eth/address/[[address]]/transactions',
+    explorer: 'https://changelly.enjinx.io/eth/transaction/[[txHash]]',
+    fixRateEnabled: true
+  },
+  GAS: {
+    symbol: 'GAS',
+    name: 'Gas',
+    addressLookup: 'https://neotracker.io/address/[[address]]',
+    explorer: 'https://neotracker.io/tx/[[txHash]]',
     fixRateEnabled: false
   },
   GRS: {
@@ -119,20 +114,13 @@ export default {
     name: 'Groestlcoin',
     addressLookup: 'http://groestlsight.groestlcoin.org/address/[[address]]',
     explorer: 'http://groestlsight.groestlcoin.org/tx/[[txHash]]',
-    fixRateEnabled: false
+    fixRateEnabled: true
   },
   KMD: {
     symbol: 'KMD',
     name: 'Komodo',
     addressLookup: 'https://kmdexplorer.io/address/[[address]]',
     explorer: 'https://kmdexplorer.io/tx/[[txHash]]',
-    fixRateEnabled: false
-  },
-  LBC: {
-    symbol: 'LBC',
-    name: 'LBRY Credits',
-    addressLookup: 'https://explorer.lbry.io/#!/address?id=[[address]]',
-    explorer: 'https://explorer.lbry.io/#!/transaction?id=[[txHash]]',
     fixRateEnabled: false
   },
   LSK: {
@@ -155,14 +143,14 @@ export default {
     addressLookup:
       'https://omniexplorer.info/lookupadd.aspx?address=[[address]]',
     explorer: 'https://omniexplorer.info/lookuptx.aspx?txid=[[txHash]]',
-    fixRateEnabled: false
+    fixRateEnabled: true
   },
   NAV: {
     symbol: 'NAV',
     name: 'NAV Coin',
     addressLookup: 'https://chainz.cryptoid.info/nav/address.dws?[[address]]',
     explorer: 'https://chainz.cryptoid.info/nav/tx.dws?[[txHash]]',
-    fixRateEnabled: false
+    fixRateEnabled: true
   },
   NEO: {
     symbol: 'NEO',
@@ -178,46 +166,18 @@ export default {
     explorer: 'https://nimiq.watch/#[[txHash]]',
     fixRateEnabled: false
   },
-  NLG: {
-    symbol: 'NLG',
-    name: 'Gulden',
-    addressLookup: 'https://blockchain.gulden.com/address/[[address]]',
-    explorer: 'https://blockchain.gulden.com/tx/[[txHash]]',
-    fixRateEnabled: false
-  },
   ONT: {
     symbol: 'ONT',
     name: 'Ontology',
     addressLookup: 'https://explorer.ont.io/address/[[address]]/10/1',
     explorer: 'https://explorer.ont.io/transaction/[[txHash]]',
-    fixRateEnabled: false
-  },
-  PART: {
-    symbol: 'PART',
-    name: 'Particl',
-    addressLookup: 'https://chainz.cryptoid.info/part/address.dws?[[address]]',
-    explorer: 'https://chainz.cryptoid.info/part/tx.dws?[[txHash]]',
-    fixRateEnabled: false
-  },
-  POT: {
-    symbol: 'POT',
-    name: 'PotCoin',
-    addressLookup: 'https://chainz.cryptoid.info/pot/address.dws?[[address]]',
-    explorer: 'https://chainz.cryptoid.info/pot/tx.dws?[[txHash]]',
-    fixRateEnabled: false
-  },
-  PROC: {
-    symbol: 'PROC',
-    name: 'ProCurrency',
-    addressLookup: 'https://procsight.com/address/[[address]]',
-    explorer: 'https://procsight.com/tx/[[txHash]]',
-    fixRateEnabled: false
+    fixRateEnabled: true
   },
   QTUM: {
     symbol: 'QTUM',
     name: 'Qtum Ignition',
-    addressLookup: 'https://qtumexplorer.io/address/[[address]]',
-    explorer: 'https://qtumexplorer.io/tx/[[txHash]]',
+    addressLookup: 'https://explorer.qtum.org/address/[[address]]',
+    explorer: 'https://explorer.qtum.org/tx/[[txHash]]',
     fixRateEnabled: true
   },
   SMART: {
@@ -232,14 +192,7 @@ export default {
     name: 'Stratis',
     addressLookup: 'https://chainz.cryptoid.info/strat/address.dws?[[address]]',
     explorer: 'https://chainz.cryptoid.info/strat/tx.dws?[[txHash]]',
-    fixRateEnabled: false
-  },
-  SYS: {
-    symbol: 'SYS',
-    name: 'Syscoin',
-    addressLookup: 'https://chainz.cryptoid.info/sys/address.dws?[[address]]',
-    explorer: 'https://chainz.cryptoid.info/sys/tx.dws?[[txHash]]',
-    fixRateEnabled: false
+    fixRateEnabled: true
   },
   TRX: {
     symbol: 'TRX',
@@ -254,14 +207,7 @@ export default {
     addressLookup:
       'https://omniexplorer.info/lookupadd.aspx?address=[[address]]',
     explorer: 'https://omniexplorer.info/lookuptx.aspx?txid=[[txHash]]',
-    fixRateEnabled: false
-  },
-  USNBT: {
-    symbol: 'USNBT',
-    name: 'NuBits',
-    addressLookup: 'https://nuexplorer.ddns.net/address/[[address]]/1/newest',
-    explorer: 'https://nuexplorer.ddns.net/transactions/[[txHash]]',
-    fixRateEnabled: false
+    fixRateEnabled: true
   },
   WAVES: {
     symbol: 'WAVES',
@@ -275,28 +221,21 @@ export default {
     name: 'Tezos',
     addressLookup: 'https://tzscan.io/[[address]]',
     explorer: 'https://tzscan.io/[[txHash]]',
-    fixRateEnabled: false
+    fixRateEnabled: true
   },
   XVG: {
     symbol: 'XVG',
     name: 'Verge',
     addressLookup: 'https://verge-blockchain.info/address/[[address]]',
     explorer: 'https://verge-blockchain.info/tx/[[txHash]]',
-    fixRateEnabled: false
+    fixRateEnabled: true
   },
   XZC: {
     symbol: 'XZC',
     name: 'ZCoin',
     addressLookup: 'https://explorer.zcoin.io/address/[[address]]',
     explorer: 'https://explorer.zcoin.io/tx/[[txHash]]',
-    fixRateEnabled: false
-  },
-  ZCL: {
-    symbol: 'ZCL',
-    name: 'Zclassic',
-    addressLookup: 'http://explorer.zclmine.pro/address/[[address]]',
-    explorer: 'http://explorer.zclmine.pro/tx/[[txHash]]',
-    fixRateEnabled: false
+    fixRateEnabled: true
   },
   ZEC: {
     symbol: 'ZEC',
@@ -310,6 +249,6 @@ export default {
     name: 'Horizen',
     addressLookup: 'https://explorer.zensystem.io/address/[[address]]',
     explorer: 'https://explorer.zensystem.io/tx/[[txHash]]',
-    fixRateEnabled: false
+    fixRateEnabled: true
   }
 };
