@@ -68,7 +68,7 @@ const permanentRegistrar = {
 };
 
 const REGISTRAR_TYPES = {
-  AUCTION: 'acution',
+  AUCTION: 'auction',
   FIFS: 'fifs',
   PERMANENT: 'permanent'
 };
@@ -383,7 +383,8 @@ export default {
                 .call();
               if (!isAvailable) this.getMoreInfo();
               else {
-                //create commitment const commitment =  await this.registrarControllerContract.methods.makeCommitment('myetherwallet.eth',this.account.address, 'random secret')
+                //create commitment const commitment =  await this.registrarControllerContract.methods.makeCommitment('myetherwallet.eth',this.account.address, 'random secret').call()
+                //mincommitment age =  await this.registrarControllerContract.method.minCommitmentAge().call()
                 //submit commitment this.registrarControllerContract.methods.commit(commitment)
                 //wait minCommitmentAge
                 //this.registrarControllerContract.methods.register('myetherwallet.eth', account.address, duration in seconds, 'random secret')
