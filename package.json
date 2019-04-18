@@ -106,7 +106,7 @@
     "store": "2.0.12",
     "string-replace-loader": "2.1.1",
     "stylelint": "9.10.1",
-    "stylelint-config-prettier": "5.0.0",
+    "stylelint-config-prettier": "5.1.0",
     "stylelint-config-standard": "18.2.0",
     "trezor-connect": "7.0.2",
     "u2f-api": "1.0.10",
