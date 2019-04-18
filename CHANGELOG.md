@@ -2,6 +2,7 @@
 
 ### Bug
 
+- Better Ledger app support flow [#910](https://github.com/MyEtherWallet/MyEtherWallet/pull/910)
 - Fixes send offline token value and deploy contract errors [#920](https://github.com/MyEtherWallet/MyEtherWallet/pull/920)
 - Update TOMO explorrer links [#918](https://github.com/MyEtherWallet/MyEtherWallet/pull/918)
 
