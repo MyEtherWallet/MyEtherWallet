@@ -1,9 +1,14 @@
 <template>
   <div class="add-wallet-container">
-    <h3> Add My Wallet </h3>
-    <p> How would you like to add your wallet? </p>
+    <h3>Add My Wallet</h3>
+    <p>How would you like to add your wallet?</p>
     <div class="add-wallet-options">
-      <router-link class="wallet-option" v-for="option in options" :to="option.link">
+      <router-link
+        v-for="(option, idx) in options"
+        :to="option.link"
+        :key="option.text + idx"
+        class="wallet-option"
+      >
         <img :src="option.icon" />
         <p>{{ option.text }}</p>
         <p>{{ option.warning }}</p>
@@ -42,7 +47,7 @@ export default {
           warning: 'Not Recommended'
         }
       ]
-    }
+    };
   }
 };
 </script>
