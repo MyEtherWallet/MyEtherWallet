@@ -41,7 +41,8 @@
               <p class="to-swap-text">
                 {{ notice.body.toValue }} {{ notice.body.toCurrency }}
               </p>
-              <p class="address">{{ notice.body.from | concatAddress }}</p>
+              <p class="address">{{ notice.body.to | concatAddress }}</p>
+
             </li>
           </ul>
         </li>
