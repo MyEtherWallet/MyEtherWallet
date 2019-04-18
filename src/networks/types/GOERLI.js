@@ -1,6 +1,7 @@
 import tokens from '@/tokens/tokens-goerli.json';
 import contracts from '@/contracts/contract-abi-goerli.json';
 import { GOERLI } from '../tlds';
+import goerli from '@/assets/images/icons/network.svg';
 
 export default {
   name: 'GöETH',
@@ -17,5 +18,6 @@ export default {
     registrarType: 'fifs',
     supportedTld: GOERLI
   },
+  icon: goerli,
   currencyName: 'GöETH'
 };

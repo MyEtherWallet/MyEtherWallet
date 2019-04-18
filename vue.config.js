@@ -16,7 +16,7 @@ const webpackConfig = {
     host: 'localhost',
     hotOnly: true,
     port: 8080,
-    writeToDisk: true,
+    writeToDisk: JSON.parse(env_vars.BUILD_TYPE) === 'mewcx',
     headers: {
       'Strict-Transport-Security':
         'max-age=63072000; includeSubdomains; preload',
@@ -84,7 +84,6 @@ if (process.env.NODE_ENV === 'production') {
       globOptions: {
         ignore: [
           // Are we using these
-          'src/components/DropDownAddressSelector/#####DropDownAddressSelector.vue',
           'src/components/DropDownAddressSelector/DropDownAddressSelector.scss',
           'src/components/DropDownAddressSelector/index.js',
           // Unknown
@@ -141,6 +140,8 @@ if (process.env.NODE_ENV === 'production') {
           'src/assets/images/networks/etsc.svg',
           'src/assets/images/networks/exp.svg',
           'src/assets/images/icons/up.svg',
+          'src/assets/images/icons/button-json.svg',
+          'src/assets/images/icons/button-mnemonic.svg',
           // Chrome Extension
           'src/builds/mewcx/app.vue',
           'src/builds/mewcx/public/img/icons/icon128.png',
