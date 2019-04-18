@@ -1,5 +1,6 @@
 <template>
   <div class="container-maker">
+    <dai-confirmation-modal ref="daiconfirmation" />
     <div class="manage-container">
       <p class="top-title">
         {{ $t('dapps.maker_title') }}
@@ -33,7 +34,7 @@
           <div class="interface__block-title">{{ $t('dapps.generate') }}</div>
           <div class="dropdown-text-container dropdown-container">
             <p>
-              <span class="cc DAI cc-icon currency-symbol" />
+              <span class="cc DAI cc-icon cc-icon-dai currency-symbol" />
               DAI
               <span class="subname">- Maker DAI </span>
             </p>
@@ -107,7 +108,7 @@
             validInputs ? '' : 'disabled',
             'submit-button large-round-button-green-filled'
           ]"
-          @click="openCdp"
+          @click="openDaiConfirmation"
         >
           Collateralize & Generate
         </div>
@@ -123,6 +124,7 @@ import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/Interf
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
 import MakerCDP from '../../MakerCDP';
+import DaiConfirmationModal from '../../components/DaiConfirmationModal';
 import { displayFixedValue, displayPercentValue } from '../../helpers';
 
 import BigNumber from 'bignumber.js';
@@ -136,7 +138,8 @@ export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
     'interface-bottom-text': InterfaceBottomText,
-    blockie: Blockie
+    blockie: Blockie,
+    'dai-confirmation-modal': DaiConfirmationModal
   },
   props: {
     tokensWithBalance: {
@@ -295,6 +298,9 @@ export default {
       if (this.ethQty <= 0) return 0;
       this.$emit('cdpOpened');
       await this.makerCDP.openCdp(this.ethQty, this.daiQty);
+    },
+    openDaiConfirmation() {
+      this.$refs.daiconfirmation.$refs.modal.show();
     }
   }
 };

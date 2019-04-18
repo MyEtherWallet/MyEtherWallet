@@ -36,6 +36,11 @@ $this-page-mobile-width: 700px;
   .currency-symbol {
     width: 40px;
     margin-right: 0;
+
+    &.cc-icon-dai::before {
+      background-color: $white;
+      border-radius: 100%;
+    }
   }
 
   p {
@@ -213,6 +218,9 @@ $this-page-mobile-width: 700px;
   display: flex;
   align-items: center;
   justify-content: center;
+  @media all and (max-width: $this-page-mobile-width) {
+    margin: 30px 0;
+  }
   img {
     height: 20px;
     margin-top: -10px;
