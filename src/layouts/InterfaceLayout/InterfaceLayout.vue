@@ -5,6 +5,11 @@
     <!-- Modals ******************************************************** -->
     <wallet-password-modal />
     <enter-pin-number-modal />
+    <ledger-app-modal
+      ref="ledgerAppModal"
+      :networks="Networks"
+      @hardwareWalletOpen="toggleNetworkAddrModal"
+    />
     <mnemonic-modal
       ref="mnemonicPhraseModal"
       :mnemonic-phrase-password-modal-open="mnemonicphrasePasswordModalOpen"
@@ -100,6 +105,7 @@ import NetworkAndAddressModal from '@/layouts/AccessWalletLayout/components/Netw
 import HardwarePasswordModal from '@/layouts/AccessWalletLayout/components/HardwarePasswordModal';
 import MnemonicPasswordModal from '@/layouts/AccessWalletLayout/components/MnemonicPasswordModal';
 import MnemonicModal from '@/layouts/AccessWalletLayout/components/MnemonicModal';
+import LedgerAppModal from '@/layouts/AccessWalletLayout/components/LedgerAppModal';
 import InterfaceAddress from './components/InterfaceAddress';
 import InterfaceBalance from './components/InterfaceBalance';
 import InterfaceNetwork from './components/InterfaceNetwork';
@@ -149,7 +155,8 @@ export default {
     'mnemonic-password-modal': MnemonicPasswordModal,
     'enter-pin-number-modal': EnterPinNumberModal,
     'mobile-interface-address': MobileInterfaceAddress,
-    'address-qrcode-modal': AddressQrcodeModal
+    'address-qrcode-modal': AddressQrcodeModal,
+    'ledger-app-modal': LedgerAppModal
   },
   data() {
     return {
@@ -227,15 +234,13 @@ export default {
       this.hardwareBrand = brand;
       this.$refs.hardwareModal.$refs.password.show();
     },
-
+    ledgerAppModalOpen() {
+      this.$refs.ledgerAppModal.$refs.ledgerApp.show();
+    },
     switchAddress() {
       switch (this.account.identifier) {
         case LEDGER_TYPE:
-          LedgerWallet()
-            .then(_newWallet => {
-              this.toggleNetworkAddrModal(_newWallet);
-            })
-            .catch(LedgerWallet.errorHandler);
+          this.ledgerAppModalOpen();
           break;
         case TREZOR_TYPE:
           TrezorWallet()

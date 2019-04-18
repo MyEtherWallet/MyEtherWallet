@@ -24,6 +24,11 @@ function comparator(arrayForSort) {
 
 export default class SwapProviders {
   constructor(providers, environmentSupplied, misc = {}) {
+    this.providerConstructors = providers;
+    this.setup(providers, environmentSupplied, misc);
+  }
+
+  setup(providers, environmentSupplied, misc) {
     this.updateProviderRates = 0;
     this.providers = new Map();
     this.providerRateUpdates = {};
