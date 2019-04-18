@@ -546,9 +546,7 @@ export default class Kyber {
       if (utils.stringEqual(networkSymbols.ETH, token)) {
         return this.currencies[token].address;
       }
-      return this.web3.utils.toChecksumAddress(
-        this.currencies[token].address
-      );
+      return this.web3.utils.toChecksumAddress(this.currencies[token].address);
     } catch (e) {
       errorLogger(e);
       throw Error(
