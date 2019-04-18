@@ -1,5 +1,7 @@
 @import '~@/scss/GlobalVariables';
 
+$this-page-mobile-width: 700px;
+
 .modal-content-container {
   //Empty
 }
@@ -7,6 +9,9 @@
 .tx-amount {
   display: grid;
   grid-template-columns: 1fr 100px 1fr;
+  @media all and (max-width: $this-page-mobile-width) {
+    display: block;
+  }
 }
 
 .arrow {
@@ -14,9 +19,15 @@
   align-items: center;
   justify-content: center;
   img {
-    margin-top: 20px;
-    height: 22px;
+    margin-top: 30px;
+    height: 20px;
   }
+  @media all and (max-width: $this-page-mobile-width) {
+    padding: 10px 0;
+    img {
+      transform: rotate(90deg);
+    }
+  }  
 }
 
 .amount-block {
@@ -46,12 +57,14 @@
   ul {
     padding: 0 10px;
     li {
-      padding: 5px 0;
+      padding: 10px 0;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
 
-      p:nth-child(2){
+      p:nth-child(2) {
         margin-left: auto;
+        text-align: right;
+        min-width: 120px;
       }
       .bold {
         font-weight: 600;
@@ -59,3 +72,14 @@
     }
   }
 }
+
+.button-container {
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
+
+
+
+
