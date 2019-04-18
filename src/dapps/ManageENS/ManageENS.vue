@@ -157,27 +157,6 @@ export default {
     this.test();
   },
   methods: {
-    async test() {
-      const registrarAddress = await this.getRegistrarAddress(TEMP_TLD);
-      console.log(registrarAddress);
-      const resolver = await this.ens.resolver(TEMP_TLD, ResolverAbi);
-      const controller = await resolver.interfaceImplementer('0x7ba18ba1');
-      // const publicResolverContract = new this.web3.eth.Contract(
-      //   ResolverAbi,
-      //   registrarAddress
-      // );
-      console.log(controller);
-
-      // const resolverAddress = await this.ens.resolver(TEMP_TLD);
-      // console.log(resolverAddress);
-      // const ensRegistryContract = new this.web3.eth.Contract(
-      //   RegistryAbi,
-      //   this.network.type.ens.registry
-      // );
-      // const resolver = await this.ens.resolver(TEMP_TLD);
-      // const publicResolverAddress = await resolver.addr();
-      // console.log(resolver);
-    },
     async setup() {
       this.domainName = '';
       this.loading = false;
