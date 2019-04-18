@@ -138,14 +138,15 @@ export default class Kyber {
 
   async retrieveSupportedTokenList(network) {
     try {
-      const tokenList = await kyberCalls.getTokenList(network);
+      const rawTokenList = await kyberCalls.getTokenList(network);
+      const tokenList = rawTokenList.data;
       const tokenDetails = {};
       for (let i = 0; i < tokenList.length; i++) {
         if (
           tokenList[i].symbol &&
           tokenList[i].name &&
           tokenList[i].decimals &&
-          tokenList[i].contractAddress
+          tokenList[i].address
         ) {
           // otherwise the entry is invalid
           const symbol = tokenList[i].symbol.toUpperCase();
@@ -159,14 +160,14 @@ export default class Kyber {
     }
   }
 
-  async retrieveGasLimits(network) {
+  async retrieveGasLimits(network = this.network) {
     try {
-      const tokenList = await kyberCalls.getGasLimits(network);
-      console.log(tokenList); // todo remove dev item
-      // return tokenDetails;
+      const gasLimitList = await kyberCalls.getGasLimits(network);
+      this.GAS_LIMITS = gasLimitList;
+      console.log('retrieveGasLimits', gasLimitList); // todo remove dev item
     } catch (e) {
-      // utils.handleOrThrow(e);
-      // errorLogger(e);
+      utils.handleOrThrow(e);
+      errorLogger(e);
     }
   }
 
@@ -543,10 +544,10 @@ export default class Kyber {
   getTokenAddress(token) {
     try {
       if (utils.stringEqual(networkSymbols.ETH, token)) {
-        return this.currencies[token].contractAddress;
+        return this.currencies[token].address;
       }
       return this.web3.utils.toChecksumAddress(
-        this.currencies[token].contractAddress
+        this.currencies[token].address
       );
     } catch (e) {
       errorLogger(e);

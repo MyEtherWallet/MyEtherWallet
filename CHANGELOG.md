@@ -9,6 +9,7 @@
 - MEWCX build fix [#935](https://github.com/MyEtherWallet/MyEtherWallet/pull/935)
 - Sentry migration [#922](https://github.com/MyEtherWallet/MyEtherWallet/pull/922)
 - remove utf8 convertion for hex strings [#941](https://github.com/MyEtherWallet/MyEtherWallet/pull/941)
+- Update usage of Kyber supplied gas limits []()
 
 ### Feature
 
