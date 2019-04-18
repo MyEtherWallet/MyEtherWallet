@@ -7,20 +7,56 @@
       class="bootstrap-modal bootstrap-modal-wide padding-40-20"
       hide-footer
     >
-      <div class="inputs-container"></div>
+      <div class="modal-content-container">
+        <div class="tx-amount">
+          <div>
+            <div class="interface__block-title">Collateral</div>
+            <div class="amount-block">
+              <div class="icon">
+                <img src="~@/assets/images/icons/btc.png" />
+              </div>
+              <div class="amount">0.005<span>ETH</span></div>
+            </div>
+          </div>
+          <div class="arrow">
+            <img src="~@/assets/images/icons/right-arrow.svg" />
+          </div>
+          <div>
+            <div class="interface__block-title">Generate</div>
+            <div class="amount-block">
+              <div class="icon">
+                <img src="~@/assets/images/icons/btc.png" />
+              </div>
+              <div class="amount">0.005<span>ETH</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="detail-info">
+          <expending-option title="Details">
+            aaaaaaaa
+          </expending-option>
+        </div>
+        <div>
+          <standard-button @click="opencdp" />
+        </div>
+      </div>
     </b-modal>
   </div>
 </template>
 
 <script>
+import ExpendingOption from '@/components/ExpendingOption';
+import StandardButton from '@/components/Buttons/StandardButton';
+
 export default {
-  components: {},
+  components: {
+    'expending-option': ExpendingOption,
+    'standard-button': StandardButton
+  },
   props: {
-    activeCdp: {
-      type: Object,
-      default: function() {
-        return {};
-      }
+    opencdp: {
+      type: Function,
+      default: function() {}
     }
   },
   data() {

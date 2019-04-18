@@ -9,8 +9,8 @@ $this-page-mobile-width: 700px;
 }
 
 .top-title {
-  padding-left: 0px;
-  padding-bottom: 0px;
+  padding-left: 0;
+  padding-bottom: 0;
   font-size: 20px;
   line-height: 30px;
 }
@@ -204,7 +204,6 @@ $this-page-mobile-width: 700px;
   }
 }
 
-
 .currency-ops-new {
   display: grid;
   grid-template-columns: 1fr 100px 1fr;
@@ -229,4 +228,3 @@ $this-page-mobile-width: 700px;
     }
   }
 }
-
