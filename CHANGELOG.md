@@ -14,7 +14,7 @@
 - Update Metamask Integration with listeners [#938](https://github.com/MyEtherWallet/MyEtherWallet/pull/938)
 - Sentry migration [#922](https://github.com/MyEtherWallet/MyEtherWallet/pull/922)
 - remove utf8 convertion for hex strings [#941](https://github.com/MyEtherWallet/MyEtherWallet/pull/941)
-- Update usage of Kyber supplied gas limits [](<>)
+- Update usage of Kyber supplied gas limits and serverless provider  [#969](https://github.com/MyEtherWallet/MyEtherWallet/pull/969)
 
 ### Feature
 

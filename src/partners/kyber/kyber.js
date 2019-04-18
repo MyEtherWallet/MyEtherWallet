@@ -164,7 +164,6 @@ export default class Kyber {
     try {
       const gasLimitList = await kyberCalls.getGasLimits(network);
       this.GAS_LIMITS = gasLimitList;
-      console.log('retrieveGasLimits', gasLimitList); // todo remove dev item
     } catch (e) {
       utils.handleOrThrow(e);
       errorLogger(e);
