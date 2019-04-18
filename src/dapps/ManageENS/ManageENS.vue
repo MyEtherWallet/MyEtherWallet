@@ -383,6 +383,7 @@ export default {
               if (!isAvailable) this.getMoreInfo();
               else {
                 console.log('REEEEEEEEEEEEEE');
+                const
                 //create commitment const commitment =  await this.registrarControllerContract.methods.makeCommitment('myetherwallet.eth',this.account.address, 'random secret').call()
                 //mincommitment age =  await this.registrarControllerContract.method.minCommitmentAge().call()
                 //submit commitment this.registrarControllerContract.methods.commit(commitment)
@@ -427,6 +428,9 @@ export default {
           );
         }
       }
+    },
+    async createCommitment() {
+
     },
     transferFunc() {
       this.loading = true;
