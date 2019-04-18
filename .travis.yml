@@ -3,7 +3,9 @@ sudo: required
 dist: xenial
 cache:
   directories:
-  - node_modules
+    - node_modules
+git:
+  depth: 1
 before_cache:
 - sudo rm -rf node_modules/.cache
 install: docker build -t mew-build-container .

@@ -5,6 +5,11 @@
     <!-- Modals ******************************************************** -->
     <wallet-password-modal />
     <enter-pin-number-modal />
+    <ledger-app-modal
+      ref="ledgerAppModal"
+      :networks="Networks"
+      @hardwareWalletOpen="toggleNetworkAddrModal"
+    />
     <mnemonic-modal
       ref="mnemonicPhraseModal"
       :mnemonic-phrase-password-modal-open="mnemonicphrasePasswordModalOpen"
@@ -100,6 +105,7 @@ import NetworkAndAddressModal from '@/layouts/AccessWalletLayout/components/Netw
 import HardwarePasswordModal from '@/layouts/AccessWalletLayout/components/HardwarePasswordModal';
 import MnemonicPasswordModal from '@/layouts/AccessWalletLayout/components/MnemonicPasswordModal';
 import MnemonicModal from '@/layouts/AccessWalletLayout/components/MnemonicModal';
+import LedgerAppModal from '@/layouts/AccessWalletLayout/components/LedgerAppModal';
 import InterfaceAddress from './components/InterfaceAddress';
 import InterfaceBalance from './components/InterfaceBalance';
 import InterfaceNetwork from './components/InterfaceNetwork';
@@ -149,7 +155,8 @@ export default {
     'mnemonic-password-modal': MnemonicPasswordModal,
     'enter-pin-number-modal': EnterPinNumberModal,
     'mobile-interface-address': MobileInterfaceAddress,
-    'address-qrcode-modal': AddressQrcodeModal
+    'address-qrcode-modal': AddressQrcodeModal,
+    'ledger-app-modal': LedgerAppModal
   },
   data() {
     return {
@@ -158,9 +165,7 @@ export default {
       tokens: [],
       receivedTokens: false,
       tokensWithBalance: [],
-      pollNetwork: () => {},
       pollBlock: () => {},
-      pollAddress: () => {},
       highestGas: '0',
       alert: {
         show: false,
@@ -209,9 +214,6 @@ export default {
   mounted() {
     this.setupOnlineEnvironment();
   },
-  destroyed() {
-    this.clearIntervals();
-  },
   methods: {
     openAddressQrcode() {
       this.$refs.addressQrcodeModal.$refs.addressQrcode.show();
@@ -232,15 +234,13 @@ export default {
       this.hardwareBrand = brand;
       this.$refs.hardwareModal.$refs.password.show();
     },
-
+    ledgerAppModalOpen() {
+      this.$refs.ledgerAppModal.$refs.ledgerApp.show();
+    },
     switchAddress() {
       switch (this.account.identifier) {
         case LEDGER_TYPE:
-          LedgerWallet()
-            .then(_newWallet => {
-              this.toggleNetworkAddrModal(_newWallet);
-            })
-            .catch(LedgerWallet.errorHandler);
+          this.ledgerAppModalOpen();
           break;
         case TREZOR_TYPE:
           TrezorWallet()
@@ -458,65 +458,28 @@ export default {
         });
     },
     checkWeb3WalletAddrChange() {
-      this.pollAddress = setInterval(() => {
-        window.web3.eth.getAccounts((err, accounts) => {
-          if (err) {
-            return Toast.responseHandler(err, false);
-          }
-          if (!accounts.length) {
-            return Toast.responseHandler(
-              new Error('Please unlock metamask'),
-              Toast.ERROR
-            );
-          }
-          const address = accounts[0];
-          if (
-            this.account.address !== null &&
-            address.toLowerCase() !== this.account.address.toLowerCase()
-          ) {
-            const wallet = new Web3Wallet(address);
-            this.$store.dispatch('decryptWallet', [
-              wallet,
-              window.web3.currentProvider
-            ]);
-            clearInterval(this.pollAddress);
-          }
-        });
-      }, 500);
+      const web3 = this.web3;
+      window.ethereum.on('accountsChanged', account => {
+        const wallet = new Web3Wallet(account[0]);
+        this.$store.dispatch('decryptWallet', [wallet, web3]);
+      });
     },
     matchWeb3WalletNetwork() {
-      if (
-        !window.web3.eth.net ||
-        typeof window.web3.eth.net.getId !== 'function'
-      )
-        return;
-      this.pollNetwork = setInterval(() => {
-        window.web3.eth.net
-          .getId()
-          .then(netId => {
-            if (this.network.type.chainID.toString() !== netId) {
-              Object.keys(networkTypes).some(net => {
-                if (networkTypes[net].chainID === netId && this.Networks[net]) {
-                  this.$store.dispatch('switchNetwork', this.Networks[net][0]);
-                  clearInterval(this.pollNetwork);
-                  return true;
-                }
-              });
+      window.ethereum.on('networkChanged', netId => {
+        if (this.network.type.chainID.toString() !== netId) {
+          Object.keys(networkTypes).some(net => {
+            if (
+              networkTypes[net].chainID.toString() === netId &&
+              this.Networks[net]
+            ) {
+              this.$store.dispatch('switchNetwork', this.Networks[net][0]);
+              return true;
             }
-          })
-          .catch(e => {
-            Toast.responseHandler(e, false);
           });
-      }, 500);
-    },
-    clearIntervals() {
-      if (this.pollBlock.unsubscribe) this.pollBlock.unsubscribe();
-      else clearInterval(this.pollBlock);
-      clearInterval(this.pollNetwork);
-      clearInterval(this.pollAddress);
+        }
+      });
     },
     setupOnlineEnvironment: web3Utils._.debounce(function() {
-      this.clearIntervals();
       if (store.get('customTokens') === undefined) {
         store.set('customTokens', {});
         this.setCustomTokenStore();
