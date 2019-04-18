@@ -33,7 +33,32 @@
         </div>
         <div class="detail-info">
           <expending-option title="Details">
-            aaaaaaaa
+            <ul>
+              <li>
+                <p>Min ETH required</p>
+                <p>0.029 ETH</p>
+              </li>
+              <li>
+                <p>Liquidation price (ETH/USD)</p>
+                <p class="bold">60.000 USB</p>
+              </li>
+              <li>
+                <p>Current price information (ETH/USD)</p>
+                <p>100.82 USD</p>
+              </li>
+              <li>
+                <p>Liquidation penalty</p>
+                <p>13.000%</p>
+              </li>
+              <li>
+                <p>Collateralization ratio</p>
+                <p class="bold">252.062$</p>
+              </li>
+              <li>
+                <p>Minimum ratio</p>
+                <p>150.000%</p>
+              </li>
+            </ul>
           </expending-option>
         </div>
         <div>
