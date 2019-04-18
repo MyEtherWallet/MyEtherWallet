@@ -69,5 +69,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'TransferRegistrars.scss';
+@import 'TransferRegistrarsContainer.scss';
 </style>
