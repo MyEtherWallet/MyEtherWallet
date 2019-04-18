@@ -1,13 +1,26 @@
-import { get } from '@/helpers/httpRequests';
-import { kyberTokenList, kyberTokenInfoList, kyberGasLimitList } from './config';
+import { post } from '@/helpers/httpRequests';
+import { kyberMethods } from './config';
+import { swapApiEndpoints } from '../partnersConfig';
 import { utils } from '../helpers';
+
+function buildPath() {
+  return swapApiEndpoints.base + swapApiEndpoints.kyber;
+}
 
 const getTokenList = async network => {
   try {
-    if (kyberTokenList[network]) {
-      return get(kyberTokenList[network]);
+    if (kyberMethods[network]) {
+      const results = await post(
+        buildPath(),
+        utils.buildPayload(kyberMethods[network].currencies, [network])
+      );
+
+      if (results.error) {
+        throw Error(results.error.message);
+      }
+
+      return results;
     }
-    return Promise.resolve({});
   } catch (e) {
     utils.handleOrThrow(e);
   }
@@ -15,8 +28,17 @@ const getTokenList = async network => {
 
 const getRates = async network => {
   try {
-    if (kyberTokenInfoList[network]) {
-      return get(kyberTokenInfoList[network]);
+    if (kyberMethods[network]) {
+      const results = await post(
+        buildPath(),
+        utils.buildPayload(kyberMethods[network].rate, [network])
+      );
+
+      if (results.error) {
+        throw Error(results.error.message);
+      }
+
+      return results;
     }
     return Promise.resolve({});
   } catch (e) {
@@ -26,13 +48,62 @@ const getRates = async network => {
 
 const getGasLimits = async network => {
   try {
-    if (kyberGasLimitList[network]) {
-      return get(kyberGasLimitList[network]);
+    if (kyberMethods[network]) {
+      const results = await post(
+        buildPath(),
+        utils.buildPayload(kyberMethods[network].gasLimits, [network])
+      );
+
+      if (results.error) {
+        throw Error(results.error.message);
+      }
+
+      return results;
     }
-    return Promise.resolve({});
   } catch (e) {
     utils.handleOrThrow(e);
   }
 };
+
+// const getTokenList = async network => {
+//   try {
+//     if (kyberTokenList[network]) {
+//       return get(kyberTokenList[network]);
+//     }
+//     return Promise.resolve({});
+//   } catch (e) {
+//     utils.handleOrThrow(e);
+//   }
+// };
+//
+// const getRates = async network => {
+//   try {
+//     if (kyberTokenInfoList[network]) {
+//       const rawResult = await get(kyberTokenInfoList[network]);
+//       if (rawResult.error) {
+//         throw Error(rawResult);
+//       }
+//       return rawResult.data;
+//     }
+//     return Promise.resolve({});
+//   } catch (e) {
+//     utils.handleOrThrow(e);
+//   }
+// };
+//
+// const getGasLimits = async network => {
+//   try {
+//     if (kyberGasLimitList[network]) {
+//       const rawResult = await get(kyberGasLimitList[network]);
+//       if (rawResult.error) {
+//         throw Error(rawResult);
+//       }
+//       return rawResult.data;
+//     }
+//     return Promise.resolve({});
+//   } catch (e) {
+//     utils.handleOrThrow(e);
+//   }
+// };
 
 export default { getTokenList, getRates, getGasLimits };
