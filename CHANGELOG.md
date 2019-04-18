@@ -1,7 +1,32 @@
+### Release v5.0.10
+
+### Bug
+
+- Better Ledger app support flow [#910](https://github.com/MyEtherWallet/MyEtherWallet/pull/910)
+- Fixes send offline token value and deploy contract errors [#920](https://github.com/MyEtherWallet/MyEtherWallet/pull/920)
+- Update TOMO explorrer links [#918](https://github.com/MyEtherWallet/MyEtherWallet/pull/918)
+
+### Devop
+
+- only clone the most recent commit [#937](https://github.com/MyEtherWallet/MyEtherWallet/pull/937)
+- Fix send offline helper, update webchain [#932](https://github.com/MyEtherWallet/MyEtherWallet/pull/932)
+- MEWCX build fix [#935](https://github.com/MyEtherWallet/MyEtherWallet/pull/935)
+- Update Metamask Integration with listeners [#938](https://github.com/MyEtherWallet/MyEtherWallet/pull/938)
+- Sentry migration [#922](https://github.com/MyEtherWallet/MyEtherWallet/pull/922)
+- Remove utf8 convertion for hex strings [#941](https://github.com/MyEtherWallet/MyEtherWallet/pull/941)
+- Additional update of swap rates following user input [#905](https://github.com/MyEtherWallet/MyEtherWallet/pull/905)
+
+### Feature
+
+- Scan each mewbuild with virustotal [#934](https://github.com/MyEtherWallet/MyEtherWallet/pull/934)
+- Can debug via [VSCODE](https://github.com/Microsoft/vscode-recipes/tree/master/vuejs-cli) [#960](https://github.com/MyEtherWallet/MyEtherWallet/pull/960)
+- Update hardware modal options [#923](https://github.com/MyEtherWallet/MyEtherWallet/pull/923)
+
 ### Release v5.0.9
 
 ### Devop
 
+- Add gas amount to send tx page [#925](https://github.com/MyEtherWallet/MyEtherWallet/pull/925)
 - Better data catch for url params [#909](https://github.com/MyEtherWallet/MyEtherWallet/pull/909)
 - Update hardwares [#906](https://github.com/MyEtherWallet/MyEtherWallet/pull/906)
 - Add monospace font[#898](https://github.com/MyEtherWallet/MyEtherWallet/pull/898)
