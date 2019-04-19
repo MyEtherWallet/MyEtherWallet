@@ -4,9 +4,23 @@
       ref="modal"
       hide-footer
       centered
-      class="bootstrap-modal bootstrap-modal-wide padding-40-20"
+      class="bootstrap-modal nopadding"
       title="Move CDP"
     >
+      <div class="modal-content-container">
+        <p>
+          You may only move your CDP to an Ethereum address that you own. By
+          clicking the box below, you(“You”)affirmatively represent that you
+          alone own and control (i) the CDP that you will transfer, and (ii) the
+          public Ethereum address to which it will be transferred.
+        </p>
+        <div class="input-container">
+          <div class="interface__block-title">
+            Enter the address to send the cdp?
+          </div>
+        </div>
+      </div>
+
       <div class="inputs-container">
         <div class="input-container">
           <label>Enter the address to send the cdp?</label>
