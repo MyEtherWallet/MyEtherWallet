@@ -6,7 +6,6 @@
   display: block;
 }
 
-
 .question {
   height: 20px;
 }
@@ -23,7 +22,7 @@
   border-radius: 3px;
   max-width: 300px;
   display: block;
-  box-shadow: 0px 20px 50px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
   cursor: initial;
 
   &::after {
@@ -41,7 +40,7 @@
 
   p {
     font-size: 14px;
-    color: #222222;
+    color: #222;
     line-height: 20px;
     font-family: sans-serif;
   }

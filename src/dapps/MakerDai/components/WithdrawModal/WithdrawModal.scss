@@ -10,7 +10,6 @@ $confirmation-modal-mobile-width: 500px;
   font-size: 36px;
 }
 
-
 .modal-content-container {
   padding: 30px;
 }
@@ -79,7 +78,7 @@ $confirmation-modal-mobile-width: 500px;
     &::before {
       color: $grey-1;
       font-size: 26px;
-      content: "\2934";
+      content: '\2934';
       position: absolute;
       top: -12px;
       right: -26px;
@@ -302,6 +301,7 @@ $confirmation-modal-mobile-width: 500px;
 
 .check-box {
   position: relative;
+  padding-top: 20px;
 }
 
 /* Customize the label (the container) */

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="manage-cdp">
     <deposit-modal
       ref="deposit"
       :action="'deposit'"
@@ -38,145 +38,169 @@
     </move-cdp-modal>
 
     <div v-show="!finishMigration" class="manage-container">
-      <div class="content-container">
+      <!-- ==================================================== -->
+      <div class="title-content-container">
         <p class="cpd-title">{{ $t('dapps.cdpPortal') }}</p>
         <p class="cdp-id">
           {{ $t('dapps.positionLabel') }} #{{ activeCdp.cdpId }}
         </p>
       </div>
+      <!-- ==================================================== -->
 
-      <div class="manage-container-info-block">
-        <div class="info-label-one-left">
-          <p>{{ $t('dapps.liquidPrice') }} (ETH/USD)</p>
-          <p>
-            <span class="blue-bold">{{ liquidationPriceDisplay }}</span>
-            <span class="liq-usd"> USD</span>
-          </p>
-        </div>
-        <div class="info-content-one-left">
-          <div class="info-content-one-inner-top">
-            <p>{{ $t('dapps.currentPrice') }}(ETH/USD)</p>
-            <p>
-              <b>{{ activeCdp.ethPrice }}</b> USD
-            </p>
+      <!-- ==================================================== -->
+      <div class="information-blocks">
+        <div class="block-item">
+          <div class="block-title">
+            <p>{{ $t('dapps.liquidPrice') }} (ETH/USD)</p>
+            <div class="blue">
+              <span class="blue-bold">{{ liquidationPriceDisplay }}</span>
+              USD
+            </div>
           </div>
-          <div class="info-content-one-inner-bottom">
-            <p>{{ $t('dapps.liquidationPenalty') }}</p>
-            <p>
-              <b
-                >{{
+          <div class="block-content">
+            <div class="item">
+              <p>{{ $t('dapps.currentPrice') }}(ETH/USD)</p>
+              <div>{{ activeCdp.ethPrice }} <span>USD</span></div>
+            </div>
+            <div class="item">
+              <p>{{ $t('dapps.liquidationPenalty') }}</p>
+              <div>
+                {{
                   displayFixedValue(
                     displayPercentValue(activeCdp._liquidationPenalty)
                   )
-                }}%</b
-              >
-            </p>
+                }}%
+              </div>
+            </div>
           </div>
         </div>
-        <div class="info-label-one-right">
-          <p>{{ $t('dapps.collateralRatio') }}</p>
-          <p class="blue-bold">{{ collaterlizationRatioDisplay }}%</p>
-        </div>
-        <div class="info-content-one-right">
-          <div class="info-content-one-inner-top">
-            <p>{{ $t('dapps.minimumRatio') }}</p>
-            <p>
-              <b
-                >{{
+        <div class="block-item">
+          <div class="block-title">
+            <p>{{ $t('dapps.collateralRatio') }}</p>
+            <div class="orange">
+              <span>{{ collaterlizationRatioDisplay }}%</span>
+            </div>
+          </div>
+          <div class="block-content">
+            <div class="item">
+              <p>{{ $t('dapps.minimumRatio') }}</p>
+              <div>
+                {{
                   displayFixedValue(
                     displayPercentValue(activeCdp.liquidationRatio)
                   )
-                }}%</b
-              >
-            </p>
-          </div>
-          <div class="info-content-one-inner-bottom">
-            <p>{{ $t('dapps.stabilityFee') }}</p>
-            <p>
-              <b
-                >{{
+                }}%
+              </div>
+            </div>
+            <div class="item">
+              <p>{{ $t('dapps.stabilityFee') }}</p>
+              <div>
+                {{
                   displayFixedValue(
                     displayPercentValue(activeCdp.stabilityFee)
                   )
-                }}%</b
-              >
-            </p>
+                }}%
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <div class="manage-container-blocks">
-        <div class="label-one-left">
-          <p>{{ $t('dapps.ethCollateral') }}</p>
-        </div>
-        <div class="content-one-left">
-          <div class="content-one-inner-left">
-            <p>{{ $t('dapps.deposited') }}</p>
-            <p>
-              <b>{{ displayFixedValue(activeCdp.ethCollateral, 5, false) }}</b>
-              ETH
-            </p>
-            <p>
-              <b>{{ displayFixedValue(activeCdp.pethCollateral, 5, true) }}</b>
-              PETH /
-              <b>{{ displayFixedValue(activeCdp.usdCollateral, 2) }}</b> USD
-            </p>
-            <p>
-              <span @click="showDeposit">{{ $t('dapps.deposit') }}</span>
-            </p>
+      <!-- ==================================================== -->
+
+      <!-- ==================================================== -->
+      <div class="information-single-block">
+        <div class="block-item">
+          <div class="block-title">
+            <p>{{ $t('dapps.ethCollateral') }}</p>
           </div>
-          <div class="content-border">
-            <div class="Line-8"></div>
-          </div>
-          <div class="content-one-inner-right">
-            <p>{{ $t('dapps.maxWithDraw') }}</p>
-            <p>
-              <b>{{ displayFixedValue(activeCdp.maxEthDraw, 5) }}</b> ETH
-            </p>
-            <p>
-              <b>{{ displayFixedValue(activeCdp.maxPethDraw, 5) }}</b> PETH /
-              <b>{{ displayFixedValue(activeCdp.maxUsdDraw, 2) }}</b> USD
-            </p>
-            <p>
-              <span @click="showWithdraw">{{ $t('dapps.withdraw') }}</span>
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="manage-container-blocks">
-        <div class="label-one-left">
-          <p>{{ $t('dapps.daiPosition') }}</p>
-        </div>
-        <div class="content-one-left">
-          <div class="content-one-inner-left">
-            <p>{{ $t('dapps.generated') }}</p>
-            <p>
-              <b>{{ activeCdp.debtValue }}</b> DAI
-            </p>
-            <p>
-              <b>{{ displayFixedValue(activeCdp.debtValue, 2) }}</b> USD
-            </p>
-            <p>
-              <span @click="showPayback">{{ $t('dapps.payBack') }}</span>
-            </p>
-          </div>
-          <div class="content-border">
-            <div class="Line-8"></div>
-          </div>
-          <div class="content-one-inner-right">
-            <p>{{ $t('dapps.maxAvailable') }}</p>
-            <p>
-              <b>{{ displayFixedValue(activeCdp.maxDai) }}</b> DAI
-            </p>
-            <p>
-              <b>{{ displayFixedValue(activeCdp.maxDai, 2) }}</b> USD
-            </p>
-            <p>
-              <span @click="showGenerate">{{ $t('dapps.generate') }}</span>
-            </p>
+
+          <div class="block-content-container">
+            <div class="block-content">
+              <div class="item">
+                <p>{{ $t('dapps.deposited') }}</p>
+                <div>
+                  {{ displayFixedValue(activeCdp.ethCollateral, 5, false) }}
+                  <span>ETH</span>
+                </div>
+                <div>
+                  {{ displayFixedValue(activeCdp.pethCollateral, 5, true) }}
+                  <span>PETH</span> /
+                  {{ displayFixedValue(activeCdp.usdCollateral, 2) }}
+                  <span>USD</span>
+                </div>
+                <button @click="showDeposit">
+                  {{ $t('dapps.deposit') }} >
+                </button>
+              </div>
+            </div>
+            <div class="block-content">
+              <div class="item">
+                <p>{{ $t('dapps.maxWithDraw') }}</p>
+                <div>
+                  {{ displayFixedValue(activeCdp.maxEthDraw, 5) }}
+                  <span>ETH</span>
+                </div>
+                <div>
+                  {{ displayFixedValue(activeCdp.maxPethDraw, 5) }}
+                  <span>PETH</span> /
+                  {{ displayFixedValue(activeCdp.maxUsdDraw, 2) }}
+                  <span>USD</span>
+                </div>
+                <button @click="showWithdraw">
+                  {{ $t('dapps.withdraw') }} >
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+      <!-- ==================================================== -->
+
+      <!-- ==================================================== -->
+      <div class="information-single-block">
+        <div class="block-item">
+          <div class="block-title">
+            <p>{{ $t('dapps.daiPosition') }}</p>
+          </div>
+
+          <div class="block-content-container">
+            <div class="block-content">
+              <div class="item">
+                <p>{{ $t('dapps.generated') }}</p>
+                <div>{{ activeCdp.debtValue }} <span>DAI</span></div>
+                <div>
+                  {{ displayFixedValue(activeCdp.debtValue, 2) }}
+                  <span>USD</span>
+                </div>
+                <button @click="showPayback">
+                  {{ $t('dapps.payBack') }} >
+                </button>
+              </div>
+            </div>
+            <div class="block-content">
+              <div class="item">
+                <p>{{ $t('dapps.maxWithDraw') }}</p>
+                <div>
+                  {{ displayFixedValue(activeCdp.maxEthDraw, 5) }}
+                  <span>ETH</span>
+                </div>
+                <div>
+                  {{ displayFixedValue(activeCdp.maxPethDraw, 5) }}
+                  <span>PETH</span> /
+                  {{ displayFixedValue(activeCdp.maxUsdDraw, 2) }}
+                  <span>USD</span>
+                </div>
+                <button @click="showGenerate">
+                  {{ $t('dapps.generate') }} >
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ==================================================== -->
     </div>
+    <help-link />
   </div>
 </template>
 
@@ -184,6 +208,7 @@
 import { mapGetters } from 'vuex';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
+import BottomHelpLink from '@/components/BottomHelpLink';
 import Blockie from '@/components/Blockie';
 import ActionModal from '../../components/ActionsModal';
 import GenerateModal from '../../components/GenerateModal';
@@ -215,7 +240,8 @@ export default {
     'payback-modal': PaybackModal,
     'close-cdp-modal': CloseCdpModal,
     'move-cdp-modal': MoveCdpModal,
-    blockie: Blockie
+    blockie: Blockie,
+    'help-link': BottomHelpLink
   },
   props: {
     openCloseModal: {
