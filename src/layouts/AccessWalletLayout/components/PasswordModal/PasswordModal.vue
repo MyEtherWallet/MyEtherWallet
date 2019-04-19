@@ -3,7 +3,7 @@
     ref="password"
     :title="$t('accessWallet.password')"
     hide-footer
-    class="bootstrap-modal modal-software"
+    class="bootstrap-modal modal-software nopadding"
     centered
     @shown="focusInput"
   >

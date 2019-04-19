@@ -22,6 +22,11 @@ $mobile-width: 700px;
   display: flex;
   align-items: flex-start;
   padding-bottom: 20px;
+
+  @media all and (max-width: $mobile-width) {
+    display: block;
+  }
+
   .cpd-title {
     font-size: 16px;
     color: $dark-blue-2;
@@ -34,6 +39,9 @@ $mobile-width: 700px;
     color: $dark-blue-2;
     font-weight: 600;
     text-align: right;
+    @media all and (max-width: $mobile-width) {
+      text-align: left;
+    }
   }
 }
 
