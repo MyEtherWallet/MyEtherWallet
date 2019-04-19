@@ -2,11 +2,9 @@
 
 $confirmation-modal-mobile-width: 500px;
 
-
 .modal-content-container {
-  padding: 30px 30px; 
+  padding: 30px 30px;
 }
-
 
 .cc-icon {
   font-size: 36px;
@@ -100,7 +98,6 @@ $confirmation-modal-mobile-width: 500px;
   .info {
     align-items: center;
     color: $dark-blue-2;
-    
     display: flex;
 
     .sliding-switch-white {
