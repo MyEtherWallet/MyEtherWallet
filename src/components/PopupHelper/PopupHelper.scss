@@ -1,0 +1,53 @@
+@import '~@/scss/GlobalVariables';
+
+.popup-helper {
+  position: relative;
+  cursor: pointer;
+  display: block;
+}
+
+
+.question {
+  height: 20px;
+}
+
+.helper-box {
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  bottom: 33px;
+  left: -15px;
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  padding: 20px 20px;
+  border-radius: 3px;
+  max-width: 300px;
+  display: block;
+  box-shadow: 0px 20px 50px rgba(0, 0, 0, 0.15);
+  cursor: initial;
+
+  &::after {
+    position: absolute;
+    left: 16px;
+    bottom: -8px;
+    transform: rotate(-45deg);
+    content: '';
+    width: 15px;
+    height: 15px;
+    border-left: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+    background-color: white;
+  }
+
+  p {
+    font-size: 14px;
+    color: #222222;
+    line-height: 20px;
+    font-family: sans-serif;
+  }
+}
+
+.popup-helper:hover .helper-box {
+  opacity: 1;
+  //pointer-events: all;
+}

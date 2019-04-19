@@ -1,5 +1,5 @@
 <template>
-  <div class="standard-input">
+  <div class="standard-input-slot">
     <div v-if="options.title" class="input-title-container">
       <div class="input-title-and-helper">
         <div class="title-and-subtitle">
@@ -54,7 +54,6 @@
         :placeholder="options.placeHolder"
         :type="options.type"
         :disabled="options.inputDisabled"
-        v-model="inputvalue"
         name=""
         @blur="emitValue"
       />
@@ -101,10 +100,6 @@ export default {
       default: function() {
         return {};
       }
-    },
-    inputvalue: {
-      type: Number,
-      default: 0
     }
   },
   data() {
@@ -142,5 +137,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'StandardInput.scss';
+@import 'StandardInputSlot.scss';
 </style>
