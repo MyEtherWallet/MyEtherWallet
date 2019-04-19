@@ -220,7 +220,8 @@ export default {
             },
             {
               text: 'KeepKey',
-              href: 'http://keepkey.go2cloud.org/aff_c?offer_id=1&aff_id=5561'
+              href:
+                'http://keepkey.myshopify.com?afmc=pi&utm_campaign=pi&utm_source=leaddyno&utm_medium=affiliate'
             },
             {
               text: this.$t('footer.trezor'),
