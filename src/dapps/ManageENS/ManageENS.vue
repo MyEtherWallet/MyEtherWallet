@@ -35,6 +35,8 @@
       :dns-owner="dnsOwner"
       :dns-claim="dnsClaim"
       :transfer-func="transferFunc"
+      :create-commitment="createCommitment"
+      :register-with-duration="registerWithDuration"
       @updateSecretPhrase="updateSecretPhrase"
       @updateBidAmount="updateBidAmount"
       @updateBidMask="updateBidMask"
@@ -101,7 +103,8 @@ export default {
       dnsRegistrar: {},
       dnsClaim: {},
       dnsOwner: '',
-      legacyRegistrar: {}
+      legacyRegistrar: {},
+      minimumAge: 0
     };
   },
   computed: {
@@ -181,6 +184,7 @@ export default {
       this.dnsRegistrar = {};
       this.dnsClaim = {};
       this.legacyRegistrar = {};
+      this.minimumAge = 0;
 
       if (this.ens) {
         this.setRegistrar();
@@ -382,7 +386,9 @@ export default {
                 .call();
               if (!isAvailable) this.getMoreInfo();
               else {
+                this.generateKeyPhrase();
                 this.$router.push({ path: 'manage-ens/create-commitment' });
+                this.loading = false;
                 //create commitment const commitment =  await this.registrarControllerContract.methods.makeCommitment('myetherwallet.eth',this.account.address, 'random secret').call()
                 //mincommitment age =  await this.registrarControllerContract.method.minCommitmentAge().call()
                 //submit commitment this.registrarControllerContract.methods.commit(commitment)
@@ -429,25 +435,39 @@ export default {
       }
     },
     async createCommitment(secret) {
-      this.loading = true;
-      const commitment = await this.registrarControllerContract.methods
-        .makeCommitment(this.parsedDomain, this.account.address, secret)
-        .call();
-      this.minimumAge = await this.registrarControllerContract.method
-        .minCommitmentAge()
-        .call();
-      this.registrarControllerContract.methods.commit(commitment);
-      this.loading = false;
-      this.$router.push({ path: 'manage-ens/permanent-registration' });
+      const utils = this.web3.utils;
+      try {
+        const commitment = await this.registrarControllerContract.methods
+          .makeCommitment(
+            this.parsedHostName,
+            this.account.address,
+            utils.sha3(secret)
+          )
+          .call();
+        this.minimumAge = await this.registrarControllerContract.methods
+          .minCommitmentAge()
+          .call();
+        this.registrarControllerContract.methods.commit(commitment);
+        this.loading = false;
+        this.$router.push({ path: 'manage-ens/permanent-registration' });
+      } catch (e) {
+        console.log(e);
+        this.loading = false;
+        Toast.responseHandler(
+          'Something went wrong! Please try again.',
+          Toast.ERROR
+        );
+      }
     },
     async registerWithDuration(secret, duration) {
       this.loading = true;
       try {
         await this.registrarControllerContract.methods
-          .register(this.parsedDomain, this.account.address, duration, secret)
+          .register(this.parsedHostName, this.account.address, duration, secret)
           .call();
         Toast.responseHandler('Successfully Registered!', Toast.SUCCESS);
       } catch (e) {
+        console.log(e);
         this.loading = false;
         Toast.responseHandler(
           'Something went wrong! Please try again.',
