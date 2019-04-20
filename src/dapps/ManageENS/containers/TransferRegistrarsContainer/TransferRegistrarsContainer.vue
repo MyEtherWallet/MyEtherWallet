@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="transfer-registrar-container">
     <div class="transfer-registrar-content">
-      <h3>We found the ENS in a different Registrar!</h3>
+      <h3>We found the {{ fullDomainName }} in a different Registrar!</h3>
       <p>Do you want to transfer {{ fullDomainName }} to the new registrar?</p>
       <div class="transfer-registrar-button">
         <button

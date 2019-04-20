@@ -20,5 +20,27 @@ h3 {
 
 p {
   font-weight: 300;
-  padding-bottom: 50px;
+}
+
+.secret-phrase-container {
+  display: flex;
+  flex-flow: column;
+  padding: 30px 15px;
+
+  input {
+    background-color: $light-grey-1;
+    border: none;
+    padding: 15px;
+    width: 100%;
+  }
+
+  label {
+    color: $dark-blue-6;
+    font-weight: bold;
+    padding-bottom: 10px;
+  }
+
+  p {
+    color: $dark-grey-1;
+  }
 }

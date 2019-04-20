@@ -1,18 +1,25 @@
 <template lang="html">
   <div class="transfer-registrar-container">
     <div class="transfer-registrar-content">
-      <h3>We found the ENS in a different Registrar!</h3>
-      <p>Do you want to transfer {{ fullDomainName }} to the new registrar?</p>
+      <h3>Cognratulations! {{ fullDomainName }} is available!</h3>
+      <p>Do you want to register {{ fullDomainName }}?</p>
+      <div class="secret-phrase-container">
+        <label for="secret-phrase">Secret Phrase</label>
+        <input v-model="localPhrase" name="secret-phrase" />
+        <p>
+          Please make sure to write down secret phrase, you will need it later
+        </p>
+      </div>
       <div class="transfer-registrar-button">
         <button
           :class="[
             'large-round-button-green-filled',
             loading ? 'disabled' : ''
           ]"
-          @click="transferFunc"
+          @click="createCommitment(localPhrase)"
         >
           <span v-show="!loading">
-            Transfer
+            Register
           </span>
           <i v-show="loading" class="fa fa-spinner fa-spin" />
         </button>
@@ -38,11 +45,7 @@ export default {
       type: String,
       default: ''
     },
-    dnsOwner: {
-      type: String,
-      default: ''
-    },
-    transferFunc: {
+    createCommitment: {
       type: Function,
       default: function() {}
     },
@@ -53,14 +56,29 @@ export default {
     tld: {
       type: String,
       default: ''
+    },
+    secretPhrase: {
+      type: String,
+      default: 'random strings generated'
     }
+  },
+  data() {
+    return {
+      localPhrase: this.secretPhrase
+    };
   },
   computed: {
     fullDomainName() {
       return `${this.hostName}.${this.tld}`;
     }
   },
+  watch: {
+    localPhrase(newVal) {
+      this.$emit('updateSecretPhrase', newVal);
+    }
+  },
   mounted() {
+    console.log(this.secretPhrase);
     if (this.hostName === '') {
       this.$router.push('/interface/dapps/manage-ens');
     }
