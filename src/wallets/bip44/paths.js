@@ -2,6 +2,10 @@ const ethereum = {
   path: "m/44'/60'/0'/0",
   label: 'Ethereum'
 };
+const poaNetwork = {
+  path: "m/44'/60'/0'/0",
+  label: 'POA network'
+};
 const ethereumClassic = {
   path: "m/44'/61'/0'/0",
   label: 'Ethereum Classic'
@@ -92,12 +96,8 @@ const ledgerLiveEthereum = {
   label: 'Ethereum - Ledger Live'
 };
 const ledgerEthereumClassic = {
-  path: "m/44'/60'/160720'/0",
-  label: 'Ethereum Classic'
-};
-const ledgerEthereumClassicVintage = {
   path: "m/44'/60'/160720'/0'",
-  label: 'Ethereum Classic MEW Vintage'
+  label: 'Ethereum Classic'
 };
 const ledgerLiveEthereumClassic = {
   path: "m/44'/61'",
@@ -127,6 +127,10 @@ const solidum = {
   path: "m/44'/997'/0'/0",
   label: 'Solidum'
 };
+const reoscChain = {
+  path: "m/44'/2894'/0'/0",
+  label: 'REOSC'
+};
 export {
   ethereum,
   ethereumClassic,
@@ -134,7 +138,6 @@ export {
   ledgerLiveEthereum,
   ledgerEthereumClassic,
   ledgerLiveEthereumClassic,
-  ledgerEthereumClassicVintage,
   ropsten,
   singularDTV,
   expanse,
@@ -159,5 +162,7 @@ export {
   keepkeyEthereum,
   keepkeyEthereumClassic,
   thundercore,
-  solidum
+  solidum,
+  poaNetwork,
+  reoscChain
 };
