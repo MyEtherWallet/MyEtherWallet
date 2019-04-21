@@ -7,10 +7,6 @@
     centered
   >
     <div class="modal-content-container">
-      <p class="hardware-link">
-        Want to get a Hardware wallet?
-        <router-link to="/hardware-wallet-affiliates">Click here!</router-link>
-      </p>
       <finney-modal ref="finney" />
       <div class="d-block text-center">
         <b-alert :show="mayNotBeAttached" fade variant="warning"
@@ -21,13 +17,14 @@
             v-for="(item, idx) in items"
             :key="item.name + idx"
             :selected="selected === item.name"
-            :select="select"
             :regular-icon="item.imgPath"
             :hover-icon="item.imgHoverPath"
             :text="item.text"
             :name="item.name"
             :disabled="item.disabled"
             :tooltip-msg="item.msg"
+            :link="item.link"
+            @updateSelected="updateSelected"
           />
         </div>
       </div>
@@ -67,12 +64,18 @@ import { Toast } from '@/helpers';
 import { isSupported } from 'u2f-api';
 import platform from 'platform';
 import {
-  LedgerWallet,
   KeepkeyWallet,
   TrezorWallet,
   BitBoxWallet,
   SecalotWallet
 } from '@/wallets';
+import {
+  LEDGER as LEDGER_TYPE,
+  TREZOR as TREZOR_TYPE,
+  BITBOX as BITBOX_TYPE,
+  SECALOT as SECALOT_TYPE,
+  KEEPKEY as KEEPKEY_TYPE
+} from '@/wallets/bip44/walletTypes';
 export default {
   components: {
     'customer-support': CustomerSupport,
@@ -87,6 +90,10 @@ export default {
     hardwareWalletOpen: {
       type: Function,
       default: function() {}
+    },
+    ledgerAppOpen: {
+      type: Function,
+      default: function() {}
     }
   },
   data() {
@@ -96,12 +103,13 @@ export default {
       isU2FSupported: false,
       items: [
         {
-          name: 'ledger',
+          name: LEDGER_TYPE,
           imgPath: ledger,
           imgHoverPath: ledgerHov,
           text: 'Ledger',
           disabled: false,
-          msg: ''
+          msg: '',
+          link: 'https://www.ledger.com?r=fa4b'
         },
         {
           name: 'finney',
@@ -109,26 +117,21 @@ export default {
           imgHoverPath: finneyHov,
           text: 'FINNEY',
           disabled: false,
-          msg: ''
+          msg: '',
+          link:
+            'http://shop.sirinlabs.com?rfsn=2397639.54fdf&utm_source=refersion&utm_medium=affiliate&utm_campaign=2397639.54fdf'
         },
         {
-          name: 'bitbox',
+          name: BITBOX_TYPE,
           imgPath: bitbox,
           imgHoverPath: bitboxHov,
           text: 'Digital Bitbox',
           disabled: false,
-          msg: ''
+          msg: '',
+          link: 'https://digitalbitbox.com/?ref=mew'
         },
         {
-          name: 'secalot',
-          imgPath: secalot,
-          imgHoverPath: secalotHov,
-          text: 'Secalot',
-          disabled: false,
-          msg: ''
-        },
-        {
-          name: 'trezor',
+          name: TREZOR_TYPE,
           imgPath: trezor,
           imgHoverPath: trezorHov,
           text: 'Trezor',
@@ -139,15 +142,26 @@ export default {
             platform.name.toLowerCase() !== 'chrome' &&
             platform.name.toLowerCase() !== 'firefox'
               ? 'Browser not supported by Trezor'
-              : ''
+              : '',
+          link: 'https://trezor.io/?offer_id=12&aff_id=2029'
         },
         {
-          name: 'keepkey',
+          name: SECALOT_TYPE,
+          imgPath: secalot,
+          imgHoverPath: secalotHov,
+          text: 'Secalot',
+          disabled: false,
+          msg: '',
+          link: 'https://www.secalot.com/'
+        },
+        {
+          name: KEEPKEY_TYPE,
           imgPath: keepkey,
           imgHoverPath: keepkeyHov,
           text: 'KeepKey',
           disabled: false,
-          msg: ''
+          msg: '',
+          link: 'http://keepkey.go2cloud.org/aff_c?offer_id=1&aff_id=5561'
         }
       ]
     };
@@ -155,9 +169,9 @@ export default {
   mounted() {
     isSupported().then(res => {
       this.items.forEach(item => {
-        const u2fhw = ['secalot', 'ledger', 'bitbox'];
-        const inMobile = ['secalot', 'keepkey'];
-        const webUsb = ['keepkey'];
+        const u2fhw = [SECALOT_TYPE, LEDGER_TYPE, BITBOX_TYPE];
+        const inMobile = [SECALOT_TYPE, KEEPKEY_TYPE];
+        const webUsb = [KEEPKEY_TYPE];
 
         if (webUsb.includes(item.name)) {
           const disable =
@@ -201,18 +215,11 @@ export default {
         this.mayNotBeAttached = true;
       }, 1000);
       switch (this.selected) {
-        case 'ledger':
-          LedgerWallet()
-            .then(_newWallet => {
-              clearTimeout(showPluggedInReminder);
-              this.$emit('hardwareWalletOpen', _newWallet);
-            })
-            .catch(e => {
-              this.mayNotBeAttached = true;
-              LedgerWallet.errorHandler(e);
-            });
+        case LEDGER_TYPE:
+          this.$refs.hardware.hide();
+          this.ledgerAppOpen();
           break;
-        case 'trezor':
+        case TREZOR_TYPE:
           TrezorWallet()
             .then(_newWallet => {
               clearTimeout(showPluggedInReminder);
@@ -223,19 +230,19 @@ export default {
               TrezorWallet.errorHandler(e);
             });
           break;
-        case 'bitbox':
+        case BITBOX_TYPE:
           this.$emit('hardwareRequiresPassword', {
             walletConstructor: BitBoxWallet,
             hardwareBrand: 'DigitalBitbox'
           });
           break;
-        case 'secalot':
+        case SECALOT_TYPE:
           this.$emit('hardwareRequiresPassword', {
             walletConstructor: SecalotWallet,
             hardwareBrand: 'Secalot'
           });
           break;
-        case 'keepkey':
+        case KEEPKEY_TYPE:
           KeepkeyWallet(false, this.$eventHub)
             .then(_newWallet => {
               this.$emit('hardwareWalletOpen', _newWallet);
@@ -257,7 +264,7 @@ export default {
       }
       this.$refs.hardware.hide();
     },
-    select(ref) {
+    updateSelected(ref) {
       if (this.selected !== ref) {
         this.selected = ref;
       } else {
