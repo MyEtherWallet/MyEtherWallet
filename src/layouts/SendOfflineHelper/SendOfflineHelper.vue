@@ -99,9 +99,9 @@
               </li>
               <li class="detail-container">
                 <span class="detail-name">Retrieved:</span>
-                <span class="detail-text">
-                  {{ dateTimeDisplay(genInfo.timestamp) }}
-                </span>
+                <span class="detail-text">{{
+                  dateTimeDisplay(genInfo.timestamp)
+                }}</span>
               </li>
               <li class="detail-container">
                 <span class="detail-name">at block:</span>
@@ -213,8 +213,8 @@
             </li>
             <li class="detail-container">
               <span class="detail-name">Value:</span>
-              <span class="detail-text"
-                >{{ toEth(value) }}
+              <span class="detail-text">
+                {{ toEth(value) }}
                 {{ selectedNetwork.type.currencyName }}
               </span>
             </li>
@@ -282,6 +282,7 @@
                 :href="replaceUrl('', txHash)"
                 class="detail-text"
                 target="_blank"
+                rel="noopener noreferrer"
                 >{{ txHash }}</a
               >
             </li>
@@ -307,6 +308,7 @@
                     v-else-if="item === 'contractAddress'"
                     :href="replaceUrl('address', txReceipt[item])"
                     target="_blank"
+                    rel="noopener noreferrer"
                     class="right-side"
                     >{{ txReceipt[item] }}</a
                   >
