@@ -6,7 +6,6 @@
       v-if="wallet !== null"
       ref="settings"
       :gas-price="gasPrice"
-      :minimum-gas-price="minimumGasPrice"
       :address="account.address"
     />
     <notifications-modal ref="notifications" />
@@ -248,7 +247,6 @@ export default {
       isHomePage: true,
       showGetFreeWallet: false,
       gasPrice: '0',
-      minimumGasPrice: '0',
       error: {},
       resolver: () => {},
       showGettingStarted: ''
@@ -289,11 +287,6 @@ export default {
     },
     web3() {
       this.setHighGasPrice();
-
-      this.minimumGasPrice =
-        this.$store.state.network.type.minimumGasPrice !== undefined
-          ? this.$store.state.network.type.minimumGasPrice.toString()
-          : '0';
     }
   },
   mounted() {
