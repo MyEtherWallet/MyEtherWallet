@@ -220,6 +220,10 @@ export default {
     this.clearIntervals();
   },
   methods: {
+    clearIntervals() {
+      if (this.pollBlock.unsubscribe) this.pollBlock.unsubscribe();
+      else clearInterval(this.pollBlock);
+    },
     openAddressQrcode() {
       this.$refs.addressQrcodeModal.$refs.addressQrcode.show();
     },
