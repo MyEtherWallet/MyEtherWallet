@@ -171,6 +171,27 @@
           }
         }
       }
+      .tx-fee {
+        margin-top: 40px;
+
+        .copy-button {
+          color: $text--link-color;
+          cursor: pointer;
+          margin-left: auto;
+        }
+
+        .fee-value {
+          padding: 0 10px;
+          display: flex;
+          align-items: center;
+          .gwei {
+            //gwei
+          }
+          .usd {
+            margin-left: auto;
+          }
+        }
+      }
     }
 
     .gas-amount,

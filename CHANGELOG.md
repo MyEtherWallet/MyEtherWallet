@@ -1,3 +1,7 @@
+### Feature
+
+- Support local nodes [#973](https://github.com/MyEtherWallet/MyEtherWallet/pull/973)
+
 ### Release v5.0.10
 
 ### Bug
@@ -26,6 +30,7 @@
 
 ### Devop
 
+- Add gas amount to send tx page [#925](https://github.com/MyEtherWallet/MyEtherWallet/pull/925)
 - Better data catch for url params [#909](https://github.com/MyEtherWallet/MyEtherWallet/pull/909)
 - Update hardwares [#906](https://github.com/MyEtherWallet/MyEtherWallet/pull/906)
 - Add monospace font[#898](https://github.com/MyEtherWallet/MyEtherWallet/pull/898)
