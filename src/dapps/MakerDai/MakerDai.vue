@@ -259,7 +259,7 @@ export default {
         },
         web3: {
           statusTimerDelay: 10000,
-          pollingInterval: 100000
+          pollingInterval: 10000000000
         },
         log: true
       });

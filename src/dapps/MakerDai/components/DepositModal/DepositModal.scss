@@ -2,6 +2,10 @@
 
 $confirmation-modal-mobile-width: 500px;
 
+.modal-content-container {
+  padding: 30px 30px;
+}
+
 .cc-icon {
   font-size: 36px;
 }
@@ -9,7 +13,6 @@ $confirmation-modal-mobile-width: 500px;
 .inputs-container {
   display: flex;
   flex-direction: column;
-  margin: 40px;
 
   .input-container {
     display: flex;
@@ -33,39 +36,38 @@ $confirmation-modal-mobile-width: 500px;
     }
 
     .input-box {
-      display: flex;
-      flex-direction: row;
-      align-items: baseline;
+      position: relative;
       margin-bottom: 20px;
+      border-radius: 4px;
 
       &.danger {
         border: 1px solid red;
       }
 
       input {
+        border-radius: 4px;
         background-color: $background-color-1;
         border: 0;
         font-size: 14px;
-        height: 52px;
         padding: 20px;
-        width: 90%;
+        padding-right: 80px;
+        width: 100%;
       }
       // needs to be fixed to smoothly match against the input
       .input-unit {
-        background-color: $background-color-1;
-        border: 0;
         font-size: 14px;
-        height: 52px;
-        padding: 17px 22px 20px;
-        width: 10%;
-        color: #999;
-        font-weight: 600;
+        color: $light-blue-6;
+        font-weight: 500;
+        position: absolute;
+        right: 20px;
+        top: 20px;
       }
     }
   }
 }
 
 .sub-text {
+  padding: 0 10px;
   .btn {
     color: #05c0a5;
     &:hover {
@@ -95,7 +97,7 @@ $confirmation-modal-mobile-width: 500px;
 
   .info {
     align-items: center;
-    color: $text-color-8;
+    color: $dark-blue-2;
     display: flex;
 
     .sliding-switch-white {
@@ -171,23 +173,25 @@ $confirmation-modal-mobile-width: 500px;
     }
   }
 
-  .submit-btn {
-    width: 189px;
-    height: 62px;
+  .btn {
     border-radius: 4px;
+    margin: 0 5px;
+  }
+
+  .submit-btn {
     background-color: #05c0a5;
+    border: solid 1px #05c0a5;
     color: $white;
 
     &.disable {
       background-color: #506175;
+      border: solid 1px #506175;
       cursor: not-allowed;
     }
   }
 
   .cancel-btn {
     background-color: $white;
-    width: 189px;
-    height: 62px;
     border-radius: 4px;
     border: solid 1px #506175;
     color: #506175;

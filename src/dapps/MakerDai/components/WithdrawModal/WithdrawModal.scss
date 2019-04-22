@@ -2,14 +2,21 @@
 
 $confirmation-modal-mobile-width: 500px;
 
+.message {
+  line-height: 19px;
+}
+
 .cc-icon {
   font-size: 36px;
+}
+
+.modal-content-container {
+  padding: 30px;
 }
 
 .inputs-container {
   display: flex;
   flex-direction: column;
-  margin: 40px;
 
   .input-container {
     display: flex;
@@ -33,10 +40,9 @@ $confirmation-modal-mobile-width: 500px;
     }
 
     .input-box {
-      display: flex;
-      flex-direction: row;
-      align-items: baseline;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
+      position: relative;
+      border-radius: 4px;
 
       &.danger {
         border: 1px solid red;
@@ -45,29 +51,52 @@ $confirmation-modal-mobile-width: 500px;
       input {
         background-color: $background-color-1;
         border: 0;
+        border-radius: 4px;
         font-size: 14px;
-        height: 52px;
         padding: 20px;
-        width: 90%;
+        width: 100%;
       }
       // needs to be fixed to smoothly match against the input
       .input-unit {
-        background-color: $background-color-1;
-        border: 0;
         font-size: 14px;
-        height: 52px;
-        padding: 17px 22px 20px;
-        width: 10%;
-        color: #999;
-        font-weight: 600;
+        color: $light-blue-6;
+        font-weight: 500;
+        position: absolute;
+        right: 20px;
+        top: 20px;
       }
     }
   }
 }
 
 .sub-text {
+  padding-left: 10px;
+  .max-withdraw {
+    border: 1px solid $grey-1;
+    position: relative;
+
+    &::before {
+      color: $grey-1;
+      font-size: 26px;
+      content: '\2934';
+      position: absolute;
+      top: -12px;
+      right: -26px;
+    }
+  }
+
+  .peth {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+
+    .peth-value {
+      margin-right: 5px;
+    }
+  }
+
   .btn {
-    color: #05c0a5;
+    color: $grey-1;
     &:hover {
       cursor: pointer;
     }
@@ -145,8 +174,8 @@ $confirmation-modal-mobile-width: 500px;
 } // .detail-info
 
 .buttons-container {
-  margin-top: 60px;
-  margin-bottom: 60px;
+  margin-top: 20px;
+  margin-bottom: 20px;
   display: flex;
   flex-direction: row;
   align-content: space-between;
@@ -172,8 +201,7 @@ $confirmation-modal-mobile-width: 500px;
   }
 
   .submit-btn {
-    width: 189px;
-    height: 62px;
+    margin: 0 5px;
     border-radius: 4px;
     background-color: #05c0a5;
     color: $white;
@@ -185,9 +213,8 @@ $confirmation-modal-mobile-width: 500px;
   }
 
   .cancel-btn {
+    margin: 0 5px;
     background-color: $white;
-    width: 189px;
-    height: 62px;
     border-radius: 4px;
     border: solid 1px #506175;
     color: #506175;
@@ -274,6 +301,7 @@ $confirmation-modal-mobile-width: 500px;
 
 .check-box {
   position: relative;
+  padding-top: 20px;
 }
 
 /* Customize the label (the container) */

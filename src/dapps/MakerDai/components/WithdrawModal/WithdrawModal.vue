@@ -4,127 +4,140 @@
       ref="modal"
       :title="getTitleText()"
       centered
-      class="bootstrap-modal bootstrap-modal-wide padding-40-20"
+      class="bootstrap-modal nopadding"
       hide-footer
     >
-      <div class="inputs-container">
-        <!-- Withdraw ETH -->
-        <div class="input-container">
-          <p>
-            <!-- TODO FOR TRANSLATE -->
-            You might be requested to sign up to three trasactions if there is
-            not enough allowance in DAI and/or MKR to complete this transaction.
-          </p>
-          <label
-            >How much {{ digitalCurrency }} would you like to withdraw?</label
-          ><!-- TODO FOR TRANSLATE -->
-          <div :class="['input-box', newCollateralRatioSafe ? '' : 'danger']">
-            <input v-model="amount" />
-            <span class="input-unit">{{ digitalCurrency }}</span>
-          </div>
-          <div class="sub-text">
-            <!--            <p v-if="!canGenerateDaiAmount">Above Max Dai Amount</p>-->
-            <!-- TODO FOR TRANSLATE -->
-            <p class="btn" @click="maxWithdraw">Max</p>
-            <!-- TODO FOR TRANSLATE -->
-            <p>
-              {{
-                activeCdp.toPeth
-                  ? displayFixedValue(activeCdp.toPeth(amount), 5, false)
-                  : 0
-              }}
-              PETH
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div class="detail-info">
-        <div class="info">
-          <h4>Detail Information</h4>
-          <div class="sliding-switch-white">
-            <label class="switch">
-              <input
-                type="checkbox"
-                @click="modalDetailInformation = !modalDetailInformation"
-              />
-              <span class="slider round" />
-            </label>
-          </div>
-        </div>
-        <div
-          :class="modalDetailInformation && 'expended-info-open'"
-          class="expended-info"
-        >
+      <div class="modal-content-container">
+        <div class="inputs-container">
           <!-- Withdraw ETH -->
-          <div v-if="action === 'withdraw'" class="padding-container">
-            <div class="grid-block">
-              <p>Max Available to Withdraw</p>
+          <div class="input-container">
+            <p class="message">
               <!-- TODO FOR TRANSLATE -->
-              <p>
-                <b>{{
-                  activeCdp.maxDaiDraw
-                    ? displayFixedValue(activeCdp.maxDaiDraw(), 3)
-                    : 0
-                }}</b>
-                {{ digitalCurrency }}
-              </p>
+              You might be requested to sign up to three trasactions if there is
+              not enough allowance in DAI and/or MKR to complete this
+              transaction.
+            </p>
+            <label
+              >How much {{ digitalCurrency }} would you like to withdraw?</label
+            ><!-- TODO FOR TRANSLATE -->
+            <div :class="['input-box', newCollateralRatioSafe ? '' : 'danger']">
+              <input v-model="amount" />
+              <span class="input-unit">{{ digitalCurrency }}</span>
             </div>
-
-            <div class="grid-block">
-              <p>{{ $t('dapps.projectedLiquidation') }}</p>
-              <p>
-                <b>{{ displayFixedValue(newLiquidationPrice, 2) }}</b>
-                {{ fiatCurrency }}
+            <div class="sub-text">
+              <!--            <p v-if="!canGenerateDaiAmount">Above Max Dai Amount</p>-->
+              <!-- TODO FOR TRANSLATE -->
+              <p class="btn max-withdraw" @click="maxWithdraw">
+                Max withdraw amount
               </p>
-            </div>
-            <div class="grid-block">
-              <p>{{ $t('dapps.projectedCollatRatio') }}</p>
-              <p>
-                <b
-                  >{{
-                    displayFixedValue(
-                      displayPercentValue(newCollateralRatio),
-                      3
-                    )
-                  }}%</b
-                >
-              </p>
+              <!-- TODO FOR TRANSLATE -->
+              <div class="peth">
+                <p class="peth-value">
+                  {{
+                    activeCdp.toPeth
+                      ? displayFixedValue(activeCdp.toPeth(amount), 5, false)
+                      : 0
+                  }}
+                  PETH
+                </p>
+                <popover
+                  popcontent="Pooled ETH, which means it joins a large pool of Ethereum that is the collateral for all Dai created."
+                />
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div v-if="!newCollateralRatioSafe && notZero(amount)">
-        <check-box @changeStatus="checkBoxClicked">
-          <template v-slot:terms>
-            <span v-if="!newCollateralRatioInvalid">
-              I understand the new collateral ratio of
-              {{ displayFixedValue(displayPercentValue(newCollateralRatio)) }}%
-              may place my cdp at risk of liquidation.
-            </span>
-            <span v-if="newCollateralRatioInvalid" style="color: red;">
-              I understand the new collateral ratio of
-              {{ displayFixedValue(displayPercentValue(newCollateralRatio)) }}%
-              WILL place my cdp at risk of liquidation.
-            </span> </template
-          ><!-- TODO FOR TRANSLATE -->
-        </check-box>
-      </div>
-      <div class="buttons-container">
-        <div
-          :class="['cancel-btn', canProceed ? '' : 'disable']"
-          @click="closeModal"
-        >
-          Cancel<!-- TODO FOR TRANSLATE -->
+
+        <div class="detail-info">
+          <div class="info">
+            <h4>Detail Information</h4>
+            <div class="sliding-switch-white">
+              <label class="switch">
+                <input
+                  type="checkbox"
+                  @click="modalDetailInformation = !modalDetailInformation"
+                />
+                <span class="slider round" />
+              </label>
+            </div>
+          </div>
+          <div
+            :class="modalDetailInformation && 'expended-info-open'"
+            class="expended-info"
+          >
+            <!-- Withdraw ETH -->
+            <div v-if="action === 'withdraw'" class="padding-container">
+              <div class="grid-block">
+                <p>Max Available to Withdraw</p>
+                <!-- TODO FOR TRANSLATE -->
+                <p>
+                  <b>{{
+                    activeCdp.maxDaiDraw
+                      ? displayFixedValue(activeCdp.maxDaiDraw(), 3)
+                      : 0
+                  }}</b>
+                  {{ digitalCurrency }}
+                </p>
+              </div>
+
+              <div class="grid-block">
+                <p>{{ $t('dapps.projectedLiquidation') }}</p>
+                <p>
+                  <b>{{ displayFixedValue(newLiquidationPrice, 2) }}</b>
+                  {{ fiatCurrency }}
+                </p>
+              </div>
+              <div class="grid-block">
+                <p>{{ $t('dapps.projectedCollatRatio') }}</p>
+                <p>
+                  <b
+                    >{{
+                      displayFixedValue(
+                        displayPercentValue(newCollateralRatio),
+                        3
+                      )
+                    }}%</b
+                  >
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
-        <div
-          :class="['submit-btn', canProceed ? '' : 'disable']"
-          @click="submitBtn"
-        >
-          Submit<!-- TODO FOR TRANSLATE -->
+        <div v-if="!newCollateralRatioSafe && notZero(amount)">
+          <check-box @changeStatus="checkBoxClicked">
+            <template v-slot:terms>
+              <span v-if="!newCollateralRatioInvalid">
+                I understand the new collateral ratio of
+                {{
+                  displayFixedValue(displayPercentValue(newCollateralRatio))
+                }}% may place my cdp at risk of liquidation.
+              </span>
+              <span v-if="newCollateralRatioInvalid" style="color: red;">
+                I understand the new collateral ratio of
+                {{
+                  displayFixedValue(displayPercentValue(newCollateralRatio))
+                }}% WILL place my cdp at risk of liquidation.
+              </span> </template
+            ><!-- TODO FOR TRANSLATE -->
+          </check-box>
         </div>
+        <div class="buttons-container">
+          <div
+            :class="['cancel-btn', canProceed ? '' : 'disable']"
+            @click="closeModal"
+          >
+            Cancel<!-- TODO FOR TRANSLATE -->
+          </div>
+          <div
+            :class="['submit-btn', canProceed ? '' : 'disable']"
+            @click="submitBtn"
+          >
+            Submit<!-- TODO FOR TRANSLATE -->
+          </div>
+        </div>
+        <help-center-button />
       </div>
-      <help-center-button />
+      <!-- .modal-content-container -->
     </b-modal>
   </div>
 </template>
