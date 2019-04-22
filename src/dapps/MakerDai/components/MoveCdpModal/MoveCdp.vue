@@ -7,47 +7,38 @@
       class="bootstrap-modal nopadding"
       title="Move CDP"
     >
-      <div class="modal-content-container">
-        <p>
+      <div class="modal-content">
+        <p class="top-text">
           You may only move your CDP to an Ethereum address that you own. By
           clicking the box below, you(“You”)affirmatively represent that you
           alone own and control (i) the CDP that you will transfer, and (ii) the
           public Ethereum address to which it will be transferred.
         </p>
-        <div class="input-container">
-          <div class="interface__block-title">
-            Enter the address to send the cdp?
-          </div>
-        </div>
-      </div>
 
-      <div class="inputs-container">
         <div class="input-container">
           <label>Enter the address to send the cdp?</label>
           <div class="input-box">
             <input v-model="address" />
           </div>
         </div>
+
+        <div class="buttons">
+          <standard-button :options="cancelButton" @click.native="closeModal" />
+          <standard-button
+            :options="submitButton"
+            :button-disabled="btnActive ? false : true"
+            @click.native="moveCdp"
+          />
+        </div>
+        <help-center-button />
       </div>
-      <div class="buttons-container">
-        <button class="cancel-btn" @click="closeModal">
-          Cancel
-        </button>
-        <button
-          :class="['submit-btn', btnActive ? '' : 'disabled']"
-          @click="moveCdp"
-        >
-          Submit
-        </button>
-      </div>
-      <help-center-button />
     </b-modal>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
-
+import StandardButton from '@/components/Buttons/StandardButton';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
 import BigNumber from 'bignumber.js/bignumber.js';
 
@@ -59,7 +50,8 @@ import { Misc } from '@/helpers';
 
 export default {
   components: {
-    'help-center-button': HelpCenterButton
+    'help-center-button': HelpCenterButton,
+    'standard-button': StandardButton
   },
   props: {
     tokensWithBalance: {
@@ -87,7 +79,18 @@ export default {
       govFee: 0,
       modalDetailInformation: false,
       textValues: {},
-      mkrToken: {}
+      mkrToken: {},
+      cancelButton: {
+        title: 'Cancel',
+        buttonStyle: 'green-border',
+        noMinWidth: true
+      },
+      submitButton: {
+        title: 'Submit',
+        buttonStyle: 'green',
+        noMinWidth: true,
+        fullWidth: true
+      }
     };
   },
   computed: {
