@@ -44,13 +44,6 @@ export default {
     decimals: 18,
     fixRateEnabled: false
   },
-  BKX: {
-    name: 'Bankex',
-    symbol: 'BKX',
-    contractAddress: '0x45245bc59219eeaaf6cd3f382e078a461ff9de7b',
-    decimals: 18,
-    fixRateEnabled: false
-  },
   BNB: {
     symbol: 'BNB',
     name: 'Binance',
@@ -191,6 +184,13 @@ export default {
     decimals: 8,
     fixRateEnabled: true
   },
+  HT: {
+    name: 'Huobi token',
+    symbol: 'HT',
+    contractAddress: '0x6f259637dcd74c767781e37bc6133cd6a68aa161',
+    decimals: 18,
+    fixRateEnabled: false
+  },
   KNC: {
     symbol: 'KNC',
     name: 'Kyber Network',
@@ -243,12 +243,6 @@ export default {
     decimals: 18,
     contractAddress: '0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2'
   },
-  MLN: {
-    symbol: 'MLN',
-    name: 'Melon',
-    decimals: 18,
-    contractAddress: '0xec67005c4e498ec7f55e092bd1d35cbc47c91892'
-  },
   NEXO: {
     name: 'NEXO',
     symbol: 'NEXO',
@@ -262,13 +256,6 @@ export default {
     contractAddress: '0x72dd4b6bd852a3aa172be4d6c5a6dbec588cf131',
     decimals: 18,
     fixRateEnabled: false
-  },
-  NMR: {
-    name: 'Numeraire',
-    symbol: 'NMR',
-    contractAddress: '0x1776e1f26f98b1a5df9cd347953a26dd3cb46671',
-    decimals: 18,
-    fixRateEnabled: true
   },
   NOAH: {
     name: 'Noah',
@@ -347,13 +334,6 @@ export default {
     name: 'Augur',
     decimals: 18,
     contractAddress: '0x1985365e9f78359a9b6ad760e32412f4a445e862'
-  },
-  RFR: {
-    name: 'Refereum',
-    symbol: 'RFR',
-    contractAddress: '0xd0929d411954c47438dc1d871dd6081f5c5e149c',
-    decimals: 4,
-    fixRateEnabled: false
   },
   RLC: {
     name: 'iExec RLC',
@@ -713,6 +693,12 @@ export default {
     name: '\tWrapped BTC',
     decimals: 8,
     contractAddress: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599'
+  },
+  MLN: {
+    symbol: 'MLN',
+    name: 'Melon',
+    decimals: 18,
+    contractAddress: '0xec67005c4e498ec7f55e092bd1d35cbc47c91892'
   },
   BIX: {
     symbol: 'BIX',

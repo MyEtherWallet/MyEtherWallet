@@ -366,8 +366,10 @@ export default {
       this.toAmt =
         e.target.valueAsNumber < 0 || isNaN(e.target.valueAsNumber)
           ? 0
-          : new BigNumber(e.target.value).decimalPlaces(decimals).toFixed();
-      e.target.value = this.toAmt;
+          : new BigNumber(e.target.valueAsNumber)
+              .decimalPlaces(decimals)
+              .toFixed();
+      // e.target.value = this.toAmt;
     }, 300),
     async createDataHex(amount, address, currency) {
       const locAmount = amount !== null ? amount : this.toAmt;
@@ -438,7 +440,7 @@ export default {
     async generateTx() {
       const symbol = this.network.type.currencyName;
       const isToken = this.selectedCoinType.symbol !== symbol;
-      const amt = unit.toWei(this.toAmt, 'ether');
+      const amtWei = unit.toWei(this.toAmt, 'ether');
       const raw = {
         nonce: Misc.sanitizeHex(new BigNumber(this.localNonce).toString(16)),
         gasLimit: Misc.sanitizeHex(new BigNumber(this.gasLimit).toString(16)),
@@ -446,7 +448,7 @@ export default {
           new BigNumber(unit.toWei(this.localGasPrice, 'gwei')).toString(16)
         ),
         to: isToken ? this.selectedCoinType.address : this.address,
-        value: isToken ? 0 : amt,
+        value: isToken ? 0 : amtWei,
         data: this.toData,
         chainId: this.network.type.chainID
       };

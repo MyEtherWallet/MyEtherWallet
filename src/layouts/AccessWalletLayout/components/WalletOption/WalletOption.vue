@@ -1,21 +1,29 @@
 <template>
   <div
     v-b-popover.hover.top="tooltipMsg"
-    :class="disabled ? 'inactive' : ''"
-    @click="disabled ? () => {} : select(name)"
+    @click="select(name)"
     @mouseover="isHovered = true"
     @mouseout="isHovered = false"
   >
-    <div :class="[selected ? 'selected' : '', 'wallet-option-container']">
-      <div>
-        <img
-          :src="(isHovered || selected) && !disabled ? hoverIcon : regularIcon"
-          class="icon"
-        />
-        <span>{{ text }}</span>
+    <div
+      :class="[
+        selected ? 'selected' : '',
+        'wallet-option-container',
+        link !== '' ? 'has-link' : ''
+      ]"
+    >
+      <div class="img-title-container">
+        <img :src="hoverIcon" class="icon" />
+        <div class="title-link-container">
+          <span>{{ text }}</span>
+          <a v-show="link !== ''" :href="link" target="_blank" @click.stop>
+            Buy Now >
+          </a>
+        </div>
       </div>
       <i
-        :class="[selected ? '' : 'not-good', 'fa fa-check-circle good-button']"
+        v-show="selected"
+        class="fa fa-check-circle good-button"
         aria-hidden="true"
       />
     </div>
@@ -24,17 +32,9 @@
 <script>
 export default {
   props: {
-    select: {
-      type: Function,
-      default: () => {}
-    },
     selected: {
       type: Boolean,
       default: false
-    },
-    regularIcon: {
-      type: String,
-      default: ''
     },
     hoverIcon: {
       type: String,
@@ -55,12 +55,21 @@ export default {
     tooltipMsg: {
       type: String,
       default: ''
+    },
+    link: {
+      type: String,
+      default: ''
     }
   },
   data() {
     return {
       isHovered: false
     };
+  },
+  methods: {
+    select(name) {
+      this.$emit('updateSelected', name);
+    }
   }
 };
 </script>
