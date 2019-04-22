@@ -130,31 +130,31 @@ export default {
       walletConstructor: function() {},
       hardwareBrand: '',
       buttons: [
-        {
-          func: this.hardwareModalOpen,
-          title: this.$t('common.hardware'),
-          desc: 'Ledger wallet, Trezor, Digital bitbox, Secalot, Keepkey',
-          recommend: '',
-          tooltip: '',
-          img: hardwareImg,
-          disabled: false,
-          classname: 'button-hardware'
-        },
-        {
-          func: this.metamaskModalOpen,
-          title: 'MetaMask',
-          desc: this.$t('accessWallet.metaMaskDesc'),
-          recommend: '',
-          tooltip: '',
-          img: metamaskImg,
-          disabled: false,
-          classname: 'button-metamask'
-        },
+        // {
+        //   func: this.hardwareModalOpen,
+        //   title: this.$t('common.hardware'),
+        //   desc: 'Ledger wallet, Trezor, Digital bitbox, Secalot, Keepkey',
+        //   recommend: '',
+        //   tooltip: '',
+        //   img: hardwareImg,
+        //   disabled: false,
+        //   classname: 'button-hardware'
+        // },
+        // {
+        //   func: this.metamaskModalOpen,
+        //   title: 'MetaMask',
+        //   desc: this.$t('accessWallet.metaMaskDesc'),
+        //   recommend: '',
+        //   tooltip: '',
+        //   img: metamaskImg,
+        //   disabled: false,
+        //   classname: 'button-metamask'
+        // },
         {
           func: this.softwareModalOpen,
           title: this.$t('accessWallet.software'),
           desc: this.$t('accessWallet.softwareDesc'),
-          recommend: this.$t('accessWallet.notRecommended'),
+          recommend: '',
           tooltip: '',
           img: softwareImg,
           disabled: false,
