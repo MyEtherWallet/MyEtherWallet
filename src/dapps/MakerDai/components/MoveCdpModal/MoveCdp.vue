@@ -27,7 +27,7 @@
           <standard-button
             :options="submitButton"
             :button-disabled="btnActive ? false : true"
-            @click.native="moveCdp"
+            :click-function="moveCdp"
           />
         </div>
         <help-center-button />
