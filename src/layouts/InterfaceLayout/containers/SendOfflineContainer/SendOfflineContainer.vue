@@ -137,7 +137,7 @@
           </div>
           <div class="the-form gas-amount">
             <input
-              v-model="nonce"
+              v-model="localNonce"
               :placeholder="$t('common.nonce')"
               type="number"
             />
@@ -145,7 +145,7 @@
               <i
                 :class="[
                   'fa fa-check-circle good-button',
-                  nonce >= 0 ? '' : 'not-good'
+                  localNonce >= 0 ? '' : 'not-good'
                 ]"
                 aria-hidden="true"
               />
@@ -427,7 +427,7 @@ export default {
         try {
           const file = JSON.parse(evt.target.result);
           self.localGasPrice = unit.fromWei(file.gasPrice, 'gwei');
-          self.localNonce = file.localNonce;
+          self.localNonce = file.nonce;
         } catch (e) {
           Toast.responseHandler(e, Toast.WARN);
         }
