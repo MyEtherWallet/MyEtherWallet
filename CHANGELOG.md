@@ -2,7 +2,6 @@
 
 - Reimplement support for web3 wallets [#976](https://github.com/MyEtherWallet/MyEtherWallet/pull/976)
 
-
 ### Release v5.0.10
 
 ### Bug

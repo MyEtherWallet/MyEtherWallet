@@ -42,7 +42,10 @@
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <p>{{ content.text }}</p>
+                    <p v-if="item.class === 'e2'">
+                      {{ $t(`${content.text}`) }}
+                    </p>
+                    <p v-else>{{ content.text }}</p>
                   </a>
                 </div>
               </div>
@@ -136,6 +139,7 @@
 import { mapGetters } from 'vuex';
 import FeedbackModal from '@/components/FeedbackModal';
 import CustomerSupport from '@/components/CustomerSupport';
+import affiliates from './affiliates.js';
 const version = VERSION;
 
 export default {
@@ -199,44 +203,7 @@ export default {
         {
           class: 'e2',
           title: this.$t('footer.affiliates'),
-          contents: [
-            {
-              text: this.$t('footer.ledger'),
-              href: 'https://www.ledger.com?r=fa4b'
-            },
-            {
-              text: this.$t('footer.finney'),
-              href:
-                'http://shop.sirinlabs.com?rfsn=2397639.54fdf&utm_source=refersion&utm_medium=affiliate&utm_campaign=2397639.54fdf'
-            },
-            {
-              text: this.$t('footer.digital'),
-              href: 'https://digitalbitbox.com/?ref=mew'
-            },
-            {
-              text: this.$t('footer.ethCard'),
-              href:
-                'https://ether.cards/?utm_source=mew&utm_medium=cpm&utm_campaign=site'
-            },
-            {
-              text: 'KeepKey',
-              href:
-                'http://keepkey.myshopify.com?afmc=pi&utm_campaign=pi&utm_source=leaddyno&utm_medium=affiliate'
-            },
-            {
-              text: this.$t('footer.trezor'),
-              href: 'https://trezor.io/?offer_id=12&aff_id=2029'
-            },
-            {
-              text: this.$t('footer.bity'),
-              href: 'https://bity.com/af/jshkb37v'
-            },
-            {
-              text: this.$t('footer.billfodl'),
-              href:
-                'https://billfodl.com/?afmc=2j&utm_campaign=2j&utm_source=leaddyno&utm_medium=affiliate'
-            }
-          ]
+          contents: affiliates
         },
         {
           class: 'e3',
