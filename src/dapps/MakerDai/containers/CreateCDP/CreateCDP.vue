@@ -1,58 +1,49 @@
 <template>
   <div class="container-maker">
+    <dai-confirmation-modal
+      ref="daiconfirmation"
+      :opencdp="openCdp"
+      :txinfo="txInfo"
+    />
+    <loading-overlay v-if="loading" loadingmessage="Creating CDP..." />
     <div class="manage-container">
       <p class="top-title">
-        <b>{{ $t('dapps.maker_title') }}</b>
+        {{ $t('dapps.maker_title') }}
       </p>
-      <p class="top-title">
-        Please text something here, please text something here, please text
-        something.
+      <p class="top-title-sub">
+        Please set a value of ETH for collateral, to determine how much DAI you
+        would like to generate.
       </p>
-      <div class="currency-ops">
-        <div class="left-top">
-          <p class="currency-label">
-            <b>{{ $t('dapps.collateral') }}</b>
-          </p>
-          <div class="currency-picker-container">
-            <div>
-              <div class="dropdown-text-container dropdown-container">
-                <p>
-                  <span class="cc ETH cc-icon currency-symbol" />
-                  ETH
-                  <span class="subname">- Ethereum </span>
-                </p>
-              </div>
-            </div>
+
+      <div class="currency-ops-new">
+        <div class="currency-picker-container">
+          <div class="interface__block-title">{{ $t('dapps.collateral') }}</div>
+          <div class="dropdown-text-container dropdown-container">
+            <p>
+              <span class="cc ETH cc-icon currency-symbol" />
+              ETH
+              <span class="subname">- Ethereum </span>
+            </p>
           </div>
-        </div>
-        <div class="left-bottom">
           <input
             v-model="ethQty"
             class="currency-picker-container dropdown-text-container dropdown-container"
           />
-          <p>{{ $t('dapps.minCollat') }} <b>0.0TODO</b> ETH</p>
-          <p>{{ depositInPeth }} PETH</p>
-        </div>
-        <div class="arrow">
-          <img :src="arrowImage" />
-        </div>
-        <div class="right-top">
-          <p class="currency-label">
-            <b>{{ $t('dapps.generate') }}</b>
-          </p>
-          <div class="currency-picker-container">
-            <div>
-              <div class="dropdown-text-container dropdown-container">
-                <p>
-                  <span class="cc DAI cc-icon currency-symbol" />
-                  DAI
-                  <span class="subname">- Maker DAI </span>
-                </p>
-              </div>
-            </div>
+          <div class="input-block-message">
+            <p>{{ $t('dapps.minCollat') }} <b>0.0TODO</b> ETH</p>
+            <p>{{ depositInPeth }} PETH</p>
           </div>
         </div>
-        <div class="right-bottom">
+        <div class="arrow"><img :src="arrowImage" /></div>
+        <div>
+          <div class="interface__block-title">{{ $t('dapps.generate') }}</div>
+          <div class="dropdown-text-container dropdown-container">
+            <p>
+              <span class="cc DAI cc-icon cc-icon-dai currency-symbol" />
+              DAI
+              <span class="subname">- Maker DAI </span>
+            </p>
+          </div>
           <input
             v-model="daiQty"
             :class="[
@@ -62,11 +53,14 @@
               'dropdown-container'
             ]"
           />
-          <p>
-            {{ $t('dapps.maxGenerate') }} <b>{{ maxDaiDraw }}</b> DAI
-          </p>
+          <div class="input-block-message">
+            <p>
+              {{ $t('dapps.maxGenerate') }} <b>{{ maxDaiDraw }}</b> DAI
+            </p>
+          </div>
         </div>
       </div>
+
       <div class="cdp-info-block cdp-info-entry">
         <ul>
           <li>
@@ -119,7 +113,7 @@
             validInputs ? '' : 'disabled',
             'submit-button large-round-button-green-filled'
           ]"
-          @click="openCdp"
+          @click="openDaiConfirmation"
         >
           Collateralize & Generate
         </div>
@@ -135,6 +129,8 @@ import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/Interf
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
 import MakerCDP from '../../MakerCDP';
+import DaiConfirmationModal from '../../components/DaiConfirmationModal';
+import LoadingOverlay from '@/components/LoadingOverlay';
 import { displayFixedValue, displayPercentValue } from '../../helpers';
 
 import BigNumber from 'bignumber.js';
@@ -148,7 +144,9 @@ export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
     'interface-bottom-text': InterfaceBottomText,
-    blockie: Blockie
+    blockie: Blockie,
+    'dai-confirmation-modal': DaiConfirmationModal,
+    'loading-overlay': LoadingOverlay
   },
   props: {
     tokensWithBalance: {
@@ -225,7 +223,9 @@ export default {
       priceFloor: 0,
       ethQty: 0,
       daiQty: 0,
-      makerCDP: {}
+      makerCDP: {},
+      txInfo: {},
+      loading: false
     };
   },
   computed: {
@@ -304,9 +304,24 @@ export default {
     displayPercentValue,
     displayFixedValue,
     async openCdp() {
+      this.loading = true;
+
       if (this.ethQty <= 0) return 0;
       this.$emit('cdpOpened');
+
+      // [Note from David to Steve] This should be implemented on TX core.
+      // Close DAI confirmation modal
+      this.$eventHub.$on('showTxConfirmModal', () => {
+        if (this.loading) {
+          this.$refs.daiconfirmation.$refs.modal.hide();
+          this.loading = false;
+        }
+      });
+
       await this.makerCDP.openCdp(this.ethQty, this.daiQty);
+    },
+    openDaiConfirmation() {
+      this.$refs.daiconfirmation.$refs.modal.show();
     }
   }
 };

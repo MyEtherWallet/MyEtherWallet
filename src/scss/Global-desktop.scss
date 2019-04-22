@@ -1437,3 +1437,19 @@
 .monospace {
   font-family: 'Inconsolata', monospace;
 }
+
+//*********************************************************************
+// Global Interface styles
+//*********************************************************************
+.interface__block-title {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 23px;
+  color: $dark-blue-2;
+  margin-bottom: 10px;
+  padding: 0 5px;
+}
+
+.rotate-90 {
+  transform: rotate(90deg);
+}
