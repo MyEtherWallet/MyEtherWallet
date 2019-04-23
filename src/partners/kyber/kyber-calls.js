@@ -19,7 +19,7 @@ const getTokenList = async network => {
         throw Error(results.error.message);
       }
 
-      return results;
+      return results.result;
     }
   } catch (e) {
     utils.handleOrThrow(e);
@@ -38,7 +38,7 @@ const getRates = async network => {
         throw Error(results.error.message);
       }
 
-      return results;
+      return results.result;
     }
     return Promise.resolve({});
   } catch (e) {
@@ -58,7 +58,7 @@ const getGasLimits = async network => {
         throw Error(results.error.message);
       }
 
-      return results;
+      return results.result;
     }
   } catch (e) {
     utils.handleOrThrow(e);
