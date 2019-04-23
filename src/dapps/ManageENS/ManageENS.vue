@@ -448,9 +448,13 @@ export default {
         this.minimumAge = await this.registrarControllerContract.methods
           .minCommitmentAge()
           .call();
-        this.registrarControllerContract.methods.commit(commitment);
-        this.loading = false;
-        this.$router.push({ path: 'permanent-registration' });
+        await this.registrarControllerContract.methods
+          .commit(commitment)
+          .send({ from: this.account.address })
+          .on('receipt', () => {
+            this.loading = false;
+            this.$router.push({ path: 'permanent-registration' });
+          });
       } catch (e) {
         this.loading = false;
         Toast.responseHandler(
@@ -459,22 +463,23 @@ export default {
         );
       }
     },
-    async registerWithDuration(secret, duration) {
+    async registerWithDuration(secret, years) {
       const utils = this.web3.utils;
       this.loading = true;
-      const MILLI_IN_YEAR = 31557600000;
-      const milliDuration = new Date().getTime() + MILLI_IN_YEAR * duration;
-      const durationSecs = Math.ceil(milliDuration / 1000);
-      console.log(durationSecs);
+      const SECONDS_YEAR = 60 * 60 * 24 * 365.25;
+      const duration = Math.ceil(SECONDS_YEAR * years);
       try {
+        const rentPrice = await this.registrarControllerContract.methods
+          .rentPrice(this.parsedHostName, duration)
+          .call();
         await this.registrarControllerContract.methods
           .register(
             this.parsedHostName,
             this.account.address,
-            durationSecs,
+            duration,
             utils.sha3(secret)
           )
-          .call();
+          .send({ from: this.account.address, value: rentPrice });
         Toast.responseHandler('Successfully Registered!', Toast.SUCCESS);
       } catch (e) {
         this.loading = false;
