@@ -37,6 +37,7 @@
       :transfer-func="transferFunc"
       :create-commitment="createCommitment"
       :register-with-duration="registerWithDuration"
+      :minimum-age="minimumAge"
       @updateSecretPhrase="updateSecretPhrase"
       @updateBidAmount="updateBidAmount"
       @updateBidMask="updateBidMask"
@@ -104,7 +105,7 @@ export default {
       dnsClaim: {},
       dnsOwner: '',
       legacyRegistrar: {},
-      minimumAge: 0
+      minimumAge: '0'
     };
   },
   computed: {
@@ -449,9 +450,8 @@ export default {
           .call();
         this.registrarControllerContract.methods.commit(commitment);
         this.loading = false;
-        this.$router.push({ path: 'manage-ens/permanent-registration' });
+        this.$router.push({ path: 'permanent-registration' });
       } catch (e) {
-        console.log(e);
         this.loading = false;
         Toast.responseHandler(
           'Something went wrong! Please try again.',
@@ -460,14 +460,24 @@ export default {
       }
     },
     async registerWithDuration(secret, duration) {
+      const utils = this.web3.utils;
       this.loading = true;
+      const MILLI_IN_YEAR = 31557600000;
+      const milliDuration = new Date().getTime() + MILLI_IN_YEAR * duration;
+      const durationSecs = Math.ceil(milliDuration / 1000);
+      console.log(durationSecs);
       try {
         await this.registrarControllerContract.methods
-          .register(this.parsedHostName, this.account.address, duration, secret)
+          .register(
+            this.parsedHostName,
+            this.account.address,
+            durationSecs,
+            utils.sha3(secret)
+          )
           .call();
         Toast.responseHandler('Successfully Registered!', Toast.SUCCESS);
       } catch (e) {
-        console.log(e);
+        console.log(e)
         this.loading = false;
         Toast.responseHandler(
           'Something went wrong! Please try again.',

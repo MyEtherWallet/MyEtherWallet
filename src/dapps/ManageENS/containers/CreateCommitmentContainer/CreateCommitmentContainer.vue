@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="transfer-registrar-container">
     <div class="transfer-registrar-content">
-      <h3>Cognratulations! {{ fullDomainName }} is available!</h3>
+      <h3>Congratulations! {{ fullDomainName }} is available!</h3>
       <p>Do you want to register {{ fullDomainName }}?</p>
       <div class="secret-phrase-container">
         <label for="secret-phrase">Secret Phrase</label>
@@ -78,7 +78,6 @@ export default {
     }
   },
   mounted() {
-    console.log(this.secretPhrase);
     if (this.hostName === '') {
       this.$router.push('/interface/dapps/manage-ens');
     }

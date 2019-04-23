@@ -1,6 +1,7 @@
 ### Feature
 
 - Support local nodes [#973](https://github.com/MyEtherWallet/MyEtherWallet/pull/973)
+- Permanent registry [](<>)
 
 ### Release v5.0.10
 
