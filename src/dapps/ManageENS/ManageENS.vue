@@ -477,7 +477,6 @@ export default {
           .call();
         Toast.responseHandler('Successfully Registered!', Toast.SUCCESS);
       } catch (e) {
-        console.log(e)
         this.loading = false;
         Toast.responseHandler(
           'Something went wrong! Please try again.',
