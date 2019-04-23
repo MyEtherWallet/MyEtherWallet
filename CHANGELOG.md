@@ -4,7 +4,7 @@
 
 ### Bug
 
-- Fix none assignment issue on Send Offline Container []()
+- Fix none assignment issue on Send Offline Container [#982](https://github.com/MyEtherWallet/MyEtherWallet/pull/982)
 
 ### Release v5.0.10
 
