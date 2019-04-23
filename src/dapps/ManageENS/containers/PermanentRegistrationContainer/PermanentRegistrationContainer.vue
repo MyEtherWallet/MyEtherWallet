@@ -1,20 +1,46 @@
 <template lang="html">
-  <div class="transfer-registrar-container">
-    <div class="transfer-registrar-content">
-      <h3>We found the ENS in a different Registrar!</h3>
-      <p>Do you want to transfer {{ fullDomainName }} to the new registrar?</p>
-      <div class="transfer-registrar-button">
+  <div class="permanent-registration-container">
+    <div class="permanent-registration-content">
+      <b-collapse id="wait-container" :visible="true" class="commitment-wait">
+        <h3>
+          Creating commitment for {{ fullDomainName }}, <br />
+          hang on tight!
+        </h3>
+        <i class="fa fa-spinner fa-spin" />
+      </b-collapse>
+      <b-collapse id="commitment-inputs-container" class="commitment-wait">
+        <h3>REEEEEEEEEE</h3>
+        <div class="permanent-registration-inputs">
+          <label for="secret-phrase">Secret Phrase</label>
+          <input
+            v-model="secretPhrase"
+            placeholder="Please enter secret phrase"
+            name="secret-phrase"
+          />
+        </div>
+        <div class="permanent-registration-inputs">
+          <label for="duration-input"
+            >How many years do you want to keep the name?</label
+          >
+          <input
+            v-model="durationInYears"
+            min="1"
+            type="number"
+            name="duration-input"
+          />
+        </div>
+      </b-collapse>
+      <div class="permanent-registration-button">
         <button
           :class="[
             'large-round-button-green-filled',
-            loading ? 'disabled' : ''
+            !canRegister ? 'disabled' : ''
           ]"
-          @click="transferFunc"
+          @click="registerWithDuration(secretPhrase, durationInYears)"
         >
-          <span v-show="!loading">
-            Transfer
+          <span>
+            {{ canRegister ? 'Register' : ticker }}
           </span>
-          <i v-show="loading" class="fa fa-spinner fa-spin" />
         </button>
       </div>
     </div>
@@ -38,31 +64,71 @@ export default {
       type: String,
       default: ''
     },
-    dnsOwner: {
-      type: String,
-      default: ''
-    },
-    transferFunc: {
+    registerWithDuration: {
       type: Function,
       default: function() {}
+    },
+    tld: {
+      type: String,
+      default: ''
     },
     loading: {
       type: Boolean,
       default: false
     },
-    tld: {
+    minimumAge: {
       type: String,
-      default: ''
+      default: '0'
     }
+  },
+  data() {
+    return {
+      ticker: `0${this.minimumAge / 60 < 10 ? this.minimumAge / 60 : "00"}:00`,
+      timer: () => {},
+      canRegister: false,
+      secretPhrase: '',
+      durationInYears: 1
+    };
   },
   computed: {
     fullDomainName() {
       return `${this.hostName}.${this.tld}`;
     }
   },
+  destroyed() {
+    clearInterval(this.timer);
+  },
   mounted() {
-    if (this.hostName === '') {
-      this.$router.push('/interface/dapps/manage-ens');
+    clearInterval(this.timer);
+    const _self = this;
+    _self.canRegister = false;
+    if (_self.hostName === '') {
+      _self.$router.push('/interface/dapps/manage-ens');
+    }
+
+    const startTime = new Date().getTime();
+    const endTime = startTime + _self.minimumAge * 1000;
+    if (_self.minimumAge > 0) {
+      _self.timer = setInterval(() => {
+        const internalStart = new Date().getTime();
+        const difference = endTime - internalStart;
+        const minutes = Math.floor(
+          (difference % (1000 * 60 * 60)) / (1000 * 60)
+        );
+        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+        _self.ticker = `${
+          minutes >= 10 ? minutes : minutes < 0 ? '00' : '0' + minutes
+        }:${seconds >= 10 ? seconds : seconds < 0 ? '00' : '0' + seconds}`;
+        if (seconds < 0) {
+          _self.canRegister = true;
+          this.$root.$emit(
+            'bv::toggle::collapse',
+            'commitment-inputs-container'
+          );
+          this.$root.$emit('bv::toggle::collapse', 'wait-container');
+          clearInterval(_self.timer);
+        }
+      }, 1000);
     }
   }
 };

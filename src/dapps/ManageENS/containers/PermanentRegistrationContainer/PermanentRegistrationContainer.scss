@@ -1,24 +1,53 @@
 @import '../../ManageENS';
 
-.transfer-registrar-container {
+.permanent-registration-container {
   @extend %template-container;
 
-  .transfer-registrar-content {
+  .permanent-registration-content {
     min-height: 400px;
   }
 }
 
-.transfer-registrar-button {
+.permanent-registration-button {
   align-items: center;
   display: flex;
   flex-direction: column;
 }
 
 h3 {
-  color: $mew-green;
+  color: $light-orange-1;
 }
 
 p {
   font-weight: 300;
   padding-bottom: 50px;
+}
+
+.commitment-wait {
+  text-align: center;
+
+  i {
+    font-size: 30px !important;
+    margin: 20px 0 !important;
+  }
+}
+
+.permanent-registration-inputs {
+  display: flex;
+  flex-flow: column;
+  padding: 30px 15px;
+  text-align: left;
+
+  input {
+    background-color: $light-grey-1;
+    border: none;
+    padding: 15px;
+    width: 100%;
+  }
+
+  label {
+    color: $dark-blue-6;
+    font-weight: bold;
+    padding-bottom: 10px;
+  }
 }
