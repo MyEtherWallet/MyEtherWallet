@@ -9,7 +9,7 @@
         <i class="fa fa-spinner fa-spin" />
       </b-collapse>
       <b-collapse id="commitment-inputs-container" class="commitment-wait">
-        <h3>REEEEEEEEEE</h3>
+        <h3>Commit created! Complete registration for {{ fullDomainName }}</h3>
         <div class="permanent-registration-inputs">
           <label for="secret-phrase">Secret Phrase</label>
           <input
