@@ -4,44 +4,29 @@
       ref="modal"
       :title="getTitleText()"
       centered
-      class="bootstrap-modal bootstrap-modal-wide padding-40-20"
+      class="bootstrap-modal nopadding"
       hide-footer
     >
-      <div class="inputs-container">
-        <!-- Payback DAI -->
-        <div v-if="action === 'payback'" class="input-container">
-          <label>How much DAI would you like to payback?</label
-          ><!-- TODO FOR TRANSLATE -->
-          <div class="input-box">
-            <input v-model="amount" /> <span class="input-unit">DAI</span>
-          </div>
-          <div class="sub-text">
-            <p class="btn" @click="currentDai">Set Max</p>
-            <!-- TODO FOR TRANSLATE -->
-          </div>
-        </div>
-      </div>
+      <div class="contents">
+        <p class="top-message">
+          You might be requested to sign up to three trasactions if there is not
+          enough allowance in DAI and/or MKR to complete this transaction.
+        </p>
 
-      <div class="detail-info">
-        <div class="info">
-          <h4>Detail Information</h4>
-          <div class="sliding-switch-white">
-            <label class="switch">
-              <input
-                type="checkbox"
-                @click="modalDetailInformation = !modalDetailInformation"
-              />
-              <span class="slider round" />
-            </label>
+        <div class="input-container">
+          <div class="interface__block-title">
+            How much DAI would you like to payback?
+          </div>
+          <div class="dai-amount">
+            <input v-model="amount" />
+            <p class="floating-text">DAI</p>
+            <p class="btn" @click="currentDai">Set Max</p>
           </div>
         </div>
-        <div
-          :class="modalDetailInformation && 'expended-info-open'"
-          class="expended-info"
-        >
-          <!-- Payback DAI-->
-          <div v-if="action === 'payback'" class="padding-container">
-            <div class="grid-block">
+
+        <expending-option title="Detail Information">
+          <ul class="details">
+            <li>
               <p>Outstanding Dai Generated<!-- TODO FOR TRANSLATE --></p>
               <p>
                 <b>{{
@@ -51,19 +36,19 @@
                 }}</b>
                 DAI
               </p>
-            </div>
-            <div class="grid-block">
+            </li>
+            <li>
               <p>Stability Fee Owed<!-- TODO FOR TRANSLATE --></p>
               <p><b>0.00%</b> MKR</p>
-            </div>
-            <div class="grid-block">
+            </li>
+            <li>
               <p>{{ $t('dapps.projectedLiquidation') }}</p>
               <p>
                 <b>{{ displayFixedValue(newLiquidationPrice, 2) }}</b>
                 {{ fiatCurrency }}
               </p>
-            </div>
-            <div class="grid-block">
+            </li>
+            <li>
               <p>{{ $t('dapps.projectedCollatRatio') }}</p>
               <p>
                 <b
@@ -75,42 +60,20 @@
                   }}%</b
                 >
               </p>
-            </div>
-          </div>
+            </li>
+          </ul>
+        </expending-option>
+
+        <div class="buttons">
+          <standard-button :options="cancelButton" @click="closeModal" />
+          <standard-button
+            :options="submitButton"
+            :button-disabled="canProceed ? false : true"
+            :click-function="submitBtn"
+          />
         </div>
+        <help-center-button />
       </div>
-      <div v-if="!newCollateralRatioSafe && notZero(amount)">
-        <check-box @changeStatus="checkBoxClicked">
-          <template v-slot:terms>
-            <span v-if="!newCollateralRatioInvalid">
-              I understand the new collateral ratio of
-              {{ displayFixedValue(displayPercentValue(newCollateralRatio)) }}%
-              may place my cdp at risk of liquidation.
-            </span>
-            <span v-if="newCollateralRatioInvalid" style="color: red;">
-              I understand the new collateral ratio of
-              {{ displayFixedValue(displayPercentValue(newCollateralRatio)) }}%
-              WILL place my cdp at risk of liquidation.
-            </span>
-          </template>
-          <!-- TODO FOR TRANSLATE -->
-        </check-box>
-      </div>
-      <div class="buttons-container">
-        <div
-          :class="['cancel-btn', canProceed ? '' : 'disable']"
-          @click="closeModal"
-        >
-          Cancel<!-- TODO FOR TRANSLATE -->
-        </div>
-        <div
-          :class="['submit-btn', canProceed ? '' : 'disable']"
-          @click="submitBtn"
-        >
-          Submit<!-- TODO FOR TRANSLATE -->
-        </div>
-      </div>
-      <help-center-button />
     </b-modal>
   </div>
 </template>
@@ -118,11 +81,12 @@
 <script>
 import { mapGetters } from 'vuex';
 import ethUnit from 'ethjs-unit';
-
+import ExpendingOption from '@/components/ExpendingOption';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
 import CheckBox from '../CheckBox';
 import BigNumber from 'bignumber.js/bignumber.js';
 import { displayFixedValue, displayPercentValue } from '../../helpers';
+import StandardButton from '@/components/Buttons/StandardButton';
 
 const toBigNumber = num => {
   return new BigNumber(num);
@@ -131,7 +95,9 @@ const toBigNumber = num => {
 export default {
   components: {
     'help-center-button': HelpCenterButton,
-    'check-box': CheckBox
+    'check-box': CheckBox,
+    'expending-option': ExpendingOption,
+    'standard-button': StandardButton
   },
   props: {
     tokensWithBalance: {
@@ -160,7 +126,19 @@ export default {
       modalDetailInformation: false,
       textValues: {},
       fiatCurrency: 'USD',
-      digitalCurrency: 'ETH'
+      digitalCurrency: 'ETH',
+      cancelButton: {
+        title: 'Cancel',
+        buttonStyle: 'green-border',
+        noMinWidth: true,
+        fullWidth: true
+      },
+      submitButton: {
+        title: 'Submit',
+        buttonStyle: 'green',
+        noMinWidth: true,
+        fullWidth: true
+      }
     };
   },
   computed: {
