@@ -4,9 +4,25 @@
       ref="modal"
       :title="getTitleText()"
       centered
-      class="bootstrap-modal bootstrap-modal-wide padding-40-20"
+      class="bootstrap-modal nopadding"
       hide-footer
     >
+      <div class="contents">
+        <div>
+          <div class="interface__block-title">
+            How much DAI would you like to generate?
+          </div>
+          <div
+            :class="[
+              'input-box',
+              newCollateralRatioSafe && canGenerateDaiAmount ? '' : 'danger'
+            ]"
+          >
+            <input v-model="amount" /> <span class="input-unit">DAI</span>
+          </div>
+        </div>
+      </div>
+
       <div class="inputs-container">
         <!-- Generate Dai -->
         <div class="input-container">

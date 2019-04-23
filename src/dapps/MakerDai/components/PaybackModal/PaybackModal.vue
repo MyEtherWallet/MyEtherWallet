@@ -13,7 +13,7 @@
           enough allowance in DAI and/or MKR to complete this transaction.
         </p>
 
-        <div class="input-container">
+        <div v-if="action === 'payback'" class="input-container">
           <div class="interface__block-title">
             How much DAI would you like to payback?
           </div>
