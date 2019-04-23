@@ -83,7 +83,7 @@ export default {
   },
   data() {
     return {
-      ticker: `0${this.minimumAge / 60 < 10 ? this.minimumAge / 60 : "00"}:00`,
+      ticker: `0${this.minimumAge / 60 < 10 ? this.minimumAge / 60 : '00'}:00`,
       timer: () => {},
       canRegister: false,
       secretPhrase: '',
