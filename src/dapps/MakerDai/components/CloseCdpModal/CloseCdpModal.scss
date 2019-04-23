@@ -28,7 +28,7 @@ $confirmation-modal-mobile-width: 500px;
 .value-table {
   border-bottom: 1px solid $light-grey-5;
   padding: 15px 10px;
- 
+
   .value-block {
     display: flex;
     align-items: flex-start;
@@ -81,7 +81,7 @@ $confirmation-modal-mobile-width: 500px;
   display: flex;
   align-items: center;
   margin-bottom: 20px;
-  >* {
+  > * {
     width: 100%;
 
     &:first-child {
@@ -89,7 +89,6 @@ $confirmation-modal-mobile-width: 500px;
     }
   }
 }
-
 
 .cc-icon {
   font-size: 36px;
