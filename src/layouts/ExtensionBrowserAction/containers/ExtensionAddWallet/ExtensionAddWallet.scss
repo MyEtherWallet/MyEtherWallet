@@ -2,7 +2,36 @@
 
 .add-wallet-container {
   align-items: center;
+  background-color: $light-grey-2;
   display: flex;
   flex-flow: column;
-  padding: 40px 0;
+  padding: 150px 0;
+
+  h2 {
+    margin: 0;
+  }
+}
+
+.add-wallet-options {
+  display: grid;
+  grid-column-gap: 50px;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  margin: 0 auto;
+  max-width: 900px;
+  padding-top: 40px;
+  position: relative;
+  text-align: center;
+}
+
+.extension-selection {
+  align-items: center;
+  display: flex;
+  flex-flow: column;
+  font-weight: bold;
+  justify-content: space-between;
+
+  h3 {
+    font-size: 16px !important;
+    font-weight: bold !important;
+  }
 }
