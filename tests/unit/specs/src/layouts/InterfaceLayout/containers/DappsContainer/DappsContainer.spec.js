@@ -49,17 +49,17 @@ describe('DappsContainer.vue', () => {
     });
   });
 
-  xit('[01/30/19] should render correct registerDomain title', () => {
+  xit('[01/30/19] should render correct manageEns title', () => {
     const dappsButtons = wrapper.vm.$el.querySelectorAll('.dapps-button');
     expect(dappsButtons[1].querySelector('h4').textContent.trim()).toEqual(
-      translate(wrapper.vm.$data.localDapps.registerDomain.title)
+      translate(wrapper.vm.$data.localDapps.manageEns.title)
     );
   });
 
-  xit('[01/30/19] should render correct registerDomain description', () => {
+  xit('[01/30/19] should render correct manageEns description', () => {
     const dappsButtons = wrapper.vm.$el.querySelectorAll('.dapps-button');
     expect(dappsButtons[1].querySelector('p').textContent.trim()).toEqual(
-      translate(wrapper.vm.$data.localDapps.registerDomain.desc)
+      translate(wrapper.vm.$data.localDapps.manageEns.desc)
     );
   });
 
@@ -77,10 +77,10 @@ describe('DappsContainer.vue', () => {
     );
   });
 
-  xit('[01/30/19] should render correct registerDomain route', () => {
+  xit('[01/30/19] should render correct manageEns route', () => {
     expect(
       wrapper.vm.$el.querySelectorAll('.param')[1].textContent.trim()
-    ).toEqual(wrapper.vm.$data.localDapps.registerDomain.route);
+    ).toEqual(wrapper.vm.$data.localDapps.manageEns.route);
   });
 
   xit('[01/30/19] should render correct domainSale route', () => {

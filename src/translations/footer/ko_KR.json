@@ -17,12 +17,13 @@
   "welcomeDes": "MyEtherWallet는 오픈소스이며 커뮤니티에 무료로 제공됩니다. 귀하의 기부는 그것을 실현하는 데 큰 도움이 됩니다.",
   "feedback": "의견 ",
   "privacy": "개인정보보호 ",
-  "copyright": "© 2018 MyEtherWallet. 무단전재 및 배포 금지",
+  "copyright": "© 2019 MyEtherWallet. All Rights reserved.",
   "love": "사랑 ",
   "donate": "MEW? 기부하세요!",
   "pricingP": "Pricing taken from",
   "advanced": "Advanced",
   "sendOffline": "Send Offline Helper",
   "finney": "Finney",
-  "billfodl": "Billfodl"
+  "billfodl": "Billfodl",
+  "verifyMessage": "Verify Message"
 }

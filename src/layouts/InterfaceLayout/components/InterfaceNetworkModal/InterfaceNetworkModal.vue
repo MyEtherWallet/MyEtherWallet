@@ -32,7 +32,9 @@
           class="content-block"
         >
           <div class="network-title">
-            <img :src="Networks[key][0].type.icon" />
+            <div class="network-icon">
+              <img :src="Networks[key][0].type.icon" />
+            </div>
             <h4 :class="key.toLowerCase()">{{ key }}</h4>
           </div>
           <div class="grid-3">
@@ -108,7 +110,8 @@
                 required: true,
                 url: {
                   require_protocol: true,
-                  protocols: ['http', 'https', 'ws', 'wss']
+                  protocols: ['http', 'https', 'ws', 'wss'],
+                  require_tld: false
                 }
               }"
               v-model="url"
@@ -324,7 +327,8 @@ export default {
       blockExplorerAddr: '',
       chainID: networkTypes['ETH'].chainID,
       tokens: [],
-      contracts: []
+      contracts: [],
+      currencyName: 'CUS'
     };
     this.selectedNetworkName = this.network.type.name;
   },
@@ -375,7 +379,8 @@ export default {
           homePage: '',
           name: this.selectedNetwork.name,
           name_long: this.selectedNetwork.name_long,
-          tokens: []
+          tokens: [],
+          currencyName: this.selectedNetwork.currencyName
         },
         url: this.url,
         username: this.username

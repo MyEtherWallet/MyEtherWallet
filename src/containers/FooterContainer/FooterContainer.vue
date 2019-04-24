@@ -183,8 +183,16 @@ export default {
                 'https://chrome.google.com/webstore/detail/myetherwallet/nlbmnnijcnlegkjjpcfjclmcfggfefdm?hl=en'
             },
             {
+              text: 'Buy a Hardware wallet',
+              to: '/hardware-wallet-affiliates'
+            },
+            {
               text: this.$t('footer.sendOffline'),
               to: '/send-offline-helper'
+            },
+            {
+              text: this.$t('footer.verifyMessage'),
+              to: '/verify-message'
             }
           ]
         },
@@ -216,7 +224,7 @@ export default {
             },
             {
               text: this.$t('footer.trezor'),
-              href: 'https://trezor.io/?a=myetherwallet.com'
+              href: 'https://trezor.io/?offer_id=12&aff_id=2029'
             },
             {
               text: this.$t('footer.bity'),

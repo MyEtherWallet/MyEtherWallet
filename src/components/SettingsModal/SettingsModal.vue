@@ -35,7 +35,7 @@
                       Gwei)
                     </label>
                   </div>
-                  <p>
+                  <p class="hidden">
                     {{ gasPriceInputs[key].eth }} {{ network.type.name }}
                     <span v-if="ethPrice !== 0 && network.type.name === 'ETH'">
                       ($
@@ -61,8 +61,9 @@
                     />
                     <p class="gwei">Gwei</p>
                   </div>
-                  <p>
-                    {{ customGasEth }} {{ network.type.name }}
+                  <p class="hidden">
+                    {{ customGasEth }}
+                    {{ network.type.currencyName }}
                     <span
                       v-if="
                         ethPrice !== 0 &&

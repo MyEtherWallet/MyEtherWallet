@@ -54,6 +54,10 @@ const blockNumber = state => {
   return state.blockNumber;
 };
 
+const linkQuery = state => {
+  return state.linkQuery;
+};
+
 export default {
   account,
   customPaths,
@@ -72,5 +76,6 @@ export default {
   sidemenuOpen,
   darklist,
   gettingStartedDone,
-  blockNumber
+  blockNumber,
+  linkQuery
 };

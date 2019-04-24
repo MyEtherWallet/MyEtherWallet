@@ -26,7 +26,7 @@ describe('MetamaskModal.vue', () => {
     });
   });
 
-  it('should check the switch to enable accessMyWallet Button', () => {
+  xit('should check the switch to enable accessMyWallet Button', () => {
     expect(
       wrapper.vm.$el.querySelectorAll('.modal-multi-icons img').length
     ).toEqual(1);
@@ -41,7 +41,7 @@ describe('MetamaskModal.vue', () => {
     expect(wrapper.vm.$data.accessMyWalletBtnDisabled).toBe(true);
   });
 
-  it('should render correct refreshPage data', () => {
+  xit('should render correct refreshPage data', () => {
     expect(
       wrapper
         .findAll('.close-button')
@@ -58,7 +58,7 @@ describe('MetamaskModal.vue', () => {
     ).toBe(false);
   });
 
-  it('should render correct unlockWeb3Wallet data', () => {
+  xit('should render correct unlockWeb3Wallet data', () => {
     wrapper.setData({ web3WalletExists: true });
     expect(
       wrapper
@@ -88,7 +88,7 @@ describe('MetamaskModal.vue', () => {
   });
 
   describe('MetamaskModal.vue Methods', () => {
-    it('should render correct getWeb3Wallet methods', () => {
+    xit('should render correct getWeb3Wallet methods', () => {
       window.web3 = state.newWeb3;
       wrapper.vm.getWeb3Wallet();
     });

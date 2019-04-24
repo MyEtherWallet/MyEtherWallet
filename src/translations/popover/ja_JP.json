@@ -1,7 +1,7 @@
 {
   "signature": "あなたの取引に合わせて個人識別子",
-  "txSpeed1": "このフィールドは、スイス連邦工科大学の常に支払済であるトランザクションの速度を調節します。",
-  "txSpeed2": "取引を行う前に、少なくとも.01 {0} をことをお勧めします。",
+  "txSpeedPt1": "This field regulates speed of transaction, which is always paid in {0}.",
+  "txSpeedPt2": "We recommend having at least .01 {0} before making transactions.",
   "print": "印刷",
   "copy": "コピー",
   "switchAddress": "アドレスを入れ替え",

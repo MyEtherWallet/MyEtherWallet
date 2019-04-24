@@ -2,6 +2,10 @@ const ethereum = {
   path: "m/44'/60'/0'/0",
   label: 'Ethereum'
 };
+const poaNetwork = {
+  path: "m/44'/60'/0'/0",
+  label: 'POA network'
+};
 const ethereumClassic = {
   path: "m/44'/61'/0'/0",
   label: 'Ethereum Classic'
@@ -92,7 +96,7 @@ const ledgerLiveEthereum = {
   label: 'Ethereum - Ledger Live'
 };
 const ledgerEthereumClassic = {
-  path: "m/44'/60'/160720'/0",
+  path: "m/44'/60'/160720'/0'",
   label: 'Ethereum Classic'
 };
 const ledgerLiveEthereumClassic = {
@@ -118,6 +122,10 @@ const keepkeyEthereumClassic = {
 const thundercore = {
   path: "m/44'/1001'/0'/0",
   label: 'ThunderCore'
+};
+const reoscChain = {
+  path: "m/44'/2894'/0'/0",
+  label: 'REOSC'
 };
 export {
   ethereum,
@@ -149,5 +157,7 @@ export {
   rskTestnet,
   keepkeyEthereum,
   keepkeyEthereumClassic,
-  thundercore
+  thundercore,
+  poaNetwork,
+  reoscChain
 };

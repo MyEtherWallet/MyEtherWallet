@@ -16,7 +16,7 @@
           <p class="button-number">1</p>
           <div class="network">
             <p>Network</p>
-            <p class="network-name">
+            <p class="network-name monospace">
               ({{ selectedNetwork.type.name }} - {{ selectedNetwork.service }})
             </p>
           </div>
@@ -80,7 +80,10 @@
           class="collapse-content"
         >
           <!-- Derivation Path Drop down -->
-          <div class="content-container-1">
+          <div
+            v-show="hardwareWallet.identifier !== 'ledger'"
+            class="content-container-1"
+          >
             <div class="hd-derivation">
               <h4>{{ $t('accessWallet.hdDerivationPath') }}</h4>
               <div class="dropdown-button-container">
@@ -129,7 +132,7 @@
                 $t('accessWallet.invalidPathDesc', { path: invalidPath.path })
               }}
             </p>
-            <p v-show="!customPathInput" class="derivation-brands">
+            <p v-show="!customPathInput" class="derivation-brands monospace">
               {{ getPathLabel(selectedPath) }} ({{ selectedPath }})
             </p>
             <div v-show="customPathInput" class="custom-path-container">
@@ -186,10 +189,10 @@
                     height="30px"
                   />
                 </li>
-                <li>
+                <li class="monospace">
                   {{ account.account.getChecksumAddressString() | concatAddr }}
                 </li>
-                <li>{{ convertBalance(account.balance) }}</li>
+                <li class="monospace">{{ convertBalance(account.balance) }}</li>
                 <li class="user-input-checkbox">
                   <label class="checkbox-container checkbox-container-small">
                     <input
@@ -417,6 +420,7 @@ export default {
       } else {
         selectedPath = this.selectedPath;
       }
+
       this.hardwareWallet
         .init(selectedPath)
         .then(() => {
@@ -428,7 +432,7 @@ export default {
         .catch(error => {
           // if HD path is not supported by the hardware
           this.HDAccounts = [];
-          this.hardwareWallet.errorHandler(error);
+          Toast.responseHandler(error, Toast.ERROR);
         });
       this.selectedPath = this.hardwareWallet.getCurrentPath();
     },
