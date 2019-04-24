@@ -2,6 +2,72 @@
 
 $confirmation-modal-mobile-width: 500px;
 
+.contents {
+  padding: 30px;
+}
+
+.top-message {
+  margin-bottom: 20px;
+}
+
+.input-container {
+  margin-bottom: 10px;
+  .dai-amount {
+    position: relative;
+
+    input {
+      background-color: $background-color-1;
+      border: 0;
+      font-size: 14px;
+      padding: 20px;
+      width: 100%;
+      padding-right: 70px;
+    }
+    .floating-text {
+      position: absolute;
+      right: 20px;
+      top: 20px;
+      color: $dark-grey-11;
+      font-weight: 500;
+    }
+    .btn {
+      color: $mew-green;
+      cursor: pointer;
+    }
+  }
+}
+
+.details {
+  //padding: 0 10px;
+  li {
+    padding: 7px 10px;
+    display: flex;
+    align-items: flex-start;
+
+    p {
+      line-height: 16px;
+    }
+
+    p:nth-child(2) {
+      margin-left: auto;
+      min-width: 100px;
+      text-align: right;
+    }
+  }
+}
+
+.buttons {
+  margin: 20px 0;
+  display: flex;
+  > * {
+    width: 100%;
+
+    &:first-child {
+      margin-right: 10px;
+    }
+  }
+}
+
 .cc-icon {
   font-size: 36px;
 }

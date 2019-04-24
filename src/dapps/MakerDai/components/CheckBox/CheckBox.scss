@@ -13,7 +13,7 @@ a {
   display: block;
   position: relative;
   padding-left: 35px;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   cursor: pointer;
   font-size: 22px;
   -webkit-user-select: none;
@@ -35,12 +35,13 @@ a {
 /* Create a custom checkbox */
 .checkmark {
   position: absolute;
-  top: 2px;
+  top: -2px;
   left: 0;
   height: 25px;
   width: 25px;
-  background-color: #eee;
+  background-color: #fff;
   border-radius: 7px;
+  border: 1px solid $mew-green;
 }
 
 /* On mouse-over, add a grey background color */
@@ -67,8 +68,8 @@ a {
 
 /* Style the checkmark/indicator */
 .check-box-container .checkmark::after {
-  left: 10px;
-  top: 7px;
+  left: 9px;
+  top: 6px;
   width: 5px;
   height: 10px;
   border: solid white;

@@ -4,22 +4,36 @@
       ref="modal"
       :title="'Close CDP'"
       centered
-      class="bootstrap-modal bootstrap-modal-wide padding-40-20"
+      class="bootstrap-modal nopadding"
       hide-footer
     >
-      <div class="detail-info">
-        <div class="info">
-          <div class="expended-info expended-info-open">
-            <div class="grid-block">
-              <p>My MKR balance:</p>
-              <p>{{ mkrBalance }} MKR</p>
-              <p>Get MKR</p>
+      <div class="contents">
+        <div v-if="!canClose" class="message-container">
+          Not enough MKR to close this CDP
+        </div>
+        <p class="top-text">
+          Closing your CDP requires paying back your outstanding DAI debt, as
+          well as the accumulated stability fee. The stability fee can be paid
+          in either DAI or MKR.
+        </p>
+        <div class="value-table-container">
+          <div class="value-table mkr-balance">
+            <div class="value-block">
+              <p><b>My MKR balance</b></p>
+              <p>
+                <b>{{ mkrBalance }} MKR</b>
+              </p>
             </div>
-            <div class="grid-block top-board">
+            <p class="get-mkr">Get MKR</p>
+          </div>
+          <div class="value-table other-values">
+            <div class="value-block">
               <p>Outstanding DAI generated</p>
-              <p>{{ activeCdp.debtValue }} DAI</p>
+              <p>
+                <b>{{ activeCdp.debtValue }} DAI</b>
+              </p>
             </div>
-            <div class="grid-block btm-board">
+            <div class="value-block">
               <p>
                 {{
                   $t('dapps.stabilityFeeInMkr', {
@@ -29,32 +43,30 @@
                   })
                 }}
               </p>
-              <p>{{ getfeeOwed }} MKR</p>
+              <p>
+                <b>{{ getfeeOwed }} MKR</b>
+              </p>
             </div>
           </div>
         </div>
-      </div>
-      {{ canClose }}
-      <div class="buttons-container">
-        <div class="cancel-btn" @click="closeModal">
-          Cancel<!-- TODO FOR TRANSLATE -->
-        </div>
-        <div
-          :class="['submit-btn', canClose ? '' : 'disable']"
-          @click="closeCdp"
-        >
-          Submit<!-- TODO FOR TRANSLATE -->
-        </div>
-      </div>
 
-      <help-center-button />
+        <div class="buttons">
+          <standard-button :options="cancelButton" @click.native="closeModal" />
+          <standard-button
+            :options="closeButton"
+            :button-disabled="canClose ? false : true"
+            :click-function="closeCdp"
+          />
+        </div>
+        <help-center-button />
+      </div>
     </b-modal>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
-
+import StandardButton from '@/components/Buttons/StandardButton';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
 import BigNumber from 'bignumber.js/bignumber.js';
 
@@ -64,7 +76,8 @@ const toBigNumber = num => {
 
 export default {
   components: {
-    'help-center-button': HelpCenterButton
+    'help-center-button': HelpCenterButton,
+    'standard-button': StandardButton
   },
   props: {
     tokensWithBalance: {
@@ -93,7 +106,19 @@ export default {
       closable: false,
       modalDetailInformation: false,
       textValues: {},
-      mkrToken: {}
+      mkrToken: {},
+      cancelButton: {
+        title: 'Cancel',
+        buttonStyle: 'green-border',
+        fullWidth: true,
+        noMinWidth: true
+      },
+      closeButton: {
+        title: 'Close',
+        buttonStyle: 'green',
+        fullWidth: true,
+        noMinWidth: true
+      }
     };
   },
   computed: {
