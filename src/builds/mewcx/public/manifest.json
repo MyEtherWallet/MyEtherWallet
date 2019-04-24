@@ -18,8 +18,10 @@
     "page": "index.html",
     "open_in_tab": true
   },
+  "background": {},
   "permissions": [
     "storage",
     "tabs"
-  ]
+  ],
+  "content_security_policy": "script-src 'self' 'unsafe-eval' 'sha256-uxI0oLy+6OpnvTApEkmCzuxkvu4J47b6yHCV93fjHN0=' 'sha256-0Gsidap6748RQlB69d8CLcBCD2A1kL9luXuhxAKpgXQ=' 'sha256-Z7zS8qcr4BZTeVyPP1sIfzQLoVSrzOW0qLHyZCds1WE='; object-src 'self'"
 }
