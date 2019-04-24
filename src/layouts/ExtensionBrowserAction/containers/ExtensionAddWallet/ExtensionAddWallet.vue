@@ -1,50 +1,67 @@
 <template>
   <div class="add-wallet-container">
-    <h3>Add My Wallet</h3>
+    <h2>Add My Wallet</h2>
     <p>How would you like to add your wallet?</p>
     <div class="add-wallet-options">
-      <router-link
-        v-for="(option, idx) in options"
-        :to="option.link"
-        :key="option.text + idx"
-        class="wallet-option"
-      >
-        <img :src="option.icon" />
-        <p>{{ option.text }}</p>
-        <p>{{ option.warning }}</p>
-      </router-link>
+      <access-wallet-button
+        v-for="(button, index) in options"
+        :key="button.title + index"
+        :func="button.func"
+        :img="button.icon"
+        :title="button.title"
+        :recommend="button.warning"
+        :disabled="false"
+        :classname="'extension-selection'"
+      />
     </div>
   </div>
 </template>
 
 <script>
+import byJsonImgHov from '@/assets/images/icons/button-json-hover.svg';
+import byMnemImgHov from '@/assets/images/icons/button-mnemonic-hover.svg';
+import privKeyImgHov from '@/assets/images/icons/button-key-hover.svg';
+import generateImgHov from '@/assets/images/icons/button-generate-hover.svg';
+import AccessWalletButton from '@/layouts/AccessWalletLayout/components/AccessWalletButton';
+
 export default {
+  components: {
+    'access-wallet-button': AccessWalletButton
+  },
   data() {
     return {
       options: [
         {
-          icon: '',
-          text: 'Generate a New Wallet',
-          link: '/generate',
-          warning: ''
+          icon: generateImgHov,
+          title: 'Generate a New Wallet',
+          warning: '',
+          func: () => {
+            console.log('REEEEEEEE');
+          }
         },
         {
-          icon: '',
-          text: 'Mnemonic Phrase',
-          link: '/mnemonic',
-          warning: 'Not Recommended'
+          icon: byMnemImgHov,
+          title: 'Mnemonic Phrase',
+          warning: 'Not Recommended',
+          func: () => {
+            console.log('REEEEEEEE');
+          }
         },
         {
-          icon: '',
-          text: 'Private Key',
-          link: '/private-key',
-          warning: 'Not Recommended'
+          icon: privKeyImgHov,
+          title: `Private \n Key`,
+          warning: 'Not Recommended',
+          func: () => {
+            console.log('REEEEEEEE');
+          }
         },
         {
-          icon: '',
-          text: 'Keystore File (UTC/JSON)',
-          link: '/keystore',
-          warning: 'Not Recommended'
+          icon: byJsonImgHov,
+          title: 'Keystore File (UTC/JSON)',
+          warning: 'Not Recommended',
+          func: () => {
+            console.log('REEEEEEEE');
+          }
         }
       ]
     };

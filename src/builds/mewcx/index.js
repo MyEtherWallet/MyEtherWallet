@@ -17,8 +17,9 @@ const cxRoutes = [
     children: [
       {
         path: '',
-        name: 'Add My Wallet',
-        component: ExtensionAddWallet
+        name: 'Add Wallet',
+        component: ExtensionAddWallet,
+        meta: { requiresAuth: false }
       }
     ]
   }
