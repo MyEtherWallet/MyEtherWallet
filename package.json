@@ -31,7 +31,7 @@
     "pre-commit": "npm run lint && npm run test"
   },
   "dependencies": {
-    "@sentry/browser": "5.1.0",
+    "@sentry/browser": "5.1.1",
     "@sentry/integrations": "5.1.0",
     "html2canvas": "1.0.0-rc.1",
     "idna-uts46": "1.1.0",
@@ -52,7 +52,7 @@
     "xss": "1.0.6"
   },
   "devDependencies": {
-    "@ensdomains/dnsregistrar": "0.3.1",
+    "@ensdomains/dnsregistrar": "0.3.5",
     "@ethereum-alarm-clock/lib": "0.3.5",
     "@keepkey/keepkey.js": "1.2.1",
     "@ledgerhq/hw-app-eth": "4.53.0",
@@ -76,7 +76,7 @@
     "bootstrap-vue": "2.0.0-rc.18",
     "canvas": "1.6.13",
     "codecov": "3.3.0",
-    "copy-webpack-plugin": "5.0.2",
+    "copy-webpack-plugin": "5.0.3",
     "eslint-plugin-security": "1.4.0",
     "eth-ens-namehash": "2.0.8",
     "ethereum-ens": "git+https://github.com/ensdomains/ensjs.git",
