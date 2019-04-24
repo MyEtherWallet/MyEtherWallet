@@ -27,7 +27,6 @@ describe('InterfaceNetwork.vue', () => {
     i18n = baseSetup.i18n;
     store = baseSetup.store;
 
-    Vue.config.errorHandler = () => {};
     Vue.config.warnHandler = () => {};
     Vue.config.silent = true;
   });

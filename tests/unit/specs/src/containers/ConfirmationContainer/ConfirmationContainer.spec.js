@@ -25,10 +25,10 @@ const BModalStub = {
 };
 
 const eventHub = {
-  $on:sinon.stub()
+  $on: sinon.stub()
 };
 
-describe('[Failing] ConfirmationContainer.vue', () => {
+describe('ConfirmationContainer.vue', () => {
   let localVue, i18n, wrapper, store;
 
   beforeAll(() => {
@@ -66,7 +66,7 @@ describe('[Failing] ConfirmationContainer.vue', () => {
   it('should render correct transactionFee data', () => {
     const checkboxElement = wrapper.find('.sliding-switch-white .switch input');
     checkboxElement.trigger('click');
-    wrapper.setData({ transactionFee: 100 });
+    wrapper.setData({ transactionFee: new String(100) });
     expect(
       wrapper.vm.$el
         .querySelectorAll('.expended-info .grid-block')[3]
@@ -136,7 +136,10 @@ describe('[Failing] ConfirmationContainer.vue', () => {
   it('should render correct amount data', () => {
     const eth = Web3.utils.fromWei(String(wrapper.vm.$data.amount), 'ether');
     expect(
-      wrapper.vm.$el.querySelector('.currency-amt').textContent.trim().indexOf(eth)
+      wrapper.vm.$el
+        .querySelector('.currency-amt')
+        .textContent.trim()
+        .indexOf(eth)
     ).toBeGreaterThan(-1);
   });
 
