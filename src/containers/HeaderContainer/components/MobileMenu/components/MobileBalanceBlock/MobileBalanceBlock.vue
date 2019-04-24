@@ -9,7 +9,10 @@
         </button>
       </div>
       <div class="bottom-block">
-        <p class="the-address">{{ accountBalance }} {{ network.type.name }}</p>
+        <p class="the-address">
+          {{ accountBalance }}
+          {{ network.type.currencyName }}
+        </p>
       </div>
     </div>
   </div>

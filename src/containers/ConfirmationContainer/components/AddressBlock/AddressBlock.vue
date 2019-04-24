@@ -18,6 +18,10 @@
       <p>{{ direction | capitalize }} Address</p>
     </div>
     <div class="address">{{ checksumAddress }}</div>
+    <div v-if="tokenSymbol !== '' && direction === 'to'">
+      <p>Via contract</p>
+      <div class="address">{{ tokenChecksumAddress }}</div>
+    </div>
   </div>
 </template>
 
@@ -74,8 +78,12 @@ export default {
       return this.tokenSymbol.toLowerCase();
     },
     checksumAddress() {
-      if (isAddress(this.tokenTransferTo))
-        return toChecksumAddress(this.tokenTransferTo);
+      if (isAddress(this.tokenTransferTo.toLowerCase()))
+        return toChecksumAddress(this.tokenTransferTo.toLowerCase());
+      if (isAddress(this.address)) return toChecksumAddress(this.address);
+      return '';
+    },
+    tokenChecksumAddress() {
       if (isAddress(this.address)) return toChecksumAddress(this.address);
       return '';
     }

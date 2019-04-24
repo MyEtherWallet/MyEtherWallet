@@ -11,5 +11,6 @@ export default {
   chainID: 108,
   tokens: tokens,
   contracts: contracts,
-  icon: thundercore
+  icon: thundercore,
+  currencyName: 'TT'
 };

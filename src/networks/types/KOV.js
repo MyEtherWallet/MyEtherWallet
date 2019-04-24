@@ -11,5 +11,6 @@ export default {
   chainID: 42,
   tokens: tokens,
   contracts: contracts,
-  icon: kov
+  icon: kov,
+  currencyName: 'KOV'
 };

@@ -11,5 +11,6 @@ export default {
   chainID: 7762959,
   tokens: tokens,
   contracts: contracts,
-  icon: music
+  icon: music,
+  currencyName: 'MUSIC'
 };

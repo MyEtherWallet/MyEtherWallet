@@ -217,6 +217,7 @@ export default class Changelly {
       swapDetails.providerReceives = details.amountExpectedFrom;
       swapDetails.providerSends = details.amountExpectedTo;
       swapDetails.parsed = Changelly.parseOrder(details);
+      swapDetails.providerSends = swapDetails.parsed.recValue;
       swapDetails.orderId = swapDetails.parsed.orderId;
       swapDetails.providerAddress = details.payinAddress;
       swapDetails.dataForInitialization = details;

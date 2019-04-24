@@ -5,7 +5,8 @@ import {
   ledgerLiveEthereumClassic,
   ropsten,
   rskMainnet,
-  rskTestnet
+  rskTestnet,
+  thundercore
 } from './paths';
 export default [
   ledgerEthereum,
@@ -14,5 +15,6 @@ export default [
   ledgerLiveEthereumClassic,
   ropsten,
   rskMainnet,
-  rskTestnet
+  rskTestnet,
+  thundercore
 ];

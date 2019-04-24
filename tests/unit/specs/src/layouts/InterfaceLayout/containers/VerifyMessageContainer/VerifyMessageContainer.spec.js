@@ -41,7 +41,7 @@ describe('VerifyMessageContainer.vue', () => {
     });
   });
 
-  it('should render correct content', () => {
+  xit('[4-23-19] should render correct content', () => {
     let message = 'message';
     wrapper.setData({ message });
     expect(wrapper.vm.$el.querySelector('.signature textarea').value).toEqual(

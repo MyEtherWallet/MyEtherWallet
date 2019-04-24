@@ -163,7 +163,9 @@ export default {
   },
   mounted() {
     this.canDownloadApple =
-      platform.product && platform.product.toLowerCase() !== 'ipad';
+      platform.product !== null
+        ? platform.product.toLowerCase() !== 'ipad'
+        : true;
     const skipTutorial = store.get('skipTutorial');
     if (
       skipTutorial === undefined ||

@@ -1,0 +1,13 @@
+{
+  "failedToSign": "簽署失敗， Ledger 裝置超時",
+  "noDevice": "未發現 Ledger 裝置",
+  "deviceBusy": "Ledger 裝置忙碌中",
+  "unknown0x6804": "Ledger 裝置: 未知的錯誤 (0x6804)",
+  "failedToSignOther": "Ledger 無法簽名! U2F OTHER_ERROR",
+  "failedSignIneligible": "Ledger 無法簽名! U2F DEVICE_INELIGIBLE",
+  "deviceBusyTx": "Ledger 裝置忙碌中!",
+  "unknown0x6801": "Ledger 裝置: UNKNOWN_ERROR (0x6801)",
+  "invalidData0x6a80": "Ledger 收到不合法的資料. (0x6a80)",
+  "deniedByUser0x6985": "使用者拒絕。 (0x6985)",
+  "claNotSupport0x6e00": "請確認您正在使用正確的應用軟體"
+}

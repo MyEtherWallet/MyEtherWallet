@@ -52,8 +52,8 @@ export default {
         // { name: 'ภาษาไทย', flag: 'th', langCode: 'th_TH' },
         // { name: 'Türkçe', flag: 'tr', langCode: 'tr_TR' },
         // { name: 'Tiếng Việt', flag: 'vn', langCode: 'vn_VN' },
-        // { name: '简体中文', flag: 'zh-Hans', langCode: 'zh_CS' }
-        { name: '繁體中文', flag: 'zh-Hant', langCode: 'zh_CN' }
+        { name: '简体中文', flag: 'zh-Hans', langCode: 'zh_CN' },
+        { name: '繁體中文', flag: 'tw', langCode: 'zh_TW' }
       ],
       currentName: 'English',
       currentFlag: 'en',

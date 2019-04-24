@@ -13,6 +13,7 @@
               :currency="tokensWithBalance"
               :page="'sendEthAndTokens'"
               :token="true"
+              :default="selectedCurrency !== '' ? selectedCurrency : {}"
               @selectedCurrency="selectedCurrency = $event"
             />
           </div>
@@ -90,6 +91,23 @@
               ]"
               aria-hidden="true"
             />
+          </div>
+        </div>
+        <div v-show="network.type.name === 'ETH'" class="tx-fee">
+          <div class="title">
+            <h4>
+              {{ $t('common.txFee') }}
+            </h4>
+            <p class="copy-button prevent-user-select" @click="openSettings">
+              {{ $t('common.edit') }}
+            </p>
+          </div>
+          <div class="fee-value">
+            <div class="gwei">
+              {{ gasPrice }} Gwei
+              <!--(Economic)-->
+            </div>
+            <div class="usd">Cost {{ txFeeEth }} ETH = ${{ convert }}</div>
           </div>
         </div>
       </div>
@@ -186,6 +204,7 @@ import { Misc, Toast } from '@/helpers';
 import BigNumber from 'bignumber.js';
 import ethUnit from 'ethjs-unit';
 import utils from 'web3-utils';
+import fetch from 'node-fetch';
 
 export default {
   components: {
@@ -219,21 +238,31 @@ export default {
       value: '0',
       gasLimit: '21000',
       data: '',
-      selectedCurrency: ''
+      selectedCurrency: '',
+      ethPrice: 0
     };
   },
+
   computed: {
     ...mapGetters({
       account: 'account',
       gasPrice: 'gasPrice',
       web3: 'web3',
-      network: 'network'
+      network: 'network',
+      linkQuery: 'linkQuery'
     }),
-    isValidAmount() {
-      const txFee = new BigNumber(ethUnit.toWei(this.gasPrice, 'gwei')).times(
+    txFee() {
+      return new BigNumber(ethUnit.toWei(this.gasPrice, 'gwei')).times(
         this.gasLimit || 0
       );
-      const txFeeEth = ethUnit.fromWei(txFee, 'ether');
+    },
+    txFeeEth() {
+      if (new BigNumber(this.txFee).gt(0)) {
+        return ethUnit.fromWei(this.txFee, 'ether');
+      }
+      return 0;
+    },
+    isValidAmount() {
       const notEnoughGasMsg =
         this.$t('errorsGlobal.notAValidAmountTotal') +
         ' Gas ' +
@@ -247,7 +276,7 @@ export default {
       const notEnoughCurrencyMsg =
         this.$t('errorsGlobal.notAValidAmountTotal') +
         ' ' +
-        this.network.type.name +
+        this.network.type.currencyName +
         ' ' +
         this.$t('errorsGlobal.toSend');
       const invalidValueMsg = this.$t('errorsGlobal.invalidValue');
@@ -255,9 +284,9 @@ export default {
         this.selectedCurrency.balance
       );
       const enoughCurrency = new BigNumber(this.value)
-        .plus(txFeeEth)
+        .plus(this.txFeeEth)
         .lte(this.balanceDefault);
-      const enoughGas = new BigNumber(txFeeEth).lte(this.balanceDefault);
+      const enoughGas = new BigNumber(this.txFeeEth).lte(this.balanceDefault);
       const validDecimal = this.isValidDecimals;
       if (new BigNumber(this.value).lt(0)) {
         return {
@@ -313,7 +342,8 @@ export default {
       );
     },
     isToken() {
-      return this.selectedCurrency.symbol !== this.network.type.name;
+      const symbol = this.network.type.currencyName;
+      return this.selectedCurrency.symbol !== symbol;
     },
     txData() {
       if (this.isToken) {
@@ -343,14 +373,56 @@ export default {
         this.selectedCurrency,
         new Date().getTime() / 1000
       );
+    },
+    convert() {
+      if (this.ethPrice) {
+        return new BigNumber(
+          new BigNumber(this.txFeeEth).times(new BigNumber(this.ethPrice))
+        )
+          .toFixed(2)
+          .toString();
+      }
+      return '--';
     }
   },
   watch: {
     multiWatch: utils._.debounce(function() {
       if (this.validInputs) this.estimateGas();
-    }, 500)
+    }, 500),
+    tokensWithBalance() {
+      if (Object.keys(this.linkQuery).length > 0) {
+        const { data, to, value, gaslimit, tokensymbol } = this.linkQuery;
+        const foundToken = tokensymbol
+          ? this.tokensWithBalance.find(item => {
+              return item.symbol.toLowerCase() === tokensymbol.toLowerCase();
+            })
+          : undefined;
+
+        this.data = data ? (Misc.validateHexString(data) ? data : '') : '';
+        this.value = value ? new BigNumber(value).toFixed() : 0;
+        this.hexAddress = to ? to : '';
+        this.address = to ? to : '';
+        this.gasLimit = gaslimit ? new BigNumber(gaslimit).toString() : '21000';
+        this.selectedCurrency = foundToken ? foundToken : this.selectedCurrency;
+
+        Toast.responseHandler(
+          'Form has been prefilled. Please proceed with caution!',
+          Toast.WARN
+        );
+        this.$store.dispatch('saveQueryVal', {});
+      }
+    },
+    network(newVal) {
+      if (newVal.type.name === 'ETH') this.getEthPrice();
+    }
+  },
+  mounted() {
+    if (this.network.type.name === 'ETH') this.getEthPrice();
   },
   methods: {
+    openSettings() {
+      this.$eventHub.$emit('open-settings');
+    },
     sendEntireBalance() {
       if (this.isToken) this.value = this.selectedCurrency.balance;
       else
@@ -434,6 +506,18 @@ export default {
       } catch (e) {
         Toast.responseHandler(e, Toast.ERROR);
       }
+    },
+    async getEthPrice() {
+      const price = await fetch(
+        'https://cryptorates.mewapi.io/ticker?filter=ETH'
+      )
+        .then(res => {
+          return res.json();
+        })
+        .catch(e => {
+          Toast.responseHandler(e, Toast.ERROR);
+        });
+      this.ethPrice = price.data.ETH.quotes.USD.price;
     },
     copyToClipboard(ref) {
       this.$refs[ref].select();

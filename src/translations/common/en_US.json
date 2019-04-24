@@ -3,7 +3,7 @@
   "accessMyWallet": "Access My Wallet",
   "accessWallet": "Access Wallet",
   "faqs": "FAQs",
-  "sendTx": "Send ETH & Tokens",
+  "sendTx": "Send Transaction",
   "sendSafeSendTx": "Protect Your ETH Transaction Using SafeSend",
   "swap": "Swap",
   "unlockWallet": "Unlock Wallet",
@@ -75,5 +75,6 @@
   "nonce": "Nonce",
   "vintage": "Vintage",
   "okay": "Okay",
-  "ok": "OK"
+  "ok": "OK",
+  "menu": "Menu"
 }

@@ -1,0 +1,1 @@
+export default ['eth', 'xyz'];

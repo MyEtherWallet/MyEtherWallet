@@ -17,12 +17,13 @@
   "welcomeDes": "MyEtherWallet es de código abierto y gratis para la comunidad. Tus donaciones contribuyen en gran medida a que esto sea posible.",
   "feedback": "Comentarios",
   "privacy": "Privacidad",
-  "copyright": "© 2018 MyEtherWallet. Todos los derechos reservados.",
+  "copyright": "© 2019 MyEtherWallet. All Rights reserved.",
   "love": "Amor",
   "donate": "¿MEW? ¡Donar!",
   "pricingP": "Los precios de",
   "advanced": "Avanzado",
   "sendOffline": "Send Offline Helper",
   "finney": "Finney",
-  "billfodl": "Billfodl"
+  "billfodl": "Billfodl",
+  "verifyMessage": "Verify Message"
 }

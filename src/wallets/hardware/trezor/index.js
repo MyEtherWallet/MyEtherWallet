@@ -10,6 +10,7 @@ import {
   getBufferFromHex,
   calculateChainIdFromV
 } from '../../utils';
+import { toBuffer } from 'ethereumjs-util';
 import errorHandler from './errorHandler';
 
 const NEED_PASSWORD = false;
@@ -61,7 +62,8 @@ class TrezorWallet {
     const msgSigner = async msg => {
       const result = await Trezor.ethereumSignMessage({
         path: this.basePath + '/' + idx,
-        message: msg
+        message: toBuffer(msg).toString('hex'),
+        hex: true
       });
       if (!result.success) throw new Error(result.payload.error);
       return getBufferFromHex(result.payload.signature);

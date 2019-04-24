@@ -55,14 +55,15 @@ export default {
       name: 'dapps',
       routes: [
         '/interface/dapps',
-        '/interface/dapps/register-domain',
-        '/interface/dapps/register-domain/bid',
-        '/interface/dapps/register-domain/reveal',
-        '/interface/dapps/register-domain/owned',
-        '/interface/dapps/register-domain/forbidden',
-        '/interface/dapps/register-domain/auction',
-        '/interface/dapps/register-domain/confirm',
-        '/interface/dapps/domain-sale'
+        '/interface/dapps/manage-ens',
+        '/interface/dapps/manage-ens/bid',
+        '/interface/dapps/manage-ens/reveal',
+        '/interface/dapps/manage-ens/owned',
+        '/interface/dapps/manage-ens/forbidden',
+        '/interface/dapps/manage-ens/auction',
+        '/interface/dapps/manage-ens/confirm',
+        '/interface/dapps/domain-sale',
+        '/interface/dapps/schedule-transaction'
       ],
       icons: {
         active: require('@/assets/images/sidemenu/dapps-active.svg'),

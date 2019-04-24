@@ -1,4 +1,5 @@
 import Ledger from '@ledgerhq/hw-app-eth';
+import { byContractAddress } from '@ledgerhq/hw-app-eth/erc20';
 import ethTx from 'ethereumjs-tx';
 import u2fTransport from '@ledgerhq/hw-transport-u2f';
 import { LEDGER as ledgerType } from '../../bip44/walletTypes';
@@ -11,9 +12,12 @@ import {
   sanitizeHex,
   calculateChainIdFromV
 } from '../../utils';
+import { toBuffer } from 'ethereumjs-util';
 import errorHandler from './errorHandler';
 
 const NEED_PASSWORD = false;
+const OPEN_TIMEOUT = 10000;
+const LISTENER_TIMEOUT = 15000;
 
 class ledgerWallet {
   constructor() {
@@ -57,6 +61,8 @@ class ledgerWallet {
       tx.raw[6] = Buffer.from([networkId]);
       tx.raw[7] = Buffer.from([]);
       tx.raw[8] = Buffer.from([]);
+      const tokenInfo = byContractAddress('0x' + tx.to.toString('hex'));
+      if (tokenInfo) await this.ledger.provideERC20TokenInformation(tokenInfo);
       const result = await this.ledger.signTransaction(
         accountPath,
         tx.serialize().toString('hex')
@@ -78,7 +84,7 @@ class ledgerWallet {
     const msgSigner = async msg => {
       const result = await this.ledger.signPersonalMessage(
         accountPath,
-        Buffer.from(msg).toString('hex')
+        toBuffer(msg).toString('hex')
       );
       const v = parseInt(result.v, 10) - 27;
       const vHex = sanitizeHex(v.toString(16));
@@ -112,7 +118,7 @@ const createWallet = async basePath => {
 };
 createWallet.errorHandler = errorHandler;
 const getLedgerTransport = async () => {
-  const transport = await u2fTransport.create(3000, 3000);
+  const transport = await u2fTransport.create(OPEN_TIMEOUT, LISTENER_TIMEOUT);
   return transport;
 };
 const getLedgerAppConfig = async _ledger => {

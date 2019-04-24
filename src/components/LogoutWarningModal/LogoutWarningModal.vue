@@ -48,7 +48,7 @@ export default {
       this.$refs.logoutWarningModal.hide();
     },
     cancel() {
-      this.$router.push('Interface');
+      this.$router.push('interface');
       this.$refs.logoutWarningModal.hide();
     }
   }
