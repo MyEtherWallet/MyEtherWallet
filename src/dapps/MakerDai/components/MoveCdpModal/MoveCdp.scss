@@ -2,72 +2,65 @@
 
 $confirmation-modal-mobile-width: 500px;
 
-.modal-content-container {
+.modal-content {
   padding: 30px;
-}
-
-.input-container {
-  margin-top: 30px;
 }
 
 .cc-icon {
   font-size: 36px;
 }
 
-.inputs-container {
+.top-text {
+  margin-bottom: 10px;
+}
+
+.input-container {
+  margin-bottom: 20px;
   display: flex;
   flex-direction: column;
 
-  .input-container {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 20px;
+  label {
+    color: $dark-blue-2;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 10px 7px;
 
-    label {
-      color: $dark-blue-2;
-      font-size: 16px;
-      font-weight: 600;
-      padding: 10px 7px;
-
-      i {
-        font-size: 14px;
-        margin-right: 2px;
-      }
-
-      .input-title {
-        font-size: 16px;
-      }
+    i {
+      font-size: 14px;
+      margin-right: 2px;
     }
 
-    .input-box {
-      display: flex;
-      flex-direction: row;
-      align-items: baseline;
-      margin-bottom: 20px;
+    .input-title {
+      font-size: 16px;
+    }
+  }
 
-      &.danger {
-        border: 1px solid red;
-      }
+  .input-box {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
 
-      input {
-        background-color: $background-color-1;
-        border: 0;
-        font-size: 14px;
-        height: 52px;
-        padding: 20px;
-        width: 90%;
-      }
-      // needs to be fixed to smoothly match against the input
-      .input-unit {
-        background-color: $background-color-1;
-        border: 0;
-        font-size: 14px;
-        height: 52px;
-        padding: 17px 22px 20px;
-        width: 10%;
-        color: #999;
-        font-weight: 600;
-      }
+    &.danger {
+      border: 1px solid red;
+    }
+
+    input {
+      background-color: $background-color-1;
+      border: 0;
+      font-size: 14px;
+      padding: 20px;
+      width: 100%;
+    }
+    // needs to be fixed to smoothly match against the input
+    .input-unit {
+      background-color: $background-color-1;
+      border: 0;
+      font-size: 14px;
+      height: 52px;
+      padding: 17px 22px 20px;
+      width: 10%;
+      color: #999;
+      font-weight: 600;
     }
   }
 }
@@ -151,57 +144,18 @@ $confirmation-modal-mobile-width: 500px;
   } // .expended-info
 } // .detail-info
 
-.buttons-container {
-  margin-top: 60px;
-  margin-bottom: 60px;
+.buttons {
+  margin-bottom: 20px;
   display: flex;
-  flex-direction: row;
-  align-content: space-between;
+  align-items: center;
   justify-content: center;
 
-  // Mobile
-  @media all and (max-width: $mobile-width) {
-    margin-top: 30px;
-  }
+  > * {
+    width: 100%;
 
-  div {
-    margin: auto;
-    text-align: center;
-    border-radius: 5px;
-    cursor: pointer;
-    padding: 20px;
-    width: 260px;
-
-    // Mobile
-    @media all and (max-width: $mobile-width) {
-      width: 100%;
+    &:first-child {
+      margin-right: 10px;
     }
-  }
-
-  .submit-btn {
-    width: 189px;
-    height: 62px;
-    border-radius: 4px;
-    background-color: #05c0a5;
-    color: $white;
-
-    &.disable {
-      background-color: #506175;
-      cursor: not-allowed;
-    }
-  }
-
-  .cancel-btn {
-    background-color: $white;
-    width: 189px;
-    height: 62px;
-    border-radius: 4px;
-    border: solid 1px #506175;
-    color: #506175;
-  }
-
-  .disabled {
-    background-color: #898989;
   }
 }
 

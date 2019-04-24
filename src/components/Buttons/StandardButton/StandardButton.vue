@@ -25,6 +25,7 @@
           options.noMinWidth ? 'no-min-width' : ''
         ]"
         class="the-button-box"
+        @click="clickFunction"
       >
         {{ options.title }}
         <img
@@ -94,6 +95,12 @@ export default {
     buttonDisabled: {
       type: Boolean,
       default: false
+    },
+    clickFunction: {
+      type: Function,
+      default: function() {
+        return;
+      }
     }
   },
   data() {
