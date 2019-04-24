@@ -8,70 +8,50 @@
       hide-footer
     >
       <div class="contents">
-        <div>
+        <div class="inputs">
           <div class="interface__block-title">
             How much DAI would you like to generate?
           </div>
-          <div
-            :class="[
-              'input-box',
-              newCollateralRatioSafe && canGenerateDaiAmount ? '' : 'danger'
-            ]"
-          >
-            <input v-model="amount" /> <span class="input-unit">DAI</span>
+          <div class="top-buttons">
+            <!-- TODO FOR TRANSLATE -->
+            <p class="total">
+              <span>Total:</span>
+              {{ activeCdp.maxDai ? displayFixedValue(activeCdp.maxDai) : 0 }}
+              DAI
+            </p>
+            <p class="max" @click="maxDai">
+              Max. Balance
+            </p>
           </div>
-        </div>
-      </div>
-
-      <div class="inputs-container">
-        <!-- Generate Dai -->
-        <div class="input-container">
-          <label>How much DAI would you like to generate?</label
-          ><!-- TODO FOR TRANSLATE -->
           <div
             :class="[
               'input-box',
               newCollateralRatioSafe && canGenerateDaiAmount ? '' : 'danger'
             ]"
           >
-            <input v-model="amount" /> <span class="input-unit">DAI</span>
+            <input v-model="amount" />
+            <p class="input-unit">DAI</p>
           </div>
           <div class="sub-text">
-            <p v-if="!canGenerateDaiAmount">Above Max Dai Amount</p>
             <!-- TODO FOR TRANSLATE -->
-            <p class="btn" @click="maxDai">Max</p>
-            <!-- TODO FOR TRANSLATE -->
-            <p>{{ newCollateralRatio }}%</p>
+            <p>Collateralization Ratio: {{ newCollateralRatio }}%</p>
+            <p v-if="!canGenerateDaiAmount" class="above-max">
+              Above Max Dai Amount
+            </p>
           </div>
         </div>
-      </div>
-
-      <div class="detail-info">
-        <div class="info">
-          <h4>Detail Information</h4>
-          <div class="sliding-switch-white">
-            <label class="switch">
-              <input
-                type="checkbox"
-                @click="modalDetailInformation = !modalDetailInformation"
-              />
-              <span class="slider round" />
-            </label>
-          </div>
-        </div>
-        <div
-          :class="modalDetailInformation && 'expended-info-open'"
-          class="expended-info"
-        >
+        <expending-option title="Details">
           <!-- Generate Dai -->
-          <div v-if="action === 'generate'" class="padding-container">
+          <div v-if="action === 'generate'" class="detail-container">
             <div class="grid-block">
               <p>Max Available to Generate</p>
               <!-- TODO FOR TRANSLATE -->
               <p>
-                <b>{{
-                  activeCdp.maxDai ? displayFixedValue(activeCdp.maxDai) : 0
-                }}</b>
+                <b>
+                  {{
+                    activeCdp.maxDai ? displayFixedValue(activeCdp.maxDai) : 0
+                  }}
+                </b>
                 DAI
               </p>
             </div>
@@ -89,38 +69,42 @@
               </p>
             </div>
           </div>
-        </div>
-      </div>
-      <div v-if="!newCollateralRatioSafe && notZero(amount)">
-        <check-box @changeStatus="checkBoxClicked">
-          <template v-slot:terms>
-            <span v-if="!newCollateralRatioInvalid">
-              I understand the new collateral ratio of
-              {{ newCollateralRatio }}% may place my cdp at risk of liquidation.
-            </span>
-            <span v-if="newCollateralRatioInvalid" style="color: red;">
-              I understand the new collateral ratio of
-              {{ newCollateralRatio }}% WILL place my cdp at risk of
-              liquidation.
-            </span> </template
-          ><!-- TODO FOR TRANSLATE -->
-        </check-box>
-      </div>
-      <div class="buttons-container">
+        </expending-option>
+
         <div
-          :class="['cancel-btn', canProceed ? '' : 'disable']"
-          @click="closeModal"
+          v-if="!newCollateralRatioSafe && notZero(amount)"
+          class="warning-confirmation"
         >
-          Cancel<!-- TODO FOR TRANSLATE -->
+          <div class="grid-block">
+            <div class="sign">⚠️</div>
+            <div class="text-content">
+              <p class="title">Caution</p>
+              <p class="warning-details">
+                Your new collateral ratio of {{ newCollateralRatio }}% may place
+                CDP at risk of liquidation.
+              </p>
+              <check-box @changeStatus="checkBoxClicked">
+                <template v-slot:terms
+                  ><p class="checkbox-label">
+                    I understand and agree with it.
+                  </p></template
+                >
+                <!-- TODO FOR TRANSLATE -->
+              </check-box>
+            </div>
+          </div>
         </div>
-        <div
-          :class="['submit-btn', canProceed ? '' : 'disable']"
-          @click="submitBtn"
-        >
-          Submit<!-- TODO FOR TRANSLATE -->
+
+        <div class="buttons">
+          <standard-button :options="cancelButton" @click="closeModal" />
+          <standard-button
+            :options="generateButton"
+            :button-disabled="canProceed ? false : true"
+            :click-function="submitBtn"
+          />
         </div>
+        <help-center-button />
       </div>
-      <help-center-button />
     </b-modal>
   </div>
 </template>
@@ -128,7 +112,8 @@
 <script>
 import { mapGetters } from 'vuex';
 import ethUnit from 'ethjs-unit';
-
+import ExpendingOption from '@/components/ExpendingOption';
+import StandardButton from '@/components/Buttons/StandardButton';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
 import CheckBox from '../CheckBox';
 import BigNumber from 'bignumber.js/bignumber.js';
@@ -141,7 +126,9 @@ const toBigNumber = num => {
 export default {
   components: {
     'help-center-button': HelpCenterButton,
-    'check-box': CheckBox
+    'check-box': CheckBox,
+    'expending-option': ExpendingOption,
+    'standard-button': StandardButton
   },
   props: {
     tokensWithBalance: {
@@ -170,7 +157,17 @@ export default {
       modalDetailInformation: false,
       textValues: {},
       fiatCurrency: 'USD',
-      digitalCurrency: 'ETH'
+      digitalCurrency: 'ETH',
+      cancelButton: {
+        title: 'Cancel',
+        buttonStyle: 'green-border',
+        noMinWidth: true
+      },
+      generateButton: {
+        title: 'Generate',
+        buttonStyle: 'green',
+        noMinWidth: true
+      }
     };
   },
   computed: {
