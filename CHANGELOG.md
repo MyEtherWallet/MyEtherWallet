@@ -1,7 +1,12 @@
+### Feature
+
+- Support local nodes [#973](https://github.com/MyEtherWallet/MyEtherWallet/pull/973)
+
 ### Release v5.0.10
 
 ### Bug
 
+- Better Ledger app support flow [#910](https://github.com/MyEtherWallet/MyEtherWallet/pull/910)
 - Fixes send offline token value and deploy contract errors [#920](https://github.com/MyEtherWallet/MyEtherWallet/pull/920)
 - Update TOMO explorrer links [#918](https://github.com/MyEtherWallet/MyEtherWallet/pull/918)
 
@@ -12,7 +17,8 @@
 - MEWCX build fix [#935](https://github.com/MyEtherWallet/MyEtherWallet/pull/935)
 - Update Metamask Integration with listeners [#938](https://github.com/MyEtherWallet/MyEtherWallet/pull/938)
 - Sentry migration [#922](https://github.com/MyEtherWallet/MyEtherWallet/pull/922)
-- remove utf8 convertion for hex strings [#941](https://github.com/MyEtherWallet/MyEtherWallet/pull/941)
+- Remove utf8 convertion for hex strings [#941](https://github.com/MyEtherWallet/MyEtherWallet/pull/941)
+- Additional update of swap rates following user input [#905](https://github.com/MyEtherWallet/MyEtherWallet/pull/905)
 
 ### Feature
 
@@ -24,6 +30,7 @@
 
 ### Devop
 
+- Add gas amount to send tx page [#925](https://github.com/MyEtherWallet/MyEtherWallet/pull/925)
 - Better data catch for url params [#909](https://github.com/MyEtherWallet/MyEtherWallet/pull/909)
 - Update hardwares [#906](https://github.com/MyEtherWallet/MyEtherWallet/pull/906)
 - Add monospace font[#898](https://github.com/MyEtherWallet/MyEtherWallet/pull/898)

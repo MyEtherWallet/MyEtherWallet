@@ -110,7 +110,8 @@
                 required: true,
                 url: {
                   require_protocol: true,
-                  protocols: ['http', 'https', 'ws', 'wss']
+                  protocols: ['http', 'https', 'ws', 'wss'],
+                  require_tld: false
                 }
               }"
               v-model="url"
