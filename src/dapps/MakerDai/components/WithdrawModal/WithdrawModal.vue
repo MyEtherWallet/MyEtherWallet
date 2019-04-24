@@ -260,14 +260,14 @@ export default {
       return 0;
     },
     newCollateralRatioSafe() {
+      console.log(this.canCompute); // todo remove dev item
+
       if (this.canCompute) {
         return this.activeCdp
           .calcCollatRatioEthChg(
             this.activeCdp.ethCollateral.minus(this.amount)
           )
           .gte(2);
-      } else if (this.activeCdp) {
-        return toBigNumber(this.activeCdp.collatRatio).gte(2);
       }
       return true;
     },
@@ -278,8 +278,6 @@ export default {
             this.activeCdp.ethCollateral.minus(this.amount)
           )
           .lte(1.5);
-      } else if (this.activeCdp) {
-        return toBigNumber(this.activeCdp.collatRatio).lte(1.5);
       }
       return true;
     },
