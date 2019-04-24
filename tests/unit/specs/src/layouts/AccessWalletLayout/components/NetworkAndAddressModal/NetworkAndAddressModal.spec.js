@@ -29,7 +29,7 @@ describe('NetworkAndAddressModal.vue', () => {
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
     store = baseSetup.store;
-    Vue.config.errorHandler = () => {};
+
     Vue.config.warnHandler = () => {};
   });
 
@@ -56,7 +56,7 @@ describe('NetworkAndAddressModal.vue', () => {
       expect(wrapper.vm.$data.accessMyWalletBtnDisabled).toBe(false);
     });
 
-    xit('should render correct unlockWallet method', () => {
+    it('should render correct unlockWallet method', () => {
       wrapper.vm.unlockWallet();
       expect(spy.calledWith({ path: 'interface' })).toBe(true);
     });

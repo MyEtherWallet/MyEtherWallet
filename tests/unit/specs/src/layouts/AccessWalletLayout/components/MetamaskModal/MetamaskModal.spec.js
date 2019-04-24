@@ -14,7 +14,6 @@ describe('MetamaskModal.vue', () => {
     i18n = baseSetup.i18n;
 
     Vue.config.warnHandler = () => {};
-    Vue.config.errorHandler = () => {};
   });
 
   beforeEach(() => {

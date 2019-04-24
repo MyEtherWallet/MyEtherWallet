@@ -4,6 +4,7 @@ import sinon from 'sinon';
 import { shallowMount } from '@vue/test-utils';
 import SwapSendToModal from '@/layouts/InterfaceLayout/containers/SwapContainer/components/SwapSendToModal/SwapSendToModal.vue';
 import { Tooling } from '@@/helpers';
+import CheckoutForm from '@/layouts/InterfaceLayout/containers/SwapContainer/components/CheckoutForm/CheckoutForm.vue';
 
 const showModal = sinon.stub();
 const hideModal = sinon.stub();
@@ -18,17 +19,17 @@ const BModalStub = {
 };
 
 describe('SwapSendToModal.vue', () => {
-  let localVue, i18n, wrapper, store;
+  let localVue, i18n, wrapper, store, actions;
 
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
     store = baseSetup.store;
-    Vue.config.errorHandler = () => {};
+
     Vue.config.warnHandler = () => {};
 
-    const actions = {
+    actions = {
       addSwapNotification: sinon.stub()
     };
 
@@ -44,7 +45,8 @@ describe('SwapSendToModal.vue', () => {
       store,
       attachToDocument: true,
       stubs: {
-        'b-modal': BModalStub
+        'b-modal': BModalStub,
+        'simplex-checkout-form': CheckoutForm
       }
     });
   });
@@ -123,7 +125,6 @@ describe('SwapSendToModal.vue', () => {
     expect(wrapper.vm.$data.fromAddress.address).toEqual(
       swapDetails.fromAddress
     );
-
     expect(wrapper.vm.$data.toAddress.value).toEqual(swapDetails.toValue);
     expect(wrapper.vm.$data.toAddress.name).toEqual(swapDetails.toCurrency);
     expect(wrapper.vm.$data.toAddress.address).toEqual(swapDetails.toAddress);
@@ -138,7 +139,7 @@ describe('SwapSendToModal.vue', () => {
       wrapper.setProps({ swapDetails });
       wrapper.vm.redirectToPartner();
       wrapper.vm.$nextTick(() => {
-        expect(hideModal.called).toBe(true);
+        expect(actions.addSwapNotification.called).toBe(true);
       });
     });
   });

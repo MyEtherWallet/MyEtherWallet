@@ -27,7 +27,8 @@ describe('ConfirmModal.vue', () => {
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
     store = baseSetup.store;
-    Vue.config.errorHandler = () => {};
+
+    Vue.config.warnHandler = () => {};
   });
 
   beforeEach(() => {

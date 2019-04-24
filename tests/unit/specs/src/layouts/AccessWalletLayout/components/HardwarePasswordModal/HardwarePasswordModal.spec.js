@@ -23,13 +23,13 @@ describe('HardwarePasswordModal.vue', () => {
     });
   });
 
-  xit('[Failing] should render correct error data', () => {
+  it('should render correct error data', () => {
     const error = 'error';
     wrapper.setData({ error });
     expect(wrapper.find('p.error').text()).toEqual(error);
   });
 
-  xit('[Failing] should render correct password data', () => {
+  it('should render correct password data', () => {
     const password = 'password';
     wrapper.setData({ password });
     expect(

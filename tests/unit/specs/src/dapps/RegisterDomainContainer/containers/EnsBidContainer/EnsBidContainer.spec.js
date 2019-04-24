@@ -49,7 +49,7 @@ describe('EnsBidContainer.vue', () => {
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
     store = baseSetup.store;
-    Vue.config.errorHandler = () => {};
+    Vue.config.warnHandler = () => {};
   });
 
   beforeEach(() => {
@@ -109,22 +109,9 @@ describe('EnsBidContainer.vue', () => {
     expect(domainNameElement.textContent.trim()).toEqual(domainName + '.');
   });
 
-  xit('should show/hide span or spinner icon according to loading props', () => {
-    expect(wrapper.findAll('.submit span').exists()).toBe(true);
-    expect(wrapper.findAll('.submit i').exists()).toBe(false);
-    wrapper.setProps({ loading: true });
-    expect(wrapper.findAll('.submit span').exists()).toBe(false);
-    expect(wrapper.findAll('.submit i').exists()).toBe(true);
-  });
-
-  xit('should call generateKeyPhrase props func when button clicked', () => {
-    wrapper.find('.random').trigger('click');
-    expect(generateKeyPhrase.called).toBe(true);
-  });
-
-  xit('should call startAuctionAndBid props func when button clicked', () => {
+  it('should call startAuctionAndBid props func when button clicked', () => {
     wrapper
-      .findAll('.submit')
+      .findAll('.buttons-container .submit-button')
       .at(0)
       .trigger('click');
     expect(startAuctionAndBid.called).toBe(true);
@@ -260,10 +247,14 @@ describe('EnsBidContainer.vue', () => {
     expect(wrapper.find('.edit').isVisible()).toBe(true);
   });
 
-  xit('should show/hide button according to showInfo data', () => {
-    expect(wrapper.find('.submit-button').isVisible()).toBe(true);
+  it('should show/hide button according to showInfo data', () => {
+    expect(wrapper.find('.buttons-container .submit-button').isVisible()).toBe(
+      true
+    );
     wrapper.setData({ showInfo: false });
-    expect(wrapper.find('.submit-button').isVisible()).toBe(false);
+    expect(wrapper.find('.buttons-container .submit-button').isVisible()).toBe(
+      false
+    );
   });
 
   it('should show/hide erroredMsg according to localBidAmount and localBidMask', () => {
@@ -271,6 +262,7 @@ describe('EnsBidContainer.vue', () => {
     wrapper.setData({ localBidAmount: 0.1 });
     expect(wrapper.find('.erroredMsg').isVisible()).toBe(true);
   });
+
   describe('EnsBidContainer.vue Methods', () => {
     it('should update json when submit button clicked', () => {
       const raw = {
