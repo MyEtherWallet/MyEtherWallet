@@ -17,10 +17,12 @@
           <div class="interface__block-title">
             How much DAI would you like to payback?
           </div>
+          <div class="top-buttons">
+            <p @click="currentDai">Set Max</p>
+          </div>
           <div class="dai-amount">
             <input v-model="amount" />
             <p class="floating-text">DAI</p>
-            <p class="btn" @click="currentDai">Set Max</p>
           </div>
         </div>
 
