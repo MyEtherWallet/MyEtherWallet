@@ -24,10 +24,18 @@
               </div>
             </div>
           </div>
-          <div class="tx-data tx-to">
+          <div v-if="hexToUtf8(messageToSign)" class="tx-data tx-to">
             <div class="address-info">
               <p class="title address-title">
                 {{ $t('interface.txSideMenuMessage') }}
+              </p>
+              <p class="message-to-sign">{{ hexToUtf8(messageToSign) }}</p>
+            </div>
+          </div>
+          <div class="tx-data tx-to">
+            <div class="address-info">
+              <p class="title address-title">
+                {{ $t('confirmation.messageInHex') }}
               </p>
               <p class="message-to-sign">{{ messageToSign }}</p>
             </div>
@@ -54,9 +62,8 @@
               href="https:/kb.myetherwallet.com"
               target="_blank"
               rel="noopener noreferrer"
+              >Learn more</a
             >
-              Learn more
-            </a>
           </p>
         </div>
       </div>
@@ -66,6 +73,7 @@
 
 <script>
 import Blockie from '@/components/Blockie';
+import utils from 'web3-utils';
 import { mapGetters } from 'vuex';
 
 export default {
@@ -117,6 +125,13 @@ export default {
     signMessage() {
       if (this.signedMessage !== '') {
         this.confirmSignMessage();
+      }
+    },
+    hexToUtf8(hex) {
+      try {
+        return utils.hexToUtf8(hex);
+      } catch (e) {
+        return false;
       }
     }
   }
