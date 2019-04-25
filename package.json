@@ -76,12 +76,8 @@
     "bootstrap-vue": "2.0.0-rc.18",
     "canvas": "1.6.13",
     "codecov": "3.3.0",
-<<<<<<< HEAD
-    "copy-webpack-plugin": "5.0.2",
-    "detectrtc": "1.3.9",
-=======
     "copy-webpack-plugin": "5.0.3",
->>>>>>> a92d54ec814f135760b9cc37ad9162c31f1e2f03
+    "detectrtc": "1.3.9",
     "eslint-plugin-security": "1.4.0",
     "eth-ens-namehash": "2.0.8",
     "ethereum-ens": "git+https://github.com/ensdomains/ensjs.git",
