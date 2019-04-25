@@ -3,39 +3,30 @@
     <div v-if="hasAccounts">
       Has Accounts
     </div>
-    <div v-else class="welcome-section">
-      <div class="header">
-        MEW | Chrome Extension
-      </div>
-      <div class="content">
-        <img src="@/assets/images/logo-small.png" width="75" />
-        <div class="text-content">
-          <h3>MyEtherWallet Official Chrome Extension</h3>
-          <p>
-            You don't have any wallet saved. Click Add Wallet to get started
-          </p>
-        </div>
-      </div>
-      <div class="add-wallet-content" @click="addWallet">
-        Add Wallet
-      </div>
+    <div v-else>
+      <welcome-container :add-wallet="addWallet" />
     </div>
   </div>
 </template>
 
 <script>
+import WelcomeContainer from './containers/WelcomeContainer';
 export default {
+  components: {
+    'welcome-container': WelcomeContainer
+  },
   data() {
     return {
       hasAccounts: false
     };
   },
-  mounted() {
+  created() {
     const chrome = window.chrome;
     const _this = this;
-    chrome.storage.sync.get(['accounts'], res => {
+    chrome.storage.sync.get(null, res => {
       _this.hasAccounts = Object.keys(res).length > 0;
     });
+    console.log(_this.hasAccounts);
   },
   methods: {
     addWallet() {
@@ -43,6 +34,7 @@ export default {
       if (chrome.runtime.openOptionsPage) {
         chrome.runtime.openOptionsPage();
       } else {
+        // eslint-disable-next-line
         window.open(chrome.runtime.getURL('index.html'));
       }
     }

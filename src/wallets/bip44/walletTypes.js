@@ -8,6 +8,7 @@ const KEYSTORE = 'keystore';
 const MNEMONIC = 'mnemonic';
 const WEB3_WALLET = 'web3_wallet';
 const PRIV_KEY = 'priv_key';
+const WATCH_ONLY = 'watch_only';
 export {
   LEDGER,
   TREZOR,
@@ -18,5 +19,6 @@ export {
   KEYSTORE,
   MNEMONIC,
   WEB3_WALLET,
-  PRIV_KEY
+  PRIV_KEY,
+  WATCH_ONLY
 };
