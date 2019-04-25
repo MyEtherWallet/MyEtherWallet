@@ -2,7 +2,6 @@
 
 $confirmation-modal-mobile-width: 500px;
 
-
 .contents {
   padding: 30px;
 }
@@ -77,7 +76,6 @@ $confirmation-modal-mobile-width: 500px;
   }
 }
 
-
 .detail-container {
   padding: 0 10px;
 
@@ -96,13 +94,12 @@ $confirmation-modal-mobile-width: 500px;
   }
 }
 
-
 .buttons {
   margin-top: 20px;
   margin-bottom: 20px;
   display: flex;
   align-items: center;
-  >* {
+  > * {
     width: 100%;
 
     &:first-child {
@@ -110,7 +107,6 @@ $confirmation-modal-mobile-width: 500px;
     }
   }
 }
-
 
 .cc-icon {
   font-size: 36px;
@@ -149,4 +145,3 @@ $confirmation-modal-mobile-width: 500px;
     }
   }
 }
-

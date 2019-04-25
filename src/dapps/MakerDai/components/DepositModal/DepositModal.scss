@@ -68,14 +68,12 @@ $confirmation-modal-mobile-width: 500px;
 
 .sub-text {
   padding: 0 10px;
-  .btn {
-    color: #05c0a5;
-    &:hover {
-      cursor: pointer;
-    }
-  }
-
+  display: flex;
+  align-items: center;
   padding-bottom: 10px;
+  p {
+    margin-right: 5px;
+  }
 }
 
 .detail-container {
@@ -145,6 +143,22 @@ $confirmation-modal-mobile-width: 500px;
     }
   } // .expended-info
 } // .detail-info
+
+
+.buttons {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  > * {
+    width: 100%;
+
+    &:first-child {
+      margin-right: 10px;
+    }
+  }
+}
+
 
 .buttons-container {
   margin-top: 60px;

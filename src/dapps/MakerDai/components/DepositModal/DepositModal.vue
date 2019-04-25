@@ -11,8 +11,10 @@
         <div class="inputs-container">
           <!-- Deposit ETH -->
           <div v-if="action === 'deposit'" class="input-container">
-            <label>How much ETH would you like to deposit?</label
-            ><!-- TODO FOR TRANSLATE -->
+            <div class="interface__block-title">
+              How much ETH would you like to deposit?
+            </div>
+            <!-- TODO FOR TRANSLATE -->
             <div :class="['input-box', hasEnoughEth ? '' : 'danger']">
               <input v-model="amount" />
               <span class="input-unit">{{ digitalCurrency }}</span>
@@ -28,6 +30,9 @@
                 }}
                 PETH
               </p>
+              <popover
+                popcontent="Pooled ETH, which means it joins a large pool of Ethereum that is the collateral for all Dai created."
+              />
             </div>
           </div>
         </div>
@@ -102,22 +107,15 @@
             <!-- TODO FOR TRANSLATE -->
           </check-box>
         </div>
-        <div class="buttons-container">
-          <div
-            :class="['cancel-btn', canProceed ? '' : 'disable']"
-            class="btn"
-            @click="closeModal"
-          >
-            Cancel<!-- TODO FOR TRANSLATE -->
-          </div>
-          <div
-            :class="['submit-btn', canProceed ? '' : 'disable']"
-            class="btn"
-            @click="submitBtn"
-          >
-            Submit<!-- TODO FOR TRANSLATE -->
-          </div>
+        <div class="buttons">
+          <standard-button :options="cancelButton" @click="closeModal" />
+          <standard-button
+            :options="submitButton"
+            :button-disabled="canProceed ? false : true"
+            :click-function="submitBtn"
+          />
         </div>
+
         <help-center-button />
       </div>
     </b-modal>
@@ -127,7 +125,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import ethUnit from 'ethjs-unit';
-
+import StandardButton from '@/components/Buttons/StandardButton';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
 import CheckBox from '../CheckBox';
 import BigNumber from 'bignumber.js/bignumber.js';
@@ -140,7 +138,8 @@ const toBigNumber = num => {
 export default {
   components: {
     'help-center-button': HelpCenterButton,
-    'check-box': CheckBox
+    'check-box': CheckBox,
+    'standard-button': StandardButton
   },
   props: {
     tokensWithBalance: {
@@ -169,7 +168,17 @@ export default {
       modalDetailInformation: false,
       textValues: {},
       fiatCurrency: 'USD',
-      digitalCurrency: 'ETH'
+      digitalCurrency: 'ETH',
+      cancelButton: {
+        title: 'Cancel',
+        buttonStyle: 'green-border',
+        noMinWidth: true
+      },
+      submitButton: {
+        title: 'Submit',
+        buttonStyle: 'green',
+        noMinWidth: true
+      }
     };
   },
   computed: {
