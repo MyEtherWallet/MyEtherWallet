@@ -86,7 +86,7 @@ export default class MakerManager /*extends EventEmitter*/ {
     // this.ethPrice = toBigNumber(
     //   (await this.priceService.getEthPrice()).toNumber()
     // );
-    this.ethPrice = toBigNumber(166.16);
+    this.ethPrice = toBigNumber(163.84);
 
     const pethPrice = await this.priceService.getPethPrice();
     const targetPrice = await this.priceService.getPethPrice();

@@ -23,12 +23,7 @@
               Max. Balance
             </p>
           </div>
-          <div
-            :class="[
-              'input-box',
-              newCollateralRatioSafe && canGenerateDaiAmount ? '' : 'danger'
-            ]"
-          >
+          <div :class="['input-box', allOk ? '' : 'danger']">
             <input v-model="amount" />
             <p class="input-unit">DAI</p>
           </div>
@@ -96,7 +91,10 @@
         </div>
 
         <div class="buttons">
-          <standard-button :options="cancelButton" @click="closeModal" />
+          <standard-button
+            :options="cancelButton"
+            :click-function="closeModal"
+          />
           <standard-button
             :options="generateButton"
             :button-disabled="canProceed ? false : true"
@@ -176,8 +174,19 @@ export default {
       network: 'network',
       account: 'account'
     }),
+    amountPresent() {
+      return (
+        (this.amount || this.amount !== '') && !toBigNumber(this.amount).lte(0)
+      );
+    },
+    canCompute() {
+      return this.activeCdp && this.amountPresent;
+    },
     allOk() {
-      return this.newCollateralRatioSafe && this.canGenerateDaiAmount;
+      if (this.amountPresent) {
+        return this.newCollateralRatioSafe && this.canGenerateDaiAmount;
+      }
+      return true;
     },
     showWarning() {
       return (
@@ -187,7 +196,7 @@ export default {
       );
     },
     hasEnoughEth() {
-      if (this.amount || this.amount !== '') {
+      if (this.canCompute) {
         const asEth = ethUnit.fromWei(this.account.balance, 'ether');
         return toBigNumber(this.amount).lte(toBigNumber(asEth));
       }
@@ -195,7 +204,7 @@ export default {
     },
     hasEnoughDai() {
       // TODO Figure out how to learn how much dai a user has (the code below should work)
-      if (this.amount || this.amount !== '') {
+      if (this.canCompute) {
         // const daiToken = this.tokensWithBalance.find(item => {
         //   return item.symbol.toUpperCase() === 'DAI';
         // });
@@ -205,13 +214,13 @@ export default {
       return true;
     },
     canGenerateDaiAmount() {
-      if (this.amount || this.amount !== '') {
+      if (this.canCompute) {
         return toBigNumber(this.amount).lte(toBigNumber(this.activeCdp.maxDai));
       }
       return true;
     },
     canProceed() {
-      if (this.amount || this.amount !== '') {
+      if (this.canCompute) {
         if (toBigNumber(this.amount).lte(0)) return false;
         // if (!ratioOk) return false;
         return (
@@ -224,7 +233,7 @@ export default {
       return false;
     },
     newCollateralRatio() {
-      if (this.activeCdp && this.amount > 0) {
+      if (this.canCompute) {
         return this.displayFixedValue(
           this.displayPercentValue(
             this.activeCdp.calcCollatRatioDaiChg(
@@ -232,35 +241,27 @@ export default {
             )
           )
         );
-      } else if (this.activeCdp) {
-        return this.displayFixedValue(
-          this.displayPercentValue(this.activeCdp.collatRatio)
-        );
       }
       return '--';
     },
     newCollateralRatioSafe() {
-      if (this.activeCdp && this.amount > 0) {
+      if (this.canCompute) {
         return this.activeCdp
           .calcCollatRatioDaiChg(this.activeCdp.debtValue.plus(this.amount))
           .gte(2);
-      } else if (this.activeCdp) {
-        return toBigNumber(this.activeCdp.collatRatio).gte(2);
       }
       return true;
     },
     newCollateralRatioInvalid() {
-      if (this.activeCdp && this.amount > 0) {
+      if (this.canCompute) {
         return this.activeCdp
           .calcCollatRatioDaiChg(this.activeCdp.debtValue.plus(this.amount))
           .lte(1.5);
-      } else if (this.activeCdp) {
-        return toBigNumber(this.activeCdp.collatRatio).lte(1.5);
       }
       return true;
     },
     newLiquidationPrice() {
-      if (this.activeCdp && this.amount > 0) {
+      if (this.canCompute) {
         return this.activeCdp.calcLiquidationPriceDaiChg(
           this.activeCdp.debtValue.plus(this.amount)
         );
@@ -278,7 +279,6 @@ export default {
       this.drawDai();
     },
     checkBoxClicked(checked) {
-      console.log(checked); // todo remove dev item
       this.riskyBypass = checked; //!this.riskyBypass;
     },
     displayPercentValue,
@@ -298,7 +298,11 @@ export default {
     async drawDai() {
       if (toBigNumber(this.amount).gte(0)) {
         this.delayCloseModal();
-        await this.activeCdp.drawDai(this.amount);
+        if (this.newCollateralRatioSafe) {
+          await this.activeCdp.drawDai(this.amount);
+        } else {
+          await this.activeCdp.drawDai(this.amount, this.riskyBypass);
+        }
       }
     },
     getTitleText() {

@@ -84,6 +84,22 @@ $mobile-width: 700px;
           font-weight: 600;
         }
       }
+      .green {
+        font-size: 16px;
+        span {
+          font-size: 16px;
+          color: $mew-green;
+          font-weight: 600;
+        }
+      }
+      .red {
+        font-size: 16px;
+        span {
+          font-size: 16px;
+          color: red;
+          font-weight: 600;
+        }
+      }
     } // .block-title
 
     .block-content {

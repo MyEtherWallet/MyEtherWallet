@@ -17,8 +17,8 @@
           <div class="interface__block-title">
             How much DAI would you like to payback?
           </div>
-          <div class="dai-amount">
-            <input v-model="amount" />
+          <div :class="['dai-amount', hasEnoughDai ? '' : 'danger']">
+            <input v-model="amount"/>
             <p class="floating-text">DAI</p>
             <p class="btn" @click="currentDai">Set Max</p>
           </div>
@@ -31,9 +31,9 @@
               <p>
                 <b>{{
                   activeCdp.debtValue
-                    ? displayFixedValue(activeCdp.debtValue, 3)
-                    : 0
-                }}</b>
+                  ? displayFixedValue(activeCdp.debtValue, 3)
+                  : 0
+                  }}</b>
                 DAI
               </p>
             </li>
@@ -52,11 +52,11 @@
               <p>{{ $t('dapps.projectedCollatRatio') }}</p>
               <p>
                 <b
-                  >{{
-                    displayFixedValue(
-                      displayPercentValue(newCollateralRatio),
-                      3
-                    )
+                >{{
+                  displayFixedValue(
+                  displayPercentValue(newCollateralRatio),
+                  3
+                  )
                   }}%</b
                 >
               </p>
@@ -65,14 +65,14 @@
         </expending-option>
 
         <div class="buttons">
-          <standard-button :options="cancelButton" @click="closeModal" />
+          <standard-button :options="cancelButton" :click-function="closeModal"/>
           <standard-button
             :options="submitButton"
             :button-disabled="canProceed ? false : true"
             :click-function="submitBtn"
           />
         </div>
-        <help-center-button />
+        <help-center-button/>
       </div>
     </b-modal>
   </div>
@@ -147,6 +147,20 @@ export default {
       network: 'network',
       account: 'account'
     }),
+    amountPresent() {
+      return (
+        (this.amount || this.amount !== '') && !toBigNumber(this.amount).lte(0)
+      );
+    },
+    canCompute() {
+      return this.activeCdp && this.amountPresent;
+    },
+    allOk() {
+      if (this.amountPresent) {
+        return this.newCollateralRatioSafe && this.canGenerateDaiAmount;
+      }
+      return true;
+    },
     hasEnoughEth() {
       if (this.amount || this.amount !== '') {
         const asEth = ethUnit.fromWei(this.account.balance, 'ether');
@@ -156,11 +170,12 @@ export default {
     },
     hasEnoughDai() {
       // TODO Figure out how to learn how much dai a user has (the code below should work)
-      if (this.amount || this.amount !== '') {
-        // const daiToken = this.tokensWithBalance.find(item => {
-        //   return item.symbol.toUpperCase() === 'DAI';
-        // });
-        const asEth = ethUnit.fromWei(this.account.balance, 'ether');
+      if (this.canCompute) {
+        const daiToken = this.tokensWithBalance.find(item => {
+          return item.symbol.toUpperCase() === 'DAI';
+        });
+        if (daiToken === undefined) return true;
+        const asEth = ethUnit.fromWei(daiToken.balance, 'ether');
         return toBigNumber(this.amount).lte(toBigNumber(asEth));
       }
       return true;
@@ -180,15 +195,16 @@ export default {
       return true;
     },
     canProceed() {
-      if (toBigNumber(this.amount).lte(0)) return false;
-      const ratio = toBigNumber(this.newCollateralRatio);
-      const ratioSafe = ratio.gt(2) || ratio.eq(0);
-      const ratioOk = ratio.gt(1.5) || ratio.eq(0);
-      if (!ratioOk) return false;
-      return (
-        (this.canWithdrawEthAmount && ratioSafe) ||
-        (this.canWithdrawEthAmount && ratioOk && this.riskyBypass)
-      );
+      return this.canCompute
+      // if (toBigNumber(this.amount).lte(0)) return false;
+      // const ratio = toBigNumber(this.newCollateralRatio);
+      // const ratioSafe = ratio.gt(2) || ratio.eq(0);
+      // const ratioOk = ratio.gt(1.5) || ratio.eq(0);
+      // if (!ratioOk) return false;
+      // return (
+      //   (this.canWithdrawEthAmount && ratioSafe) ||
+      //   (this.canWithdrawEthAmount && ratioOk && this.riskyBypass)
+      // );
     },
     newCollateralRatio() {
       if (this.activeCdp && this.amount > 0) {
@@ -219,7 +235,6 @@ export default {
         const ratio = this.activeCdp.calcCollatRatioDaiChg(
           this.activeCdp.debtValue.minus(this.amount)
         );
-        console.log(ratio.toString()); // todo remove dev item
         if (ratio.lte(new BigNumber(0.000009))) {
           return true;
         }
