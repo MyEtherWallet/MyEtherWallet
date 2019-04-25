@@ -13,22 +13,28 @@
           :name="item.name"
           :key="item.address"
         />
+        <h3 v-show="myWallets === false">
+          No wallets found 😢
+        </h3>
       </b-tab>
       <b-tab :active="!active" title="Watch Only Wallets" class="tab-container">
         <wallet-view-component
-          v-for="item in watchOnly"
-          v-show="watchOnly.length > 0"
+          v-for="item in watchOnlyWallets"
+          v-show="watchOnlyWallets.length > 0"
           :address="item.address"
           :name="item.name"
           :key="item.address"
         />
+        <h3 v-show="watchOnlyWallets === false">
+          No wallets found 😢
+        </h3>
       </b-tab>
     </b-tabs>
     <div class="popup-button-options">
-      <div class="button-option">
+      <div class="button-option" @click="addWallet">
         My Wallet
       </div>
-      <div class="button-option">
+      <div class="button-option" @click="() => {}">
         Quick Send
       </div>
     </div>
@@ -48,6 +54,10 @@ export default {
       default: () => {
         return {};
       }
+    },
+    addWallet: {
+      type: Function,
+      default: () => {}
     }
   },
   data() {
@@ -56,7 +66,7 @@ export default {
     };
   },
   computed: {
-    watchOnly() {
+    watchOnlyWallets() {
       const wallets = [];
       Object.keys(this.accounts).forEach(account => {
         if (this.accounts[account].type === WATCH_ONLY) {

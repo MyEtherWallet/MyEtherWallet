@@ -1,15 +1,20 @@
 <template>
-  <div class="wallet-view-container">
+  <div class="wallet-view-container" @click="showFullAddr = !showFullAddr">
     <div class="wallet-view-info">
       <div>
         <blockie :address="address" width="50px" height="50px" />
       </div>
       <p class="name-address">
-        <span>{{ name }} </span><br />
-        {{ concatAddr }}
+        <span class="name">{{ name }} </span><br />
+        <span v-show="!showFullAddr">{{ concatAddr }}</span>
+        <span v-show="showFullAddr">{{ address }}</span>
       </p>
+      <i :class="[showFullAddr ? 'fa-chevron-up' : 'fa-chevron-down', 'fa']" />
     </div>
-    <div class="wallet-view-balance"></div>
+    <div class="wallet-view-balance">
+      <p>Balance:</p>
+      <p class="balance">1000 ETH</p>
+    </div>
   </div>
 </template>
 
@@ -31,7 +36,8 @@ export default {
   },
   data() {
     return {
-      balance: 0
+      balance: 0,
+      showFullAddr: false
     };
   },
   computed: {
