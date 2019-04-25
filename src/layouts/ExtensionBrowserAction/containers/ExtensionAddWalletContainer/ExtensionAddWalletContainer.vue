@@ -70,5 +70,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'ExtensionAddWallet.scss';
+@import 'ExtensionAddWalletContainer.scss';
 </style>
