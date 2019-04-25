@@ -167,7 +167,22 @@ if (process.env.NODE_ENV === 'production') {
           'src/builds/web/public/img/icons/safari-pinned-tab.svg',
           'src/builds/web/public/img/spaceman.png',
           'src/builds/web/public/manifest.json',
-          'src/builds/web/public/robots.txt'
+          'src/builds/web/public/robots.txt',
+          'src/assets/images/icons/button-generate-hover.svg',
+          'src/builds/mewcx/public/backgroundPhishingCatcher.js',
+          'src/builds/mewcx/public/backgroundWeb3Manager.js',
+          'src/layouts/ExtensionBrowserAction/containers/ExtensionAddWallet/ExtensionAddWallet.scss',
+          'src/layouts/ExtensionBrowserAction/containers/ExtensionAddWallet/ExtensionAddWallet.vue',
+          'src/layouts/ExtensionBrowserAction/containers/ExtensionAddWallet/index.js',
+          'src/layouts/ExtensionBrowserAction/containers/ExtensionHeaderContainer/ExtensionHeaderContainer.scss',
+          'src/layouts/ExtensionBrowserAction/containers/ExtensionHeaderContainer/ExtensionHeaderContainer.vue',
+          'src/layouts/ExtensionBrowserAction/containers/ExtensionHeaderContainer/index.js',
+          'src/layouts/ExtensionBrowserAction/ExtensionBrowserAction.scss',
+          'src/layouts/ExtensionBrowserAction/ExtensionBrowserAction.vue',
+          'src/layouts/ExtensionBrowserAction/index.js',
+          'src/layouts/ExtensionPopup/ExtensionPopup.scss',
+          'src/layouts/ExtensionPopup/ExtensionPopup.vue',
+          'src/layouts/ExtensionPopup/index.js'
         ]
       }
     })

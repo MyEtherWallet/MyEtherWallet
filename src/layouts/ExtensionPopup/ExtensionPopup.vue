@@ -1,7 +1,7 @@
 <template>
   <div class="popover-container">
     <div v-if="hasAccounts">
-      Has Accounts
+      <accounts-container :accounts="accounts" />
     </div>
     <div v-else>
       <welcome-container :add-wallet="addWallet" />
@@ -11,13 +11,16 @@
 
 <script>
 import WelcomeContainer from './containers/WelcomeContainer';
+import AccountsContainer from './containers/AccountsContainer';
 export default {
   components: {
-    'welcome-container': WelcomeContainer
+    'welcome-container': WelcomeContainer,
+    'accounts-container': AccountsContainer
   },
   data() {
     return {
-      hasAccounts: false
+      hasAccounts: false,
+      accounts: {}
     };
   },
   created() {
@@ -25,8 +28,8 @@ export default {
     const _this = this;
     chrome.storage.sync.get(null, res => {
       _this.hasAccounts = Object.keys(res).length > 0;
+      _this.accounts = _this.hasAccounts ? res : {};
     });
-    console.log(_this.hasAccounts);
   },
   methods: {
     addWallet() {

@@ -1,0 +1,22 @@
+@import '~@/scss/GlobalVariables';
+
+.accounts-container-b-tabs {
+  display: flex;
+
+  li {
+    flex: 1 !important;
+    text-align: center;
+
+    a {
+      background-color: $light-grey-3 !important;
+      color: $dark-grey-5 !important;
+      border: none !important;
+      padding: 15px 0 !important;
+    }
+
+    .active {
+      background-color: $dark-blue-12 !important;
+      color: $white !important;
+    }
+  }
+}
