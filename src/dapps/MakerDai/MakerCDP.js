@@ -488,7 +488,7 @@ export default class MakerCDP {
   }
 
   calcCollatRatioDaiChg(daiQty) {
-    return toBigNumber(this.calcCollatRatio(this.pethCollateral, daiQty));
+    return toBigNumber(this.calcCollatRatio(this.ethCollateral, daiQty));
   }
 
   calcCollatRatioEthChg(ethQty) {

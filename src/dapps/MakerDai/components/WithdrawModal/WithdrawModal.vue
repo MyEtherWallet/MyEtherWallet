@@ -260,8 +260,6 @@ export default {
       return 0;
     },
     newCollateralRatioSafe() {
-      console.log(this.canCompute); // todo remove dev item
-
       if (this.canCompute) {
         return this.activeCdp
           .calcCollatRatioEthChg(

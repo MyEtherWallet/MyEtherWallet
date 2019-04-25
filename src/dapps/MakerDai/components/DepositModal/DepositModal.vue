@@ -28,6 +28,7 @@
                 }}
                 PETH
               </p>
+              <p v-if="!hasEnoughEth">Not Enough ETH</p>
             </div>
           </div>
         </div>
@@ -178,6 +179,11 @@ export default {
       network: 'network',
       account: 'account'
     }),
+    amountPresent() {
+      return (
+        (this.amount || this.amount !== '') && !toBigNumber(this.amount).lte(0)
+      );
+    },
     hasEnoughEth() {
       if (this.amount || this.amount !== '') {
         const asEth = ethUnit.fromWei(this.account.balance, 'ether');

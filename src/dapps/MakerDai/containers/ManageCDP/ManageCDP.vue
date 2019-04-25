@@ -46,7 +46,7 @@
         </p>
       </div>
       <!-- ==================================================== -->
-
+      <!-- 1st row-->
       <!-- ==================================================== -->
       <div class="information-blocks">
         <div class="block-item">
@@ -77,7 +77,7 @@
         <div class="block-item">
           <div class="block-title">
             <p>{{ $t('dapps.collateralRatio') }}</p>
-            <div class="orange">
+            <div :class="collateralRatioColoring">
               <span>{{ collaterlizationRatioDisplay }}%</span>
             </div>
           </div>
@@ -106,7 +106,7 @@
         </div>
       </div>
       <!-- ==================================================== -->
-
+      <!--2nd row-->
       <!-- ==================================================== -->
       <div class="information-single-block">
         <div class="block-item">
@@ -156,6 +156,7 @@
       </div>
       <!-- ==================================================== -->
 
+      <!-- 3rd row-->
       <!-- ==================================================== -->
       <div class="information-single-block">
         <div class="block-item">
@@ -179,15 +180,13 @@
             </div>
             <div class="block-content">
               <div class="item">
-                <p>{{ $t('dapps.maxWithDraw') }}</p>
+                <p>{{ $t('dapps.maxAvailable') }}</p>
                 <div>
-                  {{ displayFixedValue(activeCdp.maxEthDraw, 5) }}
-                  <span>ETH</span>
+                  {{ displayFixedValue(activeCdp.maxDai, 5) }}
+                  <span>DAI</span>
                 </div>
                 <div>
-                  {{ displayFixedValue(activeCdp.maxPethDraw, 5) }}
-                  <span>PETH</span> /
-                  {{ displayFixedValue(activeCdp.maxUsdDraw, 2) }}
+                  {{ displayFixedValue(activeCdp.maxDai, 2) }}
                   <span>USD</span>
                 </div>
                 <button @click="showGenerate">
@@ -328,6 +327,19 @@ export default {
       if (this.activeCdp) {
         return this.activeCdp.needToFinishMigrating;
       }
+    },
+    collateralRatioColoring() {
+      if (this.activeCdp.collatRatio >= 2) {
+        return 'green';
+      } else if (
+        this.activeCdp.collatRatio >= 1.75 &&
+        this.activeCdp.collatRatio < 2
+      ) {
+        return 'orange';
+      }
+      return 'red';
+
+      // if(this.activeCdp.collatRatio )
     },
     liquidationPriceDisplay() {
       const value = displayFixedValue(this.activeCdp.liquidationPrice, 2);
