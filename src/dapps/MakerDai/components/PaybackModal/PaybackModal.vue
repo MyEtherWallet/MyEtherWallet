@@ -18,7 +18,7 @@
             How much DAI would you like to payback?
           </div>
           <div :class="['dai-amount', hasEnoughDai ? '' : 'danger']">
-            <input v-model="amount"/>
+            <input v-model="amount" />
             <p class="floating-text">DAI</p>
             <p class="btn" @click="currentDai">Set Max</p>
           </div>
@@ -31,9 +31,9 @@
               <p>
                 <b>{{
                   activeCdp.debtValue
-                  ? displayFixedValue(activeCdp.debtValue, 3)
-                  : 0
-                  }}</b>
+                    ? displayFixedValue(activeCdp.debtValue, 3)
+                    : 0
+                }}</b>
                 DAI
               </p>
             </li>
@@ -52,11 +52,11 @@
               <p>{{ $t('dapps.projectedCollatRatio') }}</p>
               <p>
                 <b
-                >{{
-                  displayFixedValue(
-                  displayPercentValue(newCollateralRatio),
-                  3
-                  )
+                  >{{
+                    displayFixedValue(
+                      displayPercentValue(newCollateralRatio),
+                      3
+                    )
                   }}%</b
                 >
               </p>
@@ -65,14 +65,17 @@
         </expending-option>
 
         <div class="buttons">
-          <standard-button :options="cancelButton" :click-function="closeModal"/>
+          <standard-button
+            :options="cancelButton"
+            :click-function="closeModal"
+          />
           <standard-button
             :options="submitButton"
             :button-disabled="canProceed ? false : true"
             :click-function="submitBtn"
           />
         </div>
-        <help-center-button/>
+        <help-center-button />
       </div>
     </b-modal>
   </div>
@@ -195,7 +198,7 @@ export default {
       return true;
     },
     canProceed() {
-      return this.canCompute
+      return this.canCompute;
       // if (toBigNumber(this.amount).lte(0)) return false;
       // const ratio = toBigNumber(this.newCollateralRatio);
       // const ratioSafe = ratio.gt(2) || ratio.eq(0);
