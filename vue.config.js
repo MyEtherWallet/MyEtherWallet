@@ -84,20 +84,10 @@ if (process.env.NODE_ENV === 'production') {
       failOnUnused: true,
       globOptions: {
         ignore: [
-          // Are we using these
-          'src/components/DropDownAddressSelector/DropDownAddressSelector.scss',
-          'src/components/DropDownAddressSelector/index.js',
           // Unknown
-          'src/contracts/contract-abi-etsc.json',
-          'src/contracts/contract-abi-exp.json',
           'src/layouts/DevelopmentResources/DevelopmentResources.scss',
           'src/layouts/DevelopmentResources/DevelopmentResources.vue',
           'src/layouts/DevelopmentResources/index.js',
-          'src/layouts/InterfaceLayout/containers/SendCurrencyContainer/SendCurrencyContainer-desktop.scss',
-          'src/layouts/InterfaceLayout/containers/SendCurrencyContainer/SendCurrencyContainer-mobile.scss',
-          'src/layouts/InterfaceLayout/containers/SendCurrencyContainer/SendCurrencyContainer-tablet.scss',
-          'src/tokens/tokens-etsc.json',
-          'src/tokens/tokens-exp.json',
           // Informational
           'src/translations/README.md',
           'src/App.scss',
@@ -182,7 +172,23 @@ if (process.env.NODE_ENV === 'production') {
           'src/layouts/ExtensionBrowserAction/index.js',
           'src/layouts/ExtensionPopup/ExtensionPopup.scss',
           'src/layouts/ExtensionPopup/ExtensionPopup.vue',
-          'src/layouts/ExtensionPopup/index.js'
+          'src/layouts/ExtensionPopup/index.js',
+          'src/layouts/ExtensionBrowserAction/components/WatchOnlyModal/index.js',
+          'src/layouts/ExtensionBrowserAction/components/WatchOnlyModal/WatchOnlyModal.scss',
+          'src/layouts/ExtensionBrowserAction/components/WatchOnlyModal/WatchOnlyModal.vue',
+          'src/layouts/ExtensionBrowserAction/containers/ExtensionAddWalletContainer/ExtensionAddWalletContainer.scss',
+          'src/layouts/ExtensionBrowserAction/containers/ExtensionAddWalletContainer/ExtensionAddWalletContainer.vue',
+          'src/layouts/ExtensionBrowserAction/containers/ExtensionAddWalletContainer/index.js',
+          'src/layouts/ExtensionPopup/components/WalletViewComponent/index.js',
+          'src/layouts/ExtensionPopup/components/WalletViewComponent/WalletViewComponent.scss',
+          'src/layouts/ExtensionPopup/components/WalletViewComponent/WalletViewComponent.vue',
+          'src/layouts/ExtensionPopup/containers/AccountsContainer/AccountsContainer.scss',
+          'src/layouts/ExtensionPopup/containers/AccountsContainer/AccountsContainer.vue',
+          'src/layouts/ExtensionPopup/containers/AccountsContainer/AccountsContainerBtabs.scss',
+          'src/layouts/ExtensionPopup/containers/AccountsContainer/index.js',
+          'src/layouts/ExtensionPopup/containers/WelcomeContainer/index.js',
+          'src/layouts/ExtensionPopup/containers/WelcomeContainer/WelcomeContainer.scss',
+          'src/layouts/ExtensionPopup/containers/WelcomeContainer/WelcomeContainer.vue'
         ]
       }
     })
