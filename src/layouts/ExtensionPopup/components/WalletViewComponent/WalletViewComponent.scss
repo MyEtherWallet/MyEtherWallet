@@ -1,0 +1,23 @@
+@import '~@/scss/GlobalVariables';
+.wallet-view-container {
+  background-color: $light-green-1;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+
+  .wallet-view-info {
+    border-bottom: 1px solid $light-grey-10;
+    display: flex;
+    padding: 10px;
+
+    .name-address {
+      padding-left: 20px;
+      margin: 0 !important;
+
+      span {
+        font-weight: bold;
+      }
+    }
+  }
+}

@@ -29,20 +29,19 @@ export default {
       loading: false
     };
   },
-  mounted() {
+  create() {
     this.getAccounts();
+  },
+  mounted() {
+    this.$refs.watchOnlyModal.$refs.watchOnlyWallet.show();
   },
   methods: {
     getAccounts() {
       const chrome = window.chrome;
       const _this = this;
       chrome.storage.sync.get(null, res => {
-        if (Object.keys(res).length > 0) {
-          _this.accounts = res;
-          _this.hasAccounts = true;
-          return;
-        }
-        _this.accounts = {};
+        _this.hasAccounts = Object.keys(res).length > 0;
+        _this.accounts = _this.hasAccounts ? res : {};
       });
     },
     addWatchOnlyWallet(name, address) {

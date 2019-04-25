@@ -1,0 +1,24 @@
+@import '~@/scss/GlobalVariables';
+
+.popup-accounts-container {
+  .tab-container {
+    padding: 15px;
+  }
+
+  .popup-button-options {
+    align-items: center;
+    display: flex;
+    justify-content: space-around;
+
+    .button-option {
+      border: 1px solid $mew-green;
+      border-radius: 5px;
+      color: $mew-green;
+      cursor: pointer;
+      flex: 1;
+      margin: 10px;
+      padding: 15px;
+      text-align: center;
+    }
+  }
+}
