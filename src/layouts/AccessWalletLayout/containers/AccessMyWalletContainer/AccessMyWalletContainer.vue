@@ -119,7 +119,7 @@ import softwareImgDisabled from '@/assets/images/icons/button-software-disabled.
 import { mapGetters } from 'vuex';
 import { Toast } from '@/helpers';
 
-import platform from 'platform';
+import DetectRTC from 'detectrtc';
 
 export default {
   components: {
@@ -212,13 +212,7 @@ export default {
     isDisabled(className) {
       switch (className) {
         case 'button-mewconnect':
-          return (
-            !this.online ||
-            (platform.name.toLowerCase() !== 'chrome' &&
-              platform.name.toLowerCase() !== 'firefox' &&
-              platform.name.toLowerCase() !== 'safari' &&
-              platform.name.toLowerCase() !== 'opera')
-          );
+          return !(this.online && DetectRTC.isWebRTCSupported);
         case 'button-hardware':
           return !this.online;
         default:
