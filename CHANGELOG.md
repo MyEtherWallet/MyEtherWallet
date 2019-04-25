@@ -1,3 +1,7 @@
+### Devop
+
+- Add presale eth and old mew eth wallet support [#985](https://github.com/MyEtherWallet/MyEtherWallet/pull/985)
+
 ### Feature
 
 - Support local nodes [#973](https://github.com/MyEtherWallet/MyEtherWallet/pull/973)
