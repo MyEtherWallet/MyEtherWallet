@@ -18,7 +18,10 @@
     "page": "index.html",
     "open_in_tab": true
   },
-  "background": {},
+  "background": {
+    "scripts": ["./cxHelpers.js"],
+    "persistent": false
+  },
   "permissions": [
     "storage",
     "tabs"

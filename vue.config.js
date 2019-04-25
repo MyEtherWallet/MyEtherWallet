@@ -7,13 +7,20 @@ const UglifyJS = require('uglify-es');
 const env_vars = require('./ENV_VARS');
 const path = require('path');
 const webpackConfig = {
+  entry: {
+    app: './src/main.js',
+    cxhelpers: './src/cxHelpers/backgroundWeb3Manager.js'
+  },
+  output: {
+    filename: './[name].js'
+  },
   node: {
     process: true
   },
   devtool: 'source-map',
   devServer: {
     disableHostCheck: JSON.parse(env_vars.BUILD_TYPE) === 'mewcx', // Dev purposes only, should be commented out before release
-    https: true,
+    https:  true,
     host: 'localhost',
     hotOnly: true,
     port: 8080,
@@ -77,6 +84,13 @@ const webpackConfig = {
     }
   }
 };
+
+if (JSON.parse(env_vars.BUILD_TYPE) !== 'mewcx') {
+  webpackConfig['exclude'] = [
+    'src/cxHelpers/backgroundWeb3Manager.js',
+    'src/cxHelpers/backgroundPhishingCatcher.js',
+  ]
+}
 if (process.env.NODE_ENV === 'production') {
   webpackConfig.plugins.push(
     new UnusedFilesWebpackPlugin({
@@ -219,7 +233,7 @@ const exportObj = {
       .end()
       .use('string-replace-loader')
       .loader('string-replace-loader')
-      .tap(options => {
+      .tap(() => {
         return {
           search:
             'https://dns.google.com/experimental?ct=application/dns-udpwireformat&dns=',

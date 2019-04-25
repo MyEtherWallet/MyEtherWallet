@@ -1,7 +1,7 @@
 <template>
   <div class="popover-container">
     <div v-if="hasAccounts">
-      <accounts-container :accounts="accounts" />
+      <accounts-container :add-wallet="addWallet" :accounts="accounts" />
     </div>
     <div v-else>
       <welcome-container :add-wallet="addWallet" />
