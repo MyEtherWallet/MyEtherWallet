@@ -11,7 +11,7 @@ $confirmation-modal-mobile-width: 500px;
 }
 
 .input-container {
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   .dai-amount {
     position: relative;
 
@@ -35,12 +35,25 @@ $confirmation-modal-mobile-width: 500px;
       cursor: pointer;
     }
   }
+
+  .top-buttons {
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+
+    p {
+      margin-left: auto;
+      font-weight: 500;
+      color: $mew-green;
+      cursor: pointer;
+    }
+  }
 }
 
 .details {
   //padding: 0 10px;
   li {
-    padding: 7px 10px;
+    padding: 10px 10px;
     display: flex;
     align-items: flex-start;
 
@@ -70,65 +83,6 @@ $confirmation-modal-mobile-width: 500px;
 
 .cc-icon {
   font-size: 36px;
-}
-
-.inputs-container {
-  display: flex;
-  flex-direction: column;
-  margin: 40px;
-
-  .input-container {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 20px;
-
-    label {
-      color: $dark-blue-2;
-      font-size: 16px;
-      font-weight: 600;
-      padding: 10px 7px;
-
-      i {
-        font-size: 14px;
-        margin-right: 2px;
-      }
-
-      .input-title {
-        font-size: 16px;
-      }
-    }
-
-    .input-box {
-      display: flex;
-      flex-direction: row;
-      align-items: baseline;
-      margin-bottom: 20px;
-
-      &.danger {
-        border: 1px solid red;
-      }
-
-      input {
-        background-color: $background-color-1;
-        border: 0;
-        font-size: 14px;
-        height: 52px;
-        padding: 20px;
-        width: 90%;
-      }
-      // needs to be fixed to smoothly match against the input
-      .input-unit {
-        background-color: $background-color-1;
-        border: 0;
-        font-size: 14px;
-        height: 52px;
-        padding: 17px 22px 20px;
-        width: 10%;
-        color: #999;
-        font-weight: 600;
-      }
-    }
-  }
 }
 
 .sub-text {
