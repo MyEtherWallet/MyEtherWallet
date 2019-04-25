@@ -182,16 +182,10 @@ export default {
           item.disabled = disable;
           item.msg = disable ? this.$t('errorsGlobal.browserNonWebUsb') : '';
         }
-
         if (u2fhw.includes(item.name)) {
-          const disable =
-            (platform.name.toLowerCase() === 'chrome' ||
-              platform.name.toLowerCase() === 'opera') &&
-            res;
-          item.disabled = !disable;
-          item.msg = !disable ? this.$t('errorsGlobal.browserNonU2f') : '';
+          item.disabled = !res;
+          item.msg = !res ? this.$t('errorsGlobal.browserNonU2f') : '';
         }
-
         if (this.isMobile()) {
           const disable = !inMobile.includes(item.name);
           item.disabled = disable;
