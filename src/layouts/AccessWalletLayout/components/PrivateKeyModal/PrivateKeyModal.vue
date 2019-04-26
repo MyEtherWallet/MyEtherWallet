@@ -55,10 +55,12 @@ export default {
     }),
     notValid() {
       let validHex = false;
-      if (this.privateKey.slice(0, 1) === '0x') {
+      if (this.privateKey.slice(0, 2) === '0x') {
         validHex = !isHexString(this.privateKey, 64);
+        if (this.privateKey.length > 66) return true;
       } else {
         validHex = !isHexString('0x' + this.privateKey, 64);
+        if (this.privateKey.length > 64) return true;
       }
       return (
         (this.privateKey === '' || this.privateKey.length < 64) && validHex
