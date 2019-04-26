@@ -1,3 +1,5 @@
+### Release v5.0.11
+
 ### Devop
 
 - Update hardware icons [#994](https://github.com/MyEtherWallet/MyEtherWallet/pull/994)
