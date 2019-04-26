@@ -303,10 +303,6 @@ export default {
             return token;
           });
         }
-        tokens = this.network.type.tokens.map(token => {
-          token.balance = 'Load';
-          return token;
-        });
       } else {
         tokens = this.network.type.tokens.map(token => {
           token.balance = 'Load';
