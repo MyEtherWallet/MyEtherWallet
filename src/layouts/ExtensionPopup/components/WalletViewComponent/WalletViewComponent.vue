@@ -13,7 +13,7 @@
     </div>
     <div class="wallet-view-balance">
       <p>Balance:</p>
-      <p class="balance">1000 ETH</p>
+      <p class="balance">{{ concatBalance }} ETH</p>
     </div>
   </div>
 </template>
@@ -46,12 +46,21 @@ export default {
         this.address.length - 4,
         this.address.length
       )}`;
+    },
+    concatBalance() {
+      const stringifiedBal = `${this.balance}`;
+      return stringifiedBal.length > 11 ? `${stringifiedBal.substr(0, 11)}...`: stringifiedBal;
     }
   },
   mounted() {
-    window.web3.eth.getBalance(this.address).then(res => {
-      this.balance = res;
-    });
+    this.fetchBalance();
+  },
+  methods: {
+    async fetchBalance() {
+      const balance = await window.web3.eth.getBalance(this.address);
+      console.log(balance);
+      this.balance = window.web3.utils.fromWei(balance);
+    }
   }
 };
 </script>
