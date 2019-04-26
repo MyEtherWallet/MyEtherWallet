@@ -22,12 +22,9 @@
         <div class="not-recommended">
           {{ $t('accessWallet.notARecommendedWay') }}
         </div>
+        {{ notValid }}
         <button
-          :disabled="
-            privateKey === '' &&
-              privateKey.length === 0 &&
-              privateKey.length < 64
-          "
+          :disabled="notValid"
           class="submit-button large-round-button-green-filled"
           type="submit"
           @click.prevent="unlockWallet"
@@ -44,6 +41,7 @@
 import { WalletInterface } from '@/wallets';
 import { PRIV_KEY as privKeyType } from '@/wallets/bip44/walletTypes';
 import { mapGetters } from 'vuex';
+import { isHexString } from 'ethereumjs-util';
 export default {
   data() {
     return {
@@ -54,7 +52,18 @@ export default {
   computed: {
     ...mapGetters({
       path: 'path'
-    })
+    }),
+    notValid() {
+      let validHex = false;
+      if (this.privateKey.slice(0, 1) === '0x') {
+        validHex = !isHexString(this.privateKey, 64);
+      } else {
+        validHex = !isHexString('0x' + this.privateKey, 64);
+      }
+      return (
+        (this.privateKey === '' || this.privateKey.length < 64) && validHex
+      );
+    }
   },
   methods: {
     unlockWallet() {
