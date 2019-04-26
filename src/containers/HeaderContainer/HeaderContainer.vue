@@ -86,9 +86,9 @@
                   @click="scrollTop()"
                   >{{ $t('header.home') }}</b-nav-item
                 >
-                <b-nav-item v-if="isHomePage" to="/#about-mew">{{
-                  $t('header.about')
-                }}</b-nav-item>
+                <b-nav-item v-if="isHomePage" to="/#about-mew">
+                  {{ $t('header.about') }}
+                </b-nav-item>
                 <b-nav-item-dropdown
                   v-if="address !== null"
                   right
@@ -105,8 +105,9 @@
                     v-show="network.type.name === 'ETH'"
                     :href="'https://ethplorer.io/address/' + address"
                     target="_blank"
-                    >Ethplorer (Tokens)
-                  </b-dropdown-item>
+                    rel="noopener noreferrer"
+                    >Ethplorer (Tokens)</b-dropdown-item
+                  >
                 </b-nav-item-dropdown>
                 <b-nav-item to="/#faqs">{{ $t('common.faqs') }}</b-nav-item>
                 <div class="language-menu-container">
