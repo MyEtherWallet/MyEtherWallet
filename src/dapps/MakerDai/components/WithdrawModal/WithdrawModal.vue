@@ -116,7 +116,7 @@
         </div>
 
         <div class="buttons">
-          <standard-button :options="cancelButton" @click="closeModal" />
+          <standard-button :options="cancelButton" :click-function="closeModal" />
           <standard-button
             :options="submitButton"
             :button-disabled="canProceed ? false : true"
