@@ -398,10 +398,11 @@ export default {
       });
     },
     languageItemClicked(e) {
-      const code = e.target.getAttribute('data-language-code');
-      const flag = e.target.getAttribute('data-flag-name');
+      console.log(e);
+      const code = e.target.parentNode.getAttribute('data-language-code');
+      const flag = e.target.parentNode.getAttribute('data-flag-name');
 
-      this._i18n.locale = code;
+      this.$i18n.locale = code;
       this.currentName = e.target.innerText.replace(/^\s+|\s+$|\s+(?=\s)/g, '');
       this.currentFlag = flag;
       store.set('locale', code);

@@ -5,7 +5,7 @@
       <ul>
         <li
           v-for="language in supportedLanguages"
-          :active="$root._i18n.locale === language.langCode"
+          :active="$root.$i18n.locale === language.langCode"
           :key="language.key"
           :data-language-code="language.langCode"
           :data-flag-name="language.flag"
