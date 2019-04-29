@@ -77,6 +77,7 @@
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import { mapGetters } from 'vuex';
 import { isAddress } from '@/helpers/addressUtils';
+import { Misc } from '@/helpers';
 
 export default {
   components: {
@@ -120,7 +121,7 @@ export default {
   },
   watch: {
     tokenAddress(newVal) {
-      const strippedWhitespace = newVal.replace(/\s/g, '');
+      const strippedWhitespace = Misc.stripAddr(newVal);
       const regTest = new RegExp(/[a-zA-Z0-9]/g);
       this.validAddress =
         regTest.test(strippedWhitespace) && isAddress(strippedWhitespace);

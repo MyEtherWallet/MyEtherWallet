@@ -444,7 +444,9 @@ export default {
         gasPrice: Misc.sanitizeHex(
           new BigNumber(unit.toWei(this.localGasPrice, 'gwei')).toString(16)
         ),
-        to: isToken ? this.selectedCoinType.address : this.address,
+        to: isToken
+          ? this.selectedCoinType.address
+          : Misc.stripAddr(this.address),
         value: isToken ? 0 : amtWei,
         data: this.toData,
         chainId: this.network.type.chainID
