@@ -2,6 +2,9 @@
 
 - Reimplement support for web3 wallets [#976](https://github.com/MyEtherWallet/MyEtherWallet/pull/976)
 
+### Devop
+- Check private key format []()
+
 ### Feature
 
 - Support local nodes [#973](https://github.com/MyEtherWallet/MyEtherWallet/pull/973)
