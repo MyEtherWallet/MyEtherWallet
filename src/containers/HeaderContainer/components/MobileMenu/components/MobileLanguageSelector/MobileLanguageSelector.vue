@@ -70,8 +70,8 @@ export default {
   created() {},
   methods: {
     languageItemClicked(e) {
-      const code = e.target.getAttribute('data-language-code');
-      const flag = e.target.getAttribute('data-flag-name');
+      const code = e.target.getAttribute('data-language-code') || 'en_US';
+      const flag = e.target.getAttribute('data-flag-name') || 'en';
 
       this._i18n.locale = code;
       this.currentName = e.target.innerText.replace(/^\s+|\s+$|\s+(?=\s)/g, '');
