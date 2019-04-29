@@ -24,6 +24,7 @@
                       $t(`privacyPol.${item}`).includes('to:')
                   "
                   href="mailto:support@myetherwallet.com"
+                  rel="noopener noreferrer"
                 >
                   support@myetherwallet.com
                 </a>

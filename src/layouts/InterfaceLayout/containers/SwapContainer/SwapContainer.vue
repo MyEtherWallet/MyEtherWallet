@@ -288,7 +288,7 @@ export default {
         {
           network: this.$store.state.network.type.name,
           web3: this.$store.state.web3,
-          getRateForUnit: true
+          getRateForUnit: false
         },
         { tokensWithBalance: this.tokensWithBalance }
       ),
@@ -322,7 +322,9 @@ export default {
       loadingError: false,
       switchCurrencyOrder: false,
       bityExitToFiat: false,
-      exitToFiatCallback: () => {}
+      exitToFiatCallback: () => {},
+      debounceUpdateEstimate: {},
+      debounceDoThing: {}
     };
   },
   computed: {
@@ -550,6 +552,14 @@ export default {
     this.toArray = toArray;
     this.fromArray = fromArray;
     this.currentAddress = this.account.address;
+    this.debounceUpdateEstimate = this.web3.utils._.debounce(
+      this.updateEstimate,
+      300
+    );
+    this.debounceReviseRateEstimate = this.web3.utils._.debounce(
+      this.updateRateEstimate,
+      2000
+    );
   },
   methods: {
     reset() {
@@ -653,7 +663,11 @@ export default {
             200
           );
         } else {
-          this.web3.utils._.debounce(this.updateEstimate(direction), 200);
+          this.debounceUpdateEstimate(direction);
+          const fromCur = this.fromCurrency;
+          const toCur = this.toCurrency;
+          const fromVal = this.fromValue;
+          this.debounceReviseRateEstimate(fromCur, toCur, fromVal, direction);
         }
       }
     },
