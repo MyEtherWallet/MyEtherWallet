@@ -346,7 +346,9 @@ export default {
             const parsedItem = this.formatInput(this.inputs[item.name]);
             _contractArgs.push(parsedItem);
           } else if (item.type === 'address') {
-            _contractArgs.push(this.inputs[item.name].toLowerCase());
+            _contractArgs.push(
+              Misc.stripAddr(this.inputs[item.name].toLowerCase())
+            );
           } else {
             _contractArgs.push(this.inputs[item.name]);
           }

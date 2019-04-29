@@ -172,6 +172,10 @@ const isDarklisted = addr => {
   return errObject;
 };
 
+const stripAddr = addr => {
+  return addr.replace(/\s/g, '');
+};
+
 export default {
   isJson,
   doesExist,
@@ -188,5 +192,6 @@ export default {
   solidityType,
   isInt,
   capitalize,
-  getService
+  getService,
+  stripAddr
 };
