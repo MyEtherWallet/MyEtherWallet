@@ -22,7 +22,6 @@
         <div class="not-recommended">
           {{ $t('accessWallet.notARecommendedWay') }}
         </div>
-        {{ notValid }}
         <button
           :disabled="notValid"
           class="submit-button large-round-button-green-filled"
@@ -54,17 +53,8 @@ export default {
       path: 'path'
     }),
     notValid() {
-      let validHex = false;
-      if (this.privateKey.slice(0, 2) === '0x') {
-        validHex = !isHexString(this.privateKey, 64);
-        if (this.privateKey.length > 66) return true;
-      } else {
-        validHex = !isHexString('0x' + this.privateKey, 64);
-        if (this.privateKey.length > 64) return true;
-      }
-      return (
-        (this.privateKey === '' || this.privateKey.length < 64) && validHex
-      );
+      const _priv = this.privateKey.replace('0x', '');
+      return !isHexString('0x' + _priv, 32);
     }
   },
   methods: {
