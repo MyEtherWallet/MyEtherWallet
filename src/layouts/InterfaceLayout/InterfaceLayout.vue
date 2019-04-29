@@ -166,6 +166,8 @@ export default {
       receivedTokens: false,
       tokensWithBalance: [],
       pollBlock: () => {},
+      pollNetwork: () => {},
+      pollddress: () => {},
       highestGas: '0',
       alert: {
         show: false,
@@ -218,10 +220,6 @@ export default {
     this.clearIntervals();
   },
   methods: {
-    clearIntervals() {
-      if (this.pollBlock.unsubscribe) this.pollBlock.unsubscribe();
-      else clearInterval(this.pollBlock);
-    },
     openAddressQrcode() {
       this.$refs.addressQrcodeModal.$refs.addressQrcode.show();
     },
@@ -464,14 +462,16 @@ export default {
           Toast.responseHandler(e, Toast.ERROR);
         });
     },
-    checkWeb3WalletAddrChange() {
+    checkMetamaskAddrChange() {
       const web3 = this.web3;
       window.ethereum.on('accountsChanged', account => {
-        const wallet = new Web3Wallet(account[0]);
-        this.$store.dispatch('decryptWallet', [wallet, web3]);
+        if (account.length > 1) {
+          const wallet = new Web3Wallet(account[0]);
+          this.$store.dispatch('decryptWallet', [wallet, web3]);
+        }
       });
     },
-    matchWeb3WalletNetwork() {
+    matchMetamaskNetwork() {
       window.ethereum.on('networkChanged', netId => {
         if (this.network.type.chainID.toString() !== netId) {
           Object.keys(networkTypes).some(net => {
@@ -497,8 +497,13 @@ export default {
       if (this.online === true) {
         if (this.account.address !== null) {
           if (this.account.identifier === WEB3_TYPE) {
-            this.checkWeb3WalletAddrChange();
-            this.matchWeb3WalletNetwork();
+            if (window.web3.currentProvider.isMetamask) {
+              this.checkMetamaskAddrChange();
+              this.matchMetamaskNetwork();
+            } else {
+              this.web3WalletPollNetwork();
+              this.web3WalletPollAddress();
+            }
           }
           this.setENS();
           this.getBlock();
@@ -547,6 +552,69 @@ export default {
       } else {
         this.$store.dispatch('setENS', null);
       }
+    },
+    clearIntervals() {
+      if (this.pollBlock.unsubscribe) this.pollBlock.unsubscribe();
+      else clearInterval(this.pollBlock);
+      clearInterval(this.pollNetwork);
+      clearInterval(this.pollAddress);
+    },
+    web3WalletPollNetwork() {
+      if (
+        !window.web3.eth.net ||
+        typeof window.web3.eth.net.getId !== 'function'
+      )
+        return;
+      this.pollNetwork = setInterval(() => {
+        window.web3.eth.net
+          .getId()
+          .then(id => {
+            if (this.network.type.chainID.toString() !== id) {
+              Object.keys(networkTypes).some(net => {
+                if (networkTypes[net].chainID === id && this.Networks[net]) {
+                  this.$store.dispatch('switchNetwork', this.Networks[net]);
+                  clearInterval(this.pollNetwork);
+                  return true;
+                }
+              });
+            }
+          })
+          .catch(e => {
+            Toast.responseHandler(e, false);
+          });
+      }, 500);
+    },
+    web3WalletPollAddress() {
+      this.pollAddress = setInterval(() => {
+        if (!window.web3.eth) {
+          clearInterval(this.pollAddress);
+        }
+
+        window.web3.eth.getAccounts((err, accounts) => {
+          if (err) {
+            return Toast.responseHandler(err, false);
+          }
+          if (!accounts.length) {
+            return Toast.responseHandler(
+              new Error('Please make sure that your Web3 Wallet is unlocked'),
+              Toast.ERROR
+            );
+          }
+          const address = accounts[0];
+
+          if (
+            this.account.address !== null &&
+            address.toLowerCase() !== this.account.address.toLowerCase()
+          ) {
+            const wallet = new Web3Wallet(address);
+            this.$store.dispatch('decryptWallet', [
+              wallet,
+              window.web3.currentProvider
+            ]);
+            clearInterval(this.pollAddress);
+          }
+        });
+      }, 500);
     }
   }
 };
