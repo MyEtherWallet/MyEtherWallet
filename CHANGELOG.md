@@ -1,3 +1,12 @@
+### Bug
+
+- Reimplement support for web3 wallets [#976](https://github.com/MyEtherWallet/MyEtherWallet/pull/976)
+
+### Devop
+
+- Check private key format [#1014](https://github.com/MyEtherWallet/MyEtherWallet/pull/1014)
+- Update usage of Kyber supplied gas limits and serverless provider  [#969](https://github.com/MyEtherWallet/MyEtherWallet/pull/969)
+
 ### Feature
 
 - Support local nodes [#973](https://github.com/MyEtherWallet/MyEtherWallet/pull/973)
@@ -18,7 +27,6 @@
 - Update Metamask Integration with listeners [#938](https://github.com/MyEtherWallet/MyEtherWallet/pull/938)
 - Sentry migration [#922](https://github.com/MyEtherWallet/MyEtherWallet/pull/922)
 - remove utf8 convertion for hex strings [#941](https://github.com/MyEtherWallet/MyEtherWallet/pull/941)
-- Update usage of Kyber supplied gas limits and serverless provider  [#969](https://github.com/MyEtherWallet/MyEtherWallet/pull/969)
 
 ### Feature
 
