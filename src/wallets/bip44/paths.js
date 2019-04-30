@@ -131,6 +131,10 @@ const reoscChain = {
   path: "m/44'/2894'/0'/0",
   label: 'REOSC'
 };
+const dexon = {
+  path: "m/44'/237'/0'/0",
+  label: 'DEXON Network'
+};
 export {
   ethereum,
   ethereumClassic,
@@ -164,5 +168,6 @@ export {
   thundercore,
   solidum,
   poaNetwork,
-  reoscChain
+  reoscChain,
+  dexon
 };

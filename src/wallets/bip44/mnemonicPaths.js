@@ -23,7 +23,8 @@ import {
   rskMainnet,
   rskTestnet,
   thundercore,
-  solidum
+  solidum,
+  dexon
 } from './paths';
 export default [
   ethereum,
@@ -50,5 +51,6 @@ export default [
   rskMainnet,
   rskTestnet,
   thundercore,
-  solidum
+  solidum,
+  dexon
 ];

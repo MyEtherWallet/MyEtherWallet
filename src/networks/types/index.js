@@ -26,6 +26,8 @@ import UBQ from './UBQ.js';
 import WEB from './WEB.js';
 import TT from './TT.js';
 import SUM from './SUM.js';
+import DXN from './DXN.js';
+
 export {
   AKA,
   ATH,
@@ -54,5 +56,6 @@ export {
   UBQ,
   WEB,
   TT,
-  SUM
+  SUM,
+  DXN
 };

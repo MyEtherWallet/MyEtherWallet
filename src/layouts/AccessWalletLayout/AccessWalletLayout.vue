@@ -58,30 +58,33 @@ export default {
         'SNT',
         'ELF'
       ];
-      const rates = await fetch(
+      return await fetch(
         'https://cryptorates.mewapi.io/ticker?filter=' + tokenNames.join(',')
       )
         .then(res => {
           return res.json();
         })
+        .then(rates => {
+          return Object.keys(rates.data)
+            .map(item => Object.assign(rates.data[item]))
+            .sort((a, b) => {
+              if (a.market_cap_rank < b.market_cap_rank) return -1;
+              if (a.market_cap_rank > b.market_cap_rank) return 1;
+              return 0;
+            })
+            .filter(item => {
+              if (
+                tokenNames.find(el => {
+                  return el === item.symbol;
+                }) !== undefined
+              ) {
+                return item;
+              }
+            });
+        })
         .catch(err => {
           Toast.responseHandler(err, Toast.ERROR);
-        });
-      return Object.keys(rates.data)
-        .map(item => Object.assign(rates.data[item]))
-        .sort((a, b) => {
-          if (a.market_cap_rank < b.market_cap_rank) return -1;
-          if (a.market_cap_rank > b.market_cap_rank) return 1;
-          return 0;
-        })
-        .filter(item => {
-          if (
-            tokenNames.find(el => {
-              return el === item.symbol;
-            }) !== undefined
-          ) {
-            return item;
-          }
+          return [];
         });
     }
   }

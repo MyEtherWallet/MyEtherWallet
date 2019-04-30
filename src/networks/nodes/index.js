@@ -36,6 +36,7 @@ import reosc from './reosc';
 import web from './web';
 import thundercore from './thundercore';
 import sum from './sum';
+import dexon from './dexon';
 
 export {
   akaremote,
@@ -75,5 +76,6 @@ export {
   ubq,
   web,
   thundercore,
-  sum
+  sum,
+  dexon
 };

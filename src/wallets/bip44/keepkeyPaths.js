@@ -21,7 +21,8 @@ import {
   mixBlockchain,
   iolite,
   thundercore,
-  solidum
+  solidum,
+  dexon
 } from './paths';
 export default [
   keepkeyEthereum,
@@ -46,5 +47,6 @@ export default [
   mixBlockchain,
   iolite,
   thundercore,
-  solidum
+  solidum,
+  dexon
 ];
