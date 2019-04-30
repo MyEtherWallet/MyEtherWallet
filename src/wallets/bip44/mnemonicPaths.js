@@ -22,7 +22,10 @@ import {
   iolite,
   rskMainnet,
   rskTestnet,
-  thundercore
+  thundercore,
+  solidum,
+  metadium,
+  dexon
 } from './paths';
 export default [
   ethereum,
@@ -48,5 +51,8 @@ export default [
   iolite,
   rskMainnet,
   rskTestnet,
-  thundercore
+  thundercore,
+  solidum,
+  metadium,
+  dexon
 ];

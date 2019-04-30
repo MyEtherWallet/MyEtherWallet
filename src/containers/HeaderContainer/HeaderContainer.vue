@@ -86,9 +86,9 @@
                   @click="scrollTop()"
                   >{{ $t('header.home') }}</b-nav-item
                 >
-                <b-nav-item v-if="isHomePage" to="/#about-mew">{{
-                  $t('header.about')
-                }}</b-nav-item>
+                <b-nav-item v-if="isHomePage" to="/#about-mew">
+                  {{ $t('header.about') }}
+                </b-nav-item>
                 <b-nav-item-dropdown
                   v-if="address !== null"
                   right
@@ -105,8 +105,9 @@
                     v-show="network.type.name === 'ETH'"
                     :href="'https://ethplorer.io/address/' + address"
                     target="_blank"
-                    >Ethplorer (Tokens)
-                  </b-dropdown-item>
+                    rel="noopener noreferrer"
+                    >Ethplorer (Tokens)</b-dropdown-item
+                  >
                 </b-nav-item-dropdown>
                 <b-nav-item to="/#faqs">{{ $t('common.faqs') }}</b-nav-item>
                 <div class="language-menu-container">
@@ -397,10 +398,10 @@ export default {
       });
     },
     languageItemClicked(e) {
-      const code = e.target.getAttribute('data-language-code');
-      const flag = e.target.getAttribute('data-flag-name');
+      const code = e.target.parentNode.getAttribute('data-language-code');
+      const flag = e.target.parentNode.getAttribute('data-flag-name');
 
-      this._i18n.locale = code;
+      this.$i18n.locale = code;
       this.currentName = e.target.innerText.replace(/^\s+|\s+$|\s+(?=\s)/g, '');
       this.currentFlag = flag;
       store.set('locale', code);

@@ -370,10 +370,9 @@ export default {
       this.data = tx.data;
       this.gasLimit = new BigNumber(tx.gas).toFixed();
       this.toAddress = tx.to;
-      this.amount =
-        tx.value === '0x' ? '0' : new BigNumber(tx.value).toString();
+      this.amount = tx.value === '0x' ? '0' : new BigNumber(tx.value).toFixed();
       this.transactionFee = unit
-        .fromWei(new BigNumber(tx.gas).times(tx.gasPrice).toString(), 'ether')
+        .fromWei(new BigNumber(tx.gas).times(tx.gasPrice).toFixed(), 'ether')
         .toString();
       this.ens = {};
       if (tx.hasOwnProperty('ensObj')) {
