@@ -23,6 +23,7 @@ import {
   rskMainnet,
   rskTestnet,
   thundercore,
+  solidum,
   metadium,
   dexon
 } from './paths';
@@ -51,6 +52,7 @@ export default [
   rskMainnet,
   rskTestnet,
   thundercore,
+  solidum,
   metadium,
   dexon
 ];
