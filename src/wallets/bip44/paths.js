@@ -127,6 +127,10 @@ const solidum = {
   path: "m/44'/997'/0'/0",
   label: 'Solidum'
 };
+const metadium = {
+  path: "m/44'/916'/0'/0",
+  label: 'Metadium'
+};
 const reoscChain = {
   path: "m/44'/2894'/0'/0",
   label: 'REOSC'
@@ -167,6 +171,7 @@ export {
   keepkeyEthereumClassic,
   thundercore,
   solidum,
+  metadium,
   poaNetwork,
   reoscChain,
   dexon
