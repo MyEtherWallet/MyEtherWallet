@@ -42,7 +42,7 @@
               <td
                 v-if="token.balance === 'Load'"
                 class="load-token"
-                @click="getSpecificTokenBalance(token, index)"
+                @click="getSpecificTokenBalance(token)"
               >
                 {{ token.balance }}
               </td>
@@ -99,6 +99,7 @@
 import store from 'store';
 import { mapGetters } from 'vuex';
 import { Toast } from '@/helpers';
+import { toChecksumAddress } from '@/helpers/addressUtils';
 import InterfaceTokensModal from '../InterfaceTokensModal';
 import sortByBalance from '@/helpers/sortByBalance.js';
 import utils from 'web3-utils';
@@ -199,8 +200,15 @@ export default {
         store.get('customTokens')[this.network.type.name] || [];
       this.customTokens = storedTokens;
     },
-    async getSpecificTokenBalance(token, idx) {
-      this.tokens[idx].balance = await this.getTokenBalance(token);
+    async getSpecificTokenBalance(token) {
+      for (let i = 0; i < this.tokens.length; i++) {
+        if (
+          toChecksumAddress(this.tokens[i].address) ===
+          toChecksumAddress(token.address)
+        ) {
+          this.tokens[i].balance = await this.getTokenBalance(token);
+        }
+      }
       this.tokens.sort(sortByBalance);
       this.resetTokenSelection();
     },
