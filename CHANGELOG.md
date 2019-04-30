@@ -12,7 +12,12 @@
 
 ### Feature
 
+- DEXON network support [#977](https://github.com/MyEtherWallet/MyEtherWallet/pull/977)
 - Support local nodes [#973](https://github.com/MyEtherWallet/MyEtherWallet/pull/973)
+
+### Bug
+
+- Fix none assignment issue on Send Offline Container [#982](https://github.com/MyEtherWallet/MyEtherWallet/pull/982)
 
 ### Release v5.0.10
 
