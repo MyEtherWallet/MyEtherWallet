@@ -398,7 +398,6 @@ export default {
       });
     },
     languageItemClicked(e) {
-      console.log(e);
       const code = e.target.parentNode.getAttribute('data-language-code');
       const flag = e.target.parentNode.getAttribute('data-flag-name');
 
