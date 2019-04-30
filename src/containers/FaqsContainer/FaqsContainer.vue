@@ -46,7 +46,11 @@
               >
                 <div class="qa-text">
                   {{ faqs[prop].content }}
-                  <a :href="faqs[prop].link" target="_blank">
+                  <a
+                    :href="faqs[prop].link"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     {{ faqs[prop].linkText }}
                   </a>
                 </div>
