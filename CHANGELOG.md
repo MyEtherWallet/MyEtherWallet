@@ -1,7 +1,14 @@
+### Release v5.0.11
+
+### Devop
+
+- Update hardware icons [#994](https://github.com/MyEtherWallet/MyEtherWallet/pull/994)
+
 ### Bug
 
 - Reimplement support for web3 wallets [#976](https://github.com/MyEtherWallet/MyEtherWallet/pull/976)
 - Strip whitespace in address inputs [#1016](https://github.com/MyEtherWallet/MyEtherWallet/pull/1016)
+- Fix token load issue when searching token list [#1001](https://github.com/MyEtherWallet/MyEtherWallet/pull/1001)
 
 ### Feature
 

@@ -25,5 +25,8 @@
   "sendOffline": "Send Offline Helper",
   "finney": "Finney",
   "billfodl": "Billfodl",
-  "verifyMessage": "Verify Message"
+  "verifyMessage": "Verify Message",
+  "keepkey": "KeepKey",
+  "secalot": "Secalot",
+  "bitbox": "Bitbox"
 }

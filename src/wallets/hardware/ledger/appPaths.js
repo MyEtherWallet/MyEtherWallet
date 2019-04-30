@@ -19,7 +19,8 @@ import {
   RSK,
   RSKTEST,
   TOMO,
-  UBQ
+  UBQ,
+  TT
 } from '@/networks/types';
 import {
   ledgerEthereum,
@@ -44,7 +45,8 @@ import {
   tomoChain,
   mixBlockchain,
   rskMainnet,
-  rskTestnet
+  rskTestnet,
+  thundercore
 } from '../../bip44/paths';
 const appList = [
   {
@@ -151,6 +153,11 @@ const appList = [
     network: ROP,
     prefixes: ["m/44'/1'"],
     paths: [ropsten]
+  },
+  {
+    network: TT,
+    prefixes: ["m/44'/1001'"],
+    paths: [thundercore]
   }
 ];
 export default appList;
