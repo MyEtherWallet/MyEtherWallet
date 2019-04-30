@@ -393,10 +393,6 @@ export default {
       this.$store.dispatch('switchNetwork', network).then(() => {
         this.$store.dispatch('setWeb3Instance').then(() => {
           this.selectedeNtworkName = network.name;
-          this.$store.dispatch(
-            'setGasPrice',
-            Number(network.type.gasPrice || 41)
-          );
         });
       });
 
