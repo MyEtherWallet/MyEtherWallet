@@ -26,6 +26,7 @@ import TOMO from './TOMO.js';
 import UBQ from './UBQ.js';
 import WEB from './WEB.js';
 import TT from './TT.js';
+import DXN from './DXN.js';
 export {
   AKA,
   ATH,
@@ -54,5 +55,6 @@ export {
   TOMO,
   UBQ,
   WEB,
-  TT
+  TT,
+  DXN
 };
