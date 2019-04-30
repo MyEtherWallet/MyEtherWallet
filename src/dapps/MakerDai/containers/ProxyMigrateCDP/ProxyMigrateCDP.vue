@@ -351,7 +351,7 @@ export default {
   },
   methods: {
     async migrateCdpToProxy() {
-      const migrate = await this.activeCdp.migrateCdpComplete();
+      await this.activeCdp.migrateCdpComplete();
     },
     showClose() {
       this.$refs.closeCdp.$refs.modal.show();
