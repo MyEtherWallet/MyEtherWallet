@@ -35,6 +35,7 @@ import mix from './mix';
 import reosc from './reosc';
 import web from './web';
 import thundercore from './thundercore';
+import dexon from './dexon';
 
 export {
   akaremote,
@@ -73,5 +74,6 @@ export {
   tomo,
   ubq,
   web,
-  thundercore
+  thundercore,
+  dexon
 };
