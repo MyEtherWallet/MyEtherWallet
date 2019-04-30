@@ -40,6 +40,13 @@
           <b-btn id="popover-ref-copy" class="custom-tooltip" @click="copy">
             <img src="~@/assets/images/icons/copy.svg" />
           </b-btn>
+          <b-btn
+            id="popover-ref-address"
+            class="custom-tooltip button-address"
+            @click="showAddress"
+          >
+            <img src="~@/assets/images/icons/Interface/Buttons/Address.svg" />
+          </b-btn>
           <b-popover
             content="Switch Address"
             target="popover-ref-address"
@@ -62,8 +69,8 @@
             title
           />
           <b-popover
-            :content="$t('popover.switchAddress')"
-            target="switch"
+            :content="$t('popover.displayAddress')"
+            target="popover-ref-address"
             placement="top"
             triggers="hover"
             title
@@ -139,6 +146,7 @@ export default {
     }
   },
   methods: {
+    showAddress() {},
     copy() {
       this.$refs.copyAddress.select();
       document.execCommand('copy');
