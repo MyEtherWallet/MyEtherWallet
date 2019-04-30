@@ -12,6 +12,11 @@
 - Reimplement support for web3 wallets [#976](https://github.com/MyEtherWallet/MyEtherWallet/pull/976)
 - Fix token load issue when searching token list [#1001](https://github.com/MyEtherWallet/MyEtherWallet/pull/1001)
 
+### Devop
+
+- Check private key format [#1014](https://github.com/MyEtherWallet/MyEtherWallet/pull/1014)
+- Update usage of Kyber supplied gas limits and serverless provider  [#969](https://github.com/MyEtherWallet/MyEtherWallet/pull/969)
+
 ### Feature
 
 - DEXON network support [#977](https://github.com/MyEtherWallet/MyEtherWallet/pull/977)
@@ -38,8 +43,7 @@
 - MEWCX build fix [#935](https://github.com/MyEtherWallet/MyEtherWallet/pull/935)
 - Update Metamask Integration with listeners [#938](https://github.com/MyEtherWallet/MyEtherWallet/pull/938)
 - Sentry migration [#922](https://github.com/MyEtherWallet/MyEtherWallet/pull/922)
-- Remove utf8 convertion for hex strings [#941](https://github.com/MyEtherWallet/MyEtherWallet/pull/941)
-- Additional update of swap rates following user input [#905](https://github.com/MyEtherWallet/MyEtherWallet/pull/905)
+- remove utf8 convertion for hex strings [#941](https://github.com/MyEtherWallet/MyEtherWallet/pull/941)
 
 ### Feature
 
