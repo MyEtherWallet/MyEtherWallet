@@ -173,7 +173,7 @@ const isDarklisted = addr => {
 };
 
 const stripAddr = addr => {
-  return addr.replace(/\s/g, '');
+  return addr.trim();
 };
 
 export default {
