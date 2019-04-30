@@ -226,13 +226,13 @@ export default {
         economy: {
           gwei: new BigNumber(
             utils.fromWei(
-              new BigNumber(this.gasPrice).div(2).toFixed(0),
+              new BigNumber(this.gasPrice).div(1).toFixed(0),
               'gwei'
             )
           ).toFixed(),
           eth: new BigNumber(
             utils.fromWei(
-              new BigNumber(this.gasPrice).div(2).toFixed(0),
+              new BigNumber(this.gasPrice).div(1).toFixed(0),
               'ether'
             )
           ).toFixed()
@@ -240,13 +240,13 @@ export default {
         regular: {
           gwei: new BigNumber(
             utils.fromWei(
-              new BigNumber(this.gasPrice).div(1).toFixed(0),
+              new BigNumber(this.gasPrice).times(1.5).toFixed(0),
               'gwei'
             )
           ).toFixed(),
           eth: new BigNumber(
             utils.fromWei(
-              new BigNumber(this.gasPrice).div(1).toFixed(0),
+              new BigNumber(this.gasPrice).times(1.5).toFixed(0),
               'ether'
             )
           ).toFixed()
@@ -254,13 +254,13 @@ export default {
         fast: {
           gwei: new BigNumber(
             utils.fromWei(
-              new BigNumber(this.gasPrice).times(1.25).toFixed(0),
+              new BigNumber(this.gasPrice).times(2).toFixed(0),
               'gwei'
             )
           ).toFixed(),
           eth: new BigNumber(
             utils.fromWei(
-              new BigNumber(this.gasPrice).div(1.25).toFixed(0),
+              new BigNumber(this.gasPrice).div(2).toFixed(0),
               'ether'
             )
           ).toFixed()

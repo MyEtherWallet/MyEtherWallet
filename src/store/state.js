@@ -14,8 +14,7 @@ if (storedNetwork !== undefined) {
 const notifications =
   store.get('notifications') !== undefined ? store.get('notifications') : {};
 const gasPrice =
-  store.get('gasPrice') !== undefined ? store.get('gasPrice') : 10;
-
+  store.get('gasPrice') !== undefined ? store.get('gasPrice') : 41;
 const customPaths =
   store.get('customPaths') !== undefined ? store.get('customPaths') : {};
 const state = {

@@ -14,6 +14,12 @@ const state = {
     identifier: 'keystore',
     isHardware: false
   },
+  customTokens: [
+    { name: 'ETH', balance: 200 },
+    { name: 'BTH', balance: 300 },
+    { name: 'ETC', balance: 400 }
+  ],
+
   customPaths: {},
   ens: true,
   Errors: {},
@@ -74,6 +80,13 @@ const getters = {
   sidemenuOpen: () => {
     return false;
   },
+
+  customTokens: () => [
+    { name: 'ETH', balance: 200 },
+    { name: 'BTH', balance: 300 },
+    { name: 'ETC', balance: 400 }
+  ],
+
   Transactions: () => {},
   wallet: () => {
     return {
