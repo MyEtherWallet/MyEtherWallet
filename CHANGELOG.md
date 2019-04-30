@@ -17,6 +17,9 @@
 - Check private key format [#1014](https://github.com/MyEtherWallet/MyEtherWallet/pull/1014)
 - Update usage of Kyber supplied gas limits and serverless provider  [#969](https://github.com/MyEtherWallet/MyEtherWallet/pull/969)
 
+### Devop
+- Check private key format [#1014](https://github.com/MyEtherWallet/MyEtherWallet/pull/1014)
+
 ### Feature
 
 - DEXON network support [#977](https://github.com/MyEtherWallet/MyEtherWallet/pull/977)
