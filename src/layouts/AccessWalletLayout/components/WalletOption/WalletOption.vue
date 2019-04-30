@@ -16,7 +16,13 @@
         <img :src="hoverIcon" class="icon" />
         <div class="title-link-container">
           <span>{{ text }}</span>
-          <a v-show="link !== ''" :href="link" target="_blank" @click.stop>
+          <a
+            v-show="link !== ''"
+            :href="link"
+            target="_blank"
+            rel="noopener noreferrer"
+            @click.stop
+          >
             Buy Now >
           </a>
         </div>
