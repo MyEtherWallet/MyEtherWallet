@@ -14,6 +14,8 @@
 ### Feature
 
 - DEXON network support [#977](https://github.com/MyEtherWallet/MyEtherWallet/pull/977)
+- Metadium network support [#928](https://github.com/MyEtherWallet/MyEtherWallet/pull/928)
+- Solidum network support [#957](https://github.com/MyEtherWallet/MyEtherWallet/pull/957)
 - Support local nodes [#973](https://github.com/MyEtherWallet/MyEtherWallet/pull/973)
 
 ### Bug
