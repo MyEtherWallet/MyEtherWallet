@@ -4,7 +4,7 @@ import BootstrapVue from 'bootstrap-vue';
 import veeValidate from 'vee-validate';
 // import languages from '@/translations';
 import VueX from 'vuex';
-
+import VueToast from 'vue-toasted';
 import ClickOutside from '@/directives/ClickOutside';
 import EnsResolver from '@/directives/EnsResolver';
 import en_US from '@/translations/en_US';
@@ -14,6 +14,7 @@ function createLocalVueInstance() {
   localVue.use(VueI18n);
   localVue.use(BootstrapVue);
   localVue.use(VueX);
+  localVue.use(VueToast);
   localVue.directive('click-outside', ClickOutside);
   localVue.directive('ens-resolver', EnsResolver);
   localVue.use(veeValidate);
