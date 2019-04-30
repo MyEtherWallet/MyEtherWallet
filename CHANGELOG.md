@@ -3,7 +3,7 @@
 ### Devop
 
 - Update hardware icons [#994](https://github.com/MyEtherWallet/MyEtherWallet/pull/994)
-- Add trezor eth path to ledger []()
+- Add trezor eth path to ledger [#1020](https://github.com/MyEtherWallet/MyEtherWallet/pull/1020)
 
 ### Bug
 
