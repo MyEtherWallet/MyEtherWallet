@@ -359,7 +359,7 @@ export default {
       const decimals =
         this.selectedCoinType.symbol === symbol
           ? 18
-          : this.selectedCoinType.decimals;
+          : parseInt(this.selectedCoinType.decimals);
       this.toAmt =
         e.target.valueAsNumber < 0 || isNaN(e.target.valueAsNumber)
           ? 0
