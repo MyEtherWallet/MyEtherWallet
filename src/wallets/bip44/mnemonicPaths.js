@@ -24,6 +24,7 @@ import {
   rskTestnet,
   thundercore,
   solidum,
+  metadium,
   dexon
 } from './paths';
 export default [
@@ -52,5 +53,6 @@ export default [
   rskTestnet,
   thundercore,
   solidum,
+  metadium,
   dexon
 ];
