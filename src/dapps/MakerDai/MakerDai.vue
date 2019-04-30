@@ -275,7 +275,7 @@ export default {
       });
 
       await this.makerManager.init();
-      console.log('init complete?'); // todo remove dev item
+      // console.log('init complete?'); // todo remove dev item
 
       this.cdps = this.makerManager.cdps;
       this.cdpsWithoutProxy = this.makerManager.cdpsWithoutProxy;
