@@ -36,6 +36,7 @@ import mix from './mix';
 import reosc from './reosc';
 import web from './web';
 import thundercore from './thundercore';
+import sum from './sum';
 import dexon from './dexon';
 
 export {
@@ -77,5 +78,6 @@ export {
   ubq,
   web,
   thundercore,
+  sum,
   dexon
 };

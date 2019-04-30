@@ -21,6 +21,7 @@ import {
   mixBlockchain,
   iolite,
   thundercore,
+  solidum,
   dexon
 } from './paths';
 export default [
@@ -46,5 +47,6 @@ export default [
   mixBlockchain,
   iolite,
   thundercore,
+  solidum,
   dexon
 ];
