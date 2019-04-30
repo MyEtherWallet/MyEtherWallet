@@ -446,7 +446,7 @@ export default {
         ),
         to: isToken
           ? this.selectedCoinType.address
-          : Misc.stripAddr(this.address),
+          : this.address.toLowerCase().trim(),
         value: isToken ? 0 : amtWei,
         data: this.toData,
         chainId: this.network.type.chainID
