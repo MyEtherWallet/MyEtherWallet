@@ -77,7 +77,6 @@
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import { mapGetters } from 'vuex';
 import { isAddress } from '@/helpers/addressUtils';
-import { Misc } from '@/helpers';
 
 export default {
   components: {

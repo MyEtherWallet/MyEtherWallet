@@ -363,7 +363,7 @@ export default {
     txTo() {
       return this.isToken
         ? this.selectedCurrency.address.toLowerCase()
-        :this.hexAddress.toLowerCase().trim();
+        : this.hexAddress.toLowerCase().trim();
     },
     multiWatch() {
       return (
