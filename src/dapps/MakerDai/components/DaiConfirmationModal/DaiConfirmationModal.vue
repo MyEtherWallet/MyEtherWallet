@@ -40,7 +40,7 @@
               </li>
               <li>
                 <p>Liquidation price (ETH/USD)</p>
-                <p class="bold">{{ liquidationPrice }} USB</p>
+                <p class="bold">{{ liquidationPrice }} USD</p>
               </li>
               <li>
                 <p>Current price information (ETH/USD)</p>
@@ -105,7 +105,9 @@ export default {
     },
     currentPrice: {
       type: BigNumber,
-      default: new BigNumber(0)
+      default: function() {
+        return new BigNumber(0);
+      }
     },
     collateral: {
       type: String,
