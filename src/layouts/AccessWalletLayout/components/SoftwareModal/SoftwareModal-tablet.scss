@@ -1,6 +1,6 @@
 @import '~@/scss/GlobalVariables';
 @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
-  .modal-content {
+  .content-block {
     padding: 20px 20px;
   }
   .modal-software {
