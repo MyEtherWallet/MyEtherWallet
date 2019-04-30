@@ -2,13 +2,18 @@
   <div class="permanent-registration-container">
     <div class="permanent-registration-content">
       <b-collapse id="wait-container" :visible="true" class="commitment-wait">
+        <div class="circles-container">
+          <div class="circle" />
+          <div class="circle" />
+          <div class="circle" />
+        </div>
         <h3>
-          Creating commitment for {{ fullDomainName }}, <br />
-          hang on tight!
+          Hang on tight! <br />
+          We are creating commitment for <br />
+          <span class="domain-name"> {{ fullDomainName }}. </span>
         </h3>
-        <i class="fa fa-spinner fa-spin" />
       </b-collapse>
-      <b-collapse id="commitment-inputs-container" class="commitment-wait">
+      <b-collapse id="commitment-inputs-container" class="commitment-inputs">
         <h3>Commit created! Complete registration for {{ fullDomainName }}</h3>
         <div class="permanent-registration-inputs">
           <label for="secret-phrase">Secret Phrase</label>
