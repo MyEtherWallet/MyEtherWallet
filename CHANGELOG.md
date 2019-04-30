@@ -1,3 +1,25 @@
+### Release v5.0.11
+
+### Devop
+
+- Fix multiple sentry issues [#1015](https://github.com/MyEtherWallet/MyEtherWallet/pull/1015)
+- Update hardware icons [#994](https://github.com/MyEtherWallet/MyEtherWallet/pull/994)
+- Add trezor eth path to ledger [#1020](https://github.com/MyEtherWallet/MyEtherWallet/pull/1020)
+
+### Bug
+
+- Reimplement support for web3 wallets [#976](https://github.com/MyEtherWallet/MyEtherWallet/pull/976)
+- Fix token load issue when searching token list [#1001](https://github.com/MyEtherWallet/MyEtherWallet/pull/1001)
+
+### Feature
+
+- DEXON network support [#977](https://github.com/MyEtherWallet/MyEtherWallet/pull/977)
+- Support local nodes [#973](https://github.com/MyEtherWallet/MyEtherWallet/pull/973)
+
+### Bug
+
+- Fix none assignment issue on Send Offline Container [#982](https://github.com/MyEtherWallet/MyEtherWallet/pull/982)
+
 ### Release v5.0.10
 
 ### Bug
