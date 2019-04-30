@@ -4,6 +4,7 @@
 
 - Fix multiple sentry issues [#1015](https://github.com/MyEtherWallet/MyEtherWallet/pull/1015)
 - Update hardware icons [#994](https://github.com/MyEtherWallet/MyEtherWallet/pull/994)
+- Add trezor eth path to ledger [#1020](https://github.com/MyEtherWallet/MyEtherWallet/pull/1020)
 
 ### Bug
 
