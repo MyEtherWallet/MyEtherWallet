@@ -4,6 +4,13 @@
       ref="daiconfirmation"
       :opencdp="openCdp"
       :txinfo="txInfo"
+      :liquidation-price="liquidationPrice"
+      :collat-ratio="displayFixedPercent(collatRatio)"
+      :liquidation-penalty="displayPercentValue(makerCDP.liquidationPenalty)"
+      :min-ratio="displayPercentValue(makerCDP.liquidationRatio)"
+      :current-price="makerCDP.ethPrice"
+      :collateral="ethQty"
+      :generate="daiQty"
     />
     <loading-overlay v-if="loading" loadingmessage="Creating CDP..." />
     <div class="manage-container">
@@ -31,7 +38,7 @@
           />
           <div class="input-block-message">
             <p>{{ $t('dapps.minCollat') }} <b>0.0TODO</b> ETH</p>
-            <p>{{ depositInPeth }} PETH</p>
+            <p>{{ displayFixedValue(depositInPeth, 6) }} PETH</p>
           </div>
         </div>
         <div class="arrow"><img :src="arrowImage" /></div>
@@ -55,7 +62,8 @@
           />
           <div class="input-block-message">
             <p>
-              {{ $t('dapps.maxGenerate') }} <b>{{ maxDaiDraw }}</b> DAI
+              {{ $t('dapps.maxGenerate') }}
+              <b>{{ displayFixedValue(maxDaiDraw, 6) }}</b> DAI
             </p>
           </div>
         </div>
@@ -84,7 +92,7 @@
           <li>
             <p>{{ $t('dapps.collateralRatio') }}</p>
             <p>
-              <b>{{ displayPercentValue(collatRatio) }}%</b>
+              <b>{{ displayFixedPercent(collatRatio) }}%</b>
             </p>
           </li>
           <li>
@@ -99,7 +107,7 @@
             <p>
               {{
                 $t('dapps.stabilityFeeInMkr', {
-                  value: displayPercentValue(makerCDP.stabilityFee).toString()
+                  value: displayFixedPercent(makerCDP.stabilityFee).toString()
                 })
               }}
             </p>
@@ -131,7 +139,11 @@ import Blockie from '@/components/Blockie';
 import MakerCDP from '../../MakerCDP';
 import DaiConfirmationModal from '../../components/DaiConfirmationModal';
 import LoadingOverlay from '@/components/LoadingOverlay';
-import { displayFixedValue, displayPercentValue } from '../../helpers';
+import {
+  displayFixedPercent,
+  displayFixedValue,
+  displayPercentValue
+} from '../../helpers';
 
 import BigNumber from 'bignumber.js';
 import Arrow from '@/assets/images/etc/single-arrow.svg';
@@ -303,6 +315,7 @@ export default {
     },
     displayPercentValue,
     displayFixedValue,
+    displayFixedPercent,
     async openCdp() {
       this.loading = true;
 

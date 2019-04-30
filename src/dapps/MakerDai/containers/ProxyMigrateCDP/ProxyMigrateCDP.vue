@@ -14,155 +14,172 @@
     </move-cdp-modal>
 
     <div v-show="!finishMigration" class="manage-container">
-      <div class="content-container">
+      <!-- ==================================================== -->
+      <div class="title-content-container">
         <p class="cpd-title">{{ $t('dapps.cdpPortal') }}</p>
         <p class="cdp-id">
           {{ $t('dapps.positionLabel') }} #{{ activeCdp.cdpId }}
         </p>
       </div>
-
-      <div class="manage-container-info-block">
-        <div class="info-label-one-left">
-          <p>{{ $t('dapps.liquidPrice') }} (ETH/USD)</p>
-          <p>
-            <span class="blue-bold">{{
-              displayFixedValue(activeCdp.liquidationPrice, 2)
-            }}</span>
-            <span class="liq-usd"> USD</span>
-          </p>
-        </div>
-        <div class="info-content-one-left">
-          <div class="info-content-one-inner-top">
-            <p>{{ $t('dapps.currentPrice') }}(ETH/USD)</p>
-            <p>
-              <b>{{ activeCdp.ethPrice }}</b> USD
-            </p>
+      <!-- ==================================================== -->
+      <!-- 1st row-->
+      <!-- ==================================================== -->
+      <div class="information-blocks">
+        <div class="block-item">
+          <div class="block-title">
+            <p>{{ $t('dapps.liquidPrice') }} (ETH/USD)</p>
+            <div class="blue">
+              <span class="blue-bold">{{ liquidationPriceDisplay }}</span>
+              USD
+            </div>
           </div>
-          <div class="info-content-one-inner-bottom">
-            <p>{{ $t('dapps.liquidationPenalty') }}</p>
-            <p>
-              <b
-                >{{
+          <div class="block-content">
+            <div class="item">
+              <p>{{ $t('dapps.currentPrice') }}(ETH/USD)</p>
+              <div>{{ activeCdp.ethPrice }} <span>USD</span></div>
+            </div>
+            <div class="item">
+              <p>{{ $t('dapps.liquidationPenalty') }}</p>
+              <div>
+                {{
                   displayFixedValue(
                     displayPercentValue(activeCdp._liquidationPenalty)
                   )
-                }}%</b
-              >
-            </p>
+                }}%
+              </div>
+            </div>
           </div>
         </div>
-        <div class="info-label-one-right">
-          <p>{{ $t('dapps.collateralRatio') }}</p>
-          <p class="blue-bold">
-            {{ displayFixedValue(displayPercentValue(activeCdp.collatRatio)) }}%
-          </p>
-        </div>
-        <div class="info-content-one-right">
-          <div class="info-content-one-inner-top">
-            <p>{{ $t('dapps.minimumRatio') }}</p>
-            <p>
-              <b
-                >{{
+        <div class="block-item">
+          <div class="block-title">
+            <p>{{ $t('dapps.collateralRatio') }}</p>
+            <div :class="collateralRatioColoring">
+              <span>{{ collaterlizationRatioDisplay }}%</span>
+            </div>
+          </div>
+          <div class="block-content">
+            <div class="item">
+              <p>{{ $t('dapps.minimumRatio') }}</p>
+              <div>
+                {{
                   displayFixedValue(
                     displayPercentValue(activeCdp.liquidationRatio)
                   )
-                }}%</b
-              >
-            </p>
-          </div>
-          <div class="info-content-one-inner-bottom">
-            <p>{{ $t('dapps.stabilityFee') }}</p>
-            <p>
-              <b
-                >{{
+                }}%
+              </div>
+            </div>
+            <div class="item">
+              <p>{{ $t('dapps.stabilityFee') }}</p>
+              <div>
+                {{
                   displayFixedValue(
                     displayPercentValue(activeCdp.stabilityFee)
                   )
-                }}%</b
-              >
-            </p>
+                }}%
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <div class="manage-container-blocks">
-        <div class="label-one-left">
-          <p>{{ $t('dapps.ethCollateral') }}</p>
-        </div>
-        <div class="content-one-left">
-          <div class="content-one-inner-left">
-            <p>{{ $t('dapps.deposited') }}</p>
-            <p>
-              <b>{{ displayFixedValue(activeCdp.ethCollateral, 5, false) }}</b>
-              ETH
-            </p>
-            <p>
-              <b>{{ displayFixedValue(activeCdp.pethCollateral, 5, true) }}</b>
-              PETH /
-              <b>{{ displayFixedValue(activeCdp.usdCollateral, 2) }}</b> USD
-            </p>
-            <p></p>
+      <!-- ==================================================== -->
+      <!--2nd row-->
+      <!-- ==================================================== -->
+      <div class="information-single-block">
+        <div class="block-item">
+          <div class="block-title">
+            <p>{{ $t('dapps.ethCollateral') }}</p>
           </div>
-          <div class="content-border">
-            <div class="Line-8"></div>
-          </div>
-          <div class="content-one-inner-right">
-            <p>{{ $t('dapps.maxWithDraw') }}</p>
-            <p>
-              <b>{{ displayFixedValue(activeCdp.maxEthDraw, 5) }}</b> ETH
-            </p>
-            <p>
-              <b>{{ displayFixedValue(activeCdp.maxPethDraw, 5) }}</b> PETH /
-              <b>{{ displayFixedValue(activeCdp.maxUsdDraw, 2) }}</b> USD
-            </p>
-            <p></p>
-          </div>
-        </div>
-      </div>
-      <div class="manage-container-blocks">
-        <div class="label-one-left">
-          <p>{{ $t('dapps.daiPosition') }}</p>
-        </div>
-        <div class="content-one-left">
-          <div class="content-one-inner-left">
-            <p>{{ $t('dapps.generated') }}</p>
-            <p>
-              <b>{{ activeCdp.debtValue }}</b> DAI
-            </p>
-            <p>
-              <b>{{ displayFixedValue(activeCdp.debtValue, 2) }}</b> USD
-            </p>
-            <p></p>
-          </div>
-          <div class="content-border">
-            <div class="Line-8"></div>
-          </div>
-          <div class="content-one-inner-right">
-            <p>{{ $t('dapps.maxAvailable') }}</p>
-            <p>
-              <b>{{ displayFixedValue(activeCdp.maxDai) }}</b> DAI
-            </p>
-            <p>
-              <b>{{ displayFixedValue(activeCdp.maxDai, 2) }}</b> USD
-            </p>
-            <p></p>
+
+          <div class="block-content-container">
+            <div class="block-content">
+              <div class="item">
+                <p>{{ $t('dapps.deposited') }}</p>
+                <div>
+                  {{ displayFixedValue(activeCdp.ethCollateral, 5, false) }}
+                  <span>ETH</span>
+                </div>
+                <div>
+                  {{ displayFixedValue(activeCdp.pethCollateral, 5, true) }}
+                  <span>PETH</span> /
+                  {{ displayFixedValue(activeCdp.usdCollateral, 2) }}
+                  <span>USD</span>
+                </div>
+              </div>
+            </div>
+            <div class="block-content">
+              <div class="item">
+                <p>{{ $t('dapps.maxWithDraw') }}</p>
+                <div>
+                  {{ displayFixedValue(activeCdp.maxEthDraw, 5) }}
+                  <span>ETH</span>
+                </div>
+                <div>
+                  {{ displayFixedValue(activeCdp.maxPethDraw, 5) }}
+                  <span>PETH</span> /
+                  {{ displayFixedValue(activeCdp.maxUsdDraw, 2) }}
+                  <span>USD</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+      <!-- ==================================================== -->
+
+      <!-- 3rd row-->
+      <!-- ==================================================== -->
+      <div class="information-single-block">
+        <div class="block-item">
+          <div class="block-title">
+            <p>{{ $t('dapps.daiPosition') }}</p>
+          </div>
+
+          <div class="block-content-container">
+            <div class="block-content">
+              <div class="item">
+                <p>{{ $t('dapps.generated') }}</p>
+                <div>{{ activeCdp.debtValue }} <span>DAI</span></div>
+                <div>
+                  {{ displayFixedValue(activeCdp.debtValue, 2) }}
+                  <span>USD</span>
+                </div>
+              </div>
+            </div>
+            <div class="block-content">
+              <div class="item">
+                <p>{{ $t('dapps.maxAvailable') }}</p>
+                <div>
+                  {{ displayFixedValue(activeCdp.maxDai, 5) }}
+                  <span>DAI</span>
+                </div>
+                <div>
+                  {{ displayFixedValue(activeCdp.maxDai, 2) }}
+                  <span>USD</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ==================================================== -->
     </div>
-    <!--</div>-->
+    <help-link />
   </div>
 </template>
 
 <script>
-/* eslint-disable */
-
 import { mapGetters } from 'vuex';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
+import BottomHelpLink from '@/components/BottomHelpLink';
 import Blockie from '@/components/Blockie';
 import CloseCdpModal from '../../components/CloseCdpModal';
 import MoveCdpModal from '../../components/MoveCdpModal';
-import {displayFixedPercent, displayFixedValue, displayPercentValue} from '../../helpers'
+import {
+  displayFixedPercent,
+  displayFixedValue,
+  displayPercentValue
+} from '../../helpers';
 
 import BigNumber from 'bignumber.js';
 
@@ -176,9 +193,18 @@ export default {
     'interface-bottom-text': InterfaceBottomText,
     'close-cdp-modal': CloseCdpModal,
     'move-cdp-modal': MoveCdpModal,
-    blockie: Blockie
+    blockie: Blockie,
+    'help-link': BottomHelpLink
   },
   props: {
+    openCloseModal: {
+      type: Boolean,
+      default: false
+    },
+    openMoveModal: {
+      type: Boolean,
+      default: false
+    },
     tokensWithBalance: {
       type: Array,
       default: function() {
@@ -188,14 +214,6 @@ export default {
     getBalance: {
       type: Function,
       default: function() {}
-    },
-    openCloseModal:{
-      type: Boolean,
-      default: false
-    },
-    openMoveModal:{
-      type: Boolean,
-      default: false
     },
     makerActive: {
       type: Boolean,
@@ -224,6 +242,12 @@ export default {
       default: function() {
         return {};
       }
+    },
+    makerManager: {
+      type: Object,
+      default: function() {
+        return {};
+      }
     }
   },
   data() {
@@ -242,26 +266,6 @@ export default {
       maxEthDraw: toBigNumber(0)
     };
   },
-  watch: {
-    ['activeCdp.ready']() {
-      this.isReady();
-    },
-    async ['activeCdp.doUpdate'](val) {
-      if (val > 0) {
-        this.activeCdp = await this.activeCdp.update();
-      }
-    },
-    openCloseModal(val){
-      if(val){
-        this.showClose();
-      }
-    },
-    openMoveModal(val){
-      if(val){
-        this.showMove();
-      }
-    }
-  },
   computed: {
     ...mapGetters({
       account: 'account',
@@ -279,6 +283,59 @@ export default {
       if (this.activeCdp) {
         return this.activeCdp.needToFinishMigrating;
       }
+    },
+    collateralRatioColoring() {
+      if (this.activeCdp.collatRatio >= 2) {
+        return 'green';
+      } else if (
+        this.activeCdp.collatRatio >= 1.75 &&
+        this.activeCdp.collatRatio < 2
+      ) {
+        return 'orange';
+      }
+      return 'red';
+
+      // if(this.activeCdp.collatRatio )
+    },
+    liquidationPriceDisplay() {
+      const value = displayFixedValue(this.activeCdp.liquidationPrice, 2);
+      if (new BigNumber(value).gt(0)) {
+        return value;
+      }
+      return '--';
+    },
+    collaterlizationRatioDisplay() {
+      return displayFixedPercent(this.activeCdp.collatRatio);
+    }
+  },
+  watch: {
+    ['activeCdp.ready']() {
+      this.isReady();
+    },
+    async ['activeCdp.doUpdate'](val) {
+      if (val > 0) {
+        this.activeCdp = this.makerManager.getCdp(this.cdpId);
+      }
+    },
+    valuesUpdated() {
+      if (this.makerManager.hasCdp(this.cdpId)) {
+        this.activeCdp = this.makerManager.getCdp(this.cdpId);
+      }
+    },
+    ['$route.params.cdpId'](val) {
+      if (this.makerManager.hasCdp(val)) {
+        this.activeCdp = this.makerManager.getCdp(val);
+      }
+    },
+    openCloseModal(val) {
+      if (val) {
+        this.showClose();
+      }
+    },
+    openMoveModal(val) {
+      if (val) {
+        this.showMove();
+      }
     }
   },
   async mounted() {
@@ -287,7 +344,7 @@ export default {
     if (this.makerActive) {
       this.loaded = true;
       if (this.cdpId) {
-        this.activeCdp = this.availableCdps[this.cdpId];
+        this.activeCdp = this.makerManager.getCdp(this.cdpId);
         // eslint-disable-next-line
       }
     }
@@ -305,8 +362,11 @@ export default {
     displayPercentValue,
     displayFixedValue,
     async isReady() {
-      this.maxWithDraw = this.activeCdp.maxDaiDraw();
-      this.maxWithDrawUSD = this.activeCdp.toUSD(this.maxWithDraw);
+      // this.maxWithDraw = this.activeCdp.maxDaiDraw();
+      if (this.activeCdp) {
+        this.maxWithDrawUSD = this.activeCdp.toUSD(this.activeCdp.maxDai);
+      }
+      this.maxWithDrawUSD = '--';
     },
     async migrateCdp() {
       await this.activeCdp.migrateCdp();

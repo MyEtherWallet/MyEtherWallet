@@ -388,6 +388,14 @@ export default {
       this.loaded = true;
       if (this.cdpId) {
         this.activeCdp = this.makerManager.getCdp(this.cdpId);
+        // console.log('activeCdp1', this.activeCdp); // todo remove dev item
+
+        if (!this.activeCdp) {
+          await this.makerManager.doUpdate();
+          this.activeCdp = this.makerManager.getCdp(this.cdpId);
+        }
+        // console.log('activeCdp2', this.activeCdp); // todo remove dev item
+        // if(this.activeCdp.)
         // eslint-disable-next-line
       }
     }

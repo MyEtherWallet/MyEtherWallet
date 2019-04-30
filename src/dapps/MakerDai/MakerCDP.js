@@ -373,6 +373,7 @@ export default class MakerCDP {
 
   async canCloseCdp() {
     const value = this.debtValue.toNumber();
+    console.log(this.cdpId, value); // todo remove dev item
     return await this.cdpService.enoughMkrToWipe(this.cdpId, value, DAI.wei);
   }
 
@@ -382,7 +383,8 @@ export default class MakerCDP {
       try {
         this.needsUpdate = true;
         this.closing = true;
-        await this.cdpService.shutProxy(this.proxyAddress, this.cdpId);
+        await this.cdp.shut();
+        // await this.cdpService.shutProxy(this.proxyAddress, this.cdpId);
       } catch (e) {
         // eslint-disable-next-line
         console.error(e);
