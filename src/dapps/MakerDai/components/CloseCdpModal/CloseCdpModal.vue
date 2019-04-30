@@ -8,8 +8,11 @@
       hide-footer
     >
       <div class="contents">
-        <div v-if="!canClose" class="message-container">
+        <div v-if="!enoughMkr" class="message-container">
           Not enough MKR to close this CDP
+        </div>
+        <div v-if="!enoughDai" class="message-container">
+          Not enough DAI to close this CDP
         </div>
         <p class="top-text">
           Closing your CDP requires paying back your outstanding DAI debt, as
@@ -176,8 +179,16 @@ export default {
       }
       return 0;
     },
+    enoughMkr() {
+      const mkrNeeded = this.activeCdp.governanceFeeOwed;
+      return toBigNumber(this.mkrBalance).gte(mkrNeeded);
+    },
+    enoughDai() {
+      const daiNeeded = this.activeCdp.debtValue;
+      return toBigNumber(this.daiBalance).gte(daiNeeded);
+    },
     canClose() {
-      return this.closable;
+      return this.enoughMkr && this.enoughDai;
     }
   },
   watch: {

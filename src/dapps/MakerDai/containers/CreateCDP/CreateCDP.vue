@@ -9,8 +9,8 @@
       :liquidation-penalty="displayPercentValue(makerCDP.liquidationPenalty)"
       :min-ratio="displayPercentValue(makerCDP.liquidationRatio)"
       :current-price="makerCDP.ethPrice"
-      :collateral="ethQty"
-      :generate="daiQty"
+      :collateral="ethQty.toString()"
+      :generate="daiQty.toString()"
     />
     <loading-overlay v-if="loading" loadingmessage="Creating CDP..." />
     <div class="manage-container">

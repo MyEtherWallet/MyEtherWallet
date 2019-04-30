@@ -402,14 +402,14 @@ export default {
       await this.doUpdate();
     },
     async doUpdate() {
-      // eslint-disable-next-line
+      const complete = await this.makerManager.doUpdate(this.$route.name);
+
       if (this.creatingCdp) {
         this.creatingCdp = false;
         await this.makerManager.updateActiveCdp();
         Toast.responseHandler('CDP Created', Toast.INFO);
       }
 
-      const complete = await this.makerManager.doUpdate(this.$route.name);
       if (complete) {
         this.currentProxy = this.makerManager.currentProxy;
         this.availableCdps = this.makerManager.availableCdps;
