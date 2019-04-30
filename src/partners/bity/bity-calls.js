@@ -1,10 +1,5 @@
-import { post, get } from '@/helpers/httpRequests';
-import {
-  bityMethods,
-  BITY_URL,
-  BITY_SWAP_RATES,
-  BITY_EXIT_RATES
-} from './config';
+import { post } from '@/helpers/httpRequests';
+import { bityMethods } from './config';
 import { swapApiEndpoints } from '../partnersConfig';
 import { utils } from '../helpers';
 
@@ -26,17 +21,31 @@ function cleanPhoneData(phoneNumber) {
   return cleanedNumber;
 }
 
-const getRates = () => {
+const getRates = async () => {
   try {
-    return get(BITY_URL + BITY_SWAP_RATES);
+    const results = await post(
+      buildPath(),
+      utils.buildPayload(bityMethods.getCryptoRates)
+    );
+    if (results.error) {
+      throw Error(results.error.message);
+    }
+    return results.result;
   } catch (e) {
     utils.handleOrThrow(e);
   }
 };
 
-const getExitRates = () => {
+const getExitRates = async () => {
   try {
-    return get(BITY_URL + BITY_EXIT_RATES);
+    const results = await post(
+      buildPath(),
+      utils.buildPayload(bityMethods.getFiatRates)
+    );
+    if (results.error) {
+      throw Error(results.error.message);
+    }
+    return results.result;
   } catch (e) {
     utils.handleOrThrow(e);
   }
