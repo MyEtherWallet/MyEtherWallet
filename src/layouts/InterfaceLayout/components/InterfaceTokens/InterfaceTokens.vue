@@ -177,10 +177,11 @@ export default {
         };
         Object.keys(networkTypes).forEach(network => {
           if (
-            networkTypes[network].name.toLowerCase() ===
+            token.network &&
+            (networkTypes[network].name.toLowerCase() ===
               token.network.toLowerCase() ||
-            networkTypes[network].name_long.toLowerCase() ===
-              token.network.toLowerCase()
+              networkTypes[network].name_long.toLowerCase() ===
+                token.network.toLowerCase())
           ) {
             if (this.tokenError(newObj.address, newObj.symbol, '')) {
               v5CustomTokens[networkTypes[network].name].push(newObj);
