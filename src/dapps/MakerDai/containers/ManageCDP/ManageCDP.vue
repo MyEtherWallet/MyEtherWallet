@@ -209,7 +209,6 @@ import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/Interf
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import BottomHelpLink from '@/components/BottomHelpLink';
 import Blockie from '@/components/Blockie';
-import ActionModal from '../../components/ActionsModal';
 import GenerateModal from '../../components/GenerateModal';
 import DepositModal from '../../components/DepositModal';
 import WithdrawModal from '../../components/WithdrawModal';
@@ -232,7 +231,6 @@ export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
     'interface-bottom-text': InterfaceBottomText,
-    'action-modal': ActionModal,
     'generate-modal': GenerateModal,
     'deposit-modal': DepositModal,
     'withdraw-modal': WithdrawModal,

@@ -114,8 +114,8 @@ export default class MakerManager /*extends EventEmitter*/ {
       await this.loadCdpDetails();
     }
 
-    console.log('init complete'); // todo remove dev item
-    console.log('proxy address: ', this._proxyAddress); // todo remove dev item
+    // console.log('init complete'); // todo remove dev item
+    // console.log('proxy address: ', this._proxyAddress); // todo remove dev item
   }
 
   async buildProxy() {
