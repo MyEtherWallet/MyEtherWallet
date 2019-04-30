@@ -121,7 +121,7 @@ export default {
   },
   watch: {
     tokenAddress(newVal) {
-      const strippedWhitespace = Misc.stripAddr(newVal);
+      const strippedWhitespace = newVal.toLowerCase().trim();
       const regTest = new RegExp(/[a-zA-Z0-9]/g);
       this.validAddress =
         regTest.test(strippedWhitespace) && isAddress(strippedWhitespace);

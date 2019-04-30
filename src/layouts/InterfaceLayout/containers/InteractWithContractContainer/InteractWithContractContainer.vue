@@ -347,7 +347,7 @@ export default {
             _contractArgs.push(parsedItem);
           } else if (item.type === 'address') {
             _contractArgs.push(
-              Misc.stripAddr(this.inputs[item.name].toLowerCase())
+              this.inputs[item.name].toLowerCase().trim()
             );
           } else {
             _contractArgs.push(this.inputs[item.name]);
