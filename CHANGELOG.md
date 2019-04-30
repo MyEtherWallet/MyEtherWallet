@@ -8,6 +8,7 @@
 
 ### Feature
 
+- Access by Software UI change [#1021](https://github.com/MyEtherWallet/MyEtherWallet/pull/1021)
 - Support local nodes [#973](https://github.com/MyEtherWallet/MyEtherWallet/pull/973)
 
 ### Release v5.0.10
