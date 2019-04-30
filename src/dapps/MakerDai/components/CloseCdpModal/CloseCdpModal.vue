@@ -223,14 +223,14 @@ export default {
       this.amount = this.activeCdp.debtValue;
     },
     getBalances() {
-      console.log(this.tokensWithBalance); // todo remove dev item
+      // console.log(this.tokensWithBalance); // todo remove dev item
       this.mkrToken = this.tokensWithBalance.find(item => {
         return item.symbol === 'MKR';
       });
       this.daiToken = this.tokensWithBalance.find(item => {
         return item.symbol === 'DAI';
       });
-      console.log(this.daiToken); // todo remove dev item
+      // console.log(this.daiToken); // todo remove dev item
     }
   }
 };
