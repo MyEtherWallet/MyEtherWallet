@@ -1,10 +1,14 @@
+### Release v5.0.11
+
 ### Devop
 
 - Fix multiple sentry issues [#1015](https://github.com/MyEtherWallet/MyEtherWallet/pull/1015)
+- Update hardware icons [#994](https://github.com/MyEtherWallet/MyEtherWallet/pull/994)
 
 ### Bug
 
 - Reimplement support for web3 wallets [#976](https://github.com/MyEtherWallet/MyEtherWallet/pull/976)
+- Fix token load issue when searching token list [#1001](https://github.com/MyEtherWallet/MyEtherWallet/pull/1001)
 
 ### Feature
 
