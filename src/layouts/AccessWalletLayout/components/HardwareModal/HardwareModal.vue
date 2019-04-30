@@ -47,16 +47,16 @@
 <script>
 import FinneyModal from '../FinneyModal';
 import CustomerSupport from '@/components/CustomerSupport';
-import ledger from '@/assets/images/icons/button-ledger.png';
-import ledgerHov from '@/assets/images/icons/button-ledger-hover.png';
-import bitbox from '@/assets/images/icons/button-bitbox.png';
-import bitboxHov from '@/assets/images/icons/button-bitbox-hover.png';
-import secalot from '@/assets/images/icons/button-secalot.png';
-import secalotHov from '@/assets/images/icons/button-secalot-hover.png';
-import trezor from '@/assets/images/icons/button-trezor.png';
-import trezorHov from '@/assets/images/icons/button-trezor-hover.png';
-import keepkey from '@/assets/images/icons/button-keepkey.png';
-import keepkeyHov from '@/assets/images/icons/button-keepkey-hover.png';
+import ledger from '@/assets/images/icons/HardwareWallet/ledger.svg';
+import ledgerHov from '@/assets/images/icons/HardwareWallet/ledger.svg';
+import bitbox from '@/assets/images/icons/HardwareWallet/bitbox.svg';
+import bitboxHov from '@/assets/images/icons/HardwareWallet/bitbox.svg';
+import secalot from '@/assets/images/icons/HardwareWallet/secalot.svg';
+import secalotHov from '@/assets/images/icons/HardwareWallet/secalot.svg';
+import trezor from '@/assets/images/icons/HardwareWallet/trezor.svg';
+import trezorHov from '@/assets/images/icons/HardwareWallet/trezor.svg';
+import keepkey from '@/assets/images/icons/HardwareWallet/keepkey.svg';
+import keepkeyHov from '@/assets/images/icons/HardwareWallet/keepkey.svg';
 import finney from '@/assets/images/icons/button-finney.png';
 import finneyHov from '@/assets/images/icons/button-finney-hover.png';
 import WalletOption from '../WalletOption';
@@ -182,16 +182,10 @@ export default {
           item.disabled = disable;
           item.msg = disable ? this.$t('errorsGlobal.browserNonWebUsb') : '';
         }
-
         if (u2fhw.includes(item.name)) {
-          const disable =
-            (platform.name.toLowerCase() === 'chrome' ||
-              platform.name.toLowerCase() === 'opera') &&
-            res;
-          item.disabled = !disable;
-          item.msg = !disable ? this.$t('errorsGlobal.browserNonU2f') : '';
+          item.disabled = !res;
+          item.msg = !res ? this.$t('errorsGlobal.browserNonU2f') : '';
         }
-
         if (this.isMobile()) {
           const disable = !inMobile.includes(item.name);
           item.disabled = disable;
