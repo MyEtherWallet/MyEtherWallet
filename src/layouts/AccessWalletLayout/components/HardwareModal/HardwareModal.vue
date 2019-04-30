@@ -18,7 +18,6 @@
             :key="item.name + idx"
             :selected="selected === item.name"
             :regular-icon="item.imgPath"
-            :hover-icon="item.imgHoverPath"
             :text="item.text"
             :name="item.name"
             :disabled="item.disabled"
@@ -99,7 +98,6 @@ export default {
         {
           name: LEDGER_TYPE,
           imgPath: ledger,
-          imgHoverPath: ledger,
           text: 'Ledger',
           disabled: false,
           msg: '',
@@ -108,7 +106,6 @@ export default {
         {
           name: 'finney',
           imgPath: finney,
-          imgHoverPath: finney,
           text: 'FINNEY',
           disabled: false,
           msg: '',
@@ -118,7 +115,6 @@ export default {
         {
           name: BITBOX_TYPE,
           imgPath: bitbox,
-          imgHoverPath: bitbox,
           text: 'Digital Bitbox',
           disabled: false,
           msg: '',
@@ -127,7 +123,6 @@ export default {
         {
           name: TREZOR_TYPE,
           imgPath: trezor,
-          imgHoverPath: trezor,
           text: 'Trezor',
           disabled:
             platform.name.toLowerCase() !== 'chrome' &&
@@ -142,7 +137,6 @@ export default {
         {
           name: SECALOT_TYPE,
           imgPath: secalot,
-          imgHoverPath: secalot,
           text: 'Secalot',
           disabled: false,
           msg: '',
@@ -151,7 +145,6 @@ export default {
         {
           name: KEEPKEY_TYPE,
           imgPath: keepkey,
-          imgHoverPath: keepkey,
           text: 'KeepKey',
           disabled: false,
           msg: '',
