@@ -13,9 +13,9 @@
             <div class="interface__block-title">Collateral</div>
             <div class="amount-block">
               <div class="icon">
-                <img src="~@/assets/images/icons/btc.png" />
+                <img src="~@/assets/images/currency/eth.svg" />
               </div>
-              <div class="amount">0.005<span>ETH</span></div>
+              <div class="amount">{{ collateral }}<span>ETH</span></div>
             </div>
           </div>
           <div class="arrow">
@@ -25,9 +25,9 @@
             <div class="interface__block-title">Generate</div>
             <div class="amount-block">
               <div class="icon">
-                <img src="~@/assets/images/icons/btc.png" />
+                <img src="~@/assets/images/currency/coins/AllImages/DAI.svg" />
               </div>
-              <div class="amount">0.005<span>ETH</span></div>
+              <div class="amount">{{ generate }}<span>DAI</span></div>
             </div>
           </div>
         </div>
@@ -36,27 +36,27 @@
             <ul>
               <li>
                 <p>Min ETH required</p>
-                <p>0.029 ETH</p>
+                <p>TODO ETH</p>
               </li>
               <li>
                 <p>Liquidation price (ETH/USD)</p>
-                <p class="bold">60.000 USB</p>
+                <p class="bold">{{ liquidationPrice }} USB</p>
               </li>
               <li>
                 <p>Current price information (ETH/USD)</p>
-                <p>100.82 USD</p>
+                <p>{{ currentPrice }} USD</p>
               </li>
               <li>
                 <p>Liquidation penalty</p>
-                <p>13.000%</p>
+                <p>{{ liquidationPenalty }}%</p>
               </li>
               <li>
                 <p>Collateralization ratio</p>
-                <p class="bold">252.062$</p>
+                <p class="bold">{{ collatRatio }}</p>
               </li>
               <li>
                 <p>Minimum ratio</p>
-                <p>150.000%</p>
+                <p>{{ minRatio }}%</p>
               </li>
             </ul>
           </expending-option>
@@ -73,6 +73,7 @@
 </template>
 
 <script>
+import BigNumber from 'bignumber.js';
 import ExpendingOption from '@/components/ExpendingOption';
 import StandardButton from '@/components/Buttons/StandardButton';
 
@@ -85,6 +86,34 @@ export default {
     opencdp: {
       type: Function,
       default: function() {}
+    },
+    liquidationPrice: {
+      type: Number,
+      default: 0
+    },
+    collatRatio: {
+      type: String,
+      default: 'Error'
+    },
+    liquidationPenalty: {
+      type: String,
+      default: 'Error'
+    },
+    minRatio: {
+      type: String,
+      default: 'Error'
+    },
+    currentPrice: {
+      type: BigNumber,
+      default: new BigNumber(0)
+    },
+    collateral: {
+      type: String,
+      default: 'Error'
+    },
+    generate: {
+      type: String,
+      default: 'Error'
     }
   },
   data() {

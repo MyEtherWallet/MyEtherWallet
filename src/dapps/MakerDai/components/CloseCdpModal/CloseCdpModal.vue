@@ -26,6 +26,15 @@
             </div>
             <p class="get-mkr">Get MKR</p>
           </div>
+          <div class="value-table mkr-balance">
+            <div class="value-block">
+              <p><b>My DAI balance</b></p>
+              <p>
+                <b>{{ daiBalance }} DAI</b>
+              </p>
+            </div>
+            <p class="get-mkr">Get DAI</p>
+          </div>
           <div class="value-table other-values">
             <div class="value-block">
               <p>Outstanding DAI generated</p>
@@ -95,6 +104,12 @@ export default {
       default: function() {
         return {};
       }
+    },
+    makerManager: {
+      type: Object,
+      default: function() {
+        return {};
+      }
     }
   },
   data() {
@@ -107,6 +122,7 @@ export default {
       modalDetailInformation: false,
       textValues: {},
       mkrToken: {},
+      daiToken: {},
       cancelButton: {
         title: 'Cancel',
         buttonStyle: 'green-border',
@@ -154,19 +170,23 @@ export default {
       }
       return 0;
     },
+    daiBalance() {
+      if (this.daiToken) {
+        return this.daiToken.balance;
+      }
+      return 0;
+    },
     canClose() {
       return this.closable;
     }
   },
-  watch: {},
+  watch: {
+    tokensWithBalance() {
+      this.getBalances();
+    }
+  },
   async mounted() {
-    this.mkrToken = this.tokensWithBalance.find(item => {
-      return (
-        item.symbol === 'MKR' ||
-        item.address.toLowerCase() ===
-          '0xAaF64BFCC32d0F15873a02163e7E500671a4ffcD'.toLowerCase()
-      );
-    });
+    this.getBalances();
     this.$refs.modal.$on('shown', async () => {
       if (this.activeCdp) {
         this.closable = await this.activeCdp.canCloseCdp();
@@ -174,9 +194,16 @@ export default {
       }
       this.closable = false;
     });
-    // eslint-disable-next-line
   },
   methods: {
+    closeModal() {
+      this.$refs.modal.hide();
+    },
+    delayCloseModal() {
+      setTimeout(() => {
+        this.closeModal();
+      }, 200);
+    },
     async closeCdp() {
       this.delayCloseModal();
       await this.activeCdp.closeCdp();
@@ -195,13 +222,15 @@ export default {
     currentDai() {
       this.amount = this.activeCdp.debtValue;
     },
-    closeModal() {
-      this.$refs.modal.hide();
-    },
-    delayCloseModal() {
-      setTimeout(() => {
-        this.closeModal();
-      }, 200);
+    getBalances() {
+      console.log(this.tokensWithBalance); // todo remove dev item
+      this.mkrToken = this.tokensWithBalance.find(item => {
+        return item.symbol === 'MKR';
+      });
+      this.daiToken = this.tokensWithBalance.find(item => {
+        return item.symbol === 'DAI';
+      });
+      console.log(this.daiToken); // todo remove dev item
     }
   }
 };
