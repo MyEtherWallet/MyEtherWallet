@@ -1,7 +1,7 @@
 @import '~@/scss/GlobalVariables';
 @media all and (min-width: calc(#{$tablet-width} + 1px)) {
-  .modal-content {
-    padding: 10px 40px 40px;
+  .content-block {
+    padding: 40px 40px 40px;
   }
 
   .modal-software {
@@ -22,5 +22,6 @@
 }
 
 .hardware-link {
-  padding-bottom: 10px;
+  margin: 30px 0;
+  text-align: center;
 }
