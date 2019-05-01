@@ -52,7 +52,7 @@
     "xss": "1.0.6"
   },
   "devDependencies": {
-    "@ensdomains/dnsregistrar": "0.3.1",
+    "@ensdomains/dnsregistrar": "0.3.5",
     "@ethereum-alarm-clock/lib": "0.3.5",
     "@keepkey/keepkey.js": "1.2.1",
     "@ledgerhq/hw-app-eth": "4.55.0",
@@ -94,7 +94,7 @@
     "jspdf": "1.5.3",
     "keccak": "2.0.0",
     "multicoin-address-validator": "git+https://github.com/MyEtherWallet/multicoin-address-validator.git",
-    "node-fetch": "2.4.1",
+    "node-fetch": "2.5.0",
     "node-sass": "4.12.0",
     "package-json": "6.3.0",
     "postcss-import": "12.0.1",
