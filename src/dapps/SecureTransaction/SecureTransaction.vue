@@ -301,7 +301,7 @@ export default {
       const coinbase = this.account.address;
       const nonce = await this.web3.eth.getTransactionCount(coinbase);
       const value = this.amount === '' ? 0 : unit.toWei(this.amount, 'ether');
-      const to = this.hexAddress;
+      const to = this.hexAddress.toLowerCase().trim();
       const protectionLevel = 20;
       const query = this.coralContract.methods.deposit(to, protectionLevel);
       const encodedABI = query.encodeABI();

@@ -5,12 +5,20 @@
       :loading="loading"
       :add-watch-only="addWatchOnlyWallet"
     />
-    <add-wallet-container v-show="!hasAccounts" />
+    <add-wallet-container
+      v-show="addAccount || !hasAccounts"
+      :open-watch-only-modal="openWatchOnlyModal"
+    />
+    <my-wallets
+      v-show="!addAccount || hasAccounts"
+      :open-watch-only-modal="openWatchOnlyModal"
+    />
   </div>
 </template>
 
 <script>
 import ExtensionAddWalletContainer from './containers/ExtensionAddWalletContainer';
+import ExtensionWalletContainer from './containers/ExtensionWalletContainer';
 import WatchOnlyModal from './components/WatchOnlyModal';
 // import { WalletInterface } from '@/wallets';
 import { WATCH_ONLY } from '@/wallets/bip44/walletTypes';
@@ -20,26 +28,29 @@ import { toChecksumAddress } from '@/helpers/addressUtils';
 export default {
   components: {
     'add-wallet-container': ExtensionAddWalletContainer,
+    'my-wallets': ExtensionWalletContainer,
     'watch-only-modal': WatchOnlyModal
   },
   data() {
     return {
       hasAccounts: false,
       accounts: [],
-      loading: false
+      loading: false,
+      addAccount: false
     };
   },
   create() {
     this.getAccounts();
   },
   mounted() {
-    this.$refs.watchOnlyModal.$refs.watchOnlyWallet.show();
+    this.getAccounts();
   },
   methods: {
     getAccounts() {
       const chrome = window.chrome;
       const _this = this;
       chrome.storage.sync.get(null, res => {
+        console.log(res);
         _this.hasAccounts = Object.keys(res).length > 0;
         _this.accounts = _this.hasAccounts ? res : {};
       });
@@ -68,6 +79,9 @@ export default {
       } catch (e) {
         Toast.responseHandler('Something went wrong!', Toast.ERROR);
       }
+    },
+    openWatchOnlyModal() {
+      this.$refs.watchOnlyModal.$refs.watchOnlyWallet.show();
     }
   }
 };

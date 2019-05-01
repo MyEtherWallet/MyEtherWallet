@@ -28,6 +28,12 @@ export default {
   components: {
     'access-wallet-button': AccessWalletButton
   },
+  props: {
+    openWatchOnlyModal: {
+      type: Function,
+      default: () => {}
+    }
+  },
   data() {
     return {
       options: [
