@@ -69,6 +69,13 @@
             title
           />
           <b-popover
+            :content="$t('popover.switchAddress')"
+            target="switch"
+            placement="top"
+            triggers="hover"
+            title
+          />
+          <b-popover
             :content="$t('popover.displayAddress')"
             target="popover-ref-address"
             placement="top"
@@ -146,7 +153,6 @@ export default {
     }
   },
   methods: {
-    showAddress() {},
     copy() {
       this.$refs.copyAddress.select();
       document.execCommand('copy');
