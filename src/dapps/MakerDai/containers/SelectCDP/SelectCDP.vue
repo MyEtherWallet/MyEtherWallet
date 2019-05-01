@@ -3,15 +3,15 @@
     <div class="container-maker">
       <div class="manage-container">
         <div class="content-container">
-          <p class="cpd-title">{{ $t('dapps.cdpPortal') }}</p>
+          <p class="cpd-title">{{ $t('dappsMaker.cdpPortal') }}</p>
           <div class="cdp-id">
             <p>
-              {{ $t('dapps.currentPrice') }}: <b>{{ ethPrice }}</b> USD
+              {{ $t('dappsMaker.currentPrice') }}: <b>{{ ethPrice }}</b> USD
             </p>
           </div>
         </div>
         <div v-if="!cdpDetailsLoaded">
-          Loading CDP Details
+          {{ $t('dappsMaker.loadingMessage') }}
         </div>
         <div v-if="cdpDetailsLoaded">
           <div

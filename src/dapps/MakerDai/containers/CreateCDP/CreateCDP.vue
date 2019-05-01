@@ -12,19 +12,18 @@
       :collateral="ethQty.toString()"
       :generate="daiQty.toString()"
     />
-    <loading-overlay v-if="loading" loadingmessage="Creating CDP..." />
+    <loading-overlay v-if="loading" loadingmessage="$t('dappsMaker.creatingMessage')" />
     <div class="manage-container">
       <p class="top-title">
-        {{ $t('dapps.maker_title') }}
+        {{ $t('dappsMaker.maker_title') }}
       </p>
       <p class="top-title-sub">
-        Please set a value of ETH for collateral, to determine how much DAI you
-        would like to generate.
+        {{ $t('dappsMaker.createInstruct') }}
       </p>
 
       <div class="currency-ops-new">
         <div class="currency-picker-container">
-          <div class="interface__block-title">{{ $t('dapps.collateral') }}</div>
+          <div class="interface__block-title">{{ $t('dappsMaker.collateral') }}</div>
           <div class="dropdown-text-container dropdown-container">
             <p>
               <span class="cc ETH cc-icon currency-symbol" />
@@ -37,13 +36,13 @@
             class="currency-picker-container dropdown-text-container dropdown-container"
           />
           <div class="input-block-message">
-            <p>{{ $t('dapps.minCollat') }} <b>0.0TODO</b> ETH</p>
+            <p>{{ $t('dappsMaker.minCollat') }} <b>0.0TODO</b> ETH</p>
             <p>{{ displayFixedValue(depositInPeth, 6) }} PETH</p>
           </div>
         </div>
         <div class="arrow"><img :src="arrowImage" /></div>
         <div>
-          <div class="interface__block-title">{{ $t('dapps.generate') }}</div>
+          <div class="interface__block-title">{{ $t('dappsMaker.generate') }}</div>
           <div class="dropdown-text-container dropdown-container">
             <p>
               <span class="cc DAI cc-icon cc-icon-dai currency-symbol" />
@@ -62,7 +61,7 @@
           />
           <div class="input-block-message">
             <p>
-              {{ $t('dapps.maxGenerate') }}
+              {{ $t('dappsMaker.maxGenerate') }}
               <b>{{ displayFixedValue(maxDaiDraw, 6) }}</b> DAI
             </p>
           </div>
@@ -72,31 +71,31 @@
       <div class="cdp-info-block cdp-info-entry">
         <ul>
           <li>
-            <p>{{ $t('dapps.minEthReq') }}</p>
+            <p>{{ $t('dappsMaker.minEthReq') }}</p>
             <p>0TODO ETH</p>
           </li>
           <li>
-            <p>{{ $t('dapps.liquidPrice') }}</p>
+            <p>{{ $t('dappsMaker.liquidPrice') }}</p>
             <p>
               <b>{{ liquidationPrice }}</b> USD
             </p>
           </li>
           <li>
-            <p>{{ $t('dapps.currentPriceInfo') }}</p>
+            <p>{{ $t('dappsMaker.currentPriceInfo') }}</p>
             <p>{{ makerCDP.ethPrice }} USD</p>
           </li>
           <li>
-            <p>{{ $t('dapps.liquidationPenalty') }}</p>
+            <p>{{ $t('dappsMaker.liquidationPenalty') }}</p>
             <p>{{ displayPercentValue(makerCDP.liquidationPenalty) }}%</p>
           </li>
           <li>
-            <p>{{ $t('dapps.collateralRatio') }}</p>
+            <p>{{ $t('dappsMaker.collateralRatio') }}</p>
             <p>
               <b>{{ displayFixedPercent(collatRatio) }}%</b>
             </p>
           </li>
           <li>
-            <p>{{ $t('dapps.minimumRatio') }}</p>
+            <p>{{ $t('dappsMaker.minimumRatio') }}</p>
             <p>{{ displayPercentValue(makerCDP.liquidationRatio) }}%</p>
           </li>
         </ul>
@@ -106,7 +105,7 @@
           <li>
             <p>
               {{
-                $t('dapps.stabilityFeeInMkr', {
+                $t('dappsMaker.stabilityFeeInMkr', {
                   value: displayFixedPercent(makerCDP.stabilityFee).toString()
                 })
               }}
@@ -123,7 +122,7 @@
           ]"
           @click="openDaiConfirmation"
         >
-          Collateralize & Generate
+          {{ $t('dappsMaker.collatAndGenerate') }}
         </div>
       </div>
     </div>

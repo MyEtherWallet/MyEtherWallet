@@ -2,23 +2,22 @@
   <div class="modal-container">
     <b-modal
       ref="modal"
-      :title="getTitleText()"
+      :title="$t('dappsMaker.paybackTitle')"
       centered
       class="bootstrap-modal nopadding"
       hide-footer
     >
       <div class="contents">
         <p class="top-message">
-          You might be requested to sign up to three trasactions if there is not
-          enough allowance in DAI and/or MKR to complete this transaction.
+          {{ $t('dappsMaker.paybackNotice') }}
         </p>
 
         <div v-if="action === 'payback'" class="input-container">
           <div class="interface__block-title">
-            How much DAI would you like to payback?
+            {{ $t('dappsMaker.paybackNotice') }}
           </div>
           <div class="top-buttons">
-            <p @click="currentDai">Set Max</p>
+            <p @click="currentDai">{{ $t('dappsMaker.setMax') }}</p>
           </div>
           <div :class="['dai-amount', hasEnoughDai ? '' : 'danger']">
             <input v-model="amount" />
@@ -29,7 +28,7 @@
         <expending-option title="Detail Information">
           <ul class="details">
             <li>
-              <p>Outstanding Dai Generated<!-- TODO FOR TRANSLATE --></p>
+              <p>{{ $t('dappsMaker.outstandingDai') }}</p>
               <p>
                 <b>{{
                   activeCdp.debtValue
@@ -40,18 +39,18 @@
               </p>
             </li>
             <li>
-              <p>Stability Fee Owed<!-- TODO FOR TRANSLATE --></p>
+              <p>{{ $t('dappsMaker.stabilityFeeOwed') }}</p>
               <p><b>0.00%</b> MKR</p>
             </li>
             <li>
-              <p>{{ $t('dapps.projectedLiquidation') }}</p>
+              <p>{{ $t('dappsMaker.projectedLiquidation') }}</p>
               <p>
                 <b>{{ displayFixedValue(newLiquidationPrice, 2) }}</b>
                 {{ fiatCurrency }}
               </p>
             </li>
             <li>
-              <p>{{ $t('dapps.projectedCollatRatio') }}</p>
+              <p>{{ $t('dappsMaker.projectedCollatRatio') }}</p>
               <p>
                 <b
                   >{{

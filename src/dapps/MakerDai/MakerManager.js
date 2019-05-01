@@ -12,9 +12,8 @@ const bnOver = (one, two, three) => {
     .div(toBigNumber(three));
 };
 
-export default class MakerManager /*extends EventEmitter*/ {
+export default class MakerManager {
   constructor(props) {
-    // super();
     this.creatingProxy = false;
     this.currentAddress = props.account.address;
     this.maker = props.maker;
@@ -41,12 +40,6 @@ export default class MakerManager /*extends EventEmitter*/ {
     }
     return this.creatingProxy;
   }
-
-  // get needToMigrateCdps(){
-  //   if (this._proxyAddress === null && this.creatingProxy) {
-  //     return true;
-  //   }
-  // }
 
   get cdpsWithProxy() {
     return this.cdps;
@@ -114,8 +107,6 @@ export default class MakerManager /*extends EventEmitter*/ {
       await this.loadCdpDetails();
     }
 
-    // console.log('init complete'); // todo remove dev item
-    // console.log('proxy address: ', this._proxyAddress); // todo remove dev item
   }
 
   async buildProxy() {
@@ -157,18 +148,6 @@ export default class MakerManager /*extends EventEmitter*/ {
     const currentCdpIds = Object.keys(this.activeCdps);
     await this.locateCdps();
 
-    // const dups = this.cdps.filter(item => {
-    //   return this.cdpsWithoutProxy.includes(item);
-    // });
-
-    // if (dups.length > 0) {
-    //   dups.forEach(item => {
-    //     console.log(' this.cdpsWithoutProxy', this.cdpsWithoutProxy); // todo remove dev item
-    //     const idx = this.cdpsWithoutProxy.findIndex(item);
-    //     this.cdpsWithoutProxy.splice(idx, 1);
-    //   });
-    // }
-
     const newCdps = this.cdps.filter(
       item => !Object.keys(this.activeCdps).includes(item)
     );
@@ -201,11 +180,6 @@ export default class MakerManager /*extends EventEmitter*/ {
       this.routeHandlers.create();
       return;
     }
-
-    // // const currentCdpIds = Object.keys(this.activeCdps);
-    // if (this.cdpsWithoutProxy.length === 0) {
-    //   this.routeHandlers.goToManage();
-    // }
   }
 
   async doUpdate(route) {
@@ -232,10 +206,6 @@ export default class MakerManager /*extends EventEmitter*/ {
     }
 
     if (afterClose || afterOpen) {
-      // const { withProxy, withoutProxy } = await this.locateCdps();
-      // this.cdps = withProxy;
-      // this.cdpsWithoutProxy = withoutProxy;
-      // await this.updateActiveCdp();
       if (this.cdps.length > 0 || this.cdpsWithoutProxy.length > 0) {
         this.routeHandlers.manage();
       } else {

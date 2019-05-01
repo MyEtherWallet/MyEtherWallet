@@ -40,9 +40,9 @@
     <div v-show="!finishMigration" class="manage-container">
       <!-- ==================================================== -->
       <div class="title-content-container">
-        <p class="cpd-title">{{ $t('dapps.cdpPortal') }}</p>
+        <p class="cpd-title">{{ $t('dappsMaker.cdpPortal') }}</p>
         <p class="cdp-id">
-          {{ $t('dapps.positionLabel') }} #{{ activeCdp.cdpId }}
+          {{ $t('dappsMaker.positionLabel') }} #{{ activeCdp.cdpId }}
         </p>
       </div>
       <!-- ==================================================== -->
@@ -51,7 +51,7 @@
       <div class="information-blocks">
         <div class="block-item">
           <div class="block-title">
-            <p>{{ $t('dapps.liquidPrice') }} (ETH/USD)</p>
+            <p>{{ $t('dappsMaker.liquidPrice') }} (ETH/USD)</p>
             <div class="blue">
               <span class="blue-bold">{{ liquidationPriceDisplay }}</span>
               USD
@@ -59,11 +59,11 @@
           </div>
           <div class="block-content">
             <div class="item">
-              <p>{{ $t('dapps.currentPrice') }}(ETH/USD)</p>
+              <p>{{ $t('dappsMaker.currentPrice') }}(ETH/USD)</p>
               <div>{{ activeCdp.ethPrice }} <span>USD</span></div>
             </div>
             <div class="item">
-              <p>{{ $t('dapps.liquidationPenalty') }}</p>
+              <p>{{ $t('dappsMaker.liquidationPenalty') }}</p>
               <div>
                 {{
                   displayFixedValue(
@@ -76,14 +76,14 @@
         </div>
         <div class="block-item">
           <div class="block-title">
-            <p>{{ $t('dapps.collateralRatio') }}</p>
+            <p>{{ $t('dappsMaker.collateralRatio') }}</p>
             <div :class="collateralRatioColoring">
               <span>{{ collaterlizationRatioDisplay }}%</span>
             </div>
           </div>
           <div class="block-content">
             <div class="item">
-              <p>{{ $t('dapps.minimumRatio') }}</p>
+              <p>{{ $t('dappsMaker.minimumRatio') }}</p>
               <div>
                 {{
                   displayFixedValue(
@@ -93,7 +93,7 @@
               </div>
             </div>
             <div class="item">
-              <p>{{ $t('dapps.stabilityFee') }}</p>
+              <p>{{ $t('dappsMaker.stabilityFee') }}</p>
               <div>
                 {{
                   displayFixedValue(
@@ -111,13 +111,13 @@
       <div class="information-single-block">
         <div class="block-item">
           <div class="block-title">
-            <p>{{ $t('dapps.ethCollateral') }}</p>
+            <p>{{ $t('dappsMaker.ethCollateral') }}</p>
           </div>
 
           <div class="block-content-container">
             <div class="block-content">
               <div class="item">
-                <p>{{ $t('dapps.deposited') }}</p>
+                <p>{{ $t('dappsMaker.deposited') }}</p>
                 <div>
                   {{ displayFixedValue(activeCdp.ethCollateral, 5, false) }}
                   <span>ETH</span>
@@ -129,13 +129,13 @@
                   <span>USD</span>
                 </div>
                 <button @click="showDeposit">
-                  {{ $t('dapps.deposit') }} >
+                  {{ $t('dappsMaker.deposit') }} >
                 </button>
               </div>
             </div>
             <div class="block-content">
               <div class="item">
-                <p>{{ $t('dapps.maxWithDraw') }}</p>
+                <p>{{ $t('dappsMaker.maxWithDraw') }}</p>
                 <div>
                   {{ displayFixedValue(activeCdp.maxEthDraw, 5) }}
                   <span>ETH</span>
@@ -147,7 +147,7 @@
                   <span>USD</span>
                 </div>
                 <button @click="showWithdraw">
-                  {{ $t('dapps.withdraw') }} >
+                  {{ $t('dappsMaker.withdraw') }} >
                 </button>
               </div>
             </div>
@@ -161,26 +161,26 @@
       <div class="information-single-block">
         <div class="block-item">
           <div class="block-title">
-            <p>{{ $t('dapps.daiPosition') }}</p>
+            <p>{{ $t('dappsMaker.daiPosition') }}</p>
           </div>
 
           <div class="block-content-container">
             <div class="block-content">
               <div class="item">
-                <p>{{ $t('dapps.generated') }}</p>
+                <p>{{ $t('dappsMaker.generated') }}</p>
                 <div>{{ activeCdp.debtValue }} <span>DAI</span></div>
                 <div>
                   {{ displayFixedValue(activeCdp.debtValue, 2) }}
                   <span>USD</span>
                 </div>
                 <button @click="showPayback">
-                  {{ $t('dapps.payBack') }} >
+                  {{ $t('dappsMaker.payBack') }} >
                 </button>
               </div>
             </div>
             <div class="block-content">
               <div class="item">
-                <p>{{ $t('dapps.maxAvailable') }}</p>
+                <p>{{ $t('dappsMaker.maxAvailable') }}</p>
                 <div>
                   {{ displayFixedValue(activeCdp.maxDai, 5) }}
                   <span>DAI</span>
@@ -190,7 +190,7 @@
                   <span>USD</span>
                 </div>
                 <button @click="showGenerate">
-                  {{ $t('dapps.generate') }} >
+                  {{ $t('dappsMaker.generate') }} >
                 </button>
               </div>
             </div>
@@ -386,15 +386,10 @@ export default {
       this.loaded = true;
       if (this.cdpId) {
         this.activeCdp = this.makerManager.getCdp(this.cdpId);
-        // console.log('activeCdp1', this.activeCdp); // todo remove dev item
-
         if (!this.activeCdp) {
           await this.makerManager.doUpdate();
           this.activeCdp = this.makerManager.getCdp(this.cdpId);
         }
-        // console.log('activeCdp2', this.activeCdp); // todo remove dev item
-        // if(this.activeCdp.)
-        // eslint-disable-next-line
       }
     }
   },
@@ -429,7 +424,6 @@ export default {
     displayPercentValue,
     displayFixedValue,
     async isReady() {
-      // this.maxWithDraw = this.activeCdp.maxDaiDraw();
       if (this.activeCdp) {
         this.maxWithDrawUSD = this.activeCdp.toUSD(this.activeCdp.maxDai);
       }

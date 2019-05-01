@@ -2,45 +2,43 @@
   <div class="modal-container">
     <b-modal
       ref="modal"
-      :title="'Close CDP'"
+      :title="$t('dappsMaker.closeTitle')"
       centered
       class="bootstrap-modal nopadding"
       hide-footer
     >
       <div class="contents">
         <div v-if="!enoughMkr" class="message-container">
-          Not enough MKR to close this CDP
+          {{ $t('dappsMaker.notEnoughMkrClose') }}
         </div>
         <div v-if="!enoughDai" class="message-container">
-          Not enough DAI to close this CDP
+          {{ $t('dappsMaker.notEnoughDaiClose') }}
         </div>
         <p class="top-text">
-          Closing your CDP requires paying back your outstanding DAI debt, as
-          well as the accumulated stability fee. The stability fee can be paid
-          in either DAI or MKR.
+          {{ $t('dappsMaker.closingNotice') }}
         </p>
         <div class="value-table-container">
           <div class="value-table mkr-balance">
             <div class="value-block">
-              <p><b>My MKR balance</b></p>
+              <p><b>{{ $t('dappsMaker.mkrBalance') }}</b></p>
               <p>
                 <b>{{ mkrBalance }} MKR</b>
               </p>
             </div>
-            <p class="get-mkr">Get MKR</p>
+            <p class="get-mkr">{{ $t('dappsMaker.getMkr') }}</p>
           </div>
           <div class="value-table mkr-balance">
             <div class="value-block">
-              <p><b>My DAI balance</b></p>
+              <p><b>{{ $t('dappsMaker.daiBalance') }}</b></p>
               <p>
                 <b>{{ daiBalance }} DAI</b>
               </p>
             </div>
-            <p class="get-mkr">Get DAI</p>
+            <p class="get-mkr">{{ $t('dappsMaker.getDai') }}</p>
           </div>
           <div class="value-table other-values">
             <div class="value-block">
-              <p>Outstanding DAI generated</p>
+              <p>{{ $t('dappsMaker.outstandingDai') }}</p>
               <p>
                 <b>{{ activeCdp.debtValue }} DAI</b>
               </p>
@@ -48,7 +46,7 @@
             <div class="value-block">
               <p>
                 {{
-                  $t('dapps.stabilityFeeInMkr', {
+                  $t('dappsMaker.stabilityFeeInMkr', {
                     value: displayFixedValue(
                       displayPercentValue(activeCdp.stabilityFee)
                     )
