@@ -127,7 +127,6 @@ export default class SwapProviders {
       .reverse();
     const arraysForSort = [...tokenNameMap, ...TOP_OPTIONS_ORDER];
     return array.sort(comparator(arraysForSort));
-    // return array.sort(comparator);
   }
 
   buildInitialCurrencyArrays() {

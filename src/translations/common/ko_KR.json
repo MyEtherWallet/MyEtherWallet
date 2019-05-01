@@ -1,7 +1,7 @@
 {
-  "createANewWallet": "새로운 지갑 생성하기",
-  "accessMyWallet": "내 지갑 열기",
-  "accessWallet": "내 지갑 열기",
+  "createANewWallet": "Create A New Wallet",
+  "accessMyWallet": "내 지갑 접근 ",
+  "accessWallet": "Access Wallet",
   "faqs": "자주 묻는 질문",
   "sendTx": "Send Transaction",
   "sendSafeSendTx": "Protect Your ETH Transaction Using SafeSend",
@@ -76,5 +76,5 @@
   "vintage": "Vintage",
   "okay": "Okay",
   "ok": "OK",
-  "menu": "메뉴"
+  "menu": "Menu"
 }

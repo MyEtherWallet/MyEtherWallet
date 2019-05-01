@@ -13,10 +13,16 @@
       ]"
     >
       <div class="img-title-container">
-        <img :src="hoverIcon" class="icon" />
+        <img :src="hoverIcon ? hoverIcon : regularIcon" class="icon" />
         <div class="title-link-container">
           <span>{{ text }}</span>
-          <a v-show="link !== ''" :href="link" target="_blank" @click.stop>
+          <a
+            v-show="link !== ''"
+            :href="link"
+            target="_blank"
+            rel="noopener noreferrer"
+            @click.stop
+          >
             Buy Now >
           </a>
         </div>
@@ -57,6 +63,10 @@ export default {
       default: ''
     },
     link: {
+      type: String,
+      default: ''
+    },
+    regularIcon: {
       type: String,
       default: ''
     }

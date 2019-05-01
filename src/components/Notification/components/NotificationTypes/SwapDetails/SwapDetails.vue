@@ -73,6 +73,7 @@
               <a
                 :href="addressLink(details.to, details.toCurrency)"
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 {{ details.to }}
               </a>
@@ -94,6 +95,7 @@
                   addressLink(details.providerAddress, details.fromCurrency)
                 "
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 {{ details.providerAddress }}
               </a>
