@@ -20,7 +20,9 @@
         <div class="value-table-container">
           <div class="value-table mkr-balance">
             <div class="value-block">
-              <p><b>{{ $t('dappsMaker.mkrBalance') }}</b></p>
+              <p>
+                <b>{{ $t('dappsMaker.mkrBalance') }}</b>
+              </p>
               <p>
                 <b>{{ mkrBalance }} MKR</b>
               </p>
@@ -29,7 +31,9 @@
           </div>
           <div class="value-table mkr-balance">
             <div class="value-block">
-              <p><b>{{ $t('dappsMaker.daiBalance') }}</b></p>
+              <p>
+                <b>{{ $t('dappsMaker.daiBalance') }}</b>
+              </p>
               <p>
                 <b>{{ daiBalance }} DAI</b>
               </p>

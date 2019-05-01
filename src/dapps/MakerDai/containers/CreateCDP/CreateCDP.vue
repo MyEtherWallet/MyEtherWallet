@@ -12,7 +12,10 @@
       :collateral="ethQty.toString()"
       :generate="daiQty.toString()"
     />
-    <loading-overlay v-if="loading" loadingmessage="$t('dappsMaker.creatingMessage')" />
+    <loading-overlay
+      v-if="loading"
+      loadingmessage="$t('dappsMaker.creatingMessage')"
+    />
     <div class="manage-container">
       <p class="top-title">
         {{ $t('dappsMaker.maker_title') }}
@@ -23,7 +26,9 @@
 
       <div class="currency-ops-new">
         <div class="currency-picker-container">
-          <div class="interface__block-title">{{ $t('dappsMaker.collateral') }}</div>
+          <div class="interface__block-title">
+            {{ $t('dappsMaker.collateral') }}
+          </div>
           <div class="dropdown-text-container dropdown-container">
             <p>
               <span class="cc ETH cc-icon currency-symbol" />
@@ -36,13 +41,15 @@
             class="currency-picker-container dropdown-text-container dropdown-container"
           />
           <div class="input-block-message">
-            <p>{{ $t('dappsMaker.minCollat') }} <b>0.0TODO</b> ETH</p>
+            <!--            <p>{{ $t('dappsMaker.minCollat') }} <b>0.0TODO</b> ETH</p>-->
             <p>{{ displayFixedValue(depositInPeth, 6) }} PETH</p>
           </div>
         </div>
         <div class="arrow"><img :src="arrowImage" /></div>
         <div>
-          <div class="interface__block-title">{{ $t('dappsMaker.generate') }}</div>
+          <div class="interface__block-title">
+            {{ $t('dappsMaker.generate') }}
+          </div>
           <div class="dropdown-text-container dropdown-container">
             <p>
               <span class="cc DAI cc-icon cc-icon-dai currency-symbol" />
@@ -70,10 +77,10 @@
 
       <div class="cdp-info-block cdp-info-entry">
         <ul>
-          <li>
-            <p>{{ $t('dappsMaker.minEthReq') }}</p>
-            <p>0TODO ETH</p>
-          </li>
+          <!--          <li>-->
+          <!--            <p>{{ $t('dappsMaker.minEthReq') }}</p>-->
+          <!--            <p>0TODO ETH</p>-->
+          <!--          </li>-->
           <li>
             <p>{{ $t('dappsMaker.liquidPrice') }}</p>
             <p>

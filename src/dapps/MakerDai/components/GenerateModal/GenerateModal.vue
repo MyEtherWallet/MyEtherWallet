@@ -27,7 +27,13 @@
             <p class="input-unit">DAI</p>
           </div>
           <div class="sub-text">
-            <p> {{ $t('dappsMaker.collateralRatioVal', {value: newCollateralRatio}) }} </p>
+            <p>
+              {{
+                $t('dappsMaker.collateralRatioVal', {
+                  value: newCollateralRatio
+                })
+              }}
+            </p>
             <p v-if="!canGenerateDaiAmount" class="above-max">
               {{ $t('dappsMaker.aboveMaxDai') }}
             </p>

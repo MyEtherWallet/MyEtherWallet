@@ -29,9 +29,7 @@
                 }}
                 PETH
               </p>
-              <popover
-                popcontent="$t('dappsMaker.pethPopover')"
-              />
+              <popover popcontent="$t('dappsMaker.pethPopover')" />
               <p v-if="!hasEnoughEth">{{ $t('dappsMaker.notEnoughEth') }}</p>
             </div>
           </div>
@@ -86,7 +84,7 @@
             </div>
           </div>
         </div>
-<!--        <div v-if="!newCollateralRatioSafe && notZero(amount)">
+        <!--        <div v-if="!newCollateralRatioSafe && notZero(amount)">
           <check-box @changeStatus="checkBoxClicked">
             <template v-slot:terms>
               <span v-if="!newCollateralRatioInvalid">

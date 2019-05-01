@@ -76,10 +76,10 @@ export default class MakerManager {
     this.cdpService = await this.maker.service('cdp');
     this.proxyService = await this.maker.service('proxy');
 
-    // this.ethPrice = toBigNumber(
-    //   (await this.priceService.getEthPrice()).toNumber()
-    // );
-    this.ethPrice = toBigNumber(163.84);
+    this.ethPrice = toBigNumber(
+      (await this.priceService.getEthPrice()).toNumber()
+    );
+    // this.ethPrice = toBigNumber(163.84);
 
     const pethPrice = await this.priceService.getPethPrice();
     const targetPrice = await this.priceService.getPethPrice();
@@ -106,7 +106,6 @@ export default class MakerManager {
     if (this.cdps.length > 0 || this.cdpsWithoutProxy.length > 0) {
       await this.loadCdpDetails();
     }
-
   }
 
   async buildProxy() {

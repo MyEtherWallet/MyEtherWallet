@@ -34,10 +34,10 @@
         <div class="detail-info">
           <expending-option title="Details">
             <ul>
-              <li>
-                <p>Min ETH required</p>
-                <p>TODO ETH</p>
-              </li>
+              <!--              <li>-->
+              <!--                <p>Min ETH required</p>-->
+              <!--                <p>TODO ETH</p>-->
+              <!--              </li>-->
               <li>
                 <p>Liquidation price (ETH/USD)</p>
                 <p class="bold">{{ liquidationPrice }} USD</p>

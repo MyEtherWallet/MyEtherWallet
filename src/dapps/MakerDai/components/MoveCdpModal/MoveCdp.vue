@@ -14,7 +14,7 @@
         <check-box @changeStatus="checkBoxClicked">
           <template v-slot:terms
             ><p class="checkbox-label">
-            {{ $t('dappsMaker.understandAndAgree') }}
+              {{ $t('dappsMaker.understandAndAgree') }}
             </p></template
           >
         </check-box>
@@ -111,8 +111,7 @@ export default {
     }
   },
   watch: {},
-  mounted() {
-  },
+  mounted() {},
   methods: {
     closeCdp() {
       this.activeCdp.closeCdp();
