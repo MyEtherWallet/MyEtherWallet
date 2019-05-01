@@ -5,7 +5,7 @@
         <div class="manage-container-blocks">
           <div class="label-one-left">
             <div class="select-label">
-              <p>Collateralized debt position #{{ cdpId }}</p>
+              <p>{{ $t('dappsMaker.positionLabel', {value: cdpId}) }}</p>
 
               <p>
                 <span class="standard-button__green-border">
@@ -14,14 +14,14 @@
                     class="the-button-box"
                     @click="openManage(cdpId)"
                   >
-                    Manage
+                    {{ $t('dappsMaker.manage') }}
                   </button>
                   <button
                     v-if="!hasProxy"
                     class="the-button-box"
                     @click="openMigrate(cdpId)"
                   >
-                    View
+                    {{ $t('dappsMaker.view') }}
                   </button>
                 </span>
               </p>
@@ -29,7 +29,7 @@
           </div>
           <div class="content-one-left">
             <div class="content-one-inner-left">
-              <p>{{ $t('dapps.deposited') }}</p>
+              <p>{{ $t('dappsMaker.deposited') }}</p>
               <p>
                 <b>{{ aCdp ? displayFixedValue(aCdp.ethCollateral) : 0 }}</b>
                 ETH
@@ -41,7 +41,7 @@
                 USD
               </p>
               <br />
-              <p>{{ $t('dapps.liquidPrice') }} (ETH/USD)</p>
+              <p>{{ $t('dappsMaker.liquidPrice') }} (ETH/USD)</p>
               <p>
                 <span class="blue-bold">{{
                   aCdp ? displayFixedValue(aCdp.liquidationPrice, 2) : 0
@@ -53,7 +53,7 @@
               <div class="Line-8"></div>
             </div>
             <div class="content-one-inner-right">
-              <p>{{ $t('dapps.generated') }}</p>
+              <p>{{ $t('dappsMaker.generated') }}</p>
               <p>
                 <b>{{ aCdp ? displayFixedValue(aCdp.debtValue) : 0 }}</b>
                 DAI
@@ -63,7 +63,7 @@
                 USD
               </p>
               <br />
-              <p>{{ $t('dapps.collateralRatio') }}</p>
+              <p>{{ $t('dappsMaker.collateralRatio') }}</p>
               <p class="blue-bold">
                 {{
                   aCdp

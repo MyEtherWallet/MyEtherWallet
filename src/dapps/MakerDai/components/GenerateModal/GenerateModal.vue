@@ -2,7 +2,7 @@
   <div class="modal-container">
     <b-modal
       ref="modal"
-      :title="getTitleText()"
+      :title="$t('dappsMaker.generateTitle')"
       centered
       class="bootstrap-modal nopadding"
       hide-footer
@@ -10,17 +10,16 @@
       <div class="contents">
         <div class="inputs">
           <div class="interface__block-title">
-            How much DAI would you like to generate?
+            {{ $t('dappsMaker.generateQuestion') }}
           </div>
           <div class="top-buttons">
-            <!-- TODO FOR TRANSLATE -->
             <p class="total">
-              <span>Total:</span>
+              <span>{{ $t('dappsMaker.total') }}</span>
               {{ activeCdp.maxDai ? displayFixedValue(activeCdp.maxDai) : 0 }}
               DAI
             </p>
             <p class="max" @click="maxDai">
-              Max. Balance
+              {{ $t('dappsMaker.maxBalance') }}
             </p>
           </div>
           <div :class="['input-box', allOk ? '' : 'danger']">
@@ -28,10 +27,9 @@
             <p class="input-unit">DAI</p>
           </div>
           <div class="sub-text">
-            <!-- TODO FOR TRANSLATE -->
-            <p>Collateralization Ratio: {{ newCollateralRatio }}%</p>
+            <p> {{ $t('dappsMaker.collateralRatioVal', {value: newCollateralRatio}) }} </p>
             <p v-if="!canGenerateDaiAmount" class="above-max">
-              Above Max Dai Amount
+              {{ $t('dappsMaker.aboveMaxDai') }}
             </p>
           </div>
         </div>
@@ -39,8 +37,7 @@
           <!-- Generate Dai -->
           <div v-if="action === 'generate'" class="detail-container">
             <div class="grid-block">
-              <p>Max Available to Generate</p>
-              <!-- TODO FOR TRANSLATE -->
+              <p>{{ $t('dappsMaker.maxGenerateAvailable') }}</p>
               <p>
                 <b>
                   {{
@@ -51,14 +48,14 @@
               </p>
             </div>
             <div class="grid-block">
-              <p>{{ $t('dapps.projectedLiquidation') }}</p>
+              <p>{{ $t('dappsMaker.projectedLiquidation') }}</p>
               <p>
                 <b>{{ displayFixedValue(newLiquidationPrice, 2) }}</b>
                 {{ fiatCurrency }}
               </p>
             </div>
             <div class="grid-block">
-              <p>{{ $t('dapps.projectedCollatRatio') }}</p>
+              <p>{{ $t('dappsMaker.projectedCollatRatio') }}</p>
               <p>
                 <b>{{ newCollateralRatio }}%</b>
               </p>
@@ -73,18 +70,20 @@
           <div class="grid-block">
             <div class="sign">⚠️</div>
             <div class="text-content">
-              <p class="title">Caution</p>
+              <p class="title">{{ $t('dappsMaker.Caution') }}</p>
               <p class="warning-details">
-                Your new collateral ratio of {{ newCollateralRatio }}% may place
-                CDP at risk of liquidation.
+                {{
+                  $t('dappsMaker.liquidationRisk', {
+                    value: newCollateralRatio
+                  })
+                }}
               </p>
               <check-box @changeStatus="checkBoxClicked">
                 <template v-slot:terms
                   ><p class="checkbox-label">
-                    I understand and agree with it.
+                    {{ $t('dappsMaker.understandAndAgree') }}
                   </p></template
                 >
-                <!-- TODO FOR TRANSLATE -->
               </check-box>
             </div>
           </div>
@@ -304,10 +303,6 @@ export default {
           await this.activeCdp.drawDai(this.amount, this.riskyBypass);
         }
       }
-    },
-    getTitleText() {
-      return 'Generate DAI';
-      // <!-- TODO FOR TRANSLATE -->
     },
     closeModal() {
       this.$refs.modal.hide();

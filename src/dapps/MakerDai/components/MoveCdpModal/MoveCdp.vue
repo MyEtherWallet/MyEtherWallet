@@ -5,18 +5,22 @@
       hide-footer
       centered
       class="bootstrap-modal nopadding"
-      title="Move CDP"
+      title="$t('dappsMaker.moveTitle')"
     >
       <div class="modal-content">
         <p class="top-text">
-          You may only move your CDP to an Ethereum address that you own. By
-          clicking the box below, you(“You”)affirmatively represent that you
-          alone own and control (i) the CDP that you will transfer, and (ii) the
-          public Ethereum address to which it will be transferred.
+          {{ $t('dappsMaker.moveNotice') }}
         </p>
+        <check-box @changeStatus="checkBoxClicked">
+          <template v-slot:terms
+            ><p class="checkbox-label">
+            {{ $t('dappsMaker.understandAndAgree') }}
+            </p></template
+          >
+        </check-box>
 
         <div class="input-container">
-          <label>Enter the address to send the cdp?</label>
+          <label>{{ $t('dappsMaker.moveQuestion') }}</label>
           <div class="input-box">
             <input v-model="address" />
           </div>
@@ -40,6 +44,8 @@
 import { mapGetters } from 'vuex';
 import StandardButton from '@/components/Buttons/StandardButton';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
+import CheckBox from '../CheckBox';
+
 import BigNumber from 'bignumber.js/bignumber.js';
 
 import { Misc } from '@/helpers';
@@ -50,6 +56,7 @@ import { Misc } from '@/helpers';
 
 export default {
   components: {
+    'check-box': CheckBox,
     'help-center-button': HelpCenterButton,
     'standard-button': StandardButton
   },
@@ -78,6 +85,7 @@ export default {
       amountDai: 0,
       govFee: 0,
       modalDetailInformation: false,
+      checkBoxChecked: false,
       textValues: {},
       mkrToken: {},
       cancelButton: {
@@ -99,23 +107,18 @@ export default {
       network: 'network'
     }),
     btnActive() {
-      return this.address !== '';
+      return Misc.isValidETHAddress(this.address) && this.checkBoxChecked;
     }
   },
   watch: {},
   mounted() {
-    this.mkrToken = this.tokensWithBalance.find(item => {
-      return (
-        item.symbol === 'MKR' ||
-        item.address.toLowerCase() ===
-          '0xAaF64BFCC32d0F15873a02163e7E500671a4ffcD'.toLowerCase()
-      );
-    });
-    // eslint-disable-next-line
   },
   methods: {
     closeCdp() {
       this.activeCdp.closeCdp();
+    },
+    checkBoxClicked() {
+      this.checkBoxChecked = !this.checkBoxChecked;
     },
     displayPercentValue(raw) {
       if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);

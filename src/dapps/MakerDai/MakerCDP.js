@@ -122,7 +122,6 @@ export default class MakerCDP {
 
   get usdCollateral() {
     return this.toUSD(this._ethCollateral);
-    // return this._usdCollateral;
   }
 
   get ethCollateral() {
@@ -308,7 +307,6 @@ export default class MakerCDP {
       daiQty,
       proxyAddress
     );
-    // eslint-disable-next-line
     return newCdp.id;
   }
 
@@ -373,7 +371,6 @@ export default class MakerCDP {
 
   async canCloseCdp() {
     const value = this.debtValue.toNumber();
-    // console.log(this.cdpId, value); // todo remove dev item
     return await this.cdpService.enoughMkrToWipe(this.cdpId, value, DAI.wei);
   }
 

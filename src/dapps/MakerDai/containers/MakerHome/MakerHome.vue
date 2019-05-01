@@ -1,8 +1,8 @@
 <template>
   <div>
     <loading-sign
-      loadingmessage1="Loading MakerDAI..."
-      loadingmessage2="Please wait for a moment."
+      loadingmessage1="$t('dappsMaker.initialLoadingOne')"
+      loadingmessage2="$t('dappsMaker.initialLoadingTwo')"
     />
   </div>
 </template>

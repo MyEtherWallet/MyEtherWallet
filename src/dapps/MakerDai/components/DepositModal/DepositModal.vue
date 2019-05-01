@@ -2,7 +2,7 @@
   <div class="modal-container">
     <b-modal
       ref="modal"
-      :title="getTitleText()"
+      :title="$t('dappsMaker.depositTitle')"
       centered
       class="bootstrap-modal nopadding"
       hide-footer
@@ -12,9 +12,8 @@
           <!-- Deposit ETH -->
           <div v-if="action === 'deposit'" class="input-container">
             <div class="interface__block-title">
-              How much ETH would you like to deposit?
+              {{ $t('dappsMaker.depositQuestion') }}
             </div>
-            <!-- TODO FOR TRANSLATE -->
             <div :class="['input-box', hasEnoughEth ? '' : 'danger']">
               <input v-model="amount" />
               <span class="input-unit">{{ digitalCurrency }}</span>
@@ -31,16 +30,16 @@
                 PETH
               </p>
               <popover
-                popcontent="Pooled ETH, which means it joins a large pool of Ethereum that is the collateral for all Dai created."
+                popcontent="$t('dappsMaker.pethPopover')"
               />
-              <p v-if="!hasEnoughEth">Not Enough ETH</p>
+              <p v-if="!hasEnoughEth">{{ $t('dappsMaker.notEnoughEth') }}</p>
             </div>
           </div>
         </div>
 
         <div class="detail-info">
           <div class="info">
-            <h4>Detail Information</h4>
+            <h4>{{ $t('dappsMaker.DetailInfo') }}</h4>
             <div class="sliding-switch-white">
               <label class="switch">
                 <input
@@ -58,22 +57,21 @@
             <!-- Deposit ETH -->
             <div v-if="action === 'deposit'" class="padding-container">
               <div class="grid-block">
-                <p>Currently Deposited</p>
-                <!-- TODO FOR TRANSLATE -->
+                <p>{{ $t('dappsMaker.currentlyDeposited') }}</p>
                 <p>
                   <b>{{ displayFixedValue(activeCdp.ethCollateralNum, 2) }}</b>
                   {{ digitalCurrency }}
                 </p>
               </div>
               <div class="grid-block">
-                <p>{{ $t('dapps.projectedLiquidation') }}</p>
+                <p>{{ $t('dappsMaker.projectedLiquidation') }}</p>
                 <p>
                   <b>{{ displayFixedValue(newLiquidationPrice, 2) }}</b>
                   {{ fiatCurrency }}
                 </p>
               </div>
               <div class="grid-block">
-                <p>{{ $t('dapps.projectedCollatRatio') }}</p>
+                <p>{{ $t('dappsMaker.projectedCollatRatio') }}</p>
                 <p>
                   <b
                     >{{
@@ -88,7 +86,7 @@
             </div>
           </div>
         </div>
-        <div v-if="!newCollateralRatioSafe && notZero(amount)">
+<!--        <div v-if="!newCollateralRatioSafe && notZero(amount)">
           <check-box @changeStatus="checkBoxClicked">
             <template v-slot:terms>
               <span v-if="!newCollateralRatioInvalid">
@@ -96,7 +94,7 @@
                 {{
                   displayFixedValue(displayPercentValue(newCollateralRatio))
                 }}% may place my cdp at risk of liquidation.
-                <!-- TODO FOR TRANSLATE -->
+                &lt;!&ndash; TODO FOR TRANSLATE &ndash;&gt;
               </span>
               <span v-if="newCollateralRatioInvalid" style="color: red;">
                 I understand the new collateral ratio of
@@ -105,9 +103,9 @@
                 }}% WILL place my cdp at risk of liquidation.
               </span>
             </template>
-            <!-- TODO FOR TRANSLATE -->
+            &lt;!&ndash; TODO FOR TRANSLATE &ndash;&gt;
           </check-box>
-        </div>
+        </div>-->
         <div class="buttons">
           <standard-button
             :options="cancelButton"
@@ -286,11 +284,6 @@ export default {
         this.delayCloseModal();
         await this.activeCdp.lockEth(this.amount);
       }
-    },
-
-    getTitleText() {
-      return 'Deposit Collateral';
-      // <!-- TODO FOR TRANSLATE -->
     },
     closeModal() {
       this.$refs.modal.hide();

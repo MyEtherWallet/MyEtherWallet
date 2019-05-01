@@ -2,7 +2,7 @@
   <div class="modal-container">
     <b-modal
       ref="modal"
-      :title="getTitleText()"
+      :title="$t('dappsMaker.withdrawTitle')"
       centered
       class="bootstrap-modal nopadding"
       hide-footer
@@ -12,18 +12,12 @@
           <!-- Withdraw ETH -->
           <div class="input-container">
             <p class="message">
-              <!-- TODO FOR TRANSLATE -->
-              You might be requested to sign up to three trasactions if there is
-              not enough allowance in DAI and/or MKR to complete this
-              transaction.
+              {{ $t('dappsMaker.withdrawNotice') }}
             </p>
-            <label
-              >How much {{ digitalCurrency }} would you like to withdraw?</label
-            ><!-- TODO FOR TRANSLATE -->
+            <label> {{ $t('dappsMaker.withdrawQuestion') }}</label>
             <div class="top-buttons">
-              <!-- TODO FOR TRANSLATE -->
               <p class="max-withdraw" @click="maxWithdraw">
-                Max withdraw amount
+                {{ $t('dappsMaker.maxWithdraw') }}
               </p>
             </div>
             <div :class="['input-box', newCollateralRatioSafe ? '' : 'danger']">
@@ -32,7 +26,6 @@
             </div>
             <div class="sub-text">
               <!--            <p v-if="!canGenerateDaiAmount">Above Max Dai Amount</p>-->
-              <!-- TODO FOR TRANSLATE -->
               <div class="peth">
                 <p class="peth-value">
                   {{
@@ -43,7 +36,7 @@
                   PETH
                 </p>
                 <popover
-                  popcontent="Pooled ETH, which means it joins a large pool of Ethereum that is the collateral for all Dai created."
+                  popcontent="$t('dappsMaker.pethPopover')"
                 />
               </div>
             </div>
@@ -54,7 +47,7 @@
           <!-- Withdraw ETH -->
           <div v-if="action === 'withdraw'" class="padding-container">
             <div class="grid-block">
-              <p>Max Available to Withdraw</p>
+              <p>{{ $t('dappsMaker.maxWithdrawAvailable') }}</p>
               <!-- TODO FOR TRANSLATE -->
               <p>
                 <b>{{
@@ -67,14 +60,14 @@
             </div>
 
             <div class="grid-block">
-              <p>{{ $t('dapps.projectedLiquidation') }}</p>
+              <p>{{ $t('dappsMaker.projectedLiquidation') }}</p>
               <p>
                 <b>{{ displayFixedValue(newLiquidationPrice, 2) }}</b>
                 {{ fiatCurrency }}
               </p>
             </div>
             <div class="grid-block">
-              <p>{{ $t('dapps.projectedCollatRatio') }}</p>
+              <p>{{ $t('dappsMaker.projectedCollatRatio') }}</p>
               <p>
                 <b
                   >{{
@@ -96,17 +89,20 @@
           <div class="grid-block">
             <div class="sign">⚠️</div>
             <div class="text-content">
-              <p class="title">Caution</p>
+              <p class="title">{{ $t('dappsMaker.caution') }}</p>
               <p class="warning-details">
-                Your new collateral ratio of
                 {{
-                  displayFixedValue(displayPercentValue(newCollateralRatio))
-                }}% may place CDP at risk of liquidation.
+                  $t('dappsMaker.liquidationRisk', {
+                    value: displayFixedValue(
+                      displayPercentValue(newCollateralRatio)
+                    )
+                  })
+                }}
               </p>
               <check-box @changeStatus="checkBoxClicked">
                 <template v-slot:terms
                   ><p class="checkbox-label">
-                    I understand and agree with it.
+                    {{ $t('dappsMaker.understandAndAgree') }}
                   </p></template
                 >
                 <!-- TODO FOR TRANSLATE -->
@@ -324,10 +320,6 @@ export default {
         this.delayCloseModal();
         await this.activeCdp.freeEth(this.amount);
       }
-    },
-    getTitleText() {
-      return 'Withdraw Collateral';
-      // <!-- TODO FOR TRANSLATE -->
     },
     closeModal() {
       this.$refs.modal.hide();
