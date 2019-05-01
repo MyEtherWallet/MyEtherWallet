@@ -9,6 +9,8 @@ const ERRORS = {
   'Permissions not granted': 'trezorError.noPermission',
   'Device call in progress': 'trezorError.callInProgress',
   'Transport is missing': 'trezorError.transportMissing',
+  'EthAppPleaseEnableContractData: Please enable Contract data on the Ethereum app Settings':
+    'trezorError.turnOnContractData',
   Cancelled: 'trezorError.cancelled'
 };
 

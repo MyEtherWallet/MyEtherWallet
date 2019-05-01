@@ -33,7 +33,7 @@
       </div>
       <button
         :disabled="
-          password === '' && password.length === 0 && password.length < 9
+          walletRequirePass(file) && (password === '' || password.length === 0)
         "
         class="submit-button large-round-button-green-filled"
         type="submit"
@@ -80,6 +80,15 @@ export default {
     }
   },
   methods: {
+    walletRequirePass(ethjson) {
+      if (ethjson.encseed != null) return true;
+      else if (ethjson.Crypto != null || ethjson.crypto != null) return true;
+      else if (ethjson.hash != null && ethjson.locked) return true;
+      else if (ethjson.hash != null && !ethjson.locked) return false;
+      else if (ethjson.publisher == 'MyEtherWallet' && !ethjson.encrypted)
+        return false;
+      return true;
+    },
     unlockWallet() {
       this.spinner = true;
 
