@@ -1,3 +1,11 @@
+### Devop
+
+### Bug
+
+### Feature
+
+- Have Simplex KYC form open in new tab [#1031](https://github.com/MyEtherWallet/MyEtherWallet/pull/1031)
+
 ### Release v5.0.11
 
 ### Devop
@@ -10,7 +18,7 @@
 - Check private key format [#1014](https://github.com/MyEtherWallet/MyEtherWallet/pull/1014)
 - Update usage of Kyber supplied gas limits and serverless provider [#969](https://github.com/MyEtherWallet/MyEtherWallet/pull/969)
 - Fix hardware access icons not displaying [#1025](https://github.com/MyEtherWallet/MyEtherWallet/pull/1025)
-
+- Fix none assignment issue on Send Offline Container [#982](https://github.com/MyEtherWallet/MyEtherWallet/pull/982)
 
 ### Bug
 
@@ -18,17 +26,12 @@
 - Strip whitespace in address inputs [#1016](https://github.com/MyEtherWallet/MyEtherWallet/pull/1016)
 - Fix token load issue when searching token list [#1001](https://github.com/MyEtherWallet/MyEtherWallet/pull/1001)
 
-
 ### Feature
 
 - DEXON network support [#977](https://github.com/MyEtherWallet/MyEtherWallet/pull/977)
 - Metadium network support [#928](https://github.com/MyEtherWallet/MyEtherWallet/pull/928)
 - Solidum network support [#957](https://github.com/MyEtherWallet/MyEtherWallet/pull/957)
 - Support local nodes [#973](https://github.com/MyEtherWallet/MyEtherWallet/pull/973)
-
-### Bug
-
-- Fix none assignment issue on Send Offline Container [#982](https://github.com/MyEtherWallet/MyEtherWallet/pull/982)
 
 ### Release v5.0.10
 
