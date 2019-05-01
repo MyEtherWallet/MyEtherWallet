@@ -18,9 +18,9 @@
     "page": "index.html",
     "open_in_tab": true
   },
-  "background": {
-    "scripts": ["./cxHelpers.js"],
-    "persistent": false
+  "content_scripts": {
+    "matches": ["<all_urls>"],
+    "js": ["cxHelpers.js"]
   },
   "permissions": [
     "storage",
