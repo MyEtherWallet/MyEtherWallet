@@ -95,12 +95,6 @@
                   @changedValue="orderDetails.bic_swift = $event"
                 />
               </li>
-              <li>
-                <standard-input
-                  :options="inputAbaNumber"
-                  @changedValue="orderDetails.aba_number = $event"
-                />
-              </li>
             </ul>
           </accordion-menu>
           <!-- Personal Details - accordion-menu ******************************** -->
