@@ -9,6 +9,7 @@
 - Add presale eth and old mew eth wallet support [#985](https://github.com/MyEtherWallet/MyEtherWallet/pull/985)
 - Check private key format [#1014](https://github.com/MyEtherWallet/MyEtherWallet/pull/1014)
 - Update usage of Kyber supplied gas limits and serverless provider [#969](https://github.com/MyEtherWallet/MyEtherWallet/pull/969)
+- Fix hardware access icons not displaying [#1025](https://github.com/MyEtherWallet/MyEtherWallet/pull/1025)
 
 
 ### Bug
