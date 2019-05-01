@@ -6,11 +6,10 @@
     class="bootstrap-modal nopadding modal-software"
     centered
   >
-    <div class="modal-content">
-      <p class="hardware-link">
-        Want to get a Hardware wallet?
-        <router-link to="/hardware-wallet-affiliates">Click here!</router-link>
-      </p>
+    <div class="warning">
+      <warning-message :options="warningOptions" />
+    </div>
+    <div class="content-block">
       <div class="d-block content-container text-center">
         <div class="button-options">
           <wallet-option
@@ -23,6 +22,14 @@
             @updateSelected="updateSelected"
           />
         </div>
+        <div class="hardware-link">
+          <p>
+            {{ $t('accessWallet.buyHardwareWallet') }}
+          </p>
+          <router-link to="/hardware-wallet-affiliates">{{
+            $t('accessWallet.buyHardwareWalletLink')
+          }}</router-link>
+        </div>
         <input
           ref="jsonInput"
           type="file"
@@ -30,9 +37,6 @@
           style="display: none"
           @change="uploadFile"
         />
-      </div>
-      <div class="not-recommended">
-        {{ $t('accessWallet.notARecommendedWay') }}
       </div>
       <div class="button-container">
         <b-btn
@@ -51,6 +55,7 @@
 
 <script>
 import CustomerSupport from '@/components/CustomerSupport';
+import WarningMessage from '@/components/WarningMessage';
 import byJsonImgHov from '@/assets/images/icons/button-json-hover.svg';
 import byMnemImgHov from '@/assets/images/icons/button-mnemonic-hover.svg';
 import privKeyImgHov from '@/assets/images/icons/button-key-hover.svg';
@@ -60,7 +65,8 @@ import { Toast } from '@/helpers';
 export default {
   components: {
     'customer-support': CustomerSupport,
-    'wallet-option': WalletOption
+    'wallet-option': WalletOption,
+    'warning-message': WarningMessage
   },
   props: {
     value: {
@@ -82,6 +88,14 @@ export default {
   },
   data() {
     return {
+      warningOptions: {
+        title: 'NOT RECOMMENDED',
+        message: this.$t('accessWallet.notARecommendedWay'),
+        link: {
+          text: 'Using MEW Offline',
+          url: 'https://kb.myetherwallet.com/posts/offline/using-mew-offline/'
+        }
+      },
       file: '',
       selected: '',
       items: [

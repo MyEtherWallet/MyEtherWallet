@@ -545,9 +545,6 @@ export default class BitySwap {
         return swapNotificationStatuses.COMPLETE;
       }
       switch (data.status) {
-        // The endPoint does not seem to be updating the order.
-        //case bityStatuses.OPEN:
-        // return 'new';
         case bityStatuses.OPEN:
         case bityStatuses.RCVE:
         case bityStatuses.CONF:

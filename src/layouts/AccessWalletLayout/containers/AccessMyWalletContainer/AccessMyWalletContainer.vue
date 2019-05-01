@@ -119,7 +119,7 @@ import softwareImgDisabled from '@/assets/images/icons/button-software-disabled.
 import { mapGetters } from 'vuex';
 import { Toast } from '@/helpers';
 
-import platform from 'platform';
+import DetectRTC from 'detectrtc';
 
 export default {
   components: {
@@ -162,7 +162,7 @@ export default {
           func: this.hardwareModalOpen,
           title: this.$t('common.hardware'),
           desc:
-            'Ledger wallet, FINNEY, Trezor, Digital bitbox, Secalot, Keepkey',
+            'Ledger wallet, FINNEY, Trezor, Digital bitbox, Secalot, KeepKey',
           recommend: '',
           tooltip: '',
           img: hardwareImg,
@@ -212,13 +212,7 @@ export default {
     isDisabled(className) {
       switch (className) {
         case 'button-mewconnect':
-          return (
-            !this.online ||
-            (platform.name.toLowerCase() !== 'chrome' &&
-              platform.name.toLowerCase() !== 'firefox' &&
-              platform.name.toLowerCase() !== 'safari' &&
-              platform.name.toLowerCase() !== 'opera')
-          );
+          return !(this.online && DetectRTC.isWebRTCSupported);
         case 'button-hardware':
           return !this.online;
         default:

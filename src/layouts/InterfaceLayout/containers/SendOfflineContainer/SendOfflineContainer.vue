@@ -137,7 +137,7 @@
           </div>
           <div class="the-form gas-amount">
             <input
-              v-model="nonce"
+              v-model="localNonce"
               :placeholder="$t('common.nonce')"
               type="number"
             />
@@ -145,7 +145,7 @@
               <i
                 :class="[
                   'fa fa-check-circle good-button',
-                  nonce >= 0 ? '' : 'not-good'
+                  localNonce >= 0 ? '' : 'not-good'
                 ]"
                 aria-hidden="true"
               />
@@ -359,7 +359,7 @@ export default {
       const decimals =
         this.selectedCoinType.symbol === symbol
           ? 18
-          : this.selectedCoinType.decimals;
+          : parseInt(this.selectedCoinType.decimals);
       this.toAmt =
         e.target.valueAsNumber < 0 || isNaN(e.target.valueAsNumber)
           ? 0
@@ -427,7 +427,7 @@ export default {
         try {
           const file = JSON.parse(evt.target.result);
           self.localGasPrice = unit.fromWei(file.gasPrice, 'gwei');
-          self.localNonce = file.localNonce;
+          self.localNonce = file.nonce;
         } catch (e) {
           Toast.responseHandler(e, Toast.WARN);
         }
@@ -444,7 +444,9 @@ export default {
         gasPrice: Misc.sanitizeHex(
           new BigNumber(unit.toWei(this.localGasPrice, 'gwei')).toString(16)
         ),
-        to: isToken ? this.selectedCoinType.address : this.address,
+        to: isToken
+          ? this.selectedCoinType.address
+          : this.address.toLowerCase().trim(),
         value: isToken ? 0 : amtWei,
         data: this.toData,
         chainId: this.network.type.chainID
