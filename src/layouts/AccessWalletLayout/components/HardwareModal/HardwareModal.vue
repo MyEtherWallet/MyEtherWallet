@@ -51,7 +51,7 @@ import bitbox from '@/assets/images/icons/HardwareWallet/bitbox.svg';
 import secalot from '@/assets/images/icons/HardwareWallet/secalot.svg';
 import trezor from '@/assets/images/icons/HardwareWallet/trezor.svg';
 import keepkey from '@/assets/images/icons/HardwareWallet/keepkey.svg';
-import finney from '@/assets/images/icons/button-finney.png';
+import finney from '@/assets/images/icons/button-finney-hover.png';
 import WalletOption from '../WalletOption';
 import { Toast } from '@/helpers';
 import { isSupported } from 'u2f-api';
