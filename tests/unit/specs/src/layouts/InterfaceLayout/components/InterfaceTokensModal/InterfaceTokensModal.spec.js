@@ -44,7 +44,7 @@ describe('InterfaceTokensModal.vue', () => {
     const inputElements = wrapper.vm.$el.querySelectorAll(
       '.tokens-modal-body input'
     );
-    expect(inputElements[0].value).toEqual(tokenAddress);
+    expect(inputElements[0].value).toEqual(tokenAddress.toLowerCase().trim());
   });
 
   it('should render correct tokenSymbol', () => {

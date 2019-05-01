@@ -1,22 +1,30 @@
 // TODO: look into only using kyberTokenInfoList for ETH and parsing results differently if ROP?
 import { TIME_SWAP_VALID_DEFAULT } from '../../partnersConfig/config';
 
+import { KyberCurrenciesETH } from './currenciesETH';
+import { KyberCurrenciesROP } from './currenciesROP';
+
+const ETH_ENDPINT = 'https://api.kyber.network';
+const ROP_ENDPOINT = 'https://ropsten-api.kyber.network';
+
 const kyberTokenList = {
-  ETH: 'https://tracker.kyber.network/api/tokens/supported',
-  ROP: 'https://tracker.kyber.network/api/tokens/supported?chain=ropsten'
+  ETH: `${ETH_ENDPINT}/currencies`,
+  ROP: `${ETH_ENDPINT}/currencies`
 };
 
 const kyberTokenInfoList = {
-  ETH: 'https://tracker.kyber.network/api/tokens/pairs'
+  ETH: `${ETH_ENDPINT}/api/tokens/pairs`
+};
+
+const kyberGasLimitList = {
+  ETH: `${ETH_ENDPINT}/gasLimitConfig`,
+  ROP: `${ROP_ENDPOINT}/gasLimitConfig`
 };
 
 const kyberAddressFallback = {
   ETH: '0x818e6fecd516ecc3849daf6845e3ec868087b755',
   ROP: '0x818E6FECD516Ecc3849DAf6845e3EC868087B755'
 };
-
-import { KyberCurrenciesETH } from './currenciesETH';
-import { KyberCurrenciesROP } from './currenciesROP';
 
 const KyberCurrencies = { ETH: KyberCurrenciesETH, ROP: KyberCurrenciesROP };
 
@@ -30,6 +38,14 @@ const defaultValues = {
   tokenApprovalGasLimit: 100000, //40205,
   maxGasPrice: 30000000000, // 30 Gwei
   gasPrice: 2000000000 // 2 Gwei
+};
+
+const kyberMethods = {
+  ETH: {
+    currencies: 'getSupportedTokens',
+    rate: 'getCryptoRates',
+    gasLimits: 'getGasLimits'
+  }
 };
 
 const FEE_RATE = 0;
@@ -58,5 +74,7 @@ export {
   kyberNetworkENS,
   walletDepositeAddress,
   KyberCurrencies,
-  kyberAddressFallback
+  kyberGasLimitList,
+  kyberAddressFallback,
+  kyberMethods
 };

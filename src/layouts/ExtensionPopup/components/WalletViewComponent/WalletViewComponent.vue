@@ -63,8 +63,8 @@ export default {
   },
   methods: {
     async fetchBalance() {
-      const balance = await document.web3.eth.getBalance(this.address);
-      this.balance = document.web3.utils.fromWei(balance);
+      const balance = await window.web3.eth.getBalance(this.address);
+      this.balance = window.web3.utils.fromWei(balance);
       this.receivedBalance = true;
     }
   }

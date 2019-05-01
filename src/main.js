@@ -1,6 +1,7 @@
 /* eslint camelcase: 0 */
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
+import Web3 from 'web3';
 import * as Sentry from '@sentry/browser';
 import * as Integrations from '@sentry/integrations';
 import { getApp } from '@/builds/configs';
@@ -129,3 +130,7 @@ Sentry.init({
     });
   }
 });
+
+if (BUILD_TYPE === 'mewcx') {
+  window.web3 = new Web3('https://api.myetherwallet.com/eth');
+}
