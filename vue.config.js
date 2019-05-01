@@ -129,7 +129,7 @@ if (process.env.NODE_ENV === 'production') {
           'src/components/Notification/components/NotificationTypes/SwapNotification/index.js',
           'src/components/Notification/components/NotificationTypes/TransactionNotification/index.js',
           // Images
-          'src/assets/images/icons/question.png',
+          'src/assets/images/icons/button-finney.png',
           'src/assets/images/background/bg-left.png',
           'src/assets/images/background/bg-right.png',
           'src/assets/images/currency/coins/AllImages/_icon-config.json',

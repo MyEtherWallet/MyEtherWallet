@@ -15,6 +15,7 @@ import etho from './etho';
 import go from './go';
 import kovethscan from './kov-ethscan';
 import kovinfura from './kov-infura';
+import metadium from './meta';
 import music from './music';
 import pirl from './pirl';
 import poa from './poa';
@@ -35,6 +36,8 @@ import mix from './mix';
 import reosc from './reosc';
 import web from './web';
 import thundercore from './thundercore';
+import sum from './sum';
+import dexon from './dexon';
 
 export {
   akaremote,
@@ -57,6 +60,7 @@ export {
   iolite,
   kovethscan,
   kovinfura,
+  metadium,
   mix,
   music,
   pirl,
@@ -73,5 +77,7 @@ export {
   tomo,
   ubq,
   web,
-  thundercore
+  thundercore,
+  sum,
+  dexon
 };

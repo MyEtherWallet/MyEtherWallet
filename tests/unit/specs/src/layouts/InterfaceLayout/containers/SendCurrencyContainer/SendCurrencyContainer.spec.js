@@ -71,7 +71,7 @@ describe('SendCurrencyContainer.vue', () => {
   });
 
   describe('SendCurrencyContainer.vue Methods', () => {
-    xit('should render correct selectedCurrency data', () => {
+    it('should render correct selectedCurrency data', () => {
       const currencyElements = wrapper.findAll(
         '.currency-picker-container .item-container div'
       );
