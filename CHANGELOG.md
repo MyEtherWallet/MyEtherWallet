@@ -2,10 +2,14 @@
 
 ### Devop
 
+- Access by Software UI change [#1021](https://github.com/MyEtherWallet/MyEtherWallet/pull/1021)
 - Fix multiple sentry issues [#1015](https://github.com/MyEtherWallet/MyEtherWallet/pull/1015)
 - Update hardware icons [#994](https://github.com/MyEtherWallet/MyEtherWallet/pull/994)
 - Add trezor eth path to ledger [#1020](https://github.com/MyEtherWallet/MyEtherWallet/pull/1020)
 - Add presale eth and old mew eth wallet support [#985](https://github.com/MyEtherWallet/MyEtherWallet/pull/985)
+- Check private key format [#1014](https://github.com/MyEtherWallet/MyEtherWallet/pull/1014)
+- Update usage of Kyber supplied gas limits and serverless provider [#969](https://github.com/MyEtherWallet/MyEtherWallet/pull/969)
+
 
 ### Bug
 
@@ -13,13 +17,6 @@
 - Strip whitespace in address inputs [#1016](https://github.com/MyEtherWallet/MyEtherWallet/pull/1016)
 - Fix token load issue when searching token list [#1001](https://github.com/MyEtherWallet/MyEtherWallet/pull/1001)
 
-### Devop
-
-- Check private key format [#1014](https://github.com/MyEtherWallet/MyEtherWallet/pull/1014)
-- Update usage of Kyber supplied gas limits and serverless provider  [#969](https://github.com/MyEtherWallet/MyEtherWallet/pull/969)
-
-### Devop
-- Check private key format [#1014](https://github.com/MyEtherWallet/MyEtherWallet/pull/1014)
 
 ### Feature
 
