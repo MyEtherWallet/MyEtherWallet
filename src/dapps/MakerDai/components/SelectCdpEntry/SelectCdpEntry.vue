@@ -5,7 +5,7 @@
         <div class="manage-container-blocks">
           <div class="label-one-left">
             <div class="select-label">
-              <p>{{ $t('dappsMaker.positionLabel', {value: cdpId}) }}</p>
+              <p>{{ $t('dappsMaker.positionLabel', { value: cdpId }) }}</p>
 
               <p>
                 <span class="standard-button__green-border">
@@ -118,9 +118,9 @@ export default {
       network: 'network',
       ens: 'ens'
     }),
-    hasProxy(){
-      if(this.aCdp){
-        return !this.aCdp.noProxy
+    hasProxy() {
+      if (this.aCdp) {
+        return !this.aCdp.noProxy;
       }
       return true;
     }
@@ -128,7 +128,7 @@ export default {
   async mounted() {},
   methods: {
     openManage() {
-      if(this.$route.path.includes('maker-dai')){
+      if (this.$route.path.includes('maker-dai')) {
         this.$router.push({
           name: 'manage',
           params: {
@@ -138,7 +138,7 @@ export default {
       }
     },
     openMigrate() {
-      if(this.$route.path.includes('maker-dai')){
+      if (this.$route.path.includes('maker-dai')) {
         this.$router.push({
           name: 'migrate',
           params: {

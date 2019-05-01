@@ -35,9 +35,7 @@
                   }}
                   PETH
                 </p>
-                <popover
-                  popcontent="$t('dappsMaker.pethPopover')"
-                />
+                <popover popcontent="$t('dappsMaker.pethPopover')" />
               </div>
             </div>
           </div>
