@@ -124,7 +124,7 @@ class KeepkeyWallet {
       return Buffer.from(response.toObject().signature, 'base64');
     };
     const displayAddress = async () => {
-      await this.keepkey.getPublicKey({
+      await this.keepkey.ethereumGetAddress({
         addressNList: bip32ToAddressNList(accountPath),
         showDisplay: true
       });
