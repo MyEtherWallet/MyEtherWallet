@@ -3,15 +3,11 @@ import { TIME_SWAP_VALID_DEFAULT } from '../../partnersConfig/config';
 
 import { KyberCurrenciesETH } from './currenciesETH';
 import { KyberCurrenciesROP } from './currenciesROP';
-// const ETH_ENDPINT = 'https://tracker.kyber.network';
-// const ROP_ENDPOINT = '';
 
 const ETH_ENDPINT = 'https://api.kyber.network';
 const ROP_ENDPOINT = 'https://ropsten-api.kyber.network';
 
 const kyberTokenList = {
-  // ETH: `${ETH_ENDPINT}/api/tokens/supported`,
-  // ROP: `${ETH_ENDPINT}/api/tokens/supported?chain=ropsten`
   ETH: `${ETH_ENDPINT}/currencies`,
   ROP: `${ETH_ENDPINT}/currencies`
 };
