@@ -7,7 +7,7 @@
     centered
   >
     <div class="warning">
-      <warning-message :options="warningOptions" />
+      <warning-message />
     </div>
     <div class="content-block">
       <div class="d-block content-container text-center">
@@ -92,14 +92,6 @@ export default {
         buttonStyle: 'green',
         noMinWidth: true,
         fullWidth: true
-      },
-      warningOptions: {
-        title: 'NOT RECOMMENDED',
-        message: this.$t('accessWallet.notARecommendedWay'),
-        link: {
-          text: 'Using MEW Offline',
-          url: 'https://kb.myetherwallet.com/posts/offline/using-mew-offline/'
-        }
       },
       file: '',
       selected: '',

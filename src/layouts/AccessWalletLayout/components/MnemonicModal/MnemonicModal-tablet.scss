@@ -1,7 +1,7 @@
 @import '~@/scss/GlobalVariables';
 @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
   .button-container-block {
-    margin-bottom: 30px;
+    margin-bottom: 20px;
   }
 
   .contents {
@@ -45,20 +45,23 @@
         grid-column-gap: 20px;
         grid-row-gap: 20px;
         grid-template-columns: 1fr 1fr 1fr;
-        //margin-bottom: 20px;
-
+        
         li {
           border-bottom: 1px solid $border-bottom--mnemonic-phrase-key-color;
           color: $text--mnemonic-phrase-index-color;
           font-size: 14px;
           padding: 10px 0;
+          display: flex;
+          align-items: center;
 
+          span {
+            width: 23px;
+          }
           input {
             display: inline-block;
             color: $text--mnemonic-phrase-key-color;
-            margin-left: 10px;
             border: 0;
-            width: calc(100% - 45px);
+            width: calc(100% - 30px);
           }
         } // li
       } // ul
