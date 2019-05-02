@@ -24,8 +24,8 @@
         </div>
         <standard-button
           :button-disabled="notValid"
-          class="submit-button"
           :options="accessWalletButtonOptions"
+          class="submit-button"
           @click.prevent="unlockWallet"
         />
       </form>
