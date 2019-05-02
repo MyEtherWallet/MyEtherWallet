@@ -64,7 +64,7 @@
 <script>
 import html2canvas from 'html2canvas';
 import printJS from 'print-js';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 
 export default {
   props: {
@@ -86,9 +86,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      network: 'network'
-    }),
+    ...mapState(['network']),
     displayedData() {
       const revealTime = new Date(this.jsonString['revealDate']);
       const auctionEnd = new Date(this.jsonString['auctionDateEnd']);

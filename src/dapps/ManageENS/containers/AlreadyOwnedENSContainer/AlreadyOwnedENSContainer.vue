@@ -57,7 +57,7 @@
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import FinalizeModal from '../../components/FinalizeModal/';
 
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 export default {
   components: {
     'interface-bottom-text': InterfaceBottomText,
@@ -101,9 +101,7 @@ export default {
     return {};
   },
   computed: {
-    ...mapGetters({
-      account: 'account'
-    }),
+    ...mapState(['account']),
     fullDomainName() {
       return `${this.hostName}.${this.tld}`;
     }

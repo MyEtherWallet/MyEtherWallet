@@ -334,7 +334,7 @@
 
 <script>
 import ethTx from 'ethereumjs-tx';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import Misc from '@/helpers/misc';
 import BigNumber from 'bignumber.js';
 import web3Utils from 'web3-utils';
@@ -402,14 +402,15 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      network: 'network',
-      Networks: 'Networks',
-      customPaths: 'customPaths',
-      path: 'path',
-      web3: 'web3',
-      wallet: 'wallet'
-    }),
+    ...mapState([
+      'network',
+      'Networks',
+      'customPaths',
+      'path',
+      'web3',
+      'wallet',
+      'online'
+    ]),
     reorderNetworkList() {
       return Misc.reorderNetworks();
     },
@@ -444,7 +445,9 @@ export default {
   },
   mounted() {
     this.switchNetwork(this.$store.state.network);
-    this.fetchBalanceData();
+    if (this.online) {
+      this.fetchBalanceData();
+    }
   },
   methods: {
     replaceUrl(type, hash) {

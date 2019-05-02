@@ -194,7 +194,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import CurrencyPicker from '../../components/CurrencyPicker';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
@@ -244,13 +244,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters({
-      account: 'account',
-      gasPrice: 'gasPrice',
-      web3: 'web3',
-      network: 'network',
-      linkQuery: 'linkQuery'
-    }),
+    ...mapState(['account', 'gasPrice', 'web3', 'network', 'linkQuery']),
     txFee() {
       return new BigNumber(ethUnit.toWei(this.gasPrice, 'gwei')).times(
         this.gasLimit || 0
@@ -413,11 +407,11 @@ export default {
       }
     },
     network(newVal) {
-      if (newVal.type.name === 'ETH') this.getEthPrice();
+      if (this.online && newVal.type.name === 'ETH') this.getEthPrice();
     }
   },
   mounted() {
-    if (this.network.type.name === 'ETH') this.getEthPrice();
+    if (this.online && this.network.type.name === 'ETH') this.getEthPrice();
   },
   methods: {
     openSettings() {

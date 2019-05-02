@@ -69,7 +69,7 @@ import ConfirmCollectionModal from './components/ConfirmCollectionModal';
 import SuccessModal from './components/SuccessModal';
 import ErrorModal from './components/ErrorModal';
 import ConfirmSignModal from './components/ConfirmSignModal';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import { type as noticeTypes } from '@/helpers/notificationFormatters';
 import { WEB3_WALLET, KEEPKEY } from '@/wallets/bip44/walletTypes';
 import { Toast, Misc } from '@/helpers';
@@ -142,13 +142,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      gasPrice: 'gasPrice',
-      wallet: 'wallet',
-      web3: 'web3',
-      account: 'account',
-      network: 'network'
-    }),
+    ...mapState(['gasPrice', 'wallet', 'web3', 'account', 'network']),
     fromAddress() {
       if (this.account) {
         return this.account.address;

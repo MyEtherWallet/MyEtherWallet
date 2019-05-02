@@ -52,7 +52,7 @@
 <script>
 import AddressQrcodeModal from '@/components/AddressQrcodeModal';
 import Blockie from '@/components/Blockie';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import { Toast } from '@/helpers';
 import {
   KEYSTORE,
@@ -86,9 +86,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      account: 'account'
-    })
+    ...mapState(['account'])
   },
   mounted() {
     if (this.account.address !== null) {

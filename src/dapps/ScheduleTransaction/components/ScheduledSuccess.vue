@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import EthTx from 'ethereumjs-tx';
 import BigNumber from 'bignumber.js';
 import { Util } from '@ethereum-alarm-clock/lib';
@@ -97,7 +97,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['notifications', 'web3', 'account', 'gasPrice'])
+    ...mapState(['notifications', 'web3', 'account', 'gasPrice'])
   },
   watch: {
     async notifications() {
