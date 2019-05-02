@@ -118,6 +118,10 @@
 .next-button {
   margin-top: 20px;
   width: 235px;
+
+  .disabled {
+    border: 1px solid $light-grey-1 !important;
+  }
 }
 
 .custom-path-inputs {
