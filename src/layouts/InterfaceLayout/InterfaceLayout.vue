@@ -81,7 +81,7 @@
             :highest-gas="highestGas"
             :nonce="nonce"
           />
-          <div v-if="online" class="tokens">
+          <div class="tokens">
             <interface-tokens
               :fetch-tokens="setTokens"
               :get-token-balance="getTokenBalance"
@@ -97,7 +97,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import ENS from 'ethereum-ens';
 import WalletPasswordModal from '@/components/WalletPasswordModal';
 import EnterPinNumberModal from '@/components/EnterPinNumberModal';
@@ -195,15 +195,15 @@ export default {
         return toChecksumAddress(this.account.address);
       }
     },
-    ...mapGetters({
-      network: 'network',
-      account: 'account',
-      online: 'online',
-      web3: 'web3',
-      Networks: 'Networks',
-      sidemenuOpen: 'sidemenuOpen',
-      wallet: 'wallet'
-    })
+    ...mapState([
+      'network',
+      'account',
+      'online',
+      'web3',
+      'Networks',
+      'sidemenuOpen',
+      'wallet'
+    ])
   },
   watch: {
     web3() {
@@ -494,7 +494,7 @@ export default {
       } else {
         this.setCustomTokenStore();
       }
-      if (this.online === true) {
+      if (this.online) {
         if (this.account.address !== null) {
           if (this.account.identifier === WEB3_TYPE) {
             if (window.web3.currentProvider.isMetamask) {

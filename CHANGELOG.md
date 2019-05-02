@@ -1,3 +1,7 @@
+### Bug
+
+- Use native browser checking for online status. [](<>)
+
 ### Release v5.0.11
 
 ### Devop

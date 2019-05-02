@@ -248,7 +248,7 @@
 
 <script>
 import CustomerSupport from '@/components/CustomerSupport';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import { Misc, Toast } from '@/helpers';
 import web3utils from 'web3-utils';
 import BigNumber from 'bignumber.js';
@@ -285,14 +285,14 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      network: 'network',
-      Networks: 'Networks',
-      customPaths: 'customPaths',
-      path: 'path',
-      web3: 'web3',
-      wallet: 'wallet'
-    }),
+    ...mapState([
+      'network',
+      'Networks',
+      'customPaths',
+      'path',
+      'web3',
+      'wallet'
+    ]),
     selectedNetwork() {
       return this.network;
     },

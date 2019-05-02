@@ -10,7 +10,7 @@
 import AccessMyWalletContainer from './containers/AccessMyWalletContainer';
 import FaqsContainer from '@/containers/FaqsContainer';
 import PriceBar from './components/PriceBar';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import { Toast } from '@/helpers';
 
 export default {
@@ -26,9 +26,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      online: 'online'
-    })
+    ...mapState(['online'])
   },
   async mounted() {
     if (this.online) {

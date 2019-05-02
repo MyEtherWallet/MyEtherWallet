@@ -298,7 +298,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import { EAC, Util } from '@ethereum-alarm-clock/lib';
 import BigNumber from 'bignumber.js';
 import { Datetime } from 'vue-datetime';
@@ -445,7 +445,14 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['web3', 'network', 'gasPrice', 'notifications', 'account']),
+    ...mapState([
+      'web3',
+      'network',
+      'gasPrice',
+      'notifications',
+      'account',
+      'online'
+    ]),
     isTokenTransfer() {
       return this.selectedCurrency.symbol !== this.network.type.name;
     },
@@ -701,22 +708,24 @@ export default {
     this.deposit = this.timeBountyPresets[0] * 2;
   },
   mounted: async function() {
-    this.eac = new EAC(this.web3);
+    if (this.online) {
+      this.eac = new EAC(this.web3);
 
-    const url = 'https://cryptorates.mewapi.io/convert/ETH';
-    const fetchValues = await fetch(url);
-    const values = await fetchValues.json();
+      const url = 'https://cryptorates.mewapi.io/convert/ETH';
+      const fetchValues = await fetch(url);
+      const values = await fetchValues.json();
 
-    if (!values['USDT']) {
-      Toast.responseHandler(
-        new Error(
-          'USDT conversion no longer available. Please provide an alternative USD conversion method'
-        ),
-        Toast.ERROR
-      );
-      return;
+      if (!values['USDT']) {
+        Toast.responseHandler(
+          new Error(
+            'USDT conversion no longer available. Please provide an alternative USD conversion method'
+          ),
+          Toast.ERROR
+        );
+        return;
+      }
+      this.ethPrice = new BigNumber(values['USDT']);
     }
-    this.ethPrice = new BigNumber(values['USDT']);
   },
   methods: {
     async estimateGas() {
