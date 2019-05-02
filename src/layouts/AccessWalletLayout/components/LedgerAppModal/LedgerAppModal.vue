@@ -193,8 +193,6 @@ export default {
         this.selectedApp.paths.length > 1
           ? this.selectedApp.paths[0]
           : apps[0].paths[0];
-      // this.$root.$emit('bv::dropdown::clicked');
-      // this.$refs.pathDropdown.toggle();
       this.$refs.pathDropdown[0].closeDropdown();
     },
     setupCustomPaths() {
