@@ -27,7 +27,7 @@
                 <b>{{ mkrBalance }} MKR</b>
               </p>
             </div>
-            <p class="get-mkr">{{ $t('dappsMaker.getMkr') }}</p>
+<!--            <p class="get-mkr">{{ $t('dappsMaker.getMkr') }}</p>-->
           </div>
           <div class="value-table mkr-balance">
             <div class="value-block">
@@ -38,7 +38,7 @@
                 <b>{{ daiBalance }} DAI</b>
               </p>
             </div>
-            <p class="get-mkr">{{ $t('dappsMaker.getDai') }}</p>
+<!--            <p class="get-mkr">{{ $t('dappsMaker.getDai') }}</p>-->
           </div>
           <div class="value-table other-values">
             <div class="value-block">

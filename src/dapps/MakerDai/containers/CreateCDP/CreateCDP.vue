@@ -41,7 +41,10 @@
             class="currency-picker-container dropdown-text-container dropdown-container"
           />
           <div class="input-block-message">
-            <!--            <p>{{ $t('dappsMaker.minCollat') }} <b>0.0TODO</b> ETH</p>-->
+            <p>
+              {{ $t('dappsMaker.minCollat') }}
+              <b>{{ displayFixedValue(makerManager.minEth, 6) }}</b> ETH
+            </p>
             <p>{{ displayFixedValue(depositInPeth, 6) }} PETH</p>
           </div>
         </div>
@@ -77,10 +80,10 @@
 
       <div class="cdp-info-block cdp-info-entry">
         <ul>
-          <!--          <li>-->
-          <!--            <p>{{ $t('dappsMaker.minEthReq') }}</p>-->
-          <!--            <p>0TODO ETH</p>-->
-          <!--          </li>-->
+          <li>
+            <p>{{ $t('dappsMaker.minEthReq') }}</p>
+            <p>{{ displayFixedValue(makerManager.minEth, 6) }} ETH</p>
+          </li>
           <li>
             <p>{{ $t('dappsMaker.liquidPrice') }}</p>
             <p>
@@ -255,9 +258,13 @@ export default {
       ens: 'ens'
     }),
     validInputs() {
+      if (toBigNumber(this.ethQty).isNaN() || toBigNumber(this.daiQty).isNaN())
+        return false;
       if (toBigNumber(this.ethQty).gt(0)) {
-        // eslint-disable-next-line
-        // eslint-disable-next-line
+        if (toBigNumber(this.ethQty).lte(this.makerManager.minEth))
+          return false;
+        if (toBigNumber(this.maxDaiDraw).lte(toBigNumber(this.daiQty)))
+          return false;
         return toBigNumber(ethUnit.toWei(this.ethQty, 'ether').toString()).lte(
           this.account.balance
         );
