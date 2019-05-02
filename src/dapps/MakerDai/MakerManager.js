@@ -14,6 +14,7 @@ const bnOver = (one, two, three) => {
 
 export default class MakerManager {
   constructor(props) {
+    this.pethMin = props.pethMin || 0.005;
     this.creatingProxy = false;
     this.currentAddress = props.account.address;
     this.maker = props.maker;
@@ -54,6 +55,13 @@ export default class MakerManager {
       return null;
     }
     return this._proxyAddress;
+  }
+
+  get minEth() {
+    if (this.wethToPethRatio) {
+      return toBigNumber(this.pethMin).times(this.wethToPethRatio);
+    }
+    return '--';
   }
 
   get makerActive() {}

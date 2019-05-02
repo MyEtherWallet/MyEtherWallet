@@ -423,6 +423,15 @@ export default class MakerCDP {
     return toBigNumber(0);
   }
 
+  fromPeth(peth) {
+    if (!toBigNumber(peth).eq(0)) {
+      console.log(this._wethToPethRatio); // todo remove dev item
+      return toBigNumber(peth).times(this._wethToPethRatio);
+      // return toBigNumber(this._wethToPethRatio).div(peth);
+    }
+    return toBigNumber(0);
+  }
+
   maxDaiDraw() {
     const tl = toBigNumber(this._ethPrice).times(
       toBigNumber(this._ethCollateral)

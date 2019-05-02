@@ -116,6 +116,7 @@ const signalerConnect = (url, mewConnect) => {
     mewConnect.on('RtcConnectedEvent', () => {
       mewConnect.sendRtcMessage('address', '');
       mewConnect.once('address', data => {
+        console.log(data); // todo remove dev item
         resolve(data.address);
       });
     });
