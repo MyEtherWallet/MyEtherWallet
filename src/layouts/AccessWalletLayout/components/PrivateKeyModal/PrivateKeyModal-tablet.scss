@@ -1,6 +1,6 @@
 @import '~@/scss/GlobalVariables';
 @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
-  .modal-content {
+  .modal-content-block {
     padding: 20px;
   }
 
@@ -11,6 +11,7 @@
   .private-key-form {
     display: flex;
     flex-direction: column;
+    margin-bottom: 30px;
 
     input {
       background-color: $background-color-1;

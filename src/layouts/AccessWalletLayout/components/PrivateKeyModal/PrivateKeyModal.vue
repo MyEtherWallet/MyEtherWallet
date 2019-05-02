@@ -7,7 +7,10 @@
     centered
     @shown="focusInput"
   >
-    <div class="modal-content">
+    <div class="warning">
+      <warning-message :options="warningOptions" />
+    </div>
+    <div class="modal-content-block">
       <form class="private-key-form">
         <div class="input-container">
           <input
@@ -19,19 +22,14 @@
             placeholder="Enter Private Key"
           />
         </div>
-        <div class="not-recommended">
-          {{ $t('accessWallet.notARecommendedWay') }}
-        </div>
-        <button
-          :disabled="notValid"
-          class="submit-button large-round-button-green-filled"
-          type="submit"
+        <standard-button
+          :button-disabled="notValid"
+          class="submit-button"
+          :options="accessWalletButtonOptions"
           @click.prevent="unlockWallet"
-        >
-          <span v-show="!spinner">{{ $t('common.accessWallet') }}</span>
-          <i v-show="spinner" class="fa fa-spin fa-spinner fa-lg" />
-        </button>
+        />
       </form>
+      <customer-support />
     </div>
   </b-modal>
 </template>
@@ -41,11 +39,32 @@ import { WalletInterface } from '@/wallets';
 import { PRIV_KEY as privKeyType } from '@/wallets/bip44/walletTypes';
 import { mapGetters } from 'vuex';
 import { isHexString } from 'ethereumjs-util';
+import WarningMessage from '@/components/WarningMessage';
+import CustomerSupport from '@/components/CustomerSupport';
+import StandardButton from '@/components/Buttons/StandardButton';
 export default {
+  components: {
+    'customer-support': CustomerSupport,
+    'warning-message': WarningMessage,
+    'standard-button': StandardButton
+  },
   data() {
     return {
+      accessWalletButtonOptions: {
+        title: this.$t('common.accessWallet'),
+        buttonStyle: 'green',
+        noMinWidth: true
+      },
       privateKey: '',
-      spinner: false
+      spinner: false,
+      warningOptions: {
+        title: 'NOT RECOMMENDED',
+        message: this.$t('accessWallet.notARecommendedWay'),
+        link: {
+          text: 'Using MEW Offline',
+          url: 'https://kb.myetherwallet.com/posts/offline/using-mew-offline/'
+        }
+      }
     };
   },
   computed: {

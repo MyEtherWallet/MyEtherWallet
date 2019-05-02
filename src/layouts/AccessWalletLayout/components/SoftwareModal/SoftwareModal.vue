@@ -38,15 +38,12 @@
           @change="uploadFile"
         />
       </div>
-      <div class="button-container">
-        <b-btn
-          :class="[
-            selected !== '' ? 'enabled' : 'disabled',
-            'mid-round-button-green-filled'
-          ]"
-          @click="continueAccess"
-          >{{ $t('common.continue') }}</b-btn
-        >
+      <div class="button-container-block">
+        <standard-button
+          :button-disabled="selected !== '' ? false : true"
+          :options="continueButtonOptions"
+          @click.native="continueAccess"
+        />
       </div>
       <customer-support />
     </div>
@@ -60,13 +57,15 @@ import byJsonImgHov from '@/assets/images/icons/button-json-hover.svg';
 import byMnemImgHov from '@/assets/images/icons/button-mnemonic-hover.svg';
 import privKeyImgHov from '@/assets/images/icons/button-key-hover.svg';
 import WalletOption from '../WalletOption';
+import StandardButton from '@/components/Buttons/StandardButton';
 import { Toast } from '@/helpers';
 
 export default {
   components: {
     'customer-support': CustomerSupport,
     'wallet-option': WalletOption,
-    'warning-message': WarningMessage
+    'warning-message': WarningMessage,
+    'standard-button': StandardButton
   },
   props: {
     value: {
@@ -88,6 +87,12 @@ export default {
   },
   data() {
     return {
+      continueButtonOptions: {
+        title: this.$t('common.continue'),
+        buttonStyle: 'green',
+        noMinWidth: true,
+        fullWidth: true
+      },
       warningOptions: {
         title: 'NOT RECOMMENDED',
         message: this.$t('accessWallet.notARecommendedWay'),
