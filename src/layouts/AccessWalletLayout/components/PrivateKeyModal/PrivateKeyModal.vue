@@ -8,7 +8,7 @@
     @shown="focusInput"
   >
     <div class="warning">
-      <warning-message :options="warningOptions" />
+      <warning-message />
     </div>
     <div class="modal-content-block">
       <form class="private-key-form">
@@ -26,10 +26,12 @@
           :button-disabled="notValid"
           :options="accessWalletButtonOptions"
           class="submit-button"
-          @click.prevent="unlockWallet"
+          @click.native="unlockWallet"
         />
       </form>
-      <customer-support />
+      <div class="customer-support-block">
+        <customer-support />
+      </div>
     </div>
   </b-modal>
 </template>
@@ -56,15 +58,7 @@ export default {
         noMinWidth: true
       },
       privateKey: '',
-      spinner: false,
-      warningOptions: {
-        title: 'NOT RECOMMENDED',
-        message: this.$t('accessWallet.notARecommendedWay'),
-        link: {
-          text: 'Using MEW Offline',
-          url: 'https://kb.myetherwallet.com/posts/offline/using-mew-offline/'
-        }
-      }
+      spinner: false
     };
   },
   computed: {

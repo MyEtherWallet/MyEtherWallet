@@ -8,7 +8,7 @@
     @shown="focusInput"
   >
     <div class="warning">
-      <warning-message :options="warningOptions" />
+      <warning-message />
     </div>
     <div class="contents">
       <p class="instruction">
@@ -85,14 +85,6 @@ export default {
         buttonStyle: 'green',
         noMinWidth: true,
         fullWidth: true
-      },
-      warningOptions: {
-        title: 'NOT RECOMMENDED',
-        message: this.$t('accessWallet.notARecommendedWay'),
-        link: {
-          text: 'Using MEW Offline',
-          url: 'https://kb.myetherwallet.com/posts/offline/using-mew-offline/'
-        }
       },
       mnemonicPhrase: new Array(this.mnemonicSize).fill(''),
       mnemonic24: false,

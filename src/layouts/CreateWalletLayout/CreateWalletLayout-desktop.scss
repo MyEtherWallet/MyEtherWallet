@@ -41,6 +41,8 @@
         img {
           height: 40px;
           margin: 0 3px;
+          overflow: hidden;
+          border-radius: 7px;
         }
       }
 
@@ -63,6 +65,11 @@
     }
   }
 
+  .tab-content-block {
+    //min-height: 500px;
+    padding: 50px;
+  }
+  
   .nav-tab-user-input-box {
     background-color: $background-color-white;
     margin: 0 auto;
@@ -80,11 +87,6 @@
       to {
         width: 23.33%;
       }
-    }
-
-    .tab-pane {
-      min-height: 500px;
-      padding: 50px;
     }
   }
 

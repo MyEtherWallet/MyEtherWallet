@@ -35,9 +35,15 @@
       .icons {
         text-align: center;
         margin-bottom: 13px;
+        a {
+          display: inline-block;
+          margin-bottom: 5px;
+        }
         img {
           height: 38px;
           margin: 0 3px;
+          overflow: hidden;
+          border-radius: 7px;
         }
       }
 
@@ -60,6 +66,11 @@
     }
   } // .mew-connect-block
 
+  .tab-content-block {
+    //min-height: 420px;
+    padding: 35px 25px;
+  }
+  
   .nav-tab-user-input-box {
     background-color: $background-color-white;
     margin: 0 auto;
@@ -77,11 +88,6 @@
       to {
         width: 23.33%;
       }
-    }
-
-    .tab-pane {
-      min-height: 420px;
-      padding: 35px 25px;
     }
   }
 
