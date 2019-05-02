@@ -4,11 +4,18 @@
       <h3>Congratulations! {{ fullDomainName }} is available!</h3>
       <p>Do you want to register {{ fullDomainName }}?</p>
       <div class="secret-phrase-container">
-        <label for="secret-phrase">Secret Phrase</label>
-        <input v-model="localPhrase" name="secret-phrase" />
-        <p>
-          Please make sure to write down secret phrase, you will need it later
-        </p>
+        <label for="range-slider"
+          >How many years do you want to keep the name?</label
+        >
+        <b-form-input
+          id="range-slider"
+          v-model="duration"
+          type="range"
+          min="1"
+          max="20"
+          step="1"
+        />
+        <div>{{ duration > 1 ? `${duration} years` : `${duration} year` }}</div>
       </div>
       <div class="transfer-registrar-button">
         <button
@@ -16,7 +23,7 @@
             'large-round-button-green-filled',
             loading ? 'disabled' : ''
           ]"
-          @click="createCommitment(localPhrase)"
+          @click="createCommitment"
         >
           <span v-show="!loading">
             Register
@@ -56,15 +63,11 @@ export default {
     tld: {
       type: String,
       default: ''
-    },
-    secretPhrase: {
-      type: String,
-      default: 'random strings generated'
     }
   },
   data() {
     return {
-      localPhrase: this.secretPhrase
+      duration: '1'
     };
   },
   computed: {
@@ -73,8 +76,8 @@ export default {
     }
   },
   watch: {
-    localPhrase(newVal) {
-      this.$emit('updateSecretPhrase', newVal);
+    duration(newVal) {
+      this.$emit('updateDuration', Number(newVal));
     }
   },
   mounted() {

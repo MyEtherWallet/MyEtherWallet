@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="permanent-registration-container">
     <div class="permanent-registration-content">
-      <b-collapse id="wait-container" :visible="true" class="commitment-wait">
+      <div id="wait-container" class="commitment-wait">
         <div class="circles-container">
           <div class="circle" />
           <div class="circle" />
@@ -12,36 +12,14 @@
           We are creating commitment for <br />
           <span class="domain-name"> {{ fullDomainName }}. </span>
         </h3>
-      </b-collapse>
-      <b-collapse id="commitment-inputs-container" class="commitment-inputs">
-        <h3>Commit created! Complete registration for {{ fullDomainName }}</h3>
-        <div class="permanent-registration-inputs">
-          <label for="secret-phrase">Secret Phrase</label>
-          <input
-            v-model="secretPhrase"
-            placeholder="Please enter secret phrase"
-            name="secret-phrase"
-          />
-        </div>
-        <div class="permanent-registration-inputs">
-          <label for="duration-input"
-            >How many years do you want to keep the name?</label
-          >
-          <input
-            v-model="durationInYears"
-            min="1"
-            type="number"
-            name="duration-input"
-          />
-        </div>
-      </b-collapse>
-      <div class="permanent-registration-button">
+      </div>
+      <div v-show="commitmentCreated" class="permanent-registration-button">
         <button
           :class="[
             'large-round-button-green-filled',
             !canRegister ? 'disabled' : ''
           ]"
-          @click="registerWithDuration(secretPhrase, durationInYears)"
+          @click="registerWithDuration"
         >
           <span>
             {{ canRegister ? 'Register' : ticker }}
@@ -84,15 +62,17 @@ export default {
     minimumAge: {
       type: String,
       default: '0'
+    },
+    commitmentCreated: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
     return {
       ticker: `0${this.minimumAge / 60 < 10 ? this.minimumAge / 60 : '00'}:00`,
       timer: () => {},
-      canRegister: false,
-      secretPhrase: '',
-      durationInYears: 1
+      canRegister: false
     };
   },
   computed: {
@@ -100,41 +80,47 @@ export default {
       return `${this.hostName}.${this.tld}`;
     }
   },
+  watch: {
+    commitmentCreated(newVal) {
+      if (newVal) {
+        clearInterval(this.timer);
+        const _self = this;
+        _self.canRegister = false;
+        if (_self.hostName === '') {
+          _self.$router.push('/interface/dapps/manage-ens');
+        }
+
+        const startTime = new Date().getTime();
+        const endTime = startTime + _self.minimumAge * 1000;
+        if (_self.minimumAge > 0) {
+          _self.timer = setInterval(() => {
+            const internalStart = new Date().getTime();
+            const difference = endTime - internalStart;
+            const minutes = Math.floor(
+              (difference % (1000 * 60 * 60)) / (1000 * 60)
+            );
+            const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+            _self.ticker = `${
+              minutes >= 10 ? minutes : minutes < 0 ? '00' : '0' + minutes
+            }:${seconds >= 10 ? seconds : seconds < 0 ? '00' : '0' + seconds}`;
+            if (seconds < 0) {
+              _self.canRegister = true;
+              this.$root.$emit(
+                'bv::toggle::collapse',
+                'commitment-inputs-container'
+              );
+              this.$root.$emit('bv::toggle::collapse', 'wait-container');
+              clearInterval(_self.timer);
+            }
+          }, 1000);
+        }
+      } else {
+        clearInterval(this.timer);
+      }
+    }
+  },
   destroyed() {
     clearInterval(this.timer);
-  },
-  mounted() {
-    clearInterval(this.timer);
-    const _self = this;
-    _self.canRegister = false;
-    if (_self.hostName === '') {
-      _self.$router.push('/interface/dapps/manage-ens');
-    }
-
-    const startTime = new Date().getTime();
-    const endTime = startTime + _self.minimumAge * 1000;
-    if (_self.minimumAge > 0) {
-      _self.timer = setInterval(() => {
-        const internalStart = new Date().getTime();
-        const difference = endTime - internalStart;
-        const minutes = Math.floor(
-          (difference % (1000 * 60 * 60)) / (1000 * 60)
-        );
-        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-        _self.ticker = `${
-          minutes >= 10 ? minutes : minutes < 0 ? '00' : '0' + minutes
-        }:${seconds >= 10 ? seconds : seconds < 0 ? '00' : '0' + seconds}`;
-        if (seconds < 0) {
-          _self.canRegister = true;
-          this.$root.$emit(
-            'bv::toggle::collapse',
-            'commitment-inputs-container'
-          );
-          this.$root.$emit('bv::toggle::collapse', 'wait-container');
-          clearInterval(_self.timer);
-        }
-      }, 1000);
-    }
   }
 };
 </script>
