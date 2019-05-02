@@ -2,6 +2,7 @@
 
 ### Devop
 
+- Update Access My Wallet modal UI [#1033](https://github.com/MyEtherWallet/MyEtherWallet/pull/1033)
 - Access by Software UI change [#1021](https://github.com/MyEtherWallet/MyEtherWallet/pull/1021)
 - Fix multiple sentry issues [#1015](https://github.com/MyEtherWallet/MyEtherWallet/pull/1015)
 - Update hardware icons [#994](https://github.com/MyEtherWallet/MyEtherWallet/pull/994)
