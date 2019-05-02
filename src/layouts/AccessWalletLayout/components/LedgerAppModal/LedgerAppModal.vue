@@ -42,6 +42,35 @@
               <span> {{ app.network.name_long }} </span>
             </div>
           </div>
+          <div
+            v-show="selectedPath.path === 'custom'"
+            class="custom-path-inputs"
+          >
+            <div class="path-input">
+              <label for="custom-label"> Alias </label>
+              <input
+                v-model="customLabel"
+                name="custom-label"
+                placeholder="my custom path"
+              />
+            </div>
+            <div class="path-input">
+              <label for="custom-path"> Path </label>
+              <input
+                v-model="customPath"
+                name="custom-path"
+                placeholder="m/44'/1'/0'/0"
+              />
+            </div>
+            <div class="custom-path-actions">
+              <div class="cancel" @click="cancel">
+                Cancel
+              </div>
+              <div class="proceed" @click="addCustomPath">
+                Add Custom Path
+              </div>
+            </div>
+          </div>
           <b-dropdown :no-caret="true" class="dropdown-button-3">
             <template slot="button-content">
               <span> {{ dropDownDefaultText }} </span>
@@ -53,12 +82,20 @@
               ></i>
             </template>
             <b-dropdown-item
-              v-for="path in selectedApp.paths"
+              v-for="(path, idx) in selectedApp.paths"
               :key="path.label"
               :active="path.path === selectedPath.path"
-              @click="setPath(path)"
+              @click="setPath(path, idx)"
             >
               {{ path.label }} - {{ path.path }}
+              <i
+                v-show="
+                  selectedApp.network.name_long === 'Custom Paths' &&
+                    path.path !== 'custom'
+                "
+                class="fa fa-times remove-custom"
+                @click.stop="remove(path)"
+              />
             </b-dropdown-item>
           </b-dropdown>
           <button
@@ -75,7 +112,10 @@
 
 <script>
 import apps from '@/wallets/hardware/ledger/appPaths.js';
+import cust from '@/assets/images/icons/network.svg';
+import { Toast, pathHelpers } from '@/helpers';
 import { LedgerWallet } from '@/wallets';
+import { mapState } from 'vuex';
 export default {
   props: {
     networks: {
@@ -97,7 +137,9 @@ export default {
       },
       toggled: false,
       selectedPath: apps[0].paths[0],
-      flipButton: false
+      flipButton: false,
+      customLabel: '',
+      customPath: ''
     };
   },
   computed: {
@@ -112,14 +154,22 @@ export default {
     },
     dropDownDefaultText() {
       return `${this.selectedPath.label} - ${this.selectedPath.path}`;
-    }
+    },
+    ...mapState(['customPaths'])
   },
   watch: {
-    selectedApp(newVal) {
-      this.selectedPath = newVal.paths[0];
+    selectedApp: {
+      handler: function(newVal) {
+        this.selectedPath = newVal.paths[0];
+      },
+      deep: true
+    },
+    customPaths() {
+      this.setupCustomPaths();
     }
   },
   mounted() {
+    this.setupCustomPaths();
     this.$root.$on('bv::dropdown::show', () => {
       this.flipButton = true;
     });
@@ -128,6 +178,70 @@ export default {
     });
   },
   methods: {
+    remove(path, idx) {
+      this.$store.dispatch('removeCustomPath', path).then(() => {
+        this.setupCustomPaths();
+      });
+      this.selectedApp.paths = this.selectedApp.paths.map((item, itemId) => {
+        if (itemId !== idx) {
+          return item;
+        }
+      });
+    },
+    setupCustomPaths() {
+      const loc = apps.map(item => {
+        return item;
+      });
+      const customPathArr = Object.keys(this.customPaths);
+      const customApp = {
+        paths: [
+          {
+            label: 'Add Custom Paths',
+            path: 'custom'
+          }
+        ],
+        network: {
+          icon: cust,
+          name_long: 'Custom Paths',
+          name: 'Custom'
+        }
+      };
+
+      customPathArr.forEach(item => {
+        customApp.paths.unshift(this.customPaths[item]);
+      });
+
+      loc.push(customApp);
+
+      this.apps = loc;
+    },
+    addCustomPath() {
+      const customPath = pathHelpers.checkCustomPath(this.customPath);
+      if (customPath) {
+        this.selectedPath = {
+          path: customPath,
+          label: this.customLabel
+        };
+        this.$store
+          .dispatch('addCustomPath', {
+            label: this.customLabel,
+            path: customPath
+          })
+          .then(() => {
+            this.setupCustomPaths();
+          });
+      } else {
+        Toast.responseHandler('Invalid Custom Path', Toast.ERROR);
+      }
+    },
+    cancel() {
+      this.customLabel = '';
+      this.customPath = '';
+      this.selectedPath =
+        this.selectedApp.paths.length > 1
+          ? this.selectedApp.paths[0]
+          : apps[0].paths[0];
+    },
     selectDapp(app) {
       this.selectedApp = app;
     },

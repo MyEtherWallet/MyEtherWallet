@@ -105,7 +105,7 @@
 .shown {
   border-top: 1px solid $light-grey-3;
   border-bottom: 1px solid $light-grey-3;
-  max-height: 350px;
+  max-height: 400px;
   transition: max-height 0.5s ease-out;
   margin: 20px 0;
 }
@@ -118,4 +118,74 @@
 .next-button {
   margin-top: 20px;
   width: 235px;
+}
+
+.custom-path-inputs {
+  padding-bottom: 30px;
+  width: 100%;
+
+  .path-input {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    margin: 10px;
+    width: 100%;
+
+    input {
+      background-color: $light-grey-1;
+      border: none !important;
+      border-radius: 5px;
+      flex: 1;
+      padding: 10px;
+    }
+
+    label {
+      color: $dark-blue-2;
+      font-weight: bold;
+      margin-right: 10px;
+    }
+  }
+}
+
+%button {
+  border-radius: 5px;
+  color: $white;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.custom-path-actions {
+  display: flex;
+  padding: 10px;
+  text-align: center;
+  width: 100%;
+
+  .cancel {
+    @extend %button;
+
+    background-color: $red-5;
+    margin-right: 10px;
+
+    &:hover {
+      background-color: $mew-green;
+    }
+  }
+
+  .proceed {
+    @extend %button;
+
+    background-color: $mew-green;
+    flex: auto;
+
+    &:active {
+      background-color: #269983;
+    }
+  }
+}
+
+.remove-custom {
+  cursor: pointer;
+  position: absolute;
+  right: 10px;
+  z-index: 1;
 }
