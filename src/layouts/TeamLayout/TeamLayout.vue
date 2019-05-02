@@ -73,7 +73,7 @@ export default {
         {
           name: 'Duke & Richie Wolf',
           position: 'Blockchain Specialist',
-          otherInfo: '#MEWForce',
+          //otherInfo: '#MEWForce',
           img: richie
         },
         {
