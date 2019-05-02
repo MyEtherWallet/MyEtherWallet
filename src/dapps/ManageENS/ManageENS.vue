@@ -38,11 +38,13 @@
       :create-commitment="createCommitment"
       :register-with-duration="registerWithDuration"
       :minimum-age="minimumAge"
+      :commitment-created="commitmentCreated"
       @updateSecretPhrase="updateSecretPhrase"
       @updateBidAmount="updateBidAmount"
       @updateBidMask="updateBidMask"
       @domainNameChange="updateDomainName"
       @updateStep="updateStep"
+      @updateDuration="updateDuration"
     />
   </div>
 </template>
@@ -105,7 +107,9 @@ export default {
       dnsClaim: {},
       dnsOwner: '',
       legacyRegistrar: {},
-      minimumAge: '0'
+      minimumAge: 0,
+      duration: 1,
+      commitmentCreated: false
     };
   },
   computed: {
@@ -186,6 +190,8 @@ export default {
       this.dnsClaim = {};
       this.legacyRegistrar = {};
       this.minimumAge = 0;
+      this.duration = 1;
+      this.commitmentCreated = false;
 
       if (this.ens) {
         this.setRegistrar();
@@ -390,12 +396,6 @@ export default {
                 this.generateKeyPhrase();
                 this.$router.push({ path: 'manage-ens/create-commitment' });
                 this.loading = false;
-                //create commitment const commitment =  await this.registrarControllerContract.methods.makeCommitment('myetherwallet.eth',this.account.address, 'random secret').call()
-                //mincommitment age =  await this.registrarControllerContract.method.minCommitmentAge().call()
-                //submit commitment this.registrarControllerContract.methods.commit(commitment)
-                //wait minCommitmentAge
-                //this.registrarControllerContract.methods.register('myetherwallet.eth', account.address, duration in seconds, 'random secret')
-                //https://github.com/ensdomains/ethregistrar/blob/master/contracts/ETHRegistrarController.sol
               }
             }
           }
@@ -435,14 +435,14 @@ export default {
         }
       }
     },
-    async createCommitment(secret) {
+    async createCommitment() {
       const utils = this.web3.utils;
       try {
         const commitment = await this.registrarControllerContract.methods
           .makeCommitment(
             this.parsedHostName,
             this.account.address,
-            utils.sha3(secret)
+            utils.sha3(this.secretPhrase)
           )
           .call();
         this.minimumAge = await this.registrarControllerContract.methods
@@ -450,10 +450,12 @@ export default {
           .call();
         await this.registrarControllerContract.methods
           .commit(commitment)
-          .send({ from: this.account.address })
+          .send({ from: this.account.address }, () => {
+            this.$router.push({ path: 'permanent-registration' });
+          })
           .on('receipt', () => {
             this.loading = false;
-            this.$router.push({ path: 'permanent-registration' });
+            this.commitmentCreated = true;
           });
       } catch (e) {
         this.loading = false;
@@ -463,11 +465,11 @@ export default {
         );
       }
     },
-    async registerWithDuration(secret, years) {
+    async registerWithDuration() {
       const utils = this.web3.utils;
       this.loading = true;
       const SECONDS_YEAR = 60 * 60 * 24 * 365.25;
-      const duration = Math.ceil(SECONDS_YEAR * years);
+      const duration = Math.ceil(SECONDS_YEAR * this.duration);
       try {
         const rentPrice = await this.registrarControllerContract.methods
           .rentPrice(this.parsedHostName, duration)
@@ -477,7 +479,7 @@ export default {
             this.parsedHostName,
             this.account.address,
             duration,
-            utils.sha3(secret)
+            utils.sha3(this.secretPhrase)
           )
           .send({ from: this.account.address, value: rentPrice });
         Toast.responseHandler('Successfully Registered!', Toast.SUCCESS);
@@ -678,6 +680,9 @@ export default {
     },
     updateSecretPhrase(e) {
       this.secretPhrase = e;
+    },
+    updateDuration(e) {
+      this.duration = e;
     },
     updateBidAmount(val) {
       this.bidAmount = val;
