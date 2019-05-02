@@ -1,20 +1,14 @@
 @import '~@/scss/GlobalVariables';
 @media all and (min-width: calc(#{$tablet-width} + 1px)) {
-  .button-container {
-    a {
-      width: 100%;
-    }
-    button {
-      display: inline-block;
-      width: 100%;
-    }
+  .button-container-block {
+    margin-bottom: 30px;
   }
 
   .contents {
-    margin-bottom: 60px;
+    padding: 40px;
 
     .instruction {
-      margin-bottom: 40px;
+      margin-bottom: 20px;
     }
 
     .tools {
@@ -45,12 +39,13 @@
     }
 
     .phrases {
+      margin-bottom: 40px;
       ul {
         display: grid;
         grid-column-gap: 20px;
         grid-row-gap: 20px;
-        grid-template-columns: 1fr 1fr 1fr 1fr;
-        margin-bottom: 20px;
+        grid-template-columns: 1fr 1fr 1fr;
+        //margin-bottom: 20px;
 
         li {
           border-bottom: 1px solid $border-bottom--mnemonic-phrase-key-color;
@@ -63,7 +58,7 @@
             color: $text--mnemonic-phrase-key-color;
             margin-left: 10px;
             border: 0;
-            width: 70px;
+            width: calc(100% - 45px);
           }
         } // li
       } // ul

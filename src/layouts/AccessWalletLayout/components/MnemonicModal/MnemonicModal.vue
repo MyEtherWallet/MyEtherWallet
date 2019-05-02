@@ -3,10 +3,13 @@
     ref="mnemonicPhrase"
     :title="$t('accessWallet.accessByMnemonicPhrase')"
     hide-footer
-    class="bootstrap-modal padding-20 modal-metamask"
+    class="bootstrap-modal modal-metamask nopadding"
     centered
     @shown="focusInput"
   >
+    <div class="warning">
+      <warning-message :options="warningOptions" />
+    </div>
     <div class="contents">
       <p class="instruction">
         {{ $t('accessWallet.pleaseTypeInMnemonicPhrase') }}
@@ -46,31 +49,28 @@
             </li>
           </ul>
         </div>
-        <div class="not-recommended">
-          {{ $t('accessWallet.notARecommendedWay') }}
-        </div>
-        <div class="button-container">
-          <b-btn
-            class="mid-round-button-green-filled close-button"
-            type="submit"
-            @click.prevent="openPasswordModal"
-          >
-            {{ $t('common.continue') }}
-          </b-btn>
+        <div class="button-container-block">
+          <standard-button
+            :options="continueButtonOptions"
+            @click.native="openPasswordModal"
+          />
         </div>
       </form>
+      <customer-support />
     </div>
-
-    <customer-support />
   </b-modal>
 </template>
 
 <script>
 import CustomerSupport from '@/components/CustomerSupport';
+import WarningMessage from '@/components/WarningMessage';
+import StandardButton from '@/components/Buttons/StandardButton';
 
 export default {
   components: {
-    'customer-support': CustomerSupport
+    'customer-support': CustomerSupport,
+    'warning-message': WarningMessage,
+    'standard-button': StandardButton
   },
   props: {
     mnemonicPhrasePasswordModalOpen: {
@@ -80,6 +80,20 @@ export default {
   },
   data() {
     return {
+      continueButtonOptions: {
+        title: this.$t('common.continue'),
+        buttonStyle: 'green',
+        noMinWidth: true,
+        fullWidth: true
+      },
+      warningOptions: {
+        title: 'NOT RECOMMENDED',
+        message: this.$t('accessWallet.notARecommendedWay'),
+        link: {
+          text: 'Using MEW Offline',
+          url: 'https://kb.myetherwallet.com/posts/offline/using-mew-offline/'
+        }
+      },
       mnemonicPhrase: new Array(this.mnemonicSize).fill(''),
       mnemonic24: false,
       mnemonicSize: 12

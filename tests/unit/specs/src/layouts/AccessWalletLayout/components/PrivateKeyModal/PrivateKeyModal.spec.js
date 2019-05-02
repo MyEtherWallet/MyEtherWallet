@@ -23,13 +23,22 @@ describe('PrivateKeyModal.vue', () => {
       i18n = baseSetup.i18n;
       store = baseSetup.store;
     });
-
+    const mockRouter = {
+      history: {
+        current: {
+          fullPath: '/'
+        }
+      }
+    };
     beforeEach(() => {
       wrapper = mount(PrivateKeyModal, {
         localVue,
         i18n,
         store,
-        attachToDocument: true
+        attachToDocument: true,
+        mocks: {
+          $router: mockRouter
+        }
       });
     });
 
@@ -45,8 +54,12 @@ describe('PrivateKeyModal.vue', () => {
   describe('PrivateKeyModal.vue Methods', () => {
     let localVue, i18n, wrapper, store;
     const spy = sinon.stub();
-    const mockRoute = {
-      push: spy
+    const mockRouter = {
+      history: {
+        current: {
+          fullPath: '/'
+        }
+      }
     };
 
     beforeAll(() => {
@@ -71,7 +84,7 @@ describe('PrivateKeyModal.vue', () => {
         store,
         attachToDocument: true,
         mocks: {
-          $router: mockRoute
+          $router: mockRouter
         }
       });
     });
