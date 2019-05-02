@@ -148,8 +148,8 @@ const appList = [
   },
   {
     network: TOMO,
-    prefixes: ["m/44'/889'"],
-    paths: [tomoChain]
+    prefixes: ["m/44'/889'", "m/44'/60'"],
+    paths: [tomoChain, ledgerEthereum, ledgerLiveEthereum, ethereum]
   },
   {
     network: ROP,
