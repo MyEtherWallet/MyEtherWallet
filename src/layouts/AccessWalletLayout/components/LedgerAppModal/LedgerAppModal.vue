@@ -83,6 +83,7 @@
             </template>
             <b-dropdown-item
               v-for="(path, idx) in selectedApp.paths"
+              ref="pathDropdown"
               :key="path.label"
               :active="path.path === selectedPath.path"
               @click="setPath(path, idx)"
@@ -94,12 +95,15 @@
                     path.path !== 'custom'
                 "
                 class="fa fa-times remove-custom"
-                @click.stop="remove(path)"
+                @click.stop="remove(path, idx)"
               />
             </b-dropdown-item>
           </b-dropdown>
           <button
-            class="mid-round-button-green-filled-green-border next-button"
+            :class="[
+              selectedPath.path === 'custom' ? 'disabled' : '',
+              'mid-round-button-green-filled next-button'
+            ]"
             @click="next"
           >
             Next
@@ -179,14 +183,19 @@ export default {
   },
   methods: {
     remove(path, idx) {
-      this.$store.dispatch('removeCustomPath', path).then(() => {
-        this.setupCustomPaths();
+      const mappedPaths = this.selectedApp.paths.filter((item, itemIdx) => {
+        if (itemIdx !== idx) return item;
       });
-      this.selectedApp.paths = this.selectedApp.paths.map((item, itemId) => {
-        if (itemId !== idx) {
-          return item;
-        }
-      });
+      this.$store.dispatch('removeCustomPath', path);
+      this.setupCustomPaths();
+      this.selectedApp.paths = mappedPaths;
+      this.selectedPath =
+        this.selectedApp.paths.length > 1
+          ? this.selectedApp.paths[0]
+          : apps[0].paths[0];
+      // this.$root.$emit('bv::dropdown::clicked');
+      // this.$refs.pathDropdown.toggle();
+      this.$refs.pathDropdown[0].closeDropdown();
     },
     setupCustomPaths() {
       const loc = apps.map(item => {
@@ -229,6 +238,7 @@ export default {
           })
           .then(() => {
             this.setupCustomPaths();
+            this.selectedApp.paths.unshift(this.selectedPath);
           });
       } else {
         Toast.responseHandler('Invalid Custom Path', Toast.ERROR);
