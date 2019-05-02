@@ -1,3 +1,7 @@
+### Devop
+
+- Ledger custom paths [#1037](https://github.com/MyEtherWallet/MyEtherWallet/pull/1037)
+
 ### Release v5.0.11
 
 ### Devop
