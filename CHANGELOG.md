@@ -1,5 +1,7 @@
 ### Release v5.0.11-ens.1
 
+- Permanent registry [#965](https://github.com/MyEtherWallet/MyEtherWallet/pull/965)
+
 ### Release v5.0.11
 
 ### Devop
@@ -25,7 +27,6 @@
 - Metadium network support [#928](https://github.com/MyEtherWallet/MyEtherWallet/pull/928)
 - Solidum network support [#957](https://github.com/MyEtherWallet/MyEtherWallet/pull/957)
 - Support local nodes [#973](https://github.com/MyEtherWallet/MyEtherWallet/pull/973)
-- Permanent registry [#965](https://github.com/MyEtherWallet/MyEtherWallet/pull/965)
 
 ### Bug
 
