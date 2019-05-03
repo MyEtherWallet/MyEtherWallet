@@ -31,6 +31,7 @@ const toBigNumber = num => {
 
 export default class Kyber {
   constructor(props = {}) {
+    console.log(props); // todo remove dev item
     this.name = Kyber.getName();
     this.network = props.network || networkSymbols.ETH;
     this.getRateForUnit =
@@ -181,6 +182,7 @@ export default class Kyber {
   }
 
   getKyberContractObject() {
+    console.log(this.kyberNetworkABI, this.kyberNetworkAddress); // todo remove dev item
     return new this.web3.eth.Contract(
       this.kyberNetworkABI,
       this.kyberNetworkAddress
@@ -273,9 +275,13 @@ export default class Kyber {
   }
 
   async callKyberContract(method, ...parameters) {
-    return await this.getKyberContractObject()
-      .methods[method](...parameters)
-      .call();
+    try {
+      return await this.getKyberContractObject()
+        .methods[method](...parameters)
+        .call();
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   async approveKyber(fromToken, fromValueWei) {
