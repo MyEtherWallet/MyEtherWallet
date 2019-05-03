@@ -10,6 +10,10 @@ const execute = (command, callback) => {
 };
 execute('npm audit --json', json => {
   const advisories = JSON.parse(json).advisories;
+  if (!advisories) {
+    console.info('Most likely npm audit is unavailable', json);
+    process.exit(0);
+  }
   let auditPass = true;
   for (const id in advisories) {
     if (
