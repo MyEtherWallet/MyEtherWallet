@@ -27,19 +27,13 @@ export default class MakerManager {
     };
   }
 
+  // Getters
   get availableCdps() {
     return this.activeCdps;
   }
 
   get proxy() {
     return this._proxyAddress;
-  }
-
-  get isCreatingProxy() {
-    if (this._proxyAddress !== null) {
-      return false;
-    }
-    return this.creatingProxy;
   }
 
   get cdpsWithProxy() {
@@ -64,20 +58,7 @@ export default class MakerManager {
     return '--';
   }
 
-  get makerActive() {}
-
-  hasCdp(cdpId) {
-    return Object.keys(this.activeCdps).includes(toBigNumber(cdpId).toString());
-  }
-
-  getCdp(cdpId) {
-    return this.activeCdps[cdpId];
-  }
-
-  addOpenedCdp(makerCdp, cdpId) {
-    this.activeCdps[cdpId] = makerCdp;
-  }
-
+  // Methods
   async init() {
     await this.maker.authenticate();
     this.priceService = this.maker.service('price');
@@ -116,35 +97,12 @@ export default class MakerManager {
     }
   }
 
-  async buildProxy() {
-    this.creatingProxy = true;
-    this._proxyAddress = await this.getProxy();
-    if (!this._proxyAddress) {
-      await this.proxyService.build();
-      // eslint-disable-next-line
-      this._proxyAddress = await this.proxyService.currentProxy();
-      return this._proxyAddress;
-    }
-    this._proxyAddress = await this.proxyService.currentProxy();
-    return this._proxyAddress;
+  hasCdp(cdpId) {
+    return Object.keys(this.activeCdps).includes(toBigNumber(cdpId).toString());
   }
 
-  async migrateCdp(cdpId) {
-    const currentProxy = await this.getProxy();
-    if (currentProxy) {
-      await this.cdpService.give(cdpId, currentProxy);
-    }
-  }
-
-  async getProxy() {
-    this._proxyAddress = await this.proxyService.currentProxy();
-    if (!this._proxyAddress) {
-      this._proxyAddress = await this.proxyService.getProxyAddress(
-        this.currentAddress
-      );
-      if (this._proxyAddress) this.noProxy = false;
-    }
-    return this._proxyAddress;
+  getCdp(cdpId) {
+    return this.activeCdps[cdpId];
   }
 
   async refresh() {
@@ -193,7 +151,6 @@ export default class MakerManager {
     this._proxyAddress = await this.proxyService.currentProxy();
     let afterClose = false;
     const afterOpen = route === 'create';
-    // this.migrationInProgress = false;
     await this.updateActiveCdp();
     for (const idProp in this.activeCdps) {
       if (this.activeCdps[idProp].needsUpdate) {
@@ -220,49 +177,6 @@ export default class MakerManager {
       }
     }
     return true;
-  }
-
-  calcDrawAmt(principal, collatRatio) {
-    return Math.floor(bnOver(principal, this.ethPrice, collatRatio).toNumber());
-  }
-
-  calcMinCollatRatio(priceFloor) {
-    return bnOver(this.ethPrice, this.liquidationRatio, priceFloor);
-  }
-
-  calcCollatRatio(ethQty, daiQty) {
-    if (ethQty <= 0 || daiQty <= 0) return 0;
-    return bnOver(this.ethPrice, ethQty, daiQty);
-  }
-
-  calcLiquidationPrice(ethQty, daiQty) {
-    if (ethQty <= 0 || daiQty <= 0) return 0;
-    const getInt = parseInt(this.ethPrice);
-    for (let i = getInt; i > 0; i--) {
-      const atValue = bnOver(i, ethQty, daiQty).lte(this.liquidationRatio);
-      if (atValue) {
-        return i;
-      }
-    }
-  }
-
-  getSysVars() {
-    return {
-      ethPrice: this.ethPrice,
-      pethPrice: this.pethPrice,
-      liquidationRatio: this.liquidationRatio,
-      liquidationPenalty: this.liquidationPenalty,
-      stabilityFee: this.stabilityFee,
-      wethToPethRatio: this.wethToPethRatio,
-      currentAddress: this.currentAddress
-    };
-  }
-  getSysServices() {
-    return {
-      priceService: this.priceService,
-      cdpService: this.cdpService,
-      proxyService: this.proxyService
-    };
   }
 
   async locateCdps() {
@@ -302,6 +216,55 @@ export default class MakerManager {
     }
   }
 
+  async buildProxy() {
+    this.creatingProxy = true;
+    this._proxyAddress = await this.getProxy();
+    if (!this._proxyAddress) {
+      await this.proxyService.build();
+      this._proxyAddress = await this.proxyService.currentProxy();
+      return this._proxyAddress;
+    }
+    this._proxyAddress = await this.proxyService.currentProxy();
+    return this._proxyAddress;
+  }
+
+  async migrateCdp(cdpId) {
+    const currentProxy = await this.getProxy();
+    if (currentProxy) {
+      await this.cdpService.give(cdpId, currentProxy);
+    }
+  }
+
+  async getProxy() {
+    this._proxyAddress = await this.proxyService.currentProxy();
+    if (!this._proxyAddress) {
+      this._proxyAddress = await this.proxyService.getProxyAddress(
+        this.currentAddress
+      );
+      if (this._proxyAddress) this.noProxy = false;
+    }
+    return this._proxyAddress;
+  }
+
+  getSysVars() {
+    return {
+      ethPrice: this.ethPrice,
+      pethPrice: this.pethPrice,
+      liquidationRatio: this.liquidationRatio,
+      liquidationPenalty: this.liquidationPenalty,
+      stabilityFee: this.stabilityFee,
+      wethToPethRatio: this.wethToPethRatio,
+      currentAddress: this.currentAddress
+    };
+  }
+  getSysServices() {
+    return {
+      priceService: this.priceService,
+      cdpService: this.cdpService,
+      proxyService: this.proxyService
+    };
+  }
+
   async buildCdpObject(cdpId, options = {}) {
     const sysVars = {
       ethPrice: this.ethPrice,
@@ -323,5 +286,30 @@ export default class MakerManager {
 
     const makerCDP = new MakerCDP(cdpId, this.maker, services, sysVars);
     return await makerCDP.init(cdpId);
+  }
+
+  // Calculations
+  calcDrawAmt(principal, collatRatio) {
+    return Math.floor(bnOver(principal, this.ethPrice, collatRatio).toNumber());
+  }
+
+  calcMinCollatRatio(priceFloor) {
+    return bnOver(this.ethPrice, this.liquidationRatio, priceFloor);
+  }
+
+  calcCollatRatio(ethQty, daiQty) {
+    if (ethQty <= 0 || daiQty <= 0) return 0;
+    return bnOver(this.ethPrice, ethQty, daiQty);
+  }
+
+  calcLiquidationPrice(ethQty, daiQty) {
+    if (ethQty <= 0 || daiQty <= 0) return 0;
+    const getInt = parseInt(this.ethPrice);
+    for (let i = getInt; i > 0; i--) {
+      const atValue = bnOver(i, ethQty, daiQty).lte(this.liquidationRatio);
+      if (atValue) {
+        return i;
+      }
+    }
   }
 }
