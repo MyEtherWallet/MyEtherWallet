@@ -78,7 +78,6 @@ const REGISTRAR_TYPES = {
   FIFS: 'fifs',
   PERMANENT: 'permanent'
 };
-const TEMP_TLD = 'eth';
 export default {
   components: {
     'back-button': BackButton
@@ -167,6 +166,7 @@ export default {
   },
   methods: {
     async setup() {
+      this.isPermanentLive = true;
       this.domainName = '';
       this.loading = false;
       this.bidAmount = 0.01;
@@ -216,17 +216,25 @@ export default {
           this.registrarAddress
         );
       } else if (this.registrarType === REGISTRAR_TYPES.PERMANENT) {
-        const controllerAddress = await this.ens
-          .resolver(this.registrarTLD, ResolverAbi)
-          .interfaceImplementer(permanentRegistrar.INTERFACE_CONTROLLER);
-        this.registrarControllerContract = await new this.web3.eth.Contract(
-          PermanentRegistrarControllerAbi,
-          controllerAddress
-        );
-        this.registrarContract = await new this.web3.eth.Contract(
-          baseRegistrarAbi,
-          this.registrarAddress
-        );
+        try {
+          const controllerAddress = await this.ens
+            .resolver(this.registrarTLD, ResolverAbi)
+            .interfaceImplementer(permanentRegistrar.INTERFACE_CONTROLLER);
+          this.registrarControllerContract = new this.web3.eth.Contract(
+            PermanentRegistrarControllerAbi,
+            controllerAddress
+          );
+          this.registrarContract = new this.web3.eth.Contract(
+            baseRegistrarAbi,
+            this.registrarAddress
+          );
+        } catch (e) {
+          this.isPermanentLive = false;
+          Toast.responseHandler(
+            'ENS Permanent registrar is not available yet, please try again later',
+            Toast.ERROR
+          );
+        }
       }
     },
     async transferDomain(toAddress) {
@@ -263,9 +271,9 @@ export default {
       // Public resolver address
       const resolver = await this.ens.resolver('resolver.eth');
       const publicResolverAddress = await resolver.addr();
-      const currentResolverAddress = await this.ensRegistryContract.methods.resolver(
-        this.nameHash
-      );
+      const currentResolverAddress = await this.ensRegistryContract.methods
+        .resolver(this.nameHash)
+        .call();
       const publicResolverContract = new web3.eth.Contract(
         ResolverAbi,
         publicResolverAddress
@@ -373,18 +381,25 @@ export default {
               this.loading = false;
             }
           } else if (this.registrarType === REGISTRAR_TYPES.PERMANENT) {
+            if (!this.isPermanentLive) {
+              Toast.responseHandler(
+                'ENS Permanent registrar is not available yet, please try again later',
+                Toast.ERROR
+              );
+              return;
+            }
             const oldRegistrarAddress = await this.ens
-              .resolver(TEMP_TLD, ResolverAbi)
+              .resolver(this.registrarTLD, ResolverAbi)
               .interfaceImplementer(
                 permanentRegistrar.INTERFACE_LEGACY_REGISTRAR
               );
-            this.legacyRegistrar = await new this.web3.eth.Contract(
+            this.legacyRegistrar = new this.web3.eth.Contract(
               RegistrarAbi,
               oldRegistrarAddress
             );
-            const legacyState = await this.legacyRegistrar.methods.state(
-              this.labelHash
-            );
+            const legacyState = await this.legacyRegistrar.methods
+              .state(this.labelHash)
+              .call();
             if (legacyState === 2) {
               this.$router.push({ path: 'manage-ens/transfer-registrar' });
             } else {
@@ -450,7 +465,8 @@ export default {
           .call();
         await this.registrarControllerContract.methods
           .commit(commitment)
-          .send({ from: this.account.address }, () => {
+          .send({ from: this.account.address })
+          .once('transactionHash', () => {
             this.$router.push({ path: 'permanent-registration' });
           })
           .on('receipt', () => {
@@ -474,15 +490,21 @@ export default {
         const rentPrice = await this.registrarControllerContract.methods
           .rentPrice(this.parsedHostName, duration)
           .call();
-        await this.registrarControllerContract.methods
+        this.registrarControllerContract.methods
           .register(
             this.parsedHostName,
             this.account.address,
             duration,
             utils.sha3(this.secretPhrase)
           )
-          .send({ from: this.account.address, value: rentPrice });
-        Toast.responseHandler('Successfully Registered!', Toast.SUCCESS);
+          .send({ from: this.account.address, value: rentPrice })
+          .once('transactionHash', () => {
+            //switch to a screen that says, registration in progress...
+          })
+          .once('receipt', () => {
+            //send the user to manage page
+            Toast.responseHandler('Successfully Registered!', Toast.SUCCESS);
+          });
       } catch (e) {
         this.loading = false;
         Toast.responseHandler(
@@ -494,8 +516,12 @@ export default {
     transferFunc() {
       this.loading = true;
       try {
-        this.legacyRegistrar.methods.transferRegistrars(this.labelHash);
-        Toast.responseHandler('Transfer Success!', Toast.SUCCESS);
+        this.legacyRegistrar.methods
+          .transferRegistrars(this.labelHash)
+          .send({ from: this.account.address })
+          .once('transactionHash', () => {
+            Toast.responseHandler('Transfer Success!', Toast.SUCCESS);
+          });
       } catch (e) {
         this.loading = false;
         Toast.responseHandler(
