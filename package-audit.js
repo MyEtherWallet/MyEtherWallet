@@ -4,9 +4,15 @@ const exec = require('child_process').exec;
 const AUDIT_EXCEPTIONS = ['tar', 'js-yaml'];
 
 const execute = (command, callback) => {
-  exec(command, (error, stdout, stderr) => {
-    callback(stdout);
-  });
+  exec(
+    command,
+    {
+      maxBuffer: 2000 * 1024
+    },
+    (error, stdout, stderr) => {
+      callback(stdout);
+    }
+  );
 };
 execute('npm audit --json', json => {
   const advisories = JSON.parse(json).advisories;
