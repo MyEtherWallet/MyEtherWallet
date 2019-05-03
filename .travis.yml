@@ -7,143 +7,143 @@ cache:
 git:
   depth: 1
 before_cache:
-- sudo rm -rf node_modules/.cache
+  - sudo rm -rf node_modules/.cache
 install: docker build -t mew-build-container .
 env:
   global:
-  - ci_env=`bash <(curl -s https://codecov.io/env)`
-  - secure: S8/CyHiA4M/omHrfvUXmZeLun43yGMg3qYsSzI8HI1Wr+G8xrz1qA7LgehEGx40iTBge1NSzfr7ZyKhGGYJ6dAIGxxk7+nyoIrdyUqrkWgNgYHsZdJLnYTZhvrCSEwURW4WMCFR8LJVO/84ltvS9+hPvwtGPPuFn9BDXf9O9ril0guxkm1WijSdmpFFyMrUBZDIDw9lc5D9QTRw1gpkXYzboMvPE6BO+HQoGxid2NFqTYw9dOyNSFXfbD2ni7Z+hZRxU0YO66TndFtvXDHJvvhnMEdfHrG3xunq3Zml+PVIaCI50dNQUo88ajiZiMddCkf6b4UROQGtMmbE5t7FryuSRbWbRN/1oMcWa9h9THdICOg5R97CfvtE/debDi57hBICNpq1SKefQXA8NqKEQsl2tA/x/wwdSBANeKrQLBd85D98syv0H1EEsz4TIO1/tGAqktdxH4HxjgYt9txCDNlT4eiWPxA84e/MDYQsxj3MeP3WPg4CDUEYSkQiFEnlhirQraufjFp4B9rzMUZ73jH8F1Jp83/AirU/9CxgdfAIJRADT6cTkC0zjhganlI4BhFR90OXahgbKXcNoVGfIqcI/DPtZ8cOQxO4dgOepNlYK180kNML2eGCcyNwSv4UG5NLHSul3K9cQnFKqVFyHfAGEYPVypjZt6Rp5Kp+Mh1Y=
-  - secure: dWzuQFnoDWxioipSVCH3jSV3PIYXRy/YyLoLJ9/tr3Omqh77XbGR1CqrjdBt7lzabOgrOryXuiNxNpBezK/0vXAuFW5U83yzrdVfqLdaOqaay5PE/zSZtp7C8JMq6iQxSvjjRUyfSZowPfVTnfXr2Che9GvRWMMWqCGUQ0fCLv2kFEC9UQaFVFnS29UGRunN9Y+C5F45TEuaGnYWQ8yw+vQx0XWQBUwfv1l3C/W8v3Z7m1q1IUQTdS7ACPevExkRkz0XaTmBZyCEKAyuCLT4jGMtnH12p6292YSo9gbhcivlQzCcdRMqjaMjy+5L5SkFD0KEHPFQxp/3xcZ3iFNt2MFE3N7NpnYTBKBwi8B/FBy3tLUAZDYGDOMMZu8Oej+wrhEeUS29LG99vgWtiSqc4mhlK5zMikJ4SuLF+C8EtcqHhZf8xtH1uislZJGNoOk/Y66TCbXLfLVMbSzDi8wUei8imH8wrfnmacYylxz4Ch+8+PLa1Z4XgxyM8fogDJJSEeL6JfmdOG+O/j4pmGEo1ALKMwHilIUGL+JLnp0frVCl2I67yeXYeNdIwu/bDI3cGs3sOspNVBeTi1knBMpJ7Ed1AKTP/Ys0Ro/kGXqs/GixLknH8c5tENmUUCB2Ohj6zdExPqTxlB0ssPxuYev0LaxK1+MkIBvFOZrJURWR8cg=
-  - secure: Ce9JEDfoZhC7m249y2DtgcTaFeONsL9W5DKgR+NpSIASJ4sHLReDy+KGyFTysjUBSREUkEPnh6hd+wAbRhllEy+5iDRzgbt+Zn3FZbHXQJcRRme7Ej4ghZ0Z8qAKYiDWBv/oHBydNPpliAxA9GhfGGmBSXK+OJ8kPnH3OO4PnyR+7KWDKAHz1v7pdw5MKzvIe42ackVK9sTky94FYy/WEZRiNM0ZLHXuoApecwAUMiYlOL4LUgZ2t4W759dofHtf8zt00VSaTKSJoWogMRYDANktHP7K3NJRQzEyzY+uKuYTcP8ZLsUQikJqz9Es+QWO/DHlN/IHkS+Nula3kjR9nHVITpfEkwRg4e5n72xwTxtr3+BBKNFbly0lREvKgTS2+CAV+l/2ftTyMXEmk3Wjca/gzmZ+PnpcBLjL16CHrNgQU/OAcATH0wBYYN059fj1c2SZIwAB+o63/2znskpNKm5A1yS7H6AfKizj1OXZF+qWzUBW3msNqzyhsWecxjx0bxxIAYhcpG5+jcANVXaNlxbrdR8DClJ0T31ilqthCYkKNFlMzbYAx0pT2OG3z4UTwDbLK8ZOla+G7CXAtxcx5yRBlK3W2iTMOP1FjW/sMGWqYNRxss5Wxn/T4VgKQcERLy+AKr/OoIZ3g+BDC+02/aTvhHZlf/xxEOE9zq8VLgM=
-  - secure: Z/bpi72Z4VLH/uEgTfrZmv3rEHnxrwj52sTZmWhPsooAkYsTuJuYhU2V60jmrbuMfHShY5TOix88CzYdZUIvil8jnNwnIK7RlkgvZrGVrugOtsZZgyJuZnLRAwAcMRQ/toK+EKJ0AlPMFzO5yPrS4n83044MElvbh8nZfNarudl9DzB4Rubr5KIkIGZa+yCEqOAh533Bmdrr2Nsrf8eFssmQ9tPGIBBw1YGSBXy1paUTTUawzO1f67YV70AexF156jeCADH0j8h9v6Sj9O5hfAVP0tZYj3GJ6ctCVgQP1B0j1GVBIMgg3mXKRy+Q1LiwDq6fivbdJQ2+49cjjeDuqLFAW0dzZ3FFNInASxNGA3mjlLWknSHmwAwYBzfL3oNkg6ux3mzhUPccz8wN6pfcxPv3+HavQaViPMNAinedXH119urROTigrLt9udyzCl8P9tiFkv5g2Y4b4wln3twMXSuT1qDHpaES5xOHvzLcyY+oZWmrxBXUQUTaoiED9NSnko8HTvOlNvj0uCNFbIAvff/NDwwkgEf58e9y24YfPZQge+XDOhfqu8eVv75islH1Fh5tZ8WdGKSwHVnILkF3zvC1Lfj3qi+DGJq1LJLXqKelrJIv2iS2Cp+W9kSGxk1hsrjrrQeNLETyZeQPcOG6PkQkccbbYtiu+dyTAWtbwDo=
-  - secure: f9n3CmMOwFgH4A+BKHfpV6W67X1hATKEaJc5nE6IZk8Te1GGpebHka2ssO3I3933gA7sP8iPpMks1HTkEHYRl8kJBSjvJeINAAZz0crkUsabpm4yWdLHdm87Vpz0rSjPJRR35qHWZwYrLFIf2xPFj5jq7/B8Qd8gj5SzUgZ/WUT5sTK8L/wjmRdyDLJEk/knjVwjo/ZbrJNYs0crjxVZ9rgPbuzknwPYmcEJUvyt83k90Qk1r1Kn6FzW5SYzlaOX8ebwbyFO1ri9d04KIPAWeRjXabhNgHltg8Xlz8AbZLV5FgUQCmZTzWlOLXMinAdrYVSsj2e0BicAVMyYlW4aBckeeGJd4fF9gelhQqixEKAKwY/SUlqNQDEGOumdfFGLfAdv9jjba/bYt4uXj4f/0NTlF27QcDsVfRbWJLZHmykMVZsjriA9JOIB3q48n1VmExHyJsE0nDM/RnUpAQbI/BoknrPV61bHJRTzVLtrgXdUjqz77XfDGraDqQ/7VSK8MEn8B+dGDmUgc87IC7pkJ6UU+X5OlENS93c7rrkMIoCqhoQCeDCzzUcAYRBDKNt64hRuOqr/ujnYIBjH6nlczuTxYh/YCAglOuoNenp9Ua5dNtqTQQQn7+GO+GN+3RAPBryw5vp4sTp2sTbckJ6FEY3y3d65bRcWyoPSpN8rEYo=
-  - secure: mNKx53++0nHPFm1a4vbQ+KOfU1zLLF/CoKYdruXqvbQx6tf7zn4kDpV7cJfLAhR6pDqT6dNnxjqlWxaZejtS+UrlxghtIRpfW4ZGkz4V0KxvrgRnRdcooatKebNosE5jZDuVlCk/Az42re07T/7HCFZgjbJTRpMkHWrIKJ140PFycciuoo/+R/QLv3cYOEymhJQncJUZDCRS8f15w5C+kguP89A61GJIUDLaUfXBcrYxWnRXrUvAJGTfOOLQ7q47xQ5Pif8niFDfk0ptyRXpqR4HYoveHSr3IZnUnlKBK5Dpe5F2sPb0wH/2YkT1P55VpJ766lwoZtivmXDtX9EvLiGO0EV8YSd0njHTXKq2sgwJvq9FVxfkYPwG818TnyoSEfx4724Z6OoeyOD3CWMT+Wxp+WrNLHhSt6N4X6k8IqwoJAxbxZbR2q4a3wY11tOb0DPuqmsDCs0f4RpbKae0bvcMCu1szyuplb6+EfflXdCDj+dokaFb0g9MYbM4RJGsxRCmucYreBG+839FiJ4iNhbzw48u12aBauUYUkjHs4IUfaMxOD3mY0vDrK3hVeVcRbdYbqNN4hQ9nEmmQ3EcYCmDofbW4mZfO+14GZaj44DIiPfJ0/rKDojjjLYqtYqaIaBoqEmo0EVcmqpiStb+8/ilw4qDvWXhwj4ebmnJzR0=
+    - ci_env=`bash <(curl -s https://codecov.io/env)`
+    - secure: S8/CyHiA4M/omHrfvUXmZeLun43yGMg3qYsSzI8HI1Wr+G8xrz1qA7LgehEGx40iTBge1NSzfr7ZyKhGGYJ6dAIGxxk7+nyoIrdyUqrkWgNgYHsZdJLnYTZhvrCSEwURW4WMCFR8LJVO/84ltvS9+hPvwtGPPuFn9BDXf9O9ril0guxkm1WijSdmpFFyMrUBZDIDw9lc5D9QTRw1gpkXYzboMvPE6BO+HQoGxid2NFqTYw9dOyNSFXfbD2ni7Z+hZRxU0YO66TndFtvXDHJvvhnMEdfHrG3xunq3Zml+PVIaCI50dNQUo88ajiZiMddCkf6b4UROQGtMmbE5t7FryuSRbWbRN/1oMcWa9h9THdICOg5R97CfvtE/debDi57hBICNpq1SKefQXA8NqKEQsl2tA/x/wwdSBANeKrQLBd85D98syv0H1EEsz4TIO1/tGAqktdxH4HxjgYt9txCDNlT4eiWPxA84e/MDYQsxj3MeP3WPg4CDUEYSkQiFEnlhirQraufjFp4B9rzMUZ73jH8F1Jp83/AirU/9CxgdfAIJRADT6cTkC0zjhganlI4BhFR90OXahgbKXcNoVGfIqcI/DPtZ8cOQxO4dgOepNlYK180kNML2eGCcyNwSv4UG5NLHSul3K9cQnFKqVFyHfAGEYPVypjZt6Rp5Kp+Mh1Y=
+    - secure: dWzuQFnoDWxioipSVCH3jSV3PIYXRy/YyLoLJ9/tr3Omqh77XbGR1CqrjdBt7lzabOgrOryXuiNxNpBezK/0vXAuFW5U83yzrdVfqLdaOqaay5PE/zSZtp7C8JMq6iQxSvjjRUyfSZowPfVTnfXr2Che9GvRWMMWqCGUQ0fCLv2kFEC9UQaFVFnS29UGRunN9Y+C5F45TEuaGnYWQ8yw+vQx0XWQBUwfv1l3C/W8v3Z7m1q1IUQTdS7ACPevExkRkz0XaTmBZyCEKAyuCLT4jGMtnH12p6292YSo9gbhcivlQzCcdRMqjaMjy+5L5SkFD0KEHPFQxp/3xcZ3iFNt2MFE3N7NpnYTBKBwi8B/FBy3tLUAZDYGDOMMZu8Oej+wrhEeUS29LG99vgWtiSqc4mhlK5zMikJ4SuLF+C8EtcqHhZf8xtH1uislZJGNoOk/Y66TCbXLfLVMbSzDi8wUei8imH8wrfnmacYylxz4Ch+8+PLa1Z4XgxyM8fogDJJSEeL6JfmdOG+O/j4pmGEo1ALKMwHilIUGL+JLnp0frVCl2I67yeXYeNdIwu/bDI3cGs3sOspNVBeTi1knBMpJ7Ed1AKTP/Ys0Ro/kGXqs/GixLknH8c5tENmUUCB2Ohj6zdExPqTxlB0ssPxuYev0LaxK1+MkIBvFOZrJURWR8cg=
+    - secure: Ce9JEDfoZhC7m249y2DtgcTaFeONsL9W5DKgR+NpSIASJ4sHLReDy+KGyFTysjUBSREUkEPnh6hd+wAbRhllEy+5iDRzgbt+Zn3FZbHXQJcRRme7Ej4ghZ0Z8qAKYiDWBv/oHBydNPpliAxA9GhfGGmBSXK+OJ8kPnH3OO4PnyR+7KWDKAHz1v7pdw5MKzvIe42ackVK9sTky94FYy/WEZRiNM0ZLHXuoApecwAUMiYlOL4LUgZ2t4W759dofHtf8zt00VSaTKSJoWogMRYDANktHP7K3NJRQzEyzY+uKuYTcP8ZLsUQikJqz9Es+QWO/DHlN/IHkS+Nula3kjR9nHVITpfEkwRg4e5n72xwTxtr3+BBKNFbly0lREvKgTS2+CAV+l/2ftTyMXEmk3Wjca/gzmZ+PnpcBLjL16CHrNgQU/OAcATH0wBYYN059fj1c2SZIwAB+o63/2znskpNKm5A1yS7H6AfKizj1OXZF+qWzUBW3msNqzyhsWecxjx0bxxIAYhcpG5+jcANVXaNlxbrdR8DClJ0T31ilqthCYkKNFlMzbYAx0pT2OG3z4UTwDbLK8ZOla+G7CXAtxcx5yRBlK3W2iTMOP1FjW/sMGWqYNRxss5Wxn/T4VgKQcERLy+AKr/OoIZ3g+BDC+02/aTvhHZlf/xxEOE9zq8VLgM=
+    - secure: Z/bpi72Z4VLH/uEgTfrZmv3rEHnxrwj52sTZmWhPsooAkYsTuJuYhU2V60jmrbuMfHShY5TOix88CzYdZUIvil8jnNwnIK7RlkgvZrGVrugOtsZZgyJuZnLRAwAcMRQ/toK+EKJ0AlPMFzO5yPrS4n83044MElvbh8nZfNarudl9DzB4Rubr5KIkIGZa+yCEqOAh533Bmdrr2Nsrf8eFssmQ9tPGIBBw1YGSBXy1paUTTUawzO1f67YV70AexF156jeCADH0j8h9v6Sj9O5hfAVP0tZYj3GJ6ctCVgQP1B0j1GVBIMgg3mXKRy+Q1LiwDq6fivbdJQ2+49cjjeDuqLFAW0dzZ3FFNInASxNGA3mjlLWknSHmwAwYBzfL3oNkg6ux3mzhUPccz8wN6pfcxPv3+HavQaViPMNAinedXH119urROTigrLt9udyzCl8P9tiFkv5g2Y4b4wln3twMXSuT1qDHpaES5xOHvzLcyY+oZWmrxBXUQUTaoiED9NSnko8HTvOlNvj0uCNFbIAvff/NDwwkgEf58e9y24YfPZQge+XDOhfqu8eVv75islH1Fh5tZ8WdGKSwHVnILkF3zvC1Lfj3qi+DGJq1LJLXqKelrJIv2iS2Cp+W9kSGxk1hsrjrrQeNLETyZeQPcOG6PkQkccbbYtiu+dyTAWtbwDo=
+    - secure: f9n3CmMOwFgH4A+BKHfpV6W67X1hATKEaJc5nE6IZk8Te1GGpebHka2ssO3I3933gA7sP8iPpMks1HTkEHYRl8kJBSjvJeINAAZz0crkUsabpm4yWdLHdm87Vpz0rSjPJRR35qHWZwYrLFIf2xPFj5jq7/B8Qd8gj5SzUgZ/WUT5sTK8L/wjmRdyDLJEk/knjVwjo/ZbrJNYs0crjxVZ9rgPbuzknwPYmcEJUvyt83k90Qk1r1Kn6FzW5SYzlaOX8ebwbyFO1ri9d04KIPAWeRjXabhNgHltg8Xlz8AbZLV5FgUQCmZTzWlOLXMinAdrYVSsj2e0BicAVMyYlW4aBckeeGJd4fF9gelhQqixEKAKwY/SUlqNQDEGOumdfFGLfAdv9jjba/bYt4uXj4f/0NTlF27QcDsVfRbWJLZHmykMVZsjriA9JOIB3q48n1VmExHyJsE0nDM/RnUpAQbI/BoknrPV61bHJRTzVLtrgXdUjqz77XfDGraDqQ/7VSK8MEn8B+dGDmUgc87IC7pkJ6UU+X5OlENS93c7rrkMIoCqhoQCeDCzzUcAYRBDKNt64hRuOqr/ujnYIBjH6nlczuTxYh/YCAglOuoNenp9Ua5dNtqTQQQn7+GO+GN+3RAPBryw5vp4sTp2sTbckJ6FEY3y3d65bRcWyoPSpN8rEYo=
+    - secure: mNKx53++0nHPFm1a4vbQ+KOfU1zLLF/CoKYdruXqvbQx6tf7zn4kDpV7cJfLAhR6pDqT6dNnxjqlWxaZejtS+UrlxghtIRpfW4ZGkz4V0KxvrgRnRdcooatKebNosE5jZDuVlCk/Az42re07T/7HCFZgjbJTRpMkHWrIKJ140PFycciuoo/+R/QLv3cYOEymhJQncJUZDCRS8f15w5C+kguP89A61GJIUDLaUfXBcrYxWnRXrUvAJGTfOOLQ7q47xQ5Pif8niFDfk0ptyRXpqR4HYoveHSr3IZnUnlKBK5Dpe5F2sPb0wH/2YkT1P55VpJ766lwoZtivmXDtX9EvLiGO0EV8YSd0njHTXKq2sgwJvq9FVxfkYPwG818TnyoSEfx4724Z6OoeyOD3CWMT+Wxp+WrNLHhSt6N4X6k8IqwoJAxbxZbR2q4a3wY11tOb0DPuqmsDCs0f4RpbKae0bvcMCu1szyuplb6+EfflXdCDj+dokaFb0g9MYbM4RJGsxRCmucYreBG+839FiJ4iNhbzw48u12aBauUYUkjHs4IUfaMxOD3mY0vDrK3hVeVcRbdYbqNN4hQ9nEmmQ3EcYCmDofbW4mZfO+14GZaj44DIiPfJ0/rKDojjjLYqtYqaIaBoqEmo0EVcmqpiStb+8/ilw4qDvWXhwj4ebmnJzR0=
 branches:
   except:
-  - gh-pages
+    - gh-pages
 stages:
-- name: run on pull requests
-  if: type = pull_request and fork = true
-- name: add to mewbuilds
-  if: type != pull_request and tag IS blank
-- name: add to codecov
-  if: type != pull_request and tag IS blank
-- name: add to mewbuilds develop
-  if: branch = develop and type != pull_request
-- name: create release
-  if: branch =~ /^v.*$/
-- name: deploy to production
-  if: branch =~ /^v.*$/
-- name: deploy to production history
-  if: branch =~ /^v.*$/
+  - name: run on pull requests
+    if: type = pull_request and fork = true
+  - name: add to mewbuilds
+    if: type != pull_request and tag IS blank
+  - name: add to codecov
+    if: type != pull_request and tag IS blank
+  - name: add to mewbuilds develop
+    if: branch = develop and type != pull_request
+  - name: create release
+    if: branch =~ /^v.*$/
+  - name: deploy to production
+    if: branch =~ /^v.*$/
+  - name: deploy to production history
+    if: branch =~ /^v.*$/
 jobs:
   fast_finish: true
   include:
-  - stage: run on pull requests
-    script:
-    - docker run $ci_env -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm install
-      && npm run lint && npm run codecov && npm run build:history"
-  - stage: add to codecov
-    script:
-    - docker run $ci_env -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm install
-      && npm run codecov"
-  - stage: add to mewbuilds develop
-    before_script:
-    - docker run -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm install &&
-      npm run build:history"
-    - pip install --user awscli
-    script:
-    - aws s3 sync dist/ s3://mewbuilds/develop/ --delete --cache-control max-age=172800,public
-      --acl public-read
-    - aws s3 cp s3://mewbuilds/develop/service-worker.js s3://mewbuilds/develop/service-worker.js
-      --metadata-directive REPLACE --cache-control max-age=0,no-cache,no-store,must-revalidate
-      --content-type application/javascript --acl public-read
-    - aws s3 cp s3://mewbuilds/develop/index.html s3://mewbuilds/develop/index.html
-      --metadata-directive REPLACE --cache-control max-age=0,no-cache,no-store,must-revalidate
-      --content-type text/html --acl public-read
-  - stage: add to mewbuilds
-    before_script:
-    - docker run -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm install &&
-      npm run build:hash"
-    - pip install --user awscli
-    - ssh-keyscan -H $IPFS_NODE >> $HOME/.ssh/known_hosts
-    script:
-    - openssl aes-256-cbc -K $encrypted_2bd32a0810e2_key -iv $encrypted_2bd32a0810e2_iv
-      -in ssh-keys.tar.enc -out ssh-keys.tar -d
-    - tar xvf ssh-keys.tar
-    - chmod 400 ipfs-host.pem
-    - hashOut=`tar -cjvf - -C dist/ . | ssh -i ipfs-host.pem ubuntu@$IPFS_NODE ./ipfs-publish.sh
-      --`
-    - HASH=`echo $hashOut | sed -n 's:.*<hash>\(.*\)</hash>.*:\1:p'`
-    - aws s3 sync --delete --acl public-read dist/ s3://mewbuilds/build/$TRAVIS_COMMIT
-    - aws s3 cp s3://mewbuilds/build/$TRAVIS_COMMIT/service-worker.js s3://mewbuilds/build/$TRAVIS_COMMIT/service-worker.js
-      --metadata-directive REPLACE --cache-control max-age=0,no-cache,no-store,must-revalidate
-      --content-type application/javascript --acl public-read
-    - aws s3 cp s3://mewbuilds/build/$TRAVIS_COMMIT/index.html s3://mewbuilds/build/$TRAVIS_COMMIT/index.html
-      --metadata-directive REPLACE --cache-control max-age=0,no-cache,no-store,must-revalidate
-      --content-type text/html --acl public-read
-    - cd dist && zip -r ../MyEtherWallet-$TRAVIS_COMMIT.zip * && cd ..
-    - VIRUS_TOTAL_URL=`curl -s -F "file=@MyEtherWallet-$TRAVIS_COMMIT.zip" -F apikey=${VIRUS_TOTAL_API_KEY} https://www.virustotal.com/vtapi/v2/file/scan | jq --raw-output '.permalink'`
-    after_success:
-    - |
-      curl -H "Authorization: token ${GITHUB_TOKEN}" -X POST \
-      -d "{\"body\": \"Copy of this build can be found at <br/>https://www.mewbuilds.com/build/${TRAVIS_COMMIT}/index.html<br/> \
-                        https://www.cloudflare-ipfs.com/ipfs/$HASH <br/> \
-                        Virus Total analysis <br/> \
-                        $VIRUS_TOTAL_URL\"}" \
-                        "https://api.github.com/repos/${TRAVIS_REPO_SLUG}/commits/${TRAVIS_COMMIT}/comments"
-  - stage: create release
-    script: skip
-    before_deploy:
-    - docker run -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm install &&
-      npm run build:offline"
-    - openssl aes-256-cbc -K $encrypted_2bd32a0810e2_key -iv $encrypted_2bd32a0810e2_iv
-      -in ssh-keys.tar.enc -out ssh-keys.tar -d
-    - tar xvf ssh-keys.tar
-    - gpg --allow-secret-key-import --import mew-sign.gpg
-    deploy:
-      provider: script
-      script: bash ./release.sh $TRAVIS_TAG $GITHUB_TOKEN $TRAVIS_REPO_SLUG true
-      skip_cleanup: true
-      on:
-        tags: true
-        branch: master
-  - stage: deploy to production
-    script: skip
-    before_deploy:
-    - docker run -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm install &&
-      npm run build:hash"
-    deploy:
-      provider: pages
-      skip-cleanup: true
-      github-token: "$GITHUB_TOKEN"
-      keep-history: false
-      local-dir: "./dist"
-      on:
-        branch: master
-        tags: true
-      target-branch: gh-pages
-  - stage: deploy to production history
-    script: skip
-    before_deploy:
-    - docker run -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm install &&
-      npm run build:history"
-    - pip install --user awscli
-    - aws s3 sync dist/ s3://mewbuilds/staging/ --delete --cache-control max-age=172800,public
-      --acl public-read
-    - aws s3 cp s3://mewbuilds/staging/service-worker.js s3://mewbuilds/staging/service-worker.js
-      --metadata-directive REPLACE --cache-control max-age=0,no-cache,no-store,must-revalidate
-      --content-type application/javascript --acl public-read
-    - aws s3 cp s3://mewbuilds/staging/index.html s3://mewbuilds/staging/index.html
-      --metadata-directive REPLACE --cache-control max-age=0,no-cache,no-store,must-revalidate
-      --content-type text/html --acl public-read
-    deploy:
-      provider: pages
-      skip-cleanup: true
-      github-token: "$GITHUB_TOKEN"
-      keep-history: false
-      local-dir: "./dist"
-      on:
-        branch: master
-        tags: true
-      target-branch: gh-pages-history
+    - stage: run on pull requests
+      script:
+        - travis_wait docker run $ci_env -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm install
+          && npm run lint && npm run codecov && npm run build:history"
+    - stage: add to codecov
+      script:
+        - travis_wait docker run $ci_env -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm install
+          && npm run codecov"
+    - stage: add to mewbuilds develop
+      before_script:
+        - travis_wait docker run -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm install &&
+          npm run build:history"
+        - pip install --user awscli
+      script:
+        - aws s3 sync dist/ s3://mewbuilds/develop/ --delete --cache-control max-age=172800,public
+          --acl public-read
+        - aws s3 cp s3://mewbuilds/develop/service-worker.js s3://mewbuilds/develop/service-worker.js
+          --metadata-directive REPLACE --cache-control max-age=0,no-cache,no-store,must-revalidate
+          --content-type application/javascript --acl public-read
+        - aws s3 cp s3://mewbuilds/develop/index.html s3://mewbuilds/develop/index.html
+          --metadata-directive REPLACE --cache-control max-age=0,no-cache,no-store,must-revalidate
+          --content-type text/html --acl public-read
+    - stage: add to mewbuilds
+      before_script:
+        - travis_wait docker run -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm install &&
+          npm run build:hash"
+        - pip install --user awscli
+        - ssh-keyscan -H $IPFS_NODE >> $HOME/.ssh/known_hosts
+      script:
+        - openssl aes-256-cbc -K $encrypted_2bd32a0810e2_key -iv $encrypted_2bd32a0810e2_iv
+          -in ssh-keys.tar.enc -out ssh-keys.tar -d
+        - tar xvf ssh-keys.tar
+        - chmod 400 ipfs-host.pem
+        - hashOut=`tar -cjvf - -C dist/ . | ssh -i ipfs-host.pem ubuntu@$IPFS_NODE ./ipfs-publish.sh
+          --`
+        - HASH=`echo $hashOut | sed -n 's:.*<hash>\(.*\)</hash>.*:\1:p'`
+        - aws s3 sync --delete --acl public-read dist/ s3://mewbuilds/build/$TRAVIS_COMMIT
+        - aws s3 cp s3://mewbuilds/build/$TRAVIS_COMMIT/service-worker.js s3://mewbuilds/build/$TRAVIS_COMMIT/service-worker.js
+          --metadata-directive REPLACE --cache-control max-age=0,no-cache,no-store,must-revalidate
+          --content-type application/javascript --acl public-read
+        - aws s3 cp s3://mewbuilds/build/$TRAVIS_COMMIT/index.html s3://mewbuilds/build/$TRAVIS_COMMIT/index.html
+          --metadata-directive REPLACE --cache-control max-age=0,no-cache,no-store,must-revalidate
+          --content-type text/html --acl public-read
+        - cd dist && zip -r ../MyEtherWallet-$TRAVIS_COMMIT.zip * && cd ..
+        - VIRUS_TOTAL_URL=`curl -s -F "file=@MyEtherWallet-$TRAVIS_COMMIT.zip" -F apikey=${VIRUS_TOTAL_API_KEY} https://www.virustotal.com/vtapi/v2/file/scan | jq --raw-output '.permalink'`
+      after_success:
+        - |
+          curl -H "Authorization: token ${GITHUB_TOKEN}" -X POST \
+          -d "{\"body\": \"Copy of this build can be found at <br/>https://www.mewbuilds.com/build/${TRAVIS_COMMIT}/index.html<br/> \
+                            https://www.cloudflare-ipfs.com/ipfs/$HASH <br/> \
+                            Virus Total analysis <br/> \
+                            $VIRUS_TOTAL_URL\"}" \
+                            "https://api.github.com/repos/${TRAVIS_REPO_SLUG}/commits/${TRAVIS_COMMIT}/comments"
+    - stage: create release
+      script: skip
+      before_deploy:
+        - travis_wait docker run -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm install &&
+          npm run build:offline"
+        - openssl aes-256-cbc -K $encrypted_2bd32a0810e2_key -iv $encrypted_2bd32a0810e2_iv
+          -in ssh-keys.tar.enc -out ssh-keys.tar -d
+        - tar xvf ssh-keys.tar
+        - gpg --allow-secret-key-import --import mew-sign.gpg
+      deploy:
+        provider: script
+        script: bash ./release.sh $TRAVIS_TAG $GITHUB_TOKEN $TRAVIS_REPO_SLUG true
+        skip_cleanup: true
+        on:
+          tags: true
+          branch: master
+    - stage: deploy to production
+      script: skip
+      before_deploy:
+        - travis_wait docker run -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm install &&
+          npm run build:hash"
+      deploy:
+        provider: pages
+        skip-cleanup: true
+        github-token: '$GITHUB_TOKEN'
+        keep-history: false
+        local-dir: './dist'
+        on:
+          branch: master
+          tags: true
+        target-branch: gh-pages
+    - stage: deploy to production history
+      script: skip
+      before_deploy:
+        - travis_wait docker run -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm install &&
+          npm run build:history"
+        - pip install --user awscli
+        - aws s3 sync dist/ s3://mewbuilds/staging/ --delete --cache-control max-age=172800,public
+          --acl public-read
+        - aws s3 cp s3://mewbuilds/staging/service-worker.js s3://mewbuilds/staging/service-worker.js
+          --metadata-directive REPLACE --cache-control max-age=0,no-cache,no-store,must-revalidate
+          --content-type application/javascript --acl public-read
+        - aws s3 cp s3://mewbuilds/staging/index.html s3://mewbuilds/staging/index.html
+          --metadata-directive REPLACE --cache-control max-age=0,no-cache,no-store,must-revalidate
+          --content-type text/html --acl public-read
+      deploy:
+        provider: pages
+        skip-cleanup: true
+        github-token: '$GITHUB_TOKEN'
+        keep-history: false
+        local-dir: './dist'
+        on:
+          branch: master
+          tags: true
+        target-branch: gh-pages-history
