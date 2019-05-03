@@ -182,7 +182,11 @@ export default class Kyber {
   }
 
   getKyberContractObject() {
-    console.log(this.kyberNetworkABI, this.kyberNetworkAddress); // todo remove dev item
+    console.log(
+      'getKyberContractObject',
+      this.kyberNetworkABI,
+      this.kyberNetworkAddress
+    ); // todo remove dev item
     return new this.web3.eth.Contract(
       this.kyberNetworkABI,
       this.kyberNetworkAddress
@@ -217,6 +221,12 @@ export default class Kyber {
   }
 
   async getExpectedRate(fromToken, toToken, fromValueWei) {
+    console.log(fromToken, toToken, fromValueWei); // todo remove dev item
+    console.log(
+      this.getTokenAddress(fromToken),
+      this.getTokenAddress(toToken),
+      fromValueWei
+    ); // todo remove dev item
     const rates = await this.callKyberContract(
       'getExpectedRate',
       this.getTokenAddress(fromToken),
@@ -275,6 +285,7 @@ export default class Kyber {
   }
 
   async callKyberContract(method, ...parameters) {
+    console.log('callKyberContract', this.getKyberContractObject().methods); // todo remove dev item
     try {
       return await this.getKyberContractObject()
         .methods[method](...parameters)
