@@ -3,6 +3,7 @@ const fs = require('fs');
 const configs = require('./configs');
 const tokenList = require('./lists/tokens.json');
 const contractList = require('./lists/contracts.json');
+//fsdfs
 
 const fetchTokens = async () => {
   try {
