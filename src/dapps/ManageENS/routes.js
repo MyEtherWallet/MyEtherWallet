@@ -20,6 +20,8 @@ const CreateCommitmentContainer = () =>
   import('./containers/CreateCommitmentContainer');
 const PermanentRegistrationContainer = () =>
   import('./containers/PermanentRegistrationContainer');
+const RegistrationInProgressContainer = () =>
+  import('./containers/RegistrationInProgressContainer');
 
 export default {
   path: 'dapps/manage-ens',
@@ -115,6 +117,12 @@ export default {
       path: 'permanent-registration',
       name: 'Register ENS By Duration',
       component: PermanentRegistrationContainer,
+      props: true
+    },
+    {
+      path: 'registration-in-progress',
+      name: 'ENS Registration in progress',
+      component: RegistrationInProgressContainer,
       props: true
     }
   ]
