@@ -12,65 +12,68 @@
       :mnemonic-done-modal-open="mnemonicDoneModalOpen"
     />
     <div class="wrap">
-      <div class="nav-tab-user-input-box">
-        <b-tabs>
-          <div class="progress-bar" />
-          <b-tab title="By Mnemonic Phrase" active>
-            <div class="title-popover">
-              <h3>{{ $t('createWallet.byMnemonicWriteDown') }}</h3>
+      <div class="contents">
+        <div class="tools">
+          <div class="value-switch noselect">
+            <div class="sliding-switch">
+              <label class="switch">
+                <input type="checkbox" />
+                <span
+                  class="slider round"
+                  @click="mnemonicValueBitSizeChange"
+                />
+              </label>
+              <div class="labels">
+                <span class="label-left white">12</span>
+                <span class="label-right">24</span>
+              </div>
             </div>
-            <div class="contents">
-              <div class="tools">
-                <div class="value-switch noselect">
-                  <div class="sliding-switch">
-                    <label class="switch">
-                      <input type="checkbox" />
-                      <span
-                        class="slider round"
-                        @click="mnemonicValueBitSizeChange"
-                      />
-                    </label>
-                    <div class="labels">
-                      <span class="label-left white">12</span>
-                      <span class="label-right">24</span>
-                    </div>
-                  </div>
-                  <span class="text__base link switch-label">{{
-                    $t('createWallet.byMnemonicValue')
-                  }}</span>
-                </div>
+            <span class="text__base link switch-label">{{
+              $t('createWallet.byMnemonicValue')
+            }}</span>
+          </div>
 
-                <div
-                  class="random-button color-green noselect"
-                  @click="mnemonicValueRefresh"
-                >
-                  <i class="fa fa-refresh" aria-hidden="true" />
-                  <span>{{ $t('createWallet.byMnemonicRandom') }}</span>
-                </div>
-              </div>
-              <div class="phrases">
-                <ul>
-                  <li v-for="(value, index) in mnemonicValues" :key="index">
-                    {{ index + 1 }}.<span>{{ value }}</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div class="user-input">
-              <div
-                class="next-button large-round-button-green-filled clickable"
-                @click="mnemonicVerificationModalOpen"
-              >
-                {{ $t('createWallet.byMnemonicAlreadyWritten') }}
-              </div>
-              <div @click="openPrintModal">
-                <img class="icon" src="~@/assets/images/icons/printer.svg" />
-              </div>
-            </div>
-            <input-footer />
-          </b-tab>
-        </b-tabs>
+          <div
+            class="random-button color-green noselect"
+            @click="mnemonicValueRefresh"
+          >
+            <i class="fa fa-refresh" aria-hidden="true" />
+            <span>{{ $t('createWallet.byMnemonicRandom') }}</span>
+          </div>
+        </div>
+        <div class="phrases">
+          <ul>
+            <li v-for="(value, index) in mnemonicValues" :key="index">
+              {{ index + 1 }}.<span>{{ value }}</span>
+            </li>
+          </ul>
+        </div>
       </div>
+
+      <div class="option-container-block">
+        <expending-option title="Password">
+          <div class="option-container">
+            <create-wallet-input
+              v-model="password"
+              :show-button="false"
+              :full-width="true"
+            />
+          </div>
+        </expending-option>
+      </div>
+
+      <div class="user-input">
+        <div
+          class="next-button large-round-button-green-filled clickable"
+          @click="mnemonicVerificationModalOpen"
+        >
+          {{ $t('createWallet.byMnemonicAlreadyWritten') }}
+        </div>
+        <div @click="openPrintModal">
+          <img class="icon" src="~@/assets/images/icons/printer.svg" />
+        </div>
+      </div>
+      <input-footer />
     </div>
   </div>
 </template>
@@ -80,6 +83,10 @@ import CreateWalletInputFooter from '@/layouts/CreateWalletLayout/components/Cre
 import FinishModal from './components/FinishModal';
 import PrintModal from './components/PrintModal';
 import VerificationModal from './components/VerificationModal';
+import PasswordInput from '@/components/PasswordInput';
+import ExpendingOption from '@/components/ExpendingOption';
+import CreateWalletInput from '../../components/CreateWalletInput';
+
 const bip39 = require('bip39');
 
 export default {
@@ -87,13 +94,19 @@ export default {
     'finish-modal': FinishModal,
     'verification-modal': VerificationModal,
     'print-modal': PrintModal,
-    'input-footer': CreateWalletInputFooter
+    'input-footer': CreateWalletInputFooter,
+    'password-input': PasswordInput,
+    'expending-option': ExpendingOption,
+    'create-wallet-input': CreateWalletInput
   },
   data() {
     return {
       verificationValues: [],
       mnemonicValues: [],
-      mnemonic24: false
+      mnemonic24: false,
+      passwordInput: {
+        title: ''
+      }
     };
   },
   mounted() {
