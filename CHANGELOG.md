@@ -20,6 +20,7 @@
 
 ### Feature
 
+- Add warning signs to Create wallet page and update mnemonic input [#1041](https://github.com/MyEtherWallet/MyEtherWallet/pull/1041)
 - DEXON network support [#977](https://github.com/MyEtherWallet/MyEtherWallet/pull/977)
 - Metadium network support [#928](https://github.com/MyEtherWallet/MyEtherWallet/pull/928)
 - Solidum network support [#957](https://github.com/MyEtherWallet/MyEtherWallet/pull/957)
