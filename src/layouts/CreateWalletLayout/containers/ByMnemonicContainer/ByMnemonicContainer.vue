@@ -51,13 +51,26 @@
       </div>
 
       <div class="option-container-block">
-        <expending-option title="Password">
+        <expending-option title="Password" button-text="Optional">
           <div class="option-container">
             <create-wallet-input
               v-model="password"
               :show-button="false"
               :full-width="true"
             />
+            <div class="password-warning">
+              <p>
+                {{ $t('createWallet.mnemonicPasswordWarning') }}
+              </p>
+              <div class="read">
+                > {{ $t('common.read') }}:
+                <a
+                  href="https://kb.myetherwallet.com/posts/security-and-privacy/mnemonic-phrase-password/"
+                  target="_blank"
+                  >Mnemonic Phrase: Should I Include a Password?</a
+                >
+              </div>
+            </div>
           </div>
         </expending-option>
       </div>
@@ -239,7 +252,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'ByMnemonicContainer-desktop.scss';
-@import 'ByMnemonicContainer-tablet.scss';
-@import 'ByMnemonicContainer-mobile.scss';
+@import 'ByMnemonicContainer.scss';
 </style>
