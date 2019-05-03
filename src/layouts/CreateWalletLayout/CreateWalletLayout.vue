@@ -8,7 +8,7 @@
       <div class="page-container">
         <div v-show="!byJson && !byMnemonic" class="nav-tab-user-input-box">
           <b-tabs class="x100">
-            <div v-if="showProgressBar" class="progress-bar" />
+            <div v-if="showProgressBar && false" class="progress-bar" />
             <b-tab
               class="mew-connect-block"
               title="MEWconnect"
@@ -23,7 +23,6 @@
                   </div>
                   <p>{{ $t('createWallet.mewConnectDesc') }}</p>
                 </div>
-
                 <div class="appstores">
                   <div class="icons">
                     <a
@@ -61,7 +60,6 @@
                   </div>
                 </div>
               </div>
-
               <div class="bottom-image">
                 <img src="@/assets/images/etc/phones.png" />
               </div>
@@ -80,7 +78,6 @@
                     <popover :popcontent="$t('popover.password')" />
                   </div>
                 </div>
-
                 <create-wallet-input
                   v-model="password"
                   :switcher="switcher"
@@ -106,16 +103,7 @@
                     <popover :popcontent="$t('popover.password')" />
                   </div>
                 </div>
-
-                <create-wallet-input
-                  v-model="password"
-                  :switcher="switcher"
-                  :param="'Mnemonic'"
-                />
-                <create-wallet-input-footer
-                  :combo="$t('createWallet.passMnem')"
-                  :desc="$t('createWallet.passMnemDesc')"
-                />
+                <by-mnemonic-container />
               </div>
             </b-tab>
           </b-tabs>
@@ -127,7 +115,6 @@
         <by-mnemonic-container v-if="!byJson && byMnemonic" />
       </div>
     </div>
-
     <by-json-page-footer />
   </div>
 </template>
