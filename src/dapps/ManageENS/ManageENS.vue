@@ -499,11 +499,11 @@ export default {
           )
           .send({ from: this.account.address, value: rentPrice })
           .once('transactionHash', () => {
-            //switch to a screen that says, registration in progress...
+            this.$router.push({ path: 'registration-in-progress' });
           })
           .once('receipt', () => {
-            //send the user to manage page
-            Toast.responseHandler('Successfully Registered!', Toast.SUCCESS);
+            this.getMoreInfo();
+            // Toast.responseHandler('Successfully Registered!', Toast.SUCCESS);
           });
       } catch (e) {
         this.loading = false;
@@ -641,7 +641,11 @@ export default {
       this.resolverAddress = resolverAddress;
       this.deedOwner = highestBidder;
       this.owner = owner;
-      this.$router.push({ path: 'manage-ens/owned' });
+      if (this.$route.fullPath === '/interface/dapps/manage-ens') {
+        this.$router.push({ path: 'manage-ens/owned' });
+      } else {
+        this.$router.push({ path: 'owned' });
+      }
       this.loading = false;
     },
     async createTransaction(type) {
