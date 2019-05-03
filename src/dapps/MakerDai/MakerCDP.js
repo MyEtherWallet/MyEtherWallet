@@ -53,57 +53,7 @@ export default class MakerCDP {
     if (toInit) this.init(this.cdpId);
   }
 
-  async init(cdpId = this.cdpId) {
-    this.txMgr = this.maker.service('transactionManager');
-    this.priceService = this.maker.service('price');
-    this.cdpService = await this.maker.service('cdp');
-    this.proxyService = await this.maker.service('proxy');
-    await this.updateValues(cdpId);
-    this._governanceFee = (await this.cdpService.getGovernanceFee(
-      this.cdpId,
-      MKR
-    )).toBigNumber();
-
-    this.ready = true;
-    return this;
-  }
-
-  async updateValues(cdpId = this.cdpId) {
-    this.cdp = await this.maker.getCdp(cdpId);
-    this.proxyAddress = await this.proxyService.currentProxy();
-    this.noProxy = this.proxyAddress === null;
-    const liqPrice = await this.cdp.getLiquidationPrice();
-    this._liqPrice = liqPrice.toBigNumber().toFixed(2);
-    this.isSafe = await this.cdp.isSafe();
-    this._debtValue = (await this.cdp.getDebtValue()).toBigNumber();
-    this._collatRatio = await this.cdp.getCollateralizationRatio();
-    this._ethCollateral = (await this.cdp.getCollateralValue()).toBigNumber();
-    this._pethCollateral = (await this.cdp.getCollateralValue(
-      Maker.PETH
-    )).toBigNumber();
-    this._usdCollateral = (await this.cdp.getCollateralValue(
-      Maker.USD
-    )).toBigNumber();
-  }
-
-  async update() {
-    if (this.migrated) {
-      const currentProxy = await this.proxyService.currentProxy();
-      if (currentProxy) {
-        this.migrated = false;
-        await this.cdpService.give(this.cdpId, this.proxyAddress);
-      }
-    }
-    if (this.needsUpdate) {
-      this.opening = false;
-      this.needsUpdate = false;
-      await this.updateValues(this.cdpId);
-      this.doUpdate++;
-      return this;
-    }
-    return this;
-  }
-
+  // Getters
   get liquidationPenalty() {
     return this._liquidationPenalty;
   }
@@ -209,15 +159,60 @@ export default class MakerCDP {
     return toBigNumber(0);
   }
 
-  toNumber(val) {
-    if (BigNumber.isBigNumber(val)) {
-      return val.toNumber();
-    }
-    return toBigNumber(val).toNumber();
+  get needToFinishMigrating() {
+    return this.proxyAddress && this.noProxy;
   }
 
-  atRisk() {
-    return !!this._collatRatio.lte(2);
+  // Methods
+  async init(cdpId = this.cdpId) {
+    this.txMgr = this.maker.service('transactionManager');
+    this.priceService = this.maker.service('price');
+    this.cdpService = await this.maker.service('cdp');
+    this.proxyService = await this.maker.service('proxy');
+    await this.updateValues(cdpId);
+    this._governanceFee = (await this.cdpService.getGovernanceFee(
+      this.cdpId,
+      MKR
+    )).toBigNumber();
+
+    this.ready = true;
+    return this;
+  }
+
+  async updateValues(cdpId = this.cdpId) {
+    this.cdp = await this.maker.getCdp(cdpId);
+    this.proxyAddress = await this.proxyService.currentProxy();
+    this.noProxy = this.proxyAddress === null;
+    const liqPrice = await this.cdp.getLiquidationPrice();
+    this._liqPrice = liqPrice.toBigNumber().toFixed(2);
+    this.isSafe = await this.cdp.isSafe();
+    this._debtValue = (await this.cdp.getDebtValue()).toBigNumber();
+    this._collatRatio = await this.cdp.getCollateralizationRatio();
+    this._ethCollateral = (await this.cdp.getCollateralValue()).toBigNumber();
+    this._pethCollateral = (await this.cdp.getCollateralValue(
+      Maker.PETH
+    )).toBigNumber();
+    this._usdCollateral = (await this.cdp.getCollateralValue(
+      Maker.USD
+    )).toBigNumber();
+  }
+
+  async update() {
+    if (this.migrated) {
+      const currentProxy = await this.proxyService.currentProxy();
+      if (currentProxy) {
+        this.migrated = false;
+        await this.cdpService.give(this.cdpId, this.proxyAddress);
+      }
+    }
+    if (this.needsUpdate) {
+      this.opening = false;
+      this.needsUpdate = false;
+      await this.updateValues(this.cdpId);
+      this.doUpdate++;
+      return this;
+    }
+    return this;
   }
 
   async getProxy() {
@@ -236,16 +231,11 @@ export default class MakerCDP {
     if (!currentProxy) {
       this.needsUpdate = true;
       await this.proxyService.build();
-      // eslint-disable-next-line
       this.proxyAddress = await this.getProxy();
       return this.proxyAddress;
     }
     this.proxyAddress = await this.getProxy();
     return this.proxyAddress;
-  }
-
-  get needToFinishMigrating() {
-    return this.proxyAddress && this.noProxy;
   }
 
   async migrateCdpComplete() {
@@ -411,6 +401,7 @@ export default class MakerCDP {
     return this.cdpService.enoughMkrToWipe(amount, DAI.wei);
   }
 
+  // Calculations
   toUSD(eth) {
     if (eth === undefined || eth === null) return toBigNumber(0);
     return this._ethPrice.times(toBigNumber(eth));
@@ -444,12 +435,6 @@ export default class MakerCDP {
 
   calcMinCollatRatio(priceFloor) {
     return bnOver(this._ethPrice, this._liquidationRatio, priceFloor);
-  }
-
-  calcDrawAmt(principal) {
-    return Math.floor(
-      bnOver(principal, this._ethPrice, this._liquidationRatio)
-    );
   }
 
   calcDaiDraw(
@@ -509,6 +494,18 @@ export default class MakerCDP {
 
   calcLiquidationPriceEthChg(ethQty) {
     return toBigNumber(this.calcLiquidationPrice(ethQty, this._debtValue));
+  }
+
+  atRisk() {
+    return !!this._collatRatio.lte(2);
+  }
+
+  // Helpers
+  static toNumber(val) {
+    if (BigNumber.isBigNumber(val)) {
+      return val.toNumber();
+    }
+    return toBigNumber(val).toNumber();
   }
 
   static displayPercentValue(raw) {

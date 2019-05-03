@@ -14,7 +14,7 @@
     />
     <loading-overlay
       v-if="loading"
-      loadingmessage="$t('dappsMaker.creatingMessage')"
+      :loadingmessage="$t('dappsMaker.creatingMessage')"
     />
     <div class="manage-container">
       <p class="top-title">

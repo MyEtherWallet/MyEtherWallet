@@ -19,11 +19,6 @@
     </interface-container-title>
 
     <div v-show="makerActive" class="buttons-container">
-      <!--      <div v-if="showManage">-->
-      <!--        <div class="dapps-button" @click="goToManage">-->
-      <!--          <h4>List All</h4>-->
-      <!--        </div>-->
-      <!--      </div>-->
       <div v-if="!hasProxy && !onCreate">
         <div class="dapps-button" @click="buildProxy">
           <h4>Create Proxy</h4>
@@ -362,8 +357,6 @@ export default {
     },
     addCdp() {
       this.creatingCdp = true;
-      // this.makerManager.addOpenedCdp(vals.maker, vals.id);
-      // this.availableCdps = this.makerManager.availableCdps;
     },
     removeCdp(vals) {
       try {
