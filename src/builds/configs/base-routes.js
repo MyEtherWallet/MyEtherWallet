@@ -28,6 +28,7 @@ const SignMessageContainer = () =>
 const VerifyMessageContainer = () =>
   import('@/layouts/InterfaceLayout/containers/VerifyMessageContainer');
 const HardwaresLayout = () => import('@/layouts/HardwaresLayout');
+const DevContainer = () => import('@/layouts/InterfaceLayout/containers/DevContainer');
 
 import dapps from '@/dapps/routes';
 
@@ -146,6 +147,11 @@ const router = [
         path: 'verify-message',
         name: 'Verify Message',
         component: VerifyMessageContainer
+      },
+      {
+        path: 'dev',
+        name: 'Dev',
+        component: DevContainer
       }
     ]
   }
