@@ -5,6 +5,7 @@
   >
     <div class="title-bar-container">
       <div class="input-title">{{ title }}</div>
+      <div v-if="buttonText !== ''" class="button-text">{{ buttonText }}</div>
       <!-- Rounded switch -->
       <div class="switch sliding-switch-white">
         <label class="switch">
@@ -24,6 +25,10 @@
 export default {
   props: {
     title: {
+      type: String,
+      default: ''
+    },
+    buttonText: {
       type: String,
       default: ''
     },
