@@ -8,7 +8,9 @@ git:
   depth: 1
 before_cache:
   - sudo rm -rf node_modules/.cache
-install: docker build -t mew-build-container .
+install:
+  - docker build -t mew-build-container .
+  - travis_wait docker run $ci_env -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm install"
 env:
   global:
     - ci_env=`bash <(curl -s https://codecov.io/env)`
@@ -63,8 +65,7 @@ jobs:
           --content-type text/html --acl public-read
     - stage: add to mewbuilds
       before_script:
-        - travis_wait docker run -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm install &&
-          npm run build:hash"
+        - docker run -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:hash"
         - pip install --user awscli
         - ssh-keyscan -H $IPFS_NODE >> $HOME/.ssh/known_hosts
       script:
