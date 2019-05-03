@@ -6,6 +6,7 @@
     class="bootstrap-modal modal-metamask nopadding"
     centered
     @shown="focusInput"
+    @hide="clearInputs"
   >
     <div class="warning">
       <warning-message />
@@ -106,6 +107,9 @@ export default {
     }
   },
   methods: {
+    clearInputs() {
+      this.mnemonicPhrase = new Array(this.mnemonicSize).fill('');
+    },
     mnemonicValueBitSizeChange() {
       this.mnemonic24 = !this.mnemonic24;
       this.mnemonic24 ? (this.mnemonicSize = 24) : (this.mnemonicSize = 12);

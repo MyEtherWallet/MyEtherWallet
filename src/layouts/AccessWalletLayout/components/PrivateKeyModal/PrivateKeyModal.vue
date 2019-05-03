@@ -6,6 +6,7 @@
     class="bootstrap-modal nopadding modal-software"
     centered
     @shown="focusInput"
+    @hide="privateKey = ''"
   >
     <div class="warning">
       <warning-message />
@@ -70,6 +71,7 @@ export default {
       return !isHexString('0x' + _priv, 32);
     }
   },
+  mounted() {},
   methods: {
     unlockWallet() {
       this.spinner = true;
