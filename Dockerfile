@@ -1,4 +1,4 @@
-FROM node:8.14.0-alpine
+FROM node:8.16.0-alpine
 
 ENV NODE_OPTIONS --max-old-space-size=4096
 RUN npm install npm@6.5 -g

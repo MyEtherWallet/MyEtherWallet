@@ -10,7 +10,7 @@ before_cache:
   - sudo rm -rf node_modules/.cache
 install:
   - docker build -t mew-build-container .
-  - travis_wait docker run $ci_env -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm install"
+  - docker run --rm -ti $ci_env -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm install"
 env:
   global:
     - ci_env=`bash <(curl -s https://codecov.io/env)`
@@ -43,16 +43,13 @@ jobs:
   include:
     - stage: run on pull requests
       script:
-        - travis_wait docker run $ci_env -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm install
-          && npm run lint && npm run codecov && npm run build:history"
+        - docker run $ci_env -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run lint && npm run codecov && npm run build:history"
     - stage: add to codecov
       script:
-        - travis_wait docker run $ci_env -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm install
-          && npm run codecov"
+        - docker run $ci_env -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run codecov"
     - stage: add to mewbuilds develop
       before_script:
-        - travis_wait docker run -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm install &&
-          npm run build:history"
+        - docker run -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:history"
         - pip install --user awscli
       script:
         - aws s3 sync dist/ s3://mewbuilds/develop/ --delete --cache-control max-age=172800,public
@@ -96,8 +93,7 @@ jobs:
     - stage: create release
       script: skip
       before_deploy:
-        - travis_wait docker run -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm install &&
-          npm run build:offline"
+        - docker run -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:offline"
         - openssl aes-256-cbc -K $encrypted_2bd32a0810e2_key -iv $encrypted_2bd32a0810e2_iv
           -in ssh-keys.tar.enc -out ssh-keys.tar -d
         - tar xvf ssh-keys.tar
@@ -112,8 +108,7 @@ jobs:
     - stage: deploy to production
       script: skip
       before_deploy:
-        - travis_wait docker run -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm install &&
-          npm run build:hash"
+        - docker run -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:hash"
       deploy:
         provider: pages
         skip-cleanup: true
@@ -127,8 +122,7 @@ jobs:
     - stage: deploy to production history
       script: skip
       before_deploy:
-        - travis_wait docker run -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm install &&
-          npm run build:history"
+        - docker run -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:history"
         - pip install --user awscli
         - aws s3 sync dist/ s3://mewbuilds/staging/ --delete --cache-control max-age=172800,public
           --acl public-read
