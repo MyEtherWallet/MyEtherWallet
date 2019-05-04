@@ -81,7 +81,7 @@
         >
           <!-- Derivation Path Drop down -->
           <div
-            v-show="hardwareWallet.identifier !== 'ledger'"
+            v-show="hardwareWallet.identifier !== ledgerType"
             class="content-container-1"
           >
             <div class="hd-derivation">
@@ -253,6 +253,7 @@ import { Misc, Toast } from '@/helpers';
 import web3utils from 'web3-utils';
 import BigNumber from 'bignumber.js';
 import Blockie from '@/components/Blockie';
+import { LEDGER as LEDGER_TYPE } from '@/wallets/bip44/walletTypes';
 
 const MAX_ADDRESSES = 5;
 export default {
@@ -281,7 +282,8 @@ export default {
       currentWallet: null,
       customPath: { label: '', dpath: '' },
       showCollapse1: false,
-      showCollapse2: true
+      showCollapse2: true,
+      ledgerType: LEDGER_TYPE
     };
   },
   computed: {
