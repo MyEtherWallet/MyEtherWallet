@@ -65,6 +65,7 @@
               :address="address"
               :print="print"
               :switch-addr="switchAddress"
+              :display-addr="wallet.displayAddress"
               :qrcode="openAddressQrcode"
             />
           </div>
