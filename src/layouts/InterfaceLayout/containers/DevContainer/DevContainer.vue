@@ -1,6 +1,11 @@
 <template>
   <div class="sign-message-container">
-    <swap-widget ref="swapWidget"></swap-widget>
+    <swap-widget
+      ref="swapWidget"
+      :supplied-from="suppliedFrom"
+      :supplied-to="suppliedTo"
+      :supplied-to-amount="suppliedToAmount"
+    ></swap-widget>
     <button @click="openSwapWidget">OPEN</button>
   </div>
 </template>
@@ -9,14 +14,22 @@
 import { mapGetters } from 'vuex';
 import SwapWidget from '@/layouts/InterfaceLayout/containers/SwapContainer/components/SwapWidget';
 
-
 export default {
   name: 'DevContainer',
   components: {
-    'swap-widget': SwapWidget,
+    'swap-widget': SwapWidget
   },
   data() {
     return {
+      suppliedFrom: {
+        name: 'Ethereum',
+        symbol: 'ETH'
+      },
+      suppliedTo: {
+        name: 'AdEx',
+        symbol: 'ADX'
+      },
+      suppliedToAmount: 5,
       message: '',
       signature: ''
     };

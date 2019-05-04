@@ -28,7 +28,8 @@ const SignMessageContainer = () =>
 const VerifyMessageContainer = () =>
   import('@/layouts/InterfaceLayout/containers/VerifyMessageContainer');
 const HardwaresLayout = () => import('@/layouts/HardwaresLayout');
-const DevContainer = () => import('@/layouts/InterfaceLayout/containers/DevContainer');
+const DevContainer = () =>
+  import('@/layouts/InterfaceLayout/containers/DevContainer');
 
 import dapps from '@/dapps/routes';
 

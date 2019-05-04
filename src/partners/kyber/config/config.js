@@ -9,7 +9,7 @@ const ROP_ENDPOINT = 'https://ropsten-api.kyber.network';
 
 const kyberTokenList = {
   ETH: `${ETH_ENDPINT}/currencies`,
-  ROP: `${ETH_ENDPINT}/currencies`
+  ROP: `${ROP_ENDPOINT}/currencies`
 };
 
 const kyberTokenInfoList = {
@@ -42,6 +42,11 @@ const defaultValues = {
 
 const kyberMethods = {
   ETH: {
+    currencies: 'getSupportedTokens',
+    rate: 'getCryptoRates',
+    gasLimits: 'getGasLimits'
+  },
+  ROP: {
     currencies: 'getSupportedTokens',
     rate: 'getCryptoRates',
     gasLimits: 'getGasLimits'
