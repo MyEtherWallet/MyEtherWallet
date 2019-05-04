@@ -1,13 +1,13 @@
 language: minimal
-sudo: required
+#sudo: required
 dist: xenial
-cache:
-  directories:
-    - node_modules
-git:
-  depth: 1
-before_cache:
-  - sudo rm -rf node_modules/.cache
+#cache:
+#  directories:
+#    - node_modules
+#git:
+#  depth: 1
+#before_cache:
+#  - sudo rm -rf node_modules/.cache
 install:
   - docker --version
   - docker build -t mew-build-container .
@@ -40,7 +40,7 @@ stages:
   - name: deploy to production history
     if: branch =~ /^v.*$/
 jobs:
-  fast_finish: true
+#  fast_finish: true
   include:
     - stage: run on pull requests
       script:
