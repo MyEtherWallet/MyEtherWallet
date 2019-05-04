@@ -12,6 +12,7 @@ before_cache:
   - sudo rm -rf node_modules/.cache
 install:
   - node package-audit.js
+  - npm install npm@6.9 -g
   - npm install
 env:
   global:
