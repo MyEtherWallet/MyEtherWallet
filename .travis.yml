@@ -1,4 +1,15 @@
 language: node_js
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - libcairo2-dev
+      - libjpeg8-dev
+      - libpango1.0-dev
+      - libgif-dev
+      - librsvg2-dev
+      - g++-4.9
 node_js:
   - '8.16.0'
 sudo: required
@@ -16,6 +27,7 @@ install:
   - npm install
 env:
   global:
+    - CXX=g++-4.9
     - ci_env=`bash <(curl -s https://codecov.io/env)`
     - secure: S8/CyHiA4M/omHrfvUXmZeLun43yGMg3qYsSzI8HI1Wr+G8xrz1qA7LgehEGx40iTBge1NSzfr7ZyKhGGYJ6dAIGxxk7+nyoIrdyUqrkWgNgYHsZdJLnYTZhvrCSEwURW4WMCFR8LJVO/84ltvS9+hPvwtGPPuFn9BDXf9O9ril0guxkm1WijSdmpFFyMrUBZDIDw9lc5D9QTRw1gpkXYzboMvPE6BO+HQoGxid2NFqTYw9dOyNSFXfbD2ni7Z+hZRxU0YO66TndFtvXDHJvvhnMEdfHrG3xunq3Zml+PVIaCI50dNQUo88ajiZiMddCkf6b4UROQGtMmbE5t7FryuSRbWbRN/1oMcWa9h9THdICOg5R97CfvtE/debDi57hBICNpq1SKefQXA8NqKEQsl2tA/x/wwdSBANeKrQLBd85D98syv0H1EEsz4TIO1/tGAqktdxH4HxjgYt9txCDNlT4eiWPxA84e/MDYQsxj3MeP3WPg4CDUEYSkQiFEnlhirQraufjFp4B9rzMUZ73jH8F1Jp83/AirU/9CxgdfAIJRADT6cTkC0zjhganlI4BhFR90OXahgbKXcNoVGfIqcI/DPtZ8cOQxO4dgOepNlYK180kNML2eGCcyNwSv4UG5NLHSul3K9cQnFKqVFyHfAGEYPVypjZt6Rp5Kp+Mh1Y=
     - secure: dWzuQFnoDWxioipSVCH3jSV3PIYXRy/YyLoLJ9/tr3Omqh77XbGR1CqrjdBt7lzabOgrOryXuiNxNpBezK/0vXAuFW5U83yzrdVfqLdaOqaay5PE/zSZtp7C8JMq6iQxSvjjRUyfSZowPfVTnfXr2Che9GvRWMMWqCGUQ0fCLv2kFEC9UQaFVFnS29UGRunN9Y+C5F45TEuaGnYWQ8yw+vQx0XWQBUwfv1l3C/W8v3Z7m1q1IUQTdS7ACPevExkRkz0XaTmBZyCEKAyuCLT4jGMtnH12p6292YSo9gbhcivlQzCcdRMqjaMjy+5L5SkFD0KEHPFQxp/3xcZ3iFNt2MFE3N7NpnYTBKBwi8B/FBy3tLUAZDYGDOMMZu8Oej+wrhEeUS29LG99vgWtiSqc4mhlK5zMikJ4SuLF+C8EtcqHhZf8xtH1uislZJGNoOk/Y66TCbXLfLVMbSzDi8wUei8imH8wrfnmacYylxz4Ch+8+PLa1Z4XgxyM8fogDJJSEeL6JfmdOG+O/j4pmGEo1ALKMwHilIUGL+JLnp0frVCl2I67yeXYeNdIwu/bDI3cGs3sOspNVBeTi1knBMpJ7Ed1AKTP/Ys0Ro/kGXqs/GixLknH8c5tENmUUCB2Ohj6zdExPqTxlB0ssPxuYev0LaxK1+MkIBvFOZrJURWR8cg=
