@@ -6,6 +6,6 @@ RUN node -v && npm -v
 COPY package*.json ./
 COPY package-audit.js ./
 RUN  node package-audit.js
-RUN rm package-audit.js
-RUN rm -rf package*.json*
+RUN npm install
+RUN rm -rf package*.js*
 WORKDIR /home
