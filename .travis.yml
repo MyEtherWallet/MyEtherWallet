@@ -1,6 +1,6 @@
 language: minimal
 sudo: required
-dist: xenial
+dist: trusty
 cache:
   directories:
     - node_modules
