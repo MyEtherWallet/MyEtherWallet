@@ -401,6 +401,7 @@ export default {
               .state(this.labelHash)
               .call();
             if (legacyState === 2) {
+              this.loading = false;
               this.$router.push({ path: 'manage-ens/transfer-registrar' });
             } else {
               const isAvailable = await this.registrarControllerContract.methods
