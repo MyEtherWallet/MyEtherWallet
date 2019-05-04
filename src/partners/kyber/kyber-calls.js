@@ -51,7 +51,7 @@ const getGasLimits = async network => {
     if (kyberMethods[network]) {
       const results = await post(
         buildPath(),
-        utils.buildPayload(kyberMethods[network].gasLimits, [network])
+        utils.buildPayload(kyberMethods[network].gasLimits, [])
       );
 
       if (results.error) {

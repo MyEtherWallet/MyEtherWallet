@@ -164,7 +164,9 @@ export default class Kyber {
   async retrieveGasLimits(network = this.network) {
     try {
       const gasLimitList = await kyberCalls.getGasLimits(network);
-      this.GAS_LIMITS = gasLimitList;
+      if (Array.isArray(gasLimitList)) {
+        this.GAS_LIMITS = gasLimitList;
+      }
     } catch (e) {
       utils.handleOrThrow(e);
       errorLogger(e);
@@ -182,11 +184,6 @@ export default class Kyber {
   }
 
   getKyberContractObject() {
-    console.log(
-      'getKyberContractObject',
-      this.kyberNetworkABI,
-      this.kyberNetworkAddress
-    ); // todo remove dev item
     return new this.web3.eth.Contract(
       this.kyberNetworkABI,
       this.kyberNetworkAddress
@@ -221,12 +218,6 @@ export default class Kyber {
   }
 
   async getExpectedRate(fromToken, toToken, fromValueWei) {
-    console.log(fromToken, toToken, fromValueWei); // todo remove dev item
-    console.log(
-      this.getTokenAddress(fromToken),
-      this.getTokenAddress(toToken),
-      fromValueWei
-    ); // todo remove dev item
     const rates = await this.callKyberContract(
       'getExpectedRate',
       this.getTokenAddress(fromToken),
@@ -285,7 +276,6 @@ export default class Kyber {
   }
 
   async callKyberContract(method, ...parameters) {
-    console.log('callKyberContract', this.getKyberContractObject().methods); // todo remove dev item
     try {
       return await this.getKyberContractObject()
         .methods[method](...parameters)

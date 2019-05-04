@@ -25,9 +25,9 @@
             @swapStarted="resetSwapState"
           />
 
-          <div class="title-block">
-            <interface-container-title :title="$t('common.swap')" />
-          </div>
+          <!--          <div class="title-block">-->
+          <!--            <interface-container-title :title="$t('common.swap')" />-->
+          <!--          </div>-->
 
           <div class="form-content-container">
             <div class="send-form">
@@ -47,6 +47,7 @@
                     :currencies="fromArray"
                     :override-currency="overrideFrom"
                     :from-source="true"
+                    :selectable="!isWidget"
                     page="SwapContainerFrom"
                     @selectedCurrency="setFromCurrency"
                   />
@@ -80,6 +81,7 @@
                     :currencies="toArray"
                     :override-currency="overrideTo"
                     :from-source="false"
+                    :selectable="!isWidget"
                     page="SwapContainerTo"
                     @selectedCurrency="setToCurrency"
                   />
@@ -277,6 +279,32 @@ export default {
       default: function() {
         return [];
       }
+    },
+    suppliedFrom: {
+      type: Object,
+      default: function() {
+        return {
+          symbol: 'ETH',
+          name: 'Ethereum'
+        };
+      }
+    },
+    suppliedTo: {
+      type: Object,
+      default: function() {
+        return {
+          symbol: 'BTC',
+          name: 'Bitcoin'
+        };
+      }
+    },
+    suppliedToAmount: {
+      type: Number,
+      default: 0
+    },
+    isWidget: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
@@ -338,7 +366,8 @@ export default {
       bityExitToFiat: false,
       exitToFiatCallback: () => {},
       debounceUpdateEstimate: {},
-      debounceDoThing: {}
+      debounceDoThing: {},
+      widgetOpen: false
     };
   },
   computed: {
@@ -549,6 +578,19 @@ export default {
         this.fromValue,
         'from'
       );
+      if (this.isWidget && this.widgetOpen) {
+        // console.log('re-update rates'); // todo remove dev item
+        this.$once('swapRatesUpdated', () => {
+          if (this.suppliedToAmount > 0) {
+            this.toValue = this.suppliedToAmount;
+            this.fromValue = this.swap.calculateFromValue(
+              this.toValue,
+              this.bestRate,
+              this.fromCurrency
+            );
+          }
+        });
+      }
     },
     network(newVal) {
       this.providerData = [];
@@ -573,6 +615,25 @@ export default {
       this.updateRateEstimate,
       2000
     );
+
+    this.$refs.modal.$on('shown', () => {
+      this.widgetOpen = true;
+      // console.log('MODAL SHOWN'); // todo remove dev item
+      if (this.isWidget) {
+        this.fromCurrency = this.suppliedFrom.symbol;
+        this.toCurrency = this.suppliedTo.symbol;
+        this.overrideFrom = this.suppliedFrom;
+        this.overrideTo = this.suppliedTo;
+        if (this.suppliedToAmount > 0) {
+          this.toValue = this.suppliedToAmount;
+          this.amountChanged('to');
+        }
+      }
+    });
+
+    this.$refs.modal.$on('hide', () => {
+      this.widgetOpen = false;
+    });
   },
   methods: {
     reset() {
@@ -590,19 +651,21 @@ export default {
       this.bityExitToFiat = false;
     },
     flipCurrencies() {
-      this.switchCurrencyOrder = true;
-      const origTo = this.toValue;
-      this.fromCurrency = this.currencyDetails.to.symbol;
-      this.toCurrency = this.currencyDetails.from.symbol;
-      this.overrideFrom = this.currencyDetails.to;
-      this.overrideTo = this.currencyDetails.from;
-      this.updateRateEstimate(
-        this.fromCurrency,
-        this.toCurrency,
-        origTo,
-        'from'
-      );
-      this.switchCurrencyOrder = false;
+      if (!this.isWidget) {
+        this.switchCurrencyOrder = true;
+        const origTo = this.toValue;
+        this.fromCurrency = this.currencyDetails.to.symbol;
+        this.toCurrency = this.currencyDetails.from.symbol;
+        this.overrideFrom = this.currencyDetails.to;
+        this.overrideTo = this.currencyDetails.from;
+        this.updateRateEstimate(
+          this.fromCurrency,
+          this.toCurrency,
+          origTo,
+          'from'
+        );
+        this.switchCurrencyOrder = false;
+      }
     },
     setSelectedProvider(provider) {
       this.selectedProvider = this.providerList.find(entry => {
@@ -817,6 +880,7 @@ export default {
             }),
             fromValue
           );
+          this.$emit('swapRatesUpdated');
           this.updateEstimate(to);
         }
       }
