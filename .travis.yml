@@ -9,8 +9,9 @@ git:
 before_cache:
   - sudo rm -rf node_modules/.cache
 install:
+  - docker --version
   - docker build -t mew-build-container .
-  - docker run --rm -ti $ci_env -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm install"
+  - docker run --rm -it -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm install"
 env:
   global:
     - ci_env=`bash <(curl -s https://codecov.io/env)`
