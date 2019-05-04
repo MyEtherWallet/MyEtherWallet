@@ -1,10 +1,14 @@
 <template lang="html">
   <div class="transfer-registrar-container">
     <div class="transfer-registrar-content">
-      <h3>We found the {{ fullDomainName }} in a different Registrar!</h3>
-      <p>Do you want to transfer {{ fullDomainName }} to the new registrar?</p>
+      <h3>{{ fullDomainName }} is still in the old registrar!</h3>
+      <p v-show="isOwner">
+        Since you are are the owner of {{ fullDomainName }} you can transfer the
+        name to the new registrar using transfer button
+      </p>
       <div class="transfer-registrar-button">
         <button
+          v-show="isOwner"
           :class="[
             'large-round-button-green-filled',
             loading ? 'disabled' : ''
@@ -27,6 +31,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 
 export default {
@@ -38,7 +43,7 @@ export default {
       type: String,
       default: ''
     },
-    dnsOwner: {
+    owner: {
       type: String,
       default: ''
     },
@@ -56,8 +61,14 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      account: 'account'
+    }),
     fullDomainName() {
       return `${this.hostName}.${this.tld}`;
+    },
+    isOwner() {
+      return this.account.address.toLowerCase() === this.owner.toLowerCase();
     }
   },
   mounted() {

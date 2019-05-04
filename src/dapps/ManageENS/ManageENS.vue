@@ -400,8 +400,9 @@ export default {
             const legacyState = await this.legacyRegistrar.methods
               .state(this.labelHash)
               .call();
-            if (legacyState === 2) {
+            if (legacyState === '2') {
               this.loading = false;
+              this.owner = await this.ens.owner(this.parsedDomainName);
               this.$router.push({ path: 'manage-ens/transfer-registrar' });
             } else {
               const isAvailable = await this.registrarControllerContract.methods
@@ -504,7 +505,7 @@ export default {
           })
           .once('receipt', () => {
             this.getMoreInfo();
-            // Toast.responseHandler('Successfully Registered!', Toast.SUCCESS);
+            Toast.responseHandler('Successfully Registered!', Toast.SUCCESS);
           });
       } catch (e) {
         this.loading = false;
@@ -520,8 +521,9 @@ export default {
         this.legacyRegistrar.methods
           .transferRegistrars(this.labelHash)
           .send({ from: this.account.address })
-          .once('transactionHash', () => {
-            Toast.responseHandler('Transfer Success!', Toast.SUCCESS);
+          .once('receipt', () => {
+            this.getMoreInfo();
+            Toast.responseHandler('Successfully Transferred!', Toast.SUCCESS);
           });
       } catch (e) {
         this.loading = false;

@@ -21,7 +21,7 @@ const fetchTokens = async () => {
           .then(res => res.json())
           .catch(err => console.log(err));
         if (tokensCollection !== undefined) {
-          console.log('writing ' + tokenFile.name);
+          console.log('Writing tokens for the network: ' + tokenFile.name);
           fs.writeFileSync(
             `${configs.TOKENS_PATH}/tokens-${tokenFile.name}.json`,
             JSON.stringify(tokensCollection)
@@ -78,7 +78,7 @@ const fetchContracts = async () => {
           .then(res => res.json())
           .catch(err => console.log(err));
         if (contractsCollection !== undefined) {
-          console.log('writing ' + contractFile.name);
+          console.log('Writing contract for the network: ' + contractFile.name);
           fs.writeFileSync(
             `${configs.CONTRACTS_PATH}/contract-abi-${contractFile.name}.json`,
             JSON.stringify(contractsCollection)
