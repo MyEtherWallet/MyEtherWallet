@@ -68,6 +68,12 @@ class TrezorWallet {
       if (!result.success) throw new Error(result.payload.error);
       return getBufferFromHex(result.payload.signature);
     };
+    const displayAddress = async () => {
+      await Trezor.ethereumGetAddress({
+        path: this.basePath + '/' + idx,
+        showOnTrezor: true
+      });
+    };
     return new HDWalletInterface(
       this.basePath + '/' + idx,
       derivedKey.publicKey,
@@ -75,7 +81,8 @@ class TrezorWallet {
       this.identifier,
       errorHandler,
       txSigner,
-      msgSigner
+      msgSigner,
+      displayAddress
     );
   }
   getCurrentPath() {

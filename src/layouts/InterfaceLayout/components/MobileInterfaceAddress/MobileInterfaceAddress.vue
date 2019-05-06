@@ -11,20 +11,15 @@
             class="blockie-image"
           />
         </div>
-        <div class="address">{{ account.address }}</div>
+        <div class="address">{{ address }}</div>
         <input
           ref="copyAddress"
-          :value="account.address"
+          :value="address"
           class="hidden-input"
           autocomplete="off"
         />
         <div class="address-end">
-          {{
-            account.address.substring(
-              account.address.length - 4,
-              account.address.length
-            )
-          }}
+          {{ address.substring(address.length - 4, address.length) }}
         </div>
         <div class="buttons-container">
           <button @click="openQrcode">

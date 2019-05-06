@@ -29,7 +29,7 @@
     <div class="owner-options">
       <button
         v-if="
-          deedOwner === account.address &&
+          deedOwner.toLowerCase() === account.address.toLowerCase() &&
             owner === '0x0000000000000000000000000000000000000000'
         "
         class="finalize-button"
