@@ -15,7 +15,7 @@ export default {
   ens: {
     registry: '0x314159265dd8dbb310642f98f50c066173c1259b',
     registrarTLD: 'eth',
-    registrarType: 'auction',
+    registrarType: 'permanent',
     supportedTld: ETH
   },
   icon: eth,

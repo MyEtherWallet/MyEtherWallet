@@ -84,5 +84,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'DNSMissingTXT.scss';
+@import 'DNSMissingTXTContainer.scss';
 </style>

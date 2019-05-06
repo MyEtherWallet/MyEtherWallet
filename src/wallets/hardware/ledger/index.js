@@ -94,6 +94,9 @@ class ledgerWallet {
         getBufferFromHex(vHex)
       ]);
     };
+    const displayAddress = async () => {
+      await this.ledger.getAddress(accountPath, true, false);
+    };
     return new HDWalletInterface(
       accountPath,
       derivedKey.publicKey,
@@ -101,7 +104,8 @@ class ledgerWallet {
       this.identifier,
       errorHandler,
       txSigner,
-      msgSigner
+      msgSigner,
+      displayAddress
     );
   }
   getCurrentPath() {
