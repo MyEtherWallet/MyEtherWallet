@@ -92,7 +92,7 @@
             />
           </div>
         </div>
-        <div v-show="network.type.name === 'ETH'" class="tx-fee">
+        <div class="tx-fee">
           <div class="title">
             <h4>
               {{ $t('common.txFee') }}
@@ -106,7 +106,9 @@
               {{ gasPrice }} Gwei
               <!--(Economic)-->
             </div>
-            <div class="usd">Cost {{ txFeeEth }} ETH = ${{ convert }}</div>
+            <div v-show="network.type.name === 'ETH'" class="usd">
+              Cost {{ txFeeEth }} ETH = ${{ convert }}
+            </div>
           </div>
         </div>
       </div>
