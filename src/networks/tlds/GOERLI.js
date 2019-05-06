@@ -16,6 +16,7 @@ export default [
   'accountant',
   'accountants',
   'aco',
+  'eth',
   'actor',
   'ad',
   'adac',
