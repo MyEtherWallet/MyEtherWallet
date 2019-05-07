@@ -5,6 +5,7 @@
       :supplied-from="suppliedFrom"
       :supplied-to="suppliedTo"
       :supplied-to-amount="suppliedToAmount"
+      :dest-address="destAddress"
     ></swap-widget>
     <button @click="openSwapWidget">OPEN</button>
   </div>
@@ -30,6 +31,7 @@ export default {
         symbol: 'ADX'
       },
       suppliedToAmount: 5,
+      destAddress: '0x7676E10eefc7311970A12387518442136ea14D81',
       message: '',
       signature: ''
     };
