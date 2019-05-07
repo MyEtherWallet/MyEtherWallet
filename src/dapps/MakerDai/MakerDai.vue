@@ -256,7 +256,7 @@ export default {
           statusTimerDelay: 10000,
           pollingInterval: 10000000000
         },
-        log: true
+        // log: true
       });
 
       this.makerManager = new MakerManager({
