@@ -7,6 +7,13 @@
       class="bootstrap-modal nopadding"
       hide-footer
     >
+      <swap-widget
+        ref="swapWidget"
+        :supplied-from="suppliedFrom"
+        :supplied-to="suppliedTo"
+        :supplied-to-amount="suppliedToAmount"
+        :dest-address="account.address"
+      ></swap-widget>
       <div class="contents">
         <div v-if="!enoughMkr" class="message-container">
           {{ $t('dappsMaker.notEnoughMkrClose') }}
@@ -17,6 +24,7 @@
         <p class="top-text">
           {{ $t('dappsMaker.closingNotice') }}
         </p>
+
         <div class="value-table-container">
           <div class="value-table mkr-balance">
             <div class="value-block">
@@ -27,7 +35,9 @@
                 <b>{{ mkrBalance }} MKR</b>
               </p>
             </div>
-            <!--            <p class="get-mkr">{{ $t('dappsMaker.getMkr') }}</p>-->
+            <p class="get-mkr" @click="getMkr()">
+              {{ $t('dappsMaker.getMkr') }}
+            </p>
           </div>
           <div class="value-table mkr-balance">
             <div class="value-block">
@@ -38,7 +48,9 @@
                 <b>{{ daiBalance }} DAI</b>
               </p>
             </div>
-            <!--            <p class="get-mkr">{{ $t('dappsMaker.getDai') }}</p>-->
+            <p class="get-mkr" @click="getDai()">
+              {{ $t('dappsMaker.getDai') }}
+            </p>
           </div>
           <div class="value-table other-values">
             <div class="value-block">
@@ -82,6 +94,7 @@
 import { mapGetters } from 'vuex';
 import StandardButton from '@/components/Buttons/StandardButton';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
+import SwapWidget from '@/components/SwapWidget';
 import BigNumber from 'bignumber.js/bignumber.js';
 
 const toBigNumber = num => {
@@ -90,6 +103,7 @@ const toBigNumber = num => {
 
 export default {
   components: {
+    'swap-widget': SwapWidget,
     'help-center-button': HelpCenterButton,
     'standard-button': StandardButton
   },
@@ -139,11 +153,21 @@ export default {
         buttonStyle: 'green',
         fullWidth: true,
         noMinWidth: true
-      }
+      },
+      suppliedFrom: {
+        symbol: 'ETH',
+        name: 'Ethereum'
+      },
+      suppliedTo: {
+        symbol: 'MKR',
+        name: 'Maker'
+      },
+      suppliedToAmount: 0
     };
   },
   computed: {
     ...mapGetters({
+      account: 'account',
       web3: 'web3',
       network: 'network'
     }),
@@ -183,6 +207,7 @@ export default {
     },
     enoughMkr() {
       const mkrNeeded = this.activeCdp.governanceFeeOwed;
+      console.log('mkrNeeded', mkrNeeded.toString()); // todo remove dev item
       return toBigNumber(this.mkrBalance).gte(mkrNeeded);
     },
     enoughDai() {
@@ -244,6 +269,42 @@ export default {
         return item.symbol === 'DAI';
       });
       // console.log(this.daiToken); // todo remove dev item
+    },
+    getMkr() {
+      const mkrNeeded = this.getfeeOwed;
+      console.log(mkrNeeded); // todo remove dev item
+      if (toBigNumber(this.mkrBalance).lt(mkrNeeded)) {
+        this.suppliedToAmount = toBigNumber(mkrNeeded)
+          .minus(toBigNumber(this.mkrBalance))
+          .plus(toBigNumber(mkrNeeded).times(0.01))
+          .toNumber();
+        this.suppliedFrom = {
+          symbol: 'ETH',
+          name: 'Ethereum'
+        };
+        this.suppliedTo = {
+          symbol: 'MKR',
+          name: 'Maker'
+        };
+        this.$refs.swapWidget.$refs.modal.show();
+      }
+    },
+    getDai() {
+      const daiNeeded = this.activeCdp.debtValue;
+      if (toBigNumber(this.daiBalance).lt(daiNeeded)) {
+        this.suppliedToAmount = toBigNumber(daiNeeded)
+          .minus(toBigNumber(this.daiBalance))
+          .toNumber();
+        this.suppliedFrom = {
+          symbol: 'ETH',
+          name: 'Ethereum'
+        };
+        this.suppliedTo = {
+          symbol: 'DAI',
+          name: 'Dai'
+        };
+        this.$refs.swapWidget.$refs.modal.show();
+      }
     }
   }
 };
