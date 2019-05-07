@@ -55,6 +55,7 @@ export default class Kyber {
     this.retrieveGasLimits();
   }
 
+  // Static Informational
   static getName() {
     return PROVIDER_NAME;
   }
@@ -63,6 +64,7 @@ export default class Kyber {
     return true;
   }
 
+  // Getters
   get defaultCurrencyList() {
     return KyberCurrencies[this.network];
   }
@@ -137,6 +139,7 @@ export default class Kyber {
     }
   }
 
+  // API Call
   async retrieveSupportedTokenList(network) {
     try {
       const rawTokenList = await kyberCalls.getTokenList(network);
@@ -160,7 +163,7 @@ export default class Kyber {
       errorLogger(e);
     }
   }
-
+  // API Call
   async retrieveGasLimits(network = this.network) {
     try {
       const gasLimitList = await kyberCalls.getGasLimits(network);
@@ -514,6 +517,7 @@ export default class Kyber {
     return 'new';
   }
 
+  // Helpers
   MinRateWeiAdjustment(minRateWei) {
     const minRateWeiBN = new BigNumber(minRateWei);
     return minRateWeiBN

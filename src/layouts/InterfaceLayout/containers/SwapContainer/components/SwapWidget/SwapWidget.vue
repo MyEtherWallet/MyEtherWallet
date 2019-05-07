@@ -2,7 +2,7 @@
   <div class="modal-container">
     <b-modal
       ref="modal"
-      title="DAI Confirmation"
+      title="Swap Widget"
       centered
       class="bootstrap-modal bootstrap-modal-wide padding-40-20"
       hide-footer
@@ -112,6 +112,8 @@
                   :current-address="currentAddress"
                   :copybutton="true"
                   :title="$t('common.toAddress')"
+                  :pre-fill="true"
+                  :pre-fill-address="destAddress"
                   @toAddress="setToAddress"
                   @validAddress="validAddress = $event"
                 />
@@ -302,6 +304,10 @@ export default {
       type: Number,
       default: 0
     },
+    destAddress: {
+      type: String,
+      default: ''
+    },
     isWidget: {
       type: Boolean,
       default: true
@@ -332,7 +338,7 @@ export default {
           web3: this.$store.state.web3,
           getRateForUnit: false
         },
-        { tokensWithBalance: this.tokensWithBalance }
+        { tokensWithBalance: this.tokensWithBalance, overrideDecimals: true }
       ),
       images: {
         kybernetowrk: ImageKybernetowrk,
@@ -618,8 +624,9 @@ export default {
 
     this.$refs.modal.$on('shown', () => {
       this.widgetOpen = true;
-      // console.log('MODAL SHOWN'); // todo remove dev item
       if (this.isWidget) {
+        this.toAddress = this.destAddress !== '' ? this.destAddress : '';
+        console.log(this.toAddress); // todo remove dev item
         this.fromCurrency = this.suppliedFrom.symbol;
         this.toCurrency = this.suppliedTo.symbol;
         this.overrideFrom = this.suppliedFrom;
@@ -947,6 +954,7 @@ export default {
       this.bityExitToFiat = !this.bityExitToFiat;
     },
     resetSwapState() {
+      this.$refs.modal.hide();
       this.reset();
     }
   }
