@@ -238,32 +238,49 @@ export default {
       }
     },
     async transferDomain(toAddress) {
-      let to, data;
+      let to, data, reclaimData;
       if (this.registrarType === REGISTRAR_TYPES.AUCTION) {
-        data = await this.registrarContract.methods
+        data = this.registrarContract.methods
           .transfer(this.labelHash, toAddress)
           .encodeABI();
         to = this.registrarAddress;
       } else if (this.registrarType === REGISTRAR_TYPES.FIFS) {
-        data = await this.ensRegistryContract.methods
+        data = this.ensRegistryContract.methods
           .setOwner(this.nameHash, toAddress)
           .encodeABI();
         to = this.network.type.ens.registry;
       } else if (this.registrarType === REGISTRAR_TYPES.PERMANENT) {
-        data = await this.registrarContract.methods
+        data = this.registrarContract.methods
           .safeTransferFrom(this.account.address, toAddress, this.labelHash)
+          .encodeABI();
+        reclaimData = this.registrarContract.methods
+          .reclaim(this.labelHash, toAddress)
           .encodeABI();
         to = this.registrarAddress;
       }
-      const raw = {
+      const transferTx = {
         from: this.account.address,
         to,
         data,
         value: 0
       };
-      this.web3.eth.sendTransaction(raw).catch(err => {
-        Toast.responseHandler(err, false);
-      });
+      if (this.registrarType === REGISTRAR_TYPES.PERMANENT) {
+        const reclaimTx = {
+          from: this.account.address,
+          to,
+          reclaimData,
+          value: 0
+        };
+        this.web3.mew
+          .sendBatchTransactions([transferTx, reclaimTx])
+          .catch(err => {
+            Toast.responseHandler(err, false);
+          });
+      } else {
+        this.web3.eth.sendTransaction(transferTx).catch(err => {
+          Toast.responseHandler(err, false);
+        });
+      }
     },
     async updateResolver(newResolverAddr) {
       const web3 = this.web3;
