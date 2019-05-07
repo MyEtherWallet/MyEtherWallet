@@ -1,15 +1,26 @@
 <template>
-  <div class="wallet-view-container" @click="showFullAddr = !showFullAddr">
+  <div class="wallet-view-container">
     <div class="wallet-view-info">
       <div>
         <blockie :address="address" width="50px" height="50px" />
       </div>
-      <p class="name-address">
-        <span class="name">{{ name }} </span><br />
-        <span v-show="!showFullAddr">{{ concatAddr }}</span>
-        <span v-show="showFullAddr">{{ address }}</span>
-      </p>
-      <i :class="[showFullAddr ? 'fa-chevron-up' : 'fa-chevron-down', 'fa']" />
+      <div v-show="shouldConcat">
+        <p class="name-address">
+          <span v-show="name !== ''" class="name">{{ name }} </span><br />
+          <span v-show="!showFullAddr">{{ concatAddr }}</span>
+          <span v-show="showFullAddr">{{ address }}</span>
+        </p>
+        <i
+          :class="[showFullAddr ? 'fa-chevron-up' : 'fa-chevron-down', 'fa']"
+          @click="showFullAddr = !showFullAddr"
+        />
+      </div>
+      <div v-show="!shouldConcat">
+        <p class="name-address">
+          <span v-show="name !== ''" class="name">{{ name }} </span><br />
+          <span>{{ address }}</span>
+        </p>
+      </div>
     </div>
     <div class="wallet-view-balance">
       <p>Balance:</p>
@@ -35,6 +46,10 @@ export default {
     name: {
       type: String,
       default: ''
+    },
+    shouldConcat: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
@@ -59,7 +74,9 @@ export default {
     }
   },
   mounted() {
-    this.fetchBalance();
+    if (window.web3) {
+      this.fetchBalance();
+    }
   },
   methods: {
     async fetchBalance() {
