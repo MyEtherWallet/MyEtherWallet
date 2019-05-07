@@ -1,5 +1,11 @@
 <template>
   <div class="add-wallet-container">
+    <generate-wallet-modal
+      ref="generateNewWallet"
+      :generate-wallet="generateWallet"
+      @nickname="updateNickname"
+      @password="updatePassword"
+    />
     <verify-details-modal
       ref="verifyDetails"
       :wallet="wallet"
@@ -8,6 +14,7 @@
       :add-wallet="addWalletToStore"
       @nickname="updateNickname"
     />
+    <import-private-key-modal ref="importPrivateKey" />
     <import-keystore-modal
       ref="importKeystore"
       :filepath="filepath"
@@ -36,7 +43,10 @@
 
 <script>
 import { WalletInterface } from '@/wallets';
-import { KEYSTORE as keyStoreType } from '@/wallets/bip44/walletTypes';
+import {
+  KEYSTORE as keyStoreType,
+  PRIV_KEY as privateKeyType
+} from '@/wallets/bip44/walletTypes';
 import walletWorker from 'worker-loader!@/workers/wallet.worker.js';
 import { Toast, ExtensionHelpers } from '@/helpers';
 
@@ -46,13 +56,17 @@ import privKeyImgHov from '@/assets/images/icons/button-key-hover.svg';
 import generateImgHov from '@/assets/images/icons/button-generate-hover.svg';
 import AccessWalletButton from '@/layouts/AccessWalletLayout/components/AccessWalletButton';
 import ImportKeystoreModal from '../../components/ImportKeystoreModal';
+import ImportPrivateKeyModal from '../../components/ImportPrivateKeyModal';
 import VerifyDetailsModal from '../../components/VerifyDetailsModal';
+import GenerateWalletModal from '../../components/GenerateWalletModal';
 
 export default {
   components: {
     'access-wallet-button': AccessWalletButton,
     'import-keystore-modal': ImportKeystoreModal,
-    'verify-details-modal': VerifyDetailsModal
+    'import-private-key-modal': ImportPrivateKeyModal,
+    'verify-details-modal': VerifyDetailsModal,
+    'generate-wallet-modal': GenerateWalletModal
   },
   props: {
     openWatchOnlyModal: {
@@ -68,7 +82,7 @@ export default {
           title: 'Generate a New Wallet',
           warning: '',
           func: () => {
-            console.log('REEEEEEEE');
+            this.toggleGenerateWallet(true);
           }
         },
         {
@@ -84,7 +98,7 @@ export default {
           title: `Private \n Key`,
           warning: 'Not Recommended',
           func: () => {
-            console.log('REEEEEEEE');
+            this.toggleImportPrivateKey(true);
           }
         },
         {
@@ -102,10 +116,26 @@ export default {
       wallet: {},
       loading: false,
       title: '',
-      nickname: ''
+      nickname: '',
+      generateOnly: false
     };
   },
   methods: {
+    generateWallet() {
+      this.generateOnly = true;
+      const worker = new walletWorker();
+      worker.postMessage({ type: 'createWallet', data: [this.password] });
+      worker.onmessage = e => {
+        this.file = e.data.walletJson;
+        this.unlockJson();
+        this.addWalletToStore();
+        this.toggleGenerateWallet(false);
+      };
+      worker.onerror = function(e) {
+        Toast.responseHandler(e, false);
+        this.loading = false;
+      };
+    },
     storeWalletCb() {
       this.loading = false;
       this.toggleVerifyDetails(false, '');
@@ -127,6 +157,14 @@ export default {
       if (bool) this.$refs.importKeystore.$refs.importKeystore.show();
       if (!bool) this.$refs.importKeystore.$refs.importKeystore.hide();
     },
+    toggleImportPrivateKey(bool) {
+      if (bool) this.$refs.importPrivateKey.$refs.importPrivateKey.show();
+      if (!bool) this.$refs.importPrivateKey.$refs.importPrivateKey.hide();
+    },
+    toggleGenerateWallet(bool) {
+      if (bool) this.$refs.generateWallet.$refs.generateWallet.show();
+      if (!bool) this.$refs.generateWallet.$refs.generateWallet.hide();
+    },
     toggleVerifyDetails(bool, title) {
       if (bool) this.$refs.verifyDetails.$refs.verifyDetails.show();
       if (!bool) this.$refs.verifyDetails.$refs.verifyDetails.hide();
@@ -135,6 +173,10 @@ export default {
     back() {
       if (this.title === keyStoreType) {
         this.toggleImportKeystoreFile(true);
+      } else if (this.title === privateKeyType) {
+        this.toggleImportPrivateKey(true);
+      } else {
+        this.toggleGenerateWallet(true);
       }
       this.toggleVerifyDetails(false, '');
     },
@@ -164,8 +206,10 @@ export default {
           keyStoreType
         );
         this.loading = false;
-        this.toggleImportKeystoreFile(this.loading);
-        this.toggleVerifyDetails(true, keyStoreType);
+        if (!this.generateOnly) {
+          this.toggleImportKeystoreFile(this.loading);
+          this.toggleVerifyDetails(true, keyStoreType);
+        }
       };
       worker.onerror = e => {
         e.preventDefault();
