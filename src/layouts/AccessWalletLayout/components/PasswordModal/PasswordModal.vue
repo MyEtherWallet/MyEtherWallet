@@ -18,13 +18,11 @@
           placeholder="Enter password"
         />
         <img
-          v-if="show"
-          src="@/assets/images/icons/show-password.svg"
-          @click.prevent="switchViewPassword"
-        />
-        <img
-          v-if="!show"
-          src="@/assets/images/icons/hide-password.svg"
+          :src="
+            show
+              ? '@/assets/images/icons/show-password.svg'
+              : '@/assets/images/icons/hide-password.svg'
+          "
           @click.prevent="switchViewPassword"
         />
       </div>

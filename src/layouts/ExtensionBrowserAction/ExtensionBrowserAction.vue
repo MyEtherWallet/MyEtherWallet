@@ -10,7 +10,7 @@
       :open-watch-only-modal="openWatchOnlyModal"
     />
     <my-wallets
-      v-show="!addAccount || hasAccounts"
+      v-show="!addAccount && hasAccounts"
       :open-watch-only-modal="openWatchOnlyModal"
     />
   </div>
@@ -20,9 +20,8 @@
 import ExtensionAddWalletContainer from './containers/ExtensionAddWalletContainer';
 import ExtensionWalletContainer from './containers/ExtensionWalletContainer';
 import WatchOnlyModal from './components/WatchOnlyModal';
-// import { WalletInterface } from '@/wallets';
 import { WATCH_ONLY } from '@/wallets/bip44/walletTypes';
-import { Toast } from '@/helpers';
+import { Toast, ExtensionHelpers } from '@/helpers';
 import { toChecksumAddress } from '@/helpers/addressUtils';
 
 export default {
@@ -40,45 +39,37 @@ export default {
     };
   },
   create() {
-    this.getAccounts();
+    ExtensionHelpers.getAccounts(this.getAccountsCb);
   },
   mounted() {
-    this.getAccounts();
+    ExtensionHelpers.getAccounts(this.getAccountsCb);
   },
   methods: {
-    getAccounts() {
-      const chrome = window.chrome;
-      const _this = this;
-      chrome.storage.sync.get(null, res => {
-        console.log(res);
-        _this.hasAccounts = Object.keys(res).length > 0;
-        _this.accounts = _this.hasAccounts ? res : {};
+    getAccountsCb(res) {
+      this.hasAccounts = Object.keys(res).length > 0;
+      const accounts = Object.keys(res).map(item => {
+        if (item !== 'localTokens') return res[item];
       });
+      this.accounts = this.hasAccounts ? accounts : {};
+    },
+    addWatchOnlyWalletCb() {
+      ExtensionHelpers.getAccounts(this.getAccountsCb);
+      this.loading = false;
+      this.$refs.watchOnlyModal.$refs.watchOnlyWallet.hide();
+      Toast.responseHandler(
+        `Added ${name} to watch only accounts!`,
+        Toast.SUCCESS
+      );
     },
     addWatchOnlyWallet(name, address) {
-      const _this = this;
-      _this.loading = true;
-      const chrome = window.chrome;
+      this.loading = true;
       const newAcc = {};
       const addr = toChecksumAddress(address);
       newAcc[addr] = {
-        name: name,
+        nick: name,
         type: WATCH_ONLY
       };
-
-      try {
-        chrome.storage.sync.set(newAcc, () => {
-          _this.$refs.watchOnlyModal.$refs.watchOnlyWallet.hide();
-          Toast.responseHandler(
-            `Added ${name} to watch only accounts!`,
-            Toast.SUCCESS
-          );
-          _this.getAccounts();
-          _this.loading = false;
-        });
-      } catch (e) {
-        Toast.responseHandler('Something went wrong!', Toast.ERROR);
-      }
+      ExtensionHelpers.addWatchOnlyWallet(newAcc, this.addWatchOnlyWalletCb);
     },
     openWatchOnlyModal() {
       this.$refs.watchOnlyModal.$refs.watchOnlyWallet.show();

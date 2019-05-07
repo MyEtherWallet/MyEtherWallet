@@ -2,7 +2,6 @@
 .wallet-view-container {
   background-color: $light-green-1;
   border-radius: 5px;
-  cursor: pointer;
   display: flex;
   flex-direction: column;
   padding: 15px;
@@ -29,6 +28,7 @@
 
     i {
       color: $dark-grey-2;
+      cursor: pointer;
       position: absolute;
       right: 5px;
       top: 20px;
