@@ -7,11 +7,11 @@
     />
     <h3>{{ fullDomainName }} {{ $t('dapps.alreadyOwned') }}.</h3>
     <div class="content-container">
-      <p class="label">{{ $t('dapps.labelHash') }}({{ fullDomainName }}):</p>
+      <p class="label">{{ $t('dapps.labelHash') }}({{ hostName }}):</p>
       <p class="content">{{ labelHash }}</p>
     </div>
     <div class="content-container">
-      <p class="label">{{ $t('dapps.nameHash') }}({{ hostName }}):</p>
+      <p class="label">{{ $t('dapps.nameHash') }}({{ fullDomainName }}):</p>
       <p class="content">{{ nameHash }}</p>
     </div>
     <div class="content-container">
