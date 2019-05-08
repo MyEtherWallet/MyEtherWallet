@@ -221,7 +221,7 @@ export default class SwapProviders {
     } else if (SwapProviders.isToken(currency)) {
       const decimal = SwapProviders.getTokenDecimals(currency);
       if (decimal < 6) return decimal;
-      if(this.overrideDecimals) return decimal;
+      if (this.overrideDecimals) return decimal;
       return 6;
     }
     return 6;

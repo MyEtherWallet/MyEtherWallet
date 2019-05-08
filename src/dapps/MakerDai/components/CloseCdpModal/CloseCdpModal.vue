@@ -7,6 +7,13 @@
       class="bootstrap-modal nopadding"
       hide-footer
     >
+      <swap-widget
+        ref="swapWidget"
+        :supplied-from="suppliedFrom"
+        :supplied-to="suppliedTo"
+        :supplied-to-amount="suppliedToAmount"
+        :dest-address="account.address"
+      ></swap-widget>
       <div class="contents">
         <div v-if="!enoughMkr" class="message-container">
           {{ $t('dappsMaker.notEnoughMkrClose') }}
@@ -17,6 +24,7 @@
         <p class="top-text">
           {{ $t('dappsMaker.closingNotice') }}
         </p>
+
         <div class="value-table-container">
           <div class="value-table mkr-balance">
             <div class="value-block">
@@ -27,8 +35,11 @@
                 <b>{{ mkrBalance }} MKR</b>
               </p>
             </div>
-            <!--            <p class="get-mkr">{{ $t('dappsMaker.getMkr') }}</p>-->
+            <p class="get-mkr" @click="getMkr()">
+              {{ $t('dappsMaker.getMkr') }}
+            </p>
           </div>
+
           <div class="value-table mkr-balance">
             <div class="value-block">
               <p>
@@ -38,7 +49,9 @@
                 <b>{{ daiBalance }} DAI</b>
               </p>
             </div>
-            <!--            <p class="get-mkr">{{ $t('dappsMaker.getDai') }}</p>-->
+            <p class="get-mkr" @click="getDai()">
+              {{ $t('dappsMaker.getDai') }}
+            </p>
           </div>
           <div class="value-table other-values">
             <div class="value-block">
@@ -63,7 +76,13 @@
             </div>
           </div>
         </div>
-
+        <!-- TODO: work these into the user flow.  Batch transaction would be better, but an initial try brought the browser crashing issue back -->
+        <!--        <div v-if="needsDaiApprove">
+          <p @click="approveDai">Approve Dai</p>
+        </div>
+        <div v-if="needsMkrApprove">
+          <p @click="approveMkr">Approve Mkr</p>
+        </div>-->
         <div class="buttons">
           <standard-button :options="cancelButton" @click.native="closeModal" />
           <standard-button
@@ -82,6 +101,7 @@
 import { mapGetters } from 'vuex';
 import StandardButton from '@/components/Buttons/StandardButton';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
+import SwapWidget from '@/components/SwapWidget';
 import BigNumber from 'bignumber.js/bignumber.js';
 
 const toBigNumber = num => {
@@ -90,6 +110,7 @@ const toBigNumber = num => {
 
 export default {
   components: {
+    'swap-widget': SwapWidget,
     'help-center-button': HelpCenterButton,
     'standard-button': StandardButton
   },
@@ -139,11 +160,22 @@ export default {
         buttonStyle: 'green',
         fullWidth: true,
         noMinWidth: true
-      }
+      },
+      suppliedFrom: {
+        symbol: 'ETH',
+        name: 'Ethereum'
+      },
+      suppliedTo: {
+        symbol: 'MKR',
+        name: 'Maker'
+      },
+      suppliedToAmount: 0,
+      destAddress: ''
     };
   },
   computed: {
     ...mapGetters({
+      account: 'account',
       web3: 'web3',
       network: 'network'
     }),
@@ -183,11 +215,23 @@ export default {
     },
     enoughMkr() {
       const mkrNeeded = this.activeCdp.governanceFeeOwed;
-      return toBigNumber(this.mkrBalance).gte(mkrNeeded);
+      if (mkrNeeded) {
+        return toBigNumber(this.mkrBalance).gte(mkrNeeded);
+      }
+      return false;
     },
     enoughDai() {
       const daiNeeded = this.activeCdp.debtValue;
-      return toBigNumber(this.daiBalance).gte(daiNeeded);
+      if (daiNeeded) {
+        return toBigNumber(this.daiBalance).gte(daiNeeded);
+      }
+      return false;
+    },
+    needsDaiApprove() {
+      return toBigNumber(this.activeCdp.proxyAllowanceDai).eq(0);
+    },
+    needsMkrApprove() {
+      return toBigNumber(this.activeCdp.proxyAllowanceMkr).eq(0);
     },
     canClose() {
       return this.enoughMkr && this.enoughDai;
@@ -199,6 +243,7 @@ export default {
     }
   },
   async mounted() {
+    this.destAddress = this.account.address;
     this.getBalances();
     this.$refs.modal.$on('shown', async () => {
       if (this.activeCdp) {
@@ -236,14 +281,56 @@ export default {
       this.amount = this.activeCdp.debtValue;
     },
     getBalances() {
-      // console.log(this.tokensWithBalance); // todo remove dev item
       this.mkrToken = this.tokensWithBalance.find(item => {
         return item.symbol === 'MKR';
       });
       this.daiToken = this.tokensWithBalance.find(item => {
         return item.symbol === 'DAI';
       });
-      // console.log(this.daiToken); // todo remove dev item
+    },
+    getMkr() {
+      const mkrNeeded = this.getfeeOwed;
+      if (toBigNumber(this.mkrBalance).lt(mkrNeeded)) {
+        this.suppliedToAmount = toBigNumber(mkrNeeded)
+          .minus(toBigNumber(this.mkrBalance))
+          .plus(toBigNumber(mkrNeeded).times(0.01))
+          .toNumber();
+        this.suppliedFrom = {
+          symbol: 'ETH',
+          name: 'Ethereum'
+        };
+        this.suppliedTo = {
+          symbol: 'MKR',
+          name: 'Maker'
+        };
+        // this.destAddress = this.proxyAddress;
+        this.$refs.swapWidget.$refs.modal.show();
+      }
+    },
+    getDai() {
+      const daiNeeded = this.activeCdp.debtValue;
+      if (toBigNumber(this.daiBalance).lt(daiNeeded)) {
+        this.suppliedToAmount = toBigNumber(daiNeeded)
+          .minus(toBigNumber(this.daiBalance))
+          .toNumber();
+        this.suppliedFrom = {
+          symbol: 'ETH',
+          name: 'Ethereum'
+        };
+        this.suppliedTo = {
+          symbol: 'DAI',
+          name: 'Dai'
+        };
+        // this.destAddress = this.activeCdp.proxyAddress;
+        this.$refs.swapWidget.$refs.modal.show();
+      }
+    },
+
+    async approveDai() {
+      await this.activeCdp.approveDai();
+    },
+    async approveMkr() {
+      await this.activeCdp.approveMkr();
     }
   }
 };
