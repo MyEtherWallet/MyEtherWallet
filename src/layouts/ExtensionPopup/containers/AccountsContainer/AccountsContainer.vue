@@ -5,7 +5,7 @@
       nav-class="accounts-container-b-tabs"
       active-tab-class="accounts-container-active-b-tab"
     >
-      <b-tab :active="active" title="My Wallets" class="tab-container">
+      <b-tab :active="hasMyWallets" title="My Wallets" class="tab-container">
         <wallet-view-component
           v-for="item in myWallets"
           v-show="myWallets.length > 0"
@@ -17,7 +17,7 @@
           No wallets found 😢
         </h3>
       </b-tab>
-      <b-tab :active="!active" title="Watch Only Wallets" class="tab-container">
+      <b-tab :active="!hasMyWallets" title="Watch Only Wallets" class="tab-container">
         <wallet-view-component
           v-for="item in watchOnlyWallets"
           v-show="watchOnlyWallets.length > 0"
@@ -50,9 +50,9 @@ export default {
   },
   props: {
     accounts: {
-      type: Object,
+      type: Array,
       default: () => {
-        return {};
+        return [];
       }
     },
     addWallet: {
@@ -62,7 +62,7 @@ export default {
   },
   data() {
     return {
-      active: false
+      hasMyWallets: true
     };
   },
   computed: {
@@ -76,24 +76,30 @@ export default {
   methods: {
     parseReceivedWallets(watchOnly) {
       const wallets = [];
-      Object.keys(this.accounts).forEach(account => {
-        const parsedValue = JSON.parse(this.accounts[account]);
+      this.accounts.forEach(account => {
+        const address = Object.keys(account)[0];
+        const parsedValue = JSON.parse(account[address]);
         if (watchOnly) {
-          if (this.accounts[account].type === WATCH_ONLY) {
-            const reformObj = Object.assign({}, this.accounts[account], {
-              address: account
+          if (parsedValue.type === WATCH_ONLY) {
+            const reformObj = Object.assign({}, parsedValue, {
+              address: address
             });
             wallets.push(reformObj);
           }
         } else {
           if (parsedValue.type !== WATCH_ONLY) {
             const reformObj = Object.assign({}, parsedValue, {
-              address: account
+              address: address
             });
             wallets.push(reformObj);
           }
         }
       });
+      if (wallets.length > 0 && watchOnly) {
+        this.hasMyWallets = false;
+      } else {
+        this.hasMyWallets = true;
+      }
       return wallets.length > 0 ? wallets : false;
     }
   }
