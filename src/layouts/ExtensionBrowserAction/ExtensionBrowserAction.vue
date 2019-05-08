@@ -1,10 +1,5 @@
 <template>
   <div>
-    <watch-only-modal
-      ref="watchOnlyModal"
-      :loading="loading"
-      :add-watch-only="addWatchOnlyWallet"
-    />
     <add-wallet-container
       v-show="addAccount || !hasAccounts"
       :open-watch-only-modal="openWatchOnlyModal"
@@ -19,7 +14,6 @@
 <script>
 import ExtensionAddWalletContainer from './containers/ExtensionAddWalletContainer';
 import ExtensionWalletContainer from './containers/ExtensionWalletContainer';
-import WatchOnlyModal from './components/WatchOnlyModal';
 import { WATCH_ONLY } from '@/wallets/bip44/walletTypes';
 import { Toast, ExtensionHelpers } from '@/helpers';
 import { toChecksumAddress } from '@/helpers/addressUtils';
@@ -27,8 +21,7 @@ import { toChecksumAddress } from '@/helpers/addressUtils';
 export default {
   components: {
     'add-wallet-container': ExtensionAddWalletContainer,
-    'my-wallets': ExtensionWalletContainer,
-    'watch-only-modal': WatchOnlyModal
+    'my-wallets': ExtensionWalletContainer
   },
   data() {
     return {

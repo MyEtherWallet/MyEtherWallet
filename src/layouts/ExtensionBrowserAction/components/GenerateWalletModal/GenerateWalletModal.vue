@@ -11,21 +11,28 @@
         <div class="input-container">
           <label for="walletName"> Wallet Name </label>
           <input
+            v-model="locNickname"
             placeholder="Please add a wallet nickname"
             name="walletName"
-            @change="nickname"
           />
         </div>
         <div class="input-container">
           <label for="walletPassword"> Password </label>
-          <input
-            placeholder="Create your password here"
-            name="walletPassword"
-            @change="password"
-          />
+          <div class="password-input">
+            <input
+              v-model="locPassword"
+              :type="show ? 'text' : 'password'"
+              placeholder="Create your password here"
+              name="walletPassword"
+            />
+            <img :src="show ? showIcon : hide" @click.prevent="show = !show" />
+          </div>
         </div>
         <div
-          class="submit-button large-round-button-green-filled"
+          :class="[
+            validInputs ? '' : 'disabled',
+            'submit-button large-round-button-green-filled'
+          ]"
           @click="generateWallet"
         >
           <span v-show="!loading"> Add Wallet </span>
@@ -37,6 +44,8 @@
 </template>
 
 <script>
+import hide from '@/assets/images/icons/hide-password.svg';
+import showIcon from '@/assets/images/icons/show-password.svg';
 export default {
   props: {
     generateWallet: {
@@ -49,14 +58,25 @@ export default {
     }
   },
   data() {
-    return {};
+    return {
+      showIcon: showIcon,
+      hide: hide,
+      show: false,
+      locPassword: '',
+      locNickname: ''
+    };
   },
-  methods: {
-    nickname(e) {
-      this.$emit('nickname', e.target.value);
+  computed: {
+    validInputs() {
+      return this.locPassword !== '' && this.locNickname !== '';
+    }
+  },
+  watch: {
+    locPassword(newVal) {
+      this.$emit('password', newVal);
     },
-    password(e) {
-      this.$emit('password', e.target.value);
+    locNickname(newVal) {
+      this.$emit('nickname', newVal);
     }
   }
 };

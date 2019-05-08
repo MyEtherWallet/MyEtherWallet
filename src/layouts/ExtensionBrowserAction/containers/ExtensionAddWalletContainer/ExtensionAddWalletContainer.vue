@@ -157,14 +157,13 @@ export default {
       };
     },
     generateWallet() {
+      this.loading = true;
       this.generateOnly = true;
       const worker = new walletWorker();
       worker.postMessage({ type: 'createWallet', data: [this.password] });
       worker.onmessage = e => {
         this.file = e.data.walletJson;
         this.unlockJson();
-        this.addWalletToStore();
-        this.toggleGenerateWallet(false);
       };
       worker.onerror = function(e) {
         Toast.responseHandler(e, false);
@@ -173,11 +172,14 @@ export default {
     },
     storeWalletCb() {
       this.loading = false;
-      this.toggleVerifyDetails(false, '');
       Toast.responseHandler(
         `Successfully added ${this.nickname} wallet!`,
         Toast.SUCCESS
       );
+      this.reset();
+      this.toggleVerifyDetails(false, '');
+    },
+    reset() {
       this.filepath = '';
       this.file = '';
       this.password = '';
@@ -206,8 +208,8 @@ export default {
       if (!bool) this.$refs.importPrivateKey.$refs.importPrivateKey.hide();
     },
     toggleGenerateWallet(bool) {
-      if (bool) this.$refs.generateWallet.$refs.generateWallet.show();
-      if (!bool) this.$refs.generateWallet.$refs.generateWallet.hide();
+      if (bool) this.$refs.generateNewWallet.$refs.generateNewWallet.show();
+      if (!bool) this.$refs.generateNewWallet.$refs.generateNewWallet.hide();
     },
     toggleVerifyDetails(bool, title) {
       if (bool) this.$refs.verifyDetails.$refs.verifyDetails.show();
@@ -256,6 +258,9 @@ export default {
         if (!this.generateOnly) {
           this.toggleImportKeystoreFile(this.loading);
           this.toggleVerifyDetails(true, keyStoreType);
+        } else {
+          this.addWalletToStore();
+          this.toggleGenerateWallet(false);
         }
       };
       worker.onerror = e => {

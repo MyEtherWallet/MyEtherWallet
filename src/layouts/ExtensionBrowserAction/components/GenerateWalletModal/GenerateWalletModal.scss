@@ -21,3 +21,19 @@
   margin-top: 10px;
   width: 100% !important;
 }
+
+.password-input {
+  position: relative;
+  width: 100%;
+
+  img {
+    cursor: pointer;
+    position: absolute;
+    right: 10px;
+    top: 18px;
+  }
+
+  input {
+    width: 100%;
+  }
+}
