@@ -14,7 +14,13 @@
       :add-wallet="addWalletToStore"
       @nickname="updateNickname"
     />
-    <import-private-key-modal ref="importPrivateKey" />
+    <import-private-key-modal
+      ref="importPrivateKey"
+      :generate-wallet="generateWalletFromPriv"
+      :priv-key="privateKey"
+      @privateKey="updatePrivKey"
+      @password="updatePassword"
+    />
     <import-keystore-modal
       ref="importKeystore"
       :filepath="filepath"
@@ -48,11 +54,11 @@ import {
   PRIV_KEY as privateKeyType
 } from '@/wallets/bip44/walletTypes';
 import walletWorker from 'worker-loader!@/workers/wallet.worker.js';
-import { Toast, ExtensionHelpers } from '@/helpers';
+import { Toast, ExtensionHelpers, Wallet } from '@/helpers';
 
 import byJsonImgHov from '@/assets/images/icons/button-json-hover.svg';
 import byMnemImgHov from '@/assets/images/icons/button-mnemonic-hover.svg';
-import privKeyImgHov from '@/assets/images/icons/button-key-hover.svg';
+import privateKeyImgHov from '@/assets/images/icons/button-key-hover.svg';
 import generateImgHov from '@/assets/images/icons/button-generate-hover.svg';
 import AccessWalletButton from '@/layouts/AccessWalletLayout/components/AccessWalletButton';
 import ImportKeystoreModal from '../../components/ImportKeystoreModal';
@@ -94,7 +100,7 @@ export default {
           }
         },
         {
-          icon: privKeyImgHov,
+          icon: privateKeyImgHov,
           title: `Private \n Key`,
           warning: 'Not Recommended',
           func: () => {
@@ -117,10 +123,39 @@ export default {
       loading: false,
       title: '',
       nickname: '',
-      generateOnly: false
+      generateOnly: false,
+      privateKey: ''
     };
   },
   methods: {
+    generateWalletFromPriv() {
+      this.loading = true;
+      const worker = new walletWorker();
+      worker.postMessage({
+        type: 'generateFromPrivateKey',
+        data: [this.privateKey, this.password]
+      });
+      worker.onmessage = e => {
+        const newJson = {};
+        this.loading = false;
+        this.file = e.data.walletJson;
+        Object.keys(this.file).forEach(key => {
+          newJson[key.toLowerCase()] = this.file[key];
+        });
+        const _wallet = Wallet.fromV3(newJson, this.password, true);
+        this.wallet = new WalletInterface(
+          Buffer.from(_wallet._privKey),
+          false,
+          privateKeyType
+        );
+        this.toggleImportPrivateKey(this.loading);
+        this.toggleVerifyDetails(true, privateKeyType);
+      };
+      worker.onerror = function(e) {
+        Toast.responseHandler(e, false);
+        this.loading = false;
+      };
+    },
     generateWallet() {
       this.generateOnly = true;
       const worker = new walletWorker();
@@ -143,6 +178,15 @@ export default {
         `Successfully added ${this.nickname} wallet!`,
         Toast.SUCCESS
       );
+      this.filepath = '';
+      this.file = '';
+      this.password = '';
+      this.wallet = {};
+      this.loading = false;
+      this.title = '';
+      this.nickname = '';
+      this.generateOnly = false;
+      this.privateKey = '';
     },
     addWalletToStore() {
       this.loading = true;
@@ -191,6 +235,9 @@ export default {
     },
     updatePassword(e) {
       this.password = e;
+    },
+    updatePrivKey(e) {
+      this.privateKey = e;
     },
     unlockJson() {
       this.loading = true;

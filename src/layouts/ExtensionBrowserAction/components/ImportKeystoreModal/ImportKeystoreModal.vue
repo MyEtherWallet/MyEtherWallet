@@ -41,18 +41,14 @@
               name="keystorePassword"
             />
             <img
-              :src="
-                show
-                  ? '@/assets/images/icons/show-password.svg'
-                  : '@/assets/images/icons/hide-password.svg'
-              "
+              :src="show ? showIcon : hide"
               @click.prevent="switchViewPassword"
             />
           </div>
         </div>
         <div
           :class="[
-            true ? '' : 'disabled',
+            inputsValid ? '' : 'disabled',
             'submit-button large-round-button-green-filled'
           ]"
           @click="unlockJson"
@@ -67,6 +63,8 @@
 
 <script>
 import { Toast } from '@/helpers';
+import hide from '@/assets/images/icons/hide-password.svg';
+import showIcon from '@/assets/images/icons/show-password.svg';
 export default {
   props: {
     loading: {
@@ -89,8 +87,15 @@ export default {
   data() {
     return {
       show: false,
-      locPassword: this.password
+      locPassword: this.password,
+      showIcon: showIcon,
+      hide: hide
     };
+  },
+  computed: {
+    inputsValid() {
+      return this.locPassword !== '' && this.filePath !== '';
+    }
   },
   watch: {
     locPassword(newVal) {
@@ -99,12 +104,12 @@ export default {
   },
   methods: {
     uploadFile(e) {
-      const self = this;
+      const _self = this;
       const reader = new FileReader();
       reader.onloadend = function(evt) {
         try {
-          self.$emit('file', JSON.parse(evt.target.result));
-          self.file = JSON.parse(evt.target.result);
+          _self.$emit('file', JSON.parse(evt.target.result));
+          _self.file = JSON.parse(evt.target.result);
         } catch (e) {
           Toast.responseHandler(e, Toast.ERROR);
         }

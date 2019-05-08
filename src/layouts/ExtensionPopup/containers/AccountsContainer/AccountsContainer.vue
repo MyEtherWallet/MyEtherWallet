@@ -10,7 +10,7 @@
           v-for="item in myWallets"
           v-show="myWallets.length > 0"
           :address="item.address"
-          :name="item.name"
+          :name="item.nick"
           :key="item.address"
         />
         <h3 v-show="myWallets === false">
@@ -22,7 +22,7 @@
           v-for="item in watchOnlyWallets"
           v-show="watchOnlyWallets.length > 0"
           :address="item.address"
-          :name="item.name"
+          :name="item.nick"
           :key="item.address"
         />
         <h3 v-show="watchOnlyWallets === false">
@@ -67,29 +67,33 @@ export default {
   },
   computed: {
     watchOnlyWallets() {
-      const wallets = [];
-      Object.keys(this.accounts).forEach(account => {
-        if (this.accounts[account].type === WATCH_ONLY) {
-          const reformObj = Object.assign({}, this.accounts[account], {
-            address: account
-          });
-          wallets.push(reformObj);
-        }
-      });
-
-      return wallets.length > 0 ? wallets : false;
+      return this.parseReceivedWallets(true);
     },
     myWallets() {
+      return this.parseReceivedWallets(false);
+    }
+  },
+  methods: {
+    parseReceivedWallets(watchOnly) {
       const wallets = [];
       Object.keys(this.accounts).forEach(account => {
-        if (this.accounts[account].type !== WATCH_ONLY) {
-          const reformObj = Object.assign({}, this.accounts[account], {
-            address: account
-          });
-          wallets.push(reformObj);
+        const parsedValue = JSON.parse(this.accounts[account]);
+        if (watchOnly) {
+          if (this.accounts[account].type === WATCH_ONLY) {
+            const reformObj = Object.assign({}, this.accounts[account], {
+              address: account
+            });
+            wallets.push(reformObj);
+          }
+        } else {
+          if (parsedValue.type !== WATCH_ONLY) {
+            const reformObj = Object.assign({}, parsedValue, {
+              address: account
+            });
+            wallets.push(reformObj);
+          }
         }
       });
-
       return wallets.length > 0 ? wallets : false;
     }
   }

@@ -65,10 +65,10 @@ export default {
       this.loading = true;
       const newAcc = {};
       const addr = toChecksumAddress(address);
-      newAcc[addr] = {
+      newAcc[addr] = JSON.stringify({
         nick: name,
         type: WATCH_ONLY
-      };
+      });
       ExtensionHelpers.addWatchOnlyWallet(newAcc, this.addWatchOnlyWalletCb);
     },
     openWatchOnlyModal() {

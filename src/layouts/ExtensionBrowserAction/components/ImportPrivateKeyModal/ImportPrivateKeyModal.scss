@@ -4,11 +4,17 @@
   display: flex;
   flex-direction: column;
   padding: 10px 0;
+  position: relative;
 
+  input,
   textarea {
     background-color: $light-grey-2;
     border: none;
     padding: 15px;
+  }
+
+  textarea {
+    height: 120px;
   }
 
   label {
@@ -18,21 +24,26 @@
 }
 
 .submit-button-container {
-  align-items: center;
-  display: flex;
-  padding-top: 30px;
+  padding-top: 15px;
   width: 100%;
 
-  .back-button {
-    border: 1px solid $dark-grey-8;
-    border-radius: 5px;
-    color: $dark-grey-8;
+  .add-wallet-button {
+    width: 100%;
+  }
+}
+
+.password-input {
+  position: relative;
+  width: 100%;
+
+  img {
     cursor: pointer;
-    margin-right: 20px;
-    padding: 21px 55px;
+    position: absolute;
+    right: 10px;
+    top: 18px;
   }
 
-  .submit-button {
-    flex: 1;
+  input {
+    width: 100%;
   }
 }

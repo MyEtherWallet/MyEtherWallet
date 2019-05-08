@@ -13,7 +13,38 @@
         </div>
         <div class="input-container">
           <label for="privateKeyInput">Your Private Key</label>
-          <textarea name="privateKeyInput" @change="privateKey" />
+          <textarea
+            v-model="locPrivKey"
+            name="privateKeyInput"
+            placeholder="Enter private key"
+          />
+        </div>
+        <div class="input-container">
+          <label for="privateKeyInput">Password</label>
+          <div class="password-input">
+            <input
+              :type="show ? 'text' : 'password'"
+              v-model="locPassword"
+              name="privateKeyInput"
+              placeholder="Enter password for hashing"
+            />
+            <img
+              :src="show ? showIcon : hide"
+              @click.prevent="switchViewPassword"
+            />
+          </div>
+        </div>
+        <div class="submit-button-container">
+          <div
+            :class="[
+              validInputs ? '' : 'disabled',
+              'large-round-button-green-filled add-wallet-button'
+            ]"
+            @click="generateWallet"
+          >
+            <span v-show="!loading"> Add Wallet </span>
+            <i v-show="loading" class="fa fa-spinner fa-spin" />
+          </div>
         </div>
       </div>
     </b-modal>
@@ -21,16 +52,57 @@
 </template>
 
 <script>
+import { isValidPrivate } from 'ethereumjs-util';
+import hide from '@/assets/images/icons/hide-password.svg';
+import showIcon from '@/assets/images/icons/show-password.svg';
 export default {
   props: {
     loading: {
       type: Boolean,
       default: false
+    },
+    password: {
+      type: String,
+      default: ''
+    },
+    privKey: {
+      type: String,
+      default: ''
+    },
+    generateWallet: {
+      type: Function,
+      default: () => {}
+    }
+  },
+  data() {
+    return {
+      show: false,
+      locPassword: this.password,
+      showIcon: showIcon,
+      hide: hide,
+      locPrivKey: this.privKey,
+      validPriv: false
+    };
+  },
+  computed: {
+    validInputs() {
+      return (
+        this.locPassword !== '' && this.locPrivKey !== '' && this.validPriv
+      );
+    }
+  },
+  watch: {
+    locPrivKey(newVal) {
+      this.validPriv = isValidPrivate(Buffer.from(newVal, 'hex'));
+      this.$emit('privateKey', newVal);
+    },
+    locPassword(newVal) {
+      this.$emit('password', newVal);
     }
   },
   methods: {
-    privateKey(e) {
-      this.$emit('privateKey', e.target.value);
+    switchViewPassword() {
+      this.show = !this.show;
     }
   }
 };
