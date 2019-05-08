@@ -85,12 +85,6 @@ const webpackConfig = {
   }
 };
 
-if (JSON.parse(env_vars.BUILD_TYPE) !== 'mewcx') {
-  webpackConfig['exclude'] = [
-    'src/cxHelpers/backgroundWeb3Manager.js',
-    'src/cxHelpers/backgroundPhishingCatcher.js',
-  ]
-}
 if (process.env.NODE_ENV === 'production') {
   webpackConfig.plugins.push(
     new UnusedFilesWebpackPlugin({
