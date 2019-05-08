@@ -12,6 +12,8 @@
 <script>
 import WelcomeContainer from './containers/WelcomeContainer';
 import AccountsContainer from './containers/AccountsContainer';
+import { ExtensionHelpers } from '@/helpers';
+
 export default {
   components: {
     'welcome-container': WelcomeContainer,
@@ -20,16 +22,16 @@ export default {
   data() {
     return {
       hasAccounts: false,
-      accounts: {}
+      accounts: []
     };
   },
   created() {
-    const chrome = window.chrome;
-    const _this = this;
-    chrome.storage.sync.get(null, res => {
-      _this.hasAccounts = Object.keys(res).length > 0;
-      _this.accounts = _this.hasAccounts ? res : {};
+    window.chrome.storage.onChanged.addListener(() => {
+      ExtensionHelpers.getAccounts(this.getAccountsCb);
     });
+  },
+  mounted() {
+    ExtensionHelpers.getAccounts(this.getAccountsCb);
   },
   methods: {
     addWallet() {
@@ -40,7 +42,16 @@ export default {
         // eslint-disable-next-line
         window.open(chrome.runtime.getURL('index.html'));
       }
-    }
+    },
+    getAccountsCb(res) {
+      this.hasAccounts = Object.keys(res).length > 0;
+      const accounts = Object.keys(res).map(item => {
+        const newObj = {};
+        newObj[`${item}`] = res[`${item}`];
+        if (item !== 'localTokens') return newObj;
+      });
+      this.accounts = this.hasAccounts ? accounts : {};
+    },
   }
 };
 </script>

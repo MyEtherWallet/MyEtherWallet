@@ -38,8 +38,10 @@ export default {
       addAccount: false
     };
   },
-  create() {
-    ExtensionHelpers.getAccounts(this.getAccountsCb);
+  created() {
+    window.chrome.storage.onChanged.addListener(() => {
+      ExtensionHelpers.getAccounts(this.getAccountsCb);
+    });
   },
   mounted() {
     ExtensionHelpers.getAccounts(this.getAccountsCb);
@@ -48,7 +50,9 @@ export default {
     getAccountsCb(res) {
       this.hasAccounts = Object.keys(res).length > 0;
       const accounts = Object.keys(res).map(item => {
-        if (item !== 'localTokens') return res[item];
+        const newObj = {};
+        newObj[`${item}`] = res[`${item}`];
+        if (item !== 'localTokens') return newObj;
       });
       this.accounts = this.hasAccounts ? accounts : {};
     },
