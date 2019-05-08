@@ -39,6 +39,7 @@
               {{ $t('dappsMaker.getMkr') }}
             </p>
           </div>
+
           <div class="value-table mkr-balance">
             <div class="value-block">
               <p>
@@ -162,7 +163,8 @@ export default {
         symbol: 'MKR',
         name: 'Maker'
       },
-      suppliedToAmount: 0
+      suppliedToAmount: 0,
+      destAddress: ''
     };
   },
   computed: {
@@ -207,12 +209,17 @@ export default {
     },
     enoughMkr() {
       const mkrNeeded = this.activeCdp.governanceFeeOwed;
-      console.log('mkrNeeded', mkrNeeded.toString()); // todo remove dev item
-      return toBigNumber(this.mkrBalance).gte(mkrNeeded);
+      if (mkrNeeded) {
+        return toBigNumber(this.mkrBalance).gte(mkrNeeded);
+      }
+      return false;
     },
     enoughDai() {
       const daiNeeded = this.activeCdp.debtValue;
-      return toBigNumber(this.daiBalance).gte(daiNeeded);
+      if (daiNeeded) {
+        return toBigNumber(this.daiBalance).gte(daiNeeded);
+      }
+      return false;
     },
     canClose() {
       return this.enoughMkr && this.enoughDai;
@@ -224,6 +231,7 @@ export default {
     }
   },
   async mounted() {
+    this.destAddress = this.account.address;
     this.getBalances();
     this.$refs.modal.$on('shown', async () => {
       if (this.activeCdp) {
@@ -286,6 +294,7 @@ export default {
           symbol: 'MKR',
           name: 'Maker'
         };
+        // this.destAddress = this.proxyAddress;
         this.$refs.swapWidget.$refs.modal.show();
       }
     },
@@ -303,8 +312,20 @@ export default {
           symbol: 'DAI',
           name: 'Dai'
         };
+        this.destAddress = this.activeCdp.proxyAddress;
         this.$refs.swapWidget.$refs.modal.show();
       }
+    },
+    getApprovals() {
+      const addres = [];
+      if (this.daiToken) {
+        addres.push(this.daiToken.address);
+      }
+      if (this.mkrToken) {
+        addres.push(this.mkrToken.address);
+      }
+      const datas = this.makerManager.approveTokens(...addres);
+      console.log(datas); // todo remove dev item
     }
   }
 };

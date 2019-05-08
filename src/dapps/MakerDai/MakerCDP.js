@@ -1,5 +1,6 @@
 import Maker from '@makerdao/dai';
 import BigNumber from 'bignumber.js';
+import { ERC20 } from '../../partners/partnersConfig';
 
 const { MKR, DAI } = Maker;
 
@@ -34,6 +35,7 @@ export default class MakerCDP {
     this._currentAddress = sysVars.currentAddress || null;
     this.cdps = [];
     this.noProxy = sysVars.noProxy || false;
+    this.makerManager = sysVars.makerManager || null;
     this.needsUpdate = false;
     this.closing = false;
     this.opening = false;
@@ -114,6 +116,10 @@ export default class MakerCDP {
     return this._governanceFee;
   }
 
+  get proxyAddress() {
+    return this._proxyAddress;
+  }
+
   get maxDai() {
     if (
       this._ethPrice &&
@@ -160,7 +166,7 @@ export default class MakerCDP {
   }
 
   get needToFinishMigrating() {
-    return this.proxyAddress && this.noProxy;
+    return this._proxyAddress && this.noProxy;
   }
 
   // Methods
@@ -181,8 +187,8 @@ export default class MakerCDP {
 
   async updateValues(cdpId = this.cdpId) {
     this.cdp = await this.maker.getCdp(cdpId);
-    this.proxyAddress = await this.proxyService.currentProxy();
-    this.noProxy = this.proxyAddress === null;
+    this._proxyAddress = await this.proxyService.currentProxy();
+    this.noProxy = this._proxyAddress === null;
     const liqPrice = await this.cdp.getLiquidationPrice();
     this._liqPrice = liqPrice.toBigNumber().toFixed(2);
     this.isSafe = await this.cdp.isSafe();
@@ -202,7 +208,7 @@ export default class MakerCDP {
       const currentProxy = await this.proxyService.currentProxy();
       if (currentProxy) {
         this.migrated = false;
-        await this.cdpService.give(this.cdpId, this.proxyAddress);
+        await this.cdpService.give(this.cdpId, this._proxyAddress);
       }
     }
     if (this.needsUpdate) {
@@ -216,14 +222,14 @@ export default class MakerCDP {
   }
 
   async getProxy() {
-    this.proxyAddress = await this.proxyService.currentProxy();
-    if (!this.proxyAddress) {
-      this.proxyAddress = await this.proxyService.getProxyAddress(
+    this._proxyAddress = await this.proxyService.currentProxy();
+    if (!this._proxyAddress) {
+      this._proxyAddress = await this.proxyService.getProxyAddress(
         this._currentAddress
       );
-      if (this.proxyAddress) this.noProxy = false;
+      if (this._proxyAddress) this.noProxy = false;
     }
-    return this.proxyAddress;
+    return this._proxyAddress;
   }
 
   async buildProxy() {
@@ -231,16 +237,16 @@ export default class MakerCDP {
     if (!currentProxy) {
       this.needsUpdate = true;
       await this.proxyService.build();
-      this.proxyAddress = await this.getProxy();
-      return this.proxyAddress;
+      this._proxyAddress = await this.getProxy();
+      return this._proxyAddress;
     }
-    this.proxyAddress = await this.getProxy();
-    return this.proxyAddress;
+    this._proxyAddress = await this.getProxy();
+    return this._proxyAddress;
   }
 
   async migrateCdpComplete() {
     this.needsUpdate = true;
-    if (!this.migrateCdpActive && !this.proxyAddress) {
+    if (!this.migrateCdpActive && !this._proxyAddress) {
       this.migrateCdpActive = true;
       this.migrateCdpStage = 1;
       await this.proxyService.ensureProxy();
@@ -283,7 +289,7 @@ export default class MakerCDP {
       return await this.proxyService.ensureProxy();
     } else if (this.needToFinishMigrating) {
       this.needsUpdate = true;
-      await this.cdpService.give(this.cdpId, this.proxyAddress);
+      await this.cdpService.give(this.cdpId, this._proxyAddress);
     }
   }
 
@@ -306,7 +312,11 @@ export default class MakerCDP {
         return;
       }
       this.needsUpdate = true;
-      await this.cdpService.lockEthProxy(this.proxyAddress, this.cdpId, amount);
+      await this.cdpService.lockEthProxy(
+        this._proxyAddress,
+        this.cdpId,
+        amount
+      );
     } catch (e) {
       // eslint-disable-next-line
       console.log(e);
@@ -325,7 +335,7 @@ export default class MakerCDP {
           return;
         }
         this.needsUpdate = true;
-        this.cdpService.drawDaiProxy(this.proxyAddress, this.cdpId, amount);
+        this.cdpService.drawDaiProxy(this._proxyAddress, this.cdpId, amount);
       } catch (e) {
         // eslint-disable-next-line
         console.log(e);
@@ -339,7 +349,11 @@ export default class MakerCDP {
         return;
       }
       this.needsUpdate = true;
-      await this.cdpService.freeEthProxy(this.proxyAddress, this.cdpId, amount);
+      await this.cdpService.freeEthProxy(
+        this._proxyAddress,
+        this.cdpId,
+        amount
+      );
     } catch (e) {
       // eslint-disable-next-line
       console.log(e);
@@ -352,7 +366,11 @@ export default class MakerCDP {
         return;
       }
       this.needsUpdate = true;
-      await this.cdpService.wipeDaiProxy(this.proxyAddress, this.cdpId, amount);
+      await this.cdpService.wipeDaiProxy(
+        this._proxyAddress,
+        this.cdpId,
+        amount
+      );
     } catch (e) {
       // eslint-disable-next-line
       console.log(e);
@@ -366,17 +384,30 @@ export default class MakerCDP {
 
   async closeCdp() {
     const enoughToWipe = await this.canCloseCdp();
-    if (enoughToWipe) {
+    if (
+      this.makerManager.proxyAllowanceDai > 0 &&
+      this.makerManager.proxyAllowanceMkr
+    ) {
+      const methodObject = new this.web3.eth.Contract(
+        ERC20,
+        this.getTokenAddress(fromToken)
+      ).methods.approve(this.getKyberNetworkAddress(), fromValueWei);
+    }
+    /*    if (enoughToWipe) {
       try {
+        console.log(this._proxyAddress); // todo remove dev item
         this.needsUpdate = true;
         this.closing = true;
-        await this.cdp.shut();
-        // await this.cdpService.shutProxy(this.proxyAddress, this.cdpId);
+        console.log('close cdp'); // todo remove dev item
+        const result = await this.cdp.shut();
+        console.log('close cdp result'); // todo remove dev item
+        console.log(result); // todo remove dev item
+        // await this.cdpService.shutProxy(this._proxyAddress, this.cdpId);
       } catch (e) {
         // eslint-disable-next-line
         console.error(e);
       }
-    }
+    }*/
   }
 
   async moveCdp(address) {
@@ -385,11 +416,11 @@ export default class MakerCDP {
     if (proxy) {
       this.needsUpdate = true;
       this.closing = true; // for the purpose of displaying to the user closing and moving are the same
-      await this.cdpService.giveProxy(this.proxyAddress, this.cdpId, proxy);
+      await this.cdpService.giveProxy(this._proxyAddress, this.cdpId, proxy);
     } else if (!this.noProxy) {
       this.needsUpdate = true;
       this.closing = true;
-      await this.cdpService.giveProxy(this.proxyAddress, this.cdpId, address);
+      await this.cdpService.giveProxy(this._proxyAddress, this.cdpId, address);
     } else {
       this.needsUpdate = true;
       this.closing = true;
@@ -501,6 +532,12 @@ export default class MakerCDP {
   }
 
   // Helpers
+  async getTokenBalances() {
+    this.daiBalance = await this.daiToken.balance();
+    return this.daiBalance;
+  }
+
+  // Static Helpers
   static toNumber(val) {
     if (BigNumber.isBigNumber(val)) {
       return val.toNumber();

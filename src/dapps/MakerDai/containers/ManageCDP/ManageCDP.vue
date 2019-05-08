@@ -428,6 +428,11 @@ export default {
         this.maxWithDrawUSD = this.activeCdp.toUSD(this.activeCdp.maxDai);
       }
       this.maxWithDrawUSD = '--';
+      // proxyAllowanceMkr
+      console.log(this.makerManager.daiBalance.toNumber()); // todo remove dev item
+      console.log(this.makerManager.proxyAllowanceDai.toNumber()); // todo remove dev item
+      console.log(this.makerManager.proxyAllowanceMkr.toNumber()); // todo remove dev item
+
     },
     async migrateCdp() {
       await this.activeCdp.migrateCdp();
