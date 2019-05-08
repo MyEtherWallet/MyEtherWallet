@@ -174,6 +174,7 @@ export default {
         `Successfully added ${this.nickname} wallet!`,
         Toast.SUCCESS
       );
+      this.$router.push('/');
       this.reset();
       this.toggleVerifyDetails(false, '');
     },

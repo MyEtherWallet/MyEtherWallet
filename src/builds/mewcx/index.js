@@ -1,6 +1,8 @@
 import app from './app';
 import ExtensionPopup from '@/layouts/ExtensionPopup';
 import ExtensionBrowserAction from '@/layouts/ExtensionBrowserAction';
+import ExtensionAddWalletContainer from '@/layouts/ExtensionBrowserAction/containers/ExtensionAddWalletContainer';
+import ExtensionWalletContainer from '@/layouts/ExtensionBrowserAction/containers/ExtensionWalletContainer';
 
 const cxRoutes = [
   {
@@ -12,7 +14,20 @@ const cxRoutes = [
   {
     path: '/',
     component: ExtensionBrowserAction,
-    meta: { requiresAuth: false }
+    children: [
+      {
+        path: '',
+        name: 'View Wallets',
+        component: ExtensionWalletContainer,
+        meta: { requiresAuth: false }
+      },
+      {
+        path: '/add-wallet',
+        name: 'Add Wallets',
+        component: ExtensionAddWalletContainer,
+        meta: { requiresAuth: false }
+      }
+    ]
   }
 ];
 const configRoutes = routes => {
