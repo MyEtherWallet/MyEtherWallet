@@ -95,9 +95,7 @@ export default {
           icon: byMnemImgHov,
           title: 'Mnemonic Phrase',
           warning: 'Not Recommended',
-          func: () => {
-            console.log('REEEEEEEE');
-          }
+          func: () => {}
         },
         {
           icon: privateKeyImgHov,
