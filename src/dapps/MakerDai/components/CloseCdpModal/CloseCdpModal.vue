@@ -76,12 +76,13 @@
             </div>
           </div>
         </div>
-        <div v-if="needsDaiApprove">
+        <!-- TODO: work these into the user flow.  Batch transaction would be better, but an initial try brought the browser crashing issue back -->
+        <!--        <div v-if="needsDaiApprove">
           <p @click="approveDai">Approve Dai</p>
         </div>
         <div v-if="needsMkrApprove">
-          <p @click="approveMkr">Approve Dai</p>
-        </div>
+          <p @click="approveMkr">Approve Mkr</p>
+        </div>-->
         <div class="buttons">
           <standard-button :options="cancelButton" @click.native="closeModal" />
           <standard-button
@@ -280,18 +281,15 @@ export default {
       this.amount = this.activeCdp.debtValue;
     },
     getBalances() {
-      // console.log(this.tokensWithBalance); // todo remove dev item
       this.mkrToken = this.tokensWithBalance.find(item => {
         return item.symbol === 'MKR';
       });
       this.daiToken = this.tokensWithBalance.find(item => {
         return item.symbol === 'DAI';
       });
-      // console.log(this.daiToken); // todo remove dev item
     },
     getMkr() {
       const mkrNeeded = this.getfeeOwed;
-      console.log(mkrNeeded); // todo remove dev item
       if (toBigNumber(this.mkrBalance).lt(mkrNeeded)) {
         this.suppliedToAmount = toBigNumber(mkrNeeded)
           .minus(toBigNumber(this.mkrBalance))

@@ -399,27 +399,18 @@ export default class MakerCDP {
   }
 
   async closeCdp() {
+    // will also need to check if there is enough allowance
     const enoughToWipe = await this.canCloseCdp();
-    if (
-      this.makerManager.proxyAllowanceDai > 0 &&
-      this.makerManager.proxyAllowanceMkr > 0
-    ) {
-      if (enoughToWipe) {
-        try {
-          console.log(this._proxyAddress); // todo remove dev item
-          this.needsUpdate = true;
-          this.closing = true;
-          console.log('close cdp'); // todo remove dev item
-          const result = await this.cdp.shut();
-          console.log('close cdp result'); // todo remove dev item
-          console.log(result); // todo remove dev item
-          // await this.cdpService.shutProxy(this._proxyAddress, this.cdpId);
-        } catch (e) {
-          // eslint-disable-next-line
-          console.error(e);
-        }
+    if (enoughToWipe) {
+      try {
+        this.needsUpdate = true;
+        this.closing = true;
+        await this.cdp.shut();
+        // await this.cdpService.shutProxy(this._proxyAddress, this.cdpId);
+      } catch (e) {
+        // eslint-disable-next-line
+        console.error(e);
       }
-    } else {
     }
   }
 
@@ -460,7 +451,6 @@ export default class MakerCDP {
 
   fromPeth(peth) {
     if (!toBigNumber(peth).eq(0)) {
-      console.log(this._wethToPethRatio); // todo remove dev item
       return toBigNumber(peth).times(this._wethToPethRatio);
       // return toBigNumber(this._wethToPethRatio).div(peth);
     }

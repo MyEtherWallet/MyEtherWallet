@@ -31,7 +31,6 @@ const toBigNumber = num => {
 
 export default class Kyber {
   constructor(props = {}) {
-    console.log(props); // todo remove dev item
     this.name = Kyber.getName();
     this.network = props.network || networkSymbols.ETH;
     this.getRateForUnit =
