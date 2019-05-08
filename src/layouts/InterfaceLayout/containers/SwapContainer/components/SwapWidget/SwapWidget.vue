@@ -263,6 +263,10 @@ import {
 const errorLogger = debug('v5:swapContainer');
 import SwapSendForm from '../SwapExitToFiat';
 
+const toBigNumber = num => {
+  return new BigNumber(num);
+};
+
 export default {
   components: {
     'interface-bottom-text': InterfaceBottomText,
@@ -423,10 +427,10 @@ export default {
         }
         return false;
       } else if (
-        new BigNumber(this.fromValue).gt(
-          new BigNumber(this.selectedProvider.maxValue)
+        toBigNumber(this.fromValue).gt(
+          toBigNumber(this.selectedProvider.maxValue)
         ) &&
-        new BigNumber(this.selectedProvider.maxValue).gt(new BigNumber(0))
+        toBigNumber(this.selectedProvider.maxValue).gt(toBigNumber(0))
       )
         return this.$t('interface.aboveMaxSwap', {
           value: this.selectedProvider.maxValue,
@@ -436,7 +440,7 @@ export default {
     },
     toBelowMinAllowed() {
       if (this.checkBityMin) return this.$t('interface.belowMinGeneral');
-      if (new BigNumber(0).gte(new BigNumber(this.toValue)))
+      if (toBigNumber(0).gte(toBigNumber(this.toValue)))
         return this.$t('interface.belowMinGeneral');
       return false;
     },
@@ -585,7 +589,6 @@ export default {
         'from'
       );
       if (this.isWidget && this.widgetOpen) {
-        // console.log('re-update rates'); // todo remove dev item
         this.$once('swapRatesUpdated', () => {
           if (this.suppliedToAmount > 0) {
             this.toValue = this.suppliedToAmount;
@@ -626,14 +629,15 @@ export default {
       this.widgetOpen = true;
       if (this.isWidget) {
         this.toAddress = this.destAddress !== '' ? this.destAddress : '';
-        console.log(this.toAddress); // todo remove dev item
         this.fromCurrency = this.suppliedFrom.symbol;
         this.toCurrency = this.suppliedTo.symbol;
         this.overrideFrom = this.suppliedFrom;
         this.overrideTo = this.suppliedTo;
-        if (this.suppliedToAmount > 0) {
+        if (toBigNumber(this.suppliedToAmount).gt(0)) {
           this.toValue = this.suppliedToAmount;
           this.amountChanged('to');
+        } else {
+          this.toValue = 0;
         }
       }
     });

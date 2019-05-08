@@ -1,6 +1,9 @@
 import BigNumber from 'bignumber.js';
 import { toChecksumAddress } from '@/helpers/addressUtils';
 import MakerCDP from './MakerCDP';
+import Maker from '@makerdao/dai';
+
+const { MKR, DAI } = Maker;
 
 const toBigNumber = num => {
   return new BigNumber(num);
@@ -58,12 +61,21 @@ export default class MakerManager {
     return '--';
   }
 
+  get proxyAllowanceDai() {
+    return this._proxyAllowanceDai;
+  }
+
+  get proxyAllowanceMkr() {
+    return this._proxyAllowanceMkr;
+  }
+
   // Methods
   async init() {
     await this.maker.authenticate();
     this.priceService = this.maker.service('price');
     this.cdpService = await this.maker.service('cdp');
     this.proxyService = await this.maker.service('proxy');
+    this.tokenService = await this.maker.service('token');
 
     this.ethPrice = toBigNumber(
       (await this.priceService.getEthPrice()).toNumber()
@@ -87,6 +99,23 @@ export default class MakerManager {
 
     this.wethToPethRatio = toBigNumber(wethToPethRatio);
     this._proxyAddress = await this.proxyService.currentProxy();
+
+    this.daiToken = this.tokenService.getToken(DAI);
+    this.daiBalance = (await this.daiToken.balance()).toBigNumber();
+    this.mkrToken = this.tokenService.getToken(MKR);
+    this.mkrBalance = (await this.mkrToken.balance()).toBigNumber();
+
+    if (this._proxyAddress) {
+      this._proxyAllowanceDai = (await this.daiToken.allowance(
+        this.currentAddress,
+        this._proxyAddress
+      )).toBigNumber();
+
+      this._proxyAllowanceMkr = (await this.mkrToken.allowance(
+        this.currentAddress,
+        this._proxyAddress
+      )).toBigNumber();
+    }
 
     const { withProxy, withoutProxy } = await this.locateCdps();
     this.cdps = withProxy;
@@ -267,6 +296,7 @@ export default class MakerManager {
 
   async buildCdpObject(cdpId, options = {}) {
     const sysVars = {
+      makerManager: this,
       ethPrice: this.ethPrice,
       pethPrice: this.pethPrice,
       targetPrice: this.targetPrice,

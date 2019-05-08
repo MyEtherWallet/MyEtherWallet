@@ -205,6 +205,7 @@ export default {
     }
   },
   destroyed() {
+    this.maker.service('web3').disconnect();
     this.maker = {};
     this.priceService = {};
     this.cdpService = {};
@@ -251,12 +252,12 @@ export default {
         plugins: [MewMakerPlugin],
         accounts: {
           myLedger1: { type: 'mew' }
-        },
-        web3: {
-          statusTimerDelay: 10000,
-          pollingInterval: 10000000000
-        },
-        log: true
+        }
+        // web3: {
+        //   statusTimerDelay: 10000,
+        //   pollingInterval: 10000000000
+        // }
+        // log: true
       });
 
       this.makerManager = new MakerManager({
@@ -270,27 +271,35 @@ export default {
       });
 
       await this.makerManager.init();
-      // console.log('init complete?'); // todo remove dev item
 
       this.cdps = this.makerManager.cdps;
       this.cdpsWithoutProxy = this.makerManager.cdpsWithoutProxy;
       this.availableCdps = this.makerManager.availableCdps;
-      this.sysVars = this.makerManager.getSysVars();
-      this.ethPrice = this.sysVars.ethPrice;
-      this.pethPrice = this.sysVars.pethPrice;
-      this.liquidationRatio = this.sysVars.liquidationRatio;
-      this.liquidationPenalty = this.sysVars.liquidationPenalty;
-      this.stabilityFee = this.sysVars.stabilityFee;
-      this.wethToPethRatio = this.sysVars.wethToPethRatio;
-      this.currentAddress = this.account.address;
+      this.sysVarsFunc = this.makerManager.getSysVars;
+      if (this.sysVarsFunc) {
+        this.sysVars = this.makerManager.getSysVars();
+        this.ethPrice = this.sysVars.ethPrice;
+        this.pethPrice = this.sysVars.pethPrice;
+        this.liquidationRatio = this.sysVars.liquidationRatio;
+        this.liquidationPenalty = this.sysVars.liquidationPenalty;
+        this.stabilityFee = this.sysVars.stabilityFee;
+        this.wethToPethRatio = this.sysVars.wethToPethRatio;
+        this.currentAddress = this.account.address;
+      } /*else {
+        throw Error('Could Not Setup Maker');
+      }*/
 
-      this.sysServices = this.makerManager.getSysServices();
-      this.priceService = this.sysServices.priceService;
-      this.cdpService = this.sysServices.cdpService;
-      this.proxyService = this.sysServices.proxyService;
+      this.sysServicesFunc = this.makerManager.getSysServices;
+      if (this.sysServicesFunc) {
+        this.sysServices = this.makerManager.getSysServices();
+        this.priceService = this.sysServices.priceService;
+        this.cdpService = this.sysServices.cdpService;
+        this.proxyService = this.sysServices.proxyService;
+      } /*else {
+        throw Error('Could Not Setup Maker');
+      }*/
 
       this.currentProxy = this.makerManager.proxy;
-
       if (
         this.makerManager.cdps.length > 0 ||
         this.makerManager.cdpsWithoutProxy.length > 0
