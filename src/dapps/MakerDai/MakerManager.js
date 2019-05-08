@@ -2,8 +2,8 @@ import BigNumber from 'bignumber.js';
 import { toChecksumAddress } from '@/helpers/addressUtils';
 import MakerCDP from './MakerCDP';
 import Maker from '@makerdao/dai';
-import { ERC20 } from '../../partners/partnersConfig';
-const { MKR, DAI, WETH, PETH } = Maker;
+
+const { MKR, DAI} = Maker;
 
 const toBigNumber = num => {
   return new BigNumber(num);
@@ -61,11 +61,11 @@ export default class MakerManager {
     return '--';
   }
 
-  get proxyAllowanceDai(){
+  get proxyAllowanceDai() {
     return this._proxyAllowanceDai;
   }
 
-  get proxyAllowanceMkr(){
+  get proxyAllowanceMkr() {
     return this._proxyAllowanceMkr;
   }
 
@@ -112,6 +112,7 @@ export default class MakerManager {
         this.currentAddress,
         this._proxyAddress
       )).toBigNumber();
+
       this._proxyAllowanceMkr = (await this.mkrToken.allowance(
         this.currentAddress,
         this._proxyAddress
@@ -125,23 +126,6 @@ export default class MakerManager {
     if (this.cdps.length > 0 || this.cdpsWithoutProxy.length > 0) {
       await this.loadCdpDetails();
     }
-  }
-
-  approveTokens(...addresses) {
-    const txs = [];
-    for (let i = 0; i < addresses.length; i++) {
-      const methodObject = new this.web3.eth.Contract(
-        ERC20,
-        addresses[i]
-      ).methods.approve(this._proxyAddress, -1);
-      txs.push({
-        to: addresses[i],
-        value: 0,
-        data: methodObject.encodeABI()
-      });
-    }
-return txs;
-    // await this.daiToken._contract.approve(this._proxyAddress, -1).encodeABI();
   }
 
   hasCdp(cdpId) {
@@ -336,6 +320,9 @@ return txs;
     const makerCDP = new MakerCDP(cdpId, this.maker, services, sysVars);
     return await makerCDP.init(cdpId);
   }
+
+
+
 
   // Calculations
   calcDrawAmt(principal, collatRatio) {
