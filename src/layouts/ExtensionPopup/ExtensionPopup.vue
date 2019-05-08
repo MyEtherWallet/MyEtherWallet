@@ -51,7 +51,7 @@ export default {
         if (item !== 'localTokens') return newObj;
       });
       this.accounts = this.hasAccounts ? accounts : {};
-    },
+    }
   }
 };
 </script>

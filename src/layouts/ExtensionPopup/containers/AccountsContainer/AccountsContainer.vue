@@ -17,7 +17,11 @@
           No wallets found 😢
         </h3>
       </b-tab>
-      <b-tab :active="!hasMyWallets" title="Watch Only Wallets" class="tab-container">
+      <b-tab
+        :active="!hasMyWallets"
+        title="Watch Only Wallets"
+        class="tab-container"
+      >
         <wallet-view-component
           v-for="item in watchOnlyWallets"
           v-show="watchOnlyWallets.length > 0"
