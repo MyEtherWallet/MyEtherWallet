@@ -117,7 +117,23 @@ export default class MakerCDP {
   }
 
   get proxyAddress() {
-    return this._proxyAddress;
+    return this.makerManager.proxyAddress;
+  }
+
+  get proxyAllowanceDai() {
+    return this.makerManager.proxyAllowanceDai;
+  }
+
+  get proxyAllowanceMkr() {
+    return this.makerManager.proxyAllowanceMkr;
+  }
+
+  get daiToken() {
+    return this.makerManager.daiToken;
+  }
+
+  get mkrToken() {
+    this.makerManager.mkrToken;
   }
 
   get maxDai() {
@@ -386,28 +402,25 @@ export default class MakerCDP {
     const enoughToWipe = await this.canCloseCdp();
     if (
       this.makerManager.proxyAllowanceDai > 0 &&
-      this.makerManager.proxyAllowanceMkr
+      this.makerManager.proxyAllowanceMkr > 0
     ) {
-      const methodObject = new this.web3.eth.Contract(
-        ERC20,
-        this.getTokenAddress(fromToken)
-      ).methods.approve(this.getKyberNetworkAddress(), fromValueWei);
-    }
-    /*    if (enoughToWipe) {
-      try {
-        console.log(this._proxyAddress); // todo remove dev item
-        this.needsUpdate = true;
-        this.closing = true;
-        console.log('close cdp'); // todo remove dev item
-        const result = await this.cdp.shut();
-        console.log('close cdp result'); // todo remove dev item
-        console.log(result); // todo remove dev item
-        // await this.cdpService.shutProxy(this._proxyAddress, this.cdpId);
-      } catch (e) {
-        // eslint-disable-next-line
-        console.error(e);
+      if (enoughToWipe) {
+        try {
+          console.log(this._proxyAddress); // todo remove dev item
+          this.needsUpdate = true;
+          this.closing = true;
+          console.log('close cdp'); // todo remove dev item
+          const result = await this.cdp.shut();
+          console.log('close cdp result'); // todo remove dev item
+          console.log(result); // todo remove dev item
+          // await this.cdpService.shutProxy(this._proxyAddress, this.cdpId);
+        } catch (e) {
+          // eslint-disable-next-line
+          console.error(e);
+        }
       }
-    }*/
+    } else {
+    }
   }
 
   async moveCdp(address) {
@@ -532,8 +545,20 @@ export default class MakerCDP {
   }
 
   // Helpers
+  async approveDai() {
+    if (toBigNumber(this.proxyAllowanceDai).eq(0)) {
+      await this.daiToken.approveUnlimited(this.proxyAddress);
+    }
+  }
+
+  async approveMkr() {
+    if (toBigNumber(this.proxyAllowanceMkr).eq(0)) {
+      await this.mkrToken.approveUnlimited(this.proxyAddress);
+    }
+  }
+
   async getTokenBalances() {
-    this.daiBalance = await this.daiToken.balance();
+    this.daiBalance = await this.makerManager.daiToken.balance();
     return this.daiBalance;
   }
 

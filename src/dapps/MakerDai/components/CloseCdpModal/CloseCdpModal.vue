@@ -76,7 +76,12 @@
             </div>
           </div>
         </div>
-
+        <div v-if="needsDaiApprove">
+          <p @click="approveDai">Approve Dai</p>
+        </div>
+        <div v-if="needsMkrApprove">
+          <p @click="approveMkr">Approve Dai</p>
+        </div>
         <div class="buttons">
           <standard-button :options="cancelButton" @click.native="closeModal" />
           <standard-button
@@ -221,6 +226,12 @@ export default {
       }
       return false;
     },
+    needsDaiApprove() {
+      return toBigNumber(this.activeCdp.proxyAllowanceDai).eq(0);
+    },
+    needsMkrApprove() {
+      return toBigNumber(this.activeCdp.proxyAllowanceMkr).eq(0);
+    },
     canClose() {
       return this.enoughMkr && this.enoughDai;
     }
@@ -312,20 +323,16 @@ export default {
           symbol: 'DAI',
           name: 'Dai'
         };
-        this.destAddress = this.activeCdp.proxyAddress;
+        // this.destAddress = this.activeCdp.proxyAddress;
         this.$refs.swapWidget.$refs.modal.show();
       }
     },
-    getApprovals() {
-      const addres = [];
-      if (this.daiToken) {
-        addres.push(this.daiToken.address);
-      }
-      if (this.mkrToken) {
-        addres.push(this.mkrToken.address);
-      }
-      const datas = this.makerManager.approveTokens(...addres);
-      console.log(datas); // todo remove dev item
+
+    async approveDai() {
+      await this.activeCdp.approveDai();
+    },
+    async approveMkr() {
+      await this.activeCdp.approveMkr();
     }
   }
 };
