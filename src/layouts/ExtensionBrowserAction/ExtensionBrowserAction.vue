@@ -1,13 +1,6 @@
 <template>
   <div>
-    <add-wallet-container
-      v-show="addAccount || !hasAccounts"
-      :open-watch-only-modal="openWatchOnlyModal"
-    />
-    <my-wallets
-      v-show="!addAccount && hasAccounts"
-      :open-watch-only-modal="openWatchOnlyModal"
-    />
+    <router-view />
   </div>
 </template>
 
@@ -26,9 +19,7 @@ export default {
   data() {
     return {
       hasAccounts: false,
-      accounts: [],
-      loading: false,
-      addAccount: false
+      accounts: []
     };
   },
   created() {
@@ -47,11 +38,15 @@ export default {
         newObj[`${item}`] = res[`${item}`];
         if (item !== 'localTokens') return newObj;
       });
-      this.accounts = this.hasAccounts ? accounts : {};
+      if (this.hasAccounts) {
+        this.accounts = accounts;
+      } else {
+        this.accounts = {};
+        this.$router.push('/add-wallet');
+      }
     },
     addWatchOnlyWalletCb() {
       ExtensionHelpers.getAccounts(this.getAccountsCb);
-      this.loading = false;
       this.$refs.watchOnlyModal.$refs.watchOnlyWallet.hide();
       Toast.responseHandler(
         `Added ${name} to watch only accounts!`,
@@ -59,7 +54,6 @@ export default {
       );
     },
     addWatchOnlyWallet(name, address) {
-      this.loading = true;
       const newAcc = {};
       const addr = toChecksumAddress(address);
       newAcc[addr] = JSON.stringify({
