@@ -589,7 +589,6 @@ export default {
         'from'
       );
       if (this.isWidget && this.widgetOpen) {
-        // console.log('re-update rates'); // todo remove dev item
         this.$once('swapRatesUpdated', () => {
           if (this.suppliedToAmount > 0) {
             this.toValue = this.suppliedToAmount;
@@ -630,7 +629,6 @@ export default {
       this.widgetOpen = true;
       if (this.isWidget) {
         this.toAddress = this.destAddress !== '' ? this.destAddress : '';
-        console.log(this.toAddress); // todo remove dev item
         this.fromCurrency = this.suppliedFrom.symbol;
         this.toCurrency = this.suppliedTo.symbol;
         this.overrideFrom = this.suppliedFrom;

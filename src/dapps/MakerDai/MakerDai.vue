@@ -252,7 +252,7 @@ export default {
         plugins: [MewMakerPlugin],
         accounts: {
           myLedger1: { type: 'mew' }
-        },
+        }
         // web3: {
         //   statusTimerDelay: 10000,
         //   pollingInterval: 10000000000
@@ -271,7 +271,6 @@ export default {
       });
 
       await this.makerManager.init();
-      // console.log('init complete?'); // todo remove dev item
 
       this.cdps = this.makerManager.cdps;
       this.cdpsWithoutProxy = this.makerManager.cdpsWithoutProxy;
