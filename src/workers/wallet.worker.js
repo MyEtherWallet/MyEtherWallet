@@ -18,6 +18,17 @@ const getWalletFromPrivKeyFile = (jsonfile, password) => {
   throw new Error('Invalid Wallet file');
 };
 
+const createJsonWalletFromPrivateKey = (privateKey, password) => {
+  const createdWallet = {};
+  const wallet = new Wallet.fromPrivateKey(Buffer.from(privateKey, 'hex'));
+  createdWallet.walletJson = wallet.toV3(password, {
+    kdf: Configs.wallet.kdf,
+    n: Configs.wallet.n
+  });
+  createdWallet.name = wallet.getV3Filename();
+  return createdWallet;
+};
+
 const create = password => {
   const createdWallet = {};
   const wallet = new Wallet.generate();
@@ -49,6 +60,12 @@ if (
       postMessage(workerResult);
     } else if (event.data.type === 'unlockWallet') {
       const workerResult = unlock(event.data.data[0], event.data.data[1]);
+      postMessage(workerResult);
+    } else if (event.data.type === 'generateFromPrivateKey') {
+      const workerResult = createJsonWalletFromPrivateKey(
+        event.data.data[0],
+        event.data.data[1]
+      );
       postMessage(workerResult);
     }
   };
