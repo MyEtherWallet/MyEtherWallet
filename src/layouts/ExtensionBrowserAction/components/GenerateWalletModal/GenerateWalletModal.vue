@@ -55,6 +55,14 @@ export default {
     loading: {
       type: Boolean,
       default: false
+    },
+    password: {
+      type: String,
+      default: ''
+    },
+    nickname: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -62,8 +70,8 @@ export default {
       showIcon: showIcon,
       hide: hide,
       show: false,
-      locPassword: '',
-      locNickname: ''
+      locPassword: this.password,
+      locNickname: this.nickname
     };
   },
   computed: {

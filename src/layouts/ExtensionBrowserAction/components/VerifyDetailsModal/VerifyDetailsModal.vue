@@ -13,8 +13,8 @@
           <wallet-view-component :should-concat="false" :address="address" />
         </div>
         <div class="input-container">
-          <label> Your Wallet </label>
-          <input @change="nickname" />
+          <label> Nickname </label>
+          <input v-model="locNickname" />
         </div>
         <div class="submit-button-container">
           <div class="back-button" @click="back">
@@ -72,7 +72,16 @@ export default {
     back: {
       type: Function,
       default: () => {}
+    },
+    nickname: {
+      type: String,
+      default: ''
     }
+  },
+  data() {
+    return {
+      locNickname: this.nickname
+    };
   },
   computed: {
     address() {
@@ -83,9 +92,9 @@ export default {
       return ACTUAL_TITLES[this.title];
     }
   },
-  methods: {
-    nickname(e) {
-      this.$emit('nickname', e.target.value);
+  watch: {
+    locNickname(newVal) {
+      this.$emit('nickname', newVal);
     }
   }
 };
