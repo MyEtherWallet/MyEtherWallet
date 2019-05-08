@@ -1,6 +1,9 @@
 import BigNumber from 'bignumber.js';
 import { toChecksumAddress } from '@/helpers/addressUtils';
 import MakerCDP from './MakerCDP';
+import Maker from '@makerdao/dai';
+import { ERC20 } from '../../partners/partnersConfig';
+const { MKR, DAI, WETH, PETH } = Maker;
 
 const toBigNumber = num => {
   return new BigNumber(num);
@@ -58,12 +61,28 @@ export default class MakerManager {
     return '--';
   }
 
+  get proxyAllowanceDai(){
+    return this._proxyAllowanceDai;
+  }
+
+  get proxyAllowanceMkr(){
+    return this._proxyAllowanceMkr;
+  }
+
   // Methods
   async init() {
     await this.maker.authenticate();
     this.priceService = this.maker.service('price');
     this.cdpService = await this.maker.service('cdp');
     this.proxyService = await this.maker.service('proxy');
+    this.tokenService = await this.maker.service('token');
+    this.daiToken = this.tokenService.getToken(DAI);
+
+    this.daiBalance = (await this.daiToken.balance()).toBigNumber();
+    // this.wethToken = this.tokenService.getToken(WETH);
+    // this.pethToken = this.tokenService.getToken(PETH);
+    this.mkrToken = this.tokenService.getToken(MKR);
+    this.mkrBalance = (await this.mkrToken.balance()).toBigNumber();
 
     this.ethPrice = toBigNumber(
       (await this.priceService.getEthPrice()).toNumber()
@@ -88,6 +107,17 @@ export default class MakerManager {
     this.wethToPethRatio = toBigNumber(wethToPethRatio);
     this._proxyAddress = await this.proxyService.currentProxy();
 
+    if (this._proxyAddress) {
+      this._proxyAllowanceDai = (await this.daiToken.allowance(
+        this.currentAddress,
+        this._proxyAddress
+      )).toBigNumber();
+      this._proxyAllowanceMkr = (await this.mkrToken.allowance(
+        this.currentAddress,
+        this._proxyAddress
+      )).toBigNumber();
+    }
+
     const { withProxy, withoutProxy } = await this.locateCdps();
     this.cdps = withProxy;
     this.cdpsWithoutProxy = withoutProxy;
@@ -95,6 +125,23 @@ export default class MakerManager {
     if (this.cdps.length > 0 || this.cdpsWithoutProxy.length > 0) {
       await this.loadCdpDetails();
     }
+  }
+
+  approveTokens(...addresses) {
+    const txs = [];
+    for (let i = 0; i < addresses.length; i++) {
+      const methodObject = new this.web3.eth.Contract(
+        ERC20,
+        addresses[i]
+      ).methods.approve(this._proxyAddress, -1);
+      txs.push({
+        to: addresses[i],
+        value: 0,
+        data: methodObject.encodeABI()
+      });
+    }
+return txs;
+    // await this.daiToken._contract.approve(this._proxyAddress, -1).encodeABI();
   }
 
   hasCdp(cdpId) {
@@ -173,6 +220,7 @@ export default class MakerManager {
       if (this.cdps.length > 0 || this.cdpsWithoutProxy.length > 0) {
         this.routeHandlers.manage();
       } else {
+        console.log('go to create'); // todo remove dev item
         this.routeHandlers.create();
       }
     }
@@ -267,6 +315,7 @@ export default class MakerManager {
 
   async buildCdpObject(cdpId, options = {}) {
     const sysVars = {
+      makerManager: this,
       ethPrice: this.ethPrice,
       pethPrice: this.pethPrice,
       targetPrice: this.targetPrice,
