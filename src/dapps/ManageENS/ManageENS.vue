@@ -268,7 +268,7 @@ export default {
         const reclaimTx = {
           from: this.account.address,
           to,
-          reclaimData,
+          data: reclaimData,
           value: 0
         };
         this.web3.mew
