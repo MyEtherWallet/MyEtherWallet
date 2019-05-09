@@ -14,6 +14,7 @@
       ref="hardwareModal"
       :ledger-app-open="ledgerAppModalOpen"
       :network-and-address-open="networkAndAddressOpen"
+      :open-finney="finneyModalOpen"
       @hardwareRequiresPassword="hardwarePasswordModalOpen"
       @hardwareWalletOpen="hardwareWalletOpen"
     />
@@ -56,7 +57,7 @@
     />
 
     <wallet-password-modal />
-
+    <finney-modal ref="finney" />
     <enter-pin-number-modal />
 
     <div class="wrap">
@@ -91,6 +92,7 @@
 </template>
 
 <script>
+import FinneyModal from '../../components/FinneyModal';
 import AccessWalletButton from '../../components/AccessWalletButton';
 import HardwareModal from '../../components/HardwareModal';
 import HardwarePasswordModal from '../../components/HardwarePasswordModal';
@@ -136,7 +138,8 @@ export default {
     'access-wallet-button': AccessWalletButton,
     'wallet-password-modal': WalletPasswordModal,
     'enter-pin-number-modal': EnterPinNumberModal,
-    'ledger-app-modal': LedgerAppModal
+    'ledger-app-modal': LedgerAppModal,
+    'finney-modal': FinneyModal
   },
   data() {
     return {
@@ -266,6 +269,9 @@ export default {
       this.hardwareBrand = hardwareNeedingPassword.hardwareBrand;
       this.$refs.hardwareModal.$refs.hardware.hide();
       this.$refs.hardwarePasswordModal.$refs.password.show();
+    },
+    finneyModalOpen() {
+      this.$refs.finney.$refs.finneyModal.show();
     },
     hardwareWalletOpen(wallet) {
       if (this.$refs.mnemonicPhrasePassword.$refs.password.visible) {

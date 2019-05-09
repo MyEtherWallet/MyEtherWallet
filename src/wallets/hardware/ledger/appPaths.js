@@ -23,7 +23,6 @@ import {
   TT
 } from '@/networks/types';
 import {
-  ethereum,
   ledgerEthereum,
   ledgerLiveEthereum,
   ledgerEthereumClassic,
@@ -49,12 +48,11 @@ import {
   rskTestnet,
   thundercore
 } from '../../bip44/paths';
-ethereum['label'] = 'Ethereum (Trezor)';
 const appList = [
   {
     network: ETH,
     prefixes: ["m/44'/60'"],
-    paths: [ledgerEthereum, ledgerLiveEthereum, ethereum]
+    paths: [ledgerEthereum, ledgerLiveEthereum]
   },
   {
     network: ELLA,

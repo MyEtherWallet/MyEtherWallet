@@ -92,7 +92,7 @@
               <i
                 v-show="
                   selectedApp.network.name_long === 'Custom Paths' &&
-                    path.path !== 'custom'
+                    !path.hasOwnProperty('default')
                 "
                 class="fa fa-times remove-custom"
                 @click.stop="remove(path, idx)"
@@ -120,6 +120,7 @@ import cust from '@/assets/images/icons/network.svg';
 import { Toast, pathHelpers } from '@/helpers';
 import { LedgerWallet } from '@/wallets';
 import { mapState } from 'vuex';
+import { ethereum } from '@/wallets/bip44/paths';
 export default {
   props: {
     networks: {
@@ -203,8 +204,14 @@ export default {
       const customApp = {
         paths: [
           {
+            label: 'Ethereum (Trezor)',
+            path: ethereum.path,
+            default: true
+          },
+          {
             label: 'Add Custom Paths',
-            path: 'custom'
+            path: 'custom',
+            default: true
           }
         ],
         network: {
