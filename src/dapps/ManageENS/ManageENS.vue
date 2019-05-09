@@ -238,7 +238,7 @@ export default {
       }
     },
     async transferDomain(toAddress) {
-      let to, data, reclaimData;
+      let to, data;
       if (this.registrarType === REGISTRAR_TYPES.AUCTION) {
         data = this.registrarContract.methods
           .transfer(this.labelHash, toAddress)
@@ -253,9 +253,6 @@ export default {
         data = this.registrarContract.methods
           .safeTransferFrom(this.account.address, toAddress, this.labelHash)
           .encodeABI();
-        reclaimData = this.registrarContract.methods
-          .reclaim(this.labelHash, toAddress)
-          .encodeABI();
         to = this.registrarAddress;
       }
       const transferTx = {
@@ -265,18 +262,6 @@ export default {
         value: 0
       };
       if (this.registrarType === REGISTRAR_TYPES.PERMANENT) {
-        const reclaimTx = {
-          from: this.account.address,
-          to,
-          data: reclaimData,
-          value: 0
-        };
-        this.web3.mew
-          .sendBatchTransactions([transferTx, reclaimTx])
-          .catch(err => {
-            Toast.responseHandler(err, false);
-          });
-      } else {
         this.web3.eth.sendTransaction(transferTx).catch(err => {
           Toast.responseHandler(err, false);
         });
@@ -646,7 +631,13 @@ export default {
       let owner;
       let resolverAddress;
       try {
-        owner = await this.ens.owner(this.parsedDomainName);
+        if (this.registrarType === REGISTRAR_TYPES.PERMANENT) {
+          owner = await this.registrarContract.methods
+            .ownerOf(this.labelHash)
+            .call();
+        } else {
+          owner = await this.ens.owner(this.parsedDomainName);
+        }
       } catch (e) {
         owner = '0x';
         Toast.responseHandler(e, false);
