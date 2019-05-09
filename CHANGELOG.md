@@ -1,10 +1,10 @@
-### Devop
-
-### Bug
-
 ### Feature
 
 - Have Simplex KYC form open in new tab [#1031](https://github.com/MyEtherWallet/MyEtherWallet/pull/1031)
+
+### Release v5.0.11-ens.1
+
+- Permanent registry [#965](https://github.com/MyEtherWallet/MyEtherWallet/pull/965)
 
 ### Release v5.0.11
 

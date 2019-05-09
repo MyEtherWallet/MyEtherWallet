@@ -1,42 +1,27 @@
 <template lang="html">
-  <div class="dns-process-error">
-    <div
-      v-if="owner === '0x0000000000000000000000000000000000000000'"
-      class="dns-process-content"
-    >
-      <h3>No TXT setup found for {{ domainName }}!</h3>
-      <p>
-        On your DNS management console, please add a TXT type DNS entry "{{
-          '_ens.' + domainName
-        }}" with a value containing your Ethereum address in the format of
-        "a=YOURETHREUMADDRESS"
+  <div class="transfer-registrar-container">
+    <div class="transfer-registrar-content">
+      <h3>{{ fullDomainName }} is still in the old registrar!</h3>
+      <p v-show="isOwner">
+        Since you are are the owner of {{ fullDomainName }} you can transfer the
+        name to the new registrar using transfer button
       </p>
-    </div>
-    <div v-else class="dns-process-content">
-      <h3>
-        This name is currently owned in ENS by {{ owner }} but TXT record is no
-        longer available for {{ domainName }}!
-      </h3>
-      <p>
-        You can unclaim this {{ domainName }} from ENS by clicking the following
-        button
-      </p>
-      <div class="claim-dns-button">
+      <div class="transfer-registrar-button">
         <button
+          v-show="isOwner"
           :class="[
             'large-round-button-green-filled',
             loading ? 'disabled' : ''
           ]"
-          @click="claimFunc"
+          @click="transferFunc"
         >
           <span v-show="!loading">
-            Unclaim
+            Transfer
           </span>
           <i v-show="loading" class="fa fa-spinner fa-spin" />
         </button>
       </div>
     </div>
-
     <interface-bottom-text
       :link-text="$t('interface.helpCenter')"
       :question="$t('interface.haveIssues')"
@@ -46,13 +31,15 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
+
 export default {
   components: {
     'interface-bottom-text': InterfaceBottomText
   },
   props: {
-    domainName: {
+    hostName: {
       type: String,
       default: ''
     },
@@ -60,23 +47,32 @@ export default {
       type: String,
       default: ''
     },
-    claimFunc: {
+    transferFunc: {
       type: Function,
       default: function() {}
-    },
-    dnsClaim: {
-      type: Object,
-      default: () => {
-        return {};
-      }
     },
     loading: {
       type: Boolean,
       default: false
+    },
+    tld: {
+      type: String,
+      default: ''
+    }
+  },
+  computed: {
+    ...mapGetters({
+      account: 'account'
+    }),
+    fullDomainName() {
+      return `${this.hostName}.${this.tld}`;
+    },
+    isOwner() {
+      return this.account.address.toLowerCase() === this.owner.toLowerCase();
     }
   },
   mounted() {
-    if (this.domainName === '.') {
+    if (this.hostName === '') {
       this.$router.push('/interface/dapps/manage-ens');
     }
   }
@@ -84,5 +80,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'DNSMissingTXT.scss';
+@import 'TransferRegistrarsContainer.scss';
 </style>
