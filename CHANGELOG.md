@@ -2,6 +2,14 @@
 
 - Have Simplex KYC form open in new tab [#1031](https://github.com/MyEtherWallet/MyEtherWallet/pull/1031)
 
+### Bug
+
+- UI fix for mnemonic phrase key verification modal [#1029](https://github.com/MyEtherWallet/MyEtherWallet/pull/1029)
+
+### Devop
+
+- Change PWA name to MEW [#1030](https://github.com/MyEtherWallet/MyEtherWallet/pull/1030)
+
 ### Release v5.0.11-ens.1
 
 - Permanent registry [#965](https://github.com/MyEtherWallet/MyEtherWallet/pull/965)
