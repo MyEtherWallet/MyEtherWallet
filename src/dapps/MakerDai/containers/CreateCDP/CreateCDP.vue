@@ -308,23 +308,12 @@ export default {
   },
   methods: {
     buildEmpty() {
-      const sysVars = {
-        ethPrice: this.makerManager.ethPrice,
-        pethPrice: this.makerManager.pethPrice,
-        liquidationRatio: this.makerManager.liquidationRatio,
-        liquidationPenalty: this.makerManager.liquidationPenalty,
-        stabilityFee: this.makerManager.stabilityFee,
-        wethToPethRatio: this.makerManager.wethToPethRatio,
-        currentAddress: this.account.address
-      };
-
       const services = {
-        priceService: this.priceService,
-        cdpService: this.cdpService,
-        proxyService: this.proxyService
+        makerManager: this.makerManager,
+        web3: this.web3
       };
 
-      this.makerCDP = new MakerCDP(null, this.maker, services, sysVars);
+      this.makerCDP = new MakerCDP(null, this.maker, services, {});
     },
     displayPercentValue,
     displayFixedValue,

@@ -67,7 +67,7 @@
               <div>
                 {{
                   displayFixedValue(
-                    displayPercentValue(activeCdp._liquidationPenalty)
+                    displayPercentValue(activeCdp.liquidationPenalty)
                   )
                 }}%
               </div>
@@ -197,8 +197,6 @@
           </div>
         </div>
       </div>
-      <div> {{activeCdp.proxyAllowanceDai}}</div>
-      <div> {{activeCdp.proxyAllowanceMkr}}</div>
       <!-- ==================================================== -->
     </div>
     <help-link />
