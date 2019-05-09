@@ -290,7 +290,11 @@ export default {
     }
   },
   watch: {},
-  mounted() {},
+  mounted() {
+    this.$refs.modal.$on('shown', () => {
+      this.amount = 0;
+    });
+  },
   methods: {
     submitBtn() {
       if (!this.canProceed) return;

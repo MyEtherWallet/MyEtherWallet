@@ -21,7 +21,10 @@ export default class MakerManager {
     this.pethMin = props.pethMin || 0.005;
     this.creatingProxy = false;
     this._currentAddress = props.account.address;
-    this.maker = props.maker;
+    this.maker = function() {
+      return props.maker;
+    };
+
     this._proxyAddress = props.currentProxy || null;
     this.activeCdps = {};
     this.routeHandlers = props.routeHandlers || {
@@ -32,6 +35,10 @@ export default class MakerManager {
   }
 
   // Getters
+  get daiJs() {
+    return this.maker();
+  }
+
   get currentAddress() {
     return this._currentAddress;
   }
@@ -128,11 +135,11 @@ export default class MakerManager {
 
   // Methods
   async init() {
-    await this.maker.authenticate();
-    this._priceService = this.maker.service('price');
-    this._cdpService = await this.maker.service('cdp');
-    this._proxyService = await this.maker.service('proxy');
-    this._tokenService = await this.maker.service('token');
+    await this.maker().authenticate();
+    this._priceService = this.maker().service('price');
+    this._cdpService = await this.maker().service('cdp');
+    this._proxyService = await this.maker().service('proxy');
+    this._tokenService = await this.maker().service('token');
 
     this._ethPrice = toBigNumber(
       (await this._priceService.getEthPrice()).toNumber()
@@ -275,8 +282,8 @@ export default class MakerManager {
   }
 
   async locateCdpsWithoutProxy() {
-    const directCdps = await this.maker.getCdpIds(this._currentAddress);
-    const directCdpsCheckSum = await this.maker.getCdpIds(
+    const directCdps = await this.maker().getCdpIds(this._currentAddress);
+    const directCdpsCheckSum = await this.maker().getCdpIds(
       toChecksumAddress(this._currentAddress)
     );
 
@@ -285,7 +292,7 @@ export default class MakerManager {
 
   async locateCdpsProxy() {
     await this.getProxy();
-    return await this.maker.getCdpIds(this._proxyAddress);
+    return await this.maker().getCdpIds(this._proxyAddress);
   }
 
   async loadCdpDetails() {
@@ -361,7 +368,7 @@ export default class MakerManager {
       web3: this.web3
     };
 
-    const makerCDP = new MakerCDP(cdpId, this.maker, services, sysVars);
+    const makerCDP = new MakerCDP(cdpId, this, services, sysVars);
     return await makerCDP.init(cdpId);
   }
 

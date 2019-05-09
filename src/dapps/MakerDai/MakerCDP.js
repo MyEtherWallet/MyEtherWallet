@@ -15,16 +15,15 @@ const bnOver = (one, two, three) => {
 };
 
 export default class MakerCDP {
-  constructor(cdpId, maker, services, sysVars, toInit) {
+  constructor(cdpId, makerManager, services, sysVars, toInit) {
     this.cdpId = cdpId;
     this.cdp = {};
-    this.maker = maker;
     this.web3 = services.web3 || {};
     this.ready = false;
     this.doUpdate = 0;
     this.cdps = [];
     this.noProxy = sysVars.noProxy || false;
-    this.makerManager = services.makerManager || null;
+    this.makerManager = makerManager || null;
     this.needsUpdate = false;
     this.closing = false;
     this.opening = false;
@@ -209,7 +208,7 @@ export default class MakerCDP {
   }
 
   async updateValues(cdpId = this.cdpId) {
-    this.cdp = await this.maker.getCdp(cdpId);
+    this.cdp = await this.makerManager.daiJs.getCdp(cdpId);
     this._proxyAddress = await this.proxyService.currentProxy();
     this.noProxy = this._proxyAddress === null;
     const liqPrice = await this.cdp.getLiquidationPrice();

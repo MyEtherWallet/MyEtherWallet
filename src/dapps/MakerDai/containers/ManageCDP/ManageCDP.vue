@@ -279,12 +279,6 @@ export default {
       type: Number,
       default: 0
     },
-    maker: {
-      type: Object,
-      default: function() {
-        return {};
-      }
-    },
     makerManager: {
       type: Object,
       default: function() {
