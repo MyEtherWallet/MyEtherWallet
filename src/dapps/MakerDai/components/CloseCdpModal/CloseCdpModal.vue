@@ -77,12 +77,20 @@
           </div>
         </div>
         <!-- TODO: work these into the user flow.  Batch transaction would be better, but an initial try brought the browser crashing issue back -->
-        <!--        <div v-if="needsDaiApprove">
-          <p @click="approveDai">Approve Dai</p>
+        <div class="buttons">
+          <div v-if="needsDaiApprove">
+            <standard-button
+              :options="approveDaiButton"
+              @click.native="approveDai"
+            />
+          </div>
+          <div v-if="needsMkrApprove">
+            <standard-button
+              :options="approveMkrButton"
+              @click.native="approveMkr"
+            />
+          </div>
         </div>
-        <div v-if="needsMkrApprove">
-          <p @click="approveMkr">Approve Mkr</p>
-        </div>-->
         <div class="buttons">
           <standard-button :options="cancelButton" @click.native="closeModal" />
           <standard-button
@@ -149,6 +157,18 @@ export default {
       textValues: {},
       mkrToken: {},
       daiToken: {},
+      approveMkrButton: {
+        title: 'Approve Maker',
+        buttonStyle: 'green-border',
+        fullWidth: true,
+        noMinWidth: true
+      },
+      approveDaiButton: {
+        title: 'Approve Dai',
+        buttonStyle: 'green-border',
+        fullWidth: true,
+        noMinWidth: true
+      },
       cancelButton: {
         title: 'Cancel',
         buttonStyle: 'green-border',
@@ -238,7 +258,12 @@ export default {
       return toBigNumber(this.activeCdp.proxyAllowanceMkr).eq(0);
     },
     canClose() {
-      return this.enoughMkr && this.enoughDai;
+      return (
+        this.enoughMkr &&
+        this.enoughDai &&
+        !this.needsDaiApprove &&
+        !this.needsMkrApprove
+      );
     }
   },
   watch: {
