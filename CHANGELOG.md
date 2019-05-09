@@ -1,3 +1,7 @@
+### Bug
+
+- Fix owner check for permanent registrar names [#1054](https://github.com/MyEtherWallet/MyEtherWallet/pull/1054)
+
 ### Release v5.0.11-ens.1
 
 - Permanent registry [#965](https://github.com/MyEtherWallet/MyEtherWallet/pull/965)
