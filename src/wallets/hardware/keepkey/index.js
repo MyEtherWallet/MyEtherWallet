@@ -123,6 +123,12 @@ class KeepkeyWallet {
       );
       return Buffer.from(response.toObject().signature, 'base64');
     };
+    const displayAddress = async () => {
+      await this.keepkey.ethereumGetAddress({
+        addressNList: bip32ToAddressNList(accountPath),
+        showDisplay: true
+      });
+    };
     return new HDWalletInterface(
       accountPath,
       derivedKey.publicKey,
@@ -130,7 +136,8 @@ class KeepkeyWallet {
       this.identifier,
       errorHandler,
       txSigner,
-      msgSigner
+      msgSigner,
+      displayAddress
     );
   }
   getCurrentPath() {
