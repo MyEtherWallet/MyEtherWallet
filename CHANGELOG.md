@@ -1,3 +1,7 @@
+### Bug
+
+- UI fix for mnemonic phrase key verification modal [#1029](https://github.com/MyEtherWallet/MyEtherWallet/pull/1029)
+
 ### Release v5.0.11-ens.1
 
 - Permanent registry [#965](https://github.com/MyEtherWallet/MyEtherWallet/pull/965)
