@@ -40,7 +40,7 @@
             </li>
             <li>
               <p>{{ $t('dappsMaker.stabilityFeeOwed') }}</p>
-              <p><b>0.00%</b> MKR</p>
+              <p><b>0.00%</b> MKR</p><!-- TODO: fix-->
             </li>
             <li>
               <p>{{ $t('dappsMaker.projectedLiquidation') }}</p>
@@ -179,8 +179,7 @@ export default {
           return item.symbol.toUpperCase() === 'DAI';
         });
         if (daiToken === undefined) return true;
-        const asEth = ethUnit.fromWei(daiToken.balance, 'ether');
-        return toBigNumber(this.amount).lte(toBigNumber(asEth));
+        return toBigNumber(this.amount).lte(toBigNumber(daiToken));
       }
       return true;
     },

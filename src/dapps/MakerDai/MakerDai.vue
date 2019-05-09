@@ -205,7 +205,7 @@ export default {
     }
   },
   destroyed() {
-    this.maker.service('web3').disconnect();
+    // this.maker.service('web3').disconnect();
     this.maker = {};
     this.priceService = {};
     this.cdpService = {};
@@ -232,16 +232,13 @@ export default {
       this.openMoveModal = false;
     },
     async setup() {
+      const web3 = this.web3;
       this.gotoHome();
-      const MewMakerPlugin = MewPlugin(
-        this.web3,
-        this.account.address,
-        async () => {
-          if (this.$route.path.includes('maker-dai')) {
-            await this.doUpdate();
-          }
+      const MewMakerPlugin = MewPlugin(web3, this.account.address, async () => {
+        if (this.$route.path.includes('maker-dai')) {
+          await this.doUpdate();
         }
-      );
+      });
 
       this.maker = await Maker.create('http', {
         url: this.network.url,
