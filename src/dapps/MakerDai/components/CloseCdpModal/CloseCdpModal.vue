@@ -216,14 +216,18 @@ export default {
     enoughMkr() {
       const mkrNeeded = this.activeCdp.governanceFeeOwed;
       if (mkrNeeded) {
-        return toBigNumber(this.mkrBalance).gte(mkrNeeded);
+        return toBigNumber(this.mkrBalance)
+          .minus(mkrNeeded)
+          .gte(0);
       }
       return false;
     },
     enoughDai() {
       const daiNeeded = this.activeCdp.debtValue;
       if (daiNeeded) {
-        return toBigNumber(this.daiBalance).gte(daiNeeded);
+        return toBigNumber(this.daiBalance)
+          .minus(daiNeeded)
+          .gte(0);
       }
       return false;
     },

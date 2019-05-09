@@ -197,6 +197,8 @@
           </div>
         </div>
       </div>
+      <div> {{activeCdp.proxyAllowanceDai}}</div>
+      <div> {{activeCdp.proxyAllowanceMkr}}</div>
       <!-- ==================================================== -->
     </div>
     <help-link />
