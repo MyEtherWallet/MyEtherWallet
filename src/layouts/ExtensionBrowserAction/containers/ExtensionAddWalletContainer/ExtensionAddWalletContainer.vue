@@ -1,5 +1,8 @@
 <template>
   <div class="add-wallet-container">
+    <import-mnemonic-modal
+      @mnemonicPhrase="updateMnemonic"
+    />
     <generate-wallet-modal
       ref="generateNewWallet"
       :generate-wallet="generateWallet"
@@ -65,6 +68,8 @@ import ImportKeystoreModal from '../../components/ImportKeystoreModal';
 import ImportPrivateKeyModal from '../../components/ImportPrivateKeyModal';
 import VerifyDetailsModal from '../../components/VerifyDetailsModal';
 import GenerateWalletModal from '../../components/GenerateWalletModal';
+import ImportMnemonicModal from '../../components/ImportMnemonicModal';
+import NetworkAndAddressModal from '../../components/ImportMnemonicModal';
 
 export default {
   components: {
@@ -72,6 +77,7 @@ export default {
     'import-keystore-modal': ImportKeystoreModal,
     'import-private-key-modal': ImportPrivateKeyModal,
     'verify-details-modal': VerifyDetailsModal,
+    'import-mnemonic-modal': ImportMnemonicModal,
     'generate-wallet-modal': GenerateWalletModal
   },
   props: {
@@ -95,7 +101,9 @@ export default {
           icon: byMnemImgHov,
           title: 'Mnemonic Phrase',
           warning: 'Not Recommended',
-          func: () => {}
+          func: () => {
+            this.toggleImportMnemonicPhrase(true);
+          }
         },
         {
           icon: privateKeyImgHov,
@@ -122,7 +130,8 @@ export default {
       title: '',
       nickname: '',
       generateOnly: false,
-      privateKey: ''
+      privateKey: '',
+      mnemonicPhrase: ''
     };
   },
   methods: {
@@ -188,6 +197,7 @@ export default {
       this.nickname = '';
       this.generateOnly = false;
       this.privateKey = '';
+      this.mnemonicPhrase = '';
     },
     addWalletToStore() {
       this.loading = true;
@@ -198,23 +208,6 @@ export default {
         this.storeWalletCb
       );
     },
-    toggleImportKeystoreFile(bool) {
-      if (bool) this.$refs.importKeystore.$refs.importKeystore.show();
-      if (!bool) this.$refs.importKeystore.$refs.importKeystore.hide();
-    },
-    toggleImportPrivateKey(bool) {
-      if (bool) this.$refs.importPrivateKey.$refs.importPrivateKey.show();
-      if (!bool) this.$refs.importPrivateKey.$refs.importPrivateKey.hide();
-    },
-    toggleGenerateWallet(bool) {
-      if (bool) this.$refs.generateNewWallet.$refs.generateNewWallet.show();
-      if (!bool) this.$refs.generateNewWallet.$refs.generateNewWallet.hide();
-    },
-    toggleVerifyDetails(bool, title) {
-      if (bool) this.$refs.verifyDetails.$refs.verifyDetails.show();
-      if (!bool) this.$refs.verifyDetails.$refs.verifyDetails.hide();
-      this.title = title;
-    },
     back() {
       if (this.title === keyStoreType) {
         this.toggleImportKeystoreFile(true);
@@ -224,21 +217,6 @@ export default {
         this.toggleGenerateWallet(true);
       }
       this.toggleVerifyDetails(false, '');
-    },
-    updateFilePath(e) {
-      this.filepath = e.replace('fakepath', 'user-path');
-    },
-    updateNickname(e) {
-      this.nickname = e;
-    },
-    updateFile(e) {
-      this.file = e;
-    },
-    updatePassword(e) {
-      this.password = e;
-    },
-    updatePrivKey(e) {
-      this.privateKey = e;
     },
     unlockJson() {
       this.loading = true;
@@ -267,6 +245,45 @@ export default {
         this.loading = false;
         Toast.responseHandler(e, Toast.ERROR);
       };
+    },
+    toggleImportKeystoreFile(bool) {
+      if (bool) this.$refs.importKeystore.$refs.importKeystore.show();
+      if (!bool) this.$refs.importKeystore.$refs.importKeystore.hide();
+    },
+    toggleImportPrivateKey(bool) {
+      if (bool) this.$refs.importPrivateKey.$refs.importPrivateKey.show();
+      if (!bool) this.$refs.importPrivateKey.$refs.importPrivateKey.hide();
+    },
+    toggleImportMnemonicPhrase(bool) {
+      if (bool) this.$refs.mnemonicPhrase.$refs.mnemonicPhrase.show();
+      if (!bool) this.$refs.mnemonicPhrase.$refs.mnemonicPhrase.hide();
+    },
+    toggleGenerateWallet(bool) {
+      if (bool) this.$refs.generateNewWallet.$refs.generateNewWallet.show();
+      if (!bool) this.$refs.generateNewWallet.$refs.generateNewWallet.hide();
+    },
+    toggleVerifyDetails(bool, title) {
+      if (bool) this.$refs.verifyDetails.$refs.verifyDetails.show();
+      if (!bool) this.$refs.verifyDetails.$refs.verifyDetails.hide();
+      this.title = title;
+    },
+    updateFilePath(e) {
+      this.filepath = e.replace('fakepath', 'user-path');
+    },
+    updateNickname(e) {
+      this.nickname = e;
+    },
+    updateFile(e) {
+      this.file = e;
+    },
+    updatePassword(e) {
+      this.password = e;
+    },
+    updatePrivKey(e) {
+      this.privateKey = e;
+    },
+    updateMnemonic(e) {
+      this.mnemonicPhrase = e;
     }
   }
 };
