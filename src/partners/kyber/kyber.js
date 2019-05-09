@@ -283,6 +283,7 @@ export default class Kyber {
         .methods[method](...parameters)
         .call();
     } catch (e) {
+      // eslint-disable-next-line
       console.error(e);
     }
   }

@@ -1,6 +1,5 @@
 import Maker from '@makerdao/dai';
 import BigNumber from 'bignumber.js';
-import { ERC20 } from '../../partners/partnersConfig';
 
 const { MKR, DAI } = Maker;
 
@@ -403,7 +402,6 @@ export default class MakerCDP {
   async closeCdp() {
     // will also need to check if there is enough allowance
     const enoughToWipe = await this.canCloseCdp();
-    console.log(enoughToWipe); // todo remove dev item
     if (enoughToWipe) {
       try {
         this.needsUpdate = true;
