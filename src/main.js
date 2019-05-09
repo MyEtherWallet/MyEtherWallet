@@ -107,7 +107,7 @@ const vue = new Vue({
   render: h => h(getApp())
 });
 
-/*const integration = new Integrations.Vue({ Vue, attachProps: true });
+const integration = new Integrations.Vue({ Vue, attachProps: true });
 
 Sentry.init({
   dsn: 'https://2c4e977d74fd44d1b18083e63a3b265f@sentry.mewapi.io/1',
@@ -128,4 +128,4 @@ Sentry.init({
       return res === true ? event : null;
     });
   }
-});*/
+});
