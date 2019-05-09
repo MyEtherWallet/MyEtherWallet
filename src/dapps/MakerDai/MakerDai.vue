@@ -259,6 +259,7 @@ export default {
 
       this.makerManager = new MakerManager({
         account: this.account,
+        web3: web3,
         maker: this.maker,
         routeHandlers: {
           home: this.gotoHome,
