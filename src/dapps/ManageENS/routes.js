@@ -12,7 +12,16 @@ const FifsBuyContainer = () => import('./containers/FifsBuyContainer');
 const ClaimDNSContainer = () => import('./containers/ClaimDNSContainer');
 const DNSProcessErrorContainer = () =>
   import('./containers/DNSProcessErrorContainer');
-const DNSMissingTXT = () => import('./containers/DNSMissingTXT');
+const DNSMissingTXTContainer = () =>
+  import('./containers/DNSMissingTXTContainer');
+const TransferRegistrarsContainer = () =>
+  import('./containers/TransferRegistrarsContainer');
+const CreateCommitmentContainer = () =>
+  import('./containers/CreateCommitmentContainer');
+const PermanentRegistrationContainer = () =>
+  import('./containers/PermanentRegistrationContainer');
+const RegistrationInProgressContainer = () =>
+  import('./containers/RegistrationInProgressContainer');
 
 export default {
   path: 'dapps/manage-ens',
@@ -89,7 +98,31 @@ export default {
     {
       path: 'no-txt-setup',
       name: 'No TXT setup for DNS',
-      component: DNSMissingTXT,
+      component: DNSMissingTXTContainer,
+      props: true
+    },
+    {
+      path: 'transfer-registrar',
+      name: 'Transfer ENS Registrar',
+      component: TransferRegistrarsContainer,
+      props: true
+    },
+    {
+      path: 'create-commitment',
+      name: 'Create Commitment',
+      component: CreateCommitmentContainer,
+      props: true
+    },
+    {
+      path: 'permanent-registration',
+      name: 'Register ENS By Duration',
+      component: PermanentRegistrationContainer,
+      props: true
+    },
+    {
+      path: 'registration-in-progress',
+      name: 'ENS Registration in progress',
+      component: RegistrationInProgressContainer,
       props: true
     }
   ]

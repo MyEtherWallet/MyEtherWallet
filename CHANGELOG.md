@@ -1,3 +1,7 @@
+### Release v5.0.11-ens.1
+
+- Permanent registry [#965](https://github.com/MyEtherWallet/MyEtherWallet/pull/965)
+
 ### Release v5.0.11
 
 ### Devop
