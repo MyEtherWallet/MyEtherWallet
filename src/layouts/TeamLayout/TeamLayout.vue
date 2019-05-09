@@ -10,7 +10,6 @@
             <div class="text">
               <h4>{{ member.name }}</h4>
               <h6>{{ member.position }}</h6>
-              <h6>{{ member.otherInfo }}</h6>
             </div>
           </div>
         </div>
@@ -73,7 +72,6 @@ export default {
         {
           name: 'Duke & Richie Wolf',
           position: 'Blockchain Specialist',
-          //otherInfo: '#MEWForce',
           img: richie
         },
         {

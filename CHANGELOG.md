@@ -1,3 +1,7 @@
+### Devop
+
+- Update Richie's profile [#1036](https://github.com/MyEtherWallet/MyEtherWallet/pull/1036)
+
 ### Release v5.0.11-ens.1
 
 - Permanent registry [#965](https://github.com/MyEtherWallet/MyEtherWallet/pull/965)
@@ -6,7 +10,6 @@
 
 ### Devop
 
-- Update Richie's profile [#1036](https://github.com/MyEtherWallet/MyEtherWallet/pull/1036)
 - Access by Software UI change [#1021](https://github.com/MyEtherWallet/MyEtherWallet/pull/1021)
 - Fix multiple sentry issues [#1015](https://github.com/MyEtherWallet/MyEtherWallet/pull/1015)
 - Update hardware icons [#994](https://github.com/MyEtherWallet/MyEtherWallet/pull/994)
