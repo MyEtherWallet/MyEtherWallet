@@ -18,7 +18,7 @@
       <div class="title-content-container">
         <p class="cpd-title">{{ $t('dappsMaker.cdpPortal') }}</p>
         <p class="cdp-id">
-          {{ $t('dappsMaker.positionLabel') }} #{{ activeCdp.cdpId }}
+          {{ $t('dappsMaker.positionLabel', { value: activeCdp.cdpId }) }}
         </p>
       </div>
       <!-- ==================================================== -->
@@ -43,7 +43,7 @@
               <div>
                 {{
                   displayFixedValue(
-                    displayPercentValue(activeCdp._liquidationPenalty)
+                    displayPercentValue(activeCdp.liquidationPenalty)
                   )
                 }}%
               </div>

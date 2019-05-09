@@ -409,8 +409,8 @@ export default class MakerCDP {
       try {
         this.needsUpdate = true;
         this.closing = true;
-        await this.cdp.shut();
-        // await this.cdpService.shutProxy(this._proxyAddress, this.cdpId);
+        // await this.cdp.shut();
+        await this.cdpService.shutProxy(this._proxyAddress, this.cdpId);
       } catch (e) {
         // eslint-disable-next-line
         console.error(e);
