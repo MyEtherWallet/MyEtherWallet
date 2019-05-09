@@ -204,7 +204,10 @@ export default {
     }
   },
   destroyed() {
-    this.this.makerManager.maker().service('web3').disconnect();
+    this.this.makerManager
+      .maker()
+      .service('web3')
+      .disconnect();
     this.priceService = {};
     this.cdpService = {};
     this.proxyService = {};
@@ -233,11 +236,15 @@ export default {
       const web3 = this.web3;
       const _self = this;
       this.gotoHome();
-      const MewMakerPlugin = MewPlugin(web3, _self.account.address, async () => {
-        if (_self.$route.path.includes('maker-dai')) {
-          await _self.doUpdate();
+      const MewMakerPlugin = MewPlugin(
+        web3,
+        _self.account.address,
+        async () => {
+          if (_self.$route.path.includes('maker-dai')) {
+            await _self.doUpdate();
+          }
         }
-      });
+      );
 
       const maker = await Maker.create('http', {
         url: _self.network.url,
@@ -423,7 +430,12 @@ export default {
         web3: this.web3
       };
 
-      const makerCDP = new MakerCDP(cdpId, this.makerManager, services, sysVars);
+      const makerCDP = new MakerCDP(
+        cdpId,
+        this.makerManager,
+        services,
+        sysVars
+      );
       return await makerCDP.init(cdpId);
     },
     calcMinCollatRatio(priceFloor) {
