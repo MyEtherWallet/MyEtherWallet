@@ -69,7 +69,8 @@ class SecalotWallet {
       this.identifier,
       errorHandler,
       txSigner,
-      msgSigner
+      msgSigner,
+      null
     );
   }
   getCurrentPath() {
