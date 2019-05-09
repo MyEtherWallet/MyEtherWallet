@@ -231,12 +231,6 @@ export default {
         return {};
       }
     },
-    maker: {
-      type: Object,
-      default: function() {
-        return {};
-      }
-    },
     migrationInProgress: {
       type: Object,
       default: function() {

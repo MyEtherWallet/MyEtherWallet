@@ -111,7 +111,11 @@ export default {
     }
   },
   watch: {},
-  mounted() {},
+  mounted() {
+    this.$refs.modal.$on('shown', () => {
+      this.address = '';
+    });
+  },
   methods: {
     closeCdp() {
       this.activeCdp.closeCdp();

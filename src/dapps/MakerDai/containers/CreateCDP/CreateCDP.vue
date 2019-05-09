@@ -222,12 +222,6 @@ export default {
         return {};
       }
     },
-    maker: {
-      type: Object,
-      default: function() {
-        return {};
-      }
-    },
     makerManager: {
       type: Object,
       default: function() {
@@ -309,11 +303,10 @@ export default {
   methods: {
     buildEmpty() {
       const services = {
-        makerManager: this.makerManager,
         web3: this.web3
       };
 
-      this.makerCDP = new MakerCDP(null, this.maker, services, {});
+      this.makerCDP = new MakerCDP(null, this.makerManager, services, {});
     },
     displayPercentValue,
     displayFixedValue,

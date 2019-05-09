@@ -76,12 +76,6 @@ export default {
     cdpDetailsLoaded: {
       type: Boolean,
       default: false
-    },
-    maker: {
-      type: Object,
-      default: function() {
-        return {};
-      }
     }
   },
   data() {

@@ -51,7 +51,6 @@
       :liquidation-penalty="liquidationPenalty"
       :stability-fee="stabilityFee"
       :liquidation-ratio="liquidationRatio"
-      :maker="maker"
       :price-service="priceService"
       :cdp-service="cdpService"
       :proxy-service="proxyService"
@@ -123,7 +122,7 @@ export default {
   },
   data() {
     return {
-      maker: {},
+      // maker: {},
       priceService: {},
       cdpService: {},
       proxyService: {},
@@ -205,8 +204,7 @@ export default {
     }
   },
   destroyed() {
-    // this.maker.service('web3').disconnect();
-    this.maker = {};
+    this.this.makerManager.maker().service('web3').disconnect();
     this.priceService = {};
     this.cdpService = {};
     this.proxyService = {};
@@ -233,34 +231,30 @@ export default {
     },
     async setup() {
       const web3 = this.web3;
+      const _self = this;
       this.gotoHome();
-      const MewMakerPlugin = MewPlugin(web3, this.account.address, async () => {
-        if (this.$route.path.includes('maker-dai')) {
-          await this.doUpdate();
+      const MewMakerPlugin = MewPlugin(web3, _self.account.address, async () => {
+        if (_self.$route.path.includes('maker-dai')) {
+          await _self.doUpdate();
         }
       });
 
-      this.maker = await Maker.create('http', {
-        url: this.network.url,
+      const maker = await Maker.create('http', {
+        url: _self.network.url,
         provider: {
           type: 'HTTP',
-          url: this.network.url
+          url: _self.network.url
         },
         plugins: [MewMakerPlugin],
         accounts: {
           myLedger1: { type: 'mew' }
         }
-        // web3: {
-        //   statusTimerDelay: 10000,
-        //   pollingInterval: 10000000000
-        // }
-        // log: true
       });
 
       this.makerManager = new MakerManager({
         account: this.account,
         web3: web3,
-        maker: this.maker,
+        maker: maker,
         routeHandlers: {
           home: this.gotoHome,
           create: this.gotoCreate,
@@ -273,31 +267,27 @@ export default {
       this.cdps = this.makerManager.cdps;
       this.cdpsWithoutProxy = this.makerManager.cdpsWithoutProxy;
       this.availableCdps = this.makerManager.availableCdps;
-      this.sysVarsFunc = this.makerManager.getSysVars;
-      if (this.sysVarsFunc) {
-        this.sysVars = this.makerManager.getSysVars();
-        this.ethPrice = this.sysVars.ethPrice;
-        this.pethPrice = this.sysVars.pethPrice;
-        this.liquidationRatio = this.sysVars.liquidationRatio;
-        this.liquidationPenalty = this.sysVars.liquidationPenalty;
-        this.stabilityFee = this.sysVars.stabilityFee;
-        this.wethToPethRatio = this.sysVars.wethToPethRatio;
-        this.currentAddress = this.account.address;
-      } /*else {
-        throw Error('Could Not Setup Maker');
-      }*/
+      // this.sysVarsFunc = this.makerManager.getSysVars;
+      // if (this.sysVarsFunc) {
+      //   this.sysVars = this.makerManager.getSysVars();
+      //   this.ethPrice = this.sysVars.ethPrice;
+      //   this.pethPrice = this.sysVars.pethPrice;
+      //   this.liquidationRatio = this.sysVars.liquidationRatio;
+      //   this.liquidationPenalty = this.sysVars.liquidationPenalty;
+      //   this.stabilityFee = this.sysVars.stabilityFee;
+      //   this.wethToPethRatio = this.sysVars.wethToPethRatio;
+      //   this.currentAddress = this.account.address;
+      // }
 
-      this.sysServicesFunc = this.makerManager.getSysServices;
-      if (this.sysServicesFunc) {
-        this.sysServices = this.makerManager.getSysServices();
-        this.priceService = this.sysServices.priceService;
-        this.cdpService = this.sysServices.cdpService;
-        this.proxyService = this.sysServices.proxyService;
-      } /*else {
-        throw Error('Could Not Setup Maker');
-      }*/
+      // this.sysServicesFunc = this.makerManager.getSysServices;
+      // if (this.sysServicesFunc) {
+      //   this.sysServices = this.makerManager.getSysServices();
+      //   this.priceService = this.sysServices.priceService;
+      //   this.cdpService = this.sysServices.cdpService;
+      //   this.proxyService = this.sysServices.proxyService;
+      // }
 
-      this.currentProxy = this.makerManager.proxy;
+      this.currentProxy = this.makerManager.getProxy();
       if (
         this.makerManager.cdps.length > 0 ||
         this.makerManager.cdpsWithoutProxy.length > 0
@@ -425,24 +415,15 @@ export default {
     },
     async buildCdpObject(cdpId, options = {}) {
       const sysVars = {
-        ethPrice: this.ethPrice,
-        pethPrice: this.pethPrice,
-        targetPrice: this.targetPrice,
-        liquidationRatio: this.liquidationRatio,
-        liquidationPenalty: this.liquidationPenalty,
-        stabilityFee: this.stabilityFee,
-        wethToPethRatio: this.wethToPethRatio,
-        currentAddress: this.account.address,
         ...options
       };
 
       const services = {
-        priceService: this.priceService,
-        cdpService: this.cdpService,
-        proxyService: this.proxyService
+        makerManager: this.makerManager,
+        web3: this.web3
       };
 
-      const makerCDP = new MakerCDP(cdpId, this.maker, services, sysVars);
+      const makerCDP = new MakerCDP(cdpId, this.makerManager, services, sysVars);
       return await makerCDP.init(cdpId);
     },
     calcMinCollatRatio(priceFloor) {
