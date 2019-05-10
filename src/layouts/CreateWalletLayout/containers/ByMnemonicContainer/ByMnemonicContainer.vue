@@ -51,7 +51,11 @@
       </div>
 
       <div class="option-container-block">
-        <expending-option title="Password" button-text="Optional">
+        <expending-option
+          title="Password"
+          button-text="Optional"
+          @expanded="passwordInputViewChange"
+        >
           <div class="option-container">
             <create-wallet-input
               v-model="password"
@@ -114,6 +118,7 @@ export default {
   },
   data() {
     return {
+      password: '',
       verificationValues: [],
       mnemonicValues: [],
       mnemonic24: false,
@@ -127,6 +132,9 @@ export default {
     this.mnemonicValues = bip39.generateMnemonic(128).split(' ');
   },
   methods: {
+    passwordInputViewChange() {
+      this.password = '';
+    },
     unlockWallet() {
       this.$router.push('/access-my-wallet');
     },

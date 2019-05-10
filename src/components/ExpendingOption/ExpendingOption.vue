@@ -9,7 +9,7 @@
       <!-- Rounded switch -->
       <div class="switch sliding-switch-white">
         <label class="switch">
-          <input type="checkbox" @click="expanded = !expanded" />
+          <input type="checkbox" @click="optionExpanded" />
           <span class="slider round" />
         </label>
       </div>
@@ -41,6 +41,12 @@ export default {
     return {
       expanded: false
     };
+  },
+  methods: {
+    optionExpanded() {
+      this.expanded = !this.expanded;
+      this.$emit('expanded', this.expanded);
+    }
   }
 };
 </script>
