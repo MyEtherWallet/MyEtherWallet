@@ -69,3 +69,43 @@
     } // .phrases
   } // .contents
 } // @media all and (max-width: $mobile-width)
+
+.user-input {
+  margin-bottom: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .icon {
+    height: 30px;
+    margin-left: 20px;
+  }
+} // .user-input
+
+.option-container-block {
+  margin-bottom: 20px;
+  .option-container {
+    padding: 10px 10px 0 10px;
+
+    form {
+      margin: 0;
+    }
+  }
+}
+
+.password-warning {
+  margin-top: 20px;
+  padding: 0 10px;
+
+  a {
+    font-size: inherit;
+    font-weight: inherit;
+    text-decoration: underline;
+  }
+
+  .read {
+    margin-top: 10px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+}
