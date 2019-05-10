@@ -1,0 +1,32 @@
+@import '~@/scss/GlobalVariables';
+
+%next-button-main {
+  cursor: pointer;
+  display: block;
+  margin: 0 auto;
+  max-width: 300px;
+  padding: 20px 0;
+  text-align: center;
+  width: 100%;
+  position: relative;
+  margin-top: 40px;
+
+  img {
+    position: absolute;
+    right: 20px;
+    top: 24px;
+    width: 25px;
+  }
+}
+
+.user-input {
+  margin-bottom: 40px;
+}
+
+.next-button {
+  @extend %next-button-main;
+}
+
+.full-width {
+  width: 100%;
+}

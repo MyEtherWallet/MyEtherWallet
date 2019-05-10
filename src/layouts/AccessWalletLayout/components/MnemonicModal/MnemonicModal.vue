@@ -50,10 +50,27 @@
             </li>
           </ul>
         </div>
+        <div class="option-container-block">
+          <expending-option
+            title="Password"
+            button-text="Optional"
+            @expanded="passwordInputViewChange"
+          >
+            <div class="option-container">
+              <create-wallet-input
+                v-model="password"
+                :show-button="false"
+                :full-width="true"
+              />
+            </div>
+          </expending-option>
+        </div>
+        <p v-show="error !== ''" class="error">{{ error }}</p>
         <div class="button-container-block">
           <standard-button
             :options="continueButtonOptions"
-            @click.native="openPasswordModal"
+            :spinner="spinner"
+            @click.native="unlockWallet"
           />
         </div>
       </form>
@@ -66,21 +83,29 @@
 import CustomerSupport from '@/components/CustomerSupport';
 import WarningMessage from '@/components/WarningMessage';
 import StandardButton from '@/components/Buttons/StandardButton';
+import CreateWalletInput from './components/CreateWalletInput';
+import ExpendingOption from '@/components/ExpendingOption';
+import { MnemonicWallet } from '@/wallets';
+import { Toast } from '@/helpers';
 
 export default {
   components: {
     'customer-support': CustomerSupport,
     'warning-message': WarningMessage,
-    'standard-button': StandardButton
+    'standard-button': StandardButton,
+    'create-wallet-input': CreateWalletInput,
+    'expending-option': ExpendingOption
   },
   props: {
-    mnemonicPhrasePasswordModalOpen: {
+    hardwareWalletOpen: {
       type: Function,
       default: function() {}
     }
   },
   data() {
     return {
+      spinner: false,
+      error: '',
       continueButtonOptions: {
         title: this.$t('common.continue'),
         buttonStyle: 'green',
@@ -89,7 +114,8 @@ export default {
       },
       mnemonicPhrase: new Array(this.mnemonicSize).fill(''),
       mnemonic24: false,
-      mnemonicSize: 12
+      mnemonicSize: 12,
+      password: ''
     };
   },
   watch: {
@@ -107,6 +133,24 @@ export default {
     }
   },
   methods: {
+    passwordInputViewChange() {
+      this.password = '';
+    },
+    unlockWallet() {
+      this.spinner = true;
+      MnemonicWallet(this.mnemonicPhrase.join(' '), this.password)
+        .then(wallet => {
+          this.password = '';
+          this.spinner = false;
+          this.hardwareWalletOpen(wallet);
+        })
+        .catch(e => {
+          this.password = '';
+          this.spinner = false;
+          this.error = e;
+          Toast.responseHandler(e, Toast.ERROR);
+        });
+    },
     clearInputs() {
       this.mnemonicPhrase = new Array(this.mnemonicSize).fill('');
     },

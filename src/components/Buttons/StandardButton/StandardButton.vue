@@ -19,6 +19,18 @@
     </div>
     <div :class="buttonClass">
       <button
+        v-show="spinner"
+        :disabled="diableButton"
+        :class="[
+          options.isThisMobileBottomButton ? 'mobile-bottom-button' : '',
+          options.noMinWidth ? 'no-min-width' : ''
+        ]"
+        class="the-button-box"
+      >
+        <i class="fa fa-spin fa-spinner fa-lg" />
+      </button>
+      <button
+        v-show="!spinner"
         :disabled="diableButton"
         :class="[
           options.isThisMobileBottomButton ? 'mobile-bottom-button' : '',
@@ -27,6 +39,7 @@
         class="the-button-box"
       >
         {{ options.title }}
+        <i v-show="spinner" class="fa fa-spin fa-spinner fa-lg" />
         <img
           v-if="options.loadingIcon"
           class="loading-left"
@@ -92,6 +105,10 @@ export default {
       }
     },
     buttonDisabled: {
+      type: Boolean,
+      default: false
+    },
+    spinner: {
       type: Boolean,
       default: false
     }
