@@ -56,7 +56,7 @@
     "@ethereum-alarm-clock/lib": "0.3.5",
     "@keepkey/keepkey.js": "1.2.1",
     "@ledgerhq/hw-app-eth": "4.55.0",
-    "@ledgerhq/hw-transport-u2f": "4.55.0",
+    "@ledgerhq/hw-transport-u2f": "4.56.0",
     "@myetherwallet/eth-token-balance": "0.1.4",
     "@myetherwallet/mewconnect-web-client": "1.0.14",
     "@vue/cli-plugin-babel": "3.7.0",
