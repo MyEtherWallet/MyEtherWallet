@@ -24,7 +24,7 @@ describe('CreateWalletInput.vue', () => {
     });
   });
 
-  xit('should render correct value props', () => {
+  it('should render correct value props', () => {
     const value = '100';
     wrapper.setProps({ value });
     expect(
