@@ -204,7 +204,7 @@ export default {
     }
   },
   destroyed() {
-    this.this.makerManager
+    this.makerManager
       .maker()
       .service('web3')
       .disconnect();
