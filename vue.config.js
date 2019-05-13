@@ -84,6 +84,7 @@ if (process.env.NODE_ENV === 'production') {
       globOptions: {
         ignore: [
           // Are we using these
+          'src/assets/images/icons/question.png',
           'src/components/DropDownAddressSelector/DropDownAddressSelector.scss',
           'src/components/DropDownAddressSelector/index.js',
           'src/components/PopupHelper/index.js',
