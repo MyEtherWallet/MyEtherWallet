@@ -1,9 +1,9 @@
 import { XDC } from '../types';
 export default {
   type: XDC,
-  service: 'XinFin.Network',
-  url: 'https://testnet.xinfin.network',
-  port: 443,
+  service: 'Apothem.Network',
+  url: 'http://rpc.apothem.network',
+  port: 80,
   auth: false,
   username: '',
   password: ''
