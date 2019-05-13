@@ -190,6 +190,17 @@ export default class MakerManager {
     }
   }
 
+  async getProxy() {
+    this._proxyAddress = await this._proxyService.currentProxy();
+    if (!this._proxyAddress) {
+      this._proxyAddress = await this._proxyService.getProxyAddress(
+        this._currentAddress
+      );
+      if (this._proxyAddress) this.noProxy = false;
+    }
+    return this._proxyAddress;
+  }
+
   hasCdp(cdpId) {
     return Object.keys(this.activeCdps).includes(toBigNumber(cdpId).toString());
   }
@@ -241,10 +252,23 @@ export default class MakerManager {
   }
 
   async doUpdate(route) {
-    this._proxyAddress = await this._proxyService.currentProxy();
+    this._proxyAddress = await this.getProxy();
     let afterClose = false;
     const afterOpen = route === 'create';
     await this.updateActiveCdp();
+    this.daiBalance = (await this._daiToken.balance()).toBigNumber();
+    this.mkrBalance = (await this._mkrToken.balance()).toBigNumber();
+    if (this._proxyAddress) {
+      this._proxyAllowanceDai = (await this.daiToken.allowance(
+        this._currentAddress,
+        this._proxyAddress
+      )).toBigNumber();
+
+      this._proxyAllowanceMkr = (await this.mkrToken.allowance(
+        this._currentAddress,
+        this._proxyAddress
+      )).toBigNumber();
+    }
     for (const idProp in this.activeCdps) {
       if (this.activeCdps[idProp].needsUpdate) {
         if (this.activeCdps[idProp].closing) {
@@ -326,17 +350,6 @@ export default class MakerManager {
     if (currentProxy) {
       await this._cdpService.give(cdpId, currentProxy);
     }
-  }
-
-  async getProxy() {
-    this._proxyAddress = await this._proxyService.currentProxy();
-    if (!this._proxyAddress) {
-      this._proxyAddress = await this._proxyService.getProxyAddress(
-        this._currentAddress
-      );
-      if (this._proxyAddress) this.noProxy = false;
-    }
-    return this._proxyAddress;
   }
 
   getSysVars() {
