@@ -1,6 +1,8 @@
 <template>
   <div class="add-wallet-container">
     <import-mnemonic-modal
+      ref="mnemonicPhrase"
+      :open-address-option="openAddressOption"
       @mnemonicPhrase="updateMnemonic"
     />
     <generate-wallet-modal
@@ -33,6 +35,7 @@
       @file="updateFile"
       @password="updatePassword"
     />
+    <network-address-modal ref="networkAddress" :wallet-instance="wallet" />
     <h2>Add My Wallet</h2>
     <p>How would you like to add your wallet?</p>
     <div class="add-wallet-options">
@@ -51,7 +54,7 @@
 </template>
 
 <script>
-import { WalletInterface } from '@/wallets';
+import { WalletInterface, MnemonicWallet } from '@/wallets';
 import {
   KEYSTORE as keyStoreType,
   PRIV_KEY as privateKeyType
@@ -69,7 +72,7 @@ import ImportPrivateKeyModal from '../../components/ImportPrivateKeyModal';
 import VerifyDetailsModal from '../../components/VerifyDetailsModal';
 import GenerateWalletModal from '../../components/GenerateWalletModal';
 import ImportMnemonicModal from '../../components/ImportMnemonicModal';
-import NetworkAndAddressModal from '../../components/ImportMnemonicModal';
+import NetworkAndAddressModal from '../../components/NetworkAndAddressModal';
 
 export default {
   components: {
@@ -78,7 +81,8 @@ export default {
     'import-private-key-modal': ImportPrivateKeyModal,
     'verify-details-modal': VerifyDetailsModal,
     'import-mnemonic-modal': ImportMnemonicModal,
-    'generate-wallet-modal': GenerateWalletModal
+    'generate-wallet-modal': GenerateWalletModal,
+    'network-address-modal': NetworkAndAddressModal
   },
   props: {
     openWatchOnlyModal: {
@@ -135,6 +139,24 @@ export default {
     };
   },
   methods: {
+    openAddressOption() {
+      const mnemonicPhrase = this.mnemonicPhrase.join(' ');
+      this.loading = true;
+      MnemonicWallet(mnemonicPhrase, '')
+        .then(wallet => {
+          this.wallet = wallet;
+          this.loading = false;
+          this.mnemonicPhrase = '';
+          this.toggleImportMnemonicPhrase(false);
+          this.toggleNetworkAddressModal(true);
+        })
+        .catch(e => {
+          Toast.responseHandler(e, Toast.ERROR);
+          this.loading = false;
+          this.wallet = {};
+          this.toggleImportMnemonicPhrase(false);
+        });
+    },
     generateWalletFromPriv() {
       this.loading = true;
       const worker = new walletWorker();
@@ -261,6 +283,11 @@ export default {
     toggleGenerateWallet(bool) {
       if (bool) this.$refs.generateNewWallet.$refs.generateNewWallet.show();
       if (!bool) this.$refs.generateNewWallet.$refs.generateNewWallet.hide();
+    },
+    toggleNetworkAddressModal(bool) {
+      console.log(this.$refs.networkAddress);
+      if (bool) this.$refs.networkAddress.$refs.networkAddress.show();
+      if (!bool) this.$refs.networkAddress.$refs.networkAddress.hide();
     },
     toggleVerifyDetails(bool, title) {
       if (bool) this.$refs.verifyDetails.$refs.verifyDetails.show();

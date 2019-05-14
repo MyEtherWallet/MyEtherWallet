@@ -37,7 +37,7 @@
             <li v-for="index in mnemonicSize" :key="index">
               <span>{{ index }}.</span>
               <input
-                v-model="mnemonicPhrase[index - 1]"
+                v-model="locMnemonicPhrase[index - 1]"
                 :ref="`mnemonicInput${index - 1}`"
                 type="text"
                 name=""
@@ -52,8 +52,10 @@
           <b-btn
             class="mid-round-button-green-filled close-button"
             type="submit"
+            @click="openAddressOption"
           >
-            {{ $t('common.continue') }}
+            <span v-show="!loading"> {{ $t('common.continue') }} </span>
+            <i v-show="loading" class="fa fa-spin fa-spinner fa-lg" />
           </b-btn>
         </div>
       </form>
@@ -71,9 +73,13 @@ export default {
     'customer-support': CustomerSupport
   },
   props: {
-    mnemonicPhrasePasswordModalOpen: {
+    openAddressOption: {
       type: Function,
       default: function() {}
+    },
+    loading: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
