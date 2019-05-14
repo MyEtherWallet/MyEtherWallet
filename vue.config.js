@@ -158,6 +158,5 @@ module.exports = {
   configureWebpack: webpackConfig,
   pwa: pwa,
   lintOnSave: process.env.NODE_ENV === 'production' ? 'error' : true,
-  integrity: process.env.WEBPACK_INTEGRITY === 'false' ? false : true,
   chainWebpack: config => { }
 };
