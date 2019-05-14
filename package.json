@@ -54,7 +54,7 @@
   "devDependencies": {
     "@ensdomains/dnsregistrar": "0.3.5",
     "@ethereum-alarm-clock/lib": "0.3.5",
-    "@keepkey/keepkey.js": "1.2.1",
+    "@keepkey/keepkey.js": "1.2.2",
     "@ledgerhq/hw-app-eth": "4.55.0",
     "@ledgerhq/hw-transport-u2f": "4.55.0",
     "@myetherwallet/eth-token-balance": "0.1.4",
