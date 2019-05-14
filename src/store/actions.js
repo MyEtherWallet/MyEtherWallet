@@ -117,13 +117,13 @@ const setWeb3Instance = function({ dispatch, commit, state }, provider) {
   // eslint-disable-next-line
   const parsedUrl = `${hostUrl.protocol}//${hostUrl.host}${
     state.network.port ? ':' + state.network.port : ''
-    }${hostUrl.pathname}`;
+  }${hostUrl.pathname}`;
   state.network.username !== '' && state.network.password !== ''
     ? (options['headers'] = {
-      authorization: `Basic: ${btoa(
-        state.network.username + ':' + state.network.password
-      )}`
-    })
+        authorization: `Basic: ${btoa(
+          state.network.username + ':' + state.network.password
+        )}`
+      })
     : {};
   const web3Instance = new web3(
     new MEWProvider(
@@ -149,8 +149,8 @@ const setWeb3Instance = function({ dispatch, commit, state }, provider) {
         };
         arr[i].nonce = await (arr[i].nonce === undefined
           ? web3Instance.eth.getTransactionCount(
-            state.wallet.getChecksumAddressString()
-          )
+              state.wallet.getChecksumAddressString()
+            )
           : arr[i].nonce);
         arr[i].nonce = +arr[i].nonce + i;
         arr[i].gas = await (arr[i].gas === undefined
@@ -198,7 +198,6 @@ const updateNotification = function({ commit, state }, val) {
 
   newNotif[address][val[1]] = val[2];
   commit('UPDATE_NOTIFICATION', newNotif);
-
 };
 
 const updateBlockNumber = function({ commit }, val) {
