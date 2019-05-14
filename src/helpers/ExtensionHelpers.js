@@ -1,3 +1,5 @@
+const bip39 = require('bip39');
+import * as HDKey from 'hdkey';
 import Toast from './responseHandler';
 
 const getAccounts = callback => {
@@ -12,6 +14,11 @@ const addWatchOnlyWallet = (newAcc, callback) => {
   } catch (e) {
     Toast.responseHandler('Something went wrong!', Toast.ERROR);
   }
+};
+
+const getPrivFromMnemonicWallet = (mnemonic, path) => {
+  const hdKey = HDKey.fromMasterSeed(bip39.mnemonicToSeedSync(mnemonic, ''));
+  return hdKey.derive(path)._privateKey;
 };
 
 const addWalletToStore = (address, encStr, nickname, callback) => {
@@ -30,5 +37,6 @@ const addWalletToStore = (address, encStr, nickname, callback) => {
 export default {
   getAccounts,
   addWatchOnlyWallet,
-  addWalletToStore
+  addWalletToStore,
+  getPrivFromMnemonicWallet
 };

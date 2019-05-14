@@ -153,30 +153,29 @@
                 >
               </div>
             </div>
-            <!-- .content-container-2 -->
-            <div class="accept-terms">
-              <label class="checkbox-container">
-                {{ $t('accessWallet.acceptTerms') }}
-                <router-link to="/terms-and-conditions"
-                  >{{ $t('common.terms') }}.</router-link
-                >
+            <div class="input-container">
+              <label for="keystorePassword"> Password </label>
+              <div class="keystore-password-input">
                 <input
-                  ref="accessMyWalletBtn"
-                  type="checkbox"
-                  @click="
-                    accessMyWalletBtnDisabled = !accessMyWalletBtnDisabled
-                  "
+                  v-model="locPassword"
+                  :type="show ? 'text' : 'password'"
+                  placeholder="Enter your password"
+                  name="keystorePassword"
                 />
-                <span class="checkmark" />
-              </label>
+                <img
+                  :src="show ? showIcon : hide"
+                  @click.prevent="show = !show"
+                />
+              </div>
             </div>
             <div class="button-container">
               <b-btn
-                :disabled="accessMyWalletBtnDisabled"
-                class="mid-round-button-green-filled close-button"
-                @click.prevent="generateWalletFromPriv"
-                >{{ $t('common.accessMyWallet') }}</b-btn
+                :class="[validInputs ? '' : 'disabled', 'mid-round-button-green-filled close-button']"
+                @click.prevent="generateFromMnemonicPriv"
               >
+                <span v-show="!loading"> Add Wallet </span>
+                <i v-show="loading" class="fa fa-spinner fa-spin" />
+              </b-btn>
             </div>
             <customer-support />
           </div>
@@ -195,6 +194,8 @@ import web3utils from 'web3-utils';
 import BigNumber from 'bignumber.js';
 import Blockie from '@/components/Blockie';
 import { LEDGER as LEDGER_TYPE } from '@/wallets/bip44/walletTypes';
+import hide from '@/assets/images/icons/hide-password.svg';
+import showIcon from '@/assets/images/icons/show-password.svg';
 
 const MAX_ADDRESSES = 5;
 export default {
@@ -209,15 +210,22 @@ export default {
         return {};
       }
     },
-    generateWalletFromPriv: {
+    generateFromMnemonicPriv: {
       type: Function,
       default: () => {}
+    },
+    password: {
+      type: String,
+      default: ''
+    },
+    loading: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
     return {
       selectedId: '',
-      accessMyWalletBtnDisabled: true,
       currentIndex: 0,
       HDAccounts: [],
       availablePaths: {},
@@ -226,7 +234,11 @@ export default {
       customPathInput: false,
       currentWallet: null,
       customPath: { label: '', dpath: '' },
-      ledgerType: LEDGER_TYPE
+      ledgerType: LEDGER_TYPE,
+      show: false,
+      locPassword: this.password,
+      hide: hide,
+      showIcon: showIcon
     };
   },
   computed: {
@@ -238,19 +250,24 @@ export default {
     }),
     reorderNetworkList() {
       return Misc.reorderNetworks();
+    },
+    validInputs() {
+      return this.currentWallet && this.locPassword !== '';
     }
   },
   watch: {
     walletInstance() {
       this.getPaths();
       this.setHDAccounts();
+    },
+    locPassword(newVal) {
+      this.$emit('password', newVal);
     }
   },
   mounted() {
     // reset component values when modal becomes hidden
     this.$refs.networkAddress.$on('hidden', () => {
       this.$refs.accessMyWalletBtn.checked = false;
-      this.accessMyWalletBtnDisabled = true;
       this.availablePaths = {};
       this.selectedPath = '';
       this.invalidPath = '';
@@ -271,6 +288,10 @@ export default {
     setAccount(account) {
       this.selectedId = 'address' + account.index;
       this.unselectAllAddresses('address' + account.index);
+      this.$emit('accountPath', [
+        `${this.selectedPath}/${account.index}`,
+        account.account.getAddressString()
+      ]);
       this.currentWallet = account.account;
     },
     resetPaginationValues() {
@@ -360,7 +381,7 @@ export default {
           this.getPaths();
           this.currentIndex = 0;
           this.setHDAccounts();
-          this.$refs.networkAndAddress.show();
+          this.$refs.networkAddress.show();
         })
         .catch(error => {
           // if HD path is not supported by the hardware
@@ -381,16 +402,6 @@ export default {
           });
       });
     }, 1000),
-    unlockWallet() {
-      this.$store.dispatch('decryptWallet', [this.currentWallet]);
-      if (!this.wallet !== null) {
-        this.$router.push({
-          path: 'interface'
-        });
-      }
-
-      this.$refs.networkAndAddress.hide();
-    },
     async setHDAccounts() {
       if (!this.web3.eth) this.$store.dispatch('setWeb3Instance');
       this.HDAccounts = [];
@@ -442,8 +453,4 @@ export default {
 
 <style lang="scss" scoped>
 @import 'NetworkAndAddressModal.scss';
-
-.activeConn {
-  color: gray;
-}
 </style>
