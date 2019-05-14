@@ -140,16 +140,6 @@ export default {
           titleKey: 'common.verifyMessage'
         }
       ]
-    },
-    {
-      name: 'dev',
-      routes: ['/interface/dev'],
-      icons: {
-        active: require('@/assets/images/sidemenu/message-active.svg'),
-        inactive: require('@/assets/images/sidemenu/message.svg')
-      },
-      titleKey: 'interface.txSideMenuMessage',
-      children: []
     }
   ]
 };
