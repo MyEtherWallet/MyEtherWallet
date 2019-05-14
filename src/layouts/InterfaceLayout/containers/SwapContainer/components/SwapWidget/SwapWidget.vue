@@ -467,8 +467,12 @@ export default {
         this.hasEnough &&
         (this.toAddress !== '' || canExit) &&
         this.allAddressesValid &&
-        this.selectedProvider.minValue <= +this.fromValue &&
-        (+this.fromValue <= this.selectedProvider.maxValue ||
+        toBigNumber(this.selectedProvider.minValue).lte(
+          toBigNumber(this.fromValue)
+        ) &&
+        (toBigNumber(this.fromValue).lte(
+          toBigNumber(this.selectedProvider.maxValue)
+        ) ||
           this.selectedProvider.maxValue === 0)
       );
     },
