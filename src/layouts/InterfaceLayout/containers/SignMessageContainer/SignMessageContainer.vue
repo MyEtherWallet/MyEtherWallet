@@ -65,7 +65,7 @@
         <interface-bottom-text
           :link-text="$t('interface.helpCenter')"
           :question="$t('interface.haveIssues')"
-          link="https://kb.myetherwallet.com"
+          link="https://xinfin.network"
         />
       </div>
     </div>

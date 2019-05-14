@@ -171,7 +171,7 @@ export default {
             },
             {
               text: 'Help Center',
-              href: 'https://kb.myetherwallet.com'
+              href: 'https://xinfin.network'
             }
           ]
         }

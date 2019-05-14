@@ -44,10 +44,10 @@
       <li>
         Go to
         <a
-          href="https://www.myetherwallet.com/#send-transaction"
+          href="https://www.xinfin.network/#send-transaction"
           target="_blank"
           rel="noopener noreferrer"
-          >https://www.myetherwallet.com/#send-transaction</a
+          >https://www.xinfin.network/#send-transaction</a
         >
         (the current version)
       </li>
@@ -129,10 +129,10 @@
       <li>
         Go to
         <a
-          href="https://www.myetherwallet.com/#send-transaction"
+          href="https://www.xinfin.network/#send-transaction"
           target="_blank"
           rel="noopener noreferrer"
-          >https://www.myetherwallet.com/#send-transaction</a
+          >https://www.xinfin.network/#send-transaction</a
         >
         (the current version)
       </li>
@@ -200,10 +200,10 @@
       <li>
         Go to
         <a
-          href="https://www.myetherwallet.com/#send-transaction"
+          href="https://www.xinfin.network/#send-transaction"
           target="_blank"
           rel="noopener noreferrer"
-          >https://www.myetherwallet.com/#send-transaction</a
+          >https://www.xinfin.network/#send-transaction</a
         >
         (the current version)
       </li>
@@ -343,7 +343,7 @@
     </p>
     <p class="col">
       <a
-        href="https://kb.myetherwallet.com/diving-deeper/how-to-submit-pull-request.html"
+        href="https://xinfin.network/diving-deeper/how-to-submit-pull-request.html"
         target="_blank"
         rel="noopener noreferrer"
         >Don't know how to submit a pull request? <br />It's also easy!

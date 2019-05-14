@@ -115,7 +115,7 @@
       </li>
       <li>
         <a
-          href="https://kb.myetherwallet.com/security/ethereum-two-people-same-private-key.html"
+          href="https://xinfin.network/security/ethereum-two-people-same-private-key.html"
           target="_blank"
           rel="noopener noreferrer"
           >How does it ensure that it doesn't give different people the same

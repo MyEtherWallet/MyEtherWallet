@@ -5,7 +5,7 @@
       <li>
         Go to the
         <a
-          href="https://www.myetherwallet.com/#contracts"
+          href="https://www.xinfin.network/#contracts"
           target="_blank"
           rel="noopener noreferrer"
           >Contract tab on XinFin Wallet</a

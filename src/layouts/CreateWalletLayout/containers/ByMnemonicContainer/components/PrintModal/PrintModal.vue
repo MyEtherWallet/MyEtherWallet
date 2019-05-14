@@ -49,11 +49,11 @@
           <div class="footer">
             <div>
               <img src="~@/assets/images/icons/support.svg" />
-              support@myetherwallet.com
+              support@xinfin.network
             </div>
             <div>
               <img src="~@/assets/images/icons/web-solution.svg" />
-              https://www.myetherwallet.com
+              https://www.xinfin.network
             </div>
           </div>
         </div>

@@ -65,7 +65,7 @@
         <li>
           <p>
             <a
-              href="https://kb.myetherwallet.com/getting-started/whats-the-difference-between-an-exchange-and-myetherwallet.html"
+              href="https://xinfin.network/getting-started/whats-the-difference-between-an-exchange-and-myetherwallet.html"
               >Understand the difference between a hosted wallet / exchange and
               client-side wallet before moving your XDC to your own wallet.</a
             >
@@ -74,7 +74,7 @@
         <li>
           <p>
             <a
-              href="https://kb.myetherwallet.com/getting-started/protecting-yourself-and-your-funds.html"
+              href="https://xinfin.network/getting-started/protecting-yourself-and-your-funds.html"
               >Learn how to protect your funds!</a
             >
           </p>
@@ -82,12 +82,12 @@
         <li>
           <p>
             <a
-              href="https://kb.myetherwallet.com/getting-started/getting-back-to-basics-tips-for-newbies.html"
+              href="https://xinfin.network/getting-started/getting-back-to-basics-tips-for-newbies.html"
               >10 Tips for Noobs</a
             >
             &amp;
             <a
-              href="https://kb.myetherwallet.com/getting-started/ethereum-glossary.html"
+              href="https://xinfin.network/getting-started/ethereum-glossary.html"
               >Words are Hard</a
             >
             are both great intros.
@@ -95,7 +95,7 @@
         </li>
         <li>
           <p>
-            <a href="https://kb.myetherwallet.com/diving-deeper/"
+            <a href="https://xinfin.network/diving-deeper/"
               >And even more links to awesome things just because</a
             >
           </p>
@@ -205,7 +205,7 @@
         of these wallets to back up your information. In Jaxx, that is a
         mnemonic. InXinFin Wallet.,
         <a
-          href="https://kb.myetherwallet.com/how-do-i-move-from-coinbase-to-myetherwallet-exchange-slash-hosted-wallet-mew"
+          href="https://xinfin.network/how-do-i-move-from-coinbase-to-myetherwallet-exchange-slash-hosted-wallet-mew"
         >
           read this </a
         >.
@@ -215,7 +215,7 @@
 
       <ul>
         <li>
-          <a href="http://www.myetherwallet.com/">XinFin Wallet.com</a> or
+          <a href="http://www.xinfin.network/">XinFin Wallet.com</a> or
           <a
             href="https://www.reddit.com/r/ethereum/comments/44vbef/myetherwallet_chrome_extension_the_beta_has/"
           >
@@ -246,7 +246,7 @@
         <li>
           <p>
             <a
-              href="https://kb.myetherwallet.com/getting-started/whats-the-difference-between-an-exchange-and-myetherwallet.html"
+              href="https://xinfin.network/getting-started/whats-the-difference-between-an-exchange-and-myetherwallet.html"
               >Understand the difference between a hosted wallet / exchange and
               client-side wallet before moving your XDC to your own wallet.</a
             >
@@ -255,7 +255,7 @@
         <li>
           <p>
             <a
-              href="https://kb.myetherwallet.com/getting-started/protecting-yourself-and-your-funds.html"
+              href="https://xinfin.network/getting-started/protecting-yourself-and-your-funds.html"
               >Learn how to protect your funds!</a
             >
           </p>
@@ -263,12 +263,12 @@
         <li>
           <p>
             <a
-              href="https://kb.myetherwallet.com/getting-started/getting-back-to-basics-tips-for-newbies.html"
+              href="https://xinfin.network/getting-started/getting-back-to-basics-tips-for-newbies.html"
               >10 Tips for Noobs</a
             >
             &amp;
             <a
-              href="https://kb.myetherwallet.com/getting-started/ethereum-glossary.html"
+              href="https://xinfin.network/getting-started/ethereum-glossary.html"
               >Words are Hard</a
             >
             are both great intros.
@@ -276,7 +276,7 @@
         </li>
         <li>
           <p>
-            <a href="https://kb.myetherwallet.com/diving-deeper/"
+            <a href="https://xinfin.network/diving-deeper/"
               >And even more links to awesome things just because</a
             >
           </p>

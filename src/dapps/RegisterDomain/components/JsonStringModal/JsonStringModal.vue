@@ -27,8 +27,8 @@
         {{ $t('dapps.confirm') }}
       </button>
       <interface-bottom-text
-        link="mailto:support@myetherwallet.com"
-        link-text="https://kb.myetherwallet.com"
+        link="mailto:support@xinfin.network"
+        link-text="https://xinfin.network"
         question="Having issues?"
       />
     </form>

@@ -36,7 +36,7 @@
       Here is a list of default ERC-20 tokens that MEW supports (as of May 28,
       2017). However,
       <a
-        href="https://kb.myetherwallet.com/send/sending-and-adding-tokens.html"
+        href="https://xinfin.network/send/sending-and-adding-tokens.html"
         target="_blank"
         rel="noopener noreferrer"
       >
@@ -49,7 +49,7 @@
     <ul>
       <li>
         <a
-          href="https://kb.myetherwallet.com/send/adding-new-token-and-sending-custom-tokens.html"
+          href="https://xinfin.network/send/adding-new-token-and-sending-custom-tokens.html"
           target="_blank"
           rel="noopener noreferrer"
           >How can I add a non-default token to MEW?</a
@@ -57,7 +57,7 @@
       </li>
       <li>
         <a
-          href="https://kb.myetherwallet.com/tokens/token-creators-add-your-token-to-myetherwallet.html"
+          href="https://xinfin.network/tokens/token-creators-add-your-token-to-myetherwallet.html"
           target="_blank"
           rel="noopener noreferrer"
         >

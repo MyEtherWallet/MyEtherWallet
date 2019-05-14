@@ -3,7 +3,7 @@
   "version": "5.0.4",
   "manifest_version": 2,
   "description": "XinFin Wallet Chrome Extension",
-  "homepage_url": "https://www.myetherwallet.com/",
+  "homepage_url": "https://www.xinfin.network/",
   "icons": {
     "16": "img/icons/icon16.png",
     "32": "img/icons/icon32.png",

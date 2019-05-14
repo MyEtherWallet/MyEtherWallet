@@ -20,7 +20,7 @@ const GETTING_STARTED_DONE = function(state) {
 };
 
 const UPDATE_BLOCK_NUMBER = function(state, blockNumber) {
-  state.blockNumber = blockNumber;  
+  state.blockNumber = blockNumber;
 };
 
 const CHECK_IF_ONLINE = async function(state) {

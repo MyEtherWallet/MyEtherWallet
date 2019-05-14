@@ -67,7 +67,7 @@ export default {
           title: 'Customer Support',
           description:
             "Can't find your answer? Get in touch and we'll get back as soon as we can.",
-          email: 'support@myetherwallet.com'
+          email: 'support@xinfin.network'
         },
         {
           icon: iconCommunity,

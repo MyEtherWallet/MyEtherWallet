@@ -196,7 +196,7 @@
             {{ $t('interface.generateTx') }}
           </div>
           <interface-bottom-text
-            link="https://kb.myetherwallet.com"
+            link="https://xinfin.network"
             question="Have issues?"
             link-text="Help Center"
           />

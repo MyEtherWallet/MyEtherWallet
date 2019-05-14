@@ -18,14 +18,14 @@
     <p>
       You can also run
       <a
-        href="https://kb.myetherwallet.com/offline/running-myetherwallet-locally.html"
+        href="https://xinfin.network/offline/running-myetherwallet-locally.html"
         target="_blank"
         rel="noopener noreferrer"
         >MyEtherWallet locally</a
       >
       and/or
       <a
-        href="https://kb.myetherwallet.com/networks/run-your-own-node-with-myetherwallet.html"
+        href="https://xinfin.network/networks/run-your-own-node-with-myetherwallet.html"
         target="_blank"
         rel="noopener noreferrer"
         >connect it to your own node</a

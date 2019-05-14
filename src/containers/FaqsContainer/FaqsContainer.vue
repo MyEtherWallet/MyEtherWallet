@@ -17,7 +17,7 @@ export default {
           content: this.$t('home.howToCreateWalletDesc'),
           linkText: this.$t('home.here'),
           link:
-            'https://kb.myetherwallet.com/getting-started/creating-a-new-wallet-on-myetherwallet.html'
+            'https://xinfin.network/getting-started/creating-a-new-wallet-on-myetherwallet.html'
         },
         faq2: {
           open: false,
@@ -25,7 +25,7 @@ export default {
           content: this.$t('home.whatIsMewConnectDesc'),
           linkText: this.$t('home.here'),
           link:
-            'https://kb.myetherwallet.com/mewconnect/mew-connect-user-guide.html'
+            'https://xinfin.network/mewconnect/mew-connect-user-guide.html'
         },
         faq3: {
           open: false,
@@ -33,7 +33,7 @@ export default {
           content: this.$t('home.workingWOtherWalletsDesc'),
           linkText: this.$t('home.here'),
           link:
-            'https://kb.myetherwallet.com/getting-started/accessing-your-new-eth-wallet.html'
+            'https://xinfin.network/getting-started/accessing-your-new-eth-wallet.html'
         },
         faq4: {
           open: false,
@@ -41,7 +41,7 @@ export default {
           content: this.$t('home.howToSendTxDesc'),
           linkText: this.$t('home.here'),
           link:
-            'https://kb.myetherwallet.com/transactions/how-to-send-transaction.html'
+            'https://xinfin.network/transactions/how-to-send-transaction.html'
         },
         faq5: {
           open: false,
@@ -49,7 +49,7 @@ export default {
           content: this.$t('home.forgotPasswordPrivKeyDesc'),
           linkText: this.$t('home.here'),
           link:
-            'https://kb.myetherwallet.com/private-keys-passwords/lost-eth-private-key.html'
+            'https://xinfin.network/private-keys-passwords/lost-eth-private-key.html'
         }
       }
     };
