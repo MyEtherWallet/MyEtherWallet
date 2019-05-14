@@ -32,6 +32,9 @@ export default class MakerManager {
       create: () => {},
       manage: () => {}
     };
+
+    this._proxyAllowanceDai = 0;
+    this._proxyAllowanceMkr = 0;
   }
 
   // Getters
@@ -51,19 +54,23 @@ export default class MakerManager {
     return this._proxyAddress;
   }
 
+  get proxyAddress() {
+    if (!this._proxyAddress) {
+      return null;
+    }
+    return this._proxyAddress;
+  }
+
+  get hasProxy() {
+    return this._proxyAddress !== null;
+  }
+
   get cdpsWithProxy() {
     return this.cdps;
   }
 
   get cdpsNoProxy() {
     return this.cdpsWithoutProxy;
-  }
-
-  get proxyAddress() {
-    if (!this._proxyAddress) {
-      return null;
-    }
-    return this._proxyAddress;
   }
 
   get minEth() {
@@ -169,17 +176,7 @@ export default class MakerManager {
     this._mkrToken = this._tokenService.getToken(MKR);
     this.mkrBalance = (await this._mkrToken.balance()).toBigNumber();
 
-    if (this._proxyAddress) {
-      this._proxyAllowanceDai = (await this.daiToken.allowance(
-        this._currentAddress,
-        this._proxyAddress
-      )).toBigNumber();
-
-      this._proxyAllowanceMkr = (await this.mkrToken.allowance(
-        this._currentAddress,
-        this._proxyAddress
-      )).toBigNumber();
-    }
+    await this.checkAllowances();
 
     const { withProxy, withoutProxy } = await this.locateCdps();
     this.cdps = withProxy;
@@ -258,17 +255,7 @@ export default class MakerManager {
     await this.updateActiveCdp();
     this.daiBalance = (await this._daiToken.balance()).toBigNumber();
     this.mkrBalance = (await this._mkrToken.balance()).toBigNumber();
-    if (this._proxyAddress) {
-      this._proxyAllowanceDai = (await this.daiToken.allowance(
-        this._currentAddress,
-        this._proxyAddress
-      )).toBigNumber();
-
-      this._proxyAllowanceMkr = (await this.mkrToken.allowance(
-        this._currentAddress,
-        this._proxyAddress
-      )).toBigNumber();
-    }
+    await this.checkAllowances();
     for (const idProp in this.activeCdps) {
       if (this.activeCdps[idProp].needsUpdate) {
         if (this.activeCdps[idProp].closing) {
@@ -294,6 +281,20 @@ export default class MakerManager {
       }
     }
     return true;
+  }
+
+  async checkAllowances(){
+    if (this._proxyAddress) {
+      this._proxyAllowanceDai = (await this.daiToken.allowance(
+        this._currentAddress,
+        this._proxyAddress
+      )).toBigNumber();
+
+      this._proxyAllowanceMkr = (await this.mkrToken.allowance(
+        this._currentAddress,
+        this._proxyAddress
+      )).toBigNumber();
+    }
   }
 
   async locateCdps() {

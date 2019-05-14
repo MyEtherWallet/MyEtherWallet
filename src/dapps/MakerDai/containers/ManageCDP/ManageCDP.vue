@@ -385,6 +385,12 @@ export default {
           this.activeCdp = this.makerManager.getCdp(this.cdpId);
         }
       }
+      this.$refs.closeCdp.$refs.modal.$on('hidden', () => {
+        this.$emit('modalHidden');
+      });
+      this.$refs.moveCdp.$refs.modal.$on('hidden', () => {
+        this.$emit('modalHidden');
+      });
     }
   },
   methods: {

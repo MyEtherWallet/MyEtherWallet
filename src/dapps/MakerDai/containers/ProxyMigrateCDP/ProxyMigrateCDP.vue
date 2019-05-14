@@ -12,7 +12,6 @@
       :tokens-with-balance="tokensWithBalance"
     >
     </move-cdp-modal>
-
     <div v-show="!finishMigration" class="manage-container">
       <!-- ==================================================== -->
       <div class="title-content-container">
@@ -269,9 +268,10 @@ export default {
       ens: 'ens'
     }),
     noProxy() {
-      if (this.activeCdp) {
-        return this.activeCdp.noProxy;
-      }
+      return !this.makerManager.hasProxy;
+      // if (this.activeCdp) {
+      //   return this.activeCdp.noProxy;
+      // }
     },
     finishMigration() {
       if (this.activeCdp) {
@@ -334,7 +334,12 @@ export default {
   },
   async mounted() {
     this.cdpId = this.$route.params.cdpId;
-
+    this.$refs.closeCdp.$refs.modal.$on('hidden', () => {
+      this.$emit('modalHidden');
+    });
+    this.$refs.moveCdp.$refs.modal.$on('hidden', () => {
+      this.$emit('modalHidden');
+    });
     if (this.makerActive) {
       this.loaded = true;
       if (this.cdpId) {
@@ -348,6 +353,7 @@ export default {
       await this.activeCdp.migrateCdpComplete();
     },
     showClose() {
+      console.log(this.$refs.closeCdp.$refs.modal); // todo remove dev item
       this.$refs.closeCdp.$refs.modal.show();
     },
     showMove() {

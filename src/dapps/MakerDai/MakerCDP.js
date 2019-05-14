@@ -79,6 +79,10 @@ export default class MakerCDP {
     return this.makerManager.proxyAddress;
   }
 
+  get hasProxy() {
+    return this.makerManager.hasProxy;
+  }
+
   get proxyAllowanceDai() {
     return this.makerManager.proxyAllowanceDai;
   }
@@ -243,14 +247,7 @@ export default class MakerCDP {
   }
 
   async getProxy() {
-    this._proxyAddress = await this.proxyService.currentProxy();
-    if (!this._proxyAddress) {
-      this._proxyAddress = await this.proxyService.getProxyAddress(
-        this.currentAddress
-      );
-      if (this._proxyAddress) this.noProxy = false;
-    }
-    return this._proxyAddress;
+    this._proxyAddress = await this.makerManager.getProxy();
   }
 
   async buildProxy() {
@@ -312,14 +309,27 @@ export default class MakerCDP {
 
   async openCdp(ethQty, daiQty) {
     if (ethQty <= 0) return 0;
-    const proxyAddress = await this.buildProxy();
-    this.opening = true;
-    this.needsUpdate = true;
-    const newCdp = await this.cdpService.openProxyCdpLockEthAndDrawDai(
-      ethQty,
-      daiQty,
-      proxyAddress
-    );
+    let newCdp;
+    if (!this.hasProxy) {
+      const proxyAddress = await this.buildProxy();
+
+      this.opening = true;
+      this.needsUpdate = true;
+      newCdp = await this.cdpService.openProxyCdpLockEthAndDrawDai(
+        ethQty,
+        daiQty,
+        proxyAddress
+      );
+    } else {
+      this.opening = true;
+      this.needsUpdate = true;
+      newCdp = await this.cdpService.openProxyCdpLockEthAndDrawDai(
+        ethQty,
+        daiQty,
+        this.proxyAddress
+      );
+    }
+
     return newCdp.id;
   }
 
@@ -401,18 +411,35 @@ export default class MakerCDP {
 
   async closeCdp() {
     // will also need to check if there is enough allowance
-    const enoughToWipe = await this.canCloseCdp();
+    try {
+      this.needsUpdate = true;
+      this.closing = true;
+
+      if (this.hasProxy) {
+        await this.cdpService.shutProxy(this._proxyAddress, this.cdpId);
+      } else {
+        await this.cdp.shut();
+      }
+    } catch (e) {
+      // eslint-disable-next-line
+      console.error(e);
+    }
+    /*    const enoughToWipe = await this.canCloseCdp();
     if (enoughToWipe) {
       try {
         this.needsUpdate = true;
         this.closing = true;
-        // await this.cdp.shut();
-        await this.cdpService.shutProxy(this._proxyAddress, this.cdpId);
+
+        if (this.hasProxy) {
+          await this.cdpService.shutProxy(this._proxyAddress, this.cdpId);
+        } else {
+          await this.cdp.shut();
+        }
       } catch (e) {
         // eslint-disable-next-line
         console.error(e);
       }
-    }
+    }*/
   }
 
   async moveCdp(address) {

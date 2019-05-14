@@ -10,9 +10,11 @@
             <button class="move-btn" @click="showMove">
               <h4>Move CDP</h4>
             </button>
-            <button class="close-btn" @click="showClose">
-              <h4>Close CDP</h4>
-            </button>
+            <div v-if="!((!hasProxy && !onCreate) || showCdpMigrateButtons)">
+              <button class="close-btn" @click="showClose">
+                <h4>Close CDP</h4>
+              </button>
+            </div>
           </div>
         </div>
       </template>
@@ -20,11 +22,13 @@
 
     <div v-show="makerActive" class="buttons-container">
       <div v-if="!hasProxy && !onCreate">
+        <i class="fa fa-question-circle"></i>
         <div class="dapps-button" @click="buildProxy">
-          <h4>Create Proxy</h4>
+          <h4>Create Proxy </h4>
         </div>
       </div>
       <div v-if="showCdpMigrateButtons">
+        <i class="fa fa-question-circle"></i>
         <div v-for="(value, idx) in cdpsWithoutProxy" :key="idx + value">
           <div class="dapps-button">
             <div @click="migrateCdp(value)">
@@ -188,7 +192,7 @@ export default {
       return this.$route.name === 'create';
     },
     hasProxy() {
-      return this.currentProxy !== null;
+      return this.makerManager.hasProxy;
     },
     showCdpMigrateButtons() {
       return this.hasProxy && this.cdpsWithoutProxy.length >= 1;
@@ -274,25 +278,6 @@ export default {
       this.cdps = this.makerManager.cdps;
       this.cdpsWithoutProxy = this.makerManager.cdpsWithoutProxy;
       this.availableCdps = this.makerManager.availableCdps;
-      // this.sysVarsFunc = this.makerManager.getSysVars;
-      // if (this.sysVarsFunc) {
-      //   this.sysVars = this.makerManager.getSysVars();
-      //   this.ethPrice = this.sysVars.ethPrice;
-      //   this.pethPrice = this.sysVars.pethPrice;
-      //   this.liquidationRatio = this.sysVars.liquidationRatio;
-      //   this.liquidationPenalty = this.sysVars.liquidationPenalty;
-      //   this.stabilityFee = this.sysVars.stabilityFee;
-      //   this.wethToPethRatio = this.sysVars.wethToPethRatio;
-      //   this.currentAddress = this.account.address;
-      // }
-
-      // this.sysServicesFunc = this.makerManager.getSysServices;
-      // if (this.sysServicesFunc) {
-      //   this.sysServices = this.makerManager.getSysServices();
-      //   this.priceService = this.sysServices.priceService;
-      //   this.cdpService = this.sysServices.cdpService;
-      //   this.proxyService = this.sysServices.proxyService;
-      // }
 
       this.currentProxy = this.makerManager.getProxy();
       if (
