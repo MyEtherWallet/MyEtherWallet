@@ -96,12 +96,11 @@ export default {
           newVal[0].split(' ').length === 12 ||
           newVal[0].split(' ').length === 24
         ) {
-          this.mnemonic24 = newVal[0].split(' ').length === 24;
           this.mnemonicSize = newVal[0].split(' ').length;
+          this.mnemonic24 = this.mnemonicSize === 24;
           this.locMnemonicPhrase = newVal[0].split(' ');
         }
       }
-
       this.$emit('mnemonicPhrase', newVal);
     }
   },

@@ -35,7 +35,13 @@
       @file="updateFile"
       @password="updatePassword"
     />
-    <network-address-modal ref="networkAddress" :wallet-instance="wallet" />
+    <network-address-modal
+      ref="networkAddress"
+      :generate-from-mnemonic-priv="generateFromMnemonicPriv"
+      :wallet-instance="wallet"
+      @accountPath="updateSelectedPath"
+      @password="updatePassword"
+    />
     <h2>Add My Wallet</h2>
     <p>How would you like to add your wallet?</p>
     <div class="add-wallet-options">
@@ -57,7 +63,8 @@
 import { WalletInterface, MnemonicWallet } from '@/wallets';
 import {
   KEYSTORE as keyStoreType,
-  PRIV_KEY as privateKeyType
+  PRIV_KEY as privateKeyType,
+  MNEMONIC as mnemonicType,
 } from '@/wallets/bip44/walletTypes';
 import walletWorker from 'worker-loader!@/workers/wallet.worker.js';
 import { Toast, ExtensionHelpers, Wallet } from '@/helpers';
@@ -135,18 +142,19 @@ export default {
       nickname: '',
       generateOnly: false,
       privateKey: '',
-      mnemonicPhrase: ''
+      mnemonicPhrase: '',
+      selectedAccountPath: '',
+      selectedAddress: ''
     };
   },
   methods: {
     openAddressOption() {
-      const mnemonicPhrase = this.mnemonicPhrase.join(' ');
+      const mnemonicPhrase = this.mnemonicPhrase;
       this.loading = true;
       MnemonicWallet(mnemonicPhrase, '')
         .then(wallet => {
           this.wallet = wallet;
           this.loading = false;
-          this.mnemonicPhrase = '';
           this.toggleImportMnemonicPhrase(false);
           this.toggleNetworkAddressModal(true);
         })
@@ -157,12 +165,22 @@ export default {
           this.toggleImportMnemonicPhrase(false);
         });
     },
-    generateWalletFromPriv() {
+    generateFromMnemonicPriv() {
+      this.loading = true;
+      const privateKey = ExtensionHelpers.getPrivFromMnemonicWallet(
+        this.mnemonicPhrase,
+        this.selectedAccountPath
+      );
+      this.loading = false;
+      this.generateWalletFromPriv(privateKey);
+    },
+    generateWalletFromPriv(priv) {
+      const privKey = priv ? priv : this.privateKey;
       this.loading = true;
       const worker = new walletWorker();
       worker.postMessage({
         type: 'generateFromPrivateKey',
-        data: [this.privateKey, this.password]
+        data: [privKey, this.password]
       });
       worker.onmessage = e => {
         const newJson = {};
@@ -175,9 +193,13 @@ export default {
         this.wallet = new WalletInterface(
           Buffer.from(_wallet._privKey),
           false,
-          privateKeyType
+          priv ? mnemonicType : privateKeyType
         );
-        this.toggleImportPrivateKey(this.loading);
+        if (priv) {
+          this.toggleNetworkAddressModal(false);
+        } else {
+          this.toggleImportPrivateKey(this.loading);
+        }
         this.toggleVerifyDetails(true, privateKeyType);
       };
       worker.onerror = function(e) {
@@ -220,6 +242,8 @@ export default {
       this.generateOnly = false;
       this.privateKey = '';
       this.mnemonicPhrase = '';
+      this.selectedAccountPath = '';
+      this.selectedAddress = '';
     },
     addWalletToStore() {
       this.loading = true;
@@ -285,7 +309,6 @@ export default {
       if (!bool) this.$refs.generateNewWallet.$refs.generateNewWallet.hide();
     },
     toggleNetworkAddressModal(bool) {
-      console.log(this.$refs.networkAddress);
       if (bool) this.$refs.networkAddress.$refs.networkAddress.show();
       if (!bool) this.$refs.networkAddress.$refs.networkAddress.hide();
     },
@@ -310,7 +333,15 @@ export default {
       this.privateKey = e;
     },
     updateMnemonic(e) {
-      this.mnemonicPhrase = e;
+      if (Array.isArray(e)) {
+        this.mnemonicPhrase = e.join(' ');
+      } else {
+        Toast.responseHandler('Invalid Mnemonic', Toast.ERROR);
+      }
+    },
+    updateSelectedPath(e) {
+      this.selectedAccountPath = e[0];
+      this.selectedAddress = e[1];
     }
   }
 };
