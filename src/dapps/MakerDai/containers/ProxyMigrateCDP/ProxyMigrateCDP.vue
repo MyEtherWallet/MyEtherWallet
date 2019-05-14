@@ -353,7 +353,6 @@ export default {
       await this.activeCdp.migrateCdpComplete();
     },
     showClose() {
-      console.log(this.$refs.closeCdp.$refs.modal); // todo remove dev item
       this.$refs.closeCdp.$refs.modal.show();
     },
     showMove() {
