@@ -1456,3 +1456,15 @@
     margin-left: 5px;
   }
 }
+
+.cx-token-modal {
+  .modal-dialog {
+    min-width: 400px;
+    margin: 0 0 0 73vw;
+  }
+
+  .modal-content {
+    border-radius: 0;
+    height: 100vh;
+  }
+}
