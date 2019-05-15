@@ -1,1 +1,162 @@
 @import '~@/scss/GlobalVariables';
+
+.wallet-info-container {
+  padding-top: 20px;
+  width: 100%;
+
+  .nickname-and-buttons {
+    align-items: center;
+    background-color: $dark-blue-12;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+
+    p {
+      color: $white !important;
+      font-weight: 500;
+    }
+
+    .button-container {
+      display: flex;
+
+      div {
+        color: $white;
+        cursor: pointer;
+        padding: 5px 15px;
+      }
+    }
+  }
+
+  .wallet-content {
+    display: flex;
+    background-color: $white;
+
+    .address-and-balance-container {
+      border-bottom-left-radius: 5px;
+      border-bottom-right-radius: 5px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 0.25;
+      justify-content: space-between;
+      min-height: 250px;
+      padding: 15px;
+
+      .address-content-container {
+        display: flex;
+        justify-content: space-between;
+        padding: 30px;
+
+        .address-info {
+          display: flex;
+
+          .actual-address {
+            margin-left: 30px;
+
+            p {
+              font-size: 17px;
+              padding: 5px;
+
+              &:first-child {
+                font-weight: bold;
+              }
+            }
+          }
+        }
+        .copy-button {
+          p {
+            color: $dark-grey-11;
+            cursor: pointer;
+            font-size: 17px;
+          }
+        }
+      }
+
+      .balance-container {
+        align-items: center;
+        background-color: $light-green-1;
+        border-radius: 5px;
+        display: flex;
+        justify-content: space-between;
+        padding: 20px 30px;
+
+        p {
+          font-weight: bold;
+          font-size: 17px;
+        }
+
+        .actual-balance {
+          color: $light-blue-1;
+
+          span {
+            font-size: 14px;
+            font-weight: normal;
+          }
+        }
+      }
+    }
+
+    .tokens-container {
+      border-left: 1px solid $dark-grey-11;
+      flex: auto;
+      padding: 10px;
+
+      .tokens-header {
+        display: flex;
+        justify-content: space-between;
+        padding: 5px;
+
+        p {
+          font-weight: bold;
+        }
+
+        i {
+          color: $dark-grey-11;
+          cursor: pointer;
+        }
+
+        .view {
+          color: $dark-grey-11;
+          cursor: pointer;
+          font-weight: normal;
+          opacity: 0.9;
+        }
+      }
+
+      .token-search-container {
+        padding: 5px 0;
+        position: relative;
+
+        input {
+          background-color: $light-grey-2;
+          border: none !important;
+          padding: 5px 5px 5px 30px;
+          width: 100%;
+        }
+
+        i {
+          left: 10px;
+          position: absolute;
+          top: 13px;
+        }
+      }
+
+      .actual-tokens-container {
+        height: 150px;
+        overflow-y: scroll;
+        padding-top: 10px;
+
+        .loading-container {
+          text-align: center;
+        }
+
+        .token-item {
+          display: flex;
+          justify-content: space-between;
+          padding: 7px 10px;
+        }
+      }
+    }
+  }
+}

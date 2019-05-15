@@ -19,6 +19,16 @@
             + Add
           </div>
         </div>
+        <div class="wallet-info-container">
+          <wallet-info-component
+            v-for="wallet in myWallets"
+            :key="wallet.address"
+            :address="wallet.address"
+            :balance="wallet.balance"
+            :wallet="wallet.wallet"
+            :wallet-type="label"
+          />
+        </div>
       </div>
       <div v-show="label === 'watchOnlyWallets'">
         <div class="wallets-container-header">
@@ -29,6 +39,16 @@
             + Add
           </div>
         </div>
+        <div class="wallet-info-container">
+          <wallet-info-component
+            v-for="wallet in watchOnlyAddresses"
+            :key="wallet.address"
+            :address="wallet.address"
+            :balance="wallet.balance"
+            :wallet="wallet.wallet"
+            :wallet-type="label"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -37,6 +57,7 @@
 <script>
 import WalletSideMenu from '../../components/WalletSideMenu';
 import WatchOnlyModal from '../../components/WatchOnlyModal';
+import WalletInfoComponent from '../../components/WalletInfoComponent';
 import { WATCH_ONLY } from '@/wallets/bip44/walletTypes';
 import { toChecksumAddress } from '@/helpers/addressUtils';
 import { Toast, ExtensionHelpers } from '@/helpers';
@@ -46,7 +67,8 @@ import BigNumber from 'bignumber.js';
 export default {
   components: {
     'wallet-side-menu': WalletSideMenu,
-    'watch-only-modal': WatchOnlyModal
+    'watch-only-modal': WatchOnlyModal,
+    'wallet-info-component': WalletInfoComponent
   },
   props: {
     accounts: {
@@ -88,7 +110,6 @@ export default {
         }
       }
       this.totalBalance = balance.toString();
-
       this.watchOnlyAddresses = watchOnlyAddresses;
       this.myWallets = myWallets;
     },
