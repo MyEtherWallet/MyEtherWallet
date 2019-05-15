@@ -18,10 +18,11 @@
             <div class="actual-address">
               <p>Address</p>
               <p>{{ address }}</p>
+              <input ref="addressInput" :value="address" />
             </div>
           </div>
           <div class="copy-button">
-            <p>Copy</p>
+            <p @click="copyAddress">Copy</p>
           </div>
         </div>
         <div class="balance-container">
@@ -169,6 +170,10 @@ export default {
         this.tokens = tokens;
         this.localVersion = tokens;
       }
+    },
+    copyAddress() {
+      this.$refs.addressInput.select();
+      window.execCommand('copy');
     }
   }
 };
