@@ -64,7 +64,7 @@ import { WalletInterface, MnemonicWallet } from '@/wallets';
 import {
   KEYSTORE as keyStoreType,
   PRIV_KEY as privateKeyType,
-  MNEMONIC as mnemonicType,
+  MNEMONIC as mnemonicType
 } from '@/wallets/bip44/walletTypes';
 import walletWorker from 'worker-loader!@/workers/wallet.worker.js';
 import { Toast, ExtensionHelpers, Wallet } from '@/helpers';

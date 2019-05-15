@@ -1,6 +1,11 @@
 <template>
   <div class="wallet-side-menu">
-    <div v-for="option in options" :key="option.label" class="wallet-menu">
+    <div
+      v-for="option in options"
+      :key="option.label"
+      :class="[selectedView === option.label ? 'active' : '', 'wallet-menu']"
+      @click="switchView(option)"
+    >
       <img
         :src="selectedView === option.label ? option.icon : option.inActive"
       />
@@ -12,10 +17,10 @@
 </template>
 
 <script>
-import byJsonImg from '@/assets/images/icons/button-json-hover.svg';
-import byJsonImgHov from '@/assets/images/icons/button-json-hover.svg';
-import byMnemImg from '@/assets/images/icons/button-mnemonic-hover.svg';
-import byMnemImgHov from '@/assets/images/icons/button-mnemonic-hover.svg';
+import myWallets from '@/assets/images/icons/button-generate.svg';
+import myWalletsHov from '@/assets/images/icons/button-generate-hover.svg';
+import watchOnly from '@/assets/images/icons/hide-password.svg';
+import watchOnlyHov from '@/assets/images/icons/show-password.svg';
 export default {
   props: {
     switchView: {
@@ -24,7 +29,7 @@ export default {
     },
     selectedView: {
       type: String,
-      default: 'myWallets'
+      default: ''
     }
   },
   data() {
@@ -32,15 +37,15 @@ export default {
       options: [
         {
           name: 'My Wallets',
-          icon: byJsonImg,
-          inActive: byJsonImgHov,
+          icon: myWalletsHov,
+          inActive: myWallets,
           label: 'myWallets'
         },
         {
           name: 'Watch Only Wallets',
-          icon: byMnemImg,
-          inActive: byMnemImgHov,
-          label: 'myWatchedWallets'
+          icon: watchOnlyHov,
+          inActive: watchOnly,
+          label: 'watchOnlyWallets'
         }
       ]
     };

@@ -7,9 +7,7 @@
 <script>
 import ExtensionAddWalletContainer from './containers/ExtensionAddWalletContainer';
 import ExtensionWalletContainer from './containers/ExtensionWalletContainer';
-import { WATCH_ONLY } from '@/wallets/bip44/walletTypes';
-import { Toast, ExtensionHelpers } from '@/helpers';
-import { toChecksumAddress } from '@/helpers/addressUtils';
+import { ExtensionHelpers } from '@/helpers';
 
 export default {
   components: {
@@ -18,52 +16,27 @@ export default {
   },
   data() {
     return {
-      hasAccounts: false,
-      accounts: []
+      hasAccounts: false
     };
   },
   created() {
-    window.chrome.storage.onChanged.addListener(() => {
-      ExtensionHelpers.getAccounts(this.getAccountsCb);
-    });
+    window.chrome.storage.onChanged.addListener(this.getAccounts());
   },
   mounted() {
-    ExtensionHelpers.getAccounts(this.getAccountsCb);
+    this.getAccounts();
+  },
+  destroyed() {
+    window.chrome.storage.onChanged.removeListener(this.getAccounts);
   },
   methods: {
     getAccountsCb(res) {
       this.hasAccounts = Object.keys(res).length > 0;
-      const accounts = Object.keys(res).map(item => {
-        const newObj = {};
-        newObj[`${item}`] = res[`${item}`];
-        if (item !== 'localTokens') return newObj;
-      });
-      if (this.hasAccounts) {
-        this.accounts = accounts;
-      } else {
-        this.accounts = {};
+      if (!this.hasAccounts) {
         this.$router.push('/add-wallet');
       }
     },
-    addWatchOnlyWalletCb() {
+    getAccounts() {
       ExtensionHelpers.getAccounts(this.getAccountsCb);
-      this.$refs.watchOnlyModal.$refs.watchOnlyWallet.hide();
-      Toast.responseHandler(
-        `Added ${name} to watch only accounts!`,
-        Toast.SUCCESS
-      );
-    },
-    addWatchOnlyWallet(name, address) {
-      const newAcc = {};
-      const addr = toChecksumAddress(address);
-      newAcc[addr] = JSON.stringify({
-        nick: name,
-        type: WATCH_ONLY
-      });
-      ExtensionHelpers.addWatchOnlyWallet(newAcc, this.addWatchOnlyWalletCb);
-    },
-    openWatchOnlyModal() {
-      this.$refs.watchOnlyModal.$refs.watchOnlyWallet.show();
     }
   }
 };

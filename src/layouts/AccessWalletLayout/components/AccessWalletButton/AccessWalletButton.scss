@@ -14,6 +14,10 @@
   .button-image {
     font-size: 90px;
     margin-bottom: 5px;
+
+    img {
+      min-width: 70px;
+    }
   }
 
   p {
