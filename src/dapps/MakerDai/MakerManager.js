@@ -283,7 +283,7 @@ export default class MakerManager {
     return true;
   }
 
-  async checkAllowances(){
+  async checkAllowances() {
     if (this._proxyAddress) {
       this._proxyAllowanceDai = (await this.daiToken.allowance(
         this._currentAddress,
@@ -351,25 +351,6 @@ export default class MakerManager {
     if (currentProxy) {
       await this._cdpService.give(cdpId, currentProxy);
     }
-  }
-
-  getSysVars() {
-    return {
-      ethPrice: this._ethPrice,
-      pethPrice: this._pethPrice,
-      liquidationRatio: this._liquidationRatio,
-      liquidationPenalty: this._liquidationPenalty,
-      stabilityFee: this._stabilityFee,
-      wethToPethRatio: this._wethToPethRatio,
-      currentAddress: this._currentAddress
-    };
-  }
-  getSysServices() {
-    return {
-      priceService: this._priceService,
-      cdpService: this._cdpService,
-      proxyService: this._proxyService
-    };
   }
 
   async buildCdpObject(cdpId, options = {}) {

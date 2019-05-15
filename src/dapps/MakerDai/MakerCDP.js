@@ -311,14 +311,14 @@ export default class MakerCDP {
     if (ethQty <= 0) return 0;
     let newCdp;
     if (!this.hasProxy) {
-      const proxyAddress = await this.buildProxy();
+      // const proxyAddress = await this.buildProxy();
 
       this.opening = true;
       this.needsUpdate = true;
       newCdp = await this.cdpService.openProxyCdpLockEthAndDrawDai(
         ethQty,
-        daiQty,
-        proxyAddress
+        daiQty
+        // proxyAddress
       );
     } else {
       this.opening = true;
@@ -329,8 +329,10 @@ export default class MakerCDP {
         this.proxyAddress
       );
     }
-
-    return newCdp.id;
+    if (newCdp.id) {
+      return newCdp.id;
+    }
+    throw Error('NO NEW CDP ID');
   }
 
   async lockEth(amount) {
@@ -346,7 +348,9 @@ export default class MakerCDP {
       );
     } catch (e) {
       // eslint-disable-next-line
-      console.log(e);
+      console.log('lockEth Error:');
+      // eslint-wipeDai-next-line
+      console.error(e);
     }
   }
 
@@ -365,7 +369,9 @@ export default class MakerCDP {
         this.cdpService.drawDaiProxy(this._proxyAddress, this.cdpId, amount);
       } catch (e) {
         // eslint-disable-next-line
-        console.log(e);
+        console.log('drawDai Error:');
+        // eslint-wipeDai-next-line
+        console.error(e);
       }
     }
   }
@@ -383,7 +389,9 @@ export default class MakerCDP {
       );
     } catch (e) {
       // eslint-disable-next-line
-      console.log(e);
+      console.log('freeEth Error:');
+      // eslint-wipeDai-next-line
+      console.error(e);
     }
   }
 
@@ -399,8 +407,10 @@ export default class MakerCDP {
         amount
       );
     } catch (e) {
-      // eslint-disable-next-line
-      console.log(e);
+      // eslint-wipeDai-next-line
+      console.log('wipeDai Error:');
+      // eslint-wipeDai-next-line
+      console.error(e);
     }
   }
 
@@ -411,20 +421,7 @@ export default class MakerCDP {
 
   async closeCdp() {
     // will also need to check if there is enough allowance
-    try {
-      this.needsUpdate = true;
-      this.closing = true;
-
-      if (this.hasProxy) {
-        await this.cdpService.shutProxy(this._proxyAddress, this.cdpId);
-      } else {
-        await this.cdp.shut();
-      }
-    } catch (e) {
-      // eslint-disable-next-line
-      console.error(e);
-    }
-    /*    const enoughToWipe = await this.canCloseCdp();
+    const enoughToWipe = await this.canCloseCdp();
     if (enoughToWipe) {
       try {
         this.needsUpdate = true;
@@ -432,14 +429,14 @@ export default class MakerCDP {
 
         if (this.hasProxy) {
           await this.cdpService.shutProxy(this._proxyAddress, this.cdpId);
-        } else {
-          await this.cdp.shut();
         }
       } catch (e) {
-        // eslint-disable-next-line
+        // eslint-wipeDai-next-line
+        console.log('closeCdp Error:');
+        // eslint-wipeDai-next-line
         console.error(e);
       }
-    }*/
+    }
   }
 
   async moveCdp(address) {

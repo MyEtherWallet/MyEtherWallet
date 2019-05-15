@@ -164,6 +164,27 @@ $confirmation-modal-mobile-width: 500px;
   } // .expended-info
 } // .detail-info
 
+
+.value-block {
+  display: flex;
+  align-items: flex-start;
+  p {
+    line-height: 30px;
+    b {
+      font-weight: 600;
+      font-size: inherit;
+      color: $dark-blue-2;
+      line-height: inherit;
+    }
+  }
+
+  p:last-child {
+    margin-left: auto;
+    text-align: right;
+    min-width: 100px;
+  }
+}
+
 .buttons-container {
   margin-top: 60px;
   margin-bottom: 60px;
