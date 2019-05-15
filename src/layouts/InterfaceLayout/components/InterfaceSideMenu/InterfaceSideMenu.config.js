@@ -71,7 +71,8 @@ export default {
         '/interface/dapps/manage-ens/create-commitment',
         '/interface/dapps/manage-ens/permanent-registration',
         '/interface/dapps/domain-sale',
-        '/interface/dapps/schedule-transaction'
+        '/interface/dapps/schedule-transaction',
+        '/interface/dapps/maker-dai'
       ],
       icons: {
         active: require('@/assets/images/sidemenu/dapps-active.svg'),

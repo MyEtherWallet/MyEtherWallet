@@ -292,8 +292,11 @@ export default {
       }, 200);
     },
     async closeCdp() {
-      this.delayCloseModal();
-      await this.activeCdp.closeCdp();
+      const canCloseCdp = await this.activeCdp.canCloseCdp();
+      if (canCloseCdp) {
+        this.delayCloseModal();
+        await this.activeCdp.closeCdp();
+      }
     },
     displayPercentValue(raw) {
       if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);

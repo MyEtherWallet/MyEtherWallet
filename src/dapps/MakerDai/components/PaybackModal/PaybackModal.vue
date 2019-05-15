@@ -7,15 +7,31 @@
       class="bootstrap-modal nopadding"
       hide-footer
     >
+      <swap-widget
+        ref="swapWidget"
+        :supplied-from="suppliedFrom"
+        :supplied-to="suppliedTo"
+        :supplied-to-amount="suppliedToAmount"
+        :dest-address="account.address"
+      ></swap-widget>
       <div class="contents">
         <p class="top-message">
           {{ $t('dappsMaker.paybackNotice') }}
         </p>
-
-        <div v-if="action === 'payback'" class="input-container">
-          <div class="interface__block-title">
-            {{ $t('dappsMaker.paybackNotice') }}
+        <div v-if="!hasEnoughMkr">
+          <div class="value-block">
+            <p>
+              <b>{{ $t('dappsMaker.mkrBalance') }}</b>
+            </p>
+            <p>
+              <b>{{ mkrBalance }} MKR</b>
+            </p>
           </div>
+          <p class="get-mkr" @click="getMkr()">
+            {{ $t('dappsMaker.getMkr') }}
+          </p>
+        </div>
+        <div v-if="action === 'payback'" class="input-container">
           <div class="top-buttons">
             <p @click="currentDai">{{ $t('dappsMaker.setMax') }}</p>
           </div>
@@ -65,7 +81,20 @@
             </li>
           </ul>
         </expending-option>
-
+        <div class="buttons">
+          <div v-if="needsDaiApprove">
+            <standard-button
+              :options="approveDaiButton"
+              @click.native="approveDai"
+            />
+          </div>
+          <div v-if="needsMkrApprove">
+            <standard-button
+              :options="approveMkrButton"
+              @click.native="approveMkr"
+            />
+          </div>
+        </div>
         <div class="buttons">
           <standard-button
             :options="cancelButton"
@@ -92,6 +121,7 @@ import CheckBox from '../CheckBox';
 import BigNumber from 'bignumber.js/bignumber.js';
 import { displayFixedValue, displayPercentValue } from '../../helpers';
 import StandardButton from '@/components/Buttons/StandardButton';
+import SwapWidget from '@/components/SwapWidget';
 
 const toBigNumber = num => {
   return new BigNumber(num);
@@ -99,6 +129,7 @@ const toBigNumber = num => {
 
 export default {
   components: {
+    'swap-widget': SwapWidget,
     'help-center-button': HelpCenterButton,
     'check-box': CheckBox,
     'expending-option': ExpendingOption,
@@ -127,6 +158,8 @@ export default {
       amount: 0,
       amountEth: 0,
       amountDai: 0,
+      mkrToken: {},
+      daiToken: {},
       riskyBypass: false,
       modalDetailInformation: false,
       textValues: {},
@@ -143,7 +176,29 @@ export default {
         buttonStyle: 'green',
         noMinWidth: true,
         fullWidth: true
-      }
+      },
+      approveMkrButton: {
+        title: 'Approve Maker',
+        buttonStyle: 'green-border',
+        fullWidth: true,
+        noMinWidth: true
+      },
+      approveDaiButton: {
+        title: 'Approve Dai',
+        buttonStyle: 'green-border',
+        fullWidth: true,
+        noMinWidth: true
+      },
+      suppliedFrom: {
+        symbol: 'ETH',
+        name: 'Ethereum'
+      },
+      suppliedTo: {
+        symbol: 'MKR',
+        name: 'Maker'
+      },
+      suppliedToAmount: 0,
+      destAddress: ''
     };
   },
   computed: {
@@ -170,6 +225,20 @@ export default {
       if (this.amount || this.amount !== '') {
         const asEth = ethUnit.fromWei(this.account.balance, 'ether');
         return toBigNumber(this.amount).lte(toBigNumber(asEth));
+      }
+      return true;
+    },
+    paybackFee() {
+      if (this.amount || this.amount !== '') {
+        return toBigNumber(this.amount)
+          .div(this.activeCdp.debtValue)
+          .times(this.activeCdp.governanceFeeOwed);
+      }
+      return 0;
+    },
+    hasEnoughMkr() {
+      if (this.amount || this.amount !== '') {
+        return toBigNumber(this.mkrBalance).gte(toBigNumber(this.paybackFee));
       }
       return true;
     },
@@ -257,12 +326,31 @@ export default {
         return this.activeCdp.liquidationPrice;
       }
       return 0;
+    },
+    mkrBalance() {
+      if (this.mkrToken) {
+        return this.mkrToken.balance;
+      }
+      return 0;
+    },
+    daiBalance() {
+      if (this.daiToken) {
+        return this.daiToken.balance;
+      }
+      return 0;
+    },
+    needsDaiApprove() {
+      return toBigNumber(this.activeCdp.proxyAllowanceDai).eq(0);
+    },
+    needsMkrApprove() {
+      return toBigNumber(this.activeCdp.proxyAllowanceMkr).eq(0);
     }
   },
   watch: {},
   mounted() {
     this.$refs.modal.$on('shown', () => {
       this.amount = 0;
+      this.getBalances();
     });
   },
   methods: {
@@ -292,7 +380,33 @@ export default {
         await this.activeCdp.wipeDai(this.amount);
       }
     },
-
+    getBalances() {
+      this.mkrToken = this.tokensWithBalance.find(item => {
+        return item.symbol === 'MKR';
+      });
+      this.daiToken = this.tokensWithBalance.find(item => {
+        return item.symbol === 'DAI';
+      });
+    },
+    getMkr() {
+      const mkrNeeded = this.paybackFee;
+      if (toBigNumber(this.mkrBalance).lt(mkrNeeded)) {
+        this.suppliedToAmount = toBigNumber(mkrNeeded)
+          .minus(toBigNumber(this.mkrBalance))
+          .plus(toBigNumber(mkrNeeded).times(0.01))
+          .toNumber();
+        this.suppliedFrom = {
+          symbol: 'ETH',
+          name: 'Ethereum'
+        };
+        this.suppliedTo = {
+          symbol: 'MKR',
+          name: 'Maker'
+        };
+        // this.destAddress = this.proxyAddress;
+        this.$refs.swapWidget.$refs.modal.show();
+      }
+    },
     getTitleText() {
       return 'Payback DAI';
     },
