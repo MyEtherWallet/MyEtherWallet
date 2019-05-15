@@ -1,6 +1,6 @@
 <template>
   <div class="wallet-info-container">
-    <b-modal hide-footer hide-header ref="viewAllModal" class="cx-token-modal">
+    <b-modal ref="viewAllModal" hide-footer hide-header class="cx-token-modal">
       Hello!
     </b-modal>
     <div class="nickname-and-buttons">
