@@ -170,7 +170,10 @@
             </div>
             <div class="button-container">
               <b-btn
-                :class="[validInputs ? '' : 'disabled', 'mid-round-button-green-filled close-button']"
+                :class="[
+                  validInputs ? '' : 'disabled',
+                  'mid-round-button-green-filled close-button'
+                ]"
                 @click.prevent="generateFromMnemonicPriv"
               >
                 <span v-show="!loading"> Add Wallet </span>

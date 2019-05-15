@@ -2,6 +2,26 @@
 .wallet-side-menu {
   background-color: $white;
   height: 100%;
+  min-height: 600px;
   padding-top: 50px;
   width: 100%;
+
+  .wallet-menu {
+    align-items: center;
+    color: $light-grey-10;
+    cursor: pointer;
+    display: flex;
+    padding: 20px 30px;
+
+    img {
+      margin-right: 20px;
+    }
+  }
+}
+
+.active {
+  span {
+    color: $black;
+    font-weight: bold;
+  }
 }

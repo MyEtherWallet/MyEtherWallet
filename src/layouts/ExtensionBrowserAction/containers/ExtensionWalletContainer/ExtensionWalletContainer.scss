@@ -5,3 +5,42 @@
   grid-template-columns: 250px 1fr;
   min-height: 500px;
 }
+
+.wallets-container {
+  background-color: $light-grey-2;
+  height: 100%;
+  padding: 50px;
+}
+
+.wallets-container-header {
+  display: flex;
+  justify-content: space-between;
+
+  .add-button {
+    align-items: center;
+    border: 1px solid $mew-green;
+    border-radius: 5px;
+    color: $mew-green;
+    cursor: pointer;
+    display: flex;
+    height: 45px;
+    padding: 10px 15px;
+  }
+
+  .title-balance {
+    font-size: 20px !important;
+
+    p {
+      color: $light-blue-1 !important;
+      font-size: 15px !important;
+
+      .total-balance {
+        color: $dark-grey-11 !important;
+      }
+
+      span {
+        font-size: 12px !important;
+      }
+    }
+  }
+}
