@@ -1,6 +1,6 @@
 <template>
   <div>
-    <router-view />
+    <router-view :accounts="accounts" />
   </div>
 </template>
 
@@ -16,7 +16,8 @@ export default {
   },
   data() {
     return {
-      hasAccounts: false
+      hasAccounts: false,
+      accounts: []
     };
   },
   created() {
@@ -31,7 +32,14 @@ export default {
   methods: {
     getAccountsCb(res) {
       this.hasAccounts = Object.keys(res).length > 0;
-      if (!this.hasAccounts) {
+      const accounts = Object.keys(res).map(item => {
+        const newObj = Object.assign({}, { address: item, wallet: res[item] });
+        if (item !== 'localTokens') return newObj;
+      });
+      if (this.hasAccounts) {
+        this.accounts = accounts;
+      } else {
+        this.accounts = [];
         this.$router.push('/add-wallet');
       }
     },
