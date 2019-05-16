@@ -311,14 +311,14 @@ export default class MakerCDP {
     if (ethQty <= 0) return 0;
     let newCdp;
     if (!this.hasProxy) {
-      // const proxyAddress = await this.buildProxy();
 
       this.opening = true;
       this.needsUpdate = true;
+      console.log(this.cdpService); // todo remove dev item
       newCdp = await this.cdpService.openProxyCdpLockEthAndDrawDai(
         ethQty,
-        daiQty
-        // proxyAddress
+        daiQty,
+        null
       );
     } else {
       this.opening = true;
@@ -329,10 +329,8 @@ export default class MakerCDP {
         this.proxyAddress
       );
     }
-    if (newCdp.id) {
-      return newCdp.id;
-    }
-    throw Error('NO NEW CDP ID');
+
+    return newCdp.id;
   }
 
   async lockEth(amount) {
