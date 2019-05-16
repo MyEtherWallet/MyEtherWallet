@@ -566,9 +566,21 @@ export default class Kyber {
   }
 
   getGasLimits(token) {
-    const address = this.getTokenAddress(token);
-    if (this.GAS_LIMITS && Array.isArray(this.GAS_LIMITS)) {
-      const gasLimit = this.GAS_LIMITS.find(entry => {
+    try {
+      const address = this.getTokenAddress(token);
+      if (this.GAS_LIMITS && Array.isArray(this.GAS_LIMITS)) {
+        const gasLimit = this.GAS_LIMITS.find(entry => {
+          return entry.address === address;
+        });
+        if (gasLimit !== null && gasLimit !== undefined) {
+          return gasLimit;
+        }
+        return {
+          swapGasLimit: this.defaultTradeGasLimit,
+          approveGasLimit: this.defaultTokenApprovalGasLimit
+        };
+      }
+      const gasLimit = GAS_LIMITS.find(entry => {
         return entry.address === address;
       });
       if (gasLimit !== null && gasLimit !== undefined) {
@@ -578,17 +590,12 @@ export default class Kyber {
         swapGasLimit: this.defaultTradeGasLimit,
         approveGasLimit: this.defaultTokenApprovalGasLimit
       };
+    } catch (e) {
+      return {
+        swapGasLimit: this.defaultTradeGasLimit,
+        approveGasLimit: this.defaultTokenApprovalGasLimit
+      };
     }
-    const gasLimit = GAS_LIMITS.find(entry => {
-      return entry.address === address;
-    });
-    if (gasLimit !== null && gasLimit !== undefined) {
-      return gasLimit;
-    }
-    return {
-      swapGasLimit: this.defaultTradeGasLimit,
-      approveGasLimit: this.defaultTokenApprovalGasLimit
-    };
   }
 
   calculateNormalizedExchangeRate(toValue, fromValue) {
