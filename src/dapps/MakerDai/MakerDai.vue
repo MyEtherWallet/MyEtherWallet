@@ -278,7 +278,7 @@ export default {
       this.cdps = this.makerManager.cdps;
       this.cdpsWithoutProxy = this.makerManager.cdpsWithoutProxy;
       this.availableCdps = this.makerManager.availableCdps;
-      if (!this.makerManager) return; // if user navigates away, abort
+
       this.currentProxy = this.makerManager.getProxy();
       if (
         this.makerManager.cdps.length > 0 ||

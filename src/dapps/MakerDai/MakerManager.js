@@ -253,9 +253,7 @@ export default class MakerManager {
     let afterClose = false;
     const afterOpen = route === 'create';
     await this.updateActiveCdp();
-    this.daiBalance = (await this._daiToken.balance()).toBigNumber();
-    this.mkrBalance = (await this._mkrToken.balance()).toBigNumber();
-    await this.checkAllowances();
+
     for (const idProp in this.activeCdps) {
       if (this.activeCdps[idProp].needsUpdate) {
         if (this.activeCdps[idProp].closing) {
@@ -273,7 +271,12 @@ export default class MakerManager {
       }
     }
 
+    this.daiBalance = (await this._daiToken.balance()).toBigNumber();
+    this.mkrBalance = (await this._mkrToken.balance()).toBigNumber();
+    await this.checkAllowances();
+
     if (afterClose || afterOpen) {
+      console.log(this.cdps, this.cdpsWithoutProxy); // todo remove dev item
       if (this.cdps.length > 0 || this.cdpsWithoutProxy.length > 0) {
         this.routeHandlers.manage();
       } else {
@@ -307,17 +310,22 @@ export default class MakerManager {
   }
 
   async locateCdpsWithoutProxy() {
-    const directCdps = await this.maker().getCdpIds(this._currentAddress);
-    const directCdpsCheckSum = await this.maker().getCdpIds(
+    console.log(this.cdpService); // todo remove dev item
+    const directCdps = await this.cdpService.getCdpIds(this._currentAddress);
+    const directCdpsCheckSum = await this.cdpService.getCdpIds(
       toChecksumAddress(this._currentAddress)
     );
-
+    console.log(directCdps); // todo remove dev item
+    console.log(directCdpsCheckSum); // todo remove dev item
     return directCdps.concat(directCdpsCheckSum);
   }
 
   async locateCdpsProxy() {
-    await this.getProxy();
-    return await this.maker().getCdpIds(this._proxyAddress);
+    this._proxyAddress = await this.getProxy();
+    console.log(this._proxyAddress); // todo remove dev item
+    const vals = await this.cdpService.getCdpIds(this._proxyAddress);
+    console.log(vals); // todo remove dev item
+    return vals;
   }
 
   async loadCdpDetails() {
