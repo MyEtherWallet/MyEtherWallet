@@ -276,7 +276,7 @@ export default class MakerManager {
     await this.checkAllowances();
 
     if (afterClose || afterOpen) {
-      console.log(this.cdps, this.cdpsWithoutProxy); // todo remove dev item
+      // console.log(this.cdps, this.cdpsWithoutProxy); // todo remove dev item
       if (this.cdps.length > 0 || this.cdpsWithoutProxy.length > 0) {
         this.routeHandlers.manage();
       } else {
@@ -310,21 +310,21 @@ export default class MakerManager {
   }
 
   async locateCdpsWithoutProxy() {
-    console.log(this.cdpService); // todo remove dev item
+    // console.log(this.cdpService); // todo remove dev item
     const directCdps = await this.cdpService.getCdpIds(this._currentAddress);
     const directCdpsCheckSum = await this.cdpService.getCdpIds(
       toChecksumAddress(this._currentAddress)
     );
-    console.log(directCdps); // todo remove dev item
-    console.log(directCdpsCheckSum); // todo remove dev item
+    // console.log(directCdps); // todo remove dev item
+    // console.log(directCdpsCheckSum); // todo remove dev item
     return directCdps.concat(directCdpsCheckSum);
   }
 
   async locateCdpsProxy() {
     this._proxyAddress = await this.getProxy();
-    console.log(this._proxyAddress); // todo remove dev item
+    // console.log(this._proxyAddress); // todo remove dev item
     const vals = await this.cdpService.getCdpIds(this._proxyAddress);
-    console.log(vals); // todo remove dev item
+    // console.log(vals); // todo remove dev item
     return vals;
   }
 

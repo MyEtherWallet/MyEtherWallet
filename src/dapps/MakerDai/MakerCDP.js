@@ -311,10 +311,9 @@ export default class MakerCDP {
     if (ethQty <= 0) return 0;
     let newCdp;
     if (!this.hasProxy) {
-
       this.opening = true;
       this.needsUpdate = true;
-      console.log(this.cdpService); // todo remove dev item
+      // console.log(this.cdpService); // todo remove dev item
       newCdp = await this.cdpService.openProxyCdpLockEthAndDrawDai(
         ethQty,
         daiQty,
@@ -347,7 +346,7 @@ export default class MakerCDP {
     } catch (e) {
       // eslint-disable-next-line
       console.log('lockEth Error:');
-      // eslint-wipeDai-next-line
+      // eslint-disable-next-line
       console.error(e);
     }
   }
@@ -368,7 +367,7 @@ export default class MakerCDP {
       } catch (e) {
         // eslint-disable-next-line
         console.log('drawDai Error:');
-        // eslint-wipeDai-next-line
+        // eslint-disable-next-line
         console.error(e);
       }
     }
@@ -388,7 +387,7 @@ export default class MakerCDP {
     } catch (e) {
       // eslint-disable-next-line
       console.log('freeEth Error:');
-      // eslint-wipeDai-next-line
+      // eslint-disable-next-line
       console.error(e);
     }
   }
@@ -405,9 +404,9 @@ export default class MakerCDP {
         amount
       );
     } catch (e) {
-      // eslint-wipeDai-next-line
+      // eslint-disable-next-line
       console.log('wipeDai Error:');
-      // eslint-wipeDai-next-line
+      // eslint-disable-next-line
       console.error(e);
     }
   }
@@ -429,9 +428,9 @@ export default class MakerCDP {
           await this.cdpService.shutProxy(this._proxyAddress, this.cdpId);
         }
       } catch (e) {
-        // eslint-wipeDai-next-line
+        // eslint-disable-next-line
         console.log('closeCdp Error:');
-        // eslint-wipeDai-next-line
+        // eslint-disable-next-line
         console.error(e);
       }
     }
