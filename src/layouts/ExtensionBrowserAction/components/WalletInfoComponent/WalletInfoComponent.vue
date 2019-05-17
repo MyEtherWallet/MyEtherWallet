@@ -1,7 +1,54 @@
 <template>
   <div class="wallet-info-container">
     <b-modal ref="viewAllModal" hide-footer hide-header class="cx-token-modal">
-      Hello!
+      <div class="modal-header-contaier">
+        <div>
+          <h3>
+            All Tokens
+            <span class="token-count"> {{ tokens.length }} </span>
+          </h3>
+          <p class="modal-nickname">{{ parsedWallet.nick }}</p>
+        </div>
+        <div class="header-buttons">
+          <div class="header-button">
+            <i class="fa fa-repeat fa-lg" @click="fetchTokens" />
+          </div>
+          <div class="header-button">
+            <i
+              class="fa fa-times fa-lg"
+              @click="
+                () => {
+                  viewAllTokens(false);
+                }
+              "
+            />
+          </div>
+        </div>
+      </div>
+      <div class="token-search-container">
+        <input v-model="search" placeholder="Search tokens" />
+        <i class="fa fa-search" />
+      </div>
+      <div class="modal-tokens-container">
+        <div v-show="loading" class="loading-container">
+          <i class="fa fa-spinner fa-spin" /> Loading Tokens...
+        </div>
+        <div v-show="!loading" class="tokens-container">
+          <div
+            v-for="token in localVersion"
+            :key="token.address"
+            class="modal-token-item"
+          >
+            <div class="icon-name-container">
+              <img :src="token.icon" />
+              <p>
+                {{ token.symbol }} <br />
+                <span>{{ token.balance }}</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </b-modal>
     <div class="nickname-and-buttons">
       <p>
@@ -39,7 +86,14 @@
             Tokens
             <i class="fa fa-repeat fa-lg" @click="fetchTokens" />
           </p>
-          <p class="view">
+          <p
+            class="view"
+            @click="
+              () => {
+                viewAllTokens(true);
+              }
+            "
+          >
             View All
           </p>
         </div>
@@ -57,7 +111,10 @@
               :key="token.address"
               class="token-item"
             >
-              <p>{{ token.name }}</p>
+              <p>
+                <img :src="token.icon" />
+                {{ token.symbol }}
+              </p>
               <p>{{ token.balance }}</p>
             </div>
           </div>
@@ -130,7 +187,7 @@ export default {
       this.loading = true;
       if (newVal !== '') {
         this.localVersion = oldVersion.filter(token => {
-          if (token.name.toLowerCase().includes(newVal.toLowerCase())) {
+          if (token.symbol.toLowerCase().includes(newVal.toLowerCase())) {
             return token;
           }
         });
@@ -143,7 +200,6 @@ export default {
   },
   mounted() {
     this.fetchTokens();
-    this.$refs.viewAllModal.show();
   },
   methods: {
     async fetchTokens() {
@@ -155,10 +211,18 @@ export default {
         tokens = tokens.map(token => {
           const balance = token.balance;
           delete token.balance;
-          token.balance = new BigNumber(balance)
-            .div(new BigNumber(10).pow(token.decimals))
-            .toFixed();
+          token.balance = new BigNumber(balance).gt(0)
+            ? new BigNumber(balance)
+                .div(new BigNumber(10).pow(token.decimals))
+                .toFixed(3)
+            : 0;
           token.address = token.addr;
+          try {
+            // eslint-disable-next-line
+            token.icon = require(`@/assets/images/currency/coins/${token.symbol.toLowerCase()}.svg`);
+          } catch (e) {
+            token.icon = require('@/assets/images/currency/eth.svg');
+          }
           delete token.addr;
           return token;
         });
@@ -178,6 +242,13 @@ export default {
     copyAddress() {
       this.$refs.addressInput.select();
       window.execCommand('copy');
+    },
+    viewAllTokens(bool) {
+      if (bool) {
+        this.$refs.viewAllModal.show();
+      } else {
+        this.$refs.viewAllModal.hide();
+      }
     }
   }
 };
