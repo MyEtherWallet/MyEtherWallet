@@ -1,6 +1,7 @@
 ### Feature
 
 - Have Simplex KYC form open in new tab [#1031](https://github.com/MyEtherWallet/MyEtherWallet/pull/1031)
+- Ledger webusb option [#1081](https://github.com/MyEtherWallet/MyEtherWallet/pull/1081)
 
 ### Bug
 
