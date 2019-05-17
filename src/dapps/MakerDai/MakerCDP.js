@@ -211,9 +211,17 @@ export default class MakerCDP {
   }
 
   async updateValues(cdpId = this.cdpId) {
-    this.cdp = await this.makerManager.daiJs.getCdp(cdpId);
     this._proxyAddress = await this.proxyService.currentProxy();
     this.noProxy = this._proxyAddress === null;
+    if (this._proxyAddress) {
+      this.cdp = await this.makerManager.daiJs.getCdp(
+        cdpId,
+        this._proxyAddress
+      );
+    } else {
+      this.cdp = await this.makerManager.daiJs.getCdp(cdpId, false);
+    }
+
     const liqPrice = await this.cdp.getLiquidationPrice();
     this._liqPrice = liqPrice.toBigNumber().toFixed(2);
     this.isSafe = await this.cdp.isSafe();
