@@ -129,24 +129,6 @@
         }
       }
 
-      .token-search-container {
-        padding: 5px 0;
-        position: relative;
-
-        input {
-          background-color: $light-grey-2;
-          border: none !important;
-          padding: 5px 5px 5px 30px;
-          width: 100%;
-        }
-
-        i {
-          left: 10px;
-          position: absolute;
-          top: 13px;
-        }
-      }
-
       .actual-tokens-container {
         height: 150px;
         overflow-y: scroll;
@@ -157,10 +139,109 @@
         }
 
         .token-item {
+          align-items: center;
           display: flex;
           justify-content: space-between;
           padding: 7px 10px;
         }
+      }
+    }
+  }
+}
+
+.token-search-container {
+  padding: 5px 0;
+  position: relative;
+
+  input {
+    background-color: $light-grey-2;
+    border: none !important;
+    padding: 5px 5px 5px 30px;
+    width: 100%;
+  }
+
+  i {
+    left: 10px;
+    position: absolute;
+    top: 13px;
+  }
+}
+
+.modal-header-contaier {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+
+  h3 {
+    position: relative;
+  }
+
+  .modal-nickname {
+    color: $dark-grey-11;
+  }
+
+  .token-count {
+    background-color: $light-blue-1;
+    border-radius: 5px;
+    color: $white !important;
+    font-size: 12px;
+    margin-left: 5px;
+    padding: 5px;
+    position: absolute;
+    top: -5px;
+  }
+
+  .header-buttons {
+    display: flex;
+
+    .header-button {
+      padding: 0 10px;
+
+      &:last-child {
+        padding-right: 10px;
+      }
+    }
+
+    i {
+      cursor: pointer;
+      font-size: 20px;
+      font-weight: 400 !important;
+    }
+  }
+}
+
+.modal-tokens-container {
+  .tokens-container {
+    max-height: 100vh;
+    overflow-y: scroll;
+    padding-right: 10px;
+  }
+  .modal-token-item {
+    background-color: $light-green-1;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    margin-right: 5px;
+    padding: 10px;
+    width: 100%;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .icon-name-container {
+      align-items: center;
+      display: flex;
+
+      p {
+        font-weight: bold;
+        padding-left: 10px;
+      }
+
+      span {
+        font-weight: normal !important;
+        padding-top: 10px;
       }
     }
   }

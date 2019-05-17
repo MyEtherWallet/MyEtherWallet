@@ -1459,8 +1459,10 @@
 
 .cx-token-modal {
   .modal-dialog {
+    margin: 0;
     min-width: 400px;
-    margin: 0 0 0 73vw;
+    position: absolute;
+    right: 0;
   }
 
   .modal-content {
