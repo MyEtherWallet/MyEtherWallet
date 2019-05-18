@@ -2,7 +2,7 @@
   <div>
     <b-modal
       ref="verifyDetails"
-      :title="title"
+      :title="actualTitle"
       hide-footer
       centered
       class="bootstrap-modal"
@@ -22,7 +22,11 @@
           </div>
           <div
             class="submit-button large-round-button-green-filled"
-            @click="addWallet"
+            @click="
+              () => {
+                addWallet('wallet');
+              }
+            "
           >
             <span v-show="!loading"> Add Wallet </span>
             <i v-show="loading" class="fa fa-spinner fa-spin" />

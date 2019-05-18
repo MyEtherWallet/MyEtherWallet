@@ -21,7 +21,7 @@ export default {
     };
   },
   created() {
-    window.chrome.storage.onChanged.addListener(this.getAccounts());
+    window.chrome.storage.onChanged.addListener(this.getAccounts);
   },
   mounted() {
     this.getAccounts();

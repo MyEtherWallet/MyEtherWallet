@@ -245,12 +245,13 @@ export default {
       this.selectedAccountPath = '';
       this.selectedAddress = '';
     },
-    addWalletToStore() {
+    addWalletToStore(type) {
       this.loading = true;
       ExtensionHelpers.addWalletToStore(
         this.wallet.getAddressString(),
         JSON.stringify(this.file),
         this.nickname,
+        type,
         this.storeWalletCb
       );
     },
@@ -282,7 +283,7 @@ export default {
           this.toggleImportKeystoreFile(this.loading);
           this.toggleVerifyDetails(true, keyStoreType);
         } else {
-          this.addWalletToStore();
+          this.addWalletToStore('wallet');
           this.toggleGenerateWallet(false);
         }
       };

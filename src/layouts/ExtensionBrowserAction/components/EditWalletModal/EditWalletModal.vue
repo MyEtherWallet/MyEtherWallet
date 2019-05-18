@@ -1,38 +1,31 @@
 <template>
   <div>
     <b-modal
-      ref="watchOnlyWallet"
+      ref="editModal"
       hide-footer
-      centered
       class="bootstrap-modal"
-      title="Add Watch Only Wallet"
+      title="Edit Modal"
     >
       <div class="modal-contents">
         <div class="input-container">
           <label for="walletName"> Wallet Name </label>
           <input
-            v-model="name"
+            v-model="locName"
             placeholder="Please add a wallet nickname"
             name="walletName"
           />
         </div>
-        <div class="input-container">
-          <label for="walletAddr"> Address </label>
-          <input
-            v-model="address"
-            placeholder="Please enter the wallet address"
-            name="walletAddr"
-          />
+        <div
+          class="submit-button large-round-button-green-filled"
+          @click="saveWallet"
+        >
+          Submit
         </div>
         <div
-          :class="[
-            validInputs ? '' : 'disabled',
-            'submit-button large-round-button-green-filled'
-          ]"
-          @click="addWatchOnly(name, address)"
+          class="remove-button large-round-button-white-filled"
+          @click="removeWallet"
         >
-          <span v-show="!loading"> Add Wallet </span>
-          <i v-show="loading" class="fa fa-spinner fa-spin" />
+          Remove Wallet
         </div>
       </div>
     </b-modal>
@@ -40,35 +33,53 @@
 </template>
 
 <script>
-import { isAddress } from '@/helpers/addressUtils';
-
+import { Toast, ExtensionHelpers } from '@/helpers';
 export default {
   props: {
-    addWatchOnly: {
+    name: {
+      type: String,
+      default: ''
+    },
+    removeWallet: {
       type: Function,
       default: () => {}
     },
-    loading: {
-      type: Boolean,
-      default: false
+    address: {
+      type: String,
+      default: ''
+    },
+    wallet: {
+      type: Object,
+      default: () => {
+        return {};
+      }
     }
   },
   data() {
     return {
-      name: '',
-      address: ''
+      locName: this.name
     };
-  },
-  computed: {
-    validInputs() {
-      return isAddress(this.address) && this.name !== '';
-    }
   },
   mounted() {
     this.$refs.watchOnlyWallet.$on('hidden', () => {
-      this.name = '';
-      this.address = '';
+      this.locName = '';
     });
+  },
+  methods: {
+    saveWallet() {
+      const wallet = Object.assign({}, this.wallet);
+      ExtensionHelpers.addWalletToStore(
+        this.address,
+        wallet.priv,
+        this.locName,
+        wallet.type,
+        this.saveWalletCb
+      );
+    },
+    saveWalletCb() {
+      this.$refs.editModal.hide();
+      Toast.responseHandler('Wallet successfully updated!', Toast.SUCCESS);
+    }
   }
 };
 </script>

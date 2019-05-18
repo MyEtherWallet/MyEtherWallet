@@ -1,5 +1,19 @@
 <template>
   <div class="wallet-info-container">
+    <edit-wallet-modal
+      ref="editModal"
+      :address="address"
+      :name="parsedWallet.nick"
+      :wallet="parsedWallet"
+      :remove-wallet="openRemoveWallet"
+    />
+    <remove-wallet-modal
+      ref="removeWalletModal"
+      :cancel-remove="cancelRemove"
+      :wallet-type="parsedWallet.type"
+      :nickname="parsedWallet.nick"
+      :address="address"
+    />
     <b-modal ref="viewAllModal" hide-footer hide-header class="cx-token-modal">
       <div class="modal-header-contaier">
         <div>
@@ -7,7 +21,9 @@
             All Tokens
             <span class="token-count"> {{ tokens.length }} </span>
           </h3>
-          <p class="modal-nickname">{{ parsedWallet.nick }}</p>
+          <div class="modal-nickname">
+            <p>{{ parsedWallet.nick }}</p>
+          </div>
         </div>
         <div class="header-buttons">
           <div class="header-button">
@@ -55,8 +71,8 @@
         {{ parsedWallet.nick }}
       </p>
       <div class="button-container">
-        <div @click="access">Access</div>
-        <div @click="detail">Detail</div>
+        <div v-show="walletType !== 'watchOnly'" @click="access">Access</div>
+        <div v-show="walletType !== 'watchOnly'" @click="detail">Detail</div>
         <div @click="edit">Edit</div>
       </div>
     </div>
@@ -129,10 +145,14 @@ import TokenBalance from '@myetherwallet/eth-token-balance';
 import { ETH } from '@/networks/types';
 import sortByBalance from '@/helpers/sortByBalance.js';
 import BigNumber from 'bignumber.js';
+import EditWalletModal from '../EditWalletModal';
+import RemoveWalletModal from '../RemoveWalletModal';
 
 export default {
   components: {
-    blockie: Blockie
+    blockie: Blockie,
+    'edit-wallet-modal': EditWalletModal,
+    'remove-wallet-modal': RemoveWalletModal
   },
   props: {
     address: {
@@ -156,10 +176,6 @@ export default {
       default: () => {}
     },
     detail: {
-      type: Function,
-      default: () => {}
-    },
-    edit: {
       type: Function,
       default: () => {}
     },
@@ -202,6 +218,17 @@ export default {
     this.fetchTokens();
   },
   methods: {
+    cancelRemove() {
+      this.edit();
+      this.$refs.removeWalletModal.$refs.removeWalletModal.hide();
+    },
+    edit() {
+      this.$refs.editModal.$refs.editModal.show();
+    },
+    openRemoveWallet() {
+      this.$refs.editModal.$refs.editModal.hide();
+      this.$refs.removeWalletModal.$refs.removeWalletModal.show();
+    },
     async fetchTokens() {
       this.loading = true;
       let tokens = [];
