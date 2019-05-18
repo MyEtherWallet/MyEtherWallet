@@ -14,13 +14,13 @@
               {{ totalBalance }} <span>ETH</span>
               <span class="total-balance"> (Total Balance) </span>
             </p>
-            <i class="fa fa-spin fa-spinner" v-show="loading" />
+            <i v-show="loading" class="fa fa-spin fa-spinner" />
           </div>
           <div class="add-button" @click="addWallet">
             + Add
           </div>
         </div>
-        <div class="wallets" v-show="myWallets.length > 0">
+        <div v-show="myWallets.length > 0" class="wallets">
           <wallet-info-component
             v-for="wallet in myWallets"
             :key="wallet.address"
@@ -46,7 +46,7 @@
             + Add
           </div>
         </div>
-        <div class="wallets" v-show="watchOnlyAddresses.length > 0">
+        <div v-show="watchOnlyAddresses.length > 0" class="wallets">
           <wallet-info-component
             v-for="wallet in watchOnlyAddresses"
             :key="wallet.address"
