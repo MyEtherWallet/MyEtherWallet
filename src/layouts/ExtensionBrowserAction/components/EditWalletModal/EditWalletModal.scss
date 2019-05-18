@@ -21,3 +21,10 @@
   margin-top: 10px;
   width: 100% !important;
 }
+
+.remove-button {
+  @extend .submit-button;
+
+  color: $red-7;
+  text-align: center;
+}

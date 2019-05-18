@@ -1,23 +1,42 @@
 @import '~@/scss/GlobalVariables';
 
-.input-container {
-  display: flex;
-  flex-direction: column;
-  padding: 10px 0;
+.warning-text-container {
+  text-align: center;
 
-  input {
-    background-color: $light-grey-2;
-    border: none;
-    padding: 15px;
-  }
-
-  label {
-    color: $dark-blue-12;
-    font-weight: bold;
+  p {
+    font-size: 16px !important;
   }
 }
 
-.submit-button {
-  margin-top: 10px;
-  width: 100% !important;
+.remove-modal-buttons {
+  align-items: center;
+  display: flex;
+  justify-content: space-around;
+  padding-top: 40px;
+
+  %button-temp {
+    border: 1px solid;
+    border-radius: 5px;
+    cursor: pointer;
+    flex: 1;
+    margin: 5px;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .cancel,
+  .remove {
+    @extend %button-temp;
+  }
+
+  .remove {
+    background-color: $red-7;
+    border: 1px solid $red-7;
+    color: $white;
+  }
+
+  .cancel {
+    border: 1px solid $dark-grey-11;
+    color: $dark-grey-11;
+  }
 }

@@ -2,7 +2,7 @@
 
 .wallet-info-container {
   padding-top: 20px;
-  width: 100%;
+  max-width: 1000px;
 
   .nickname-and-buttons {
     align-items: center;
@@ -38,7 +38,6 @@
       border-bottom-right-radius: 5px;
       display: flex;
       flex-direction: column;
-      flex-grow: 0.25;
       justify-content: space-between;
       min-height: 250px;
       padding: 15px;
@@ -105,6 +104,7 @@
     .tokens-container {
       border-left: 1px solid $dark-grey-11;
       flex: auto;
+      max-width: 350px;
       padding: 10px;
 
       .tokens-header {
@@ -177,7 +177,12 @@
   }
 
   .modal-nickname {
-    color: $dark-grey-11;
+    min-width: 120px;
+    width: 100%;
+
+    p {
+      color: $dark-grey-11;
+    }
   }
 
   .token-count {
