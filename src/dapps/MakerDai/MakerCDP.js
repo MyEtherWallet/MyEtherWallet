@@ -211,7 +211,7 @@ export default class MakerCDP {
   }
 
   async updateValues(cdpId = this.cdpId) {
-    this._proxyAddress = await this.proxyService.currentProxy();
+    this._proxyAddress = await this.makerManager.getProxy();
     this.noProxy = this._proxyAddress === null;
     if (this._proxyAddress) {
       this.cdp = await this.makerManager.daiJs.getCdp(
@@ -321,7 +321,6 @@ export default class MakerCDP {
     if (!this.hasProxy) {
       this.opening = true;
       this.needsUpdate = true;
-      // console.log(this.cdpService); // todo remove dev item
       newCdp = await this.cdpService.openProxyCdpLockEthAndDrawDai(
         ethQty,
         daiQty,
