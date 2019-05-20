@@ -296,7 +296,7 @@ export default {
         this.validAddress &&
         this.toAmt >= 0 &&
         this.gasLimit > 0 &&
-        this.localNonce > 0 &&
+        this.localNonce >= 0 &&
         this.localGasPrice
       );
     }
