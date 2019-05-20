@@ -163,7 +163,7 @@ export default class Kyber {
   async retrieveGasLimits(network = this.network) {
     try {
       const gasLimitList = await kyberCalls.getGasLimits(network);
-      this.GAS_LIMITS = gasLimitList;
+      this.GAS_LIMITS = gasLimitList.data;
     } catch (e) {
       utils.handleOrThrow(e);
       errorLogger(e);
