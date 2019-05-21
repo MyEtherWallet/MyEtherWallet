@@ -13,6 +13,7 @@
 
 ### Devop
 
+- Ledger custom paths [#1037](https://github.com/MyEtherWallet/MyEtherWallet/pull/1037)
 - Update Richie's profile [#1036](https://github.com/MyEtherWallet/MyEtherWallet/pull/1036)
 - Change PWA name to MEW [#1030](https://github.com/MyEtherWallet/MyEtherWallet/pull/1030)
 
