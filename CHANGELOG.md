@@ -13,6 +13,7 @@
 
 ### Devop
 
+- Update Richie's profile [#1036](https://github.com/MyEtherWallet/MyEtherWallet/pull/1036)
 - Change PWA name to MEW [#1030](https://github.com/MyEtherWallet/MyEtherWallet/pull/1030)
 
 ### Release v5.0.11-ens.1
