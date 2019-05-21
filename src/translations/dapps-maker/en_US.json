@@ -1,6 +1,6 @@
 {
-  "maker_title": "Collateralize & Generate DAI ",
-  "maker_desc": "Collateralize DAI coins",
+  "maker_title": "MakerDAO",
+  "maker_desc": "Collateralize ETH for DAI",
   "cdpPortal": "CDP Portal",
   "positionLabel": "Collateralized debt position #{value}",
   "currentPrice": "Current price",
