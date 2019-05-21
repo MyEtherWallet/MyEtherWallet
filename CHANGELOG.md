@@ -6,11 +6,11 @@
 
 - UI fix for mnemonic phrase key verification modal [#1029](https://github.com/MyEtherWallet/MyEtherWallet/pull/1029)
 - Fix owner check for permanent registrar names [#1054](https://github.com/MyEtherWallet/MyEtherWallet/pull/1054)
+- Web3 wallet promievent fix [#1063](https://github.com/MyEtherWallet/MyEtherWallet/pull/1063)
 
 ### Devop
 
 - Change PWA name to MEW [#1030](https://github.com/MyEtherWallet/MyEtherWallet/pull/1030)
-
 
 ### Release v5.0.11-ens.1
 
