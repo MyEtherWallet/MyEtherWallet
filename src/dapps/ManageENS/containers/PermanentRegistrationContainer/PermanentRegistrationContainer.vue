@@ -9,7 +9,7 @@
         </div>
         <h3>
           Hang on tight! <br />
-          We are creating commitment for <br />
+          We are finalizing the registration for <br />
           <span class="domain-name"> {{ fullDomainName }}. </span>
         </h3>
       </div>

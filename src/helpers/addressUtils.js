@@ -14,13 +14,13 @@ const isAddress = address => {
   ) {
     return true;
   }
-  const chainID = store.getters.network.type.chainID;
+  const chainID = store.state.network.type.chainID;
   if (chainID === RSK.chainID || chainID === RSKTEST.chainID)
     return isValidRSKChecksumAddress(address, chainID);
   return web3.utils.checkAddressChecksum(address);
 };
 const toChecksumAddress = address => {
-  const chainID = store.getters.network.type.chainID;
+  const chainID = store.state.network.type.chainID;
   if (chainID === RSK.chainID || chainID === RSKTEST.chainID)
     return toRSKChecksumAddress(address, chainID);
   return web3.utils.toChecksumAddress(address);

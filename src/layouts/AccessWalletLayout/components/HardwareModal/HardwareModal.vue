@@ -159,7 +159,7 @@ export default {
       this.items.forEach(item => {
         const u2fhw = [SECALOT_TYPE, LEDGER_TYPE, BITBOX_TYPE];
         const inMobile = [SECALOT_TYPE, KEEPKEY_TYPE];
-        const webUsb = [KEEPKEY_TYPE];
+        const webUsb = [KEEPKEY_TYPE, LEDGER_TYPE];
 
         if (webUsb.includes(item.name)) {
           const disable =

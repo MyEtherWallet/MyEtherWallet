@@ -152,7 +152,7 @@
 </template>
 <script>
 import AddressBlock from '../AddressBlock';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 
 export default {
   components: {
@@ -181,11 +181,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters({
-      web3: 'web3',
-      network: 'network',
-      account: 'account'
-    }),
+    ...mapState(['web3', 'network', 'account']),
     buttonText() {
       if (!this.allSigned && this.isHardwareWallet) {
         return this.$t('confirmation.approveOnDevice');
