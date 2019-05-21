@@ -40,7 +40,7 @@ export default {
         this.accounts = accounts;
       } else {
         this.accounts = [];
-        this.$router.push('/add-wallet');
+        this.$router.push('/access-my-wallet');
       }
     },
     getAccounts() {

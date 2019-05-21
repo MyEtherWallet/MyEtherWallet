@@ -1,5 +1,6 @@
-import HomeLayout from '@/layouts/HomeLayout';
-import CreateWalletLayout from '@/layouts/CreateWalletLayout';
+const HomeLayout = () => import('@/layouts/HomeLayout');
+const CreateWalletLayout = () => import('@/layouts/CreateWalletLayout');
+const AccessWalletLayout = () => import('@/layouts/AccessWalletLayout');
 
 import app from './app';
 const webRoutes = [
@@ -13,6 +14,12 @@ const webRoutes = [
     path: '/create-wallet',
     name: 'CreateWalletLayout',
     component: CreateWalletLayout,
+    meta: { requiresAuth: false }
+  },
+  {
+    path: '/access-my-wallet',
+    name: 'AccessWalletLayout',
+    component: AccessWalletLayout,
     meta: { requiresAuth: false }
   }
 ];

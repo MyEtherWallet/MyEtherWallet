@@ -13,13 +13,34 @@
         <b-nav-item href="https://kb.myetherwallet.com" target="_blank">
           Help Center
         </b-nav-item>
+        <b-nav-item href="https://kb.myetherwallet.com" target="_blank">
+          Help Center
+        </b-nav-item>
+        <b-nav-item
+          v-show="account.address !== null"
+          target="_blank"
+          @click="logout"
+        >
+          Logout
+        </b-nav-item>
       </b-nav>
     </b-navbar>
   </div>
 </template>
 
 <script>
-export default {};
+import { mapState } from 'vuex';
+export default {
+  computed: {
+    ...mapState(['account'])
+  },
+  methods: {
+    logout() {
+      this.$store.dispatch('clearWallet');
+      this.$router.push('/');
+    }
+  }
+};
 </script>
 
 <style lang="scss" scoped>

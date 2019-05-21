@@ -3,7 +3,6 @@ const TeamLayout = () => import('@/layouts/TeamLayout');
 const PrivacyPolicyLayout = () => import('@/layouts/PrivacyPolicyLayout');
 const TermsAndConditionsLayout = () =>
   import('@/layouts/TermsAndConditionsLayout');
-const AccessWalletLayout = () => import('@/layouts/AccessWalletLayout');
 const InterfaceLayout = () => import('@/layouts/InterfaceLayout');
 const HelpCenterLayout = () => import('@/layouts/HelpCenterLayout');
 const NotFoundLayout = () => import('@/layouts/NotFoundLayout');
@@ -48,12 +47,6 @@ const router = [
     path: '/terms-and-conditions',
     name: 'TermsAndConditionsLayout',
     component: TermsAndConditionsLayout,
-    meta: { requiresAuth: false }
-  },
-  {
-    path: '/access-my-wallet',
-    name: 'AccessWalletLayout',
-    component: AccessWalletLayout,
     meta: { requiresAuth: false }
   },
   {
