@@ -72,6 +72,6 @@
   "getMkr": "Get MKR",
   "getDai": "Get DAI",
   "closeTitle": "Close CDP",
-  "initialLoadingOne": "Loading MakerDAI...",
+  "initialLoadingOne": "Loading MakerDAO...",
   "initialLoadingTwo": "Please wait for a moment."
 }
