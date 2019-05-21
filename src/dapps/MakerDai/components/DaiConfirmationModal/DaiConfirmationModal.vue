@@ -52,7 +52,7 @@
               </li>
               <li>
                 <p>Collateralization ratio</p>
-                <p class="bold">{{ collatRatio }}</p>
+                <p class="bold">{{ collatRatio }} %</p>
               </li>
               <li>
                 <p>Minimum ratio</p>
@@ -73,7 +73,7 @@
 </template>
 
 <script>
-import BigNumber from 'bignumber.js';
+// import BigNumber from 'bignumber.js';
 import ExpendingOption from '@/components/ExpendingOption';
 import StandardButton from '@/components/Buttons/StandardButton';
 
@@ -104,10 +104,8 @@ export default {
       default: 'Error'
     },
     currentPrice: {
-      type: BigNumber,
-      default: function() {
-        return new BigNumber(0);
-      }
+      type: String,
+      default: 'Error'
     },
     collateral: {
       type: String,

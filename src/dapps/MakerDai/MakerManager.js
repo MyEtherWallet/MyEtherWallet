@@ -2,6 +2,14 @@ import BigNumber from 'bignumber.js';
 import { toChecksumAddress } from '@/helpers/addressUtils';
 import MakerCDP from './MakerCDP';
 import Maker from '@makerdao/dai';
+import Vue from 'vue';
+
+const Observer = new Vue().$data.__ob__.constructor;
+
+const makeNonreactive = function(obj) {
+  obj.__ob__ = new Observer({});
+  return obj;
+};
 
 const { MKR, DAI } = Maker;
 
@@ -17,15 +25,13 @@ const bnOver = (one, two, three) => {
 
 export default class MakerManager {
   constructor(props) {
+    console.log(props); // todo remove dev item
     this.web3 = props.web3 || {};
     this.pethMin = props.pethMin || 0.005;
     this.creatingProxy = false;
     this._currentAddress = props.account.address;
-    this.maker = function() {
-      return props.maker;
-    };
+    this.maker = makeNonreactive(props.maker);
 
-    this.makerDao = props.maker;
     this._proxyAddress = props.currentProxy || null;
     this.activeCdps = {};
     this.routeHandlers = props.routeHandlers || {
@@ -39,10 +45,6 @@ export default class MakerManager {
   }
 
   // Getters
-  get daiJs() {
-    return this.makerDao;
-  }
-
   get currentAddress() {
     return this._currentAddress;
   }
@@ -143,11 +145,11 @@ export default class MakerManager {
 
   // Methods
   async init() {
-    await this.maker().authenticate();
-    this._priceService = this.maker().service('price');
-    this._cdpService = await this.maker().service('cdp');
-    this._proxyService = await this.maker().service('proxy');
-    this._tokenService = await this.maker().service('token');
+    await this.maker.authenticate();
+    this._priceService = this.maker.service('price');
+    this._cdpService = await this.maker.service('cdp');
+    this._proxyService = await this.maker.service('proxy');
+    this._tokenService = await this.maker.service('token');
 
     this._ethPrice = toBigNumber(
       (await this._priceService.getEthPrice()).toNumber()
@@ -204,7 +206,7 @@ export default class MakerManager {
   }
 
   getCdp(cdpId) {
-    return this.activeCdps[cdpId];
+    return makeNonreactive(this.activeCdps[cdpId]);
   }
 
   async refresh() {
@@ -365,7 +367,9 @@ export default class MakerManager {
       web3: this.web3
     };
 
-    const makerCDP = new MakerCDP(cdpId, this, services, sysVars);
+    const makerCDP = makeNonreactive(
+      new MakerCDP(cdpId, this, services, sysVars)
+    );
     return await makerCDP.init(cdpId);
   }
 
