@@ -1,19 +1,34 @@
 const exec = require('child_process').exec;
 
 //tar package is not applicable to web and waiting for other packages to update
-const AUDIT_EXCEPTIONS = ['tar', 'js-yaml']
+const AUDIT_EXCEPTIONS = ['tar', 'js-yaml'];
 
 const execute = (command, callback) => {
-    exec(command, (error, stdout, stderr) => { callback(stdout); });
-};
-execute('npm audit --json', (json) => {
-    const advisories = JSON.parse(json).advisories
-    let auditPass = true;
-    for (const id in advisories) {
-        if (advisories[id].severity === 'high' && !AUDIT_EXCEPTIONS.includes(advisories[id].module_name)) {
-            console.error("AUDIT Failed", advisories[id])
-            auditPass = false;
-        }
+  exec(
+    command,
+    {
+      maxBuffer: 2000 * 1024
+    },
+    (error, stdout, stderr) => {
+      callback(stdout);
     }
-    if (!auditPass) process.exit(1)
-})
+  );
+};
+execute('npm audit --json', json => {
+  const advisories = JSON.parse(json).advisories;
+  if (!advisories) {
+    console.info('Most likely npm audit is unavailable', json);
+    process.exit(0);
+  }
+  let auditPass = true;
+  for (const id in advisories) {
+    if (
+      advisories[id].severity === 'high' &&
+      !AUDIT_EXCEPTIONS.includes(advisories[id].module_name)
+    ) {
+      console.error('AUDIT Failed', advisories[id]);
+      auditPass = false;
+    }
+  }
+  if (!auditPass) process.exit(1);
+});
