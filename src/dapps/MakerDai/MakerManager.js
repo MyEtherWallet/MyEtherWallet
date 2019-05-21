@@ -370,6 +370,19 @@ export default class MakerManager {
   }
 
   // Calculations
+
+  toUSD(eth) {
+    if (eth === undefined || eth === null) return toBigNumber(0);
+    return this.ethPrice.times(toBigNumber(eth));
+  }
+
+  toPeth(eth) {
+    if (!toBigNumber(eth).eq(0)) {
+      return toBigNumber(eth).div(this.wethToPethRatio);
+    }
+    return toBigNumber(0);
+  }
+
   calcDrawAmt(principal, collatRatio) {
     return Math.floor(
       bnOver(principal, this._ethPrice, collatRatio).toNumber()

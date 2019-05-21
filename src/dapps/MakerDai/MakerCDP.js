@@ -123,6 +123,10 @@ export default class MakerCDP {
     return this.makerManager.minEth;
   }
 
+  get pethMin() {
+    return this.makerManager.pethMin;
+  }
+
   // CDP Instance/item values
 
   get zeroDebt() {
@@ -165,7 +169,7 @@ export default class MakerCDP {
     return this._governanceFee;
   }
 
-  get enoughToWipe(){
+  get enoughToWipe() {
     return this._enoughToWipe;
   }
 
@@ -187,8 +191,17 @@ export default class MakerCDP {
 
   get maxEthDraw() {
     if (this.ethPrice && this._debtValue && this.liquidationRatio) {
+      if (this.zeroDebt) {
+        return this._ethCollateral
+          .minus(bnOver(this.liquidationRatio, this._debtValue, this.ethPrice))
+          .minus(this.minEth.times(1.0));
+      }
       return this._ethCollateral.minus(
-        bnOver(this.liquidationRatio, this._debtValue, this.ethPrice)
+        bnOver(
+          this.liquidationRatio.plus(0.001),
+          this._debtValue,
+          this.ethPrice
+        )
       );
     }
     return toBigNumber(0);
@@ -196,8 +209,23 @@ export default class MakerCDP {
 
   get maxPethDraw() {
     if (this.pethPrice && this._pethCollateral && this.liquidationRatio) {
+      if (this.zeroDebt) {
+        return this._pethCollateral
+          .minus(
+            bnOver(
+              this.liquidationRatio.plus(0.001),
+              this._debtValue,
+              this.pethPrice
+            )
+          )
+          .minus(this.pethMin.times(1.0));
+      }
       return this._pethCollateral.minus(
-        bnOver(this.liquidationRatio, this._debtValue, this.pethPrice)
+        bnOver(
+          this.liquidationRatio.plus(0.001),
+          this._debtValue,
+          this.pethPrice
+        )
       );
     }
     return toBigNumber(0);
@@ -206,9 +234,15 @@ export default class MakerCDP {
   get maxUsdDraw() {
     if (this.pethPrice && this._pethCollateral && this.liquidationRatio) {
       return this.toUSD(
-        this._ethCollateral.minus(
-          bnOver(this.liquidationRatio, this._debtValue, this.ethPrice)
-        )
+        this._ethCollateral
+          .minus(
+            bnOver(
+              this.liquidationRatio.plus(0.001),
+              this._debtValue,
+              this.ethPrice
+            )
+          )
+          .minus(this.minEth.times(1.0))
       );
     }
     return toBigNumber(0);
@@ -241,7 +275,6 @@ export default class MakerCDP {
     } else {
       this.cdp = await this.makerManager.daiJs.getCdp(cdpId, false);
     }
-
 
     const liqPrice = await this.cdp.getLiquidationPrice();
     this._liqPrice = liqPrice.toBigNumber().toFixed(2);
@@ -448,7 +481,7 @@ export default class MakerCDP {
     // will also need to check if there is enough allowance
     // const enoughToWipe = await this.canCloseCdp();
     // if (enoughToWipe) {
-    console.log("close"); // todo remove dev item
+    console.log('close'); // todo remove dev item
     try {
       this.needsUpdate = true;
       this.closing = true;
@@ -489,15 +522,11 @@ export default class MakerCDP {
 
   // Calculations
   toUSD(eth) {
-    if (eth === undefined || eth === null) return toBigNumber(0);
-    return this.ethPrice.times(toBigNumber(eth));
+    return this.makerManager.toUSD(eth);
   }
 
   toPeth(eth) {
-    if (!toBigNumber(eth).eq(0)) {
-      return toBigNumber(eth).div(this.wethToPethRatio);
-    }
-    return toBigNumber(0);
+    return this.makerManager.toPeth(eth);
   }
 
   fromPeth(peth) {
