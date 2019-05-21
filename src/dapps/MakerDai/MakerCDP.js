@@ -95,8 +95,16 @@ export default class MakerCDP {
     return this.makerManager.daiToken;
   }
 
+  get daiBalance() {
+    return this.makerManager.daiBalance;
+  }
+
   get mkrToken() {
     return this.makerManager.mkrToken;
+  }
+
+  get mkrBalance() {
+    return this.makerManager.mkrBalance;
   }
 
   get proxyService() {
@@ -111,7 +119,15 @@ export default class MakerCDP {
     return this.makerManager.cdpService;
   }
 
+  get minEth() {
+    return this.makerManager.minEth;
+  }
+
   // CDP Instance/item values
+
+  get zeroDebt() {
+    return toBigNumber(this.debtValue).eq(0);
+  }
 
   get usdCollateral() {
     return this.toUSD(this._ethCollateral);
@@ -147,6 +163,10 @@ export default class MakerCDP {
 
   get governanceFeeOwed() {
     return this._governanceFee;
+  }
+
+  get enoughToWipe(){
+    return this._enoughToWipe;
   }
 
   get maxDai() {
@@ -221,6 +241,7 @@ export default class MakerCDP {
     } else {
       this.cdp = await this.makerManager.daiJs.getCdp(cdpId, false);
     }
+
 
     const liqPrice = await this.cdp.getLiquidationPrice();
     this._liqPrice = liqPrice.toBigNumber().toFixed(2);
@@ -425,22 +446,23 @@ export default class MakerCDP {
 
   async closeCdp() {
     // will also need to check if there is enough allowance
-    const enoughToWipe = await this.canCloseCdp();
-    if (enoughToWipe) {
-      try {
-        this.needsUpdate = true;
-        this.closing = true;
+    // const enoughToWipe = await this.canCloseCdp();
+    // if (enoughToWipe) {
+    console.log("close"); // todo remove dev item
+    try {
+      this.needsUpdate = true;
+      this.closing = true;
 
-        if (this.hasProxy) {
-          await this.cdpService.shutProxy(this._proxyAddress, this.cdpId);
-        }
-      } catch (e) {
-        // eslint-disable-next-line
-        console.log('closeCdp Error:');
-        // eslint-disable-next-line
-        console.error(e);
+      if (this.hasProxy) {
+        await this.cdpService.shutProxy(this._proxyAddress, this.cdpId);
       }
+    } catch (e) {
+      // eslint-disable-next-line
+      console.log('closeCdp Error:');
+      // eslint-disable-next-line
+      console.error(e);
     }
+    // }
   }
 
   async moveCdp(address) {
@@ -576,7 +598,7 @@ export default class MakerCDP {
     }
   }
 
-  async getTokenBalances() {
+  async getDaiBalances() {
     this.daiBalance = await this.makerManager.daiToken.balance();
     return this.daiBalance;
   }

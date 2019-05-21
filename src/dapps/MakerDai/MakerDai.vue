@@ -69,7 +69,8 @@
       @cdpOpened="addCdp"
       @cdpClosed="removeCdp"
       @modalHidden="modalHidden"
-    ></router-view>
+    >
+    </router-view>
   </div>
 </template>
 

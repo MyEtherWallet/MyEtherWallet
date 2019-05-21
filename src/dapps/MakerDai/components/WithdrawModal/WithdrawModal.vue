@@ -210,17 +210,6 @@ export default {
       }
       return true;
     },
-    hasEnoughDai() {
-      // TODO Figure out how to learn how much dai a user has (the code below should work)
-      if (this.amountPresent) {
-        // const daiToken = this.tokensWithBalance.find(item => {
-        //   return item.symbol.toUpperCase() === 'DAI';
-        // });
-        const asEth = ethUnit.fromWei(this.account.balance, 'ether');
-        return toBigNumber(this.amount).lte(toBigNumber(asEth));
-      }
-      return true;
-    },
     canWithdrawEthAmount() {
       if (this.amountPresent) {
         return toBigNumber(this.amount).lte(
@@ -229,20 +218,13 @@ export default {
       }
       return false;
     },
-    canGenerateDaiAmount() {
-      if (this.amountPresent) {
-        return toBigNumber(this.amount).lte(toBigNumber(this.activeCdp.maxDai));
-      }
-      return true;
-    },
     canProceed() {
       if (this.amountPresent) {
         if (toBigNumber(this.amount).lte(0)) return false;
-        // if (!ratioOk) return false;
         return (
-          (this.newCollateralRatioSafe && this.canGenerateDaiAmount) ||
+          (this.newCollateralRatioSafe && this.canWithdrawEthAmount) ||
           (!this.newCollateralRatioInvalid &&
-            this.canGenerateDaiAmount &&
+            this.canWithdrawEthAmount &&
             this.riskyBypass)
         );
       }
@@ -256,25 +238,19 @@ export default {
       } else if (this.activeCdp) {
         return this.activeCdp.collatRatio;
       }
-      return 0;
+      return toBigNumber(0);
     },
     newCollateralRatioSafe() {
       if (this.canCompute) {
-        return this.activeCdp
-          .calcCollatRatioEthChg(
-            this.activeCdp.ethCollateral.minus(this.amount)
-          )
-          .gte(2);
+        if (this.activeCdp.zeroDebt) return true;
+        return this.newCollateralRatio.gte(2);
       }
       return true;
     },
     newCollateralRatioInvalid() {
       if (this.canCompute) {
-        return this.activeCdp
-          .calcCollatRatioEthChg(
-            this.activeCdp.ethCollateral.minus(this.amount)
-          )
-          .lte(1.5);
+        if (this.activeCdp.zeroDebt) return false;
+        return this.newCollateralRatio.lte(1.5);
       }
       return true;
     },
@@ -310,7 +286,7 @@ export default {
     },
     maxWithdraw() {
       this.amount = this.activeCdp.maxEthDraw.minus(
-        this.activeCdp.maxEthDraw.times(0.0001)
+        this.activeCdp.minEth.times(1.2)
       );
       this.$forceUpdate();
     },
