@@ -5,7 +5,7 @@
       <p class="title">{{ options.title }}</p>
       <p class="message">{{ options.message }}</p>
       <div v-if="options.link.url" class="link">
-        > Read:
+        > {{ $t('common.read') }}:
         <a :href="options.link.url" target="_blank">{{ options.link.text }}</a>
       </div>
     </div>
@@ -17,7 +17,16 @@ export default {
   props: {
     options: {
       type: Object,
-      default: function() {}
+      default: function() {
+        return {
+          title: this.$t('common.notRecommended'),
+          message: this.$t('common.notRecommendedMessage'),
+          link: {
+            text: this.$t('common.usingMewOffline'),
+            url: 'https://kb.myetherwallet.com/posts/offline/using-mew-offline/'
+          }
+        };
+      }
     }
   },
   data() {

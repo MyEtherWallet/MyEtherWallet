@@ -46,14 +46,14 @@
 
     <mnemonic-modal
       ref="mnemonicPhraseModal"
-      :mnemonic-phrase-password-modal-open="mnemonicphrasePasswordModalOpen"
+      :hardware-wallet-open="hardwareWalletOpen"
     />
 
-    <mnemonic-password-modal
+    <!--    <mnemonic-password-modal
       ref="mnemonicPhrasePassword"
       :hardware-wallet-open="hardwareWalletOpen"
       :phrase="phrase"
-    />
+    />-->
 
     <wallet-password-modal />
 
@@ -249,11 +249,11 @@ export default {
       this.$refs.mnemonicPhraseModal.$refs.mnemonicPhrase.show();
       this.$refs.softwareModal.$refs.software.hide();
     },
-    mnemonicphrasePasswordModalOpen(phrase) {
-      this.phrase = phrase;
-      this.$refs.mnemonicPhraseModal.$refs.mnemonicPhrase.hide();
-      this.$refs.mnemonicPhrasePassword.$refs.password.show();
-    },
+    // mnemonicphrasePasswordModalOpen(phrase) {
+    //   this.phrase = phrase;
+    //   this.$refs.mnemonicPhraseModal.$refs.mnemonicPhrase.hide();
+    //   this.$refs.mnemonicPhrasePassword.$refs.password.show();
+    // },
     fileUploaded(e) {
       this.file = e;
       this.passwordOpen();
@@ -265,9 +265,9 @@ export default {
       this.$refs.hardwarePasswordModal.$refs.password.show();
     },
     hardwareWalletOpen(wallet) {
-      if (this.$refs.mnemonicPhrasePassword.$refs.password.visible) {
-        this.$refs.mnemonicPhrasePassword.$refs.password.hide();
-      }
+      // if (this.$refs.mnemonicPhrasePassword.$refs.password.visible) {
+      //   this.$refs.mnemonicPhrasePassword.$refs.password.hide();
+      // }
       try {
         this.hardwareWallet = wallet;
         this.networkAndAddressOpen();

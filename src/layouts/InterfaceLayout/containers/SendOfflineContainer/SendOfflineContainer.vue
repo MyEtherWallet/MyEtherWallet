@@ -270,7 +270,10 @@ export default {
     txSpeedMsg() {
       const net = this.network.type.name;
       // eslint-disable-next-line
-      const msg = `${this.$t('popover.txSpeedPt1').replace('{0}', net)} ${this.$t('popover.txSpeedPt2').replace('{0}', net)}`;
+      const msg = `${this.$t('popover.txSpeedPt1').replace(
+        '{0}',
+        net
+      )} ${this.$t('popover.txSpeedPt2').replace('{0}', net)}`;
       return msg;
     },
     validAddress() {
