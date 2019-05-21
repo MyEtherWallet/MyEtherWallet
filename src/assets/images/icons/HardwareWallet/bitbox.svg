@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="45px" height="45px" viewBox="0 0 45 45" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 54.1 (76490) - https://sketchapp.com -->
+    <title>ledger</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Landing-pages" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Hardware(pop-out)1-Copy-2" transform="translate(-538.000000, -381.000000)" stroke="#002747" stroke-width="2.6">
+            <g id="pop-out" transform="translate(477.000000, 207.000000)">
+                <g id="bitbox" transform="translate(61.000000, 174.000000)">
+                    <polygon id="Path-4" points="17.8273125 20.7260924 17.8273125 9.02749927 22.2775568 7 26.4155197 9.02749927 26.4155197 20.7260924 33.4292689 24.0791567 33.4292689 33.3926027 22.2775568 38.4475235 11 33.3926027 11 24.0791567"></polygon>
+                    <polyline id="Path-5" points="12.0432239 24.7738128 22.3017573 28.954308 32.5602906 24.5154328"></polyline>
+                    <path d="M22.2604165,28.8838407 C22.2604165,34.9532637 22.2604165,37.9879752 22.2604165,37.9879752" id="Path-6"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

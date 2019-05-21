@@ -81,7 +81,7 @@
         >
           <!-- Derivation Path Drop down -->
           <div
-            v-show="hardwareWallet.identifier !== 'ledger'"
+            v-show="hardwareWallet.identifier !== ledgerType"
             class="content-container-1"
           >
             <div class="hd-derivation">
@@ -248,11 +248,12 @@
 
 <script>
 import CustomerSupport from '@/components/CustomerSupport';
-import { mapGetters } from 'vuex';
-import { Misc, Toast } from '@/helpers';
+import { mapState } from 'vuex';
+import { Misc, Toast, pathHelpers } from '@/helpers';
 import web3utils from 'web3-utils';
 import BigNumber from 'bignumber.js';
 import Blockie from '@/components/Blockie';
+import { LEDGER as LEDGER_TYPE } from '@/wallets/bip44/walletTypes';
 
 const MAX_ADDRESSES = 5;
 export default {
@@ -281,18 +282,19 @@ export default {
       currentWallet: null,
       customPath: { label: '', dpath: '' },
       showCollapse1: false,
-      showCollapse2: true
+      showCollapse2: true,
+      ledgerType: LEDGER_TYPE
     };
   },
   computed: {
-    ...mapGetters({
-      network: 'network',
-      Networks: 'Networks',
-      customPaths: 'customPaths',
-      path: 'path',
-      web3: 'web3',
-      wallet: 'wallet'
-    }),
+    ...mapState([
+      'network',
+      'Networks',
+      'customPaths',
+      'path',
+      'web3',
+      'wallet'
+    ]),
     selectedNetwork() {
       return this.network;
     },
@@ -357,7 +359,7 @@ export default {
       });
     },
     addCustomPath() {
-      const customPath = this.checkCustomPath(this.customPath.path);
+      const customPath = pathHelpers.checkCustomPath(this.customPath.path);
       if (customPath) {
         this.customPath.path = customPath;
         this.$store
@@ -371,43 +373,6 @@ export default {
         this.showCustomPathInput(); // reset the path input
       } else {
         this.invalidPath = this.customPath;
-      }
-    },
-    splitPath(path) {
-      let array1;
-      // eslint-disable-next-line
-      const regExp = /(?<root>^\w+)\/?(?<bip>\d+)'?\/?(?<coin>\d+)'?\/?(?<chain>\d+)?'?\/?(?<account>.+$)/;
-      const matcher = RegExp(regExp, 'g');
-      if ((array1 = matcher.exec(path)) !== null) {
-        return array1;
-      }
-      return null;
-    },
-    checkCustomPath(path) {
-      path = path.trim();
-      try {
-        let array1;
-        if ((array1 = this.splitPath(path)) !== null) {
-          let assembledPath = '';
-          if (array1[1]) {
-            if (array1[1] !== 'm') return false;
-            assembledPath = assembledPath.concat(array1[1]);
-          } else {
-            return false;
-          }
-          if (array1[2])
-            assembledPath = assembledPath.concat('/', array1[2], "'");
-          if (array1[3])
-            assembledPath = assembledPath.concat('/', array1[3], "'");
-          if (array1[4])
-            assembledPath = assembledPath.concat('/', array1[4], "'");
-          if (array1[5]) assembledPath = assembledPath.concat('/', array1[5]);
-          return assembledPath;
-        }
-        return false;
-      } catch (e) {
-        Toast.responseHandler(e, Toast.ERROR);
-        return false;
       }
     },
     changePath(key) {

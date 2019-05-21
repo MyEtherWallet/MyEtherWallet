@@ -274,7 +274,7 @@ import InterfaceBottomText from '@/components/InterfaceBottomText';
 import * as networkTypes from '@/networks/types';
 import Misc from '@/helpers/misc';
 
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 
 export default {
   components: {
@@ -296,10 +296,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      network: 'network',
-      Networks: 'Networks'
-    }),
+    ...mapState(['network', 'Networks']),
     reorderedNetworks() {
       const networks = Misc.reorderNetworks();
       return networks;

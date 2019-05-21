@@ -51,6 +51,7 @@ export default class Kyber {
       props.kyberAddress || kyberAddressFallback[this.network];
     this.getSupportedTokenList();
     this.getMainNetAddress(this.kyberNetworkAddress);
+    this.retrieveGasLimits();
   }
 
   static getName() {
@@ -137,14 +138,15 @@ export default class Kyber {
 
   async retrieveSupportedTokenList(network) {
     try {
-      const tokenList = await kyberCalls.getTokenList(network);
+      const rawTokenList = await kyberCalls.getTokenList(network);
+      const tokenList = rawTokenList.data;
       const tokenDetails = {};
       for (let i = 0; i < tokenList.length; i++) {
         if (
           tokenList[i].symbol &&
           tokenList[i].name &&
           tokenList[i].decimals &&
-          tokenList[i].contractAddress
+          tokenList[i].address
         ) {
           // otherwise the entry is invalid
           const symbol = tokenList[i].symbol.toUpperCase();
@@ -152,6 +154,16 @@ export default class Kyber {
         }
       }
       return tokenDetails;
+    } catch (e) {
+      utils.handleOrThrow(e);
+      errorLogger(e);
+    }
+  }
+
+  async retrieveGasLimits(network = this.network) {
+    try {
+      const gasLimitList = await kyberCalls.getGasLimits(network);
+      this.GAS_LIMITS = gasLimitList.data;
     } catch (e) {
       utils.handleOrThrow(e);
       errorLogger(e);
@@ -531,11 +543,9 @@ export default class Kyber {
   getTokenAddress(token) {
     try {
       if (utils.stringEqual(networkSymbols.ETH, token)) {
-        return this.currencies[token].contractAddress;
+        return this.currencies[token].address;
       }
-      return this.web3.utils.toChecksumAddress(
-        this.currencies[token].contractAddress
-      );
+      return this.web3.utils.toChecksumAddress(this.currencies[token].address);
     } catch (e) {
       errorLogger(e);
       throw Error(
@@ -556,17 +566,36 @@ export default class Kyber {
   }
 
   getGasLimits(token) {
-    const address = this.getTokenAddress(token);
-    const gasLimit = this.GAS_LIMITS.find(entry => {
-      return entry.address === address;
-    });
-    if (gasLimit !== null && gasLimit !== undefined) {
-      return gasLimit;
+    try {
+      const address = this.getTokenAddress(token);
+      if (this.GAS_LIMITS && Array.isArray(this.GAS_LIMITS)) {
+        const gasLimit = this.GAS_LIMITS.find(entry => {
+          return entry.address === address;
+        });
+        if (gasLimit !== null && gasLimit !== undefined) {
+          return gasLimit;
+        }
+        return {
+          swapGasLimit: this.defaultTradeGasLimit,
+          approveGasLimit: this.defaultTokenApprovalGasLimit
+        };
+      }
+      const gasLimit = GAS_LIMITS.find(entry => {
+        return entry.address === address;
+      });
+      if (gasLimit !== null && gasLimit !== undefined) {
+        return gasLimit;
+      }
+      return {
+        swapGasLimit: this.defaultTradeGasLimit,
+        approveGasLimit: this.defaultTokenApprovalGasLimit
+      };
+    } catch (e) {
+      return {
+        swapGasLimit: this.defaultTradeGasLimit,
+        approveGasLimit: this.defaultTokenApprovalGasLimit
+      };
     }
-    return {
-      swapGasLimit: this.defaultTradeGasLimit,
-      approveGasLimit: this.defaultTokenApprovalGasLimit
-    };
   }
 
   calculateNormalizedExchangeRate(toValue, fromValue) {

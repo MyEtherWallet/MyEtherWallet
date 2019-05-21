@@ -6,11 +6,10 @@
     class="bootstrap-modal nopadding modal-software"
     centered
   >
-    <div class="modal-content">
-      <p class="hardware-link">
-        Want to get a Hardware wallet?
-        <router-link to="/hardware-wallet-affiliates">Click here!</router-link>
-      </p>
+    <div class="warning">
+      <warning-message />
+    </div>
+    <div class="content-block">
       <div class="d-block content-container text-center">
         <div class="button-options">
           <wallet-option
@@ -23,6 +22,14 @@
             @updateSelected="updateSelected"
           />
         </div>
+        <div class="hardware-link">
+          <p>
+            {{ $t('accessWallet.buyHardwareWallet') }}
+          </p>
+          <router-link to="/hardware-wallet-affiliates">{{
+            $t('accessWallet.buyHardwareWalletLink')
+          }}</router-link>
+        </div>
         <input
           ref="jsonInput"
           type="file"
@@ -31,18 +38,12 @@
           @change="uploadFile"
         />
       </div>
-      <div class="not-recommended">
-        {{ $t('accessWallet.notARecommendedWay') }}
-      </div>
-      <div class="button-container">
-        <b-btn
-          :class="[
-            selected !== '' ? 'enabled' : 'disabled',
-            'mid-round-button-green-filled'
-          ]"
-          @click="continueAccess"
-          >{{ $t('common.continue') }}</b-btn
-        >
+      <div class="button-container-block">
+        <standard-button
+          :button-disabled="selected !== '' ? false : true"
+          :options="continueButtonOptions"
+          @click.native="continueAccess"
+        />
       </div>
       <customer-support />
     </div>
@@ -51,16 +52,20 @@
 
 <script>
 import CustomerSupport from '@/components/CustomerSupport';
+import WarningMessage from '@/components/WarningMessage';
 import byJsonImgHov from '@/assets/images/icons/button-json-hover.svg';
 import byMnemImgHov from '@/assets/images/icons/button-mnemonic-hover.svg';
 import privKeyImgHov from '@/assets/images/icons/button-key-hover.svg';
 import WalletOption from '../WalletOption';
+import StandardButton from '@/components/Buttons/StandardButton';
 import { Toast } from '@/helpers';
 
 export default {
   components: {
     'customer-support': CustomerSupport,
-    'wallet-option': WalletOption
+    'wallet-option': WalletOption,
+    'warning-message': WarningMessage,
+    'standard-button': StandardButton
   },
   props: {
     value: {
@@ -82,6 +87,12 @@ export default {
   },
   data() {
     return {
+      continueButtonOptions: {
+        title: this.$t('common.continue'),
+        buttonStyle: 'green',
+        noMinWidth: true,
+        fullWidth: true
+      },
       file: '',
       selected: '',
       items: [

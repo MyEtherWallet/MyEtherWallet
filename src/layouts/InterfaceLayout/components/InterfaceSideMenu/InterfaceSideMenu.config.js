@@ -2,6 +2,7 @@ export default {
   tabs: [
     {
       name: 'send-transaction',
+      onlineOnly: false,
       routes: [
         '/interface/send-transaction',
         '/interface',
@@ -43,6 +44,7 @@ export default {
     },
     {
       name: 'swap',
+      onlineOnly: true,
       routes: ['/interface/swap'],
       icons: {
         active: require('@/assets/images/sidemenu/swap-active.svg'),
@@ -53,15 +55,24 @@ export default {
     },
     {
       name: 'dapps',
+      onlineOnly: true,
       routes: [
         '/interface/dapps',
         '/interface/dapps/manage-ens',
-        '/interface/dapps/manage-ens/bid',
-        '/interface/dapps/manage-ens/reveal',
-        '/interface/dapps/manage-ens/owned',
-        '/interface/dapps/manage-ens/forbidden',
         '/interface/dapps/manage-ens/auction',
-        '/interface/dapps/manage-ens/confirm',
+        '/interface/dapps/manage-ens/bid',
+        '/interface/dapps/manage-ens/owned',
+        '/interface/dapps/manage-ens/reveal',
+        '/interface/dapps/manage-ens/forbidden',
+        '/interface/dapps/manage-ens/finalize',
+        '/interface/dapps/manage-ens/manage',
+        '/interface/dapps/manage-ens/fifs',
+        '/interface/dapps/manage-ens/claim',
+        '/interface/dapps/manage-ens/dns-error',
+        '/interface/dapps/manage-ens/no-txt-setup',
+        '/interface/dapps/manage-ens/transfer-registrar',
+        '/interface/dapps/manage-ens/create-commitment',
+        '/interface/dapps/manage-ens/permanent-registration',
         '/interface/dapps/domain-sale',
         '/interface/dapps/schedule-transaction'
       ],
@@ -74,6 +85,7 @@ export default {
     },
     {
       name: 'contracts',
+      onlineOnly: true,
       routes: [
         '/interface/interact-with-contract',
         '/interface/deploy-contract'
@@ -106,6 +118,7 @@ export default {
     },
     {
       name: 'messages',
+      onlineOnly: false,
       routes: ['/interface/sign-message', '/interface/verify-message'],
       icons: {
         active: require('@/assets/images/sidemenu/message-active.svg'),

@@ -93,7 +93,7 @@
             />
           </div>
         </div>
-        <div v-show="network.type.name === 'ETH'" class="tx-fee">
+        <div class="tx-fee">
           <div class="title">
             <h4>
               {{ $t('common.txFee') }}
@@ -107,7 +107,9 @@
               {{ gasPrice }} Gwei
               <!--(Economic)-->
             </div>
-            <div class="usd">Cost {{ txFeeEth }} ETH = ${{ convert }}</div>
+            <div v-show="network.type.name === 'ETH'" class="usd">
+              Cost {{ txFeeEth }} ETH = ${{ convert }}
+            </div>
           </div>
         </div>
       </div>
@@ -194,7 +196,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import CurrencyPicker from '../../components/CurrencyPicker';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
@@ -244,13 +246,14 @@ export default {
   },
 
   computed: {
-    ...mapGetters({
-      account: 'account',
-      gasPrice: 'gasPrice',
-      web3: 'web3',
-      network: 'network',
-      linkQuery: 'linkQuery'
-    }),
+    ...mapState([
+      'account',
+      'gasPrice',
+      'web3',
+      'network',
+      'linkQuery',
+      'online'
+    ]),
     txFee() {
       return new BigNumber(ethUnit.toWei(this.gasPrice, 'gwei')).times(
         this.gasLimit || 0
@@ -363,7 +366,7 @@ export default {
     txTo() {
       return this.isToken
         ? this.selectedCurrency.address.toLowerCase()
-        : this.hexAddress.toLowerCase();
+        : this.hexAddress.toLowerCase().trim();
     },
     multiWatch() {
       return (
@@ -413,11 +416,11 @@ export default {
       }
     },
     network(newVal) {
-      if (newVal.type.name === 'ETH') this.getEthPrice();
+      if (this.online && newVal.type.name === 'ETH') this.getEthPrice();
     }
   },
   mounted() {
-    if (this.network.type.name === 'ETH') this.getEthPrice();
+    if (this.online && this.network.type.name === 'ETH') this.getEthPrice();
   },
   methods: {
     openSettings() {
