@@ -285,9 +285,11 @@ export default {
       return toBigNumber(val).gt(0);
     },
     maxWithdraw() {
-      this.amount = this.activeCdp.maxEthDraw.minus(
-        this.activeCdp.minEth.times(1.2)
+      this.amount = this.activeCdp.maxEthDraw/*.minus(
+        this.activeCdp.minEth.times(1.0)
       );
+      console.log(this.activeCdp.maxEthDraw.toString()); // todo remove dev item
+      console.log(this.amount.toString()); // todo remove dev item*/
       this.$forceUpdate();
     },
     currentDai() {
