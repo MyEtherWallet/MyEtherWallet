@@ -1,0 +1,52 @@
+@import '~@/scss/GlobalVariables';
+.view-wallet-info-layout {
+  background-color: $light-grey-2;
+  display: grid;
+  grid-template-columns: 200px 50px auto 50px 200px;
+  grid-template-rows: 100px 125px auto 100px;
+
+  .title {
+    grid-column-start: 3;
+    grid-column-end: 3;
+    grid-row-start: 2;
+    grid-row-end: 2;
+    text-align: center;
+  }
+
+  .wallet-info-container {
+    display: flex;
+    grid-column-start: 2;
+    grid-column-end: 5;
+    grid-row-start: 3;
+    grid-row-end: 3;
+    justify-content: space-between;
+
+    .wallet-info {
+      display: flex;
+      flex-direction: column;
+      width: 74%;
+
+      .wallet-info-header {
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+        align-items: center;
+        background-color: $dark-blue-12;
+        display: flex;
+        justify-content: space-between;
+        padding: 5px 10px;
+
+        h3 {
+          color: $white;
+        }
+
+        a {
+          color: $white !important;
+        }
+      }
+    }
+
+    .wallet-tokens {
+      width: 25%;
+    }
+  }
+}
