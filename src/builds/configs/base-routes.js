@@ -27,6 +27,7 @@ const SignMessageContainer = () =>
 const VerifyMessageContainer = () =>
   import('@/layouts/InterfaceLayout/containers/VerifyMessageContainer');
 const HardwaresLayout = () => import('@/layouts/HardwaresLayout');
+const ViewWalletInfoLayout = () => import('@/layouts/ViewWalletInfoLayout');
 
 import dapps from '@/dapps/routes';
 
@@ -90,6 +91,11 @@ const router = [
     name: '404',
     component: NotFoundLayout,
     meta: { requiresAuth: false }
+  },
+  {
+    path: '/view-wallet-info',
+    name: 'ViewWalletInfoLayout',
+    component: ViewWalletInfoLayout
   },
   {
     path: '/interface',

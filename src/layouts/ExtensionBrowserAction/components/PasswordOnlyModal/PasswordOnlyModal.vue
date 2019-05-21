@@ -28,7 +28,7 @@
           ]"
           @click="submit"
         >
-          <span v-show="!loading"> Unlock Wallet </span>
+          <span v-show="!loading"> {{ title }} </span>
           <i v-show="loading" class="fa fa-spinner fa-spin" />
         </div>
       </div>
@@ -49,6 +49,10 @@ export default {
       type: Boolean,
       default: false
     },
+    path: {
+      type: String,
+      default: ''
+    },
     disabled: {
       type: Boolean,
       default: false
@@ -65,6 +69,15 @@ export default {
       show: false,
       locPassword: this.password
     };
+  },
+  computed: {
+    title() {
+      if (this.path === 'access') {
+        return 'Access Wallet';
+      }
+
+      return 'View Wallet Info';
+    }
   },
   watch: {
     locPassword(newVal) {

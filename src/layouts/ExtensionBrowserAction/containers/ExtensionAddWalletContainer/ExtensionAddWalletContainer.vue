@@ -60,6 +60,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import { WalletInterface, MnemonicWallet } from '@/wallets';
 import {
   KEYSTORE as keyStoreType,
@@ -146,6 +147,14 @@ export default {
       selectedAccountPath: '',
       selectedAddress: ''
     };
+  },
+  computed: {
+    ...mapState(['path'])
+  },
+  mounted() {
+    if (this.path !== '') {
+      this.$router.push('/');
+    }
   },
   methods: {
     openAddressOption() {

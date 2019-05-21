@@ -9,7 +9,7 @@
       <password-only-modal
         ref="passwordOnlyModal"
         :path="path"
-        :submit="path !== 'view' ? accessWallet : viewWallet"
+        :submit="accessWallet"
         :disabled="validInput"
         @password="updatePassword"
       />
@@ -131,12 +131,6 @@ export default {
       this.processAccounts();
     }
   },
-  mounted() {
-    this.$refs.passwordOnlyModal.$refs.passwordOnlyModal.$on('hidden', () => {
-      this.file = '';
-      this.path = '';
-    });
-  },
   methods: {
     walletRequirePass(ethjson) {
       if (ethjson.encseed != null) return true;
@@ -167,11 +161,15 @@ export default {
       };
     },
     setWallet(wallet) {
+      const navTo = this.path !== 'access' ? 'view-wallet-info' : 'interface';
       this.$store.dispatch('decryptWallet', [wallet]);
       this.loading = false;
       this.password = '';
+      this.file = '';
+      this.path = '';
+
       this.$router.push({
-        path: 'interface'
+        path: navTo
       });
     },
     viewWallet() {
@@ -214,7 +212,7 @@ export default {
       return web3utils.fromWei(balance);
     },
     addWallet() {
-      this.$router.push('add-wallet');
+      this.$router.push('access-my-wallet');
     },
     switchView(val) {
       this.label = val.label;
