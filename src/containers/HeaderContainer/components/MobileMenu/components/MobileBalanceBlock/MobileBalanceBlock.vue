@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import { Toast } from '@/helpers';
 import BigNumber from 'bignumber.js';
 import InterfaceBalanceModal from '@/layouts/InterfaceLayout/components/InterfaceBalanceModal';
@@ -29,11 +29,7 @@ export default {
     'interface-balance-modal': InterfaceBalanceModal
   },
   computed: {
-    ...mapGetters({
-      network: 'network',
-      web3: 'web3',
-      account: 'account'
-    }),
+    ...mapState(['network', 'web3', 'account']),
     accountBalance() {
       return this.web3.utils.fromWei(
         new BigNumber(this.account.balance).toFixed(),

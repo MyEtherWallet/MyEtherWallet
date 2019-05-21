@@ -39,7 +39,7 @@
 <script>
 import { WalletInterface } from '@/wallets';
 import { PRIV_KEY as privKeyType } from '@/wallets/bip44/walletTypes';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import { isHexString } from 'ethereumjs-util';
 export default {
   data() {
@@ -49,9 +49,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      path: 'path'
-    }),
+    ...mapState(['path']),
     notValid() {
       const _priv = this.privateKey.replace('0x', '');
       return !isHexString('0x' + _priv, 32);

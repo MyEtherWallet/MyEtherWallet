@@ -67,8 +67,9 @@ const removeCustomPath = function({ commit, state }, val) {
   commit('ADD_CUSTOM_PATH', newPaths);
 };
 
-const checkIfOnline = function({ commit }) {
-  commit('CHECK_IF_ONLINE');
+const checkIfOnline = function({ commit, dispatch }, val) {
+  if (val) dispatch('setWeb3Instance');
+  commit('CHECK_IF_ONLINE', val);
 };
 
 const gettingStartedDone = function({ commit }) {

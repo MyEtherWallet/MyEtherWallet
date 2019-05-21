@@ -116,7 +116,7 @@ import CustomerSupport from '@/components/CustomerSupport';
 import { Web3Wallet } from '@/wallets/software';
 import { Toast } from '@/helpers';
 import Web3 from 'web3';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import platform from 'platform';
 import brave from '@/assets/images/browser/brave.png';
 import chrome from '@/assets/images/browser/chrome.png';
@@ -165,9 +165,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      path: 'path'
-    })
+    ...mapState(['path'])
   },
   mounted() {
     this.isSafari = platform.name.toLowerCase() === 'safari';

@@ -31,7 +31,7 @@
 
 <script>
 import StandardButton from '@/components/Buttons/StandardButton';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import { Misc } from '@/helpers';
 
 export default {
@@ -57,9 +57,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters({
-      network: 'network'
-    }),
+    ...mapState(['network']),
     buttonCheckEtherscan() {
       return {
         // eslint-disable-next-line
