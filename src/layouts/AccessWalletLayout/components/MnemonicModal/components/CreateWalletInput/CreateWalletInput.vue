@@ -8,11 +8,10 @@
       <div class="user-input-field">
         <input
           v-validate="param === 'Json' ? 'required|min:9' : ''"
-          :class="strengthClass"
           :type="password.showPassword ? 'text' : 'password'"
           :value="value"
           name="password"
-          placeholder="Please Enter At Least 9 Characters"
+          placeholder="Please Enter Password"
           autocomplete="off"
           @input="updateValue($event.target.value)"
         />
@@ -32,13 +31,6 @@
           src="~@/assets/images/icons/show-password.svg"
         />
       </div>
-
-      <p v-show="value.length > 0" class="passwd-strength">
-        Password strength: <span :class="strengthClass">{{ strength }}</span>
-      </p>
-      <p v-if="value.length > 0" class="passwd-strength">
-        {{ errors.first('password') }}
-      </p>
     </div>
     <!-- === MEW custom form ======================================== -->
     <button
@@ -61,7 +53,6 @@
 </template>
 
 <script>
-import zxcvbn from 'zxcvbn';
 export default {
   props: {
     value: {
@@ -96,30 +87,7 @@ export default {
   },
   methods: {
     async updateValue(value) {
-      const score = await zxcvbn(value).score;
-
       this.$emit('input', value);
-      switch (score) {
-        case 1:
-          this.strength = 'Very Weak';
-          this.strengthClass = 'very-weak';
-          break;
-        case 2:
-          this.strength = 'Weak';
-          this.strengthClass = 'weak';
-          break;
-        case 3:
-          this.strength = 'Good';
-          this.strengthClass = 'strong';
-          break;
-        case 4:
-          this.strength = 'Strong';
-          this.strengthClass = 'strong';
-          break;
-        default:
-          this.strength = 'Very Weak';
-          this.strengthClass = 'very-weak';
-      }
     }
   }
 };

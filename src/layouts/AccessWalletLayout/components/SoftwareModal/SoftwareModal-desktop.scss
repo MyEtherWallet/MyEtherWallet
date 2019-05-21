@@ -1,7 +1,7 @@
 @import '~@/scss/GlobalVariables';
 @media all and (min-width: calc(#{$tablet-width} + 1px)) {
   .content-block {
-    padding: 40px 40px 40px;
+    padding: 40px;
   }
 
   .modal-software {
@@ -12,16 +12,12 @@
   }
 }
 
-.button-container {
+.button-container-block {
   width: 100%;
-
-  button {
-    width: inherit;
-    margin: 0;
-  }
+  margin-bottom: 20px;
 }
 
 .hardware-link {
-  margin: 30px 0;
+  margin: 20px 0;
   text-align: center;
 }

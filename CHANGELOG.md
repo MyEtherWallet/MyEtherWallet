@@ -23,6 +23,7 @@
 
 ### Devop
 
+- Update Access My Wallet modal UI [#1033](https://github.com/MyEtherWallet/MyEtherWallet/pull/1033)
 - Access by Software UI change [#1021](https://github.com/MyEtherWallet/MyEtherWallet/pull/1021)
 - Fix multiple sentry issues [#1015](https://github.com/MyEtherWallet/MyEtherWallet/pull/1015)
 - Update hardware icons [#994](https://github.com/MyEtherWallet/MyEtherWallet/pull/994)
@@ -41,6 +42,7 @@
 
 ### Feature
 
+- Add warning signs to Create wallet page and update mnemonic input [#1041](https://github.com/MyEtherWallet/MyEtherWallet/pull/1041)
 - DEXON network support [#977](https://github.com/MyEtherWallet/MyEtherWallet/pull/977)
 - Metadium network support [#928](https://github.com/MyEtherWallet/MyEtherWallet/pull/928)
 - Solidum network support [#957](https://github.com/MyEtherWallet/MyEtherWallet/pull/957)
