@@ -7,7 +7,6 @@
     centered
   >
     <div class="modal-content-container">
-      <finney-modal ref="finney" />
       <div class="d-block text-center">
         <b-alert :show="mayNotBeAttached" fade variant="warning"
           >Please make sure your device is connected</b-alert
@@ -18,7 +17,6 @@
             :key="item.name + idx"
             :selected="selected === item.name"
             :regular-icon="item.imgPath"
-            :hover-icon="item.imgHoverPath"
             :text="item.text"
             :name="item.name"
             :disabled="item.disabled"
@@ -45,20 +43,13 @@
 </template>
 
 <script>
-import FinneyModal from '../FinneyModal';
 import CustomerSupport from '@/components/CustomerSupport';
-import ledger from '@/assets/images/icons/button-ledger.png';
-import ledgerHov from '@/assets/images/icons/button-ledger-hover.png';
-import bitbox from '@/assets/images/icons/button-bitbox.png';
-import bitboxHov from '@/assets/images/icons/button-bitbox-hover.png';
-import secalot from '@/assets/images/icons/button-secalot.png';
-import secalotHov from '@/assets/images/icons/button-secalot-hover.png';
-import trezor from '@/assets/images/icons/button-trezor.png';
-import trezorHov from '@/assets/images/icons/button-trezor-hover.png';
-import keepkey from '@/assets/images/icons/button-keepkey.png';
-import keepkeyHov from '@/assets/images/icons/button-keepkey-hover.png';
-import finney from '@/assets/images/icons/button-finney.png';
-import finneyHov from '@/assets/images/icons/button-finney-hover.png';
+import ledger from '@/assets/images/icons/HardwareWallet/ledger.svg';
+import bitbox from '@/assets/images/icons/HardwareWallet/bitbox.svg';
+import secalot from '@/assets/images/icons/HardwareWallet/secalot.svg';
+import trezor from '@/assets/images/icons/HardwareWallet/trezor.svg';
+import keepkey from '@/assets/images/icons/HardwareWallet/keepkey.svg';
+import finney from '@/assets/images/icons/button-finney-hover.png';
 import WalletOption from '../WalletOption';
 import { Toast } from '@/helpers';
 import { isSupported } from 'u2f-api';
@@ -79,8 +70,7 @@ import {
 export default {
   components: {
     'customer-support': CustomerSupport,
-    'wallet-option': WalletOption,
-    'finney-modal': FinneyModal
+    'wallet-option': WalletOption
   },
   props: {
     networkAndAddressOpen: {
@@ -94,6 +84,10 @@ export default {
     ledgerAppOpen: {
       type: Function,
       default: function() {}
+    },
+    openFinney: {
+      type: Function,
+      default: function() {}
     }
   },
   data() {
@@ -105,7 +99,6 @@ export default {
         {
           name: LEDGER_TYPE,
           imgPath: ledger,
-          imgHoverPath: ledgerHov,
           text: 'Ledger',
           disabled: false,
           msg: '',
@@ -114,7 +107,6 @@ export default {
         {
           name: 'finney',
           imgPath: finney,
-          imgHoverPath: finneyHov,
           text: 'FINNEY',
           disabled: false,
           msg: '',
@@ -124,7 +116,6 @@ export default {
         {
           name: BITBOX_TYPE,
           imgPath: bitbox,
-          imgHoverPath: bitboxHov,
           text: 'Digital Bitbox',
           disabled: false,
           msg: '',
@@ -133,7 +124,6 @@ export default {
         {
           name: TREZOR_TYPE,
           imgPath: trezor,
-          imgHoverPath: trezorHov,
           text: 'Trezor',
           disabled:
             platform.name.toLowerCase() !== 'chrome' &&
@@ -148,7 +138,6 @@ export default {
         {
           name: SECALOT_TYPE,
           imgPath: secalot,
-          imgHoverPath: secalotHov,
           text: 'Secalot',
           disabled: false,
           msg: '',
@@ -157,7 +146,6 @@ export default {
         {
           name: KEEPKEY_TYPE,
           imgPath: keepkey,
-          imgHoverPath: keepkeyHov,
           text: 'KeepKey',
           disabled: false,
           msg: '',
@@ -171,7 +159,7 @@ export default {
       this.items.forEach(item => {
         const u2fhw = [SECALOT_TYPE, LEDGER_TYPE, BITBOX_TYPE];
         const inMobile = [SECALOT_TYPE, KEEPKEY_TYPE];
-        const webUsb = [KEEPKEY_TYPE];
+        const webUsb = [KEEPKEY_TYPE, LEDGER_TYPE];
 
         if (webUsb.includes(item.name)) {
           const disable =
@@ -182,16 +170,10 @@ export default {
           item.disabled = disable;
           item.msg = disable ? this.$t('errorsGlobal.browserNonWebUsb') : '';
         }
-
         if (u2fhw.includes(item.name)) {
-          const disable =
-            (platform.name.toLowerCase() === 'chrome' ||
-              platform.name.toLowerCase() === 'opera') &&
-            res;
-          item.disabled = !disable;
-          item.msg = !disable ? this.$t('errorsGlobal.browserNonU2f') : '';
+          item.disabled = !res;
+          item.msg = !res ? this.$t('errorsGlobal.browserNonU2f') : '';
         }
-
         if (this.isMobile()) {
           const disable = !inMobile.includes(item.name);
           item.disabled = disable;
@@ -253,7 +235,8 @@ export default {
             });
           break;
         case 'finney':
-          this.$refs.finney.$refs.finneyModal.show();
+          this.openFinney();
+          this.$refs.hardware.hide();
           break;
         default:
           Toast.responseHandler(

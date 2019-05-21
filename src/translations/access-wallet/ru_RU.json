@@ -31,7 +31,7 @@
   "mewConnectTitle": "Доступ с помощью MEWconnect",
   "mewConnectDesc1": "Используйте приложение MEWconnect для сканирования указанного выше QR-кода",
   "mewConnectDesc2": "Нет приложения? Загрузите сейчас.",
-  "notARecommendedWay": "This is not a recommended way to access your wallet. Due to the sensitivity of the information involved, these options should only be used in offline settings by experienced users.",
+  "notARecommendedWay": "This is NOT a recommended way of accessing a wallet. This information is sensitive, and these options should only be used in offline settings by experienced crypto users.",
   "buyHardwareWallet": "Purchase a hardware wallet for the highest security when accessing your crypto.",
   "buyHardwareWalletLink": "Purchase a hardware wallet...."
 }

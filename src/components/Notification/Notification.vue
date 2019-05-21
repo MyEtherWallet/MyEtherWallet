@@ -103,7 +103,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import store from 'store';
 import unit from 'ethjs-unit';
 import BigNumber from 'bignumber.js';
@@ -146,12 +146,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      web3: 'web3',
-      network: 'network',
-      notifications: 'notifications',
-      account: 'account'
-    }),
+    ...mapState(['web3', 'network', 'notifications', 'account', 'online']),
     sortedNotifications() {
       if (!this.notifications[this.account.address]) return [];
       const notifications = this.notifications[this.account.address];
@@ -176,8 +171,10 @@ export default {
       store.set('notifications', this.notifications);
     }
     this.countUnread();
-    this.fetchBalanceData();
-    this.checkForUnResolvedTxNotifications();
+    if (this.online) {
+      this.fetchBalanceData();
+      this.checkForUnResolvedTxNotifications();
+    }
   },
   methods: {
     hiddenModal() {

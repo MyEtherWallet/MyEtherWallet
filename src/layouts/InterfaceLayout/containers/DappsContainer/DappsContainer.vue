@@ -22,7 +22,7 @@
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import DappButtons from '../../components/DappButtons';
 import dapps from '@/dapps';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 
 export default {
   name: 'DappsContainer',
@@ -36,9 +36,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      network: 'network'
-    }),
+    ...mapState(['network']),
     sortedObject() {
       const arrayedDapp = [];
       Object.keys(dapps).forEach(dapp => {

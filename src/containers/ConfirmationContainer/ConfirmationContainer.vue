@@ -69,7 +69,7 @@ import ConfirmCollectionModal from './components/ConfirmCollectionModal';
 import SuccessModal from './components/SuccessModal';
 import ErrorModal from './components/ErrorModal';
 import ConfirmSignModal from './components/ConfirmSignModal';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import { type as noticeTypes } from '@/helpers/notificationFormatters';
 import { WEB3_WALLET, KEEPKEY } from '@/wallets/bip44/walletTypes';
 import { Toast, Misc } from '@/helpers';
@@ -142,13 +142,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      gasPrice: 'gasPrice',
-      wallet: 'wallet',
-      web3: 'web3',
-      account: 'account',
-      network: 'network'
-    }),
+    ...mapState(['gasPrice', 'wallet', 'web3', 'account', 'network']),
     fromAddress() {
       if (this.account) {
         return this.account.address;
@@ -227,41 +221,9 @@ export default {
 
     this.$eventHub.$on('showWeb3Wallet', (tx, resolve) => {
       this.parseRawTx(tx);
-      this.responseFunction = resolve;
       this.successMessage = 'Sending Transaction';
-      this.wallet
-        .signTransaction(tx)
-        .once('transactionHash', hash => {
-          this.$store
-            .dispatch('addNotification', [
-              noticeTypes.TRANSACTION_HASH,
-              this.fromAddress,
-              this.lastRaw,
-              hash
-            ])
-            .then(() => {
-              this.showSuccessModal('Transaction sent!', 'Okay');
-            });
-        })
-        .on('receipt', receipt => {
-          this.$store.dispatch('addNotification', [
-            noticeTypes.TRANSACTION_RECEIPT,
-            this.fromAddress,
-            this.lastRaw,
-            receipt
-          ]);
-        })
-        .on('error', err => {
-          this.$store.dispatch('addNotification', [
-            noticeTypes.TRANSACTION_ERROR,
-            this.fromAddress,
-            this.lastRaw,
-            err
-          ]);
-        })
-        .catch(err => {
-          Toast.responseHandler(err, Toast.ERROR);
-        });
+      const promiObject = this.wallet.signTransaction(tx);
+      resolve(promiObject);
       this.showSuccessModal(
         'Continue transaction with Web3 Wallet Provider.',
         'Close'
@@ -370,10 +332,9 @@ export default {
       this.data = tx.data;
       this.gasLimit = new BigNumber(tx.gas).toFixed();
       this.toAddress = tx.to;
-      this.amount =
-        tx.value === '0x' ? '0' : new BigNumber(tx.value).toString();
+      this.amount = tx.value === '0x' ? '0' : new BigNumber(tx.value).toFixed();
       this.transactionFee = unit
-        .fromWei(new BigNumber(tx.gas).times(tx.gasPrice).toString(), 'ether')
+        .fromWei(new BigNumber(tx.gas).times(tx.gasPrice).toFixed(), 'ether')
         .toString();
       this.ens = {};
       if (tx.hasOwnProperty('ensObj')) {
