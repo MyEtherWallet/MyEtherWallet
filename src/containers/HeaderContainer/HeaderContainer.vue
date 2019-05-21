@@ -205,7 +205,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import store from 'store';
 import { Misc, Toast } from '@/helpers';
 import Blockie from '@/components/Blockie';
@@ -276,12 +276,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      network: 'network',
-      web3: 'web3',
-      account: 'account',
-      gettingStartedDone: 'gettingStartedDone'
-    }),
+    ...mapState(['network', 'web3', 'account', 'gettingStartedDone']),
     showButtons() {
       if (
         this.address === null &&

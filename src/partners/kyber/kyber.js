@@ -163,7 +163,7 @@ export default class Kyber {
   async retrieveGasLimits(network = this.network) {
     try {
       const gasLimitList = await kyberCalls.getGasLimits(network);
-      this.GAS_LIMITS = gasLimitList;
+      this.GAS_LIMITS = gasLimitList.data;
     } catch (e) {
       utils.handleOrThrow(e);
       errorLogger(e);
@@ -566,17 +566,36 @@ export default class Kyber {
   }
 
   getGasLimits(token) {
-    const address = this.getTokenAddress(token);
-    const gasLimit = this.GAS_LIMITS.find(entry => {
-      return entry.address === address;
-    });
-    if (gasLimit !== null && gasLimit !== undefined) {
-      return gasLimit;
+    try {
+      const address = this.getTokenAddress(token);
+      if (this.GAS_LIMITS && Array.isArray(this.GAS_LIMITS)) {
+        const gasLimit = this.GAS_LIMITS.find(entry => {
+          return entry.address === address;
+        });
+        if (gasLimit !== null && gasLimit !== undefined) {
+          return gasLimit;
+        }
+        return {
+          swapGasLimit: this.defaultTradeGasLimit,
+          approveGasLimit: this.defaultTokenApprovalGasLimit
+        };
+      }
+      const gasLimit = GAS_LIMITS.find(entry => {
+        return entry.address === address;
+      });
+      if (gasLimit !== null && gasLimit !== undefined) {
+        return gasLimit;
+      }
+      return {
+        swapGasLimit: this.defaultTradeGasLimit,
+        approveGasLimit: this.defaultTokenApprovalGasLimit
+      };
+    } catch (e) {
+      return {
+        swapGasLimit: this.defaultTradeGasLimit,
+        approveGasLimit: this.defaultTokenApprovalGasLimit
+      };
     }
-    return {
-      swapGasLimit: this.defaultTradeGasLimit,
-      approveGasLimit: this.defaultTokenApprovalGasLimit
-    };
   }
 
   calculateNormalizedExchangeRate(toValue, fromValue) {

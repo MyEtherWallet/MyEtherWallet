@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 
 export default {
   props: {
@@ -43,9 +43,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters({
-      network: 'network'
-    }),
+    ...mapState(['network']),
     supported() {
       return this.supportedNetworks.includes(this.network.type.name);
     }

@@ -205,7 +205,7 @@ import Timer from '../../components/Timer';
 import JsonStringModal from '../../components/JsonStringModal';
 import { Misc, Toast } from '@/helpers';
 import PrintModal from '../../components/PrintModal';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 
 export default {
@@ -292,9 +292,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      web3: 'web3'
-    }),
+    ...mapState(['web3']),
     validInputs() {
       return (
         this.secretPhrase.length > 0 &&

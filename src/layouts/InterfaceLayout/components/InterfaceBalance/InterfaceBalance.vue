@@ -65,7 +65,7 @@
 
 <script>
 import InterfaceBalanceModal from '../InterfaceBalanceModal';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 export default {
   components: {
     'interface-balance-modal': InterfaceBalanceModal
@@ -86,9 +86,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      network: 'network'
-    })
+    ...mapState(['network'])
   },
   watch: {
     balance() {
