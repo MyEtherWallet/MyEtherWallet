@@ -20,7 +20,7 @@
   "offline": "离线",
   "sendPubTx": "发送/发布交易",
   "generate": "生成",
-  "registerENSDescShort": "Bid on or register an ENS domain",
+  "registerENSDescShort": "Register an ENS domain",
   "balance": "我的余额",
   "network": "网络",
   "equivalentValues": "等价值",

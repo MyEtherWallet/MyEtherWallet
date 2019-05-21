@@ -20,7 +20,7 @@
   "offline": "오프라인 ",
   "sendPubTx": "트랜잭션 발신/발행 ",
   "generate": "생성 ",
-  "registerENSDescShort": "Bid on or register an ENS domain",
+  "registerENSDescShort": "Register an ENS domain",
   "balance": "Balance",
   "network": "Network",
   "equivalentValues": "Equivalent Values",
