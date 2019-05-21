@@ -69,8 +69,7 @@
       @cdpOpened="addCdp"
       @cdpClosed="removeCdp"
       @modalHidden="modalHidden"
-    >
-    </router-view>
+    ></router-view>
   </div>
 </template>
 
@@ -249,13 +248,8 @@ export default {
           }
         }
       );
-
-      const maker = await Maker.create('http', {
-        url: _self.network.url,
-        provider: {
-          type: 'HTTP',
-          url: _self.network.url
-        },
+      const maker = await Maker.create('inject', {
+        provider: { inject: web3.currentProvider },
         plugins: [MewMakerPlugin],
         accounts: {
           myLedger1: { type: 'mew' }
