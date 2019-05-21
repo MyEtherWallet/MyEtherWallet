@@ -221,7 +221,7 @@ import SignedTxModal from './components/SignedTxModal';
 import Blockie from '@/components/Blockie';
 import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import { isAddress } from '@/helpers/addressUtils';
 import store from 'store';
 import { Misc, Toast } from '@/helpers';
@@ -266,16 +266,14 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      wallet: 'wallet',
-      network: 'network',
-      web3: 'web3',
-      linkQuery: 'linkQuery'
-    }),
+    ...mapState(['wallet', 'network', 'web3', 'linkQuery']),
     txSpeedMsg() {
       const net = this.network.type.name;
       // eslint-disable-next-line
-      const msg = `${this.$t('popover.txSpeedPt1').replace('{0}', net)} ${this.$t('popover.txSpeedPt2').replace('{0}', net)}`;
+      const msg = `${this.$t('popover.txSpeedPt1').replace(
+        '{0}',
+        net
+      )} ${this.$t('popover.txSpeedPt2').replace('{0}', net)}`;
       return msg;
     },
     validAddress() {
@@ -301,7 +299,7 @@ export default {
         this.validAddress &&
         this.toAmt >= 0 &&
         this.gasLimit > 0 &&
-        this.localNonce > 0 &&
+        this.localNonce >= 0 &&
         this.localGasPrice
       );
     }

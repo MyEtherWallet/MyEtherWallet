@@ -118,9 +118,9 @@ Sentry.init({
   release: NODE_ENV === 'production' ? VERSION : 'develop',
   beforeSend(event) {
     event.tags = {
-      network: store.getters.network.type.name,
-      service: store.getters.network.service,
-      walletType: store.getters.account.identifier
+      network: store.state.network.type.name,
+      service: store.state.network.service,
+      walletType: store.state.account.identifier
     };
     return new Promise(resolve => {
       vue.$eventHub.$emit('issueModal', event, resolve);
