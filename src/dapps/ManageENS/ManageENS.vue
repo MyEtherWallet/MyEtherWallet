@@ -61,7 +61,7 @@ import ResolverAbi from './ABI/resolverAbi.js';
 import * as unit from 'ethjs-unit';
 import * as nameHashPckg from 'eth-ens-namehash';
 import normalise from '@/helpers/normalise';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import { Toast } from '@/helpers';
 import DNSRegistrar from '@ensdomains/dnsregistrar';
 import BigNumber from 'bignumber.js';
@@ -112,13 +112,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      web3: 'web3',
-      network: 'network',
-      account: 'account',
-      gasPrice: 'gasPrice',
-      ens: 'ens'
-    }),
+    ...mapState(['web3', 'network', 'account', 'gasPrice', 'ens']),
     registrarTLD() {
       return this.network.type.ens.registrarTLD;
     },

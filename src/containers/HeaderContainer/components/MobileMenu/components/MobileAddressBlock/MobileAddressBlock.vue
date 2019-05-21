@@ -32,7 +32,7 @@
 
 <script>
 import Blockie from '@/components/Blockie';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 
 export default {
   name: 'MobileAddressBlock2',
@@ -43,12 +43,7 @@ export default {
     return {};
   },
   computed: {
-    ...mapGetters({
-      wallet: 'wallet',
-      online: 'online',
-      web3: 'web3',
-      account: 'account'
-    })
+    ...mapState(['wallet', 'online', 'web3', 'account'])
   },
   watch: {},
   mounted() {},

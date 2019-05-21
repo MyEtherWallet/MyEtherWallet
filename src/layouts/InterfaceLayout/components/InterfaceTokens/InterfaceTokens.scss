@@ -1,5 +1,11 @@
 @import '~@/scss/GlobalVariables';
-
+.cant-load {
+  background-color: $red-1;
+  color: $white;
+  padding: 5px;
+  text-align: center;
+  width: 100%;
+}
 .tokens-container {
   border-radius: 5px;
   overflow: hidden;

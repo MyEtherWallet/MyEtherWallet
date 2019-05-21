@@ -187,7 +187,7 @@ import EthTx from 'ethereumjs-tx';
 import BigNumber from 'bignumber.js';
 import store from 'store';
 import { generateAddress, bufferToHex } from 'ethereumjs-util';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 
 export default {
   name: 'DeployContract',
@@ -207,11 +207,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      gasPrice: 'gasPrice',
-      web3: 'web3',
-      network: 'network'
-    }),
+    ...mapState(['gasPrice', 'web3', 'network']),
     isValidAbi() {
       return Misc.isJson(this.abi);
     },
