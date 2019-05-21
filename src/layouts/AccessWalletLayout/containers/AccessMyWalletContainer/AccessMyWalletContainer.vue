@@ -116,7 +116,7 @@ import hardwareImgDisabled from '@/assets/images/icons/button-hardware-disabled.
 import metamaskImgDisabled from '@/assets/images/icons/button-metamask-disabled.svg';
 import softwareImgDisabled from '@/assets/images/icons/button-software-disabled.svg';
 
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import { Toast } from '@/helpers';
 
 import DetectRTC from 'detectrtc';
@@ -196,10 +196,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      online: 'online',
-      Networks: 'Networks'
-    })
+    ...mapState(['online', 'Networks'])
   },
   mounted() {
     this.$nextTick(() => {
