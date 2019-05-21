@@ -1,6 +1,6 @@
 {
-  "name": "MyEtherWallet",
-  "short_name": "MEW WEB",
+  "name": "MEW",
+  "short_name": "MEW",
   "icons": [
     {
       "src": "./img/icons/android-chrome-192x192.png",
