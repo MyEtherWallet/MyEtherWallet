@@ -14,7 +14,12 @@
       :nickname="parsedWallet.nick"
       :address="address"
     />
-    <b-modal ref="viewAllModal" hide-footer hide-header class="cx-token-modal">
+    <b-modal
+      ref="viewAllModal"
+      hide-footer
+      hide-header
+      modal-class="cx-token-modal"
+    >
       <div class="modal-header-contaier">
         <div>
           <h3>
@@ -71,8 +76,26 @@
         {{ parsedWallet.nick }}
       </p>
       <div class="button-container">
-        <div v-show="walletType !== 'watchOnly'" @click="access">Access</div>
-        <div v-show="walletType !== 'watchOnly'" @click="detail">Detail</div>
+        <div
+          v-show="walletType !== 'watchOnly'"
+          @click="
+            () => {
+              access(wallet, 'access');
+            }
+          "
+        >
+          Access
+        </div>
+        <div
+          v-show="walletType !== 'watchOnly'"
+          @click="
+            () => {
+              detail(wallet, 'view');
+            }
+          "
+        >
+          Detail
+        </div>
         <div @click="edit">Edit</div>
       </div>
     </div>

@@ -22,8 +22,8 @@ const cxRoutes = [
         meta: { requiresAuth: false }
       },
       {
-        path: '/add-wallet',
-        name: 'Add Wallets',
+        path: '/access-my-wallet',
+        name: 'AccessWalletLayout',
         component: ExtensionAddWalletContainer,
         meta: { requiresAuth: false }
       }

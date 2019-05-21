@@ -6,6 +6,13 @@
         ref="watchOnlyModal"
         :add-watch-only="addWatchOnlyWallet"
       />
+      <password-only-modal
+        ref="passwordOnlyModal"
+        :path="path"
+        :submit="path !== 'view' ? accessWallet : viewWallet"
+        :disabled="validInput"
+        @password="updatePassword"
+      />
       <div v-show="label === 'myWallets'">
         <div class="wallets-container-header">
           <div class="title-balance">
@@ -28,12 +35,14 @@
             :balance="wallet.balance"
             :wallet="wallet.wallet"
             :wallet-type="wallet.type"
+            :access="togglePasswordModal"
+            :detail="togglePasswordModal"
           />
         </div>
         <div v-show="myWallets.length === 0 && !loading">
           <h2>No Wallet found...</h2>
         </div>
-        <div v-show="loading">
+        <div v-show="loading && file === ''">
           <h2>Loading Wallets...</h2>
         </div>
       </div>
@@ -68,20 +77,25 @@
 </template>
 
 <script>
+import { KEYSTORE as keyStoreType } from '@/wallets/bip44/walletTypes';
 import WalletSideMenu from '../../components/WalletSideMenu';
 import WatchOnlyModal from '../../components/WatchOnlyModal';
 import WalletInfoComponent from '../../components/WalletInfoComponent';
+import PasswordOnlyModal from '../../components/PasswordOnlyModal';
 import { WATCH_ONLY } from '@/wallets/bip44/walletTypes';
 import { toChecksumAddress } from '@/helpers/addressUtils';
 import { Toast, ExtensionHelpers } from '@/helpers';
 import web3utils from 'web3-utils';
 import BigNumber from 'bignumber.js';
+import { WalletInterface } from '@/wallets';
+import walletWorker from 'worker-loader!@/workers/wallet.worker.js';
 
 export default {
   components: {
     'wallet-side-menu': WalletSideMenu,
     'watch-only-modal': WatchOnlyModal,
-    'wallet-info-component': WalletInfoComponent
+    'wallet-info-component': WalletInfoComponent,
+    'password-only-modal': PasswordOnlyModal
   },
   props: {
     accounts: {
@@ -98,15 +112,77 @@ export default {
       loading: false,
       watchOnlyAddresses: [],
       myWallets: [],
-      totalBalance: 0
+      totalBalance: 0,
+      file: '',
+      path: '',
+      password: ''
     };
+  },
+  computed: {
+    validInput() {
+      return (
+        (this.password !== '' || this.password.length > 0) &&
+        this.walletRequirePass(this.file)
+      );
+    }
   },
   watch: {
     accounts() {
       this.processAccounts();
     }
   },
+  mounted() {
+    this.$refs.passwordOnlyModal.$refs.passwordOnlyModal.$on('hidden', () => {
+      this.file = '';
+      this.path = '';
+    });
+  },
   methods: {
+    walletRequirePass(ethjson) {
+      if (ethjson.encseed != null) return true;
+      else if (ethjson.Crypto != null || ethjson.crypto != null) return true;
+      else if (ethjson.hash != null && ethjson.locked) return true;
+      else if (ethjson.hash != null && !ethjson.locked) return false;
+      else if (ethjson.publisher == 'MyEtherWallet' && !ethjson.encrypted)
+        return false;
+      return true;
+    },
+    accessWallet() {
+      this.loading = true;
+      const worker = new walletWorker();
+      worker.postMessage({
+        type: 'unlockWallet',
+        data: [this.file, this.password]
+      });
+      worker.onmessage = e => {
+        this.setWallet(
+          new WalletInterface(Buffer.from(e.data._privKey), false, keyStoreType)
+        );
+        this.loading = false;
+      };
+      worker.onerror = e => {
+        e.preventDefault();
+        this.loading = false;
+        Toast.responseHandler(e, Toast.ERROR);
+      };
+    },
+    setWallet(wallet) {
+      this.$store.dispatch('decryptWallet', [wallet]);
+      this.loading = false;
+      this.password = '';
+      this.$router.push({
+        path: 'interface'
+      });
+    },
+    viewWallet() {
+      console.log(this.path);
+    },
+    togglePasswordModal(file, path) {
+      const parseFile = JSON.parse(file);
+      this.file = JSON.parse(parseFile.priv);
+      this.path = path;
+      this.$refs.passwordOnlyModal.$refs.passwordOnlyModal.show();
+    },
     async processAccounts() {
       this.totalBalance = 0;
       this.loading = true;
@@ -175,6 +251,9 @@ export default {
     },
     openWatchOnlyModal() {
       this.$refs.watchOnlyModal.$refs.watchOnlyWallet.show();
+    },
+    updatePassword(e) {
+      this.password = e;
     }
   }
 };
