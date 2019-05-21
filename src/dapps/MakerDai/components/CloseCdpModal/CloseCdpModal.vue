@@ -243,6 +243,7 @@ export default {
       return false;
     },
     enoughDai() {
+      if (this.activeCdp.zeroDebt) return true;
       const daiNeeded = this.activeCdp.debtValue;
       if (daiNeeded) {
         return toBigNumber(this.daiBalance)
@@ -275,11 +276,7 @@ export default {
     this.destAddress = this.account.address;
     this.getBalances();
     this.$refs.modal.$on('shown', async () => {
-      if (this.activeCdp) {
-        this.closable = await this.activeCdp.canCloseCdp();
-        return this.closable;
-      }
-      this.closable = false;
+      await this.checkMakerToClose();
     });
   },
   methods: {
@@ -291,12 +288,20 @@ export default {
         this.closeModal();
       }, 200);
     },
-    async closeCdp() {
-      const canCloseCdp = await this.activeCdp.canCloseCdp();
-      if (canCloseCdp) {
-        this.delayCloseModal();
-        await this.activeCdp.closeCdp();
+    async checkMakerToClose() {
+      if (this.activeCdp) {
+        this.closable = await this.activeCdp.canCloseCdp();
+        console.log(this.closable); // todo remove dev item
+        return this.closable;
       }
+      this.closable = false;
+    },
+    async closeCdp() {
+      // const canCloseCdp = await this.activeCdp.canCloseCdp();
+      // if (canCloseCdp) {
+      this.delayCloseModal();
+      await this.activeCdp.closeCdp();
+      // }
     },
     displayPercentValue(raw) {
       if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);

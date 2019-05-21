@@ -5,7 +5,7 @@
       hide-footer
       centered
       class="bootstrap-modal nopadding"
-      title="$t('dappsMaker.moveTitle')"
+      :title="$t('dappsMaker.moveTitle')"
     >
       <div class="modal-content">
         <p class="top-text">

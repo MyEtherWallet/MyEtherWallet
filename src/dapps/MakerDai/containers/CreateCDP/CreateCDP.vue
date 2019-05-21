@@ -38,9 +38,15 @@
           </div>
           <input
             v-model="ethQty"
-            class="currency-picker-container dropdown-text-container dropdown-container"
+            :class="[
+              !hasEnoughEth ? 'red-border' : '',
+              'currency-picker-container',
+              'dropdown-text-container',
+              'dropdown-container'
+            ]"
           />
           <div class="input-block-message">
+            <p v-if="!hasEnoughEth" class="red-text">Not enough ETH</p>
             <p>
               {{ $t('dappsMaker.minCollat') }}
               <b>{{ displayFixedValue(makerManager.minEth, 6) }}</b> ETH
@@ -63,7 +69,8 @@
           <input
             v-model="daiQty"
             :class="[
-              risky ? 'red-border' : '',
+              veryRisky ? 'red-border' : '',
+              risky && !veryRisky ? 'orange-border' : '',
               'currency-picker-container',
               'dropdown-text-container',
               'dropdown-container'
@@ -100,7 +107,12 @@
           </li>
           <li>
             <p>{{ $t('dappsMaker.collateralRatio') }}</p>
-            <p>
+            <p
+              :class="[
+                veryRisky ? 'red-text' : '',
+                risky && !veryRisky ? 'orange-text' : ''
+              ]"
+            >
               <b>{{ displayFixedPercent(collatRatio) }}%</b>
             </p>
           </li>
@@ -265,6 +277,11 @@ export default {
       }
       return false;
     },
+    hasEnoughEth() {
+      return toBigNumber(ethUnit.toWei(this.ethQty, 'ether').toString()).lte(
+        this.account.balance
+      );
+    },
     atSetFloor() {
       if (this.priceFloor <= 0) return 0;
       return this.makerCDP.calcMinCollatRatio(this.priceFloor);
@@ -292,6 +309,13 @@ export default {
       }
       return false;
     },
+    veryRisky() {
+      const collRatio = this.collatRatio;
+      if (toBigNumber(collRatio).gt(0)) {
+        return toBigNumber(collRatio).lte(1.75);
+      }
+      return false;
+    },
     depositInPeth() {
       if (this.ethQty <= 0) return 0;
       return this.makerCDP.toPeth(this.ethQty);
@@ -316,6 +340,10 @@ export default {
 
       if (this.ethQty <= 0) return 0;
       this.$emit('cdpOpened');
+      // close loading overlay after 5 seconds to prevent user from having to refresh to keep using the site.
+      setTimeout(() => {
+        this.loading = false;
+      }, 5000);
 
       // [Note from David to Steve] This should be implemented on TX core.
       // Close DAI confirmation modal

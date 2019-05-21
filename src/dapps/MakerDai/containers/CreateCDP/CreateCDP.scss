@@ -20,8 +20,20 @@ $this-page-mobile-width: 700px;
   line-height: 17px;
 }
 
+.orange-border {
+  border: orange 1px solid !important;
+}
+
+.orange-text{
+  color: orange;
+}
+
 .red-border {
   border: red 1px solid !important;
+}
+
+.red-text{
+  color: red;
 }
 
 .subname {
