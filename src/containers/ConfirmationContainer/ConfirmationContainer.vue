@@ -227,41 +227,9 @@ export default {
 
     this.$eventHub.$on('showWeb3Wallet', (tx, resolve) => {
       this.parseRawTx(tx);
-      this.responseFunction = resolve;
       this.successMessage = 'Sending Transaction';
-      this.wallet
-        .signTransaction(tx)
-        .once('transactionHash', hash => {
-          this.$store
-            .dispatch('addNotification', [
-              noticeTypes.TRANSACTION_HASH,
-              this.fromAddress,
-              this.lastRaw,
-              hash
-            ])
-            .then(() => {
-              this.showSuccessModal('Transaction sent!', 'Okay');
-            });
-        })
-        .on('receipt', receipt => {
-          this.$store.dispatch('addNotification', [
-            noticeTypes.TRANSACTION_RECEIPT,
-            this.fromAddress,
-            this.lastRaw,
-            receipt
-          ]);
-        })
-        .on('error', err => {
-          this.$store.dispatch('addNotification', [
-            noticeTypes.TRANSACTION_ERROR,
-            this.fromAddress,
-            this.lastRaw,
-            err
-          ]);
-        })
-        .catch(err => {
-          Toast.responseHandler(err, Toast.ERROR);
-        });
+      const promiObject = this.wallet.signTransaction(tx);
+      resolve(promiObject);
       this.showSuccessModal(
         'Continue transaction with Web3 Wallet Provider.',
         'Close'
