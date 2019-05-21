@@ -1,3 +1,5 @@
+### Release v5.0.12
+
 ### Feature
 
 - Have Simplex KYC form open in new tab [#1031](https://github.com/MyEtherWallet/MyEtherWallet/pull/1031)
