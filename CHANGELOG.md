@@ -1,3 +1,26 @@
+### Release v5.0.12
+
+### Feature
+
+- Have Simplex KYC form open in new tab [#1031](https://github.com/MyEtherWallet/MyEtherWallet/pull/1031)
+- Ledger webusb option [#1081](https://github.com/MyEtherWallet/MyEtherWallet/pull/1081)
+
+### Bug
+
+- Use native browser checking for online status. [#1032](https://github.com/MyEtherWallet/MyEtherWallet/pull/1032)
+- UI fix for mnemonic phrase key verification modal [#1029](https://github.com/MyEtherWallet/MyEtherWallet/pull/1029)
+- set up a fallback if GAS_LIMIT check fails [#1076](https://github.com/MyEtherWallet/MyEtherWallet/pull/1076)
+- Fix owner check for permanent registrar names [#1054](https://github.com/MyEtherWallet/MyEtherWallet/pull/1054)
+- Web3 wallet promievent fix [#1063](https://github.com/MyEtherWallet/MyEtherWallet/pull/1063)
+- Catch ledger error [#1091](https://github.com/MyEtherWallet/MyEtherWallet/pull/1091)
+
+### Devop
+
+- Ledger custom paths [#1037](https://github.com/MyEtherWallet/MyEtherWallet/pull/1037)
+- Update Richie's profile [#1036](https://github.com/MyEtherWallet/MyEtherWallet/pull/1036)
+- Change PWA name to MEW [#1030](https://github.com/MyEtherWallet/MyEtherWallet/pull/1030)
+- Address validation on swap [#1090](https://github.com/MyEtherWallet/MyEtherWallet/pull/1090)
+
 ### Release v5.0.11-ens.1
 
 - Permanent registry [#965](https://github.com/MyEtherWallet/MyEtherWallet/pull/965)
@@ -6,6 +29,7 @@
 
 ### Devop
 
+- Update Access My Wallet modal UI [#1033](https://github.com/MyEtherWallet/MyEtherWallet/pull/1033)
 - Access by Software UI change [#1021](https://github.com/MyEtherWallet/MyEtherWallet/pull/1021)
 - Fix multiple sentry issues [#1015](https://github.com/MyEtherWallet/MyEtherWallet/pull/1015)
 - Update hardware icons [#994](https://github.com/MyEtherWallet/MyEtherWallet/pull/994)
@@ -14,6 +38,7 @@
 - Check private key format [#1014](https://github.com/MyEtherWallet/MyEtherWallet/pull/1014)
 - Update usage of Kyber supplied gas limits and serverless provider [#969](https://github.com/MyEtherWallet/MyEtherWallet/pull/969)
 - Fix hardware access icons not displaying [#1025](https://github.com/MyEtherWallet/MyEtherWallet/pull/1025)
+- Fix none assignment issue on Send Offline Container [#982](https://github.com/MyEtherWallet/MyEtherWallet/pull/982)
 
 ### Bug
 
@@ -23,14 +48,11 @@
 
 ### Feature
 
+- Add warning signs to Create wallet page and update mnemonic input [#1041](https://github.com/MyEtherWallet/MyEtherWallet/pull/1041)
 - DEXON network support [#977](https://github.com/MyEtherWallet/MyEtherWallet/pull/977)
 - Metadium network support [#928](https://github.com/MyEtherWallet/MyEtherWallet/pull/928)
 - Solidum network support [#957](https://github.com/MyEtherWallet/MyEtherWallet/pull/957)
 - Support local nodes [#973](https://github.com/MyEtherWallet/MyEtherWallet/pull/973)
-
-### Bug
-
-- Fix none assignment issue on Send Offline Container [#982](https://github.com/MyEtherWallet/MyEtherWallet/pull/982)
 
 ### Release v5.0.10
 

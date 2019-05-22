@@ -61,7 +61,7 @@ import ResolverAbi from './ABI/resolverAbi.js';
 import * as unit from 'ethjs-unit';
 import * as nameHashPckg from 'eth-ens-namehash';
 import normalise from '@/helpers/normalise';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import { Toast } from '@/helpers';
 import DNSRegistrar from '@ensdomains/dnsregistrar';
 import BigNumber from 'bignumber.js';
@@ -112,13 +112,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      web3: 'web3',
-      network: 'network',
-      account: 'account',
-      gasPrice: 'gasPrice',
-      ens: 'ens'
-    }),
+    ...mapState(['web3', 'network', 'account', 'gasPrice', 'ens']),
     registrarTLD() {
       return this.network.type.ens.registrarTLD;
     },
@@ -240,30 +234,32 @@ export default {
     async transferDomain(toAddress) {
       let to, data;
       if (this.registrarType === REGISTRAR_TYPES.AUCTION) {
-        data = await this.registrarContract.methods
+        data = this.registrarContract.methods
           .transfer(this.labelHash, toAddress)
           .encodeABI();
         to = this.registrarAddress;
       } else if (this.registrarType === REGISTRAR_TYPES.FIFS) {
-        data = await this.ensRegistryContract.methods
+        data = this.ensRegistryContract.methods
           .setOwner(this.nameHash, toAddress)
           .encodeABI();
         to = this.network.type.ens.registry;
       } else if (this.registrarType === REGISTRAR_TYPES.PERMANENT) {
-        data = await this.registrarContract.methods
+        data = this.registrarContract.methods
           .safeTransferFrom(this.account.address, toAddress, this.labelHash)
           .encodeABI();
         to = this.registrarAddress;
       }
-      const raw = {
+      const transferTx = {
         from: this.account.address,
         to,
         data,
         value: 0
       };
-      this.web3.eth.sendTransaction(raw).catch(err => {
-        Toast.responseHandler(err, false);
-      });
+      if (this.registrarType === REGISTRAR_TYPES.PERMANENT) {
+        this.web3.eth.sendTransaction(transferTx).catch(err => {
+          Toast.responseHandler(err, false);
+        });
+      }
     },
     async updateResolver(newResolverAddr) {
       const web3 = this.web3;
@@ -629,7 +625,13 @@ export default {
       let owner;
       let resolverAddress;
       try {
-        owner = await this.ens.owner(this.parsedDomainName);
+        if (this.registrarType === REGISTRAR_TYPES.PERMANENT) {
+          owner = await this.registrarContract.methods
+            .ownerOf(this.labelHash)
+            .call();
+        } else {
+          owner = await this.ens.owner(this.parsedDomainName);
+        }
       } catch (e) {
         owner = '0x';
         Toast.responseHandler(e, false);

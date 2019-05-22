@@ -8,7 +8,12 @@
     </div>
     <div class="side-menu">
       <ul>
-        <li v-for="(tab, idx) in tabData" :key="tab.name + idx">
+        <li
+          v-for="(tab, idx) in tabData"
+          :class="tab.onlineOnly && !online ? 'disabled-item' : ''"
+          :key="tab.name + idx"
+        >
+          <div v-if="tab.onlineOnly && !online" class="dash" />
           <div
             :class="[
               isTabActive(tab.routes) ? 'active' : '',
@@ -56,11 +61,15 @@
 
 <script>
 import tabsConfig from './InterfaceSideMenu.config';
+import { mapState } from 'vuex';
 export default {
   data() {
     return {
       tabData: tabsConfig.tabs
     };
+  },
+  computed: {
+    ...mapState(['online'])
   },
   methods: {
     toggleSideMenu() {

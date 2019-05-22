@@ -65,7 +65,7 @@ import noShare from '@/assets/images/icons/no-share.svg';
 import makeBackup from '@/assets/images/icons/make-a-backup.svg';
 import walletWorker from 'worker-loader!@/workers/wallet.worker.js';
 import { Toast, Wallet, Configs } from '@/helpers';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 
 export default {
   components: {
@@ -103,9 +103,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      online: 'online'
-    })
+    ...mapState(['online'])
   },
   mounted() {
     if (this.online && window.Worker) {
