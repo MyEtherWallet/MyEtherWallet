@@ -50,7 +50,16 @@ export default async (
   getSanitizedTx(tx)
     .then(_tx => {
       if (store.state.wallet.identifier === WEB3_WALLET) {
-        eventHub.$emit(EventNames.SHOW_WEB3_CONFIRM_MODAL, _tx);
+        eventHub.$emit(EventNames.SHOW_WEB3_CONFIRM_MODAL, _tx, _promiObj => {
+          setEvents(_promiObj, _tx, store.dispatch);
+          _promiObj
+            .once('transactionHash', hash => {
+              res(null, toPayload(payload.id, hash));
+            })
+            .on('error', err => {
+              res(err);
+            });
+        });
       } else {
         eventHub.$emit(EventNames.SHOW_TX_CONFIRM_MODAL, _tx, _response => {
           const _promiObj = store.state.web3.eth.sendSignedTransaction(

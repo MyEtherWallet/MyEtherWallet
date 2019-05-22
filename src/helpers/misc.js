@@ -157,14 +157,14 @@ const solidityType = inputType => {
 };
 
 const isDarklisted = addr => {
-  const darklisted = store.getters.darklist.data.findIndex(item => {
+  const darklisted = store.state.darklist.data.findIndex(item => {
     return (
       utils.toChecksumAddress(item.address.toLowerCase()) ===
       utils.toChecksumAddress(addr.toLowerCase())
     );
   });
   const errMsg =
-    darklisted === -1 ? '' : store.getters.darklist.data[darklisted].comment;
+    darklisted === -1 ? '' : store.state.darklist.data[darklisted].comment;
   const errObject = {
     error: darklisted === -1 ? false : true,
     msg: errMsg

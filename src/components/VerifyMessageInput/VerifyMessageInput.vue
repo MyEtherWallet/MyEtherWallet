@@ -51,7 +51,7 @@
 
 <script>
 import { Toast } from '@/helpers';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import {
   toBuffer,
   hashPersonalMessage,
@@ -73,9 +73,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      web3: 'web3'
-    })
+    ...mapState(['web3'])
   },
   watch: {
     message(newVal) {
