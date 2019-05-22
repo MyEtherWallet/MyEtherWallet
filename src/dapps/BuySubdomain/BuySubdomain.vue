@@ -63,7 +63,7 @@ import domains from './domains.json';
 import normalise from '@/helpers/normalise';
 import BigNumber from 'bignumber.js';
 import web3 from 'web3';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import StandardButton from '@/components/Buttons/StandardButton';
 import { Toast } from '@/helpers';
 
@@ -83,12 +83,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      ethDonationAddress: 'ethDonationAddress',
-      ens: 'ens',
-      account: 'account',
-      web3: 'web3'
-    }),
+    ...mapState(['ethDonationAddress', 'ens', 'account', 'web3']),
     sortedResults() {
       const newArr = this.results;
       newArr.sort((a, b) => {

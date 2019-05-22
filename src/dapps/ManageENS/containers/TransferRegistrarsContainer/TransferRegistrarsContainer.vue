@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 
 export default {
@@ -61,7 +61,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters({
+    ...mapState({
       account: 'account'
     }),
     fullDomainName() {
