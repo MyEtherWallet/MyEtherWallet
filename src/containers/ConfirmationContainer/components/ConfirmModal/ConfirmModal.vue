@@ -93,7 +93,7 @@
 
 <script>
 import AddressBlock from '../AddressBlock';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import StandardButton from '@/components/Buttons/StandardButton';
 import parseTokensData from '@/helpers/parseTokensData.js';
 
@@ -164,10 +164,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      web3: 'web3',
-      network: 'network'
-    }),
+    ...mapState(['web3', 'network']),
     signedTransaction() {
       if (this.signedMessage) {
         return this.signedMessage;

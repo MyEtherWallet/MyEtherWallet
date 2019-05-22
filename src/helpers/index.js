@@ -6,7 +6,7 @@ import Blockies from './blockies';
 import Misc from './misc';
 import CreateJsonWallet from './createJsonWallet';
 import Toast from './responseHandler';
-
+import pathHelpers from './pathHelper';
 Wallet.ThirdParty = ThirdPartyWallets;
 export {
   Wallet,
@@ -15,5 +15,6 @@ export {
   Blockies,
   Misc,
   CreateJsonWallet,
-  Toast
+  Toast,
+  pathHelpers
 };

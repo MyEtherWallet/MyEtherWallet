@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 export default {
   props: {
     currency: {
@@ -88,9 +88,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      network: 'network'
-    }),
+    ...mapState(['network']),
     networkToken() {
       return {
         name: this.network.type.name_long,

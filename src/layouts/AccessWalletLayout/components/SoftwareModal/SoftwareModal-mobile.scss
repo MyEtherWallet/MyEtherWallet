@@ -1,7 +1,7 @@
 @import '~@/scss/GlobalVariables';
 @media all and (max-width: $mobile-width) {
   .content-block {
-    padding: 20px 10px;
+    padding: 20px;
   }
 
   .modal-software {
@@ -9,7 +9,6 @@
       display: grid;
       grid-gap: 10px;
       grid-template-columns: 1fr;
-      margin-bottom: 40px;
     }
   }
 }

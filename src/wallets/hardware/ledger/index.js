@@ -2,6 +2,7 @@ import Ledger from '@ledgerhq/hw-app-eth';
 import { byContractAddress } from '@ledgerhq/hw-app-eth/erc20';
 import ethTx from 'ethereumjs-tx';
 import u2fTransport from '@ledgerhq/hw-transport-u2f';
+import webUsbTransport from '@ledgerhq/hw-transport-webusb';
 import { LEDGER as ledgerType } from '../../bip44/walletTypes';
 import bip44Paths from '../../bip44';
 import HDWalletInterface from '@/wallets/HDWalletInterface';
@@ -122,7 +123,12 @@ const createWallet = async basePath => {
 };
 createWallet.errorHandler = errorHandler;
 const getLedgerTransport = async () => {
-  const transport = await u2fTransport.create(OPEN_TIMEOUT, LISTENER_TIMEOUT);
+  let transport;
+  if (webUsbTransport.isSupported()) {
+    transport = await webUsbTransport.create();
+  } else {
+    transport = await u2fTransport.create(OPEN_TIMEOUT, LISTENER_TIMEOUT);
+  }
   return transport;
 };
 const getLedgerAppConfig = async _ledger => {

@@ -74,7 +74,7 @@
 <script>
 import Blockie from '@/components/Blockie';
 import utils from 'web3-utils';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 
 export default {
   components: {
@@ -109,9 +109,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      account: 'account'
-    }),
+    ...mapState(['account']),
     signedMessageSignature() {
       if (this.signedMessage) {
         return this.signedMessage;

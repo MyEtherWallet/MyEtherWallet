@@ -7,7 +7,6 @@
     centered
   >
     <div class="modal-content-container">
-      <finney-modal ref="finney" />
       <div class="d-block text-center">
         <b-alert :show="mayNotBeAttached" fade variant="warning"
           >Please make sure your device is connected</b-alert
@@ -44,7 +43,6 @@
 </template>
 
 <script>
-import FinneyModal from '../FinneyModal';
 import CustomerSupport from '@/components/CustomerSupport';
 import ledger from '@/assets/images/icons/HardwareWallet/ledger.svg';
 import bitbox from '@/assets/images/icons/HardwareWallet/bitbox.svg';
@@ -72,8 +70,7 @@ import {
 export default {
   components: {
     'customer-support': CustomerSupport,
-    'wallet-option': WalletOption,
-    'finney-modal': FinneyModal
+    'wallet-option': WalletOption
   },
   props: {
     networkAndAddressOpen: {
@@ -85,6 +82,10 @@ export default {
       default: function() {}
     },
     ledgerAppOpen: {
+      type: Function,
+      default: function() {}
+    },
+    openFinney: {
       type: Function,
       default: function() {}
     }
@@ -158,7 +159,7 @@ export default {
       this.items.forEach(item => {
         const u2fhw = [SECALOT_TYPE, LEDGER_TYPE, BITBOX_TYPE];
         const inMobile = [SECALOT_TYPE, KEEPKEY_TYPE];
-        const webUsb = [KEEPKEY_TYPE];
+        const webUsb = [KEEPKEY_TYPE, LEDGER_TYPE];
 
         if (webUsb.includes(item.name)) {
           const disable =
@@ -234,7 +235,8 @@ export default {
             });
           break;
         case 'finney':
-          this.$refs.finney.$refs.finneyModal.show();
+          this.openFinney();
+          this.$refs.hardware.hide();
           break;
         default:
           Toast.responseHandler(
