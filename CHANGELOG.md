@@ -12,6 +12,7 @@
 - set up a fallback if GAS_LIMIT check fails [#1076](https://github.com/MyEtherWallet/MyEtherWallet/pull/1076)
 - Fix owner check for permanent registrar names [#1054](https://github.com/MyEtherWallet/MyEtherWallet/pull/1054)
 - Web3 wallet promievent fix [#1063](https://github.com/MyEtherWallet/MyEtherWallet/pull/1063)
+- Catch ledger error []()
 
 ### Devop
 
