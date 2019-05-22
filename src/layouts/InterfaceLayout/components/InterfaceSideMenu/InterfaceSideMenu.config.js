@@ -2,6 +2,7 @@ export default {
   tabs: [
     {
       name: 'send-transaction',
+      onlineOnly: false,
       routes: [
         '/interface/send-transaction',
         '/interface',
@@ -43,6 +44,7 @@ export default {
     },
     {
       name: 'swap',
+      onlineOnly: true,
       routes: ['/interface/swap'],
       icons: {
         active: require('@/assets/images/sidemenu/swap-active.svg'),
@@ -53,6 +55,7 @@ export default {
     },
     {
       name: 'dapps',
+      onlineOnly: true,
       routes: [
         '/interface/dapps',
         '/interface/dapps/manage-ens',
@@ -82,6 +85,7 @@ export default {
     },
     {
       name: 'contracts',
+      onlineOnly: true,
       routes: [
         '/interface/interact-with-contract',
         '/interface/deploy-contract'
@@ -114,6 +118,7 @@ export default {
     },
     {
       name: 'messages',
+      onlineOnly: false,
       routes: ['/interface/sign-message', '/interface/verify-message'],
       icons: {
         active: require('@/assets/images/sidemenu/message-active.svg'),

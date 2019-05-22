@@ -14,6 +14,7 @@
       ref="hardwareModal"
       :ledger-app-open="ledgerAppModalOpen"
       :network-and-address-open="networkAndAddressOpen"
+      :open-finney="finneyModalOpen"
       @hardwareRequiresPassword="hardwarePasswordModalOpen"
       @hardwareWalletOpen="hardwareWalletOpen"
     />
@@ -46,17 +47,17 @@
 
     <mnemonic-modal
       ref="mnemonicPhraseModal"
-      :mnemonic-phrase-password-modal-open="mnemonicphrasePasswordModalOpen"
+      :hardware-wallet-open="hardwareWalletOpen"
     />
 
-    <mnemonic-password-modal
+    <!--    <mnemonic-password-modal
       ref="mnemonicPhrasePassword"
       :hardware-wallet-open="hardwareWalletOpen"
       :phrase="phrase"
-    />
+    />-->
 
     <wallet-password-modal />
-
+    <finney-modal ref="finney" />
     <enter-pin-number-modal />
 
     <div class="wrap">
@@ -91,6 +92,7 @@
 </template>
 
 <script>
+import FinneyModal from '../../components/FinneyModal';
 import AccessWalletButton from '../../components/AccessWalletButton';
 import HardwareModal from '../../components/HardwareModal';
 import HardwarePasswordModal from '../../components/HardwarePasswordModal';
@@ -116,7 +118,7 @@ import hardwareImgDisabled from '@/assets/images/icons/button-hardware-disabled.
 import metamaskImgDisabled from '@/assets/images/icons/button-metamask-disabled.svg';
 import softwareImgDisabled from '@/assets/images/icons/button-software-disabled.svg';
 
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import { Toast } from '@/helpers';
 
 import DetectRTC from 'detectrtc';
@@ -136,7 +138,8 @@ export default {
     'access-wallet-button': AccessWalletButton,
     'wallet-password-modal': WalletPasswordModal,
     'enter-pin-number-modal': EnterPinNumberModal,
-    'ledger-app-modal': LedgerAppModal
+    'ledger-app-modal': LedgerAppModal,
+    'finney-modal': FinneyModal
   },
   data() {
     return {
@@ -196,10 +199,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      online: 'online',
-      Networks: 'Networks'
-    })
+    ...mapState(['online', 'Networks'])
   },
   mounted() {
     this.$nextTick(() => {
@@ -252,11 +252,11 @@ export default {
       this.$refs.mnemonicPhraseModal.$refs.mnemonicPhrase.show();
       this.$refs.softwareModal.$refs.software.hide();
     },
-    mnemonicphrasePasswordModalOpen(phrase) {
-      this.phrase = phrase;
-      this.$refs.mnemonicPhraseModal.$refs.mnemonicPhrase.hide();
-      this.$refs.mnemonicPhrasePassword.$refs.password.show();
-    },
+    // mnemonicphrasePasswordModalOpen(phrase) {
+    //   this.phrase = phrase;
+    //   this.$refs.mnemonicPhraseModal.$refs.mnemonicPhrase.hide();
+    //   this.$refs.mnemonicPhrasePassword.$refs.password.show();
+    // },
     fileUploaded(e) {
       this.file = e;
       this.passwordOpen();
@@ -267,10 +267,13 @@ export default {
       this.$refs.hardwareModal.$refs.hardware.hide();
       this.$refs.hardwarePasswordModal.$refs.password.show();
     },
+    finneyModalOpen() {
+      this.$refs.finney.$refs.finneyModal.show();
+    },
     hardwareWalletOpen(wallet) {
-      if (this.$refs.mnemonicPhrasePassword.$refs.password.visible) {
-        this.$refs.mnemonicPhrasePassword.$refs.password.hide();
-      }
+      // if (this.$refs.mnemonicPhrasePassword.$refs.password.visible) {
+      //   this.$refs.mnemonicPhrasePassword.$refs.password.hide();
+      // }
       try {
         this.hardwareWallet = wallet;
         this.networkAndAddressOpen();
