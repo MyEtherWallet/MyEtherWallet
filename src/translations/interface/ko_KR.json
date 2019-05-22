@@ -107,5 +107,6 @@
   "simplexTagLine": "Buy crypto with a credit card!",
   "CryptoToFiatBeta": "Please note Crypto to Fiat is currently a beta feature of Bity",
   "back": "Back",
-  "invalidTanCode": "Invalid Code"
+  "invalidTanCode": "Invalid Code",
+  "unableToValidateAddress": "Currently unable to validate addresses for {currency}. It is likely correct, but Please double check it is correct before sending."
 }
