@@ -14,11 +14,7 @@ export default {
   name: 'App',
   components: {
     'footer-container': FooterContainer,
-<<<<<<< HEAD
     'header-container': HeaderContainer
-=======
-    'confirmation-container': ConfirmationContainer
->>>>>>> ea43ee6c63eafc3bd6a791973d1d37e063a8bce8
   }
 };
 </script>
