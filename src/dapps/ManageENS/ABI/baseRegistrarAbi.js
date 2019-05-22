@@ -3,25 +3,6 @@ const baseRegistrar = [
     constant: true,
     inputs: [
       {
-        name: 'interfaceId',
-        type: 'bytes4'
-      }
-    ],
-    name: 'supportsInterface',
-    outputs: [
-      {
-        name: '',
-        type: 'bool'
-      }
-    ],
-    payable: false,
-    stateMutability: 'view',
-    type: 'function'
-  },
-  {
-    constant: true,
-    inputs: [
-      {
         name: 'tokenId',
         type: 'uint256'
       }
@@ -129,17 +110,12 @@ const baseRegistrar = [
   },
   {
     constant: true,
-    inputs: [
-      {
-        name: 'tokenId',
-        type: 'uint256'
-      }
-    ],
-    name: 'ownerOf',
+    inputs: [],
+    name: 'MIGRATION_LOCK_PERIOD',
     outputs: [
       {
         name: '',
-        type: 'address'
+        type: 'uint256'
       }
     ],
     payable: false,
@@ -345,6 +321,29 @@ const baseRegistrar = [
     type: 'function'
   },
   {
+    inputs: [
+      {
+        name: '_ens',
+        type: 'address'
+      },
+      {
+        name: '_previousRegistrar',
+        type: 'address'
+      },
+      {
+        name: '_baseNode',
+        type: 'bytes32'
+      },
+      {
+        name: '_transferPeriodEnds',
+        type: 'uint256'
+      }
+    ],
+    payable: false,
+    stateMutability: 'nonpayable',
+    type: 'constructor'
+  },
+  {
     anonymous: false,
     inputs: [
       {
@@ -513,6 +512,25 @@ const baseRegistrar = [
     type: 'event'
   },
   {
+    constant: true,
+    inputs: [
+      {
+        name: 'tokenId',
+        type: 'uint256'
+      }
+    ],
+    name: 'ownerOf',
+    outputs: [
+      {
+        name: '',
+        type: 'address'
+      }
+    ],
+    payable: false,
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
     constant: false,
     inputs: [
       {
@@ -648,6 +666,10 @@ const baseRegistrar = [
       {
         name: 'id',
         type: 'uint256'
+      },
+      {
+        name: 'owner',
+        type: 'address'
       }
     ],
     name: 'reclaim',
@@ -676,6 +698,25 @@ const baseRegistrar = [
     outputs: [],
     payable: false,
     stateMutability: 'nonpayable',
+    type: 'function'
+  },
+  {
+    constant: true,
+    inputs: [
+      {
+        name: 'interfaceID',
+        type: 'bytes4'
+      }
+    ],
+    name: 'supportsInterface',
+    outputs: [
+      {
+        name: '',
+        type: 'bool'
+      }
+    ],
+    payable: false,
+    stateMutability: 'view',
     type: 'function'
   }
 ];

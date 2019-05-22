@@ -113,7 +113,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import MobileMenuButton from './components/MobileMenuButton';
 import MobileAddressBlock from './components/MobileAddressBlock';
 import MobileBalanceBlock from './components/MobileBalanceBlock';
@@ -151,10 +151,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      account: 'account',
-      blockNumber: 'blockNumber'
-    })
+    ...mapState(['account', 'blockNumber'])
   },
   watch: {
     $route(newVal) {

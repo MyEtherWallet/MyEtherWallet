@@ -166,9 +166,7 @@ export default class Kyber {
   async retrieveGasLimits(network = this.network) {
     try {
       const gasLimitList = await kyberCalls.getGasLimits(network);
-      if (Array.isArray(gasLimitList)) {
-        this.GAS_LIMITS = gasLimitList;
-      }
+      this.GAS_LIMITS = gasLimitList.data;
     } catch (e) {
       utils.handleOrThrow(e);
       errorLogger(e);
@@ -602,8 +600,6 @@ export default class Kyber {
         approveGasLimit: this.defaultTokenApprovalGasLimit
       };
     } catch (e) {
-      // eslint-disable-next-line
-      console.error(e);
       return {
         swapGasLimit: this.defaultTradeGasLimit,
         approveGasLimit: this.defaultTokenApprovalGasLimit

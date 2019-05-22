@@ -98,6 +98,7 @@ import WAValidator from 'wallet-address-validator';
 import MAValidator from 'multicoin-address-validator';
 import Blockie from '@/components/Blockie';
 import { EthereumTokens, BASE_CURRENCY, hasIcon } from '@/partners';
+import { canValidate } from '@/partners/helpers';
 
 const errorLogger = debugLogger('v5:error');
 
@@ -133,6 +134,7 @@ export default {
       selectedAddress: '',
       validAddress: false,
       dropdownOpen: false,
+      unableToValidate: false,
       addresses: [],
       toAddressCheckMark: false
     };
@@ -190,24 +192,35 @@ export default {
               this.currency
             );
           } catch (e) {
-            try {
-              this.validAddress = MAValidator.validate(
-                checkAddress,
-                this.currency
-              );
-            } catch (e) {
-              errorLogger(e);
-              this.validAddress = false;
+            if (canValidate(this.currency)) {
+              try {
+                this.validAddress = MAValidator.validate(
+                  checkAddress,
+                  this.currency
+                );
+              } catch (e) {
+                errorLogger(e);
+                this.validAddress = false;
+              }
+            } else {
+              this.validAddress = true;
+              this.unableToValidate = true;
             }
           }
         }
 
         if (this.validAddress) {
+          if (this.unableToValidate) {
+            this.$emit('unableToValidate', true);
+          } else {
+            this.$emit('unableToValidate', false);
+          }
           this.$emit('toAddress', checkAddress);
           this.$emit('validAddress', true);
         } else {
           this.$emit('toAddress', '');
           this.$emit('validAddress', false);
+          this.$emit('unableToValidate', false);
         }
       }
     }

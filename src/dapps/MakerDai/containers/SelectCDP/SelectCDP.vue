@@ -1,6 +1,6 @@
 <template>
   <div>
-<!--    <div class="container-maker">
+    <!--    <div class="container-maker">
       <div class="manage-container">
         <div class="content-container">
           <p class="cpd-title">{{ $t('dappsMaker.cdpPortal') }}</p>

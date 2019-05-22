@@ -396,7 +396,7 @@ export default {
       return '--';
     },
     ethCollateral() {
-      console.log('this.activeCdp',this.activeCdp.ethCollateral); // todo remove dev item
+      console.log('this.activeCdp', this.activeCdp.ethCollateral); // todo remove dev item
       if (this.activeCdp) {
         displayFixedValue(this.activeCdp.ethCollateral, 5, false);
       }
@@ -416,7 +416,7 @@ export default {
     },
     debtValueDisplay() {
       if (this.activeCdp) {
-        return displayFixedValue(this.activeCdp.debtValue, 2)
+        return displayFixedValue(this.activeCdp.debtValue, 2);
       }
       return '--';
     },
@@ -428,13 +428,13 @@ export default {
     },
     maxDai() {
       if (this.activeCdp) {
-        return displayFixedValue(this.activeCdp.maxDai, 5)
+        return displayFixedValue(this.activeCdp.maxDai, 5);
       }
       return '--';
     },
     maxUsd() {
       if (this.activeCdp) {
-        return displayFixedValue(this.activeCdp.maxDai, 2)
+        return displayFixedValue(this.activeCdp.maxDai, 2);
       }
       return '--';
     }
@@ -493,7 +493,6 @@ export default {
           // await this.makerManager.doUpdate();
           this.activeCdp = this.getCdp(this.cdpId);
           console.log('activeCdp 3', activeCdp); // todo remove dev item
-
         }
       }
       this.$refs.closeCdp.$refs.modal.$on('hidden', () => {

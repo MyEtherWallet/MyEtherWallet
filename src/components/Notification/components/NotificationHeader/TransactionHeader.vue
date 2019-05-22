@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import { notificationHeaderLabels, noticeStatusFields } from '../config';
 
 export default {
@@ -50,12 +50,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      web3: 'web3',
-      network: 'network',
-      notifications: 'notifications',
-      wallet: 'wallet'
-    }),
+    ...mapState(['web3', 'network', 'notifications', 'wallet']),
     typeString() {
       if (notificationHeaderLabels[this.notice.type]) {
         return this.$t(notificationHeaderLabels[this.notice.type]);

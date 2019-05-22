@@ -146,7 +146,6 @@ export default class MakerCDP {
     return this.ethCollateral.toNumber();
   }
 
-
   get pethCollateralNum() {
     return this.pethCollateral.toNumber();
   }
@@ -191,11 +190,7 @@ export default class MakerCDP {
           .minus(this.minEth.times(1.0));
       }
       return this.ethCollateral.minus(
-        bnOver(
-          this.liquidationRatio.plus(0.001),
-          this.debtValue,
-          this.ethPrice
-        )
+        bnOver(this.liquidationRatio.plus(0.001), this.debtValue, this.ethPrice)
       );
     }
     return toBigNumber(0);
