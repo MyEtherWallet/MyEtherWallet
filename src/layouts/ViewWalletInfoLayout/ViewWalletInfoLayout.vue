@@ -20,8 +20,9 @@
         <interface-tokens
           :tokens="tokens"
           :get-token-balance="getTokenBalance"
-          :received-tokens="loading"
+          :received-tokens="!loading"
           :reset-token-selection="setTokensWithBalance"
+          :fetch-tokens="fetchTokens"
         />
       </div>
     </div>
@@ -35,6 +36,11 @@ import store from 'store';
 import TokenBalance from '@myetherwallet/eth-token-balance';
 import InterfaceTokens from '@/layouts/InterfaceLayout/components/InterfaceTokens';
 import { BigNumber } from 'bignumber.js';
+import sortByBalance from '@/helpers/sortByBalance.js';
+
+import Web3 from 'web3';
+const web3 = new Web3('https://api.myetherwallet.com/eth');
+
 export default {
   components: {
     'interface-tokens': InterfaceTokens
@@ -46,12 +52,14 @@ export default {
     };
   },
   computed: {
-    ...mapState(['acccount'])
+    ...mapState(['account', 'network'])
+  },
+  mounted() {
+    this.fetchTokens();
   },
   methods: {
     async getTokenBalance(token) {
       try {
-        const web3 = this.web3;
         const contractAbi = [
           {
             name: 'balanceOf',
@@ -83,37 +91,31 @@ export default {
           .catch(e => {
             Toast.responseHandler(e, false);
           });
-
         return balance;
       } catch (e) {
         Toast.responseHandler(e, Toast.ERROR);
       }
     },
     async fetchTokens() {
-      this.receivedTokens = false;
-      let tokens = [];
-      if (this.network.type.chainID === 1 || this.network.type.chainID === 3) {
-        const tb = new TokenBalance(this.web3.currentProvider);
-        try {
-          tokens = await tb.getBalance(this.account.address);
-          tokens = tokens.map(token => {
-            token.address = token.addr;
-            delete token.addr;
-            return token;
-          });
-        } catch (e) {
-          tokens = this.network.type.tokens.map(token => {
-            token.balance = 'Load';
-            return token;
-          });
-        }
-      } else {
-        tokens = this.network.type.tokens.map(token => {
+      this.loading = true;
+      const tb = new TokenBalance(web3.currentProvider);
+      try {
+        this.tokens = await tb.getBalance(this.account.address);
+        this.tokens = this.tokens.map(token => {
+          token.address = token.addr;
+          delete token.addr;
+          return token;
+        });
+        this.tokens = this.tokens.sort(sortByBalance);
+        this.loading = false;
+      } catch (e) {
+        this.tokens = this.network.type.tokens.map(token => {
           token.balance = 'Load';
           return token;
         });
+        this.tokens = this.tokens.sort(sortByBalance);
+        this.loading = false;
       }
-      return tokens;
     },
     setTokensWithBalance() {
       const customStore = store.get('customTokens');
@@ -140,13 +142,13 @@ export default {
               .filter(token => token.balance > 0)
               .concat(res.filter(token => token.balance > 0));
             this.tokensWithBalance = allTokens;
-            this.receivedTokens = true;
+            this.loading = true;
           })
           .catch(e => {
             Toast.responseHandler(e, Toast.ERROR);
           });
       } else {
-        this.receivedTokens = true;
+        this.loading = true;
         this.tokensWithBalance = this.tokens.filter(token => token.balance > 0);
       }
     }
