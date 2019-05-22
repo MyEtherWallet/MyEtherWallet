@@ -58,7 +58,6 @@ const getGasLimits = async network => {
       if (results.error) {
         throw Error(results.error.message);
       }
-
       return results.result;
     }
     return Promise.resolve(GAS_LIMITS || {});

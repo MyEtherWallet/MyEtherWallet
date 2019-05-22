@@ -269,7 +269,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import CurrencyPicker from '../../components/CurrencyPicker';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
@@ -299,12 +299,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      network: 'network',
-      gasPrice: 'gasPrice',
-      account: 'account',
-      web3: 'web3'
-    }),
+    ...mapState(['network', 'gasPrice', 'account', 'web3']),
     mergedContracts() {
       const customContracts = store.get('customContracts') || [];
       return this.network.type.contracts.concat(customContracts);
