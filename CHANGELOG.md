@@ -19,6 +19,7 @@
 - Ledger custom paths [#1037](https://github.com/MyEtherWallet/MyEtherWallet/pull/1037)
 - Update Richie's profile [#1036](https://github.com/MyEtherWallet/MyEtherWallet/pull/1036)
 - Change PWA name to MEW [#1030](https://github.com/MyEtherWallet/MyEtherWallet/pull/1030)
+- Address validation on swap [#1090](https://github.com/MyEtherWallet/MyEtherWallet/pull/1090)
 
 ### Release v5.0.11-ens.1
 
