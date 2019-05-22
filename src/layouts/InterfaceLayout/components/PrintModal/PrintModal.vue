@@ -28,7 +28,6 @@
 import Blockie from '@/components/Blockie';
 import printJS from 'print-js';
 import html2canvas from 'html2canvas';
-import { mapGetters } from 'vuex';
 import AccountContentToDisplay from './components/AccountContentToDisplay';
 import AccountContentToPrint from './components/AccountContentToPrint';
 
@@ -46,11 +45,6 @@ export default {
   },
   data() {
     return {};
-  },
-  computed: {
-    ...mapGetters({
-      wallet: 'wallet'
-    })
   },
   methods: {
     async print() {
