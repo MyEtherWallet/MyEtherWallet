@@ -48,7 +48,7 @@
 import { WalletInterface } from '@/wallets';
 import { KEYSTORE as keyStoreType } from '@/wallets/bip44/walletTypes';
 import walletWorker from 'worker-loader!@/workers/wallet.worker.js';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import { Toast, Wallet } from '@/helpers';
 export default {
   props: {
@@ -67,10 +67,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      path: 'path',
-      online: 'online'
-    })
+    ...mapState(['path', 'online'])
   },
   watch: {
     password() {

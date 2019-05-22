@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import { Toast } from '@/helpers';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
@@ -67,10 +67,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      account: 'account',
-      web3: 'web3'
-    })
+    ...mapState(['account', 'web3'])
   },
   methods: {
     signMessage() {

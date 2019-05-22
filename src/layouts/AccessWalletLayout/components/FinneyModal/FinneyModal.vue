@@ -52,7 +52,7 @@
 <script>
 import { MewConnectWallet } from '@/wallets';
 import { Toast } from '@/helpers';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import finneyImg from '@/assets/images/etc/finney.png';
 
 export default {
@@ -63,9 +63,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      web3: 'web3'
-    })
+    ...mapState(['web3'])
   },
   mounted() {
     this.$refs.finneyModal.$on('show', () => {
