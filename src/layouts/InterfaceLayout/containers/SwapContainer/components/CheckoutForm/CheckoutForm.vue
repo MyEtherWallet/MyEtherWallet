@@ -6,7 +6,7 @@
       ref="payment_form"
       :action="formData.payment_post_url"
       method="POST"
-      target="_self"
+      target="_blank"
     >
       <input :value="formData.version" type="hidden" name="version" />
       <input :value="formData.partner" type="hidden" name="partner" />

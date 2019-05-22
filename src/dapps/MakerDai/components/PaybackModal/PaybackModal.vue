@@ -56,7 +56,9 @@
             </li>
             <li>
               <p>{{ $t('dappsMaker.stabilityFeeOwed') }}</p>
-              <p><b>{{activeCdp.governanceFeeOwed}}</b> MKR</p>
+              <p>
+                <b>{{ activeCdp.governanceFeeOwed }}</b> MKR
+              </p>
               <!-- TODO: fix-->
             </li>
             <li>

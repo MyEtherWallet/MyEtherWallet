@@ -2,10 +2,10 @@
   <div class="modal-container">
     <b-modal
       ref="modal"
+      :title="$t('dappsMaker.moveTitle')"
       hide-footer
       centered
       class="bootstrap-modal nopadding"
-      :title="$t('dappsMaker.moveTitle')"
     >
       <div class="modal-content">
         <p class="top-text">
