@@ -85,7 +85,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
@@ -176,13 +176,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      account: 'account',
-      gasPrice: 'gasPrice',
-      web3: 'web3',
-      network: 'network',
-      ens: 'ens'
-    }),
+    ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
     maxDaiDraw() {
       if (this.ethQty <= 0) return 0;
       return bnOver(this.ethPrice, this.ethQty, this.liquidationRatio);

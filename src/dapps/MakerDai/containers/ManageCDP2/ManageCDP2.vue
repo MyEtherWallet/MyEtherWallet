@@ -209,6 +209,12 @@ const toBigNumber = num => {
   return new BigNumber(num);
 };
 
+const bnOver = (one, two, three) => {
+  return toBigNumber(one)
+    .times(toBigNumber(two))
+    .div(toBigNumber(three));
+};
+
 export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
@@ -390,9 +396,9 @@ export default {
       return '--';
     },
     ethCollateral() {
-      console.log('this.activeCdp ethCollateral', this.activeCdp.ethCollateral); // todo remove dev item
+      console.log('this.activeCdp', this.activeCdp.ethCollateral); // todo remove dev item
       if (this.activeCdp) {
-       return  displayFixedValue(this.activeCdp.ethCollateral, 5, true);
+        displayFixedValue(this.activeCdp.ethCollateral, 5, false);
       }
       return '--';
     },
@@ -421,14 +427,26 @@ export default {
       return '--';
     },
     maxDai() {
-      if (this.activeCdp) {
-        return displayFixedValue(this.activeCdp.maxDai, 5);
+      if (
+        this.ethPrice &&
+        this.ethCollateral &&
+        this.liquidationRatio &&
+        this.debtValue
+      ) {
+        return displayFixedValue(
+          bnOver(
+            this.ethPrice,
+            this.ethCollateral,
+            this.liquidationRatio
+          ).minus(this.debtValue),
+          5
+        );
       }
       return '--';
     },
     maxUsd() {
       if (this.activeCdp) {
-        return displayFixedValue(this.activeCdp.maxDai, 2);
+        return displayFixedValue(this.maxDai, 2);
       }
       return '--';
     }
@@ -473,7 +491,6 @@ export default {
     }
   },
   async mounted() {
-    this.activeCdp = {};
     this.cdpId = this.$route.params.cdpId;
     if (this.makerActive) {
       this.loaded = true;
