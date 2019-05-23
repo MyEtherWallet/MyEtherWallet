@@ -266,6 +266,9 @@ export default {
     this.$refs.modal.$on('shown', () => {
       this.amount = 0;
     });
+    this.$refs.modal.$on('hidden', () => {
+      this.amount = 0;
+    });
   },
   methods: {
     submitBtn() {
