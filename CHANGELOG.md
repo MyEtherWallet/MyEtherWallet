@@ -1,3 +1,7 @@
+### Bug
+
+- Use u2f in windows for ledger []()
+
 ### Release v5.0.12
 
 ### Feature
