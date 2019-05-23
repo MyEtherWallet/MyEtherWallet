@@ -1,3 +1,9 @@
+### Release v5.0.12-hotfix.1
+
+### Bug
+
+- Use u2f in windows for ledger [#1100](https://github.com/MyEtherWallet/MyEtherWallet/pull/1100)
+
 ### Release v5.0.12
 
 ### Feature
