@@ -392,7 +392,7 @@ export default {
     ethCollateral() {
       console.log('this.activeCdp ethCollateral', this.activeCdp.ethCollateral); // todo remove dev item
       if (this.activeCdp) {
-       return  displayFixedValue(this.activeCdp.ethCollateral, 5, true);
+        return displayFixedValue(this.activeCdp.ethCollateral, 5, true);
       }
       return '--';
     },

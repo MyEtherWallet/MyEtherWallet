@@ -9,5 +9,6 @@
   "unknown0x6801": "Ledger 裝置: UNKNOWN_ERROR (0x6801)",
   "invalidData0x6a80": "Ledger 收到不合法的資料. (0x6a80)",
   "deniedByUser0x6985": "使用者拒絕。 (0x6985)",
-  "claNotSupport0x6e00": "請確認您正在使用正確的應用軟體"
+  "claNotSupport0x6e00": "請確認您正在使用正確的應用軟體",
+  "noDeviceSelected": "No device selected or user closed the selection modal."
 }
