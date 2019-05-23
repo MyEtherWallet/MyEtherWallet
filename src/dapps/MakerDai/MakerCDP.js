@@ -22,7 +22,7 @@ export default class MakerCDP {
     this.doUpdate = 0;
     this.cdps = [];
     this.noProxy = sysVars.noProxy || false;
-    this.makerManager = makerManager || null;
+    this.makerManager = services.makerManager || null;
     this.needsUpdate = false;
     this.closing = false;
     this.opening = false;
@@ -38,7 +38,18 @@ export default class MakerCDP {
     this.pethCollateral = toBigNumber(0);
     this._usdCollateral = toBigNumber(0);
     this._governanceFee = toBigNumber(0);
-    console.log(this.makerManager); // todo remove dev item
+
+    // this.proxyAllowanceDai = sysVars.proxyAllowanceDai || toBigNumber(0);
+    // this.proxyAllowanceMkr = sysVars.proxyAllowanceMkr || toBigNumber(0);
+    // this.liquidationPenalty = sysVars.liquidationPenalty;
+    //
+    //
+    // console.log(this.makerManager); // todo remove dev item
+    //
+/*    this.proxyService = services.proxyService || null;
+    this.priceService = services.priceService || null;
+    this.cdpService = services.cdpService || null;*/
+
     if (toInit) this.init(this.cdpId);
   }
 
@@ -257,12 +268,12 @@ export default class MakerCDP {
     this._proxyAddress = await this.makerManager.getProxy();
     this.noProxy = this._proxyAddress === null;
     if (this._proxyAddress) {
-      this.cdp = await this.makerManager.maker.getCdp(
+      this.cdp = await this.makerManager.getCdp(
         cdpId,
         this._proxyAddress
       );
     } else {
-      this.cdp = await this.makerManager.maker.getCdp(cdpId, false);
+      this.cdp = await this.makerManager.getCdp(cdpId, false);
     }
     console.log(this.cdp); // todo remove dev item
     const liqPrice = await this.cdp.getLiquidationPrice();

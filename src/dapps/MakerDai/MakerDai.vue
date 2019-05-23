@@ -172,7 +172,7 @@ export default {
       sysServices: {},
       targetPrice: 0,
       valuesUpdated: 0,
-      wethToPethRatio: toBigNumber(0),
+      wethToPethRatio: toBigNumber(0)
     };
   },
   computed: {
@@ -269,7 +269,33 @@ export default {
       if (this.cdps.length > 0 || this.cdpsWithoutProxy.length > 0) {
         this.cdpDetailsLoaded = true;
         this.makerActive = true;
-        this.makerManager = this;
+        this.makerManager = {
+          _proxyService: this._proxyService,
+          priceService: this.priceService,
+          _cdpService: this._cdpService,
+          doUpdate: this.doUpdate,
+          getProxy: this.getProxy,
+          hasProxy: this.hasProxy,
+          getCdp: this.getMakerCdp,
+          toPeth: this.toPeth,
+          toUSD: this.toUSD,
+          _proxyAddress: this._proxyAddress,
+          liquidationPenalty: this.liquidationPenalty,
+          stabilityFee: this.stabilityFee,
+          ethPrice: this.ethPrice,
+          _pethPrice: this._pethPrice,
+          wethToPethRatio: this.wethToPethRatio,
+          _targetPrice: this._targetPrice,
+          liquidationRatio: this.liquidationRatio,
+          proxyAllowanceDai: this.proxyAllowanceDai,
+          proxyAllowanceMkr: this.proxyAllowanceMkr,
+          _daiToken: this._daiToken,
+          daiBalance: this.daiBalance,
+          _mkrToken: this._mkrToken,
+          mkrBalance: this.mkrBalance,
+          minEth: this.minEth,
+          pethMin: this.pethMin
+        };
         if (
           this.$route.name !== 'create' &&
           this.$route.path.includes('maker-dai')
@@ -383,17 +409,6 @@ export default {
 
       await this.checkAllowances();
 
-      // this.services = {
-      //   priceService: this._priceService,
-      //   cdpService: this._cdpService,
-      //   proxyService: this._proxyService,
-      //   tokenService: this._tokenService
-      // };
-      //
-      // this.values = {
-      //   pethPrice: this._pethPrice,
-      //
-      // }
 
       const { withProxy, withoutProxy } = await this.locateCdps();
       this.cdps = withProxy;
@@ -424,54 +439,65 @@ export default {
     getCdp(cdpId) {
       return this.activeCdps[cdpId];
     },
+    async getMakerCdp(cdpId) {
+      if (this._proxyAddress) {
+        return await this.maker.getCdp(cdpId, this._proxyAddress);
+      }
+      return await this.maker.getCdp(cdpId, false);
+    },
 
     async refresh() {
       await this.doUpdate();
     },
 
     async updateActiveCdp() {
-      console.log(this.cdps); // todo remove dev item
-      console.log(Object.keys(this.activeCdps)); // todo remove dev item
-      const currentCdpIds = Object.keys(this.activeCdps);
-      await this.locateCdps();
-
-      const newCdps = this.cdps.filter(
-        item => !Object.keys(this.activeCdps).includes(item.toString())
-      );
-      console.log('should only include newly found cdps'); // todo remove dev item
-      console.log(this.cdps.filter(
-        item => !Object.keys(this.activeCdps).includes(item.toString())
-      )); // todo remove dev item
-
-      console.log('newCdps', newCdps); // todo remove dev item
-      const newCdpsWithoutProxy = this.cdpsWithoutProxy.filter(
-        item => !Object.keys(this.activeCdps).includes(item.toString())
-      );
-
-      console.log('newCdpsWithoutProxy', newCdpsWithoutProxy); // todo remove dev item
-      const removedCdps = currentCdpIds.filter(
-        item =>
-          !(this.cdps.includes(item.toString()) || this.cdpsWithoutProxy.includes(item.toString()))
-      );
-
-      if (removedCdps.length > 0) {
-        removedCdps.forEach(item => delete this.activeCdps[item]);
-      }
-
-      for (let i = 0; i < newCdps.length; i++) {
-        this.activeCdps[newCdps[i]] = await this.buildCdpObject(newCdps[i]);
-      }
-
-      for (let i = 0; i < newCdpsWithoutProxy.length; i++) {
-        this.activeCdps[newCdpsWithoutProxy[i]] = await this.buildCdpObject(
-          newCdpsWithoutProxy[i],
-          { noProxy: true }
-        );
-      }
-
-      if (this.cdps.length === 0 && this.cdpsWithoutProxy.length === 0) {
-        this.gotoCreate();
-      }
+      // console.log(this.cdps); // todo remove dev item
+      // console.log(Object.keys(this.activeCdps)); // todo remove dev item
+      // const currentCdpIds = Object.keys(this.activeCdps);
+      // await this.locateCdps();
+      //
+      // const newCdps = this.cdps.filter(
+      //   item => !Object.keys(this.activeCdps).includes(item.toString())
+      // );
+      // console.log('should only include newly found cdps'); // todo remove dev item
+      // console.log(
+      //   this.cdps.filter(
+      //     item => !Object.keys(this.activeCdps).includes(item.toString())
+      //   )
+      // ); // todo remove dev item
+      //
+      // console.log('newCdps', newCdps); // todo remove dev item
+      // const newCdpsWithoutProxy = this.cdpsWithoutProxy.filter(
+      //   item => !Object.keys(this.activeCdps).includes(item.toString())
+      // );
+      //
+      // console.log('newCdpsWithoutProxy', newCdpsWithoutProxy); // todo remove dev item
+      // const removedCdps = currentCdpIds.filter(
+      //   item =>
+      //     !(
+      //       this.cdps.includes(item.toString()) ||
+      //       this.cdpsWithoutProxy.includes(item.toString())
+      //     )
+      // );
+      //
+      // if (removedCdps.length > 0) {
+      //   removedCdps.forEach(item => delete this.activeCdps[item]);
+      // }
+      //
+      // for (let i = 0; i < newCdps.length; i++) {
+      //   this.activeCdps[newCdps[i]] = await this.buildCdpObject(newCdps[i]);
+      // }
+      //
+      // for (let i = 0; i < newCdpsWithoutProxy.length; i++) {
+      //   this.activeCdps[newCdpsWithoutProxy[i]] = await this.buildCdpObject(
+      //     newCdpsWithoutProxy[i],
+      //     { noProxy: true }
+      //   );
+      // }
+      //
+      // if (this.cdps.length === 0 && this.cdpsWithoutProxy.length === 0) {
+      //   this.gotoCreate();
+      // }
     },
 
     async doUpdate(route) {
@@ -492,7 +518,7 @@ export default {
           } else if (this.activeCdps[idProp].opening) {
             await this.activeCdps[idProp].updateValues();
           } else {
-            /*this.activeCdps[idProp] = */await this.activeCdps[idProp].update();
+            this.activeCdps[idProp] = await this.activeCdps[idProp].update();
           }
         }
       }
@@ -580,33 +606,66 @@ export default {
         await this._cdpService.give(cdpId, currentProxy);
       }
     },
-
     async buildCdpObject(cdpId, options = {}) {
       console.log('buildCdpObject'); // todo remove dev item
       const sysVars = {
-        ...options
+        ...options,
+        _proxyAddress: this._proxyAddress,
+        liquidationPenalty: this.liquidationPenalty,
+        stabilityFee: this.stabilityFee,
+        ethPrice: this.ethPrice,
+        _pethPrice: this._pethPrice,
+        wethToPethRatio: this.wethToPethRatio,
+        _targetPrice: this._targetPrice,
+        liquidationRatio: this.liquidationRatio,
+        proxyAllowanceDai: this.proxyAllowanceDai,
+        proxyAllowanceMkr: this.proxyAllowanceMkr,
+        _daiToken: this._daiToken,
+        daiBalance: this.daiBalance,
+        _mkrToken: this._mkrToken,
+        mkrBalance: this.mkrBalance,
+        minEth: this.minEth,
+        pethMin: this.pethMin
       };
+
+      if (this._proxyAddress) {
+        this.cdp = await this.getMakerCdp(cdpId, this._proxyAddress);
+      } else {
+        this.cdp = await this.getMakerCdp(cdpId, false);
+      }
 
       const services = {
-        makerManager: this,
+        makerManager: {
+          _proxyService: this._proxyService,
+          priceService: this.priceService,
+          _cdpService: this._cdpService,
+          doUpdate: this.doUpdate,
+          getProxy: this.getProxy,
+          hasProxy: this.hasProxy,
+          getCdp: this.getMakerCdp,
+          toPeth: this.toPeth,
+          toUSD: this.toUSD,
+          _proxyAddress: this._proxyAddress,
+          liquidationPenalty: this.liquidationPenalty,
+          stabilityFee: this.stabilityFee,
+          ethPrice: this.ethPrice,
+          _pethPrice: this._pethPrice,
+          wethToPethRatio: this.wethToPethRatio,
+          _targetPrice: this._targetPrice,
+          liquidationRatio: this.liquidationRatio,
+          proxyAllowanceDai: this.proxyAllowanceDai,
+          proxyAllowanceMkr: this.proxyAllowanceMkr,
+          _daiToken: this._daiToken,
+          daiBalance: this.daiBalance,
+          _mkrToken: this._mkrToken,
+          mkrBalance: this.mkrBalance,
+          minEth: this.minEth,
+          pethMin: this.pethMin
+        },
         web3: this.web3
       };
-      if (this._proxyAddress) {
-        this.cdp = await this.makerManager.maker.getCdp(
-          cdpId,
-          this._proxyAddress
-        );
-      } else {
-        this.cdp = await this.makerManager.maker.getCdp(cdpId, false);
-      }
 
-      const makerCDP = {
-        pethCollateral: '',
-        governanceFee: '',
-        debtValue: ''
-      }
-
-      // const makerCDP = new MakerCDP(cdpId, this, services, sysVars);
+      const makerCDP = new MakerCDP(cdpId, this, services, sysVars);
       if (cdpId) {
         return await makerCDP.init(cdpId);
       }
@@ -704,7 +763,7 @@ export default {
           }
         });
       }
-    },
+    }
   }
 };
 </script>
