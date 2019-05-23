@@ -4,6 +4,10 @@
 
 - Use u2f in windows for ledger [#1100](https://github.com/MyEtherWallet/MyEtherWallet/pull/1100)
 
+### Devop
+
+- Possible random error fix, and sync master to develop [#1101](https://github.com/MyEtherWallet/MyEtherWallet/pull/1101)
+
 ### Release v5.0.12
 
 ### Feature
