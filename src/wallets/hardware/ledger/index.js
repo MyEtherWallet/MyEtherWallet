@@ -7,6 +7,8 @@ import { LEDGER as ledgerType } from '../../bip44/walletTypes';
 import bip44Paths from '../../bip44';
 import HDWalletInterface from '@/wallets/HDWalletInterface';
 import * as HDKey from 'hdkey';
+import platform from 'platform';
+
 import {
   getSignTransactionObject,
   getBufferFromHex,
@@ -124,7 +126,7 @@ const createWallet = async basePath => {
 createWallet.errorHandler = errorHandler;
 const getLedgerTransport = async () => {
   let transport;
-  if (webUsbTransport.isSupported()) {
+  if (webUsbTransport.isSupported() && platform.os.family !== 'Windows') {
     transport = await webUsbTransport.create();
   } else {
     transport = await u2fTransport.create(OPEN_TIMEOUT, LISTENER_TIMEOUT);
