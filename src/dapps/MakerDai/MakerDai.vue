@@ -186,9 +186,6 @@ export default {
     onCreate() {
       return this.$route.name === 'create';
     },
-    // hasProxy() {
-    //   return this.makerManager.hasProxy;
-    // },
     showCdpMigrateButtons() {
       return this.hasProxy() && this.cdpsWithoutProxy.length >= 1;
     },
