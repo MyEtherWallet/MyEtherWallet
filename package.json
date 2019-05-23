@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "5.0.12",
+  "version": "5.0.12-hotfix.1",
   "description": "Client side ethereum wallet",
   "licsense": "MIT",
   "repository": "https://github.com/myetherwallet/myetherwallet",

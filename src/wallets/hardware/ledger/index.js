@@ -124,9 +124,16 @@ const createWallet = async basePath => {
   return _ledgerWallet;
 };
 createWallet.errorHandler = errorHandler;
+
+const isWebUsbSupported = async () => {
+  const isSupported = await webUsbTransport.isSupported();
+  return isSupported && platform.os.family !== 'Windows';
+};
+
 const getLedgerTransport = async () => {
   let transport;
-  if (webUsbTransport.isSupported() && platform.os.family !== 'Windows') {
+  const support = await isWebUsbSupported();
+  if (support) {
     transport = await webUsbTransport.create();
   } else {
     transport = await u2fTransport.create(OPEN_TIMEOUT, LISTENER_TIMEOUT);
