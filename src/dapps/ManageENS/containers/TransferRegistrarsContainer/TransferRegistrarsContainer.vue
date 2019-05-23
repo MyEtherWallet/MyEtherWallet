@@ -43,7 +43,7 @@ export default {
       type: String,
       default: ''
     },
-    owner: {
+    deedOwner: {
       type: String,
       default: ''
     },
@@ -68,13 +68,16 @@ export default {
       return `${this.hostName}.${this.tld}`;
     },
     isOwner() {
-      return this.account.address.toLowerCase() === this.owner.toLowerCase();
+      return (
+        this.account.address.toLowerCase() === this.deedOwner.toLowerCase()
+      );
     }
   },
   mounted() {
     if (this.hostName === '') {
       this.$router.push('/interface/dapps/manage-ens');
     }
+    console.log(this.deedOwner);
   }
 };
 </script>
