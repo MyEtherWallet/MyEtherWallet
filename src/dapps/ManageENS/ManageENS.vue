@@ -65,7 +65,6 @@ import { mapState } from 'vuex';
 import { Toast } from '@/helpers';
 import DNSRegistrar from '@ensdomains/dnsregistrar';
 import BigNumber from 'bignumber.js';
-import { toChecksumAddress } from '@/helpers/addressUtils';
 
 const bip39 = require('bip39');
 
@@ -400,14 +399,7 @@ export default {
             if (legacyState === '2') {
               this.loading = false;
               this.owner = await this.ens.owner(this.parsedDomainName);
-              if (
-                toChecksumAddress(this.account.address) !==
-                toChecksumAddress(this.owner)
-              ) {
-                this.$router.push({ path: 'manage-ens/owned' });
-              } else {
-                this.$router.push({ path: 'manage-ens/transfer-registrar' });
-              }
+              this.$router.push({ path: 'manage-ens/transfer-registrar' });
             } else {
               const isAvailable = await this.registrarControllerContract.methods
                 .available(this.parsedHostName)
