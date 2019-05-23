@@ -20,7 +20,7 @@
             <h4>Balance</h4>
             <div class="balance-and-buttons">
               <p>
-                <b>{{ account.balance }}</b> ETH
+                <b>{{ balance }}</b> ETH
               </p>
               <div class="balance-button-container">
                 <i class="fa fa-refresh fa-lg" />
@@ -88,6 +88,7 @@ export default {
     return {
       tokens: [],
       loading: false,
+      balance: 0,
       otherOptions: [
         {
           name: 'Private Key',
@@ -121,14 +122,19 @@ export default {
   },
   mounted() {
     this.fetchTokens();
+    this.fetchBalance();
   },
   methods: {
     openTxHistory() {
+      // eslint-disable-next-line
       window.open(
         `${this.network.type.blockExplorerAddr.replace('[[address]]', '') +
           this.account.address}`,
         '_blank'
       );
+    },
+    async fetchBalance() {
+      this.balance = await web3.eth.getBalance(this.account.address);
     },
     copy() {
       this.$refs.copyAddress.select();
