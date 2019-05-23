@@ -354,7 +354,7 @@ export default {
       if (this.parsedTld !== '' && isSupported === undefined) {
         Toast.responseHandler(
           `Domain TLD ${this.parsedTld} is not supported in this node!`,
-          Toast.ERROR
+          Toast.ERROR``
         );
         this.loading = false;
       } else if (this.parsedTld === this.registrarTLD) {
@@ -393,12 +393,16 @@ export default {
               RegistrarAbi,
               oldRegistrarAddress
             );
-            const legacyState = await this.legacyRegistrar.methods
-              .state(this.labelHash)
+            const domainStatus = await this.legacyRegistrar.methods
+              .entries(this.labelHash)
               .call();
-            if (legacyState === '2') {
+            if (domainStatus[0] === '2') {
+              const deedContract = new this.web3.eth.Contract(
+                DeedContractAbi,
+                domainStatus[1]
+              );
+              this.deedOwner = await deedContract.methods.owner().call();
               this.loading = false;
-              this.owner = await this.ens.owner(this.parsedDomainName);
               this.$router.push({ path: 'manage-ens/transfer-registrar' });
             } else {
               const isAvailable = await this.registrarControllerContract.methods
