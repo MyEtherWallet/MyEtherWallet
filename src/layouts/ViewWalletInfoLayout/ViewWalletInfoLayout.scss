@@ -22,9 +22,13 @@
     justify-content: space-between;
 
     .wallet-info {
+      background-color: $white;
+      border-bottom-left-radius: 5px;
+      border-bottom-right-radius: 5px;
       display: flex;
       flex-direction: column;
-      width: 74%;
+      margin-right: 10px;
+      width: 75%;
 
       .wallet-info-header {
         border-top-left-radius: 5px;
@@ -43,10 +47,91 @@
           color: $white !important;
         }
       }
+
+      .balance-container {
+        padding: 10px;
+
+        .balance-main-container {
+          align-items: center;
+          background-color: $light-green-1;
+          border-radius: 5px;
+          display: flex;
+          justify-content: space-between;
+          padding: 10px 30px;
+          width: 100%;
+
+          .balance-and-buttons {
+            display: flex;
+          }
+
+          .balance-button-container {
+            i {
+              cursor: pointer;
+              margin: 0 20px;
+            }
+
+            img {
+              cursor: pointer;
+            }
+          }
+        }
+      }
+    }
+
+    .blockie-container {
+      align-items: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .account-details {
+      padding-top: 50px;
     }
 
     .wallet-tokens {
+      min-width: 300px;
       width: 25%;
+    }
+
+    .address-copy-container {
+      background-color: $light-green-1;
+      border-radius: 5px;
+      display: flex;
+      margin: 10px 0;
+      max-width: 300px;
+      padding: 20px 30px;
+      position: relative;
+
+      input {
+        position: absolute;
+        opacity: 0;
+      }
+
+      img {
+        cursor: pointer;
+        margin-left: 5px;
+      }
+    }
+
+    .other-options {
+      align-items: center;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      margin: 0 auto;
+      width: 380px;
+
+      .option-item {
+        cursor: pointer;
+        display: flex;
+        justify-content: flex-start;
+        padding: 30px;
+
+        img {
+          margin-right: 10px;
+        }
+      }
     }
   }
 }
