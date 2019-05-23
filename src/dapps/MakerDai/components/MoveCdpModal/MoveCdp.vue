@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import StandardButton from '@/components/Buttons/StandardButton';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
 import CheckBox from '../CheckBox';
@@ -102,10 +102,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      web3: 'web3',
-      network: 'network'
-    }),
+    ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
     btnActive() {
       return Misc.isValidETHAddress(this.address) && this.checkBoxChecked;
     }

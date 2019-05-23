@@ -129,7 +129,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import ExpendingOption from '@/components/ExpendingOption';
 import ethUnit from 'ethjs-unit';
 import StandardButton from '@/components/Buttons/StandardButton';
@@ -190,11 +190,8 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      web3: 'web3',
-      network: 'network',
-      account: 'account'
-    }),
+    ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
+
     amountPresent() {
       return (
         (this.amount || this.amount !== '') && !toBigNumber(this.amount).lte(0)

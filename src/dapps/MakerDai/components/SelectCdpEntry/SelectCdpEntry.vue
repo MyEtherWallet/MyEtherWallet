@@ -91,7 +91,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
@@ -123,13 +123,7 @@ export default {
     return {};
   },
   computed: {
-    ...mapGetters({
-      account: 'account',
-      gasPrice: 'gasPrice',
-      web3: 'web3',
-      network: 'network',
-      ens: 'ens'
-    }),
+    ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
     hasProxy() {
       if (this.aCdp) {
         return !this.aCdp.noProxy;

@@ -1,4 +1,7 @@
 import BigNumber from 'bignumber.js';
+import Vue from 'vue';
+
+const Observer = new Vue().$data.__ob__.constructor;
 
 export function displayPercentValue(raw) {
   if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);
@@ -18,4 +21,17 @@ export function displayFixedPercent(raw, decimals = 3, round = true) {
     return value;
   }
   return '--';
+}
+
+export function prevent(val) {
+  if (val) {
+    // Set dummy observer on value
+    Object.defineProperty(val, '__ob__', {
+      value: new Observer({}),
+      enumerable: false,
+      configurable: true
+    });
+  }
+
+  return val;
 }

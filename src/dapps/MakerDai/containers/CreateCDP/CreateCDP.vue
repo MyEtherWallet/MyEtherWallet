@@ -152,7 +152,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import ethUnit from 'ethjs-unit';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
@@ -256,13 +256,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      account: 'account',
-      gasPrice: 'gasPrice',
-      web3: 'web3',
-      network: 'network',
-      ens: 'ens'
-    }),
+    ...mapState(['account', 'ens', 'gasPrice', 'web3', 'network']),
     validInputs() {
       if (toBigNumber(this.ethQty).isNaN() || toBigNumber(this.daiQty).isNaN())
         return false;

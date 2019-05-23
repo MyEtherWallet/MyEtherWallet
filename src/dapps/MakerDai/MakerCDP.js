@@ -1,5 +1,6 @@
 import Maker from '@makerdao/dai';
 import BigNumber from 'bignumber.js';
+import { prevent } from './helpers';
 
 const { MKR, DAI } = Maker;
 
@@ -22,7 +23,7 @@ export default class MakerCDP {
     this.doUpdate = 0;
     this.cdps = [];
     this.noProxy = sysVars.noProxy || false;
-    this.makerManager = makerManager || null;
+    this.makerManager = prevent(makerManager) || null;
     this.needsUpdate = false;
     this.closing = false;
     this.opening = false;
@@ -303,9 +304,9 @@ export default class MakerCDP {
       this.needsUpdate = false;
       await this.updateValues(this.cdpId);
       this.doUpdate++;
-      return this;
+      return prevent(this);
     }
-    return this;
+    return prevent(this);
   }
 
   async getProxy() {
@@ -481,7 +482,7 @@ export default class MakerCDP {
     // will also need to check if there is enough allowance
     // const enoughToWipe = await this.canCloseCdp();
     // if (enoughToWipe) {
-    console.log('close'); // todo remove dev item
+    // console.log('close'); // todo remove dev item
     try {
       this.needsUpdate = true;
       this.closing = true;

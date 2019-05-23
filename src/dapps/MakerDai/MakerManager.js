@@ -2,6 +2,7 @@ import BigNumber from 'bignumber.js';
 import { toChecksumAddress } from '@/helpers/addressUtils';
 import MakerCDP from './MakerCDP';
 import Maker from '@makerdao/dai';
+import { prevent } from './helpers';
 
 const { MKR, DAI } = Maker;
 
@@ -22,7 +23,7 @@ export default class MakerManager {
     this.creatingProxy = false;
     this._currentAddress = props.account.address;
     this.maker = function() {
-      return props.maker;
+      return prevent(props.maker);
     };
 
     this.makerDao = props.maker;
