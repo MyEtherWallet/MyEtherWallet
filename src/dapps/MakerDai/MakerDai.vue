@@ -172,7 +172,7 @@ export default {
       sysServices: {},
       targetPrice: 0,
       valuesUpdated: 0,
-      wethToPethRatio: toBigNumber(0)
+      wethToPethRatio: toBigNumber(0),
     };
   },
   computed: {
@@ -280,54 +280,7 @@ export default {
         this.gotoCreate();
       }
     },
-    gotoHome() {
-      this.$router.push({
-        name: 'Maker'
-      });
-    },
-    gotoCreate() {
-      if (this.$route.path.includes('maker-dai')) {
-        this.$router.push({
-          name: 'create'
-        });
-      }
-    },
-    goToManage() {
-      if (this.$route.path.includes('maker-dai')) {
-        if (this.cdps.length === 1) {
-          this.$router.push({
-            name: 'manage',
-            params: {
-              cdpId: this.cdps[0]
-            }
-          });
-        } else if (this.cdpsWithoutProxy.length === 1) {
-          this.$router.push({
-            name: 'migrate',
-            params: {
-              cdpId: this.cdpsWithoutProxy[0]
-            }
-          });
-        } else if (this.showManage) {
-          // eslint-disable-next-line
-          this.$router.push({
-            name: 'select'
-          });
-        } else {
-          this.gotoCreate();
-        }
-      }
-    },
-    openManage(cdpId) {
-      if (this.$route.path.includes('maker-dai')) {
-        this.$router.push({
-          name: 'manage',
-          params: {
-            cdpId: cdpId
-          }
-        });
-      }
-    },
+
     async buildEmpty() {
       // const services = {
       //   web3: this.web3
@@ -423,10 +376,10 @@ export default {
       this.wethToPethRatio = toBigNumber(wethToPethRatio);
       this._proxyAddress = await this._proxyService.currentProxy();
 
-      this._daiToken = this._tokenService.getToken(DAI);
-      this.daiBalance = (await this._daiToken.balance()).toBigNumber();
-      this._mkrToken = this._tokenService.getToken(MKR);
-      this.mkrBalance = (await this._mkrToken.balance()).toBigNumber();
+      this.daiToken = this._tokenService.getToken(DAI);
+      this.daiBalance = (await this.daiToken.balance()).toBigNumber();
+      this.mkrToken = this._tokenService.getToken(MKR);
+      this.mkrBalance = (await this.mkrToken.balance()).toBigNumber();
 
       await this.checkAllowances();
 
@@ -544,8 +497,8 @@ export default {
         }
       }
 
-      this.daiBalance = (await this._daiToken.balance()).toBigNumber();
-      this.mkrBalance = (await this._mkrToken.balance()).toBigNumber();
+      this.daiBalance = (await this.daiToken.balance()).toBigNumber();
+      this.mkrBalance = (await this.mkrToken.balance()).toBigNumber();
       await this.checkAllowances();
 
       if (afterClose || afterOpen) {
@@ -560,12 +513,12 @@ export default {
 
     async checkAllowances() {
       if (this._proxyAddress) {
-        this._proxyAllowanceDai = (await this._daiToken.allowance(
+        this._proxyAllowanceDai = (await this.daiToken.allowance(
           this.account.address,
           this._proxyAddress
         )).toBigNumber();
 
-        this._proxyAllowanceMkr = (await this._mkrToken.allowance(
+        this._proxyAllowanceMkr = (await this.mkrToken.allowance(
           this.account.address,
           this._proxyAddress
         )).toBigNumber();
@@ -638,8 +591,22 @@ export default {
         makerManager: this,
         web3: this.web3
       };
+      if (this._proxyAddress) {
+        this.cdp = await this.makerManager.maker.getCdp(
+          cdpId,
+          this._proxyAddress
+        );
+      } else {
+        this.cdp = await this.makerManager.maker.getCdp(cdpId, false);
+      }
 
-      const makerCDP = new MakerCDP(cdpId, this, services, sysVars);
+      const makerCDP = {
+        pethCollateral: '',
+        governanceFee: '',
+        debtValue: ''
+      }
+
+      // const makerCDP = new MakerCDP(cdpId, this, services, sysVars);
       if (cdpId) {
         return await makerCDP.init(cdpId);
       }
@@ -689,7 +656,55 @@ export default {
           return i;
         }
       }
-    }
+    },
+    gotoHome() {
+      this.$router.push({
+        name: 'Maker'
+      });
+    },
+    gotoCreate() {
+      if (this.$route.path.includes('maker-dai')) {
+        this.$router.push({
+          name: 'create'
+        });
+      }
+    },
+    goToManage() {
+      if (this.$route.path.includes('maker-dai')) {
+        if (this.cdps.length === 1) {
+          this.$router.push({
+            name: 'manage',
+            params: {
+              cdpId: this.cdps[0]
+            }
+          });
+        } else if (this.cdpsWithoutProxy.length === 1) {
+          this.$router.push({
+            name: 'migrate',
+            params: {
+              cdpId: this.cdpsWithoutProxy[0]
+            }
+          });
+        } else if (this.showManage) {
+          // eslint-disable-next-line
+          this.$router.push({
+            name: 'select'
+          });
+        } else {
+          this.gotoCreate();
+        }
+      }
+    },
+    openManage(cdpId) {
+      if (this.$route.path.includes('maker-dai')) {
+        this.$router.push({
+          name: 'manage',
+          params: {
+            cdpId: cdpId
+          }
+        });
+      }
+    },
   }
 };
 </script>
