@@ -477,20 +477,28 @@ export default {
     },
 
     async updateActiveCdp() {
+      console.log(this.cdps); // todo remove dev item
+      console.log(Object.keys(this.activeCdps)); // todo remove dev item
       const currentCdpIds = Object.keys(this.activeCdps);
       await this.locateCdps();
 
       const newCdps = this.cdps.filter(
-        item => !Object.keys(this.activeCdps).includes(item)
+        item => !Object.keys(this.activeCdps).includes(item.toString())
       );
+      console.log('should only include newly found cdps'); // todo remove dev item
+      console.log(this.cdps.filter(
+        item => !Object.keys(this.activeCdps).includes(item.toString())
+      )); // todo remove dev item
 
+      console.log('newCdps', newCdps); // todo remove dev item
       const newCdpsWithoutProxy = this.cdpsWithoutProxy.filter(
-        item => !Object.keys(this.activeCdps).includes(item)
+        item => !Object.keys(this.activeCdps).includes(item.toString())
       );
 
+      console.log('newCdpsWithoutProxy', newCdpsWithoutProxy); // todo remove dev item
       const removedCdps = currentCdpIds.filter(
         item =>
-          !(this.cdps.includes(item) || this.cdpsWithoutProxy.includes(item))
+          !(this.cdps.includes(item.toString()) || this.cdpsWithoutProxy.includes(item.toString()))
       );
 
       if (removedCdps.length > 0) {
@@ -531,7 +539,7 @@ export default {
           } else if (this.activeCdps[idProp].opening) {
             await this.activeCdps[idProp].updateValues();
           } else {
-            this.activeCdps[idProp] = await this.activeCdps[idProp].update();
+            /*this.activeCdps[idProp] = */await this.activeCdps[idProp].update();
           }
         }
       }
