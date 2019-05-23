@@ -204,7 +204,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import BottomHelpLink from '@/components/BottomHelpLink';
@@ -303,13 +303,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      account: 'account',
-      gasPrice: 'gasPrice',
-      web3: 'web3',
-      network: 'network',
-      ens: 'ens'
-    }),
+    ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
     noProxy() {
       if (this.activeCdp) {
         return this.activeCdp.noProxy;

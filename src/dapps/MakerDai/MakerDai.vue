@@ -10,7 +10,7 @@
             <button class="move-btn" @click="showMove">
               <h4>Move CDP</h4>
             </button>
-            <div v-if="!((!hasProxy && !onCreate) || showCdpMigrateButtons)">
+            <div v-if="!((!hasProxy() && !onCreate) || showCdpMigrateButtons)">
               <button class="close-btn" @click="showClose">
                 <h4>Close CDP</h4>
               </button>
@@ -21,7 +21,7 @@
     </interface-container-title>
 
     <div v-show="makerActive" class="buttons-container">
-      <div v-if="!hasProxy && !onCreate">
+      <div v-if="!hasProxy() && !onCreate">
         <i class="fa fa-question-circle"></i>
         <div class="dapps-button" @click="buildProxy">
           <h4>Create Proxy</h4>
@@ -75,7 +75,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
@@ -88,6 +88,7 @@ import { Toast } from '@/helpers';
 import MakerCDP from './MakerCDP';
 import MakerManager from './MakerManager';
 import MewPlugin from 'mew-maker-plugin';
+import { prevent } from './helpers';
 
 const toBigNumber = num => {
   return new BigNumber(num);
@@ -161,13 +162,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      account: 'account',
-      gasPrice: 'gasPrice',
-      web3: 'web3',
-      network: 'network',
-      ens: 'ens'
-    }),
+    ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
     maxDaiDraw() {
       if (this.ethQty <= 0) return 0;
       return bnOver(this.ethPrice, this.ethQty, this.liquidationRatio);
@@ -191,11 +186,11 @@ export default {
     onCreate() {
       return this.$route.name === 'create';
     },
-    hasProxy() {
-      return this.makerManager.hasProxy;
-    },
+    // hasProxy() {
+    //   return this.makerManager.hasProxy;
+    // },
     showCdpMigrateButtons() {
-      return this.hasProxy && this.cdpsWithoutProxy.length >= 1;
+      return this.hasProxy() && this.cdpsWithoutProxy.length >= 1;
     },
     listCdps() {
       return this.cdps.length > 1 || this.cdpsWithoutProxy.length > 1;
@@ -226,6 +221,9 @@ export default {
     await this.setup();
   },
   methods: {
+    hasProxy() {
+      return this.makerManager.hasProxy;
+    },
     showClose() {
       this.openCloseModal = true;
     },
@@ -257,16 +255,18 @@ export default {
         }
       });
 
-      this.makerManager = new MakerManager({
-        account: this.account,
-        web3: web3,
-        maker: maker,
-        routeHandlers: {
-          home: this.gotoHome,
-          create: this.gotoCreate,
-          manage: this.goToManage
-        }
-      });
+      this.makerManager = prevent(
+        new MakerManager({
+          account: this.account,
+          web3: web3,
+          maker: maker,
+          routeHandlers: {
+            home: this.gotoHome,
+            create: this.gotoCreate,
+            manage: this.goToManage
+          }
+        })
+      );
 
       await this.makerManager.init();
 

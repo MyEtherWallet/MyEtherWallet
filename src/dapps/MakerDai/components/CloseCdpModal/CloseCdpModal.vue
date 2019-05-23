@@ -106,7 +106,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import StandardButton from '@/components/Buttons/StandardButton';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
 import SwapWidget from '@/components/SwapWidget';
@@ -194,11 +194,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      account: 'account',
-      web3: 'web3',
-      network: 'network'
-    }),
+    ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
     getfeeOwed() {
       const result = this.activeCdp.governanceFeeOwed;
       return this.displayFixedValue(result, 8);
@@ -291,7 +287,7 @@ export default {
     async checkMakerToClose() {
       if (this.activeCdp) {
         this.closable = await this.activeCdp.canCloseCdp();
-        console.log(this.closable); // todo remove dev item
+        // console.log(this.closable); // todo remove dev item
         return this.closable;
       }
       this.closable = false;

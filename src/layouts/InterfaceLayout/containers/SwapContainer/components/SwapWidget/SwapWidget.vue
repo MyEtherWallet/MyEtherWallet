@@ -229,7 +229,7 @@
 <script>
 import BigNumber from 'bignumber.js';
 import debug from 'debug';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 
 import { Toast } from '@/helpers';
 import ProvidersRadioSelector from '../ProvidersRadioSelector';
@@ -381,13 +381,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      account: 'account',
-      ens: 'ens',
-      gasPrice: 'gasPrice',
-      web3: 'web3',
-      network: 'network'
-    }),
+    ...mapState(['account', 'ens', 'gasPrice', 'web3', 'network']),
     bestRate() {
       try {
         if (this.providerData.length > 0) {
