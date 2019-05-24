@@ -325,6 +325,7 @@ export default {
     this.sysServices = {};
   },
   async mounted() {
+    // console.log(toBigNumber('').minus(5)); // todo remove dev item
     await this.setup();
   },
   methods: {

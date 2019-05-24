@@ -300,7 +300,7 @@ export default {
     newCollateralRatio() {
       if (this.values.debtValue && this.amount > 0) {
         return this.calcCollatRatioDaiChg(
-          this.values.debtValue.minus(this.amount)
+          toBigNumber(this.values.debtValue).minus(this.amount)
         );
       } else if (this.values) {
         return this.values.collatRatio;
@@ -310,7 +310,7 @@ export default {
     newCollateralRatioSafe() {
       if (this.values.debtValue && this.amount > 0) {
         const ratio = this.calcCollatRatioDaiChg(
-          this.values.debtValue.minus(this.amount)
+          toBigNumber(this.values.debtValue).minus(this.amount)
         );
         if (ratio.lte(new BigNumber(0.000009))) {
           return true;
@@ -324,7 +324,7 @@ export default {
     newCollateralRatioInvalid() {
       if (this.values.debtValue && this.amount > 0) {
         const ratio = this.calcCollatRatioDaiChg(
-          this.values.debtValue.minus(this.amount)
+          toBigNumber(this.values.debtValue).minus(this.amount)
         );
         if (ratio.lte(new BigNumber(0.000009))) {
           return true;
@@ -338,7 +338,7 @@ export default {
     newLiquidationPrice() {
       if (this.values.debtValue && this.amount > 0) {
         return this.calcLiquidationPriceDaiChg(
-          this.values.debtValue.minus(this.amount)
+          toBigNumber(this.values.debtValue).minus(this.amount)
         );
       } else if (this.values.liquidationPrice) {
         return this.values.liquidationPrice;
@@ -401,7 +401,7 @@ export default {
       return toBigNumber(val).gt(0);
     },
     maxDai() {
-      this.amount = this.values.maxDai.minus(this.values.maxDai.times(0.01));
+      this.amount = toBigNumber(this.values.maxDai).minus(toBigNumber(this.values.maxDai).times(0.01));
     },
     currentDai() {
       this.amount = this.values.debtValue;

@@ -254,7 +254,7 @@ export default {
     newCollateralRatio() {
       if (this.canCompute) {
         return this.calcCollatRatioEthChg(
-          this.values.ethCollateral.minus(this.amount)
+          toBigNumber(this.values.ethCollateral).minus(this.amount)
         );
       } else if (this.values) {
         return this.values.collatRatio;
@@ -278,7 +278,7 @@ export default {
     newLiquidationPrice() {
       if (this.canCompute) {
         return this.calcLiquidationPriceEthChg(
-          this.values.ethCollateral.minus(this.amount)
+          toBigNumber(this.values.ethCollateral).minus(this.amount)
         );
       } else if (this.values) {
         return this.values.liquidationPrice;
