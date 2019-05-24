@@ -259,7 +259,7 @@ export default {
     newCollateralRatioInvalid() {
       if (this.values && this.amount > 0) {
         return this.calcCollatRatioEthChg(
-          this.values.ethCollateral.plus(this.amount)
+          toBigNumber(this.values.ethCollateral).plus(this.amount)
         ).lte(1.5);
       } else if (this.values) {
         return toBigNumber(this.values.collatRatio).lte(1.5);

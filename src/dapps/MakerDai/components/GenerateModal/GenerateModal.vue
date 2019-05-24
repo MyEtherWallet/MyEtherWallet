@@ -262,32 +262,34 @@ export default {
       if (this.canCompute) {
         return this.displayFixedValue(
           this.displayPercentValue(
-            this.calcCollatRatioDaiChg(this.values.debtValue.plus(this.amount))
+            this.calcCollatRatioDaiChg(
+              toBigNumber(this.values.debtValue).plus(this.amount)
+            )
           )
         );
       }
       return '--';
     },
     newCollateralRatioSafe() {
-      if (this.canCompute && this.values.debtValue) {
+      if (this.canCompute) {
         return this.calcCollatRatioDaiChg(
-          this.values.debtValue.plus(this.amount)
+          toBigNumber(this.values.debtValue).plus(this.amount)
         ).gte(2);
       }
       return true;
     },
     newCollateralRatioInvalid() {
-      if (this.canCompute && this.values.debtValue) {
+      if (this.canCompute) {
         return this.calcCollatRatioDaiChg(
-          this.values.debtValue.plus(this.amount)
+          toBigNumber(this.values.debtValue).plus(this.amount)
         ).lte(1.5);
       }
       return true;
     },
     newLiquidationPrice() {
-      if (this.canCompute && this.values.debtValue) {
+      if (this.canCompute) {
         return this.calcLiquidationPriceDaiChg(
-          this.values.debtValue.plus(this.amount)
+          toBigNumber(this.values.debtValue).plus(this.amount)
         );
       } else if (this.values) {
         return this.values.liquidationPrice;
@@ -315,7 +317,9 @@ export default {
       return toBigNumber(val).gt(0);
     },
     maxDai() {
-      this.amount = this.values.maxDai.minus(this.values.maxDai.times(0.01));
+      this.amount = toBigNumber(this.values.maxDai).minus(
+        toBigNumber(this.values.maxDai).times(0.01)
+      );
       this.$forceUpdate();
     },
     currentDai() {
