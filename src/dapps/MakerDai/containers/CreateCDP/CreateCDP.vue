@@ -252,10 +252,28 @@ export default {
       type: Function,
       default: function() {}
     },
-    makerManager: {
+    values: {
       type: Object,
       default: function() {
-        return {};
+        return {
+          maxPethDraw: '',
+          maxEthDraw: '',
+          maxUsdDraw: '',
+          ethCollateral: '',
+          pethCollateral: '',
+          usdCollateral: '',
+          debtValue: '',
+          maxDai: '',
+          collateralRatio: '',
+          cdpId: '',
+          stabilityFee: '',
+          minEth: '',
+          liquidationRatio: '',
+          wethToPethRatio: '',
+          liquidationPenalty: '',
+          targetPrice: '',
+          pethPrice: ''
+        };
       }
     }
   },
@@ -277,8 +295,7 @@ export default {
       if (toBigNumber(this.ethQty).isNaN() || toBigNumber(this.daiQty).isNaN())
         return false;
       if (toBigNumber(this.ethQty).gt(0)) {
-        if (toBigNumber(this.ethQty).lte(this.makerManager.minEth))
-          return false;
+        if (toBigNumber(this.ethQty).lte(this.values.minEth)) return false;
         if (toBigNumber(this.maxDaiDraw).lte(toBigNumber(this.daiQty)))
           return false;
         return toBigNumber(ethUnit.toWei(this.ethQty, 'ether').toString()).lte(
@@ -380,7 +397,8 @@ export default {
       this.$refs.daiconfirmation.$refs.modal.show();
     },
     toUSD(eth) {
-      const toUsd = this.makerManager.toUSD(eth);
+      if (eth === undefined || eth === null) return toBigNumber(0);
+      const toUsd = this.ethPrice.times(toBigNumber(eth));
       if (toUsd.lt(0)) {
         return toBigNumber(0);
       }
@@ -388,13 +406,14 @@ export default {
     },
 
     toPeth(eth) {
-      return this.makerManager.toPeth(eth);
+      if (!toBigNumber(eth).eq(0)) {
+        return toBigNumber(eth).div(this.wethToPethRatio);
+      }
+      return toBigNumber(0);
     },
-
     fromPeth(peth) {
       if (!toBigNumber(peth).eq(0)) {
         return toBigNumber(peth).times(this.wethToPethRatio);
-        // return toBigNumber(this._wethToPethRatio).div(peth);
       }
       return toBigNumber(0);
     },
@@ -453,22 +472,6 @@ export default {
         }
       }
       return 0;
-    },
-
-    calcCollatRatioDaiChg(daiQty) {
-      return toBigNumber(this.calcCollatRatio(this.ethCollateral, daiQty));
-    },
-
-    calcCollatRatioEthChg(ethQty) {
-      return toBigNumber(this.calcCollatRatio(ethQty, this._debtValue));
-    },
-
-    calcLiquidationPriceDaiChg(daiQty) {
-      return toBigNumber(this.calcLiquidationPrice(this.ethCollateral, daiQty));
-    },
-
-    calcLiquidationPriceEthChg(ethQty) {
-      return toBigNumber(this.calcLiquidationPrice(ethQty, this._debtValue));
     }
   }
 };

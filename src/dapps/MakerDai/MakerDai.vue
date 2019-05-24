@@ -389,6 +389,17 @@ export default {
       this.mkrToken = this._tokenService.getToken(MKR);
       this.mkrBalance = (await this.mkrToken.balance()).toBigNumber();
 
+      const minEth = toBigNumber(this.pethMin).times(this.wethToPethRatio);
+      this.systemValues = {
+        stabilityFee: stabilityFee,
+        minEth: minEth,
+        liquidationRatio: liquidationRatio,
+        wethToPethRatio: wethToPethRatio,
+        liquidationPenalty: liquidationPenalty,
+        targetPrice: targetPrice,
+        pethPrice: pethPrice
+      };
+
       await this.checkAllowances();
 
       const { withProxy, withoutProxy } = await this.locateCdps();
@@ -527,10 +538,11 @@ export default {
       const _proxyAllowanceDai = this._proxyAllowanceDai;
       const _proxyAllowanceMkr = this._proxyAllowanceMkr;
       const toPeth = this.toPeth;
-      const stabilityFee = this.stabilityFee;
+      const systemValues = this.systemValues;
       const valuesToManage = {
+        ...systemValues,
         cdpId: cdpId,
-        stabilityFee: stabilityFee,
+        // stabilityFee: stabilityFee,
         maxPethDraw: currentCdp.maxPethDraw,
         maxEthDraw: currentCdp.maxEthDraw,
         maxUsdDraw: currentCdp.maxUsdDraw,
@@ -896,6 +908,7 @@ export default {
     },
     gotoCreate() {
       if (this.$route.path.includes('maker-dai')) {
+        this.activeValues = this.systemValues;
         this.$router.push({
           name: 'create'
         });
