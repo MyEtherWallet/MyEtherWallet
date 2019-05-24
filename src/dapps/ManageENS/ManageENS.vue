@@ -601,17 +601,18 @@ export default {
       }
     },
     updateDomainName(value) {
-      if (this.parsedTld === this.registrarTLD) {
-        this.domainNameErr = value.substr(0, 2) === '0x' || value.length < 7;
-      } else {
-        this.domainNameErr = false;
-      }
       try {
         this.domainName = normalise(value);
       } catch (e) {
         Toast.responseHandler(e, Toast.WARN);
         this.domainNameErr = true;
         return;
+      }
+      if (this.parsedTld === this.registrarTLD) {
+        this.domainNameErr =
+          value.substr(0, 2) === '0x' || this.parsedHostName.length < 7;
+      } else {
+        this.domainNameErr = false;
       }
     },
     async getMoreInfo(deedOwner) {
