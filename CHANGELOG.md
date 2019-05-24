@@ -1,3 +1,5 @@
+### Release v5.0.12-hotfix.2
+
 ### Bug
 
 - Fixes refresh page on mnemonic wallet submit [#1108](https://github.com/MyEtherWallet/MyEtherWallet/pull/1108)
