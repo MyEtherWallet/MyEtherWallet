@@ -136,12 +136,15 @@ export default {
     passwordInputViewChange() {
       this.password = '';
     },
-    unlockWallet() {
+    unlockWallet(e) {
+      e.preventDefault();
+      e.stopPropagation();
       this.spinner = true;
       MnemonicWallet(this.mnemonicPhrase.join(' '), this.password)
         .then(wallet => {
           this.password = '';
           this.spinner = false;
+          this.$refs.mnemonicPhrase.hide();
           this.hardwareWalletOpen(wallet);
         })
         .catch(e => {
