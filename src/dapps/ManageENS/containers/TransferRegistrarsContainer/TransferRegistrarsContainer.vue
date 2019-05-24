@@ -77,7 +77,6 @@ export default {
     if (this.hostName === '') {
       this.$router.push('/interface/dapps/manage-ens');
     }
-    console.log(this.deedOwner);
   }
 };
 </script>
