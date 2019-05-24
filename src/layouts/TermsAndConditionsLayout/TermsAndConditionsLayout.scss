@@ -7,26 +7,26 @@
   background-position: right top, left 80px;
   background-repeat: no-repeat, no-repeat;
   padding: 60px 0;
-
-  .page-container {
-    padding: 60px 0;
-
-    .content-width-limit {
-      margin: 0 auto;
-      max-width: 620px;
-    }
-
-    .page-header {
-      margin-bottom: 70px;
-      text-align: center;
-
-      p {
-        margin: 0 auto;
-        max-width: 700px;
-      }
-    }
-  }
 } // .wrap
+
+
+.page-container {
+  .content-width-limit {
+    margin: 0 auto;
+    max-width: 620px;
+  }
+}
+
+
+.page-header {
+  margin-bottom: 70px;
+  text-align: center;
+
+  p {
+    margin: 0 auto;
+    max-width: 700px;
+  }
+}
 
 .content {
   h6 {
