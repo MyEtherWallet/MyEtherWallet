@@ -282,7 +282,14 @@ export default {
           debtValue: '',
           maxDai: '',
           collateralRatio: '',
-          cdpId: ''
+          cdpId: '',
+          stabilityFee: '',
+          minEth: '',
+          liquidationRatio: '',
+          wethToPethRatio: '',
+          liquidationPenalty: '',
+          targetPrice: '',
+          pethPrice: ''
         };
       }
     },
