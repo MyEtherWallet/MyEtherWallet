@@ -354,7 +354,7 @@ export default {
       if (this.parsedTld !== '' && isSupported === undefined) {
         Toast.responseHandler(
           `Domain TLD ${this.parsedTld} is not supported in this node!`,
-          Toast.ERROR``
+          Toast.ERROR
         );
         this.loading = false;
       } else if (this.parsedTld === this.registrarTLD) {
