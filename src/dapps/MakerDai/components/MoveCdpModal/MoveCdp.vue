@@ -71,10 +71,21 @@ export default {
       type: String,
       default: ''
     },
-    activeCdp: {
+    values: {
       type: Object,
       default: function() {
-        return {};
+        return {
+          maxPethDraw: '',
+          maxEthDraw: '',
+          maxUsdDraw: '',
+          ethCollateral: '',
+          pethCollateral: '',
+          usdCollateral: '',
+          debtValue: '',
+          maxDai: '',
+          collateralRatio: '',
+          cdpId: ''
+        };
       }
     }
   },
@@ -130,6 +141,7 @@ export default {
     },
     async moveCdp() {
       if (Misc.isValidETHAddress(this.address)) {
+        this.$emit('moveCdp', this.address);
         this.activeCdp.moveCdp(this.address);
         this.closeModal();
       }

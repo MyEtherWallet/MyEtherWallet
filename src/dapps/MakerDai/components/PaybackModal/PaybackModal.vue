@@ -31,7 +31,7 @@
             {{ $t('dappsMaker.getMkr') }}
           </p>
         </div>
-        <div v-if="action === 'payback'" class="input-container">
+        <div class="input-container">
           <div class="top-buttons">
             <p @click="currentDai">{{ $t('dappsMaker.setMax') }}</p>
           </div>
@@ -47,9 +47,7 @@
               <p>{{ $t('dappsMaker.outstandingDai') }}</p>
               <p>
                 <b>{{
-                  activeCdp.debtValue
-                    ? displayFixedValue(activeCdp.debtValue, 3)
-                    : 0
+                  values.debtValue ? displayFixedValue(values.debtValue, 3) : 0
                 }}</b>
                 DAI
               </p>
@@ -57,7 +55,7 @@
             <li>
               <p>{{ $t('dappsMaker.stabilityFeeOwed') }}</p>
               <p>
-                <b>{{ activeCdp.governanceFeeOwed }}</b> MKR
+                <b>{{ values.governanceFeeOwed }}</b> MKR
               </p>
               <!-- TODO: fix-->
             </li>
@@ -148,11 +146,38 @@ export default {
       type: String,
       default: ''
     },
-    activeCdp: {
+    values: {
       type: Object,
       default: function() {
-        return {};
+        return {
+          maxPethDraw: '',
+          maxEthDraw: '',
+          maxUsdDraw: '',
+          ethCollateral: '',
+          pethCollateral: '',
+          usdCollateral: '',
+          debtValue: '',
+          maxDai: '',
+          collateralRatio: '',
+          cdpId: ''
+        };
       }
+    },
+    calcCollatRatioEthChg: {
+      type: Function,
+      default: function() {}
+    },
+    calcLiquidationPriceEthChg: {
+      type: Function,
+      default: function() {}
+    },
+    calcCollatRatioDaiChg: {
+      type: Function,
+      default: function() {}
+    },
+    calcLiquidationPriceDaiChg: {
+      type: Function,
+      default: function() {}
     }
   },
   data() {
@@ -211,7 +236,7 @@ export default {
       );
     },
     canCompute() {
-      return this.activeCdp && this.amountPresent;
+      return this.values && this.amountPresent;
     },
     allOk() {
       if (this.amountPresent) {
@@ -229,8 +254,8 @@ export default {
     paybackFee() {
       if (this.amount || this.amount !== '') {
         return toBigNumber(this.amount)
-          .div(this.activeCdp.debtValue)
-          .times(this.activeCdp.governanceFeeOwed);
+          .div(this.values.debtValue)
+          .times(this.values.governanceFeeOwed);
       }
       return 0;
     },
@@ -254,14 +279,14 @@ export default {
     canWithdrawEthAmount() {
       if (this.amount || this.amount !== '') {
         return toBigNumber(this.amount).lte(
-          toBigNumber(this.activeCdp.ethCollateral)
+          toBigNumber(this.values.ethCollateral)
         );
       }
       return false;
     },
     canGenerateDaiAmount() {
       if (this.amount || this.amount !== '') {
-        return toBigNumber(this.amount).lte(toBigNumber(this.activeCdp.maxDai));
+        return toBigNumber(this.amount).lte(toBigNumber(this.values.maxDai));
       }
       return true;
     },
@@ -278,50 +303,50 @@ export default {
       // );
     },
     newCollateralRatio() {
-      if (this.activeCdp && this.amount > 0) {
-        return this.activeCdp.calcCollatRatioDaiChg(
-          this.activeCdp.debtValue.minus(this.amount)
+      if (this.values && this.amount > 0) {
+        return this.calcCollatRatioDaiChg(
+          this.values.debtValue.minus(this.amount)
         );
-      } else if (this.activeCdp) {
-        return this.activeCdp.collatRatio;
+      } else if (this.values) {
+        return this.values.collatRatio;
       }
       return 0;
     },
     newCollateralRatioSafe() {
-      if (this.activeCdp && this.amount > 0) {
-        const ratio = this.activeCdp.calcCollatRatioDaiChg(
-          this.activeCdp.debtValue.minus(this.amount)
+      if (this.values && this.amount > 0) {
+        const ratio = this.calcCollatRatioDaiChg(
+          this.values.debtValue.minus(this.amount)
         );
         if (ratio.lte(new BigNumber(0.000009))) {
           return true;
         }
         return ratio.gte(2);
-      } else if (this.activeCdp) {
-        return toBigNumber(this.activeCdp.collatRatio).gte(2);
+      } else if (this.values) {
+        return toBigNumber(this.values.collatRatio).gte(2);
       }
       return true;
     },
     newCollateralRatioInvalid() {
-      if (this.activeCdp && this.amount > 0) {
-        const ratio = this.activeCdp.calcCollatRatioDaiChg(
-          this.activeCdp.debtValue.minus(this.amount)
+      if (this.values && this.amount > 0) {
+        const ratio = this.calcCollatRatioDaiChg(
+          this.values.debtValue.minus(this.amount)
         );
         if (ratio.lte(new BigNumber(0.000009))) {
           return true;
         }
         return ratio.gte(1.5);
-      } else if (this.activeCdp) {
-        return toBigNumber(this.activeCdp.collatRatio).lte(1.5);
+      } else if (this.values) {
+        return toBigNumber(this.values.collatRatio).lte(1.5);
       }
       return true;
     },
     newLiquidationPrice() {
-      if (this.activeCdp && this.amount > 0) {
-        return this.activeCdp.calcLiquidationPriceDaiChg(
-          this.activeCdp.debtValue.minus(this.amount)
+      if (this.values && this.amount > 0) {
+        return this.calcLiquidationPriceDaiChg(
+          this.values.debtValue.minus(this.amount)
         );
-      } else if (this.activeCdp) {
-        return this.activeCdp.liquidationPrice;
+      } else if (this.values) {
+        return this.values.liquidationPrice;
       }
       return 0;
     },
@@ -338,10 +363,27 @@ export default {
       return 0;
     },
     needsDaiApprove() {
-      return toBigNumber(this.activeCdp.proxyAllowanceDai).eq(0);
+      console.log('proxyAllowanceDai', this.values.proxyAllowanceDai); // todo remove dev item
+      if (toBigNumber(this.values.proxyAllowanceDai).gt(0)) {
+        if (
+          toBigNumber(this.values.proxyAllowanceDai).lt(this.values.debtValue)
+        ) {
+          return true;
+        }
+      }
+      return toBigNumber(this.values.proxyAllowanceDai).eq(0);
     },
     needsMkrApprove() {
-      return toBigNumber(this.activeCdp.proxyAllowanceMkr).eq(0);
+      if (toBigNumber(this.values.proxyAllowanceMkr).gt(0)) {
+        if (
+          toBigNumber(this.values.proxyAllowanceMkr).lt(
+            this.values.governanceFeeOwed
+          )
+        ) {
+          return true;
+        }
+      }
+      return toBigNumber(this.values.proxyAllowanceMkr).eq(0);
     }
   },
   watch: {},
@@ -365,17 +407,17 @@ export default {
       return toBigNumber(val).gt(0);
     },
     maxDai() {
-      this.amount = this.activeCdp.maxDai.minus(
-        this.activeCdp.maxDai.times(0.01)
-      );
+      this.amount = this.values.maxDai.minus(this.values.maxDai.times(0.01));
     },
     currentDai() {
-      this.amount = this.activeCdp.debtValue;
+      this.amount = this.values.debtValue;
     },
     async wipeDai() {
       if (toBigNumber(this.amount).gte(0)) {
         this.delayCloseModal();
-        await this.activeCdp.wipeDai(this.amount);
+        console.log('DO ACTION'); // todo remove dev item
+        this.$emit('wipeDai', this.amount);
+        // await this.activeCdp.wipeDai(this.amount);
       }
     },
     getBalances() {
@@ -393,6 +435,9 @@ export default {
           .minus(toBigNumber(this.mkrBalance))
           .plus(toBigNumber(mkrNeeded).times(0.01))
           .toNumber();
+        if (toBigNumber(this.suppliedToAmount).lt(0.000001)) {
+          this.suppliedToAmount = 0.000001;
+        }
         this.suppliedFrom = {
           symbol: 'ETH',
           name: 'Ethereum'
@@ -401,8 +446,12 @@ export default {
           symbol: 'MKR',
           name: 'Maker'
         };
+        console.log(this.suppliedToAmount); // todo remove dev item
         // this.destAddress = this.proxyAddress;
-        this.$refs.swapWidget.$refs.modal.show();
+        // this.$refs.swapWidget.$refs.modal.show();
+        this.$nextTick(() => {
+          this.$refs.swapWidget.$refs.modal.show();
+        });
       }
     },
     getTitleText() {
@@ -415,6 +464,14 @@ export default {
       setTimeout(() => {
         this.closeModal();
       }, 200);
+    },
+    async approveDai() {
+      this.$emit('approveDai');
+      // await this.activeCdp.approveDai();
+    },
+    async approveMkr() {
+      this.$emit('approveMkr');
+      // await this.activeCdp.approveMkr();
     }
   }
 };

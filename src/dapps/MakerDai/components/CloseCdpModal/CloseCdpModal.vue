@@ -57,7 +57,7 @@
             <div class="value-block">
               <p>{{ $t('dappsMaker.outstandingDai') }}</p>
               <p>
-                <b>{{ activeCdp.debtValue }} DAI</b>
+                <b>{{ values.debtValue }} DAI</b>
               </p>
             </div>
             <div class="value-block">
@@ -65,7 +65,7 @@
                 {{
                   $t('dappsMaker.stabilityFeeInMkr', {
                     value: displayFixedValue(
-                      displayPercentValue(activeCdp.stabilityFee)
+                      displayPercentValue(values.stabilityFee)
                     )
                   })
                 }}
@@ -133,10 +133,21 @@ export default {
       type: String,
       default: ''
     },
-    activeCdp: {
+    values: {
       type: Object,
       default: function() {
-        return {};
+        return {
+          maxPethDraw: '',
+          maxEthDraw: '',
+          maxUsdDraw: '',
+          ethCollateral: '',
+          pethCollateral: '',
+          usdCollateral: '',
+          debtValue: '',
+          maxDai: '',
+          collateralRatio: '',
+          cdpId: ''
+        };
       }
     },
     makerManager: {
@@ -196,24 +207,24 @@ export default {
   computed: {
     ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
     getfeeOwed() {
-      const result = this.activeCdp.governanceFeeOwed;
+      const result = this.values.governanceFeeOwed;
       return this.displayFixedValue(result, 8);
     },
     newCollateralRatio() {
-      if (this.activeCdp) {
-        return this.activeCdp.collatRatio;
+      if (this.values) {
+        return this.values.collatRatio;
       }
       return 0;
     },
     newCollateralRatioSafe() {
-      if (this.activeCdp) {
-        return toBigNumber(this.activeCdp.collatRatio).gte(2);
+      if (this.values) {
+        return toBigNumber(this.values.collatRatio).gte(2);
       }
       return true;
     },
     newLiquidationPrice() {
-      if (this.activeCdp) {
-        return this.activeCdp.liquidationPrice;
+      if (this.values) {
+        return this.values.liquidationPrice;
       }
       return 0;
     },
@@ -230,7 +241,8 @@ export default {
       return 0;
     },
     enoughMkr() {
-      const mkrNeeded = this.activeCdp.governanceFeeOwed;
+      const mkrNeeded = this.values.governanceFeeOwed;
+
       if (mkrNeeded) {
         return toBigNumber(this.mkrBalance)
           .minus(mkrNeeded)
@@ -239,8 +251,8 @@ export default {
       return false;
     },
     enoughDai() {
-      if (this.activeCdp.zeroDebt) return true;
-      const daiNeeded = this.activeCdp.debtValue;
+      if (this.values.zeroDebt) return true;
+      const daiNeeded = this.values.debtValue;
       if (daiNeeded) {
         return toBigNumber(this.daiBalance)
           .minus(daiNeeded)
@@ -249,10 +261,27 @@ export default {
       return false;
     },
     needsDaiApprove() {
-      return toBigNumber(this.activeCdp.proxyAllowanceDai).eq(0);
+      console.log('proxyAllowanceDai', this.values.proxyAllowanceDai); // todo remove dev item
+      if (toBigNumber(this.values.proxyAllowanceDai).gt(0)) {
+        if (
+          toBigNumber(this.values.proxyAllowanceDai).lt(this.values.debtValue)
+        ) {
+          return true;
+        }
+      }
+      return toBigNumber(this.values.proxyAllowanceDai).eq(0);
     },
     needsMkrApprove() {
-      return toBigNumber(this.activeCdp.proxyAllowanceMkr).eq(0);
+      if (toBigNumber(this.values.proxyAllowanceMkr).gt(0)) {
+        if (
+          toBigNumber(this.values.proxyAllowanceMkr).lt(
+            this.values.governanceFeeOwed
+          )
+        ) {
+          return true;
+        }
+      }
+      return toBigNumber(this.values.proxyAllowanceMkr).eq(0);
     },
     canClose() {
       return (
@@ -272,7 +301,8 @@ export default {
     this.destAddress = this.account.address;
     this.getBalances();
     this.$refs.modal.$on('shown', async () => {
-      await this.checkMakerToClose();
+      this.getBalances();
+      // await this.checkMakerToClose();
     });
   },
   methods: {
@@ -296,6 +326,7 @@ export default {
       // const canCloseCdp = await this.activeCdp.canCloseCdp();
       // if (canCloseCdp) {
       this.delayCloseModal();
+      this.$emit('closeCdp');
       await this.activeCdp.closeCdp();
       // }
     },
@@ -308,15 +339,16 @@ export default {
       return raw.toFixed(decimals, BigNumber.ROUND_DOWN).toString();
     },
     maxDai() {
-      this.amount = this.activeCdp.maxDai;
+      this.amount = this.values.maxDai;
     },
     currentDai() {
-      this.amount = this.activeCdp.debtValue;
+      this.amount = this.values.debtValue;
     },
     getBalances() {
       this.mkrToken = this.tokensWithBalance.find(item => {
         return item.symbol === 'MKR';
       });
+      console.log(this.mkrToken); // todo remove dev item
       this.daiToken = this.tokensWithBalance.find(item => {
         return item.symbol === 'DAI';
       });
@@ -328,6 +360,9 @@ export default {
           .minus(toBigNumber(this.mkrBalance))
           .plus(toBigNumber(mkrNeeded).times(0.01))
           .toNumber();
+        if (toBigNumber(this.suppliedToAmount).lt(0.000001)) {
+          this.suppliedToAmount = 0.000001;
+        }
         this.suppliedFrom = {
           symbol: 'ETH',
           name: 'Ethereum'
@@ -337,15 +372,20 @@ export default {
           name: 'Maker'
         };
         // this.destAddress = this.proxyAddress;
-        this.$refs.swapWidget.$refs.modal.show();
+        this.$nextTick(() => {
+          this.$refs.swapWidget.$refs.modal.show();
+        });
       }
     },
     getDai() {
-      const daiNeeded = this.activeCdp.debtValue;
+      const daiNeeded = this.values.debtValue;
       if (toBigNumber(this.daiBalance).lt(daiNeeded)) {
         this.suppliedToAmount = toBigNumber(daiNeeded)
           .minus(toBigNumber(this.daiBalance))
           .toNumber();
+        if (toBigNumber(this.suppliedToAmount).lt(0.000001)) {
+          this.suppliedToAmount = 0.000001;
+        }
         this.suppliedFrom = {
           symbol: 'ETH',
           name: 'Ethereum'
@@ -355,15 +395,19 @@ export default {
           name: 'Dai'
         };
         // this.destAddress = this.activeCdp.proxyAddress;
-        this.$refs.swapWidget.$refs.modal.show();
+        this.$nextTick(() => {
+          this.$refs.swapWidget.$refs.modal.show();
+        });
       }
     },
 
     async approveDai() {
-      await this.activeCdp.approveDai();
+      this.$emit('approveDai');
+      // await this.activeCdp.approveDai();
     },
     async approveMkr() {
-      await this.activeCdp.approveMkr();
+      this.$emit('approveMkr');
+      // await this.activeCdp.approveMkr();
     }
   }
 };

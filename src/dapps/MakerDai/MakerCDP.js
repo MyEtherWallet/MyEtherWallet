@@ -291,6 +291,7 @@ export default class MakerCDP {
   }
 
   async update() {
+    console.log('makerCDP update called'); // todo remove dev item
     if (this.migrated) {
       const currentProxy = await this.proxyService.currentProxy();
       if (currentProxy) {
@@ -620,15 +621,12 @@ export default class MakerCDP {
 
   // Helpers
   async approveDai() {
-    if (toBigNumber(this.proxyAllowanceDai).eq(0)) {
-      await this.daiToken.approveUnlimited(this.proxyAddress);
-    }
+    await this.daiToken.approveUnlimited(this.proxyAddress);
   }
 
   async approveMkr() {
-    if (toBigNumber(this.proxyAllowanceMkr).eq(0)) {
-      await this.mkrToken.approveUnlimited(this.proxyAddress);
-    }
+    await this.mkrToken.approveUnlimited(this.proxyAddress);
+
   }
 
   async getDaiBalances() {
