@@ -41,14 +41,12 @@
         </div>
         <expending-option title="Details">
           <!-- Generate Dai -->
-          <div  class="detail-container">
+          <div class="detail-container">
             <div class="grid-block">
               <p>{{ $t('dappsMaker.maxGenerateAvailable') }}</p>
               <p>
                 <b>
-                  {{
-                  values.maxDai ? displayFixedValue(values.maxDai) : 0
-                  }}
+                  {{ values.maxDai ? displayFixedValue(values.maxDai) : 0 }}
                 </b>
                 DAI
               </p>
@@ -76,7 +74,7 @@
           <div class="grid-block">
             <div class="sign">⚠️</div>
             <div class="text-content">
-              <p class="title">{{ $t('dappsMaker.Caution') }}</p>
+              <p class="title">{{ $t('dappsMaker.caution') }}</p>
               <p class="warning-details">
                 {{
                   $t('dappsMaker.liquidationRisk', {
@@ -161,21 +159,21 @@ export default {
         };
       }
     },
-    calcCollatRatioEthChg:{
+    calcCollatRatioEthChg: {
       type: Function,
-      default: function(){}
+      default: function() {}
     },
-    calcLiquidationPriceEthChg:{
+    calcLiquidationPriceEthChg: {
       type: Function,
-      default: function(){}
+      default: function() {}
     },
-    calcCollatRatioDaiChg:{
+    calcCollatRatioDaiChg: {
       type: Function,
-      default: function(){}
+      default: function() {}
     },
-    calcLiquidationPriceDaiChg:{
+    calcLiquidationPriceDaiChg: {
       type: Function,
-      default: function(){}
+      default: function() {}
     }
   },
   data() {
@@ -264,32 +262,30 @@ export default {
       if (this.canCompute) {
         return this.displayFixedValue(
           this.displayPercentValue(
-            this.calcCollatRatioDaiChg(
-              this.values.debtValue.plus(this.amount)
-            )
+            this.calcCollatRatioDaiChg(this.values.debtValue.plus(this.amount))
           )
         );
       }
       return '--';
     },
     newCollateralRatioSafe() {
-      if (this.canCompute) {
-        return this
-          .calcCollatRatioDaiChg(this.values.debtValue.plus(this.amount))
-          .gte(2);
+      if (this.canCompute && this.values.debtValue) {
+        return this.calcCollatRatioDaiChg(
+          this.values.debtValue.plus(this.amount)
+        ).gte(2);
       }
       return true;
     },
     newCollateralRatioInvalid() {
-      if (this.canCompute) {
-        return this
-          .calcCollatRatioDaiChg(this.values.debtValue.plus(this.amount))
-          .lte(1.5);
+      if (this.canCompute && this.values.debtValue) {
+        return this.calcCollatRatioDaiChg(
+          this.values.debtValue.plus(this.amount)
+        ).lte(1.5);
       }
       return true;
     },
     newLiquidationPrice() {
-      if (this.canCompute) {
+      if (this.canCompute && this.values.debtValue) {
         return this.calcLiquidationPriceDaiChg(
           this.values.debtValue.plus(this.amount)
         );
@@ -319,9 +315,7 @@ export default {
       return toBigNumber(val).gt(0);
     },
     maxDai() {
-      this.amount = this.values.maxDai.minus(
-        this.values.maxDai.times(0.01)
-      );
+      this.amount = this.values.maxDai.minus(this.values.maxDai.times(0.01));
       this.$forceUpdate();
     },
     currentDai() {
@@ -331,13 +325,9 @@ export default {
       if (toBigNumber(this.amount).gte(0)) {
         this.delayCloseModal();
         if (this.newCollateralRatioSafe) {
-          console.log('DO ACTION'); // todo remove dev item
-          this.$emit('drawDai', [this.amount, null])
-          // await this.activeCdp.drawDai(this.amount);
+          this.$emit('drawDai', [this.amount, null]);
         } else {
-          console.log('DO ACTION'); // todo remove dev item
-          this.$emit('drawDai', [this.amount, this.riskyBypass])
-          // await this.activeCdp.drawDai(this.amount, this.riskyBypass);
+          this.$emit('drawDai', [this.amount, this.riskyBypass]);
         }
       }
     },

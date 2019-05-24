@@ -23,7 +23,7 @@
               <!-- TODO FOR TRANSLATE -->
               <p>
                 {{
-                values.toPeth
+                  values.toPeth
                     ? displayFixedValue(values.toPeth(amount), 5, false)
                     : 0
                 }}
@@ -53,11 +53,11 @@
             class="expended-info"
           >
             <!-- Deposit ETH -->
-            <div  class="padding-container">
+            <div class="padding-container">
               <div class="grid-block">
                 <p>{{ $t('dappsMaker.currentlyDeposited') }}</p>
                 <p>
-                  <b>{{ displayFixedValue(values.ethCollateral, 2) }}</b>
+                  <b>{{ displayFixedValue(values.ethCollateral, 5) }}</b>
                   {{ digitalCurrency }}
                 </p>
               </div>
@@ -307,7 +307,6 @@ export default {
     async lockEth() {
       if (toBigNumber(this.amount).gte(0)) {
         this.delayCloseModal();
-        console.log('DO ACTION'); // todo remove dev item
         this.$emit('lockEth', this.amount);
         // await this.activeCdp.lockEth(this.amount);
       }

@@ -25,7 +25,6 @@ const bnOver = (one, two, three) => {
 
 export default class MakerManager {
   constructor(props) {
-    console.log(props); // todo remove dev item
     this.web3 = props.web3 || {};
     this.pethMin = props.pethMin || 0.005;
     this.creatingProxy = false;

@@ -1,41 +1,41 @@
 <template>
   <div class="manage-cdp">
-<!--    <deposit-modal-->
-<!--      ref="deposit"-->
-<!--      :action="'deposit'"-->
-<!--      :active-cdp="activeCdp"-->
-<!--      :tokens-with-balance="tokensWithBalance"-->
-<!--    ></deposit-modal>-->
-<!--    <generate-modal-->
-<!--      ref="generate"-->
-<!--      :action="'generate'"-->
-<!--      :active-cdp="activeCdp"-->
-<!--      :tokens-with-balance="tokensWithBalance"-->
-<!--    ></generate-modal>-->
-<!--    <withdraw-modal-->
-<!--      ref="withdraw"-->
-<!--      :action="'withdraw'"-->
-<!--      :active-cdp="activeCdp"-->
-<!--      :tokens-with-balance="tokensWithBalance"-->
-<!--    ></withdraw-modal>-->
-<!--    <payback-modal-->
-<!--      ref="payback"-->
-<!--      :action="'payback'"-->
-<!--      :active-cdp="activeCdp"-->
-<!--      :tokens-with-balance="tokensWithBalance"-->
-<!--    ></payback-modal>-->
-<!--    <close-cdp-modal-->
-<!--      ref="closeCdp"-->
-<!--      :active-cdp="activeCdp"-->
-<!--      :tokens-with-balance="tokensWithBalance"-->
-<!--    >-->
-<!--    </close-cdp-modal>-->
-<!--    <move-cdp-modal-->
-<!--      ref="moveCdp"-->
-<!--      :active-cdp="activeCdp"-->
-<!--      :tokens-with-balance="tokensWithBalance"-->
-<!--    >-->
-<!--    </move-cdp-modal>-->
+    <!--    <deposit-modal-->
+    <!--      ref="deposit"-->
+    <!--      :action="'deposit'"-->
+    <!--      :active-cdp="activeCdp"-->
+    <!--      :tokens-with-balance="tokensWithBalance"-->
+    <!--    ></deposit-modal>-->
+    <!--    <generate-modal-->
+    <!--      ref="generate"-->
+    <!--      :action="'generate'"-->
+    <!--      :active-cdp="activeCdp"-->
+    <!--      :tokens-with-balance="tokensWithBalance"-->
+    <!--    ></generate-modal>-->
+    <!--    <withdraw-modal-->
+    <!--      ref="withdraw"-->
+    <!--      :action="'withdraw'"-->
+    <!--      :active-cdp="activeCdp"-->
+    <!--      :tokens-with-balance="tokensWithBalance"-->
+    <!--    ></withdraw-modal>-->
+    <!--    <payback-modal-->
+    <!--      ref="payback"-->
+    <!--      :action="'payback'"-->
+    <!--      :active-cdp="activeCdp"-->
+    <!--      :tokens-with-balance="tokensWithBalance"-->
+    <!--    ></payback-modal>-->
+    <!--    <close-cdp-modal-->
+    <!--      ref="closeCdp"-->
+    <!--      :active-cdp="activeCdp"-->
+    <!--      :tokens-with-balance="tokensWithBalance"-->
+    <!--    >-->
+    <!--    </close-cdp-modal>-->
+    <!--    <move-cdp-modal-->
+    <!--      ref="moveCdp"-->
+    <!--      :active-cdp="activeCdp"-->
+    <!--      :tokens-with-balance="tokensWithBalance"-->
+    <!--    >-->
+    <!--    </move-cdp-modal>-->
 
     <div v-show="!finishMigration" class="manage-container">
       <!-- ==================================================== -->
@@ -399,7 +399,6 @@ export default {
       return '--';
     },
     cdpIdDisplay() {
-      console.log(this.activeCdp); // todo remove dev item
       if (this.values) {
         return this.values.cdpId;
       }
@@ -504,7 +503,6 @@ export default {
     },
     async valuesUpdated() {
       if (this.cdpId) {
-        console.log('activeCdp'); // todo remove dev item
         // console.log(this.activeCdp); // todo remove dev item
         // // this.activeCdp = this.getCdp[this.cdpId];
         // if (!this.activeCdp) {

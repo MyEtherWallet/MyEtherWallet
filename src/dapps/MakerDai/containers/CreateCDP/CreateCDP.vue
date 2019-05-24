@@ -6,8 +6,8 @@
       :txinfo="txInfo"
       :liquidation-price="liquidationPrice"
       :collat-ratio="displayFixedPercent(collatRatio)"
-      :liquidation-penalty="displayPercentValue(makerCDP.liquidationPenalty)"
-      :min-ratio="displayPercentValue(makerCDP.liquidationRatio)"
+      :liquidation-penalty="displayPercentValue(liquidationPenalty)"
+      :min-ratio="displayPercentValue(liquidationRatio)"
       :current-price="displayFixedValue(ethPrice, 2)"
       :collateral="ethQty.toString()"
       :generate="daiQty.toString()"
@@ -157,7 +157,6 @@ import ethUnit from 'ethjs-unit';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
-// import MakerCDP from '../../MakerCDP';
 import DaiConfirmationModal from '../../components/DaiConfirmationModal';
 import LoadingOverlay from '@/components/LoadingOverlay';
 import {
@@ -284,7 +283,6 @@ export default {
       priceFloor: 0,
       ethQty: 0,
       daiQty: 0,
-      makerCDP: {},
       txInfo: {},
       loading: false
     };
@@ -312,7 +310,7 @@ export default {
     },
     atSetFloor() {
       if (this.priceFloor <= 0) return 0;
-      return this.makerCDP.calcMinCollatRatio(this.priceFloor);
+      return bnOver(this.ethPrice, this.liquidationRatio, this.priceFloor);
     },
     collatRatio() {
       if (this.daiQty <= 0 || this.ethQty <= 0) return 0;
@@ -346,7 +344,7 @@ export default {
     },
     depositInPeth() {
       if (this.ethQty <= 0) return 0;
-      return this.makerCDP.toPeth(this.ethQty);
+      return this.toPeth(this.ethQty);
     },
     minEth() {
       if (this.wethToPethRatio) {
@@ -360,13 +358,7 @@ export default {
   },
   methods: {
     async buildEmptyInstance() {
-      // const services = {
-      //   web3: this.web3
-      // };
-      // console.log(this.makerManager); // todo remove dev item
       this.makerCDP = await this.buildEmpty();
-      console.log(this.makerCDP); // todo remove dev item
-      console.log(this.makerCDP.ethPrice.toString()); // todo remove dev item
       this.$forceUpdate();
     },
     displayPercentValue,
@@ -376,7 +368,7 @@ export default {
       this.loading = true;
 
       if (this.ethQty <= 0) return 0;
-      this.$emit('cdpOpened');
+
       // close loading overlay after 5 seconds to prevent user from having to refresh to keep using the site.
       setTimeout(() => {
         this.loading = false;
@@ -385,6 +377,7 @@ export default {
       // [Note from David to Steve] This should be implemented on TX core.
       // Close DAI confirmation modal
       this.$eventHub.$on('showTxConfirmModal', () => {
+        this.$emit('cdpOpened');
         if (this.loading) {
           this.$refs.daiconfirmation.$refs.modal.hide();
           this.loading = false;

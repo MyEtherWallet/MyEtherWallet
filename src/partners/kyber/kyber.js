@@ -425,7 +425,6 @@ export default class Kyber {
         walletDepositeAddress
       )
       .encodeABI();
-    console.log(this.getTokenTradeGas(fromCurrency, toCurrency)); // todo remove dev item
     return {
       to: this.getKyberNetworkAddress(),
       value: Object.values(networkSymbols).includes(fromCurrency)
@@ -533,12 +532,6 @@ export default class Kyber {
   getTokenTradeGas(fromCurrency, toCurrency) {
     const fromGas = this.getTokenSwapGas(fromCurrency);
     const toGas = this.getTokenSwapGas(toCurrency);
-    console.log(fromGas); // todo remove dev item
-    console.log(toGas); // todo remove dev item
-    console.log(toBigNumber(fromGas)
-      .plus(toBigNumber(toGas))
-      .toFixed(0)
-      .toString()); // todo remove dev item
     return toBigNumber(fromGas)
       .plus(toBigNumber(toGas))
       .toFixed(0)

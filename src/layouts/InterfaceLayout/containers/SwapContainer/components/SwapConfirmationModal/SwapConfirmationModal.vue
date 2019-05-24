@@ -355,11 +355,9 @@ export default {
           ) {
             entry.gasPrice = swapDetails.kyberMaxGas;
           }
-          console.log(entry); // todo remove dev item
           return entry;
         });
       }
-      console.log(this.preparedSwap); // todo remove dev item
       this.swapReady = true;
     }
   }
