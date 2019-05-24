@@ -240,7 +240,7 @@ export default {
       return true;
     },
     canGenerateDaiAmount() {
-      if (this.canCompute) {
+      if (this.canCompute && !toBigNumber(this.amount).isNaN()) {
         return toBigNumber(this.amount).lte(toBigNumber(this.values.maxDai));
       }
       return true;

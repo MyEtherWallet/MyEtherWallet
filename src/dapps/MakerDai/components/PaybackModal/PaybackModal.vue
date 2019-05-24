@@ -266,13 +266,8 @@ export default {
       return true;
     },
     hasEnoughDai() {
-      // TODO Figure out how to learn how much dai a user has (the code below should work)
       if (this.canCompute) {
-        const daiToken = this.tokensWithBalance.find(item => {
-          return item.symbol.toUpperCase() === 'DAI';
-        });
-        if (daiToken === undefined) return true;
-        return toBigNumber(this.amount).lte(toBigNumber(daiToken));
+        return toBigNumber(this.amount).lte(toBigNumber(this.daiBalance));
       }
       return true;
     },
@@ -291,7 +286,7 @@ export default {
       return true;
     },
     canProceed() {
-      return this.canCompute;
+      return this.hasEnoughDai;
       // if (toBigNumber(this.amount).lte(0)) return false;
       // const ratio = toBigNumber(this.newCollateralRatio);
       // const ratioSafe = ratio.gt(2) || ratio.eq(0);
