@@ -261,7 +261,6 @@ export default {
       return false;
     },
     needsDaiApprove() {
-      console.log('proxyAllowanceDai', this.values.proxyAllowanceDai); // todo remove dev item
       if (toBigNumber(this.values.proxyAllowanceDai).gt(0)) {
         if (
           toBigNumber(this.values.proxyAllowanceDai).lt(this.values.debtValue)
@@ -317,7 +316,6 @@ export default {
     async checkMakerToClose() {
       if (this.activeCdp) {
         this.closable = await this.activeCdp.canCloseCdp();
-        console.log(this.closable); // todo remove dev item
         return this.closable;
       }
       this.closable = false;
@@ -327,7 +325,7 @@ export default {
       // if (canCloseCdp) {
       this.delayCloseModal();
       this.$emit('closeCdp');
-      await this.activeCdp.closeCdp();
+      // await this.activeCdp.closeCdp();
       // }
     },
     displayPercentValue(raw) {
@@ -348,7 +346,6 @@ export default {
       this.mkrToken = this.tokensWithBalance.find(item => {
         return item.symbol === 'MKR';
       });
-      console.log(this.mkrToken); // todo remove dev item
       this.daiToken = this.tokensWithBalance.find(item => {
         return item.symbol === 'DAI';
       });

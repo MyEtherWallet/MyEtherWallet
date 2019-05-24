@@ -46,7 +46,7 @@ export default class MakerCDP {
     //
     // console.log(this.makerManager); // todo remove dev item
     //
-/*    this.proxyService = services.proxyService || null;
+    /*    this.proxyService = services.proxyService || null;
     this.priceService = services.priceService || null;
     this.cdpService = services.cdpService || null;*/
 
@@ -268,14 +268,10 @@ export default class MakerCDP {
     this._proxyAddress = await this.makerManager.getProxy();
     this.noProxy = this._proxyAddress === null;
     if (this._proxyAddress) {
-      this.cdp = await this.makerManager.getCdp(
-        cdpId,
-        this._proxyAddress
-      );
+      this.cdp = await this.makerManager.getCdp(cdpId, this._proxyAddress);
     } else {
       this.cdp = await this.makerManager.getCdp(cdpId, false);
     }
-    console.log(this.cdp); // todo remove dev item
     const liqPrice = await this.cdp.getLiquidationPrice();
     this._liqPrice = liqPrice.toBigNumber().toFixed(2);
     this.isSafe = await this.cdp.isSafe();
@@ -291,7 +287,6 @@ export default class MakerCDP {
   }
 
   async update() {
-    console.log('makerCDP update called'); // todo remove dev item
     if (this.migrated) {
       const currentProxy = await this.proxyService.currentProxy();
       if (currentProxy) {
@@ -435,6 +430,7 @@ export default class MakerCDP {
     }
   }
 
+  // This should also have a acknowledgeBypass
   async freeEth(amount) {
     try {
       if (this.noProxy) {
@@ -482,7 +478,6 @@ export default class MakerCDP {
     // will also need to check if there is enough allowance
     // const enoughToWipe = await this.canCloseCdp();
     // if (enoughToWipe) {
-    console.log('close'); // todo remove dev item
     try {
       this.needsUpdate = true;
       this.closing = true;
@@ -626,7 +621,6 @@ export default class MakerCDP {
 
   async approveMkr() {
     await this.mkrToken.approveUnlimited(this.proxyAddress);
-
   }
 
   async getDaiBalances() {

@@ -223,6 +223,7 @@ export default {
       // maker: {},
       afterUpdate: [],
       // activeCdps: {},
+      allCdpIds: [],
       activeCdp: {},
       availableCdps: {},
       cdps: [],
@@ -470,158 +471,6 @@ export default {
         Toast.responseHandler('Update encountered an issue', Toast.INFO);
       }
     },
-    async getProxy() {
-      this._proxyAddress = await this._proxyService.currentProxy();
-      if (!this._proxyAddress) {
-        this._proxyAddress = await this._proxyService.getProxyAddress(
-          this.account.address
-        );
-        if (this._proxyAddress) this.noProxy = false;
-      }
-      return this._proxyAddress;
-    },
-    async setupCdpManage(cdpId) {
-      this.currentCdpId = cdpId;
-      this.activeValues = await this.getValuesForManage(cdpId);
-    },
-    showDeposit() {
-      this.$refs.deposit.$refs.modal.show();
-    },
-    showWithdraw() {
-      this.$refs.withdraw.$refs.modal.show();
-    },
-    showPayback() {
-      this.$refs.payback.$refs.modal.show();
-    },
-    showGenerate() {
-      this.$refs.generate.$refs.modal.show();
-    },
-    showClose() {
-      this.$refs.closeCdp.$refs.modal.$on('hidden', () => {
-        this.$emit('modalHidden');
-      });
-      this.$refs.closeCdp.$refs.modal.show();
-    },
-    showMove() {
-      this.$refs.moveCdp.$refs.modal.$on('hidden', () => {
-        this.$emit('modalHidden');
-      });
-      this.$refs.moveCdp.$refs.modal.show();
-    },
-    lockEth(val) {
-      console.log(val); // todo remove dev item
-      this.currentCdp.lockEth(val);
-    },
-    wipeDai(val) {
-      console.log(val); // todo remove dev item
-      this.currentCdp.wipeDai(val);
-    },
-    freeEth(val) {
-      console.log(val); // todo remove dev item
-      this.currentCdp.freeEth(val);
-    },
-    drawDai(val) {
-      console.log(val); // todo remove dev item
-      this.currentCdp.drawDai(val);
-    },
-    closeCdp(val) {
-      console.log(val); // todo remove dev item
-      this.currentCdp.closeCdp();
-    },
-    moveCdp(val) {
-      console.log(val); // todo remove dev item
-      this.currentCdp.moveCdp(val);
-    },
-    async getValuesForManage(cdpId) {
-      const currentCdp = this.activeCdps[cdpId];
-      this.currentCdp = currentCdp;
-      const _proxyAllowanceDai = this._proxyAllowanceDai;
-      const _proxyAllowanceMkr = this._proxyAllowanceMkr;
-      const toPeth = this.toPeth;
-      const systemValues = this.systemValues;
-      const valuesToManage = {
-        ...systemValues,
-        cdpId: cdpId,
-        // stabilityFee: stabilityFee,
-        maxPethDraw: currentCdp.maxPethDraw,
-        maxEthDraw: currentCdp.maxEthDraw,
-        maxUsdDraw: currentCdp.maxUsdDraw,
-        ethCollateral: currentCdp.ethCollateral,
-        pethCollateral: currentCdp.pethCollateral,
-        usdCollateral: currentCdp.usdCollateral,
-        debtValue: currentCdp.debtValue,
-        maxDai: currentCdp.maxDai,
-        collateralRatio: currentCdp.collatRatio,
-        liquidationPrice: currentCdp.liquidationPrice,
-        minEth: currentCdp.minEth,
-        isSafe: false,
-        governanceFeeOwed: currentCdp.governanceFeeOwed,
-        ethCollateralNum: currentCdp.ethCollateralNum,
-        toPeth: toPeth,
-        proxyAllowanceDai: _proxyAllowanceDai,
-        proxyAllowanceMkr: _proxyAllowanceMkr,
-        zeroDebt: currentCdp.zeroDebt
-      };
-      console.log(valuesToManage); // todo remove dev item
-      return valuesToManage;
-    },
-    calcCollatRatioDaiChg(daiQty) {
-      return toBigNumber(
-        this.currentCdp.calcCollatRatio(this.currentCdp.ethCollateral, daiQty)
-      );
-    },
-
-    calcCollatRatioEthChg(ethQty) {
-      return toBigNumber(
-        this.currentCdp.calcCollatRatio(ethQty, this.currentCdp.debtValue)
-      );
-    },
-
-    calcLiquidationPriceDaiChg(daiQty) {
-      return toBigNumber(
-        this.currentCdp.calcLiquidationPrice(
-          this.currentCdp.ethCollateral,
-          daiQty
-        )
-      );
-    },
-
-    calcLiquidationPriceEthChg(ethQty) {
-      return toBigNumber(
-        this.currentCdp.calcLiquidationPrice(ethQty, this.currentCdp.debtValue)
-      );
-    },
-    async approveDai() {
-      await this._tokenService
-        .getToken(DAI)
-        .approveUnlimited(this._proxyAddress);
-    },
-    async approveMkr() {
-      this._tokenService.getToken(MKR).approveUnlimited(this._proxyAddress);
-    },
-
-    //============================================================
-    // prior in separate
-
-    hasCdp(cdpId) {
-      return Object.keys(this.activeCdps).includes(
-        toBigNumber(cdpId).toString()
-      );
-    },
-
-    getCdp(cdpId) {
-      return this.activeCdps[cdpId];
-    },
-
-    async getMakerCdp(cdpId) {
-      if (cdpId === null) return;
-      console.log('this.maker', this.maker); // todo remove dev item
-      if (this._proxyAddress) {
-        return await this.maker.getCdp(cdpId, this._proxyAddress);
-      }
-      return await this.maker.getCdp(cdpId, false);
-    },
-
     async refresh() {
       await this.doUpdate();
     },
@@ -650,8 +499,6 @@ export default {
         removedCdps.forEach(item => delete this.activeCdps[item]);
       }
 
-      console.log('newCdps.length', newCdps.length); // todo remove dev item
-      console.log('newCdpsWithoutProxy.length', newCdpsWithoutProxy.length); // todo remove dev item
       if (newCdps.length > 0) {
         for (let i = 0; i < newCdps.length; i++) {
           this.activeCdps[newCdps[i]] = await this.buildCdpObject(newCdps[i]);
@@ -677,7 +524,6 @@ export default {
       let afterClose = false;
       const afterOpen = route === 'create';
       await this.updateActiveCdp();
-      console.log('this.activeCdps', this.activeCdps); // todo remove dev item
       for (const idProp in this.activeCdps) {
         if (this.activeCdps[idProp].needsUpdate) {
           if (this.activeCdps[idProp].closing) {
@@ -693,7 +539,6 @@ export default {
             this.activeCdps[idProp] = await this.activeCdps[idProp].update();
           }
         }
-        console.log(idProp, idProp === this.currentCdpId, this.currentCdpId); // todo remove dev item
         if (idProp === this.currentCdpId) {
           await this.currentCdp.update();
           await this.setupCdpManage(this.currentCdpId);
@@ -704,15 +549,13 @@ export default {
       this.mkrBalance = (await this.mkrToken.balance()).toBigNumber();
       await this.checkAllowances();
 
-      console.log('this.cdps', this.cdps); // todo remove dev item
       if (!Object.keys(this.activeCdps).includes(this.currentCdpId)) {
         await this.loadCdpDetails();
         await this.setupCdpManage(this.currentCdpId);
       } else {
         await this.setupCdpManage(this.currentCdpId);
       }
-
-      if (afterClose || afterOpen) {
+      if (afterClose || afterOpen || this.creatingCdp) {
         if (this.cdps.length > 0 || this.cdpsWithoutProxy.length > 0) {
           this.goToManage();
         } else {
@@ -742,6 +585,8 @@ export default {
       this.cdps = [];
       this.cdps = await this.locateCdpsProxy();
 
+      this.allCdpIds = [...this.cdpsWithoutProxy, ...this.cdps];
+
       return { withProxy: this.cdps, withoutProxy: this.cdpsWithoutProxy };
     },
 
@@ -759,7 +604,6 @@ export default {
     },
 
     async loadCdpDetails() {
-      console.log('loadCdpDetails'); // todo remove dev item
       for (let i = 0; i < this.cdps.length; i++) {
         this.activeCdps[this.cdps[i]] = await this.buildCdpObject(this.cdps[i]);
       }
@@ -773,26 +617,7 @@ export default {
       }
     },
 
-    async buildProxy() {
-      this.creatingProxy = true;
-      this._proxyAddress = await this.getProxy();
-      if (!this._proxyAddress) {
-        await this._proxyService.build();
-        this._proxyAddress = await this._proxyService.currentProxy();
-        return this._proxyAddress;
-      }
-      this._proxyAddress = await this._proxyService.currentProxy();
-      return this._proxyAddress;
-    },
-
-    async migrateCdp(cdpId) {
-      const currentProxy = await this.getProxy();
-      if (currentProxy) {
-        await this._cdpService.give(cdpId, currentProxy);
-      }
-    },
     async buildCdpObject(cdpId, options = {}) {
-      console.log('buildCdpObject'); // todo remove dev item
       const sysVars = {
         ...options,
         _proxyAddress: this._proxyAddress,
@@ -855,6 +680,179 @@ export default {
         return await makerCDP.init(cdpId);
       }
       return makerCDP;
+    },
+
+    async getProxy() {
+      this._proxyAddress = await this._proxyService.currentProxy();
+      if (!this._proxyAddress) {
+        this._proxyAddress = await this._proxyService.getProxyAddress(
+          this.account.address
+        );
+        if (this._proxyAddress) this.noProxy = false;
+      }
+      return this._proxyAddress;
+    },
+    showDeposit() {
+      this.$refs.deposit.$refs.modal.show();
+    },
+    showWithdraw() {
+      this.$refs.withdraw.$refs.modal.show();
+    },
+    showPayback() {
+      this.$refs.payback.$refs.modal.show();
+    },
+    showGenerate() {
+      this.$refs.generate.$refs.modal.show();
+    },
+    showClose() {
+      this.$refs.closeCdp.$refs.modal.$on('hidden', () => {
+        this.$emit('modalHidden');
+      });
+      this.$refs.closeCdp.$refs.modal.show();
+    },
+    showMove() {
+      this.$refs.moveCdp.$refs.modal.$on('hidden', () => {
+        this.$emit('modalHidden');
+      });
+      this.$refs.moveCdp.$refs.modal.show();
+    },
+    lockEth(val) {
+      this.currentCdp.lockEth(val);
+    },
+    wipeDai(val) {
+      this.currentCdp.wipeDai(val);
+    },
+    freeEth(val) {
+      this.currentCdp.freeEth(val);
+    },
+    drawDai(val) {
+      if (val[1] === null) {
+        this.currentCdp.drawDai(val[0]);
+      } else {
+        this.currentCdp.drawDai(val[0], val[1]);
+      }
+    },
+    closeCdp() {
+      this.currentCdp.closeCdp();
+    },
+    moveCdp(val) {
+      this.currentCdp.moveCdp(val);
+    },
+    async setupCdpManage(cdpId) {
+      if (!this.allCdpIds.includes(cdpId) && this.allCdpIds.length > 0) {
+        cdpId = this.allCdpIds[0];
+      }
+      if (this.allCdpIds.length === 0) {
+        this.activeValues = this.systemValues;
+      } else {
+        this.currentCdpId = cdpId;
+        this.activeValues = await this.getValuesForManage(cdpId);
+      }
+    },
+    async getValuesForManage(cdpId) {
+      const currentCdp = this.activeCdps[cdpId];
+      this.currentCdp = currentCdp;
+      const _proxyAllowanceDai = this._proxyAllowanceDai;
+      const _proxyAllowanceMkr = this._proxyAllowanceMkr;
+      const toPeth = this.toPeth;
+      const systemValues = this.systemValues;
+      const valuesToManage = {
+        ...systemValues,
+        cdpId: cdpId,
+        maxPethDraw: currentCdp.maxPethDraw,
+        maxEthDraw: currentCdp.maxEthDraw,
+        maxUsdDraw: currentCdp.maxUsdDraw,
+        ethCollateral: currentCdp.ethCollateral,
+        pethCollateral: currentCdp.pethCollateral,
+        usdCollateral: currentCdp.usdCollateral,
+        debtValue: currentCdp.debtValue,
+        maxDai: currentCdp.maxDai,
+        collateralRatio: currentCdp.collatRatio,
+        liquidationPrice: currentCdp.liquidationPrice,
+        minEth: currentCdp.minEth,
+        isSafe: false,
+        governanceFeeOwed: currentCdp.governanceFeeOwed,
+        ethCollateralNum: currentCdp.ethCollateralNum,
+        toPeth: toPeth,
+        proxyAllowanceDai: _proxyAllowanceDai,
+        proxyAllowanceMkr: _proxyAllowanceMkr,
+        zeroDebt: currentCdp.zeroDebt
+      };
+      return valuesToManage;
+    },
+    calcCollatRatioDaiChg(daiQty) {
+      return toBigNumber(
+        this.currentCdp.calcCollatRatio(this.currentCdp.ethCollateral, daiQty)
+      );
+    },
+
+    calcCollatRatioEthChg(ethQty) {
+      return toBigNumber(
+        this.currentCdp.calcCollatRatio(ethQty, this.currentCdp.debtValue)
+      );
+    },
+
+    calcLiquidationPriceDaiChg(daiQty) {
+      return toBigNumber(
+        this.currentCdp.calcLiquidationPrice(
+          this.currentCdp.ethCollateral,
+          daiQty
+        )
+      );
+    },
+
+    calcLiquidationPriceEthChg(ethQty) {
+      return toBigNumber(
+        this.currentCdp.calcLiquidationPrice(ethQty, this.currentCdp.debtValue)
+      );
+    },
+    async approveDai() {
+      await this._tokenService
+        .getToken(DAI)
+        .approveUnlimited(this._proxyAddress);
+    },
+    async approveMkr() {
+      this._tokenService.getToken(MKR).approveUnlimited(this._proxyAddress);
+    },
+
+    //============================================================
+    // prior in separate
+
+    hasCdp(cdpId) {
+      return Object.keys(this.activeCdps).includes(
+        toBigNumber(cdpId).toString()
+      );
+    },
+
+    getCdp(cdpId) {
+      return this.activeCdps[cdpId];
+    },
+
+    async getMakerCdp(cdpId) {
+      if (cdpId === null) return;
+      if (this._proxyAddress) {
+        return await this.maker.getCdp(cdpId, this._proxyAddress);
+      }
+      return await this.maker.getCdp(cdpId, false);
+    },
+
+    async buildProxy() {
+      this.creatingProxy = true;
+      this._proxyAddress = await this.getProxy();
+      if (!this._proxyAddress) {
+        await this._proxyService.build();
+        this._proxyAddress = await this._proxyService.currentProxy();
+        return this._proxyAddress;
+      }
+      this._proxyAddress = await this._proxyService.currentProxy();
+      return this._proxyAddress;
+    },
+
+    async migrateCdp(cdpId) {
+      const currentProxy = await this.getProxy();
+      if (currentProxy) {
+        await this._cdpService.give(cdpId, currentProxy);
+      }
     },
 
     // Calculations
@@ -942,6 +940,7 @@ export default {
     },
     openManage(cdpId) {
       if (this.$route.path.includes('maker-dai')) {
+        this.setupCdpManage(cdpId);
         this.$router.push({
           name: 'manage',
           params: {

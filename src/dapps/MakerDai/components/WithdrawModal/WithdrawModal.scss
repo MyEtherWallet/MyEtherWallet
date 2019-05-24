@@ -134,3 +134,37 @@ $confirmation-modal-mobile-width: 500px;
     }
   }
 }
+
+.warning-confirmation {
+  margin-top: 20px;
+  border: 1px solid $light-orange-1;
+  background-color: $light-orange-3;
+  padding: 20px;
+  border-radius: 4px;
+
+  .grid-block {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    .sign {
+      font-size: 30px;
+    }
+    .text-content {
+      .title {
+        font-size: 18px;
+        font-weight: 600;
+        margin: 0;
+        padding: 0;
+      }
+      .warning-details {
+        margin-top: 5px;
+        color: $dark-blue-2;
+        margin-bottom: 10px;
+        font-size: 14px;
+      }
+      .checkbox-label {
+        color: $mew-green;
+        font-weight: 500;
+      }
+    }
+  }
+}

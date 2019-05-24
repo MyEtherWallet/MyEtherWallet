@@ -29,7 +29,7 @@
               <div class="peth">
                 <p class="peth-value">
                   {{
-                  values.toPeth
+                    values.toPeth
                       ? displayFixedValue(values.toPeth(amount), 5, false)
                       : 0
                   }}
@@ -49,9 +49,7 @@
               <!-- TODO FOR TRANSLATE -->
               <p>
                 <b>{{
-                  values.maxDai
-                    ? displayFixedValue(values.maxDai, 3)
-                    : 0
+                  values.maxDai ? displayFixedValue(values.maxEthDraw, 5) : 0
                 }}</b>
                 {{ digitalCurrency }}
               </p>
@@ -177,21 +175,21 @@ export default {
         };
       }
     },
-    calcCollatRatioEthChg:{
+    calcCollatRatioEthChg: {
       type: Function,
-      default: function(){}
+      default: function() {}
     },
-    calcLiquidationPriceEthChg:{
+    calcLiquidationPriceEthChg: {
       type: Function,
-      default: function(){}
+      default: function() {}
     },
-    calcCollatRatioDaiChg:{
+    calcCollatRatioDaiChg: {
       type: Function,
-      default: function(){}
+      default: function() {}
     },
-    calcLiquidationPriceDaiChg:{
+    calcLiquidationPriceDaiChg: {
       type: Function,
-      default: function(){}
+      default: function() {}
     }
   },
   data() {
@@ -324,9 +322,7 @@ export default {
     async freeEth() {
       if (toBigNumber(this.amount).gte(0)) {
         this.delayCloseModal();
-        console.log('DO ACTION'); // todo remove dev item
         this.$emit('freeEth', this.amount);
-        // await this.activeCdp.freeEth(this.amount);
       }
     },
     closeModal() {

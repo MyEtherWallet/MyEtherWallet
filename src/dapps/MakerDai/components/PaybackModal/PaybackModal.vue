@@ -303,7 +303,7 @@ export default {
       // );
     },
     newCollateralRatio() {
-      if (this.values && this.amount > 0) {
+      if (this.values.debtValue && this.amount > 0) {
         return this.calcCollatRatioDaiChg(
           this.values.debtValue.minus(this.amount)
         );
@@ -313,7 +313,7 @@ export default {
       return 0;
     },
     newCollateralRatioSafe() {
-      if (this.values && this.amount > 0) {
+      if (this.values.debtValue && this.amount > 0) {
         const ratio = this.calcCollatRatioDaiChg(
           this.values.debtValue.minus(this.amount)
         );
@@ -327,7 +327,7 @@ export default {
       return true;
     },
     newCollateralRatioInvalid() {
-      if (this.values && this.amount > 0) {
+      if (this.values.debtValue && this.amount > 0) {
         const ratio = this.calcCollatRatioDaiChg(
           this.values.debtValue.minus(this.amount)
         );
@@ -341,11 +341,11 @@ export default {
       return true;
     },
     newLiquidationPrice() {
-      if (this.values && this.amount > 0) {
+      if (this.values.debtValue && this.amount > 0) {
         return this.calcLiquidationPriceDaiChg(
           this.values.debtValue.minus(this.amount)
         );
-      } else if (this.values) {
+      } else if (this.values.liquidationPrice) {
         return this.values.liquidationPrice;
       }
       return 0;
@@ -363,7 +363,6 @@ export default {
       return 0;
     },
     needsDaiApprove() {
-      console.log('proxyAllowanceDai', this.values.proxyAllowanceDai); // todo remove dev item
       if (toBigNumber(this.values.proxyAllowanceDai).gt(0)) {
         if (
           toBigNumber(this.values.proxyAllowanceDai).lt(this.values.debtValue)
@@ -415,9 +414,7 @@ export default {
     async wipeDai() {
       if (toBigNumber(this.amount).gte(0)) {
         this.delayCloseModal();
-        console.log('DO ACTION'); // todo remove dev item
         this.$emit('wipeDai', this.amount);
-        // await this.activeCdp.wipeDai(this.amount);
       }
     },
     getBalances() {
@@ -446,7 +443,6 @@ export default {
           symbol: 'MKR',
           name: 'Maker'
         };
-        console.log(this.suppliedToAmount); // todo remove dev item
         // this.destAddress = this.proxyAddress;
         // this.$refs.swapWidget.$refs.modal.show();
         this.$nextTick(() => {
