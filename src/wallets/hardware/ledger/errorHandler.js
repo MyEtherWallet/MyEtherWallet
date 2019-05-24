@@ -16,7 +16,8 @@ const ERRORS = {
     'ledgerError.claNotSupport0x6e00',
   'Invalid networkId signature returned.': 'ledgerError.invalidNetworkID',
   'EthAppPleaseEnableContractData: Please enable Contract data on the Ethereum app Settings':
-    'ledgerError.enableContractData'
+    'ledgerError.enableContractData',
+  'No device selected.': 'ledgerError.noDeviceSelected'
 };
 const WARNING = {
   'Ledger device: Condition of use not satisfied (denied by the user?) (0x6985)':

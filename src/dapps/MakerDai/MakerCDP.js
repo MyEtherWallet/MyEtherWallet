@@ -1,6 +1,5 @@
 import Maker from '@makerdao/dai';
 import BigNumber from 'bignumber.js';
-import { prevent } from './helpers';
 
 const { MKR, DAI } = Maker;
 
@@ -23,7 +22,7 @@ export default class MakerCDP {
     this.doUpdate = 0;
     this.cdps = [];
     this.noProxy = sysVars.noProxy || false;
-    this.makerManager = prevent(makerManager) || null;
+    this.makerManager = services.makerManager || null;
     this.needsUpdate = false;
     this.closing = false;
     this.opening = false;
@@ -33,19 +32,30 @@ export default class MakerCDP {
 
     this._liqPrice = toBigNumber(0);
     this.isSafe = false;
-    this._debtValue = toBigNumber(0);
+    this.debtValue = toBigNumber(0);
     this._collatRatio = 0;
-    this._ethCollateral = toBigNumber(0);
-    this._pethCollateral = toBigNumber(0);
+    this.ethCollateral = toBigNumber(0);
+    this.pethCollateral = toBigNumber(0);
     this._usdCollateral = toBigNumber(0);
     this._governanceFee = toBigNumber(0);
+
+    // this.proxyAllowanceDai = sysVars.proxyAllowanceDai || toBigNumber(0);
+    // this.proxyAllowanceMkr = sysVars.proxyAllowanceMkr || toBigNumber(0);
+    // this.liquidationPenalty = sysVars.liquidationPenalty;
+    //
+    //
+    // console.log(this.makerManager); // todo remove dev item
+    //
+    /*    this.proxyService = services.proxyService || null;
+    this.priceService = services.priceService || null;
+    this.cdpService = services.cdpService || null;*/
 
     if (toInit) this.init(this.cdpId);
   }
 
   // Getters
   get currentAddress() {
-    return this.makerManager.currentAddress;
+    return this.makerManager.account.address;
   }
 
   get liquidationPenalty() {
@@ -61,7 +71,7 @@ export default class MakerCDP {
   }
 
   get pethPrice() {
-    return this.makerManager.pethPrice;
+    return this.makerManager._pethPrice;
   }
 
   get wethToPethRatio() {
@@ -69,7 +79,7 @@ export default class MakerCDP {
   }
 
   get targetPrice() {
-    return this.makerManager.targetPrice;
+    return this.makerManager._targetPrice;
   }
 
   get liquidationRatio() {
@@ -77,7 +87,7 @@ export default class MakerCDP {
   }
 
   get proxyAddress() {
-    return this.makerManager.proxyAddress;
+    return this.makerManager._proxyAddress;
   }
 
   get hasProxy() {
@@ -93,7 +103,7 @@ export default class MakerCDP {
   }
 
   get daiToken() {
-    return this.makerManager.daiToken;
+    return this.makerManager._daiToken;
   }
 
   get daiBalance() {
@@ -101,7 +111,7 @@ export default class MakerCDP {
   }
 
   get mkrToken() {
-    return this.makerManager.mkrToken;
+    return this.makerManager._mkrToken;
   }
 
   get mkrBalance() {
@@ -109,19 +119,19 @@ export default class MakerCDP {
   }
 
   get proxyService() {
-    return this.makerManager.proxyService;
+    return this.makerManager._proxyService;
   }
 
   get priceService() {
-    return this.makerManager.priceService;
+    return this.makerManager._priceService;
   }
 
   get cdpService() {
-    return this.makerManager.cdpService;
+    return this.makerManager._cdpService;
   }
 
   get minEth() {
-    return this.makerManager.minEth;
+    return this.makerManager.minEth();
   }
 
   get pethMin() {
@@ -135,31 +145,24 @@ export default class MakerCDP {
   }
 
   get usdCollateral() {
-    return this.toUSD(this._ethCollateral);
+    return this.toUSD(this.ethCollateral);
   }
 
-  get ethCollateral() {
-    return this._ethCollateral;
-  }
+  // get ethCollateral() {
+  //   console.log(this.ethCollateral.toString()); // todo remove dev item
+  //   return this.ethCollateral;
+  // }
 
   get ethCollateralNum() {
-    return this._ethCollateral.toNumber();
-  }
-
-  get pethCollateral() {
-    return this._pethCollateral;
+    return this.ethCollateral.toNumber();
   }
 
   get pethCollateralNum() {
-    return this._pethCollateral.toNumber();
+    return this.pethCollateral.toNumber();
   }
 
   get collatRatio() {
     return this._collatRatio;
-  }
-
-  get debtValue() {
-    return this._debtValue;
   }
 
   get liquidationPrice() {
@@ -177,54 +180,50 @@ export default class MakerCDP {
   get maxDai() {
     if (
       this.ethPrice &&
-      this._ethCollateral &&
+      this.ethCollateral &&
       this.liquidationRatio &&
-      this._debtValue
+      this.debtValue
     ) {
       return bnOver(
         this.ethPrice,
-        this._ethCollateral,
+        this.ethCollateral,
         this.liquidationRatio
-      ).minus(this._debtValue);
+      ).minus(this.debtValue);
     }
     return toBigNumber(0);
   }
 
   get maxEthDraw() {
-    if (this.ethPrice && this._debtValue && this.liquidationRatio) {
+    if (this.ethPrice && this.debtValue && this.liquidationRatio) {
       if (this.zeroDebt) {
-        return this._ethCollateral
-          .minus(bnOver(this.liquidationRatio, this._debtValue, this.ethPrice))
+        return this.ethCollateral
+          .minus(bnOver(this.liquidationRatio, this.debtValue, this.ethPrice))
           .minus(this.minEth.times(1.0));
       }
-      return this._ethCollateral.minus(
-        bnOver(
-          this.liquidationRatio.plus(0.001),
-          this._debtValue,
-          this.ethPrice
-        )
+      return this.ethCollateral.minus(
+        bnOver(this.liquidationRatio.plus(0.001), this.debtValue, this.ethPrice)
       );
     }
     return toBigNumber(0);
   }
 
   get maxPethDraw() {
-    if (this.pethPrice && this._pethCollateral && this.liquidationRatio) {
+    if (this.pethPrice && this.pethCollateral && this.liquidationRatio) {
       if (this.zeroDebt) {
-        return this._pethCollateral
+        return this.pethCollateral
           .minus(
             bnOver(
               this.liquidationRatio.plus(0.001),
-              this._debtValue,
+              this.debtValue,
               this.pethPrice
             )
           )
           .minus(this.pethMin.times(1.0));
       }
-      return this._pethCollateral.minus(
+      return this.pethCollateral.minus(
         bnOver(
           this.liquidationRatio.plus(0.001),
-          this._debtValue,
+          this.debtValue,
           this.pethPrice
         )
       );
@@ -233,13 +232,13 @@ export default class MakerCDP {
   }
 
   get maxUsdDraw() {
-    if (this.pethPrice && this._pethCollateral && this.liquidationRatio) {
+    if (this.pethPrice && this.pethCollateral && this.liquidationRatio) {
       return this.toUSD(
-        this._ethCollateral
+        this.ethCollateral
           .minus(
             bnOver(
               this.liquidationRatio.plus(0.001),
-              this._debtValue,
+              this.debtValue,
               this.ethPrice
             )
           )
@@ -269,21 +268,17 @@ export default class MakerCDP {
     this._proxyAddress = await this.makerManager.getProxy();
     this.noProxy = this._proxyAddress === null;
     if (this._proxyAddress) {
-      this.cdp = await this.makerManager.daiJs.getCdp(
-        cdpId,
-        this._proxyAddress
-      );
+      this.cdp = await this.makerManager.getCdp(cdpId, this._proxyAddress);
     } else {
-      this.cdp = await this.makerManager.daiJs.getCdp(cdpId, false);
+      this.cdp = await this.makerManager.getCdp(cdpId, false);
     }
-
     const liqPrice = await this.cdp.getLiquidationPrice();
     this._liqPrice = liqPrice.toBigNumber().toFixed(2);
     this.isSafe = await this.cdp.isSafe();
-    this._debtValue = (await this.cdp.getDebtValue()).toBigNumber();
+    this.debtValue = (await this.cdp.getDebtValue()).toBigNumber();
     this._collatRatio = await this.cdp.getCollateralizationRatio();
-    this._ethCollateral = (await this.cdp.getCollateralValue()).toBigNumber();
-    this._pethCollateral = (await this.cdp.getCollateralValue(
+    this.ethCollateral = (await this.cdp.getCollateralValue()).toBigNumber();
+    this.pethCollateral = (await this.cdp.getCollateralValue(
       Maker.PETH
     )).toBigNumber();
     this._usdCollateral = (await this.cdp.getCollateralValue(
@@ -304,9 +299,9 @@ export default class MakerCDP {
       this.needsUpdate = false;
       await this.updateValues(this.cdpId);
       this.doUpdate++;
-      return prevent(this);
+      return this;
     }
-    return prevent(this);
+    return this;
   }
 
   async getProxy() {
@@ -435,6 +430,7 @@ export default class MakerCDP {
     }
   }
 
+  // This should also have a acknowledgeBypass
   async freeEth(amount) {
     try {
       if (this.noProxy) {
@@ -482,7 +478,6 @@ export default class MakerCDP {
     // will also need to check if there is enough allowance
     // const enoughToWipe = await this.canCloseCdp();
     // if (enoughToWipe) {
-    // console.log('close'); // todo remove dev item
     try {
       this.needsUpdate = true;
       this.closing = true;
@@ -523,7 +518,11 @@ export default class MakerCDP {
 
   // Calculations
   toUSD(eth) {
-    return this.makerManager.toUSD(eth);
+    const toUsd = this.makerManager.toUSD(eth);
+    if (toUsd.lt(0)) {
+      return toBigNumber(0);
+    }
+    return toUsd;
   }
 
   toPeth(eth) {
@@ -540,9 +539,9 @@ export default class MakerCDP {
 
   maxDaiDraw() {
     const tl = toBigNumber(this.ethPrice).times(
-      toBigNumber(this._ethCollateral)
+      toBigNumber(this.ethCollateral)
     );
-    const tr = toBigNumber(this._debtValue).times(
+    const tr = toBigNumber(this.debtValue).times(
       toBigNumber(this.liquidationRatio)
     );
     return tl.minus(tr).div(toBigNumber(this.ethPrice));
@@ -600,7 +599,7 @@ export default class MakerCDP {
   }
 
   calcCollatRatioEthChg(ethQty) {
-    return toBigNumber(this.calcCollatRatio(ethQty, this._debtValue));
+    return toBigNumber(this.calcCollatRatio(ethQty, this.debtValue));
   }
 
   calcLiquidationPriceDaiChg(daiQty) {
@@ -608,7 +607,7 @@ export default class MakerCDP {
   }
 
   calcLiquidationPriceEthChg(ethQty) {
-    return toBigNumber(this.calcLiquidationPrice(ethQty, this._debtValue));
+    return toBigNumber(this.calcLiquidationPrice(ethQty, this.debtValue));
   }
 
   atRisk() {
@@ -617,15 +616,11 @@ export default class MakerCDP {
 
   // Helpers
   async approveDai() {
-    if (toBigNumber(this.proxyAllowanceDai).eq(0)) {
-      await this.daiToken.approveUnlimited(this.proxyAddress);
-    }
+    await this.daiToken.approveUnlimited(this.proxyAddress);
   }
 
   async approveMkr() {
-    if (toBigNumber(this.proxyAllowanceMkr).eq(0)) {
-      await this.mkrToken.approveUnlimited(this.proxyAddress);
-    }
+    await this.mkrToken.approveUnlimited(this.proxyAddress);
   }
 
   async getDaiBalances() {

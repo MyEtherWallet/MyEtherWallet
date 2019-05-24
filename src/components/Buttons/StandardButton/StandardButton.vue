@@ -109,15 +109,15 @@ export default {
       type: Boolean,
       default: false
     },
+    spinner: {
+      type: Boolean,
+      default: false
+    },
     clickFunction: {
       type: Function,
       default: function() {
         return;
       }
-    },
-    spinner: {
-      type: Boolean,
-      default: false
     }
   },
   data() {

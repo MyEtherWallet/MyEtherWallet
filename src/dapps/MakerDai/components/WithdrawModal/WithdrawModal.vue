@@ -29,8 +29,8 @@
               <div class="peth">
                 <p class="peth-value">
                   {{
-                    activeCdp.toPeth
-                      ? displayFixedValue(activeCdp.toPeth(amount), 5, false)
+                    values.toPeth
+                      ? displayFixedValue(values.toPeth(amount), 5, false)
                       : 0
                   }}
                   PETH
@@ -43,15 +43,13 @@
 
         <expending-option title="Detail Information">
           <!-- Withdraw ETH -->
-          <div v-if="action === 'withdraw'" class="padding-container">
+          <div class="padding-container">
             <div class="grid-block">
               <p>{{ $t('dappsMaker.maxWithdrawAvailable') }}</p>
               <!-- TODO FOR TRANSLATE -->
               <p>
                 <b>{{
-                  activeCdp.maxDaiDraw
-                    ? displayFixedValue(activeCdp.maxDaiDraw(), 3)
-                    : 0
+                  values.maxDai ? displayFixedValue(values.maxEthDraw, 5) : 0
                 }}</b>
                 {{ digitalCurrency }}
               </p>
@@ -160,11 +158,38 @@ export default {
       type: String,
       default: ''
     },
-    activeCdp: {
+    values: {
       type: Object,
       default: function() {
-        return {};
+        return {
+          maxPethDraw: '',
+          maxEthDraw: '',
+          maxUsdDraw: '',
+          ethCollateral: '',
+          pethCollateral: '',
+          usdCollateral: '',
+          debtValue: '',
+          maxDai: '',
+          collateralRatio: '',
+          cdpId: ''
+        };
       }
+    },
+    calcCollatRatioEthChg: {
+      type: Function,
+      default: function() {}
+    },
+    calcLiquidationPriceEthChg: {
+      type: Function,
+      default: function() {}
+    },
+    calcCollatRatioDaiChg: {
+      type: Function,
+      default: function() {}
+    },
+    calcLiquidationPriceDaiChg: {
+      type: Function,
+      default: function() {}
     }
   },
   data() {
@@ -191,14 +216,13 @@ export default {
   },
   computed: {
     ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
-
     amountPresent() {
       return (
         (this.amount || this.amount !== '') && !toBigNumber(this.amount).lte(0)
       );
     },
     canCompute() {
-      return this.activeCdp && this.amountPresent;
+      return this.values && this.amountPresent;
     },
     hasEnoughEth() {
       if (this.amountPresent) {
@@ -210,7 +234,7 @@ export default {
     canWithdrawEthAmount() {
       if (this.amountPresent) {
         return toBigNumber(this.amount).lte(
-          toBigNumber(this.activeCdp.ethCollateral)
+          toBigNumber(this.values.ethCollateral)
         );
       }
       return false;
@@ -229,35 +253,35 @@ export default {
     },
     newCollateralRatio() {
       if (this.canCompute) {
-        return this.activeCdp.calcCollatRatioEthChg(
-          this.activeCdp.ethCollateral.minus(this.amount)
+        return this.calcCollatRatioEthChg(
+          this.values.ethCollateral.minus(this.amount)
         );
-      } else if (this.activeCdp) {
-        return this.activeCdp.collatRatio;
+      } else if (this.values) {
+        return this.values.collatRatio;
       }
       return toBigNumber(0);
     },
     newCollateralRatioSafe() {
       if (this.canCompute) {
-        if (this.activeCdp.zeroDebt) return true;
+        if (this.values.zeroDebt) return true;
         return this.newCollateralRatio.gte(2);
       }
       return true;
     },
     newCollateralRatioInvalid() {
       if (this.canCompute) {
-        if (this.activeCdp.zeroDebt) return false;
+        if (this.values.zeroDebt) return false;
         return this.newCollateralRatio.lte(1.5);
       }
       return true;
     },
     newLiquidationPrice() {
       if (this.canCompute) {
-        return this.activeCdp.calcLiquidationPriceEthChg(
-          this.activeCdp.ethCollateral.minus(this.amount)
+        return this.calcLiquidationPriceEthChg(
+          this.values.ethCollateral.minus(this.amount)
         );
-      } else if (this.activeCdp) {
-        return this.activeCdp.liquidationPrice;
+      } else if (this.values) {
+        return this.values.liquidationPrice;
       }
       return 0;
     }
@@ -265,6 +289,9 @@ export default {
   watch: {},
   mounted() {
     this.$refs.modal.$on('shown', () => {
+      this.amount = 0;
+    });
+    this.$refs.modal.$on('hidden', () => {
       this.amount = 0;
     });
   },
@@ -282,7 +309,7 @@ export default {
       return toBigNumber(val).gt(0);
     },
     maxWithdraw() {
-      this.amount = this.activeCdp.maxEthDraw; /*.minus(
+      this.amount = this.values.maxEthDraw; /*.minus(
         this.activeCdp.minEth.times(1.0)
       );
       console.log(this.activeCdp.maxEthDraw.toString()); // todo remove dev item
@@ -290,12 +317,12 @@ export default {
       this.$forceUpdate();
     },
     currentDai() {
-      this.amount = this.activeCdp.debtValue;
+      this.amount = this.values.debtValue;
     },
     async freeEth() {
       if (toBigNumber(this.amount).gte(0)) {
         this.delayCloseModal();
-        await this.activeCdp.freeEth(this.amount);
+        this.$emit('freeEth', this.amount);
       }
     },
     closeModal() {
