@@ -15,7 +15,7 @@
           <div class="top-buttons">
             <p class="total">
               <span>{{ $t('dappsMaker.total') }}</span>
-              {{ activeCdp.maxDai ? displayFixedValue(activeCdp.maxDai) : 0 }}
+              {{ values.maxDai ? displayFixedValue(values.maxDai) : 0 }}
               DAI
             </p>
             <p class="max" @click="maxDai">
@@ -41,13 +41,13 @@
         </div>
         <expending-option title="Details">
           <!-- Generate Dai -->
-          <div v-if="action === 'generate'" class="detail-container">
+          <div  class="detail-container">
             <div class="grid-block">
               <p>{{ $t('dappsMaker.maxGenerateAvailable') }}</p>
               <p>
                 <b>
                   {{
-                    activeCdp.maxDai ? displayFixedValue(activeCdp.maxDai) : 0
+                  values.maxDai ? displayFixedValue(values.maxDai) : 0
                   }}
                 </b>
                 DAI
@@ -144,11 +144,38 @@ export default {
       type: String,
       default: ''
     },
-    activeCdp: {
+    values: {
       type: Object,
       default: function() {
-        return {};
+        return {
+          maxPethDraw: '',
+          maxEthDraw: '',
+          maxUsdDraw: '',
+          ethCollateral: '',
+          pethCollateral: '',
+          usdCollateral: '',
+          debtValue: '',
+          maxDai: '',
+          collateralRatio: '',
+          cdpId: ''
+        };
       }
+    },
+    calcCollatRatioEthChg:{
+      type: Function,
+      default: function(){}
+    },
+    calcLiquidationPriceEthChg:{
+      type: Function,
+      default: function(){}
+    },
+    calcCollatRatioDaiChg:{
+      type: Function,
+      default: function(){}
+    },
+    calcLiquidationPriceDaiChg:{
+      type: Function,
+      default: function(){}
     }
   },
   data() {
@@ -181,7 +208,7 @@ export default {
       );
     },
     canCompute() {
-      return this.activeCdp && this.amountPresent;
+      return this.values && this.amountPresent;
     },
     allOk() {
       if (this.amountPresent) {
@@ -216,7 +243,7 @@ export default {
     },
     canGenerateDaiAmount() {
       if (this.canCompute) {
-        return toBigNumber(this.amount).lte(toBigNumber(this.activeCdp.maxDai));
+        return toBigNumber(this.amount).lte(toBigNumber(this.values.maxDai));
       }
       return true;
     },
@@ -237,8 +264,8 @@ export default {
       if (this.canCompute) {
         return this.displayFixedValue(
           this.displayPercentValue(
-            this.activeCdp.calcCollatRatioDaiChg(
-              this.activeCdp.debtValue.plus(this.amount)
+            this.calcCollatRatioDaiChg(
+              this.values.debtValue.plus(this.amount)
             )
           )
         );
@@ -247,36 +274,36 @@ export default {
     },
     newCollateralRatioSafe() {
       if (this.canCompute) {
-        return this.activeCdp
-          .calcCollatRatioDaiChg(this.activeCdp.debtValue.plus(this.amount))
+        return this
+          .calcCollatRatioDaiChg(this.values.debtValue.plus(this.amount))
           .gte(2);
       }
       return true;
     },
     newCollateralRatioInvalid() {
       if (this.canCompute) {
-        return this.activeCdp
-          .calcCollatRatioDaiChg(this.activeCdp.debtValue.plus(this.amount))
+        return this
+          .calcCollatRatioDaiChg(this.values.debtValue.plus(this.amount))
           .lte(1.5);
       }
       return true;
     },
     newLiquidationPrice() {
       if (this.canCompute) {
-        return this.activeCdp.calcLiquidationPriceDaiChg(
-          this.activeCdp.debtValue.plus(this.amount)
+        return this.calcLiquidationPriceDaiChg(
+          this.values.debtValue.plus(this.amount)
         );
-      } else if (this.activeCdp) {
-        return this.activeCdp.liquidationPrice;
+      } else if (this.values) {
+        return this.values.liquidationPrice;
       }
       return 0;
     }
   },
   watch: {},
   mounted() {
-    this.$refs.modal.$on('shown', () => {
-      this.amount = 0;
-    });
+    // this.$refs.modal.$on('shown', () => {
+    //   this.amount = 0;
+    // });
   },
   methods: {
     submitBtn() {
@@ -292,21 +319,25 @@ export default {
       return toBigNumber(val).gt(0);
     },
     maxDai() {
-      this.amount = this.activeCdp.maxDai.minus(
-        this.activeCdp.maxDai.times(0.01)
+      this.amount = this.values.maxDai.minus(
+        this.values.maxDai.times(0.01)
       );
       this.$forceUpdate();
     },
     currentDai() {
-      this.amount = this.activeCdp.debtValue;
+      this.amount = this.values.debtValue;
     },
     async drawDai() {
       if (toBigNumber(this.amount).gte(0)) {
         this.delayCloseModal();
         if (this.newCollateralRatioSafe) {
-          await this.activeCdp.drawDai(this.amount);
+          console.log('DO ACTION'); // todo remove dev item
+          this.$emit('drawDai', [this.amount, null])
+          // await this.activeCdp.drawDai(this.amount);
         } else {
-          await this.activeCdp.drawDai(this.amount, this.riskyBypass);
+          console.log('DO ACTION'); // todo remove dev item
+          this.$emit('drawDai', [this.amount, this.riskyBypass])
+          // await this.activeCdp.drawDai(this.amount, this.riskyBypass);
         }
       }
     },

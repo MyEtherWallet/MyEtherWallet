@@ -1,5 +1,73 @@
 <template>
   <div class="container-maker">
+    <deposit-modal
+      ref="deposit"
+      :values="activeValues"
+      :calc-collat-ratio-dai-chg="calcCollatRatioDaiChg"
+      :calc-collat-ratio-eth-chg="calcCollatRatioEthChg"
+      :calc-liquidation-price-eth-chg="calcLiquidationPriceEthChg"
+      :calc-liquidation-price-dai-chg="calcLiquidationPriceDaiChg"
+      :tokens-with-balance="tokensWithBalance"
+      @lockEth="lockEth"
+    ></deposit-modal>
+    <generate-modal
+      ref="generate"
+      :values="activeValues"
+      :calc-collat-ratio-dai-chg="calcCollatRatioDaiChg"
+      :calc-collat-ratio-eth-chg="calcCollatRatioEthChg"
+      :calc-liquidation-price-eth-chg="calcLiquidationPriceEthChg"
+      :calc-liquidation-price-dai-chg="calcLiquidationPriceDaiChg"
+      :tokens-with-balance="tokensWithBalance"
+      @drawDai="drawDai"
+    ></generate-modal>
+    <withdraw-modal
+      ref="withdraw"
+      :values="activeValues"
+      :calc-collat-ratio-dai-chg="calcCollatRatioDaiChg"
+      :calc-collat-ratio-eth-chg="calcCollatRatioEthChg"
+      :calc-liquidation-price-eth-chg="calcLiquidationPriceEthChg"
+      :calc-liquidation-price-dai-chg="calcLiquidationPriceDaiChg"
+      :tokens-with-balance="tokensWithBalance"
+      @approveDai="approveDai"
+      @approveMkr="approveMkr"
+      @freeEth="freeEth"
+    ></withdraw-modal>
+    <payback-modal
+      ref="payback"
+      :values="activeValues"
+      :calc-collat-ratio-dai-chg="calcCollatRatioDaiChg"
+      :calc-collat-ratio-eth-chg="calcCollatRatioEthChg"
+      :calc-liquidation-price-eth-chg="calcLiquidationPriceEthChg"
+      :calc-liquidation-price-dai-chg="calcLiquidationPriceDaiChg"
+      :tokens-with-balance="tokensWithBalance"
+      @approveDai="approveDai"
+      @approveMkr="approveMkr"
+      @wipeDai="wipeDai"
+    ></payback-modal>
+    <close-cdp-modal
+      ref="closeCdp"
+      :values="activeValues"
+      :calc-collat-ratio-dai-chg="calcCollatRatioDaiChg"
+      :calc-collat-ratio-eth-chg="calcCollatRatioEthChg"
+      :calc-liquidation-price-eth-chg="calcLiquidationPriceEthChg"
+      :calc-liquidation-price-dai-chg="calcLiquidationPriceDaiChg"
+      :tokens-with-balance="tokensWithBalance"
+      @approveDai="approveDai"
+      @approveMkr="approveMkr"
+      @closeCdp="closeCdp"
+    >
+    </close-cdp-modal>
+    <move-cdp-modal
+      ref="moveCdp"
+      :values="activeValues"
+      :calc-collat-ratio-dai-chg="calcCollatRatioDaiChg"
+      :calc-collat-ratio-eth-chg="calcCollatRatioEthChg"
+      :calc-liquidation-price-eth-chg="calcLiquidationPriceEthChg"
+      :calc-liquidation-price-dai-chg="calcLiquidationPriceDaiChg"
+      :tokens-with-balance="tokensWithBalance"
+      @moveCdp="moveCdp"
+    >
+    </move-cdp-modal>
     <interface-container-title :title="'MAKER'">
       <template v-slot:right>
         <div style="padding-left: 20px; cursor: pointer;">
@@ -51,9 +119,9 @@
         </div>
       </div>
     </div>
+
     <router-view
       :build-empty="buildEmpty"
-      :maker-manager="makerManager"
       :maker-active="makerActive"
       :eth-price="ethPrice"
       :peth-price="pethPrice"
@@ -66,19 +134,24 @@
       :cdp-service="cdpService"
       :proxy-service="proxyService"
       :cdps="cdps"
-      :available-cdps="availableCdps"
       :cdp-details-loaded="cdpDetailsLoaded"
       :tokens-with-balance="tokensWithBalance"
       :migration-in-progress="migrationInProgress"
       :open-close-modal="openCloseModal"
       :open-move-modal="openMoveModal"
       :values-updated="valuesUpdated"
+      :values="activeValues"
       :get-cdp="getCdp"
       :has-cdp="hasCdp"
+      @activeCdpId="setupCdpManage"
       @cdpOpened="addCdp"
       @cdpClosed="removeCdp"
       @modalHidden="modalHidden"
       @managerUpdate="doUpdate"
+      @showWithdraw="showWithdraw"
+      @showPayback="showPayback"
+      @showGenerate="showGenerate"
+      @showDeposit="showDeposit"
     >
     </router-view>
   </div>
@@ -92,6 +165,10 @@ import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
 import CloseCdpModal from './components/CloseCdpModal';
 import MoveCdpModal from './components/MoveCdpModal';
+import GenerateModal from './components/GenerateModal';
+import DepositModal from './components/DepositModal';
+import WithdrawModal from './components/WithdrawModal';
+import PaybackModal from './components/PaybackModal';
 import BigNumber from 'bignumber.js';
 import Maker from '@makerdao/dai';
 import { Toast } from '@/helpers';
@@ -116,6 +193,10 @@ export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
     'interface-bottom-text': InterfaceBottomText,
+    'generate-modal': GenerateModal,
+    'deposit-modal': DepositModal,
+    'withdraw-modal': WithdrawModal,
+    'payback-modal': PaybackModal,
     blockie: Blockie,
     'back-button': BackButton,
     'close-cdp-modal': CloseCdpModal,
@@ -139,9 +220,9 @@ export default {
   },
   data() {
     return {
-      maker: {},
+      // maker: {},
       afterUpdate: [],
-      activeCdps: {},
+      // activeCdps: {},
       activeCdp: {},
       availableCdps: {},
       cdps: [],
@@ -172,7 +253,21 @@ export default {
       sysServices: {},
       targetPrice: 0,
       valuesUpdated: 0,
-      wethToPethRatio: toBigNumber(0)
+      wethToPethRatio: toBigNumber(0),
+      currentCdpId: '',
+      activeValues: {
+        maxPethDraw: toBigNumber(0),
+        maxEthDraw: toBigNumber(0),
+        maxUsdDraw: toBigNumber(0),
+        ethCollateral: toBigNumber(0),
+        pethCollateral: toBigNumber(0),
+        usdCollateral: toBigNumber(0),
+        debtValue: toBigNumber(0),
+        maxDai: toBigNumber(0),
+        collateralRatio: toBigNumber(0),
+        minEth: toBigNumber(0),
+        cdpId: '--'
+      }
     };
   },
   computed: {
@@ -217,7 +312,7 @@ export default {
     }
   },
   destroyed() {
-    this.maker.service('web3').disconnect();
+    // this.maker.service('web3').disconnect();
     this.priceService = {};
     this.cdpService = {};
     this.proxyService = {};
@@ -232,17 +327,13 @@ export default {
     await this.setup();
   },
   methods: {
-    showClose() {
-      this.openCloseModal = true;
-    },
-    showMove() {
-      this.openMoveModal = true;
-    },
     modalHidden() {
       this.openCloseModal = false;
       this.openMoveModal = false;
     },
     async setup() {
+      this.activeCdps = {};
+      this.currentCdp = {};
       const web3 = this.web3;
       const _self = this;
       this.gotoHome();
@@ -263,39 +354,55 @@ export default {
         }
       });
 
-      await this.init();
+      await this.maker.authenticate();
+      this._priceService = this.maker.service('price');
+      this._cdpService = await this.maker.service('cdp');
+      this._proxyService = await this.maker.service('proxy');
+      this._tokenService = await this.maker.service('token');
+
+      this.pethMin = toBigNumber(0.005);
+
+      this.ethPrice = toBigNumber(
+        (await this._priceService.getEthPrice()).toNumber()
+      );
+
+      const pethPrice = await this._priceService.getPethPrice();
+      const targetPrice = await this._priceService.getPethPrice();
+      const liquidationRatio = await this._cdpService.getLiquidationRatio();
+      const liquidationPenalty = await this._cdpService.getLiquidationPenalty();
+      const stabilityFee = await this._cdpService.getAnnualGovernanceFee();
+      const wethToPethRatio = await this._priceService.getWethToPethRatio();
+
+      this.pethPrice = toBigNumber(pethPrice.toNumber());
+
+      this._targetPrice = toBigNumber(targetPrice.toNumber());
+
+      this.liquidationRatio = toBigNumber(liquidationRatio);
+      this.liquidationPenalty = toBigNumber(liquidationPenalty);
+      this.stabilityFee = toBigNumber(stabilityFee);
+
+      this.wethToPethRatio = toBigNumber(wethToPethRatio);
+      this._proxyAddress = await this._proxyService.currentProxy();
+
+      this.daiToken = this._tokenService.getToken(DAI);
+      this.daiBalance = (await this.daiToken.balance()).toBigNumber();
+      this.mkrToken = this._tokenService.getToken(MKR);
+      this.mkrBalance = (await this.mkrToken.balance()).toBigNumber();
+
+      await this.checkAllowances();
+
+      const { withProxy, withoutProxy } = await this.locateCdps();
+      this.cdps = withProxy;
+      this.cdpsWithoutProxy = withoutProxy;
+
+      if (this.cdps.length > 0 || this.cdpsWithoutProxy.length > 0) {
+        await this.loadCdpDetails();
+      }
 
       this.currentProxy = this.getProxy();
       if (this.cdps.length > 0 || this.cdpsWithoutProxy.length > 0) {
         this.cdpDetailsLoaded = true;
         this.makerActive = true;
-        this.makerManager = {
-          _proxyService: this._proxyService,
-          priceService: this.priceService,
-          _cdpService: this._cdpService,
-          doUpdate: this.doUpdate,
-          getProxy: this.getProxy,
-          hasProxy: this.hasProxy,
-          getCdp: this.getMakerCdp,
-          toPeth: this.toPeth,
-          toUSD: this.toUSD,
-          _proxyAddress: this._proxyAddress,
-          liquidationPenalty: this.liquidationPenalty,
-          stabilityFee: this.stabilityFee,
-          ethPrice: this.ethPrice,
-          _pethPrice: this._pethPrice,
-          wethToPethRatio: this.wethToPethRatio,
-          _targetPrice: this._targetPrice,
-          liquidationRatio: this.liquidationRatio,
-          proxyAllowanceDai: this.proxyAllowanceDai,
-          proxyAllowanceMkr: this.proxyAllowanceMkr,
-          _daiToken: this._daiToken,
-          daiBalance: this.daiBalance,
-          _mkrToken: this._mkrToken,
-          mkrBalance: this.mkrBalance,
-          minEth: this.minEth,
-          pethMin: this.pethMin
-        };
         if (
           this.$route.name !== 'create' &&
           this.$route.path.includes('maker-dai')
@@ -308,12 +415,7 @@ export default {
     },
 
     async buildEmpty() {
-      // const services = {
-      //   web3: this.web3
-      // };
-      // console.log(this.makerManager); // todo remove dev item
       return await this.buildCdpObject(null);
-      // this.makerCDP = new MakerCDP(null, this.makerManager, services, {});
     },
     addCdp() {
       this.creatingCdp = true;
@@ -336,17 +438,6 @@ export default {
       });
       await this.migrateCdp(cdpId);
     },
-    async runAfterUpdateActions() {
-      for (let i = 0; i < this.afterUpdate.length; i++) {
-        const item = this.afterUpdate[i];
-        if (Array.isArray(item)) {
-          const func = item.shift();
-          await func.apply(this, item);
-        } else {
-          await item();
-        }
-      }
-    },
     async refreshExternal() {
       // eslint-disable-next-line
       await this.doUpdateExternal();
@@ -361,7 +452,6 @@ export default {
       }
 
       if (complete) {
-        await this.runAfterUpdateActions();
         this.valuesUpdated++;
         Toast.responseHandler('CDP Updated', Toast.INFO);
       } else {
@@ -369,56 +459,6 @@ export default {
         Toast.responseHandler('Update encountered an issue', Toast.INFO);
       }
     },
-    //============================================================
-    // prior in separate
-    async init() {
-      await this.maker.authenticate();
-      this._priceService = this.maker.service('price');
-      this._cdpService = await this.maker.service('cdp');
-      this._proxyService = await this.maker.service('proxy');
-      this._tokenService = await this.maker.service('token');
-
-      this.pethMin = toBigNumber(0.005);
-
-      this.ethPrice = toBigNumber(
-        (await this._priceService.getEthPrice()).toNumber()
-      );
-
-      const pethPrice = await this._priceService.getPethPrice();
-      const targetPrice = await this._priceService.getPethPrice();
-      const liquidationRatio = await this._cdpService.getLiquidationRatio();
-      const liquidationPenalty = await this._cdpService.getLiquidationPenalty();
-      const stabilityFee = await this._cdpService.getAnnualGovernanceFee();
-      const wethToPethRatio = await this._priceService.getWethToPethRatio();
-
-      this._pethPrice = toBigNumber(pethPrice.toNumber());
-
-      this._targetPrice = toBigNumber(targetPrice.toNumber());
-
-      this.liquidationRatio = toBigNumber(liquidationRatio);
-      this.liquidationPenalty = toBigNumber(liquidationPenalty);
-      this.stabilityFee = toBigNumber(stabilityFee);
-
-      this.wethToPethRatio = toBigNumber(wethToPethRatio);
-      this._proxyAddress = await this._proxyService.currentProxy();
-
-      this.daiToken = this._tokenService.getToken(DAI);
-      this.daiBalance = (await this.daiToken.balance()).toBigNumber();
-      this.mkrToken = this._tokenService.getToken(MKR);
-      this.mkrBalance = (await this.mkrToken.balance()).toBigNumber();
-
-      await this.checkAllowances();
-
-
-      const { withProxy, withoutProxy } = await this.locateCdps();
-      this.cdps = withProxy;
-      this.cdpsWithoutProxy = withoutProxy;
-
-      if (this.cdps.length > 0 || this.cdpsWithoutProxy.length > 0) {
-        await this.loadCdpDetails();
-      }
-    },
-
     async getProxy() {
       this._proxyAddress = await this._proxyService.currentProxy();
       if (!this._proxyAddress) {
@@ -429,6 +469,127 @@ export default {
       }
       return this._proxyAddress;
     },
+    async setupCdpManage(cdpId) {
+      this.currentCdpId = cdpId;
+      this.activeValues = await this.getValuesForManage(cdpId);
+    },
+    showDeposit() {
+      this.$refs.deposit.$refs.modal.show();
+    },
+    showWithdraw() {
+      this.$refs.withdraw.$refs.modal.show();
+    },
+    showPayback() {
+      this.$refs.payback.$refs.modal.show();
+    },
+    showGenerate() {
+      this.$refs.generate.$refs.modal.show();
+    },
+    showClose() {
+      this.$refs.closeCdp.$refs.modal.$on('hidden', () => {
+        this.$emit('modalHidden');
+      });
+      this.$refs.closeCdp.$refs.modal.show();
+    },
+    showMove() {
+      this.$refs.moveCdp.$refs.modal.$on('hidden', () => {
+        this.$emit('modalHidden');
+      });
+      this.$refs.moveCdp.$refs.modal.show();
+    },
+    lockEth(val) {
+      console.log(val); // todo remove dev item
+      this.currentCdp.lockEth(val);
+    },
+    wipeDai(val) {
+      console.log(val); // todo remove dev item
+      this.currentCdp.wipeDai(val);
+    },
+    freeEth(val) {
+      console.log(val); // todo remove dev item
+      this.currentCdp.freeEth(val);
+    },
+    drawDai(val) {
+      console.log(val); // todo remove dev item
+      this.currentCdp.drawDai(val);
+    },
+    closeCdp(val) {
+      console.log(val); // todo remove dev item
+      this.currentCdp.closeCdp();
+    },
+    moveCdp(val) {
+      console.log(val); // todo remove dev item
+      this.currentCdp.moveCdp(val);
+    },
+    async getValuesForManage(cdpId) {
+      const currentCdp = this.activeCdps[cdpId];
+      this.currentCdp = currentCdp;
+      const _proxyAllowanceDai = this._proxyAllowanceDai;
+      const _proxyAllowanceMkr = this._proxyAllowanceMkr;
+      const toPeth = this.toPeth;
+      const stabilityFee = this.stabilityFee;
+      const valuesToManage = {
+        cdpId: cdpId,
+        stabilityFee: stabilityFee,
+        maxPethDraw: currentCdp.maxPethDraw,
+        maxEthDraw: currentCdp.maxEthDraw,
+        maxUsdDraw: currentCdp.maxUsdDraw,
+        ethCollateral: currentCdp.ethCollateral,
+        pethCollateral: currentCdp.pethCollateral,
+        usdCollateral: currentCdp.usdCollateral,
+        debtValue: currentCdp.debtValue,
+        maxDai: currentCdp.maxDai,
+        collateralRatio: currentCdp.collatRatio,
+        liquidationPrice: currentCdp.liquidationPrice,
+        minEth: currentCdp.minEth,
+        isSafe: false,
+        governanceFeeOwed: currentCdp.governanceFeeOwed,
+        ethCollateralNum: currentCdp.ethCollateralNum,
+        toPeth: toPeth,
+        proxyAllowanceDai: _proxyAllowanceDai,
+        proxyAllowanceMkr: _proxyAllowanceMkr,
+        zeroDebt: currentCdp.zeroDebt
+      };
+      console.log(valuesToManage); // todo remove dev item
+      return valuesToManage;
+    },
+    calcCollatRatioDaiChg(daiQty) {
+      return toBigNumber(
+        this.currentCdp.calcCollatRatio(this.currentCdp.ethCollateral, daiQty)
+      );
+    },
+
+    calcCollatRatioEthChg(ethQty) {
+      return toBigNumber(
+        this.currentCdp.calcCollatRatio(ethQty, this.currentCdp.debtValue)
+      );
+    },
+
+    calcLiquidationPriceDaiChg(daiQty) {
+      return toBigNumber(
+        this.currentCdp.calcLiquidationPrice(
+          this.currentCdp.ethCollateral,
+          daiQty
+        )
+      );
+    },
+
+    calcLiquidationPriceEthChg(ethQty) {
+      return toBigNumber(
+        this.currentCdp.calcLiquidationPrice(ethQty, this.currentCdp.debtValue)
+      );
+    },
+    async approveDai() {
+      await this._tokenService
+        .getToken(DAI)
+        .approveUnlimited(this._proxyAddress);
+    },
+    async approveMkr() {
+      this._tokenService.getToken(MKR).approveUnlimited(this._proxyAddress);
+    },
+
+    //============================================================
+    // prior in separate
 
     hasCdp(cdpId) {
       return Object.keys(this.activeCdps).includes(
@@ -439,7 +600,10 @@ export default {
     getCdp(cdpId) {
       return this.activeCdps[cdpId];
     },
+
     async getMakerCdp(cdpId) {
+      if (cdpId === null) return;
+      console.log('this.maker', this.maker); // todo remove dev item
       if (this._proxyAddress) {
         return await this.maker.getCdp(cdpId, this._proxyAddress);
       }
@@ -451,53 +615,49 @@ export default {
     },
 
     async updateActiveCdp() {
-      // console.log(this.cdps); // todo remove dev item
-      // console.log(Object.keys(this.activeCdps)); // todo remove dev item
-      // const currentCdpIds = Object.keys(this.activeCdps);
-      // await this.locateCdps();
-      //
-      // const newCdps = this.cdps.filter(
-      //   item => !Object.keys(this.activeCdps).includes(item.toString())
-      // );
-      // console.log('should only include newly found cdps'); // todo remove dev item
-      // console.log(
-      //   this.cdps.filter(
-      //     item => !Object.keys(this.activeCdps).includes(item.toString())
-      //   )
-      // ); // todo remove dev item
-      //
-      // console.log('newCdps', newCdps); // todo remove dev item
-      // const newCdpsWithoutProxy = this.cdpsWithoutProxy.filter(
-      //   item => !Object.keys(this.activeCdps).includes(item.toString())
-      // );
-      //
-      // console.log('newCdpsWithoutProxy', newCdpsWithoutProxy); // todo remove dev item
-      // const removedCdps = currentCdpIds.filter(
-      //   item =>
-      //     !(
-      //       this.cdps.includes(item.toString()) ||
-      //       this.cdpsWithoutProxy.includes(item.toString())
-      //     )
-      // );
-      //
-      // if (removedCdps.length > 0) {
-      //   removedCdps.forEach(item => delete this.activeCdps[item]);
-      // }
-      //
-      // for (let i = 0; i < newCdps.length; i++) {
-      //   this.activeCdps[newCdps[i]] = await this.buildCdpObject(newCdps[i]);
-      // }
-      //
-      // for (let i = 0; i < newCdpsWithoutProxy.length; i++) {
-      //   this.activeCdps[newCdpsWithoutProxy[i]] = await this.buildCdpObject(
-      //     newCdpsWithoutProxy[i],
-      //     { noProxy: true }
-      //   );
-      // }
-      //
-      // if (this.cdps.length === 0 && this.cdpsWithoutProxy.length === 0) {
-      //   this.gotoCreate();
-      // }
+      const currentCdpIds = Object.keys(this.activeCdps);
+      await this.locateCdps();
+
+      const newCdps = this.cdps.filter(
+        item => !Object.keys(this.activeCdps).includes(item.toString())
+      );
+
+      const newCdpsWithoutProxy = this.cdpsWithoutProxy.filter(
+        item => !Object.keys(this.activeCdps).includes(item.toString())
+      );
+
+      const removedCdps = currentCdpIds.filter(
+        item =>
+          !(
+            this.cdps.includes(item.toString()) ||
+            this.cdpsWithoutProxy.includes(item.toString())
+          )
+      );
+
+      if (removedCdps.length > 0) {
+        removedCdps.forEach(item => delete this.activeCdps[item]);
+      }
+
+      console.log('newCdps.length', newCdps.length); // todo remove dev item
+      console.log('newCdpsWithoutProxy.length', newCdpsWithoutProxy.length); // todo remove dev item
+      if (newCdps.length > 0) {
+        for (let i = 0; i < newCdps.length; i++) {
+          this.activeCdps[newCdps[i]] = await this.buildCdpObject(newCdps[i]);
+        }
+      }
+
+      if (newCdpsWithoutProxy.length > 0) {
+        for (let i = 0; i < newCdpsWithoutProxy.length; i++) {
+          this.activeCdps[newCdpsWithoutProxy[i]] = await this.buildCdpObject(
+            newCdpsWithoutProxy[i],
+            { noProxy: true }
+          );
+        }
+      }
+
+      if (this.cdps.length === 0 && this.cdpsWithoutProxy.length === 0) {
+        this.gotoCreate();
+      }
     },
 
     async doUpdate(route) {
@@ -505,7 +665,7 @@ export default {
       let afterClose = false;
       const afterOpen = route === 'create';
       await this.updateActiveCdp();
-
+      console.log('this.activeCdps', this.activeCdps); // todo remove dev item
       for (const idProp in this.activeCdps) {
         if (this.activeCdps[idProp].needsUpdate) {
           if (this.activeCdps[idProp].closing) {
@@ -521,11 +681,24 @@ export default {
             this.activeCdps[idProp] = await this.activeCdps[idProp].update();
           }
         }
+        console.log(idProp, idProp === this.currentCdpId, this.currentCdpId); // todo remove dev item
+        if (idProp === this.currentCdpId) {
+          await this.currentCdp.update();
+          await this.setupCdpManage(this.currentCdpId);
+        }
       }
 
       this.daiBalance = (await this.daiToken.balance()).toBigNumber();
       this.mkrBalance = (await this.mkrToken.balance()).toBigNumber();
       await this.checkAllowances();
+
+      console.log('this.cdps', this.cdps); // todo remove dev item
+      if (!Object.keys(this.activeCdps).includes(this.currentCdpId)) {
+        await this.loadCdpDetails();
+        await this.setupCdpManage(this.currentCdpId);
+      } else {
+        await this.setupCdpManage(this.currentCdpId);
+      }
 
       if (afterClose || afterOpen) {
         if (this.cdps.length > 0 || this.cdpsWithoutProxy.length > 0) {
@@ -614,7 +787,7 @@ export default {
         liquidationPenalty: this.liquidationPenalty,
         stabilityFee: this.stabilityFee,
         ethPrice: this.ethPrice,
-        _pethPrice: this._pethPrice,
+        _pethPrice: this.pethPrice,
         wethToPethRatio: this.wethToPethRatio,
         _targetPrice: this._targetPrice,
         liquidationRatio: this.liquidationRatio,
@@ -649,7 +822,7 @@ export default {
           liquidationPenalty: this.liquidationPenalty,
           stabilityFee: this.stabilityFee,
           ethPrice: this.ethPrice,
-          _pethPrice: this._pethPrice,
+          _pethPrice: this.pethPrice,
           wethToPethRatio: this.wethToPethRatio,
           _targetPrice: this._targetPrice,
           liquidationRatio: this.liquidationRatio,
@@ -745,7 +918,7 @@ export default {
             }
           });
         } else if (this.showManage) {
-          // eslint-disable-next-line
+          // The listing screen may not work
           this.$router.push({
             name: 'select'
           });
