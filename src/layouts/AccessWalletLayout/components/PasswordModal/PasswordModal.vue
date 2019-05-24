@@ -30,9 +30,7 @@
         {{ $t('accessWallet.notARecommendedWay') }}
       </div>
       <button
-        :disabled="
-          walletRequirePass(file) && (password === '' || password.length === 0)
-        "
+        :disabled="inputValid"
         class="submit-button large-round-button-green-filled"
         type="submit"
         @click.prevent="unlockWallet"
@@ -67,7 +65,13 @@ export default {
     };
   },
   computed: {
-    ...mapState(['path', 'online'])
+    ...mapState(['path', 'online']),
+    inputValid() {
+      return (
+        this.walletRequirePass(this.file) &&
+        (this.password === '' || this.password.length === 0)
+      );
+    }
   },
   watch: {
     password() {

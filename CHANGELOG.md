@@ -1,3 +1,13 @@
+### Release v5.0.12-hotfix.1
+
+### Bug
+
+- Use u2f in windows for ledger [#1100](https://github.com/MyEtherWallet/MyEtherWallet/pull/1100)
+
+### Devop
+
+- Possible random error fix, and sync master to develop [#1101](https://github.com/MyEtherWallet/MyEtherWallet/pull/1101)
+
 ### Release v5.0.12
 
 ### Feature
@@ -12,12 +22,14 @@
 - set up a fallback if GAS_LIMIT check fails [#1076](https://github.com/MyEtherWallet/MyEtherWallet/pull/1076)
 - Fix owner check for permanent registrar names [#1054](https://github.com/MyEtherWallet/MyEtherWallet/pull/1054)
 - Web3 wallet promievent fix [#1063](https://github.com/MyEtherWallet/MyEtherWallet/pull/1063)
+- Catch ledger error [#1091](https://github.com/MyEtherWallet/MyEtherWallet/pull/1091)
 
 ### Devop
 
 - Ledger custom paths [#1037](https://github.com/MyEtherWallet/MyEtherWallet/pull/1037)
 - Update Richie's profile [#1036](https://github.com/MyEtherWallet/MyEtherWallet/pull/1036)
 - Change PWA name to MEW [#1030](https://github.com/MyEtherWallet/MyEtherWallet/pull/1030)
+- Address validation on swap [#1090](https://github.com/MyEtherWallet/MyEtherWallet/pull/1090)
 
 ### Release v5.0.11-ens.1
 
