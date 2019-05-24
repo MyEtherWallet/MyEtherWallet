@@ -1,3 +1,7 @@
+### Bug
+
+- Fixes refresh page on mnemonic wallet submit []()
+
 ### Release v5.0.12-hotfix.1
 
 ### Bug
