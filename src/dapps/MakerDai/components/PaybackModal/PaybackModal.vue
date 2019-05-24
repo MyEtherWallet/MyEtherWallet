@@ -401,7 +401,9 @@ export default {
       return toBigNumber(val).gt(0);
     },
     maxDai() {
-      this.amount = toBigNumber(this.values.maxDai).minus(toBigNumber(this.values.maxDai).times(0.01));
+      this.amount = toBigNumber(this.values.maxDai).minus(
+        toBigNumber(this.values.maxDai).times(0.01)
+      );
     },
     currentDai() {
       this.amount = this.values.debtValue;
