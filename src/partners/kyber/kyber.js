@@ -166,9 +166,7 @@ export default class Kyber {
   async retrieveGasLimits(network = this.network) {
     try {
       const gasLimitList = await kyberCalls.getGasLimits(network);
-      if (Array.isArray(gasLimitList)) {
-        this.GAS_LIMITS = gasLimitList.data;
-      }
+      this.GAS_LIMITS = gasLimitList.data;
     } catch (e) {
       utils.handleOrThrow(e);
       errorLogger(e);
@@ -427,7 +425,6 @@ export default class Kyber {
         walletDepositeAddress
       )
       .encodeABI();
-
     return {
       to: this.getKyberNetworkAddress(),
       value: Object.values(networkSymbols).includes(fromCurrency)
