@@ -60,7 +60,7 @@
     "@ledgerhq/hw-transport-webusb": "4.60.2",
     "@myetherwallet/eth-token-balance": "0.1.4",
     "@myetherwallet/mewconnect-web-client": "1.0.14",
-    "@vue/cli-plugin-babel": "3.7.0",
+    "@vue/cli-plugin-babel": "3.8.0",
     "@vue/cli-plugin-eslint": "3.7.0",
     "@vue/cli-plugin-pwa": "3.7.0",
     "@vue/cli-plugin-unit-jest": "3.7.0",
