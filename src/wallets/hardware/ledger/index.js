@@ -127,7 +127,10 @@ createWallet.errorHandler = errorHandler;
 
 const isWebUsbSupported = async () => {
   const isSupported = await webUsbTransport.isSupported();
-  return isSupported && platform.os.family !== 'Windows'; // take it out later once the windows issue is fixed
+  console.log(isSupported, platform.name);
+  return (
+    isSupported && platform.os.family !== 'Windows' && platform.name !== 'Opera' // take it out later once the windows issue is fixed
+  );
 };
 
 const getLedgerTransport = async () => {
