@@ -17,12 +17,9 @@
     }
 
     .page-header {
-      margin-bottom: 10px;
+      margin-bottom: 40px;
       text-align: center;
 
-      h1 {
-        margin: 0;
-      }
       p {
         margin: 0 auto;
         max-width: 700px;
@@ -32,9 +29,7 @@
 } // .wrap
 
 .content {
-  h6 {
-    text-align: center;
-  }
+  text-align: center;
   p {
     font-size: 14px;
     font-weight: 400;
