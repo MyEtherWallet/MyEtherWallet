@@ -1,5 +1,5 @@
 <template>
-  <div class="team">
+  <div class="privacy-policy">
     <div class="wrap">
       <div class="page-container">
         <div class="content-width-limit">
