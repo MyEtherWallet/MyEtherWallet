@@ -1,4 +1,5 @@
-import xdc from './xdc-testnet';
+import xdc from './xdc-mainnet';
+
 // import ethethscan from './eth-ethscan';
 // import ethinfura from './eth-infura';
 // import ethinfuraws from './eth-infura-ws';

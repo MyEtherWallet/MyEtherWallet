@@ -6,9 +6,9 @@ export default {
   name: 'XDC',
   name_long: 'XDC',
   homePage: 'https://xinfin.org/',
-  blockExplorerAddr: 'https://explorer.apothem.network/account/[[address]]',
-  blockExplorerTX: 'https://explorer.apothem.network/tx/[[txHash]]',
-  chainID: 51,
+  blockExplorerAddr: 'https://explorer.xinfin.network/account/[[address]]',
+  blockExplorerTX: 'https://explorer.xinfin.network/tx/[[txHash]]',
+  chainID: 50,
   tokens: tokens,
   contracts: contracts,
   ens: {
