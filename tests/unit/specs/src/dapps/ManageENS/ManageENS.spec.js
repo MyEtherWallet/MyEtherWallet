@@ -1,10 +1,10 @@
 import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils';
-import RegisterDomain from '@/dapps/RegisterDomain/RegisterDomain.vue';
+import ManageENS from '@/dapps/ManageENS/ManageENS.vue';
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton/BackButton.vue';
 import { Tooling } from '@@/helpers';
 
-describe('RegisterDomain.vue', () => {
+describe('ManageENS.vue', () => {
   let localVue, i18n, wrapper, store;
   const domainName = 'domainName';
   const bidAmount = 0.001;
@@ -29,7 +29,7 @@ describe('RegisterDomain.vue', () => {
   });
 
   beforeEach(() => {
-    wrapper = shallowMount(RegisterDomain, {
+    wrapper = shallowMount(ManageENS, {
       localVue,
       i18n,
       store,
@@ -43,7 +43,7 @@ describe('RegisterDomain.vue', () => {
   it('should render correct domain name data', () => {
     wrapper.setData({ domainName });
     expect(wrapper.find('router-view').attributes('domain-name')).toEqual(
-      domainName
+      domainName + '.eth'
     );
   });
 

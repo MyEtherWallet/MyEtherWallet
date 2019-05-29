@@ -6,6 +6,8 @@ import ethTx from 'ethereumjs-tx';
 const ETH_PATH = "m/44'/60'/0'/0";
 const mnemonic =
   'board shadow cave liquid sand hour maid capable stand candy frog slogan intact error glimpse project galaxy tackle table sausage salute west airport umbrella';
+
+console.log(bip39);
 const seed = bip39.mnemonicToSeed(mnemonic);
 const accountList = {
   0: {

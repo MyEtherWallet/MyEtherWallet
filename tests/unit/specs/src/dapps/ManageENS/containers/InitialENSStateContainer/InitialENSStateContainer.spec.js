@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils';
 import sinon from 'sinon';
-import InitialENSStateContainer from '@/dapps/RegisterDomain/containers/InitialENSStateContainer/InitialENSStateContainer.vue';
+import InitialENSStateContainer from '@/dapps/ManageENS/containers/InitialENSStateContainer/InitialENSStateContainer.vue';
 import { Tooling } from '@@/helpers';
 
 describe('InitialENSStateContainer.vue', () => {
@@ -22,18 +22,19 @@ describe('InitialENSStateContainer.vue', () => {
       i18n,
       store,
       attachToDocument: true,
-      propsData: { domainName, checkDomain }
+      propsData: { checkDomain }
     });
   });
 
   it('should render correct domain name', () => {
+    wrapper.setProps({ domainName });
     expect(wrapper.vm.$el.querySelector('.domain-name input').value).toEqual(
-      domainName
+      wrapper.vm.$data.localDomainName
     );
   });
 
   it('should render correct localdomainName watch method', () => {
-    wrapper.setProps({ domainName: 'domainName11' });
+    wrapper.setData({ localDomainName: 'localDomainName' });
     expect(wrapper.emitted().domainNameChange).toBeTruthy();
   });
 

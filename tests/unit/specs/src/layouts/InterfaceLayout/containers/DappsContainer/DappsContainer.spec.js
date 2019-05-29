@@ -54,15 +54,17 @@ describe('DappsContainer.vue', () => {
   it('should render correct localDapps data', () => {
     for (let i = 0; i < wrapper.vm.sortedObject.length; i++) {
       const sortedObject = wrapper.vm.sortedObject[i];
+      const dappsButtonTitle = wrapper.vm.$el.querySelectorAll(
+        '.dapps-button h4'
+      )[i];
+      const dappsButtonRoute = wrapper.vm.$el.querySelectorAll(
+        '.dapps-button .param'
+      )[i];
       expect(translate(sortedObject.title)).toEqual(
-        wrapper.vm.$el
-          .querySelectorAll('.dapps-button h4')
-          [i].textContent.trim()
+        dappsButtonTitle.textContent.trim()
       );
       expect(translate(sortedObject.route)).toEqual(
-        wrapper.vm.$el
-          .querySelectorAll('.dapps-button .param')
-          [i].textContent.trim()
+        dappsButtonRoute.textContent.trim()
       );
       // console.log(translate(sortedObject.desc));
       // console.log(wrapper.findAll('.dapps-button p').at(i).html());
