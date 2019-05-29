@@ -29,16 +29,8 @@ describe('PasswordModal.vue', () => {
     );
   });
 
-  xit(' should render error data', () => {
-    const error = 'error';
-    wrapper.setData({ error });
-    expect(
-      wrapper.vm.$el.querySelector('.password-form p').textContent.trim()
-    ).toEqual(error);
-  });
-
   describe('PasswordModal.vue Methods', () => {
-    xit('[Failing 1-16-19] should switch view password when image button clicked', () => {
+    it('should switch view password when image button clicked', () => {
       wrapper.find('.password-form img').trigger('click');
       expect(wrapper.vm.$data.show).toBe(true);
       wrapper.find('.password-form img').trigger('click');

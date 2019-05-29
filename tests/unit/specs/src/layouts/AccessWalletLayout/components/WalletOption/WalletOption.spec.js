@@ -1,7 +1,6 @@
 import WalletOption from '@/layouts/AccessWalletLayout/components/WalletOption/WalletOption.vue';
 import { shallowMount } from '@vue/test-utils';
 import { Tooling } from '@@/helpers';
-import sinon from 'sinon';
 
 describe('WalletOption.vue', () => {
   let localVue, i18n, wrapper, store;
@@ -39,12 +38,7 @@ describe('WalletOption.vue', () => {
         .classes()
         .indexOf('selected')
     ).toBe(-1);
-    expect(
-      wrapper
-        .find('.good-button')
-        .classes()
-        .indexOf('not-good')
-    ).toBeGreaterThan(-1);
+
     wrapper.setProps({ selected: true });
     expect(
       wrapper
@@ -52,23 +46,11 @@ describe('WalletOption.vue', () => {
         .classes()
         .indexOf('selected')
     ).toBeGreaterThan(-1);
-    expect(
-      wrapper
-        .find('.good-button')
-        .classes()
-        .indexOf('not-good')
-    ).toBe(-1);
   });
 
-  describe('WalletOption.vue Methods', () => {
-    it('should toggle expanded data when click checkbox', () => {
-      wrapper.setProps({ disabled: true });
-      const divParent = wrapper.find('.inactive');
-      wrapper.setProps({ disabled: false });
-      const select = sinon.stub();
-      wrapper.setProps({ select });
-      divParent.trigger('click');
-      expect(select.called).toBe(true);
-    });
-  });
+  // describe('WalletOption.vue Methods', () => {
+  //   it('should toggle expanded data when click checkbox', () => {
+
+  //   });
+  // });
 });

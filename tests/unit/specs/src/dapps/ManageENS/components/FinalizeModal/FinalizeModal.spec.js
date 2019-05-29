@@ -1,5 +1,5 @@
 import { shallowMount } from '@vue/test-utils';
-import FinalizeModal from '@/dapps/RegisterDomain/components/FinalizeModal/FinalizeModal.vue';
+import FinalizeModal from '@/dapps/ManageENS/components/FinalizeModal/FinalizeModal.vue';
 import { Tooling } from '@@/helpers';
 import sinon from 'sinon';
 

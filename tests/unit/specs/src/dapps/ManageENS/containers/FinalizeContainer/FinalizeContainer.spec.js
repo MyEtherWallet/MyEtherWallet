@@ -2,7 +2,7 @@
 import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils';
 import sinon from 'sinon';
-import FinalizeContainer from '@/dapps/RegisterDomain/containers/FinalizeContainer/FinalizeContainer.vue';
+import FinalizeContainer from '@/dapps/ManageENS/containers/FinalizeContainer/FinalizeContainer.vue';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import { Tooling } from '@@/helpers';
 

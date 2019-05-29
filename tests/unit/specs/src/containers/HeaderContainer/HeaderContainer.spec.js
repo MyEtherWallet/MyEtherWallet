@@ -62,6 +62,22 @@ describe('HeaderContainer.vue', () => {
       return null;
     };
 
+    getters.account = () => {
+      return {
+        balance: 0,
+        address: null,
+        identifier: 'keystore',
+        isHardware: false
+      };
+    };
+
+    state.account = {
+      balance: 0,
+      address: null,
+      identifier: 'keystore',
+      isHardware: false
+    };
+
     store = new VueX.Store({
       actions,
       getters,
@@ -90,11 +106,7 @@ describe('HeaderContainer.vue', () => {
         'b-modal': BModalStub,
         'scroll-up-button': ScrollUpButton,
         'settings-modal': SettingsModal,
-        // 'notifications-modal': NotificationsModal,
         'logout-modal': LogoutModal
-        // 'logout-warning-modal': LogoutWarningModal,
-        // 'issue-log-modal': IssueLogModal,
-        // 'user-reminder-button': UserReminderButton
       },
       mocks: {
         $eventHub: eventHub,
@@ -195,7 +207,7 @@ describe('HeaderContainer.vue', () => {
 
   it('should render correct supportedLanguages data', () => {
     const dropDownItems = wrapper.vm.$el.querySelectorAll(
-      'b-dropdown-item-stub'
+      '.language-menu-container b-dropdown-item-stub'
     );
     for (let i = 0; i < dropDownItems.length; i++) {
       const dropDownItem = dropDownItems[i];
