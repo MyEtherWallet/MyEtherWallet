@@ -1,56 +1,114 @@
 <template>
   <div class="popup-accounts-container">
-    <b-tabs
-      justified
-      nav-class="accounts-container-b-tabs"
-      active-tab-class="accounts-container-active-b-tab"
-    >
-      <b-tab :active="hasMyWallets" title="My Wallets" class="tab-container">
-        <wallet-view-component
-          v-for="item in myWallets"
-          v-show="myWallets.length > 0"
-          :address="item.address"
-          :name="item.nick"
-          :key="item.address"
-        />
-        <h3 v-show="myWallets === false">
-          No wallets found 😢
-        </h3>
-      </b-tab>
-      <b-tab
-        :active="!hasMyWallets"
-        title="Watch Only Wallets"
-        class="tab-container"
+    <div v-show="!quickSend">
+      <b-tabs
+        justified
+        nav-class="accounts-container-b-tabs"
+        active-tab-class="accounts-container-active-b-tab"
       >
-        <wallet-view-component
-          v-for="item in watchOnlyWallets"
-          v-show="watchOnlyWallets.length > 0"
-          :address="item.address"
-          :name="item.nick"
-          :key="item.address"
-        />
-        <h3 v-show="watchOnlyWallets === false">
-          No wallets found 😢
-        </h3>
-      </b-tab>
-    </b-tabs>
-    <div class="popup-button-options">
-      <div class="button-option" @click="addWallet">
-        My Wallet
-      </div>
-      <div class="button-option" @click="() => {}">
-        Quick Send
+        <b-tab :active="hasMyWallets" title="My Wallets" class="tab-container">
+          <div class="total-balance-container">
+            <p>Total Balance:</p>
+            <p>{{ concatBalance }} <b>ETH</b></p>
+          </div>
+          <wallet-view-component
+            v-for="item in myWallets"
+            v-show="myWallets.length > 0"
+            :address="item.address"
+            :name="item.nick"
+            :key="item.address"
+            :balance="item.balance"
+          />
+          <h3 v-show="myWallets === false">
+            No wallets found 😢
+          </h3>
+        </b-tab>
+        <b-tab
+          :active="!hasMyWallets"
+          title="Watch Only Wallets"
+          class="tab-container"
+        >
+          <wallet-view-component
+            v-for="item in watchOnlyWallets"
+            v-show="watchOnlyWallets.length > 0"
+            :address="item.address"
+            :name="item.nick"
+            :key="item.address"
+            :balance="item.balance"
+          />
+          <h3 v-show="watchOnlyWallets === false">
+            No wallets found 😢
+          </h3>
+        </b-tab>
+      </b-tabs>
+      <div class="popup-button-options">
+        <div class="button-option" @click="addWallet">
+          My Wallet
+        </div>
+        <div class="button-option" @click="moveToQuicksend">
+          Quick Send
+        </div>
       </div>
     </div>
+    <div v-show="quickSend">
+      <quick-send-container :my-accounts="myWallets" />
+    </div>
+    <b-modal
+      ref="fromModal"
+      hide-footer
+      hide-header
+      no-fade
+      class="quick-send-from-modal"
+    >
+      <div class="quick-send-from-header">
+        <h3>From</h3>
+        <i class="fa fa-times fa-lg" @click="closeFromModal" />
+      </div>
+      <div class="from-address-container">
+        <div
+          v-for="wallet in myWallets"
+          :key="wallet.nick + wallet.address"
+          class="wallet-from-view"
+          @click="selectWallet(wallet, $event)"
+        >
+          <div>
+            <blockie :address="wallet.address" width="50px" height="50px" />
+          </div>
+          <div class="info-container">
+            <p>
+              <b>{{ wallet.nick }}</b>
+            </p>
+            <p>{{ wallet.address }}</p>
+            <p>
+              <b>
+                {{
+                  wallet.balance.length > 11
+                    ? `${wallet.balance.substr(0, 11)}...`
+                    : wallet.balance
+                }}
+              </b>
+              ETH
+            </p>
+          </div>
+        </div>
+      </div>
+    </b-modal>
   </div>
 </template>
 
 <script>
 import { WATCH_ONLY } from '@/wallets/bip44/walletTypes';
 import WalletViewComponent from '../../components/WalletViewComponent';
+import QuickSendContainer from '../QuickSendContainer';
+import BigNumber from 'bignumber.js';
+import Blockie from '@/components/Blockie';
+import { toChecksumAddress } from '@/helpers/addressUtils';
+
 export default {
   components: {
-    'wallet-view-component': WalletViewComponent
+    'wallet-view-component': WalletViewComponent,
+    'quick-send-container': QuickSendContainer,
+    blockie: Blockie
   },
   props: {
     accounts: {
@@ -66,45 +124,102 @@ export default {
   },
   data() {
     return {
-      hasMyWallets: true
+      hasMyWallets: true,
+      totalBalance: 0,
+      loading: false,
+      watchOnlyWallets: [],
+      myWallets: [],
+      quickSend: false,
+      selectedWallet: {}
     };
   },
   computed: {
-    watchOnlyWallets() {
-      return this.parseReceivedWallets(true);
-    },
-    myWallets() {
-      return this.parseReceivedWallets(false);
+    concatBalance() {
+      const stringifiedBal = `${this.totalBalance}`;
+      return stringifiedBal.length > 11
+        ? `${stringifiedBal.substr(0, 11)}...`
+        : stringifiedBal;
     }
   },
+  watch: {
+    accounts(newVal) {
+      if (newVal.length > 0) this.parseReceivedWallets();
+    }
+  },
+  mounted() {
+    if (this.accounts.length > 0) this.parseReceivedWallets();
+    this.$refs.fromModal.$on('hidden', () => {
+      if (Object.keys(this.selectedWallet).length > 0) {
+        // this.quickSend = true;
+      }
+    });
+  },
   methods: {
-    parseReceivedWallets(watchOnly) {
-      const wallets = [];
-      this.accounts.forEach(account => {
+    async parseReceivedWallets() {
+      this.loading = true;
+      const watchOnlyWallets = [];
+      const myOwnWallets = [];
+      let totalBalance = new BigNumber(this.totalBalance);
+      for (const account of this.accounts) {
         const address = Object.keys(account)[0];
         const parsedValue = JSON.parse(account[address]);
-        if (watchOnly) {
-          if (parsedValue.type === WATCH_ONLY) {
-            const reformObj = Object.assign({}, parsedValue, {
-              address: address
-            });
-            wallets.push(reformObj);
-          }
-        } else {
-          if (parsedValue.type !== WATCH_ONLY) {
-            const reformObj = Object.assign({}, parsedValue, {
-              address: address
-            });
-            wallets.push(reformObj);
-          }
+        if (parsedValue.type === WATCH_ONLY) {
+          const reformObj = Object.assign({}, parsedValue, {
+            address: address,
+            balance: await this.fetchBalance(address)
+          });
+          watchOnlyWallets.push(reformObj);
+        } else if (parsedValue.type !== WATCH_ONLY) {
+          const balance = await this.fetchBalance(address);
+          totalBalance = totalBalance.plus(balance);
+          const reformObj = Object.assign({}, parsedValue, {
+            address: address,
+            balance: balance
+          });
+          myOwnWallets.push(reformObj);
         }
-      });
-      if (wallets.length > 0 && watchOnly) {
+      }
+
+      if (myOwnWallets.length === 0 && watchOnlyWallets.length > 0) {
         this.hasMyWallets = false;
       } else {
         this.hasMyWallets = true;
       }
-      return wallets.length > 0 ? wallets : false;
+      this.loading = false;
+      this.totalBalance = totalBalance;
+      this.watchOnlyWallets = watchOnlyWallets;
+      this.myWallets = myOwnWallets;
+    },
+    async fetchBalance(address) {
+      if (address !== '0x') {
+        const balance = await window.web3.eth.getBalance(address);
+        return window.web3.utils.fromWei(balance);
+      }
+    },
+    moveToQuicksend() {
+      this.$refs.fromModal.show();
+    },
+    closeFromModal() {
+      this.$refs.fromModal.hide();
+    },
+    selectWallet(wallet, e) {
+      if (this.selectedWallet.hasOwnProperty('nick')) {
+        if (
+          toChecksumAddress(wallet.address) ===
+          toChecksumAddress(this.selectedWallet.address)
+        ) {
+          e.target.classList.remove('selected');
+          this.selectedWallet = {};
+        } else {
+          e.target.classList.add('selected');
+          document.getElementsByClassName('wallet-from-view').forEach(item => {
+            console.log(item);
+          });
+        }
+      } else {
+        this.selectedWallet = wallet;
+        e.target.classList.add('selected');
+      }
     }
   }
 };

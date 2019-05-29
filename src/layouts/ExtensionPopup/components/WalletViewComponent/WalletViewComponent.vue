@@ -25,8 +25,7 @@
     <div class="wallet-view-balance">
       <p>Balance:</p>
       <p class="balance">
-        <i v-show="!receivedBalance" class="fa fa-spinner fa-spin" />
-        <span v-show="receivedBalance"> {{ concatBalance }} </span> ETH
+        <span> {{ concatBalance }} </span> ETH
       </p>
     </div>
   </div>
@@ -47,6 +46,10 @@ export default {
       type: String,
       default: ''
     },
+    balance: {
+      type: String,
+      default: '0'
+    },
     shouldConcat: {
       type: Boolean,
       default: true
@@ -54,9 +57,7 @@ export default {
   },
   data() {
     return {
-      balance: 0,
-      showFullAddr: false,
-      receivedBalance: false
+      showFullAddr: false
     };
   },
   computed: {
@@ -71,20 +72,6 @@ export default {
       return stringifiedBal.length > 11
         ? `${stringifiedBal.substr(0, 11)}...`
         : stringifiedBal;
-    }
-  },
-  mounted() {
-    if (window.web3) {
-      this.fetchBalance();
-    }
-  },
-  methods: {
-    async fetchBalance() {
-      if (this.address !== '0x') {
-        const balance = await window.web3.eth.getBalance(this.address);
-        this.balance = window.web3.utils.fromWei(balance);
-        this.receivedBalance = true;
-      }
     }
   }
 };

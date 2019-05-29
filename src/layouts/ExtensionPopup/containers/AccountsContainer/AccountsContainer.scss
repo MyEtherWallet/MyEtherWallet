@@ -22,4 +22,78 @@
       text-align: center;
     }
   }
+
+  .total-balance-container {
+    align-items: center;
+    background-color: $mew-green;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    padding: 10px 20px;
+    text-align: center;
+
+    p {
+      color: $white;
+      font-size: 13px;
+      margin: 0 !important;
+    }
+  }
+}
+
+.quick-send-from-modal {
+  .quick-send-from-header {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+
+    h3 {
+      font-weight: bold;
+      margin: 0 !important;
+    }
+
+    i {
+      cursor: pointer;
+    }
+  }
+
+  .from-address-container {
+    height: 285px;
+    overflow-y: scroll;
+
+    .wallet-from-view {
+      background-color: $light-green-1;
+      border-radius: 5px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px;
+
+      div {
+        pointer-events: none;
+      }
+
+      .info-container {
+        padding-left: 20px;
+        text-align: left;
+        word-break: break-word;
+
+        p {
+          margin: 0 !important;
+        }
+
+        p:nth-child(2) {
+          color: $dark-blue-12;
+        }
+
+        p:nth-child(3) {
+          color: $light-blue-1;
+        }
+      }
+    }
+
+    .selected {
+      border: 1px solid $mew-green;
+    }
+  }
 }
