@@ -172,9 +172,6 @@ export default {
         path: navTo
       });
     },
-    viewWallet() {
-      console.log(this.path);
-    },
     togglePasswordModal(file, path) {
       const parseFile = JSON.parse(file);
       this.file = JSON.parse(parseFile.priv);
