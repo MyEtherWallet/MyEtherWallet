@@ -133,4 +133,5 @@ Sentry.init({
 
 if (BUILD_TYPE === 'mewcx') {
   window.web3 = new Web3('https://api.myetherwallet.com/eth');
+  window.web3.currentProvider.isMew = true;
 }

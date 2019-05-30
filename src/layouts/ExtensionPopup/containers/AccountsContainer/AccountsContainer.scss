@@ -2,7 +2,7 @@
 
 .popup-accounts-container {
   .tab-container {
-    padding: 15px;
+    padding: 15px 0 15px 15px;
     outline: none !important;
   }
 
@@ -39,6 +39,12 @@
       margin: 0 !important;
     }
   }
+
+  .wallet-component-container {
+    max-height: 300px;
+    overflow-y: scroll;
+    padding-right: 15px;
+  }
 }
 
 .quick-send-from-modal {
@@ -57,9 +63,14 @@
     }
   }
 
+  .quick-send-from-content {
+    padding: 10px 10px 0 10px;
+  }
+
   .from-address-container {
-    height: 285px;
+    max-height: 400px;
     overflow-y: scroll;
+    padding-right: 15px;
 
     .wallet-from-view {
       background-color: $light-green-1;
@@ -67,7 +78,12 @@
       cursor: pointer;
       display: flex;
       justify-content: space-around;
+      margin-bottom: 10px;
       padding: 10px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
 
       div {
         pointer-events: none;
