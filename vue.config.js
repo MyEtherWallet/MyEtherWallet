@@ -13,7 +13,7 @@ const webpackConfig = {
   devtool: 'source-map',
   devServer: {
     https: true,
-    host: 'localhost',
+    host: '0.0.0.0',
     hotOnly: true,
     port: 8080,
     writeToDisk: JSON.parse(env_vars.BUILD_TYPE) === 'mewcx',
