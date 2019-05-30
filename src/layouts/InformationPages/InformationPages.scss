@@ -18,7 +18,7 @@
 // Tablet
 @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
   .wrap {
-    padding: 60px 0;
+    padding: 50px 0;
     background-position: calc(100% + 35px) -70px, -60px 80px;
     background-size: 100px, 200px;
   }
@@ -27,7 +27,7 @@
 // Mobile
 @media all and (max-width: $mobile-width) {
   .wrap {
-    padding: 40px 10px;
+    padding: 50px 0px;
     background-position: calc(100% + 35px) -70px, -60px 80px;
     background-size: 100px, 170px;
   }
