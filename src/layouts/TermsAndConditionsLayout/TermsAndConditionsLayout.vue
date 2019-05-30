@@ -7,7 +7,6 @@
             <h1>{{ $t('termsOfConditions.title') }}</h1>
             <h6>{{ $t('termsOfConditions.date') }}</h6>
           </div>
-
           <div class="content">
             <p>{{ $t('termsOfConditions.paragraph1') }}</p>
             <p>{{ $t('termsOfConditions.paragraph2') }}</p>
