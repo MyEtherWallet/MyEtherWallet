@@ -52,7 +52,7 @@
           <b-btn
             class="mid-round-button-green-filled close-button"
             type="submit"
-            @click="openAddressOption"
+            @click.prevent="openAddressOption"
           >
             <span v-show="!loading"> {{ $t('common.continue') }} </span>
             <i v-show="loading" class="fa fa-spin fa-spinner fa-lg" />

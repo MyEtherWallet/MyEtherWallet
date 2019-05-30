@@ -1483,4 +1483,17 @@
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
   }
+
+  .modal-body {
+    padding: 0;
+  }
+}
+
+.custom-progress {
+  border-radius: 0 !important;
+  height: 0.5rem !important;
+
+  .bg-success {
+    background-color: $mew-green !important;
+  }
 }

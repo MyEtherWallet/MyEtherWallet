@@ -1,1 +1,231 @@
 @import '~@/scss/GlobalVariables';
+.quick-send-container {
+  height: 100%;
+
+  .quick-send-header {
+    align-items: center;
+    background-color: $dark-blue-12;
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+
+    p {
+      color: $white;
+      margin: 0 !important;
+    }
+
+    .clickable {
+      cursor: pointer;
+    }
+  }
+
+  .quick-send-step-contents {
+    padding: 20px 10px 10px;
+
+    .title {
+      color: $light-blue-1;
+      font-weight: bold;
+    }
+
+    .from-text {
+      display: flex;
+      justify-content: space-between;
+      padding-bottom: 10px;
+
+      p {
+        margin: 0 !important;
+
+        &:first-child {
+          font-weight: bold;
+        }
+
+        &:last-child {
+          color: $dark-grey-11;
+          cursor: pointer;
+        }
+      }
+    }
+
+    .password-container {
+      label {
+        font-weight: bold;
+      }
+      .password-input {
+        position: relative;
+        width: 100%;
+
+        img {
+          cursor: pointer;
+          position: absolute;
+          right: 10px;
+          top: 18px;
+        }
+
+        input {
+          background-color: $light-grey-1;
+          border: none;
+          border-radius: 5px;
+          padding: 15px;
+          width: 100%;
+        }
+      }
+    }
+
+    .to-amount-container {
+      label {
+        display: flex;
+        justify-content: space-between;
+        margin: 0;
+        padding-bottom: 10px;
+        padding-top: 10px;
+
+        p {
+          margin: 0 !important;
+
+          &:first-child {
+            font-weight: bold;
+          }
+
+          &:last-child {
+            color: $dark-grey-11;
+            cursor: pointer;
+          }
+        }
+      }
+
+      .to-amount-input {
+        width: 100%;
+        position: relative;
+
+        input {
+          background-color: $light-grey-1;
+          border: none;
+          border-radius: 5px;
+          padding: 15px;
+          width: 100%;
+        }
+      }
+    }
+    .to-address-container {
+      label {
+        font-weight: bold;
+      }
+
+      .to-address-input {
+        width: 100%;
+        position: relative;
+
+        input {
+          background-color: $light-grey-1;
+          border: none;
+          border-radius: 5px;
+          padding: 15px;
+          padding-left: 45px;
+          width: 100%;
+        }
+
+        .blockie-container {
+          left: 12px;
+          position: absolute;
+          top: 13px;
+        }
+
+        .blockie-temp {
+          background-color: $light-grey-4;
+          border-radius: 50%;
+          padding: 15px;
+        }
+      }
+    }
+
+    .confirmation-container {
+      p {
+        margin-left: 0;
+      }
+    }
+
+    .confirmation-amount {
+      align-items: center;
+      background-color: $light-blue-1;
+      border-radius: 5px;
+      color: $white;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      padding: 25px 15px;
+
+      p {
+        margin: 0;
+      }
+    }
+
+    .to-address-confirmation {
+      background-color: $light-green-1;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+      padding: 15px 20px;
+
+      div:last-child {
+        padding-left: 20px;
+        word-break: break-word;
+      }
+    }
+  }
+
+  .success-container {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 240px;
+    padding: 40px 0;
+
+    .check-icon {
+      border: 5px solid $mew-green;
+      border-radius: 50%;
+      font-size: 50px;
+      padding: 25px 40px;
+
+      i {
+        color: $mew-green;
+      }
+    }
+
+    h3 {
+      font-weight: bold;
+      padding-top: 10px;
+    }
+
+    a {
+      color: $mew-green;
+      text-decoration: underline;
+    }
+  }
+
+  .next-button {
+    align-items: center;
+    background-color: $mew-green;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    width: 100%;
+
+    p {
+      color: $white;
+      margin: 0 !important;
+      pointer-events: none;
+    }
+  }
+
+  .disabled {
+    background-color: $dark-grey-11;
+    cursor: none;
+    pointer-events: none;
+  }
+
+  .error {
+    color: $red-1;
+  }
+}

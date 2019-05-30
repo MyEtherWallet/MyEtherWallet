@@ -7,38 +7,42 @@
         active-tab-class="accounts-container-active-b-tab"
       >
         <b-tab :active="hasMyWallets" title="My Wallets" class="tab-container">
-          <div class="total-balance-container">
-            <p>Total Balance:</p>
-            <p>{{ concatBalance }} <b>ETH</b></p>
+          <div class="wallet-component-container">
+            <div class="total-balance-container">
+              <p>Total Balance:</p>
+              <p>{{ concatBalance }} <b>ETH</b></p>
+            </div>
+            <wallet-view-component
+              v-for="item in myWallets"
+              v-show="myWallets.length > 0"
+              :address="item.address"
+              :name="item.nick"
+              :key="item.address"
+              :balance="item.balance"
+            />
+            <h3 v-show="myWallets === false">
+              No wallets found 😢
+            </h3>
           </div>
-          <wallet-view-component
-            v-for="item in myWallets"
-            v-show="myWallets.length > 0"
-            :address="item.address"
-            :name="item.nick"
-            :key="item.address"
-            :balance="item.balance"
-          />
-          <h3 v-show="myWallets === false">
-            No wallets found 😢
-          </h3>
         </b-tab>
         <b-tab
           :active="!hasMyWallets"
           title="Watch Only Wallets"
           class="tab-container"
         >
-          <wallet-view-component
-            v-for="item in watchOnlyWallets"
-            v-show="watchOnlyWallets.length > 0"
-            :address="item.address"
-            :name="item.nick"
-            :key="item.address"
-            :balance="item.balance"
-          />
-          <h3 v-show="watchOnlyWallets === false">
-            No wallets found 😢
-          </h3>
+          <div class="wallet-component-container">
+            <wallet-view-component
+              v-for="item in watchOnlyWallets"
+              v-show="watchOnlyWallets.length > 0"
+              :address="item.address"
+              :name="item.nick"
+              :key="item.address"
+              :balance="item.balance"
+            />
+            <h3 v-show="watchOnlyWallets === false">
+              No wallets found 😢
+            </h3>
+          </div>
         </b-tab>
       </b-tabs>
       <div class="popup-button-options">
@@ -51,7 +55,11 @@
       </div>
     </div>
     <div v-show="quickSend">
-      <quick-send-container :my-accounts="myWallets" />
+      <quick-send-container
+        :selected-wallet="selectedWallet"
+        :cancel="cancel"
+        :switch-wallet="moveToQuicksend"
+      />
     </div>
     <b-modal
       ref="fromModal"
@@ -60,35 +68,38 @@
       no-fade
       class="quick-send-from-modal"
     >
-      <div class="quick-send-from-header">
-        <h3>From</h3>
-        <i class="fa fa-times fa-lg" @click="closeFromModal" />
-      </div>
-      <div class="from-address-container">
-        <div
-          v-for="wallet in myWallets"
-          :key="wallet.nick + wallet.address"
-          class="wallet-from-view"
-          @click="selectWallet(wallet, $event)"
-        >
-          <div>
-            <blockie :address="wallet.address" width="50px" height="50px" />
-          </div>
-          <div class="info-container">
-            <p>
-              <b>{{ wallet.nick }}</b>
-            </p>
-            <p>{{ wallet.address }}</p>
-            <p>
-              <b>
-                {{
-                  wallet.balance.length > 11
-                    ? `${wallet.balance.substr(0, 11)}...`
-                    : wallet.balance
-                }}
-              </b>
-              ETH
-            </p>
+      <div class="quick-send-from-content">
+        <div class="quick-send-from-header">
+          <h3>From</h3>
+          <i class="fa fa-times fa-lg" @click="closeFromModal" />
+        </div>
+        <div class="from-address-container">
+          <div
+            v-for="wallet in myWallets"
+            ref="fromWallet"
+            :key="wallet.nick + wallet.address"
+            class="wallet-from-view"
+            @click="selectWallet(wallet, $event)"
+          >
+            <div>
+              <blockie :address="wallet.address" width="50px" height="50px" />
+            </div>
+            <div class="info-container">
+              <p>
+                <b>{{ wallet.nick }}</b>
+              </p>
+              <p>{{ wallet.address }}</p>
+              <p>
+                <b>
+                  {{
+                    wallet.balance.length > 11
+                      ? `${wallet.balance.substr(0, 11)}...`
+                      : wallet.balance
+                  }}
+                </b>
+                ETH
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -150,7 +161,9 @@ export default {
     if (this.accounts.length > 0) this.parseReceivedWallets();
     this.$refs.fromModal.$on('hidden', () => {
       if (Object.keys(this.selectedWallet).length > 0) {
-        // this.quickSend = true;
+        this.quickSend = true;
+      } else {
+        this.quickSend = false;
       }
     });
   },
@@ -211,15 +224,23 @@ export default {
           e.target.classList.remove('selected');
           this.selectedWallet = {};
         } else {
-          e.target.classList.add('selected');
-          document.getElementsByClassName('wallet-from-view').forEach(item => {
-            console.log(item);
+          this.$refs.fromWallet.forEach(item => {
+            item.classList.remove('selected');
           });
+          this.selectedWallet = wallet;
+          e.target.classList.add('selected');
         }
       } else {
+        this.$refs.fromWallet.forEach(item => {
+          item.classList.remove('selected');
+        });
         this.selectedWallet = wallet;
         e.target.classList.add('selected');
       }
+    },
+    cancel() {
+      this.quickSend = false;
+      this.selectedWallet = {};
     }
   }
 };
