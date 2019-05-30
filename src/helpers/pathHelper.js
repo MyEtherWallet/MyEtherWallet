@@ -30,7 +30,6 @@ const checkCustomPath = path => {
         assembledPath = assembledPath.concat('/', array1[4], "'");
       if (array1[5] && !/'/.test(array1[5]))
         assembledPath = assembledPath.concat('/', array1[5]);
-      console.log(assembledPath); // todo remove dev item
       return assembledPath;
     }
     return false;
