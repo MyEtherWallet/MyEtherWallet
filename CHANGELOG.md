@@ -1,3 +1,6 @@
+### Bug
+- Fix broken custom derivation paths [#1133](https://github.com/MyEtherWallet/MyEtherWallet/pull/1133) 
+
 ### Release v5.0.12-hotfix.2
 
 ### Bug
