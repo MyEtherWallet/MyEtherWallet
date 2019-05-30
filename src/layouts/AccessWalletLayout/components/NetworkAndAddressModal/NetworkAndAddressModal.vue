@@ -112,11 +112,11 @@
                     <div class="custom-networks">
                       <div @click="changePath(key)">{{ val.label }}</div>
                       <span>
-                      <i
-                        class="fa fa-times-circle"
-                        @click.prevent="removeCustomPath(val)"
-                      />
-                    </span>
+                        <i
+                          class="fa fa-times-circle"
+                          @click.prevent="removeCustomPath(val)"
+                        />
+                      </span>
                     </div>
                   </b-dropdown-item>
                   <b-dropdown-item @click="showCustomPathInput">
