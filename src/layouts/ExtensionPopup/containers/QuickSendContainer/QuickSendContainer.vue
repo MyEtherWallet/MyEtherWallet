@@ -15,7 +15,9 @@
       variant="success"
     />
     <div class="quick-send-step-contents">
-      <h4 class="title">STEP {{ step }}. {{ steps[step] }}</h4>
+      <h4 v-show="step < 4" class="title">
+        STEP {{ step }}. {{ steps[step] }}
+      </h4>
       <div v-show="step === 1">
         <div class="from-text">
           <p>From</p>
@@ -295,15 +297,17 @@ export default {
         ),
         data: '0x'
       };
-      window.web3.eth
-        .estimateGas(params)
-        .then(gasLimit => {
-          this.gasLimit = gasLimit;
-        })
-        .catch(e => {
-          // eslint-disable-no-console
-          console.log(e);
-        });
+      if (this.toAddress !== '') {
+        window.web3.eth
+          .estimateGas(params)
+          .then(gasLimit => {
+            this.gasLimit = gasLimit;
+          })
+          .catch(e => {
+            // eslint-disable-no-console
+            console.log(e);
+          });
+      }
     },
     entireBalance() {
       const gasPrice = new BigNumber(ethUnit.fromWei(this.gasPrice, 'gwei'));
