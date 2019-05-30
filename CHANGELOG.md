@@ -2,6 +2,7 @@
 
 ### Bug
 
+- UI update for mobile network, balance [#1134](https://github.com/MyEtherWallet/MyEtherWallet/pull/1134)
 - Fix ENS migrate owner check [#1103](https://github.com/MyEtherWallet/MyEtherWallet/pull/1103)
 - Fixes refresh page on mnemonic wallet submit [#1108](https://github.com/MyEtherWallet/MyEtherWallet/pull/1108)
 
