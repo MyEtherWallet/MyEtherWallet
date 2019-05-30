@@ -9,7 +9,7 @@ const path = require('path');
 const webpackConfig = {
   entry: {
     app: './src/main.js',
-    cxhelpers: './src/cxHelpers/backgroundWeb3Manager.js'
+    cxhelpers: './src/cxHelpers/backgroundPhishingCatcher.js'
   },
   output: {
     filename: './[name].js'
