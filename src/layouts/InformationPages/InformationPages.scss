@@ -27,7 +27,7 @@
 // Mobile
 @media all and (max-width: $mobile-width) {
   .wrap {
-    padding: 50px 0px;
+    padding: 50px 0;
     background-position: calc(100% + 35px) -70px, -60px 80px;
     background-size: 100px, 170px;
   }

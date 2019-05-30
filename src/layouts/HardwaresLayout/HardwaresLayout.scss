@@ -9,7 +9,6 @@
 }
 
 .hardware-container {
-
   .hardware-text {
     text-align: center;
     padding-bottom: 50px;
@@ -87,7 +86,7 @@
     .hardware-item-logo {
       margin-left: 30px;
       @media all and (max-width: $mobile-width) {
-        margin-left: 0px;
+        margin-left: 0;
         margin-bottom: 30px;
       }
 
