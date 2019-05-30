@@ -149,6 +149,13 @@
                 v-model="customPath.path"
                 placeholder="m/44'/1'/0'/0"
               />
+              <button
+                class="submit-button cancel"
+                @click="bypassVerify = !bypassVerify"
+              >
+                bypass verify
+              </button>
+              {{ bypassVerify }}
               <button class="submit-button cancel" @click="showCustomPathInput">
                 {{ $t('common.cancel') }}
               </button>
@@ -283,7 +290,8 @@ export default {
       customPath: { label: '', dpath: '' },
       showCollapse1: false,
       showCollapse2: true,
-      ledgerType: LEDGER_TYPE
+      ledgerType: LEDGER_TYPE,
+      bypassVerify: false
     };
   },
   computed: {
@@ -359,7 +367,12 @@ export default {
       });
     },
     addCustomPath() {
-      const customPath = pathHelpers.checkCustomPath(this.customPath.path);
+      let customPath;
+      if (!this.bypassVerify) {
+        customPath = pathHelpers.checkCustomPath(this.customPath.path);
+      } else {
+        customPath = this.customPath.path;
+      }
       if (customPath) {
         this.customPath.path = customPath;
         this.$store
