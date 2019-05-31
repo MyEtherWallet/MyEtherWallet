@@ -171,6 +171,41 @@ const isDarklisted = addr => {
   return errObject;
 };
 
+const stringToArray = str => {
+  return str.replace(/[^a-zA-Z0-9_,]+/g, '').split(',');
+};
+
+const isContractArgValid = (value, solidityType) => {
+  if (!value) value = '';
+  if (solidityType.includes('[') && solidityType.includes(']')) {
+    const parsedValue = Array.isArray(value) ? value : stringToArray(value);
+    const values = [];
+    parsedValue.forEach(item => {
+      if (solidityType.includes(uint)) {
+        values.push(item !== '' && !isNaN(item) && isInt(item));
+      } else if (solidityType.includes(address)) {
+        values.push(isAddress(item));
+      } else if (solidityType.includes(string)) {
+        values.push(item !== '');
+      } else if (solidityType.includes(bool)) {
+        values.push(typeof item === typeof true || item === '');
+      } else if (solidityType.includes(bytes)) {
+        values.push(validateHexString(item));
+      }
+    });
+    return !values.includes(false);
+  }
+  if (solidityType === 'uint')
+    return value !== '' && !isNaN(value) && isInt(value);
+  if (solidityType === 'address') return isAddress(value);
+  if (solidityType === 'string') return true;
+  if (solidityType === 'bytes')
+    return value.substr(0, 2) === '0x' && validateHexString(value);
+  if (solidityType === 'bool')
+    return typeof value === typeof true || value === '';
+  return false;
+};
+
 export default {
   isJson,
   doesExist,
@@ -187,5 +222,7 @@ export default {
   solidityType,
   isInt,
   capitalize,
-  getService
+  getService,
+  stringToArray,
+  isContractArgValid
 };
