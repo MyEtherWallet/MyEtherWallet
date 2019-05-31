@@ -1,6 +1,6 @@
 ### Bug
 
-- Various fixes for Metamask and Trezor [#1125](https://github.com/MyEtherWallet/MyEtherWallet/pull/1125)
+- Various fixes for Metamask, Trezor, interact with contract, and deploy contract [#1125](https://github.com/MyEtherWallet/MyEtherWallet/pull/1125)
 
 ### Release v5.0.12-hotfix.2
 
