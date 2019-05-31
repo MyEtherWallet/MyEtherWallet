@@ -127,7 +127,6 @@ createWallet.errorHandler = errorHandler;
 
 const isWebUsbSupported = async () => {
   const isSupported = await webUsbTransport.isSupported();
-  console.log(isSupported, platform.name);
   return (
     isSupported && platform.os.family !== 'Windows' && platform.name !== 'Opera' // take it out later once the windows issue is fixed
   );
