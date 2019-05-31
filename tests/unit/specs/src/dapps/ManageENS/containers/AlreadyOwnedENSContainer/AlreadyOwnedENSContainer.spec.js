@@ -54,10 +54,6 @@ describe('AlreadyOwnedENSContainer.vue', () => {
         hostName,
         tld
       },
-      mocks: {
-        $route: mockRoute,
-        $router: mockRouter
-      },
       stubs: {
         'b-modal': BModalStub,
         'finalize-modal': FinalizeModal
