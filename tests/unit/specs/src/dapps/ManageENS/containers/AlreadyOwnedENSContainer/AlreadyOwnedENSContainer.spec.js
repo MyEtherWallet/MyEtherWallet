@@ -1,3 +1,4 @@
+import Vue from 'vue';
 import sinon from 'sinon';
 import { shallowMount } from '@vue/test-utils';
 import AlreadyOwnedENSContainer from '@/dapps/ManageENS/containers/AlreadyOwnedENSContainer/AlreadyOwnedENSContainer.vue';
@@ -14,6 +15,11 @@ const BModalStub = {
   }
 };
 
+const push = sinon.stub();
+const mockRouter = {
+  push: push
+};
+
 describe('AlreadyOwnedENSContainer.vue', () => {
   let localVue, i18n, wrapper, store;
   const labelHash = 'labelHash';
@@ -21,25 +27,16 @@ describe('AlreadyOwnedENSContainer.vue', () => {
   const owner = 'owner';
   const deedOwner = 'deedOwner';
   const resolverAddress = 'resolverAddress';
-  const domainName = 'domainName';
-  const mockRoute = {
-    fullPath: 'auction'
-  };
-  const mockRouter = {
-    replace: sinon.stub(),
-    push: () => {},
-    history: {
-      current: {
-        path: '/interface/dapps/manage-ens'
-      }
-    }
-  };
+  const hostName = 'hostName';
+  const tld = 'tld';
 
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
     store = baseSetup.store;
+
+    Vue.config.warnHandler = () => {};
   });
 
   beforeEach(() => {
@@ -54,7 +51,8 @@ describe('AlreadyOwnedENSContainer.vue', () => {
         owner,
         deedOwner,
         resolverAddress,
-        domainName
+        hostName,
+        tld
       },
       mocks: {
         $route: mockRoute,
@@ -63,16 +61,19 @@ describe('AlreadyOwnedENSContainer.vue', () => {
       stubs: {
         'b-modal': BModalStub,
         'finalize-modal': FinalizeModal
+      },
+      mocks: {
+        $router: mockRouter
       }
     });
   });
 
-  xit('should render correct domain name props', () => {
+  it('should render correct fullDomainName computed data', () => {
     expect(
       wrapper.vm.$el
-        .querySelector('.already-owned-container h3')
+        .querySelectorAll('.already-owned-container h3')[1]
         .textContent.trim()
-        .indexOf(domainName)
+        .indexOf(wrapper.vm.fullDomainName)
     ).toBeGreaterThan(-1);
   });
 

@@ -1,6 +1,11 @@
+import Vue from 'vue';
 import Vuex from 'vuex';
 import { mount } from '@vue/test-utils';
 import PrivateKeyModal from '@/layouts/AccessWalletLayout/components/PrivateKeyModal/PrivateKeyModal.vue';
+import WarningMessage from '@/components/WarningMessage';
+import CustomerSupport from '@/components/CustomerSupport';
+import StandardButton from '@/components/Buttons/StandardButton';
+
 import sinon from 'sinon';
 import { Tooling } from '@@/helpers';
 
@@ -22,14 +27,32 @@ describe('PrivateKeyModal.vue', () => {
       localVue = baseSetup.localVue;
       i18n = baseSetup.i18n;
       store = baseSetup.store;
+
+      Vue.config.warnHandler = () => {};
     });
 
     beforeEach(() => {
+      const mockRouter = {
+        history: {
+          current: {
+            fullPath: '/'
+          }
+        }
+      };
+
       wrapper = mount(PrivateKeyModal, {
         localVue,
         i18n,
         store,
-        attachToDocument: true
+        attachToDocument: true,
+        stubs: {
+          'customer-support': CustomerSupport,
+          'warning-message': WarningMessage,
+          'standard-button': StandardButton
+        },
+        mocks: {
+          $router: mockRouter
+        }
       });
     });
 
@@ -45,9 +68,6 @@ describe('PrivateKeyModal.vue', () => {
   describe('PrivateKeyModal.vue Methods', () => {
     let localVue, i18n, wrapper, store;
     const spy = sinon.stub();
-    const mockRoute = {
-      push: spy
-    };
 
     beforeAll(() => {
       const baseSetup = Tooling.createLocalVueInstance();
@@ -65,13 +85,22 @@ describe('PrivateKeyModal.vue', () => {
     });
 
     beforeEach(() => {
+      const mockRouter = {
+        push: spy,
+        history: {
+          current: {
+            fullPath: '/'
+          }
+        }
+      };
+
       wrapper = mount(PrivateKeyModal, {
         localVue,
         i18n,
         store,
         attachToDocument: true,
         mocks: {
-          $router: mockRoute
+          $router: mockRouter
         }
       });
     });
