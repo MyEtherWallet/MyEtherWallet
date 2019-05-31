@@ -167,7 +167,7 @@
             />
           </div>
         </div>
-        <div v-show="selectedMethod.payable">
+        <div>
           <div class="title-container">
             <div class="title">
               <h4>{{ $t('common.value') }} in ETH:</h4>
