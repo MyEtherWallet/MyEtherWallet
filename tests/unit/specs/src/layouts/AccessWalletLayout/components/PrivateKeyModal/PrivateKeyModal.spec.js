@@ -2,7 +2,6 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import { mount } from '@vue/test-utils';
 import PrivateKeyModal from '@/layouts/AccessWalletLayout/components/PrivateKeyModal/PrivateKeyModal.vue';
-import WarningMessage from '@/components/WarningMessage';
 import CustomerSupport from '@/components/CustomerSupport';
 import StandardButton from '@/components/Buttons/StandardButton';
 
@@ -47,7 +46,6 @@ describe('PrivateKeyModal.vue', () => {
         attachToDocument: true,
         stubs: {
           'customer-support': CustomerSupport,
-          'warning-message': WarningMessage,
           'standard-button': StandardButton
         },
         mocks: {
