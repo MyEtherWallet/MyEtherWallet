@@ -7,7 +7,9 @@ const bip39 = require('bip39');
 const ETH_PATH = "m/44'/60'/0'/0";
 const mnemonic =
   'board shadow cave liquid sand hour maid capable stand candy frog slogan intact error glimpse project galaxy tackle table sausage salute west airport umbrella';
-const seed = bip39.mnemonicToSeedSync(mnemonic);
+
+console.log(bip39);
+const seed = bip39.mnemonicToSeed(mnemonic);
 const accountList = {
   0: {
     address: '0x232d4F524498eFC37cc0624A3C486a75ed84412A',

@@ -22,18 +22,19 @@ describe('InitialENSStateContainer.vue', () => {
       i18n,
       store,
       attachToDocument: true,
-      propsData: { domainName, checkDomain }
+      propsData: { checkDomain }
     });
   });
 
-  xit('should render correct domain name', () => {
+  it('should render correct domain name', () => {
+    wrapper.setProps({ domainName });
     expect(wrapper.vm.$el.querySelector('.domain-name input').value).toEqual(
-      domainName
+      wrapper.vm.$data.localDomainName
     );
   });
 
-  xit('should render correct localdomainName watch method', () => {
-    wrapper.setProps({ domainName: 'domainName11' });
+  it('should render correct localdomainName watch method', () => {
+    wrapper.setData({ localDomainName: 'localDomainName' });
     expect(wrapper.emitted().domainNameChange).toBeTruthy();
   });
 
