@@ -108,7 +108,7 @@
             </div>
             <i
               :class="[
-                isValidInput(deployArgs, getType(input.type).solidityType)
+                isValidInput(inputs[input.name], getType(input.type).solidityType)
                   ? ''
                   : 'not-good',
                 'fa fa-check-circle good-button'
@@ -279,30 +279,27 @@ export default {
     }
   },
   methods: {
+    stringToArr(stringArr) {
+      return stringArr.replace(/[^a-zA-Z0-9_,]+/g, '').split(',');
+    },
     isValidInput(value, solidityType) {
       if (!value) value = '';
       if (solidityType.includes('[') && solidityType.includes(']')) {
+        const parsedValue = Array.isArray(value) ? value : this.stringToArr(value);
         const values = [];
-        if (value[0] === '[') {
-          const strToArr =
-            value[0] === '[' ? value.substr(0, value.length - 1) : value;
-          strToArr
-            .replace(/\s/, '')
-            .split(',')
-            .forEach(item => {
-              if (solidityType.includes(uint)) {
-                values.push(value !== '' && !isNaN(value) && Misc.isInt(value));
-              } else if (solidityType.includes(address)) {
-                values.push(isAddress(value));
-              } else if (solidityType.includes(string)) {
-                values.push(isAddress(true));
-              } else if (solidityType.includes(bool)) {
-                values.push(typeof value === typeof true || value === '');
-              } else if (solidityType.includes(bytes)) {
-                values.push(Misc.validateHexString(item));
-              }
-            });
-        }
+        parsedValue.forEach(item => {
+          if (solidityType.includes(uint)) {
+            values.push(item !== '' && !isNaN(item) && Misc.isInt(item));
+          } else if (solidityType.includes(address)) {
+            values.push(isAddress(item));
+          } else if (solidityType.includes(string)) {
+            values.push(item !== '');
+          } else if (solidityType.includes(bool)) {
+            values.push(typeof item === typeof true || item === '');
+          } else if (solidityType.includes(bytes)) {
+            values.push(Misc.validateHexString(item));
+          }
+        });
         return !values.includes(false);
       }
       if (solidityType === 'uint')
