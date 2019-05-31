@@ -103,13 +103,12 @@ const scrollToTop = scrollDuration => {
 };
 
 const validateHexString = str => {
-  if (str == '') return true;
+  if (str === '') return true;
   str =
-    str.substring(0, 2) == '0x'
+    str.substring(0, 2) === '0x'
       ? str.substring(2).toUpperCase()
       : str.toUpperCase();
-  const re = /^[0-9A-F]+$/g;
-  return re.test(str);
+  return utils.isHex(str);
 };
 
 const reorderNetworks = () => {

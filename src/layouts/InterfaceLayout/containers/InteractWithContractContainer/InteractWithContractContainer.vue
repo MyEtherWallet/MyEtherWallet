@@ -211,7 +211,7 @@
                 :key="item.name + idx"
                 class="result-container"
               >
-                <label :name="item.name !== '' ? item.name : item.type + idx">{{
+                <label :for="item.name !== '' ? item.name : item.type + idx">{{
                   item.name !== '' ? item.name : item.type | capitalize
                 }}</label>
                 <input
@@ -379,19 +379,22 @@ export default {
         if (value[0] === '[') {
           const strToArr =
             value[0] === '[' ? value.substr(0, value.length - 1) : value;
-          strToArr.split(',').forEach(item => {
-            if (solidityType.includes(uint)) {
-              values.push(value !== '' && !isNaN(value) && Misc.isInt(value));
-            } else if (solidityType.includes(address)) {
-              values.push(isAddress(value));
-            } else if (solidityType.includes(string)) {
-              values.push(isAddress(true));
-            } else if (solidityType.includes(bool)) {
-              values.push(typeof value === typeof true || value === '');
-            } else if (solidityType.includes(bytes)) {
-              values.push(Misc.validateHexString(item));
-            }
-          });
+          strToArr
+            .replace(/\s/, '')
+            .split(',')
+            .forEach(item => {
+              if (solidityType.includes(uint)) {
+                values.push(value !== '' && !isNaN(value) && Misc.isInt(value));
+              } else if (solidityType.includes(address)) {
+                values.push(isAddress(value));
+              } else if (solidityType.includes(string)) {
+                values.push(isAddress(true));
+              } else if (solidityType.includes(bool)) {
+                values.push(typeof value === typeof true || value === '');
+              } else if (solidityType.includes(bytes)) {
+                values.push(Misc.validateHexString(item));
+              }
+            });
         }
         return !values.includes(false);
       }
