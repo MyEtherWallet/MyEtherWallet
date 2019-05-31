@@ -31,7 +31,7 @@
     "pre-commit": "npm run lint && npm run test"
   },
   "dependencies": {
-    "@sentry/browser": "5.3.0",
+    "@sentry/browser": "5.4.0",
     "@sentry/integrations": "5.3.1",
     "html2canvas": "1.0.0-rc.1",
     "idna-uts46": "1.1.0",
