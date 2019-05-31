@@ -34,5 +34,6 @@
   "notARecommendedWay": "This is NOT a recommended way of accessing a wallet. This information is sensitive, and these options should only be used in offline settings by experienced crypto users.",
   "buyHardwareWallet": "Purchase a hardware wallet for the highest security when accessing your crypto.",
   "buyHardwareWalletLink": "Purchase a hardware wallet....",
-  "connectDevice": "Please make sure your device is connected."
+  "connectDevice": "Please make sure your device is connected.",
+  "buy": "Buy Now"
 }
