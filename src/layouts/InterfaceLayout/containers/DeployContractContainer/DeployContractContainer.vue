@@ -178,14 +178,12 @@
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import { Misc, Toast } from '@/helpers';
-import { isAddress } from '@/helpers/addressUtils';
 import ethUnit from 'ethjs-unit';
 import EthTx from 'ethereumjs-tx';
 import BigNumber from 'bignumber.js';
 import store from 'store';
 import { generateAddress, bufferToHex } from 'ethereumjs-util';
 import { mapState } from 'vuex';
-import { uint, address, string, bytes, bool } from '@/helpers/solidityTypes.js';
 
 export default {
   name: 'DeployContract',
@@ -279,39 +277,7 @@ export default {
     }
   },
   methods: {
-    stringToArr(stringArr) {
-      return stringArr.replace(/[^a-zA-Z0-9_,]+/g, '').split(',');
-    },
-    isValidInput(value, solidityType) {
-      if (!value) value = '';
-      if (solidityType.includes('[') && solidityType.includes(']')) {
-        const parsedValue = Array.isArray(value) ? value : this.stringToArr(value);
-        const values = [];
-        parsedValue.forEach(item => {
-          if (solidityType.includes(uint)) {
-            values.push(item !== '' && !isNaN(item) && Misc.isInt(item));
-          } else if (solidityType.includes(address)) {
-            values.push(isAddress(item));
-          } else if (solidityType.includes(string)) {
-            values.push(item !== '');
-          } else if (solidityType.includes(bool)) {
-            values.push(typeof item === typeof true || item === '');
-          } else if (solidityType.includes(bytes)) {
-            values.push(Misc.validateHexString(item));
-          }
-        });
-        return !values.includes(false);
-      }
-      if (solidityType === 'uint')
-        return value !== '' && !isNaN(value) && Misc.isInt(value);
-      if (solidityType === 'address') return isAddress(value);
-      if (solidityType === 'string') return true;
-      if (solidityType === 'bytes')
-        return value.substr(0, 2) === '0x' && Misc.validateHexString(value);
-      if (solidityType === 'bool')
-        return typeof value === typeof true || value === '';
-      return false;
-    },
+    isValidInput: Misc.isContractArgValid,
     getType: Misc.solidityType,
     async sendTransaction() {
       try {
