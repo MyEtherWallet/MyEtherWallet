@@ -1,18 +1,14 @@
 @import '~@/scss/GlobalVariables';
 
 .verify-message-layout {
-  align-items: center;
   background-color: $light-grey-2;
-  display: flex;
-  justify-content: center;
   padding: 100px 0;
-  text-align: center;
-
+  
   @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
-    padding: 20px 20px;
+    padding: 50px 0px;
   }
   @media all and (max-width: $mobile-width) {
-    padding: 20px 10px;
+    padding: 50px 0px;
   }
 
   .verify-message-content {
@@ -21,4 +17,30 @@
     flex-direction: column;
     max-width: 800px;
   }
+
 }
+
+.title-block {
+  margin: 0 auto;
+  margin-bottom: 50px;
+  max-width: 700px;
+  text-align: center;
+
+  h2 {
+    font-size: 45px;
+    font-weight: 500;
+    line-height: 60px;
+  }
+
+  @media all and (max-width: $mobile-width) {
+    text-align: left;
+
+    h2 {
+      font-size: 25px;
+      font-weight: 600;
+      line-height: 40px;
+    }    
+  }
+}
+
+
