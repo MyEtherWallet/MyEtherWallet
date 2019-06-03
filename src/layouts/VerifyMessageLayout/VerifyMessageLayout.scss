@@ -3,12 +3,12 @@
 .verify-message-layout {
   background-color: $light-grey-2;
   padding: 100px 0;
-  
+
   @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
-    padding: 50px 0px;
+    padding: 50px 0;
   }
   @media all and (max-width: $mobile-width) {
-    padding: 50px 0px;
+    padding: 50px 0;
   }
 
   .verify-message-content {
@@ -17,7 +17,6 @@
     flex-direction: column;
     max-width: 800px;
   }
-
 }
 
 .title-block {
@@ -39,8 +38,6 @@
       font-size: 25px;
       font-weight: 600;
       line-height: 40px;
-    }    
+    }
   }
 }
-
-
