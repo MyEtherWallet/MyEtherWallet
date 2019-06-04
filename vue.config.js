@@ -9,7 +9,7 @@ const path = require('path');
 const webpackConfig = {
   entry: {
     app: './src/main.js',
-    cxhelpers: './src/cxHelpers/backgroundPhishingCatcher.js'
+    background: './src/builds/mewcx/public/cxHelpers/backgroundPhishingCatcher.js'
   },
   output: {
     filename: './[name].js'
@@ -22,7 +22,7 @@ const webpackConfig = {
     disableHostCheck: true, // Dev purposes only, should be commented out before release
     https:  true,
     host: 'localhost',
-    hotOnly: true,
+    hotOnly: JSON.parse(env_vars.BUILD_TYPE) !== 'mewcx',
     port: 8080,
     writeToDisk: JSON.parse(env_vars.BUILD_TYPE) === 'mewcx',
     headers: {
@@ -224,7 +224,8 @@ if (process.env.NODE_ENV === 'production') {
           'src/layouts/ExtensionBrowserAction/containers/ExtensionWalletContainer/ExtensionWalletContainer.scss',
           'src/layouts/ExtensionBrowserAction/containers/ExtensionWalletContainer/ExtensionWalletContainer.vue',
           'src/layouts/ExtensionBrowserAction/containers/ExtensionWalletContainer/index.js',
-          'src/tokens/tokens-etsc.json'
+          'src/tokens/tokens-etsc.json',
+          'src/*'
         ]
       }
     })
@@ -246,6 +247,13 @@ const exportObj = {
   integrity: process.env.WEBPACK_INTEGRITY === 'false' ? false : true,
   pwa: pwa,
   chainWebpack: config => {
+    config
+      .plugin('html')
+      .tap((args) => {
+        // eslint-disable-next-line no-param-reassign
+        args[0].excludeChunks = ['background'];
+        return args;
+      });
     config.module
       .rule('replace')
       .test(/\.js$/)
