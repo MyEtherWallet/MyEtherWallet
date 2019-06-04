@@ -96,29 +96,20 @@
 
           @keyframes spaceman-fly {
             0% {
-              transform:  rotate(0deg)
-                          scale(1.4)
-                          translate(0px, 0px);
+              transform: rotate(0deg) scale(1.4) translate(0, 0);
             }
             25% {
-              transform:  rotate(15deg)
-                          scale(0.8)
-                          translate(100px, -170px);
+              transform: rotate(15deg) scale(0.8) translate(100px, -170px);
             }
             50% {
-              transform:  rotate(-10deg)
-                          scale(0.6)
-                          translate(170px, -160px);
+              transform: rotate(-10deg) scale(0.6) translate(170px, -160px);
             }
 
             100% {
-              transform:  rotate(0deg)
-                          scale(1.4)
-                          translate(0px, 0px);
+              transform: rotate(0deg) scale(1.4) translate(0, 0);
             }
           }
         } // .spaceman
-
       } // .animation-content
     } // .content
   } //. top-section
