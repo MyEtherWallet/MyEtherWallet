@@ -10,6 +10,7 @@
 </template>
 
 <script>
+/* eslint no-console:0 */
 import WelcomeContainer from './containers/WelcomeContainer';
 import AccountsContainer from './containers/AccountsContainer';
 import { ExtensionHelpers } from '@/helpers';
