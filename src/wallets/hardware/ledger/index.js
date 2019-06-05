@@ -20,7 +20,7 @@ import errorHandler from './errorHandler';
 
 const NEED_PASSWORD = false;
 const OPEN_TIMEOUT = 10000;
-const LISTENER_TIMEOUT = 15000;
+const LISTENER_TIMEOUT = 30000;
 
 class ledgerWallet {
   constructor() {
@@ -137,7 +137,9 @@ createWallet.errorHandler = errorHandler;
 
 const isWebUsbSupported = async () => {
   const isSupported = await webUsbTransport.isSupported();
-  return isSupported && platform.os.family !== 'Windows'; // take it out later once the windows issue is fixed
+  return (
+    isSupported && platform.os.family !== 'Windows' && platform.name !== 'Opera' // take it out later once the windows issue is fixed
+  );
 };
 
 const getLedgerTransport = async () => {
