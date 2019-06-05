@@ -9,6 +9,7 @@
 - Update UI for Verify Message page [#1146](https://github.com/MyEtherWallet/MyEtherWallet/pull/1146)
 - Fix UI for Hardware modal [#1140](https://github.com/MyEtherWallet/MyEtherWallet/pull/1140)
 - Ui fix for password modal [#1135](https://github.com/MyEtherWallet/MyEtherWallet/pull/1135)
+- UI update for mobile network, balance [#1134](https://github.com/MyEtherWallet/MyEtherWallet/pull/1134)
 
 ### Release v5.0.12-hotfix.2
 
