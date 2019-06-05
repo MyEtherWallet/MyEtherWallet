@@ -1,14 +1,14 @@
 <template>
-  <div class="team">
+  <div class="privacy-policy">
     <div class="wrap">
       <div class="page-container">
         <div class="content-width-limit">
           <div class="page-header">
             <h1>{{ $t('privacyPol.title') }}</h1>
+            <h6>{{ $t('privacyPol.date') }}</h6>
           </div>
 
           <div class="content">
-            <h6>{{ $t('privacyPol.date') }}</h6>
             <div v-for="item in items" :key="item">
               <p
                 v-if="

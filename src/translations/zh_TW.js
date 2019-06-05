@@ -20,6 +20,7 @@ import ledgerError from './errors-ledger/zh_TW';
 import secalotError from './errors-secalot/zh_TW';
 import keepkeyError from './errors-keepkey/zh_TW';
 import bitboxError from './errors-bitbox/zh_TW';
+import buyHardwareWallet from './buy-hardware-wallet/zh_TW';
 
 const zh_TW = {
   common: common,
@@ -42,6 +43,7 @@ const zh_TW = {
   ledgerError: ledgerError,
   secalotError: secalotError,
   keepkeyError: keepkeyError,
-  bitboxError: bitboxError
+  bitboxError: bitboxError,
+  buyHardwareWallet: buyHardwareWallet
 };
 export default zh_TW;

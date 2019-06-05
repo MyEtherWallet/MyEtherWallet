@@ -31,5 +31,7 @@
   "mewConnectTitle": "使用 MEWconnect 存取",
   "mewConnectDesc1": "請使用 MEWconnect App 來掃描上方的 QR code。",
   "mewConnectDesc2": "還沒安裝 App 嗎? 馬上下載。",
-  "notARecommendedWay": "我們 **非常不建議** 使用這種方式來建立錢包。由於這些是非常敏感的資訊，因此下面的選項只應被有經驗的加密貨幣使用者所使用。"
+  "notARecommendedWay": "我們 **非常不建議** 使用這種方式來建立錢包。由於這些是非常敏感的資訊，因此下面的選項只應被有經驗的加密貨幣使用者所使用。",
+  "connectDevice": "Please make sure your device is connected.",
+  "buy": "Buy Now"
 }
