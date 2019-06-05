@@ -11,6 +11,7 @@
 - Ui fix for password modal [#1135](https://github.com/MyEtherWallet/MyEtherWallet/pull/1135)
 - UI update for mobile network, balance [#1134](https://github.com/MyEtherWallet/MyEtherWallet/pull/1134)
 - UI update for Send Offline Helper, Convert Units, Buy a Hardware wallet [#1129](https://github.com/MyEtherWallet/MyEtherWallet/pull/1129)
+- Term and conditions, Privacy policy UI fix [#1128](https://github.com/MyEtherWallet/MyEtherWallet/pull/1128)
 
 ### Release v5.0.12-hotfix.2
 
