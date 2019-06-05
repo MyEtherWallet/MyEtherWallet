@@ -91,7 +91,6 @@
         </div>
       </template>
     </interface-container-title>
-
     <div v-show="makerActive" class="buttons-container">
       <div v-if="!hasProxy && !onCreate">
         <i class="fa fa-question-circle"></i>
@@ -152,6 +151,7 @@
       @showPayback="showPayback"
       @showGenerate="showGenerate"
       @showDeposit="showDeposit"
+      @migrateCdp="migrateCdpExternal"
     >
     </router-view>
   </div>
@@ -225,12 +225,26 @@ export default {
       // activeCdps: {},
       allCdpIds: [],
       activeCdp: {},
+      activeValues: {
+        maxPethDraw: toBigNumber(0),
+        maxEthDraw: toBigNumber(0),
+        maxUsdDraw: toBigNumber(0),
+        ethCollateral: toBigNumber(0),
+        pethCollateral: toBigNumber(0),
+        usdCollateral: toBigNumber(0),
+        debtValue: toBigNumber(0),
+        maxDai: toBigNumber(0),
+        collateralRatio: toBigNumber(0),
+        minEth: toBigNumber(0),
+        cdpId: '--'
+      },
       availableCdps: {},
       cdps: [],
       cdpsWithoutProxy: [],
       cdpService: {},
       cdpDetailsLoaded: false,
       currentProxy: null,
+      currentCdpId: '',
       creatingCdp: false,
       daiPrice: 0,
       daiQty: 0,
@@ -245,6 +259,7 @@ export default {
       openCloseModal: false,
       openMoveModal: false,
       proxyService: {},
+      proxyAddress: null,
       pethPrice: toBigNumber(0),
       pethMin: toBigNumber(0),
       priceService: {},
@@ -254,21 +269,7 @@ export default {
       sysServices: {},
       targetPrice: 0,
       valuesUpdated: 0,
-      wethToPethRatio: toBigNumber(0),
-      currentCdpId: '',
-      activeValues: {
-        maxPethDraw: toBigNumber(0),
-        maxEthDraw: toBigNumber(0),
-        maxUsdDraw: toBigNumber(0),
-        ethCollateral: toBigNumber(0),
-        pethCollateral: toBigNumber(0),
-        usdCollateral: toBigNumber(0),
-        debtValue: toBigNumber(0),
-        maxDai: toBigNumber(0),
-        collateralRatio: toBigNumber(0),
-        minEth: toBigNumber(0),
-        cdpId: '--'
-      }
+      wethToPethRatio: toBigNumber(0)
     };
   },
   computed: {
@@ -303,7 +304,10 @@ export default {
       return this.cdps.length > 1 || this.cdpsWithoutProxy.length > 1;
     },
     hasProxy() {
-      return this._proxyAddress !== null;
+      return this.proxyAddress !== null;
+    },
+    currentProxyAddress() {
+      return this.proxyAddress;
     }
   },
   watch: {
@@ -383,7 +387,8 @@ export default {
       this.stabilityFee = toBigNumber(stabilityFee);
 
       this.wethToPethRatio = toBigNumber(wethToPethRatio);
-      this._proxyAddress = await this._proxyService.currentProxy();
+      this.proxyAddress = await this._proxyService.currentProxy();
+      console.log('this.proxyAddress', this.proxyAddress); // todo remove dev item
 
       this.daiToken = this._tokenService.getToken(DAI);
       this.daiBalance = (await this.daiToken.balance()).toBigNumber();
@@ -407,6 +412,7 @@ export default {
       this.cdps = withProxy;
       this.cdpsWithoutProxy = withoutProxy;
 
+      console.log(withProxy, withoutProxy); // todo remove dev item
       if (this.cdps.length > 0 || this.cdpsWithoutProxy.length > 0) {
         await this.loadCdpDetails();
       }
@@ -520,7 +526,7 @@ export default {
     },
 
     async doUpdate(route) {
-      this._proxyAddress = await this.getProxy();
+      this.proxyAddress = await this.getProxy();
       let afterClose = false;
       const afterOpen = route === 'create';
       await this.updateActiveCdp();
@@ -566,15 +572,15 @@ export default {
     },
 
     async checkAllowances() {
-      if (this._proxyAddress) {
+      if (this.proxyAddress) {
         this._proxyAllowanceDai = (await this.daiToken.allowance(
           this.account.address,
-          this._proxyAddress
+          this.proxyAddress
         )).toBigNumber();
 
         this._proxyAllowanceMkr = (await this.mkrToken.allowance(
           this.account.address,
-          this._proxyAddress
+          this.proxyAddress
         )).toBigNumber();
       }
     },
@@ -599,8 +605,8 @@ export default {
     },
 
     async locateCdpsProxy() {
-      this._proxyAddress = await this.getProxy();
-      return await this._cdpService.getCdpIds(this._proxyAddress);
+      this.proxyAddress = await this.getProxy();
+      return await this._cdpService.getCdpIds(this.proxyAddress);
     },
 
     async loadCdpDetails() {
@@ -620,7 +626,7 @@ export default {
     async buildCdpObject(cdpId, options = {}) {
       const sysVars = {
         ...options,
-        _proxyAddress: this._proxyAddress,
+        _proxyAddress: this.proxyAddress,
         liquidationPenalty: this.liquidationPenalty,
         stabilityFee: this.stabilityFee,
         ethPrice: this.ethPrice,
@@ -638,8 +644,10 @@ export default {
         pethMin: this.pethMin
       };
 
-      if (this._proxyAddress) {
-        this.cdp = await this.getMakerCdp(cdpId, this._proxyAddress);
+      if (this.cdpsWithoutProxy.includes(cdpId)) {
+        this.cdp = await this.getMakerCdp(cdpId, false);
+      } else if (this.cdps.includes(cdpId)) {
+        this.cdp = await this.getMakerCdp(cdpId, this.proxyAddress);
       } else {
         this.cdp = await this.getMakerCdp(cdpId, false);
       }
@@ -655,7 +663,7 @@ export default {
           getCdp: this.getMakerCdp,
           toPeth: this.toPeth,
           toUSD: this.toUSD,
-          _proxyAddress: this._proxyAddress,
+          _proxyAddress: this.proxyAddress,
           liquidationPenalty: this.liquidationPenalty,
           stabilityFee: this.stabilityFee,
           ethPrice: this.ethPrice,
@@ -683,14 +691,14 @@ export default {
     },
 
     async getProxy() {
-      this._proxyAddress = await this._proxyService.currentProxy();
-      if (!this._proxyAddress) {
-        this._proxyAddress = await this._proxyService.getProxyAddress(
+      this.proxyAddress = await this._proxyService.currentProxy();
+      if (!this.proxyAddress) {
+        this.proxyAddress = await this._proxyService.getProxyAddress(
           this.account.address
         );
-        if (this._proxyAddress) this.noProxy = false;
+        if (this.proxyAddress) this.noProxy = false;
       }
-      return this._proxyAddress;
+      return this.proxyAddress;
     },
     showDeposit() {
       this.$refs.deposit.$refs.modal.show();
@@ -809,10 +817,10 @@ export default {
     async approveDai() {
       await this._tokenService
         .getToken(DAI)
-        .approveUnlimited(this._proxyAddress);
+        .approveUnlimited(this.proxyAddress);
     },
     async approveMkr() {
-      this._tokenService.getToken(MKR).approveUnlimited(this._proxyAddress);
+      this._tokenService.getToken(MKR).approveUnlimited(this.proxyAddress);
     },
 
     //============================================================
@@ -830,22 +838,22 @@ export default {
 
     async getMakerCdp(cdpId) {
       if (cdpId === null) return;
-      if (this._proxyAddress) {
-        return await this.maker.getCdp(cdpId, this._proxyAddress);
+      if (this.proxyAddress) {
+        return await this.maker.getCdp(cdpId, this.proxyAddress);
       }
       return await this.maker.getCdp(cdpId, false);
     },
 
     async buildProxy() {
       this.creatingProxy = true;
-      this._proxyAddress = await this.getProxy();
-      if (!this._proxyAddress) {
+      this.proxyAddress = await this.getProxy();
+      if (!this.proxyAddress) {
         await this._proxyService.build();
-        this._proxyAddress = await this._proxyService.currentProxy();
-        return this._proxyAddress;
+        this.proxyAddress = await this._proxyService.currentProxy();
+        return this.proxyAddress;
       }
-      this._proxyAddress = await this._proxyService.currentProxy();
-      return this._proxyAddress;
+      this.proxyAddress = await this._proxyService.currentProxy();
+      return this.proxyAddress;
     },
 
     async migrateCdp(cdpId) {
