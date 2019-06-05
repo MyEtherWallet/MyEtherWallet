@@ -102,35 +102,6 @@ export default {
           titleKey: 'common.depContract'
         }
       ]
-    },
-    {
-      name: 'messages',
-      routes: ['/interface/sign-message', '/interface/verify-message'],
-      icons: {
-        active: require('@/assets/images/sidemenu/message-active.svg'),
-        inactive: require('@/assets/images/sidemenu/message.svg')
-      },
-      titleKey: 'interface.txSideMenuMessage',
-      children: [
-        {
-          name: 'sign-message',
-          routes: ['/interface/sign-message'],
-          icons: {
-            active: '',
-            inactive: ''
-          },
-          titleKey: 'common.signMessage'
-        },
-        {
-          name: 'verify-message',
-          routes: ['/interface/verify-message'],
-          icons: {
-            active: '',
-            inactive: ''
-          },
-          titleKey: 'common.verifyMessage'
-        }
-      ]
     }
   ]
 };
