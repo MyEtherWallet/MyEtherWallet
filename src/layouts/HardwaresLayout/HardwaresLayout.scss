@@ -2,24 +2,34 @@
 
 .hardware-layout {
   background-color: $light-grey-2;
+  padding: 100px 0;
+  @media all and (max-width: $tablet-width) {
+    padding: 50px 0;
+  }
 }
 
 .hardware-container {
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  padding: 70px 30px;
-
   .hardware-text {
     text-align: center;
+    padding-bottom: 50px;
 
     h2 {
       color: $dark-blue-6;
+      font-size: 45px;
+      font-weight: 500;
+      line-height: 60px;
     }
 
     p {
       color: $dark-blue-1;
-      padding-bottom: 30px;
+    }
+    @media all and (max-width: $mobile-width) {
+      text-align: left;
+      h2 {
+        font-size: 25px;
+        font-weight: 600;
+        line-height: 40px;
+      }
     }
   }
 
@@ -30,11 +40,12 @@
     display: flex;
     // height: 170px;
     max-width: 720px;
-    margin: 14px 0;
+    margin: 14px auto;
     padding: 26px 34px;
 
     @media all and (max-width: $mobile-width) {
       flex-direction: column-reverse;
+      padding: 46px 34px;
     }
 
     .hardware-item-text {
@@ -51,25 +62,37 @@
 
       .price-container {
         font-weight: bold;
+        display: flex;
+        align-items: center;
 
         p {
           color: $dark-blue-2;
           font-size: 20px;
-          left: 15px;
-          position: relative;
         }
 
         span {
-          position: absolute;
-          left: -15px;
-          top: -2px;
+          margin-right: 3px;
+          color: $dark-blue-2;
         }
+      }
+
+      .more-info {
+        font-size: 13px;
+        margin-top: 10px;
+        display: block;
       }
     }
 
     .hardware-item-logo {
+      margin-left: 30px;
+      @media all and (max-width: $mobile-width) {
+        margin-left: 0;
+        margin-bottom: 30px;
+      }
+
       img {
-        height: 124px;
+        max-height: 42px;
+        max-width: 140px;
       }
     }
   }

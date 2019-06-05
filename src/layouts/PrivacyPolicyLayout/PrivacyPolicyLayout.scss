@@ -9,7 +9,7 @@
   padding: 60px 0;
 
   .page-container {
-    padding: 60px 0;
+    //padding: 60px 0;
 
     .content-width-limit {
       margin: 0 auto;
@@ -17,7 +17,7 @@
     }
 
     .page-header {
-      margin-bottom: 70px;
+      margin-bottom: 40px;
       text-align: center;
 
       p {
@@ -29,6 +29,7 @@
 } // .wrap
 
 .content {
+  text-align: center;
   p {
     font-size: 14px;
     font-weight: 400;
