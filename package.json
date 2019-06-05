@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "5.0.13",
+  "version": "5.0.12-hotfix.2",
   "description": "Client side ethereum wallet",
   "licsense": "MIT",
   "repository": "https://github.com/myetherwallet/myetherwallet",
@@ -31,10 +31,13 @@
     "pre-commit": "npm run lint && npm run test"
   },
   "dependencies": {
+    "@babel/preset-env": "7.4.5",
     "@sentry/browser": "5.4.0",
     "@sentry/integrations": "5.4.1",
+    "babel-loader": "8.0.6",
     "html2canvas": "1.0.0-rc.2",
     "idna-uts46": "1.1.0",
+    "js-sha1": "0.6.0",
     "levenshtein": "1.0.5",
     "luxon": "1.16.0",
     "moment": "2.24.0",

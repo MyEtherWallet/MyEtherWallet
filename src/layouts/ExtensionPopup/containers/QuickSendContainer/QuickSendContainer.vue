@@ -131,13 +131,13 @@
 </template>
 
 <script>
+/* eslint no-console:0 */
 import WalletViewComponent from '../../components/WalletViewComponent';
 import hide from '@/assets/images/icons/hide-password.svg';
 import showIcon from '@/assets/images/icons/show-password.svg';
 import BigNumber from 'bignumber.js';
 import { isAddress } from '@/helpers/addressUtils';
 import walletWorker from 'worker-loader!@/workers/wallet.worker.js';
-// import { Wallet } from '@/helpers';
 import { WalletInterface } from '@/wallets';
 import { KEYSTORE as keyStoreType } from '@/wallets/bip44/walletTypes';
 import Blockie from '@/components/Blockie';
