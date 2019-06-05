@@ -142,7 +142,7 @@ export default {
     async moveCdp() {
       if (Misc.isValidETHAddress(this.address)) {
         this.$emit('moveCdp', this.address);
-        this.activeCdp.moveCdp(this.address);
+        // this.activeCdp.moveCdp(this.address);
         this.closeModal();
       }
     },
