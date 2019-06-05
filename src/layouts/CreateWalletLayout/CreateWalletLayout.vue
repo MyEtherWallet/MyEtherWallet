@@ -14,9 +14,9 @@
               @click="showProgressBar = true"
             >
               <div class="title-block">
-                <div class="not-recommended">
+                <!-- <div class="not-recommended">
                   {{ $t('createWallet.notARecommendedWay') }}
-                </div>
+                </div> -->
                 <div class="title-popover">
                   <h3>{{ $t('createWallet.yourPw') }}</h3>
                   <popover :popcontent="$t('popover.password')" />
@@ -38,9 +38,9 @@
               @click="showProgressBar = true"
             >
               <div class="title-block">
-                <div class="not-recommended">
+                <!-- <div class="not-recommended">
                   {{ $t('createWallet.notARecommendedWay') }}
-                </div>
+                </div> -->
                 <div class="title-popover">
                   <h3>{{ $t('createWallet.yourPw') }}</h3>
                   <popover :popcontent="$t('popover.password')" />

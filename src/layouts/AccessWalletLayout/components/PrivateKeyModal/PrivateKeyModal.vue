@@ -19,9 +19,9 @@
             placeholder="Enter Private Key"
           />
         </div>
-        <div class="not-recommended">
+        <!-- <div class="not-recommended">
           {{ $t('accessWallet.notARecommendedWay') }}
-        </div>
+        </div> -->
         <button
           :disabled="
             privateKey === '' &&

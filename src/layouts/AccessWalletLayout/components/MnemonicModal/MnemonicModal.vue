@@ -46,9 +46,9 @@
             </li>
           </ul>
         </div>
-        <div class="not-recommended">
+        <!-- <div class="not-recommended">
           {{ $t('accessWallet.notARecommendedWay') }}
-        </div>
+        </div> -->
         <div class="button-container">
           <b-btn
             class="mid-round-button-green-filled close-button"

@@ -29,9 +29,9 @@
         />
       </div>
       <p v-show="error !== ''" class="error">{{ error }}</p>
-      <div class="not-recommended">
+      <!-- <div class="not-recommended">
         {{ $t('accessWallet.notARecommendedWay') }}
-      </div>
+      </div> -->
       <button
         class="submit-button large-round-button-green-filled"
         type="submit"
