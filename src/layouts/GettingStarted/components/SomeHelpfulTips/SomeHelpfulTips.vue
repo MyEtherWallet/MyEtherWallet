@@ -69,13 +69,13 @@ export default {
         //     'https://chrome.google.com/webstore/detail/myetherwallet/nlbmnnijcnlegkjjpcfjclmcfggfefdm?hl=en',
         //   descCont: this.$t('gettingStarted.tip3DescCont')
         // },
-        {
-          title: this.$t('gettingStarted.tip4Title'),
-          desc: this.$t('gettingStarted.tip4Desc'),
-          linkText: this.$t('gettingStarted.tip4DescLink'),
-          linkUrl: '',
-          descCont: ''
-        },
+        // {
+        //   title: this.$t('gettingStarted.tip4Title'),
+        //   desc: this.$t('gettingStarted.tip4Desc'),
+        //   linkText: this.$t('gettingStarted.tip4DescLink'),
+        //   linkUrl: '',
+        //   descCont: ''
+        // },
         {
           title: this.$t('gettingStarted.tip5Title'),
           desc: this.$t('gettingStarted.tip5Desc'),
