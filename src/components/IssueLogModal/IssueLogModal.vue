@@ -12,7 +12,7 @@
           <div class="modal-header-block">
             <h2 class="title">Something went wrong.</h2>
             <p class="sub-text">
-              Do you want to inform MEW about this error?
+              Do you want to inform Team XinFin about this error?
             </p>
           </div>
           <div class="modal-user-input-block">
