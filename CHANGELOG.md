@@ -1,3 +1,7 @@
+### Devop
+
+- AWS sync with --exact-timestamps flag [#1117](https://github.com/MyEtherWallet/MyEtherWallet/pull/1117)
+
 ### Release v5.0.12-hotfix.2
 
 ### Bug
