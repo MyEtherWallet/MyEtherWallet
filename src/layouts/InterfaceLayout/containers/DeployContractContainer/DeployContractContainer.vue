@@ -108,7 +108,10 @@
             </div>
             <i
               :class="[
-                isValidInput(inputs[input.name], getType(input.type).solidityType)
+                isValidInput(
+                  inputs[input.name],
+                  getType(input.type).solidityType
+                )
                   ? ''
                   : 'not-good',
                 'fa fa-check-circle good-button'
