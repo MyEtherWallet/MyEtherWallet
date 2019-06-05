@@ -1,23 +1,11 @@
 <template>
   <div>
-    <close-cdp-modal
-      ref="closeCdp"
-      :active-cdp="activeCdp"
-      :tokens-with-balance="tokensWithBalance"
-    >
-    </close-cdp-modal>
-    <move-cdp-modal
-      ref="moveCdp"
-      :active-cdp="activeCdp"
-      :tokens-with-balance="tokensWithBalance"
-    >
-    </move-cdp-modal>
     <div v-show="!finishMigration" class="manage-container">
       <!-- ==================================================== -->
       <div class="title-content-container">
         <p class="cpd-title">{{ $t('dappsMaker.cdpPortal') }}</p>
         <p class="cdp-id">
-          {{ $t('dappsMaker.positionLabel', { value: activeCdp.cdpId }) }}
+          {{ $t('dappsMaker.positionLabel', { value: cdpIdDisplay }) }}
         </p>
       </div>
       <!-- ==================================================== -->
@@ -35,17 +23,11 @@
           <div class="block-content">
             <div class="item">
               <p>{{ $t('dappsMaker.currentPrice') }}(ETH/USD)</p>
-              <div>{{ activeCdp.ethPrice }} <span>USD</span></div>
+              <div>{{ ethPriceDisplay }} <span>USD</span></div>
             </div>
             <div class="item">
               <p>{{ $t('dappsMaker.liquidationPenalty') }}</p>
-              <div>
-                {{
-                  displayFixedValue(
-                    displayPercentValue(activeCdp.liquidationPenalty)
-                  )
-                }}%
-              </div>
+              <div>{{ liquidationPenaltyDisplay }}%</div>
             </div>
           </div>
         </div>
@@ -59,23 +41,11 @@
           <div class="block-content">
             <div class="item">
               <p>{{ $t('dappsMaker.minimumRatio') }}</p>
-              <div>
-                {{
-                  displayFixedValue(
-                    displayPercentValue(activeCdp.liquidationRatio)
-                  )
-                }}%
-              </div>
+              <div>{{ liquidationRatioDisplay }}%</div>
             </div>
             <div class="item">
               <p>{{ $t('dappsMaker.stabilityFee') }}</p>
-              <div>
-                {{
-                  displayFixedValue(
-                    displayPercentValue(activeCdp.stabilityFee)
-                  )
-                }}%
-              </div>
+              <div>{{ stabilityFeeDisplay }}%</div>
             </div>
           </div>
         </div>
@@ -94,13 +64,13 @@
               <div class="item">
                 <p>{{ $t('dappsMaker.deposited') }}</p>
                 <div>
-                  {{ displayFixedValue(activeCdp.ethCollateral, 5, false) }}
+                  {{ ethCollateral }}
                   <span>ETH</span>
                 </div>
                 <div>
-                  {{ displayFixedValue(activeCdp.pethCollateral, 5, true) }}
+                  {{ pethCollateral }}
                   <span>PETH</span> /
-                  {{ displayFixedValue(activeCdp.usdCollateral, 2) }}
+                  {{ usdCollateral }}
                   <span>USD</span>
                 </div>
               </div>
@@ -109,13 +79,13 @@
               <div class="item">
                 <p>{{ $t('dappsMaker.maxWithDraw') }}</p>
                 <div>
-                  {{ displayFixedValue(activeCdp.maxEthDraw, 5) }}
+                  {{ maxEthDrawDisplay }}
                   <span>ETH</span>
                 </div>
                 <div>
-                  {{ displayFixedValue(activeCdp.maxPethDraw, 5) }}
+                  {{ maxPethDrawDisplay }}
                   <span>PETH</span> /
-                  {{ displayFixedValue(activeCdp.maxUsdDraw, 2) }}
+                  {{ maxUsdDrawDisplay }}
                   <span>USD</span>
                 </div>
               </div>
@@ -137,9 +107,9 @@
             <div class="block-content">
               <div class="item">
                 <p>{{ $t('dappsMaker.generated') }}</p>
-                <div>{{ activeCdp.debtValue }} <span>DAI</span></div>
+                <div>{{ debtValue }} <span>DAI</span></div>
                 <div>
-                  {{ displayFixedValue(activeCdp.debtValue, 2) }}
+                  {{ debtValueDisplay }}
                   <span>USD</span>
                 </div>
               </div>
@@ -148,11 +118,11 @@
               <div class="item">
                 <p>{{ $t('dappsMaker.maxAvailable') }}</p>
                 <div>
-                  {{ displayFixedValue(activeCdp.maxDai, 5) }}
+                  {{ maxDai }}
                   <span>DAI</span>
                 </div>
                 <div>
-                  {{ displayFixedValue(activeCdp.maxDai, 2) }}
+                  {{ maxUsd }}
                   <span>USD</span>
                 </div>
               </div>
@@ -230,13 +200,83 @@ export default {
         return {};
       }
     },
-    migrationInProgress: {
+    valuesUpdated: {
+      type: Number,
+      default: 0
+    },
+    getCdp: {
+      type: Function,
+      default: function() {}
+    },
+    hasCdp: {
+      type: Function,
+      default: function() {}
+    },
+    values: {
+      type: Object,
+      default: function() {
+        return {
+          maxPethDraw: '',
+          maxEthDraw: '',
+          maxUsdDraw: '',
+          ethCollateral: '',
+          pethCollateral: '',
+          usdCollateral: '',
+          debtValue: '',
+          maxDai: '',
+          collateralRatio: '',
+          cdpId: '',
+          stabilityFee: '',
+          minEth: '',
+          liquidationRatio: '',
+          wethToPethRatio: '',
+          liquidationPenalty: '',
+          targetPrice: '',
+          pethPrice: ''
+        };
+      }
+    },
+    ethPrice: {
+      type: BigNumber,
+      default: toBigNumber(0)
+    },
+    pethPrice: {
+      type: BigNumber,
+      default: toBigNumber(0)
+    },
+    liquidationPenalty: {
+      type: BigNumber,
+      default: toBigNumber(0)
+    },
+    stabilityFee: {
+      type: BigNumber,
+      default: toBigNumber(0)
+    },
+    liquidationRatio: {
+      type: BigNumber,
+      default: toBigNumber(0)
+    },
+    wethToPethRatio: {
+      type: BigNumber,
+      default: toBigNumber(0)
+    },
+    pethMin: {
+      type: BigNumber,
+      default: toBigNumber(0)
+    },
+    priceService: {
       type: Object,
       default: function() {
         return {};
       }
     },
-    makerManager: {
+    cdpService: {
+      type: Object,
+      default: function() {
+        return {};
+      }
+    },
+    proxyService: {
       type: Object,
       default: function() {
         return {};
@@ -273,27 +313,127 @@ export default {
       }
     },
     collateralRatioColoring() {
-      if (this.activeCdp.collatRatio >= 2) {
-        return 'green';
-      } else if (
-        this.activeCdp.collatRatio >= 1.75 &&
-        this.activeCdp.collatRatio < 2
-      ) {
-        return 'orange';
+      if (this.values) {
+        if (this.values.collateralRatio >= 2) {
+          return 'green';
+        } else if (
+          this.values.collateralRatio >= 1.75 &&
+          this.values.collateralRatio < 2
+        ) {
+          return 'orange';
+        }
+        return 'red';
       }
-      return 'red';
-
-      // if(this.activeCdp.collatRatio )
+      return '';
     },
     liquidationPriceDisplay() {
-      const value = displayFixedValue(this.activeCdp.liquidationPrice, 2);
-      if (new BigNumber(value).gt(0)) {
-        return value;
+      if (this.values) {
+        const value = displayFixedValue(this.values.liquidationPrice, 2);
+        if (new BigNumber(value).gt(0)) {
+          return value;
+        }
+        return '--';
       }
       return '--';
     },
     collaterlizationRatioDisplay() {
-      return displayFixedPercent(this.activeCdp.collatRatio);
+      if (this.values) {
+        return displayFixedPercent(this.values.collateralRatio);
+      }
+      return '--';
+    },
+    cdpIdDisplay() {
+      if (this.values) {
+        return this.values.cdpId;
+      }
+      return '--';
+    },
+    liquidationRatioDisplay() {
+      if (this.values) {
+        return displayFixedValue(displayPercentValue(this.liquidationRatio));
+      }
+      return '--';
+    },
+    liquidationPenaltyDisplay() {
+      if (this.values) {
+        return displayFixedValue(displayPercentValue(this.liquidationPenalty));
+      }
+      return '--';
+    },
+    stabilityFeeDisplay() {
+      if (this.values) {
+        return displayFixedValue(displayPercentValue(this.stabilityFee));
+      }
+      return '--';
+    },
+    ethPriceDisplay() {
+      if (this.values) {
+        return displayFixedValue(this.ethPrice, 2);
+      }
+      return '--';
+    },
+    maxPethDrawDisplay() {
+      if (this.values) {
+        return displayFixedValue(this.values.maxPethDraw, 5);
+      }
+      return '--';
+    },
+    zeroDebt() {
+      return toBigNumber(this.values.debtValue).eq(0);
+    },
+    maxEthDrawDisplay() {
+      if (this.values) {
+        return this.values.maxEthDraw;
+      }
+      return '--';
+    },
+    maxUsdDrawDisplay() {
+      if (this.values) {
+        return displayFixedValue(this.values.maxUsdDraw, 2);
+      }
+      return '--';
+    },
+    ethCollateral() {
+      if (this.values) {
+        return displayFixedValue(this.values.ethCollateral, 5, true);
+      }
+      return '--';
+    },
+    pethCollateral() {
+      if (this.values) {
+        return displayFixedValue(this.values.pethCollateral, 5, true);
+      }
+      return '--';
+    },
+    usdCollateral() {
+      if (this.values) {
+        return displayFixedValue(this.values.usdCollateral, 2);
+      }
+      return '--';
+    },
+    debtValueDisplay() {
+      if (this.values) {
+        return displayFixedValue(this.values.debtValue, 2);
+      }
+      return '--';
+    },
+    debtValue() {
+      if (this.values) {
+        return this.values.debtValue;
+      }
+      return '--';
+    },
+    maxDai() {
+      if (this.values) {
+        return this.values.maxDai;
+      }
+      return '--';
+    },
+    maxUsd() {
+      if (this.values) {
+        return displayFixedValue(this.values.maxDai, 2);
+      }
+      return '--';
     }
   },
   watch: {
@@ -302,17 +442,26 @@ export default {
     },
     async ['activeCdp.doUpdate'](val) {
       if (val > 0) {
-        this.activeCdp = this.makerManager.getCdp(this.cdpId);
+        this.activeCdp = this.getCdp(this.cdpId);
       }
     },
-    valuesUpdated() {
-      if (this.makerManager.hasCdp(this.cdpId)) {
-        this.activeCdp = this.makerManager.getCdp(this.cdpId);
+    async valuesUpdated() {
+      if (this.cdpId) {
+        // console.log(this.activeCdp); // todo remove dev item
+        // // this.activeCdp = this.getCdp[this.cdpId];
+        // if (!this.activeCdp) {
+        //   console.log("shouldn't run"); // todo remove dev item
+        //   // this.$emit('managerUpdate');
+        //   // await this.makerManager.doUpdate();
+        //   this.activeCdp = await this.getCdp(this.cdpId);
+        // } else {
+        //   /*this.activeCdp =*/ await this.activeCdp.update();
+        // }
       }
     },
     ['$route.params.cdpId'](val) {
-      if (this.makerManager.hasCdp(val)) {
-        this.activeCdp = this.makerManager.getCdp(val);
+      if (this.hasCdp(val)) {
+        this.activeCdp = this.getCdp(val);
       }
     },
     openCloseModal(val) {
@@ -327,18 +476,12 @@ export default {
     }
   },
   async mounted() {
+    this.activeCdp = {};
     this.cdpId = this.$route.params.cdpId;
-    this.$refs.closeCdp.$refs.modal.$on('hidden', () => {
-      this.$emit('modalHidden');
-    });
-    this.$refs.moveCdp.$refs.modal.$on('hidden', () => {
-      this.$emit('modalHidden');
-    });
     if (this.makerActive) {
       this.loaded = true;
       if (this.cdpId) {
-        this.activeCdp = this.makerManager.getCdp(this.cdpId);
-        // eslint-disable-next-line
+        this.$emit('activeCdpId', this.cdpId);
       }
     }
   },
@@ -346,23 +489,14 @@ export default {
     async migrateCdpToProxy() {
       await this.activeCdp.migrateCdpComplete();
     },
-    showClose() {
-      this.$refs.closeCdp.$refs.modal.show();
-    },
-    showMove() {
-      this.$refs.moveCdp.$refs.modal.show();
-    },
+    showClose() {},
+    showMove() {},
     displayPercentValue,
     displayFixedValue,
-    async isReady() {
-      // this.maxWithDraw = this.activeCdp.maxDaiDraw();
-      if (this.activeCdp) {
-        this.maxWithDrawUSD = this.activeCdp.toUSD(this.activeCdp.maxDai);
-      }
-      this.maxWithDrawUSD = '--';
-    },
+    async isReady() {},
     async migrateCdp() {
-      await this.activeCdp.migrateCdp();
+      this.$emit('migrateCdp', this.cdpId);
+      // await this.activeCdp.migrateCdp();
     }
   }
 };

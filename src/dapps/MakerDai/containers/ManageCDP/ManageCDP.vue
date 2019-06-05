@@ -1,41 +1,5 @@
 <template>
   <div class="manage-cdp">
-    <!--    <deposit-modal-->
-    <!--      ref="deposit"-->
-    <!--      :action="'deposit'"-->
-    <!--      :active-cdp="activeCdp"-->
-    <!--      :tokens-with-balance="tokensWithBalance"-->
-    <!--    ></deposit-modal>-->
-    <!--    <generate-modal-->
-    <!--      ref="generate"-->
-    <!--      :action="'generate'"-->
-    <!--      :active-cdp="activeCdp"-->
-    <!--      :tokens-with-balance="tokensWithBalance"-->
-    <!--    ></generate-modal>-->
-    <!--    <withdraw-modal-->
-    <!--      ref="withdraw"-->
-    <!--      :action="'withdraw'"-->
-    <!--      :active-cdp="activeCdp"-->
-    <!--      :tokens-with-balance="tokensWithBalance"-->
-    <!--    ></withdraw-modal>-->
-    <!--    <payback-modal-->
-    <!--      ref="payback"-->
-    <!--      :action="'payback'"-->
-    <!--      :active-cdp="activeCdp"-->
-    <!--      :tokens-with-balance="tokensWithBalance"-->
-    <!--    ></payback-modal>-->
-    <!--    <close-cdp-modal-->
-    <!--      ref="closeCdp"-->
-    <!--      :active-cdp="activeCdp"-->
-    <!--      :tokens-with-balance="tokensWithBalance"-->
-    <!--    >-->
-    <!--    </close-cdp-modal>-->
-    <!--    <move-cdp-modal-->
-    <!--      ref="moveCdp"-->
-    <!--      :active-cdp="activeCdp"-->
-    <!--      :tokens-with-balance="tokensWithBalance"-->
-    <!--    >-->
-    <!--    </move-cdp-modal>-->
 
     <div v-show="!finishMigration" class="manage-container">
       <!-- ==================================================== -->
@@ -369,7 +333,7 @@ export default {
       }
     },
     collateralRatioColoring() {
-      if (this.activeCdp) {
+      if (this.values) {
         if (this.values.collateralRatio >= 2) {
           return 'green';
         } else if (
@@ -383,7 +347,7 @@ export default {
       return '';
     },
     liquidationPriceDisplay() {
-      if (this.activeCdp) {
+      if (this.values) {
         const value = displayFixedValue(this.values.liquidationPrice, 2);
         if (new BigNumber(value).gt(0)) {
           return value;
@@ -393,7 +357,7 @@ export default {
       return '--';
     },
     collaterlizationRatioDisplay() {
-      if (this.activeCdp) {
+      if (this.values) {
         return displayFixedPercent(this.values.collateralRatio);
       }
       return '--';
