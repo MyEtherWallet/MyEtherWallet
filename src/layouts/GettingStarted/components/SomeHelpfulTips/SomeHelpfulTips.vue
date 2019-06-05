@@ -61,14 +61,14 @@ export default {
           linkUrl: '',
           descCont: ''
         },
-        {
-          title: this.$t('gettingStarted.tip3Title'),
-          desc: this.$t('gettingStarted.tip3Desc'),
-          linkText: this.$t('gettingStarted.tip3DescLink'),
-          linkUrl:
-            'https://chrome.google.com/webstore/detail/myetherwallet/nlbmnnijcnlegkjjpcfjclmcfggfefdm?hl=en',
-          descCont: this.$t('gettingStarted.tip3DescCont')
-        },
+        // {
+        //   title: this.$t('gettingStarted.tip3Title'),
+        //   desc: this.$t('gettingStarted.tip3Desc'),
+        //   linkText: this.$t('gettingStarted.tip3DescLink'),
+        //   linkUrl:
+        //     'https://chrome.google.com/webstore/detail/myetherwallet/nlbmnnijcnlegkjjpcfjclmcfggfefdm?hl=en',
+        //   descCont: this.$t('gettingStarted.tip3DescCont')
+        // },
         {
           title: this.$t('gettingStarted.tip4Title'),
           desc: this.$t('gettingStarted.tip4Desc'),
