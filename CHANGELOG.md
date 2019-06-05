@@ -1,6 +1,7 @@
 ### Devop
 
 - AWS sync with --exact-timestamps flag [#1117](https://github.com/MyEtherWallet/MyEtherWallet/pull/1117)
+- Support 32bits chainID [#959](https://github.com/MyEtherWallet/MyEtherWallet/pull/959)
 
 ### Release v5.0.12-hotfix.2
 
