@@ -1,8 +1,14 @@
-### Release v5.0.12-hotfix.2
+### Devop
+
+- AWS sync with --exact-timestamps flag [#1117](https://github.com/MyEtherWallet/MyEtherWallet/pull/1117)
+- Support 32bits chainID [#959](https://github.com/MyEtherWallet/MyEtherWallet/pull/959)
 
 ### Bug
 
 - Fix front page spaceman animation [#1147](https://github.com/MyEtherWallet/MyEtherWallet/pull/1147)
+
+### Release v5.0.12-hotfix.2
+
 - Fix ENS migrate owner check [#1103](https://github.com/MyEtherWallet/MyEtherWallet/pull/1103)
 - Fixes refresh page on mnemonic wallet submit [#1108](https://github.com/MyEtherWallet/MyEtherWallet/pull/1108)
 
