@@ -10,7 +10,7 @@
   "sendTx": "Enviar transacción",
   "haveIssues": "¿Tienes algún problema?",
   "registerEns": "Register ENS",
-  "registerEnsDesc": "Once you have a domain name, you can tell your friends to send XDC to mewtopia.eth instead of your address(0x7cB57B5A97eAbe942....)",
+  "registerEnsDesc": "Once you have a domain name, you can tell your friends to send XDC to xowdomain.xdc instead of your address(xdc7cB57B5A97eAbe942....)",
   "checkDomain": "Comprobar dominio",
   "subDomain": "Subdominio",
   "allSubDomains": "Todos los subdominios",
