@@ -181,7 +181,6 @@
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import { Misc, Toast } from '@/helpers';
-import { isAddress } from '@/helpers/addressUtils';
 import ethUnit from 'ethjs-unit';
 import EthTx from 'ethereumjs-tx';
 import BigNumber from 'bignumber.js';
@@ -246,7 +245,15 @@ export default {
       const _deployArgs = [];
       if (this.abiConstructor) {
         this.abiConstructor.inputs.forEach(item => {
-          _deployArgs.push(this.inputs[item.name]);
+          if (item.type.includes('[') && item.type.includes(']')) {
+            const inputs = this.inputs.hasOwnProperty(item.name)
+              ? this.inputs[item.name].replace(/\s/g, '')
+              : '';
+            const arr = inputs.split(',');
+            _deployArgs.push(arr);
+          } else {
+            _deployArgs.push(this.inputs[item.name]);
+          }
         });
       }
       return _deployArgs;
@@ -259,10 +266,10 @@ export default {
     allValid() {
       let _allvalid = true;
       if (this.abiConstructor) {
-        this.abiConstructor.inputs.forEach(item => {
+        this.abiConstructor.inputs.forEach((item, idx) => {
           if (
             !this.isValidInput(
-              this.inputs[item.name],
+              this.deployArgs[idx],
               this.getType(item.type).solidityType
             )
           )
@@ -273,18 +280,7 @@ export default {
     }
   },
   methods: {
-    isValidInput(value, solidityType) {
-      if (!value) value = '';
-      if (solidityType === 'uint')
-        return value !== '' && !isNaN(value) && Misc.isInt(value);
-      if (solidityType === 'address') return isAddress(value);
-      if (solidityType === 'string') return true;
-      if (solidityType === 'bytes')
-        return value.substr(0, 2) == '0x' && Misc.validateHexString(value);
-      if (solidityType === 'bool')
-        return typeof value == typeof true || value === '';
-      return false;
-    },
+    isValidInput: Misc.isContractArgValid,
     getType: Misc.solidityType,
     async sendTransaction() {
       try {
