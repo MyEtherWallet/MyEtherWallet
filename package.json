@@ -25,7 +25,8 @@
     "update:lists": "node fetchLists/index.js",
     "update:swap": "node compileBaseSwapOptions.js",
     "update": "npm run update:packages && npm run update:lists",
-    "update:mainlists": "node fetchLists/fetchMainLists.js"
+    "update:mainlists": "node fetchLists/fetchMainLists.js",
+    "clean": "sudo rm -rf node_modules/.cache; sudo rm -rf node_modules/websocket/.git; npm install;"
   },
   "gitHooks": {
     "pre-commit": "npm run lint && npm run test"

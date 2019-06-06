@@ -23,7 +23,7 @@
             rel="noopener noreferrer"
             @click.stop
           >
-            Buy Now >
+            {{ $t('accessWallet.buy') }} >
           </a>
         </div>
       </div>
