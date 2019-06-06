@@ -34,10 +34,10 @@ const fetchTokens = async () => {
   }
 };
 
-const fetchDarkList = async () => {
+const fetchAddressDarkList = async () => {
   try {
-    if (!fs.existsSync(configs.DARKLIST_PATH)) {
-      fs.mkdirSync(configs.DARKLIST_PATH);
+    if (!fs.existsSync(configs.ADDRESS_DARKLIST_PATH)) {
+      fs.mkdirSync(configs.ADDRESS_DARKLIST_PATH);
     }
 
     const darkList = await fetch(
@@ -51,9 +51,124 @@ const fetchDarkList = async () => {
     };
     console.log('writing darklist');
     fs.writeFileSync(
-      `${configs.DARKLIST_PATH}/address-darklist.json`,
+      `${configs.ADDRESS_DARKLIST_PATH}/address-darklist.json`,
       JSON.stringify(jsonToStore)
     );
+  } catch (e) {
+    console.log(e); // Not captured by sentry
+  }
+};
+
+const fetchUrlDarklist = async () => {
+  const sources = [
+    {
+      repo:
+        'https://raw.githubusercontent.com/409H/EtherAddressLookup/master/blacklists/domains.json',
+      identifier: 'eal'
+    },
+    {
+      repo:
+        'https://raw.githubusercontent.com/iosiro/counter_phishing_blacklist/master/blacklists/domains.json',
+      identifier: 'iosiro'
+    },
+    {
+      repo:
+        'https://raw.githubusercontent.com/phishfort/phishfort-lists/master/blacklists/domains.json',
+      identifier: 'phishfort'
+    },
+    {
+      repo:
+        'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/urls/urls-darklist.json',
+      identifier: 'mew'
+    }
+  ];
+  try {
+    console.log('fetching url darklist');
+    const promises = [];
+    if (!fs.existsSync(configs.URL_DARKLIST_PATH)) {
+      fs.mkdirSync(configs.URL_DARKLIST_PATH);
+    }
+
+    for (let i = 0; i < sources.length; i++) {
+      const fetchedProm = await fetch(sources[i].repo).then(res => res.json());
+      promises.push(fetchedProm);
+    }
+
+    await Promise.all(promises).then(values => {
+      values.forEach((res, idx) => {
+        if (sources[idx].identifier === 'mew') {
+          const newRes = res.map(item => {
+            return item.id;
+          });
+
+          fs.writeFileSync(
+            `${configs.URL_DARKLIST_PATH}/${
+              sources[idx].identifier
+            }-blacklisted-domains.json`,
+            JSON.stringify(newRes)
+          );
+        } else {
+          fs.writeFileSync(
+            `${configs.URL_DARKLIST_PATH}/${
+              sources[idx].identifier
+            }-blacklisted-domains.json`,
+            JSON.stringify(res)
+          );
+        }
+      });
+    });
+  } catch (e) {
+    console.log(e); // Not captured by sentry
+  }
+};
+
+const fetchUrlLightlist = async () => {
+  const sources = [
+    {
+      repo:
+        'https://raw.githubusercontent.com/409H/EtherAddressLookup/master/whitelists/domains.json',
+      identifier: 'eal'
+    },
+    {
+      repo:
+        'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/urls/urls-lightlist.json',
+      identifier: 'mew'
+    }
+  ];
+  try {
+    console.log('fetching url lightlist');
+    const promises = [];
+    if (!fs.existsSync(configs.URL_LIGHTLIST_PATH)) {
+      fs.mkdirSync(configs.URL_LIGHTLIST_PATH);
+    }
+    for (let i = 0; i < sources.length; i++) {
+      const fetchedProm = await fetch(sources[i].repo).then(res => res.json());
+      promises.push(fetchedProm);
+    }
+
+    await Promise.all(promises).then(values => {
+      values.forEach((res, idx) => {
+        if (sources[idx].identifier === 'mew') {
+          const newRes = res.map(item => {
+            return item.id;
+          });
+
+          fs.writeFileSync(
+            `${configs.URL_LIGHTLIST_PATH}/${
+              sources[idx].identifier
+            }-whitelisted-domains.json`,
+            JSON.stringify(newRes)
+          );
+        } else {
+          fs.writeFileSync(
+            `${configs.URL_LIGHTLIST_PATH}/${
+              sources[idx].identifier
+            }-whitelisted-domains.json`,
+            JSON.stringify(res)
+          );
+        }
+      });
+    });
   } catch (e) {
     console.log(e); // Not captured by sentry
   }
@@ -94,7 +209,9 @@ const fetchContracts = async () => {
 const run = async () => {
   await fetchTokens()
     .then(fetchContracts)
-    .then(fetchDarkList);
+    .then(fetchAddressDarkList)
+    .then(fetchUrlDarklist)
+    .then(fetchUrlLightlist);
 };
 
 (async () => {
