@@ -3,11 +3,9 @@ const uniMap = require('unicode/category/Ll');
 const homoglyphs = require('./homoglyphs');
 const similarity = require('similarity');
 const levenshtein = require('levenshtein');
-console.log('dasd');
+const chrome = window.chrome;
 (function() {
   /* eslint no-undef: 0 no-console:0 */
-  window.yeet = 'REEEEEEEEEEEE';
-  console.log('ANOTHER ONE');
   chrome.storage.sync.get(['eal-blacklisted-domains'], res => {
     res === null ? getDomains('eal') : checkIfDataIsRecent('eal');
   });
@@ -111,13 +109,13 @@ console.log('dasd');
       .concat(phishfortBlacklisted.domains);
     let urlRedirect;
     const foundWhitelist = whitelisted.domains.find(dom => {
-      if (tabs[0] !== undefined) {
+      if (tabs.length > 0) {
         return dom === extractRootDomain(tabs[0].url);
       }
     });
 
     const foundBlacklist = allDomains.find(dom => {
-      if (tabs[0] !== undefined) {
+      if (tabs.length > 0) {
         return dom === extractRootDomain(tabs[0].url);
       }
     });
@@ -128,7 +126,7 @@ console.log('dasd');
         checkUrlSimilarity(tabs[0].url, SEARCH_STRING)
       ) {
         urlRedirect = encodeURI(
-          `https://vintage.myetherwallet.com/phishing.html?phishing-address=${
+          `https://www.myetherwallet.com/phishing.html?phishing-address=${
             tabs[0].url
           }`
         );
@@ -136,7 +134,6 @@ console.log('dasd');
       }
     }
   }
-
   function extractHostname(url) {
     let hostname;
     if (url.indexOf('://') > -1) {
@@ -165,6 +162,7 @@ console.log('dasd');
         domain = splitArr[arrLen - 3] + '.' + domain;
       }
     }
+
     return domain.toLowerCase();
   }
 
@@ -189,6 +187,7 @@ console.log('dasd');
   }
 
   function getDomains(str) {
+    console.log(str);
     const blackListDomains = {
       eal: {
         timestamp: 0,
@@ -262,7 +261,7 @@ console.log('dasd');
     getDomainsFromSource(src).then(domains => {
       src.timestamp = Math.floor(Date.now() / 1000);
       src.domains = domains;
-      chrome.sync.storage.set(obj, console.log);
+      chrome.storage.sync.set(obj, console.log);
     });
   }
 
@@ -277,8 +276,11 @@ console.log('dasd');
 
   function checkUrlSimilarity(url, arr) {
     const newUrl = transformHomoglyphs(parseUrl(url));
-    if (isSimilar(newUrl, url, arr, 0.8) && !isNewBlacklist(url, arr))
+    if (isSimilar(newUrl, url, arr, 0.8) && !isNewBlacklist(url, arr)) {
+      console.log('.....');
       return true;
+    }
+
     return false;
   }
 
