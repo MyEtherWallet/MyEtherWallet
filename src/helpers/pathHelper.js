@@ -25,8 +25,10 @@ const checkCustomPath = path => {
       }
       if (array1[2]) assembledPath = assembledPath.concat('/', array1[2], "'");
       if (array1[3]) assembledPath = assembledPath.concat('/', array1[3], "'");
-      if (array1[4]) assembledPath = assembledPath.concat('/', array1[4], "'");
-      if (array1[5]) assembledPath = assembledPath.concat('/', array1[5]);
+      if (array1[4] && !/'/.test(array1[4]))
+        assembledPath = assembledPath.concat('/', array1[4], "'");
+      if (array1[5] && !/'/.test(array1[5]))
+        assembledPath = assembledPath.concat('/', array1[5]);
       return assembledPath;
     }
     return false;
