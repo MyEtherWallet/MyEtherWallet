@@ -33,5 +33,7 @@
   "mewConnectDesc2": "¿No tiene la aplicación? Descargar ahora.",
   "notARecommendedWay": "This is not a recommended way to access your wallet. Due to the sensitivity of the information involved, these options should only be used in offline settings by experienced users.",
   "buyHardwareWallet": "Purchase a hardware wallet for the highest security when accessing your crypto.",
-  "buyHardwareWalletLink": "Purchase a hardware wallet...."
+  "buyHardwareWalletLink": "Purchase a hardware wallet....",
+  "connectDevice": "Please make sure your device is connected.",
+  "buy": "Buy Now"
 }
