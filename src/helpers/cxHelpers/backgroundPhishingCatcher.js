@@ -152,12 +152,16 @@ const chrome = window.chrome;
   }
 
   function setInStorage(src, storageName) {
-    const obj = {};
-    obj[storageName] = JSON.stringify(src);
+    const storObj = {};
     cxHelpers.getDomainsFromSource(src).then(domains => {
+      if (src.identifier.includes('mew')) {
+        src.domains = cxHelpers.parseMewFormat(domains);
+      } else {
+        src.domains = domains;
+      }
       src.timestamp = Math.floor(Date.now() / 1000);
-      src.domains = domains;
-      chrome.storage.sync.set(obj, console.log);
+      storObj[storageName] = JSON.stringify(src);
+      chrome.storage.sync.set(storObj, console.log);
     });
   }
 })();

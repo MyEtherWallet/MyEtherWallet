@@ -7,8 +7,6 @@ const levenshtein = require('levenshtein');
 const getDomainsFromSource = async obj => {
   try {
     const objResponse = await fetch(obj.repo);
-    if (obj.identifer.includes('mew'))
-      return parseMewFormat(objResponse.json());
     return objResponse.json();
   } catch (objError) {
     console.error(objError);
@@ -25,7 +23,6 @@ const checkUrlSimilarity = (url, arr) => {
 };
 
 const parseMewFormat = res => {
-  console.log(res);
   return res.map(item => {
     return item.id;
   });
@@ -118,7 +115,7 @@ const blackListDomains = {
     format: 'plain',
     repo:
       'https://raw.githubusercontent.com/409H/EtherAddressLookup/master/blacklists/domains.json',
-    identifer: 'eal'
+    identifier: 'eal'
   },
   iosiro: {
     timestamp: 0,
@@ -126,7 +123,7 @@ const blackListDomains = {
     format: 'plain',
     repo:
       'https://raw.githubusercontent.com/iosiro/counter_phishing_blacklist/master/blacklists/domains.json',
-    identifer: 'iosiro'
+    identifier: 'iosiro'
   },
   phishfort: {
     timestamp: 0,
@@ -134,7 +131,7 @@ const blackListDomains = {
     format: 'plain',
     repo:
       'https://raw.githubusercontent.com/phishfort/phishfort-lists/master/blacklists/domains.json',
-    identifer: 'phishfort'
+    identifier: 'phishfort'
   },
   mew: {
     timestamp: 0,
@@ -142,7 +139,7 @@ const blackListDomains = {
     format: 'plain',
     repo:
       'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/urls/urls-darklist.json',
-    identifer: 'mew'
+    identifier: 'mew'
   }
 };
 
@@ -153,7 +150,7 @@ const whiteListDomains = {
     format: 'plain',
     repo:
       'https://raw.githubusercontent.com/409H/EtherAddressLookup/master/whitelists/domains.json',
-    identifer: 'eal-whitelist'
+    identifier: 'eal-whitelist'
   },
   mew: {
     timestamp: 0,
@@ -161,7 +158,7 @@ const whiteListDomains = {
     format: 'plain',
     repo:
       'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/urls/urls-lightlist.json',
-    identifer: 'mew-whitelist'
+    identifier: 'mew-whitelist'
   }
 };
 
@@ -180,5 +177,6 @@ export default {
   extractRootDomain,
   blackListDomains,
   whiteListDomains,
-  hosts
+  hosts,
+  parseMewFormat
 };
