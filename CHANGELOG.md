@@ -7,6 +7,7 @@
 
 ### Bug
 
+- Broken link in getting started []()
 - Fix broken custom derivation paths & Remove -1 as an allowed gas limit value [#1133](https://github.com/MyEtherWallet/MyEtherWallet/pull/1133)
 - Various fixes for Metamask, Trezor, interact with contract, and deploy contract [#1125](https://github.com/MyEtherWallet/MyEtherWallet/pull/1125)
 - Fix front page spaceman animation [#1147](https://github.com/MyEtherWallet/MyEtherWallet/pull/1147)
