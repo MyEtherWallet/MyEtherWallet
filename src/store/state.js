@@ -1,5 +1,5 @@
 import nodeList from '@/networks';
-import darklist from '@/darklist/address-darklist.json';
+import darklist from '@/address-darklist/address-darklist.json';
 import store from 'store';
 if (store.get('notifications') === undefined) store.set('notifications', {});
 
