@@ -49,7 +49,7 @@ const fetchAddressDarkList = async () => {
       data: darkList,
       timestamp: Date.now()
     };
-    console.log('writing darklist');
+    console.log('Writing address darklist');
     fs.writeFileSync(
       `${configs.ADDRESS_DARKLIST_PATH}/address-darklist.json`,
       JSON.stringify(jsonToStore)
@@ -83,13 +83,13 @@ const fetchUrlDarklist = async () => {
     }
   ];
   try {
-    console.log('fetching url darklist');
     const promises = [];
     if (!fs.existsSync(configs.URL_DARKLIST_PATH)) {
       fs.mkdirSync(configs.URL_DARKLIST_PATH);
     }
 
     for (let i = 0; i < sources.length; i++) {
+      console.log(`Writing url darklist from ${sources[i].identifier}`);
       const fetchedProm = await fetch(sources[i].repo).then(res => res.json());
       promises.push(fetchedProm);
     }
@@ -136,12 +136,12 @@ const fetchUrlLightlist = async () => {
     }
   ];
   try {
-    console.log('fetching url lightlist');
     const promises = [];
     if (!fs.existsSync(configs.URL_LIGHTLIST_PATH)) {
       fs.mkdirSync(configs.URL_LIGHTLIST_PATH);
     }
     for (let i = 0; i < sources.length; i++) {
+      console.log(`Writing url lightlist from ${sources[i].identifier}`);
       const fetchedProm = await fetch(sources[i].repo).then(res => res.json());
       promises.push(fetchedProm);
     }

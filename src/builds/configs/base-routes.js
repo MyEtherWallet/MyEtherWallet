@@ -28,6 +28,7 @@ const VerifyMessageContainer = () =>
   import('@/layouts/InterfaceLayout/containers/VerifyMessageContainer');
 const HardwaresLayout = () => import('@/layouts/HardwaresLayout');
 const ViewWalletInfoLayout = () => import('@/layouts/ViewWalletInfoLayout');
+const PhishingCatcherLayout = () => import('@/layouts/PhishingCatcherLayout');
 
 import dapps from '@/dapps/routes';
 
@@ -54,6 +55,12 @@ const router = [
     path: '/help-center',
     name: 'HelpCenterLayout',
     component: HelpCenterLayout,
+    meta: { requiresAuth: false }
+  },
+  {
+    path: '/phishing-catcher',
+    name: 'PhishingCatcherLayout',
+    component: PhishingCatcherLayout,
     meta: { requiresAuth: false }
   },
   {

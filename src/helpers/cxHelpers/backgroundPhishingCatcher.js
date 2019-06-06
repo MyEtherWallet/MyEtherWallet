@@ -32,16 +32,18 @@ const chrome = window.chrome;
       ealWhitelisted = Object.assign({}, cxHelpers.whiteListDomains['eal']),
       mewWhitelisted = Object.assign({}, cxHelpers.whiteListDomains['mew']);
 
-    const allBlacklistedDomains = ealBlacklisted.domains
+    let allBlacklistedDomains = [];
+    let allWhitelistedDomains = [];
+    allBlacklistedDomains = ealBlacklisted.domains
       .concat(iosiroBlacklisted.domains)
       .concat(phishfortBlacklisted.domains)
       .concat(mewBlacklisted.domains);
-    const allWhitelistedDomains = mewWhitelisted.domains.concat(
+    allWhitelistedDomains = mewWhitelisted.domains.concat(
       ealWhitelisted.domains
     );
 
     let urlRedirect;
-    const foundWhitelist = allWhitelistedDomains.domains.find(dom => {
+    const foundWhitelist = allWhitelistedDomains.find(dom => {
       if (tabs.length > 0) {
         return dom === cxHelpers.extractRootDomain(tabs[0].url);
       }
@@ -58,10 +60,13 @@ const chrome = window.chrome;
         cxHelpers.checkUrlSimilarity(tabs[0].url, SEARCH_STRING)
       ) {
         urlRedirect = encodeURI(
-          `https://www.myetherwallet.com/phishing.html?phishing-address=${
-            tabs[0].url
-          }`
+          `https://localhost:8080#/phishing-catcher?url=${tabs[0].url}`
         );
+        // urlRedirect = encodeURI(
+        //   `https://www.myetherwallet.com/phishing.html?phishing-address=${
+        //     tabs[0].url
+        //   }`
+        // );
         chrome.tabs.update(null, { url: urlRedirect });
       }
     }
