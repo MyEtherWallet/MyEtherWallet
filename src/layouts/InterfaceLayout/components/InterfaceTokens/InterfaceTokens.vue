@@ -151,7 +151,7 @@ export default {
     address: {
       type: String,
       default: ''
-    },
+    }
   },
   data() {
     return {
