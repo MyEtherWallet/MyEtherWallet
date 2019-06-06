@@ -32,7 +32,7 @@
         <div class="account-details">
           <div class="blockie-container">
             <blockie :address="account.address" width="80px" height="80px" />
-            <h3>{{ account.nickname }}'s wallet</h3>
+            <h3 v-if="hasNickname">{{ account.nickname }}'s wallet</h3>
             <div class="address-copy-container">
               <input ref="copyAddress" :value="account.address" />
               <p>{{ account.address | concatAddr }}</p>
@@ -122,7 +122,10 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account', 'network'])
+    ...mapState(['account', 'network']),
+    hasNickname() {
+      return this.account.nickname !== null || this.account.nickname.length > 0;
+    }
   },
   mounted() {
     this.fetchTokens();
