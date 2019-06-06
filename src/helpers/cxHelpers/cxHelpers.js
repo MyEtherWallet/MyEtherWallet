@@ -1,17 +1,16 @@
+import ealDarklist from '@/url-darklist/eal-blacklisted-domains.json';
+import iosiroDarklist from '@/url-darklist/iosiro-blacklisted-domains.json';
+import mewDarklist from '@/url-darklist/mew-blacklisted-domains.json';
+import phishfortDarklist from '@/url-darklist/phishfort-blacklisted-domains.json';
+
+import mewLightlist from '@/url-lightlist/mew-whitelisted-domains.json';
+import ealLightlist from '@/url-lightlist/eal-whitelisted-domains.json';
+
 const similarity = require('similarity');
 const punycode = require('punycode');
 const uniMap = require('unicode/category/Ll');
 const homoglyphs = require('./homoglyphs');
 const levenshtein = require('levenshtein');
-
-const getDomainsFromSource = async obj => {
-  try {
-    const objResponse = await fetch(obj.repo);
-    return objResponse.json();
-  } catch (objError) {
-    console.error(objError);
-  }
-};
 
 const checkUrlSimilarity = (url, arr) => {
   const newUrl = transformHomoglyphs(parseUrl(url));
@@ -20,12 +19,6 @@ const checkUrlSimilarity = (url, arr) => {
   }
 
   return false;
-};
-
-const parseMewFormat = res => {
-  return res.map(item => {
-    return item.id;
-  });
 };
 
 const isNewBlacklist = (url, arr) => {
@@ -110,61 +103,37 @@ const extractRootDomain = url => {
 
 const blackListDomains = {
   eal: {
-    domains: [],
-    repo:
-      'https://raw.githubusercontent.com/409H/EtherAddressLookup/master/blacklists/domains.json',
+    domains: ealDarklist,
     identifier: 'eal'
   },
   iosiro: {
-    domains: [],
-    repo:
-      'https://raw.githubusercontent.com/iosiro/counter_phishing_blacklist/master/blacklists/domains.json',
+    domains: iosiroDarklist,
     identifier: 'iosiro'
   },
   phishfort: {
-    domains: [],
-    repo:
-      'https://raw.githubusercontent.com/phishfort/phishfort-lists/master/blacklists/domains.json',
+    domains: phishfortDarklist,
     identifier: 'phishfort'
   },
   mew: {
-    domains: [],
-    repo:
-      'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/urls/urls-darklist.json',
+    domains: mewDarklist,
     identifier: 'mew'
   }
 };
 
 const whiteListDomains = {
   eal: {
-    domains: [],
-    repo:
-      'https://raw.githubusercontent.com/409H/EtherAddressLookup/master/whitelists/domains.json',
+    domains: mewLightlist,
     identifier: 'eal-whitelist'
   },
   mew: {
-    domains: [],
-    repo:
-      'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/urls/urls-lightlist.json',
+    domains: ealLightlist,
     identifier: 'mew-whitelist'
   }
 };
 
-const hosts = [
-  'eal-blacklisted-domains',
-  'iosiro-blacklisted-domains',
-  'phishfort-blacklisted-domains',
-  'mew-blacklisted-domains',
-  'eal-whitelisted-domains',
-  'mew-whitelisted-domains'
-];
-
 export default {
-  getDomainsFromSource,
   checkUrlSimilarity,
   extractRootDomain,
   blackListDomains,
-  whiteListDomains,
-  hosts,
-  parseMewFormat
+  whiteListDomains
 };
