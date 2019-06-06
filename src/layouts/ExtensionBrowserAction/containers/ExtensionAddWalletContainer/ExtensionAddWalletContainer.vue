@@ -151,11 +151,6 @@ export default {
   computed: {
     ...mapState(['path'])
   },
-  mounted() {
-    if (this.path !== '') {
-      this.$router.push('/');
-    }
-  },
   methods: {
     openAddressOption() {
       const mnemonicPhrase = this.mnemonicPhrase;

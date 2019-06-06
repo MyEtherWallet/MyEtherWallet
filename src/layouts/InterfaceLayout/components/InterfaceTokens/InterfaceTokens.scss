@@ -128,3 +128,18 @@
 .clickable {
   cursor: pointer;
 }
+
+.address-qr-display {
+  align-items: center;
+  background-color: $white;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-around;
+  margin-top: 10px;
+  padding: 15px;
+
+  .address-container {
+    padding-left: 10px;
+    word-break: break-word;
+  }
+}

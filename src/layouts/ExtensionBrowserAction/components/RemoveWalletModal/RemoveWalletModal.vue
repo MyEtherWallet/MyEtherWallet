@@ -10,7 +10,8 @@
     >
       <div class="modal-contents">
         <div class="warning-text-container">
-          <div v-show="walletType === 'wallet'">
+          <h2>Remove Wallet</h2>
+          <div v-show="walletType === 'wallet'" class="text-container">
             Be sure you have saved the private key and/or Keystore File and the
             password before you remove it. If you want to use this wallet with
             your MyEtherWallet CX in the future, you will need to manually

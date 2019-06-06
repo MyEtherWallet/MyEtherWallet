@@ -17,7 +17,8 @@ import {
 import ethTx from 'ethereumjs-tx';
 import { toChecksumAddress } from '@/helpers/addressUtils';
 class WalletInterface {
-  constructor(key, isPub = false, identifier) {
+  constructor(key, isPub = false, identifier, nick) {
+    this.nickname = nick !== '' ? nick : '';
     this.identifier = identifier;
     if (!isPub) {
       const _privKey = Buffer.isBuffer(key)
@@ -47,6 +48,11 @@ class WalletInterface {
   getPrivateKeyString() {
     if (this.isPubOnly) throw new Error('public key only wallet');
     return bufferToHex(this.getPrivateKey());
+  }
+
+  getNickname() {
+    if (this.nickname === '') return null;
+    return this.nickname;
   }
 
   getPublicKey() {

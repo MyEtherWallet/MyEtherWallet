@@ -197,6 +197,10 @@ export default {
             {
               text: this.$t('footer.verifyMessage'),
               to: '/verify-message'
+            },
+            {
+              text: this.$t('footer.viewWalletInfo'),
+              to: '/view-wallet-info'
             }
           ]
         },

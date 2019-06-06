@@ -59,14 +59,15 @@ const chrome = window.chrome;
         foundBlacklist !== undefined ||
         cxHelpers.checkUrlSimilarity(tabs[0].url, SEARCH_STRING)
       ) {
-        urlRedirect = encodeURI(
-          `https://localhost:8080#/phishing-catcher?url=${tabs[0].url}`
-        );
+        // Dev test
         // urlRedirect = encodeURI(
-        //   `https://www.myetherwallet.com/phishing.html?phishing-address=${
-        //     tabs[0].url
-        //   }`
+        //   `https://localhost:8080#/phishing-catcher?url=${tabs[0].url}`
         // );
+        urlRedirect = encodeURI(
+          `https://www.myetherwallet.com/phishing.html?phishing-address=${
+            tabs[0].url
+          }`
+        );
         chrome.tabs.update(null, { url: urlRedirect });
       }
     }

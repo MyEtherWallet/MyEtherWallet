@@ -85,7 +85,7 @@
           </p>
         </div>
       </div>
-      <div class="bottom-image-container">
+      <div v-show="ads" class="bottom-image-container">
         <a
           rel="noopener noreferrer"
           href="https://mewconnect.myetherwallet.com/#/"
@@ -93,6 +93,15 @@
         >
           <img class="icon" src="~@/assets/images/etc/mewconnect.jpeg" />
         </a>
+      </div>
+      <div v-show="!ads" class="address-qr-display">
+        <div class="qr-container">
+          <qrcode :options="{ size: 100 }" :value="address" />
+        </div>
+        <div class="address-container">
+          <h4>Address QR Code</h4>
+          <p>{{ address }}</p>
+        </div>
       </div>
     </div>
   </div>
@@ -134,7 +143,15 @@ export default {
     resetTokenSelection: {
       type: Function,
       default: function() {}
-    }
+    },
+    ads: {
+      type: Boolean,
+      default: true
+    },
+    address: {
+      type: String,
+      default: ''
+    },
   },
   data() {
     return {
