@@ -2,7 +2,7 @@
 
 .wallet-info-container {
   padding-top: 20px;
-  max-width: 1000px;
+  width: 100%;
 
   .nickname-and-buttons {
     align-items: center;
@@ -37,6 +37,7 @@
       border-bottom-left-radius: 5px;
       border-bottom-right-radius: 5px;
       display: flex;
+      flex: auto;
       flex-direction: column;
       justify-content: space-between;
       min-height: 250px;

@@ -59,6 +59,8 @@
           :received-tokens="!loading"
           :reset-token-selection="setTokensWithBalance"
           :fetch-tokens="fetchTokens"
+          :ads="false"
+          :address="account.address"
         />
       </div>
     </div>
@@ -77,6 +79,8 @@ import Blockie from '@/components/Blockie';
 import more from '@/assets/images/icons/more-black.svg';
 
 import Web3 from 'web3';
+import utils from 'web3-utils';
+
 const web3 = new Web3('https://api.myetherwallet.com/eth');
 
 export default {
@@ -134,7 +138,8 @@ export default {
       );
     },
     async fetchBalance() {
-      this.balance = await web3.eth.getBalance(this.account.address);
+      const balance = await web3.eth.getBalance(this.account.address);
+      this.balance = utils.fromWei(balance, 'ether');
     },
     copy() {
       this.$refs.copyAddress.select();

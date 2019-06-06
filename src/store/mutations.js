@@ -51,12 +51,14 @@ const CLEAR_WALLET = function(state) {
   };
 };
 
-//
 const DECRYPT_WALLET = function(state, wallet) {
   state.wallet = wallet;
   state.account['address'] = wallet.getAddressString();
   state.account['isHardware'] = wallet.isHardware;
   state.account['identifier'] = wallet.identifier;
+  if (!wallet.isHardWare) {
+    state.account['nickname'] = wallet.getNickname();
+  }
 };
 
 const INIT_STATES = function(state, stateObj) {

@@ -90,7 +90,7 @@
           v-show="walletType !== 'watchOnly'"
           @click="
             () => {
-              detail(wallet, 'view');
+              detail(wallet, 'view', nickname);
             }
           "
         >
@@ -188,7 +188,7 @@ export default {
     },
     nickname: {
       type: String,
-      default: 'Sample Name'
+      default: ''
     },
     walletType: {
       type: String,

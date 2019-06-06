@@ -13,7 +13,7 @@
         :disabled="validInput"
         @password="updatePassword"
       />
-      <div v-show="label === 'myWallets'">
+      <div v-show="label === 'myWallets'" class="my-wallets-container">
         <div class="wallets-container-header">
           <div class="title-balance">
             <h3>{{ name }}</h3>
@@ -39,14 +39,14 @@
             :detail="togglePasswordModal"
           />
         </div>
-        <div v-show="myWallets.length === 0 && !loading">
+        <div v-show="myWallets.length === 0 && !loading" class="wallets-info">
           <h2>No Wallet found...</h2>
         </div>
-        <div v-show="loading && file === ''">
+        <div v-show="loading && file === ''" class="wallets-info">
           <h2>Loading Wallets...</h2>
         </div>
       </div>
-      <div v-show="label === 'watchOnlyWallets'">
+      <div v-show="label === 'watchOnlyWallets'" class="watch-only-container">
         <div class="wallets-container-header">
           <div class="title-balance">
             <h3>{{ name }}</h3>
@@ -65,10 +65,13 @@
             :wallet-type="wallet.type"
           />
         </div>
-        <div v-show="watchOnlyAddresses.length === 0 && !loading">
+        <div
+          v-show="watchOnlyAddresses.length === 0 && !loading"
+          class="wallets-info"
+        >
           <h2>No Wallet found...</h2>
         </div>
-        <div v-show="loading">
+        <div v-show="loading" class="wallets-info">
           <h2>Loading Wallets...</h2>
         </div>
       </div>
@@ -142,6 +145,10 @@ export default {
       return true;
     },
     accessWallet() {
+      const nickname =
+        this.nickname !== null && this.nickname.length > 0
+          ? this.nickname
+          : null;
       this.loading = true;
       const worker = new walletWorker();
       worker.postMessage({
@@ -150,9 +157,15 @@ export default {
       });
       worker.onmessage = e => {
         this.setWallet(
-          new WalletInterface(Buffer.from(e.data._privKey), false, keyStoreType)
+          new WalletInterface(
+            Buffer.from(e.data._privKey),
+            false,
+            keyStoreType,
+            nickname
+          )
         );
         this.loading = false;
+        this.nickname = '';
       };
       worker.onerror = e => {
         e.preventDefault();
@@ -172,9 +185,10 @@ export default {
         path: navTo
       });
     },
-    togglePasswordModal(file, path) {
+    togglePasswordModal(file, path, nickname) {
       const parseFile = JSON.parse(file);
       this.file = JSON.parse(parseFile.priv);
+      this.nickname = nickname.length > 0 ? nickname : null;
       this.path = path;
       this.$refs.passwordOnlyModal.$refs.passwordOnlyModal.show();
     },
