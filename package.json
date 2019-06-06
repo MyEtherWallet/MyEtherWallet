@@ -36,7 +36,7 @@
     "@sentry/browser": "5.4.0",
     "@sentry/integrations": "5.4.1",
     "babel-loader": "8.0.6",
-    "html2canvas": "1.0.0-rc.2",
+    "html2canvas": "1.0.0-rc.3",
     "idna-uts46": "1.1.0",
     "js-sha1": "0.6.0",
     "levenshtein": "1.0.5",

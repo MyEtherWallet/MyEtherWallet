@@ -110,33 +110,25 @@ const extractRootDomain = url => {
 
 const blackListDomains = {
   eal: {
-    timestamp: 0,
     domains: [],
-    format: 'plain',
     repo:
       'https://raw.githubusercontent.com/409H/EtherAddressLookup/master/blacklists/domains.json',
     identifier: 'eal'
   },
   iosiro: {
-    timestamp: 0,
     domains: [],
-    format: 'plain',
     repo:
       'https://raw.githubusercontent.com/iosiro/counter_phishing_blacklist/master/blacklists/domains.json',
     identifier: 'iosiro'
   },
   phishfort: {
-    timestamp: 0,
     domains: [],
-    format: 'plain',
     repo:
       'https://raw.githubusercontent.com/phishfort/phishfort-lists/master/blacklists/domains.json',
     identifier: 'phishfort'
   },
   mew: {
-    timestamp: 0,
     domains: [],
-    format: 'plain',
     repo:
       'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/urls/urls-darklist.json',
     identifier: 'mew'
@@ -145,17 +137,13 @@ const blackListDomains = {
 
 const whiteListDomains = {
   eal: {
-    timestamp: 0,
     domains: [],
-    format: 'plain',
     repo:
       'https://raw.githubusercontent.com/409H/EtherAddressLookup/master/whitelists/domains.json',
     identifier: 'eal-whitelist'
   },
   mew: {
-    timestamp: 0,
     domains: [],
-    format: 'plain',
     repo:
       'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/urls/urls-lightlist.json',
     identifier: 'mew-whitelist'
