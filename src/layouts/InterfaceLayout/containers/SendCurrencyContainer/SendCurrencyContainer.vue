@@ -340,7 +340,7 @@ export default {
       return (
         this.isValidAmount.valid &&
         this.isValidAddress &&
-        (new BigNumber(this.gasLimit).gte(0) || this.gasLimit == -1) &&
+        new BigNumber(this.gasLimit).gte(0) &&
         Misc.validateHexString(this.data)
       );
     },

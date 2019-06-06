@@ -20,6 +20,7 @@ import ledgerError from './errors-ledger/en_US';
 import secalotError from './errors-secalot/en_US';
 import keepkeyError from './errors-keepkey/en_US';
 import bitboxError from './errors-bitbox/en_US';
+import buyHardwareWallet from './buy-hardware-wallet/en_US';
 
 const en_US = {
   common: common,
@@ -42,6 +43,7 @@ const en_US = {
   ledgerError: ledgerError,
   secalotError: secalotError,
   keepkeyError: keepkeyError,
-  bitboxError: bitboxError
+  bitboxError: bitboxError,
+  buyHardwareWallet: buyHardwareWallet
 };
 export default en_US;

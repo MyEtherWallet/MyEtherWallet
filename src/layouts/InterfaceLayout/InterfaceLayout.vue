@@ -588,18 +588,24 @@ export default {
     web3WalletPollAddress() {
       this.pollAddress = setInterval(() => {
         if (!window.web3.eth) {
+          Toast.responseHandler(
+            new Error('Web3 Instance not found!'),
+            Toast.ERROR
+          );
           clearInterval(this.pollAddress);
         }
 
         window.web3.eth.getAccounts((err, accounts) => {
           if (err) {
-            return Toast.responseHandler(err, false);
+            Toast.responseHandler(err, false);
+            clearInterval(this.pollAddress);
           }
           if (!accounts.length) {
-            return Toast.responseHandler(
+            Toast.responseHandler(
               new Error('Please make sure that your Web3 Wallet is unlocked'),
               Toast.ERROR
             );
+            clearInterval(this.pollAddress);
           }
           const address = accounts[0];
 
