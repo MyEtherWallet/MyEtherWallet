@@ -81,19 +81,19 @@ const webpackConfig = {
   ]
 };
 
-if (JSON.parse(env_vars.BUILD_TYPE !== 'mewcx')) {
-  webpackConfig['optimization'] = {
-    splitChunks: {
-      cacheGroups: {
-        commons: {
-          test: /[\\/]node_modules[\\/]/,
-          name: 'vendors',
-          chunks: 'initial'
-        }
-      }
-    }
-  }
-}
+// if (JSON.parse(env_vars.BUILD_TYPE !== 'mewcx')) {
+//   webpackConfig['optimization'] = {
+//     splitChunks: {
+//       cacheGroups: {
+//         commons: {
+//           test: /[\\/]node_modules[\\/]/,
+//           name: 'vendors',
+//           chunks: 'initial'
+//         }
+//       }
+//     }
+//   }
+// }
 
 if (process.env.NODE_ENV === 'production') {
   webpackConfig.plugins.push(

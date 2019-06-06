@@ -3,6 +3,18 @@ import store from '@/store';
 import { getMode, getRoutes } from '@/builds/configs';
 import xss from 'xss';
 
+const storeQuery = query => {
+  const keys = Object.keys(query);
+  if (keys.length > 0) {
+    const blankObj = {};
+    for (const key in query) {
+      blankObj[key] = xss(query[key]);
+    }
+
+    store.dispatch('saveQueryVal', blankObj);
+  }
+};
+
 const router = new Router({
   mode: getMode(),
   routes: getRoutes(),
@@ -22,17 +34,10 @@ router.beforeResolve((to, ___, next) => {
     to.meta.hasOwnProperty('requiresAuth') &&
     to.meta.requiresAuth === false
   ) {
+    storeQuery(to.query);
     next();
   } else {
-    const queryKeys = Object.keys(to.query);
-    if (queryKeys.length > 0) {
-      const blankObj = {};
-      for (const key in to.query) {
-        blankObj[key] = xss(to.query[key]);
-      }
-
-      store.dispatch('saveQueryVal', blankObj);
-    }
+    storeQuery(to.query);
     if (store.state.wallet === null) {
       store.dispatch('setLastPath', to.path);
       next({ name: 'AccessWalletLayout' });
