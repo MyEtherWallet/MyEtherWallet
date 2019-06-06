@@ -1,23 +1,14 @@
-const punycode = require('punycode');
-const uniMap = require('unicode/category/Ll');
-const homoglyphs = require('./homoglyphs');
-const similarity = require('similarity');
-const levenshtein = require('levenshtein');
+import cxHelpers from './cxHelpers';
 const chrome = window.chrome;
 (function() {
   /* eslint no-undef: 0 no-console:0 */
-  chrome.storage.sync.get(['eal-blacklisted-domains'], res => {
-    res === null ? getDomains('eal') : checkIfDataIsRecent('eal');
-  });
-  chrome.storage.sync.get(['iosiro-blacklisted-domains'], res => {
-    res === null ? getDomains('iosiro') : checkIfDataIsRecent('iosiro');
-  });
-  chrome.storage.sync.get(['phishfort-blacklisted-domains'], res => {
-    res === null ? getDomains('phishfort') : checkIfDataIsRecent('phishfort');
-  });
-
-  chrome.storage.sync.get(['409h-whitelisted-domains'], res => {
-    res === null ? getDomains('409h') : checkIfDataIsRecent('409h');
+  cxHelpers.hosts.forEach(item => {
+    const nameString = item.replace('-domains', '');
+    chrome.storage.sync.get([item], res => {
+      res.hasOwnProperty('domains')
+        ? checkIfDataIsRecent(nameString)
+        : getDomains(nameString);
+    });
   });
 
   setInterval(function() {
@@ -40,90 +31,65 @@ const chrome = window.chrome;
   }
 
   function querycB(tabs) {
-    const eal = {
-      timestamp: 0,
-      domains: [],
-      format: 'plain',
-      repo:
-        'https://raw.githubusercontent.com/409H/EtherAddressLookup/master/blacklists/domains.json',
-      identifer: 'eal'
-    };
-
-    const iosiro = {
-      timestamp: 0,
-      domains: [],
-      format: 'plain',
-      repo:
-        'https://raw.githubusercontent.com/iosiro/counter_phishing_blacklist/master/blacklists/domains.json',
-      identifer: 'iosiro'
-    };
-
-    const phishfort = {
-      timestamp: 0,
-      domains: [],
-      format: 'plain',
-      repo:
-        'https://raw.githubusercontent.com/phishfort/phishfort-lists/master/blacklists/domains.json',
-      identifer: 'phishfort'
-    };
-
-    const whitelistDef = {
-      timestamp: 0,
-      domains: [],
-      format: 'plain',
-      repo:
-        'https://raw.githubusercontent.com/409H/EtherAddressLookup/master/whitelists/domains.json',
-      identifer: 'whitelist'
-    };
     const SEARCH_STRING = ['myetherwallet'];
-    let ealBlacklisted = Object.assign({}, eal),
-      iosiroBlacklisted = Object.assign({}, iosiro),
-      phishfortBlacklisted = Object.assign({}, phishfort),
-      whitelisted = Object.assign({}, whitelistDef);
+    let ealBlacklisted = Object.assign({}, cxHelpers.blackListDomains['eal']),
+      iosiroBlacklisted = Object.assign(
+        {},
+        cxHelpers.blackListDomains['iosiro']
+      ),
+      phishfortBlacklisted = Object.assign(
+        {},
+        cxHelpers.blackListDomains['phishfort']
+      ),
+      mewBlacklisted = Object.assign({}, cxHelpers.blackListDomains['mew']),
+      ealWhitelisted = Object.assign({}, cxHelpers.whiteListDomains['eal']),
+      mewWhitelisted = Object.assign({}, cxHelpers.whiteListDomains['mew']);
 
-    chrome.storage.sync.get(
-      [
-        'eal-blacklisted-domains',
-        'iosiro-blacklisted-domains',
-        'phishfort-blacklisted-domains',
-        '409h-whitelisted-domains'
-      ],
-      res => {
-        ealBlacklisted = res.hasOwnProperty('ealBlacklisted')
-          ? JSON.parse(res['ealBlacklisted'])
-          : eal;
-        iosiroBlacklisted = res.hasOwnProperty('iosiroBlacklisted')
-          ? JSON.parse(res['iosiroBlacklisted'])
-          : iosiro;
-        phishfortBlacklisted = res.hasOwnProperty('phishfortBlacklisted')
-          ? JSON.parse(res['phishfortBlacklisted'])
-          : phishfort;
-        whitelisted = res.hasOwnProperty('whitelisted')
-          ? JSON.parse(res['whitelisted'])
-          : whitelistDef;
-      }
-    );
-
-    const allDomains = ealBlacklisted.domains
-      .concat(iosiroBlacklisted.domains)
-      .concat(phishfortBlacklisted.domains);
-    let urlRedirect;
-    const foundWhitelist = whitelisted.domains.find(dom => {
-      if (tabs.length > 0) {
-        return dom === extractRootDomain(tabs[0].url);
-      }
+    chrome.storage.sync.get(cxHelpers.hosts, res => {
+      ealBlacklisted = res.hasOwnProperty('ealBlacklisted')
+        ? JSON.parse(res['ealBlacklisted'])
+        : cxHelpers.blackListDomains['eal'];
+      iosiroBlacklisted = res.hasOwnProperty('iosiroBlacklisted')
+        ? JSON.parse(res['iosiroBlacklisted'])
+        : cxHelpers.blackListDomains['iosiro'];
+      phishfortBlacklisted = res.hasOwnProperty('phishfortBlacklisted')
+        ? JSON.parse(res['phishfortBlacklisted'])
+        : cxHelpers.blackListDomains['phishfort'];
+      mewBlacklisted = res.hasOwnProperty('phishfortBlacklisted')
+        ? JSON.parse(res['mewBlacklisted'])
+        : cxHelpers.blackListDomains['mew'];
+      ealWhitelisted = res.hasOwnProperty('whitelisted')
+        ? JSON.parse(res['whitelisted'])
+        : cxHelpers.whiteListDomains['eal'];
+      mewWhitelisted = res.hasOwnProperty('whitelisted')
+        ? JSON.parse(res['whitelisted'])
+        : cxHelpers.whiteListDomains['mew'];
     });
 
-    const foundBlacklist = allDomains.find(dom => {
+    const allBlacklistedDomains = ealBlacklisted.domains
+      .concat(iosiroBlacklisted.domains)
+      .concat(phishfortBlacklisted.domains)
+      .concat(mewBlacklisted.domains);
+    const allWhitelistedDomains = mewWhitelisted.domains.concat(
+      ealWhitelisted.domains
+    );
+
+    let urlRedirect;
+    const foundWhitelist = allWhitelistedDomains.domains.find(dom => {
       if (tabs.length > 0) {
-        return dom === extractRootDomain(tabs[0].url);
+        return dom === cxHelpers.extractRootDomain(tabs[0].url);
+      }
+    });
+    const foundBlacklist = allBlacklistedDomains.find(dom => {
+      if (tabs.length > 0) {
+        return dom === cxHelpers.extractRootDomain(tabs[0].url);
       }
     });
 
     if (foundWhitelist === undefined) {
       if (
         foundBlacklist !== undefined ||
-        checkUrlSimilarity(tabs[0].url, SEARCH_STRING)
+        cxHelpers.checkUrlSimilarity(tabs[0].url, SEARCH_STRING)
       ) {
         urlRedirect = encodeURI(
           `https://www.myetherwallet.com/phishing.html?phishing-address=${
@@ -134,44 +100,10 @@ const chrome = window.chrome;
       }
     }
   }
-  function extractHostname(url) {
-    let hostname;
-    if (url.indexOf('://') > -1) {
-      hostname = url.split('/')[2];
-    } else {
-      hostname = url.split('/')[0];
-    }
-
-    hostname = hostname.split(':')[0];
-    hostname = hostname.split('?')[0];
-
-    return hostname;
-  }
-
-  function extractRootDomain(url) {
-    let domain = extractHostname(url);
-    const splitArr = domain.split('.');
-    const arrLen = splitArr.length;
-
-    if (arrLen > 2) {
-      domain = splitArr[arrLen - 2] + '.' + splitArr[arrLen - 1];
-      if (
-        splitArr[arrLen - 2].length == 2 &&
-        splitArr[arrLen - 1].length == 2
-      ) {
-        domain = splitArr[arrLen - 3] + '.' + domain;
-      }
-    }
-
-    return domain.toLowerCase();
-  }
 
   function checkIfDataIsRecent(str) {
     let dataObj = {};
-    const storedName =
-      str === 'eal' || str === 'iosiro' || str === 'phishfort'
-        ? str + '-blacklisted-domains'
-        : str + '-whitelisted-domains';
+    const storedName = `${str}-domains`;
     chrome.storage.sync.get([storedName], res => {
       const isEmpty = Object.keys(res).length === 0;
       dataObj = !isEmpty ? JSON.parse(res) : res;
@@ -187,70 +119,34 @@ const chrome = window.chrome;
   }
 
   function getDomains(str) {
-    console.log(str);
-    const blackListDomains = {
-      eal: {
-        timestamp: 0,
-        domains: [],
-        format: 'plain',
-        repo:
-          'https://raw.githubusercontent.com/409H/EtherAddressLookup/master/blacklists/domains.json',
-        identifer: 'eal'
-      },
-      iosiro: {
-        timestamp: 0,
-        domains: [],
-        format: 'plain',
-        repo:
-          'https://raw.githubusercontent.com/iosiro/counter_phishing_blacklist/master/blacklists/domains.json',
-        identifer: 'iosiro'
-      },
-      phishfort: {
-        timestamp: 0,
-        domains: [],
-        format: 'plain',
-        repo:
-          'https://raw.githubusercontent.com/phishfort/phishfort-lists/master/blacklists/domains.json',
-        identifer: 'phishfort'
+    if (str) {
+      const newName = `${str}-domains`;
+      if (str.includes('whitelisted')) {
+        setInStorage(
+          cxHelpers.whiteListDomains[str.replace('-whitelisted', '')],
+          newName
+        );
       }
-    };
 
-    const whiteListDomains = {
-      '409h': {
-        timestamp: 0,
-        domains: [],
-        format: 'plain',
-        repo:
-          'https://raw.githubusercontent.com/409H/EtherAddressLookup/master/whitelists/domains.json',
-        identifer: 'whitelist'
+      if (str.includes('blacklisted')) {
+        setInStorage(
+          cxHelpers.blackListDomains[str.replace('-blacklisted', '')],
+          newName
+        );
       }
-    };
-
-    let newName;
-
-    if (
-      str &&
-      str !== '' &&
-      (str === 'eal' || str === 'iosiro' || str == 'phishfort')
-    ) {
-      newName = str + '-blacklisted-domains';
-      setInStorage(blackListDomains[str], newName);
-    } else if (
-      str &&
-      str !== '' &&
-      (str !== 'eal' || str !== 'iosiro' || str != 'phishfort')
-    ) {
-      newName = str + '-whitelisted-domains';
-      setInStorage(whiteListDomains[str], newName);
     } else {
-      Object.keys(blackListDomains).forEach(src => {
-        newName = src + '-blacklisted-domains';
-        setInStorage(blackListDomains[src], newName);
+      Object.keys(cxHelpers.blackListDomains).forEach(src => {
+        setInStorage(
+          cxHelpers.blackListDomains[src],
+          src + '-blacklisted-domains'
+        );
       });
 
-      Object.keys(whiteListDomains).forEach(src => {
-        newName = src + '-whitelisted-domains';
-        setInStorage(whiteListDomains[src], newName);
+      Object.keys(cxHelpers.whiteListDomains).forEach(src => {
+        setInStorage(
+          cxHelpers.whiteListDomains[src],
+          src + '-whitelisted-domains'
+        );
       });
     }
   }
@@ -258,80 +154,10 @@ const chrome = window.chrome;
   function setInStorage(src, storageName) {
     const obj = {};
     obj[storageName] = JSON.stringify(src);
-    getDomainsFromSource(src).then(domains => {
+    cxHelpers.getDomainsFromSource(src).then(domains => {
       src.timestamp = Math.floor(Date.now() / 1000);
       src.domains = domains;
       chrome.storage.sync.set(obj, console.log);
     });
-  }
-
-  async function getDomainsFromSource(objBlacklist) {
-    try {
-      const objResponse = await fetch(objBlacklist.repo);
-      return objResponse.json();
-    } catch (objError) {
-      console.log('Failed to get blacklist for ' + objBlacklist.repo, objError);
-    }
-  }
-
-  function checkUrlSimilarity(url, arr) {
-    const newUrl = transformHomoglyphs(parseUrl(url));
-    if (isSimilar(newUrl, url, arr, 0.8) && !isNewBlacklist(url, arr)) {
-      console.log('.....');
-      return true;
-    }
-
-    return false;
-  }
-
-  function isNewBlacklist(url, arr) {
-    for (let i = 0; i < arr.length; i++) {
-      if (arr[i] === url) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  function isSimilar(newUrl, comparedToUrl, arr, percent) {
-    for (let i = 0; i < arr.length; i++) {
-      const sim = similarity(arr[i], newUrl);
-      if (sim >= percent || !levenshteinCheck(comparedToUrl, arr[i])) {
-        return true;
-      }
-    }
-
-    return false;
-  }
-
-  function parseUrl(url) {
-    try {
-      return punycode.toUnicode(url);
-    } catch (e) {
-      return url;
-    }
-  }
-
-  function levenshteinCheck(url, validString) {
-    const distance = new levenshtein(url, validString).distance;
-    const holisticStd = 3.639774978064392;
-    const holisticLimit = 4 + 1 * holisticStd;
-    return distance > 0 && distance < holisticLimit ? true : false;
-  }
-
-  function transformHomoglyphs(str) {
-    let asciiStr = '';
-    for (const char of str) {
-      const uInfo = uniMap[char.charCodeAt(0)];
-
-      if (uInfo && uInfo.mapping) {
-        const maps = uInfo.mapping.split(' ');
-        asciiStr += String.fromCharCode(parseInt('0x') + maps[0]);
-      } else {
-        asciiStr += homoglyphs[char] ? homoglyphs[char] : char;
-      }
-    }
-
-    return asciiStr;
   }
 })();
