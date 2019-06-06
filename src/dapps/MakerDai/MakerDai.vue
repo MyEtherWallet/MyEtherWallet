@@ -92,7 +92,7 @@
       </template>
     </interface-container-title>
     <div v-show="makerActive" class="buttons-container">
-      <div v-if="!hasProxy && !onCreate">
+      <div v-if="showCreateProxy">
         <i class="fa fa-question-circle"></i>
         <div class="dapps-button" @click="buildProxy">
           <h4>Create Proxy</h4>
@@ -297,6 +297,12 @@ export default {
     onCreate() {
       return this.$route.name === 'create';
     },
+    showCreateProxy(){
+      if(this.showCdpMigrateButtons){
+        return false;
+      }
+     return !this.hasProxy && !this.onCreate;
+    },
     showCdpMigrateButtons() {
       return this.hasProxy && this.cdpsWithoutProxy.length >= 1;
     },
@@ -388,7 +394,6 @@ export default {
 
       this.wethToPethRatio = toBigNumber(wethToPethRatio);
       this.proxyAddress = await this._proxyService.currentProxy();
-      console.log('this.proxyAddress', this.proxyAddress); // todo remove dev item
 
       this.daiToken = this._tokenService.getToken(DAI);
       this.daiBalance = (await this.daiToken.balance()).toBigNumber();
@@ -412,7 +417,6 @@ export default {
       this.cdps = withProxy;
       this.cdpsWithoutProxy = withoutProxy;
 
-      console.log(withProxy, withoutProxy); // todo remove dev item
       if (this.cdps.length > 0 || this.cdpsWithoutProxy.length > 0) {
         await this.loadCdpDetails();
       }
@@ -449,11 +453,11 @@ export default {
     },
     async migrateCdpExternal(cdpId) {
       this.afterUpdate.push(this.goToManage);
-      this.afterUpdate.push(() => {
-        if (this.cdpsWithoutProxy.length === 0) {
-          this.cdpsWithoutProxy = [];
-        }
-      });
+      // this.afterUpdate.push(() => {
+      //   if (this.cdpsWithoutProxy.length === 0) {
+      //     this.cdpsWithoutProxy = [];
+      //   }
+      // });
       await this.migrateCdp(cdpId);
     },
     async refreshExternal() {
@@ -561,6 +565,15 @@ export default {
       } else {
         await this.setupCdpManage(this.currentCdpId);
       }
+
+      const runAfterUpdate = () => {
+        if (this.afterUpdate.length > 0) {
+          const fn = this.afterUpdate.pop();
+          fn();
+          runAfterUpdate();
+        }
+      };
+      runAfterUpdate();
       if (afterClose || afterOpen || this.creatingCdp) {
         if (this.cdps.length > 0 || this.cdpsWithoutProxy.length > 0) {
           this.goToManage();
@@ -838,7 +851,11 @@ export default {
 
     async getMakerCdp(cdpId) {
       if (cdpId === null) return;
-      if (this.proxyAddress) {
+      if (this.cdpsWithoutProxy.includes(cdpId)) {
+        return await this.maker.getCdp(cdpId, false);
+      } else if (this.cdps.includes(cdpId) && this.proxyAddress) {
+        return await this.maker.getCdp(cdpId, this.proxyAddress);
+      } else if (this.proxyAddress) {
         return await this.maker.getCdp(cdpId, this.proxyAddress);
       }
       return await this.maker.getCdp(cdpId, false);
