@@ -1,3 +1,5 @@
+### Release v5.0.13
+
 ### Devop
 
 - AWS sync with --exact-timestamps flag [#1117](https://github.com/MyEtherWallet/MyEtherWallet/pull/1117)
@@ -5,6 +7,7 @@
 
 ### Bug
 
+- Fix broken custom derivation paths & Remove -1 as an allowed gas limit value [#1133](https://github.com/MyEtherWallet/MyEtherWallet/pull/1133)
 - Various fixes for Metamask, Trezor, interact with contract, and deploy contract [#1125](https://github.com/MyEtherWallet/MyEtherWallet/pull/1125)
 - Fix front page spaceman animation [#1147](https://github.com/MyEtherWallet/MyEtherWallet/pull/1147)
 - Update UI for Verify Message page [#1146](https://github.com/MyEtherWallet/MyEtherWallet/pull/1146)
