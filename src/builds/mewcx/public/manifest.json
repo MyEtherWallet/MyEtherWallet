@@ -15,7 +15,7 @@
   },
   "options_page": "index.html",
   "background": {
-    "scripts": ["./cxHelpers/backgroundPhishingCatcher.js"],
+    "scripts": ["background.js"],
     "persistent": true
   },
   "permissions": [
