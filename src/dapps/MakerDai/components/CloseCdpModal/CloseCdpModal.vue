@@ -242,7 +242,6 @@ export default {
     },
     enoughMkr() {
       const mkrNeeded = this.values.governanceFeeOwed;
-
       if (mkrNeeded) {
         return toBigNumber(this.mkrBalance)
           .minus(mkrNeeded)
@@ -263,7 +262,7 @@ export default {
     needsDaiApprove() {
       if (toBigNumber(this.values.proxyAllowanceDai).gt(0)) {
         if (
-          toBigNumber(this.values.proxyAllowanceDai).lt(this.values.debtValue)
+          toBigNumber(this.values.proxyAllowanceDai).lte(this.values.debtValue)
         ) {
           return true;
         }
@@ -391,7 +390,6 @@ export default {
           symbol: 'DAI',
           name: 'Dai'
         };
-        // this.destAddress = this.activeCdp.proxyAddress;
         this.$nextTick(() => {
           this.$refs.swapWidget.$refs.modal.show();
         });

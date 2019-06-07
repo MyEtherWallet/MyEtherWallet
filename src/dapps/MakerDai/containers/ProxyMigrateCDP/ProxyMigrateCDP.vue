@@ -442,7 +442,7 @@ export default {
     },
     async ['activeCdp.doUpdate'](val) {
       if (val > 0) {
-        this.activeCdp = this.getCdp(this.cdpId);
+        // this.activeCdp = this.getCdp(this.cdpId);
       }
     },
     async valuesUpdated() {
@@ -461,7 +461,7 @@ export default {
     },
     ['$route.params.cdpId'](val) {
       if (this.hasCdp(val)) {
-        this.activeCdp = this.getCdp(val);
+        // this.activeCdp = this.getCdp(val);
       }
     },
     openCloseModal(val) {
@@ -487,7 +487,7 @@ export default {
   },
   methods: {
     async migrateCdpToProxy() {
-      await this.activeCdp.migrateCdpComplete();
+      // await this.activeCdp.migrateCdpComplete();
     },
     showClose() {},
     showMove() {},
