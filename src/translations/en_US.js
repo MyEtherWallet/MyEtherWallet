@@ -45,7 +45,7 @@ const en_US = {
   secalotError: secalotError,
   keepkeyError: keepkeyError,
   bitboxError: bitboxError,
-  buyHardwareWallet: buyHardwareWallet
+  buyHardwareWallet: buyHardwareWallet,
   dappsMaker: dappsMaker
 };
 export default en_US;
