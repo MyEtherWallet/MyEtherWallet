@@ -34,6 +34,7 @@
             :address="wallet.address"
             :balance="wallet.balance"
             :wallet="wallet.wallet"
+            :nickname="wallet.nickname"
             :wallet-type="wallet.type"
             :access="togglePasswordModal"
             :detail="togglePasswordModal"
@@ -118,7 +119,8 @@ export default {
       totalBalance: 0,
       file: '',
       path: '',
-      password: ''
+      password: '',
+      nickname: ''
     };
   },
   computed: {
@@ -146,9 +148,7 @@ export default {
     },
     accessWallet() {
       const nickname =
-        this.nickname !== null && this.nickname.length > 0
-          ? this.nickname
-          : null;
+        this.nickname !== null && this.nickname.length > 0 ? this.nickname : '';
       this.loading = true;
       const worker = new walletWorker();
       worker.postMessage({
@@ -180,6 +180,7 @@ export default {
       this.password = '';
       this.file = '';
       this.path = '';
+      this.nickname = '';
 
       this.$router.push({
         path: navTo
@@ -205,6 +206,7 @@ export default {
         account['balance'] = await this.getBalance(address);
         account['type'] = parsedItemWallet.type;
         account['address'] = address;
+        account['nickname'] = parsedItemWallet.nick;
         if (parsedItemWallet.type !== 'wallet') {
           watchOnlyAddresses.push(account);
         } else {

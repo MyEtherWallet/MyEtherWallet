@@ -1,12 +1,11 @@
 <template>
   <div class="view-wallet-info-layout">
+    <view-private-key-modal ref="viewPriv" />
     <div class="title">
       <h2>View Wallet Info</h2>
       <p>
-        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Tempora totam
-        asperiores beatae distinctio est id, nulla iusto dolore sunt earum
-        molestiae consequatur laudantium aspernatur ratione labore nisi ab iure
-        pariatur.
+        Check your transaction history, download a new keystore file, print a
+        paper wallet, and more!
       </p>
     </div>
     <div class="wallet-info-container">
@@ -32,7 +31,7 @@
         <div class="account-details">
           <div class="blockie-container">
             <blockie :address="account.address" width="80px" height="80px" />
-            <h3 v-if="hasNickname">{{ account.nickname }}'s wallet</h3>
+            <h3 v-show="hasNickname">{{ account.nickname }}'s wallet</h3>
             <div class="address-copy-container">
               <input ref="copyAddress" :value="account.address" />
               <p>{{ account.address | concatAddr }}</p>
@@ -49,6 +48,11 @@
               <img :src="option.icon" />
               <p>{{ option.name }}</p>
             </div>
+            <a
+              ref="downloadFile"
+              :href="walletJson"
+              :download="hasNickname ? account.nickname : account.address"
+            />
           </div>
         </div>
       </div>
@@ -73,11 +77,12 @@ import { Toast } from '@/helpers';
 import store from 'store';
 import TokenBalance from '@myetherwallet/eth-token-balance';
 import InterfaceTokens from '@/layouts/InterfaceLayout/components/InterfaceTokens';
+import ViewPrivateKey from './components/ViewPrivateKey';
 import { BigNumber } from 'bignumber.js';
 import sortByBalance from '@/helpers/sortByBalance.js';
 import Blockie from '@/components/Blockie';
 import more from '@/assets/images/icons/more-black.svg';
-
+import createBlob from '@/helpers/createBlob.js';
 import Web3 from 'web3';
 import utils from 'web3-utils';
 
@@ -86,7 +91,8 @@ const web3 = new Web3('https://api.myetherwallet.com/eth');
 export default {
   components: {
     'interface-tokens': InterfaceTokens,
-    blockie: Blockie
+    blockie: Blockie,
+    'view-private-key-modal': ViewPrivateKey
   },
   data() {
     return {
@@ -98,25 +104,29 @@ export default {
           name: 'Private Key',
           key: 'privKey',
           icon: more,
-          func: () => {}
+          func: this.openViewPriv,
+          disabled: false
         },
         {
           name: 'Txn History',
           key: 'txnHis',
           icon: more,
-          func: this.openTxHistory
+          func: this.openTxHistory,
+          disabled: false
         },
         {
           name: 'Keystore File',
           key: 'keyStor',
           icon: more,
-          func: () => {}
+          func: () => {},
+          disabled: false
         },
         {
           name: 'Print Wallet',
           key: 'printWal',
           icon: more,
-          func: () => {}
+          func: () => {},
+          disabled: false
         }
       ]
     };
@@ -124,7 +134,7 @@ export default {
   computed: {
     ...mapState(['account', 'network']),
     hasNickname() {
-      return this.account.nickname !== null || this.account.nickname.length > 0;
+      return this.account.nickname !== '' || this.account.nickname.length > 0;
     }
   },
   mounted() {
@@ -132,6 +142,13 @@ export default {
     this.fetchBalance();
   },
   methods: {
+    downloadKeystore() {
+      this.walletJson = createBlob(this.wallet.getKeystoreFile());
+      this.$refs.downloadFile.click();
+    },
+    openViewPriv() {
+      this.$refs.viewPriv.$refs.viewPriv.show();
+    },
     openTxHistory() {
       // eslint-disable-next-line
       window.open(
