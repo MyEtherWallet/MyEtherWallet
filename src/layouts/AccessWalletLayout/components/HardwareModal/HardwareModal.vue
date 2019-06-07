@@ -8,9 +8,9 @@
   >
     <div class="modal-content-container">
       <div class="d-block text-center">
-        <b-alert :show="mayNotBeAttached" fade variant="warning"
-          >Please make sure your device is connected</b-alert
-        >
+        <b-alert :show="mayNotBeAttached" fade variant="warning">{{
+          $t('accessWallet.connectDevice')
+        }}</b-alert>
         <div class="button-options hardware-button-options">
           <wallet-option
             v-for="(item, idx) in items"
