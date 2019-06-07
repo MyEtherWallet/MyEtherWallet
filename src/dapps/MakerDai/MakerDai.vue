@@ -109,9 +109,30 @@
         </div>
       </div>
     </div>
+    <div v-show="makerActive" class="buttons-container">
+      <div v-if="showCreateProxy && cdpsWithoutProxy.length > 1">
+        <div v-for="(value, idx) in cdpsWithoutProxy" :key="idx + value">
+          <div
+            :class="[
+              'dapps-button',
+              activeValues.cdpId === value ? 'active' : ''
+            ]"
+          >
+            <div @click="openMigrate(value)">
+              <h4>CDP #{{ value }}</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div v-show="makerActive && listCdps" class="buttons-container">
       <div v-for="(value, idx) in cdps" :key="idx + value">
-        <div class="dapps-button">
+        <div
+          :class="[
+            'dapps-button',
+            activeValues.cdpId === value ? 'active' : ''
+          ]"
+        >
           <div @click="openManage(value)">
             <h4>CDP #{{ value }}</h4>
           </div>
@@ -297,11 +318,11 @@ export default {
     onCreate() {
       return this.$route.name === 'create';
     },
-    showCreateProxy(){
-      if(this.showCdpMigrateButtons){
+    showCreateProxy() {
+      if (this.showCdpMigrateButtons) {
         return false;
       }
-     return !this.hasProxy && !this.onCreate;
+      return !this.hasProxy && !this.onCreate;
     },
     showCdpMigrateButtons() {
       return this.hasProxy && this.cdpsWithoutProxy.length >= 1;
@@ -968,6 +989,17 @@ export default {
         this.setupCdpManage(cdpId);
         this.$router.push({
           name: 'manage',
+          params: {
+            cdpId: cdpId
+          }
+        });
+      }
+    },
+    openMigrate(cdpId) {
+      if (this.$route.path.includes('maker-dai')) {
+        this.setupCdpManage(cdpId);
+        this.$router.push({
+          name: 'migrate',
           params: {
             cdpId: cdpId
           }

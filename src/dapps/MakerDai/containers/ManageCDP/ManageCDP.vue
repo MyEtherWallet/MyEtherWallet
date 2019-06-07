@@ -1,6 +1,5 @@
 <template>
   <div class="manage-cdp">
-
     <div v-show="!finishMigration" class="manage-container">
       <!-- ==================================================== -->
       <div class="title-content-container">
@@ -462,7 +461,7 @@ export default {
     },
     async ['activeCdp.doUpdate'](val) {
       if (val > 0) {
-        this.activeCdp = this.getCdp(this.cdpId);
+        // this.activeCdp = this.getCdp(this.cdpId);
       }
     },
     async valuesUpdated() {
@@ -481,7 +480,7 @@ export default {
     },
     ['$route.params.cdpId'](val) {
       if (this.hasCdp(val)) {
-        this.activeCdp = this.getCdp(val);
+        // this.activeCdp = this.getCdp(val);
       }
     },
     openCloseModal(val) {
@@ -513,7 +512,7 @@ export default {
   },
   methods: {
     async migrateCdpToProxy() {
-      await this.activeCdp.migrateCdpComplete();
+      // await this.activeCdp.migrateCdpComplete();
     },
     showDeposit() {
       this.$emit('showDeposit');
@@ -531,7 +530,7 @@ export default {
     displayFixedValue,
     async isReady() {},
     async migrateCdp() {
-      await this.activeCdp.migrateCdp();
+      // await this.activeCdp.migrateCdp();
     }
   }
 };

@@ -113,6 +113,10 @@ $confirmation-modal-mobile-width: 500px;
     background-color: $light-green-6;
   }
 
+  &.active {
+    border: 1px solid $mew-green;
+  }
+
   img {
     //margin-bottom: 15px;
     @media all and (max-width: $dapp-button-mobile-width) {
