@@ -137,11 +137,6 @@ export default class MakerCDP {
     return this.toUSD(this.ethCollateral);
   }
 
-  // get ethCollateral() {
-  //   console.log(this.ethCollateral.toString()); // todo remove dev item
-  //   return this.ethCollateral;
-  // }
-
   get ethCollateralNum() {
     return this.ethCollateral.toNumber();
   }
