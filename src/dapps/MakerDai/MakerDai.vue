@@ -196,7 +196,6 @@ import { Toast } from '@/helpers';
 import MakerCDP from './MakerCDP';
 import { toChecksumAddress } from '@/helpers/addressUtils';
 
-// import MakerManager from './MakerManager';
 import MewPlugin from 'mew-maker-plugin';
 const { MKR, DAI } = Maker;
 
@@ -241,9 +240,7 @@ export default {
   },
   data() {
     return {
-      // maker: {},
       afterUpdate: [],
-      // activeCdps: {},
       allCdpIds: [],
       activeCdp: {},
       activeValues: {
@@ -344,14 +341,12 @@ export default {
     }
   },
   destroyed() {
-    // this.maker.service('web3').disconnect();
     this.priceService = {};
     this.cdpService = {};
     this.proxyService = {};
     this.availableCdps = {};
     this.activeCdp = {};
     this.makerCdp = {};
-    // this.makerManager = {};
     this.sysVars = {};
     this.sysServices = {};
   },
@@ -474,15 +469,9 @@ export default {
     },
     async migrateCdpExternal(cdpId) {
       this.afterUpdate.push(this.goToManage);
-      // this.afterUpdate.push(() => {
-      //   if (this.cdpsWithoutProxy.length === 0) {
-      //     this.cdpsWithoutProxy = [];
-      //   }
-      // });
       await this.migrateCdp(cdpId);
     },
     async refreshExternal() {
-      // eslint-disable-next-line
       await this.doUpdateExternal();
     },
     async doUpdateExternal() {
@@ -856,10 +845,6 @@ export default {
     async approveMkr() {
       this._tokenService.getToken(MKR).approveUnlimited(this.proxyAddress);
     },
-
-    //============================================================
-    // prior in separate
-
     hasCdp(cdpId) {
       return Object.keys(this.activeCdps).includes(
         toBigNumber(cdpId).toString()

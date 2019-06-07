@@ -57,7 +57,6 @@
               <p>
                 <b>{{ values.governanceFeeOwed }}</b> MKR
               </p>
-              <!-- TODO: fix-->
             </li>
             <li>
               <p>{{ $t('dappsMaker.projectedLiquidation') }}</p>
@@ -287,15 +286,6 @@ export default {
     },
     canProceed() {
       return this.hasEnoughDai;
-      // if (toBigNumber(this.amount).lte(0)) return false;
-      // const ratio = toBigNumber(this.newCollateralRatio);
-      // const ratioSafe = ratio.gt(2) || ratio.eq(0);
-      // const ratioOk = ratio.gt(1.5) || ratio.eq(0);
-      // if (!ratioOk) return false;
-      // return (
-      //   (this.canWithdrawEthAmount && ratioSafe) ||
-      //   (this.canWithdrawEthAmount && ratioOk && this.riskyBypass)
-      // );
     },
     newCollateralRatio() {
       if (this.values.debtValue && this.amount > 0) {
@@ -440,15 +430,10 @@ export default {
           symbol: 'MKR',
           name: 'Maker'
         };
-        // this.destAddress = this.proxyAddress;
-        // this.$refs.swapWidget.$refs.modal.show();
         this.$nextTick(() => {
           this.$refs.swapWidget.$refs.modal.show();
         });
       }
-    },
-    getTitleText() {
-      return 'Payback DAI';
     },
     closeModal() {
       this.$refs.modal.hide();
@@ -460,11 +445,9 @@ export default {
     },
     async approveDai() {
       this.$emit('approveDai');
-      // await this.activeCdp.approveDai();
     },
     async approveMkr() {
       this.$emit('approveMkr');
-      // await this.activeCdp.approveMkr();
     }
   }
 };

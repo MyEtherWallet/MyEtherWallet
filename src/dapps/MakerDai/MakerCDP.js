@@ -39,17 +39,6 @@ export default class MakerCDP {
     this._usdCollateral = toBigNumber(0);
     this._governanceFee = toBigNumber(0);
 
-    // this.proxyAllowanceDai = sysVars.proxyAllowanceDai || toBigNumber(0);
-    // this.proxyAllowanceMkr = sysVars.proxyAllowanceMkr || toBigNumber(0);
-    // this.liquidationPenalty = sysVars.liquidationPenalty;
-    //
-    //
-    // console.log(this.makerManager); // todo remove dev item
-    //
-    /*    this.proxyService = services.proxyService || null;
-    this.priceService = services.priceService || null;
-    this.cdpService = services.cdpService || null;*/
-
     if (toInit) this.init(this.cdpId);
   }
 
@@ -475,9 +464,6 @@ export default class MakerCDP {
   }
 
   async closeCdp() {
-    // will also need to check if there is enough allowance
-    // const enoughToWipe = await this.canCloseCdp();
-    // if (enoughToWipe) {
     try {
       this.needsUpdate = true;
       this.closing = true;
@@ -532,7 +518,6 @@ export default class MakerCDP {
   fromPeth(peth) {
     if (!toBigNumber(peth).eq(0)) {
       return toBigNumber(peth).times(this.wethToPethRatio);
-      // return toBigNumber(this._wethToPethRatio).div(peth);
     }
     return toBigNumber(0);
   }

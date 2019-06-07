@@ -40,7 +40,6 @@
           </div>
         </div>
         <expending-option title="Details">
-          <!-- Generate Dai -->
           <div class="detail-container">
             <div class="grid-block">
               <p>{{ $t('dappsMaker.maxGenerateAvailable') }}</p>
@@ -298,18 +297,14 @@ export default {
     }
   },
   watch: {},
-  mounted() {
-    // this.$refs.modal.$on('shown', () => {
-    //   this.amount = 0;
-    // });
-  },
+  mounted() {},
   methods: {
     submitBtn() {
       if (!this.canProceed) return;
       this.drawDai();
     },
     checkBoxClicked(checked) {
-      this.riskyBypass = checked; //!this.riskyBypass;
+      this.riskyBypass = checked;
     },
     displayPercentValue,
     displayFixedValue,

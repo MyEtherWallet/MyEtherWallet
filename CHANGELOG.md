@@ -1,4 +1,5 @@
 ### Bug
+
 - Fix broken custom derivation paths & Remove -1 as an allowed gas limit value [#1133](https://github.com/MyEtherWallet/MyEtherWallet/pull/1133) 
 
 ### Release v5.0.12-hotfix.2
