@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-show="!finishMigration" class="manage-container">
+    <div class="manage-container">
       <!-- ==================================================== -->
       <div class="title-content-container">
         <p class="cpd-title">{{ $t('dappsMaker.cdpPortal') }}</p>
@@ -200,10 +200,6 @@ export default {
         return {};
       }
     },
-    valuesUpdated: {
-      type: Number,
-      default: 0
-    },
     getCdp: {
       type: Function,
       default: function() {}
@@ -285,7 +281,6 @@ export default {
   },
   data() {
     return {
-      activeCdp: {},
       loaded: false,
       ethQty: 0,
       daiQty: 0,
@@ -301,17 +296,6 @@ export default {
   },
   computed: {
     ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
-    noProxy() {
-      return !this.makerManager.hasProxy;
-      // if (this.activeCdp) {
-      //   return this.activeCdp.noProxy;
-      // }
-    },
-    finishMigration() {
-      if (this.activeCdp) {
-        return this.activeCdp.needToFinishMigrating;
-      }
-    },
     collateralRatioColoring() {
       if (this.values) {
         if (this.values.collateralRatio >= 2) {
@@ -437,46 +421,11 @@ export default {
     }
   },
   watch: {
-    ['activeCdp.ready']() {
-      this.isReady();
-    },
-    async ['activeCdp.doUpdate'](val) {
-      if (val > 0) {
-        // this.activeCdp = this.getCdp(this.cdpId);
-      }
-    },
-    async valuesUpdated() {
-      if (this.cdpId) {
-        // console.log(this.activeCdp); // todo remove dev item
-        // // this.activeCdp = this.getCdp[this.cdpId];
-        // if (!this.activeCdp) {
-        //   console.log("shouldn't run"); // todo remove dev item
-        //   // this.$emit('managerUpdate');
-        //   // await this.makerManager.doUpdate();
-        //   this.activeCdp = await this.getCdp(this.cdpId);
-        // } else {
-        //   /*this.activeCdp =*/ await this.activeCdp.update();
-        // }
-      }
-    },
-    ['$route.params.cdpId'](val) {
-      if (this.hasCdp(val)) {
-        // this.activeCdp = this.getCdp(val);
-      }
-    },
-    openCloseModal(val) {
-      if (val) {
-        this.showClose();
-      }
-    },
-    openMoveModal(val) {
-      if (val) {
-        this.showMove();
-      }
-    }
+    // ['activeCdp.ready']() {
+    //   this.isReady();
+    // },
   },
   async mounted() {
-    this.activeCdp = {};
     this.cdpId = this.$route.params.cdpId;
     if (this.makerActive) {
       this.loaded = true;
@@ -486,9 +435,6 @@ export default {
     }
   },
   methods: {
-    async migrateCdpToProxy() {
-      // await this.activeCdp.migrateCdpComplete();
-    },
     showClose() {},
     showMove() {},
     displayPercentValue,
@@ -496,7 +442,6 @@ export default {
     async isReady() {},
     async migrateCdp() {
       this.$emit('migrateCdp', this.cdpId);
-      // await this.activeCdp.migrateCdp();
     }
   }
 };

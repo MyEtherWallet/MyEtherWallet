@@ -49,11 +49,6 @@ import CheckBox from '../CheckBox';
 import BigNumber from 'bignumber.js/bignumber.js';
 
 import { Misc } from '@/helpers';
-
-// const toBigNumber = num => {
-//   return new BigNumber(num);
-// };
-
 export default {
   components: {
     'check-box': CheckBox,
@@ -142,7 +137,6 @@ export default {
     async moveCdp() {
       if (Misc.isValidETHAddress(this.address)) {
         this.$emit('moveCdp', this.address);
-        // this.activeCdp.moveCdp(this.address);
         this.closeModal();
       }
     },

@@ -2,7 +2,7 @@
   <div class="modal-container">
     <b-modal
       ref="modal"
-      title="DAI Confirmation"
+      :title="$t('dappsMaker.DAIConfirmation')"
       centered
       class="bootstrap-modal bootstrap-modal-wide padding-40-20"
       hide-footer
@@ -10,7 +10,10 @@
       <div class="modal-content-container">
         <div class="tx-amount">
           <div>
-            <div class="interface__block-title">Collateral</div>
+            <div class="interface__block-title">
+              {{ $t('dappsMaker.collateral') }}
+            </div>
+
             <div class="amount-block">
               <div class="icon">
                 <img src="~@/assets/images/currency/eth.svg" />
@@ -22,7 +25,9 @@
             <img src="~@/assets/images/icons/right-arrow.svg" />
           </div>
           <div>
-            <div class="interface__block-title">Generate</div>
+            <div class="interface__block-title">
+              {{ $t('dappsMaker.generate') }}
+            </div>
             <div class="amount-block">
               <div class="icon">
                 <img src="~@/assets/images/currency/coins/AllImages/DAI.svg" />
@@ -32,30 +37,26 @@
           </div>
         </div>
         <div class="detail-info">
-          <expending-option title="Details">
+          <expending-option :title="$t('dappsMaker.details')">
             <ul>
-              <!--              <li>-->
-              <!--                <p>Min ETH required</p>-->
-              <!--                <p>TODO ETH</p>-->
-              <!--              </li>-->
               <li>
-                <p>Liquidation price (ETH/USD)</p>
+                <p>{{ $t('dappsMaker.liquidPrice') }} (ETH/USD)</p>
                 <p class="bold">{{ liquidationPrice }} USD</p>
               </li>
               <li>
-                <p>Current price information (ETH/USD)</p>
+                <p>{{ $t('dappsMaker.currentPrice') }} (ETH/USD)</p>
                 <p>{{ currentPrice }} USD</p>
               </li>
               <li>
-                <p>Liquidation penalty</p>
+                <p>{{ $t('dappsMaker.liquidationPenalty') }}</p>
                 <p>{{ liquidationPenalty }}%</p>
               </li>
               <li>
-                <p>Collateralization ratio</p>
+                <p>{{ $t('dappsMaker.collateralRatio') }}</p>
                 <p class="bold">{{ collatRatio }} %</p>
               </li>
               <li>
-                <p>Minimum ratio</p>
+                <p>{{ $t('dappsMaker.minimumRatio') }}</p>
                 <p>{{ minRatio }}%</p>
               </li>
             </ul>
@@ -73,7 +74,6 @@
 </template>
 
 <script>
-// import BigNumber from 'bignumber.js';
 import ExpendingOption from '@/components/ExpendingOption';
 import StandardButton from '@/components/Buttons/StandardButton';
 
@@ -119,7 +119,7 @@ export default {
   data() {
     return {
       confirmButton: {
-        title: 'Confirm and Create CDP',
+        title: this.$t('dappsMaker.confirmAndCreate'),
         buttonStyle: 'green',
         helpCenter: true
       }

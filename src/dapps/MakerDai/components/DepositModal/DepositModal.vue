@@ -9,7 +9,6 @@
     >
       <div class="modal-content-container">
         <div class="inputs-container">
-          <!-- Deposit ETH -->
           <div class="input-container">
             <div class="interface__block-title">
               {{ $t('dappsMaker.depositQuestion') }}
@@ -19,8 +18,6 @@
               <span class="input-unit">{{ digitalCurrency }}</span>
             </div>
             <div class="sub-text">
-              <!--            <p class="btn" @click="maxDeposit">Max</p>-->
-              <!-- TODO FOR TRANSLATE -->
               <p>
                 {{
                   values.toPeth
@@ -52,7 +49,6 @@
             :class="modalDetailInformation && 'expended-info-open'"
             class="expended-info"
           >
-            <!-- Deposit ETH -->
             <div class="padding-container">
               <div class="grid-block">
                 <p>{{ $t('dappsMaker.currentlyDeposited') }}</p>
@@ -84,26 +80,6 @@
             </div>
           </div>
         </div>
-        <!--        <div v-if="!newCollateralRatioSafe && notZero(amount)">
-          <check-box @changeStatus="checkBoxClicked">
-            <template v-slot:terms>
-              <span v-if="!newCollateralRatioInvalid">
-                I understand the new collateral ratio of
-                {{
-                  displayFixedValue(displayPercentValue(newCollateralRatio))
-                }}% may place my cdp at risk of liquidation.
-                &lt;!&ndash; TODO FOR TRANSLATE &ndash;&gt;
-              </span>
-              <span v-if="newCollateralRatioInvalid" style="color: red;">
-                I understand the new collateral ratio of
-                {{
-                  displayFixedValue(displayPercentValue(newCollateralRatio))
-                }}% WILL place my cdp at risk of liquidation.
-              </span>
-            </template>
-            &lt;!&ndash; TODO FOR TRANSLATE &ndash;&gt;
-          </check-box>
-        </div>-->
         <div class="buttons">
           <standard-button
             :options="cancelButton"
@@ -296,11 +272,6 @@ export default {
     notZero(val) {
       return toBigNumber(val).gt(0);
     },
-    maxDeposit() {
-      // this.amount = this.activeCdp.maxDai.minus(
-      //   this.activeCdp.maxDai.times(0.01)
-      // );
-    },
     currentDai() {
       this.amount = this.values.debtValue;
     },
@@ -308,7 +279,6 @@ export default {
       if (toBigNumber(this.amount).gte(0)) {
         this.delayCloseModal();
         this.$emit('lockEth', this.amount);
-        // await this.activeCdp.lockEth(this.amount);
       }
     },
     closeModal() {

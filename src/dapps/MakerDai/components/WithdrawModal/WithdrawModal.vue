@@ -9,7 +9,6 @@
     >
       <div class="modal-content-container">
         <div class="inputs-container">
-          <!-- Withdraw ETH -->
           <div class="input-container">
             <p class="message">
               {{ $t('dappsMaker.withdrawNotice') }}
@@ -25,7 +24,6 @@
               <span class="input-unit">{{ digitalCurrency }}</span>
             </div>
             <div class="sub-text">
-              <!--            <p v-if="!canGenerateDaiAmount">Above Max Dai Amount</p>-->
               <div class="peth">
                 <p class="peth-value">
                   {{
@@ -42,11 +40,9 @@
         </div>
 
         <expending-option title="Detail Information">
-          <!-- Withdraw ETH -->
           <div class="padding-container">
             <div class="grid-block">
               <p>{{ $t('dappsMaker.maxWithdrawAvailable') }}</p>
-              <!-- TODO FOR TRANSLATE -->
               <p>
                 <b>{{
                   values.maxDai ? displayFixedValue(values.maxEthDraw, 5) : 0
@@ -96,12 +92,11 @@
                 }}
               </p>
               <check-box @changeStatus="checkBoxClicked">
-                <template v-slot:terms
-                  ><p class="checkbox-label">
+                <template v-slot:terms>
+                  <p class="checkbox-label">
                     {{ $t('dappsMaker.understandAndAgree') }}
-                  </p></template
-                >
-                <!-- TODO FOR TRANSLATE -->
+                  </p>
+                </template>
               </check-box>
             </div>
           </div>
@@ -121,7 +116,6 @@
 
         <help-center-button />
       </div>
-      <!-- .modal-content-container -->
     </b-modal>
   </div>
 </template>
@@ -311,9 +305,7 @@ export default {
     maxWithdraw() {
       this.amount = this.values.maxEthDraw; /*.minus(
         this.activeCdp.minEth.times(1.0)
-      );
-      console.log(this.activeCdp.maxEthDraw.toString()); // todo remove dev item
-      console.log(this.amount.toString()); // todo remove dev item*/
+      );*/
       this.$forceUpdate();
     },
     currentDai() {

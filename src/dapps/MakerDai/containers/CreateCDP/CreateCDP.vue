@@ -160,7 +160,6 @@ import Blockie from '@/components/Blockie';
 import DaiConfirmationModal from '../../components/DaiConfirmationModal';
 import LoadingOverlay from '@/components/LoadingOverlay';
 import {
-  displayFixedPercent,
   displayFixedValue,
   displayPercentValue
 } from '../../helpers';
@@ -363,13 +362,10 @@ export default {
     },
     displayPercentValue,
     displayFixedValue,
-    displayFixedPercent,
     async openCdp() {
       this.loading = true;
 
       if (this.ethQty <= 0) return 0;
-
-      // close loading overlay after 5 seconds to prevent user from having to refresh to keep using the site.
       setTimeout(() => {
         this.loading = false;
       }, 5000);
@@ -410,17 +406,6 @@ export default {
       }
       return toBigNumber(0);
     },
-
-    // maxDaiDraw() {
-    //   const tl = toBigNumber(this.ethPrice).times(
-    //     toBigNumber(this._ethCollateral)
-    //   );
-    //   const tr = toBigNumber(this._debtValue).times(
-    //     toBigNumber(this.liquidationRatio)
-    //   );
-    //   return tl.minus(tr).div(toBigNumber(this.ethPrice));
-    // },
-
     calcMinCollatRatio(priceFloor) {
       return bnOver(this.ethPrice, this.liquidationRatio, priceFloor);
     },

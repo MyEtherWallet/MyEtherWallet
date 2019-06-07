@@ -154,12 +154,6 @@ import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/Interf
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import BottomHelpLink from '@/components/BottomHelpLink';
 import Blockie from '@/components/Blockie';
-// import GenerateModal from '../../components/GenerateModal';
-// import DepositModal from '../../components/DepositModal';
-// import WithdrawModal from '../../components/WithdrawModal';
-// import PaybackModal from '../../components/PaybackModal';
-// import CloseCdpModal from '../../components/CloseCdpModal';
-// import MoveCdpModal from '../../components/MoveCdpModal';
 import {
   displayFixedPercent,
   displayFixedValue,
@@ -176,12 +170,6 @@ export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
     'interface-bottom-text': InterfaceBottomText,
-    // 'generate-modal': GenerateModal,
-    // 'deposit-modal': DepositModal,
-    // 'withdraw-modal': WithdrawModal,
-    // 'payback-modal': PaybackModal,
-    // 'close-cdp-modal': CloseCdpModal,
-    // 'move-cdp-modal': MoveCdpModal,
     blockie: Blockie,
     'help-link': BottomHelpLink
   },
@@ -459,30 +447,6 @@ export default {
     ['activeCdp.ready']() {
       this.isReady();
     },
-    async ['activeCdp.doUpdate'](val) {
-      if (val > 0) {
-        // this.activeCdp = this.getCdp(this.cdpId);
-      }
-    },
-    async valuesUpdated() {
-      if (this.cdpId) {
-        // console.log(this.activeCdp); // todo remove dev item
-        // // this.activeCdp = this.getCdp[this.cdpId];
-        // if (!this.activeCdp) {
-        //   console.log("shouldn't run"); // todo remove dev item
-        //   // this.$emit('managerUpdate');
-        //   // await this.makerManager.doUpdate();
-        //   this.activeCdp = await this.getCdp(this.cdpId);
-        // } else {
-        //   /*this.activeCdp =*/ await this.activeCdp.update();
-        // }
-      }
-    },
-    ['$route.params.cdpId'](val) {
-      if (this.hasCdp(val)) {
-        // this.activeCdp = this.getCdp(val);
-      }
-    },
     openCloseModal(val) {
       if (val) {
         this.showClose();
@@ -502,18 +466,9 @@ export default {
       if (this.cdpId) {
         this.$emit('activeCdpId', this.cdpId);
       }
-      // this.$refs.closeCdp.$refs.modal.$on('hidden', () => {
-      //   this.$emit('modalHidden');
-      // });
-      // this.$refs.moveCdp.$refs.modal.$on('hidden', () => {
-      //   this.$emit('modalHidden');
-      // });
     }
   },
   methods: {
-    async migrateCdpToProxy() {
-      // await this.activeCdp.migrateCdpComplete();
-    },
     showDeposit() {
       this.$emit('showDeposit');
     },
@@ -528,10 +483,7 @@ export default {
     },
     displayPercentValue,
     displayFixedValue,
-    async isReady() {},
-    async migrateCdp() {
-      // await this.activeCdp.migrateCdp();
-    }
+    async isReady() {}
   }
 };
 </script>
