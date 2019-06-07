@@ -159,10 +159,7 @@ import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
 import DaiConfirmationModal from '../../components/DaiConfirmationModal';
 import LoadingOverlay from '@/components/LoadingOverlay';
-import {
-  displayFixedValue,
-  displayPercentValue
-} from '../../helpers';
+import { displayFixedValue, displayPercentValue } from '../../helpers';
 
 import BigNumber from 'bignumber.js';
 import Arrow from '@/assets/images/etc/single-arrow.svg';
