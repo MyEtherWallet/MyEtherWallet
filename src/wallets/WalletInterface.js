@@ -18,7 +18,7 @@ import ethTx from 'ethereumjs-tx';
 import { toChecksumAddress } from '@/helpers/addressUtils';
 class WalletInterface {
   constructor(key, isPub = false, identifier, nick) {
-    this.nickname = nick !== '' ? nick : '';
+    this.nickname = nick !== null && nick !== '' ? nick : '';
     this.identifier = identifier;
     if (!isPub) {
       const _privKey = Buffer.isBuffer(key)
@@ -51,7 +51,7 @@ class WalletInterface {
   }
 
   getNickname() {
-    if (this.nickname === '') return null;
+    if (this.nickname === '') return '';
     return this.nickname;
   }
 

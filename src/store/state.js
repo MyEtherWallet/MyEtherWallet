@@ -22,7 +22,8 @@ const state = {
     balance: 0,
     address: null,
     isHardware: false,
-    identifier: ''
+    identifier: '',
+    nickname: ''
   },
   customPaths: customPaths,
   ens: null,

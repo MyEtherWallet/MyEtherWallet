@@ -120,8 +120,14 @@
       flex-wrap: wrap;
       justify-content: space-around;
       margin: 0 auto;
+      position: relative;
       width: 380px;
 
+      a {
+        position: absolute;
+        opacity: 0;
+        z-index: -1;
+      }
       .option-item {
         cursor: pointer;
         display: flex;
