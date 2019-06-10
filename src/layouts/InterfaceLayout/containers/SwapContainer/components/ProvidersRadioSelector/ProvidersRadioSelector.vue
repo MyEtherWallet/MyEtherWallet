@@ -348,9 +348,7 @@ export default {
     },
     normalizedRateDisplay(source) {
       const toValue = this.valueForRate(this.fromValue, source.rate);
-      return `${source.fromValue} ${source.fromCurrency} = ${toValue} ${
-        source.toCurrency
-      }`;
+      return `${source.fromValue} ${source.fromCurrency} = ${toValue} ${source.toCurrency}`;
     },
     valueForRate(rate, value) {
       return new BigNumber(value)
