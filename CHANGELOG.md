@@ -1,3 +1,7 @@
+### Bug
+
+- Fix getAddressString null issue, update ethereumjs-tx []()
+
 ### Release v5.0.13
 
 ### Devop
