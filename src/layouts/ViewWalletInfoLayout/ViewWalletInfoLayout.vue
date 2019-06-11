@@ -151,6 +151,13 @@ export default {
     this.fetchBalance();
     this.walletJson = createBlob(JSON.parse(this.account.keystore), 'mime');
   },
+  destroyed() {
+    this.tokens = [];
+    this.loading = false;
+    this.balance = 0;
+    this.walletJson = {};
+    this.build = BUILD_TYPE;
+  },
   methods: {
     disableItem(itemKey) {
       if (itemKey === 'privKey') {
