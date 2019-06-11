@@ -6,7 +6,9 @@
       </div>
       <div v-show="shouldConcat">
         <p class="name-address">
-          <span v-show="name !== ''" class="name">{{ name }} </span><br />
+          <span v-show="name !== ''" class="name"
+            >{{ name.length > 14 ? concatName : name }} </span
+          ><br />
           <span v-show="!showFullAddr">{{ concatAddr }}</span>
           <span v-show="showFullAddr">{{ address }}</span>
         </p>
@@ -17,7 +19,9 @@
       </div>
       <div v-show="!shouldConcat">
         <p class="name-address">
-          <span v-show="name !== ''" class="name">{{ name }} </span><br />
+          <span v-show="name !== ''" class="name"
+            >{{ name.length > 14 ? concatName : name }} </span
+          ><br />
           <span>{{ address }}</span>
         </p>
       </div>
@@ -61,6 +65,9 @@ export default {
     };
   },
   computed: {
+    concatName() {
+      return `${this.name.substring(0, 14)}...`;
+    },
     concatAddr() {
       return `${this.address.substr(0, 10)}...${this.address.substr(
         this.address.length - 4,
