@@ -1,6 +1,11 @@
 <template>
   <div class="view-wallet-info-layout">
     <view-private-key-modal ref="viewPriv" />
+    <print-modal
+      ref="printModal"
+      :priv-key="!account.isHardware"
+      :address="account.address"
+    />
     <div class="title">
       <h2>View Wallet Info</h2>
       <p>
@@ -83,6 +88,7 @@ import { mapState } from 'vuex';
 import { Toast } from '@/helpers';
 import store from 'store';
 import TokenBalance from '@myetherwallet/eth-token-balance';
+import PrintModal from '@/layouts/InterfaceLayout/components/PrintModal';
 import InterfaceTokens from '@/layouts/InterfaceLayout/components/InterfaceTokens';
 import ViewPrivateKey from './components/ViewPrivateKey';
 import { BigNumber } from 'bignumber.js';
@@ -99,6 +105,7 @@ export default {
   components: {
     'interface-tokens': InterfaceTokens,
     blockie: Blockie,
+    'print-modal': PrintModal,
     'view-private-key-modal': ViewPrivateKey
   },
   data() {
@@ -133,7 +140,7 @@ export default {
           key: 'printWal',
           icon: more,
           iconDisabled: more,
-          func: () => {}
+          func: this.printWallet
         }
       ],
       walletJson: {},
@@ -169,6 +176,9 @@ export default {
         return true;
       }
       return false;
+    },
+    printWallet() {
+      this.$refs.printModal.$refs.print.show();
     },
     downloadKeystore() {
       this.$refs.downloadFile.click();

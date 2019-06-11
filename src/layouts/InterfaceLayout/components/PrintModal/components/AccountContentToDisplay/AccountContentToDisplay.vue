@@ -105,10 +105,10 @@
       <div v-if="!wallet.isPubOnly" class="my-priv-container">
         <div class="text-container">
           <h3>{{ myPriv }}</h3>
-          <p>{{ wallet.privateKey.toString('hex') }}</p>
+          <p>{{ wallet.getPrivateKeyString() }}</p>
         </div>
         <qrcode
-          :value="wallet.privateKey.toString('hex')"
+          :value="wallet.getPrivateKeyString()"
           :options="{ size: 120 }"
         />
       </div>
