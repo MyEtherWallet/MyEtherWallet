@@ -111,7 +111,7 @@ export default {
       const worker = new walletWorker();
       worker.postMessage({ type: 'createWallet', data: [this.password] });
       worker.onmessage = e => {
-        this.walletJson = this.createBlob('mime', e.data.walletJson);
+        this.walletJson = createBlob(e.data.walletJson, 'mime');
         this.downloadable = true;
         this.name = e.data.name.toString();
       };
@@ -120,7 +120,7 @@ export default {
       };
     } else {
       const _wallet = this.createWallet(this.password);
-      this.walletJson = createBlob('mime', _wallet.walletJson);
+      this.walletJson = createBlob(_wallet.walletJson, 'mime');
       this.downloadable = true;
       this.name = _wallet.name.toString();
     }

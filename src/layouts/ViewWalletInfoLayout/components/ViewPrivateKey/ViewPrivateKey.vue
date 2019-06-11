@@ -33,7 +33,7 @@ export default {
   computed: {
     ...mapState(['wallet']),
     privKey() {
-      return this.wallet.getPrivateKey();
+      return this.wallet.getPrivateKeyString();
     }
   },
   methods: {

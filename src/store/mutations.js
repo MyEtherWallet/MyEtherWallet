@@ -58,6 +58,7 @@ const DECRYPT_WALLET = function(state, wallet) {
   state.account['identifier'] = wallet.identifier;
   if (!wallet.isHardWare) {
     state.account['nickname'] = wallet.getNickname();
+    state.account['keystore'] = wallet.getKeystore();
   }
 };
 

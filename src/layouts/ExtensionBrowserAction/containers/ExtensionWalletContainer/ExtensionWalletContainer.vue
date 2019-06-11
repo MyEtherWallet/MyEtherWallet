@@ -161,7 +161,8 @@ export default {
             Buffer.from(e.data._privKey),
             false,
             keyStoreType,
-            nickname
+            nickname,
+            JSON.stringify(this.file)
           )
         );
         this.loading = false;
