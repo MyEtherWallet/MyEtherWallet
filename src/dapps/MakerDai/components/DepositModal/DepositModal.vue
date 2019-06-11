@@ -18,16 +18,18 @@
               <span class="input-unit">{{ digitalCurrency }}</span>
             </div>
             <div class="sub-text">
-              <p>
-                {{
+              <p v-if="!hasEnoughEth" class="above-max">{{ $t('dappsMaker.notEnoughEth') }}</p>
+              <div class="peth">
+                <p>
+                  {{
                   values.toPeth
-                    ? displayFixedValue(values.toPeth(amount), 5, false)
-                    : 0
-                }}
-                PETH
-              </p>
-              <popover popcontent="$t('dappsMaker.pethPopover')" />
-              <p v-if="!hasEnoughEth">{{ $t('dappsMaker.notEnoughEth') }}</p>
+                  ? displayFixedValue(values.toPeth(amount), 5, false)
+                  : 0
+                  }}
+                  PETH
+                </p>
+                <popover popcontent="$t('dappsMaker.pethPopover')" />
+              </div>
             </div>
           </div>
         </div>

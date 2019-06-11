@@ -244,14 +244,14 @@ export default {
       return true;
     },
     hasEnoughEth() {
-      if (this.amount || this.amount !== '') {
+      if (this.canCompute) {
         const asEth = ethUnit.fromWei(this.account.balance, 'ether');
         return toBigNumber(this.amount).lte(toBigNumber(asEth));
       }
       return true;
     },
     paybackFee() {
-      if (this.amount || this.amount !== '') {
+      if (this.canCompute) {
         return toBigNumber(this.amount)
           .div(this.values.debtValue)
           .times(this.values.governanceFeeOwed);
@@ -259,7 +259,7 @@ export default {
       return 0;
     },
     hasEnoughMkr() {
-      if (this.amount || this.amount !== '') {
+      if (this.canCompute) {
         return toBigNumber(this.mkrBalance).gte(toBigNumber(this.paybackFee));
       }
       return true;
@@ -271,7 +271,7 @@ export default {
       return true;
     },
     canWithdrawEthAmount() {
-      if (this.amount || this.amount !== '') {
+      if (this.canCompute) {
         return toBigNumber(this.amount).lte(
           toBigNumber(this.values.ethCollateral)
         );
@@ -279,7 +279,7 @@ export default {
       return false;
     },
     canGenerateDaiAmount() {
-      if (this.amount || this.amount !== '') {
+      if (this.canCompute) {
         return toBigNumber(this.amount).lte(toBigNumber(this.values.maxDai));
       }
       return true;
@@ -287,39 +287,44 @@ export default {
     canProceed() {
       return this.hasEnoughDai;
     },
-    newCollateralRatio() {
-      if (this.values.debtValue && this.amount > 0) {
+    calcCollateralRatio() {
+      if (this.canCompute) {
         return this.calcCollatRatioDaiChg(
           toBigNumber(this.values.debtValue).minus(this.amount)
         );
+      }
+      if (this.values) {
+        return this.values.collateralRatio;
+      }
+      return '--';
+    },
+    newCollateralRatio() {
+      if (this.amount > 0) {
+        return this.calcCollateralRatio;
       } else if (this.values) {
         return this.values.collatRatio;
       }
-      return 0;
+      return '--';
     },
     newCollateralRatioSafe() {
-      if (this.values.debtValue && this.amount > 0) {
-        const ratio = this.calcCollatRatioDaiChg(
-          toBigNumber(this.values.debtValue).minus(this.amount)
-        );
-        if (ratio.lte(new BigNumber(0.000009))) {
+      if (this.amount > 0) {
+        // TODO why did I make this like this?
+        if (this.calcCollateralRatio.lte(new BigNumber(0.000009))) {
           return true;
         }
-        return ratio.gte(2);
+        return this.calcCollateralRatio.gte(2);
       } else if (this.values) {
         return toBigNumber(this.values.collatRatio).gte(2);
       }
       return true;
     },
     newCollateralRatioInvalid() {
-      if (this.values.debtValue && this.amount > 0) {
-        const ratio = this.calcCollatRatioDaiChg(
-          toBigNumber(this.values.debtValue).minus(this.amount)
-        );
-        if (ratio.lte(new BigNumber(0.000009))) {
+      if (this.amount > 0) {
+        // TODO why did I make this like this?
+        if (this.calcCollateralRatio.lte(new BigNumber(0.000009))) {
           return true;
         }
-        return ratio.gte(1.5);
+        return this.calcCollateralRatio.gte(1.5);
       } else if (this.values) {
         return toBigNumber(this.values.collatRatio).lte(1.5);
       }
@@ -401,7 +406,11 @@ export default {
     async wipeDai() {
       if (toBigNumber(this.amount).gte(0)) {
         this.delayCloseModal();
-        this.$emit('wipeDai', this.amount);
+        if (toBigNumber(this.amount).gt(this.values.debtValue)) {
+          this.$emit('wipeDai', this.values.debtValue);
+        } else {
+          this.$emit('wipeDai', this.amount);
+        }
       }
     },
     getBalances() {

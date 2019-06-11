@@ -68,11 +68,24 @@ $confirmation-modal-mobile-width: 500px;
 
 .sub-text {
   padding: 0 10px;
-  display: flex;
-  align-items: center;
+  //display: flex;
+  //align-items: center;
   padding-bottom: 10px;
-  p {
-    margin-right: 5px;
+
+  .peth{
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    padding-bottom: 10px;
+    p {
+      margin-right: 5px;
+    }
+  }
+
+  .above-max {
+    margin-bottom: 2px;
+    color: $red-1;
+    font-weight: 600;
   }
 }
 

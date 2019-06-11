@@ -24,6 +24,9 @@
               <span class="input-unit">{{ digitalCurrency }}</span>
             </div>
             <div class="sub-text">
+              <p v-if="canWithdrawEthNotice" class="above-max">
+                {{ $t('dappsMaker.overMaxWithdraw') }}
+              </p>
               <div class="peth">
                 <p class="peth-value">
                   {{
@@ -33,7 +36,7 @@
                   }}
                   PETH
                 </p>
-                <popover popcontent="$t('dappsMaker.pethPopover')" />
+                <popover :popcontent="$t('dappsMaker.pethPopover')" />
               </div>
             </div>
           </div>
@@ -218,12 +221,20 @@ export default {
     canCompute() {
       return this.values && this.amountPresent;
     },
-    hasEnoughEth() {
+    // hasEnoughEth() {
+    //   if (this.amountPresent) {
+    //     const asEth = ethUnit.fromWei(this.account.balance, 'ether');
+    //     return toBigNumber(this.amount).lte(toBigNumber(asEth));
+    //   }
+    //   return true;
+    // },
+    canWithdrawEthNotice() {
       if (this.amountPresent) {
-        const asEth = ethUnit.fromWei(this.account.balance, 'ether');
-        return toBigNumber(this.amount).lte(toBigNumber(asEth));
+        return !toBigNumber(this.amount).lte(
+          toBigNumber(this.values.maxEthDraw)
+        );
       }
-      return true;
+      return false;
     },
     canWithdrawEthAmount() {
       if (this.amountPresent) {
@@ -245,6 +256,16 @@ export default {
       }
       return false;
     },
+    calcCollateralRatio() {
+      if (this.canCompute) {
+        return this.calcCollatRatioDaiChg(
+          toBigNumber(this.values.debtValue).plus(this.amount)
+        );
+      }
+      if (this.values) {
+        return this.values.collateralRatio;
+      }
+    },
     newCollateralRatio() {
       if (this.canCompute) {
         return this.calcCollatRatioEthChg(
@@ -253,7 +274,7 @@ export default {
       } else if (this.values) {
         return this.values.collatRatio;
       }
-      return toBigNumber(0);
+      return '--';
     },
     newCollateralRatioSafe() {
       if (this.canCompute) {
@@ -303,9 +324,7 @@ export default {
       return toBigNumber(val).gt(0);
     },
     maxWithdraw() {
-      this.amount = this.values.maxEthDraw; /*.minus(
-        this.activeCdp.minEth.times(1.0)
-      );*/
+      this.amount = this.values.maxEthDraw;
       this.$forceUpdate();
     },
     currentDai() {
@@ -314,7 +333,11 @@ export default {
     async freeEth() {
       if (toBigNumber(this.amount).gte(0)) {
         this.delayCloseModal();
-        this.$emit('freeEth', this.amount);
+        if (this.newCollateralRatioSafe) {
+          this.$emit('freeEth', [this.amount, null]);
+        } else {
+          this.$emit('freeEth', [this.amount, this.riskyBypass]);
+        }
       }
     },
     closeModal() {

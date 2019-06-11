@@ -96,6 +96,12 @@ $confirmation-modal-mobile-width: 500px;
     }
   }
 
+  .above-max {
+    margin-bottom: 2px;
+    color: $red-1;
+    font-weight: 600;
+  }
+
   .btn {
     color: $grey-1;
     &:hover {

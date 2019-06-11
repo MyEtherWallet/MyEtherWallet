@@ -58,6 +58,7 @@
   "withdrawTitle": "Withdraw Collateral",
   "maxWithdrawAvailable": "Max Available to Withdraw",
   "maxWithdraw": "Max withdraw amount",
+  "overMaxWithdraw": "Over Max Withdraw Amount",
   "withdrawQuestion": "How much ETH would you like to withdraw?",
   "currentlyDeposited": "Currently Deposited",
   "notEnoughEth": "Not Enough ETH",
