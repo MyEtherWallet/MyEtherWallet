@@ -1,6 +1,7 @@
 import Router from 'vue-router';
 import store from '@/store';
 import { getMode, getRoutes } from '@/builds/configs';
+import { ExtensionHelpers } from '@/helpers';
 import xss from 'xss';
 
 const storeQuery = query => {
@@ -29,18 +30,28 @@ const router = new Router({
 });
 
 router.beforeResolve((to, ___, next) => {
+  storeQuery(to.query);
   if (
     to.hasOwnProperty('meta') &&
     to.meta.hasOwnProperty('requiresAuth') &&
     to.meta.requiresAuth === false
   ) {
-    storeQuery(to.query);
     next();
   } else {
-    storeQuery(to.query);
     if (store.state.wallet === null) {
-      store.dispatch('setLastPath', to.path);
-      next({ name: 'AccessWalletLayout' });
+      if (BUILD_TYPE === 'mewcx') {
+        ExtensionHelpers.getAccounts(item => {
+          const hasStoredWallet = Object.keys(item).length > 0;
+          if (hasStoredWallet) {
+            next('/');
+          } else {
+            next({ name: 'AccessWalletLayout' });
+          }
+        });
+      } else {
+        store.dispatch('setLastPath', to.path);
+        next({ name: 'AccessWalletLayout' });
+      }
     } else {
       if (store.state.path !== '') {
         const localPath = store.state.path;

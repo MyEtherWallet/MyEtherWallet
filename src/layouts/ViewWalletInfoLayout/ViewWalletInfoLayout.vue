@@ -42,10 +42,17 @@
             <div
               v-for="option in otherOptions"
               :key="option.key"
-              class="option-item"
+              :class="[
+                disableItem(option.key) ? 'item-disabled' : '',
+                'option-item'
+              ]"
               @click="option.func"
             >
-              <img :src="option.icon" />
+              <img
+                :src="
+                  disableItem(option.key) ? option.iconDisabled : option.icon
+                "
+              />
               <p>{{ option.name }}</p>
             </div>
             <a
@@ -104,31 +111,33 @@ export default {
           name: 'Private Key',
           key: 'privKey',
           icon: more,
-          func: this.openViewPriv,
-          disabled: false
+          iconDisabled: more,
+          func: this.openViewPriv
         },
         {
           name: 'Txn History',
           key: 'txnHis',
           icon: more,
-          func: this.openTxHistory,
-          disabled: false
+          iconDisabled: more,
+          func: this.openTxHistory
         },
         {
           name: 'Keystore File',
           key: 'keyStor',
           icon: more,
-          func: () => {},
-          disabled: false
+          iconDisabled: more,
+          func: this.downloadKeystore
         },
         {
           name: 'Print Wallet',
           key: 'printWal',
           icon: more,
-          func: () => {},
-          disabled: false
+          iconDisabled: more,
+          func: () => {}
         }
-      ]
+      ],
+      walletJson: {},
+      build: BUILD_TYPE
     };
   },
   computed: {
@@ -140,10 +149,21 @@ export default {
   mounted() {
     this.fetchTokens();
     this.fetchBalance();
+    this.walletJson = createBlob(JSON.parse(this.account.keystore), 'mime');
   },
   methods: {
+    disableItem(itemKey) {
+      if (itemKey === 'privKey') {
+        return !!this.account.isHardware;
+      } else if (itemKey === 'keyStor') {
+        if (this.build === 'mewcx') {
+          return false;
+        }
+        return true;
+      }
+      return false;
+    },
     downloadKeystore() {
-      this.walletJson = createBlob(this.wallet.getKeystoreFile());
       this.$refs.downloadFile.click();
     },
     openViewPriv() {
@@ -210,7 +230,12 @@ export default {
       try {
         this.tokens = await tb.getBalance(this.account.address);
         this.tokens = this.tokens.map(token => {
+          const denominator = new BigNumber(10).pow(token.decimals);
+          const balance = new BigNumber(token.balance)
+            .div(denominator)
+            .toString();
           token.address = token.addr;
+          token.balance = balance;
           delete token.addr;
           return token;
         });

@@ -598,7 +598,7 @@ export default {
         this.downloadable = true;
         return window.URL.createObjectURL(blob);
       };
-      this.generatedJson = createBlob('mime', this.genInfo);
+      this.generatedJson = createBlob(this.genInfo, 'mime');
       this.exportFileName = `generated-offline-tx-${Date.now()}.json`;
     },
     uploadClick() {

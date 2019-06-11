@@ -102,8 +102,8 @@ const router = [
   {
     path: '/view-wallet-info',
     name: 'ViewWalletInfoLayout',
-    component: ViewWalletInfoLayout,
-    meta: { requiresAuth: false }
+    component: ViewWalletInfoLayout
+    // meta: { requiresAuth: false }
   },
   {
     path: '/interface',
