@@ -15,7 +15,7 @@
           <div class="top-buttons">
             <p class="total">
               <span>{{ $t('dappsMaker.total') }}</span>
-              {{ values.maxDai ? displayFixedValue(values.maxDai) : 0 }}
+              {{ newTotal }}
               DAI
             </p>
             <p class="max" @click="maxDai">
@@ -224,6 +224,9 @@ export default {
         this.riskyBypass
       );
     },
+    newTotal(){
+      return toBigNumber(this.values.debtValue).plus(this.amount)
+    },
     hasEnoughEth() {
       if (this.canCompute) {
         const asEth = ethUnit.fromWei(this.account.balance, 'ether');
@@ -254,10 +257,10 @@ export default {
       if (this.canCompute) {
         return this.calcCollatRatioDaiChg(
           toBigNumber(this.values.debtValue).plus(this.amount)
-        )
+        );
       }
       if (this.values) {
-        return this.values.collateralRatio
+        return this.values.collateralRatio;
       }
     },
     newCollateralRatio() {

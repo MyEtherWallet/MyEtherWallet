@@ -35,7 +35,7 @@
                 <b>{{ mkrBalance }} MKR</b>
               </p>
             </div>
-            <p class="get-mkr" @click="getMkr()">
+            <p v-show="!enoughDai" class="get-mkr" @click="getMkr()">
               {{ $t('dappsMaker.getMkr') }}
             </p>
           </div>
@@ -49,7 +49,7 @@
                 <b>{{ daiBalance }} DAI</b>
               </p>
             </div>
-            <p class="get-mkr" @click="getDai()">
+            <p v-show="!enoughMkr" class="get-mkr" @click="getDai()">
               {{ $t('dappsMaker.getDai') }}
             </p>
           </div>
