@@ -56,7 +56,7 @@ const DECRYPT_WALLET = function(state, wallet) {
   state.account['address'] = wallet.getAddressString();
   state.account['isHardware'] = wallet.isHardware;
   state.account['identifier'] = wallet.identifier;
-  if (!wallet.isHardWare) {
+  if (!wallet.hasOwnProperty('isHardWare')) {
     state.account['nickname'] = wallet.getNickname();
     state.account['keystore'] = wallet.getKeystore();
   }

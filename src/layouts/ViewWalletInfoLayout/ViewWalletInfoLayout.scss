@@ -130,6 +130,7 @@
         z-index: -1;
       }
       .option-item {
+        align-items: center;
         cursor: pointer;
         display: flex;
         justify-content: flex-start;
@@ -137,6 +138,16 @@
 
         img {
           margin-right: 10px;
+          width: 32px;
+        }
+      }
+
+      .item-disabled {
+        cursor: none;
+        pointer-events: none;
+
+        p {
+          color: $light-grey-11 !important;
         }
       }
     }

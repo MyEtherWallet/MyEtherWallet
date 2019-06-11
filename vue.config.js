@@ -9,7 +9,8 @@ const path = require('path');
 const webpackConfig = {
   entry: {
     app: './src/main.js',
-    background: './src/helpers/cxHelpers/backgroundPhishingCatcher.js'
+    background: './src/builds/mewcx/cxHelpers/backgroundPhishingCatcher.js',
+    web3Manager: './src/builds/mewcx/cxHelpers/backgroundWeb3Manager.js'
   },
   output: {
     filename: './[name].js',
@@ -126,7 +127,7 @@ const exportObj = {
       .plugin('html')
       .tap((args) => {
         // eslint-disable-next-line no-param-reassign
-        args[0].excludeChunks = ['background'];
+        args[0].excludeChunks = ['background', 'web3Manager'];
         return args;
       });
     config.module

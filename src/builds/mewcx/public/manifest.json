@@ -15,7 +15,7 @@
   },
   "options_page": "index.html",
   "background": {
-    "scripts": ["background.js"],
+    "scripts": ["background.js", "web3Manager.js"],
     "persistent": true
   },
   "permissions": [
