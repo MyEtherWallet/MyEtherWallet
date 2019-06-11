@@ -190,7 +190,9 @@ export default {
     togglePasswordModal(file, path, nickname) {
       const parseFile = JSON.parse(file);
       this.file = JSON.parse(parseFile.priv);
-      this.nickname = nickname.length > 0 ? nickname : null;
+      if (typeof nickname !== 'undefined') {
+        this.nickname = nickname.length > 0 ? nickname : null;
+      }
       this.path = path;
       this.$refs.passwordOnlyModal.$refs.passwordOnlyModal.show();
     },
