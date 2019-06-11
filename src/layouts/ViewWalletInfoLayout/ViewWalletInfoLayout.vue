@@ -1,7 +1,7 @@
 <template>
   <div class="view-wallet-info-layout">
     <interface-balance-modal ref="balance" :balance="balance" />
-    <view-private-key-modal ref="viewPriv" />
+    <view-private-key-modal v-if="!account.isHardware" ref="viewPriv" />
     <print-modal
       ref="printModal"
       :priv-key="!account.isHardware"
@@ -104,7 +104,12 @@ import ViewPrivateKey from './components/ViewPrivateKey';
 import { BigNumber } from 'bignumber.js';
 import sortByBalance from '@/helpers/sortByBalance.js';
 import Blockie from '@/components/Blockie';
-import more from '@/assets/images/icons/more-black.svg';
+import printer from '@/assets/images/icons/printer.svg';
+import txnHistory from '@/assets/images/icons/tx-history-spinner.svg';
+import privateKeyGrey from '@/assets/images/icons/private-key-grey.svg';
+import privateKey from '@/assets/images/icons/private-key.svg';
+import keystore from '@/assets/images/icons/download-keystore.svg';
+import keystoreGrey from '@/assets/images/icons/download-keystore-grey.svg';
 import createBlob from '@/helpers/createBlob.js';
 import Web3 from 'web3';
 import utils from 'web3-utils';
@@ -129,29 +134,29 @@ export default {
         {
           name: 'Private Key',
           key: 'privKey',
-          icon: more,
-          iconDisabled: more,
+          icon: privateKey,
+          iconDisabled: privateKeyGrey,
           func: this.openViewPriv
         },
         {
           name: 'Txn History',
           key: 'txnHis',
-          icon: more,
-          iconDisabled: more,
+          icon: txnHistory,
+          iconDisabled: txnHistory,
           func: this.openTxHistory
         },
         {
           name: 'Keystore File',
           key: 'keyStor',
-          icon: more,
-          iconDisabled: more,
+          icon: keystore,
+          iconDisabled: keystoreGrey,
           func: this.downloadKeystore
         },
         {
           name: 'Print Wallet',
           key: 'printWal',
-          icon: more,
-          iconDisabled: more,
+          icon: printer,
+          iconDisabled: printer,
           func: this.printWallet
         }
       ],
@@ -160,15 +165,17 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account', 'network']),
+    ...mapState(['account', 'network', 'web3']),
     hasNickname() {
-      return this.account.nickname !== '' || this.account.nickname.length > 0;
+      return typeof this.account.nickname !== 'undefined';
     }
   },
   mounted() {
     this.fetchTokens();
     this.fetchBalance();
-    this.walletJson = createBlob(JSON.parse(this.account.keystore), 'mime');
+    if (!this.account.isHardware) {
+      this.walletJson = createBlob(JSON.parse(this.account.keystore), 'mime');
+    }
   },
   destroyed() {
     this.tokens = [];
@@ -211,7 +218,12 @@ export default {
     },
     async fetchBalance() {
       this.fetchingBalance = true;
-      const balance = await web3.eth.getBalance(this.account.address);
+      let balance;
+      if (this.build === 'mewcx') {
+        balance = await web3.eth.getBalance(this.account.address);
+      } else {
+        balance = await this.web3.eth.getBalance(this.account.address);
+      }
       this.balance = utils.fromWei(balance, 'ether');
       this.fetchingBalance = false;
     },
@@ -231,7 +243,13 @@ export default {
             outputs: [{ name: 'out', type: 'uint256' }]
           }
         ];
-        const contract = new web3.eth.Contract(contractAbi);
+
+        let contract;
+        if (this.build === 'mewcx') {
+          contract = new web3.eth.Contract(contractAbi);
+        } else {
+          contract = new this.web3.eth.Contract(contractAbi);
+        }
         const data = contract.methods
           .balanceOf(this.account.address)
           .encodeABI();
@@ -260,7 +278,12 @@ export default {
     },
     async fetchTokens() {
       this.loading = true;
-      const tb = new TokenBalance(web3.currentProvider);
+      let tb;
+      if (this.build === 'mewcx') {
+        tb = new TokenBalance(web3.currentProvider);
+      } else {
+        tb = new TokenBalance(this.web3.currentProvider);
+      }
       try {
         this.tokens = await tb.getBalance(this.account.address);
         this.tokens = this.tokens.map(token => {
