@@ -19,7 +19,10 @@
                 placeholder="Create your password here"
                 name="walletPassword"
               />
-              <img :src="show ? showIcon : hide" @click.prevent="show = !show" />
+              <img
+                :src="show ? showIcon : hide"
+                @click.prevent="show = !show"
+              />
             </div>
           </div>
           <button
