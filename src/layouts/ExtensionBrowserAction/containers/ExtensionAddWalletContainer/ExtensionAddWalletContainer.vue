@@ -23,6 +23,7 @@
       ref="importPrivateKey"
       :generate-wallet="generateWalletFromPriv"
       :priv-key="privateKey"
+      :loading="loading"
       @privateKey="updatePrivKey"
       @password="updatePassword"
     />
@@ -179,8 +180,8 @@ export default {
       this.generateWalletFromPriv(privateKey);
     },
     generateWalletFromPriv(priv) {
-      const privKey = priv ? priv : this.privateKey;
       this.loading = true;
+      const privKey = priv ? priv : this.privateKey;
       const worker = new walletWorker();
       worker.postMessage({
         type: 'generateFromPrivateKey',
@@ -200,9 +201,9 @@ export default {
           priv ? mnemonicType : privateKeyType
         );
         if (priv) {
-          this.toggleNetworkAddressModal(false);
-        } else {
           this.toggleImportPrivateKey(this.loading);
+        } else {
+          this.toggleNetworkAddressModal(false);
         }
         this.toggleVerifyDetails(true, privateKeyType);
       };
