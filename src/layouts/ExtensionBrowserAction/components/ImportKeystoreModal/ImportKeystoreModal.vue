@@ -7,56 +7,59 @@
       class="bootstrap-modal"
       title="Keystore File (UTC/JSON)"
     >
-      <div class="modal-contents">
-        <div class="not-recommended">
-          {{ $t('accessWallet.notARecommendedWay') }}
-        </div>
-        <div class="input-container">
-          <label for="filePath"> Your Wallet File </label>
-          <div class="keystore-filepath-input">
-            <input
-              v-model="filepath"
-              name="filePath"
-              type="text"
-              class="disabled"
-            />
-            <input
-              ref="uploadInput"
-              type="file"
-              class="hidden"
-              @change="uploadFile"
-            />
-            <div class="mid-round-button-green-border" @click="clickUpload">
-              Upload File...
+      <form>
+        <div class="modal-contents">
+          <div class="not-recommended">
+            {{ $t('accessWallet.notARecommendedWay') }}
+          </div>
+          <div class="input-container">
+            <label for="filePath"> Your Wallet File </label>
+            <div class="keystore-filepath-input">
+              <input
+                v-model="filepath"
+                name="filePath"
+                type="text"
+                class="disabled"
+              />
+              <input
+                ref="uploadInput"
+                type="file"
+                class="hidden"
+                @change="uploadFile"
+              />
+              <div class="mid-round-button-green-border" @click="clickUpload">
+                Upload File...
+              </div>
             </div>
           </div>
-        </div>
-        <div class="input-container">
-          <label for="keystorePassword"> Password </label>
-          <div class="keystore-password-input">
-            <input
-              v-model="locPassword"
-              :type="show ? 'text' : 'password'"
-              placeholder="Enter your password"
-              name="keystorePassword"
-            />
-            <img
-              :src="show ? showIcon : hide"
-              @click.prevent="switchViewPassword"
-            />
+          <div class="input-container">
+            <label for="keystorePassword"> Password </label>
+            <div class="keystore-password-input">
+              <input
+                v-model="locPassword"
+                :type="show ? 'text' : 'password'"
+                placeholder="Enter your password"
+                name="keystorePassword"
+              />
+              <img
+                :src="show ? showIcon : hide"
+                @click.prevent="switchViewPassword"
+              />
+            </div>
           </div>
+          <button
+            :class="[
+              inputsValid ? '' : 'disabled',
+              'submit-button large-round-button-green-filled'
+            ]"
+            type="submit"
+            @click.prevent="unlockJson"
+          >
+            <span v-show="!loading"> Add Wallet </span>
+            <i v-show="loading" class="fa fa-spinner fa-spin" />
+          </button>
         </div>
-        <div
-          :class="[
-            inputsValid ? '' : 'disabled',
-            'submit-button large-round-button-green-filled'
-          ]"
-          @click="unlockJson"
-        >
-          <span v-show="!loading"> Add Wallet </span>
-          <i v-show="loading" class="fa fa-spinner fa-spin" />
-        </div>
-      </div>
+      </form>
     </b-modal>
   </div>
 </template>

@@ -11,41 +11,48 @@
         <div class="not-recommended">
           {{ $t('accessWallet.notARecommendedWay') }}
         </div>
-        <div class="input-container">
-          <label for="privateKeyInput">Your Private Key</label>
-          <textarea
-            v-model="locPrivKey"
-            name="privateKeyInput"
-            placeholder="Enter private key"
-          />
-        </div>
-        <div class="input-container">
-          <label for="privateKeyInput">Password</label>
-          <div class="password-input">
-            <input
-              :type="show ? 'text' : 'password'"
-              v-model="locPassword"
+        <form>
+          <div class="input-container">
+            <label for="privateKeyInput">Your Private Key</label>
+            <textarea
+              v-model="locPrivKey"
               name="privateKeyInput"
-              placeholder="Enter password for hashing"
-            />
-            <img
-              :src="show ? showIcon : hide"
-              @click.prevent="switchViewPassword"
+              placeholder="Enter private key"
             />
           </div>
-        </div>
-        <div class="submit-button-container">
-          <div
-            :class="[
-              validInputs ? '' : 'disabled',
-              'large-round-button-green-filled add-wallet-button'
-            ]"
-            @click="generateWallet"
-          >
-            <span v-show="!loading"> Add Wallet </span>
-            <i v-show="loading" class="fa fa-spinner fa-spin" />
+          <div class="input-container">
+            <label for="privateKeyInput">Password</label>
+            <div class="password-input">
+              <input
+                :type="show ? 'text' : 'password'"
+                v-model="locPassword"
+                name="privateKeyInput"
+                placeholder="Enter password for hashing"
+              />
+              <img
+                :src="show ? showIcon : hide"
+                @click.prevent="switchViewPassword"
+              />
+            </div>
           </div>
-        </div>
+          <div class="submit-button-container">
+            <button
+              :class="[
+                validInputs ? '' : 'disabled',
+                'large-round-button-green-filled add-wallet-button'
+              ]"
+              type="submit"
+              @click.prevent="
+                () => {
+                  generateWallet(locPrivKey);
+                }
+              "
+            >
+              <span v-show="!loading"> Add Wallet </span>
+              <i v-show="loading" class="fa fa-spinner fa-spin" />
+            </button>
+          </div>
+        </form>
       </div>
     </b-modal>
   </div>

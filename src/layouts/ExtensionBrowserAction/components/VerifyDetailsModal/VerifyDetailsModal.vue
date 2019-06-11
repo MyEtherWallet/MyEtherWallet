@@ -7,32 +7,35 @@
       centered
       class="bootstrap-modal"
     >
-      <div class="modal-contents">
-        <div class="input-container">
-          <label> Your Wallet </label>
-          <wallet-view-component :should-concat="false" :address="address" />
-        </div>
-        <div class="input-container">
-          <label> Nickname </label>
-          <input v-model="locNickname" />
-        </div>
-        <div class="submit-button-container">
-          <div class="back-button" @click="back">
-            Back
+      <form>
+        <div class="modal-contents">
+          <div class="input-container">
+            <label> Your Wallet </label>
+            <wallet-view-component :should-concat="false" :address="address" />
           </div>
-          <div
-            class="submit-button large-round-button-green-filled"
-            @click="
-              () => {
-                addWallet('wallet');
-              }
-            "
-          >
-            <span v-show="!loading"> Add Wallet </span>
-            <i v-show="loading" class="fa fa-spinner fa-spin" />
+          <div class="input-container">
+            <label> Nickname </label>
+            <input v-model="locNickname" />
+          </div>
+          <div class="submit-button-container">
+            <div class="back-button" @click.prevent="back">
+              Back
+            </div>
+            <button
+              class="submit-button large-round-button-green-filled"
+              type="submit"
+              @click.prevent="
+                () => {
+                  addWallet('wallet');
+                }
+              "
+            >
+              <span v-show="!loading"> Add Wallet </span>
+              <i v-show="loading" class="fa fa-spinner fa-spin" />
+            </button>
           </div>
         </div>
-      </div>
+      </form>
     </b-modal>
   </div>
 </template>

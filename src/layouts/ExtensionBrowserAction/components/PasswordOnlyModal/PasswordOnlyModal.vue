@@ -9,28 +9,31 @@
     >
       <div class="modal-contents">
         <p>Your wallet is encrypted. Please enter the password</p>
-        <div class="input-container">
-          <label for="walletPassword"> Password </label>
-          <div class="password-input">
-            <input
-              v-model="locPassword"
-              :type="show ? 'text' : 'password'"
-              placeholder="Create your password here"
-              name="walletPassword"
-            />
-            <img :src="show ? showIcon : hide" @click.prevent="show = !show" />
+        <form>
+          <div class="input-container">
+            <label for="walletPassword"> Password </label>
+            <div class="password-input">
+              <input
+                v-model="locPassword"
+                :type="show ? 'text' : 'password'"
+                placeholder="Create your password here"
+                name="walletPassword"
+              />
+              <img :src="show ? showIcon : hide" @click.prevent="show = !show" />
+            </div>
           </div>
-        </div>
-        <div
-          :class="[
-            disabled ? '' : 'disabled',
-            'submit-button large-round-button-green-filled'
-          ]"
-          @click="submit"
-        >
-          <span v-show="!loading"> {{ title }} </span>
-          <i v-show="loading" class="fa fa-spinner fa-spin" />
-        </div>
+          <button
+            :class="[
+              disabled ? '' : 'disabled',
+              'submit-button large-round-button-green-filled'
+            ]"
+            type="submite"
+            @click.prevent="submit"
+          >
+            <span v-show="!loading"> {{ title }} </span>
+            <i v-show="loading" class="fa fa-spinner fa-spin" />
+          </button>
+        </form>
       </div>
     </b-modal>
   </div>

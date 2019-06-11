@@ -7,26 +7,29 @@
       title="Edit Modal"
     >
       <div class="modal-contents">
-        <div class="input-container">
-          <label for="walletName"> Wallet Name </label>
-          <input
-            v-model="locName"
-            placeholder="Please add a wallet nickname"
-            name="walletName"
-          />
-        </div>
-        <div
-          class="submit-button large-round-button-green-filled"
-          @click="saveWallet"
-        >
-          Submit
-        </div>
-        <div
-          class="remove-button large-round-button-white-filled"
-          @click="removeWallet"
-        >
-          Remove Wallet
-        </div>
+        <form>
+          <div class="input-container">
+            <label for="walletName"> Wallet Name </label>
+            <input
+              v-model="locName"
+              placeholder="Please add a wallet nickname"
+              name="walletName"
+            />
+          </div>
+          <button
+            class="submit-button large-round-button-green-filled"
+            type="submit"
+            @click.prevent="saveWallet"
+          >
+            Submit
+          </button>
+          <button
+            class="remove-button large-round-button-white-filled"
+            @click.stop.prevent="removeWallet"
+          >
+            Remove Wallet
+          </button>
+        </form>
       </div>
     </b-modal>
   </div>
