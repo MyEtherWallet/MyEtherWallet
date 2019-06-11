@@ -1,5 +1,6 @@
 <template>
   <div class="view-wallet-info-layout">
+    <interface-balance-modal ref="balance" :balance="balance" />
     <view-private-key-modal ref="viewPriv" />
     <print-modal
       ref="printModal"
@@ -24,11 +25,19 @@
             <h4>Balance</h4>
             <div class="balance-and-buttons">
               <p>
-                <b>{{ balance }}</b> ETH
+                <b v-show="!fetchingBalance">{{ balance }}</b>
+                <i
+                  v-show="fetchingBalance"
+                  class="fa fa-spinner fa-lg fa-spin"
+                />
+                ETH
               </p>
               <div class="balance-button-container">
-                <i class="fa fa-refresh fa-lg" />
-                <img src="~@/assets/images/icons/more-black.svg" />
+                <i class="fa fa-refresh fa-lg" @click="fetchBalance" />
+                <img
+                  src="~@/assets/images/icons/more-black.svg"
+                  @click="openBalance"
+                />
               </div>
             </div>
           </div>
@@ -89,6 +98,7 @@ import { Toast } from '@/helpers';
 import store from 'store';
 import TokenBalance from '@myetherwallet/eth-token-balance';
 import PrintModal from '@/layouts/InterfaceLayout/components/PrintModal';
+import InterfaceBalanceModal from '@/layouts/InterfaceLayout/components/InterfaceBalanceModal';
 import InterfaceTokens from '@/layouts/InterfaceLayout/components/InterfaceTokens';
 import ViewPrivateKey from './components/ViewPrivateKey';
 import { BigNumber } from 'bignumber.js';
@@ -106,13 +116,15 @@ export default {
     'interface-tokens': InterfaceTokens,
     blockie: Blockie,
     'print-modal': PrintModal,
-    'view-private-key-modal': ViewPrivateKey
+    'view-private-key-modal': ViewPrivateKey,
+    'interface-balance-modal': InterfaceBalanceModal
   },
   data() {
     return {
       tokens: [],
       loading: false,
-      balance: 0,
+      fetchingBalance: false,
+      balance: '0',
       otherOptions: [
         {
           name: 'Private Key',
@@ -161,7 +173,7 @@ export default {
   destroyed() {
     this.tokens = [];
     this.loading = false;
-    this.balance = 0;
+    this.balance = '0';
     this.walletJson = {};
     this.build = BUILD_TYPE;
   },
@@ -180,6 +192,9 @@ export default {
     printWallet() {
       this.$refs.printModal.$refs.print.show();
     },
+    openBalance() {
+      this.$refs.balance.$refs.balance.show();
+    },
     downloadKeystore() {
       this.$refs.downloadFile.click();
     },
@@ -195,8 +210,10 @@ export default {
       );
     },
     async fetchBalance() {
+      this.fetchingBalance = true;
       const balance = await web3.eth.getBalance(this.account.address);
       this.balance = utils.fromWei(balance, 'ether');
+      this.fetchingBalance = false;
     },
     copy() {
       this.$refs.copyAddress.select();
