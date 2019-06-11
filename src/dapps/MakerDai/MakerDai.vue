@@ -358,6 +358,91 @@ export default {
       this.openCloseModal = false;
       this.openMoveModal = false;
     },
+    gotoHome() {
+      this.$router.push({
+        name: 'Maker'
+      });
+    },
+    gotoCreate() {
+      if (this.$route.path.includes('maker-dai')) {
+        this.activeValues = this.systemValues;
+        this.$router.push({
+          name: 'create'
+        });
+      }
+    },
+    goToManage() {
+      if (this.$route.path.includes('maker-dai')) {
+        if (this.cdps.length === 1) {
+          this.$router.push({
+            name: 'manage',
+            params: {
+              cdpId: this.cdps[0]
+            }
+          });
+        } else if (this.cdpsWithoutProxy.length === 1) {
+          this.$router.push({
+            name: 'migrate',
+            params: {
+              cdpId: this.cdpsWithoutProxy[0]
+            }
+          });
+        } else if (this.showManage) {
+          // The listing screen may not work
+          this.$router.push({
+            name: 'select'
+          });
+        } else {
+          this.gotoCreate();
+        }
+      }
+    },
+    openManage(cdpId) {
+      if (this.$route.path.includes('maker-dai')) {
+        this.setupCdpManage(cdpId);
+        this.$router.push({
+          name: 'manage',
+          params: {
+            cdpId: cdpId
+          }
+        });
+      }
+    },
+    openMigrate(cdpId) {
+      if (this.$route.path.includes('maker-dai')) {
+        this.setupCdpManage(cdpId);
+        this.$router.push({
+          name: 'migrate',
+          params: {
+            cdpId: cdpId
+          }
+        });
+      }
+    },
+    showDeposit() {
+      this.$refs.deposit.$refs.modal.show();
+    },
+    showWithdraw() {
+      this.$refs.withdraw.$refs.modal.show();
+    },
+    showPayback() {
+      this.$refs.payback.$refs.modal.show();
+    },
+    showGenerate() {
+      this.$refs.generate.$refs.modal.show();
+    },
+    showClose() {
+      this.$refs.closeCdp.$refs.modal.$on('hidden', () => {
+        this.$emit('modalHidden');
+      });
+      this.$refs.closeCdp.$refs.modal.show();
+    },
+    showMove() {
+      this.$refs.moveCdp.$refs.modal.$on('hidden', () => {
+        this.$emit('modalHidden');
+      });
+      this.$refs.moveCdp.$refs.modal.show();
+    },
     async setup() {
       this.activeCdps = {};
       this.currentCdp = {};
@@ -393,22 +478,27 @@ export default {
         (await this._priceService.getEthPrice()).toNumber()
       );
 
-      const pethPrice = await this._priceService.getPethPrice();
-      const targetPrice = await this._priceService.getPethPrice();
-      const liquidationRatio = await this._cdpService.getLiquidationRatio();
-      const liquidationPenalty = await this._cdpService.getLiquidationPenalty();
-      const stabilityFee = await this._cdpService.getAnnualGovernanceFee();
-      const wethToPethRatio = await this._priceService.getWethToPethRatio();
+      this.pethPrice = toBigNumber(
+        (await this._priceService.getPethPrice()).toNumber()
+      );
 
-      this.pethPrice = toBigNumber(pethPrice.toNumber());
+      this._targetPrice = toBigNumber(
+        (await this._priceService.getPethPrice()).toNumber()
+      );
 
-      this._targetPrice = toBigNumber(targetPrice.toNumber());
+      this.liquidationRatio = toBigNumber(
+        await this._cdpService.getLiquidationRatio()
+      );
+      this.liquidationPenalty = toBigNumber(
+        await this._cdpService.getLiquidationPenalty()
+      );
+      this.stabilityFee = toBigNumber(
+        await this._cdpService.getAnnualGovernanceFee()
+      );
 
-      this.liquidationRatio = toBigNumber(liquidationRatio);
-      this.liquidationPenalty = toBigNumber(liquidationPenalty);
-      this.stabilityFee = toBigNumber(stabilityFee);
-
-      this.wethToPethRatio = toBigNumber(wethToPethRatio);
+      this.wethToPethRatio = toBigNumber(
+        await this._priceService.getWethToPethRatio()
+      );
       this.proxyAddress = await this._proxyService.currentProxy();
 
       this.daiToken = this._tokenService.getToken(DAI);
@@ -418,13 +508,13 @@ export default {
 
       const minEth = toBigNumber(this.pethMin).times(this.wethToPethRatio);
       this.systemValues = {
-        stabilityFee: stabilityFee,
+        stabilityFee: this.stabilityFee,
         minEth: minEth,
-        liquidationRatio: liquidationRatio,
-        wethToPethRatio: wethToPethRatio,
-        liquidationPenalty: liquidationPenalty,
-        targetPrice: targetPrice,
-        pethPrice: pethPrice
+        liquidationRatio: this.liquidationRatio,
+        wethToPethRatio: this.wethToPethRatio,
+        liquidationPenalty: this.liquidationPenalty,
+        targetPrice: this._targetPrice,
+        pethPrice: this.pethPrice
       };
 
       await this.checkAllowances();
@@ -494,51 +584,6 @@ export default {
     async refresh() {
       await this.doUpdate();
     },
-
-    async updateActiveCdp() {
-      const currentCdpIds = Object.keys(this.activeCdps);
-      await this.locateCdps();
-
-      const newCdps = this.cdps.filter(
-        item => !Object.keys(this.activeCdps).includes(item.toString())
-      );
-
-      const newCdpsWithoutProxy = this.cdpsWithoutProxy.filter(
-        item => !Object.keys(this.activeCdps).includes(item.toString())
-      );
-
-      const removedCdps = currentCdpIds.filter(
-        item =>
-          !(
-            this.cdps.includes(item.toString()) ||
-            this.cdpsWithoutProxy.includes(item.toString())
-          )
-      );
-
-      if (removedCdps.length > 0) {
-        removedCdps.forEach(item => delete this.activeCdps[item]);
-      }
-
-      if (newCdps.length > 0) {
-        for (let i = 0; i < newCdps.length; i++) {
-          this.activeCdps[newCdps[i]] = await this.buildCdpObject(newCdps[i]);
-        }
-      }
-
-      if (newCdpsWithoutProxy.length > 0) {
-        for (let i = 0; i < newCdpsWithoutProxy.length; i++) {
-          this.activeCdps[newCdpsWithoutProxy[i]] = await this.buildCdpObject(
-            newCdpsWithoutProxy[i],
-            { noProxy: true }
-          );
-        }
-      }
-
-      if (this.cdps.length === 0 && this.cdpsWithoutProxy.length === 0) {
-        this.gotoCreate();
-      }
-    },
-
     async doUpdate(route) {
       this.proxyAddress = await this.getProxy();
       let afterClose = false;
@@ -631,7 +676,49 @@ export default {
       this.proxyAddress = await this.getProxy();
       return await this._cdpService.getCdpIds(this.proxyAddress);
     },
+    async updateActiveCdp() {
+      const currentCdpIds = Object.keys(this.activeCdps);
+      await this.locateCdps();
 
+      const newCdps = this.cdps.filter(
+        item => !Object.keys(this.activeCdps).includes(item.toString())
+      );
+
+      const newCdpsWithoutProxy = this.cdpsWithoutProxy.filter(
+        item => !Object.keys(this.activeCdps).includes(item.toString())
+      );
+
+      const removedCdps = currentCdpIds.filter(
+        item =>
+          !(
+            this.cdps.includes(item.toString()) ||
+            this.cdpsWithoutProxy.includes(item.toString())
+          )
+      );
+
+      if (removedCdps.length > 0) {
+        removedCdps.forEach(item => delete this.activeCdps[item]);
+      }
+
+      if (newCdps.length > 0) {
+        for (let i = 0; i < newCdps.length; i++) {
+          this.activeCdps[newCdps[i]] = await this.buildCdpObject(newCdps[i]);
+        }
+      }
+
+      if (newCdpsWithoutProxy.length > 0) {
+        for (let i = 0; i < newCdpsWithoutProxy.length; i++) {
+          this.activeCdps[newCdpsWithoutProxy[i]] = await this.buildCdpObject(
+            newCdpsWithoutProxy[i],
+            { noProxy: true }
+          );
+        }
+      }
+
+      if (this.cdps.length === 0 && this.cdpsWithoutProxy.length === 0) {
+        this.gotoCreate();
+      }
+    },
     async loadCdpDetails() {
       for (let i = 0; i < this.cdps.length; i++) {
         this.activeCdps[this.cdps[i]] = await this.buildCdpObject(this.cdps[i]);
@@ -645,7 +732,6 @@ export default {
         );
       }
     },
-
     async buildCdpObject(cdpId, options = {}) {
       const sysVars = {
         ...options,
@@ -676,37 +762,34 @@ export default {
       }
 
       const services = {
-        makerManager: {
-          _proxyService: this._proxyService,
-          priceService: this.priceService,
-          _cdpService: this._cdpService,
-          doUpdate: this.doUpdate,
-          getProxy: this.getProxy,
-          hasProxy: this.hasProxy,
-          getCdp: this.getMakerCdp,
-          toPeth: this.toPeth,
-          toUSD: this.toUSD,
-          _proxyAddress: this.proxyAddress,
-          liquidationPenalty: this.liquidationPenalty,
-          stabilityFee: this.stabilityFee,
-          ethPrice: this.ethPrice,
-          _pethPrice: this.pethPrice,
-          wethToPethRatio: this.wethToPethRatio,
-          _targetPrice: this._targetPrice,
-          liquidationRatio: this.liquidationRatio,
-          proxyAllowanceDai: this.proxyAllowanceDai,
-          proxyAllowanceMkr: this.proxyAllowanceMkr,
-          _daiToken: this._daiToken,
-          daiBalance: this.daiBalance,
-          _mkrToken: this._mkrToken,
-          mkrBalance: this.mkrBalance,
-          minEth: this.minEth,
-          pethMin: this.pethMin
-        },
-        web3: this.web3
+        _proxyService: this._proxyService,
+        priceService: this.priceService,
+        _cdpService: this._cdpService,
+        doUpdate: this.doUpdate,
+        getProxy: this.getProxy,
+        hasProxy: this.hasProxy,
+        getCdp: this.getMakerCdp,
+        toPeth: this.toPeth,
+        toUSD: this.toUSD,
+        _proxyAddress: this.proxyAddress,
+        liquidationPenalty: this.liquidationPenalty,
+        stabilityFee: this.stabilityFee,
+        ethPrice: this.ethPrice,
+        _pethPrice: this.pethPrice,
+        wethToPethRatio: this.wethToPethRatio,
+        _targetPrice: this._targetPrice,
+        liquidationRatio: this.liquidationRatio,
+        proxyAllowanceDai: this.proxyAllowanceDai,
+        proxyAllowanceMkr: this.proxyAllowanceMkr,
+        _daiToken: this._daiToken,
+        daiBalance: this.daiBalance,
+        _mkrToken: this._mkrToken,
+        mkrBalance: this.mkrBalance,
+        minEth: this.minEth,
+        pethMin: this.pethMin
       };
 
-      const makerCDP = new MakerCDP(cdpId, this, services, sysVars);
+      const makerCDP = new MakerCDP(cdpId, this.web3, services, sysVars);
       if (cdpId) {
         return await makerCDP.init(cdpId);
       }
@@ -723,30 +806,7 @@ export default {
       }
       return this.proxyAddress;
     },
-    showDeposit() {
-      this.$refs.deposit.$refs.modal.show();
-    },
-    showWithdraw() {
-      this.$refs.withdraw.$refs.modal.show();
-    },
-    showPayback() {
-      this.$refs.payback.$refs.modal.show();
-    },
-    showGenerate() {
-      this.$refs.generate.$refs.modal.show();
-    },
-    showClose() {
-      this.$refs.closeCdp.$refs.modal.$on('hidden', () => {
-        this.$emit('modalHidden');
-      });
-      this.$refs.closeCdp.$refs.modal.show();
-    },
-    showMove() {
-      this.$refs.moveCdp.$refs.modal.$on('hidden', () => {
-        this.$emit('modalHidden');
-      });
-      this.$refs.moveCdp.$refs.modal.show();
-    },
+
     lockEth(val) {
       this.currentCdp.lockEth(val);
     },
@@ -754,7 +814,11 @@ export default {
       this.currentCdp.wipeDai(val);
     },
     freeEth(val) {
-      this.currentCdp.freeEth(val);
+      if (val[1] === null) {
+        this.currentCdp.freeEth(val[0]);
+      } else {
+        this.currentCdp.freeEth(val[0], val[1]);
+      }
     },
     drawDai(val) {
       if (val[1] === null) {
@@ -787,7 +851,7 @@ export default {
       const _proxyAllowanceMkr = this._proxyAllowanceMkr;
       const toPeth = this.toPeth;
       const systemValues = this.systemValues;
-      const valuesToManage = {
+      return {
         ...systemValues,
         cdpId: cdpId,
         maxPethDraw: currentCdp.maxPethDraw,
@@ -809,7 +873,6 @@ export default {
         proxyAllowanceMkr: _proxyAllowanceMkr,
         zeroDebt: currentCdp.zeroDebt
       };
-      return valuesToManage;
     },
     calcCollatRatioDaiChg(daiQty) {
       return toBigNumber(
@@ -868,7 +931,7 @@ export default {
     },
 
     async buildProxy() {
-      this.creatingProxy = true;
+      // this.creatingProxy = true;
       this.proxyAddress = await this.getProxy();
       if (!this.proxyAddress) {
         await this._proxyService.build();
@@ -903,94 +966,33 @@ export default {
         return toBigNumber(eth).div(this.wethToPethRatio);
       }
       return toBigNumber(0);
-    },
-
-    calcDrawAmt(principal, collatRatio) {
-      return Math.floor(
-        bnOver(principal, this.ethPrice, collatRatio).toNumber()
-      );
-    },
-
-    calcMinCollatRatio(priceFloor) {
-      return bnOver(this.ethPrice, this.liquidationRatio, priceFloor);
-    },
-
-    calcCollatRatio(ethQty, daiQty) {
-      if (ethQty <= 0 || daiQty <= 0) return 0;
-      return bnOver(this.ethPrice, ethQty, daiQty);
-    },
-
-    calcLiquidationPrice(ethQty, daiQty) {
-      if (ethQty <= 0 || daiQty <= 0) return 0;
-      const getInt = parseInt(this.ethPrice);
-      for (let i = getInt; i > 0; i--) {
-        const atValue = bnOver(i, ethQty, daiQty).lte(this.liquidationRatio);
-        if (atValue) {
-          return i;
-        }
-      }
-    },
-    gotoHome() {
-      this.$router.push({
-        name: 'Maker'
-      });
-    },
-    gotoCreate() {
-      if (this.$route.path.includes('maker-dai')) {
-        this.activeValues = this.systemValues;
-        this.$router.push({
-          name: 'create'
-        });
-      }
-    },
-    goToManage() {
-      if (this.$route.path.includes('maker-dai')) {
-        if (this.cdps.length === 1) {
-          this.$router.push({
-            name: 'manage',
-            params: {
-              cdpId: this.cdps[0]
-            }
-          });
-        } else if (this.cdpsWithoutProxy.length === 1) {
-          this.$router.push({
-            name: 'migrate',
-            params: {
-              cdpId: this.cdpsWithoutProxy[0]
-            }
-          });
-        } else if (this.showManage) {
-          // The listing screen may not work
-          this.$router.push({
-            name: 'select'
-          });
-        } else {
-          this.gotoCreate();
-        }
-      }
-    },
-    openManage(cdpId) {
-      if (this.$route.path.includes('maker-dai')) {
-        this.setupCdpManage(cdpId);
-        this.$router.push({
-          name: 'manage',
-          params: {
-            cdpId: cdpId
-          }
-        });
-      }
-    },
-    openMigrate(cdpId) {
-      if (this.$route.path.includes('maker-dai')) {
-        this.setupCdpManage(cdpId);
-        this.$router.push({
-          name: 'migrate',
-          params: {
-            cdpId: cdpId
-          }
-        });
-      }
     }
+
+    // calcDrawAmt(principal, collatRatio) {
+    //   return Math.floor(
+    //     bnOver(principal, this.ethPrice, collatRatio).toNumber()
+    //   );
+    // },
+
+    // calcMinCollatRatio(priceFloor) {
+    //   return bnOver(this.ethPrice, this.liquidationRatio, priceFloor);
+    // },
+
+    // calcCollatRatio(ethQty, daiQty) {
+    //   if (ethQty <= 0 || daiQty <= 0) return 0;
+    //   return bnOver(this.ethPrice, ethQty, daiQty);
+    // },
+
+    // calcLiquidationPrice(ethQty, daiQty) {
+    //   if (ethQty <= 0 || daiQty <= 0) return 0;
+    //   const getInt = parseInt(this.ethPrice);
+    //   for (let i = getInt; i > 0; i--) {
+    //     const atValue = bnOver(i, ethQty, daiQty).lte(this.liquidationRatio);
+    //     if (atValue) {
+    //       return i;
+    //     }
+    //   }
+    // }
   }
 };
 </script>

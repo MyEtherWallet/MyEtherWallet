@@ -1,6 +1,12 @@
 import Maker from '@makerdao/dai';
 import BigNumber from 'bignumber.js';
-
+import {
+  calcLiquidationPrice,
+  calcCollatRatio,
+  maxPethDraw,
+  maxEthDraw,
+  maxDai
+} from './helpers';
 const { MKR, DAI } = Maker;
 
 const toBigNumber = num => {
@@ -14,15 +20,15 @@ const bnOver = (one, two, three) => {
 };
 
 export default class MakerCDP {
-  constructor(cdpId, makerManager, services, sysVars, toInit) {
+  constructor(cdpId, web3, services, sysVars) {
     this.cdpId = cdpId;
     this.cdp = {};
-    this.web3 = services.web3 || {};
+    this.web3 = web3 || {};
     this.ready = false;
     this.doUpdate = 0;
     this.cdps = [];
     this.noProxy = sysVars.noProxy || false;
-    this.makerManager = services.makerManager || null;
+    this.services = services || null;
     this.needsUpdate = false;
     this.closing = false;
     this.opening = false;
@@ -38,93 +44,91 @@ export default class MakerCDP {
     this.pethCollateral = toBigNumber(0);
     this._usdCollateral = toBigNumber(0);
     this._governanceFee = toBigNumber(0);
-
-    if (toInit) this.init(this.cdpId);
   }
 
   // Getters
   get currentAddress() {
-    return this.makerManager.account.address;
+    return this.services.account.address;
   }
 
   get liquidationPenalty() {
-    return this.makerManager.liquidationPenalty;
+    return this.services.liquidationPenalty;
   }
 
   get stabilityFee() {
-    return this.makerManager.stabilityFee;
+    return this.services.stabilityFee;
   }
 
   get ethPrice() {
-    return this.makerManager.ethPrice;
+    return this.services.ethPrice;
   }
 
   get pethPrice() {
-    return this.makerManager._pethPrice;
+    return this.services._pethPrice;
   }
 
   get wethToPethRatio() {
-    return this.makerManager.wethToPethRatio;
+    return this.services.wethToPethRatio;
   }
 
-  get targetPrice() {
-    return this.makerManager._targetPrice;
-  }
+  // get targetPrice() {
+  //   return this.services._targetPrice;
+  // }
 
   get liquidationRatio() {
-    return this.makerManager.liquidationRatio;
+    return this.services.liquidationRatio;
   }
 
   get proxyAddress() {
-    return this.makerManager._proxyAddress;
+    return this.services._proxyAddress;
   }
 
   get hasProxy() {
-    return this.makerManager.hasProxy;
+    return this.services.hasProxy;
   }
 
   get proxyAllowanceDai() {
-    return this.makerManager.proxyAllowanceDai;
+    return this.services.proxyAllowanceDai;
   }
 
   get proxyAllowanceMkr() {
-    return this.makerManager.proxyAllowanceMkr;
+    return this.services.proxyAllowanceMkr;
   }
 
   get daiToken() {
-    return this.makerManager._daiToken;
+    return this.services._daiToken;
   }
 
   get daiBalance() {
-    return this.makerManager.daiBalance;
+    return this.services.daiBalance;
   }
 
   get mkrToken() {
-    return this.makerManager._mkrToken;
+    return this.services._mkrToken;
   }
 
   get mkrBalance() {
-    return this.makerManager.mkrBalance;
+    return this.services.mkrBalance;
   }
 
   get proxyService() {
-    return this.makerManager._proxyService;
+    return this.services._proxyService;
   }
 
-  get priceService() {
-    return this.makerManager._priceService;
-  }
+  // get priceService() {
+  //   return this.services._priceService;
+  // }
 
   get cdpService() {
-    return this.makerManager._cdpService;
+    return this.services._cdpService;
   }
 
   get minEth() {
-    return this.makerManager.minEth();
+    return this.services.minEth();
   }
 
   get pethMin() {
-    return this.makerManager.pethMin;
+    return this.services.pethMin;
   }
 
   // CDP Instance/item values
@@ -141,9 +145,9 @@ export default class MakerCDP {
     return this.ethCollateral.toNumber();
   }
 
-  get pethCollateralNum() {
-    return this.pethCollateral.toNumber();
-  }
+  // get pethCollateralNum() {
+  //   return this.pethCollateral.toNumber();
+  // }
 
   get collatRatio() {
     return this._collatRatio;
@@ -157,9 +161,9 @@ export default class MakerCDP {
     return this._governanceFee;
   }
 
-  get enoughToWipe() {
-    return this._enoughToWipe;
-  }
+  // get enoughToWipe() {
+  //   return this._enoughToWipe;
+  // }
 
   get maxDai() {
     if (
@@ -168,11 +172,12 @@ export default class MakerCDP {
       this.liquidationRatio &&
       this.debtValue
     ) {
-      return bnOver(
+      return maxDai(
         this.ethPrice,
         this.ethCollateral,
-        this.liquidationRatio
-      ).minus(this.debtValue);
+        this.liquidationRatio.plus(0.001),
+        this.debtValue
+      );
     }
     return toBigNumber(0);
   }
@@ -180,12 +185,19 @@ export default class MakerCDP {
   get maxEthDraw() {
     if (this.ethPrice && this.debtValue && this.liquidationRatio) {
       if (this.zeroDebt) {
-        return this.ethCollateral
-          .minus(bnOver(this.liquidationRatio, this.debtValue, this.ethPrice))
-          .minus(this.minEth.times(1.0));
+        return maxEthDraw(
+          this.ethCollateral,
+          this.liquidationRatio.plus(0.001),
+          this.debtValue,
+          this.ethPrice,
+          this.minEth.times(1.0)
+        );
       }
-      return this.ethCollateral.minus(
-        bnOver(this.liquidationRatio.plus(0.001), this.debtValue, this.ethPrice)
+      return maxEthDraw(
+        this.ethCollateral,
+        this.liquidationRatio.plus(0.001),
+        this.debtValue,
+        this.ethPrice
       );
     }
     return toBigNumber(0);
@@ -194,22 +206,19 @@ export default class MakerCDP {
   get maxPethDraw() {
     if (this.pethPrice && this.pethCollateral && this.liquidationRatio) {
       if (this.zeroDebt) {
-        return this.pethCollateral
-          .minus(
-            bnOver(
-              this.liquidationRatio.plus(0.001),
-              this.debtValue,
-              this.pethPrice
-            )
-          )
-          .minus(this.pethMin.times(1.0));
-      }
-      return this.pethCollateral.minus(
-        bnOver(
+        return maxPethDraw(
+          this.pethCollateral,
           this.liquidationRatio.plus(0.001),
           this.debtValue,
-          this.pethPrice
-        )
+          this.pethPrice,
+          this.pethMin.times(1.0)
+        );
+      }
+      return maxPethDraw(
+        this.pethCollateral,
+        this.liquidationRatio.plus(0.001),
+        this.debtValue,
+        this.pethPrice
       );
     }
     return toBigNumber(0);
@@ -217,17 +226,7 @@ export default class MakerCDP {
 
   get maxUsdDraw() {
     if (this.pethPrice && this.pethCollateral && this.liquidationRatio) {
-      return this.toUSD(
-        this.ethCollateral
-          .minus(
-            bnOver(
-              this.liquidationRatio.plus(0.001),
-              this.debtValue,
-              this.ethPrice
-            )
-          )
-          .minus(this.minEth.times(1.0))
-      );
+      return this.toUSD(this.maxEthDraw);
     }
     return toBigNumber(0);
   }
@@ -249,12 +248,12 @@ export default class MakerCDP {
   }
 
   async updateValues(cdpId = this.cdpId) {
-    this._proxyAddress = await this.makerManager.getProxy();
+    this._proxyAddress = await this.services.getProxy();
     this.noProxy = this._proxyAddress === null;
     if (this._proxyAddress) {
-      this.cdp = await this.makerManager.getCdp(cdpId, this._proxyAddress);
+      this.cdp = await this.services.getCdp(cdpId, this._proxyAddress);
     } else {
-      this.cdp = await this.makerManager.getCdp(cdpId, false);
+      this.cdp = await this.services.getCdp(cdpId, false);
     }
     const liqPrice = await this.cdp.getLiquidationPrice();
     this._liqPrice = liqPrice.toBigNumber().toFixed(2);
@@ -289,54 +288,54 @@ export default class MakerCDP {
   }
 
   async getProxy() {
-    this._proxyAddress = await this.makerManager.getProxy();
+    this._proxyAddress = await this.services.getProxy();
   }
 
-  async buildProxy() {
-    const currentProxy = await this.getProxy();
-    if (!currentProxy) {
-      this.needsUpdate = true;
-      await this.proxyService.build();
-      this._proxyAddress = await this.getProxy();
-      return this._proxyAddress;
-    }
-    this._proxyAddress = await this.getProxy();
-    return this._proxyAddress;
-  }
-
-  async migrateCdpComplete() {
-    this.needsUpdate = true;
-    if (!this.migrateCdpActive && !this._proxyAddress) {
-      this.migrateCdpActive = true;
-      this.migrateCdpStage = 1;
-      await this.proxyService.ensureProxy();
-    } else {
-      if (this.migrateCdpStage === 1) {
-        let checking;
-        this.migrateCdpStage = 2;
-        const currentProxy = await this.getProxy();
-        if (currentProxy) {
-          this.migrateCdpActive = false;
-          this.doUpdate++;
-          this.migrateCdpStage = 3;
-          this.noProxy = false;
-          await this.cdpService.give(this.cdpId, currentProxy);
-        } else {
-          checking = setInterval(async () => {
-            const currentProxy = await this.getProxy();
-            if (currentProxy) {
-              clearInterval(checking);
-              this.migrateCdpActive = false;
-              this.doUpdate++;
-              this.migrateCdpStage = 3;
-              this.noProxy = false;
-              await this.cdpService.give(this.cdpId, currentProxy);
-            }
-          }, 500);
-        }
-      }
-    }
-  }
+  // async buildProxy() {
+  //   const currentProxy = await this.getProxy();
+  //   if (!currentProxy) {
+  //     this.needsUpdate = true;
+  //     await this.proxyService.build();
+  //     this._proxyAddress = await this.getProxy();
+  //     return this._proxyAddress;
+  //   }
+  //   this._proxyAddress = await this.getProxy();
+  //   return this._proxyAddress;
+  // }
+  //
+  // async migrateCdpComplete() {
+  //   this.needsUpdate = true;
+  //   if (!this.migrateCdpActive && !this._proxyAddress) {
+  //     this.migrateCdpActive = true;
+  //     this.migrateCdpStage = 1;
+  //     await this.proxyService.ensureProxy();
+  //   } else {
+  //     if (this.migrateCdpStage === 1) {
+  //       let checking;
+  //       this.migrateCdpStage = 2;
+  //       const currentProxy = await this.getProxy();
+  //       if (currentProxy) {
+  //         this.migrateCdpActive = false;
+  //         this.doUpdate++;
+  //         this.migrateCdpStage = 3;
+  //         this.noProxy = false;
+  //         await this.cdpService.give(this.cdpId, currentProxy);
+  //       } else {
+  //         checking = setInterval(async () => {
+  //           const currentProxy = await this.getProxy();
+  //           if (currentProxy) {
+  //             clearInterval(checking);
+  //             this.migrateCdpActive = false;
+  //             this.doUpdate++;
+  //             this.migrateCdpStage = 3;
+  //             this.noProxy = false;
+  //             await this.cdpService.give(this.cdpId, currentProxy);
+  //           }
+  //         }, 500);
+  //       }
+  //     }
+  //   }
+  // }
 
   async migrateCdp() {
     const currentProxy = await this.getProxy();
@@ -386,8 +385,6 @@ export default class MakerCDP {
       );
     } catch (e) {
       // eslint-disable-next-line
-      console.log('lockEth Error:');
-      // eslint-disable-next-line
       console.error(e);
     }
   }
@@ -407,31 +404,35 @@ export default class MakerCDP {
         this.cdpService.drawDaiProxy(this._proxyAddress, this.cdpId, amount);
       } catch (e) {
         // eslint-disable-next-line
-        console.log('drawDai Error:');
-        // eslint-disable-next-line
         console.error(e);
       }
     }
   }
 
   // This should also have a acknowledgeBypass
-  async freeEth(amount) {
-    try {
-      if (this.noProxy) {
-        return;
+  async freeEth(amount, acknowledgeBypass = false) {
+    if (
+      this.calcCollatRatio(this.ethCollateral.minus(amount), this.debtValue).gt(
+        1.5
+      ) ||
+      acknowledgeBypass
+    ) {
+      try {
+        if (this.noProxy) {
+          return;
+        }
+        this.needsUpdate = true;
+        await this.cdpService.freeEthProxy(
+          this._proxyAddress,
+          this.cdpId,
+          amount
+        );
+      } catch (e) {
+        // eslint-disable-next-line
+        console.error(e);
       }
-      this.needsUpdate = true;
-      await this.cdpService.freeEthProxy(
-        this._proxyAddress,
-        this.cdpId,
-        amount
-      );
-    } catch (e) {
-      // eslint-disable-next-line
-      console.log('freeEth Error:');
-      // eslint-disable-next-line
-      console.error(e);
     }
+
   }
 
   async wipeDai(amount) {
@@ -446,8 +447,6 @@ export default class MakerCDP {
         amount
       );
     } catch (e) {
-      // eslint-disable-next-line
-      console.log('wipeDai Error:');
       // eslint-disable-next-line
       console.error(e);
     }
@@ -499,7 +498,7 @@ export default class MakerCDP {
 
   // Calculations
   toUSD(eth) {
-    const toUsd = this.makerManager.toUSD(eth);
+    const toUsd = this.services.toUSD(eth);
     if (toUsd.lt(0)) {
       return toBigNumber(0);
     }
@@ -507,15 +506,15 @@ export default class MakerCDP {
   }
 
   toPeth(eth) {
-    return this.makerManager.toPeth(eth);
+    return this.services.toPeth(eth);
   }
 
-  fromPeth(peth) {
-    if (!toBigNumber(peth).eq(0)) {
-      return toBigNumber(peth).times(this.wethToPethRatio);
-    }
-    return toBigNumber(0);
-  }
+  // fromPeth(peth) {
+  //   if (!toBigNumber(peth).eq(0)) {
+  //     return toBigNumber(peth).times(this.wethToPethRatio);
+  //   }
+  //   return toBigNumber(0);
+  // }
 
   maxDaiDraw() {
     const tl = toBigNumber(this.ethPrice).times(
@@ -527,27 +526,27 @@ export default class MakerCDP {
     return tl.minus(tr).div(toBigNumber(this.ethPrice));
   }
 
-  calcMinCollatRatio(priceFloor) {
-    return bnOver(this.ethPrice, this.liquidationRatio, priceFloor);
-  }
-
-  calcDaiDraw(
-    ethQty,
-    ethPrice = this.ethPrice,
-    liquidationRatio = this.liquidationRatio
-  ) {
-    if (ethQty <= 0) return 0;
-    return bnOver(ethPrice, toBigNumber(ethQty), liquidationRatio);
-  }
-
-  calcMinEthDeposit(
-    daiQty,
-    ethPrice = this.ethPrice,
-    liquidationRatio = this.liquidationRatio
-  ) {
-    if (daiQty <= 0) return 0;
-    return bnOver(liquidationRatio, daiQty, ethPrice);
-  }
+  // calcMinCollatRatio(priceFloor) {
+  //   return bnOver(this.ethPrice, this.liquidationRatio, priceFloor);
+  // }
+  //
+  // calcDaiDraw(
+  //   ethQty,
+  //   ethPrice = this.ethPrice,
+  //   liquidationRatio = this.liquidationRatio
+  // ) {
+  //   if (ethQty <= 0) return 0;
+  //   return bnOver(ethPrice, toBigNumber(ethQty), liquidationRatio);
+  // }
+  //
+  // calcMinEthDeposit(
+  //   daiQty,
+  //   ethPrice = this.ethPrice,
+  //   liquidationRatio = this.liquidationRatio
+  // ) {
+  //   if (daiQty <= 0) return 0;
+  //   return bnOver(liquidationRatio, daiQty, ethPrice);
+  // }
 
   calcCollatRatio(ethQty, daiQty) {
     if (ethQty <= 0 || daiQty <= 0) return 0;
@@ -556,43 +555,49 @@ export default class MakerCDP {
 
   calcLiquidationPrice(ethQty, daiQty) {
     if (ethQty <= 0 || daiQty <= 0) return 0;
-    const getInt = parseInt(this.ethPrice);
-    for (let i = getInt; i > 0; i--) {
-      const atValue = bnOver(i, ethQty, daiQty).lte(this.liquidationRatio);
-      if (atValue) {
-        return i;
-      }
-    }
-    for (let i = 100; i > 0; i--) {
-      const atValue = bnOver(i / 100, ethQty, daiQty).lte(
-        this.liquidationRatio
-      );
-      if (atValue) {
-        return i / 100;
-      }
-    }
-    return 0;
+    return calcLiquidationPrice(
+      ethQty,
+      daiQty,
+      this.ethPrice,
+      this.liquidationRatio
+    );
+    // const getInt = parseInt(this.ethPrice);
+    // for (let i = getInt; i > 0; i--) {
+    //   const atValue = bnOver(i, ethQty, daiQty).lte(this.liquidationRatio);
+    //   if (atValue) {
+    //     return i;
+    //   }
+    // }
+    // for (let i = 100; i > 0; i--) {
+    //   const atValue = bnOver(i / 100, ethQty, daiQty).lte(
+    //     this.liquidationRatio
+    //   );
+    //   if (atValue) {
+    //     return i / 100;
+    //   }
+    // }
+    // return 0;
   }
 
-  calcCollatRatioDaiChg(daiQty) {
-    return toBigNumber(this.calcCollatRatio(this.ethCollateral, daiQty));
-  }
-
-  calcCollatRatioEthChg(ethQty) {
-    return toBigNumber(this.calcCollatRatio(ethQty, this.debtValue));
-  }
-
-  calcLiquidationPriceDaiChg(daiQty) {
-    return toBigNumber(this.calcLiquidationPrice(this.ethCollateral, daiQty));
-  }
-
-  calcLiquidationPriceEthChg(ethQty) {
-    return toBigNumber(this.calcLiquidationPrice(ethQty, this.debtValue));
-  }
-
-  atRisk() {
-    return !!this._collatRatio.lte(2);
-  }
+  // calcCollatRatioDaiChg(daiQty) {
+  //   return toBigNumber(this.calcCollatRatio(this.ethCollateral, daiQty));
+  // }
+  //
+  // calcCollatRatioEthChg(ethQty) {
+  //   return toBigNumber(this.calcCollatRatio(ethQty, this.debtValue));
+  // }
+  //
+  // calcLiquidationPriceDaiChg(daiQty) {
+  //   return toBigNumber(this.calcLiquidationPrice(this.ethCollateral, daiQty));
+  // }
+  //
+  // calcLiquidationPriceEthChg(ethQty) {
+  //   return toBigNumber(this.calcLiquidationPrice(ethQty, this.debtValue));
+  // }
+  //
+  // atRisk() {
+  //   return !!this._collatRatio.lte(2);
+  // }
 
   // Helpers
   async approveDai() {
@@ -604,7 +609,7 @@ export default class MakerCDP {
   }
 
   async getDaiBalances() {
-    this.daiBalance = await this.makerManager.daiToken.balance();
+    this.daiBalance = await this.services.daiToken.balance();
     return this.daiBalance;
   }
 

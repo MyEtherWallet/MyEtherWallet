@@ -27,15 +27,15 @@
             <p class="input-unit">DAI</p>
           </div>
           <div class="sub-text">
+            <p v-if="!canGenerateDaiAmount" class="above-max">
+              {{ $t('dappsMaker.aboveMaxDai') }}
+            </p>
             <p>
               {{
                 $t('dappsMaker.collateralRatioVal', {
                   value: newCollateralRatio
                 })
               }}
-            </p>
-            <p v-if="!canGenerateDaiAmount" class="above-max">
-              {{ $t('dappsMaker.aboveMaxDai') }}
             </p>
           </div>
         </div>
@@ -117,7 +117,11 @@ import StandardButton from '@/components/Buttons/StandardButton';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
 import CheckBox from '../CheckBox';
 import BigNumber from 'bignumber.js/bignumber.js';
-import { displayFixedValue, displayPercentValue } from '../../helpers';
+import {
+  displayFixedValue,
+  displayPercentValue,
+  displayFixedPercent
+} from '../../helpers';
 
 const toBigNumber = num => {
   return new BigNumber(num);
@@ -227,17 +231,6 @@ export default {
       }
       return true;
     },
-    hasEnoughDai() {
-      // TODO Figure out how to learn how much dai a user has (the code below should work)
-      if (this.canCompute) {
-        // const daiToken = this.tokensWithBalance.find(item => {
-        //   return item.symbol.toUpperCase() === 'DAI';
-        // });
-        const asEth = ethUnit.fromWei(this.account.balance, 'ether');
-        return toBigNumber(this.amount).lte(toBigNumber(asEth));
-      }
-      return true;
-    },
     canGenerateDaiAmount() {
       if (this.canCompute && !toBigNumber(this.amount).isNaN()) {
         return toBigNumber(this.amount).lte(toBigNumber(this.values.maxDai));
@@ -257,31 +250,31 @@ export default {
       }
       return false;
     },
-    newCollateralRatio() {
+    calcCollateralRatio() {
       if (this.canCompute) {
-        return this.displayFixedValue(
-          this.displayPercentValue(
-            this.calcCollatRatioDaiChg(
-              toBigNumber(this.values.debtValue).plus(this.amount)
-            )
-          )
-        );
+        return this.calcCollatRatioDaiChg(
+          toBigNumber(this.values.debtValue).plus(this.amount)
+        )
+      }
+      if (this.values) {
+        return this.values.collateralRatio
+      }
+    },
+    newCollateralRatio() {
+      if (this.canCompute || this.values) {
+        return this.displayFixedPercent(this.calcCollateralRatio);
       }
       return '--';
     },
     newCollateralRatioSafe() {
       if (this.canCompute) {
-        return this.calcCollatRatioDaiChg(
-          toBigNumber(this.values.debtValue).plus(this.amount)
-        ).gte(2);
+        return this.calcCollateralRatio.gte(2);
       }
       return true;
     },
     newCollateralRatioInvalid() {
       if (this.canCompute) {
-        return this.calcCollatRatioDaiChg(
-          toBigNumber(this.values.debtValue).plus(this.amount)
-        ).lte(1.5);
+        return this.calcCollateralRatio.lte(1.5);
       }
       return true;
     },
@@ -296,8 +289,6 @@ export default {
       return 0;
     }
   },
-  watch: {},
-  mounted() {},
   methods: {
     submitBtn() {
       if (!this.canProceed) return;
@@ -308,6 +299,7 @@ export default {
     },
     displayPercentValue,
     displayFixedValue,
+    displayFixedPercent,
     notZero(val) {
       return toBigNumber(val).gt(0);
     },
