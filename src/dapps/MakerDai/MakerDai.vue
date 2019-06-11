@@ -454,7 +454,7 @@ export default {
         _self.account.address,
         async () => {
           if (_self.$route.path.includes('maker-dai')) {
-            await _self.doUpdateExternal();
+            await _self.doUpdate();
           }
         }
       );
@@ -562,32 +562,15 @@ export default {
       await this.migrateCdp(cdpId);
     },
     async refreshExternal() {
-      await this.doUpdateExternal();
-    },
-    async doUpdateExternal() {
-      const complete = await this.doUpdate(this.$route.name);
-
-      if (this.creatingCdp) {
-        this.creatingCdp = false;
-        await this.updateActiveCdp();
-        Toast.responseHandler('CDP Created', Toast.INFO);
-      }
-
-      if (complete) {
-        this.valuesUpdated++;
-        Toast.responseHandler('CDP Updated', Toast.INFO);
-      } else {
-        this.valuesUpdated++;
-        Toast.responseHandler('Update encountered an issue', Toast.INFO);
-      }
+      await this.doUpdate();
     },
     async refresh() {
       await this.doUpdate();
     },
-    async doUpdate(route) {
+    async doUpdate() {
       this.proxyAddress = await this.getProxy();
       let afterClose = false;
-      const afterOpen = route === 'create';
+      const afterOpen = this.$route.name === 'create';
       await this.updateActiveCdp();
       for (const idProp in this.activeCdps) {
         if (this.activeCdps[idProp].needsUpdate) {
@@ -636,7 +619,14 @@ export default {
           this.gotoCreate();
         }
       }
-      return true;
+      if (this.creatingCdp) {
+        this.creatingCdp = false;
+        await this.updateActiveCdp();
+        Toast.responseHandler('CDP Created', Toast.INFO);
+      } else {
+        this.valuesUpdated++;
+        Toast.responseHandler('CDP Updated', Toast.INFO);
+      }
     },
 
     async checkAllowances() {
@@ -652,7 +642,47 @@ export default {
         )).toBigNumber();
       }
     },
-
+    async setupCdpManage(cdpId) {
+      if (!this.allCdpIds.includes(cdpId) && this.allCdpIds.length > 0) {
+        cdpId = this.allCdpIds[0];
+      }
+      if (this.allCdpIds.length === 0) {
+        this.activeValues = this.systemValues;
+      } else {
+        this.currentCdpId = cdpId;
+        this.activeValues = await this.getValuesForManage(cdpId);
+      }
+    },
+    async getValuesForManage(cdpId) {
+      const currentCdp = this.activeCdps[cdpId];
+      this.currentCdp = currentCdp;
+      const _proxyAllowanceDai = this._proxyAllowanceDai;
+      const _proxyAllowanceMkr = this._proxyAllowanceMkr;
+      const toPeth = this.toPeth;
+      const systemValues = this.systemValues;
+      return {
+        ...systemValues,
+        cdpId: cdpId,
+        maxPethDraw: currentCdp.maxPethDraw,
+        maxEthDraw: currentCdp.maxEthDraw,
+        maxUsdDraw: currentCdp.maxUsdDraw,
+        ethCollateral: currentCdp.ethCollateral,
+        pethCollateral: currentCdp.pethCollateral,
+        usdCollateral: currentCdp.usdCollateral,
+        debtValue: currentCdp.debtValue,
+        maxDai: currentCdp.maxDai,
+        collateralRatio: currentCdp.collatRatio,
+        liquidationPrice: currentCdp.liquidationPrice,
+        minEth: currentCdp.minEth,
+        isSafe: false,
+        governanceFeeOwed: currentCdp.governanceFeeOwed,
+        ethCollateralNum: currentCdp.ethCollateralNum,
+        toPeth: toPeth,
+        proxyAllowanceDai: _proxyAllowanceDai,
+        proxyAllowanceMkr: _proxyAllowanceMkr,
+        zeroDebt: currentCdp.zeroDebt
+      };
+    },
     async locateCdps() {
       this.cdpsWithoutProxy = [];
       this.cdpsWithoutProxy = await this.locateCdpsWithoutProxy();
@@ -833,47 +863,7 @@ export default {
     moveCdp(val) {
       this.currentCdp.moveCdp(val);
     },
-    async setupCdpManage(cdpId) {
-      if (!this.allCdpIds.includes(cdpId) && this.allCdpIds.length > 0) {
-        cdpId = this.allCdpIds[0];
-      }
-      if (this.allCdpIds.length === 0) {
-        this.activeValues = this.systemValues;
-      } else {
-        this.currentCdpId = cdpId;
-        this.activeValues = await this.getValuesForManage(cdpId);
-      }
-    },
-    async getValuesForManage(cdpId) {
-      const currentCdp = this.activeCdps[cdpId];
-      this.currentCdp = currentCdp;
-      const _proxyAllowanceDai = this._proxyAllowanceDai;
-      const _proxyAllowanceMkr = this._proxyAllowanceMkr;
-      const toPeth = this.toPeth;
-      const systemValues = this.systemValues;
-      return {
-        ...systemValues,
-        cdpId: cdpId,
-        maxPethDraw: currentCdp.maxPethDraw,
-        maxEthDraw: currentCdp.maxEthDraw,
-        maxUsdDraw: currentCdp.maxUsdDraw,
-        ethCollateral: currentCdp.ethCollateral,
-        pethCollateral: currentCdp.pethCollateral,
-        usdCollateral: currentCdp.usdCollateral,
-        debtValue: currentCdp.debtValue,
-        maxDai: currentCdp.maxDai,
-        collateralRatio: currentCdp.collatRatio,
-        liquidationPrice: currentCdp.liquidationPrice,
-        minEth: currentCdp.minEth,
-        isSafe: false,
-        governanceFeeOwed: currentCdp.governanceFeeOwed,
-        ethCollateralNum: currentCdp.ethCollateralNum,
-        toPeth: toPeth,
-        proxyAllowanceDai: _proxyAllowanceDai,
-        proxyAllowanceMkr: _proxyAllowanceMkr,
-        zeroDebt: currentCdp.zeroDebt
-      };
-    },
+
     calcCollatRatioDaiChg(daiQty) {
       return toBigNumber(
         this.currentCdp.calcCollatRatio(this.currentCdp.ethCollateral, daiQty)
@@ -967,32 +957,6 @@ export default {
       }
       return toBigNumber(0);
     }
-
-    // calcDrawAmt(principal, collatRatio) {
-    //   return Math.floor(
-    //     bnOver(principal, this.ethPrice, collatRatio).toNumber()
-    //   );
-    // },
-
-    // calcMinCollatRatio(priceFloor) {
-    //   return bnOver(this.ethPrice, this.liquidationRatio, priceFloor);
-    // },
-
-    // calcCollatRatio(ethQty, daiQty) {
-    //   if (ethQty <= 0 || daiQty <= 0) return 0;
-    //   return bnOver(this.ethPrice, ethQty, daiQty);
-    // },
-
-    // calcLiquidationPrice(ethQty, daiQty) {
-    //   if (ethQty <= 0 || daiQty <= 0) return 0;
-    //   const getInt = parseInt(this.ethPrice);
-    //   for (let i = getInt; i > 0; i--) {
-    //     const atValue = bnOver(i, ethQty, daiQty).lte(this.liquidationRatio);
-    //     if (atValue) {
-    //       return i;
-    //     }
-    //   }
-    // }
   }
 };
 </script>
