@@ -17,6 +17,12 @@ const chrome = window.chrome;
     });
   }
 
+  function checkForOtherWeb3(tabs) {
+    chrome.tabs.sendMessage(tabs[0].id, { msg: 'injectWeb3' }, function(res) {
+      console.log(res.response);
+    });
+  }
+
   function querycB(tabs) {
     const SEARCH_STRING = ['myetherwallet'];
     const ealBlacklisted = Object.assign({}, cxHelpers.blackListDomains['eal']),
@@ -69,6 +75,8 @@ const chrome = window.chrome;
           }`
         );
         chrome.tabs.update(null, { url: urlRedirect });
+      } else {
+        checkForOtherWeb3(tabs);
       }
     }
   }

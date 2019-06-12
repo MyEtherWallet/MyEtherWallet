@@ -15,9 +15,16 @@
   },
   "options_page": "index.html",
   "background": {
-    "scripts": ["background.js", "web3Manager.js"],
+    "scripts": ["background.js"],
     "persistent": true
   },
+  "content_scripts": [
+    {
+      "matches": ["*://*/*"],
+      "js": ["web3Manager.js"],
+      "all_frames": true
+    }
+  ],
   "permissions": [
     "storage",
     "tabs"
