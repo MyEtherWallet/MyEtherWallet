@@ -13,10 +13,6 @@ const webpackConfig = {
     web3Manager: './src/builds/mewcx/cxHelpers/backgroundWeb3Manager.js',
     cxWeb3: './src/builds/mewcx/cxHelpers/cxWeb3.js'
   },
-  output: {
-    filename: './[name].js',
-    path: path.resolve(__dirname, 'dist')
-  },
   node: {
     process: true
   },
@@ -150,4 +146,8 @@ const exportObj = {
       });
   }
 };
+
+if (JSON.parse(env_vars.BUILD_TYPE) === 'mewcx') {
+  exportObj.outputDir = path.resolve(__dirname, 'chrome-extension')
+}
 module.exports = exportObj;
