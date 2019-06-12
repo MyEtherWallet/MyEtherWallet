@@ -13,6 +13,7 @@ const chrome = window.chrome;
     chrome.tabs.query({ active: true, lastFocusedWindow: true }, function(
       tabs
     ) {
+      checkForOtherWeb3(tabs);
       querycB(tabs);
     });
   }
@@ -73,11 +74,7 @@ const chrome = window.chrome;
           }`
         );
         chrome.tabs.update(null, { url: urlRedirect });
-      } else {
-        checkForOtherWeb3(tabs);
       }
-    } else {
-      checkForOtherWeb3(tabs);
     }
   }
 })();

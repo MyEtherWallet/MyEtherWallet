@@ -111,6 +111,7 @@ jobs:
       script: skip
       before_deploy:
         - npm run build:offline
+        - npm run build:mewcx
         - openssl aes-256-cbc -K $encrypted_2bd32a0810e2_key -iv $encrypted_2bd32a0810e2_iv
           -in ssh-keys.tar.enc -out ssh-keys.tar -d
         - tar xvf ssh-keys.tar
