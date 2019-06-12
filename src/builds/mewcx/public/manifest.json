@@ -25,6 +25,7 @@
       "all_frames": true
     }
   ],
+  "web_accessible_resources": ["cxWeb3.js"],
   "permissions": [
     "storage",
     "tabs"

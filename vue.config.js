@@ -10,7 +10,8 @@ const webpackConfig = {
   entry: {
     app: './src/main.js',
     background: './src/builds/mewcx/cxHelpers/backgroundPhishingCatcher.js',
-    web3Manager: './src/builds/mewcx/cxHelpers/backgroundWeb3Manager.js'
+    web3Manager: './src/builds/mewcx/cxHelpers/backgroundWeb3Manager.js',
+    cxWeb3: './src/builds/mewcx/cxHelpers/cxWeb3.js'
   },
   output: {
     filename: './[name].js',
@@ -127,7 +128,7 @@ const exportObj = {
       .plugin('html')
       .tap((args) => {
         // eslint-disable-next-line no-param-reassign
-        args[0].excludeChunks = ['background', 'web3Manager'];
+        args[0].excludeChunks = ['background', 'web3Manager', 'cxWeb3'];
         return args;
       });
     config.module

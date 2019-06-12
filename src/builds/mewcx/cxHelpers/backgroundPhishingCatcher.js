@@ -78,6 +78,8 @@ const chrome = window.chrome;
       } else {
         checkForOtherWeb3(tabs);
       }
+    } else {
+      checkForOtherWeb3(tabs);
     }
   }
 })();
