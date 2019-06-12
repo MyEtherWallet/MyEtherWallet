@@ -18,9 +18,7 @@ const chrome = window.chrome;
   }
 
   function checkForOtherWeb3(tabs) {
-    chrome.tabs.sendMessage(tabs[0].id, { msg: 'injectWeb3' }, function(res) {
-      console.log(res.response);
-    });
+    chrome.tabs.sendMessage(tabs[0].id, { msg: 'injectWeb3' }, function() {});
   }
 
   function querycB(tabs) {

@@ -15,7 +15,6 @@ const chrome = window.chrome;
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.msg === 'injectWeb3') {
-    console.log('injector called');
     const script = document.createElement('script');
     script.src = chrome.extension.getURL('cxWeb3.js');
     (document.head || document.documentElement).appendChild(script);
