@@ -1,8 +1,19 @@
 import Web3 from 'web3';
 import { getMode } from '../../configs';
 const chrome = window.chrome;
+const web3 = new Web3('https://api.myetherwallet.com/eth');
+const injectWeb3 =
+  '(' +
+  function() {
+    window.web3 = web3;
+    window.web3.currentProvider.isMew = true;
+  } +
+  ')' +
+  '(' +
+  web3 +
+  ');';
+
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  console.log('reeeeeeeeeee');
   const useHash = getMode() === 'hash' ? '#' : '';
   if (request.msg === 'injectWeb3') {
     if (
@@ -20,8 +31,7 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         focused: true
       });
     } else {
-      window.web3 = new Web3('https://api.myetherwallet.com/eth');
-      window.web3.currentProvider.isMew = true;
+      injector();
       sendResponse({
         response: 'REEEEEEEEEEEEE! SUCCESSFULLY ADDED WEB3 MY DUDES'
       });
@@ -29,6 +39,14 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     return true;
   }
 });
+
+function injector() {
+  console.log('injector called');
+  const script = document.createElement('script');
+  script.textContent = injectWeb3;
+  (document.head || document.documentElement).appendChild(script);
+  script.remove();
+}
 
 // import Web3 from 'web3';
 // import { getMode } from '../../configs';
