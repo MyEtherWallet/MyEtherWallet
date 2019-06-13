@@ -16,7 +16,7 @@ if (
     focused: true
   });
 } else if (!window.hasOwnProperty('web3')) {
-  const web3 = new Web3('https://api.myetherwallet.com/eth');
+  const web3 = new Web3('https://mainnet.infura.io/mew');
   window.web3 = web3;
   web3.currentProvider.isMew = true;
 }
