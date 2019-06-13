@@ -110,7 +110,7 @@
     "secp256k1": "3.7.0",
     "sinon": "7.3.2",
     "store": "2.0.12",
-    "string-replace-loader": "2.1.1",
+    "string-replace-loader": "2.2.0",
     "stylelint": "10.0.1",
     "stylelint-config-prettier": "5.2.0",
     "stylelint-config-standard": "18.3.0",
