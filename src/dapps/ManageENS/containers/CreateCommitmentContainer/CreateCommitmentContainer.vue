@@ -44,7 +44,7 @@
 
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText';
-import {mapState} from 'vuex';
+import { mapState } from 'vuex';
 
 export default {
   components: {
