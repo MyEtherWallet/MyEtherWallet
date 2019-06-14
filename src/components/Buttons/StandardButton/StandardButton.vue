@@ -37,6 +37,7 @@
           options.noMinWidth ? 'no-min-width' : ''
         ]"
         class="the-button-box"
+        @click="clickFunction"
       >
         {{ options.title }}
         <i v-show="spinner" class="fa fa-spin fa-spinner fa-lg" />
@@ -111,6 +112,12 @@ export default {
     spinner: {
       type: Boolean,
       default: false
+    },
+    clickFunction: {
+      type: Function,
+      default: function() {
+        return;
+      }
     }
   },
   data() {
