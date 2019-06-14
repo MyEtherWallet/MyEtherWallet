@@ -1,6 +1,7 @@
 import normalise from '@/helpers/normalise';
 import { Misc } from '@/helpers';
 import { toChecksumAddress } from '@/helpers/addressUtils';
+import utils from 'web3-utils';
 const EnsResolver = {
   bind: function(el, binding, vnode) {
     vnode.context.$watch(binding.value, function(e) {
@@ -81,7 +82,18 @@ const EnsResolver = {
         _this.isValidAddress = false;
         _this.hexAddress = '';
         removeElements();
-        errorPar.innerText = 'Invalid address';
+        if (e.length > 0) {
+          if (e.length !== 42 || !utils.isHexStrict(e)) {
+            errorPar.innerText = 'Not a valid Ethereum address';
+          } else if (!utils.checkAddressChecksum(e)) {
+            errorPar.innerText =
+              'This address is not checksummed properly. Please copy the address exactly as shown.';
+            // 'Incorrect checksum: check address format on EthVM';
+          }
+        } else {
+          errorPar.innerText = '';
+        }
+
         el.parentNode.parentNode.appendChild(errorPar);
       }
     });

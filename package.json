@@ -102,7 +102,7 @@
     "package-json": "6.3.0",
     "postcss-import": "12.0.1",
     "postcss-url": "8.0.0",
-    "prettier": "1.18.0",
+    "prettier": "1.18.2",
     "remark-cli": "6.0.1",
     "remark-preset-lint-recommended": "3.0.2",
     "rskjs-util": "1.0.3",
