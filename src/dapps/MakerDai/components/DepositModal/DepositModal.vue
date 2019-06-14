@@ -18,13 +18,15 @@
               <span class="input-unit">{{ digitalCurrency }}</span>
             </div>
             <div class="sub-text">
-              <p v-if="!hasEnoughEth" class="above-max">{{ $t('dappsMaker.notEnoughEth') }}</p>
+              <p v-if="!hasEnoughEth" class="above-max">
+                {{ $t('dappsMaker.notEnoughEth') }}
+              </p>
               <div class="peth">
                 <p>
                   {{
-                  values.toPeth
-                  ? displayFixedValue(values.toPeth(amount), 5, false)
-                  : 0
+                    values.toPeth
+                      ? displayFixedValue(values.toPeth(amount), 5, false)
+                      : 0
                   }}
                   PETH
                 </p>

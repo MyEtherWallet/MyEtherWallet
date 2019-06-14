@@ -224,8 +224,8 @@ export default {
         this.riskyBypass
       );
     },
-    newTotal(){
-      return toBigNumber(this.values.debtValue).plus(this.amount)
+    newTotal() {
+      return toBigNumber(this.values.debtValue).plus(this.amount);
     },
     hasEnoughEth() {
       if (this.canCompute) {
