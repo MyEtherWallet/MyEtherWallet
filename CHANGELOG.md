@@ -1,3 +1,9 @@
+### Release v5.0.14
+
+### Feature
+
+- Maker Integration [#740](https://github.com/MyEtherWallet/MyEtherWallet/pull/740)
+
 ### Bug
 
 - Fix getAddressString null issue, update ethereumjs-tx [#1163](https://github.com/MyEtherWallet/MyEtherWallet/pull/1163)
