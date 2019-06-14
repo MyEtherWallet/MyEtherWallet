@@ -1,7 +1,6 @@
 <template>
   <div class="send-currency-container">
     <interface-container-title :title="$t('common.sendTx')" />
-
     <div class="send-form">
       <div class="form-block amount-to-address">
         <div class="amount">
