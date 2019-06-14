@@ -1,3 +1,9 @@
+### Release v5.0.14
+
+### Feature
+
+- Maker Integration [#740](https://github.com/MyEtherWallet/MyEtherWallet/pull/740)
+
 ### Release v5.0.13
 
 ### Devop
