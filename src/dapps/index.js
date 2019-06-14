@@ -6,6 +6,7 @@ import secureTransaction from '@/assets/images/icons/button-key-hover.svg';
 import secureTransactionHov from '@/assets/images/icons/button-key.svg';
 import scheduleTransaction from '@/assets/images/icons/eac.svg';
 import scheduleTransactionHov from '@/assets/images/icons/eac-hov.svg';
+import makerdai from '@/assets/images/icons/dapps/makerdai.svg';
 import { ETH, GOERLI, ROP, RIN, KOV } from '@/networks/types';
 
 const dapps = {
@@ -40,6 +41,14 @@ const dapps = {
     title: 'Schedule a transaction',
     desc:
       'Schedule a transaction using the decentralized Ethereum Alarm Clock protocol',
+    supportedNetworks: [ETH.name, ROP.name, KOV.name]
+  },
+  maker: {
+    route: '/interface/dapps/maker-dai',
+    icon: makerdai,
+    iconDisabled: secureTransactionHov,
+    title: 'dappsMaker.maker_title',
+    desc: 'dappsMaker.maker_desc',
     supportedNetworks: [ETH.name, ROP.name, KOV.name]
   }
 };

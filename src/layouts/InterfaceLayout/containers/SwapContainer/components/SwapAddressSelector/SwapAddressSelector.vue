@@ -118,6 +118,14 @@ export default {
     currency: {
       type: String,
       default: 'ETH'
+    },
+    preFill: {
+      type: Boolean,
+      default: false
+    },
+    preFillAddress: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -148,6 +156,12 @@ export default {
     },
     currency() {
       this.validateAddress(this.selectedAddress);
+    }
+  },
+  mounted() {
+    if (this.preFill) {
+      this.selectedAddress =
+        this.preFillAddress !== '' ? this.preFillAddress : '';
     }
   },
   methods: {
