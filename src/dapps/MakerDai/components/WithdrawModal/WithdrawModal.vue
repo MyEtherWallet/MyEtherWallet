@@ -126,7 +126,6 @@
 <script>
 import { mapState } from 'vuex';
 import ExpendingOption from '@/components/ExpendingOption';
-import ethUnit from 'ethjs-unit';
 import StandardButton from '@/components/Buttons/StandardButton';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
 import CheckBox from '../CheckBox';
