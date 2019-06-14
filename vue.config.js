@@ -84,8 +84,15 @@ if (process.env.NODE_ENV === 'production') {
       globOptions: {
         ignore: [
           // Are we using these
+          'src/assets/images/icons/question.png',
           'src/components/DropDownAddressSelector/DropDownAddressSelector.scss',
           'src/components/DropDownAddressSelector/index.js',
+          'src/components/PopupHelper/index.js',
+          'src/components/PopupHelper/PopupHelper.scss',
+          'src/components/PopupHelper/PopupHelper.vue',
+          'src/components/StandardInputSlot/index.js',
+          'src/components/StandardInputSlot/StandardInputSlot.scss',
+          'src/components/StandardInputSlot/StandardInputSlot.vue',
           // Unknown
           'src/contracts/contract-abi-etsc.json',
           'src/contracts/contract-abi-exp.json',
