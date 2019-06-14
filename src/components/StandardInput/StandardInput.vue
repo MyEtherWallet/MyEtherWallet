@@ -54,6 +54,7 @@
         :placeholder="options.placeHolder"
         :type="options.type"
         :disabled="options.inputDisabled"
+        v-model="inputvalue"
         name=""
         @blur="emitValue"
       />
@@ -100,6 +101,10 @@ export default {
       default: function() {
         return {};
       }
+    },
+    inputvalue: {
+      type: Number,
+      default: 0
     }
   },
   data() {
