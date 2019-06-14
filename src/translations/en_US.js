@@ -2,6 +2,7 @@
 import common from './common/en_US';
 import confirmation from './confirmation/en_US';
 import dapps from './dapps/en_US';
+import dappsMaker from './dapps-maker/en_US';
 import header from './header/en_US';
 import home from './home/en_US';
 import footer from './footer/en_US';
@@ -44,6 +45,7 @@ const en_US = {
   secalotError: secalotError,
   keepkeyError: keepkeyError,
   bitboxError: bitboxError,
-  buyHardwareWallet: buyHardwareWallet
+  buyHardwareWallet: buyHardwareWallet,
+  dappsMaker: dappsMaker
 };
 export default en_US;

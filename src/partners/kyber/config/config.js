@@ -3,13 +3,14 @@ import { TIME_SWAP_VALID_DEFAULT } from '../../partnersConfig/config';
 
 import { KyberCurrenciesETH } from './currenciesETH';
 import { KyberCurrenciesROP } from './currenciesROP';
+import { KyberCurrenciesKOV } from './currenciesKOV';
 
 const ETH_ENDPINT = 'https://api.kyber.network';
 const ROP_ENDPOINT = 'https://ropsten-api.kyber.network';
 
 const kyberTokenList = {
   ETH: `${ETH_ENDPINT}/currencies`,
-  ROP: `${ETH_ENDPINT}/currencies`
+  ROP: `${ROP_ENDPOINT}/currencies`
 };
 
 const kyberTokenInfoList = {
@@ -23,14 +24,19 @@ const kyberGasLimitList = {
 
 const kyberAddressFallback = {
   ETH: '0x818e6fecd516ecc3849daf6845e3ec868087b755',
-  ROP: '0x818E6FECD516Ecc3849DAf6845e3EC868087B755'
+  ROP: '0x818E6FECD516Ecc3849DAf6845e3EC868087B755',
+  KOV: '0x692f391bCc85cefCe8C237C01e1f636BbD70EA4D'
 };
 
-const KyberCurrencies = { ETH: KyberCurrenciesETH, ROP: KyberCurrenciesROP };
+const KyberCurrencies = {
+  ETH: KyberCurrenciesETH,
+  ROP: KyberCurrenciesROP,
+  KOV: KyberCurrenciesKOV
+};
 
 const walletDepositeAddress = '0x4247951c2eb6d0bA38d233fe7d542c8c80c9d46A'; // i.e. where payments go
 const kyberNetworkENS = 'kybernetwork.eth';
-const kyberValidNetworks = ['ETH', 'ROP'];
+const kyberValidNetworks = ['ETH', 'ROP', 'KOV'];
 
 const defaultValues = {
   tradeGasLimit: 400000,
@@ -42,6 +48,11 @@ const defaultValues = {
 
 const kyberMethods = {
   ETH: {
+    currencies: 'getSupportedTokens',
+    rate: 'getCryptoRates',
+    gasLimits: 'getGasLimits'
+  },
+  ROP: {
     currencies: 'getSupportedTokens',
     rate: 'getCryptoRates',
     gasLimits: 'getGasLimits'

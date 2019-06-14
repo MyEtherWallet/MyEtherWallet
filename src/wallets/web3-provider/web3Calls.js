@@ -16,6 +16,16 @@ class Web3Calls {
         params: 0
       }),
       new Method({
+        name: 'getBlockNumber',
+        call: 'eth_blockNumber',
+        params: 0
+      }),
+      new Method({
+        name: 'getBlockByNumber',
+        call: 'eth_getBlockByNumber',
+        params: 2
+      }),
+      new Method({
         name: 'estimateGas',
         call: 'eth_estimateGas',
         params: 1,
