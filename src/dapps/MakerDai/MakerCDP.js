@@ -13,12 +13,6 @@ const toBigNumber = num => {
   return new BigNumber(num);
 };
 
-const bnOver = (one, two, three) => {
-  return toBigNumber(one)
-    .times(toBigNumber(two))
-    .div(toBigNumber(three));
-};
-
 export default class MakerCDP {
   constructor(cdpId, web3, services, sysVars) {
     this.cdpId = cdpId;
@@ -432,7 +426,6 @@ export default class MakerCDP {
         console.error(e);
       }
     }
-
   }
 
   async wipeDai(amount) {
@@ -550,7 +543,7 @@ export default class MakerCDP {
 
   calcCollatRatio(ethQty, daiQty) {
     if (ethQty <= 0 || daiQty <= 0) return 0;
-    return bnOver(this.ethPrice, ethQty, daiQty);
+    return calcCollatRatio(this.ethPrice, ethQty, daiQty);
   }
 
   calcLiquidationPrice(ethQty, daiQty) {
