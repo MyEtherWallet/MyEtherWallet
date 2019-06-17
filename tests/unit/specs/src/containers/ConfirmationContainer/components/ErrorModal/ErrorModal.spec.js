@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils';
 import ErrorModal from '@/containers/ConfirmationContainer/components/ErrorModal/ErrorModal.vue';
-import StandardButton from '@/components/Buttons/StandardButton';
 import sinon from 'sinon';
 import { Tooling } from '@@/helpers';
 
@@ -65,7 +64,7 @@ describe('ErrorModal.vue', () => {
 
   it('should render correct linkMessage props', () => {
     wrapper.setProps({ linkMessage });
-    console.log(wrapper.vm.$el.querySelector('.close-button'))
+    console.log(wrapper.vm.$el.querySelector('.close-button'));
   });
 
   describe('ErrorModal.vue Methods', () => {
@@ -74,5 +73,4 @@ describe('ErrorModal.vue', () => {
       expect(hideModal.called).toBe(true);
     });
   });
-
 });

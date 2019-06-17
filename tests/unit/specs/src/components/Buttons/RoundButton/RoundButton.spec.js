@@ -19,12 +19,15 @@ describe('RoundButton.vue', () => {
       localVue,
       i18n,
       store,
-      attachToDocument: true,
+      attachToDocument: true
     });
   });
 
   it('should render correct title props', () => {
-    let title = 'title';
-    expect(wrapper.vm.$el.querySelector('.round-button button').textContent.trim()).toEqual(title);
+    const title = 'title';
+    wrapper.setProps({title});
+    expect(
+      wrapper.vm.$el.querySelector('.round-button button').textContent.trim()
+    ).toEqual(title);
   });
 });

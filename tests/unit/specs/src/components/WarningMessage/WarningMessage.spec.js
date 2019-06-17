@@ -19,13 +19,23 @@ describe('WarningMessage.vue', () => {
       localVue,
       i18n,
       store,
-      attachToDocument: true,
+      attachToDocument: true
     });
   });
 
   it('should render correct options props', () => {
-    expect(wrapper.vm.$el.querySelector('.warning-message .title').textContent.trim()).toEqual(wrapper.props().title);
-    expect(wrapper.vm.$el.querySelector('.warning-message .message').textContent.trim()).toEqual(wrapper.props().message);
-    expect(wrapper.vm.$el.querySelector('.warning-message .link a').textContent.trim()).toEqual(wrapper.props().options.link.text);
+    expect(
+      wrapper.vm.$el.querySelector('.warning-message .title').textContent.trim()
+    ).toEqual(wrapper.props().options.title);
+    expect(
+      wrapper.vm.$el
+        .querySelector('.warning-message .message')
+        .textContent.trim()
+    ).toEqual(wrapper.props().options.message);
+    expect(
+      wrapper.vm.$el
+        .querySelector('.warning-message .link a')
+        .textContent.trim()
+    ).toEqual(wrapper.props().options.link.text);
   });
 });
