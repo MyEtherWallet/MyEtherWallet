@@ -167,7 +167,7 @@
             />
           </div>
         </div>
-        <div>
+        <div v-if="!selectedMethod.constant">
           <div class="title-container">
             <div class="title">
               <h4>{{ $t('common.value') }} in ETH:</h4>
@@ -181,6 +181,9 @@
             placeholder="ETH"
             class="non-bool-input"
           />
+        </div>
+        <div v-if="!selectedMethod.constant">
+          <gas-price-display-update></gas-price-display-update>
         </div>
         <div v-if="selectedMethod.constant">
           <div class="title-container">
@@ -272,6 +275,7 @@
 import { mapState } from 'vuex';
 import CurrencyPicker from '../../components/CurrencyPicker';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
+import GasPriceDisplayUpdate from '@/components/GasPriceDisplayUpdate';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import { Misc, Toast } from '@/helpers';
 import { isAddress } from '@/helpers/addressUtils';
@@ -282,7 +286,8 @@ export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
     'interface-bottom-text': InterfaceBottomText,
-    'currency-picker': CurrencyPicker
+    'currency-picker': CurrencyPicker,
+    'gas-price-display-update': GasPriceDisplayUpdate
   },
   data() {
     return {

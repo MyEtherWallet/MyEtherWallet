@@ -1,0 +1,65 @@
+@import '~@/scss/GlobalVariables';
+
+%form-block-base {
+  border-radius: 5px;
+
+  .the-form {
+    background-color: $background-color-1;
+    border-radius: 5px;
+  }
+}
+
+.form-block {
+  @extend %form-block-base;
+}
+
+.tx-fee-container {
+  /*
+  display: grid;
+  grid-column-gap: 5px;
+  grid-template-columns: 2fr 3fr;
+  */
+  display: block;
+
+  @media all and (max-width: $mobile-width) {
+    display: block;
+  }
+
+  .title {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 13px;
+    padding: 0 8px;
+  }
+
+  .tx-fee {
+    margin-top: 40px;
+
+    .copy-button {
+      color: $text--link-color;
+      cursor: pointer;
+      margin-left: auto;
+    }
+
+    .fee-value {
+      padding: 0 10px;
+      display: flex;
+      align-items: center;
+
+      .gwei {
+        //gwei
+      }
+
+      .usd {
+        margin-left: auto;
+      }
+    }
+  }
+}
+
+.error-message-container {
+  p {
+    color: $text-color-red;
+    margin: 7px 0 0 15px;
+  }
+}

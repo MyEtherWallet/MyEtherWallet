@@ -3,6 +3,7 @@ import { shallowMount } from '@vue/test-utils';
 import InteractWithContractContainer from '@/layouts/InterfaceLayout/containers/InteractWithContractContainer/InteractWithContractContainer.vue';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle/InterfaceContainerTitle.vue';
 import InterfaceBottomText from '@/components/InterfaceBottomText/InterfaceBottomText.vue';
+import GasPriceDisplayUpdate from '@/components/GasPriceDisplayUpdate/GasPriceDisplayUpdate.vue';
 import CurrencyPicker from '@/layouts/InterfaceLayout/components/CurrencyPicker/CurrencyPicker.vue';
 import PopOver from '@/components/PopOver/PopOver.vue';
 import { Tooling } from '@@/helpers';
@@ -30,7 +31,8 @@ describe('InteractWithContractContainer.vue', () => {
         'interface-bottom-text': InterfaceBottomText,
         'interface-container-title': InterfaceContainerTitle,
         'currency-picker': CurrencyPicker,
-        popover: PopOver
+        popover: PopOver,
+        'gas-price-display-update': GasPriceDisplayUpdate
       }
     });
   });
