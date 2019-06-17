@@ -417,9 +417,7 @@ export default {
       return Misc.reorderNetworks();
     },
     networkTitle() {
-      return `${this.selectedNetwork.type.name} - ${
-        this.selectedNetwork.service
-      } `;
+      return `${this.selectedNetwork.type.name} - ${this.selectedNetwork.service} `;
     },
     rawTx() {
       return {
