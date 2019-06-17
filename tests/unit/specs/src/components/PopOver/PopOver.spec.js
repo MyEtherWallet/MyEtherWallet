@@ -22,8 +22,6 @@ describe('PopOver.vue', () => {
   const popcontent = 'popcontent';
   const popovertype = 'popovertype';
 
-
-
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
