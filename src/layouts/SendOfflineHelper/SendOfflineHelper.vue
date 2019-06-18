@@ -335,7 +335,7 @@
 </template>
 
 <script>
-import ethTx from 'ethereumjs-tx';
+import { Transaction } from 'ethereumjs-tx';
 import { mapState } from 'vuex';
 import Misc from '@/helpers/misc';
 import BigNumber from 'bignumber.js';
@@ -417,9 +417,7 @@ export default {
       return Misc.reorderNetworks();
     },
     networkTitle() {
-      return `${this.selectedNetwork.type.name} - ${
-        this.selectedNetwork.service
-      } `;
+      return `${this.selectedNetwork.type.name} - ${this.selectedNetwork.service} `;
     },
     rawTx() {
       return {
@@ -516,7 +514,9 @@ export default {
       if (rawSigned) this.rawSigned = rawSigned;
       if (this.rawSigned !== '') {
         const sanitizedRawSigned = Misc.sanitizeHex(this.rawSigned);
-        const tx = new ethTx(sanitizedRawSigned);
+        const tx = new Transaction(sanitizedRawSigned, {
+          chain: this.network.type.chainID
+        });
         this.invalidSignature = !tx.verifySignature();
         this.chainID = tx.getChainId();
         this.wrongNetwork = !new BigNumber(

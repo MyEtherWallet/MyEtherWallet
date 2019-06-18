@@ -1,0 +1,18 @@
+@import '~@/scss/GlobalVariables';
+
+.loading-overlay {
+  position: fixed;
+  z-index: 999999;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: $dark-grey-12;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.text {
+  color: white;
+}

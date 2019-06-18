@@ -89,16 +89,16 @@ const createAndSignTx = function({ commit }, val) {
 };
 
 const decryptWallet = function({ commit, dispatch }, params) {
-  if (params[0]) {
-    if (params[0].identifier === MEW_CONNECT) {
-      params[0].mewConnect().on('RtcClosedEvent', () => {
-        if (params[0].mewConnect().getConnectonState()) {
-          this._vm.$eventHub.$emit('mewConnectDisconnected');
-          dispatch('clearWallet');
-        }
-      });
-    }
+  // if (params[0]) {
+  if (params[0].identifier === MEW_CONNECT) {
+    params[0].mewConnect().on('RtcClosedEvent', () => {
+      if (params[0].mewConnect().getConnectonState()) {
+        this._vm.$eventHub.$emit('mewConnectDisconnected');
+        dispatch('clearWallet');
+      }
+    });
   }
+  // }
 
   commit('DECRYPT_WALLET', params[0]);
   dispatch('setWeb3Instance', params[1]);
@@ -141,6 +141,7 @@ const setWeb3Instance = function({ dispatch, commit, state }, provider) {
       this._vm.$eventHub
     )
   );
+  web3Instance.currentProvider.sendAsync = web3Instance.currentProvider.send;
   web3Instance['mew'] = {};
   web3Instance['mew'].sendBatchTransactions = arr => {
     return new Promise(async resolve => {

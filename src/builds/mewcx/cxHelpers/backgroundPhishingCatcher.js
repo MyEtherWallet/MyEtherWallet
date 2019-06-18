@@ -69,9 +69,7 @@ const chrome = window.chrome;
         //   `https://localhost:8080#/phishing-catcher?url=${tabs[0].url}`
         // );
         urlRedirect = encodeURI(
-          `https://www.myetherwallet.com/phishing.html?phishing-address=${
-            tabs[0].url
-          }`
+          `https://www.myetherwallet.com/phishing.html?phishing-address=${tabs[0].url}`
         );
         chrome.tabs.update(null, { url: urlRedirect });
       }
