@@ -308,7 +308,6 @@ export default {
     },
     newCollateralRatioSafe() {
       if (this.amount > 0) {
-        // TODO why did I make this like this?
         if (this.calcCollateralRatio.lte(new BigNumber(0.000009))) {
           return true;
         }
@@ -320,7 +319,7 @@ export default {
     },
     newCollateralRatioInvalid() {
       if (this.amount > 0) {
-        // TODO why did I make this like this?
+        // If less than a very small number
         if (this.calcCollateralRatio.lte(new BigNumber(0.000009))) {
           return true;
         }
