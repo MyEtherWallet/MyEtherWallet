@@ -388,7 +388,7 @@ export default {
             }
           });
         } else if (this.showManage) {
-          // The listing screen may not work
+          // The listing screen may not work and can be removed
           this.$router.push({
             name: 'select'
           });
@@ -921,7 +921,6 @@ export default {
     },
 
     async buildProxy() {
-      // this.creatingProxy = true;
       this.proxyAddress = await this.getProxy();
       if (!this.proxyAddress) {
         await this._proxyService.build();
