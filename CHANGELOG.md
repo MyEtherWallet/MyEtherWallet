@@ -8,6 +8,7 @@
 
 - Fix getAddressString null issue, update ethereumjs-tx [#1163](https://github.com/MyEtherWallet/MyEtherWallet/pull/1163)
 - Add better errors on send, disable register on ens when no balance [#1173](https://github.com/MyEtherWallet/MyEtherWallet/pull/1173)
+- Fix Private Key network error on access [#1166](https://github.com/MyEtherWallet/MyEtherWallet/pull/1166)
 
 ### Release v5.0.13
 
