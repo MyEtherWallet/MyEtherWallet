@@ -669,6 +669,12 @@ module.exports = [
   'src/layouts/InformationPages/TermsAndConditionsLayout/index.js',
   'src/layouts/InformationPages/TermsAndConditionsLayout/TermsAndConditionsLayout.scss',
   'src/layouts/InformationPages/TermsAndConditionsLayout/TermsAndConditionsLayout.vue',
-  'src/translations/README.md'
-
+  'src/translations/README.md',
+  'src/assets/images/icons/question.png',
+  'src/components/PopupHelper/index.js',
+  'src/components/PopupHelper/PopupHelper.scss',
+  'src/components/PopupHelper/PopupHelper.vue',
+  'src/components/StandardInputSlot/index.js',
+  'src/components/StandardInputSlot/StandardInputSlot.scss',
+  'src/components/StandardInputSlot/StandardInputSlot.vue'
 ]
