@@ -243,7 +243,6 @@ export default {
     canProceed() {
       if (this.canCompute) {
         if (toBigNumber(this.amount).lte(0)) return false;
-        // if (!ratioOk) return false;
         return (
           (this.newCollateralRatioSafe && this.canGenerateDaiAmount) ||
           (!this.newCollateralRatioInvalid &&
