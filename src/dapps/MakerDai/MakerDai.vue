@@ -80,11 +80,11 @@
         <div v-if="showMoveOrClose" class="header-buttons-container">
           <div class="inner-container">
             <button class="move-btn" @click="showMove">
-              <h4>Move CDP</h4>
+              <h4>{{ $t('dappsMaker.moveTitle') }}</h4>
             </button>
             <div v-if="!((!hasProxy && !onCreate) || showCdpMigrateButtons)">
               <button class="close-btn" @click="showClose">
-                <h4>Close CDP</h4>
+                <h4>{{ $t('dappsMaker.closeTitle') }}</h4>
               </button>
             </div>
           </div>
@@ -93,20 +93,26 @@
     </interface-container-title>
     <div v-show="makerActive" class="buttons-container">
       <div v-if="showCreateProxy">
-        <i class="fa fa-question-circle"></i>
         <div class="dapps-button" @click="buildProxy">
-          <h4>Create Proxy</h4>
+          <h4>{{ $t('dappsMaker.createProxy') }}</h4>
         </div>
       </div>
+      <div v-if="showCreateProxy" class="proxy-container">
+        {{ $t('dappsMaker.proxyInstructions') }}
+      </div>
       <div v-if="showCdpMigrateButtons">
-        <i class="fa fa-question-circle"></i>
         <div v-for="(value, idx) in cdpsWithoutProxy" :key="idx + value">
           <div class="dapps-button">
             <div @click="migrateCdpExternal(value)">
-              <h4>Migrate CDP {{ value }}</h4>
+              <h4>
+                {{ $t('dappsMaker.migrateCdp', { value: value }) }}
+              </h4>
             </div>
           </div>
         </div>
+      </div>
+      <div v-if="showCdpMigrateButtons" class="proxy-container">
+        {{ $t('dappsMaker.migrateInstructions') }}
       </div>
     </div>
     <div v-show="makerActive" class="buttons-container">

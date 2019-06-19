@@ -113,6 +113,34 @@ $confirmation-modal-mobile-width: 500px;
   min-height: 15px;
 }
 
+.proxy-container {
+  color: $black;
+  height: 100%;
+  padding: 10px 5px;
+  grid-column: 2 / 5;
+
+  @media all and (max-width: $dapp-button-mobile-width) {
+    display: flex;
+    align-items: center;
+    text-align: left;
+    padding: 5px 10px;
+  }
+
+  img {
+    @media all and (max-width: $dapp-button-mobile-width) {
+      margin-top: 0;
+      margin-left: -10px;
+      margin-right: 5px;
+    }
+  }
+
+  h4 {
+    margin-bottom: 5px;
+    font-size: 18px;
+    font-weight: 500;
+  }
+}
+
 .buttons-container {
   display: grid;
   grid-column-gap: 5px;
@@ -139,6 +167,8 @@ $confirmation-modal-mobile-width: 500px;
     display: block;
     padding: 10px;
   }
+
+
 }
 
 %send-form-base {
