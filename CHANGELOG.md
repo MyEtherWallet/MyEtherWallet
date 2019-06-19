@@ -1,3 +1,9 @@
+### Release v5.0.14-hotfix
+
+### Bug
+
+- Fix send tx for custom chains [#1184](https://github.com/MyEtherWallet/MyEtherWallet/pull/1184)
+
 ### Release v5.0.14
 
 ### Feature
