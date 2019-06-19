@@ -8,6 +8,7 @@ import bip44Paths from '../../bip44';
 import HDWalletInterface from '@/wallets/HDWalletInterface';
 import * as HDKey from 'hdkey';
 import platform from 'platform';
+import store from '@/store';
 
 import {
   getSignTransactionObject,
@@ -59,7 +60,7 @@ class ledgerWallet {
       accountPath = this.basePath + '/' + idx;
     }
     const txSigner = async tx => {
-      tx = new Transaction(tx, { chain: tx.chainId });
+      tx = new Transaction(tx, { common: store.common });
       const networkId = tx.getChainId();
       tx.raw[6] = networkId;
       tx.raw[7] = Buffer.from([]);

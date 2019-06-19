@@ -75,6 +75,7 @@ import { WEB3_WALLET, KEEPKEY } from '@/wallets/bip44/walletTypes';
 import { Toast, Misc } from '@/helpers';
 import locStore from 'store';
 import parseTokensData from '@/helpers/parseTokensData.js';
+import Common from 'ethereumjs-common';
 
 const events = {
   showSuccessModal: 'showSuccessModal',
@@ -195,7 +196,7 @@ export default {
     });
 
     this.$eventHub.$on('showSendSignedTx', (tx, resolve) => {
-      const newTx = new Transaction(tx, { chain: this.network.type.chainID });
+      const newTx = new Transaction(tx);
       this.isHardwareWallet = this.account.isHardware;
       this.responseFunction = resolve;
       this.successMessage = 'Sending Transaction';
