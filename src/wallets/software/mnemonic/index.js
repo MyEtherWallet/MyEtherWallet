@@ -1,5 +1,5 @@
 import * as HDKey from 'hdkey';
-import ethTx from 'ethereumjs-tx';
+import { Transaction } from 'ethereumjs-tx';
 import { hashPersonalMessage, toBuffer, ecsign } from 'ethereumjs-util';
 import { MNEMONIC as mnemonicType } from '../../bip44/walletTypes';
 import bip44Paths from '../../bip44';
@@ -30,8 +30,8 @@ class MnemonicWallet {
   getAccount(idx) {
     const derivedKey = this.hdKey.derive(this.basePath + '/' + idx);
     const txSigner = async tx => {
-      tx = new ethTx(tx);
-      const networkId = tx._chainId;
+      tx = new Transaction(tx, { chain: tx.chainId });
+      const networkId = tx.getChainId();
       tx.sign(derivedKey.privateKey);
       const signedChainId = calculateChainIdFromV(tx.v);
       if (signedChainId !== networkId)

@@ -477,10 +477,7 @@ export default {
           });
       } catch (e) {
         this.loading = false;
-        Toast.responseHandler(
-          'Something went wrong! Please try again.',
-          Toast.ERROR
-        );
+        Toast.responseHandler(e, Toast.ERROR);
       }
     },
     async registerWithDuration() {

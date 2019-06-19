@@ -8,6 +8,8 @@ import {
   ethCoinbase,
   ethGetTransactionCount,
   ethGetTransactionReceipt,
+  ethGetBlockByNumber,
+  ethGetBlockNumber,
   netVersion
 } from '../methods';
 class HttpProvider {
@@ -29,6 +31,8 @@ class HttpProvider {
         middleware.use(ethSign);
         middleware.use(ethAccounts);
         middleware.use(ethCoinbase);
+        middleware.use(ethGetBlockByNumber);
+        middleware.use(ethGetBlockNumber);
         middleware.use(netVersion);
         middleware.run(req, callback).then(() => {
           requestManager.provider.send(payload, callback);
