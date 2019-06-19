@@ -298,8 +298,7 @@ export default {
               new BigNumber(this.gasLimit).toString(16)
             ),
             data: this.txData
-          },
-          { chain: this.network.type.chainID }
+          }
         );
         const json = _tx.toJSON(true);
         delete json.to;

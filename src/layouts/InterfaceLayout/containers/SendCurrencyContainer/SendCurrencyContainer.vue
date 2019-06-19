@@ -497,10 +497,9 @@ export default {
           gasLimit: Misc.sanitizeHex(new BigNumber(this.gasLimit).toString(16)),
           to: this.txTo,
           value: this.txValue,
-          data: this.txData,
-          chainId: this.network.type.chainID
+          data: this.txData
         };
-        const _tx = new Transaction(raw, { chain: this.network.type.chainID });
+        const _tx = new Transaction(raw);
         const json = _tx.toJSON(true);
         json.from = coinbase;
         this.web3.eth.sendTransaction(json).catch(err => {
