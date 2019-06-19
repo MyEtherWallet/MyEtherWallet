@@ -170,6 +170,7 @@ import sortByBalance from '@/helpers/sortByBalance.js';
 import BigNumber from 'bignumber.js';
 import EditWalletModal from '../EditWalletModal';
 import RemoveWalletModal from '../RemoveWalletModal';
+import { mapState } from 'vuex';
 
 export default {
   components: {
@@ -216,6 +217,7 @@ export default {
     };
   },
   computed: {
+    ...mapState(['web3']),
     parsedWallet() {
       return JSON.parse(this.wallet);
     }
@@ -255,7 +257,7 @@ export default {
     async fetchTokens() {
       this.loading = true;
       let tokens = [];
-      const tb = new TokenBalance(window.web3.currentProvider);
+      const tb = new TokenBalance(this.web3.currentProvider);
       try {
         tokens = await tb.getBalance(this.address);
         tokens = tokens.map(token => {

@@ -142,6 +142,7 @@ import { WalletInterface } from '@/wallets';
 import { KEYSTORE as keyStoreType } from '@/wallets/bip44/walletTypes';
 import Blockie from '@/components/Blockie';
 import { Misc } from '@/helpers';
+import { mapState } from 'vue';
 import { ETH } from '@/networks/types';
 import ethUnit from 'ethjs-unit';
 
@@ -192,6 +193,7 @@ export default {
     };
   },
   computed: {
+    ...mapState(['web3']),
     txLinkAndHash() {
       return this.txLink.replace('[[txHash]]', this.txHash);
     },
@@ -283,7 +285,7 @@ export default {
       };
     },
     async getGasPrice() {
-      window.web3.eth.getGasPrice().then(res => {
+      this.web3.eth.getGasPrice().then(res => {
         this.gasPrice = new BigNumber(ethUnit.fromWei(res, 'gwei')).toString();
       });
     },
@@ -298,7 +300,7 @@ export default {
         data: '0x'
       };
       if (this.toAddress !== '') {
-        window.web3.eth
+        this.web3.eth
           .estimateGas(params)
           .then(gasLimit => {
             this.gasLimit = gasLimit;
@@ -320,7 +322,7 @@ export default {
       this.value = walletBalance.minus(convertedLimitAndPrice).toString();
     },
     async createTransaction() {
-      const nonce = await window.web3.eth.getTransactionCount(
+      const nonce = await this.web3.eth.getTransactionCount(
         this.selectedWallet.address
       );
       this.raw = {
@@ -342,7 +344,7 @@ export default {
     },
     async sendTransaction() {
       this.loading = true;
-      window.web3.eth
+      this.web3.eth
         .sendSignedTransaction(this.signedTx.rawTransaction)
         .on('transactionHash', hash => {
           this.txHash = hash;

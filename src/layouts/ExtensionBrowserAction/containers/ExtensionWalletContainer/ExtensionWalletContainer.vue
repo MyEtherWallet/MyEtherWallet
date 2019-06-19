@@ -93,6 +93,7 @@ import web3utils from 'web3-utils';
 import BigNumber from 'bignumber.js';
 import { WalletInterface } from '@/wallets';
 import walletWorker from 'worker-loader!@/workers/wallet.worker.js';
+import { mapState } from 'vuex';
 
 export default {
   components: {
@@ -124,6 +125,7 @@ export default {
     };
   },
   computed: {
+    ...mapState(['web3']),
     validInput() {
       return (
         (this.password !== '' || this.password.length > 0) &&
@@ -224,7 +226,7 @@ export default {
       this.loading = false;
     },
     async getBalance(addr) {
-      const balance = await window.web3.eth.getBalance(addr);
+      const balance = await this.web3.eth.getBalance(addr);
       return web3utils.fromWei(balance);
     },
     addWallet() {
