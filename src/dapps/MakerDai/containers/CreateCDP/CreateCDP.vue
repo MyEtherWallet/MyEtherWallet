@@ -296,6 +296,7 @@ export default {
         if (toBigNumber(this.ethQty).lte(this.values.minEth)) return false;
         if (toBigNumber(this.maxDaiDraw).lte(toBigNumber(this.daiQty)))
           return false;
+        if (toBigNumber(this.collatRatio).lte(1.501)) return false;
         return toBigNumber(ethUnit.toWei(this.ethQty, 'ether').toString()).lte(
           this.account.balance
         );
@@ -322,7 +323,8 @@ export default {
     },
     maxDaiDraw() {
       if (this.ethQty <= 0) return 0;
-      return this.calcDaiDraw(this.ethQty);
+      const bufferVal = this.calcDaiDraw(this.ethQty).times(0.01);
+      return toBigNumber(this.calcDaiDraw(this.ethQty)).minus(bufferVal);
     },
     minEthDeposit() {
       if (this.daiQty <= 0) return 0;
