@@ -16,7 +16,7 @@ import {
 } from '../../utils';
 import HDKey from 'hdkey';
 import { toBuffer } from 'ethereumjs-util';
-import ethTx from 'ethereumjs-tx';
+import { Transaction } from 'ethereumjs-tx';
 import errorHandler from './errorHandler';
 
 const { MessageType } = Messages;
@@ -88,9 +88,9 @@ class KeepkeyWallet {
       accountPath = this.basePath + '/' + idx;
     }
     const txSigner = async tx => {
-      tx = new ethTx(tx);
+      tx = new Transaction(tx, { chain: tx.chainId });
       const hexTx = getUint8Tx(tx);
-      const networkId = tx._chainId;
+      const networkId = tx.getChainId();
       hexTx.addressNList = bip32ToAddressNList(accountPath);
       const result = await this.keepkey.ethereumSignTx(
         hexTx,
