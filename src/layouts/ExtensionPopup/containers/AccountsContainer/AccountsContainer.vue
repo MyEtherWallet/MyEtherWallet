@@ -114,6 +114,7 @@ import QuickSendContainer from '../QuickSendContainer';
 import BigNumber from 'bignumber.js';
 import Blockie from '@/components/Blockie';
 import { toChecksumAddress } from '@/helpers/addressUtils';
+import { mapState } from '@/helpers/addressUtils';
 
 export default {
   components: {
@@ -145,6 +146,7 @@ export default {
     };
   },
   computed: {
+    ...mapState(['web3']),
     concatBalance() {
       const stringifiedBal = `${this.totalBalance}`;
       return stringifiedBal.length > 11
@@ -205,8 +207,8 @@ export default {
     },
     async fetchBalance(address) {
       if (address !== '0x') {
-        const balance = await window.web3.eth.getBalance(address);
-        return window.web3.utils.fromWei(balance);
+        const balance = await this.web3.eth.getBalance(address);
+        return this.web3.utils.fromWei(balance);
       }
     },
     moveToQuicksend() {
