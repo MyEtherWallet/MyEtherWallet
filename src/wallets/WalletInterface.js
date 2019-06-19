@@ -76,13 +76,10 @@ class WalletInterface {
       throw new Error('public key only wallets needs a signer');
     return new Promise((resolve, reject) => {
       if (!this.isPubOnly) {
-        console.log(store.state.common);
         const tx = new Transaction(txParams, {
           common: store.state.common
         });
-        console.log(txParams, tx);
         const networkId = tx.getChainId();
-        console.log(networkId);
         tx.sign(this.privateKey);
         const signedChainId = calculateChainIdFromV(tx.v);
         if (signedChainId !== networkId)
