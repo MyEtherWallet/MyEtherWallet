@@ -420,11 +420,6 @@ export default {
       return '--';
     }
   },
-  watch: {
-    // ['activeCdp.ready']() {
-    //   this.isReady();
-    // },
-  },
   async mounted() {
     this.cdpId = this.$route.params.cdpId;
     if (this.makerActive) {

@@ -65,10 +65,6 @@ export default class MakerCDP {
     return this.services.wethToPethRatio;
   }
 
-  // get targetPrice() {
-  //   return this.services._targetPrice;
-  // }
-
   get liquidationRatio() {
     return this.services.liquidationRatio;
   }
@@ -109,10 +105,6 @@ export default class MakerCDP {
     return this.services._proxyService;
   }
 
-  // get priceService() {
-  //   return this.services._priceService;
-  // }
-
   get cdpService() {
     return this.services._cdpService;
   }
@@ -139,10 +131,6 @@ export default class MakerCDP {
     return this.ethCollateral.toNumber();
   }
 
-  // get pethCollateralNum() {
-  //   return this.pethCollateral.toNumber();
-  // }
-
   get collatRatio() {
     return this._collatRatio;
   }
@@ -154,10 +142,6 @@ export default class MakerCDP {
   get governanceFeeOwed() {
     return this._governanceFee;
   }
-
-  // get enoughToWipe() {
-  //   return this._enoughToWipe;
-  // }
 
   get maxDai() {
     if (
@@ -284,52 +268,6 @@ export default class MakerCDP {
   async getProxy() {
     this._proxyAddress = await this.services.getProxy();
   }
-
-  // async buildProxy() {
-  //   const currentProxy = await this.getProxy();
-  //   if (!currentProxy) {
-  //     this.needsUpdate = true;
-  //     await this.proxyService.build();
-  //     this._proxyAddress = await this.getProxy();
-  //     return this._proxyAddress;
-  //   }
-  //   this._proxyAddress = await this.getProxy();
-  //   return this._proxyAddress;
-  // }
-  //
-  // async migrateCdpComplete() {
-  //   this.needsUpdate = true;
-  //   if (!this.migrateCdpActive && !this._proxyAddress) {
-  //     this.migrateCdpActive = true;
-  //     this.migrateCdpStage = 1;
-  //     await this.proxyService.ensureProxy();
-  //   } else {
-  //     if (this.migrateCdpStage === 1) {
-  //       let checking;
-  //       this.migrateCdpStage = 2;
-  //       const currentProxy = await this.getProxy();
-  //       if (currentProxy) {
-  //         this.migrateCdpActive = false;
-  //         this.doUpdate++;
-  //         this.migrateCdpStage = 3;
-  //         this.noProxy = false;
-  //         await this.cdpService.give(this.cdpId, currentProxy);
-  //       } else {
-  //         checking = setInterval(async () => {
-  //           const currentProxy = await this.getProxy();
-  //           if (currentProxy) {
-  //             clearInterval(checking);
-  //             this.migrateCdpActive = false;
-  //             this.doUpdate++;
-  //             this.migrateCdpStage = 3;
-  //             this.noProxy = false;
-  //             await this.cdpService.give(this.cdpId, currentProxy);
-  //           }
-  //         }, 500);
-  //       }
-  //     }
-  //   }
-  // }
 
   async migrateCdp() {
     const currentProxy = await this.getProxy();
@@ -502,13 +440,6 @@ export default class MakerCDP {
     return this.services.toPeth(eth);
   }
 
-  // fromPeth(peth) {
-  //   if (!toBigNumber(peth).eq(0)) {
-  //     return toBigNumber(peth).times(this.wethToPethRatio);
-  //   }
-  //   return toBigNumber(0);
-  // }
-
   maxDaiDraw() {
     const tl = toBigNumber(this.ethPrice).times(
       toBigNumber(this.ethCollateral)
@@ -518,28 +449,6 @@ export default class MakerCDP {
     );
     return tl.minus(tr).div(toBigNumber(this.ethPrice));
   }
-
-  // calcMinCollatRatio(priceFloor) {
-  //   return bnOver(this.ethPrice, this.liquidationRatio, priceFloor);
-  // }
-  //
-  // calcDaiDraw(
-  //   ethQty,
-  //   ethPrice = this.ethPrice,
-  //   liquidationRatio = this.liquidationRatio
-  // ) {
-  //   if (ethQty <= 0) return 0;
-  //   return bnOver(ethPrice, toBigNumber(ethQty), liquidationRatio);
-  // }
-  //
-  // calcMinEthDeposit(
-  //   daiQty,
-  //   ethPrice = this.ethPrice,
-  //   liquidationRatio = this.liquidationRatio
-  // ) {
-  //   if (daiQty <= 0) return 0;
-  //   return bnOver(liquidationRatio, daiQty, ethPrice);
-  // }
 
   calcCollatRatio(ethQty, daiQty) {
     if (ethQty <= 0 || daiQty <= 0) return 0;
@@ -554,43 +463,7 @@ export default class MakerCDP {
       this.ethPrice,
       this.liquidationRatio
     );
-    // const getInt = parseInt(this.ethPrice);
-    // for (let i = getInt; i > 0; i--) {
-    //   const atValue = bnOver(i, ethQty, daiQty).lte(this.liquidationRatio);
-    //   if (atValue) {
-    //     return i;
-    //   }
-    // }
-    // for (let i = 100; i > 0; i--) {
-    //   const atValue = bnOver(i / 100, ethQty, daiQty).lte(
-    //     this.liquidationRatio
-    //   );
-    //   if (atValue) {
-    //     return i / 100;
-    //   }
-    // }
-    // return 0;
   }
-
-  // calcCollatRatioDaiChg(daiQty) {
-  //   return toBigNumber(this.calcCollatRatio(this.ethCollateral, daiQty));
-  // }
-  //
-  // calcCollatRatioEthChg(ethQty) {
-  //   return toBigNumber(this.calcCollatRatio(ethQty, this.debtValue));
-  // }
-  //
-  // calcLiquidationPriceDaiChg(daiQty) {
-  //   return toBigNumber(this.calcLiquidationPrice(this.ethCollateral, daiQty));
-  // }
-  //
-  // calcLiquidationPriceEthChg(ethQty) {
-  //   return toBigNumber(this.calcLiquidationPrice(ethQty, this.debtValue));
-  // }
-  //
-  // atRisk() {
-  //   return !!this._collatRatio.lte(2);
-  // }
 
   // Helpers
   async approveDai() {

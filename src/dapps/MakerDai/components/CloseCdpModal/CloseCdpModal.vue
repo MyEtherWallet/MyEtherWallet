@@ -35,7 +35,7 @@
                 <b>{{ mkrBalance }} MKR</b>
               </p>
             </div>
-            <p v-show="!enoughDai" class="get-mkr" @click="getMkr()">
+            <p v-show="!enoughMkr" class="get-mkr" @click="getMkr()">
               {{ $t('dappsMaker.getMkr') }}
             </p>
           </div>
@@ -49,7 +49,7 @@
                 <b>{{ daiBalance }} DAI</b>
               </p>
             </div>
-            <p v-show="!enoughMkr" class="get-mkr" @click="getDai()">
+            <p v-show="!enoughDai" class="get-mkr" @click="getDai()">
               {{ $t('dappsMaker.getDai') }}
             </p>
           </div>
@@ -300,7 +300,6 @@ export default {
     this.getBalances();
     this.$refs.modal.$on('shown', async () => {
       this.getBalances();
-      // await this.checkMakerToClose();
     });
   },
   methods: {
@@ -312,20 +311,9 @@ export default {
         this.closeModal();
       }, 200);
     },
-    async checkMakerToClose() {
-      if (this.activeCdp) {
-        this.closable = await this.activeCdp.canCloseCdp();
-        return this.closable;
-      }
-      this.closable = false;
-    },
     async closeCdp() {
-      // const canCloseCdp = await this.activeCdp.canCloseCdp();
-      // if (canCloseCdp) {
       this.delayCloseModal();
       this.$emit('closeCdp');
-      // await this.activeCdp.closeCdp();
-      // }
     },
     displayPercentValue(raw) {
       if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);
@@ -367,7 +355,6 @@ export default {
           symbol: 'MKR',
           name: 'Maker'
         };
-        // this.destAddress = this.proxyAddress;
         this.$nextTick(() => {
           this.$refs.swapWidget.$refs.modal.show();
         });
@@ -398,11 +385,9 @@ export default {
 
     async approveDai() {
       this.$emit('approveDai');
-      // await this.activeCdp.approveDai();
     },
     async approveMkr() {
       this.$emit('approveMkr');
-      // await this.activeCdp.approveMkr();
     }
   }
 };

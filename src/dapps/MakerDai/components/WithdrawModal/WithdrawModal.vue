@@ -220,13 +220,6 @@ export default {
     canCompute() {
       return this.values && this.amountPresent;
     },
-    // hasEnoughEth() {
-    //   if (this.amountPresent) {
-    //     const asEth = ethUnit.fromWei(this.account.balance, 'ether');
-    //     return toBigNumber(this.amount).lte(toBigNumber(asEth));
-    //   }
-    //   return true;
-    // },
     canWithdrawEthNotice() {
       if (this.amountPresent) {
         return !toBigNumber(this.amount).lte(
