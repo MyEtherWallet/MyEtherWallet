@@ -1,6 +1,6 @@
 import MEWconnect from '@myetherwallet/mewconnect-web-client';
 import store from '@/store';
-import ethTx from 'ethereumjs-tx';
+import { Transaction } from 'ethereumjs-tx';
 import WalletInterface from '@/wallets/WalletInterface';
 import { MEW_CONNECT as mewConnectType } from '../../bip44/walletTypes';
 import {
@@ -62,7 +62,7 @@ class MEWconnectWallet {
       return new Promise(resolve => {
         this.mewConnect.sendRtcMessage('signTx', JSON.stringify(tx));
         this.mewConnect.once('signTx', result => {
-          tx = new ethTx(sanitizeHex(result));
+          tx = new Transaction(sanitizeHex(result), { chain: networkId });
           const signedChainId = calculateChainIdFromV(tx.v);
           if (signedChainId !== networkId)
             throw new Error(

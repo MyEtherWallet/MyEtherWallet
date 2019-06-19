@@ -27,7 +27,7 @@
           :button-disabled="notValid"
           :options="accessWalletButtonOptions"
           class="submit-button"
-          @click.native="unlockWallet"
+          @click.native.prevent="unlockWallet"
         />
       </form>
       <div class="customer-support-block">
