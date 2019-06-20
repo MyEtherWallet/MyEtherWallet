@@ -93,7 +93,7 @@ class BitBoxWallet {
 }
 const getRootPubKey = (_bitbox, _path) => {
   return new Promise((resolve, reject) => {
-    _bitbox.getAddress(_path, (result, error) => {
+    _bitbox.getStarted(_path, (result, error) => {
       if (error) return reject(error);
       resolve({
         publicKey: result.publicKey,
