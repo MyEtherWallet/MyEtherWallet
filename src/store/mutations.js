@@ -1,6 +1,5 @@
 import store from 'store';
 import { Toast } from '@/helpers';
-import commonGenerator from '@/helpers/commonGenerator';
 
 const ADD_NOTIFICATION = function(state, newNotif) {
   state.notifications = newNotif;
@@ -93,7 +92,6 @@ const SWITCH_NETWORK = function(state, networkObj) {
   _netObj.type = {
     name: networkObj.type.name
   };
-  state.common = commonGenerator(networkObj);
   store.set('network', _netObj);
 };
 

@@ -89,7 +89,9 @@ class KeepkeyWallet {
       accountPath = this.basePath + '/' + idx;
     }
     const txSigner = async tx => {
-      tx = new Transaction(tx, { common: store.common });
+      tx = new Transaction(tx, {
+        common: store.commostore.state.network.confign
+      });
       const hexTx = getUint8Tx(tx);
       const networkId = tx.getChainId();
       hexTx.addressNList = bip32ToAddressNList(accountPath);

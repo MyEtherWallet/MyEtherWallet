@@ -77,7 +77,7 @@ class WalletInterface {
     return new Promise((resolve, reject) => {
       if (!this.isPubOnly) {
         const tx = new Transaction(txParams, {
-          common: store.state.common
+          common: store.state.network.config
         });
         const networkId = tx.getChainId();
         tx.sign(this.privateKey);
