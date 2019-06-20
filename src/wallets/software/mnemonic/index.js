@@ -6,6 +6,7 @@ import bip44Paths from '../../bip44';
 import HDWalletInterface from '@/wallets/HDWalletInterface';
 import { getSignTransactionObject, calculateChainIdFromV } from '../../utils';
 import errorHandler from './errorHandler';
+import store from '@/store';
 
 const bip39 = require('bip39');
 const NEED_PASSWORD = true;
@@ -30,7 +31,7 @@ class MnemonicWallet {
   getAccount(idx) {
     const derivedKey = this.hdKey.derive(this.basePath + '/' + idx);
     const txSigner = async tx => {
-      tx = new Transaction(tx, { chain: tx.chainId });
+      tx = new Transaction(tx, { common: store.state.network.config });
       const networkId = tx.getChainId();
       tx.sign(derivedKey.privateKey);
       const signedChainId = calculateChainIdFromV(tx.v);
