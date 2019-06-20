@@ -31,7 +31,7 @@
                     :preferred-countries="['us', 'gb', 'ua']"
                     :disabled-fetching-country="true"
                     class="phone-number"
-                    @onValidate="setPhoneNumber"
+                    @validate="setPhoneNumber"
                   ></vue-tel-input>
                 </div>
               </li>
