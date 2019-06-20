@@ -175,6 +175,11 @@
     "registrar": "0x0b07463b30b302a98407d3e3df85ebc073b0dbd1"
   },
   {
+    "name": "cryptoking",
+    "version": "1.0",
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
+  },
+  {
     "name": "deserves",
     "version": "1.0",
     "registrar": "0x0b07463b30b302a98407d3e3df85ebc073b0dbd1"
@@ -238,6 +243,11 @@
     "name": "smartaddress",
     "version": "0.9",
     "registrar": "0xfa6512358d241b636edf5f8ccaaf86676dec21a7"
+  },
+  {
+    "name": "thecryptogirl",
+    "version": "1.0",
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
   },
   {
     "name": "thecryptoguy",
