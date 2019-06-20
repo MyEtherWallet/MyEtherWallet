@@ -60,40 +60,45 @@ class ledgerWallet {
       accountPath = this.basePath + '/' + idx;
     }
     const txSigner = async tx => {
-      tx = new Transaction(tx, { common: store.common });
+      tx = new Transaction(tx, { common: store.state.network.config });
       const networkId = tx.getChainId();
       tx.raw[6] = networkId;
       tx.raw[7] = Buffer.from([]);
       tx.raw[8] = Buffer.from([]);
       const tokenInfo = byContractAddress('0x' + tx.to.toString('hex'));
-      if (tokenInfo) await this.ledger.provideERC20TokenInformation(tokenInfo);
-      const result = await this.ledger.signTransaction(
-        accountPath,
-        tx.serialize().toString('hex')
-      );
-
-      // EIP155 support. check/recalc signature v value.
-      let v = result.v;
-      const rv = parseInt(v, 16);
-      let cv = networkId * 2 + 35;
-      if (rv !== cv && (rv & cv) !== rv) {
-        cv += 1; // add signature v bit.
-      }
-      v = cv.toString(16);
-
-      tx.v = getBufferFromHex(v);
-      tx.r = getBufferFromHex(result.r);
-      tx.s = getBufferFromHex(result.s);
-      const signedChainId = calculateChainIdFromV(tx.v);
-      if (signedChainId !== networkId)
-        throw new Error(
-          'Invalid networkId signature returned. Expected: ' +
-            networkId +
-            ', Got: ' +
-            signedChainId,
-          'InvalidNetworkId'
+      try {
+        if (tokenInfo)
+          await this.ledger.provideERC20TokenInformation(tokenInfo);
+        const result = await this.ledger.signTransaction(
+          accountPath,
+          tx.serialize().toString('hex')
         );
-      return getSignTransactionObject(tx);
+
+        // EIP155 support. check/recalc signature v value.
+        let v = result.v;
+        const rv = parseInt(v, 16);
+        let cv = networkId * 2 + 35;
+        if (rv !== cv && (rv & cv) !== rv) {
+          cv += 1; // add signature v bit.
+        }
+        v = cv.toString(16);
+
+        tx.v = getBufferFromHex(v);
+        tx.r = getBufferFromHex(result.r);
+        tx.s = getBufferFromHex(result.s);
+        const signedChainId = calculateChainIdFromV(tx.v);
+        if (signedChainId !== networkId)
+          throw new Error(
+            'Invalid networkId signature returned. Expected: ' +
+              networkId +
+              ', Got: ' +
+              signedChainId,
+            'InvalidNetworkId'
+          );
+        return getSignTransactionObject(tx);
+      } catch (e) {
+        console.log(e);
+      }
     };
     const msgSigner = async msg => {
       const result = await this.ledger.signPersonalMessage(

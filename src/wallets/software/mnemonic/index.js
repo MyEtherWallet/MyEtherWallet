@@ -31,7 +31,7 @@ class MnemonicWallet {
   getAccount(idx) {
     const derivedKey = this.hdKey.derive(this.basePath + '/' + idx);
     const txSigner = async tx => {
-      tx = new Transaction(tx, { common: store.common });
+      tx = new Transaction(tx, { common: store.state.network.config });
       const networkId = tx.getChainId();
       tx.sign(derivedKey.privateKey);
       const signedChainId = calculateChainIdFromV(tx.v);

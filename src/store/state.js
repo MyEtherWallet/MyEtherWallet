@@ -14,7 +14,10 @@ if (storedNetwork !== undefined) {
   network.type = nodeList[storedNetwork.type.name][0].type;
 }
 
-const common = commonGenerator(network);
+if (!network.hasOwnProperty('config')) {
+  network.config = commonGenerator(network);
+}
+
 const notifications =
   store.get('notifications') !== undefined ? store.get('notifications') : {};
 const gasPrice =
@@ -45,8 +48,7 @@ const state = {
   darklist: darklist,
   gettingStartedDone: gettingStartedDone,
   blockNumber: 0,
-  linkQuery: {},
-  common: common
+  linkQuery: {}
 };
 
 export default state;

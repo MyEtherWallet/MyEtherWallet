@@ -38,7 +38,7 @@ class TrezorWallet {
   getAccount(idx) {
     const derivedKey = this.hdKey.derive('m/' + idx);
     const txSigner = async tx => {
-      tx = new Transaction(tx, { common: store.common });
+      tx = new Transaction(tx, { common: store.state.network.config });
       const networkId = tx.getChainId();
       const options = {
         path: this.basePath + '/' + idx,

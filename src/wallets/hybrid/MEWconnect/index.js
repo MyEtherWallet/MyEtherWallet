@@ -62,7 +62,9 @@ class MEWconnectWallet {
       return new Promise(resolve => {
         this.mewConnect.sendRtcMessage('signTx', JSON.stringify(tx));
         this.mewConnect.once('signTx', result => {
-          tx = new Transaction(sanitizeHex(result), { common: store.common });
+          tx = new Transaction(sanitizeHex(result), {
+            common: store.state.network.config
+          });
           const signedChainId = calculateChainIdFromV(tx.v);
           if (signedChainId !== networkId)
             throw new Error(
