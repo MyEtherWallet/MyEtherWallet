@@ -8,6 +8,7 @@ import HDWalletInterface from '@/wallets/HDWalletInterface';
 import { Toast } from '@/helpers';
 import errorHandler from './errorHandler';
 import * as HDKey from 'hdkey';
+import store from '@/store';
 import {
   getSignTransactionObject,
   sanitizeHex,
@@ -37,7 +38,7 @@ class BitBoxWallet {
   getAccount(idx) {
     const derivedKey = this.hdKey.derive('m/' + idx);
     const txSigner = async tx => {
-      tx = new Transaction(tx, { chain: tx.chainId });
+      tx = new Transaction(tx, { common: store.state.network.config });
       const networkId = tx.getChainId();
       const result = await this.bitbox.signTransaction(
         this.basePath + '/' + idx,

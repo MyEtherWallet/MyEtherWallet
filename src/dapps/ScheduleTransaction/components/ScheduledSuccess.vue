@@ -192,10 +192,7 @@ export default {
         scheduledTokensApproveTransaction
       );
       scheduledTokensApproveTransaction.gasLimit = estimatedGasLimit + 1000000;
-
-      const approveTx = new Transaction(scheduledTokensApproveTransaction, {
-        chain: this.network.type.chainID
-      });
+      const approveTx = new Transaction(scheduledTokensApproveTransaction);
 
       const json = approveTx.toJSON(true);
       json.from = coinbase;
