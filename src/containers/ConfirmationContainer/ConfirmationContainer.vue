@@ -195,7 +195,7 @@ export default {
     });
 
     this.$eventHub.$on('showSendSignedTx', (tx, resolve) => {
-      const newTx = new Transaction(tx, { chain: this.network.type.chainID });
+      const newTx = new Transaction(tx);
       this.isHardwareWallet = this.account.isHardware;
       this.responseFunction = resolve;
       this.successMessage = 'Sending Transaction';
