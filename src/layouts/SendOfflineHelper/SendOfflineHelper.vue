@@ -514,9 +514,7 @@ export default {
       if (rawSigned) this.rawSigned = rawSigned;
       if (this.rawSigned !== '') {
         const sanitizedRawSigned = Misc.sanitizeHex(this.rawSigned);
-        const tx = new Transaction(sanitizedRawSigned, {
-          chain: this.network.type.chainID
-        });
+        const tx = new Transaction(sanitizedRawSigned);
         this.invalidSignature = !tx.verifySignature();
         this.chainID = tx.getChainId();
         this.wrongNetwork = !new BigNumber(
