@@ -75,7 +75,6 @@ import { WEB3_WALLET, KEEPKEY } from '@/wallets/bip44/walletTypes';
 import { Toast, Misc } from '@/helpers';
 import locStore from 'store';
 import parseTokensData from '@/helpers/parseTokensData.js';
-import Common from 'ethereumjs-common';
 
 const events = {
   showSuccessModal: 'showSuccessModal',

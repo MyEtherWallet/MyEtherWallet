@@ -288,18 +288,14 @@ export default {
         const web3 = this.web3;
         const coinbase = await web3.eth.getCoinbase();
         const nonce = await web3.eth.getTransactionCount(coinbase);
-        const _tx = new Transaction(
-          {
-            nonce: nonce,
-            gasPrice: Misc.sanitizeHex(
-              ethUnit.toWei(this.gasPrice, 'gwei').toString(16)
-            ),
-            gasLimit: Misc.sanitizeHex(
-              new BigNumber(this.gasLimit).toString(16)
-            ),
-            data: this.txData
-          }
-        );
+        const _tx = new Transaction({
+          nonce: nonce,
+          gasPrice: Misc.sanitizeHex(
+            ethUnit.toWei(this.gasPrice, 'gwei').toString(16)
+          ),
+          gasLimit: Misc.sanitizeHex(new BigNumber(this.gasLimit).toString(16)),
+          data: this.txData
+        });
         const json = _tx.toJSON(true);
         delete json.to;
         json.from = coinbase;
