@@ -20,7 +20,7 @@
   },
   "externally_connectable": {
     "matches": [
-      "*://*/*"
+      "*://*.myetherwallet.com/*"
     ]
   },
   "content_scripts": [
