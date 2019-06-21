@@ -1,11 +1,17 @@
 import HttpProvider from './providers/http-provider';
 import GivenProvider from './providers/given-provider';
 import WSProvider from './providers/ws-provider';
+import MewCxWeb3 from './providers/mew-cx-web3';
 import EtherscanProvider from './providers/etherscan-provider';
 import { WEB3_WALLET } from '../bip44/walletTypes';
 class MEWProvider {
   constructor(host, options, store, eventHub) {
-    if (store.state.wallet && store.state.wallet.identifier == WEB3_WALLET) {
+    if (BUILD_TYPE === 'mewcx') {
+      return new MewCxWeb3(host);
+    } else if (
+      store.state.wallet &&
+      store.state.wallet.identifier == WEB3_WALLET
+    ) {
       return new GivenProvider(host, options, store, eventHub);
     } else if (host && typeof host === 'string') {
       if (host.includes('etherscan')) {

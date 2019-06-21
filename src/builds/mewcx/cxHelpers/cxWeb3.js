@@ -1,4 +1,5 @@
-import Web3 from 'web3';
+import web3 from 'web3';
+import MEWProvider from '@/wallets/web3-provider';
 import { getMode } from '../../configs';
 const chrome = window.chrome;
 const useHash = getMode() === 'hash' ? '#' : '';
@@ -16,7 +17,6 @@ if (
     focused: true
   });
 } else if (!window.hasOwnProperty('web3')) {
-  const web3 = new Web3('https://mainnet.infura.io/mew');
-  window.web3 = web3;
-  web3.currentProvider.isMew = true;
+  window.web3 = new web3(new MEWProvider('https://mainnet.infura.io/mew'));
+  window.web3.currentProvider.isMew = true;
 }

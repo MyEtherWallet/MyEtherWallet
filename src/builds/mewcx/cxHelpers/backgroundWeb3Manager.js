@@ -13,20 +13,38 @@ const chrome = window.chrome;
 //   web3 +
 //   ');';
 
+function exec(fn) {
+  console.log('inserting runtime id');
+  const script = document.createElement('script');
+  script.setAttribute('type', 'application/javascript');
+  script.textContent = '(' + fn + ')("' + chrome.runtime.id + '")';
+  document.body.appendChild(script); //run the script
+  document.body.removeChild(script); //clean up
+}
+
+exec(function(extensionID) {
+  window.extensionID = extensionID;
+});
+
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.msg === 'injectWeb3') {
     const script = document.createElement('script');
     script.src = chrome.extension.getURL('cxWeb3.js');
-    (document.head || document.documentElement).appendChild(script);
-    script.onload = function() {
-      script.parentNode.removeChild(script);
-    };
+    document.body.appendChild(script);
+    document.body.removeChild(script);
     sendResponse({
       response: 'REEEEEEEEEEEEE! SUCCESSFULLY ADDED WEB3 MY DUDES'
     });
-    return true;
   }
+
+  if (request.msg === 'fetchMewCXAccounts') {
+    console.log('gotHere');
+    sendResponse({ response: 'SOMEBODY ONCE TOLD ME' });
+  }
+  return true;
 });
+// (function() {
+// })();
 
 // function injector() {
 //   console.log('injector called');

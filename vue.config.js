@@ -9,8 +9,9 @@ const path = require('path');
 const webpackConfig = {
   entry: {
     app: './src/main.js',
-    background: './src/builds/mewcx/cxHelpers/backgroundPhishingCatcher.js',
+    phishingManager: './src/builds/mewcx/cxHelpers/backgroundPhishingCatcher.js',
     web3Manager: './src/builds/mewcx/cxHelpers/backgroundWeb3Manager.js',
+    background: './src/builds/mewcx/cxHelpers/backgroundState.js',
     cxWeb3: './src/builds/mewcx/cxHelpers/cxWeb3.js'
   },
   node: {

@@ -114,7 +114,7 @@ import QuickSendContainer from '../QuickSendContainer';
 import BigNumber from 'bignumber.js';
 import Blockie from '@/components/Blockie';
 import { toChecksumAddress } from '@/helpers/addressUtils';
-import { mapState } from '@/helpers/addressUtils';
+import { mapState } from 'vuex';
 
 export default {
   components: {
