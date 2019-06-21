@@ -14,7 +14,7 @@ const chrome = window.chrome;
 //   ');';
 
 function exec(fn) {
-  console.log('inserting runtime id');
+  // console.log('inserting runtime id');
   const script = document.createElement('script');
   script.setAttribute('type', 'application/javascript');
   script.textContent = '(' + fn + ')("' + chrome.runtime.id + '")';
@@ -22,25 +22,20 @@ function exec(fn) {
   document.body.removeChild(script); //clean up
 }
 
-exec(function(extensionID) {
-  window.extensionID = extensionID;
-});
-
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.msg === 'injectWeb3') {
     const script = document.createElement('script');
     script.src = chrome.extension.getURL('cxWeb3.js');
     document.body.appendChild(script);
     document.body.removeChild(script);
+    exec(function(extensionID) {
+      window.extensionID = extensionID;
+    });
     sendResponse({
       response: 'REEEEEEEEEEEEE! SUCCESSFULLY ADDED WEB3 MY DUDES'
     });
   }
 
-  if (request.msg === 'fetchMewCXAccounts') {
-    console.log('gotHere');
-    sendResponse({ response: 'SOMEBODY ONCE TOLD ME' });
-  }
   return true;
 });
 // (function() {
