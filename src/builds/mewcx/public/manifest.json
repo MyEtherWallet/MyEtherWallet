@@ -15,8 +15,13 @@
   },
   "options_page": "index.html",
   "background": {
-    "scripts": ["background.js"],
+    "scripts": ["background.js", "phishingManager.js"],
     "persistent": true
+  },
+  "externally_connectable": {
+    "matches": [
+      "*://*/*"
+    ]
   },
   "content_scripts": [
     {

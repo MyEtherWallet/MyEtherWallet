@@ -507,7 +507,6 @@ export default {
           Toast.responseHandler(err, Toast.ERROR);
         });
       } catch (e) {
-        console.log(e)
         Toast.responseHandler(e, Toast.ERROR);
       }
     },

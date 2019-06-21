@@ -142,7 +142,7 @@ import { WalletInterface } from '@/wallets';
 import { KEYSTORE as keyStoreType } from '@/wallets/bip44/walletTypes';
 import Blockie from '@/components/Blockie';
 import { Misc } from '@/helpers';
-import { mapState } from 'vue';
+import { mapState } from 'vuex';
 import { ETH } from '@/networks/types';
 import ethUnit from 'ethjs-unit';
 

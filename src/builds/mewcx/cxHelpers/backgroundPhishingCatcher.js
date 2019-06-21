@@ -13,13 +13,8 @@ const chrome = window.chrome;
     chrome.tabs.query({ active: true, lastFocusedWindow: true }, function(
       tabs
     ) {
-      checkForOtherWeb3(tabs);
       querycB(tabs);
     });
-  }
-
-  function checkForOtherWeb3(tabs) {
-    chrome.tabs.sendMessage(tabs[0].id, { msg: 'injectWeb3' }, function() {});
   }
 
   function querycB(tabs) {
