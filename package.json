@@ -1,8 +1,11 @@
 {
   "name": "myetherwallet",
-  "version": "5.0.14-hotfix.1",
+  "version": "5.0.14-hotfix.2",
   "description": "Client side ethereum wallet",
-  "licsense": "MIT",
+  "licsense": {
+    "type": "MIT",
+    "url": "https://www.opensource.org/licenses/mit-license.php"
+  },
   "repository": "https://github.com/myetherwallet/myetherwallet",
   "scripts": {
     "build:offline": "WEBPACK_INTEGRITY=false npm run build:hash",
