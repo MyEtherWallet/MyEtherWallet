@@ -1,5 +1,5 @@
 const chrome = window.chrome;
-import { buildMode } from './cxHelpers.js';
+import cxHelpers from './cxHelpers.js';
 function exec(fn) {
   const script = document.createElement('script');
   script.setAttribute('type', 'application/javascript');
@@ -25,10 +25,11 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   return true;
 });
 
-window.addEventListener(`web3${window.extensionID}getAccount`, function() {
+window.addEventListener(`web3${window.extensionID}getAccount`, function(e) {
+  console.log(`web3${window.extensionID}getAccount`, e);
   chrome.windows.create({
     url: chrome.runtime.getURL(
-      `index.html${buildMode()}/extension-popups/web3-detected`
+      `index.html${cxHelpers.buildMode()}/extension-popups/web3-detected`
     ),
     type: 'popup',
     height: 400,

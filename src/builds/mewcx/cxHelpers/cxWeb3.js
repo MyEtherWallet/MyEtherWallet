@@ -1,6 +1,6 @@
 import web3 from 'web3';
 import MEWProvider from '@/wallets/web3-provider';
-import { buildMode } from './cxHelpers.js';
+import cxHelpers from './cxHelpers.js';
 const chrome = window.chrome;
 if (
   window.hasOwnProperty('web3') &&
@@ -8,7 +8,7 @@ if (
 ) {
   chrome.windows.create({
     url: chrome.runtime.getURL(
-      `index.html${buildMode()}/extension-popups/web3-detected`
+      `index.html${cxHelpers.buildMode()}/extension-popups/web3-detected`
     ),
     type: 'popup',
     height: 400,
@@ -16,6 +16,7 @@ if (
     focused: true
   });
 } else if (!window.hasOwnProperty('web3')) {
+  console.log('Injectin MEW web3');
   window.web3 = new web3(new MEWProvider('https://mainnet.infura.io/mew'));
   window.web3.currentProvider.isMew = true;
 }
