@@ -179,10 +179,7 @@ export default {
       );
     },
     isTokenTransfer() {
-      return (
-        this.notice.body.tokenTransferTo !== undefined &&
-        this.notice.body.tokenTransferTo !== null
-      );
+      return this.notice.body.tokenTransferTo !== '';
     },
     details() {
       return this.notice.body;
