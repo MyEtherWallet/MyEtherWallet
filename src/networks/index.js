@@ -1,7 +1,6 @@
 const platform = require('platform');
 import * as types from './types';
 import * as nodes from './nodes';
-import commonGenerator from '@/helpers/commonGenerator';
 
 const nodeList = {};
 Object.keys(types).forEach(key => {
@@ -9,7 +8,6 @@ Object.keys(types).forEach(key => {
 });
 
 Object.keys(nodes).forEach(key => {
-  nodes[key].config = commonGenerator(nodes[key]);
   if (nodes[key].service === nodes['ethmew'].service) {
     nodeList[nodes[key].type.name].splice(0, 0, nodes[key]);
   } else if (

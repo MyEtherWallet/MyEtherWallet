@@ -9,7 +9,7 @@ import HDWalletInterface from '@/wallets/HDWalletInterface';
 import * as HDKey from 'hdkey';
 import platform from 'platform';
 import store from '@/store';
-
+import commonGenerator from '@/helpers/commonGenerator';
 import {
   getSignTransactionObject,
   getBufferFromHex,
@@ -60,7 +60,9 @@ class ledgerWallet {
       accountPath = this.basePath + '/' + idx;
     }
     const txSigner = async tx => {
-      tx = new Transaction(tx, { common: store.state.network.config });
+      tx = new Transaction(tx, {
+        common: commonGenerator(store.state.network)
+      });
       const networkId = tx.getChainId();
       tx.raw[6] = networkId;
       tx.raw[7] = Buffer.from([]);
