@@ -1,11 +1,12 @@
 import * as HDKey from 'hdkey';
-import ethTx from 'ethereumjs-tx';
+import { Transaction } from 'ethereumjs-tx';
 import { hashPersonalMessage, toBuffer, ecsign } from 'ethereumjs-util';
 import { MNEMONIC as mnemonicType } from '../../bip44/walletTypes';
 import bip44Paths from '../../bip44';
 import HDWalletInterface from '@/wallets/HDWalletInterface';
 import { getSignTransactionObject, calculateChainIdFromV } from '../../utils';
 import errorHandler from './errorHandler';
+import store from '@/store';
 
 const bip39 = require('bip39');
 const NEED_PASSWORD = true;
@@ -30,8 +31,8 @@ class MnemonicWallet {
   getAccount(idx) {
     const derivedKey = this.hdKey.derive(this.basePath + '/' + idx);
     const txSigner = async tx => {
-      tx = new ethTx(tx);
-      const networkId = tx._chainId;
+      tx = new Transaction(tx, { common: store.state.network.config });
+      const networkId = tx.getChainId();
       tx.sign(derivedKey.privateKey);
       const signedChainId = calculateChainIdFromV(tx.v);
       if (signedChainId !== networkId)

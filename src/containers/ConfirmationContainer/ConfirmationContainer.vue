@@ -63,7 +63,7 @@
 <script>
 import * as unit from 'ethjs-unit';
 import BigNumber from 'bignumber.js';
-import * as ethTx from 'ethereumjs-tx';
+import { Transaction } from 'ethereumjs-tx';
 import ConfirmModal from './components/ConfirmModal';
 import ConfirmCollectionModal from './components/ConfirmCollectionModal';
 import SuccessModal from './components/SuccessModal';
@@ -195,7 +195,7 @@ export default {
     });
 
     this.$eventHub.$on('showSendSignedTx', (tx, resolve) => {
-      const newTx = new ethTx(tx);
+      const newTx = new Transaction(tx);
       this.isHardwareWallet = this.account.isHardware;
       this.responseFunction = resolve;
       this.successMessage = 'Sending Transaction';

@@ -1,4 +1,4 @@
-import ethTx from 'ethereumjs-tx';
+import { Transaction } from 'ethereumjs-tx';
 import { hashPersonalMessage, toBuffer } from 'ethereumjs-util';
 import DigitalBitboxUsb from './digitalBitboxUsb';
 import DigitalBitboxEth from './digitalBitboxEth';
@@ -8,6 +8,7 @@ import HDWalletInterface from '@/wallets/HDWalletInterface';
 import { Toast } from '@/helpers';
 import errorHandler from './errorHandler';
 import * as HDKey from 'hdkey';
+import store from '@/store';
 import {
   getSignTransactionObject,
   sanitizeHex,
@@ -37,8 +38,8 @@ class BitBoxWallet {
   getAccount(idx) {
     const derivedKey = this.hdKey.derive('m/' + idx);
     const txSigner = async tx => {
-      tx = new ethTx(tx);
-      const networkId = tx._chainId;
+      tx = new Transaction(tx, { common: store.state.network.config });
+      const networkId = tx.getChainId();
       const result = await this.bitbox.signTransaction(
         this.basePath + '/' + idx,
         tx
