@@ -1,3 +1,5 @@
+### Release v5.0.14-hotfix.2
+
 ### Bug
 
 - Fix Typo [#1198](https://github.com/MyEtherWallet/MyEtherWallet/pull/1198)
