@@ -18,11 +18,6 @@
     "scripts": ["background.js", "phishingManager.js"],
     "persistent": true
   },
-  "externally_connectable": {
-    "matches": [
-      "*://*.myetherwallet.com/*"
-    ]
-  },
   "content_scripts": [
     {
       "matches": ["*://*/*"],
