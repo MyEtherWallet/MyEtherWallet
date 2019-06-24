@@ -215,11 +215,12 @@ class DigitalBitboxEth {
   }
   signTransaction(path, eTx) {
     return new Promise((resolve, reject) => {
+      const chainId = eTx.getChainId();
       const hashToSign = eTx.hash(false).toString('hex');
       DigitalBitboxEth.signGeneric(
         this,
         path,
-        eTx._chainId,
+        chainId,
         hashToSign,
         (result, error) => {
           if (error) return reject(error);

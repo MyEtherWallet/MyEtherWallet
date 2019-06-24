@@ -29,9 +29,15 @@
           <span class="subname">- {{ selectedCurrency.name }}</span>
         </p>
         <p v-show="!token">{{ selectedCurrency.name }}</p>
-        <i :class="['fa', open ? 'fa-angle-up' : 'fa-angle-down']" />
+        <i
+          v-if="selectable"
+          :class="['fa', open ? 'fa-angle-up' : 'fa-angle-down']"
+        />
       </div>
-      <div :class="[open ? 'open' : 'hide', 'dropdown-item-container']">
+      <div
+        v-if="selectable"
+        :class="[open ? 'open' : 'hide', 'dropdown-item-container']"
+      >
         <div class="dropdown-search-container">
           <input v-model="search" :placeholder="$t('interface.search')" />
           <i class="fa fa-search" />
@@ -98,6 +104,10 @@ export default {
     fromSource: {
       type: Boolean,
       default: false
+    },
+    selectable: {
+      type: Boolean,
+      default: true
     },
     defaultValue: {
       type: Object,
@@ -182,7 +192,9 @@ export default {
       return hasIcon(currency);
     },
     openDropdown() {
-      this.open = !this.open;
+      if (this.selectable) {
+        this.open = !this.open;
+      }
     },
     selectCurrency(currency) {
       this.openDropdown();

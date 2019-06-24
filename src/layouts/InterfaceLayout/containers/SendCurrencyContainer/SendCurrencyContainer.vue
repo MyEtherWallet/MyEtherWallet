@@ -1,7 +1,6 @@
 <template>
   <div class="send-currency-container">
     <interface-container-title :title="$t('common.sendTx')" />
-
     <div class="send-form">
       <div class="form-block amount-to-address">
         <div class="amount">
@@ -201,7 +200,7 @@ import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import CurrencyPicker from '../../components/CurrencyPicker';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
-import EthTx from 'ethereumjs-tx';
+import { Transaction } from 'ethereumjs-tx';
 import { Misc, Toast } from '@/helpers';
 import BigNumber from 'bignumber.js';
 import ethUnit from 'ethjs-unit';
@@ -490,7 +489,7 @@ export default {
       try {
         const coinbase = await this.web3.eth.getCoinbase();
         const nonce = await this.web3.eth.getTransactionCount(coinbase);
-        const _tx = new EthTx({
+        const raw = {
           nonce: Misc.sanitizeHex(new BigNumber(nonce).toString(16)),
           gasPrice: Misc.sanitizeHex(
             ethUnit.toWei(this.gasPrice, 'gwei').toString(16)
@@ -498,9 +497,9 @@ export default {
           gasLimit: Misc.sanitizeHex(new BigNumber(this.gasLimit).toString(16)),
           to: this.txTo,
           value: this.txValue,
-          data: this.txData,
-          chainId: this.network.type.chainID
-        });
+          data: this.txData
+        };
+        const _tx = new Transaction(raw);
         const json = _tx.toJSON(true);
         json.from = coinbase;
         this.web3.eth.sendTransaction(json).catch(err => {

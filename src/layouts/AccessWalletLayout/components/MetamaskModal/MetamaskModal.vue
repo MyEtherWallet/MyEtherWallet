@@ -186,16 +186,18 @@ export default {
           this.web3WalletExists = false;
           return;
         }
-        this.signIn(web3);
+        this.signIn(web3, 'ethereum');
       } else if (window.web3) {
         this.signIn(window.web3);
       }
     },
-    signIn(web3) {
+    signIn(web3, type) {
       new Web3(web3.currentProvider).eth
         .getAccounts()
         .then(accounts => {
-          window.ethereum.autoRefreshOnNetworkChange = false;
+          if (type === 'ethereum') {
+            window.ethereum.autoRefreshOnNetworkChange = false;
+          }
           if (!accounts.length) return (this.unlockWeb3Wallet = true);
           const address = accounts[0];
           const wallet = new Web3Wallet(address);
