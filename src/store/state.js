@@ -1,7 +1,6 @@
 import nodeList from '@/networks';
 import darklist from '@/darklist/address-darklist.json';
 import store from 'store';
-import commonGenerator from '@/helpers/commonGenerator';
 if (store.get('notifications') === undefined) store.set('notifications', {});
 
 const gettingStartedDone =
@@ -12,10 +11,6 @@ let network = nodeList['ETH'][0];
 if (storedNetwork !== undefined) {
   network = storedNetwork;
   network.type = nodeList[storedNetwork.type.name][0].type;
-}
-
-if (!network.hasOwnProperty('config')) {
-  network.config = commonGenerator(network);
 }
 
 const notifications =
