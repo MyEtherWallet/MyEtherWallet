@@ -7,6 +7,7 @@ import HDWalletInterface from '@/wallets/HDWalletInterface';
 import { getSignTransactionObject, calculateChainIdFromV } from '../../utils';
 import errorHandler from './errorHandler';
 import store from '@/store';
+import commonGenerator from '@/helpers/commonGenerator';
 
 const bip39 = require('bip39');
 const NEED_PASSWORD = true;
@@ -31,7 +32,9 @@ class MnemonicWallet {
   getAccount(idx) {
     const derivedKey = this.hdKey.derive(this.basePath + '/' + idx);
     const txSigner = async tx => {
-      tx = new Transaction(tx, { common: store.state.network.config });
+      tx = new Transaction(tx, {
+        common: commonGenerator(store.state.network)
+      });
       const networkId = tx.getChainId();
       tx.sign(derivedKey.privateKey);
       const signedChainId = calculateChainIdFromV(tx.v);
