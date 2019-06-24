@@ -19,6 +19,7 @@ import { toBuffer } from 'ethereumjs-util';
 import { Transaction } from 'ethereumjs-tx';
 import errorHandler from './errorHandler';
 import store from '@/store';
+import commonGenerator from '@/helpers/commonGenerator';
 
 const { MessageType } = Messages;
 const {
@@ -90,7 +91,7 @@ class KeepkeyWallet {
     }
     const txSigner = async tx => {
       tx = new Transaction(tx, {
-        common: store.state.network.config
+        common: commonGenerator(store.state.network)
       });
       const hexTx = getUint8Tx(tx);
       const networkId = tx.getChainId();
