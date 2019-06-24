@@ -14,6 +14,7 @@ import {
   isValidPublic,
   privateToPublic
 } from 'ethereumjs-util';
+import commonGenerator from '@/helpers/commonGenerator';
 import { Transaction } from 'ethereumjs-tx';
 import { toChecksumAddress } from '@/helpers/addressUtils';
 import store from '@/store';
@@ -77,8 +78,9 @@ class WalletInterface {
     return new Promise((resolve, reject) => {
       if (!this.isPubOnly) {
         const tx = new Transaction(txParams, {
-          common: store.state.network.config
+          common: commonGenerator(store.state.network)
         });
+        console.log(tx);
         const networkId = tx.getChainId();
         tx.sign(this.privateKey);
         const signedChainId = calculateChainIdFromV(tx.v);

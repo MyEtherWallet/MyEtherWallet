@@ -13,7 +13,7 @@ import {
 import { toBuffer } from 'ethereumjs-util';
 import errorHandler from './errorHandler';
 import store from '@/store';
-
+import commonGenerator from '@/helpers/commonGenerator';
 const NEED_PASSWORD = false;
 
 class TrezorWallet {
@@ -38,7 +38,9 @@ class TrezorWallet {
   getAccount(idx) {
     const derivedKey = this.hdKey.derive('m/' + idx);
     const txSigner = async tx => {
-      tx = new Transaction(tx, { common: store.state.network.config });
+      tx = new Transaction(tx, {
+        common: commonGenerator(store.state.network)
+      });
       const networkId = tx.getChainId();
       const options = {
         path: this.basePath + '/' + idx,
