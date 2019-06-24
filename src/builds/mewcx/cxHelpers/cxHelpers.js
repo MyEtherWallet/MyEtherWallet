@@ -6,6 +6,9 @@ import phishfortDarklist from '@/url-darklist/phishfort-blacklisted-domains.json
 import mewLightlist from '@/url-lightlist/mew-whitelisted-domains.json';
 import ealLightlist from '@/url-lightlist/eal-whitelisted-domains.json';
 
+import { getMode } from '../../configs';
+const useHash = getMode() === 'hash' ? '#' : '';
+
 const similarity = require('similarity');
 const punycode = require('punycode');
 const uniMap = require('unicode/category/Ll');
@@ -131,9 +134,14 @@ const whiteListDomains = {
   }
 };
 
+const buildMode = function() {
+  return useHash;
+};
+
 export default {
   checkUrlSimilarity,
   extractRootDomain,
   blackListDomains,
-  whiteListDomains
+  whiteListDomains,
+  buildMode
 };

@@ -1,15 +1,14 @@
 import web3 from 'web3';
 import MEWProvider from '@/wallets/web3-provider';
-import { getMode } from '../../configs';
+import { buildMode } from './cxHelpers.js';
 const chrome = window.chrome;
-const useHash = getMode() === 'hash' ? '#' : '';
 if (
   window.hasOwnProperty('web3') &&
   !window.web3.currentProvider.hasOwnProperty('isMew')
 ) {
   chrome.windows.create({
     url: chrome.runtime.getURL(
-      `index.html${useHash}/extension-popups/web3-detected`
+      `index.html${buildMode()}/extension-popups/web3-detected`
     ),
     type: 'popup',
     height: 400,
