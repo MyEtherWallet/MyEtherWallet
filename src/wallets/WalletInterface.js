@@ -80,7 +80,6 @@ class WalletInterface {
         const tx = new Transaction(txParams, {
           common: commonGenerator(store.state.network)
         });
-        console.log(tx);
         const networkId = tx.getChainId();
         tx.sign(this.privateKey);
         const signedChainId = calculateChainIdFromV(tx.v);
