@@ -1,5 +1,5 @@
 'use strict';
-import { toBuffer } from 'ethereumjs-util';
+import { toBuffer, stripZeros, rlp } from 'ethereumjs-util';
 
 const SecalotEth = function(comm, pinCode) {
   this.comm = comm;
@@ -151,12 +151,15 @@ SecalotEth.prototype.signTransaction = function(path, eTx, callback) {
     }
   };
 
-  const savedRaw = eTx.raw.slice();
-  eTx.v = chainID;
-  eTx.r = 0;
-  eTx.s = 0;
-  const dataToHash = eTx.serialize();
-  eTx.raw = savedRaw;
+  const items = eTx.raw
+    .slice(0, 6)
+    .concat([
+      toBuffer(chainID),
+      stripZeros(toBuffer(0)),
+      stripZeros(toBuffer(0))
+    ]);
+
+  const dataToHash = rlp.encode(items);
 
   rawData = Buffer.from(dataToHash, 'hex');
 
