@@ -1,3 +1,21 @@
+### Release v5.0.14-hotfix.2
+
+### Bug
+
+- Fix Typo [#1198](https://github.com/MyEtherWallet/MyEtherWallet/pull/1198)
+- Fix Secalot throwing exception [#1194](https://github.com/MyEtherWallet/MyEtherWallet/pull/1194)
+
+### Devop
+
+- Cleanup greenkeeper branches [#1203](https://github.com/MyEtherWallet/MyEtherWallet/pull/1203)
+- Add subdomains [#1186](https://github.com/MyEtherWallet/MyEtherWallet/pull/1186)
+
+### Release v5.0.14-hotfix.1
+
+### Bug
+
+- Fix send tx for custom chains [#1184](https://github.com/MyEtherWallet/MyEtherWallet/pull/1184)
+
 ### Release v5.0.14
 
 ### Feature

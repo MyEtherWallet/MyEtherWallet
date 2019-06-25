@@ -3,19 +3,31 @@ const chrome = window.chrome;
 const useHash = getMode() === 'hash' ? '#' : '';
 
 (function() {
-  /* eslint no-undef: 0 no-console:0 */
+  /* eslint no-console: 0 no-unused-vars: 0 */
   const eventsListeners = function(request, _, sendResponse) {
-    if (request.msg === 'fetchMewCXAccounts') {
-      chrome.windows.create({
-        url: chrome.runtime.getURL(
-          `index.html${useHash}/extension-popups/web3-detected`
-        ),
-        type: 'popup',
-        height: 400,
-        width: 300,
-        focused: true
-      });
-      sendResponse({ msg: 'caught it externally' });
+    switch (request.msg) {
+      case 'fetchMewCXAccounts':
+        chrome.windows.create({
+          url: chrome.runtime.getURL(
+            `index.html${useHash}/extension-popups/web3-detected`
+          ),
+          type: 'popup',
+          height: 400,
+          width: 300,
+          focused: true
+        });
+        break;
+      case 'web3Detected':
+        chrome.windows.create({
+          url: chrome.runtime.getURL(
+            `index.html${useHash}/extension-popups/web3-detected`
+          ),
+          type: 'popup',
+          height: 400,
+          width: 300,
+          focused: true
+        });
+        break;
     }
     return true;
   };
@@ -27,14 +39,14 @@ const useHash = getMode() === 'hash' ? '#' : '';
   chrome.tabs.onUpdated.addListener(cb);
 
   function cb() {
-    chrome.runtime.onMessageExternal.removeListener(eventsListeners);
+    chrome.runtime.onMessage.removeListener(eventsListeners);
     chrome.tabs.query({ active: true, lastFocusedWindow: true }, function(
       tabs
     ) {
       web3Injector(tabs);
     });
 
-    chrome.runtime.onMessageExternal.addListener(eventsListeners);
+    chrome.runtime.onMessage.addListener(eventsListeners);
   }
 
   function web3Injector(tabs) {
