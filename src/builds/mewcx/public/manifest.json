@@ -20,9 +20,9 @@
   },
   "content_scripts": [
     {
-      "matches": ["*://*/*"],
+      "matches": ["<all_urls>"],
       "js": ["web3Manager.js"],
-      "all_frames": true
+      "run_at": "document_end"
     }
   ],
   "web_accessible_resources": ["cxWeb3.js"],

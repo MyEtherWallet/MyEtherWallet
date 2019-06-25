@@ -17,7 +17,6 @@ const webpackConfig = {
   node: {
     process: true
   },
-  devtool: 'source-map',
   devServer: {
     disableHostCheck: true, // Dev purposes only, should be commented out before release
     https:  true,
@@ -104,6 +103,8 @@ if (process.env.NODE_ENV === 'production') {
       }
     })
   );
+
+  webpackConfig.devtool = 'source-map';
 }
 const pwa = {
   name: 'MyEtherWallet',
@@ -125,7 +126,7 @@ const exportObj = {
       .plugin('html')
       .tap((args) => {
         // eslint-disable-next-line no-param-reassign
-        args[0].excludeChunks = ['background', 'web3Manager', 'cxWeb3'];
+        args[0].excludeChunks = ['phishingManager', 'background', 'web3Manager', 'cxWeb3'];
         return args;
       });
     config.module

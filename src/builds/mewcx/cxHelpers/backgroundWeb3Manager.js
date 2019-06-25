@@ -1,9 +1,11 @@
 const chrome = window.chrome;
-import cxHelpers from './cxHelpers.js';
+const extensionID = chrome.runtime.id;
+// import cxHelpers from './cxHelpers.js';
 function exec(fn) {
+  console.log('injecting web3');
   const script = document.createElement('script');
   script.setAttribute('type', 'application/javascript');
-  script.textContent = '(' + fn + ')("' + chrome.runtime.id + '")';
+  script.textContent = '(' + fn + ')("' + extensionID + '")';
   document.body.appendChild(script); //run the script
   document.body.removeChild(script); //clean up
 }
@@ -14,8 +16,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     script.src = chrome.extension.getURL('cxWeb3.js');
     document.body.appendChild(script);
     document.body.removeChild(script);
-    exec(function(extensionID) {
-      window.extensionID = extensionID;
+    exec(function(id) {
+      window.extensionID = id;
     });
     sendResponse({
       response: 'REEEEEEEEEEEEE! SUCCESSFULLY ADDED WEB3 MY DUDES'
@@ -25,15 +27,22 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   return true;
 });
 
-window.addEventListener(`web3${window.extensionID}getAccount`, function(e) {
-  console.log(`web3${window.extensionID}getAccount`, e);
-  chrome.windows.create({
-    url: chrome.runtime.getURL(
-      `index.html${cxHelpers.buildMode()}/extension-popups/web3-detected`
-    ),
-    type: 'popup',
-    height: 400,
-    width: 300,
-    focused: true
-  });
-});
+window.addEventListener(
+  `web3${extensionID}web3Detected`,
+  function() {
+    chrome.runtime.sendMessage(extensionID, {
+      msg: 'web3Detected'
+    });
+  },
+  false
+);
+
+window.addEventListener(
+  `web3${extensionID}getAccount`,
+  function() {
+    chrome.runtime.sendMessage(extensionID, {
+      msg: 'fetchMewCXAccounts'
+    });
+  },
+  false
+);
