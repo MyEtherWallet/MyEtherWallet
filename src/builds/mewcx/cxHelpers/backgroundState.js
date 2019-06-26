@@ -12,11 +12,24 @@ import { ExtensionHelpers } from '@/helpers';
     });
   });
   const eventsListeners = function(request, _, sendResponse) {
+    let q;
+    if (Object.keys(request.meta).length > 0) {
+      const arr = [];
+      for (const i in request.meta) {
+        if (request.meta.hasOwnProperty(i)) {
+          arr.push(
+            encodeURIComponent(i) + '=' + encodeURIComponent(request.meta[i])
+          );
+        }
+      }
+
+      q = arr.join('&');
+    }
     switch (request.msg) {
       case 'fetchMewCXAccounts':
         chrome.windows.create({
           url: chrome.runtime.getURL(
-            `index.html${useHash}/extension-popups/account-access?connectionRequest=${request.url}`
+            `index.html${useHash}/extension-popups/account-access?connectionRequest=${request.url}&${q}`
           ),
           type: 'popup',
           height: 500,

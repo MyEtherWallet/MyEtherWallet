@@ -19,6 +19,9 @@ export default {
       const { connectionRequest } = this.linkQuery;
       return Misc.getService(connectionRequest);
     }
+  },
+  mounted() {
+    console.log(this.linkQuery);
   }
 };
 </script>
