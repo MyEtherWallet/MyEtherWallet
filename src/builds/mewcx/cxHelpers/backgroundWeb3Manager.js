@@ -60,9 +60,22 @@ window.addEventListener(
 window.addEventListener(
   `web3${extensionID}getAccount`,
   function() {
+    const meta = {};
+    const tags = Array.from(document.getElementsByTagName('meta')).filter(
+      meta => {
+        if (meta.attributes[0].nodeName === 'property') return meta;
+      }
+    );
+    Array.from(document.getElementsByTagName('link')).forEach(item => {
+      if (item.href.includes('favicon.')) meta['favicon'] = item.href;
+    });
+    tags.forEach(tag => {
+      meta[tag.attributes[0].value] = tag.attributes[1].value;
+    });
     chrome.runtime.sendMessage(extensionID, {
       msg: 'fetchMewCXAccounts',
-      url: window.location.origin
+      url: window.location.origin,
+      meta: meta
     });
   },
   false
