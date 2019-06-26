@@ -16,17 +16,17 @@ import { ExtensionHelpers } from '@/helpers';
   const eventsListeners = function(request, _, sendResponse) {
     switch (request.msg) {
       case 'fetchMewCXAccounts':
-        chrome.tabs.sendMessage(tabId, {
-          msg: 'selectedMewCXAccount',
-          account: accountTestReturn[0]
+        chrome.windows.create({
+          url: chrome.runtime.getURL(
+            `index.html${useHash}/extension-popups/account-access`
+          ),
+          type: 'popup',
+          height: 500,
+          width: 300,
+          focused: true
         });
         break;
       case 'web3Detected':
-        console.log(
-          chrome.runtime.getURL(
-            `index.html${useHash}/extension-popups/web3-detected`
-          )
-        );
         chrome.windows.create({
           url: chrome.runtime.getURL(
             `index.html${useHash}/extension-popups/web3-detected`
