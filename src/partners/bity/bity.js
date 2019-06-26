@@ -17,7 +17,8 @@ import {
   sendReceivedSmsCode,
   buildCyptoToFiatOrderData,
   getCyptoToFiatOrderDetails,
-  getStatusFiat
+  getStatusFiat,
+  getEstimate
 } from './bity-calls';
 import {
   bityStatuses,
@@ -147,7 +148,38 @@ export default class BitySwap {
     return -1;
   }
 
+  async _getRateEstimate(fromCurrency, toCurrency, fromValue) {
+    const reqInfo = {
+      fromValue: fromValue,
+      toCurrency: toCurrency,
+      fromCurrency: fromCurrency
+    };
+    return await getEstimate(reqInfo);
+  }
+
   async getRate(fromCurrency, toCurrency) {
+    const rate = this._getRate(fromCurrency, toCurrency);
+    return {
+      fromCurrency,
+      toCurrency,
+      provider: this.name,
+      rate: rate,
+      minValue: this.fiatCurrencies.includes(toCurrency)
+        ? this.getChfEquivalentMaxMin(fromCurrency, false)
+        : this.getBtcEquivalentMaxMin(fromCurrency, false),
+      maxValue: this.fiatCurrencies.includes(toCurrency)
+        ? this.getChfEquivalentMaxMin(fromCurrency, true)
+        : this.getBtcEquivalentMaxMin(fromCurrency, true)
+    };
+  }
+
+  async getRateUpdate(fromCurrency, toCurrency, fromValue) {
+    const expRate = await this._getRateEstimate(
+      fromCurrency,
+      toCurrency,
+      fromValue
+    );
+    console.log(expRate); // todo remove dev item
     const rate = this._getRate(fromCurrency, toCurrency);
     return {
       fromCurrency,
