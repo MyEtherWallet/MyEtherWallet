@@ -2,6 +2,7 @@ import app from './app';
 import ExtensionPopup from '@/layouts/ExtensionPopup';
 import ExtensionWeb3Layout from '@/layouts/ExtensionWeb3Layout';
 import Web3Detected from '@/layouts/ExtensionWeb3Layout/containers/Web3Detected';
+import AccountAccess from '@/layouts/ExtensionWeb3Layout/containers/AccountAccess';
 import ExtensionBrowserAction from '@/layouts/ExtensionBrowserAction';
 import ExtensionAddWalletContainer from '@/layouts/ExtensionBrowserAction/containers/ExtensionAddWalletContainer';
 import ExtensionWalletContainer from '@/layouts/ExtensionBrowserAction/containers/ExtensionWalletContainer';
@@ -20,6 +21,7 @@ const cxRoutes = [
       },
       {
         path: 'account-access',
+        component: AccountAccess,
         meta: { requiresAuth: false }
       },
       {
