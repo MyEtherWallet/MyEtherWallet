@@ -6,19 +6,22 @@ export default async ({ payload }, res, next) => {
   window.dispatchEvent(event);
   window.addEventListener(
     `web3${window.extensionID}receiveAccount`,
-    receiveAccount
+    eventRes => {
+      res(null, toPayload(payload.id, [eventRes.detail.account]));
+      window.removeEventListener(
+        `web3${window.extensionID}receiveAccount`,
+        () => {}
+      );
+      window.removeEventListener(`web3${window.extensionID}reject`, () => {});
+    }
   );
-  // chrome.runtime.sendMessage(
-  //   'eohbnnfmdailkcegaeeoplbdaggjbalo',
-  //   { msg: 'fetchMewCXAccounts' },
-  //   receiveAccount
-  // );
-  // chrome.runtime.onMessage(function(response, _, sendResponse) {
-  //   if (response.msg)
-  // });
 
-  function receiveAccount(account) {
-    console.log(account, 'received?');
+  window.addEventListener(`web3${window.extensionID}reject`, () => {
     res(null, toPayload(payload.id, []));
-  }
+    window.removeEventListener(
+      `web3${window.extensionID}receiveAccount`,
+      () => {}
+    );
+    window.removeEventListener(`web3${window.extensionID}reject`, () => {});
+  });
 };

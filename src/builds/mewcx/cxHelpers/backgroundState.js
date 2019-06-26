@@ -1,29 +1,38 @@
 import { getMode } from '../../configs';
 const chrome = window.chrome;
 const useHash = getMode() === 'hash' ? '#' : '';
+import { ExtensionHelpers } from '@/helpers';
 
 (function() {
   /* eslint no-console: 0 no-unused-vars: 0 */
+  let tabId;
+  let warned;
+  const accountTestReturn = [];
+  ExtensionHelpers.getAccounts(res => {
+    Object.keys(res).forEach(item => {
+      accountTestReturn.push(item);
+    });
+  });
   const eventsListeners = function(request, _, sendResponse) {
     switch (request.msg) {
       case 'fetchMewCXAccounts':
-        chrome.windows.create({
-          url: chrome.runtime.getURL(
-            `index.html${useHash}/extension-popups/web3-detected`
-          ),
-          type: 'popup',
-          height: 400,
-          width: 300,
-          focused: true
+        chrome.tabs.sendMessage(tabId, {
+          msg: 'selectedMewCXAccount',
+          account: accountTestReturn[0]
         });
         break;
       case 'web3Detected':
+        console.log(
+          chrome.runtime.getURL(
+            `index.html${useHash}/extension-popups/web3-detected`
+          )
+        );
         chrome.windows.create({
           url: chrome.runtime.getURL(
             `index.html${useHash}/extension-popups/web3-detected`
           ),
           type: 'popup',
-          height: 400,
+          height: 500,
           width: 300,
           focused: true
         });
@@ -43,6 +52,7 @@ const useHash = getMode() === 'hash' ? '#' : '';
     chrome.tabs.query({ active: true, lastFocusedWindow: true }, function(
       tabs
     ) {
+      tabId = tabs[0].id;
       web3Injector(tabs);
     });
 
