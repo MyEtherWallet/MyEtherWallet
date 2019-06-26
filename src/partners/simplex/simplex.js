@@ -119,6 +119,10 @@ export default class Simplex {
     };
   }
 
+  async getRateUpdate(fromCurrency, toCurrency, fromValue, toValue, isFiat) {
+    return this.getRate(fromCurrency, toCurrency, fromValue, toValue, isFiat);
+  }
+
   async updateFiat(fromCurrency, toCurrency, fromValue) {
     if (fromValue <= 0) fromValue = 51;
     const result = await getQuote({

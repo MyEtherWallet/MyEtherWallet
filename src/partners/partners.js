@@ -182,6 +182,30 @@ export default class SwapProviders {
     };
   }
 
+  async valueRateEstimate(fromCurrency, toCurrency, fromValue) {
+    if (this.haveProviderRates) {
+      const providersFound = [];
+      const callsToMake = [];
+      if (
+        +fromValue > 0 &&
+        fromCurrency !== toCurrency &&
+        !Number.isNaN(+fromValue)
+      ) {
+        this.providers.forEach(provider => {
+          if (provider.validSwap(fromCurrency, toCurrency)) {
+            callsToMake.push(provider.getRateUpdate.bind(provider));
+            providersFound.push(provider.name);
+          }
+        });
+        return { providersFound, callsToMake };
+      }
+    }
+    return {
+      providersFound: [],
+      callsToMake: []
+    };
+  }
+
   getTokenAddress(currency, noError) {
     if (SwapProviders.isToken(currency)) {
       return EthereumTokens[currency].contractAddress;
