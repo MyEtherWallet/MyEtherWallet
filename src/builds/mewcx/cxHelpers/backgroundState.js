@@ -5,8 +5,6 @@ import { ExtensionHelpers } from '@/helpers';
 
 (function() {
   /* eslint no-console: 0 no-unused-vars: 0 */
-  let tabId;
-  let warned;
   const accountTestReturn = [];
   ExtensionHelpers.getAccounts(res => {
     Object.keys(res).forEach(item => {
@@ -18,7 +16,7 @@ import { ExtensionHelpers } from '@/helpers';
       case 'fetchMewCXAccounts':
         chrome.windows.create({
           url: chrome.runtime.getURL(
-            `index.html${useHash}/extension-popups/account-access`
+            `index.html${useHash}/extension-popups/account-access?connectionRequest=${request.url}`
           ),
           type: 'popup',
           height: 500,
@@ -52,7 +50,6 @@ import { ExtensionHelpers } from '@/helpers';
     chrome.tabs.query({ active: true, lastFocusedWindow: true }, function(
       tabs
     ) {
-      tabId = tabs[0].id;
       web3Injector(tabs);
     });
 

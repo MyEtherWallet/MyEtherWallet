@@ -61,7 +61,8 @@ window.addEventListener(
   `web3${extensionID}getAccount`,
   function() {
     chrome.runtime.sendMessage(extensionID, {
-      msg: 'fetchMewCXAccounts'
+      msg: 'fetchMewCXAccounts',
+      url: window.location.origin
     });
   },
   false
