@@ -2,7 +2,6 @@ const chrome = window.chrome;
 const extensionID = chrome.runtime.id;
 // import cxHelpers from './cxHelpers.js';
 function exec(fn) {
-  console.log('injecting web3');
   const script = document.createElement('script');
   script.setAttribute('type', 'application/javascript');
   script.textContent = '(' + fn + ')("' + extensionID + '")';
@@ -11,17 +10,38 @@ function exec(fn) {
 }
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  if (request.msg === 'injectWeb3') {
-    const script = document.createElement('script');
-    script.src = chrome.extension.getURL('cxWeb3.js');
-    document.body.appendChild(script);
-    document.body.removeChild(script);
-    exec(function(id) {
-      window.extensionID = id;
-    });
-    sendResponse({
-      response: 'REEEEEEEEEEEEE! SUCCESSFULLY ADDED WEB3 MY DUDES'
-    });
+  const script = document.createElement('script');
+  script.src = chrome.extension.getURL('cxWeb3.js');
+  switch (request.msg) {
+    case 'injectWeb3':
+      document.body.appendChild(script);
+      document.body.removeChild(script);
+      exec(function(id) {
+        window.extensionID = id;
+      });
+      sendResponse({
+        response: 'REEEEEEEEEEEEE! SUCCESSFULLY ADDED WEB3 MY DUDES'
+      });
+      break;
+
+    case 'selectedMewCXAccount':
+      window.dispatchEvent(
+        new CustomEvent(`web3${extensionID}receiveAccount`, {
+          detail: {
+            account: request.account
+          }
+        })
+      );
+      break;
+    case 'rejectMewCXAccount':
+      window.dispatchEvent(
+        new CustomEvent(`web3${extensionID}reject`, {
+          detail: {
+            account: []
+          }
+        })
+      );
+      break;
   }
 
   return true;

@@ -1,0 +1,17 @@
+@import '~@/scss/GlobalVariables';
+
+.web-detected-container {
+  align-items: center;
+  display: flex;
+  background-color: $dark-blue-2;
+  flex-direction: column;
+  height: 500px;
+  justify-content: space-between;
+  padding: 20px;
+  text-align: center;
+  width: 100%;
+
+  p {
+    color: $white;
+  }
+}
