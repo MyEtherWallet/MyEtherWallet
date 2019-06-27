@@ -118,7 +118,7 @@ export default {
           const obj = {
             msg: 'selectedMewCXAccount',
             account: account
-          }
+          };
           chrome.tabs.sendMessage(tab[0].id, obj);
           window.close();
         }

@@ -25,7 +25,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       break;
 
     case 'selectedMewCXAccount':
-      console.log(request, sender);
       window.dispatchEvent(
         new CustomEvent(`web3${extensionID}receiveAccount`, {
           detail: {
