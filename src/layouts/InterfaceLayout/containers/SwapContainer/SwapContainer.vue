@@ -788,7 +788,7 @@ export default {
         const {
           providersFound,
           callsToMake
-        } = await this.swap.updateRateEstimate(
+        } = await this.swap.valueRateEstimate(
           fromCurrency,
           toCurrency,
           fromValue,

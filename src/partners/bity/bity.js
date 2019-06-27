@@ -150,23 +150,28 @@ export default class BitySwap {
 
   async _getRateEstimate(fromCurrency, toCurrency, fromValue) {
     const reqInfo = {
-      fromValue: fromValue,
+      pair: fromCurrency + toCurrency,
+      fromValue: fromValue.toString(),
       toCurrency: toCurrency,
       fromCurrency: fromCurrency
     };
     return await getEstimate(reqInfo);
   }
 
-  async getRate(fromCurrency, toCurrency) {
+  async getRate(fromCurrency, toCurrency, fromValue) {
+    const expRate = await this._getRateEstimate(
+      fromCurrency,
+      toCurrency,
+      fromValue
+    );
+
     const rate = this._getRate(fromCurrency, toCurrency);
     return {
       fromCurrency,
       toCurrency,
       provider: this.name,
       rate: rate,
-      minValue: this.fiatCurrencies.includes(toCurrency)
-        ? this.getChfEquivalentMaxMin(fromCurrency, false)
-        : this.getBtcEquivalentMaxMin(fromCurrency, false),
+      minValue: expRate.input.minimum_amount,
       maxValue: this.fiatCurrencies.includes(toCurrency)
         ? this.getChfEquivalentMaxMin(fromCurrency, true)
         : this.getBtcEquivalentMaxMin(fromCurrency, true)
@@ -179,16 +184,13 @@ export default class BitySwap {
       toCurrency,
       fromValue
     );
-    console.log(expRate); // todo remove dev item
     const rate = this._getRate(fromCurrency, toCurrency);
     return {
       fromCurrency,
       toCurrency,
       provider: this.name,
       rate: rate,
-      minValue: this.fiatCurrencies.includes(toCurrency)
-        ? this.getChfEquivalentMaxMin(fromCurrency, false)
-        : this.getBtcEquivalentMaxMin(fromCurrency, false),
+      minValue: expRate.input.minimum_amount,
       maxValue: this.fiatCurrencies.includes(toCurrency)
         ? this.getChfEquivalentMaxMin(fromCurrency, true)
         : this.getBtcEquivalentMaxMin(fromCurrency, true)
