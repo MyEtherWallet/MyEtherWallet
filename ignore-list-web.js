@@ -141,5 +141,20 @@ module.exports = [
   'src/layouts/ExtensionPopup/ExtensionPopup.scss',
   'src/layouts/ExtensionPopup/ExtensionPopup.vue',
   'src/layouts/ExtensionPopup/index.js',
-  'src/tokens/tokens-etsc.json'
+  'src/tokens/tokens-etsc.json',
+  'src/assets/images/icons/question.png',
+  'src/components/PopupHelper/index.js',
+  'src/components/PopupHelper/PopupHelper.scss',
+  'src/components/PopupHelper/PopupHelper.vue',
+  'src/components/StandardInputSlot/index.js',
+  'src/components/StandardInputSlot/StandardInputSlot.scss',
+  'src/components/StandardInputSlot/StandardInputSlot.vue',
+  'src/layouts/ExtensionWeb3Layout/containers/AccountAccess/AccountAccess.scss',
+  'src/layouts/ExtensionWeb3Layout/containers/AccountAccess/AccountAccess.vue',
+  'src/layouts/ExtensionWeb3Layout/containers/AccountAccess/index.js',
+  'src/layouts/ExtensionWeb3Layout/containers/Web3Detected/index.js',
+  'src/layouts/ExtensionWeb3Layout/containers/Web3Detected/Web3Detected.scss',
+  'src/layouts/ExtensionWeb3Layout/containers/Web3Detected/Web3Detected.vue',
+  'src/layouts/ExtensionWeb3Layout/ExtensionWeb3Layout.vue',
+  'src/layouts/ExtensionWeb3Layout/index.js'
 ]
