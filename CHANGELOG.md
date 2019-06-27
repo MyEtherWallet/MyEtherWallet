@@ -1,3 +1,8 @@
+### Bug
+
+- Fix the BitBox hardware wallet communication error introduced with Chrome 73 [#1209](https://github.com/MyEtherWallet/MyEtherWallet/pull/1209)
+- Fix error message display for the BitBox hardware wallet [#1209](https://github.com/MyEtherWallet/MyEtherWallet/pull/1209)
+
 ### Release v5.0.14-hotfix.2
 
 ### Bug
