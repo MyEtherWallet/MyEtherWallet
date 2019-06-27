@@ -11,7 +11,7 @@
       <div class="form-content-container">
         <div class="accordion-menu-container">
           <!-- Phone Number - accordion-menu ******************************** -->
-          <accordion-menu
+          <!--          <accordion-menu
             :isopen="steps['step1']"
             :title="$t('interface.phoneNumber')"
             :greytitle="false"
@@ -40,7 +40,7 @@
               </li>
             </ul>
           </accordion-menu>
-          <!-- Tan Code - accordion-menu ******************************** -->
+          &lt;!&ndash; Tan Code - accordion-menu ******************************** &ndash;&gt;
           <accordion-menu
             :isopen="steps['verifyStep']"
             :greytitle="false"
@@ -66,7 +66,7 @@
                 </p>
               </li>
             </ul>
-          </accordion-menu>
+          </accordion-menu>-->
           <!-- Bank Details - accordion-menu ******************************** -->
           <accordion-menu
             :isopen="steps['step2']"
@@ -111,6 +111,12 @@
                 <standard-input
                   :options="inputName"
                   @changedValue="orderDetails.owner.name = $event"
+                />
+              </li>
+              <li>
+                <standard-input
+                  :options="inputEmail"
+                  @changedValue="orderDetails.email = $event"
                 />
               </li>
               <li>
@@ -210,7 +216,7 @@
 <script>
 import 'vue-tel-input/dist/vue-tel-input.css';
 
-import store from 'store';
+// import store from 'store';
 import { getNames, registerLocale } from 'i18n-iso-countries';
 import names from 'i18n-iso-countries/langs/en.json';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
@@ -300,6 +306,10 @@ export default {
         title: this.$t('interface.ownerName'),
         value: ''
       },
+      inputEmail: {
+        title: this.$t('interface.email'),
+        value: ''
+      },
       inputAddress1: {
         title: this.$t('interface.billingAddress'),
         placeHolder: 'Address 1',
@@ -356,6 +366,7 @@ export default {
       phoneNumber: '',
       tan: '',
       invalidTanEntered: false,
+      email: '',
       orderDetails: {
         currency: this.swapDetails.toCurrency,
         type: 'bank_account',
@@ -400,25 +411,25 @@ export default {
     }
   },
   watch: {
-    tan(val) {
-      const correctLength = val.toString().length === 6;
-      const allNumbers = /^\d\d\d\d\d\d$/.test(val);
-      this.validTan = correctLength && allNumbers;
-    }
+    // tan(val) {
+    //   const correctLength = val.toString().length === 6;
+    //   const allNumbers = /^\d\d\d\d\d\d$/.test(val);
+    //   this.validTan = correctLength && allNumbers;
+    // }
   },
   mounted() {
     this.openMenu();
     const providerConstructor = providerMap.get(this.swapDetails.provider);
     this.provider = new providerConstructor();
-    const haveCred = store.get(this.localStoreKey);
-    if (haveCred !== null && haveCred !== undefined) {
-      const userDetails = store.get(this.localStoreKey);
-      if (userDetails.phone_token && userDetails.verified) {
-        this.stageComplete('step1');
-        this.stageComplete('verifyStep');
-      }
-      if (!this.phoneToken) this.phoneToken = userDetails.phone_token;
-    }
+    // const haveCred = store.get(this.localStoreKey);
+    // if (haveCred !== null && haveCred !== undefined) {
+    //   const userDetails = store.get(this.localStoreKey);
+    //   if (userDetails.phone_token && userDetails.verified) {
+    //     this.stageComplete('step1');
+    //     this.stageComplete('verifyStep');
+    //   }
+    //   if (!this.phoneToken) this.phoneToken = userDetails.phone_token;
+    // }
   },
   methods: {
     reOpen(step) {
@@ -445,50 +456,51 @@ export default {
     openMenu(val) {
       return val;
     },
-    setPhoneNumber({ number, isValid }) {
-      this.validPhoneNumber = isValid;
-      this.phoneNumber = number;
-    },
+    // setPhoneNumber({ number, isValid }) {
+    //   this.validPhoneNumber = isValid;
+    //   this.phoneNumber = number;
+    // },
     backButtonAction() {
       this.$emit('backButtonClick');
     },
-    async registerPhone() {
-      if (this.phoneNumber === '')
-        throw Error(this.$t('interface.phoneRequired'));
-      const initData = {
-        phoneNumber: this.phoneNumber,
-        ...this.swapDetails
-      };
-      const existing = await this.provider.registerUser(initData);
-      if (existing) {
-        this.previouslyVerified = true;
-        this.stageComplete('step1');
-        this.stageComplete('verifyStep');
-        this.updateStep('step2');
-      } else {
-        this.stageComplete('step1');
-        this.updateStep('verifyStep');
-      }
-    },
-    async confirmUser() {
-      if (this.validTan) {
-        const verifyData = {
-          tan: this.tan,
-          ...this.swapDetails
-        };
-        const verified = await this.provider.verifyUser(verifyData);
-        if (verified.success) {
-          this.invalidTanEntered = false;
-          this.stageComplete('verifyStep');
-          this.updateStep('step2');
-        } else {
-          this.invalidTanEntered = true;
-        }
-      }
-    },
+    // async registerPhone() {
+    //   if (this.phoneNumber === '')
+    //     throw Error(this.$t('interface.phoneRequired'));
+    //   const initData = {
+    //     phoneNumber: this.phoneNumber,
+    //     ...this.swapDetails
+    //   };
+    //   const existing = await this.provider.registerUser(initData);
+    //   if (existing) {
+    //     this.previouslyVerified = true;
+    //     this.stageComplete('step1');
+    //     this.stageComplete('verifyStep');
+    //     this.updateStep('step2');
+    //   } else {
+    //     this.stageComplete('step1');
+    //     this.updateStep('verifyStep');
+    //   }
+    // },
+    // async confirmUser() {
+    //   if (this.validTan) {
+    //     const verifyData = {
+    //       tan: this.tan,
+    //       ...this.swapDetails
+    //     };
+    //     const verified = await this.provider.verifyUser(verifyData);
+    //     if (verified.success) {
+    //       this.invalidTanEntered = false;
+    //       this.stageComplete('verifyStep');
+    //       this.updateStep('step2');
+    //     } else {
+    //       this.invalidTanEntered = true;
+    //     }
+    //   }
+    // },
     async createExitOrder() {
       this.finalizingSwap = true;
       const details = {
+        email: this.email,
         input: {
           amount: this.swapDetails.fromValue,
           currency: this.swapDetails.fromCurrency,
