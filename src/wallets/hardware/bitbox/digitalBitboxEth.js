@@ -12,7 +12,7 @@
 
 import * as Crypto from 'crypto';
 import * as HDKey from 'hdkey';
-const BitBoxSupportedMajorVersion = 6;
+const BitBoxSupportedMajorVersion = 7;
 const hijackState = {
   // Order must match that in the firmware code
   responseReady: 0,
