@@ -5,20 +5,19 @@ import { ExtensionHelpers } from '@/helpers';
 
 (function() {
   /* eslint no-console: 0 no-unused-vars: 0 */
-  const accountTestReturn = [];
-  ExtensionHelpers.getAccounts(res => {
-    Object.keys(res).forEach(item => {
-      accountTestReturn.push(item);
-    });
-  });
   const eventsListeners = function(request, _, sendResponse) {
     let q;
-    if (Object.keys(request.meta).length > 0) {
+    if (
+      request.hasOwnProperty('meta') &&
+      Object.keys(request.meta).length > 0
+    ) {
       const arr = [];
       for (const i in request.meta) {
         if (request.meta.hasOwnProperty(i)) {
           arr.push(
-            encodeURIComponent(i) + '=' + encodeURIComponent(request.meta[i])
+            encodeURIComponent(i.replace('og:', '')) +
+              '=' +
+              encodeURIComponent(request.meta[i])
           );
         }
       }

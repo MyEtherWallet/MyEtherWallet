@@ -502,8 +502,10 @@ export default {
               this.checkMetamaskAddrChange();
               this.matchMetamaskNetwork();
             } else {
-              this.web3WalletPollNetwork();
-              this.web3WalletPollAddress();
+              if (!window.web3.currentProvider.isMew) {
+                this.web3WalletPollNetwork();
+                this.web3WalletPollAddress();
+              }
             }
           }
           this.setENS();
