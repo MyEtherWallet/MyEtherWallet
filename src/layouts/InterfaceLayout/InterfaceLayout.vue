@@ -498,10 +498,7 @@ export default {
       if (this.online) {
         if (this.account.address !== null) {
           if (this.account.identifier === WEB3_TYPE) {
-            if (
-              window.web3.currentProvider.isMetaMask ||
-              window.web3.currentProvider._metamask
-            ) {
+            if (window.web3.currentProvider.isMetaMask) {
               this.checkMetamaskAddrChange();
               this.matchMetamaskNetwork();
             } else {
