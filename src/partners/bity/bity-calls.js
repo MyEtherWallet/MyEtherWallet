@@ -66,11 +66,44 @@ const getEstimate = async orderInfo => {
   }
 };
 
+const createOrder = async orderInfo => {
+  try {
+    const results = await post(
+      buildPath(),
+      utils.buildPayload(bityMethods.createOrder, orderInfo)
+    );
+    console.log(results); // todo remove dev item
+    if (results.error) {
+      throw Error(results.error.message);
+    }
+
+    return results.result;
+  } catch (e) {
+    utils.handleOrThrow(e);
+  }
+};
+
 const openOrder = async orderInfo => {
   try {
     const results = await post(
       buildPath(),
       utils.buildPayload(bityMethods.createTransaction, orderInfo)
+    );
+    if (results.error) {
+      throw Error(results.error.message);
+    }
+
+    return results.result;
+  } catch (e) {
+    utils.handleOrThrow(e);
+  }
+};
+
+const orderDetails = async orderInfo => {
+  try {
+    const results = await post(
+      buildPath(),
+      utils.buildPayload(bityMethods.orderDetails, orderInfo)
     );
     if (results.error) {
       throw Error(results.error.message);
@@ -181,6 +214,8 @@ const getStatusFiat = async (orderInfo, phoneToken) => {
 
 export {
   getEstimate,
+  createOrder,
+  orderDetails,
   getRates,
   getExitRates,
   openOrder,

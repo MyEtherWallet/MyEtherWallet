@@ -413,7 +413,7 @@ export default {
       return false;
     },
     toBelowMinAllowed() {
-      if (this.checkBityMin) return this.$t('interface.belowMinGeneral');
+      // if (this.checkBityMin) return this.$t('interface.belowMinGeneral');
       if (new BigNumber(0).gte(new BigNumber(this.toValue)))
         return this.$t('interface.belowMinGeneral');
       return false;
@@ -835,8 +835,10 @@ export default {
       }
     },
     async swapConfirmationModalOpen() {
+      console.log('open modal'); // todo remove dev item
       try {
         if (this.validSwap) {
+          console.log('valid', this.validSwap); // todo remove dev item
           this.finalizingSwap = true;
           const providerDetails = this.providerList.find(entry => {
             return entry.provider === this.selectedProvider.provider;
@@ -855,6 +857,7 @@ export default {
                 ? this.currentAddress
                 : this.exitFromAddress
           };
+          console.log(swapDetails); // todo remove dev item
           this.swapDetails = await this.swap.startSwap(swapDetails);
           this.finalizingSwap = false;
 
