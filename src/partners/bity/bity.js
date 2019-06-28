@@ -11,6 +11,7 @@ import { Toast } from '@/helpers';
 import {
   getRates,
   openOrder,
+  orderDetails,
   getStatus,
   getExitRates,
   loginWithPhone,
@@ -18,7 +19,8 @@ import {
   buildCyptoToFiatOrderData,
   getCyptoToFiatOrderDetails,
   getStatusFiat,
-  getEstimate
+  getEstimate,
+  createOrder
 } from './bity-calls';
 import {
   bityStatuses,
@@ -164,7 +166,7 @@ export default class BitySwap {
       toCurrency,
       fromValue
     );
-
+    console.log(expRate); // todo remove dev item
     const rate = this._getRate(fromCurrency, toCurrency);
     return {
       fromCurrency,
@@ -184,6 +186,8 @@ export default class BitySwap {
       toCurrency,
       fromValue
     );
+    console.log(expRate); // todo remove dev item
+
     const rate = this._getRate(fromCurrency, toCurrency);
     return {
       fromCurrency,
@@ -378,6 +382,7 @@ export default class BitySwap {
         }
       }
     } else if (!this.checkIfExit(swapDetails)) {
+      console.log('bity', swapDetails); // todo remove dev item
       swapDetails.dataForInitialization = await this.buildOrder(swapDetails);
       if (!swapDetails.dataForInitialization) throw Error('abort');
       swapDetails.providerReceives =
@@ -402,20 +407,32 @@ export default class BitySwap {
     toCurrency,
     fromValue,
     toValue,
-    toAddress
+    toAddress,
+    fromAddress
   }) {
     if (
-      this.minCheck(fromCurrency, fromValue, toCurrency, toValue) &&
+      // this.minCheck(fromCurrency, fromValue, toCurrency, toValue) &&
       this.maxCheck(fromCurrency, fromValue, toCurrency, toValue)
     ) {
-      const order = {
-        amount: fromValue,
-        mode: 0,
-        pair: fromCurrency + toCurrency,
-        destAddress: toAddress
-      };
 
-      return await openOrder(order);
+      const order = {
+        orderDetails: {
+          input: {
+            amount: fromValue,
+            currency: fromCurrency,
+            type: 'crypto_address',
+            crypto_address: fromAddress
+          },
+          output: {
+            currency: toCurrency,
+            type: 'crypto_address',
+            crypto_address: toAddress
+          }
+        }
+      };
+      console.log(order); // todo remove dev item
+      const orderInfo = await createOrder(order);
+      return await orderDetails(orderInfo.status_address);
     }
   }
 
