@@ -1,0 +1,31 @@
+@import '~@/scss/GlobalVariables';
+
+%overall-padding {
+  padding: 10px 20px;
+}
+
+.sign-transaction-container {
+  display: flex;
+  flex-direction: column;
+
+  .sign-transaction-header {
+    @extend %overall-padding;
+
+    p {
+      font-size: 20px;
+      font-weight: bold;
+      margin: 0;
+    }
+  }
+
+  .sign-transaction-addresses {
+    @extend %overall-padding;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+
+    // i {
+    //   color
+    // }
+  }
+}
