@@ -17,7 +17,6 @@ const EXCEPTIONS = [
   'web3-core-helpers',
   'web3-core-method',
   'web3-utils',
-  'web3-eth',
   '@xkeshi/vue-qrcode',
   'multicoin-address-validator',
   'bootstrap-vue'

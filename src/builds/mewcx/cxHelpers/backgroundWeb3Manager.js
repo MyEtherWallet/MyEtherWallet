@@ -57,9 +57,21 @@ window.addEventListener(
   false
 );
 
+window.addEventListener(`web3${extensionID}getCurrentAccount`, function() {
+  chrome.storage.sync.get('selectedAccount', function(res) {
+    const event = new CustomEvent(`web3${extensionID}receiveAccount`, {
+      detail: {
+        account: res['selectedAccount']
+      }
+    });
+    window.dispatchEvent(event);
+  });
+});
+
 window.addEventListener(
   `web3${extensionID}getAccount`,
   function() {
+    chrome.storage.sync.set({ selectedAccount: '' }, function() {});
     const meta = {};
     const tags = Array.from(document.getElementsByTagName('meta')).filter(
       meta => {
@@ -80,3 +92,10 @@ window.addEventListener(
   },
   false
 );
+
+window.addEventListener(`web3${extensionID}sendTx`, function(e) {
+  chrome.runtime.sendMessage(extensionID, {
+    msg: 'confirmAndSendTx',
+    tx: e.detail.tx
+  });
+});

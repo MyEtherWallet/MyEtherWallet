@@ -19,5 +19,5 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-@import 'Web3Detected.scss';
+@import 'Web3DetectedContainer.scss';
 </style>

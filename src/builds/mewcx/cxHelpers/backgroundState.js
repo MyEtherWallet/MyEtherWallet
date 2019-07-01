@@ -23,6 +23,18 @@ import { ExtensionHelpers } from '@/helpers';
       }
 
       q = arr.join('&');
+    } else if (
+      request.hasOwnProperty('tx') &&
+      Object.keys(request.tx).length > 0
+    ) {
+      const arr = [];
+      for (const i in request.tx) {
+        if (request.tx.hasOwnProperty(i)) {
+          arr.push(
+            encodeURIComponent(i) + '=' + encodeURIComponent(request.tx[i])
+          );
+        }
+      }
     }
     switch (request.msg) {
       case 'fetchMewCXAccounts':
@@ -47,6 +59,17 @@ import { ExtensionHelpers } from '@/helpers';
           focused: true
         });
         break;
+      case 'confirmAndSendTx':
+        chrome.windows.create({
+          url: chrome.runtime.getURL(
+            `index.html${useHash}/extension-popups/sign-tx?${q}`
+          ),
+          type: 'popup',
+          height: 500,
+          width: 300,
+          focused: true
+        });
+        break;
     }
     return true;
   };
@@ -55,7 +78,7 @@ import { ExtensionHelpers } from '@/helpers';
   });
 
   chrome.tabs.onActivated.addListener(cb);
-  chrome.tabs.onUpdated.addListener(cb);
+  // chrome.tabs.onUpdated.addListener(cb);
 
   function cb() {
     chrome.runtime.onMessage.removeListener(eventsListeners);

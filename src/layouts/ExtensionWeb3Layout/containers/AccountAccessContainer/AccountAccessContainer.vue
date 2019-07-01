@@ -13,38 +13,14 @@
     </div>
     <div class="addresses-container">
       <div class="address-container">
-        <div
+        <address-selection-component
           v-for="(acc, idx) in accWithBal"
           :key="acc.address + idx"
-          class="address-detail-container"
-          @click="selectAccount(acc.address)"
-        >
-          <div class="check-mark-container">
-            <i
-              :class="[
-                selectedAccount === acc.address
-                  ? 'icon-selected'
-                  : 'icon-not-selected',
-                'fa fa-check-circle fa-lg'
-              ]"
-            />
-          </div>
-          <div
-            :class="[
-              selectedAccount === acc.address ? 'selected' : '',
-              'address-detail'
-            ]"
-          >
-            <blockie :address="acc.address" width="30px" height="30px" />
-            <div class="address-text">
-              <p>{{ acc.address | concatAddr }}</p>
-              <div class="balance">
-                <span>Balance:</span>
-                <span>{{ acc.balance.substr(0, 7) }} ETH</span>
-              </div>
-            </div>
-          </div>
-        </div>
+          :address="acc.address"
+          :balance="acc.balance"
+          :selected-account="selectedAccount"
+          :select-account="selectAccount"
+        />
       </div>
     </div>
     <button
@@ -60,11 +36,10 @@
 import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { Misc, ExtensionHelpers } from '@/helpers';
-import Blockie from '@/components/Blockie';
-
+import AddressSelectionComponent from './components/AddressSelectionComponent';
 export default {
   components: {
-    blockie: Blockie
+    'address-selection-component': AddressSelectionComponent
   },
   data() {
     return {
@@ -102,7 +77,6 @@ export default {
       }
     },
     selectAccount(acc) {
-      console.log(acc);
       if (this.selectedAccount === acc) {
         this.selectedAccount = '';
       } else {
@@ -119,6 +93,7 @@ export default {
             msg: 'selectedMewCXAccount',
             account: account
           };
+          chrome.storage.sync.set({ selectedAccount: account }, function() {});
           chrome.tabs.sendMessage(tab[0].id, obj);
           window.close();
         }
@@ -129,5 +104,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'AccountAccess.scss';
+@import 'AccountAccessContainer.scss';
 </style>

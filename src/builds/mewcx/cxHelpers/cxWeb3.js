@@ -1,5 +1,6 @@
-import web3Eth from 'web3-eth';
+import web3Eth from 'web3';
 import MEWProvider from '@/wallets/web3-provider';
+
 if (
   window.hasOwnProperty('web3') &&
   !window.web3.currentProvider.hasOwnProperty('isMew')
