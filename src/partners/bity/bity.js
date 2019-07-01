@@ -431,8 +431,7 @@ export default class BitySwap {
         }
       };
       console.log(order); // todo remove dev item
-      const orderInfo = await createOrder(order);
-      return await orderDetails(orderInfo.status_address);
+      return await createOrder(order);
     }
   }
 
