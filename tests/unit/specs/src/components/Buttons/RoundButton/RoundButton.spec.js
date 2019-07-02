@@ -25,7 +25,7 @@ describe('RoundButton.vue', () => {
 
   it('should render correct title props', () => {
     const title = 'title';
-    wrapper.setProps({title});
+    wrapper.setProps({ title });
     expect(
       wrapper.vm.$el.querySelector('.round-button button').textContent.trim()
     ).toEqual(title);
