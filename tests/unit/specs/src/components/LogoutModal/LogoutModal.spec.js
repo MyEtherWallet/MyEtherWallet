@@ -1,4 +1,4 @@
-import DisconnectedModal from '@/components/DisconnectedModal/DisconnectedModal.vue';
+import LogoutModal from '@/components/LogoutModal/LogoutModal.vue';
 import { shallowMount } from '@vue/test-utils';
 import { Tooling } from '@@/helpers';
 import StandardButton from '@/components/Buttons/StandardButton';
@@ -15,8 +15,12 @@ const BModalStub = {
   }
 };
 
-describe('DisconnectedModal.vue', () => {
+describe('LogoutModal.vue', () => {
   let localVue, i18n, wrapper, store;
+
+  const mockRouter = {
+    push: sinon.stub()
+  };
 
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
@@ -26,7 +30,7 @@ describe('DisconnectedModal.vue', () => {
   });
 
   beforeEach(() => {
-    wrapper = shallowMount(DisconnectedModal, {
+    wrapper = shallowMount(LogoutModal, {
       localVue,
       i18n,
       store,
@@ -34,19 +38,22 @@ describe('DisconnectedModal.vue', () => {
       stubs: {
         'standard-button': StandardButton,
         'b-modal': BModalStub
+      },
+      mocks: {
+        $router: mockRouter
       }
     });
   });
 
-  it('should render correct browser data', () => {
-    expect(
-      wrapper.vm.$el.querySelectorAll('.the-button-box')[1].textContent.trim()
-    ).toEqual(wrapper.vm.$data.okayButtonOptions.title);
-  });
+  describe('LogoutModal.vue Methods', () => {
+    it('should cancel when button is clicked', () => {
+      wrapper.find('.buttons .no').trigger('click');
+      expect(hideModal.called).toBe(true);
+    });
 
-  describe('DisconnectedModal.vue Methods', () => {
-    it('should hide disconnected modal when button clicked', () => {
-      wrapper.find('.standard-button').trigger('click');
+    it('should logout when button is clicked', () => {
+      wrapper.find('.buttons .yes').trigger('click');
+      expect(mockRouter.push.calledWith('/')).toBe(true);
       expect(hideModal.called).toBe(true);
     });
   });

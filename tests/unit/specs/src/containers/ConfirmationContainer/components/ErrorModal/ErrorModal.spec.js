@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils';
-import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessModal/SuccessModal.vue';
-import StandardButton from '@/components/Buttons/StandardButton';
+import ErrorModal from '@/containers/ConfirmationContainer/components/ErrorModal/ErrorModal.vue';
 import sinon from 'sinon';
 import { Tooling } from '@@/helpers';
 
@@ -20,7 +19,7 @@ const BBtnStub = {
   template: '<div  class="b-btn"><slot></slot></div>'
 };
 
-describe('SuccessModal.vue', () => {
+describe('ErrorModal.vue', () => {
   let localVue, i18n, wrapper, store;
   const message = 'message';
   const linkMessage = 'linkMessage';
@@ -41,7 +40,7 @@ describe('SuccessModal.vue', () => {
   });
 
   beforeEach(() => {
-    wrapper = shallowMount(SuccessModal, {
+    wrapper = shallowMount(ErrorModal, {
       localVue,
       i18n,
       store,
@@ -49,8 +48,7 @@ describe('SuccessModal.vue', () => {
       propsData: { message, linkTo },
       stubs: {
         'b-modal': BModalStub,
-        'b-btn': BBtnStub,
-        'standard-button': StandardButton
+        'b-btn': BBtnStub
       },
       mocks: {
         $router: mockRoute
@@ -65,36 +63,12 @@ describe('SuccessModal.vue', () => {
   });
 
   it('should render correct linkMessage props', () => {
-    expect(wrapper.vm.buttonOk.title).toEqual('Ok');
     wrapper.setProps({ linkMessage });
-    expect(wrapper.vm.buttonOk.title).toEqual(linkMessage);
+    console.log(wrapper.vm.$el.querySelector('.close-button'));
   });
 
-  it('should render correct etherscanLink props', () => {
-    expect(wrapper.find('.buttons a').exists()).toBe(false);
-    wrapper.setData({ etherscanLink: 'etherscanLink' });
-    expect(wrapper.find('.buttons a').exists()).toBe(true);
-  });
-
-  it('should render correct buttonCheckEtherscan computed data', () => {
-    wrapper.setData({ etherscanLink: 'etherscanLink' });
-    expect(
-      wrapper.vm.$el
-        .querySelectorAll('.standard-button .the-button-box')[1]
-        .textContent.trim()
-    ).toEqual(wrapper.vm.buttonCheckEtherscan.title);
-  });
-
-  it('should render correct buttonOk computed data', () => {
-    expect(
-      wrapper.vm.$el
-        .querySelectorAll('.standard-button .the-button-box')[1]
-        .textContent.trim()
-    ).toEqual(wrapper.vm.buttonOk.title);
-  });
-
-  describe('SuccessModal.vue Methods', () => {
-    it('should render correct hideModal method', () => {
+  describe('ErrorModal.vue Methods', () => {
+    xit('should render correct hideModal method', () => {
       wrapper.vm.hideModal();
       expect(hideModal.called).toBe(true);
     });
