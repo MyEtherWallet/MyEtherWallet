@@ -194,13 +194,13 @@ const getCyptoToFiatOrderDetails = async detailsData => {
   }
 };
 
-const getStatusFiat = async (orderInfo, phoneToken) => {
+const getStatusFiat = async (orderInfo) => {
   try {
     const results = await post(
       buildPath(),
-      utils.buildPayload(bityMethods.statusFiat, {
+      utils.buildPayload(bityMethods.orderDetails, {
         orderId: orderInfo,
-        phoneToken: phoneToken.phoneToken
+        detailsUrl: orderInfo
       })
     );
     if (results.error) {

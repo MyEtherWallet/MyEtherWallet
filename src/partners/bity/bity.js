@@ -352,35 +352,49 @@ export default class BitySwap {
       swapDetails.dataForInitialization = false;
       swapDetails.isExitToFiat = true;
       return swapDetails;
-    } else if (this.checkIfExit(swapDetails) && swapDetails.bypass) {
-      const preOrder = await this.buildExitOrder(swapDetails);
-      if (preOrder.created) {
-        swapDetails.dataForInitialization = await getCyptoToFiatOrderDetails({
-          pair: swapDetails.fromCurrency + swapDetails.toCurrency,
-          detailsUrl: preOrder.status_address,
-          phoneToken: this.phoneToken
-        });
-        if (swapDetails.dataForInitialization) {
-          swapDetails.providerReceives =
-            swapDetails.dataForInitialization.input.amount;
-          swapDetails.providerSends =
-            swapDetails.dataForInitialization.output.amount;
-          swapDetails.parsed = BitySwap.parseExitOrder(
-            swapDetails.dataForInitialization
-          );
-          swapDetails.timestamp = swapDetails.parsed.timestamp.replace(
-            'ZZ',
-            'Z'
-          );
-          swapDetails.providerSends = swapDetails.parsed.recValue;
-          swapDetails.providerAddress =
-            swapDetails.dataForInitialization.payment_address;
-          swapDetails.isDex = BitySwap.isDex();
-          swapDetails.validFor = swapDetails.parsed.validFor;
-        } else {
-          throw Error('abort');
-        }
+    } else if (this.checkIfExit(swapDetails) /*&& swapDetails.bypass*/) {
+      // const preOrder = await this.buildExitOrder(swapDetails);
+      // if (preOrder.created) {
+      //   swapDetails.dataForInitialization = await getCyptoToFiatOrderDetails({
+      //     pair: swapDetails.fromCurrency + swapDetails.toCurrency,
+      //     orderDetails: {
+      //       // 'email': 'steveM@MyEtherWallet.com',
+      //       'input': {
+      //         'amount': '0.1',
+      //         'currency': 'ETH',
+      //         'type': 'crypto_address',
+      //         'crypto_address': '0xe51dDAa1B650c26B62fCA2520cdC2c60cE205F75'
+      //       },
+      //       'output': {
+      //         'currency': 'BTC',
+      //         'type': 'crypto_address',
+      //         'crypto_address': '1Bf5Ng3uH2gRWbrcU3HegqMTfQpa3GSYVW'
+      //       }
+      //     }
+      //
+      //     detailsUrl: preOrder.status_address,
+      //     phoneToken: this.phoneToken
+      //   });
+
+      swapDetails.dataForInitialization = await createOrder(swapDetails);
+      if (swapDetails.dataForInitialization) {
+        swapDetails.providerReceives =
+          swapDetails.dataForInitialization.input.amount;
+        swapDetails.providerSends =
+          swapDetails.dataForInitialization.output.amount;
+        swapDetails.parsed = BitySwap.parseExitOrder(
+          swapDetails.dataForInitialization
+        );
+        swapDetails.timestamp = swapDetails.parsed.timestamp.replace('ZZ', 'Z');
+        swapDetails.providerSends = swapDetails.parsed.recValue;
+        swapDetails.providerAddress =
+          swapDetails.dataForInitialization.payment_address;
+        swapDetails.isDex = BitySwap.isDex();
+        swapDetails.validFor = swapDetails.parsed.validFor;
+      } else {
+        throw Error('abort');
       }
+      // }
     } else if (!this.checkIfExit(swapDetails)) {
       console.log('bity', swapDetails); // todo remove dev item
       swapDetails.dataForInitialization = await this.buildOrder(swapDetails);
@@ -407,31 +421,17 @@ export default class BitySwap {
     toCurrency,
     fromValue,
     toValue,
-    toAddress,
-    fromAddress
+    toAddress
   }) {
-    if (
-      // this.minCheck(fromCurrency, fromValue, toCurrency, toValue) &&
-      this.maxCheck(fromCurrency, fromValue, toCurrency, toValue)
-    ) {
-
+    if (this.maxCheck(fromCurrency, fromValue, toCurrency, toValue)) {
       const order = {
-        orderDetails: {
-          input: {
-            amount: fromValue,
-            currency: fromCurrency,
-            type: 'crypto_address',
-            crypto_address: fromAddress
-          },
-          output: {
-            currency: toCurrency,
-            type: 'crypto_address',
-            crypto_address: toAddress
-          }
-        }
+        amount: fromValue,
+        mode: 0,
+        pair: fromCurrency + toCurrency,
+        destAddress: toAddress
       };
-      console.log(order); // todo remove dev item
-      return await createOrder(order);
+
+      return await openOrder(order);
     }
   }
 
@@ -578,7 +578,7 @@ export default class BitySwap {
     try {
       const data = await getStatusFiat(
         noticeDetails.statusId,
-        noticeDetails.special
+        noticeDetails
       );
       if (!utils.isJson(data)) return swapNotificationStatuses.PENDING;
 
