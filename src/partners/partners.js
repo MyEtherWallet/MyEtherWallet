@@ -29,6 +29,7 @@ export default class SwapProviders {
   }
 
   setup(providers, environmentSupplied, misc) {
+    this.overrideDecimals = misc.overrideDecimals || false;
     this.updateProviderRates = 0;
     this.providers = new Map();
     this.providerRateUpdates = {};
@@ -220,6 +221,7 @@ export default class SwapProviders {
     } else if (SwapProviders.isToken(currency)) {
       const decimal = SwapProviders.getTokenDecimals(currency);
       if (decimal < 6) return decimal;
+      if (this.overrideDecimals) return decimal;
       return 6;
     }
     return 6;

@@ -108,15 +108,16 @@
                     v-for="(val, key) in customPaths"
                     :class="selectedPath === val.path ? 'active' : ''"
                     :key="key"
-                    class="custom-networks"
                   >
-                    <div @click="changePath(key)">{{ val.label }}</div>
-                    <span>
-                      <i
-                        class="fa fa-times-circle"
-                        @click.prevent="removeCustomPath(val)"
-                      />
-                    </span>
+                    <div class="custom-networks">
+                      <div @click="changePath(key)">{{ val.label }}</div>
+                      <span>
+                        <i
+                          class="fa fa-times-circle"
+                          @click.prevent="removeCustomPath(val)"
+                        />
+                      </span>
+                    </div>
                   </b-dropdown-item>
                   <b-dropdown-item @click="showCustomPathInput">
                     {{ $t('accessWallet.addCustomPath') }}
@@ -222,17 +223,13 @@
               <router-link to="/terms-and-conditions"
                 >{{ $t('common.terms') }}.</router-link
               >
-              <input
-                ref="accessMyWalletBtn"
-                type="checkbox"
-                @click="accessMyWalletBtnDisabled = !accessMyWalletBtnDisabled"
-              />
+              <input v-model="acceptTerms" type="checkbox" />
               <span class="checkmark" />
             </label>
           </div>
           <div class="button-container">
             <b-btn
-              :disabled="accessMyWalletBtnDisabled"
+              :disabled="!isDisabled"
               class="mid-round-button-green-filled close-button"
               @click.prevent="unlockWallet"
               >{{ $t('common.accessMyWallet') }}</b-btn
@@ -272,7 +269,6 @@ export default {
   data() {
     return {
       selectedId: '',
-      accessMyWalletBtnDisabled: true,
       currentIndex: 0,
       HDAccounts: [],
       availablePaths: {},
@@ -283,7 +279,8 @@ export default {
       customPath: { label: '', dpath: '' },
       showCollapse1: false,
       showCollapse2: true,
-      ledgerType: LEDGER_TYPE
+      ledgerType: LEDGER_TYPE,
+      acceptTerms: false
     };
   },
   computed: {
@@ -300,6 +297,9 @@ export default {
     },
     reorderNetworkList() {
       return Misc.reorderNetworks();
+    },
+    isDisabled() {
+      return this.selectedId !== '' && this.acceptTerms;
     }
   },
   watch: {
@@ -311,8 +311,6 @@ export default {
   mounted() {
     // reset component values when modal becomes hidden
     this.$refs.networkAndAddress.$on('hidden', () => {
-      this.$refs.accessMyWalletBtn.checked = false;
-      this.accessMyWalletBtnDisabled = true;
       this.availablePaths = {};
       this.selectedPath = '';
       this.invalidPath = '';

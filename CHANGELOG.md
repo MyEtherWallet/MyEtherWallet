@@ -1,3 +1,77 @@
+### Bug
+
+- Fix the BitBox hardware wallet communication error introduced with Chrome 73 [#1209](https://github.com/MyEtherWallet/MyEtherWallet/pull/1209)
+- Fix error message display for the BitBox hardware wallet [#1209](https://github.com/MyEtherWallet/MyEtherWallet/pull/1209)
+
+### Release v5.0.14-hotfix.2
+
+### Bug
+
+- Fix Typo [#1198](https://github.com/MyEtherWallet/MyEtherWallet/pull/1198)
+- Fix Secalot throwing exception [#1194](https://github.com/MyEtherWallet/MyEtherWallet/pull/1194)
+
+### Devop
+
+- Cleanup greenkeeper branches [#1203](https://github.com/MyEtherWallet/MyEtherWallet/pull/1203)
+- Add subdomains [#1186](https://github.com/MyEtherWallet/MyEtherWallet/pull/1186)
+
+### Release v5.0.14-hotfix.1
+
+### Bug
+
+- Fix send tx for custom chains [#1184](https://github.com/MyEtherWallet/MyEtherWallet/pull/1184)
+
+### Release v5.0.14
+
+### Feature
+
+- Maker Integration [#740](https://github.com/MyEtherWallet/MyEtherWallet/pull/740)
+
+### Bug
+
+- Fix getAddressString null issue, update ethereumjs-tx [#1163](https://github.com/MyEtherWallet/MyEtherWallet/pull/1163)
+- Add better errors on send, disable register on ens when no balance [#1173](https://github.com/MyEtherWallet/MyEtherWallet/pull/1173)
+- Fix Private Key network error on access [#1166](https://github.com/MyEtherWallet/MyEtherWallet/pull/1166)
+
+### Release v5.0.13
+
+### Devop
+
+- AWS sync with --exact-timestamps flag [#1117](https://github.com/MyEtherWallet/MyEtherWallet/pull/1117)
+- Support 32bits chainID [#959](https://github.com/MyEtherWallet/MyEtherWallet/pull/959)
+
+### Bug
+
+- Broken link in getting started [#1154](https://github.com/MyEtherWallet/MyEtherWallet/pull/1154)
+- Fix broken custom derivation paths & Remove -1 as an allowed gas limit value [#1133](https://github.com/MyEtherWallet/MyEtherWallet/pull/1133)
+- Various fixes for Metamask, Trezor, interact with contract, and deploy contract [#1125](https://github.com/MyEtherWallet/MyEtherWallet/pull/1125)
+- Fix front page spaceman animation [#1147](https://github.com/MyEtherWallet/MyEtherWallet/pull/1147)
+- Update UI for Verify Message page [#1146](https://github.com/MyEtherWallet/MyEtherWallet/pull/1146)
+- Fix UI for Hardware modal [#1140](https://github.com/MyEtherWallet/MyEtherWallet/pull/1140)
+- Ui fix for password modal [#1135](https://github.com/MyEtherWallet/MyEtherWallet/pull/1135)
+- UI update for mobile network, balance [#1134](https://github.com/MyEtherWallet/MyEtherWallet/pull/1134)
+- UI update for Send Offline Helper, Convert Units, Buy a Hardware wallet [#1129](https://github.com/MyEtherWallet/MyEtherWallet/pull/1129)
+- Term and conditions, Privacy policy UI fix [#1128](https://github.com/MyEtherWallet/MyEtherWallet/pull/1128)
+
+### Release v5.0.12-hotfix.2
+
+### Bug
+
+- Fix ENS migrate owner check [#1103](https://github.com/MyEtherWallet/MyEtherWallet/pull/1103)
+- Fixes refresh page on mnemonic wallet submit [#1108](https://github.com/MyEtherWallet/MyEtherWallet/pull/1108)
+
+### Release v5.0.12-hotfix.1
+
+### Bug
+
+- Use u2f in windows for ledger [#1100](https://github.com/MyEtherWallet/MyEtherWallet/pull/1100)
+
+### Devop
+
+- Possible random error fix, and sync master to develop [#1101](https://github.com/MyEtherWallet/MyEtherWallet/pull/1101)
+
+### Release v5.0.12
+
 ### Feature
 
 - Have Simplex KYC form open in new tab [#1031](https://github.com/MyEtherWallet/MyEtherWallet/pull/1031)
@@ -10,12 +84,14 @@
 - set up a fallback if GAS_LIMIT check fails [#1076](https://github.com/MyEtherWallet/MyEtherWallet/pull/1076)
 - Fix owner check for permanent registrar names [#1054](https://github.com/MyEtherWallet/MyEtherWallet/pull/1054)
 - Web3 wallet promievent fix [#1063](https://github.com/MyEtherWallet/MyEtherWallet/pull/1063)
+- Catch ledger error [#1091](https://github.com/MyEtherWallet/MyEtherWallet/pull/1091)
 
 ### Devop
 
 - Ledger custom paths [#1037](https://github.com/MyEtherWallet/MyEtherWallet/pull/1037)
 - Update Richie's profile [#1036](https://github.com/MyEtherWallet/MyEtherWallet/pull/1036)
 - Change PWA name to MEW [#1030](https://github.com/MyEtherWallet/MyEtherWallet/pull/1030)
+- Address validation on swap [#1090](https://github.com/MyEtherWallet/MyEtherWallet/pull/1090)
 
 ### Release v5.0.11-ens.1
 

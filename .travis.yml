@@ -69,7 +69,7 @@ jobs:
         - npm run build:history
         - pip install --user awscli
       script:
-        - aws s3 sync dist/ s3://mewbuilds/develop/ --delete --cache-control max-age=172800,public
+        - aws s3 sync dist/ s3://mewbuilds/develop/ --exact-timestamps --delete --cache-control max-age=172800,public
           --acl public-read
         - aws s3 cp s3://mewbuilds/develop/service-worker.js s3://mewbuilds/develop/service-worker.js
           --metadata-directive REPLACE --cache-control max-age=0,no-cache,no-store,must-revalidate
@@ -90,7 +90,7 @@ jobs:
         - hashOut=`tar -cjvf - -C dist/ . | ssh -i ipfs-host.pem ubuntu@$IPFS_NODE ./ipfs-publish.sh
           --`
         - HASH=`echo $hashOut | sed -n 's:.*<hash>\(.*\)</hash>.*:\1:p'`
-        - aws s3 sync --delete --acl public-read dist/ s3://mewbuilds/build/$TRAVIS_COMMIT
+        - aws s3 sync dist/ s3://mewbuilds/build/$TRAVIS_COMMIT --exact-timestamps --delete --acl public-read
         - aws s3 cp s3://mewbuilds/build/$TRAVIS_COMMIT/service-worker.js s3://mewbuilds/build/$TRAVIS_COMMIT/service-worker.js
           --metadata-directive REPLACE --cache-control max-age=0,no-cache,no-store,must-revalidate
           --content-type application/javascript --acl public-read
@@ -141,7 +141,7 @@ jobs:
       before_deploy:
         - npm run build:history
         - pip install --user awscli
-        - aws s3 sync dist/ s3://mewbuilds/staging/ --delete --cache-control max-age=172800,public
+        - aws s3 sync dist/ s3://mewbuilds/staging/ --exact-timestamps --delete --cache-control max-age=172800,public
           --acl public-read
         - aws s3 cp s3://mewbuilds/staging/service-worker.js s3://mewbuilds/staging/service-worker.js
           --metadata-directive REPLACE --cache-control max-age=0,no-cache,no-store,must-revalidate

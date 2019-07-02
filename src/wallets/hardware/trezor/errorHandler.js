@@ -11,7 +11,9 @@ const ERRORS = {
   'Transport is missing': 'trezorError.transportMissing',
   'EthAppPleaseEnableContractData: Please enable Contract data on the Ethereum app Settings':
     'trezorError.turnOnContractData',
-  Cancelled: 'trezorError.cancelled'
+  Cancelled: 'trezorError.cancelled',
+  'Iframe timeout': 'trezor.iframeTimeout',
+  'Browser not supported': 'trezor.unsupportedBrowser'
 };
 
 const WARNING = {};

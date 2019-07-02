@@ -1,4 +1,4 @@
-import ethTx from 'ethereumjs-tx';
+import { Transaction } from 'ethereumjs-tx';
 import { hashPersonalMessage, toBuffer } from 'ethereumjs-util';
 import DigitalBitboxUsb from './digitalBitboxUsb';
 import DigitalBitboxEth from './digitalBitboxEth';
@@ -8,12 +8,14 @@ import HDWalletInterface from '@/wallets/HDWalletInterface';
 import { Toast } from '@/helpers';
 import errorHandler from './errorHandler';
 import * as HDKey from 'hdkey';
+import store from '@/store';
 import {
   getSignTransactionObject,
   sanitizeHex,
   getBufferFromHex,
   calculateChainIdFromV
 } from '../../utils';
+import commonGenerator from '@/helpers/commonGenerator';
 
 const NEED_PASSWORD = true;
 
@@ -37,8 +39,10 @@ class BitBoxWallet {
   getAccount(idx) {
     const derivedKey = this.hdKey.derive('m/' + idx);
     const txSigner = async tx => {
-      tx = new ethTx(tx);
-      const networkId = tx._chainId;
+      tx = new Transaction(tx, {
+        common: commonGenerator(store.state.network)
+      });
+      const networkId = tx.getChainId();
       const result = await this.bitbox.signTransaction(
         this.basePath + '/' + idx,
         tx
@@ -92,7 +96,7 @@ class BitBoxWallet {
 }
 const getRootPubKey = (_bitbox, _path) => {
   return new Promise((resolve, reject) => {
-    _bitbox.getAddress(_path, (result, error) => {
+    _bitbox.getStarted(_path, (result, error) => {
       if (error) return reject(error);
       resolve({
         publicKey: result.publicKey,
