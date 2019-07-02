@@ -4,7 +4,7 @@ import DappsContainer from '@/layouts/InterfaceLayout/containers/DappsContainer/
 import DappButtons from '@/layouts/InterfaceLayout/components/DappButtons/DappButtons.vue';
 import languages from '@/translations';
 import { Tooling } from '@@/helpers';
-
+import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
 const RouterLinkStub = {
   name: 'router-link',
   template:
@@ -18,7 +18,8 @@ function translate(lang) {
   for (let i = 0; i < arrLang.length; i++) {
     langObj = langObj[arrLang[i]];
   }
-  return langObj;
+  if (langObj) return langObj;
+  return lang;
 }
 
 describe('DappsContainer.vue', () => {
@@ -43,49 +44,30 @@ describe('DappsContainer.vue', () => {
         address: address
       },
       stubs: {
+        'interface-container-title': InterfaceContainerTitle,
         'dapp-buttons': DappButtons,
         'router-link': RouterLinkStub
       }
     });
   });
 
-  xit('[01/30/19] should render correct manageEns title', () => {
-    const dappsButtons = wrapper.vm.$el.querySelectorAll('.dapps-button');
-    expect(dappsButtons[1].querySelector('h4').textContent.trim()).toEqual(
-      translate(wrapper.vm.$data.localDapps.manageEns.title)
-    );
-  });
-
-  xit('[01/30/19] should render correct manageEns description', () => {
-    const dappsButtons = wrapper.vm.$el.querySelectorAll('.dapps-button');
-    expect(dappsButtons[1].querySelector('p').textContent.trim()).toEqual(
-      translate(wrapper.vm.$data.localDapps.manageEns.desc)
-    );
-  });
-
-  xit('[01/30/19] should render correct domainSale title', () => {
-    const dappsButtons = wrapper.vm.$el.querySelectorAll('.dapps-button');
-    expect(dappsButtons[2].querySelector('h4').textContent.trim()).toEqual(
-      translate(wrapper.vm.$data.localDapps.domainSale.title)
-    );
-  });
-
-  xit('[01/30/19] should render correct domainSale description', () => {
-    const dappsButtons = wrapper.vm.$el.querySelectorAll('.dapps-button');
-    expect(dappsButtons[2].querySelector('p').textContent.trim()).toEqual(
-      translate(wrapper.vm.$data.localDapps.domainSale.desc)
-    );
-  });
-
-  xit('[01/30/19] should render correct manageEns route', () => {
-    expect(
-      wrapper.vm.$el.querySelectorAll('.param')[1].textContent.trim()
-    ).toEqual(wrapper.vm.$data.localDapps.manageEns.route);
-  });
-
-  xit('[01/30/19] should render correct domainSale route', () => {
-    expect(
-      wrapper.vm.$el.querySelectorAll('.param')[2].textContent.trim()
-    ).toEqual(wrapper.vm.$data.localDapps.domainSale.route);
+  it('should render correct localDapps data', () => {
+    for (let i = 0; i < wrapper.vm.sortedObject.length; i++) {
+      const sortedObject = wrapper.vm.sortedObject[i];
+      const dappsButtonTitle = wrapper.vm.$el.querySelectorAll(
+        '.dapps-button h4'
+      )[i];
+      const dappsButtonRoute = wrapper.vm.$el.querySelectorAll(
+        '.dapps-button .param'
+      )[i];
+      expect(translate(sortedObject.title)).toEqual(
+        dappsButtonTitle.textContent.trim()
+      );
+      expect(translate(sortedObject.route)).toEqual(
+        dappsButtonRoute.textContent.trim()
+      );
+      // console.log(translate(sortedObject.desc));
+      // console.log(wrapper.findAll('.dapps-button p').at(i).html());
+    }
   });
 });
