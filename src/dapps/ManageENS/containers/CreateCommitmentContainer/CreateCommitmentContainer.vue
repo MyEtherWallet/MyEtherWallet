@@ -21,7 +21,8 @@
         <button
           :class="[
             'large-round-button-green-filled',
-            loading ? 'disabled' : ''
+            loading ? 'disabled' : '',
+            info.disable ? 'disabled' : ''
           ]"
           @click="createCommitment"
         >
@@ -30,6 +31,7 @@
           </span>
           <i v-show="loading" class="fa fa-spinner fa-spin" />
         </button>
+        <span v-show="info.disable"> {{ info.msg }} </span>
       </div>
     </div>
     <interface-bottom-text
@@ -42,6 +44,7 @@
 
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText';
+import { mapState } from 'vuex';
 
 export default {
   components: {
@@ -71,8 +74,22 @@ export default {
     };
   },
   computed: {
+    ...mapState(['account']),
     fullDomainName() {
       return `${this.hostName}.${this.tld}`;
+    },
+    info() {
+      const balance = this.account.balance;
+      if (balance === '0') {
+        return {
+          disable: true,
+          msg: 'You have no balance to send a Tx'
+        };
+      }
+      return {
+        disable: false,
+        msg: ''
+      };
     }
   },
   watch: {

@@ -1,325 +1,327 @@
 <template>
   <div class="send-offline-helper">
-    <div class="wrap">
-      <div class="page-title">
-        <page-title
-          :options="{
-            title: 'Send Offline Helper',
-            boldSubTitle: '',
-            textContent: [
-              'Customize actions, debug reveals, and more with this set of advance tools. Please be mindful of the capabilities and limitations of these tools before using.'
-            ]
-          }"
-        />
-      </div>
-      <div class="page-content-container">
-        <!-- Select Network-->
-        <div class="collapse-container">
+    <div class="page-container">
+      <div class="wrap">
+        <div class="page-title">
+          <page-title
+            :options="{
+              title: 'Send Offline Helper',
+              boldSubTitle: '',
+              textContent: [
+                'Customize actions, debug reveals, and more with this set of advance tools. Please be mindful of the capabilities and limitations of these tools before using.'
+              ]
+            }"
+          />
+        </div>
+        <div class="page-content-container">
+          <!-- Select Network-->
+          <div class="collapse-container">
+            <accordion-menu
+              :greytitle="false"
+              :isopen="stage1"
+              :title="$t('withoutWallet.selectNetwork')"
+              :right-text="networkTitle"
+              number="1"
+              @titleClicked="stage1 = !stage1"
+            >
+              <ul class="networks">
+                <li
+                  v-for="(key, index) in Object.keys(reorderNetworkList)"
+                  :key="$router.path + key + index"
+                >
+                  <div class="network-title">
+                    <div class="network-icon">
+                      <img
+                        v-if="Networks[key][0].type.icon"
+                        :src="Networks[key][0].type.icon"
+                      />
+                      <div v-if="!Networks[key][0].type.icon" class="no-icon">
+                        <p>No</p>
+                        <p>Icon</p>
+                      </div>
+                    </div>
+                    <p>{{ key }}</p>
+                  </div>
+                  <div class="network-content">
+                    <p
+                      v-for="net in Networks[key]"
+                      :key="net.service"
+                      :class="
+                        net.service === selectedNetwork.service &&
+                        net.type &&
+                        net.type.name === selectedNetwork.type.name
+                          ? 'current-network'
+                          : ''
+                      "
+                      @click="switchNetwork(net)"
+                    >
+                      {{ net.service }}
+                    </p>
+                  </div>
+                </li>
+              </ul>
+            </accordion-menu>
+          </div>
+
+          <!-- Generate Info -->
           <accordion-menu
             :greytitle="false"
-            :isopen="stage1"
-            :title="$t('withoutWallet.selectNetwork')"
-            :right-text="networkTitle"
-            number="1"
-            @titleClicked="stage1 = !stage1"
+            :editbutton="true"
+            :isopen="stage2"
+            :title="$t('withoutWallet.generateInfo')"
+            number="2"
+            @titleClicked="stage2 = !stage2"
           >
-            <ul class="networks">
-              <li
-                v-for="(key, index) in Object.keys(reorderNetworkList)"
-                :key="$router.path + key + index"
-              >
-                <div class="network-title">
-                  <div class="network-icon">
-                    <img
-                      v-if="Networks[key][0].type.icon"
-                      :src="Networks[key][0].type.icon"
-                    />
-                    <div v-if="!Networks[key][0].type.icon" class="no-icon">
-                      <p>No</p>
-                      <p>Icon</p>
-                    </div>
-                  </div>
-                  <p>{{ key }}</p>
-                </div>
-                <div class="network-content">
-                  <p
-                    v-for="net in Networks[key]"
-                    :key="net.service"
-                    :class="
-                      net.service === selectedNetwork.service &&
-                      net.type &&
-                      net.type.name === selectedNetwork.type.name
-                        ? 'current-network'
-                        : ''
-                    "
-                    @click="switchNetwork(net)"
+            <dropdown-address-selector
+              title="From Address"
+              @toAddress="generateInformation($event)"
+            />
+            <div v-if="informationGenerated">
+              <ul>
+                <li class="detail-container">
+                  <span class="detail-name">Sender:</span>
+                  <span class="detail-text">{{ genInfo.address }}</span>
+                </li>
+                <li class="detail-container">
+                  <span class="detail-name">Nonce:</span>
+                  <span class="detail-text">{{ genInfo.nonce }}</span>
+                </li>
+                <li class="detail-container">
+                  <span class="detail-name">Chain ID:</span>
+                  <span class="detail-text"
+                    >{{ genInfo.chainID }} ({{ genInfo.networkName }})</span
                   >
-                    {{ net.service }}
-                  </p>
-                </div>
-              </li>
-            </ul>
-          </accordion-menu>
-        </div>
+                </li>
+                <li class="detail-container with-divider">
+                  <span class="detail-name">Current Gas Price:</span>
+                  <span class="detail-text"
+                    >{{ toGwei(genInfo.gasPrice) }} Gwei</span
+                  >
+                </li>
+                <li class="detail-container">
+                  <span class="detail-name">Retrieved:</span>
+                  <span class="detail-text">{{
+                    dateTimeDisplay(genInfo.timestamp)
+                  }}</span>
+                </li>
+                <li class="detail-container">
+                  <span class="detail-name">at block:</span>
+                  <span class="detail-text">{{ genInfo.blockNumber }}</span>
+                </li>
+              </ul>
+            </div>
+            <div v-show="informationGenerated" class="button-container">
+              <a
+                ref="generatedDownloadLink"
+                :href="generatedJson"
+                :download="exportFileName"
+              >
+                <standard-button
+                  :options="{
+                    title: 'Export JSON File',
+                    buttonStyle: 'green-border',
+                    noWalletTerms: true,
+                    noMinWidth: true
+                  }"
+                />
+              </a>
 
-        <!-- Generate Info -->
-        <accordion-menu
-          :greytitle="false"
-          :editbutton="true"
-          :isopen="stage2"
-          :title="$t('withoutWallet.generateInfo')"
-          number="2"
-          @titleClicked="stage2 = !stage2"
-        >
-          <dropdown-address-selector
-            title="From Address"
-            @toAddress="generateInformation($event)"
-          />
-          <div v-if="informationGenerated">
-            <ul>
-              <li class="detail-container">
-                <span class="detail-name">Sender:</span>
-                <span class="detail-text">{{ genInfo.address }}</span>
-              </li>
-              <li class="detail-container">
-                <span class="detail-name">Nonce:</span>
-                <span class="detail-text">{{ genInfo.nonce }}</span>
-              </li>
-              <li class="detail-container">
-                <span class="detail-name">Chain ID:</span>
-                <span class="detail-text"
-                  >{{ genInfo.chainID }} ({{ genInfo.networkName }})</span
-                >
-              </li>
-              <li class="detail-container with-divider">
-                <span class="detail-name">Current Gas Price:</span>
-                <span class="detail-text"
-                  >{{ toGwei(genInfo.gasPrice) }} Gwei</span
-                >
-              </li>
-              <li class="detail-container">
-                <span class="detail-name">Retrieved:</span>
-                <span class="detail-text">{{
-                  dateTimeDisplay(genInfo.timestamp)
-                }}</span>
-              </li>
-              <li class="detail-container">
-                <span class="detail-name">at block:</span>
-                <span class="detail-text">{{ genInfo.blockNumber }}</span>
-              </li>
-            </ul>
-          </div>
-          <div v-show="informationGenerated" class="button-container">
-            <a
-              ref="generatedDownloadLink"
-              :href="generatedJson"
-              :download="exportFileName"
-            >
               <standard-button
                 :options="{
-                  title: 'Export JSON File',
+                  title: 'Continue',
+                  buttonStyle: 'green',
+                  noWalletTerms: true,
+                  rightArrow: true
+                }"
+                @click.native="stage2Btn"
+              />
+            </div>
+          </accordion-menu>
+
+          <!-- Paste/Upload Signed Tx-->
+          <accordion-menu
+            :greytitle="false"
+            :isopen="stage3"
+            :title="$t('withoutWallet.signedTx')"
+            number="3"
+            @titleClicked="stage3 = !stage3"
+          >
+            <textarea v-model="rawSigned" class="no-margin raw-tx-input" />
+            <p v-if="invalidSignature">Invalid Signature</p>
+            <p v-if="wrongNetwork && correctNetwork === ''">
+              Signed Chain ID does not match chain id for selected network
+            </p>
+            <p v-if="wrongNetwork && correctNetwork !== ''">
+              Signed Chain ID ({{ correctNetwork }}) does not match chain id for
+              selected network
+            </p>
+            <expending-option title="Raw Transaction">
+              <textarea
+                :value="JSON.stringify(rawTx)"
+                class="no-margin raw-tx-input"
+                disabled
+              />
+            </expending-option>
+            <div class="button-container">
+              <input
+                ref="jsonInput"
+                type="file"
+                name="file"
+                style="display: none"
+                @change="uploadFile"
+              />
+              <standard-button
+                :options="{
+                  title: 'Upload JSON File',
                   buttonStyle: 'green-border',
                   noWalletTerms: true,
                   noMinWidth: true
                 }"
+                @click.native="uploadClick()"
               />
-            </a>
+              <standard-button
+                :options="{
+                  title: 'Continue',
+                  buttonStyle: 'green',
+                  noWalletTerms: true
+                }"
+                @click.native="stage3Btn"
+              />
+            </div>
+          </accordion-menu>
 
-            <standard-button
-              :options="{
-                title: 'Continue',
-                buttonStyle: 'green',
-                noWalletTerms: true,
-                rightArrow: true
-              }"
-              @click.native="stage2Btn"
-            />
-          </div>
-        </accordion-menu>
+          <!-- Review and Send-->
+          <accordion-menu
+            :greytitle="false"
+            :editbutton="false"
+            :isopen="stage4"
+            :title="$t('withoutWallet.txDetails')"
+            number="4"
+            @titleClicked="stage4 = !stage4"
+          >
+            <ul>
+              <li class="detail-container">
+                <span class="detail-name">Sender:</span>
+                <span class="detail-text">{{ from }}</span>
+              </li>
+              <li class="detail-container">
+                <span class="detail-name">Receiver:</span>
+                <span class="detail-text">{{ to }}</span>
+              </li>
+              <li class="detail-container">
+                <span class="detail-name">Nonce:</span>
+                <span class="detail-text">{{ nonce }}</span>
+              </li>
+              <li class="detail-container">
+                <span class="detail-name">Value:</span>
+                <span class="detail-text">
+                  {{ toEth(value) }}
+                  {{ selectedNetwork.type.currencyName }}
+                </span>
+              </li>
+              <li class="detail-container">
+                <span class="detail-name">Data:</span>
+                <span v-if="data !== '0x'" class="detail-text">
+                  {{ truncateData(data) }}
+                  <span class="show-all-btn" @click="showAllData = !showAllData"
+                    >Show All</span
+                  >
+                </span>
+                <span v-else class="data-all">{{ data }}</span>
+                <span v-if="showAllData" class="data-all">{{ data }}</span>
+              </li>
 
-        <!-- Paste/Upload Signed Tx-->
-        <accordion-menu
-          :greytitle="false"
-          :isopen="stage3"
-          :title="$t('withoutWallet.signedTx')"
-          number="3"
-          @titleClicked="stage3 = !stage3"
-        >
-          <textarea v-model="rawSigned" class="no-margin raw-tx-input" />
-          <p v-if="invalidSignature">Invalid Signature</p>
-          <p v-if="wrongNetwork && correctNetwork === ''">
-            Signed Chain ID does not match chain id for selected network
-          </p>
-          <p v-if="wrongNetwork && correctNetwork !== ''">
-            Signed Chain ID ({{ correctNetwork }}) does not match chain id for
-            selected network
-          </p>
-          <expending-option title="Raw Transaction">
-            <textarea
-              :value="JSON.stringify(rawTx)"
-              class="no-margin raw-tx-input"
-              disabled
-            />
-          </expending-option>
-          <div class="button-container">
-            <input
-              ref="jsonInput"
-              type="file"
-              name="file"
-              style="display: none"
-              @change="uploadFile"
-            />
-            <standard-button
-              :options="{
-                title: 'Upload JSON File',
-                buttonStyle: 'green-border',
-                noWalletTerms: true,
-                noMinWidth: true
-              }"
-              @click.native="uploadClick()"
-            />
-            <standard-button
-              :options="{
-                title: 'Continue',
-                buttonStyle: 'green',
-                noWalletTerms: true
-              }"
-              @click.native="stage3Btn"
-            />
-          </div>
-        </accordion-menu>
-
-        <!-- Review and Send-->
-        <accordion-menu
-          :greytitle="false"
-          :editbutton="false"
-          :isopen="stage4"
-          :title="$t('withoutWallet.txDetails')"
-          number="4"
-          @titleClicked="stage4 = !stage4"
-        >
-          <ul>
-            <li class="detail-container">
-              <span class="detail-name">Sender:</span>
-              <span class="detail-text">{{ from }}</span>
-            </li>
-            <li class="detail-container">
-              <span class="detail-name">Receiver:</span>
-              <span class="detail-text">{{ to }}</span>
-            </li>
-            <li class="detail-container">
-              <span class="detail-name">Nonce:</span>
-              <span class="detail-text">{{ nonce }}</span>
-            </li>
-            <li class="detail-container">
-              <span class="detail-name">Value:</span>
-              <span class="detail-text">
-                {{ toEth(value) }}
-                {{ selectedNetwork.type.currencyName }}
-              </span>
-            </li>
-            <li class="detail-container">
-              <span class="detail-name">Data:</span>
-              <span v-if="data !== '0x'" class="detail-text">
-                {{ truncateData(data) }}
-                <span class="show-all-btn" @click="showAllData = !showAllData"
-                  >Show All</span
+              <li class="detail-container with-divider">
+                <span class="detail-name">Chain ID:</span>
+                <span class="detail-text"
+                  >{{ chainID }} ({{ selectedNetwork.type.name_long }})</span
                 >
-              </span>
-              <span v-else class="data-all">{{ data }}</span>
-              <span v-if="showAllData" class="data-all">{{ data }}</span>
-            </li>
+              </li>
+              <li class="detail-container">
+                <span class="detail-name">Gas Limit:</span>
+                <span class="detail-text">{{ gasLimit }}</span>
+              </li>
+              <li class="detail-container">
+                <span class="detail-name">Gas Price:</span>
+                <span class="detail-text">{{ toGwei(gasPrice) }} Gwei</span>
+              </li>
+              <li class="detail-container">
+                <span class="detail-name">Fee:</span>
+                <span class="detail-text">
+                  {{ toEth(fee) }}
+                  {{ selectedNetwork.type.currencyName }}
+                  ($ {{ calculateCost(fee) }})
+                </span>
+              </li>
+            </ul>
+            <div class="button-container">
+              <standard-button
+                :options="{
+                  title: 'Send',
+                  buttonStyle: 'green',
+                  noWalletTerms: true,
+                  rightArrow: true
+                }"
+                @click.native="stage4Btn"
+              />
+            </div>
+          </accordion-menu>
 
-            <li class="detail-container with-divider">
-              <span class="detail-name">Chain ID:</span>
-              <span class="detail-text"
-                >{{ chainID }} ({{ selectedNetwork.type.name_long }})</span
-              >
-            </li>
-            <li class="detail-container">
-              <span class="detail-name">Gas Limit:</span>
-              <span class="detail-text">{{ gasLimit }}</span>
-            </li>
-            <li class="detail-container">
-              <span class="detail-name">Gas Price:</span>
-              <span class="detail-text">{{ toGwei(gasPrice) }} Gwei</span>
-            </li>
-            <li class="detail-container">
-              <span class="detail-name">Fee:</span>
-              <span class="detail-text">
-                {{ toEth(fee) }}
-                {{ selectedNetwork.type.currencyName }}
-                ($ {{ calculateCost(fee) }})
-              </span>
-            </li>
-          </ul>
-          <div class="button-container">
-            <standard-button
-              :options="{
-                title: 'Send',
-                buttonStyle: 'green',
-                noWalletTerms: true,
-                rightArrow: true
-              }"
-              @click.native="stage4Btn"
-            />
-          </div>
-        </accordion-menu>
-
-        <!-- Sent Tx Details & Hash-->
-        <accordion-menu
-          :greytitle="false"
-          :editbutton="false"
-          :isopen="stage5"
-          :title="$t('withoutWallet.txStatus')"
-          number="5"
-          @titleClicked="stage5 = !stage5"
-        >
-          <ul v-if="error === ''">
-            <li class="tx-hash-container">
-              <p>Transaction Hash:</p>
-              <a
-                :href="replaceUrl('', txHash)"
-                class="detail-text"
-                target="_blank"
-                rel="noopener noreferrer"
-                >{{ txHash }}</a
-              >
-            </li>
-            <li class="tx-receipt-container">
-              <p>Transaction Receipt:</p>
-              <div
-                v-if="Object.keys(txReceipt).length > 0"
-                class="tx-receipt-items"
-              >
+          <!-- Sent Tx Details & Hash-->
+          <accordion-menu
+            :greytitle="false"
+            :editbutton="false"
+            :isopen="stage5"
+            :title="$t('withoutWallet.txStatus')"
+            number="5"
+            @titleClicked="stage5 = !stage5"
+          >
+            <ul v-if="error === ''">
+              <li class="tx-hash-container">
+                <p>Transaction Hash:</p>
+                <a
+                  :href="replaceUrl('', txHash)"
+                  class="detail-text"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >{{ txHash }}</a
+                >
+              </li>
+              <li class="tx-receipt-container">
+                <p>Transaction Receipt:</p>
                 <div
-                  v-for="(item, idx) in Object.keys(txReceipt)"
-                  :key="item + idx"
+                  v-if="Object.keys(txReceipt).length > 0"
+                  class="tx-receipt-items"
                 >
-                  <span>{{ item }}</span>
-                  <a
-                    v-if="item === 'transactionHash'"
-                    :href="replaceUrl('', txReceipt[item])"
-                    target="_blank"
-                    class="right-side"
-                    >{{ txReceipt[item] }}</a
+                  <div
+                    v-for="(item, idx) in Object.keys(txReceipt)"
+                    :key="item + idx"
                   >
-                  <a
-                    v-else-if="item === 'contractAddress'"
-                    :href="replaceUrl('address', txReceipt[item])"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="right-side"
-                    >{{ txReceipt[item] }}</a
-                  >
-                  <span v-else class="right-side">{{ txReceipt[item] }}</span>
+                    <span>{{ item }}</span>
+                    <a
+                      v-if="item === 'transactionHash'"
+                      :href="replaceUrl('', txReceipt[item])"
+                      target="_blank"
+                      class="right-side"
+                      >{{ txReceipt[item] }}</a
+                    >
+                    <a
+                      v-else-if="item === 'contractAddress'"
+                      :href="replaceUrl('address', txReceipt[item])"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="right-side"
+                      >{{ txReceipt[item] }}</a
+                    >
+                    <span v-else class="right-side">{{ txReceipt[item] }}</span>
+                  </div>
                 </div>
-              </div>
-              <div v-else class="loading">Loading....</div>
-            </li>
-          </ul>
-          <div v-else>{{ error }}</div>
-        </accordion-menu>
+                <div v-else class="loading">Loading....</div>
+              </li>
+            </ul>
+            <div v-else>{{ error }}</div>
+          </accordion-menu>
+        </div>
       </div>
     </div>
 
@@ -333,7 +335,7 @@
 </template>
 
 <script>
-import ethTx from 'ethereumjs-tx';
+import { Transaction } from 'ethereumjs-tx';
 import { mapState } from 'vuex';
 import Misc from '@/helpers/misc';
 import BigNumber from 'bignumber.js';
@@ -415,9 +417,7 @@ export default {
       return Misc.reorderNetworks();
     },
     networkTitle() {
-      return `${this.selectedNetwork.type.name} - ${
-        this.selectedNetwork.service
-      } `;
+      return `${this.selectedNetwork.type.name} - ${this.selectedNetwork.service} `;
     },
     rawTx() {
       return {
@@ -514,7 +514,7 @@ export default {
       if (rawSigned) this.rawSigned = rawSigned;
       if (this.rawSigned !== '') {
         const sanitizedRawSigned = Misc.sanitizeHex(this.rawSigned);
-        const tx = new ethTx(sanitizedRawSigned);
+        const tx = new Transaction(sanitizedRawSigned);
         this.invalidSignature = !tx.verifySignature();
         this.chainID = tx.getChainId();
         this.wrongNetwork = !new BigNumber(

@@ -12,5 +12,7 @@
   "claNotSupport0x6e00": "Please make sure you're using the correct application",
   "unsupportedBrowserU2f": "Browser does not support U2F or connection is not secured. Please try using Chrome.",
   "invalidNetworkID": "Invalid network ID!",
-  "enableContractData": "Please enable contract data on your ledger app"
+  "enableContractData": "Please enable contract data on your ledger app",
+  "noDeviceSelected": "No device selected or user closed the selection modal.",
+  "appAndNetworkMismatch": "The app does not support selected network"
 }

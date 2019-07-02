@@ -73,7 +73,7 @@ export default {
           title: this.$t('gettingStarted.tip4Title'),
           desc: this.$t('gettingStarted.tip4Desc'),
           linkText: this.$t('gettingStarted.tip4DescLink'),
-          linkUrl: '',
+          linkUrl: '/hardware-wallet-affiliates',
           descCont: ''
         },
         {

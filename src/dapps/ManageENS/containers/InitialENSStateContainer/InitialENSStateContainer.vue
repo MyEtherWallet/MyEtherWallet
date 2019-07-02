@@ -27,7 +27,7 @@
           {{ $t('dapps.registerEnsContractNotReady') }}
         </p>
         <p v-show="domainNameErr" class="erroredMsg">
-          <span v-if="localDomainName.length < 7 && localDomainName !== ''">
+          <span v-if="!isValidLength && localDomainName !== ''">
             {{ $t('dapps.registerEnsWarn1') }}
           </span>
           <span v-else> {{ $t('dapps.registerEnsWarn2') }} </span>
@@ -57,6 +57,7 @@
 
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText';
+import { mapState } from 'vuex';
 export default {
   components: {
     'interface-bottom-text': InterfaceBottomText
@@ -95,6 +96,17 @@ export default {
     return {
       localDomainName: this.hostName
     };
+  },
+  computed: {
+    ...mapState(['network']),
+    isValidLength() {
+      return (
+        this.localDomainName.replace(
+          '.' + this.network.type.ens.registrarTLD,
+          ''
+        ).length > 6
+      );
+    }
   },
   watch: {
     localDomainName(newVal) {
