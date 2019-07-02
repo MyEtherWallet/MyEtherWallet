@@ -21,6 +21,7 @@ import secalotError from './errors-secalot/ko_KR';
 import keepkeyError from './errors-keepkey/ko_KR';
 import bitboxError from './errors-bitbox/ko_KR';
 import buyHardwareWallet from './buy-hardware-wallet/ko_KR';
+import dappsMaker from './dapps-maker/ko_KR';
 
 const ko_KR = {
   common: common,
@@ -44,6 +45,7 @@ const ko_KR = {
   secalotError: secalotError,
   keepkeyError: keepkeyError,
   bitboxError: bitboxError,
-  buyHardwareWallet: buyHardwareWallet
+  buyHardwareWallet: buyHardwareWallet,
+  dappsMaker: dappsMaker
 };
 export default ko_KR;
