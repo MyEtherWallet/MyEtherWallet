@@ -69,7 +69,7 @@
           </accordion-menu>-->
           <!-- Bank Details - accordion-menu ******************************** -->
           <accordion-menu
-            :isopen="steps['step1']"
+            :isopen="true"
             :title="$t('interface.bankInfo')"
             :greytitle="false"
             :editbutton="true"
@@ -96,7 +96,7 @@
           </accordion-menu>
           <!-- Personal Details - accordion-menu ******************************** -->
           <accordion-menu
-            :isopen="steps['step2']"
+            :isopen="true"
             :title="$t('interface.personalInfo')"
             :greytitle="false"
             :editbutton="true"
@@ -175,16 +175,15 @@
             :button-disabled="!validTan"
             @click.native="confirmUser()"
           />-->
-          <standard-button
+<!--          <standard-button
             v-if="steps['step1']"
             :options="button2"
             @click.native="
               updateStep('step2');
               stageComplete('step1');
             "
-          />
+          />-->
           <standard-button
-            v-if="steps['step2']"
             :options="button3"
             :button-disabled="!canSwap"
             @click.native="
@@ -219,7 +218,7 @@ import names from 'i18n-iso-countries/langs/en.json';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
 import AccordionMenu from '@/components/AccordionMenu';
 import StandardInput from '@/components/StandardInput';
-import StandardDropdown from '@/components/StandardDropdown';
+import StandardDropdown from './StandardDropdown';
 import StandardButton from '@/components/Buttons/StandardButton';
 import VueTelInput from 'vue-tel-input';
 import IBAN from 'iban';
