@@ -15,8 +15,6 @@ const BModalStub = {
   }
 };
 
-
-
 describe('AlreadyOwnedENSContainer.vue', () => {
   let localVue, i18n, wrapper, store;
   const labelHash = 'labelHash';
