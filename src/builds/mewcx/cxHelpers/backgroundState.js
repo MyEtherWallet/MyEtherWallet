@@ -1,7 +1,7 @@
 import { getMode } from '../../configs';
 const chrome = window.chrome;
 const useHash = getMode() === 'hash' ? '#' : '';
-import { ExtensionHelpers } from '@/helpers';
+// import { ExtensionHelpers } from '@/helpers';
 
 (function() {
   /* eslint no-console: 0 no-unused-vars: 0 */
@@ -35,6 +35,7 @@ import { ExtensionHelpers } from '@/helpers';
           );
         }
       }
+      q = arr.join('&');
     }
     switch (request.msg) {
       case 'fetchMewCXAccounts':
@@ -78,7 +79,7 @@ import { ExtensionHelpers } from '@/helpers';
   });
 
   chrome.tabs.onActivated.addListener(cb);
-  // chrome.tabs.onUpdated.addListener(cb);
+  chrome.tabs.onUpdated.addListener(cb);
 
   function cb() {
     chrome.runtime.onMessage.removeListener(eventsListeners);

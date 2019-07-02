@@ -94,6 +94,7 @@ window.addEventListener(
 );
 
 window.addEventListener(`web3${extensionID}sendTx`, function(e) {
+  console.log(e);
   chrome.runtime.sendMessage(extensionID, {
     msg: 'confirmAndSendTx',
     tx: e.detail.tx

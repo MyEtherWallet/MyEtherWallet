@@ -7,7 +7,9 @@ export default async ({ payload }, res, next) => {
   getSanitizedTx(tx)
     .then(_tx => {
       const event = new CustomEvent(`web3${window.extensionID}sendTx`, {
-        detail: _tx
+        detail: {
+          tx: _tx
+        }
       });
       window.dispatchEvent(event);
       window.addEventListener(
