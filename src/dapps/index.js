@@ -1,19 +1,20 @@
 import domainSale from '@/assets/images/icons/domain-sale.svg';
 import domainSaleHov from '@/assets/images/icons/domain-sale-hov.svg';
-import registerDomain from '@/assets/images/icons/domain.svg';
-import registerDomainHov from '@/assets/images/icons/domain-hov.svg';
+import manageEns from '@/assets/images/icons/domain.svg';
+import manageEnsHov from '@/assets/images/icons/domain-hov.svg';
 import secureTransaction from '@/assets/images/icons/button-key-hover.svg';
 import secureTransactionHov from '@/assets/images/icons/button-key.svg';
 import scheduleTransaction from '@/assets/images/icons/eac.svg';
 import scheduleTransactionHov from '@/assets/images/icons/eac-hov.svg';
+import makerdai from '@/assets/images/icons/dapps/makerdai.svg';
 import { ETH, GOERLI, ROP, RIN, KOV } from '@/networks/types';
 
 const dapps = {
-  registerDomain: {
-    route: '/interface/dapps/register-domain',
-    icon: registerDomain,
-    iconDisabled: registerDomainHov,
-    title: 'interface.registerEns',
+  manageEns: {
+    route: '/interface/dapps/manage-ens',
+    icon: manageEns,
+    iconDisabled: manageEnsHov,
+    title: 'interface.ensManager',
     desc: 'interface.registerENSDescShort',
     supportedNetworks: [ETH.name, GOERLI.name, ROP.name, RIN.name]
   },
@@ -41,6 +42,14 @@ const dapps = {
     desc:
       'Schedule a transaction using the decentralized Ethereum Alarm Clock protocol',
     supportedNetworks: [ETH.name, ROP.name, KOV.name]
+  },
+  maker: {
+    route: '/interface/dapps/maker-dai',
+    icon: makerdai,
+    iconDisabled: secureTransactionHov,
+    title: 'dappsMaker.maker_title',
+    desc: 'dappsMaker.maker_desc',
+    supportedNetworks: [ETH.name]
   }
 };
 

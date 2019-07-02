@@ -5,7 +5,7 @@
       <ul>
         <li
           v-for="language in supportedLanguages"
-          :active="$root._i18n.locale === language.langCode"
+          :active="$root.$i18n.locale === language.langCode"
           :key="language.key"
           :data-language-code="language.langCode"
           :data-flag-name="language.flag"
@@ -52,8 +52,8 @@ export default {
         // { name: 'ภาษาไทย', flag: 'th', langCode: 'th_TH' },
         // { name: 'Türkçe', flag: 'tr', langCode: 'tr_TR' },
         // { name: 'Tiếng Việt', flag: 'vn', langCode: 'vn_VN' },
-        // { name: '简体中文', flag: 'zh-Hans', langCode: 'zh_CS' }
-        { name: '繁體中文', flag: 'zh-Hant', langCode: 'zh_CN' }
+        { name: '简体中文', flag: 'zh-Hans', langCode: 'zh_CN' },
+        { name: '繁體中文', flag: 'tw', langCode: 'zh_TW' }
       ],
       currentName: 'English',
       currentFlag: 'en',
@@ -70,8 +70,8 @@ export default {
   created() {},
   methods: {
     languageItemClicked(e) {
-      const code = e.target.getAttribute('data-language-code');
-      const flag = e.target.getAttribute('data-flag-name');
+      const code = e.target.getAttribute('data-language-code') || 'en_US';
+      const flag = e.target.getAttribute('data-flag-name') || 'en';
 
       this._i18n.locale = code;
       this.currentName = e.target.innerText.replace(/^\s+|\s+$|\s+(?=\s)/g, '');

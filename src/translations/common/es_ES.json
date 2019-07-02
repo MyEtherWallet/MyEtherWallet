@@ -3,7 +3,7 @@
   "accessMyWallet": "Acceder a mi billetera",
   "accessWallet": "Acceder a mi billetera",
   "faqs": "Preguntas frecuentes",
-  "sendTx": "Enviar ETH y tokens",
+  "sendTx": "Send Transaction",
   "sendSafeSendTx": "Protect Your ETH Transaction Using SafeSend",
   "swap": "Cambiar",
   "unlockWallet": "Desbloquear billetera",
@@ -75,5 +75,6 @@
   "nonce": "Nonce",
   "vintage": "Vintage",
   "okay": "Okay",
-  "ok": "OK"
+  "ok": "OK",
+  "menu": "Menu"
 }

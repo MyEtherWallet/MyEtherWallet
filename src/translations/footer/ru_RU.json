@@ -17,12 +17,16 @@
   "welcomeDes": "MyEtherWallet является ПО с открытым кодом и предоставляется сообществу бесплатно. Все это возможно благодаря вашим пожертвованиям.",
   "feedback": "Отзывы",
   "privacy": "Конфиденциальность",
-  "copyright": "© 2018 MyEtherWallet. Все права защищены.",
+  "copyright": "© 2019 MyEtherWallet. All Rights reserved.",
   "love": "Нравится",
   "donate": "MEW? Сделайте пожертвование!",
   "pricingP": "Pricing taken from",
   "advanced": "Advanced",
   "sendOffline": "Send Offline Helper",
   "finney": "Finney",
-  "billfodl": "Billfodl"
+  "billfodl": "Billfodl",
+  "verifyMessage": "Verify Message",
+  "keepkey": "KeepKey",
+  "secalot": "Secalot",
+  "bitbox": "Bitbox"
 }

@@ -10,7 +10,6 @@
             <div class="text">
               <h4>{{ member.name }}</h4>
               <h6>{{ member.position }}</h6>
-              <h6>{{ member.otherInfo }}</h6>
             </div>
           </div>
         </div>
@@ -30,6 +29,7 @@ import richie from '@/assets/images/team/Richie.jpg';
 import brittany from '@/assets/images/team/Brittany.jpg';
 import yel from '@/assets/images/team/Gamaliel.jpg';
 import steve from '@/assets/images/team/Steve.jpg';
+import gage from '@/assets/images/team/Gage.jpg';
 import jack from '@/assets/images/team/Jack.jpg';
 import david from '@/assets/images/team/David.jpg';
 import samantha from '@/assets/images/team/Samantha.jpg';
@@ -66,20 +66,17 @@ export default {
         },
         {
           name: 'Stephen',
-          position: 'Customer Support',
-          otherInfo: '#MEWForce',
+          position: 'Educational Project Lead',
           img: stephen
         },
         {
           name: 'Duke & Richie Wolf',
           position: 'Blockchain Specialist',
-          otherInfo: '#MEWForce',
           img: richie
         },
         {
           name: 'Brittany',
-          position: 'Blockchain Specialist',
-          otherInfo: '#MEWForce',
+          position: 'Operations Coordinator',
           img: brittany
         },
         {
@@ -91,6 +88,11 @@ export default {
           name: 'Steve',
           position: 'Full-Stack Developer',
           img: steve
+        },
+        {
+          name: 'Gage',
+          position: 'Full-Stack Developer',
+          img: gage
         },
         {
           name: 'Jack',
@@ -119,7 +121,7 @@ export default {
         },
         {
           name: 'Samantha',
-          position: 'Media & Communication Officer',
+          position: 'Media & Communication',
           img: samantha
         }
       ]

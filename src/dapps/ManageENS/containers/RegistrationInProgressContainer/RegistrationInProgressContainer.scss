@@ -1,0 +1,64 @@
+@import '../../ManageENS';
+
+.registration-in-progress-container {
+  @extend %template-container;
+
+  .registration-in-progress-content {
+    min-height: 400px;
+  }
+}
+
+.registration-in-progress-button {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+p {
+  font-weight: 300;
+  padding-bottom: 50px;
+}
+
+.commitment-wait {
+  padding: 80px 0 30px;
+  text-align: center;
+
+  .domain-name {
+    color: $light-blue-1;
+    font-size: inherit;
+  }
+
+  .circles-container {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+
+    .circle {
+      background-color: $mew-green;
+      border-radius: 50%;
+      height: 20px;
+      margin: 10px;
+      width: 20px;
+    }
+  }
+}
+
+.registration-in-progress-inputs {
+  display: flex;
+  flex-flow: column;
+  padding: 30px 15px;
+  text-align: left;
+
+  input {
+    background-color: $light-grey-1;
+    border: none;
+    padding: 15px;
+    width: 100%;
+  }
+
+  label {
+    color: $dark-blue-6;
+    font-weight: bold;
+    padding-bottom: 10px;
+  }
+}

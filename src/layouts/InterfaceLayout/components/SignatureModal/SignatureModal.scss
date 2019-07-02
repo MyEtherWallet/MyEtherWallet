@@ -1,0 +1,25 @@
+@import '~@/scss/GlobalVariables';
+
+.copy-container {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+
+  .copy-buttons {
+    color: $text-color-3;
+    margin-left: auto;
+
+    span {
+      cursor: pointer;
+      padding: 10px;
+    }
+  }
+}
+
+.button-container {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  padding-top: 30px;
+}

@@ -16,12 +16,28 @@
       ]"
     >
       <ul>
-        <li>
+        <li v-if="isTokenTransfer">
           <p>{{ $t('header.amount') }}:</p>
-          <p>{{ convertToEth(details.amount) }} ETH</p>
+          <p>{{ details.tokenTransferVal }} {{ details.tokenSymbol }}</p>
+        </li>
+        <li v-if="!isTokenTransfer">
+          <p>{{ $t('header.amount') }}:</p>
+          <p>{{ convertToEth(details.amount) }} {{ network.type.name }}</p>
         </li>
         <li>
           <p>{{ $t('common.toAddress') }}:</p>
+          <p>
+            <a
+              :href="addressLink(details.tokenTransferTo || details.to)"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              {{ details.tokenTransferTo || details.to }}
+            </a>
+          </p>
+        </li>
+        <li v-if="isTokenTransfer">
+          <p>Via contract:</p>
           <p>
             <a
               :href="addressLink(details.to)"
@@ -47,7 +63,8 @@
         <li v-if="notice.body.gasUsed">
           <p>{{ $t('common.txFee') }}:</p>
           <p>
-            {{ convertToEth(details.gasPrice * details.gasUsed) }} ETH
+            {{ convertToEth(details.gasPrice * details.gasUsed) }}
+            {{ network.type.name }}
             <span>
               (${{ getFiatValue(details.gasPrice * details.gasUsed) }})
             </span>
@@ -56,7 +73,8 @@
         <li>
           <p>{{ $t('header.maxTxFee') }}:</p>
           <p>
-            {{ convertToEth(details.gasPrice * details.gasLimit) }} ETH (${{
+            {{ convertToEth(details.gasPrice * details.gasLimit) }}
+            {{ network.type.name }} (${{
               getFiatValue(details.gasPrice * details.gasLimit)
             }})
           </p>
@@ -86,7 +104,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import NotificationHeader from '../../NotificationHeader';
 
 export default {
@@ -147,12 +165,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      web3: 'web3',
-      network: 'network',
-      notifications: 'notifications',
-      wallet: 'wallet'
-    }),
+    ...mapState(['web3', 'network', 'notifications', 'wallet']),
     errorMessage() {
       return this.errorMessageString(this.notice);
     },
@@ -164,6 +177,9 @@ export default {
         this.notice.body.contractAddress !== undefined &&
         this.notice.body.contractAddress !== null
       );
+    },
+    isTokenTransfer() {
+      return this.notice.body.tokenTransferTo !== '';
     },
     details() {
       return this.notice.body;

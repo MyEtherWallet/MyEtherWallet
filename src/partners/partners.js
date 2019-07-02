@@ -24,6 +24,12 @@ function comparator(arrayForSort) {
 
 export default class SwapProviders {
   constructor(providers, environmentSupplied, misc = {}) {
+    this.providerConstructors = providers;
+    this.setup(providers, environmentSupplied, misc);
+  }
+
+  setup(providers, environmentSupplied, misc) {
+    this.overrideDecimals = misc.overrideDecimals || false;
     this.updateProviderRates = 0;
     this.providers = new Map();
     this.providerRateUpdates = {};
@@ -110,6 +116,7 @@ export default class SwapProviders {
   // Does in general, but have observed some instances where it did not.
   optionSorting(array) {
     const tokens = [...this.ownedTokenList];
+
     const tokenNameMap = tokens
       .sort((a, b) => {
         if (a.hasOwnProperty('balance') && b.hasOwnProperty('balance')) {
@@ -117,11 +124,10 @@ export default class SwapProviders {
         }
         return 0;
       })
-      .map(item => item.name)
+      .map(item => item.symbol)
       .reverse();
     const arraysForSort = [...tokenNameMap, ...TOP_OPTIONS_ORDER];
     return array.sort(comparator(arraysForSort));
-    // return array.sort(comparator);
   }
 
   buildInitialCurrencyArrays() {
@@ -215,6 +221,7 @@ export default class SwapProviders {
     } else if (SwapProviders.isToken(currency)) {
       const decimal = SwapProviders.getTokenDecimals(currency);
       if (decimal < 6) return decimal;
+      if (this.overrideDecimals) return decimal;
       return 6;
     }
     return 6;

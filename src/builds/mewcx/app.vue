@@ -18,9 +18,6 @@ export default {
     'header-container': HeaderContainer,
     'footer-container': FooterContainer,
     'confirmation-container': ConfirmationContainer
-  },
-  mounted() {
-    this.$store.dispatch('checkIfOnline');
   }
 };
 </script>

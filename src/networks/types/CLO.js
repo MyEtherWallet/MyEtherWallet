@@ -11,5 +11,6 @@ export default {
   chainID: 820,
   tokens: tokens,
   contracts: contracts,
-  icon: clo
+  icon: clo,
+  currencyName: 'CLO'
 };

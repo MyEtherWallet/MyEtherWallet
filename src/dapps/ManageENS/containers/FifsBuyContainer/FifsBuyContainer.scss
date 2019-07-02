@@ -1,0 +1,70 @@
+@import '../../ManageENS';
+
+$ens-bid-mobile-width: 600px;
+
+.name-available-container {
+  @extend %template-container;
+}
+
+.content-header {
+  //border-bottom: 1px dashed $light-grey-3;
+  padding: 10px 0 15px;
+
+  h3 {
+    color: $mew-green;
+  }
+
+  p {
+    font-weight: 300;
+  }
+
+  > div {
+    padding: 0 5px;
+  }
+}
+
+.buttons-container {
+  text-align: center;
+  margin-top: 60px;
+
+  // Mobile
+  @media all and (max-width: $mobile-width) {
+    margin-top: 30px;
+  }
+
+  button {
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 20px;
+    width: 260px;
+
+    // Mobile
+    @media all and (max-width: $mobile-width) {
+      width: 100%;
+    }
+  }
+
+  .submit {
+    background-color: $mew-green;
+    border: 1px solid $mew-green;
+    color: $white;
+  }
+}
+
+.done {
+  display: flex;
+  justify-content: space-between;
+}
+
+.disable {
+  background-color: $light-grey-14 !important;
+  margin-top: 23px;
+}
+
+.confirmation-warning {
+  background-color: $light-green-1;
+  border-radius: 4px;
+  color: $dark-blue-12;
+  margin: 17px 0 0;
+  padding: 15px 25px;
+}

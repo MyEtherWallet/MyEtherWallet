@@ -134,7 +134,7 @@
 </template>
 <script>
 import Blockie from '@/components/Blockie';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 
 export default {
   components: {
@@ -166,9 +166,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      wallet: 'wallet'
-    })
+    ...mapState(['wallet'])
   },
   methods: {}
 };

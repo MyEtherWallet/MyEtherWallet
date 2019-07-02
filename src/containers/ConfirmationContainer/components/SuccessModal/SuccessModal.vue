@@ -31,8 +31,8 @@
 
 <script>
 import StandardButton from '@/components/Buttons/StandardButton';
-import { mapGetters } from 'vuex';
-import url from 'url';
+import { mapState } from 'vuex';
+import { Misc } from '@/helpers';
 
 export default {
   components: {
@@ -57,9 +57,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters({
-      network: 'network'
-    }),
+    ...mapState(['network']),
     buttonCheckEtherscan() {
       return {
         // eslint-disable-next-line
@@ -76,20 +74,15 @@ export default {
       };
     },
     explorrerName() {
-      return this.getService(this.network.type.blockExplorerTX);
+      return Misc.getService(this.network.type.blockExplorerTX);
     }
   },
   methods: {
     hideModal() {
+      if (this.linkTo !== '/') {
+        this.$router.push({ path: this.linkTo });
+      }
       this.$refs.success.hide();
-    },
-    getService(parsableUrl) {
-      const parsedUrl = url.parse(parsableUrl).hostname;
-      const splitUrl = parsedUrl.split('.');
-      if (splitUrl.length > 2)
-        // eslint-disable-next-line
-        return this.$options.filters.capitalize(`${splitUrl[1]}.${splitUrl[2]}`);
-      return this.$options.filters.capitalize(splitUrl.join('.'));
     }
   }
 };

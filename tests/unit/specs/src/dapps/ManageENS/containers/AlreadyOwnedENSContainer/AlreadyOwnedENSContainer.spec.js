@@ -27,6 +27,19 @@ describe('AlreadyOwnedENSContainer.vue', () => {
   const owner = 'owner';
   const deedOwner = 'deedOwner';
   const resolverAddress = 'resolverAddress';
+  const domainName = 'domainName';
+  const mockRoute = {
+    fullPath: 'auction'
+  };
+  const mockRouter = {
+    replace: sinon.stub(),
+    push: () => {},
+    history: {
+      current: {
+        path: '/interface/dapps/manage-ens'
+      }
+    }
+  };
   const hostName = 'hostName';
   const tld = 'tld';
 
@@ -53,6 +66,10 @@ describe('AlreadyOwnedENSContainer.vue', () => {
         resolverAddress,
         hostName,
         tld
+      },
+      mocks: {
+        $route: mockRoute,
+        $router: mockRouter
       },
       stubs: {
         'b-modal': BModalStub,

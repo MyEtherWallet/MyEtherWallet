@@ -11,5 +11,6 @@ export default {
   chainID: 18289463,
   tokens: tokens,
   contracts: contracts,
-  icon: iolite
+  icon: iolite,
+  currencyName: 'ILT'
 };

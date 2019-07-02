@@ -1,8 +1,9 @@
 <template lang="html">
   <div class="content-title">
     <h2>{{ title }} <slot></slot></h2>
+    <slot name="right"></slot>
     <div class="side-menu-button">
-      <round-button title="Change" @click.native="toggleSideMenu" />
+      <round-button :title="$t('common.menu')" @click.native="toggleSideMenu" />
     </div>
   </div>
 </template>

@@ -1,19 +1,27 @@
 import Ledger from '@ledgerhq/hw-app-eth';
-import ethTx from 'ethereumjs-tx';
+import { byContractAddress } from '@ledgerhq/hw-app-eth/erc20';
+import { Transaction } from 'ethereumjs-tx';
 import u2fTransport from '@ledgerhq/hw-transport-u2f';
+import webUsbTransport from '@ledgerhq/hw-transport-webusb';
 import { LEDGER as ledgerType } from '../../bip44/walletTypes';
 import bip44Paths from '../../bip44';
 import HDWalletInterface from '@/wallets/HDWalletInterface';
 import * as HDKey from 'hdkey';
+import platform from 'platform';
+import store from '@/store';
+import commonGenerator from '@/helpers/commonGenerator';
 import {
   getSignTransactionObject,
   getBufferFromHex,
   sanitizeHex,
   calculateChainIdFromV
 } from '../../utils';
+import { toBuffer } from 'ethereumjs-util';
 import errorHandler from './errorHandler';
 
 const NEED_PASSWORD = false;
+const OPEN_TIMEOUT = 10000;
+const LISTENER_TIMEOUT = 30000;
 
 class ledgerWallet {
   constructor() {
@@ -52,16 +60,30 @@ class ledgerWallet {
       accountPath = this.basePath + '/' + idx;
     }
     const txSigner = async tx => {
-      tx = new ethTx(tx);
-      const networkId = tx._chainId;
-      tx.raw[6] = Buffer.from([networkId]);
+      tx = new Transaction(tx, {
+        common: commonGenerator(store.state.network)
+      });
+      const networkId = tx.getChainId();
+      tx.raw[6] = networkId;
       tx.raw[7] = Buffer.from([]);
       tx.raw[8] = Buffer.from([]);
+      const tokenInfo = byContractAddress('0x' + tx.to.toString('hex'));
+      if (tokenInfo) await this.ledger.provideERC20TokenInformation(tokenInfo);
       const result = await this.ledger.signTransaction(
         accountPath,
         tx.serialize().toString('hex')
       );
-      tx.v = getBufferFromHex(result.v);
+
+      // EIP155 support. check/recalc signature v value.
+      let v = result.v;
+      const rv = parseInt(v, 16);
+      let cv = networkId * 2 + 35;
+      if (rv !== cv && (rv & cv) !== rv) {
+        cv += 1; // add signature v bit.
+      }
+      v = cv.toString(16);
+
+      tx.v = getBufferFromHex(v);
       tx.r = getBufferFromHex(result.r);
       tx.s = getBufferFromHex(result.s);
       const signedChainId = calculateChainIdFromV(tx.v);
@@ -78,7 +100,7 @@ class ledgerWallet {
     const msgSigner = async msg => {
       const result = await this.ledger.signPersonalMessage(
         accountPath,
-        Buffer.from(msg).toString('hex')
+        toBuffer(msg).toString('hex')
       );
       const v = parseInt(result.v, 10) - 27;
       const vHex = sanitizeHex(v.toString(16));
@@ -88,6 +110,9 @@ class ledgerWallet {
         getBufferFromHex(vHex)
       ]);
     };
+    const displayAddress = async () => {
+      await this.ledger.getAddress(accountPath, true, false);
+    };
     return new HDWalletInterface(
       accountPath,
       derivedKey.publicKey,
@@ -95,7 +120,8 @@ class ledgerWallet {
       this.identifier,
       errorHandler,
       txSigner,
-      msgSigner
+      msgSigner,
+      displayAddress
     );
   }
   getCurrentPath() {
@@ -111,8 +137,22 @@ const createWallet = async basePath => {
   return _ledgerWallet;
 };
 createWallet.errorHandler = errorHandler;
+
+const isWebUsbSupported = async () => {
+  const isSupported = await webUsbTransport.isSupported();
+  return (
+    isSupported && platform.os.family !== 'Windows' && platform.name !== 'Opera' // take it out later once the windows issue is fixed
+  );
+};
+
 const getLedgerTransport = async () => {
-  const transport = await u2fTransport.create(3000, 3000);
+  let transport;
+  const support = await isWebUsbSupported();
+  if (support) {
+    transport = await webUsbTransport.create();
+  } else {
+    transport = await u2fTransport.create(OPEN_TIMEOUT, LISTENER_TIMEOUT);
+  }
   return transport;
 };
 const getLedgerAppConfig = async _ledger => {

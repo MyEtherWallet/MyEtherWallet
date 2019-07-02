@@ -33,7 +33,8 @@ const state = {
   wallet: {
     getAddressString: jest.fn()
   },
-  web3: newWeb3
+  web3: newWeb3,
+  linkQuery: {}
 };
 
 const getters = {
@@ -68,7 +69,8 @@ const getters = {
           registry: '0x123456789',
           registrarTLD: 'eth',
           registrarType: 'auction'
-        }
+        },
+        currencyName: 'ETH'
       },
       url: 'https://mainnet.infura.io/mew'
     };
@@ -95,7 +97,8 @@ const getters = {
   web3: () => {
     return newWeb3;
   },
-  path: () => {}
+  path: () => {},
+  linkQuery: () => {}
 };
 
 export { state, getters };

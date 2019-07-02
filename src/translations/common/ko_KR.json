@@ -3,7 +3,7 @@
   "accessMyWallet": "내 지갑 접근 ",
   "accessWallet": "Access Wallet",
   "faqs": "자주 묻는 질문",
-  "sendTx": "ETH 및 토큰 발신 ",
+  "sendTx": "Send Transaction",
   "sendSafeSendTx": "Protect Your ETH Transaction Using SafeSend",
   "swap": "교환 ",
   "unlockWallet": "지갑 잠금해제 ",
@@ -75,5 +75,6 @@
   "nonce": "Nonce",
   "vintage": "Vintage",
   "okay": "Okay",
-  "ok": "OK"
+  "ok": "OK",
+  "menu": "Menu"
 }
