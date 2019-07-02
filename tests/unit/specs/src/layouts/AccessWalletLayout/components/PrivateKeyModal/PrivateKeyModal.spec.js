@@ -30,13 +30,7 @@ describe('PrivateKeyModal.vue', () => {
 
       Vue.config.warnHandler = () => {};
     });
-    const mockRouter = {
-      history: {
-        current: {
-          fullPath: '/'
-        }
-      }
-    };
+
     beforeEach(() => {
       const mockRouter = {
         history: {
