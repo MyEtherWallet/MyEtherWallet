@@ -7,9 +7,13 @@
 .sign-transaction-container {
   display: flex;
   flex-direction: column;
+  height: 478px;
+  position: relative;
 
   .sign-transaction-header {
     @extend %overall-padding;
+
+    padding-bottom: 0;
 
     p {
       font-size: 20px;
@@ -20,6 +24,7 @@
 
   .sign-transaction-addresses {
     @extend %overall-padding;
+
     align-items: center;
     display: flex;
     flex-direction: column;
@@ -32,7 +37,115 @@
   .details-container {
     border-bottom: 1px solid $dark-grey-11;
     border-top: 1px solid $dark-grey-11;
-    display: flex;
+    margin: 0 10px;
 
+    &.add-margin {
+      margin-bottom: 10px;
+    }
+
+    .details-header-container {
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+
+      p {
+        font-weight: bold;
+        margin: 0;
+      }
+    }
+  }
+
+  .continue-button {
+    background-color: $mew-green;
+    border: 1px solid $mew-green;
+    color: $white;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    user-select: none;
+    display: inline-block;
+    text-align: center;
+    padding: 21px 55px;
+    width: 100%;
+
+    &.details-closed {
+      bottom: 0;
+      position: absolute;
+    }
+  }
+}
+
+.shown {
+  height: 400px;
+  transition: max-height 0.5s ease-out;
+  margin: 20px 0;
+}
+
+.hide-box {
+  height: 0;
+  transition: max-height 0.5s ease-out;
+  display: none;
+}
+
+.sliding-switch-white {
+  height: 27px;
+  position: relative;
+
+  .switch {
+    display: inline-block;
+    height: 28px;
+    position: relative;
+    width: 52px;
+
+    // Hide default HTML checkbox
+    input {
+      display: none;
+    }
+  }
+
+  // The slider
+  .slider {
+    background-color: $css-toggle-button--slider-background-color;
+    bottom: 0;
+    cursor: pointer;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: 0.4s;
+
+    &::before {
+      background-color: $text-white;
+      bottom: 3px;
+      content: '';
+      height: 22px;
+      left: 3px;
+      padding: 1px 7px;
+      position: absolute;
+      transition: 0.4s;
+      width: 23px;
+    }
+
+    // Rounded sliders
+    &.round {
+      border-radius: 34px;
+    }
+
+    &.round::before {
+      border-radius: 100%;
+    }
+  }
+
+  input:checked + .slider {
+    background-color: $css-toggle-button--slider--active--background-color;
+  }
+
+  input:focus + .slider {
+    box-shadow: 0 0 1px $css-toggle-button--slider--active--background-color;
+  }
+
+  input:checked + .slider::before {
+    transform: translateX(23px);
   }
 }

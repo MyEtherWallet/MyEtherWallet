@@ -21,8 +21,8 @@ export default {
       default: '0'
     }
   }
-}
+};
 </script>
 <style lang="scss" scoped>
-  @import "AmountInfoComponent.scss";
+@import 'AmountInfoComponent.scss';
 </style>
