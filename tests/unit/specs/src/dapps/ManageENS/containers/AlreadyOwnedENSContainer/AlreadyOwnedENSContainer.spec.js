@@ -15,10 +15,7 @@ const BModalStub = {
   }
 };
 
-const push = sinon.stub();
-const mockRouter = {
-  push: push
-};
+
 
 describe('AlreadyOwnedENSContainer.vue', () => {
   let localVue, i18n, wrapper, store;
@@ -27,7 +24,6 @@ describe('AlreadyOwnedENSContainer.vue', () => {
   const owner = 'owner';
   const deedOwner = 'deedOwner';
   const resolverAddress = 'resolverAddress';
-  const domainName = 'domainName';
   const mockRoute = {
     fullPath: 'auction'
   };
@@ -74,9 +70,6 @@ describe('AlreadyOwnedENSContainer.vue', () => {
       stubs: {
         'b-modal': BModalStub,
         'finalize-modal': FinalizeModal
-      },
-      mocks: {
-        $router: mockRouter
       }
     });
   });
