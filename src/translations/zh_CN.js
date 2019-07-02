@@ -21,6 +21,7 @@ import secalotError from './errors-secalot/zh_CN';
 import keepkeyError from './errors-keepkey/zh_CN';
 import bitboxError from './errors-bitbox/zh_CN';
 import buyHardwareWallet from './buy-hardware-wallet/zh_CN';
+import dappsMaker from './dapps-maker/zh_CN';
 
 const zh_CN = {
   common: common,
@@ -44,6 +45,7 @@ const zh_CN = {
   secalotError: secalotError,
   keepkeyError: keepkeyError,
   bitboxError: bitboxError,
-  buyHardwareWallet: buyHardwareWallet
+  buyHardwareWallet: buyHardwareWallet,
+  dappsMaker: dappsMaker
 };
 export default zh_CN;
