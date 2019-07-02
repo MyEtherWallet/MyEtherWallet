@@ -11,7 +11,7 @@
       <div class="form-content-container">
         <div class="accordion-menu-container">
           <!-- Phone Number - accordion-menu ******************************** -->
-          <!--          <accordion-menu
+          <!--                    <accordion-menu
             :isopen="steps['step1']"
             :title="$t('interface.phoneNumber')"
             :greytitle="false"
@@ -22,7 +22,7 @@
           >
             <ul>
               <li>
-                <p>{{ $t('interface.enterPhoneForSMS') }}</p>
+                <p>{{ $t('interface.en') }}</p>
               </li>
               <li>
                 <div class="grid-phone-number">
@@ -39,9 +39,9 @@
                 <p>{{ $t('interface.clickToContinue', { label: 'Send' }) }}</p>
               </li>
             </ul>
-          </accordion-menu>
-          &lt;!&ndash; Tan Code - accordion-menu ******************************** &ndash;&gt;
-          <accordion-menu
+          </accordion-menu>-->
+          <!-- Tan Code - accordion-menu ******************************** -->
+          <!--          <accordion-menu
             :isopen="steps['verifyStep']"
             :greytitle="false"
             :editbutton="false"
@@ -69,12 +69,12 @@
           </accordion-menu>-->
           <!-- Bank Details - accordion-menu ******************************** -->
           <accordion-menu
-            :isopen="steps['step2']"
+            :isopen="steps['step1']"
             :title="$t('interface.bankInfo')"
             :greytitle="false"
             :editbutton="true"
-            number="3"
-            @titleClicked="reOpen"
+            number="1"
+            @titleClicked="updateStep('step1')"
           >
             <ul>
               <li v-if="previouslyVerified">
@@ -86,9 +86,6 @@
                   @changedValue="orderDetails.iban = $event"
                 />
               </li>
-              <!--              <li v-if="!isValidIBAN">
-                <p> {{$t('header.invalidIBAN')}}</p>
-              </li>-->
               <li>
                 <standard-input
                   :options="inputBicSwift"
@@ -99,12 +96,12 @@
           </accordion-menu>
           <!-- Personal Details - accordion-menu ******************************** -->
           <accordion-menu
-            :isopen="steps['step3']"
+            :isopen="steps['step2']"
             :title="$t('interface.personalInfo')"
             :greytitle="false"
             :editbutton="true"
-            number="4"
-            @titleClicked="reOpen"
+            number="2"
+            @titleClicked="updateStep('step2')"
           >
             <ul>
               <li>
@@ -116,7 +113,7 @@
               <li>
                 <standard-input
                   :options="inputEmail"
-                  @changedValue="orderDetails.email = $event"
+                  @changedValue="email = $event"
                 />
               </li>
               <li>
@@ -166,7 +163,7 @@
         </div>
         <!-- .accordion-menu-container -->
         <div class="button-container">
-          <standard-button
+          <!--          <standard-button
             v-if="steps['step1']"
             :options="button1"
             :button-disabled="!isValidPhoneNumber"
@@ -177,22 +174,22 @@
             :options="verifyButton"
             :button-disabled="!validTan"
             @click.native="confirmUser()"
-          />
+          />-->
           <standard-button
-            v-if="steps['step2']"
+            v-if="steps['step1']"
             :options="button2"
             @click.native="
-              updateStep('step3');
-              stageComplete('step2');
+              updateStep('step2');
+              stageComplete('step1');
             "
           />
           <standard-button
-            v-if="steps['step3']"
+            v-if="steps['step2']"
             :options="button3"
             :button-disabled="!canSwap"
             @click.native="
               updateStep('');
-              stageComplete('step3');
+              stageComplete('step2');
               createExitOrder();
             "
           />
@@ -265,15 +262,15 @@ export default {
       countryList: Object.entries(getNames('en')),
       complete: {
         step1: false,
-        verifyStep: false,
-        step2: false,
-        step3: false
+        // verifyStep: false,
+        step2: false
+        // step3: false
       },
       steps: {
         step1: true,
-        verifyStep: false,
-        step2: false,
-        step3: false
+        // verifyStep: false,
+        step2: false
+        // step3: false
       },
       inputCountryCode: {
         title: this.$t('interface.countryCode'),
@@ -372,8 +369,8 @@ export default {
         type: 'bank_account',
         iban: '',
         bic_swift: '',
-        aba_number: '',
-        sort_code: '',
+        // aba_number: '',
+        // sort_code: '',
         owner: {
           name: '',
           address: '',
@@ -500,7 +497,9 @@ export default {
     async createExitOrder() {
       this.finalizingSwap = true;
       const details = {
-        email: this.email,
+        contact_person: {
+          email: this.email
+        },
         input: {
           amount: this.swapDetails.fromValue,
           currency: this.swapDetails.fromCurrency,
@@ -513,8 +512,7 @@ export default {
       const swapDetails = await this.provider.startSwap({
         ...this.swapDetails,
         bypass: true,
-        orderDetails: details,
-        special: { phoneToken: this.provider.phoneToken }
+        orderDetails: details
       });
       this.finalizingSwap = false;
       this.exitToFiatCallback(swapDetails);
