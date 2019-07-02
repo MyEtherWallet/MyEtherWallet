@@ -13,6 +13,11 @@
                 <currency-picker
                   :currency="allTokens"
                   :token="true"
+                  :default="
+                    selectedCoinType.hasOwnProperty('symbol')
+                      ? selectedCoinType
+                      : {}
+                  "
                   page="sendOfflineGenTx"
                   @selectedCurrency="setSelectedCurrency"
                 />
@@ -132,7 +137,7 @@
           </div>
           <div class="the-form gas-amount">
             <input
-              v-model="nonce"
+              v-model="localNonce"
               :placeholder="$t('common.nonce')"
               type="number"
             />
@@ -140,7 +145,7 @@
               <i
                 :class="[
                   'fa fa-check-circle good-button',
-                  nonce > 0 ? '' : 'not-good'
+                  localNonce >= 0 ? '' : 'not-good'
                 ]"
                 aria-hidden="true"
               />
@@ -216,7 +221,7 @@ import SignedTxModal from './components/SignedTxModal';
 import Blockie from '@/components/Blockie';
 import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import { isAddress } from '@/helpers/addressUtils';
 import store from 'store';
 import { Misc, Toast } from '@/helpers';
@@ -261,15 +266,14 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      wallet: 'wallet',
-      network: 'network',
-      web3: 'web3'
-    }),
+    ...mapState(['wallet', 'network', 'web3', 'linkQuery']),
     txSpeedMsg() {
       const net = this.network.type.name;
       // eslint-disable-next-line
-      const msg = `${this.$t('popover.txSpeedPt1').replace('{0}', net)} ${this.$t('popover.txSpeedPt2').replace('{0}', net)}`;
+      const msg = `${this.$t('popover.txSpeedPt1').replace(
+        '{0}',
+        net
+      )} ${this.$t('popover.txSpeedPt2').replace('{0}', net)}`;
       return msg;
     },
     validAddress() {
@@ -295,7 +299,7 @@ export default {
         this.validAddress &&
         this.toAmt >= 0 &&
         this.gasLimit > 0 &&
-        this.localNonce > 0 &&
+        this.localNonce >= 0 &&
         this.localGasPrice
       );
     }
@@ -314,6 +318,27 @@ export default {
         this.toData = '0x';
       }
     },
+    tokens(newVal) {
+      if (newVal.length > 0 && Object.keys(this.linkQuery).length > 0) {
+        const { data, to, value, gaslimit, gas, tokensymbol } = this.linkQuery;
+        const foundToken = tokensymbol
+          ? newVal.find(item => {
+              return item.symbol.toLowerCase() === tokensymbol.toLowerCase();
+            })
+          : undefined;
+        this.toAmt = value ? new BigNumber(value).toFixed() : 0;
+        this.toData = data ? (Misc.validateHexString(data) ? data : '') : '';
+        this.address = to ? to : '';
+        this.gasLimit = gaslimit ? new BigNumber(gaslimit).toString() : '21000';
+        this.localGasPrice = gas ? new BigNumber(gas).toFixed() : 0;
+        this.selectedCoinType = foundToken ? foundToken : this.selectedCoinType;
+        Toast.responseHandler(
+          'Form has been prefilled. Please proceed with caution!',
+          Toast.WARN
+        );
+        this.$store.dispatch('saveQueryVal', {});
+      }
+    },
     toAmt(newVal) {
       this.createDataHex(newVal, null, null);
     },
@@ -328,15 +353,18 @@ export default {
   },
   methods: {
     debouncedAmount: utils._.debounce(function(e) {
+      const symbol = this.network.type.currencyName;
       const decimals =
-        this.selectedCoinType.symbol === this.network.type.name
+        this.selectedCoinType.symbol === symbol
           ? 18
-          : this.selectedCoinType.decimals;
+          : parseInt(this.selectedCoinType.decimals);
       this.toAmt =
         e.target.valueAsNumber < 0 || isNaN(e.target.valueAsNumber)
           ? 0
-          : new BigNumber(e.target.value).decimalPlaces(decimals).toFixed();
-      e.target.value = this.toAmt;
+          : new BigNumber(e.target.valueAsNumber)
+              .decimalPlaces(decimals)
+              .toFixed();
+      // e.target.value = this.toAmt;
     }, 300),
     async createDataHex(amount, address, currency) {
       const locAmount = amount !== null ? amount : this.toAmt;
@@ -367,7 +395,8 @@ export default {
           type: 'function'
         }
       ];
-      if (locCurrency.symbol !== this.network.type.name && locAddress !== '') {
+      const symbol = this.network.type.currencyName;
+      if (locCurrency.symbol !== symbol && locAddress !== '') {
         const locVal = locAmount === '' || locAmount === null ? '0' : locAmount;
         const contract = new this.web3.eth.Contract(abi, locCurrency.address);
         const convertedAmount = new BigNumber(locVal).times(
@@ -396,7 +425,7 @@ export default {
         try {
           const file = JSON.parse(evt.target.result);
           self.localGasPrice = unit.fromWei(file.gasPrice, 'gwei');
-          self.localNonce = file.localNonce;
+          self.localNonce = file.nonce;
         } catch (e) {
           Toast.responseHandler(e, Toast.WARN);
         }
@@ -404,16 +433,19 @@ export default {
       reader.readAsBinaryString(e.target.files[0]);
     },
     async generateTx() {
-      const isToken = this.selectedCoinType.symbol !== this.network.type.name;
-      const amt = unit.toWei(this.toAmt, 'ether');
+      const symbol = this.network.type.currencyName;
+      const isToken = this.selectedCoinType.symbol !== symbol;
+      const amtWei = unit.toWei(this.toAmt, 'ether');
       const raw = {
         nonce: Misc.sanitizeHex(new BigNumber(this.localNonce).toString(16)),
         gasLimit: Misc.sanitizeHex(new BigNumber(this.gasLimit).toString(16)),
         gasPrice: Misc.sanitizeHex(
           new BigNumber(unit.toWei(this.localGasPrice, 'gwei')).toString(16)
         ),
-        to: isToken ? this.selectedCoinType.address : this.address,
-        value: isToken ? 0 : amt,
+        to: isToken
+          ? this.selectedCoinType.address
+          : this.address.toLowerCase().trim(),
+        value: isToken ? 0 : amtWei,
         data: this.toData,
         chainId: this.network.type.chainID
       };
@@ -424,8 +456,9 @@ export default {
       window.scrollTo(0, 0);
     },
     setSelectedCurrency(e) {
+      const symbol = this.network.type.currencyName;
       this.selectedCoinType = e;
-      if (e.symbol === this.network.type.name) {
+      if (e.symbol === symbol) {
         this.toData = '0x';
       }
     }

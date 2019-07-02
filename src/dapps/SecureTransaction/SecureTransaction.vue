@@ -186,7 +186,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
 import { CoralConfig } from './config';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
@@ -236,13 +236,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      account: 'account',
-      gasPrice: 'gasPrice',
-      web3: 'web3',
-      network: 'network',
-      ens: 'ens'
-    }),
+    ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
     validAmount() {
       return (
         new BigNumber(this.amount).gte(this.minimumAmount) &&
@@ -301,7 +295,7 @@ export default {
       const coinbase = this.account.address;
       const nonce = await this.web3.eth.getTransactionCount(coinbase);
       const value = this.amount === '' ? 0 : unit.toWei(this.amount, 'ether');
-      const to = this.hexAddress;
+      const to = this.hexAddress.toLowerCase().trim();
       const protectionLevel = 20;
       const query = this.coralContract.methods.deposit(to, protectionLevel);
       const encodedABI = query.encodeABI();

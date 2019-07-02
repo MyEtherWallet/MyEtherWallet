@@ -1,4 +1,4 @@
-import ethTx from 'ethereumjs-tx';
+import { Transaction } from 'ethereumjs-tx';
 import SecalotEth from './secalotEth';
 import SecalotUsb from './secalotUsb';
 import { SECALOT as secalotType } from '../../bip44/walletTypes';
@@ -12,6 +12,8 @@ import {
   calculateChainIdFromV
 } from '../../utils';
 import errorHandler from './errorHandler';
+import store from '@/store';
+import commonGenerator from '@/helpers/commonGenerator';
 
 const NEED_PASSWORD = true;
 
@@ -35,8 +37,10 @@ class SecalotWallet {
   getAccount(idx) {
     const derivedKey = this.hdKey.derive('m/' + idx);
     const txSigner = async tx => {
-      tx = new ethTx(tx);
-      const networkId = tx._chainId;
+      tx = new Transaction(tx, {
+        common: commonGenerator(store.state.network)
+      });
+      const networkId = tx.getChainId();
       const result = await this.secalot.signTransactionAsync(
         this.basePath + '/' + idx,
         tx
@@ -69,7 +73,8 @@ class SecalotWallet {
       this.identifier,
       errorHandler,
       txSigner,
-      msgSigner
+      msgSigner,
+      null
     );
   }
   getCurrentPath() {

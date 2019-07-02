@@ -51,8 +51,8 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import EthTx from 'ethereumjs-tx';
+import { mapState } from 'vuex';
+import { Transaction } from 'ethereumjs-tx';
 import BigNumber from 'bignumber.js';
 import { Util } from '@ethereum-alarm-clock/lib';
 
@@ -97,7 +97,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['notifications', 'web3', 'account', 'gasPrice'])
+    ...mapState(['notifications', 'web3', 'account', 'gasPrice', 'network'])
   },
   watch: {
     async notifications() {
@@ -192,8 +192,7 @@ export default {
         scheduledTokensApproveTransaction
       );
       scheduledTokensApproveTransaction.gasLimit = estimatedGasLimit + 1000000;
-
-      const approveTx = new EthTx(scheduledTokensApproveTransaction);
+      const approveTx = new Transaction(scheduledTokensApproveTransaction);
 
       const json = approveTx.toJSON(true);
       json.from = coinbase;

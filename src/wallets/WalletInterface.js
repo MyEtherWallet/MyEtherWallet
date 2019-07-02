@@ -14,8 +14,10 @@ import {
   isValidPublic,
   privateToPublic
 } from 'ethereumjs-util';
-import ethTx from 'ethereumjs-tx';
+import commonGenerator from '@/helpers/commonGenerator';
+import { Transaction } from 'ethereumjs-tx';
 import { toChecksumAddress } from '@/helpers/addressUtils';
+import store from '@/store';
 class WalletInterface {
   constructor(key, isPub = false, identifier) {
     this.identifier = identifier;
@@ -75,8 +77,10 @@ class WalletInterface {
       throw new Error('public key only wallets needs a signer');
     return new Promise((resolve, reject) => {
       if (!this.isPubOnly) {
-        const tx = new ethTx(txParams);
-        const networkId = tx._chainId;
+        const tx = new Transaction(txParams, {
+          common: commonGenerator(store.state.network)
+        });
+        const networkId = tx.getChainId();
         tx.sign(this.privateKey);
         const signedChainId = calculateChainIdFromV(tx.v);
         if (signedChainId !== networkId)

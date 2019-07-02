@@ -2,6 +2,7 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import * as Sentry from '@sentry/browser';
+import * as Integrations from '@sentry/integrations';
 import { getApp } from '@/builds/configs';
 import BootstrapVue from 'bootstrap-vue';
 
@@ -99,24 +100,27 @@ Object.keys(toastConfig).forEach(item => {
 
 /* eslint-disable no-new */
 const vue = new Vue({
+  el: '#app',
   i18n,
   router,
   store,
   render: h => h(getApp())
-}).$mount('#app');
+});
+
+const integration = new Integrations.Vue({ Vue, attachProps: true });
 
 Sentry.init({
   dsn: 'https://2c4e977d74fd44d1b18083e63a3b265f@sentry.mewapi.io/1',
-  integrations: [new Sentry.Integrations.Vue({ vue })],
+  integrations: [integration],
   maxBreadcrumbs: 0,
   environment: BUILD_TYPE,
   requestBodies: 'small',
   release: NODE_ENV === 'production' ? VERSION : 'develop',
   beforeSend(event) {
     event.tags = {
-      network: store.getters.network.type.name,
-      service: store.getters.network.service,
-      walletType: store.getters.account.identifier
+      network: store.state.network.type.name,
+      service: store.state.network.service,
+      walletType: store.state.account.identifier
     };
     return new Promise(resolve => {
       vue.$eventHub.$emit('issueModal', event, resolve);

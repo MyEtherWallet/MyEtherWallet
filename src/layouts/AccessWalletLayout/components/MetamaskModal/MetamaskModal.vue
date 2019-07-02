@@ -7,7 +7,23 @@
     centered
   >
     <div class="modal-content">
-      <div v-if="web3WalletExists">
+      <div v-if="isSafari" class="browser-catch">
+        <h4>
+          MetaMask is only available in these browsers:
+        </h4>
+        <div class="browser-logo-container">
+          <a
+            v-for="browser in browsers"
+            :key="browser.name"
+            :href="browser.link"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <img :src="browser.logo" />
+          </a>
+        </div>
+      </div>
+      <div v-else-if="web3WalletExists">
         <div class="modal-multi-icons">
           <img
             class="icon"
@@ -100,7 +116,12 @@ import CustomerSupport from '@/components/CustomerSupport';
 import { Web3Wallet } from '@/wallets/software';
 import { Toast } from '@/helpers';
 import Web3 from 'web3';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
+import platform from 'platform';
+import brave from '@/assets/images/browser/brave.png';
+import chrome from '@/assets/images/browser/chrome.png';
+import firefox from '@/assets/images/browser/firefox.png';
+import opera from '@/assets/images/browser/opera.png';
 
 export default {
   components: {
@@ -117,15 +138,37 @@ export default {
       accessMyWalletBtnDisabled: true,
       unlockWeb3Wallet: false,
       web3WalletExists: false,
-      refreshPage: false
+      refreshPage: false,
+      isSafari: false,
+      browsers: [
+        {
+          logo: brave,
+          link: 'https://brave.com/',
+          name: 'brave'
+        },
+        {
+          logo: firefox,
+          link: 'https://www.mozilla.org/en-US/firefox/?v=b',
+          name: 'firefox'
+        },
+        {
+          logo: opera,
+          link: 'https://www.opera.com/',
+          name: 'opera'
+        },
+        {
+          logo: chrome,
+          link: 'https://www.google.com/chrome/',
+          name: 'chrome'
+        }
+      ]
     };
   },
   computed: {
-    ...mapGetters({
-      path: 'path'
-    })
+    ...mapState(['path'])
   },
   mounted() {
+    this.isSafari = platform.name.toLowerCase() === 'safari';
     this.web3WalletExists = this.checkWeb3();
   },
   methods: {
@@ -135,7 +178,7 @@ export default {
     async getWeb3Wallet() {
       if (this.checkWeb3() !== true) return;
       if (window.ethereum) {
-        window.web3 = new Web3(window.ethereum);
+        const web3 = new Web3(window.ethereum);
         try {
           await window.ethereum.enable();
         } catch (e) {
@@ -143,15 +186,18 @@ export default {
           this.web3WalletExists = false;
           return;
         }
-        this.signIn(window.web3);
+        this.signIn(web3, 'ethereum');
       } else if (window.web3) {
         this.signIn(window.web3);
       }
     },
-    signIn(web3) {
+    signIn(web3, type) {
       new Web3(web3.currentProvider).eth
         .getAccounts()
         .then(accounts => {
+          if (type === 'ethereum') {
+            window.ethereum.autoRefreshOnNetworkChange = false;
+          }
           if (!accounts.length) return (this.unlockWeb3Wallet = true);
           const address = accounts[0];
           const wallet = new Web3Wallet(address);
@@ -166,12 +212,7 @@ export default {
         });
     },
     checkWeb3() {
-      if (window.ethereum) {
-        return true;
-      } else if (window.web3) {
-        return true;
-      }
-      return false;
+      return window.ethereum !== 'undefined' || window.web3 !== 'undefined';
     }
   }
 };

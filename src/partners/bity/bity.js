@@ -334,6 +334,7 @@ export default class BitySwap {
             'ZZ',
             'Z'
           );
+          swapDetails.providerSends = swapDetails.parsed.recValue;
           swapDetails.providerAddress =
             swapDetails.dataForInitialization.payment_address;
           swapDetails.isDex = BitySwap.isDex();
@@ -352,6 +353,7 @@ export default class BitySwap {
       swapDetails.parsed = BitySwap.parseOrder(
         swapDetails.dataForInitialization
       );
+      swapDetails.providerSends = swapDetails.parsed.recValue;
       swapDetails.providerAddress =
         swapDetails.dataForInitialization.payment_address;
       swapDetails.isDex = BitySwap.isDex();
@@ -543,9 +545,6 @@ export default class BitySwap {
         return swapNotificationStatuses.COMPLETE;
       }
       switch (data.status) {
-        // The endPoint does not seem to be updating the order.
-        //case bityStatuses.OPEN:
-        // return 'new';
         case bityStatuses.OPEN:
         case bityStatuses.RCVE:
         case bityStatuses.CONF:

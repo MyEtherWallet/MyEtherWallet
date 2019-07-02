@@ -44,4 +44,7 @@ describe('VerifyMessageContainer.vue', () => {
   it('should render correct content', () => {
     console.log(wrapper.html());
   });
+  xit('[7-2-19 NOT TEST PRESENT] should render correct content', () => {
+    console.log(wrapper.html());
+  });
 });

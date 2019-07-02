@@ -17,12 +17,16 @@
   "welcomeDes": "MyEtherWallet はオープンソースであり，オープンソースコミュニティへは無料です．あなたの寄付がこの長い道のりを可能にします．",
   "feedback": "ご意見",
   "privacy": "プライバシー",
-  "copyright": "© 2018 MyEtherWallet. All Rights reserved.",
+  "copyright": "© 2019 MyEtherWallet. All Rights reserved.",
   "love": "Love",
   "donate": "MEWですか？寄付してください！",
   "pricingP": "Pricing taken from",
   "advanced": "Advanced",
   "sendOffline": "Send Offline Helper",
   "finney": "Finney",
-  "billfodl": "Billfodl"
+  "billfodl": "Billfodl",
+  "verifyMessage": "Verify Message",
+  "keepkey": "KeepKey",
+  "secalot": "Secalot",
+  "bitbox": "Bitbox"
 }

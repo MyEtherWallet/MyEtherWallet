@@ -1,0 +1,27 @@
+@import '~@/scss/GlobalVariables';
+
+.timer {
+  background-color: $light-green-1;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  // height: 81px;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding: 16px;
+
+  .deadline {
+    color: $dark-blue-12;
+    font-size: 14px;
+  }
+
+  .actual-timer {
+    display: flex;
+    color: $red-5;
+    justify-content: space-between;
+
+    img {
+      margin-right: 5px;
+    }
+  }
+}

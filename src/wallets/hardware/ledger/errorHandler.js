@@ -14,7 +14,12 @@ const ERRORS = {
     'ledgerError.invalidData0x6a80',
   'Ledger device: CLA_NOT_SUPPORTED (0x6e00)':
     'ledgerError.claNotSupport0x6e00',
-  'Invalid networkId signature returned.': 'ledgerError.invalidNetworkID'
+  'Invalid networkId signature returned.': 'ledgerError.invalidNetworkID',
+  'EthAppPleaseEnableContractData: Please enable Contract data on the Ethereum app Settings':
+    'ledgerError.enableContractData',
+  'No device selected.': 'ledgerError.noDeviceSelected',
+  'Incompatible EIP155-based V 10 and chain id 1. See the second parameter of the Transaction constructor to set the chain id.':
+    'ledgerError.appAndNetworkMismatch'
 };
 const WARNING = {
   'Ledger device: Condition of use not satisfied (denied by the user?) (0x6985)':

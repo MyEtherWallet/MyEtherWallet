@@ -11,19 +11,23 @@ import {
   MAX_DEST_AMOUNT,
   MIN_RATE_BUFFER,
   defaultValues,
-  specialGasLimits,
   KyberCurrencies,
   kyberAddressFallback,
   kyberNetworkABI,
   kyberValidNetworks,
   kyberNetworkENS,
   walletDepositeAddress,
-  FEE_RATE
+  FEE_RATE,
+  GAS_LIMITS
 } from './config';
 import kyberCalls from './kyber-calls';
 
 const logger = debugLogger('v5:kyber-swap');
 const errorLogger = debugLogger('v5-error:kyber');
+
+const toBigNumber = num => {
+  return new BigNumber(num);
+};
 
 export default class Kyber {
   constructor(props = {}) {
@@ -32,10 +36,10 @@ export default class Kyber {
     this.getRateForUnit =
       typeof props.getRateForUnit === 'boolean' ? props.getRateForUnit : false;
     this.hasRates = 0;
-    this.specialGasLimits = specialGasLimits;
-    this.tradeGasLimit = defaultValues.tradeGasLimit;
+    this.GAS_LIMITS = GAS_LIMITS;
+    this.defaultTradeGasLimit = defaultValues.tradeGasLimit;
     this.tokenToTokenGasLimit = defaultValues.tokenToTokenGasLimit;
-    this.tokenApprovalGas = defaultValues.tokenApprovalGasLimit;
+    this.defaultTokenApprovalGasLimit = defaultValues.tokenApprovalGasLimit;
     this.maxGasPrice = defaultValues.maxGasPrice; // 30 Gwei
     this.gasPrice = defaultValues.gasPrice; // 2 Gwei
     this.tokenDetails = {};
@@ -47,8 +51,10 @@ export default class Kyber {
       props.kyberAddress || kyberAddressFallback[this.network];
     this.getSupportedTokenList();
     this.getMainNetAddress(this.kyberNetworkAddress);
+    this.retrieveGasLimits();
   }
 
+  // Static Informational
   static getName() {
     return PROVIDER_NAME;
   }
@@ -57,6 +63,7 @@ export default class Kyber {
     return true;
   }
 
+  // Getters
   get defaultCurrencyList() {
     return KyberCurrencies[this.network];
   }
@@ -131,16 +138,18 @@ export default class Kyber {
     }
   }
 
+  // API Call
   async retrieveSupportedTokenList(network) {
     try {
-      const tokenList = await kyberCalls.getTokenList(network);
+      const rawTokenList = await kyberCalls.getTokenList(network);
+      const tokenList = rawTokenList.data;
       const tokenDetails = {};
       for (let i = 0; i < tokenList.length; i++) {
         if (
           tokenList[i].symbol &&
           tokenList[i].name &&
           tokenList[i].decimals &&
-          tokenList[i].contractAddress
+          tokenList[i].address
         ) {
           // otherwise the entry is invalid
           const symbol = tokenList[i].symbol.toUpperCase();
@@ -148,6 +157,16 @@ export default class Kyber {
         }
       }
       return tokenDetails;
+    } catch (e) {
+      utils.handleOrThrow(e);
+      errorLogger(e);
+    }
+  }
+  // API Call
+  async retrieveGasLimits(network = this.network) {
+    try {
+      const gasLimitList = await kyberCalls.getGasLimits(network);
+      this.GAS_LIMITS = gasLimitList.data;
     } catch (e) {
       utils.handleOrThrow(e);
       errorLogger(e);
@@ -257,9 +276,14 @@ export default class Kyber {
   }
 
   async callKyberContract(method, ...parameters) {
-    return await this.getKyberContractObject()
-      .methods[method](...parameters)
-      .call();
+    try {
+      return await this.getKyberContractObject()
+        .methods[method](...parameters)
+        .call();
+    } catch (e) {
+      // eslint-disable-next-line
+      console.error(e);
+    }
   }
 
   async approveKyber(fromToken, fromValueWei) {
@@ -270,7 +294,7 @@ export default class Kyber {
         this.getTokenAddress(fromToken)
       ).methods.approve(this.getKyberNetworkAddress(), fromValueWei);
       try {
-        transferGasEst = await methodObject.estimateGas();
+        transferGasEst = this.getTokenApprovalGas(fromToken);
       } catch (e) {
         transferGasEst = undefined;
       }
@@ -291,12 +315,6 @@ export default class Kyber {
     } catch (e) {
       errorLogger(e);
     }
-  }
-
-  isTokenToToken(fromCurrency, toCurrency) {
-    return (
-      fromCurrency !== kyberBaseCurrency && toCurrency !== kyberBaseCurrency
-    );
   }
 
   async canUserSwap({
@@ -372,7 +390,7 @@ export default class Kyber {
         return new Set([
           await this.approveKyber(fromCurrency, 0, fromAddress),
           {
-            gas: this.tokenApprovalGas,
+            gas: this.getTokenApprovalGas(fromCurrency),
             ...(await this.approveKyber(
               fromCurrency,
               fromValueWei,
@@ -392,23 +410,6 @@ export default class Kyber {
     throw Error(errorMessage);
   }
 
-  MinRateWeiAdjustment(minRateWei) {
-    const minRateWeiBN = new BigNumber(minRateWei);
-    return minRateWeiBN
-      .minus(minRateWeiBN.times(new BigNumber(MIN_RATE_BUFFER)))
-      .toFixed(0)
-      .toString();
-  }
-
-  getGeneralGasLimits(fromCurrency, toCurrency) {
-    if (this.specialGasLimits[toCurrency]) {
-      return this.specialGasLimits[toCurrency];
-    } else if (this.isTokenToToken(fromCurrency, toCurrency)) {
-      return this.tokenToTokenGasLimit;
-    }
-    return this.tradeGasLimit;
-  }
-
   async getTradeData(
     { fromCurrency, toCurrency, fromValueWei, toAddress },
     minRateWei
@@ -424,13 +425,12 @@ export default class Kyber {
         walletDepositeAddress
       )
       .encodeABI();
-
     return {
       to: this.getKyberNetworkAddress(),
       value: Object.values(networkSymbols).includes(fromCurrency)
         ? fromValueWei
         : 0,
-      gas: this.getGeneralGasLimits(fromCurrency, toCurrency),
+      gas: this.getTokenTradeGas(fromCurrency, toCurrency),
       data
     };
   }
@@ -461,7 +461,7 @@ export default class Kyber {
       );
       if (finalRate === 0)
         throw Error(
-          'Received a rate of 0. Invalid quantity.  Try swaping a lower amount.'
+          'Received a rate of 0. Invalid quantity.  Try swapping a lower amount.'
         );
       const prepareSwapTxData = await this.canUserSwap(kyberSwapDetails);
       prepareSwapTxData.add(
@@ -479,11 +479,27 @@ export default class Kyber {
     swapDetails.maybeToken = true;
     swapDetails.providerAddress = this.getAddress();
     swapDetails.kyberMaxGas = await this.callKyberContract('maxGasPrice');
+    const finalRateWei = await this.getExpectedRate(
+      swapDetails.fromCurrency,
+      swapDetails.toCurrency,
+      this.convertToTokenWei(swapDetails.fromCurrency, swapDetails.fromValue)
+    );
+    const finalRate = this.convertToTokenBase('ETH', finalRateWei);
     swapDetails.dataForInitialization = await this.generateDataForTransactions(
       swapDetails
     );
+    swapDetails.toValue = new BigNumber(finalRate).times(
+      new BigNumber(swapDetails.fromValue).toFixed(18).toString()
+    );
+
+    swapDetails.finalRate = this.calculateNormalizedExchangeRate(
+      swapDetails.toValue,
+      swapDetails.fromValue
+    );
     swapDetails.providerReceives = swapDetails.fromValue;
-    swapDetails.providerSends = swapDetails.toValue;
+    swapDetails.providerSends = new BigNumber(finalRate).times(
+      new BigNumber(swapDetails.fromValue)
+    );
     swapDetails.parsed = {
       sendToAddress: this.getKyberNetworkAddress(),
       status: 'pending',
@@ -494,18 +510,50 @@ export default class Kyber {
     return swapDetails;
   }
 
-  static async getOrderStatus(/*noticeDetails*/) {
+  static async getOrderStatus() {
     return 'new';
+  }
+
+  // Helpers
+  MinRateWeiAdjustment(minRateWei) {
+    const minRateWeiBN = new BigNumber(minRateWei);
+    return minRateWeiBN
+      .minus(minRateWeiBN.times(new BigNumber(MIN_RATE_BUFFER)))
+      .toFixed(0)
+      .toString();
+  }
+
+  isTokenToToken(fromCurrency, toCurrency) {
+    return (
+      fromCurrency !== kyberBaseCurrency && toCurrency !== kyberBaseCurrency
+    );
+  }
+
+  getTokenTradeGas(fromCurrency, toCurrency) {
+    const fromGas = this.getTokenSwapGas(fromCurrency);
+    const toGas = this.getTokenSwapGas(toCurrency);
+    return toBigNumber(fromGas)
+      .plus(toBigNumber(toGas))
+      .toFixed(0)
+      .toString();
+  }
+
+  getTokenApprovalGas(token) {
+    const gasLimits = this.getGasLimits(token);
+    return gasLimits.approveGasLimit;
+  }
+
+  getTokenSwapGas(token) {
+    const gasLimits = this.getGasLimits(token);
+    return gasLimits.swapGasLimit;
   }
 
   getTokenAddress(token) {
     try {
       if (utils.stringEqual(networkSymbols.ETH, token)) {
-        return this.currencies[token].contractAddress;
+        return this.currencies[token].address;
       }
-      return this.web3.utils.toChecksumAddress(
-        this.currencies[token].contractAddress
-      );
+      return this.web3.utils.toChecksumAddress(this.currencies[token].address);
     } catch (e) {
       errorLogger(e);
       throw Error(
@@ -523,6 +571,43 @@ export default class Kyber {
         `Token [${token}] not included in kyber network list of tokens`
       );
     }
+  }
+
+  getGasLimits(token) {
+    try {
+      const address = this.getTokenAddress(token);
+      if (this.GAS_LIMITS && Array.isArray(this.GAS_LIMITS)) {
+        const gasLimit = this.GAS_LIMITS.find(entry => {
+          return entry.address === address;
+        });
+        if (gasLimit !== null && gasLimit !== undefined) {
+          return gasLimit;
+        }
+        return {
+          swapGasLimit: this.defaultTradeGasLimit,
+          approveGasLimit: this.defaultTokenApprovalGasLimit
+        };
+      }
+      const gasLimit = GAS_LIMITS.find(entry => {
+        return entry.address === address;
+      });
+      if (gasLimit !== null && gasLimit !== undefined) {
+        return gasLimit;
+      }
+      return {
+        swapGasLimit: this.defaultTradeGasLimit,
+        approveGasLimit: this.defaultTokenApprovalGasLimit
+      };
+    } catch (e) {
+      return {
+        swapGasLimit: this.defaultTradeGasLimit,
+        approveGasLimit: this.defaultTokenApprovalGasLimit
+      };
+    }
+  }
+
+  calculateNormalizedExchangeRate(toValue, fromValue) {
+    return new BigNumber(toValue).div(fromValue).toString(10);
   }
 
   convertToTokenBase(token, value) {
