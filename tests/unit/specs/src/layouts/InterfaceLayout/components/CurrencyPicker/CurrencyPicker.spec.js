@@ -35,8 +35,11 @@ describe('CurrencyPicker.vue', () => {
       const currencyElement = currencyElements[i];
       const localCurrency = wrapper.vm.localCurrency[i];
       expect(
-        currencyElement.querySelectorAll('p')[0].textContent.trim()
-      ).toEqual(localCurrency.symbol + ' - ' + localCurrency.name);
+        currencyElement
+          .querySelectorAll('p')[0]
+          .textContent.trim()
+          .indexOf(localCurrency.name)
+      ).toBeGreaterThan(-1);
       expect(
         currencyElement.querySelectorAll('p')[2].textContent.trim()
       ).toEqual(localCurrency.name);
@@ -48,19 +51,14 @@ describe('CurrencyPicker.vue', () => {
       wrapper.vm.$el
         .querySelectorAll('.dropdown-container p')[0]
         .textContent.trim()
-        .indexOf(wrapper.vm.$data.selectedCurrency.symbol)
-    ).toBeGreaterThan(-1);
-    expect(
-      wrapper.vm.$el
-        .querySelectorAll('.dropdown-container p')[0]
-        .textContent.trim()
         .indexOf(wrapper.vm.$data.selectedCurrency.name)
     ).toBeGreaterThan(-1);
     expect(
       wrapper.vm.$el
         .querySelectorAll('.dropdown-container p')[1]
         .textContent.trim()
-    ).toEqual(wrapper.vm.$data.selectedCurrency.name);
+        .indexOf(wrapper.vm.$data.selectedCurrency.name)
+    ).toBeGreaterThan(-1);
   });
 
   it('should show elements according to token props', () => {
@@ -108,8 +106,11 @@ describe('CurrencyPicker.vue', () => {
       const currencyElement = currencyElements[i];
       const localCurrency = wrapper.vm.localCurrency[i];
       expect(
-        currencyElement.querySelectorAll('p')[0].textContent.trim()
-      ).toEqual(localCurrency.symbol + ' - ' + localCurrency.name);
+        currencyElement
+          .querySelectorAll('p')[0]
+          .textContent.trim()
+          .indexOf(localCurrency.name)
+      ).toBeGreaterThan(-1);
       expect(
         currencyElement.querySelectorAll('p')[2].textContent.trim()
       ).toEqual(localCurrency.name);
