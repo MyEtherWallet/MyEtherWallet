@@ -1,11 +1,21 @@
-FROM node:8.16.0-jessie
+FROM node:8.16.0-jessie AS build
+
+ARG TARGET=development
 
 ENV NODE_OPTIONS --max-old-space-size=4096
-RUN npm install npm@6.9 -g
-RUN node -v && npm -v
-COPY package*.json ./
-COPY package-audit.js ./
-RUN  node package-audit.js
-RUN rm package-audit.js
-RUN rm -rf package*.json*
-WORKDIR /home
+ENV WORKDIR /build/mew
+
+WORKDIR ${WORKDIR}
+
+COPY . ${WORKDIR}
+
+RUN npm i -g npm@6.9 && \
+    npm i && \
+    npm run build
+
+FROM nginx:1.17.1-alpine
+
+WORKDIR /var/www/html
+
+COPY --from=build /build/mew/dist .
+COPY ${WORKDIR}/docker/nginx/nginx.conf /etc/nginx/conf.d/default.conf
