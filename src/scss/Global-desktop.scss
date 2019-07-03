@@ -1513,3 +1513,18 @@
     background-color: $mew-green !important;
   }
 }
+
+.cx-password-modal {
+  .modal-dialog {
+    bottom: 0;
+    margin: 0;
+    position: absolute;
+    width: 100%;
+  }
+
+  .modal-content {
+    border: none;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+  }
+}

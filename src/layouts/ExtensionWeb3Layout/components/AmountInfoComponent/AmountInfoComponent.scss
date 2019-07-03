@@ -7,7 +7,7 @@
   align-items: center;
   display: flex;
   justify-content: space-between;
-  padding: 20px 20px 10px;
+  padding: 10px;
   width: 100%;
 
   .eth-icon {
@@ -25,8 +25,19 @@
     padding-left: 10px;
   }
 
-  // .amount-text {
-  //   span {
-  //   }
-  // }
+  .amount-text {
+    color: $dark-blue-12;
+    font-size: 20px;
+    font-weight: bold;
+
+    span {
+      color: $dark-grey-11;
+      font-size: 15px;
+      font-weight: normal;
+    }
+  }
+
+  .address-text {
+    font-size: 15px;
+  }
 }

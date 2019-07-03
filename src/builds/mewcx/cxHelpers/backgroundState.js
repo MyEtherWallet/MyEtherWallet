@@ -21,7 +21,6 @@ const useHash = getMode() === 'hash' ? '#' : '';
           );
         }
       }
-
       q = arr.join('&');
     } else if (
       request.hasOwnProperty('tx') &&
@@ -63,7 +62,7 @@ const useHash = getMode() === 'hash' ? '#' : '';
       case 'confirmAndSendTx':
         chrome.windows.create({
           url: chrome.runtime.getURL(
-            `index.html${useHash}/extension-popups/sign-tx?${q}`
+            `index.html${useHash}/extension-popups/sign-tx?url=${request.url}&${q}`
           ),
           type: 'popup',
           height: 500,
