@@ -1,6 +1,7 @@
 /* eslint no-undef: 0 no-console:0 */
 import { toPayload } from '../methods/jsonrpc';
 import { getSanitizedTx } from '../methods/utils';
+
 export default async ({ payload }, res, next) => {
   if (payload.method !== 'eth_sendTransaction') return next();
   const tx = Object.assign({}, payload.params[0]);
@@ -13,11 +14,11 @@ export default async ({ payload }, res, next) => {
       });
       window.dispatchEvent(event);
       window.addEventListener(
-        `web3${window.extensionID}recieveTx`,
+        `web3${window.extensionID}recieveTxHash`,
         eventRes => {
-          res(null, toPayload(payload.id, [eventRes.detail.tx]));
+          res(null, toPayload(payload.id, [eventRes.detail.txHash]));
           window.removeEventListener(
-            `web3${window.extensionID}recieveTx`,
+            `web3${window.extensionID}recieveTxHash`,
             () => {}
           );
           window.removeEventListener(
@@ -30,7 +31,7 @@ export default async ({ payload }, res, next) => {
       window.addEventListener(`web3${window.extensionID}reject`, () => {
         res(new Error('User cancelled request!'));
         window.removeEventListener(
-          `web3${window.extensionID}recieveTx`,
+          `web3${window.extensionID}recieveTxHash`,
           () => {}
         );
         window.removeEventListener(`web3${window.extensionID}reject`, () => {});

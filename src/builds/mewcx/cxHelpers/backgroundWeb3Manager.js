@@ -1,6 +1,5 @@
 const chrome = window.chrome;
 const extensionID = chrome.runtime.id;
-// import cxHelpers from './cxHelpers.js';
 function exec(fn) {
   const script = document.createElement('script');
   script.setAttribute('type', 'application/javascript');
@@ -8,7 +7,7 @@ function exec(fn) {
   document.body.appendChild(script); //run the script
   document.body.removeChild(script); //clean up
 }
-
+/* eslint-disable-next-line */
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   const script = document.createElement('script');
   script.src = chrome.extension.getURL('cxWeb3.js');
@@ -18,9 +17,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
       document.body.removeChild(script);
       exec(function(id) {
         window.extensionID = id;
-      });
-      sendResponse({
-        response: 'REEEEEEEEEEEEE! SUCCESSFULLY ADDED WEB3 MY DUDES'
       });
       break;
 
@@ -33,14 +29,18 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         })
       );
       break;
-    case 'rejectMewCXAccount':
+    case 'mewTxHash':
       window.dispatchEvent(
-        new CustomEvent(`web3${extensionID}reject`, {
+        new CustomEvent(`web3${extensionID}recieveTxHash`, {
           detail: {
-            account: []
+            hash: request.hash
           }
         })
       );
+      break;
+    case 'rejectMewCXAccount':
+    case 'rejectMewTxSign':
+      window.dispatchEvent(new CustomEvent(`web3${extensionID}reject`));
       break;
   }
 
@@ -94,9 +94,9 @@ window.addEventListener(
 );
 
 window.addEventListener(`web3${extensionID}sendTx`, function(e) {
-  console.log(e);
   chrome.runtime.sendMessage(extensionID, {
     msg: 'confirmAndSendTx',
-    tx: e.detail.tx
+    tx: e.detail.tx,
+    url: window.location.origin
   });
 });

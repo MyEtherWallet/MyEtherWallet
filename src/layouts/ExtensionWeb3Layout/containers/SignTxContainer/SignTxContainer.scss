@@ -1,7 +1,7 @@
 @import '~@/scss/GlobalVariables';
 
 %overall-padding {
-  padding: 10px 20px;
+  padding: 10px;
 }
 
 .sign-transaction-container {
@@ -44,14 +44,30 @@
     }
 
     .details-header-container {
+      @extend %overall-padding;
+
       align-items: center;
       display: flex;
       justify-content: space-between;
-      padding: 10px;
 
       p {
         font-weight: bold;
         margin: 0;
+      }
+    }
+
+    .detail-item {
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+
+      .title {
+        color: $dark-grey-11;
+      }
+
+      .content {
+        color: $dark-blue-12;
       }
     }
   }
@@ -77,15 +93,14 @@
 }
 
 .shown {
-  height: 400px;
   transition: max-height 0.5s ease-out;
-  margin: 20px 0;
+  padding: 0 10px 10px;
 }
 
 .hide-box {
+  display: none;
   height: 0;
   transition: max-height 0.5s ease-out;
-  display: none;
 }
 
 .sliding-switch-white {
