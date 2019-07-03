@@ -16,7 +16,7 @@ export default async ({ payload }, res, next) => {
       window.addEventListener(
         `web3${window.extensionID}recieveTxHash`,
         eventRes => {
-          res(null, toPayload(payload.id, [eventRes.detail.txHash]));
+          res(null, toPayload(payload.id, eventRes.detail.hash));
           window.removeEventListener(
             `web3${window.extensionID}recieveTxHash`,
             () => {}
@@ -29,7 +29,7 @@ export default async ({ payload }, res, next) => {
       );
 
       window.addEventListener(`web3${window.extensionID}reject`, () => {
-        res(new Error('User cancelled request!'));
+        res(null, toPayload(payload.id, null));
         window.removeEventListener(
           `web3${window.extensionID}recieveTxHash`,
           () => {}
@@ -37,7 +37,7 @@ export default async ({ payload }, res, next) => {
         window.removeEventListener(`web3${window.extensionID}reject`, () => {});
       });
     })
-    .catch(e => {
-      res(e);
+    .catch(() => {
+      res(null, toPayload(payload.id, null));
     });
 };
