@@ -12,7 +12,14 @@
 
 import * as Crypto from 'crypto';
 import * as HDKey from 'hdkey';
-const BitBoxSupportedMajorVersion = 6;
+const BitBoxSupportedMajorVersion = 7;
+const hijackState = {
+  // Order must match that in the firmware code
+  responseReady: 0,
+  processingCommand: 1,
+  incompleteCommand: 2,
+  idle: 3
+};
 class DigitalBitboxEth {
   static aes_cbc_b64_decrypt = (ciphertext, key) => {
     try {
@@ -69,19 +76,16 @@ class DigitalBitboxEth {
   };
   static parseError = errObject => {
     const errMsg = {
-      err101:
-        'The BitBox is not initialized. First use the <a href="https://shiftcrypto.ch/start" target="_blank" rel="noopener noreferrer">Digital Bitbox desktop app</a> to set up a wallet.', // No password set
-      err250:
-        'The BitBox is not initialized. First use the <a href="https://shiftcrypto.ch/start" target="_blank" rel="noopener noreferrer">BitBox desktop app</a> to set up a wallet.', // Wallet not seeded
-      err251:
-        'The BitBox is not initialized. First use the <a href="https://shiftcrypto.ch/start" target="_blank" rel="noopener noreferrer">BitBox desktop app</a> to set up a wallet.', // Wallet not seeded
-      err109:
-        'The BitBox received unexpected data. Was the correct password used? ' +
-        errObject.message
+      err101: 'errorNotInitialized', // No password set
+      err250: 'errorNotInitialized', // Wallet not seeded
+      err251: 'errorNotInitialized', // Wallet not seeded
+      err109: 'errorInvalidPassword' + errObject.message, // Wrong password (typically); append error message in order to parse login tries left
+      err600: 'errorUserAbort', // User aborted action
+      err601: 'errorUserTimeout' // Touch button not pressed
     };
-    const code = 'err' + errObject.code.toString();
-    const msg = errMsg[code] || errObject.message;
-    return msg;
+    const code = 'err' + ('code' in errObject ? errObject.code.toString() : '');
+    const err = { message: errMsg[code] || 'errorUnexpected' };
+    return err;
   };
   static signGeneric = (self, path, chainId, hashToSign, callback) => {
     const cmd =
@@ -96,8 +100,7 @@ class DigitalBitboxEth {
         return;
       }
       if ('echo' in response) {
-        const cmd = '{"sign":""}';
-        self.send(cmd, localCallback);
+        self.send('{"sign":""}', true, localCallback);
         return;
       }
       if ('sign' in response) {
@@ -114,89 +117,102 @@ class DigitalBitboxEth {
         return;
       }
     };
-    self.send(cmd, localCallback);
+    self.send(cmd, true, localCallback);
   };
-  constructor(comm, sec) {
+  constructor(comm, secret) {
     this.comm = comm;
-    this.sec = '';
-    this.to = null;
-    this.sec = sec || this.sec;
+    this.secret = '';
+    this.timeout = null;
+    this.secret = secret || this.secret;
     this.key = Crypto.createHash('sha256')
-      .update(new Buffer(this.sec, 'utf8'))
+      .update(new Buffer(this.secret, 'utf8'))
       .digest();
     this.key = Crypto.createHash('sha256')
       .update(this.key)
       .digest();
-    clearTimeout(this.to);
-    this.to = setTimeout(() => {
-      this.sec = '';
+    clearTimeout(this.timeout);
+    this.timeout = setTimeout(() => {
+      this.secret = '';
     }, 60000);
   }
-  send(cmd, callback) {
-    this.comm.exchange('{"ping":""}', (pingResponse, pingError) => {
-      if (typeof pingError !== 'undefined') {
-        callback(undefined, pingError);
-        return;
-      }
-      pingResponse = JSON.parse(pingResponse.toString('utf8'));
-      if (!('device' in pingResponse)) {
-        callback(
-          undefined,
-          'Please upgrade to the newest firmware using the <a href="https://shiftcrypto.ch/start" target="_blank" rel="noopener noreferrer">BitBox Desktop app.</a>'
-        );
-        return;
-      }
-      const match = /^v(\d+)\.\d+\.\d+/.exec(pingResponse.device.version);
-      if (match === null || match.length != 2) {
-        throw 'unexpected reply';
-      }
-      const majorVersion = parseInt(match[1]);
-      if (majorVersion < BitBoxSupportedMajorVersion) {
-        callback(
-          undefined,
-          'Please upgrade to the newest firmware using the <a href="https://shiftcrypto.ch/start" target="_blank" rel="noopener noreferrer">BitBox Desktop app.</a>'
-        );
-        return;
-      }
-      if (majorVersion > BitBoxSupportedMajorVersion) {
-        callback(
-          undefined,
-          'MyEtherWallet does not yet support this version of the firmware'
-        );
-        return;
-      }
-      const cipher = DigitalBitboxEth.aes_cbc_b64_encrypt(cmd, this.key);
-      this.comm.exchange(cipher, response => {
-        if (typeof pingError !== 'undefined') {
-          callback(undefined, pingError);
+  send(cmd, encrypt, callback) {
+    let message = '';
+    if (encrypt) message = DigitalBitboxEth.aes_cbc_b64_encrypt(cmd, this.key);
+    else message = cmd || ' '; // Need at least 1 byte length for U2F
+    this.comm.exchange(message, (response, err) => {
+      try {
+        if (typeof err !== 'undefined' || typeof response === 'undefined') {
+          // Entered on U2F timeouts
+          // Poll for the response
+          this.send('', false, callback);
           return;
         }
-        try {
-          response = JSON.parse(response.toString('utf8'));
+        if (response.length == 1) {
+          if (response[0] == hijackState.processingCommand) {
+            // BitBox is processing the previous command
+            // Poll for the response
+            this.send('', false, callback);
+          }
+          return;
+        }
+        response = JSON.parse(response.toString('utf8'));
+        if ('error' in response) {
+          callback(undefined, DigitalBitboxEth.parseError(response.error));
+          return;
+        }
+
+        if ('ping' in response) {
+          if (!('device' in response)) {
+            callback(undefined, 'errorUpgradeFirmware');
+            return;
+          }
+          const match = /^v(\d+)\.\d+\.\d+/.exec(response.device.version);
+          if (match === null || match.length != 2) {
+            throw 'unexpected reply';
+          }
+          const majorVersion = parseInt(match[1]);
+          if (majorVersion < BitBoxSupportedMajorVersion) {
+            callback(undefined, 'errorUpgradeFirmware');
+            return;
+          }
+          if (majorVersion > BitBoxSupportedMajorVersion) {
+            callback(undefined, 'errorUnsupportedFirmware');
+            return;
+          }
+          callback(response);
+        }
+
+        if ('ciphertext' in response) {
+          response = JSON.parse(
+            DigitalBitboxEth.aes_cbc_b64_decrypt(response.ciphertext, this.key)
+          );
           if ('error' in response) {
             callback(undefined, DigitalBitboxEth.parseError(response.error));
             return;
           }
-          if ('ciphertext' in response) {
-            response = JSON.parse(
-              DigitalBitboxEth.aes_cbc_b64_decrypt(
-                response.ciphertext,
-                this.key
-              )
-            );
-            if ('error' in response) {
-              callback(undefined, DigitalBitboxEth.parseError(response.error));
-              return;
-            }
-            callback(response, undefined);
-          }
-        } catch (err) {
-          callback(undefined, 'Unexpected error: ' + err.message);
+          callback(response);
         }
-      });
+      } catch (err) {
+        // unexpected error
+        callback(undefined, 'errorUnexpected');
+      }
     });
   }
+  getStarted(path, callback) {
+    // First check firmware version compatibility
+    // Get extended public key if firmware is compatible
+    // Else return an error
+    const localCallback = (response, error) => {
+      if (typeof error != 'undefined') {
+        callback(undefined, error);
+        return;
+      }
+      this.getAddress(path, callback);
+    };
+    this.send('{"ping":""}', false, localCallback);
+  }
   getAddress(path, callback) {
+    // Get extended public key
     const cmd = '{"xpub":"' + path + '"}';
     const localCallback = (response, error) => {
       if (typeof error != 'undefined') {
@@ -211,7 +227,7 @@ class DigitalBitboxEth {
       callback(result);
       return;
     };
-    this.send(cmd, localCallback);
+    this.send(cmd, true, localCallback);
   }
   signTransaction(path, eTx) {
     return new Promise((resolve, reject) => {

@@ -63,10 +63,6 @@ describe('AccessWalletButton.vue', () => {
     );
   });
 
-  xit('should render correct icon', () => {
-    expect(wrapper.vm.$el.querySelector('.icon').src.trim()).toEqual(img);
-  });
-
   it('should render correct disabled', () => {
     const btnBlock = wrapper.find('.button-block');
     expect(btnBlock.classes().indexOf('disabled')).toBeGreaterThan(-1);

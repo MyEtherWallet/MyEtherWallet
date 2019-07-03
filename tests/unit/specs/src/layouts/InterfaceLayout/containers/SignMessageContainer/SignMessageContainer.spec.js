@@ -33,15 +33,11 @@ describe('SignMessageContainer.vue', () => {
     });
   });
 
-  describe('SignMessageContainer.vue Methods', () => {
-    xit('[Failing] should render correct deleteInputText method', () => {
-      // const textArea = wrapper.find('.domain-name .custom-textarea-1');
-      wrapper.find('.copy-buttons span').trigger('click');
-      expect(
-        wrapper.vm.$el
-          .querySelector('.domain-name .custom-textarea-1')
-          .textContent.trim()
-      ).toEqual('');
-    });
+  it('should render correct data', () => {
+    const message = 'message';
+    wrapper.setData({ message });
+    expect(wrapper.vm.$el.querySelector('.the-form textarea').value).toEqual(
+      message
+    );
   });
 });
