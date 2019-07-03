@@ -75,7 +75,7 @@ const affiliates = [
     price: '79.00',
     description:
       'Protect your cryptocurrencies, store your private keys offline, and safeguard your assets from hackers.',
-    href: 'http://keepkey.go2cloud.org/aff_c?offer_id=1&aff_id=5561',
+    href: 'http://lddy.no/a4im',
     currency: '$',
     logo: 'keepkey'
   }

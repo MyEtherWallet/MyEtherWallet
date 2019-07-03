@@ -37,7 +37,7 @@ describe('HardwarePasswordModal.vue', () => {
     ).toEqual(password);
   });
 
-  xit('[Failing] should render correct hardwareBrand props', () => {
+  it('should render correct hardwareBrand props', () => {
     const hardwareBrand = 'hardwareBrand';
     wrapper.setProps({ hardwareBrand });
     expect(
@@ -49,7 +49,7 @@ describe('HardwarePasswordModal.vue', () => {
   });
 
   describe('HardwarePasswordModal.vue Methods', () => {
-    xit('[Failing] should change password data when input triggers', () => {
+    it('should change password data when input triggers', () => {
       const inputElement = wrapper.find('.input-container input');
       const inputText = 'testpassword';
       inputElement.setValue(inputText);
@@ -57,7 +57,7 @@ describe('HardwarePasswordModal.vue', () => {
       expect(wrapper.vm.$data.password).toBe(inputText);
     });
 
-    xit('[Failing] should change show data when button click', () => {
+    it('should change show data when button click', () => {
       let imgElement = wrapper.find('.input-container img');
       imgElement.trigger('click');
       expect(wrapper.vm.$data.show).toBe(true);
