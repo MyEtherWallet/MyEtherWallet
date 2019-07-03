@@ -169,20 +169,17 @@ export default {
       const _self = this;
       const newTx = new Transaction(_self.txParams);
       const signedTx = await wallet.signTransaction(newTx);
-      this.web3.eth.sendSignedTransaction(signedTx.rawTransaction);
-      window.close();
-      // window.chrome.tabs.query(
-      //   { url: `*://*.${Misc.getService(_self.linkQuery.url)}/*` },
-      //   function(tab) {
-      //     console.log('got here 1?');
-      //     const obj = {
-      //       msg: 'mewTxHash',
-      //       hash: hash
-      //     };
-      //     window.chrome.tabs.sendMessage(tab[0].id, obj);
-      //     window.close();
-      //   }
-      // );
+      window.chrome.tabs.query(
+        { url: `*://*.${Misc.getService(_self.linkQuery.url)}/*` },
+        function(tab) {
+          const obj = {
+            msg: 'mewTxHash',
+            hash: self.web3.eth.sendSignedTransaction(signedTx.rawTransaction)
+          };
+          window.chrome.tabs.sendMessage(tab[0].id, obj);
+          window.close();
+        }
+      );
     }
   }
 };
