@@ -54,7 +54,7 @@ const webpackConfig = {
             filePath.replace(/^.*[\\\/]/, '') === 'manifest.json' &&
             JSON.parse(env_vars.BUILD_TYPE) === 'mewcx'
           ) {
-            const version = require('package.json').version;
+            const version = require('./package.json').version;
             const json = JSON.parse(content);
             json.version = version;
             return JSON.stringify(json, null, 2);
