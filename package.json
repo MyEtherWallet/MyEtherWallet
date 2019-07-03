@@ -50,7 +50,7 @@
     "vue": "2.6.10",
     "vue-datetime": "1.0.0-beta.10",
     "vue-mq": "1.0.1",
-    "vue-router": "3.0.6",
+    "vue-router": "3.0.7",
     "vue-toasted": "1.1.27",
     "vuex": "3.1.1",
     "weekstart": "1.0.0",
