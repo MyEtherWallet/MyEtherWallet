@@ -34,6 +34,7 @@
   "dependencies": {
     "@sentry/browser": "5.4.3",
     "@sentry/integrations": "5.4.2",
+    "eslint-loader": "2.1.2",
     "html2canvas": "1.0.0-rc.3",
     "idna-uts46": "1.1.0",
     "js-sha1": "0.6.0",
@@ -67,7 +68,7 @@
     "@vue/cli-plugin-eslint": "3.9.0",
     "@vue/cli-plugin-pwa": "3.9.0",
     "@vue/cli-plugin-unit-jest": "3.9.0",
-    "@vue/cli-service": "3.8.4",
+    "@vue/cli-service": "3.9.0",
     "@vue/eslint-config-prettier": "4.0.1",
     "@vue/test-utils": "1.0.0-beta.29",
     "@xkeshi/vue-qrcode": "git+https://github.com/MyEtherWallet/vue-qrcode.git",
