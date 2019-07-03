@@ -27,7 +27,7 @@
     "update": "npm run update:packages && npm run update:lists",
     "update:mainlists": "node fetchLists/fetchMainLists.js",
     "clean": "sudo rm -rf node_modules/.cache; sudo rm -rf node_modules/websocket/.git; npm install;",
-    "preinstall": "find node_modules -name \".git\" -exec rm  -rf {} \\ || true"
+    "preinstall": "find node_modules -name \".git\" -exec rm -rf {} \\; || true"
   },
   "gitHooks": {
     "pre-commit": "npm run lint && npm run test"
