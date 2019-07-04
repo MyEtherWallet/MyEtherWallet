@@ -23,12 +23,13 @@
         />
       </div>
     </div>
-    <button
-      :class="[selectedAccount === '' ? 'disabled' : '', 'submit-button']"
-      @click="sendAccount"
-    >
-      Access
-    </button>
+    <accept-cancel-buttons
+      :func-one="sendAccount"
+      :func-two="rejectAction"
+      :disabled="selectedAccount === ''"
+      text-one="Access"
+      text-two="Reject"
+    />
   </div>
 </template>
 
@@ -36,10 +37,12 @@
 import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { Misc, ExtensionHelpers } from '@/helpers';
-import AddressSelectionComponent from './components/AddressSelectionComponent';
+import AddressSelectionComponent from '../../components/AddressSelectionComponent';
+import AcceptCancelButtons from '../../components/AcceptCancelButtons';
 export default {
   components: {
-    'address-selection-component': AddressSelectionComponent
+    'address-selection-component': AddressSelectionComponent,
+    'accept-cancel-buttons': AcceptCancelButtons
   },
   data() {
     return {
@@ -82,6 +85,19 @@ export default {
       } else {
         this.selectedAccount = acc;
       }
+    },
+    rejectAction() {
+      const _self = this;
+      window.chrome.tabs.query(
+        { url: `*://*.${_self.request.connectionRequest}/*` },
+        function(tab) {
+          const obj = {
+            msg: 'rejectMewCXAccount'
+          };
+          window.chrome.tabs.sendMessage(tab[0].id, obj);
+          window.close();
+        }
+      );
     },
     sendAccount() {
       const account = this.selectedAccount;

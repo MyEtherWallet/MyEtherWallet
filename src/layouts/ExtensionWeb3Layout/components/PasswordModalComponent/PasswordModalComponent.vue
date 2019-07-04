@@ -39,7 +39,7 @@
             type="submit"
             @click.prevent="func"
           >
-            {{ $t('common.continue') }}
+            {{ actionName }}
           </button>
         </form>
         <p class="terms">

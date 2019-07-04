@@ -3,8 +3,8 @@ import MiddleWare from '../middleware';
 import {
   ethAccounts,
   ethCoinbase,
-  ethSendTransaction
-  // ethSign,
+  ethSendTransaction,
+  ethSign
   // ethSignTransaction,
   // ethGetTransactionCount,
   // ethGetTransactionReceipt
@@ -23,7 +23,7 @@ class MewCxWeb3 {
         // middleware.use(ethSignTransaction);
         // middleware.use(ethGetTransactionCount);
         // middleware.use(ethGetTransactionReceipt);
-        // middleware.use(ethSign);
+        middleware.use(ethSign);
         middleware.use(ethAccounts);
         middleware.use(ethCoinbase);
         // middleware.use(ethGetBlockByNumber);

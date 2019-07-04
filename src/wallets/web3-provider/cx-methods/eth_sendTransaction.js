@@ -29,7 +29,7 @@ export default async ({ payload }, res, next) => {
       );
 
       window.addEventListener(`web3${window.extensionID}reject`, () => {
-        res(null, toPayload(payload.id, null));
+        res(null, toPayload(payload.id, new Error('User Rejected action!')));
         window.removeEventListener(
           `web3${window.extensionID}recieveTxHash`,
           () => {}
@@ -38,6 +38,6 @@ export default async ({ payload }, res, next) => {
       });
     })
     .catch(() => {
-      res(null, toPayload(payload.id, null));
+      res(null, toPayload(payload.id, new Error('User Rejected action!')));
     });
 };
