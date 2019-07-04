@@ -1,7 +1,6 @@
 import { getMode } from '../../configs';
 const chrome = window.chrome;
 const useHash = getMode() === 'hash' ? '#' : '';
-// import { ExtensionHelpers } from '@/helpers';
 
 (function() {
   /* eslint no-console: 0 no-unused-vars: 0 */
