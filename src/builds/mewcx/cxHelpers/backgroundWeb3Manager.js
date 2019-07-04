@@ -4,8 +4,8 @@ function exec(fn) {
   const script = document.createElement('script');
   script.setAttribute('type', 'application/javascript');
   script.textContent = '(' + fn + ')("' + extensionID + '")';
-  document.body.appendChild(script); //run the script
-  document.body.removeChild(script); //clean up
+  document.body.appendChild(script);
+  document.body.removeChild(script);
 }
 /* eslint-disable-next-line */
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {

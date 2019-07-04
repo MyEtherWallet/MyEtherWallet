@@ -59,10 +59,6 @@ const chrome = window.chrome;
         foundBlacklist !== undefined ||
         cxHelpers.checkUrlSimilarity(tabs[0].url, SEARCH_STRING)
       ) {
-        // Dev test
-        // urlRedirect = encodeURI(
-        //   `https://localhost:8080#/phishing-catcher?url=${tabs[0].url}`
-        // );
         urlRedirect = encodeURI(
           `https://www.myetherwallet.com/phishing.html?phishing-address=${tabs[0].url}`
         );
