@@ -68,12 +68,12 @@
         </div>
       </div>
     </div>
-    <button
-      :class="[showDetails ? '' : 'details-closed', 'continue-button']"
-      @click="openPasswordModal"
-    >
-      Continue
-    </button>
+    <accept-cancel-buttons
+      :func-one="openPasswordModal"
+      :func-two="rejectAction"
+      text-one="Continue"
+      text-two="Reject"
+    />
     <password-modal-component
       ref="passwordModal"
       :func="unlockWallet"
@@ -86,6 +86,7 @@
 <script>
 import AmountInfoComponent from '../../components/AmountInfoComponent';
 import PasswordModalComponent from '../../components/PasswordModalComponent';
+import AcceptCancelButtons from '../../components/AcceptCancelButtons';
 import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import utils from 'web3-utils';
@@ -97,7 +98,8 @@ import { Misc } from '@/helpers';
 export default {
   components: {
     'amount-info-component': AmountInfoComponent,
-    'password-modal-component': PasswordModalComponent
+    'password-modal-component': PasswordModalComponent,
+    'accept-cancel-buttons': AcceptCancelButtons
   },
   data() {
     return {
@@ -165,6 +167,19 @@ export default {
         );
       };
     },
+    rejectAction() {
+      const _self = this;
+      window.chrome.tabs.query(
+        { url: `*://*.${Misc.getService(_self.linkQuery.url)}/*` },
+        function(tab) {
+          const obj = {
+            msg: 'rejectMewTxSign'
+          };
+          window.chrome.tabs.sendMessage(tab[0].id, obj);
+          window.close();
+        }
+      );
+    },
     async signAndSend(wallet) {
       const _self = this;
       const newTx = new Transaction(_self.txParams);
@@ -178,7 +193,7 @@ export default {
             { url: `*://*.${Misc.getService(_self.linkQuery.url)}/*` },
             function(tab) {
               const obj = {
-                msg: 'reject'
+                msg: 'rejectMewSignTx'
               };
               window.chrome.tabs.sendMessage(tab[0].id, obj);
               window.close();

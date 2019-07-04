@@ -17,7 +17,7 @@ export default async ({ payload }, res, next) => {
   );
 
   window.addEventListener(`web3${window.extensionID}reject`, () => {
-    res(new Error('User cancelled request!'));
+    res(null, toPayload(payload.id, new Error('User cancelled request!')));
     window.removeEventListener(
       `web3${window.extensionID}receiveAccount`,
       () => {}

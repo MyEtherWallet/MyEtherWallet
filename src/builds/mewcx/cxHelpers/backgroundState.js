@@ -70,6 +70,17 @@ const useHash = getMode() === 'hash' ? '#' : '';
           focused: true
         });
         break;
+      case 'signMsg':
+        chrome.windows.create({
+          url: chrome.runtime.getURL(
+            `index.html${useHash}/extension-popups/sign-msg?url=${request.url}&msgToSign=${request.msgToSign}&address=${request.address}`
+          ),
+          type: 'popup',
+          height: 500,
+          width: 300,
+          focused: true
+        });
+        break;
     }
     return true;
   };

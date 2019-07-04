@@ -4,6 +4,7 @@ import ExtensionWeb3Layout from '@/layouts/ExtensionWeb3Layout';
 import Web3DetectedContainer from '@/layouts/ExtensionWeb3Layout/containers/Web3DetectedContainer';
 import AccountAccessContainer from '@/layouts/ExtensionWeb3Layout/containers/AccountAccessContainer';
 import SignTxContainer from '@/layouts/ExtensionWeb3Layout/containers/SignTxContainer';
+import SignMsgContainer from '@/layouts/ExtensionWeb3Layout/containers/SignMsgContainer';
 import ExtensionBrowserAction from '@/layouts/ExtensionBrowserAction';
 import ExtensionAddWalletContainer from '@/layouts/ExtensionBrowserAction/containers/ExtensionAddWalletContainer';
 import ExtensionWalletContainer from '@/layouts/ExtensionBrowserAction/containers/ExtensionWalletContainer';
@@ -32,6 +33,7 @@ const cxRoutes = [
       },
       {
         path: 'sign-msg',
+        component: SignMsgContainer,
         meta: { requiresAuth: false }
       }
     ]

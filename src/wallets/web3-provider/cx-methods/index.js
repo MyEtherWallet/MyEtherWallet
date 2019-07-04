@@ -1,5 +1,5 @@
 import ethSendTransaction from './eth_sendTransaction';
-// import ethSign from './eth_sign';
+import ethSign from './eth_sign';
 import ethAccounts from './eth_accounts';
 import ethCoinbase from './eth_coinbase';
 // import ethSignTransaction from './eth_signTransaction';
@@ -10,7 +10,7 @@ import ethCoinbase from './eth_coinbase';
 // import ethGetBlockNumber from './eth_blockNumber';
 export {
   ethSendTransaction,
-  // ethSign,
+  ethSign,
   ethAccounts,
   ethCoinbase
   // ethSignTransaction,

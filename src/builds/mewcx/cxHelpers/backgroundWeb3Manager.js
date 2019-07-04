@@ -38,9 +38,19 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         })
       );
       break;
+    case 'mewSignedMsg':
+      window.dispatchEvent(
+        new CustomEvent(`web3${extensionID}recieveSignedMsg`, {
+          detail: {
+            signedMsg: request.signedMsg
+          }
+        })
+      );
+      break;
     case 'rejectMewCXAccount':
     case 'rejectMewTxSign':
-      window.dispatchEvent(new CustomEvent(`web3${extensionID}reject`));
+    case 'rejectMewSignMsg':
+      window.dispatchEvent(new CustomEvent(`web3${extensionID}reject`, {}));
       break;
   }
 
@@ -97,6 +107,15 @@ window.addEventListener(`web3${extensionID}sendTx`, function(e) {
   chrome.runtime.sendMessage(extensionID, {
     msg: 'confirmAndSendTx',
     tx: e.detail.tx,
+    url: window.location.origin
+  });
+});
+
+window.addEventListener(`web3${extensionID}sendSignMsg`, function(e) {
+  chrome.runtime.sendMessage(extensionID, {
+    msg: 'signMsg',
+    msgToSign: e.detail.msgToSign,
+    address: e.detail.address,
     url: window.location.origin
   });
 });
