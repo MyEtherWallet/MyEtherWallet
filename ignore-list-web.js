@@ -175,5 +175,14 @@ module.exports = [
   'src/layouts/ExtensionWeb3Layout/containers/SignTxContainer/SignTxContainer.vue',
   'src/layouts/ExtensionWeb3Layout/containers/Web3DetectedContainer/index.js',
   'src/layouts/ExtensionWeb3Layout/containers/Web3DetectedContainer/Web3DetectedContainer.scss',
-  'src/layouts/ExtensionWeb3Layout/containers/Web3DetectedContainer/Web3DetectedContainer.vue'
+  'src/layouts/ExtensionWeb3Layout/containers/Web3DetectedContainer/Web3DetectedContainer.vue',
+  'src/layouts/ExtensionWeb3Layout/components/AcceptCancelButtons/AcceptCancelButtons.scss',
+  'src/layouts/ExtensionWeb3Layout/components/AcceptCancelButtons/AcceptCancelButtons.vue',
+  'src/layouts/ExtensionWeb3Layout/components/AcceptCancelButtons/index.js',
+  'src/layouts/ExtensionWeb3Layout/components/AddressSelectionComponent/AddressSelectionComponent.scss',
+  'src/layouts/ExtensionWeb3Layout/components/AddressSelectionComponent/AddressSelectionComponent.vue',
+  'src/layouts/ExtensionWeb3Layout/components/AddressSelectionComponent/index.js',
+  'src/layouts/ExtensionWeb3Layout/containers/SignMsgContainer/index.js',
+  'src/layouts/ExtensionWeb3Layout/containers/SignMsgContainer/SignMsgContainer.scss',
+  'src/layouts/ExtensionWeb3Layout/containers/SignMsgContainer/SignMsgContainer.vue'
 ]
