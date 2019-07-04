@@ -1,7 +1,5 @@
 import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils';
-// import InteractWithContractContainer from '@/layouts/InterfaceLayout/containers/InteractWithContractContainer/InteractWithContractContainer.vue';
-//import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle/InterfaceContainerTitle.vue';
 import DeployContractContainer from '@/layouts/InterfaceLayout/containers/DeployContractContainer/DeployContractContainer.vue';
 // import InterfaceBottomText from '@/components/InterfaceBottomText/InterfaceBottomText.vue';
 // import CurrencyPicker from '@/layouts/InterfaceLayout/components/CurrencyPicker/CurrencyPicker.vue';
@@ -10,7 +8,7 @@ import BackButton from '@/layouts/InterfaceLayout/components/BackButton/BackButt
 // import sinon from 'sinon';
 import { Tooling } from '@@/helpers';
 
-describe('[Needs Cleaned Up 1-16-19] InteractWithContractContainer.vue', () => {
+describe('DeployContractContainer.vue', () => {
   let localVue, i18n, wrapper, store;
   const resetView = jest.fn();
 
@@ -18,6 +16,10 @@ describe('[Needs Cleaned Up 1-16-19] InteractWithContractContainer.vue', () => {
     window.scrollTo = jest.fn().mockImplementation((valX, valY) => {
       window.pageXOffset = valX;
       window.pageYOffset = valY;
+    });
+
+    document.execCommand = jest.fn().mockImplementation(command => {
+      return command;
     });
 
     const baseSetup = Tooling.createLocalVueInstance();
@@ -58,20 +60,6 @@ describe('[Needs Cleaned Up 1-16-19] InteractWithContractContainer.vue', () => {
     );
   });
 
-  xit('should render correct contractName', () => {
-    const contractName = 'contractName';
-    wrapper.setData({ contractName });
-    expect(
-      wrapper.vm.$el.querySelectorAll('.domain-name input')[0].value
-    ).toEqual(contractName);
-  });
-
-  xit('should render correct contractName placeholder', () => {
-    expect(
-      wrapper.vm.$el.querySelectorAll('.domain-name input')[0].placeholder
-    ).toEqual(wrapper.vm.$data.contractNamePlaceholder);
-  });
-
   it('should render correct bytecode', () => {
     const bytecode = 'bytecode';
     wrapper.setData({ bytecode });
@@ -102,12 +90,6 @@ describe('[Needs Cleaned Up 1-16-19] InteractWithContractContainer.vue', () => {
     ).toEqual('Name for the contract');
   });
 
-  it('should render correct value data', () => {
-    wrapper
-      .find('.submit-button-container .buttons .submit-button')
-      .trigger('click');
-  });
-
   it('should render correct validAbi', () => {
     expect(
       wrapper.vm.$el
@@ -117,6 +99,14 @@ describe('[Needs Cleaned Up 1-16-19] InteractWithContractContainer.vue', () => {
   });
 
   describe('DeployContractContainer.vue Methods', () => {
+    it('should execute `copy` command when button is clicked', () => {
+      wrapper
+        .findAll('.title-button')
+        .at(1)
+        .trigger('click');
+      expect(document.execCommand).toHaveBeenCalled();
+    });
+
     it('should Open confirmationModal when click button', () => {
       window.pageXOffset = 100;
       window.pageYOffset = 100;

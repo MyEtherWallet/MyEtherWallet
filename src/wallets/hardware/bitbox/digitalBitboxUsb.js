@@ -8,9 +8,7 @@
 
 import u2f from 'u2f-api';
 
-const DigitalBitboxUsb = function(timeoutSeconds) {
-  this.timeoutSeconds = timeoutSeconds;
-};
+const DigitalBitboxUsb = function() {};
 
 // Convert from normal to web-safe, strip trailing "="s
 DigitalBitboxUsb.webSafe64 = function(base64) {
@@ -35,9 +33,7 @@ DigitalBitboxUsb.prototype.u2fCallback = function(response, callback) {
       DigitalBitboxUsb.normal64(response.signatureData),
       'base64'
     );
-    if (data.length > 7) {
-      callback(data.slice(5));
-    } else return;
+    callback(data.slice(5));
   } else {
     callback(undefined, response);
   }
@@ -46,6 +42,7 @@ DigitalBitboxUsb.prototype.u2fCallback = function(response, callback) {
 DigitalBitboxUsb.prototype.exchange = function(msg, callback) {
   msg = Buffer.from(msg, 'ascii');
   const kh_max_len = 128 - 2; // Subtract 2 bytes for `index` and `total` header
+  // Challenge is needed for U2F but unused in the hijack procedure
   const challenge = new Buffer(
     'dbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdbdb',
     'hex'
@@ -68,7 +65,7 @@ DigitalBitboxUsb.prototype.exchange = function(msg, callback) {
       keyHandle: DigitalBitboxUsb.webSafe64(kh.toString('base64'))
     };
     u2f
-      .sign([key], this.timeoutSeconds)
+      .sign(key, 3) // 3-second timeout so that polling is fast enough
       .then(localCallback)
       .catch(err => {
         callback(undefined, err);
