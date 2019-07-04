@@ -1,11 +1,8 @@
 {
   "name": "myetherwallet",
-  "version": "5.0.14-hotfix.2",
+  "version": "5.0.15",
   "description": "Client side ethereum wallet",
-  "licsense": {
-    "type": "MIT",
-    "url": "https://www.opensource.org/licenses/mit-license.php"
-  },
+  "license": "MIT",
   "repository": "https://github.com/myetherwallet/myetherwallet",
   "scripts": {
     "build:offline": "WEBPACK_INTEGRITY=false npm run build:hash",
@@ -29,7 +26,8 @@
     "update:swap": "node compileBaseSwapOptions.js",
     "update": "npm run update:packages && npm run update:lists",
     "update:mainlists": "node fetchLists/fetchMainLists.js",
-    "clean": "sudo rm -rf node_modules/.cache; sudo rm -rf node_modules/websocket/.git; npm install;"
+    "clean": "sudo rm -rf node_modules/.cache; sudo rm -rf node_modules/websocket/.git; npm install;",
+    "preinstall": "find node_modules -name \".git\" -exec rm -rf {} \\; || true"
   },
   "gitHooks": {
     "pre-commit": "npm run lint && npm run test"
@@ -37,6 +35,7 @@
   "dependencies": {
     "@sentry/browser": "5.4.3",
     "@sentry/integrations": "5.4.2",
+    "eslint-loader": "2.1.2",
     "html2canvas": "1.0.0-rc.3",
     "idna-uts46": "1.1.0",
     "js-sha1": "0.6.0",
@@ -50,7 +49,7 @@
     "vue": "2.6.10",
     "vue-datetime": "1.0.0-beta.10",
     "vue-mq": "1.0.1",
-    "vue-router": "3.0.6",
+    "vue-router": "3.0.7",
     "vue-toasted": "1.1.27",
     "vuex": "3.1.1",
     "weekstart": "1.0.0",
@@ -63,14 +62,14 @@
     "@ledgerhq/hw-app-eth": "4.63.2",
     "@ledgerhq/hw-transport-u2f": "4.63.2",
     "@ledgerhq/hw-transport-webusb": "4.63.2",
-    "@makerdao/dai": "0.16.1",
+    "@makerdao/dai": "0.16.2",
     "@myetherwallet/eth-token-balance": "0.1.4",
     "@myetherwallet/mewconnect-web-client": "1.0.14",
-    "@vue/cli-plugin-babel": "3.8.0",
-    "@vue/cli-plugin-eslint": "3.8.0",
-    "@vue/cli-plugin-pwa": "3.8.0",
-    "@vue/cli-plugin-unit-jest": "3.8.0",
-    "@vue/cli-service": "3.8.4",
+    "@vue/cli-plugin-babel": "3.9.0",
+    "@vue/cli-plugin-eslint": "3.9.0",
+    "@vue/cli-plugin-pwa": "3.9.0",
+    "@vue/cli-plugin-unit-jest": "3.9.0",
+    "@vue/cli-service": "3.9.0",
     "@vue/eslint-config-prettier": "4.0.1",
     "@vue/test-utils": "1.0.0-beta.29",
     "@xkeshi/vue-qrcode": "git+https://github.com/MyEtherWallet/vue-qrcode.git",
@@ -121,12 +120,12 @@
     "stylelint-config-prettier": "5.2.0",
     "stylelint-config-standard": "18.3.0",
     "trezor-connect": "7.0.3",
-    "u2f-api": "1.0.10",
+    "u2f-api": "1.0.11",
     "uglify-es": "3.3.9",
     "unused-files-webpack-plugin": "3.4.0",
     "uuid": "3.3.2",
     "vue-i18n": "8.11.2",
-    "vue-tel-input": "2.3.0",
+    "vue-tel-input": "2.4.0",
     "vue-template-compiler": "2.6.10",
     "vue-worker": "1.2.1",
     "wallet-address-validator": "0.2.4",
