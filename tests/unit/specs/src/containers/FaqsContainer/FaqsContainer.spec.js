@@ -20,7 +20,6 @@ describe('FaqsContainer.vue', () => {
       attachToDocument: true
     });
   });
-  // https://www.youtube.com/watch?v=cX7hni-zGD8
 
   it('should render correct FAQ contents', () => {
     const linkWrappers = wrapper.findAll('.qa__contents--title');
