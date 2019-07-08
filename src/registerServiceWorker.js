@@ -2,7 +2,7 @@
 
 import { register } from 'register-service-worker';
 
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'production' && BUILD_TYPE !== 'mewcx') {
   register(`${process.env.BASE_URL}service-worker.js`, {
     registrationOptions: { scope: './' },
     updated() {
