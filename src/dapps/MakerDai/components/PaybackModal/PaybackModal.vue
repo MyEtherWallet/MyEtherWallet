@@ -260,7 +260,10 @@ export default {
     },
     hasEnoughMkr() {
       if (this.canCompute) {
-        console.log('hasEnoughMkr', toBigNumber(this.mkrBalance).gte(toBigNumber(this.paybackFee))); // todo remove dev item
+        console.log(
+          'hasEnoughMkr',
+          toBigNumber(this.mkrBalance).gte(toBigNumber(this.paybackFee))
+        ); // todo remove dev item
         return toBigNumber(this.mkrBalance).gte(toBigNumber(this.paybackFee));
       }
       return true;
