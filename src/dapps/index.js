@@ -49,7 +49,7 @@ const dapps = {
     iconDisabled: secureTransactionHov,
     title: 'dappsMaker.maker_title',
     desc: 'dappsMaker.maker_desc',
-    supportedNetworks: [ETH.name]
+    supportedNetworks: [ETH.name, ROP.name, KOV.name]
   }
 };
 
