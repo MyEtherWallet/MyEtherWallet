@@ -21,6 +21,7 @@ import secalotError from './errors-secalot/es_ES';
 import keepkeyError from './errors-keepkey/es_ES';
 import bitboxError from './errors-bitbox/es_ES';
 import buyHardwareWallet from './buy-hardware-wallet/es_ES';
+import dappsMaker from './dapps-maker/es_ES';
 
 const es_ES = {
   common: common,
@@ -44,6 +45,7 @@ const es_ES = {
   secalotError: secalotError,
   keepkeyError: keepkeyError,
   bitboxError: bitboxError,
-  buyHardwareWallet: buyHardwareWallet
+  buyHardwareWallet: buyHardwareWallet,
+  dappsMaker: dappsMaker
 };
 export default es_ES;

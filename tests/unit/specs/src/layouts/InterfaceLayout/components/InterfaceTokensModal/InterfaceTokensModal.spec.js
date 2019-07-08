@@ -44,14 +44,14 @@ describe('InterfaceTokensModal.vue', () => {
     const inputElements = wrapper.vm.$el.querySelectorAll(
       '.tokens-modal-body input'
     );
-    expect(inputElements[0].value).toEqual(tokenAddress.toLowerCase().trim());
+    expect(inputElements[0].value).toEqual(tokenAddress.toLowerCase());
   });
 
   it('should render correct tokenSymbol', () => {
     const inputElements = wrapper.vm.$el.querySelectorAll(
       '.tokens-modal-body input'
     );
-    expect(inputElements[1].value).toEqual(tokenSymbol);
+    expect(inputElements[1].value).toEqual(wrapper.vm.$data.tokenSymbol);
   });
 
   it('should render correct tokenDecimal', () => {
