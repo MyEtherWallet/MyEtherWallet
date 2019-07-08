@@ -21,7 +21,6 @@ git:
   depth: 1
 before_cache:
   - sudo rm -rf node_modules/.cache
-  - sudo rm -rf node_modules/websocket/.git
 install:
   - node package-audit.js
   - npm install npm@6.9 -g
