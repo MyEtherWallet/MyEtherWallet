@@ -1,6 +1,7 @@
 <template>
   <div class="send-currency-container-safe-send">
-    <interface-container-title :title="$t('common.sendSafeSendTx')" />
+    <!-- <interface-container-title :title="$t('common.sendSafeSendTx')" /> -->
+    <back-button />
     <div class="send-form">
       <div class="advanced-content safe-send-container">
         <div class="input-container">
@@ -187,7 +188,8 @@
 
 <script>
 import { mapState } from 'vuex';
-import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
+// import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
+import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
 import { CoralConfig } from './config';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
@@ -198,8 +200,9 @@ import { Toast, Misc } from '@/helpers';
 
 export default {
   components: {
-    'interface-container-title': InterfaceContainerTitle,
+    // 'interface-container-title': InterfaceContainerTitle,
     'interface-bottom-text': InterfaceBottomText,
+    'back-button': BackButton,
     blockie: Blockie
   },
   props: {
