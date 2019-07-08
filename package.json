@@ -65,7 +65,7 @@
     "@myetherwallet/eth-token-balance": "0.1.4",
     "@myetherwallet/mewconnect-web-client": "1.0.14",
     "@vue/cli-plugin-babel": "3.9.2",
-    "@vue/cli-plugin-eslint": "3.9.1",
+    "@vue/cli-plugin-eslint": "3.9.2",
     "@vue/cli-plugin-pwa": "3.9.0",
     "@vue/cli-plugin-unit-jest": "3.9.0",
     "@vue/cli-service": "3.9.2",
