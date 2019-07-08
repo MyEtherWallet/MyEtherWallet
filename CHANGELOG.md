@@ -1,3 +1,7 @@
+### Devop
+
+- Add proxy notice to moveCDP modal, improve swap widget []()
+
 ### Release v5.0.15
 
 ### Bug

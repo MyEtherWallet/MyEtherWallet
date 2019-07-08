@@ -249,7 +249,7 @@ export default {
   },
   data() {
     return {
-      destAddressProxy:'',
+      destAddressProxy: '',
       destAddressHasProxy: false,
       afterUpdate: [],
       allCdpIds: [],
