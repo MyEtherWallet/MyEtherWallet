@@ -109,5 +109,6 @@
   "back": "Back",
   "invalidTanCode": "Invalid Code",
   "email": "Email",
-  "unableToValidateAddress": "Currently unable to validate addresses for {currency}. It is likely correct, but Please double check it is correct before sending."
+  "unableToValidateAddress": "Currently unable to validate addresses for {currency}. It is likely correct, but Please double check it is correct before sending.",
+  "reviewSwap": "Review swap"
 }

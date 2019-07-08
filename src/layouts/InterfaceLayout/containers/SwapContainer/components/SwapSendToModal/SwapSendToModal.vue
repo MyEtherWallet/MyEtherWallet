@@ -5,7 +5,7 @@
       hide-footer
       centered
       class="bootstrap-modal bootstrap-modal-wide padding-40-20"
-      title="Confirmation"
+      :title="$t('interface.reviewSwap')"
     >
       <div class="time-remaining">
         <h1>{{ timeRemaining }}</h1>
@@ -155,7 +155,7 @@ export default {
     },
     fiatDest() {
       if (this.swapDetails.orderDetails) {
-        return this.swapDetails.orderDetails.output.owner.name;
+        return this.swapDetails.orderDetails.name;
       }
       return '';
     },
