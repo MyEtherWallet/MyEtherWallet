@@ -21,6 +21,7 @@ import secalotError from './errors-secalot/ja_JP';
 import keepkeyError from './errors-keepkey/ja_JP';
 import bitboxError from './errors-bitbox/ja_JP';
 import buyHardwareWallet from './buy-hardware-wallet/ja_JP';
+import dappsMaker from './dapps-maker/ja_JP';
 
 const ja_JP = {
   common: common,
@@ -44,6 +45,7 @@ const ja_JP = {
   secalotError: secalotError,
   keepkeyError: keepkeyError,
   bitboxError: bitboxError,
-  buyHardwareWallet: buyHardwareWallet
+  buyHardwareWallet: buyHardwareWallet,
+  dappsMaker: dappsMaker
 };
 export default ja_JP;
