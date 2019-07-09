@@ -38,6 +38,7 @@ import web from './web';
 import thundercore from './thundercore';
 import sum from './sum';
 import dexon from './dexon';
+import pht from './pht';
 
 export {
   akaremote,
@@ -79,5 +80,6 @@ export {
   web,
   thundercore,
   sum,
-  dexon
+  dexon,
+  pht
 };
