@@ -102,6 +102,7 @@ const useHash = getMode() === 'hash' ? '#' : '';
   }
 
   function web3Injector(tabs) {
+    console.log('web3 injector called');
     chrome.tabs.sendMessage(tabs[0].id, { msg: 'injectWeb3' }, function() {});
   }
 })();

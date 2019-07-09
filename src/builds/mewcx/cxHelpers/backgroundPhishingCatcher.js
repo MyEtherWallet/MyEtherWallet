@@ -18,6 +18,7 @@ const chrome = window.chrome;
   }
 
   function querycB(tabs) {
+    console.log('phishing detector called');
     const SEARCH_STRING = ['myetherwallet'];
     const ealBlacklisted = Object.assign({}, cxHelpers.blackListDomains['eal']),
       iosiroBlacklisted = Object.assign(
