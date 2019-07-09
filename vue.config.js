@@ -73,15 +73,15 @@ const webpackConfig = {
 
             if (process.env.NODE_ENV === 'production') {
               json.background.scripts = json.background.scripts.map(item => {
-                return `./js/${item}`;
+                return `/js/${item}`;
               });
 
               json.content_scripts[0].js = json.content_scripts[0].js.map(item => {
-                return `./js/${item}`;
+                return `/js/${item}`;
               });
 
               json.web_accessible_resources = json.web_accessible_resources.map(item => {
-                return `./js/${item}`;
+                return `/js/${item}`;
               });
             }
             return JSON.stringify(json, null, 2);
@@ -94,7 +94,7 @@ const webpackConfig = {
 };
 
 if (JSON.parse(env_vars.BUILD_TYPE) !== 'mewcx') {
-  webpackConfig['optimization'] = {
+  webpackConfig.optimization = {
     splitChunks: {
       cacheGroups: {
         commons: {
@@ -164,9 +164,10 @@ const exportObj = {
 };
 
 if (JSON.parse(env_vars.BUILD_TYPE) === 'mewcx') {
+  exportObj['publicPath'] = '';
   exportObj['outputDir'] = path.resolve(__dirname, 'chrome-extension');
-  exportObj['assetsDir'] = '';
+  // exportObj['assetsDir'] = './';
   exportObj['filenameHashing'] = false;
-  exportObj['productionSourceMap'] = false;
+  // exportObj['productionSourceMap'] = false;
 }
 module.exports = exportObj;
