@@ -1,7 +1,5 @@
 import web3Eth from 'web3';
 import MEWProvider from '@/wallets/web3-provider';
-/* eslint-disable-next-line */
-console.log('u wot m8?!?!?!')
 if (
   window.hasOwnProperty('web3') &&
   !window.web3.currentProvider.hasOwnProperty('isMew')
