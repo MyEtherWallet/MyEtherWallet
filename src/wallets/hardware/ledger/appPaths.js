@@ -20,7 +20,8 @@ import {
   RSKTEST,
   TOMO,
   UBQ,
-  TT
+  TT,
+  PHT
 } from '@/networks/types';
 import {
   ledgerEthereum,
@@ -46,7 +47,8 @@ import {
   mixBlockchain,
   rskMainnet,
   rskTestnet,
-  thundercore
+  thundercore,
+  lightstreamsNetwork
 } from '../../bip44/paths';
 const appList = [
   {
@@ -158,6 +160,11 @@ const appList = [
     network: TT,
     prefixes: ["m/44'/1001'"],
     paths: [thundercore]
+  },
+  {
+    network: PHT,
+    prefixes: ["m/44'/60'"],
+    paths: [lightstreamsNetwork]
   }
 ];
 export default appList;
