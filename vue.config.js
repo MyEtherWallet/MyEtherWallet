@@ -14,11 +14,15 @@ const webpackConfig = {
     background: './src/builds/mewcx/cxHelpers/backgroundState.js',
     cxWeb3: './src/builds/mewcx/cxHelpers/cxWeb3.js'
   },
+  output: {
+    path: path.join(__dirname, 'chrome-extension'),
+    filename: "[name].js"
+  },
   node: {
     process: true
   },
   devServer: {
-    disableHostCheck: true, // Dev purposes only, should be commented out before release
+    // disableHostCheck: true, // Dev purposes only, should be commented out before release
     https:  true,
     host: 'localhost',
     hotOnly: JSON.parse(env_vars.BUILD_TYPE) !== 'mewcx',
@@ -50,51 +54,9 @@ const webpackConfig = {
           progressive: true
         })
       ]
-    }),
-    new CopyWebpackPlugin([
-      {
-        from: 'src/builds/' + JSON.parse(env_vars.BUILD_TYPE) + '/public',
-        transform: function(content, filePath) {
-          if (filePath.split('.').pop() === ('js' || 'JS'))
-            return UglifyJS.minify(content.toString()).code;
-          if (
-            filePath.replace(/^.*[\\\/]/, '') === 'manifest.json' &&
-            JSON.parse(env_vars.BUILD_TYPE) === 'mewcx'
-          ) {
-            const version = require('./package.json').version;
-            const json = JSON.parse(content);
-            const hasExtra = version.indexOf('-');
-            if (hasExtra !== -1) {
-              const newVersion = version.substring(0, hasExtra);
-              json.version = newVersion;
-            } else {
-              json.version = version;
-            }
-
-            if (process.env.NODE_ENV === 'production') {
-              json.background.scripts = json.background.scripts.map(item => {
-                return `/js/${item}`;
-              });
-
-              json.content_scripts[0].js = json.content_scripts[0].js.map(item => {
-                return `/js/${item}`;
-              });
-
-              json.web_accessible_resources = json.web_accessible_resources.map(item => {
-                return `/js/${item}`;
-              });
-            }
-            return JSON.stringify(json, null, 2);
-          }
-          return content;
-        }
-      }
-    ])
-  ]
-};
-
-if (JSON.parse(env_vars.BUILD_TYPE) !== 'mewcx') {
-  webpackConfig.optimization = {
+    })
+  ],
+  optimization: {
     splitChunks: {
       cacheGroups: {
         commons: {
@@ -104,7 +66,49 @@ if (JSON.parse(env_vars.BUILD_TYPE) !== 'mewcx') {
         }
       }
     }
+    // minify: false
   }
+};
+if (JSON.parse(env_vars.BUILD_TYPE) === 'mewcx') {
+  webpackConfig.plugins.push(new CopyWebpackPlugin([
+    {
+      from: 'src/builds/' + JSON.parse(env_vars.BUILD_TYPE) + '/public',
+      transform: function(content, filePath) {
+        // if (filePath.split('.').pop() === ('js' || 'JS'))
+        //   return UglifyJS.minify(content.toString()).code;
+        if (
+          filePath.replace(/^.*[\\\/]/, '') === 'manifest.json' &&
+          JSON.parse(env_vars.BUILD_TYPE) === 'mewcx'
+        ) {
+          const version = require('./package.json').version;
+          const json = JSON.parse(content);
+          const hasExtra = version.indexOf('-');
+          if (hasExtra !== -1) {
+            const newVersion = version.substring(0, hasExtra);
+            json.version = newVersion;
+          } else {
+            json.version = version;
+          }
+
+          // if (process.env.NODE_ENV === 'production') {
+          //   json.background.scripts = json.background.scripts.map(item => {
+          //     return `js/${item}`;
+          //   });
+
+          //   json.content_scripts[0].js = json.content_scripts[0].js.map(item => {
+          //     return `js/${item}`;
+          //   });
+
+          //   json.web_accessible_resources = json.web_accessible_resources.map(item => {
+          //     return `js/${item}`;
+          //   });
+          // }
+          return JSON.stringify(json, null, 2);
+        }
+        return content;
+      }
+    }
+  ]));
 }
 
 if (process.env.NODE_ENV === 'production') {
@@ -164,10 +168,10 @@ const exportObj = {
 };
 
 if (JSON.parse(env_vars.BUILD_TYPE) === 'mewcx') {
-  exportObj['publicPath'] = '';
+  // exportObj['publicPath'] = '';
   exportObj['outputDir'] = path.resolve(__dirname, 'chrome-extension');
-  // exportObj['assetsDir'] = './';
+  // exportObj['assetsDir'] = '';
   exportObj['filenameHashing'] = false;
-  // exportObj['productionSourceMap'] = false;
+  exportObj['productionSourceMap'] = false;
 }
 module.exports = exportObj;
