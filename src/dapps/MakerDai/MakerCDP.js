@@ -344,6 +344,7 @@ export default class MakerCDP {
   // This should also have a acknowledgeBypass
   async freeEth(amount, acknowledgeBypass = false) {
     if (
+      this.debtValue.eq(0) ||
       this.calcCollatRatio(this.ethCollateral.minus(amount), this.debtValue).gt(
         1.5
       ) ||
@@ -451,12 +452,12 @@ export default class MakerCDP {
   }
 
   calcCollatRatio(ethQty, daiQty) {
-    if (ethQty <= 0 || daiQty <= 0) return 0;
+    if (ethQty <= 0 || daiQty <= 0) return toBigNumber(0);
     return calcCollatRatio(this.ethPrice, ethQty, daiQty);
   }
 
   calcLiquidationPrice(ethQty, daiQty) {
-    if (ethQty <= 0 || daiQty <= 0) return 0;
+    if (ethQty <= 0 || daiQty <= 0) return toBigNumber(0);
     return calcLiquidationPrice(
       ethQty,
       daiQty,
