@@ -35,6 +35,7 @@ import rsktestpublic from './rsk-test-public';
 import tomo from './tomo';
 import ubq from './ubq';
 import goerli from './goerli-mew-ws';
+import goerlipocket from './goerli-pocket';
 import exp from './exp';
 import iolite from './iolite';
 import mix from './mix';
@@ -62,6 +63,7 @@ export {
   etho,
   exp,
   goerli,
+  goerlipocket,
   go,
   iolite,
   kovethscan,
