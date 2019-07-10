@@ -110,5 +110,6 @@
   "invalidTanCode": "Invalid Code",
   "email": "Email",
   "unableToValidateAddress": "Currently unable to validate addresses for {currency}. It is likely correct, but Please double check it is correct before sending.",
-  "reviewSwap": "Review swap"
+  "reviewSwap": "Review swap",
+  "emailPopOver": "Only used if any problems arise with the deposit, otherwise if omitted the value will be refunded to the sending address if any problems arise."
 }

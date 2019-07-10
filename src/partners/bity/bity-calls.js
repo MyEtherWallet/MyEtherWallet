@@ -194,7 +194,7 @@ const getCyptoToFiatOrderDetails = async detailsData => {
   }
 };
 
-const getStatusFiat = async (orderInfo) => {
+const getStatusFiat = async orderInfo => {
   try {
     const results = await post(
       buildPath(),

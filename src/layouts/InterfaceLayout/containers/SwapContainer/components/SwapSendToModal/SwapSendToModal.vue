@@ -2,10 +2,10 @@
   <div class="modal-container">
     <b-modal
       ref="swapconfirmation"
+      :title="$t('interface.reviewSwap')"
       hide-footer
       centered
       class="bootstrap-modal bootstrap-modal-wide padding-40-20"
-      :title="$t('interface.reviewSwap')"
     >
       <div class="time-remaining">
         <h1>{{ timeRemaining }}</h1>
