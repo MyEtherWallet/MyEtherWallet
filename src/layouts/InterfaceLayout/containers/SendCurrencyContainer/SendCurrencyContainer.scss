@@ -1,4 +1,4 @@
-@import '../InterfaceContainer';
+@import "../InterfaceContainer";
 
 .dashboard-container {
   @extend %interface-container;
@@ -19,7 +19,58 @@
   padding: 8px;
 }
 
+.title {
+  padding: 5px 0 25px 0;
+
+  h4 {
+    font-size: 20px;
+  }
+}
+
 .card {
   border: 0;
-  padding: 15px;
+  padding: 20px;
+  height: 100%;
+  border-radius: 5px;
+}
+
+.block--actions {
+  .buttons {
+    margin-bottom: -8px;
+
+    img {
+      margin: 8px 0;
+      width: 100%;
+    }
+  }
+}
+
+.block--swap {
+  .currency-symbol::before {
+    font-size: 35px;
+  }
+
+  .swap-info {
+    margin-bottom: -10px;
+  }
+
+  .swap-to {
+    margin: 10px 0;
+    background-color: $light-green-1;
+    padding: 20px 30px;
+    display: flex;
+    align-items: center;
+
+    p {
+      font-weight: 600;
+      font-size: 18px;
+    }
+    span {
+      height: 35px;
+    }
+    img {
+      height: 25px;
+      padding: 0 10px;
+    }
+  }
 }
