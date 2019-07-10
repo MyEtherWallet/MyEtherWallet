@@ -1,0 +1,94 @@
+@import '~@/scss/GlobalVariables';
+
+// *********************************************************************
+// .wrap
+// *********************************************************************
+.wrap {
+  margin: 0;
+  padding: 0;
+}
+
+// *********************************************************************
+// .menu-title
+// *********************************************************************
+
+.menu-title {
+  padding: 10px 15px;
+  background-color: $dark-blue-12;
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  font-size: 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  user-select: none;
+  > div {
+    color: $white;
+  }
+
+  &.grey-title {
+    background-color: $grey-1;
+  }
+
+  .edit-button {
+    margin-left: auto;
+    display: block;
+    cursor: pointer;
+    text-align: right;
+  }
+
+  .title-number {
+    border: 1px solid $white;
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin-right: 10px;
+
+    $title-number-size: 22px;
+
+    height: $title-number-size;
+    width: $title-number-size;
+
+    > * {
+      width: 100%;
+      font-weight: 600;
+      font-size: 14px;
+    }
+  }
+}
+
+.opened .menu-title {
+  border-radius: 5px 5px 0 0;
+}
+
+.opened .edit-button {
+  display: none;
+}
+
+// *********************************************************************
+// .content-container
+// *********************************************************************
+
+.menu-content-container {
+  border-radius: 0 0 5px 5px;
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.2s linear;
+  background-color: $white;
+  //background-color: $grey-1;
+
+  .padding-block {
+    padding: 30px;
+    @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+      padding: 20px;
+    }
+    @media all and (max-width: $mobile-width) {
+      padding: 10px;
+    }
+  }
+}
+
+.opened .menu-content-container {
+  max-height: 800px;
+}
