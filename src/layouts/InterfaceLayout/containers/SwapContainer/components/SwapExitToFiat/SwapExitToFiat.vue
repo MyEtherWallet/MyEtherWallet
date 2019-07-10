@@ -69,9 +69,7 @@
                   <standard-input
                     :options="inputAddress2"
                     class="address2"
-                    @changedValue="
-                      orderDetails.address_complement = $event
-                    "
+                    @changedValue="orderDetails.address_complement = $event"
                   />
                   <standard-input
                     :options="inputCity"
@@ -184,15 +182,11 @@ export default {
       countryList: Object.entries(getNames('en')),
       complete: {
         step1: false,
-        // verifyStep: false,
         step2: false
-        // step3: false
       },
       steps: {
         step1: true,
-        // verifyStep: false,
         step2: false
-        // step3: false
       },
       inputCountryCode: {
         title: this.$t('interface.countryCode'),
@@ -227,6 +221,8 @@ export default {
       },
       inputEmail: {
         title: this.$t('interface.email'),
+        popover: this.$t('interface.emailPopOver'),
+        placeHolder: 'user@example.com',
         value: ''
       },
       inputAddress1: {
@@ -288,11 +284,8 @@ export default {
       email: '',
       orderDetails: {
         currency: this.swapDetails.toCurrency,
-        // type: 'bank_account',
         iban: '',
         bic_swift: '',
-        // aba_number: '',
-        // sort_code: '',
         name: '',
         address: '',
         address_complement: '',

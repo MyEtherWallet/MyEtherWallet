@@ -18,6 +18,8 @@ const swapApiEndpoints = {
 };
 
 const mewSimplex = 'https://apiccswap.myetherwallet.com';
+// const mewSimplex = 'http://apiccswap.example.com';
+
 
 const swapNotificationStatuses = {
   new: 'new',
