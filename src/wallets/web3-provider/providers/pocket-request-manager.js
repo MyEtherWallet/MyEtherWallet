@@ -31,6 +31,12 @@ const networks = [
       ticker: 'POA',
       netid: '99'
     }
+  },
+  {
+    goerli: {
+      ticker: 'ETH',
+      netid: '5'
+    }
   }
 ];
 
@@ -46,6 +52,8 @@ class PocketRequestManager {
       this.query = 'kovan';
     } else if (host.includes('poa')) {
       this.query = 'poa';
+    } else if (host.includes('goerli')) {
+      this.query = 'goerli';
     }
     this.network = networks.find(o => o[this.query])[this.query];
     this.provider = new PocketProvider(

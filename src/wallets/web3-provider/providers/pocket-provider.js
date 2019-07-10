@@ -12,10 +12,10 @@ import {
   ethGetBlockNumber,
   netVersion
 } from '../methods';
-class PoktProvider {
+class PocketProvider {
   constructor(host, options, store, eventHub) {
     const requestManager = new PocketRequestManger(host);
-    this.poktProvider = {
+    this.PocketProvider = {
       send: (payload, callback) => {
         const req = {
           payload,
@@ -39,7 +39,7 @@ class PoktProvider {
         });
       }
     };
-    return this.poktProvider;
+    return this.PocketProvider;
   }
 }
-export default PoktProvider;
+export default PocketProvider;
