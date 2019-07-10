@@ -1,6 +1,11 @@
+### Bug
+
+- Display "Advanced" section on "Send Transaction" page if data or gas limit fields are prefilled by url query params
+
 ### Release v5.0.15
 
 ### Bug
+
 - Fix withdraw ETH with infinite collateralization [#1244](https://github.com/MyEtherWallet/MyEtherWallet/pull/1244)
 - Fix the BitBox hardware wallet communication error introduced with Chrome 73 [#1209](https://github.com/MyEtherWallet/MyEtherWallet/pull/1209)
 - Fix error message display for the BitBox hardware wallet [#1209](https://github.com/MyEtherWallet/MyEtherWallet/pull/1209)
