@@ -1,11 +1,22 @@
 export default {
   tabs: [
     {
+      name: 'dashboard',
+      onlineOnly: false,
+      routes: ['/interface/dashboard', '/interface'],
+      icons: {
+        active: require('@/assets/images/sidemenu/send-active.svg'),
+        inactive: require('@/assets/images/sidemenu/send.svg')
+      },
+      titleKey: 'interface.dashboard',
+      children: []
+    },
+    {
       name: 'send-transaction',
       onlineOnly: false,
       routes: [
         '/interface/send-transaction',
-        '/interface',
+        // '/interface',
         '/interface/send-offline',
         '/interface/send-offline/generate-info',
         '/interface/send-offline/generate-tx',
@@ -19,7 +30,7 @@ export default {
       children: [
         {
           name: 'send-transaction',
-          routes: ['/interface/send-transaction', '/interface'],
+          routes: ['/interface/send-transaction'],
           icons: {
             active: '',
             inactive: ''
