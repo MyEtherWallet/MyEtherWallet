@@ -1,0 +1,101 @@
+@import "../InterfaceContainer";
+
+.dashboard-container {
+  @extend %interface-container;
+
+  background-color: transparent;
+}
+
+.container--flex {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 15px;
+
+  @media all and (max-width: 1200px) {
+    grid-template-columns: 2fr 3fr;
+  }
+
+  @media all and (max-width: 650px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.container--top {
+  margin-bottom: 15px;
+}
+
+.title {
+  padding: 5px 0 25px 0;
+
+  h4 {
+    font-size: 20px;
+  }
+}
+
+.container--card {
+  background-color: $white;
+  padding: 20px;
+  height: 100%;
+  border-radius: 5px;
+}
+
+.block--actions {
+  .buttons {
+    margin-bottom: -8px;
+
+    img {
+      margin: 8px 0;
+      width: 100%;
+    }
+  }
+}
+
+.block--swap {
+  .currency-symbol::before {
+    font-size: 35px;
+  }
+
+  .swap-info {
+    margin-bottom: -10px;
+  }
+
+  .swap-to {
+    margin: 10px 0;
+    background-color: $light-green-1;
+    padding: 20px 30px;
+    display: flex;
+    align-items: center;
+
+    > div {
+      padding-left: 10px;
+    }
+
+    p {
+      font-weight: 600;
+      font-size: 18px;
+    }
+
+    span {
+      height: 35px;
+    }
+
+    img {
+      height: 25px;
+      padding: 0 10px;
+    }
+  }
+}
+
+.bottom--buttons {
+  .button-container {
+    $collepse-width: 650px;
+
+    @media all and (max-width: $collepse-width) {
+      overflow-y: auto;
+
+      > * {
+        width: $collepse-width;
+      }
+    }
+  }
+}
