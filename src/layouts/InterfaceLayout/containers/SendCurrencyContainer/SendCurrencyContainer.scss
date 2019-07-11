@@ -2,21 +2,18 @@
 
 .dashboard-container {
   @extend %interface-container;
-}
 
-.grid-container {
-  overflow: visible;
   background-color: transparent;
-  padding: 0;
-  margin: -8px 0;
 }
 
-.row {
-  margin: 0 -8px;
+.container--flex {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 15px;
 }
 
-.col {
-  padding: 8px;
+.container--top {
+  margin-bottom: 15px;
 }
 
 .title {
@@ -27,8 +24,8 @@
   }
 }
 
-.card {
-  border: 0;
+.container--card {
+  background-color: $white;
   padding: 20px;
   height: 100%;
   border-radius: 5px;
@@ -73,6 +70,20 @@
     img {
       height: 25px;
       padding: 0 10px;
+    }
+  }
+}
+
+.bottom--buttons {
+  .button-container {
+    $collepse-width: 650px;
+
+    @media all and (max-width: $collepse-width) {
+      overflow-y: auto;
+
+      > * {
+        width: $collepse-width;
+      }
     }
   }
 }
