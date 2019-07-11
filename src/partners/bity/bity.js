@@ -1,6 +1,4 @@
-import store from 'store';
 import BigNumber from 'bignumber.js';
-import web3Utils from 'web3-utils';
 import {
   networkSymbols,
   BASE_CURRENCY,
@@ -14,11 +12,7 @@ import {
   orderDetails,
   getStatus,
   getExitRates,
-  loginWithPhone,
-  sendReceivedSmsCode,
-  buildCyptoToFiatOrderData,
   getCyptoToFiatOrderDetails,
-  getStatusFiat,
   getEstimate,
   createOrder
 } from './bity-calls';
@@ -31,7 +25,6 @@ import {
   BITY_MAX,
   BITY_MIN,
   BITY_DECIMALS,
-  LOCAL_STORAGE_KEY,
   BASE_EQUIVALENT_CURRENCY,
   FIAT_EQUIVALENT_CURRENCY,
   FIAT_MIN,
@@ -69,8 +62,6 @@ export default class BitySwap {
     this.fiatCurrencies = Object.keys(bityFiatCurrencies);
     this.rates = new Map();
 
-    this.phoneSha = undefined;
-    this.userDetails = this.loadStoredCredentials();
     this.retrieveRates();
   }
 
@@ -80,10 +71,6 @@ export default class BitySwap {
 
   static isDex() {
     return false;
-  }
-
-  get phoneToken() {
-    return this.userDetails[this.phoneSha].phone_token;
   }
 
   get isValidNetwork() {
@@ -166,7 +153,7 @@ export default class BitySwap {
       toCurrency,
       fromValue
     );
-    console.log(expRate); // todo remove dev item
+
     const rate = this._getRate(fromCurrency, toCurrency);
     return {
       fromCurrency,
@@ -186,8 +173,6 @@ export default class BitySwap {
       toCurrency,
       fromValue
     );
-    console.log(expRate); // todo remove dev item
-
     const rate = this._getRate(fromCurrency, toCurrency);
     return {
       fromCurrency,
@@ -352,29 +337,7 @@ export default class BitySwap {
       swapDetails.dataForInitialization = false;
       swapDetails.isExitToFiat = true;
       return swapDetails;
-    } else if (this.checkIfExit(swapDetails) /*&& swapDetails.bypass*/) {
-      // const preOrder = await this.buildExitOrder(swapDetails);
-      // if (preOrder.created) {
-      //   swapDetails.dataForInitialization = await getCyptoToFiatOrderDetails({
-      //     pair: swapDetails.fromCurrency + swapDetails.toCurrency,
-      //     orderDetails: {
-      //       // 'email': 'steveM@MyEtherWallet.com',
-      //       'input': {
-      //         'amount': '0.1',
-      //         'currency': 'ETH',
-      //         'type': 'crypto_address',
-      //         'crypto_address': '0xe51dDAa1B650c26B62fCA2520cdC2c60cE205F75'
-      //       },
-      //       'output': {
-      //         'currency': 'BTC',
-      //         'type': 'crypto_address',
-      //         'crypto_address': '1Bf5Ng3uH2gRWbrcU3HegqMTfQpa3GSYVW'
-      //       }
-      //     }
-      //
-      //     detailsUrl: preOrder.status_address,
-      //     phoneToken: this.phoneToken
-      //   });
+    } else if (this.checkIfExit(swapDetails)) {
 
       swapDetails.dataForInitialization = await createOrder(swapDetails);
       if (swapDetails.dataForInitialization) {
@@ -394,9 +357,7 @@ export default class BitySwap {
       } else {
         throw Error('abort');
       }
-      // }
     } else if (!this.checkIfExit(swapDetails)) {
-      console.log('bity', swapDetails); // todo remove dev item
       swapDetails.dataForInitialization = await this.buildOrder(swapDetails);
       if (!swapDetails.dataForInitialization) throw Error('abort');
       swapDetails.providerReceives =
@@ -432,74 +393,6 @@ export default class BitySwap {
       };
 
       return await openOrder(order);
-    }
-  }
-
-  loadStoredCredentials() {
-    const userDetails = store.get(LOCAL_STORAGE_KEY);
-    if (userDetails !== null && userDetails !== undefined) {
-      return userDetails;
-    }
-    return {};
-  }
-
-  setStoredCredentials(phoneSha, phoneToken, verified = false) {
-    let userDetails = store.get(LOCAL_STORAGE_KEY);
-    if (userDetails === null || userDetails === undefined) {
-      userDetails = {};
-    }
-    userDetails[phoneSha] = {
-      phone_token: phoneToken,
-      verified: verified
-    };
-    store.set(LOCAL_STORAGE_KEY, userDetails);
-    this.userDetails = userDetails;
-    return userDetails;
-  }
-
-  async registerUser(initData) {
-    this.phoneSha = web3Utils.sha3(initData.phoneNumber);
-    if (this.userDetails[this.phoneSha] === undefined) {
-      await this.getPhoneToken(initData);
-      return false;
-    } else if (!this.userDetails[this.phoneSha].verified) {
-      await this.getPhoneToken(initData);
-      return false;
-    }
-    return true;
-  }
-
-  async getPhoneToken(initData) {
-    const initializeData = {
-      pair: initData.fromCurrency + initData.toCurrency,
-      phoneNumber: initData.phoneNumber
-    };
-    const result = await loginWithPhone(initializeData);
-    this.setStoredCredentials(this.phoneSha, result.phone_token);
-  }
-
-  async verifyUser(verifyData) {
-    const verificationData = {
-      pair: verifyData.fromCurrency + verifyData.toCurrency,
-      phoneToken: this.phoneToken,
-      tan: verifyData.tan
-    };
-    // returns {success: true} if successful
-    const result = await sendReceivedSmsCode(verificationData);
-    this.setStoredCredentials(this.phoneSha, this.phoneToken, result.success);
-    return result;
-  }
-
-  async buildExitOrder({ fromCurrency, toCurrency, orderDetails }) {
-    try {
-      const orderData = {
-        pair: fromCurrency + toCurrency,
-        phoneToken: this.phoneToken,
-        orderDetails: { ...orderDetails }
-      };
-      return buildCyptoToFiatOrderData(orderData);
-    } catch (e) {
-      Toast.responseHandler(e, false);
     }
   }
 
@@ -576,7 +469,7 @@ export default class BitySwap {
 
   static async getOrderStatusFiat(noticeDetails) {
     try {
-      const data = await getStatusFiat(noticeDetails.statusId, noticeDetails);
+      const data = await orderDetails({ detailsUrl: noticeDetails.statusId });
       if (!utils.isJson(data)) return swapNotificationStatuses.PENDING;
 
       // Since the status cannot be relied upon, we are going to assume the order went through after 10 min, if their was no error with the eth transaction.

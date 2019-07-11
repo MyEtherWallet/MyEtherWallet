@@ -10,16 +10,13 @@ const TIME_SWAP_VALID_DEFAULT = 600;
 const TOP_OPTIONS_ORDER = ['ETH', 'BTC', 'EUR', 'USD', 'CHF'].reverse(); // easier to visualize with a first to last, but easier to sort with last to first.
 
 const swapApiEndpoints = {
-  // base: 'https://swap.mewapi.io',
-  base: 'https://6szankrze5.execute-api.us-east-1.amazonaws.com/testing',
+  base: 'https://swap.mewapi.io',
   changelly: '/changelly',
   bity: '/bity',
   kyber: '/kyber'
 };
 
 const mewSimplex = 'https://apiccswap.myetherwallet.com';
-// const mewSimplex = 'http://apiccswap.example.com';
-
 
 const swapNotificationStatuses = {
   new: 'new',
