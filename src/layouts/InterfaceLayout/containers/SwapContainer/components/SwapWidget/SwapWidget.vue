@@ -308,6 +308,10 @@ export default {
       type: Number,
       default: 0
     },
+    suppliedFromAmount: {
+      type: Number,
+      default: 0
+    },
     destAddress: {
       type: String,
       default: ''
@@ -594,6 +598,13 @@ export default {
               this.toValue,
               this.bestRate,
               this.fromCurrency
+            );
+          } else if(this.suppliedFromAmount > 0){
+            this.fromValue = this.suppliedFromAmount;
+            this.toValue = this.swap.calculateToValue(
+              this.fromValue,
+              this.bestRate,
+              this.toCurrency
             );
           }
         });
