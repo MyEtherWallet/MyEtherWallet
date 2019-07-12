@@ -69,26 +69,28 @@
     <b-row>
       <b-col>
         <div class="card">
-
           <div class="block--dapps">
             <div class="flex--row--align-center title">
               <h4>MEW Dapps</h4>
-              <button class="title-button prevent-user-select" @click="goTo('dapps')">
+              <button
+                class="title-button prevent-user-select"
+                @click="goTo('dapps')"
+              >
                 Vuew All
               </button>
             </div>
             <div class="block--container">
-                <dapp-buttons
-                  v-for="dapp in sortedObject"
-                  :key="dapp.title"
-                  :title="$t(dapp.title)"
-                  :icon="dapp.icon"
-                  :icon-disabled="dapp.iconDisabled"
-                  :desc="$t(dapp.desc)"
-                  :param="dapp.route"
-                  :supported-networks="dapp.supportedNetworks"
-                  class="dapp"
-                />
+              <dapp-buttons
+                v-for="dapp in sortedObject"
+                :key="dapp.title"
+                :title="$t(dapp.title)"
+                :icon="dapp.icon"
+                :icon-disabled="dapp.iconDisabled"
+                :desc="$t(dapp.desc)"
+                :param="dapp.route"
+                :supported-networks="dapp.supportedNetworks"
+                class="dapp"
+              />
             </div>
           </div>
         </div>
@@ -106,6 +108,19 @@ import Blockie from '@/components/Blockie';
 import tabsConfig from '../../components/InterfaceSideMenu/InterfaceSideMenu.config';
 import DappButtons from '../../components/DappButtons';
 import dapps from '@/dapps';
+import {
+  SwapProviders,
+  providers
+  // bestProviderForQuantity,
+  // bestRateForQuantity,
+  // isValidEntry,
+  // providerNames,
+  // supportedProviders,
+  // BASE_CURRENCY,
+  // fiat,
+  // MIN_SWAP_AMOUNT,
+  // ERC20
+} from '@/partners';
 // import { Transaction } from 'ethereumjs-tx';
 // import { Misc, Toast } from '@/helpers';
 // import BigNumber from 'bignumber.js';
@@ -149,7 +164,16 @@ export default {
       gasLimit: '21000',
       data: '',
       selectedCurrency: '',
-      ethPrice: 0
+      ethPrice: 0,
+      swap: new SwapProviders(
+        providers,
+        {
+          network: this.$store.state.network.type.name,
+          web3: this.$store.state.web3,
+          getRateForUnit: false
+        },
+        { tokensWithBalance: this.tokensWithBalance }
+      )
     };
   },
 
@@ -180,10 +204,17 @@ export default {
       });
     }
   },
-  watch: {},
+  watch: {
+    ['swap.haveProviderRates']() {
+      this.haveProviderRates = this.swap.haveProviderRates;
+      this.setupSwap();
+    }
+  },
   mounted() {
-    if (this.online && this.network.type.name === 'ETH')
-      console.log('set up swappables'); // todo remove dev item;
+    if (this.online && this.network.type.name === 'ETH') {
+    } else {
+      console.log('no swap'); // todo remove dev item;
+    }
   },
   methods: {
     goTo(page) {
@@ -205,6 +236,10 @@ export default {
       } else {
         this.$router.push({ path: pageInfo.routes[0] });
       }
+    },
+    async setupSwap(){
+      const swappers = await this.swap.standAloneRateEstimate('ETH', 'BTC', 1);
+      console.log(swappers); // todo remove dev item
     }
   }
 };
