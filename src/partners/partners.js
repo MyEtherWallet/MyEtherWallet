@@ -192,47 +192,49 @@ export default class SwapProviders {
     fromValue,
     toValue = 0
   ) {
-    const { callsToMake } = await this.updateRateEstimate(
-      fromCurrency,
-      toCurrency,
-      fromValue,
-      toValue
-    );
-    const results = await Promise.all(
-      callsToMake.map(func =>
-        func(fromCurrency, toCurrency, fromValue, toValue)
-      )
-    );
-    if (
-      results.every(
-        entry =>
-          entry.fromCurrency === fromCurrency && entry.toCurrency === toCurrency
-      )
-    ) {
-      const vals = bestProviderForQuantity(
-        results.map(entry => {
-          if (+entry.rate > 0) {
-            return {
-              provider: entry.provider,
-              fromCurrency,
-              fromValue: fromValue,
-              toCurrency,
-              rate: +entry.rate,
-              minValue: entry.minValue || 0,
-              maxValue: entry.maxValue || 0,
-              computeConversion: function(_fromValue) {
-                return new BigNumber(_fromValue)
-                  .times(this.rate)
-                  .toFixed(6)
-                  .toString(10);
-              }
-            };
-          }
-        }),
-        fromValue
+    if (this.haveProviderRates) {
+      const { callsToMake } = await this.updateRateEstimate(
+        fromCurrency,
+        toCurrency,
+        fromValue,
+        toValue
       );
-      console.log(vals); // todo remove dev item
-      return vals;
+      const results = await Promise.all(
+        callsToMake.map(func =>
+          func(fromCurrency, toCurrency, fromValue, toValue)
+        )
+      );
+      if (
+        results.every(
+          entry =>
+            entry.fromCurrency === fromCurrency && entry.toCurrency === toCurrency
+        )
+      ) {
+        const vals = bestProviderForQuantity(
+          results.map(entry => {
+            if (+entry.rate > 0) {
+              return {
+                provider: entry.provider,
+                fromCurrency,
+                fromValue: fromValue,
+                toCurrency,
+                rate: +entry.rate,
+                minValue: entry.minValue || 0,
+                maxValue: entry.maxValue || 0,
+                computeConversion: function(_fromValue) {
+                  return new BigNumber(_fromValue)
+                    .times(this.rate)
+                    .toFixed(6)
+                    .toString(10);
+                }
+              };
+            }
+          }),
+          fromValue
+        );
+        console.log(vals); // todo remove dev item
+        return vals;
+      }
     }
   }
 
