@@ -1,4 +1,4 @@
-@import "~@/scss/GlobalVariables";
+@import '~@/scss/GlobalVariables';
 @media all and (min-width: calc(#{$tablet-width} + 1px)) {
   // *********************************************************************
   // CSS reset
@@ -83,7 +83,7 @@
   mark,
   audio,
   video {
-    font-family: "Montserrat", sans-serif;
+    font-family: 'Montserrat', sans-serif;
     font-size: 14px;
     margin: 0;
     padding: 0;
@@ -122,8 +122,8 @@
   // *********************************************************************
   // Disable WebKit Spinners
   // *********************************************************************
-  input[type="number"]::-webkit-inner-spin-button,
-  input[type="number"]::-webkit-outer-spin-button {
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
   }
@@ -671,7 +671,7 @@
       width: 15px;
 
       &::after {
-        content: "!";
+        content: '!';
         font-size: 13px;
         font-weight: 600;
         padding: 0;
@@ -903,7 +903,7 @@
       &::before {
         background-color: $css-toggle-button--button-background-color;
         bottom: 3px;
-        content: "";
+        content: '';
         height: 22px;
         left: 4px;
         padding: 1px 7px;
@@ -965,7 +965,7 @@
       &::before {
         background-color: $text-white;
         bottom: 3px;
-        content: "";
+        content: '';
         height: 22px;
         left: 3px;
         padding: 1px 7px;
@@ -1056,7 +1056,7 @@
       &::after {
         border: solid $border-color-2;
         border-width: 0 3px 3px 0;
-        content: "";
+        content: '';
         // display: none;
         height: 10px;
         left: 9px;
@@ -1083,7 +1083,7 @@
       &::after {
         border: solid $border-color-2;
         border-width: 0 3px 3px 0;
-        content: "";
+        content: '';
         // display: none;
         height: 9px;
         left: 7px;
@@ -1195,7 +1195,7 @@
       background-color: $text-color-3;
       border-radius: 100px;
       color: $text-white;
-      content: "!";
+      content: '!';
       display: inline-block;
       font-size: 12px;
       line-height: 17px;
@@ -1435,7 +1435,7 @@
 // Monospace font
 // *********************************************************************
 .monospace {
-  font-family: "Inconsolata", monospace;
+  font-family: 'Inconsolata', monospace;
 }
 
 //*********************************************************************
