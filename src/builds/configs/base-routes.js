@@ -28,7 +28,8 @@ const SignMessageContainer = () =>
 const VerifyMessageContainer = () =>
   import('@/layouts/InterfaceLayout/containers/VerifyMessageContainer');
 const HardwaresLayout = () => import('@/layouts/HardwaresLayout');
-const Dashboard = () => import('@/layouts/InterfaceLayout/containers/Dashboard')
+const DashboardContainer = () =>
+  import('@/layouts/InterfaceLayout/containers/DashboardContainer');
 
 import dapps from '@/dapps/routes';
 
@@ -106,12 +107,12 @@ const router = [
       {
         path: '',
         name: 'Dashboard',
-        component: Dashboard
+        component: DashboardContainer
       },
       {
         path: 'dashboard',
-        name: 'Dashboard',
-        component: Dashboard
+        name: 'Dashboard Container',
+        component: DashboardContainer
       },
       // {
       //   path: 'send-transaction',
