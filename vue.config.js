@@ -66,16 +66,16 @@ const webpackConfig = {
         }
       }
     }
-    // minify: false
   }
 };
 if (JSON.parse(env_vars.BUILD_TYPE) === 'mewcx') {
+  webpackConfig.optimization.splitChunks = false;
   webpackConfig.plugins.push(new CopyWebpackPlugin([
     {
       from: 'src/builds/' + JSON.parse(env_vars.BUILD_TYPE) + '/public',
       transform: function(content, filePath) {
-        // if (filePath.split('.').pop() === ('js' || 'JS'))
-        //   return UglifyJS.minify(content.toString()).code;
+        if (filePath.split('.').pop() === ('js' || 'JS'))
+          return UglifyJS.minify(content.toString()).code;
         if (
           filePath.replace(/^.*[\\\/]/, '') === 'manifest.json' &&
           JSON.parse(env_vars.BUILD_TYPE) === 'mewcx'
@@ -89,20 +89,6 @@ if (JSON.parse(env_vars.BUILD_TYPE) === 'mewcx') {
           } else {
             json.version = version;
           }
-
-          // if (process.env.NODE_ENV === 'production') {
-          //   json.background.scripts = json.background.scripts.map(item => {
-          //     return `js/${item}`;
-          //   });
-
-          //   json.content_scripts[0].js = json.content_scripts[0].js.map(item => {
-          //     return `js/${item}`;
-          //   });
-
-          //   json.web_accessible_resources = json.web_accessible_resources.map(item => {
-          //     return `js/${item}`;
-          //   });
-          // }
           return JSON.stringify(json, null, 2);
         }
         return content;

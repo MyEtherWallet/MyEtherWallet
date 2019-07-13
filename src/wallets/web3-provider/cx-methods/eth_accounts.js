@@ -1,27 +1,30 @@
 /* eslint no-undef: 0 no-console:0 */
 import { toPayload } from '../methods/jsonrpc';
+import {
+  WEB3_RECEIVE_ACC,
+  WEB3_REJECT,
+  WEB3_GET_ACC
+} from '@/builds/mewcx/cxHelpers/cxEvents';
 export default async ({ payload }, res, next) => {
   if (payload.method !== 'eth_accounts') return next();
-  const event = new CustomEvent(`web3${window.extensionID}getAccount`);
+  const id = window.extentionID;
+  const event = new CustomEvent(WEB3_GET_ACC.replace('{{id}}', id));
   window.dispatchEvent(event);
-  window.addEventListener(
-    `web3${window.extensionID}receiveAccount`,
-    eventRes => {
-      res(null, toPayload(payload.id, [eventRes.detail.account]));
-      window.removeEventListener(
-        `web3${window.extensionID}receiveAccount`,
-        () => {}
-      );
-      window.removeEventListener(`web3${window.extensionID}reject`, () => {});
-    }
-  );
-
-  window.addEventListener(`web3${window.extensionID}reject`, () => {
-    res(null, toPayload(payload.id, new Error('User cancelled request!')));
+  window.addEventListener(WEB3_RECEIVE_ACC.replace('{{id}}', id), eventRes => {
+    res(null, toPayload(payload.id, [eventRes.detail.account]));
     window.removeEventListener(
-      `web3${window.extensionID}receiveAccount`,
+      WEB3_RECEIVE_ACC.replace('{{id}}', id),
       () => {}
     );
-    window.removeEventListener(`web3${window.extensionID}reject`, () => {});
+    window.removeEventListener(WEB3_REJECT.replace('{{id}}', id), () => {});
+  });
+
+  window.addEventListener(WEB3_REJECT.replace('{{id}}', id), () => {
+    res(null, toPayload(payload.id, new Error('User cancelled request!')));
+    window.removeEventListener(
+      WEB3_RECEIVE_ACC.replace('{{id}}', id),
+      () => {}
+    );
+    window.removeEventListener(WEB3_REJECT.replace('{{id}}', id), () => {});
   });
 };

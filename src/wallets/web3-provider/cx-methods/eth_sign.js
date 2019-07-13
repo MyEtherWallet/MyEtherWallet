@@ -1,9 +1,15 @@
 import { toPayload } from '../methods/jsonrpc';
+import {
+  WEB3_SEND_SIGN_MSG,
+  WEB3_RECEIVE_SIGNED_MSG,
+  WEB3_REJECT
+} from '@/builds/mewcx/cxHelpers/cxEvents';
 export default async ({ payload }, res, next) => {
   if (payload.method !== 'personal_sign') return next();
+  const id = window.extentionID;
   const msg = payload.params[0];
   const address = payload.params[1];
-  const event = new CustomEvent(`web3${window.extensionID}sendSignMsg`, {
+  const event = new CustomEvent(WEB3_SEND_SIGN_MSG.replace('{{id}}', id), {
     detail: {
       msgToSign: msg,
       address: address
@@ -11,26 +17,26 @@ export default async ({ payload }, res, next) => {
   });
   window.dispatchEvent(event);
   window.addEventListener(
-    `web3${window.extensionID}recieveSignedMsg`,
+    WEB3_RECEIVE_SIGNED_MSG.replace('{{id}}', id),
     eventRes => {
       res(
         null,
         toPayload(payload.id, '0x' + eventRes.detail.signedMsg.toString('hex'))
       );
       window.removeEventListener(
-        `web3${window.extensionID}recieveSignedMsg`,
+        WEB3_RECEIVE_SIGNED_MSG.replace('{{id}}', id),
         () => {}
       );
-      window.removeEventListener(`web3${window.extensionID}reject`, () => {});
+      window.removeEventListener(WEB3_REJECT, () => {});
     }
   );
 
-  window.addEventListener(`web3${window.extensionID}reject`, () => {
+  window.addEventListener(WEB3_REJECT, () => {
     res(null, toPayload(payload.id, new Error('User Rejected action!')));
     window.removeEventListener(
-      `web3${window.extensionID}recieveTxHash`,
+      WEB3_RECEIVE_SIGNED_MSG.replace('{{id}}', id),
       () => {}
     );
-    window.removeEventListener(`web3${window.extensionID}reject`, () => {});
+    window.removeEventListener(WEB3_REJECT.replace('{{id}}', id), () => {});
   });
 };
