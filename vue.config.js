@@ -14,10 +14,6 @@ const webpackConfig = {
     background: './src/builds/mewcx/cxHelpers/backgroundState.js',
     cxWeb3: './src/builds/mewcx/cxHelpers/cxWeb3.js'
   },
-  output: {
-    path: path.join(__dirname, 'chrome-extension'),
-    filename: "[name].js"
-  },
   node: {
     process: true
   },
