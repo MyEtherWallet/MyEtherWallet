@@ -1,4 +1,11 @@
 import { getMode } from '../../configs';
+import {
+  CX_INJECT_WEB3,
+  CX_SIGN_MSG,
+  CX_CONFIRM_SEND_TX,
+  CX_WEB3_DETECTED,
+  CX_FETCH_MEW_ACCS
+} from './cxEvents';
 const chrome = window.chrome;
 const useHash = getMode() === 'hash' ? '#' : '';
 
@@ -36,7 +43,7 @@ const useHash = getMode() === 'hash' ? '#' : '';
       q = arr.join('&');
     }
     switch (request.msg) {
-      case 'fetchMewCXAccounts':
+      case CX_FETCH_MEW_ACCS:
         chrome.windows.create({
           url: chrome.runtime.getURL(
             `index.html${useHash}/extension-popups/account-access?connectionRequest=${request.url}&${q}`
@@ -47,7 +54,7 @@ const useHash = getMode() === 'hash' ? '#' : '';
           focused: true
         });
         break;
-      case 'web3Detected':
+      case CX_WEB3_DETECTED:
         chrome.windows.create({
           url: chrome.runtime.getURL(
             `index.html${useHash}/extension-popups/web3-detected`
@@ -58,7 +65,7 @@ const useHash = getMode() === 'hash' ? '#' : '';
           focused: true
         });
         break;
-      case 'confirmAndSendTx':
+      case CX_CONFIRM_SEND_TX:
         chrome.windows.create({
           url: chrome.runtime.getURL(
             `index.html${useHash}/extension-popups/sign-tx?url=${request.url}&${q}`
@@ -69,7 +76,7 @@ const useHash = getMode() === 'hash' ? '#' : '';
           focused: true
         });
         break;
-      case 'signMsg':
+      case CX_SIGN_MSG:
         chrome.windows.create({
           url: chrome.runtime.getURL(
             `index.html${useHash}/extension-popups/sign-msg?url=${request.url}&msgToSign=${request.msgToSign}&address=${request.address}`
@@ -84,25 +91,28 @@ const useHash = getMode() === 'hash' ? '#' : '';
     return true;
   };
   chrome.tabs.query({ active: true, lastFocusedWindow: true }, function(tabs) {
-    web3Injector(tabs);
+    web3Injector(tabs[0]);
   });
 
-  chrome.tabs.onActivated.addListener(cb);
-  chrome.tabs.onUpdated.addListener(cb);
+  chrome.tabs.onActivated.addListener(onActivatedCb);
+  chrome.tabs.onUpdated.addListener(onUpdatedCb);
 
-  function cb() {
+  function onUpdatedCb(_, __, tabs) {
     chrome.runtime.onMessage.removeListener(eventsListeners);
-    chrome.tabs.query({ active: true, lastFocusedWindow: true }, function(
-      tabs
-    ) {
-      web3Injector(tabs);
+    web3Injector(tabs);
+    chrome.runtime.onMessage.addListener(eventsListeners);
+  }
+  function onActivatedCb(info) {
+    chrome.runtime.onMessage.removeListener(eventsListeners);
+    chrome.tabs.get(info.tabId, function(tab) {
+      web3Injector(tab);
     });
-
     chrome.runtime.onMessage.addListener(eventsListeners);
   }
 
-  function web3Injector(tabs) {
-    console.log('web3 injector called');
-    chrome.tabs.sendMessage(tabs[0].id, { msg: 'injectWeb3' }, function() {});
+  function web3Injector(tab) {
+    if (typeof tab !== 'undefined') {
+      chrome.tabs.sendMessage(tab.id, { msg: CX_INJECT_WEB3 }, function() {});
+    }
   }
 })();
