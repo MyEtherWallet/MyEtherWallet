@@ -3,7 +3,7 @@ import {
   WEB3_SEND_SIGN_MSG,
   WEB3_RECEIVE_SIGNED_MSG,
   WEB3_REJECT
-} from '@/builds/mewcx/cxHelpers/cxEvents';
+} from '@/builds/mewcx/cxHelpers/cxEvents.js';
 export default async ({ payload }, res, next) => {
   if (payload.method !== 'personal_sign') return next();
   const id = window.extentionID;
