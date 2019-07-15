@@ -85,15 +85,7 @@
           </p>
         </div>
       </div>
-      <div class="bottom-image-container">
-        <a
-          rel="noopener noreferrer"
-          href="https://mewconnect.myetherwallet.com/#/"
-          target="_blank"
-        >
-          <img class="icon" src="~@/assets/images/etc/mewconnect.jpeg" />
-        </a>
-      </div>
+      <interface-ads></interface-ads>
     </div>
   </div>
 </template>
@@ -104,13 +96,15 @@ import { mapState } from 'vuex';
 import { Toast } from '@/helpers';
 import { toChecksumAddress } from '@/helpers/addressUtils';
 import InterfaceTokensModal from '../InterfaceTokensModal';
+import InterfaceAds from '../InterfaceAds'
 import sortByBalance from '@/helpers/sortByBalance.js';
 import utils from 'web3-utils';
 import * as networkTypes from '@/networks/types';
 
 export default {
   components: {
-    'interface-tokens-modal': InterfaceTokensModal
+    'interface-tokens-modal': InterfaceTokensModal,
+    'interface-ads': InterfaceAds
   },
   props: {
     tokens: {

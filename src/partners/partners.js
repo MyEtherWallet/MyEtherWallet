@@ -207,7 +207,8 @@ export default class SwapProviders {
       if (
         results.every(
           entry =>
-            entry.fromCurrency === fromCurrency && entry.toCurrency === toCurrency
+            entry.fromCurrency === fromCurrency &&
+            entry.toCurrency === toCurrency
         )
       ) {
         const vals = bestProviderForQuantity(
@@ -232,7 +233,6 @@ export default class SwapProviders {
           }),
           fromValue
         );
-        console.log(vals); // todo remove dev item
         return vals;
       }
     }

@@ -1,0 +1,64 @@
+@import '~@/scss/GlobalVariables';
+
+.bottom-image-container {
+  //background-color: $background-color-white;
+  border-radius: 5px;
+  margin-top: 10px;
+  overflow: hidden;
+
+  .ad-container {
+    height: 200px;
+  }
+  img {
+    width: 100%;
+  }
+
+  .twitter-container {
+    padding: 30px;
+    background-color: $background-color-white;
+    border-radius: 5px;
+    overflow: hidden;
+    text-align: center;
+
+    i {
+      color: #1ca1f1;
+      font-size: 48px;
+      vertical-align: sub;
+    }
+    span {
+      vertical-align: baseline;
+      padding-left: 10px;
+      padding-bottom: 5px;
+      font-size: 24px;
+      font-weight: bold;
+    }
+  }
+}
+
+.select-dots-container {
+  //background-color: $background-color-white;
+  border-radius: 5px;
+  margin-top: 10px;
+  overflow: hidden;
+  width: 100%;
+  text-align: center;
+
+  .ad-dot {
+    padding-right: 10px;
+    cursor: pointer;
+    color: #0b2840;
+    .inactive {
+      opacity: 0.2;
+    }
+    .active {
+      opacity: 1;
+    }
+  }
+}
+.spinner-container {
+  text-align: center;
+}
+
+.clickable {
+  cursor: pointer;
+}

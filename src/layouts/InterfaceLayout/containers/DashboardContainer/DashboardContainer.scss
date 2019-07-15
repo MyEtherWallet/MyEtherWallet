@@ -1,7 +1,6 @@
-@import "../InterfaceContainer";
+@import '../InterfaceContainer';
 
 $dapps-container-mobile-width: 650px;
-
 
 .dashboard-container {
   @extend %interface-container;
@@ -139,7 +138,6 @@ $dapps-container-mobile-width: 650px;
     }
   }
 }
-
 
 .bottom--buttons {
   .button-container {

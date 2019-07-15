@@ -410,7 +410,7 @@ export default {
         )
       )
         return this.$t('interface.belowMin', {
-          value: this.selectedProvider.maxValue,
+          value: toBigNumber(this.selectedProvider.maxValue).toFixed(6),
           currency: this.fromCurrency
         });
       return false;
@@ -419,7 +419,7 @@ export default {
       if (this.selectedProvider.provider === this.providerNames.bity) {
         if (this.checkBityMax) {
           return this.$t('interface.aboveMax', {
-            value: this.selectedProvider.maxValue,
+            value: toBigNumber(this.selectedProvider.maxValue).toFixed(6),
             currency: this.fromCurrency
           });
         }
@@ -431,7 +431,7 @@ export default {
         toBigNumber(this.selectedProvider.maxValue).gt(toBigNumber(0))
       )
         return this.$t('interface.aboveMaxSwap', {
-          value: this.selectedProvider.maxValue,
+          value: toBigNumber(this.selectedProvider.maxValue).toFixed(6),
           currency: this.fromCurrency
         });
       return false;
@@ -599,7 +599,7 @@ export default {
               this.bestRate,
               this.fromCurrency
             );
-          } else if(this.suppliedFromAmount > 0){
+          } else if (this.suppliedFromAmount > 0) {
             this.fromValue = this.suppliedFromAmount;
             this.toValue = this.swap.calculateToValue(
               this.fromValue,
