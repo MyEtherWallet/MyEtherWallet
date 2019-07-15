@@ -184,5 +184,6 @@ module.exports = [
   'src/layouts/ExtensionWeb3Layout/components/AddressSelectionComponent/index.js',
   'src/layouts/ExtensionWeb3Layout/containers/SignMsgContainer/index.js',
   'src/layouts/ExtensionWeb3Layout/containers/SignMsgContainer/SignMsgContainer.scss',
-  'src/layouts/ExtensionWeb3Layout/containers/SignMsgContainer/SignMsgContainer.vue'
+  'src/layouts/ExtensionWeb3Layout/containers/SignMsgContainer/SignMsgContainer.vue',
+  'src/builds/mewcx/public/README.md'
 ]

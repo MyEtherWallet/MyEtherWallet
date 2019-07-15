@@ -691,5 +691,6 @@ module.exports = [
   'src/layouts/ExtensionWeb3Layout/containers/Web3Detected/Web3Detected.scss',
   'src/layouts/ExtensionWeb3Layout/containers/Web3Detected/Web3Detected.vue',
   'src/layouts/ExtensionWeb3Layout/ExtensionWeb3Layout.vue',
-  'src/layouts/ExtensionWeb3Layout/index.js'
+  'src/layouts/ExtensionWeb3Layout/index.js',
+  'src/builds/mewcx/public/README.md'
 ]

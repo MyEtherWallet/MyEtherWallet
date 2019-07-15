@@ -9,9 +9,8 @@ const path = require('path');
 const webpackConfig = {
   entry: {
     app: './src/main.js',
-    phishingManager: './src/builds/mewcx/cxHelpers/backgroundPhishingCatcher.js',
-    web3Manager: './src/builds/mewcx/cxHelpers/backgroundWeb3Manager.js',
-    background: './src/builds/mewcx/cxHelpers/backgroundState.js',
+    contentScript: './src/builds/mewcx/cxHelpers/contentScript.js',
+    background: './src/builds/mewcx/cxHelpers/background.js',
     cxWeb3: './src/builds/mewcx/cxHelpers/cxWeb3.js'
   },
   node: {
@@ -64,34 +63,6 @@ const webpackConfig = {
     }
   }
 };
-if (JSON.parse(env_vars.BUILD_TYPE) === 'mewcx') {
-  webpackConfig.optimization.splitChunks = false;
-  webpackConfig.plugins.push(new CopyWebpackPlugin([
-    {
-      from: 'src/builds/' + JSON.parse(env_vars.BUILD_TYPE) + '/public',
-      transform: function(content, filePath) {
-        if (filePath.split('.').pop() === ('js' || 'JS'))
-          return UglifyJS.minify(content.toString()).code;
-        if (
-          filePath.replace(/^.*[\\\/]/, '') === 'manifest.json' &&
-          JSON.parse(env_vars.BUILD_TYPE) === 'mewcx'
-        ) {
-          const version = require('./package.json').version;
-          const json = JSON.parse(content);
-          const hasExtra = version.indexOf('-');
-          if (hasExtra !== -1) {
-            const newVersion = version.substring(0, hasExtra);
-            json.version = newVersion;
-          } else {
-            json.version = version;
-          }
-          return JSON.stringify(json, null, 2);
-        }
-        return content;
-      }
-    }
-  ]));
-}
 
 if (process.env.NODE_ENV === 'production') {
   webpackConfig.plugins.push(
@@ -150,10 +121,39 @@ const exportObj = {
 };
 
 if (JSON.parse(env_vars.BUILD_TYPE) === 'mewcx') {
-  // exportObj['publicPath'] = '';
   exportObj['outputDir'] = path.resolve(__dirname, 'chrome-extension');
-  // exportObj['assetsDir'] = '';
   exportObj['filenameHashing'] = false;
   exportObj['productionSourceMap'] = false;
+  exportObj['configureWebpack'].output = {
+    path: path.resolve(__dirname, 'chrome-extension'),
+    filename: '[name].js'
+  };
+  exportObj['configureWebpack'].optimization.splitChunks = false;
+  exportObj['configureWebpack'].plugins.push(new CopyWebpackPlugin([
+    {
+      from: 'src/builds/' + JSON.parse(env_vars.BUILD_TYPE) + '/public',
+      transform: function(content, filePath) {
+        if (filePath.split('.').pop() === ('js' || 'JS'))
+          return UglifyJS.minify(content.toString()).code;
+        if (
+          filePath.replace(/^.*[\\\/]/, '') === 'manifest.json' &&
+          JSON.parse(env_vars.BUILD_TYPE) === 'mewcx'
+        ) {
+          const version = require('./package.json').version;
+          const json = JSON.parse(content);
+          const hasExtra = version.indexOf('-');
+          if (hasExtra !== -1) {
+            const newVersion = version.substring(0, hasExtra);
+            json.version = newVersion;
+          } else {
+            json.version = version;
+          }
+          return JSON.stringify(json, null, 2);
+        }
+        return content;
+      },
+      flatten: true
+    }
+  ]));
 }
 module.exports = exportObj;

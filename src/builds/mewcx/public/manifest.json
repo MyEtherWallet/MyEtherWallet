@@ -15,32 +15,18 @@
   },
   "options_page": "index.html",
   "background": {
-    "scripts": [
-      "background.js",
-      "phishingManager.js"
-    ],
+    "scripts": ["background.js"],
     "persistent": true
   },
   "content_scripts": [
     {
-      "matches": [
-        "<all_urls>"
-      ],
-      "js": [
-        "web3Manager.js"
-      ],
+      "matches": ["<all_urls>"],
+      "js": ["contentScript.js"],
       "run_at": "document_end"
     }
   ],
-  "web_accessible_resources": [
-    "cxWeb3.js"
-  ],
-  "permissions": [
-    "<all_urls>",
-    "storage",
-    "tabs",
-    "activeTab"
-  ],
+  "web_accessible_resources": ["cxWeb3.js"],
+  "permissions": ["<all_urls>", "storage", "tabs", "activeTab"],
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "version": "5.0.15"
 }
