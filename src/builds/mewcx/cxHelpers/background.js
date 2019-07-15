@@ -160,6 +160,9 @@ const useHash = getMode() === 'hash' ? '#' : '';
         // Injects web3
         chrome.tabs.sendMessage(tab.id, { msg: CX_INJECT_WEB3 }, function() {});
       }
+    } else {
+      // Injects web3
+      chrome.tabs.sendMessage(tab.id, { msg: CX_INJECT_WEB3 }, function() {});
     }
   }
 })();

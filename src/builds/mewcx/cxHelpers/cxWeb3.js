@@ -6,7 +6,7 @@ if (
   !window.web3.currentProvider.hasOwnProperty('isMew')
 ) {
   const event = new CustomEvent(
-    WEB3_DETECTED.replace('{{id}}', window.extentionID)
+    WEB3_DETECTED.replace('{{id}}', window.extensionID)
   );
   window.dispatchEvent(event);
 } else if (!window.hasOwnProperty('web3')) {
