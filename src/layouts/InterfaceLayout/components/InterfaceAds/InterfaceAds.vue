@@ -2,8 +2,7 @@
   <div>
     <div class="bottom-image-container">
       <div class="twitter-container">
-        <i class="fa fa-twitter"></i> <span>Follow us on Twitter</span>
-
+        <i class="fa fa-twitter"></i> <span>{{$t('common.twitterFollow')}}</span>
       </div>
 
       <div class="ad-container">
