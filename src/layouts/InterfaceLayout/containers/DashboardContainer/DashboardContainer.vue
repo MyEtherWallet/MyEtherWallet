@@ -3,7 +3,7 @@
     <div class="container--flex container--top">
       <div class="container--card block--actions">
         <div class="title">
-          <h4>Actions</h4>
+          <h4>{{ $t('common.actions') }}</h4>
         </div>
         <div class="margin--top--auto buttons">
           <img
@@ -21,12 +21,12 @@
 
       <div class="container--card block--swap">
         <div class="flex--row--align-center title">
-          <h4>Swap</h4>
+          <h4>{{ $t('common.swap') }}</h4>
           <button
             class="title-button prevent-user-select"
             @click="goTo('swap')"
           >
-            More...
+            {{ $t('common.more') }}
           </button>
         </div>
         <p>
@@ -35,7 +35,7 @@
         </p>
         <div class="margin--top--auto swap-info">
           <div v-for="pair in swapPairs" :key="pair.from + pair.to">
-            <div class="swap-to" @click="showSwapWidget(pair)">
+            <div class="swap-to clickable" @click="showSwapWidget(pair)">
               <p class="monospace">
                 {{ pair.amt }} {{ pair.from }} / {{ pair.rate }} {{ pair.to }}
               </p>
@@ -50,32 +50,6 @@
               </div>
             </div>
           </div>
-          <!--          <div class="swap-to">
-            <p class="monospace">0.026 BTC / 1 ETH</p>
-            <div class="margin&#45;&#45;left&#45;&#45;auto flex&#45;&#45;row&#45;&#45;align-center">
-              <span class="currency-symbol cc ETH cc-icon"></span>
-              <img src="@/assets/images/icons/swap.svg" />
-              <span class="currency-symbol cc BTC cc-icon"></span>
-            </div>
-          </div>
-
-          <div class="swap-to">
-            <p class="monospace">351.24 USD / 1 ETH</p>
-            <div class="margin&#45;&#45;left&#45;&#45;auto flex&#45;&#45;row&#45;&#45;align-center">
-              <span class="currency-symbol cc ETH cc-icon"></span>
-              <img src="@/assets/images/icons/swap.svg" />
-              <span class="currency-symbol cc USD cc-icon"></span>
-            </div>
-          </div>
-
-          <div class="swap-to">
-            <p class="monospace">32.116 XMR / 1 ETH</p>
-            <div class="margin&#45;&#45;left&#45;&#45;auto flex&#45;&#45;row&#45;&#45;align-center">
-              <span class="currency-symbol cc ETH cc-icon"></span>
-              <img src="@/assets/images/icons/swap.svg" />
-              <span class="currency-symbol cc XMR cc-icon"></span>
-            </div>
-          </div>-->
         </div>
       </div>
     </div>
@@ -83,12 +57,12 @@
     <div class="container--card bottom--buttons">
       <div class="block--dapps">
         <div class="flex--row--align-center title">
-          <h4>MEW Dapps</h4>
+          <h4>{{ $t('common.dapps') }}</h4>
           <button
             class="title-button prevent-user-select"
             @click="goTo('dapps')"
           >
-            Vuew All
+            {{ $t('common.viewAll') }}
           </button>
         </div>
         <div class="block--container">
@@ -255,6 +229,7 @@ export default {
   },
   mounted() {
     if (this.online && this.network.type.name === 'ETH') {
+      console.log('with swap'); // todo remove dev item;
     } else {
       console.log('no swap'); // todo remove dev item;
     }
@@ -285,17 +260,18 @@ export default {
     },
     async setupSwap() {
       for (let i = 0; i < this.swapPairs.length; i++) {
-        // swapPairs
         const swappers = await this.swap.standAloneRateEstimate(
           this.swapPairs[i].from,
           this.swapPairs[i].to,
           this.swapPairs[i].amt
         );
-        this.swapPairs[i].rate = toBigNumber(swappers[0].rate).toFixed(4);
-        console.log(swappers); // todo remove dev item
+        this.$set(
+          this.swapPairs[i],
+          'rate',
+          toBigNumber(swappers[0].rate).toFixed(4)
+        );
       }
       this.rateUpdate();
-      // const swappers = await this.swap.standAloneRateEstimate('ETH', 'BTC', 1);
       console.log(this.swapPairs); // todo remove dev item
     },
     async rateUpdate() {
@@ -304,7 +280,7 @@ export default {
           this.updatingRates = true;
           await this.setupSwap();
           this.updatingRates = false;
-        }, 30000);
+        }, 60000);
       }
     },
     showSwapWidget(vals) {

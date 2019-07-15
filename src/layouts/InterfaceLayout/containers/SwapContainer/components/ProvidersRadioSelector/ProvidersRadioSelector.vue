@@ -174,6 +174,10 @@ import bityBeta from '@/assets/images/etc/bitybeta.png';
 
 import ProviderInfoList from './ProviderInfoList';
 
+const toBigNumber = num => {
+  return new BigNumber(num);
+};
+
 export default {
   components: {
     'provider-info-list': ProviderInfoList
@@ -333,25 +337,33 @@ export default {
     },
     minNote(details) {
       if (details.minValue > 0) {
-        return [`${details.minValue} ${details.fromCurrency} (From Min.)`];
+        return [
+          `${toBigNumber(details.minValue).toFixed(6)} ${
+            details.fromCurrency
+          } (From Min.)`
+        ];
       }
       return '';
     },
     maxNote(details) {
       if (details.maxValue > 0) {
-        return `${details.maxValue} ${details.fromCurrency} (Max.)`;
+        return `${toBigNumber(details.maxValue).toFixed(6)} ${
+          details.fromCurrency
+        } (Max.)`;
       }
       return '';
     },
     formatRateDisplay(fromValue, fromCurrency, toValue, toCurrency) {
-      return `${fromValue} ${fromCurrency} = ${toValue} ${toCurrency}`;
+      return `${toBigNumber(fromValue).toFixed(
+        6
+      )} ${fromCurrency} = ${toBigNumber(toValue).toFixed(6)} ${toCurrency}`;
     },
     normalizedRateDisplay(source) {
       const toValue = this.valueForRate(this.fromValue, source.rate);
       return `${source.fromValue} ${source.fromCurrency} = ${toValue} ${source.toCurrency}`;
     },
     valueForRate(rate, value) {
-      return new BigNumber(value)
+      return toBigNumber(value)
         .times(rate)
         .toFixed(6)
         .toString(10);

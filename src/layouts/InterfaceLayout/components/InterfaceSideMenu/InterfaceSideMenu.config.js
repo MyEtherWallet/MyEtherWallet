@@ -5,8 +5,8 @@ export default {
       onlineOnly: false,
       routes: ['/interface/dashboard', '/interface'],
       icons: {
-        active: require('@/assets/images/sidemenu/send-active.svg'),
-        inactive: require('@/assets/images/sidemenu/send.svg')
+        active: require('@/assets/images/sidemenu/dashboard-active.svg'),
+        inactive: require('@/assets/images/sidemenu/dashboard.svg')
       },
       titleKey: 'interface.dashboard',
       children: []
@@ -16,7 +16,6 @@ export default {
       onlineOnly: false,
       routes: [
         '/interface/send-transaction',
-        // '/interface',
         '/interface/send-offline',
         '/interface/send-offline/generate-info',
         '/interface/send-offline/generate-tx',
