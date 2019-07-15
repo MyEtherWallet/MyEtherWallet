@@ -9,7 +9,7 @@ import {
 
 export default async ({ payload }, res, next) => {
   if (payload.method !== 'eth_sendTransaction') return next();
-  const id = window.extentionID;
+  const id = window.extensionID;
   const tx = Object.assign({}, payload.params[0]);
   getSanitizedTx(tx)
     .then(_tx => {

@@ -6,7 +6,7 @@ import {
 } from '@/builds/mewcx/cxHelpers/cxEvents.js';
 export default async ({ payload }, res, next) => {
   if (payload.method !== 'personal_sign') return next();
-  const id = window.extentionID;
+  const id = window.extensionID;
   const msg = payload.params[0];
   const address = payload.params[1];
   const event = new CustomEvent(WEB3_SEND_SIGN_MSG.replace('{{id}}', id), {

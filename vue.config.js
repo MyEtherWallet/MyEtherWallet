@@ -121,14 +121,16 @@ const exportObj = {
 };
 
 if (JSON.parse(env_vars.BUILD_TYPE) === 'mewcx') {
+  delete exportObj['configureWebpack'].optimization.splitChunks;
   exportObj['outputDir'] = path.resolve(__dirname, 'chrome-extension');
   exportObj['filenameHashing'] = false;
   exportObj['productionSourceMap'] = false;
+  exportObj['configureWebpack'].optimization.splitChunks = false;
+  exportObj['configureWebpack'].optimization.minimize = false;
   exportObj['configureWebpack'].output = {
     path: path.resolve(__dirname, 'chrome-extension'),
     filename: '[name].js'
   };
-  exportObj['configureWebpack'].optimization.splitChunks = false;
   exportObj['configureWebpack'].plugins.push(new CopyWebpackPlugin([
     {
       from: 'src/builds/' + JSON.parse(env_vars.BUILD_TYPE) + '/public',
@@ -148,11 +150,21 @@ if (JSON.parse(env_vars.BUILD_TYPE) === 'mewcx') {
           } else {
             json.version = version;
           }
+          // json.background.scripts = json.background.scripts.map(item => {
+          //   return `js/${item}`;
+          // });
+
+          // json.content_scripts[0].js = json.content_scripts[0].js.map(item => {
+          //   return `js/${item}`;
+          // });
+
+          // json.web_accessible_resources = json.web_accessible_resources.map(item => {
+          //   return `js/${item}`;
+          // });
           return JSON.stringify(json, null, 2);
         }
         return content;
-      },
-      flatten: true
+      }
     }
   ]));
 }

@@ -7,7 +7,7 @@ import {
 } from '@/builds/mewcx/cxHelpers/cxEvents.js';
 export default async ({ payload }, res, next) => {
   if (payload.method !== 'eth_accounts') return next();
-  const id = window.extentionID;
+  const id = window.extensionID;
   const event = new CustomEvent(WEB3_GET_ACC.replace('{{id}}', id));
   window.dispatchEvent(event);
   window.addEventListener(WEB3_RECEIVE_ACC.replace('{{id}}', id), eventRes => {
