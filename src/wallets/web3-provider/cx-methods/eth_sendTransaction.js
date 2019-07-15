@@ -5,7 +5,7 @@ import {
   WEB3_SEND_TX,
   WEB3_RECEIVE_TX_HASH,
   WEB3_REJECT
-} from '@/builds/mewcx/cxHelpers/cxEvents';
+} from '@/builds/mewcx/cxHelpers/cxEvents.js';
 
 export default async ({ payload }, res, next) => {
   if (payload.method !== 'eth_sendTransaction') return next();

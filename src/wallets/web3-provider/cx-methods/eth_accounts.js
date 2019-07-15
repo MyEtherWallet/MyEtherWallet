@@ -4,7 +4,7 @@ import {
   WEB3_RECEIVE_ACC,
   WEB3_REJECT,
   WEB3_GET_ACC
-} from '@/builds/mewcx/cxHelpers/cxEvents';
+} from '@/builds/mewcx/cxHelpers/cxEvents.js';
 export default async ({ payload }, res, next) => {
   if (payload.method !== 'eth_accounts') return next();
   const id = window.extentionID;
