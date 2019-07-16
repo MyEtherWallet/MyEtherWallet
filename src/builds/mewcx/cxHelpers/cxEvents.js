@@ -6,7 +6,6 @@ const MEW_SIGNED_MSG = 'mewSignedMsg';
 const REJECT_MEW_CX_ACC = 'rejectMewCXAccount';
 const REJECT_MEW_TX_SIGN = 'rejectMewTxSign';
 const REJECT_MEW_SIGN_MSG = 'rejectMewSignMsg';
-const WEB3_GET_CURRENT_ACC = 'web3{{id}}getCurrentAccount';
 const WEB3_GET_ACC = 'web3{{id}}getAccount';
 const WEB3_SEND_TX = 'web3{{id}}sendTx';
 const WEB3_SEND_SIGN_MSG = 'web3{{id}}sendSignMsg';
@@ -19,6 +18,7 @@ const CX_WEB3_DETECTED = 'web3Detected';
 const CX_CONFIRM_SEND_TX = 'confirmAndSendTx';
 const CX_SIGN_MSG = 'signMsg';
 const CX_INJECT_WEB3 = 'injectWeb3';
+const CX_GO_TO_MAIN_PAGE = 'goToMainPage';
 
 export {
   WEB3_DETECTED,
@@ -29,7 +29,6 @@ export {
   REJECT_MEW_CX_ACC,
   REJECT_MEW_TX_SIGN,
   REJECT_MEW_SIGN_MSG,
-  WEB3_GET_CURRENT_ACC,
   WEB3_GET_ACC,
   WEB3_SEND_TX,
   WEB3_SEND_SIGN_MSG,
@@ -41,5 +40,6 @@ export {
   CX_WEB3_DETECTED,
   CX_CONFIRM_SEND_TX,
   CX_SIGN_MSG,
-  CX_INJECT_WEB3
+  CX_INJECT_WEB3,
+  CX_GO_TO_MAIN_PAGE
 };
