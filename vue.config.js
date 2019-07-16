@@ -17,7 +17,6 @@ const webpackConfig = {
     process: true
   },
   devServer: {
-    // disableHostCheck: true, // Dev purposes only, should be commented out before release
     https:  true,
     host: 'localhost',
     hotOnly: JSON.parse(env_vars.BUILD_TYPE) !== 'mewcx',
@@ -93,13 +92,15 @@ const exportObj = {
   integrity: process.env.WEBPACK_INTEGRITY === 'false' ? false : true,
   pwa: pwa,
   chainWebpack: config => {
-    config
-      .plugin('html')
-      .tap((args) => {
-        // eslint-disable-next-line no-param-reassign
-        args[0].excludeChunks = ['phishingManager', 'background', 'web3Manager', 'cxWeb3'];
-        return args;
-      });
+    if (JSON.parse(env_vars.BUILD_TYPE) === 'mewcx') {
+      config
+        .plugin('html')
+        .tap((args) => {
+          // eslint-disable-next-line no-param-reassign
+          args[0].excludeChunks = ['background', 'contentScript', 'cxWeb3'];
+          return args;
+        });
+    }
     config.module
       .rule('replace')
       .test(/\.js$/)
@@ -126,20 +127,16 @@ if (JSON.parse(env_vars.BUILD_TYPE) === 'mewcx') {
   exportObj['filenameHashing'] = false;
   exportObj['productionSourceMap'] = false;
   exportObj['configureWebpack'].optimization.splitChunks = false;
-  exportObj['configureWebpack'].optimization.minimize = false;
-  exportObj['configureWebpack'].output = {
-    path: path.resolve(__dirname, 'chrome-extension'),
-    filename: '[name].js'
-  };
+  exportObj['configureWebpack'].optimization.minimize = true;
   exportObj['configureWebpack'].plugins.push(new CopyWebpackPlugin([
     {
       from: 'src/builds/' + JSON.parse(env_vars.BUILD_TYPE) + '/public',
+      flatten: process.env.NODE_ENV === 'production',
       transform: function(content, filePath) {
         if (filePath.split('.').pop() === ('js' || 'JS'))
           return UglifyJS.minify(content.toString()).code;
         if (
-          filePath.replace(/^.*[\\\/]/, '') === 'manifest.json' &&
-          JSON.parse(env_vars.BUILD_TYPE) === 'mewcx'
+          filePath.replace(/^.*[\\\/]/, '') === 'manifest.json'
         ) {
           const version = require('./package.json').version;
           const json = JSON.parse(content);
@@ -150,17 +147,22 @@ if (JSON.parse(env_vars.BUILD_TYPE) === 'mewcx') {
           } else {
             json.version = version;
           }
-          // json.background.scripts = json.background.scripts.map(item => {
-          //   return `js/${item}`;
-          // });
-
-          // json.content_scripts[0].js = json.content_scripts[0].js.map(item => {
-          //   return `js/${item}`;
-          // });
-
-          // json.web_accessible_resources = json.web_accessible_resources.map(item => {
-          //   return `js/${item}`;
-          // });
+          if (process.env.NODE_ENV === 'production') {
+            json.browser_action.default_popup = `index.html${process.env.ROUTER_MODE === 'history' ? '' : '#'}/popup`
+            json.background.scripts = json.background.scripts.map(item => {
+              return `js/${item}`;
+            });
+            json.content_scripts[0].js = json.content_scripts[0].js.map(item => {
+              return `js/${item}`;
+            });
+            json.web_accessible_resources = json.web_accessible_resources.map(item => {
+              return `js/${item}`;
+            });
+            Object.keys(json.icons).forEach(item => {
+              json.icons[item] = json.icons[item].replace('img/icons/', '');
+            })
+            json.browser_action.default_icon = json.browser_action.default_icon.replace('img/icons/', '');
+          }
           return JSON.stringify(json, null, 2);
         }
         return content;

@@ -122,7 +122,11 @@ let urls = [];
   function onActivatedCb(info) {
     chrome.runtime.onMessage.removeListener(eventsListeners);
     chrome.tabs.get(info.tabId, function(tab) {
-      if (typeof tab !== 'undefined' && Object.keys(tab).length > 0) {
+      if (
+        typeof tab !== 'undefined' &&
+        Object.keys(tab).length > 0 &&
+        tab.url !== undefined
+      ) {
         urls[info.tabId] = cxHelpers.extractRootDomain(tab.url);
         querycB(tab);
       }
