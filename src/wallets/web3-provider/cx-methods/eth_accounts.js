@@ -8,7 +8,12 @@ import {
 export default async ({ payload }, res, next) => {
   if (payload.method !== 'eth_accounts') return next();
   const id = window.extensionID;
-  const event = new CustomEvent(WEB3_GET_ACC.replace('{{id}}', id));
+  const callerUrl = window.location.hostname;
+  const event = new CustomEvent(WEB3_GET_ACC.replace('{{id}}', id), {
+    detail: {
+      from: callerUrl
+    }
+  });
   window.dispatchEvent(event);
   window.addEventListener(WEB3_RECEIVE_ACC.replace('{{id}}', id), eventRes => {
     res(null, toPayload(payload.id, [eventRes.detail.account]));

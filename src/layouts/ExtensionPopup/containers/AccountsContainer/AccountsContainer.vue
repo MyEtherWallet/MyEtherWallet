@@ -156,11 +156,13 @@ export default {
   },
   watch: {
     accounts(newVal) {
-      if (newVal.length > 0) this.parseReceivedWallets();
+      if (newVal !== undefined && newVal.length > 0)
+        this.parseReceivedWallets();
     }
   },
   mounted() {
-    if (this.accounts.length > 0) this.parseReceivedWallets();
+    if (this.accounts !== undefined && this.accounts.length > 0)
+      this.parseReceivedWallets();
     this.$refs.fromModal.$on('hidden', () => {
       if (Object.keys(this.selectedWallet).length > 0) {
         this.quickSend = true;
@@ -176,22 +178,24 @@ export default {
       const myOwnWallets = [];
       let totalBalance = new BigNumber(this.totalBalance);
       for (const account of this.accounts) {
-        const address = Object.keys(account)[0];
-        const parsedValue = JSON.parse(account[address]);
-        if (parsedValue.type === WATCH_ONLY) {
-          const reformObj = Object.assign({}, parsedValue, {
-            address: address,
-            balance: await this.fetchBalance(address)
-          });
-          watchOnlyWallets.push(reformObj);
-        } else if (parsedValue.type !== WATCH_ONLY) {
-          const balance = await this.fetchBalance(address);
-          totalBalance = totalBalance.plus(balance);
-          const reformObj = Object.assign({}, parsedValue, {
-            address: address,
-            balance: balance
-          });
-          myOwnWallets.push(reformObj);
+        if (account !== undefined) {
+          const address = Object.keys(account)[0];
+          const parsedValue = JSON.parse(account[address]);
+          if (parsedValue.type === WATCH_ONLY) {
+            const reformObj = Object.assign({}, parsedValue, {
+              address: address,
+              balance: await this.fetchBalance(address)
+            });
+            watchOnlyWallets.push(reformObj);
+          } else if (parsedValue.type !== WATCH_ONLY) {
+            const balance = await this.fetchBalance(address);
+            totalBalance = totalBalance.plus(balance);
+            const reformObj = Object.assign({}, parsedValue, {
+              address: address,
+              balance: balance
+            });
+            myOwnWallets.push(reformObj);
+          }
         }
       }
 

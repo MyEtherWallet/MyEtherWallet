@@ -205,18 +205,20 @@ export default {
       const watchOnlyAddresses = [];
       const myWallets = [];
       for (const account of this.accounts) {
-        const address = toChecksumAddress(account.address).toLowerCase();
-        delete account['address'];
-        const parsedItemWallet = JSON.parse(account.wallet);
-        account['balance'] = await this.getBalance(address);
-        account['type'] = parsedItemWallet.type;
-        account['address'] = address;
-        account['nickname'] = parsedItemWallet.nick;
-        if (parsedItemWallet.type !== 'wallet') {
-          watchOnlyAddresses.push(account);
-        } else {
-          balance = balance.plus(new BigNumber(account.balance));
-          myWallets.push(account);
+        if (account !== undefined) {
+          const address = toChecksumAddress(account.address).toLowerCase();
+          delete account['address'];
+          const parsedItemWallet = JSON.parse(account.wallet);
+          account['balance'] = await this.getBalance(address);
+          account['type'] = parsedItemWallet.type;
+          account['address'] = address;
+          account['nickname'] = parsedItemWallet.nick;
+          if (parsedItemWallet.type !== 'wallet') {
+            watchOnlyAddresses.push(account);
+          } else {
+            balance = balance.plus(new BigNumber(account.balance));
+            myWallets.push(account);
+          }
         }
       }
 
