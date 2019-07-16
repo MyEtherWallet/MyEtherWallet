@@ -21,6 +21,7 @@
           :selected-account="selectedAccount"
           :select-account="selectAccount"
         />
+        <div v-if="accWithBal.length === 0" class=""></div>
       </div>
     </div>
     <accept-cancel-buttons
@@ -37,8 +38,13 @@
 import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { Misc, ExtensionHelpers } from '@/helpers';
+import { isAddress } from '@/helpers/addressUtils';
 import AddressSelectionComponent from '../../components/AddressSelectionComponent';
 import AcceptCancelButtons from '../../components/AcceptCancelButtons';
+import {
+  REJECT_MEW_CX_ACC,
+  SELECTED_MEW_CX_ACC
+} from '@/builds/mewcx/cxHelpers/cxEvents.js';
 export default {
   components: {
     'address-selection-component': AddressSelectionComponent,
@@ -71,12 +77,14 @@ export default {
     },
     async getBalance() {
       for (let i = 0; i < this.accounts.length; i++) {
-        const balance = await this.web3.eth.getBalance(this.accounts[i]);
-        const balanceToWei = this.web3.utils.fromWei(balance);
-        this.accWithBal.push({
-          balance: new BigNumber(balanceToWei).toString(),
-          address: this.accounts[i]
-        });
+        if (isAddress(this.accounts[i])) {
+          const balance = await this.web3.eth.getBalance(this.accounts[i]);
+          const balanceToWei = this.web3.utils.fromWei(balance);
+          this.accWithBal.push({
+            balance: new BigNumber(balanceToWei).toString(),
+            address: this.accounts[i]
+          });
+        }
       }
     },
     selectAccount(acc) {
@@ -92,7 +100,7 @@ export default {
         { url: `*://*.${_self.request.connectionRequest}/*` },
         function(tab) {
           const obj = {
-            msg: 'rejectMewCXAccount'
+            msg: REJECT_MEW_CX_ACC
           };
           window.chrome.tabs.sendMessage(tab[0].id, obj);
           window.close();
@@ -102,14 +110,16 @@ export default {
     sendAccount() {
       const account = this.selectedAccount;
       const chrome = window.chrome;
+      const eventObj = {};
+      eventObj[`${this.request.connectionRequest.toLowerCase()}`] = account;
       chrome.tabs.query(
-        { url: `*://*.${this.request.connectionRequest}/*` },
+        { url: `*://*.${this.request.connectionRequest.toLowerCase()}/*` },
         function(tab) {
           const obj = {
-            msg: 'selectedMewCXAccount',
+            msg: SELECTED_MEW_CX_ACC,
             account: account
           };
-          chrome.storage.sync.set({ selectedAccount: account }, function() {});
+          chrome.storage.sync.set(eventObj, function() {});
           chrome.tabs.sendMessage(tab[0].id, obj);
           window.close();
         }

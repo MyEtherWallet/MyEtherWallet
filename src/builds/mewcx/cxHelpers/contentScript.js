@@ -7,7 +7,7 @@ import {
   REJECT_MEW_TX_SIGN,
   REJECT_MEW_SIGN_MSG,
   WEB3_DETECTED,
-  WEB3_GET_CURRENT_ACC,
+  // WEB3_GET_CURRENT_ACC,
   WEB3_RECEIVE_ACC,
   WEB3_GET_ACC,
   CX_FETCH_MEW_ACCS,
@@ -20,6 +20,7 @@ import {
   WEB3_REJECT,
   CX_WEB3_DETECTED
 } from './cxEvents';
+import cxHelpers from './cxHelpers';
 const chrome = window.chrome;
 const extensionID = chrome.runtime.id;
 function exec(fn) {
@@ -94,43 +95,55 @@ window.addEventListener(
   false
 );
 
-window.addEventListener(
-  WEB3_GET_CURRENT_ACC.replace('{{id}}', extensionID),
-  function() {
-    chrome.storage.sync.get('selectedAccount', function(res) {
-      const event = new CustomEvent(
-        WEB3_RECEIVE_ACC.replace('{{id}}', extensionID),
-        {
-          detail: {
-            account: res['selectedAccount']
-          }
-        }
-      );
-      window.dispatchEvent(event);
-    });
-  }
-);
+// window.addEventListener(
+//   WEB3_GET_CURRENT_ACC.replace('{{id}}', extensionID),
+//   function() {
+//     chrome.storage.sync.get('selectedAccount', function(res) {
+//       const event = new CustomEvent(
+//         WEB3_RECEIVE_ACC.replace('{{id}}', extensionID),
+//         {
+//           detail: {
+//             account: res['selectedAccount']
+//           }
+//         }
+//       );
+//       window.dispatchEvent(event);
+//     });
+//   }
+// );
 
 window.addEventListener(
   WEB3_GET_ACC.replace('{{id}}', extensionID),
-  function() {
-    chrome.storage.sync.set({ selectedAccount: '' }, function() {});
-    const meta = {};
-    const tags = Array.from(document.getElementsByTagName('meta')).filter(
-      meta => {
-        if (meta.attributes[0].nodeName === 'property') return meta;
+  function(e) {
+    const url = cxHelpers.extractRootDomain(e.detail.from);
+    chrome.storage.sync.get(url, items => {
+      const meta = {};
+      const tags = Array.from(document.getElementsByTagName('meta')).filter(
+        meta => {
+          if (meta.attributes[0].nodeName === 'property') return meta;
+        }
+      );
+      Array.from(document.getElementsByTagName('link')).forEach(item => {
+        if (item.href.includes('favicon.')) meta['favicon'] = item.href;
+      });
+      tags.forEach(tag => {
+        meta[tag.attributes[0].value] = tag.attributes[1].value;
+      });
+      if (Object.keys(items).length > 0) {
+        window.dispatchEvent(
+          new CustomEvent(WEB3_RECEIVE_ACC.replace('{{id}}', extensionID), {
+            detail: {
+              account: items[url]
+            }
+          })
+        );
+      } else {
+        chrome.runtime.sendMessage(extensionID, {
+          msg: CX_FETCH_MEW_ACCS,
+          url: window.location.origin,
+          meta: meta
+        });
       }
-    );
-    Array.from(document.getElementsByTagName('link')).forEach(item => {
-      if (item.href.includes('favicon.')) meta['favicon'] = item.href;
-    });
-    tags.forEach(tag => {
-      meta[tag.attributes[0].value] = tag.attributes[1].value;
-    });
-    chrome.runtime.sendMessage(extensionID, {
-      msg: CX_FETCH_MEW_ACCS,
-      url: window.location.origin,
-      meta: meta
     });
   },
   false

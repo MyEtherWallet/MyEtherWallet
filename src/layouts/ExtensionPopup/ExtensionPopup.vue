@@ -14,6 +14,7 @@
 import WelcomeContainer from './containers/WelcomeContainer';
 import AccountsContainer from './containers/AccountsContainer';
 import { ExtensionHelpers } from '@/helpers';
+import { isAddress } from '@/helpers/addressUtils';
 
 export default {
   components: {
@@ -48,8 +49,10 @@ export default {
       this.hasAccounts = Object.keys(res).length > 0;
       const accounts = Object.keys(res).map(item => {
         const newObj = {};
-        newObj[`${item}`] = res[`${item}`];
-        if (item !== 'localTokens') return newObj;
+        if (isAddress(item)) {
+          newObj[`${item}`] = res[`${item}`];
+          if (item !== 'localTokens') return newObj;
+        }
       });
       this.accounts = this.hasAccounts ? accounts : {};
     }

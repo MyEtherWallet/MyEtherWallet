@@ -9,6 +9,7 @@ import {
 } from './cxEvents';
 const chrome = window.chrome;
 const useHash = getMode() === 'hash' ? '#' : '';
+let urls = [];
 (function() {
   /* eslint no-console: 0, no-unused-vars: 0, no-undef: 0 */
   const eventsListeners = function(request, _, sendResponse) {
@@ -96,6 +97,14 @@ const useHash = getMode() === 'hash' ? '#' : '';
 
   chrome.tabs.onUpdated.addListener(onUpdatedCb);
   chrome.tabs.onActivated.addListener(onActivatedCb);
+  chrome.tabs.onRemoved.addListener(onRemovedCb);
+
+  function onRemovedCb(id) {
+    chrome.storage.sync.remove(urls[id]);
+    urls = urls.filter((item, idx) => {
+      if (idx !== id) return item;
+    });
+  }
 
   function onUpdatedCb(_, __, tab) {
     chrome.runtime.onMessage.removeListener(eventsListeners);
@@ -108,6 +117,7 @@ const useHash = getMode() === 'hash' ? '#' : '';
     chrome.runtime.onMessage.removeListener(eventsListeners);
     chrome.tabs.get(info.tabId, function(tab) {
       if (typeof tab !== 'undefined' && Object.keys(tab).length > 0) {
+        urls[info.tabId] = cxHelpers.extractRootDomain(tab.url);
         querycB(tab);
       }
     });
