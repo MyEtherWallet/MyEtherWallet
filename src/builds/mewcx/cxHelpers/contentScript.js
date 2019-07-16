@@ -31,10 +31,11 @@ function exec(fn) {
   document.body.appendChild(script);
   document.body.removeChild(script);
 }
-/* eslint-disable-next-line */
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(function(request) {
   const script = document.createElement('script');
-  script.src = chrome.extension.getURL('cxWeb3.js');
+  script.src = chrome.extension.getURL(
+    `${process.env.NODE_ENV === 'production' ? 'js/' : ''}cxWeb3.js`
+  );
   switch (request.msg) {
     case CX_INJECT_WEB3:
       document.body.appendChild(script);

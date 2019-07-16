@@ -55,7 +55,7 @@
             <div class="content-title">
               <h3 class="lite">
                 {{ $t('footer.love') }}
-                <img src="~@/assets/images/icons/heart.svg" />
+                <img src="@/assets/images/icons/heart.svg" />
                 {{ $t('footer.donate') }}
               </h3>
             </div>
@@ -68,7 +68,7 @@
                 rel="noopener noreferrer"
               >
                 <p :data-eth="ethDonationAddress" class="crypto-link">
-                  <img src="~@/assets/images/icons/eth.svg" /> &nbsp;Ethereum
+                  <img src="@/assets/images/icons/eth.svg" /> &nbsp;Ethereum
                   Donation
                 </p>
               </a>
@@ -82,7 +82,7 @@
                   class="crypto-link no-padding"
                   data-btc="1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9"
                 >
-                  <img src="~@/assets/images/icons/btc.svg" /> &nbsp;Bitcoin
+                  <img src="@/assets/images/icons/btc.svg" /> &nbsp;Bitcoin
                   Donation
                 </p>
               </a>
