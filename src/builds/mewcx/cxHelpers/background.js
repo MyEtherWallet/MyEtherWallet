@@ -5,7 +5,8 @@ import {
   CX_SIGN_MSG,
   CX_CONFIRM_SEND_TX,
   CX_WEB3_DETECTED,
-  CX_FETCH_MEW_ACCS
+  CX_FETCH_MEW_ACCS,
+  CX_GO_TO_MAIN_PAGE
 } from './cxEvents';
 const chrome = window.chrome;
 const useHash = getMode() === 'hash' ? '#' : '';
@@ -44,6 +45,11 @@ let urls = [];
       q = arr.join('&');
     }
     switch (request.msg) {
+      case CX_GO_TO_MAIN_PAGE:
+        chrome.tabs.create({
+          url: `chrome-extension://${chrome.runtime.id}/index.html`
+        });
+        break;
       case CX_FETCH_MEW_ACCS:
         chrome.windows.create({
           url: chrome.runtime.getURL(

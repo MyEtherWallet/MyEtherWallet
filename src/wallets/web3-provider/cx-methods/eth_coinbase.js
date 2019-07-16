@@ -1,8 +1,8 @@
 /* eslint no-undef: 0 no-console:0 */
 import { toPayload } from '../methods/jsonrpc';
 import {
-  WEB3_RECEIVE_ACC
-  // WEB3_GET_CURRENT_ACC
+  WEB3_RECEIVE_ACC,
+  WEB3_REJECT
 } from '@/builds/mewcx/cxHelpers/cxEvents.js';
 export default async ({ payload }, res, next) => {
   if (payload.method !== 'eth_coinbase') return next();

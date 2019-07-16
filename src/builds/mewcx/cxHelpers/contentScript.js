@@ -7,10 +7,10 @@ import {
   REJECT_MEW_TX_SIGN,
   REJECT_MEW_SIGN_MSG,
   WEB3_DETECTED,
-  // WEB3_GET_CURRENT_ACC,
   WEB3_RECEIVE_ACC,
   WEB3_GET_ACC,
   CX_FETCH_MEW_ACCS,
+  CX_GO_TO_MAIN_PAGE,
   CX_CONFIRM_SEND_TX,
   CX_SIGN_MSG,
   WEB3_SEND_TX,
@@ -21,6 +21,7 @@ import {
   CX_WEB3_DETECTED
 } from './cxEvents';
 import cxHelpers from './cxHelpers';
+import { ExtensionHelpers } from '@/helpers';
 const chrome = window.chrome;
 const extensionID = chrome.runtime.id;
 function exec(fn) {
@@ -95,23 +96,6 @@ window.addEventListener(
   false
 );
 
-// window.addEventListener(
-//   WEB3_GET_CURRENT_ACC.replace('{{id}}', extensionID),
-//   function() {
-//     chrome.storage.sync.get('selectedAccount', function(res) {
-//       const event = new CustomEvent(
-//         WEB3_RECEIVE_ACC.replace('{{id}}', extensionID),
-//         {
-//           detail: {
-//             account: res['selectedAccount']
-//           }
-//         }
-//       );
-//       window.dispatchEvent(event);
-//     });
-//   }
-// );
-
 window.addEventListener(
   WEB3_GET_ACC.replace('{{id}}', extensionID),
   function(e) {
@@ -138,10 +122,18 @@ window.addEventListener(
           })
         );
       } else {
-        chrome.runtime.sendMessage(extensionID, {
-          msg: CX_FETCH_MEW_ACCS,
-          url: window.location.origin,
-          meta: meta
+        ExtensionHelpers.getAccounts(item => {
+          if (Object.keys(item).length > 0) {
+            chrome.runtime.sendMessage(extensionID, {
+              msg: CX_FETCH_MEW_ACCS,
+              url: window.location.origin,
+              meta: meta
+            });
+          } else {
+            chrome.runtime.sendMessage(extensionID, {
+              msg: CX_GO_TO_MAIN_PAGE
+            });
+          }
         });
       }
     });
