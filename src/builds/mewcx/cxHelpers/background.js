@@ -11,6 +11,8 @@ import {
 const chrome = window.chrome;
 const useHash = getMode() === 'hash' ? '#' : '';
 let urls = [];
+let metamaskChecker;
+
 (function() {
   /* eslint no-console: 0, no-unused-vars: 0, no-undef: 0 */
   const eventsListeners = function(request, _, sendResponse) {
@@ -64,6 +66,7 @@ let urls = [];
       case CX_WEB3_DETECTED:
         chrome.storage.sync.get('warned', item => {
           if (Object.keys(item).length === 0) {
+            clearTimeout(metamaskChecker);
             chrome.windows.create({
               url: chrome.runtime.getURL(
                 `index.html${useHash}/extension-popups/web3-detected`
@@ -74,6 +77,9 @@ let urls = [];
               focused: true
             });
             chrome.storage.sync.set({ warned: 'true' });
+            metamaskChecker = setTimeout(function() {
+              chrome.storage.remove('warned');
+            }, 900000);
           }
         });
         break;
