@@ -2,6 +2,7 @@ import Router from 'vue-router';
 import store from '@/store';
 import { getMode, getRoutes } from '@/builds/configs';
 import { ExtensionHelpers } from '@/helpers';
+import { isAddress } from '@/helpers/addressUtils';
 import xss from 'xss';
 
 const storeQuery = query => {
@@ -41,11 +42,16 @@ router.beforeResolve((to, ___, next) => {
     if (store.state.wallet === null) {
       if (BUILD_TYPE === 'mewcx') {
         ExtensionHelpers.getAccounts(item => {
-          const hasStoredWallet = Object.keys(item).length > 0;
-          if (hasStoredWallet) {
-            next('/');
-          } else {
+          const hasStoredWallet = {};
+          Object.keys(item).forEach(key => {
+            if (isAddress(key)) {
+              hasStoredWallet[key] = item[key];
+            }
+          });
+          if (Object.keys(hasStoredWallet).length > 0) {
             next({ name: 'AccessWalletLayout' });
+          } else {
+            next('/');
           }
         });
       } else {
