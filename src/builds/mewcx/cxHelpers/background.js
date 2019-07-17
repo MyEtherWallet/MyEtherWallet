@@ -62,14 +62,19 @@ let urls = [];
         });
         break;
       case CX_WEB3_DETECTED:
-        chrome.windows.create({
-          url: chrome.runtime.getURL(
-            `index.html${useHash}/extension-popups/web3-detected`
-          ),
-          type: 'popup',
-          height: 500,
-          width: 300,
-          focused: true
+        chrome.storage.sync.get('warned', item => {
+          if (Object.keys(item).length === 0) {
+            chrome.windows.create({
+              url: chrome.runtime.getURL(
+                `index.html${useHash}/extension-popups/web3-detected`
+              ),
+              type: 'popup',
+              height: 500,
+              width: 300,
+              focused: true
+            });
+            chrome.storage.sync.set({ warned: 'true' });
+          }
         });
         break;
       case CX_CONFIRM_SEND_TX:

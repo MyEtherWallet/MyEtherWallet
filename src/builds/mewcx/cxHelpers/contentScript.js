@@ -24,7 +24,7 @@ import cxHelpers from './cxHelpers';
 import { ExtensionHelpers } from '@/helpers';
 const chrome = window.chrome;
 const extensionID = chrome.runtime.id;
-function exec(fn) {
+function inject(fn) {
   const script = document.createElement('script');
   script.setAttribute('type', 'application/javascript');
   script.textContent = '(' + fn + ')("' + extensionID + '")';
@@ -40,7 +40,7 @@ chrome.runtime.onMessage.addListener(function(request) {
     case CX_INJECT_WEB3:
       document.body.appendChild(script);
       document.body.removeChild(script);
-      exec(function(id) {
+      inject(function(id) {
         window.extensionID = id;
       });
       break;
