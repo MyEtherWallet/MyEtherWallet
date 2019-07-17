@@ -49,7 +49,7 @@ let metamaskChecker;
     switch (request.msg) {
       case CX_GO_TO_MAIN_PAGE:
         chrome.tabs.create({
-          url: `chrome-extension://${chrome.runtime.id}/index.html`
+          url: `chrome-extension://${chrome.runtime.id}/index.html${useHash}/access-my-wallet`
         });
         break;
       case CX_FETCH_MEW_ACCS:

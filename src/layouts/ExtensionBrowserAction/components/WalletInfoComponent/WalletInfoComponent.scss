@@ -106,6 +106,7 @@
       border-left: 1px solid $dark-grey-11;
       flex: auto;
       max-width: 350px;
+      min-width: 350px;
       padding: 10px;
 
       .tokens-header {
@@ -144,6 +145,15 @@
           display: flex;
           justify-content: space-between;
           padding: 7px 10px;
+
+          .manual-load {
+            cursor: pointer;
+          }
+
+          img {
+            height: 30px;
+            width: 30px;
+          }
         }
       }
     }

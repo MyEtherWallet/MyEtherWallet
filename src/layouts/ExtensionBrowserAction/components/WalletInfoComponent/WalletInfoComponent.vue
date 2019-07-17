@@ -146,15 +146,22 @@
           </div>
           <div v-show="!loading">
             <div
-              v-for="token in localVersion"
-              :key="token.address"
+              v-for="(token, idx) in localVersion"
+              :key="token.address + idx"
               class="token-item"
             >
               <p>
                 <img :src="token.icon" />
                 {{ token.symbol }}
               </p>
-              <p>{{ token.balance }}</p>
+              <p
+                :class="[token.balance !== 'Load' ? '' : 'manual-load']"
+                @click="
+                  token.balance !== 'Load' ? () => {} : fetchTokenBalance(token)
+                "
+              >
+                {{ token.balance }}
+              </p>
             </div>
           </div>
         </div>
@@ -171,6 +178,7 @@ import BigNumber from 'bignumber.js';
 import EditWalletModal from '../EditWalletModal';
 import RemoveWalletModal from '../RemoveWalletModal';
 import { mapState } from 'vuex';
+import { Toast } from '@/helpers';
 
 export default {
   components: {
@@ -249,6 +257,46 @@ export default {
     },
     edit() {
       this.$refs.editModal.$refs.editModal.show();
+    },
+    async fetchTokenBalance(token) {
+      const tokenIndex = this.tokens.findIndex(element => {
+        return element.address.toLowerCase() === token.address.toLowerCase();
+      });
+      const contractAbi = [
+        {
+          name: 'balanceOf',
+          type: 'function',
+          constant: true,
+          inputs: [{ name: 'address', type: 'address' }],
+          outputs: [{ name: 'out', type: 'uint256' }]
+        }
+      ];
+      const contract = new this.web3.eth.Contract(contractAbi);
+      const data = contract.methods.balanceOf(this.address).encodeABI();
+      const balance = await this.web3.eth
+        .call({
+          to: token.address,
+          data: data
+        })
+        .then(res => {
+          let tokenBalance;
+          if (Number(res) === 0 || res === '0x') {
+            tokenBalance = 0;
+          } else {
+            const denominator = new BigNumber(10).pow(token.decimals);
+            tokenBalance = new BigNumber(res).div(denominator).toString();
+          }
+          return tokenBalance;
+        })
+        .catch(e => {
+          Toast.responseHandler(e, false);
+        });
+      this.localVersion = this.localVersion.map((item, idx) => {
+        if (idx === tokenIndex) {
+          item.balance = balance;
+        }
+        return item;
+      });
     },
     openRemoveWallet() {
       this.$refs.editModal.$refs.editModal.hide();

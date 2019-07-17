@@ -22,6 +22,7 @@ import {
 } from './cxEvents';
 import cxHelpers from './cxHelpers';
 import { ExtensionHelpers } from '@/helpers';
+import { isAddress } from '@/helpers/addressUtils';
 const chrome = window.chrome;
 const extensionID = chrome.runtime.id;
 function inject(fn) {
@@ -124,7 +125,13 @@ window.addEventListener(
         );
       } else {
         ExtensionHelpers.getAccounts(item => {
-          if (Object.keys(item).length > 0) {
+          const addresses = {};
+          Object.keys(item).forEach(key => {
+            if (isAddress(key)) {
+              addresses[key] = item[key];
+            }
+          });
+          if (Object.keys(addresses).length > 0) {
             chrome.runtime.sendMessage(extensionID, {
               msg: CX_FETCH_MEW_ACCS,
               url: window.location.origin,
