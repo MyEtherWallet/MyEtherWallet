@@ -1,3 +1,6 @@
+### Bug
+- Fix webworker error when origin is null [#1273](https://github.com/MyEtherWallet/MyEtherWallet/pull/1273)
+
 ### Release v5.0.15
 
 ### Bug
