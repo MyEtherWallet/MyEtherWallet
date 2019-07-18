@@ -17,6 +17,7 @@ const webpackConfig = {
     process: true
   },
   devServer: {
+    disableHostCheck: JSON.parse(env_vars.BUILD_TYPE) === 'mewcx',
     https:  true,
     host: 'localhost',
     hotOnly: JSON.parse(env_vars.BUILD_TYPE) !== 'mewcx',
@@ -92,15 +93,13 @@ const exportObj = {
   integrity: process.env.WEBPACK_INTEGRITY === 'false' ? false : true,
   pwa: pwa,
   chainWebpack: config => {
-    if (JSON.parse(env_vars.BUILD_TYPE) === 'mewcx') {
-      config
-        .plugin('html')
-        .tap((args) => {
-          // eslint-disable-next-line no-param-reassign
-          args[0].excludeChunks = ['background', 'contentScript', 'cxWeb3'];
-          return args;
-        });
-    }
+    config
+      .plugin('html')
+      .tap((args) => {
+        // eslint-disable-next-line no-param-reassign
+        args[0].excludeChunks = ['background', 'contentScript', 'cxWeb3'];
+        return args;
+      });
     config.module
       .rule('replace')
       .test(/\.js$/)

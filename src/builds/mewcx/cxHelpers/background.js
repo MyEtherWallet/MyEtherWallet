@@ -10,7 +10,7 @@ import {
 } from './cxEvents';
 const chrome = window.chrome;
 const useHash = getMode() === 'hash' ? '#' : '';
-let urls = [];
+const urls = {};
 let metamaskChecker;
 
 (function() {
@@ -118,9 +118,7 @@ let metamaskChecker;
 
   function onRemovedCb(id) {
     chrome.storage.sync.remove(urls[id]);
-    urls = urls.filter((item, idx) => {
-      if (idx !== id) return item;
-    });
+    delete urls[id];
   }
 
   function onUpdatedCb(_, __, tab) {
