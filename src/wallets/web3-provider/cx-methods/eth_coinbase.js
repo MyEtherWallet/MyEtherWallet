@@ -2,7 +2,8 @@
 import { toPayload } from '../methods/jsonrpc';
 import {
   WEB3_RECEIVE_ACC,
-  WEB3_REJECT
+  WEB3_REJECT,
+  WEB3_GET_ACC
 } from '@/builds/mewcx/cxHelpers/cxEvents.js';
 export default async ({ payload }, res, next) => {
   if (payload.method !== 'eth_coinbase') return next();
@@ -15,7 +16,7 @@ export default async ({ payload }, res, next) => {
   });
   window.dispatchEvent(event);
   window.addEventListener(WEB3_RECEIVE_ACC.replace('{{id}}', id), eventRes => {
-    res(null, toPayload(payload.id, [eventRes.detail.account]));
+    res(null, toPayload(payload.id, eventRes.detail.account));
     window.removeEventListener(
       WEB3_RECEIVE_ACC.replace('{{id}}', id),
       () => {}

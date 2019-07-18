@@ -1,10 +1,10 @@
 <template>
   <div class="view-wallet-info-layout">
     <interface-balance-modal ref="balance" :balance="balance" />
-    <view-private-key-modal v-if="!account.isHardware" ref="viewPriv" />
+    <view-private-key-modal v-if="hasPrivKey" ref="viewPriv" />
     <print-modal
       ref="printModal"
-      :priv-key="!account.isHardware"
+      :priv-key="hasPrivKey"
       :address="account.address"
     />
     <div class="title">
@@ -111,10 +111,7 @@ import privateKey from '@/assets/images/icons/private-key.svg';
 import keystore from '@/assets/images/icons/download-keystore.svg';
 import keystoreGrey from '@/assets/images/icons/download-keystore-grey.svg';
 import createBlob from '@/helpers/createBlob.js';
-import Web3 from 'web3';
 import utils from 'web3-utils';
-
-const web3 = new Web3('https://api.myetherwallet.com/eth');
 
 export default {
   components: {
@@ -168,12 +165,21 @@ export default {
     ...mapState(['account', 'network', 'web3']),
     hasNickname() {
       return typeof this.account.nickname !== 'undefined';
+    },
+    hasPrivKey() {
+      return (
+        typeof this.account.isHardware !== 'undefined' &&
+        this.account.isHardware !== false
+      );
     }
   },
   mounted() {
     this.fetchTokens();
     this.fetchBalance();
-    if (!this.account.isHardware) {
+    if (
+      !this.account.isHardware &&
+      typeof this.account.keystore !== 'undefined'
+    ) {
       this.walletJson = createBlob(JSON.parse(this.account.keystore), 'mime');
     }
   },
@@ -218,12 +224,7 @@ export default {
     },
     async fetchBalance() {
       this.fetchingBalance = true;
-      let balance;
-      if (this.build === 'mewcx') {
-        balance = await web3.eth.getBalance(this.account.address);
-      } else {
-        balance = await this.web3.eth.getBalance(this.account.address);
-      }
+      const balance = await this.web3.eth.getBalance(this.account.address);
       this.balance = utils.fromWei(balance, 'ether');
       this.fetchingBalance = false;
     },
@@ -244,16 +245,11 @@ export default {
           }
         ];
 
-        let contract;
-        if (this.build === 'mewcx') {
-          contract = new web3.eth.Contract(contractAbi);
-        } else {
-          contract = new this.web3.eth.Contract(contractAbi);
-        }
+        const contract = new this.web3.eth.Contract(contractAbi);
         const data = contract.methods
           .balanceOf(this.account.address)
           .encodeABI();
-        const balance = await web3.eth
+        const balance = await this.web3.eth
           .call({
             to: token.address,
             data: data
@@ -278,12 +274,7 @@ export default {
     },
     async fetchTokens() {
       this.loading = true;
-      let tb;
-      if (this.build === 'mewcx') {
-        tb = new TokenBalance(web3.currentProvider);
-      } else {
-        tb = new TokenBalance(this.web3.currentProvider);
-      }
+      const tb = new TokenBalance(this.web3.currentProvider);
       try {
         this.tokens = await tb.getBalance(this.account.address);
         this.tokens = this.tokens.map(token => {

@@ -42,6 +42,7 @@ import { Misc } from '@/helpers';
 import Blockie from '@/components/Blockie';
 import PasswordModalComponent from '../../components/PasswordModalComponent';
 import AcceptCancelButtons from '../../components/AcceptCancelButtons';
+import { MEW_SIGNED_MSG } from '@/builds/mewcx/cxHelpers/cxEvents';
 export default {
   components: {
     blockie: Blockie,
@@ -80,20 +81,23 @@ export default {
         data: [JSON.parse(this.signingKeystore), this.password]
       });
       worker.onmessage = function(e) {
-        _self.signMsg(
-          new WalletInterface(Buffer.from(e.data._privKey), false, keyStoreType)
-        );
+        _self.signMsg(e.data._privKey);
       };
     },
-    async signMsg(wallet) {
+    async signMsg(priv) {
+      const wallet = new WalletInterface(
+        Buffer.from(priv),
+        false,
+        keyStoreType
+      );
       const _self = this;
       const signedMsg = await wallet.signMessage(this.message);
       window.chrome.tabs.query(
         { url: `*://*.${Misc.getService(_self.linkQuery.url)}/*` },
         function(tab) {
           const obj = {
-            msg: 'mewSignedMsg',
-            signedMsg: signedMsg
+            msg: MEW_SIGNED_MSG,
+            signedMsg: '0x' + signedMsg.toString('hex')
           };
           window.chrome.tabs.sendMessage(tab[0].id, obj);
           window.close();

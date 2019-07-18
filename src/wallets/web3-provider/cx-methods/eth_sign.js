@@ -5,7 +5,8 @@ import {
   WEB3_REJECT
 } from '@/builds/mewcx/cxHelpers/cxEvents.js';
 export default async ({ payload }, res, next) => {
-  if (payload.method !== 'personal_sign') return next();
+  if (payload.method !== 'personal_sign' && payload.method !== 'eth_sign')
+    return next();
   const id = window.extensionID;
   const msg = payload.params[0];
   const address = payload.params[1];
@@ -19,10 +20,7 @@ export default async ({ payload }, res, next) => {
   window.addEventListener(
     WEB3_RECEIVE_SIGNED_MSG.replace('{{id}}', id),
     eventRes => {
-      res(
-        null,
-        toPayload(payload.id, '0x' + eventRes.detail.signedMsg.toString('hex'))
-      );
+      res(null, toPayload(payload.id, eventRes.detail.signedMsg));
       window.removeEventListener(
         WEB3_RECEIVE_SIGNED_MSG.replace('{{id}}', id),
         () => {}

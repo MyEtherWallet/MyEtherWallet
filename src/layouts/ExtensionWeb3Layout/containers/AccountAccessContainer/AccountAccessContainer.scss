@@ -5,6 +5,7 @@
   padding: 20px;
 
   .website-logos {
+    align-items: center;
     display: flex;
     justify-content: space-around;
     padding: 0 40px 10px;
@@ -12,6 +13,10 @@
 
   .site-logo {
     width: 50px;
+  }
+
+  .clip-logo {
+    height: 25px;
   }
 
   p {

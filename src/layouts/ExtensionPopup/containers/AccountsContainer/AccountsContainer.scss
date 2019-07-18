@@ -47,6 +47,13 @@
   }
 }
 
+.no-wallet-container {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  height: 140px;
+}
+
 .quick-send-from-modal {
   .quick-send-from-header {
     align-items: center;

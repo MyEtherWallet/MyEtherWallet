@@ -30,13 +30,10 @@ const router = new Router({
   }
 });
 
-router.beforeResolve((to, ___, next) => {
+router.beforeResolve((to, from, next) => {
   storeQuery(to.query);
-  if (
-    to.hasOwnProperty('meta') &&
-    to.meta.hasOwnProperty('requiresAuth') &&
-    to.meta.requiresAuth === false
-  ) {
+
+  if (to.meta.hasOwnProperty('requiresAuth')) {
     next();
   } else {
     if (store.state.wallet === null) {
