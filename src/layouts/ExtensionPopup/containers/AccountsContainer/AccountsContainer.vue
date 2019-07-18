@@ -20,9 +20,11 @@
               :key="item.address"
               :balance="item.balance"
             />
-            <h3 v-show="myWallets === false">
-              No wallets found 😢
-            </h3>
+            <div v-if="myWallets.length === 0" class="no-wallet-container">
+              <h3>
+                No wallets found 😢
+              </h3>
+            </div>
           </div>
         </b-tab>
         <b-tab
@@ -39,9 +41,14 @@
               :key="item.address"
               :balance="item.balance"
             />
-            <h3 v-show="watchOnlyWallets === false">
-              No wallets found 😢
-            </h3>
+            <div
+              v-if="watchOnlyWallets.length === 0"
+              class="no-wallet-container"
+            >
+              <h3>
+                No wallets found 😢
+              </h3>
+            </div>
           </div>
         </b-tab>
       </b-tabs>

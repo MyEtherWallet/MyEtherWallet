@@ -8,7 +8,7 @@ const gettingStartedDone =
 const storedNetwork = store.get('network');
 let network = nodeList['ETH'][2];
 
-if (storedNetwork !== undefined) {
+if (BUILD_TYPE !== 'mewcx' && storedNetwork !== undefined) {
   network = storedNetwork;
   network.type = nodeList[storedNetwork.type.name][0].type;
 }

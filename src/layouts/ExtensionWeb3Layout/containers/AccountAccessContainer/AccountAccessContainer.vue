@@ -3,7 +3,7 @@
     <div class="connection-request-container">
       <div class="website-logos">
         <img :src="request.favicon" class="site-logo" />
-        <img src="~@/assets/images/icons/clip.svg" />
+        <img src="~@/assets/images/icons/clip.svg" class="clip-logo" />
         <img class="site-logo" src="~@/assets/images/logo-small.png" />
       </div>
       <p>
