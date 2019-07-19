@@ -13,7 +13,7 @@ export {
   ethSign,
   ethAccounts,
   ethCoinbase
-  // ethSignTransaction,
+  // ethSignTransaction
   // ethGetTransactionCount,
   // netVersion,
   // ethGetTransactionReceipt,

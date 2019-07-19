@@ -15,21 +15,17 @@ export default async ({ payload }, res, next) => {
     }
   });
   window.dispatchEvent(event);
-  window.addEventListener(WEB3_RECEIVE_ACC.replace('{{id}}', id), eventRes => {
+  window.addEventListener(WEB3_RECEIVE_ACC.replace('{{id}}', id), function(
+    eventRes
+  ) {
+    this.removeEventListener(WEB3_RECEIVE_ACC.replace('{{id}}', id), () => {});
+    this.removeEventListener(WEB3_REJECT.replace('{{id}}', id), () => {});
     res(null, toPayload(payload.id, eventRes.detail.account));
-    window.removeEventListener(
-      WEB3_RECEIVE_ACC.replace('{{id}}', id),
-      () => {}
-    );
-    window.removeEventListener(WEB3_REJECT.replace('{{id}}', id), () => {});
   });
 
-  window.addEventListener(WEB3_REJECT.replace('{{id}}', id), () => {
+  window.addEventListener(WEB3_REJECT.replace('{{id}}', id), function() {
+    this.removeEventListener(WEB3_RECEIVE_ACC.replace('{{id}}', id), () => {});
+    this.removeEventListener(WEB3_REJECT.replace('{{id}}', id), () => {});
     res(null, toPayload(payload.id, new Error('User cancelled request!')));
-    window.removeEventListener(
-      WEB3_RECEIVE_ACC.replace('{{id}}', id),
-      () => {}
-    );
-    window.removeEventListener(WEB3_REJECT.replace('{{id}}', id), () => {});
   });
 };

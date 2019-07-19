@@ -71,33 +71,22 @@ export default {
   },
   methods: {
     signMessage() {
-      try {
-        this.web3.eth
-          .sign(this.message, this.account.address)
-          .then(_signedMessage => {
-            this.signature = JSON.stringify(
-              {
-                address: this.account.address,
-                msg: this.message,
-                sig: _signedMessage,
-                version: '3',
-                signer: this.account.isHardware
-                  ? this.account.identifier
-                  : 'MEW'
-              },
-              null,
-              2
-            );
-            this.$refs.signatureModal.$refs.signatureModal.show();
-          })
-          .catch(e => {
-            this.$refs.signatureModal.$refs.signatureModal.hide();
-            Toast.responseHandler(e, Toast.ERROR);
-          });
-      } catch (e) {
-        this.$refs.signatureModal.$refs.signatureModal.hide();
-        Toast.responseHandler(e, Toast.ERROR);
-      }
+      this.web3.eth
+        .sign(this.message, this.account.address)
+        .then(_signedMessage => {
+          this.signature = JSON.stringify(
+            {
+              address: this.account.address,
+              msg: this.message,
+              sig: _signedMessage,
+              version: '3',
+              signer: this.account.isHardware ? this.account.identifier : 'MEW'
+            },
+            null,
+            2
+          );
+          this.$refs.signatureModal.$refs.signatureModal.show();
+        });
     },
     copyToClipboard() {
       this.$refs.signature.select();
