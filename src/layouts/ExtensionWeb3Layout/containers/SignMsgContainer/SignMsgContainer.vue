@@ -28,6 +28,8 @@
       ref="passwordModal"
       :func="unlockWallet"
       :action-name="'Sign Message'"
+      :loading="loading"
+      :error="error"
       @passwordChange="updatePassword"
     />
   </div>
@@ -42,7 +44,10 @@ import { Misc } from '@/helpers';
 import Blockie from '@/components/Blockie';
 import PasswordModalComponent from '../../components/PasswordModalComponent';
 import AcceptCancelButtons from '../../components/AcceptCancelButtons';
-import { MEW_SIGNED_MSG } from '@/builds/mewcx/cxHelpers/cxEvents';
+import {
+  MEW_SIGNED_MSG,
+  REJECT_MEW_SIGN_MSG
+} from '@/builds/mewcx/cxHelpers/cxEvents';
 export default {
   components: {
     blockie: Blockie,
@@ -54,7 +59,9 @@ export default {
       address: '',
       message: '',
       password: '',
-      signingKeystore: {}
+      signingKeystore: {},
+      loading: false,
+      error: {}
     };
   },
   computed: {
@@ -71,9 +78,14 @@ export default {
   },
   methods: {
     updatePassword(e) {
+      this.error = {
+        msg: '',
+        errored: false
+      };
       this.password = e;
     },
     unlockWallet() {
+      this.loading = true;
       const worker = new walletWorker();
       const _self = this;
       worker.postMessage({
@@ -81,7 +93,17 @@ export default {
         data: [JSON.parse(this.signingKeystore), this.password]
       });
       worker.onmessage = function(e) {
+        _self.loading = false;
         _self.signMsg(e.data._privKey);
+      };
+
+      worker.onerror = function(e) {
+        e.preventDefault();
+        _self.loading = false;
+        _self.error = {
+          msg: 'Unlock failed: Wrong password!',
+          errored: true
+        };
       };
     },
     async signMsg(priv) {
@@ -113,7 +135,7 @@ export default {
         { url: `*://*.${Misc.getService(_self.linkQuery.url)}/*` },
         function(tab) {
           const obj = {
-            msg: 'rejectMewSignMsg'
+            msg: REJECT_MEW_SIGN_MSG
           };
           window.chrome.tabs.sendMessage(tab[0].id, obj);
           window.close();

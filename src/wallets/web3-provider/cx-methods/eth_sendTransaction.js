@@ -1,5 +1,4 @@
-/* eslint no-undef: 0 no-console:0 */
-import { toPayload } from '../methods/jsonrpc';
+import { toPayload, toError } from '../methods/jsonrpc';
 import { getSanitizedTx } from '../methods/utils';
 import {
   WEB3_SEND_TX,
@@ -43,7 +42,7 @@ export default async ({ payload }, res, next) => {
         window.removeEventListener(WEB3_REJECT.replace('{{id}}', id), () => {});
       });
     })
-    .catch(() => {
-      res(null, toPayload(payload.id, new Error('User Rejected action!')));
+    .catch(e => {
+      res(null, toError(payload.id, e));
     });
 };

@@ -25,12 +25,12 @@ export default async ({ payload }, res, next) => {
         WEB3_RECEIVE_SIGNED_MSG.replace('{{id}}', id),
         () => {}
       );
-      window.removeEventListener(WEB3_REJECT, () => {});
+      window.removeEventListener(WEB3_REJECT.replace('{{id}}', id), () => {});
     }
   );
 
-  window.addEventListener(WEB3_REJECT, () => {
-    res(null, toPayload(payload.id, new Error('User Rejected action!')));
+  window.addEventListener(WEB3_REJECT.replace('{{id}}', id), () => {
+    res(null, toPayload(payload.id, null));
     window.removeEventListener(
       WEB3_RECEIVE_SIGNED_MSG.replace('{{id}}', id),
       () => {}
