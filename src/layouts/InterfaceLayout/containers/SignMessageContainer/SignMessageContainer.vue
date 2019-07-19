@@ -71,7 +71,6 @@ export default {
   },
   methods: {
     signMessage() {
-      console.log('sign');
       try {
         this.web3.eth
           .sign(this.message, this.account.address)
