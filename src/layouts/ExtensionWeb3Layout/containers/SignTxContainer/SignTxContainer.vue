@@ -78,6 +78,8 @@
       ref="passwordModal"
       :func="unlockWallet"
       :action-name="'Sign and Send'"
+      :loading="loading"
+      :error="error"
       @passwordChange="updatePassword"
     />
   </div>
@@ -95,6 +97,10 @@ import { WalletInterface } from '@/wallets';
 import walletWorker from 'worker-loader!@/workers/wallet.worker.js';
 import { Transaction } from 'ethereumjs-tx';
 import { Misc } from '@/helpers';
+import {
+  REJECT_MEW_TX_SIGN,
+  MEW_TX_HASH
+} from '@/builds/mewcx/cxHelpers/cxEvents';
 export default {
   components: {
     'amount-info-component': AmountInfoComponent,
@@ -106,7 +112,9 @@ export default {
       showDetails: true,
       signingKeystore: '',
       wallet: {},
-      password: ''
+      password: '',
+      loading: false,
+      error: {}
     };
   },
   computed: {
@@ -146,6 +154,10 @@ export default {
       this.$refs.passwordModal.$refs.passwordModal.show();
     },
     updatePassword(e) {
+      this.error = {
+        msg: '',
+        errored: false
+      };
       this.password = e;
     },
     hexToNumString(hex, convertTo) {
@@ -155,16 +167,27 @@ export default {
       return new BigNumber(hex).toString();
     },
     unlockWallet() {
+      this.loading = true;
       const worker = new walletWorker();
-      const self = this;
+      const _self = this;
       worker.postMessage({
         type: 'unlockWallet',
         data: [JSON.parse(this.signingKeystore), this.password]
       });
       worker.onmessage = function(e) {
-        self.signAndSend(
+        _self.loading = false;
+        _self.signAndSend(
           new WalletInterface(Buffer.from(e.data._privKey), false, keyStoreType)
         );
+      };
+
+      worker.onerror = function(e) {
+        e.preventDefault();
+        _self.loading = false;
+        _self.error = {
+          msg: 'Unlock failed: Wrong password!',
+          errored: true
+        };
       };
     },
     rejectAction() {
@@ -173,7 +196,7 @@ export default {
         { url: `*://*.${Misc.getService(_self.linkQuery.url)}/*` },
         function(tab) {
           const obj = {
-            msg: 'rejectMewTxSign'
+            msg: REJECT_MEW_TX_SIGN
           };
           window.chrome.tabs.sendMessage(tab[0].id, obj);
           window.close();
@@ -193,7 +216,7 @@ export default {
             { url: `*://*.${Misc.getService(_self.linkQuery.url)}/*` },
             function(tab) {
               const obj = {
-                msg: 'rejectMewSignTx'
+                msg: REJECT_MEW_TX_SIGN
               };
               window.chrome.tabs.sendMessage(tab[0].id, obj);
               window.close();
@@ -204,7 +227,7 @@ export default {
           { url: `*://*.${Misc.getService(_self.linkQuery.url)}/*` },
           function(tab) {
             const obj = {
-              msg: 'mewTxHash',
+              msg: MEW_TX_HASH,
               hash: hash
             };
             window.chrome.tabs.sendMessage(tab[0].id, obj);

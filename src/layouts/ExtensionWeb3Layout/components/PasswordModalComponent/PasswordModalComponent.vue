@@ -22,6 +22,7 @@
               autocomplete="off"
               placeholder="Enter password"
             />
+            <p v-show="error.msg !== ''" class="error-msg">{{ error.msg }}</p>
             <img
               v-if="show"
               src="@/assets/images/icons/show-password.svg"
@@ -34,12 +35,13 @@
             />
           </div>
           <button
-            :disabled="password === ''"
+            :disabled="password === '' || loading || error.errored"
             class="submit-button large-round-button-green-filled"
             type="submit"
             @click.prevent="func"
           >
-            {{ actionName }}
+            <span v-show="!loading">{{ actionName }}</span>
+            <i v-show="loading" class="fa fa-spin fa-spinner" />
           </button>
         </form>
         <p class="terms">
@@ -65,6 +67,19 @@ export default {
     actionName: {
       type: String,
       default: ''
+    },
+    loading: {
+      type: Boolean,
+      default: false
+    },
+    error: {
+      type: Object,
+      default: () => {
+        return {
+          msg: '',
+          errored: false
+        };
+      }
     }
   },
   data() {

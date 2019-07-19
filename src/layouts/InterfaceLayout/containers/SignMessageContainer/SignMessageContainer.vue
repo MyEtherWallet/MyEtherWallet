@@ -71,6 +71,7 @@ export default {
   },
   methods: {
     signMessage() {
+      console.log('sign');
       try {
         this.web3.eth
           .sign(this.message, this.account.address)
@@ -91,9 +92,11 @@ export default {
             this.$refs.signatureModal.$refs.signatureModal.show();
           })
           .catch(e => {
+            this.$refs.signatureModal.$refs.signatureModal.hide();
             Toast.responseHandler(e, Toast.ERROR);
           });
       } catch (e) {
+        this.$refs.signatureModal.$refs.signatureModal.hide();
         Toast.responseHandler(e, Toast.ERROR);
       }
     },

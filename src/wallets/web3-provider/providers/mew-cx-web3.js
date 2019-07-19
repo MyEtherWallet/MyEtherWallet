@@ -5,9 +5,6 @@ import {
   ethCoinbase,
   ethSendTransaction,
   ethSign
-  // ethSignTransaction,
-  // ethGetTransactionCount,
-  // ethGetTransactionReceipt
 } from '../cx-methods';
 class MewCxWeb3 {
   constructor(host) {
@@ -20,15 +17,9 @@ class MewCxWeb3 {
         };
         const middleware = new MiddleWare();
         middleware.use(ethSendTransaction);
-        // middleware.use(ethSignTransaction);
-        // middleware.use(ethGetTransactionCount);
-        // middleware.use(ethGetTransactionReceipt);
         middleware.use(ethSign);
         middleware.use(ethAccounts);
         middleware.use(ethCoinbase);
-        // middleware.use(ethGetBlockByNumber);
-        // middleware.use(ethGetBlockNumber);
-        // middleware.use(netVersion);
         middleware.run(req, callback).then(() => {
           requestManager.provider.send(payload, callback);
         });
