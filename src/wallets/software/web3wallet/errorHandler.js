@@ -1,7 +1,8 @@
 import { Toast } from '@/helpers';
 const ERRORS = {
   REJECT_TX:
-    'Returned error: Error: MetaMask Tx Signature: User denied transaction signature.'
+    'Returned error: Error: MetaMask Tx Signature: User denied transaction signature.',
+  MEW_REJECT_TX: 'User rejected action!'
 };
 const WARNING = {};
 

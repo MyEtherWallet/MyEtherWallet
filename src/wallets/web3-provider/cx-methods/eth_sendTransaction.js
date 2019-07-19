@@ -20,26 +20,23 @@ export default async ({ payload }, res, next) => {
       window.dispatchEvent(event);
       window.addEventListener(
         WEB3_RECEIVE_TX_HASH.replace('{{id}}', id),
-        eventRes => {
-          res(null, toPayload(payload.id, eventRes.detail.hash));
-          window.removeEventListener(
+        function(eventRes) {
+          this.removeEventListener(
             WEB3_RECEIVE_TX_HASH.replace('{{id}}', id),
             () => {}
           );
-          window.removeEventListener(
-            WEB3_REJECT.replace('{{id}}', id),
-            () => {}
-          );
+          this.removeEventListener(WEB3_REJECT.replace('{{id}}', id), () => {});
+          res(null, toPayload(payload.id, eventRes.detail.hash));
         }
       );
 
-      window.addEventListener(WEB3_REJECT.replace('{{id}}', id), () => {
-        res(null, toPayload(payload.id, new Error('User Rejected action!')));
-        window.removeEventListener(
+      window.addEventListener(WEB3_REJECT.replace('{{id}}', id), function() {
+        this.removeEventListener(
           WEB3_RECEIVE_TX_HASH.replace('{{id}}', id),
           () => {}
         );
-        window.removeEventListener(WEB3_REJECT.replace('{{id}}', id), () => {});
+        this.removeEventListener(WEB3_REJECT.replace('{{id}}', id), () => {});
+        res(null, toPayload(payload.id, new Error('User Rejected action!')));
       });
     })
     .catch(e => {
