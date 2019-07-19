@@ -1,0 +1,41 @@
+@import '~@/scss/GlobalVariables';
+
+.interface-mobile-menu .mobile-menu-container {
+  position: relative;
+
+  .menu-small-title {
+    position: absolute;
+    top: 20px;
+    right: 23px;
+    color: $white;
+    z-index: 1;
+    pointer-events: none;
+    font-size: 14px;
+  }
+
+  .btn-group {
+    width: 100%;
+    .btn-secondary,
+    .btn-secondary:not(:disabled):not(.disabled):active,
+    .btn-secondary.dropdown-toggle {
+      background-color: $dark-blue-2;
+      border: 0;
+      border-radius: 0;
+      text-align: left;
+      padding: 15px 20px;
+      font-size: 20px;
+      font-weight: 500;
+    }
+  }
+  .dropdown-toggle::after {
+    display: none;
+  }
+  .dropdown-menu.show {
+    width: 100%;
+  }
+  ul {
+    li {
+      padding: 5px 0;
+    }
+  }
+}

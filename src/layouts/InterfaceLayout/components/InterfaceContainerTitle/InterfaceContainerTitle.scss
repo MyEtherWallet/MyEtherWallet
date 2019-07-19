@@ -1,12 +1,16 @@
 @import '~@/scss/GlobalVariables';
 
-.content-title {
+.desktop-title {
   align-items: center;
   background-color: $background-color-white;
   border-bottom: 2px solid $background-color-1;
   display: flex;
   padding: 15px 0;
   position: relative;
+
+  @media all and (max-width: $interface--mobile-side-menu--width) {
+    display: none;
+  }
 
   h2 {
     border-left: 5px solid $background-color-2;
@@ -23,13 +27,20 @@
       padding-left: 10px;
     }
   }
+
+  .side-menu-button {
+    display: none;
+    margin-left: auto;
+    margin-right: 20px;
+
+    @media all and (max-width: $interface--mobile-side-menu--width) {
+      display: block;
+    }
+  }
 }
 
-.side-menu-button {
+.mobile-title {
   display: none;
-  margin-left: auto;
-  margin-right: 20px;
-
   @media all and (max-width: $interface--mobile-side-menu--width) {
     display: block;
   }

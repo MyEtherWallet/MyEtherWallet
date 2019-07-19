@@ -1,19 +1,29 @@
 <template lang="html">
-  <div class="content-title">
-    <h2>{{ title }} <slot></slot></h2>
-    <slot name="right"></slot>
-    <div class="side-menu-button">
-      <round-button :title="$t('common.menu')" @click.native="toggleSideMenu" />
+  <div class="interface-container-title">
+    <div class="desktop-title">
+      <h2>{{ title }} <slot></slot></h2>
+      <slot name="right"></slot>
+      <div class="side-menu-button">
+        <round-button
+          :title="$t('common.menu')"
+          @click.native="toggleSideMenu"
+        />
+      </div>
+    </div>
+    <div class="mobile-title">
+      <mobile-menu />
     </div>
   </div>
 </template>
 
 <script>
 import RoundButton from '@/components/Buttons/RoundButton';
+import InterfaceMobileMenu from '@/layouts/InterfaceLayout/components/InterfaceMobileMenu';
 
 export default {
   components: {
-    'round-button': RoundButton
+    'round-button': RoundButton,
+    'mobile-menu': InterfaceMobileMenu
   },
   props: {
     title: {
