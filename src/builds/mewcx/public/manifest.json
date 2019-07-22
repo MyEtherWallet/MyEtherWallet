@@ -22,10 +22,10 @@
     {
       "matches": ["<all_urls>"],
       "js": ["contentScript.js"],
-      "run_at": "document_end"
+      "run_at": "document_start"
     }
   ],
-  "web_accessible_resources": ["cxWeb3.js"],
+  "web_accessible_resources": ["cxWeb3.js", "img/*.svg", "img/*.png", "img/*.jpg"],
   "permissions": ["<all_urls>", "storage", "tabs", "activeTab"],
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "version": "5.0.15"

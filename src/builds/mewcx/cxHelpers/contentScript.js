@@ -23,14 +23,22 @@ import {
 import cxHelpers from './cxHelpers';
 import { ExtensionHelpers } from '@/helpers';
 import { isAddress } from '@/helpers/addressUtils';
+let getAccountModalIsOPen = false;
 const chrome = window.chrome;
 const extensionID = chrome.runtime.id;
+
+(function() {
+  inject(function(id) {
+    window.extensionID = id;
+  });
+});
+
 function inject(fn) {
   const script = document.createElement('script');
   script.setAttribute('type', 'application/javascript');
   script.textContent = '(' + fn + ')("' + extensionID + '")';
-  document.body.appendChild(script);
-  document.body.removeChild(script);
+  document.head.appendChild(script);
+  document.head.removeChild(script);
 }
 chrome.runtime.onMessage.addListener(function(request) {
   const script = document.createElement('script');
@@ -39,14 +47,15 @@ chrome.runtime.onMessage.addListener(function(request) {
   );
   switch (request.msg) {
     case CX_INJECT_WEB3:
-      document.body.appendChild(script);
-      document.body.removeChild(script);
+      document.head.appendChild(script);
+      document.head.removeChild(script);
       inject(function(id) {
         window.extensionID = id;
       });
       break;
 
     case SELECTED_MEW_CX_ACC:
+      getAccountModalIsOPen = false;
       window.dispatchEvent(
         new CustomEvent(WEB3_RECEIVE_ACC.replace('{{id}}', extensionID), {
           detail: {
@@ -97,7 +106,6 @@ window.addEventListener(
   },
   false
 );
-
 window.addEventListener(
   WEB3_GET_ACC.replace('{{id}}', extensionID),
   function(e) {
@@ -124,25 +132,28 @@ window.addEventListener(
           })
         );
       } else {
-        ExtensionHelpers.getAccounts(item => {
-          const addresses = {};
-          Object.keys(item).forEach(key => {
-            if (isAddress(key)) {
-              addresses[key] = item[key];
+        if (!getAccountModalIsOPen) {
+          ExtensionHelpers.getAccounts(item => {
+            const addresses = {};
+            Object.keys(item).forEach(key => {
+              if (isAddress(key)) {
+                addresses[key] = item[key];
+              }
+            });
+            if (Object.keys(addresses).length > 0) {
+              chrome.runtime.sendMessage(extensionID, {
+                msg: CX_FETCH_MEW_ACCS,
+                url: window.location.origin,
+                meta: meta
+              });
+            } else {
+              chrome.runtime.sendMessage(extensionID, {
+                msg: CX_GO_TO_MAIN_PAGE
+              });
             }
           });
-          if (Object.keys(addresses).length > 0) {
-            chrome.runtime.sendMessage(extensionID, {
-              msg: CX_FETCH_MEW_ACCS,
-              url: window.location.origin,
-              meta: meta
-            });
-          } else {
-            chrome.runtime.sendMessage(extensionID, {
-              msg: CX_GO_TO_MAIN_PAGE
-            });
-          }
-        });
+          getAccountModalIsOPen = true;
+        }
       }
     });
   },
