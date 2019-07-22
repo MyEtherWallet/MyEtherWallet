@@ -332,6 +332,12 @@ export default {
       } catch (e) {
         tokens = ETH.tokens.map(token => {
           token.balance = 'Load';
+          try {
+            // eslint-disable-next-line
+            token.icon = require(`@/assets/images/currency/coins/${token.symbol.toLowerCase()}.svg`);
+          } catch (e) {
+            token.icon = require('@/assets/images/currency/eth.svg');
+          }
           return token;
         });
         this.loading = false;
