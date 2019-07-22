@@ -1,6 +1,6 @@
 ### Bug
 
-- Custom networks not showing on send offline helper []()
+- Custom networks not showing on send offline helper [#1285](https://github.com/MyEtherWallet/MyEtherWallet/pull/1285)
 
 ### Devop
 
