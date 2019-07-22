@@ -19,7 +19,8 @@ const EXCEPTIONS = [
   'web3-utils',
   '@xkeshi/vue-qrcode',
   'multicoin-address-validator',
-  'bootstrap-vue'
+  'bootstrap-vue',
+  'web3-core-requestmanager'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
