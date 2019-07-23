@@ -5,7 +5,7 @@
       hide-footer
       centered
       class="bootstrap-modal"
-      title="Add Watch Only Wallet"
+      title="Add Watch-Only Wallet"
     >
       <div class="modal-contents">
         <form>
@@ -28,10 +28,11 @@
           <button
             :class="[
               validInputs ? '' : 'disabled',
+              loading ? 'disabled' : '',
               'submit-button large-round-button-green-filled'
             ]"
             type="submit"
-            @click.prevent="addWatchOnly(name, address)"
+            @click.prevent="submit"
           >
             <span v-show="!loading"> Add Wallet </span>
             <i v-show="loading" class="fa fa-spinner fa-spin" />
@@ -72,6 +73,11 @@ export default {
       this.name = '';
       this.address = '';
     });
+  },
+  methods: {
+    submit() {
+      this.addWatchOnly(this.name, this.address);
+    }
   }
 };
 </script>

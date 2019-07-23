@@ -13,9 +13,6 @@
         <b-nav-item href="https://kb.myetherwallet.com" target="_blank">
           Help Center
         </b-nav-item>
-        <b-nav-item href="https://kb.myetherwallet.com" target="_blank">
-          Help Center
-        </b-nav-item>
         <b-nav-item
           v-show="account.address !== null"
           target="_blank"

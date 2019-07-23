@@ -21,7 +21,7 @@
     .button-container {
       display: flex;
 
-      div {
+      .clickable {
         color: $white;
         cursor: pointer;
         padding: 5px 15px;

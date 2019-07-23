@@ -51,7 +51,7 @@ export default {
         const newObj = {};
         if (isAddress(item)) {
           newObj[`${item}`] = res[`${item}`];
-          if (item !== 'localTokens') return newObj;
+          return newObj;
         }
       });
       this.accounts = this.hasAccounts ? accounts : {};

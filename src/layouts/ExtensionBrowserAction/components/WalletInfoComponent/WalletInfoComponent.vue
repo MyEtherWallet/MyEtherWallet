@@ -56,8 +56,8 @@
         </div>
         <div v-show="!loading" class="tokens-container">
           <div
-            v-for="token in localVersion"
-            :key="token.address"
+            v-for="(token, idx) in localVersion"
+            :key="token.address + address + idx"
             class="modal-token-item"
           >
             <div class="icon-name-container">
@@ -78,6 +78,7 @@
       <div class="button-container">
         <div
           v-show="walletType !== 'watchOnly'"
+          class="clickable"
           @click="
             () => {
               access(wallet, 'access');
@@ -88,15 +89,16 @@
         </div>
         <div
           v-show="walletType !== 'watchOnly'"
+          class="clickable"
           @click="
             () => {
               detail(wallet, 'view', nickname);
             }
           "
         >
-          Detail
+          Details
         </div>
-        <div @click="edit">Edit</div>
+        <div class="clickable" @click="edit">Edit</div>
       </div>
     </div>
     <div class="wallet-content">
@@ -151,7 +153,6 @@
               class="token-item"
             >
               <p>
-                <img :src="token.icon" />
                 {{ token.symbol }}
               </p>
               <p
@@ -317,12 +318,6 @@ export default {
                 .toFixed(3)
             : 0;
           token.address = token.addr;
-          try {
-            // eslint-disable-next-line
-            token.icon = require(`@/assets/images/currency/coins/${token.symbol.toLowerCase()}.svg`);
-          } catch (e) {
-            token.icon = require('@/assets/images/currency/eth.svg');
-          }
           delete token.addr;
           return token;
         });
@@ -332,12 +327,6 @@ export default {
       } catch (e) {
         tokens = ETH.tokens.map(token => {
           token.balance = 'Load';
-          try {
-            // eslint-disable-next-line
-            token.icon = require(`@/assets/images/currency/coins/${token.symbol.toLowerCase()}.svg`);
-          } catch (e) {
-            token.icon = require('@/assets/images/currency/eth.svg');
-          }
           return token;
         });
         this.loading = false;

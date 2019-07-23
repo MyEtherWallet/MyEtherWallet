@@ -5,6 +5,7 @@
       hide-footer
       class="bootstrap-modal"
       title="Edit Modal"
+      centered
     >
       <div class="modal-contents">
         <form>
