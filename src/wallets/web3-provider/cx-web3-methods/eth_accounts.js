@@ -1,5 +1,5 @@
 /* eslint no-undef: 0 no-console:0 */
-import { toPayload } from '../methods/jsonrpc';
+import { toPayload } from '../jsonrpc';
 import {
   WEB3_RECEIVE_ACC,
   WEB3_REJECT,

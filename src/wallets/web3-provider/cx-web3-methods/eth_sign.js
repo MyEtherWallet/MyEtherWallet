@@ -1,4 +1,4 @@
-import { toPayload } from '../methods/jsonrpc';
+import { toPayload } from '../jsonrpc';
 import {
   WEB3_SEND_SIGN_MSG,
   WEB3_RECEIVE_SIGNED_MSG,

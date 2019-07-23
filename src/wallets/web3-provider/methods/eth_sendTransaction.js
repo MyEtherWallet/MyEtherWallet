@@ -3,7 +3,7 @@ import utils from 'web3-utils';
 import EthCalls from '../web3Calls';
 import { WEB3_WALLET } from '../../bip44/walletTypes';
 import EventNames from '../events';
-import { toPayload } from './jsonrpc';
+import { toPayload } from '../jsonrpc';
 import * as locStore from 'store';
 import { getSanitizedTx } from './utils';
 import BigNumber from 'bignumber.js';

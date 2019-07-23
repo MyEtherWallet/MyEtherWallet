@@ -1,7 +1,7 @@
 import unit from 'ethjs-unit';
 import EthCalls from '../web3Calls';
 import { WEB3_WALLET } from '../../bip44/walletTypes';
-import { toPayload } from './jsonrpc';
+import { toPayload } from '../jsonrpc';
 import EventNames from '../events';
 import { getSanitizedTx } from './utils';
 export default async (

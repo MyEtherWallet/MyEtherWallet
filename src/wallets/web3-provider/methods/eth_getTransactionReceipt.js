@@ -1,4 +1,4 @@
-import { toPayload } from './jsonrpc';
+import { toPayload } from '../jsonrpc';
 import EthCalls from '../web3Calls';
 const WAIT_TIME = 30 * 1000; //30 seconds
 const memcache = {};
