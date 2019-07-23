@@ -1,4 +1,4 @@
-import { toPayload, toError } from '../methods/jsonrpc';
+import { toPayload, toError } from '../jsonrpc';
 import { getSanitizedTx } from '../methods/utils';
 import {
   WEB3_SEND_TX,

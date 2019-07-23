@@ -126,7 +126,7 @@ if (JSON.parse(env_vars.BUILD_TYPE) === 'mewcx') {
   exportObj['filenameHashing'] = false;
   exportObj['productionSourceMap'] = false;
   exportObj['configureWebpack'].optimization.splitChunks = false;
-  exportObj['configureWebpack'].optimization.minimize = process.env.NODE_ENV === 'production';
+  exportObj['configureWebpack'].optimization.minimize = false;
   exportObj['configureWebpack'].plugins.push(new CopyWebpackPlugin([
     {
       from: 'src/builds/' + JSON.parse(env_vars.BUILD_TYPE) + '/public',

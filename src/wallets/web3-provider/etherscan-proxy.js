@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { toPayload } from './methods/jsonrpc';
+import { toPayload } from './jsonrpc';
 
 const toQueryString = params => {
   return Object.keys(params)
