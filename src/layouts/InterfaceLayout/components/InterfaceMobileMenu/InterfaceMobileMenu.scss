@@ -1,4 +1,4 @@
-@import '~@/scss/GlobalVariables';
+@import "~@/scss/GlobalVariables";
 
 .interface-mobile-menu .mobile-menu-container {
   position: relative;
@@ -7,7 +7,7 @@
     position: absolute;
     top: 20px;
     right: 23px;
-    color: $white;
+    color: $mew-green;
     z-index: 1;
     pointer-events: none;
     font-size: 14px;
@@ -20,22 +20,67 @@
     .btn-secondary.dropdown-toggle {
       background-color: $dark-blue-2;
       border: 0;
-      border-radius: 0;
+      border-radius: 0 0;
       text-align: left;
       padding: 15px 20px;
       font-size: 20px;
       font-weight: 500;
     }
   }
+
+  .dropdown-menu-item {
+    border-bottom: 1px solid $light-grey-5;
+    padding: 25px 10px;
+
+    &:last-child {
+      border-bottom: 0;
+    }
+
+    p {
+      font-size: 22px;
+      font-weight: 500;
+    }
+
+    .cat-title {
+      display: flex;
+      align-items: center;
+      i {
+        margin-left: auto;
+      }
+    }
+
+    .sub-menu {
+      overflow: hidden;
+      height: 0px;
+      padding-left: 10px;
+      a {
+        padding: 0;
+        margin: 0;
+      }
+
+      li {
+        padding-top: 10px;
+        a {
+          margin-top: 10px;
+          font-size: 18px;
+          line-height: 30px;
+        }
+      }
+    }
+  }
+
   .dropdown-toggle::after {
     display: none;
   }
+
   .dropdown-menu.show {
     width: 100%;
+    transform: translate3d(0px, 57px, 0px) !important;
+    z-index: 1 !important;
   }
-  ul {
-    li {
-      padding: 5px 0;
-    }
+
+  .dropdown-menu {
+    border-radius: 0 0 5px 5px;
+    padding: 0 20px;
   }
 }
