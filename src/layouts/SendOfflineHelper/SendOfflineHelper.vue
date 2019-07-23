@@ -32,10 +32,19 @@
                   <div class="network-title">
                     <div class="network-icon">
                       <img
-                        v-if="Networks[key][0].type.icon"
+                        v-if="
+                          key !== 'Custom Networks' &&
+                            Networks[key][0].type.icon
+                        "
                         :src="Networks[key][0].type.icon"
                       />
-                      <div v-if="!Networks[key][0].type.icon" class="no-icon">
+                      <div
+                        v-if="
+                          key !== 'Custom Networks' &&
+                            !Networks[key][0].type.icon
+                        "
+                        class="no-icon"
+                      >
                         <p>No</p>
                         <p>Icon</p>
                       </div>
@@ -44,7 +53,7 @@
                   </div>
                   <div class="network-content">
                     <p
-                      v-for="net in Networks[key]"
+                      v-for="net in reorderNetworkList[key]"
                       :key="net.service"
                       :class="
                         net.service === selectedNetwork.service &&
@@ -100,9 +109,9 @@
                 </li>
                 <li class="detail-container">
                   <span class="detail-name">Retrieved:</span>
-                  <span class="detail-text">{{
-                    dateTimeDisplay(genInfo.timestamp)
-                  }}</span>
+                  <span class="detail-text">
+                    {{ dateTimeDisplay(genInfo.timestamp) }}
+                  </span>
                 </li>
                 <li class="detail-container">
                   <span class="detail-name">at block:</span>
@@ -341,7 +350,7 @@ import Misc from '@/helpers/misc';
 import BigNumber from 'bignumber.js';
 import web3Utils from 'web3-utils';
 import * as networkTypes from '@/networks/types';
-
+import store from 'store';
 import TitleTextContentsLayout from '@/layouts/InformationPages/Components/TitleTextContentsLayout';
 import AccordionMenu from '@/components/AccordionMenu';
 import DropDownAddressSelector from '@/components/DropDownAddressSelector';
@@ -414,7 +423,16 @@ export default {
       'online'
     ]),
     reorderNetworkList() {
-      return Misc.reorderNetworks();
+      const customNetworks =
+        store.get('customNetworks') !== undefined
+          ? store.get('customNetworks')
+          : [];
+      const currentNetworks = Misc.reorderNetworks();
+      const newObj = Object.assign({}, currentNetworks, {
+        'Custom Networks': customNetworks
+      });
+      if (customNetworks.length === 0) delete newObj['Custom Networks'];
+      return newObj;
     },
     networkTitle() {
       return `${this.selectedNetwork.type.name} - ${this.selectedNetwork.service} `;

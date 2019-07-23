@@ -1,3 +1,7 @@
+### Bug
+
+- Custom networks not showing on send offline helper [#1285](https://github.com/MyEtherWallet/MyEtherWallet/pull/1285)
+
 ### Devop
 
 - Add MEWTopia link [#1275](https://github.com/MyEtherWallet/MyEtherWallet/pull/1275)
