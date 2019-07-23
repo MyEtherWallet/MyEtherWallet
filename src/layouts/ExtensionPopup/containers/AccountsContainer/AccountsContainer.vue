@@ -29,7 +29,7 @@
         </b-tab>
         <b-tab
           :active="!hasMyWallets"
-          title="Watch Only Wallets"
+          title="Watch-Only Wallets"
           class="tab-container"
         >
           <div class="wallet-component-container">
@@ -223,7 +223,11 @@ export default {
       }
     },
     moveToQuicksend() {
-      this.$refs.fromModal.show();
+      if (this.myWallets.length === 0) {
+        this.addWallet();
+      } else {
+        this.$refs.fromModal.show();
+      }
     },
     closeFromModal() {
       this.$refs.fromModal.hide();
@@ -250,6 +254,8 @@ export default {
         this.selectedWallet = wallet;
         e.target.classList.add('selected');
       }
+
+      this.closeFromModal();
     },
     cancel() {
       this.quickSend = false;

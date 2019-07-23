@@ -8,13 +8,25 @@ const fromMyEtherWalletV2 = json => {
   return new Wallet(privKey);
 };
 const getWalletFromPrivKeyFile = (jsonfile, password) => {
-  if (jsonfile.encseed != null) return Wallet.fromEthSale(jsonfile, password);
-  else if (jsonfile.Crypto != null || jsonfile.crypto != null)
-    return Wallet.fromV3(jsonfile, password, true);
-  else if (jsonfile.hash != null)
-    return Wallet.ThirdParty.fromEtherWallet(jsonfile, password);
-  else if (jsonfile.publisher == 'MyEtherWallet')
-    return fromMyEtherWalletV2(jsonfile);
+  // filename hack for getting the file name once unlocked
+  let wallet;
+  if (jsonfile.encseed != null) {
+    wallet = Wallet.fromEthSale(jsonfile, password);
+    wallet.filename = wallet.getV3Filename();
+    return wallet;
+  } else if (jsonfile.Crypto != null || jsonfile.crypto != null) {
+    wallet = Wallet.fromV3(jsonfile, password, true);
+    wallet.filename = wallet.getV3Filename();
+    return wallet;
+  } else if (jsonfile.hash != null) {
+    wallet = Wallet.ThirdParty.fromEtherWallet(jsonfile, password);
+    wallet.filename = wallet.getV3Filename();
+    return wallet;
+  } else if (jsonfile.publisher == 'MyEtherWallet') {
+    wallet = fromMyEtherWalletV2(jsonfile);
+    wallet.filename = wallet.getV3Filename();
+    return wallet;
+  }
   throw new Error('Invalid Wallet file');
 };
 

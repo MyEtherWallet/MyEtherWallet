@@ -1,12 +1,8 @@
 <template>
   <div class="view-wallet-info-layout">
     <interface-balance-modal ref="balance" :balance="balance" />
-    <view-private-key-modal v-if="hasPrivKey" ref="viewPriv" />
-    <print-modal
-      ref="printModal"
-      :priv-key="hasPrivKey"
-      :address="account.address"
-    />
+    <view-private-key-modal ref="viewPriv" />
+    <print-modal ref="printModal" :address="account.address" />
     <div class="title">
       <h2>View Wallet Info</h2>
       <p>
@@ -72,7 +68,8 @@
             <a
               ref="downloadFile"
               :href="walletJson"
-              :download="hasNickname ? account.nickname : account.address"
+              :download="filename"
+              target="_blank"
             />
           </div>
         </div>
@@ -133,31 +130,40 @@ export default {
           key: 'privKey',
           icon: privateKey,
           iconDisabled: privateKeyGrey,
-          func: this.openViewPriv
+          func: () => {
+            this.openViewPriv();
+          }
         },
         {
           name: 'Txn History',
           key: 'txnHis',
           icon: txnHistory,
           iconDisabled: txnHistory,
-          func: this.openTxHistory
+          func: () => {
+            this.openTxHistory();
+          }
         },
         {
           name: 'Keystore File',
           key: 'keyStor',
           icon: keystore,
           iconDisabled: keystoreGrey,
-          func: this.downloadKeystore
+          func: () => {
+            this.downloadKeystore();
+          }
         },
         {
           name: 'Print Wallet',
           key: 'printWal',
           icon: printer,
           iconDisabled: printer,
-          func: this.printWallet
+          func: () => {
+            this.printWallet();
+          }
         }
       ],
-      walletJson: {},
+      walletJson: '',
+      filename: '',
       build: BUILD_TYPE
     };
   },
@@ -165,12 +171,6 @@ export default {
     ...mapState(['account', 'network', 'web3']),
     hasNickname() {
       return typeof this.account.nickname !== 'undefined';
-    },
-    hasPrivKey() {
-      return (
-        typeof this.account.isHardware !== 'undefined' &&
-        this.account.isHardware !== false
-      );
     }
   },
   mounted() {
@@ -180,14 +180,19 @@ export default {
       !this.account.isHardware &&
       typeof this.account.keystore !== 'undefined'
     ) {
-      this.walletJson = createBlob(JSON.parse(this.account.keystore), 'mime');
+      this.walletJson = createBlob(
+        JSON.parse(this.account.keystore).file,
+        'mime'
+      );
+      this.filename = JSON.parse(this.account.keystore).name;
     }
   },
   destroyed() {
     this.tokens = [];
     this.loading = false;
     this.balance = '0';
-    this.walletJson = {};
+    this.walletJson = '';
+    this.filename = '';
     this.build = BUILD_TYPE;
   },
   methods: {
@@ -209,7 +214,14 @@ export default {
       this.$refs.balance.$refs.balance.show();
     },
     downloadKeystore() {
-      this.$refs.downloadFile.click();
+      if (this.build === 'mewcx') {
+        window.chrome.downloads.download({
+          filename: this.filename,
+          url: this.walletJson
+        });
+      } else {
+        this.$refs.downloadFile.click();
+      }
     },
     openViewPriv() {
       this.$refs.viewPriv.$refs.viewPriv.show();

@@ -96,6 +96,7 @@
     }
 
     .address-copy-container {
+      align-items: center;
       background-color: $light-green-1;
       border-radius: 5px;
       display: flex;
@@ -104,6 +105,10 @@
       padding: 20px 30px;
       position: relative;
 
+      p {
+        margin: 0;
+      }
+
       input {
         position: absolute;
         opacity: 0;
@@ -111,6 +116,7 @@
 
       img {
         cursor: pointer;
+        height: 22px;
         margin-left: 5px;
       }
     }

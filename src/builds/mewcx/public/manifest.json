@@ -26,7 +26,7 @@
     }
   ],
   "web_accessible_resources": ["cxWeb3.js", "img/*.svg", "img/*.png", "img/*.jpg"],
-  "permissions": ["<all_urls>", "storage", "tabs", "activeTab"],
+  "permissions": ["<all_urls>", "storage", "tabs", "activeTab", "downloads"],
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "version": "5.0.15"
 }

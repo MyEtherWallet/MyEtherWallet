@@ -5,12 +5,14 @@
       <watch-only-modal
         ref="watchOnlyModal"
         :add-watch-only="addWatchOnlyWallet"
+        :loading="loading"
       />
       <password-only-modal
         ref="passwordOnlyModal"
         :path="path"
         :submit="accessWallet"
         :disabled="validInput"
+        :loading="loading"
         @password="updatePassword"
       />
       <div v-show="label === 'myWallets'" class="my-wallets-container">
@@ -108,6 +110,10 @@ export default {
       default: () => {
         return [];
       }
+    },
+    getAccounts: {
+      type: Function,
+      default: () => {}
     }
   },
   data() {
@@ -138,6 +144,11 @@ export default {
       this.processAccounts();
     }
   },
+  mounted() {
+    if (this.accounts.length === 0) {
+      this.getAccounts();
+    }
+  },
   methods: {
     walletRequirePass(ethjson) {
       if (ethjson.encseed != null) return true;
@@ -149,22 +160,27 @@ export default {
       return true;
     },
     accessWallet() {
+      this.loading = true;
       const nickname =
         this.nickname !== null && this.nickname.length > 0 ? this.nickname : '';
-      this.loading = true;
       const worker = new walletWorker();
       worker.postMessage({
         type: 'unlockWallet',
         data: [this.file, this.password]
       });
       worker.onmessage = e => {
+        const obj = {
+          file: this.file,
+          name: e.data.filename
+        };
+
         this.setWallet(
           new WalletInterface(
             Buffer.from(e.data._privKey),
             false,
             keyStoreType,
             nickname,
-            JSON.stringify(this.file)
+            JSON.stringify(obj)
           )
         );
         this.loading = false;
@@ -239,19 +255,22 @@ export default {
       this.name = val.name;
     },
     addWatchOnlyWalletCb() {
+      this.loading = false;
       this.$refs.watchOnlyModal.$refs.watchOnlyWallet.hide();
       Toast.responseHandler(
-        'Added watch only account successfully!',
+        'Added Watch-Only account successfully!',
         Toast.SUCCESS
       );
     },
     addWatchOnlyWallet(name, address) {
+      this.loading = true;
       const newAcc = {};
       const addr = toChecksumAddress(address);
       const foundAddr = this.accounts.find(item => {
-        return toChecksumAddress(item.address) === toChecksumAddress(address);
+        return toChecksumAddress(item.address) === addr;
       });
       if (foundAddr) {
+        this.loading = false;
         Toast.responseHandler('Address already added!', Toast.ERROR);
       } else {
         newAcc[addr] = JSON.stringify({

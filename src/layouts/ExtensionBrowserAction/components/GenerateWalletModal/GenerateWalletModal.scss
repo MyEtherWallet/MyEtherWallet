@@ -20,6 +20,22 @@
 .submit-button {
   margin-top: 10px;
   width: 100% !important;
+  background-color: $mew-green;
+  border: 1px solid $mew-green;
+  border-radius: 6px;
+  color: $white;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 21px 55px;
+  user-select: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.disabled {
+  background-color: $dark-grey-11 !important;
+  pointer-events: none !important;
 }
 
 .password-input {

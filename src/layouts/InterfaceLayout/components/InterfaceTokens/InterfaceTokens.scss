@@ -20,16 +20,20 @@
       margin-bottom: 10px;
 
       .title-container {
+        align-items: center;
         display: flex;
+        justify-content: center;
       }
 
       h4 {
         font-size: 14px;
         font-weight: 400;
+        margin: 0;
       }
 
       img {
         cursor: pointer;
+        height: 20px;
         padding-left: 5px;
       }
 

@@ -42,7 +42,7 @@ export default {
           label: 'myWallets'
         },
         {
-          name: 'Watch Only Wallets',
+          name: 'Watch-Only Wallets',
           icon: watchOnlyHov,
           inActive: watchOnly,
           label: 'watchOnlyWallets'

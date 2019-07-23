@@ -108,11 +108,17 @@ export default {
           data: [this.file, this.password]
         });
         worker.onmessage = function(e) {
+          const obj = {
+            file: this.file,
+            name: e.data.filename
+          }
           self.setUnlockedWallet(
             new WalletInterface(
               Buffer.from(e.data._privKey),
               false,
-              keyStoreType
+              keyStoreType,
+              '',
+              JSON.stringify(obj)
             )
           );
         };

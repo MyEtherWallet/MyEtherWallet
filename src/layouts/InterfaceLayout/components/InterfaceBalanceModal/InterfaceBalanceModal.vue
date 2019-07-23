@@ -28,7 +28,7 @@
                 require(`@/assets/images/currency/${ev.name.toLowerCase()}.svg`)
               "
             />
-            <p>{{ ev.name }}</p>
+            <p class="ev-name">{{ ev.name }}</p>
             <p class="ev-value">{{ ev.value }}</p>
           </li>
         </ul>
