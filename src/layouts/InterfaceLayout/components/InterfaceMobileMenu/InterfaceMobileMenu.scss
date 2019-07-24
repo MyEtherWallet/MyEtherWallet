@@ -37,8 +37,9 @@
     }
 
     p {
-      font-size: 22px;
-      font-weight: 500;
+      font-size: 20px;
+      line-height: 30px;
+      font-weight: 600;
     }
 
     .cat-title {
@@ -51,15 +52,17 @@
 
     .sub-menu {
       overflow: hidden;
-      height: 0px;
+      max-height: 0px;
       padding-left: 10px;
+      user-select: none;
+      transition: max-height 0.3s ease;
       a {
         padding: 0;
         margin: 0;
       }
 
       li {
-        padding-top: 10px;
+        //padding-top: 10px;
         a {
           margin-top: 10px;
           font-size: 18px;
@@ -67,6 +70,15 @@
         }
       }
     }
+
+    &:hover .sub-menu {
+      max-height: 300px;
+      user-select: all;
+    }
+  }
+
+  .btn {
+    border-radius: 5px 5px 0 0 !important;
   }
 
   .dropdown-toggle::after {
@@ -75,7 +87,7 @@
 
   .dropdown-menu.show {
     width: 100%;
-    transform: translate3d(0px, 57px, 0px) !important;
+    transform: translate3d(0, 57px, 0) !important;
     z-index: 1 !important;
   }
 
