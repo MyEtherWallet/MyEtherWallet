@@ -27,18 +27,12 @@ let getAccountModalIsOPen = false;
 const chrome = window.chrome;
 const extensionID = chrome.runtime.id;
 
-(function() {
-  inject(function(id) {
-    window.extensionID = id;
-  });
-});
-
 function inject(fn) {
   const script = document.createElement('script');
   script.setAttribute('type', 'application/javascript');
   script.textContent = '(' + fn + ')("' + extensionID + '")';
-  document.head.appendChild(script);
-  document.head.removeChild(script);
+  document.body.appendChild(script);
+  document.body.removeChild(script);
 }
 chrome.runtime.onMessage.addListener(function(request) {
   const script = document.createElement('script');
@@ -47,8 +41,8 @@ chrome.runtime.onMessage.addListener(function(request) {
   );
   switch (request.msg) {
     case CX_INJECT_WEB3:
-      document.head.appendChild(script);
-      document.head.removeChild(script);
+      document.body.appendChild(script);
+      document.body.removeChild(script);
       inject(function(id) {
         window.extensionID = id;
       });

@@ -1,4 +1,4 @@
-import { toPayload, toError } from '../jsonrpc';
+import { toPayload } from '../jsonrpc';
 import { getSanitizedTx } from '../methods/utils';
 import {
   WEB3_SEND_TX,
@@ -36,10 +36,10 @@ export default async ({ payload }, res, next) => {
           () => {}
         );
         this.removeEventListener(WEB3_REJECT.replace('{{id}}', id), () => {});
-        res(null, toPayload(payload.id, new Error('User Rejected action!')));
+        res(new Error('User Rejected action!'));
       });
     })
     .catch(e => {
-      res(null, toError(payload.id, e));
+      res(e);
     });
 };

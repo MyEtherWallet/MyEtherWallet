@@ -26,6 +26,6 @@ export default async ({ payload }, res, next) => {
   window.addEventListener(WEB3_REJECT.replace('{{id}}', id), function() {
     this.removeEventListener(WEB3_RECEIVE_ACC.replace('{{id}}', id), () => {});
     this.removeEventListener(WEB3_REJECT.replace('{{id}}', id), () => {});
-    res(null, toPayload(payload.id, new Error('User cancelled request!')));
+    res(new Error('User cancelled request!'));
   });
 };

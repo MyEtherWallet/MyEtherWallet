@@ -7,6 +7,7 @@ const UglifyJS = require('uglify-es');
 const env_vars = require('./ENV_VARS');
 const path = require('path');
 const webpackConfig = {
+  devtool: 'source-map',
   entry: {
     app: './src/main.js',
     contentScript: './src/builds/mewcx/cxHelpers/contentScript.js',
@@ -75,7 +76,6 @@ if (process.env.NODE_ENV === 'production') {
     })
   );
 
-  webpackConfig.devtool = 'source-map';
 }
 const pwa = {
   name: 'MyEtherWallet',
@@ -130,7 +130,7 @@ if (JSON.parse(env_vars.BUILD_TYPE) === 'mewcx') {
   exportObj['configureWebpack'].plugins.push(new CopyWebpackPlugin([
     {
       from: 'src/builds/' + JSON.parse(env_vars.BUILD_TYPE) + '/public',
-      flatten: process.env.NODE_ENV === 'production',
+      flatten: true,
       transform: function(content, filePath) {
         if (filePath.split('.').pop() === ('js' || 'JS'))
           return UglifyJS.minify(content.toString()).code;
