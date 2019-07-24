@@ -7,7 +7,7 @@ import {
   ethSign
 } from '../cx-web3-methods';
 
-import { ethRequestAccounts } from '../cx-ethereum-methods';
+// import { ethRequestAccounts } from '../cx-ethereum-methods';
 import { EventEmitter } from 'events';
 class MewCxWeb3 {
   constructor(host) {
@@ -35,7 +35,7 @@ class MewCxWeb3 {
 class MewCxEthereum extends EventEmitter {
   constructor(host) {
     super();
-    // const requestManager = new HttpRequestManger(host, {});
+    this._requestManager = new HttpRequestManger(host, {});
     this._id = 0;
     this._promises = {};
     this._connect();
