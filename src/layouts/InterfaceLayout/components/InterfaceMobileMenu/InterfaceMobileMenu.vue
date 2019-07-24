@@ -8,7 +8,11 @@
           :key="tab.name + idx"
           class="dropdown-menu-item"
         >
-          <div class="cat-title" @click.prevent="tabAction(tab)">
+          <div
+            :class="isTabActive(tab.routes) ? 'active' : ''"
+            class="cat-title"
+            @click.prevent="tabAction(tab)"
+          >
             <p>{{ $t(tab.titleKey) }}</p>
             <i
               v-if="tab.children.length"
