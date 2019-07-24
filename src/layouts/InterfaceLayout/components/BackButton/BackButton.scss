@@ -1,7 +1,9 @@
-@import '~@/scss/GlobalVariables';
+@import "~@/scss/GlobalVariables";
 
 .back-container {
   cursor: pointer;
+  display: flex;
+  align-items: cneter;
 
   .back-icon-container {
     border: 1px solid $black;
@@ -34,4 +36,8 @@
       font-weight: 500;
     }
   }
+}
+
+.right-slot {
+  margin-left: auto;
 }
