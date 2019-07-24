@@ -8,7 +8,7 @@ import {
 } from '../cx-web3-methods';
 
 // import { ethRequestAccounts } from '../cx-ethereum-methods';
-import { EventEmitter } from 'events';
+const EventEmitter = require('events');
 class MewCxWeb3 {
   constructor(host) {
     const requestManager = new HttpRequestManger(host, {});
