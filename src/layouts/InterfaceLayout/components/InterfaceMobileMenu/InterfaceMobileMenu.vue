@@ -1,15 +1,15 @@
 <template>
   <div class="interface-mobile-menu">
     <div class="mobile-menu-container">
-      <b-dropdown text="Send Transaction">
+      <b-dropdown :text="title">
         <div
           v-for="(tab, idx) in tabData"
           :class="tab.onlineOnly && !online ? 'disabled-item' : ''"
           :key="tab.name + idx"
           class="dropdown-menu-item"
         >
-          <div class="cat-title">
-            <p @click.prevent="tabAction(tab)">{{ $t(tab.titleKey) }}</p>
+          <div class="cat-title" @click.prevent="tabAction(tab)">
+            <p>{{ $t(tab.titleKey) }}</p>
             <i
               v-if="tab.children.length"
               class="fa fa-angle-down"
@@ -39,6 +39,12 @@
 import tabsConfig from './InterfaceMobileMenu.config';
 import { mapState } from 'vuex';
 export default {
+  props: {
+    title: {
+      type: String,
+      default: ''
+    }
+  },
   data() {
     return {
       tabData: tabsConfig.tabs
@@ -55,7 +61,8 @@ export default {
       if (!tab.hasOwnProperty('children') || tab.children.length === 0) {
         this.$router.push({ path: tab.routes[0] });
       } else {
-        this.$router.push({ path: tab.children[0].routes[0] });
+        // Disable category menu link
+        //this.$router.push({ path: tab.children[0].routes[0] });
       }
     }
   }

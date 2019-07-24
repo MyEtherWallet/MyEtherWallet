@@ -11,7 +11,7 @@
       </div>
     </div>
     <div class="mobile-title">
-      <mobile-menu />
+      <mobile-menu :title="title" />
     </div>
   </div>
 </template>
