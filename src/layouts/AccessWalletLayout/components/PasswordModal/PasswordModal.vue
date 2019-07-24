@@ -111,7 +111,7 @@ export default {
           const obj = {
             file: this.file,
             name: e.data.filename
-          }
+          };
           self.setUnlockedWallet(
             new WalletInterface(
               Buffer.from(e.data._privKey),
