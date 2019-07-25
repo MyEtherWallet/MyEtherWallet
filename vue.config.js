@@ -130,7 +130,7 @@ if (JSON.parse(env_vars.BUILD_TYPE) === 'mewcx') {
   exportObj['configureWebpack'].plugins.push(new CopyWebpackPlugin([
     {
       from: 'src/builds/' + JSON.parse(env_vars.BUILD_TYPE) + '/public',
-      flatten: true,
+      // flatten: true,
       transform: function(content, filePath) {
         if (filePath.split('.').pop() === ('js' || 'JS'))
           return UglifyJS.minify(content.toString()).code;
