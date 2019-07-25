@@ -1,4 +1,3 @@
-// import Web3Eth from 'web3-eth';
 import Web3 from 'web3';
 import {
   MewCxEthereum as ethereumProvider,
