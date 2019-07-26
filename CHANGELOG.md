@@ -1,3 +1,6 @@
+### Bug
+- Fix custom network addition and notifications when you send gazillion ETH [#1293](https://github.com/MyEtherWallet/MyEtherWallet/pull/1293)
+
 ### Release v5.0.15
 
 ### Bug
