@@ -1,7 +1,7 @@
 import { bestRateForQuantity, bestProviderForQuantity } from '@/partners';
 
 describe('simplex.js', () => {
-  let exampleData;
+  const exampleData;
 
   beforeEach(() => {
     exampleData = [
