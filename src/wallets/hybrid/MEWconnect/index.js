@@ -13,7 +13,7 @@ import { hashPersonalMessage, toBuffer } from 'ethereumjs-util';
 import errorHandler from './errorHandler';
 import commonGenerator from '@/helpers/commonGenerator';
 
-const SIGNALER_URL = 'https://connect.mewapi.io';
+const SIGNALER_URL = 'wss://0ec2scxqck.execute-api.us-west-1.amazonaws.com/dev'; //https://connect.mewapi.io';
 const IS_HARDWARE = true;
 
 // TODO: add listener and ui notification on RtcConnectedEvent and RtcClosedEvent
