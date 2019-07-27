@@ -2,7 +2,8 @@
   <div>
     <div class="bottom-image-container">
       <div class="twitter-container">
-        <i class="fa fa-twitter"></i> <span>{{$t('common.twitterFollow')}}</span>
+        <i class="fa fa-twitter"></i>
+        <span>{{ $t('common.twitterFollow') }}</span>
       </div>
 
       <div class="ad-container">
@@ -12,7 +13,11 @@
       <div class="select-dots-container">
         <span v-for="(ad, index) in currentAds" :key="index" class="ad-dot">
           <i
-            :class="['fa', 'fa-circle', currentAdIndex !== index ? 'inactive' : 'active']"
+            :class="[
+              'fa',
+              'fa-circle',
+              currentAdIndex !== index ? 'inactive' : 'active'
+            ]"
             @click="currentAdIndex = index"
           ></i>
         </span>
