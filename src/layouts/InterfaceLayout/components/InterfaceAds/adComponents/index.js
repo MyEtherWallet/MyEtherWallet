@@ -1,5 +1,5 @@
-import buyEthAd from './buyEthAd'
-import staticAd from './staticAd'
+import buyEthAd from './buyEthAd';
+import staticAd from './staticAd';
 
 //
 // const adComponentMapping = {

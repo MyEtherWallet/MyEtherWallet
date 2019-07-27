@@ -14,7 +14,7 @@
           <img
             class="clickable"
             src="@/assets/images/buttons/nft-manager.png"
-            @click="goTo('interact-with-contract')"
+            @click="goTo('nft-manager')"
           />
         </div>
       </div>

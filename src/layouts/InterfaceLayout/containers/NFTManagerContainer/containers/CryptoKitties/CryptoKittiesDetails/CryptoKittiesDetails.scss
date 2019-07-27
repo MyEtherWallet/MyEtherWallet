@@ -1,0 +1,64 @@
+//@import '~@/scss/GlobalVariables';
+@import '../../../../InterfaceContainer';
+
+$collepse-width: 650px;
+
+.crypto-kitties-details {
+  @extend %interface-container;
+}
+
+.crypto-kitties-details-content-container {
+  padding: 30px;
+  @media all and (max-width: $collepse-width) {
+    padding: 10px;
+  }
+}
+
+.grid-container {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+
+  @media all and (max-width: $collepse-width) {
+    flex-direction: column-reverse;
+    margin-top: 20px;
+    padding: 0 15px;
+  }
+}
+
+.kitty-image {
+  margin-right: 30px;
+  width: 350px;
+  @media all and (max-width: $collepse-width) {
+    margin: 0 auto;
+    max-width: 350px;
+    width: 100%;
+  }
+  img {
+    width: 100%;
+  }
+}
+
+.kitty-text {
+  margin: auto 0;
+  h3 {
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+}
+
+.address-input-container {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.send-button-container {
+  margin: 0 auto;
+  margin-top: 40px;
+  max-width: 300px;
+  @media all and (max-width: $collepse-width) {
+    margin-top: 20px;
+    max-width: 500px;
+  }
+}

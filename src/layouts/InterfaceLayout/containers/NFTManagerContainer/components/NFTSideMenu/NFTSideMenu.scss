@@ -1,0 +1,37 @@
+@import '~@/scss/GlobalVariables';
+
+$collepse-width: 650px;
+
+.desktop-menu {
+  @media all and (max-width: $collepse-width) {
+    display: none;
+  }
+  .input-search-container {
+    margin-bottom: 30px;
+  }
+
+  ul {
+    li {
+      padding: 15px 20px;
+      color: $dark-grey-7;
+      cursor: pointer;
+      user-select: none;
+      &:hover {
+        color: $dark-grey-9;
+      }
+      &.selected {
+        color: $dark-grey-9;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+.mobile-menu {
+  @media all and (min-width: $collepse-width) {
+    display: none;
+  }
+  .input-search-container {
+    margin-bottom: 15px;
+  }
+}

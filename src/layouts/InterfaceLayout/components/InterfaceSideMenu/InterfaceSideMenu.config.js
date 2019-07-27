@@ -68,6 +68,7 @@ export default {
       onlineOnly: true,
       routes: [
         '/interface/dapps',
+        '/interface/nft-manager',
         '/interface/dapps/manage-ens',
         '/interface/dapps/manage-ens/auction',
         '/interface/dapps/manage-ens/bid',
@@ -92,7 +93,26 @@ export default {
         inactive: require('@/assets/images/sidemenu/dapps.svg')
       },
       titleKey: 'common.dapps',
-      children: []
+      children: [
+        {
+          name: 'Dapps',
+          routes: ['/interface/dapps'],
+          icons: {
+            active: '',
+            inactive: ''
+          },
+          titleKey: 'common.dapps'
+        },
+        {
+          name: 'nft-manager',
+          routes: ['/interface/nft-manager'],
+          icons: {
+            active: '',
+            inactive: ''
+          },
+          titleKey: 'common.ntfManager'
+        }
+      ]
     },
     {
       name: 'contracts',
