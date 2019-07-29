@@ -37,33 +37,31 @@ class MewCxEthereum extends EventEmitter {
   constructor(host) {
     super();
     this.host = host;
+    this.middleware = new MiddleWare();
+    this.middleware.use(ethRequestAccounts);
+    this._requestManager = new HttpRequestManger(host, {});
     this._id = 0;
-    // this._promises = {};
+    this._promises = {};
     this._connect();
-    this.provider = {
-      send: method => {
-        const payload = {
-          jsonrpc: '2,0',
-          method: method,
-          params: [],
-          id: this._id++
-        };
-        const middleware = new MiddleWare();
-        middleware.use(ethRequestAccounts);
-        const requestManager = new HttpRequestManger(host, {});
+    // this.provider = {
+    //   send: (method, callback) => {
+    //     const payload = {
+    //       jsonrpc: '2,0',
+    //       method: method,
+    //       params: [],
+    //       id: this._id++
+    //     };
 
-        const req = {
-          payload,
-          requestManager
-        };
-        middleware.use(ethRequestAccounts);
-        middleware.run(req, this.callback).then(() => {
-          requestManager.provider.send(payload, this.callback);
-        });
-      }
-    };
-
-    return this.provider;
+    //     const req = {
+    //       payload,
+    //       requestManager
+    //     };
+    //     const middleware = new MiddleWare();
+    //     middleware.use(ethRequestAccounts);
+    //     middleware.run(req, callback).then(() => {
+    //       requestManager.provider.send(payload, callback);
+    //     });
+    //   },
     //   sendAsync: (payload, callback) => {
     //      return this.send(payload.method, payload.params)
     // .then(result => {
@@ -82,37 +80,49 @@ class MewCxEthereum extends EventEmitter {
     // };
   }
 
-  // send(method, params = []) {
-  //   if (!method || typeof method !== 'string') {
-  //     return new Error('Method is not a valid string.');
-  //   }
-
-  //   if (!(params instanceof Array)) {
-  //     return new Error('Params is not a valid array.');
-  //   }
-  //   const id = this._id++;
-  //   const jsonrpc = '2.0';
-  //   const payload = { jsonrpc, id, method, params };
-  //   const reqManager = this._requestManager;
-  //   const req = {
-  //     payload,
-  //     reqManager
-  //   };
-  //   return this.middleware.run(req, this._callback).then(() => {
-  //     this._requestManager.provider.send(req);
-  //   });
-  // }
-  // _callback() {}
-  _callback(e, res) {
-    // new Promise((resolve, reject) => {
-    //   if (e) reject(e);
-    //   resolve(res);
-    // });
-    if (e !== null) {
-      return e;
+  send(method, params = []) {
+    if (!method || typeof method !== 'string') {
+      return new Error('Method is not a valid string.');
     }
-    return res;
+
+    if (!(params instanceof Array)) {
+      return new Error('Params is not a valid array.');
+    }
+    const id = this._id++;
+    const jsonrpc = '2.0';
+    const payload = { jsonrpc, id, method, params };
+    const reqManager = this._requestManager;
+    const req = {
+      payload,
+      reqManager
+    };
+    const promise = new Promise((resolve, reject) => {
+      this._promises[payload.id] = { resolve, reject };
+    });
+    const cb = (e, res) => {
+      if (e !== null) this._promises[res.id].reject(e);
+      this._promises[res.id].resolve(res.result);
+    };
+    this.middleware.run(req, cb).then(() => {
+      this._requestManager.provider.send(req, cb);
+    });
+
+    return promise;
   }
+  // _callback() {}
+  // _callback(e, res) {
+  //   console.log(e, res, this._promises);
+  //   if (e !== null) this._promises[res.id].reject(e);
+  //   this._promises[res.id].resolve(res.result);
+  //   new Promise((resolve, reject) => {
+  //     if (e) reject(e);
+  //     resolve(res);
+  //   });
+  //   if (e !== null) {
+  //     return e;
+  //   }
+  //   return res;
+  // }
 
   async _connect() {
     fetch(this.host, {
