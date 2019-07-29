@@ -519,7 +519,8 @@ export default {
         .catch(e => {
           Toast.responseHandler(e, Toast.ERROR);
         });
-      this.ethPrice = price.data.ETH.quotes.USD.price;
+      this.ethPrice =
+        typeof price === 'object' ? price.data.ETH.quotes.USD.price : 0;
     },
     copyToClipboard(ref) {
       this.$refs[ref].select();
