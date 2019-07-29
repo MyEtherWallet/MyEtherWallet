@@ -369,7 +369,7 @@ export default {
       const fetchValues = await fetch(url);
       const values = await fetchValues.json();
       if (!values) return 0;
-      if (!values.data['ETH']) return 0;
+      if (!values && !values.data && !values.data['ETH']) return 0;
       this.ethPrice = new BigNumber(values.data['ETH'].quotes.USD.price);
     },
     convertToGwei(value) {

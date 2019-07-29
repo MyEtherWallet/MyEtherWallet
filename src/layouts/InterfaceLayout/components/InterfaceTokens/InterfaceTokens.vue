@@ -196,9 +196,10 @@ export default {
       if (store.get('localTokens') !== undefined) {
         this.getV3Tokens();
       }
-      const storedTokens =
-        store.get('customTokens')[this.network.type.name] || [];
-      this.customTokens = storedTokens;
+      const storedTokens = store.get('customTokens');
+      this.customTokens = storedTokens.hasOWnProperty(this.network.type.name)
+        ? storedTokens[this.network.type.name]
+        : [];
     },
     async getSpecificTokenBalance(token) {
       for (let i = 0; i < this.tokens.length; i++) {
