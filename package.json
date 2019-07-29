@@ -120,7 +120,7 @@
     "stylelint-config-prettier": "5.2.0",
     "stylelint-config-standard": "18.3.0",
     "trezor-connect": "7.0.5",
-    "u2f-api": "1.1.0",
+    "u2f-api": "1.1.1",
     "uglify-es": "3.3.9",
     "unused-files-webpack-plugin": "3.4.0",
     "uuid": "3.3.2",

@@ -117,7 +117,9 @@ const setState = function({ commit }, stateObj) {
 };
 
 const setWeb3Instance = function({ dispatch, commit, state }, provider) {
-  const hostUrl = url.parse(state.network.url);
+  const hostUrl = state.network.url
+    ? url.parse(state.network.url)
+    : state.Network['ETH'][0];
   const options = {};
   // eslint-disable-next-line
   const parsedUrl = `${hostUrl.protocol}//${hostUrl.host}${

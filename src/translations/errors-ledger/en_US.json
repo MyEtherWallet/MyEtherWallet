@@ -1,7 +1,8 @@
 {
   "failedToSign": "Failed to sign, Ledger device timedout.",
   "noDevice": "No Ledger device found!",
-  "deviceBusy": "Ledger Device is busy",
+  "deviceBusy1": "Ledger Device is busy",
+  "deviceBusy2": "Device is locked. Please unlock device and try again.",
   "unknown0x6804": "Ledger device: UNKNOWN_ERROR (0x6804)",
   "failedToSignOther": "Ledger failed to sign! U2F OTHER_ERROR",
   "failedSignIneligible": "Ledger failed to sign! U2F DEVICE_INELIGIBLE",
@@ -14,5 +15,6 @@
   "invalidNetworkID": "Invalid network ID!",
   "enableContractData": "Please enable contract data on your ledger app",
   "noDeviceSelected": "No device selected or user closed the selection modal.",
-  "appAndNetworkMismatch": "The app does not support selected network"
+  "appAndNetworkMismatch": "The app does not support selected network",
+  "transportInterface": "The interface number provided is not supported by the device in its current configuration."
 }
