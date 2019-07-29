@@ -259,9 +259,9 @@ export default {
       return _deployArgs;
     },
     txData() {
-      return new this.web3.eth.Contract(JSON.parse(this.abi))
+      return this.abi !== '' ? new this.web3.eth.Contract(JSON.parse(this.abi))
         .deploy({ data: this.txByteCode, arguments: this.deployArgs })
-        .encodeABI();
+        .encodeABI() : '0x';
     },
     allValid() {
       let _allvalid = true;
