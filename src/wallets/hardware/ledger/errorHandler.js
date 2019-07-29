@@ -3,7 +3,7 @@ import Vue from 'vue';
 const ERRORS = {
   'Failed to sign with Ledger device: U2F TIMEOUT': 'ledgerError.failedToSign',
   'No Ledger device found (timeout)': 'ledgerError.noDevice',
-  'Ledger Device is busy': 'ledgerError.deviceBusy',
+  'Ledger Device is busy': 'ledgerError.deviceBusy1',
   'Ledger device: UNKNOWN_ERROR (0x6804)': 'ledgerError.unknown0x6804',
   'TransportError: Failed to sign with Ledger device: U2F OTHER_ERROR':
     'ledgerError.failedToSignOther',
@@ -17,9 +17,12 @@ const ERRORS = {
   'Invalid networkId signature returned.': 'ledgerError.invalidNetworkID',
   'EthAppPleaseEnableContractData: Please enable Contract data on the Ethereum app Settings':
     'ledgerError.enableContractData',
+  'TransportInterfaceNotAvailable: The interface number provided is not supported by the device in its current configuration.':
+    'ledgerError.transportInterface',
   'No device selected.': 'ledgerError.noDeviceSelected',
   'Incompatible EIP155-based V 10 and chain id 1. See the second parameter of the Transaction constructor to set the chain id.':
-    'ledgerError.appAndNetworkMismatch'
+    'ledgerError.appAndNetworkMismatch',
+  'Ledger Device is busy (lock getAddress)': 'ledgerError.deviceBusy2'
 };
 const WARNING = {
   'Ledger device: Condition of use not satisfied (denied by the user?) (0x6985)':

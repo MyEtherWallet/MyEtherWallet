@@ -14,6 +14,7 @@ import { toBuffer } from 'ethereumjs-util';
 import errorHandler from './errorHandler';
 import store from '@/store';
 import commonGenerator from '@/helpers/commonGenerator';
+import BigNumber from 'bignumber.js';
 const NEED_PASSWORD = false;
 
 class TrezorWallet {
@@ -38,7 +39,9 @@ class TrezorWallet {
   getAccount(idx) {
     const derivedKey = this.hdKey.derive('m/' + idx);
     const txSigner = async tx => {
-      tx = new Transaction(tx, {
+      const locTx = Object.assign({}, tx);
+      locTx['chainId'] = new BigNumber(tx['chainId']).toNumber();
+      tx = new Transaction(locTx, {
         common: commonGenerator(store.state.network)
       });
       const networkId = tx.getChainId();
