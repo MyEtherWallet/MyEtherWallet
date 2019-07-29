@@ -22,7 +22,8 @@ const ERRORS = {
   'No device selected.': 'ledgerError.noDeviceSelected',
   'Incompatible EIP155-based V 10 and chain id 1. See the second parameter of the Transaction constructor to set the chain id.':
     'ledgerError.appAndNetworkMismatch',
-  'Ledger Device is busy (lock getAddress)': 'ledgerError.deviceBusy2'
+  'Ledger Device is busy (lock getAddress)': 'ledgerError.deviceBusy2',
+  'Ledger device: INS_NOT_SUPPORTED (0x6d00)': 'ledgerError.wrongWallet'
 };
 const WARNING = {
   'Ledger device: Condition of use not satisfied (denied by the user?) (0x6985)':
