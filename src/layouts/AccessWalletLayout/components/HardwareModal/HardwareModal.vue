@@ -116,10 +116,10 @@ export default {
         {
           name: BITBOX_TYPE,
           imgPath: bitbox,
-          text: 'Digital Bitbox',
+          text: 'BitBox',
           disabled: false,
           msg: '',
-          link: 'https://digitalbitbox.com/?ref=mew'
+          link: 'https://shiftcrypto.ch/?ref=mew'
         },
         {
           name: TREZOR_TYPE,
@@ -215,7 +215,7 @@ export default {
         case BITBOX_TYPE:
           this.$emit('hardwareRequiresPassword', {
             walletConstructor: BitBoxWallet,
-            hardwareBrand: 'DigitalBitbox'
+            hardwareBrand: 'BitBox'
           });
           break;
         case SECALOT_TYPE:
