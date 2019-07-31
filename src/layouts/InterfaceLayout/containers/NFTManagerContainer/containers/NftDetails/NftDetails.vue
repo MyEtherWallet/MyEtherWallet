@@ -28,16 +28,13 @@
 
 <script>
 import { mapState } from 'vuex';
-import ERC721 from '../../abis/ERC721';
+import { ERC721, KittyCore } from '../../abis/';
+
 import { Misc, Toast } from '@/helpers';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
 import SmallBackButton from '@/layouts/InterfaceLayout/components/SmallBackButton';
 import DropDownAddressSelector from '@/components/DropDownAddressSelector';
 import StandardButton from '@/components/Buttons/StandardButton';
-import { Transaction } from 'ethereumjs-tx';
-
-// Please remove these images after "NFT Manager" development is done. (@/assets/images/temp)
-import kitty1 from '@/assets/images/temp/kitty1.svg';
 
 export default {
   components: {
@@ -56,13 +53,21 @@ export default {
       default: function() {
         return {};
       }
+    },
+    nftConfig: {
+      type: Object,
+      default: function() {
+        return {};
+      }
     }
   },
   data() {
     return {
       toAddress: '',
       tokenContract: {},
-      kitty: { number: 3362, img: kitty1 },
+      ERC721tokenContract: {},
+      cryptoKittiesContract: {},
+      cryptoKittiesConfig: '',
       sendButton: {
         title: 'Send',
         buttonStyle: 'green',
@@ -89,32 +94,30 @@ export default {
       return false;
     }
   },
-  watch: {
-    nft(newVal, oldVal) {
-      console.log(newVal, oldVal); // todo remove dev item
-      // this.tokenContract.options.address =
-      //   '0xeA3352C1a3480Ac5a32Fcd1F2854529BA7193F14';
-    }
-  },
+  watch: {},
   mounted() {
-    this.tokenContract = new this.web3.eth.Contract(ERC721);
+    this.ERC721tokenContract = new this.web3.eth.Contract(ERC721);
   },
   methods: {
     prepareTransfer(toAddress) {
-      console.log(toAddress); // todo remove dev item
       this.toAddress = toAddress;
-      this.tokenContract.options.address = this.nft.contract;
+      this.ERC721tokenContract.options.address = this.nft.contract;
+    },
+    buildData() {
+      if (this.nft.contract === this.cryptoKittiesConfig.contractAddress) {
+        this.cryptoKittiesContract = new this.web3.eth.Contract(KittyCore);
+        this.cryptoKittiesContract.options.address = this.nft.contract;
+        return this.cryptoKittiesContract.methods
+          .transferFrom(this.account.address, this.toAddress, this.nft.token)
+          .encodeABI();
+      }
+      return this.ERC721tokenContract.methods
+        .safeTransferFrom(this.account.address, this.toAddress, this.nft.token)
+        .encodeABI();
     },
     transfer() {
       if (this.isValidAddress) {
-        const txData = this.tokenContract.methods
-          .safeTransferFrom(
-            this.account.address,
-            this.toAddress,
-            this.nft.token
-          )
-          .encodeABI();
-        console.log(txData); // todo remove dev item
+        const txData = this.buildData();
         const raw = {
           from: this.account.address,
           to: this.nft.contract,
@@ -123,12 +126,10 @@ export default {
         this.web3.eth.sendTransaction(raw).catch(err => {
           Toast.responseHandler(err, Toast.ERROR);
         });
-        // this.emit('')
         this.toAddress = '';
       }
     },
     goBack() {
-      console.log('back'); // todo remove dev item
       this.$emit('back');
     }
   }

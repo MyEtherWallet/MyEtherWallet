@@ -76,40 +76,48 @@ button[disabled] {
 }
 
 .internal-nav-container{
+
   grid-column: span 3;
   text-align: center;
+  //width: 300px;
   &:first-child{
 
   }
   .internal-nav{
 
     cursor: pointer;
-    width: 50px;
+    //width: 50px;
     margin: 5px;
     padding: 5px;
     border-radius: 4px;
     &.prev{
+      border: 1px solid black;
       margin-right: 50px;
+      border-top-left-radius: 4px ;
+      border-bottom-left-radius: 4px ;
     }
     &.next{
+      border: 1px solid black;
+      border-top-right-radius: 4px ;
+      border-bottom-right-radius: 4px ;
       margin-left: 50px;
     }
 
-    @include btn-mixin-1();
-
-    background-color: $green-filled-button-background;
-    border: 1px solid $green-filled-button-background;
-    color: $color-white;
-
-    &:hover {
-      background-color: $green-filled-button-background--hover;
-      border: 1px solid $green-filled-button-background--hover;
-    }
-
-    &:active {
-      background-color: $green-filled-button-background--click;
-      border: 1px solid $green-filled-button-background--click;
-    }
+    //@include btn-mixin-1();
+    //
+    //background-color: $green-filled-button-background;
+    //border: 1px solid $green-filled-button-background;
+    //color: $color-white;
+    //
+    //&:hover {
+    //  background-color: $green-filled-button-background--hover;
+    //  border: 1px solid $green-filled-button-background--hover;
+    //}
+    //
+    //&:active {
+    //  background-color: $green-filled-button-background--click;
+    //  border: 1px solid $green-filled-button-background--click;
+    //}
   }
 }
 
