@@ -100,7 +100,7 @@ export default {
     unlockWallet() {
       this.spinner = true;
 
-      if (this.online && window.Worker) {
+      if (this.online && window.Worker && window.origin !== 'null') {
         const worker = new walletWorker();
         const self = this;
         worker.postMessage({
