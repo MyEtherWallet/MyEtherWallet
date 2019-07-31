@@ -196,9 +196,10 @@ export default {
       if (store.get('localTokens') !== undefined) {
         this.getV3Tokens();
       }
-      const storedTokens =
-        store.get('customTokens')[this.network.type.name] || [];
-      this.customTokens = storedTokens;
+      const storedTokens = store.get('customTokens') || {};
+      this.customTokens = storedTokens.hasOwnProperty(this.network.type.name)
+        ? storedTokens[this.network.type.name]
+        : [];
     },
     async getSpecificTokenBalance(token) {
       for (let i = 0; i < this.tokens.length; i++) {
@@ -290,13 +291,6 @@ export default {
         const currentCustomToken = store.get('customTokens');
         this.customTokens =
           this.customTokens.length > 0 ? this.customTokens : [];
-        // token['balance'] = await this.getTokenBalance(token);
-        // if (token['balance'] === undefined) {
-        //   Toast.responseHandler(
-        //     new Error('Token Balance Returned Undefined'),
-        //     Toast.ERROR
-        //   );
-        // }
         this.customTokens.push(token);
         currentCustomToken[this.network.type.name] = this.customTokens;
         store.set('customTokens', currentCustomToken);

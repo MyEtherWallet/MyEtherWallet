@@ -70,6 +70,10 @@ export default {
     this.$refs.welcome.$refs.welcome.$on('hidden', () => {
       store.set('notFirstTimeVisit', true);
     });
+
+    this.$refs.logoutWarningModal.$refs.logoutWarningModal.$on('hidden', () => {
+      window.scrollTo(0, 0);
+    });
   },
   destroyed() {
     window.removeEventListener('PWA_UPDATED');
