@@ -45,10 +45,10 @@ const affiliates = [
   },
   {
     text: 'footer.bitbox',
-    price: '59.00',
+    price: '44.00',
     description:
       'Our aim is to equip you for independence, with ease, in the digital world.',
-    href: 'https://digitalbitbox.com/?ref=mew',
+    href: 'https://shiftcrypto.ch/?ref=mew',
     currency: '€',
     logo: 'bitbox'
   },

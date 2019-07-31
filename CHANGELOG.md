@@ -3,9 +3,24 @@
 - Add proxy notice to moveCDP modal, improve swap widget [#1251](https://github.com/MyEtherWallet/MyEtherWallet/pull/1251)
 
 ### Bug
+
+- Fix #1249 and #1205 [#1250](https://github.com/MyEtherWallet/MyEtherWallet/pull/1250)
+- Display "Advanced" section on "Send Transaction" page if data or gas limit fields are prefilled by url query params
+- Fix custom network addition and notifications when you send gazillion ETH [#1293](https://github.com/MyEtherWallet/MyEtherWallet/pull/1293)
+- Logout warning modal redirect to current page instead of home page [#1297](https://github.com/MyEtherWallet/MyEtherWallet/pull/1297)
+- Custom networks not showing on send offline helper [#1285](https://github.com/MyEtherWallet/MyEtherWallet/pull/1285)
 - Fix webworker error when origin is null [#1273](https://github.com/MyEtherWallet/MyEtherWallet/pull/1273)
 
+### Devop
+
+- Add MEWTopia link [#1275](https://github.com/MyEtherWallet/MyEtherWallet/pull/1275)
+- Sentry Fixes [#1295](https://github.com/MyEtherWallet/MyEtherWallet/pull/1295)
+
 ### Release v5.0.15
+
+### Feature
+
+- Lightstreams network support [#1257](https://github.com/MyEtherWallet/MyEtherWallet/pull/1257)
 
 ### Bug
 
@@ -36,6 +51,7 @@
 ### Feature
 
 - Maker Integration [#740](https://github.com/MyEtherWallet/MyEtherWallet/pull/740)
+- Pocket Network Integration [#1226](https://github.com/MyEtherWallet/MyEtherWallet/pull/1262)
 
 ### Bug
 
