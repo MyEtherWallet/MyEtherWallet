@@ -31,6 +31,7 @@
 ### Feature
 
 - Maker Integration [#740](https://github.com/MyEtherWallet/MyEtherWallet/pull/740)
+- Pocket Network Integration [#1226](https://github.com/MyEtherWallet/MyEtherWallet/pull/1262)
 
 ### Bug
 
