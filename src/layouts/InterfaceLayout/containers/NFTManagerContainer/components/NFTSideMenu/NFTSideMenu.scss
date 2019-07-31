@@ -6,8 +6,32 @@ $collepse-width: 650px;
   @media all and (max-width: $collepse-width) {
     display: none;
   }
+
+  .listing-container{
+    margin-top: 30px;
+  }
   .input-search-container {
     margin-bottom: 30px;
+
+    .input-search {
+      position: relative;
+    }
+
+    input {
+      position: relative;
+      border: 0;
+      padding: 20px;
+      padding-left: 50px;
+      background-color: $light-grey-17;
+      width: 100%;
+    }
+
+    img {
+      position: absolute;
+      top: 24px;
+      left: 20px;
+      height: 15px;
+    }
   }
 
   ul {
@@ -33,5 +57,27 @@ $collepse-width: 650px;
   }
   .input-search-container {
     margin-bottom: 15px;
+
+    .input-search {
+      position: relative;
+    }
+
+    input {
+      position: relative;
+      border: 0;
+      padding: 20px;
+      padding-left: 50px;
+      background-color: $light-grey-17;
+      width: 100%;
+    }
+
+    img {
+      position: absolute;
+      top: 24px;
+      left: 20px;
+      height: 15px;
+    }
   }
 }
+
+

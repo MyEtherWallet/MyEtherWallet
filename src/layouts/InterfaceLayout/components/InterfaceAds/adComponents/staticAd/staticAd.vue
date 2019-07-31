@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="bottom-image-container">
+    <div class="ad-image-container">
       <a :href="useUrl(url)" rel="noopener noreferrer" target="_blank">
         <img :src="useImage(image)" class="icon" />
       </a>
@@ -16,7 +16,7 @@ export default {
   props: {
     image: {
       type: String,
-      default: 'mewconnect.jpeg'
+      default: 'mewconnect.png'
     },
     url: {
       type: String,

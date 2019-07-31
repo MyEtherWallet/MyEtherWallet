@@ -19,7 +19,8 @@ const EXCEPTIONS = [
   'web3-utils',
   '@xkeshi/vue-qrcode',
   'multicoin-address-validator',
-  'bootstrap-vue'
+  'bootstrap-vue',
+  '@vue/eslint-config-prettier'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

@@ -1,14 +1,25 @@
 <template>
   <div>
-    <div class="bottom-image-container">
-      <div class="twitter-container">
-        <i class="fa fa-twitter"></i>
-        <span>{{ $t('common.twitterFollow') }}</span>
+    <div class="twitter-container">
+      <div class="twitter-content">
+        <a
+          href="https://twitter.com/intent/follow?screen_name=myetherwallet"
+          onclick="window.open(this.href, 'twitter-share', 'width=580,height=296');return false;"
+          title="Share on Twitter"
+        >
+          <div class="twitter-container">
+            <i class="fa fa-twitter"></i>
+            <span>{{ $t('common.twitterFollow') }}</span>
+          </div>
+        </a>
       </div>
-
+    </div>
+    <div class="bottom-image-container">
       <div class="ad-container">
-        <component :is="useComponent()" :image="adImage" :url="adUrl">
-        </component>
+        <keep-alive :max="adDetails.length">
+          <component :is="useComponent()" :image="adImage" :url="adUrl">
+          </component>
+        </keep-alive>
       </div>
       <div class="select-dots-container">
         <span v-for="(ad, index) in currentAds" :key="index" class="ad-dot">
@@ -48,11 +59,11 @@ export default {
       search: '',
       adImage: '',
       adUrl: '',
-      currentAdIndex: 0,
+      currentAdIndex: 1,
       currentAds: [
         {
           component: 'staticAd',
-          image: 'mewconnect.jpeg',
+          image: 'mewconnect.png',
           url: 'https://mewconnect.myetherwallet.com/#/'
         },
         {
@@ -60,7 +71,7 @@ export default {
         },
         {
           component: 'staticAd',
-          image: 'mewconnect2.jpeg',
+          image: 'mewconnect.png',
           url: 'https://mewconnect.myetherwallet.com/#/'
         },
         {
@@ -70,12 +81,12 @@ export default {
       adDetails: {
         mewConnect: {
           component: 'staticAd',
-          image: 'mewconnect.jpeg',
+          image: 'mewconnect.png',
           url: 'https://mewconnect.myetherwallet.com/#/'
         },
         mewConnect2: {
           component: 'staticAd',
-          image: 'mewconnect2.png',
+          image: 'mewconnect.png',
           url: 'https://mewconnect.myetherwallet.com/#/'
         },
         buyEth: {
@@ -96,13 +107,13 @@ export default {
   },
   methods: {
     rotateAds() {
-      setInterval(() => {
-        if (this.currentAdIndex + 1 < this.currentAds.length) {
-          this.currentAdIndex += 1;
-        } else {
-          this.currentAdIndex = 0;
-        }
-      }, 10000);
+      // setInterval(() => {
+      //   if (this.currentAdIndex + 1 < this.currentAds.length) {
+      //     this.currentAdIndex += 1;
+      //   } else {
+      //     this.currentAdIndex = 0;
+      //   }
+      // }, 10000);
     },
     useComponent() {
       if (adComponentMapping[this.currentAd.component]) {

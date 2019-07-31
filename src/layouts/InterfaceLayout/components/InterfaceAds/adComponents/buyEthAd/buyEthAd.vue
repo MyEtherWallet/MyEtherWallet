@@ -1,31 +1,85 @@
 <template>
   <div>
     <div class="bottom-image-container">
-      <a
-        rel="noopener noreferrer"
-        href="https://mewconnect.myetherwallet.com/#/"
-        target="_blank"
-      >
-        <img class="icon" src="~@/assets/images/ads/buyEth.png" />
-      </a>
+      <div class="content">
+        <div class="buy-text">
+          <p>Buy ETH with Credit Card</p>
+        </div>
+        <div class="send-button-container">
+          <standard-button :options="sendButton" @click.native="showSwapWidget" />
+        </div>
+        <!--      style="height: 50px; width: 100px;" -->
+        <img class="cc-cards" src="@/assets/images/etc/visamaster.png" />
+        <img class="background-eth" src="@/assets/images/ads/eth.png">
+        <!--        <img class="icon" style="z-index: -1" src="~@/assets/images/ads/buyEth.png" />-->
+      </div>
+
     </div>
+    <div v-if="showWidget">
+      <swap-widget
+        ref="swapWidget"
+        :supplied-from="suppliedFrom"
+        :supplied-to="suppliedTo"
+        :supplied-from-amount="suppliedFromAmount"
+        :dest-address="account.address"
+      ></swap-widget>
+    </div>
+
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
+import SwapWidget from '@/components/SwapWidget';
 
 export default {
-  components: {},
+  components: {
+    'swap-widget': SwapWidget
+  },
   props: {},
   data() {
-    return {};
+    return {
+      showWidget: false,
+      suppliedFromAmount: 100,
+      suppliedTo: {
+        symbol: 'ETH',
+        name: ''
+      },
+      suppliedFrom: {
+        symbol: 'USD',
+        name: ''
+      },
+      sendButton: {
+        title: 'Buy Now',
+        buttonStyle: 'green-border',
+        helpCenter: false,
+        noMinWidth: true,
+        fullWidth: true
+      }
+    };
   },
   computed: {
-    ...mapState(['network', 'web3', 'online'])
+    ...mapState(['account', 'network', 'web3', 'online'])
   },
   watch: {},
-  methods: {}
+  methods: {
+    showSwapWidget() {
+      this.showWidget = true;
+      const vals = { from: 'USD', to: 'ETH', amt: 100, rate: 0 }
+      this.suppliedFromAmount = vals.amt;
+      this.suppliedFrom = {
+        symbol: vals.from,
+        name: ''
+      };
+      this.suppliedTo = {
+        symbol: vals.to,
+        name: ''
+      };
+      this.$nextTick(() => {
+        this.$refs.swapWidget.$refs.modal.show();
+      });
+    }
+  }
 };
 </script>
 

@@ -44,5 +44,7 @@
   "transferEnsTo": "Transfer ENS domain to",
   "ensNotAvailable": "is not available yet",
   "safesend_title": "SafeSend ETH Transaction",
-  "safesend_desc": "Protect and Secure your ETH transaction using SafeSend"
+  "safesend_desc": "Protect and Secure your ETH transaction using SafeSend",
+  "sendMy": "Send My {value}",
+  "nftOwnCount": "You own {count} {items}"
 }
