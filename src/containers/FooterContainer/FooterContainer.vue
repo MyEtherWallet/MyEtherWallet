@@ -222,6 +222,10 @@ export default {
               to: '/#faqs'
             },
             {
+              text: 'MEWtopia',
+              href: 'https://www.mewtopia.com'
+            },
+            {
               text: this.$t('common.vintage'),
               href: 'https://vintage.myetherwallet.com'
             },
