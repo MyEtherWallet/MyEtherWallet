@@ -196,8 +196,8 @@ export default {
       if (store.get('localTokens') !== undefined) {
         this.getV3Tokens();
       }
-      const storedTokens = store.get('customTokens');
-      this.customTokens = storedTokens.hasOWnProperty(this.network.type.name)
+      const storedTokens = store.get('customTokens') || {};
+      this.customTokens = storedTokens.hasOwnProperty(this.network.type.name)
         ? storedTokens[this.network.type.name]
         : [];
     },
