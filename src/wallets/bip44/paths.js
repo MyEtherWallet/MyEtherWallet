@@ -103,6 +103,10 @@ const ledgerLiveEthereumClassic = {
   path: "m/44'/61'",
   label: 'Ethereum Classic - Ledger Live'
 };
+const ledgerLightstreamsNetwork = {
+  path: "m/44'/60'/0'",
+  label: 'Lightstreams Network'
+};
 const rskMainnet = {
   path: "m/44'/137'/0'/0",
   label: 'RSK Mainnet'
@@ -118,6 +122,10 @@ const keepkeyEthereum = {
 const keepkeyEthereumClassic = {
   path: "m/44'/61'",
   label: 'Ethereum Classic'
+};
+const keepkeyLightstreamsNetwork = {
+  path: "m/44'/60'",
+  label: 'Lightstreams Network'
 };
 const thundercore = {
   path: "m/44'/1001'/0'/0",
@@ -150,6 +158,7 @@ export {
   ledgerLiveEthereum,
   ledgerEthereumClassic,
   ledgerLiveEthereumClassic,
+  ledgerLightstreamsNetwork,
   ropsten,
   singularDTV,
   expanse,
@@ -173,6 +182,7 @@ export {
   rskTestnet,
   keepkeyEthereum,
   keepkeyEthereumClassic,
+  keepkeyLightstreamsNetwork,
   thundercore,
   solidum,
   metadium,
