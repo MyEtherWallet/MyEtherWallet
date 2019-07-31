@@ -23,7 +23,7 @@ import {
   thundercore,
   solidum,
   dexon,
-  lightstreamsNetwork,
+  lightstreamsNetwork
 } from './paths';
 export default [
   keepkeyEthereum,
