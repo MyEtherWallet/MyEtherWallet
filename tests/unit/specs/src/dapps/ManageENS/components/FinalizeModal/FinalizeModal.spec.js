@@ -13,7 +13,6 @@ const BModalStub = {
   }
 };
 
-//xdescribe
 describe('FinalizeModal.vue', () => {
   let localVue, i18n, wrapper, store;
 

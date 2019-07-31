@@ -400,11 +400,26 @@ export default {
             })
           : undefined;
 
-        this.data = data ? (Misc.validateHexString(data) ? data : '') : '';
+        if (data && Misc.validateHexString(data)) {
+          this.data = data;
+          if (this.data.length > 0) {
+            this.advancedExpand = true;
+          }
+        } else {
+          this.data = '';
+        }
+
         this.value = value ? new BigNumber(value).toFixed() : 0;
         this.hexAddress = to ? to : '';
         this.address = to ? to : '';
-        this.gasLimit = gaslimit ? new BigNumber(gaslimit).toString() : '21000';
+
+        if (gaslimit) {
+          this.gasLimit = new BigNumber(gaslimit).toString();
+          this.advancedExpand = true;
+        } else {
+          this.gasLimit = '21000';
+        }
+
         this.selectedCurrency = foundToken ? foundToken : this.selectedCurrency;
 
         Toast.responseHandler(
