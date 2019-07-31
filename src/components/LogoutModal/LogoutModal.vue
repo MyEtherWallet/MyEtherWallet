@@ -29,7 +29,6 @@ export default {
     logout() {
       this.$store.dispatch('clearWallet');
       this.$refs.logout.hide();
-      this.$router.push('/');
     },
     cancel() {
       this.$refs.logout.hide();
