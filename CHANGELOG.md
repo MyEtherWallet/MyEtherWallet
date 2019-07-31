@@ -12,6 +12,10 @@
 
 ### Release v5.0.15
 
+### Feature
+
+- Lightstreams network support [#1257](https://github.com/MyEtherWallet/MyEtherWallet/pull/1257)
+
 ### Bug
 
 - Fix withdraw ETH with infinite collateralization [#1244](https://github.com/MyEtherWallet/MyEtherWallet/pull/1244)
