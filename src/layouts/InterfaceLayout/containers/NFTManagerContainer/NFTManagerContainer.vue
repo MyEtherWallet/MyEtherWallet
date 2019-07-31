@@ -1,13 +1,13 @@
 <template>
   <div class="crypto-kitties-manager">
-    <interface-container-title title="NFT Manager" />
+    <interface-container-title title="NFT Manager"/>
     <div class="inner-side-menu content-container">
       <nft-side-menu
         :data="sideMenuData"
         @selected="changeSelectedContract"
         @showTokenDetails="showSearchSelected"
       >
-        <input type="text" placeholder="Search #" />
+        <input type="text" placeholder="Search #"/>
       </nft-side-menu>
       <div v-if="showDetails">
         <nft-details
@@ -17,16 +17,23 @@
         ></nft-details>
       </div>
       <div v-if="!showDetails">
-        <content-block-title :button-text="ntfCount" :title="nftTitle" />
+        <content-block-title :button-text="ntfCount" :title="nftTitle"/>
         <!-- TODO Clean Up Design and Improve Mobile -->
         <div class="grid-container">
           <div v-for="nft in nftToShow" :key="nft.key" class="kitty">
             <div class="kitty-img" @click="showNftDetails(nft)">
-              <img :src="getImage(nft)" />
+              <img :src="getImage(nft)"/>
               <p>#{{ nft.token }}</p>
             </div>
           </div>
           <div v-show="selectedNtf.count > 9" class="internal-nav-container">
+            <span
+              v-show="startIndex > 0"
+              class="internal-nav prev"
+              @click="getPrevious(true)"
+            >
+              First
+            </span>
             <span
               v-show="startIndex > 0"
               class="internal-nav prev"
@@ -39,7 +46,7 @@
               v-show="showNextButton"
               class="internal-nav next"
               @click="getNext()"
-              >Next</span
+            >Next</span
             >
           </div>
         </div>
@@ -66,7 +73,7 @@ import KittyCore from './abis/KittyCore';
 import fetch from 'node-fetch';
 
 const URL_BASE =
-  'example.com';
+  '';
 
 export default {
   components: {
@@ -94,7 +101,7 @@ export default {
       nftData: {},
       ownedTokens: [],
       useDevAddress: true,
-      devAddress: '0x2f261a227480b7d1802433d05a92a27bab645032'
+      devAddress: '0xa3d7553397352efb84a0bc217a464e9e114207d6'
       // 0xac43df42ba2d186da57342e1b685f024db445a22 // mycryptoheros:hero
       // '0xa3d7553397352efb84a0bc217a464e9e114207d6' // gods unchained
       // '0x2f261a227480b7d1802433d05a92a27bab645032' // cryptokitties
@@ -136,9 +143,9 @@ export default {
     nftToShow() {
       const toShow = this.nftData[this.selectedContract]
         ? this.nftData[this.selectedContract].details.slice(
-            this.nftData[this.selectedContract].currentIndex,
-            this.nftData[this.selectedContract].currentIndex + this.countPerPage
-          )
+          this.nftData[this.selectedContract].currentIndex,
+          this.nftData[this.selectedContract].currentIndex + this.countPerPage
+        )
         : [];
       return toShow;
     },
@@ -150,7 +157,7 @@ export default {
         return this.nftData[this.selectedContract];
       }
       return {};
-      },
+    },
     nftTitle() {
       if (this.nftData[this.selectedContract]) {
         return this.nftData[this.selectedContract].title;
@@ -272,7 +279,9 @@ export default {
       const tokenContract = new this.web3.eth.Contract(nftABI);
       tokenContract.options.address =
         '0xeA3352C1a3480Ac5a32Fcd1F2854529BA7193F14';
-      const address = this.useDevAddress ? this.devAddress : this.account.address;
+      const address = this.useDevAddress
+        ? this.devAddress
+        : this.account.address;
       const res = await tokenContract.methods
         .getTokenBalances(supportedNftTokens, address.toLowerCase())
         .call();
@@ -286,7 +295,7 @@ export default {
       });
     },
     async getOwned(address = this.account.address, nftData = this.nftData) {
-      if(this.useDevAddress) address = this.devAddress;
+      if (this.useDevAddress) address = this.devAddress;
       if (!this.processing) {
         this.processing = true;
         const supportedNftTokens = Object.keys(nftData);
@@ -310,80 +319,107 @@ export default {
 
       for (let i = 0; i < contracts.length; i++) {
         nftData = await this.processNftDataContract(
-          address,
-          tokenContract,
           contracts[i],
-          nftData
+          nftData,
+          address,
+          tokenContract
         );
       }
       this.imagesRetrieved = true;
       this.nftData = nftData;
       return await this.getImages(nftData);
     },
-    async processNftDataContract(address, tokenContract, contract, nftData) {
+    async processNftDataContract(
+      contract,
+      nftData,
+      address = this.account.address,
+      tokenContract = null
+    ) {
       if (nftData[contract].ERC721Extension) {
-        for (let i = 0; i < nftData[contract].count; i += 1000) {
-          const res = await tokenContract.methods
-            .getOwnedTokens(contract, address.toLowerCase(), i, i + 1000)
-            .call();
-          const details = hexDecoder(res).map(val => {
-            return {
-              contract: contract,
-              token: val.toNumber(),
-              image: ''
-            };
-          });
-          if (details.length < 1000) {
-            const detailsSlim = details.reduce((accumulator, currentValue) => {
-              const idx = nftData[contract].details.findIndex(
-                entry => entry.token === currentValue.token
-              );
-              if (idx < 0) {
-                accumulator.push(currentValue);
-              }
-              return accumulator;
-            }, []);
-            nftData[contract].details = [
-              ...nftData[contract].details,
-              ...detailsSlim
-            ];
-          } else {
-            nftData[contract].details = [
-              ...nftData[contract].details,
-              ...details
-            ];
-          }
-
-          // console.log(nftData[contract].details.length); // todo remove dev item
-        }
+        nftData[contract].details = await this.getOwnedStandard(
+          contract,
+          0,
+          this.countPerPage,
+          address,
+          tokenContract
+        );
         // nftData[contract].count = hexDecoder(res).length;
         return nftData;
       } else if (nftData[contract].nonStandard) {
         try {
           const nonStandard = await this.getOwnedNonStandard(contract, address);
-          // Generalize access or create accessor function for each non-standard contract
-          // nftData[contract].details = JSON.parse(nonStandard).kitties.map(
-          //   val => {
-          //     return {
-          //       contract: contract,
-          //       token: val.id,
-          //       image: ''
-          //     };
-          //   }
-          // );
           nftData[contract].details = this.processor(
             nftData[contract].details,
             contract,
             nonStandard
           );
-          // nftData[contract].currentIndex = nftData[contract].details.length;
           nftData[contract].count = JSON.parse(nonStandard).total;
-          // console.log(nftData[contract].details); // todo remove dev item
         } catch (e) {
           nftData[contract].details = [];
         }
       }
       return nftData;
+    },
+    async getAllStandardNftOwned(address, tokenContract, contract, nftData) {
+      for (let i = 0; i < nftData[contract].count; i += 1000) {
+        const res = await tokenContract.methods
+          .getOwnedTokens(contract, address.toLowerCase(), i, i + 1000)
+          .call();
+        const details = hexDecoder(res).map(val => {
+          return {
+            contract: contract,
+            token: val.toNumber(),
+            image: ''
+          };
+        });
+        if (details.length < 1000) {
+          const detailsSlim = details.reduce((accumulator, currentValue) => {
+            const idx = nftData[contract].details.findIndex(
+              entry => entry.token === currentValue.token
+            );
+            if (idx < 0) {
+              accumulator.push(currentValue);
+            }
+            return accumulator;
+          }, []);
+          nftData[contract].details = [
+            ...nftData[contract].details,
+            ...detailsSlim
+          ];
+        } else {
+          nftData[contract].details = [
+            ...nftData[contract].details,
+            ...details
+          ];
+        }
+      }
+      // nftData[contract].count = hexDecoder(res).length;
+      return nftData;
+    },
+    async getOwnedStandard(
+      contract,
+      offset,
+      count = this.countPerPage,
+      address = this.account.address,
+      tokenContract = undefined
+    ) {
+      if (this.useDevAddress) address = this.devAddress;
+      if (!tokenContract) {
+        tokenContract = new this.web3.eth.Contract(nftABI);
+        tokenContract.options.address =
+          '0xeA3352C1a3480Ac5a32Fcd1F2854529BA7193F14';
+      }
+      console.log(contract, address.toLowerCase(), offset, count); // todo remove dev item
+      const res = await tokenContract.methods
+        .getOwnedTokens(contract, address.toLowerCase(), offset, count)
+        .call();
+      return hexDecoder(res).map(val => {
+        return {
+          contract: contract,
+          token: val.toNumber(),
+          image: ''
+        };
+      });
     },
     async getOwnedNonStandard(contract, address, offset = 0) {
       // address = '0x2f261a227480b7d1802433d05a92a27bab645032';
@@ -395,14 +431,15 @@ export default {
           method: 'GET'
         }
       );
-      console.log(data); // todo remove dev item
+      // console.log(data); // todo remove dev item
       return await data.json();
     },
-    processor(details, contract, nonStandard) {
+    processor(details, contract, nonStandardResult) {
       const exists = item => {
         return details.findIndex(entry => entry.token === item.id) >= 0;
       };
-      const newDetails = JSON.parse(nonStandard).kitties.map(val => {
+      const newDetails = JSON.parse(nonStandardResult).kitties.map(val => {
+        // console.log(!exists(val)); // todo remove dev item
         if (!exists(val)) {
           return {
             contract: contract,
@@ -411,7 +448,7 @@ export default {
           };
         }
       });
-      console.log('newDetails', newDetails); // todo remove dev item
+      // console.log('newDetails', newDetails); // todo remove dev item
       return [...details, ...newDetails];
       // return details.concat(newDetails);
     },
@@ -426,22 +463,6 @@ export default {
             prop,
             nftTokenDetails[prop].nonStandard
           );
-          // const retrieveCount = content.length > 20 ? 21 : content.length;
-
-          // for (let j = 0; j < retrieveCount; j++) {
-          //   if (!Number.isNaN(content[j].token)) {
-          //     try {
-          //       content[j].image = await this.getNftImage(
-          //         prop,
-          //         content[j].token
-          //       );
-          //     } catch (e) {
-          //       content[j].image = '';
-          //     }
-          //   }
-          // }
-          // nftTokenDetails[prop].details = contentResult;
-          // this.valueChanged++;
         }
       }
       this.nftData = nftTokenDetails;
@@ -463,6 +484,7 @@ export default {
             if (!Number.isNaN(content[j].token)) {
               try {
                 if (nonStandard) {
+                  console.log(content[j].image === ''); // todo remove dev item
                   console.log(j); // todo remove dev item
                   content[j].image = await this.getNftImage(
                     contract,
@@ -477,7 +499,9 @@ export default {
                 }
               } catch (e) {
                 failCount++;
-                content[j].image = '';
+                if (content[j]) {
+                  content[j].image = '';
+                }
               }
             }
           }
@@ -485,25 +509,43 @@ export default {
       }
       return content;
     },
-    getPrevious() {
+    getPrevious(start) {
       console.log('get prior'); // todo remove dev item
       const content = this.nftData[this.selectedContract];
       if (content.nonStandard) {
         console.log('getNextSetNonStandard'); // todo remove dev item
         this.getPriorSetNonStandard(content);
       } else {
-        this.getPriorSetStandard(content);
+        if (start) {
+          this.getPriorSetStandardRESET(content); //TODO make this call something else that already exists
+        } else {
+          this.getPriorSetStandard(content);
+        }
       }
     },
-    getNext() {
+    getNext(end) {
       console.log('get next'); // todo remove dev item
       const content = this.nftData[this.selectedContract];
       if (content.nonStandard) {
         console.log('getNextSetNonStandard'); // todo remove dev item
         this.getNextSetNonStandard(content);
       } else {
-        this.getNextSetStandard(content);
+        if (end) {
+          this.getNextSetStandardEND(content);
+        } else {
+          this.getNextSetStandard(content);
+        }
       }
+    },
+    async getNextSetStandardEND(content) {
+
+      content.priorIndex = content.count - 9;
+      content.currentIndex = content.count;
+      console.log(content.currentIndex); // todo remove dev item
+      const additional = await this.getOwnedStandard(content.contract, content.priorIndex);
+      content.details = [...content.details, ...additional];
+      console.log(content.details); // todo remove dev item
+      await this.getNextSet(content, content.priorIndex);
     },
     async getNextSetStandard(content) {
       const offset = content.currentIndex + this.countPerPage; // 0 = 20 | 20 = 37
@@ -512,7 +554,13 @@ export default {
         content.priorIndex = content.currentIndex;
         content.currentIndex = offset;
       }
-
+      console.log(content.currentIndex); // todo remove dev item
+      const additional = await this.getOwnedStandard(content.contract, offset);
+      content.details = [...content.details, ...additional];
+      console.log(content.details); // todo remove dev item
+      await this.getNextSet(content, offset);
+    },
+    async getNextSet(content, offset) {
       const maxIndex =
         offset + this.countPerPage <= content.count
           ? offset + this.countPerPage
@@ -530,7 +578,9 @@ export default {
               );
             } catch (e) {
               failCount++;
-              content.details[i].image = '';
+              if (content.details[i]) {
+                content.details[i].image = '';
+              }
             }
           }
         }
@@ -539,6 +589,27 @@ export default {
       //   content.details,
       //   content.contract
       // );
+
+      this.$set(this.nftData, content.contract, content);
+    },
+    async getPriorSetStandardRESET(content) {
+      content.currentIndex = 9;
+      content.priorIndex = 0;
+
+      for (let i = content.priorIndex; i < content.currentIndex; i++) {
+        if (content.details[i].image === '') {
+          if (!Number.isNaN(content.details[i].token)) {
+            try {
+              content.details[i].image = await this.getNftImage(
+                content.details[i].contract,
+                content.details[i].token
+              );
+            } catch (e) {
+              content.details[i].image = '';
+            }
+          }
+        }
+      }
 
       this.$set(this.nftData, content.contract, content);
     },
@@ -576,34 +647,30 @@ export default {
       }
     },
     async getNextSetNonStandard(content, address = this.account.address) {
-      if(this.useDevAddress)  address = this.devAddress;
-      const offset = content.currentIndex + content.details.length; // 0 = 20 | 20 = 37
+      if (this.useDevAddress) address = this.devAddress;
+      const offset = content.currentIndex + this.countPerPage;
       if (offset <= content.count) {
         // update offsets if not at the end
         content.priorIndex = content.currentIndex;
         content.currentIndex = offset;
       }
+      console.log('currentIndex', content.currentIndex); // todo remove dev item
+      console.log('priorIndex', content.priorIndex); // todo remove dev item
       const nonStandard = await this.getOwnedNonStandard(
         content.contract,
         address,
         offset
       );
-      console.log('nonStandard', nonStandard); // todo remove dev item
+
       content.details = this.processor([], content.contract, nonStandard);
 
-      content.details = await this.getImagesForContract(
-        content.details,
-        content.contract,
-        true
-      );
-
-      console.log('content.details', content.details); // todo remove dev item
-      this.$set(this.nftData, content.contract, content);
+      await this.getNextSet(content, offset);
     },
     async getPriorSetNonStandard(content, address = this.account.address) {
-      if(this.useDevAddress)  address = this.devAddress;
+      if (this.useDevAddress) address = this.devAddress;
       const offset = content.currentIndex - content.priorIndex;
-
+      console.log('currentIndex', content.currentIndex); // todo remove dev item
+      console.log('priorIndex', content.priorIndex); // todo remove dev item
       if (content.currentIndex - offset >= 0) {
         content.currentIndex = content.currentIndex - offset;
       } else {
@@ -623,35 +690,16 @@ export default {
           content.currentIndex
         );
 
-        content.details = this.processor([], content.contract, nonStandard);
+        const details = this.processor([], content.contract, nonStandard);
         console.log('content.details', content.details); // todo remove dev item
         content.details = await this.getImagesForContract(
-          content.details,
+          details,
           content.contract,
           true
         );
 
         this.$set(this.nftData, content.contract, content);
       }
-    },
-
-    async getAllNonStandardOwned() {
-      // await this.getOwnedNonStandard()
-      // const getAll = async (address, body, offset) => {
-      //   const higherOffset = offset > 20 ? offset : 20;
-      //   const cats = body.kitties;
-      //   for (let i = higherOffset; i < limit; i += 20) {
-      //     var options = {
-      //       url: `https://api.cryptokitties.co/kitties?owner_wallet_address=${address}&limit=100&offset=${i}`,
-      //       method: 'GET'
-      //     };
-      //     let results = await makeRequest(options);
-      //     console.log(results); // todo remove dev item
-      //     cats.concat(results.kitties);
-      //   }
-      //   body.kitties = cats;
-      //   return body;
-      // };
     }
   }
 };
