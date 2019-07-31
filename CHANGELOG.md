@@ -1,3 +1,7 @@
+### Devop
+
+- Add proxy notice to moveCDP modal, improve swap widget [#1251](https://github.com/MyEtherWallet/MyEtherWallet/pull/1251)
+
 ### Bug
 
 - Fix #1249 and #1205 [#1250](https://github.com/MyEtherWallet/MyEtherWallet/pull/1250)
