@@ -3,22 +3,22 @@ import {
   ledgerLiveEthereum,
   ledgerEthereumClassic,
   ledgerLiveEthereumClassic,
-  ledgerLightstreamsNetwork,
   ropsten,
   rskMainnet,
   rskTestnet,
   thundercore,
-  solidum
+  solidum,
+  lightstreamsNetwork
 } from './paths';
 export default [
   ledgerEthereum,
   ledgerLiveEthereum,
   ledgerEthereumClassic,
   ledgerLiveEthereumClassic,
-  ledgerLightstreamsNetwork,
   ropsten,
   rskMainnet,
   rskTestnet,
   thundercore,
-  solidum
+  solidum,
+  lightstreamsNetwork
 ];
