@@ -1,9 +1,14 @@
+### Devop
+
+- Add proxy notice to moveCDP modal, improve swap widget [#1251](https://github.com/MyEtherWallet/MyEtherWallet/pull/1251)
+
 ### Bug
 - Fix webworker error when origin is null [#1273](https://github.com/MyEtherWallet/MyEtherWallet/pull/1273)
 
 ### Release v5.0.15
 
 ### Bug
+
 - Fix withdraw ETH with infinite collateralization [#1244](https://github.com/MyEtherWallet/MyEtherWallet/pull/1244)
 - Fix the BitBox hardware wallet communication error introduced with Chrome 73 [#1209](https://github.com/MyEtherWallet/MyEtherWallet/pull/1209)
 - Fix error message display for the BitBox hardware wallet [#1209](https://github.com/MyEtherWallet/MyEtherWallet/pull/1209)
