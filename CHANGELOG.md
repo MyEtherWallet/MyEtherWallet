@@ -1,5 +1,6 @@
 ### Bug
 
+- Logout warning modal redirect to current page instead of home page [#1297](https://github.com/MyEtherWallet/MyEtherWallet/pull/1297)
 - Custom networks not showing on send offline helper [#1285](https://github.com/MyEtherWallet/MyEtherWallet/pull/1285)
 
 ### Devop
