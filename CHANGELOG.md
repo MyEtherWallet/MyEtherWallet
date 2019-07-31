@@ -1,5 +1,6 @@
 ### Bug
 
+- Display "Advanced" section on "Send Transaction" page if data or gas limit fields are prefilled by url query params
 - Fix custom network addition and notifications when you send gazillion ETH [#1293](https://github.com/MyEtherWallet/MyEtherWallet/pull/1293)
 - Custom networks not showing on send offline helper [#1285](https://github.com/MyEtherWallet/MyEtherWallet/pull/1285)
 - Fix webworker error when origin is null [#1273](https://github.com/MyEtherWallet/MyEtherWallet/pull/1273)
