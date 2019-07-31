@@ -1,6 +1,5 @@
 <template>
   <div class="crypto-kitties-details">
-    <!--    <interface-container-title title="NFT Manager" />-->
     <div class="crypto-kitties-details-content-container">
       <back-button @click.native="goBack" />
       <div class="grid-container">
