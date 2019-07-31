@@ -19,7 +19,8 @@ export default {
         '/interface/send-offline',
         '/interface/send-offline/generate-info',
         '/interface/send-offline/generate-tx',
-        '/interface/send-offline/send-tx'
+        '/interface/send-offline/send-tx',
+        '/interface/nft-manager'
       ],
       icons: {
         active: require('@/assets/images/sidemenu/send-active.svg'),
@@ -49,6 +50,15 @@ export default {
             inactive: ''
           },
           titleKey: 'common.offline'
+        },
+        {
+          name: 'nft-manager',
+          routes: ['/interface/nft-manager'],
+          icons: {
+            active: '',
+            inactive: ''
+          },
+          titleKey: 'common.ntfManager'
         }
       ]
     },
@@ -68,7 +78,6 @@ export default {
       onlineOnly: true,
       routes: [
         '/interface/dapps',
-        '/interface/nft-manager',
         '/interface/dapps/manage-ens',
         '/interface/dapps/manage-ens/auction',
         '/interface/dapps/manage-ens/bid',
@@ -93,26 +102,7 @@ export default {
         inactive: require('@/assets/images/sidemenu/dapps.svg')
       },
       titleKey: 'common.dapps',
-      children: [
-        {
-          name: 'Dapps',
-          routes: ['/interface/dapps'],
-          icons: {
-            active: '',
-            inactive: ''
-          },
-          titleKey: 'common.dapps'
-        },
-        {
-          name: 'nft-manager',
-          routes: ['/interface/nft-manager'],
-          icons: {
-            active: '',
-            inactive: ''
-          },
-          titleKey: 'common.ntfManager'
-        }
-      ]
+      children: []
     },
     {
       name: 'contracts',

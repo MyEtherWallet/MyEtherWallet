@@ -6,14 +6,14 @@
           <p>Buy ETH with Credit Card</p>
         </div>
         <div class="send-button-container">
-          <standard-button :options="sendButton" @click.native="showSwapWidget" />
+          <standard-button
+            :options="sendButton"
+            @click.native="showSwapWidget"
+          />
         </div>
-        <!--      style="height: 50px; width: 100px;" -->
         <img class="cc-cards" src="@/assets/images/etc/visamaster.png" />
-        <img class="background-eth" src="@/assets/images/ads/eth.png">
-        <!--        <img class="icon" style="z-index: -1" src="~@/assets/images/ads/buyEth.png" />-->
+        <img class="background-eth" src="@/assets/images/ads/eth.png" />
       </div>
-
     </div>
     <div v-if="showWidget">
       <swap-widget
@@ -24,7 +24,6 @@
         :dest-address="account.address"
       ></swap-widget>
     </div>
-
   </div>
 </template>
 
@@ -65,7 +64,7 @@ export default {
   methods: {
     showSwapWidget() {
       this.showWidget = true;
-      const vals = { from: 'USD', to: 'ETH', amt: 100, rate: 0 }
+      const vals = { from: 'USD', to: 'ETH', amt: 100, rate: 0 };
       this.suppliedFromAmount = vals.amt;
       this.suppliedFrom = {
         symbol: vals.from,

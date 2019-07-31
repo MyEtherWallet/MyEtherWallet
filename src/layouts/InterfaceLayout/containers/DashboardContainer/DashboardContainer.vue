@@ -80,13 +80,16 @@
         </div>
       </div>
     </div>
-    <swap-widget
-      ref="swapWidget"
-      :supplied-from="suppliedFrom"
-      :supplied-to="suppliedTo"
-      :supplied-from-amount="suppliedFromAmount"
-      :dest-address="account.address"
-    ></swap-widget>
+    <div v-if="showSwapValues">
+      <swap-widget
+        ref="swapWidget"
+        :supplied-from="suppliedFrom"
+        :supplied-to="suppliedTo"
+        :supplied-from-amount="suppliedFromAmount"
+        :dest-address="account.address"
+      ></swap-widget>
+    </div>
+
   </div>
 </template>
 
@@ -101,10 +104,7 @@ import DappButtons from '../../components/DappButtons';
 import dapps from '@/dapps';
 import SwapWidget from '@/components/SwapWidget';
 
-import {
-  SwapProviders,
-  providers
-} from '@/partners';
+import { SwapProviders, providers } from '@/partners';
 import BigNumber from 'bignumber.js';
 
 const toBigNumber = num => {
@@ -138,6 +138,7 @@ export default {
   },
   data() {
     return {
+      showSwapValues: true,
       dappsToShow: ['maker', 'manageEns', 'scheduleTransaction'],
       tabData: tabsConfig.tabs,
       advancedExpand: false,
@@ -208,15 +209,17 @@ export default {
   },
   watch: {
     ['swap.haveProviderRates']() {
-      this.haveProviderRates = this.swap.haveProviderRates;
-      this.setupSwap();
+      if (this.showSwapValues) {
+        this.haveProviderRates = this.swap.haveProviderRates;
+        this.setupSwap();
+      }
     }
   },
   mounted() {
     if (this.online && this.network.type.name === 'ETH') {
-      console.log('with swap'); // todo remove dev item;
+      this.showSwapValues = true;
     } else {
-      console.log('no swap'); // todo remove dev item;
+      this.showSwapValues = false;
     }
   },
   beforeDestroy() {
@@ -244,20 +247,21 @@ export default {
       }
     },
     async setupSwap() {
-      for (let i = 0; i < this.swapPairs.length; i++) {
-        const swappers = await this.swap.standAloneRateEstimate(
-          this.swapPairs[i].from,
-          this.swapPairs[i].to,
-          this.swapPairs[i].amt
-        );
-        this.$set(
-          this.swapPairs[i],
-          'rate',
-          toBigNumber(swappers[0].rate).toFixed(4)
-        );
+      if (this.showSwapValues) {
+        for (let i = 0; i < this.swapPairs.length; i++) {
+          const swappers = await this.swap.standAloneRateEstimate(
+            this.swapPairs[i].from,
+            this.swapPairs[i].to,
+            this.swapPairs[i].amt
+          );
+          this.$set(
+            this.swapPairs[i],
+            'rate',
+            toBigNumber(swappers[0].rate).toFixed(4)
+          );
+        }
+        this.rateUpdate();
       }
-      this.rateUpdate();
-      console.log(this.swapPairs); // todo remove dev item
     },
     async rateUpdate() {
       if (this.rateUpdater === null) {
@@ -269,18 +273,20 @@ export default {
       }
     },
     showSwapWidget(vals) {
-      this.suppliedFromAmount = vals.amt;
-      this.suppliedFrom = {
-        symbol: vals.from,
-        name: ''
-      };
-      this.suppliedTo = {
-        symbol: vals.to,
-        name: ''
-      };
-      this.$nextTick(() => {
-        this.$refs.swapWidget.$refs.modal.show();
-      });
+      if (this.showSwapValues) {
+        this.suppliedFromAmount = vals.amt;
+        this.suppliedFrom = {
+          symbol: vals.from,
+          name: ''
+        };
+        this.suppliedTo = {
+          symbol: vals.to,
+          name: ''
+        };
+        this.$nextTick(() => {
+          this.$refs.swapWidget.$refs.modal.show();
+        });
+      }
     }
   }
 };

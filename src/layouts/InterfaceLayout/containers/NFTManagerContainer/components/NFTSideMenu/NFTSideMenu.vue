@@ -1,18 +1,6 @@
 <template>
   <div class="nft-side-menu">
     <div class="desktop-menu">
-<!--      <input-search class="input-search-container">-->
-<!--        <input v-model="vals" />-->
-<!--        <ul>-->
-<!--          <li-->
-<!--            v-for="item in searchResults"-->
-<!--            :key="item.token"-->
-<!--            @click="showDetails(item)"-->
-<!--          >-->
-<!--            {{ item.token }}-->
-<!--          </li>-->
-<!--        </ul>-->
-<!--      </input-search>-->
       <ul class="listing-container">
         <li
           v-for="i in data"
@@ -25,9 +13,6 @@
       </ul>
     </div>
     <div class="mobile-menu">
-<!--      <input-search class="input-search-container">-->
-<!--        <slot />-->
-<!--      </input-search>-->
       <b-dropdown text="CryptoKitties (5)">
         <b-dropdown-item v-for="i in data" :key="i.key" href="#">
           {{ i.title }} ({{ i.count }})
@@ -54,7 +39,6 @@ export default {
   },
   data() {
     return {
-      vals: '',
       selected: '0x06012c8cf97bead5deae237070f9587f8e7a266d',
       searchResults: []
     };
@@ -69,15 +53,7 @@ export default {
     }
   },
   watch: {
-    vals(newVal) {
-      if (newVal === '') {
-        this.searchResults = [];
-      } else {
-        this.searchForToken(newVal);
-      }
-      console.log('vals', newVal); // todo remove dev item
-    },
-    data() {}
+
   },
   mounted() {},
   methods: {
@@ -92,17 +68,6 @@ export default {
       this.searchResults = [];
       console.log(nft); // todo remove dev item
       this.$emit('showTokenDetails', nft);
-    },
-    searchForToken(val) {
-      this.searchResults = this.selectedContractTokens.filter(entry => {
-        if (entry.token) {
-          console.log(entry.token); // todo remove dev item
-          // return false;
-          return entry.token.toString().includes(val);
-        }
-        return false;
-      });
-      // this.searchResults = raw.map(entry => entry.token);
     }
   }
 };
