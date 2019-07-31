@@ -1,9 +1,11 @@
 <template>
   <div class="send-currency-container-safe-send">
-    <interface-container-title :title="$t('common.sendSafeSendTx')" />
+    <back-button />
     <div class="send-form">
       <div class="advanced-content safe-send-container">
         <div class="input-container">
+          <h3>{{ $t('common.sendSafeSendTx') }}</h3>
+          <br />
           <div class="inner-safesend-text-container">
             <strong>
               <span class="inner-safesend-text">SafeSend</span>&nbsp;protects
@@ -195,12 +197,14 @@ import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
 import utils from 'web3-utils';
 import { Toast, Misc } from '@/helpers';
+import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
 
 export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
     'interface-bottom-text': InterfaceBottomText,
-    blockie: Blockie
+    blockie: Blockie,
+    'back-button': BackButton
   },
   props: {
     tokensWithBalance: {
