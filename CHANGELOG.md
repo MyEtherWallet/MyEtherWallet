@@ -1,6 +1,7 @@
 ### Bug
 
-- Fix #1249 and #1205 []()
+- Fix #1249 and #1205 [#1250](https://github.com/MyEtherWallet/MyEtherWallet/pull/1250)
+- Fix webworker error when origin is null [#1273](https://github.com/MyEtherWallet/MyEtherWallet/pull/1273)
 
 ### Release v5.0.15
 
