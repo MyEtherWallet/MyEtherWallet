@@ -66,7 +66,6 @@ export default {
     },
     showDetails(nft) {
       this.searchResults = [];
-      console.log(nft); // todo remove dev item
       this.$emit('showTokenDetails', nft);
     }
   }

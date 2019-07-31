@@ -60,8 +60,7 @@ import hexDecoder from './binaryDecoderNFT';
 import { nftABI, ERC721, KittyCore } from './abis';
 import fetch from 'node-fetch';
 
-const URL_BASE =
-  '';
+const URL_BASE = '';
 
 export default {
   components: {
@@ -86,6 +85,7 @@ export default {
       nftTokens: {},
       nftData: {},
       ownedTokens: [],
+      tokenContractAddress: '0xeA3352C1a3480Ac5a32Fcd1F2854529BA7193F14',
       useDevAddress: true,
       devAddress: '0xa3d7553397352efb84a0bc217a464e9e114207d6'
       // 0xac43df42ba2d186da57342e1b685f024db445a22 // mycryptoheros:hero
@@ -239,13 +239,23 @@ export default {
 
       return await imageRaw.text();
     },
+    async getOwnedNonStandard(contract, address, offset = 0) {
+      const data = await fetch(
+        `${URL_BASE}?nonStandardContract=${contract}&address=${address}&offset=${offset}`,
+        {
+          mode: 'cors',
+          cache: 'no-cache',
+          method: 'GET'
+        }
+      );
+      return await data.json();
+    },
     async getOwnedCounts() {
       const supportedNftTokens = this.nftConfig
         .filter(entry => entry.ERC721Extension)
         .map(entry => entry.contract);
       const tokenContract = new this.web3.eth.Contract(nftABI);
-      tokenContract.options.address =
-        '0xeA3352C1a3480Ac5a32Fcd1F2854529BA7193F14';
+      tokenContract.options.address = this.tokenContractAddress;
       const address = this.useDevAddress
         ? this.devAddress
         : this.account.address;
@@ -281,8 +291,7 @@ export default {
     },
     async getOwnedTokens(contracts, address, nftData) {
       const tokenContract = new this.web3.eth.Contract(nftABI);
-      tokenContract.options.address =
-        '0xeA3352C1a3480Ac5a32Fcd1F2854529BA7193F14';
+      tokenContract.options.address = this.tokenContractAddress;
 
       for (let i = 0; i < contracts.length; i++) {
         nftData = await this.processNftDataContract(
@@ -336,10 +345,8 @@ export default {
       if (this.useDevAddress) address = this.devAddress;
       if (!tokenContract) {
         tokenContract = new this.web3.eth.Contract(nftABI);
-        tokenContract.options.address =
-          '0xeA3352C1a3480Ac5a32Fcd1F2854529BA7193F14';
+        tokenContract.options.address = this.tokenContractAddress;
       }
-      console.log(contract, address.toLowerCase(), offset, count); // todo remove dev item
       const res = await tokenContract.methods
         .getOwnedTokens(contract, address.toLowerCase(), offset, count)
         .call();
@@ -351,17 +358,7 @@ export default {
         };
       });
     },
-    async getOwnedNonStandard(contract, address, offset = 0) {
-      const data = await fetch(
-        `${URL_BASE}?nonStandardContract=${contract}&address=${address}&offset=${offset}`,
-        {
-          mode: 'cors',
-          cache: 'no-cache',
-          method: 'GET'
-        }
-      );
-      return await data.json();
-    },
+
     processor(details, contract, nonStandardResult) {
       const exists = item => {
         return details.findIndex(entry => entry.token === item.id) >= 0;
@@ -463,7 +460,7 @@ export default {
       await this.getNextSet(content, content.priorIndex);
     },
     async getNextSetStandard(content) {
-      const offset = content.currentIndex + this.countPerPage; // 0 = 20 | 20 = 37
+      const offset = content.currentIndex + this.countPerPage;
       if (offset <= content.count) {
         // update offsets if not at the end
         content.priorIndex = content.currentIndex;
