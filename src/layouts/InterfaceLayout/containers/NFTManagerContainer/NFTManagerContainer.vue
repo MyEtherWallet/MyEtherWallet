@@ -60,7 +60,9 @@ import hexDecoder from './binaryDecoderNFT';
 import { nftABI, ERC721, KittyCore } from './abis';
 import fetch from 'node-fetch';
 
-const URL_BASE = '';
+// const URL_BASE = '';
+const URL_BASE = 'https://swap.mewapi.io/nft';
+
 
 export default {
   components: {
