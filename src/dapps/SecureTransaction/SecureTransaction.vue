@@ -188,7 +188,6 @@
 
 <script>
 import { mapState } from 'vuex';
-// import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
 import { CoralConfig } from './config';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
@@ -200,7 +199,6 @@ import { Toast, Misc } from '@/helpers';
 
 export default {
   components: {
-    // 'interface-container-title': InterfaceContainerTitle,
     'interface-bottom-text': InterfaceBottomText,
     'back-button': BackButton,
     blockie: Blockie
