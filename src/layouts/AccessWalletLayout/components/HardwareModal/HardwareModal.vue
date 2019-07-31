@@ -149,7 +149,7 @@ export default {
           text: 'KeepKey',
           disabled: false,
           msg: '',
-          link: 'http://keepkey.go2cloud.org/aff_c?offer_id=1&aff_id=5561'
+          link: 'http://lddy.no/a4im'
         }
       ]
     };
