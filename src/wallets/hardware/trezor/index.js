@@ -39,9 +39,7 @@ class TrezorWallet {
   getAccount(idx) {
     const derivedKey = this.hdKey.derive('m/' + idx);
     const txSigner = async tx => {
-      const locTx = Object.assign({}, tx);
-      locTx['chainId'] = new BigNumber(tx['chainId']).toNumber();
-      tx = new Transaction(locTx, {
+      tx = new Transaction(tx, {
         common: commonGenerator(store.state.network)
       });
       const networkId = tx.getChainId();
