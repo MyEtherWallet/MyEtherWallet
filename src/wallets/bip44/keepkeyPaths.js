@@ -1,6 +1,7 @@
 import {
   keepkeyEthereum,
   keepkeyEthereumClassic,
+  keepkeyLightstreamsNetwork,
   ropsten,
   singularDTV,
   expanse,
@@ -27,6 +28,7 @@ import {
 export default [
   keepkeyEthereum,
   keepkeyEthereumClassic,
+  keepkeyLightstreamsNetwork,
   ropsten,
   singularDTV,
   expanse,

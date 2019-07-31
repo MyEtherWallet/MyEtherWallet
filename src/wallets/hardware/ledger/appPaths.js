@@ -28,6 +28,7 @@ import {
   ledgerLiveEthereum,
   ledgerEthereumClassic,
   ledgerLiveEthereumClassic,
+  ledgerLightstreamsNetwork,
   ropsten,
   expanse,
   ubiq,
@@ -47,8 +48,7 @@ import {
   mixBlockchain,
   rskMainnet,
   rskTestnet,
-  thundercore,
-  lightstreamsNetwork
+  thundercore
 } from '../../bip44/paths';
 const appList = [
   {
@@ -164,7 +164,7 @@ const appList = [
   {
     network: PHT,
     prefixes: ["m/44'/60'"],
-    paths: [lightstreamsNetwork]
+    paths: [ledgerLightstreamsNetwork]
   }
 ];
 export default appList;
