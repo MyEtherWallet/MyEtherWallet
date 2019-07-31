@@ -627,7 +627,6 @@ export default {
     this.$refs.modal.$on('shown', () => {
       this.widgetOpen = true;
       if (this.isWidget) {
-        console.log('swap widget', this.suppliedToAmount); // todo remove dev item
         this.toAddress = this.destAddress !== '' ? this.destAddress : '';
         this.fromCurrency = this.suppliedFrom.symbol;
         this.toCurrency = this.suppliedTo.symbol;
