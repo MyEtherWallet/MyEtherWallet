@@ -402,7 +402,7 @@ export default {
 
         if (data && Misc.validateHexString(data)) {
           this.data = data;
-          if (this.data.length > 0 && new BigNumber(data, 16).gt(0)) {
+          if (this.data.length > 0) {
             this.advancedExpand = true;
           }
         } else {
