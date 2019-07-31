@@ -14,7 +14,6 @@ import { toBuffer } from 'ethereumjs-util';
 import errorHandler from './errorHandler';
 import store from '@/store';
 import commonGenerator from '@/helpers/commonGenerator';
-import BigNumber from 'bignumber.js';
 const NEED_PASSWORD = false;
 
 class TrezorWallet {
