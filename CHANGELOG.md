@@ -1,7 +1,12 @@
 ### Bug
 
 - Fix #1249 and #1205 [#1250](https://github.com/MyEtherWallet/MyEtherWallet/pull/1250)
+- Custom networks not showing on send offline helper [#1285](https://github.com/MyEtherWallet/MyEtherWallet/pull/1285)
 - Fix webworker error when origin is null [#1273](https://github.com/MyEtherWallet/MyEtherWallet/pull/1273)
+
+### Devop
+
+- Add MEWTopia link [#1275](https://github.com/MyEtherWallet/MyEtherWallet/pull/1275)
 
 ### Release v5.0.15
 
@@ -34,6 +39,7 @@
 ### Feature
 
 - Maker Integration [#740](https://github.com/MyEtherWallet/MyEtherWallet/pull/740)
+- Pocket Network Integration [#1226](https://github.com/MyEtherWallet/MyEtherWallet/pull/1262)
 
 ### Bug
 
