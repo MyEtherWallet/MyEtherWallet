@@ -222,7 +222,7 @@ export default {
               to: '/#faqs'
             },
             {
-              text: 'MEWTopia',
+              text: 'MEWtopia',
               href: 'https://www.mewtopia.com'
             },
             {
