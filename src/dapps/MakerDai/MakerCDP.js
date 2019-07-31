@@ -406,6 +406,12 @@ export default class MakerCDP {
     // }
   }
 
+  async checkIfDestAddressHasProxy(address) {
+    await this.getProxy();
+    const proxy = await this.proxyService.getProxyAddress(address);
+    return proxy;
+  }
+
   async moveCdp(address) {
     await this.getProxy();
     const proxy = await this.proxyService.getProxyAddress(address);

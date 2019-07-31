@@ -64,8 +64,11 @@
       :calc-collat-ratio-eth-chg="calcCollatRatioEthChg"
       :calc-liquidation-price-eth-chg="calcLiquidationPriceEthChg"
       :calc-liquidation-price-dai-chg="calcLiquidationPriceDaiChg"
+      :dest-address-has-proxy="destAddressHasProxy"
+      :dest-address-proxy="destAddressProxy"
       :tokens-with-balance="tokensWithBalance"
       @moveCdp="moveCdp"
+      @checkForProxy="checkIfDestAddressHasProxy"
     >
     </move-cdp-modal>
     <interface-container-title :title="'MAKER'">
@@ -246,6 +249,8 @@ export default {
   },
   data() {
     return {
+      destAddressProxy: '',
+      destAddressHasProxy: false,
       afterUpdate: [],
       allCdpIds: [],
       activeCdp: {},
@@ -447,6 +452,7 @@ export default {
       this.$refs.moveCdp.$refs.modal.$on('hidden', () => {
         this.$emit('modalHidden');
       });
+      this.destAddressHasProxy = false;
       this.$refs.moveCdp.$refs.modal.show();
     },
     async setup() {
@@ -865,6 +871,17 @@ export default {
     },
     closeCdp() {
       this.currentCdp.closeCdp();
+    },
+    checkIfDestAddressHasProxy(val) {
+      this.currentCdp
+        .checkIfDestAddressHasProxy(val)
+        .then(result => {
+          this.destAddressProxy = result;
+          this.destAddressHasProxy = result !== null;
+        })
+        .catch(err => {
+          throw err;
+        });
     },
     moveCdp(val) {
       this.currentCdp.moveCdp(val);
