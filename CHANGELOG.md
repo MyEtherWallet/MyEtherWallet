@@ -11,7 +11,7 @@
 ### Bug
 
 - Fix #1249 and #1205 [#1250](https://github.com/MyEtherWallet/MyEtherWallet/pull/1250)
-- Display "Advanced" section on "Send Transaction" page if data or gas limit fields are prefilled by url query params
+- Display "Advanced" section on "Send Transaction" page if data or gas limit fields are prefilled by url query params [#1260](https://github.com/MyEtherWallet/MyEtherWallet/pull/1260)
 - Fix custom network addition and notifications when you send gazillion ETH [#1293](https://github.com/MyEtherWallet/MyEtherWallet/pull/1293)
 - Logout warning modal redirect to current page instead of home page [#1297](https://github.com/MyEtherWallet/MyEtherWallet/pull/1297)
 - Custom networks not showing on send offline helper [#1285](https://github.com/MyEtherWallet/MyEtherWallet/pull/1285)
