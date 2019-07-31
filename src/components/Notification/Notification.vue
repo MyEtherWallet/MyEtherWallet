@@ -374,11 +374,11 @@ export default {
     },
     convertToGwei(value) {
       if (this.notValidNumber(value)) return '';
-      return unit.fromWei(value, 'Gwei');
+      return unit.fromWei(new BigNumber(value).toFixed(), 'Gwei');
     },
     convertToEth(value) {
       if (this.notValidNumber(value)) return '';
-      return unit.fromWei(value, 'ether');
+      return unit.fromWei(new BigNumber(value).toFixed(), 'ether');
     },
     getFiatValue(value) {
       if (this.notValidNumber(value)) return '';
