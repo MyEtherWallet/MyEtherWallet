@@ -1,4 +1,4 @@
-@import '../InterfaceContainer';
+@import '../InterfaceContainer.scss';
 
 $collepse-width: 1300px;
 
@@ -17,7 +17,7 @@ $collepse-width: 1300px;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-gap: 30px;
-  margin-top: 30px;
+  margin-top: 20px;
   @media all and (max-width: $collepse-width) {
     grid-template-columns: 1fr 1fr;
   }
@@ -27,8 +27,6 @@ $collepse-width: 1300px;
   text-align: center;
 
   .kitty-img {
-    //background-color: $light-grey-2;
-    //border-radius: 100%;
     img {
       width: 100%;
     }
@@ -38,3 +36,80 @@ $collepse-width: 1300px;
     margin-top: 10px;
   }
 }
+
+
+
+// Colors
+$color-white: #fff;
+
+// Green Filled Button Colors
+$green-filled-button-background: #3bc1aa;
+$green-filled-button-background--hover: #3ed7bc;
+$green-filled-button-background--click: #269983;
+
+// Green Bordered Button Colors
+$green-border-button-border: #33c2a7;
+$green-border-button-border--hover: #55f0d6;
+$green-border-button-border--click: #56b7a9;
+$green-border-button-background--click: #f3fafa;
+
+@import '~@/scss/GlobalVariables';
+
+button {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  display: block;
+  width: 100%;
+}
+
+button[disabled] {
+  background-color: gray !important;
+  border-color: gray !important;
+  cursor: default !important;
+}
+
+@mixin btn-mixin-1() {
+  text-align: center;
+  user-select: none;
+}
+
+.internal-nav-container{
+  grid-column: span 3;
+  text-align: center;
+  &:first-child{
+
+  }
+  .internal-nav{
+
+    cursor: pointer;
+    width: 50px;
+    margin: 5px;
+    padding: 5px;
+    border-radius: 4px;
+    &.prev{
+      margin-right: 50px;
+    }
+    &.next{
+      margin-left: 50px;
+    }
+
+    @include btn-mixin-1();
+
+    background-color: $green-filled-button-background;
+    border: 1px solid $green-filled-button-background;
+    color: $color-white;
+
+    &:hover {
+      background-color: $green-filled-button-background--hover;
+      border: 1px solid $green-filled-button-background--hover;
+    }
+
+    &:active {
+      background-color: $green-filled-button-background--click;
+      border: 1px solid $green-filled-button-background--click;
+    }
+  }
+}
+

@@ -104,22 +104,7 @@ import SwapWidget from '@/components/SwapWidget';
 import {
   SwapProviders,
   providers
-  // bestProviderForQuantity,
-  // bestRateForQuantity,
-  // isValidEntry,
-  // providerNames,
-  // supportedProviders,
-  // BASE_CURRENCY,
-  // fiat,
-  // MIN_SWAP_AMOUNT,
-  // ERC20
 } from '@/partners';
-// import { Transaction } from 'ethereumjs-tx';
-// import { Misc, Toast } from '@/helpers';
-// import BigNumber from 'bignumber.js';
-// import ethUnit from 'ethjs-unit';
-// import utils from 'web3-utils';
-// import fetch from 'node-fetch';
 import BigNumber from 'bignumber.js';
 
 const toBigNumber = num => {

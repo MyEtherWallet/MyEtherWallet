@@ -28,7 +28,7 @@ $collepse-width: 650px;
 
 .kitty-image {
   margin-right: 30px;
-  width: 350px;
+  width: 250px;
   @media all and (max-width: $collepse-width) {
     margin: 0 auto;
     max-width: 350px;
@@ -48,6 +48,7 @@ $collepse-width: 650px;
 }
 
 .address-input-container {
+  padding-top: 30px;
   max-width: 600px;
   margin: 0 auto;
   text-align: center;

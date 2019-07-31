@@ -1,24 +1,44 @@
 @import '~@/scss/GlobalVariables';
 
-.bottom-image-container {
-  //background-color: $background-color-white;
+
+//.bottom-image-container {
+//  //background-color: $background-color-white;
+//  border-radius: 5px;
+//  margin-top: 10px;
+//  overflow: hidden;
+//
+//  a {
+//    color: black;
+//    text-decoration: none;
+//  }
+//
+//  .ad-container {
+//    height: 25%;
+//    //min-height: 200px;
+//  }
+//  //img {
+//  //  //height: 200px;
+//  //  width: 100%;
+//  //}
+//
+//
+//}
+
+.twitter-container {
   border-radius: 5px;
-  margin-top: 10px;
+  margin-top: 15px;
   overflow: hidden;
-
-  .ad-container {
-    height: 200px;
-  }
-  img {
-    width: 100%;
-  }
-
-  .twitter-container {
+  .twitter-content{
     padding: 30px;
     background-color: $background-color-white;
     border-radius: 5px;
     overflow: hidden;
     text-align: center;
+
+    a {
+      color: black;
+      text-decoration: none;
+    }
 
     i {
       color: #1ca1f1;
@@ -35,26 +55,73 @@
   }
 }
 
-.select-dots-container {
+.bottom-image-container {
+  position: relative;
   //background-color: $background-color-white;
   border-radius: 5px;
-  margin-top: 10px;
+  margin-top: 5px;
   overflow: hidden;
-  width: 100%;
-  text-align: center;
+  height: 200px;
 
-  .ad-dot {
-    padding-right: 10px;
-    cursor: pointer;
-    color: #0b2840;
-    .inactive {
-      opacity: 0.2;
-    }
-    .active {
-      opacity: 1;
+  a {
+    color: black;
+    text-decoration: none;
+  }
+
+  .ad-container {
+    height: 25%;
+    //min-height: 200px;
+  }
+
+  .select-dots-container {
+    position: absolute;
+    bottom: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+    overflow: hidden;
+    width: 100%;
+    text-align: center;
+
+    .ad-dot {
+      padding-right: 10px;
+      cursor: pointer;
+      color: #0b2840;
+      .inactive {
+        opacity: 0.2;
+      }
+      .active {
+        opacity: 1;
+      }
     }
   }
+  //img {
+  //  //height: 200px;
+  //  width: 100%;
+  //}
+
+  //.twitter-container {
+  //  padding: 30px;
+  //  background-color: $background-color-white;
+  //  border-radius: 5px;
+  //  overflow: hidden;
+  //  text-align: center;
+  //
+  //  i {
+  //    color: #1ca1f1;
+  //    font-size: 48px;
+  //    vertical-align: sub;
+  //  }
+  //  span {
+  //    vertical-align: baseline;
+  //    padding-left: 10px;
+  //    padding-bottom: 5px;
+  //    font-size: 24px;
+  //    font-weight: bold;
+  //  }
+  //}
 }
+
+
 .spinner-container {
   text-align: center;
 }
