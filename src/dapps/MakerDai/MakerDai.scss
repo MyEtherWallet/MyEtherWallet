@@ -1,0 +1,242 @@
+@import '~@/scss/GlobalVariables';
+
+$dapp-button-mobile-width: 650px;
+$dapps-container-mobile-width: 650px;
+$confirmation-modal-mobile-width: 500px;
+
+%interface-container {
+  border-radius: 5px;
+  grid-area: main;
+  overflow: hidden;
+
+  > div {
+    background: $background-color-white;
+  }
+}
+
+.header-buttons-container {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  top: 16px;
+  right: 100px;
+
+  @media all and (max-width: 600px) {
+    top: 79px;
+    left: 8px;
+  }
+
+  .inner-container {
+    display: flex;
+    // Mobile
+
+    button {
+      margin-left: 10px;
+      text-align: center;
+      border-radius: 5px;
+      cursor: pointer;
+      display: block;
+    }
+
+    .move-btn {
+      background-color: $white;
+      width: 120px;
+      height: 34px;
+      border-radius: 4px;
+      border: solid 1px #05c0a5;
+      color: #05c0a5;
+    }
+    .close-btn {
+      background-color: $white;
+      width: 120px;
+      height: 34px;
+      border-radius: 4px;
+      border: solid 1px #e96071;
+      color: #e96071;
+    }
+  }
+}
+
+.dapps-button {
+  background: $light-green-4;
+  border: 1px solid $light-green-4;
+  border-radius: 5px;
+  color: $black;
+  cursor: pointer;
+  height: 100%;
+  padding: 10px 5px;
+  text-align: center;
+
+  @media all and (max-width: $dapp-button-mobile-width) {
+    display: flex;
+    align-items: center;
+    text-align: left;
+    padding: 5px 10px;
+  }
+
+  &:hover {
+    border: 1px solid $mew-green;
+    background-color: $light-green-6;
+  }
+
+  &.active {
+    border: 1px solid $mew-green;
+  }
+
+  img {
+    @media all and (max-width: $dapp-button-mobile-width) {
+      margin-top: 0;
+      margin-left: -10px;
+      margin-right: 5px;
+    }
+  }
+
+  h4 {
+    margin-bottom: 5px;
+    font-size: 18px;
+    font-weight: 500;
+  }
+}
+
+.disabled {
+  background-color: $white;
+  border: 1px solid $light-grey-6;
+  color: $light-grey-6;
+  pointer-events: none;
+
+  p {
+    color: $light-grey-6;
+  }
+}
+
+.dapps-container {
+  min-height: 15px;
+}
+
+.proxy-container {
+  color: $black;
+  height: 100%;
+  padding: 10px 5px;
+  grid-column: 2 / 5;
+
+  @media all and (max-width: $dapp-button-mobile-width) {
+    display: flex;
+    align-items: center;
+    text-align: left;
+    padding: 5px 10px;
+  }
+
+  img {
+    @media all and (max-width: $dapp-button-mobile-width) {
+      margin-top: 0;
+      margin-left: -10px;
+      margin-right: 5px;
+    }
+  }
+
+  h4 {
+    margin-bottom: 5px;
+    font-size: 18px;
+    font-weight: 500;
+  }
+}
+
+.buttons-container {
+  display: grid;
+  grid-column-gap: 5px;
+  grid-row-gap: 5px;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  padding: 10px;
+
+  @media all and (max-width: $dapps-container-mobile-width) {
+    > * {
+      margin-bottom: 10px;
+    }
+  }
+
+  > *:last-child {
+    margin-bottom: 0;
+  }
+
+  // Tablet
+  @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+    padding: 20px;
+  }
+
+  @media all and (max-width: $dapps-container-mobile-width) {
+    display: block;
+    padding: 10px;
+  }
+}
+
+%send-form-base {
+  padding: 40px 60px 0;
+
+  .title-container {
+    align-items: flex-end;
+    display: flex;
+    margin-bottom: 5px;
+  }
+}
+
+%form-block-base {
+  border-radius: 5px;
+
+  .the-form {
+    background-color: $background-color-1;
+    border-radius: 5px;
+  }
+}
+
+.select-contract .dropdown-toggle {
+  border: 0;
+  display: none;
+}
+
+.container-maker {
+  margin-bottom: 10px;
+  @extend %interface-container;
+
+  .Collateralize-Gene {
+    width: 341px;
+    height: 22px;
+    font-family: AvenirNext;
+    font-size: 16px;
+    font-weight: 600;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: #0b2840;
+  }
+
+  .Please-text-somethin {
+    width: 535px;
+    height: 51px;
+    font-family: AvenirNext;
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: #506175;
+  }
+
+  .Please-text-somethin .text-style-1 {
+    font-family: PingFangSC;
+  }
+
+  .Collateral {
+    width: 199px;
+    height: 22px;
+    font-family: AvenirNext;
+    font-size: 16px;
+    font-weight: 600;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: #0b2840;
+  }
+}

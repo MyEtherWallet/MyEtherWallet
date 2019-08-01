@@ -145,7 +145,7 @@ import BigNumber from 'bignumber.js';
 import utils from 'web3-utils';
 import store from 'store';
 import { Toast } from '@/helpers';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 
 export default {
   name: 'Settings',
@@ -218,21 +218,19 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      network: 'network'
-    }),
+    ...mapState(['network', 'online']),
     gasPriceInputs() {
       return {
         economy: {
           gwei: new BigNumber(
             utils.fromWei(
-              new BigNumber(this.gasPrice).div(2).toFixed(0),
+              new BigNumber(this.gasPrice).div(1).toFixed(0),
               'gwei'
             )
           ).toFixed(),
           eth: new BigNumber(
             utils.fromWei(
-              new BigNumber(this.gasPrice).div(2).toFixed(0),
+              new BigNumber(this.gasPrice).div(1).toFixed(0),
               'ether'
             )
           ).toFixed()
@@ -240,13 +238,13 @@ export default {
         regular: {
           gwei: new BigNumber(
             utils.fromWei(
-              new BigNumber(this.gasPrice).div(1).toFixed(0),
+              new BigNumber(this.gasPrice).times(1.5).toFixed(0),
               'gwei'
             )
           ).toFixed(),
           eth: new BigNumber(
             utils.fromWei(
-              new BigNumber(this.gasPrice).div(1).toFixed(0),
+              new BigNumber(this.gasPrice).times(1.5).toFixed(0),
               'ether'
             )
           ).toFixed()
@@ -254,13 +252,13 @@ export default {
         fast: {
           gwei: new BigNumber(
             utils.fromWei(
-              new BigNumber(this.gasPrice).times(1.25).toFixed(0),
+              new BigNumber(this.gasPrice).times(2).toFixed(0),
               'gwei'
             )
           ).toFixed(),
           eth: new BigNumber(
             utils.fromWei(
-              new BigNumber(this.gasPrice).div(1.25).toFixed(0),
+              new BigNumber(this.gasPrice).div(2).toFixed(0),
               'ether'
             )
           ).toFixed()
@@ -284,7 +282,9 @@ export default {
     }
   },
   mounted() {
-    this.getEthPrice();
+    if (this.online) {
+      this.getEthPrice();
+    }
     this.exportConfig();
   },
   methods: {

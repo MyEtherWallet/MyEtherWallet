@@ -9,7 +9,11 @@ const ERRORS = {
   'Permissions not granted': 'trezorError.noPermission',
   'Device call in progress': 'trezorError.callInProgress',
   'Transport is missing': 'trezorError.transportMissing',
-  Cancelled: 'trezorError.cancelled'
+  'EthAppPleaseEnableContractData: Please enable Contract data on the Ethereum app Settings':
+    'trezorError.turnOnContractData',
+  Cancelled: 'trezorError.cancelled',
+  'Iframe timeout': 'trezor.iframeTimeout',
+  'Browser not supported': 'trezor.unsupportedBrowser'
 };
 
 const WARNING = {};

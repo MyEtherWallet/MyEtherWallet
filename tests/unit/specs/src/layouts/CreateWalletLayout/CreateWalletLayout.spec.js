@@ -14,7 +14,6 @@ import { Tooling } from '@@/helpers';
 import { RouterLinkStub } from '@@/helpers/setupTooling';
 import IpadModal from '@/components/IpadModal';
 
-//xdescribe
 describe('CreateWalletLayout.vue', () => {
   let localVue, i18n, wrapper, store, showModal, hideModal;
 

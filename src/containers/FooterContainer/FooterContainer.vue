@@ -136,7 +136,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import FeedbackModal from '@/components/FeedbackModal';
 import CustomerSupport from '@/components/CustomerSupport';
 import affiliates from './affiliates.js';
@@ -222,6 +222,10 @@ export default {
               to: '/#faqs'
             },
             {
+              text: 'MEWtopia',
+              href: 'https://www.mewtopia.com'
+            },
+            {
               text: this.$t('common.vintage'),
               href: 'https://vintage.myetherwallet.com'
             },
@@ -269,9 +273,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      ethDonationAddress: 'ethDonationAddress'
-    })
+    ...mapState(['ethDonationAddress'])
   },
   methods: {
     openFeedbackModal() {

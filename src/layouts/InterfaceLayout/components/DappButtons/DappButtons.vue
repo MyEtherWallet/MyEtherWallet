@@ -1,17 +1,18 @@
 <template>
-  <div :class="['dapps-button', supported ? '' : 'disabled']">
-    <router-link :to="param" tag="div">
-      <img :src="supported ? icon : iconDisabled" />
-      <div>
-        <h4>{{ title }}</h4>
-        <p>{{ desc }}</p>
-      </div>
-    </router-link>
+  <div
+    :class="['dapps-button', supported ? '' : 'disabled']"
+    @click="navigateTo"
+  >
+    <img :src="supported ? icon : iconDisabled" />
+    <div>
+      <h4>{{ title }}</h4>
+      <p>{{ desc }}</p>
+    </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 
 export default {
   props: {
@@ -43,11 +44,14 @@ export default {
     }
   },
   computed: {
-    ...mapGetters({
-      network: 'network'
-    }),
+    ...mapState(['network']),
     supported() {
       return this.supportedNetworks.includes(this.network.type.name);
+    }
+  },
+  methods: {
+    navigateTo() {
+      this.$router.push(this.param);
     }
   }
 };

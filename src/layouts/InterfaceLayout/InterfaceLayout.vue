@@ -65,6 +65,7 @@
               :address="address"
               :print="print"
               :switch-addr="switchAddress"
+              :display-addr="wallet.displayAddress"
               :qrcode="openAddressQrcode"
             />
           </div>
@@ -81,7 +82,7 @@
             :highest-gas="highestGas"
             :nonce="nonce"
           />
-          <div v-if="online" class="tokens">
+          <div class="tokens">
             <interface-tokens
               :fetch-tokens="setTokens"
               :get-token-balance="getTokenBalance"
@@ -97,7 +98,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import ENS from 'ethereum-ens';
 import WalletPasswordModal from '@/components/WalletPasswordModal';
 import EnterPinNumberModal from '@/components/EnterPinNumberModal';
@@ -195,15 +196,15 @@ export default {
         return toChecksumAddress(this.account.address);
       }
     },
-    ...mapGetters({
-      network: 'network',
-      account: 'account',
-      online: 'online',
-      web3: 'web3',
-      Networks: 'Networks',
-      sidemenuOpen: 'sidemenuOpen',
-      wallet: 'wallet'
-    })
+    ...mapState([
+      'network',
+      'account',
+      'online',
+      'web3',
+      'Networks',
+      'sidemenuOpen',
+      'wallet'
+    ])
   },
   watch: {
     web3() {
@@ -255,7 +256,7 @@ export default {
             .catch(TrezorWallet.errorHandler);
           break;
         case BITBOX_TYPE:
-          this.togglePasswordModal(BitBoxWallet, 'DigitalBitbox');
+          this.togglePasswordModal(BitBoxWallet, 'BitBox');
           break;
         case SECALOT_TYPE:
           this.togglePasswordModal(SecalotWallet, 'Secalot');
@@ -494,7 +495,7 @@ export default {
       } else {
         this.setCustomTokenStore();
       }
-      if (this.online === true) {
+      if (this.online) {
         if (this.account.address !== null) {
           if (this.account.identifier === WEB3_TYPE) {
             if (window.web3.currentProvider.isMetamask) {
@@ -587,18 +588,24 @@ export default {
     web3WalletPollAddress() {
       this.pollAddress = setInterval(() => {
         if (!window.web3.eth) {
+          Toast.responseHandler(
+            new Error('Web3 Instance not found!'),
+            Toast.ERROR
+          );
           clearInterval(this.pollAddress);
         }
 
         window.web3.eth.getAccounts((err, accounts) => {
           if (err) {
-            return Toast.responseHandler(err, false);
+            Toast.responseHandler(err, false);
+            clearInterval(this.pollAddress);
           }
           if (!accounts.length) {
-            return Toast.responseHandler(
+            Toast.responseHandler(
               new Error('Please make sure that your Web3 Wallet is unlocked'),
               Toast.ERROR
             );
+            clearInterval(this.pollAddress);
           }
           const address = accounts[0];
 

@@ -40,9 +40,7 @@ const warn = {
       return `<div><img src="${toastWarn}" /> &nbsp; Something minor happened. Don't be alarmed</div>`;
     }
     // if there is a message show it with the message
-    return `<div><img src="${toastWarn}" /> &nbsp; Warning: ${
-      payload.message
-    }</div>`;
+    return `<div><img src="${toastWarn}" /> &nbsp; Warning: ${payload.message}</div>`;
   },
   options: Object.assign({}, toastObject, {
     className: 'toast-warn'

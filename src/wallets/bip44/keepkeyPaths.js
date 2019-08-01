@@ -20,7 +20,10 @@ import {
   tomoChain,
   mixBlockchain,
   iolite,
-  thundercore
+  thundercore,
+  solidum,
+  dexon,
+  lightstreamsNetwork
 } from './paths';
 export default [
   keepkeyEthereum,
@@ -44,5 +47,8 @@ export default [
   tomoChain,
   mixBlockchain,
   iolite,
-  thundercore
+  thundercore,
+  solidum,
+  dexon,
+  lightstreamsNetwork
 ];

@@ -6,7 +6,9 @@ import {
   ropsten,
   rskMainnet,
   rskTestnet,
-  thundercore
+  thundercore,
+  solidum,
+  lightstreamsNetwork
 } from './paths';
 export default [
   ledgerEthereum,
@@ -16,5 +18,7 @@ export default [
   ropsten,
   rskMainnet,
   rskTestnet,
-  thundercore
+  thundercore,
+  solidum,
+  lightstreamsNetwork
 ];

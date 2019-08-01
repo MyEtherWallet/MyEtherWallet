@@ -17,6 +17,7 @@
 // .title-bar-container
 // *********************************************************************
 .title-bar-container {
+  position: relative;
   padding: 0 10px;
   display: flex;
   align-items: center;
@@ -27,6 +28,15 @@
     line-height: initial;
     margin-right: 8px;
     color: #212529;
+  }
+
+  .button-text {
+    font-weight: 400;
+    font-size: 16px;
+    position: absolute;
+    right: 75px;
+    top: 2px;
+    color: $mew-green;
   }
 
   .switch {

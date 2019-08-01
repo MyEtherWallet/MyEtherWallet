@@ -10,7 +10,7 @@
   "sendTx": "Send Transaction",
   "haveIssues": "Have any issues?",
   "ensManager": "ENS Manager",
-  "registerEnsDesc": "Once you have a domain name, you can tell your friends to send ETH to mewtopia.eth instead of your address(0x7cB57B5A97eAbe942....)",
+  "registerEnsDesc": "Search for a domain name. Once you have registered one, you can tell your friends to send ETH to \"_____.eth\", instead of your public address (0x.....).",
   "checkDomain": "Check Domain",
   "subDomain": "Sub Domain",
   "allSubDomains": "All Sub Domains",
@@ -20,7 +20,7 @@
   "offline": "Offline",
   "sendPubTx": "Send/Publish Transaction",
   "generate": "Generate",
-  "registerENSDescShort": "Bid on or register an ENS domain",
+  "registerENSDescShort": "Register an ENS domain",
   "balance": "Balance",
   "network": "Network",
   "equivalentValues": "Equivalent Values",
@@ -39,8 +39,8 @@
   "byteCode": "Byte Code",
   "constructor": "Constructor",
   "contractName": "Contract Name",
-  "subdomains": "Subdomains",
-  "buySubDomains": "Buy a subdomain",
+  "nameYourWallet": "Name Your Wallet",
+  "nameYourWalletDesc": "Give your address a human readable name on a registered ENS domain.",
   "signMessageDesc": "Include your nickname and where you use the nickname so someone else cannot use it. Include a specific reason for the message so it cannot be reused for a different purpose.",
   "verifiedMessage": "did sign the message",
   "walletNotFound": "Oops! Wallet not found! :(",
@@ -107,5 +107,6 @@
   "simplexTagLine": "Buy crypto with a credit card!",
   "CryptoToFiatBeta": "Please note Crypto to Fiat is currently a beta feature of Bity",
   "back": "Back",
-  "invalidTanCode": "Invalid Code"
+  "invalidTanCode": "Invalid Code",
+  "unableToValidateAddress": "Currently unable to validate addresses for {currency}. It is likely correct, but Please double check it is correct before sending."
 }
