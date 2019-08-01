@@ -62,7 +62,7 @@ import NFTSideMenu from '@/layouts/InterfaceLayout/containers/NFTManagerContaine
 import NftDetails from './containers/NftDetails';
 import { mapState } from 'vuex';
 import hexDecoder from './binaryDecoderNFT';
-import { nftABI, ERC721, KittyCore } from './abis';
+import { nftABI } from './abis';
 import fetch from 'node-fetch';
 
 const URL_BASE = 'https://swap.mewapi.io/nft';
@@ -78,8 +78,6 @@ export default {
   data() {
     return {
       nftABI,
-      ERC721,
-      KittyCore,
       countPerPage: 9,
       nftConfig: [],
       tokenHelper: {},
@@ -127,13 +125,12 @@ export default {
       }
     },
     nftToShow() {
-      const toShow = this.nftData[this.selectedContract]
+      return this.nftData[this.selectedContract]
         ? this.nftData[this.selectedContract].details.slice(
             this.nftData[this.selectedContract].currentIndex,
             this.nftData[this.selectedContract].currentIndex + this.countPerPage
           )
         : [];
-      return toShow;
     },
     sideMenuData() {
       return this.nftData;

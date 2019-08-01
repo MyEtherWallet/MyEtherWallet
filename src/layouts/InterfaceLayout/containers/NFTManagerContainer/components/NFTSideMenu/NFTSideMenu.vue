@@ -43,7 +43,6 @@ export default {
       searchResults: []
     };
   },
-
   computed: {},
   watch: {},
   mounted() {},
