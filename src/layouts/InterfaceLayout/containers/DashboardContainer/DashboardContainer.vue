@@ -5,7 +5,7 @@
         <div class="title">
           <h4>{{ $t('common.actions') }}</h4>
         </div>
-        <div class="margin--top--auto buttons">
+        <div v-if="online" class="margin--top--auto buttons">
           <img
             class="clickable"
             src="@/assets/images/buttons/send-tx.png"
@@ -15,6 +15,17 @@
             class="clickable"
             src="@/assets/images/buttons/nft-manager.png"
             @click="goTo('nft-manager')"
+          />
+        </div>
+        <div v-if="!online" class="margin--top--auto buttons">
+          <img
+            class="clickable"
+            src="@/assets/images/buttons/send-tx.png"
+            @click="goTo('send-offline')"
+          />
+          <img
+            class="clickable"
+            src="@/assets/images/buttons/nft-manager.png"
           />
         </div>
       </div>
@@ -230,7 +241,6 @@ export default {
   },
   methods: {
     goTo(page) {
-      if (!this.online) return;
       let childIndex = -1;
       const pageInfo = this.tabData.find(entry => {
         if (entry.name === page) {
