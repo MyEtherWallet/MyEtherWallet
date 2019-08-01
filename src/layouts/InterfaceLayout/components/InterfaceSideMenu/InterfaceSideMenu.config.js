@@ -53,6 +53,7 @@ export default {
         },
         {
           name: 'nft-manager',
+          onlineOnly: true,
           routes: ['/interface/nft-manager'],
           icons: {
             active: '',

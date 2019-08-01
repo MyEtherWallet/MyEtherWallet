@@ -5,7 +5,7 @@
         <div class="title">
           <h4>{{ $t('common.actions') }}</h4>
         </div>
-        <div v-if="online" class="margin--top--auto buttons">
+        <div class="margin--top--auto buttons">
           <img
             class="clickable"
             src="@/assets/images/buttons/send-tx.png"
@@ -15,17 +15,6 @@
             class="clickable"
             src="@/assets/images/buttons/nft-manager.png"
             @click="goTo('nft-manager')"
-          />
-        </div>
-        <div v-if="!online" class="margin--top--auto buttons">
-          <img
-            class="clickable"
-            src="@/assets/images/buttons/send-tx.png"
-            @click="goTo('send-offline')"
-          />
-          <img
-            class="clickable"
-            src="@/assets/images/buttons/nft-manager.png"
           />
         </div>
       </div>
@@ -203,22 +192,20 @@ export default {
     ]),
     sortedObject() {
       const arrayedDapp = [];
-      if (this.online) {
-        Object.keys(dapps).forEach(dapp => {
-          if (this.dappsToShow.includes(dapp)) {
-            arrayedDapp.push(dapps[dapp]);
-          }
-        });
+      Object.keys(dapps).forEach(dapp => {
+        if (this.dappsToShow.includes(dapp)) {
+          arrayedDapp.push(dapps[dapp]);
+        }
+      });
 
-        return arrayedDapp.sort((a, b) => {
-          if (
-            a.supportedNetworks.includes(this.network.type.name) ||
-            b.supportedNetworks.includes(this.network.type.name)
-          )
-            return 1;
-          return 0;
-        });
-      }
+      return arrayedDapp.sort((a, b) => {
+        if (
+          a.supportedNetworks.includes(this.network.type.name) ||
+          b.supportedNetworks.includes(this.network.type.name)
+        )
+          return 1;
+        return 0;
+      });
     }
   },
   watch: {
@@ -255,9 +242,13 @@ export default {
         return false;
       });
       if (childIndex >= 0) {
-        this.$router.push({ path: pageInfo.children[childIndex].routes[0] });
+        if (this.online || !pageInfo.children[childIndex].onlineOnly) {
+          this.$router.push({ path: pageInfo.children[childIndex].routes[0] });
+        }
       } else {
-        this.$router.push({ path: pageInfo.routes[0] });
+        if (this.online || !pageInfo.onlineOnly) {
+          this.$router.push({ path: pageInfo.routes[0] });
+        }
       }
     },
     async setupSwap() {
