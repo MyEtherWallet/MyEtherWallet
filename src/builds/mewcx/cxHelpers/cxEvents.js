@@ -13,6 +13,9 @@ const WEB3_RECEIVE_ACC = 'web3{{id}}receiveAccount';
 const WEB3_RECEIVE_TX_HASH = 'web3{{id}}recieveTxHash';
 const WEB3_RECEIVE_SIGNED_MSG = 'web3{{id}}recieveSignedMsg';
 const WEB3_REJECT = 'web3{{id}}reject';
+const WEB3_ACCOUNT_CHANGE = 'web3{{id}}providerAccountChange';
+const WEB3_NETWORK_CHANGE = 'web3{{id}}providerNetworkChange';
+const WEB3_CHAIN_CHANGE = 'web3{{id}}providerChainChange';
 const CX_FETCH_MEW_ACCS = 'fetchMewCXAccounts';
 const CX_WEB3_DETECTED = 'web3Detected';
 const CX_CONFIRM_SEND_TX = 'confirmAndSendTx';
@@ -36,6 +39,9 @@ export {
   WEB3_RECEIVE_TX_HASH,
   WEB3_RECEIVE_SIGNED_MSG,
   WEB3_REJECT,
+  WEB3_ACCOUNT_CHANGE,
+  WEB3_NETWORK_CHANGE,
+  WEB3_CHAIN_CHANGE,
   CX_FETCH_MEW_ACCS,
   CX_WEB3_DETECTED,
   CX_CONFIRM_SEND_TX,

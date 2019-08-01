@@ -103,7 +103,10 @@ class MewCxEthereum extends EventEmitter {
       },
       on: this.on,
       emit: this.emit,
-      removeListener: this.removeListener
+      removeListener: () => {
+        this.removeListener();
+        this.clearListeners();
+      }
     };
 
     return this.httpProvider;
@@ -131,7 +134,21 @@ class MewCxEthereum extends EventEmitter {
     );
   }
 
-  // clearListeners() {}
+  clearListeners() {
+    const id = window.extensionID;
+    window.removeEventListener(
+      WEB3_ACCOUNT_CHANGE.replace('{{id}}', id),
+      function() {}
+    );
+    window.removeEventListener(
+      WEB3_NETWORK_CHANGE.replace('{{id}}', id),
+      function() {}
+    );
+    window.removeEventListener(
+      WEB3_CHAIN_CHANGE.replace('{{id}}', id),
+      function() {}
+    );
+  }
 
   async _connect() {
     fetch(this.host, {
@@ -147,6 +164,7 @@ class MewCxEthereum extends EventEmitter {
       }
     })
       .then(() => {
+        this.setListeners();
         this.emit('connect');
       })
       .catch(() => {
@@ -158,7 +176,7 @@ class MewCxEthereum extends EventEmitter {
 
   _emitClose(code, reason) {
     this.emit('close', code, reason);
-    this.removeAllListeners(); // not too sure about removing all listeners of this instance yet
+    this.httpProvider.removeAllListeners(); // not too sure about removing all listeners of this instance yet
   }
 }
 
