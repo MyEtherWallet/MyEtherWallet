@@ -346,7 +346,11 @@ export default {
           web3: this.$store.state.web3,
           getRateForUnit: false
         },
-        { tokensWithBalance: this.tokensWithBalance, overrideDecimals: true }
+        {
+          tokensWithBalance: this.tokensWithBalance,
+          overrideDecimals: true,
+          online: this.$store.state.online
+        }
       ),
       images: {
         kybernetowrk: ImageKybernetowrk,
@@ -385,7 +389,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account', 'ens', 'gasPrice', 'web3', 'network']),
+    ...mapState(['account', 'ens', 'gasPrice', 'web3', 'network', 'online']),
     bestRate() {
       try {
         if (this.providerData.length > 0) {
@@ -621,39 +625,41 @@ export default {
     }
   },
   mounted() {
-    const { toArray, fromArray } = this.swap.initialCurrencyLists;
-    this.toArray = toArray;
-    this.fromArray = fromArray;
-    this.currentAddress = this.account.address;
-    this.debounceUpdateEstimate = this.web3.utils._.debounce(
-      this.updateEstimate,
-      300
-    );
-    this.debounceReviseRateEstimate = this.web3.utils._.debounce(
-      this.updateRateEstimate,
-      2000
-    );
+    if (this.online) {
+      const { toArray, fromArray } = this.swap.initialCurrencyLists;
+      this.toArray = toArray;
+      this.fromArray = fromArray;
+      this.currentAddress = this.account.address;
+      this.debounceUpdateEstimate = this.web3.utils._.debounce(
+        this.updateEstimate,
+        300
+      );
+      this.debounceReviseRateEstimate = this.web3.utils._.debounce(
+        this.updateRateEstimate,
+        2000
+      );
 
-    this.$refs.modal.$on('shown', () => {
-      this.widgetOpen = true;
-      if (this.isWidget) {
-        this.toAddress = this.destAddress !== '' ? this.destAddress : '';
-        this.fromCurrency = this.suppliedFrom.symbol;
-        this.toCurrency = this.suppliedTo.symbol;
-        this.overrideFrom = this.suppliedFrom;
-        this.overrideTo = this.suppliedTo;
-        if (toBigNumber(this.suppliedToAmount).gt(0)) {
-          this.toValue = this.suppliedToAmount;
-          this.amountChanged('to');
-        } else {
-          this.toValue = 0;
+      this.$refs.modal.$on('shown', () => {
+        this.widgetOpen = true;
+        if (this.isWidget) {
+          this.toAddress = this.destAddress !== '' ? this.destAddress : '';
+          this.fromCurrency = this.suppliedFrom.symbol;
+          this.toCurrency = this.suppliedTo.symbol;
+          this.overrideFrom = this.suppliedFrom;
+          this.overrideTo = this.suppliedTo;
+          if (toBigNumber(this.suppliedToAmount).gt(0)) {
+            this.toValue = this.suppliedToAmount;
+            this.amountChanged('to');
+          } else {
+            this.toValue = 0;
+          }
         }
-      }
-    });
+      });
 
-    this.$refs.modal.$on('hide', () => {
-      this.widgetOpen = false;
-    });
+      this.$refs.modal.$on('hide', () => {
+        this.widgetOpen = false;
+      });
+    }
   },
   methods: {
     reset() {

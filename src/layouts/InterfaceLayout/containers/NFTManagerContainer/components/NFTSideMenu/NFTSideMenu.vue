@@ -44,22 +44,13 @@ export default {
     };
   },
 
-  computed: {
-    selectedContractTokens() {
-      if (this.data[this.selected]) {
-        return this.data[this.selected].details;
-      }
-      return [];
-    }
-  },
-  watch: {
-
-  },
+  computed: {},
+  watch: {},
   mounted() {},
   methods: {
     selectNft(nft) {
       this.searchResults = [];
-      if(nft.count > 0){
+      if (nft.count > 0) {
         this.selected = nft.contract;
         this.$emit('selected', nft.contract);
       }

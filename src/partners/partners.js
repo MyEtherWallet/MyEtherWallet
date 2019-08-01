@@ -28,6 +28,10 @@ function comparator(arrayForSort) {
 
 export default class SwapProviders {
   constructor(providers, environmentSupplied, misc = {}) {
+    this.online = true;
+    if (misc.hasOwnProperty('online')) {
+      this.online = misc.online;
+    }
     this.providerConstructors = providers;
     this.setup(providers, environmentSupplied, misc);
   }
@@ -38,7 +42,9 @@ export default class SwapProviders {
     this.providers = new Map();
     this.providerRateUpdates = {};
     this.ownedTokenList = misc.tokensWithBalance || [];
+    this.providerRatesRecieved = [];
 
+    if (!this.online) return;
     providers.forEach(entry => {
       this.providerRateUpdates[entry.getName()] = 0;
       this.providers.set(entry.getName(), new entry(environmentSupplied));
@@ -95,6 +101,7 @@ export default class SwapProviders {
   }
 
   isProvider(name) {
+    if (!this.online) return false;
     return this.providers.has(name);
   }
 

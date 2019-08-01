@@ -53,6 +53,10 @@ export default {
         return {};
       }
     },
+    selectedContract: {
+      type: String,
+      default: 'Error'
+    },
     nftConfig: {
       type: Object,
       default: function() {
@@ -103,11 +107,14 @@ export default {
       this.ERC721tokenContract.options.address = this.nft.contract;
     },
     buildData() {
-      if (this.nft.contract === this.cryptoKittiesConfig.contractAddress) {
+      if (
+        this.nft.contract.toLowerCase() ===
+        '0x06012c8cf97bead5deae237070f9587f8e7a266d'.toLowerCase()
+      ) {
         this.cryptoKittiesContract = new this.web3.eth.Contract(KittyCore);
         this.cryptoKittiesContract.options.address = this.nft.contract;
         return this.cryptoKittiesContract.methods
-          .transferFrom(this.account.address, this.toAddress, this.nft.token)
+          .transfer(this.toAddress, this.nft.token)
           .encodeABI();
       }
       return this.ERC721tokenContract.methods

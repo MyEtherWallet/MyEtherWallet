@@ -22,7 +22,12 @@
         <div class="grid-container">
           <div v-for="nft in nftToShow" :key="nft.key" class="kitty">
             <div class="kitty-img" @click="showNftDetails(nft)">
-              <img :src="getImage(nft)" />
+              <div v-show="!hasImage(nft)" class="placeholder">
+                <div class="animated-background"></div>
+              </div>
+              <div v-show="hasImage(nft)">
+                <img :src="getImage(nft)" />
+              </div>
               <p>#{{ nft.token }}</p>
             </div>
           </div>
@@ -60,9 +65,7 @@ import hexDecoder from './binaryDecoderNFT';
 import { nftABI, ERC721, KittyCore } from './abis';
 import fetch from 'node-fetch';
 
-// const URL_BASE = '';
 const URL_BASE = 'https://swap.mewapi.io/nft';
-
 
 export default {
   components: {
@@ -89,7 +92,7 @@ export default {
       ownedTokens: [],
       tokenContractAddress: '0xeA3352C1a3480Ac5a32Fcd1F2854529BA7193F14',
       useDevAddress: true,
-      devAddress: '0xa3d7553397352efb84a0bc217a464e9e114207d6'
+      devAddress: '0x2f261a227480b7d1802433d05a92a27bab645032'
       // 0xac43df42ba2d186da57342e1b685f024db445a22 // mycryptoheros:hero
       // '0xa3d7553397352efb84a0bc217a464e9e114207d6' // gods unchained
       // '0x2f261a227480b7d1802433d05a92a27bab645032' // cryptokitties
@@ -154,16 +157,13 @@ export default {
     },
     ntfCount() {
       if (this.nftData[this.selectedContract]) {
-        const itemName = this.nftData[this.selectedContract].itemName
-          ? this.nftData[this.selectedContract].itemName
-          : this.nftData[this.selectedContract].title;
         return this.$t('dapps.nftOwnCount', {
-          count: this.nftData[this.selectedContract].count,
-          items: itemName
+          perPage: this.countPerPage,
+          count: this.nftData[this.selectedContract].count
         });
       }
 
-      return 'You own no NFTs';
+      return this.$t('dapps.noneOwned');
     }
   },
   watch: {},
@@ -199,8 +199,11 @@ export default {
       this.selectedContract = selectedContract;
       this.showDetails = false;
     },
-    getImage(ntf) {
-      return ntf.image;
+    hasImage(nft) {
+      return nft.image !== '';
+    },
+    getImage(nft) {
+      return nft.image;
     },
     comeBack() {
       this.showDetails = false;
@@ -226,31 +229,9 @@ export default {
           method: 'GET'
         }
       );
-      return await image.text();
-    },
-    async getViaMetadataUrl(contract, token) {
-      const tokenContract = new this.web3.eth.Contract(ERC721);
-      tokenContract.options.address = contract;
-      if (!token) return '';
-      const res = await tokenContract.methods.tokenURI(token).call();
-      const imageRaw = await fetch(`${URL_BASE}?metadataUri=${res}`, {
-        mode: 'cors',
-        cache: 'no-cache',
-        method: 'GET'
-      });
-
-      return await imageRaw.text();
-    },
-    async getOwnedNonStandard(contract, address, offset = 0) {
-      const data = await fetch(
-        `${URL_BASE}?nonStandardContract=${contract}&address=${address}&offset=${offset}`,
-        {
-          mode: 'cors',
-          cache: 'no-cache',
-          method: 'GET'
-        }
-      );
-      return await data.json();
+      const hex = await image.text();
+      return hex;
+      // return 'data:' + response.headers['content-type'] + ';base64,'
     },
     async getOwnedCounts() {
       const supportedNftTokens = this.nftConfig
@@ -337,6 +318,17 @@ export default {
       }
       return nftData;
     },
+    async getOwnedNonStandard(contract, address, offset = 0) {
+      const data = await fetch(
+        `${URL_BASE}?nonStandardContract=${contract}&address=${address}&offset=${offset}`,
+        {
+          mode: 'cors',
+          cache: 'no-cache',
+          method: 'GET'
+        }
+      );
+      return await data.json();
+    },
     async getOwnedStandard(
       contract,
       offset,
@@ -362,17 +354,12 @@ export default {
     },
 
     processor(details, contract, nonStandardResult) {
-      const exists = item => {
-        return details.findIndex(entry => entry.token === item.id) >= 0;
-      };
       const newDetails = JSON.parse(nonStandardResult).kitties.map(val => {
-        if (!exists(val)) {
-          return {
-            contract: contract,
-            token: val.id,
-            image: ''
-          };
-        }
+        return {
+          contract: contract,
+          token: val.id,
+          image: ''
+        };
       });
       return [...details, ...newDetails];
     },
@@ -382,18 +369,17 @@ export default {
         const prop = contracts[i];
         const content = nftTokenDetails[prop].details;
         if (content.length > 0) {
-          nftTokenDetails[prop].details = await this.getImagesForContract(
+          this.getImagesForContract(
             content,
             prop,
             nftTokenDetails[prop].nonStandard
-          );
+          ).then(result => {
+            this.nftData[prop].details = result;
+          });
         }
       }
-      this.nftData = nftTokenDetails;
-      return nftTokenDetails;
     },
-    async getImagesForContract(content, contract, nonStandard = false) {
-      let failCount = 0;
+    async getImagesForContract(content, contract) {
       if (content) {
         if (content.length > 0) {
           const retrieveCount =
@@ -401,75 +387,61 @@ export default {
               ? this.countPerPage
               : content.length;
           for (let j = 0; j < retrieveCount; j++) {
-            if (failCount > 10) break;
             if (!Number.isNaN(content[j].token)) {
-              try {
-                if (nonStandard) {
-                  content[j].image = await this.getNftImage(
-                    contract,
-                    content[j].token
-                  );
-                } else {
-                  content[j].image = await this.getViaMetadataUrl(
-                    contract,
-                    content[j].token
-                  );
-                }
-              } catch (e) {
-                failCount++;
-                if (content[j]) {
-                  content[j].image = '';
-                }
-              }
+              this.getNftImage(contract, content[j].token)
+                .then(image => {
+                  content[j].image = image;
+                })
+                .catch(() => {
+                  if (content[j]) {
+                    content[j].image = '';
+                  }
+                });
             }
           }
         }
       }
       return content;
     },
-    getPrevious(start) {
+    getPrevious() {
       const content = this.nftData[this.selectedContract];
       if (content.nonStandard) {
         this.getPriorSetNonStandard(content);
       } else {
-        if (start) {
-          this.getPriorSetStandardRESET(content); //TODO make this call something else that already exists
-        } else {
-          this.getPriorSetStandard(content);
-        }
+        this.getPriorSetStandard(content);
       }
     },
-    getNext(end) {
+    getNext() {
       const content = this.nftData[this.selectedContract];
-      if (content.nonStandard) {
-        this.getNextSetNonStandard(content);
-      } else {
-        if (end) {
-          this.getNextSetStandardEND(content);
-        } else {
-          this.getNextSetStandard(content);
-        }
-      }
+      this.getNextSetStandard(content);
     },
-    async getNextSetStandardEND(content) {
-      content.priorIndex = content.count - 9;
-      content.currentIndex = content.count;
-      const additional = await this.getOwnedStandard(
-        content.contract,
-        content.priorIndex
-      );
-      content.details = [...content.details, ...additional];
-      await this.getNextSet(content, content.priorIndex);
-    },
-    async getNextSetStandard(content) {
+    async getNextSetStandard(content, address = this.account.address) {
+      if (this.useDevAddress) address = this.devAddress;
       const offset = content.currentIndex + this.countPerPage;
       if (offset <= content.count) {
         // update offsets if not at the end
         content.priorIndex = content.currentIndex;
         content.currentIndex = offset;
       }
-      const additional = await this.getOwnedStandard(content.contract, offset);
-      content.details = [...content.details, ...additional];
+
+      if (content.nonStandard) {
+        const nonStandard = await this.getOwnedNonStandard(
+          content.contract,
+          address,
+          offset
+        );
+        content.details = this.processor(
+          content.details,
+          content.contract,
+          nonStandard
+        );
+      } else {
+        const additional = await this.getOwnedStandard(
+          content.contract,
+          offset
+        );
+        content.details = [...content.details, ...additional];
+      }
       await this.getNextSet(content, offset);
     },
     async getNextSet(content, offset) {
@@ -477,43 +449,18 @@ export default {
         offset + this.countPerPage <= content.count
           ? offset + this.countPerPage
           : content.count;
-      let failCount = 0;
       for (let i = content.currentIndex; i < maxIndex; i++) {
-        if (failCount > 10) break;
         if (content.details[i].image === '') {
           if (!Number.isNaN(content.details[i].token)) {
-            try {
-              content.details[i].image = await this.getNftImage(
-                content.details[i].contract,
-                content.details[i].token
-              );
-            } catch (e) {
-              failCount++;
-              if (content.details[i]) {
-                content.details[i].image = '';
-              }
-            }
-          }
-        }
-      }
-
-      this.$set(this.nftData, content.contract, content);
-    },
-    async getPriorSetStandardRESET(content) {
-      content.currentIndex = 9;
-      content.priorIndex = 0;
-
-      for (let i = content.priorIndex; i < content.currentIndex; i++) {
-        if (content.details[i].image === '') {
-          if (!Number.isNaN(content.details[i].token)) {
-            try {
-              content.details[i].image = await this.getNftImage(
-                content.details[i].contract,
-                content.details[i].token
-              );
-            } catch (e) {
-              content.details[i].image = '';
-            }
+            this.getNftImage(content.contract, content.details[i].token)
+              .then(image => {
+                content.details[i].image = image;
+              })
+              .catch(() => {
+                if (content.details[i]) {
+                  content.details[i].image = '';
+                }
+              });
           }
         }
       }
@@ -538,38 +485,21 @@ export default {
         for (let i = content.priorIndex; i < content.currentIndex; i++) {
           if (content.details[i].image === '') {
             if (!Number.isNaN(content.details[i].token)) {
-              try {
-                content.details[i].image = await this.getNftImage(
-                  content.details[i].contract,
-                  content.details[i].token
-                );
-              } catch (e) {
-                content.details[i].image = '';
-              }
+              this.getNftImage(content.details[i].contract, content.details[i].token)
+                .then(image => {
+                  content.details[i].image = image;
+                })
+                .catch(() => {
+                  if (content.details[i]) {
+                    content.details[i].image = '';
+                  }
+                });
             }
           }
         }
 
         this.$set(this.nftData, content.contract, content);
       }
-    },
-    async getNextSetNonStandard(content, address = this.account.address) {
-      if (this.useDevAddress) address = this.devAddress;
-      const offset = content.currentIndex + this.countPerPage;
-      if (offset <= content.count) {
-        // update offsets if not at the end
-        content.priorIndex = content.currentIndex;
-        content.currentIndex = offset;
-      }
-      const nonStandard = await this.getOwnedNonStandard(
-        content.contract,
-        address,
-        offset
-      );
-
-      content.details = this.processor([], content.contract, nonStandard);
-
-      await this.getNextSet(content, offset);
     },
     async getPriorSetNonStandard(content, address = this.account.address) {
       if (this.useDevAddress) address = this.devAddress;
@@ -593,7 +523,7 @@ export default {
           content.currentIndex
         );
 
-        const details = this.processor([], content.contract, nonStandard);
+        const details = this.processor(content.details, content.contract, nonStandard);
         content.details = await this.getImagesForContract(
           details,
           content.contract,
@@ -602,41 +532,6 @@ export default {
 
         this.$set(this.nftData, content.contract, content);
       }
-    },
-    async getAllStandardNftOwned(address, tokenContract, contract, nftData) {
-      for (let i = 0; i < nftData[contract].count; i += 1000) {
-        const res = await tokenContract.methods
-          .getOwnedTokens(contract, address.toLowerCase(), i, i + 1000)
-          .call();
-        const details = hexDecoder(res).map(val => {
-          return {
-            contract: contract,
-            token: val.toNumber(),
-            image: ''
-          };
-        });
-        if (details.length < 1000) {
-          const detailsSlim = details.reduce((accumulator, currentValue) => {
-            const idx = nftData[contract].details.findIndex(
-              entry => entry.token === currentValue.token
-            );
-            if (idx < 0) {
-              accumulator.push(currentValue);
-            }
-            return accumulator;
-          }, []);
-          nftData[contract].details = [
-            ...nftData[contract].details,
-            ...detailsSlim
-          ];
-        } else {
-          nftData[contract].details = [
-            ...nftData[contract].details,
-            ...details
-          ];
-        }
-      }
-      return nftData;
     }
   }
 };

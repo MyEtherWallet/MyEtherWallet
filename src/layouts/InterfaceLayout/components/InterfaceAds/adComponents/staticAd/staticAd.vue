@@ -33,6 +33,7 @@ export default {
   methods: {
     useImage(name) {
       if (name === '') name = 'mewconnect.jpeg';
+      // eslint-disable-next-line security/detect-non-literal-require
       return require(`@/assets/images/ads/${name}`);
     },
     useUrl(url) {

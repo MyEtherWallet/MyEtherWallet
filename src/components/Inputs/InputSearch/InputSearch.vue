@@ -2,7 +2,6 @@
   <div class="input-search">
     <slot />
     <img src="@/assets/images/icons/magnifier.svg" />
-
   </div>
 </template>
 
@@ -17,12 +16,10 @@ export default {
     }
   },
   data() {
-    return {
-    };
+    return {};
   },
   computed: {},
-  watch: {
-  },
+  watch: {},
   methods: {}
 };
 </script>

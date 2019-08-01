@@ -30,8 +30,7 @@
           </button>
         </div>
         <p>
-          MEW has partnered with Bity, Kyber Network, and Simplex to allow users
-          to swap fiat to crypto, ETH and BTC, ETH and ERC-20.
+          {{ $t('interface.dashboardSwap') }}
         </p>
         <div class="margin--top--auto swap-info">
           <div v-for="pair in swapPairs" :key="pair.from + pair.to">
@@ -89,7 +88,6 @@
         :dest-address="account.address"
       ></swap-widget>
     </div>
-
   </div>
 </template>
 
@@ -164,7 +162,10 @@ export default {
           web3: this.$store.state.web3,
           getRateForUnit: false
         },
-        { tokensWithBalance: this.tokensWithBalance }
+        {
+          tokensWithBalance: this.tokensWithBalance,
+          online: this.$store.state.online
+        }
       ),
       rateUpdater: null,
       updatingRates: false,
@@ -191,20 +192,22 @@ export default {
     ]),
     sortedObject() {
       const arrayedDapp = [];
-      Object.keys(dapps).forEach(dapp => {
-        if (this.dappsToShow.includes(dapp)) {
-          arrayedDapp.push(dapps[dapp]);
-        }
-      });
+      if (this.online) {
+        Object.keys(dapps).forEach(dapp => {
+          if (this.dappsToShow.includes(dapp)) {
+            arrayedDapp.push(dapps[dapp]);
+          }
+        });
 
-      return arrayedDapp.sort((a, b) => {
-        if (
-          a.supportedNetworks.includes(this.network.type.name) ||
-          b.supportedNetworks.includes(this.network.type.name)
-        )
-          return 1;
-        return 0;
-      });
+        return arrayedDapp.sort((a, b) => {
+          if (
+            a.supportedNetworks.includes(this.network.type.name) ||
+            b.supportedNetworks.includes(this.network.type.name)
+          )
+            return 1;
+          return 0;
+        });
+      }
     }
   },
   watch: {
@@ -227,6 +230,7 @@ export default {
   },
   methods: {
     goTo(page) {
+      if (!this.online) return;
       let childIndex = -1;
       const pageInfo = this.tabData.find(entry => {
         if (entry.name === page) {

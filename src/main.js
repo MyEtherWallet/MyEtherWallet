@@ -107,25 +107,25 @@ const vue = new Vue({
   render: h => h(getApp())
 });
 
-// const integration = new Integrations.Vue({ Vue, attachProps: true });
-//
-// Sentry.init({
-//   dsn: 'https://2c4e977d74fd44d1b18083e63a3b265f@sentry.mewapi.io/1',
-//   integrations: [integration],
-//   maxBreadcrumbs: 0,
-//   environment: BUILD_TYPE,
-//   requestBodies: 'small',
-//   release: NODE_ENV === 'production' ? VERSION : 'develop',
-//   beforeSend(event) {
-//     event.tags = {
-//       network: store.state.network.type.name,
-//       service: store.state.network.service,
-//       walletType: store.state.account.identifier
-//     };
-//     return new Promise(resolve => {
-//       vue.$eventHub.$emit('issueModal', event, resolve);
-//     }).then(res => {
-//       return res === true ? event : null;
-//     });
-//   }
-// });
+const integration = new Integrations.Vue({ Vue, attachProps: true });
+
+Sentry.init({
+  dsn: 'https://2c4e977d74fd44d1b18083e63a3b265f@sentry.mewapi.io/1',
+  integrations: [integration],
+  maxBreadcrumbs: 0,
+  environment: BUILD_TYPE,
+  requestBodies: 'small',
+  release: NODE_ENV === 'production' ? VERSION : 'develop',
+  beforeSend(event) {
+    event.tags = {
+      network: store.state.network.type.name,
+      service: store.state.network.service,
+      walletType: store.state.account.identifier
+    };
+    return new Promise(resolve => {
+      vue.$eventHub.$emit('issueModal', event, resolve);
+    }).then(res => {
+      return res === true ? event : null;
+    });
+  }
+});
