@@ -27,6 +27,7 @@ export default async (
   next
 ) => {
   if (payload.method !== 'eth_sendTransaction') return next();
+  tx.gasPrice = unit.toWei(store.state.gasPrice, 'gwei').toString();
   const tx = Object.assign({}, payload.params[0]);
   const localTx = Object.assign({}, tx);
   delete localTx['gas'];
@@ -44,9 +45,6 @@ export default async (
     return;
   }
   tx.chainId = !tx.chainId ? store.state.network.type.chainID : tx.chainId;
-  tx.gasPrice = !tx.gasPrice
-    ? unit.toWei(store.state.gasPrice, 'gwei').toString()
-    : tx.gasPrice;
   getSanitizedTx(tx)
     .then(_tx => {
       if (store.state.wallet.identifier === WEB3_WALLET) {
