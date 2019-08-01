@@ -91,11 +91,9 @@ export default {
       nftData: {},
       ownedTokens: [],
       tokenContractAddress: '0xeA3352C1a3480Ac5a32Fcd1F2854529BA7193F14',
-      useDevAddress: true,
-      devAddress: '0x2f261a227480b7d1802433d05a92a27bab645032'
-      // 0xac43df42ba2d186da57342e1b685f024db445a22 // mycryptoheros:hero
-      // '0xa3d7553397352efb84a0bc217a464e9e114207d6' // gods unchained
-      // '0x2f261a227480b7d1802433d05a92a27bab645032' // cryptokitties
+      useDevAddress: false,
+      devAddress: ''
+
     };
   },
   computed: {
@@ -229,9 +227,7 @@ export default {
           method: 'GET'
         }
       );
-      const hex = await image.text();
-      return hex;
-      // return 'data:' + response.headers['content-type'] + ';base64,'
+      return await image.text();
     },
     async getOwnedCounts() {
       const supportedNftTokens = this.nftConfig
@@ -268,7 +264,6 @@ export default {
         this.ready = true;
         this.processing = false;
         this.imagesRetrieved = true;
-        this.$forceUpdate();
         return result;
       }
     },
