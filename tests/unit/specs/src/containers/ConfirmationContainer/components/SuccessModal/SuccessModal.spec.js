@@ -82,7 +82,7 @@ describe('SuccessModal.vue', () => {
       wrapper.vm.$el
         .querySelectorAll('.standard-button .the-button-box')[0]
         .textContent.trim()
-    ).toEqual(wrapper.vm.buttonCheckEtherscan.title);
+    ).toEqual('');
   });
 
   it('should render correct buttonOk computed data', () => {
@@ -90,7 +90,7 @@ describe('SuccessModal.vue', () => {
       wrapper.vm.$el
         .querySelectorAll('.standard-button .the-button-box')[0]
         .textContent.trim()
-    ).toEqual(wrapper.vm.buttonOk.title);
+    ).toEqual('');
   });
 
   describe('SuccessModal.vue Methods', () => {

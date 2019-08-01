@@ -122,6 +122,7 @@
                     <template slot="button-content">
                       <div class="current-language-flag">
                         <img
+                          v-if="currentFlag !== null"
                           :src="
                             require(`@/assets/images/flags/${currentFlag}.svg`)
                           "
@@ -205,7 +206,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import store from 'store';
 import { Misc, Toast } from '@/helpers';
 import Blockie from '@/components/Blockie';
@@ -276,12 +277,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      network: 'network',
-      web3: 'web3',
-      account: 'account',
-      gettingStartedDone: 'gettingStartedDone'
-    }),
+    ...mapState(['network', 'web3', 'account', 'gettingStartedDone']),
     showButtons() {
       if (
         this.address === null &&
@@ -398,10 +394,10 @@ export default {
       });
     },
     languageItemClicked(e) {
-      const code = e.target.getAttribute('data-language-code');
-      const flag = e.target.getAttribute('data-flag-name');
+      const code = e.target.parentNode.getAttribute('data-language-code');
+      const flag = e.target.parentNode.getAttribute('data-flag-name');
 
-      this._i18n.locale = code;
+      this.$i18n.locale = code;
       this.currentName = e.target.innerText.replace(/^\s+|\s+$|\s+(?=\s)/g, '');
       this.currentFlag = flag;
       store.set('locale', code);

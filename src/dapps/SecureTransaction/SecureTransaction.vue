@@ -1,6 +1,7 @@
 <template>
   <div class="send-currency-container-safe-send">
-    <interface-container-title :title="$t('common.sendSafeSendTx')" />
+    <!-- <interface-container-title :title="$t('common.sendSafeSendTx')" /> -->
+    <back-button />
     <div class="send-form">
       <div class="advanced-content safe-send-container">
         <div class="input-container">
@@ -186,8 +187,8 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
+import { mapState } from 'vuex';
+import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
 import { CoralConfig } from './config';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
@@ -198,8 +199,8 @@ import { Toast, Misc } from '@/helpers';
 
 export default {
   components: {
-    'interface-container-title': InterfaceContainerTitle,
     'interface-bottom-text': InterfaceBottomText,
+    'back-button': BackButton,
     blockie: Blockie
   },
   props: {
@@ -236,13 +237,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      account: 'account',
-      gasPrice: 'gasPrice',
-      web3: 'web3',
-      network: 'network',
-      ens: 'ens'
-    }),
+    ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
     validAmount() {
       return (
         new BigNumber(this.amount).gte(this.minimumAmount) &&
@@ -301,7 +296,7 @@ export default {
       const coinbase = this.account.address;
       const nonce = await this.web3.eth.getTransactionCount(coinbase);
       const value = this.amount === '' ? 0 : unit.toWei(this.amount, 'ether');
-      const to = this.hexAddress;
+      const to = this.hexAddress.toLowerCase().trim();
       const protectionLevel = 20;
       const query = this.coralContract.methods.deposit(to, protectionLevel);
       const encodedABI = query.encodeABI();

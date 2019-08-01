@@ -75,7 +75,7 @@
 
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import { isAddress } from '@/helpers/addressUtils';
 
 export default {
@@ -97,9 +97,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      web3: 'web3'
-    }),
+    ...mapState(['web3']),
     allFieldsValid() {
       if (!this.validAddress) return false;
       if (this.tokenSymbol === '') return false;
@@ -120,7 +118,7 @@ export default {
   },
   watch: {
     tokenAddress(newVal) {
-      const strippedWhitespace = newVal.replace(/\s/g, '');
+      const strippedWhitespace = newVal.toLowerCase().trim();
       const regTest = new RegExp(/[a-zA-Z0-9]/g);
       this.validAddress =
         regTest.test(strippedWhitespace) && isAddress(strippedWhitespace);

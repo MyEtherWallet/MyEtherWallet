@@ -80,6 +80,14 @@
   }
 } // @media all and (min-width: calc(#{$tablet-width} + 1px))
 
+.button-container {
+  div {
+    padding: 20px 0;
+    width: 100%;
+    text-align: center;
+  }
+}
+
 .hardware-link {
   padding-bottom: 10px;
 }

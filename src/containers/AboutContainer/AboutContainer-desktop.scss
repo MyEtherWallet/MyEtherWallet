@@ -70,67 +70,6 @@
           height: 715px;
         }
 
-        .spaceman {
-          @media all and (max-width: $tablet-width) {
-            height: 200px;
-          }
-
-          animation-duration: 22s;
-          animation-iteration-count: infinite;
-          animation-name: spaceman-fly;
-          height: 220px;
-          position: absolute;
-          z-index: 1;
-
-          @keyframes spaceman-fly {
-            0% {
-              bottom: 89px;
-              right: 75%;
-            }
-
-            25% {
-              bottom: 60px;
-              right: 70%;
-            }
-
-            50% {
-              bottom: 80px;
-            }
-
-            75% {
-              bottom: 40px;
-            }
-
-            100% {
-              bottom: 89px;
-              right: 75%;
-            }
-          }
-
-          @media all and (max-width: $tablet-width) {
-            @keyframes spaceman-fly {
-              0% {
-                bottom: 109px;
-                right: 43%;
-              }
-              25% {
-                bottom: 80px;
-                right: 40%;
-              }
-              50% {
-                bottom: 100px;
-              }
-              75% {
-                bottom: 60px;
-              }
-              100% {
-                bottom: 109px;
-                right: 43%;
-              }
-            }
-          }
-        } // .spaceman
-
         .mew-icon {
           @media all and (max-width: $tablet-width) {
             height: 200px;
@@ -141,9 +80,37 @@
           position: absolute;
           right: 0;
           top: 0;
-          z-index: 1;
         }
       } // .image-content
+
+      .animation-content {
+        position: absolute;
+        right: 300px;
+        bottom: 38px;
+
+        .spaceman {
+          animation-duration: 22s;
+          animation-iteration-count: infinite;
+          animation-name: spaceman-fly;
+          height: 220px;
+
+          @keyframes spaceman-fly {
+            0% {
+              transform: rotate(0deg) scale(1.4) translate(0, 0);
+            }
+            25% {
+              transform: rotate(15deg) scale(0.8) translate(100px, -170px);
+            }
+            50% {
+              transform: rotate(-10deg) scale(0.6) translate(170px, -160px);
+            }
+
+            100% {
+              transform: rotate(0deg) scale(1.4) translate(0, 0);
+            }
+          }
+        } // .spaceman
+      } // .animation-content
     } // .content
   } //. top-section
 

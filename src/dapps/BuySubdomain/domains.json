@@ -145,14 +145,39 @@
     "registrar": "0xfa6512358d241b636edf5f8ccaaf86676dec21a7"
   },
   {
+    "name": "britishblockchain",
+    "version": "1.0",
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
+  },
+  {
+    "name": "blockchainboss",
+    "version": "1.0",
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
+  },
+  {
+    "name": "buymeatesla",
+    "version": "1.0",
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
+  },
+  {
     "name": "buymecoffee",
     "version": "0.9",
     "registrar": "0xfa6512358d241b636edf5f8ccaaf86676dec21a7"
   },
   {
+    "name": "codeinecrazy",
+    "version": "1.0",
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
+  },
+  {
     "name": "coinsto",
     "version": "1.0",
     "registrar": "0x0b07463b30b302a98407d3e3df85ebc073b0dbd1"
+  },
+  {
+    "name": "cryptoking",
+    "version": "1.0",
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
   },
   {
     "name": "deserves",
@@ -195,6 +220,11 @@
     "registrar": "0x0b07463b30b302a98407d3e3df85ebc073b0dbd1"
   },
   {
+    "name": "mollypercocet",
+    "version": "1.0",
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
+  },
+  {
     "name": "requires",
     "version": "1.0",
     "registrar": "0x0b07463b30b302a98407d3e3df85ebc073b0dbd1"
@@ -215,9 +245,24 @@
     "registrar": "0xfa6512358d241b636edf5f8ccaaf86676dec21a7"
   },
   {
+    "name": "thecryptogirl",
+    "version": "1.0",
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
+  },
+  {
+    "name": "thecryptoguy",
+    "version": "1.0",
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
+  },
+  {
     "name": "thisisme",
     "version": "0.9",
     "registrar": "0xfa6512358d241b636edf5f8ccaaf86676dec21a7"
+  },
+  {
+    "name": "trustsnobank",
+    "version": "1.0",
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
   },
   {
     "name": "viewwallet",
@@ -228,6 +273,11 @@
     "name": "wantsmore",
     "version": "1.0",
     "registrar": "0x0b07463b30b302a98407d3e3df85ebc073b0dbd1"
+  },
+  {
+    "name": "xannyfamily",
+    "version": "1.0",
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
   },
   {
     "name": "yourass",

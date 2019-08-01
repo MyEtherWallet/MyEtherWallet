@@ -20,7 +20,6 @@ const BModalStub = {
   }
 };
 
-//xdescribe
 describe('ByJsonFileContainer.vue', () => {
   let localVue, i18n, wrapper, store;
   beforeAll(() => {

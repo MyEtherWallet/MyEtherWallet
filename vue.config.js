@@ -84,8 +84,15 @@ if (process.env.NODE_ENV === 'production') {
       globOptions: {
         ignore: [
           // Are we using these
+          'src/assets/images/icons/question.png',
           'src/components/DropDownAddressSelector/DropDownAddressSelector.scss',
           'src/components/DropDownAddressSelector/index.js',
+          'src/components/PopupHelper/index.js',
+          'src/components/PopupHelper/PopupHelper.scss',
+          'src/components/PopupHelper/PopupHelper.vue',
+          'src/components/StandardInputSlot/index.js',
+          'src/components/StandardInputSlot/StandardInputSlot.scss',
+          'src/components/StandardInputSlot/StandardInputSlot.vue',
           // Unknown
           'src/contracts/contract-abi-etsc.json',
           'src/contracts/contract-abi-exp.json',
@@ -123,6 +130,7 @@ if (process.env.NODE_ENV === 'production') {
           'src/components/Notification/components/NotificationTypes/SwapNotification/index.js',
           'src/components/Notification/components/NotificationTypes/TransactionNotification/index.js',
           // Images
+          'src/assets/images/icons/button-finney.png',
           'src/assets/images/background/bg-left.png',
           'src/assets/images/background/bg-right.png',
           'src/assets/images/currency/coins/AllImages/_icon-config.json',
@@ -142,6 +150,7 @@ if (process.env.NODE_ENV === 'production') {
           'src/assets/images/icons/up.svg',
           'src/assets/images/icons/button-json.svg',
           'src/assets/images/icons/button-mnemonic.svg',
+          'src/assets/images/team/_blank_.jpg',
           // Chrome Extension
           'src/builds/mewcx/app.vue',
           'src/builds/mewcx/public/img/icons/icon128.png',

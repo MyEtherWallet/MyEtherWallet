@@ -64,7 +64,7 @@
 <script>
 import html2canvas from 'html2canvas';
 import printJS from 'print-js';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 
 export default {
   props: {
@@ -86,9 +86,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      network: 'network'
-    }),
+    ...mapState(['network']),
     displayedData() {
       const revealTime = new Date(this.jsonString['revealDate']);
       const auctionEnd = new Date(this.jsonString['auctionDateEnd']);
@@ -120,19 +118,20 @@ export default {
   },
   methods: {
     async print() {
-      this.loading = !this.loading;
-      const element = this.$refs.printContainer;
+      const _self = this;
+      _self.loading = !_self.loading;
+      const element = _self.$refs.printContainer;
       const screen = await html2canvas(element, {
         async: true,
         logging: false
       });
-      this.loading = !this.loading;
+      _self.loading = !_self.loading;
 
       printJS({
         printable: screen.toDataURL('image/png'),
         type: 'image',
         onPrintDialogClose: () => {
-          this.$refs.print.hide();
+          _self.$refs.print.hide();
         }
       });
     }

@@ -71,7 +71,7 @@ import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
 
 import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 
 import Arrow from '@/assets/images/etc/single-arrow.svg';
 import iconBtc from '@/assets/images/currency/btc.svg';
@@ -120,14 +120,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      ens: 'ens',
-      gasPrice: 'gasPrice',
-      web3: 'web3',
-      account: 'account',
-      wallet: 'wallet',
-      network: 'network'
-    }),
+    ...mapState(['ens', 'gasPrice', 'web3', 'account', 'wallet', 'network']),
     toFiat() {
       return this.fiatCurrenciesArray.includes(this.toAddress.name);
     },

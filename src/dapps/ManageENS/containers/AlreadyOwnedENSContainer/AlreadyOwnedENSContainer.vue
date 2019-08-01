@@ -7,11 +7,11 @@
     />
     <h3>{{ fullDomainName }} {{ $t('dapps.alreadyOwned') }}.</h3>
     <div class="content-container">
-      <p class="label">{{ $t('dapps.labelHash') }}({{ fullDomainName }}):</p>
+      <p class="label">{{ $t('dapps.labelHash') }}({{ hostName }}):</p>
       <p class="content">{{ labelHash }}</p>
     </div>
     <div class="content-container">
-      <p class="label">{{ $t('dapps.nameHash') }}({{ hostName }}):</p>
+      <p class="label">{{ $t('dapps.nameHash') }}({{ fullDomainName }}):</p>
       <p class="content">{{ nameHash }}</p>
     </div>
     <div class="content-container">
@@ -29,7 +29,7 @@
     <div class="owner-options">
       <button
         v-if="
-          deedOwner === account.address &&
+          deedOwner.toLowerCase() === account.address.toLowerCase() &&
             owner === '0x0000000000000000000000000000000000000000'
         "
         class="finalize-button"
@@ -57,7 +57,7 @@
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import FinalizeModal from '../../components/FinalizeModal/';
 
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 export default {
   components: {
     'interface-bottom-text': InterfaceBottomText,
@@ -101,9 +101,7 @@ export default {
     return {};
   },
   computed: {
-    ...mapGetters({
-      account: 'account'
-    }),
+    ...mapState(['account']),
     fullDomainName() {
       return `${this.hostName}.${this.tld}`;
     }

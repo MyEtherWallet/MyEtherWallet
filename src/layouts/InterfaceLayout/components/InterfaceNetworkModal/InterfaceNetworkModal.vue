@@ -136,7 +136,7 @@
               class="custom-input-text-1"
               type="text"
               name="customExplorerTx"
-              placeholder="https://etherscan.io/tx/"
+              placeholder="https://etherscan.io/tx/[[txHash]]"
               autocomplete="off"
             />
             <input
@@ -156,7 +156,7 @@
               class="custom-input-text-1"
               type="text"
               name="customExplorerAddr"
-              placeholder="https://etherscan.io/address/"
+              placeholder="https://etherscan.io/address/[[address]]"
               autocomplete="off"
             />
           </div>
@@ -274,7 +274,7 @@ import InterfaceBottomText from '@/components/InterfaceBottomText';
 import * as networkTypes from '@/networks/types';
 import Misc from '@/helpers/misc';
 
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 
 export default {
   components: {
@@ -296,16 +296,13 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      network: 'network',
-      Networks: 'Networks'
-    }),
+    ...mapState(['network', 'Networks']),
     reorderedNetworks() {
       const networks = Misc.reorderNetworks();
       return networks;
     },
     selectedNetwork() {
-      return this.network.type;
+      return this.types[this.selectedNetworkName];
     }
   },
   watch: {
@@ -363,9 +360,9 @@ export default {
     },
     saveCustomNetwork() {
       const customNetwork = {
-        auth: !!(this.password !== '' && this.username !== ''),
+        auth: this.password !== '' && this.username !== '',
         password: this.password,
-        port: this.port,
+        port: parseInt(this.port),
         service: this.name,
         type: {
           blockExplorerAddr:
@@ -374,7 +371,7 @@ export default {
             '',
           blockExplorerTX:
             this.selectedNetwork.blockExplorerTX || this.blockExplorerTX || '',
-          chainID: this.chainID,
+          chainID: parseInt(this.chainID),
           contracts: [],
           homePage: '',
           name: this.selectedNetwork.name,

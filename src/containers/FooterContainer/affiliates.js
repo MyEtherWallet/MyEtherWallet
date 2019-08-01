@@ -45,10 +45,10 @@ const affiliates = [
   },
   {
     text: 'footer.bitbox',
-    price: '59.00',
+    price: '44.00',
     description:
       'Our aim is to equip you for independence, with ease, in the digital world.',
-    href: 'https://digitalbitbox.com/?ref=mew',
+    href: 'https://shiftcrypto.ch/?ref=mew',
     currency: '€',
     logo: 'bitbox'
   },
@@ -75,7 +75,7 @@ const affiliates = [
     price: '79.00',
     description:
       'Protect your cryptocurrencies, store your private keys offline, and safeguard your assets from hackers.',
-    href: 'http://keepkey.go2cloud.org/aff_c?offer_id=1&aff_id=5561',
+    href: 'http://lddy.no/a4im',
     currency: '$',
     logo: 'keepkey'
   }
