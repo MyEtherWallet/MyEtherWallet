@@ -130,7 +130,7 @@ if (JSON.parse(env_vars.BUILD_TYPE) === 'mewcx') {
   exportObj['configureWebpack'].plugins.push(new CopyWebpackPlugin([
     {
       from: 'src/builds/' + JSON.parse(env_vars.BUILD_TYPE) + '/public',
-      // flatten: true,
+      flatten: true,
       transform: function(content, filePath) {
         if (filePath.split('.').pop() === ('js' || 'JS'))
           return UglifyJS.minify(content.toString()).code;
@@ -157,11 +157,11 @@ if (JSON.parse(env_vars.BUILD_TYPE) === 'mewcx') {
             json.web_accessible_resources = json.web_accessible_resources.map(item => {
               return `js/${item}`;
             });
-            Object.keys(json.icons).forEach(item => {
-              json.icons[item] = json.icons[item].replace('img/icons/', '');
-            })
-            json.browser_action.default_icon = json.browser_action.default_icon.replace('img/icons/', '');
           }
+          json.browser_action.default_icon = json.browser_action.default_icon.replace('img/icons/', '');
+          Object.keys(json.icons).forEach(item => {
+            json.icons[item] = json.icons[item].replace('img/icons/', '');
+          })
           return JSON.stringify(json, null, 2);
         }
         return content;

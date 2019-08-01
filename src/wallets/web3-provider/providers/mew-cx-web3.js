@@ -5,16 +5,16 @@ import {
   ethGetTransactionCount,
   ethGetTransactionReceipt,
   ethGetBlockByNumber,
-  ethGetBlockNumber,
-  netVersion
+  ethGetBlockNumber
 } from '../methods';
 import {
   ethAccounts,
   ethCoinbase,
   ethSendTransaction,
-  ethSign
+  ethSign,
+  netVersion,
+  ethRequestAccounts
 } from '../cx-web3-methods';
-import { ethRequestAccounts } from '../cx-ethereum-methods';
 
 const EventEmitter = require('events');
 class MewCxWeb3 {
