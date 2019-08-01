@@ -39,13 +39,16 @@ export default {
   },
   data() {
     return {
-      selected: '0x06012c8cf97bead5deae237070f9587f8e7a266d',
+      selected: '',
       searchResults: []
     };
   },
   computed: {},
   watch: {},
-  mounted() {},
+  mounted() {
+    this.selected = Object.keys(this.data)[0];
+    this.$emit('selected', this.selected);
+  },
   methods: {
     selectNft(nft) {
       this.searchResults = [];
