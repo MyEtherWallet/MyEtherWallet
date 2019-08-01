@@ -19,10 +19,6 @@ const InteractWithContractContainer = () =>
   import('@/layouts/InterfaceLayout/containers/InteractWithContractContainer');
 const NFTManagerContainer = () =>
   import('@/layouts/InterfaceLayout/containers/NFTManagerContainer');
-// const CryptoKittiesDetails = () =>
-//   import(
-//     '@/layouts/InterfaceLayout/containers/NFTManagerContainer/containers/CryptoKitties/CryptoKittiesDetails'
-//   );
 const SendCurrencyContainer = () =>
   import('@/layouts/InterfaceLayout/containers/SendCurrencyContainer');
 const SendOfflineContainer = () =>
@@ -120,11 +116,6 @@ const router = [
         name: 'Dashboard Container',
         component: DashboardContainer
       },
-      // {
-      //   path: 'send-transaction',
-      //   name: 'Send Transaction',
-      //   component: SendCurrencyContainer
-      // },
       {
         path: 'dapps',
         name: 'Dapps',
@@ -170,11 +161,6 @@ const router = [
         name: 'NFTManager',
         component: NFTManagerContainer
       }
-      // {
-      //   path: 'crypto-kitties-details',
-      //   name: 'CryptoKittiesDetails',
-      //   component: CryptoKittiesDetails
-      // }
     ]
   }
 ];
