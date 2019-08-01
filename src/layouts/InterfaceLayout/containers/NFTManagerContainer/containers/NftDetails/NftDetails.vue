@@ -27,8 +27,6 @@
 
 <script>
 import { mapState } from 'vuex';
-import { ERC721, KittyCore } from '../../abis/';
-
 import { Misc, Toast } from '@/helpers';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
 import SmallBackButton from '@/layouts/InterfaceLayout/components/SmallBackButton';
@@ -99,7 +97,24 @@ export default {
   },
   watch: {},
   mounted() {
-    this.ERC721tokenContract = new this.web3.eth.Contract(ERC721);
+    this.ERC721tokenContract = new this.web3.eth.Contract([
+      {
+        constant: false,
+        inputs: [
+          { name: '_from', type: 'address' },
+          { name: '_to', type: 'address' },
+          {
+            name: '_tokenId',
+            type: 'uint256'
+          }
+        ],
+        name: 'transferFrom',
+        outputs: [],
+        payable: false,
+        stateMutability: 'nonpayable',
+        type: 'function'
+      }
+    ]);
   },
   methods: {
     prepareTransfer(toAddress) {
