@@ -1,9 +1,7 @@
 import { shallowMount } from '@vue/test-utils';
 import HardwarePasswordModal from '@/layouts/AccessWalletLayout/components/HardwarePasswordModal/HardwarePasswordModal.vue';
-
 import { Tooling } from '@@/helpers';
 
-//xdescribe
 describe('HardwarePasswordModal.vue', () => {
   let localVue, i18n, wrapper, store;
 

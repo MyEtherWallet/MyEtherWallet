@@ -10,7 +10,9 @@ let network = nodeList['ETH'][0];
 
 if (storedNetwork !== undefined) {
   network = storedNetwork;
-  network.type = nodeList[storedNetwork.type.name][0].type;
+  if (storedNetwork.type.name !== 'CUS') {
+    network.type = nodeList[storedNetwork.type.name][0].type;
+  }
 }
 
 const notifications =
