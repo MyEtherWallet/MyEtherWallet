@@ -43,7 +43,7 @@ describe('ManageENS.vue', () => {
   it('should render correct domain name data', () => {
     wrapper.setData({ domainName });
     expect(wrapper.find('router-view').attributes('domain-name')).toEqual(
-      domainName + '.eth'
+      `${domainName}.eth`
     );
   });
 
