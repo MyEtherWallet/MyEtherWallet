@@ -256,7 +256,7 @@ export default {
             .catch(TrezorWallet.errorHandler);
           break;
         case BITBOX_TYPE:
-          this.togglePasswordModal(BitBoxWallet, 'DigitalBitbox');
+          this.togglePasswordModal(BitBoxWallet, 'BitBox');
           break;
         case SECALOT_TYPE:
           this.togglePasswordModal(SecalotWallet, 'Secalot');

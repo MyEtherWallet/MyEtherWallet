@@ -36,6 +36,8 @@ import samantha from '@/assets/images/team/Samantha.jpg';
 import alex from '@/assets/images/team/Alex.jpg';
 import misha from '@/assets/images/team/Misha.jpg';
 import katya from '@/assets/images/team/Katya.jpg';
+import aldo from '@/assets/images/team/Aldo.jpg';
+import semaja from '@/assets/images/team/Semaja.jpg';
 
 export default {
   components: {
@@ -60,24 +62,24 @@ export default {
           img: brian
         },
         {
-          name: 'Olchik',
+          name: 'Olga',
           position: 'VP',
           img: olchik
         },
         {
-          name: 'Stephen',
-          position: 'Educational Project Lead',
-          img: stephen
+          name: 'Alex',
+          position: 'Director of Mobile',
+          img: alex
         },
         {
-          name: 'Duke & Richie Wolf',
-          position: 'Blockchain Specialist',
-          img: richie
+          name: 'Misha',
+          position: 'Lead Mobile Developer',
+          img: misha
         },
         {
-          name: 'Brittany',
-          position: 'Operations Coordinator',
-          img: brittany
+          name: 'Aldo',
+          position: 'Full-Stack Developer',
+          img: aldo
         },
         {
           name: 'Yel',
@@ -95,24 +97,34 @@ export default {
           img: gage
         },
         {
-          name: 'Jack',
-          position: 'UI/UX Designer',
-          img: jack
-        },
-        {
           name: 'David',
           position: 'Front-End Developer',
           img: david
         },
         {
-          name: 'Alex',
-          position: 'Director of Mobile',
-          img: alex
+          name: 'Jack',
+          position: 'UI/UX Designer',
+          img: jack
         },
         {
-          name: 'Misha',
-          position: 'Lead Mobile Developer',
-          img: misha
+          name: 'Stephen',
+          position: 'Educational Project Lead',
+          img: stephen
+        },
+        {
+          name: 'Semaja',
+          position: 'Blockchain Community Specialist',
+          img: semaja
+        },
+        {
+          name: 'Duke & Richie Wolf',
+          position: 'Blockchain Community Specialist',
+          img: richie
+        },
+        {
+          name: 'Brittany',
+          position: 'Operations Coordinator',
+          img: brittany
         },
         {
           name: 'Katya',
@@ -121,7 +133,7 @@ export default {
         },
         {
           name: 'Samantha',
-          position: 'Media & Communication',
+          position: 'Communications and Media',
           img: samantha
         }
       ]

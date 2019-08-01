@@ -17,8 +17,8 @@ import {
   ethCoinbase,
   ethSendTransaction,
   ethSign,
-  netVersion,
-  ethRequestAccounts
+  ethRequestAccounts,
+  netVersion
 } from '../cx-web3-methods';
 
 const EventEmitter = require('events');

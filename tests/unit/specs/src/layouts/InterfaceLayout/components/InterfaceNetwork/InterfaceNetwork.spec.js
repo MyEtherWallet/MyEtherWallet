@@ -17,7 +17,6 @@ const BModalStub = {
   }
 };
 
-//xdescribe
 describe('InterfaceNetwork.vue', () => {
   let localVue, i18n, wrapper, store;
 

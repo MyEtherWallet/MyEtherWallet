@@ -116,10 +116,22 @@ Sentry.init({
   requestBodies: 'small',
   release: NODE_ENV === 'production' ? VERSION : 'develop',
   beforeSend(event) {
+    const network =
+      !store && !store.state && !store.state.network
+        ? store.state.network.type.name
+        : '';
+    const service =
+      !store && !store.state && !store.state.network
+        ? store.state.network.service
+        : '';
+    const identifier =
+      !store && !store.state && !store.state.account
+        ? store.state.account.identifier
+        : '';
     event.tags = {
-      network: store.state.network.type.name,
-      service: store.state.network.service,
-      walletType: store.state.account.identifier
+      network: network,
+      service: service,
+      walletType: identifier
     };
     return new Promise(resolve => {
       vue.$eventHub.$emit('issueModal', event, resolve);
