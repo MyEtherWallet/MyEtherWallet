@@ -17,7 +17,12 @@
     <div class="bottom-image-container">
       <div class="ad-container">
         <keep-alive :max="adDetails.length">
-          <component :is="useComponent()" :image="adImage" :url="adUrl">
+          <component
+            :is="useComponent()"
+            :image="adImage"
+            :url="adUrl"
+            @pauseAds="pauseAds"
+          >
           </component>
         </keep-alive>
       </div>
@@ -59,6 +64,7 @@ export default {
       search: '',
       adImage: '',
       adUrl: '',
+      adInterval: {},
       currentAdIndex: 1,
       currentAds: [
         {
@@ -105,21 +111,33 @@ export default {
   mounted() {
     this.rotateAds();
   },
+  beforeDestroy() {
+    clearInterval(this.adInterval);
+    this.adInterval = null;
+  },
   methods: {
     rotateAds() {
-      // setInterval(() => {
-      //   if (this.currentAdIndex + 1 < this.currentAds.length) {
-      //     this.currentAdIndex += 1;
-      //   } else {
-      //     this.currentAdIndex = 0;
-      //   }
-      // }, 10000);
+      this.adInterval = setInterval(() => {
+        if (this.currentAdIndex + 1 < this.currentAds.length) {
+          this.currentAdIndex += 1;
+        } else {
+          this.currentAdIndex = 0;
+        }
+      }, 10000);
     },
     useComponent() {
       if (adComponentMapping[this.currentAd.component]) {
         return adComponentMapping[this.currentAd.component];
       }
       return adComponentMapping['staticAd'];
+    },
+    pauseAds() {
+      if (this.adInterval !== null) {
+        clearInterval(this.adInterval);
+        this.adInterval = null;
+      } else {
+        this.rotateAds();
+      }
     }
   }
 };

@@ -1,43 +1,39 @@
 @import '~@/scss/GlobalVariables';
 
 .bottom-image-container {
-
   position: relative;
   border-radius: 5px;
   margin-top: 10px;
   overflow: hidden;
 
-  .content{
+  .content {
     background-color: white;
     display: block;
     padding: 20px 35px;
-    background-image: url("~@/assets/images/ads/eth.png");
+    background-image: url('~@/assets/images/ads/eth.png');
     background-position: bottom right;
     background-repeat: no-repeat;
     height: 200px;
-    .buy-text{
-      p{
+    .buy-text {
+      p {
         color: black;
         font-size: 26px;
         font-weight: bold;
         margin-top: 26px;
       }
     }
-    .send-button-container{
+    .send-button-container {
       margin-top: 30px;
       margin-right: 15px;
       display: inline-block;
       width: 175px;
     }
-    .cc-cards{
+    .cc-cards {
       width: 25%;
     }
-    .background-eth{
+    .background-eth {
       z-index: -1;
       position: relative;
     }
   }
-
-
-
 }

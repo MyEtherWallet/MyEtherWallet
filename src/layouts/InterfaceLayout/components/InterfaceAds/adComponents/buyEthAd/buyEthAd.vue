@@ -61,22 +61,26 @@ export default {
     ...mapState(['account', 'network', 'web3', 'online'])
   },
   watch: {},
+  mounted() {},
   methods: {
     showSwapWidget() {
-      this.showWidget = true;
-      const vals = { from: 'USD', to: 'ETH', amt: 100, rate: 0 };
-      this.suppliedFromAmount = vals.amt;
-      this.suppliedFrom = {
-        symbol: vals.from,
-        name: ''
-      };
-      this.suppliedTo = {
-        symbol: vals.to,
-        name: ''
-      };
-      this.$nextTick(() => {
-        this.$refs.swapWidget.$refs.modal.show();
-      });
+      if (this.online) {
+        this.$emit('pauseAds');
+        this.showWidget = true;
+        const vals = { from: 'USD', to: 'ETH', amt: 100, rate: 0 };
+        this.suppliedFromAmount = vals.amt;
+        this.suppliedFrom = {
+          symbol: vals.from,
+          name: ''
+        };
+        this.suppliedTo = {
+          symbol: vals.to,
+          name: ''
+        };
+        this.$nextTick(() => {
+          this.$refs.swapWidget.$refs.modal.show();
+        });
+      }
     }
   }
 };
