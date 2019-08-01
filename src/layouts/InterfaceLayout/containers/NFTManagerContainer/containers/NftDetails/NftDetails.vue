@@ -10,7 +10,7 @@
           <h3>{{ $t('dapps.sendMy', { value: selectedTitle }) }}</h3>
           <p>#{{ nft.token }}</p>
           <div class="address-input-container">
-            <address-selector title="To Address" @toAddress="prepareTransfer" />
+            <address-selector :title="$t('interface.sendTxToAddr')" @toAddress="prepareTransfer" />
             <div class="send-button-container">
               <standard-button
                 :button-disabled="!isValidAddress"
@@ -70,7 +70,7 @@ export default {
       cryptoKittiesContract: {},
       cryptoKittiesConfig: '',
       sendButton: {
-        title: 'Send',
+        title: this.$t('interface.send'),
         buttonStyle: 'green',
         helpCenter: true,
         noMinWidth: true,
