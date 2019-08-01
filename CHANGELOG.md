@@ -2,6 +2,7 @@
 
 ### Feature
 
+- Update team info and pictures [#1304](https://github.com/MyEtherWallet/MyEtherWallet/pull/1304)
 - Lightstreams network support [#1257](https://github.com/MyEtherWallet/MyEtherWallet/pull/1257)
 
 ### Devop
