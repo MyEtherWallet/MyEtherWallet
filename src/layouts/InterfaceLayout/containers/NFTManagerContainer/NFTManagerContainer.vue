@@ -485,7 +485,10 @@ export default {
         for (let i = content.priorIndex; i < content.currentIndex; i++) {
           if (content.details[i].image === '') {
             if (!Number.isNaN(content.details[i].token)) {
-              this.getNftImage(content.details[i].contract, content.details[i].token)
+              this.getNftImage(
+                content.details[i].contract,
+                content.details[i].token
+              )
                 .then(image => {
                   content.details[i].image = image;
                 })
@@ -523,7 +526,11 @@ export default {
           content.currentIndex
         );
 
-        const details = this.processor(content.details, content.contract, nonStandard);
+        const details = this.processor(
+          content.details,
+          content.contract,
+          nonStandard
+        );
         content.details = await this.getImagesForContract(
           details,
           content.contract,
