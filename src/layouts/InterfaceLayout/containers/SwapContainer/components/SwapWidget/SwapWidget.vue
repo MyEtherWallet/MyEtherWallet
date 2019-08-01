@@ -640,20 +640,21 @@ export default {
         2000
       );
 
-    this.$refs.modal.$on('shown', () => {
-      this.widgetOpen = true;
-      if (this.isWidget) {
-        this.toAddress = this.destAddress !== '' ? this.destAddress : '';
-        this.fromCurrency = this.suppliedFrom.symbol;
-        this.toCurrency = this.suppliedTo.symbol;
-        this.overrideFrom = this.suppliedFrom;
-        this.overrideTo = this.suppliedTo;
-        if (toBigNumber(this.suppliedToAmount).gt(0)) {
-          this.loadingWidget = true;
-          this.toValue = this.suppliedToAmount;
-          this.amountChanged('to');
-        } else {
-          this.toValue = 0;
+      this.$refs.modal.$on('shown', () => {
+        this.widgetOpen = true;
+        if (this.isWidget) {
+          this.toAddress = this.destAddress !== '' ? this.destAddress : '';
+          this.fromCurrency = this.suppliedFrom.symbol;
+          this.toCurrency = this.suppliedTo.symbol;
+          this.overrideFrom = this.suppliedFrom;
+          this.overrideTo = this.suppliedTo;
+          if (toBigNumber(this.suppliedToAmount).gt(0)) {
+            this.loadingWidget = true;
+            this.toValue = this.suppliedToAmount;
+            this.amountChanged('to');
+          } else {
+            this.toValue = 0;
+          }
         }
       });
 
