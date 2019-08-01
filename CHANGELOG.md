@@ -1,5 +1,6 @@
 ### Devop
 
+- Add new team members into the team page [#1302](https://github.com/MyEtherWallet/MyEtherWallet/pull/1302)
 - Add proxy notice to moveCDP modal, improve swap widget [#1251](https://github.com/MyEtherWallet/MyEtherWallet/pull/1251)
 
 ### Bug
