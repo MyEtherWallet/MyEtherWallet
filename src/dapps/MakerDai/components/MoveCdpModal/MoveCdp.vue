@@ -25,7 +25,17 @@
             <input v-model="address" />
           </div>
         </div>
-
+        <div>
+          <div v-if="destAddressHasProxy">
+            <p>
+              {{ $t('dappsMaker.proxyAddress', { value: destAddressProxy }) }}
+            </p>
+            {{ $t('dappsMaker.moveWithProxy') }}
+          </div>
+          <div v-if="!destAddressHasProxy">
+            {{ $t('dappsMaker.moveWithoutProxy') }}
+          </div>
+        </div>
         <div class="buttons">
           <standard-button :options="cancelButton" @click.native="closeModal" />
           <standard-button
@@ -82,6 +92,14 @@ export default {
           cdpId: ''
         };
       }
+    },
+    destAddressHasProxy: {
+      type: Boolean,
+      default: false
+    },
+    destAddressProxy: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -113,7 +131,13 @@ export default {
       return Misc.isValidETHAddress(this.address) && this.checkBoxChecked;
     }
   },
-  watch: {},
+  watch: {
+    address(newVal) {
+      if (Misc.isValidETHAddress(newVal)) {
+        this.$emit('checkForProxy', newVal);
+      }
+    }
+  },
   mounted() {
     this.$refs.modal.$on('shown', () => {
       this.address = '';

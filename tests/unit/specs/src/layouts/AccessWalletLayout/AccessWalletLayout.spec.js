@@ -10,7 +10,6 @@ function roundPercentage(num) {
   return new BigNumber(num).toFixed(2);
 }
 
-//xdescribe
 describe('AccessWalletLayout.vue', () => {
   let localVue, i18n, wrapper, store;
 

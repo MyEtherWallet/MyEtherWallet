@@ -150,6 +150,7 @@ if (process.env.NODE_ENV === 'production') {
           'src/assets/images/icons/up.svg',
           'src/assets/images/icons/button-json.svg',
           'src/assets/images/icons/button-mnemonic.svg',
+          'src/assets/images/team/_blank_.jpg',
           // Chrome Extension
           'src/builds/mewcx/app.vue',
           'src/builds/mewcx/public/img/icons/icon128.png',
