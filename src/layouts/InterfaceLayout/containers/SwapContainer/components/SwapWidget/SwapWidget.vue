@@ -385,7 +385,8 @@ export default {
       exitToFiatCallback: () => {},
       debounceUpdateEstimate: {},
       debounceDoThing: {},
-      widgetOpen: false
+      widgetOpen: false,
+      loadingWidget: false
     };
   },
   computed: {
@@ -639,20 +640,20 @@ export default {
         2000
       );
 
-      this.$refs.modal.$on('shown', () => {
-        this.widgetOpen = true;
-        if (this.isWidget) {
-          this.toAddress = this.destAddress !== '' ? this.destAddress : '';
-          this.fromCurrency = this.suppliedFrom.symbol;
-          this.toCurrency = this.suppliedTo.symbol;
-          this.overrideFrom = this.suppliedFrom;
-          this.overrideTo = this.suppliedTo;
-          if (toBigNumber(this.suppliedToAmount).gt(0)) {
-            this.toValue = this.suppliedToAmount;
-            this.amountChanged('to');
-          } else {
-            this.toValue = 0;
-          }
+    this.$refs.modal.$on('shown', () => {
+      this.widgetOpen = true;
+      if (this.isWidget) {
+        this.toAddress = this.destAddress !== '' ? this.destAddress : '';
+        this.fromCurrency = this.suppliedFrom.symbol;
+        this.toCurrency = this.suppliedTo.symbol;
+        this.overrideFrom = this.suppliedFrom;
+        this.overrideTo = this.suppliedTo;
+        if (toBigNumber(this.suppliedToAmount).gt(0)) {
+          this.loadingWidget = true;
+          this.toValue = this.suppliedToAmount;
+          this.amountChanged('to');
+        } else {
+          this.toValue = 0;
         }
       });
 
@@ -853,6 +854,12 @@ export default {
           this.toValue = toValue;
           this.fromValue = fromValue;
           break;
+      }
+
+      if (this.toValue - this.suppliedToAmount > 1 && this.loadingWidget) {
+        this.loadingWidget = false;
+        this.toValue = this.suppliedToAmount;
+        this.updateEstimate('to');
       }
     },
     async updateRateEstimate(fromCurrency, toCurrency, fromValue, to) {

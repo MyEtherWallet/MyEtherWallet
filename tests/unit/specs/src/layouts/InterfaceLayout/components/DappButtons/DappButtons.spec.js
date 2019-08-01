@@ -56,10 +56,10 @@ describe('DappButtons.vue', () => {
     ).toEqual(icon);
   });
 
-  it('should render correct param', () => {
-    expect(wrapper.vm.$el.querySelector('.param').textContent.trim()).toEqual(
-      param
-    );
-  });
+  // it('should render correct param', () => {
+  //   expect(wrapper.vm.$el.querySelector('.param').textContent.trim()).toEqual(
+  //     param
+  //   );
+  // });
   describe('DappButtons.vue Methods', () => {});
 });
