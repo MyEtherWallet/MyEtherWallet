@@ -4,7 +4,7 @@ import { Tooling } from '@@/helpers';
 
 describe('NameForbiddenENSContainer.vue', () => {
   let localVue, i18n, wrapper, store;
-  
+
   const domainName = 'MyEtherWallet';
 
   beforeAll(() => {
