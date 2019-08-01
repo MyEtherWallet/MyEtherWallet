@@ -90,10 +90,7 @@ export default {
       nftTokens: {},
       nftData: {},
       ownedTokens: [],
-      tokenContractAddress: '0xeA3352C1a3480Ac5a32Fcd1F2854529BA7193F14',
-      useDevAddress: false,
-      devAddress: ''
-
+      tokenContractAddress: '0xeA3352C1a3480Ac5a32Fcd1F2854529BA7193F14'
     };
   },
   computed: {
@@ -235,9 +232,7 @@ export default {
         .map(entry => entry.contract);
       const tokenContract = new this.web3.eth.Contract(nftABI);
       tokenContract.options.address = this.tokenContractAddress;
-      const address = this.useDevAddress
-        ? this.devAddress
-        : this.account.address;
+      const address = this.account.address;
       const res = await tokenContract.methods
         .getTokenBalances(supportedNftTokens, address.toLowerCase())
         .call();
@@ -251,7 +246,6 @@ export default {
       });
     },
     async getOwned(address = this.account.address, nftData = this.nftData) {
-      if (this.useDevAddress) address = this.devAddress;
       if (!this.processing) {
         this.processing = true;
         const supportedNftTokens = Object.keys(nftData);
@@ -331,7 +325,6 @@ export default {
       address = this.account.address,
       tokenContract = undefined
     ) {
-      if (this.useDevAddress) address = this.devAddress;
       if (!tokenContract) {
         tokenContract = new this.web3.eth.Contract(nftABI);
         tokenContract.options.address = this.tokenContractAddress;
@@ -411,7 +404,6 @@ export default {
       this.getNextSetStandard(content);
     },
     async getNextSetStandard(content, address = this.account.address) {
-      if (this.useDevAddress) address = this.devAddress;
       const offset = content.currentIndex + this.countPerPage;
       if (offset <= content.count) {
         // update offsets if not at the end
@@ -500,7 +492,6 @@ export default {
       }
     },
     async getPriorSetNonStandard(content, address = this.account.address) {
-      if (this.useDevAddress) address = this.devAddress;
       const offset = content.currentIndex - content.priorIndex;
       if (content.currentIndex - offset >= 0) {
         content.currentIndex = content.currentIndex - offset;
