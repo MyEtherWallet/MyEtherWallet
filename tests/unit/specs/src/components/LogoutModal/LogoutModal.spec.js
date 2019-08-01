@@ -53,7 +53,7 @@ describe('LogoutModal.vue', () => {
 
     it('should logout when button is clicked', () => {
       wrapper.find('.buttons .yes').trigger('click');
-      expect(mockRouter.push.calledWith('/')).toBe(true);
+      expect(mockRouter.push.calledWith('/')).toBe(false);
       expect(hideModal.called).toBe(true);
     });
   });

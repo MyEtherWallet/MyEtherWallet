@@ -185,5 +185,6 @@ module.exports = [
   'src/layouts/ExtensionWeb3Layout/containers/SignMsgContainer/index.js',
   'src/layouts/ExtensionWeb3Layout/containers/SignMsgContainer/SignMsgContainer.scss',
   'src/layouts/ExtensionWeb3Layout/containers/SignMsgContainer/SignMsgContainer.vue',
-  'src/builds/mewcx/public/README.md'
+  'src/builds/mewcx/public/README.md',
+  'src/assets/images/team/_blank_.jpg',
 ]
