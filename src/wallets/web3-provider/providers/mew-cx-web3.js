@@ -73,23 +73,21 @@ class MewCxEthereum extends EventEmitter {
     const id = this._id++;
     const jsonrpc = '2.0';
     const payload = { jsonrpc, id, method, params };
-    const reqManager = this._requestManager;
+    const requestManager = this._requestManager;
     const req = {
       payload,
-      reqManager
+      requestManager
     };
 
     const promise = new Promise((resolve, reject) => {
       this._promises[payload.id] = { resolve, reject };
     });
     const cb = (e, res) => {
-      console.log(res);
       if (e !== null) this._promises[res.id].reject(e);
       this._promises[res.id].resolve(res.result);
     };
 
     this.middleware.run(req, cb).then(() => {
-      console.log(req);
       this._requestManager.provider.send(req, cb);
     });
 

@@ -12,7 +12,6 @@ export default async ({ payload, requestManager }, res, next) => {
       memcache.timestamp = new Date().getTime();
       res(null, toPayload(payload.id, blockNumber));
     } catch (e) {
-      console.log(e);
       res(null, toPayload(payload.id, null));
     }
   } else {
