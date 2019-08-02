@@ -5,7 +5,7 @@
         <div class="title">
           <h4>{{ $t('common.actions') }}</h4>
         </div>
-        <div class="margin--top--auto buttons">
+        <div class="buttons">
           <button-send-tx
             class="clickable"
             @click.native="goTo('send-transaction')"
@@ -27,10 +27,10 @@
             {{ $t('common.more') }}
           </button>
         </div>
-        <p>
+        <p class="section-description">
           {{ $t('interface.dashboardSwap') }}
         </p>
-        <div class="margin--top--auto swap-info">
+        <div class="swap-info">
           <div v-for="pair in swapPairs" :key="pair.from + pair.to">
             <div class="swap-to clickable" @click="showSwapWidget(pair)">
               <p class="monospace">

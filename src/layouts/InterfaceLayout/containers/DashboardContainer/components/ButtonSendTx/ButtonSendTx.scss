@@ -1,5 +1,5 @@
-@import '~@/scss/GlobalVariables';
-@import '../DashboardButtons';
+@import "~@/scss/GlobalVariables";
+@import "../DashboardButtons";
 
 .content-container {
   background-color: $dark-blue-2;
@@ -21,9 +21,9 @@
 
 .spaceman {
   position: absolute;
-  left: 65%;
-  bottom: 8%;
-  height: 70%;
+  right: 8%;
+  top: 6%;
+  height: 116%;
 }
 
 p {
@@ -31,6 +31,7 @@ p {
   font-size: 20px;
   font-weight: 600;
   position: absolute;
-  top: 43%;
+  top: calc(50% - 10px);
   left: 12%;
+  text-shadow: 2px 2px 0px $black;
 }
