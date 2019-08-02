@@ -1,0 +1,22 @@
+@import '~@/scss/GlobalVariables';
+@import '../DashboardButtons';
+
+.content-container {
+  background-color: $light-purple-2;
+}
+
+.kitties {
+  position: absolute;
+  left: 65%;
+  top: 8%;
+  height: 82%;
+}
+
+p {
+  color: $black;
+  font-size: 20px;
+  font-weight: 600;
+  position: absolute;
+  top: 43%;
+  left: 12%;
+}
