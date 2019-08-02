@@ -401,14 +401,18 @@ export default {
     },
     setBalances: web3utils._.debounce(function() {
       this.HDAccounts.forEach(account => {
-        this.web3.eth
-          .getBalance(account.account.getAddressString())
-          .then(balance => {
-            account.balance = balance;
-          })
-          .catch(e => {
-            Toast.responseHandler(e, Toast.ERROR);
-          });
+        if (account.account) {
+          this.web3.eth
+            .getBalance(account.account.getAddressString())
+            .then(balance => {
+              account.balance = balance;
+            })
+            .catch(e => {
+              Toast.responseHandler(e, Toast.ERROR);
+            });
+        } else {
+          account.balance = 0;
+        }
       });
     }, 1000),
     unlockWallet() {

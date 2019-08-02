@@ -89,9 +89,11 @@ const SET_WEB3_INSTANCE = function(state, web3) {
 const SWITCH_NETWORK = function(state, networkObj) {
   state.network = networkObj;
   const _netObj = Object.assign({}, networkObj);
-  _netObj.type = {
-    name: networkObj.type.name
-  };
+  if (_netObj.type.name !== 'CUS') {
+    _netObj.type = {
+      name: networkObj.type.name
+    };
+  }
   store.set('network', _netObj);
 };
 
