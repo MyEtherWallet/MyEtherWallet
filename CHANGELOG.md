@@ -1,3 +1,11 @@
+### Release v5.0.16-hotfix.1
+
+### Devop
+
+- Fix toast xss issue [#1306](https://github.com/MyEtherWallet/MyEtherWallet/pull/1306)
+- Set gasPrice of TXs to Global value [#1305](https://github.com/MyEtherWallet/MyEtherWallet/pull/1305)
+- Update team info and pictures [#1304](https://github.com/MyEtherWallet/MyEtherWallet/pull/1304)
+
 ### Release v5.0.16
 
 ### Feature
