@@ -78,7 +78,7 @@ export default {
         },
         {
           name: 'Aldo',
-          position: 'Full-Stack Developer',
+          position: 'Lead Software Engineer - EthVM',
           img: aldo
         },
         {
@@ -103,7 +103,7 @@ export default {
         },
         {
           name: 'Jack',
-          position: 'UI/UX Designer',
+          position: 'Head of UI/UX Design',
           img: jack
         },
         {
@@ -112,9 +112,9 @@ export default {
           img: stephen
         },
         {
-          name: 'Semaja',
-          position: 'Blockchain Community Specialist',
-          img: semaja
+          name: 'Brittany',
+          position: 'Operations Coordinator',
+          img: brittany
         },
         {
           name: 'Duke & Richie Wolf',
@@ -122,9 +122,9 @@ export default {
           img: richie
         },
         {
-          name: 'Brittany',
-          position: 'Operations Coordinator',
-          img: brittany
+          name: 'Semaja',
+          position: 'Blockchain Community Specialist',
+          img: semaja
         },
         {
           name: 'Katya',
