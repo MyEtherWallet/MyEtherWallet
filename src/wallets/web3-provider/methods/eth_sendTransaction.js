@@ -27,8 +27,8 @@ export default async (
   next
 ) => {
   if (payload.method !== 'eth_sendTransaction') return next();
-  tx.gasPrice = unit.toWei(store.state.gasPrice, 'gwei').toString();
   const tx = Object.assign({}, payload.params[0]);
+  tx.gasPrice = unit.toWei(store.state.gasPrice, 'gwei').toString();
   const localTx = Object.assign({}, tx);
   delete localTx['gas'];
   delete localTx['nonce'];
