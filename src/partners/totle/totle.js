@@ -74,7 +74,7 @@ export default class Totle {
 
   async getSupportedTokenList() {
     try {
-      // this.tokenDetails = await this.retrieveSupportedTokenList(this.network);
+      await this.retrieveSupportedTokenList(this.network);
       this.hasRates =
         Object.keys(this.tokenDetails).length > 0 ? this.hasRates + 1 : 0;
     } catch (e) {
@@ -85,26 +85,30 @@ export default class Totle {
   // API Call
   async retrieveSupportedTokenList(network) {
     try {
-      const rawTokenList = await totleCalls.getTokenList(network);
-      logger('Tokens', rawTokenList);
-      const tokenList = rawTokenList.tokens.filter(
-        token => token.tradable === true
-      );
+      const { tokens } = await totleCalls.getTokenList(network);
+      logger('Tokens', tokens);
+      const tradableTokens = tokens.filter(token => token.tradable === true);
       const tokenDetails = {};
-      for (let i = 0; i < tokenList.length; i++) {
+      for (let i = 0; i < tradableTokens.length; i++) {
         if (
-          tokenList[i].symbol &&
-          tokenList[i].name &&
-          tokenList[i].decimals &&
-          tokenList[i].address
+          tradableTokens[i].symbol &&
+          tradableTokens[i].name &&
+          tradableTokens[i].decimals &&
+          tradableTokens[i].address
         ) {
           // otherwise the entry is invalid
-          const symbol = tokenList[i].symbol.toUpperCase();
+          const symbol = tradableTokens[i].symbol.toUpperCase();
           tokenDetails[symbol] = {
-            symbol: tokenList[i].symbol,
-            name: tokenList[i].name,
-            decimals: tokenList[i].decimals,
-            contractAddress: tokenList[i].address
+            symbol: tradableTokens[i].symbol,
+            name: tradableTokens[i].name,
+            decimals: tradableTokens[i].decimals,
+            contractAddress: tradableTokens[i].address
+          };
+          this.tokenDetails[symbol] = {
+            symbol: tradableTokens[i].symbol,
+            name: tradableTokens[i].name,
+            decimals: tradableTokens[i].decimals,
+            contractAddress: tradableTokens[i].address
           };
         }
       }
