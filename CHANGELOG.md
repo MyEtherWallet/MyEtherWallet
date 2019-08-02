@@ -3,6 +3,7 @@
 ### Devop
 
 - Fix toast xss issue []()
+- Set gasPrice of TXs to Global value [#1305](https://github.com/MyEtherWallet/MyEtherWallet/pull/1305)
 
 ### Release v5.0.16
 
