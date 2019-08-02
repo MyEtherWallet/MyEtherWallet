@@ -1,4 +1,4 @@
-@import "../InterfaceContainer";
+@import '../InterfaceContainer';
 
 $dapps-container-mobile-width: 650px;
 
@@ -53,7 +53,7 @@ $dapps-container-mobile-width: 650px;
       margin-bottom: 15px;
 
       &:last-child {
-        margin-bottom: 0px;
+        margin-bottom: 0;
       }
     }
   }
