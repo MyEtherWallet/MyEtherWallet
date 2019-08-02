@@ -82,7 +82,8 @@ describe('EnterPinNumberModal.vue', () => {
   });
 
   it('should render correct pin data', () => {
-    wrapper.setData({ pin: 'pin' });
+    const pin = 'pin';
+    wrapper.setData({ pin });
     expect(
       wrapper.vm.$el.querySelector('.modal-contents .input-container input')
         .value

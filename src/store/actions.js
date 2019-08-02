@@ -77,10 +77,11 @@ const gettingStartedDone = function({ commit }) {
 };
 
 const clearWallet = function({ commit, state }) {
-  if (state.wallet.identifier === MEW_CONNECT) {
+  const linkTo = state.path !== '' ? state.path : '/';
+  if (state.wallet && state.wallet.identifier === MEW_CONNECT) {
     state.wallet.mewConnect().disconnectRTC();
   }
-  Vue.router.push('/');
+  Vue.router.push(linkTo);
   commit('CLEAR_WALLET');
 };
 
@@ -117,7 +118,9 @@ const setState = function({ commit }, stateObj) {
 };
 
 const setWeb3Instance = function({ dispatch, commit, state }, provider) {
-  const hostUrl = url.parse(state.network.url);
+  const hostUrl = state.network.url
+    ? url.parse(state.network.url)
+    : state.Network['ETH'][0];
   const options = {};
   // eslint-disable-next-line
   const parsedUrl = `${hostUrl.protocol}//${hostUrl.host}${
