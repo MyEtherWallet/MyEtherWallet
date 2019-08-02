@@ -1,0 +1,36 @@
+@import '~@/scss/GlobalVariables';
+@import '../DashboardButtons';
+
+.content-container {
+  background-color: $dark-blue-2;
+}
+
+.left {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 50%;
+}
+
+.right {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  height: 50%;
+}
+
+.spaceman {
+  position: absolute;
+  left: 65%;
+  bottom: 8%;
+  height: 70%;
+}
+
+p {
+  color: $white;
+  font-size: 20px;
+  font-weight: 600;
+  position: absolute;
+  top: 43%;
+  left: 12%;
+}
