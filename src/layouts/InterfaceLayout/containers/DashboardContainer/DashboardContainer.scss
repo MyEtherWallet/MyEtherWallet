@@ -1,4 +1,4 @@
-@import '../InterfaceContainer';
+@import "../InterfaceContainer";
 
 $dapps-container-mobile-width: 650px;
 
@@ -51,17 +51,17 @@ $dapps-container-mobile-width: 650px;
 
     > * {
       margin-bottom: 15px;
+    }
 
-      &:last-child {
-        margin-bottom: 0;
-      }
+    > *:last-child {
+      margin-bottom: 0;
     }
   }
 }
 
 .block--swap {
   .currency-symbol::before {
-    font-size: 35px;
+    font-size: 29px;
   }
 
   .swap-info {
@@ -71,7 +71,7 @@ $dapps-container-mobile-width: 650px;
   .swap-to {
     margin: 10px 0;
     background-color: $light-green-1;
-    padding: 20px 30px;
+    padding: 5px 30px;
     display: flex;
     align-items: center;
 
@@ -81,11 +81,11 @@ $dapps-container-mobile-width: 650px;
 
     p {
       font-weight: 600;
-      font-size: 18px;
+      font-size: 14px;
     }
 
     span {
-      height: 35px;
+      height: 29px;
     }
 
     img {
