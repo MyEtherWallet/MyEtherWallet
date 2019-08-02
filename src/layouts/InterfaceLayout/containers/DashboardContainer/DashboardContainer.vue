@@ -6,15 +6,13 @@
           <h4>{{ $t('common.actions') }}</h4>
         </div>
         <div class="margin--top--auto buttons">
-          <img
+          <button-send-tx
             class="clickable"
-            src="@/assets/images/buttons/send-tx.png"
-            @click="goTo('send-transaction')"
+            @click.native="goTo('send-transaction')"
           />
-          <img
+          <button-nft-manager
             class="clickable"
-            src="@/assets/images/buttons/nft-manager.png"
-            @click="goTo('nft-manager')"
+            @click.native="goTo('nft-manager')"
           />
         </div>
       </div>
@@ -101,6 +99,8 @@ import tabsConfig from '../../components/InterfaceSideMenu/InterfaceSideMenu.con
 import DappButtons from '../../components/DappButtons';
 import dapps from '@/dapps';
 import SwapWidget from '@/components/SwapWidget';
+import ButtonNftManager from './components/ButtonNftManager';
+import ButtonSendTx from './components/ButtonSendTx';
 
 import { SwapProviders, providers } from '@/partners';
 import BigNumber from 'bignumber.js';
@@ -116,7 +116,9 @@ export default {
     blockie: Blockie,
     'currency-picker': CurrencyPicker,
     'dapp-buttons': DappButtons,
-    'swap-widget': SwapWidget
+    'swap-widget': SwapWidget,
+    'button-nft-manager': ButtonNftManager,
+    'button-send-tx': ButtonSendTx
   },
   props: {
     tokensWithBalance: {
