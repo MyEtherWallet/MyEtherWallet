@@ -1,4 +1,4 @@
-@import '~@/scss/GlobalVariables';
+@import "~@/scss/GlobalVariables";
 
 $dapp-button-mobile-width: 650px;
 
@@ -25,11 +25,12 @@ $dapp-button-mobile-width: 650px;
   }
 
   img {
-    //margin-bottom: 15px;
     @media all and (max-width: $dapp-button-mobile-width) {
       margin-top: 0;
       margin-left: -10px;
-      margin-right: 5px;
+      margin-right: 22px;
+      width: 23%;
+      max-width: 90px;
     }
   }
 
