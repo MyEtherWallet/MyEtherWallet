@@ -8,6 +8,7 @@ const web3 = require('web3');
 const swapConfigFolder = './src/partners/partnersConfig';
 const changellyConfigFolder = './src/partners/changelly/config';
 const kyberConfigFolder = './src/partners/kyber/config';
+const totleConfigFolder = './src/partners/totle/config';
 
 const explicitStringReplacements = {
   RLC: {
@@ -20,6 +21,7 @@ class CompileSwapOptions {
     this.web3 = new web3('https://api.myetherwallet.com/eth');
     this.changellyBaseOptions = {};
     this.kyberBaseOptions = {};
+    this.totleBaseOptions = {};
 
     this.needDecimalCheck = [];
   }
@@ -108,6 +110,47 @@ class CompileSwapOptions {
       }
 
       this.KyberCurrencies = tokenDetails;
+      return {
+        ETH: tokenDetails,
+        other: {}
+      };
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  async getTotleSupported() {
+    try {
+      const { tokens } = await this.get('https://api.totle.com/tokens');
+
+      const tradableTokens = tokens.filter(token => token.tradable === true);
+
+      const tokenDetails = {};
+      for (let i = 0; i < tradableTokens.length; i++) {
+        if (
+          tradableTokens[i].symbol &&
+          tradableTokens[i].name &&
+          tradableTokens[i].decimals &&
+          tradableTokens[i].address
+        ) {
+          // otherwise the entry is invalid
+          const symbol = tradableTokens[i].symbol.toUpperCase();
+          tokenDetails[symbol] = {
+            symbol: tradableTokens[i].symbol,
+            name: tradableTokens[i].name,
+            decimals: tradableTokens[i].decimals,
+            contractAddress: tradableTokens[i].address
+          };
+          this.totleBaseOptions[symbol] = {
+            symbol: tradableTokens[i].symbol,
+            name: tradableTokens[i].name,
+            decimals: tradableTokens[i].decimals,
+            contractAddress: tradableTokens[i].address
+          };
+        }
+      }
+
+      this.TotleCurrencies = tokenDetails;
       return {
         ETH: tokenDetails,
         other: {}
@@ -245,7 +288,16 @@ class CompileSwapOptions {
 
   async run() {
     const kyberTokens = await this.getKyberSupported();
-    const withChangelly = await this.supplyChangellySupported(kyberTokens);
+    const totleTokens = await this.getTotleSupported();
+
+    const partnerTokens = {
+        ETH: {
+          ...kyberTokens.ETH,
+          ...totleTokens.ETH
+        },
+        other: {}
+    };
+    const withChangelly = await this.supplyChangellySupported(partnerTokens);
 
     for (let i = 0; i < this.needDecimalCheck.length; i++) {
       const decimals = await this.getDecimals(this.needDecimalCheck[i]);
@@ -282,6 +334,15 @@ class CompileSwapOptions {
         `const KyberCurrenciesETH = ${JSON.stringify(
           this.kyberBaseOptions
         )}; \nexport { KyberCurrenciesETH };\n`
+      );
+    }
+
+    if (Object.keys(this.totleBaseOptions).length > 0) {
+      fs.writeFileSync(
+        `${totleConfigFolder}/currenciesETH.js`,
+        `const TotleCurrenciesETH = ${JSON.stringify(
+          this.totleBaseOptions
+        )}; \nexport { TotleCurrenciesETH };\n`
       );
     }
   }

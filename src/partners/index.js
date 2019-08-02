@@ -4,6 +4,7 @@ import {
   KyberSwap,
   PROVIDER_NAME as kybernetwork
 } from './kyber';
+import { TotleCurrencies, TotleSwap, PROVIDER_NAME as totle } from './totle';
 import {
   ChangellyCurrencies,
   ChangellySwap,
@@ -37,7 +38,7 @@ import {
 } from './helpers';
 
 // Array of currently supported providers
-const providers = [BitySwap, KyberSwap, ChangellySwap, Simplex];
+const providers = [BitySwap, KyberSwap, TotleSwap, ChangellySwap, Simplex];
 
 const providerMap = providers.reduce(
   (accumulator, currentValue) =>
@@ -48,6 +49,7 @@ const providerMap = providers.reduce(
 const providerNames = {
   simplex: simplex,
   kyber: kybernetwork,
+  totle: totle,
   changelly: changelly,
   bity: bity
 };
@@ -66,6 +68,8 @@ export {
   BityCurrencies,
   KyberSwap,
   KyberCurrencies,
+  TotleSwap,
+  TotleCurrencies,
   Simplex,
   SimplexCurrencies,
   ChangellySwap,

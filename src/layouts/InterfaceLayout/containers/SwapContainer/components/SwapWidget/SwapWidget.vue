@@ -238,6 +238,7 @@ import InterfaceBottomText from '@/components/InterfaceBottomText';
 import InterfaceContainerTitle from '../../../../components/InterfaceContainerTitle';
 import swapIcon from '@/assets/images/icons/swap.svg';
 import ImageKybernetowrk from '@/assets/images/etc/kybernetwork.png';
+import ImageTotle from '@/assets/images/etc/totle.png';
 import ImageBity from '@/assets/images/etc/bity.png';
 import ImageVisaMaster from '@/assets/images/etc/visamaster.png';
 
@@ -346,6 +347,7 @@ export default {
       ),
       images: {
         kybernetowrk: ImageKybernetowrk,
+        totle: ImageTotle,
         bity: ImageBity,
         visaMaster: ImageVisaMaster,
         swap: swapIcon
