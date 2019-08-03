@@ -24,11 +24,11 @@ import {
   PHT
 } from '@/networks/types';
 import {
-  ethereum,
   ledgerEthereum,
   ledgerLiveEthereum,
   ledgerEthereumClassic,
   ledgerLiveEthereumClassic,
+  ledgerLightstreamsNetwork,
   ropsten,
   expanse,
   ubiq,
@@ -164,7 +164,7 @@ const appList = [
   {
     network: PHT,
     prefixes: ["m/44'/60'"],
-    paths: [ethereum]
+    paths: [ledgerLightstreamsNetwork]
   }
 ];
 export default appList;

@@ -1,6 +1,7 @@
 import {
   keepkeyEthereum,
   keepkeyEthereumClassic,
+  keepkeyLightstreamsNetwork,
   ropsten,
   singularDTV,
   expanse,
@@ -22,12 +23,12 @@ import {
   iolite,
   thundercore,
   solidum,
-  dexon,
-  lightstreamsNetwork
+  dexon
 } from './paths';
 export default [
   keepkeyEthereum,
   keepkeyEthereumClassic,
+  keepkeyLightstreamsNetwork,
   ropsten,
   singularDTV,
   expanse,
@@ -49,6 +50,5 @@ export default [
   iolite,
   thundercore,
   solidum,
-  dexon,
-  lightstreamsNetwork
+  dexon
 ];
