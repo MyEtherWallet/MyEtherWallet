@@ -7,7 +7,7 @@
         :nft-config="nftConfig"
         @selected="changeSelectedContract"
       >
-<!--        <input type="text" placeholder="Search #" />-->
+        <!--        <input type="text" placeholder="Search #" />-->
       </nft-side-menu>
       <div v-if="showDetails">
         <nft-details
@@ -39,8 +39,8 @@
             >
               <i class="fa fa-chevron-left"></i>
             </span>
-            {{$t('dapps.showing', {first: startIndex, last: endIndex})}}
-<!--            Showing {{ startIndex }} -{{ endIndex }}-->
+            {{ $t('dapps.showing', { first: startIndex, last: endIndex }) }}
+            <!--            Showing {{ startIndex }} -{{ endIndex }}-->
             <span
               v-show="showNextButton"
               class="internal-nav next"
@@ -68,6 +68,7 @@ import fetch from 'node-fetch';
 
 const URL_BASE = 'https://swap.mewapi.io/nft';
 
+
 export default {
   components: {
     'content-block-title': ContentBlockTitle,
@@ -89,15 +90,72 @@ export default {
       nftTokens: {},
       nftData: {},
       ownedTokens: [],
-      tokenContractAddress: '0xeA3352C1a3480Ac5a32Fcd1F2854529BA7193F14'
-      // ,useDevAddress: true, // todo remove dev item
-      // devAddress: '0xa3d7553397352efb84a0bc217a464e9e114207d6' // todo remove dev item
+      tokenContractAddress: '0xeA3352C1a3480Ac5a32Fcd1F2854529BA7193F14',
+      useDevAddress: false, // todo remove dev item
+      devAddress: '0xa3d7553397352efb84a0bc217a464e9e114207d6' // todo remove dev item
       // 0xac43df42ba2d186da57342e1b685f024db445a22 // mycryptoheros:hero // todo remove dev item
       // '0xa3d7553397352efb84a0bc217a464e9e114207d6' // gods unchained // todo remove dev item
       // '0x2f261a227480b7d1802433d05a92a27bab645032' // cryptokitties // todo remove dev item
     };
   },
   computed: {
+    endIndex() {
+      if (this.nftData[this.selectedContract]) {
+        const ids_retrieved = this.nftData[this.selectedContract].details
+          .length;
+        const increment =
+          ids_retrieved > this.countPerPage ? this.countPerPage : ids_retrieved;
+        return this.nftData[this.selectedContract].currentIndex + increment;
+      }
+    },
+    nftTitle() {
+      if (this.nftData[this.selectedContract]) {
+        return this.nftData[this.selectedContract].title;
+      }
+      return 'Loading';
+    },
+    nftToShow() {
+      if (this.nftData[this.selectedContract]) {
+        if (!this.nftData[this.selectedContract].details) return [];
+        return this.nftData[this.selectedContract].details.length >
+          this.countPerPage
+          ? this.nftData[this.selectedContract].details.slice(
+              this.nftData[this.selectedContract].currentIndex,
+              this.nftData[this.selectedContract].currentIndex +
+                this.countPerPage
+            )
+          : this.nftData[this.selectedContract].details;
+      }
+      return [];
+    },
+    ntfCount() {
+      if (this.nftData[this.selectedContract]) {
+        return this.$t('dapps.nftOwnCount', {
+          perPage: this.countPerPage,
+          count: this.nftData[this.selectedContract].count
+        });
+      }
+
+      return this.$t('dapps.noneOwned');
+    },
+    selectedNtf() {
+      if (this.nftData[this.selectedContract]) {
+        return this.nftData[this.selectedContract];
+      }
+      return {};
+    },
+    showNextButton() {
+      if (this.nftData[this.selectedContract]) {
+        const ids_retrieved = this.nftData[this.selectedContract].count;
+        return (
+          this.endIndex !== ids_retrieved &&
+          this.endIndex + this.countPerPage <= ids_retrieved
+        );
+      }
+    },
+    sideMenuData() {
+      return this.nftData;
+    },
     ...mapState([
       'account',
       'gasPrice',
@@ -111,62 +169,6 @@ export default {
         return this.nftData[this.selectedContract].currentIndex;
       }
       return 0;
-    },
-    showNextButton() {
-      if (this.nftData[this.selectedContract]) {
-        const ids_retrieved = this.nftData[this.selectedContract].count;
-        return (
-          this.endIndex !== ids_retrieved &&
-          this.endIndex + this.countPerPage <= ids_retrieved
-        );
-      }
-    },
-    endIndex() {
-      if (this.nftData[this.selectedContract]) {
-        const ids_retrieved = this.nftData[this.selectedContract].details
-          .length;
-        const increment =
-          ids_retrieved > this.countPerPage ? this.countPerPage : ids_retrieved;
-        return this.nftData[this.selectedContract].currentIndex + increment;
-      }
-    },
-    nftToShow() {
-      if (this.nftData[this.selectedContract]) {
-        return this.nftData[this.selectedContract].details.length >
-          this.countPerPage
-          ? this.nftData[this.selectedContract].details.slice(
-              this.nftData[this.selectedContract].currentIndex,
-              this.nftData[this.selectedContract].currentIndex +
-                this.countPerPage
-            )
-          : this.nftData[this.selectedContract].details;
-      }
-      return [];
-    },
-    sideMenuData() {
-      return this.nftData;
-    },
-    selectedNtf() {
-      if (this.nftData[this.selectedContract]) {
-        return this.nftData[this.selectedContract];
-      }
-      return {};
-    },
-    nftTitle() {
-      if (this.nftData[this.selectedContract]) {
-        return this.nftData[this.selectedContract].title;
-      }
-      return 'Loading';
-    },
-    ntfCount() {
-      if (this.nftData[this.selectedContract]) {
-        return this.$t('dapps.nftOwnCount', {
-          perPage: this.countPerPage,
-          count: this.nftData[this.selectedContract].count
-        });
-      }
-
-      return this.$t('dapps.noneOwned');
     }
   },
   watch: {},
@@ -195,6 +197,8 @@ export default {
       return accumulator;
     }, {});
 
+    this.changeSelectedContract(this.nftConfig[0].contractAddress);
+
     this.getOwnedCounts();
     this.getOwned();
   },
@@ -203,26 +207,11 @@ export default {
       this.selectedContract = selectedContract;
       this.showDetails = false;
     },
-    hasImage(nft) {
-      return nft.image !== '';
-    },
-    getImage(nft) {
-      return nft.image;
-    },
     comeBack() {
       this.showDetails = false;
     },
-    showNftDetails(nft) {
-      this.detailsFor = nft;
-      this.showDetails = true;
-    },
-    async getTokenConfig() {
-      const data = await fetch(`${URL_BASE}?supported=true`, {
-        mode: 'cors',
-        cache: 'no-cache',
-        method: 'GET'
-      });
-      return await data.json();
+    getImage(nft) {
+      return nft.image;
     },
     async getNftImage(contract, token) {
       const image = await fetch(
@@ -235,8 +224,25 @@ export default {
       );
       return await image.text();
     },
+    async getOwned(address = this.account.address, nftData = this.nftData) {
+      if (this.useDevAddress) address = this.devAddress; // todo remove dev item
+      if (!this.processing) {
+        this.processing = true;
+        const supportedNftTokens = Object.keys(nftData);
+
+        const result = await this.getOwnedTokens(
+          supportedNftTokens,
+          address,
+          nftData
+        );
+        this.ready = true;
+        this.processing = false;
+        this.imagesRetrieved = true;
+        return result;
+      }
+    },
     async getOwnedCounts(address = this.account.address) {
-      // if (this.useDevAddress) address = this.devAddress; // todo remove dev item
+      if (this.useDevAddress) address = this.devAddress; // todo remove dev item
       const supportedNftTokens = this.nftConfig
         .filter(entry => entry.ERC721Extension)
         .map(entry => entry.contract);
@@ -255,66 +261,14 @@ export default {
         return val.toString();
       });
     },
-    async getOwned(address = this.account.address, nftData = this.nftData) {
-      // if (this.useDevAddress) address = this.devAddress; // todo remove dev item
-      if (!this.processing) {
-        this.processing = true;
-        const supportedNftTokens = Object.keys(nftData);
-
-        const result = await this.getOwnedTokens(
-          supportedNftTokens,
-          address,
-          nftData
-        );
-        this.ready = true;
-        this.processing = false;
-        this.imagesRetrieved = true;
-        return result;
-      }
-    },
-    async getOwnedTokens(contracts, address, nftData) {
-      const tokenContract = new this.web3.eth.Contract(nftABI);
-      tokenContract.options.address = this.tokenContractAddress;
-
-      for (let i = 0; i < contracts.length; i++) {
-        nftData = await this.loadForContract(
-          contracts[i],
-          nftData,
-          address,
-          tokenContract
-        );
-      }
-      this.imagesRetrieved = true;
-    },
-    async loadForContract(
-      contract,
-      nftData,
-      address = this.account.address,
-      tokenContract = null
-    ) {
-      if (nftData[contract].ERC721Extension) {
-        this.getOwnedStandard(
-          contract,
-          0,
-          this.countPerPage,
-          address,
-          tokenContract
-        ).then(result => {
-          this.nftData[contract].details = result;
-        });
-
-        return nftData;
-      } else if (nftData[contract].nonStandard) {
-        this.getOwnedNonStandard(contract, address);
-      }
-      return nftData;
-    },
     async getOwnedNonStandard(
       contract,
       address,
       offset = 0,
       limit = this.countPerPage
     ) {
+      if (this.useDevAddress) address = this.devAddress; // todo remove dev item
+
       fetch(
         `${URL_BASE}?nonStandardContract=${contract}&address=${address}&offset=${offset}&limit=${limit}`,
         {
@@ -328,21 +282,26 @@ export default {
         })
         .then(rawJson => {
           this.nftData[contract].count = JSON.parse(rawJson).total;
-          const getNestedObject = (nestedObj, pathArr) => {
-            return pathArr.reduce(
-              (obj, key) =>
-                obj && obj[key] !== 'undefined' ? obj[key] : undefined,
-              nestedObj
-            );
+          const getNestedObject = (nestedObj, pathArr, token) => {
+            return pathArr.reduce((obj, key) => {
+              if (key === '@tokenvalue@') {
+                key = token.toString();
+              }
+              return obj && obj[key] !== 'undefined' ? obj[key] : undefined;
+            }, nestedObj);
           };
+
           const metadataKeys = this.nftData[contract].metadataKeys || [
             'kitties'
           ];
+          const imageKey = this.nftData[contract].pngKey || 'image_url_png';
           return getNestedObject(JSON.parse(rawJson), metadataKeys).map(val => {
             return {
               contract: contract,
               token: val.id,
-              image: ''
+              image: val[imageKey]
+                ? `${URL_BASE}/image?path=${val[imageKey]}`
+                : ''
             };
           });
         })
@@ -354,10 +313,12 @@ export default {
             const retrieveCount =
               list.length > this.countPerPage ? this.countPerPage : list.length;
             for (let j = 0; j < retrieveCount; j++) {
-              if (!Number.isNaN(list[j].token)) {
+              if (!Number.isNaN(list[j].token) && list[j].image === '') {
                 this.getNftImage(contract, list[j].token)
                   .then(image => {
-                    this.nftData[contract].details[j].image = image;
+                    this.nftData[contract].details[
+                      j
+                    ].image = `${URL_BASE}/image?path=${image}`;
                   })
                   .catch(() => {
                     if (this.nftData[contract].details[j]) {
@@ -376,10 +337,13 @@ export default {
       address = this.account.address,
       tokenContract = undefined
     ) {
+      if (this.useDevAddress) address = this.devAddress; // todo remove dev item
+
       if (!tokenContract) {
         tokenContract = new this.web3.eth.Contract(nftABI);
         tokenContract.options.address = this.tokenContractAddress;
       }
+
       tokenContract.methods
         .getOwnedTokens(contract, address.toLowerCase(), offset, count)
         .call()
@@ -402,7 +366,9 @@ export default {
               if (!Number.isNaN(list[j].token)) {
                 this.getNftImage(contract, list[j].token)
                   .then(image => {
-                    this.nftData[contract].details[j].image = image;
+                    this.nftData[contract].details[
+                      j
+                    ].image = `${URL_BASE}/image?path=${image}`;
                   })
                   .catch(() => {
                     if (this.nftData[contract].details[j]) {
@@ -412,10 +378,47 @@ export default {
               }
             }
           }
-        });
+        })
+        .catch(console.error);
     },
+    async getOwnedTokens(contracts, address, nftData) {
+      const tokenContract = new this.web3.eth.Contract(nftABI);
+      tokenContract.options.address = this.tokenContractAddress;
 
+      for (let i = 0; i < contracts.length; i++) {
+        nftData = await this.loadForContract(
+          contracts[i],
+          nftData,
+          address,
+          tokenContract
+        );
+      }
+      this.imagesRetrieved = true;
+    },
+    getNext(address = this.account.address) {
+      if (this.useDevAddress) address = this.devAddress; // todo remove dev item
+      const content = this.nftData[this.selectedContract];
+
+      const offset = content.currentIndex + this.countPerPage;
+      if (offset <= content.count) {
+        // update offsets if not at the end
+        content.priorIndex = content.currentIndex;
+        content.currentIndex = offset;
+      }
+
+      if (content.nonStandard) {
+        this.getOwnedNonStandard(
+          content.contract,
+          address,
+          offset,
+          this.countPerPage
+        );
+      } else {
+        this.getOwnedStandard(content.contract, offset, this.countPerPage);
+      }
+    },
     getPrevious(address = this.account.address) {
+      if (this.useDevAddress) address = this.devAddress; // todo remove dev item
       const content = this.nftData[this.selectedContract];
 
       const offset = content.currentIndex - content.priorIndex;
@@ -444,26 +447,43 @@ export default {
         }
       }
     },
-    getNext(address = this.account.address) {
-      const content = this.nftData[this.selectedContract];
-
-      const offset = content.currentIndex + this.countPerPage;
-      if (offset <= content.count) {
-        // update offsets if not at the end
-        content.priorIndex = content.currentIndex;
-        content.currentIndex = offset;
-      }
-
-      if (content.nonStandard) {
-        this.getOwnedNonStandard(
-          content.contract,
+    async getTokenConfig() {
+      const data = await fetch(`${URL_BASE}?supported=true`, {
+        mode: 'cors',
+        cache: 'no-cache',
+        method: 'GET'
+      });
+      return await data.json();
+    },
+    hasImage(nft) {
+      return nft.image !== '';
+    },
+    async loadForContract(
+      contract,
+      nftData,
+      address = this.account.address,
+      tokenContract = null
+    ) {
+      if (nftData[contract].ERC721Extension) {
+        this.getOwnedStandard(
+          contract,
+          0,
+          this.countPerPage,
           address,
-          offset,
-          this.countPerPage
-        );
-      } else {
-        this.getOwnedStandard(content.contract, offset, this.countPerPage);
+          tokenContract
+        ).then(result => {
+          this.nftData[contract].details = result;
+        });
+
+        return nftData;
+      } else if (nftData[contract].nonStandard) {
+        this.getOwnedNonStandard(contract, address);
       }
+      return nftData;
+    },
+    showNftDetails(nft) {
+      this.detailsFor = nft;
+      this.showDetails = true;
     }
   }
 };
