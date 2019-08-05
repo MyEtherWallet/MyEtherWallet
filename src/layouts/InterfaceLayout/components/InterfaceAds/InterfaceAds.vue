@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="">
+  <div class="interface-ads">
+    <div class="global__interface-block__margin-top">
       <a
         :title="$t('common.twitterFollow')"
         href="https://twitter.com/intent/follow?screen_name=myetherwallet"
@@ -18,46 +18,24 @@
         </div>
       </a>
     </div>
-    <b-carousel v-model="slide" :interval="4000" controls indicators>
-      <!-- Text slides with image -->
-      <b-carousel-slide
-        caption="First slide"
-        text="Nulla vitae elit libero, a pharetra augue mollis interdum."
-        img-src="https://picsum.photos/1024/480/?image=52"
-      ></b-carousel-slide>
-
-      <!-- Slides with custom text -->
-      <b-carousel-slide img-src="https://picsum.photos/1024/480/?image=54">
-        <h1>Hello world!</h1>
-      </b-carousel-slide>
-
-      <!-- Slides with image only -->
-      <b-carousel-slide
-        img-src="https://picsum.photos/1024/480/?image=58"
-      ></b-carousel-slide>
-
-      <!-- Slides with img slot -->
-      <!-- Note the classes .d-block and .img-fluid to prevent browser default image alignment -->
-      <b-carousel-slide>
-        <img
-          slot="img"
-          class="d-block img-fluid w-100"
-          width="1024"
-          height="480"
-          src="https://picsum.photos/1024/480/?image=55"
-          alt="image slot"
-        />
-      </b-carousel-slide>
-
-      <!-- Slide with blank fluid image to maintain slide aspect ratio -->
-      <b-carousel-slide caption="Blank Image" img-blank img-alt="Blank image">
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-          eros felis, tincidunt a tincidunt eget, convallis vel est. Ut
-          pellentesque ut lacus vel interdum.
-        </p>
-      </b-carousel-slide>
-    </b-carousel>
+    <div class="global__interface-block__margin-top">
+      <b-carousel
+        v-model="slide"
+        :interval="4000"
+        controls
+        indicators
+        background="#fff"
+        @sliding-start="onSlideStart"
+        @sliding-end="onSlideEnd"
+      >
+        <b-carousel-slide>
+          <img src="@/assets/images/ads/mewconnect.jpg" />
+        </b-carousel-slide>
+        <b-carousel-slide>
+          <img src="@/assets/images/ads/mewconnect.jpg" />
+        </b-carousel-slide>
+      </b-carousel>
+    </div>
 
     <div class="global__interface-block--margin-top bottom-image-container">
       <div class="ad-container">
@@ -190,4 +168,22 @@ export default {
 
 <style lang="scss" scoped>
 @import 'InterfaceAds.scss';
+</style>
+
+<style lang="scss">
+.carousel-caption {
+  position: relative;
+  right: initial;
+  bottom: initial;
+  left: initial;
+  z-index: initial;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  color: initial;
+  text-align: initial;
+
+  > img {
+    width: 100%;
+  }
+}
 </style>

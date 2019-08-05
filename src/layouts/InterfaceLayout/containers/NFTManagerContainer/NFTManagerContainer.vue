@@ -68,7 +68,6 @@ import fetch from 'node-fetch';
 
 const URL_BASE = 'https://swap.mewapi.io/nft';
 
-
 export default {
   components: {
     'content-block-title': ContentBlockTitle,
