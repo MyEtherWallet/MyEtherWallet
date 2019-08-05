@@ -114,7 +114,7 @@
     "rskjs-util": "1.0.3",
     "sass-loader": "7.1.0",
     "secp256k1": "3.7.1",
-    "sinon": "7.4.0",
+    "sinon": "7.3.2",
     "store": "2.0.12",
     "string-replace-loader": "2.2.0",
     "stylelint": "10.1.0",
@@ -126,7 +126,7 @@
     "unused-files-webpack-plugin": "3.4.0",
     "uuid": "3.3.2",
     "vue-i18n": "8.12.0",
-    "vue-tel-input": "3.0.0",
+    "vue-tel-input": "2.5.0",
     "vue-template-compiler": "2.6.10",
     "vue-worker": "1.2.1",
     "wallet-address-validator": "0.2.4",
@@ -145,16 +145,20 @@
   },
   "greenkeeper": {
     "ignore": [
+      "@myetherwallet/mewconnect-web-client",
       "canvas",
       "ethereum-ens",
       "webpack",
       "babel-jest",
+      "web3",
       "web3-core-helpers",
       "web3-core-method",
+      "web3-utils",
+      "@xkeshi/vue-qrcode",
+      "multicoin-address-validator",
+      "bootstrap-vue",
       "web3-core-requestmanager",
-      "web3-providers-http",
-      "web3-providers-ws",
-      "web3-utils"
+      "vue-tel-input"
     ]
   }
 }
