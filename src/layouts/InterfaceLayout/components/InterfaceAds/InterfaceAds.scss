@@ -1,32 +1,23 @@
-@import '~@/scss/GlobalVariables';
+@import "~@/scss/GlobalVariables";
 
-.twitter-container {
-  border-radius: 5px;
-  margin-top: 15px;
-  overflow: hidden;
-  .twitter-content {
-    padding: 30px;
-    background-color: $background-color-white;
-    border-radius: 5px;
-    overflow: hidden;
-    text-align: center;
+a {
+  text-decoration: none;
+}
 
-    a {
-      color: black;
-      text-decoration: none;
-    }
+.twitter-ad-block {
+  user-select: none;
+  .block-title {
+    font-size: 20px;
+    color: $black;
+    padding: 20px;
+    font-weight: 600;
+  }
 
+  .block-twitter {
+    padding-right: 20px;
     i {
+      font-size: 40px;
       color: #1ca1f1;
-      font-size: 48px;
-      vertical-align: sub;
-    }
-    span {
-      vertical-align: baseline;
-      padding-left: 10px;
-      padding-bottom: 5px;
-      font-size: 24px;
-      font-weight: bold;
     }
   }
 }
@@ -34,7 +25,6 @@
 .bottom-image-container {
   position: relative;
   border-radius: 5px;
-  margin-top: 5px;
   overflow: hidden;
   height: 200px;
 
