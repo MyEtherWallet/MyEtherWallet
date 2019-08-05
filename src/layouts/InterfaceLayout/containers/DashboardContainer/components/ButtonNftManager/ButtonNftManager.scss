@@ -7,9 +7,9 @@
 
 .kitties {
   position: absolute;
-  left: 65%;
-  top: 8%;
-  height: 82%;
+  right: 4%;
+  top: -13%;
+  height: 125%;
 }
 
 p {
@@ -17,6 +17,6 @@ p {
   font-size: 20px;
   font-weight: 600;
   position: absolute;
-  top: 43%;
+  top: calc(50% - 10px);
   left: 12%;
 }
