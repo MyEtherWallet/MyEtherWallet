@@ -69,7 +69,7 @@
     "@vue/cli-plugin-eslint": "3.9.2",
     "@vue/cli-plugin-pwa": "3.9.0",
     "@vue/cli-plugin-unit-jest": "3.9.0",
-    "@vue/cli-service": "3.9.3",
+    "@vue/cli-service": "3.10.0",
     "@vue/eslint-config-prettier": "5.0.0",
     "@vue/test-utils": "1.0.0-beta.29",
     "@xkeshi/vue-qrcode": "git+https://github.com/MyEtherWallet/vue-qrcode.git",
