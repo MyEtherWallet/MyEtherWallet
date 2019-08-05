@@ -47,5 +47,6 @@
   "safesend_desc": "Protect and Secure your ETH transaction using SafeSend",
   "sendMy": "Send My {value}",
   "nftOwnCount": "{perPage} Per Page | {count} Items Total",
-  "noneOwned": "You own no NFTs"
+  "noneOwned": "You own no NFTs",
+  "showing": " Showing {first} - {last}"
 }
