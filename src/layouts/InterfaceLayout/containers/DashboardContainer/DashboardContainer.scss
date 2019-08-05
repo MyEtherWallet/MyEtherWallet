@@ -1,6 +1,7 @@
-@import "../InterfaceContainer";
+@import '../InterfaceContainer';
 
 $dapps-container-mobile-width: 650px;
+$actionsSwapCollepsePoint: 1430px;
 
 .dashboard-container {
   @extend %interface-container;
@@ -17,11 +18,7 @@ $dapps-container-mobile-width: 650px;
   grid-template-columns: 1fr 1fr;
   grid-gap: 15px;
 
-  @media all and (max-width: 1200px) {
-    grid-template-columns: 2fr 3fr;
-  }
-
-  @media all and (max-width: 650px) {
+  @media all and (max-width: $actionsSwapCollepsePoint) {
     grid-template-columns: 1fr;
   }
 }
@@ -43,14 +40,21 @@ $dapps-container-mobile-width: 650px;
   padding: 20px;
   height: 100%;
   border-radius: 5px;
+
+  .section-description {
+    margin-bottom: 20px;
+  }
 }
 
 .block--actions {
   .buttons {
-    margin-bottom: -8px;
-
     > * {
+      height: 150px;
       margin-bottom: 15px;
+
+      @media all and (max-width: $actionsSwapCollepsePoint) {
+        height: 100px;
+      }
     }
 
     > *:last-child {
@@ -61,7 +65,7 @@ $dapps-container-mobile-width: 650px;
 
 .block--swap {
   .currency-symbol::before {
-    font-size: 29px;
+    font-size: 25px;
   }
 
   .swap-info {
@@ -71,7 +75,7 @@ $dapps-container-mobile-width: 650px;
   .swap-to {
     margin: 10px 0;
     background-color: $light-green-1;
-    padding: 5px 30px;
+    padding: 8px 20px;
     display: flex;
     align-items: center;
 
@@ -85,18 +89,17 @@ $dapps-container-mobile-width: 650px;
     }
 
     span {
-      height: 29px;
+      height: 25px;
     }
 
     img {
       height: 25px;
-      padding: 0 10px;
+      padding: 0 12px;
     }
   }
 }
 
 .block--dapps {
-  padding: 0 40px;
   .block--container {
     display: grid;
     grid-column-gap: 20px;
@@ -114,14 +117,8 @@ $dapps-container-mobile-width: 650px;
       margin-bottom: 0;
     }
 
-    // Tablet
-    @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
-      padding: 20px;
-    }
-
     @media all and (max-width: $dapps-container-mobile-width) {
       display: block;
-      padding: 10px;
     }
 
     .dapp {
