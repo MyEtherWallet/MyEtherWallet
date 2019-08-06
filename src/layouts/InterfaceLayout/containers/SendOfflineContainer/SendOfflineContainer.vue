@@ -364,7 +364,6 @@ export default {
           : new BigNumber(e.target.valueAsNumber)
               .decimalPlaces(decimals)
               .toFixed();
-      // e.target.value = this.toAmt;
     }, 300),
     async createDataHex(amount, address, currency) {
       const locAmount = amount !== null ? amount : this.toAmt;
