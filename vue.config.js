@@ -130,6 +130,8 @@ if (process.env.NODE_ENV === 'production') {
           'src/components/Notification/components/NotificationTypes/SwapNotification/index.js',
           'src/components/Notification/components/NotificationTypes/TransactionNotification/index.js',
           // Images
+          'src/assets/images/ads/mewconnect.png',
+          'src/assets/images/ads/mewconnect.jpg',
           'src/assets/images/etc/mewconnect.jpeg',
           'src/assets/images/icons/button-finney.png',
           'src/assets/images/background/bg-left.png',

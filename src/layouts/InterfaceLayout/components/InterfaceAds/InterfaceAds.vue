@@ -33,7 +33,7 @@
         </b-carousel-slide>
         <b-carousel-slide>
           <a href="https://mewconnect.myetherwallet.com/#/" target="_blank">
-            <img src="~@/assets/images/ads/mewconnect.jpg" />
+            <img src="~@/assets/images/ads/mewconnect.jpeg" />
           </a>
         </b-carousel-slide>
       </b-carousel>
