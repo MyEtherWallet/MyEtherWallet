@@ -156,8 +156,7 @@ export default {
       return 0;
     },
     activeAddress() {
-      return '0xfeb21f4fd9c1c06588db1a0359cf85ff6d22f836';
-      // return this.account.address;
+      return this.account.address;
     }
   },
   watch: {},
