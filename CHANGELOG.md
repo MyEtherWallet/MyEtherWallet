@@ -1,6 +1,6 @@
 ### Devop
 
-- Add xss custom config []()
+- Add xss custom config [#1326](https://github.com/MyEtherWallet/MyEtherWallet/pull/1326)
 
 ### Release v5.1.0
 
