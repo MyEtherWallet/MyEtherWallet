@@ -81,5 +81,8 @@
   "proxyInstructions": "in order to interact with your cdp you first need to create a proxy to perform the many individual actions required for each cdp interaction.",
   "migrateInstructions": "in order to interact with your cdp you need to associate it with the created proxy which will perform the many individual actions required for each cdp interaction.",
   "createProxy": "Create Proxy",
-  "migrateCdp": "Migrate CDP {value}"
+  "migrateCdp": "Migrate CDP {value}",
+  "moveWithProxy": "This CDP will be moved to the MakerCDP proxy registered with the destination address.",
+  "moveWithoutProxy": "When accessing the CDP from the destination address for the first time a MakerCDP proxy will need to be registered first before any interaction with the CDP can occur.",
+  "proxyAddress": "Proxy Address: {value}"
 }
