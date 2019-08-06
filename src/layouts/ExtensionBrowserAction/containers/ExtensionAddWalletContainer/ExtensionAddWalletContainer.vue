@@ -37,6 +37,7 @@
       @password="updatePassword"
     />
     <network-address-modal
+      v-if="Object.keys(wallet).length !== 0"
       ref="networkAddress"
       :generate-from-mnemonic-priv="generateFromMnemonicPriv"
       :wallet-instance="wallet"

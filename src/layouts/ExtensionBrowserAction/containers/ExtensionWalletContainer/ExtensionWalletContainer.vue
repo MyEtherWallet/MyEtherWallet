@@ -29,7 +29,7 @@
             + Add
           </div>
         </div>
-        <div v-show="myWallets.length > 0" class="wallets">
+        <div v-show="myWallets.length > 0 || loading" class="wallets">
           <wallet-info-component
             v-for="wallet in myWallets"
             :key="wallet.address"
@@ -58,7 +58,7 @@
             + Add
           </div>
         </div>
-        <div v-show="watchOnlyAddresses.length > 0" class="wallets">
+        <div v-show="watchOnlyAddresses.length > 0 || loading" class="wallets">
           <wallet-info-component
             v-for="wallet in watchOnlyAddresses"
             :key="wallet.address"
