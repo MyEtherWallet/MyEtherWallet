@@ -265,11 +265,11 @@ export default {
     },
     async rateUpdate() {
       if (this.rateUpdater === null) {
-        this.rateUpdater = setInterval(async () => {
-          this.updatingRates = true;
-          await this.setupSwap();
-          this.updatingRates = false;
-        }, 60000);
+        // this.rateUpdater = setInterval(async () => {
+        //   this.updatingRates = true;
+        //   await this.setupSwap();
+        //   this.updatingRates = false;
+        // }, 60000);
       }
     },
     showSwapWidget(vals) {

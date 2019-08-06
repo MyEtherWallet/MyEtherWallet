@@ -71,7 +71,7 @@ export default {
       tokenContract: {},
       ERC721tokenContract: {},
       cryptoKittiesContract: {},
-      cryptoKittiesConfig: '',
+      cryptoKittiesConfig: '0x06012c8cf97bead5deae237070f9587f8e7a266d',
       sendButton: {
         title: this.$t('interface.send'),
         buttonStyle: 'green',
@@ -111,6 +111,20 @@ export default {
         type: 'function'
       }
     ]);
+    this.cryptoKittiesContract = new this.web3.eth.Contract([
+      {
+        constant: false,
+        inputs: [
+          { name: '_to', type: 'address' },
+          { name: '_tokenId', type: 'uint256' }
+        ],
+        name: 'transfer',
+        outputs: [],
+        payable: false,
+        stateMutability: 'nonpayable',
+        type: 'function'
+      }
+    ]);
   },
   methods: {
     prepareTransfer(toAddress) {
@@ -118,6 +132,14 @@ export default {
       this.ERC721tokenContract.options.address = this.nft.contract;
     },
     buildData() {
+      if (
+        this.nft.contract.toLowerCase() ===
+        this.cryptoKittiesConfig.toLowerCase()
+      ) {
+        return this.cryptoKittiesContract
+          .transfer(this.toAddress, this.nft.token)
+          .encodeABI();
+      }
       return this.ERC721tokenContract.methods
         .transferFrom(this.account.address, this.toAddress, this.nft.token)
         .encodeABI();
