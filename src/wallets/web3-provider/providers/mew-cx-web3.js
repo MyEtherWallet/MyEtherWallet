@@ -48,6 +48,7 @@ class MewCxWeb3 {
 class MewCxEthereum extends EventEmitter {
   constructor(host) {
     super();
+    this.setMaxListeners(0);
     this.host = host;
     this.middleware = new MiddleWare();
     this.middleware.use(ethRequestAccounts);
@@ -98,14 +99,18 @@ class MewCxEthereum extends EventEmitter {
 
         return promise;
       },
-      sendAsync: payload => {
+      sendAsync: function(payload) {
         return this.send(payload.method, payload.params);
       },
+      setMaxListeners: this.setMaxListeners,
       on: this.on,
       emit: this.emit,
       removeListener: () => {
         this.removeListener();
         this.clearListeners();
+      },
+      enable: function() {
+        return this.send('eth_requestAccounts');
       }
     };
 

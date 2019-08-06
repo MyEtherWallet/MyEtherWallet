@@ -18,7 +18,7 @@
 
 <script>
 import FooterContainer from '@/containers/FooterContainer';
-import HeaderContainer from '@/layouts/ExtensionBrowserAction/containers/ExtensionHeaderContainer';
+import HeaderContainer from '@/containers/HeaderContainer';
 
 export default {
   name: 'App',
@@ -34,6 +34,14 @@ export default {
 
 <style lang="scss">
 @import '~@/scss/Global-desktop';
+@import '~@/scss/Global-tablet';
+@import '~@/scss/Global-mobile';
+
 @import '~@/scss/CustomForms-desktop';
+@import '~@/scss/CustomForms-tablet';
+@import '~@/scss/CustomForms-mobile';
+
 @import '~@/scss/CustomModal-desktop';
+@import '~@/scss/CustomModal-tablet';
+@import '~@/scss/CustomModal-mobile';
 </style>

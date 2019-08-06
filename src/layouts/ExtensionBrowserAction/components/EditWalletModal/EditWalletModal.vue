@@ -65,7 +65,7 @@ export default {
     };
   },
   mounted() {
-    this.$refs.watchOnlyWallet.$on('hidden', () => {
+    this.$refs.editModal.$on('hidden', () => {
       this.locName = '';
     });
   },
