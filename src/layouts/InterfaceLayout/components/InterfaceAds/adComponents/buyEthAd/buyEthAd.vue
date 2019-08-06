@@ -78,6 +78,9 @@ export default {
           name: ''
         };
         this.$nextTick(() => {
+          this.$refs.swapWidget.$refs.modal.$on('hidden', () => {
+            this.$emit('pauseAds');
+          });
           this.$refs.swapWidget.$refs.modal.show();
         });
       }
