@@ -5,6 +5,7 @@ import url from 'url';
 import utils from 'web3-utils';
 import store from '@/store';
 import { uint, address, string, bytes, bool } from './solidityTypes';
+import xss from 'xss';
 
 const capitalize = value => {
   if (!value) return '';
@@ -210,6 +211,15 @@ const isContractArgValid = (value, solidityType) => {
   return false;
 };
 
+const stripTags = content => {
+  const string = xss(content, {
+    whitelist: [],
+    stripIgnoreTag: true,
+    stripIgnoreTagBody: ['script']
+  });
+  return string;
+};
+
 export default {
   isJson,
   doesExist,
@@ -228,5 +238,6 @@ export default {
   capitalize,
   getService,
   stringToArray,
-  isContractArgValid
+  isContractArgValid,
+  stripTags
 };
