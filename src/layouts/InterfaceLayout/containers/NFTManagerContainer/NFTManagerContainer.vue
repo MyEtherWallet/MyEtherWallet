@@ -155,8 +155,9 @@ export default {
       }
       return 0;
     },
-    activeAddress(){
-      return this.account.address;
+    activeAddress() {
+      return '0xfeb21f4fd9c1c06588db1a0359cf85ff6d22f836';
+      // return this.account.address;
     }
   },
   watch: {},
@@ -320,7 +321,7 @@ export default {
       contract,
       offset,
       count = this.countPerPage,
-      address = this.account.address,
+      address = this.activeAddress,
       tokenContract = undefined
     ) {
       if (!tokenContract) {
@@ -399,7 +400,7 @@ export default {
         this.getOwnedStandard(content.contract, offset, this.countPerPage);
       }
     },
-    getPrevious(address = this.account.address) {
+    getPrevious(address = this.activeAddress) {
       const content = this.nftData[this.selectedContract];
 
       const offset = content.currentIndex - content.priorIndex;
@@ -442,7 +443,7 @@ export default {
     async loadForContract(
       contract,
       nftData,
-      address = this.account.address,
+      address = this.activeAddress,
       tokenContract = null
     ) {
       if (nftData[contract].ERC721Extension) {
