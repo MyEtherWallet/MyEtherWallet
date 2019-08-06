@@ -154,6 +154,9 @@ export default {
         return this.nftData[this.selectedContract].currentIndex;
       }
       return 0;
+    },
+    activeAddress(){
+      return this.account.address;
     }
   },
   watch: {},
@@ -211,7 +214,7 @@ export default {
       );
       return await image.json();
     },
-    async getOwned(address = this.account.address, nftData = this.nftData) {
+    async getOwned(address = this.activeAddress, nftData = this.nftData) {
       if (!this.processing) {
         this.processing = true;
         const supportedNftTokens = Object.keys(nftData);
@@ -227,7 +230,7 @@ export default {
         return result;
       }
     },
-    async getOwnedCounts(address = this.account.address) {
+    async getOwnedCounts(address = this.activeAddress) {
       const supportedNftTokens = this.nftConfig
         .filter(entry => entry.ERC721Extension)
         .map(entry => entry.contract);
