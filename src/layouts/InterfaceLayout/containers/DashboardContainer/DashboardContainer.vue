@@ -169,7 +169,6 @@ export default {
           online: this.$store.state.online
         }
       ),
-      rateUpdater: null,
       updatingRates: false,
       suppliedFrom: {
         symbol: 'ETH',
@@ -218,9 +217,6 @@ export default {
       this.showSwapValues = false;
     }
   },
-  beforeDestroy() {
-    clearInterval(this.rateUpdater);
-  },
   methods: {
     goTo(page) {
       let childIndex = -1;
@@ -260,16 +256,6 @@ export default {
             toBigNumber(swappers[0].rate).toFixed(4)
           );
         }
-        this.rateUpdate();
-      }
-    },
-    async rateUpdate() {
-      if (this.rateUpdater === null) {
-        // this.rateUpdater = setInterval(async () => {
-        //   this.updatingRates = true;
-        //   await this.setupSwap();
-        //   this.updatingRates = false;
-        // }, 60000);
       }
     },
     showSwapWidget(vals) {

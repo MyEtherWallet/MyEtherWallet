@@ -140,8 +140,7 @@ export default {
       if (this.nftData[this.selectedContract]) {
         const ids_retrieved = this.nftData[this.selectedContract].count;
         return (
-          this.endIndex !== ids_retrieved &&
-          this.endIndex + this.countPerPage <= ids_retrieved
+          this.endIndex !== ids_retrieved && this.endIndex <= ids_retrieved
         );
       }
     },
@@ -267,7 +266,7 @@ export default {
           return data.json();
         })
         .then(rawJson => {
-          this.nftData[contract].count = JSON.parse(rawJson).total;
+          this.nftData[contract].count = rawJson.total;
           const getNestedObject = (nestedObj, pathArr, token) => {
             return pathArr.reduce((obj, key) => {
               if (key === '@tokenvalue@') {
@@ -281,7 +280,7 @@ export default {
             'kitties'
           ];
           const imageKey = this.nftData[contract].imageKey || 'image_url_png';
-          return getNestedObject(JSON.parse(rawJson), metadataKeys).map(val => {
+          return getNestedObject(rawJson, metadataKeys).map(val => {
             return {
               contract: contract,
               token: val.id,
@@ -386,6 +385,10 @@ export default {
         // update offsets if not at the end
         content.priorIndex = content.currentIndex;
         content.currentIndex = offset;
+      } else {
+        // update offsets if not at the end
+        content.priorIndex = content.currentIndex;
+        content.currentIndex = content.count;
       }
 
       if (content.nonStandard) {
@@ -432,7 +435,8 @@ export default {
       const data = await fetch(`${URL_BASE}?supported=true`, {
         mode: 'cors',
         cache: 'no-cache',
-        method: 'GET'
+        method: 'GET',
+        'Cache-Control': 'no-cache'
       });
       return await data.json();
     },

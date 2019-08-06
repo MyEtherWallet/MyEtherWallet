@@ -111,20 +111,6 @@ export default {
         type: 'function'
       }
     ]);
-    this.cryptoKittiesContract = new this.web3.eth.Contract([
-      {
-        constant: false,
-        inputs: [
-          { name: '_to', type: 'address' },
-          { name: '_tokenId', type: 'uint256' }
-        ],
-        name: 'transfer',
-        outputs: [],
-        payable: false,
-        stateMutability: 'nonpayable',
-        type: 'function'
-      }
-    ]);
   },
   methods: {
     prepareTransfer(toAddress) {
@@ -136,7 +122,22 @@ export default {
         this.nft.contract.toLowerCase() ===
         this.cryptoKittiesConfig.toLowerCase()
       ) {
-        return this.cryptoKittiesContract
+        this.cryptoKittiesContract = new this.web3.eth.Contract([
+          {
+            constant: false,
+            inputs: [
+              { name: '_to', type: 'address' },
+              { name: '_tokenId', type: 'uint256' }
+            ],
+            name: 'transfer',
+            outputs: [],
+            payable: false,
+            stateMutability: 'nonpayable',
+            type: 'function'
+          }
+        ]);
+
+        return this.cryptoKittiesContract.methods
           .transfer(this.toAddress, this.nft.token)
           .encodeABI();
       }
