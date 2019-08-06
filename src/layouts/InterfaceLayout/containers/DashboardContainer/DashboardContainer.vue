@@ -186,10 +186,8 @@ export default {
   computed: {
     ...mapState([
       'account',
-      'gasPrice',
       'web3',
       'network',
-      'linkQuery',
       'online'
     ]),
     sortedObject() {

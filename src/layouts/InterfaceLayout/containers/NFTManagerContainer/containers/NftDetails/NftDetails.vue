@@ -83,14 +83,7 @@ export default {
   },
 
   computed: {
-    ...mapState([
-      'account',
-      'gasPrice',
-      'web3',
-      'network',
-      'linkQuery',
-      'online'
-    ]),
+    ...mapState(['account', 'web3']),
     isValidAddress() {
       if (this.toAddress !== '') {
         return Misc.isValidENSorEtherAddress(this.toAddress);
