@@ -47,7 +47,10 @@
             <li
               v-for="(child, cidx) in tab.children"
               :key="child.name + cidx"
-              :class="isTabActive(child.routes) ? 'active' : ''"
+              :class="[
+                isTabActive(child.routes) ? 'active' : '',
+                child.onlineOnly && !online ? 'disabled-item' : ''
+              ]"
               @click.prevent="tabAction(child)"
             >
               {{ $t(child.titleKey) }}

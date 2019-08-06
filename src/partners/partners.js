@@ -1,7 +1,11 @@
 import BigNumber from 'bignumber.js';
 import WAValidator from 'wallet-address-validator';
 import MAValidator from 'multicoin-address-validator';
-import { checkInvalidOrMissingValue, utils } from './helpers';
+import {
+  checkInvalidOrMissingValue,
+  bestProviderForQuantity,
+  utils
+} from './helpers';
 import {
   BASE_CURRENCY,
   TOP_OPTIONS_ORDER,
@@ -24,6 +28,10 @@ function comparator(arrayForSort) {
 
 export default class SwapProviders {
   constructor(providers, environmentSupplied, misc = {}) {
+    this.online = true;
+    if (misc.hasOwnProperty('online')) {
+      this.online = misc.online;
+    }
     this.providerConstructors = providers;
     this.setup(providers, environmentSupplied, misc);
   }
@@ -34,7 +42,9 @@ export default class SwapProviders {
     this.providers = new Map();
     this.providerRateUpdates = {};
     this.ownedTokenList = misc.tokensWithBalance || [];
+    this.providerRatesRecieved = [];
 
+    if (!this.online) return;
     providers.forEach(entry => {
       this.providerRateUpdates[entry.getName()] = 0;
       this.providers.set(entry.getName(), new entry(environmentSupplied));
@@ -91,6 +101,7 @@ export default class SwapProviders {
   }
 
   isProvider(name) {
+    if (!this.online) return false;
     return this.providers.has(name);
   }
 
@@ -180,6 +191,58 @@ export default class SwapProviders {
       providersFound: [],
       callsToMake: []
     };
+  }
+
+  async standAloneRateEstimate(
+    fromCurrency,
+    toCurrency,
+    fromValue,
+    toValue = 0
+  ) {
+    if (this.haveProviderRates) {
+      const { callsToMake } = await this.updateRateEstimate(
+        fromCurrency,
+        toCurrency,
+        fromValue,
+        toValue
+      );
+      const results = await Promise.all(
+        callsToMake.map(func =>
+          func(fromCurrency, toCurrency, fromValue, toValue)
+        )
+      );
+      if (
+        results.every(
+          entry =>
+            entry.fromCurrency === fromCurrency &&
+            entry.toCurrency === toCurrency
+        )
+      ) {
+        const vals = bestProviderForQuantity(
+          results.map(entry => {
+            if (+entry.rate > 0) {
+              return {
+                provider: entry.provider,
+                fromCurrency,
+                fromValue: fromValue,
+                toCurrency,
+                rate: +entry.rate,
+                minValue: entry.minValue || 0,
+                maxValue: entry.maxValue || 0,
+                computeConversion: function(_fromValue) {
+                  return new BigNumber(_fromValue)
+                    .times(this.rate)
+                    .toFixed(6)
+                    .toString(10);
+                }
+              };
+            }
+          }),
+          fromValue
+        );
+        return vals;
+      }
+    }
   }
 
   getTokenAddress(currency, noError) {
