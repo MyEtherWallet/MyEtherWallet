@@ -1,4 +1,4 @@
-@import '~@/scss/GlobalVariables';
+@import "~@/scss/GlobalVariables";
 
 a {
   text-decoration: none;
@@ -66,4 +66,9 @@ a {
 
 .clickable {
   cursor: pointer;
+}
+
+.slider-container {
+  border-radius: 5px;
+  overflow: hidden;
 }
