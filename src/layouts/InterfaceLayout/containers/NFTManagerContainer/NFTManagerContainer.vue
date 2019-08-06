@@ -5,6 +5,7 @@
       <nft-side-menu
         :data="sideMenuData"
         :nft-config="nftConfig"
+        :initial-highlighted="selectedContract"
         @selected="changeSelectedContract"
       >
       </nft-side-menu>
@@ -364,7 +365,6 @@ export default {
             }
           }
         })
-        .catch(console.error);
     },
     async getOwnedTokens(contracts, address, nftData) {
       const tokenContract = new this.web3.eth.Contract(nftABI);

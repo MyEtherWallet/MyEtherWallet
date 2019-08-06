@@ -30,7 +30,7 @@
       >
         <b-carousel-slide>
           <buy-eth-ad @pauseAds="pauseAds"></buy-eth-ad>
-<!--          <img src="@/assets/images/ads/mewconnect.jpg" />-->
+          <!--          <img src="@/assets/images/ads/mewconnect.jpg" />-->
         </b-carousel-slide>
         <b-carousel-slide>
           <img src="~@/assets/images/ads/mewconnect.jpg" />
@@ -38,7 +38,7 @@
       </b-carousel>
     </div>
 
-<!--    <div class="global__interface-block&#45;&#45;margin-top bottom-image-container">
+    <!--    <div class="global__interface-block&#45;&#45;margin-top bottom-image-container">
       <div class="ad-container">
         <keep-alive :max="adDetails.length">
           <component
@@ -89,7 +89,7 @@ export default {
       search: '',
       adImage: '',
       adUrl: '',
-      adInterval: {},
+      adInterval: 4000,
       currentAdIndex: 1,
       currentAds: [
         {
@@ -133,23 +133,8 @@ export default {
     }
   },
   watch: {},
-  mounted() {
-    this.rotateAds();
-  },
-  beforeDestroy() {
-    clearInterval(this.adInterval);
-    this.adInterval = null;
-  },
+  mounted() {},
   methods: {
-    rotateAds() {
-      this.adInterval = setInterval(() => {
-        if (this.currentAdIndex + 1 < this.currentAds.length) {
-          this.currentAdIndex += 1;
-        } else {
-          this.currentAdIndex = 0;
-        }
-      }, 10000);
-    },
     useComponent() {
       if (adComponentMapping[this.currentAd.component]) {
         return adComponentMapping[this.currentAd.component];
@@ -157,19 +142,14 @@ export default {
       return adComponentMapping['staticAd'];
     },
     pauseAds() {
-      if (this.adInterval !== null) {
-        clearInterval(this.adInterval);
-        this.adInterval = null;
+      if (this.adInterval > 0) {
+        this.adInterval = 0;
       } else {
-        this.rotateAds();
+        this.adInterval = 4000;
       }
     },
-    onSlideStart(){
-
-    },
-    onSlideEnd(){
-
-    }
+    onSlideStart() {},
+    onSlideEnd() {}
   }
 };
 </script>

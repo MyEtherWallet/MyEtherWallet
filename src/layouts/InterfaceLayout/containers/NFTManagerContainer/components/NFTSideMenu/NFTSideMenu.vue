@@ -35,6 +35,10 @@ export default {
       default: function() {
         return {};
       }
+    },
+    initialHighlighted:{
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -46,8 +50,8 @@ export default {
   computed: {},
   watch: {},
   mounted() {
-    this.selected = Object.keys(this.data)[0];
-    this.$emit('selected', this.selected);
+    this.selected = this.initialHighlighted; //Object.keys(this.data)[0];
+    // this.$emit('selected', this.selected);
   },
   methods: {
     selectNft(nft) {
