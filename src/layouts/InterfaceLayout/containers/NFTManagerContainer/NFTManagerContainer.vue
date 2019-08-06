@@ -148,14 +148,7 @@ export default {
     sideMenuData() {
       return this.nftData;
     },
-    ...mapState([
-      'account',
-      'gasPrice',
-      'web3',
-      'network',
-      'linkQuery',
-      'online'
-    ]),
+    ...mapState(['account', 'web3', 'online']),
     startIndex() {
       if (this.nftData[this.selectedContract]) {
         return this.nftData[this.selectedContract].currentIndex;
@@ -364,7 +357,7 @@ export default {
               }
             }
           }
-        })
+        });
     },
     async getOwnedTokens(contracts, address, nftData) {
       const tokenContract = new this.web3.eth.Contract(nftABI);
