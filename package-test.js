@@ -7,6 +7,7 @@ const SAFE_TIME = 1000 * 1 * 60 * 60 * 24 * 7; //7days
 //@xkeshi/vue-qrcode no longer maintained, forked out to mew
 //multicoin-address-validator not enough downloads
 // Bootstrap vue is breaking current styles..
+// vue tel input missing internal package
 const EXCEPTIONS = [
   '@myetherwallet/mewconnect-web-client',
   'canvas',
@@ -20,6 +21,8 @@ const EXCEPTIONS = [
   '@xkeshi/vue-qrcode',
   'multicoin-address-validator',
   'bootstrap-vue',
+  'web3-core-requestmanager',
+  'vue-tel-input',
   '@vue/eslint-config-prettier'
 ];
 const CUSTOM_DIST = {
