@@ -30,39 +30,14 @@
       >
         <b-carousel-slide>
           <buy-eth-ad @pauseAds="pauseAds"></buy-eth-ad>
-          <!--          <img src="@/assets/images/ads/mewconnect.jpg" />-->
         </b-carousel-slide>
         <b-carousel-slide>
-          <img src="~@/assets/images/ads/mewconnect.jpg" />
+          <a href="https://mewconnect.myetherwallet.com/#/" target="_blank">
+            <img src="~@/assets/images/ads/mewconnect.jpg" />
+          </a>
         </b-carousel-slide>
       </b-carousel>
     </div>
-
-    <!--    <div class="global__interface-block&#45;&#45;margin-top bottom-image-container">
-      <div class="ad-container">
-        <keep-alive :max="adDetails.length">
-          <component
-            :is="useComponent()"
-            :image="adImage"
-            :url="adUrl"
-            @pauseAds="pauseAds"
-          >
-          </component>
-        </keep-alive>
-      </div>
-      <div class="select-dots-container">
-        <span v-for="(ad, index) in currentAds" :key="index" class="ad-dot">
-          <i
-            :class="[
-              'fa',
-              'fa-circle',
-              currentAdIndex !== index ? 'inactive' : 'active'
-            ]"
-            @click="currentAdIndex = index"
-          ></i>
-        </span>
-      </div>
-    </div>-->
   </div>
 </template>
 
@@ -70,10 +45,6 @@
 import { mapState } from 'vuex';
 import InterfaceTokensModal from '../InterfaceTokensModal';
 
-const adComponentMapping = {
-  buyEthAd: 'buy-eth-ad',
-  staticAd: 'static-ad'
-};
 import ads from './adComponents';
 
 export default {
@@ -90,57 +61,15 @@ export default {
       adImage: '',
       adUrl: '',
       adInterval: 4000,
-      currentAdIndex: 1,
-      currentAds: [
-        {
-          component: 'staticAd',
-          image: 'mewconnect.png',
-          url: 'https://mewconnect.myetherwallet.com/#/'
-        },
-        {
-          component: 'buyEthAd'
-        },
-        {
-          component: 'staticAd',
-          image: 'mewconnect.png',
-          url: 'https://mewconnect.myetherwallet.com/#/'
-        },
-        {
-          component: 'buyEthAd'
-        }
-      ],
-      adDetails: {
-        mewConnect: {
-          component: 'staticAd',
-          image: 'mewconnect.png',
-          url: 'https://mewconnect.myetherwallet.com/#/'
-        },
-        mewConnect2: {
-          component: 'staticAd',
-          image: 'mewconnect.png',
-          url: 'https://mewconnect.myetherwallet.com/#/'
-        },
-        buyEth: {
-          component: 'buyEthAd'
-        }
-      }
+      currentAdIndex: 1
     };
   },
   computed: {
-    ...mapState(['network', 'web3', 'online']),
-    currentAd() {
-      return this.currentAds[this.currentAdIndex];
-    }
+    ...mapState(['network', 'web3', 'online'])
   },
   watch: {},
   mounted() {},
   methods: {
-    useComponent() {
-      if (adComponentMapping[this.currentAd.component]) {
-        return adComponentMapping[this.currentAd.component];
-      }
-      return adComponentMapping['staticAd'];
-    },
     pauseAds() {
       if (this.adInterval > 0) {
         this.adInterval = 0;
@@ -170,7 +99,7 @@ export default {
   color: initial;
   text-align: initial;
 
-  > img {
+  img {
     width: 100%;
   }
 }

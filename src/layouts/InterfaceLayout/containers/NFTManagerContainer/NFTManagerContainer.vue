@@ -182,7 +182,7 @@ export default {
       return accumulator;
     }, {});
 
-    if(this.network.type.name === 'ETH'){
+    if (this.network.type.name === 'ETH') {
       this.changeSelectedContract(this.nftConfig[0].contractAddress);
 
       this.getOwnedCounts();

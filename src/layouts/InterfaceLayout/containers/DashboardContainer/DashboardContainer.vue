@@ -184,12 +184,7 @@ export default {
   },
 
   computed: {
-    ...mapState([
-      'account',
-      'web3',
-      'network',
-      'online'
-    ]),
+    ...mapState(['account', 'web3', 'network', 'online']),
     sortedObject() {
       const arrayedDapp = [];
       Object.keys(dapps).forEach(dapp => {
