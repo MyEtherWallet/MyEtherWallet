@@ -1,4 +1,5 @@
 @import '~@/scss/GlobalVariables';
+
 @media all and (min-width: calc(#{$tablet-width} + 1px)) {
   .mobile-interface-address-block {
     display: none;
