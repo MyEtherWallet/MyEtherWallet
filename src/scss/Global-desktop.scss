@@ -1432,6 +1432,8 @@
     transform: translate3d(12px, 48px, 0) !important;
   }
 }
+
+// *********************************************************************
 // Monospace font
 // *********************************************************************
 .monospace {
@@ -1506,4 +1508,17 @@
 
 .flex--grow-1 {
   flex-grow: 1;
+}
+
+//*********************************************************************
+// [GLOBAL] INTERFACE BLOCK STYLE
+//*********************************************************************
+.global__interface-block {
+  border-radius: 5px;
+  background-color: $white;
+  padding: 20px;
+}
+
+.global__interface-block__margin-top {
+  margin-top: 15px;
 }
