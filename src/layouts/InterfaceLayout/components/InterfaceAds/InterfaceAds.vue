@@ -29,15 +29,16 @@
         @sliding-end="onSlideEnd"
       >
         <b-carousel-slide>
-          <img src="@/assets/images/ads/mewconnect.jpg" />
+          <buy-eth-ad @pauseAds="pauseAds"></buy-eth-ad>
+<!--          <img src="@/assets/images/ads/mewconnect.jpg" />-->
         </b-carousel-slide>
         <b-carousel-slide>
-          <img src="@/assets/images/ads/mewconnect.jpg" />
+          <img src="~@/assets/images/ads/mewconnect.jpg" />
         </b-carousel-slide>
       </b-carousel>
     </div>
 
-    <div class="global__interface-block--margin-top bottom-image-container">
+<!--    <div class="global__interface-block&#45;&#45;margin-top bottom-image-container">
       <div class="ad-container">
         <keep-alive :max="adDetails.length">
           <component
@@ -61,7 +62,7 @@
           ></i>
         </span>
       </div>
-    </div>
+    </div>-->
   </div>
 </template>
 
@@ -84,6 +85,7 @@ export default {
   props: {},
   data() {
     return {
+      slide: 5,
       search: '',
       adImage: '',
       adUrl: '',
@@ -161,6 +163,12 @@ export default {
       } else {
         this.rotateAds();
       }
+    },
+    onSlideStart(){
+
+    },
+    onSlideEnd(){
+
     }
   }
 };
