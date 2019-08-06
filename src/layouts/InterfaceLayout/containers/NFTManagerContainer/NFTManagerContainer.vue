@@ -148,7 +148,7 @@ export default {
     sideMenuData() {
       return this.nftData;
     },
-    ...mapState(['account', 'web3', 'online']),
+    ...mapState(['account', 'web3', 'online', 'network']),
     startIndex() {
       if (this.nftData[this.selectedContract]) {
         return this.nftData[this.selectedContract].currentIndex;
@@ -182,10 +182,12 @@ export default {
       return accumulator;
     }, {});
 
-    this.changeSelectedContract(this.nftConfig[0].contractAddress);
+    if(this.network.type.name === 'ETH'){
+      this.changeSelectedContract(this.nftConfig[0].contractAddress);
 
-    this.getOwnedCounts();
-    this.getOwned();
+      this.getOwnedCounts();
+      this.getOwned();
+    }
   },
   methods: {
     changeSelectedContract(selectedContract) {

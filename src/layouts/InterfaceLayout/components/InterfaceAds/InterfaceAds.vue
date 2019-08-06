@@ -21,7 +21,7 @@
     <div class="global__interface-block__margin-top">
       <b-carousel
         v-model="slide"
-        :interval="4000"
+        :interval="adInterval"
         controls
         indicators
         background="#fff"
