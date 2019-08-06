@@ -14,8 +14,6 @@ export default {
   },
   methods: {
     back() {
-      //const path = this.$route.path.split('/');
-      //const goToPath = path.slice(0, path.length - 1).join('/');
       this.$router.push('/interface/nft-manager');
     }
   }
