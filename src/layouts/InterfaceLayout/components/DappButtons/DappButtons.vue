@@ -44,9 +44,11 @@ export default {
     }
   },
   computed: {
-    ...mapState(['network']),
+    ...mapState(['network', 'online']),
     supported() {
-      return this.supportedNetworks.includes(this.network.type.name);
+      if (this.online) {
+        return this.supportedNetworks.includes(this.network.type.name);
+      }
     }
   },
   methods: {

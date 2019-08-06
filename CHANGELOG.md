@@ -1,5 +1,8 @@
 ### Release v5.1.0
 
+### Feature
+
+- Add Dashboard and NFT Manager [#1269](https://github.com/MyEtherWallet/MyEtherWallet/pull/1269)
 
 ### Release v5.0.16-hotfix.1
 
