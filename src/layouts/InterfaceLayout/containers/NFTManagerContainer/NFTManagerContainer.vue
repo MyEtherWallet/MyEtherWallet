@@ -63,7 +63,6 @@ import { mapState } from 'vuex';
 import hexDecoder from './binaryDecoderNFT';
 import { nftABI } from './abis';
 
-
 const URL_BASE = 'https://nft.mewapi.io/nft';
 
 export default {
@@ -257,7 +256,6 @@ export default {
       offset = 0,
       limit = this.countPerPage
     ) {
-
       fetch(
         `${URL_BASE}?nonStandardContract=${contract}&address=${address}&offset=${offset}&limit=${limit}`,
         {
@@ -326,7 +324,6 @@ export default {
       address = this.account.address,
       tokenContract = undefined
     ) {
-
       if (!tokenContract) {
         tokenContract = new this.web3.eth.Contract(nftABI);
         tokenContract.options.address = this.tokenContractAddress;
