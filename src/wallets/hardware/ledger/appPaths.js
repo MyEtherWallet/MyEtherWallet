@@ -20,9 +20,11 @@ import {
   RSKTEST,
   TOMO,
   UBQ,
-  TT
+  TT,
+  PHT
 } from '@/networks/types';
 import {
+  ethereum,
   ledgerEthereum,
   ledgerLiveEthereum,
   ledgerEthereumClassic,
@@ -158,6 +160,11 @@ const appList = [
     network: TT,
     prefixes: ["m/44'/1001'"],
     paths: [thundercore]
+  },
+  {
+    network: PHT,
+    prefixes: ["m/44'/60'"],
+    paths: [ethereum]
   }
 ];
 export default appList;

@@ -338,7 +338,6 @@ export default class BitySwap {
       swapDetails.isExitToFiat = true;
       return swapDetails;
     } else if (this.checkIfExit(swapDetails)) {
-
       swapDetails.dataForInitialization = await createOrder(swapDetails);
       if (swapDetails.dataForInitialization) {
         swapDetails.providerReceives =
