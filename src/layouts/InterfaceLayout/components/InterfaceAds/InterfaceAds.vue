@@ -1,20 +1,43 @@
 <template>
-  <div>
-    <div class="twitter-container">
-      <div class="twitter-content">
-        <a
-          href="https://twitter.com/intent/follow?screen_name=myetherwallet"
-          onclick="window.open(this.href, 'twitter-share', 'width=580,height=296');return false;"
-          title="Share on Twitter"
+  <div class="interface-ads">
+    <div class="global__interface-block__margin-top">
+      <a
+        :title="$t('common.twitterFollow')"
+        href="https://twitter.com/intent/follow?screen_name=myetherwallet"
+        onclick="window.open(this.href, 'twitter-share', 'width=580,height=296');return false;"
+      >
+        <div
+          class="global__interface-block flex--row--align-center twitter-ad-block"
         >
-          <div class="twitter-container">
+          <p class="block-title">
+            {{ $t('common.twitterFollow') }}
+          </p>
+          <div class="margin--left--auto block-twitter">
             <i class="fa fa-twitter"></i>
-            <span>{{ $t('common.twitterFollow') }}</span>
           </div>
-        </a>
-      </div>
+        </div>
+      </a>
     </div>
-    <div class="bottom-image-container">
+    <div class="global__interface-block__margin-top">
+      <b-carousel
+        v-model="slide"
+        :interval="4000"
+        controls
+        indicators
+        background="#fff"
+        @sliding-start="onSlideStart"
+        @sliding-end="onSlideEnd"
+      >
+        <b-carousel-slide>
+          <img src="@/assets/images/ads/mewconnect.jpg" />
+        </b-carousel-slide>
+        <b-carousel-slide>
+          <img src="@/assets/images/ads/mewconnect.jpg" />
+        </b-carousel-slide>
+      </b-carousel>
+    </div>
+
+    <div class="global__interface-block--margin-top bottom-image-container">
       <div class="ad-container">
         <keep-alive :max="adDetails.length">
           <component
@@ -145,4 +168,22 @@ export default {
 
 <style lang="scss" scoped>
 @import 'InterfaceAds.scss';
+</style>
+
+<style lang="scss">
+.carousel-caption {
+  position: relative;
+  right: initial;
+  bottom: initial;
+  left: initial;
+  z-index: initial;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  color: initial;
+  text-align: initial;
+
+  > img {
+    width: 100%;
+  }
+}
 </style>
