@@ -7,7 +7,6 @@
         :nft-config="nftConfig"
         @selected="changeSelectedContract"
       >
-        <!--        <input type="text" placeholder="Search #" />-->
       </nft-side-menu>
       <div v-if="showDetails">
         <nft-details
@@ -40,7 +39,6 @@
               <i class="fa fa-chevron-left"></i>
             </span>
             {{ $t('dapps.showing', { first: startIndex, last: endIndex }) }}
-            <!--            Showing {{ startIndex }} -{{ endIndex }}-->
             <span
               v-show="showNextButton"
               class="internal-nav next"
@@ -64,10 +62,9 @@ import NftDetails from './containers/NftDetails';
 import { mapState } from 'vuex';
 import hexDecoder from './binaryDecoderNFT';
 import { nftABI } from './abis';
-import fetch from 'node-fetch';
 
-const URL_BASE = 'https://swap.mewapi.io/nft';
 
+const URL_BASE = 'https://nft.mewapi.io/nft';
 
 export default {
   components: {
@@ -90,12 +87,7 @@ export default {
       nftTokens: {},
       nftData: {},
       ownedTokens: [],
-      tokenContractAddress: '0xeA3352C1a3480Ac5a32Fcd1F2854529BA7193F14',
-      useDevAddress: false, // todo remove dev item
-      devAddress: '0xa3d7553397352efb84a0bc217a464e9e114207d6' // todo remove dev item
-      // 0xac43df42ba2d186da57342e1b685f024db445a22 // mycryptoheros:hero // todo remove dev item
-      // '0xa3d7553397352efb84a0bc217a464e9e114207d6' // gods unchained // todo remove dev item
-      // '0x2f261a227480b7d1802433d05a92a27bab645032' // cryptokitties // todo remove dev item
+      tokenContractAddress: '0xeA3352C1a3480Ac5a32Fcd1F2854529BA7193F14'
     };
   },
   computed: {
@@ -213,7 +205,7 @@ export default {
     getImage(nft) {
       return nft.image;
     },
-    async getNftImage(contract, token) {
+    async getNftImagePath(contract, token) {
       const image = await fetch(
         `${URL_BASE}?contract=${contract}&token=${token}`,
         {
@@ -222,10 +214,9 @@ export default {
           method: 'GET'
         }
       );
-      return await image.text();
+      return await image.json();
     },
     async getOwned(address = this.account.address, nftData = this.nftData) {
-      if (this.useDevAddress) address = this.devAddress; // todo remove dev item
       if (!this.processing) {
         this.processing = true;
         const supportedNftTokens = Object.keys(nftData);
@@ -242,7 +233,6 @@ export default {
       }
     },
     async getOwnedCounts(address = this.account.address) {
-      if (this.useDevAddress) address = this.devAddress; // todo remove dev item
       const supportedNftTokens = this.nftConfig
         .filter(entry => entry.ERC721Extension)
         .map(entry => entry.contract);
@@ -267,7 +257,6 @@ export default {
       offset = 0,
       limit = this.countPerPage
     ) {
-      if (this.useDevAddress) address = this.devAddress; // todo remove dev item
 
       fetch(
         `${URL_BASE}?nonStandardContract=${contract}&address=${address}&offset=${offset}&limit=${limit}`,
@@ -294,7 +283,7 @@ export default {
           const metadataKeys = this.nftData[contract].metadataKeys || [
             'kitties'
           ];
-          const imageKey = this.nftData[contract].pngKey || 'image_url_png';
+          const imageKey = this.nftData[contract].imageKey || 'image_url_png';
           return getNestedObject(JSON.parse(rawJson), metadataKeys).map(val => {
             return {
               contract: contract,
@@ -314,11 +303,11 @@ export default {
               list.length > this.countPerPage ? this.countPerPage : list.length;
             for (let j = 0; j < retrieveCount; j++) {
               if (!Number.isNaN(list[j].token) && list[j].image === '') {
-                this.getNftImage(contract, list[j].token)
+                this.getNftImagePath(contract, list[j].token)
                   .then(image => {
                     this.nftData[contract].details[
                       j
-                    ].image = `${URL_BASE}/image?path=${image}`;
+                    ].image = `${URL_BASE}/image?path=${image.image}`;
                   })
                   .catch(() => {
                     if (this.nftData[contract].details[j]) {
@@ -337,7 +326,6 @@ export default {
       address = this.account.address,
       tokenContract = undefined
     ) {
-      if (this.useDevAddress) address = this.devAddress; // todo remove dev item
 
       if (!tokenContract) {
         tokenContract = new this.web3.eth.Contract(nftABI);
@@ -364,11 +352,11 @@ export default {
               list.length > this.countPerPage ? this.countPerPage : list.length;
             for (let j = 0; j < retrieveCount; j++) {
               if (!Number.isNaN(list[j].token)) {
-                this.getNftImage(contract, list[j].token)
+                this.getNftImagePath(contract, list[j].token)
                   .then(image => {
                     this.nftData[contract].details[
                       j
-                    ].image = `${URL_BASE}/image?path=${image}`;
+                    ].image = `${URL_BASE}/image?path=${image.image}`;
                   })
                   .catch(() => {
                     if (this.nftData[contract].details[j]) {
@@ -396,7 +384,6 @@ export default {
       this.imagesRetrieved = true;
     },
     getNext(address = this.account.address) {
-      if (this.useDevAddress) address = this.devAddress; // todo remove dev item
       const content = this.nftData[this.selectedContract];
 
       const offset = content.currentIndex + this.countPerPage;
@@ -418,7 +405,6 @@ export default {
       }
     },
     getPrevious(address = this.account.address) {
-      if (this.useDevAddress) address = this.devAddress; // todo remove dev item
       const content = this.nftData[this.selectedContract];
 
       const offset = content.currentIndex - content.priorIndex;
