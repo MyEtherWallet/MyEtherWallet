@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "5.0.16-hotfix.1",
+  "version": "5.1.0",
   "description": "Client side ethereum wallet",
   "license": "MIT",
   "repository": "https://github.com/myetherwallet/myetherwallet",
@@ -45,7 +45,7 @@
     "pocket-js-web3-provider": "0.0.3",
     "print-js": "1.0.61",
     "register-service-worker": "1.6.2",
-    "vee-validate": "2.2.13",
+    "vee-validate": "2.2.14",
     "vue": "2.6.10",
     "vue-datetime": "1.0.0-beta.10",
     "vue-mq": "1.0.1",
@@ -65,11 +65,11 @@
     "@makerdao/dai": "0.17.1",
     "@myetherwallet/eth-token-balance": "0.1.4",
     "@myetherwallet/mewconnect-web-client": "1.0.14",
-    "@vue/cli-plugin-babel": "3.9.2",
-    "@vue/cli-plugin-eslint": "3.9.2",
-    "@vue/cli-plugin-pwa": "3.9.0",
-    "@vue/cli-plugin-unit-jest": "3.9.0",
-    "@vue/cli-service": "3.9.3",
+    "@vue/cli-plugin-babel": "3.10.0",
+    "@vue/cli-plugin-eslint": "3.10.0",
+    "@vue/cli-plugin-pwa": "3.10.0",
+    "@vue/cli-plugin-unit-jest": "3.10.0",
+    "@vue/cli-service": "3.10.0",
     "@vue/eslint-config-prettier": "5.0.0",
     "@vue/test-utils": "1.0.0-beta.29",
     "@xkeshi/vue-qrcode": "git+https://github.com/MyEtherWallet/vue-qrcode.git",
@@ -114,7 +114,7 @@
     "rskjs-util": "1.0.3",
     "sass-loader": "7.1.0",
     "secp256k1": "3.7.1",
-    "sinon": "7.3.2",
+    "sinon": "7.4.1",
     "store": "2.0.12",
     "string-replace-loader": "2.2.0",
     "stylelint": "10.1.0",
@@ -145,16 +145,20 @@
   },
   "greenkeeper": {
     "ignore": [
+      "@myetherwallet/mewconnect-web-client",
       "canvas",
       "ethereum-ens",
       "webpack",
       "babel-jest",
+      "web3",
       "web3-core-helpers",
       "web3-core-method",
+      "web3-utils",
+      "@xkeshi/vue-qrcode",
+      "multicoin-address-validator",
+      "bootstrap-vue",
       "web3-core-requestmanager",
-      "web3-providers-http",
-      "web3-providers-ws",
-      "web3-utils"
+      "vue-tel-input"
     ]
   }
 }
