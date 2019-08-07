@@ -1,3 +1,15 @@
+### Release v5.1.1
+
+### Feature
+
+- Add Buy Eth Button to nav bar, standardize dapp header layout [#1330](https://github.com/MyEtherWallet/MyEtherWallet/pull/1330)
+
+### Release v5.1.0
+
+### Feature
+
+- Add Dashboard and NFT Manager [#1269](https://github.com/MyEtherWallet/MyEtherWallet/pull/1269)
+
 ### Release v5.0.16-hotfix.1
 
 ### Devop
