@@ -197,7 +197,6 @@ import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
 import utils from 'web3-utils';
 import { Toast, Misc } from '@/helpers';
-import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
 
 export default {
   components: {
