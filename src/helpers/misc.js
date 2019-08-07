@@ -212,13 +212,14 @@ const isContractArgValid = (value, solidityType) => {
 };
 
 const stripTags = content => {
-  const string = xss(content, {
+  const insertToDom = new DOMParser().parseFromString(content, 'text/html');
+  insertToDom.body.textContent.replace(/(<([^>]+)>)/gi, '') || '';
+  const string = xss(insertToDom.body.textContent, {
     whitelist: [],
     stripIgnoreTag: true,
     stripIgnoreTagBody: '*'
   });
-  const insertToDom = new DOMParser().parseFromString(string, 'text/html');
-  return insertToDom.body.textContent.replace(/(<([^>]+)>)/gi, '') || '';
+  return string;
 };
 
 export default {
