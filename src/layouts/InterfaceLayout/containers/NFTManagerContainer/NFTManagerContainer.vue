@@ -60,7 +60,10 @@
         </div>
       </div>
     </div>
-    <div v-if="countsRetrieved && !hasNfts" class="inner-side-menu content-container">
+    <div
+      v-if="countsRetrieved && !hasNfts"
+      class="inner-side-menu content-container"
+    >
       No NFTs
     </div>
     <div class="flex--row--align-start mft-manager-content-container"></div>
@@ -173,9 +176,7 @@ export default {
       return this.account.address;
     },
     hasNfts() {
-      return Object.values(this.nftData).some(
-        entry => entry.count > 0
-      );
+      return Object.values(this.nftData).some(entry => entry.count > 0);
     }
   },
   watch: {},
