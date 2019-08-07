@@ -77,15 +77,6 @@
         </div>
       </div>
     </div>
-    <div v-if="showSwapValues">
-<!--      <swap-widget-->
-<!--        ref="swapWidget"-->
-<!--        :supplied-from="suppliedFrom"-->
-<!--        :supplied-to="suppliedTo"-->
-<!--        :supplied-from-amount="suppliedFromAmount"-->
-<!--        :dest-address="account.address"-->
-<!--      ></swap-widget>-->
-    </div>
   </div>
 </template>
 
@@ -260,22 +251,7 @@ export default {
     },
     showSwapWidget(vals) {
       if (this.showSwapValues) {
-        // this.suppliedFromAmount = vals.amt;
-        // this.suppliedFrom = {
-        //   symbol: vals.from,
-        //   name: ''
-        // };
-        // this.suppliedTo = {
-        //   symbol: vals.to,
-        //   name: ''
-        // };
         this.$eventHub.$emit('showSwapWidget', this.account.address, vals.from, vals.to, vals.amt)
-
-        // this.$nextTick(() => {
-        //   this.$eventHub.$emit('showSwapWidget', this.account.address, vals.to, vals.from, vals.amt)
-        //   // showSwapWidget
-        //   // this.$refs.swapWidget.$refs.modal.show();
-        // });
       }
     }
   }

@@ -876,11 +876,6 @@ export default {
           break;
       }
 
-      // if (this.toValue - this.suppliedToAmount > 1 && this.loadingWidget) {
-      //   this.loadingWidget = false;
-      //   this.toValue = this.suppliedToAmount;
-      //   this.updateEstimate('to');
-      // }
     },
     async updateRateEstimate(fromCurrency, toCurrency, fromValue, to) {
       if (this.haveProviderRates) {
