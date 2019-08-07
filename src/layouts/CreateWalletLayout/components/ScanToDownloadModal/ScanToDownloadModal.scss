@@ -14,6 +14,9 @@
     padding: 0 20px;
     padding-bottom: 10px;
     text-align: center;
+    @media all and (max-width: $mobile-width) {
+      padding: 20px;
+    }
   }
 
   .qr-image {
@@ -52,6 +55,7 @@
     border-right: 1px solid $light-grey-2;
     @media all and (max-width: $mobile-width) {
       border-right: 0;
+      border-bottom: 1px solid $light-grey-2;
     }
   }
 }
