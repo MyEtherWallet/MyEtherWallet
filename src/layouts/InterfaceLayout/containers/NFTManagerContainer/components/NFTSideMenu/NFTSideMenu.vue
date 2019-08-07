@@ -65,8 +65,8 @@ export default {
     }
   },
   watch: {
-    loadingComplete(){
-      this.selected = this.sortByCount[0].contract
+    loadingComplete() {
+      this.selected = this.sortByCount[0].contract;
       this.$emit('selected', this.selected);
     }
   },

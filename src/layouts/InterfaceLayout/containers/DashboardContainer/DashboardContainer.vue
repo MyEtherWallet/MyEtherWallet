@@ -32,7 +32,10 @@
         </p>
         <div class="swap-info">
           <div v-for="pair in swapPairs" :key="pair.from + pair.to">
-            <div class="swap-to clickable" @click.prevent="showSwapWidget(pair)">
+            <div
+              class="swap-to clickable"
+              @click.prevent="showSwapWidget(pair)"
+            >
               <p class="monospace">
                 {{ pair.amt }} {{ pair.from }} / {{ pair.rate }} {{ pair.to }}
               </p>
@@ -251,7 +254,13 @@ export default {
     },
     showSwapWidget(vals) {
       if (this.showSwapValues) {
-        this.$eventHub.$emit('showSwapWidget', this.account.address, vals.from, vals.to, vals.amt)
+        this.$eventHub.$emit(
+          'showSwapWidget',
+          this.account.address,
+          vals.from,
+          vals.to,
+          vals.amt
+        );
       }
     }
   }

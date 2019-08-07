@@ -695,7 +695,7 @@ export default {
       }
     },
     async updateEstimate(input) {
-      if(this.simplexUpdate){
+      if (this.simplexUpdate) {
         this.simplexUpdate = false;
         return;
       }
