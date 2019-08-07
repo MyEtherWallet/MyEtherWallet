@@ -1,6 +1,7 @@
 ### Release v5.1.0
 
 ### Bug
+
 - Fix scroll up button position [#1331](https://github.com/MyEtherWallet/MyEtherWallet/pull/1331)
 
 ### Feature
