@@ -684,10 +684,7 @@ export default {
             this.fromCurrency
           ]
         ) {
-          this.web3.utils._.debounce(
-            this.updateEstimate(this.providerNames.simplex + direction),
-            200
-          );
+          this.debounceUpdateEstimate(this.providerNames.simplex + direction);
         } else {
           this.debounceUpdateEstimate(direction);
           const fromCur = this.fromCurrency;
@@ -698,6 +695,10 @@ export default {
       }
     },
     async updateEstimate(input) {
+      if(this.simplexUpdate){
+        this.simplexUpdate = false;
+        return;
+      }
       let fromValue, toValue, simplexProvider, simplexRateDetails;
       switch (input) {
         case 'to':
@@ -715,6 +716,7 @@ export default {
           );
           break;
         case `${this.providerNames.simplex}to`:
+          this.simplexUpdate = true;
           simplexProvider = this.swap.getProvider(this.providerNames.simplex);
 
           if (simplexProvider.canQuote(this.fromValue, this.toValue)) {
@@ -746,6 +748,7 @@ export default {
 
           break;
         case `${this.providerNames.simplex}from`:
+          this.simplexUpdate = true;
           simplexProvider = this.swap.getProvider(this.providerNames.simplex);
           if (simplexProvider.canQuote(this.fromValue, this.toValue)) {
             simplexRateDetails = await simplexProvider.updateFiat(
@@ -788,7 +791,7 @@ export default {
         const {
           providersFound,
           callsToMake
-        } = await this.swap.valueRateEstimate(
+        } = await this.swap.updateRateEstimate(
           fromCurrency,
           toCurrency,
           fromValue,
