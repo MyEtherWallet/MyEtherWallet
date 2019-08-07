@@ -4,7 +4,7 @@
     <div class="buy-subdomain-content">
       <div class="buy-subdomain-form-container">
         <div class="title">
-          <h4>{{ $t('interface.subdomains') }}</h4>
+          <h4>{{ $t('interface.nameYourWallet') }}</h4>
         </div>
         <div class="form">
           <div class="subdomain-input">

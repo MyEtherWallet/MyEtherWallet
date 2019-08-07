@@ -3,7 +3,6 @@ import SignedTxModal from '@/layouts/InterfaceLayout/containers/SendOfflineConta
 import sinon from 'sinon';
 import { Tooling } from '@@/helpers';
 
-//xdescribe
 describe('SignedTxModal.vue', () => {
   let localVue, i18n, wrapper, store;
 

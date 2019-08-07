@@ -21,7 +21,7 @@ const webpackConfig = {
       'Strict-Transport-Security':
         'max-age=63072000; includeSubdomains; preload',
       'Content-Security-Policy':
-        "default-src 'self' blob:; frame-src 'self' connect.trezor.io:443; img-src 'self' data: blob:; script-src 'unsafe-eval' 'unsafe-inline' blob: https:; style-src 'self' 'unsafe-inline' https:; object-src 'none'; connect-src *;",
+        "default-src 'self' blob:; frame-src 'self' connect.trezor.io:443; img-src 'self' https://nft.mewapi.io data: blob: ; script-src 'unsafe-eval' 'unsafe-inline' blob: https:; style-src 'self' 'unsafe-inline' https:; object-src 'none'; connect-src *;",
       'X-Content-Type-Options': 'nosniff',
       'X-Frame-Options': 'DENY',
       'X-XSS-Protection': '1; mode=block',
@@ -130,6 +130,9 @@ if (process.env.NODE_ENV === 'production') {
           'src/components/Notification/components/NotificationTypes/SwapNotification/index.js',
           'src/components/Notification/components/NotificationTypes/TransactionNotification/index.js',
           // Images
+          'src/assets/images/ads/mewconnect.png',
+          'src/assets/images/ads/mewconnect.jpg',
+          'src/assets/images/etc/mewconnect.jpeg',
           'src/assets/images/icons/button-finney.png',
           'src/assets/images/background/bg-left.png',
           'src/assets/images/background/bg-right.png',
@@ -150,6 +153,7 @@ if (process.env.NODE_ENV === 'production') {
           'src/assets/images/icons/up.svg',
           'src/assets/images/icons/button-json.svg',
           'src/assets/images/icons/button-mnemonic.svg',
+          'src/assets/images/team/_blank_.jpg',
           // Chrome Extension
           'src/builds/mewcx/app.vue',
           'src/builds/mewcx/public/img/icons/icon128.png',

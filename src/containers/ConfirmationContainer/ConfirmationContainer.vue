@@ -117,7 +117,7 @@ export default {
       nonce: '',
       gasLimit: '21000',
       data: '0x',
-      gasAmount: this.gasPrice,
+      gasPrice: 0,
       parsedBalance: 0,
       toAddress: '',
       transactionFee: '',
@@ -142,7 +142,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['gasPrice', 'wallet', 'web3', 'account', 'network']),
+    ...mapState(['wallet', 'web3', 'account', 'network']),
     fromAddress() {
       if (this.account) {
         return this.account.address;
@@ -331,6 +331,9 @@ export default {
       this.nonce = tx.nonce === '0x' ? 0 : new BigNumber(tx.nonce).toFixed();
       this.data = tx.data;
       this.gasLimit = new BigNumber(tx.gas).toFixed();
+      this.gasPrice = parseInt(
+        unit.fromWei(new BigNumber(tx.gasPrice).toFixed(), 'gwei')
+      );
       this.toAddress = tx.to;
       this.amount = tx.value === '0x' ? '0' : new BigNumber(tx.value).toFixed();
       this.transactionFee = unit
@@ -346,7 +349,6 @@ export default {
       this.dismissed = false;
       this.responseFunction(this.signedMessage);
       this.$refs.signConfirmModal.$refs.signConfirmation.hide();
-      // this.showSuccessModal();
     },
     generateTx() {
       this.dismissed = false;
@@ -448,7 +450,7 @@ export default {
       this.nonce = '';
       this.gasLimit = '21000';
       this.data = '0x';
-      this.gasAmount = this.gasPrice;
+      this.gasPrice = 0;
       this.parsedBalance = 0;
       this.toAddress = '';
       this.transactionFee = '';
