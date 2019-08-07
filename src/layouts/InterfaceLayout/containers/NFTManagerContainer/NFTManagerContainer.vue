@@ -6,7 +6,10 @@
       </nft-side-menu>
       <loading-sign :loadingmessage1="$t('common.loading')" />
     </div>
-    <div v-if="countsRetrieved" class="inner-side-menu content-container">
+    <div
+      v-if="countsRetrieved && hasNfts"
+      class="inner-side-menu content-container"
+    >
       <nft-side-menu
         :supported-nft-obj="sideMenuData"
         :nft-config="nftConfig"
@@ -57,6 +60,9 @@
         </div>
       </div>
     </div>
+    <div v-if="countsRetrieved && !hasNfts" class="inner-side-menu content-container">
+      No NFTs
+    </div>
     <div class="flex--row--align-start mft-manager-content-container"></div>
   </div>
 </template>
@@ -88,6 +94,7 @@ export default {
       countPerPage: 9,
       nftConfig: [],
       tokenHelper: {},
+      mayHaveTokens: [true, true],
       countsRetrieved: false,
       showDetails: false,
       selectedContract: '0x06012c8cf97bead5deae237070f9587f8e7a266d',
@@ -164,6 +171,11 @@ export default {
     },
     activeAddress() {
       return this.account.address;
+    },
+    hasNfts() {
+      return Object.values(this.nftData).some(
+        entry => entry.count > 0
+      );
     }
   },
   watch: {},
