@@ -1,5 +1,9 @@
 ### Release v5.1.0
 
+### Bug
+
+- Fix text translations [#1329](https://github.com/MyEtherWallet/MyEtherWallet/pull/1329)
+
 ### Feature
 
 - Add Dashboard and NFT Manager [#1269](https://github.com/MyEtherWallet/MyEtherWallet/pull/1269)
