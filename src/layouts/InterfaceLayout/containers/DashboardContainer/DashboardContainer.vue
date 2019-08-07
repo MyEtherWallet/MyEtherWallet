@@ -32,7 +32,7 @@
         </p>
         <div class="swap-info">
           <div v-for="pair in swapPairs" :key="pair.from + pair.to">
-            <div class="swap-to clickable" @click="showSwapWidget(pair)">
+            <div class="swap-to clickable" @click.prevent="showSwapWidget(pair)">
               <p class="monospace">
                 {{ pair.amt }} {{ pair.from }} / {{ pair.rate }} {{ pair.to }}
               </p>
@@ -78,13 +78,13 @@
       </div>
     </div>
     <div v-if="showSwapValues">
-      <swap-widget
-        ref="swapWidget"
-        :supplied-from="suppliedFrom"
-        :supplied-to="suppliedTo"
-        :supplied-from-amount="suppliedFromAmount"
-        :dest-address="account.address"
-      ></swap-widget>
+<!--      <swap-widget-->
+<!--        ref="swapWidget"-->
+<!--        :supplied-from="suppliedFrom"-->
+<!--        :supplied-to="suppliedTo"-->
+<!--        :supplied-from-amount="suppliedFromAmount"-->
+<!--        :dest-address="account.address"-->
+<!--      ></swap-widget>-->
     </div>
   </div>
 </template>
@@ -260,18 +260,22 @@ export default {
     },
     showSwapWidget(vals) {
       if (this.showSwapValues) {
-        this.suppliedFromAmount = vals.amt;
-        this.suppliedFrom = {
-          symbol: vals.from,
-          name: ''
-        };
-        this.suppliedTo = {
-          symbol: vals.to,
-          name: ''
-        };
-        this.$nextTick(() => {
-          this.$refs.swapWidget.$refs.modal.show();
-        });
+        // this.suppliedFromAmount = vals.amt;
+        // this.suppliedFrom = {
+        //   symbol: vals.from,
+        //   name: ''
+        // };
+        // this.suppliedTo = {
+        //   symbol: vals.to,
+        //   name: ''
+        // };
+        this.$eventHub.$emit('showSwapWidget', this.account.address, vals.from, vals.to, vals.amt)
+
+        // this.$nextTick(() => {
+        //   this.$eventHub.$emit('showSwapWidget', this.account.address, vals.to, vals.from, vals.amt)
+        //   // showSwapWidget
+        //   // this.$refs.swapWidget.$refs.modal.show();
+        // });
       }
     }
   }

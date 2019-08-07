@@ -72,7 +72,6 @@ const createOrder = async orderInfo => {
       buildPath(),
       utils.buildPayload(bityMethods.createOrder, orderInfo)
     );
-    console.log(results); // todo remove dev item
     if (results.error) {
       throw Error(results.error.message);
     }

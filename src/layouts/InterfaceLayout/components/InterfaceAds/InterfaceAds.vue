@@ -28,9 +28,9 @@
         @sliding-start="onSlideStart"
         @sliding-end="onSlideEnd"
       >
-        <!--        <b-carousel-slide>
+        <b-carousel-slide>
           <buy-eth-ad @pauseAds="pauseAds"></buy-eth-ad>
-        </b-carousel-slide>-->
+        </b-carousel-slide>
         <b-carousel-slide>
           <a href="https://mewconnect.myetherwallet.com/#/" target="_blank">
             <img src="~@/assets/images/ads/mewconnect.jpeg" />

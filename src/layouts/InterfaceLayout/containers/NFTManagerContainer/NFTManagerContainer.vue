@@ -156,7 +156,7 @@ export default {
     },
     activeAddress() {
       return this.account.address;
-    }
+    },
   },
   watch: {},
   async mounted() {

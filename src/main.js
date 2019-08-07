@@ -106,38 +106,38 @@ const vue = new Vue({
   store,
   render: h => h(getApp())
 });
-
-const integration = new Integrations.Vue({ Vue, attachProps: true });
-
-Sentry.init({
-  dsn: 'https://2c4e977d74fd44d1b18083e63a3b265f@sentry.mewapi.io/1',
-  integrations: [integration],
-  maxBreadcrumbs: 0,
-  environment: BUILD_TYPE,
-  requestBodies: 'small',
-  release: NODE_ENV === 'production' ? VERSION : 'develop',
-  beforeSend(event) {
-    const network =
-      !store && !store.state && !store.state.network
-        ? store.state.network.type.name
-        : '';
-    const service =
-      !store && !store.state && !store.state.network
-        ? store.state.network.service
-        : '';
-    const identifier =
-      !store && !store.state && !store.state.account
-        ? store.state.account.identifier
-        : '';
-    event.tags = {
-      network: network,
-      service: service,
-      walletType: identifier
-    };
-    return new Promise(resolve => {
-      vue.$eventHub.$emit('issueModal', event, resolve);
-    }).then(res => {
-      return res === true ? event : null;
-    });
-  }
-});
+//
+// const integration = new Integrations.Vue({ Vue, attachProps: true });
+//
+// Sentry.init({
+//   dsn: 'https://2c4e977d74fd44d1b18083e63a3b265f@sentry.mewapi.io/1',
+//   integrations: [integration],
+//   maxBreadcrumbs: 0,
+//   environment: BUILD_TYPE,
+//   requestBodies: 'small',
+//   release: NODE_ENV === 'production' ? VERSION : 'develop',
+//   beforeSend(event) {
+//     const network =
+//       !store && !store.state && !store.state.network
+//         ? store.state.network.type.name
+//         : '';
+//     const service =
+//       !store && !store.state && !store.state.network
+//         ? store.state.network.service
+//         : '';
+//     const identifier =
+//       !store && !store.state && !store.state.account
+//         ? store.state.account.identifier
+//         : '';
+//     event.tags = {
+//       network: network,
+//       service: service,
+//       walletType: identifier
+//     };
+//     return new Promise(resolve => {
+//       vue.$eventHub.$emit('issueModal', event, resolve);
+//     }).then(res => {
+//       return res === true ? event : null;
+//     });
+//   }
+// });
