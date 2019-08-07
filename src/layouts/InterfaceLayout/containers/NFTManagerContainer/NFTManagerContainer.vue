@@ -1,11 +1,17 @@
 <template>
   <div class="crypto-kitties-manager">
     <interface-container-title :title="$t('common.ntfManager')" />
-    <div class="inner-side-menu content-container">
+    <div v-if="!countsRetrieved" class="inner-side-menu content-container">
+      <nft-side-menu :supported-nft-obj="sideMenuData" :nft-config="nftConfig">
+      </nft-side-menu>
+      <loading-sign :loadingmessage1="$t('common.loading')" />
+    </div>
+    <div v-if="countsRetrieved" class="inner-side-menu content-container">
       <nft-side-menu
-        :data="sideMenuData"
+        :supported-nft-obj="sideMenuData"
         :nft-config="nftConfig"
         :initial-highlighted="selectedContract"
+        :loading-complete="countsRetrieved"
         @selected="changeSelectedContract"
       >
       </nft-side-menu>
@@ -56,6 +62,7 @@
 </template>
 
 <script>
+import LoadingSign from '@/components/LoadingSign';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
 import ContentBlockTitle from '@/layouts/InterfaceLayout/components/ContentBlockTitle';
 import NFTSideMenu from '@/layouts/InterfaceLayout/containers/NFTManagerContainer/components/NFTSideMenu';
@@ -68,6 +75,7 @@ const URL_BASE = 'https://nft.mewapi.io/nft';
 
 export default {
   components: {
+    'loading-sign': LoadingSign,
     'content-block-title': ContentBlockTitle,
     'nft-side-menu': NFTSideMenu,
     'interface-container-title': InterfaceContainerTitle,
@@ -80,7 +88,7 @@ export default {
       countPerPage: 9,
       nftConfig: [],
       tokenHelper: {},
-      imagesRetrieved: true,
+      countsRetrieved: false,
       showDetails: false,
       selectedContract: '0x06012c8cf97bead5deae237070f9587f8e7a266d',
       detailsFor: {},
@@ -156,9 +164,10 @@ export default {
     },
     activeAddress() {
       return this.account.address;
-    },
+    }
   },
-  watch: {},
+  watch: {
+  },
   async mounted() {
     const stateItems = {
       count: 0,
@@ -185,8 +194,6 @@ export default {
     }, {});
 
     if (this.network.type.name === 'ETH') {
-      this.changeSelectedContract(this.nftConfig[0].contractAddress);
-
       this.getOwnedCounts();
       this.getOwned();
     }
@@ -213,22 +220,6 @@ export default {
       );
       return await image.json();
     },
-    async getOwned(address = this.activeAddress, nftData = this.nftData) {
-      if (!this.processing) {
-        this.processing = true;
-        const supportedNftTokens = Object.keys(nftData);
-
-        const result = await this.getOwnedTokens(
-          supportedNftTokens,
-          address,
-          nftData
-        );
-        this.ready = true;
-        this.processing = false;
-        this.imagesRetrieved = true;
-        return result;
-      }
-    },
     async getOwnedCounts(address = this.activeAddress) {
       const supportedNftTokens = this.nftConfig
         .filter(entry => entry.ERC721Extension)
@@ -247,6 +238,21 @@ export default {
           : val.toNumber();
         return val.toString();
       });
+    },
+    async getOwned(address = this.activeAddress, nftData = this.nftData) {
+      if (!this.processing) {
+        this.processing = true;
+        const supportedNftTokens = Object.keys(nftData);
+
+        const result = await this.getOwnedTokens(
+          supportedNftTokens,
+          address,
+          nftData
+        );
+        this.ready = true;
+        this.processing = false;
+        return result;
+      }
     },
     async getOwnedNonStandard(
       contract,
@@ -267,6 +273,7 @@ export default {
         })
         .then(rawJson => {
           this.nftData[contract].count = rawJson.total;
+          this.countsRetrieved = true;
           const getNestedObject = (nestedObj, pathArr, token) => {
             return pathArr.reduce((obj, key) => {
               if (key === '@tokenvalue@') {
@@ -375,7 +382,6 @@ export default {
           tokenContract
         );
       }
-      this.imagesRetrieved = true;
     },
     getNext(address = this.account.address) {
       const content = this.nftData[this.selectedContract];

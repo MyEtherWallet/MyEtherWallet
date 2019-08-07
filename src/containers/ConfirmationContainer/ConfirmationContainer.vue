@@ -64,7 +64,6 @@
       :supplied-from-amount="swapWigetData['fromValue']"
       :supplied-to-amount="swapWigetData['toValue']"
       :dest-address="swapWigetData['destAddress']"
-      @hidden="swapWidgetModalClosed"
     />
   </div>
 </template>
@@ -297,14 +296,25 @@ export default {
     this.$eventHub.$on(
       'showSwapWidget',
       (destAddress, toCurrency, fromCurrency, fromValue) => {
-        this.swapWidgetModalOpen(destAddress, toCurrency, fromCurrency, fromValue);
+        this.swapWidgetModalOpen(
+          destAddress,
+          toCurrency,
+          fromCurrency,
+          fromValue
+        );
       }
     );
 
     this.$eventHub.$on(
       'showSwapWidgetTo',
       (destAddress, toCurrency, fromCurrency, toValue) => {
-        this.swapWidgetModalOpen(destAddress, toCurrency, fromCurrency, undefined, toValue);
+        this.swapWidgetModalOpen(
+          destAddress,
+          toCurrency,
+          fromCurrency,
+          undefined,
+          toValue
+        );
       }
     );
   },
@@ -319,10 +329,15 @@ export default {
       this.successMessage = '';
       this.linkMessage = 'OK';
     });
-
   },
   methods: {
-    swapWidgetModalOpen(destAddress, fromCurrency, toCurrency, fromValue, toValue) {
+    swapWidgetModalOpen(
+      destAddress,
+      fromCurrency,
+      toCurrency,
+      fromValue,
+      toValue
+    ) {
       if (typeof toCurrency === 'string') {
         this.$set(this.swapWigetData.toCurrency, 'symbol', toCurrency);
       } else if (typeof toCurrency === 'object') {
@@ -343,13 +358,6 @@ export default {
         );
       }
 
-      console.log(
-        destAddress,
-        this.swapWigetData.fromCurrency.symbol,
-        this.swapWigetData.toCurrency.symbol,
-        fromValue,
-        toValue
-      ); // todo remove dev item
       this.swapWigetData = {
         destAddress: destAddress,
         fromCurrency: this.swapWigetData.fromCurrency,
@@ -360,23 +368,21 @@ export default {
 
       this.$nextTick(() => {
         this.$refs.swapWidget.$refs.modal.show();
+        this.$refs.swapWidget.$refs.modal.$on('hidden', () => {
+          this.swapWigetData = {
+            destAddress: '',
+            fromCurrency: {
+              symbol: 'ETH',
+              name: ''
+            },
+            toCurrency: {
+              symbol: 'ETH',
+              name: ''
+            },
+            fromValue: 0
+          };
+        });
       });
-
-    },
-    swapWidgetModalClosed() {
-      // this.$refs.swapWidget.$refs.modal.show();
-      this.swapWigetData = {
-        destAddress: '',
-        fromCurrency: {
-          symbol: 'ETH',
-          name: ''
-        },
-        toCurrency: {
-          symbol: 'ETH',
-          name: ''
-        },
-        fromValue: 0
-      };
     },
     confirmationModalOpen() {
       window.scrollTo(0, 0);
@@ -558,6 +564,18 @@ export default {
       this.txBatch = null;
       this.sending = false;
       this.signCallback = {};
+      this.swapWigetData = {
+        destAddress: '',
+        fromCurrency: {
+          symbol: 'ETH',
+          name: ''
+        },
+        toCurrency: {
+          symbol: 'ETH',
+          name: ''
+        },
+        fromValue: 0
+      };
     }
   }
 };
