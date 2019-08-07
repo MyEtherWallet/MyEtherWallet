@@ -215,9 +215,10 @@ const stripTags = content => {
   const string = xss(content, {
     whitelist: [],
     stripIgnoreTag: true,
-    stripIgnoreTagBody: ['script']
+    stripIgnoreTagBody: '*'
   });
-  return string;
+  const insertToDom = new DOMParser().parseFromString(string, 'text/html');
+  return insertToDom.body.textContent.replace(/(<([^>]+)>)/gi, '') || '';
 };
 
 export default {
