@@ -15,15 +15,6 @@
         <img class="background-eth" src="@/assets/images/ads/eth.png" />
       </div>
     </div>
-    <div v-if="showWidget">
-<!--      <swap-widget-->
-<!--        ref="swapWidget"-->
-<!--        :supplied-from="suppliedFrom"-->
-<!--        :supplied-to="suppliedTo"-->
-<!--        :supplied-from-amount="suppliedFromAmount"-->
-<!--        :dest-address="account.address"-->
-<!--      ></swap-widget>-->
-    </div>
   </div>
 </template>
 
@@ -65,30 +56,7 @@ export default {
   methods: {
     showSwapWidget() {
       if (this.online) {
-        // this.$emit('pauseAds');
-        this.showWidget = true;
-        const vals = { from: 'USD', to: 'ETH', amt: 100, rate: 0 };
-        // this.suppliedFromAmount = vals.amt;
-        // this.suppliedFrom = {
-        //   symbol: vals.from,
-        //   name: ''
-        // };
-        // this.suppliedTo = {
-        //   symbol: vals.to,
-        //   name: ''
-        // };
         this.$eventHub.$emit('showSwapWidgetTo', this.account.address, 'USD', 'ETH', 1)
-        //
-        // this.$nextTick(() => {
-        //   // showSwapWidget
-        //   // this.$refs.swapWidget.$refs.modal.show();
-        // });
-        // this.$nextTick(() => {
-        //   this.$refs.swapWidget.$refs.modal.$on('hidden', () => {
-        //     // this.$emit('pauseAds');
-        //   });
-        //   this.$refs.swapWidget.$refs.modal.show();
-        // });
       }
     }
   }
