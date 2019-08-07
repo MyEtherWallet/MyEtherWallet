@@ -39,6 +39,10 @@ export default {
     initialHighlighted: {
       type: String,
       default: ''
+    },
+    loadingComplete: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -51,19 +55,23 @@ export default {
     sortByCount() {
       return Object.values(this.supportedNftObj).sort((a, b) => {
         if (a.count < b.count) {
-          return -1;
+          return 1;
         }
         if (a.count > b.count) {
-          return 1;
+          return -1;
         }
         return 0;
       });
     }
   },
-  watch: {},
+  watch: {
+    loadingComplete(){
+      this.selected = this.sortByCount[0].contract
+      this.$emit('selected', this.selected);
+    }
+  },
   mounted() {
-    this.selected = this.initialHighlighted; //Object.keys(this.data)[0];
-    // this.$emit('selected', this.selected);
+    this.selected = this.initialHighlighted;
   },
   methods: {
     selectNft(nft) {
