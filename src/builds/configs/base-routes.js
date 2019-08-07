@@ -10,6 +10,7 @@ const NotFoundLayout = () => import('@/layouts/NotFoundLayout');
 const GettingStarted = () => import('@/layouts/GettingStarted');
 const SendOfflineHelper = () => import('@/layouts/SendOfflineHelper');
 const VerifyMessageLayout = () => import('@/layouts/VerifyMessageLayout');
+const DappSubmission = () => import('@/layouts/DappSubmissionLayout');
 
 const DappsContainer = () =>
   import('@/layouts/InterfaceLayout/containers/DappsContainer');
@@ -88,6 +89,12 @@ const router = [
     path: '/send-offline-helper',
     name: 'SendOfflineHelper',
     component: SendOfflineHelper,
+    meta: { requiresAuth: false }
+  },
+  {
+    path: '/dapp-submission',
+    name: 'DappSubmission',
+    component: DappSubmission,
     meta: { requiresAuth: false }
   },
   {
