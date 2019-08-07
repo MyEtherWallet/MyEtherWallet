@@ -1432,6 +1432,8 @@
     transform: translate3d(12px, 48px, 0) !important;
   }
 }
+
+// *********************************************************************
 // Monospace font
 // *********************************************************************
 .monospace {
@@ -1527,4 +1529,52 @@
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
   }
+}
+
+.margin--top--auto {
+  margin-top: auto;
+}
+.margin--right--auto {
+  margin-right: auto;
+}
+.margin--bottom--auto {
+  margin-bottom: auto;
+}
+.margin--left--auto {
+  margin-left: auto;
+}
+
+.flex--row--align-center {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  &.justify--center {
+    justify-content: center;
+  }
+}
+
+.flex--row--align-start {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  &.justify--center {
+    justify-content: center;
+  }
+}
+
+.flex--grow-1 {
+  flex-grow: 1;
+}
+
+//*********************************************************************
+// [GLOBAL] INTERFACE BLOCK STYLE
+//*********************************************************************
+.global__interface-block {
+  border-radius: 5px;
+  background-color: $white;
+  padding: 20px;
+}
+
+.global__interface-block__margin-top {
+  margin-top: 15px;
 }
