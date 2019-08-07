@@ -19,11 +19,11 @@ const dapps = {
     supportedNetworks: [ETH.name, GOERLI.name, ROP.name, RIN.name]
   },
   domainSale: {
-    route: '/interface/dapps/buy-subdomain',
+    route: '/interface/dapps/name-wallet',
     icon: domainSale,
     iconDisabled: domainSaleHov,
-    title: 'interface.subdomains',
-    desc: 'interface.buySubDomains',
+    title: 'interface.nameYourWallet',
+    desc: 'interface.nameYourWalletDesc',
     supportedNetworks: [ETH.name]
   },
   secureTransaction: {
@@ -49,7 +49,7 @@ const dapps = {
     iconDisabled: secureTransactionHov,
     title: 'dappsMaker.maker_title',
     desc: 'dappsMaker.maker_desc',
-    supportedNetworks: [ETH.name]
+    supportedNetworks: [ETH.name, KOV.name]
   }
 };
 

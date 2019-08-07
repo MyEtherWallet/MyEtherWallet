@@ -9,7 +9,12 @@
     >
       <div class="modal-contents">
         <qrcode :value="address" :options="{ size: 160 }" />
-        <textarea v-model="address" class="address" readonly></textarea>
+        <textarea
+          ref="addressInput"
+          v-model="address"
+          class="address"
+          readonly
+        ></textarea>
         <button @click="copyToClipboard">Copy</button>
       </div>
     </b-modal>
@@ -30,10 +35,8 @@ export default {
   },
   methods: {
     copyToClipboard: function() {
-      const el = document.querySelector('.address');
-      el.select();
+      this.$refs.addressInput.select();
       document.execCommand('copy');
-      el.select();
     }
   }
 };

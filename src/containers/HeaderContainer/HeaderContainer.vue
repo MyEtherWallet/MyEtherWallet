@@ -133,6 +133,7 @@
                     <template slot="button-content">
                       <div class="current-language-flag">
                         <img
+                          v-if="currentFlag !== null"
                           :src="
                             require(`@/assets/images/flags/${currentFlag}.svg`)
                           "

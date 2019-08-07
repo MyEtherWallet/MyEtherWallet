@@ -4,10 +4,8 @@ import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/Interf
 import InterfaceBottomText from '@/components/InterfaceBottomText/InterfaceBottomText.vue';
 import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessModal/SuccessModal.vue';
 import PopOver from '@/components/PopOver/PopOver.vue';
-
 import { Tooling } from '@@/helpers';
 
-//xdescribe
 describe('SignMessageContainer.vue', () => {
   let localVue, i18n, wrapper, store;
 

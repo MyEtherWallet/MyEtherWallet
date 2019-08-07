@@ -28,6 +28,7 @@ import WEB from './WEB.js';
 import TT from './TT.js';
 import SUM from './SUM.js';
 import DXN from './DXN.js';
+import PHT from './PHT.js';
 
 export {
   AKA,
@@ -59,5 +60,6 @@ export {
   WEB,
   TT,
   SUM,
-  DXN
+  DXN,
+  PHT
 };
