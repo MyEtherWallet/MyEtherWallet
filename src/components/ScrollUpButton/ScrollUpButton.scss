@@ -1,11 +1,11 @@
-@import '~@/scss/GlobalVariables';
+@import "~@/scss/GlobalVariables";
 
 .scroll-up-button {
   bottom: 5vh;
   cursor: pointer;
   position: fixed;
   right: 4vw;
-  z-index: 999;
+  z-index: 990;
 
   .button-block {
     img {
