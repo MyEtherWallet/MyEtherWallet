@@ -1,5 +1,9 @@
 ### Release v5.1.0
 
+### Devop
+
+- Update UI frontpage FAQs block [#1332](https://github.com/MyEtherWallet/MyEtherWallet/pull/1332)
+
 ### Feature
 
 - Add Dashboard and NFT Manager [#1269](https://github.com/MyEtherWallet/MyEtherWallet/pull/1269)
