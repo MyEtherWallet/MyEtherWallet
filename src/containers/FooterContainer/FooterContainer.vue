@@ -197,6 +197,10 @@ export default {
             {
               text: this.$t('footer.verifyMessage'),
               to: '/verify-message'
+            },
+            {
+              text: 'Submit Dapp',
+              to: '/dapp-submission'
             }
           ]
         },
