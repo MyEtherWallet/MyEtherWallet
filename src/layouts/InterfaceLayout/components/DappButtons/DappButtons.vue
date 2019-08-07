@@ -1,12 +1,13 @@
 <template>
-  <div :class="['dapps-button', supported ? '' : 'disabled']">
-    <router-link :to="param" tag="div">
-      <img :src="supported ? icon : iconDisabled" />
-      <div>
-        <h4>{{ title }}</h4>
-        <p>{{ desc }}</p>
-      </div>
-    </router-link>
+  <div
+    :class="['dapps-button', supported ? '' : 'disabled']"
+    @click="navigateTo"
+  >
+    <img :src="supported ? icon : iconDisabled" />
+    <div>
+      <h4>{{ title }}</h4>
+      <p>{{ desc }}</p>
+    </div>
   </div>
 </template>
 
@@ -43,9 +44,16 @@ export default {
     }
   },
   computed: {
-    ...mapState(['network']),
+    ...mapState(['network', 'online']),
     supported() {
-      return this.supportedNetworks.includes(this.network.type.name);
+      if (this.online) {
+        return this.supportedNetworks.includes(this.network.type.name);
+      }
+    }
+  },
+  methods: {
+    navigateTo() {
+      this.$router.push(this.param);
     }
   }
 };

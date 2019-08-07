@@ -427,11 +427,13 @@ export default {
     switchView(direction) {
       switch (direction) {
         case 'forward':
-          JSON.parse(this.abi).forEach(item => {
-            if (item.type !== 'constructor' && item.constant !== undefined) {
-              this.contractMethods.push(item);
-            }
-          });
+          if (this.abi !== '') {
+            JSON.parse(this.abi).forEach(item => {
+              if (item.type !== 'constructor' && item.constant !== undefined) {
+                this.contractMethods.push(item);
+              }
+            });
+          }
           this.interact = true;
           this.loading = false;
           break;

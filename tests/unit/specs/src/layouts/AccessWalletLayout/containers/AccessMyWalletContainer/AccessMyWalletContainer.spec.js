@@ -19,7 +19,6 @@ const BBtnStub = {
   props: ['title']
 };
 
-//xdescribe
 describe('AccessMyWalletContainer.vue', () => {
   let localVue, i18n, wrapper, store, showModal, hideModal;
 

@@ -116,10 +116,10 @@ export default {
         {
           name: BITBOX_TYPE,
           imgPath: bitbox,
-          text: 'Digital Bitbox',
+          text: 'BitBox',
           disabled: false,
           msg: '',
-          link: 'https://digitalbitbox.com/?ref=mew'
+          link: 'https://shiftcrypto.ch/?ref=mew'
         },
         {
           name: TREZOR_TYPE,
@@ -149,7 +149,7 @@ export default {
           text: 'KeepKey',
           disabled: false,
           msg: '',
-          link: 'http://keepkey.go2cloud.org/aff_c?offer_id=1&aff_id=5561'
+          link: 'http://lddy.no/a4im'
         }
       ]
     };
@@ -215,7 +215,7 @@ export default {
         case BITBOX_TYPE:
           this.$emit('hardwareRequiresPassword', {
             walletConstructor: BitBoxWallet,
-            hardwareBrand: 'DigitalBitbox'
+            hardwareBrand: 'BitBox'
           });
           break;
         case SECALOT_TYPE:

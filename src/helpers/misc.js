@@ -156,12 +156,16 @@ const solidityType = inputType => {
 };
 
 const isDarklisted = addr => {
-  const darklisted = store.state.darklist.data.findIndex(item => {
-    return (
-      utils.toChecksumAddress(item.address.toLowerCase()) ===
-      utils.toChecksumAddress(addr.toLowerCase())
-    );
-  });
+  const storedDarklist = store.state.darklist.data;
+  const darklisted =
+    storedDarklist > 0
+      ? storedDarklist.findIndex(item => {
+          return (
+            utils.toChecksumAddress(item.address.toLowerCase()) ===
+            utils.toChecksumAddress(addr.toLowerCase())
+          );
+        })
+      : -1;
   const errMsg =
     darklisted === -1 ? '' : store.state.darklist.data[darklisted].comment;
   const errObject = {

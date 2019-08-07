@@ -7,7 +7,8 @@ import {
   rskMainnet,
   rskTestnet,
   thundercore,
-  solidum
+  solidum,
+  lightstreamsNetwork
 } from './paths';
 export default [
   ledgerEthereum,
@@ -18,5 +19,6 @@ export default [
   rskMainnet,
   rskTestnet,
   thundercore,
-  solidum
+  solidum,
+  lightstreamsNetwork
 ];

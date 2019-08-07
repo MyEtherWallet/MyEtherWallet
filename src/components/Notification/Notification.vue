@@ -369,16 +369,16 @@ export default {
       const fetchValues = await fetch(url);
       const values = await fetchValues.json();
       if (!values) return 0;
-      if (!values.data['ETH']) return 0;
+      if (!values && !values.data && !values.data['ETH']) return 0;
       this.ethPrice = new BigNumber(values.data['ETH'].quotes.USD.price);
     },
     convertToGwei(value) {
       if (this.notValidNumber(value)) return '';
-      return unit.fromWei(value, 'Gwei');
+      return unit.fromWei(new BigNumber(value).toFixed(), 'Gwei');
     },
     convertToEth(value) {
       if (this.notValidNumber(value)) return '';
-      return unit.fromWei(value, 'ether');
+      return unit.fromWei(new BigNumber(value).toFixed(), 'ether');
     },
     getFiatValue(value) {
       if (this.notValidNumber(value)) return '';
