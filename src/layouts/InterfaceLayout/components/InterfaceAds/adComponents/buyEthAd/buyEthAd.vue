@@ -56,7 +56,13 @@ export default {
   methods: {
     showSwapWidget() {
       if (this.online) {
-        this.$eventHub.$emit('showSwapWidgetTo', this.account.address, 'USD', 'ETH', 1)
+        this.$eventHub.$emit(
+          'showSwapWidgetTo',
+          this.account.address,
+          'USD',
+          'ETH',
+          1
+        );
       }
     }
   }

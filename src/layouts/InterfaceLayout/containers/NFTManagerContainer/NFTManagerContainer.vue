@@ -166,8 +166,7 @@ export default {
       return this.account.address;
     }
   },
-  watch: {
-  },
+  watch: {},
   async mounted() {
     const stateItems = {
       count: 0,

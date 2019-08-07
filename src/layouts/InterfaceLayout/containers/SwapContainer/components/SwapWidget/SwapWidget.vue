@@ -789,7 +789,7 @@ export default {
       }
     },
     async updateEstimate(input) {
-      if(this.simplexUpdate){
+      if (this.simplexUpdate) {
         this.simplexUpdate = false;
         return;
       }
@@ -875,7 +875,6 @@ export default {
           this.fromValue = fromValue;
           break;
       }
-
     },
     async updateRateEstimate(fromCurrency, toCurrency, fromValue, to) {
       if (this.haveProviderRates) {
