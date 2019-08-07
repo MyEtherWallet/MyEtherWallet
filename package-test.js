@@ -8,7 +8,9 @@ const SAFE_TIME = 1000 * 1 * 60 * 60 * 24 * 7; //7days
 //multicoin-address-validator not enough downloads
 // Bootstrap vue is breaking current styles..
 // vue tel input missing internal package
+// vue router same link broken
 const EXCEPTIONS = [
+  'vue-router',
   '@myetherwallet/mewconnect-web-client',
   'canvas',
   'ethereum-ens',
