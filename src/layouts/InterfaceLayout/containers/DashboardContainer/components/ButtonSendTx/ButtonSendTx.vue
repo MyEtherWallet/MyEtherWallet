@@ -1,6 +1,6 @@
 <template>
   <div class="button-send-tx">
-    <div class="content-container">
+    <div :class="disabled ? 'button-disabled' : ''" class="content-container">
       <img :src="left" class="left" />
       <img :src="right" class="right" />
       <img :src="spaceman" class="spaceman" />

@@ -1,6 +1,6 @@
 <template>
   <div class="button-nft-manager">
-    <div class="content-container">
+    <div :class="disabled ? 'button-disabled' : ''" class="content-container">
       <img :src="kitties" class="kitties" />
       <div class="text-content">
         <p class="title">NFT<br />Manager</p>
