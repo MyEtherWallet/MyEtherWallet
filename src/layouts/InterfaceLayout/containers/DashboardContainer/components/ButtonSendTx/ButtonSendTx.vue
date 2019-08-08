@@ -4,7 +4,7 @@
       <img :src="left" class="left" />
       <img :src="right" class="right" />
       <img :src="spaceman" class="spaceman" />
-      <p>Send Transaction</p>
+      <p>Send<br />Transaction</p>
     </div>
   </div>
 </template>

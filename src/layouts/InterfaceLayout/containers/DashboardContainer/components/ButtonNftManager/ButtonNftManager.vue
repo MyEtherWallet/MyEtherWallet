@@ -3,7 +3,7 @@
     <div class="content-container">
       <img v-if="!disabled" :src="kitties" class="kitties" />
       <img v-if="disabled" :src="kitties" class="kitties" />
-      <p>NFT Manager</p>
+      <p>NFT<br />Manager</p>
     </div>
   </div>
 </template>

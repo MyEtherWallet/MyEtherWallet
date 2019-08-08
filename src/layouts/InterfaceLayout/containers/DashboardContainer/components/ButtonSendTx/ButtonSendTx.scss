@@ -1,5 +1,5 @@
-@import '~@/scss/GlobalVariables';
-@import '../DashboardButtons';
+@import "~@/scss/GlobalVariables";
+@import "../DashboardButtons";
 
 .content-container {
   background-color: $dark-blue-2;
@@ -28,10 +28,11 @@
 
 p {
   color: $white;
-  font-size: 20px;
+  font-size: 28px;
   font-weight: 600;
   position: absolute;
-  top: calc(50% - 10px);
-  left: 12%;
+  top: calc(50% - 31px);
+  left: 11%;
+  line-height: 31px;
   text-shadow: 2px 2px 0 $black;
 }
