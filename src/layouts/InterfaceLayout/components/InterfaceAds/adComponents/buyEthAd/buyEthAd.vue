@@ -3,7 +3,7 @@
     <div class="bottom-image-container">
       <div class="content">
         <div class="buy-text">
-          <p>{{$t('interface.buyWithCreditCard')}}</p>
+          <p>{{ $t('interface.buyWithCreditCard') }}</p>
         </div>
         <div class="send-button-container">
           <standard-button

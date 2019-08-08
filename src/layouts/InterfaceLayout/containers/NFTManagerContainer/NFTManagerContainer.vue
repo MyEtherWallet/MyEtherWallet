@@ -1,15 +1,15 @@
 <template>
   <div class="crypto-kitties-manager">
     <interface-container-title :title="$t('common.ntfManager')" />
-    <div v-if="!isReady && isOnlineAndEth" class="inner-side-menu content-container">
+    <div
+      v-if="!isReady && isOnlineAndEth"
+      class="inner-side-menu content-container"
+    >
       <nft-side-menu :supported-nft-obj="sideMenuData" :nft-config="nftConfig">
       </nft-side-menu>
       <loading-sign :loadingmessage1="$t('common.loading')" />
     </div>
-    <div
-      v-if="isReady && hasNfts"
-      class="inner-side-menu content-container"
-    >
+    <div v-if="isReady && hasNfts" class="inner-side-menu content-container">
       <nft-side-menu
         :supported-nft-obj="sideMenuData"
         :nft-config="nftConfig"
@@ -37,7 +37,7 @@
                 <div class="animated-background"></div>
               </div>
               <div v-show="hasImage(nft)">
-                <img :src="getImage(nft)" />
+                <img :src="getImage(nft)" @load="hasLoaded(nft)" />
               </div>
               <p>#{{ nft.token }}</p>
             </div>
@@ -62,10 +62,7 @@
         </div>
       </div>
     </div>
-    <div
-      v-if="isReady && !hasNfts"
-      class="inner-side-menu content-container"
-    >
+    <div v-if="isReady && !hasNfts" class="inner-side-menu content-container">
       No NFTs
     </div>
     <div v-if="!isOnlineAndEth">
@@ -73,9 +70,8 @@
         NFTs are
       </div>
       <div v-show="online">
-        NFTs are not supported on {{network.type.name_long}}
+        NFTs are not supported on {{ network.type.name_long }}
       </div>
-
     </div>
     <div class="flex--row--align-start mft-manager-content-container"></div>
   </div>
@@ -90,7 +86,6 @@ import NftDetails from './containers/NftDetails';
 import { mapState } from 'vuex';
 import hexDecoder from './binaryDecoderNFT';
 import { nftABI } from './abis';
-
 
 const URL_BASE = 'https://nft.mewapi.io/nft';
 
@@ -192,7 +187,7 @@ export default {
     hasNfts() {
       return Object.values(this.nftData).some(entry => entry.count > 0);
     },
-    isReady(){
+    isReady() {
       return this.isOnlineAndEth && this.countsRetrieved;
     },
     isOnlineAndEth() {
@@ -231,6 +226,15 @@ export default {
     }
   },
   methods: {
+    hasLoaded(nft) {
+      this.$set(nft, 'loaded', true);
+    },
+    hasImage(nft) {
+      if (nft.loaded) {
+        return true;
+      }
+      // return nft.image !== '';
+    },
     removeSentNft(nft) {
       const afterSent = this.nftData[nft.contract].details.filter(entry => {
         return entry.token !== nft.token;
@@ -486,9 +490,6 @@ export default {
         'Cache-Control': 'no-cache'
       });
       return await data.json();
-    },
-    hasImage(nft) {
-      return nft.image !== '';
     },
     async loadForContract(
       contract,
