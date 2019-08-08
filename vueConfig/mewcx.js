@@ -1,9 +1,9 @@
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const UglifyJS = require('uglify-es');
 const env_vars = require('../ENV_VARS');
 const path = require('path');
 const defaultConfig = require('./defaultConfigs');
 const webpackConfig = {
+  devtool: 'source-map',
   entry: {
     app: './src/main.js',
     contentScript: './src/builds/mewcx/cxHelpers/contentScript.js',
@@ -16,11 +16,9 @@ const webpackConfig = {
   plugins: defaultConfig.plugins.concat([
     new CopyWebpackPlugin([
       {
-        from: 'src/builds/' + JSON.parse(env_vars.BUILD_TYPE) + '/public',
-        flatten: true,
+        from: 'src/builds/mewcx/public',
         transform: function(content, filePath) {
-          if (filePath.split('.').pop() === ('js' || 'JS'))
-            return UglifyJS.minify(content.toString()).code;
+          // eslint-disable-next-line no-useless-escape
           if (filePath.replace(/^.*[\\\/]/, '') === 'manifest.json') {
             const version = JSON.parse(env_vars.VERSION);
             const json = JSON.parse(content);
@@ -31,29 +29,7 @@ const webpackConfig = {
             } else {
               json.version = version;
             }
-            if (process.env.NODE_ENV === 'production') {
-              json.browser_action.default_popup = `index.html#/popup`;
-              json.background.scripts = json.background.scripts.map(item => {
-                return `js/${item}`;
-              });
-              json.content_scripts[0].js = json.content_scripts[0].js.map(
-                item => {
-                  return `js/${item}`;
-                }
-              );
-              json.web_accessible_resources = json.web_accessible_resources.map(
-                item => {
-                  return `js/${item}`;
-                }
-              );
-            }
-            json.browser_action.default_icon = json.browser_action.default_icon.replace(
-              'img/icons/',
-              ''
-            );
-            Object.keys(json.icons).forEach(item => {
-              json.icons[item] = json.icons[item].replace('img/icons/', '');
-            });
+            json.browser_action.default_popup = `index.html#/popup`;
             return JSON.stringify(json, null, 2);
           }
           return content;
@@ -78,6 +54,8 @@ const exportObj = {
       args[0].excludeChunks = ['background', 'contentScript', 'cxWeb3'];
       return args;
     });
+    config.plugins.delete('pwa');
+    config.plugins.delete('workbox');
   }
 };
 module.exports = exportObj;

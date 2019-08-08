@@ -27,27 +27,37 @@ let getAccountModalIsOPen = false;
 const chrome = window.chrome;
 const extensionID = chrome.runtime.id;
 
-function inject(fn) {
+const inject = fn => {
   const script = document.createElement('script');
-  script.setAttribute('type', 'application/javascript');
-  script.textContent = '(' + fn + ')("' + extensionID + '")';
-  document.body.appendChild(script);
-  document.body.removeChild(script);
-}
-chrome.runtime.onMessage.addListener(function(request) {
-  const script = document.createElement('script');
-  script.src = chrome.extension.getURL(
-    `${process.env.NODE_ENV === 'production' ? 'js/' : ''}cxWeb3.js`
+  const vendorsScript = document.createElement('script');
+  vendorsScript.src = chrome.extension.getURL(
+    `${process.env.NODE_ENV === 'production' ? 'js/' : ''}vendors.js`
   );
+  vendorsScript.setAttribute('id', 'mew-vendor');
+  vendorsScript.onload = () => {
+    script.src = chrome.extension.getURL(
+      `${process.env.NODE_ENV === 'production' ? 'js/' : ''}cxWeb3.js`
+    );
+    script.setAttribute('id', 'mew-web3script');
+    document.head.appendChild(script);
+  };
+  if (!elementExists('mew-vendor')) document.head.appendChild(vendorsScript);
+  const idScript = document.createElement('script');
+  idScript.setAttribute('type', 'application/javascript');
+  idScript.setAttribute('id', 'mew-extensionId');
+  idScript.textContent = '(' + fn + ')("' + extensionID + '")';
+  if (!elementExists('mew-extensionId')) document.body.appendChild(idScript);
+};
+const elementExists = eleId => {
+  return document.getElementById(eleId) !== null;
+};
+chrome.runtime.onMessage.addListener(function(request) {
   switch (request.msg) {
     case CX_INJECT_WEB3:
-      document.body.appendChild(script);
-      document.body.removeChild(script);
       inject(function(id) {
         window.extensionID = id;
       });
       break;
-
     case SELECTED_MEW_CX_ACC:
       getAccountModalIsOPen = false;
       window.dispatchEvent(
