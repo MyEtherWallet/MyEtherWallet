@@ -15,6 +15,7 @@
         :nft-config="nftConfig"
         :initial-highlighted="selectedContract"
         :loading-complete="countsRetrieved"
+        :sent-update="sentUpdate"
         @selected="changeSelectedContract"
       >
       </nft-side-menu>
@@ -22,6 +23,7 @@
         <nft-details
           :nft="detailsFor"
           :selected-title="nftTitle"
+          @nftTransfered="removeSentNft"
           @back="comeBack"
         ></nft-details>
       </div>
@@ -105,7 +107,8 @@ export default {
       nftTokens: {},
       nftData: {},
       ownedTokens: [],
-      tokenContractAddress: '0xeA3352C1a3480Ac5a32Fcd1F2854529BA7193F14'
+      tokenContractAddress: '0xeA3352C1a3480Ac5a32Fcd1F2854529BA7193F14',
+      sentUpdate: 0
     };
   },
   computed: {
@@ -211,6 +214,15 @@ export default {
     }
   },
   methods: {
+    removeSentNft(nft) {
+      const afterSent = this.nftData[nft.contract].details.filter(entry => {
+        return entry.token !== nft.token;
+      });
+      this.$set(this.nftData[nft.contract], 'details', afterSent);
+      this.nftData[nft.contract].count -= 1;
+      if (this.nftData[nft.contract].count === 0) this.sentUpdate += 1;
+      this.showDetails = false;
+    },
     changeSelectedContract(selectedContract) {
       this.selectedContract = selectedContract;
       this.showDetails = false;

@@ -194,6 +194,9 @@ export default {
           return 1;
         return 0;
       });
+    },
+    isOnlineAndEth() {
+      return this.online && this.network.type.name === 'ETH';
     }
   },
   watch: {

@@ -43,6 +43,10 @@ export default {
     loadingComplete: {
       type: Boolean,
       default: false
+    },
+    sentUpdate: {
+      type: Number,
+      default: 0
     }
   },
   data() {
@@ -66,14 +70,20 @@ export default {
   },
   watch: {
     loadingComplete() {
-      this.selected = this.sortByCount[0].contract;
-      this.$emit('selected', this.selected);
+      this.setSelectedToTop();
+    },
+    sentUpdate() {
+      this.setSelectedToTop();
     }
   },
   mounted() {
     this.selected = this.initialHighlighted;
   },
   methods: {
+    setSelectedToTop() {
+      this.selected = this.sortByCount[0].contract;
+      this.$emit('selected', this.selected);
+    },
     selectNft(nft) {
       this.searchResults = [];
       if (nft.count > 0) {
