@@ -1,3 +1,13 @@
+### Release v5.1.1
+
+### Feature
+
+- Add Buy Eth Button to nav bar, standardize dapp header layout [#1330](https://github.com/MyEtherWallet/MyEtherWallet/pull/1330)
+
+### Bug
+
+- Fix scroll up button position [#1331](https://github.com/MyEtherWallet/MyEtherWallet/pull/1331)
+
 ### Release v5.1.0
 
 ### Feature
