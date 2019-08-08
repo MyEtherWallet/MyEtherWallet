@@ -7,14 +7,13 @@
         </div>
         <div class="buttons">
           <button-send-tx
-            :disabled="true"
             class="clickable"
             @click.native="goTo('send-transaction')"
           />
           <button-nft-manager
-            :disabled="true"
+            :disabled="!isOnlineAndEth"
             class="clickable"
-            @click.native="goTo('nft-manager')"
+            @click.native="goTo('nft-manager', !isOnlineAndEth)"
           />
         </div>
       </div>
@@ -35,7 +34,7 @@
         <div class="swap-info">
           <div v-for="pair in swapPairs" :key="pair.from + pair.to">
             <div
-              :class="true ? 'swap-disabled' : ''"
+              :class="isOnlineAndEth ? '' : 'swap-disabled'"
               class="swap-to clickable"
               @click.prevent="showSwapWidget(pair)"
             >
@@ -204,10 +203,26 @@ export default {
   },
   watch: {
     ['swap.haveProviderRates']() {
-      if (this.showSwapValues) {
+      if (this.isOnlineAndEth) {
         this.haveProviderRates = this.swap.haveProviderRates;
         this.setupSwap();
       }
+    },
+    network() {
+      setTimeout(() => {
+        this.swap = new SwapProviders(
+          providers,
+          {
+            network: this.network.type.name,
+            web3: this.web3,
+            getRateForUnit: false
+          },
+          {
+            tokensWithBalance: this.tokensWithBalance,
+            online: this.$store.state.online
+          }
+        );
+      }, 500);
     }
   },
   mounted() {
@@ -218,7 +233,8 @@ export default {
     }
   },
   methods: {
-    goTo(page) {
+    goTo(page, disabled) {
+      if (disabled) return;
       let childIndex = -1;
       const pageInfo = this.tabData.find(entry => {
         if (entry.name === page) {
@@ -243,23 +259,27 @@ export default {
       }
     },
     async setupSwap() {
-      if (this.showSwapValues) {
+      if (this.isOnlineAndEth) {
         for (let i = 0; i < this.swapPairs.length; i++) {
           const swappers = await this.swap.standAloneRateEstimate(
             this.swapPairs[i].from,
             this.swapPairs[i].to,
             this.swapPairs[i].amt
           );
-          this.$set(
-            this.swapPairs[i],
-            'rate',
-            toBigNumber(swappers[0].rate).toFixed(4)
-          );
+          if (this.isOnlineAndEth) {
+            if (swappers) {
+              this.$set(
+                this.swapPairs[i],
+                'rate',
+                toBigNumber(swappers[0].rate).toFixed(4)
+              );
+            }
+          }
         }
       }
     },
     showSwapWidget(vals) {
-      if (this.showSwapValues) {
+      if (this.isOnlineAndEth) {
         this.$eventHub.$emit(
           'showSwapWidget',
           this.account.address,
