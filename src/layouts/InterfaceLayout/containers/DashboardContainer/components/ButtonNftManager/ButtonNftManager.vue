@@ -1,9 +1,13 @@
 <template>
   <div class="button-nft-manager">
     <div class="content-container">
-      <img v-if="!disabled" :src="kitties" class="kitties" />
-      <img v-if="disabled" :src="kitties" class="kitties" />
-      <p>NFT<br />Manager</p>
+      <img :src="kitties" class="kitties" />
+      <div class="text-content">
+        <p class="title">NFT<br />Manager</p>
+        <p v-if="disabled" class="button-disabled">
+          This function is not available.
+        </p>
+      </div>
     </div>
   </div>
 </template>

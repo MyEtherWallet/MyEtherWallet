@@ -4,7 +4,12 @@
       <img :src="left" class="left" />
       <img :src="right" class="right" />
       <img :src="spaceman" class="spaceman" />
-      <p>Send<br />Transaction</p>
+      <div class="text-content">
+        <p class="title">Send<br />Transaction</p>
+        <p v-if="disabled" class="button-disabled">
+          This function is not available.
+        </p>
+      </div>
     </div>
   </div>
 </template>
@@ -17,6 +22,12 @@ import Spaceman from '@/assets/images/buttons/send-tx/spaceman.png';
 export default {
   name: 'ButtonSendTx',
   components: {},
+  props: {
+    disabled: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       left: LeftCircle,
