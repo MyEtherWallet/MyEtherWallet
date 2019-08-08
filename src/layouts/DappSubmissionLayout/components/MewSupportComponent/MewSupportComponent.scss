@@ -1,0 +1,55 @@
+@import '~@/scss/GlobalVariables';
+
+.mew-support-box {
+  background: $light-green-1;
+  border-radius: 6px;
+  height: 197px;
+  width: 324px;
+}
+
+.mew-support-header {
+  color: $dark-blue-2;
+  // font-family: SFProDisplay-Bold;
+  font-size: 20px;
+  font-weight: bold;
+  height: 24px;
+  // width: 176px;
+  text-align: left;
+  margin-left: 20px;
+}
+.mew-support-info {
+  color: $light-blue-3;
+  // font-family: SFProText-Regular;
+  color: rgb(71, 96, 129);
+  height: 54px;
+  letter-spacing: 0;
+  line-height: 18px;
+  text-align: left;
+  margin-top: 10px;
+  margin-left: 20px;
+  width: 180px;
+}
+
+.mew-support-txt {
+  padding-top: 24px;
+}
+
+.msg-logo {
+  height: 49px;
+  width: 49px;
+  margin-left: 15px;
+}
+
+.email-us-btn {
+  border-radius: 4px;
+  border: 1px solid $mew-green;
+  height: 46px;
+  width: 88%;
+  background-color: transparent;
+  color: $mew-green;
+  font-weight: 500;
+}
+
+.text-container {
+  display: flex;
+}

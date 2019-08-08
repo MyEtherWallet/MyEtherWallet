@@ -1,0 +1,22 @@
+@import '~@/scss/GlobalVariables';
+
+.banner {
+  max-width: 100%;
+}
+
+.banner-container {
+  position: relative;
+  text-align: center;
+}
+
+.banner-text {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  position: absolute;
+  color: $white;
+  font-size: 40px;
+  font-weight: bold;
+  height: 48px;
+  width: 100%;
+}
