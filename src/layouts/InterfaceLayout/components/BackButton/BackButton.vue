@@ -6,6 +6,7 @@
       </div>
       <p>{{ $t('common.back') }}</p>
     </div>
+    <div class="right-slot"><slot /></div>
   </div>
 </template>
 
