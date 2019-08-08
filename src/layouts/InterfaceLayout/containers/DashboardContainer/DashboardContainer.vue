@@ -35,6 +35,7 @@
         <div class="swap-info">
           <div v-for="pair in swapPairs" :key="pair.from + pair.to">
             <div
+              :class="true ? 'swap-disabled' : ''"
               class="swap-to clickable"
               @click.prevent="showSwapWidget(pair)"
             >
