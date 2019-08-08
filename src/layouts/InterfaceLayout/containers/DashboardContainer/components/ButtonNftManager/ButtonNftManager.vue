@@ -1,7 +1,8 @@
 <template>
   <div class="button-nft-manager">
     <div class="content-container">
-      <img :src="kitties" class="kitties" />
+      <img v-if="!disabled" :src="kitties" class="kitties" />
+      <img v-if="disabled" :src="kitties" class="kitties" />
       <p>NFT Manager</p>
     </div>
   </div>
@@ -13,6 +14,12 @@ import CryptoKitties from '@/assets/images/buttons/nft-manager/crypto-kitties.pn
 export default {
   name: 'ButtonNftManager',
   components: {},
+  props: {
+    disabled: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       kitties: CryptoKitties
