@@ -917,8 +917,9 @@ export default {
                   minValue: entry.minValue || 0,
                   maxValue: entry.maxValue || 0,
                   computeConversion: function(_fromValue) {
+                    const rate = new BigNumber(entry.rate);
                     return new BigNumber(_fromValue)
-                      .times(this.rate)
+                      .times(rate)
                       .toFixed(6)
                       .toString(10);
                   }

@@ -86,7 +86,7 @@ export default class Simplex {
   async getRate(fromCurrency, toCurrency, fromValue, toValue, isFiat) {
     let simplexRateDetails, updateType;
 
-    if (this.canQuote(fromValue /*, toValue*/)) {
+    if (this.canQuote(fromValue, toValue)) {
       if (this.isFiat(fromCurrency) && isFiat) {
         updateType = 'updateFiat';
       } else {
@@ -103,6 +103,7 @@ export default class Simplex {
       this.internalEstimateRate = new BigNumber(simplexRateDetails.toValue)
         .div(simplexRateDetails.fromValue)
         .toString(10);
+
       return {
         fromCurrency: fromCurrency,
         toCurrency: toCurrency,
@@ -147,12 +148,14 @@ export default class Simplex {
       return { error: result.result, fromValue: fromValue, toValue: 0 };
     }
     this.currentOrder = result.result;
+    const rate = new BigNumber(result.result.digital_money.amount)
+      .div(result.result.fiat_money.total_amount)
+      .toString(10);
+
     return {
       fromValue: result.result.fiat_money.total_amount,
       toValue: result.result.digital_money.amount,
-      rate: new BigNumber(result.result.digital_money.amount)
-        .div(result.result.fiat_money.base_amount)
-        .toString(10)
+      rate: rate
     };
   }
 
@@ -168,12 +171,15 @@ export default class Simplex {
       return { error: result.result, fromValue: 0, toValue: toValue };
     }
     this.currentOrder = result.result;
+
+    const rate = new BigNumber(toValue)
+      .div(result.result.fiat_money.total_amount)
+      .toString(10);
+
     return {
       fromValue: result.result.fiat_money.total_amount,
       toValue: toValue, //result.result.digital_money.amount,
-      rate: new BigNumber(toValue)
-        .div(result.result.fiat_money.base_amount)
-        .toString(10)
+      rate: rate
     };
   }
 
