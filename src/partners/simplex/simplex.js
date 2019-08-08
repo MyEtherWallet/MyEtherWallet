@@ -148,14 +148,13 @@ export default class Simplex {
       return { error: result.result, fromValue: fromValue, toValue: 0 };
     }
     this.currentOrder = result.result;
-    const rate = new BigNumber(result.result.digital_money.amount)
-      .div(result.result.fiat_money.total_amount)
-      .toString(10);
 
     return {
       fromValue: result.result.fiat_money.total_amount,
       toValue: result.result.digital_money.amount,
-      rate: rate
+      rate: new BigNumber(result.result.digital_money.amount)
+        .div(result.result.fiat_money.total_amount)
+        .toString(10)
     };
   }
 
@@ -172,14 +171,12 @@ export default class Simplex {
     }
     this.currentOrder = result.result;
 
-    const rate = new BigNumber(toValue)
-      .div(result.result.fiat_money.total_amount)
-      .toString(10);
-
     return {
       fromValue: result.result.fiat_money.total_amount,
       toValue: toValue, //result.result.digital_money.amount,
-      rate: rate
+      rate: new BigNumber(toValue)
+        .div(result.result.fiat_money.total_amount)
+        .toString(10)
     };
   }
 
