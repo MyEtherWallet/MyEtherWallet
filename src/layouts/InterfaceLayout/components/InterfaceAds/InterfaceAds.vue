@@ -18,7 +18,7 @@
         </div>
       </a>
     </div>
-    <div class="global__interface-block__margin-top">
+    <div class="global__interface-block__margin-top slider-container">
       <b-carousel
         v-model="slide"
         :interval="adInterval"
@@ -32,9 +32,7 @@
           <buy-eth-ad @pauseAds="pauseAds"></buy-eth-ad>
         </b-carousel-slide>
         <b-carousel-slide>
-          <a href="https://mewconnect.myetherwallet.com/#/" target="_blank">
-            <img src="~@/assets/images/ads/mewconnect.jpeg" />
-          </a>
+          <mew-connect-ad />
         </b-carousel-slide>
       </b-carousel>
     </div>
@@ -51,7 +49,8 @@ export default {
   components: {
     'interface-tokens-modal': InterfaceTokensModal,
     'buy-eth-ad': ads.buyEthAd,
-    'static-ad': ads.staticAd
+    'static-ad': ads.staticAd,
+    'mew-connect-ad': ads.mewConnectAd
   },
   props: {},
   data() {
