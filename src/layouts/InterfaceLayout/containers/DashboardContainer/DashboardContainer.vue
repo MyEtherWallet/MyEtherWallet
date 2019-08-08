@@ -7,10 +7,12 @@
         </div>
         <div class="buttons">
           <button-send-tx
+            :disabled="true"
             class="clickable"
             @click.native="goTo('send-transaction')"
           />
           <button-nft-manager
+            :disabled="true"
             class="clickable"
             @click.native="goTo('nft-manager')"
           />
