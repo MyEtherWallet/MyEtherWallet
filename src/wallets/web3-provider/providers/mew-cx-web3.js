@@ -65,7 +65,7 @@ class MewCxEthereum extends EventEmitter {
     this._requestManager = new HttpRequestManger(host, {});
     this._id = 0;
     this._promises = {};
-    this._connect();
+    // this._connect();
 
     this.httpProvider = {
       send: (method, params = []) => {
