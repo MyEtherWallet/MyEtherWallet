@@ -1,4 +1,4 @@
-@import '~@/scss/GlobalVariables';
+@import "~@/scss/GlobalVariables";
 
 .vintage-header {
   background-color: $mew-green;
@@ -135,9 +135,9 @@
         position: relative;
         .buy-eth-icon {
           position: absolute;
-          top: 15px;
-          left: -17px;
-          height: 29px;
+          top: 19px;
+          left: -13px;
+          height: 24px;
         }
       }
 
