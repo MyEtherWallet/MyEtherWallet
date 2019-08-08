@@ -7,13 +7,13 @@
       class="bootstrap-modal nopadding"
       hide-footer
     >
-      <swap-widget
-        ref="swapWidget"
-        :supplied-from="suppliedFrom"
-        :supplied-to="suppliedTo"
-        :supplied-to-amount="suppliedToAmount"
-        :dest-address="account.address"
-      ></swap-widget>
+      <!--      <swap-widget-->
+      <!--        ref="swapWidget"-->
+      <!--        :supplied-from="suppliedFrom"-->
+      <!--        :supplied-to="suppliedTo"-->
+      <!--        :supplied-to-amount="suppliedToAmount"-->
+      <!--        :dest-address="account.address"-->
+      <!--      ></swap-widget>-->
       <div class="contents">
         <p class="top-message">
           {{ $t('dappsMaker.paybackNotice') }}
@@ -438,9 +438,13 @@ export default {
           symbol: 'MKR',
           name: 'Maker'
         };
-        this.$nextTick(() => {
-          this.$refs.swapWidget.$refs.modal.show();
-        });
+        this.$eventHub.$emit(
+          'showSwapWidgetTo',
+          this.account.address,
+          this.suppliedFrom,
+          this.suppliedTo,
+          this.suppliedToAmount
+        );
       }
     },
     closeModal() {

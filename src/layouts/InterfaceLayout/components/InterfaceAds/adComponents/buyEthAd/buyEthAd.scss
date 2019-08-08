@@ -13,13 +13,14 @@
     background-image: url('~@/assets/images/ads/eth.png');
     background-position: bottom right;
     background-repeat: no-repeat;
-    height: 200px;
+    height: 190px;
     .buy-text {
       p {
         color: black;
         font-size: 26px;
         font-weight: bold;
-        margin-top: 26px;
+        margin-top: 10px;
+        margin-bottom: 10px;
       }
     }
     .send-button-container {

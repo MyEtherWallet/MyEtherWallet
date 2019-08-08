@@ -1,13 +1,13 @@
 <template>
   <div class="crypto-kitties-manager">
     <interface-container-title :title="$t('common.ntfManager')" />
-    <div v-if="!countsRetrieved" class="inner-side-menu content-container">
+    <div v-if="!isReady && isOnlineAndEth" class="inner-side-menu content-container">
       <nft-side-menu :supported-nft-obj="sideMenuData" :nft-config="nftConfig">
       </nft-side-menu>
       <loading-sign :loadingmessage1="$t('common.loading')" />
     </div>
     <div
-      v-if="countsRetrieved && hasNfts"
+      v-if="isReady && hasNfts"
       class="inner-side-menu content-container"
     >
       <nft-side-menu
@@ -63,10 +63,19 @@
       </div>
     </div>
     <div
-      v-if="countsRetrieved && !hasNfts"
+      v-if="isReady && !hasNfts"
       class="inner-side-menu content-container"
     >
       No NFTs
+    </div>
+    <div v-if="!isOnlineAndEth">
+      <div v-show="!online">
+        NFTs are
+      </div>
+      <div v-show="online">
+        NFTs are not supported on {{network.type.name_long}}
+      </div>
+
     </div>
     <div class="flex--row--align-start mft-manager-content-container"></div>
   </div>
@@ -81,6 +90,7 @@ import NftDetails from './containers/NftDetails';
 import { mapState } from 'vuex';
 import hexDecoder from './binaryDecoderNFT';
 import { nftABI } from './abis';
+
 
 const URL_BASE = 'https://nft.mewapi.io/nft';
 
@@ -112,6 +122,7 @@ export default {
     };
   },
   computed: {
+    ...mapState(['account', 'web3', 'online', 'network']),
     endIndex() {
       if (this.nftData[this.selectedContract]) {
         const ids_retrieved = this.nftData[this.selectedContract].details
@@ -168,7 +179,6 @@ export default {
     sideMenuData() {
       return this.nftData;
     },
-    ...mapState(['account', 'web3', 'online', 'network']),
     startIndex() {
       if (this.nftData[this.selectedContract]) {
         return this.nftData[this.selectedContract].currentIndex;
@@ -178,8 +188,15 @@ export default {
     activeAddress() {
       return this.account.address;
     },
+
     hasNfts() {
       return Object.values(this.nftData).some(entry => entry.count > 0);
+    },
+    isReady(){
+      return this.isOnlineAndEth && this.countsRetrieved;
+    },
+    isOnlineAndEth() {
+      return this.online && this.network.type.name === 'ETH';
     }
   },
   watch: {},
