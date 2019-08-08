@@ -7,13 +7,6 @@
       class="bootstrap-modal nopadding"
       hide-footer
     >
-      <swap-widget
-        ref="swapWidget"
-        :supplied-from="suppliedFrom"
-        :supplied-to="suppliedTo"
-        :supplied-to-amount="suppliedToAmount"
-        :dest-address="account.address"
-      ></swap-widget>
       <div class="contents">
         <div v-if="!enoughMkr" class="message-container">
           {{ $t('dappsMaker.notEnoughMkrClose') }}
@@ -377,9 +370,13 @@ export default {
           symbol: 'DAI',
           name: 'Dai'
         };
-        this.$nextTick(() => {
-          this.$refs.swapWidget.$refs.modal.show();
-        });
+        this.$eventHub.$emit(
+          'showSwapWidgetTo',
+          this.account.address,
+          this.suppliedFrom,
+          this.suppliedTo,
+          this.suppliedToAmount
+        );
       }
     },
 
