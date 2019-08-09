@@ -100,7 +100,7 @@ export default {
         { url: `*://*.${_self.request.connectionRequest}/*` },
         function(tab) {
           const obj = {
-            msg: REJECT_MEW_CX_ACC
+            event: REJECT_MEW_CX_ACC
           };
           window.chrome.tabs.sendMessage(tab[0].id, obj);
           window.close();
@@ -116,9 +116,10 @@ export default {
         { url: `*://*.${this.request.connectionRequest.toLowerCase()}/*` },
         function(tab) {
           const obj = {
-            msg: SELECTED_MEW_CX_ACC,
-            account: account
+            event: SELECTED_MEW_CX_ACC,
+            payload: [account]
           };
+          console.log(obj);
           chrome.storage.sync.set(eventObj, function() {});
           chrome.tabs.sendMessage(tab[0].id, obj);
           window.close();

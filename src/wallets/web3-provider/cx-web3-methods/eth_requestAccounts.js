@@ -18,7 +18,7 @@ export default async ({ payload }, res, next) => {
   window.addEventListener(WEB3_RECEIVE_ACC.replace('{{id}}', id), function(
     eventRes
   ) {
-    res(null, toPayload(payload.id, [eventRes.detail.account]));
+    res(null, toPayload(payload.id, eventRes.detail.payload));
     this.removeEventListener(WEB3_RECEIVE_ACC.replace('{{id}}', id), () => {});
     this.removeEventListener(WEB3_REJECT.replace('{{id}}', id), () => {});
   });

@@ -8,7 +8,7 @@ import {
 export default async ({ payload }, res, next) => {
   if (payload.method !== 'eth_accounts') return next();
   const id = window.extensionID;
-  const callerUrl = window.location.hostname;
+  const callerUrl = window.location.origin;
   const event = new CustomEvent(WEB3_GET_ACC.replace('{{id}}', id), {
     detail: {
       from: callerUrl
@@ -18,7 +18,7 @@ export default async ({ payload }, res, next) => {
   window.addEventListener(WEB3_RECEIVE_ACC.replace('{{id}}', id), function(
     eventRes
   ) {
-    res(null, toPayload(payload.id, [eventRes.detail.account]));
+    res(null, toPayload(payload.id, eventRes.detail.payload));
     this.removeEventListener(WEB3_RECEIVE_ACC.replace('{{id}}', id), () => {});
     this.removeEventListener(WEB3_REJECT.replace('{{id}}', id), () => {});
   });

@@ -138,10 +138,41 @@ const buildMode = function() {
   return useHash;
 };
 
+const queryBuilder = function(request) {
+  if (request.hasOwnProperty('meta') && Object.keys(request.meta).length > 0) {
+    const arr = [];
+    for (const i in request.meta) {
+      if (request.meta.hasOwnProperty(i)) {
+        arr.push(
+          encodeURIComponent(i.replace('og:', '')) +
+            '=' +
+            encodeURIComponent(request.meta[i])
+        );
+      }
+    }
+    return arr.join('&');
+  } else if (
+    request.hasOwnProperty('tx') &&
+    Object.keys(request.tx).length > 0
+  ) {
+    const arr = [];
+    for (const i in request.tx) {
+      if (request.tx.hasOwnProperty(i)) {
+        arr.push(
+          encodeURIComponent(i) + '=' + encodeURIComponent(request.tx[i])
+        );
+      }
+    }
+    return arr.join('&');
+  }
+  return '';
+};
+
 export default {
   checkUrlSimilarity,
   extractRootDomain,
   blackListDomains,
   whiteListDomains,
-  buildMode
+  buildMode,
+  queryBuilder
 };

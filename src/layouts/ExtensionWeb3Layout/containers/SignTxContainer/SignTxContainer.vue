@@ -196,7 +196,7 @@ export default {
         { url: `*://*.${Misc.getService(_self.linkQuery.url)}/*` },
         function(tab) {
           const obj = {
-            msg: REJECT_MEW_TX_SIGN
+            event: REJECT_MEW_TX_SIGN
           };
           window.chrome.tabs.sendMessage(tab[0].id, obj);
           window.close();
@@ -216,7 +216,7 @@ export default {
             { url: `*://*.${Misc.getService(_self.linkQuery.url)}/*` },
             function(tab) {
               const obj = {
-                msg: REJECT_MEW_TX_SIGN
+                event: REJECT_MEW_TX_SIGN
               };
               window.chrome.tabs.sendMessage(tab[0].id, obj);
               window.close();
@@ -227,7 +227,7 @@ export default {
           { url: `*://*.${Misc.getService(_self.linkQuery.url)}/*` },
           function(tab) {
             const obj = {
-              msg: MEW_TX_HASH,
+              event: MEW_TX_HASH,
               hash: hash
             };
             window.chrome.tabs.sendMessage(tab[0].id, obj);

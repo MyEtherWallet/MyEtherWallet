@@ -52,7 +52,7 @@ const elementExists = eleId => {
   return document.getElementById(eleId) !== null;
 };
 chrome.runtime.onMessage.addListener(function(request) {
-  switch (request.msg) {
+  switch (request.event) {
     case CX_INJECT_WEB3:
       inject(function(id) {
         window.extensionID = id;
@@ -64,7 +64,7 @@ chrome.runtime.onMessage.addListener(function(request) {
       window.dispatchEvent(
         new CustomEvent(WEB3_RECEIVE_ACC.replace('{{id}}', extensionID), {
           detail: {
-            account: request.account
+            payload: request.payload
           }
         })
       );
@@ -106,14 +106,64 @@ window.addEventListener(
   WEB3_DETECTED.replace('{{id}}', extensionID),
   function() {
     chrome.runtime.sendMessage(extensionID, {
-      msg: CX_WEB3_DETECTED
+      event: CX_WEB3_DETECTED
     });
   },
   false
 );
 window.addEventListener(
   WEB3_GET_ACC.replace('{{id}}', extensionID),
+  // function(e) {
+  //   const url = cxHelpers.extractRootDomain(e.detail.from);
+  //   chrome.storage.sync.get(url, items => {
+  //     const meta = {};
+  //     const tags = Array.from(document.getElementsByTagName('meta')).filter(
+  //       meta => {
+  //         if (meta.attributes[0].nodeName === 'property') return meta;
+  //       }
+  //     );
+  //     Array.from(document.getElementsByTagName('link')).forEach(item => {
+  //       if (item.href.includes('favicon.')) meta['favicon'] = item.href;
+  //     });
+  //     tags.forEach(tag => {
+  //       meta[tag.attributes[0].value] = tag.attributes[1].value;
+  //     });
+  //     if (Object.keys(items).length > 0) {
+  //       window.dispatchEvent(
+  //         new CustomEvent(WEB3_RECEIVE_ACC.replace('{{id}}', extensionID), {
+  //           detail: {
+  //             account: items[url]
+  //           }
+  //         })
+  //       );
+  //     } else {
+  //       if (!getAccountModalIsOPen) {
+  //         ExtensionHelpers.getAccounts(item => {
+  //           const addresses = {};
+  //           Object.keys(item).forEach(key => {
+  //             if (isAddress(key)) {
+  //               addresses[key] = item[key];
+  //             }
+  //           });
+  //           if (Object.keys(addresses).length > 0) {
+  //             chrome.runtime.sendMessage(extensionID, {
+  //               event: CX_FETCH_MEW_ACCS,
+  //               url: window.location.origin,
+  //               meta: meta
+  //             });
+  //           } else {
+  //             chrome.runtime.sendMessage(extensionID, {
+  //               event: CX_GO_TO_MAIN_PAGE
+  //             });
+  //           }
+  //         });
+  //         getAccountModalIsOPen = true;
+  //       }
+  //     }
+  //   });
+  // },
   function(e) {
+    console.log(e);
     const url = cxHelpers.extractRootDomain(e.detail.from);
     chrome.storage.sync.get(url, items => {
       const meta = {};
@@ -128,38 +178,13 @@ window.addEventListener(
       tags.forEach(tag => {
         meta[tag.attributes[0].value] = tag.attributes[1].value;
       });
-      if (Object.keys(items).length > 0) {
-        window.dispatchEvent(
-          new CustomEvent(WEB3_RECEIVE_ACC.replace('{{id}}', extensionID), {
-            detail: {
-              account: items[url]
-            }
-          })
-        );
-      } else {
-        if (!getAccountModalIsOPen) {
-          ExtensionHelpers.getAccounts(item => {
-            const addresses = {};
-            Object.keys(item).forEach(key => {
-              if (isAddress(key)) {
-                addresses[key] = item[key];
-              }
-            });
-            if (Object.keys(addresses).length > 0) {
-              chrome.runtime.sendMessage(extensionID, {
-                msg: CX_FETCH_MEW_ACCS,
-                url: window.location.origin,
-                meta: meta
-              });
-            } else {
-              chrome.runtime.sendMessage(extensionID, {
-                msg: CX_GO_TO_MAIN_PAGE
-              });
-            }
-          });
-          getAccountModalIsOPen = true;
+      chrome.runtime.sendMessage(extensionID, {
+        event: CX_FETCH_MEW_ACCS,
+        payload: {
+          url: window.location.origin,
+          meta: meta
         }
-      }
+      });
     });
   },
   false
@@ -169,9 +194,11 @@ window.addEventListener(WEB3_SEND_TX.replace('{{id}}', extensionID), function(
   e
 ) {
   chrome.runtime.sendMessage(extensionID, {
-    msg: CX_CONFIRM_SEND_TX,
-    tx: e.detail.tx,
-    url: window.location.origin
+    event: CX_CONFIRM_SEND_TX,
+    payload: {
+      tx: e.detail.tx,
+      url: window.location.origin
+    }
   });
 });
 
@@ -179,10 +206,12 @@ window.addEventListener(
   WEB3_SEND_SIGN_MSG.replace('{{id}}', extensionID),
   function(e) {
     chrome.runtime.sendMessage(extensionID, {
-      msg: CX_SIGN_MSG,
-      msgToSign: e.detail.msgToSign,
-      address: e.detail.address,
-      url: window.location.origin
+      event: CX_SIGN_MSG,
+      payload: {
+        msgToSign: e.detail.msgToSign,
+        address: e.detail.address,
+        url: window.location.origin
+      }
     });
   }
 );
