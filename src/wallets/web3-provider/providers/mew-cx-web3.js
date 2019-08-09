@@ -85,11 +85,9 @@ class MewCxEthereum extends EventEmitter {
           requestManager
         };
 
-        const promise = new Promise((resolve, reject) => {
-          this._promises[payload.id] = { resolve, reject };
-        });
+        this._promises[payload.id] = new Promise();
         const cb = (e, res) => {
-          if (e !== null) this._promises[res.id].reject(e);
+          if (e) this._promises[res.id].reject(e);
           this._promises[res.id].resolve(res.result);
         };
 
@@ -97,7 +95,7 @@ class MewCxEthereum extends EventEmitter {
           this._requestManager.provider.send(req, cb);
         });
 
-        return promise;
+        return this._promises[payload.id];
       },
       sendAsync: function(payload) {
         return this.send(payload.method, payload.params);

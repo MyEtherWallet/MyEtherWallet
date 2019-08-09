@@ -1,6 +1,5 @@
-console.log('sdfsdfdf');
 import cxHelpers from './cxHelpers';
-import { getMode } from '../../configs';
+
 import {
   CX_INJECT_WEB3,
   CX_SIGN_MSG,
@@ -10,12 +9,10 @@ import {
   CX_GO_TO_MAIN_PAGE
 } from './cxEvents';
 const chrome = window.chrome;
-const useHash = getMode() === 'hash' ? '#' : '';
 const urls = {};
 let metamaskChecker;
 
-/* eslint no-console: 0, no-unused-vars: 0, no-undef: 0 */
-const eventsListeners = function(request, _, sendResponse) {
+const eventsListeners = request => {
   let q;
   if (request.hasOwnProperty('meta') && Object.keys(request.meta).length > 0) {
     const arr = [];
@@ -46,13 +43,13 @@ const eventsListeners = function(request, _, sendResponse) {
   switch (request.msg) {
     case CX_GO_TO_MAIN_PAGE:
       chrome.tabs.create({
-        url: `chrome-extension://${chrome.runtime.id}/index.html${useHash}/access-my-wallet`
+        url: chrome.runtime.getURL(`index.html#/access-my-wallet`)
       });
       break;
     case CX_FETCH_MEW_ACCS:
       chrome.windows.create({
         url: chrome.runtime.getURL(
-          `index.html${useHash}/extension-popups/account-access?connectionRequest=${request.url}&${q}`
+          `index.html#/extension-popups/account-access?connectionRequest=${request.url}&${q}`
         ),
         type: 'popup',
         height: 500,
@@ -66,7 +63,7 @@ const eventsListeners = function(request, _, sendResponse) {
           clearTimeout(metamaskChecker);
           chrome.windows.create({
             url: chrome.runtime.getURL(
-              `index.html${useHash}/extension-popups/web3-detected`
+              `index.html#/extension-popups/web3-detected`
             ),
             type: 'popup',
             height: 500,
@@ -83,7 +80,7 @@ const eventsListeners = function(request, _, sendResponse) {
     case CX_CONFIRM_SEND_TX:
       chrome.windows.create({
         url: chrome.runtime.getURL(
-          `index.html${useHash}/extension-popups/sign-tx?url=${request.url}&${q}`
+          `index.html#/extension-popups/sign-tx?url=${request.url}&${q}`
         ),
         type: 'popup',
         height: 500,
@@ -94,7 +91,7 @@ const eventsListeners = function(request, _, sendResponse) {
     case CX_SIGN_MSG:
       chrome.windows.create({
         url: chrome.runtime.getURL(
-          `index.html${useHash}/extension-popups/sign-msg?url=${request.url}&msgToSign=${request.msgToSign}&address=${request.address}`
+          `index.html#/extension-popups/sign-msg?url=${request.url}&msgToSign=${request.msgToSign}&address=${request.address}`
         ),
         type: 'popup',
         height: 500,
