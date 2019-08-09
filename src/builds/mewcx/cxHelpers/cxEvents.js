@@ -22,6 +22,7 @@ const CX_CONFIRM_SEND_TX = 'confirmAndSendTx';
 const CX_SIGN_MSG = 'signMsg';
 const CX_INJECT_WEB3 = 'injectWeb3';
 const CX_GO_TO_MAIN_PAGE = 'goToMainPage';
+const WEB3_RPC_REQUEST = 'web3RPCRequest';
 
 export {
   WEB3_DETECTED,
@@ -47,5 +48,6 @@ export {
   CX_CONFIRM_SEND_TX,
   CX_SIGN_MSG,
   CX_INJECT_WEB3,
-  CX_GO_TO_MAIN_PAGE
+  CX_GO_TO_MAIN_PAGE,
+  WEB3_RPC_REQUEST
 };
