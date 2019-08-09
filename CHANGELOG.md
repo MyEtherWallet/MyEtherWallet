@@ -8,11 +8,9 @@
 
 - Fix scroll up button position [#1331](https://github.com/MyEtherWallet/MyEtherWallet/pull/1331)
 - Fix text translations [#1329](https://github.com/MyEtherWallet/MyEtherWallet/pull/1329)
+- Fix Mobile UI Scan to Download mobile [#1333](https://github.com/MyEtherWallet/MyEtherWallet/pull/1333)
 
 ### Release v5.1.0
-
-### Bug
-- Fix Mobile UI Scan to Download mobile [#1333](https://github.com/MyEtherWallet/MyEtherWallet/pull/1333)
 
 ### Feature
 
