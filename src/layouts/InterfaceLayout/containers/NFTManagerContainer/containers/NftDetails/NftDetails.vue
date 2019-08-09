@@ -157,6 +157,7 @@ export default {
           Toast.responseHandler(err, Toast.ERROR);
         });
         this.$emit('nftTransfered', this.nft);
+
         this.toAddress = '';
       }
     },

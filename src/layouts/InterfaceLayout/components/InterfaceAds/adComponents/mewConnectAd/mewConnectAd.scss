@@ -3,7 +3,8 @@
 .content-block {
   position: relative;
   img {
-    height: 100%;
+    max-height: 200px;
+    //width: 100%;
   }
 
   .text-content {
