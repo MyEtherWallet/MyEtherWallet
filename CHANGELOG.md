@@ -11,6 +11,9 @@
 
 ### Release v5.1.0
 
+### Bug
+- Fix Mobile UI Scan to Download mobile [#1333](https://github.com/MyEtherWallet/MyEtherWallet/pull/1333)
+
 ### Feature
 
 - Add Dashboard and NFT Manager [#1269](https://github.com/MyEtherWallet/MyEtherWallet/pull/1269)
