@@ -12,11 +12,21 @@
 
 <script type="text/javascript">
 export default {
+  props: {
+    path: {
+      type: String,
+      default: ''
+    }
+  },
   methods: {
     back() {
       const path = this.$route.path.split('/');
       const goToPath = path.slice(0, path.length - 1).join('/');
-      this.$router.push(goToPath);
+      if (path === '') {
+        this.$router.push(goToPath);
+      } else {
+        this.$router.push(this.path);
+      }
     }
   }
 };

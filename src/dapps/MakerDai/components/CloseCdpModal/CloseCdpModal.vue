@@ -102,7 +102,6 @@
 import { mapState } from 'vuex';
 import StandardButton from '@/components/Buttons/StandardButton';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
-import SwapWidget from '@/components/SwapWidget';
 import BigNumber from 'bignumber.js/bignumber.js';
 
 const toBigNumber = num => {
@@ -111,7 +110,6 @@ const toBigNumber = num => {
 
 export default {
   components: {
-    'swap-widget': SwapWidget,
     'help-center-button': HelpCenterButton,
     'standard-button': StandardButton
   },
