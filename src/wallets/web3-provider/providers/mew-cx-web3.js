@@ -1,4 +1,4 @@
-import HttpRequestManger from '../providers/http-request-manager';
+import MEWCXProvider from '../providers/mew-cx-request-manager';
 import MiddleWare from '../middleware';
 import {
   ethSignTransaction,
@@ -22,28 +22,6 @@ import {
 } from '../cx-web3-methods';
 
 const EventEmitter = require('events');
-class MewCxWeb3 {
-  constructor(host) {
-    const requestManager = new HttpRequestManger(host, {});
-    this.httpProvider = {
-      send: (payload, callback) => {
-        const req = {
-          payload,
-          requestManager
-        };
-        const middleware = new MiddleWare();
-        middleware.use(ethSendTransaction);
-        middleware.use(ethSign);
-        middleware.use(ethAccounts);
-        middleware.use(ethCoinbase);
-        middleware.run(req, callback).then(() => {
-          requestManager.provider.send(payload, callback);
-        });
-      }
-    };
-    return this.httpProvider;
-  }
-}
 
 class MewCxEthereum extends EventEmitter {
   constructor(host) {
@@ -62,42 +40,36 @@ class MewCxEthereum extends EventEmitter {
     this.middleware.use(ethGetBlockByNumber);
     this.middleware.use(ethGetBlockNumber);
     this.middleware.use(netVersion);
-    this._requestManager = new HttpRequestManger(host, {});
+    this._requestManager = new MEWCXProvider();
     this._id = 0;
-    this._promises = {};
-    // this._connect();
 
     this.httpProvider = {
       send: (method, params = []) => {
-        if (!method || typeof method !== 'string') {
-          return new Error('Method is not a valid string.');
-        }
-
-        if (!(params instanceof Array)) {
-          return new Error('Params is not a valid array.');
-        }
-        const id = this._id++;
-        const jsonrpc = '2.0';
-        const payload = { jsonrpc, id, method, params };
-        const requestManager = this._requestManager;
-        const req = {
-          payload,
-          requestManager
-        };
-
-        this._promises[payload.id] = new Promise();
-        const cb = (e, res) => {
-          if (e) this._promises[res.id].reject(e);
-          this._promises[res.id].resolve(res.result);
-        };
-
-        this.middleware.run(req, cb).then(() => {
-          this._requestManager.provider.send(req, cb);
+        return new Promise((resolve, reject) => {
+          if (!method || typeof method !== 'string') {
+            return reject(new Error('Method is not a valid string.'));
+          }
+          if (!(params instanceof Array)) {
+            return reject(new Error('Params is not a valid array.'));
+          }
+          const id = this._id++;
+          const jsonrpc = '2.0';
+          const payload = { jsonrpc, id, method, params };
+          const requestManager = this._requestManager;
+          const req = {
+            payload,
+            requestManager
+          };
+          const cb = (e, res) => {
+            if (e) return reject(e);
+            return resolve(res.result);
+          };
+          this.middleware.run(req, cb).then(() => {
+            this._requestManager.provider.send(req, cb);
+          });
         });
-
-        return this._promises[payload.id];
       },
-      sendAsync: function(payload) {
+      sendAsync: payload => {
         return this.send(payload.method, payload.params);
       },
       setMaxListeners: this.setMaxListeners,
@@ -107,7 +79,7 @@ class MewCxEthereum extends EventEmitter {
         this.removeListener();
         this.clearListeners();
       },
-      enable: function() {
+      enable: () => {
         return this.send('eth_requestAccounts');
       }
     };
@@ -152,31 +124,6 @@ class MewCxEthereum extends EventEmitter {
       function() {}
     );
   }
-
-  async _connect() {
-    fetch(this.host, {
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      method: 'POST',
-      body: {
-        jsonrpc: '2.0',
-        method: 'net_version',
-        params: [],
-        id: this._id++
-      }
-    })
-      .then(() => {
-        this.setListeners();
-        this.emit('connect');
-      })
-      .catch(() => {
-        this._emitClose(1011, 'No connection found');
-      });
-
-    this.once('close', this._connect.bind(this));
-  }
-
   _emitClose(code, reason) {
     this.emit('close', code, reason);
     this.httpProvider.removeAllListeners(); // not too sure about removing all listeners of this instance yet

@@ -1,5 +1,7 @@
 import cxHelpers from './cxHelpers';
-
+import MiddleWare from '@/wallets/web3-provider/middleware';
+import web3rpcRequestEvent from './events/web3-rpc-request';
+import store '@/store'
 import {
   CX_INJECT_WEB3,
   CX_SIGN_MSG,
@@ -11,96 +13,102 @@ import {
 const chrome = window.chrome;
 const urls = {};
 let metamaskChecker;
-
-const eventsListeners = request => {
-  let q;
-  if (request.hasOwnProperty('meta') && Object.keys(request.meta).length > 0) {
-    const arr = [];
-    for (const i in request.meta) {
-      if (request.meta.hasOwnProperty(i)) {
-        arr.push(
-          encodeURIComponent(i.replace('og:', '')) +
-            '=' +
-            encodeURIComponent(request.meta[i])
-        );
-      }
-    }
-    q = arr.join('&');
-  } else if (
-    request.hasOwnProperty('tx') &&
-    Object.keys(request.tx).length > 0
-  ) {
-    const arr = [];
-    for (const i in request.tx) {
-      if (request.tx.hasOwnProperty(i)) {
-        arr.push(
-          encodeURIComponent(i) + '=' + encodeURIComponent(request.tx[i])
-        );
-      }
-    }
-    q = arr.join('&');
+const eventsListeners = (request, _, callback) => {
+  const middleware = new MiddleWare();
+  const req = {
+    event: request.event,
+    payload: request.payload
   }
-  switch (request.msg) {
-    case CX_GO_TO_MAIN_PAGE:
-      chrome.tabs.create({
-        url: chrome.runtime.getURL(`index.html#/access-my-wallet`)
-      });
-      break;
-    case CX_FETCH_MEW_ACCS:
-      chrome.windows.create({
-        url: chrome.runtime.getURL(
-          `index.html#/extension-popups/account-access?connectionRequest=${request.url}&${q}`
-        ),
-        type: 'popup',
-        height: 500,
-        width: 300,
-        focused: true
-      });
-      break;
-    case CX_WEB3_DETECTED:
-      chrome.storage.sync.get('warned', item => {
-        if (Object.keys(item).length === 0) {
-          clearTimeout(metamaskChecker);
-          chrome.windows.create({
-            url: chrome.runtime.getURL(
-              `index.html#/extension-popups/web3-detected`
-            ),
-            type: 'popup',
-            height: 500,
-            width: 300,
-            focused: true
-          });
-          chrome.storage.sync.set({ warned: 'true' });
-          metamaskChecker = setTimeout(function() {
-            chrome.storage.remove('warned');
-          }, 900000);
-        }
-      });
-      break;
-    case CX_CONFIRM_SEND_TX:
-      chrome.windows.create({
-        url: chrome.runtime.getURL(
-          `index.html#/extension-popups/sign-tx?url=${request.url}&${q}`
-        ),
-        type: 'popup',
-        height: 500,
-        width: 300,
-        focused: true
-      });
-      break;
-    case CX_SIGN_MSG:
-      chrome.windows.create({
-        url: chrome.runtime.getURL(
-          `index.html#/extension-popups/sign-msg?url=${request.url}&msgToSign=${request.msgToSign}&address=${request.address}`
-        ),
-        type: 'popup',
-        height: 500,
-        width: 300,
-        focused: true
-      });
-      break;
-  }
-  return true;
+  middleware.use(web3rpcRequestEvent);
+  middleware.run(req, callback);
+  // let q;
+  // if (request.hasOwnProperty('meta') && Object.keys(request.meta).length > 0) {
+  //   const arr = [];
+  //   for (const i in request.meta) {
+  //     if (request.meta.hasOwnProperty(i)) {
+  //       arr.push(
+  //         encodeURIComponent(i.replace('og:', '')) +
+  //           '=' +
+  //           encodeURIComponent(request.meta[i])
+  //       );
+  //     }
+  //   }
+  //   q = arr.join('&');
+  // } else if (
+  //   request.hasOwnProperty('tx') &&
+  //   Object.keys(request.tx).length > 0
+  // ) {
+  //   const arr = [];
+  //   for (const i in request.tx) {
+  //     if (request.tx.hasOwnProperty(i)) {
+  //       arr.push(
+  //         encodeURIComponent(i) + '=' + encodeURIComponent(request.tx[i])
+  //       );
+  //     }
+  //   }
+  //   q = arr.join('&');
+  // }
+  // switch (request.msg) {
+  //   case CX_GO_TO_MAIN_PAGE:
+  //     chrome.tabs.create({
+  //       url: chrome.runtime.getURL(`index.html#/access-my-wallet`)
+  //     });
+  //     break;
+  //   case CX_FETCH_MEW_ACCS:
+  //     chrome.windows.create({
+  //       url: chrome.runtime.getURL(
+  //         `index.html#/extension-popups/account-access?connectionRequest=${request.url}&${q}`
+  //       ),
+  //       type: 'popup',
+  //       height: 500,
+  //       width: 300,
+  //       focused: true
+  //     });
+  //     break;
+  //   case CX_WEB3_DETECTED:
+  //     chrome.storage.sync.get('warned', item => {
+  //       if (Object.keys(item).length === 0) {
+  //         clearTimeout(metamaskChecker);
+  //         chrome.windows.create({
+  //           url: chrome.runtime.getURL(
+  //             `index.html#/extension-popups/web3-detected`
+  //           ),
+  //           type: 'popup',
+  //           height: 500,
+  //           width: 300,
+  //           focused: true
+  //         });
+  //         chrome.storage.sync.set({ warned: 'true' });
+  //         metamaskChecker = setTimeout(function() {
+  //           chrome.storage.remove('warned');
+  //         }, 900000);
+  //       }
+  //     });
+  //     break;
+  //   case CX_CONFIRM_SEND_TX:
+  //     chrome.windows.create({
+  //       url: chrome.runtime.getURL(
+  //         `index.html#/extension-popups/sign-tx?url=${request.url}&${q}`
+  //       ),
+  //       type: 'popup',
+  //       height: 500,
+  //       width: 300,
+  //       focused: true
+  //     });
+  //     break;
+  //   case CX_SIGN_MSG:
+  //     chrome.windows.create({
+  //       url: chrome.runtime.getURL(
+  //         `index.html#/extension-popups/sign-msg?url=${request.url}&msgToSign=${request.msgToSign}&address=${request.address}`
+  //       ),
+  //       type: 'popup',
+  //       height: 500,
+  //       width: 300,
+  //       focused: true
+  //     });
+  //     break;
+  // }
+  // return true;
 };
 chrome.tabs.query({ active: true, lastFocusedWindow: true }, function(tabs) {
   querycB(tabs);
