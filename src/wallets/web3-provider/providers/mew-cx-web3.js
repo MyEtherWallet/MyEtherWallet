@@ -130,4 +130,4 @@ class MewCxEthereum extends EventEmitter {
   }
 }
 
-export { MewCxWeb3, MewCxEthereum };
+export { MewCxEthereum };

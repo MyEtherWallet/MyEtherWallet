@@ -1,7 +1,8 @@
 import cxHelpers from './cxHelpers';
 import MiddleWare from '@/wallets/web3-provider/middleware';
-import web3rpcRequestEvent from './events/web3-rpc-request';
-import store '@/store'
+import { web3rpcRequestEvent, mewCxFetchAccounts } from './events';
+import store from '@/store';
+store.dispatch('setWeb3Instance');
 import {
   CX_INJECT_WEB3,
   CX_SIGN_MSG,
@@ -12,13 +13,13 @@ import {
 } from './cxEvents';
 const chrome = window.chrome;
 const urls = {};
-let metamaskChecker;
 const eventsListeners = (request, _, callback) => {
   const middleware = new MiddleWare();
   const req = {
     event: request.event,
     payload: request.payload
-  }
+  };
+  middleware.use(mewCxFetchAccounts);
   middleware.use(web3rpcRequestEvent);
   middleware.run(req, callback);
   // let q;
@@ -184,10 +185,10 @@ function querycB(tab) {
       chrome.tabs.update(null, { url: urlRedirect });
     } else {
       // Injects web3
-      chrome.tabs.sendMessage(tab.id, { msg: CX_INJECT_WEB3 }, function() {});
+      chrome.tabs.sendMessage(tab.id, { event: CX_INJECT_WEB3 }, function() {});
     }
   } else {
     // Injects web3
-    chrome.tabs.sendMessage(tab.id, { msg: CX_INJECT_WEB3 }, function() {});
+    chrome.tabs.sendMessage(tab.id, { event: CX_INJECT_WEB3 }, function() {});
   }
 }

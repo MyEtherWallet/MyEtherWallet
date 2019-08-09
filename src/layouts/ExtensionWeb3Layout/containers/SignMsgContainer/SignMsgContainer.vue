@@ -118,7 +118,7 @@ export default {
         { url: `*://*.${Misc.getService(_self.linkQuery.url)}/*` },
         function(tab) {
           const obj = {
-            msg: MEW_SIGNED_MSG,
+            event: MEW_SIGNED_MSG,
             signedMsg: '0x' + signedMsg.toString('hex')
           };
           window.chrome.tabs.sendMessage(tab[0].id, obj);
@@ -135,7 +135,7 @@ export default {
         { url: `*://*.${Misc.getService(_self.linkQuery.url)}/*` },
         function(tab) {
           const obj = {
-            msg: REJECT_MEW_SIGN_MSG
+            event: REJECT_MEW_SIGN_MSG
           };
           window.chrome.tabs.sendMessage(tab[0].id, obj);
           window.close();
