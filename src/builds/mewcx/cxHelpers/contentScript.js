@@ -58,6 +58,7 @@ chrome.runtime.onMessage.addListener(function(request) {
         window.extensionID = id;
       });
       break;
+
     case SELECTED_MEW_CX_ACC:
       getAccountModalIsOPen = false;
       window.dispatchEvent(
