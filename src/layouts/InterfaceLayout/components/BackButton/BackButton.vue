@@ -20,9 +20,9 @@ export default {
   },
   methods: {
     back() {
-      const path = this.$route.path.split('/');
-      const goToPath = path.slice(0, path.length - 1).join('/');
-      if (path === '') {
+      const routePath = this.$route.path.split('/');
+      const goToPath = routePath.slice(0, routePath.length - 1).join('/');
+      if (this.path === '') {
         this.$router.push(goToPath);
       } else {
         this.$router.push(this.path);
