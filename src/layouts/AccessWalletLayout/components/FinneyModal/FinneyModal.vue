@@ -71,9 +71,13 @@ export default {
         .then(wallet => {
           if (!this.web3.eth) this.$store.dispatch('setWeb3Instance');
           this.$store.dispatch('decryptWallet', [wallet]).then(() => {
-            this.$router.push({
-              path: 'interface'
-            });
+            this.$router.push(
+              {
+                path: 'interface'
+              },
+              () => {},
+              () => {}
+            );
           });
         })
         .catch(e => {

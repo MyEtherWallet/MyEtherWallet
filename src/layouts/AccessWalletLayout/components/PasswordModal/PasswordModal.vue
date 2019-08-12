@@ -140,9 +140,13 @@ export default {
       this.$store.dispatch('decryptWallet', [wallet]);
       this.spinner = false;
       this.password = '';
-      this.$router.push({
-        path: 'interface'
-      });
+      this.$router.push(
+        {
+          path: 'interface'
+        },
+        () => {},
+        () => {}
+      );
     },
     switchViewPassword() {
       this.show = !this.show;

@@ -111,19 +111,27 @@ export default {
   },
   async mounted() {
     if (!this.makerActive) {
-      this.$router.push({
-        name: 'Maker'
-      });
+      this.$router.push(
+        {
+          name: 'Maker'
+        },
+        () => {},
+        () => {}
+      );
     }
   },
   methods: {
     openManage(cdp) {
-      this.$router.push({
-        name: 'manage',
-        params: {
-          cdpId: cdp
-        }
-      });
+      this.$router.push(
+        {
+          name: 'manage',
+          params: {
+            cdpId: cdp
+          }
+        },
+        () => {},
+        () => {}
+      );
     },
     displayPercentValue(raw) {
       if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);

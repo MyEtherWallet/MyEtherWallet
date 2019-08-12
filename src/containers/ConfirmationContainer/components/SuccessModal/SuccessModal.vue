@@ -80,7 +80,7 @@ export default {
   methods: {
     hideModal() {
       if (this.linkTo !== '/') {
-        this.$router.push({ path: this.linkTo });
+        this.$router.push({ path: this.linkTo }, () => {}, () => {});
       }
       this.$refs.success.hide();
     }

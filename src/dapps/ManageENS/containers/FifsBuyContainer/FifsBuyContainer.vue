@@ -30,7 +30,7 @@ export default {
   },
   mounted() {
     if (this.domainName === '')
-      this.$router.replace('/interface/dapps/manage-ens');
+      this.$router.replace('/interface/dapps/manage-ens', () => {}, () => {});
   },
   methods: {}
 };

@@ -366,7 +366,7 @@ export default {
       this.isMobileMenuOpen = false;
       this.$refs.mewConnectDisconnected.$refs.disconnected.show();
       this.$refs.mewConnectDisconnected.$refs.disconnected.$on('hidden', () => {
-        this.$router.push('/access-my-wallet');
+        this.$router.push('/access-my-wallet', () => {}, () => {});
       });
     });
   },
