@@ -135,26 +135,22 @@ export default {
   methods: {
     openManage() {
       if (this.$route.path.includes('maker-dai')) {
-        this.$router.push(
-          {
-            name: 'manage',
-            params: {
-              cdpId: this.cdpId
-            }
+        this.$router.push({
+          name: 'manage',
+          params: {
+            cdpId: this.cdpId
           }
-        );
+        });
       }
     },
     openMigrate() {
       if (this.$route.path.includes('maker-dai')) {
-        this.$router.push(
-          {
-            name: 'migrate',
-            params: {
-              cdpId: this.cdpId
-            }
+        this.$router.push({
+          name: 'migrate',
+          params: {
+            cdpId: this.cdpId
           }
-        );
+        });
       }
     },
     displayPercentValue(raw) {

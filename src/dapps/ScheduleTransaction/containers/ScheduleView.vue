@@ -646,20 +646,18 @@ export default {
             const isTokenTransfer = transaction.input.includes(
               EAC_SCHEDULING_CONFIG.TOKEN_TRANSFER_METHOD_ID
             );
-            this.$router.push(
-              {
-                name: 'Scheduled success',
-                params: {
-                  txHash: latestNotification.hash,
-                  isTokenTransfer,
-                  selectedCurrency: isTokenTransfer
-                    ? this.selectedCurrency
-                    : null,
-                  toAddress: transaction.to,
-                  amount: this.amount
-                }
+            this.$router.push({
+              name: 'Scheduled success',
+              params: {
+                txHash: latestNotification.hash,
+                isTokenTransfer,
+                selectedCurrency: isTokenTransfer
+                  ? this.selectedCurrency
+                  : null,
+                toAddress: transaction.to,
+                amount: this.amount
               }
-            );
+            });
           } catch (e) {
             Toast.responseHandler(e, Toast.ERROR);
           }

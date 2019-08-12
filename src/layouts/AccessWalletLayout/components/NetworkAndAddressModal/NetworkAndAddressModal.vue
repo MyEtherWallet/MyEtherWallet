@@ -418,11 +418,9 @@ export default {
     unlockWallet() {
       this.$store.dispatch('decryptWallet', [this.currentWallet]);
       if (!this.wallet !== null) {
-        this.$router.push(
-          {
-            path: 'interface'
-          }
-        );
+        this.$router.push({
+          path: 'interface'
+        });
       }
 
       this.$refs.networkAndAddress.hide();
