@@ -373,9 +373,7 @@ export default {
       this.$router.push(
         {
           name: 'Maker'
-        },
-        () => {},
-        () => {}
+        }
       );
     },
     gotoCreate() {
@@ -384,9 +382,7 @@ export default {
         this.$router.push(
           {
             name: 'create'
-          },
-          () => {},
-          () => {}
+          }
         );
       }
     },
@@ -399,9 +395,7 @@ export default {
               params: {
                 cdpId: this.cdps[0]
               }
-            },
-            () => {},
-            () => {}
+            }
           );
         } else if (this.cdpsWithoutProxy.length === 1) {
           this.$router.push(
@@ -410,18 +404,14 @@ export default {
               params: {
                 cdpId: this.cdpsWithoutProxy[0]
               }
-            },
-            () => {},
-            () => {}
+            }
           );
         } else if (this.showManage) {
           // The listing screen may not work and can be removed
           this.$router.push(
             {
               name: 'select'
-            },
-            () => {},
-            () => {}
+            }
           );
         } else {
           this.gotoCreate();
@@ -437,9 +427,7 @@ export default {
             params: {
               cdpId: cdpId
             }
-          },
-          () => {},
-          () => {}
+          }
         );
       }
     },
@@ -452,9 +440,7 @@ export default {
             params: {
               cdpId: cdpId
             }
-          },
-          () => {},
-          () => {}
+          }
         );
       }
     },

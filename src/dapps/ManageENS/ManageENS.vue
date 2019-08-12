@@ -371,9 +371,7 @@ export default {
             const isAvailable = expiryTime * 1000 < new Date().getTime();
             if (isAvailable) {
               this.$router.push(
-                { path: 'manage-ens/fifs' },
-                () => {},
-                () => {}
+                { path: 'manage-ens/fifs' }
               );
               this.loading = false;
             } else {
@@ -408,9 +406,7 @@ export default {
               this.deedOwner = await deedContract.methods.owner().call();
               this.loading = false;
               this.$router.push(
-                { path: 'manage-ens/transfer-registrar' },
-                () => {},
-                () => {}
+                { path: 'manage-ens/transfer-registrar' }
               );
             } else {
               const isAvailable = await this.registrarControllerContract.methods
@@ -420,9 +416,7 @@ export default {
               else {
                 this.generateKeyPhrase();
                 this.$router.push(
-                  { path: 'manage-ens/create-commitment' },
-                  () => {},
-                  () => {}
+                  { path: 'manage-ens/create-commitment' }
                 );
                 this.loading = false;
               }
@@ -482,9 +476,7 @@ export default {
           .send({ from: this.account.address })
           .once('transactionHash', () => {
             this.$router.push(
-              { path: 'permanent-registration' },
-              () => {},
-              () => {}
+              { path: 'permanent-registration' }
             );
           })
           .on('receipt', () => {
@@ -515,9 +507,7 @@ export default {
           .send({ from: this.account.address, value: rentPrice })
           .once('transactionHash', () => {
             this.$router.push(
-              { path: 'registration-in-progress' },
-              () => {},
-              () => {}
+              { path: 'registration-in-progress' }
             );
           })
           .once('receipt', () => {
@@ -573,9 +563,7 @@ export default {
       switch (type) {
         case 'dnsOwned':
           this.$router.push(
-            { path: 'manage-ens/dns-owned' },
-            () => {},
-            () => {}
+            { path: 'manage-ens/dns-owned' }
           );
           break;
         case 'dnsClaimable':
@@ -583,16 +571,12 @@ export default {
           break;
         case 'dnsNotSetup':
           this.$router.push(
-            { path: 'manage-ens/dns-error' },
-            () => {},
-            () => {}
+            { path: 'manage-ens/dns-error' }
           );
           break;
         case 'dnsMissingTXT':
           this.$router.push(
-            { path: 'manage-ens/no-txt-setup' },
-            () => {},
-            () => {}
+            { path: 'manage-ens/no-txt-setup' }
           );
           break;
       }
@@ -606,9 +590,7 @@ export default {
           this.$router.push(
             {
               path: 'manage-ens/auction'
-            },
-            () => {},
-            () => {}
+            }
           );
           this.loading = false;
           break;
@@ -625,9 +607,7 @@ export default {
           this.$router.push(
             {
               path: 'manage-ens/forbidden'
-            },
-            () => {},
-            () => {}
+            }
           );
           break;
         case '4':

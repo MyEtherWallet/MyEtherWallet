@@ -114,9 +114,7 @@ export default {
       this.$router.push(
         {
           name: 'Maker'
-        },
-        () => {},
-        () => {}
+        }
       );
     }
   },
@@ -128,9 +126,7 @@ export default {
           params: {
             cdpId: cdp
           }
-        },
-        () => {},
-        () => {}
+        }
       );
     },
     displayPercentValue(raw) {

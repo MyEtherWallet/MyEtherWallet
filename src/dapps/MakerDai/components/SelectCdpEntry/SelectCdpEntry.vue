@@ -141,9 +141,7 @@ export default {
             params: {
               cdpId: this.cdpId
             }
-          },
-          () => {},
-          () => {}
+          }
         );
       }
     },
@@ -155,9 +153,7 @@ export default {
             params: {
               cdpId: this.cdpId
             }
-          },
-          () => {},
-          () => {}
+          }
         );
       }
     },
