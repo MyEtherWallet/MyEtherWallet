@@ -100,7 +100,7 @@
           <qrcode :value="address" :options="{ size: 120 }" />
         </div>
       </div>
-      <div v-if="!wallet && !wallet.isPubOnly" class="my-priv-container">
+      <div v-if="!!wallet && !wallet.isPubOnly" class="my-priv-container">
         <div class="text-container">
           <h3>{{ myPriv }}</h3>
           <p>{{ wallet.privateKey.toString('hex') }}</p>
@@ -165,8 +165,7 @@ export default {
   },
   computed: {
     ...mapState(['wallet'])
-  },
-  methods: {}
+  }
 };
 </script>
 <style lang="scss" scoped>
