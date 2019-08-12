@@ -242,7 +242,7 @@ export default {
         }
       } else {
         if (this.online || !pageInfo.onlineOnly) {
-          this.$router.push({ path: pageInfo.routes[0] }, () => {}, () => {});
+          this.$router.push({ path: pageInfo.routes[0] });
         }
       }
     },

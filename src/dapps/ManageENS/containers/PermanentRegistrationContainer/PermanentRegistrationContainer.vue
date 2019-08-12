@@ -120,8 +120,7 @@ export default {
     }
   },
   mounted() {
-    if (this.hostName === '')
-      this.$router.push('/interface/dapps/manage-ens', () => {}, () => {});
+    if (this.hostName === '') this.$router.push('/interface/dapps/manage-ens');
   },
   destroyed() {
     clearInterval(this.timer);
