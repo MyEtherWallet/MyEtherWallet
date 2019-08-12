@@ -2,7 +2,7 @@ const statusTypes = {
   new: { text: 'Swap Created', class: 'status-processing' },
   sent: { text: 'Processing', class: 'status-processing' },
   pending: { text: 'Processing', class: 'status-processing' },
-  complete: { text: 'Succeed', class: 'status-succeed' },
+  complete: { text: 'Success', class: 'status-succeed' },
   failed: { text: 'Failed', class: 'status-failed' },
   cancelled: { text: 'Cancelled', class: 'status-processing' },
   error: { text: 'Error', class: 'status-failed' },
