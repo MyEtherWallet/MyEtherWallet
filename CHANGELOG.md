@@ -1,6 +1,9 @@
+### Release v5.1.1
+
 ### Devop
 
 - Remove Safesend Dapp [#1346](https://github.com/MyEtherWallet/MyEtherWallet/pull/1346)
+- Update packages [#1344](https://github.com/MyEtherWallet/MyEtherWallet/pull/1344)
 - Update UI frontpage FAQs block [#1332](https://github.com/MyEtherWallet/MyEtherWallet/pull/1332)
 - Add xss custom config [#1326](https://github.com/MyEtherWallet/MyEtherWallet/pull/1326)
 
