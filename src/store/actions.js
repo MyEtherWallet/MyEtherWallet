@@ -81,7 +81,7 @@ const clearWallet = function({ commit, state }) {
   if (state.wallet && state.wallet.identifier === MEW_CONNECT) {
     state.wallet.mewConnect().disconnectRTC();
   }
-  Vue.router.push(linkTo);
+  Vue.router.push(linkTo, () => {}, () => {});
   commit('CLEAR_WALLET');
 };
 
