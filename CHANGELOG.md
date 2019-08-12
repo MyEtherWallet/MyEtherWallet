@@ -1,3 +1,7 @@
+### Devop
+
+- Add xss custom config [#1326](https://github.com/MyEtherWallet/MyEtherWallet/pull/1326)
+
 ### Bug
 
 - Fix text translations [#1329](https://github.com/MyEtherWallet/MyEtherWallet/pull/1329)
