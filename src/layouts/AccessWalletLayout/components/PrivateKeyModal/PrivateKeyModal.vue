@@ -78,11 +78,9 @@ export default {
       ]);
       this.privateKey = '';
       this.spinner = false;
-      this.$router.push(
-        {
-          path: 'interface'
-        }
-      );
+      this.$router.push({
+        path: 'interface'
+      });
     },
     focusInput() {
       this.$refs.privateKeyInput.focus();

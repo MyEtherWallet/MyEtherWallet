@@ -202,11 +202,9 @@ export default {
           const address = accounts[0];
           const wallet = new Web3Wallet(address);
           this.$store.dispatch('decryptWallet', [wallet, web3.currentProvider]);
-          this.$router.push(
-            {
-              path: 'interface'
-            }
-          );
+          this.$router.push({
+            path: 'interface'
+          });
         })
         .catch(e => {
           Toast.responseHandler(e, Toast.ERROR);

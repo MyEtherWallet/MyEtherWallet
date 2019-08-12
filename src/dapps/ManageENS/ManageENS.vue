@@ -370,9 +370,7 @@ export default {
               .call();
             const isAvailable = expiryTime * 1000 < new Date().getTime();
             if (isAvailable) {
-              this.$router.push(
-                { path: 'manage-ens/fifs' }
-              );
+              this.$router.push({ path: 'manage-ens/fifs' });
               this.loading = false;
             } else {
               this.getMoreInfo();
@@ -405,9 +403,7 @@ export default {
               );
               this.deedOwner = await deedContract.methods.owner().call();
               this.loading = false;
-              this.$router.push(
-                { path: 'manage-ens/transfer-registrar' }
-              );
+              this.$router.push({ path: 'manage-ens/transfer-registrar' });
             } else {
               const isAvailable = await this.registrarControllerContract.methods
                 .available(this.parsedHostName)
@@ -415,9 +411,7 @@ export default {
               if (!isAvailable) this.getMoreInfo();
               else {
                 this.generateKeyPhrase();
-                this.$router.push(
-                  { path: 'manage-ens/create-commitment' }
-                );
+                this.$router.push({ path: 'manage-ens/create-commitment' });
                 this.loading = false;
               }
             }
@@ -475,9 +469,7 @@ export default {
           .commit(commitment)
           .send({ from: this.account.address })
           .once('transactionHash', () => {
-            this.$router.push(
-              { path: 'permanent-registration' }
-            );
+            this.$router.push({ path: 'permanent-registration' });
           })
           .on('receipt', () => {
             this.loading = false;
@@ -506,9 +498,7 @@ export default {
           )
           .send({ from: this.account.address, value: rentPrice })
           .once('transactionHash', () => {
-            this.$router.push(
-              { path: 'registration-in-progress' }
-            );
+            this.$router.push({ path: 'registration-in-progress' });
           })
           .once('receipt', () => {
             this.getMoreInfo();
@@ -562,22 +552,16 @@ export default {
       this.loading = false;
       switch (type) {
         case 'dnsOwned':
-          this.$router.push(
-            { path: 'manage-ens/dns-owned' }
-          );
+          this.$router.push({ path: 'manage-ens/dns-owned' });
           break;
         case 'dnsClaimable':
           this.$router.push({ path: 'manage-ens/claim' });
           break;
         case 'dnsNotSetup':
-          this.$router.push(
-            { path: 'manage-ens/dns-error' }
-          );
+          this.$router.push({ path: 'manage-ens/dns-error' });
           break;
         case 'dnsMissingTXT':
-          this.$router.push(
-            { path: 'manage-ens/no-txt-setup' }
-          );
+          this.$router.push({ path: 'manage-ens/no-txt-setup' });
           break;
       }
     },
@@ -587,11 +571,9 @@ export default {
       switch (res[0]) {
         case '0':
           this.generateKeyPhrase();
-          this.$router.push(
-            {
-              path: 'manage-ens/auction'
-            }
-          );
+          this.$router.push({
+            path: 'manage-ens/auction'
+          });
           this.loading = false;
           break;
         case '1':
@@ -604,11 +586,9 @@ export default {
           break;
         case '3':
           this.loading = false;
-          this.$router.push(
-            {
-              path: 'manage-ens/forbidden'
-            }
-          );
+          this.$router.push({
+            path: 'manage-ens/forbidden'
+          });
           break;
         case '4':
           this.loading = false;
