@@ -37,7 +37,7 @@ const dapps = {
   maker: {
     route: '/interface/dapps/maker-dai',
     icon: makerdai,
-  iconDisabled: secureTransactionHov,
+    iconDisabled: secureTransactionHov,
     title: 'dappsMaker.maker_title',
     desc: 'dappsMaker.maker_desc',
     supportedNetworks: [ETH.name, KOV.name]
