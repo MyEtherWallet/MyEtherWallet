@@ -3,14 +3,14 @@ import store from '@/store';
 import { getMode, getRoutes } from '@/builds/configs';
 import { ExtensionHelpers } from '@/helpers';
 import { isAddress } from '@/helpers/addressUtils';
-import xss from 'xss';
+import Misc from '@/helpers/misc';
 
 const storeQuery = query => {
-  const keys = Object.keys(query);
-  if (keys.length > 0) {
+  const queryKeys = Object.keys(query);
+  if (queryKeys.length > 0) {
     const blankObj = {};
     for (const key in query) {
-      blankObj[key] = xss(query[key]);
+      blankObj[key] = Misc.stripTags(query[key]);
     }
 
     store.dispatch('saveQueryVal', blankObj);

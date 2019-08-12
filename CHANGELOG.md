@@ -1,3 +1,16 @@
+### Release v5.1.1
+
+### Devop
+
+- Update packages [#1344](https://github.com/MyEtherWallet/MyEtherWallet/pull/1344)
+- Update UI frontpage FAQs block [#1332](https://github.com/MyEtherWallet/MyEtherWallet/pull/1332)
+- Add xss custom config [#1326](https://github.com/MyEtherWallet/MyEtherWallet/pull/1326)
+
+### Bug
+
+- Fix text translations [#1329](https://github.com/MyEtherWallet/MyEtherWallet/pull/1329)
+- Fix Mobile UI Scan to Download mobile [#1333](https://github.com/MyEtherWallet/MyEtherWallet/pull/1333)
+
 ### Release v5.1.0
 
 ### Feature
