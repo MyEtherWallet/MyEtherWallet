@@ -235,9 +235,7 @@ export default {
       if (childIndex >= 0) {
         if (this.online || !pageInfo.children[childIndex].onlineOnly) {
           this.$router.push(
-            { path: pageInfo.children[childIndex].routes[0] },
-            () => {},
-            () => {}
+            { path: pageInfo.children[childIndex].routes[0] }
           );
         }
       } else {

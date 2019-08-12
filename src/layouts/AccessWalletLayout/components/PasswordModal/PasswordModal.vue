@@ -143,9 +143,7 @@ export default {
       this.$router.push(
         {
           path: 'interface'
-        },
-        () => {},
-        () => {}
+        }
       );
     },
     switchViewPassword() {

@@ -658,9 +658,7 @@ export default {
                   toAddress: transaction.to,
                   amount: this.amount
                 }
-              },
-              () => {},
-              () => {}
+              }
             );
           } catch (e) {
             Toast.responseHandler(e, Toast.ERROR);

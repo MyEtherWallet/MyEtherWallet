@@ -1,8 +1,15 @@
 ### Devop
 
+<<<<<<< HEAD
 - Update packages [#1344](https://github.com/MyEtherWallet/MyEtherWallet/pull/1344)
+=======
+- Add xss custom config [#1326](https://github.com/MyEtherWallet/MyEtherWallet/pull/1326)
+>>>>>>> 4679246ce986197c83f3c3ec61194b42eea86146
 
 ### Release v5.1.0
+
+### Bug
+- Fix Mobile UI Scan to Download mobile [#1333](https://github.com/MyEtherWallet/MyEtherWallet/pull/1333)
 
 ### Feature
 
