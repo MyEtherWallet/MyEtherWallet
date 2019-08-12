@@ -1,5 +1,6 @@
 ### Devop
 
+- Remove Safesend Dapp []()
 - Update UI frontpage FAQs block [#1332](https://github.com/MyEtherWallet/MyEtherWallet/pull/1332)
 - Add xss custom config [#1326](https://github.com/MyEtherWallet/MyEtherWallet/pull/1326)
 

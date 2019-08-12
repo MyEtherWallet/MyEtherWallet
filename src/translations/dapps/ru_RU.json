@@ -42,7 +42,5 @@
   "registerEnsContractNotReady": "Contract is not ready yet, transaction might fail.",
   "updateResolver": "Update Resolving address",
   "transferEnsTo": "Transfer ENS domain to",
-  "ensNotAvailable": "is not available yet",
-  "safesend_title": "SafeSend ETH Transaction",
-  "safesend_desc": "Protect and Secure your ETH transaction using SafeSend"
+  "ensNotAvailable": "is not available yet"
 }
