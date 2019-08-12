@@ -155,12 +155,15 @@ export default class BitySwap {
     );
 
     const rate = this._getRate(fromCurrency, toCurrency);
+
     return {
       fromCurrency,
       toCurrency,
       provider: this.name,
       rate: rate,
-      minValue: expRate.input.minimum_amount,
+      minValue: new BigNumber(expRate.input.minimum_amount).plus(
+        new BigNumber(expRate.input.minimum_amount).times(0.000001)
+      ), // because we truncate the number at 6 decimal places
       maxValue: this.fiatCurrencies.includes(toCurrency)
         ? this.getChfEquivalentMaxMin(fromCurrency, true)
         : this.getBtcEquivalentMaxMin(fromCurrency, true)
@@ -174,12 +177,15 @@ export default class BitySwap {
       fromValue
     );
     const rate = this._getRate(fromCurrency, toCurrency);
+
     return {
       fromCurrency,
       toCurrency,
       provider: this.name,
       rate: rate,
-      minValue: expRate.input.minimum_amount,
+      minValue: new BigNumber(expRate.input.minimum_amount).plus(
+        new BigNumber(expRate.input.minimum_amount).times(0.000001)
+      ), // because we truncate the number at 6 decimal places
       maxValue: this.fiatCurrencies.includes(toCurrency)
         ? this.getChfEquivalentMaxMin(fromCurrency, true)
         : this.getBtcEquivalentMaxMin(fromCurrency, true)
