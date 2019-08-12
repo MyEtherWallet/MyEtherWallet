@@ -14,7 +14,7 @@ export default {
   },
   methods: {
     back() {
-      this.$router.push('/interface/nft-manager', () => {}, () => {});
+      this.$router.push('/interface/nft-manager');
     }
   }
 };

@@ -15,7 +15,7 @@ export default {
     back() {
       const path = this.$route.path.split('/');
       const goToPath = path.slice(0, path.length - 1).join('/');
-      this.$router.push(goToPath, () => {}, () => {});
+      this.$router.push(goToPath);
     }
   }
 };

@@ -53,7 +53,7 @@ export default {
   },
   methods: {
     navigateTo() {
-      this.$router.push(this.param, () => {}, () => {});
+      this.$router.push(this.param);
     }
   }
 };

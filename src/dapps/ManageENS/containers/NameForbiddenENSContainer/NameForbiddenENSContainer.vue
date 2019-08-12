@@ -23,7 +23,7 @@ export default {
   },
   mounted() {
     if (this.domainName === '') {
-      this.$router.push('/interface/dapps/manage-ens', () => {}, () => {});
+      this.$router.push('/interface/dapps/manage-ens');
     }
   }
 };

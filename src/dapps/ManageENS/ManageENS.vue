@@ -579,7 +579,7 @@ export default {
           );
           break;
         case 'dnsClaimable':
-          this.$router.push({ path: 'manage-ens/claim' }, () => {}, () => {});
+          this.$router.push({ path: 'manage-ens/claim' });
           break;
         case 'dnsNotSetup':
           this.$router.push(
@@ -615,7 +615,7 @@ export default {
         case '1':
           this.generateKeyPhrase();
           this.loading = false;
-          this.$router.push({ path: 'manage-ens/bid' }, () => {}, () => {});
+          this.$router.push({ path: 'manage-ens/bid' });
           break;
         case '2':
           this.getMoreInfo(res[1]);
@@ -633,7 +633,7 @@ export default {
         case '4':
           this.loading = false;
           this.highestBid = unit.fromWei(res[4], 'ether').toString();
-          this.$router.push({ path: 'manage-ens/reveal' }, () => {}, () => {});
+          this.$router.push({ path: 'manage-ens/reveal' });
           break;
       }
     },
@@ -689,9 +689,9 @@ export default {
       this.deedOwner = highestBidder;
       this.owner = owner;
       if (this.$route.fullPath === '/interface/dapps/manage-ens') {
-        this.$router.push({ path: 'manage-ens/owned' }, () => {}, () => {});
+        this.$router.push({ path: 'manage-ens/owned' });
       } else {
-        this.$router.push({ path: 'owned' }, () => {}, () => {});
+        this.$router.push({ path: 'owned' });
       }
       this.loading = false;
     },
