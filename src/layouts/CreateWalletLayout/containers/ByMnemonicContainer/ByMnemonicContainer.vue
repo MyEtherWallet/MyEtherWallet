@@ -136,7 +136,7 @@ export default {
       this.password = '';
     },
     unlockWallet() {
-      this.$router.push('/access-my-wallet');
+      this.$router.push('/access-my-wallet', () => {}, () => {});
     },
     mnemonicValueRefresh() {
       if (this.mnemonic24 === true) {

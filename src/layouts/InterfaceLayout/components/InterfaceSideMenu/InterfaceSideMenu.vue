@@ -84,9 +84,13 @@ export default {
     tabAction(tab) {
       if (!tab.hasOwnProperty('children') || tab.children.length === 0) {
         this.toggleSideMenu();
-        this.$router.push({ path: tab.routes[0] });
+        this.$router.push({ path: tab.routes[0] }, () => {}, () => {});
       } else {
-        this.$router.push({ path: tab.children[0].routes[0] });
+        this.$router.push(
+          { path: tab.children[0].routes[0] },
+          () => {},
+          () => {}
+        );
       }
     }
   }

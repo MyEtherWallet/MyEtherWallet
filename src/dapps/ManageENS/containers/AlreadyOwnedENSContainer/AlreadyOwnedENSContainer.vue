@@ -108,7 +108,7 @@ export default {
   },
   mounted() {
     if (this.hostName === '') {
-      this.$router.push('/interface/dapps/manage-ens');
+      this.$router.push('/interface/dapps/manage-ens', () => {}, () => {});
     }
   },
   methods: {
@@ -116,7 +116,7 @@ export default {
       this.$refs.finalizeModal.$refs.finalize.show();
     },
     manageEns() {
-      this.$router.push('manage');
+      this.$router.push('manage', () => {}, () => {});
     }
   }
 };

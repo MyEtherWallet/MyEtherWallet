@@ -370,39 +370,59 @@ export default {
       this.openMoveModal = false;
     },
     gotoHome() {
-      this.$router.push({
-        name: 'Maker'
-      });
+      this.$router.push(
+        {
+          name: 'Maker'
+        },
+        () => {},
+        () => {}
+      );
     },
     gotoCreate() {
       if (this.$route.path.includes('maker-dai')) {
         this.activeValues = this.systemValues;
-        this.$router.push({
-          name: 'create'
-        });
+        this.$router.push(
+          {
+            name: 'create'
+          },
+          () => {},
+          () => {}
+        );
       }
     },
     goToManage() {
       if (this.$route.path.includes('maker-dai')) {
         if (this.cdps.length === 1) {
-          this.$router.push({
-            name: 'manage',
-            params: {
-              cdpId: this.cdps[0]
-            }
-          });
+          this.$router.push(
+            {
+              name: 'manage',
+              params: {
+                cdpId: this.cdps[0]
+              }
+            },
+            () => {},
+            () => {}
+          );
         } else if (this.cdpsWithoutProxy.length === 1) {
-          this.$router.push({
-            name: 'migrate',
-            params: {
-              cdpId: this.cdpsWithoutProxy[0]
-            }
-          });
+          this.$router.push(
+            {
+              name: 'migrate',
+              params: {
+                cdpId: this.cdpsWithoutProxy[0]
+              }
+            },
+            () => {},
+            () => {}
+          );
         } else if (this.showManage) {
           // The listing screen may not work and can be removed
-          this.$router.push({
-            name: 'select'
-          });
+          this.$router.push(
+            {
+              name: 'select'
+            },
+            () => {},
+            () => {}
+          );
         } else {
           this.gotoCreate();
         }
@@ -411,23 +431,31 @@ export default {
     openManage(cdpId) {
       if (this.$route.path.includes('maker-dai')) {
         this.setupCdpManage(cdpId);
-        this.$router.push({
-          name: 'manage',
-          params: {
-            cdpId: cdpId
-          }
-        });
+        this.$router.push(
+          {
+            name: 'manage',
+            params: {
+              cdpId: cdpId
+            }
+          },
+          () => {},
+          () => {}
+        );
       }
     },
     openMigrate(cdpId) {
       if (this.$route.path.includes('maker-dai')) {
         this.setupCdpManage(cdpId);
-        this.$router.push({
-          name: 'migrate',
-          params: {
-            cdpId: cdpId
-          }
-        });
+        this.$router.push(
+          {
+            name: 'migrate',
+            params: {
+              cdpId: cdpId
+            }
+          },
+          () => {},
+          () => {}
+        );
       }
     },
     showDeposit() {
