@@ -69,8 +69,10 @@ class MewCxEthereum extends EventEmitter {
           });
         });
       },
-      sendAsync: payload => {
-        return this.send(payload.method, payload.params);
+      sendAsync: function(payload, cb) {
+        this.send(payload.method, payload.params)
+          .then(result => cb(null, result))
+          .catch(cb);
       },
       setMaxListeners: this.setMaxListeners,
       on: this.on,
