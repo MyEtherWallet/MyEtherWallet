@@ -25,15 +25,7 @@ const dapps = {
     title: 'interface.nameYourWallet',
     desc: 'interface.nameYourWalletDesc',
     supportedNetworks: [ETH.name]
-  },
-  secureTransaction: {
-    route: '/interface/dapps/secure-transaction',
-    icon: secureTransaction,
-    iconDisabled: secureTransactionHov,
-    title: 'dapps.safesend_title',
-    desc: 'dapps.safesend_desc',
-    supportedNetworks: [ETH.name]
-  },
+  }
   scheduleTransaction: {
     route: '/interface/dapps/schedule-transaction',
     icon: scheduleTransaction,
