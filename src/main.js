@@ -42,7 +42,6 @@ import EnsResolver from '@/directives/EnsResolver';
 import Capitalize from '@/filters/Capitalize';
 import ConcatAddr from '@/filters/ConcatAddr';
 // etc
-// import i18n from './translation.config.js';
 import languages from '@/translations';
 import VueMq from 'vue-mq';
 import VeeValidate from 'vee-validate';
@@ -61,7 +60,6 @@ Vue.use(VueMq, {
 Vue.prototype.$eventHub = new Vue();
 
 // Regular Components
-// Vue.component('infinite-slider', InfiniteSlider);
 Vue.component(VueQrcode.name, VueQrcode);
 Vue.component('popover', PopOver);
 
