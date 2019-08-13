@@ -71,7 +71,7 @@
       @checkForProxy="checkIfDestAddressHasProxy"
     >
     </move-cdp-modal>
-    <back-button>
+    <back-button :path="'/interface/dapps/'">
       <div style="padding-left: 20px; cursor: pointer;">
         <i
           v-show="showRefresh"
