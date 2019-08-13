@@ -1,3 +1,7 @@
+### Devop
+
+- Upgrade web3.js to 1.2.1 [#1348](https://github.com/MyEtherWallet/MyEtherWallet/pull/1348)
+
 ### Release v5.1.1
 
 ### Devop
