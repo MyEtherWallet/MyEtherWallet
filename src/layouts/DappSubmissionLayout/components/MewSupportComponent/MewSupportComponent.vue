@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="mew-support-box ml-5 mt-5">
-      <div class="mew-support-txt">
+      <div class="mew-support-container">
         <p class="mew-support-header">Mew Support</p>
         <div class="text-container">
           <p class="mew-support-info">
@@ -9,8 +9,8 @@
           </p>
           <img class="msg-logo" src="~@/assets/images/message.png" />
         </div>
-        <button class="email-us-btn mt-3">Email us</button>
       </div>
+      <button class="email-us-btn mt-3">Email us</button>
     </div>
   </div>
 </template>
