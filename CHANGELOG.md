@@ -1,8 +1,10 @@
 ### Release v5.1.1
 
+### Feature
+- Add Buy Eth Button to nav bar, standardize dapp header layout [#1330](https://github.com/MyEtherWallet/MyEtherWallet/pull/1330)
+
 ### Devop
 
-- Add Buy Eth Button to nav bar, standardize dapp header layout [#1330](https://github.com/MyEtherWallet/MyEtherWallet/pull/1330)
 - Update packages [#1344](https://github.com/MyEtherWallet/MyEtherWallet/pull/1344)
 - Update UI frontpage FAQs block [#1332](https://github.com/MyEtherWallet/MyEtherWallet/pull/1332)
 - Add xss custom config [#1326](https://github.com/MyEtherWallet/MyEtherWallet/pull/1326)
@@ -12,8 +14,11 @@
 - Fix scroll up button position [#1331](https://github.com/MyEtherWallet/MyEtherWallet/pull/1331)
 - Fix text translations [#1329](https://github.com/MyEtherWallet/MyEtherWallet/pull/1329)
 - Fix Mobile UI Scan to Download mobile [#1333](https://github.com/MyEtherWallet/MyEtherWallet/pull/1333)
+- By Mnemonic Phrase layout bug fix [#1347](https://github.com/MyEtherWallet/MyEtherWallet/pull/1347)
+
 
 ### Release v5.1.0
+
 
 ### Feature
 
