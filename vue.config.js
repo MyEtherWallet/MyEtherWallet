@@ -180,11 +180,11 @@ if (process.env.NODE_ENV === 'production') {
           'src/builds/web/public/manifest.json',
           'src/builds/web/public/robots.txt',
           'src/layouts/DappSubmissionLayout/components/InputComponent/index.js',
-'src/layouts/DappSubmissionLayout/components/InputComponent/InputComponent.scss',
-'src/layouts/DappSubmissionLayout/components/InputComponent/InputComponent.vue',
-'src/layouts/DappSubmissionLayout/containers/SummaryContainer/index.js',
-'src/layouts/DappSubmissionLayout/containers/SummaryContainer/SummaryContainer.scss',
-'src/layouts/DappSubmissionLayout/containers/SummaryContainer/SummaryContainer.vue',
+          'src/layouts/DappSubmissionLayout/components/InputComponent/InputComponent.scss',
+          'src/layouts/DappSubmissionLayout/components/InputComponent/InputComponent.vue',
+          'src/layouts/DappSubmissionLayout/containers/SummaryContainer/index.js',
+          'src/layouts/DappSubmissionLayout/containers/SummaryContainer/SummaryContainer.scss',
+          'src/layouts/DappSubmissionLayout/containers/SummaryContainer/SummaryContainer.vue'
         ]
       }
     })
