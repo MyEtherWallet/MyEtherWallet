@@ -3,9 +3,12 @@
     <div class="dapp-header">
       <submit-component :btn-text="'Save & Continue'" />
       <banner-component :banner-text="'Tell us about your DApp'" />
+      <b-progress :value="25" class="dapp-progress-bar"></b-progress>
     </div>
-    <div class="dapp-container mt-5">
-      <about-your-dapp class="about-your-dapp w-50" />
+    <div class="dapp-container">
+      <about-your-dapp 
+        class="about-your-dapp w-50" 
+      />
       <div class="dapp-container-right">
         <strength-of-info class="strength-of-info ml-5" />
         <mew-support />
@@ -40,4 +43,12 @@ export default {
 
 <style lang="scss" scoped>
 @import 'DappSubmissionLayout.scss';
+</style>
+
+<style lang="scss">
+.dapp-progress-bar {
+  .progress-bar {
+    background-color:#05c0a5;
+  }
+}
 </style>
