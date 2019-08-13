@@ -10,12 +10,10 @@
 
 - Fix text translations [#1329](https://github.com/MyEtherWallet/MyEtherWallet/pull/1329)
 - Fix Mobile UI Scan to Download mobile [#1333](https://github.com/MyEtherWallet/MyEtherWallet/pull/1333)
+- By Mnemonic Phrase layout bug fix [#1347](https://github.com/MyEtherWallet/MyEtherWallet/pull/1347)
 
 ### Release v5.1.0
 
-### Bug
-
-- By Mnemonic Phrase layout bug fix [#1347](https://github.com/MyEtherWallet/MyEtherWallet/pull/1347)
 
 ### Feature
 
