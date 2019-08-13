@@ -111,59 +111,59 @@ window.addEventListener(
   },
   false
 );
+// function(e) {
+//   const url = cxHelpers.extractRootDomain(e.detail.from);
+//   chrome.storage.sync.get(url, items => {
+//     const meta = {};
+//     const tags = Array.from(document.getElementsByTagName('meta')).filter(
+//       meta => {
+//         if (meta.attributes[0].nodeName === 'property') return meta;
+//       }
+//     );
+//     Array.from(document.getElementsByTagName('link')).forEach(item => {
+//       if (item.href.includes('favicon.')) meta['favicon'] = item.href;
+//     });
+//     tags.forEach(tag => {
+//       meta[tag.attributes[0].value] = tag.attributes[1].value;
+//     });
+//     if (Object.keys(items).length > 0) {
+//       window.dispatchEvent(
+//         new CustomEvent(WEB3_RECEIVE_ACC.replace('{{id}}', extensionID), {
+//           detail: {
+//             account: items[url]
+//           }
+//         })
+//       );
+//     } else {
+//       if (!getAccountModalIsOPen) {
+//         ExtensionHelpers.getAccounts(item => {
+//           const addresses = {};
+//           Object.keys(item).forEach(key => {
+//             if (isAddress(key)) {
+//               addresses[key] = item[key];
+//             }
+//           });
+//           if (Object.keys(addresses).length > 0) {
+//             chrome.runtime.sendMessage(extensionID, {
+//               event: CX_FETCH_MEW_ACCS,
+//               url: window.location.origin,
+//               meta: meta
+//             });
+//           } else {
+//             chrome.runtime.sendMessage(extensionID, {
+//               event: CX_GO_TO_MAIN_PAGE
+//             });
+//           }
+//         });
+//         getAccountModalIsOPen = true;
+//       }
+//     }
+//   });
+// },
 window.addEventListener(
   WEB3_GET_ACC.replace('{{id}}', extensionID),
-  // function(e) {
-  //   const url = cxHelpers.extractRootDomain(e.detail.from);
-  //   chrome.storage.sync.get(url, items => {
-  //     const meta = {};
-  //     const tags = Array.from(document.getElementsByTagName('meta')).filter(
-  //       meta => {
-  //         if (meta.attributes[0].nodeName === 'property') return meta;
-  //       }
-  //     );
-  //     Array.from(document.getElementsByTagName('link')).forEach(item => {
-  //       if (item.href.includes('favicon.')) meta['favicon'] = item.href;
-  //     });
-  //     tags.forEach(tag => {
-  //       meta[tag.attributes[0].value] = tag.attributes[1].value;
-  //     });
-  //     if (Object.keys(items).length > 0) {
-  //       window.dispatchEvent(
-  //         new CustomEvent(WEB3_RECEIVE_ACC.replace('{{id}}', extensionID), {
-  //           detail: {
-  //             account: items[url]
-  //           }
-  //         })
-  //       );
-  //     } else {
-  //       if (!getAccountModalIsOPen) {
-  //         ExtensionHelpers.getAccounts(item => {
-  //           const addresses = {};
-  //           Object.keys(item).forEach(key => {
-  //             if (isAddress(key)) {
-  //               addresses[key] = item[key];
-  //             }
-  //           });
-  //           if (Object.keys(addresses).length > 0) {
-  //             chrome.runtime.sendMessage(extensionID, {
-  //               event: CX_FETCH_MEW_ACCS,
-  //               url: window.location.origin,
-  //               meta: meta
-  //             });
-  //           } else {
-  //             chrome.runtime.sendMessage(extensionID, {
-  //               event: CX_GO_TO_MAIN_PAGE
-  //             });
-  //           }
-  //         });
-  //         getAccountModalIsOPen = true;
-  //       }
-  //     }
-  //   });
-  // },
   function(e) {
-    console.log(e);
+    console.log(e, 'why is detail empty you son of a bitch');
     const url = cxHelpers.extractRootDomain(e.detail.from);
     chrome.storage.sync.get(url, () => {
       const meta = {};
@@ -178,13 +178,17 @@ window.addEventListener(
       tags.forEach(tag => {
         meta[tag.attributes[0].value] = tag.attributes[1].value;
       });
-      chrome.runtime.sendMessage(extensionID, {
-        event: CX_FETCH_MEW_ACCS,
-        payload: {
-          url: window.location.origin,
-          meta: meta
-        }
-      }, e.detail.cb);
+      chrome.runtime.sendMessage(
+        extensionID,
+        {
+          event: CX_FETCH_MEW_ACCS,
+          payload: {
+            url: window.location.origin,
+            meta: meta
+          }
+        },
+        e.detail.cb
+      );
     });
   },
   false
