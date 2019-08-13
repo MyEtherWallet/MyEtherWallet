@@ -71,29 +71,27 @@
       @checkForProxy="checkIfDestAddressHasProxy"
     >
     </move-cdp-modal>
-    <interface-container-title :title="'MAKER'">
-      <template v-slot:right>
-        <div style="padding-left: 20px; cursor: pointer;">
-          <i
-            v-show="showRefresh"
-            class="fa fa-refresh"
-            @click="refreshExternal"
-          ></i>
-        </div>
-        <div v-if="showMoveOrClose" class="header-buttons-container">
-          <div class="inner-container">
-            <button class="move-btn" @click="showMove">
-              <h4>{{ $t('dappsMaker.moveTitle') }}</h4>
+    <back-button :path="'/interface/dapps/'">
+      <div style="padding-left: 20px; cursor: pointer;">
+        <i
+          v-show="showRefresh"
+          class="fa fa-refresh"
+          @click="refreshExternal"
+        ></i>
+      </div>
+      <div v-if="showMoveOrClose" class="header-buttons-container">
+        <div class="inner-container">
+          <button class="move-btn" @click="showMove">
+            <h4>{{ $t('dappsMaker.moveTitle') }}</h4>
+          </button>
+          <div v-if="!((!hasProxy && !onCreate) || showCdpMigrateButtons)">
+            <button class="close-btn" @click="showClose">
+              <h4>{{ $t('dappsMaker.closeTitle') }}</h4>
             </button>
-            <div v-if="!((!hasProxy && !onCreate) || showCdpMigrateButtons)">
-              <button class="close-btn" @click="showClose">
-                <h4>{{ $t('dappsMaker.closeTitle') }}</h4>
-              </button>
-            </div>
           </div>
         </div>
-      </template>
-    </interface-container-title>
+      </div>
+    </back-button>
     <div v-show="makerActive" class="buttons-container">
       <div v-if="showCreateProxy">
         <div class="dapps-button" @click="buildProxy">
