@@ -14,10 +14,15 @@ import 'bootstrap-vue/dist/bootstrap-vue.css';
 import Vue from 'vue';
 import Router from 'vue-router';
 const originalPush = Router.prototype.push;
+const originalReplace = Router.prototype.replace;
 Router.prototype.push = function push(path) {
   return originalPush.call(this, path).catch(err => err);
 };
+Router.prototype.replace = function push(path) {
+  return originalReplace.call(this, path).catch(err => err);
+};
 Router.prototype.originalPush = originalPush; // Incase we do want to handle on resolve or on abort
+Router.prototype.originalReplace = originalReplace; // Incase we do want to handle on resolve or on abort
 import router from '@/router';
 import store from '@/store';
 import Vuex from 'vuex';
