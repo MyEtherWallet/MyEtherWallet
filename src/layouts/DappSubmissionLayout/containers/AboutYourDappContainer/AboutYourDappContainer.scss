@@ -16,3 +16,15 @@
     }
   }
 }
+
+.fake-container {
+  position: relative;
+}
+
+.tag-holder {
+  display: flex;
+  justify-content: space-around;
+  left: 5px;
+  position: absolute;
+  top: 4px;
+}

@@ -16,7 +16,23 @@
         ></b-form-select>
       </b-form-group>
       <b-form-group label-align="left" label="Tags" label-for="dappTags">
-        <b-form-input id="dappTags" type="text" required></b-form-input>
+        <div class="fake-container">
+          <div ref="tagHolder" class="tag-holder">
+            <tag-component
+              v-for="(tag, idx) in displayTags"
+              :name="tag"
+              :delete-func="deleteTag"
+              :idx="idx"
+            />
+          </div>
+          <b-form-input
+            id="dappTags"
+            ref="dappTagsInput"
+            v-model="tagInput"
+            type="text"
+            required
+          ></b-form-input>
+        </div>
       </b-form-group>
       <b-form-group label-align="left" label="Description">
         <b-form-textarea
@@ -67,11 +83,44 @@
 </template>
 
 <script>
+import TagComponentVue from '../../components/TagComponent/TagComponent.vue';
 export default {
+  components: {
+    'tag-component': TagComponentVue
+  },
   data() {
     return {
-      categories: [{ text: 'Select One', value: null }, 'Finance']
+      categories: [{ text: 'Select One', value: null }, 'Finance'],
+      tagInput: '',
+      suggestedTags: '',
+      file: '',
+      displayTags: []
     };
+  },
+  watch: {
+    tagInput(newVal) {
+      if (newVal.includes(' ')) {
+        newVal.split(' ').forEach(item => {
+          if (item.length > 0) {
+            this.displayTags.push(item);
+            this.tagInput = '';
+            this.updateWidth();
+          }
+        });
+      }
+    }
+  },
+  methods: {
+    deleteTag(idx) {
+      this.displayTags.splice(idx, 1);
+      this.updateWidth();
+    },
+    updateWidth() {
+      this.$refs.dappTagsInput.style.paddingLeft =
+        this.$refs.tagHolder.offsetWidth > 0
+          ? `${this.$refs.tagHolder.offsetWidth}px`
+          : '10.5px';
+    }
   }
 };
 </script>
