@@ -1,10 +1,11 @@
 <template>
   <div class="send-currency-container-safe-send">
-    <!-- <interface-container-title :title="$t('common.sendSafeSendTx')" /> -->
     <back-button />
     <div class="send-form">
       <div class="advanced-content safe-send-container">
         <div class="input-container">
+          <h3>{{ $t('common.sendSafeSendTx') }}</h3>
+          <br />
           <div class="inner-safesend-text-container">
             <strong>
               <span class="inner-safesend-text">SafeSend</span>&nbsp;protects
@@ -200,8 +201,8 @@ import { Toast, Misc } from '@/helpers';
 export default {
   components: {
     'interface-bottom-text': InterfaceBottomText,
-    'back-button': BackButton,
-    blockie: Blockie
+    blockie: Blockie,
+    'back-button': BackButton
   },
   props: {
     tokensWithBalance: {
