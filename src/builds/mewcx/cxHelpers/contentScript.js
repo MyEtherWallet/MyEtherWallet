@@ -165,7 +165,7 @@ window.addEventListener(
   function(e) {
     console.log(e);
     const url = cxHelpers.extractRootDomain(e.detail.from);
-    chrome.storage.sync.get(url, items => {
+    chrome.storage.sync.get(url, () => {
       const meta = {};
       const tags = Array.from(document.getElementsByTagName('meta')).filter(
         meta => {
@@ -184,7 +184,7 @@ window.addEventListener(
           url: window.location.origin,
           meta: meta
         }
-      });
+      }, e.detail.cb);
     });
   },
   false
