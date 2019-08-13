@@ -14,7 +14,13 @@
       <div class="information-blocks">
         <div class="block-item">
           <div class="block-title">
-            <p>{{ $t('dappsMaker.liquidPrice') }} (ETH/USD)</p>
+            <div class="for-pop">
+              <p>{{ $t('dappsMaker.liquidPrice') }} (ETH/USD)</p>
+              <p v-if="liquidationPriceDisplay === '--'" class="pop-icon">
+                <popover :popcontent="$t('dappsMaker.whatIsDashes')" />
+              </p>
+            </div>
+
             <div class="blue">
               <span class="blue-bold">{{ liquidationPriceDisplay }}</span>
               USD
@@ -33,7 +39,13 @@
         </div>
         <div class="block-item">
           <div class="block-title">
-            <p>{{ $t('dappsMaker.collateralRatio') }}</p>
+            <div class="for-pop">
+              <p>{{ $t('dappsMaker.collateralRatio') }}</p>
+              <p v-if="liquidationPriceDisplay === '--'" class="pop-icon">
+                <popover :popcontent="$t('dappsMaker.whatIsDashes')" />
+              </p>
+            </div>
+
             <div :class="collateralRatioColoring">
               <span>{{ collaterlizationRatioDisplay }}%</span>
             </div>
@@ -150,6 +162,7 @@
 
 <script>
 import { mapState } from 'vuex';
+import PopUpHelper from '@/components/PopupHelper';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import BottomHelpLink from '@/components/BottomHelpLink';
@@ -168,6 +181,7 @@ const toBigNumber = num => {
 
 export default {
   components: {
+    'pop-up-helper': PopUpHelper,
     'interface-container-title': InterfaceContainerTitle,
     'interface-bottom-text': InterfaceBottomText,
     blockie: Blockie,
