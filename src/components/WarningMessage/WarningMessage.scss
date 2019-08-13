@@ -1,4 +1,4 @@
-@import '~@/scss/GlobalVariables';
+@import "~@/scss/GlobalVariables";
 
 // *********************************************************************
 // .warning-message
@@ -8,10 +8,16 @@
   padding: 20px 20px;
   grid-template-columns: 60px 1fr;
   background-color: $light-grey-16;
+  @media all and (max-width: 330px) {
+    grid-template-columns: 0px 1fr;
+  }
 }
 
 .left {
   font-size: 30px;
+  @media all and (max-width: 330px) {
+    opacity: 0;
+  }
 }
 
 .right {

@@ -1,4 +1,4 @@
-@import '~@/scss/GlobalVariables';
+@import "~@/scss/GlobalVariables";
 @media all and (min-width: calc(#{$tablet-width} + 1px)) {
   .wrap {
     padding: 0;
@@ -46,6 +46,14 @@
       grid-row-gap: 20px;
       grid-template-columns: 1fr 1fr 1fr;
       margin-bottom: 20px;
+
+      @media all and (max-width: 600px) {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      @media all and (max-width: 350px) {
+        grid-template-columns: 1fr;
+      }
 
       li {
         border-bottom: 1px solid $border-bottom--mnemonic-phrase-key-color;

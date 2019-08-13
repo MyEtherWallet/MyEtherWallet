@@ -1,4 +1,4 @@
-@import '~@/scss/GlobalVariables';
+@import "~@/scss/GlobalVariables";
 
 .header {
   align-items: center;
@@ -65,14 +65,14 @@
   grid-template-columns: 1fr 1fr 1fr;
   grid-gap: 20px 50px;
 
-  @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+  @media all and (max-width: $tablet-width) {
     grid-template-columns: 1fr 1fr;
-    grid-gap: 20px 30px;
+    grid-gap: 5px 10px;
   }
 
-  @media all and (max-width: $mobile-width) {
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 10px 10px;
+  @media all and (max-width: 370px) {
+    grid-template-columns: 1fr;
+    grid-gap: 5px 10px;
   }
 }
 
