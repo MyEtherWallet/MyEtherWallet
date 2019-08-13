@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import tabsConfig from './InterfaceMobileMenu.config';
+import tabsConfig from '../InterfaceSideMenu/InterfaceSideMenu.config.js';
 import { mapState } from 'vuex';
 export default {
   props: {
@@ -64,9 +64,6 @@ export default {
     tabAction(tab) {
       if (!tab.hasOwnProperty('children') || tab.children.length === 0) {
         this.$router.push({ path: tab.routes[0] });
-      } else {
-        // Disable category menu link
-        //this.$router.push({ path: tab.children[0].routes[0] });
       }
     }
   }
