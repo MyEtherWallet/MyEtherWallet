@@ -1,6 +1,6 @@
 FROM node:8.16.0-jessie
 
-ENV NODE_OPTIONS --max-old-space-size=4096
+ENV NODE_OPTIONS --max-old-space-size=8192
 RUN npm install npm@6.10 -g
 RUN node -v && npm -v
 COPY package*.json ./
