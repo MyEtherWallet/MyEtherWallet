@@ -54,7 +54,10 @@
   "sign": "Sign",
   "toAddress": "目的地址",
   "cancel": "Cancel",
+  "actions": "Actions",
   "value": "Value",
+  "more": "More",
+  "viewAll": "View All",
   "gasLimit": "Gas Limit",
   "gasPrice": "Gas Price",
   "data": "Data",
@@ -80,5 +83,7 @@
   "read": "Read",
   "notRecommended": "NOT RECOMMENDED",
   "notRecommendedMessage": "This is not a recommended way to access your wallet. Due to the sensitivity of the information involved, these options should only be used in offline settings by experienced users.",
-  "usingMewOffline": "Using MEW Offline"
+  "usingMewOffline": "Using MEW Offline",
+  "twitterFollow": "Follow us on Twitter",
+  "ntfManager": "NFT Manager"
 }
