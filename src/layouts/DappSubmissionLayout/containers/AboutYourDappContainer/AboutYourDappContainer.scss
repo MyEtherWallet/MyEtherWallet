@@ -4,15 +4,35 @@
   .form-group {
     text-align: left;
     font-weight: 600;
-    font-size: 16px;
     margin-top: 5px;
 
-    input {
-      margin-top: 10px;
+    .dapp-input {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+
+      span {
+        font-size: 16px;
+        color: $red-9;
+        padding-left: 10px; 
+        height: 19px;       
+      }
     }
 
-    select {
-      margin-top: 10px;
+    textarea {
+      font-size: 14px;
+    }
+
+    .dapp-text-info {
+      font-weight: 500;
+      font-size: 14px;
+      height: 52px;
+      line-height: 20px;
+    }
+
+    .custom-file-input {
+      display: none;
     }
   }
 }
