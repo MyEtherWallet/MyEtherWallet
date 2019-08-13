@@ -41,7 +41,7 @@ const dapps = {
     title: 'Schedule a transaction',
     desc:
       'Schedule a transaction using the decentralized Ethereum Alarm Clock protocol',
-    supportedNetworks: [ETH.name, ROP.name, KOV.name]
+    supportedNetworks: [ETH.name, KOV.name]
   },
   maker: {
     route: '/interface/dapps/maker-dai',
