@@ -1,7 +1,7 @@
 @import '../InterfaceContainer';
 
 $dapps-container-mobile-width: 650px;
-$actionsSwapCollepsePoint: 1430px;
+$actionsSwapCollepsePoint: 700px;
 
 .dashboard-container {
   @extend %interface-container;
@@ -78,6 +78,12 @@ $actionsSwapCollepsePoint: 1430px;
     padding: 8px 20px;
     display: flex;
     align-items: center;
+    border-radius: 5px;
+    &.swap-disabled {
+      filter: grayscale(100%);
+      opacity: 0.8;
+      background-color: $light-green-2;
+    }
 
     > div {
       padding-left: 10px;
