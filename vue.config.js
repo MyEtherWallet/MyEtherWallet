@@ -10,16 +10,18 @@ const webpackConfig = {
   node: {
     process: true
   },
+  devtool: 'source-map',
   devServer: {
     https: true,
     host: 'localhost',
     hotOnly: true,
     port: 8080,
+    writeToDisk: JSON.parse(env_vars.BUILD_TYPE) === 'mewcx',
     headers: {
       'Strict-Transport-Security':
         'max-age=63072000; includeSubdomains; preload',
       'Content-Security-Policy':
-        "default-src 'self' blob:; frame-src 'self' connect.trezor.io:443; img-src 'self' data: blob:; script-src 'unsafe-eval' 'unsafe-inline' blob: https:; style-src 'self' 'unsafe-inline' https:; object-src 'none'; connect-src *;",
+        "default-src 'self' blob:; frame-src 'self' connect.trezor.io:443; img-src 'self' https://nft.mewapi.io data: blob: ; script-src 'unsafe-eval' 'unsafe-inline' blob: https:; style-src 'self' 'unsafe-inline' https:; object-src 'none'; connect-src *;",
       'X-Content-Type-Options': 'nosniff',
       'X-Frame-Options': 'DENY',
       'X-XSS-Protection': '1; mode=block',
@@ -45,10 +47,13 @@ const webpackConfig = {
     new CopyWebpackPlugin([
       {
         from: 'src/builds/' + JSON.parse(env_vars.BUILD_TYPE) + '/public',
-        transform: function (content, filePath) {
+        transform: function(content, filePath) {
           if (filePath.split('.').pop() === ('js' || 'JS'))
             return UglifyJS.minify(content.toString()).code;
-          if (filePath.replace(/^.*[\\\/]/, '') === 'manifest.json' && JSON.parse(env_vars.BUILD_TYPE) === 'mewcx') {
+          if (
+            filePath.replace(/^.*[\\\/]/, '') === 'manifest.json' &&
+            JSON.parse(env_vars.BUILD_TYPE) === 'mewcx'
+          ) {
             const version = require('./package.json').version;
             const json = JSON.parse(content);
             json.version = version;
@@ -79,9 +84,15 @@ if (process.env.NODE_ENV === 'production') {
       globOptions: {
         ignore: [
           // Are we using these
-          'src/components/DropDownAddressSelector/#####DropDownAddressSelector.vue',
+          'src/assets/images/icons/question.png',
           'src/components/DropDownAddressSelector/DropDownAddressSelector.scss',
           'src/components/DropDownAddressSelector/index.js',
+          'src/components/PopupHelper/index.js',
+          'src/components/PopupHelper/PopupHelper.scss',
+          'src/components/PopupHelper/PopupHelper.vue',
+          'src/components/StandardInputSlot/index.js',
+          'src/components/StandardInputSlot/StandardInputSlot.scss',
+          'src/components/StandardInputSlot/StandardInputSlot.vue',
           // Unknown
           'src/contracts/contract-abi-etsc.json',
           'src/contracts/contract-abi-exp.json',
@@ -119,6 +130,10 @@ if (process.env.NODE_ENV === 'production') {
           'src/components/Notification/components/NotificationTypes/SwapNotification/index.js',
           'src/components/Notification/components/NotificationTypes/TransactionNotification/index.js',
           // Images
+          'src/assets/images/ads/mewconnect.png',
+          'src/assets/images/ads/mewconnect.jpg',
+          'src/assets/images/etc/mewconnect.jpeg',
+          'src/assets/images/icons/button-finney.png',
           'src/assets/images/background/bg-left.png',
           'src/assets/images/background/bg-right.png',
           'src/assets/images/currency/coins/AllImages/_icon-config.json',
@@ -136,6 +151,9 @@ if (process.env.NODE_ENV === 'production') {
           'src/assets/images/networks/etsc.svg',
           'src/assets/images/networks/exp.svg',
           'src/assets/images/icons/up.svg',
+          'src/assets/images/icons/button-json.svg',
+          'src/assets/images/icons/button-mnemonic.svg',
+          'src/assets/images/team/_blank_.jpg',
           // Chrome Extension
           'src/builds/mewcx/app.vue',
           'src/builds/mewcx/public/img/icons/icon128.png',
@@ -182,12 +200,23 @@ const exportObj = {
   integrity: process.env.WEBPACK_INTEGRITY === 'false' ? false : true,
   pwa: pwa,
   chainWebpack: config => {
-    config.module.rule('replace').test(/\.js$/).include.add(path.resolve(__dirname, 'node_modules/@ensdomains/dnsprovejs')).end().use('string-replace-loader').loader('string-replace-loader').tap(options => {
-      return {
-        search: 'https://dns.google.com/experimental?ct=application/dns-udpwireformat&dns=',
-        replace: 'https://cloudflare-dns.com/dns-query?ct=application/dns-udpwireformat&dns='
-      }
-    })
+    config.module
+      .rule('replace')
+      .test(/\.js$/)
+      .include.add(
+        path.resolve(__dirname, 'node_modules/@ensdomains/dnsprovejs')
+      )
+      .end()
+      .use('string-replace-loader')
+      .loader('string-replace-loader')
+      .tap(options => {
+        return {
+          search:
+            'https://dns.google.com/experimental?ct=application/dns-udpwireformat&dns=',
+          replace:
+            'https://cloudflare-dns.com/dns-query?ct=application/dns-udpwireformat&dns='
+        };
+      });
   }
 };
-module.exports = exportObj
+module.exports = exportObj;

@@ -71,7 +71,7 @@ describe('SendCurrencyContainer.vue', () => {
   });
 
   describe('SendCurrencyContainer.vue Methods', () => {
-    xit('should render correct selectedCurrency data', () => {
+    it('should render correct selectedCurrency data', () => {
       const currencyElements = wrapper.findAll(
         '.currency-picker-container .item-container div'
       );
@@ -79,13 +79,13 @@ describe('SendCurrencyContainer.vue', () => {
         const currencyElement = currencyElements.at(i);
         currencyElement.trigger('click');
         const selectedCurrency = wrapper.vm.$data.selectedCurrency;
-
-        expect(selectedCurrency.symbol + ' - ' + selectedCurrency.name).toEqual(
+        expect(
           currencyElement
             .find('p')
             .text()
             .trim()
-        );
+            .indexOf(selectedCurrency.name)
+        ).toBeGreaterThan(-1);
       }
     });
 

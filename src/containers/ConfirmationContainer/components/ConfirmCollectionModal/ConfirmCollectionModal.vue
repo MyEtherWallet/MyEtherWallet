@@ -148,9 +148,10 @@
 </template>
 <script>
 import AddressBlock from '../AddressBlock';
-import { mapGetters } from 'vuex';
-import { hexToNumberString, fromWei } from 'web3-utils';
-import BN from 'bignumber.js';
+import { mapState } from 'vuex';
+import { fromWei, hexToNumberString } from 'web3-utils';
+import BigNumber from 'bignumber.js';
+
 export default {
   components: {
     'address-block': AddressBlock
@@ -184,11 +185,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      web3: 'web3',
-      network: 'network',
-      account: 'account'
-    }),
+    ...mapState(['web3', 'network', 'account']),
     buttonText() {
       if (!this.allSigned && this.isHardwareWallet) {
         return this.$t('confirmation.approveOnDevice');
@@ -208,11 +205,11 @@ export default {
     },
     txTotal() {
       if (this.unSignedArray.length > 0) {
-        let totalGas = new BN();
+        let totalGas = new BigNumber();
         this.unSignedArray.forEach(item => {
           totalGas = totalGas.add(
-            new BN(item.gasPrice.replace('0x', ''), 'hex').mul(
-              new BN(item.gas.replace('0x', ''), 'hex')
+            new BigNumber(item.gasPrice.replace('0x', ''), 'hex').mul(
+              new BigNumber(item.gas.replace('0x', ''), 'hex')
             )
           );
         });

@@ -41,10 +41,22 @@ describe('InterfaceBalance.vue', () => {
     });
   });
 
-  xit('should render correct balance data', () => {
+  it('should render correct balance data', () => {
     expect(
-      wrapper.vm.$el.querySelector('.balance-text p').textContent.trim()
-    ).toEqual(balance);
+      wrapper.vm.$el
+        .querySelector('.balance-text p')
+        .textContent.trim()
+        .indexOf(balance)
+    ).toBeGreaterThan(-1);
+
+    const getBalance = sinon.stub();
+    wrapper.setProps({ getBalance });
+  });
+
+  it('should render correct fetchingBalance data', () => {
+    expect(wrapper.vm.$data.fetchingBalance).toBe(false);
+    wrapper.vm.fetchBalance();
+    expect(wrapper.vm.$data.fetchingBalance).toBe(true);
   });
 
   describe('InterfaceBalance.vue Methods', () => {

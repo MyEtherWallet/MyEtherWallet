@@ -73,6 +73,7 @@
               <a
                 :href="addressLink(details.to, details.toCurrency)"
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 {{ details.to }}
               </a>
@@ -94,6 +95,7 @@
                   addressLink(details.providerAddress, details.fromCurrency)
                 "
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 {{ details.providerAddress }}
               </a>
@@ -172,7 +174,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 
 import '@/assets/images/currency/coins/asFont/cryptocoins.css';
 import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
@@ -258,13 +260,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      web3: 'web3',
-      network: 'network',
-      notifications: 'notifications',
-      wallet: 'wallet',
-      gasPrice: 'gasPrice'
-    }),
+    ...mapState(['web3', 'network', 'notifications', 'wallet', 'gasPrice']),
     errorMessage() {
       return this.errorMessageString(this.notice);
     },

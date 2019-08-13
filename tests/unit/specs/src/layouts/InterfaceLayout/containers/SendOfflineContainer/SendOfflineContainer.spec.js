@@ -43,9 +43,11 @@ xdescribe('SendOfflineContainer.vue', () => {
   });
 
   xit('should render correct nonce data', () => {
-    expect(
-      wrapper.vm.$el.querySelector('router-view').getAttribute('nonce')
-    ).toBe(String(wrapper.vm.$data.nonce));
+    // expect(
+    //   wrapper.vm.$el.querySelector('router-view').getAttribute('nonce')
+    // ).toBe(String(wrapper.vm.$data.nonce));
+
+    console.log(wrapper.vm.$el.querySelector('.gas-amount input').textContent);
   });
 
   xit('should render correct gasLimit data', () => {
@@ -60,7 +62,7 @@ xdescribe('SendOfflineContainer.vue', () => {
     ).toBe(wrapper.vm.$data.rawTx);
   });
 
-  xit('[02/04/19] should render correct tabs data', () => {
+  xit('should render correct tabs data', () => {
     const pointerEventsElements = wrapper.vm.$el.querySelectorAll(
       'div.prevent-pointer-events'
     );

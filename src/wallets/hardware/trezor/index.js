@@ -3,7 +3,7 @@ import { TREZOR as trezorType } from '../../bip44/walletTypes';
 import bip44Paths from '../../bip44';
 import HDWalletInterface from '@/wallets/HDWalletInterface';
 import * as HDKey from 'hdkey';
-import ethTx from 'ethereumjs-tx';
+import { Transaction } from 'ethereumjs-tx';
 import {
   getSignTransactionObject,
   getHexTxObject,
@@ -12,7 +12,8 @@ import {
 } from '../../utils';
 import { toBuffer } from 'ethereumjs-util';
 import errorHandler from './errorHandler';
-
+import store from '@/store';
+import commonGenerator from '@/helpers/commonGenerator';
 const NEED_PASSWORD = false;
 
 class TrezorWallet {
@@ -37,8 +38,10 @@ class TrezorWallet {
   getAccount(idx) {
     const derivedKey = this.hdKey.derive('m/' + idx);
     const txSigner = async tx => {
-      tx = new ethTx(tx);
-      const networkId = tx._chainId;
+      tx = new Transaction(tx, {
+        common: commonGenerator(store.state.network)
+      });
+      const networkId = tx.getChainId();
       const options = {
         path: this.basePath + '/' + idx,
         transaction: getHexTxObject(tx)
@@ -68,6 +71,12 @@ class TrezorWallet {
       if (!result.success) throw new Error(result.payload.error);
       return getBufferFromHex(result.payload.signature);
     };
+    const displayAddress = async () => {
+      await Trezor.ethereumGetAddress({
+        path: this.basePath + '/' + idx,
+        showOnTrezor: true
+      });
+    };
     return new HDWalletInterface(
       this.basePath + '/' + idx,
       derivedKey.publicKey,
@@ -75,7 +84,8 @@ class TrezorWallet {
       this.identifier,
       errorHandler,
       txSigner,
-      msgSigner
+      msgSigner,
+      displayAddress
     );
   }
   getCurrentPath() {

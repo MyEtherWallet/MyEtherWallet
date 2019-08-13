@@ -5,6 +5,7 @@ import domains from '@/dapps/BuySubdomain/domains.json';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import SubdomainAbi from '@/helpers/subdomainAbi.js';
 import { Tooling } from '@@/helpers';
+import { state } from '@@/helpers/mockStore';
 
 describe('BuySubdomain.vue', () => {
   let localVue, i18n, wrapper, store, newWeb3;
@@ -15,6 +16,7 @@ describe('BuySubdomain.vue', () => {
     i18n = baseSetup.i18n;
     store = baseSetup.store;
     Vue.config.warnHandler = () => {};
+    newWeb3 = state.web3;
   });
 
   beforeEach(() => {
@@ -29,7 +31,7 @@ describe('BuySubdomain.vue', () => {
     });
   });
 
-  xit('should render correct knownRegistrarInstances data', () => {
+  it('should render correct knownRegistrarInstances data', () => {
     wrapper.find('.subdomain-input input').setValue('adsfasdf');
     const web3C = newWeb3.eth.Contract;
     const knownRegistrarInstances = {};

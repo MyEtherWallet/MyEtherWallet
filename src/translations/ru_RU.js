@@ -20,6 +20,8 @@ import ledgerError from './errors-ledger/ru_RU';
 import secalotError from './errors-secalot/ru_RU';
 import keepkeyError from './errors-keepkey/ru_RU';
 import bitboxError from './errors-bitbox/ru_RU';
+import buyHardwareWallet from './buy-hardware-wallet/ru_RU';
+import dappsMaker from './dapps-maker/ru_RU';
 
 const ru_RU = {
   common: common,
@@ -42,6 +44,8 @@ const ru_RU = {
   ledgerError: ledgerError,
   secalotError: secalotError,
   keepkeyError: keepkeyError,
-  bitboxError: bitboxError
+  bitboxError: bitboxError,
+  buyHardwareWallet: buyHardwareWallet,
+  dappsMaker: dappsMaker
 };
 export default ru_RU;

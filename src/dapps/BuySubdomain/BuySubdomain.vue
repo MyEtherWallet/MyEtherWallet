@@ -4,7 +4,7 @@
     <div class="buy-subdomain-content">
       <div class="buy-subdomain-form-container">
         <div class="title">
-          <h4>{{ $t('interface.subdomains') }}</h4>
+          <h4>{{ $t('interface.nameYourWallet') }}</h4>
         </div>
         <div class="form">
           <div class="subdomain-input">
@@ -60,11 +60,11 @@ import SubdomainAbi from '@/helpers/subdomainAbi.js';
 import domains from './domains.json';
 import normalise from '@/helpers/normalise';
 import BigNumber from 'bignumber.js';
-import { mapGetters } from 'vuex';
-import _ from 'underscore';
+import { mapState } from 'vuex';
 import StandardButton from '@/components/Buttons/StandardButton';
 import { Toast } from '@/helpers';
 import { fromWei, sha3 } from 'web3-utils';
+import { debounce } from 'underscore';
 
 export default {
   components: {
@@ -83,12 +83,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      ethDonationAddress: 'ethDonationAddress',
-      ens: 'ens',
-      account: 'account',
-      web3: 'web3'
-    }),
+    ...mapState(['ethDonationAddress', 'ens', 'account', 'web3']),
     sortedResults() {
       const newArr = this.results;
       newArr.sort((a, b) => {
@@ -123,7 +118,7 @@ export default {
     });
   },
   methods: {
-    debounceInput: _.debounce(function(e) {
+    debounceInput: debounce(function(e) {
       this.domainName = normalise(e.target.value);
     }, 1500),
     async query() {

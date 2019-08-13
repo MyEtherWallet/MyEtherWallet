@@ -7,7 +7,7 @@
   "others": "Others",
   "affiliates": "Affiliates",
   "ledger": "Ledger Wallet",
-  "digital": "Digital Bitbox",
+  "digital": "BitBox",
   "ethCard": "Ether Card",
   "trezor": "Trezor",
   "bity": "Bity",
@@ -25,5 +25,8 @@
   "sendOffline": "Send Offline Helper",
   "finney": "Finney",
   "billfodl": "Billfodl",
-  "verifyMessage": "Verify Message"
+  "verifyMessage": "Verify Message",
+  "keepkey": "KeepKey",
+  "secalot": "Secalot",
+  "bitbox": "Bitbox"
 }

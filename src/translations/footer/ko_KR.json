@@ -7,7 +7,7 @@
   "others": "기타 ",
   "affiliates": "제휴 ",
   "ledger": "출납부 지갑 ",
-  "digital": "디지털 비트박스 ",
+  "digital": "BitBox",
   "ethCard": "이더 카드 ",
   "trezor": "트레조",
   "bity": "비티 ",
@@ -25,5 +25,8 @@
   "sendOffline": "Send Offline Helper",
   "finney": "Finney",
   "billfodl": "Billfodl",
-  "verifyMessage": "Verify Message"
+  "verifyMessage": "Verify Message",
+  "keepkey": "KeepKey",
+  "secalot": "Secalot",
+  "bitbox": "Bitbox"
 }

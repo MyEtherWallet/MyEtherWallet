@@ -4,7 +4,9 @@ import { Tooling } from '@@/helpers';
 
 describe('NameForbiddenENSContainer.vue', () => {
   let localVue, i18n, wrapper, store;
+
   const domainName = 'MyEtherWallet';
+
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
@@ -27,6 +29,6 @@ describe('NameForbiddenENSContainer.vue', () => {
       wrapper.vm.$el
         .querySelector('.name-forbidden-container h3')
         .textContent.trim()
-    ).toEqual(domainName + '.eth is not available yet!');
+    ).toEqual(`${domainName}.eth is not available yet!`);
   });
 });

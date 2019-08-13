@@ -12,9 +12,7 @@ export default class AbstractCallMethod extends AbstractMethod {
 
     if (this.parameters.length !== this.parametersAmount) {
       throw new Error(
-        `Invalid Arguments length: expected: ${this.parametersAmount}, given: ${
-          this.parameters.length
-        }`
+        `Invalid Arguments length: expected: ${this.parametersAmount}, given: ${this.parameters.length}`
       );
     }
 

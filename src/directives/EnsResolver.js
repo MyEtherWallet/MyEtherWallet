@@ -1,6 +1,7 @@
 import normalise from '@/helpers/normalise';
 import { Misc } from '@/helpers';
 import { toChecksumAddress } from '@/helpers/addressUtils';
+import utils from 'web3-utils';
 const EnsResolver = {
   bind: function(el, binding, vnode) {
     vnode.context.$watch(binding.value, function(e) {
@@ -48,7 +49,9 @@ const EnsResolver = {
             _this.isValidAddress = false;
             _this.hexAddress = '';
             // eslint-disable-next-line
-            errorPar.innerText = `No ${_this.network.type.name[0]}NS resolver in this node`;
+            errorPar.innerText = `No ${
+              _this.network.type.name[0]
+            }NS resolver in this node`;
             el.parentNode.parentNode.appendChild(errorPar);
           } else {
             ens
@@ -66,7 +69,9 @@ const EnsResolver = {
               .catch(() => {
                 removeElements();
                 // eslint-disable-next-line
-                errorPar.innerText = `${_this.network.type.name[0]}NS name is invalid or not found`;
+                errorPar.innerText = `${
+                  _this.network.type.name[0]
+                }NS name is invalid or not found`;
                 _this.isValidAddress = false;
                 _this.hexAddress = '';
                 vnode.elm.parentNode.parentNode.appendChild(errorPar);
@@ -77,7 +82,18 @@ const EnsResolver = {
         _this.isValidAddress = false;
         _this.hexAddress = '';
         removeElements();
-        errorPar.innerText = 'Invalid address';
+        if (e.length > 0) {
+          if (e.length !== 42 || !utils.isHexStrict(e)) {
+            errorPar.innerText = 'Not a valid Ethereum address';
+          } else if (!utils.checkAddressChecksum(e)) {
+            errorPar.innerText =
+              'This address is not checksummed properly. Please copy the address exactly as shown.';
+            // 'Incorrect checksum: check address format on EthVM';
+          }
+        } else {
+          errorPar.innerText = '';
+        }
+
         el.parentNode.parentNode.appendChild(errorPar);
       }
     });

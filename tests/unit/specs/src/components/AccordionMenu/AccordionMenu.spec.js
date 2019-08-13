@@ -46,9 +46,11 @@ describe('AccordionMenu.vue', () => {
   });
 
   it('should render correct title props', () => {
-    console.log(
+    const title = 'title';
+    wrapper.setProps({ title });
+    expect(
       wrapper.vm.$el.querySelectorAll('.menu-title div')[1].textContent.trim()
-    );
+    ).toEqual(title);
   });
 
   it('should render correct isopen props', () => {

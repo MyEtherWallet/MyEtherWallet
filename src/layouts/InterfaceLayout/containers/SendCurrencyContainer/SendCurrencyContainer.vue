@@ -1,7 +1,6 @@
 <template>
   <div class="send-currency-container">
     <interface-container-title :title="$t('common.sendTx')" />
-
     <div class="send-form">
       <div class="form-block amount-to-address">
         <div class="amount">
@@ -93,6 +92,25 @@
             />
           </div>
         </div>
+        <div class="tx-fee">
+          <div class="title">
+            <h4>
+              {{ $t('common.txFee') }}
+            </h4>
+            <p class="copy-button prevent-user-select" @click="openSettings">
+              {{ $t('common.edit') }}
+            </p>
+          </div>
+          <div class="fee-value">
+            <div class="gwei">
+              {{ gasPrice }} Gwei
+              <!--(Economic)-->
+            </div>
+            <div v-show="network.type.name === 'ETH'" class="usd">
+              Cost {{ txFeeEth }} ETH = ${{ convert }}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -177,16 +195,17 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import CurrencyPicker from '../../components/CurrencyPicker';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
-import EthTx from 'ethereumjs-tx';
+import { Transaction } from 'ethereumjs-tx';
 import { Misc, Toast } from '@/helpers';
 import BigNumber from 'bignumber.js';
 import ethUnit from 'ethjs-unit';
 import _ from 'underscore';
+import fetch from 'node-fetch';
 
 export default {
   components: {
@@ -220,22 +239,32 @@ export default {
       value: '0',
       gasLimit: '21000',
       data: '',
-      selectedCurrency: ''
+      selectedCurrency: '',
+      ethPrice: 0
     };
   },
+
   computed: {
-    ...mapGetters({
-      account: 'account',
-      gasPrice: 'gasPrice',
-      web3: 'web3',
-      network: 'network',
-      linkQuery: 'linkQuery'
-    }),
-    isValidAmount() {
-      const txFee = new BigNumber(ethUnit.toWei(this.gasPrice, 'gwei')).times(
+    ...mapState([
+      'account',
+      'gasPrice',
+      'web3',
+      'network',
+      'linkQuery',
+      'online'
+    ]),
+    txFee() {
+      return new BigNumber(ethUnit.toWei(this.gasPrice, 'gwei')).times(
         this.gasLimit || 0
       );
-      const txFeeEth = ethUnit.fromWei(txFee, 'ether');
+    },
+    txFeeEth() {
+      if (new BigNumber(this.txFee).gt(0)) {
+        return ethUnit.fromWei(this.txFee, 'ether');
+      }
+      return 0;
+    },
+    isValidAmount() {
       const notEnoughGasMsg =
         this.$t('errorsGlobal.notAValidAmountTotal') +
         ' Gas ' +
@@ -257,9 +286,9 @@ export default {
         this.selectedCurrency.balance
       );
       const enoughCurrency = new BigNumber(this.value)
-        .plus(txFeeEth)
+        .plus(this.txFeeEth)
         .lte(this.balanceDefault);
-      const enoughGas = new BigNumber(txFeeEth).lte(this.balanceDefault);
+      const enoughGas = new BigNumber(this.txFeeEth).lte(this.balanceDefault);
       const validDecimal = this.isValidDecimals;
       if (new BigNumber(this.value).lt(0)) {
         return {
@@ -310,7 +339,7 @@ export default {
       return (
         this.isValidAmount.valid &&
         this.isValidAddress &&
-        (new BigNumber(this.gasLimit).gte(0) || this.gasLimit == -1) &&
+        new BigNumber(this.gasLimit).gte(0) &&
         Misc.validateHexString(this.data)
       );
     },
@@ -336,7 +365,7 @@ export default {
     txTo() {
       return this.isToken
         ? this.selectedCurrency.address.toLowerCase()
-        : this.hexAddress.toLowerCase();
+        : this.hexAddress.toLowerCase().trim();
     },
     multiWatch() {
       return (
@@ -346,6 +375,16 @@ export default {
         this.selectedCurrency,
         new Date().getTime() / 1000
       );
+    },
+    convert() {
+      if (this.ethPrice) {
+        return new BigNumber(
+          new BigNumber(this.txFeeEth).times(new BigNumber(this.ethPrice))
+        )
+          .toFixed(2)
+          .toString();
+      }
+      return '--';
     }
   },
   watch: {
@@ -361,11 +400,26 @@ export default {
             })
           : undefined;
 
-        this.data = data ? (Misc.validateHexString(data) ? data : '') : '';
+        if (data && Misc.validateHexString(data)) {
+          this.data = data;
+          if (this.data.length > 0) {
+            this.advancedExpand = true;
+          }
+        } else {
+          this.data = '';
+        }
+
         this.value = value ? new BigNumber(value).toFixed() : 0;
         this.hexAddress = to ? to : '';
         this.address = to ? to : '';
-        this.gasLimit = gaslimit ? new BigNumber(gaslimit).toString() : '21000';
+
+        if (gaslimit) {
+          this.gasLimit = new BigNumber(gaslimit).toString();
+          this.advancedExpand = true;
+        } else {
+          this.gasLimit = '21000';
+        }
+
         this.selectedCurrency = foundToken ? foundToken : this.selectedCurrency;
 
         Toast.responseHandler(
@@ -374,9 +428,18 @@ export default {
         );
         this.$store.dispatch('saveQueryVal', {});
       }
+    },
+    network(newVal) {
+      if (this.online && newVal.type.name === 'ETH') this.getEthPrice();
     }
   },
+  mounted() {
+    if (this.online && this.network.type.name === 'ETH') this.getEthPrice();
+  },
   methods: {
+    openSettings() {
+      this.$eventHub.$emit('open-settings');
+    },
     sendEntireBalance() {
       if (this.isToken) this.value = this.selectedCurrency.balance;
       else
@@ -441,7 +504,7 @@ export default {
       try {
         const coinbase = await this.web3.eth.getCoinbase();
         const nonce = await this.web3.eth.getTransactionCount(coinbase);
-        const _tx = new EthTx({
+        const raw = {
           nonce: Misc.sanitizeHex(new BigNumber(nonce).toString(16)),
           gasPrice: Misc.sanitizeHex(
             ethUnit.toWei(this.gasPrice, 'gwei').toString(16)
@@ -449,9 +512,9 @@ export default {
           gasLimit: Misc.sanitizeHex(new BigNumber(this.gasLimit).toString(16)),
           to: this.txTo,
           value: this.txValue,
-          data: this.txData,
-          chainId: this.network.type.chainID
-        });
+          data: this.txData
+        };
+        const _tx = new Transaction(raw);
         const json = _tx.toJSON(true);
         json.from = coinbase;
         this.web3.eth.sendTransaction(json).catch(err => {
@@ -461,6 +524,19 @@ export default {
       } catch (e) {
         Toast.responseHandler(e, Toast.ERROR);
       }
+    },
+    async getEthPrice() {
+      const price = await fetch(
+        'https://cryptorates.mewapi.io/ticker?filter=ETH'
+      )
+        .then(res => {
+          return res.json();
+        })
+        .catch(e => {
+          Toast.responseHandler(e, Toast.ERROR);
+        });
+      this.ethPrice =
+        typeof price === 'object' ? price.data.ETH.quotes.USD.price : 0;
     },
     copyToClipboard(ref) {
       this.$refs[ref].select();

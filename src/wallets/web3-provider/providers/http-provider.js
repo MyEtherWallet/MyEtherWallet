@@ -1,4 +1,4 @@
-import { HttpProvider as Web3HttpProvider } from 'web3-providers';
+import HttpRequestManger from './http-request-manager';
 import MiddleWare from '../middleware';
 import {
   ethSendTransaction,
@@ -8,25 +8,20 @@ import {
   ethCoinbase,
   ethGetTransactionCount,
   ethGetTransactionReceipt,
+  ethGetBlockByNumber,
+  ethGetBlockNumber,
   netVersion
 } from '../methods';
 class HttpProvider {
   constructor(host, options, store, eventHub) {
-    this.httpProvider = new Web3HttpProvider(host, options);
-    const requestManager = new Web3HttpProvider(host, options);
-    delete this.httpProvider['sendPayload'];
-    this.httpProvider.sendPayload = payload => {
-      console.log(payload);
-      return new Promise((resolve, reject) => {
+    const requestManager = new HttpRequestManger(host, options);
+    this.httpProvider = {
+      send: (payload, callback) => {
         const req = {
           payload,
           store,
           requestManager,
           eventHub
-        };
-        const callback = (err, res) => {
-          if (err) return reject(new Error(err));
-          return resolve(res);
         };
         const middleware = new MiddleWare();
         middleware.use(ethSendTransaction);
@@ -36,14 +31,13 @@ class HttpProvider {
         middleware.use(ethSign);
         middleware.use(ethAccounts);
         middleware.use(ethCoinbase);
+        middleware.use(ethGetBlockByNumber);
+        middleware.use(ethGetBlockNumber);
         middleware.use(netVersion);
         middleware.run(req, callback).then(() => {
-          requestManager
-            .sendPayload(payload)
-            .then(resolve)
-            .catch(reject);
+          requestManager.provider.send(payload, callback);
         });
-      });
+      }
     };
     return this.httpProvider;
   }

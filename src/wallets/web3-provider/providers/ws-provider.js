@@ -1,4 +1,4 @@
-import { WebsocketProvider as Web3WSProvider } from 'web3-providers';
+import Web3WSProvider from 'web3-providers-ws';
 import MiddleWare from '../middleware';
 import workerTimer from '@/helpers/webWorkerTimer';
 import {

@@ -1,6 +1,24 @@
 import Wallet from 'ethereumjs-wallet';
 import Configs from '@/helpers/configs';
 
+const fromMyEtherWalletV2 = json => {
+  if (json.privKey.length !== 64) {
+    throw new Error('Invalid private key length');
+  }
+  const privKey = new Buffer(json.privKey, 'hex');
+  return new Wallet(privKey);
+};
+const getWalletFromPrivKeyFile = (jsonfile, password) => {
+  if (jsonfile.encseed != null) return Wallet.fromEthSale(jsonfile, password);
+  else if (jsonfile.Crypto != null || jsonfile.crypto != null)
+    return Wallet.fromV3(jsonfile, password, true);
+  else if (jsonfile.hash != null)
+    return Wallet.ThirdParty.fromEtherWallet(jsonfile, password);
+  else if (jsonfile.publisher == 'MyEtherWallet')
+    return fromMyEtherWalletV2(jsonfile);
+  throw new Error('Invalid Wallet file');
+};
+
 const create = password => {
   const createdWallet = {};
   const wallet = new Wallet.generate();
@@ -17,7 +35,8 @@ const unlock = (file, password) => {
   Object.keys(file).forEach(key => {
     newFile[key.toLowerCase()] = file[key];
   });
-  return Wallet.fromV3(newFile, password, true);
+
+  return getWalletFromPrivKeyFile(newFile, password);
 };
 
 // onmessage breaks tests as it is undefined

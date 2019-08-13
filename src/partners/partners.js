@@ -1,7 +1,11 @@
 import BigNumber from 'bignumber.js';
 import WAValidator from 'wallet-address-validator';
 import MAValidator from 'multicoin-address-validator';
-import { checkInvalidOrMissingValue, utils } from './helpers';
+import {
+  checkInvalidOrMissingValue,
+  bestProviderForQuantity,
+  utils
+} from './helpers';
 import {
   BASE_CURRENCY,
   TOP_OPTIONS_ORDER,
@@ -24,11 +28,23 @@ function comparator(arrayForSort) {
 
 export default class SwapProviders {
   constructor(providers, environmentSupplied, misc = {}) {
+    this.online = true;
+    if (misc.hasOwnProperty('online')) {
+      this.online = misc.online;
+    }
+    this.providerConstructors = providers;
+    this.setup(providers, environmentSupplied, misc);
+  }
+
+  setup(providers, environmentSupplied, misc) {
+    this.overrideDecimals = misc.overrideDecimals || false;
     this.updateProviderRates = 0;
     this.providers = new Map();
     this.providerRateUpdates = {};
     this.ownedTokenList = misc.tokensWithBalance || [];
+    this.providerRatesRecieved = [];
 
+    if (!this.online) return;
     providers.forEach(entry => {
       this.providerRateUpdates[entry.getName()] = 0;
       this.providers.set(entry.getName(), new entry(environmentSupplied));
@@ -85,6 +101,7 @@ export default class SwapProviders {
   }
 
   isProvider(name) {
+    if (!this.online) return false;
     return this.providers.has(name);
   }
 
@@ -122,7 +139,6 @@ export default class SwapProviders {
       .reverse();
     const arraysForSort = [...tokenNameMap, ...TOP_OPTIONS_ORDER];
     return array.sort(comparator(arraysForSort));
-    // return array.sort(comparator);
   }
 
   buildInitialCurrencyArrays() {
@@ -177,6 +193,58 @@ export default class SwapProviders {
     };
   }
 
+  async standAloneRateEstimate(
+    fromCurrency,
+    toCurrency,
+    fromValue,
+    toValue = 0
+  ) {
+    if (this.haveProviderRates) {
+      const { callsToMake } = await this.updateRateEstimate(
+        fromCurrency,
+        toCurrency,
+        fromValue,
+        toValue
+      );
+      const results = await Promise.all(
+        callsToMake.map(func =>
+          func(fromCurrency, toCurrency, fromValue, toValue)
+        )
+      );
+      if (
+        results.every(
+          entry =>
+            entry.fromCurrency === fromCurrency &&
+            entry.toCurrency === toCurrency
+        )
+      ) {
+        const vals = bestProviderForQuantity(
+          results.map(entry => {
+            if (+entry.rate > 0) {
+              return {
+                provider: entry.provider,
+                fromCurrency,
+                fromValue: fromValue,
+                toCurrency,
+                rate: +entry.rate,
+                minValue: entry.minValue || 0,
+                maxValue: entry.maxValue || 0,
+                computeConversion: function(_fromValue) {
+                  return new BigNumber(_fromValue)
+                    .times(this.rate)
+                    .toFixed(6)
+                    .toString(10);
+                }
+              };
+            }
+          }),
+          fromValue
+        );
+        return vals;
+      }
+    }
+  }
+
   getTokenAddress(currency, noError) {
     if (SwapProviders.isToken(currency)) {
       return EthereumTokens[currency].contractAddress;
@@ -216,6 +284,7 @@ export default class SwapProviders {
     } else if (SwapProviders.isToken(currency)) {
       const decimal = SwapProviders.getTokenDecimals(currency);
       if (decimal < 6) return decimal;
+      if (this.overrideDecimals) return decimal;
       return 6;
     }
     return 6;

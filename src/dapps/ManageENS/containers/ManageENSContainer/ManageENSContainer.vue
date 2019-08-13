@@ -59,7 +59,7 @@
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import { isAddress } from '@/helpers/addressUtils';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 export default {
   components: {
     'interface-bottom-text': InterfaceBottomText
@@ -94,9 +94,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      web3: 'web3'
-    })
+    ...mapState(['web3'])
   },
   mounted() {
     if (this.domainName === '.') {

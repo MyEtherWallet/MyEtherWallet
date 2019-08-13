@@ -137,7 +137,7 @@
           </div>
           <div class="the-form gas-amount">
             <input
-              v-model="nonce"
+              v-model="localNonce"
               :placeholder="$t('common.nonce')"
               type="number"
             />
@@ -145,7 +145,7 @@
               <i
                 :class="[
                   'fa fa-check-circle good-button',
-                  nonce >= 0 ? '' : 'not-good'
+                  localNonce >= 0 ? '' : 'not-good'
                 ]"
                 aria-hidden="true"
               />
@@ -221,7 +221,7 @@ import SignedTxModal from './components/SignedTxModal';
 import Blockie from '@/components/Blockie';
 import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import { isAddress } from '@/helpers/addressUtils';
 import store from 'store';
 import { Misc, Toast } from '@/helpers';
@@ -266,12 +266,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      wallet: 'wallet',
-      network: 'network',
-      web3: 'web3',
-      linkQuery: 'linkQuery'
-    }),
+    ...mapState(['wallet', 'network', 'web3', 'linkQuery']),
     txSpeedMsg() {
       const net = this.network.type.name;
       // eslint-disable-next-line
@@ -304,7 +299,7 @@ export default {
         this.validAddress &&
         this.toAmt >= 0 &&
         this.gasLimit > 0 &&
-        this.localNonce > 0 &&
+        this.localNonce >= 0 &&
         this.localGasPrice
       );
     }
@@ -362,14 +357,13 @@ export default {
       const decimals =
         this.selectedCoinType.symbol === symbol
           ? 18
-          : this.selectedCoinType.decimals;
+          : parseInt(this.selectedCoinType.decimals);
       this.toAmt =
         e.target.valueAsNumber < 0 || isNaN(e.target.valueAsNumber)
           ? 0
           : new BigNumber(e.target.valueAsNumber)
               .decimalPlaces(decimals)
               .toFixed();
-      // e.target.value = this.toAmt;
     }, 300),
     async createDataHex(amount, address, currency) {
       const locAmount = amount !== null ? amount : this.toAmt;
@@ -430,7 +424,7 @@ export default {
         try {
           const file = JSON.parse(evt.target.result);
           self.localGasPrice = unit.fromWei(file.gasPrice, 'gwei');
-          self.localNonce = file.localNonce;
+          self.localNonce = file.nonce;
         } catch (e) {
           Toast.responseHandler(e, Toast.WARN);
         }
@@ -447,7 +441,9 @@ export default {
         gasPrice: Misc.sanitizeHex(
           new BigNumber(unit.toWei(this.localGasPrice, 'gwei')).toString(16)
         ),
-        to: isToken ? this.selectedCoinType.address : this.address,
+        to: isToken
+          ? this.selectedCoinType.address
+          : this.address.toLowerCase().trim(),
         value: isToken ? 0 : amtWei,
         data: this.toData,
         chainId: this.network.type.chainID

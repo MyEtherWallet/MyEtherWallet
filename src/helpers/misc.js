@@ -4,6 +4,7 @@ import { isAddress } from './addressUtils';
 import url from 'url';
 import store from '@/store';
 import { uint, address, string, bytes, bool } from './solidityTypes';
+import { isHex, toChecksumAddress } from 'web3-utils';
 
 const capitalize = value => {
   if (!value) return '';
@@ -102,13 +103,12 @@ const scrollToTop = scrollDuration => {
 };
 
 const validateHexString = str => {
-  if (str == '') return true;
+  if (str === '') return true;
   str =
-    str.substring(0, 2) == '0x'
+    str.substring(0, 2) === '0x'
       ? str.substring(2).toUpperCase()
       : str.toUpperCase();
-  const re = /^[0-9A-F]+$/g;
-  return re.test(str);
+  return isHex(str);
 };
 
 const reorderNetworks = () => {
@@ -156,16 +156,58 @@ const solidityType = inputType => {
 };
 
 const isDarklisted = addr => {
-  const darklisted = store.getters.darklist.data.findIndex(item => {
-    return item.address.toLowerCase() === addr.toLowerCase();
-  });
+  const storedDarklist = store.state.darklist.data;
+  const darklisted =
+    storedDarklist > 0
+      ? storedDarklist.findIndex(item => {
+          return (
+            toChecksumAddress(item.address.toLowerCase()) ===
+            toChecksumAddress(addr.toLowerCase())
+          );
+        })
+      : -1;
   const errMsg =
-    darklisted === -1 ? '' : store.getters.darklist.data[darklisted].comment;
+    darklisted === -1 ? '' : store.state.darklist.data[darklisted].comment;
   const errObject = {
     error: darklisted === -1 ? false : true,
     msg: errMsg
   };
   return errObject;
+};
+
+const stringToArray = str => {
+  return str.replace(/[^a-zA-Z0-9_,]+/g, '').split(',');
+};
+
+const isContractArgValid = (value, solidityType) => {
+  if (!value) value = '';
+  if (solidityType.includes('[') && solidityType.includes(']')) {
+    const parsedValue = Array.isArray(value) ? value : stringToArray(value);
+    const values = [];
+    parsedValue.forEach(item => {
+      if (solidityType.includes(uint)) {
+        values.push(item !== '' && !isNaN(item) && isInt(item));
+      } else if (solidityType.includes(address)) {
+        values.push(isAddress(item));
+      } else if (solidityType.includes(string)) {
+        values.push(item !== '');
+      } else if (solidityType.includes(bool)) {
+        values.push(typeof item === typeof true || item === '');
+      } else if (solidityType.includes(bytes)) {
+        values.push(validateHexString(item));
+      }
+    });
+    return !values.includes(false);
+  }
+  if (solidityType === 'uint')
+    return value !== '' && !isNaN(value) && isInt(value);
+  if (solidityType === 'address') return isAddress(value);
+  if (solidityType === 'string') return true;
+  if (solidityType === 'bytes')
+    return value.substr(0, 2) === '0x' && validateHexString(value);
+  if (solidityType === 'bool')
+    return typeof value === typeof true || value === '';
+  return false;
 };
 
 export default {
@@ -184,5 +226,7 @@ export default {
   solidityType,
   isInt,
   capitalize,
-  getService
+  getService,
+  stringToArray,
+  isContractArgValid
 };

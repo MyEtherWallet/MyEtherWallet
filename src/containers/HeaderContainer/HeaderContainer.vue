@@ -86,9 +86,9 @@
                   @click="scrollTop()"
                   >{{ $t('header.home') }}</b-nav-item
                 >
-                <b-nav-item v-if="isHomePage" to="/#about-mew">{{
-                  $t('header.about')
-                }}</b-nav-item>
+                <b-nav-item v-if="isHomePage" to="/#about-mew">
+                  {{ $t('header.about') }}
+                </b-nav-item>
                 <b-nav-item-dropdown
                   v-if="address !== null"
                   right
@@ -105,8 +105,9 @@
                     v-show="network.type.name === 'ETH'"
                     :href="'https://ethplorer.io/address/' + address"
                     target="_blank"
-                    >Ethplorer (Tokens)
-                  </b-dropdown-item>
+                    rel="noopener noreferrer"
+                    >Ethplorer (Tokens)</b-dropdown-item
+                  >
                 </b-nav-item-dropdown>
                 <b-nav-item to="/#faqs">{{ $t('common.faqs') }}</b-nav-item>
                 <div class="language-menu-container">
@@ -121,6 +122,7 @@
                     <template slot="button-content">
                       <div class="current-language-flag">
                         <img
+                          v-if="currentFlag !== null"
                           :src="
                             require(`@/assets/images/flags/${currentFlag}.svg`)
                           "
@@ -204,7 +206,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import store from 'store';
 import { Misc, Toast } from '@/helpers';
 import Blockie from '@/components/Blockie';
@@ -275,12 +277,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      network: 'network',
-      web3: 'web3',
-      account: 'account',
-      gettingStartedDone: 'gettingStartedDone'
-    }),
+    ...mapState(['network', 'web3', 'account', 'gettingStartedDone']),
     showButtons() {
       if (
         this.address === null &&
@@ -321,6 +318,9 @@ export default {
     web3() {
       this.setHighGasPrice();
     }
+  },
+  created() {
+    this.$eventHub.$on('open-settings', this.openSettings);
   },
   mounted() {
     if (Misc.doesExist(store.get('locale'))) {
@@ -374,6 +374,7 @@ export default {
     Object.values(events).forEach(evt => {
       this.$eventHub.$off(evt);
     });
+    this.$eventHub.$off('open-settings');
   },
   methods: {
     setHighGasPrice() {
@@ -393,10 +394,10 @@ export default {
       });
     },
     languageItemClicked(e) {
-      const code = e.target.getAttribute('data-language-code');
-      const flag = e.target.getAttribute('data-flag-name');
+      const code = e.target.parentNode.getAttribute('data-language-code');
+      const flag = e.target.parentNode.getAttribute('data-flag-name');
 
-      this._i18n.locale = code;
+      this.$i18n.locale = code;
       this.currentName = e.target.innerText.replace(/^\s+|\s+$|\s+(?=\s)/g, '');
       this.currentFlag = flag;
       store.set('locale', code);

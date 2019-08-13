@@ -4,10 +4,8 @@ import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/Interf
 import InterfaceBottomText from '@/components/InterfaceBottomText/InterfaceBottomText.vue';
 import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessModal/SuccessModal.vue';
 import PopOver from '@/components/PopOver/PopOver.vue';
-
 import { Tooling } from '@@/helpers';
 
-//xdescribe
 describe('SignMessageContainer.vue', () => {
   let localVue, i18n, wrapper, store;
 
@@ -33,15 +31,11 @@ describe('SignMessageContainer.vue', () => {
     });
   });
 
-  describe('SignMessageContainer.vue Methods', () => {
-    xit('[Failing] should render correct deleteInputText method', () => {
-      // const textArea = wrapper.find('.domain-name .custom-textarea-1');
-      wrapper.find('.copy-buttons span').trigger('click');
-      expect(
-        wrapper.vm.$el
-          .querySelector('.domain-name .custom-textarea-1')
-          .textContent.trim()
-      ).toEqual('');
-    });
+  it('should render correct data', () => {
+    const message = 'message';
+    wrapper.setData({ message });
+    expect(wrapper.vm.$el.querySelector('.the-form textarea').value).toEqual(
+      message
+    );
   });
 });

@@ -3,6 +3,7 @@ const fs = require('fs');
 const configs = require('./configs');
 const tokenList = require('./lists/tokens.json');
 const contractList = require('./lists/contracts.json');
+//fsdfs
 
 const fetchTokens = async () => {
   try {
@@ -10,7 +11,7 @@ const fetchTokens = async () => {
       fs.mkdirSync(configs.TOKENS_PATH);
     }
     const tokenFileURL =
-      'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/dist/tokens/';
+      'https://cdn.jsdelivr.net/gh/MyEtherWallet/ethereum-lists@master/dist/tokens/';
     if (tokenList !== undefined && tokenList.length > 0) {
       for (let i = 0; i < tokenList.length; i++) {
         const tokenFile = tokenList[i];
@@ -20,6 +21,7 @@ const fetchTokens = async () => {
           .then(res => res.json())
           .catch(err => console.log(err));
         if (tokensCollection !== undefined) {
+          console.log('Writing tokens for the network: ' + tokenFile.name);
           fs.writeFileSync(
             `${configs.TOKENS_PATH}/tokens-${tokenFile.name}.json`,
             JSON.stringify(tokensCollection)
@@ -39,7 +41,7 @@ const fetchDarkList = async () => {
     }
 
     const darkList = await fetch(
-      'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/addresses/addresses-darklist.json'
+      'https://cdn.jsdelivr.net/gh/MyEtherWallet/ethereum-lists@master/src/addresses/addresses-darklist.json'
     )
       .then(res => res.json())
       .catch(console.log);
@@ -47,6 +49,7 @@ const fetchDarkList = async () => {
       data: darkList,
       timestamp: Date.now()
     };
+    console.log('writing darklist');
     fs.writeFileSync(
       `${configs.DARKLIST_PATH}/address-darklist.json`,
       JSON.stringify(jsonToStore)
@@ -63,7 +66,7 @@ const fetchContracts = async () => {
     }
 
     const contractFileURL =
-      'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/dist/contracts/';
+      'https://cdn.jsdelivr.net/gh/MyEtherWallet/ethereum-lists@master/dist/contracts/';
     if (contractList !== undefined && contractList.length > 0) {
       for (let i = 0; i < contractList.length; i++) {
         const contractFile = contractList[i];
@@ -75,6 +78,7 @@ const fetchContracts = async () => {
           .then(res => res.json())
           .catch(err => console.log(err));
         if (contractsCollection !== undefined) {
+          console.log('Writing contract for the network: ' + contractFile.name);
           fs.writeFileSync(
             `${configs.CONTRACTS_PATH}/contract-abi-${contractFile.name}.json`,
             JSON.stringify(contractsCollection)

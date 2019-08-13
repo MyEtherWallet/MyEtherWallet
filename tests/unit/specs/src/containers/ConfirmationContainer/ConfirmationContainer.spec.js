@@ -66,13 +66,15 @@ describe('ConfirmationContainer.vue', () => {
   it('should render correct transactionFee data', () => {
     const checkboxElement = wrapper.find('.sliding-switch-white .switch input');
     checkboxElement.trigger('click');
-    wrapper.setData({ transactionFee: new String(100) });
+    wrapper.setData({ transactionFee: String(100) });
+
     expect(
       wrapper.vm.$el
-        .querySelectorAll('.expended-info .grid-block')[3]
+        .querySelectorAll('.padding-container .grid-block')[3]
         .querySelectorAll('p')[1]
         .textContent.trim()
-    ).toEqual(wrapper.vm.$data.transactionFee + ' ETH');
+        .indexOf(wrapper.vm.$data.transactionFee)
+    ).toBeGreaterThan(-1);
   });
 
   it('should render correct fromAddress data', () => {
