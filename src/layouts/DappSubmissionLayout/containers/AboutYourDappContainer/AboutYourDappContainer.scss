@@ -1,15 +1,18 @@
 @import '~@/scss/GlobalVariables';
 
-
 .about-dapp-container {
-  form {
-    .form-group {
-      label {
-        text-align: left;
-        font-weight: 600;
-        font-size: 16px;
-        margin-top: 5px;
-      }
+  .form-group {
+    text-align: left;
+    font-weight: 600;
+    font-size: 16px;
+    margin-top: 5px;
+
+    input {
+      margin-top: 10px;
+    }
+
+    select {
+      margin-top: 10px;
     }
   }
 }
