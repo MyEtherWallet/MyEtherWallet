@@ -17,6 +17,7 @@ export default async ({ payload }, res, next) => {
   };
   const eventName = WEB3_GET_ACC.replace('{{id}}', id);
   const event = new CustomEvent(eventName, obj);
+  console.log(event);
   window.dispatchEvent(event);
   // window.addEventListener(WEB3_RECEIVE_ACC.replace('{{id}}', id), function(
   //   eventRes
