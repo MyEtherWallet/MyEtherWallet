@@ -80,6 +80,17 @@
             <div class="top-menu">
               <b-nav>
                 <b-nav-item
+                  href="https://ccswap.myetherwallet.com/#/"
+                  target="_blank"
+                  class="buy-eth"
+                >
+                  <img
+                    class="buy-eth-icon"
+                    src="@/assets/images/icons/buy-eth.svg"
+                  />
+                  Buy Eth
+                </b-nav-item>
+                <b-nav-item
                   v-if="isHomePage"
                   to="/"
                   exact

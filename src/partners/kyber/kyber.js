@@ -217,6 +217,10 @@ export default class Kyber {
     };
   }
 
+  async getRateUpdate(fromCurrency, toCurrency, fromValue, toValue, isFiat) {
+    return this.getRate(fromCurrency, toCurrency, fromValue, toValue, isFiat);
+  }
+
   async getExpectedRate(fromToken, toToken, fromValueWei) {
     const rates = await this.callKyberContract(
       'getExpectedRate',
