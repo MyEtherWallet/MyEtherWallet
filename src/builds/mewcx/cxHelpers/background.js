@@ -5,15 +5,16 @@ import store from '@/store';
 store.dispatch('setWeb3Instance');
 import {
   CX_INJECT_WEB3,
-  CX_SIGN_MSG,
-  CX_CONFIRM_SEND_TX,
-  CX_WEB3_DETECTED,
-  CX_FETCH_MEW_ACCS,
-  CX_GO_TO_MAIN_PAGE
+  // CX_SIGN_MSG,
+  // CX_CONFIRM_SEND_TX,
+  // CX_WEB3_DETECTED,
+  // CX_FETCH_MEW_ACCS,
+  // CX_GO_TO_MAIN_PAGE
 } from './cxEvents';
 const chrome = window.chrome;
 const urls = {};
 const eventsListeners = (request, _, callback) => {
+  console.log(request);
   const middleware = new MiddleWare();
   const req = {
     event: request.event,
