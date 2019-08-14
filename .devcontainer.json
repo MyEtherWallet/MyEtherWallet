@@ -10,5 +10,4 @@
   "appPort": ["8080:8080"],
   "shutdownAction": "stopContainer",
   "postCreateCommand": "npm install"
-  // "runArgs": ["--memory", "4096m"]
 }
