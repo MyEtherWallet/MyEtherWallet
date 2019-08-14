@@ -27,8 +27,7 @@
     "update": "npm run update:packages && npm run update:lists",
     "update:mainlists": "node fetchLists/fetchMainLists.js",
     "clean": "sudo rm -rf node_modules/.cache; sudo rm -rf node_modules/websocket/.git; npm install;",
-    "preinstall": "find node_modules -name \".git\" -exec rm -rf {} \\; || true",
-    "postinstall": "echo 'const scryptsy = require(\"scryptsy\"); module.exports = scryptsy;' > node_modules/web3/node_modules/web3-eth-accounts/src/scrypt.js"
+    "preinstall": "find node_modules -name \".git\" -exec rm -rf {} \\; || true"
   },
   "gitHooks": {
     "pre-commit": "npm run lint && npm run test"

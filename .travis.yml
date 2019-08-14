@@ -11,7 +11,7 @@ before_cache:
 install:
   - docker --version
   - docker build -t mew-build-container .
-  - docker run --rm -it -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm install --unsafe-perm"
+  - docker run --rm -it -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm install"
 env:
   global:
     - ci_env=`bash <(curl -s https://codecov.io/env)`
