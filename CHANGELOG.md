@@ -1,3 +1,9 @@
+### Release v5.1.2
+
+### Bug
+
+- Fix missing buttons in maker dapp, and some general housekeeping [#1352](https://github.com/MyEtherWallet/MyEtherWallet/pull/1352)
+
 ### Release v5.1.1
 
 ### Feature
