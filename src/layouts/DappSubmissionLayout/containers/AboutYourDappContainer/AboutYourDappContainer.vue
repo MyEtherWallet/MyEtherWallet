@@ -2,51 +2,54 @@
   <div>
     <div class="about-dapp-container mt-5">
       <b-form>
-        <b-form-group
-          label-class="dapp-label"
-          label-align="left"
-          label="DApp Name"
-          label-for="dappName"
-        > 
+        <b-form-group>
+          <label class="dapp-label">DApp Name</label>
           <div class="dapp-input">
+            <b-form-input id="dappName" type="text" required> </b-form-input>
+            <span>*</span>
+          </div>
+        </b-form-group>
+        <b-form-group>
+          <label class="dapp-label">Category</label>
+          <div class="dapp-input">
+            <label class="dapp-select-label">
+              <b-form-select
+                id="dappCategory"
+                :options="categories"
+                required
+              ></b-form-select>
+            </label>
+            <span>*</span>
+          </div>
+        </b-form-group>
+        <b-form-group>
+          <label class="dapp-label">Tags</label>
+          <img
+            class="explanation-icon"
+            src="~@/assets/images/icons/explanation.png"
+          />
+          <div class="fake-container">
+            <div ref="tagHolder" class="tag-holder">
+              <tag-component
+                v-for="(tag, idx) in displayTags"
+                :name="tag"
+                :delete-func="deleteTag"
+                :idx="idx"
+                :key="tag + idx"
+              />
+            </div>
+            <!-- change to regular input -->
             <b-form-input
-              id="dappName"
+              id="dappTags"
+              ref="dappTagsInput"
+              v-model="tagInput"
               type="text"
-              required>
-            </b-form-input>
-            <span>*</span>
-          </div>
-        </b-form-group>
-        <b-form-group
-          label-class="dapp-label"
-          label-align="left"
-          label="Category"
-          label-for="dappCategory"
-        >
-          <div class="dapp-input">
-            <b-form-select
-              id="dappCategory"
-              :options="categories"
               required
-            ></b-form-select>
-            <span>*</span>
+            ></b-form-input>
           </div>
         </b-form-group>
-        <b-form-group
-          label-class="dapp-label"
-          label-align="left"
-          label="Tags"
-          label-for="dappTags"> 
-          <b-form-input
-            id="dappTags"
-            type="text"
-            required>
-          </b-form-input>
-        </b-form-group>
-        <b-form-group
-          label-class="dapp-text-label"
-          label-align="left"
-          label="Description">
+        <b-form-group>
+          <label class="dapp-label">Description</label>
           <div class="dapp-input">
             <b-form-textarea
               size="lg"
@@ -56,104 +59,126 @@
             <span>*</span>
           </div>
         </b-form-group>
-        <b-form-group
-          label-class="dapp-label"
-          label-align="left"
-          label="DApp status"
-          label-for="dappStatus"
-        >
+        <b-form-group>
+          <label class="dapp-label"
+            >Will your DApp be released in the U.S. market?</label
+          >
           <div class="dapp-input">
-            <b-form-select
-              id="dappStatus"
-              :options="categories"
-              required
-            ></b-form-select>
+            <label class="dapp-select-label">
+              <b-form-select
+                id="dappUsMarket"
+                :options="categories"
+                required
+              ></b-form-select>
+            </label>
             <span>*</span>
           </div>
         </b-form-group>
-        <b-form-group
-          label-align="left"
-          label-class="dapp-text-label"
-          label="Mock user flow">
-          <p class="dapp-text-info">Dimensions must be 1200px width by 630px height; JPEG or PDF file only; Image size no large than 5M</p>
-          <label for="file-upload" class="custom-file-upload">
-              <i class="fa fa-cloud-upload"></i> Custom Upload
-          </label>
+        <b-form-group>
+          <label class="dapp-label">DApp status</label>
           <div class="dapp-input">
-            <b-form-file
-              v-model="file"
-              :state="false"
-              placeholder="Choose a file..."
-              drop-placeholder="Drop file here..."
-            ></b-form-file>
+            <label class="dapp-select-label">
+              <b-form-select
+                id="dappStatus"
+                :options="categories"
+                required
+              ></b-form-select>
+            </label>
             <span>*</span>
           </div>
         </b-form-group>
-        <b-form-group 
-          label-class="dapp-label"
-          label-align="left"
-          label="Contract address"
-          label-for="contractAddress">
+        <b-form-group>
+          <label class="dapp-label">Mock user flow</label>
+          <img
+            class="explanation-icon"
+            src="~@/assets/images/icons/explanation.png"
+          />
+          <p class="dapp-text-info">
+            Dimensions must be 1200px width by 630px height; JPEG or PDF file
+            only; Image size no large than 5M
+          </p>
           <div class="dapp-input">
-            <b-form-input
-              id="contractAddress"
-              type="text"
-              required>
+            <div class="upload-btn-wrapper">
+              <div class="fake-input"></div>
+              <button for="customUpload" class="upload-btn">Upload</button>
+              <input id="customUpload" type="file" />
+            </div>
+            <span>*</span>
+          </div>
+        </b-form-group>
+        <b-form-group>
+          <label class="dapp-label">Contract address</label>
+          <img
+            class="explanation-icon"
+            src="~@/assets/images/icons/explanation.png"
+          />
+          <div class="dapp-input">
+            <b-form-input id="contractAddress" type="text" required>
             </b-form-input>
             <span>*</span>
           </div>
         </b-form-group>
-        <b-form-group
-          label-align="left"
-          label-class="dapp-label"
-          label="DApp icon"
-          label-for="dappIcon">
-          <p>Dimensions must be 192px width by 192px height; JPEG or PNG file only; Image size no large than 1M.</p>
-          <b-form-file
-            id="dappIcon"
-            v-model="file"
-            :state="false"
-            placeholder="Choose a file..."
-            drop-placeholder="Drop file here..."
-          ></b-form-file>
+        <b-form-group>
+          <label class="dapp-label">DApp icon</label>
+          <img
+            class="explanation-icon"
+            src="~@/assets/images/icons/explanation.png"
+          />
+          <div class="image-container">
+            <label class="image-label" for="dappIcon">
+              <i class="fa fa-cloud-upload"></i>
+              <h4 class="image-text">
+                Drop your icon here, or select a file from your computer.
+              </h4>
+              <p class="image-requirements">
+                JPEG or PNG, at least 192px * 192px
+              </p>
+            </label>
+            <input id="dappIcon" type="file" />
+          </div>
         </b-form-group>
-        <b-form-group
-          label-align="left"
-          label-class="dapp-label"
-          label="Banner Image"
-          label-for="bannerImage">
-          <p>Dimensions must be 1200 width by 206px height, JPEG or PNG file only; Image size no large than 5M</p>
-          <b-form-file
-            id="bannerImage"
-            v-model="file"
-            :state="false"
-            placeholder="Choose a file..."
-            drop-placeholder="Drop file here..."
-          ></b-form-file>
+        <b-form-group>
+          <label class="dapp-label">Banner</label>
+          <img
+            class="explanation-icon"
+            src="~@/assets/images/icons/explanation.png"
+          />
+          <div class="image-container">
+            <label class="image-label" for="bannerImage">
+              <i class="fa fa-cloud-upload"></i>
+              <h4 class="image-text">
+                Drop your icon here, or select a file from your computer.
+              </h4>
+              <p class="image-requirements">
+                JPEG or PNG, at least 1200px * 206px
+              </p>
+            </label>
+            <input id="bannerImage" type="file" />
+          </div>
         </b-form-group>
-         <b-form-group 
-          label-class="dapp-label"
-          label-align="left"
-          label="DApp website"
-          label-for="dappWebsite">
+        <b-form-group>
+          <label class="dapp-label">DApp website</label>
           <b-form-input
-            placeholder="URL link"
             id="dappWebsite"
+            placeholder="URL link"
             type="text"
-            required>
+            required
+          >
           </b-form-input>
         </b-form-group>
-        <b-form-group
-          label-class="dapp-label"
-          label-align="left"
-          label="DApp contract audit"
-          label-for="dappContractAudit"
-        >
-          <b-form-select
-            id="dappContract"
-            :options="categories"
-            required
-          ></b-form-select>
+        <b-form-group>
+          <label class="dapp-label">DApp contract audit</label>
+          <img
+            class="explanation-icon"
+            src="~@/assets/images/icons/explanation.png"
+          />
+          <label class="dapp-select-label">
+            <b-form-select
+              id="dappContract"
+              :options="categories"
+              required
+            ></b-form-select>
+          </label>
         </b-form-group>
       </b-form>
     </div>
@@ -161,35 +186,56 @@
 </template>
 
 <script>
+import TagComponentVue from '../../components/TagComponent/TagComponent.vue';
 export default {
-  props: {
-    progressBarValue: {
-      type: String,
-      default: ''
-    }
+  components: {
+    'tag-component': TagComponentVue
   },
   data() {
     return {
-      categories: [{ value: null, text: 'Select One' }, 'Finance']
+      categories: [{ text: 'Select One', value: null }, 'Finance'],
+      tagInput: '',
+      suggestedTags: '',
+      file: '',
+      displayTags: []
     };
+  },
+  watch: {
+    tagInput(newVal) {
+      if (newVal.includes(' ')) {
+        newVal.split(' ').forEach(item => {
+          if (item.length > 0) {
+            this.displayTags.push(item);
+            this.tagInput = '';
+            this.updateWidth();
+          }
+        });
+      }
+    }
+  },
+  methods: {
+    deleteTag(idx) {
+      this.displayTags.splice(idx, 1);
+      this.updateWidth();
+    },
+    updateWidth() {
+      this.$refs.dappTagsInput.style.paddingLeft =
+        this.$refs.tagHolder.offsetWidth > 0
+          ? `${this.$refs.tagHolder.offsetWidth}px`
+          : '10.5px';
+    }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-@import 'AboutYourDappContainer.scss';
+// @import 'AboutYourDappContainer.scss';
+@import '../AboutYourDappTeamContainer.scss';
 </style>
 
 <style lang="scss">
-  .dapp-label {
-    margin-bottom: 10px;
-    font-size: 16px;
-  }
-  .dapp-text-label {
-    font-size: 16px;
-  }
-  input[type="file"] {
-    display: none;
-  } 
-
+.dapp-label {
+  margin-bottom: 10px;
+  font-size: 16px;
+}
 </style>

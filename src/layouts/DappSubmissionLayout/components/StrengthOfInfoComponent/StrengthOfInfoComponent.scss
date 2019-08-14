@@ -6,3 +6,62 @@
   height: 152px;
   width: 324px;
 }
+
+.circle {
+  width: 100px;
+  height: 100px;
+  border-radius: 50px;
+  position: absolute;
+  clip: rect(0, 50px, 100px, 0);
+}
+
+.lack-of-info-progress {
+  border: 6px solid $red-9;
+}
+
+.good-strength-progress {
+  border: 6px solid $mew-green;
+}
+
+.lack-of-info-text {
+  color: $red-9;
+  font-weight: bold;
+}
+
+.good-strength-text {
+  color: $mew-green;
+  font-weight: bold;
+}
+
+.info-text {
+  color: $light-blue-3;
+}
+
+.strength-of-info-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.text-wrapper {
+  width: 157px;
+  text-align: left;
+}
+
+.circle-wrapper {
+  height: 100%;
+  width: 103px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.strength-text {
+  font-size: 20px;
+  font-weight: bold;
+  height: 24px;
+  width: 48px;
+  display: flex;
+  align-items: center;
+}

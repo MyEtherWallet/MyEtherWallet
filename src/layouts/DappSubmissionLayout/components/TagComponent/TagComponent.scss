@@ -1,0 +1,11 @@
+@import '~@/scss/GlobalVariables';
+.tag-container {
+  background-color: $light-grey-7;
+  border-radius: 5px;
+  color: $white;
+  padding: 2px;
+
+  span {
+    cursor: pointer;
+  }
+}

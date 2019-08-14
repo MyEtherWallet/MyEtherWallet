@@ -6,11 +6,16 @@
       <b-progress :value="25" class="dapp-progress-bar"></b-progress>
     </div>
     <div class="dapp-container">
-      <about-your-dapp 
+      <!-- <about-your-dapp 
         class="about-your-dapp w-50" 
-      />
+      /> -->
+      <about-your-team class="about-your-dapp w-50" />
       <div class="dapp-container-right">
-        <strength-of-info class="strength-of-info ml-5" />
+        <strength-of-info
+          :lack-of-info="false"
+          :strength-of-info="'12%'"
+          class="strength-of-info ml-5"
+        />
         <mew-support />
       </div>
     </div>
@@ -23,6 +28,7 @@ import StrengthOfInfoComponent from './components/StrengthOfInfoComponent';
 import BannerComponent from './components/BannerComponent';
 import BannerSubmitComponent from './components/BannerSubmitComponent';
 import MewSupportComponent from './components/MewSupportComponent';
+import AboutYourTeamContainer from './containers/AboutYourTeamContainer';
 
 export default {
   components: {
@@ -30,7 +36,8 @@ export default {
     'strength-of-info': StrengthOfInfoComponent,
     'banner-component': BannerComponent,
     'submit-component': BannerSubmitComponent,
-    'mew-support': MewSupportComponent
+    'mew-support': MewSupportComponent,
+    'about-your-team': AboutYourTeamContainer
   },
   data() {
     return {
@@ -48,7 +55,7 @@ export default {
 <style lang="scss">
 .dapp-progress-bar {
   .progress-bar {
-    background-color:#05c0a5;
+    background-color: #05c0a5;
   }
 }
 </style>
