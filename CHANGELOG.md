@@ -1,7 +1,7 @@
 ### Release v5.1.1-hotfix.1
 
 ### Bug
-
+- Fix issues related to address switching [#1355](https://github.com/MyEtherWallet/MyEtherWallet/pull/1355)
 - Fix missing buttons in maker dapp, and some general housekeeping [#1352](https://github.com/MyEtherWallet/MyEtherWallet/pull/1352)
 
 ### Devop
