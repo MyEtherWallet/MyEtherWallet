@@ -146,6 +146,7 @@ export default {
           this.spinner = false;
           this.$refs.mnemonicPhrase.hide();
           this.hardwareWalletOpen(wallet);
+          // this.$emit('hardwareWalletOpen', wallet);
         })
         .catch(e => {
           this.password = '';
