@@ -1,3 +1,9 @@
+### Release v5.1.2
+
+### Bug
+
+- Fix missing buttons in maker dapp, and some general housekeeping [#1352](https://github.com/MyEtherWallet/MyEtherWallet/pull/1352)
+
 ### Release v5.1.1
 ### Release v5.1.1-hotfix.1
 
@@ -8,6 +14,7 @@
 ### Release v5.1.1
 
 ### Feature
+
 - Add Buy Eth Button to nav bar, standardize dapp header layout [#1330](https://github.com/MyEtherWallet/MyEtherWallet/pull/1330)
 
 ### Devop
@@ -23,9 +30,7 @@
 - Fix Mobile UI Scan to Download mobile [#1333](https://github.com/MyEtherWallet/MyEtherWallet/pull/1333)
 - By Mnemonic Phrase layout bug fix [#1347](https://github.com/MyEtherWallet/MyEtherWallet/pull/1347)
 
-
 ### Release v5.1.0
-
 
 ### Feature
 
