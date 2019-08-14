@@ -1,3 +1,10 @@
+### Release 5.1.2
+
+### Bug
+
+- Fix issues related to address switching [#1355](https://github.com/MyEtherWallet/MyEtherWallet/pull/1355)
+
+
 ### Release v5.1.1
 
 ### Feature
