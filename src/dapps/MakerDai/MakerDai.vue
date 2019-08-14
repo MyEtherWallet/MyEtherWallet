@@ -72,27 +72,22 @@
     >
     </move-cdp-modal>
     <back-button :path="'/interface/dapps/'">
-      <div style="padding-left: 20px; cursor: pointer;">
-        <i
-          v-show="showRefresh"
-          class="fa fa-refresh"
-          @click="refreshExternal"
-        ></i>
-      </div>
-      <div v-if="showMoveOrClose" class="header-buttons-container">
-        <div class="inner-container">
-          <button class="move-btn" @click="showMove">
-            <h4>{{ $t('dappsMaker.moveTitle') }}</h4>
-          </button>
-          <div v-if="!((!hasProxy && !onCreate) || showCdpMigrateButtons)">
-            <button class="close-btn" @click="showClose">
-              <h4>{{ $t('dappsMaker.closeTitle') }}</h4>
+      <div class="back-bar-container">
+        <div v-if="showMoveOrClose" class="header-buttons-container">
+          <div class="inner-container">
+            <button class="move-btn" @click="showMove">
+              <h4>{{ $t('dappsMaker.moveTitle') }}</h4>
             </button>
+            <div v-if="!((!hasProxy && !onCreate) || showCdpMigrateButtons)">
+              <button class="close-btn" @click="showClose">
+                <h4>{{ $t('dappsMaker.closeTitle') }}</h4>
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </back-button>
-    <div v-show="makerActive" class="buttons-container">
+    <div v-if="makerActive" class="buttons-container">
       <div v-if="showCreateProxy">
         <div class="dapps-button" @click="buildProxy">
           <h4>{{ $t('dappsMaker.createProxy') }}</h4>
@@ -310,6 +305,7 @@ export default {
       return bnOver(this.liquidationRatio, this.daiQty, this.ethPrice);
     },
     showMoveOrClose() {
+      console.log(this.$route.name); // todo remove dev item
       return this.$route.name === 'manage' || this.$route.name === 'migrate';
     },
     showManage() {
