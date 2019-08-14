@@ -48,6 +48,8 @@ const bityStatuses = {
 
 const bityMethods = {
   getEstimate: 'getEstimate',
+  createOrder: 'createOrder',
+  orderDetails: 'getOrderDetails',
   createTransaction: 'createTransaction',
   status: 'getStatus',
   logInWithPhoneNumber: 'logInWithPhoneNumber',

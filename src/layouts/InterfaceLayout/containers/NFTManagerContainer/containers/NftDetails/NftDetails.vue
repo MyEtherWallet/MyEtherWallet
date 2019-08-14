@@ -156,6 +156,8 @@ export default {
         this.web3.eth.sendTransaction(raw).catch(err => {
           Toast.responseHandler(err, Toast.ERROR);
         });
+        this.$emit('nftTransfered', this.nft);
+
         this.toAddress = '';
       }
     },

@@ -1,11 +1,21 @@
 <template>
   <div class="crypto-kitties-manager">
     <interface-container-title :title="$t('common.ntfManager')" />
-    <div class="inner-side-menu content-container">
+    <div
+      v-if="!isReady && isOnlineAndEth"
+      class="inner-side-menu content-container"
+    >
+      <nft-side-menu :supported-nft-obj="sideMenuData" :nft-config="nftConfig">
+      </nft-side-menu>
+      <loading-sign :loadingmessage1="$t('common.loading')" />
+    </div>
+    <div v-if="isReady && hasNfts" class="inner-side-menu content-container">
       <nft-side-menu
-        :data="sideMenuData"
+        :supported-nft-obj="sideMenuData"
         :nft-config="nftConfig"
         :initial-highlighted="selectedContract"
+        :loading-complete="countsRetrieved"
+        :sent-update="sentUpdate"
         @selected="changeSelectedContract"
       >
       </nft-side-menu>
@@ -13,6 +23,7 @@
         <nft-details
           :nft="detailsFor"
           :selected-title="nftTitle"
+          @nftTransfered="removeSentNft"
           @back="comeBack"
         ></nft-details>
       </div>
@@ -26,7 +37,7 @@
                 <div class="animated-background"></div>
               </div>
               <div v-show="hasImage(nft)">
-                <img :src="getImage(nft)" />
+                <img :src="getImage(nft)" @load="hasLoaded(nft)" />
               </div>
               <p>#{{ nft.token }}</p>
             </div>
@@ -51,11 +62,23 @@
         </div>
       </div>
     </div>
+    <div v-if="isReady && !hasNfts" class="inner-side-menu content-container">
+      No NFTs
+    </div>
+    <div v-if="!isOnlineAndEth">
+      <div v-show="!online">
+        NFTs are
+      </div>
+      <div v-show="online">
+        NFTs are not supported on {{ network.type.name_long }}
+      </div>
+    </div>
     <div class="flex--row--align-start mft-manager-content-container"></div>
   </div>
 </template>
 
 <script>
+import LoadingSign from '@/components/LoadingSign';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
 import ContentBlockTitle from '@/layouts/InterfaceLayout/components/ContentBlockTitle';
 import NFTSideMenu from '@/layouts/InterfaceLayout/containers/NFTManagerContainer/components/NFTSideMenu';
@@ -68,6 +91,7 @@ const URL_BASE = 'https://nft.mewapi.io/nft';
 
 export default {
   components: {
+    'loading-sign': LoadingSign,
     'content-block-title': ContentBlockTitle,
     'nft-side-menu': NFTSideMenu,
     'interface-container-title': InterfaceContainerTitle,
@@ -80,17 +104,20 @@ export default {
       countPerPage: 9,
       nftConfig: [],
       tokenHelper: {},
-      imagesRetrieved: true,
+      mayHaveTokens: [true, true],
+      countsRetrieved: false,
       showDetails: false,
       selectedContract: '0x06012c8cf97bead5deae237070f9587f8e7a266d',
       detailsFor: {},
       nftTokens: {},
       nftData: {},
       ownedTokens: [],
-      tokenContractAddress: '0xeA3352C1a3480Ac5a32Fcd1F2854529BA7193F14'
+      tokenContractAddress: '0xeA3352C1a3480Ac5a32Fcd1F2854529BA7193F14',
+      sentUpdate: 0
     };
   },
   computed: {
+    ...mapState(['account', 'web3', 'online', 'network']),
     endIndex() {
       if (this.nftData[this.selectedContract]) {
         const ids_retrieved = this.nftData[this.selectedContract].details
@@ -147,7 +174,6 @@ export default {
     sideMenuData() {
       return this.nftData;
     },
-    ...mapState(['account', 'web3', 'online', 'network']),
     startIndex() {
       if (this.nftData[this.selectedContract]) {
         return this.nftData[this.selectedContract].currentIndex;
@@ -156,6 +182,16 @@ export default {
     },
     activeAddress() {
       return this.account.address;
+    },
+
+    hasNfts() {
+      return Object.values(this.nftData).some(entry => entry.count > 0);
+    },
+    isReady() {
+      return this.isOnlineAndEth && this.countsRetrieved;
+    },
+    isOnlineAndEth() {
+      return this.online && this.network.type.name === 'ETH';
     }
   },
   watch: {},
@@ -185,13 +221,29 @@ export default {
     }, {});
 
     if (this.network.type.name === 'ETH') {
-      this.changeSelectedContract(this.nftConfig[0].contractAddress);
-
       this.getOwnedCounts();
       this.getOwned();
     }
   },
   methods: {
+    hasLoaded(nft) {
+      this.$set(nft, 'loaded', true);
+    },
+    hasImage(nft) {
+      if (nft.loaded) {
+        return true;
+      }
+      // return nft.image !== '';
+    },
+    removeSentNft(nft) {
+      const afterSent = this.nftData[nft.contract].details.filter(entry => {
+        return entry.token !== nft.token;
+      });
+      this.$set(this.nftData[nft.contract], 'details', afterSent);
+      this.nftData[nft.contract].count -= 1;
+      if (this.nftData[nft.contract].count === 0) this.sentUpdate += 1;
+      this.showDetails = false;
+    },
     changeSelectedContract(selectedContract) {
       this.selectedContract = selectedContract;
       this.showDetails = false;
@@ -213,22 +265,6 @@ export default {
       );
       return await image.json();
     },
-    async getOwned(address = this.activeAddress, nftData = this.nftData) {
-      if (!this.processing) {
-        this.processing = true;
-        const supportedNftTokens = Object.keys(nftData);
-
-        const result = await this.getOwnedTokens(
-          supportedNftTokens,
-          address,
-          nftData
-        );
-        this.ready = true;
-        this.processing = false;
-        this.imagesRetrieved = true;
-        return result;
-      }
-    },
     async getOwnedCounts(address = this.activeAddress) {
       const supportedNftTokens = this.nftConfig
         .filter(entry => entry.ERC721Extension)
@@ -247,6 +283,21 @@ export default {
           : val.toNumber();
         return val.toString();
       });
+    },
+    async getOwned(address = this.activeAddress, nftData = this.nftData) {
+      if (!this.processing) {
+        this.processing = true;
+        const supportedNftTokens = Object.keys(nftData);
+
+        const result = await this.getOwnedTokens(
+          supportedNftTokens,
+          address,
+          nftData
+        );
+        this.ready = true;
+        this.processing = false;
+        return result;
+      }
     },
     async getOwnedNonStandard(
       contract,
@@ -267,6 +318,7 @@ export default {
         })
         .then(rawJson => {
           this.nftData[contract].count = rawJson.total;
+          this.countsRetrieved = true;
           const getNestedObject = (nestedObj, pathArr, token) => {
             return pathArr.reduce((obj, key) => {
               if (key === '@tokenvalue@') {
@@ -280,7 +332,8 @@ export default {
             'kitties'
           ];
           const imageKey = this.nftData[contract].imageKey || 'image_url_png';
-          return getNestedObject(rawJson, metadataKeys).map(val => {
+
+          const list = getNestedObject(rawJson, metadataKeys).map(val => {
             return {
               contract: contract,
               token: val.id,
@@ -289,11 +342,12 @@ export default {
                 : ''
             };
           });
+
+          this.nftData[contract].details = list.slice(0, 9);
+          this.$set(this.nftData[contract], 'details', list.slice(0, 9));
+          return this.nftData[contract].details;
         })
         .then(list => {
-          const reducedList = list.slice(0, 9);
-          this.nftData[contract].details = reducedList;
-          this.$set(this.nftData[contract], 'details', reducedList);
           if (list.length > 0) {
             const retrieveCount =
               list.length > this.countPerPage ? this.countPerPage : list.length;
@@ -375,7 +429,6 @@ export default {
           tokenContract
         );
       }
-      this.imagesRetrieved = true;
     },
     getNext(address = this.account.address) {
       const content = this.nftData[this.selectedContract];
@@ -439,9 +492,6 @@ export default {
         'Cache-Control': 'no-cache'
       });
       return await data.json();
-    },
-    hasImage(nft) {
-      return nft.image !== '';
     },
     async loadForContract(
       contract,

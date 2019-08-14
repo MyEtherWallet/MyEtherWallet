@@ -105,9 +105,9 @@ export default class SwapProviders {
     return this.providers.has(name);
   }
 
-  updateNetwork(network) {
+  updateNetwork(network, web3) {
     this.providers.forEach(provider => {
-      provider.setNetwork(network);
+      provider.setNetwork(network, web3);
     });
   }
 
@@ -240,6 +240,9 @@ export default class SwapProviders {
           }),
           fromValue
         );
+        if (vals.length === 0) {
+          return [{}];
+        }
         return vals;
       }
     }

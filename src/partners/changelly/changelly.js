@@ -100,6 +100,10 @@ export default class Changelly {
     return this.getMarketRate(fromCurrency, toCurrency, fromValue);
   }
 
+  async getRateUpdate(fromCurrency, toCurrency, fromValue, toValue, isFiat) {
+    return this.getRate(fromCurrency, toCurrency, fromValue, toValue, isFiat);
+  }
+
   async getFixedRate(fromCurrency, toCurrency, fromValue) {
     const changellyDetails = await changellyCalls.getFixRate(
       fromCurrency,
