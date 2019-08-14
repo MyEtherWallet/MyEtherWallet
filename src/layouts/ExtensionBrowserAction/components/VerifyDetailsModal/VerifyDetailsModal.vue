@@ -93,7 +93,11 @@ export default {
   computed: {
     address() {
       const hasWallet = Object.keys(this.wallet).length > 0;
-      return hasWallet ? this.wallet.getAddressString() : '0x';
+      return hasWallet
+        ? this.wallet.hasOwnProperty('isHardware')
+          ? '0x'
+          : this.wallet.getAddressString()
+        : '0x';
     },
     actualTitle() {
       return ACTUAL_TITLES[this.title];

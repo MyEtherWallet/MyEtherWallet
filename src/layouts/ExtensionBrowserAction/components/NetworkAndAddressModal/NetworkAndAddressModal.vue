@@ -153,34 +153,36 @@
                 >
               </div>
             </div>
-            <div class="input-container">
-              <label for="keystorePassword"> Password </label>
-              <div class="keystore-password-input">
-                <input
-                  v-model="locPassword"
-                  :type="show ? 'text' : 'password'"
-                  placeholder="Enter your password"
-                  name="keystorePassword"
-                />
-                <img
-                  :src="show ? showIcon : hide"
-                  @click.prevent="show = !show"
-                />
+            <form>
+              <div class="input-container">
+                <label for="keystorePassword"> Password </label>
+                <div class="keystore-password-input">
+                  <input
+                    v-model="locPassword"
+                    :type="show ? 'text' : 'password'"
+                    placeholder="Enter your password"
+                    name="keystorePassword"
+                  />
+                  <img
+                    :src="show ? showIcon : hide"
+                    @click.prevent="show = !show"
+                  />
+                </div>
               </div>
-            </div>
-            <div class="button-container">
-              <b-btn
-                :class="[
-                  validInputs ? '' : 'disabled',
-                  'mid-round-button-green-filled close-button'
-                ]"
-                @click.prevent="generateFromMnemonicPriv"
-              >
-                <span v-show="!loading"> Add Wallet </span>
-                <i v-show="loading" class="fa fa-spinner fa-spin" />
-              </b-btn>
-            </div>
-            <customer-support />
+              <div class="button-container">
+                <b-btn
+                  :class="[
+                    validInputs ? '' : 'disabled',
+                    'mid-round-button-green-filled close-button'
+                  ]"
+                  @click.prevent="generateFromMnemonicPriv"
+                >
+                  <span v-show="!loading"> Add Wallet </span>
+                  <i v-show="loading" class="fa fa-spinner fa-spin" />
+                </b-btn>
+              </div>
+              <customer-support />
+            </form>
           </div>
         </div>
       </div>
@@ -254,9 +256,11 @@ export default {
     }
   },
   watch: {
-    walletInstance() {
-      this.getPaths();
-      this.setHDAccounts();
+    walletInstance(wallet) {
+      if (wallet.hasOwnProperty('isHardware')) {
+        this.getPaths();
+        this.setHDAccounts();
+      }
     },
     locPassword(newVal) {
       this.$emit('password', newVal);
@@ -265,7 +269,6 @@ export default {
   mounted() {
     // reset component values when modal becomes hidden
     this.$refs.networkAddress.$on('hidden', () => {
-      this.$refs.accessMyWalletBtn.checked = false;
       this.availablePaths = {};
       this.selectedPath = '';
       this.invalidPath = '';
@@ -386,7 +389,9 @@ export default {
           this.HDAccounts = [];
           Toast.responseHandler(error, Toast.ERROR);
         });
-      this.selectedPath = this.walletInstance.getCurrentPath();
+      this.selectedPath = this.walletInstance.hasOwnProperty('isHardware')
+        ? this.walletInstance.getCurrentPath()
+        : "m/44'/60'/0'/0";
     },
     setBalances: web3utils._.debounce(function() {
       this.HDAccounts.forEach(account => {
