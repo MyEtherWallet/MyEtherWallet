@@ -47,7 +47,7 @@ jobs:
         - docker run --rm -it $ci_env -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run lint && npm run codecov && npm run build:history"
     - stage: add to codecov
       script:
-        - docker run -rm -it $ci_env -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run codecov"
+        - docker run --rm -it $ci_env -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run codecov"
     - stage: add to mewbuilds develop
       before_script:
         - docker run --rm -it -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:history"
