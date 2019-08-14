@@ -1,13 +1,17 @@
-### Release v5.1.2
+### Release v5.1.1-hotfix.1
 
 ### Bug
 
 - Fix missing buttons in maker dapp, and some general housekeeping [#1352](https://github.com/MyEtherWallet/MyEtherWallet/pull/1352)
 
+### Devop
+
+- Remove Safesend Dapp [#1346](https://github.com/MyEtherWallet/MyEtherWallet/pull/1346)
+- Add hover effect to Dashboard -> Swap buttons [#1353](https://github.com/MyEtherWallet/MyEtherWallet/pull/1353)
+- Add Changelly to Dashboard -> Swap description [#1356](https://github.com/MyEtherWallet/MyEtherWallet/pull/1356)
+
 ### Release v5.1.1
 
-### Devop
-- Add hover effect to Dashboard -> Swap buttons [#1353](https://github.com/MyEtherWallet/MyEtherWallet/pull/1353)
 
 ### Feature
 
@@ -15,7 +19,6 @@
 
 ### Devop
 
-- Add Changelly to Dashboard -> Swap description [#1356](https://github.com/MyEtherWallet/MyEtherWallet/pull/1356)
 - Update packages [#1344](https://github.com/MyEtherWallet/MyEtherWallet/pull/1344)
 - Update UI frontpage FAQs block [#1332](https://github.com/MyEtherWallet/MyEtherWallet/pull/1332)
 - Add xss custom config [#1326](https://github.com/MyEtherWallet/MyEtherWallet/pull/1326)
