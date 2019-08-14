@@ -6,6 +6,7 @@
 
 ### Devop
 
+- Add Changelly to Dashboard -> Swap description [#1356](https://github.com/MyEtherWallet/MyEtherWallet/pull/1356)
 - Update packages [#1344](https://github.com/MyEtherWallet/MyEtherWallet/pull/1344)
 - Update UI frontpage FAQs block [#1332](https://github.com/MyEtherWallet/MyEtherWallet/pull/1332)
 - Add xss custom config [#1326](https://github.com/MyEtherWallet/MyEtherWallet/pull/1326)
