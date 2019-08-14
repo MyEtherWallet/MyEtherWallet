@@ -85,5 +85,7 @@
   "usingMewOffline": "Using MEW Offline",
   "twitterFollow": "Follow us on Twitter",
   "ntfManager": "NFT Manager",
-  "loading": "Loading"
+  "loading": "Loading",
+  "path": "Path",
+  "alias": "Alias"
 }
