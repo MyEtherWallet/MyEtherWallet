@@ -10,12 +10,16 @@
 
 ### Release v5.1.1
 
+### Devop
+- Add hover effect to Dashboard -> Swap buttons [#1353](https://github.com/MyEtherWallet/MyEtherWallet/pull/1353)
+
 ### Feature
 
 - Add Buy Eth Button to nav bar, standardize dapp header layout [#1330](https://github.com/MyEtherWallet/MyEtherWallet/pull/1330)
 
 ### Devop
 
+- Add Changelly to Dashboard -> Swap description [#1356](https://github.com/MyEtherWallet/MyEtherWallet/pull/1356)
 - Update packages [#1344](https://github.com/MyEtherWallet/MyEtherWallet/pull/1344)
 - Update UI frontpage FAQs block [#1332](https://github.com/MyEtherWallet/MyEtherWallet/pull/1332)
 - Add xss custom config [#1326](https://github.com/MyEtherWallet/MyEtherWallet/pull/1326)
