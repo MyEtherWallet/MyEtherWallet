@@ -41,7 +41,7 @@ describe('NetworkAndAddressModal.vue', () => {
       attachToDocument: true,
       mocks: {
         $router: mockRoute,
-        $route: {path: '/access-my-wallet'}
+        $route: { path: '/access-my-wallet' }
       },
       stubs: {
         'b-modal': BModalStub
