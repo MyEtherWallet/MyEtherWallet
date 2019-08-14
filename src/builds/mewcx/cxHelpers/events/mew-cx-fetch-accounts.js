@@ -4,7 +4,6 @@ import store from '@/store';
 import cxHelpers from '../cxHelpers';
 import { ExtensionHelpers } from '@/helpers';
 export default async ({ event, payload }, res, next) => {
-  console.log('hi!', event);
   if (event !== CX_FETCH_MEW_ACCS && event !== WEB3_GET_ACC) return next();
   const currentAccount = store.state.currentAddr;
   const q = cxHelpers.queryBuilder(payload);
@@ -12,7 +11,6 @@ export default async ({ event, payload }, res, next) => {
     res(currentAccount);
   } else {
     ExtensionHelpers.getAccounts(acc => {
-      console.log(payload, q);
       if (Object.keys(acc).length > 0) {
         chrome.windows.create({
           url: chrome.runtime.getURL(
@@ -25,7 +23,9 @@ export default async ({ event, payload }, res, next) => {
         });
       } else {
         chrome.tabs.create({
-          url: chrome.runtime.getURL(`index.html#/access-my-wallet`)
+          url: chrome.runtime.getURL(
+            `index.html#/access-my-wallet?connectionRequest=${payload.url}`
+          )
         });
       }
     });

@@ -37,7 +37,6 @@
       @password="updatePassword"
     />
     <network-address-modal
-      v-if="Object.keys(wallet).length !== 0"
       ref="networkAddress"
       :generate-from-mnemonic-priv="generateFromMnemonicPriv"
       :wallet-instance="wallet"
@@ -70,7 +69,8 @@ import {
   MNEMONIC as mnemonicType
 } from '@/wallets/bip44/walletTypes';
 import walletWorker from 'worker-loader!@/workers/wallet.worker.js';
-import { Toast, ExtensionHelpers, Wallet } from '@/helpers';
+import { SELECTED_MEW_CX_ACC } from '@/builds/mewcx/cxHelpers/cxEvents.js';
+import { Toast, ExtensionHelpers, Wallet, Misc } from '@/helpers';
 
 import byJsonImgHov from '@/assets/images/icons/button-json-hover.svg';
 import byMnemImgHov from '@/assets/images/icons/button-mnemonic-hover.svg';
@@ -151,7 +151,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['path'])
+    ...mapState(['path', 'linkQuery'])
   },
   methods: {
     openAddressOption() {
@@ -177,7 +177,6 @@ export default {
         this.mnemonicPhrase,
         this.selectedAccountPath
       );
-      this.loading = false;
       this.generateWalletFromPriv(privateKey);
     },
     generateWalletFromPriv(priv) {
@@ -201,11 +200,8 @@ export default {
           false,
           priv ? mnemonicType : privateKeyType
         );
-        if (priv) {
-          this.toggleImportPrivateKey(this.loading);
-        } else {
-          this.toggleNetworkAddressModal(false);
-        }
+        this.toggleImportPrivateKey(this.loading);
+        this.toggleNetworkAddressModal(false);
         this.toggleVerifyDetails(true, privateKeyType);
       };
       worker.onerror = function(e) {
@@ -253,19 +249,50 @@ export default {
     },
     addWalletToStore(type) {
       this.loading = true;
-      ExtensionHelpers.addWalletToStore(
-        this.wallet.getAddressString(),
-        JSON.stringify(this.file),
-        this.nickname,
-        type,
-        this.storeWalletCb
-      );
+      const chrome = window.chrome;
+      const _self = this;
+      const { connectionRequest } = _self.linkQuery;
+      const account = _self.wallet.getAddressString();
+      // eslint-disable-next-line
+      if (!!connectionRequest) {
+        const service = Misc.getService(connectionRequest);
+        const eventObj = {};
+        eventObj[`${service.toLowerCase()}`] = account;
+        ExtensionHelpers.addWalletToStore(
+          account,
+          JSON.stringify(_self.file),
+          _self.nickname,
+          type,
+          _self.storeWalletCb
+        );
+        chrome.tabs.query({ url: `*://*.${service.toLowerCase()}/*` }, function(
+          tab
+        ) {
+          const obj = {
+            event: SELECTED_MEW_CX_ACC,
+            payload: [account]
+          };
+          chrome.storage.sync.set(eventObj, function() {});
+          chrome.tabs.sendMessage(tab[0].id, obj);
+          window.close();
+        });
+      } else {
+        ExtensionHelpers.addWalletToStore(
+          account,
+          JSON.stringify(_self.file),
+          _self.nickname,
+          type,
+          _self.storeWalletCb
+        );
+      }
     },
     back() {
-      if (this.title === keyStoreType) {
+      if (this.wallet.identifier === keyStoreType) {
         this.toggleImportKeystoreFile(true);
-      } else if (this.title === privateKeyType) {
+      } else if (this.wallet.identifier === privateKeyType) {
         this.toggleImportPrivateKey(true);
+      } else if (this.wallet.identifier === mnemonicType) {
+        this.toggleNetworkAddressModal(true);
       } else {
         this.toggleGenerateWallet(true);
       }

@@ -96,13 +96,14 @@ export default {
     },
     rejectAction() {
       const _self = this;
-      window.chrome.tabs.query(
+      const chrome = window.chrome;
+      chrome.tabs.query(
         { url: `*://*.${_self.request.connectionRequest}/*` },
         function(tab) {
           const obj = {
             event: REJECT_MEW_CX_ACC
           };
-          window.chrome.tabs.sendMessage(tab[0].id, obj);
+          chrome.tabs.sendMessage(tab[0].id, obj);
           window.close();
         }
       );
@@ -119,7 +120,6 @@ export default {
             event: SELECTED_MEW_CX_ACC,
             payload: [account]
           };
-          console.log(obj);
           chrome.storage.sync.set(eventObj, function() {});
           chrome.tabs.sendMessage(tab[0].id, obj);
           window.close();

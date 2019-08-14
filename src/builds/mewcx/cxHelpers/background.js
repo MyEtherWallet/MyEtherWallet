@@ -1,10 +1,10 @@
 import cxHelpers from './cxHelpers';
 import MiddleWare from '@/wallets/web3-provider/middleware';
-import { web3rpcRequestEvent, mewCxFetchAccounts } from './events';
+import { web3RpcRequestEvent, mewCxFetchAccounts } from './events';
 import store from '@/store';
 store.dispatch('setWeb3Instance');
 import {
-  CX_INJECT_WEB3,
+  CX_INJECT_WEB3
   // CX_SIGN_MSG,
   // CX_CONFIRM_SEND_TX,
   // CX_WEB3_DETECTED,
@@ -13,6 +13,9 @@ import {
 } from './cxEvents';
 const chrome = window.chrome;
 const urls = {};
+chrome.storage.onChanged.addListener(function(changes) {
+  console.log(changes);
+});
 const eventsListeners = (request, _, callback) => {
   console.log(request);
   const middleware = new MiddleWare();
@@ -21,7 +24,7 @@ const eventsListeners = (request, _, callback) => {
     payload: request.payload
   };
   middleware.use(mewCxFetchAccounts);
-  middleware.use(web3rpcRequestEvent);
+  middleware.use(web3RpcRequestEvent);
   middleware.run(req, callback);
   // let q;
   // if (request.hasOwnProperty('meta') && Object.keys(request.meta).length > 0) {
