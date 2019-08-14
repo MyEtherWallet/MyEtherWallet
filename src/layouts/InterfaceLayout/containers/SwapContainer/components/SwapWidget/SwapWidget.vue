@@ -875,6 +875,13 @@ export default {
           this.fromValue = fromValue;
           break;
       }
+
+      if (this.toValue - this.suppliedToAmount > 1 && this.loadingWidget) {
+        this.loadingWidget = false;
+        console.log(this.toValue, this.suppliedToAmount); // todo remove dev item
+        this.toValue = this.suppliedToAmount;
+        this.updateEstimate('to');
+      }
     },
     async updateRateEstimate(fromCurrency, toCurrency, fromValue, to) {
       if (this.haveProviderRates) {
