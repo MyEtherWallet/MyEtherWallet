@@ -131,7 +131,6 @@
 </template>
 
 <script>
-
 import { getNames, registerLocale } from 'i18n-iso-countries';
 import names from 'i18n-iso-countries/langs/en.json';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
