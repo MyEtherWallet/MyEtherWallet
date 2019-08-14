@@ -25,11 +25,11 @@ branches:
   except:
     - gh-pages
 stages:
+  - name: add to codecov
+    if: type != pull_request and tag IS blank
   - name: run on pull requests
     if: type = pull_request and fork = true
   - name: add to mewbuilds
-    if: type != pull_request and tag IS blank
-  - name: add to codecov
     if: type != pull_request and tag IS blank
   - name: add to mewbuilds develop
     if: branch = develop and type != pull_request
@@ -47,7 +47,7 @@ jobs:
         - docker run --rm -it $ci_env -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run lint && npm run codecov && npm run build:history"
     - stage: add to codecov
       script:
-        - docker run --memory="4096m" --rm -it $ci_env -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run codecov"
+        - docker run --memory="1024m" --rm -it $ci_env -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run codecov"
     - stage: add to mewbuilds develop
       before_script:
         - docker run --rm -it -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:history"
