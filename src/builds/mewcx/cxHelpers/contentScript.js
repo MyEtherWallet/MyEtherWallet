@@ -163,9 +163,8 @@ window.addEventListener(
 window.addEventListener(
   WEB3_GET_ACC.replace('{{id}}', extensionID),
   function(e) {
-    console.log(e, 'why is detail empty you son of a bitch');
     const url = cxHelpers.extractRootDomain(e.detail.from);
-    chrome.storage.sync.get(url, () => {
+    chrome.storage.sync.get(url, storedAccounts => {
       const meta = {};
       const tags = Array.from(document.getElementsByTagName('meta')).filter(
         meta => {
@@ -178,17 +177,23 @@ window.addEventListener(
       tags.forEach(tag => {
         meta[tag.attributes[0].value] = tag.attributes[1].value;
       });
-      chrome.runtime.sendMessage(
-        extensionID,
-        {
+      if (Object.keys(storedAccounts).length > 0) {
+        window.dispatchEvent(
+          new CustomEvent(WEB3_RECEIVE_ACC.replace('{{id}}', extensionID), {
+            detail: {
+              payload: [storedAccounts[url]]
+            }
+          })
+        );
+      } else {
+        chrome.runtime.sendMessage(extensionID, {
           event: CX_FETCH_MEW_ACCS,
           payload: {
             url: window.location.origin,
             meta: meta
           }
-        },
-        e.detail.cb
-      );
+        });
+      }
     });
   },
   false
