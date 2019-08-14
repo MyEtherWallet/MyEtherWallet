@@ -4,7 +4,6 @@
   "accessWallet": "Acceder a mi billetera",
   "faqs": "Preguntas frecuentes",
   "sendTx": "Send Transaction",
-  "sendSafeSendTx": "Protect Your ETH Transaction Using SafeSend",
   "swap": "Cambiar",
   "unlockWallet": "Desbloquear billetera",
   "createWallet": "Crear billetera",
@@ -54,7 +53,10 @@
   "sign": "Signo",
   "toAddress": "A dirección",
   "cancel": "Cancelar",
+  "actions": "Actions",
   "value": "Valor",
+  "more": "More",
+  "viewAll": "View All",
   "gasLimit": "Límite de gas",
   "gasPrice": "Precio del gas",
   "data": "Datos",
@@ -80,5 +82,7 @@
   "read": "Read",
   "notRecommended": "NOT RECOMMENDED",
   "notRecommendedMessage": "This is not a recommended way to access your wallet. Due to the sensitivity of the information involved, these options should only be used in offline settings by experienced users.",
-  "usingMewOffline": "Using MEW Offline"
+  "usingMewOffline": "Using MEW Offline",
+  "twitterFollow": "Follow us on Twitter",
+  "ntfManager": "NFT Manager"
 }

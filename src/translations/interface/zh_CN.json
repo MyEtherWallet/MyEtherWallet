@@ -108,5 +108,7 @@
   "CryptoToFiatBeta": "Please note Crypto to Fiat is currently a beta feature of Bity",
   "back": "Back",
   "invalidTanCode": "Invalid Code",
-  "unableToValidateAddress": "Currently unable to validate addresses for {currency}. It is likely correct, but Please double check it is correct before sending."
+  "unableToValidateAddress": "Currently unable to validate addresses for {currency}. It is likely correct, but Please double check it is correct before sending.",
+  "dashboard": "Dashboard",
+  "dashboardSwap": "MEW has partnered with Bity, Kyber Network, Changelly, and Simplex to allow users to swap fiat to crypto, ETH and BTC, ETH and ERC-20."
 }
