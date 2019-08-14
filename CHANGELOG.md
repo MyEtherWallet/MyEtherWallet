@@ -2,6 +2,7 @@
 
 ### Bug
 
+- Fix Mnemonic TableTo Print bug [#1360](https://github.com/MyEtherWallet/MyEtherWallet/pull/1360)
 - Fix missing buttons in maker dapp, and some general housekeeping [#1352](https://github.com/MyEtherWallet/MyEtherWallet/pull/1352)
 
 ### Devop
