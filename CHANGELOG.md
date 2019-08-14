@@ -1,6 +1,20 @@
+### Release v5.1.1-hotfix.1
+
+### Bug
+- Fix issues related to address switching [#1355](https://github.com/MyEtherWallet/MyEtherWallet/pull/1355)
+- Fix missing buttons in maker dapp, and some general housekeeping [#1352](https://github.com/MyEtherWallet/MyEtherWallet/pull/1352)
+
+### Devop
+
+- Remove Safesend Dapp [#1346](https://github.com/MyEtherWallet/MyEtherWallet/pull/1346)
+- Add hover effect to Dashboard -> Swap buttons [#1353](https://github.com/MyEtherWallet/MyEtherWallet/pull/1353)
+- Add Changelly to Dashboard -> Swap description [#1356](https://github.com/MyEtherWallet/MyEtherWallet/pull/1356)
+
 ### Release v5.1.1
 
+
 ### Feature
+
 - Add Buy Eth Button to nav bar, standardize dapp header layout [#1330](https://github.com/MyEtherWallet/MyEtherWallet/pull/1330)
 
 ### Devop
@@ -16,9 +30,7 @@
 - Fix Mobile UI Scan to Download mobile [#1333](https://github.com/MyEtherWallet/MyEtherWallet/pull/1333)
 - By Mnemonic Phrase layout bug fix [#1347](https://github.com/MyEtherWallet/MyEtherWallet/pull/1347)
 
-
 ### Release v5.1.0
-
 
 ### Feature
 
