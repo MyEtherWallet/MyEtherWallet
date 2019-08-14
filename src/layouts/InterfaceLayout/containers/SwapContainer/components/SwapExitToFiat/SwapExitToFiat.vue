@@ -131,9 +131,7 @@
 </template>
 
 <script>
-import 'vue-tel-input/dist/vue-tel-input.css';
 
-// import store from 'store';
 import { getNames, registerLocale } from 'i18n-iso-countries';
 import names from 'i18n-iso-countries/langs/en.json';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
@@ -141,7 +139,6 @@ import AccordionMenu from '@/components/AccordionMenu';
 import StandardInput from '@/components/StandardInput';
 import StandardDropdown from './StandardDropdown';
 import StandardButton from '@/components/Buttons/StandardButton';
-import VueTelInput from 'vue-tel-input';
 import IBAN from 'iban';
 
 import { providerMap } from '@/partners';
@@ -154,8 +151,7 @@ export default {
     'accordion-menu': AccordionMenu,
     'standard-input': StandardInput,
     'standard-dropdown': StandardDropdown,
-    'standard-button': StandardButton,
-    'vue-tel-input': VueTelInput
+    'standard-button': StandardButton
   },
   props: {
     swapDetails: {
@@ -306,11 +302,9 @@ export default {
       }
       return IBAN.isValid(this.orderDetails.iban);
     },
-    isValidPhoneNumber() {
-      return this.validPhoneNumber;
-    },
     canSwap() {
       return (
+        this.isValidIBAN &&
         this.orderDetails.iban !== '' &&
         this.orderDetails.bic_swift !== '' &&
         this.orderDetails.name !== '' &&
@@ -326,11 +320,6 @@ export default {
     this.provider = new providerConstructor();
   },
   methods: {
-    reOpen(step) {
-      if (this.complete[step]) {
-        this.updateStep(step);
-      }
-    },
     roomForDropDown(val) {
       this.addSpace = val;
     },
