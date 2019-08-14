@@ -2,7 +2,6 @@ import domainSale from '@/assets/images/icons/domain-sale.svg';
 import domainSaleHov from '@/assets/images/icons/domain-sale-hov.svg';
 import manageEns from '@/assets/images/icons/domain.svg';
 import manageEnsHov from '@/assets/images/icons/domain-hov.svg';
-import secureTransaction from '@/assets/images/icons/button-key-hover.svg';
 import secureTransactionHov from '@/assets/images/icons/button-key.svg';
 import scheduleTransaction from '@/assets/images/icons/eac.svg';
 import scheduleTransactionHov from '@/assets/images/icons/eac-hov.svg';
@@ -24,14 +23,6 @@ const dapps = {
     iconDisabled: domainSaleHov,
     title: 'interface.nameYourWallet',
     desc: 'interface.nameYourWalletDesc',
-    supportedNetworks: [ETH.name]
-  },
-  secureTransaction: {
-    route: '/interface/dapps/secure-transaction',
-    icon: secureTransaction,
-    iconDisabled: secureTransactionHov,
-    title: 'dapps.safesend_title',
-    desc: 'dapps.safesend_desc',
     supportedNetworks: [ETH.name]
   },
   scheduleTransaction: {
