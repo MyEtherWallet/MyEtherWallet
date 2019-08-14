@@ -305,7 +305,6 @@ export default {
       return bnOver(this.liquidationRatio, this.daiQty, this.ethPrice);
     },
     showMoveOrClose() {
-      console.log(this.$route.name); // todo remove dev item
       return this.$route.name === 'manage' || this.$route.name === 'migrate';
     },
     showManage() {

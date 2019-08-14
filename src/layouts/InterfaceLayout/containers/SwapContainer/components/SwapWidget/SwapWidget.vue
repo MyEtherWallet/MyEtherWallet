@@ -25,10 +25,6 @@
             @swapStarted="resetSwapState"
           />
 
-          <!--          <div class="title-block">-->
-          <!--            <interface-container-title :title="$t('common.swap')" />-->
-          <!--          </div>-->
-
           <div class="form-content-container">
             <div class="send-form">
               <div class="form-block amount-to-address">
@@ -878,7 +874,6 @@ export default {
 
       if (this.toValue - this.suppliedToAmount > 1 && this.loadingWidget) {
         this.loadingWidget = false;
-        console.log(this.toValue, this.suppliedToAmount); // todo remove dev item
         this.toValue = this.suppliedToAmount;
         this.updateEstimate('to');
       }
