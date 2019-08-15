@@ -1,10 +1,6 @@
 import cxHelpers from './cxHelpers';
 import MiddleWare from '@/wallets/web3-provider/middleware';
-import {
-  web3RpcRequestEvent,
-  mewCxFetchAccounts,
-  web3Detected
-} from './events';
+import { web3RpcRequest, mewCxFetchAccounts, web3Detected } from './events';
 import store from '@/store';
 store.dispatch('setWeb3Instance');
 import {
@@ -20,11 +16,16 @@ const urls = {};
 // eslint-disable-next-line
 let metamaskChecker;
 const eventsListeners = (request, _, callback) => {
+  const obj = {
+    event: request.event,
+    payload: request.payload
+  };
   const middleware = new MiddleWare();
   middleware.use(mewCxFetchAccounts);
-  middleware.use(web3RpcRequestEvent);
+  middleware.use(web3RpcRequest);
   middleware.use(web3Detected);
-  middleware.run(request, callback);
+  middleware.run(obj, callback);
+  return true;
   // let q;
   // if (request.hasOwnProperty('meta') && Object.keys(request.meta).length > 0) {
   //   const arr = [];
