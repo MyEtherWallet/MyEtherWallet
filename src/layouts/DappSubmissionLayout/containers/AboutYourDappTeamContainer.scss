@@ -1,153 +1,99 @@
 @import '~@/scss/GlobalVariables';
 
-.about-dapp-container {
-  .form-group {
-    font-weight: 600;
-    margin-top: 5px;
-    text-align: left;
+.form-group {
+  font-weight: 600;
+  margin-top: 5px;
+  text-align: left;
 
-    input {
-      background: $light-blue-9;
-      border: none;
-      height: 52px;
-      width: 90%;
-    }
+  input {
+    background: $light-blue-9;
+    border: none;
+    height: 52px;
+    width: 90%;
+  }
 
-    select {
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      appearance: none;
-      background: $light-blue-9;
-      border: none;
-      height: 52px;
-    }
+  select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: $light-blue-9;
+    border: none;
+    height: 52px;
+  }
 
-    input::placeholder,
-    select::placeholder,
-    textarea::placeholder {
-      color: $light-blue-10;
-    }
+  input::placeholder,
+  select::placeholder,
+  textarea::placeholder {
+    color: $light-blue-10;
+  }
 
-    .dapp-select-label {
-      width: 90%;
-      height: 52px;
-      position: relative;
-    }
+  .dapp-select-label {
+    width: 90%;
+    height: 52px;
+    position: relative;
+  }
 
-    .dapp-select-label::after {
-      content: '\f078';
-      font-family: 'FontAwesome';
-      pointer-events: none;
-      position: absolute;
-      right: 0;
-      top: 18px;
-      width: 5%;
-    }
+  .dapp-select-label::after {
+    content: '\f078';
+    font-family: 'FontAwesome';
+    pointer-events: none;
+    position: absolute;
+    right: 0;
+    top: 18px;
+    width: 5%;
+  }
 
-    .dapp-input {
-      display: flex;
-      width: 100%;
-      align-items: center;
+  .dapp-input {
+    display: flex;
+    width: 100%;
+    align-items: center;
 
-      span {
-        color: $red-9;
-        font-size: 16px;
-        height: 19px;
-        padding-left: 10px;
-      }
-    }
-
-    textarea {
-      background: $light-blue-9;
-      border: none;
-      font-size: 14px;
-      width: 90%;
-    }
-
-    .dapp-text-info {
-      font-weight: 500;
-      font-size: 14px;
-      height: 30px;
-      line-height: 20px;
-    }
-
-    input[type='file'] {
-      position: absolute;
-      font-size: 100px;
-      left: 0;
-      right: 0;
-      opacity: 0;
-    }
-
-    .image-container {
-      border-radius: 6px;
-      border: 1px dashed $dark-grey-11;
-      cursor: pointer;
-      display: table;
-      height: 223px;
-      width: 460px;
-    }
-
-    .image-label {
-      display: table-cell;
-      text-align: center;
-      vertical-align: middle;
-
-      i {
-        color: $light-grey-8;
-        font-size: 60px;
-      }
-    }
-
-    .image-text {
-      color: $dark-grey-9;
-    }
-
-    .image-requirements {
-      color: $light-grey-11;
-      font-weight: normal;
-    }
-
-    .upload-btn {
-      border-radius: 4px;
-      border: 1px solid $mew-green;
-      height: 52px;
-      width: 112px;
-      color: $mew-green;
-    }
-
-    .upload-btn-wrapper {
-      display: flex;
-      overflow: hidden;
-      position: relative;
-      width: 90%;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .fake-container {
-      position: relative;
-    }
-
-    .tag-holder {
-      display: flex;
-      justify-content: space-around;
-      left: 5px;
-      position: absolute;
-      top: 4px;
-    }
-
-    .explanation-icon {
-      height: 16px;
-      width: 16px;
-      margin-left: 5px;
-    }
-
-    .fake-input {
-      background: $light-blue-9;
-      border-radius: 4px;
-      height: 52px;
-      width: 100%;
+    span {
+      color: $red-9;
+      font-size: 16px;
+      height: 19px;
+      padding-left: 10px;
     }
   }
+
+  textarea {
+    background: $light-blue-9;
+    border: none;
+    font-size: 14px;
+    width: 90%;
+  }
+
+  .dapp-text-info {
+    font-weight: 500;
+    font-size: 14px;
+    height: 30px;
+    line-height: 20px;
+  }
+
+  input[type='file'] {
+    position: absolute;
+    font-size: 100px;
+    left: 0;
+    right: 0;
+    opacity: 0;
+  }
+
+  .fake-container {
+    position: relative;
+  }
+
+  .tag-holder {
+    display: flex;
+    justify-content: space-around;
+    left: 5px;
+    position: absolute;
+    top: 4px;
+  }
+
+  .explanation-icon {
+    height: 16px;
+    width: 16px;
+    margin-left: 5px;
+  }
 }
+
