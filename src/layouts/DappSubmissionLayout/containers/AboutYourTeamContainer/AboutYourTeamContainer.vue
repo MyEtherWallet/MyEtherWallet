@@ -2,11 +2,10 @@
   <div class="about-team-container mt-5">
     <b-form>
       <b-form-group>
-        <label class="dapp-label">Authors</label>
-        <img
-          class="explanation-icon"
-          src="~@/assets/images/icons/explanation.png"
-        />
+        <label 
+          class="dapp-label">Authors
+          <more-info></more-info>
+        </label>
         <div class="dapp-input">
           <b-form-input 
             id="authors"
@@ -18,11 +17,10 @@
         </div>
       </b-form-group>
       <b-form-group>
-        <label class="dapp-label">My full name</label>
-        <img
-          class="explanation-icon"
-          src="~@/assets/images/icons/explanation.png"
-        />
+        <label
+          class="dapp-label">My full name
+          <more-info></more-info>
+        </label>
         <div class="dapp-input">
           <b-form-input 
             id="fullName"
@@ -33,11 +31,10 @@
         </div>
       </b-form-group>
       <b-form-group>
-        <label class="dapp-label">My email</label>
-        <img
-          class="explanation-icon"
-          src="~@/assets/images/icons/explanation.png"
-        />
+        <label
+          class="dapp-label">My email
+          <more-info></more-info>
+        </label>
         <div class="dapp-input">
           <b-form-input 
             id="emailAddress"
@@ -54,11 +51,10 @@
         </div>
       </b-form-group>
       <b-form-group>
-        <label class="dapp-label">Company website</label>
-        <img
-          class="explanation-icon"
-          src="~@/assets/images/icons/explanation.png"
-        />
+        <label
+          class="dapp-label">Company website
+          <more-info></more-info>
+        </label>
         <div class="dapp-input">
           <b-form-input 
             id="companyWebsite"
@@ -69,11 +65,10 @@
         </div>
       </b-form-group>
       <b-form-group>
-        <label class="dapp-label">Software license</label>
-        <img
-          class="explanation-icon"
-          src="~@/assets/images/icons/explanation.png"
-        />
+        <label 
+          class="dapp-label">Software license 
+          <more-info></more-info>
+        </label>
         <div class="dapp-input">
           <b-form-input 
             id="softwareLicense"
@@ -97,10 +92,24 @@
 </template>
 
 <script>
-export default {};
+import MoreInfoComponent from '../../components/MoreInfoComponent';
+
+export default {
+  components: {
+    'more-info': MoreInfoComponent
+  }
+};
 </script>
 
 <style lang="scss" scoped>
 @import 'AboutYourTeamContainer.scss';
 @import '../AboutYourDappTeamContainer.scss';
+</style>
+
+<style lang="scss">
+.dapp-label {
+  margin-bottom: 10px;
+  font-size: 16px;
+  display: flex;
+}
 </style>

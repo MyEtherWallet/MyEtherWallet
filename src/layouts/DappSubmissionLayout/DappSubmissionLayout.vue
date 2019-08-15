@@ -6,12 +6,12 @@
       <b-progress :value="25" class="dapp-progress-bar"></b-progress>
     </div>
     <div class="dapp-container">
-      <!-- <about-your-dapp 
-        class="about-your-dapp w-50 mb-5" 
-      /> -->
-      <about-your-team 
+      <about-your-dapp 
         class="about-your-dapp w-50 mb-5" 
       />
+      <!-- <about-your-team 
+        class="about-your-dapp w-50 mb-5" 
+      /> -->
       <div class="dapp-container-right">
         <strength-of-info
           :lack-of-info="false"
