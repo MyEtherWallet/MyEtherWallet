@@ -1,5 +1,5 @@
 /* eslint no-undef: 0 no-console:0 */
-import EventHandler from './eventHandler';
+import eventHandler from './eventHandler';
 import {
   WEB3_RECEIVE_ACC,
   WEB3_REJECT,
@@ -18,14 +18,7 @@ export default async ({ payload }, res, next) => {
   const eventName = WEB3_GET_ACC.replace('{{id}}', id);
   const receiveEvent = WEB3_RECEIVE_ACC.replace('{{id}}', id);
   const rejectEvent = WEB3_REJECT.replace('{{id}}', id);
-  const eventHandler = new EventHandler(
-    eventName,
-    obj,
-    receiveEvent,
-    rejectEvent
-  );
-  eventHandler
-    .dispatch()
+  eventHandler(eventName, obj, receiveEvent, rejectEvent)
     .then(response => {
       res(null, toPayload(payload.id, response.payload));
     })
