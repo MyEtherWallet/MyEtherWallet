@@ -21,14 +21,10 @@ const urls = {};
 let metamaskChecker;
 const eventsListeners = (request, _, callback) => {
   const middleware = new MiddleWare();
-  const req = {
-    event: request.event,
-    payload: request.payload
-  };
   middleware.use(mewCxFetchAccounts);
   middleware.use(web3RpcRequestEvent);
   middleware.use(web3Detected);
-  middleware.run(req, callback);
+  middleware.run(request, callback);
   // let q;
   // if (request.hasOwnProperty('meta') && Object.keys(request.meta).length > 0) {
   //   const arr = [];

@@ -37,15 +37,11 @@ class MewCxEthereum extends EventEmitter {
     this.middleware.use(ethSign);
     this.middleware.use(ethAccounts);
     this.middleware.use(ethCoinbase);
-    this.middleware.use(ethGetBlockByNumber);
-    this.middleware.use(ethGetBlockNumber);
-    this.middleware.use(netVersion);
-    this._requestManager = new MEWCXProvider();
+    this.requestManager = new MEWCXProvider();
     this._id = 0;
 
     this.httpProvider = {
       send: (method, params = []) => {
-        console.log(this._id);
         return new Promise((resolve, reject) => {
           if (!method || typeof method !== 'string') {
             return reject(new Error('Method is not a valid string.'));
@@ -56,18 +52,17 @@ class MewCxEthereum extends EventEmitter {
           const id = this._id++;
           const jsonrpc = '2.0';
           const payload = { jsonrpc, id, method, params };
-          const requestManager = this._requestManager;
+          const requestManager = this.requestManager;
           const req = {
             payload,
             requestManager
           };
           const cb = (e, res) => {
             if (e) return reject(e);
-            console.log(e, res);
             return resolve(res);
           };
           this.middleware.run(req, cb).then(() => {
-            this._requestManager.provider.send(req, cb);
+            this.requestManager.provider.send(req.payload, cb);
           });
         });
       },
@@ -75,7 +70,7 @@ class MewCxEthereum extends EventEmitter {
         this.httpProvider
           .send(payload.method, payload.params)
           .then(result => {
-            result.id = payload.id;
+            result.id = payload.id ? payload.id : result.id;
             cb(null, result);
           })
           .catch(cb);
