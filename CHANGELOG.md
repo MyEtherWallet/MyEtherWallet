@@ -6,6 +6,7 @@
 
 ### Devop
 
+- Fix Buy Eth to Buy ETH [#1361] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1361)
 - Remove Safesend Dapp [#1346](https://github.com/MyEtherWallet/MyEtherWallet/pull/1346)
 - Add hover effect to Dashboard -> Swap buttons [#1353](https://github.com/MyEtherWallet/MyEtherWallet/pull/1353)
 - Add Changelly to Dashboard -> Swap description [#1356](https://github.com/MyEtherWallet/MyEtherWallet/pull/1356)
