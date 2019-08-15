@@ -1,4 +1,4 @@
-@import '~@/scss/GlobalVariables';
+@import "~@/scss/GlobalVariables";
 
 .modal-container {
   .network {
@@ -24,12 +24,19 @@
         &::before {
           border-radius: 50px;
           bottom: 8px;
-          content: '';
+          content: "";
           height: 6px;
           left: -12px;
           position: absolute;
           width: 6px;
         }
+      }
+
+      .warning-msg {
+        margin-right: 30px;
+        color: red;
+        font-size: 13px;
+        line-height: 17px;
       }
 
       .flex-container {
