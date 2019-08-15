@@ -190,7 +190,7 @@
             <div>
               <h4 class="modal-title">{{ $t('interface.httpBasicAccess') }}</h4>
               <p class="warning-msg">
-                Warning: This information will be saved to your local storage, make sure your computer is secure
+                Warning: This information will be saved to your local storage, make sure your computer is secure.
               </p>
             </div>
             <div class="margin-left-auto add-custom-network">
