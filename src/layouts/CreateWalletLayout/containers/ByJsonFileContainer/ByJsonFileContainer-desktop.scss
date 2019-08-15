@@ -1,4 +1,4 @@
-@import '~@/scss/GlobalVariables';
+@import "~@/scss/GlobalVariables";
 @media all and (min-width: calc(#{$tablet-width} + 1px)) {
   .wrap {
     background-color: $background-color-1;
@@ -106,3 +106,10 @@
     }
   }
 } // @media all and (min-width: calc(#{$tablet-width} + 1px))
+
+.generating {
+  p {
+    color: $white;
+    margin-top: 10px;
+  }
+}
