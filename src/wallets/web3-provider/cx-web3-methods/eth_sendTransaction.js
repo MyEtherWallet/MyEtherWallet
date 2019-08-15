@@ -1,3 +1,4 @@
+import eventHandler from './eventHandler';
 import { toPayload } from '../jsonrpc';
 import { getSanitizedTx } from '../methods/utils';
 import {
@@ -12,32 +13,22 @@ export default async ({ payload }, res, next) => {
   const tx = Object.assign({}, payload.params[0]);
   getSanitizedTx(tx)
     .then(_tx => {
-      const event = new CustomEvent(WEB3_SEND_TX.replace('{{id}}', id), {
+      const obj = {
         detail: {
           tx: _tx
         }
-      });
-      window.dispatchEvent(event);
-      window.addEventListener(
-        WEB3_RECEIVE_TX_HASH.replace('{{id}}', id),
-        function(eventRes) {
-          this.removeEventListener(
-            WEB3_RECEIVE_TX_HASH.replace('{{id}}', id),
-            () => {}
-          );
-          this.removeEventListener(WEB3_REJECT.replace('{{id}}', id), () => {});
-          res(null, toPayload(payload.id, eventRes.detail.hash));
-        }
-      );
+      };
+      const eventName = WEB3_SEND_TX.replace('{{id}}', id);
+      const resolveName = WEB3_RECEIVE_TX_HASH.replace('{{id}}', id);
+      const rejectName = WEB3_REJECT.replace('{{id}}', id);
 
-      window.addEventListener(WEB3_REJECT.replace('{{id}}', id), function() {
-        this.removeEventListener(
-          WEB3_RECEIVE_TX_HASH.replace('{{id}}', id),
-          () => {}
-        );
-        this.removeEventListener(WEB3_REJECT.replace('{{id}}', id), () => {});
-        res(new Error('User Rejected action!'));
-      });
+      eventHandler(eventName, obj, resolveName, rejectName)
+        .then(response => {
+          res(null, toPayload(payload.id, response.payload));
+        })
+        .catch(e => {
+          res(e);
+        });
     })
     .catch(e => {
       res(e);

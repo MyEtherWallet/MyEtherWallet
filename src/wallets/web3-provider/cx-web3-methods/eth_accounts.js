@@ -8,6 +8,7 @@ import {
 import { toPayload } from '../jsonrpc';
 export default async ({ payload }, res, next) => {
   if (payload.method !== 'eth_accounts') return next();
+  console.log(payload);
   const id = window.extensionID;
   const callerUrl = window.location.origin;
   const obj = {
@@ -20,6 +21,7 @@ export default async ({ payload }, res, next) => {
   const rejectEvent = WEB3_REJECT.replace('{{id}}', id);
   eventHandler(eventName, obj, receiveEvent, rejectEvent)
     .then(response => {
+      console.log(payload.id, response.payload);
       res(null, toPayload(payload.id, response.payload));
     })
     .catch(e => {
