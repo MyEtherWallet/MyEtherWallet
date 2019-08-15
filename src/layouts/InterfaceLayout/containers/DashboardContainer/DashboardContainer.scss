@@ -1,4 +1,4 @@
-@import '../InterfaceContainer';
+@import "../InterfaceContainer";
 
 $dapps-container-mobile-width: 650px;
 $actionsSwapCollepsePoint: 700px;
@@ -7,10 +7,6 @@ $actionsSwapCollepsePoint: 700px;
   @extend %interface-container;
 
   background-color: transparent;
-}
-
-.clickable {
-  cursor: pointer;
 }
 
 .container--flex {
@@ -86,8 +82,9 @@ $actionsSwapCollepsePoint: 700px;
     }
 
     &.swap-disabled {
+      cursor: initial;
       filter: grayscale(100%);
-      opacity: 0.8;
+      opacity: 0.4;
       background-color: $light-green-2;
     }
 

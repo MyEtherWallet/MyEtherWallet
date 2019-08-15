@@ -1,12 +1,14 @@
-@import '~@/scss/GlobalVariables';
-@import '../DashboardButtons';
+@import "~@/scss/GlobalVariables";
+@import "../DashboardButtons";
 
 .content-container {
   background-color: $dark-blue-2;
+  cursor: pointer;
 
   &.button-disabled {
     filter: grayscale(100%);
-    opacity: 0.6;
+    opacity: 0.4;
+    cursor: initial;
   }
 }
 
