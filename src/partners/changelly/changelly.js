@@ -312,7 +312,7 @@ export default class Changelly {
       sendValue: order.amountExpectedFrom,
       status: order.status,
       timestamp: order.createdAt,
-      validFor: TIME_SWAP_VALID // validFor ||  // Rates provided are only an estimate, and
+      validFor: TIME_SWAP_VALID // Rates provided are only an estimate
     };
   }
 

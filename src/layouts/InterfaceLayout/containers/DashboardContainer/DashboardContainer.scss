@@ -79,6 +79,12 @@ $actionsSwapCollepsePoint: 700px;
     display: flex;
     align-items: center;
     border-radius: 5px;
+    border: 1px solid $light-green-1;
+
+    &.swap-enabled:hover {
+      border: 1px solid $light-grey-7;
+    }
+
     &.swap-disabled {
       filter: grayscale(100%);
       opacity: 0.8;
