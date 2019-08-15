@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "5.1.1",
+  "version": "5.1.1-hotfix.1",
   "description": "Client side ethereum wallet",
   "license": "MIT",
   "repository": "https://github.com/myetherwallet/myetherwallet",
@@ -130,7 +130,6 @@
     "uglify-es": "3.3.9",
     "uuid": "3.3.2",
     "vue-i18n": "8.13.0",
-    "vue-tel-input": "2.5.0",
     "vue-template-compiler": "2.6.10",
     "vue-worker": "1.2.1",
     "wallet-address-validator": "0.2.4",

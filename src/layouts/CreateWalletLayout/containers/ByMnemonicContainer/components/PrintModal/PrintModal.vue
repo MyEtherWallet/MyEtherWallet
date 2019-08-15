@@ -73,7 +73,7 @@ export default {
         logging: false,
         height: 800,
         width: 800,
-        y: -2550
+        scrollY: 0
       }).then(canvas => {
         return canvas;
       });
