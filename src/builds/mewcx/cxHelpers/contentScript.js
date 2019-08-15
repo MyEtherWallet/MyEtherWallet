@@ -18,7 +18,8 @@ import {
   WEB3_RECEIVE_TX_HASH,
   WEB3_RECEIVE_SIGNED_MSG,
   WEB3_REJECT,
-  CX_WEB3_DETECTED
+  CX_WEB3_DETECTED,
+  WEB3_RPC_REQUEST
 } from './cxEvents';
 import cxHelpers from './cxHelpers';
 import { ExtensionHelpers } from '@/helpers';
@@ -111,6 +112,21 @@ window.addEventListener(
   },
   false
 );
+
+window.addEventListener(WEB3_RPC_REQUEST, function(e) {
+  console.log('i think it gets here?', e.detail);
+  chrome.runtime.sendMessage(
+    extensionID,
+    {
+      event: WEB3_RPC_REQUEST,
+      payload: e.detail
+    },
+    {},
+    res => {
+      console.log(res);
+    }
+  );
+});
 // function(e) {
 //   const url = cxHelpers.extractRootDomain(e.detail.from);
 //   chrome.storage.sync.get(url, items => {
