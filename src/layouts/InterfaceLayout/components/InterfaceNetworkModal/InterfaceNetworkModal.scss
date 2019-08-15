@@ -1,4 +1,4 @@
-@import "~@/scss/GlobalVariables";
+@import '~@/scss/GlobalVariables';
 
 .modal-container {
   .network {
@@ -24,7 +24,7 @@
         &::before {
           border-radius: 50px;
           bottom: 8px;
-          content: "";
+          content: '';
           height: 6px;
           left: -12px;
           position: absolute;
