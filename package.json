@@ -27,7 +27,8 @@
     "update": "npm run update:packages && npm run update:lists",
     "update:mainlists": "node fetchLists/fetchMainLists.js",
     "clean": "sudo rm -rf node_modules/.cache; sudo rm -rf node_modules/websocket/.git; npm install;",
-    "preinstall": "find node_modules -name \".git\" -exec rm -rf {} \\; || true"
+    "preinstall": "find node_modules -name \".git\" -exec rm -rf {} \\; || true",
+    "postinstall": "echo 'module.exports = {};' > node_modules/web3-core-requestmanager/node_modules/web3-providers-ws/src/index.js"
   },
   "gitHooks": {
     "pre-commit": "npm run lint && npm run test"
@@ -133,7 +134,7 @@
     "web3": "1.2.1",
     "web3-core-helpers": "1.2.1",
     "web3-core-method": "1.2.1",
-    "web3-core-requestmanager": "1.2.0",
+    "web3-core-requestmanager": "1.2.1",
     "web3-utils": "1.2.1",
     "webpack": "^4.28.4",
     "worker-loader": "2.0.0",
