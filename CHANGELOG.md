@@ -1,3 +1,7 @@
+### Devop
+
+- Fix Buy Eth to Buy ETH [#1361] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1361)
+
 ### Release v5.1.1-hotfix.1
 
 ### Bug
