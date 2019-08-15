@@ -7,9 +7,11 @@
     </div>
     <div class="dapp-container">
       <!-- <about-your-dapp 
-        class="about-your-dapp w-50" 
+        class="about-your-dapp w-50 mb-5" 
       /> -->
-      <about-your-team class="about-your-dapp w-50" />
+      <about-your-team 
+        class="about-your-dapp w-50 mb-5" 
+      />
       <div class="dapp-container-right">
         <strength-of-info
           :lack-of-info="false"

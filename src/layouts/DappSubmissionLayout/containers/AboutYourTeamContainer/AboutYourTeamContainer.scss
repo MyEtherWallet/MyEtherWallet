@@ -1,1 +1,14 @@
 @import '~@/scss/GlobalVariables';
+
+.social-links-container {
+  width: 90%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.add-btn {
+  color: $mew-green;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+}
