@@ -23,11 +23,10 @@
           </div>
         </b-form-group>
         <b-form-group>
-          <label class="dapp-label">Tags</label>
-          <img
-            class="explanation-icon"
-            src="~@/assets/images/icons/explanation.png"
-          />
+          <label
+            class="dapp-label">Tags
+            <more-info></more-info>
+          </label>
           <div class="fake-container">
             <div ref="tagHolder" class="tag-holder">
               <tag-component
@@ -88,11 +87,10 @@
           </div>
         </b-form-group>
         <b-form-group>
-          <label class="dapp-label">Mock user flow</label>
-          <img
-            class="explanation-icon"
-            src="~@/assets/images/icons/explanation.png"
-          />
+          <label
+            class="dapp-label">Mock user flow
+            <more-info></more-info>
+          </label>
           <p class="dapp-text-info">
             Dimensions must be 1200px width by 630px height; JPEG or PDF file
             only; Image size no large than 5M
@@ -107,11 +105,10 @@
           </div>
         </b-form-group>
         <b-form-group>
-          <label class="dapp-label">Contract address</label>
-          <img
-            class="explanation-icon"
-            src="~@/assets/images/icons/explanation.png"
-          />
+          <label
+            class="dapp-label">Contract address
+            <more-info></more-info>
+          </label>
           <div class="dapp-input">
             <b-form-input id="contractAddress" type="text" required>
             </b-form-input>
@@ -119,11 +116,10 @@
           </div>
         </b-form-group>
         <b-form-group>
-          <label class="dapp-label">DApp icon</label>
-          <img
-            class="explanation-icon"
-            src="~@/assets/images/icons/explanation.png"
-          />
+          <label
+            class="dapp-label">DApp icon
+            <more-info></more-info>
+          </label>
           <div class="image-container">
             <label class="image-label" for="dappIcon">
               <i class="fa fa-cloud-upload"></i>
@@ -138,11 +134,10 @@
           </div>
         </b-form-group>
         <b-form-group>
-          <label class="dapp-label">Banner</label>
-          <img
-            class="explanation-icon"
-            src="~@/assets/images/icons/explanation.png"
-          />
+          <label
+            class="dapp-label">Banner
+            <more-info></more-info>
+          </label>
           <div class="image-container">
             <label class="image-label" for="bannerImage">
               <i class="fa fa-cloud-upload"></i>
@@ -167,11 +162,10 @@
           </b-form-input>
         </b-form-group>
         <b-form-group>
-          <label class="dapp-label">DApp contract audit</label>
-          <img
-            class="explanation-icon"
-            src="~@/assets/images/icons/explanation.png"
-          />
+          <label
+            class="dapp-label">DApp contract audit
+            <more-info></more-info>
+          </label>
           <label class="dapp-select-label">
             <b-form-select
               id="dappContract"
@@ -229,7 +223,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// @import 'AboutYourDappContainer.scss';
+@import 'AboutYourDappContainer.scss';
 @import '../AboutYourDappTeamContainer.scss';
 </style>
 
@@ -237,5 +231,6 @@ export default {
 .dapp-label {
   margin-bottom: 10px;
   font-size: 16px;
+  display: flex;
 }
 </style>
