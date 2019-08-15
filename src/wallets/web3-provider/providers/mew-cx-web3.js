@@ -45,6 +45,7 @@ class MewCxEthereum extends EventEmitter {
 
     this.httpProvider = {
       send: (method, params = []) => {
+        console.log(this._id);
         return new Promise((resolve, reject) => {
           if (!method || typeof method !== 'string') {
             return reject(new Error('Method is not a valid string.'));
@@ -62,16 +63,21 @@ class MewCxEthereum extends EventEmitter {
           };
           const cb = (e, res) => {
             if (e) return reject(e);
-            return resolve(res.result);
+            console.log(e, res);
+            return resolve(res);
           };
           this.middleware.run(req, cb).then(() => {
             this._requestManager.provider.send(req, cb);
           });
         });
       },
-      sendAsync: function(payload, cb) {
-        this.send(payload.method, payload.params)
-          .then(result => cb(null, result))
+      sendAsync: (payload, cb) => {
+        this.httpProvider
+          .send(payload.method, payload.params)
+          .then(result => {
+            result.id = payload.id;
+            cb(null, result);
+          })
           .catch(cb);
       },
       setMaxListeners: this.setMaxListeners,
@@ -81,7 +87,7 @@ class MewCxEthereum extends EventEmitter {
         this.removeListener();
         this.clearListeners();
       },
-      enable: () => {
+      enable: function() {
         return this.send('eth_requestAccounts');
       }
     };
