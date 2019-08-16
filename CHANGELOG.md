@@ -2,7 +2,7 @@
 
 ### Bug
 
-- Fix incorrect rate display [#]()
+- Fix incorrect rate display [#](<>)
 
 ### Release v5.1.1-hotfix.1
 
