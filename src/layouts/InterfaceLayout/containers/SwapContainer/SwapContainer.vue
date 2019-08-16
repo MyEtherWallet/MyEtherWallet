@@ -683,6 +683,7 @@ export default {
         this.simplexUpdate = false;
         return;
       }
+
       let fromValue, toValue, simplexProvider, simplexRateDetails;
       switch (input) {
         case 'to':
