@@ -2,6 +2,10 @@
 
 - Fix Buy Eth to Buy ETH [#1361] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1361)
 
+### Bug
+
+- Fix scroll up animation glitch on mobile [#1358](https://github.com/MyEtherWallet/MyEtherWallet/pull/1358)
+
 ### Release v5.1.1-hotfix.1
 
 ### Bug
