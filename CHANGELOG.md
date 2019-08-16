@@ -2,7 +2,7 @@
 
 ### Bug
 
-- Fix incorrect rate display [#](<>)
+- Fix incorrect rate display [#1368](https://github.com/MyEtherWallet/MyEtherWallet/pull/1368)
 
 ### Release v5.1.1-hotfix.1
 
