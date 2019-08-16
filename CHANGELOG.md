@@ -1,3 +1,7 @@
+### Devop
+
+- Add "Please wait while we generate your keystore file..." to keystorebutton. [#1363](https://github.com/MyEtherWallet/MyEtherWallet/pull/1363)
+
 ### Bug
 
 - Fix scroll up animation glitch on mobile [#1358](https://github.com/MyEtherWallet/MyEtherWallet/pull/1358)
@@ -16,7 +20,6 @@
 - Add Changelly to Dashboard -> Swap description [#1356](https://github.com/MyEtherWallet/MyEtherWallet/pull/1356)
 
 ### Release v5.1.1
-
 
 ### Feature
 
