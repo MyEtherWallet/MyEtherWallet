@@ -8,8 +8,7 @@ import {
   ChangellyCurrencies,
   statuses,
   TIME_SWAP_VALID,
-  PROVIDER_NAME,
-  FEE_RATE
+  PROVIDER_NAME
 } from './config';
 import changellyCalls from './changelly-calls';
 import changellyApi from './changelly-api';
@@ -77,12 +76,6 @@ export default class Changelly {
     return false;
   }
 
-  calculateTrueRate(topRate) {
-    return new BigNumber(topRate)
-      .minus(new BigNumber(topRate).times(new BigNumber(FEE_RATE)))
-      .toNumber();
-  }
-
   fixedEnabled(currency) {
     return (
       typeof this.currencies[currency].fixRateEnabled === 'boolean' &&
@@ -129,30 +122,14 @@ export default class Changelly {
     };
   }
 
-  async getMarketRate(fromCurrency, toCurrency, fromValue) {
-    if (
-      this.rateDetails[`${fromCurrency}/${toCurrency}`] &&
-      this.getRateForUnit
-    ) {
-      return {
-        fromCurrency,
-        toCurrency,
-        provider: this.name,
-        minValue: this.rateDetails[`${fromCurrency}/${toCurrency}`].minAmount,
-        rate: this.calculateTrueRate(
-          this.rateDetails[`${fromCurrency}/${toCurrency}`].rate
-        )
-      };
-    }
+  calculateRate(inVal, outVal) {
+    return new BigNumber(outVal).div(inVal);
+  }
 
+  async getMarketRate(fromCurrency, toCurrency, fromValue) {
     const changellyDetails = await Promise.all([
       changellyCalls.getMin(fromCurrency, toCurrency, fromValue, this.network),
-      changellyCalls.getRate(
-        fromCurrency,
-        toCurrency,
-        this.getRateForUnit ? 1 : fromValue,
-        this.network
-      )
+      changellyCalls.getRate(fromCurrency, toCurrency, fromValue, this.network)
     ]);
 
     const minAmount = new BigNumber(changellyDetails[0])
@@ -160,9 +137,13 @@ export default class Changelly {
       .plus(new BigNumber(changellyDetails[0]))
       .toFixed();
 
+    const estValueResponse = changellyDetails[1][0];
+
+    const rate = this.calculateRate(fromValue, estValueResponse.result);
+
     this.rateDetails[`${fromCurrency}/${toCurrency}`] = {
       minAmount: minAmount,
-      rate: changellyDetails[1]
+      rate: rate
     };
 
     return {
@@ -170,7 +151,7 @@ export default class Changelly {
       toCurrency,
       provider: this.name,
       minValue: minAmount,
-      rate: this.calculateTrueRate(changellyDetails[1])
+      rate: estValueResponse.rate
     };
   }
 

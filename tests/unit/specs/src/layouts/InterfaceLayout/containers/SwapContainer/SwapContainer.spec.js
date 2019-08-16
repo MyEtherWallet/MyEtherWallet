@@ -81,36 +81,23 @@ describe('SwapContainer.vue', () => {
     }
   });
 
-  // describe('SwapContainer.vue Methods', () => {
-  //   let localVue, i18n, wrapper, store;
-
-  //   beforeAll(() => {
-  //     const baseSetup = Tooling.createLocalVueInstance();
-  //     localVue = baseSetup.localVue;
-  //     i18n = baseSetup.i18n;
-  //     store = baseSetup.store;
-  //   });
-  // });
-
-  //   beforeEach(() => {
-  //     wrapper = shallowMount(SwapContainer, {
-  //       localVue,
-  //       i18n,
-  //       store,
-  //       attachToDocument: true,
-  //       stubs: {
-  //         'currency-picker': CurrencyPicker,
-  //         'swap-confirmation-modal': SwapConfirmationModal,
-  //         'router-link': RouterLinkStub,
-  //         'b-modal': BModalStub
-  //       }
-  //     });
-  //   });
-
-  //   xit('[Failing] should open swapConfirmationModal when click button', () => {
-  //     const btnSubmit = wrapper.find('.submit-button');
-  //     btnSubmit.trigger('click');
-  //     expect(showModal.called).toBe(true);
-  //   });
-  // });
+  describe('SwapContainer.vue Methods', () => {
+    xit('should get rates', async done => {
+      const interval = setInterval(async () => {
+        console.log(wrapper.vm.swap.haveProviderRates); // todo remove dev item
+        if (wrapper.vm.swap.haveProviderRates) {
+          clearInterval(interval)
+          const reault = await wrapper.vm.updateRateEstimate(
+            'ETH',
+            'BTC',
+            1,
+            'to'
+          );
+          console.log(reault); // todo remove dev item
+          console.log(wrapper.vm.providerData); // todo remove dev item
+          done();
+        }
+      }, 1000);
+    }, 10000);
+  });
 });

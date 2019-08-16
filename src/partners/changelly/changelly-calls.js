@@ -32,11 +32,13 @@ const getRate = async (fromCurrency, toCurrency, fromValue, network) => {
     if (changellyMethods[network]) {
       const results = await post(
         buildPath(),
-        utils.buildPayload(changellyMethods[network].rate, {
-          from: fromCurrency,
-          to: toCurrency,
-          amount: fromValue
-        })
+        utils.buildPayload(changellyMethods[network].rate, [
+          {
+            from: fromCurrency,
+            to: toCurrency,
+            amount: fromValue
+          }
+        ])
       );
 
       if (results.error) {
