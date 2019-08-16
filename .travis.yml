@@ -25,11 +25,11 @@ branches:
   except:
     - gh-pages
 stages:
-  - name: add to codecov
-    if: type != pull_request and tag IS blank
   - name: run on pull requests
     if: type = pull_request and fork = true
   - name: add to mewbuilds
+    if: type != pull_request and tag IS blank
+  - name: add to codecov
     if: type != pull_request and tag IS blank
   - name: add to mewbuilds develop
     if: branch = develop and type != pull_request

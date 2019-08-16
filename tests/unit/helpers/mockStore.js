@@ -1,7 +1,6 @@
 import nodeList from '@/networks';
 import Web3 from 'web3';
-const network = nodeList['ETH'][3];
-
+const network = nodeList['ETH'][0];
 const newWeb3 = new Web3();
 const state = {
   account: {
