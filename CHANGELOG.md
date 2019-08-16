@@ -1,3 +1,7 @@
+### Devop
+
+- Add warning message to HTTP Basic Access Authentication [#1364](https://github.com/MyEtherWallet/MyEtherWallet/pull/1364)
+
 ### Release v5.1.1-hotfix.1
 
 ### Bug
@@ -7,7 +11,6 @@
 
 ### Devop
 
-- Add warning message to HTTP Basic Access Authentication [#1364](https://github.com/MyEtherWallet/MyEtherWallet/pull/1364)
 - Remove Safesend Dapp [#1346](https://github.com/MyEtherWallet/MyEtherWallet/pull/1346)
 - Add hover effect to Dashboard -> Swap buttons [#1353](https://github.com/MyEtherWallet/MyEtherWallet/pull/1353)
 - Add Changelly to Dashboard -> Swap description [#1356](https://github.com/MyEtherWallet/MyEtherWallet/pull/1356)
