@@ -86,7 +86,7 @@ describe('SwapContainer.vue', () => {
       const interval = setInterval(async () => {
         console.log(wrapper.vm.swap.haveProviderRates); // todo remove dev item
         if (wrapper.vm.swap.haveProviderRates) {
-          clearInterval(interval)
+          clearInterval(interval);
           const reault = await wrapper.vm.updateRateEstimate(
             'ETH',
             'BTC',

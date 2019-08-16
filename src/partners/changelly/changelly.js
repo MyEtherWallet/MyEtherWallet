@@ -27,7 +27,6 @@ export default class Changelly {
     this.currencyDetails = props.currencies || ChangellyCurrencies;
     this.useFixed = true;
     this.tokenDetails = {};
-    this.rateDetails = {};
     this.getSupportedCurrencies(this.network);
   }
 
@@ -138,13 +137,6 @@ export default class Changelly {
       .toFixed();
 
     const estValueResponse = changellyDetails[1][0];
-
-    const rate = this.calculateRate(fromValue, estValueResponse.result);
-
-    this.rateDetails[`${fromCurrency}/${toCurrency}`] = {
-      minAmount: minAmount,
-      rate: rate
-    };
 
     return {
       fromCurrency,
