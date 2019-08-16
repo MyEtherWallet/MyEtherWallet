@@ -1,5 +1,5 @@
 module.exports = {
-  collectCoverage: false, //process.env.NODE_ENV === 'production' ? true : false,
+  collectCoverage: true, //process.env.NODE_ENV === 'production' ? true : false,
   globals: {
     WITH_NETWORK: false,
     VERSION: 'test',
