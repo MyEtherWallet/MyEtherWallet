@@ -83,21 +83,22 @@ describe('SwapContainer.vue', () => {
 
   describe('SwapContainer.vue Methods', () => {
     xit('should get rates', async done => {
-      const interval = setInterval(async () => {
-        console.log(wrapper.vm.swap.haveProviderRates); // todo remove dev item
-        if (wrapper.vm.swap.haveProviderRates) {
-          clearInterval(interval);
-          const reault = await wrapper.vm.updateRateEstimate(
-            'ETH',
-            'BTC',
-            1,
-            'to'
-          );
-          console.log(reault); // todo remove dev item
-          console.log(wrapper.vm.providerData); // todo remove dev item
-          done();
-        }
-      }, 1000);
+      done();
+      // const interval = setInterval(async () => {
+      //   console.log(wrapper.vm.swap.haveProviderRates); // todo remove dev item
+      //   if (wrapper.vm.swap.haveProviderRates) {
+      //     clearInterval(interval);
+      //     const reault = await wrapper.vm.updateRateEstimate(
+      //       'ETH',
+      //       'BTC',
+      //       1,
+      //       'to'
+      //     );
+      //     console.log(reault); // todo remove dev item
+      //     console.log(wrapper.vm.providerData); // todo remove dev item
+      //     done();
+      //   }
+      // }, 1000);
     }, 10000);
   });
 });
