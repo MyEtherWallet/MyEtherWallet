@@ -29,9 +29,6 @@
         @sliding-end="onSlideEnd"
       >
         <b-carousel-slide>
-          <buy-eth-ad @pauseAds="pauseAds"></buy-eth-ad>
-        </b-carousel-slide>
-        <b-carousel-slide>
           <mew-connect-ad />
         </b-carousel-slide>
       </b-carousel>
