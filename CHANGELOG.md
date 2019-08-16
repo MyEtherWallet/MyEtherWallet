@@ -1,3 +1,7 @@
+### Devop
+
+- Update qrcode modal to be mobile friendly [#1366](https://github.com/MyEtherWallet/MyEtherWallet/pull/1366)
+
 ### Release v5.1.1-hotfix.1
 
 ### Bug
@@ -7,7 +11,6 @@
 
 ### Devop
 
-- Update qrcode modal to be mobile friendly [#1366](https://github.com/MyEtherWallet/MyEtherWallet/pull/1366)
 - Remove Safesend Dapp [#1346](https://github.com/MyEtherWallet/MyEtherWallet/pull/1346)
 - Add hover effect to Dashboard -> Swap buttons [#1353](https://github.com/MyEtherWallet/MyEtherWallet/pull/1353)
 - Add Changelly to Dashboard -> Swap description [#1356](https://github.com/MyEtherWallet/MyEtherWallet/pull/1356)
