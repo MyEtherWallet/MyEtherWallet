@@ -1,12 +1,12 @@
-@import '~@/scss/GlobalVariables';
+@import "~@/scss/GlobalVariables";
 
 .tokens-modal-body {
   display: flex;
   flex-direction: column;
   height: auto;
   justify-content: space-between;
-  min-height: 325px;
-  padding: 15px 30px;
+  //min-height: 325px;
+  padding: 30px 30px;
 
   input {
     margin: 5px 0;
@@ -14,8 +14,8 @@
   }
 
   button {
-    margin-bottom: 15px;
-    min-width: 300px;
+    max-width: 300px;
+    width: 100%;
   }
 
   div {
@@ -29,4 +29,8 @@
 
 .error-message {
   color: $red-1;
+}
+
+.button-block {
+  margin-top: 30px;
 }
