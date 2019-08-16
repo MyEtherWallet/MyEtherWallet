@@ -1,5 +1,6 @@
 ### Devop
 
+- Update UI custom token UI [1367](https://github.com/MyEtherWallet/MyEtherWallet/pull/1367)
 - Fix Buy Eth to Buy ETH [#1361] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1361)
 - Add "Please wait while we generate your keystore file..." to keystorebutton. [#1363](https://github.com/MyEtherWallet/MyEtherWallet/pull/1363)
 
