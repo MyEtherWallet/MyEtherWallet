@@ -32,7 +32,7 @@ describe('ManageENSContainer.vue', () => {
       mocks: {
         $router: mockRouter
       },
-      propsData: { resolverAddress}
+      propsData: { resolverAddress }
     });
   });
 
