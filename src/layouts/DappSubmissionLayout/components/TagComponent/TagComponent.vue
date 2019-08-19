@@ -1,6 +1,6 @@
 <template>
-  <div class="tag-container">
-    {{ name }} <span @click="deleteFunc(idx)"> <i class="fa fa-times"/></span>
+  <div ref="tagContainer" class="tag-container">
+    {{ name }} <span @click="deleteFunc(idx)"><i class="fa fa-times"/></span>
   </div>
 </template>
 
@@ -19,7 +19,7 @@ export default {
       type: Number,
       default: 0
     }
-  }
+  },
 };
 </script>
 

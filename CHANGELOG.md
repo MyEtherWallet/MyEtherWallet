@@ -1,6 +1,18 @@
+### Devop
+
+- Update qrcode modal to be mobile friendly [#1366](https://github.com/MyEtherWallet/MyEtherWallet/pull/1366)
+- Update UI custom token UI [1367](https://github.com/MyEtherWallet/MyEtherWallet/pull/1367)
+- Fix Buy Eth to Buy ETH [#1361] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1361)
+- Add "Please wait while we generate your keystore file..." to keystorebutton. [#1363](https://github.com/MyEtherWallet/MyEtherWallet/pull/1363)
+
+### Bug
+
+- Fix scroll up animation glitch on mobile [#1358](https://github.com/MyEtherWallet/MyEtherWallet/pull/1358)
+
 ### Release v5.1.1-hotfix.1
 
 ### Bug
+
 - Fix issues related to address switching [#1355](https://github.com/MyEtherWallet/MyEtherWallet/pull/1355)
 - Fix missing buttons in maker dapp, and some general housekeeping [#1352](https://github.com/MyEtherWallet/MyEtherWallet/pull/1352)
 
@@ -11,7 +23,6 @@
 - Add Changelly to Dashboard -> Swap description [#1356](https://github.com/MyEtherWallet/MyEtherWallet/pull/1356)
 
 ### Release v5.1.1
-
 
 ### Feature
 

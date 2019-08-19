@@ -1,17 +1,29 @@
 <template>
   <div>
     <div class="dapp-header">
-      <submit-component :btn-text="'Save & Continue'" />
+      <submit-component :btn-text="'Save & Continue'"/>
       <banner-component :banner-text="'Tell us about your DApp'" />
       <b-progress :value="25" class="dapp-progress-bar"></b-progress>
     </div>
     <div class="dapp-container">
-      <about-your-dapp 
+      <!-- <about-your-dapp 
+        class="about-your-dapp w-50 mb-5"
+        :update-name="updateName"
+        :update-category="updateCategory"
+        :update-tags="updateTags"
+        :update-description="updateDescription"
+        :update-us-market="updateUsMarket"
+        :update-dapp-status="updateDappStatus"
+        :update-mock-flow="updateMockFlow"
+        :update-contract-address="updateContractAddress"
+        :update-dapp-icon="updateDappIcon"
+        :update-banner="updateBanner"
+        :update-dapp-web="updateDappWeb"
+        :update-contract-audit="updateContractAudit"
+      /> -->
+      <about-your-team 
         class="about-your-dapp w-50 mb-5" 
       />
-      <!-- <about-your-team 
-        class="about-your-dapp w-50 mb-5" 
-      /> -->
       <div class="dapp-container-right">
         <strength-of-info
           :lack-of-info="false"
@@ -43,10 +55,50 @@ export default {
   },
   data() {
     return {
-      data: false
+      form: {
+        tags: []
+      }
     };
   },
-  methods: {}
+  methods: {
+    updateName(e) {
+      this.form.dappName = e;
+    },
+    updateCategory(e) {
+      this.form.category = e;
+    },
+    updateTags(e) {
+      this.form.tags.push(e);
+    },
+    updateDescription(e) {
+      this.form.description = e;
+    },
+    updateUsMarket(e) {
+      this.form.usMarket = e;
+    },
+    updateDappStatus(e) {
+      this.form.dappStatus = e;
+    },
+    updateMockFlow(e) {
+      console.error('category', e)
+      this.form.mockFlow = e;
+    },
+    updateContractAddress(e) {
+      this.form.contractAddress = e;
+    },
+    updateDappIcon(e) {
+      this.form.dappIcon = e;
+    },
+    updateBanner(e) {
+      this.form.banner = e;
+    },
+    updateDappWeb(e) {
+      this.form.dappWeb = e;
+    },
+    updateContractAudit(e) {
+      this.form.contractAudit = e;
+    },
+  }
 };
 </script>
 

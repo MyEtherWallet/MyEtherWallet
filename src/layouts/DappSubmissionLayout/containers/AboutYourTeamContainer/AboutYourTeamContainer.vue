@@ -1,5 +1,5 @@
 <template>
-  <div class="about-team-container mt-5">
+  <div class="about-container mt-5">
     <b-form>
       <b-form-group>
         <label 
@@ -7,7 +7,8 @@
           <more-info></more-info>
         </label>
         <div class="dapp-input">
-          <b-form-input 
+          <b-form-input
+            v-model="authors"
             id="authors"
             type="text"
             placeholder="e.g. James Lee; Emilie Roy; Edward McCormick"
@@ -23,6 +24,7 @@
         </label>
         <div class="dapp-input">
           <b-form-input 
+            v-model="fullName"
             id="fullName"
             type="text"
             required>
@@ -37,6 +39,7 @@
         </label>
         <div class="dapp-input">
           <b-form-input 
+            v-model="emailAddress"
             id="emailAddress"
             type="text"
             required>
@@ -56,7 +59,8 @@
           <more-info></more-info>
         </label>
         <div class="dapp-input">
-          <b-form-input 
+          <b-form-input
+            v-model="companyWebsite"
             id="companyWebsite"
             type="text"
             placeholder="URL link"
@@ -71,6 +75,7 @@
         </label>
         <div class="dapp-input">
           <b-form-input 
+            v-model="softwareLicense"
             id="softwareLicense"
             type="text"
             required>
@@ -81,6 +86,7 @@
         <label class="dapp-label">Additional notes</label>
         <div class="dapp-input">
           <b-form-textarea
+            v-model="additionalNotes"
             size="lg"
             rows="5"
             placeholder="300 characters"
@@ -97,6 +103,16 @@ import MoreInfoComponent from '../../components/MoreInfoComponent';
 export default {
   components: {
     'more-info': MoreInfoComponent
+  },
+  data() {
+    return {
+      authors: '',
+      fullName: '',
+      emailAddress: '',
+      companyWebsite: '',
+      softwareLicense: '',
+      additionalNotes: ''
+    }
   }
 };
 </script>
