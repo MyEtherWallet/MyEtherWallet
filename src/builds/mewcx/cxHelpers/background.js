@@ -1,4 +1,4 @@
-import cxHelpers from './cxHelpers';
+import helpers from './helpers';
 import MiddleWare from '@/wallets/web3-provider/middleware';
 import {
   mewCxFetchAccounts,
@@ -63,7 +63,7 @@ function onActivatedCb(info) {
       Object.keys(tab).length > 0 &&
       tab.url !== undefined
     ) {
-      urls[info.tabId] = cxHelpers.extractRootDomain(tab.url);
+      urls[info.tabId] = helpers.extractRootDomain(tab.url);
       querycB(tab);
     }
   });
@@ -72,15 +72,15 @@ function onActivatedCb(info) {
 
 function querycB(tab) {
   const SEARCH_STRING = ['myetherwallet'];
-  const ealBlacklisted = Object.assign({}, cxHelpers.blackListDomains['eal']),
-    iosiroBlacklisted = Object.assign({}, cxHelpers.blackListDomains['iosiro']),
+  const ealBlacklisted = Object.assign({}, helpers.blackListDomains['eal']),
+    iosiroBlacklisted = Object.assign({}, helpers.blackListDomains['iosiro']),
     phishfortBlacklisted = Object.assign(
       {},
-      cxHelpers.blackListDomains['phishfort']
+      helpers.blackListDomains['phishfort']
     ),
-    mewBlacklisted = Object.assign({}, cxHelpers.blackListDomains['mew']),
-    ealWhitelisted = Object.assign({}, cxHelpers.whiteListDomains['eal']),
-    mewWhitelisted = Object.assign({}, cxHelpers.whiteListDomains['mew']);
+    mewBlacklisted = Object.assign({}, helpers.blackListDomains['mew']),
+    ealWhitelisted = Object.assign({}, helpers.whiteListDomains['eal']),
+    mewWhitelisted = Object.assign({}, helpers.whiteListDomains['mew']);
 
   let allBlacklistedDomains = [];
   let allWhitelistedDomains = [];
@@ -92,16 +92,16 @@ function querycB(tab) {
 
   let urlRedirect;
   const foundWhitelist = allWhitelistedDomains.find(dom => {
-    return dom === cxHelpers.extractRootDomain(tab.url);
+    return dom === helpers.extractRootDomain(tab.url);
   });
   const foundBlacklist = allBlacklistedDomains.find(dom => {
-    return dom === cxHelpers.extractRootDomain(tab.url);
+    return dom === helpers.extractRootDomain(tab.url);
   });
 
   if (foundWhitelist === undefined) {
     if (
       foundBlacklist !== undefined ||
-      cxHelpers.checkUrlSimilarity(tab.url, SEARCH_STRING)
+      helpers.checkUrlSimilarity(tab.url, SEARCH_STRING)
     ) {
       urlRedirect = encodeURI(
         `https://www.myetherwallet.com/phishing.html?phishing-address=${tab.url}`
