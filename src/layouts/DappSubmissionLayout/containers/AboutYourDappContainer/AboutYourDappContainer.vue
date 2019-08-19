@@ -8,8 +8,8 @@
             <b-form-input
               id="dappName"
               type="text"
-              @update="updateName"
-              v-model="dappName">
+              v-model="dappName"
+              @update="updateName">
             </b-form-input>
             <span>*</span>
           </div>
@@ -21,8 +21,8 @@
               <b-form-select
                 id="dappCategory"
                 :options="dappCategories"
-                @change="updateCategory"
                 v-model="dappCategory"
+                @change="updateCategory"
               ></b-form-select>
             </label>
             <span>*</span>
@@ -31,14 +31,17 @@
         <b-form-group class="input-tags-group">
           <label
             class="dapp-label">Tags
-            <more-info></more-info>
+            <popover
+              :popcontent="$t('dappsSubmission.tags')"
+              class="dapp-popover"
+            ></popover>
           </label>
           <div class="input-tags-container">
             <div class="tag-wrapper">
               <div ref="tagHolder" class="tag-holder">
                 <tag-component
-                  ref="tagContainer"
                   v-for="(tag, idx) in displayTags"
+                  ref="tagContainer"
                   :name="tag"
                   :delete-func="deleteTag"
                   :idx="idx"
@@ -47,13 +50,13 @@
               </div>
               <div class="dapp-input">
                 <input
-                  class="dapp-tags-input"
                   id="dappTags"
-                  @keyup="onKeyDown"
+                  class="dapp-tags-input"
                   ref="dappTagsInput"
                   type="text"
-                  @change="updateTags(tagInput)"
-                  v-model="tagInput"/>
+                  v-model="tagInput"
+                  @keyup="onKeyDown"
+                  @change="updateTags(tagInput)"/>
               </div>
             </div>
             <span>*</span>
@@ -91,8 +94,8 @@
               <b-form-select
                 id="dappUsMarket"
                 :options="dappUsMarketOptions"
-                @change="updateUsMarket"
                 v-model="dappUsMarket"
+                @change="updateUsMarket"
               ></b-form-select>
             </label>
             <span>*</span>
@@ -105,8 +108,8 @@
               <b-form-select
                 id="dappStatus"
                 :options="dappStatusOptions"
-                @change="updateDappStatus"
                 v-model="dappStatus"
+                @change="updateDappStatus"
               ></b-form-select>
             </label>
             <span>*</span>
@@ -115,7 +118,10 @@
         <b-form-group>
           <label
             class="dapp-label">Mock user flow
-            <more-info></more-info>
+            <popover
+              class="dapp-popover"
+              :popcontent="$t('dappsSubmission.mockUserFlow')"
+            ></popover>
           </label>
           <p class="dapp-text-info mb-3">
             Dimensions must be 1200px width by 630px height; JPEG or PDF file
@@ -128,14 +134,17 @@
               </div>
               <button class="upload-btn">Upload</button>
             </label>
-            <input @change="onFileChange" id="customUpload" type="file" />
+            <input @change="onMockFileChange" id="customUpload" type="file" />
             <span>*</span>
           </div>
         </b-form-group>
         <b-form-group>
           <label
             class="dapp-label">Contract address
-            <more-info></more-info>
+            <popover
+              class="dapp-popover"
+              :popcontent="$t('dappsSubmission.contractAddress')"
+            ></popover>
           </label>
           <div class="dapp-input">
             <b-form-input
@@ -151,40 +160,59 @@
         <b-form-group>
           <label
             class="dapp-label">DApp icon
-            <more-info></more-info>
+            <popover
+              class="dapp-popover"
+              :popcontent="$t('dappsSubmission.dappIcon')"
+            ></popover>
           </label>
           <div class="image-container">
             <label class="image-label" for="dappIcon">
-              <i class="fa fa-cloud-upload"></i>
-              <h4 class="image-text">
-                Drop your icon here, or select a file from your computer.
-              </h4>
-              <p class="image-requirements">
-                JPEG or PNG, at least 192px * 192px
-              </p>
+              <div class="image-placeholder" v-if="!dappIconFile">
+                <i class="fa fa-cloud-upload"></i>
+                <h4 class="image-text">
+                  Drop your icon here, or select a file from your computer.
+                </h4>
+                <p class="image-requirements">
+                  JPEG or PNG, at least 192px * 192px
+                </p>
+              </div>
+              <div v-if="dappIconFile">{{dappIconFile}}</div>
+              <b-form-file
+                drop-placeholder="Drop your icon here"
+                id="dappIcon"
+                type="file"
+                @change="onDappIconChange">
+              </b-form-file>
             </label>
-            <input
-              id="dappIcon"
-              type="file"
-              @update="updateDappIcon" />
           </div>
         </b-form-group>
         <b-form-group>
           <label
             class="dapp-label">Banner
-            <more-info></more-info>
+            <popover
+              class="dapp-popover"
+              :popcontent="$t('dappsSubmission.banner')"
+            ></popover>
           </label>
           <div class="image-container">
             <label class="image-label" for="bannerImage">
-              <i class="fa fa-cloud-upload"></i>
-              <h4 class="image-text">
-                Drop your icon here, or select a file from your computer.
-              </h4>
-              <p class="image-requirements">
-                JPEG or PNG, at least 1200px * 206px
-              </p>
+              <div class="image-placeholder" v-if="!bannerFile">
+                <i class="fa fa-cloud-upload"></i>
+                <h4 class="image-text">
+                  Drop your image here, or select a file from your computer.
+                </h4>
+                <p class="image-requirements">
+                  JPEG or PNG, at least 1200px * 206px
+                </p>
+              </div>
+              <div v-if="bannerFile">{{bannerFile}}</div>
+              <b-form-file
+                drop-placeholder="Drop your banner here"
+                id="bannerImage"
+                type="file"
+                @change="onBannerChange">
+              </b-form-file>
             </label>
-            <input id="bannerImage" type="file" />
           </div>
         </b-form-group>
         <b-form-group>
@@ -201,7 +229,10 @@
         <b-form-group>
           <label
             class="dapp-label">DApp contract audit
-            <more-info></more-info>
+            <popover
+              class="dapp-popover"
+              :popcontent="$t('dappsSubmission.contractAudit')"
+            ></popover>
           </label>
           <label class="dapp-select-label">
             <b-form-select
@@ -219,7 +250,7 @@
 
 <script>
 import TagComponentVue from '../../components/TagComponent/TagComponent.vue';
-import MoreInfoComponent from '../../components/MoreInfoComponent';
+import PopOver from '@/components/PopOver';
 
 export default {
   props: {
@@ -278,7 +309,7 @@ export default {
   },
   components: {
     'tag-component': TagComponentVue,
-    'more-info': MoreInfoComponent,
+    'popover': PopOver
   },
   data() {
     return {
@@ -335,6 +366,8 @@ export default {
       dappName: '',
       contractAddress: '',
       dappWebsite: '',
+      dappIconFile: '',
+      bannerFile: ''
     };
   },
   methods: {
@@ -362,10 +395,21 @@ export default {
           ? `${this.$refs.tagHolder.offsetWidth + 8}px`
           : '10.5px';
     },
-    onFileChange(e) {
+    onMockFileChange(e) {
       const file = e.target.files[0];
       this.mockUserFlowFile = file.name;
-      console.error('e', file)
+      this.updateMockFlow(file);
+    },
+    onDappIconChange(e) {
+      console.error('e', e)
+      const file = e.target.files[0];
+      this.dappIconFile = file.name;
+      this.updateDappIcon(file);
+    },
+    onBannerChange(e) {
+      const file = e.target.files[0];
+      this.bannerFile = file.name;
+      this.updateBanner(file);
     }
   }
 };
@@ -379,8 +423,16 @@ export default {
 
 <style lang="scss">
 .dapp-label {
-  margin-bottom: 10px;
-  font-size: 16px;
+  align-items: center;
   display: flex;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+.custom-file-input {
+  height: 100%;
+}
+.custom-file-label {
+  height: 100%;
+  opacity: 0;
 }
 </style>

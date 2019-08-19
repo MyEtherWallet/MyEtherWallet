@@ -4,15 +4,19 @@
       <b-form-group>
         <label 
           class="dapp-label">Authors
-          <more-info></more-info>
+          <popover
+            class="dapp-popover"
+            :popcontent="$t('dappsSubmission.authors')"
+          ></popover>
         </label>
         <div class="dapp-input">
           <b-form-input
-            v-model="authors"
             id="authors"
-            type="text"
             placeholder="e.g. James Lee; Emilie Roy; Edward McCormick"
-            required>
+            required
+            type="text"
+            @update="updateAuthors"
+            v-model="authors">
           </b-form-input>
           <span>*</span>
         </div>
@@ -20,14 +24,18 @@
       <b-form-group>
         <label
           class="dapp-label">My full name
-          <more-info></more-info>
+          <popover
+            class="dapp-popover"
+            :popcontent="$t('dappsSubmission.fullName')"
+          ></popover>
         </label>
         <div class="dapp-input">
           <b-form-input 
             v-model="fullName"
             id="fullName"
             type="text"
-            required>
+            required
+            @update="updateFullName">
           </b-form-input>
           <span>*</span>
         </div>
@@ -35,14 +43,18 @@
       <b-form-group>
         <label
           class="dapp-label">My email
-          <more-info></more-info>
+          <popover
+            class="dapp-popover"
+            :popcontent="$t('dappsSubmission.email')"
+          ></popover>
         </label>
         <div class="dapp-input">
           <b-form-input 
             v-model="emailAddress"
             id="emailAddress"
             type="text"
-            required>
+            required
+            @update="updateEmail">
           </b-form-input>
           <span>*</span>
         </div>
@@ -50,13 +62,19 @@
       <b-form-group>
         <div class="social-links-container">
           <label class="dapp-label"> Company social links</label>
-          <button class="add-btn pull-right">Add +</button>
+          <button
+            @click="showSocialAcctModal"
+            class="add-btn pull-right">Add +
+          </button>
         </div>
       </b-form-group>
       <b-form-group>
         <label
           class="dapp-label">Company website
-          <more-info></more-info>
+          <popover
+            class="dapp-popover"
+            :popcontent="$t('dappsSubmission.companyWebsite')"
+          ></popover>
         </label>
         <div class="dapp-input">
           <b-form-input
@@ -64,21 +82,27 @@
             id="companyWebsite"
             type="text"
             placeholder="URL link"
-            required>
+            required
+            @update="updateCompanyWebsite">
           </b-form-input>
         </div>
       </b-form-group>
       <b-form-group>
         <label 
           class="dapp-label">Software license 
-          <more-info></more-info>
+          <popover
+            class="dapp-popover"
+            :popcontent="$t('dappsSubmission.softwareLicense')"
+          ></popover>
         </label>
         <div class="dapp-input">
           <b-form-input 
             v-model="softwareLicense"
             id="softwareLicense"
             type="text"
-            required>
+            placeholder="(e.g. MIT, GPL, Proprietary)"
+            required
+            @update="updateLicense">
           </b-form-input>
         </div>
       </b-form-group>
@@ -90,6 +114,7 @@
             size="lg"
             rows="5"
             placeholder="300 characters"
+            @update="updateAdditionalNotes"
           ></b-form-textarea>
         </div>
       </b-form-group>
@@ -98,11 +123,41 @@
 </template>
 
 <script>
-import MoreInfoComponent from '../../components/MoreInfoComponent';
+import PopOver from '@/components/PopOver';
 
 export default {
+  props: {
+    updateAuthors: {
+      type: Function,
+      default: () => {}    
+    },
+    updateFullName: {
+      type: Function,
+      default: () => {}
+    },
+    updateEmail: {
+      type: Function,
+      default: () => {}
+    },
+    updateSocialLinks: {
+      type: Function,
+      default: () => {}
+    },
+    updateCompanyWebsite: {
+      type: Function,
+      default: () => {}
+    },
+    updateLicense: {
+      type: Function,
+      default: () => {}
+    },
+    updateAdditionalNotes: {
+      type: Function,
+      default: () => {}
+    }
+  },
   components: {
-    'more-info': MoreInfoComponent
+    'popover': PopOver
   },
   data() {
     return {
@@ -124,8 +179,9 @@ export default {
 
 <style lang="scss">
 .dapp-label {
-  margin-bottom: 10px;
-  font-size: 16px;
+  align-items: center;
   display: flex;
+  font-size: 16px;
+  margin-bottom: 10px;
 }
 </style>
