@@ -13,7 +13,7 @@ if (
 } else if (!window.hasOwnProperty('web3')) {
   console.info('MEWCX Web3 provider injected');
   window.web3 = {};
-  window.web3.currentProvider = ethereumProvider;
+  window.web3.currentProvider = ethereum;
   window.web3.currentProvider.isMew = true;
   window.Web3 = Web3; // unsure if this is needed
   window.ethereum = ethereum;

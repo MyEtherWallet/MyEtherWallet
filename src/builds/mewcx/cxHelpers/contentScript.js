@@ -74,7 +74,7 @@ chrome.runtime.onMessage.addListener(function(request) {
       window.dispatchEvent(
         new CustomEvent(WEB3_RECEIVE_TX_HASH.replace('{{id}}', extensionID), {
           detail: {
-            hash: request.hash
+            payload: request.payload
           }
         })
       );

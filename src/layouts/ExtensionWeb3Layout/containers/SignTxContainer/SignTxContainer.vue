@@ -211,6 +211,7 @@ export default {
         e,
         hash
       ) {
+        console.log(e, hash);
         if (e) {
           window.chrome.tabs.query(
             { url: `*://*.${Misc.getService(_self.linkQuery.url)}/*` },
@@ -228,7 +229,7 @@ export default {
           function(tab) {
             const obj = {
               event: MEW_TX_HASH,
-              hash: hash
+              payload: hash
             };
             window.chrome.tabs.sendMessage(tab[0].id, obj);
             window.close();
