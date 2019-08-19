@@ -30,7 +30,8 @@ chrome.runtime.onMessage.addListener(function(request) {
   }
   const obj = {
     event: request.event,
-    payload: request.payload
+    payload: request.payload,
+    id: extensionID
   };
   const middleware = new MiddleWare();
   middleware.use(csErrors);
@@ -135,9 +136,6 @@ events[WEB3_SEND_SIGN_MSG] = function(e) {
 };
 
 Object.keys(events).forEach(item => {
-  window.addEventListener(
-    item.replace('{{id}}', extensionID),
-    events[item],
-    false
-  );
+  console.log(item.replace('{{id}}', extensionID), events[item]);
+  window.addEventListener(item.replace('{{id}}', extensionID), events[item]);
 });
