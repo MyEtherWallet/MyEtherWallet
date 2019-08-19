@@ -9,14 +9,7 @@ import {
 } from './events';
 import store from '@/store';
 store.dispatch('setWeb3Instance');
-import {
-  CX_INJECT_WEB3,
-  CX_WEB3_DETECTED
-  // CX_SIGN_MSG,
-  // CX_CONFIRM_SEND_TX,
-  // CX_FETCH_MEW_ACCS,
-  // CX_GO_TO_MAIN_PAGE
-} from './cxEvents';
+import { CX_INJECT_WEB3, CX_WEB3_DETECTED } from './cxEvents';
 const chrome = window.chrome;
 const urls = {};
 // eslint-disable-next-line
@@ -41,94 +34,6 @@ const eventsListeners = (request, _, callback) => {
   middleware.use(web3Detected);
   middleware.run(obj, callback);
   return true;
-  // let q;
-  // if (request.hasOwnProperty('meta') && Object.keys(request.meta).length > 0) {
-  //   const arr = [];
-  //   for (const i in request.meta) {
-  //     if (request.meta.hasOwnProperty(i)) {
-  //       arr.push(
-  //         encodeURIComponent(i.replace('og:', '')) +
-  //           '=' +
-  //           encodeURIComponent(request.meta[i])
-  //       );
-  //     }
-  //   }
-  //   q = arr.join('&');
-  // } else if (
-  //   request.hasOwnProperty('tx') &&
-  //   Object.keys(request.tx).length > 0
-  // ) {
-  //   const arr = [];
-  //   for (const i in request.tx) {
-  //     if (request.tx.hasOwnProperty(i)) {
-  //       arr.push(
-  //         encodeURIComponent(i) + '=' + encodeURIComponent(request.tx[i])
-  //       );
-  //     }
-  //   }
-  //   q = arr.join('&');
-  // }
-  // switch (request.msg) {
-  //   case CX_GO_TO_MAIN_PAGE:
-  //     chrome.tabs.create({
-  //       url: chrome.runtime.getURL(`index.html#/access-my-wallet`)
-  //     });
-  //     break;
-  //   case CX_FETCH_MEW_ACCS:
-  //     chrome.windows.create({
-  //       url: chrome.runtime.getURL(
-  //         `index.html#/extension-popups/account-access?connectionRequest=${request.url}&${q}`
-  //       ),
-  //       type: 'popup',
-  //       height: 500,
-  //       width: 300,
-  //       focused: true
-  //     });
-  //     break;
-  //   case CX_WEB3_DETECTED:
-  //     chrome.storage.sync.get('warned', item => {
-  //       if (Object.keys(item).length === 0) {
-  //         clearTimeout(metamaskChecker);
-  //         chrome.windows.create({
-  //           url: chrome.runtime.getURL(
-  //             `index.html#/extension-popups/web3-detected`
-  //           ),
-  //           type: 'popup',
-  //           height: 500,
-  //           width: 300,
-  //           focused: true
-  //         });
-  //         chrome.storage.sync.set({ warned: 'true' });
-  //         metamaskChecker = setTimeout(function() {
-  //           chrome.storage.remove('warned');
-  //         }, 900000);
-  //       }
-  //     });
-  //     break;
-  //   case CX_CONFIRM_SEND_TX:
-  //     chrome.windows.create({
-  //       url: chrome.runtime.getURL(
-  //         `index.html#/extension-popups/sign-tx?url=${request.url}&${q}`
-  //       ),
-  //       type: 'popup',
-  //       height: 500,
-  //       width: 300,
-  //       focused: true
-  //     });
-  //     break;
-  //   case CX_SIGN_MSG:
-  //     chrome.windows.create({
-  //       url: chrome.runtime.getURL(
-  //         `index.html#/extension-popups/sign-msg?url=${request.url}&msgToSign=${request.msgToSign}&address=${request.address}`
-  //       ),
-  //       type: 'popup',
-  //       height: 500,
-  //       width: 300,
-  //       focused: true
-  //     });
-  //     break;
-  // }
-  // return true;
 };
 chrome.tabs.query({ active: true, lastFocusedWindow: true }, function(tabs) {
   querycB(tabs);
@@ -139,7 +44,7 @@ chrome.tabs.onActivated.addListener(onActivatedCb);
 chrome.tabs.onRemoved.addListener(onRemovedCb);
 
 function onRemovedCb(id) {
-  chrome.storage.sync.remove(urls[id]);
+  chrome.storage.sync.remove(urls[id], () => {});
   delete urls[id];
 }
 
