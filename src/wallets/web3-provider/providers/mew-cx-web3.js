@@ -1,7 +1,6 @@
 import MEWCXProvider from '../providers/mew-cx-request-manager';
 import MiddleWare from '../middleware';
 import {
-  WEB3_ACCOUNT_CHANGE,
   WEB3_NETWORK_CHANGE,
   WEB3_CHAIN_CHANGE
 } from '@/builds/mewcx/cxHelpers/cxEvents.js';
@@ -46,7 +45,9 @@ class MewCxEthereum extends EventEmitter {
             requestManager
           };
           const cb = (e, res) => {
-            if (e) return reject(e);
+            if (e) {
+              return reject(e);
+            }
             return resolve(res);
           };
           this.middleware.run(req, cb).then(() => {
@@ -81,12 +82,6 @@ class MewCxEthereum extends EventEmitter {
   setListeners() {
     const id = window.extensionID;
     window.addEventListener(
-      WEB3_ACCOUNT_CHANGE.replace('{{id}}', id),
-      eventRes => {
-        this.emit('accountsChanged', [eventRes.detail.account]);
-      }
-    );
-    window.addEventListener(
       WEB3_NETWORK_CHANGE.replace('{{id}}', id),
       eventRes => {
         this.emit('networkChanged', eventRes.detail.network);
@@ -102,10 +97,6 @@ class MewCxEthereum extends EventEmitter {
 
   clearListeners() {
     const id = window.extensionID;
-    window.removeEventListener(
-      WEB3_ACCOUNT_CHANGE.replace('{{id}}', id),
-      function() {}
-    );
     window.removeEventListener(
       WEB3_NETWORK_CHANGE.replace('{{id}}', id),
       function() {}

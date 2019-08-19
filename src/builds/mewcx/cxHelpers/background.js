@@ -8,8 +8,12 @@ import {
   web3Detected
 } from './events';
 import store from '@/store';
-store.dispatch('setWeb3Instance');
 import { CX_INJECT_WEB3, CX_WEB3_DETECTED } from './cxEvents';
+store.dispatch('setWeb3Instance');
+
+store.subscribe((mutation, state) => {
+  console.log(mutation, state);
+});
 const chrome = window.chrome;
 const urls = {};
 // eslint-disable-next-line
