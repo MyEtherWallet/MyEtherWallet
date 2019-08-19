@@ -10,6 +10,11 @@ With that in mind, You can run this command on your terminal:
 This should output a folder called `chrome-extension` which you can install on your browser.
 [See here for more details](https://developer.chrome.com/extensions/getstarted#manifest)
 
+### Dev Info
+
+This chrome extension follows the EIP-1193. But with the way teh wallets are stored/generated, we excempted `accountsChanged`.
+For more info, you can read the EIP-1193 specs [here](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1193.md)
+
 ## Web3 API
 
 Our API still follows the current web3 iteration. Only change is that you'll have to interact with the Chrome Extension.
