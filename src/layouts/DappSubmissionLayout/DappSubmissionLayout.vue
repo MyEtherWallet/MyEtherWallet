@@ -23,6 +23,13 @@
       /> -->
       <about-your-team 
         class="about-your-dapp w-50 mb-5" 
+        :update-authors="updateAuthors"
+        :update-full-name="updateFullName"
+        :update-email="updateEmail"
+        :update-social-links="updateSocialLinks"
+        :update-company-website="updateCompanyWebsite"
+        :update-license="updateLicense"
+        :update-additional-notes="updateAdditionalNotes"
       />
       <div class="dapp-container-right">
         <strength-of-info
@@ -80,13 +87,13 @@ export default {
       this.form.dappStatus = e;
     },
     updateMockFlow(e) {
-      console.error('category', e)
       this.form.mockFlow = e;
     },
     updateContractAddress(e) {
       this.form.contractAddress = e;
     },
     updateDappIcon(e) {
+      console.error('category', e)
       this.form.dappIcon = e;
     },
     updateBanner(e) {
@@ -98,6 +105,27 @@ export default {
     updateContractAudit(e) {
       this.form.contractAudit = e;
     },
+    updateAuthors(e) {
+      this.form.authors = e;
+    },
+    updateFullName(e) {
+      this.form.fullName = e;
+    },
+    updateEmail(e) {
+      this.form.email = e;
+    },
+    updateSocialLinks(e) {
+      this.form.socialLinks = e;
+    },
+    updateCompanyWebsite(e) {
+      this.form.companyWebsite = e;
+    },
+    updateLicense(e) {
+      this.form.license = e;
+    },
+    updateAdditionalNotes(e) {
+      this.form.additionalNotes = e;
+    }
   }
 };
 </script>

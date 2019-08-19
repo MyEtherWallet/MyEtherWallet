@@ -3,7 +3,7 @@
 .fake-input {
   background: $light-blue-9;
   border-radius: 4px;
-  display: table; 
+  display: table;
   height: 52px;
   width: 100%;
 
@@ -15,19 +15,25 @@
 }
 
 .image-label {
-  display: table-cell;
+  align-items: center;
+  display: flex;
+  height: 223px;
   text-align: center;
   vertical-align: middle;
-
   i {
     color: $light-grey-8;
     font-size: 60px;
   }
 }
 
+.image-placeholder {
+  position: absolute;
+  width: 31%;
+}
+
 .image-container {
-  border-radius: 6px;
-  border: 1px dashed $dark-grey-11;
+  // border-radius: 6px;
+  // border: 1px dashed $dark-grey-11;
   cursor: pointer;
   display: table;
   height: 223px;
@@ -105,7 +111,18 @@
     color: $dark-blue-2;
     font-weight: normal;
     span {
-      margin-right: 15px; 
+      margin-right: 15px;
     }
   }
+}
+
+.custom-file {
+  // height: 100%;
+  border-radius: 6px;
+  border: 1px dashed #999;
+  cursor: pointer;
+  // display: table;
+  height: 223px;
+  width: 460px;
+  position: absolute;
 }
