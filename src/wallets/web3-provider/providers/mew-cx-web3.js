@@ -1,13 +1,6 @@
 import MEWCXProvider from '../providers/mew-cx-request-manager';
 import MiddleWare from '../middleware';
 import {
-  ethSignTransaction,
-  ethGetTransactionCount,
-  ethGetTransactionReceipt,
-  ethGetBlockByNumber,
-  ethGetBlockNumber
-} from '../methods';
-import {
   WEB3_ACCOUNT_CHANGE,
   WEB3_NETWORK_CHANGE,
   WEB3_CHAIN_CHANGE
@@ -17,8 +10,7 @@ import {
   ethCoinbase,
   ethSendTransaction,
   ethSign,
-  ethRequestAccounts,
-  netVersion
+  ethRequestAccounts
 } from '../cx-web3-methods';
 
 const EventEmitter = require('events');
@@ -26,14 +18,10 @@ const EventEmitter = require('events');
 class MewCxEthereum extends EventEmitter {
   constructor(host) {
     super();
-    this.setMaxListeners(0);
     this.host = host;
     this.middleware = new MiddleWare();
     this.middleware.use(ethRequestAccounts);
     this.middleware.use(ethSendTransaction);
-    this.middleware.use(ethSignTransaction);
-    this.middleware.use(ethGetTransactionCount);
-    this.middleware.use(ethGetTransactionReceipt);
     this.middleware.use(ethSign);
     this.middleware.use(ethAccounts);
     this.middleware.use(ethCoinbase);

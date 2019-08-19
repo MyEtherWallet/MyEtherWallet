@@ -114,7 +114,6 @@ window.addEventListener(
 );
 
 window.addEventListener(WEB3_RPC_REQUEST, function(e) {
-  console.log('i think it gets here?', e.detail);
   chrome.runtime.sendMessage(
     extensionID,
     {
@@ -122,8 +121,20 @@ window.addEventListener(WEB3_RPC_REQUEST, function(e) {
       payload: e.detail
     },
     {},
-    res => {
-      console.log(res);
+    data => {
+      if (data.error) {
+        window.dispatchEvent(
+          new CustomEvent(`${WEB3_RPC_REQUEST}-${e.detail.id}-err`, {
+            detail: data.error
+          })
+        );
+      } else {
+        window.dispatchEvent(
+          new CustomEvent(`${WEB3_RPC_REQUEST}-${e.detail.id}-res`, {
+            detail: data.response
+          })
+        );
+      }
     }
   );
 });

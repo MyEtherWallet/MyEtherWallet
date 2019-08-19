@@ -20,7 +20,7 @@ export default async ({ payload }, res, next) => {
   const rejectEvent = WEB3_REJECT.replace('{{id}}', id);
   eventHandler(eventName, obj, receiveEvent, rejectEvent)
     .then(response => {
-      res(null, toPayload(payload.id, response.payload));
+      res(null, toPayload(payload.id, response.payload[0]));
     })
     .catch(e => {
       res(e);
