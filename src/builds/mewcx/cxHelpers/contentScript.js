@@ -85,7 +85,7 @@ chrome.runtime.onMessage.addListener(function(request) {
           WEB3_RECEIVE_SIGNED_MSG.replace('{{id}}', extensionID),
           {
             detail: {
-              signedMsg: request.signedMsg
+              payload: request.payload
             }
           }
         )

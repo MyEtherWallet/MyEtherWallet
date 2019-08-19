@@ -1,4 +1,5 @@
 import { toPayload } from '../jsonrpc';
+import eventHandler from './eventHandler';
 import {
   WEB3_SEND_SIGN_MSG,
   WEB3_RECEIVE_SIGNED_MSG,
@@ -10,31 +11,22 @@ export default async ({ payload }, res, next) => {
   const id = window.extensionID;
   const msg = payload.params[0];
   const address = payload.params[1];
-  const event = new CustomEvent(WEB3_SEND_SIGN_MSG.replace('{{id}}', id), {
+  const obj = {
     detail: {
       msgToSign: msg,
       address: address
     }
-  });
-  window.dispatchEvent(event);
-  window.addEventListener(
-    WEB3_RECEIVE_SIGNED_MSG.replace('{{id}}', id),
-    function(eventRes) {
-      this.removeEventListener(
-        WEB3_RECEIVE_SIGNED_MSG.replace('{{id}}', id),
-        () => {}
-      );
-      this.removeEventListener(WEB3_REJECT.replace('{{id}}', id), () => {});
-      res(null, toPayload(payload.id, eventRes.detail.signedMsg));
-    }
-  );
+  };
 
-  window.addEventListener(WEB3_REJECT.replace('{{id}}', id), function() {
-    this.removeEventListener(
-      WEB3_RECEIVE_SIGNED_MSG.replace('{{id}}', id),
-      () => {}
-    );
-    this.removeEventListener(WEB3_REJECT.replace('{{id}}', id), () => {});
-    res(new Error('User rejected action!'));
-  });
+  const eventName = WEB3_SEND_SIGN_MSG.replace('{{id}}', id);
+  const resName = WEB3_RECEIVE_SIGNED_MSG.replace('{{id}}', id);
+  const errName = WEB3_REJECT.replace('{{id}}', id);
+
+  eventHandler(eventName, obj, resName, errName)
+    .then(response => {
+      res(null, toPayload(payload.id, response.payload));
+    })
+    .catch(e => {
+      res(e);
+    });
 };
