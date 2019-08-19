@@ -1,12 +1,12 @@
 /* eslint-disable no-undef */
 import { CX_FETCH_MEW_ACCS, WEB3_GET_ACC } from '../cxEvents';
 import store from '@/store';
-import cxHelpers from '../cxHelpers';
+import helpers from '../helpers';
 import { ExtensionHelpers } from '@/helpers';
 export default async ({ event, payload }, _, next) => {
   if (event !== CX_FETCH_MEW_ACCS && event !== WEB3_GET_ACC) return next();
   const currentAccount = store.state.currentAddr;
-  const q = cxHelpers.queryBuilder(payload);
+  const q = helpers.queryBuilder(payload);
   if (currentAccount) {
     res(currentAccount);
   } else {

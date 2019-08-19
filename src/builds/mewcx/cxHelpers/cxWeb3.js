@@ -11,6 +11,7 @@ if (
   );
   window.dispatchEvent(event);
 } else if (!window.hasOwnProperty('web3')) {
+  // eslint-disable-next-line
   console.info('MEWCX Web3 provider injected');
   window.web3 = {};
   window.web3.currentProvider = ethereum;

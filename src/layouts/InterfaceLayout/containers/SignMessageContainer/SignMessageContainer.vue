@@ -91,7 +91,6 @@ export default {
             this.$refs.signatureModal.$refs.signatureModal.show();
           })
           .catch(e => {
-            console.log(e);
             Toast.responseHandler(e, Toast.ERROR);
           });
       } catch (e) {
