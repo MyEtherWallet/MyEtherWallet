@@ -3,6 +3,7 @@ import MiddleWare from '@/wallets/web3-provider/middleware';
 import {
   mewCxFetchAccounts,
   mewCxSignTx,
+  mewCxSignMsg,
   web3RpcRequest,
   web3Detected
 } from './events';
@@ -31,10 +32,11 @@ const eventsListeners = (request, _, callback) => {
     event: request.event,
     payload: request.payload
   };
-  console.log(request.event);
+
   const middleware = new MiddleWare();
   middleware.use(mewCxFetchAccounts);
   middleware.use(mewCxSignTx);
+  middleware.use(mewCxSignMsg);
   middleware.use(web3RpcRequest);
   middleware.use(web3Detected);
   middleware.run(obj, callback);

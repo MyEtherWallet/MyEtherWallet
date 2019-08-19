@@ -211,7 +211,6 @@ export default {
         e,
         hash
       ) {
-        console.log(e, hash);
         if (e) {
           window.chrome.tabs.query(
             { url: `*://*.${Misc.getService(_self.linkQuery.url)}/*` },

@@ -119,7 +119,7 @@ export default {
         function(tab) {
           const obj = {
             event: MEW_SIGNED_MSG,
-            signedMsg: '0x' + signedMsg.toString('hex')
+            payload: '0x' + signedMsg.toString('hex')
           };
           window.chrome.tabs.sendMessage(tab[0].id, obj);
           window.close();
