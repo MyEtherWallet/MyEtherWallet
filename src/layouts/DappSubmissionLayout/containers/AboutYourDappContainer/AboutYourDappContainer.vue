@@ -1,11 +1,16 @@
 <template>
   <div>
-    <div class="about-dapp-container mt-5">
+    <div class="about-container mt-5">
       <b-form>
         <b-form-group>
           <label class="dapp-label">DApp Name</label>
           <div class="dapp-input">
-            <b-form-input id="dappName" type="text" required> </b-form-input>
+            <b-form-input
+              id="dappName"
+              type="text"
+              @update="updateName"
+              v-model="dappName">
+            </b-form-input>
             <span>*</span>
           </div>
         </b-form-group>
@@ -15,45 +20,64 @@
             <label class="dapp-select-label">
               <b-form-select
                 id="dappCategory"
-                :options="categories"
-                required
+                :options="dappCategories"
+                @change="updateCategory"
+                v-model="dappCategory"
               ></b-form-select>
             </label>
             <span>*</span>
           </div>
         </b-form-group>
-        <b-form-group>
+        <b-form-group class="input-tags-group">
           <label
             class="dapp-label">Tags
             <more-info></more-info>
           </label>
-          <div class="fake-container">
-            <div ref="tagHolder" class="tag-holder">
-              <tag-component
-                v-for="(tag, idx) in displayTags"
-                :name="tag"
-                :delete-func="deleteTag"
-                :idx="idx"
-                :key="tag + idx"
-              />
+          <div class="input-tags-container">
+            <div class="tag-wrapper">
+              <div ref="tagHolder" class="tag-holder">
+                <tag-component
+                  ref="tagContainer"
+                  v-for="(tag, idx) in displayTags"
+                  :name="tag"
+                  :delete-func="deleteTag"
+                  :idx="idx"
+                  :key="tag + idx"
+                />
+              </div>
+              <div class="dapp-input">
+                <input
+                  class="dapp-tags-input"
+                  id="dappTags"
+                  @keyup="onKeyDown"
+                  ref="dappTagsInput"
+                  type="text"
+                  @change="updateTags(tagInput)"
+                  v-model="tagInput"/>
+              </div>
             </div>
-            <!-- change to regular input -->
-            <b-form-input
-              id="dappTags"
-              ref="dappTagsInput"
-              v-model="tagInput"
-              type="text"
-              required
-            ></b-form-input>
+            <span>*</span>
           </div>
         </b-form-group>
+        <div class="suggested-tags-container mb-3">
+          <p class="title">Suggested Tags</p>
+          <p class="tags">
+            <span>games</span>
+            <span>gambling</span>
+            <span>social</span>
+            <span>finance</span>
+            <span>high risk</span>
+            <span>wallet</span>
+          </p>
+        </div>
         <b-form-group>
           <label class="dapp-label">Description</label>
           <div class="dapp-input">
             <b-form-textarea
-              size="lg"
-              rows="7"
               placeholder="800 characters"
+              rows="7"
+              size="lg"
+              @update="updateDescription"
             ></b-form-textarea>
             <span>*</span>
           </div>
@@ -66,8 +90,9 @@
             <label class="dapp-select-label">
               <b-form-select
                 id="dappUsMarket"
-                :options="categories"
-                required
+                :options="dappUsMarketOptions"
+                @change="updateUsMarket"
+                v-model="dappUsMarket"
               ></b-form-select>
             </label>
             <span>*</span>
@@ -79,8 +104,9 @@
             <label class="dapp-select-label">
               <b-form-select
                 id="dappStatus"
-                :options="categories"
-                required
+                :options="dappStatusOptions"
+                @change="updateDappStatus"
+                v-model="dappStatus"
               ></b-form-select>
             </label>
             <span>*</span>
@@ -91,16 +117,18 @@
             class="dapp-label">Mock user flow
             <more-info></more-info>
           </label>
-          <p class="dapp-text-info">
+          <p class="dapp-text-info mb-3">
             Dimensions must be 1200px width by 630px height; JPEG or PDF file
             only; Image size no large than 5M
           </p>
           <div class="dapp-input">
-            <div class="upload-btn-wrapper">
-              <div class="fake-input"></div>
-              <button for="customUpload" class="upload-btn">Upload</button>
-              <input id="customUpload" type="file" />
-            </div>
+            <label for="customUpload" class="upload-btn-wrapper">
+              <div class="fake-input">
+                <p class="file-name">{{mockUserFlowFile}}</p>
+              </div>
+              <button class="upload-btn">Upload</button>
+            </label>
+            <input @change="onFileChange" id="customUpload" type="file" />
             <span>*</span>
           </div>
         </b-form-group>
@@ -110,7 +138,12 @@
             <more-info></more-info>
           </label>
           <div class="dapp-input">
-            <b-form-input id="contractAddress" type="text" required>
+            <b-form-input
+              id="contractAddress"
+              v-model="contractAddress"
+              type="text"
+              @update="updateContractAddress"
+            >
             </b-form-input>
             <span>*</span>
           </div>
@@ -130,7 +163,10 @@
                 JPEG or PNG, at least 192px * 192px
               </p>
             </label>
-            <input id="dappIcon" type="file" />
+            <input
+              id="dappIcon"
+              type="file"
+              @update="updateDappIcon" />
           </div>
         </b-form-group>
         <b-form-group>
@@ -157,7 +193,8 @@
             id="dappWebsite"
             placeholder="URL link"
             type="text"
-            required
+            @update="updateDappWeb"
+            v-model="dappWebsite"
           >
           </b-form-input>
         </b-form-group>
@@ -168,9 +205,10 @@
           </label>
           <label class="dapp-select-label">
             <b-form-select
+              v-model="dappContract"
               id="dappContract"
-              :options="categories"
-              required
+              :options="dappContractOptions"
+              @change="updateContractAudit"
             ></b-form-select>
           </label>
         </b-form-group>
@@ -181,42 +219,153 @@
 
 <script>
 import TagComponentVue from '../../components/TagComponent/TagComponent.vue';
+import MoreInfoComponent from '../../components/MoreInfoComponent';
+
 export default {
+  props: {
+    updateName: {
+      type: Function,
+      default: () => {}
+    },
+    updateCategory: {
+      type: Function,
+      default: () => {}
+    },
+    updateTags: {
+      type: Function,
+      default: () => {}
+    },
+    updateDescription: {
+      type: Function,
+      default: () => {}
+    },
+    updateUsMarket: {
+      type: Function,
+      default: () => {}
+    },
+    updateDappStatus: {
+      type: Function,
+      default: () => {}
+    },
+    updateMockFlow: {
+      type: Function,
+      default: () => {}
+    },
+    updateContractAddress: {
+      type: Function,
+      default: () => {}
+    },
+    updateDappIcon: {
+      type: Function,
+      default: () => {}
+    },
+    updateBanner: {
+      type: Function,
+      default: () => {}
+    },
+    updateDappWeb: {
+      type: Function,
+      default: () => {}
+    },
+    updateContractAudit: {
+      type: Function,
+      default: () => {}
+    },
+    updateDescription: {
+      type: Function,
+      default: () => {}
+    }
+  },
   components: {
-    'tag-component': TagComponentVue
+    'tag-component': TagComponentVue,
+    'more-info': MoreInfoComponent,
   },
   data() {
     return {
-      categories: [{ text: 'Select One', value: null }, 'Finance'],
+      tag: '',
+      tags: [],
+      dappCategory: null,
+      dappCategories: [
+        { value: null, text: 'Please select' },
+        { value: 'Games', text: 'Games'},
+        { value: 'Social', text: 'Social'},
+        { value: 'Finance', text: 'Finance'},
+        { value: 'High risk', text: 'High risk'},
+        { value: 'Exchanges', text: 'Exchanges'},
+        { value: 'Development', text: 'Development'},
+        { value: 'Media', text: 'Media'},
+        { value: 'Wallet', text: 'Wallet'},
+        { value: 'Security', text: 'Security'},
+        { value: 'Property', text: 'Property'},
+        { value: 'Marketplaces', text: 'Marketplaces'},
+        { value: 'Governance', text: 'Governance'},
+        { value: 'Storage', text: 'Storage'},
+        { value: 'Identity', text: 'Identity'},
+        { value: 'Energy', text: 'Energy'},
+        { value: 'Insurance', text: 'Insurance'},
+        { value: 'Health', text: 'Health'},
+        { value: 'Other', text: 'Other'}
+      ],
+      dappUsMarket: null,
+      dappUsMarketOptions: [
+        { value: null, text: 'Please select'},
+        { value: 'Yes', text: 'Yes'},
+        { value: 'No', text: 'No'}
+      ],
+      dappStatus: null,
+      dappStatusOptions: [
+        { value: null, text: 'Please select'},
+        { value: 'Live', text: 'Live'},
+        { value: 'Beta', text: 'Beta'},
+        { value: 'Prototype', text: 'Prototype'},
+        { value: 'Work in progress', text: 'Work in progress'},
+        { value: 'Concept', text: 'Concept'},
+        { value: 'Broken', text: 'Broken'},
+        { value: 'Stealth', text: 'Stealth'},
+        { value: 'Abandoned', text: 'Abandoned'}
+      ],
+      dappContract: null,
+      dappContractOptions: [
+        { value: null, text: 'Please select'},
+      ],
       tagInput: '',
       suggestedTags: '',
-      file: '',
-      displayTags: []
+      mockUserFlowFile: '',
+      displayTags: [],
+      dappName: '',
+      contractAddress: '',
+      dappWebsite: '',
     };
   },
-  watch: {
-    tagInput(newVal) {
-      if (newVal.includes(' ')) {
-        newVal.split(' ').forEach(item => {
-          if (item.length > 0) {
-            this.displayTags.push(item);
-            this.tagInput = '';
-            this.updateWidth();
-          }
-        });
-      }
-    }
-  },
   methods: {
+    onKeyDown(e) {
+      if (e.keyCode === 13 && this.$refs.tagHolder.offsetWidth <= (this.$refs.dappTagsInput.offsetWidth - 10)) {
+        if (this.tagInput.length > 0) {
+          this.displayTags.push(this.tagInput);
+          this.tagInput = '';
+          setTimeout(() => this.updateWidth());
+        }
+      } else if (e.keyCode === 8) {
+        if (this.tagInput.length <= 0) {
+          const lastTag = this.displayTags.splice(this.displayTags.length-1, 1);
+          setTimeout(() => {this.updateWidth(); this.tagInput = lastTag.toString()});
+        }
+      }
+    },
     deleteTag(idx) {
       this.displayTags.splice(idx, 1);
-      this.updateWidth();
+      setTimeout(() => this.updateWidth());
     },
     updateWidth() {
-      this.$refs.dappTagsInput.style.paddingLeft =
+     this.$refs.dappTagsInput.style.paddingLeft = 
         this.$refs.tagHolder.offsetWidth > 0
-          ? `${this.$refs.tagHolder.offsetWidth}px`
+          ? `${this.$refs.tagHolder.offsetWidth + 8}px`
           : '10.5px';
+    },
+    onFileChange(e) {
+      const file = e.target.files[0];
+      this.mockUserFlowFile = file.name;
+      console.error('e', file)
     }
   }
 };
@@ -225,6 +374,7 @@ export default {
 <style lang="scss" scoped>
 @import 'AboutYourDappContainer.scss';
 @import '../AboutYourDappTeamContainer.scss';
+
 </style>
 
 <style lang="scss">

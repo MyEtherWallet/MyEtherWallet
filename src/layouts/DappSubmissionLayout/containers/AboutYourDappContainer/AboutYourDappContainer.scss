@@ -3,8 +3,15 @@
 .fake-input {
   background: $light-blue-9;
   border-radius: 4px;
+  display: table; 
   height: 52px;
   width: 100%;
+
+  .file-name {
+    display: table-cell;
+    vertical-align: middle;
+    padding-left: 5px;
+  }
 }
 
 .image-label {
@@ -51,4 +58,54 @@
   width: 90%;
   justify-content: center;
   align-items: center;
+}
+
+.input-tags-container {
+  display: flex;
+  align-items: center;
+
+  span {
+    color: $red-9;
+    font-size: 16px;
+    // height: 19px;
+    padding-left: 10px;
+  }
+}
+.tag-wrapper {
+  max-width: 90%;
+  overflow: auto;
+  position: relative;
+  width: 90%;
+
+  .dapp-tags-input {
+    max-width: 100%;
+    width: 100%;
+    padding-left: 10.5px;
+  }
+}
+
+.tag-holder {
+  display: flex;
+  justify-content: space-around;
+  left: 5px;
+  position: absolute;
+  top: 13px;
+}
+
+.suggested-tags-container {
+  margin-top: 15px;
+  margin-left: 15px;
+  text-align: left;
+  .title {
+    text-transform: uppercase;
+    font-weight: 500;
+    color: $light-blue-7;
+  }
+  .tags {
+    color: $dark-blue-2;
+    font-weight: normal;
+    span {
+      margin-right: 15px; 
+    }
+  }
 }

@@ -15,7 +15,7 @@ export default {
   },
   methods: {
     scrollToTop: function() {
-      Misc.scrollToTop(500);
+      Misc.scrollToTop(600);
     }
   }
 };
