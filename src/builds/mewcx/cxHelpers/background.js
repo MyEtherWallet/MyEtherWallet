@@ -1,13 +1,18 @@
 import cxHelpers from './cxHelpers';
 import MiddleWare from '@/wallets/web3-provider/middleware';
-import { web3RpcRequest, mewCxFetchAccounts, web3Detected } from './events';
+import {
+  mewCxFetchAccounts,
+  mewCxSignTx,
+  web3RpcRequest,
+  web3Detected
+} from './events';
 import store from '@/store';
 store.dispatch('setWeb3Instance');
 import {
-  CX_INJECT_WEB3
+  CX_INJECT_WEB3,
+  CX_WEB3_DETECTED
   // CX_SIGN_MSG,
   // CX_CONFIRM_SEND_TX,
-  // CX_WEB3_DETECTED,
   // CX_FETCH_MEW_ACCS,
   // CX_GO_TO_MAIN_PAGE
 } from './cxEvents';
@@ -16,12 +21,20 @@ const urls = {};
 // eslint-disable-next-line
 let metamaskChecker;
 const eventsListeners = (request, _, callback) => {
+  if (request.event === CX_WEB3_DETECTED) {
+    clearTimeout(metamaskChecker);
+    metamaskChecker = setTimeout(function() {
+      chrome.storage.remove('warned');
+    }, 900000);
+  }
   const obj = {
     event: request.event,
     payload: request.payload
   };
+  console.log(request.event);
   const middleware = new MiddleWare();
   middleware.use(mewCxFetchAccounts);
+  middleware.use(mewCxSignTx);
   middleware.use(web3RpcRequest);
   middleware.use(web3Detected);
   middleware.run(obj, callback);
