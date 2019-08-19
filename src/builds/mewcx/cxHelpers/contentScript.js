@@ -136,6 +136,5 @@ events[WEB3_SEND_SIGN_MSG] = function(e) {
 };
 
 Object.keys(events).forEach(item => {
-  console.log(item.replace('{{id}}', extensionID), events[item]);
   window.addEventListener(item.replace('{{id}}', extensionID), events[item]);
 });
