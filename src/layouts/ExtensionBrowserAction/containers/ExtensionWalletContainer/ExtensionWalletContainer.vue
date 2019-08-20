@@ -20,7 +20,7 @@
           <div class="title-balance">
             <h3>{{ name }}</h3>
             <p v-show="!loading">
-              {{ totalBalance }} <span>ETH</span>
+              {{ totalBalance }} <span>{{ network.type.name }}</span>
               <span class="total-balance"> (Total Balance) </span>
             </p>
             <i v-show="loading" class="fa fa-spin fa-spinner" />
@@ -131,7 +131,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['web3']),
+    ...mapState(['web3', 'network']),
     validInput() {
       return (
         (this.password !== '' || this.password.length > 0) &&

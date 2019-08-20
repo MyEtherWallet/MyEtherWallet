@@ -16,7 +16,7 @@
         <p>{{ address | concatAddr }}</p>
         <div class="balance">
           <span>Balance:</span>
-          <span>{{ balance.substr(0, 7) }} ETH</span>
+          <span>{{ balance.substr(0, 7) }} {{ currency }}</span>
         </div>
       </div>
     </div>
@@ -45,6 +45,10 @@ export default {
     selectAccount: {
       type: Function,
       default: () => {}
+    },
+    currency: {
+      type: String,
+      default: 'ETH'
     }
   }
 };

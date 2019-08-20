@@ -87,7 +87,7 @@
       <div v-show="step === 3" class="confirmation-container">
         <div class="confirmation-amount">
           <p><b>Amount</b></p>
-          <p>{{ value }} ETH</p>
+          <p>{{ value }} {{ network.type.name }}</p>
         </div>
         <p><b>From</b></p>
         <wallet-view-component
@@ -193,7 +193,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['web3']),
+    ...mapState(['web3', 'network']),
     txLinkAndHash() {
       return this.txLink.replace('[[txHash]]', this.txHash);
     },

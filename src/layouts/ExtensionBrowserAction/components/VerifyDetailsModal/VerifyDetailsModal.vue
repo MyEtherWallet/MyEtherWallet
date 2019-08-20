@@ -11,7 +11,7 @@
         <div class="modal-contents">
           <div class="input-container">
             <label> Your Wallet </label>
-            <wallet-view-component :should-concat="false" :address="address" />
+            <wallet-view-component :should-concat="false" :address="address" :balance="balance" />
           </div>
           <div class="input-container">
             <label> Nickname </label>
@@ -42,6 +42,7 @@
 
 <script>
 import WalletViewComponent from '@/layouts/ExtensionPopup/components/WalletViewComponent';
+import {mapState} from 'vuex';
 import {
   KEYSTORE as keyStoreType,
   MNEMONIC as mnemonicType,
@@ -87,10 +88,12 @@ export default {
   },
   data() {
     return {
-      locNickname: this.nickname
+      locNickname: this.nickname,
+      balance: '0'
     };
   },
   computed: {
+    ...mapState(['web3']),
     address() {
       const hasWallet = Object.keys(this.wallet).length > 0;
       return hasWallet
@@ -107,6 +110,10 @@ export default {
     locNickname(newVal) {
       this.$emit('nickname', newVal);
     }
+  },
+  async mounted() {
+    const balance = await this.web3.eth.getBalance(this.address);
+    this.balance = balance;
   }
 };
 </script>

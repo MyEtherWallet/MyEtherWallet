@@ -118,7 +118,7 @@
         </div>
         <div class="balance-container">
           <p>Balance</p>
-          <p class="actual-balance">{{ balance }} <span>ETH</span></p>
+          <p class="actual-balance">{{ balance }} <span>{{ network.type.name }}</span></p>
         </div>
       </div>
       <div class="tokens-container">
@@ -226,7 +226,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['web3']),
+    ...mapState(['web3', 'network']),
     parsedWallet() {
       return JSON.parse(this.wallet);
     }

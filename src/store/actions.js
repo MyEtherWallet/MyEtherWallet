@@ -145,46 +145,48 @@ const setWeb3Instance = function({ dispatch, commit, state }, provider) {
     )
   );
   web3Instance.currentProvider.sendAsync = web3Instance.currentProvider.send;
-  web3Instance['mew'] = {};
-  web3Instance['mew'].sendBatchTransactions = arr => {
-    return new Promise(async resolve => {
-      for (let i = 0; i < arr.length; i++) {
-        const localTx = {
-          to: arr[i].to,
-          data: arr[i].data,
-          from: arr[i].from,
-          value: arr[i].value,
-          gasPrice: arr[i].gasPrice
-        };
-        const gas = await (arr[i].gas === undefined
-          ? web3Instance.eth.estimateGas(localTx)
-          : arr[i].gas);
-        const nonce = await (arr[i].nonce === undefined
-          ? web3Instance.eth.getTransactionCount(state.account.address)
-          : arr[i].nonce);
-        arr[i].nonce = new BigNumber(nonce + i).toFixed();
-        arr[i].gas = gas;
-        arr[i].chainId = !arr[i].chainId
-          ? state.network.type.chainID
-          : arr[i].chainId;
-        arr[i].gasPrice =
-          arr[i].gasPrice === undefined
-            ? unit.toWei(state.gasPrice, 'gwei')
-            : arr[i].gasPrice;
-        arr[i] = formatters.inputCallFormatter(arr[i]);
-      }
+  if (BUILD_TYPE !== 'mewcx') {
+    web3Instance['mew'] = {};
+    web3Instance['mew'].sendBatchTransactions = arr => {
+      return new Promise(async resolve => {
+        for (let i = 0; i < arr.length; i++) {
+          const localTx = {
+            to: arr[i].to,
+            data: arr[i].data,
+            from: arr[i].from,
+            value: arr[i].value,
+            gasPrice: arr[i].gasPrice
+          };
+          const gas = await (arr[i].gas === undefined
+            ? web3Instance.eth.estimateGas(localTx)
+            : arr[i].gas);
+          const nonce = await (arr[i].nonce === undefined
+            ? web3Instance.eth.getTransactionCount(state.account.address)
+            : arr[i].nonce);
+          arr[i].nonce = new BigNumber(nonce + i).toFixed();
+          arr[i].gas = gas;
+          arr[i].chainId = !arr[i].chainId
+            ? state.network.type.chainID
+            : arr[i].chainId;
+          arr[i].gasPrice =
+            arr[i].gasPrice === undefined
+              ? unit.toWei(state.gasPrice, 'gwei')
+              : arr[i].gasPrice;
+          arr[i] = formatters.inputCallFormatter(arr[i]);
+        }
 
-      const batchSignCallback = promises => {
-        resolve(promises);
-      };
-      this._vm.$eventHub.$emit(
-        'showTxCollectionConfirmModal',
-        arr,
-        batchSignCallback,
-        state.wallet.isHardware
-      );
-    });
-  };
+        const batchSignCallback = promises => {
+          resolve(promises);
+        };
+        this._vm.$eventHub.$emit(
+          'showTxCollectionConfirmModal',
+          arr,
+          batchSignCallback,
+          state.wallet.isHardware
+        );
+      });
+    };
+  }
   commit('SET_WEB3_INSTANCE', web3Instance);
 };
 

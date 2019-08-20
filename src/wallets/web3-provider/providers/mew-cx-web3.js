@@ -82,18 +82,17 @@ class MewCxEthereum extends EventEmitter {
 
   setListeners() {
     const id = window.extensionID;
+    const _self = this;
     window.addEventListener(
       WEB3_NETWORK_CHANGE.replace('{{id}}', id),
       eventRes => {
-        console.log(eventRes);
-        this.emit('networkChanged', eventRes.detail.payload);
+        _self.httpProvider.emit('networkChanged', eventRes.detail.payload);
       }
     );
     window.addEventListener(
       WEB3_CHAIN_CHANGE.replace('{{id}}', id),
       eventRes => {
-        console.log(eventRes);
-        this.emit('chainChanged', eventRes.detail.payload);
+        _self.httpProvider.emit('chainChanged', eventRes.detail.payload);
       }
     );
   }
