@@ -37,7 +37,7 @@ describe('partners', () => {
             func(fromCurrency, toCurrency, fromValue, toValue)
           )
         );
-        expect(results.length).toBe(3)
+        expect(results.length).toBe(3);
         done();
       }
     }, 500);
@@ -61,7 +61,7 @@ describe('partners', () => {
             func(fromCurrency, toCurrency, fromValue, toValue)
           )
         );
-        expect(results.length).toBe(2)
+        expect(results.length).toBe(2);
         done();
       }
     }, 500);
@@ -85,7 +85,7 @@ describe('partners', () => {
             func(fromCurrency, toCurrency, fromValue, toValue)
           )
         );
-        expect(results.length).toBe(1)
+        expect(results.length).toBe(1);
         done();
       }
     }, 500);
