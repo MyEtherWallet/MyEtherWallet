@@ -7,9 +7,10 @@
           <div class="dapp-input">
             <b-form-input
               id="dappName"
-              type="text"
               v-model="dappName"
-              @update="updateName">
+              type="text"
+              @update="updateName"
+            >
             </b-form-input>
             <span>*</span>
           </div>
@@ -29,8 +30,8 @@
           </div>
         </b-form-group>
         <b-form-group class="input-tags-group">
-          <label
-            class="dapp-label">Tags
+          <label class="dapp-label"
+            >Tags
             <popover
               :popcontent="$t('dappsSubmission.tags')"
               class="dapp-popover"
@@ -51,12 +52,13 @@
               <div class="dapp-input">
                 <input
                   id="dappTags"
-                  class="dapp-tags-input"
                   ref="dappTagsInput"
-                  type="text"
                   v-model="tagInput"
+                  class="dapp-tags-input"
+                  type="text"
                   @keyup="onKeyDown"
-                  @change="updateTags(tagInput)"/>
+                  @change="updateTags(tagInput)"
+                />
               </div>
             </div>
             <span>*</span>
@@ -116,11 +118,11 @@
           </div>
         </b-form-group>
         <b-form-group>
-          <label
-            class="dapp-label">Mock user flow
+          <label class="dapp-label"
+            >Mock user flow
             <popover
-              class="dapp-popover"
               :popcontent="$t('dappsSubmission.mockUserFlow')"
+              class="dapp-popover"
             ></popover>
           </label>
           <p class="dapp-text-info mb-3">
@@ -130,20 +132,20 @@
           <div class="dapp-input">
             <label for="customUpload" class="upload-btn-wrapper">
               <div class="fake-input">
-                <p class="file-name">{{mockUserFlowFile}}</p>
+                <p class="file-name">{{ mockUserFlowFile }}</p>
               </div>
               <button class="upload-btn">Upload</button>
             </label>
-            <input @change="onMockFileChange" id="customUpload" type="file" />
+            <input id="customUpload" type="file" @change="onMockFileChange" />
             <span>*</span>
           </div>
         </b-form-group>
         <b-form-group>
-          <label
-            class="dapp-label">Contract address
+          <label class="dapp-label"
+            >Contract address
             <popover
-              class="dapp-popover"
               :popcontent="$t('dappsSubmission.contractAddress')"
+              class="dapp-popover"
             ></popover>
           </label>
           <div class="dapp-input">
@@ -158,16 +160,16 @@
           </div>
         </b-form-group>
         <b-form-group>
-          <label
-            class="dapp-label">DApp icon
+          <label class="dapp-label"
+            >DApp icon
             <popover
-              class="dapp-popover"
               :popcontent="$t('dappsSubmission.dappIcon')"
+              class="dapp-popover"
             ></popover>
           </label>
           <div class="image-container">
             <label class="image-label" for="dappIcon">
-              <div class="image-placeholder" v-if="!dappIconFile">
+              <div v-if="!dappIconFile" class="image-placeholder">
                 <i class="fa fa-cloud-upload"></i>
                 <h4 class="image-text">
                   Drop your icon here, or select a file from your computer.
@@ -176,27 +178,28 @@
                   JPEG or PNG, at least 192px * 192px
                 </p>
               </div>
-              <div v-if="dappIconFile">{{dappIconFile}}</div>
+              <div v-if="dappIconFile">{{ dappIconFile }}</div>
               <b-form-file
-                drop-placeholder="Drop your icon here"
                 id="dappIcon"
+                drop-placeholder="Drop your icon here"
                 type="file"
-                @change="onDappIconChange">
+                @change="onDappIconChange"
+              >
               </b-form-file>
             </label>
           </div>
         </b-form-group>
         <b-form-group>
-          <label
-            class="dapp-label">Banner
+          <label class="dapp-label"
+            >Banner
             <popover
-              class="dapp-popover"
               :popcontent="$t('dappsSubmission.banner')"
+              class="dapp-popover"
             ></popover>
           </label>
           <div class="image-container">
             <label class="image-label" for="bannerImage">
-              <div class="image-placeholder" v-if="!bannerFile">
+              <div v-if="!bannerFile" class="image-placeholder">
                 <i class="fa fa-cloud-upload"></i>
                 <h4 class="image-text">
                   Drop your image here, or select a file from your computer.
@@ -205,12 +208,13 @@
                   JPEG or PNG, at least 1200px * 206px
                 </p>
               </div>
-              <div v-if="bannerFile">{{bannerFile}}</div>
+              <div v-if="bannerFile">{{ bannerFile }}</div>
               <b-form-file
-                drop-placeholder="Drop your banner here"
                 id="bannerImage"
+                drop-placeholder="Drop your banner here"
                 type="file"
-                @change="onBannerChange">
+                @change="onBannerChange"
+              >
               </b-form-file>
             </label>
           </div>
@@ -219,25 +223,24 @@
           <label class="dapp-label">DApp website</label>
           <b-form-input
             id="dappWebsite"
+            v-model="dappWebsite"
             placeholder="URL link"
             type="text"
             @update="updateDappWeb"
-            v-model="dappWebsite"
-          >
-          </b-form-input>
+          ></b-form-input>
         </b-form-group>
         <b-form-group>
-          <label
-            class="dapp-label">DApp contract audit
+          <label class="dapp-label"
+            >DApp contract audit
             <popover
-              class="dapp-popover"
               :popcontent="$t('dappsSubmission.contractAudit')"
+              class="dapp-popover"
             ></popover>
           </label>
           <label class="dapp-select-label">
             <b-form-select
-              v-model="dappContract"
               id="dappContract"
+              v-model="dappContract"
               :options="dappContractOptions"
               @change="updateContractAudit"
             ></b-form-select>
@@ -253,6 +256,10 @@ import TagComponentVue from '../../components/TagComponent/TagComponent.vue';
 import PopOver from '@/components/PopOver';
 
 export default {
+  components: {
+    'tag-component': TagComponentVue,
+    popover: PopOver
+  },
   props: {
     updateName: {
       type: Function,
@@ -301,15 +308,7 @@ export default {
     updateContractAudit: {
       type: Function,
       default: () => {}
-    },
-    updateDescription: {
-      type: Function,
-      default: () => {}
     }
-  },
-  components: {
-    'tag-component': TagComponentVue,
-    'popover': PopOver
   },
   data() {
     return {
@@ -318,47 +317,45 @@ export default {
       dappCategory: null,
       dappCategories: [
         { value: null, text: 'Please select' },
-        { value: 'Games', text: 'Games'},
-        { value: 'Social', text: 'Social'},
-        { value: 'Finance', text: 'Finance'},
-        { value: 'High risk', text: 'High risk'},
-        { value: 'Exchanges', text: 'Exchanges'},
-        { value: 'Development', text: 'Development'},
-        { value: 'Media', text: 'Media'},
-        { value: 'Wallet', text: 'Wallet'},
-        { value: 'Security', text: 'Security'},
-        { value: 'Property', text: 'Property'},
-        { value: 'Marketplaces', text: 'Marketplaces'},
-        { value: 'Governance', text: 'Governance'},
-        { value: 'Storage', text: 'Storage'},
-        { value: 'Identity', text: 'Identity'},
-        { value: 'Energy', text: 'Energy'},
-        { value: 'Insurance', text: 'Insurance'},
-        { value: 'Health', text: 'Health'},
-        { value: 'Other', text: 'Other'}
+        { value: 'Games', text: 'Games' },
+        { value: 'Social', text: 'Social' },
+        { value: 'Finance', text: 'Finance' },
+        { value: 'High risk', text: 'High risk' },
+        { value: 'Exchanges', text: 'Exchanges' },
+        { value: 'Development', text: 'Development' },
+        { value: 'Media', text: 'Media' },
+        { value: 'Wallet', text: 'Wallet' },
+        { value: 'Security', text: 'Security' },
+        { value: 'Property', text: 'Property' },
+        { value: 'Marketplaces', text: 'Marketplaces' },
+        { value: 'Governance', text: 'Governance' },
+        { value: 'Storage', text: 'Storage' },
+        { value: 'Identity', text: 'Identity' },
+        { value: 'Energy', text: 'Energy' },
+        { value: 'Insurance', text: 'Insurance' },
+        { value: 'Health', text: 'Health' },
+        { value: 'Other', text: 'Other' }
       ],
       dappUsMarket: null,
       dappUsMarketOptions: [
-        { value: null, text: 'Please select'},
-        { value: 'Yes', text: 'Yes'},
-        { value: 'No', text: 'No'}
+        { value: null, text: 'Please select' },
+        { value: 'Yes', text: 'Yes' },
+        { value: 'No', text: 'No' }
       ],
       dappStatus: null,
       dappStatusOptions: [
-        { value: null, text: 'Please select'},
-        { value: 'Live', text: 'Live'},
-        { value: 'Beta', text: 'Beta'},
-        { value: 'Prototype', text: 'Prototype'},
-        { value: 'Work in progress', text: 'Work in progress'},
-        { value: 'Concept', text: 'Concept'},
-        { value: 'Broken', text: 'Broken'},
-        { value: 'Stealth', text: 'Stealth'},
-        { value: 'Abandoned', text: 'Abandoned'}
+        { value: null, text: 'Please select' },
+        { value: 'Live', text: 'Live' },
+        { value: 'Beta', text: 'Beta' },
+        { value: 'Prototype', text: 'Prototype' },
+        { value: 'Work in progress', text: 'Work in progress' },
+        { value: 'Concept', text: 'Concept' },
+        { value: 'Broken', text: 'Broken' },
+        { value: 'Stealth', text: 'Stealth' },
+        { value: 'Abandoned', text: 'Abandoned' }
       ],
       dappContract: null,
-      dappContractOptions: [
-        { value: null, text: 'Please select'},
-      ],
+      dappContractOptions: [{ value: null, text: 'Please select' }],
       tagInput: '',
       suggestedTags: '',
       mockUserFlowFile: '',
@@ -372,7 +369,11 @@ export default {
   },
   methods: {
     onKeyDown(e) {
-      if (e.keyCode === 13 && this.$refs.tagHolder.offsetWidth <= (this.$refs.dappTagsInput.offsetWidth - 10)) {
+      if (
+        e.keyCode === 13 &&
+        this.$refs.tagHolder.offsetWidth <=
+          this.$refs.dappTagsInput.offsetWidth - 10
+      ) {
         if (this.tagInput.length > 0) {
           this.displayTags.push(this.tagInput);
           this.tagInput = '';
@@ -380,8 +381,14 @@ export default {
         }
       } else if (e.keyCode === 8) {
         if (this.tagInput.length <= 0) {
-          const lastTag = this.displayTags.splice(this.displayTags.length-1, 1);
-          setTimeout(() => {this.updateWidth(); this.tagInput = lastTag.toString()});
+          const lastTag = this.displayTags.splice(
+            this.displayTags.length - 1,
+            1
+          );
+          setTimeout(() => {
+            this.updateWidth();
+            this.tagInput = lastTag.toString();
+          });
         }
       }
     },
@@ -390,7 +397,7 @@ export default {
       setTimeout(() => this.updateWidth());
     },
     updateWidth() {
-     this.$refs.dappTagsInput.style.paddingLeft = 
+      this.$refs.dappTagsInput.style.paddingLeft =
         this.$refs.tagHolder.offsetWidth > 0
           ? `${this.$refs.tagHolder.offsetWidth + 8}px`
           : '10.5px';
@@ -401,7 +408,7 @@ export default {
       this.updateMockFlow(file);
     },
     onDappIconChange(e) {
-      console.error('e', e)
+      console.error('e', e);
       const file = e.target.files[0];
       this.dappIconFile = file.name;
       this.updateDappIcon(file);
@@ -418,7 +425,6 @@ export default {
 <style lang="scss" scoped>
 @import 'AboutYourDappContainer.scss';
 @import '../AboutYourDappTeamContainer.scss';
-
 </style>
 
 <style lang="scss">

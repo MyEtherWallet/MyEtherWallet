@@ -1,6 +1,6 @@
 @import '~@/scss/GlobalVariables';
 
-.social-links-container {
+.social-links-header {
   width: 90%;
   display: flex;
   justify-content: space-between;
@@ -11,4 +11,37 @@
   font-size: 14px;
   font-weight: 500;
   border: none;
+}
+
+.fake-input {
+  background: $light-blue-9;
+  border-radius: 4px;
+  display: table;
+  height: 52px;
+  width: 90%;
+}
+
+.social-img {
+  height: 32px;
+  width: 32px;
+  border-radius: 20px;
+  margin: 10px;
+}
+
+.social-url {
+  color: $dark-blue-2;
+  font-size: 14px;
+  font-weight: normal;
+}
+
+.social-remove {
+  cursor: pointer;
+  height: 16px;
+  margin-left: 10px;
+  width: 14px;
+}
+
+.social-account {
+  align-items: center;
+  display: flex;
 }
