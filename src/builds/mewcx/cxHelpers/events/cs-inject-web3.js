@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 import { CX_INJECT_WEB3 } from '../cxEvents';
 
-export default async ({ event, id }, _, next) => {
+export default async ({ event, id }, res, next) => {
   if (event !== CX_INJECT_WEB3) return next();
   const inject = fn => {
     const script = document.createElement('script');
@@ -30,4 +30,6 @@ export default async ({ event, id }, _, next) => {
   inject(function(chromeid) {
     window.extensionID = chromeid;
   });
+
+  res();
 };

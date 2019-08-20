@@ -8,7 +8,11 @@ import {
   web3Detected
 } from './events';
 import store from '@/store';
-import { CX_INJECT_WEB3, CX_WEB3_DETECTED } from './cxEvents';
+import {
+  CX_INJECT_WEB3,
+  CX_WEB3_DETECTED,
+  WEB3_INJECT_SUCCESS
+} from './cxEvents';
 const chrome = window.chrome;
 // Set default values on init
 chrome.storage.sync.get(null, items => {
@@ -141,10 +145,22 @@ function querycB(tab) {
       chrome.tabs.update(null, { url: urlRedirect });
     } else {
       // Injects web3
-      chrome.tabs.sendMessage(tab.id, { event: CX_INJECT_WEB3 }, function() {});
+      chrome.tabs.sendMessage(tab.id, { event: CX_INJECT_WEB3 }, function() {
+        store.state.web3.eth.net.getId().then(() => {
+          chrome.tabs.sendMessage(tab.id, {
+            event: WEB3_INJECT_SUCCESS.replace('{{id}}', 'internal') // triggers connect call
+          });
+        });
+      });
     }
   } else {
     // Injects web3
-    chrome.tabs.sendMessage(tab.id, { event: CX_INJECT_WEB3 }, function() {});
+    chrome.tabs.sendMessage(tab.id, { event: CX_INJECT_WEB3 }, function() {
+      store.state.web3.eth.net.getId().then(() => {
+        chrome.tabs.sendMessage(tab.id, {
+          event: WEB3_INJECT_SUCCESS.replace('{{id}}', 'internal') // triggers connect call
+        });
+      });
+    });
   }
 }

@@ -18,7 +18,8 @@ import {
   csInjectedWeb3,
   csSelecctedAcc,
   csSignedMsg,
-  csTxHash
+  csTxHash,
+  csWebInjectionSuccessful
 } from './events';
 import helpers from './helpers';
 import MiddleWare from '@/wallets/web3-provider/middleware';
@@ -49,7 +50,7 @@ chrome.storage.onChanged.addListener(function(res) {
   });
 });
 
-chrome.runtime.onMessage.addListener(function(request) {
+chrome.runtime.onMessage.addListener(function(request, _, callback) {
   if (request.event === SELECTED_MEW_CX_ACC) {
     getAccountModalIsOPen = false;
   }
@@ -64,7 +65,8 @@ chrome.runtime.onMessage.addListener(function(request) {
   middleware.use(csSelecctedAcc);
   middleware.use(csSignedMsg);
   middleware.use(csTxHash);
-  middleware.run(obj, () => {});
+  middleware.use(csWebInjectionSuccessful);
+  middleware.run(obj, callback);
   return true;
 });
 
