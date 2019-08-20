@@ -26,6 +26,7 @@ class MewCxEthereum extends EventEmitter {
     this.middleware.use(ethCoinbase);
     this.requestManager = new MEWCXProvider();
     this._id = 0;
+    this.setListeners();
 
     this.httpProvider = {
       send: (method, params = []) => {
@@ -84,13 +85,15 @@ class MewCxEthereum extends EventEmitter {
     window.addEventListener(
       WEB3_NETWORK_CHANGE.replace('{{id}}', id),
       eventRes => {
-        this.emit('networkChanged', eventRes.detail.network);
+        console.log(eventRes);
+        this.emit('networkChanged', eventRes.detail.payload);
       }
     );
     window.addEventListener(
       WEB3_CHAIN_CHANGE.replace('{{id}}', id),
       eventRes => {
-        this.emit('chainChanged', eventRes.detail.chain);
+        console.log(eventRes);
+        this.emit('chainChanged', eventRes.detail.payload);
       }
     );
   }

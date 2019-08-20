@@ -9,7 +9,9 @@ import {
   WEB3_SEND_TX,
   WEB3_SEND_SIGN_MSG,
   CX_WEB3_DETECTED,
-  WEB3_RPC_REQUEST
+  WEB3_RPC_REQUEST,
+  WEB3_CHAIN_CHANGE,
+  WEB3_NETWORK_CHANGE
 } from './cxEvents';
 import {
   csErrors,
@@ -24,8 +26,30 @@ const chrome = window.chrome;
 const extensionID = chrome.runtime.id;
 let getAccountModalIsOPen = false;
 
+chrome.storage.onChanged.addListener(function(res) {
+  Object.keys(res).forEach(val => {
+    const eventName = val.includes('Chain')
+      ? WEB3_CHAIN_CHANGE.replace('{{id}}', extensionID)
+      : val.includes('Network')
+      ? WEB3_NETWORK_CHANGE.replace('{{id}}', extensionID)
+      : '';
+    if (val.includes('Chain') || val.includes('Network')) {
+      if (res[val].hasOwnProperty('oldValue')) {
+        if (res[val].oldValue !== res[val].newValue) {
+          console.log(res[val].newValue);
+          window.dispatchEvent(new CustomEvent(eventName), {
+            detail: {
+              payload: `${res[val].newValue}`
+            }
+          });
+        }
+      }
+    }
+  });
+});
+
 chrome.runtime.onMessage.addListener(function(request) {
-  if (request === SELECTED_MEW_CX_ACC) {
+  if (request.event === SELECTED_MEW_CX_ACC) {
     getAccountModalIsOPen = false;
   }
   const obj = {

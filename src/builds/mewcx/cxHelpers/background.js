@@ -9,12 +9,8 @@ import {
 } from './events';
 import store from '@/store';
 import { CX_INJECT_WEB3, CX_WEB3_DETECTED } from './cxEvents';
-store.dispatch('setWeb3Instance');
-
-store.subscribe((mutation, state) => {
-  console.log(mutation, state);
-});
 const chrome = window.chrome;
+store.dispatch('setWeb3Instance');
 const urls = {};
 // eslint-disable-next-line
 let metamaskChecker;
