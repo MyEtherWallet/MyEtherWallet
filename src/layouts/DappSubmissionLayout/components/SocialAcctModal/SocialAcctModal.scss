@@ -1,1 +1,53 @@
 @import '~@/scss/GlobalVariables';
+
+.submit-btn {
+  background: $mew-green;
+  border-radius: 6px;
+  color: white;
+  height: 52px;
+  width: 100%;
+}
+
+.social-acct-modal {
+  border-radius: 12px;
+  height: 261px;
+  width: 350px;
+}
+
+input,
+select {
+  background: $light-blue-9;
+  border: none;
+  border-radius: 4px;
+  height: 52px;
+}
+
+input::placeholder,
+select::placeholder {
+  color: $light-blue-10;
+}
+
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.select-label {
+  height: 52px;
+  position: relative;
+  width: 100%;
+}
+
+.select-label::after {
+  color: $dark-blue-2;
+  content: '>';
+  font-family: Beirut;
+  font-size: 20px;
+  transform: rotate(-90deg);
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+  top: 11px;
+  width: 11%;
+}

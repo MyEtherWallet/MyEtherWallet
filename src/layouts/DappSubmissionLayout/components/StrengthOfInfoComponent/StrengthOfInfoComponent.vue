@@ -55,4 +55,3 @@ export default {
 <style lang="scss" scoped>
 @import 'StrengthOfInfoComponent.scss';
 </style>
- 

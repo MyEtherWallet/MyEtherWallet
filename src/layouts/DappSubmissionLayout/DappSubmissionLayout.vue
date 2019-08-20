@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="dapp-header">
-      <submit-component :btn-text="'Save & Continue'"/>
+      <submit-component :btn-text="'Save & Continue'" />
       <banner-component :banner-text="'Tell us about your DApp'" />
       <b-progress :value="25" class="dapp-progress-bar"></b-progress>
     </div>
@@ -21,8 +21,7 @@
         :update-dapp-web="updateDappWeb"
         :update-contract-audit="updateContractAudit"
       /> -->
-      <about-your-team 
-        class="about-your-dapp w-50 mb-5" 
+      <about-your-team
         :update-authors="updateAuthors"
         :update-full-name="updateFullName"
         :update-email="updateEmail"
@@ -30,6 +29,7 @@
         :update-company-website="updateCompanyWebsite"
         :update-license="updateLicense"
         :update-additional-notes="updateAdditionalNotes"
+        class="about-your-dapp w-50 mb-5"
       />
       <div class="dapp-container-right">
         <strength-of-info
@@ -93,7 +93,7 @@ export default {
       this.form.contractAddress = e;
     },
     updateDappIcon(e) {
-      console.error('category', e)
+      console.error('category', e);
       this.form.dappIcon = e;
     },
     updateBanner(e) {

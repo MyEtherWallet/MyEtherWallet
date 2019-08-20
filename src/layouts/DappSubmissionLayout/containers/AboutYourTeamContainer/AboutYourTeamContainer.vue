@@ -1,108 +1,133 @@
 <template>
   <div class="about-container mt-5">
+    <social-acct-modal ref="socialacct" @addSocialAccount="addSocialAccount" />
     <b-form>
       <b-form-group>
-        <label 
-          class="dapp-label">Authors
+        <label class="dapp-label"
+          >Authors
           <popover
-            class="dapp-popover"
             :popcontent="$t('dappsSubmission.authors')"
+            class="dapp-popover"
           ></popover>
         </label>
         <div class="dapp-input">
           <b-form-input
             id="authors"
+            v-model="authors"
             placeholder="e.g. James Lee; Emilie Roy; Edward McCormick"
             required
             type="text"
             @update="updateAuthors"
-            v-model="authors">
+          >
           </b-form-input>
           <span>*</span>
         </div>
       </b-form-group>
       <b-form-group>
-        <label
-          class="dapp-label">My full name
+        <label class="dapp-label"
+          >My full name
           <popover
-            class="dapp-popover"
             :popcontent="$t('dappsSubmission.fullName')"
+            class="dapp-popover"
           ></popover>
         </label>
         <div class="dapp-input">
-          <b-form-input 
-            v-model="fullName"
+          <b-form-input
             id="fullName"
+            v-model="fullName"
             type="text"
             required
-            @update="updateFullName">
+            @update="updateFullName"
+          >
           </b-form-input>
           <span>*</span>
         </div>
       </b-form-group>
       <b-form-group>
-        <label
-          class="dapp-label">My email
+        <label class="dapp-label"
+          >My email
           <popover
-            class="dapp-popover"
             :popcontent="$t('dappsSubmission.email')"
+            class="dapp-popover"
           ></popover>
         </label>
         <div class="dapp-input">
-          <b-form-input 
-            v-model="emailAddress"
+          <b-form-input
             id="emailAddress"
+            v-model="emailAddress"
             type="text"
             required
-            @update="updateEmail">
+            @update="updateEmail"
+          >
           </b-form-input>
           <span>*</span>
         </div>
       </b-form-group>
       <b-form-group>
         <div class="social-links-container">
-          <label class="dapp-label"> Company social links</label>
-          <button
-            @click="showSocialAcctModal"
-            class="add-btn pull-right">Add +
-          </button>
+          <div class="social-links-header">
+            <label class="dapp-label"> Company social links</label>
+            <button class="add-btn pull-right" @click="openSocialAcctModal">
+              Add +
+            </button>
+          </div>
+          <div v-if="socialAccts.length > 0" class="social-links-content">
+            <div
+              v-for="(acct, idx) in socialAccts"
+              :idx="idx"
+              :key="acct + idx"
+              class="social-account"
+            >
+              <div class="fake-input mt-2">
+                <img :src="acct.src" class="social-img" />
+                <span class="social-url ml-1">{{ acct.url }}</span>
+              </div>
+              <img
+                class="social-remove"
+                src="@/assets/images/icons/remove.png"
+                @click="removeSocialLink(idx)"
+              />
+            </div>
+          </div>
         </div>
       </b-form-group>
       <b-form-group>
-        <label
-          class="dapp-label">Company website
+        <label class="dapp-label"
+          >Company website
           <popover
-            class="dapp-popover"
             :popcontent="$t('dappsSubmission.companyWebsite')"
+            class="dapp-popover"
           ></popover>
         </label>
         <div class="dapp-input">
           <b-form-input
-            v-model="companyWebsite"
             id="companyWebsite"
+            v-model="companyWebsite"
             type="text"
             placeholder="URL link"
             required
-            @update="updateCompanyWebsite">
+            @update="updateCompanyWebsite"
+          >
           </b-form-input>
         </div>
       </b-form-group>
       <b-form-group>
-        <label 
-          class="dapp-label">Software license 
+        <label class="dapp-label"
+          >Software license
           <popover
-            class="dapp-popover"
             :popcontent="$t('dappsSubmission.softwareLicense')"
+            class="dapp-popover"
           ></popover>
         </label>
         <div class="dapp-input">
-          <b-form-input 
-            v-model="softwareLicense"
+          <b-form-input
             id="softwareLicense"
+            v-model="softwareLicense"
             type="text"
             placeholder="(e.g. MIT, GPL, Proprietary)"
             required
-            @update="updateLicense">
+            @update="updateLicense"
+          >
           </b-form-input>
         </div>
       </b-form-group>
@@ -124,12 +149,17 @@
 
 <script>
 import PopOver from '@/components/PopOver';
+import SocialAcctModal from '../../components/SocialAcctModal';
 
 export default {
+  components: {
+    popover: PopOver,
+    'social-acct-modal': SocialAcctModal
+  },
   props: {
     updateAuthors: {
       type: Function,
-      default: () => {}    
+      default: () => {}
     },
     updateFullName: {
       type: Function,
@@ -156,9 +186,6 @@ export default {
       default: () => {}
     }
   },
-  components: {
-    'popover': PopOver
-  },
   data() {
     return {
       authors: '',
@@ -166,7 +193,22 @@ export default {
       emailAddress: '',
       companyWebsite: '',
       softwareLicense: '',
-      additionalNotes: ''
+      additionalNotes: '',
+      socialAccts: []
+    };
+  },
+  methods: {
+    openSocialAcctModal() {
+      this.$refs.socialacct.$refs.socialAcctModal.show();
+    },
+    addSocialAccount(account) {
+      this.socialAccts.push(account);
+      console.error('this', this.socialAccts);
+      this.updateSocialLinks(this.socialAccts);
+    },
+    removeSocialLink(idx) {
+      this.socialAccts.splice(idx, 1);
+      this.updateSocialLinks(this.socialAccts);
     }
   }
 };

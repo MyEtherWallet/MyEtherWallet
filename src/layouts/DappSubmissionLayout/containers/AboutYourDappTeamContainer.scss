@@ -38,12 +38,14 @@
   }
 
   .dapp-select-label::after {
-    content: '\f078';
-    font-family: 'FontAwesome';
+    color: $dark-blue-2;
+    content: '>';
+    font-family: Beirut;
+    font-size: 20px;
+    transform: rotate(-90deg);
     pointer-events: none;
     position: absolute;
     right: 0;
-    top: 18px;
     width: 5%;
   }
 
