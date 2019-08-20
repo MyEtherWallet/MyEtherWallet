@@ -25,7 +25,11 @@ describe('changelly.js', () => {
       'ETH'
     );
     const value = new BigNumber(rate.rate).times(new BigNumber(fromValue));
-    const diff = value.div(expected).minus(1).abs().toNumber();
+    const diff = value
+      .div(expected)
+      .minus(1)
+      .abs()
+      .toNumber();
     expect(diff).toBeLessThan(percentVarianceAllowed);
   });
   it('Expect market rate calculated value to be within 1% of exact value (from ETH) ', async () => {
@@ -44,7 +48,11 @@ describe('changelly.js', () => {
       'ETH'
     );
     const value = new BigNumber(rate.rate).times(fromValue);
-    const diff = value.div(expected).minus(1).abs().toNumber();
+    const diff = value
+      .div(expected)
+      .minus(1)
+      .abs()
+      .toNumber();
     expect(diff).toBeLessThan(percentVarianceAllowed);
   });
   it('Expect fixed rate calculated value to be within 1% of exact value (to ETH)', async () => {
@@ -60,7 +68,11 @@ describe('changelly.js', () => {
     );
     const value = new BigNumber(rate.rate).times(fromValue);
     // const diff = value.minus(expected);
-    const diff = value.div(expected).minus(1).abs().toNumber();
+    const diff = value
+      .div(expected)
+      .minus(1)
+      .abs()
+      .toNumber();
     expect(diff).toBeLessThan(percentVarianceAllowed);
   });
   it('Expect fixed rate calculated value to be within 1% of exact value (from ETH) ', async () => {
@@ -75,7 +87,11 @@ describe('changelly.js', () => {
       'ETH'
     );
     const value = new BigNumber(rate.rate).times(fromValue);
-    const diff = value.div(expected).minus(1).abs().toNumber();
+    const diff = value
+      .div(expected)
+      .minus(1)
+      .abs()
+      .toNumber();
     expect(diff).toBeLessThan(percentVarianceAllowed);
   });
 });

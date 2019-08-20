@@ -110,7 +110,7 @@ export default class Simplex {
         fromCurrency: fromCurrency,
         toCurrency: toCurrency,
         provider: this.name,
-        rate: simplexRateDetails.rate.toString(),
+        rate: simplexRateDetails.rate,
         minValue: this.minFiat,
         maxValue: this.maxFiat
       };
@@ -125,7 +125,7 @@ export default class Simplex {
       fromCurrency: fromCurrency,
       toCurrency: toCurrency,
       provider: this.name,
-      rate: simplexRateDetails.rate.toString(),
+      rate: simplexRateDetails.rate,
       minValue: this.minFiat,
       maxValue: this.maxFiat
     };
@@ -153,7 +153,10 @@ export default class Simplex {
     return {
       fromValue: result.result.fiat_money.total_amount,
       toValue: result.result.digital_money.amount,
-      rate: this.calculateRate(result.result.fiat_money.total_amount, result.result.digital_money.amount)
+      rate: this.calculateRate(
+        result.result.fiat_money.total_amount,
+        result.result.digital_money.amount
+      )
     };
   }
 
@@ -173,7 +176,10 @@ export default class Simplex {
     return {
       fromValue: result.result.fiat_money.total_amount,
       toValue: toValue,
-      rate: this.calculateRate(result.result.fiat_money.total_amount, result.result.digital_money.amount)
+      rate: this.calculateRate(
+        result.result.fiat_money.total_amount,
+        result.result.digital_money.amount
+      )
     };
   }
 
