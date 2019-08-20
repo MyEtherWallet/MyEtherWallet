@@ -125,7 +125,7 @@
     "uglify-es": "3.3.9",
     "unused-files-webpack-plugin": "3.4.0",
     "uuid": "3.3.2",
-    "vue-i18n": "8.13.0",
+    "vue-i18n": "8.14.0",
     "vue-template-compiler": "2.6.10",
     "vue-worker": "1.2.1",
     "wallet-address-validator": "0.2.4",
