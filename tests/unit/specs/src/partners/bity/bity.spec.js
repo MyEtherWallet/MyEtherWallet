@@ -1,13 +1,6 @@
 import Bity from '@/partners/bity/bity.js';
 import {
-  // getRates,
-  // openOrder,
-  // orderDetails,
-  // getStatus,
-  // getExitRates,
-  // getCyptoToFiatOrderDetails,
   getEstimate
-  // createOrder
 } from '@/partners/bity/bity-calls';
 import BigNumber from 'bignumber.js';
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
