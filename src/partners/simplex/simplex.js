@@ -83,6 +83,10 @@ export default class Simplex {
     );
   }
 
+  calculateRate(inVal, outVal) {
+    return new BigNumber(outVal).div(new BigNumber(inVal));
+  }
+
   async getRate(fromCurrency, toCurrency, fromValue, toValue, isFiat) {
     let simplexRateDetails, updateType;
 
@@ -96,19 +100,17 @@ export default class Simplex {
       simplexRateDetails = await this[updateType](
         fromCurrency,
         toCurrency,
-        toValue,
-        fromValue
+        fromValue,
+        toValue
       );
 
-      this.internalEstimateRate = new BigNumber(simplexRateDetails.toValue)
-        .div(simplexRateDetails.fromValue)
-        .toString(10);
+      this.internalEstimateRate = simplexRateDetails.rate;
 
       return {
         fromCurrency: fromCurrency,
         toCurrency: toCurrency,
         provider: this.name,
-        rate: this.internalEstimateRate,
+        rate: simplexRateDetails.rate.toString(),
         minValue: this.minFiat,
         maxValue: this.maxFiat
       };
@@ -117,15 +119,13 @@ export default class Simplex {
     this.invalidFrom = 'simplexMin';
     simplexRateDetails = await this.updateFiat(fromCurrency, toCurrency, 51);
 
-    this.internalEstimateRate = new BigNumber(simplexRateDetails.toValue)
-      .div(simplexRateDetails.fromValue)
-      .toString(10);
+    this.internalEstimateRate = simplexRateDetails.rate;
 
     return {
       fromCurrency: fromCurrency,
       toCurrency: toCurrency,
       provider: this.name,
-      rate: this.internalEstimateRate,
+      rate: simplexRateDetails.rate.toString(),
       minValue: this.minFiat,
       maxValue: this.maxFiat
     };
@@ -147,18 +147,17 @@ export default class Simplex {
     if (result.error) {
       return { error: result.result, fromValue: fromValue, toValue: 0 };
     }
+
     this.currentOrder = result.result;
 
     return {
       fromValue: result.result.fiat_money.total_amount,
       toValue: result.result.digital_money.amount,
-      rate: new BigNumber(result.result.digital_money.amount)
-        .div(result.result.fiat_money.total_amount)
-        .toString(10)
+      rate: this.calculateRate(result.result.fiat_money.total_amount, result.result.digital_money.amount)
     };
   }
 
-  async updateDigital(fromCurrency, toCurrency, toValue) {
+  async updateDigital(fromCurrency, toCurrency, fromValue, toValue) {
     if (toValue <= 0) toValue = 1;
     const result = await getQuote({
       digital_currency: toCurrency,
@@ -174,9 +173,7 @@ export default class Simplex {
     return {
       fromValue: result.result.fiat_money.total_amount,
       toValue: toValue,
-      rate: new BigNumber(toValue)
-        .div(result.result.fiat_money.total_amount)
-        .toString(10)
+      rate: this.calculateRate(result.result.fiat_money.total_amount, result.result.digital_money.amount)
     };
   }
 
