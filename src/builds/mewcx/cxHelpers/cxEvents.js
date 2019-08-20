@@ -22,6 +22,7 @@ const CX_SIGN_MSG = 'signMsg';
 const CX_INJECT_WEB3 = 'injectWeb3';
 const WEB3_RPC_REQUEST = 'web3RPCRequest';
 const NETWORK_SWITCH_AND_CHAIN_ID = 'networkAndChainIdChanged';
+const WEB3_INJECT_SUCCESS = 'web3{{id}}ScriptInjectedSuccessfuly';
 
 export {
   WEB3_DETECTED,
@@ -47,5 +48,6 @@ export {
   CX_SIGN_MSG,
   CX_INJECT_WEB3,
   WEB3_RPC_REQUEST,
-  NETWORK_SWITCH_AND_CHAIN_ID
+  NETWORK_SWITCH_AND_CHAIN_ID,
+  WEB3_INJECT_SUCCESS
 };

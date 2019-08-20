@@ -2,7 +2,8 @@ import MEWCXProvider from '../providers/mew-cx-request-manager';
 import MiddleWare from '../middleware';
 import {
   WEB3_NETWORK_CHANGE,
-  WEB3_CHAIN_CHANGE
+  WEB3_CHAIN_CHANGE,
+  WEB3_INJECT_SUCCESS
 } from '@/builds/mewcx/cxHelpers/cxEvents.js';
 import {
   ethAccounts,
@@ -95,6 +96,10 @@ class MewCxEthereum extends EventEmitter {
         _self.httpProvider.emit('chainChanged', eventRes.detail.payload);
       }
     );
+
+    window.addEventListener(WEB3_INJECT_SUCCESS.replace('{{id}}', id), () => {
+      _self.httpProvider.emit('connect');
+    });
   }
 
   clearListeners() {
