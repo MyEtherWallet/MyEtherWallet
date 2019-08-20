@@ -33,7 +33,6 @@ export default {
   },
   methods: {
     getAccountsCb(res) {
-      this.hasAccounts = Object.keys(res).length > 0;
       const accounts = Object.keys(res)
         .filter(item => {
           if (isAddress(item)) {
@@ -48,7 +47,7 @@ export default {
 
           return newObj;
         });
-
+      this.hasAccounts = accounts.length > 0;
       if (this.hasAccounts) {
         this.accounts = accounts;
       } else {

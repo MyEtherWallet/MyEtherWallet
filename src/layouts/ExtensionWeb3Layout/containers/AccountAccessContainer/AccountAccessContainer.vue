@@ -20,6 +20,7 @@
           :balance="acc.balance"
           :selected-account="selectedAccount"
           :select-account="selectAccount"
+          :currency="network.type.name"
         />
         <div v-if="accWithBal.length === 0" class=""></div>
       </div>
@@ -58,7 +59,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['linkQuery', 'web3']),
+    ...mapState(['linkQuery', 'web3', 'network']),
     request() {
       const { connectionRequest, favicon } = this.linkQuery;
       const obj = {};
@@ -72,7 +73,11 @@ export default {
   },
   methods: {
     getAccounts(acc) {
-      this.accounts = Object.keys(acc);
+      this.accounts = Object.keys(acc).filter(item => {
+        if (isAddress(item)) {
+          return acc[item];
+        }
+      });
       this.getBalance();
     },
     async getBalance() {

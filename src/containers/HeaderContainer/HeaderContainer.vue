@@ -49,7 +49,10 @@
         ]"
         class="fixed-header"
       >
-        <div v-if="$route.fullPath === '/'" class="vintage-header">
+        <div
+          v-if="buildType !== 'mewcx' && $route.fullPath === '/'"
+          class="vintage-header"
+        >
           Missing the vintage MEW?
           <a rel="noopener noreferrer" href="https://vintage.myetherwallet.com"
             >Click here to go back!</a
@@ -284,7 +287,8 @@ export default {
       showGetFreeWallet: false,
       gasPrice: '0',
       error: {},
-      resolver: () => {}
+      resolver: () => {},
+      buildType: BUILD_TYPE
     };
   },
   computed: {

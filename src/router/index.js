@@ -32,20 +32,19 @@ const router = new Router({
 
 router.beforeResolve((to, from, next) => {
   storeQuery(to.query);
-
   if (to.meta.hasOwnProperty('requiresAuth')) {
     next();
   } else {
     if (store.state.wallet === null) {
       if (BUILD_TYPE === 'mewcx') {
         ExtensionHelpers.getAccounts(item => {
-          const hasStoredWallet = {};
-          Object.keys(item).forEach(key => {
+          const hasStoredWallet = Object.keys(item).filter(key => {
+            const newObj = {};
             if (isAddress(key)) {
-              hasStoredWallet[key] = item[key];
+              return (newObj[key] = item[key]);
             }
           });
-          if (Object.keys(hasStoredWallet).length > 0) {
+          if (hasStoredWallet.length > 0) {
             next({ name: 'AccessWalletLayout' });
           } else {
             next('/');

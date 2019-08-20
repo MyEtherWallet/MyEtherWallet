@@ -29,7 +29,7 @@
     <div class="wallet-view-balance">
       <p>Balance:</p>
       <p class="balance">
-        <span> {{ concatBalance }} </span> ETH
+        <span> {{ concatBalance }} </span> {{ network.type.name }}
       </p>
     </div>
   </div>
@@ -37,6 +37,7 @@
 
 <script>
 import Blockie from '@/components/Blockie';
+import {mapState} from 'vuex';
 export default {
   components: {
     blockie: Blockie
@@ -65,6 +66,7 @@ export default {
     };
   },
   computed: {
+    ...mapState(['network']),
     concatName() {
       return `${this.name.substring(0, 14)}...`;
     },

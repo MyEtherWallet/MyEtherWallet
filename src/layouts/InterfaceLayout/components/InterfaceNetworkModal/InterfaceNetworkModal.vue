@@ -49,7 +49,7 @@
                   : ''
               "
               class="switch-network"
-              @click="switchNetwork(net)"
+              @click="switchNetwork(net, key)"
             >
               {{ net.service }}
             </p>
@@ -296,7 +296,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['network', 'Networks']),
+    ...mapState(['network', 'Networks', 'web3']),
     reorderedNetworks() {
       const networks = Misc.reorderNetworks();
       return networks;
@@ -394,11 +394,17 @@ export default {
     switchNetwork(network) {
       this.$store.dispatch('switchNetwork', network).then(() => {
         this.$store.dispatch('setWeb3Instance').then(() => {
-          this.selectedeNtworkName = network.name;
+          this.selectedNetworkName = network.type.name;
           if (BUILD_TYPE === 'mewcx') {
-            window.chrome.storage.sync.set({
-              defChainID: network.type.chainID,
-              defNetworkUrl: network.url
+            this.web3.eth.net.getId().then(id => {
+              window.chrome.storage.sync.set({
+                defChainID: network.type.chainID,
+                defNetVersion: id,
+                defNetwork: JSON.stringify({
+                  url: network.url,
+                  key: network.type.name
+                })
+              });
             });
           }
         });

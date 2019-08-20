@@ -10,7 +10,7 @@
           <div class="wallet-component-container">
             <div class="total-balance-container">
               <p>Total Balance:</p>
-              <p>{{ concatBalance }} <b>ETH</b></p>
+              <p>{{ concatBalance }} <b>{{ network.type.name }}</b></p>
             </div>
             <wallet-view-component
               v-for="item in myWallets"
@@ -104,7 +104,7 @@
                       : wallet.balance
                   }}
                 </b>
-                ETH
+                {{ network.type.name }}
               </p>
             </div>
           </div>
@@ -122,6 +122,7 @@ import BigNumber from 'bignumber.js';
 import Blockie from '@/components/Blockie';
 import { toChecksumAddress } from '@/helpers/addressUtils';
 import { mapState } from 'vuex';
+import { isAddress } from '@/helpers/addressUtils';
 
 export default {
   components: {
@@ -153,7 +154,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['web3']),
+    ...mapState(['web3', 'network']),
     concatBalance() {
       const stringifiedBal = `${this.totalBalance}`;
       return stringifiedBal.length > 11
@@ -185,24 +186,22 @@ export default {
       const myOwnWallets = [];
       let totalBalance = new BigNumber(this.totalBalance);
       for (const account of this.accounts) {
-        if (account !== undefined) {
-          const address = Object.keys(account)[0];
-          const parsedValue = JSON.parse(account[address]);
-          if (parsedValue.type === WATCH_ONLY) {
-            const reformObj = Object.assign({}, parsedValue, {
-              address: address,
-              balance: await this.fetchBalance(address)
-            });
-            watchOnlyWallets.push(reformObj);
-          } else if (parsedValue.type !== WATCH_ONLY) {
-            const balance = await this.fetchBalance(address);
-            totalBalance = totalBalance.plus(balance);
-            const reformObj = Object.assign({}, parsedValue, {
-              address: address,
-              balance: balance
-            });
-            myOwnWallets.push(reformObj);
-          }
+        const address = Object.keys(account)[0];
+        const parsedValue = JSON.parse(account[address]);
+        if (parsedValue.type === WATCH_ONLY) {
+          const reformObj = Object.assign({}, parsedValue, {
+            address: address,
+            balance: await this.fetchBalance(address)
+          });
+          watchOnlyWallets.push(reformObj);
+        } else if (parsedValue.type !== WATCH_ONLY) {
+          const balance = await this.fetchBalance(address);
+          totalBalance = totalBalance.plus(balance);
+          const reformObj = Object.assign({}, parsedValue, {
+            address: address,
+            balance: balance
+          });
+          myOwnWallets.push(reformObj);
         }
       }
 
@@ -217,7 +216,7 @@ export default {
       this.myWallets = myOwnWallets;
     },
     async fetchBalance(address) {
-      if (address !== '0x') {
+      if (address !== '0x' || isAddress(address)) {
         const balance = await this.web3.eth.getBalance(address);
         return this.web3.utils.fromWei(balance);
       }

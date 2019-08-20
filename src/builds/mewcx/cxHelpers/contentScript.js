@@ -28,20 +28,21 @@ let getAccountModalIsOPen = false;
 
 chrome.storage.onChanged.addListener(function(res) {
   Object.keys(res).forEach(val => {
-    const eventName = val.includes('Chain')
+    const eventName = val.includes('ChainID')
       ? WEB3_CHAIN_CHANGE.replace('{{id}}', extensionID)
-      : val.includes('Network')
+      : val.includes('NetVersion')
       ? WEB3_NETWORK_CHANGE.replace('{{id}}', extensionID)
       : '';
-    if (val.includes('Chain') || val.includes('Network')) {
+
+    if (eventName !== '') {
       if (res[val].hasOwnProperty('oldValue')) {
         if (res[val].oldValue !== res[val].newValue) {
-          console.log(res[val].newValue);
-          window.dispatchEvent(new CustomEvent(eventName), {
+          const event = new CustomEvent(eventName, {
             detail: {
-              payload: `${res[val].newValue}`
+              payload: res[val].newValue
             }
           });
+          window.dispatchEvent(event, false);
         }
       }
     }
@@ -160,5 +161,9 @@ events[WEB3_SEND_SIGN_MSG] = function(e) {
 };
 
 Object.keys(events).forEach(item => {
-  window.addEventListener(item.replace('{{id}}', extensionID), events[item]);
+  window.addEventListener(
+    item.replace('{{id}}', extensionID),
+    events[item],
+    false
+  );
 });
