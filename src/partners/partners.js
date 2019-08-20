@@ -59,6 +59,7 @@ export default class SwapProviders {
         this.checkIfRatesPresent();
         if (this.haveProviderRates || checkCount > 20) {
           this.providerRatesRecieved = Object.keys(this.providerRateUpdates);
+          this.callWhenReady();
           clearInterval(checkIfAllRatesReceived);
         }
       }, 150);
