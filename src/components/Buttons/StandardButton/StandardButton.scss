@@ -1,4 +1,4 @@
-@import '~@/scss/GlobalVariables';
+@import "~@/scss/GlobalVariables";
 
 // Colors
 $color-white: #fff;
@@ -106,6 +106,10 @@ button[disabled] {
     @media all and (max-width: $mobile-width) {
       border-radius: 0;
     }
+  }
+
+  &.padding-small {
+    padding: 10px 20px;
   }
 
   .loading-left {
