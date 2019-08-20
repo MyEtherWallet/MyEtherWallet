@@ -37,7 +37,7 @@
 
 <script>
 import Blockie from '@/components/Blockie';
-import {mapState} from 'vuex';
+import { mapState } from 'vuex';
 export default {
   components: {
     blockie: Blockie

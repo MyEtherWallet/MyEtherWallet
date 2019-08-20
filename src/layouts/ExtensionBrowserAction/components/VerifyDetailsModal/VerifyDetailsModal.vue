@@ -11,7 +11,11 @@
         <div class="modal-contents">
           <div class="input-container">
             <label> Your Wallet </label>
-            <wallet-view-component :should-concat="false" :address="address" :balance="balance" />
+            <wallet-view-component
+              :should-concat="false"
+              :address="address"
+              :balance="balance"
+            />
           </div>
           <div class="input-container">
             <label> Nickname </label>
@@ -42,7 +46,7 @@
 
 <script>
 import WalletViewComponent from '@/layouts/ExtensionPopup/components/WalletViewComponent';
-import {mapState} from 'vuex';
+import { mapState } from 'vuex';
 import {
   KEYSTORE as keyStoreType,
   MNEMONIC as mnemonicType,

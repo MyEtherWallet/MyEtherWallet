@@ -10,7 +10,9 @@
           <div class="wallet-component-container">
             <div class="total-balance-container">
               <p>Total Balance:</p>
-              <p>{{ concatBalance }} <b>{{ network.type.name }}</b></p>
+              <p>
+                {{ concatBalance }} <b>{{ network.type.name }}</b>
+              </p>
             </div>
             <wallet-view-component
               v-for="item in myWallets"
