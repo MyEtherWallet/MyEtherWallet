@@ -31,6 +31,10 @@
         <b-carousel-slide>
           <mew-connect-ad />
         </b-carousel-slide>
+
+        <b-carousel-slide>
+          <buy-eth-ad />
+        </b-carousel-slide>
       </b-carousel>
     </div>
   </div>
