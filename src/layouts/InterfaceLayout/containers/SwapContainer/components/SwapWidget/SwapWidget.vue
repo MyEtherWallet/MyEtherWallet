@@ -25,10 +25,6 @@
             @swapStarted="resetSwapState"
           />
 
-          <!--          <div class="title-block">-->
-          <!--            <interface-container-title :title="$t('common.swap')" />-->
-          <!--          </div>-->
-
           <div class="form-content-container">
             <div class="send-form">
               <div class="form-block amount-to-address">
@@ -874,6 +870,12 @@ export default {
           this.toValue = toValue;
           this.fromValue = fromValue;
           break;
+      }
+
+      if (this.toValue - this.suppliedToAmount > 1 && this.loadingWidget) {
+        this.loadingWidget = false;
+        this.toValue = this.suppliedToAmount;
+        this.updateEstimate('to');
       }
     },
     async updateRateEstimate(fromCurrency, toCurrency, fromValue, to) {
