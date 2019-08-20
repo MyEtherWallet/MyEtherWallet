@@ -18,7 +18,11 @@
             ? hexToNumString(linkQuery.tokenTransferVal)
             : hexToNumString(linkQuery.value, 'ether')
         "
-        :currency="linkQuery.tokenSymbol !== '' ? linkQuery.tokenSymbol : network.type.name"
+        :currency="
+          linkQuery.tokenSymbol !== ''
+            ? linkQuery.tokenSymbol
+            : network.type.name
+        "
         :contract-address="linkQuery.tokenTransferTo"
       />
     </div>
@@ -44,7 +48,9 @@
       >
         <div class="detail-item">
           <span class="title">Network </span>
-          <span class="content">{{ network.type.name }} by {{ network.service }} </span>
+          <span class="content"
+            >{{ network.type.name }} by {{ network.service }}
+          </span>
         </div>
         <div class="detail-item">
           <span class="title"> Gas Limit </span>

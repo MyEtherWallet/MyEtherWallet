@@ -46,13 +46,15 @@ export default {
       }
     },
     getAccountsCb(res) {
-      const accounts = Object.keys(res).filter((item) => {
-        return isAddress(item);
-      }).map(item => {
-        const newObj = {};
-        newObj[item] = res[item];
-        return newObj;
-      });
+      const accounts = Object.keys(res)
+        .filter(item => {
+          return isAddress(item);
+        })
+        .map(item => {
+          const newObj = {};
+          newObj[item] = res[item];
+          return newObj;
+        });
       this.hasAccounts = accounts.length > 0;
       this.accounts = this.hasAccounts ? accounts : {};
     }

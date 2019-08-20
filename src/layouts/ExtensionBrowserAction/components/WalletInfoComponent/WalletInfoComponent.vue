@@ -118,7 +118,9 @@
         </div>
         <div class="balance-container">
           <p>Balance</p>
-          <p class="actual-balance">{{ balance }} <span>{{ network.type.name }}</span></p>
+          <p class="actual-balance">
+            {{ balance }} <span>{{ network.type.name }}</span>
+          </p>
         </div>
       </div>
       <div class="tokens-container">

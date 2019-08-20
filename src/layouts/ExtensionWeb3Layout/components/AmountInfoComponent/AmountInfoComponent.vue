@@ -9,7 +9,9 @@
         <span>{{ currency.toUpperCase() }}</span>
       </p>
       <p class="address-text">Address: {{ concat(address) }}</p>
-      <p v-if="currency !== state.network.type.name">via Contract address {{ contractAddr }}</p>
+      <p v-if="currency !== state.network.type.name">
+        via Contract address {{ contractAddr }}
+      </p>
     </div>
   </div>
 </template>
