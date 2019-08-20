@@ -395,6 +395,12 @@ export default {
       this.$store.dispatch('switchNetwork', network).then(() => {
         this.$store.dispatch('setWeb3Instance').then(() => {
           this.selectedeNtworkName = network.name;
+          if (BUILD_TYPE === 'mewcx') {
+            window.chrome.storage.sync.set({
+              defChainID: network.type.chainID,
+              defNetworkUrl: network.url
+            });
+          }
         });
       });
 
