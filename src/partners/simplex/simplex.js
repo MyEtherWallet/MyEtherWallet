@@ -173,7 +173,7 @@ export default class Simplex {
 
     return {
       fromValue: result.result.fiat_money.total_amount,
-      toValue: toValue, //result.result.digital_money.amount,
+      toValue: toValue,
       rate: new BigNumber(toValue)
         .div(result.result.fiat_money.total_amount)
         .toString(10)
