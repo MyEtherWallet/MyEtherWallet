@@ -1,7 +1,8 @@
 <template>
-  <div class="social-acct-modal">
+  <div class="modal-container">
     <b-modal
       ref="socialAcctModal"
+      class="bootstrap-modal social-acct-modal"
       centered
       hide-footer
       title="Add a social account"
