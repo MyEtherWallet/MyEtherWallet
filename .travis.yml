@@ -1,17 +1,4 @@
-language: node_js
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - libcairo2-dev
-      - libjpeg8-dev
-      - libpango1.0-dev
-      - libgif-dev
-      - librsvg2-dev
-      - g++-4.9
-node_js:
-  - '8.16.0'
+language: minimal
 sudo: required
 dist: xenial
 cache:
@@ -22,13 +9,11 @@ git:
 before_cache:
   - sudo rm -rf node_modules/.cache
 install:
-  - node package-audit.js
-  - npm install npm@6.9 -g
-  - npm install
+  - docker --version
+  - docker build -t mew-build-container .
+  - docker run --rm -it -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm install"
 env:
   global:
-    - NODE_OPTIONS="--max_old_space_size=4096"
-    - CXX=g++-4.9
     - ci_env=`bash <(curl -s https://codecov.io/env)`
     - secure: S8/CyHiA4M/omHrfvUXmZeLun43yGMg3qYsSzI8HI1Wr+G8xrz1qA7LgehEGx40iTBge1NSzfr7ZyKhGGYJ6dAIGxxk7+nyoIrdyUqrkWgNgYHsZdJLnYTZhvrCSEwURW4WMCFR8LJVO/84ltvS9+hPvwtGPPuFn9BDXf9O9ril0guxkm1WijSdmpFFyMrUBZDIDw9lc5D9QTRw1gpkXYzboMvPE6BO+HQoGxid2NFqTYw9dOyNSFXfbD2ni7Z+hZRxU0YO66TndFtvXDHJvvhnMEdfHrG3xunq3Zml+PVIaCI50dNQUo88ajiZiMddCkf6b4UROQGtMmbE5t7FryuSRbWbRN/1oMcWa9h9THdICOg5R97CfvtE/debDi57hBICNpq1SKefQXA8NqKEQsl2tA/x/wwdSBANeKrQLBd85D98syv0H1EEsz4TIO1/tGAqktdxH4HxjgYt9txCDNlT4eiWPxA84e/MDYQsxj3MeP3WPg4CDUEYSkQiFEnlhirQraufjFp4B9rzMUZ73jH8F1Jp83/AirU/9CxgdfAIJRADT6cTkC0zjhganlI4BhFR90OXahgbKXcNoVGfIqcI/DPtZ8cOQxO4dgOepNlYK180kNML2eGCcyNwSv4UG5NLHSul3K9cQnFKqVFyHfAGEYPVypjZt6Rp5Kp+Mh1Y=
     - secure: dWzuQFnoDWxioipSVCH3jSV3PIYXRy/YyLoLJ9/tr3Omqh77XbGR1CqrjdBt7lzabOgrOryXuiNxNpBezK/0vXAuFW5U83yzrdVfqLdaOqaay5PE/zSZtp7C8JMq6iQxSvjjRUyfSZowPfVTnfXr2Che9GvRWMMWqCGUQ0fCLv2kFEC9UQaFVFnS29UGRunN9Y+C5F45TEuaGnYWQ8yw+vQx0XWQBUwfv1l3C/W8v3Z7m1q1IUQTdS7ACPevExkRkz0XaTmBZyCEKAyuCLT4jGMtnH12p6292YSo9gbhcivlQzCcdRMqjaMjy+5L5SkFD0KEHPFQxp/3xcZ3iFNt2MFE3N7NpnYTBKBwi8B/FBy3tLUAZDYGDOMMZu8Oej+wrhEeUS29LG99vgWtiSqc4mhlK5zMikJ4SuLF+C8EtcqHhZf8xtH1uislZJGNoOk/Y66TCbXLfLVMbSzDi8wUei8imH8wrfnmacYylxz4Ch+8+PLa1Z4XgxyM8fogDJJSEeL6JfmdOG+O/j4pmGEo1ALKMwHilIUGL+JLnp0frVCl2I67yeXYeNdIwu/bDI3cGs3sOspNVBeTi1knBMpJ7Ed1AKTP/Ys0Ro/kGXqs/GixLknH8c5tENmUUCB2Ohj6zdExPqTxlB0ssPxuYev0LaxK1+MkIBvFOZrJURWR8cg=
@@ -59,16 +44,16 @@ jobs:
   include:
     - stage: run on pull requests
       script:
-        - npm run lint && npm run codecov && npm run build:history
+        - docker run --rm -it $ci_env -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run lint && npm run codecov && npm run build:history"
     - stage: add to codecov
       script:
-        - npm run codecov
+        - docker run --rm -it $ci_env -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run codecov"
     - stage: add to mewbuilds develop
       before_script:
-        - npm run build:history
+        - docker run --rm -it -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:history"
         - pip install --user awscli
       script:
-        - aws s3 sync dist/ s3://mewbuilds/develop/ --exact-timestamps --delete --cache-control max-age=172800,public
+        - aws s3 sync dist/ s3://mewbuilds/develop/ --delete --cache-control max-age=172800,public
           --acl public-read
         - aws s3 cp s3://mewbuilds/develop/service-worker.js s3://mewbuilds/develop/service-worker.js
           --metadata-directive REPLACE --cache-control max-age=0,no-cache,no-store,must-revalidate
@@ -78,7 +63,7 @@ jobs:
           --content-type text/html --acl public-read
     - stage: add to mewbuilds
       before_script:
-        - npm run build:hash
+        - docker run --rm -it -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:hash"
         - pip install --user awscli
         - ssh-keyscan -H $IPFS_NODE >> $HOME/.ssh/known_hosts
       script:
@@ -89,7 +74,7 @@ jobs:
         - hashOut=`tar -cjvf - -C dist/ . | ssh -i ipfs-host.pem ubuntu@$IPFS_NODE ./ipfs-publish.sh
           --`
         - HASH=`echo $hashOut | sed -n 's:.*<hash>\(.*\)</hash>.*:\1:p'`
-        - aws s3 sync dist/ s3://mewbuilds/build/$TRAVIS_COMMIT --exact-timestamps --delete --acl public-read
+        - aws s3 sync --delete --acl public-read dist/ s3://mewbuilds/build/$TRAVIS_COMMIT
         - aws s3 cp s3://mewbuilds/build/$TRAVIS_COMMIT/service-worker.js s3://mewbuilds/build/$TRAVIS_COMMIT/service-worker.js
           --metadata-directive REPLACE --cache-control max-age=0,no-cache,no-store,must-revalidate
           --content-type application/javascript --acl public-read
@@ -101,7 +86,7 @@ jobs:
       after_success:
         - |
           curl -H "Authorization: token ${GITHUB_TOKEN}" -X POST \
-          -d "{\"body\": \"Copy of this build can be found at <br/>https://builds.myetherwallet.com/build/${TRAVIS_COMMIT}/index.html<br/> \
+          -d "{\"body\": \"Copy of this build can be found at <br/>https://www.mewbuilds.com/build/${TRAVIS_COMMIT}/index.html<br/> \
                             https://www.cloudflare-ipfs.com/ipfs/$HASH <br/> \
                             Virus Total analysis <br/> \
                             $VIRUS_TOTAL_URL\"}" \
@@ -109,7 +94,7 @@ jobs:
     - stage: create release
       script: skip
       before_deploy:
-        - npm run build:offline
+        - docker run --rm -it -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:offline"
         - openssl aes-256-cbc -K $encrypted_2bd32a0810e2_key -iv $encrypted_2bd32a0810e2_iv
           -in ssh-keys.tar.enc -out ssh-keys.tar -d
         - tar xvf ssh-keys.tar
@@ -124,7 +109,7 @@ jobs:
     - stage: deploy to production
       script: skip
       before_deploy:
-        - npm run build:hash
+        - docker run --rm -it -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:hash"
       deploy:
         provider: pages
         skip-cleanup: true
@@ -138,9 +123,9 @@ jobs:
     - stage: deploy to production history
       script: skip
       before_deploy:
-        - npm run build:history
+        - docker run --rm -it -v `pwd`:/home:rw mew-build-container /bin/bash -c "npm run build:history"
         - pip install --user awscli
-        - aws s3 sync dist/ s3://mewbuilds/staging/ --exact-timestamps --delete --cache-control max-age=172800,public
+        - aws s3 sync dist/ s3://mewbuilds/staging/ --delete --cache-control max-age=172800,public
           --acl public-read
         - aws s3 cp s3://mewbuilds/staging/service-worker.js s3://mewbuilds/staging/service-worker.js
           --metadata-directive REPLACE --cache-control max-age=0,no-cache,no-store,must-revalidate
