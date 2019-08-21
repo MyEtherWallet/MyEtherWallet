@@ -1,3 +1,5 @@
+### Release v5.1.2
+
 ### Devop
 
 - Add warning message to HTTP Basic Access Authentication [#1364](https://github.com/MyEtherWallet/MyEtherWallet/pull/1364)
