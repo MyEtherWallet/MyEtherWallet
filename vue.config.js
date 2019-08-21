@@ -187,6 +187,7 @@ if (process.env.NODE_ENV === 'production') {
           'src/layouts/DappSubmissionLayout/containers/SummaryContainer/SummaryContainer.scss',
           'src/layouts/DappSubmissionLayout/containers/SummaryContainer/SummaryContainer.vue',
           'src/layouts/DappSubmissionLayout/components/TagComponent/index.js'
+        ]
       }
     })
   );
