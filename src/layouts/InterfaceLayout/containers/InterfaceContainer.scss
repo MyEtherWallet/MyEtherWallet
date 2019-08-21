@@ -20,7 +20,7 @@
 %interface-container {
   border-radius: 5px;
   grid-area: main;
-  overflow: hidden;
+  //overflow: hidden;
   background: $background-color-white;
 
   @media all and (max-width: $tablet-width) {
@@ -59,4 +59,14 @@
 .select-contract .dropdown-toggle {
   border: 0;
   display: none;
+}
+
+.inner-side-menu {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  grid-gap: 40px;
+
+  @media all and (max-width: 700px) {
+    grid-template-columns: 1fr;
+  }
 }

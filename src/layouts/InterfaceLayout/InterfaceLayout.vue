@@ -12,7 +12,7 @@
     />
     <mnemonic-modal
       ref="mnemonicPhraseModal"
-      :mnemonic-phrase-password-modal-open="mnemonicphrasePasswordModalOpen"
+      :hardware-wallet-open="toggleNetworkAddrModal"
     />
 
     <mnemonic-password-modal

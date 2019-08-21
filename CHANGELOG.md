@@ -1,4 +1,69 @@
+### Release v5.1.2
+
+### Devop
+
+- Fix dashboard "MEW connect", "Buy ETH" buttons layout [#1376](https://github.com/MyEtherWallet/MyEtherWallet/pull/1376)
+- Fix Buy Eth to Buy ETH [#1361](https://github.com/MyEtherWallet/MyEtherWallet/pull/1361)
+- Dashboard -> Actions & Swap button style update [#1365](https://github.com/MyEtherWallet/MyEtherWallet/pull/1365)
+- Add warning message to HTTP Basic Access Authentication [#1364](https://github.com/MyEtherWallet/MyEtherWallet/pull/1364)
+- Upgrade web3.js to 1.2.1 [#1348](https://github.com/MyEtherWallet/MyEtherWallet/pull/1348)
+- Update qrcode modal to be mobile friendly [#1366](https://github.com/MyEtherWallet/MyEtherWallet/pull/1366)
+- Update UI custom token UI [1367](https://github.com/MyEtherWallet/MyEtherWallet/pull/1367)
+- Fix Buy Eth to Buy ETH [#1361](https://github.com/MyEtherWallet/MyEtherWallet/pull/1361)
+- Add "Please wait while we generate your keystore file..." to keystorebutton. [#1363](https://github.com/MyEtherWallet/MyEtherWallet/pull/1363)
+
+### Bug
+
+- Fix incorrect rate display [#1368](https://github.com/MyEtherWallet/MyEtherWallet/pull/1368)
+- Fix scroll up animation glitch on mobile [#1358](https://github.com/MyEtherWallet/MyEtherWallet/pull/1358)
+
+### Release v5.1.1-hotfix.1
+
+### Bug
+
+- Fix issues related to address switching [#1355](https://github.com/MyEtherWallet/MyEtherWallet/pull/1355)
+- Fix missing buttons in maker dapp, and some general housekeeping [#1352](https://github.com/MyEtherWallet/MyEtherWallet/pull/1352)
+
+### Devop
+
+- Remove Safesend Dapp [#1346](https://github.com/MyEtherWallet/MyEtherWallet/pull/1346)
+- Add hover effect to Dashboard -> Swap buttons [#1353](https://github.com/MyEtherWallet/MyEtherWallet/pull/1353)
+- Add Changelly to Dashboard -> Swap description [#1356](https://github.com/MyEtherWallet/MyEtherWallet/pull/1356)
+
+### Release v5.1.1
+
+### Feature
+
+- Add Buy Eth Button to nav bar, standardize dapp header layout [#1330](https://github.com/MyEtherWallet/MyEtherWallet/pull/1330)
+
+### Devop
+
+- Update packages [#1344](https://github.com/MyEtherWallet/MyEtherWallet/pull/1344)
+- Update UI frontpage FAQs block [#1332](https://github.com/MyEtherWallet/MyEtherWallet/pull/1332)
+- Add xss custom config [#1326](https://github.com/MyEtherWallet/MyEtherWallet/pull/1326)
+
+### Bug
+
+- Fix scroll up button position [#1331](https://github.com/MyEtherWallet/MyEtherWallet/pull/1331)
+- Fix text translations [#1329](https://github.com/MyEtherWallet/MyEtherWallet/pull/1329)
+- Fix Mobile UI Scan to Download mobile [#1333](https://github.com/MyEtherWallet/MyEtherWallet/pull/1333)
+- By Mnemonic Phrase layout bug fix [#1347](https://github.com/MyEtherWallet/MyEtherWallet/pull/1347)
+
 ### Release v5.1.0
+
+### Feature
+
+- Add Dashboard and NFT Manager [#1269](https://github.com/MyEtherWallet/MyEtherWallet/pull/1269)
+
+### Release v5.0.16-hotfix.1
+
+### Devop
+
+- Fix toast xss issue [#1306](https://github.com/MyEtherWallet/MyEtherWallet/pull/1306)
+- Set gasPrice of TXs to Global value [#1305](https://github.com/MyEtherWallet/MyEtherWallet/pull/1305)
+- Update team info and pictures [#1304](https://github.com/MyEtherWallet/MyEtherWallet/pull/1304)
+
+### Release v5.0.16
 
 ### Feature
 
