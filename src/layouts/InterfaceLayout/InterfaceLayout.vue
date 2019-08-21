@@ -472,19 +472,25 @@ export default {
         }
       });
     },
+    checkAndSetNetwork(id) {
+      if (this.network.type.chainID.toString() !== `${id}`) {
+        Object.keys(networkTypes).some(net => {
+          if (
+            networkTypes[net].chainID.toString() === `${id}` &&
+            this.Networks[net]
+          ) {
+            this.$store.dispatch('switchNetwork', this.Networks[net][0]);
+            return true;
+          }
+        });
+      }
+    },
     matchMetamaskNetwork() {
+      this.web3.eth.net.getId().then(id => {
+        this.checkAndSetNetwork(id);
+      });
       window.ethereum.on('networkChanged', netId => {
-        if (this.network.type.chainID.toString() !== netId) {
-          Object.keys(networkTypes).some(net => {
-            if (
-              networkTypes[net].chainID.toString() === netId &&
-              this.Networks[net]
-            ) {
-              this.$store.dispatch('switchNetwork', this.Networks[net][0]);
-              return true;
-            }
-          });
-        }
+        this.checkAndSetNetwork(netId);
       });
     },
     setupOnlineEnvironment: web3Utils._.debounce(function() {
@@ -498,14 +504,15 @@ export default {
       if (this.online) {
         if (this.account.address !== null) {
           if (this.account.identifier === WEB3_TYPE) {
-            if (window.web3.currentProvider.isMetaMask) {
+            if (
+              window.web3.currentProvider.isMetaMask ||
+              window.web3.currentProvider.isMew
+            ) {
               this.checkMetamaskAddrChange();
               this.matchMetamaskNetwork();
             } else {
-              if (!window.web3.currentProvider.isMew) {
-                this.web3WalletPollNetwork();
-                this.web3WalletPollAddress();
-              }
+              this.web3WalletPollNetwork();
+              this.web3WalletPollAddress();
             }
           }
           this.setENS();
