@@ -1,6 +1,10 @@
 @import '~@/scss/GlobalVariables';
-.about-container {
+template {
   font-family: 'Avenir Next';
+}
+
+.about-your-dapp {
+  display: inline-block;
 }
 
 .form-group {
@@ -73,6 +77,7 @@
     font-weight: 500;
     font-size: 14px;
     line-height: 20px;
+    width: 90%;
   }
 
   input[type='file'] {

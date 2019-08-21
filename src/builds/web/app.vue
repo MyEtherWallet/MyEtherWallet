@@ -4,7 +4,7 @@
     <header-container
       v-show="
         $route.fullPath !== '/getting-started' &&
-          $route.fullPath !== '/dapp-submission'
+          !$route.fullPath.includes('/dapp-submission')
       "
     />
     <welcome-modal ref="welcome" />

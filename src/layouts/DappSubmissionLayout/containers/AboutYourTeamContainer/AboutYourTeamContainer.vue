@@ -1,5 +1,5 @@
 <template>
-  <div class="about-container mt-5">
+  <div class="about-your-dapp w-50 mb-5 mt-5">
     <social-acct-modal ref="socialacct" @addSocialAccount="addSocialAccount" />
     <b-form>
       <b-form-group>
@@ -66,7 +66,7 @@
       <b-form-group>
         <div class="social-links-container">
           <div class="social-links-header">
-            <label class="dapp-label"> Company social links</label>
+            <label class="dapp-social-label"> Company social links</label>
             <button class="add-btn pull-right" @click="openSocialAcctModal">
               Add +
             </button>
@@ -203,7 +203,6 @@ export default {
     },
     addSocialAccount(account) {
       this.socialAccts.push(account);
-      console.error('this', this.socialAccts);
       this.updateSocialLinks(this.socialAccts);
     },
     removeSocialLink(idx) {
@@ -220,10 +219,11 @@ export default {
 </style>
 
 <style lang="scss">
-.dapp-label {
+.dapp-social-label {
   align-items: center;
   display: flex;
   font-size: 16px;
   margin-bottom: 10px;
+  width: auto;
 }
 </style>

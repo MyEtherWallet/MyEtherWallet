@@ -10,7 +10,12 @@
           <img class="msg-logo" src="~@/assets/images/message.png" />
         </div>
       </div>
-      <button class="email-us-btn mt-3">Email us</button>
+      <b-link
+        class="email-us-btn mt-3"
+        href="mailto:support@myetherwallet.com"
+        target="_blank"
+        >Email us</b-link
+      >
     </div>
   </div>
 </template>

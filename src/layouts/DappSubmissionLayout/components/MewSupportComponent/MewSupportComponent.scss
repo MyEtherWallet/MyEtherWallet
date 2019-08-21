@@ -13,7 +13,6 @@
   font-size: 20px;
   font-weight: bold;
   height: 24px;
-  // width: 176px;
   text-align: left;
   margin-left: 20px;
 }
@@ -42,13 +41,21 @@
 }
 
 .email-us-btn {
+  background-color: transparent;
   border-radius: 4px;
   border: 1px solid $mew-green;
-  height: 46px;
-  width: 88%;
-  background-color: transparent;
   color: $mew-green;
+  display: block;
   font-weight: 500;
+  height: 46px;
+  margin: 10px;
+  padding: 10px;
+
+  &:hover {
+    background-color: $mew-green;
+    color: $white;
+    text-decoration: none;
+  }
 }
 
 .text-container {
