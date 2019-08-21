@@ -1,8 +1,8 @@
 const KyberCurrenciesETH = {
   THISISADUMMYTOKEN: {
     symbol: 'THISISADUMMYTOKEN',
-    name: 'Ethereum',
-    decimals: 18,
+    name: 'For tests',
+    decimals: NaN,
     contractAddress: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
   },
   ETH: {

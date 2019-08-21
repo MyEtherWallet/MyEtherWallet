@@ -1,7 +1,7 @@
 export default [
   {
     symbol: 'THISISADUMMYTOKEN',
-    address: 'THISISADUMMYTOKEN'
+    address: 'THISISADUMMYTOKEN for tests'
   },
   {
     symbol: 'ETH',
