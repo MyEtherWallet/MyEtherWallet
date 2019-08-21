@@ -1,5 +1,9 @@
 export default [
   {
+    symbol: 'THISISADUMMYTOKEN',
+    address: 'THISISADUMMYTOKEN for tests'
+  },
+  {
     symbol: 'ETH',
     address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
     swapGasLimit: 0,

@@ -1,4 +1,5 @@
 @import '~@/scss/GlobalVariables';
+
 @media all and (min-width: calc(#{$tablet-width} + 1px)) {
   .mobile-interface-address-block {
     display: none;
@@ -83,4 +84,9 @@
 
 .interface-layout {
   background-color: $light-grey-2;
+}
+
+.tx-contents {
+  max-width: 1550px;
+  margin: 0 auto;
 }

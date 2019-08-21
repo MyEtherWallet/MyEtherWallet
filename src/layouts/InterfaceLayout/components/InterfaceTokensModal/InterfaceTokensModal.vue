@@ -52,7 +52,7 @@
             Invalid Decimal. Decimal can only be between 0 and 18.
           </span>
         </div>
-        <div>
+        <div class="button-block">
           <button
             :class="[
               allFieldsValid ? '' : 'disabled',

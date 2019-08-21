@@ -54,6 +54,7 @@
   "refund": "{currency} address for refund (if needed) from Changelly",
   "providers": "Providers",
   "buyEth": "Buy ETH with",
+  "buyWithCreditCard": "Buy ETH with Credit Card",
   "noProviderFound": "No providers found :(",
   "loadingProviders": "Please wait while we load provider rates...",
   "loadRateError": "An Error occurred while retrieving the rates for {currency}",
@@ -108,5 +109,10 @@
   "CryptoToFiatBeta": "Please note Crypto to Fiat is currently a beta feature of Bity",
   "back": "Back",
   "invalidTanCode": "Invalid Code",
-  "unableToValidateAddress": "Currently unable to validate addresses for {currency}. It is likely correct, but Please double check it is correct before sending."
+  "email": "Email",
+  "unableToValidateAddress": "Currently unable to validate addresses for {currency}. It is likely correct, but Please double check it is correct before sending.",
+  "reviewSwap": "Review swap",
+  "emailPopOver": "Only used if any problems arise with the deposit, otherwise if omitted the value will be refunded to the sending address if any problems arise.",
+  "dashboard": "Dashboard",
+  "dashboardSwap": "MEW has partnered with Bity, Kyber Network, Changelly, and Simplex to allow users to swap fiat to crypto, ETH and BTC, ETH and ERC-20."
 }

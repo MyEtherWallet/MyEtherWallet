@@ -1,0 +1,11 @@
+@import '~@/scss/GlobalVariables';
+
+.ad-image-container {
+  background-color: $background-color-white;
+  border-radius: 5px;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+  }
+}

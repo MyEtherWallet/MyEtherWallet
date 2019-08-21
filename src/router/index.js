@@ -1,7 +1,7 @@
 import Router from 'vue-router';
 import store from '@/store';
 import { getMode, getRoutes } from '@/builds/configs';
-import xss from 'xss';
+import Misc from '@/helpers/misc';
 
 const router = new Router({
   mode: getMode(),
@@ -28,7 +28,7 @@ router.beforeResolve((to, ___, next) => {
     if (queryKeys.length > 0) {
       const blankObj = {};
       for (const key in to.query) {
-        blankObj[key] = xss(to.query[key]);
+        blankObj[key] = Misc.stripTags(to.query[key]);
       }
 
       store.dispatch('saveQueryVal', blankObj);
