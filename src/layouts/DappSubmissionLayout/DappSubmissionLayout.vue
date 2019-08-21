@@ -51,12 +51,12 @@
       </div>
       <success-modal
         ref="successModal"
-        :successTitle="'Congratulations'"
-        :message="'It takes about 3-5 business days to review your DApp. And an email will be sent to you if the the status update.'"
+        :success-title="'Congratulations'"
+        :message="
+          'It takes about 3-5 business days to review your DApp. And an email will be sent to you if the the status update.'
+        "
       />
-      <error-modal
-        ref="errorModal"
-      />
+      <error-modal ref="errorModal" />
     </div>
   </div>
 </template>
@@ -305,12 +305,14 @@ export default {
         })
         .then(res => {
           this.$refs.successModal.$refs.success.show();
-          // console.error('res', res);
+          // eslint-disable-next-line
+          console.error('res', res);
         })
         .catch(err => {
           // change to toast
           this.$refs.errorModal.$refs.errorModal.show();
-          // console.error('err', err);
+          // eslint-disable-next-line
+          console.error('err', err);
         });
     }
   }

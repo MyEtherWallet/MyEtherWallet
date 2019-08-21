@@ -10,7 +10,9 @@
       <img src="@/assets/images/modal/garlands.png" />
       <div class="d-block text-center">
         <i class="check-icon fa fa-check" aria-hidden="true" />
-        <h2 class="title">{{ successTitle ? successTitle : $t('confirmation.success') }}</h2>
+        <h2 class="title">
+          {{ successTitle ? successTitle : $t('confirmation.success') }}
+        </h2>
         <p>{{ message }}</p>
       </div>
 
