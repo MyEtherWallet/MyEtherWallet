@@ -277,6 +277,12 @@ class CompileSwapOptions {
     }
 
     if (Object.keys(this.kyberBaseOptions).length > 0) {
+      this.kyberBaseOptions['THISISADUMMYTOKEN'] = {
+        symbol: 'THISISADUMMYTOKEN',
+          name: 'Ethereum',
+          decimals: 18,
+          contractAddress: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+      };
       fs.writeFileSync(
         `${kyberConfigFolder}/currenciesETH.js`,
         `const KyberCurrenciesETH = ${JSON.stringify(
