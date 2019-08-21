@@ -49,6 +49,14 @@
         />
         <mew-support />
       </div>
+      <success-modal
+        ref="successModal"
+        :successTitle="'Congratulations'"
+        :message="'It takes about 3-5 business days to review your DApp. And an email will be sent to you if the the status update.'"
+      />
+      <error-modal
+        ref="errorModal"
+      />
     </div>
   </div>
 </template>
@@ -62,6 +70,8 @@ import MewSupportComponent from './components/MewSupportComponent';
 import AboutYourTeamContainer from './containers/AboutYourTeamContainer';
 import SummaryContainer from './containers/SummaryContainer';
 import axios from 'axios';
+import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessModal';
+import ErrorModal from '@/containers/ConfirmationContainer/components/ErrorModal';
 
 export default {
   components: {
@@ -71,7 +81,9 @@ export default {
     'banner-submit-component': BannerSubmitComponent,
     'mew-support': MewSupportComponent,
     'about-your-team': AboutYourTeamContainer,
-    'summary-container': SummaryContainer
+    'summary-container': SummaryContainer,
+    'success-modal': SuccessModal,
+    'error-modal': ErrorModal
   },
   data() {
     return {
@@ -286,14 +298,17 @@ export default {
       this.form.additionalNotes = e;
     },
     submitForm() {
+      this.$refs.successModal.$refs.success.show();
       axios
         .post('https://formspree.io/dapps@myetherwallet.com', {
           form: this.form
         })
         .then(res => {
+          this.$refs.successModal.$refs.success.show();
           console.error('res', res);
         })
         .catch(err => {
+          this.$refs.errorModal.$refs.errorModal.show();
           console.error('err', err);
         });
     }
