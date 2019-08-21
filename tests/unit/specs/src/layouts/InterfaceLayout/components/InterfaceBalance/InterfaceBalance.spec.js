@@ -67,6 +67,7 @@ describe('InterfaceBalance.vue', () => {
 
     it('should open balance modal when button clicked', () => {
       const divElements = wrapper.findAll('div');
+
       for (let i = 0; i < divElements.length; i++) {
         const divElement = divElements.at(i);
         if (divElement.classes().length == 0) {

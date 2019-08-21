@@ -91,7 +91,7 @@
                     class="buy-eth-icon"
                     src="@/assets/images/icons/buy-eth.svg"
                   />
-                  Buy Eth
+                  Buy ETH
                 </b-nav-item>
                 <b-nav-item
                   v-if="isHomePage"

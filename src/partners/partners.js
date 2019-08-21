@@ -57,7 +57,7 @@ export default class SwapProviders {
       const checkIfAllRatesReceived = setInterval(() => {
         checkCount++;
         this.checkIfRatesPresent();
-        if (this.haveProviderRates || checkCount > 20) {
+        if (this.ratesRetrieved || checkCount > 20) {
           this.providerRatesRecieved = Object.keys(this.providerRateUpdates);
           clearInterval(checkIfAllRatesReceived);
         }
@@ -66,7 +66,7 @@ export default class SwapProviders {
       const checkIfAllRatesReceived = setInterval(() => {
         checkCount++;
         this.checkIfRatesPresent();
-        if (this.haveProviderRates || checkCount > 50) {
+        if (this.ratesRetrieved || checkCount > 50) {
           this.providerRatesRecieved = Object.keys(this.providerRateUpdates);
           clearInterval(checkIfAllRatesReceived);
         }
@@ -84,6 +84,16 @@ export default class SwapProviders {
     return Object.keys(this.providerRateUpdates).every(providerName => {
       return this.providerRatesRecieved.includes(providerName);
     });
+  }
+
+  get ratesRetrieved() {
+    let result = true;
+    this.providers.forEach(provider => {
+      if (!provider.ratesRetrieved) {
+        result = false;
+      }
+    });
+    return result;
   }
 
   ownedTokens(tokens) {

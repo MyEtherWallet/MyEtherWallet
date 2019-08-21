@@ -52,6 +52,7 @@ import {
   MNEMONIC as mnemonicType,
   PRIV_KEY as privateKeyType
 } from '@/wallets/bip44/walletTypes';
+import { isAddress } from '@/helpers/addressUtils';
 
 const ACTUAL_TITLES = {};
 ACTUAL_TITLES[keyStoreType] = 'Keystore File (UTC/JSON)';
@@ -113,11 +114,13 @@ export default {
   watch: {
     locNickname(newVal) {
       this.$emit('nickname', newVal);
+    },
+    async web3() {
+      if (isAddress(this.address)) {
+        const balance = await this.web3.eth.getBalance(this.address);
+        this.balance = balance;
+      }
     }
-  },
-  async mounted() {
-    const balance = await this.web3.eth.getBalance(this.address);
-    this.balance = balance;
   }
 };
 </script>

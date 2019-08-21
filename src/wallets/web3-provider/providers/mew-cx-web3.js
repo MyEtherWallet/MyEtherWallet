@@ -74,7 +74,9 @@ class MewCxEthereum extends EventEmitter {
         this.clearListeners();
       },
       enable: function() {
-        return this.send('eth_requestAccounts');
+        return this.send('eth_requestAccounts').then(res => {
+          return res.result;
+        });
       }
     };
 

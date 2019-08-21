@@ -30,7 +30,7 @@
         <a href="https://ccswap.myetherwallet.com/#/" target="_blank">
           <div class="buy-eth">
             <img src="@/assets/images/icons/buy-eth.svg" />
-            <p>Buy Eth</p>
+            <p>Buy ETH</p>
           </div>
         </a>
         <mobile-menu-button

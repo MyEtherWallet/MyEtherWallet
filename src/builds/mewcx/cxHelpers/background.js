@@ -87,6 +87,7 @@ function onRemovedCb(id) {
 function onUpdatedCb(_, __, tab) {
   chrome.runtime.onMessage.removeListener(eventsListeners);
   if (typeof tab !== 'undefined' && Object.keys(tab).length > 0) {
+    urls[tab.id] = helpers.extractRootDomain(tab.url);
     querycB(tab);
   }
   chrome.runtime.onMessage.addListener(eventsListeners);
