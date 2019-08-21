@@ -289,6 +289,7 @@ export default class Kyber {
   getUpdatedCurrencyEntries(value, collectMap) {
     if (this.currencies[value.symbol]) {
       for (const prop in this.currencies) {
+        if (prop === 'THISISADUMMYTOKEN') continue;
         if (this.currencies[prop])
           collectMap.set(prop, {
             symbol: prop,
