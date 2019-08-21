@@ -1,3 +1,5 @@
+### Release v5.1.2
+
 ### Devop
 
 - Dashboard -> Actions & Swap button style update [#1365](https://github.com/MyEtherWallet/MyEtherWallet/pull/1365)
@@ -5,11 +7,12 @@
 - Upgrade web3.js to 1.2.1 [#1348](https://github.com/MyEtherWallet/MyEtherWallet/pull/1348)
 - Update qrcode modal to be mobile friendly [#1366](https://github.com/MyEtherWallet/MyEtherWallet/pull/1366)
 - Update UI custom token UI [1367](https://github.com/MyEtherWallet/MyEtherWallet/pull/1367)
-- Fix Buy Eth to Buy ETH [#1361] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1361)
+- Fix Buy Eth to Buy ETH [#1361](https://github.com/MyEtherWallet/MyEtherWallet/pull/1361)
 - Add "Please wait while we generate your keystore file..." to keystorebutton. [#1363](https://github.com/MyEtherWallet/MyEtherWallet/pull/1363)
 
 ### Bug
 
+- Fix incorrect rate display [#1368](https://github.com/MyEtherWallet/MyEtherWallet/pull/1368)
 - Fix scroll up animation glitch on mobile [#1358](https://github.com/MyEtherWallet/MyEtherWallet/pull/1358)
 
 ### Release v5.1.1-hotfix.1
