@@ -1,18 +1,15 @@
 <template>
-  <div>
-    <div class="bottom-image-container">
-      <div class="content">
-        <div class="buy-text">
-          <p>{{ $t('interface.buyWithCreditCard') }}</p>
-        </div>
-        <div class="send-button-container">
+  <div class="buy-eth-ad">
+    <div class="content-block">
+      <div class="flex-vertical-center">
+        <div class="top-block">{{ $t('interface.buyWithCreditCard') }}</div>
+        <div class="bottom-block">
           <standard-button
             :options="sendButton"
             @click.native="showSwapWidget"
           />
+          <img class="cc-cards" src="@/assets/images/etc/visamaster.png" />
         </div>
-        <img class="cc-cards" src="@/assets/images/etc/visamaster.png" />
-        <img class="background-eth" src="@/assets/images/ads/eth.png" />
       </div>
     </div>
   </div>
@@ -44,7 +41,8 @@ export default {
         buttonStyle: 'green-border',
         helpCenter: false,
         noMinWidth: true,
-        fullWidth: true
+        fullWidth: true,
+        paddingSmall: true
       }
     };
   },
