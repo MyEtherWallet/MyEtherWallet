@@ -51,8 +51,7 @@ describe('SwapAddressSelector.vue', () => {
     const liElements = wrapper.vm.$el.querySelectorAll(
       '.dropdown-list-box ul li'
     );
-    for (let i = 0; i < liElements.length; i++) {
-      const liElement = liElements[i];
+    for (const [i, liElement] of liElements.entries()) {
       const address = wrapper.vm.$data.addresses[i].address;
       const currency = wrapper.vm.$data.addresses[i].currency;
       expect(
@@ -83,6 +82,7 @@ describe('SwapAddressSelector.vue', () => {
       let dropdownOpen = true;
       wrapper.setData({ dropdownOpen: true });
       const liElements = wrapper.findAll('.dropdown-list-box ul li');
+
       for (let i = 0; i < liElements.length; i++) {
         liElements.at(i).trigger('click');
         dropdownOpen = !dropdownOpen;

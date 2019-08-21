@@ -532,7 +532,7 @@ export default {
       this.fromArray = fromArray;
     },
     ['swap.haveProviderRates']() {
-      this.haveProviderRates = this.swap.haveProviderRates;
+      this.haveProviderRates = this.swap.ratesRetrieved;
       const { toArray, fromArray } = this.swap.buildInitialCurrencyArrays();
       this.toArray = toArray;
       this.fromArray = fromArray;
@@ -683,6 +683,7 @@ export default {
         this.simplexUpdate = false;
         return;
       }
+
       let fromValue, toValue, simplexProvider, simplexRateDetails;
       switch (input) {
         case 'to':
