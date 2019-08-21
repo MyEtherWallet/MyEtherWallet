@@ -1,0 +1,47 @@
+@import '~@/scss/GlobalVariables';
+@import '../DashboardButtons';
+
+.content-container {
+  background-color: $light-purple-2;
+  cursor: pointer;
+
+  &.button-disabled {
+    filter: grayscale(100%);
+    opacity: 0.4;
+    cursor: initial;
+  }
+}
+
+.kitties {
+  position: absolute;
+  right: 4%;
+  top: -13%;
+  height: 125%;
+}
+
+.title {
+  color: $black;
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 31px;
+}
+
+.button-disabled {
+  color: $black;
+  font-size: 13px;
+  font-weight: 400;
+  //margin-top: 5px;
+}
+
+.text-content {
+  padding-left: 40px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
+}

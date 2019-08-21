@@ -11,7 +11,6 @@ xdescribe('MobileLanguageSelector.vue', () => {
     i18n = baseSetup.i18n;
     store = baseSetup.store;
   });
-
   beforeEach(() => {
     wrapper = shallowMount(MobileLanguageSelector, {
       localVue,
@@ -20,7 +19,6 @@ xdescribe('MobileLanguageSelector.vue', () => {
       attachToDocument: true
     });
   });
-
   it('should render correct menuOpen data', () => {
     wrapper.setData({ menuOpen: true });
     expect(
@@ -37,12 +35,10 @@ xdescribe('MobileLanguageSelector.vue', () => {
         .indexOf('open')
     ).toBe(-1);
   });
-
   it('should render correct open props', () => {
     wrapper.setProps({ open: true });
     expect(wrapper.vm.$data.menuOpen).toBe(wrapper.props().open);
   });
-
   it('should render correct supportedLanguages data', () => {
     const liElements = wrapper.vm.$el.querySelectorAll(
       '.language-menu-content-container ul li'

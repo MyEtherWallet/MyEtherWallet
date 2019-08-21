@@ -1,4 +1,5 @@
 import store from 'store';
+import { Toast } from '@/helpers';
 
 const ADD_NOTIFICATION = function(state, newNotif) {
   state.notifications = newNotif;
@@ -23,18 +24,15 @@ const UPDATE_BLOCK_NUMBER = function(state, blockNumber) {
   state.blockNumber = blockNumber;
 };
 
-const CHECK_IF_ONLINE = async function(state) {
-  state.online =
-    window.location.protocol === 'http:' ||
-    window.location.protocol === 'https:';
+const CHECK_IF_ONLINE = async function(state, status) {
+  state.online = status;
   if (state.online) {
     const darkList = await fetch(
       'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/src/addresses/addresses-darklist.json'
     )
       .then(res => res.json())
       .catch(e => {
-        // eslint-disable-next-line no-console
-        console.log(e);
+        Toast.responseHandler(e, Toast.ERROR);
       });
     state.darklist = {
       data: darkList,
@@ -91,9 +89,11 @@ const SET_WEB3_INSTANCE = function(state, web3) {
 const SWITCH_NETWORK = function(state, networkObj) {
   state.network = networkObj;
   const _netObj = Object.assign({}, networkObj);
-  _netObj.type = {
-    name: networkObj.type.name
-  };
+  if (_netObj.type.name !== 'CUS') {
+    _netObj.type = {
+      name: networkObj.type.name
+    };
+  }
   store.set('network', _netObj);
 };
 
@@ -109,6 +109,10 @@ const UPDATE_SWAP_TRANSACTION = function(state, newTx) {
 
 const TOGGLE_SIDEMENU = function(state) {
   state.sidemenuOpen = !state.sidemenuOpen;
+};
+
+const SAVE_QUERY_VAL = function(state, newQuery) {
+  state.linkQuery = newQuery;
 };
 
 export default {
@@ -129,5 +133,6 @@ export default {
   UPDATE_SWAP_TRANSACTION,
   TOGGLE_SIDEMENU,
   GETTING_STARTED_DONE,
-  UPDATE_BLOCK_NUMBER
+  UPDATE_BLOCK_NUMBER,
+  SAVE_QUERY_VAL
 };

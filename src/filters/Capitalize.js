@@ -1,7 +1,4 @@
-const Capitalize = function(value) {
-  if (!value) return '';
-  value = value.toString();
-  return value.charAt(0).toUpperCase() + value.slice(1);
-};
+import { Misc } from '@/helpers';
+const Capitalize = Misc.capitalize;
 
 export default Capitalize;

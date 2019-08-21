@@ -167,7 +167,7 @@
             />
           </div>
         </div>
-        <div v-show="selectedMethod.payable">
+        <div>
           <div class="title-container">
             <div class="title">
               <h4>{{ $t('common.value') }} in ETH:</h4>
@@ -211,7 +211,7 @@
                 :key="item.name + idx"
                 class="result-container"
               >
-                <label :name="item.name !== '' ? item.name : item.type + idx">{{
+                <label :for="item.name !== '' ? item.name : item.type + idx">{{
                   item.name !== '' ? item.name : item.type | capitalize
                 }}</label>
                 <input
@@ -269,13 +269,12 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import CurrencyPicker from '../../components/CurrencyPicker';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import { Misc, Toast } from '@/helpers';
 import { isAddress } from '@/helpers/addressUtils';
-import { uint, address, string, bytes, bool } from '@/helpers/solidityTypes.js';
 import * as unit from 'ethjs-unit';
 import store from 'store';
 
@@ -299,12 +298,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      network: 'network',
-      gasPrice: 'gasPrice',
-      account: 'account',
-      web3: 'web3'
-    }),
+    ...mapState(['network', 'gasPrice', 'account', 'web3']),
     mergedContracts() {
       const customContracts = store.get('customContracts') || [];
       return this.network.type.contracts.concat(customContracts);
@@ -346,7 +340,7 @@ export default {
             const parsedItem = this.formatInput(this.inputs[item.name]);
             _contractArgs.push(parsedItem);
           } else if (item.type === 'address') {
-            _contractArgs.push(this.inputs[item.name].toLowerCase());
+            _contractArgs.push(this.inputs[item.name].toLowerCase().trim());
           } else {
             _contractArgs.push(this.inputs[item.name]);
           }
@@ -377,39 +371,7 @@ export default {
       this.value = 0;
       this.inputs = {};
     },
-    isValidInput(value, solidityType) {
-      if (!value) value = '';
-      if (solidityType.includes('[') && solidityType.includes(']')) {
-        const values = [];
-        if (value[0] === '[') {
-          const strToArr =
-            value[0] === '[' ? value.substr(0, value.length - 1) : value;
-          strToArr.split(',').forEach(item => {
-            if (solidityType.includes(uint)) {
-              values.push(value !== '' && !isNaN(value) && Misc.isInt(value));
-            } else if (solidityType.includes(address)) {
-              values.push(isAddress(value));
-            } else if (solidityType.includes(string)) {
-              values.push(isAddress(true));
-            } else if (solidityType.includes(bool)) {
-              values.push(typeof value === typeof true || value === '');
-            } else if (solidityType.includes(bytes)) {
-              values.push(Misc.validateHexString(item));
-            }
-          });
-        }
-        return !values.includes(false);
-      }
-      if (solidityType === 'uint')
-        return value !== '' && !isNaN(value) && Misc.isInt(value);
-      if (solidityType === 'address') return isAddress(value);
-      if (solidityType === 'string') return true;
-      if (solidityType === 'bytes')
-        return value.substr(0, 2) === '0x' && Misc.validateHexString(value);
-      if (solidityType === 'bool')
-        return typeof value === typeof true || value === '';
-      return false;
-    },
+    isValidInput: Misc.isContractArgValid,
     getType: Misc.solidityType,
     selectedContract(selected) {
       if (selected.abi === '') {
@@ -465,11 +427,13 @@ export default {
     switchView(direction) {
       switch (direction) {
         case 'forward':
-          JSON.parse(this.abi).forEach(item => {
-            if (item.type !== 'constructor' && item.constant !== undefined) {
-              this.contractMethods.push(item);
-            }
-          });
+          if (this.abi !== '') {
+            JSON.parse(this.abi).forEach(item => {
+              if (item.type !== 'constructor' && item.constant !== undefined) {
+                this.contractMethods.push(item);
+              }
+            });
+          }
           this.interact = true;
           this.loading = false;
           break;
@@ -508,6 +472,7 @@ export default {
             return res;
           })
           .catch(e => {
+            this.loading = false;
             Toast.responseHandler(e, Toast.ERROR);
             errored = true;
           });
@@ -525,8 +490,8 @@ export default {
             to: this.address.toLowerCase(),
             data: data
           };
+          this.loading = false;
           web3.eth.sendTransaction(raw).catch(err => {
-            this.loading = false;
             Toast.responseHandler(err, Toast.ERROR);
           });
         }

@@ -29,9 +29,15 @@
           <span class="subname">- {{ selectedCurrency.name }}</span>
         </p>
         <p v-show="!token">{{ selectedCurrency.name }}</p>
-        <i :class="['fa', open ? 'fa-angle-up' : 'fa-angle-down']" />
+        <i
+          v-if="selectable"
+          :class="['fa', open ? 'fa-angle-up' : 'fa-angle-down']"
+        />
       </div>
-      <div :class="[open ? 'open' : 'hide', 'dropdown-item-container']">
+      <div
+        v-if="selectable"
+        :class="[open ? 'open' : 'hide', 'dropdown-item-container']"
+      >
         <div class="dropdown-search-container">
           <input v-model="search" :placeholder="$t('interface.search')" />
           <i class="fa fa-search" />
@@ -63,7 +69,6 @@
               <span v-if="getIcon(curr.symbol) === ''" class="currency-symbol">
                 <img :src="iconFetcher(curr.symbol)" class="icon-image" />
               </span>
-              <!--<i :class="['cc', getIcon(curr.symbol), 'cc-icon']" />-->
               {{ curr.symbol }}
               <span class="subname">- {{ curr.name }}</span>
             </p>
@@ -99,6 +104,10 @@ export default {
     fromSource: {
       type: Boolean,
       default: false
+    },
+    selectable: {
+      type: Boolean,
+      default: true
     },
     defaultValue: {
       type: Object,
@@ -175,7 +184,7 @@ export default {
         icon = require(`@/assets/images/currency/coins/AllImages/${currency}.svg`);
       } catch (e) {
         // eslint-disable-next-line
-        return require(`@/assets/images/currency/coins/AllImages/MEW.png`);
+        return require(`@/assets/images/icons/web-solution.svg`);
       }
       return icon;
     },
@@ -183,7 +192,9 @@ export default {
       return hasIcon(currency);
     },
     openDropdown() {
-      this.open = !this.open;
+      if (this.selectable) {
+        this.open = !this.open;
+      }
     },
     selectCurrency(currency) {
       this.openDropdown();

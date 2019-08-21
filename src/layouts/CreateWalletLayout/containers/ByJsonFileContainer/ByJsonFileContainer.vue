@@ -39,11 +39,12 @@
                     :download="name"
                     @click="downloadDone()"
                   >
-                    <span v-if="downloadable">
-                      {{ $t('createWallet.byJsonFileDownloadKeyFile') }}
-                    </span>
-                    <div v-if="!downloadable">
+                    <span v-if="downloadable">{{
+                      $t('createWallet.byJsonFileDownloadKeyFile')
+                    }}</span>
+                    <div v-if="!downloadable" class="generating">
                       <i class="fa fa-spinner fa-lg fa-spin" />
+                      <p>Please wait while we generate your keystore file...</p>
                     </div>
                   </a>
                 </div>
@@ -65,7 +66,7 @@ import noShare from '@/assets/images/icons/no-share.svg';
 import makeBackup from '@/assets/images/icons/make-a-backup.svg';
 import walletWorker from 'worker-loader!@/workers/wallet.worker.js';
 import { Toast, Wallet, Configs } from '@/helpers';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 
 export default {
   components: {
@@ -103,12 +104,10 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      online: 'online'
-    })
+    ...mapState(['online'])
   },
   mounted() {
-    if (this.online && window.Worker) {
+    if (this.online && window.Worker && window.origin !== 'null') {
       const worker = new walletWorker();
       worker.postMessage({ type: 'createWallet', data: [this.password] });
       worker.onmessage = e => {

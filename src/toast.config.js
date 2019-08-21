@@ -1,6 +1,7 @@
 import toastWarn from '@/assets/images/icons/toast-warn.svg';
 import toastErr from '@/assets/images/icons/toast-err.svg';
 import toastSuccess from '@/assets/images/icons/toast-success.svg';
+import Misc from '@/helpers/misc';
 
 const toastObject = {
   position: 'bottom-right',
@@ -25,7 +26,9 @@ const error = {
       return `<div><img src="${toastErr}" /> &nbsp; Oops.. Something Went Wrong..</div>`;
     }
     // if there is a message show it with the message
-    return `<div><img src="${toastErr}" /> &nbsp; ${payload.message}</div>`;
+    return `<div><img src="${toastErr}" /> &nbsp; ${Misc.stripTags(
+      payload.message
+    )}</div>`;
   },
   options: Object.assign({}, toastObject, {
     className: 'toast-error'
@@ -40,9 +43,9 @@ const warn = {
       return `<div><img src="${toastWarn}" /> &nbsp; Something minor happened. Don't be alarmed</div>`;
     }
     // if there is a message show it with the message
-    return `<div><img src="${toastWarn}" /> &nbsp; Warning: ${
+    return `<div><img src="${toastWarn}" /> &nbsp; Warning: ${Misc.stripTags(
       payload.message
-    }</div>`;
+    )}</div>`;
   },
   options: Object.assign({}, toastObject, {
     className: 'toast-warn'
@@ -57,7 +60,9 @@ const info = {
       return `<div><img src="${toastSuccess}" /> Good job! </div>`;
     }
     // if there is a message show it with the message
-    return `<div><img src="${toastSuccess}" /> &nbsp; ${payload.message}</div>`;
+    return `<div><img src="${toastSuccess}" /> &nbsp; ${Misc.stripTags(
+      payload.message
+    )}</div>`;
   },
   options: Object.assign({}, toastObject, {
     className: 'toast-info'
@@ -72,7 +77,9 @@ const success = {
       return `<div><img src="${toastSuccess}" /> &nbsp; Success!</div>`;
     }
     // if there is a message show it with the message
-    return `<div><img src="${toastSuccess}" /> &nbsp; ${payload.message}</div>`;
+    return `<div><img src="${toastSuccess}" /> &nbsp; ${Misc.stripTags(
+      payload.message
+    )}</div>`;
   },
   options: Object.assign({}, toastObject, {
     className: 'toast-success'

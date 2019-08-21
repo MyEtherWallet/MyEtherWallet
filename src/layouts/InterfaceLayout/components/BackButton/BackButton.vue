@@ -1,23 +1,31 @@
 <template>
-  <div class="back-container" @click.prevent="back">
-    <div class="content-title">
+  <div class="back-container">
+    <div class="content-title" @click.prevent="back">
       <div class="back-icon-container">
         <i class="fa fa-arrow-left" aria-hidden="true" />
       </div>
       <p>{{ $t('common.back') }}</p>
     </div>
+    <div class="right-slot"><slot /></div>
   </div>
 </template>
 
 <script type="text/javascript">
 export default {
+  props: {
+    path: {
+      type: String,
+      default: ''
+    }
+  },
   methods: {
     back() {
-      if (this.$router.history.current.path.includes('interface')) {
-        const stringifiedPath = this.$router.history.current.path.split('/');
-        this.$router.replace(`/${stringifiedPath[1]}/${stringifiedPath[2]}`);
+      const routePath = this.$route.path.split('/');
+      const goToPath = routePath.slice(0, routePath.length - 1).join('/');
+      if (this.path === '') {
+        this.$router.push(goToPath);
       } else {
-        this.$router.go(-1);
+        this.$router.push(this.path);
       }
     }
   }

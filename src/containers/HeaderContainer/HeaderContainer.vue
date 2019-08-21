@@ -3,10 +3,10 @@
     <!-- Modals ***************************************** -->
     <disconnected-modal ref="mewConnectDisconnected" />
     <settings-modal
-      v-if="wallet !== null"
+      v-if="address !== null"
       ref="settings"
       :gas-price="gasPrice"
-      :address="account.address"
+      :address="address"
     />
     <notifications-modal ref="notifications" />
     <logout-modal ref="logout" />
@@ -58,7 +58,7 @@
         <div
           :class="[
             (isMobileMenuOpen || !isPageOnTop) && 'mobile-menu-boxshadow',
-            wallet !== null ? '' : 'page-container'
+            address !== null ? '' : 'page-container'
           ]"
         >
           <div class="header-container">
@@ -80,15 +80,46 @@
             <div class="top-menu">
               <b-nav>
                 <b-nav-item
+                  href="https://ccswap.myetherwallet.com/#/"
+                  target="_blank"
+                  class="buy-eth"
+                >
+                  <img
+                    class="buy-eth-icon"
+                    src="@/assets/images/icons/buy-eth.svg"
+                  />
+                  Buy ETH
+                </b-nav-item>
+                <b-nav-item
                   v-if="isHomePage"
                   to="/"
                   exact
                   @click="scrollTop()"
                   >{{ $t('header.home') }}</b-nav-item
                 >
-                <b-nav-item v-if="isHomePage" to="/#about-mew">{{
-                  $t('header.about')
-                }}</b-nav-item>
+                <b-nav-item v-if="isHomePage" to="/#about-mew">
+                  {{ $t('header.about') }}
+                </b-nav-item>
+                <b-nav-item-dropdown
+                  v-if="address !== null"
+                  right
+                  no-caret
+                  class="tx-history-menu"
+                >
+                  <template slot="button-content">
+                    <p>Transaction History</p>
+                  </template>
+                  <b-dropdown-item :href="explorerUrl" target="_blank">
+                    <p>{{ serviceUrl }} ({{ network.type.name }})</p>
+                  </b-dropdown-item>
+                  <b-dropdown-item
+                    v-show="network.type.name === 'ETH'"
+                    :href="'https://ethplorer.io/address/' + address"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Ethplorer (Tokens)</b-dropdown-item
+                  >
+                </b-nav-item-dropdown>
                 <b-nav-item to="/#faqs">{{ $t('common.faqs') }}</b-nav-item>
                 <div class="language-menu-container">
                   <div class="arrows">
@@ -102,6 +133,7 @@
                     <template slot="button-content">
                       <div class="current-language-flag">
                         <img
+                          v-if="currentFlag !== null"
                           :src="
                             require(`@/assets/images/flags/${currentFlag}.svg`)
                           "
@@ -121,7 +153,10 @@
                     >
                   </b-nav-item-dropdown>
                 </div>
-                <div v-if="wallet !== null" class="notification-menu-container">
+                <div
+                  v-if="address !== null"
+                  class="notification-menu-container"
+                >
                   <notification ref="notification" />
                 </div>
                 <b-nav-item
@@ -145,15 +180,16 @@
                   <div class="access-button">Access</div>
                 </b-nav-item>
                 <b-nav-item-dropdown
-                  v-if="wallet !== null"
+                  v-if="address !== null"
                   right
                   no-caret
                   extra-toggle-classes="identicon-dropdown"
+                  class="settings-menu"
                 >
                   <template slot="button-content">
                     <div class="settings-container">
                       <blockie
-                        :address="account.address"
+                        :address="address"
                         width="35px"
                         height="35px"
                         class="blockie-image"
@@ -181,7 +217,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import store from 'store';
 import { Misc, Toast } from '@/helpers';
 import Blockie from '@/components/Blockie';
@@ -237,8 +273,8 @@ export default {
         // { name: 'ภาษาไทย', flag: 'th', langCode: 'th_TH' },
         // { name: 'Türkçe', flag: 'tr', langCode: 'tr_TR' },
         // { name: 'Tiếng Việt', flag: 'vn', langCode: 'vn_VN' },
-        // { name: '简体中文', flag: 'zh-Hans', langCode: 'zh_CS' }
-        { name: '繁體中文', flag: 'zh-Hant', langCode: 'zh_CN' }
+        { name: '简体中文', flag: 'zh-Hans', langCode: 'zh_CN' },
+        { name: '繁體中文', flag: 'tw', langCode: 'zh_TW' }
       ],
       currentName: 'English',
       currentFlag: 'en',
@@ -248,21 +284,14 @@ export default {
       showGetFreeWallet: false,
       gasPrice: '0',
       error: {},
-      resolver: () => {},
-      showGettingStarted: ''
+      resolver: () => {}
     };
   },
   computed: {
-    ...mapGetters({
-      wallet: 'wallet',
-      online: 'online',
-      web3: 'web3',
-      account: 'account',
-      gettingStartedDone: 'gettingStartedDone'
-    }),
+    ...mapState(['network', 'web3', 'account', 'gettingStartedDone']),
     showButtons() {
       if (
-        this.wallet === null &&
+        this.address === null &&
         (this.$route.fullPath === '/' ||
           this.$route.fullPath === '/#about-mew' ||
           this.$route.fullPath === '/#faqs' ||
@@ -272,6 +301,18 @@ export default {
         return true;
       }
       return false;
+    },
+    explorerUrl() {
+      return this.network.type.blockExplorerAddr.replace(
+        '[[address]]',
+        this.address
+      );
+    },
+    serviceUrl() {
+      return Misc.getService(this.network.type.blockExplorerAddr);
+    },
+    address() {
+      return this.account.address;
     }
   },
   watch: {
@@ -282,12 +323,15 @@ export default {
         this.isHomePage = true;
       }
     },
-    wallet() {
+    address() {
       this.setHighGasPrice();
     },
     web3() {
       this.setHighGasPrice();
     }
+  },
+  created() {
+    this.$eventHub.$on('open-settings', this.openSettings);
   },
   mounted() {
     if (Misc.doesExist(store.get('locale'))) {
@@ -329,8 +373,6 @@ export default {
       }
     });
 
-    // this.disconnectMewConnectModal();
-
     this.$eventHub.$on('mewConnectDisconnected', () => {
       this.isMobileMenuOpen = false;
       this.$refs.mewConnectDisconnected.$refs.disconnected.show();
@@ -343,7 +385,7 @@ export default {
     Object.values(events).forEach(evt => {
       this.$eventHub.$off(evt);
     });
-    // this.$eventHub.$off('issueModal');
+    this.$eventHub.$off('open-settings');
   },
   methods: {
     setHighGasPrice() {
@@ -363,10 +405,10 @@ export default {
       });
     },
     languageItemClicked(e) {
-      const code = e.target.getAttribute('data-language-code');
-      const flag = e.target.getAttribute('data-flag-name');
+      const code = e.target.parentNode.getAttribute('data-language-code');
+      const flag = e.target.parentNode.getAttribute('data-flag-name');
 
-      this._i18n.locale = code;
+      this.$i18n.locale = code;
       this.currentName = e.target.innerText.replace(/^\s+|\s+$|\s+(?=\s)/g, '');
       this.currentFlag = flag;
       store.set('locale', code);

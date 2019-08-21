@@ -12,6 +12,7 @@ import GOERLI from './GOERLI';
 import GO from './GO.js';
 import IOLITE from './IOLITE.js';
 import KOV from './KOV.js';
+import META from './META.js';
 import MIX from './MIX.js';
 import MUSIC from './MUSIC.js';
 import PIRL from './PIRL.js';
@@ -25,6 +26,10 @@ import TOMO from './TOMO.js';
 import UBQ from './UBQ.js';
 import WEB from './WEB.js';
 import TT from './TT.js';
+import SUM from './SUM.js';
+import DXN from './DXN.js';
+import PHT from './PHT.js';
+
 export {
   AKA,
   ATH,
@@ -40,6 +45,7 @@ export {
   GO,
   IOLITE,
   KOV,
+  META,
   MIX,
   MUSIC,
   POA,
@@ -52,5 +58,8 @@ export {
   TOMO,
   UBQ,
   WEB,
-  TT
+  TT,
+  SUM,
+  DXN,
+  PHT
 };

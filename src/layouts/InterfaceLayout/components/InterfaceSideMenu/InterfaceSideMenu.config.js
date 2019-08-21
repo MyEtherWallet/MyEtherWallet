@@ -1,14 +1,26 @@
 export default {
   tabs: [
     {
+      name: 'dashboard',
+      onlineOnly: false,
+      routes: ['/interface/dashboard', '/interface'],
+      icons: {
+        active: require('@/assets/images/sidemenu/dashboard-active.svg'),
+        inactive: require('@/assets/images/sidemenu/dashboard.svg')
+      },
+      titleKey: 'interface.dashboard',
+      children: []
+    },
+    {
       name: 'send-transaction',
+      onlineOnly: false,
       routes: [
         '/interface/send-transaction',
-        '/interface',
         '/interface/send-offline',
         '/interface/send-offline/generate-info',
         '/interface/send-offline/generate-tx',
-        '/interface/send-offline/send-tx'
+        '/interface/send-offline/send-tx',
+        '/interface/nft-manager'
       ],
       icons: {
         active: require('@/assets/images/sidemenu/send-active.svg'),
@@ -18,7 +30,7 @@ export default {
       children: [
         {
           name: 'send-transaction',
-          routes: ['/interface/send-transaction', '/interface'],
+          routes: ['/interface/send-transaction'],
           icons: {
             active: '',
             inactive: ''
@@ -38,11 +50,22 @@ export default {
             inactive: ''
           },
           titleKey: 'common.offline'
+        },
+        {
+          name: 'nft-manager',
+          onlineOnly: true,
+          routes: ['/interface/nft-manager'],
+          icons: {
+            active: '',
+            inactive: ''
+          },
+          titleKey: 'common.ntfManager'
         }
       ]
     },
     {
       name: 'swap',
+      onlineOnly: true,
       routes: ['/interface/swap'],
       icons: {
         active: require('@/assets/images/sidemenu/swap-active.svg'),
@@ -53,16 +76,27 @@ export default {
     },
     {
       name: 'dapps',
+      onlineOnly: true,
       routes: [
         '/interface/dapps',
-        '/interface/dapps/register-domain',
-        '/interface/dapps/register-domain/bid',
-        '/interface/dapps/register-domain/reveal',
-        '/interface/dapps/register-domain/owned',
-        '/interface/dapps/register-domain/forbidden',
-        '/interface/dapps/register-domain/auction',
-        '/interface/dapps/register-domain/confirm',
-        '/interface/dapps/domain-sale'
+        '/interface/dapps/manage-ens',
+        '/interface/dapps/manage-ens/auction',
+        '/interface/dapps/manage-ens/bid',
+        '/interface/dapps/manage-ens/owned',
+        '/interface/dapps/manage-ens/reveal',
+        '/interface/dapps/manage-ens/forbidden',
+        '/interface/dapps/manage-ens/finalize',
+        '/interface/dapps/manage-ens/manage',
+        '/interface/dapps/manage-ens/fifs',
+        '/interface/dapps/manage-ens/claim',
+        '/interface/dapps/manage-ens/dns-error',
+        '/interface/dapps/manage-ens/no-txt-setup',
+        '/interface/dapps/manage-ens/transfer-registrar',
+        '/interface/dapps/manage-ens/create-commitment',
+        '/interface/dapps/manage-ens/permanent-registration',
+        '/interface/dapps/domain-sale',
+        '/interface/dapps/schedule-transaction',
+        '/interface/dapps/maker-dai'
       ],
       icons: {
         active: require('@/assets/images/sidemenu/dapps-active.svg'),
@@ -73,6 +107,7 @@ export default {
     },
     {
       name: 'contracts',
+      onlineOnly: true,
       routes: [
         '/interface/interact-with-contract',
         '/interface/deploy-contract'
@@ -105,6 +140,7 @@ export default {
     },
     {
       name: 'messages',
+      onlineOnly: false,
       routes: ['/interface/sign-message', '/interface/verify-message'],
       icons: {
         active: require('@/assets/images/sidemenu/message-active.svg'),

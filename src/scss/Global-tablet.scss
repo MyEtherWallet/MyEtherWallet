@@ -1046,7 +1046,7 @@
 
     // On mouse-over, add a grey background color
     &:hover input ~ .checkmark {
-      $check-box-hover-color: $light-grey-12;
+      $check-box-hover-color: $dark-grey-11;
 
       background-color: $check-box-hover-color;
     }
@@ -1279,7 +1279,7 @@
   }
 
   .disabled {
-    background-color: $light-grey-12;
+    background-color: $dark-grey-11;
     pointer-events: none;
   }
 } // @media ----------------------------------------------------------------------------------------

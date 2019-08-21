@@ -1,6 +1,7 @@
 const platform = require('platform');
 import * as types from './types';
 import * as nodes from './nodes';
+
 const nodeList = {};
 Object.keys(types).forEach(key => {
   nodeList[types[key].name] = [];

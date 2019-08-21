@@ -67,6 +67,24 @@ $mobile-menu-z-index: 999;
 
 .mobile-menu-button--container {
   margin-left: auto;
+  display: flex;
+  align-items: center;
+
+  a {
+    text-decoration: none;
+  }
+  .buy-eth {
+    margin-right: 15px;
+    display: flex;
+    align-items: center;
+    p {
+      font-weight: 600;
+      color: $black;
+    }
+    img {
+      height: 25px;
+    }
+  }
 }
 
 //********************************************************

@@ -7,15 +7,18 @@ const gettingStartedDone =
   store.get('skipTutorial') !== undefined ? store.get('skipTutorial') : false;
 const storedNetwork = store.get('network');
 let network = nodeList['ETH'][0];
+
 if (storedNetwork !== undefined) {
   network = storedNetwork;
-  network.type = nodeList[storedNetwork.type.name][0].type;
+  if (storedNetwork.type.name !== 'CUS') {
+    network.type = nodeList[storedNetwork.type.name][0].type;
+  }
 }
+
 const notifications =
   store.get('notifications') !== undefined ? store.get('notifications') : {};
 const gasPrice =
-  store.get('gasPrice') !== undefined ? store.get('gasPrice') : 10;
-
+  store.get('gasPrice') !== undefined ? store.get('gasPrice') : 41;
 const customPaths =
   store.get('customPaths') !== undefined ? store.get('customPaths') : {};
 const state = {
@@ -41,7 +44,8 @@ const state = {
   sidemenuOpen: false,
   darklist: darklist,
   gettingStartedDone: gettingStartedDone,
-  blockNumber: 0
+  blockNumber: 0,
+  linkQuery: {}
 };
 
 export default state;

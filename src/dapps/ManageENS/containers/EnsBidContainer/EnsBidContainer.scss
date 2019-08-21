@@ -1,0 +1,237 @@
+@import '../../ManageENS';
+
+$ens-bid-mobile-width: 600px;
+
+%accordion-template {
+  background-color: $dark-blue-12 !important;
+  border: 0;
+  border-radius: 4px !important;
+  color: $white;
+  font-size: 16px !important;
+  height: 36px;
+  padding: 7px 11px;
+  text-align: left;
+  font-weight: 600;
+
+  span {
+    border: 1px solid $white;
+    border-radius: 100px;
+    padding: 2px 4px 2px 8px;
+    font-size: 13px;
+    text-align: center;
+  }
+
+  i {
+    border: 1px solid $white;
+    border-radius: 100px;
+    padding: 3px;
+  }
+
+  .disabled {
+    pointer-events: none;
+  }
+
+  .edit {
+    cursor: pointer;
+  }
+}
+
+.name-available-container {
+  @extend %template-container;
+}
+
+.content-header {
+  //border-bottom: 1px dashed $light-grey-3;
+  padding: 10px 0 15px;
+
+  h3 {
+    color: $mew-green;
+  }
+
+  p {
+    font-weight: 300;
+  }
+
+  > div {
+    padding: 0 5px;
+  }
+}
+
+.inputs-container {
+  display: flex;
+  flex-direction: column;
+
+  .input-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+
+    label {
+      color: $dark-blue-2;
+      font-size: 16px;
+      font-weight: 600;
+      padding: 10px 7px;
+
+      i {
+        font-size: 14px;
+        margin-right: 2px;
+      }
+
+      .input-title {
+        font-size: 16px;
+      }
+    }
+
+    input {
+      background-color: $background-color-1;
+      border: 0;
+      font-size: 14px;
+      height: 52px;
+      padding: 20px;
+      width: 100%;
+    }
+  }
+}
+
+.buttons-container {
+  text-align: center;
+  margin-top: 60px;
+
+  // Mobile
+  @media all and (max-width: $mobile-width) {
+    margin-top: 30px;
+  }
+
+  button {
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 20px;
+    width: 260px;
+
+    // Mobile
+    @media all and (max-width: $mobile-width) {
+      width: 100%;
+    }
+  }
+
+  .submit {
+    background-color: $mew-green;
+    border: 1px solid $mew-green;
+    color: $white;
+  }
+}
+
+.secret-phrase-label {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+
+  .random {
+    color: $mew-green;
+    cursor: pointer;
+    font-weight: normal;
+  }
+}
+
+.accordion-header {
+  @extend %accordion-template;
+}
+
+.accordion-header-details {
+  @extend %accordion-template;
+
+  margin-top: 6px;
+
+  span {
+    padding: 2px 2px 2px 7px;
+  }
+}
+
+.done {
+  display: flex;
+  justify-content: space-between;
+}
+
+.disable {
+  background-color: $light-grey-14 !important;
+  margin-top: 23px;
+}
+
+.confirmation-warning {
+  background-color: $light-green-1;
+  border-radius: 4px;
+  color: $dark-blue-12;
+  margin: 17px 0 0;
+  padding: 15px 25px;
+}
+
+.detail-info {
+  //padding: 20px 17px;
+
+  .detail-info-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 7px 10px;
+
+    // Mobile
+    @media all and (max-width: $ens-bid-mobile-width) {
+      display: block;
+
+      > * {
+        display: block;
+      }
+    }
+
+    .detail-title {
+      color: $dark-grey-11;
+      font-size: 14px;
+    }
+
+    .detail-value {
+      color: $dark-blue-12;
+      font-size: 14px;
+    }
+  }
+}
+
+.json-container {
+  .json-label-container {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    padding: 14px 10px;
+
+    .json-title {
+      color: $dark-blue-2;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .json-copy {
+      color: $mew-green;
+      cursor: pointer;
+      font-size: 14px;
+    }
+  }
+
+  .json-content {
+    background-color: $light-green-1;
+    border: 0;
+    border-radius: 4px;
+    height: 132px;
+    overflow-y: scroll;
+    padding: 15px 10px;
+    width: 100%;
+    word-wrap: break-word;
+  }
+}
+
+.timer-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.print-button {
+  margin-top: 20px;
+}

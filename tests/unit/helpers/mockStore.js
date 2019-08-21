@@ -1,12 +1,7 @@
 import nodeList from '@/networks';
-import url from 'url';
 import Web3 from 'web3';
-const network = nodeList['ETH'][3];
-const hostUrl = url.parse(network.url);
-
-const newWeb3 = new Web3(
-  `${hostUrl.protocol}//${hostUrl.hostname}:${network.port}${hostUrl.pathname}`
-);
+const network = nodeList['ETH'][0];
+const newWeb3 = new Web3();
 const state = {
   account: {
     balance: 0,
@@ -33,7 +28,8 @@ const state = {
   wallet: {
     getAddressString: jest.fn()
   },
-  web3: newWeb3
+  web3: newWeb3,
+  linkQuery: {}
 };
 
 const getters = {
@@ -68,7 +64,8 @@ const getters = {
           registry: '0x123456789',
           registrarTLD: 'eth',
           registrarType: 'auction'
-        }
+        },
+        currencyName: 'ETH'
       },
       url: 'https://mainnet.infura.io/mew'
     };
@@ -95,7 +92,8 @@ const getters = {
   web3: () => {
     return newWeb3;
   },
-  path: () => {}
+  path: () => {},
+  linkQuery: () => {}
 };
 
 export { state, getters };

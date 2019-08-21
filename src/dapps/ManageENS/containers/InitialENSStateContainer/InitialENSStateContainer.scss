@@ -1,0 +1,222 @@
+@import '../../ManageENS';
+.initial-state-ens {
+  @extend %template-container;
+}
+.advanced {
+  padding-top: 10px;
+
+  .advanced-content {
+    border-bottom: 2px solid $background-color-1;
+    border-top: 2px solid $background-color-1;
+    display: flex;
+    padding: 0 8px;
+    padding-bottom: 20px;
+    padding-top: 20px;
+  }
+
+  .toggle-button {
+    align-items: center;
+    display: flex;
+    margin-left: auto;
+
+    > span {
+      margin-right: 15px;
+    }
+  }
+}
+
+.send-form {
+  .title-container {
+    align-items: flex-end;
+    display: flex;
+    margin-bottom: 10px;
+
+    .title {
+      padding: 0 8px;
+    }
+
+    p {
+      max-width: 760px;
+    }
+
+    h4 {
+      margin-bottom: 10px;
+    }
+
+    .buttons {
+      margin-bottom: 3px;
+      margin-left: auto;
+    }
+  }
+
+  .the-form {
+    border-radius: 5px;
+    //margin-bottom: 10px;
+  }
+
+  .domain-name {
+    align-items: center;
+    display: flex;
+    position: relative;
+
+    input {
+      background-color: $background-color-1;
+      border: 0;
+      margin-right: 20px;
+      padding: 13px 15px;
+      width: 100%;
+    }
+
+    span {
+      font-size: 20px;
+      font-weight: 600;
+    }
+  }
+
+  .error-message-container {
+    margin: 7px 0 0 15px;
+    p {
+      color: $text-color-red;
+    }
+  }
+}
+
+.amount-to-address {
+  display: grid;
+  grid-column-gap: 5px;
+  grid-template-columns: 1fr 70px 1fr;
+
+  .title {
+    margin-bottom: 13px;
+    padding: 0 8px;
+  }
+
+  .exchange-icon {
+    color: $text-color-9;
+    font-size: 30px;
+    padding-top: 62px;
+    text-align: center;
+  }
+
+  .to-address {
+    position: relative;
+
+    .title {
+      align-items: center;
+      display: flex;
+      position: relative;
+    }
+
+    img {
+      height: 50px;
+      left: 98px;
+      position: absolute;
+      top: -14px;
+    }
+
+    .copy-button {
+      color: $text--link-color;
+      cursor: pointer;
+      margin-left: auto;
+    }
+
+    .address-block {
+      height: 98px;
+    }
+
+    i {
+      bottom: 13px;
+      position: absolute;
+      right: 13px;
+    }
+
+    textarea {
+      background-color: transparent;
+      border: 0;
+      height: 100%;
+      padding: 13px 15px;
+      resize: none;
+      width: 100%;
+    }
+  }
+}
+
+.submit-button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 60px;
+
+  // Mobile
+  @media all and (max-width: $mobile-width) {
+    margin-top: 30px;
+  }
+}
+
+.flex-container {
+  border-bottom: 2px solid $background-color-1;
+  border-top: 2px solid $background-color-1;
+  margin-bottom: 40px;
+  margin-top: 40px;
+  padding: 20px 35px;
+
+  .title-container {
+    display: flex;
+
+    .margin-left-auto {
+      margin-left: auto;
+    }
+  }
+}
+
+.domain-check-form {
+  margin-top: 30px;
+
+  .domain-checker {
+    display: flex;
+
+    input {
+      background-color: $background-color-1;
+      border: 0;
+      border-radius: 5px 0 0 5px;
+      // margin-right: 20px;
+      padding: 13px 15px;
+      width: 100%;
+    }
+
+    .check-button {
+      background-color: $button-background-color-1;
+      border-radius: 0 5px 5px 0;
+      color: $text-white;
+      cursor: pointer;
+      font-weight: 500;
+      padding: 13px 40px;
+    }
+  }
+}
+
+.sub-domain-list {
+  margin-top: 30px;
+
+  .title {
+    margin-bottom: 10px;
+  }
+
+  ul {
+    li {
+      align-items: center;
+      border-top: 5px dotted $background-color-1;
+      display: flex;
+      padding: 10px 0;
+    }
+  }
+
+  .buy-button-container {
+    align-items: center;
+    display: flex;
+    margin-left: auto;
+
+    p {
+      margin-right: 10px;
+    }
+  }
+}

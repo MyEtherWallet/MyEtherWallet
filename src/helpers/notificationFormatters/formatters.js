@@ -78,7 +78,10 @@ const formatTransactionHash = (val, network) => {
       amount: new BigNumber(val[txIndexes.txDetails].value).toString(),
       nonce: new BigNumber(val[txIndexes.txDetails].nonce).toString(),
       gasPrice: new BigNumber(val[txIndexes.txDetails].gasPrice).toString(),
-      gasLimit: new BigNumber(val[txIndexes.txDetails].gas).toString()
+      gasLimit: new BigNumber(val[txIndexes.txDetails].gas).toString(),
+      tokenTransferTo: val[txIndexes.txDetails].tokenTransferTo,
+      tokenTransferVal: val[txIndexes.txDetails].tokenTransferVal,
+      tokenSymbol: val[txIndexes.txDetails].tokenSymbol
     },
     expanded: false
   };

@@ -6,17 +6,20 @@ import {
   MIN_RATE_BUFFER,
   defaultValues,
   specialGasLimits,
-  kyberTokenList,
+  // kyberTokenList,
   kyberTokenInfoList,
   kyberValidNetworks,
   kyberNetworkENS,
   walletDepositeAddress,
   kyberAddressFallback,
+  kyberGasLimitList,
   KyberCurrencies,
-  FEE_RATE
+  FEE_RATE,
+  kyberMethods
 } from './config';
 import kyberNetworkABI from './kyberNetwork.abi';
 import { ERC20 } from '../../partnersConfig';
+import GAS_LIMITS from './gasLimits';
 
 export {
   kyberBaseCurrency,
@@ -30,10 +33,13 @@ export {
   kyberNetworkENS,
   KyberCurrencies,
   kyberAddressFallback,
-  kyberTokenList,
+  kyberGasLimitList,
+  // kyberTokenList,
   kyberTokenInfoList,
   kyberValidNetworks,
   kyberNetworkABI,
   ERC20,
-  FEE_RATE
+  FEE_RATE,
+  GAS_LIMITS,
+  kyberMethods
 };

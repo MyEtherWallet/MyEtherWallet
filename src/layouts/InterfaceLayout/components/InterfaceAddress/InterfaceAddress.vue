@@ -25,7 +25,7 @@
         <div class="icon-container">
           <button
             v-if="hasMultipleAddr"
-            id="popover-ref-address"
+            id="popover-ref-switch"
             class="change-button"
             @click="switchAddr"
           >
@@ -39,6 +39,14 @@
           </b-btn>
           <b-btn id="popover-ref-copy" class="custom-tooltip" @click="copy">
             <img src="~@/assets/images/icons/copy.svg" />
+          </b-btn>
+          <b-btn
+            v-show="displayAddr"
+            id="popover-ref-address"
+            class="custom-tooltip button-address"
+            @click="displayAddr"
+          >
+            <img src="~@/assets/images/icons/Interface/Buttons/Address.svg" />
           </b-btn>
           <b-popover
             content="Switch Address"
@@ -63,7 +71,14 @@
           />
           <b-popover
             :content="$t('popover.switchAddress')"
-            target="switch"
+            target="popover-ref-switch"
+            placement="top"
+            triggers="hover"
+            title
+          />
+          <b-popover
+            :content="$t('popover.displayAddress')"
+            target="popover-ref-address"
             placement="top"
             triggers="hover"
             title
@@ -83,7 +98,7 @@
 
 <script>
 import Blockie from '@/components/Blockie';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import { Toast } from '@/helpers';
 import {
   KEYSTORE,
@@ -109,6 +124,10 @@ export default {
       type: Function,
       default: function() {}
     },
+    displayAddr: {
+      type: Function,
+      default: undefined
+    },
     qrcode: {
       type: Function,
       default: function() {}
@@ -120,9 +139,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      account: 'account'
-    })
+    ...mapState(['account'])
   },
   mounted() {
     if (this.account.address !== null) {

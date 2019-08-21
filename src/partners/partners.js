@@ -1,7 +1,11 @@
 import BigNumber from 'bignumber.js';
 import WAValidator from 'wallet-address-validator';
 import MAValidator from 'multicoin-address-validator';
-import { checkInvalidOrMissingValue, utils } from './helpers';
+import {
+  checkInvalidOrMissingValue,
+  bestProviderForQuantity,
+  utils
+} from './helpers';
 import {
   BASE_CURRENCY,
   TOP_OPTIONS_ORDER,
@@ -24,11 +28,23 @@ function comparator(arrayForSort) {
 
 export default class SwapProviders {
   constructor(providers, environmentSupplied, misc = {}) {
+    this.online = true;
+    if (misc.hasOwnProperty('online')) {
+      this.online = misc.online;
+    }
+    this.providerConstructors = providers;
+    this.setup(providers, environmentSupplied, misc);
+  }
+
+  setup(providers, environmentSupplied, misc) {
+    this.overrideDecimals = misc.overrideDecimals || false;
     this.updateProviderRates = 0;
     this.providers = new Map();
     this.providerRateUpdates = {};
     this.ownedTokenList = misc.tokensWithBalance || [];
+    this.providerRatesRecieved = [];
 
+    if (!this.online) return;
     providers.forEach(entry => {
       this.providerRateUpdates[entry.getName()] = 0;
       this.providers.set(entry.getName(), new entry(environmentSupplied));
@@ -41,7 +57,7 @@ export default class SwapProviders {
       const checkIfAllRatesReceived = setInterval(() => {
         checkCount++;
         this.checkIfRatesPresent();
-        if (this.haveProviderRates || checkCount > 20) {
+        if (this.ratesRetrieved || checkCount > 20) {
           this.providerRatesRecieved = Object.keys(this.providerRateUpdates);
           clearInterval(checkIfAllRatesReceived);
         }
@@ -50,7 +66,7 @@ export default class SwapProviders {
       const checkIfAllRatesReceived = setInterval(() => {
         checkCount++;
         this.checkIfRatesPresent();
-        if (this.haveProviderRates || checkCount > 50) {
+        if (this.ratesRetrieved || checkCount > 50) {
           this.providerRatesRecieved = Object.keys(this.providerRateUpdates);
           clearInterval(checkIfAllRatesReceived);
         }
@@ -70,6 +86,16 @@ export default class SwapProviders {
     });
   }
 
+  get ratesRetrieved() {
+    let result = true;
+    this.providers.forEach(provider => {
+      if (!provider.ratesRetrieved) {
+        result = false;
+      }
+    });
+    return result;
+  }
+
   ownedTokens(tokens) {
     this.ownedTokenList = tokens;
   }
@@ -85,12 +111,13 @@ export default class SwapProviders {
   }
 
   isProvider(name) {
+    if (!this.online) return false;
     return this.providers.has(name);
   }
 
-  updateNetwork(network) {
+  updateNetwork(network, web3) {
     this.providers.forEach(provider => {
-      provider.setNetwork(network);
+      provider.setNetwork(network, web3);
     });
   }
 
@@ -110,6 +137,7 @@ export default class SwapProviders {
   // Does in general, but have observed some instances where it did not.
   optionSorting(array) {
     const tokens = [...this.ownedTokenList];
+
     const tokenNameMap = tokens
       .sort((a, b) => {
         if (a.hasOwnProperty('balance') && b.hasOwnProperty('balance')) {
@@ -117,11 +145,10 @@ export default class SwapProviders {
         }
         return 0;
       })
-      .map(item => item.name)
+      .map(item => item.symbol)
       .reverse();
     const arraysForSort = [...tokenNameMap, ...TOP_OPTIONS_ORDER];
     return array.sort(comparator(arraysForSort));
-    // return array.sort(comparator);
   }
 
   buildInitialCurrencyArrays() {
@@ -176,6 +203,61 @@ export default class SwapProviders {
     };
   }
 
+  async standAloneRateEstimate(
+    fromCurrency,
+    toCurrency,
+    fromValue,
+    toValue = 0
+  ) {
+    if (this.haveProviderRates) {
+      const { callsToMake } = await this.updateRateEstimate(
+        fromCurrency,
+        toCurrency,
+        fromValue,
+        toValue
+      );
+      const results = await Promise.all(
+        callsToMake.map(func =>
+          func(fromCurrency, toCurrency, fromValue, toValue)
+        )
+      );
+      if (
+        results.every(
+          entry =>
+            entry.fromCurrency === fromCurrency &&
+            entry.toCurrency === toCurrency
+        )
+      ) {
+        const vals = bestProviderForQuantity(
+          results.map(entry => {
+            if (+entry.rate > 0) {
+              return {
+                provider: entry.provider,
+                fromCurrency,
+                fromValue: fromValue,
+                toCurrency,
+                rate: +entry.rate,
+                minValue: entry.minValue || 0,
+                maxValue: entry.maxValue || 0,
+                computeConversion: function(_fromValue) {
+                  return new BigNumber(_fromValue)
+                    .times(this.rate)
+                    .toFixed(6)
+                    .toString(10);
+                }
+              };
+            }
+          }),
+          fromValue
+        );
+        if (vals.length === 0) {
+          return [{}];
+        }
+        return vals;
+      }
+    }
+  }
+
   getTokenAddress(currency, noError) {
     if (SwapProviders.isToken(currency)) {
       return EthereumTokens[currency].contractAddress;
@@ -215,6 +297,7 @@ export default class SwapProviders {
     } else if (SwapProviders.isToken(currency)) {
       const decimal = SwapProviders.getTokenDecimals(currency);
       if (decimal < 6) return decimal;
+      if (this.overrideDecimals) return decimal;
       return 6;
     }
     return 6;

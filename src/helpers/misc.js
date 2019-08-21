@@ -1,9 +1,17 @@
 import normalise from '@/helpers/normalise';
 import nodeList from '@/networks';
 import { isAddress } from './addressUtils';
+import url from 'url';
 import utils from 'web3-utils';
 import store from '@/store';
 import { uint, address, string, bytes, bool } from './solidityTypes';
+import xss from 'xss';
+
+const capitalize = value => {
+  if (!value) return '';
+  value = value.toString();
+  return value.charAt(0).toUpperCase() + value.slice(1);
+};
 /* Accepts string, returns boolean */
 const isJson = str => {
   try {
@@ -13,6 +21,15 @@ const isJson = str => {
   }
 
   return true;
+};
+
+const getService = parsableUrl => {
+  const parsedUrl = url.parse(parsableUrl).hostname;
+  const splitUrl = parsedUrl.split('.');
+  if (splitUrl.length > 2)
+    // eslint-disable-next-line
+    return capitalize(`${splitUrl[1]}.${splitUrl[2]}`);
+  return capitalize(splitUrl.join('.'));
 };
 
 const doesExist = val => val !== undefined && val !== null;
@@ -87,13 +104,12 @@ const scrollToTop = scrollDuration => {
 };
 
 const validateHexString = str => {
-  if (str == '') return true;
+  if (str === '') return true;
   str =
-    str.substring(0, 2) == '0x'
+    str.substring(0, 2) === '0x'
       ? str.substring(2).toUpperCase()
       : str.toUpperCase();
-  const re = /^[0-9A-F]+$/g;
-  return re.test(str);
+  return utils.isHex(str);
 };
 
 const reorderNetworks = () => {
@@ -141,19 +157,69 @@ const solidityType = inputType => {
 };
 
 const isDarklisted = addr => {
-  const darklisted = store.getters.darklist.data.findIndex(item => {
-    return (
-      utils.toChecksumAddress(item.address.toLowerCase()) ===
-      utils.toChecksumAddress(addr.toLowerCase())
-    );
-  });
+  const storedDarklist = store.state.darklist.data;
+  const darklisted =
+    storedDarklist > 0
+      ? storedDarklist.findIndex(item => {
+          return (
+            utils.toChecksumAddress(item.address.toLowerCase()) ===
+            utils.toChecksumAddress(addr.toLowerCase())
+          );
+        })
+      : -1;
   const errMsg =
-    darklisted === -1 ? '' : store.getters.darklist.data[darklisted].comment;
+    darklisted === -1 ? '' : store.state.darklist.data[darklisted].comment;
   const errObject = {
     error: darklisted === -1 ? false : true,
     msg: errMsg
   };
   return errObject;
+};
+
+const stringToArray = str => {
+  return str.replace(/[^a-zA-Z0-9_,]+/g, '').split(',');
+};
+
+const isContractArgValid = (value, solidityType) => {
+  if (!value) value = '';
+  if (solidityType.includes('[') && solidityType.includes(']')) {
+    const parsedValue = Array.isArray(value) ? value : stringToArray(value);
+    const values = [];
+    parsedValue.forEach(item => {
+      if (solidityType.includes(uint)) {
+        values.push(item !== '' && !isNaN(item) && isInt(item));
+      } else if (solidityType.includes(address)) {
+        values.push(isAddress(item));
+      } else if (solidityType.includes(string)) {
+        values.push(item !== '');
+      } else if (solidityType.includes(bool)) {
+        values.push(typeof item === typeof true || item === '');
+      } else if (solidityType.includes(bytes)) {
+        values.push(validateHexString(item));
+      }
+    });
+    return !values.includes(false);
+  }
+  if (solidityType === 'uint')
+    return value !== '' && !isNaN(value) && isInt(value);
+  if (solidityType === 'address') return isAddress(value);
+  if (solidityType === 'string') return true;
+  if (solidityType === 'bytes')
+    return value.substr(0, 2) === '0x' && validateHexString(value);
+  if (solidityType === 'bool')
+    return typeof value === typeof true || value === '';
+  return false;
+};
+
+const stripTags = content => {
+  const insertToDom = new DOMParser().parseFromString(content, 'text/html');
+  insertToDom.body.textContent.replace(/(<([^>]+)>)/gi, '') || '';
+  const string = xss(insertToDom.body.textContent, {
+    whitelist: [],
+    stripIgnoreTag: true,
+    stripIgnoreTagBody: '*'
+  });
+  return string;
 };
 
 export default {
@@ -170,5 +236,10 @@ export default {
   reorderNetworks,
   isDarklisted,
   solidityType,
-  isInt
+  isInt,
+  capitalize,
+  getService,
+  stringToArray,
+  isContractArgValid,
+  stripTags
 };
