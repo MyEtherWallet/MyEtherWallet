@@ -84,6 +84,10 @@ export default class BitySwap {
     return {};
   }
 
+  get ratesRetrieved() {
+    return this.hasRates > 0 && this.rates.size > 0;
+  }
+
   async retrieveRates() {
     try {
       if (!this.isValidNetwork) return;
@@ -91,6 +95,7 @@ export default class BitySwap {
       const exitData = exitRates.pairs;
       const rates = await getRates();
       const data = rates.objects;
+
       exitData.forEach(entry => {
         if (entry.enabled) {
           data.forEach(rateEntry => {
@@ -106,7 +111,6 @@ export default class BitySwap {
           });
         }
       });
-
       data.forEach(pair => {
         if (~this.mainPairs.indexOf(pair.pair.substring(3))) {
           if (pair.is_enabled && !this.fiatCurrencies.includes(pair.source)) {

@@ -41,8 +41,8 @@ export default class Simplex {
     return this.network === networkSymbols.ETH;
   }
 
-  setNetwork(network) {
-    this.network = network;
+  get ratesRetrieved() {
+    return this.hasRates > 0;
   }
 
   get currencies() {
@@ -50,6 +50,10 @@ export default class Simplex {
       return this.currencyDetails;
     }
     return { fiat: {}, digital: {} };
+  }
+
+  setNetwork(network) {
+    this.network = network;
   }
 
   validSwap(fromCurrency, toCurrency) {
