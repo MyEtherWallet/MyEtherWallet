@@ -15,7 +15,6 @@
             id="authors"
             v-model="authors"
             placeholder="e.g. James Lee; Emilie Roy; Edward McCormick"
-            required
             type="text"
             @update="updateAuthors"
           >
@@ -36,7 +35,6 @@
             id="fullName"
             v-model="fullName"
             type="text"
-            required
             @update="updateFullName"
           >
           </b-form-input>
@@ -56,7 +54,6 @@
             id="emailAddress"
             v-model="emailAddress"
             type="text"
-            required
             @update="updateEmail"
           >
           </b-form-input>
@@ -105,7 +102,6 @@
             v-model="companyWebsite"
             type="text"
             placeholder="URL link"
-            required
             @update="updateCompanyWebsite"
           >
           </b-form-input>
@@ -125,7 +121,6 @@
             v-model="softwareLicense"
             type="text"
             placeholder="(e.g. MIT, GPL, Proprietary)"
-            required
             @update="updateLicense"
           >
           </b-form-input>

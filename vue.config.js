@@ -14,7 +14,7 @@ const webpackConfig = {
   devServer: {
     https: true,
     disableHostCheck: true,
-    host: '0.0.0.0',
+    host: 'localhost',
     hotOnly: true,
     port: 8080,
     writeToDisk: JSON.parse(env_vars.BUILD_TYPE) === 'mewcx',
@@ -185,8 +185,8 @@ if (process.env.NODE_ENV === 'production') {
           'src/layouts/DappSubmissionLayout/components/InputComponent/InputComponent.vue',
           'src/layouts/DappSubmissionLayout/containers/SummaryContainer/index.js',
           'src/layouts/DappSubmissionLayout/containers/SummaryContainer/SummaryContainer.scss',
-          'src/layouts/DappSubmissionLayout/containers/SummaryContainer/SummaryContainer.vue'
-        ]
+          'src/layouts/DappSubmissionLayout/containers/SummaryContainer/SummaryContainer.vue',
+          'src/layouts/DappSubmissionLayout/components/TagComponent/index.js'
       }
     })
   );
