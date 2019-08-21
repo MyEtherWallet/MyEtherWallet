@@ -1,10 +1,5 @@
-import { post, get } from '@/helpers/httpRequests';
-import {
-  bityMethods,
-  BITY_URL,
-  BITY_SWAP_RATES,
-  BITY_EXIT_RATES
-} from './config';
+import { post } from '@/helpers/httpRequests';
+import { bityMethods } from './config';
 import { swapApiEndpoints } from '../partnersConfig';
 import { utils } from '../helpers';
 
@@ -26,17 +21,31 @@ function cleanPhoneData(phoneNumber) {
   return cleanedNumber;
 }
 
-const getRates = () => {
+const getRates = async () => {
   try {
-    return get(BITY_URL + BITY_SWAP_RATES);
+    const results = await post(
+      buildPath(),
+      utils.buildPayload(bityMethods.getCryptoRates)
+    );
+    if (results.error) {
+      throw Error(results.error.message);
+    }
+    return results.result;
   } catch (e) {
     utils.handleOrThrow(e);
   }
 };
 
-const getExitRates = () => {
+const getExitRates = async () => {
   try {
-    return get(BITY_URL + BITY_EXIT_RATES);
+    const results = await post(
+      buildPath(),
+      utils.buildPayload(bityMethods.getFiatRates)
+    );
+    if (results.error) {
+      throw Error(results.error.message);
+    }
+    return results.result;
   } catch (e) {
     utils.handleOrThrow(e);
   }
@@ -57,11 +66,43 @@ const getEstimate = async orderInfo => {
   }
 };
 
+const createOrder = async orderInfo => {
+  try {
+    const results = await post(
+      buildPath(),
+      utils.buildPayload(bityMethods.createOrder, orderInfo)
+    );
+    if (results.error) {
+      throw Error(results.error.message);
+    }
+
+    return results.result;
+  } catch (e) {
+    utils.handleOrThrow(e);
+  }
+};
+
 const openOrder = async orderInfo => {
   try {
     const results = await post(
       buildPath(),
       utils.buildPayload(bityMethods.createTransaction, orderInfo)
+    );
+    if (results.error) {
+      throw Error(results.error.message);
+    }
+
+    return results.result;
+  } catch (e) {
+    utils.handleOrThrow(e);
+  }
+};
+
+const orderDetails = async orderInfo => {
+  try {
+    const results = await post(
+      buildPath(),
+      utils.buildPayload(bityMethods.orderDetails, orderInfo)
     );
     if (results.error) {
       throw Error(results.error.message);
@@ -152,13 +193,13 @@ const getCyptoToFiatOrderDetails = async detailsData => {
   }
 };
 
-const getStatusFiat = async (orderInfo, phoneToken) => {
+const getStatusFiat = async orderInfo => {
   try {
     const results = await post(
       buildPath(),
-      utils.buildPayload(bityMethods.statusFiat, {
+      utils.buildPayload(bityMethods.orderDetails, {
         orderId: orderInfo,
-        phoneToken: phoneToken.phoneToken
+        detailsUrl: orderInfo
       })
     );
     if (results.error) {
@@ -172,6 +213,8 @@ const getStatusFiat = async (orderInfo, phoneToken) => {
 
 export {
   getEstimate,
+  createOrder,
+  orderDetails,
   getRates,
   getExitRates,
   openOrder,

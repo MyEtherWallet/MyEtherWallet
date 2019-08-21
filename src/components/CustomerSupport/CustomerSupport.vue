@@ -73,7 +73,9 @@ export default {
         ${this.description}
       `;
       // eslint-disable-next-line
-      return `mailto:support@myetherwallet.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      return `mailto:support@myetherwallet.com?subject=${encodeURIComponent(
+        subject
+      )}&body=${encodeURIComponent(body)}`;
     }
   },
   mounted() {

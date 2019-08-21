@@ -15,11 +15,6 @@ const BModalStub = {
   }
 };
 
-const push = sinon.stub();
-const mockRouter = {
-  push: push
-};
-
 describe('AlreadyOwnedENSContainer.vue', () => {
   let localVue, i18n, wrapper, store;
   const labelHash = 'labelHash';
@@ -57,9 +52,6 @@ describe('AlreadyOwnedENSContainer.vue', () => {
       stubs: {
         'b-modal': BModalStub,
         'finalize-modal': FinalizeModal
-      },
-      mocks: {
-        $router: mockRouter
       }
     });
   });

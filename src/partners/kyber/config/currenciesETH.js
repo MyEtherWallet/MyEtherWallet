@@ -1,15 +1,33 @@
 const KyberCurrenciesETH = {
+  THISISADUMMYTOKEN: {
+    symbol: 'THISISADUMMYTOKEN',
+    name: 'For tests',
+    decimals: NaN,
+    contractAddress: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+  },
   ETH: {
     symbol: 'ETH',
     name: 'Ethereum',
     decimals: 18,
     contractAddress: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
   },
+  WETH: {
+    symbol: 'WETH',
+    name: 'Wrapped Ether',
+    decimals: 18,
+    contractAddress: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'
+  },
   KNC: {
     symbol: 'KNC',
     name: 'Kyber Network',
     decimals: 18,
     contractAddress: '0xdd974d5c2e2928dea5f71b9825b8b646686bd200'
+  },
+  DAI: {
+    symbol: 'DAI',
+    name: 'Dai Stablecoin',
+    decimals: 18,
+    contractAddress: '0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359'
   },
   OMG: {
     symbol: 'OMG',
@@ -53,12 +71,6 @@ const KyberCurrenciesETH = {
     decimals: 18,
     contractAddress: '0x8f8221afbb33998d8584a2b05749ba73c37a938a'
   },
-  GTO: {
-    symbol: 'GTO',
-    name: 'GIFTO',
-    decimals: 5,
-    contractAddress: '0xc5bbae50781be1669306b9e001eff57a2957b09d'
-  },
   RDN: {
     symbol: 'RDN',
     name: 'Raiden Network',
@@ -77,23 +89,11 @@ const KyberCurrenciesETH = {
     decimals: 8,
     contractAddress: '0xf0ee6b27b759c9893ce4f094b49ad28fd15a23e4'
   },
-  SALT: {
-    symbol: 'SALT',
-    name: 'Salt',
-    decimals: 8,
-    contractAddress: '0x4156d3342d5c385a87d264f90653733592000581'
-  },
   BQX: {
     symbol: 'BQX',
     name: 'ETHOS',
     decimals: 8,
     contractAddress: '0x5af2be193a6abca9c8817001f45744777db30756'
-  },
-  ADX: {
-    symbol: 'ADX',
-    name: 'AdEx',
-    decimals: 4,
-    contractAddress: '0x4470BB87d77b963A013DB939BE332f927f2b992e'
   },
   AST: {
     symbol: 'AST',
@@ -101,47 +101,11 @@ const KyberCurrenciesETH = {
     decimals: 4,
     contractAddress: '0x27054b13b1b798b345b591a4d22e6562d47ea75a'
   },
-  RCN: {
-    symbol: 'RCN',
-    name: 'Ripio Credit Network',
-    decimals: 18,
-    contractAddress: '0xf970b8e36e23f7fc3fd752eea86f8be8d83375a6'
-  },
-  ZIL: {
-    symbol: 'ZIL',
-    name: 'Zilliqa',
-    decimals: 12,
-    contractAddress: '0x05f4a42e251f2d52b8ed15e9fedaacfcef1fad27'
-  },
   LINK: {
     symbol: 'LINK',
     name: 'Chain Link',
     decimals: 18,
     contractAddress: '0x514910771af9ca656af840dff83e8264ecf986ca'
-  },
-  DAI: {
-    symbol: 'DAI',
-    name: 'Dai Stablecoin',
-    decimals: 18,
-    contractAddress: '0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359'
-  },
-  MKR: {
-    symbol: 'MKR',
-    name: 'Maker',
-    decimals: 18,
-    contractAddress: '0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2'
-  },
-  DCC: {
-    symbol: 'DCC',
-    name: 'Distributed Credit Chain',
-    decimals: 18,
-    contractAddress: '0xffa93aacf49297d51e211817452839052fdfb961'
-  },
-  ENJ: {
-    symbol: 'ENJ',
-    name: 'EnjinCoin',
-    decimals: 18,
-    contractAddress: '0xf629cbd94d3791c9250152bd8dfbdf380e2a3b9c'
   },
   DGX: {
     symbol: 'DGX',
@@ -149,17 +113,11 @@ const KyberCurrenciesETH = {
     decimals: 9,
     contractAddress: '0x4f3afec4e5a3f2a6a1a411def7d7dfe50ee057bf'
   },
-  MOT: {
-    symbol: 'MOT',
-    name: 'Olympus Labs',
+  STORM: {
+    symbol: 'STORM',
+    name: 'Storm',
     decimals: 18,
-    contractAddress: '0x263c618480dbe35c300d8d5ecda19bbb986acaed'
-  },
-  ELEC: {
-    symbol: 'ELEC',
-    name: 'ElectrifyAsia',
-    decimals: 18,
-    contractAddress: '0xd49ff13661451313ca1553fd6954bd1d9b6e02b9'
+    contractAddress: '0xd0a4b8946cb52f0661273bfbc6fd0e0c75fc6433'
   },
   IOST: {
     symbol: 'IOST',
@@ -167,17 +125,11 @@ const KyberCurrenciesETH = {
     decimals: 18,
     contractAddress: '0xfa1a856cfa3409cfa145fa4e20eb270df3eb21ab'
   },
-  STORM: {
-    symbol: 'STORM',
-    name: 'Storm',
+  MOT: {
+    symbol: 'MOT',
+    name: 'Olympus Labs',
     decimals: 18,
-    contractAddress: '0xd0a4b8946cb52f0661273bfbc6fd0e0c75fc6433'
-  },
-  WAX: {
-    symbol: 'WAX',
-    name: 'Wax',
-    decimals: 8,
-    contractAddress: '0x39bb259f66e1c59d5abef88375979b4d20d98022'
+    contractAddress: '0x263c618480dbe35c300d8d5ecda19bbb986acaed'
   },
   ABT: {
     symbol: 'ABT',
@@ -185,17 +137,11 @@ const KyberCurrenciesETH = {
     decimals: 18,
     contractAddress: '0xb98d4c97425d9908e66e53a6fdf673acca0be986'
   },
-  AE: {
-    symbol: 'AE',
-    name: 'Aeternity',
+  ENJ: {
+    symbol: 'ENJ',
+    name: 'EnjinCoin',
     decimals: 18,
-    contractAddress: '0x5ca9a71b1d01849c0a95490cc00559717fcf0d1d'
-  },
-  CVC: {
-    symbol: 'CVC',
-    name: 'Civic',
-    decimals: 8,
-    contractAddress: '0x41e5560054824ea6b0732e656e3ad64e20e94e45'
+    contractAddress: '0xf629cbd94d3791c9250152bd8dfbdf380e2a3b9c'
   },
   BLZ: {
     symbol: 'BLZ',
@@ -203,17 +149,11 @@ const KyberCurrenciesETH = {
     decimals: 18,
     contractAddress: '0x5732046a883704404f284ce41ffadd5b007fd668'
   },
-  REP: {
-    symbol: 'REP',
-    name: 'Augur',
+  ELEC: {
+    symbol: 'ELEC',
+    name: 'ElectrifyAsia',
     decimals: 18,
-    contractAddress: '0x1985365e9f78359a9b6ad760e32412f4a445e862'
-  },
-  COFI: {
-    symbol: 'COFI',
-    name: 'CoinFi',
-    decimals: 18,
-    contractAddress: '0x3136ef851592acf49ca4c825131e364170fa32b3'
+    contractAddress: '0xd49ff13661451313ca1553fd6954bd1d9b6e02b9'
   },
   BBO: {
     symbol: 'BBO',
@@ -233,6 +173,18 @@ const KyberCurrenciesETH = {
     decimals: 18,
     contractAddress: '0xfe5f141bf94fe84bc28ded0ab966c16b17490657'
   },
+  CVC: {
+    symbol: 'CVC',
+    name: 'Civic',
+    decimals: 8,
+    contractAddress: '0x41e5560054824ea6b0732e656e3ad64e20e94e45'
+  },
+  WAX: {
+    symbol: 'WAX',
+    name: 'Wax',
+    decimals: 8,
+    contractAddress: '0x39bb259f66e1c59d5abef88375979b4d20d98022'
+  },
   POE: {
     symbol: 'POE',
     name: 'Po.et',
@@ -243,7 +195,7 @@ const KyberCurrenciesETH = {
     symbol: 'PAY',
     name: 'TenX',
     decimals: 18,
-    contractAddress: '0xB97048628DB6B661D4C2aA833e95Dbe1A905B280'
+    contractAddress: '0xb97048628db6b661d4c2aa833e95dbe1a905b280'
   },
   DTA: {
     symbol: 'DTA',
@@ -267,25 +219,19 @@ const KyberCurrenciesETH = {
     symbol: 'LEND',
     name: 'EthLend',
     decimals: 18,
-    contractAddress: '0x80fB784B7eD66730e8b1DBd9820aFD29931aab03'
-  },
-  WINGS: {
-    symbol: 'WINGS',
-    name: 'Wings',
-    decimals: 18,
-    contractAddress: '0x667088b212ce3d06a1b553a7221E1fD19000d9aF'
+    contractAddress: '0x80fb784b7ed66730e8b1dbd9820afd29931aab03'
   },
   MTL: {
     symbol: 'MTL',
     name: 'Metal',
     decimals: 8,
-    contractAddress: '0xF433089366899D83a9f26A773D59ec7eCF30355e'
+    contractAddress: '0xf433089366899d83a9f26a773d59ec7ecf30355e'
   },
-  WABI: {
-    symbol: 'WABI',
-    name: 'WaBi',
+  COFI: {
+    symbol: 'COFI',
+    name: 'CoinFi',
     decimals: 18,
-    contractAddress: '0x286BDA1413a2Df81731D4930ce2F862a35A609fE'
+    contractAddress: '0x3136ef851592acf49ca4c825131e364170fa32b3'
   },
   MOC: {
     symbol: 'MOC',
@@ -293,23 +239,17 @@ const KyberCurrenciesETH = {
     decimals: 18,
     contractAddress: '0x865ec58b06bf6305b886793aa20a2da31d034e68'
   },
-  BNB: {
-    symbol: 'BNB',
-    name: 'Binance',
+  REP: {
+    symbol: 'REP',
+    name: 'Augur',
     decimals: 18,
-    contractAddress: '0xB8c77482e45F1F44dE1745F52C74426C631bDD52'
+    contractAddress: '0x1985365e9f78359a9b6ad760e32412f4a445e862'
   },
   ZRX: {
     symbol: 'ZRX',
     name: '0x',
     decimals: 18,
     contractAddress: '0xe41d2489571d322189246dafa5ebde1f4699f498'
-  },
-  WETH: {
-    symbol: 'WETH',
-    name: 'Wrapped Ether',
-    decimals: 18,
-    contractAddress: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'
   },
   MAS: {
     symbol: 'MAS',
@@ -335,29 +275,17 @@ const KyberCurrenciesETH = {
     decimals: 18,
     contractAddress: '0xea26c4ac16d4a5a106820bc8aee85fd0b7b2b664'
   },
-  CNN: {
-    symbol: 'CNN',
-    name: 'CNN Token',
+  MKR: {
+    symbol: 'MKR',
+    name: 'Maker',
     decimals: 18,
-    contractAddress: '0x8713d26637CF49e1b6B4a7Ce57106AaBc9325343'
+    contractAddress: '0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2'
   },
-  SSP: {
-    symbol: 'SSP',
-    name: 'Smartshare Token',
-    decimals: 4,
-    contractAddress: '0x624d520BAB2E4aD83935Fa503fB130614374E850'
-  },
-  PRO: {
-    symbol: 'PRO',
-    name: 'Propy',
-    decimals: 8,
-    contractAddress: '0x226bb599a12C826476e3A771454697EA52E9E220'
-  },
-  OCN: {
-    symbol: 'OCN',
-    name: 'OCoin',
+  DCC: {
+    symbol: 'DCC',
+    name: 'Distributed Credit Chain',
     decimals: 18,
-    contractAddress: '0x4092678e4E78230F46A1534C0fbc8fA39780892B'
+    contractAddress: '0xffa93aacf49297d51e211817452839052fdfb961'
   },
   EKO: {
     symbol: 'EKO',
@@ -375,19 +303,7 @@ const KyberCurrenciesETH = {
     symbol: 'DTH',
     name: 'Dether',
     decimals: 18,
-    contractAddress: '0x5adc961D6AC3f7062D2eA45FEFB8D8167d44b190'
-  },
-  WBTC: {
-    symbol: 'WBTC',
-    name: '\tWrapped BTC',
-    decimals: 8,
-    contractAddress: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599'
-  },
-  ABYSS: {
-    symbol: 'ABYSS',
-    name: 'ABYSS',
-    decimals: 18,
-    contractAddress: '0x0E8d6b471e332F140e7d9dbB99E5E3822F728DA6'
+    contractAddress: '0x5adc961d6ac3f7062d2ea45fefb8d8167d44b190'
   },
   PT: {
     symbol: 'PT',
@@ -395,17 +311,35 @@ const KyberCurrenciesETH = {
     decimals: 18,
     contractAddress: '0x094c875704c14783049ddf8136e298b3a099c446'
   },
+  INF: {
+    symbol: 'INF',
+    name: 'InfinitusTokens',
+    decimals: 18,
+    contractAddress: '0x00e150d741eda1d49d341189cae4c08a73a49c95'
+  },
   TTC: {
     symbol: 'TTC',
     name: 'TTC Protocol',
     decimals: 18,
     contractAddress: '0x9389434852b94bbad4c8afed5b7bdbc5ff0c2275'
   },
-  INF: {
-    symbol: 'INF',
-    name: 'InfinitusTokens',
+  ABYSS: {
+    symbol: 'ABYSS',
+    name: 'ABYSS',
     decimals: 18,
-    contractAddress: '0x00e150d741eda1d49d341189cae4c08a73a49c95'
+    contractAddress: '0x0e8d6b471e332f140e7d9dbb99e5e3822f728da6'
+  },
+  WBTC: {
+    symbol: 'WBTC',
+    name: 'Wrapped BTC',
+    decimals: 8,
+    contractAddress: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599'
+  },
+  MLN: {
+    symbol: 'MLN',
+    name: 'Melon',
+    decimals: 18,
+    contractAddress: '0xec67005c4e498ec7f55e092bd1d35cbc47c91892'
   },
   USDC: {
     symbol: 'USDC',
@@ -419,23 +353,101 @@ const KyberCurrenciesETH = {
     decimals: 2,
     contractAddress: '0xdb25f211ab05b1c97d595516f45794528a807ad8'
   },
-  MLN: {
-    symbol: 'MLN',
-    name: 'Melon',
-    decimals: 18,
-    contractAddress: '0xec67005c4E498Ec7f55E092bd1d35cbC47C91892'
-  },
-  BIX: {
-    symbol: 'BIX',
-    name: 'BIX Token',
-    decimals: 18,
-    contractAddress: '0xb3104b4b9da82025e8b9f8fb28b3553ce2f67069'
-  },
   CDT: {
     symbol: 'CDT',
     name: 'CoinDash',
     decimals: 18,
     contractAddress: '0x177d39ac676ed1c67a2b268ad7f1e58826e5b0af'
+  },
+  MCO: {
+    symbol: 'MCO',
+    name: 'Crypto.com',
+    decimals: 8,
+    contractAddress: '0xb63b606ac810a52cca15e44bb630fd42d8d1d83d'
+  },
+  PAX: {
+    symbol: 'PAX',
+    name: 'Paxos Standard',
+    decimals: 18,
+    contractAddress: '0x8e870d67f660d95d5be530380d0ec0bd388289e1'
+  },
+  GEN: {
+    symbol: 'GEN',
+    name: 'DAOStack',
+    decimals: 18,
+    contractAddress: '0x543ff227f64aa17ea132bf9886cab5db55dcaddf'
+  },
+  LRC: {
+    symbol: 'LRC',
+    name: 'LoopringCoin',
+    decimals: 18,
+    contractAddress: '0xbbbbca6a901c926f240b89eacb641d8aec7aeafd'
+  },
+  RLC: {
+    symbol: 'RLC',
+    name: 'iExec RLC',
+    decimals: 9,
+    contractAddress: '0x607f4c5bb672230e8672085532f7e901544a7375'
+  },
+  NPXS: {
+    symbol: 'NPXS',
+    name: 'Pundi X',
+    decimals: 18,
+    contractAddress: '0xa15c7ebe1f07caf6bff097d8a589fb8ac49ae5b3'
+  },
+  GNO: {
+    symbol: 'GNO',
+    name: 'Gnosis',
+    decimals: 18,
+    contractAddress: '0x6810e776880c02933d47db1b9fc05908e5386b96'
+  },
+  MYB: {
+    symbol: 'MYB',
+    name: 'MyBit',
+    decimals: 18,
+    contractAddress: '0x5d60d8d7ef6d37e16ebabc324de3be57f135e0bc'
+  },
+  BAM: {
+    symbol: 'BAM',
+    name: 'Bamboo',
+    decimals: 18,
+    contractAddress: '0x22b3faaa8df978f6bafe18aade18dc2e3dfa0e0c'
+  },
+  SPN: {
+    symbol: 'SPN',
+    name: 'Sapien',
+    decimals: 6,
+    contractAddress: '0x20f7a3ddf244dc9299975b4da1c39f8d5d75f05a'
+  },
+  EQUAD: {
+    symbol: 'EQUAD',
+    name: 'Quadrant Protocol',
+    decimals: 18,
+    contractAddress: '0xc28e931814725bbeb9e670676fabbcb694fe7df2'
+  },
+  UPP: {
+    symbol: 'UPP',
+    name: 'Sentinel Protocol',
+    decimals: 18,
+    contractAddress: '0xc86d054809623432210c107af2e3f619dcfbf652'
+  },
+  CND: {
+    symbol: 'CND',
+    name: 'Cindicator',
+    decimals: 18,
+    contractAddress: '0xd4c435f5b09f855c3317c8524cb1f586e42795fa'
+  },
+  USDT: {
+    symbol: 'USDT',
+    name: 'Tether USD',
+    decimals: 6,
+    contractAddress: '0xdac17f958d2ee523a2206206994597c13d831ec7'
+  },
+  SNX: {
+    symbol: 'SNX',
+    name: 'Synthetix Network Token',
+    decimals: 18,
+    contractAddress: '0xc011a73ee8576fb46f5e1c5751ca3b9fe0af2a6f'
   }
 };
 export { KyberCurrenciesETH };

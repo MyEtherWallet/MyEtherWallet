@@ -11,5 +11,6 @@ export default {
   chainID: 31,
   tokens: tokens,
   contracts: contracts,
-  icon: rsk
+  icon: rsk,
+  currencyName: 'tRBTC'
 };

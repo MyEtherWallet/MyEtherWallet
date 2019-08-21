@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 export default {
   props: {
     currency: {
@@ -70,6 +70,12 @@ export default {
     token: {
       type: Boolean,
       default: true
+    },
+    default: {
+      type: Object,
+      default: () => {
+        return {};
+      }
     }
   },
   data() {
@@ -82,13 +88,11 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      network: 'network'
-    }),
+    ...mapState(['network']),
     networkToken() {
       return {
         name: this.network.type.name_long,
-        symbol: this.network.type.name
+        symbol: this.network.type.currencyName
       };
     },
     localCurrency() {
@@ -114,6 +118,9 @@ export default {
     },
     selectedCurrency(newVal) {
       this.$emit('selectedCurrency', newVal);
+    },
+    default(newVal) {
+      if (newVal.hasOwnProperty('symbol')) this.selectedCurrency = newVal;
     }
   },
   mounted() {

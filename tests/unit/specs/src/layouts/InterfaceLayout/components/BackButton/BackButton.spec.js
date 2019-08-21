@@ -11,7 +11,7 @@ describe('BackButton.vue', () => {
     go: spy,
     history: {
       current: {
-        path: '/interface/dapps/register-domain'
+        path: '/interface/dapps/manage-ens'
       }
     }
   };

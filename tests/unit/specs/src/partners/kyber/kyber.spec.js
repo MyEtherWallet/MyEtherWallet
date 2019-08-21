@@ -1,4 +1,5 @@
 import Kyber from '@/partners/kyber/kyber.js';
+import kyberCalls from '@/partners/kyber/kyber-calls';
 import Web3 from 'web3';
 import ENS from 'ethereum-ens';
 
@@ -7,47 +8,85 @@ const network = 'ETH';
 const withNetwork = false;
 
 describe('kyber.js', () => {
+  let kyber;
   beforeEach(done => {
     setTimeout(() => {
       done();
     }, 500);
   });
 
-  it('should instanciate a new instance', () => {
+  beforeAll(async done => {
     const web3 = new Web3(nodeUrl);
     const ens = new ENS(web3.currentProvider);
-    const kyber = new Kyber({
+    kyber = new Kyber({
       network,
       web3: web3,
-      ens: ens
+      ens: ens,
+      tradeGasLimit: 10,
+      tokenToTokenGasLimit: 10,
+      tokenApprovalGasLimit: 10
     });
+
+    const interval = setInterval(async () => {
+      if (kyber.ratesRetrieved) {
+        clearInterval(interval);
+        done();
+      }
+    }, 100);
+  }, 10000);
+
+  it('should have current token list', () => {
+    const undef = kyber.currencies['THISISADUMMYTOKEN'];
+    expect(undef).toBeUndefined();
+  });
+
+  it('should have current gas limit list', () => {
+    const undef = kyber.GAS_LIMITS.find(
+      entry => entry.symbol === 'THISISADUMMYTOKEN'
+    );
+    expect(undef).toBeUndefined();
+  });
+
+  it('should instanciate a new instance', () => {
     expect(kyber).toBeInstanceOf(Kyber);
   });
 
-  it('should return the value in token wei', () => {
-    const web3 = new Web3(nodeUrl);
-    const ens = new ENS(web3.currentProvider);
-    const kyber = new Kyber({
-      network,
-      web3: web3,
-      ens: ens
-    });
-
-    const weiValue = kyber.convertToTokenBase('GTO', 100000);
+  it('should return the value in tokens', () => {
+    const weiValue = kyber.convertToTokenBase('AST', 10000);
+    // symbol -> wei -> base
+    // AST -> 10000 -> 1
+    // ENG -> 100000000 -> 1
+    // BQX -> 100000000 -> 1
     expect(weiValue).toBe('1');
   });
 
-  it('should return the value in token units', () => {
-    const web3 = new Web3(nodeUrl);
-    const ens = new ENS(web3.currentProvider);
-    const kyber = new Kyber({
-      network,
-      web3: web3,
-      ens: ens
-    });
+  it('should return the value in token wei', () => {
+    const weiValue = kyber.convertToTokenWei('AST', 1);
+    // symbol -> base -> wei
+    // AST -> 1 -> 10000
+    // ENG -> 1 -> 100000000
+    // BQX -> 1 - > 100000000
+    expect(weiValue).toBe('10000');
+  });
 
-    const baseValue = kyber.convertToTokenWei('GTO', 1);
-    expect(baseValue).toBe('100000');
+  it('should return the correct gas limit', async () => {
+    const undef = kyber.GAS_LIMITS.find(
+      entry => entry.symbol === 'THISISADUMMYTOKEN'
+    );
+    expect(undef).toBeUndefined();
+    const gasLimit = kyber.getGasLimits('DGX');
+    expect(gasLimit.swapGasLimit).toBe(750000);
+  });
+
+  it('should return gas limits array from api', async done => {
+    const gasLimitList = await kyberCalls.getGasLimits('ETH');
+    expect(gasLimitList.data).toBeInstanceOf(Array);
+    done();
+  });
+
+  it('should return the value in token units', () => {
+    const baseValue = kyber.convertToTokenWei('KNC', 1);
+    expect(baseValue).toBe('1000000000000000000');
   });
 
   xit('should return data for kyber trade tx', async () => {
@@ -380,7 +419,6 @@ describe('kyber.js', () => {
         0.382958,
         '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
       );
-      console.log(dataForTxs); // todo remove dev item
       expect(dataForTxs).toEqual(expect.anything());
     });
   }

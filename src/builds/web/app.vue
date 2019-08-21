@@ -15,7 +15,7 @@ import HeaderContainer from '@/containers/HeaderContainer';
 import ConfirmationContainer from '@/containers/ConfirmationContainer';
 import WelcomeModal from '@/components/WelcomeModal';
 import store from 'store';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import { Toast } from '@/helpers';
 import LogoutWarningModal from '@/components/LogoutWarningModal';
 
@@ -29,9 +29,7 @@ export default {
     'welcome-modal': WelcomeModal
   },
   computed: {
-    ...mapGetters({
-      wallet: 'wallet'
-    })
+    ...mapState(['wallet', 'online'])
   },
   watch: {
     $route(to, from) {
@@ -56,9 +54,15 @@ export default {
     window.addEventListener('PWA_MOUNT_ERROR', () => {
       Toast.responseHandler(errMsg, Toast.WARN);
     });
+    window.addEventListener('online', () => {
+      this.$store.dispatch('checkIfOnline', true);
+    });
+    window.addEventListener('offline', () => {
+      this.$store.dispatch('checkIfOnline', false);
+    });
   },
   mounted() {
-    this.$store.dispatch('checkIfOnline');
+    this.$store.dispatch('checkIfOnline', navigator.onLine);
     if (!store.get('notFirstTimeVisit') && this.$route.fullPath === '/') {
       this.$refs.welcome.$refs.welcome.show();
     }
@@ -66,9 +70,15 @@ export default {
     this.$refs.welcome.$refs.welcome.$on('hidden', () => {
       store.set('notFirstTimeVisit', true);
     });
+
+    this.$refs.logoutWarningModal.$refs.logoutWarningModal.$on('hidden', () => {
+      window.scrollTo(0, 0);
+    });
   },
   destroyed() {
     window.removeEventListener('PWA_UPDATED');
+    window.removeEventListener('offline');
+    window.removeEventListener('online');
   }
 };
 </script>

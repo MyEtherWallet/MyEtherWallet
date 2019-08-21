@@ -104,10 +104,20 @@
               :title="$t('common.toAddress')"
               @toAddress="setToAddress"
               @validAddress="validAddress = $event"
+              @unableToValidate="unableToValidate = $event"
             />
           </div>
           <div v-show="!validAddress" class="error-message-container">
             <p>{{ $t('interface.notValidAddr', { currency: toCurrency }) }}</p>
+          </div>
+          <div v-show="unableToValidate" class="warn-message-container">
+            <p>
+              {{
+                $t('interface.unableToValidateAddress', {
+                  currency: toCurrency
+                })
+              }}
+            </p>
           </div>
         </div>
 
@@ -123,11 +133,21 @@
               :title="$t('interface.fromAddr')"
               @toAddress="setExitFromAddress"
               @validAddress="validExitAddress = $event"
+              @unableToValidate="unableToValidateExit = $event"
             />
           </div>
           <div v-show="!validExitAddress" class="error-message-container">
             <p>
               {{ $t('interface.notValidAddrSrc', { currency: fromCurrency }) }}
+            </p>
+          </div>
+          <div v-show="unableToValidateExit" class="warn-message-container">
+            <p>
+              {{
+                $t('interface.unableToValidateAddress', {
+                  currency: toCurrency
+                })
+              }}
             </p>
           </div>
         </div>
@@ -141,11 +161,21 @@
               :title="$t('interface.refund', { currency: fromCurrency })"
               @toAddress="setRefundAddress"
               @validAddress="validRefundAddress = $event"
+              @unableToValidate="unableToValidateRefund = $event"
             />
           </div>
           <div v-show="!validRefundAddress" class="error-message-container">
             <p>
               {{ $t('interface.notValidAddr', { currency: fromCurrency }) }}
+            </p>
+          </div>
+          <div v-show="unableToValidateRefund" class="warn-message-container">
+            <p>
+              {{
+                $t('interface.unableToValidateAddress', {
+                  currency: toCurrency
+                })
+              }}
             </p>
           </div>
         </div>
@@ -211,7 +241,7 @@
 <script>
 import BigNumber from 'bignumber.js';
 import debug from 'debug';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 
 import { Toast } from '@/helpers';
 import ProvidersRadioSelector from './components/ProvidersRadioSelector';
@@ -288,7 +318,7 @@ export default {
         {
           network: this.$store.state.network.type.name,
           web3: this.$store.state.web3,
-          getRateForUnit: true
+          getRateForUnit: false
         },
         { tokensWithBalance: this.tokensWithBalance }
       ),
@@ -322,17 +352,16 @@ export default {
       loadingError: false,
       switchCurrencyOrder: false,
       bityExitToFiat: false,
-      exitToFiatCallback: () => {}
+      exitToFiatCallback: () => {},
+      debounceUpdateEstimate: {},
+      debounceDoThing: {},
+      unableToValidate: false,
+      unableToValidateExit: false,
+      unableToValidateRefund: false
     };
   },
   computed: {
-    ...mapGetters({
-      account: 'account',
-      ens: 'ens',
-      gasPrice: 'gasPrice',
-      web3: 'web3',
-      network: 'network'
-    }),
+    ...mapState(['account', 'ens', 'gasPrice', 'web3', 'network']),
     bestRate() {
       try {
         if (this.providerData.length > 0) {
@@ -384,7 +413,6 @@ export default {
       return false;
     },
     toBelowMinAllowed() {
-      if (this.checkBityMin) return this.$t('interface.belowMinGeneral');
       if (new BigNumber(0).gte(new BigNumber(this.toValue)))
         return this.$t('interface.belowMinGeneral');
       return false;
@@ -416,21 +444,6 @@ export default {
         (+this.fromValue <= this.selectedProvider.maxValue ||
           this.selectedProvider.maxValue === 0)
       );
-    },
-    checkBityMin() {
-      if (this.swap.isProvider(this.providerNames.bity)) {
-        return (
-          !this.swap
-            .getProvider(this.providerNames.bity)
-            .minCheck(
-              this.fromCurrency,
-              this.fromValue,
-              this.toCurrency,
-              this.toValue
-            ) && this.selectedProvider.provider === this.providerNames.bity
-        );
-      }
-      return false;
     },
     checkBityMax() {
       if (this.swap.isProvider(this.providerNames.bity)) {
@@ -519,7 +532,7 @@ export default {
       this.fromArray = fromArray;
     },
     ['swap.haveProviderRates']() {
-      this.haveProviderRates = this.swap.haveProviderRates;
+      this.haveProviderRates = this.swap.ratesRetrieved;
       const { toArray, fromArray } = this.swap.buildInitialCurrencyArrays();
       this.toArray = toArray;
       this.fromArray = fromArray;
@@ -549,6 +562,14 @@ export default {
     this.toArray = toArray;
     this.fromArray = fromArray;
     this.currentAddress = this.account.address;
+    this.debounceUpdateEstimate = this.web3.utils._.debounce(
+      this.updateEstimate,
+      300
+    );
+    this.debounceReviseRateEstimate = this.web3.utils._.debounce(
+      this.updateRateEstimate,
+      2000
+    );
   },
   methods: {
     reset() {
@@ -647,16 +668,22 @@ export default {
             this.fromCurrency
           ]
         ) {
-          this.web3.utils._.debounce(
-            this.updateEstimate(this.providerNames.simplex + direction),
-            200
-          );
+          this.debounceUpdateEstimate(this.providerNames.simplex + direction);
         } else {
-          this.web3.utils._.debounce(this.updateEstimate(direction), 200);
+          this.debounceUpdateEstimate(direction);
+          const fromCur = this.fromCurrency;
+          const toCur = this.toCurrency;
+          const fromVal = this.fromValue;
+          this.debounceReviseRateEstimate(fromCur, toCur, fromVal, direction);
         }
       }
     },
     async updateEstimate(input) {
+      if (this.simplexUpdate) {
+        this.simplexUpdate = false;
+        return;
+      }
+
       let fromValue, toValue, simplexProvider, simplexRateDetails;
       switch (input) {
         case 'to':
@@ -674,6 +701,7 @@ export default {
           );
           break;
         case `${this.providerNames.simplex}to`:
+          this.simplexUpdate = true;
           simplexProvider = this.swap.getProvider(this.providerNames.simplex);
 
           if (simplexProvider.canQuote(this.fromValue, this.toValue)) {
@@ -705,6 +733,7 @@ export default {
 
           break;
         case `${this.providerNames.simplex}from`:
+          this.simplexUpdate = true;
           simplexProvider = this.swap.getProvider(this.providerNames.simplex);
           if (simplexProvider.canQuote(this.fromValue, this.toValue)) {
             simplexRateDetails = await simplexProvider.updateFiat(

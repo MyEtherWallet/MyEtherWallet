@@ -48,13 +48,17 @@ const bityStatuses = {
 
 const bityMethods = {
   getEstimate: 'getEstimate',
+  createOrder: 'createOrder',
+  orderDetails: 'getOrderDetails',
   createTransaction: 'createTransaction',
   status: 'getStatus',
   logInWithPhoneNumber: 'logInWithPhoneNumber',
   sendReceivedSmsCode: 'sendReceivedSmsCode',
   buildCyptoToFiatOrderData: 'createExitToFiatTransaction',
   getExitOrderDetails: 'getExitOrderDetails',
-  statusFiat: 'getStatusFiat'
+  statusFiat: 'getStatusFiat',
+  getFiatRates: 'getFiatRates',
+  getCryptoRates: 'getCryptoRates'
 };
 
 const BITY_URL = 'https://bity.com';

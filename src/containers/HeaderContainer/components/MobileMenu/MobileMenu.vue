@@ -27,6 +27,12 @@
         </div>
       </router-link>
       <div class="mobile-menu-button--container">
+        <a href="https://ccswap.myetherwallet.com/#/" target="_blank">
+          <div class="buy-eth">
+            <img src="@/assets/images/icons/buy-eth.svg" />
+            <p>Buy ETH</p>
+          </div>
+        </a>
         <mobile-menu-button
           :ismenuopen="isMenuOpen"
           @click.native="isMenuOpen = !isMenuOpen"
@@ -113,7 +119,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import MobileMenuButton from './components/MobileMenuButton';
 import MobileAddressBlock from './components/MobileAddressBlock';
 import MobileBalanceBlock from './components/MobileBalanceBlock';
@@ -151,10 +157,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      account: 'account',
-      blockNumber: 'blockNumber'
-    })
+    ...mapState(['account', 'blockNumber'])
   },
   watch: {
     $route(newVal) {

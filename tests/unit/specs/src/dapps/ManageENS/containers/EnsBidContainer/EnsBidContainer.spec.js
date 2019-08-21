@@ -40,7 +40,7 @@ describe('EnsBidContainer.vue', () => {
     replace: sinon.stub(),
     history: {
       current: {
-        path: '/interface/dapps/register-domain'
+        path: '/interface/dapps/manage-ens'
       }
     }
   };
@@ -130,7 +130,7 @@ describe('EnsBidContainer.vue', () => {
           replace: sinon.stub(),
           history: {
             current: {
-              path: '/interface/dapps/register-domain'
+              path: '/interface/dapps/manage-ens'
             }
           }
         }
@@ -156,7 +156,7 @@ describe('EnsBidContainer.vue', () => {
           replace: sinon.stub(),
           history: {
             current: {
-              path: '/interface/dapps/register-domain'
+              path: '/interface/dapps/manage-ens'
             }
           }
         }
@@ -187,7 +187,7 @@ describe('EnsBidContainer.vue', () => {
           replace: sinon.stub(),
           history: {
             current: {
-              path: '/interface/dapps/register-domain'
+              path: '/interface/dapps/manage-ens'
             }
           }
         }
@@ -302,7 +302,7 @@ describe('EnsBidContainer.vue', () => {
             replace: sinon.stub(),
             history: {
               current: {
-                path: '/interface/dapps/register-domain'
+                path: '/interface/dapps/manage-ens'
               }
             }
           }

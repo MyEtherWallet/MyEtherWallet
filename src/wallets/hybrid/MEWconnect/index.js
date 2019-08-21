@@ -1,6 +1,6 @@
 import MEWconnect from '@myetherwallet/mewconnect-web-client';
 import store from '@/store';
-import ethTx from 'ethereumjs-tx';
+import { Transaction } from 'ethereumjs-tx';
 import WalletInterface from '@/wallets/WalletInterface';
 import { MEW_CONNECT as mewConnectType } from '../../bip44/walletTypes';
 import {
@@ -11,6 +11,7 @@ import {
 } from '../../utils';
 import { hashPersonalMessage, toBuffer } from 'ethereumjs-util';
 import errorHandler from './errorHandler';
+import commonGenerator from '@/helpers/commonGenerator';
 
 const SIGNALER_URL = 'https://connect.mewapi.io';
 const IS_HARDWARE = true;
@@ -47,8 +48,8 @@ class MEWconnectWallet {
     const txSigner = async tx => {
       let tokenInfo;
       if (tx.data.slice(0, 10) === '0xa9059cbb') {
-        tokenInfo = store.getters.network.type.tokens.find(
-          entry => entry.address === tx.to
+        tokenInfo = store.state.network.type.tokens.find(
+          entry => entry.address.toLowerCase() === tx.to.toLowerCase()
         );
         if (tokenInfo) {
           tx.currency = {
@@ -62,7 +63,9 @@ class MEWconnectWallet {
       return new Promise(resolve => {
         this.mewConnect.sendRtcMessage('signTx', JSON.stringify(tx));
         this.mewConnect.once('signTx', result => {
-          tx = new ethTx(sanitizeHex(result));
+          tx = new Transaction(sanitizeHex(result), {
+            common: commonGenerator(store.state.network)
+          });
           const signedChainId = calculateChainIdFromV(tx.v);
           if (signedChainId !== networkId)
             throw new Error(

@@ -181,13 +181,12 @@
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import { Misc, Toast } from '@/helpers';
-import { isAddress } from '@/helpers/addressUtils';
 import ethUnit from 'ethjs-unit';
-import EthTx from 'ethereumjs-tx';
+import { Transaction } from 'ethereumjs-tx';
 import BigNumber from 'bignumber.js';
 import store from 'store';
 import { generateAddress, bufferToHex } from 'ethereumjs-util';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 
 export default {
   name: 'DeployContract',
@@ -207,11 +206,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      gasPrice: 'gasPrice',
-      web3: 'web3',
-      network: 'network'
-    }),
+    ...mapState(['gasPrice', 'web3', 'network']),
     isValidAbi() {
       return Misc.isJson(this.abi);
     },
@@ -250,23 +245,33 @@ export default {
       const _deployArgs = [];
       if (this.abiConstructor) {
         this.abiConstructor.inputs.forEach(item => {
-          _deployArgs.push(this.inputs[item.name]);
+          if (item.type.includes('[') && item.type.includes(']')) {
+            const inputs = this.inputs.hasOwnProperty(item.name)
+              ? this.inputs[item.name].replace(/\s/g, '')
+              : '';
+            const arr = inputs.split(',');
+            _deployArgs.push(arr);
+          } else {
+            _deployArgs.push(this.inputs[item.name]);
+          }
         });
       }
       return _deployArgs;
     },
     txData() {
-      return new this.web3.eth.Contract(JSON.parse(this.abi))
-        .deploy({ data: this.txByteCode, arguments: this.deployArgs })
-        .encodeABI();
+      return this.abi !== ''
+        ? new this.web3.eth.Contract(JSON.parse(this.abi))
+            .deploy({ data: this.txByteCode, arguments: this.deployArgs })
+            .encodeABI()
+        : '0x';
     },
     allValid() {
       let _allvalid = true;
       if (this.abiConstructor) {
-        this.abiConstructor.inputs.forEach(item => {
+        this.abiConstructor.inputs.forEach((item, idx) => {
           if (
             !this.isValidInput(
-              this.inputs[item.name],
+              this.deployArgs[idx],
               this.getType(item.type).solidityType
             )
           )
@@ -277,18 +282,7 @@ export default {
     }
   },
   methods: {
-    isValidInput(value, solidityType) {
-      if (!value) value = '';
-      if (solidityType === 'uint')
-        return value !== '' && !isNaN(value) && Misc.isInt(value);
-      if (solidityType === 'address') return isAddress(value);
-      if (solidityType === 'string') return true;
-      if (solidityType === 'bytes')
-        return value.substr(0, 2) == '0x' && Misc.validateHexString(value);
-      if (solidityType === 'bool')
-        return typeof value == typeof true || value === '';
-      return false;
-    },
+    isValidInput: Misc.isContractArgValid,
     getType: Misc.solidityType,
     async sendTransaction() {
       try {
@@ -296,7 +290,7 @@ export default {
         const web3 = this.web3;
         const coinbase = await web3.eth.getCoinbase();
         const nonce = await web3.eth.getTransactionCount(coinbase);
-        const _tx = new EthTx({
+        const _tx = new Transaction({
           nonce: nonce,
           gasPrice: Misc.sanitizeHex(
             ethUnit.toWei(this.gasPrice, 'gwei').toString(16)

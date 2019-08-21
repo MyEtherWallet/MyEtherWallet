@@ -108,6 +108,10 @@ button[disabled] {
     }
   }
 
+  &.padding-small {
+    padding: 10px 20px;
+  }
+
   .loading-left {
     position: absolute;
     top: 16px;

@@ -8,8 +8,7 @@ import {
   ChangellyCurrencies,
   statuses,
   TIME_SWAP_VALID,
-  PROVIDER_NAME,
-  FEE_RATE
+  PROVIDER_NAME
 } from './config';
 import changellyCalls from './changelly-calls';
 import changellyApi from './changelly-api';
@@ -28,12 +27,18 @@ export default class Changelly {
     this.currencyDetails = props.currencies || ChangellyCurrencies;
     this.useFixed = true;
     this.tokenDetails = {};
-    this.rateDetails = {};
     this.getSupportedCurrencies(this.network);
   }
 
   static getName() {
     return PROVIDER_NAME;
+  }
+
+  getApiConnector(type) {
+    if (type === 'api') {
+      return changellyApi;
+    }
+    return changellyCalls;
   }
 
   static isDex() {
@@ -53,6 +58,10 @@ export default class Changelly {
     } catch (e) {
       errorLogger(e);
     }
+  }
+
+  get ratesRetrieved() {
+    return Object.keys(this.tokenDetails).length > 0 && this.hasRates > 0;
   }
 
   get isValidNetwork() {
@@ -77,12 +86,6 @@ export default class Changelly {
     return false;
   }
 
-  calculateTrueRate(topRate) {
-    return new BigNumber(topRate)
-      .minus(new BigNumber(topRate).times(new BigNumber(FEE_RATE)))
-      .toNumber();
-  }
-
   fixedEnabled(currency) {
     return (
       typeof this.currencies[currency].fixRateEnabled === 'boolean' &&
@@ -98,6 +101,10 @@ export default class Changelly {
       return this.getMarketRate(fromCurrency, toCurrency, fromValue);
     }
     return this.getMarketRate(fromCurrency, toCurrency, fromValue);
+  }
+
+  async getRateUpdate(fromCurrency, toCurrency, fromValue, toValue, isFiat) {
+    return this.getRate(fromCurrency, toCurrency, fromValue, toValue, isFiat);
   }
 
   async getFixedRate(fromCurrency, toCurrency, fromValue) {
@@ -125,30 +132,14 @@ export default class Changelly {
     };
   }
 
-  async getMarketRate(fromCurrency, toCurrency, fromValue) {
-    if (
-      this.rateDetails[`${fromCurrency}/${toCurrency}`] &&
-      this.getRateForUnit
-    ) {
-      return {
-        fromCurrency,
-        toCurrency,
-        provider: this.name,
-        minValue: this.rateDetails[`${fromCurrency}/${toCurrency}`].minAmount,
-        rate: this.calculateTrueRate(
-          this.rateDetails[`${fromCurrency}/${toCurrency}`].rate
-        )
-      };
-    }
+  calculateRate(inVal, outVal) {
+    return new BigNumber(outVal).div(inVal);
+  }
 
+  async getMarketRate(fromCurrency, toCurrency, fromValue) {
     const changellyDetails = await Promise.all([
       changellyCalls.getMin(fromCurrency, toCurrency, fromValue, this.network),
-      changellyCalls.getRate(
-        fromCurrency,
-        toCurrency,
-        this.getRateForUnit ? 1 : fromValue,
-        this.network
-      )
+      changellyCalls.getRate(fromCurrency, toCurrency, fromValue, this.network)
     ]);
 
     const minAmount = new BigNumber(changellyDetails[0])
@@ -156,17 +147,14 @@ export default class Changelly {
       .plus(new BigNumber(changellyDetails[0]))
       .toFixed();
 
-    this.rateDetails[`${fromCurrency}/${toCurrency}`] = {
-      minAmount: minAmount,
-      rate: changellyDetails[1]
-    };
+    const estValueResponse = changellyDetails[1][0];
 
     return {
       fromCurrency,
       toCurrency,
       provider: this.name,
       minValue: minAmount,
-      rate: this.calculateTrueRate(changellyDetails[1])
+      rate: estValueResponse.rate
     };
   }
 
@@ -217,6 +205,7 @@ export default class Changelly {
       swapDetails.providerReceives = details.amountExpectedFrom;
       swapDetails.providerSends = details.amountExpectedTo;
       swapDetails.parsed = Changelly.parseOrder(details);
+      swapDetails.providerSends = swapDetails.parsed.recValue;
       swapDetails.orderId = swapDetails.parsed.orderId;
       swapDetails.providerAddress = details.payinAddress;
       swapDetails.dataForInitialization = details;
@@ -307,7 +296,7 @@ export default class Changelly {
       sendValue: order.amountExpectedFrom,
       status: order.status,
       timestamp: order.createdAt,
-      validFor: TIME_SWAP_VALID // validFor ||  // Rates provided are only an estimate, and
+      validFor: TIME_SWAP_VALID // Rates provided are only an estimate
     };
   }
 

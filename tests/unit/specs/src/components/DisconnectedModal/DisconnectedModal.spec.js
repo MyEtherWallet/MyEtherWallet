@@ -40,7 +40,7 @@ describe('DisconnectedModal.vue', () => {
 
   it('should render correct browser data', () => {
     expect(
-      wrapper.vm.$el.querySelectorAll('.the-button-box')[1].textContent.trim()
+      wrapper.vm.$el.querySelectorAll('.ok-button')[0].textContent.trim()
     ).toEqual(wrapper.vm.$data.okayButtonOptions.title);
   });
 

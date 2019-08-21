@@ -1,3 +1,309 @@
+### Release v5.1.2
+
+### Devop
+
+- Fix dashboard "MEW connect", "Buy ETH" buttons layout [#1376](https://github.com/MyEtherWallet/MyEtherWallet/pull/1376)
+- Fix Buy Eth to Buy ETH [#1361](https://github.com/MyEtherWallet/MyEtherWallet/pull/1361)
+- Dashboard -> Actions & Swap button style update [#1365](https://github.com/MyEtherWallet/MyEtherWallet/pull/1365)
+- Add warning message to HTTP Basic Access Authentication [#1364](https://github.com/MyEtherWallet/MyEtherWallet/pull/1364)
+- Upgrade web3.js to 1.2.1 [#1348](https://github.com/MyEtherWallet/MyEtherWallet/pull/1348)
+- Update qrcode modal to be mobile friendly [#1366](https://github.com/MyEtherWallet/MyEtherWallet/pull/1366)
+- Update UI custom token UI [1367](https://github.com/MyEtherWallet/MyEtherWallet/pull/1367)
+- Fix Buy Eth to Buy ETH [#1361](https://github.com/MyEtherWallet/MyEtherWallet/pull/1361)
+- Add "Please wait while we generate your keystore file..." to keystorebutton. [#1363](https://github.com/MyEtherWallet/MyEtherWallet/pull/1363)
+
+### Bug
+
+- Fix incorrect rate display [#1368](https://github.com/MyEtherWallet/MyEtherWallet/pull/1368)
+- Fix scroll up animation glitch on mobile [#1358](https://github.com/MyEtherWallet/MyEtherWallet/pull/1358)
+
+### Release v5.1.1-hotfix.1
+
+### Bug
+
+- Fix issues related to address switching [#1355](https://github.com/MyEtherWallet/MyEtherWallet/pull/1355)
+- Fix missing buttons in maker dapp, and some general housekeeping [#1352](https://github.com/MyEtherWallet/MyEtherWallet/pull/1352)
+
+### Devop
+
+- Remove Safesend Dapp [#1346](https://github.com/MyEtherWallet/MyEtherWallet/pull/1346)
+- Add hover effect to Dashboard -> Swap buttons [#1353](https://github.com/MyEtherWallet/MyEtherWallet/pull/1353)
+- Add Changelly to Dashboard -> Swap description [#1356](https://github.com/MyEtherWallet/MyEtherWallet/pull/1356)
+
+### Release v5.1.1
+
+### Feature
+
+- Add Buy Eth Button to nav bar, standardize dapp header layout [#1330](https://github.com/MyEtherWallet/MyEtherWallet/pull/1330)
+
+### Devop
+
+- Update packages [#1344](https://github.com/MyEtherWallet/MyEtherWallet/pull/1344)
+- Update UI frontpage FAQs block [#1332](https://github.com/MyEtherWallet/MyEtherWallet/pull/1332)
+- Add xss custom config [#1326](https://github.com/MyEtherWallet/MyEtherWallet/pull/1326)
+
+### Bug
+
+- Fix scroll up button position [#1331](https://github.com/MyEtherWallet/MyEtherWallet/pull/1331)
+- Fix text translations [#1329](https://github.com/MyEtherWallet/MyEtherWallet/pull/1329)
+- Fix Mobile UI Scan to Download mobile [#1333](https://github.com/MyEtherWallet/MyEtherWallet/pull/1333)
+- By Mnemonic Phrase layout bug fix [#1347](https://github.com/MyEtherWallet/MyEtherWallet/pull/1347)
+
+### Release v5.1.0
+
+### Feature
+
+- Add Dashboard and NFT Manager [#1269](https://github.com/MyEtherWallet/MyEtherWallet/pull/1269)
+
+### Release v5.0.16-hotfix.1
+
+### Devop
+
+- Fix toast xss issue [#1306](https://github.com/MyEtherWallet/MyEtherWallet/pull/1306)
+- Set gasPrice of TXs to Global value [#1305](https://github.com/MyEtherWallet/MyEtherWallet/pull/1305)
+- Update team info and pictures [#1304](https://github.com/MyEtherWallet/MyEtherWallet/pull/1304)
+
+### Release v5.0.16
+
+### Feature
+
+- Lightstreams network support [#1257](https://github.com/MyEtherWallet/MyEtherWallet/pull/1257)
+
+### Devop
+
+- Add new team members into the team page [#1302](https://github.com/MyEtherWallet/MyEtherWallet/pull/1302)
+- Add proxy notice to moveCDP modal, improve swap widget [#1251](https://github.com/MyEtherWallet/MyEtherWallet/pull/1251)
+
+### Bug
+
+- Fix #1249 and #1205 [#1250](https://github.com/MyEtherWallet/MyEtherWallet/pull/1250)
+- Display "Advanced" section on "Send Transaction" page if data or gas limit fields are prefilled by url query params [#1260](https://github.com/MyEtherWallet/MyEtherWallet/pull/1260)
+- Fix custom network addition and notifications when you send gazillion ETH [#1293](https://github.com/MyEtherWallet/MyEtherWallet/pull/1293)
+- Logout warning modal redirect to current page instead of home page [#1297](https://github.com/MyEtherWallet/MyEtherWallet/pull/1297)
+- Custom networks not showing on send offline helper [#1285](https://github.com/MyEtherWallet/MyEtherWallet/pull/1285)
+- Fix webworker error when origin is null [#1273](https://github.com/MyEtherWallet/MyEtherWallet/pull/1273)
+
+### Devop
+
+- Add MEWTopia link [#1275](https://github.com/MyEtherWallet/MyEtherWallet/pull/1275)
+- Sentry Fixes [#1295](https://github.com/MyEtherWallet/MyEtherWallet/pull/1295)
+
+### Release v5.0.15
+
+### Bug
+
+- Fix withdraw ETH with infinite collateralization [#1244](https://github.com/MyEtherWallet/MyEtherWallet/pull/1244)
+- Fix the BitBox hardware wallet communication error introduced with Chrome 73 [#1209](https://github.com/MyEtherWallet/MyEtherWallet/pull/1209)
+- Fix error message display for the BitBox hardware wallet [#1209](https://github.com/MyEtherWallet/MyEtherWallet/pull/1209)
+
+### Release v5.0.14-hotfix.2
+
+### Bug
+
+- Fix Typo [#1198](https://github.com/MyEtherWallet/MyEtherWallet/pull/1198)
+- Fix Secalot throwing exception [#1194](https://github.com/MyEtherWallet/MyEtherWallet/pull/1194)
+
+### Devop
+
+- Cleanup greenkeeper branches [#1203](https://github.com/MyEtherWallet/MyEtherWallet/pull/1203)
+- Add subdomains [#1186](https://github.com/MyEtherWallet/MyEtherWallet/pull/1186)
+
+### Release v5.0.14-hotfix.1
+
+### Bug
+
+- Fix send tx for custom chains [#1184](https://github.com/MyEtherWallet/MyEtherWallet/pull/1184)
+
+### Release v5.0.14
+
+### Feature
+
+- Maker Integration [#740](https://github.com/MyEtherWallet/MyEtherWallet/pull/740)
+- Pocket Network Integration [#1226](https://github.com/MyEtherWallet/MyEtherWallet/pull/1262)
+
+### Bug
+
+- Fix getAddressString null issue, update ethereumjs-tx [#1163](https://github.com/MyEtherWallet/MyEtherWallet/pull/1163)
+- Add better errors on send, disable register on ens when no balance [#1173](https://github.com/MyEtherWallet/MyEtherWallet/pull/1173)
+- Fix Private Key network error on access [#1166](https://github.com/MyEtherWallet/MyEtherWallet/pull/1166)
+
+### Release v5.0.13
+
+### Devop
+
+- AWS sync with --exact-timestamps flag [#1117](https://github.com/MyEtherWallet/MyEtherWallet/pull/1117)
+- Support 32bits chainID [#959](https://github.com/MyEtherWallet/MyEtherWallet/pull/959)
+
+### Bug
+
+- Broken link in getting started [#1154](https://github.com/MyEtherWallet/MyEtherWallet/pull/1154)
+- Fix broken custom derivation paths & Remove -1 as an allowed gas limit value [#1133](https://github.com/MyEtherWallet/MyEtherWallet/pull/1133)
+- Various fixes for Metamask, Trezor, interact with contract, and deploy contract [#1125](https://github.com/MyEtherWallet/MyEtherWallet/pull/1125)
+- Fix front page spaceman animation [#1147](https://github.com/MyEtherWallet/MyEtherWallet/pull/1147)
+- Update UI for Verify Message page [#1146](https://github.com/MyEtherWallet/MyEtherWallet/pull/1146)
+- Fix UI for Hardware modal [#1140](https://github.com/MyEtherWallet/MyEtherWallet/pull/1140)
+- Ui fix for password modal [#1135](https://github.com/MyEtherWallet/MyEtherWallet/pull/1135)
+- UI update for mobile network, balance [#1134](https://github.com/MyEtherWallet/MyEtherWallet/pull/1134)
+- UI update for Send Offline Helper, Convert Units, Buy a Hardware wallet [#1129](https://github.com/MyEtherWallet/MyEtherWallet/pull/1129)
+- Term and conditions, Privacy policy UI fix [#1128](https://github.com/MyEtherWallet/MyEtherWallet/pull/1128)
+
+### Release v5.0.12-hotfix.2
+
+### Bug
+
+- Fix ENS migrate owner check [#1103](https://github.com/MyEtherWallet/MyEtherWallet/pull/1103)
+- Fixes refresh page on mnemonic wallet submit [#1108](https://github.com/MyEtherWallet/MyEtherWallet/pull/1108)
+
+### Release v5.0.12-hotfix.1
+
+### Bug
+
+- Use u2f in windows for ledger [#1100](https://github.com/MyEtherWallet/MyEtherWallet/pull/1100)
+
+### Devop
+
+- Possible random error fix, and sync master to develop [#1101](https://github.com/MyEtherWallet/MyEtherWallet/pull/1101)
+
+### Release v5.0.12
+
+### Feature
+
+- Have Simplex KYC form open in new tab [#1031](https://github.com/MyEtherWallet/MyEtherWallet/pull/1031)
+- Ledger webusb option [#1081](https://github.com/MyEtherWallet/MyEtherWallet/pull/1081)
+
+### Bug
+
+- Use native browser checking for online status. [#1032](https://github.com/MyEtherWallet/MyEtherWallet/pull/1032)
+- UI fix for mnemonic phrase key verification modal [#1029](https://github.com/MyEtherWallet/MyEtherWallet/pull/1029)
+- set up a fallback if GAS_LIMIT check fails [#1076](https://github.com/MyEtherWallet/MyEtherWallet/pull/1076)
+- Fix owner check for permanent registrar names [#1054](https://github.com/MyEtherWallet/MyEtherWallet/pull/1054)
+- Web3 wallet promievent fix [#1063](https://github.com/MyEtherWallet/MyEtherWallet/pull/1063)
+- Catch ledger error [#1091](https://github.com/MyEtherWallet/MyEtherWallet/pull/1091)
+
+### Devop
+
+- Ledger custom paths [#1037](https://github.com/MyEtherWallet/MyEtherWallet/pull/1037)
+- Update Richie's profile [#1036](https://github.com/MyEtherWallet/MyEtherWallet/pull/1036)
+- Change PWA name to MEW [#1030](https://github.com/MyEtherWallet/MyEtherWallet/pull/1030)
+- Address validation on swap [#1090](https://github.com/MyEtherWallet/MyEtherWallet/pull/1090)
+
+### Release v5.0.11-ens.1
+
+- Permanent registry [#965](https://github.com/MyEtherWallet/MyEtherWallet/pull/965)
+
+### Release v5.0.11
+
+### Devop
+
+- Update Access My Wallet modal UI [#1033](https://github.com/MyEtherWallet/MyEtherWallet/pull/1033)
+- Access by Software UI change [#1021](https://github.com/MyEtherWallet/MyEtherWallet/pull/1021)
+- Fix multiple sentry issues [#1015](https://github.com/MyEtherWallet/MyEtherWallet/pull/1015)
+- Update hardware icons [#994](https://github.com/MyEtherWallet/MyEtherWallet/pull/994)
+- Add trezor eth path to ledger [#1020](https://github.com/MyEtherWallet/MyEtherWallet/pull/1020)
+- Add presale eth and old mew eth wallet support [#985](https://github.com/MyEtherWallet/MyEtherWallet/pull/985)
+- Check private key format [#1014](https://github.com/MyEtherWallet/MyEtherWallet/pull/1014)
+- Update usage of Kyber supplied gas limits and serverless provider [#969](https://github.com/MyEtherWallet/MyEtherWallet/pull/969)
+- Fix hardware access icons not displaying [#1025](https://github.com/MyEtherWallet/MyEtherWallet/pull/1025)
+- Fix none assignment issue on Send Offline Container [#982](https://github.com/MyEtherWallet/MyEtherWallet/pull/982)
+
+### Bug
+
+- Reimplement support for web3 wallets [#976](https://github.com/MyEtherWallet/MyEtherWallet/pull/976)
+- Strip whitespace in address inputs [#1016](https://github.com/MyEtherWallet/MyEtherWallet/pull/1016)
+- Fix token load issue when searching token list [#1001](https://github.com/MyEtherWallet/MyEtherWallet/pull/1001)
+
+### Feature
+
+- Add warning signs to Create wallet page and update mnemonic input [#1041](https://github.com/MyEtherWallet/MyEtherWallet/pull/1041)
+- DEXON network support [#977](https://github.com/MyEtherWallet/MyEtherWallet/pull/977)
+- Metadium network support [#928](https://github.com/MyEtherWallet/MyEtherWallet/pull/928)
+- Solidum network support [#957](https://github.com/MyEtherWallet/MyEtherWallet/pull/957)
+- Support local nodes [#973](https://github.com/MyEtherWallet/MyEtherWallet/pull/973)
+
+### Release v5.0.10
+
+### Bug
+
+- Better Ledger app support flow [#910](https://github.com/MyEtherWallet/MyEtherWallet/pull/910)
+- Fixes send offline token value and deploy contract errors [#920](https://github.com/MyEtherWallet/MyEtherWallet/pull/920)
+- Update TOMO explorrer links [#918](https://github.com/MyEtherWallet/MyEtherWallet/pull/918)
+
+### Devop
+
+- only clone the most recent commit [#937](https://github.com/MyEtherWallet/MyEtherWallet/pull/937)
+- Fix send offline helper, update webchain [#932](https://github.com/MyEtherWallet/MyEtherWallet/pull/932)
+- MEWCX build fix [#935](https://github.com/MyEtherWallet/MyEtherWallet/pull/935)
+- Update Metamask Integration with listeners [#938](https://github.com/MyEtherWallet/MyEtherWallet/pull/938)
+- Sentry migration [#922](https://github.com/MyEtherWallet/MyEtherWallet/pull/922)
+- remove utf8 convertion for hex strings [#941](https://github.com/MyEtherWallet/MyEtherWallet/pull/941)
+
+### Feature
+
+- Scan each mewbuild with virustotal [#934](https://github.com/MyEtherWallet/MyEtherWallet/pull/934)
+- Can debug via [VSCODE](https://github.com/Microsoft/vscode-recipes/tree/master/vuejs-cli) [#960](https://github.com/MyEtherWallet/MyEtherWallet/pull/960)
+- Update hardware modal options [#923](https://github.com/MyEtherWallet/MyEtherWallet/pull/923)
+
+### Release v5.0.9
+
+### Devop
+
+- Add gas amount to send tx page [#925](https://github.com/MyEtherWallet/MyEtherWallet/pull/925)
+- Better data catch for url params [#909](https://github.com/MyEtherWallet/MyEtherWallet/pull/909)
+- Update hardwares [#906](https://github.com/MyEtherWallet/MyEtherWallet/pull/906)
+- Add monospace font[#898](https://github.com/MyEtherWallet/MyEtherWallet/pull/898)
+- Add Gage on team page [#853](https://github.com/MyEtherWallet/MyEtherWallet/pull/853)
+- Fixes Bitbox error and Hardware wallet error handling [#893](https://github.com/MyEtherWallet/MyEtherWallet/pull/893)
+- Use Kyber supplied gas limits [#892](https://github.com/MyEtherWallet/MyEtherWallet/pull/892)
+
+### Feature
+
+- Update verify message [#854](https://github.com/MyEtherWallet/MyEtherWallet/pull/854)
+- Add hardware page [#862](https://github.com/MyEtherWallet/MyEtherWallet/pull/862)
+- Reimplement query params for send offline and regular send [#803](https://github.com/MyEtherWallet/MyEtherWallet/pull/803)
+- Show token transfer data in notification body [#840](https://github.com/MyEtherWallet/MyEtherWallet/pull/840)
+- Add curency symbol to config [#809](https://github.com/MyEtherWallet/MyEtherWallet/pull/809)
+- Add Browser options for Metamask on Safari [#867](https://github.com/MyEtherWallet/MyEtherWallet/pull/867)
+- Add TX history menu[#865](https://github.com/MyEtherWallet/MyEtherWallet/pull/865)
+
+### Bug
+
+- Fix side menu bugs, logout warning modal bug[#896](https://github.com/MyEtherWallet/MyEtherWallet/pull/896)
+- Add network icon background[#897](https://github.com/MyEtherWallet/MyEtherWallet/pull/897)
+- Fix custom token validation [#852](https://github.com/MyEtherWallet/MyEtherWallet/pull/852)
+- Change mobile side menu button title from "Change" to "Menu" [#887](https://github.com/MyEtherWallet/MyEtherWallet/pull/887)
+- Fix notification to show max 5 notification popups[#873](https://github.com/MyEtherWallet/MyEtherWallet/pull/873)
+- Display final re-calculated values on swap confirmation[#841](https://github.com/MyEtherWallet/MyEtherWallet/pull/841)
+- Fix batch send success modal[#843](https://github.com/MyEtherWallet/MyEtherWallet/pull/843)
+- Fix hardware wallet scroll bug[#890](https://github.com/MyEtherWallet/MyEtherWallet/pull/890)
+- Allow zero as nonce for offline transaction [#860](https://github.com/MyEtherWallet/MyEtherWallet/pull/860)
+- Resolve spinner on interact contract [#861](https://github.com/MyEtherWallet/MyEtherWallet/pull/841)
+- Fix incorrect signing of messages starts with 0x [#899](https://github.com/MyEtherWallet/MyEtherWallet/pull/899)
+
+### Hotfix v5.0.8-hotfix.1
+
+- Display final re-calculated values on swap confirmation[#841](https://github.com/MyEtherWallet/MyEtherWallet/pull/841)
+- Fix batch send success modal[#843](https://github.com/MyEtherWallet/MyEtherWallet/pull/843)
+
+### Release v5.0.8
+
+### Bug
+
+- Better Ipad Catch [#814](https://github.com/MyEtherWallet/MyEtherWallet/pull/814)
+- Fix success modal not linking to unlock wallet page [#825](https://github.com/MyEtherWallet/MyEtherWallet/pull/825)
+- Currency in notifications shown correctly [#824](https://github.com/MyEtherWallet/MyEtherWallet/pull/824)
+- Fix Token details not sending to mewconnect [#839](https://github.com/MyEtherWallet/MyEtherWallet/pull/839)
+
+### Feature
+
+- Implement DNS for ENS [#792](https://github.com/MyEtherWallet/MyEtherWallet/pull/792)
+- Add ethereum classic path as presented in mew v3 [#812](https://github.com/MyEtherWallet/MyEtherWallet/pull/812)
+- Shows the recipient and the contract address [#822](https://github.com/MyEtherWallet/MyEtherWallet/pull/822)
+- Add ledger support for ThunderCore [#827](https://github.com/MyEtherWallet/MyEtherWallet/pull/827)
+
+### Devop
+
+- Add zh_TW (Traditional Chinese) translation [#820](https://github.com/MyEtherWallet/MyEtherWallet/pull/820)
+
 ### Release v5.0.7
 
 ### Feature

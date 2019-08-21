@@ -32,6 +32,13 @@
         }
       }
 
+      .warning-msg {
+        margin-right: 30px;
+        color: red;
+        font-size: 13px;
+        line-height: 17px;
+      }
+
       .flex-container {
         display: flex;
 
@@ -119,8 +126,18 @@
 .network-title {
   display: flex;
   align-items: center;
-  img {
-    height: 25px;
-    margin-right: 13px;
+
+  .network-icon {
+    width: 35px;
+    height: 35px;
+    border-radius: 100%;
+    background-color: $dark-grey-8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    img {
+      height: 25px;
+    }
   }
 }

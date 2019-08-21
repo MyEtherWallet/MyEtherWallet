@@ -1,5 +1,9 @@
 {
-  "signFailed": "Sign failed",
-  "invalidPassword": "Password provided is incorrect! Remaining Attempts: ",
-  "userAbortedAction": "User aborted action"
+  "unexpected": "Unexpected error",
+  "invalidPassword": "The password is incorrect. Attempts remaining: ",
+  "userAbort": "The transaction was canceled by the user. To confirm a transaction, hold the BitBox touch button for 4 seconds.",
+  "userTimeout": "Timed out. To confirm a transaction, hold the BitBox touch button for 4 seconds.",
+  "notInitialized": "The BitBox is not initialized. Use Shift Cryptosecurity's BitBox App to set up a wallet.",
+  "upgradeFirmware": "Please upgrade to the newest firmware using Shift Cryptosecurity's BitBox App.",
+  "unsupportedFirmware": "MyEtherWallet does not yet support this version of the firmware"
 }

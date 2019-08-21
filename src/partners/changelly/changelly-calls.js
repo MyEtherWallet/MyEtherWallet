@@ -32,6 +32,36 @@ const getRate = async (fromCurrency, toCurrency, fromValue, network) => {
     if (changellyMethods[network]) {
       const results = await post(
         buildPath(),
+        utils.buildPayload(changellyMethods[network].rate, [
+          {
+            from: fromCurrency,
+            to: toCurrency,
+            amount: fromValue
+          }
+        ])
+      );
+
+      if (results.error) {
+        throw Error(results.error.message);
+      }
+      return results.result;
+    }
+    return Promise.resolve(-1);
+  } catch (e) {
+    utils.handleOrThrow(e);
+  }
+};
+
+const getResultAmount = async (
+  fromCurrency,
+  toCurrency,
+  fromValue,
+  network
+) => {
+  try {
+    if (changellyMethods[network]) {
+      const results = await post(
+        buildPath(),
         utils.buildPayload(changellyMethods[network].rate, {
           from: fromCurrency,
           to: toCurrency,
@@ -192,6 +222,7 @@ const createFixTransaction = async (transactionParams, network) => {
 export default {
   getCurrencies,
   getRate,
+  getResultAmount,
   getMin,
   validateAddress,
   createTransaction,

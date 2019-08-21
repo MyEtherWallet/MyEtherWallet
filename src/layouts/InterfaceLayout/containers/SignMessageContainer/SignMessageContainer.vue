@@ -1,5 +1,6 @@
 <template>
   <div class="sign-message-container">
+    <signature-modal-modal ref="signatureModal" :signature="signature" />
     <interface-container-title :title="$t('common.signMessage')" />
     <div class="content-container">
       <div class="send-form">
@@ -20,33 +21,6 @@
           <span v-show="errors.has('message')">
             {{ errors.first('message') }}
           </span>
-        </div>
-      </div>
-
-      <div class="send-form">
-        <div class="title-container">
-          <div class="title">
-            <h4>{{ $t('common.signature') }}</h4>
-            <popover :popcontent="$t('popover.signature')" />
-
-            <div class="copy-buttons">
-              <button
-                class="title-button"
-                @click="deleteInputText('signature')"
-              >
-                {{ $t('common.clear') }}
-              </button>
-              <button
-                class="title-button"
-                @click="copyToClipboard('signature')"
-              >
-                {{ $t('common.copy') }}
-              </button>
-            </div>
-          </div>
-        </div>
-        <div class="the-form domain-name">
-          <textarea ref="signature" class="custom-textarea-1" />
         </div>
       </div>
 
@@ -73,36 +47,34 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import { Toast } from '@/helpers';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
-import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessModal/SuccessModal.vue';
+import SignatureModal from '../../components/SignatureModal';
 
 export default {
   name: 'SignMessage',
   components: {
     'interface-bottom-text': InterfaceBottomText,
     'interface-container-title': InterfaceContainerTitle,
-    'success-modal': SuccessModal
+    'signature-modal-modal': SignatureModal
   },
   data() {
     return {
-      message: ''
+      message: '',
+      signature: ''
     };
   },
   computed: {
-    ...mapGetters({
-      account: 'account',
-      web3: 'web3'
-    })
+    ...mapState(['account', 'web3'])
   },
   methods: {
     signMessage() {
       this.web3.eth
         .sign(this.message, this.account.address)
         .then(_signedMessage => {
-          this.$refs.signature.value = JSON.stringify(
+          this.signature = JSON.stringify(
             {
               address: this.account.address,
               msg: this.message,
@@ -113,19 +85,21 @@ export default {
             null,
             2
           );
+          this.$refs.signatureModal.$refs.signatureModal.show();
         })
         .catch(e => {
           Toast.responseHandler(e, false);
         });
     },
-    copyToClipboard(ref) {
-      this.$refs[ref].select();
+    copyToClipboard() {
+      this.$refs.signature.select();
       document.execCommand('copy');
       window.getSelection().removeAllRanges();
       Toast.responseHandler('Copied', Toast.INFO);
     },
-    deleteInputText(ref) {
-      this.$refs[ref].value = '';
+    deleteInputText() {
+      this.signature = '';
+      this.message = '';
     }
   }
 };

@@ -44,11 +44,16 @@ export default {
   },
   methods: {
     logout() {
+      const path = this.$route.fullPath;
+      if (path !== '/interface') {
+        this.$store.dispatch('setLastPath', path);
+      }
       this.$store.dispatch('clearWallet');
+      this.$store.dispatch('setLastPath', '');
       this.$refs.logoutWarningModal.hide();
     },
     cancel() {
-      this.$router.push('Interface');
+      this.$router.push('interface');
       this.$refs.logoutWarningModal.hide();
     }
   }

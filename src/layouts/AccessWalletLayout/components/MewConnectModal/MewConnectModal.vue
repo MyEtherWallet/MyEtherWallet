@@ -48,7 +48,7 @@
 <script>
 import CustomerSupport from '@/components/CustomerSupport';
 import { MewConnectWallet } from '@/wallets';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import { Toast } from '@/helpers';
 import platform from 'platform';
 import IpadModal from '@/components/IpadModal';
@@ -65,14 +65,13 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({
-      path: 'path',
-      web3: 'web3'
-    })
+    ...mapState(['path', 'web3'])
   },
   mounted() {
     this.canDownloadApple =
-      platform.product && platform.product.toLowerCase() !== 'ipad';
+      platform.product !== null
+        ? platform.product.toLowerCase() !== 'ipad'
+        : true;
     this.$refs.mewConnect.$on('show', () => {
       new MewConnectWallet(this.codeDisplay)
         .then(wallet => {
