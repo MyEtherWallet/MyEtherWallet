@@ -57,7 +57,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'VerificationModal-desktop.scss';
-@import 'VerificationModal-tablet.scss';
-@import 'VerificationModal-mobile.scss';
+@import 'VerificationModal.scss';
 </style>

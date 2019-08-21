@@ -131,6 +131,16 @@
         }
       }
 
+      .buy-eth {
+        position: relative;
+        .buy-eth-icon {
+          position: absolute;
+          top: 19px;
+          left: -13px;
+          height: 24px;
+        }
+      }
+
       .language-menu-container {
         margin-left: 20px;
       }

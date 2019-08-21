@@ -100,6 +100,10 @@ export default class Changelly {
     return this.getMarketRate(fromCurrency, toCurrency, fromValue);
   }
 
+  async getRateUpdate(fromCurrency, toCurrency, fromValue, toValue, isFiat) {
+    return this.getRate(fromCurrency, toCurrency, fromValue, toValue, isFiat);
+  }
+
   async getFixedRate(fromCurrency, toCurrency, fromValue) {
     const changellyDetails = await changellyCalls.getFixRate(
       fromCurrency,
@@ -308,7 +312,7 @@ export default class Changelly {
       sendValue: order.amountExpectedFrom,
       status: order.status,
       timestamp: order.createdAt,
-      validFor: TIME_SWAP_VALID // validFor ||  // Rates provided are only an estimate, and
+      validFor: TIME_SWAP_VALID // Rates provided are only an estimate
     };
   }
 
