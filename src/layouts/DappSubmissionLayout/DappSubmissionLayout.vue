@@ -305,11 +305,12 @@ export default {
         })
         .then(res => {
           this.$refs.successModal.$refs.success.show();
-          console.error('res', res);
+          // console.error('res', res);
         })
         .catch(err => {
+          // change to toast
           this.$refs.errorModal.$refs.errorModal.show();
-          console.error('err', err);
+          // console.error('err', err);
         });
     }
   }

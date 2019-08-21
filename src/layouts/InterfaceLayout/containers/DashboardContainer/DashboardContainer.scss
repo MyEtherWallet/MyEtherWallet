@@ -9,10 +9,6 @@ $actionsSwapCollepsePoint: 700px;
   background-color: transparent;
 }
 
-.clickable {
-  cursor: pointer;
-}
-
 .container--flex {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -86,8 +82,9 @@ $actionsSwapCollepsePoint: 700px;
     }
 
     &.swap-disabled {
+      cursor: initial;
       filter: grayscale(100%);
-      opacity: 0.8;
+      opacity: 0.4;
       background-color: $light-green-2;
     }
 

@@ -29,8 +29,8 @@ describe('VerificationModal.vue', () => {
     mnemonicValues.push('values3');
     wrapper.setProps({ mnemonicValues });
     const liElements = wrapper.vm.$el.querySelectorAll('li');
-    for (let i = 0; i < liElements.length; i++) {
-      const liElement = liElements[i];
+
+    for (const [i, liElement] of liElements.entries()) {
       expect(liElement.querySelector('span').textContent.trim()).toEqual(
         mnemonicValues[i]
       );

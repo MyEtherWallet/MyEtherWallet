@@ -37,9 +37,14 @@ export default class Kyber {
       typeof props.getRateForUnit === 'boolean' ? props.getRateForUnit : false;
     this.hasRates = 0;
     this.GAS_LIMITS = GAS_LIMITS;
-    this.defaultTradeGasLimit = defaultValues.tradeGasLimit;
-    this.tokenToTokenGasLimit = defaultValues.tokenToTokenGasLimit;
-    this.defaultTokenApprovalGasLimit = defaultValues.tokenApprovalGasLimit;
+    this.gasLimitsLoaded = false;
+    this.tokenListLoaded = false;
+    this.defaultTradeGasLimit =
+      props.tradeGasLimit || defaultValues.tradeGasLimit;
+    this.tokenToTokenGasLimit =
+      props.tokenToTokenGasLimit || defaultValues.tokenToTokenGasLimit;
+    this.defaultTokenApprovalGasLimit =
+      props.tokenApprovalGasLimit || defaultValues.tokenApprovalGasLimit;
     this.maxGasPrice = defaultValues.maxGasPrice; // 30 Gwei
     this.gasPrice = defaultValues.gasPrice; // 2 Gwei
     this.tokenDetails = {};
@@ -49,9 +54,11 @@ export default class Kyber {
     this.kyberNetworkABI = kyberNetworkABI || [];
     this.kyberNetworkAddress =
       props.kyberAddress || kyberAddressFallback[this.network];
+    this.retrieveGasLimits().then(() => {
+      this.gasLimitsLoaded = true;
+    });
     this.getSupportedTokenList();
     this.getMainNetAddress(this.kyberNetworkAddress);
-    this.retrieveGasLimits();
   }
 
   // Static Informational
@@ -66,6 +73,18 @@ export default class Kyber {
   // Getters
   get defaultCurrencyList() {
     return KyberCurrencies[this.network];
+  }
+
+  get ratesRetrieved() {
+    return this.tokenListLoaded;
+  }
+
+  get isReady() {
+    return (
+      Object.keys(this.tokenDetails).length > 0 &&
+      this.gasLimitsLoaded &&
+      this.tokenListLoaded
+    );
   }
 
   get currencies() {
@@ -138,47 +157,54 @@ export default class Kyber {
     }
   }
 
-  // API Call
-  async retrieveSupportedTokenList(network) {
-    try {
-      const rawTokenList = await kyberCalls.getTokenList(network);
-      const tokenList = rawTokenList.data;
-      const tokenDetails = {};
-      for (let i = 0; i < tokenList.length; i++) {
-        if (
-          tokenList[i].symbol &&
-          tokenList[i].name &&
-          tokenList[i].decimals &&
-          tokenList[i].address
-        ) {
-          // otherwise the entry is invalid
-          const symbol = tokenList[i].symbol.toUpperCase();
-          tokenDetails[symbol] = tokenList[i];
-        }
-      }
-      return tokenDetails;
-    } catch (e) {
-      utils.handleOrThrow(e);
-      errorLogger(e);
-    }
-  }
-  // API Call
-  async retrieveGasLimits(network = this.network) {
-    try {
-      const gasLimitList = await kyberCalls.getGasLimits(network);
-      this.GAS_LIMITS = gasLimitList.data;
-    } catch (e) {
-      utils.handleOrThrow(e);
-      errorLogger(e);
-    }
-  }
-
   async getSupportedTokenList() {
     try {
       this.tokenDetails = await this.retrieveSupportedTokenList(this.network);
       this.hasRates =
         Object.keys(this.tokenDetails).length > 0 ? this.hasRates + 1 : 0;
     } catch (e) {
+      errorLogger(e);
+    }
+  }
+
+  // API Call
+  async retrieveSupportedTokenList(network) {
+    try {
+      const rawTokenList = await kyberCalls.getTokenList(network);
+      const tokenList = rawTokenList.data;
+      if (tokenList) {
+        const tokenDetails = {};
+        for (let i = 0; i < tokenList.length; i++) {
+          if (
+            tokenList[i].symbol &&
+            tokenList[i].name &&
+            tokenList[i].decimals &&
+            tokenList[i].address
+          ) {
+            // otherwise the entry is invalid
+            const symbol = tokenList[i].symbol.toUpperCase();
+            tokenDetails[symbol] = tokenList[i];
+          }
+        }
+        this.tokenListLoaded = true;
+        return tokenDetails;
+      }
+      return KyberCurrencies[this.network];
+    } catch (e) {
+      utils.handleOrThrow(e);
+      errorLogger(e);
+    }
+  }
+
+  // API Call
+  async retrieveGasLimits(network = this.network) {
+    try {
+      const gasLimitList = await kyberCalls.getGasLimits(network);
+      if (gasLimitList.data) {
+        this.GAS_LIMITS = gasLimitList.data;
+      }
+    } catch (e) {
+      utils.handleOrThrow(e);
       errorLogger(e);
     }
   }
@@ -239,7 +265,7 @@ export default class Kyber {
     const fromWei = this.convertToTokenWei(fromToken, fromValue);
     logger(fromWei);
     const inWei = await this.getExpectedRate(fromToken, toToken, fromWei);
-    if (+inWei > -1) {
+    if (new BigNumber(inWei).gt(-1)) {
       return this.convertToTokenBase(kyberBaseCurrency, inWei);
     }
     return -1;
@@ -247,6 +273,7 @@ export default class Kyber {
 
   getInitialCurrencyEntries(collectMapFrom, collectMapTo) {
     for (const prop in this.currencies) {
+      if (prop === 'THISISADUMMYTOKEN') continue;
       if (this.currencies[prop])
         collectMapTo.set(prop, {
           symbol: prop,
@@ -262,6 +289,7 @@ export default class Kyber {
   getUpdatedCurrencyEntries(value, collectMap) {
     if (this.currencies[value.symbol]) {
       for (const prop in this.currencies) {
+        if (prop === 'THISISADUMMYTOKEN') continue;
         if (this.currencies[prop])
           collectMap.set(prop, {
             symbol: prop,
@@ -568,7 +596,7 @@ export default class Kyber {
 
   getTokenDecimals(token) {
     try {
-      return +this.currencies[token].decimals;
+      return new BigNumber(this.currencies[token].decimals).toNumber();
     } catch (e) {
       errorLogger(e);
       throw Error(
@@ -580,20 +608,11 @@ export default class Kyber {
   getGasLimits(token) {
     try {
       const address = this.getTokenAddress(token);
-      if (this.GAS_LIMITS && Array.isArray(this.GAS_LIMITS)) {
-        const gasLimit = this.GAS_LIMITS.find(entry => {
-          return entry.address === address;
-        });
-        if (gasLimit !== null && gasLimit !== undefined) {
-          return gasLimit;
-        }
-        return {
-          swapGasLimit: this.defaultTradeGasLimit,
-          approveGasLimit: this.defaultTokenApprovalGasLimit
-        };
-      }
-      const gasLimit = GAS_LIMITS.find(entry => {
-        return entry.address === address;
+      const gasLimit = this.GAS_LIMITS.find(entry => {
+        return (
+          entry.address.toLowerCase() === address.toLowerCase() ||
+          entry.symbol === token
+        );
       });
       if (gasLimit !== null && gasLimit !== undefined) {
         return gasLimit;
