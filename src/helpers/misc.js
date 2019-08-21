@@ -117,10 +117,20 @@ const reorderNetworks = () => {
   delete oldObject['ETH'];
   delete oldObject['RIN'];
   delete oldObject['ROP'];
+
+  const findWs = nodeList['ETH'].find(item => {
+    return item.service.includes('-ws');
+  });
+  const eth =
+    BUILD_TYPE !== 'mewcx'
+      ? nodeList['ETH']
+      : findWs === undefined
+      ? nodeList['ETH']
+      : findWs;
   const newObject = Object.assign(
     {},
     {
-      ETH: nodeList['ETH'],
+      ETH: eth,
       ROP: nodeList['ROP'],
       RIN: nodeList['RIN'],
       ...oldObject
