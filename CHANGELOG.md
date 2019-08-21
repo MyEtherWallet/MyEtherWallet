@@ -1,5 +1,6 @@
 ### Devop
 
+- Add warning message to HTTP Basic Access Authentication [#1364](https://github.com/MyEtherWallet/MyEtherWallet/pull/1364)
 - Upgrade web3.js to 1.2.1 [#1348](https://github.com/MyEtherWallet/MyEtherWallet/pull/1348)
 - Update qrcode modal to be mobile friendly [#1366](https://github.com/MyEtherWallet/MyEtherWallet/pull/1366)
 - Update UI custom token UI [1367](https://github.com/MyEtherWallet/MyEtherWallet/pull/1367)
