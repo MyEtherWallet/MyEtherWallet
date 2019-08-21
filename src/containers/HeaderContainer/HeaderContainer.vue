@@ -100,7 +100,7 @@
                   @click="scrollTop()"
                   >{{ $t('header.home') }}</b-nav-item
                 >
-                <b-nav-item v-if="isHomePage" to="/#about-mew">
+                <b-nav-item v-if="isHomePage && buildType !== 'mewcx'" to="/#about-mew">
                   {{ $t('header.about') }}
                 </b-nav-item>
                 <b-nav-item-dropdown
@@ -123,7 +123,7 @@
                     >Ethplorer (Tokens)</b-dropdown-item
                   >
                 </b-nav-item-dropdown>
-                <b-nav-item to="/#faqs">{{ $t('common.faqs') }}</b-nav-item>
+                <b-nav-item to="/#faqs" v-if="buildType !== 'mewcx'">{{ $t('common.faqs') }}</b-nav-item>
                 <div class="language-menu-container">
                   <div class="arrows">
                     <i class="fa fa-angle-down" aria-hidden="true" />
