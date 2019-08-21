@@ -71,7 +71,7 @@
               </div>
             </router-link>
           </li>
-          <li v-if="isHomePage">
+          <li v-if="isHomePage && buildType !== 'mewcx'">
             <router-link to="/#about-mew" @click.native="isMenuOpen = false">
               <div class="menu-link-block">
                 <div>{{ $t('header.about') }}</div>
@@ -79,7 +79,7 @@
               </div>
             </router-link>
           </li>
-          <li>
+          <li v-if="buildType !== 'mewcx'">
             <router-link to="/#faqs" @click.native="isMenuOpen = false">
               <div class="menu-link-block">
                 <div>{{ $t('common.faqs') }}</div>
