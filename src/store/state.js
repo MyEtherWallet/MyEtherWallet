@@ -2,11 +2,10 @@ import nodeList from '@/networks';
 import darklist from '@/address-darklist/address-darklist.json';
 import store from 'store';
 if (store.get('notifications') === undefined) store.set('notifications', {});
-
 const gettingStartedDone =
   store.get('skipTutorial') !== undefined ? store.get('skipTutorial') : false;
 const storedNetwork = store.get('network');
-let network = nodeList['ETH'][2];
+let network = BUILD_TYPE !== 'mewcx' ? nodeList['ETH'][2] : nodeList['ETH'][1];
 
 if (BUILD_TYPE !== 'mewcx' && storedNetwork !== undefined) {
   network = storedNetwork;
