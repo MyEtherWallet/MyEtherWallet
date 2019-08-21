@@ -1,4 +1,10 @@
 const KyberCurrenciesETH = {
+  THISISADUMMYTOKEN: {
+    symbol: 'THISISADUMMYTOKEN',
+    name: 'Ethereum',
+    decimals: 18,
+    contractAddress: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+  },
   ETH: {
     symbol: 'ETH',
     name: 'Ethereum',

@@ -34,6 +34,13 @@ export default class Changelly {
     return PROVIDER_NAME;
   }
 
+  getApiConnector(type) {
+    if (type === 'api') {
+      return changellyApi;
+    }
+    return changellyCalls;
+  }
+
   static isDex() {
     return false;
   }
@@ -51,6 +58,10 @@ export default class Changelly {
     } catch (e) {
       errorLogger(e);
     }
+  }
+
+  get ratesRetrieved() {
+    return Object.keys(this.tokenDetails).length > 0 &&  this.hasRates > 0;
   }
 
   get isValidNetwork() {

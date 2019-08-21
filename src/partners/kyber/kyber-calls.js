@@ -1,5 +1,5 @@
 import { post } from '@/helpers/httpRequests';
-import { kyberMethods, KyberCurrencies, GAS_LIMITS } from './config';
+import { kyberMethods} from './config';
 import { swapApiEndpoints } from '../partnersConfig';
 import { utils } from '../helpers';
 
@@ -21,7 +21,7 @@ const getTokenList = async network => {
 
       return results.result;
     }
-    return Promise.resolve(KyberCurrencies[network] || {});
+    return Promise.resolve({ data: false });
   } catch (e) {
     utils.handleOrThrow(e);
   }
@@ -60,7 +60,7 @@ const getGasLimits = async network => {
       }
       return results.result;
     }
-    return Promise.resolve(GAS_LIMITS || {});
+    return Promise.resolve({ data: false });
   } catch (e) {
     utils.handleOrThrow(e);
   }

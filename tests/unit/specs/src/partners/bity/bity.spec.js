@@ -1,7 +1,5 @@
 import Bity from '@/partners/bity/bity.js';
-import {
-  getEstimate
-} from '@/partners/bity/bity-calls';
+import { getEstimate } from '@/partners/bity/bity-calls';
 import BigNumber from 'bignumber.js';
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
