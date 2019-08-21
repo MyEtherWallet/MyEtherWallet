@@ -1,0 +1,13 @@
+// See https://aka.ms/vscode-remote/devcontainer.json for format details.
+{
+  "dockerFile": "Dockerfile",
+  "extensions": [
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "octref.vetur",
+    "ms-vscode-remote.remote-containers"
+  ],
+  "appPort": ["8080:8080"],
+  "shutdownAction": "stopContainer",
+  "postCreateCommand": "npm install"
+}
