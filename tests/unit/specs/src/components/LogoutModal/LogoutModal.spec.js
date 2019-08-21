@@ -16,7 +16,7 @@ const BModalStub = {
 };
 
 describe('LogoutModal.vue', () => {
-  let localVue, i18n, wrapper, store;
+  let localVue, i18n, wrapper, store, dispatch;
 
   const mockRouter = {
     push: sinon.stub()
@@ -27,6 +27,8 @@ describe('LogoutModal.vue', () => {
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
     store = baseSetup.store;
+    dispatch = sinon.stub();
+    store.dispatch = dispatch;
   });
 
   beforeEach(() => {
@@ -52,8 +54,9 @@ describe('LogoutModal.vue', () => {
     });
 
     it('should logout when button is clicked', () => {
+      expect(dispatch.calledWith('clearWallet')).toBe(false);
       wrapper.find('.buttons .yes').trigger('click');
-      expect(mockRouter.push.calledWith('/')).toBe(false);
+      expect(dispatch.calledWith('clearWallet')).toBe(true);
       expect(hideModal.called).toBe(true);
     });
   });
