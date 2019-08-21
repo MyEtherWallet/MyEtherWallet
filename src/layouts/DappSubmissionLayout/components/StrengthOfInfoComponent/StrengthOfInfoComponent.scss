@@ -22,14 +22,25 @@
 }
 
 .lack-of-info-progress {
-  background: linear-gradient($light-green-1, $light-green-1) content-box no-repeat,
-    conic-gradient(from calc(-1 * var(--percentage)), $red-9 var(--percentage, 0), transparent var(--percentage, 0)) border-box;
+  background: linear-gradient($light-green-1, $light-green-1) content-box
+      no-repeat,
+    conic-gradient(
+        from calc(-1 * var(--percentage)),
+        $red-9 var(--percentage, 0),
+        transparent var(--percentage, 0)
+      )
+      border-box;
 }
 
 .good-strength-progress {
   background: linear-gradient($light-green-1, $light-green-1) content-box
-      no-repeat, conic-gradient(from calc(-1 * var(--percentage)), $mew-green var(--percentage, 0),
-      transparent var(--percentage, 0)) border-box;
+      no-repeat,
+    conic-gradient(
+        from calc(-1 * var(--percentage)),
+        $mew-green var(--percentage, 0),
+        transparent var(--percentage, 0)
+      )
+      border-box;
 }
 
 .lack-of-info-text {
