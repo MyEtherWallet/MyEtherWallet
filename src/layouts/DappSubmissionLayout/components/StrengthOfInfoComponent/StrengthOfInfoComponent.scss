@@ -8,19 +8,28 @@
 }
 
 .circle {
-  width: 100px;
+  display: flex;
+  border: 5px solid transparent;
+  border-radius: 50%;
   height: 100px;
-  border-radius: 50px;
   position: absolute;
-  clip: rect(0, 50px, 100px, 0);
+  width: 100px;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5em;
+
+  --percentage: 0deg;
 }
 
 .lack-of-info-progress {
-  border: 6px solid $red-9;
+  background: linear-gradient($light-green-1, $light-green-1) content-box no-repeat,
+    conic-gradient(from calc(-1 * var(--percentage)), $red-9 var(--percentage, 0), transparent var(--percentage, 0)) border-box;
 }
 
 .good-strength-progress {
-  border: 6px solid $mew-green;
+  background: linear-gradient($light-green-1, $light-green-1) content-box
+      no-repeat, conic-gradient(from calc(-1 * var(--percentage)), $mew-green var(--percentage, 0),
+      transparent var(--percentage, 0)) border-box;
 }
 
 .lack-of-info-text {
@@ -50,18 +59,21 @@
 }
 
 .circle-wrapper {
-  height: 100%;
-  width: 103px;
-  display: flex;
-  justify-content: center;
   align-items: center;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  margin-right: 20px;
+  width: 103px;
 }
 
 .strength-text {
+  align-items: center;
+  display: flex;
   font-size: 20px;
   font-weight: bold;
   height: 24px;
+  justify-content: center;
   width: 48px;
-  display: flex;
-  align-items: center;
+  z-index: 999;
 }

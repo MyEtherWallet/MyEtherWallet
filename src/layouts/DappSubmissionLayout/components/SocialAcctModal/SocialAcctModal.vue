@@ -43,7 +43,10 @@ export default {
     return {
       dappSocialAccounts: [
         { value: null, text: 'Please select' },
-        { value: github, text: 'Github' },
+        {
+          value: github,
+          html: '<img src="@/assets/images/icons/github.png"/>  Github'
+        },
         { value: facebook, text: 'Facebook' },
         { value: twitter, text: 'Twitter' }
       ],

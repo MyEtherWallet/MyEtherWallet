@@ -1,5 +1,4 @@
 @import '~@/scss/GlobalVariables';
-
 .fake-input {
   background: $light-blue-9;
   border-radius: 4px;
@@ -12,6 +11,11 @@
     vertical-align: middle;
     padding-left: 5px;
   }
+}
+
+.dapp-icon-label {
+  max-width: 14%;
+  width: 100%;
 }
 
 .image-label {
@@ -27,25 +31,26 @@
 }
 
 .image-placeholder {
-  position: absolute;
-  width: 31%;
+  width: 100%;
 }
 
 .image-container {
-  // border-radius: 6px;
-  // border: 1px dashed $dark-grey-11;
   cursor: pointer;
   display: table;
   height: 223px;
-  width: 460px;
+  position: relative;
+  width: 90%;
 }
 
 .image-text {
   color: $dark-grey-9;
+  font-family: 'Avenir Next';
+  font-size: 14px;
 }
 
 .image-requirements {
   color: $light-grey-11;
+  font-family: 'Avenir Next';
   font-weight: normal;
 }
 
@@ -73,7 +78,6 @@
   span {
     color: $red-9;
     font-size: 16px;
-    // height: 19px;
     padding-left: 10px;
   }
 }
@@ -117,12 +121,72 @@
 }
 
 .custom-file {
-  // height: 100%;
   border-radius: 6px;
-  border: 1px dashed #999;
+  border: 1px dashed $dark-grey-11;
   cursor: pointer;
-  // display: table;
   height: 223px;
-  width: 460px;
   position: absolute;
+}
+
+.replace-label {
+  color: $mew-green;
+  cursor: pointer;
+  font-weight: normal;
+  text-align: right;
+  width: 100%;
+}
+
+.dapp-icon-uploaded {
+  &.image-container {
+    height: 180px;
+  }
+  .image-placeholder {
+    margin-left: 150px;
+    text-align: left;
+    position: absolute;
+    width: 50%;
+  }
+  .image-label {
+    align-items: normal;
+    height: 100%;
+    margin-top: 20px;
+  }
+  .image-text {
+    margin-top: 20px;
+  }
+  .custom-file {
+    height: 118px;
+    width: 118px;
+  }
+  .dapp-icon-img {
+    height: 118px;
+    width: 118px;
+  }
+}
+
+.banner-uploaded {
+  &.image-container {
+    height: 200px;
+  }
+  .image-label {
+    height: 150px;
+  }
+  .banner-img {
+    border-radius: 4px;
+    height: 99px;
+    width: 100%;
+  }
+  .custom-file {
+    height: 99px;
+  }
+  .image-placeholder {
+    margin-left: 20px;
+    margin-top: 90px;
+    position: absolute;
+    text-align: left;
+  }
+  .replace-label {
+    text-align: right;
+    width: 100%;
+  }
 }

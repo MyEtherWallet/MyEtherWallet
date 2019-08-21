@@ -5,6 +5,7 @@
       <div class="strength-of-info-wrapper">
         <div class="circle-wrapper">
           <div
+            ref="circularProgressBar"
             :class="
               lackOfInfo ? 'lack-of-info-progress' : 'good-strength-progress'
             "
@@ -14,7 +15,7 @@
             :class="lackOfInfo ? 'lack-of-info-text' : 'good-strength-text'"
             class="strength-text"
           >
-            {{ strengthOfInfo }}
+            {{ strengthOfInfo + '%' }}
           </span>
         </div>
         <div class="text-wrapper">
@@ -45,8 +46,16 @@ export default {
       default: false
     },
     strengthOfInfo: {
-      type: String,
-      default: ''
+      type: Number,
+      default: 0
+    }
+  },
+  watch: {
+    strengthOfInfo(newVal) {
+      this.$refs.circularProgressBar.style.setProperty(
+        '--percentage',
+        `${newVal * 3.6}deg`
+      );
     }
   }
 };
