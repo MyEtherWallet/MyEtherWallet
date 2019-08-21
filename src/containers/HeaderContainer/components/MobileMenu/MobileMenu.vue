@@ -142,6 +142,10 @@ export default {
     logout: {
       type: Function,
       default: function() {}
+    },
+    buildType: {
+      type: String,
+      default: 'web'
     }
   },
   data() {

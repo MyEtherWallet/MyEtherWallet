@@ -32,7 +32,7 @@ export default {
     'footer-container': FooterContainer,
     'header-container': HeaderContainer,
     'confirmation-container': ConfirmationContainer,
-    'logout-warning-modal': LogoutWarningModal,
+    'logout-warning-modal': LogoutWarningModal
   },
   computed: {
     ...mapState(['wallet'])

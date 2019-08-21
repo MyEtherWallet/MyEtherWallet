@@ -517,9 +517,14 @@ export default {
         const _tx = new Transaction(raw);
         const json = _tx.toJSON(true);
         json.from = coinbase;
-        console.log('gets here right?', json, this.web3.eth, this.$store.state.wallet);
+        console.log(
+          'gets here right?',
+          json,
+          this.web3.eth,
+          this.$store.state.wallet
+        );
         this.web3.eth.sendTransaction(json).catch(err => {
-          console.log('do you even get here?')
+          console.log('do you even get here?');
           Toast.responseHandler(err, Toast.ERROR);
         });
       } catch (e) {
