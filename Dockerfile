@@ -1,6 +1,6 @@
-FROM node:8.16.0-jessie
+FROM node:10.16.2-jessie
 
-ENV NODE_OPTIONS --max-old-space-size=4096
+ENV NODE_OPTIONS --max-old-space-size=4092
 RUN npm install npm@6.10 -g
 RUN node -v && npm -v
 COPY package*.json ./
@@ -9,3 +9,5 @@ RUN  node package-audit.js
 RUN rm package-audit.js
 RUN rm -rf package*.json*
 WORKDIR /home
+
+EXPOSE 8080

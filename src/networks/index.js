@@ -2,7 +2,7 @@ const platform = require('platform');
 import * as types from './types';
 import * as nodes from './nodes';
 
-let nodeList = {};
+const nodeList = {};
 Object.keys(types).forEach(key => {
   nodeList[types[key].name] = [];
 });
@@ -22,21 +22,21 @@ Object.keys(nodes).forEach(key => {
   }
 });
 
-if (BUILD_TYPE === 'mewcx') {
-  const obj = {};
-  Object.keys(nodeList).forEach(network => {
-    obj[network] = nodeList[network].filter(item => {
-      return item.service.includes('-ws');
-    });
-  });
+// if (BUILD_TYPE === 'mewcx') {
+//   const obj = {};
+//   Object.keys(nodeList).forEach(network => {
+//     obj[network] = nodeList[network].filter(item => {
+//       return item.service.includes('-ws');
+//     });
+//   });
 
-  Object.keys(obj).forEach(network => {
-    if (obj[network].length === 0) {
-      delete obj[network];
-    }
-  });
+//   Object.keys(obj).forEach(network => {
+//     if (obj[network].length === 0) {
+//       delete obj[network];
+//     }
+//   });
 
-  nodeList = Object.assign({}, obj);
-}
+//   nodeList = Object.assign({}, obj);
+// }
 
 export default nodeList;
