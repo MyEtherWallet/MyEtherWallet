@@ -61,7 +61,7 @@ export default class Changelly {
   }
 
   get ratesRetrieved() {
-    return Object.keys(this.tokenDetails).length > 0 &&  this.hasRates > 0;
+    return Object.keys(this.tokenDetails).length > 0 && this.hasRates > 0;
   }
 
   get isValidNetwork() {

@@ -54,8 +54,7 @@ export default class Kyber {
     this.kyberNetworkABI = kyberNetworkABI || [];
     this.kyberNetworkAddress =
       props.kyberAddress || kyberAddressFallback[this.network];
-    this.retrieveGasLimits()
-      .then(() => {
+    this.retrieveGasLimits().then(() => {
       this.gasLimitsLoaded = true;
     });
     this.getSupportedTokenList();

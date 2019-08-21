@@ -1,5 +1,5 @@
 import { post } from '@/helpers/httpRequests';
-import { kyberMethods} from './config';
+import { kyberMethods } from './config';
 import { swapApiEndpoints } from '../partnersConfig';
 import { utils } from '../helpers';
 
