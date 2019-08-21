@@ -69,8 +69,8 @@ describe('InterfaceTokens.vue', () => {
       '.token-table-container table'
     )[0];
     const trElements = tableElement.querySelectorAll('tr');
-    for (let i = 0; i < trElements.length; i++) {
-      const trElement = trElements[i];
+
+    for (const [i, trElement] of trElements.entries()) {
       expect(trElement.querySelectorAll('td')[0].textContent.trim()).toEqual(
         customTokens[i].name
       );
@@ -86,8 +86,7 @@ describe('InterfaceTokens.vue', () => {
       '.token-table-container table'
     )[1];
     const trElements = tableElement.querySelectorAll('tr');
-    for (let i = 0; i < trElements.length; i++) {
-      const trElement = trElements[i];
+    for (const [i, trElement] of trElements.entries()) {
       expect(trElement.querySelectorAll('td')[0].textContent.trim()).toEqual(
         localTokens[i].name
       );

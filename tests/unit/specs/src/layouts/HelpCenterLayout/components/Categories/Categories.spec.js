@@ -28,27 +28,19 @@ describe('Categories.vue', () => {
   });
 
   it('should render correct contents', () => {
-    for (
-      let i = 0;
-      i < wrapper.vm.$el.querySelectorAll('.category-buttons li').length;
-      i++
-    ) {
-      const categoryButtonElement = wrapper.vm.$el.querySelectorAll(
-        '.category-buttons li'
-      )[i];
+    const categoryButtonElements = wrapper.vm.$el.querySelectorAll(
+      '.category-buttons li'
+    );
+
+    for (const [i, categoryButtonElement] of categoryButtonElements.entries()) {
       expect(
         categoryButtonElement.querySelector('.button-title').textContent.trim()
       ).toEqual(wrapper.vm.$data.categoryButtons[i].title);
     }
 
-    for (
-      let i = 0;
-      i < wrapper.vm.$el.querySelectorAll('.link-block').length;
-      i++
-    ) {
-      const linkBlockElement = wrapper.vm.$el.querySelectorAll('.link-block')[
-        i
-      ];
+    const linkBlockElements = wrapper.vm.$el.querySelectorAll('.link-block');
+
+    for (const [i, linkBlockElement] of linkBlockElements.entries()) {
       expect(
         linkBlockElement.querySelector('.block-icon img').getAttribute('src')
       ).toEqual(wrapper.vm.$data.linkBlocks[i].icon);
@@ -61,11 +53,10 @@ describe('Categories.vue', () => {
       expect(
         linkBlockElement.querySelector('.email a').href.replace('mailto:', '')
       ).toEqual(wrapper.vm.$data.linkBlocks[i].email);
+
       const socialElements = linkBlockElement.querySelectorAll('.social div');
 
-      for (let j = 0; j < socialElements.length; j++) {
-        const socialElement = socialElements[j];
-
+      for (const [j, socialElement] of socialElements.entries()) {
         expect(socialElement.querySelector('a').href).toEqual(
           wrapper.vm.$data.linkBlocks[i].social[j].link + '/'
         );

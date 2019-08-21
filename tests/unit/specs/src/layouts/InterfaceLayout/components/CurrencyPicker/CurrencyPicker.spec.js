@@ -31,8 +31,7 @@ describe('CurrencyPicker.vue', () => {
       '.item-container div'
     );
 
-    for (let i = 0; i < currencyElements.length; i++) {
-      const currencyElement = currencyElements[i];
+    for (const [i, currencyElement] of currencyElements.entries()) {
       const localCurrency = wrapper.vm.localCurrency[i];
       expect(
         currencyElement
@@ -99,11 +98,12 @@ describe('CurrencyPicker.vue', () => {
 
   it('should render correct currency props', () => {
     wrapper.setProps({ currency });
+
     const currencyElements = wrapper.vm.$el.querySelectorAll(
       '.item-container div'
     );
-    for (let i = 0; i < currencyElements.length; i++) {
-      const currencyElement = currencyElements[i];
+
+    for (const [i, currencyElement] of currencyElements.entries()) {
       const localCurrency = wrapper.vm.localCurrency[i];
       expect(
         currencyElement
