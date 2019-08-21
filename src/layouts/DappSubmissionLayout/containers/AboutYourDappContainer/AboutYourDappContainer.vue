@@ -399,6 +399,8 @@ export default {
             this.tagInput = lastTag.toString();
           });
         }
+      } else {
+        return false;
       }
       this.updateTags(this.displayTags);
     },
