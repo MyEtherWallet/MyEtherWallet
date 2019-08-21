@@ -13,7 +13,8 @@ const webpackConfig = {
   devtool: 'source-map',
   devServer: {
     https: true,
-    host: 'localhost',
+    disableHostCheck: true,
+    host: '0.0.0.0',
     hotOnly: true,
     port: 8080,
     writeToDisk: JSON.parse(env_vars.BUILD_TYPE) === 'mewcx',
@@ -47,7 +48,7 @@ const webpackConfig = {
     new CopyWebpackPlugin([
       {
         from: 'src/builds/' + JSON.parse(env_vars.BUILD_TYPE) + '/public',
-        transform: function (content, filePath) {
+        transform: function(content, filePath) {
           if (filePath.split('.').pop() === ('js' || 'JS'))
             return UglifyJS.minify(content.toString()).code;
           if (

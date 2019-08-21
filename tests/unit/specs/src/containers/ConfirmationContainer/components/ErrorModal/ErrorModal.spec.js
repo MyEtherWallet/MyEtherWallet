@@ -64,7 +64,7 @@ describe('ErrorModal.vue', () => {
 
   it('should render correct linkMessage props', () => {
     wrapper.setProps({ linkMessage });
-    console.log(wrapper.vm.$el.querySelector('.close-button'));
+    // console.log(wrapper.vm.$el.querySelector('.close-button'));
   });
 
   describe('ErrorModal.vue Methods', () => {

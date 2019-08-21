@@ -23,7 +23,8 @@
         :disabled="diableButton"
         :class="[
           options.isThisMobileBottomButton ? 'mobile-bottom-button' : '',
-          options.noMinWidth ? 'no-min-width' : ''
+          options.noMinWidth ? 'no-min-width' : '',
+          options.paddingSmall ? 'padding-small' : ''
         ]"
         class="the-button-box"
       >
@@ -34,7 +35,8 @@
         :disabled="diableButton"
         :class="[
           options.isThisMobileBottomButton ? 'mobile-bottom-button' : '',
-          options.noMinWidth ? 'no-min-width' : ''
+          options.noMinWidth ? 'no-min-width' : '',
+          options.paddingSmall ? 'padding-small' : ''
         ]"
         class="the-button-box"
         @click="clickFunction"

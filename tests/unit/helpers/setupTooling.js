@@ -2,7 +2,6 @@ import { createLocalVue } from '@vue/test-utils';
 import VueI18n from 'vue-i18n';
 import BootstrapVue from 'bootstrap-vue';
 import veeValidate from 'vee-validate';
-// import languages from '@/translations';
 import VueX from 'vuex';
 import VueToast from 'vue-toasted';
 import ClickOutside from '@/directives/ClickOutside';
@@ -55,15 +54,6 @@ const RouterLinkStub = {
   template: '<div class="routerlink"><slot></slot></div>',
   props: ['to']
 };
-
-// likely will remove this function
-// function createShallowMountWrapper(component, suppliedOptions, baseOptions = {}){
-//   if(typeof baseOptions === 'boolean' && baseOptions){
-//     baseOptions = baseOptions || createLocalVueInstance();
-//   }
-//
-//   return shallowMount(component, {baseOptions, ...suppliedOptions});
-// }
 export { RouterLinkStub };
 export default {
   createLocalVueInstance
