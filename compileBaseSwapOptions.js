@@ -279,7 +279,7 @@ class CompileSwapOptions {
     if (Object.keys(this.kyberBaseOptions).length > 0) {
       this.kyberBaseOptions['THISISADUMMYTOKEN'] = {
         symbol: 'THISISADUMMYTOKEN',
-          name: 'Ethereum',
+          name: 'For tests',
           decimals: 18,
           contractAddress: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
       };

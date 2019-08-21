@@ -265,7 +265,7 @@ export default class Kyber {
     const fromWei = this.convertToTokenWei(fromToken, fromValue);
     logger(fromWei);
     const inWei = await this.getExpectedRate(fromToken, toToken, fromWei);
-    if (+inWei > -1) {
+    if (new BigNumber(inWei).gt(-1)) {
       return this.convertToTokenBase(kyberBaseCurrency, inWei);
     }
     return -1;
@@ -596,7 +596,7 @@ export default class Kyber {
 
   getTokenDecimals(token) {
     try {
-      return +this.currencies[token].decimals;
+      return new BigNumber(this.currencies[token].decimals).toNumber();
     } catch (e) {
       errorLogger(e);
       throw Error(
