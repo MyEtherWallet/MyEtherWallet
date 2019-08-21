@@ -1,5 +1,11 @@
 ### Release v5.1.2
 
+### Bug
+
+- Fix network mismatch when using metamask [#1384](https://github.com/MyEtherWallet/MyEtherWallet/pull/1384)
+
+### Release v5.1.2
+
 ### Devop
 
 - Fix dashboard "MEW connect", "Buy ETH" buttons layout [#1376](https://github.com/MyEtherWallet/MyEtherWallet/pull/1376)
