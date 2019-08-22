@@ -33,15 +33,19 @@ class MewCxEthereum extends EventEmitter {
     this.httpProvider = {
       send: (method, params = []) => {
         return new Promise((resolve, reject) => {
-          if (!method || typeof method !== 'string') {
-            return reject(new Error('Method is not a valid string.'));
-          }
-          if (!(params instanceof Array)) {
-            return reject(new Error('Params is not a valid array.'));
-          }
+          // if (!method || typeof method !== 'string') {
+          //   return reject(new Error('Method is not a valid string.'));
+          // }
+          // if (!(params instanceof Array)) {
+          //   return reject(new Error('Params is not a valid array.'));
+          // }
           const id = this._id++;
-          const jsonrpc = '2.0';
-          const payload = { jsonrpc, id, method, params };
+          const jsonrpc = typeof method === 'string' ? '2.0' : method.jsonrpc;
+          const methodParsed =
+            typeof method === 'string' ? method : method.method;
+          const paramsParsed =
+            typeof method === 'string' ? params : method.params;
+          const payload = { jsonrpc, id, methodParsed, paramsParsed };
           const requestManager = this.requestManager;
           const req = {
             payload,
@@ -58,26 +62,14 @@ class MewCxEthereum extends EventEmitter {
           });
         });
       },
-      sendAsync: (payload, cb) => {
-        console.log(payload, 'im getting here')
-        if (_.isObject(payload)) {
-          this.httpProvider
-            .send(payload.method, payload.params)
-            .then(result => {
-              result.id = payload.id ? payload.id : result.id;
-              cb(null, result);
-            })
-            .catch(cb);
-        } else {
-          this.httpProvider
-            .send(payload, [])
-            .then(result => {
-              result.id = payload.id ? payload.id : result.id;
-              cb(null, result);
-            })
-            .catch(cb);
-        }
-      },
+      // sendAsync: function(payload, cb) {
+      //   this.send(payload.method, payload.params)
+      //     .then(result => {
+      //       result.id = payload.id ? payload.id : result.id;
+      //       cb(null, result);
+      //     })
+      //     .catch(cb);
+      // },
       setMaxListeners: this.setMaxListeners,
       on: this.on,
       emit: this.emit,
