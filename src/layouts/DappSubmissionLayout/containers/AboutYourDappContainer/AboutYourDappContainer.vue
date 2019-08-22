@@ -492,7 +492,7 @@ export default {
       } else {
         this.bannerError = false;
         this.bannerUrl = URL.createObjectURL(file);
-        this.updateBanner(this.bannerUrl);
+        this.updateBanner(this.bannerUrl, false);
       }
     }
   }

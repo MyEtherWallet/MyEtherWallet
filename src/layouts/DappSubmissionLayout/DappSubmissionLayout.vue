@@ -22,6 +22,7 @@
       class="fake-form"
       action="https://formspree.io/jessicap@myetherwallet.com"
       method="POST"
+      enctype="multipart/form-data"
     >
       <input v-model="form.dappName" type="text" name="dappName" />
       <input v-model="form.category" type="text" name="category" />
