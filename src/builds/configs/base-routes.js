@@ -100,6 +100,7 @@ const router = [
   {
     path: '/dapp-submission',
     component: DappSubmission,
+    meta: { requiresAuth: false, name: 'referrer' },
     children: [
       {
         path: '',

@@ -6,7 +6,7 @@ const cxRoutes = [
     path: '/',
     name: 'Home',
     component: AccessWalletLayout,
-    meta: { requiresAuth: false, name: 'referrer' }
+    meta: { requiresAuth: false }
   },
   {
     path: '/browser-action',

@@ -7,7 +7,7 @@ const webRoutes = [
     path: '/',
     name: 'Home',
     component: HomeLayout,
-    meta: { requiresAuth: false }
+    meta: { requiresAuth: false, name: 'referrer' }
   },
   {
     path: '/create-wallet',
