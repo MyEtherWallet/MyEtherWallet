@@ -26,7 +26,6 @@
     }
   ],
   "web_accessible_resources": [
-    "vendors.js",
     "cxWeb3.js",
     "img/*.svg",
     "img/*.png",
