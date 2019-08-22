@@ -67,7 +67,7 @@
                     <span
                       v-if="
                         ethPrice !== 0 &&
-                          customGasEth !== 0 &&
+                          customGasEth >= 1 &&
                           network.type.name === 'ETH'
                       "
                       >($ {{ convert(customGasEth) }})</span
@@ -146,7 +146,6 @@ import utils from 'web3-utils';
 import store from 'store';
 import { Toast } from '@/helpers';
 import { mapState } from 'vuex';
-import ethUnit from 'ethjs-unit';
 
 export default {
   name: 'Settings',
@@ -271,11 +270,13 @@ export default {
   watch: {
     customGas(newVal) {
       if (newVal !== '') {
-        if (new BigNumber(newVal).gt(0)) {
-          const toWei = ethUnit.toWei(newVal, 'gwei').toString();
-          this.customGasEth = ethUnit.fromWei(toWei, 'gwei').toString();
-        } else {
-          this.customGas = this.customGasEth;
+        if (new BigNumber(newVal).gte(1)) {
+          const toGwei = new BigNumber(
+            utils.toWei(`${newVal}`, 'gwei')
+          ).toFixed();
+          this.customGasEth = new BigNumber(
+            `${utils.fromWei(toGwei, 'ether')}`
+          ).toFixed();
         }
       }
     },
