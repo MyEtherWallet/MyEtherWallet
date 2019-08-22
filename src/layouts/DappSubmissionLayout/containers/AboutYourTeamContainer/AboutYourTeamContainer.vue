@@ -13,6 +13,7 @@
         <div class="dapp-input">
           <b-form-input
             id="authors"
+            v-model="form.authors"
             placeholder="e.g. James Lee; Emilie Roy; Edward McCormick"
             type="text"
             @update="updateAuthors"
@@ -32,7 +33,7 @@
         <div class="dapp-input">
           <b-form-input
             id="fullName"
-            v-model="fullName"
+            v-model="form.fullName"
             type="text"
             @update="updateFullName"
           >
@@ -52,14 +53,11 @@
           <b-form-input
             v-validate="'email'"
             id="emailAddress"
-            v-model="emailAddress"
+            v-model="form.email"
             name="email"
             type="text"
             @update="
-              updateEmail(
-                emailAddress,
-                errors.has('email') && emailAddress !== ''
-              )
+              updateEmail(form.email, errors.has('email') && form.email !== '')
             "
           >
           </b-form-input>
@@ -109,14 +107,14 @@
           <b-form-input
             v-validate="'url:require_protocol'"
             id="companyWebsite"
-            v-model="companyWebsite"
+            v-model="form.companyWebsite"
             type="text"
             name="website"
             placeholder="URL link"
             @update="
               updateCompanyWebsite(
-                companyWebsite,
-                errors.has('website') && companyWebsite !== ''
+                form.companyWebsite,
+                errors.has('website') && form.companyWebsite !== ''
               )
             "
           >
@@ -137,7 +135,7 @@
         <div class="dapp-input">
           <b-form-input
             id="softwareLicense"
-            v-model="softwareLicense"
+            v-model="form.license"
             type="text"
             placeholder="(e.g. MIT, GPL, Proprietary)"
             @update="updateLicense"
@@ -150,15 +148,15 @@
         <div class="dapp-input">
           <b-form-textarea
             v-validate="'max:300'"
-            v-model="additionalNotes"
+            v-model="form.additionalNotes"
             size="lg"
             rows="5"
             name="additional notes"
             placeholder="300 characters"
             @update="
               updateAdditionalNotes(
-                additionalNotes,
-                errors.has('additional notes') && additionalNotes !== ''
+                form.additionalNotes,
+                errors.has('additional notes') && form.additionalNotes !== ''
               )
             "
           ></b-form-textarea>
@@ -208,19 +206,23 @@ export default {
     updateAdditionalNotes: {
       type: Function,
       default: () => {}
+    },
+    form: {
+      type: Object,
+      default: function() {
+        return {};
+      }
+    },
+    socialAccts: {
+      type: Array,
+      default: function() {
+        return [];
+      }
     }
   },
   data() {
     return {
-      authors: '',
-      fullName: '',
-      emailAddress: '',
-      companyWebsite: '',
-      softwareLicense: '',
-      additionalNotes: '',
-      socialAccts: [],
-      socialLinks: [],
-      socialSrc: []
+      socialLinks: []
     };
   },
   methods: {
@@ -230,14 +232,12 @@ export default {
     addSocialAccount(account) {
       this.socialAccts.push(account);
       this.socialLinks.push(account.url);
-      this.socialSrc.push(account.src);
-      this.updateSocialLinks(this.socialLinks, this.socialSrc);
+      this.updateSocialLinks(this.socialLinks, this.socialAccts);
     },
     removeSocialLink(idx) {
       this.socialAccts.splice(idx, 1);
       this.socialLinks.splice(idx, 1);
-      this.socialSrc.splice(idx, 1);
-      this.updateSocialLinks(this.socialLinks, this.socialSrc);
+      this.updateSocialLinks(this.socialLinks, this.socialAccts);
     }
   }
 };

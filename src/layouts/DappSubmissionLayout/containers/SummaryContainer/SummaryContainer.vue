@@ -104,7 +104,7 @@
               :key="acct + idx"
               class="social-links mr-2"
             >
-              <img :src="acct" class="social-img" />
+              <img :src="acct.src" class="social-img" />
             </div>
           </div>
           <div class="mt-5">

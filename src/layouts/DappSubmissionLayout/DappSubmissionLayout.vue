@@ -132,13 +132,13 @@ export default {
         mockFlow: '',
         contractAddress: '',
         description: '',
-        category: '',
-        usMarket: '',
+        category: null,
+        usMarket: null,
         dappIcon: '',
         banner: '',
         dappWebsite: '',
-        contractAudit: '',
-        dappStatus: '',
+        contractAudit: null,
+        dappStatus: null,
         authors: '',
         fullName: '',
         email: '',
@@ -347,9 +347,9 @@ export default {
         5
       );
     },
-    updateSocialLinks(socialLinks, socialSrc) {
+    updateSocialLinks(socialLinks, socialAccts) {
       this.form.socialLinks = socialLinks;
-      this.socialAccts = socialSrc;
+      this.socialAccts = socialAccts;
       this.dappSocialLinksUpdated = this.updateStrengthPercentage(
         this.form.socialLinks,
         this.dappSocialLinksUpdated,
