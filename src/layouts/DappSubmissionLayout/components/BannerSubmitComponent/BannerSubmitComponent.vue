@@ -6,7 +6,15 @@
     </span>
     <p v-if="showPreview" class="preview-txt mr-3">Preview</p>
     <button v-if="showBack" class="back-btn mr-3" @click="back">Back</button>
-    <button class="submit-btn mr-5" @click="next">{{ btnText }}</button>
+    <button
+      :class="[
+        disableSubmit || (lackOfInfo && showPreview) ? 'disabled' : 'submit-btn'
+      ]"
+      class="mr-5"
+      @click="next"
+    >
+      {{ btnText }}
+    </button>
   </div>
 </template>
 <script>
@@ -31,6 +39,14 @@ export default {
     back: {
       type: Function,
       default: () => {}
+    },
+    disableSubmit: {
+      type: Boolean,
+      default: false
+    },
+    lackOfInfo: {
+      type: Boolean,
+      default: false
     }
   }
 };

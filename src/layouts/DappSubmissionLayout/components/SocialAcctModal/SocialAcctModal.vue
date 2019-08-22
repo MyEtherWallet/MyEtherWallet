@@ -20,13 +20,23 @@
           </b-form-group>
           <b-form-group>
             <b-form-input
+              v-validate="'url:require_protocol'"
               v-model="dappSocialLink"
+              name="url"
               placeholder="URL link"
               type="url"
             ></b-form-input>
+            <p v-if="errors.has('url')" class="error">
+              {{ errors.first('url') }}
+            </p>
           </b-form-group>
         </b-form>
-        <button class="submit-btn" @click="onSubmit">Submit</button>
+        <button
+          :class="[errors.has('url') ? 'disabled' : 'submit-btn']"
+          @click="onSubmit"
+        >
+          Submit
+        </button>
       </div>
     </b-modal>
   </div>

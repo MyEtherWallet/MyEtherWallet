@@ -3,6 +3,11 @@ template {
   font-family: 'Avenir Next';
 }
 
+.error {
+  color: $text-color-red;
+  margin-top: 5px;
+}
+
 .about-your-dapp {
   display: inline-block;
 }

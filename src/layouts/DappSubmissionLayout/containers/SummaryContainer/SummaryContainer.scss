@@ -4,6 +4,10 @@ template {
   font-family: 'Avenir Next';
 }
 
+.error {
+  color: $text-color-red;
+}
+
 .dapp-info-container,
 .dapp-team-container {
   background: rgb(242, 250, 250);

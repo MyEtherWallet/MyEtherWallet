@@ -51,14 +51,19 @@
         </label>
         <div class="dapp-input">
           <b-form-input
+            v-validate="'email'"
             id="emailAddress"
             v-model="emailAddress"
+            name="email"
             type="text"
-            @update="updateEmail"
+            @update="updateEmail(emailAddress, errors.has('email'))"
           >
           </b-form-input>
           <span>*</span>
         </div>
+        <p v-if="errors.has('email')" class="error">
+          {{ errors.first('email') }}
+        </p>
       </b-form-group>
       <b-form-group>
         <div class="social-links-container">
@@ -98,14 +103,21 @@
         </label>
         <div class="dapp-input">
           <b-form-input
+            v-validate="'url:require_protocol'"
             id="companyWebsite"
             v-model="companyWebsite"
             type="text"
+            name="website"
             placeholder="URL link"
-            @update="updateCompanyWebsite"
+            @update="
+              updateCompanyWebsite(companyWebsite, errors.has('website'))
+            "
           >
           </b-form-input>
         </div>
+        <p v-if="errors.has('website')" class="error">
+          {{ errors.first('website') }}
+        </p>
       </b-form-group>
       <b-form-group>
         <label class="dapp-label"
@@ -130,13 +142,23 @@
         <label class="dapp-label">Additional notes</label>
         <div class="dapp-input">
           <b-form-textarea
+            v-validate="'max:300'"
             v-model="additionalNotes"
             size="lg"
             rows="5"
+            name="additional notes"
             placeholder="300 characters"
-            @update="updateAdditionalNotes"
+            @update="
+              updateAdditionalNotes(
+                additionalNotes,
+                errors.has('additional notes')
+              )
+            "
           ></b-form-textarea>
         </div>
+        <p v-if="errors.has('additional notes')" class="error">
+          {{ errors.first('additional notes') }}
+        </p>
       </b-form-group>
     </b-form>
   </div>

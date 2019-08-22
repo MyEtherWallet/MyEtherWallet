@@ -3,9 +3,23 @@
 .submit-btn {
   background: $mew-green;
   border-radius: 6px;
-  color: white;
+  color: $white;
   height: 52px;
   width: 100%;
+}
+
+.disabled {
+  background-color: $light-grey-10;
+  border-radius: 6px;
+  color: $white;
+  height: 52px;
+  pointer-events: none;
+  width: 100%;
+}
+
+.error {
+  color: $text-color-red;
+  margin-top: 5px;
 }
 
 input,
