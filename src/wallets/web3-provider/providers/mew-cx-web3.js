@@ -12,6 +12,7 @@ import {
   ethSign,
   ethRequestAccounts
 } from '../cx-web3-methods';
+const _ = require('underscore');
 
 const EventEmitter = require('events');
 
@@ -30,7 +31,7 @@ class MewCxEthereum extends EventEmitter {
     this.setListeners();
 
     this.httpProvider = {
-      send: (method, params = [], cb) => {
+      send: (method, params = []) => {
         return new Promise((resolve, reject) => {
           if (!method || typeof method !== 'string') {
             return reject(new Error('Method is not a valid string.'));
@@ -58,13 +59,24 @@ class MewCxEthereum extends EventEmitter {
         });
       },
       sendAsync: (payload, cb) => {
-        this.httpProvider
-          .send(payload.method, payload.params)
-          .then(result => {
-            result.id = payload.id ? payload.id : result.id;
-            cb(null, result);
-          })
-          .catch(cb);
+        console.log(payload, 'im getting here')
+        if (_.isObject(payload)) {
+          this.httpProvider
+            .send(payload.method, payload.params)
+            .then(result => {
+              result.id = payload.id ? payload.id : result.id;
+              cb(null, result);
+            })
+            .catch(cb);
+        } else {
+          this.httpProvider
+            .send(payload, [])
+            .then(result => {
+              result.id = payload.id ? payload.id : result.id;
+              cb(null, result);
+            })
+            .catch(cb);
+        }
       },
       setMaxListeners: this.setMaxListeners,
       on: this.on,
