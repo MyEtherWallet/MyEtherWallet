@@ -6,7 +6,7 @@
         <div class="dapp-input">
           <b-form-input
             id="dappName"
-            v-model="dappName"
+            v-model="form.dappName"
             type="text"
             @update="updateName"
           >
@@ -21,7 +21,7 @@
             <b-form-select
               id="dappCategory"
               :options="dappCategories"
-              v-model="dappCategory"
+              v-model="form.category"
               @change="updateCategory"
             ></b-form-select>
           </label>
@@ -81,15 +81,15 @@
         <div class="dapp-input">
           <b-form-textarea
             v-validate="'max:800'"
-            v-model="dappDescription"
+            v-model="form.description"
             name="description"
             placeholder="800 characters"
             rows="7"
             size="lg"
             @update="
               updateDescription(
-                dappDescription,
-                errors.has('description') && dappDescription !== ''
+                form.description,
+                errors.has('description') && form.description !== ''
               )
             "
           ></b-form-textarea>
@@ -108,7 +108,7 @@
             <b-form-select
               id="dappUsMarket"
               :options="dappUsMarketOptions"
-              v-model="dappUsMarket"
+              v-model="form.usMarket"
               @change="updateUsMarket"
             ></b-form-select>
           </label>
@@ -122,7 +122,7 @@
             <b-form-select
               id="dappStatus"
               :options="dappStatusOptions"
-              v-model="dappStatus"
+              v-model="form.dappStatus"
               @change="updateDappStatus"
             ></b-form-select>
           </label>
@@ -172,7 +172,7 @@
         <div class="dapp-input">
           <b-form-input
             id="contractAddress"
-            v-model="contractAddress"
+            v-model="form.contractAddress"
             type="text"
             @update="updateContractAddress"
           >
@@ -264,14 +264,14 @@
         <b-form-input
           v-validate="'url:require_protocol'"
           id="dappWebsite"
-          v-model="dappWebsite"
+          v-model="form.dappWebsite"
           name="website"
           placeholder="URL link"
           type="text"
           @update="
             updateDappWeb(
-              dappWebsite,
-              errors.has('website') && dappWebsite !== ''
+              form.dappWebsite,
+              errors.has('website') && form.dappWebsite !== ''
             )
           "
         ></b-form-input>
@@ -290,7 +290,7 @@
         <label class="dapp-select-label">
           <b-form-select
             id="dappContract"
-            v-model="dappContract"
+            v-model="form.contractAudit"
             :options="dappContractOptions"
             @change="updateContractAudit"
           ></b-form-select>
@@ -357,13 +357,18 @@ export default {
     updateContractAudit: {
       type: Function,
       default: () => {}
+    },
+    form: {
+      type: Object,
+      default: function() {
+        return {};
+      }
     }
   },
   data() {
     return {
       tag: '',
       tags: [],
-      dappCategory: null,
       dappCategories: [
         { value: null, text: 'Please select' },
         { value: 'Games', text: 'Games' },
@@ -385,13 +390,11 @@ export default {
         { value: 'Health', text: 'Health' },
         { value: 'Other', text: 'Other' }
       ],
-      dappUsMarket: null,
       dappUsMarketOptions: [
         { value: null, text: 'Please select' },
         { value: 'Yes', text: 'Yes' },
         { value: 'No', text: 'No' }
       ],
-      dappStatus: null,
       dappStatusOptions: [
         { value: null, text: 'Please select' },
         { value: 'Live', text: 'Live' },
@@ -403,21 +406,15 @@ export default {
         { value: 'Stealth', text: 'Stealth' },
         { value: 'Abandoned', text: 'Abandoned' }
       ],
-      dappContract: null,
       dappContractOptions: [{ value: null, text: 'Please select' }],
       tagInput: '',
-      suggestedTags: '',
-      mockUserFlowFile: '',
-      displayTags: [],
-      dappName: '',
-      contractAddress: '',
-      dappWebsite: '',
+      displayTags: this.form.tags,
       dappIconUrl: '',
       bannerUrl: '',
-      dappDescription: '',
       mockFileError: false,
       dappIconError: false,
-      bannerError: false
+      bannerError: false,
+      mockUserFlowFile: ''
     };
   },
   methods: {
