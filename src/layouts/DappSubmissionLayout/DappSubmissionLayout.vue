@@ -16,8 +16,8 @@
       <b-progress :value="bannerValue" class="dapp-progress-bar"></b-progress>
     </div>
     <form
-      class="fake-form"
       ref="fakeform"
+      class="fake-form"
       action="https://formspree.io/jessicap@myetherwallet.com"
       method="POST"
     >
@@ -352,7 +352,6 @@ export default {
       this.form.additionalNotes = e;
     },
     submitForm() {
-      console.error('in here????');
       this.$refs.fakeform.submit();
       // axios({
       //   method: 'post',
