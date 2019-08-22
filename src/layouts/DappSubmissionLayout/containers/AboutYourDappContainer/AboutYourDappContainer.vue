@@ -86,12 +86,7 @@
             placeholder="800 characters"
             rows="7"
             size="lg"
-            @update="
-              updateDescription(
-                form.description,
-                errors.has('description') && form.description !== ''
-              )
-            "
+            @update="updateDescription(errors.has('description'))"
           ></b-form-textarea>
           <span>*</span>
         </div>
@@ -268,12 +263,7 @@
           name="website"
           placeholder="URL link"
           type="text"
-          @update="
-            updateDappWeb(
-              form.dappWebsite,
-              errors.has('website') && form.dappWebsite !== ''
-            )
-          "
+          @update="updateDappWeb(errors.has('website'))"
         ></b-form-input>
         <p v-if="errors.has('website')" class="error">
           {{ errors.first('website') }}
