@@ -67,7 +67,7 @@
                     <span
                       v-if="
                         ethPrice !== 0 &&
-                          customGasEth >= 1 &&
+                          customGasEth !== 0 &&
                           network.type.name === 'ETH'
                       "
                       >($ {{ convert(customGasEth) }})</span
@@ -79,6 +79,7 @@
             <div class="button-block">
               <standard-button
                 :options="buttonSave"
+                :button-disabled="selectedGasType === 'other' && customGas < 1"
                 @click.native="saveGasChanges"
               />
             </div>
@@ -209,7 +210,6 @@ export default {
       },
       selectedGasType: 'regular',
       customGas: 0,
-      gasValueHold: 0,
       customGasEth: 0,
       ethPrice: 0,
       fileName: '',
@@ -277,6 +277,8 @@ export default {
           this.customGasEth = new BigNumber(
             `${utils.fromWei(toGwei, 'ether')}`
           ).toFixed();
+        } else {
+          this.customGas = 0;
         }
       }
     },
@@ -356,6 +358,7 @@ export default {
           ).toNumber()
         );
       } else {
+        if (!new BigNumber(this.customGas).gte(1)) return;
         this.$store.dispatch(
           'setGasPrice',
           new BigNumber(this.customGas).toNumber()
