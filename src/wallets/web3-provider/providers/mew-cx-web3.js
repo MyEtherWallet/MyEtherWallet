@@ -30,7 +30,8 @@ class MewCxEthereum extends EventEmitter {
     this.setListeners();
 
     this.httpProvider = {
-      send: (method, params = []) => {
+      send: (method, params = [], cb) => {
+        console.log(method, cb);
         return new Promise((resolve, reject) => {
           if (!method || typeof method !== 'string') {
             return reject(new Error('Method is not a valid string.'));
@@ -47,6 +48,7 @@ class MewCxEthereum extends EventEmitter {
             requestManager
           };
           const cb = (e, res) => {
+            console.log(e, res, 'response');
             if (e) {
               return reject(e);
             }
@@ -58,6 +60,7 @@ class MewCxEthereum extends EventEmitter {
         });
       },
       sendAsync: (payload, cb) => {
+        console.log(payload);
         this.httpProvider
           .send(payload.method, payload.params)
           .then(result => {
