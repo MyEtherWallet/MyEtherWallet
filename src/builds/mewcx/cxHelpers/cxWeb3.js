@@ -13,9 +13,9 @@ if (
 } else if (!window.hasOwnProperty('web3')) {
   // eslint-disable-next-line
   console.info('MEWCX Web3 provider injected');
-  // window.web3 = new Web3(ethereum);
-  window.web3 = {};
-  window.web3.currentProvider = ethereum;
+  window.web3 = new Web3(ethereum);
+  // window.web3 = {};
+  // window.web3.currentProvider = ethereum;
   window.web3.currentProvider.isMew = true;
   window.web3.currentProvider.isMetaMask = true;
   // window.Web3 = Web3; // unsure if this is needed
