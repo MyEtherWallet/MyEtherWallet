@@ -73,17 +73,28 @@
           <span>wallet</span>
         </p>
       </div>
-      <b-form-group>
+      <b-form-group id="form-group-description">
         <label class="dapp-label">Description</label>
+        <b-form-invalid-feedback id="form-group-description">
+          This is a required field.
+        </b-form-invalid-feedback>
         <div class="dapp-input">
           <b-form-textarea
+            v-validate="'max:800'"
+            v-model="dappDescription"
+            name="description"
             placeholder="800 characters"
             rows="7"
             size="lg"
-            @update="updateDescription"
+            @update="
+              updateDescription(dappDescription, errors.has('description'))
+            "
           ></b-form-textarea>
           <span>*</span>
         </div>
+        <p v-if="errors.has('description')" class="error">
+          {{ errors.first('description') }}
+        </p>
       </b-form-group>
       <b-form-group>
         <label class="dapp-label"
@@ -134,9 +145,18 @@
             </div>
             <button class="upload-btn">Upload</button>
           </label>
-          <input id="customUpload" type="file" @change="onMockFileChange" />
+          <input
+            id="customUpload"
+            ref="mockUserFlow"
+            type="file"
+            @change="onMockFileChange"
+          />
           <span>*</span>
         </div>
+        <p v-if="mockFileError" class="error">
+          The image dimensions are too big. Dimensions must be 1200px width by
+          630px height.
+        </p>
       </b-form-group>
       <b-form-group>
         <label class="dapp-label"
@@ -191,6 +211,9 @@
             ></b-form-file>
           </label>
         </div>
+        <p v-if="dappIconError" class="error">
+          The image dimensions are too big. Dimensions must be 192px by 192px.
+        </p>
       </b-form-group>
       <b-form-group>
         <label class="dapp-label"
@@ -228,16 +251,25 @@
             </b-form-file>
           </label>
         </div>
+        <p v-if="bannerError" class="error">
+          The image dimensions are too small. Dimensions must be at least 1200px
+          * 206px.
+        </p>
       </b-form-group>
       <b-form-group>
         <label class="dapp-label">DApp website</label>
         <b-form-input
+          v-validate="'url:require_protocol'"
           id="dappWebsite"
           v-model="dappWebsite"
+          name="website"
           placeholder="URL link"
           type="text"
-          @update="updateDappWeb"
+          @update="updateDappWeb(dappWebsite, errors.has('website'))"
         ></b-form-input>
+        <p v-if="errors.has('website')" class="error">
+          {{ errors.first('website') }}
+        </p>
       </b-form-group>
       <b-form-group>
         <label class="dapp-label"
@@ -373,8 +405,18 @@ export default {
       contractAddress: '',
       dappWebsite: '',
       dappIconUrl: '',
-      bannerUrl: ''
+      bannerUrl: '',
+      dappDescription: '',
+      mockFileError: false,
+      dappIconError: false,
+      bannerError: false
     };
+  },
+  computed: {
+    isFormDirty() {
+      console.error('in here');
+      return Object.keys(this.fields).some(key => this.fields[key].dirty);
+    }
   },
   methods: {
     onKeyDown(e) {
@@ -415,20 +457,41 @@ export default {
     },
     onMockFileChange(e) {
       const file = e.target.files[0];
-      this.mockUserFlowFile = file.name;
-      this.updateMockFlow(URL.createObjectURL(file));
+
+      if (file.size > 1200 * 630) {
+        this.mockFileError = true;
+        this.updateMockFlow('', true);
+      } else {
+        this.mockFileError = false;
+        this.mockUserFlowFile = file.name;
+        this.updateMockFlow(URL.createObjectURL(file), false);
+      }
     },
     onDappIconChange(e) {
       const file =
         e.type === 'drop' ? e.dataTransfer.files[0] : e.target.files[0];
-      this.dappIconUrl = URL.createObjectURL(file);
-      this.updateDappIcon(this.dappIconUrl);
+
+      if (file.size > 192 * 192) {
+        this.dappIconError = true;
+        this.updateDappIcon('', true);
+      } else {
+        this.dappIconError = false;
+        this.dappIconUrl = URL.createObjectURL(file);
+        this.updateDappIcon(this.dappIconUrl, false);
+      }
     },
     onBannerChange(e) {
       const file =
         e.type === 'drop' ? e.dataTransfer.files[0] : e.target.files[0];
-      this.bannerUrl = URL.createObjectURL(file);
-      this.updateBanner(this.bannerUrl);
+
+      if (file.size < 1200 * 206) {
+        this.bannerError = true;
+        this.updateBanner('', true);
+      } else {
+        this.bannerError = false;
+        this.bannerUrl = URL.createObjectURL(file);
+        this.updateBanner(this.bannerUrl);
+      }
     }
   }
 };

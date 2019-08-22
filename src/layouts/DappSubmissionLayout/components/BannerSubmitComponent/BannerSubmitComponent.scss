@@ -26,6 +26,17 @@
   width: 145px;
 }
 
+.disabled {
+  background-color: $light-grey-10;
+  border-radius: 6px;
+  color: $text-white;
+  font-size: 14px;
+  font-weight: 500;
+  height: 52px;
+  pointer-events: none;
+  width: 180px;
+}
+
 .submit-btn {
   border: 1px solid $border-green;
   background-color: $button--background-color-1;

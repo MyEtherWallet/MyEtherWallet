@@ -11,6 +11,8 @@
         "
         :next="next"
         :back="previous"
+        :disable-submit="disableBtn"
+        :lack-of-info="strengthPercentage < 50 ? true : false"
       />
       <banner-component :banner-text="bannerText" />
       <b-progress :value="bannerValue" class="dapp-progress-bar"></b-progress>
@@ -71,6 +73,7 @@
         :update-license="updateLicense"
         :update-additional-notes="updateAdditionalNotes"
         :form="form"
+        :lack-of-info="strengthPercentage < 50 ? true : false"
       />
       <div
         v-if="$route.fullPath !== '/dapp-submission/dapp-summary'"
@@ -158,7 +161,8 @@ export default {
       dappFullNameUpdated: false,
       dappEmailUpdated: false,
       dappSocialLinksUpdated: false,
-      dappSoftwareLicenseUpdated: false
+      dappSoftwareLicenseUpdated: false,
+      disableBtn: false
     };
   },
   computed: {
@@ -243,8 +247,10 @@ export default {
         5
       );
     },
-    updateDescription(e) {
-      this.form.description = e;
+    updateDescription(description, hasError) {
+      this.form.description = description;
+      this.disableBtn = hasError;
+
       this.dappDescriptionUpdated = this.updateStrengthPercentage(
         this.form.description,
         this.dappDescriptionUpdated,
@@ -267,8 +273,10 @@ export default {
         5
       );
     },
-    updateMockFlow(e) {
-      this.form.mockFlow = e;
+    updateMockFlow(url, hasError) {
+      this.form.mockFlow = url;
+      this.disableBtn = hasError;
+
       this.dappMockUserFlowUpdated = this.updateStrengthPercentage(
         this.form.mockFlow,
         this.dappMockUserFlowUpdated,
@@ -283,24 +291,29 @@ export default {
         5
       );
     },
-    updateDappIcon(e) {
-      this.form.dappIcon = e;
+    updateDappIcon(url, hasError) {
+      this.form.dappIcon = url;
+      this.disableBtn = hasError;
+
       this.dappIconUpdated = this.updateStrengthPercentage(
         this.form.dappIcon,
         this.dappIconUpdated,
         10
       );
     },
-    updateBanner(e) {
-      this.form.banner = e;
+    updateBanner(url, hasError) {
+      this.form.banner = url;
+      this.disableBtn = hasError;
+
       this.dappBannerUpdated = this.updateStrengthPercentage(
         this.form.banner,
         this.dappBannerUpdated,
         5
       );
     },
-    updateDappWeb(e) {
-      this.form.dappWeb = e;
+    updateDappWeb(url, hasError) {
+      this.form.dappWeb = url;
+      this.disableBtn = hasError;
     },
     updateContractAudit(e) {
       this.form.contractAudit = e;
@@ -321,8 +334,10 @@ export default {
         5
       );
     },
-    updateEmail(e) {
-      this.form.email = e;
+    updateEmail(email, hasError) {
+      this.form.email = email;
+      this.disableBtn = hasError;
+
       this.dappEmailUpdated = this.updateStrengthPercentage(
         this.form.email,
         this.dappEmailUpdated,
@@ -337,8 +352,9 @@ export default {
         5
       );
     },
-    updateCompanyWebsite(e) {
-      this.form.companyWebsite = e;
+    updateCompanyWebsite(url, hasError) {
+      this.form.companyWebsite = url;
+      this.disableBtn = hasError;
     },
     updateLicense(e) {
       this.form.license = e;
@@ -348,8 +364,9 @@ export default {
         5
       );
     },
-    updateAdditionalNotes(e) {
-      this.form.additionalNotes = e;
+    updateAdditionalNotes(notes, hasError) {
+      this.form.additionalNotes = notes;
+      this.disableBtn = hasError;
     },
     submitForm() {
       this.$refs.fakeform.submit();
