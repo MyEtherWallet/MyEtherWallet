@@ -62,7 +62,7 @@
           </div>
           <div class="mt-5">
             <p class="summary-title mb-3">DApp website</p>
-            <p class="summary-content">{{ form.dappWeb }}</p>
+            <p class="summary-content">{{ form.dappWebsite }}</p>
           </div>
           <div class="mt-5">
             <p class="summary-title mb-3">DApp contract audit</p>
@@ -100,11 +100,11 @@
           <div class="mt-5">
             <p class="summary-title mb-3">Social media</p>
             <div
-              v-for="(link, idx) in form.socialLinks"
-              :key="link + idx"
+              v-for="(acct, idx) in socialAccts"
+              :key="acct + idx"
               class="social-links mr-2"
             >
-              <img :src="link.src" class="social-img" />
+              <img :src="acct" class="social-img" />
             </div>
           </div>
           <div class="mt-5">
@@ -133,6 +133,12 @@ export default {
     lackOfInfo: {
       type: Boolean,
       default: false
+    },
+    socialAccts: {
+      type: Array,
+      default: function() {
+        return [];
+      }
     }
   },
   methods: {
