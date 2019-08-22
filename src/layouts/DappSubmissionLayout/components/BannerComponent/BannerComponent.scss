@@ -10,13 +10,13 @@
 }
 
 .banner-text {
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  position: absolute;
   color: $white;
   font-size: 40px;
   font-weight: bold;
   height: 48px;
+  left: 50%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 50%;
   width: 100%;
 }

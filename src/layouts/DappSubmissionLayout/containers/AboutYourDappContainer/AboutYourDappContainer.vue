@@ -412,12 +412,6 @@ export default {
       bannerError: false
     };
   },
-  computed: {
-    isFormDirty() {
-      console.error('in here');
-      return Object.keys(this.fields).some(key => this.fields[key].dirty);
-    }
-  },
   methods: {
     onKeyDown(e) {
       if (
