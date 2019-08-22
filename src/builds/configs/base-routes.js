@@ -100,7 +100,6 @@ const router = [
   {
     path: '/dapp-submission',
     component: DappSubmission,
-    meta: { requiresAuth: false, name: 'referrer' },
     children: [
       {
         path: '',
@@ -124,7 +123,7 @@ const router = [
         path: 'dapp-summary',
         name: 'DappSummary',
         component: DappSummary,
-        meta: { requiresAuth: false, name: 'referrer' }
+        meta: { requiresAuth: false }
       }
     ]
   },
