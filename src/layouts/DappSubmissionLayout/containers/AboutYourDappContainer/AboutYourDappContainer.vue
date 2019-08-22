@@ -1,6 +1,6 @@
 <template>
   <div class="about-your-dapp w-50 mb-5 mt-5">
-    <b-form>
+    <b-form onsubmit="return false;">
       <b-form-group>
         <label class="dapp-label">DApp Name</label>
         <div class="dapp-input">
@@ -399,8 +399,6 @@ export default {
             this.tagInput = lastTag.toString();
           });
         }
-      } else {
-        return false;
       }
       this.updateTags(this.displayTags);
     },

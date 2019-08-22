@@ -15,6 +15,40 @@
       <banner-component :banner-text="bannerText" />
       <b-progress :value="bannerValue" class="dapp-progress-bar"></b-progress>
     </div>
+    <form
+      class="fake-form"
+      ref="fakeform"
+      action="https://formspree.io/jessicap@myetherwallet.com"
+      method="POST"
+    >
+      <input v-model="form.dappName" type="text" name="dappName" />
+      <input v-model="form.category" type="text" name="category" />
+      <input v-model="form.tags" type="text" name="tags" />
+      <input v-model="form.description" type="text" name="description" />
+      <input v-model="form.usMarket" type="text" name="usMarket" />
+      <input v-model="form.dappStatus" type="text" name="dappStatus" />
+      <input v-model="form.mockFlow" type="text" name="mockFlow" />
+      <input
+        v-model="form.contractAddress"
+        type="text"
+        name="contractAddress"
+      />
+      <input v-model="form.dappIcon" type="text" name="dappIcon" />
+      <input v-model="form.banner" type="text" name="banner" />
+      <input v-model="form.dappWeb" type="text" name="dappWeb" />
+      <input v-model="form.contractAudit" type="text" name="contractAudit" />
+      <input v-model="form.authors" type="text" name="authors" />
+      <input v-model="form.fullName" type="text" name="fullName" />
+      <input v-model="form.email" type="text" name="email" />
+      <input v-model="form.socialLinks" type="text" name="socialLinks" />
+      <input v-model="form.companyWebsite" type="text" name="companyWebsite" />
+      <input v-model="form.license" type="text" name="license" />
+      <input
+        v-model="form.additionalNotes"
+        type="text"
+        name="additionalNotes"
+      />
+    </form>
     <div class="dapp-container">
       <router-view
         :update-name="updateName"
@@ -69,7 +103,7 @@ import BannerSubmitComponent from './components/BannerSubmitComponent';
 import MewSupportComponent from './components/MewSupportComponent';
 import AboutYourTeamContainer from './containers/AboutYourTeamContainer';
 import SummaryContainer from './containers/SummaryContainer';
-import axios from 'axios';
+// import axios from 'axios';
 import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessModal';
 import ErrorModal from '@/containers/ConfirmationContainer/components/ErrorModal';
 
@@ -87,7 +121,27 @@ export default {
   },
   data() {
     return {
-      form: {},
+      form: {
+        dappName: '',
+        tags: [],
+        mockFlow: '',
+        contractAddress: '',
+        description: '',
+        category: '',
+        usMarket: '',
+        dappIcon: '',
+        banner: '',
+        dappWeb: '',
+        contractAudit: '',
+        dappStatus: '',
+        authors: '',
+        fullName: '',
+        email: '',
+        companyWebsite: '',
+        socialLinks: [],
+        license: '',
+        additionalNotes: ''
+      },
       bannerValue: 33,
       strengthPercentage: 0,
       dappNameUpdated: false,
@@ -298,22 +352,36 @@ export default {
       this.form.additionalNotes = e;
     },
     submitForm() {
-      this.$refs.successModal.$refs.success.show();
-      axios
-        .post('https://formspree.io/dapps@myetherwallet.com', {
-          form: this.form
-        })
-        .then(res => {
-          this.$refs.successModal.$refs.success.show();
-          // eslint-disable-next-line
-          console.error('res', res);
-        })
-        .catch(err => {
-          // change to toast
-          this.$refs.errorModal.$refs.errorModal.show();
-          // eslint-disable-next-line
-          console.error('err', err);
-        });
+      console.error('in here????');
+      this.$refs.fakeform.submit();
+      // axios({
+      //   method: 'post',
+      //   url: 'https://formspree.io/dapps@myetherwallet.com',
+      //   data: {
+      //     form: this.form
+      //   }
+      // }).then(res => {
+      //   console.error('res', res)
+      // })
+      // .catch(err => {
+      //   console.error('err', err)
+      // })
+      // this.$refs.successModal.$refs.success.show();
+      // axios
+      //   .post('https://formspree.io/dapps@myetherwallet.com', {
+      //     form: this.form
+      //   })
+      //   .then(res => {
+      //     this.$refs.successModal.$refs.success.show();
+      //     // eslint-disable-next-line
+      //     console.error('res', res);
+      //   })
+      //   .catch(err => {
+      //     // change to toast
+      //     this.$refs.errorModal.$refs.errorModal.show();
+      //     // eslint-disable-next-line
+      //     console.error('err', err);
+      //   });
     }
   }
 };
