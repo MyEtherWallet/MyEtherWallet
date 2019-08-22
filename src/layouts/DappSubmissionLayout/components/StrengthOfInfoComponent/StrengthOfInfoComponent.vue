@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-5">
+  <div>
     <h4 class="text-left">Strength of Information</h4>
     <div class="strength-of-info-box mt-2">
       <div class="strength-of-info-wrapper">
