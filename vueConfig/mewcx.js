@@ -30,6 +30,14 @@ const webpackConfig = {
               json.version = version;
             }
             json.browser_action.default_popup = `index.html#/popup`;
+            json.background.scripts = json.background.scripts.map(item => {
+              return `${process.env.NODE_ENV === 'production' ? './js' + item : './' + item}`
+            });
+
+            json.content_scripts[0].js = json.content_scripts[0].js.map(item => {
+              return `${process.env.NODE_ENV === 'production' ? './js' + item : './' + item}`
+            });
+
             return JSON.stringify(json, null, 2);
           }
           return content;
@@ -37,7 +45,9 @@ const webpackConfig = {
       }
     ])
   ]),
-  optimization: defaultConfig.optimization
+  optimization: {
+    splitChunks: false
+  }
 };
 const exportObj = {
   publicPath: './',
