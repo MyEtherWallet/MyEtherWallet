@@ -56,7 +56,12 @@
             v-model="emailAddress"
             name="email"
             type="text"
-            @update="updateEmail(emailAddress, errors.has('email'))"
+            @update="
+              updateEmail(
+                emailAddress,
+                errors.has('email') && emailAddress !== ''
+              )
+            "
           >
           </b-form-input>
           <span>*</span>
@@ -110,7 +115,10 @@
             name="website"
             placeholder="URL link"
             @update="
-              updateCompanyWebsite(companyWebsite, errors.has('website'))
+              updateCompanyWebsite(
+                companyWebsite,
+                errors.has('website') && companyWebsite !== ''
+              )
             "
           >
           </b-form-input>
@@ -151,7 +159,7 @@
             @update="
               updateAdditionalNotes(
                 additionalNotes,
-                errors.has('additional notes')
+                errors.has('additional notes') && additionalNotes !== ''
               )
             "
           ></b-form-textarea>
