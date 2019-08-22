@@ -15,13 +15,14 @@
   },
   "options_page": "index.html",
   "background": {
-    "scripts": ["vendors.js", "background.js"],
+    "scripts": ["background.js"],
     "persistent": true
   },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["vendors.js", "contentScript.js"]
+      "js": ["contentScript.js"],
+      "run_at": "document_start"
     }
   ],
   "web_accessible_resources": [

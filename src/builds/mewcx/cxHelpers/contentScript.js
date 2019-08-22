@@ -21,7 +21,7 @@ import {
   csTxHash,
   csWebInjectionSuccessful
 } from './events';
-import helpers from './helpers';
+import { extractRootDomain } from './extractRootDomain';
 import MiddleWare from '@/wallets/web3-provider/middleware';
 const chrome = window.chrome;
 const extensionID = chrome.runtime.id;
@@ -104,7 +104,7 @@ events[WEB3_RPC_REQUEST] = function(e) {
 };
 
 events[WEB3_GET_ACC] = function(e) {
-  const url = helpers.extractRootDomain(e.detail.from);
+  const url = extractRootDomain(e.detail.from);
   chrome.storage.sync.get(url, storedAccounts => {
     const meta = {};
     const tags = Array.from(document.getElementsByTagName('meta')).filter(

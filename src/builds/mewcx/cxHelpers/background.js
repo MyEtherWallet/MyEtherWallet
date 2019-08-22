@@ -1,4 +1,5 @@
 import helpers from './helpers';
+import { extractRootDomain } from './extractRootDomain';
 import MiddleWare from '@/wallets/web3-provider/middleware';
 import {
   mewCxFetchAccounts,
@@ -87,7 +88,7 @@ function onRemovedCb(id) {
 function onUpdatedCb(_, __, tab) {
   chrome.runtime.onMessage.removeListener(eventsListeners);
   if (typeof tab !== 'undefined' && Object.keys(tab).length > 0) {
-    urls[tab.id] = helpers.extractRootDomain(tab.url);
+    urls[tab.id] = extractRootDomain(tab.url);
     querycB(tab);
   }
   chrome.runtime.onMessage.addListener(eventsListeners);
@@ -100,7 +101,7 @@ function onActivatedCb(info) {
       Object.keys(tab).length > 0 &&
       tab.url !== undefined
     ) {
-      urls[info.tabId] = helpers.extractRootDomain(tab.url);
+      urls[info.tabId] = extractRootDomain(tab.url);
       querycB(tab);
     }
   });
@@ -129,10 +130,10 @@ function querycB(tab) {
 
   let urlRedirect;
   const foundWhitelist = allWhitelistedDomains.find(dom => {
-    return dom === helpers.extractRootDomain(tab.url);
+    return dom === extractRootDomain(tab.url);
   });
   const foundBlacklist = allBlacklistedDomains.find(dom => {
-    return dom === helpers.extractRootDomain(tab.url);
+    return dom === extractRootDomain(tab.url);
   });
 
   if (foundWhitelist === undefined) {
