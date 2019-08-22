@@ -123,7 +123,7 @@ const router = [
         path: 'dapp-summary',
         name: 'DappSummary',
         component: DappSummary,
-        meta: { requiresAuth: false }
+        meta: { requiresAuth: false, name: 'referrer' }
       }
     ]
   },
