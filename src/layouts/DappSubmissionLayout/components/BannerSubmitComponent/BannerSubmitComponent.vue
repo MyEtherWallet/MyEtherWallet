@@ -1,6 +1,8 @@
 <template>
   <div class="submit-container">
-    <img class="logo ml-4" src="~@/assets/images/short-hand-logo.png" />
+    <router-link to="/">
+      <img class="logo ml-4" src="~@/assets/images/short-hand-logo.png" />
+    </router-link>
     <span :class="showPreview ? 'submit-preview-text' : ''" class="submit-text">
       Submit DApp
     </span>
