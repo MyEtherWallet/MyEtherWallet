@@ -250,9 +250,8 @@ export default {
         5
       );
     },
-    updateDescription(description, hasError) {
-      this.form.description = description;
-      this.disableBtn = hasError;
+    updateDescription(hasError) {
+      this.disableBtn = hasError && this.form.description !== '';
 
       this.dappDescriptionUpdated = this.updateStrengthPercentage(
         this.form.description,
@@ -314,9 +313,8 @@ export default {
         5
       );
     },
-    updateDappWeb(url, hasError) {
-      this.form.dappWebsite = url;
-      this.disableBtn = hasError;
+    updateDappWeb(hasError) {
+      this.disableBtn = hasError && this.form.dappWebsite !== '';
     },
     updateContractAudit(e) {
       this.form.contractAudit = e;
@@ -337,9 +335,8 @@ export default {
         5
       );
     },
-    updateEmail(email, hasError) {
-      this.form.email = email;
-      this.disableBtn = hasError;
+    updateEmail(hasError) {
+      this.disableBtn = hasError && this.form.email !== '';
 
       this.dappEmailUpdated = this.updateStrengthPercentage(
         this.form.email,
@@ -356,9 +353,8 @@ export default {
         5
       );
     },
-    updateCompanyWebsite(url, hasError) {
-      this.form.companyWebsite = url;
-      this.disableBtn = hasError;
+    updateCompanyWebsite(hasError) {
+      this.disableBtn = hasError && this.form.companyWebsite !== '';
     },
     updateLicense(e) {
       this.form.license = e;
@@ -368,9 +364,8 @@ export default {
         5
       );
     },
-    updateAdditionalNotes(notes, hasError) {
-      this.form.additionalNotes = notes;
-      this.disableBtn = hasError;
+    updateAdditionalNotes(hasError) {
+      this.disableBtn = hasError && this.form.additionalNotes !== '';
     },
     submitForm() {
       this.$refs.fakeform.submit();

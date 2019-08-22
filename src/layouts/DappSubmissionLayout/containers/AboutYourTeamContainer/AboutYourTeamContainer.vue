@@ -56,9 +56,7 @@
             v-model="form.email"
             name="email"
             type="text"
-            @update="
-              updateEmail(form.email, errors.has('email') && form.email !== '')
-            "
+            @update="updateEmail(errors.has('email'))"
           >
           </b-form-input>
           <span>*</span>
@@ -111,15 +109,11 @@
             type="text"
             name="website"
             placeholder="URL link"
-            @update="
-              updateCompanyWebsite(
-                form.companyWebsite,
-                errors.has('website') && form.companyWebsite !== ''
-              )
-            "
+            @update="updateCompanyWebsite(errors.has('website'))"
           >
           </b-form-input>
         </div>
+        <span>{{ errors.has('website') }}</span>
         <p v-if="errors.has('website')" class="error">
           {{ errors.first('website') }}
         </p>
@@ -153,12 +147,7 @@
             rows="5"
             name="additional notes"
             placeholder="300 characters"
-            @update="
-              updateAdditionalNotes(
-                form.additionalNotes,
-                errors.has('additional notes') && form.additionalNotes !== ''
-              )
-            "
+            @update="updateAdditionalNotes(errors.has('additional notes'))"
           ></b-form-textarea>
         </div>
         <p v-if="errors.has('additional notes')" class="error">
