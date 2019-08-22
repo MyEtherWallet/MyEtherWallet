@@ -13,7 +13,6 @@
         <div class="dapp-input">
           <b-form-input
             id="authors"
-            v-model="authors"
             placeholder="e.g. James Lee; Emilie Roy; Edward McCormick"
             type="text"
             @update="updateAuthors"
@@ -219,7 +218,9 @@ export default {
       companyWebsite: '',
       softwareLicense: '',
       additionalNotes: '',
-      socialAccts: []
+      socialAccts: [],
+      socialLinks: [],
+      socialSrc: []
     };
   },
   methods: {
@@ -228,11 +229,15 @@ export default {
     },
     addSocialAccount(account) {
       this.socialAccts.push(account);
-      this.updateSocialLinks(this.socialAccts);
+      this.socialLinks.push(account.url);
+      this.socialSrc.push(account.src);
+      this.updateSocialLinks(this.socialLinks, this.socialSrc);
     },
     removeSocialLink(idx) {
       this.socialAccts.splice(idx, 1);
-      this.updateSocialLinks(this.socialAccts);
+      this.socialLinks.splice(idx, 1);
+      this.socialSrc.splice(idx, 1);
+      this.updateSocialLinks(this.socialLinks, this.socialSrc);
     }
   }
 };

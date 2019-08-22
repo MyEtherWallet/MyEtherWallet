@@ -32,7 +32,11 @@
           </b-form-group>
         </b-form>
         <button
-          :class="[errors.has('url') ? 'disabled' : 'submit-btn']"
+          :class="[
+            errors.has('url') || dappSocialLink === ''
+              ? 'disabled'
+              : 'submit-btn'
+          ]"
           @click="onSubmit"
         >
           Submit

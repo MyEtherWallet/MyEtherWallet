@@ -55,11 +55,12 @@
 }
 
 .upload-btn {
+  background-color: $white;
   border-radius: 4px;
   border: 1px solid $mew-green;
+  color: $mew-green;
   height: 52px;
   width: 112px;
-  color: $mew-green;
 }
 
 .upload-btn-wrapper {

@@ -38,7 +38,7 @@
       />
       <input v-model="form.dappIcon" type="text" name="dappIcon" />
       <input v-model="form.banner" type="text" name="banner" />
-      <input v-model="form.dappWeb" type="text" name="dappWeb" />
+      <input v-model="form.dappWebsite" type="text" name="dappWebsite" />
       <input v-model="form.contractAudit" type="text" name="contractAudit" />
       <input v-model="form.authors" type="text" name="authors" />
       <input v-model="form.fullName" type="text" name="fullName" />
@@ -75,6 +75,7 @@
         :update-additional-notes="updateAdditionalNotes"
         :form="form"
         :lack-of-info="strengthPercentage < 50 ? true : false"
+        :social-accts="socialAccts"
       />
       <div
         v-if="$route.fullPath !== '/dapp-submission/dapp-summary'"
@@ -135,7 +136,7 @@ export default {
         usMarket: '',
         dappIcon: '',
         banner: '',
-        dappWeb: '',
+        dappWebsite: '',
         contractAudit: '',
         dappStatus: '',
         authors: '',
@@ -163,7 +164,8 @@ export default {
       dappEmailUpdated: false,
       dappSocialLinksUpdated: false,
       dappSoftwareLicenseUpdated: false,
-      disableBtn: false
+      disableBtn: false,
+      socialAccts: []
     };
   },
   computed: {
@@ -313,7 +315,7 @@ export default {
       );
     },
     updateDappWeb(url, hasError) {
-      this.form.dappWeb = url;
+      this.form.dappWebsite = url;
       this.disableBtn = hasError;
     },
     updateContractAudit(e) {
@@ -345,8 +347,9 @@ export default {
         5
       );
     },
-    updateSocialLinks(e) {
-      this.form.socialLinks = e;
+    updateSocialLinks(socialLinks, socialSrc) {
+      this.form.socialLinks = socialLinks;
+      this.socialAccts = socialSrc;
       this.dappSocialLinksUpdated = this.updateStrengthPercentage(
         this.form.socialLinks,
         this.dappSocialLinksUpdated,
