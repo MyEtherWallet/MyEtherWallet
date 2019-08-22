@@ -11,8 +11,8 @@
         choose a wallet that you want to connect.
       </p>
     </div>
-    <div class="addresses-container">
-      <div class="address-container">
+    <div class="accounts-container">
+      <div class="account-container">
         <address-selection-component
           v-for="(acc, idx) in accWithBal"
           :key="acc.address + idx"

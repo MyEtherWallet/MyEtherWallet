@@ -31,13 +31,14 @@
   display: flex;
   flex-direction: column;
 
-  .addresses-container {
+  .accounts-container {
     height: 220px;
     margin-right: 15px;
     padding-top: 10px;
 
-    .address-container {
+    .account-container {
       height: auto;
+      width: auto !important;
     }
   }
 }
