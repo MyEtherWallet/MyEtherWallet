@@ -7,7 +7,7 @@ import {
   mewCxSignMsg,
   web3RpcRequest,
   web3Detected
-} from './events';
+} from './backgroundEvents';
 import store from '@/store';
 import {
   CX_INJECT_WEB3,

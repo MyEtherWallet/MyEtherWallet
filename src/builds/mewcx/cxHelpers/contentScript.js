@@ -20,7 +20,7 @@ import {
   csSignedMsg,
   csTxHash,
   csWebInjectionSuccessful
-} from './events';
+} from './contentScriptEvents';
 import { extractRootDomain } from './extractRootDomain';
 import MiddleWare from '@/wallets/web3-provider/middleware';
 const chrome = window.chrome;
