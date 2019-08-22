@@ -1,7 +1,7 @@
 <template>
   <div class="about-your-dapp w-50 mb-5 mt-5">
     <social-acct-modal ref="socialacct" @addSocialAccount="addSocialAccount" />
-    <b-form>
+    <b-form onsubmit="return false;">
       <b-form-group>
         <label class="dapp-label"
           >Authors
