@@ -1,3 +1,9 @@
+### Release v5.1.3
+
+### Bug
+
+- Restrict gas price minimum to 1 gwei [#1386](https://github.com/MyEtherWallet/MyEtherWallet/pull/1386)
+
 ### Release v5.1.2
 
 ### Devop
