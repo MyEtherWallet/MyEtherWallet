@@ -17,41 +17,6 @@
       <banner-component :banner-text="bannerText" />
       <b-progress :value="bannerValue" class="dapp-progress-bar"></b-progress>
     </div>
-    <form
-      ref="fakeform"
-      class="fake-form"
-      action="https://formspree.io/jessicap@myetherwallet.com"
-      method="POST"
-      enctype="multipart/form-data"
-    >
-      <input v-model="form.dappName" type="text" name="dappName" />
-      <input v-model="form.category" type="text" name="category" />
-      <input v-model="form.tags" type="text" name="tags" />
-      <input v-model="form.description" type="text" name="description" />
-      <input v-model="form.usMarket" type="text" name="usMarket" />
-      <input v-model="form.dappStatus" type="text" name="dappStatus" />
-      <input v-model="form.mockFlow" type="text" name="mockFlow" />
-      <input
-        v-model="form.contractAddress"
-        type="text"
-        name="contractAddress"
-      />
-      <input v-model="form.dappIcon" type="text" name="dappIcon" />
-      <input v-model="form.banner" type="text" name="banner" />
-      <input v-model="form.dappWebsite" type="text" name="dappWebsite" />
-      <input v-model="form.contractAudit" type="text" name="contractAudit" />
-      <input v-model="form.authors" type="text" name="authors" />
-      <input v-model="form.fullName" type="text" name="fullName" />
-      <input v-model="form.email" type="text" name="email" />
-      <input v-model="form.socialLinks" type="text" name="socialLinks" />
-      <input v-model="form.companyWebsite" type="text" name="companyWebsite" />
-      <input v-model="form.license" type="text" name="license" />
-      <input
-        v-model="form.additionalNotes"
-        type="text"
-        name="additionalNotes"
-      />
-    </form>
     <div class="dapp-container">
       <router-view
         :update-name="updateName"
@@ -65,7 +30,6 @@
         :update-dapp-icon="updateDappIcon"
         :update-banner="updateBanner"
         :update-dapp-web="updateDappWeb"
-        :update-contract-audit="updateContractAudit"
         :update-authors="updateAuthors"
         :update-full-name="updateFullName"
         :update-email="updateEmail"
@@ -96,6 +60,46 @@
         "
       />
       <error-modal ref="errorModal" />
+
+      <form
+        ref="fakeform"
+        class="fake-form"
+        action="https://formspree.io/jessicap@myetherwallet.com"
+        method="POST"
+        enctype="multipart/form-data"
+      >
+        <input v-model="form.dappName" type="text" name="dappName" />
+        <input v-model="form.category" type="text" name="category" />
+        <input v-model="form.tags" type="text" name="tags" />
+        <input v-model="form.description" type="text" name="description" />
+        <input v-model="form.usMarket" type="text" name="usMarket" />
+        <input v-model="form.dappStatus" type="text" name="dappStatus" />
+        <input v-model="form.mockFlowFile" type="text" name="mockFlowFile" />
+        <input
+          v-model="form.contractAddress"
+          type="text"
+          name="contractAddress"
+        />
+        <input v-model="form.dappIconFile" type="text" name="dappIconFile" />
+        <input v-model="form.banner" type="text" name="banner" />
+        <input v-model="form.dappWebsite" type="text" name="dappWebsite" />
+        <input v-model="form.contractAudit" type="text" name="contractAudit" />
+        <input v-model="form.authors" type="text" name="authors" />
+        <input v-model="form.fullName" type="text" name="fullName" />
+        <input v-model="form.email" type="text" name="email" />
+        <input v-model="form.socialLinks" type="text" name="socialLinks" />
+        <input
+          v-model="form.companyWebsite"
+          type="text"
+          name="companyWebsite"
+        />
+        <input v-model="form.license" type="text" name="license" />
+        <input
+          v-model="form.additionalNotes"
+          type="text"
+          name="additionalNotes"
+        />
+      </form>
     </div>
   </div>
 </template>
@@ -129,13 +133,16 @@ export default {
       form: {
         dappName: '',
         tags: [],
-        mockFlow: '',
+        mockFlowFile: '',
+        mockFlowUrl: '',
         contractAddress: '',
         description: '',
         category: null,
         usMarket: null,
-        dappIcon: '',
-        banner: '',
+        dappIconFile: '',
+        dappIconUrl: '',
+        bannerFile: '',
+        bannerUrl: '',
         dappWebsite: '',
         contractAudit: null,
         dappStatus: null,
@@ -226,16 +233,14 @@ export default {
       }
       return this.strengthPercentage;
     },
-    updateName(e) {
-      this.form.dappName = e;
+    updateName() {
       this.dappNameUpdated = this.updateStrengthPercentage(
         this.form.dappName,
         this.dappNameUpdated,
         5
       );
     },
-    updateCategory(e) {
-      this.form.category = e;
+    updateCategory() {
       this.dappCategoryUpdated = this.updateStrengthPercentage(
         this.form.category,
         this.dappCategoryUpdated,
@@ -259,46 +264,41 @@ export default {
         5
       );
     },
-    updateUsMarket(e) {
-      this.form.usMarket = e;
+    updateUsMarket() {
       this.dappUsMarketUpdated = this.updateStrengthPercentage(
         this.form.usMarket,
         this.dappUsMarketUpdated,
         5
       );
     },
-    updateDappStatus(e) {
-      this.form.dappStatus = e;
+    updateDappStatus() {
       this.dappStatusUpdated = this.updateStrengthPercentage(
         this.form.dappStatus,
         this.dappStatusUpdated,
         5
       );
     },
-    updateMockFlow(url, hasError) {
-      this.form.mockFlow = url;
+    updateMockFlow(hasError) {
       this.disableBtn = hasError;
 
       this.dappMockUserFlowUpdated = this.updateStrengthPercentage(
-        this.form.mockFlow,
+        this.form.mockFlowUrl,
         this.dappMockUserFlowUpdated,
         5
       );
     },
-    updateContractAddress(e) {
-      this.form.contractAddress = e;
+    updateContractAddress() {
       this.dappContractAddressUpdated = this.updateStrengthPercentage(
         this.form.contractAddress,
         this.dappContractAddressUpdated,
         5
       );
     },
-    updateDappIcon(url, hasError) {
-      this.form.dappIcon = url;
+    updateDappIcon(hasError) {
       this.disableBtn = hasError;
-
+      console.error('this', this.form.dappIconUrl, this.form.dappIconFile);
       this.dappIconUpdated = this.updateStrengthPercentage(
-        this.form.dappIcon,
+        this.form.dappIconUrl,
         this.dappIconUpdated,
         10
       );
@@ -316,19 +316,14 @@ export default {
     updateDappWeb(hasError) {
       this.disableBtn = hasError && this.form.dappWebsite !== '';
     },
-    updateContractAudit(e) {
-      this.form.contractAudit = e;
-    },
-    updateAuthors(e) {
-      this.form.authors = e;
+    updateAuthors() {
       this.dappAuthorUpdated = this.updateStrengthPercentage(
         this.form.authors,
         this.dappAuthorUpdated,
         5
       );
     },
-    updateFullName(e) {
-      this.form.fullName = e;
+    updateFullName() {
       this.dappFullNameUpdated = this.updateStrengthPercentage(
         this.form.fullName,
         this.dappFullNameUpdated,
@@ -356,8 +351,7 @@ export default {
     updateCompanyWebsite(hasError) {
       this.disableBtn = hasError && this.form.companyWebsite !== '';
     },
-    updateLicense(e) {
-      this.form.license = e;
+    updateLicense() {
       this.dappSoftwareLicenseUpdated = this.updateStrengthPercentage(
         this.form.license,
         this.dappSoftwareLicenseUpdated,

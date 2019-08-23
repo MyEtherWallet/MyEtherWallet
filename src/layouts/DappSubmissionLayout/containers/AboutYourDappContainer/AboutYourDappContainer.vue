@@ -1,5 +1,5 @@
 <template>
-  <div class="about-your-dapp w-50 mb-5">
+  <div class="about-your-dapp w-50 mb-5 mt-5">
     <b-form onsubmit="return false;">
       <b-form-group>
         <label class="dapp-label">DApp Name</label>
@@ -86,7 +86,7 @@
             placeholder="800 characters"
             rows="7"
             size="lg"
-            @update="updateDescription(errors.has('description'))"
+            @change="updateDescription(errors.has('description'))"
           ></b-form-textarea>
           <span>*</span>
         </div>
@@ -139,7 +139,7 @@
         <div class="dapp-input">
           <label for="customUpload" class="upload-btn-wrapper">
             <div class="fake-input">
-              <p class="file-name">{{ mockUserFlowFile }}</p>
+              <p class="file-name">{{ form.mockFlowFile.name }}</p>
             </div>
             <button class="upload-btn">Upload</button>
           </label>
@@ -180,19 +180,19 @@
           <span class="dapp-icon-label"> DApp icon </span>
           <popover
             :popcontent="$t('dappsSubmission.dappIcon')"
-            class="dapp-popover"
+            class="dapp-icon-popover"
           ></popover>
-          <label v-if="dappIconUrl" for="dappIcon" class="replace-label"
+          <label v-if="form.dappIconUrl" for="dappIcon" class="replace-label"
             >Replace</label
           >
         </label>
         <div
-          :class="dappIconUrl ? 'dapp-icon-uploaded ' : ''"
+          :class="form.dappIconUrl ? 'dapp-icon-uploaded ' : ''"
           class="image-container"
         >
           <label class="image-label" for="dappIcon">
             <div class="image-placeholder">
-              <i v-if="!dappIconUrl" class="fa fa-cloud-upload"></i>
+              <i v-if="!form.dappIconUrl" class="fa fa-cloud-upload"></i>
               <h4 class="image-text">
                 Drop your icon here, or select a file from your computer.
               </h4>
@@ -200,7 +200,11 @@
                 JPEG or PNG, at least 192px * 192px
               </p>
             </div>
-            <img v-if="dappIconUrl" :src="dappIconUrl" class="dapp-icon-img" />
+            <img
+              v-if="form.dappIconUrl"
+              :src="form.dappIconUrl"
+              class="dapp-icon-img"
+            />
             <b-form-file
               id="dappIcon"
               drop-placeholder="Drop your icon here"
@@ -220,17 +224,17 @@
             :popcontent="$t('dappsSubmission.banner')"
             class="dapp-popover"
           ></popover>
-          <label v-if="bannerUrl" for="bannerImage" class="replace-label"
+          <label v-if="form.bannerUrl" for="bannerImage" class="replace-label"
             >Replace</label
           >
         </label>
         <div
-          :class="bannerUrl ? 'banner-uploaded ' : ''"
+          :class="form.bannerUrl ? 'banner-uploaded ' : ''"
           class="image-container"
         >
           <label class="image-label" for="bannerImage">
             <div class="image-placeholder">
-              <i v-if="!bannerUrl" class="fa fa-cloud-upload"></i>
+              <i v-if="!form.bannerUrl" class="fa fa-cloud-upload"></i>
               <h4 class="image-text">
                 Drop your image here, or select a file from your computer.
               </h4>
@@ -238,7 +242,11 @@
                 JPEG or PNG, at least 1200px * 206px
               </p>
             </div>
-            <img v-if="bannerUrl" :src="bannerUrl" class="banner-img" />
+            <img
+              v-if="form.bannerUrl"
+              :src="form.bannerUrl"
+              class="banner-img"
+            />
             <b-form-file
               id="bannerImage"
               accept="image/*"
@@ -263,7 +271,7 @@
           name="website"
           placeholder="URL link"
           type="text"
-          @update="updateDappWeb(errors.has('website'))"
+          @change="updateDappWeb(errors.has('website'))"
         ></b-form-input>
         <p v-if="errors.has('website')" class="error">
           {{ errors.first('website') }}
@@ -282,7 +290,6 @@
             id="dappContract"
             v-model="form.contractAudit"
             :options="dappContractOptions"
-            @change="updateContractAudit"
           ></b-form-select>
         </label>
       </b-form-group>
@@ -344,10 +351,6 @@ export default {
       type: Function,
       default: () => {}
     },
-    updateContractAudit: {
-      type: Function,
-      default: () => {}
-    },
     form: {
       type: Object,
       default: function() {
@@ -399,12 +402,9 @@ export default {
       dappContractOptions: [{ value: null, text: 'Please select' }],
       tagInput: '',
       displayTags: this.form.tags,
-      dappIconUrl: '',
-      bannerUrl: '',
       mockFileError: false,
       dappIconError: false,
-      bannerError: false,
-      mockUserFlowFile: ''
+      bannerError: false
     };
   },
   methods: {
@@ -449,11 +449,11 @@ export default {
 
       if (file.size > 1200 * 630) {
         this.mockFileError = true;
-        this.updateMockFlow('', true);
+        this.updateMockFlow(true);
       } else {
-        this.mockFileError = false;
-        this.mockUserFlowFile = file.name;
-        this.updateMockFlow(URL.createObjectURL(file), false);
+        this.form.mockFlowFile = file;
+        this.form.mockFlowUrl = URL.createObjectURL(file);
+        this.updateMockFlow(false);
       }
     },
     onDappIconChange(e) {
@@ -462,11 +462,12 @@ export default {
 
       if (file.size > 192 * 192) {
         this.dappIconError = true;
-        this.updateDappIcon('', true);
+        this.updateDappIcon(true);
       } else {
         this.dappIconError = false;
-        this.dappIconUrl = URL.createObjectURL(file);
-        this.updateDappIcon(this.dappIconUrl, false);
+        this.form.dappIconFile = file;
+        this.form.dappIconUrl = URL.createObjectURL(file);
+        this.updateDappIcon(false);
       }
     },
     onBannerChange(e) {
@@ -475,11 +476,12 @@ export default {
 
       if (file.size < 1200 * 206) {
         this.bannerError = true;
-        this.updateBanner('', true);
+        this.updateBanner(true);
       } else {
         this.bannerError = false;
-        this.bannerUrl = URL.createObjectURL(file);
-        this.updateBanner(this.bannerUrl, false);
+        this.form.bannerUrl = URL.createObjectURL(file);
+        this.form.bannerFile = file;
+        this.updateBanner(false);
       }
     }
   }

@@ -14,8 +14,12 @@
 }
 
 .dapp-icon-label {
-  max-width: 14%;
+  max-width: 11%;
   width: 100%;
+
+  .dapp-icon-popover {
+    margin-left: 0;
+  }
 }
 
 .image-label {

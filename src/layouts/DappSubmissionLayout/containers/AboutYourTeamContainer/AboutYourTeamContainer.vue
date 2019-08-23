@@ -1,5 +1,5 @@
 <template>
-  <div class="about-your-dapp w-50 mb-5">
+  <div class="about-your-dapp w-50 mb-5 mt-5">
     <social-acct-modal ref="socialacct" @addSocialAccount="addSocialAccount" />
     <b-form onsubmit="return false;">
       <b-form-group>
@@ -56,7 +56,7 @@
             v-model="form.email"
             name="email"
             type="text"
-            @update="updateEmail(errors.has('email'))"
+            @change="updateEmail(errors.has('email'))"
           >
           </b-form-input>
           <span>*</span>
@@ -109,11 +109,10 @@
             type="text"
             name="website"
             placeholder="URL link"
-            @update="updateCompanyWebsite(errors.has('website'))"
+            @change="updateCompanyWebsite(errors.has('website'))"
           >
           </b-form-input>
         </div>
-        <span>{{ errors.has('website') }}</span>
         <p v-if="errors.has('website')" class="error">
           {{ errors.first('website') }}
         </p>
@@ -147,7 +146,7 @@
             rows="5"
             name="additional notes"
             placeholder="300 characters"
-            @update="updateAdditionalNotes(errors.has('additional notes'))"
+            @change="updateAdditionalNotes(errors.has('additional notes'))"
           ></b-form-textarea>
         </div>
         <p v-if="errors.has('additional notes')" class="error">
