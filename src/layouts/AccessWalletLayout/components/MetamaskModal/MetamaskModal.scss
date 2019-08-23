@@ -1,4 +1,4 @@
-@import '~@/scss/GlobalVariables';
+@import "~@/scss/GlobalVariables";
 .modal-content {
   padding: 40px;
 
@@ -30,6 +30,10 @@
     display: flex;
     justify-content: center;
     margin-bottom: 25px;
+
+    .metamask {
+      height: 110px;
+    }
 
     img {
       padding: 0 13px;
