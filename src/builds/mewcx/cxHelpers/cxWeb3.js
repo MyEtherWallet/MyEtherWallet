@@ -2,7 +2,6 @@ import Web3 from 'web3';
 import { MewCxEthereum as ethereumProvider } from '@/wallets/web3-provider/providers/mew-cx-web3';
 import { WEB3_DETECTED } from './cxEvents';
 const ethereum = new ethereumProvider().setMaxListeners(0); // setting to 0 to remove listener warning
-ethereum.sendAsync = ethereum.send;
 if (
   window.hasOwnProperty('web3') &&
   !window.web3.currentProvider.hasOwnProperty('isMew')
