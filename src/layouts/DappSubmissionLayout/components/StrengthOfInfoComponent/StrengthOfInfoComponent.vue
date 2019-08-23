@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mt-5">
     <h4 class="text-left">Strength of Information</h4>
     <div class="strength-of-info-box mt-2">
       <div class="strength-of-info-wrapper">
@@ -57,6 +57,12 @@ export default {
         `${newVal * 3.6}deg`
       );
     }
+  },
+  mounted() {
+    this.$refs.circularProgressBar.style.setProperty(
+      '--percentage',
+      `${this.strengthOfInfo * 3.6}deg`
+    );
   }
 };
 </script>

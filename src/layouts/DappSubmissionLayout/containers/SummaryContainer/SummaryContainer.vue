@@ -24,8 +24,8 @@
           <div class="mt-5">
             <p class="summary-title mb-3">Mock user flow</p>
             <p class="summary-content">
-              <img :src="form.mockFlow" class="summary-img" />
-              {{ cleanUrl(form.mockFlow) }}
+              <img :src="form.mockFlowUrl" class="summary-img" />
+              {{ cleanUrl(form.mockFlowUrl) }}
             </p>
           </div>
           <div class="mt-5">
@@ -49,15 +49,15 @@
           <div class="mt-5">
             <p class="summary-title mb-3">DApp icon</p>
             <p class="summary-content">
-              <img :src="form.dappIcon" class="summary-img" />
-              {{ cleanUrl(form.dappIcon) }}
+              <img :src="form.dappIconUrl" class="summary-img" />
+              {{ cleanUrl(form.dappIconUrl) }}
             </p>
           </div>
           <div class="mt-5">
             <p class="summary-title mb-3">Banner image</p>
             <p class="summary-content">
-              <img :src="form.banner" class="summary-img" />
-              {{ cleanUrl(form.banner) }}
+              <img :src="form.bannerUrl" class="summary-img" />
+              {{ cleanUrl(form.bannerUrl) }}
             </p>
           </div>
           <div class="mt-5">
