@@ -140,7 +140,7 @@
         <div class="dapp-input">
           <label for="customUpload" class="upload-btn-wrapper">
             <div class="fake-input">
-              <p class="file-name">{{ form.mockFlowFile.name }}</p>
+              <p class="file-name">{{ mockFlowImgName }}</p>
             </div>
             <button class="upload-btn">Upload</button>
           </label>
@@ -405,7 +405,8 @@ export default {
       displayTags: this.form.tags,
       mockFileError: false,
       dappIconError: false,
-      bannerError: false
+      bannerError: false,
+      mockFlowImgName: ''
     };
   },
   methods: {
@@ -452,7 +453,8 @@ export default {
         this.mockFileError = true;
         this.updateMockFlow(true);
       } else {
-        this.form.mockFlowFile = file;
+        this.form.mockFlowFile = e;
+        this.mockFlowImgName = file.name;
         this.form.mockFlowUrl = URL.createObjectURL(file);
         this.updateMockFlow(false);
       }
@@ -466,7 +468,7 @@ export default {
         this.updateDappIcon(true);
       } else {
         this.dappIconError = false;
-        this.form.dappIconFile = file;
+        this.form.dappIconFile = e;
         this.form.dappIconUrl = URL.createObjectURL(file);
         this.updateDappIcon(false);
       }
@@ -480,8 +482,8 @@ export default {
         this.updateBanner(true);
       } else {
         this.bannerError = false;
-        this.form.bannerUrl = URL.createObjectURL(file);
         this.form.bannerFile = file;
+        this.form.bannerUrl = URL.createObjectURL(file);
         this.updateBanner(false);
       }
     }
