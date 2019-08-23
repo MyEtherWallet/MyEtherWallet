@@ -56,7 +56,8 @@
             v-model="form.email"
             name="email"
             type="text"
-            @change="updateEmail(errors.has('email'))"
+            @update="updateEmail"
+            @change="updateDisableBtn(errors)"
           >
           </b-form-input>
           <span>*</span>
@@ -109,7 +110,7 @@
             type="text"
             name="website"
             placeholder="URL link"
-            @change="updateCompanyWebsite(errors.has('website'))"
+            @change="updateDisableBtn(errors)"
           >
           </b-form-input>
         </div>
@@ -146,7 +147,7 @@
             rows="5"
             name="additional notes"
             placeholder="300 characters"
-            @change="updateAdditionalNotes(errors.has('additional notes'))"
+            @change="updateDisableBtn(errors)"
           ></b-form-textarea>
         </div>
         <p v-if="errors.has('additional notes')" class="error">
@@ -183,15 +184,7 @@ export default {
       type: Function,
       default: () => {}
     },
-    updateCompanyWebsite: {
-      type: Function,
-      default: () => {}
-    },
     updateLicense: {
-      type: Function,
-      default: () => {}
-    },
-    updateAdditionalNotes: {
       type: Function,
       default: () => {}
     },
@@ -206,6 +199,10 @@ export default {
       default: function() {
         return [];
       }
+    },
+    updateDisableBtn: {
+      type: Function,
+      default: () => {}
     }
   },
   data() {

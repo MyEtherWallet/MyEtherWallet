@@ -86,7 +86,8 @@
             placeholder="800 characters"
             rows="7"
             size="lg"
-            @change="updateDescription(errors.has('description'))"
+            @update="updateDescription"
+            @change="updateDisableBtn(errors)"
           ></b-form-textarea>
           <span>*</span>
         </div>
@@ -271,7 +272,7 @@
           name="website"
           placeholder="URL link"
           type="text"
-          @change="updateDappWeb(errors.has('website'))"
+          @change="updateDisableBtn(errors)"
         ></b-form-input>
         <p v-if="errors.has('website')" class="error">
           {{ errors.first('website') }}
@@ -323,6 +324,10 @@ export default {
       type: Function,
       default: () => {}
     },
+    updateDisableBtn: {
+      type: Function,
+      default: () => {}
+    },
     updateUsMarket: {
       type: Function,
       default: () => {}
@@ -344,10 +349,6 @@ export default {
       default: () => {}
     },
     updateBanner: {
-      type: Function,
-      default: () => {}
-    },
-    updateDappWeb: {
       type: Function,
       default: () => {}
     },

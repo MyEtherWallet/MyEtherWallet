@@ -23,20 +23,18 @@
         :update-category="updateCategory"
         :update-tags="updateTags"
         :update-description="updateDescription"
+        :update-disable-btn="updateDisableBtn"
         :update-us-market="updateUsMarket"
         :update-dapp-status="updateDappStatus"
         :update-mock-flow="updateMockFlow"
         :update-contract-address="updateContractAddress"
         :update-dapp-icon="updateDappIcon"
         :update-banner="updateBanner"
-        :update-dapp-web="updateDappWeb"
         :update-authors="updateAuthors"
         :update-full-name="updateFullName"
         :update-email="updateEmail"
         :update-social-links="updateSocialLinks"
-        :update-company-website="updateCompanyWebsite"
         :update-license="updateLicense"
-        :update-additional-notes="updateAdditionalNotes"
         :form="form"
         :lack-of-info="strengthPercentage < 50 ? true : false"
         :social-accts="socialAccts"
@@ -255,14 +253,19 @@ export default {
         5
       );
     },
-    updateDescription(hasError) {
-      this.disableBtn = hasError && this.form.description !== '';
-
+    updateDescription() {
       this.dappDescriptionUpdated = this.updateStrengthPercentage(
         this.form.description,
         this.dappDescriptionUpdated,
         5
       );
+    },
+    updateDisableBtn(errors) {
+      if (errors.items.length > 0) {
+        this.disableBtn = true;
+      } else {
+        this.disableBtn = false;
+      }
     },
     updateUsMarket() {
       this.dappUsMarketUpdated = this.updateStrengthPercentage(
@@ -296,7 +299,7 @@ export default {
     },
     updateDappIcon(hasError) {
       this.disableBtn = hasError;
-      console.error('this', this.form.dappIconUrl, this.form.dappIconFile);
+
       this.dappIconUpdated = this.updateStrengthPercentage(
         this.form.dappIconUrl,
         this.dappIconUpdated,
@@ -313,9 +316,6 @@ export default {
         5
       );
     },
-    updateDappWeb(hasError) {
-      this.disableBtn = hasError && this.form.dappWebsite !== '';
-    },
     updateAuthors() {
       this.dappAuthorUpdated = this.updateStrengthPercentage(
         this.form.authors,
@@ -330,9 +330,7 @@ export default {
         5
       );
     },
-    updateEmail(hasError) {
-      this.disableBtn = hasError && this.form.email !== '';
-
+    updateEmail() {
       this.dappEmailUpdated = this.updateStrengthPercentage(
         this.form.email,
         this.dappEmailUpdated,
@@ -348,18 +346,12 @@ export default {
         5
       );
     },
-    updateCompanyWebsite(hasError) {
-      this.disableBtn = hasError && this.form.companyWebsite !== '';
-    },
     updateLicense() {
       this.dappSoftwareLicenseUpdated = this.updateStrengthPercentage(
         this.form.license,
         this.dappSoftwareLicenseUpdated,
         5
       );
-    },
-    updateAdditionalNotes(hasError) {
-      this.disableBtn = hasError && this.form.additionalNotes !== '';
     },
     submitForm() {
       this.$refs.fakeform.submit();
