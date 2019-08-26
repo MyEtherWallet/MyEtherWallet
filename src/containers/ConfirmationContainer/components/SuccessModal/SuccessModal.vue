@@ -88,6 +88,11 @@ export default {
     hideModal() {
       if (this.linkTo !== '/') {
         this.$router.push({ path: this.linkTo });
+      } else if (
+        this.linkTo === '/' &&
+        this.successTitle === 'Congratulations'
+      ) {
+        this.$router.push({ path: '/' });
       }
       this.$refs.success.hide();
     }
