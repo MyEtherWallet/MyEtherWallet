@@ -72,6 +72,7 @@ import SummaryContainer from './containers/SummaryContainer';
 import axios from 'axios';
 import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessModal';
 import { Toast } from '@/helpers';
+import FormData from 'form-data';
 
 export default {
   components: {
@@ -311,17 +312,23 @@ export default {
       );
     },
     submitForm() {
-      const config = {
-        header: {
-          'Content-Type': 'multipart/form-data'
-        }
-      };
-      axios
-        .post(
-          'https://formspree.io/jessicap@myetherwallet.com',
-          this.form,
-          config
+      const formData = new FormData();
+
+      for (const key in this.form) {
+        if (
+          key !== 'bannerUrl' &&
+          key !== 'dappIconUrl' &&
+          key !== 'mockFlowUrl'
         )
+          [formData.append(key, this.form[key])];
+      }
+
+      axios
+        .post('https://formspree.io/dapps@myetherwallet.com', formData, {
+          header: {
+            'Content-Type': 'multipart/form-data'
+          }
+        })
         .then(this.$refs.successModal.$refs.success.show)
         .catch(function() {
           Toast.responseHandler(
