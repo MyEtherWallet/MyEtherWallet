@@ -322,9 +322,7 @@ export default {
           this.form,
           config
         )
-        .then(function() {
-          this.$refs.successModal.$refs.success.show();
-        })
+        .then(this.$refs.successModal.$refs.success.show)
         .catch(function() {
           Toast.responseHandler(
             new Error('There is an error. Please try again'),
