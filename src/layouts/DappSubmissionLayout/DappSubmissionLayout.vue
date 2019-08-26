@@ -194,7 +194,7 @@ export default {
       this.dappNameUpdated = this.updateStrengthPercentage(
         this.form.dappName,
         this.dappNameUpdated,
-        5
+        10
       );
     },
     updateCategory() {
@@ -216,7 +216,7 @@ export default {
       this.dappDescriptionUpdated = this.updateStrengthPercentage(
         this.form.description,
         this.dappDescriptionUpdated,
-        5
+        10
       );
     },
     updateDisableBtn(errors) {
@@ -285,7 +285,7 @@ export default {
       this.dappFullNameUpdated = this.updateStrengthPercentage(
         this.form.fullName,
         this.dappFullNameUpdated,
-        5
+        10
       );
     },
     updateEmail() {
@@ -301,7 +301,7 @@ export default {
       this.dappSocialLinksUpdated = this.updateStrengthPercentage(
         this.form.socialLinks,
         this.dappSocialLinksUpdated,
-        5
+        10
       );
     },
     updateLicense() {
@@ -324,7 +324,7 @@ export default {
       }
 
       axios
-        .post('https://formspree.io/dapps@myetherwallet.com', formData, {
+        .post('https://formspree.io/jessicap@myetherwallet.com', formData, {
           header: {
             'Content-Type': 'multipart/form-data'
           }
