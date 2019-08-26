@@ -313,7 +313,7 @@ export default {
     submitForm() {
       const config = {
         header: {
-          'Content-Type': 'multifpart/form-data'
+          'Content-Type': 'multipart/form-data'
         }
       };
       axios
