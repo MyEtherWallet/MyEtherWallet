@@ -324,7 +324,7 @@ export default {
       }
 
       axios
-        .post('https://formspree.io/jessicap@myetherwallet.com', formData, {
+        .post('https://formspree.io/dapps@myetherwallet.com', formData, {
           header: {
             'Content-Type': 'multipart/form-data'
           }
