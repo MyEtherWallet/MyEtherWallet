@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mt-5">
     <p v-if="lackOfInfo" class="error">
       Please provide all the required information we need.
     </p>
