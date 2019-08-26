@@ -23,13 +23,7 @@
         </div>
       </b-form-group>
       <b-form-group>
-        <label class="dapp-label"
-          >My full name
-          <popover
-            :popcontent="$t('dappsSubmission.fullName')"
-            class="dapp-popover"
-          ></popover>
-        </label>
+        <label class="dapp-label">My full name </label>
         <div class="dapp-input">
           <b-form-input
             id="fullName"
@@ -42,13 +36,7 @@
         </div>
       </b-form-group>
       <b-form-group>
-        <label class="dapp-label"
-          >My email
-          <popover
-            :popcontent="$t('dappsSubmission.email')"
-            class="dapp-popover"
-          ></popover>
-        </label>
+        <label class="dapp-label">My email </label>
         <div class="dapp-input">
           <b-form-input
             v-validate="'email'"
@@ -95,13 +83,7 @@
         </div>
       </b-form-group>
       <b-form-group>
-        <label class="dapp-label"
-          >Company website
-          <popover
-            :popcontent="$t('dappsSubmission.companyWebsite')"
-            class="dapp-popover"
-          ></popover>
-        </label>
+        <label class="dapp-label">Company website </label>
         <div class="dapp-input">
           <b-form-input
             v-validate="'url:require_protocol'"

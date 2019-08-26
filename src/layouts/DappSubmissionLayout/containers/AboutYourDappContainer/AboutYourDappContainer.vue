@@ -65,12 +65,11 @@
       <div class="suggested-tags-container mb-3">
         <p class="title">Suggested Tags</p>
         <p class="tags">
-          <span>games</span>
-          <span>gambling</span>
-          <span>social</span>
-          <span>finance</span>
-          <span>high risk</span>
-          <span>wallet</span>
+          <span>Games</span>
+          <span>DeFi Lending</span>
+          <span>Social</span>
+          <span>Finance</span>
+          <span>Wallet</span>
         </p>
       </div>
       <b-form-group id="form-group-description">
@@ -97,7 +96,7 @@
       </b-form-group>
       <b-form-group>
         <label class="dapp-label"
-          >Will your DApp be released in the U.S. market?</label
+          >Is your DApp available for use in the United States?</label
         >
         <div class="dapp-input">
           <label class="dapp-select-label">
@@ -368,7 +367,7 @@ export default {
         { value: 'Games', text: 'Games' },
         { value: 'Social', text: 'Social' },
         { value: 'Finance', text: 'Finance' },
-        { value: 'High risk', text: 'High risk' },
+        { value: 'Infrastructure', text: 'Infrastructure' },
         { value: 'Exchanges', text: 'Exchanges' },
         { value: 'Development', text: 'Development' },
         { value: 'Media', text: 'Media' },
@@ -400,7 +399,12 @@ export default {
         { value: 'Stealth', text: 'Stealth' },
         { value: 'Abandoned', text: 'Abandoned' }
       ],
-      dappContractOptions: [{ value: null, text: 'Please select' }],
+      dappContractOptions: [
+        { value: null, text: 'Please select' },
+        { value: 'None in Process', text: 'None in Process' },
+        { value: 'In Process', text: 'In Process' },
+        { value: 'Completed', text: 'Completed' }
+      ],
       tagInput: '',
       displayTags: this.form.tags,
       mockFileError: false,

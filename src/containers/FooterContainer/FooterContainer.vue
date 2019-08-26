@@ -199,7 +199,7 @@ export default {
               to: '/verify-message'
             },
             {
-              text: 'Submit Dapp',
+              text: 'Submit DApp',
               to: '/dapp-submission'
             }
           ]
