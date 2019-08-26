@@ -2,6 +2,7 @@
 
 ### Devop
 
+- Compress images, Remove unused images and components [#1389](https://github.com/MyEtherWallet/MyEtherWallet/pull/1389)
 - Fix dashboard "MEW connect", "Buy ETH" buttons layout [#1376](https://github.com/MyEtherWallet/MyEtherWallet/pull/1376)
 - Fix Buy Eth to Buy ETH [#1361](https://github.com/MyEtherWallet/MyEtherWallet/pull/1361)
 - Dashboard -> Actions & Swap button style update [#1365](https://github.com/MyEtherWallet/MyEtherWallet/pull/1365)
