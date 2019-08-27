@@ -5,6 +5,8 @@
     hide-footer
     class="bootstrap-modal json-string-modal"
     centered
+    static="true"
+    lazy="true"
   >
     <form class="json-string-form">
       <div class="input-container">

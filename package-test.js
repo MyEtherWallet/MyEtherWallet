@@ -9,16 +9,12 @@ const SAFE_TIME = 1000 * 1 * 60 * 60 * 24 * 7; //7days
 // vue tel input missing internal package
 // vue router same link broken
 const EXCEPTIONS = [
-  'vue-router',
   '@myetherwallet/mewconnect-web-client',
   'canvas',
   'ethereum-ens',
   'babel-jest',
-  '@xkeshi/vue-qrcode',
   'multicoin-address-validator',
-  'bootstrap-vue',
   'web3-core-requestmanager',
-  'vue-tel-input',
   '@vue/eslint-config-prettier'
 ];
 const CUSTOM_DIST = {

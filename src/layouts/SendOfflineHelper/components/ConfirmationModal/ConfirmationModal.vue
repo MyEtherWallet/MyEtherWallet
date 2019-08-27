@@ -6,6 +6,8 @@
       hide-footer
       centered
       class="bootstrap-modal-wide nopadding"
+      static="true"
+      lazy="true"
     >
       <div class="modal-contents">
         <div class="tx-info-container">

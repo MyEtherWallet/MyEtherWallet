@@ -5,6 +5,8 @@
     hide-footer
     hide-header
     class="bootstrap-modal no-padding"
+    static="true"
+    lazy="true"
   >
     <div class="modal-content-block">
       <div class="d-block text-center">

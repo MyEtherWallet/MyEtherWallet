@@ -6,6 +6,8 @@
       hide-footer
       centered
       class="bootstrap-modal nopadding"
+      static="true"
+      lazy="true"
     >
       <div class="modal-content">
         <p class="top-text">

@@ -6,6 +6,8 @@
       centered
       class="bootstrap-modal nopadding"
       hide-footer
+      static="true"
+      lazy="true"
     >
       <div class="contents">
         <p class="top-message">

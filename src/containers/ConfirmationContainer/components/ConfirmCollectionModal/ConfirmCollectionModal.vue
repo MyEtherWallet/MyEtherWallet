@@ -6,6 +6,8 @@
       hide-footer
       centered
       class="bootstrap-modal-wide confirmation-modal nopadding"
+      static="true"
+      lazy="true"
     >
       <div class="modal-content">
         <div class="network-info-container">
