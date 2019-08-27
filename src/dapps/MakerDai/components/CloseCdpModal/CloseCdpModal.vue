@@ -5,6 +5,8 @@
       :title="$t('dappsMaker.closeTitle')"
       centered
       class="bootstrap-modal nopadding"
+      static="true"
+      lazy="true"
       hide-footer
     >
       <div class="contents">

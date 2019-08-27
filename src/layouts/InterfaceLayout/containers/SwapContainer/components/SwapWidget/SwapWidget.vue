@@ -6,6 +6,8 @@
       centered
       class="bootstrap-modal bootstrap-modal-wide padding-40-20"
       hide-footer
+      static="true"
+      lazy="true"
     >
       <div class="swap-container">
         <div v-show="!bityExitToFiat">

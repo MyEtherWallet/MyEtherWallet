@@ -5,6 +5,8 @@
       title="Password"
       hide-footer
       centered
+      static="true"
+      lazy="true"
       class="bootstrap-modal nopadding"
     >
       <div class="modal-contents">

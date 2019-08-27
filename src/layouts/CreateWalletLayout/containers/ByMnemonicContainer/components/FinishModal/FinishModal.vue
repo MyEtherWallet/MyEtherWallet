@@ -5,6 +5,8 @@
     centered
     hide-header
     class="bootstrap-modal done no-padding"
+    static="true"
+    lazy="true"
   >
     <div class="modal-container-block">
       <div class="d-block text-center">

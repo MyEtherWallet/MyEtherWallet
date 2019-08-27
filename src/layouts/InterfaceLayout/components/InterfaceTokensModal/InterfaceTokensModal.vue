@@ -6,6 +6,8 @@
       class="bootstrap-modal nopadding max-height-1"
       centered
       title="Add Custom Token"
+      static="true"
+      lazy="true"
       @hidden="resetCompState"
     >
       <form class="tokens-modal-body" @keydown.enter.prevent>

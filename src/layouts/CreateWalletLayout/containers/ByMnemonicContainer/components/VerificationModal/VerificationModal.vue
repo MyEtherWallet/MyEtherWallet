@@ -5,6 +5,8 @@
     centered
     class="bootstrap-modal-wide verification nopadding"
     title="Verification"
+    static="true"
+    lazy="true"
   >
     <div class="content-block">
       <p class="block-title">

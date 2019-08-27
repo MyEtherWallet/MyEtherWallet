@@ -5,6 +5,8 @@
     hide-footer
     class="bootstrap-modal modal-software"
     centered
+    static="true"
+    lazy="true"
     @shown="focusInput"
   >
     <form class="password-form">
