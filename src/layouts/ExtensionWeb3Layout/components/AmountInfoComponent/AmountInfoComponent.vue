@@ -5,7 +5,7 @@
     </div>
     <div class="amount-text-container">
       <p class="amount-text">
-        {{ direction === 'to' ? '+' : '-' }} {{ amount }}
+        {{ direction === 'to' ? '+' : '-' }} {{ concattedAmount }}
         <span>{{ currency.toUpperCase() }}</span>
       </p>
       <p class="address-text">Address: {{ concat(address) }}</p>
@@ -37,6 +37,11 @@ export default {
     contractAddr: {
       type: String,
       default: 'to'
+    }
+  },
+  computed: {
+    concattedAmount() {
+      return `${this.amount}`.substring(0, 5);
     }
   },
   methods: {
