@@ -13,6 +13,20 @@
   margin-left: 6em;
 }
 
+// Mobile
+@media all and (max-width: $mobile-width) {
+  .submit-preview-text {
+    margin-left: 0;
+  }
+}
+
+// Tablet
+@media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+  .submit-preview-text {
+    margin-left: 1em;
+  }
+}
+
 .submit-text {
   color: $dark-blue-2;
   font-size: 24px;

@@ -20,3 +20,17 @@
   top: 50%;
   width: 100%;
 }
+
+// Mobile
+@media all and (max-width: $mobile-width) {
+  .banner-text {
+    font-size: 21px;
+  }
+}
+
+// Tablet
+@media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+  .banner-text {
+    font-size: 26px;
+  }
+}

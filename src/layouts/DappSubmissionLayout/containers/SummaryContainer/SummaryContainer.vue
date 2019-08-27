@@ -1,9 +1,9 @@
 <template>
-  <div class="mt-5">
+  <div class="mt-5 ">
     <p v-if="lackOfInfo" class="error">
       Please provide all the required information we need.
     </p>
-    <b-container class="dapp-info-container mx-auto mt-2 pb-5 pl-5">
+    <b-container class="dapp-info-container mx-auto mt-2 pb-5 pl-5 w-75">
       <p class="summary-header pt-5">DApp Information</p>
       <b-row>
         <b-col>
@@ -75,7 +75,7 @@
         </b-col>
       </b-row>
     </b-container>
-    <b-container class="dapp-team-container mx-auto mt-5 mb-5 pb-5 pl-5">
+    <b-container class="dapp-team-container mx-auto mt-5 mb-5 pb-5 pl-5 w-75">
       <p class="summary-header pt-5">Team & company information</p>
       <b-row>
         <b-col>
