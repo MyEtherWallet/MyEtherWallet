@@ -12,12 +12,29 @@
     width: 50%;
     padding: 20px;
 
+    .qrcode-container {
+      margin: 20px 0 20px 0;
+      width: 150px;
+      border: 10px solid $white;
+      border-radius: 3px;
+    }
+
     p {
       color: $white;
+    }
+
+    .text-container {
+      p {
+        font-size: 18px;
+      }
+      h3 {
+        color: $white;
+        font-size: 30px;
+      }
     }
   }
 }
 
-@media screen and (max-width: 450px) {
+@media screen and (max-width: 520px) {
   //mobile
 }
