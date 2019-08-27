@@ -35,6 +35,17 @@
   }
 }
 
-@media screen and (max-width: 520px) {
-  //mobile
+@media screen and (max-width: 525px) {
+  .finney-desktop {
+    min-height: 500px;
+    width: 100%;
+    background-size: 953px;
+    background-position: 486px center;
+
+    .modal-content-right {
+      margin-left: auto;
+      width: 65%;
+      padding: 20px;
+    }
+  }
 }
