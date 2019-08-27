@@ -1,28 +1,16 @@
 <template>
-  <div>
-    <div class="bottom-image-container">
-      <div class="content">
-        <div class="buy-text">
-          <p>Buy ETH with Credit Card</p>
-        </div>
-        <div class="send-button-container">
+  <div class="buy-eth-ad">
+    <div class="content-block">
+      <div class="flex-vertical-center">
+        <div class="top-block">{{ $t('interface.buyWithCreditCard') }}</div>
+        <div class="bottom-block">
           <standard-button
             :options="sendButton"
             @click.native="showSwapWidget"
           />
+          <img class="cc-cards" src="@/assets/images/etc/visamaster.png" />
         </div>
-        <img class="cc-cards" src="@/assets/images/etc/visamaster.png" />
-        <img class="background-eth" src="@/assets/images/ads/eth.png" />
       </div>
-    </div>
-    <div v-if="showWidget">
-      <swap-widget
-        ref="swapWidget"
-        :supplied-from="suppliedFrom"
-        :supplied-to="suppliedTo"
-        :supplied-from-amount="suppliedFromAmount"
-        :dest-address="account.address"
-      ></swap-widget>
     </div>
   </div>
 </template>
@@ -53,7 +41,8 @@ export default {
         buttonStyle: 'green-border',
         helpCenter: false,
         noMinWidth: true,
-        fullWidth: true
+        fullWidth: true,
+        paddingSmall: true
       }
     };
   },
@@ -65,24 +54,13 @@ export default {
   methods: {
     showSwapWidget() {
       if (this.online) {
-        this.$emit('pauseAds');
-        this.showWidget = true;
-        const vals = { from: 'USD', to: 'ETH', amt: 100, rate: 0 };
-        this.suppliedFromAmount = vals.amt;
-        this.suppliedFrom = {
-          symbol: vals.from,
-          name: ''
-        };
-        this.suppliedTo = {
-          symbol: vals.to,
-          name: ''
-        };
-        this.$nextTick(() => {
-          this.$refs.swapWidget.$refs.modal.$on('hidden', () => {
-            this.$emit('pauseAds');
-          });
-          this.$refs.swapWidget.$refs.modal.show();
-        });
+        this.$eventHub.$emit(
+          'showSwapWidgetTo',
+          this.account.address,
+          'USD',
+          'ETH',
+          1
+        );
       }
     }
   }

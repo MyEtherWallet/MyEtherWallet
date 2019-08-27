@@ -413,7 +413,6 @@ export default {
       return false;
     },
     toBelowMinAllowed() {
-      if (this.checkBityMin) return this.$t('interface.belowMinGeneral');
       if (new BigNumber(0).gte(new BigNumber(this.toValue)))
         return this.$t('interface.belowMinGeneral');
       return false;
@@ -445,21 +444,6 @@ export default {
         (+this.fromValue <= this.selectedProvider.maxValue ||
           this.selectedProvider.maxValue === 0)
       );
-    },
-    checkBityMin() {
-      if (this.swap.isProvider(this.providerNames.bity)) {
-        return (
-          !this.swap
-            .getProvider(this.providerNames.bity)
-            .minCheck(
-              this.fromCurrency,
-              this.fromValue,
-              this.toCurrency,
-              this.toValue
-            ) && this.selectedProvider.provider === this.providerNames.bity
-        );
-      }
-      return false;
     },
     checkBityMax() {
       if (this.swap.isProvider(this.providerNames.bity)) {
@@ -548,7 +532,7 @@ export default {
       this.fromArray = fromArray;
     },
     ['swap.haveProviderRates']() {
-      this.haveProviderRates = this.swap.haveProviderRates;
+      this.haveProviderRates = this.swap.ratesRetrieved;
       const { toArray, fromArray } = this.swap.buildInitialCurrencyArrays();
       this.toArray = toArray;
       this.fromArray = fromArray;
@@ -684,10 +668,7 @@ export default {
             this.fromCurrency
           ]
         ) {
-          this.web3.utils._.debounce(
-            this.updateEstimate(this.providerNames.simplex + direction),
-            200
-          );
+          this.debounceUpdateEstimate(this.providerNames.simplex + direction);
         } else {
           this.debounceUpdateEstimate(direction);
           const fromCur = this.fromCurrency;
@@ -698,6 +679,11 @@ export default {
       }
     },
     async updateEstimate(input) {
+      if (this.simplexUpdate) {
+        this.simplexUpdate = false;
+        return;
+      }
+
       let fromValue, toValue, simplexProvider, simplexRateDetails;
       switch (input) {
         case 'to':
@@ -715,6 +701,7 @@ export default {
           );
           break;
         case `${this.providerNames.simplex}to`:
+          this.simplexUpdate = true;
           simplexProvider = this.swap.getProvider(this.providerNames.simplex);
 
           if (simplexProvider.canQuote(this.fromValue, this.toValue)) {
@@ -746,6 +733,7 @@ export default {
 
           break;
         case `${this.providerNames.simplex}from`:
+          this.simplexUpdate = true;
           simplexProvider = this.swap.getProvider(this.providerNames.simplex);
           if (simplexProvider.canQuote(this.fromValue, this.toValue)) {
             simplexRateDetails = await simplexProvider.updateFiat(
