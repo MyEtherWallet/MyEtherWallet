@@ -46,13 +46,11 @@
 import { MewConnectWallet } from '@/wallets';
 import { Toast } from '@/helpers';
 import { mapState } from 'vuex';
-import finneyImg from '@/assets/images/etc/finney.png';
 
 export default {
   data() {
     return {
-      qrcode: '',
-      finneyImg: finneyImg
+      qrcode: ''
     };
   },
   computed: {
