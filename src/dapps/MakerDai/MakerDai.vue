@@ -71,15 +71,8 @@
       @checkForProxy="checkIfDestAddressHasProxy"
     >
     </move-cdp-modal>
-    <interface-container-title :title="'MAKER'">
-      <template v-slot:right>
-        <div style="padding-left: 20px; cursor: pointer;">
-          <i
-            v-show="showRefresh"
-            class="fa fa-refresh"
-            @click="refreshExternal"
-          ></i>
-        </div>
+    <back-button :path="'/interface/dapps/'">
+      <div class="back-bar-container">
         <div v-if="showMoveOrClose" class="header-buttons-container">
           <div class="inner-container">
             <button class="move-btn" @click="showMove">
@@ -92,9 +85,9 @@
             </div>
           </div>
         </div>
-      </template>
-    </interface-container-title>
-    <div v-show="makerActive" class="buttons-container">
+      </div>
+    </back-button>
+    <div v-if="makerActive" class="buttons-container">
       <div v-if="showCreateProxy">
         <div class="dapps-button" @click="buildProxy">
           <h4>{{ $t('dappsMaker.createProxy') }}</h4>

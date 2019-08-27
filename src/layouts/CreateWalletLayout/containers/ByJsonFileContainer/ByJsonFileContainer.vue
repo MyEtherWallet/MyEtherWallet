@@ -42,8 +42,9 @@
                     <span v-if="downloadable">{{
                       $t('createWallet.byJsonFileDownloadKeyFile')
                     }}</span>
-                    <div v-if="!downloadable">
+                    <div v-if="!downloadable" class="generating">
                       <i class="fa fa-spinner fa-lg fa-spin" />
+                      <p>Please wait while we generate your keystore file...</p>
                     </div>
                   </a>
                 </div>

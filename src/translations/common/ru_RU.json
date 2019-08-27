@@ -4,7 +4,6 @@
   "accessWallet": "Получить доступ к кошельку",
   "faqs": "ЧаВо",
   "sendTx": "Send Transaction",
-  "sendSafeSendTx": "Protect Your ETH Transaction Using SafeSend",
   "swap": "Обменять",
   "unlockWallet": "Разблокировать кошелек",
   "createWallet": "Создать кошелек",
@@ -54,7 +53,10 @@
   "sign": "Подписать",
   "toAddress": "На адрес",
   "cancel": "Отменить",
+  "actions": "Actions",
   "value": "Сумма",
+  "more": "More",
+  "viewAll": "View All",
   "gasLimit": "Лимит газа",
   "gasPrice": "Цена газа",
   "data": "Данные",
@@ -80,5 +82,10 @@
   "read": "Read",
   "notRecommended": "NOT RECOMMENDED",
   "notRecommendedMessage": "This is not a recommended way to access your wallet. Due to the sensitivity of the information involved, these options should only be used in offline settings by experienced users.",
-  "usingMewOffline": "Using MEW Offline"
+  "usingMewOffline": "Using MEW Offline",
+  "twitterFollow": "Follow us on Twitter",
+  "ntfManager": "NFT Manager",
+  "loading": "Loading",
+  "path": "Path",
+  "alias": "Alias"
 }

@@ -39,9 +39,9 @@ const kyberNetworkENS = 'kybernetwork.eth';
 const kyberValidNetworks = ['ETH', 'ROP', 'KOV'];
 
 const defaultValues = {
-  tradeGasLimit: 400000,
-  tokenToTokenGasLimit: 400000,
-  tokenApprovalGasLimit: 100000, //40205,
+  tradeGasLimit: 500000,
+  tokenToTokenGasLimit: 500000,
+  tokenApprovalGasLimit: 150000, //40205,
   maxGasPrice: 30000000000, // 30 Gwei
   gasPrice: 2000000000 // 2 Gwei
 };

@@ -25,10 +25,6 @@
             @swapStarted="resetSwapState"
           />
 
-          <!--          <div class="title-block">-->
-          <!--            <interface-container-title :title="$t('common.swap')" />-->
-          <!--          </div>-->
-
           <div class="form-content-container">
             <div class="send-form">
               <div class="form-block amount-to-address">
@@ -648,12 +644,27 @@ export default {
           this.toCurrency = this.suppliedTo.symbol;
           this.overrideFrom = this.suppliedFrom;
           this.overrideTo = this.suppliedTo;
+
           if (toBigNumber(this.suppliedToAmount).gt(0)) {
+            this.updateRateEstimate(
+              this.suppliedFrom.symbol,
+              this.suppliedTo.symbol,
+              this.suppliedToAmount,
+              'to'
+            );
+
             this.loadingWidget = true;
             this.toValue = this.suppliedToAmount;
             this.amountChanged('to');
           } else {
+            this.updateRateEstimate(
+              this.suppliedFrom.symbol,
+              this.suppliedTo.symbol,
+              this.suppliedFromAmount,
+              'from'
+            );
             this.toValue = 0;
+            this.amountChanged('from');
           }
         }
       });
@@ -762,11 +773,9 @@ export default {
             this.fromCurrency
           ]
         ) {
-          this.web3.utils._.debounce(
-            this.updateEstimate(this.providerNames.simplex + direction),
-            200
-          );
+          this.debounceUpdateEstimate(this.providerNames.simplex + direction);
         } else {
+          this.simplexUpdate = false;
           this.debounceUpdateEstimate(direction);
           const fromCur = this.fromCurrency;
           const toCur = this.toCurrency;
@@ -776,6 +785,10 @@ export default {
       }
     },
     async updateEstimate(input) {
+      if (this.simplexUpdate) {
+        this.simplexUpdate = false;
+        return;
+      }
       let fromValue, toValue, simplexProvider, simplexRateDetails;
       switch (input) {
         case 'to':
@@ -793,6 +806,7 @@ export default {
           );
           break;
         case `${this.providerNames.simplex}to`:
+          this.simplexUpdate = true;
           simplexProvider = this.swap.getProvider(this.providerNames.simplex);
 
           if (simplexProvider.canQuote(this.fromValue, this.toValue)) {
@@ -824,6 +838,7 @@ export default {
 
           break;
         case `${this.providerNames.simplex}from`:
+          this.simplexUpdate = true;
           simplexProvider = this.swap.getProvider(this.providerNames.simplex);
           if (simplexProvider.canQuote(this.fromValue, this.toValue)) {
             simplexRateDetails = await simplexProvider.updateFiat(
@@ -904,8 +919,9 @@ export default {
                   minValue: entry.minValue || 0,
                   maxValue: entry.maxValue || 0,
                   computeConversion: function(_fromValue) {
+                    const rate = new BigNumber(entry.rate);
                     return new BigNumber(_fromValue)
-                      .times(this.rate)
+                      .times(rate)
                       .toFixed(6)
                       .toString(10);
                   }

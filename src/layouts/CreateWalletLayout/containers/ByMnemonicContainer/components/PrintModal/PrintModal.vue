@@ -70,11 +70,13 @@ export default {
       const element = this.$refs.printContainer;
       const screen = await html2canvas(element, {
         async: true,
-        logging: false
+        logging: false,
+        height: 800,
+        width: 800,
+        scrollY: 0
       }).then(canvas => {
         return canvas;
       });
-
       printJS({
         printable: screen.toDataURL('image/png'),
         type: 'image'

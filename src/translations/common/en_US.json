@@ -4,7 +4,6 @@
   "accessWallet": "Access Wallet",
   "faqs": "FAQs",
   "sendTx": "Send Transaction",
-  "sendSafeSendTx": "Protect Your ETH Transaction Using SafeSend",
   "swap": "Swap",
   "unlockWallet": "Unlock Wallet",
   "createWallet": "Create Wallet",
@@ -85,5 +84,8 @@
   "notRecommendedMessage": "This is not a recommended way to access your wallet. Due to the sensitivity of the information involved, these options should only be used in offline settings by experienced users.",
   "usingMewOffline": "Using MEW Offline",
   "twitterFollow": "Follow us on Twitter",
-  "ntfManager": "NFT Manager"
+  "ntfManager": "NFT Manager",
+  "loading": "Loading",
+  "path": "Path",
+  "alias": "Alias"
 }
