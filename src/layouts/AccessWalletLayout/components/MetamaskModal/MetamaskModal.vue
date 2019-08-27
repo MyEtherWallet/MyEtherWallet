@@ -182,6 +182,7 @@ export default {
         try {
           await window.ethereum.enable();
         } catch (e) {
+          console.log(e);
           Toast.responseHandler(e, Toast.WARN);
           this.web3WalletExists = false;
           return;
@@ -191,25 +192,23 @@ export default {
         this.signIn(window.web3);
       }
     },
-    signIn(web3, type) {
-      new Web3(web3.currentProvider).eth
-        .getAccounts()
-        .then(accounts => {
-          if (type === 'ethereum') {
-            window.ethereum.autoRefreshOnNetworkChange = false;
-          }
-          if (!accounts.length) return (this.unlockWeb3Wallet = true);
-          const address = accounts[0];
-          const wallet = new Web3Wallet(address);
-          this.$store.dispatch('decryptWallet', [wallet, web3.currentProvider]);
-          this.$router.push({
-            path: 'interface'
-          });
-        })
-        .catch(e => {
-          Toast.responseHandler(e, Toast.ERROR);
-          return (this.web3WalletExists = false);
+    async signIn(web3, type) {
+      try {
+        const newWeb3 = new Web3(web3.currentProvider);
+        const acc = await newWeb3.eth.getAccounts();
+        if (type === 'ethereum') {
+          window.ethereum.autoRefreshOnNetworkChange = false;
+        }
+        if (!acc.length) return (this.unlockWeb3Wallet = true);
+        const wallet = new Web3Wallet(acc[0]);
+        this.$store.dispatch('decryptWallet', [wallet, newWeb3]);
+        this.$router.push({
+          path: 'interface'
         });
+      } catch (e) {
+        Toast.responseHandler(e, Toast.ERROR);
+        return (this.web3WalletExists = false);
+      }
     },
     checkWeb3() {
       return window.ethereum !== 'undefined' || window.web3 !== 'undefined';

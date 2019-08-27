@@ -12,7 +12,6 @@ import {
   ethSign,
   ethRequestAccounts
 } from '../cx-web3-methods';
-const _ = require('underscore');
 
 const EventEmitter = require('events');
 
@@ -31,79 +30,50 @@ class MewCxEthereum extends EventEmitter {
     this.setListeners();
 
     this.httpProvider = {
-      send: (recMethod, recParams = []) => {
-        console.log(recMethod, recParams, 'send?');
-        // console.log('sent something', recMethod, recParams);
-        if (typeof recParams == 'function') {
-          this.sendAsync(recMethod, (err, res) => {
-            recParams(err, res);
+      sendPromise: (method, params = []) => {
+        return new Promise((resolve, reject) => {
+          // if (!method || typeof method !== 'string') {
+          //   return reject(new Error('Method is not a valid string.'));
+          // }
+          // if (!(params instanceof Array)) {
+          //   return reject(new Error('Params is not a valid array.'));
+          // }
+          const id = this._id++;
+          const jsonrpc = '2.0';
+          const payload =
+            !method || typeof method !== 'string'
+              ? method
+              : { jsonrpc, id, method, params };
+          const requestManager = this.requestManager;
+          const req = {
+            payload,
+            requestManager
+          };
+          const cb = (e, res) => {
+            if (e) {
+              return reject(e);
+            }
+            return resolve(res);
+          };
+          this.middleware.run(req, cb).then(() => {
+            this.requestManager.provider.send(req.payload, cb);
           });
-        } else {
-          return new Promise((resolve, reject) => {
-            // if (!method || typeof method !== 'string') {
-            //   return reject(new Error('Method is not a valid string.'));
-            // }
-            // if (!(params instanceof Array)) {
-            //   return reject(new Error('Params is not a valid array.'));
-            // }
-            const id = this._id++;
-            const jsonrpc =
-              typeof recMethod === 'string' ? '2.0' : recMethod.jsonrpc;
-            const method =
-              typeof method === 'string' ? recMethod : recMethod.method;
-            const params =
-              typeof method === 'string' ? recParams : recMethod.params;
-            const payload = { jsonrpc, id, method, params };
-            const requestManager = this.requestManager;
-            const req = {
-              payload,
-              requestManager
-            };
-            const cb = (e, res) => {
-              if (e) {
-                return reject(e);
-              }
-              return resolve(res.result);
-            };
-            this.middleware.run(req, cb).then(() => {
-              this.requestManager.provider.send(req.payload, cb);
-            });
-          });
-        }
+        });
+      },
+      send: function(method, params = []) {
+        this.sendPromise(method, params);
       },
       sendAsync: function(payload, cb) {
-        console.log(
-          'why must we suffer...',
-          payload,
-          this.send,
-          this.httpProvider.send
-        );
-        if (typeof cb !== 'function') {
-          // console.log('getting here?', payload);
-          this.send(payload)
-            .then(result => {
-              console.log('or getting hereeeeee?', result);
-              // result.id = payload.id ? payload.id : result.id;
-              cb(null, result);
-            })
-            .catch(cb);
-        } else {
-          console.log(
-            'or getting here11111?',
-            payload,
-            this.send,
-            this.httpProvider.send
-          );
-          this.send(payload.method, payload.params)
-            .then(result => {
-              console.log('or getting hereeee2222?', result);
-              result.id = payload.id ? payload.id : result.id;
-              cb(null, result);
-            })
-            .catch(cb);
-        }
+        this.sendPromise(payload.method, payload.params)
+          .then(result => {
+            result.id = payload.id ? payload.id : result.id;
+            cb(null, result);
+          })
+          .catch(cb);
       },
       setMaxListeners: this.setMaxListeners,
+      isMetaMask: true,
+      isMew: true,
       on: this.on,
       emit: this.emit,
       removeListener: () => {
@@ -111,8 +81,7 @@ class MewCxEthereum extends EventEmitter {
         this.clearListeners();
       },
       enable: function() {
-        console.log('reeeee', this.send);
-        return this.send('eth_requestAccounts', []).then(res => {
+        return this.sendPromise('eth_requestAccounts').then(res => {
           return res.result;
         });
       }

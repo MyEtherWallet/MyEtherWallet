@@ -505,8 +505,8 @@ export default {
         if (this.account.address !== null) {
           if (this.account.identifier === WEB3_TYPE) {
             if (
-              window.web3.currentProvider.isMetaMask ||
-              window.web3.currentProvider.isMew
+              window.ethereum.isMetaMask ||
+              window.ethereum.isMew
             ) {
               this.checkMetamaskAddrChange();
               this.matchMetamaskNetwork();
