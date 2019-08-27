@@ -1,3 +1,7 @@
+## Feature
+
+- Dapp submission page [#1339](https://github.com/MyEtherWallet/MyEtherWallet/pull/1339)
+
 ### Release v5.1.2
 
 ### Devop
@@ -16,10 +20,6 @@
 
 - Fix incorrect rate display [#1368](https://github.com/MyEtherWallet/MyEtherWallet/pull/1368)
 - Fix scroll up animation glitch on mobile [#1358](https://github.com/MyEtherWallet/MyEtherWallet/pull/1358)
-
-## Feature
-
-- Dapp submission page [#1339](https://github.com/MyEtherWallet/MyEtherWallet/pull/1339)
 
 ### Release v5.1.1-hotfix.1
 
