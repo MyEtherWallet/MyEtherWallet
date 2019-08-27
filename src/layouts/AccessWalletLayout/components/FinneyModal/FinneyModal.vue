@@ -9,9 +9,31 @@
     <div class="finney-desktop">
       <div class="modal-content-right">
         <p>
-          To connect please scan the QR code from FinneyWallet app on your
-          FINNEY device
+          To connect, scan the QR code from <b>FinneyWallet</b> app on your
+          <b>FINNEY™ BLOCKCHAIN SMARTPHONE</b>
         </p>
+        <qrcode
+          :value="qrcode"
+          :options="{ size: 186 }"
+          class="qrcode-container"
+        />
+        <div class="text-container">
+          <a
+            href="http://shop.sirinlabs.com?rfsn=2397639.54fdf&utm_source=refersion&utm_medium=affiliate&utm_campaign=2397639.54fdf"
+            target="blank"
+            rel="noopener noreferrer"
+          >
+            <p>
+              Get your
+            </p>
+            <h3>
+              FINNEY™
+            </h3>
+            <p>
+              now
+            </p>
+          </a>
+        </div>
       </div>
     </div>
     <div v-if="false" class="finney-mobile">
