@@ -180,7 +180,7 @@
           <span class="dapp-icon-label"> DApp icon </span>
           <popover
             :popcontent="$t('dappsSubmission.dappIcon')"
-            class="dapp-icon-popover"
+            class="dapp-popover"
           ></popover>
           <label v-if="form.dappIconUrl" for="dappIcon" class="replace-label"
             >Replace</label
