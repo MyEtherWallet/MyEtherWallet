@@ -136,7 +136,7 @@
               class="custom-input-text-1"
               type="text"
               name="customExplorerTx"
-              placeholder="https://etherscan.io/tx/"
+              placeholder="https://etherscan.io/tx/[[txHash]]"
               autocomplete="off"
             />
             <input
@@ -156,7 +156,7 @@
               class="custom-input-text-1"
               type="text"
               name="customExplorerAddr"
-              placeholder="https://etherscan.io/address/"
+              placeholder="https://etherscan.io/address/[[address]]"
               autocomplete="off"
             />
           </div>
@@ -187,7 +187,13 @@
 
         <div class="content-block">
           <div class="flex-container">
-            <h4 class="modal-title">{{ $t('interface.httpBasicAccess') }}</h4>
+            <div>
+              <h4 class="modal-title">{{ $t('interface.httpBasicAccess') }}</h4>
+              <p class="warning-msg">
+                Warning: This information will be saved to your local storage,
+                make sure your computer is secure.
+              </p>
+            </div>
             <div class="margin-left-auto add-custom-network">
               <div class="sliding-switch-white">
                 <label class="switch">
@@ -302,7 +308,7 @@ export default {
       return networks;
     },
     selectedNetwork() {
-      return this.network.type;
+      return this.types[this.selectedNetworkName];
     }
   },
   watch: {
@@ -360,9 +366,9 @@ export default {
     },
     saveCustomNetwork() {
       const customNetwork = {
-        auth: !!(this.password !== '' && this.username !== ''),
+        auth: this.password !== '' && this.username !== '',
         password: this.password,
-        port: this.port,
+        port: parseInt(this.port),
         service: this.name,
         type: {
           blockExplorerAddr:
@@ -371,7 +377,7 @@ export default {
             '',
           blockExplorerTX:
             this.selectedNetwork.blockExplorerTX || this.blockExplorerTX || '',
-          chainID: this.chainID,
+          chainID: parseInt(this.chainID),
           contracts: [],
           homePage: '',
           name: this.selectedNetwork.name,

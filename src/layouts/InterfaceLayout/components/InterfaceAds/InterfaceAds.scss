@@ -1,0 +1,74 @@
+@import '~@/scss/GlobalVariables';
+
+a {
+  text-decoration: none;
+}
+
+.twitter-ad-block {
+  user-select: none;
+  .block-title {
+    font-size: 20px;
+    color: $black;
+    padding: 20px;
+    font-weight: 600;
+  }
+
+  .block-twitter {
+    padding-right: 20px;
+    i {
+      font-size: 40px;
+      color: #1ca1f1;
+    }
+  }
+}
+
+.bottom-image-container {
+  position: relative;
+  border-radius: 5px;
+  overflow: hidden;
+  height: 200px;
+
+  a {
+    color: black;
+    text-decoration: none;
+  }
+
+  .ad-container {
+    height: 25%;
+  }
+
+  .select-dots-container {
+    position: absolute;
+    bottom: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+    overflow: hidden;
+    width: 100%;
+    text-align: center;
+
+    .ad-dot {
+      padding-right: 10px;
+      cursor: pointer;
+      color: #0b2840;
+      .inactive {
+        opacity: 0.2;
+      }
+      .active {
+        opacity: 1;
+      }
+    }
+  }
+}
+
+.spinner-container {
+  text-align: center;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.slider-container {
+  border-radius: 5px;
+  overflow: hidden;
+}

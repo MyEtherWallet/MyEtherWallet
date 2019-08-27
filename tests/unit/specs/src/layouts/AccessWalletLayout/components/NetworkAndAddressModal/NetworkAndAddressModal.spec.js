@@ -40,19 +40,13 @@ describe('NetworkAndAddressModal.vue', () => {
       store,
       attachToDocument: true,
       mocks: {
-        $router: mockRoute
+        $router: mockRoute,
+        $route: { path: '/access-my-wallet' }
       },
       stubs: {
         'b-modal': BModalStub
       }
     });
-  });
-
-  xit('[7-2-19] should render correct accessMyWalletBtnDisabled data', () => {
-    expect(wrapper.vm.$data.accessMyWalletBtnDisabled).toBe(true);
-    const accessMyWalletBtn = wrapper.find({ ref: 'accessMyWalletBtn' });
-    accessMyWalletBtn.trigger('click');
-    expect(wrapper.vm.$data.accessMyWalletBtnDisabled).toBe(false);
   });
 
   describe('NetworkAndAddressModal.vue Methods', () => {

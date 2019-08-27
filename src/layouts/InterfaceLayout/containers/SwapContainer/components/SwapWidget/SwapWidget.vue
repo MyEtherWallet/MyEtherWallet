@@ -25,10 +25,6 @@
             @swapStarted="resetSwapState"
           />
 
-          <!--          <div class="title-block">-->
-          <!--            <interface-container-title :title="$t('common.swap')" />-->
-          <!--          </div>-->
-
           <div class="form-content-container">
             <div class="send-form">
               <div class="form-block amount-to-address">
@@ -309,6 +305,10 @@ export default {
       type: Number,
       default: 0
     },
+    suppliedFromAmount: {
+      type: Number,
+      default: 0
+    },
     destAddress: {
       type: String,
       default: ''
@@ -343,7 +343,11 @@ export default {
           web3: this.$store.state.web3,
           getRateForUnit: false
         },
-        { tokensWithBalance: this.tokensWithBalance, overrideDecimals: true }
+        {
+          tokensWithBalance: this.tokensWithBalance,
+          overrideDecimals: true,
+          online: this.$store.state.online
+        }
       ),
       images: {
         kybernetowrk: ImageKybernetowrk,
@@ -379,11 +383,12 @@ export default {
       exitToFiatCallback: () => {},
       debounceUpdateEstimate: {},
       debounceDoThing: {},
-      widgetOpen: false
+      widgetOpen: false,
+      loadingWidget: false
     };
   },
   computed: {
-    ...mapState(['account', 'ens', 'gasPrice', 'web3', 'network']),
+    ...mapState(['account', 'ens', 'gasPrice', 'web3', 'network', 'online']),
     bestRate() {
       try {
         if (this.providerData.length > 0) {
@@ -408,7 +413,7 @@ export default {
         )
       )
         return this.$t('interface.belowMin', {
-          value: this.selectedProvider.maxValue,
+          value: toBigNumber(this.selectedProvider.maxValue).toFixed(6),
           currency: this.fromCurrency
         });
       return false;
@@ -417,7 +422,7 @@ export default {
       if (this.selectedProvider.provider === this.providerNames.bity) {
         if (this.checkBityMax) {
           return this.$t('interface.aboveMax', {
-            value: this.selectedProvider.maxValue,
+            value: toBigNumber(this.selectedProvider.maxValue).toFixed(6),
             currency: this.fromCurrency
           });
         }
@@ -429,7 +434,7 @@ export default {
         toBigNumber(this.selectedProvider.maxValue).gt(toBigNumber(0))
       )
         return this.$t('interface.aboveMaxSwap', {
-          value: this.selectedProvider.maxValue,
+          value: toBigNumber(this.selectedProvider.maxValue).toFixed(6),
           currency: this.fromCurrency
         });
       return false;
@@ -597,6 +602,13 @@ export default {
               this.bestRate,
               this.fromCurrency
             );
+          } else if (this.suppliedFromAmount > 0) {
+            this.fromValue = this.suppliedFromAmount;
+            this.toValue = this.swap.calculateToValue(
+              this.fromValue,
+              this.bestRate,
+              this.toCurrency
+            );
           }
         });
       }
@@ -612,39 +624,57 @@ export default {
     }
   },
   mounted() {
-    const { toArray, fromArray } = this.swap.initialCurrencyLists;
-    this.toArray = toArray;
-    this.fromArray = fromArray;
-    this.currentAddress = this.account.address;
-    this.debounceUpdateEstimate = this.web3.utils._.debounce(
-      this.updateEstimate,
-      300
-    );
-    this.debounceReviseRateEstimate = this.web3.utils._.debounce(
-      this.updateRateEstimate,
-      2000
-    );
+    if (this.online) {
+      const { toArray, fromArray } = this.swap.initialCurrencyLists;
+      this.toArray = toArray;
+      this.fromArray = fromArray;
+      this.currentAddress = this.account.address;
+      this.debounceUpdateEstimate = this.web3.utils._.debounce(
+        this.updateEstimate,
+        300
+      );
+      this.debounceReviseRateEstimate = this.web3.utils._.debounce(
+        this.updateRateEstimate,
+        2000
+      );
 
-    this.$refs.modal.$on('shown', () => {
-      this.widgetOpen = true;
-      if (this.isWidget) {
-        this.toAddress = this.destAddress !== '' ? this.destAddress : '';
-        this.fromCurrency = this.suppliedFrom.symbol;
-        this.toCurrency = this.suppliedTo.symbol;
-        this.overrideFrom = this.suppliedFrom;
-        this.overrideTo = this.suppliedTo;
-        if (toBigNumber(this.suppliedToAmount).gt(0)) {
-          this.toValue = this.suppliedToAmount;
-          this.amountChanged('to');
-        } else {
-          this.toValue = 0;
+      this.$refs.modal.$on('shown', () => {
+        this.widgetOpen = true;
+        if (this.isWidget) {
+          this.toAddress = this.destAddress !== '' ? this.destAddress : '';
+          this.fromCurrency = this.suppliedFrom.symbol;
+          this.toCurrency = this.suppliedTo.symbol;
+          this.overrideFrom = this.suppliedFrom;
+          this.overrideTo = this.suppliedTo;
+
+          if (toBigNumber(this.suppliedToAmount).gt(0)) {
+            this.updateRateEstimate(
+              this.suppliedFrom.symbol,
+              this.suppliedTo.symbol,
+              this.suppliedToAmount,
+              'to'
+            );
+
+            this.loadingWidget = true;
+            this.toValue = this.suppliedToAmount;
+            this.amountChanged('to');
+          } else {
+            this.updateRateEstimate(
+              this.suppliedFrom.symbol,
+              this.suppliedTo.symbol,
+              this.suppliedFromAmount,
+              'from'
+            );
+            this.toValue = 0;
+            this.amountChanged('from');
+          }
         }
-      }
-    });
+      });
 
-    this.$refs.modal.$on('hide', () => {
-      this.widgetOpen = false;
-    });
+      this.$refs.modal.$on('hide', () => {
+        this.widgetOpen = false;
+      });
+    }
   },
   methods: {
     reset() {
@@ -745,11 +775,9 @@ export default {
             this.fromCurrency
           ]
         ) {
-          this.web3.utils._.debounce(
-            this.updateEstimate(this.providerNames.simplex + direction),
-            200
-          );
+          this.debounceUpdateEstimate(this.providerNames.simplex + direction);
         } else {
+          this.simplexUpdate = false;
           this.debounceUpdateEstimate(direction);
           const fromCur = this.fromCurrency;
           const toCur = this.toCurrency;
@@ -759,6 +787,10 @@ export default {
       }
     },
     async updateEstimate(input) {
+      if (this.simplexUpdate) {
+        this.simplexUpdate = false;
+        return;
+      }
       let fromValue, toValue, simplexProvider, simplexRateDetails;
       switch (input) {
         case 'to':
@@ -776,6 +808,7 @@ export default {
           );
           break;
         case `${this.providerNames.simplex}to`:
+          this.simplexUpdate = true;
           simplexProvider = this.swap.getProvider(this.providerNames.simplex);
 
           if (simplexProvider.canQuote(this.fromValue, this.toValue)) {
@@ -807,6 +840,7 @@ export default {
 
           break;
         case `${this.providerNames.simplex}from`:
+          this.simplexUpdate = true;
           simplexProvider = this.swap.getProvider(this.providerNames.simplex);
           if (simplexProvider.canQuote(this.fromValue, this.toValue)) {
             simplexRateDetails = await simplexProvider.updateFiat(
@@ -838,6 +872,12 @@ export default {
           this.toValue = toValue;
           this.fromValue = fromValue;
           break;
+      }
+
+      if (this.toValue - this.suppliedToAmount > 1 && this.loadingWidget) {
+        this.loadingWidget = false;
+        this.toValue = this.suppliedToAmount;
+        this.updateEstimate('to');
       }
     },
     async updateRateEstimate(fromCurrency, toCurrency, fromValue, to) {
@@ -881,8 +921,9 @@ export default {
                   minValue: entry.minValue || 0,
                   maxValue: entry.maxValue || 0,
                   computeConversion: function(_fromValue) {
+                    const rate = new BigNumber(entry.rate);
                     return new BigNumber(_fromValue)
-                      .times(this.rate)
+                      .times(rate)
                       .toFixed(6)
                       .toString(10);
                   }

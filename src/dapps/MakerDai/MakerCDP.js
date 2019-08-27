@@ -165,15 +165,15 @@ export default class MakerCDP {
       if (this.zeroDebt) {
         return maxEthDraw(
           this.ethCollateral,
-          this.liquidationRatio.plus(0.001),
+          this.liquidationRatio,
           this.debtValue,
           this.ethPrice,
-          this.minEth.times(1.0)
+          this.minEth.times(0)
         );
       }
       return maxEthDraw(
         this.ethCollateral,
-        this.liquidationRatio.plus(0.001),
+        this.liquidationRatio,
         this.debtValue,
         this.ethPrice
       );
@@ -186,15 +186,15 @@ export default class MakerCDP {
       if (this.zeroDebt) {
         return maxPethDraw(
           this.pethCollateral,
-          this.liquidationRatio.plus(0.001),
+          this.liquidationRatio,
           this.debtValue,
           this.pethPrice,
-          this.pethMin.times(1.0)
+          this.pethMin.times(0)
         );
       }
       return maxPethDraw(
         this.pethCollateral,
-        this.liquidationRatio.plus(0.001),
+        this.liquidationRatio,
         this.debtValue,
         this.pethPrice
       );
@@ -404,6 +404,12 @@ export default class MakerCDP {
       console.error(e);
     }
     // }
+  }
+
+  async checkIfDestAddressHasProxy(address) {
+    await this.getProxy();
+    const proxy = await this.proxyService.getProxyAddress(address);
+    return proxy;
   }
 
   async moveCdp(address) {

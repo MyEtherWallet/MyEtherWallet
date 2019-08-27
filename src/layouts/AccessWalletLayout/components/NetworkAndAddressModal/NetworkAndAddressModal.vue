@@ -15,12 +15,12 @@
         >
           <p class="button-number">1</p>
           <div class="network">
-            <p>Network</p>
+            <p>{{ $t('common.network') }}</p>
             <p class="network-name monospace">
               ({{ selectedNetwork.type.name }} - {{ selectedNetwork.service }})
             </p>
           </div>
-          <p v-if="false" class="right-button">Cancel</p>
+          <p v-if="false" class="right-button">{{ $t('common.cancel') }}</p>
         </b-btn>
         <b-collapse
           id="collapse1"
@@ -72,7 +72,7 @@
           variant="primary"
         >
           <p class="button-number">2</p>
-          <p>Address</p>
+          <p>{{ $t('common.address') }}</p>
         </b-btn>
         <b-collapse
           id="collapse2"
@@ -137,14 +137,13 @@
               {{ getPathLabel(selectedPath) }} ({{ selectedPath }})
             </p>
             <div v-show="customPathInput" class="custom-path-container">
-              <!-- TODO: how to structure the path input? -->
-              <label for="customPathLabel">Alias</label>
+              <label for="customPathLabel">{{ $t('common.alias') }}</label>
               <input
                 id="customPathLabel"
                 v-model="customPath.label"
                 placeholder="my custom path"
               />
-              <label for="customPathInput">Path</label>
+              <label for="customPathInput">{{ $t('common.path') }}</label>
               <input
                 id="customPathInput"
                 v-model="customPath.path"
@@ -401,22 +400,28 @@ export default {
     },
     setBalances: web3utils._.debounce(function() {
       this.HDAccounts.forEach(account => {
-        this.web3.eth
-          .getBalance(account.account.getAddressString())
-          .then(balance => {
-            account.balance = balance;
-          })
-          .catch(e => {
-            Toast.responseHandler(e, Toast.ERROR);
-          });
+        if (account.account) {
+          this.web3.eth
+            .getBalance(account.account.getAddressString())
+            .then(balance => {
+              account.balance = balance;
+            })
+            .catch(e => {
+              Toast.responseHandler(e, Toast.ERROR);
+            });
+        } else {
+          account.balance = 0;
+        }
       });
     }, 1000),
     unlockWallet() {
       this.$store.dispatch('decryptWallet', [this.currentWallet]);
       if (!this.wallet !== null) {
-        this.$router.push({
-          path: 'interface'
-        });
+        if (!this.$route.path.split('/').includes('interface')) {
+          this.$router.push({
+            path: 'interface'
+          });
+        }
       }
 
       this.$refs.networkAndAddress.hide();

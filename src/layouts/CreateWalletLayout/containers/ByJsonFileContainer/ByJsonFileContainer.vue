@@ -39,11 +39,12 @@
                     :download="name"
                     @click="downloadDone()"
                   >
-                    <span v-if="downloadable">
-                      {{ $t('createWallet.byJsonFileDownloadKeyFile') }}
-                    </span>
-                    <div v-if="!downloadable">
+                    <span v-if="downloadable">{{
+                      $t('createWallet.byJsonFileDownloadKeyFile')
+                    }}</span>
+                    <div v-if="!downloadable" class="generating">
                       <i class="fa fa-spinner fa-lg fa-spin" />
+                      <p>Please wait while we generate your keystore file...</p>
                     </div>
                   </a>
                 </div>
@@ -106,7 +107,7 @@ export default {
     ...mapState(['online'])
   },
   mounted() {
-    if (this.online && window.Worker) {
+    if (this.online && window.Worker && window.origin !== 'null') {
       const worker = new walletWorker();
       worker.postMessage({ type: 'createWallet', data: [this.password] });
       worker.onmessage = e => {

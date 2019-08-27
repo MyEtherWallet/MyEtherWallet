@@ -5,6 +5,7 @@ import url from 'url';
 import utils from 'web3-utils';
 import store from '@/store';
 import { uint, address, string, bytes, bool } from './solidityTypes';
+import xss from 'xss';
 
 const capitalize = value => {
   if (!value) return '';
@@ -156,12 +157,16 @@ const solidityType = inputType => {
 };
 
 const isDarklisted = addr => {
-  const darklisted = store.state.darklist.data.findIndex(item => {
-    return (
-      utils.toChecksumAddress(item.address.toLowerCase()) ===
-      utils.toChecksumAddress(addr.toLowerCase())
-    );
-  });
+  const storedDarklist = store.state.darklist.data;
+  const darklisted =
+    storedDarklist > 0
+      ? storedDarklist.findIndex(item => {
+          return (
+            utils.toChecksumAddress(item.address.toLowerCase()) ===
+            utils.toChecksumAddress(addr.toLowerCase())
+          );
+        })
+      : -1;
   const errMsg =
     darklisted === -1 ? '' : store.state.darklist.data[darklisted].comment;
   const errObject = {
@@ -206,6 +211,17 @@ const isContractArgValid = (value, solidityType) => {
   return false;
 };
 
+const stripTags = content => {
+  const insertToDom = new DOMParser().parseFromString(content, 'text/html');
+  insertToDom.body.textContent.replace(/(<([^>]+)>)/gi, '') || '';
+  const string = xss(insertToDom.body.textContent, {
+    whitelist: [],
+    stripIgnoreTag: true,
+    stripIgnoreTagBody: '*'
+  });
+  return string;
+};
+
 export default {
   isJson,
   doesExist,
@@ -224,5 +240,6 @@ export default {
   capitalize,
   getService,
   stringToArray,
-  isContractArgValid
+  isContractArgValid,
+  stripTags
 };

@@ -46,8 +46,9 @@ describe('SwapContainer.vue', () => {
       '.item-container'
     );
     const fromToElements = containerElements[0];
-    for (let i = 0; i < fromToElements.querySelectorAll('div').length; i++) {
-      const currencyElement = fromToElements.querySelectorAll('div')[i];
+    for (const [i, currencyElement] of fromToElements
+      .querySelectorAll('div')
+      .entries()) {
       if (i > 0) {
         const symbol = wrapper.vm.$data.fromArray[i - 1].symbol;
         const name = wrapper.vm.$data.fromArray[i - 1].name;
@@ -66,8 +67,9 @@ describe('SwapContainer.vue', () => {
       '.item-container'
     );
     const fromToElements = containerElements[1];
-    for (let i = 0; i < fromToElements.querySelectorAll('div').length; i++) {
-      const currencyElement = fromToElements.querySelectorAll('div')[i];
+    for (const [i, currencyElement] of fromToElements
+      .querySelectorAll('div')
+      .entries()) {
       if (i > 0) {
         const symbol = wrapper.vm.$data.fromArray[i - 1].symbol;
         const name = wrapper.vm.$data.fromArray[i - 1].name;
@@ -81,36 +83,9 @@ describe('SwapContainer.vue', () => {
     }
   });
 
-  // describe('SwapContainer.vue Methods', () => {
-  //   let localVue, i18n, wrapper, store;
-
-  //   beforeAll(() => {
-  //     const baseSetup = Tooling.createLocalVueInstance();
-  //     localVue = baseSetup.localVue;
-  //     i18n = baseSetup.i18n;
-  //     store = baseSetup.store;
-  //   });
-  // });
-
-  //   beforeEach(() => {
-  //     wrapper = shallowMount(SwapContainer, {
-  //       localVue,
-  //       i18n,
-  //       store,
-  //       attachToDocument: true,
-  //       stubs: {
-  //         'currency-picker': CurrencyPicker,
-  //         'swap-confirmation-modal': SwapConfirmationModal,
-  //         'router-link': RouterLinkStub,
-  //         'b-modal': BModalStub
-  //       }
-  //     });
-  //   });
-
-  //   xit('[Failing] should open swapConfirmationModal when click button', () => {
-  //     const btnSubmit = wrapper.find('.submit-button');
-  //     btnSubmit.trigger('click');
-  //     expect(showModal.called).toBe(true);
-  //   });
-  // });
+  describe('SwapContainer.vue Methods', () => {
+    xit('should get rates', async done => {
+      done();
+    });
+  });
 });

@@ -1,0 +1,163 @@
+@import '../InterfaceContainer';
+
+$dapps-container-mobile-width: 650px;
+$actionsSwapCollepsePoint: 700px;
+
+.dashboard-container {
+  @extend %interface-container;
+
+  background-color: transparent;
+}
+
+.container--flex {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 15px;
+
+  @media all and (max-width: $actionsSwapCollepsePoint) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.container--top {
+  margin-bottom: 15px;
+}
+
+.title {
+  padding: 5px 0 25px 0;
+
+  h4 {
+    font-size: 20px;
+  }
+}
+
+.container--card {
+  background-color: $white;
+  padding: 20px;
+  height: 100%;
+  border-radius: 5px;
+
+  .section-description {
+    margin-bottom: 20px;
+  }
+}
+
+.block--actions {
+  .buttons {
+    > * {
+      height: 150px;
+      margin-bottom: 15px;
+
+      @media all and (max-width: $actionsSwapCollepsePoint) {
+        height: 100px;
+      }
+    }
+
+    > *:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.block--swap {
+  .currency-symbol::before {
+    font-size: 25px;
+  }
+
+  .swap-info {
+    margin-bottom: -10px;
+  }
+
+  .swap-to {
+    margin: 10px 0;
+    background-color: $light-green-1;
+    padding: 8px 20px;
+    display: flex;
+    align-items: center;
+    border-radius: 5px;
+    border: 1px solid $light-green-1;
+
+    &.swap-enabled:hover {
+      border: 1px solid $light-grey-7;
+    }
+
+    &.swap-disabled {
+      cursor: initial;
+      filter: grayscale(100%);
+      opacity: 0.4;
+      background-color: $light-green-2;
+    }
+
+    > div {
+      padding-left: 10px;
+    }
+
+    p {
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    span {
+      height: 25px;
+    }
+
+    img {
+      height: 25px;
+      padding: 0 12px;
+    }
+  }
+}
+
+.block--dapps {
+  .block--container {
+    display: grid;
+    grid-column-gap: 20px;
+    grid-row-gap: 20px;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr;
+
+    @media all and (max-width: $dapps-container-mobile-width) {
+      > * {
+        margin-bottom: 10px;
+      }
+    }
+
+    > *:last-child {
+      margin-bottom: 0;
+    }
+
+    @media all and (max-width: $dapps-container-mobile-width) {
+      display: block;
+    }
+
+    .dapp {
+      place-self: center stretch;
+
+      p {
+        font-weight: 600;
+        font-size: 18px;
+      }
+      span {
+        height: 35px;
+      }
+      img {
+        height: 25px;
+        padding: 0 10px;
+      }
+    }
+  }
+}
+
+.bottom--buttons {
+  .button-container {
+    $collepse-width: 650px;
+
+    @media all and (max-width: $collepse-width) {
+      overflow-y: auto;
+
+      > * {
+        width: $collepse-width;
+      }
+    }
+  }
+}

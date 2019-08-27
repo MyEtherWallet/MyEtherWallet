@@ -17,6 +17,8 @@ const DeployContractContainer = () =>
   import('@/layouts/InterfaceLayout/containers/DeployContractContainer');
 const InteractWithContractContainer = () =>
   import('@/layouts/InterfaceLayout/containers/InteractWithContractContainer');
+const NFTManagerContainer = () =>
+  import('@/layouts/InterfaceLayout/containers/NFTManagerContainer');
 const SendCurrencyContainer = () =>
   import('@/layouts/InterfaceLayout/containers/SendCurrencyContainer');
 const SendOfflineContainer = () =>
@@ -28,6 +30,8 @@ const SignMessageContainer = () =>
 const VerifyMessageContainer = () =>
   import('@/layouts/InterfaceLayout/containers/VerifyMessageContainer');
 const HardwaresLayout = () => import('@/layouts/HardwaresLayout');
+const DashboardContainer = () =>
+  import('@/layouts/InterfaceLayout/containers/DashboardContainer');
 
 import dapps from '@/dapps/routes';
 
@@ -104,8 +108,13 @@ const router = [
     children: [
       {
         path: '',
-        name: 'Send Transaction',
-        component: SendCurrencyContainer
+        name: 'Dashboard',
+        component: DashboardContainer
+      },
+      {
+        path: 'dashboard',
+        name: 'Dashboard Container',
+        component: DashboardContainer
       },
       {
         path: 'dapps',
@@ -146,6 +155,11 @@ const router = [
         path: 'verify-message',
         name: 'Verify Message',
         component: VerifyMessageContainer
+      },
+      {
+        path: 'nft-manager',
+        name: 'NFTManager',
+        component: NFTManagerContainer
       }
     ]
   }

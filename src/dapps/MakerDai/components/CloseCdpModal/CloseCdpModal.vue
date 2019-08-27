@@ -7,13 +7,6 @@
       class="bootstrap-modal nopadding"
       hide-footer
     >
-      <swap-widget
-        ref="swapWidget"
-        :supplied-from="suppliedFrom"
-        :supplied-to="suppliedTo"
-        :supplied-to-amount="suppliedToAmount"
-        :dest-address="account.address"
-      ></swap-widget>
       <div class="contents">
         <div v-if="!enoughMkr" class="message-container">
           {{ $t('dappsMaker.notEnoughMkrClose') }}
@@ -109,7 +102,6 @@
 import { mapState } from 'vuex';
 import StandardButton from '@/components/Buttons/StandardButton';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
-import SwapWidget from '@/components/SwapWidget';
 import BigNumber from 'bignumber.js/bignumber.js';
 
 const toBigNumber = num => {
@@ -118,7 +110,6 @@ const toBigNumber = num => {
 
 export default {
   components: {
-    'swap-widget': SwapWidget,
     'help-center-button': HelpCenterButton,
     'standard-button': StandardButton
   },
@@ -377,9 +368,13 @@ export default {
           symbol: 'DAI',
           name: 'Dai'
         };
-        this.$nextTick(() => {
-          this.$refs.swapWidget.$refs.modal.show();
-        });
+        this.$eventHub.$emit(
+          'showSwapWidgetTo',
+          this.account.address,
+          this.suppliedFrom,
+          this.suppliedTo,
+          this.suppliedToAmount
+        );
       }
     },
 

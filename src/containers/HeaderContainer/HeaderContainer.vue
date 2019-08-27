@@ -80,6 +80,17 @@
             <div class="top-menu">
               <b-nav>
                 <b-nav-item
+                  href="https://ccswap.myetherwallet.com/#/"
+                  target="_blank"
+                  class="buy-eth"
+                >
+                  <img
+                    class="buy-eth-icon"
+                    src="@/assets/images/icons/buy-eth.svg"
+                  />
+                  Buy ETH
+                </b-nav-item>
+                <b-nav-item
                   v-if="isHomePage"
                   to="/"
                   exact
@@ -122,6 +133,7 @@
                     <template slot="button-content">
                       <div class="current-language-flag">
                         <img
+                          v-if="currentFlag !== null"
                           :src="
                             require(`@/assets/images/flags/${currentFlag}.svg`)
                           "
