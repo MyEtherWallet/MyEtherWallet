@@ -504,10 +504,7 @@ export default {
       if (this.online) {
         if (this.account.address !== null) {
           if (this.account.identifier === WEB3_TYPE) {
-            if (
-              window.ethereum.isMetaMask ||
-              window.ethereum.isMew
-            ) {
+            if (window.ethereum.isMetaMask || window.ethereum.isMew) {
               this.checkMetamaskAddrChange();
               this.matchMetamaskNetwork();
             } else {

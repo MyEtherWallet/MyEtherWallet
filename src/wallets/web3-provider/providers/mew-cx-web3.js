@@ -32,12 +32,12 @@ class MewCxEthereum extends EventEmitter {
     this.httpProvider = {
       sendPromise: (method, params = []) => {
         return new Promise((resolve, reject) => {
-          // if (!method || typeof method !== 'string') {
-          //   return reject(new Error('Method is not a valid string.'));
-          // }
-          // if (!(params instanceof Array)) {
-          //   return reject(new Error('Params is not a valid array.'));
-          // }
+          if (!method || typeof method !== 'string') {
+            return reject(new Error('Method is not a valid string.'));
+          }
+          if (!(params instanceof Array)) {
+            return reject(new Error('Params is not a valid array.'));
+          }
           const id = this._id++;
           const jsonrpc = '2.0';
           const payload =
@@ -51,17 +51,24 @@ class MewCxEthereum extends EventEmitter {
           };
           const cb = (e, res) => {
             if (e) {
-              return reject(e);
+              reject(e);
             }
-            return resolve(res);
+            resolve(res);
           };
           this.middleware.run(req, cb).then(() => {
             this.requestManager.provider.send(req.payload, cb);
           });
         });
       },
-      send: function(method, params = []) {
-        this.sendPromise(method, params);
+      send: function(payload, cb) {
+        this.sendPromise(payload.method, payload.params)
+          .then(result => {
+            result.id = payload.id ? payload.id : result.id;
+            cb(null, result);
+          })
+          .catch(e => {
+            cb(e);
+          });
       },
       sendAsync: function(payload, cb) {
         this.sendPromise(payload.method, payload.params)
@@ -69,7 +76,9 @@ class MewCxEthereum extends EventEmitter {
             result.id = payload.id ? payload.id : result.id;
             cb(null, result);
           })
-          .catch(cb);
+          .catch(e => {
+            cb(e);
+          });
       },
       setMaxListeners: this.setMaxListeners,
       isMetaMask: true,

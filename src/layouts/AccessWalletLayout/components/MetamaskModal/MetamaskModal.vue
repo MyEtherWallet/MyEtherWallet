@@ -182,7 +182,6 @@ export default {
         try {
           await window.ethereum.enable();
         } catch (e) {
-          console.log(e);
           Toast.responseHandler(e, Toast.WARN);
           this.web3WalletExists = false;
           return;
