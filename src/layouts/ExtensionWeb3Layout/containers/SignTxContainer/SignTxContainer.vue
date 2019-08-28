@@ -133,7 +133,10 @@ export default {
         to,
         value,
         data,
-        from
+        from,
+        tokenTransferVal,
+        tokenSymbol,
+        tokenTransferTo
       } = this.linkQuery;
       return {
         nonce: nonce,
@@ -142,7 +145,10 @@ export default {
         to: to,
         value: value,
         data: data,
-        from: from
+        from: from,
+        tokenTransferVal: tokenTransferVal,
+        tokenSymbol: tokenSymbol,
+        tokenTransferTo: tokenTransferTo
       };
     }
   },

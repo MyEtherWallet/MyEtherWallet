@@ -9,8 +9,8 @@ class MEWCXRequestManager {
     const obj = {
       detail: payload
     };
-    const eventRes = `${WEB3_RPC_REQUEST}-${obj.detail.id}-res`;
-    const eventErr = `${WEB3_RPC_REQUEST}-${obj.detail.id}-err`;
+    const eventRes = `${WEB3_RPC_REQUEST}-${payload.id}-res`;
+    const eventErr = `${WEB3_RPC_REQUEST}-${payload.id}-err`;
     eventHandler(WEB3_RPC_REQUEST, obj, eventRes, eventErr)
       .then(res => {
         callback(null, res);

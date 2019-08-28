@@ -16,7 +16,7 @@ import {
 } from './cxEvents';
 const chrome = window.chrome;
 // Set default values on init
-chrome.storage.sync.get(null, items => {
+const networkChanger = items => {
   if (items.hasOwnProperty('defNetwork')) {
     const networkProps = JSON.parse(items['defNetwork']);
     const network = store.state.Networks[networkProps.key].find(
@@ -44,6 +44,29 @@ chrome.storage.sync.get(null, items => {
           url: store.state.network.url,
           key: store.state.network.type.name
         })
+      });
+    });
+  }
+};
+chrome.storage.sync.get(null, networkChanger);
+
+// Listens for network changes and sets background store to match client store
+chrome.storage.onChanged.addListener(items => {
+  if (items.hasOwnProperty('defNetwork')) {
+    const networkProps = JSON.parse(items['defNetwork'].newValue);
+    const network = store.state.Networks[networkProps.key].find(
+      actualNetwork => {
+        return actualNetwork.url === networkProps.url;
+      }
+    );
+    store.dispatch('switchNetwork', network).then(() => {
+      store.dispatch('setWeb3Instance', network.url).then(() => {
+        store.state.web3.eth.net.getId().then(res => {
+          chrome.storage.sync.set({
+            defChainID: store.state.network.type.chainID,
+            defNetVersion: res
+          });
+        });
       });
     });
   }

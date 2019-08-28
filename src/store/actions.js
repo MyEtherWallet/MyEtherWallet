@@ -144,8 +144,8 @@ const setWeb3Instance = function({ dispatch, commit, state }, provider) {
       this._vm.$eventHub
     )
   );
+  // web3Instance.currentProvider.sendAsync = web3Instance.currentProvider.send;
   if (BUILD_TYPE !== 'mewcx') {
-    web3Instance.currentProvider.sendAsync = web3Instance.currentProvider.send;
     web3Instance['mew'] = {};
     web3Instance['mew'].sendBatchTransactions = arr => {
       return new Promise(async resolve => {
