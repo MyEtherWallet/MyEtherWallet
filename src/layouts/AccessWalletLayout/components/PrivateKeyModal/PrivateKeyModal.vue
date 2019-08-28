@@ -73,14 +73,17 @@ export default {
   methods: {
     unlockWallet() {
       this.spinner = true;
-      this.$store.dispatch('decryptWallet', [
-        new WalletInterface(this.privateKey, false, privKeyType)
-      ]);
-      this.privateKey = '';
-      this.spinner = false;
-      this.$router.push({
-        path: 'interface'
-      });
+      this.$store
+        .dispatch('decryptWallet', [
+          new WalletInterface(this.privateKey, false, privKeyType)
+        ])
+        .then(() => {
+          this.privateKey = '';
+          this.spinner = false;
+          this.$router.push({
+            path: 'interface'
+          });
+        });
     },
     focusInput() {
       this.$refs.privateKeyInput.focus();
