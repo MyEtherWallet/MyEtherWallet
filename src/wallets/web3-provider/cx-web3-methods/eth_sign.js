@@ -9,8 +9,10 @@ export default async ({ payload }, res, next) => {
   if (payload.method !== 'personal_sign' && payload.method !== 'eth_sign')
     return next();
   const id = window.extensionID;
-  const address = payload.params[0];
-  const msg = payload.params[1];
+  const address =
+    payload.method === 'personal_sign' ? payload.params[1] : payload.params[0];
+  const msg =
+    payload.method === 'personal_sign' ? payload.params[0] : payload.params[1];
   const obj = {
     detail: {
       msgToSign: msg,
