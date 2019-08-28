@@ -1,8 +1,11 @@
+### Devop
+
+- Fix finney modal layout [#1392](https://github.com/MyEtherWallet/MyEtherWallet/pull/1392)
+
 ### Release v5.1.2
 
 ### Devop
 
-- Fix finney modal layout [#1392](https://github.com/MyEtherWallet/MyEtherWallet/pull/1392)
 - Fix dashboard "MEW connect", "Buy ETH" buttons layout [#1376](https://github.com/MyEtherWallet/MyEtherWallet/pull/1376)
 - Fix Buy Eth to Buy ETH [#1361](https://github.com/MyEtherWallet/MyEtherWallet/pull/1361)
 - Dashboard -> Actions & Swap button style update [#1365](https://github.com/MyEtherWallet/MyEtherWallet/pull/1365)
