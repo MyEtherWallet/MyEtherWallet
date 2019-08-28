@@ -1,3 +1,10 @@
+### Release v5.1.3
+
+### Devop
+
+- Sentry fixes, additional ledger errors, handle unlock wallet if wallet is null [#1394](https://github.com/MyEtherWallet/MyEtherWallet/pull/1394)
+
+
 ### Release v5.1.2
 
 ### Devop
