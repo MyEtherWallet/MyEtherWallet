@@ -200,7 +200,7 @@ export default class Kyber {
   async retrieveGasLimits(network = this.network) {
     try {
       const gasLimitList = await kyberCalls.getGasLimits(network);
-      if (gasLimitList.data) {
+      if (gasLimitList && gasLimitList.data) {
         this.GAS_LIMITS = gasLimitList.data;
       }
     } catch (e) {
@@ -255,6 +255,7 @@ export default class Kyber {
       fromValueWei
     );
     logger(rates);
+    if(!rates) r
     if (new BigNumber(rates['expectedRate']).eq(new BigNumber(0))) {
       return -1;
     }
