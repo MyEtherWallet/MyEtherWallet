@@ -1,7 +1,7 @@
 import { createLocalVue } from '@vue/test-utils';
 import VueI18n from 'vue-i18n';
 import BootstrapVue from 'bootstrap-vue';
-import veeValidate from 'vee-validate';
+import ValidationProvider from 'vee-validate/dist/vee-validate.full';
 import VueX from 'vuex';
 import VueToast from 'vue-toasted';
 import ClickOutside from '@/directives/ClickOutside';
@@ -16,7 +16,8 @@ function createLocalVueInstance() {
   localVue.use(VueToast);
   localVue.directive('click-outside', ClickOutside);
   localVue.directive('ens-resolver', EnsResolver);
-  localVue.use(veeValidate);
+  localVue.component('ValidationProvider', ValidationProvider);
+
   localVue.filter('capitalize', function(value) {
     if (!value) return '';
     value = value.toString().toLowerCase();

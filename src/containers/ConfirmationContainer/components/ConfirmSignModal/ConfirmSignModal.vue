@@ -6,8 +6,8 @@
       centered
       class="bootstrap-modal-wide confirmation-modal nopadding"
       title="Confirmation"
-      static="true"
-      lazy="true"
+      static
+      lazy
     >
       <div class="modal-content qrcode-modal">
         <div class="tx-info">

@@ -7,8 +7,8 @@
     no-close-on-esc
     centered
     class="bootstrap-modal nopadding"
-    static="true"
-    lazy="true"
+    static
+    lazy
   >
     <div class="welcome-modal">
       <img src="@/assets/images/modal/garlands.png" />

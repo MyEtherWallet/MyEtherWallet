@@ -7,8 +7,8 @@
       centered
       class="nopadding print-mod"
       size="lg"
-      static="true"
-      lazy="true"
+      static
+      lazy
     >
       <div class="modal-content-container">
         <div ref="printContainer" class="mnemonic-to-print">

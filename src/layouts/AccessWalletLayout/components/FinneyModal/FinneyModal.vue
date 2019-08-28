@@ -5,8 +5,8 @@
     hide-footer
     class="bootstrap-modal nopadding"
     centered
-    static="true"
-    lazy="true"
+    static
+    lazy
   >
     <div class="finney-modal-content">
       <div class="content-container">
