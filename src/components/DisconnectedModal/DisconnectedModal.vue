@@ -5,8 +5,8 @@
       hide-footer
       hide-header
       centered
-      static="true"
-      lazy="true"
+      static
+      lazy
       class="bootstrap-modal nopadding"
     >
       <div class="modal-contents">

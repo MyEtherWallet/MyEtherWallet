@@ -7,8 +7,8 @@
         hide-header
         centered
         class="bootstrap-modal nopadding"
-        static="true"
-        lazy="true"
+        static
+        lazy
       >
         <div class="modal-contents">
           <div class="modal-header-block">

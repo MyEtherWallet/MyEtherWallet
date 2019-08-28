@@ -6,8 +6,8 @@
       hide-footer
       class="bootstrap-modal"
       centered
-      static="true"
-      lazy="true"
+      static
+      lazy
       @hidden="reset"
     >
       <div class="ledger-app-selection-container">

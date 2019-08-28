@@ -6,8 +6,8 @@
       hide-footer
       centered
       class="bootstrap-modal network nopadding max-height-1"
-      static="true"
-      lazy="true"
+      static
+      lazy
     >
       <div class="content-block">
         <div class="flex-container">

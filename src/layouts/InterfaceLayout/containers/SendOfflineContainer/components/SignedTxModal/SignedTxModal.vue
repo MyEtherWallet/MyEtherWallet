@@ -4,8 +4,8 @@
     :title="$t('interface.signedTx')"
     hide-footer
     class="bootstrap-modal signed-tx-modal"
-    static="true"
-    lazy="true"
+    static
+    lazy
   >
     <div class="d-block">
       <div class="title-block">

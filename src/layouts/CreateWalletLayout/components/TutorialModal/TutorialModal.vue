@@ -7,8 +7,8 @@
     no-close-on-backdrop
     no-close-on-esc
     class="bootstrap-modal padding-40-20 background-image-1"
-    static="true"
-    lazy="true"
+    static
+    lazy
   >
     <div class="d-block text-center">
       <h3 class="title">{{ $t('createWallet.tutorialModalHeader') }}</h3>

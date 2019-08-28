@@ -6,8 +6,8 @@
     centered
     class="nopadding print-mod"
     size="lg"
-    static="true"
-    lazy="true"
+    static
+    lazy
   >
     <div ref="printContainer" class="print-modal">
       <div class="print-modal-header">

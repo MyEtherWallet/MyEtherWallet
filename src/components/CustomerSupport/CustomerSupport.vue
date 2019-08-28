@@ -18,8 +18,8 @@
       centered
       class="bootstrap-modal nopadding"
       title="Issue information"
-      static="true"
-      lazy="true"
+      static
+      lazy
     >
       <div class="email-prefill-inputs">
         <input v-model="browser" placeholder="Browser" />

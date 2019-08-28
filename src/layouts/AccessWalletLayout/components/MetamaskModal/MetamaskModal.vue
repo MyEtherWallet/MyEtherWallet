@@ -3,8 +3,8 @@
     ref="metamask"
     :title="$t('accessWallet.accessByMetaMask')"
     hide-footer
-    static="true"
-    lazy="true"
+    static
+    lazy
     class="bootstrap-modal nopadding modal-metamask"
     centered
   >

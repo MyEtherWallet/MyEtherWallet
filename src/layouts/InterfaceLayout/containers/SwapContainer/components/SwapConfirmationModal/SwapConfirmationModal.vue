@@ -6,8 +6,8 @@
       centered
       class="bootstrap-modal bootstrap-modal-wide padding-40-20"
       title="Confirmation"
-      static="true"
-      lazy="true"
+      static
+      lazy
     >
       <div class="time-remaining">
         <h1>{{ timeRemaining }}</h1>

@@ -14,8 +14,8 @@
       centered
       no-padding
       class="bootstrap-modal-wide nopadding"
-      static="true"
-      lazy="true"
+      static
+      lazy
       @show="countUnread"
       @hide="hiddenModal"
     >

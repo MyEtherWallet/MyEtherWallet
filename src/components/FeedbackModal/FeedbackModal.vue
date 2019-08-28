@@ -6,8 +6,8 @@
       centered
       class="bootstrap-modal"
       title="Feedback / Custommer Support"
-      static="true"
-      lazy="true"
+      static
+      lazy
     >
       <div class="modal-content">
         If you want to send us your feedback, please use

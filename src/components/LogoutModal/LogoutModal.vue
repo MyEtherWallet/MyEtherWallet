@@ -6,8 +6,8 @@
       hide-header
       centered
       class="bootstrap-modal nopadding"
-      static="true"
-      lazy="true"
+      static
+      lazy
     >
       <div class="modal-contents">
         <h2>Are you sure you want to logout of your wallet?</h2>

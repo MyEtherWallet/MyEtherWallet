@@ -5,8 +5,8 @@
     hide-footer
     class="bootstrap-modal nopadding modal-software"
     centered
-    static="true"
-    lazy="true"
+    static
+    lazy
     @shown="focusInput"
     @hide="privateKey = ''"
   >
