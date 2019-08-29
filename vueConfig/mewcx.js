@@ -23,6 +23,11 @@ const webpackConfig = {
             const version = JSON.parse(env_vars.VERSION);
             const json = JSON.parse(content);
             const hasExtra = version.indexOf('-');
+            const hasJSFile = [
+              'background',
+              'content_scripts',
+              'web_accessible_resources'
+            ];
             if (hasExtra !== -1) {
               const newVersion = version.substring(0, hasExtra);
               json.version = newVersion;
@@ -30,23 +35,31 @@ const webpackConfig = {
               json.version = version;
             }
             json.browser_action.default_popup = `index.html#/popup`;
-            json.background.scripts = json.background.scripts.map(item => {
-              return `${
-                process.env.NODE_ENV === 'production'
-                  ? './js' + item
-                  : './' + item
-              }`;
-            });
-
-            json.content_scripts[0].js = json.content_scripts[0].js.map(
-              item => {
-                return `${
-                  process.env.NODE_ENV === 'production'
-                    ? './js' + item
-                    : './' + item
-                }`;
+            Object.keys(json).forEach(key => {
+              if (hasJSFile.includes(key)) {
+                if (Array.isArray(json[key])) {
+                  if (typeof json[key][0] === 'object') {
+                    json[key][0].js = json[key][0].js.map(item => {
+                      return `${
+                        process.env.NODE_ENV === 'production'
+                          ? './js/' + item
+                          : './' + item
+                      }`;
+                    });
+                  } else {
+                    json[key][0] =
+                      process.env.NODE_ENV === 'production'
+                        ? './js/' + json[key][0]
+                        : './' + json[key][0];
+                  }
+                } else {
+                  json[key].scripts[0] =
+                    process.env.NODE_ENV === 'production'
+                      ? './js/' + json[key].scripts[0]
+                      : './' + json[key].scripts[0];
+                }
               }
-            );
+            });
 
             return JSON.stringify(json, null, 2);
           }

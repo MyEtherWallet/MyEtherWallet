@@ -5,7 +5,7 @@ REPO="$3"
 CHANGELOG=`awk -v version="$RELEASE" '/### Release / {printit = $3 == version}; printit;' 'CHANGELOG.md'`
 mkdir release
 cd dist; zip -r ../release/MyEtherWallet-$RELEASE.zip *; sha256sum * > ../release/MyEtherWallet-$RELEASE-CHECKSUM-SHA256; cd ..
-cd chrome-extension; zip -r ../release/MyEtherWalletExtension-$RELEASE.zip *; sha256sum * >  ../release/MyEtherWalletExtension-$RELEASE-CHECKSUM-SHA256; cd ..
+cd chrome-extension; zip -r ../release/MyEtherWallet-CX-$RELEASE.zip *; sha256sum * >  ../release/MyEtherWallet-CX-$RELEASE-CHECKSUM-SHA256; cd ..
 
 if [ -n "$4" ]; then
     for f in release/*; do
