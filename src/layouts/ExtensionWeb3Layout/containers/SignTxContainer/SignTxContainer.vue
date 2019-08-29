@@ -224,11 +224,13 @@ export default {
         hash
       ) {
         if (e) {
+          console.log(e);
           window.chrome.tabs.query(
             { url: `*://*.${Misc.getService(_self.linkQuery.url)}/*` },
             function(tab) {
               const obj = {
-                event: REJECT_MEW_TX_SIGN
+                event: REJECT_MEW_TX_SIGN,
+                payload: e.message
               };
               window.chrome.tabs.sendMessage(tab[0].id, obj);
               window.close();
