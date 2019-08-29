@@ -154,7 +154,7 @@
       "web3-core-method",
       "web3-utils",
       "multicoin-address-validator",
-      "vue-qrcode",
+      "@xkeshi/vue-qrcode",
       "web3-core-requestmanager"
     ]
   }
