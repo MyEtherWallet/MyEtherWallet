@@ -134,7 +134,7 @@
         </label>
         <p class="dapp-text-info mb-3">
           Dimensions must be 1200px width by 630px height; JPEG or PDF file
-          only; Image size no large than 5M
+          only; Image size no large than 5MB
         </p>
         <div class="dapp-input">
           <label for="customUpload" class="upload-btn-wrapper">
@@ -153,7 +153,7 @@
         </div>
         <p v-if="mockFileError" class="error">
           The image dimensions are too big. Dimensions must be 1200px width by
-          630px height.
+          630px height and less than 5MB.
         </p>
       </b-form-group>
       <b-form-group>
@@ -451,45 +451,76 @@ export default {
           : '10.5px';
     },
     onMockFileChange(e) {
-      const file = e.target.files[0];
+      const file = e.target.files[0],
+        img = new Image(),
+        url = URL.createObjectURL(file),
+        vm = this;
 
-      if (file.size > 1200 * 630) {
-        this.mockFileError = true;
-        this.updateMockFlow(true);
+      if (file.type === 'application/pdf') {
+        file.size > 5000000
+          ? this.onMockFileChangeError()
+          : this.onMockFileChangeSuccess(file, url);
       } else {
-        this.mockFileError = false;
-        this.form.mockFlowFile = file;
-        this.form.mockFlowUrl = URL.createObjectURL(file);
-        this.updateMockFlow(false);
+        img.src = url;
+
+        img.onload = function() {
+          img.width > 1200 || img.height > 630
+            ? vm.onMockFileChangeError()
+            : vm.onMockFileChangeSuccess(file, url);
+        };
       }
+    },
+    onMockFileChangeSuccess(file, url) {
+      this.mockFileError = false;
+      this.form.mockFlowFile = file;
+      this.form.mockFlowUrl = url;
+      this.updateMockFlow(false);
+    },
+    onMockFileChangeError() {
+      this.mockFileError = true;
+      this.updateMockFlow(true);
     },
     onDappIconChange(e) {
       const file =
-        e.type === 'drop' ? e.dataTransfer.files[0] : e.target.files[0];
+          e.type === 'drop' ? e.dataTransfer.files[0] : e.target.files[0],
+        img = new Image(),
+        url = URL.createObjectURL(file),
+        vm = this;
 
-      if (file.size > 192 * 192) {
-        this.dappIconError = true;
-        this.updateDappIcon(true);
-      } else {
-        this.dappIconError = false;
-        this.form.dappIconFile = file;
-        this.form.dappIconUrl = URL.createObjectURL(file);
-        this.updateDappIcon(false);
-      }
+      img.src = url;
+
+      img.onload = function() {
+        if (img.height > 192 || img.width > 192) {
+          vm.dappIconError = true;
+          vm.updateDappIcon(true);
+        } else {
+          vm.dappIconError = false;
+          vm.form.dappIconFile = file;
+          vm.form.dappIconUrl = url;
+          vm.updateDappIcon(false);
+        }
+      };
     },
     onBannerChange(e) {
       const file =
-        e.type === 'drop' ? e.dataTransfer.files[0] : e.target.files[0];
+          e.type === 'drop' ? e.dataTransfer.files[0] : e.target.files[0],
+        img = new Image(),
+        url = URL.createObjectURL(file),
+        vm = this;
 
-      if (file.size < 1200 * 206) {
-        this.bannerError = true;
-        this.updateBanner(true);
-      } else {
-        this.bannerError = false;
-        this.form.bannerFile = file;
-        this.form.bannerUrl = URL.createObjectURL(file);
-        this.updateBanner(false);
-      }
+      img.src = url;
+
+      img.onload = function() {
+        if (img.width < 1200 || img.height < 206) {
+          vm.bannerError = true;
+          vm.updateBanner(true);
+        } else {
+          vm.bannerError = false;
+          vm.form.bannerFile = file;
+          vm.form.bannerUrl = url;
+          vm.updateBanner(false);
+        }
+      };
     }
   }
 };
