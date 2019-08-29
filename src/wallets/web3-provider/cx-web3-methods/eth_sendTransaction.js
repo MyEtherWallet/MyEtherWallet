@@ -2,6 +2,8 @@ import eventHandler from './eventHandler';
 import { toPayload } from '../jsonrpc';
 import { getSanitizedTx } from '../methods/utils';
 import EthCalls from '../web3Calls';
+import store from '@/store';
+import unit from 'ethjs-unit';
 import {
   WEB3_SEND_TX,
   WEB3_RECEIVE_TX_HASH,
@@ -13,6 +15,7 @@ export default async ({ payload, requestManager }, res, next) => {
   const ethCalls = new EthCalls(requestManager);
   const id = window.extensionID;
   const tx = Object.assign({}, payload.params[0]);
+  tx.gasPrice = unit.toWei(store.state.gasPrice, 'gwei').toString();
   try {
     tx.nonce = !tx.nonce
       ? await ethCalls.getTransactionCount(tx.from)
