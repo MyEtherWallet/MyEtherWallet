@@ -170,7 +170,7 @@ export default {
   computed: {
     ...mapState(['account', 'network', 'web3']),
     hasNickname() {
-      return typeof this.account.nickname !== 'undefined';
+      return this.account.nickname !== '';
     }
   },
   mounted() {

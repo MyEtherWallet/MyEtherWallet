@@ -1,3 +1,4 @@
+// eslint-disable-next-line
 import { MewCxEthereum as ethereumProvider } from '@/wallets/web3-provider/providers/mew-cx-web3';
 import { WEB3_DETECTED } from './cxEvents';
 const ethereum = new ethereumProvider().setMaxListeners(0); // setting to 0 to remove listener warning

@@ -63,7 +63,7 @@
             <div class="icon-name-container">
               <img :src="token.icon" />
               <p>
-                {{ token.symbol }} <br />
+                {{ token.name }} <br />
                 <span>{{ token.balance }}</span>
               </p>
             </div>
@@ -155,7 +155,7 @@
               class="token-item"
             >
               <p>
-                {{ token.symbol }}
+                {{ token.name }}
               </p>
               <p
                 :class="[token.balance !== 'Load' ? '' : 'manual-load']"
@@ -175,7 +175,6 @@
 <script>
 import Blockie from '@/components/Blockie';
 import TokenBalance from '@myetherwallet/eth-token-balance';
-import { ETH } from '@/networks/types';
 import sortByBalance from '@/helpers/sortByBalance.js';
 import BigNumber from 'bignumber.js';
 import EditWalletModal from '../EditWalletModal';
@@ -327,7 +326,7 @@ export default {
         this.localVersion = tokens.sort(sortByBalance);
         this.tokens = tokens.sort(sortByBalance);
       } catch (e) {
-        tokens = ETH.tokens.map(token => {
+        tokens = this.network.type.tokens.map(token => {
           token.balance = 'Load';
           return token;
         });
