@@ -148,13 +148,13 @@
       align-items: center;
       background-color: $light-blue-1;
       border-radius: 5px;
-      color: $white;
       display: flex;
       justify-content: space-between;
       margin-bottom: 10px;
       padding: 25px 15px;
 
       p {
+        color: $white !important;
         margin: 0;
       }
     }

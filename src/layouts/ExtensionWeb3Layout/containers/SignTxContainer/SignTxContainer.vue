@@ -6,24 +6,22 @@
     <div class="sign-transaction-addresses">
       <amount-info-component
         :direction="'from'"
-        :address="linkQuery.from"
-        :amount="hexToNumString(linkQuery.value, 'ether')"
+        :address="txParams.from"
+        :amount="hexToNumString(txParams.value, 'ether')"
       />
       <img src="@/assets/images/icons/arrow-down-blue.svg" />
       <amount-info-component
         :direction="'to'"
-        :address="linkQuery.to"
+        :address="txParams.to"
         :amount="
-          linkQuery.tokenSymbol !== ''
-            ? hexToNumString(linkQuery.tokenTransferVal)
-            : hexToNumString(linkQuery.value, 'ether')
+          txParams.tokenSymbol
+            ? hexToNumString(txParams.tokenTransferVal)
+            : hexToNumString(txParams.value, 'ether')
         "
         :currency="
-          linkQuery.tokenSymbol !== ''
-            ? linkQuery.tokenSymbol
-            : network.type.name
+          txParams.tokenSymbol ? txParams.tokenSymbol : network.type.name
         "
-        :contract-address="linkQuery.tokenTransferTo"
+        :contract-address="txParams.tokenTransferTo"
       />
     </div>
     <div :class="[showDetails ? 'add-margin' : '', 'details-container']">
@@ -53,24 +51,24 @@
           </span>
         </div>
         <div class="detail-item">
-          <span class="title"> Gas Limit </span>
+          <span class="title"> Gas </span>
           <span class="content">
-            {{ hexToNumString(linkQuery.gasLimit) }}
+            {{ hexToNumString(txParams.gas) }}
           </span>
         </div>
         <div class="detail-item">
           <span class="title"> Gas Price </span>
           <span class="content">
-            {{ hexToNumString(linkQuery.gasPrice, 'gwei') }}
+            {{ hexToNumString(txParams.gasPrice, 'gwei') }}
           </span>
         </div>
         <div class="detail-item">
           <span class="title"> Nonce </span>
-          <span class="content"> {{ hexToNumString(linkQuery.nonce) }} </span>
+          <span class="content"> {{ hexToNumString(txParams.nonce) }} </span>
         </div>
         <div class="detail-item">
           <span class="title"> Data </span>
-          <span class="content"> {{ linkQuery.data }} </span>
+          <span class="content"> {{ txParams.data }} </span>
         </div>
       </div>
     </div>
@@ -129,7 +127,7 @@ export default {
       const {
         nonce,
         gasPrice,
-        gasLimit,
+        gas,
         to,
         value,
         data,
@@ -138,10 +136,10 @@ export default {
         tokenSymbol,
         tokenTransferTo
       } = this.linkQuery;
-      return {
+      const obj = {
         nonce: nonce,
         gasPrice: gasPrice,
-        gasLimit: gasLimit,
+        gas: gas,
         to: to,
         value: value,
         data: data,
@@ -150,6 +148,8 @@ export default {
         tokenSymbol: tokenSymbol,
         tokenTransferTo: tokenTransferTo
       };
+
+      return obj;
     }
   },
   mounted() {
@@ -224,7 +224,6 @@ export default {
         hash
       ) {
         if (e) {
-          console.log(e);
           window.chrome.tabs.query(
             { url: `*://*.${Misc.getService(_self.linkQuery.url)}/*` },
             function(tab) {

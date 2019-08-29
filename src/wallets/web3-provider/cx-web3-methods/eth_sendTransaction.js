@@ -18,6 +18,7 @@ export default async ({ payload, requestManager }, res, next) => {
       ? await ethCalls.getTransactionCount(tx.from)
       : tx.nonce;
     tx.gas = !tx.gas ? await ethCalls.estimateGas(tx) : tx.gas;
+    // tx.gasLimit = tx.gasLimit || tx.gas;
   } catch (e) {
     res(e);
     return;
@@ -36,9 +37,11 @@ export default async ({ payload, requestManager }, res, next) => {
 
       eventHandler(eventName, obj, resolveName, rejectName)
         .then(response => {
+          console.log(response);
           res(null, toPayload(payload.id, response.payload));
         })
         .catch(e => {
+          console.log(e);
           res(e);
         });
     })
