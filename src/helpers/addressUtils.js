@@ -7,7 +7,6 @@ import {
 import { RSK, RSKTEST } from '@/networks/types';
 import web3 from 'web3';
 
-const chainID = store.state.network ? store.state.network.type.chainID : 1;
 const isAddress = address => {
   if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
     return false;
@@ -17,11 +16,13 @@ const isAddress = address => {
   ) {
     return true;
   }
+  const chainID = store.state.network ? store.state.network.type.chainID : 1;
   if (chainID === RSK.chainID || chainID === RSKTEST.chainID)
     return isValidRSKChecksumAddress(address, chainID);
   return web3.utils.checkAddressChecksum(address);
 };
 const toChecksumAddress = address => {
+  const chainID = store.state.network ? store.state.network.type.chainID : 1;
   if (chainID === RSK.chainID || chainID === RSKTEST.chainID)
     return toRSKChecksumAddress(address, chainID);
   return web3.utils.toChecksumAddress(address);
