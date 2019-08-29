@@ -58,6 +58,7 @@ import {
   ecrecover,
   pubToAddress
 } from 'ethereumjs-util';
+
 export default {
   props: {
     signature: {

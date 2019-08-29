@@ -97,6 +97,7 @@ export default {
   methods: {
     async updateValue(value) {
       const score = await zxcvbn(value).score;
+
       this.$emit('input', value);
       switch (score) {
         case 1:
