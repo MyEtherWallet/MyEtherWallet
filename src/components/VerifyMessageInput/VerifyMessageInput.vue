@@ -1,52 +1,51 @@
 <template>
   <div class="verify-content-container">
-    <validation-provider name="signature" rules="required">
-      <div class="send-form">
-        <div class="title-container">
-          <div class="title">
-            <h4>Signature:</h4>
-            <div class="copy-buttons">
-              <span @click="deleteInput">{{ $t('common.clear') }}</span>
-              <span @click="copyToClipboard">{{ $t('common.copy') }}</span>
-            </div>
+    <div class="send-form">
+      <div class="title-container">
+        <div class="title">
+          <h4>Signature:</h4>
+          <div class="copy-buttons">
+            <span @click="deleteInput">{{ $t('common.clear') }}</span>
+            <span @click="copyToClipboard">{{ $t('common.copy') }}</span>
           </div>
         </div>
-        <div class="the-form signature">
-          <textarea
-            ref="signature"
-            v-model="message"
-            name="signature"
-            class="custom-textarea-1"
-          />
-        </div>
-        <div>
-          <p
-            v-if="message !== '' && showMessage === true"
-            class="success-message"
-          >
-            {{ JSON.parse(message).address }}
-            {{ $t('interface.verifiedMessage') }}:
-            <br v-if="JSON.parse(message).msg.length > 20" />
-            <b>{{ JSON.parse(message).msg }}</b>
-          </p>
-          <p v-if="errors[0]">{{ errors[0] }}</p>
-        </div>
       </div>
+      <div class="the-form signature">
+        <textarea
+          v-validate="'required'"
+          ref="signature"
+          v-model="message"
+          name="signature"
+          class="custom-textarea-1"
+        />
+      </div>
+      <div>
+        <p
+          v-if="message !== '' && showMessage === true"
+          class="success-message"
+        >
+          {{ JSON.parse(message).address }}
+          {{ $t('interface.verifiedMessage') }}:
+          <br v-if="JSON.parse(message).msg.length > 20" />
+          <b>{{ JSON.parse(message).msg }}</b>
+        </p>
+        <p v-if="errors.has('signature')">{{ errors.first('signature') }}</p>
+      </div>
+    </div>
 
-      <div class="submit-button-container">
-        <div class="buttons">
-          <button
-            :class="[
-              errors[0] || message === '' ? 'disabled' : '',
-              'submit-button large-round-button-green-filled clickable'
-            ]"
-            @click="verifyMessage"
-          >
-            {{ $t('common.verifyMessage') }}
-          </button>
-        </div>
+    <div class="submit-button-container">
+      <div class="buttons">
+        <button
+          :class="[
+            errors.has('signature') || message === '' ? 'disabled' : '',
+            'submit-button large-round-button-green-filled clickable'
+          ]"
+          @click="verifyMessage"
+        >
+          {{ $t('common.verifyMessage') }}
+        </button>
       </div>
-    </validation-provider>
+    </div>
   </div>
 </template>
 
@@ -59,7 +58,6 @@ import {
   ecrecover,
   pubToAddress
 } from 'ethereumjs-util';
-
 export default {
   props: {
     signature: {

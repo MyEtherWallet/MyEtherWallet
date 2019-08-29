@@ -5,9 +5,7 @@ const SAFE_TIME = 1000 * 1 * 60 * 60 * 24 * 7; //7days
 // 'web3', 'web3-core-helpers', 'web3-core-method', 'web3-utils' 1.0.0-beta.41 introduced breaking changes [2-4-19]
 //@xkeshi/vue-qrcode no longer maintained, forked out to mew
 //multicoin-address-validator not enough downloads
-// Bootstrap vue is breaking current styles..
-// vue tel input missing internal package
-// vue router same link broken
+// waiting for vee-validate 3.0 to be more stable (https://github.com/baianat/vee-validate/issues/2248)
 const EXCEPTIONS = [
   '@myetherwallet/mewconnect-web-client',
   'canvas',
@@ -15,7 +13,8 @@ const EXCEPTIONS = [
   'babel-jest',
   'multicoin-address-validator',
   'web3-core-requestmanager',
-  '@vue/eslint-config-prettier'
+  '@vue/eslint-config-prettier',
+  'vee-validate' 
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

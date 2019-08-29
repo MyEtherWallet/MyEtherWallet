@@ -44,7 +44,7 @@ import ConcatAddr from '@/filters/ConcatAddr';
 // etc
 import languages from '@/translations';
 import VueMq from 'vue-mq';
-import { ValidationProvider } from 'vee-validate/dist/vee-validate.full';
+import VeeValidate from 'vee-validate';
 import './registerServiceWorker';
 import { Promise } from 'q';
 import VueI18n from 'vue-i18n';
@@ -62,7 +62,6 @@ Vue.prototype.$eventHub = new Vue();
 // Regular Components
 Vue.component(VueQrcode.name, VueQrcode);
 Vue.component('popover', PopOver);
-Vue.component('ValidationProvider', ValidationProvider);
 
 //Router
 Vue.use(Router);
@@ -81,6 +80,7 @@ Vue.component('standard-input', StandardInput);
 Vue.config.productionTip = false;
 
 Vue.use(Vuex);
+Vue.use(VeeValidate);
 
 /* Init Bootstrap */
 Vue.use(BootstrapVue);
