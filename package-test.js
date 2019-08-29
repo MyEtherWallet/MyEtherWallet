@@ -14,6 +14,7 @@ const EXCEPTIONS = [
   'multicoin-address-validator',
   'web3-core-requestmanager',
   '@vue/eslint-config-prettier',
+  '@xkeshi/vue-qrcode',
   'vee-validate' 
 ];
 const CUSTOM_DIST = {
