@@ -24,8 +24,12 @@
           <div class="mt-5">
             <p class="summary-title mb-3">Mock user flow</p>
             <p class="summary-content">
-              <img :src="form.mockFlowUrl" class="summary-img" />
-              {{ cleanUrl(form.mockFlowUrl) }}
+              <img
+                v-if="form.mockFlowFile.type !== 'application/pdf'"
+                :src="form.mockFlowUrl"
+                class="summary-img"
+              />
+              <span class="align-middle"> {{ form.mockFlowFile.name }} </span>
             </p>
           </div>
           <div class="mt-5">
@@ -50,14 +54,14 @@
             <p class="summary-title mb-3">DApp icon</p>
             <p class="summary-content">
               <img :src="form.dappIconUrl" class="summary-img" />
-              {{ cleanUrl(form.dappIconUrl) }}
+              <span class="align-middle"> {{ form.dappIconFile.name }} </span>
             </p>
           </div>
           <div class="mt-5">
             <p class="summary-title mb-3">Banner image</p>
             <p class="summary-content">
               <img :src="form.bannerUrl" class="summary-img" />
-              {{ cleanUrl(form.bannerUrl) }}
+              <span class="align-middle"> {{ form.bannerFile.name }} </span>
             </p>
           </div>
           <div class="mt-5">
@@ -139,11 +143,6 @@ export default {
       default: function() {
         return [];
       }
-    }
-  },
-  methods: {
-    cleanUrl(url) {
-      return url.slice(5);
     }
   }
 };
