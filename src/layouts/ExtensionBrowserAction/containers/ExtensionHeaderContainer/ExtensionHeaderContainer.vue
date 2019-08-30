@@ -2,7 +2,10 @@
   <div>
     <b-navbar class="extension-header-container">
       <b-navbar-brand to="/" class="brand-container">
-        <img src="~@/assets/images/short-hand-logo.png" height="40" />
+        <img
+          :src="require(`@/assets/images/short-hand-logo-${buildType}.png`)"
+          height="40"
+        />
         <div class="brand-border" />
         <span> Chrome Extension </span>
       </b-navbar-brand>
@@ -28,6 +31,11 @@
 <script>
 import { mapState } from 'vuex';
 export default {
+  data() {
+    return {
+      buildType: BUILD_TYPE
+    };
+  },
   computed: {
     ...mapState(['account'])
   },

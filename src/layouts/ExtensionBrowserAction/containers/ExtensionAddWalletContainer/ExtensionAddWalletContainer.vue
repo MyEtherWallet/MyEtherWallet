@@ -182,7 +182,7 @@ export default {
     this.$refs.generateNewWallet.$refs.generateNewWallet.$on('hidden', () => {
       this.password = '';
       this.nickname = '';
-    })
+    });
   },
   methods: {
     openAddressOption() {

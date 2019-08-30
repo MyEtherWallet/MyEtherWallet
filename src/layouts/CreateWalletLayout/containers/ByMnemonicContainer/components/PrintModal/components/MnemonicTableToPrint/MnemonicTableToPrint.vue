@@ -2,7 +2,10 @@
   <div class="mnemonic-table-container">
     <div class="header">
       <div class="block-title">
-        <img src="~@/assets/images/short-hand-logo.png" height="30px" />
+        <img
+          :src="require(`@/assets/images/short-hand-logo-${buildType}.png`)"
+          height="30px"
+        />
         <span>Mnemonic Phrase</span>
       </div>
       <div class="support">
@@ -50,6 +53,11 @@ export default {
       type: Boolean,
       default: false
     }
+  },
+  data() {
+    return {
+      buildType: BUILD_TYPE
+    };
   }
 };
 </script>

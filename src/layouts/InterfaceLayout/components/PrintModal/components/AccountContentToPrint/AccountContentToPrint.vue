@@ -123,7 +123,10 @@
         </p>
       </div>
       <div class="logo-container">
-        <img src="~@/assets/images/short-hand-logo.png" height="25px" />
+        <img
+          :src="require(`@/assets/images/short-hand-logo-${buildType}.png`)"
+          height="25px"
+        />
         <p class="border-line"></p>
         <p>{{ paper }}</p>
       </div>
@@ -160,7 +163,8 @@ export default {
         text3: 'Share Your Private Key With Anyone!',
         red1: 'SAFE',
         red2: 'DO NOT'
-      }
+      },
+      buildType: BUILD_TYPE
     };
   },
   computed: {
