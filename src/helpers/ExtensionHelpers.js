@@ -19,7 +19,10 @@ const addWalletToStore = (address, encStr, nickname, type, callback) => {
   getAccounts(item => {
     const found = Object.keys(item).find(key => {
       if (isAddress(key)) {
-        return toChecksumAddress(key) === checksummedAddr;
+        return (
+          toChecksumAddress(key).toLocaleLowerCase() ===
+          checksummedAddr.toLocaleLowerCase()
+        );
       }
     });
     if (found) {

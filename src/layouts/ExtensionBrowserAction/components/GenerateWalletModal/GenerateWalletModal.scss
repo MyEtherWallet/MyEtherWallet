@@ -35,6 +35,7 @@
 
 .disabled {
   background-color: $dark-grey-11 !important;
+  border: 1px solid $dark-grey-11 !important;
   pointer-events: none !important;
 }
 
