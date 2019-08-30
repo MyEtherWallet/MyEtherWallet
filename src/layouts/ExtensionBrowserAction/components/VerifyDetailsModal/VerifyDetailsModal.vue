@@ -53,6 +53,7 @@ import {
   PRIV_KEY as privateKeyType
 } from '@/wallets/bip44/walletTypes';
 import { isAddress } from '@/helpers/addressUtils';
+import { Toast } from '@/helpers';
 
 const ACTUAL_TITLES = {};
 ACTUAL_TITLES[keyStoreType] = 'Keystore File (UTC/JSON)';
@@ -115,10 +116,16 @@ export default {
     locNickname(newVal) {
       this.$emit('nickname', newVal);
     },
-    async web3() {
-      if (isAddress(this.address)) {
-        const balance = await this.web3.eth.getBalance(this.address);
-        this.balance = balance;
+    wallet(newVal) {
+      if (Object.keys(newVal).length > 0) {
+        this.web3.eth
+          .getBalance(newVal.getAddressString())
+          .then(res => {
+            this.balance = this.web3.utils.fromWei(res, 'ether');
+          })
+          .catch(e => {
+            Toast.responseHandler(e, Toast.ERROR);
+          });
       }
     }
   }

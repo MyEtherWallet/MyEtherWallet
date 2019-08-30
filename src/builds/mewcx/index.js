@@ -1,10 +1,10 @@
 import app from './app';
 import ExtensionPopup from '@/layouts/ExtensionPopup';
-import ExtensionWeb3Layout from '@/layouts/ExtensionWeb3Layout';
-import Web3DetectedContainer from '@/layouts/ExtensionWeb3Layout/containers/Web3DetectedContainer';
-import AccountAccessContainer from '@/layouts/ExtensionWeb3Layout/containers/AccountAccessContainer';
-import SignTxContainer from '@/layouts/ExtensionWeb3Layout/containers/SignTxContainer';
-import SignMsgContainer from '@/layouts/ExtensionWeb3Layout/containers/SignMsgContainer';
+import ExtensionWeb3Popup from '@/layouts/ExtensionWeb3Popup';
+import Web3DetectedContainer from '@/layouts/ExtensionWeb3Popup/containers/Web3DetectedContainer';
+import AccountAccessContainer from '@/layouts/ExtensionWeb3Popup/containers/AccountAccessContainer';
+import SignTxContainer from '@/layouts/ExtensionWeb3Popup/containers/SignTxContainer';
+import SignMsgContainer from '@/layouts/ExtensionWeb3Popup/containers/SignMsgContainer';
 import ExtensionBrowserAction from '@/layouts/ExtensionBrowserAction';
 import ExtensionAddWalletContainer from '@/layouts/ExtensionBrowserAction/containers/ExtensionAddWalletContainer';
 import ExtensionWalletContainer from '@/layouts/ExtensionBrowserAction/containers/ExtensionWalletContainer';
@@ -13,7 +13,7 @@ const cxRoutes = [
   {
     path: '/extension-popups',
     name: 'Web3 Detected',
-    component: ExtensionWeb3Layout,
+    component: ExtensionWeb3Popup,
     meta: { requiresAuth: false },
     children: [
       {

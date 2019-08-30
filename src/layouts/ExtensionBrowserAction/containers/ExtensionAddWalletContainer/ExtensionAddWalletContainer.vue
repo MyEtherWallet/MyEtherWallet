@@ -40,6 +40,7 @@
       ref="networkAddress"
       :generate-from-mnemonic-priv="generateFromMnemonicPriv"
       :wallet-instance="wallet"
+      :loading="loading"
       @accountPath="updateSelectedPath"
       @password="updatePassword"
     />
@@ -84,6 +85,7 @@ import GenerateWalletModal from '../../components/GenerateWalletModal';
 import ImportMnemonicModal from '../../components/ImportMnemonicModal';
 import NetworkAndAddressModal from '../../components/NetworkAndAddressModal';
 
+import { isAddress } from '@/helpers/addressUtils';
 export default {
   components: {
     'access-wallet-button': AccessWalletButton,
@@ -104,6 +106,7 @@ export default {
     return {
       options: [
         {
+          key: 'GEN',
           icon: generateImgHov,
           title: 'Generate a New Wallet',
           warning: '',
@@ -112,25 +115,28 @@ export default {
           }
         },
         {
+          key: mnemonicType,
           icon: byMnemImgHov,
           title: 'Mnemonic Phrase',
-          warning: 'Not Recommended',
+          warning: '',
           func: () => {
             this.toggleImportMnemonicPhrase(true);
           }
         },
         {
+          key: privateKeyType,
           icon: privateKeyImgHov,
           title: `Private \n Key`,
-          warning: 'Not Recommended',
+          warning: '',
           func: () => {
             this.toggleImportPrivateKey(true);
           }
         },
         {
+          key: keyStoreType,
           icon: byJsonImgHov,
           title: 'Keystore File (UTC/JSON)',
-          warning: 'Not Recommended',
+          warning: '',
           func: () => {
             this.toggleImportKeystoreFile(true);
           }
@@ -147,26 +153,44 @@ export default {
       privateKey: '',
       mnemonicPhrase: '',
       selectedAccountPath: '',
-      selectedAddress: ''
+      selectedAddress: '',
+      accCount: 0
     };
   },
   computed: {
     ...mapState(['path', 'linkQuery'])
   },
+  mounted() {
+    this.$refs.mnemonicPhrase.$refs.mnemonicPhrase.$on('hidden', () => {
+      this.mnemonicPhrase = new Array(this.mnemonicSize).fill('');
+    });
+    this.$refs.networkAddress.$refs.networkAddress.$on('hidden', () => {
+      if (this.selectedAccountPath === '' || this.selectedAddress === '') {
+        this.toggleImportMnemonicPhrase(true);
+      }
+      this.password = '';
+      this.selectedAddress = '';
+    });
+
+    this.$refs.importPrivateKey.$refs.importPrivateKey.$on('hidden', () => {
+      this.password = '';
+      this.privateKey = '';
+    });
+  },
   methods: {
     openAddressOption() {
-      const mnemonicPhrase = this.mnemonicPhrase;
       this.loading = true;
+      const mnemonicPhrase = this.mnemonicPhrase;
       MnemonicWallet(mnemonicPhrase, '')
         .then(wallet => {
-          this.wallet = wallet;
           this.loading = false;
+          this.wallet = wallet;
           this.toggleImportMnemonicPhrase(false);
           this.toggleNetworkAddressModal(true);
         })
         .catch(e => {
-          Toast.responseHandler(e, Toast.ERROR);
           this.loading = false;
+          Toast.responseHandler(e, Toast.ERROR);
           this.wallet = {};
           this.toggleImportMnemonicPhrase(false);
         });
@@ -177,9 +201,9 @@ export default {
         this.mnemonicPhrase,
         this.selectedAccountPath
       );
-      this.generateWalletFromPriv(privateKey);
+      this.generateWalletFromPriv(privateKey, 'mnem');
     },
-    generateWalletFromPriv(priv) {
+    generateWalletFromPriv(priv, type) {
       this.loading = true;
       const privKey = priv ? priv : this.privateKey;
       const worker = new walletWorker();
@@ -198,11 +222,14 @@ export default {
         this.wallet = new WalletInterface(
           Buffer.from(_wallet._privKey),
           false,
-          priv ? mnemonicType : privateKeyType
+          type !== 'priv' ? mnemonicType : privateKeyType
         );
         this.toggleImportPrivateKey(this.loading);
         this.toggleNetworkAddressModal(false);
-        this.toggleVerifyDetails(true, privateKeyType);
+        this.toggleVerifyDetails(
+          true,
+          type !== 'priv' ? mnemonicType : privateKeyType
+        );
       };
       worker.onerror = function(e) {
         Toast.responseHandler(e, false);
@@ -253,6 +280,13 @@ export default {
       const _self = this;
       const { connectionRequest } = _self.linkQuery;
       const account = _self.wallet.getAddressString();
+      ExtensionHelpers.getAccounts(store => {
+        _self.accCount = Object.keys(store).filter(item => {
+          return isAddress(item);
+        }).length;
+      });
+      const nickname =
+        _self.nickname === '' ? `Wallet ${this.accCount}` : _self.nickname;
       // eslint-disable-next-line
       if (!!connectionRequest) {
         const service = Misc.getService(connectionRequest);
@@ -261,7 +295,7 @@ export default {
         ExtensionHelpers.addWalletToStore(
           account,
           JSON.stringify(_self.file),
-          _self.nickname,
+          nickname,
           type,
           _self.storeWalletCb
         );
@@ -280,7 +314,7 @@ export default {
         ExtensionHelpers.addWalletToStore(
           account,
           JSON.stringify(_self.file),
-          _self.nickname,
+          nickname,
           type,
           _self.storeWalletCb
         );
@@ -292,7 +326,7 @@ export default {
       } else if (this.wallet.identifier === privateKeyType) {
         this.toggleImportPrivateKey(true);
       } else if (this.wallet.identifier === mnemonicType) {
-        this.toggleNetworkAddressModal(true);
+        this.toggleImportMnemonicPhrase(true);
       } else {
         this.toggleGenerateWallet(true);
       }

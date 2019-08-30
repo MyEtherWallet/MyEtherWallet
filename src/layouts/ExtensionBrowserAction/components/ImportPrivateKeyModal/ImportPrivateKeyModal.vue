@@ -39,12 +39,13 @@
             <button
               :class="[
                 validInputs ? '' : 'disabled',
+                !loading ? '' : 'disabled',
                 'large-round-button-green-filled add-wallet-button'
               ]"
               type="submit"
               @click.prevent="
                 () => {
-                  generateWallet(locPrivKey);
+                  generateWallet(locPrivKey, 'priv');
                 }
               "
             >
