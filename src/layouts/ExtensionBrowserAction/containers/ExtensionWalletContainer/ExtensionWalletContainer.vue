@@ -45,7 +45,7 @@
         <div v-show="myWallets.length === 0 && !loading" class="wallets-info">
           <h2>No Wallet found...</h2>
         </div>
-        <div v-show="loading && file === ''" class="wallets-info">
+        <div v-show="loading && myWallets.length === 0" class="wallets-info">
           <h2>Loading Wallets...</h2>
         </div>
       </div>
@@ -74,7 +74,7 @@
         >
           <h2>No Wallet found...</h2>
         </div>
-        <div v-show="loading" class="wallets-info">
+        <div v-show="loading && myWallets.length === 0" class="wallets-info">
           <h2>Loading Wallets...</h2>
         </div>
       </div>
@@ -89,13 +89,13 @@ import WatchOnlyModal from '../../components/WatchOnlyModal';
 import WalletInfoComponent from '../../components/WalletInfoComponent';
 import PasswordOnlyModal from '../../components/PasswordOnlyModal';
 import { WATCH_ONLY } from '@/wallets/bip44/walletTypes';
-import { toChecksumAddress } from '@/helpers/addressUtils';
 import { Toast, ExtensionHelpers } from '@/helpers';
 import web3utils from 'web3-utils';
 import BigNumber from 'bignumber.js';
 import { WalletInterface } from '@/wallets';
 import walletWorker from 'worker-loader!@/workers/wallet.worker.js';
 import { mapState } from 'vuex';
+import { isAddress, toChecksumAddress } from '@/helpers/addressUtils';
 
 export default {
   components: {
@@ -104,18 +104,18 @@ export default {
     'wallet-info-component': WalletInfoComponent,
     'password-only-modal': PasswordOnlyModal
   },
-  props: {
-    accounts: {
-      type: Array,
-      default: () => {
-        return [];
-      }
-    },
-    getAccounts: {
-      type: Function,
-      default: () => {}
-    }
-  },
+  // props: {
+  //   accounts: {
+  //     type: Array,
+  //     default: () => {
+  //       return [];
+  //     }
+  //   },
+  //   getAccounts: {
+  //     type: Function,
+  //     default: () => {}
+  //   }
+  // },
   data() {
     return {
       label: 'myWallets',
@@ -127,7 +127,8 @@ export default {
       file: '',
       path: '',
       password: '',
-      nickname: ''
+      nickname: '',
+      hasAccounts: ''
     };
   },
   computed: {
@@ -139,17 +140,40 @@ export default {
       );
     }
   },
-  watch: {
-    accounts() {
-      this.processAccounts();
-    }
+  created() {
+    window.chrome.storage.onChanged.addListener(this.getAccounts);
   },
   mounted() {
-    if (this.accounts.length === 0) {
-      this.getAccounts();
-    }
+    this.getAccounts();
+  },
+  destroyed() {
+    window.chrome.storage.onChanged.removeListener(this.getAccounts);
   },
   methods: {
+    getAccountsCb(res) {
+      const accounts = Object.keys(res)
+        .filter(item => {
+          if (isAddress(item)) {
+            return item;
+          }
+        })
+        .map(item => {
+          const newObj = Object.assign(
+            {},
+            { address: toChecksumAddress(item), wallet: res[item] }
+          );
+
+          return newObj;
+        });
+      if (accounts.length > 0) {
+        this.processAccounts(accounts);
+      } else {
+        this.$router.push('/access-my-wallet');
+      }
+    },
+    getAccounts() {
+      ExtensionHelpers.getAccounts(this.getAccountsCb);
+    },
     walletRequirePass(ethjson) {
       if (ethjson.encseed != null) return true;
       else if (ethjson.Crypto != null || ethjson.crypto != null) return true;
@@ -214,13 +238,13 @@ export default {
       this.path = path;
       this.$refs.passwordOnlyModal.$refs.passwordOnlyModal.show();
     },
-    async processAccounts() {
+    async processAccounts(accs) {
       this.totalBalance = 0;
       this.loading = true;
       let balance = new BigNumber(this.totalBalance);
       const watchOnlyAddresses = [];
       const myWallets = [];
-      for (const account of this.accounts) {
+      for (const account of accs) {
         if (account !== undefined) {
           const address = toChecksumAddress(account.address).toLowerCase();
           delete account['address'];
@@ -266,25 +290,17 @@ export default {
       this.loading = true;
       const newAcc = {};
       const addr = toChecksumAddress(address);
-      const foundAddr = this.accounts.find(item => {
-        return toChecksumAddress(item.address) === addr;
+      newAcc[addr] = JSON.stringify({
+        nick: name,
+        type: WATCH_ONLY
       });
-      if (foundAddr) {
-        this.loading = false;
-        Toast.responseHandler('Address already added!', Toast.ERROR);
-      } else {
-        newAcc[addr] = JSON.stringify({
-          nick: name,
-          type: WATCH_ONLY
-        });
-        ExtensionHelpers.addWalletToStore(
-          address,
-          null,
-          name,
-          WATCH_ONLY,
-          this.addWatchOnlyWalletCb
-        );
-      }
+      ExtensionHelpers.addWalletToStore(
+        address,
+        null,
+        name,
+        WATCH_ONLY,
+        this.addWatchOnlyWalletCb
+      );
     },
     openWatchOnlyModal() {
       this.$refs.watchOnlyModal.$refs.watchOnlyWallet.show();

@@ -52,7 +52,6 @@ import {
   MNEMONIC as mnemonicType,
   PRIV_KEY as privateKeyType
 } from '@/wallets/bip44/walletTypes';
-import { isAddress } from '@/helpers/addressUtils';
 import { Toast } from '@/helpers';
 
 const ACTUAL_TITLES = {};

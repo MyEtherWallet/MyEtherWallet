@@ -86,9 +86,18 @@
     .top-logo {
       line-height: 10px;
 
-      img {
+      .logo-large {
         height: 33px;
         transition: all 0.3s ease;
+      }
+
+      .logo-large-mewcx {
+        height: 55px;
+        transition: all 0.3s ease;
+      }
+
+      .logo-small-mewcx {
+        height: 33px;
       }
 
       .logo-small {

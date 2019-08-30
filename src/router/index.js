@@ -45,9 +45,9 @@ router.beforeResolve((to, from, next) => {
             }
           });
           if (hasStoredWallet.length > 0) {
-            next({ name: 'AccessWalletLayout' });
-          } else {
             next('/');
+          } else {
+            next({ name: 'AccessWalletLayout' });
           }
         });
       } else {

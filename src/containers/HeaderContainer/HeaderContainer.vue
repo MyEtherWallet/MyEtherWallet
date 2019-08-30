@@ -78,9 +78,17 @@
             >
               <div class="top-logo">
                 <img
-                  :class="!isPageOnTop && !isMobileMenuOpen ? 'logo-small' : ''"
-                  class="logo-large"
-                  src="~@/assets/images/short-hand-logo.png"
+                  :class="[
+                    !isPageOnTop && !isMobileMenuOpen
+                      ? `logo-small${
+                          buildType === 'web' ? '' : '-' + buildType
+                        }`
+                      : '',
+                    `logo-large${buildType === 'web' ? '' : '-' + buildType}`
+                  ]"
+                  :src="
+                    require(`@/assets/images/short-hand-logo-${buildType}.png`)
+                  "
                 />
               </div>
             </router-link>

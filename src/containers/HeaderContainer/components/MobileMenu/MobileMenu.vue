@@ -23,7 +23,10 @@
           :class="!isOnTop && !isMenuOpen ? 'small-menu' : ''"
           class="logo-image--container"
         >
-          <img class="logo" src="~@/assets/images/short-hand-logo.png" />
+          <img
+            :src="require(`@/assets/images/short-hand-logo-${buildType}.png`)"
+            class="logo"
+          />
         </div>
       </router-link>
       <div class="mobile-menu-button--container">
