@@ -1,5 +1,11 @@
 @import '~@/scss/GlobalVariables';
 
+.social-links-header-wrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
 .social-links-header {
   width: 90%;
   display: flex;

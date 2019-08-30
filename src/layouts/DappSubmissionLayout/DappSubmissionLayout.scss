@@ -6,6 +6,9 @@ body {
 .dapp-container-right {
   display: inline-block;
   vertical-align: top;
+  position: sticky;
+  position: -webkit-sticky;
+  top: 60px;
 }
 
 .dapp-container {

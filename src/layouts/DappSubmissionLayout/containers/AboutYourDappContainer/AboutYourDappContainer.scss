@@ -13,8 +13,19 @@
   }
 }
 
+.uploaded-required-icon {
+  margin-bottom: 45px;
+}
+
+.image-wrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
 .dapp-icon-label {
-  min-width: 76px;
+  font-size: 16px;
+  min-width: 86px;
 }
 
 .image-label {

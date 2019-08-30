@@ -4,7 +4,7 @@
       <img class="logo ml-4" src="~@/assets/images/short-hand-logo.png" />
     </router-link>
     <span :class="showPreview ? 'submit-preview-text' : ''" class="submit-text">
-      Submit DApp
+      Submit Dapp
     </span>
     <p v-if="showPreview" class="preview-txt mr-3">Preview</p>
     <button v-if="showBack" class="back-btn mr-3" @click="back">Back</button>

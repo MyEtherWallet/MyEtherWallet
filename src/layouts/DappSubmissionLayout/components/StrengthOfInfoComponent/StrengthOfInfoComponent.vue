@@ -26,11 +26,7 @@
             {{ lackOfInfo ? 'Lack of Info' : 'Good Job!' }}
           </h3>
           <p class="info-text">
-            {{
-              lackOfInfo
-                ? 'Please provide all the required information marked “*” we need.'
-                : 'Great! Your DApp information is good to submit.'
-            }}
+            {{ getStrengthText() }}
           </p>
         </div>
       </div>
@@ -63,6 +59,16 @@ export default {
       '--percentage',
       `${this.strengthOfInfo * 3.6}deg`
     );
+  },
+  methods: {
+    getStrengthText() {
+      if (this.strengthOfInfo < 50) {
+        return 'Please provide all the required information marked “*” we need.';
+      } else if (this.strengthOfInfo === 100) {
+        return 'Great! Your Dapp information is good to submit.';
+      }
+      return 'Almost there! Please provide all the required information marked “*” we need.';
+    }
   }
 };
 </script>

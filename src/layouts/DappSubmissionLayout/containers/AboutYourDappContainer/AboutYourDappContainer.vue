@@ -2,31 +2,41 @@
   <div class="about-your-dapp w-50 mb-5 mt-5">
     <b-form onsubmit="return false;">
       <b-form-group>
-        <label class="dapp-label">DApp Name</label>
+        <label class="dapp-label">Dapp name</label>
         <div class="dapp-input">
           <b-form-input
+            v-validate="'required'"
             id="dappName"
             v-model="form.dappName"
+            name="dappName"
             type="text"
             @update="updateName"
           >
           </b-form-input>
           <span>*</span>
         </div>
+        <p v-if="errors.has('dappName')" class="error">
+          {{ errors.first('dappName') }}
+        </p>
       </b-form-group>
       <b-form-group>
         <label class="dapp-label">Category</label>
         <div class="dapp-input">
           <label class="dapp-select-label">
             <b-form-select
+              v-validate="'required'"
               id="dappCategory"
               :options="dappCategories"
               v-model="form.category"
+              name="dappCategory"
               @change="updateCategory"
             ></b-form-select>
           </label>
           <span>*</span>
         </div>
+        <p v-if="errors.has('dappCategory')" class="error">
+          {{ errors.first('dappCategory') }}
+        </p>
       </b-form-group>
       <b-form-group class="input-tags-group">
         <label class="dapp-label"
@@ -61,12 +71,15 @@
           </div>
           <span>*</span>
         </div>
+        <p v-if="dappTagsError" class="error">
+          The tags field is required
+        </p>
       </b-form-group>
       <div class="suggested-tags-container mb-3">
         <p class="title">Suggested Tags</p>
         <p class="tags">
           <span>Games</span>
-          <span>DeFi Lending</span>
+          <span>Defi Lending</span>
           <span>Social</span>
           <span>Finance</span>
           <span>Wallet</span>
@@ -79,7 +92,7 @@
         </b-form-invalid-feedback>
         <div class="dapp-input">
           <b-form-textarea
-            v-validate="'max:800'"
+            v-validate="'max:800|required'"
             v-model="form.description"
             name="description"
             placeholder="800 characters"
@@ -96,33 +109,43 @@
       </b-form-group>
       <b-form-group>
         <label class="dapp-label"
-          >Is your DApp available for use in the United States?</label
+          >Is your Dapp available for use in the United States?</label
         >
         <div class="dapp-input">
           <label class="dapp-select-label">
             <b-form-select
+              v-validate="'required'"
               id="dappUsMarket"
               :options="dappUsMarketOptions"
               v-model="form.usMarket"
+              name="dappUsMarket"
               @change="updateUsMarket"
             ></b-form-select>
           </label>
           <span>*</span>
         </div>
+        <p v-if="errors.has('dappUsMarket')" class="error">
+          {{ errors.first('dappUsMarket') }}
+        </p>
       </b-form-group>
       <b-form-group>
-        <label class="dapp-label">DApp status</label>
+        <label class="dapp-label">Dapp status</label>
         <div class="dapp-input">
           <label class="dapp-select-label">
             <b-form-select
+              v-validate="'required'"
               id="dappStatus"
               :options="dappStatusOptions"
               v-model="form.dappStatus"
+              name="dappStatus"
               @change="updateDappStatus"
             ></b-form-select>
           </label>
           <span>*</span>
         </div>
+        <p v-if="errors.has('dappStatus')" class="error">
+          {{ errors.first('dappStatus') }}
+        </p>
       </b-form-group>
       <b-form-group>
         <label class="dapp-label"
@@ -166,18 +189,23 @@
         </label>
         <div class="dapp-input">
           <b-form-input
+            v-validate="'required'"
             id="contractAddress"
             v-model="form.contractAddress"
+            name="contractAddress"
             type="text"
             @update="updateContractAddress"
           >
           </b-form-input>
           <span>*</span>
         </div>
+        <p v-if="errors.has('contractAddress')" class="error">
+          {{ errors.first('contractAddress') }}
+        </p>
       </b-form-group>
       <b-form-group>
         <label class="dapp-label">
-          <span class="dapp-icon-label"> DApp icon </span>
+          <span class="dapp-icon-label"> Dapp icon </span>
           <popover
             :popcontent="$t('dappsSubmission.dappIcon')"
             class="dapp-popover"
@@ -186,32 +214,39 @@
             >Replace</label
           >
         </label>
-        <div
-          :class="form.dappIconUrl ? 'dapp-icon-uploaded ' : ''"
-          class="image-container"
-        >
-          <label class="image-label" for="dappIcon">
-            <div class="image-placeholder">
-              <i v-if="!form.dappIconUrl" class="fa fa-cloud-upload"></i>
-              <h4 class="image-text">
-                Drop your icon here, or select a file from your computer.
-              </h4>
-              <p class="image-requirements">
-                JPEG or PNG, at least 192px * 192px
-              </p>
-            </div>
-            <img
-              v-if="form.dappIconUrl"
-              :src="form.dappIconUrl"
-              class="dapp-icon-img"
-            />
-            <b-form-file
-              id="dappIcon"
-              drop-placeholder="Drop your icon here"
-              type="file"
-              @change="onDappIconChange"
-            ></b-form-file>
-          </label>
+        <div class="image-wrapper">
+          <div
+            :class="form.dappIconUrl ? 'dapp-icon-uploaded ' : ''"
+            class="image-container"
+          >
+            <label class="image-label" for="dappIcon">
+              <div class="image-placeholder">
+                <i v-if="!form.dappIconUrl" class="fa fa-cloud-upload"></i>
+                <h4 class="image-text">
+                  Drop your icon here, or select a file from your computer.
+                </h4>
+                <p class="image-requirements">
+                  JPEG or PNG, at least 192px * 192px
+                </p>
+              </div>
+              <img
+                v-if="form.dappIconUrl"
+                :src="form.dappIconUrl"
+                class="dapp-icon-img"
+              />
+              <b-form-file
+                id="dappIcon"
+                drop-placeholder="Drop your icon here"
+                type="file"
+                @change="onDappIconChange"
+              ></b-form-file>
+            </label>
+          </div>
+          <span
+            :class="form.dappIconUrl ? 'uploaded-required-icon' : ''"
+            class="requiredIcon"
+            >*</span
+          >
         </div>
         <p v-if="dappIconError" class="error">
           The image dimensions are too big. Dimensions must be 192px by 192px.
@@ -228,34 +263,41 @@
             >Replace</label
           >
         </label>
-        <div
-          :class="form.bannerUrl ? 'banner-uploaded ' : ''"
-          class="image-container"
-        >
-          <label class="image-label" for="bannerImage">
-            <div class="image-placeholder">
-              <i v-if="!form.bannerUrl" class="fa fa-cloud-upload"></i>
-              <h4 class="image-text">
-                Drop your image here, or select a file from your computer.
-              </h4>
-              <p class="image-requirements">
-                JPEG or PNG, at least 1200px * 206px
-              </p>
-            </div>
-            <img
-              v-if="form.bannerUrl"
-              :src="form.bannerUrl"
-              class="banner-img"
-            />
-            <b-form-file
-              id="bannerImage"
-              accept="image/*"
-              drop-placeholder="Drop your banner here"
-              type="file"
-              @change="onBannerChange"
-            >
-            </b-form-file>
-          </label>
+        <div class="image-wrapper">
+          <div
+            :class="form.bannerUrl ? 'banner-uploaded ' : ''"
+            class="image-container"
+          >
+            <label class="image-label" for="bannerImage">
+              <div class="image-placeholder">
+                <i v-if="!form.bannerUrl" class="fa fa-cloud-upload"></i>
+                <h4 class="image-text">
+                  Drop your image here, or select a file from your computer.
+                </h4>
+                <p class="image-requirements">
+                  JPEG or PNG, at least 1200px * 206px
+                </p>
+              </div>
+              <img
+                v-if="form.bannerUrl"
+                :src="form.bannerUrl"
+                class="banner-img"
+              />
+              <b-form-file
+                id="bannerImage"
+                accept="image/*"
+                drop-placeholder="Drop your banner here"
+                type="file"
+                @change="onBannerChange"
+              >
+              </b-form-file>
+            </label>
+          </div>
+          <span
+            :class="form.bannerUrl ? 'uploaded-required-icon' : ''"
+            class="requiredIcon"
+            >*</span
+          >
         </div>
         <p v-if="bannerError" class="error">
           The image dimensions are too small. Dimensions must be at least 1200px
@@ -263,7 +305,7 @@
         </p>
       </b-form-group>
       <b-form-group>
-        <label class="dapp-label">DApp website</label>
+        <label class="dapp-label">Dapp website</label>
         <b-form-input
           v-validate="'url:require_protocol'"
           id="dappWebsite"
@@ -279,7 +321,7 @@
       </b-form-group>
       <b-form-group>
         <label class="dapp-label"
-          >DApp contract audit
+          >Dapp contract audit
           <popover
             :popcontent="$t('dappsSubmission.contractAudit')"
             class="dapp-popover"
@@ -395,9 +437,7 @@ export default {
         { value: 'Prototype', text: 'Prototype' },
         { value: 'Work in progress', text: 'Work in progress' },
         { value: 'Concept', text: 'Concept' },
-        { value: 'Broken', text: 'Broken' },
-        { value: 'Stealth', text: 'Stealth' },
-        { value: 'Abandoned', text: 'Abandoned' }
+        { value: 'Stealth', text: 'Stealth' }
       ],
       dappContractOptions: [
         { value: null, text: 'Please select' },
@@ -410,7 +450,8 @@ export default {
       mockFileError: false,
       dappIconError: false,
       bannerError: false,
-      mockFlowImgName: ''
+      mockFlowImgName: '',
+      dappTagsError: false
     };
   },
   methods: {
@@ -437,11 +478,13 @@ export default {
           });
         }
       }
+      this.dappTagsError = this.displayTags.length === 0;
       this.updateTags(this.displayTags);
     },
     deleteTag(idx) {
       this.displayTags.splice(idx, 1);
       this.updateTags(this.displayTags);
+      this.dappTagsError = this.displayTags.length === 0;
       setTimeout(() => this.updateWidth());
     },
     updateWidth() {

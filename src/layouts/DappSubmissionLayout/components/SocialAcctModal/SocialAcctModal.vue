@@ -50,6 +50,9 @@
 import github from '@/assets/images/icons/github.png';
 import twitter from '@/assets/images/icons/twitter.jpg';
 import facebook from '@/assets/images/icons/facebook.png';
+import reddit from '@/assets/images/icons/reddit.svg';
+import medium from '@/assets/images/icons/medium.png';
+import linkedIn from '@/assets/images/icons/linkedin.svg';
 
 export default {
   name: 'SocialAcctModal',
@@ -59,10 +62,13 @@ export default {
         { value: null, text: 'Please select' },
         {
           value: github,
-          html: '<img src="@/assets/images/icons/github.png"/>  Github'
+          text: 'Github'
         },
         { value: facebook, text: 'Facebook' },
-        { value: twitter, text: 'Twitter' }
+        { value: twitter, text: 'Twitter' },
+        { value: reddit, text: 'Reddit' },
+        { value: medium, text: 'Medium' },
+        { value: linkedIn, text: 'LinkedIn' }
       ],
       dappSocialAccount: null,
       dappSocialLink: ''

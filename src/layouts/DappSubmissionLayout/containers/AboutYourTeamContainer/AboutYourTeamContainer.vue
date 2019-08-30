@@ -12,8 +12,10 @@
         </label>
         <div class="dapp-input">
           <b-form-input
+            v-validate="'required'"
             id="authors"
             v-model="form.authors"
+            name="authors"
             placeholder="e.g. James Lee; Emilie Roy; Edward McCormick"
             type="text"
             @update="updateAuthors"
@@ -21,25 +23,33 @@
           </b-form-input>
           <span>*</span>
         </div>
+        <p v-if="errors.has('authors')" class="error">
+          {{ errors.first('authors') }}
+        </p>
       </b-form-group>
       <b-form-group>
         <label class="dapp-label">My full name </label>
         <div class="dapp-input">
           <b-form-input
+            v-validate="'required'"
             id="fullName"
             v-model="form.fullName"
+            name="fullName"
             type="text"
             @update="updateFullName"
           >
           </b-form-input>
           <span>*</span>
         </div>
+        <p v-if="errors.has('fullName')" class="error">
+          {{ errors.first('fullName') }}
+        </p>
       </b-form-group>
       <b-form-group>
         <label class="dapp-label">My email </label>
         <div class="dapp-input">
           <b-form-input
-            v-validate="'email'"
+            v-validate="'email|required'"
             id="emailAddress"
             v-model="form.email"
             name="email"
@@ -56,11 +66,14 @@
       </b-form-group>
       <b-form-group>
         <div class="social-links-container">
-          <div class="social-links-header">
-            <label class="dapp-social-label"> Company social links</label>
-            <button class="add-btn pull-right" @click="openSocialAcctModal">
-              Add +
-            </button>
+          <div class="social-links-header-wrapper">
+            <div class="social-links-header">
+              <label class="dapp-social-label"> Company social links</label>
+              <button class="add-btn pull-right" @click="openSocialAcctModal">
+                Add +
+              </button>
+            </div>
+            <span class="requiredIcon">*</span>
           </div>
           <div v-if="socialAccts.length > 0" class="social-links-content">
             <div
@@ -81,6 +94,9 @@
             </div>
           </div>
         </div>
+        <p v-if="socialLinksError" class="error">
+          The company social links field is required
+        </p>
       </b-form-group>
       <b-form-group>
         <label class="dapp-label">Company website </label>
@@ -114,7 +130,6 @@
             v-model="form.license"
             type="text"
             placeholder="(e.g. MIT, GPL, Proprietary)"
-            @update="updateLicense"
           >
           </b-form-input>
         </div>
@@ -166,10 +181,6 @@ export default {
       type: Function,
       default: () => {}
     },
-    updateLicense: {
-      type: Function,
-      default: () => {}
-    },
     form: {
       type: Object,
       default: function() {
@@ -189,21 +200,25 @@ export default {
   },
   data() {
     return {
-      socialLinks: []
+      socialLinks: [],
+      socialLinksError: false
     };
   },
   methods: {
     openSocialAcctModal() {
       this.$refs.socialacct.$refs.socialAcctModal.show();
+      this.socialLinksError = this.socialLinks.length === 0;
     },
     addSocialAccount(account) {
       this.socialAccts.push(account);
       this.socialLinks.push(account.url);
+      this.socialLinksError = this.socialLinks.length === 0;
       this.updateSocialLinks(this.socialLinks, this.socialAccts);
     },
     removeSocialLink(idx) {
       this.socialAccts.splice(idx, 1);
       this.socialLinks.splice(idx, 1);
+      this.socialLinksError = this.socialLinks.length === 0;
       this.updateSocialLinks(this.socialLinks, this.socialAccts);
     }
   }
