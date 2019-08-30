@@ -19,7 +19,7 @@
                 v-model="filepath"
                 name="filePath"
                 type="text"
-                class="disabled"
+                class="disable-file-input"
               />
               <input
                 ref="uploadInput"
@@ -50,7 +50,8 @@
           <button
             :class="[
               inputsValid ? '' : 'disabled',
-              'submit-button large-round-button-green-filled'
+              !loading ? '' : 'disabled',
+              'keystore-submit'
             ]"
             type="submit"
             @click.prevent="unlockJson"
@@ -104,6 +105,11 @@ export default {
     locPassword(newVal) {
       this.$emit('password', newVal);
     }
+  },
+  mounted() {
+    this.$refs.importKeystore.$on('hidden', () => {
+      this.locPassword = '';
+    });
   },
   methods: {
     uploadFile(e) {

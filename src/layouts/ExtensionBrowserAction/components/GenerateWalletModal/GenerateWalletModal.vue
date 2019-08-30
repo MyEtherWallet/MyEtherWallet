@@ -7,33 +7,40 @@
       title="Generate a New Wallet"
     >
       <div class="modal-contents">
-        <div class="input-container">
-          <label for="walletName"> Wallet Name </label>
-          <input
-            v-model="locNickname"
-            placeholder="Please add a wallet nickname"
-            name="walletName"
-          />
-        </div>
-        <div class="input-container">
-          <label for="walletPassword"> Password </label>
-          <div class="password-input">
+        <form>
+          <div class="input-container">
+            <label for="walletName"> Wallet Name </label>
             <input
-              v-model="locPassword"
-              :type="show ? 'text' : 'password'"
-              placeholder="Create your password here"
-              name="walletPassword"
+              v-model="locNickname"
+              placeholder="Please add a wallet nickname"
+              name="walletName"
             />
-            <img :src="show ? showIcon : hide" @click.prevent="show = !show" />
           </div>
-        </div>
-        <div
-          :class="[validInputs ? '' : 'disabled', 'submit-button']"
-          @click="generateWallet"
-        >
-          <span v-show="!loading"> Add Wallet </span>
-          <i v-show="loading" class="fa fa-spinner fa-spin" />
-        </div>
+          <div class="input-container">
+            <label for="walletPassword"> Password </label>
+            <div class="password-input">
+              <input
+                v-model="locPassword"
+                :type="show ? 'text' : 'password'"
+                placeholder="Create your password here"
+                name="walletPassword"
+              />
+              <img :src="show ? showIcon : hide" @click.prevent="show = !show" />
+            </div>
+          </div>
+          <b-btn
+            :class="[
+              validInputs ? '' : 'disabled',
+              !loading ? '' : 'disabled',
+              'submit-button'
+            ]"
+            type="submit"
+            @click.prevent="generateWallet"
+          >
+            <span v-show="!loading"> Add Wallet </span>
+            <i v-show="loading" class="fa fa-spinner fa-spin" />
+          </b-btn>
+        </form>
       </div>
     </b-modal>
   </div>
@@ -82,6 +89,12 @@ export default {
     locNickname(newVal) {
       this.$emit('nickname', newVal);
     }
+  },
+  mounted() {
+    this.$refs.generateNewWallet.$on('hidden', () => {
+      this.locPassword = '';
+      this.locNickname = '';
+    });
   }
 };
 </script>

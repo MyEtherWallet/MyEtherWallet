@@ -8,6 +8,7 @@
     <generate-wallet-modal
       ref="generateNewWallet"
       :generate-wallet="generateWallet"
+      :loading="loading"
       @nickname="updateNickname"
       @password="updatePassword"
     />
@@ -96,12 +97,6 @@ export default {
     'generate-wallet-modal': GenerateWalletModal,
     'network-address-modal': NetworkAndAddressModal
   },
-  props: {
-    openWatchOnlyModal: {
-      type: Function,
-      default: () => {}
-    }
-  },
   data() {
     return {
       options: [
@@ -176,6 +171,18 @@ export default {
       this.password = '';
       this.privateKey = '';
     });
+
+    this.$refs.importKeystore.$refs.importKeystore.$on('hidden', () => {
+      this.loading = false;
+      this.password = '';
+      this.filepath = '';
+      this.file = '';
+    });
+
+    this.$refs.generateNewWallet.$refs.generateNewWallet.$on('hidden', () => {
+      this.password = '';
+      this.nickname = '';
+    })
   },
   methods: {
     openAddressOption() {
