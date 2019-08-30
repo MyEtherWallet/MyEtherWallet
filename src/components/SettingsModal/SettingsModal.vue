@@ -97,8 +97,8 @@
             </p>
             <div class="import-button-block">
               <div class="filename">
-                {{inputFileName}}
-<!--                <standard-input :options="inputFileName" />-->
+                {{ inputFileName }}
+                <!--                <standard-input :options="inputFileName" />-->
               </div>
               <input
                 ref="uploadInput"
