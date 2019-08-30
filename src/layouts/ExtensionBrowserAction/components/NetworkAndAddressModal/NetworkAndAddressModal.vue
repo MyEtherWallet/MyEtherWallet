@@ -173,8 +173,10 @@
                 <b-btn
                   :class="[
                     validInputs ? '' : 'disabled',
-                    'mid-round-button-green-filled close-button'
+                    !loading ? '' : 'disabled',
+                    'network-submit'
                   ]"
+                  type="submit"
                   @click.prevent="generateFromMnemonicPriv"
                 >
                   <span v-show="!loading"> Add Wallet </span>
@@ -239,7 +241,6 @@ export default {
       customPathInput: false,
       currentWallet: null,
       customPath: { label: '', dpath: '' },
-      ledgerType: LEDGER_TYPE,
       show: false,
       locPassword: this.password,
       hide: hide,
@@ -269,6 +270,9 @@ export default {
   mounted() {
     // reset component values when modal becomes hidden
     this.$refs.networkAddress.$on('hidden', () => {
+      this.selectedId = '';
+      this.show = false;
+      this.locPassword = '';
       this.availablePaths = {};
       this.selectedPath = '';
       this.invalidPath = '';

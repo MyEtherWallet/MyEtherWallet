@@ -37,7 +37,8 @@
     padding-top: 10px;
 
     .account-container {
-      height: auto;
+      max-height: 220px;
+      overflow-y: auto;
       width: auto !important;
     }
   }

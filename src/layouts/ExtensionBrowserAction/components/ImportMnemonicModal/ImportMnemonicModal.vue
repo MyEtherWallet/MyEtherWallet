@@ -50,7 +50,7 @@
         </div>
         <div class="button-container">
           <b-btn
-            class="mid-round-button-green-filled close-button"
+            :class="[hasEmpty ? 'disabled' : '', 'mnemonic-submit']"
             type="submit"
             @click.prevent="openAddressOption"
           >
@@ -89,6 +89,11 @@ export default {
       mnemonicSize: 12
     };
   },
+  computed: {
+    hasEmpty() {
+      return this.locMnemonicPhrase.includes('');
+    }
+  },
   watch: {
     locMnemonicPhrase(newVal) {
       if (newVal[0] !== ' ' && newVal[0].indexOf(' ') >= 0) {
@@ -103,6 +108,11 @@ export default {
       }
       this.$emit('mnemonicPhrase', newVal);
     }
+  },
+  mounted() {
+    this.$refs.mnemonicPhrase.$on('hidden', () => {
+      this.locMnemonicPhrase = new Array(this.mnemonicSize).fill('');
+    });
   },
   methods: {
     mnemonicValueBitSizeChange() {

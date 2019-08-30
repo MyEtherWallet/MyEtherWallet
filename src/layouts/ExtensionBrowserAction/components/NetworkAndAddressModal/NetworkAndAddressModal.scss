@@ -265,3 +265,22 @@ $red-filled-button-background--click: #ff5a7f;
     }
   }
 }
+
+.network-submit {
+  background-color: $mew-green;
+  border: 1px solid $white;
+  border-radius: 6px;
+  color: $white;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 15px 40px;
+  user-select: none;
+}
+
+.disabled {
+  background-color: $dark-grey-11 !important;
+  border: 1px solid $dark-grey-11;
+  color: $light-grey-6;
+  pointer-events: none;
+}
