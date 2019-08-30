@@ -4,11 +4,11 @@
       Please provide all the required information we need.
     </p>
     <b-container class="dapp-info-container mx-auto mt-2 pb-5 pl-5 w-75">
-      <p class="summary-header pt-5">DApp Information</p>
+      <p class="summary-header pt-5">Dapp Information</p>
       <b-row>
         <b-col>
           <div class="mt-5">
-            <p class="summary-title mb-3">DApp name</p>
+            <p class="summary-title mb-3">Dapp name</p>
             <p class="summary-content">{{ form.dappName }}</p>
           </div>
           <div class="mt-5">
@@ -51,7 +51,7 @@
             <p class="summary-content">{{ form.usMarket }}</p>
           </div>
           <div class="mt-5">
-            <p class="summary-title mb-3">DApp icon</p>
+            <p class="summary-title mb-3">Dapp icon</p>
             <p class="summary-content">
               <img :src="form.dappIconUrl" class="summary-img" />
               <span class="align-middle"> {{ form.dappIconFile.name }} </span>
@@ -65,15 +65,15 @@
             </p>
           </div>
           <div class="mt-5">
-            <p class="summary-title mb-3">DApp website</p>
+            <p class="summary-title mb-3">Dapp website</p>
             <p class="summary-content">{{ form.dappWebsite }}</p>
           </div>
           <div class="mt-5">
-            <p class="summary-title mb-3">DApp contract audit</p>
+            <p class="summary-title mb-3">Dapp contract audit</p>
             <p class="summary-content">{{ form.contractAudit }}</p>
           </div>
           <div class="mt-5">
-            <p class="summary-title mb-3">DApp status</p>
+            <p class="summary-title mb-3">Dapp status</p>
             <p class="summary-content">{{ form.dappStatus }}</p>
           </div>
         </b-col>

@@ -11,7 +11,7 @@
         "
         :next="next"
         :back="previous"
-        :disable-submit="disableBtn"
+        :disable-submit="isDisabledBtn()"
         :lack-of-info="strengthPercentage < 50 ? true : false"
       />
       <banner-component :banner-text="bannerText" />
@@ -34,7 +34,6 @@
         :update-full-name="updateFullName"
         :update-email="updateEmail"
         :update-social-links="updateSocialLinks"
-        :update-license="updateLicense"
         :form="form"
         :lack-of-info="strengthPercentage < 50 ? true : false"
         :social-accts="socialAccts"
@@ -54,7 +53,7 @@
         ref="successModal"
         :success-title="'Congratulations'"
         :message="
-          'It takes about 3-5 business days to review your DApp. And an email will be sent to you if the the status update.'
+          'It takes about 3-5 business days to review your Dapp. And an email will be sent to you if the the status update.'
         "
       />
     </div>
@@ -127,9 +126,9 @@ export default {
       dappFullNameUpdated: false,
       dappEmailUpdated: false,
       dappSocialLinksUpdated: false,
-      dappSoftwareLicenseUpdated: false,
       disableBtn: false,
-      socialAccts: []
+      socialAccts: [],
+      imgHasError: false
     };
   },
   computed: {
@@ -139,7 +138,7 @@ export default {
       } else if (this.$route.fullPath === '/dapp-submission/about-your-team') {
         return 'Tell us about your team & company';
       }
-      return 'Tell us about your DApp';
+      return 'Tell us about your Dapp';
     }
   },
   methods: {
@@ -219,8 +218,34 @@ export default {
         10
       );
     },
+    isDisabledBtn() {
+      if (this.$route.fullPath === '/dapp-submission') {
+        return !(
+          this.form.dappName &&
+          this.form.category &&
+          this.form.tags.length > 0 &&
+          this.form.description &&
+          this.form.usMarket &&
+          this.form.dappStatus &&
+          this.form.mockFlowFile &&
+          this.form.contractAddress &&
+          this.form.dappIconFile &&
+          this.form.bannerFile &&
+          !this.imgHasError &&
+          !this.disableBtn
+        );
+      } else if (this.$route.fullPath === '/dapp-submission/about-your-team') {
+        return !(
+          this.form.authors &&
+          this.form.fullName &&
+          this.form.email &&
+          this.form.socialLinks.length > 0 &&
+          !this.disableBtn
+        );
+      }
+    },
     updateDisableBtn(errors) {
-      if (errors.items.length > 0) {
+      if (errors && errors.items.length > 0) {
         this.disableBtn = true;
       } else {
         this.disableBtn = false;
@@ -241,7 +266,7 @@ export default {
       );
     },
     updateMockFlow(hasError) {
-      this.disableBtn = hasError;
+      this.imgHasError = hasError;
 
       this.dappMockUserFlowUpdated = this.updateStrengthPercentage(
         this.form.mockFlowUrl,
@@ -253,11 +278,11 @@ export default {
       this.dappContractAddressUpdated = this.updateStrengthPercentage(
         this.form.contractAddress,
         this.dappContractAddressUpdated,
-        5
+        10
       );
     },
     updateDappIcon(hasError) {
-      this.disableBtn = hasError;
+      this.imgHasError = hasError;
 
       this.dappIconUpdated = this.updateStrengthPercentage(
         this.form.dappIconUrl,
@@ -266,7 +291,7 @@ export default {
       );
     },
     updateBanner(hasError) {
-      this.disableBtn = hasError;
+      this.imgHasError = hasError;
 
       this.dappBannerUpdated = this.updateStrengthPercentage(
         this.form.bannerUrl,
@@ -304,13 +329,6 @@ export default {
         10
       );
     },
-    updateLicense() {
-      this.dappSoftwareLicenseUpdated = this.updateStrengthPercentage(
-        this.form.license,
-        this.dappSoftwareLicenseUpdated,
-        5
-      );
-    },
     submitForm() {
       const formData = new FormData();
 
@@ -324,7 +342,7 @@ export default {
       }
 
       axios
-        .post('https://formspree.io/dapps@myetherwallet.com', formData, {
+        .post('https://formspree.io/mqjndkkx', formData, {
           header: {
             'Content-Type': 'multipart/form-data'
           }

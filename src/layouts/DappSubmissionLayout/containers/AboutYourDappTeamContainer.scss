@@ -72,6 +72,13 @@ template {
     }
   }
 
+  .requiredIcon {
+    color: $red-9;
+    font-size: 16px;
+    height: 19px;
+    padding-left: 10px;
+  }
+
   textarea {
     background: $light-blue-9;
     border: none;

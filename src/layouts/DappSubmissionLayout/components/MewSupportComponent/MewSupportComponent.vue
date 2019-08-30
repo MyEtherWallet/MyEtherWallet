@@ -14,7 +14,7 @@
         class="email-us-btn mt-3"
         href="mailto:support@myetherwallet.com"
         target="_blank"
-        >Email us</b-link
+        >Contact Support</b-link
       >
     </div>
   </div>
