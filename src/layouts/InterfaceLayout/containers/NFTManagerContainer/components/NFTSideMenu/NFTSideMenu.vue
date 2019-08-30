@@ -8,7 +8,10 @@
           :class="i.contract === selected ? 'selected' : ''"
           @click="selectNft(i)"
         >
-          {{ i.title }} ({{ i.count }})
+          <span class="title">{{ i.title }}</span> <span class="count">({{ i.count }})</span>
+        </li>
+        <li>
+          <span @click="openCustomModal">+Custom NFT</span>
         </li>
       </ul>
     </div>
@@ -80,6 +83,9 @@ export default {
     this.selected = this.initialHighlighted;
   },
   methods: {
+    openCustomModal() {
+      this.$emit('openCustomModal');
+    },
     setSelectedToTop() {
       this.selected = this.sortByCount[0].contract;
       this.$emit('selected', this.selected);
