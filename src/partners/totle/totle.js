@@ -56,6 +56,10 @@ export default class Totle {
     return this.network === networkSymbols.ETH;
   }
 
+  get ratesRetrieved() {
+    return Object.keys(this.tokenDetails).length > 0 && this.hasRates > 0;
+  }
+
   setNetwork(network) {
     this.network = network;
   }
@@ -88,6 +92,7 @@ export default class Totle {
       const { tokens } = await totleCalls.getTokenList(network);
       logger('Tokens', tokens);
       const tradableTokens = tokens.filter(token => token.tradable === true);
+      if (tradableTokens) {
       const tokenDetails = {};
       for (let i = 0; i < tradableTokens.length; i++) {
         if (
@@ -113,6 +118,8 @@ export default class Totle {
         }
       }
       return tokenDetails;
+      }
+      return this.defaultCurrencyList;
     } catch (e) {
       utils.handleOrThrow(e);
       errorLogger(e);
@@ -321,7 +328,7 @@ export default class Totle {
 
   getTokenDecimals(token) {
     try {
-      return +this.currencies[token].decimals;
+      return new BigNumber(this.currencies[token].decimals).toNumber();
     } catch (e) {
       errorLogger(e);
       throw Error(`Token [${token}] not included in totle list of tokens`);

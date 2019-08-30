@@ -137,13 +137,13 @@ class CompileSwapOptions {
           const symbol = tradableTokens[i].symbol.toUpperCase();
           tokenDetails[symbol] = {
             symbol: tradableTokens[i].symbol,
-            name: tradableTokens[i].name,
+            name: tradableTokens[i].name.trim(),
             decimals: tradableTokens[i].decimals,
             contractAddress: tradableTokens[i].address
           };
           this.totleBaseOptions[symbol] = {
             symbol: tradableTokens[i].symbol,
-            name: tradableTokens[i].name,
+            name: tradableTokens[i].name.trim(),
             decimals: tradableTokens[i].decimals,
             contractAddress: tradableTokens[i].address
           };
