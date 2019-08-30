@@ -14,7 +14,7 @@ const ERRORS = {
   Cancelled: 'trezorError.cancelled',
   'Iframe timeout': 'trezor.iframeTimeout',
   'Browser not supported': 'trezor.unsupportedBrowser',
-  'popup failed to open':'trezor.popupFailedToOpen'
+  'popup failed to open': 'trezor.popupFailedToOpen'
 };
 
 const WARNING = {};
