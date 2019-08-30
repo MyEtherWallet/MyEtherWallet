@@ -17,6 +17,7 @@
         :loading-complete="countsRetrieved"
         :sent-update="sentUpdate"
         @selected="changeSelectedContract"
+        @openCustomModal="openCustomModal"
       >
       </nft-side-menu>
       <div v-if="showDetails">
@@ -74,6 +75,10 @@
       </div>
     </div>
     <div class="flex--row--align-start mft-manager-content-container"></div>
+    <nft-custom-add-modal
+      ref="customModal"
+      :add-token="addCustom"
+    ></nft-custom-add-modal>
   </div>
 </template>
 
@@ -82,15 +87,26 @@ import LoadingSign from '@/components/LoadingSign';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
 import ContentBlockTitle from '@/layouts/InterfaceLayout/components/ContentBlockTitle';
 import NFTSideMenu from '@/layouts/InterfaceLayout/containers/NFTManagerContainer/components/NFTSideMenu';
-import NftDetails from './containers/NftDetails';
+import NftDetails from './components/NftDetails';
+import NftCustomAddModal from './components/NftCustomAddModal';
 import { mapState } from 'vuex';
 import hexDecoder from './binaryDecoderNFT';
 import { nftABI } from './abis';
 
 const URL_BASE = 'https://nft.mewapi.io/nft';
 
+const CUSTOM_NFTs = [
+  {
+    ERC721Extension: true,
+    contract: '0xb55c5cac5014c662fdbf21a2c59cd45403c482fd',
+    customNft: true,
+    title: 'demo'
+  }
+];
+
 export default {
   components: {
+    'nft-custom-add-modal': NftCustomAddModal,
     'loading-sign': LoadingSign,
     'content-block-title': ContentBlockTitle,
     'nft-side-menu': NFTSideMenu,
@@ -113,7 +129,15 @@ export default {
       nftData: {},
       ownedTokens: [],
       tokenContractAddress: '0xeA3352C1a3480Ac5a32Fcd1F2854529BA7193F14',
-      sentUpdate: 0
+      sentUpdate: 0,
+      customNFTs: [
+        {
+          ERC721Extension: true,
+          contract: '0xb55c5cac5014c662fdbf21a2c59cd45403c482fd',
+          customNft: true,
+          title: 'demo'
+        }
+      ]
     };
   },
   computed: {
@@ -181,9 +205,9 @@ export default {
       return 0;
     },
     activeAddress() {
-      return this.account.address;
+      return '0xAC9ba72fb61aA7c31A95df0A8b6ebA6f41EF875e';
+      // return this.account.address;
     },
-
     hasNfts() {
       return Object.values(this.nftData).some(entry => entry.count > 0);
     },
@@ -206,12 +230,13 @@ export default {
     };
     const configData = await this.getTokenConfig();
 
-    this.nftConfig = configData.map(entry => {
+    const nftConfig = configData.map(entry => {
       return {
         ...entry,
         contract: entry.contractAddress
       };
     });
+    this.nftConfig = [...this.customNFTs, ...nftConfig];
     this.nftData = this.nftConfig.reduce((accumulator, currentValue) => {
       accumulator[currentValue.contract] = {
         ...currentValue,
@@ -226,14 +251,28 @@ export default {
     }
   },
   methods: {
+    addCustom(address, symbol) {
+      this.customNFTs.push({
+        ERC721Extension: true,
+        contract: address,
+        customNft: true,
+        title: symbol
+      });
+      this.setup();
+    },
+    openCustomModal() {
+      this.$refs.customModal.$refs.modal.show();
+    },
     hasLoaded(nft) {
       this.$set(nft, 'loaded', true);
     },
     hasImage(nft) {
+      if (nft.customNft) {
+        return true;
+      }
       if (nft.loaded) {
         return true;
       }
-      // return nft.image !== '';
     },
     removeSentNft(nft) {
       const afterSent = this.nftData[nft.contract].details.filter(entry => {
@@ -253,6 +292,39 @@ export default {
     },
     getImage(nft) {
       return nft.image;
+    },
+    async setup() {
+      const stateItems = {
+        count: 0,
+        selected: false,
+        startIndex: 0,
+        priorIndex: 0,
+        currentIndex: 0,
+        details: []
+      };
+
+      const configData = await this.getTokenConfig();
+
+      const nftConfig = configData.map(entry => {
+        return {
+          ...entry,
+          contract: entry.contractAddress
+        };
+      });
+
+      this.nftConfig = [...this.customNFTs, ...nftConfig];
+      this.nftData = this.nftConfig.reduce((accumulator, currentValue) => {
+        accumulator[currentValue.contract] = {
+          ...currentValue,
+          ...stateItems
+        };
+        return accumulator;
+      }, {});
+
+      if (this.network.type.name === 'ETH') {
+        this.getOwnedCounts();
+        this.getOwned();
+      }
     },
     async getNftImagePath(contract, token) {
       const image = await fetch(
@@ -374,7 +446,8 @@ export default {
       offset,
       count = this.countPerPage,
       address = this.activeAddress,
-      tokenContract = undefined
+      tokenContract = undefined,
+      custom = false
     ) {
       if (!tokenContract) {
         tokenContract = new this.web3.eth.Contract(nftABI);
@@ -386,11 +459,16 @@ export default {
         .call()
         .then(res => {
           return hexDecoder(res).map(val => {
-            return {
+            const content = {
               contract: contract,
               token: val.toNumber(),
               image: ''
             };
+            if (custom) {
+              content.customNft = true;
+              content.token = val.toFixed(0).toString();
+            }
+            return content;
           });
         })
         .then(list => {
@@ -400,7 +478,7 @@ export default {
             const retrieveCount =
               list.length > this.countPerPage ? this.countPerPage : list.length;
             for (let j = 0; j < retrieveCount; j++) {
-              if (!Number.isNaN(list[j].token)) {
+              if (!Number.isNaN(list[j].token) && !list[j].customNft) {
                 this.getNftImagePath(contract, list[j].token)
                   .then(image => {
                     this.nftData[contract].details[
@@ -412,6 +490,8 @@ export default {
                       this.nftData[contract].details[j].image = '';
                     }
                   });
+              } else if (list[j].customNft) {
+                this.nftData[contract].details[j].image = '';
               }
             }
           }
@@ -420,7 +500,7 @@ export default {
     async getOwnedTokens(contracts, address, nftData) {
       const tokenContract = new this.web3.eth.Contract(nftABI);
       tokenContract.options.address = this.tokenContractAddress;
-
+      console.log('contracts', contracts); // todo remove dev item
       for (let i = 0; i < contracts.length; i++) {
         nftData = await this.loadForContract(
           contracts[i],
@@ -505,7 +585,8 @@ export default {
           0,
           this.countPerPage,
           address,
-          tokenContract
+          tokenContract,
+          nftData[contract].customNft
         ).then(result => {
           this.nftData[contract].details = result;
         });

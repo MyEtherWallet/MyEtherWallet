@@ -1,0 +1,122 @@
+<template lang="html">
+  <div>
+    <b-modal
+      ref="modal"
+      hide-footer
+      class="bootstrap-modal nopadding max-height-1"
+      centered
+      title="Add Custom Token"
+      @hidden="resetCompState"
+    >
+      <form class="tokens-modal-body" @keydown.enter.prevent>
+        <div>
+          <input
+            v-validate="'required'"
+            v-model="contractAddress"
+            :class="[
+              'custom-input-text-1',
+              contractAddress !== '' && !validAddress ? 'invalid-address' : ''
+            ]"
+            name="Address"
+            type="text"
+            placeholder="Token Contract Address"
+          />
+          <span
+            v-show="contractAddress !== '' && !validAddress"
+            class="error-message"
+          >
+            Invalid address given.
+          </span>
+          <input
+            v-validate="'required'"
+            v-model="tokenSymbol"
+            name="Symbol"
+            type="text"
+            placeholder="NFT name"
+            class="custom-input-text-1"
+          />
+        </div>
+        <div class="button-block">
+          <button
+            :class="[
+              allFieldsValid ? '' : 'disabled',
+              'save-button large-round-button-green-filled clickable'
+            ]"
+            @click.prevent="addToken(contractAddress, tokenSymbol)"
+          >
+            {{ $t('interface.save') }}
+          </button>
+          <interface-bottom-text
+            :link-text="$t('interface.helpCenter')"
+            :question="$t('interface.dontKnow')"
+            link="https://kb.myetherwallet.com"
+          />
+        </div>
+      </form>
+    </b-modal>
+  </div>
+</template>
+
+<script>
+import InterfaceBottomText from '@/components/InterfaceBottomText';
+import { mapState } from 'vuex';
+import { isAddress } from '@/helpers/addressUtils';
+
+export default {
+  components: {
+    'interface-bottom-text': InterfaceBottomText
+  },
+  props: {
+    addToken: {
+      type: Function,
+      default: function() {}
+    }
+  },
+  data() {
+    return {
+      contractAddress: '',
+      tokenSymbol: '',
+      tokenDecimal: '',
+      validAddress: false
+    };
+  },
+  computed: {
+    ...mapState(['web3']),
+    allFieldsValid() {
+      if (!this.validAddress) return false;
+      if (this.tokenSymbol === '') return false;
+      if (
+        this.errors.has('address') ||
+        this.errors.has('symbol')
+      )
+        return false;
+      return true;
+    }
+  },
+  watch: {
+    contractAddress(newVal) {
+      const strippedWhitespace = newVal.toLowerCase().trim();
+      const regTest = new RegExp(/[a-zA-Z0-9]/g);
+      this.validAddress =
+        regTest.test(strippedWhitespace) && isAddress(strippedWhitespace);
+      this.toAddress = strippedWhitespace;
+      this.contractAddress = strippedWhitespace;
+    },
+    tokenSymbol(newVal) {
+      this.tokenSymbol = newVal;
+    }
+  },
+  methods: {
+    resetCompState() {
+      this.contractAddress = '';
+      this.tokenSymbol = '';
+      this.tokenDecimal = '';
+      this.validAddress = false;
+    }
+  }
+};
+</script>
+
+<style lang="scss" scoped>
+@import 'NftCustomAddModal.scss';
+</style>

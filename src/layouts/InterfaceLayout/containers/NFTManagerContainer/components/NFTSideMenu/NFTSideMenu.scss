@@ -36,7 +36,8 @@ $collepse-width: 650px;
 
   ul {
     li {
-      padding: 15px 20px;
+      position: relative;
+      padding: 5px 20px;
       color: $dark-grey-7;
       cursor: pointer;
       user-select: none;
@@ -46,6 +47,16 @@ $collepse-width: 650px;
       &.selected {
         color: $dark-grey-9;
         font-weight: 600;
+      }
+      .title{
+        display: inline-block;
+        width: 120px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+      .count{
+        float: right;
       }
     }
   }
