@@ -83,6 +83,7 @@
 </template>
 
 <script>
+import store from 'store';
 import LoadingSign from '@/components/LoadingSign';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
 import ContentBlockTitle from '@/layouts/InterfaceLayout/components/ContentBlockTitle';
@@ -130,14 +131,7 @@ export default {
       ownedTokens: [],
       tokenContractAddress: '0xeA3352C1a3480Ac5a32Fcd1F2854529BA7193F14',
       sentUpdate: 0,
-      customNFTs: [
-        {
-          ERC721Extension: true,
-          contract: '0xb55c5cac5014c662fdbf21a2c59cd45403c482fd',
-          customNft: true,
-          title: 'demo'
-        }
-      ]
+      customNFTs: []
     };
   },
   computed: {
@@ -220,35 +214,7 @@ export default {
   },
   watch: {},
   async mounted() {
-    const stateItems = {
-      count: 0,
-      selected: false,
-      startIndex: 0,
-      priorIndex: 0,
-      currentIndex: 0,
-      details: []
-    };
-    const configData = await this.getTokenConfig();
-
-    const nftConfig = configData.map(entry => {
-      return {
-        ...entry,
-        contract: entry.contractAddress
-      };
-    });
-    this.nftConfig = [...this.customNFTs, ...nftConfig];
-    this.nftData = this.nftConfig.reduce((accumulator, currentValue) => {
-      accumulator[currentValue.contract] = {
-        ...currentValue,
-        ...stateItems
-      };
-      return accumulator;
-    }, {});
-
-    if (this.network.type.name === 'ETH') {
-      this.getOwnedCounts();
-      this.getOwned();
-    }
+    await this.setup();
   },
   methods: {
     addCustom(address, symbol) {
@@ -258,6 +224,9 @@ export default {
         customNft: true,
         title: symbol
       });
+
+      this.$refs.customModal.$refs.modal.hide();
+      store.set('customNFTs', this.customNFTs);
       this.setup();
     },
     openCustomModal() {
@@ -303,6 +272,11 @@ export default {
         details: []
       };
 
+      const customNFTs = store.get('customNFTs');
+
+      if (customNFTs !== undefined && customNFTs !== null) {
+        this.customNFTs = customNFTs;
+      }
       const configData = await this.getTokenConfig();
 
       const nftConfig = configData.map(entry => {
@@ -311,7 +285,6 @@ export default {
           contract: entry.contractAddress
         };
       });
-
       this.nftConfig = [...this.customNFTs, ...nftConfig];
       this.nftData = this.nftConfig.reduce((accumulator, currentValue) => {
         accumulator[currentValue.contract] = {
