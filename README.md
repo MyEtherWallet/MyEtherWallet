@@ -41,6 +41,14 @@ MyEtherWallet is a doorway to the Ethereum blockchain, allowing users to manage 
 
 If you find a bug, or want a new feature added, please submit it on the [Github Issues](https://github.com/MyEtherWallet/MyEtherWallet/issues)
 
+## Prerequisites
+
+There are not many prerequisites required to build and run this project, but you'll need the following:
+
+* Node.js (Node 8.15 & NPM 6.4)
+* Node Package Manager
+
+
 ## Getting started
 
 1. Open terminal
