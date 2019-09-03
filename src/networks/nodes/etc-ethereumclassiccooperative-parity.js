@@ -1,8 +1,8 @@
 import { ETC } from '../types';
 export default {
   type: ETC,
-  service: 'CW Parity',
-  url: 'https://etc-parity.0xinfra.com/',
+  service: 'ETC Coop Parity',
+  url: 'https://www.ethercluster.com/etc',
   port: 443,
   auth: false,
   username: '',
