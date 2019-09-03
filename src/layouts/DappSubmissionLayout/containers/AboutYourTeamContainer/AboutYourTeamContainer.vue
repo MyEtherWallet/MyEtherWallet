@@ -34,15 +34,15 @@
             v-validate="'required'"
             id="fullName"
             v-model="form.fullName"
-            name="fullName"
+            name="name"
             type="text"
             @update="updateFullName"
           >
           </b-form-input>
           <span>*</span>
         </div>
-        <p v-if="errors.has('fullName')" class="error">
-          {{ errors.first('fullName') }}
+        <p v-if="errors.has('name')" class="error">
+          {{ errors.first('name') }}
         </p>
       </b-form-group>
       <b-form-group>
@@ -142,13 +142,13 @@
             v-model="form.additionalNotes"
             size="lg"
             rows="5"
-            name="additional notes"
+            name="notes"
             placeholder="300 characters"
             @change="updateDisableBtn(errors)"
           ></b-form-textarea>
         </div>
-        <p v-if="errors.has('additional notes')" class="error">
-          {{ errors.first('additional notes') }}
+        <p v-if="errors.has('notes')" class="error">
+          {{ errors.first('notes') }}
         </p>
       </b-form-group>
     </b-form>

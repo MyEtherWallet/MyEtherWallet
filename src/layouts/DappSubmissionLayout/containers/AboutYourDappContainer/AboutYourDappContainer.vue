@@ -8,15 +8,15 @@
             v-validate="'required'"
             id="dappName"
             v-model="form.dappName"
-            name="dappName"
+            name="name"
             type="text"
             @update="updateName"
           >
           </b-form-input>
           <span>*</span>
         </div>
-        <p v-if="errors.has('dappName')" class="error">
-          {{ errors.first('dappName') }}
+        <p v-if="errors.has('name')" class="error">
+          {{ errors.first('name') }}
         </p>
       </b-form-group>
       <b-form-group>
@@ -28,14 +28,14 @@
               id="dappCategory"
               :options="dappCategories"
               v-model="form.category"
-              name="dappCategory"
+              name="category"
               @change="updateCategory"
             ></b-form-select>
           </label>
           <span>*</span>
         </div>
-        <p v-if="errors.has('dappCategory')" class="error">
-          {{ errors.first('dappCategory') }}
+        <p v-if="errors.has('category')" class="error">
+          {{ errors.first('category') }}
         </p>
       </b-form-group>
       <b-form-group class="input-tags-group">
@@ -118,14 +118,14 @@
               id="dappUsMarket"
               :options="dappUsMarketOptions"
               v-model="form.usMarket"
-              name="dappUsMarket"
+              name="field"
               @change="updateUsMarket"
             ></b-form-select>
           </label>
           <span>*</span>
         </div>
-        <p v-if="errors.has('dappUsMarket')" class="error">
-          {{ errors.first('dappUsMarket') }}
+        <p v-if="errors.has('field')" class="error">
+          {{ errors.first('field') }}
         </p>
       </b-form-group>
       <b-form-group>
@@ -137,14 +137,14 @@
               id="dappStatus"
               :options="dappStatusOptions"
               v-model="form.dappStatus"
-              name="dappStatus"
+              name="status"
               @change="updateDappStatus"
             ></b-form-select>
           </label>
           <span>*</span>
         </div>
-        <p v-if="errors.has('dappStatus')" class="error">
-          {{ errors.first('dappStatus') }}
+        <p v-if="errors.has('status')" class="error">
+          {{ errors.first('status') }}
         </p>
       </b-form-group>
       <b-form-group>
@@ -192,15 +192,15 @@
             v-validate="'required'"
             id="contractAddress"
             v-model="form.contractAddress"
-            name="contractAddress"
+            name="address"
             type="text"
             @update="updateContractAddress"
           >
           </b-form-input>
           <span>*</span>
         </div>
-        <p v-if="errors.has('contractAddress')" class="error">
-          {{ errors.first('contractAddress') }}
+        <p v-if="errors.has('address')" class="error">
+          {{ errors.first('address') }}
         </p>
       </b-form-group>
       <b-form-group>
