@@ -27,6 +27,9 @@
           >
             Invalid address given.
           </span>
+          <span v-show="nonStandardMessage">
+            NFT token contract doesn't include a required method to add as a custom NFT.
+          </span>
           <input
             v-validate="'required'"
             v-model="tokenSymbol"
@@ -42,7 +45,7 @@
               allFieldsValid ? '' : 'disabled',
               'save-button large-round-button-green-filled clickable'
             ]"
-            @click.prevent="addToken(contractAddress, tokenSymbol)"
+            @click.prevent="addCustom(contractAddress, tokenSymbol)"
           >
             {{ $t('interface.save') }}
           </button>
@@ -70,6 +73,10 @@ export default {
     addToken: {
       type: Function,
       default: function() {}
+    },
+    activeAddress: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -77,7 +84,8 @@ export default {
       contractAddress: '',
       tokenSymbol: '',
       tokenDecimal: '',
-      validAddress: false
+      validAddress: false,
+      nonStandardMessage: false
     };
   },
   computed: {
@@ -85,11 +93,7 @@ export default {
     allFieldsValid() {
       if (!this.validAddress) return false;
       if (this.tokenSymbol === '') return false;
-      if (
-        this.errors.has('address') ||
-        this.errors.has('symbol')
-      )
-        return false;
+      if (this.errors.has('address') || this.errors.has('symbol')) return false;
       return true;
     }
   },
@@ -112,6 +116,47 @@ export default {
       this.tokenSymbol = '';
       this.tokenDecimal = '';
       this.validAddress = false;
+      this.nonStandardMessage = false;
+    },
+    async addCustom(address, symbol) {
+      const result = await this.checkIfStandard(address);
+      if(result) this.addToken(address, symbol);
+      else {
+        this.nonStandardMessage = true;
+      }
+    },
+    openCustomModal() {
+      this.$refs.customModal.$refs.modal.show();
+    },
+    checkIfStandard(address) {
+      return new Promise((resolve) =>{
+        const tokenContract = new this.web3.eth.Contract([
+          {
+            constant: true,
+            inputs: [
+              { name: '_owner', type: 'address' },
+              { name: '_index', type: 'uint256' }
+            ],
+            name: 'tokenOfOwnerByIndex',
+            outputs: [{ name: '', type: 'uint256' }],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function'
+          }
+        ]);
+        tokenContract.options.address = address;
+        tokenContract.methods.tokenOfOwnerByIndex(this.activeAddress,0)
+          .call()
+          .then(result =>{
+            console.log(result); // todo remove dev item
+            resolve(true)
+          })
+          .catch(err =>{
+            console.log('error'); // todo remove dev item
+            console.log(err); // todo remove dev item
+            resolve(false)
+          })
+      })
     }
   }
 };

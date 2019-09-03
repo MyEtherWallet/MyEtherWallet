@@ -78,6 +78,7 @@
     <nft-custom-add-modal
       ref="customModal"
       :add-token="addCustom"
+      :active-address="activeAddress"
     ></nft-custom-add-modal>
   </div>
 </template>
@@ -224,9 +225,8 @@ export default {
         customNft: true,
         title: symbol
       });
-
       this.$refs.customModal.$refs.modal.hide();
-      store.set('customNFTs', this.customNFTs);
+      // store.set('customNFTs', this.customNFTs);
       this.setup();
     },
     openCustomModal() {
