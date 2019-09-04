@@ -2,6 +2,10 @@
 
 - Dapp submission page [#1339](https://github.com/MyEtherWallet/MyEtherWallet/pull/1339)
 
+### Devop
+
+- Compress images, Remove unused images and components [#1389](https://github.com/MyEtherWallet/MyEtherWallet/pull/1389)
+
 ### Release v5.1.2
 
 ### Devop
