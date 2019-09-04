@@ -19,7 +19,10 @@ const EXCEPTIONS = [
   'bootstrap-vue',
   'web3-core-requestmanager',
   'vue-tel-input',
-  '@vue/eslint-config-prettier'
+  '@vue/eslint-config-prettier',
+  'vee-validate',
+  'babel-eslint',
+  'webpack'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
