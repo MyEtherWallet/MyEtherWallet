@@ -1,3 +1,7 @@
+### Bug
+
+- Fix the bug when user expend the token list, footer breaks [#1396](https://github.com/MyEtherWallet/MyEtherWallet/pull/1396)
+
 ### Release v5.1.2
 
 ### Devop
@@ -14,7 +18,6 @@
 
 ### Bug
 
-- Fix the bug when user expend the token list, footer breaks [#1396](https://github.com/MyEtherWallet/MyEtherWallet/pull/1396)
 - Fix incorrect rate display [#1368](https://github.com/MyEtherWallet/MyEtherWallet/pull/1368)
 - Fix scroll up animation glitch on mobile [#1358](https://github.com/MyEtherWallet/MyEtherWallet/pull/1358)
 
