@@ -81,7 +81,7 @@ class MewCxEthereum extends EventEmitter {
           });
       },
       setMaxListeners: this.setMaxListeners,
-      isMetaMask: true,
+      // isMetaMask: true,
       isMew: true,
       on: this.on,
       emit: this.emit,

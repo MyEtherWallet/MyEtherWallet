@@ -8,7 +8,7 @@
       title="Add Custom Token"
       @hidden="resetCompState"
     >
-      <form class="tokens-modal-body" @keydown.enter.prevent>
+      <form class="tokens-modal-body">
         <div>
           <input
             v-validate="'required'"
@@ -58,6 +58,7 @@
               allFieldsValid ? '' : 'disabled',
               'save-button large-round-button-green-filled clickable'
             ]"
+            type="submit"
             @click.prevent="addToken(tokenAddress, tokenSymbol, tokenDecimal)"
           >
             {{ $t('interface.save') }}
