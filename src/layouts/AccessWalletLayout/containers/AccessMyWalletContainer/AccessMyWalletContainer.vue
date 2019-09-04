@@ -96,7 +96,7 @@ import FinneyModal from '../../components/FinneyModal';
 import AccessWalletButton from '../../components/AccessWalletButton';
 import HardwareModal from '../../components/HardwareModal';
 import HardwarePasswordModal from '../../components/HardwarePasswordModal';
-import MetamaskModal from '../../components/MetamaskModal';
+import Web3WalletModal from '../../components/Web3WalletModal';
 import MewConnectModal from '../../components/MewConnectModal';
 import NetworkAndAddressModal from '../../components/NetworkAndAddressModal';
 import PasswordModal from '../../components/PasswordModal';
@@ -129,7 +129,7 @@ export default {
     'network-and-address-modal': NetworkAndAddressModal,
     'hardware-modal': HardwareModal,
     'hardware-password-modal': HardwarePasswordModal,
-    'metamask-modal': MetamaskModal,
+    'metamask-modal': Web3WalletModal,
     'software-modal': SoftwareModal,
     'password-modal': PasswordModal,
     'private-key-modal': PrivateKeyModal,
@@ -244,8 +244,8 @@ export default {
       this.$refs.softwareModal.$refs.software.hide();
       this.$refs.privatekeyModal.$refs.privateKey.show();
     },
-    installMetamaskModalOpen() {
-      this.$refs.installMetamaskModal.$refs.installmetamask.show();
+    installWeb3WalletModalOpen() {
+      this.$refs.installWeb3WalletModal.$refs.installmetamask.show();
     },
     mnemonicphraseModalOpen() {
       this.$refs.mnemonicPhraseModal.$refs.mnemonicPhrase.show();

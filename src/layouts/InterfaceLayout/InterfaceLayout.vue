@@ -463,7 +463,7 @@ export default {
           Toast.responseHandler(e, Toast.ERROR);
         });
     },
-    checkMetamaskAddrChange() {
+    checkWeb3WalletAddrChange() {
       const web3 = this.web3;
       window.ethereum.on('accountsChanged', account => {
         if (account.length > 1) {
@@ -485,7 +485,7 @@ export default {
         });
       }
     },
-    matchMetamaskNetwork() {
+    matchWeb3WalletNetwork() {
       this.web3.eth.net.getId().then(id => {
         this.checkAndSetNetwork(id);
       });
@@ -505,8 +505,8 @@ export default {
         if (this.account.address !== null) {
           if (this.account.identifier === WEB3_TYPE) {
             if (window.ethereum.isMetaMask || window.ethereum.isMew) {
-              this.checkMetamaskAddrChange();
-              this.matchMetamaskNetwork();
+              this.checkWeb3WalletAddrChange();
+              this.matchWeb3WalletNetwork();
             } else {
               this.web3WalletPollNetwork();
               this.web3WalletPollAddress();

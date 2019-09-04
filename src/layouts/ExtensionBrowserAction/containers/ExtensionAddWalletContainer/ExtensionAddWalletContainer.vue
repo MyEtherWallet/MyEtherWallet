@@ -304,6 +304,7 @@ export default {
           JSON.stringify(_self.file),
           nickname,
           type,
+          'add',
           _self.storeWalletCb
         );
         chrome.tabs.query({ url: `*://*.${service.toLowerCase()}/*` }, function(
@@ -323,6 +324,7 @@ export default {
           JSON.stringify(_self.file),
           nickname,
           type,
+          'add',
           _self.storeWalletCb
         );
       }

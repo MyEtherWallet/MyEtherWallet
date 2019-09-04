@@ -299,6 +299,7 @@ export default {
         null,
         name,
         WATCH_ONLY,
+        'add',
         this.addWatchOnlyWalletCb
       );
     },
