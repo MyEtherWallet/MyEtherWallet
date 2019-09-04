@@ -42,8 +42,12 @@
       <div v-else-if="web3WalletExists">
         <div class="modal-multi-icons">
           <img
+            :src="
+              isMetaMask
+                ? require('@/assets/images/icons/button-metamask-fox.svg')
+                : require('@/assets/images/logo-small.png')
+            "
             class="icon"
-            :src="isMetaMask ? require('@/assets/images/icons/button-metamask-fox.svg') : require('@/assets/images/logo-small.png')"
           />
           <img class="icon" src="~@/assets/images/icons/clip.svg" />
           <img class="icon logo-small" src="~@/assets/images/logo-small.png" />
@@ -106,12 +110,16 @@
         <div class="button-container">
           <a
             v-show="!refreshPage"
-            href="https://metamask.io/"
+            :href="
+              isMetaMask
+                ? 'https://metamask.io/'
+                : 'https://chrome.google.com/webstore/detail/myetherwallet/nlbmnnijcnlegkjjpcfjclmcfggfefdm?hl=en'
+            "
             target="_blank"
             rel="noopener noreferrer"
             class="mid-round-button-green-filled close-button"
             @click="refreshPage = true"
-            >{{ $t('accessWallet.installWeb3Wallet') }}</a
+            >{{ isMetaMask ? 'Install MetaMask' : 'Install Web3 Wallet' }}</a
           >
           <b-btn
             v-show="refreshPage"
