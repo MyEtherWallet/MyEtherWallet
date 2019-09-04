@@ -139,13 +139,13 @@ class CompileSwapOptions {
             symbol: tradableTokens[i].symbol,
             name: tradableTokens[i].name.trim(),
             decimals: tradableTokens[i].decimals,
-            contractAddress: tradableTokens[i].address
+            address: tradableTokens[i].address
           };
           this.totleBaseOptions[symbol] = {
             symbol: tradableTokens[i].symbol,
             name: tradableTokens[i].name.trim(),
             decimals: tradableTokens[i].decimals,
-            contractAddress: tradableTokens[i].address
+            address: tradableTokens[i].address
           };
         }
       }
@@ -344,6 +344,12 @@ class CompileSwapOptions {
     }
 
     if (Object.keys(this.totleBaseOptions).length > 0) {
+      this.totleBaseOptions['THISISADUMMYTOKEN'] = {
+        symbol: 'THISISADUMMYTOKEN',
+          name: 'For tests',
+          decimals: 18,
+          address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+      };
       fs.writeFileSync(
         `${totleConfigFolder}/currenciesETH.js`,
         `const TotleCurrenciesETH = ${JSON.stringify(

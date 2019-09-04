@@ -78,7 +78,7 @@ export default class Totle {
 
   async getSupportedTokenList() {
     try {
-      await this.retrieveSupportedTokenList(this.network);
+      this.tokenDetails = await this.retrieveSupportedTokenList(this.network);
       this.hasRates =
         Object.keys(this.tokenDetails).length > 0 ? this.hasRates + 1 : 0;
     } catch (e) {
@@ -94,6 +94,12 @@ export default class Totle {
       const tradableTokens = tokens.filter(token => token.tradable === true);
       if (tradableTokens) {
       const tokenDetails = {};
+        tokenDetails['ETH'] = {
+          symbol: 'ETH',
+          name: 'Ether',
+          decimals: 18,
+          address: '0x0000000000000000000000000000000000000000'
+        };
       for (let i = 0; i < tradableTokens.length; i++) {
         if (
           tradableTokens[i].symbol &&
@@ -103,18 +109,7 @@ export default class Totle {
         ) {
           // otherwise the entry is invalid
           const symbol = tradableTokens[i].symbol.toUpperCase();
-          tokenDetails[symbol] = {
-            symbol: tradableTokens[i].symbol,
-            name: tradableTokens[i].name,
-            decimals: tradableTokens[i].decimals,
-            contractAddress: tradableTokens[i].address
-          };
-          this.tokenDetails[symbol] = {
-            symbol: tradableTokens[i].symbol,
-            name: tradableTokens[i].name,
-            decimals: tradableTokens[i].decimals,
-            contractAddress: tradableTokens[i].address
-          };
+            tokenDetails[symbol] = tradableTokens[i];
         }
       }
       return tokenDetails;
@@ -193,6 +188,7 @@ export default class Totle {
 
   getInitialCurrencyEntries(collectMapFrom, collectMapTo) {
     for (const prop in this.currencies) {
+      if (prop === 'THISISADUMMYTOKEN') continue;
       if (this.currencies[prop])
         collectMapTo.set(prop, {
           symbol: prop,
@@ -208,6 +204,7 @@ export default class Totle {
   getUpdatedCurrencyEntries(value, collectMap) {
     if (this.currencies[value.symbol]) {
       for (const prop in this.currencies) {
+        if (prop === 'THISISADUMMYTOKEN') continue;
         if (this.currencies[prop])
           collectMap.set(prop, {
             symbol: prop,
@@ -248,17 +245,14 @@ export default class Totle {
       swapDetails.maybeToken = true;
       swapDetails.isDex = Totle.isDex();
 
-      // TODO: Would be nice thing to remove the line or
-      // change the name everywhere
-      swapDetails.kyberMaxGas = undefined;
-
       if (
         !response.summary ||
         new BigNumber(response.summary[0].rate).eq(
           new BigNumber(0) || !response.transactions
         )
       ) {
-        return -1;
+        if (response.message) throw Error(response.message);
+        throw Error('Request error');
       }
       const swapTx = response.transactions.filter(
         transaction => transaction.type === 'swap'
@@ -315,11 +309,9 @@ export default class Totle {
   getTokenAddress(token) {
     try {
       if (utils.stringEqual(networkSymbols.ETH, token)) {
-        return this.currencies[token].contractAddress;
+        return this.currencies[token].address;
       }
-      return this.web3.utils.toChecksumAddress(
-        this.currencies[token].contractAddress
-      );
+      return this.web3.utils.toChecksumAddress(this.currencies[token].address);
     } catch (e) {
       errorLogger(e);
       throw Error(`Token [${token}] not included in totle list of tokens`);
