@@ -13,7 +13,14 @@ const getPrivFromMnemonicWallet = (mnemonic, path) => {
   return hdKey.derive(path)._privateKey;
 };
 
-const addWalletToStore = (address, encStr, nickname, type, addType, callback) => {
+const addWalletToStore = (
+  address,
+  encStr,
+  nickname,
+  type,
+  addType,
+  callback
+) => {
   const checksummedAddr = toChecksumAddress(address).toLowerCase();
   const chrome = window.chrome;
   getAccounts(item => {
