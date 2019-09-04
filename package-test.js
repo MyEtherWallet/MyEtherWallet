@@ -6,6 +6,7 @@ const SAFE_TIME = 1000 * 1 * 60 * 60 * 24 * 7; //7days
 //@xkeshi/vue-qrcode no longer maintained, forked out to mew
 //multicoin-address-validator not enough downloads
 // waiting for vee-validate 3.0 to be more stable (https://github.com/baianat/vee-validate/issues/2248)
+// Matching exceptions with package.json
 const EXCEPTIONS = [
   '@myetherwallet/mewconnect-web-client',
   'canvas',
@@ -15,7 +16,9 @@ const EXCEPTIONS = [
   'web3-core-requestmanager',
   '@vue/eslint-config-prettier',
   '@xkeshi/vue-qrcode',
-  'vee-validate' 
+  'vee-validate',
+  'webpack',
+  'babel-eslint'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
