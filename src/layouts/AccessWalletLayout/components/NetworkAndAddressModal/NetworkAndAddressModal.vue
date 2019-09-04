@@ -418,7 +418,7 @@ export default {
       this.$store
         .dispatch('decryptWallet', [this.currentWallet])
         .then(() => {
-          if (!this.wallet !== null) {
+          if (this.wallet !== null) {
             if (!this.$route.path.split('/').includes('interface')) {
               this.$router.push({
                 path: 'interface'
