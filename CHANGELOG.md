@@ -4,6 +4,10 @@
 
 - Restrict gas price minimum to 1 gwei [#1386](https://github.com/MyEtherWallet/MyEtherWallet/pull/1386)
 
+### Devop
+
+- Compress images, Remove unused images and components [#1389](https://github.com/MyEtherWallet/MyEtherWallet/pull/1389)
+
 ### Release v5.1.2
 
 ### Devop
