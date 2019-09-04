@@ -32,7 +32,7 @@
     />
     <print-modal
       ref="printModal"
-      :priv-key="!wallet && !wallet.isPubOnly"
+      :priv-key="!wallet"
       :address="account.address"
     />
     <address-qrcode-modal ref="addressQrcodeModal" :address="account.address" />
