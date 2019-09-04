@@ -55,11 +55,5 @@ describe('DappButtons.vue', () => {
       wrapper.vm.$el.querySelector('.dapps-button img').src.trim()
     ).toEqual(icon);
   });
-
-  // it('should render correct param', () => {
-  //   expect(wrapper.vm.$el.querySelector('.param').textContent.trim()).toEqual(
-  //     param
-  //   );
-  // });
   describe('DappButtons.vue Methods', () => {});
 });
