@@ -28,8 +28,8 @@
       <div v-else-if="web3WalletExists">
         <div class="modal-multi-icons">
           <img
-            class="icon"
-            src="~@/assets/images/icons/button-metamask-fox.svg"
+            class="icon metamask"
+            src="~@/assets/images/icons/button-metamask-fox.png"
           />
           <img class="icon" src="~@/assets/images/icons/clip.svg" />
           <img class="icon logo-small" src="~@/assets/images/logo-small.png" />
@@ -74,8 +74,8 @@
       <div v-else>
         <div class="modal-multi-icons">
           <img
-            class="icon"
-            src="~@/assets/images/icons/button-metamask-fox.svg"
+            class="icon metamask"
+            src="~@/assets/images/icons/button-metamask-fox.png"
           />
         </div>
         <div class="d-block content-container text-center">
