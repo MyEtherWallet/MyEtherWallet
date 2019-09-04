@@ -1,6 +1,7 @@
 ### Devop
 
 - Updated Bootstrap Vue. [#1393](https://github.com/MyEtherWallet/MyEtherWallet/pull/1393)
+- Compress images, Remove unused images and components [#1389](https://github.com/MyEtherWallet/MyEtherWallet/pull/1389)
 
 ### Release v5.1.2
 
