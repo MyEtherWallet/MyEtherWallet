@@ -5,6 +5,12 @@
   padding: 0 8px;
 }
 
+.errorInput {
+  border: 1px solid $red-1 !important;
+  border-radius: 5px;
+  padding: 11px 13px;
+}
+
 .buy-subdomain-container {
   background-color: $white;
   border-radius: 4px;
@@ -32,6 +38,10 @@
     color: $dark-blue-7;
     font-size: 16px;
     font-weight: bold;
+  }
+
+  .errorText {
+    color: $red-1;
   }
 
   .form {
