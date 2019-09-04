@@ -1,7 +1,7 @@
 <template>
   <b-modal
     ref="metamask"
-    :title="$t('accessWallet.accessByMetaMask')"
+    :title="isMetaMask ? 'Access via MetaMask' : 'Access via MEWCX'"
     hide-footer
     class="bootstrap-modal nopadding modal-metamask"
     centered
@@ -23,18 +23,34 @@
           </a>
         </div>
       </div>
+      <div v-if="isSafari && !isMetaMask" class="browser-catch">
+        <h4>
+          MEWCX is only available in these browsers:
+        </h4>
+        <div class="browser-logo-container">
+          <a
+            v-for="browser in mewSupportedBrowsers"
+            :key="browser.name"
+            :href="browser.link"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <img :src="browser.logo" />
+          </a>
+        </div>
+      </div>
       <div v-else-if="web3WalletExists">
         <div class="modal-multi-icons">
           <img
             class="icon"
-            src="~@/assets/images/icons/button-metamask-fox.svg"
+            :src="isMetaMask ? require('@/assets/images/icons/button-metamask-fox.svg') : require('@/assets/images/logo-small.png')"
           />
           <img class="icon" src="~@/assets/images/icons/clip.svg" />
           <img class="icon logo-small" src="~@/assets/images/logo-small.png" />
         </div>
         <div class="d-block content-container text-center">
           <h4 v-show="!unlockWeb3Wallet">
-            {{ $t('accessWallet.metaMaskModalDesc') }}
+            {{ $t('accessWallet.web3WalletModalDesc') }}
           </h4>
           <h4 v-show="unlockWeb3Wallet">
             {{ $t('accessWallet.unlockWeb3Wallet') }}
@@ -77,7 +93,7 @@
           />
         </div>
         <div class="d-block content-container text-center">
-          <h4>{{ $t('accessWallet.installMetaMaskModalDesc') }}</h4>
+          <h4>{{ $t('accessWallet.installWeb3WalletModalDesc') }}</h4>
         </div>
         <div class="accept-terms hidden">
           <label class="checkbox-container">
@@ -150,6 +166,23 @@ export default {
           logo: firefox,
           link: 'https://www.mozilla.org/en-US/firefox/?v=b',
           name: 'firefox'
+        },
+        {
+          logo: opera,
+          link: 'https://www.opera.com/',
+          name: 'opera'
+        },
+        {
+          logo: chrome,
+          link: 'https://www.google.com/chrome/',
+          name: 'chrome'
+        }
+      ],
+      mewSupportedBrowsers: [
+        {
+          logo: brave,
+          link: 'https://brave.com/',
+          name: 'brave'
         },
         {
           logo: opera,

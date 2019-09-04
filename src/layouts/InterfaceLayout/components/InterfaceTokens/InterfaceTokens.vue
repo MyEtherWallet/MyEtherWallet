@@ -160,7 +160,6 @@ export default {
     },
     search(newVal) {
       this.assignTokens(this.tokens, newVal);
-      this.getCustomTokens();
     }
   },
   methods: {
@@ -307,7 +306,7 @@ export default {
       this.$refs.expendUp.classList.toggle('hidden');
     },
     async assignTokens(arr, query) {
-      const oldArray = this.customTokens ? this.customTokens.slice() : [];
+      const oldArray = this.customTokens.length > 0 ? this.customTokens.slice() : [];
       if (query !== '') {
         this.customTokens = oldArray
           .filter(token => {
@@ -325,6 +324,7 @@ export default {
           .sort(sortByBalance);
       } else {
         this.localTokens = arr;
+        this.customTokens = oldArray;
       }
     }
   }
