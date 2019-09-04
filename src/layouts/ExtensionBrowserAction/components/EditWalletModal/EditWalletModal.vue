@@ -66,7 +66,7 @@ export default {
   },
   mounted() {
     this.$refs.editModal.$on('hidden', () => {
-      this.locName = '';
+      this.locName = this.name;
     });
   },
   methods: {
@@ -77,6 +77,7 @@ export default {
         wallet.priv,
         this.locName,
         wallet.type,
+        'edit',
         this.saveWalletCb
       );
     },

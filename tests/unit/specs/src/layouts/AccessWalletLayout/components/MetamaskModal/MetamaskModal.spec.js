@@ -1,11 +1,11 @@
 import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils';
-import MetamaskModal from '@/layouts/AccessWalletLayout/components/MetamaskModal/MetamaskModal.vue';
+import Web3WalletModal from '@/layouts/AccessWalletLayout/components/Web3WalletModal/Web3WalletModal.vue';
 import { Tooling } from '@@/helpers';
 import { state } from '@@/helpers/mockStore';
 import { RouterLinkStub } from '@@/helpers/setupTooling';
 
-describe('MetamaskModal.vue', () => {
+describe('Web3WalletModal.vue', () => {
   let localVue, i18n, wrapper, store;
 
   beforeAll(() => {
@@ -17,7 +17,7 @@ describe('MetamaskModal.vue', () => {
   });
 
   beforeEach(() => {
-    wrapper = shallowMount(MetamaskModal, {
+    wrapper = shallowMount(Web3WalletModal, {
       localVue,
       i18n,
       store,
@@ -89,7 +89,7 @@ describe('MetamaskModal.vue', () => {
     ).toEqual(true);
   });
 
-  describe('MetamaskModal.vue Methods', () => {
+  describe('Web3WalletModal.vue Methods', () => {
     xit('should render correct getWeb3Wallet methods', () => {
       window.web3 = state.newWeb3;
       wrapper.vm.getWeb3Wallet();

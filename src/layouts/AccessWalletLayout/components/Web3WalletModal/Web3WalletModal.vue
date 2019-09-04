@@ -7,7 +7,7 @@
     centered
   >
     <div class="modal-content">
-      <div v-if="isSafari" class="browser-catch">
+      <div v-if="isSafari && isMetaMask" class="browser-catch">
         <h4>
           MetaMask is only available in these browsers:
         </h4>
@@ -37,7 +37,7 @@
             {{ $t('accessWallet.metaMaskModalDesc') }}
           </h4>
           <h4 v-show="unlockWeb3Wallet">
-            {{ $t('accessWallet.unlockMetamaskWallet') }}
+            {{ $t('accessWallet.unlockWeb3Wallet') }}
           </h4>
         </div>
         <div class="accept-terms">
@@ -95,7 +95,7 @@
             rel="noopener noreferrer"
             class="mid-round-button-green-filled close-button"
             @click="refreshPage = true"
-            >{{ $t('accessWallet.installMetamask') }}</a
+            >{{ $t('accessWallet.installWeb3Wallet') }}</a
           >
           <b-btn
             v-show="refreshPage"
@@ -165,7 +165,10 @@ export default {
     };
   },
   computed: {
-    ...mapState(['path'])
+    ...mapState(['path']),
+    isMetaMask() {
+      return window.ethereum.isMetaMask;
+    }
   },
   mounted() {
     this.isSafari = platform.name.toLowerCase() === 'safari';
@@ -220,5 +223,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'MetamaskModal.scss';
+@import 'Web3WalletModal.scss';
 </style>

@@ -13,11 +13,11 @@ const getPrivFromMnemonicWallet = (mnemonic, path) => {
   return hdKey.derive(path)._privateKey;
 };
 
-const addWalletToStore = (address, encStr, nickname, type, callback) => {
+const addWalletToStore = (address, encStr, nickname, type, addType, callback) => {
   const checksummedAddr = toChecksumAddress(address).toLowerCase();
   const chrome = window.chrome;
   getAccounts(item => {
-    const found = Object.keys(item).find(key => {
+    const foundAddress = Object.keys(item).find(key => {
       if (isAddress(key)) {
         return (
           toChecksumAddress(key).toLocaleLowerCase() ===
@@ -25,10 +25,24 @@ const addWalletToStore = (address, encStr, nickname, type, callback) => {
         );
       }
     });
-    if (found) {
-      Toast.responseHandler('Address already stored!', Toast.ERROR);
-      return;
+    const foundNickname = Object.keys(item).find(key => {
+      if (isAddress(key)) {
+        return JSON.parse(item[key]).nick === nickname;
+      }
+    });
+
+    if (addType === 'edit') {
+      if (foundNickname) {
+        Toast.responseHandler('Nickname found!', Toast.WARN);
+        return;
+      }
+    } else {
+      if (foundAddress) {
+        Toast.responseHandler('Address already stored!', Toast.ERROR);
+        return;
+      }
     }
+
     nickname = nickname.replace(/(<([^>]+)>)/gi, '');
     const value = {
       nick: nickname,
