@@ -200,7 +200,6 @@ import { Misc, Toast } from '@/helpers';
 import web3utils from 'web3-utils';
 import BigNumber from 'bignumber.js';
 import Blockie from '@/components/Blockie';
-import { LEDGER as LEDGER_TYPE } from '@/wallets/bip44/walletTypes';
 import hide from '@/assets/images/icons/hide-password.svg';
 import showIcon from '@/assets/images/icons/show-password.svg';
 

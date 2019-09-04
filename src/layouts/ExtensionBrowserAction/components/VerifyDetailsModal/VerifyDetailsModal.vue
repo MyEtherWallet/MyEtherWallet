@@ -116,7 +116,7 @@ export default {
       this.$emit('nickname', newVal);
     },
     wallet(newVal) {
-      if (Object.keys(newVal).length > 0) {
+      if (Object.keys(newVal).length > 0 && newVal.identifier === 'keystore') {
         this.web3.eth
           .getBalance(newVal.getAddressString())
           .then(res => {
