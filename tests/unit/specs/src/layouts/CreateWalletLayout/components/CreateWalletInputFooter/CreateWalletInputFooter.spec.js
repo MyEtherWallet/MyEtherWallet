@@ -31,13 +31,19 @@ describe('CreateWalletInputFooter.vue', () => {
 
   it('should render correct combo props', () => {
     expect(
-      wrapper.vm.$el.querySelector('.footer-text p').textContent.trim().indexOf(combo)
+      wrapper.vm.$el
+        .querySelector('.footer-text p')
+        .textContent.trim()
+        .indexOf(combo)
     ).toBeGreaterThan(-1);
   });
 
   it('should render correct desc props', () => {
     expect(
-      wrapper.vm.$el.querySelector('.footer-text p').textContent.trim().indexOf(desc)
+      wrapper.vm.$el
+        .querySelector('.footer-text p')
+        .textContent.trim()
+        .indexOf(desc)
     ).toBeGreaterThan(-1);
   });
 
