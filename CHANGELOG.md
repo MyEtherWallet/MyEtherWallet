@@ -2,6 +2,10 @@
 
 - Fix the bug when user expend the token list, footer breaks [#1396](https://github.com/MyEtherWallet/MyEtherWallet/pull/1396)
 
+### Devop
+
+- Compress images, Remove unused images and components [#1389](https://github.com/MyEtherWallet/MyEtherWallet/pull/1389)
+
 ### Release v5.1.2
 
 ### Devop
