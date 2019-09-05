@@ -5,6 +5,8 @@
     hide-footer
     hide-header
     class="bootstrap-modal"
+    static
+    lazy
   >
     <div class="d-block text-center">
       <i class="check-icon fa fa-close" aria-hidden="true" />
