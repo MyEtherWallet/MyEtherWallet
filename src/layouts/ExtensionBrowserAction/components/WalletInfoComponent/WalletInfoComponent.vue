@@ -146,9 +146,9 @@
             <template slot="button-content">
               <i class="fa fa-lg fa-ellipsis-h" />
             </template>
+            <b-dropdown-item @click="openAddCustom">Add</b-dropdown-item>
             <b-dropdown-item @click="fetchTokens">Refresh</b-dropdown-item>
             <b-dropdown-item @click="() => {viewAllTokens(true);}">View All</b-dropdown-item>
-            <b-dropdown-item @click="openAddCustom">Add</b-dropdown-item>
           </b-dropdown>
         </div>
         <div class="token-search-container">
@@ -290,7 +290,7 @@ export default {
   },
   methods: {
     searchBySymbol(symbol) {
-      const searchNetwork = this.localTokens.find(item => {
+      const searchNetwork = this.localTokenVersion.find(item => {
         return item.symbol.toLowerCase() === symbol.toLowerCase();
       });
 
@@ -304,7 +304,7 @@ export default {
       return true;
     },
     searchByAddr(addr) {
-      const searchNetwork = this.localTokens.find(item => {
+      const searchNetwork = this.localTokenVersion.find(item => {
         return (
           utils.toChecksumAddress(item.address) ===
           utils.toChecksumAddress(addr)
@@ -327,14 +327,14 @@ export default {
       const findTokenBySymbol = this.searchBySymbol(symbol);
       const findTokenByAddr = this.searchByAddr(address);
       if (!findTokenByAddr && addType !== '') {
-        this.$refs.tokenModal.$refs.token.hide();
+        this.$refs.tokenModal.$refs.tokenModal.hide();
         Toast.responseHandler(
           'A default or custom token with this contract address already exists!',
           Toast.ERROR
         );
         return false;
       } else if (!findTokenBySymbol && addType !== '') {
-        this.$refs.tokenModal.$refs.token.hide();
+        this.$refs.tokenModal.$refs.tokenModal.hide();
         Toast.responseHandler(
           "A default or custom token with this symbol already exists! The token in our list may have the same symbol but a different contract address, try adding it again with a '2' after the symbol!",
           Toast.ERROR
@@ -361,7 +361,7 @@ export default {
         this.localCustomTokens = this.customTokens.splice();
         currentCustomToken[this.network.type.name] = this.customTokens;
         store.set('customTokens', currentCustomToken);
-        this.$refs.tokenModal.$refs.token.hide();
+        this.$refs.tokenModal.$refs.tokenModal.hide();
         await this.fetchTokens();
         Toast.responseHandler('Successfully added token!', Toast.SUCCESS);
       }
@@ -445,6 +445,7 @@ export default {
                 .toFixed(3)
             : 0;
           token.address = token.addr;
+          token.icon = token.icon ? token.icon : require(`@/assets/images/networks/${this.network.type.name.toLowerCase()}.svg`)
           delete token.addr;
           return token;
         });
@@ -454,6 +455,7 @@ export default {
       } catch (e) {
         tokens = this.network.type.tokens.map(token => {
           token.balance = 'Load';
+          token.icon = token.icon ? token.icon : require(`@/assets/images/networks/${this.network.type.name.toLowerCase()}.svg`)
           return token;
         });
         this.loading = false;
@@ -467,9 +469,15 @@ export default {
         this.getV3Tokens();
       }
       const storedTokens = store.get('customTokens') || {};
-      this.customTokens = storedTokens.hasOwnProperty(this.network.type.name)
+      const tokens = storedTokens.hasOwnProperty(this.network.type.name)
         ? storedTokens[this.network.type.name]
         : [];
+
+      this.customTokens = tokens.map(item => {
+        item.icon = item.icon ? item.icon : require(`@/assets/images/networks/${this.network.type.name.toLowerCase()}.svg`)
+        return item;
+      });
+
       this.localCustomTokens = this.customTokens.slice();
     },
     getV3Tokens() {
@@ -504,7 +512,7 @@ export default {
     },
     copyAddress() {
       this.$refs.addressInput.select();
-      window.execCommand('copy');
+      document.execCommand('copy');
     },
     viewAllTokens(bool) {
       if (bool) {
