@@ -1,107 +1,55 @@
-@import '~@/scss/GlobalVariables';
-.content-container {
-  align-items: center;
-  display: flex;
-  justify-content: space-around;
-  min-height: 420px;
-  padding: 15px 15px 0;
+@import "~@/scss/GlobalVariables";
 
-  .finney-img {
-    flex: 60;
-    position: relative;
+a {
+  text-decoration: none;
+}
 
-    img {
-      left: -330px;
-      position: absolute;
-      top: -245px;
-      width: 850px;
-    }
-  }
+.finney-desktop {
+  background-image: url(~@/assets/images/modal/finney/finney-bg.jpg);
+  min-height: 500px;
+  width: 100%;
+  background-size: 1025px;
+  background-position: right center;
 
-  .finney-text-container {
-    color: $dark-grey-3;
-    display: flex;
-    flex: auto;
-    flex-direction: column;
-    justify-content: space-around;
-    min-height: inherit;
-    position: relative;
-    z-index: 3;
+  .modal-content-right {
+    margin-left: auto;
+    width: 50%;
+    padding: 40px 20px 20px;
 
-    .scan-container {
-      width: 200px !important;
+    .qrcode-container {
+      margin: 20px 0 20px 0;
+      width: 150px;
+      border: 10px solid $white;
+      border-radius: 3px;
     }
 
-    .qr-container {
-      .large {
-        display: block;
-      }
-
-      .small {
-        display: none;
-      }
+    p {
+      color: $white;
     }
 
     .text-container {
-      padding-left: 15px;
-
-      a {
-        color: $dark-grey-3 !important;
-
-        &:hover {
-          text-decoration: none !important;
-        }
-      }
-
-      span {
+      p {
         font-size: 18px;
       }
-
       h3 {
+        color: $white;
         font-size: 30px;
       }
     }
   }
 }
 
-@media screen and (max-width: 450px) {
-  .content-container {
-    min-height: 235px !important;
-    padding: 15px 15px 0 !important;
-  }
+@media screen and (max-width: 525px) {
+  .finney-desktop {
+    min-height: 500px;
+    width: 100%;
+    background-size: 953px;
+    background-position: 486px center;
 
-  .finney-img {
-    flex: 60;
-    position: relative;
-
-    img {
-      left: -220px !important;
-      position: absolute;
-      top: -135px !important;
-      width: 510px !important;
-    }
-  }
-
-  .large {
-    display: none !important;
-  }
-
-  .small {
-    display: block !important;
-  }
-
-  .finney-text-container {
-    .scan-container {
-      width: 130px !important;
-    }
-
-    span,
-    p {
-      font-size: 12px !important;
-    }
-
-    h3 {
-      font-size: 20px !important;
+    .modal-content-right {
+      margin-left: auto;
+      width: 65%;
+      padding: 40px 20px 20px;
     }
   }
 }
