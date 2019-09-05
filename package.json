@@ -33,7 +33,7 @@
     "pre-commit": "npm run lint && npm run test"
   },
   "dependencies": {
-    "@sentry/browser": "5.6.2",
+    "@sentry/browser": "5.6.3",
     "@sentry/integrations": "5.6.1",
     "html2canvas": "1.0.0-rc.3",
     "idna-uts46": "1.1.0",
@@ -79,7 +79,7 @@
     "babel-jest": "23.6.0",
     "bignumber.js": "9.0.0",
     "bip39": "3.0.2",
-    "bootstrap-vue": "2.0.0-rc.19",
+    "bootstrap-vue": "2.0.0-rc.28",
     "canvas": "1.6.13",
     "codecov": "3.5.0",
     "copy-webpack-plugin": "5.0.4",
@@ -153,12 +153,10 @@
       "web3-core-helpers",
       "web3-core-method",
       "web3-utils",
-      "@xkeshi/vue-qrcode",
       "multicoin-address-validator",
-      "bootstrap-vue",
+      "@xkeshi/vue-qrcode",
       "web3-core-requestmanager",
-      "vue-tel-input",
-      "vee-validate"
+      "sass-loader"
     ]
   }
 }

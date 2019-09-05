@@ -5,6 +5,8 @@
     hide-footer
     class="bootstrap-modal nopadding modal-network-and-address"
     centered
+    static
+    lazy
   >
     <div class="modal-content-container">
       <div class="collapse-container">
