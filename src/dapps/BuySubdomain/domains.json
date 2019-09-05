@@ -1,5 +1,35 @@
 [
   {
+    "name": "accepte",
+    "version": "1.0",
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
+  },
+  {
+    "name": "asksfor",
+    "version": "1.0",
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
+  },
+  {
+    "name": "atethereum",
+    "version": "1.0",
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
+  },
+  {
+    "name": "atpeepeth",
+    "version": "1.0",
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
+  },
+  {
+    "name": "begsfor",
+    "version": "1.0",
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
+  },
+  {
+    "name": "blockchaincontracts",
+    "version": "1.0",
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
+  },
+  {
     "name": "britishblockchain",
     "version": "1.0",
     "registrar": "0xc32659651d137a18b79925449722855aa327231d"
@@ -15,12 +45,47 @@
     "registrar": "0xc32659651d137a18b79925449722855aa327231d"
   },
   {
+    "name": "chainlinknode",
+    "version": "1.0",
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
+  },
+  {
     "name": "codeinecrazy",
     "version": "1.0",
     "registrar": "0xc32659651d137a18b79925449722855aa327231d"
   },
   {
     "name": "cryptoking",
+    "version": "1.0",
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
+  },
+  {
+    "name": "deserves",
+    "version": "1.0",
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
+  },
+  {
+    "name": "eth-gbg",
+    "version": "1.0",
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
+  },
+  {
+    "name": "etherbase",
+    "version": "1.0",
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
+  },
+  {
+    "name": "gimmethe",
+    "version": "1.0",
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
+  },
+  {
+    "name": "paynonym",
+    "version": "1.0",
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
+  },
+  {
+    "name": "sendmecrypto",
     "version": "1.0",
     "registrar": "0xc32659651d137a18b79925449722855aa327231d"
   },
@@ -40,7 +105,17 @@
     "registrar": "0xc32659651d137a18b79925449722855aa327231d"
   },
   {
+    "name": "tokenid",
+    "version": "1.0",
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
+  },
+  {
     "name": "trustsnobank",
+    "version": "1.0",
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
+  },
+  {
+    "name": "wantsome",
     "version": "1.0",
     "registrar": "0xc32659651d137a18b79925449722855aa327231d"
   },
