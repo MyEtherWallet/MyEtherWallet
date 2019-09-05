@@ -66,8 +66,8 @@ xdescribe('SendOfflineContainer.vue', () => {
     const pointerEventsElements = wrapper.vm.$el.querySelectorAll(
       'div.prevent-pointer-events'
     );
-    for (let i = 0; i < pointerEventsElements.length; i++) {
-      const pointerEventsElement = pointerEventsElements[i];
+
+    for (const [i, pointerEventsElement] of pointerEventsElements.entries()) {
       expect(
         pointerEventsElement.querySelector('p.title').textContent.trim()
       ).toEqual(wrapper.vm.$data.tabs[i].title);

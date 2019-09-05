@@ -49,13 +49,6 @@ describe('NetworkAndAddressModal.vue', () => {
     });
   });
 
-  xit('[7-2-19] should render correct accessMyWalletBtnDisabled data', () => {
-    expect(wrapper.vm.$data.accessMyWalletBtnDisabled).toBe(true);
-    const accessMyWalletBtn = wrapper.find({ ref: 'accessMyWalletBtn' });
-    accessMyWalletBtn.trigger('click');
-    expect(wrapper.vm.$data.accessMyWalletBtnDisabled).toBe(false);
-  });
-
   describe('NetworkAndAddressModal.vue Methods', () => {
     it('should render correct unlockWallet method', () => {
       wrapper.vm.unlockWallet();

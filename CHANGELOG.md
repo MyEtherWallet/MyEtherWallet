@@ -4,6 +4,10 @@
 
 - Fix network mismatch when using metamask [#1384](https://github.com/MyEtherWallet/MyEtherWallet/pull/1384)
 
+### Devop
+
+- Compress images, Remove unused images and components [#1389](https://github.com/MyEtherWallet/MyEtherWallet/pull/1389)
+
 ### Release v5.1.2
 
 ### Devop

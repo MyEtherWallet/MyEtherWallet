@@ -68,9 +68,10 @@ describe('LinkBlock.vue', () => {
     expect(
       wrapper.vm.$el.querySelector('.email a').href.replace('mailto:', '')
     ).toEqual(content.email);
+
     const socialElements = wrapper.vm.$el.querySelectorAll('.social div');
-    for (let i = 0; i < socialElements.length; i++) {
-      const socialElement = socialElements[i];
+
+    for (const [i, socialElement] of socialElements.entries()) {
       expect(socialElement.querySelector('a').href).toEqual(
         content.social[i].link + '/'
       );
