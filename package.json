@@ -80,7 +80,7 @@
     "babel-jest": "23.6.0",
     "bignumber.js": "9.0.0",
     "bip39": "3.0.2",
-    "bootstrap-vue": "2.0.0-rc.19",
+    "bootstrap-vue": "2.0.0-rc.28",
     "canvas": "1.6.13",
     "codecov": "3.5.0",
     "copy-webpack-plugin": "5.0.4",
@@ -154,12 +154,9 @@
       "web3-core-helpers",
       "web3-core-method",
       "web3-utils",
-      "@xkeshi/vue-qrcode",
       "multicoin-address-validator",
-      "bootstrap-vue",
-      "web3-core-requestmanager",
-      "vue-tel-input",
-      "vee-validate"
+      "@xkeshi/vue-qrcode",
+      "web3-core-requestmanager"
     ]
   }
 }

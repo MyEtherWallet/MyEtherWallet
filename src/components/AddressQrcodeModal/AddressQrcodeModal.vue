@@ -4,6 +4,8 @@
       ref="addressQrcode"
       hide-footer
       centered
+      static
+      lazy
       class="bootstrap-modal nopadding"
       title="Address"
     >
