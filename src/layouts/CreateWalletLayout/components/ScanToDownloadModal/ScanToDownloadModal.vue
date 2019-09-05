@@ -5,6 +5,8 @@
     hide-footer
     centered
     class="bootstrap-modal no-padding"
+    static
+    lazy
   >
     <div class="qr-divider">
       <div class="ios">

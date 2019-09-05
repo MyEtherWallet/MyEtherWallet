@@ -6,6 +6,8 @@
       centered
       class="bootstrap-modal nopadding"
       title="Address"
+      static
+      lazy
     >
       <div class="modal-contents">
         MEWconnect is not compatible with iPads.
