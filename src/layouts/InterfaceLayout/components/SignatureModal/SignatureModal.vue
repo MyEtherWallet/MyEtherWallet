@@ -6,6 +6,8 @@
       centered
       class="bootstrap-modal"
       title="Signature"
+      static
+      lazy
     >
       <div class="modal-contents">
         <div>
