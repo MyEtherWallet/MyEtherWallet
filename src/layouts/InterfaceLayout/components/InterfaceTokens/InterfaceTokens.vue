@@ -220,7 +220,7 @@ export default {
       this.resetTokenSelection();
     },
     addTokenModal() {
-      this.$refs.tokenModal.$refs.token.show();
+      this.$refs.tokenModal.$refs.tokenModal.show();
     },
     removeToken(idx) {
       const storedTokens = store.get('customTokens');

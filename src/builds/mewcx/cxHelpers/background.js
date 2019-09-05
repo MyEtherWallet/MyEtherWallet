@@ -1,4 +1,5 @@
 import helpers from './helpers';
+import { isAddress } from '@/helpers/addressUtils';
 import { extractRootDomain } from './extractRootDomain';
 import MiddleWare from '@/wallets/web3-provider/middleware';
 import {
@@ -52,24 +53,36 @@ chrome.storage.sync.get(null, networkChanger);
 
 // Listens for network changes and sets background store to match client store
 chrome.storage.onChanged.addListener(items => {
-  if (items.hasOwnProperty('defNetwork')) {
-    const networkProps = JSON.parse(items['defNetwork'].newValue);
-    const network = store.state.Networks[networkProps.key].find(
-      actualNetwork => {
-        return actualNetwork.url === networkProps.url;
-      }
-    );
-    store.dispatch('switchNetwork', network).then(() => {
-      store.dispatch('setWeb3Instance', network.url).then(() => {
-        store.state.web3.eth.net.getId().then(res => {
-          chrome.storage.sync.set({
-            defChainID: store.state.network.type.chainID,
-            defNetVersion: res
+  Object.keys(items).forEach(item => {
+    if (isAddress(item)) {
+      const currentNotifications = JSON.parse(
+        localStorage.getItem('notifications')
+      );
+      currentNotifications[item] = [];
+      localStorage.setItem(
+        'notifications',
+        JSON.stringify(currentNotifications)
+      );
+    }
+    if (item === 'defNetwork') {
+      const networkProps = JSON.parse(items['defNetwork'].newValue);
+      const network = store.state.Networks[networkProps.key].find(
+        actualNetwork => {
+          return actualNetwork.url === networkProps.url;
+        }
+      );
+      store.dispatch('switchNetwork', network).then(() => {
+        store.dispatch('setWeb3Instance', network.url).then(() => {
+          store.state.web3.eth.net.getId().then(res => {
+            chrome.storage.sync.set({
+              defChainID: store.state.network.type.chainID,
+              defNetVersion: res
+            });
           });
         });
       });
-    });
-  }
+    }
+  });
 });
 const urls = {};
 // eslint-disable-next-line

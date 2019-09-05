@@ -1583,3 +1583,14 @@
 .global__interface-block__margin-top {
   margin-top: 15px;
 }
+
+.cx-dropdown {
+  .btn {
+    padding: 0 !important;
+  }
+
+  .btn-secondary {
+    background-color: transparent !important;
+    border: none !important;
+  }
+}
