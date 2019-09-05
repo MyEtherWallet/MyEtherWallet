@@ -201,7 +201,9 @@ export default {
       this.customTokens = storedTokens.hasOwnProperty(this.network.type.name)
         ? storedTokens[this.network.type.name]
         : [];
-      this.localCustomTokens = storedTokens.hasOwnProperty(this.network.type.name)
+      this.localCustomTokens = storedTokens.hasOwnProperty(
+        this.network.type.name
+      )
         ? storedTokens[this.network.type.name]
         : [];
     },
