@@ -3,10 +3,15 @@
 ### Bug
 
 - Fix network mismatch when using metamask [#1384](https://github.com/MyEtherWallet/MyEtherWallet/pull/1384)
+- Fix the bug when user expend the token list, footer breaks [#1396](https://github.com/MyEtherWallet/MyEtherWallet/pull/1396)
+
 
 ### Devop
 
+- Fix finney modal layout [#1392](https://github.com/MyEtherWallet/MyEtherWallet/pull/1392)
+- Updated Bootstrap Vue. [#1393](https://github.com/MyEtherWallet/MyEtherWallet/pull/1393)
 - Compress images, Remove unused images and components [#1389](https://github.com/MyEtherWallet/MyEtherWallet/pull/1389)
+- Restore valid Lightsreams network [#1350](https://github.com/MyEtherWallet/MyEtherWallet/pull/1350)
 
 ### Release v5.1.2
 
