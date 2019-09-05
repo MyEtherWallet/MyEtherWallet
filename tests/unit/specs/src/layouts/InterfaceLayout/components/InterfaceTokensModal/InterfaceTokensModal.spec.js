@@ -6,7 +6,7 @@ import { Tooling } from '@@/helpers';
 describe('InterfaceTokensModal.vue', () => {
   let localVue, i18n, wrapper, store;
   const tokenDecimal = '100';
-  const tokenAddress = '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D';
+  const tokenAddress = '0xdecaf9cd2367cdbb726e904cd6397edfcae6068d';
   const tokenSymbol = 'tokenSy';
   const addToken = sinon.stub();
   beforeAll(() => {
@@ -44,7 +44,7 @@ describe('InterfaceTokensModal.vue', () => {
     const inputElements = wrapper.vm.$el.querySelectorAll(
       '.tokens-modal-body input'
     );
-    expect(inputElements[0].value).toEqual(tokenAddress.toLowerCase());
+    expect(inputElements[0].value).toEqual(tokenAddress);
   });
 
   it('should render correct tokenSymbol', () => {
