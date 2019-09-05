@@ -6,6 +6,8 @@
       hide-footer
       centered
       class="bootstrap-modal balance nopadding"
+      static
+      lazy
     >
       <div class="content-block total-balance">
         <div class="flex-container">

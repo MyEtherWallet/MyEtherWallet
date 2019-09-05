@@ -6,6 +6,8 @@
       hide-footer
       centered
       class="bootstrap-modal-wide nopadding finalize-modal"
+      static
+      lazy
     >
       <div class="finalize-modal-container">
         <h3>
