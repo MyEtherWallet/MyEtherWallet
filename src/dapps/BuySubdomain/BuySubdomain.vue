@@ -114,14 +114,14 @@ export default {
       this.query();
     }
   },
-  mounted() {
-    const web3C = this.web3.eth.Contract;
-    domains.forEach(domain => {
-      const updatedDomain = Object.assign({}, domain);
-      updatedDomain.contract = new web3C(SubdomainAbi, domain.registrar);
-      this.knownRegistrarInstances[domain.name] = updatedDomain;
-    });
-  },
+  // mounted() {
+  //   const web3C = this.web3.eth.Contract;
+  //   domains.forEach(domain => {
+  //     const updatedDomain = Object.assign({}, domain);
+  //     updatedDomain.contract = new web3C(SubdomainAbi, domain.registrar);
+  //     this.knownRegistrarInstances[domain.name] = updatedDomain;
+  //   });
+  // },
   methods: {
     debounceInput: web3.utils._.debounce(function(e) {
       if (e.target.value.indexOf(' ') >= 0) {
@@ -139,7 +139,7 @@ export default {
           const getSubdomain = await this.knownRegistrarInstances[
             key
           ].contract.methods
-            .query(sha3(key), this.domainName)
+            .query('0x' + sha3(key), this.domainName)
             .call();
           getSubdomain.version = this.knownRegistrarInstances[key].version;
           if (getSubdomain[0] !== '') {
@@ -153,31 +153,25 @@ export default {
       }
     },
     async buyDomain(item) {
-      const domain = this.web3.utils.sha3(item.domain);
+      const domain = '0x' + this.web3.utils.sha3(item.domain);
       const subdomain = this.domainName;
       const ownerAddress = this.account.address;
       const referrerAddress = this.ethDonationAddress;
       const resolverAddress = await this.ens.resolver('resolver.eth').addr();
       const itemContract = this.knownRegistrarInstances[item.domain];
-      const data = await (item.version === '1.0'
-        ? itemContract.contract.methods
-            .register(
-              domain,
-              subdomain,
-              ownerAddress,
-              referrerAddress,
-              resolverAddress
-            )
-            .encodeABI()
-        : itemContract.contract.methods
-            .register(
-              domain,
-              subdomain,
-              ownerAddress,
-              resolverAddress,
-              referrerAddress
-            )
-            .encodeABI());
+      const data = await itemContract.contract.methods
+        .register(
+          domain,
+          subdomain,
+          ownerAddress,
+          referrerAddress,
+          resolverAddress,
+          {
+            from: ownerAddress,
+            value: item.price
+          }
+        )
+        .encodeABI();
 
       const raw = {
         from: ownerAddress,

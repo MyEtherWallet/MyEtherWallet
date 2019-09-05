@@ -1,9 +1,9 @@
 import { createLocalVue } from '@vue/test-utils';
 import VueI18n from 'vue-i18n';
 import BootstrapVue from 'bootstrap-vue';
-import veeValidate from 'vee-validate';
 import VueX from 'vuex';
 import VueToast from 'vue-toasted';
+import veeValidate from 'vee-validate';
 import ClickOutside from '@/directives/ClickOutside';
 import EnsResolver from '@/directives/EnsResolver';
 import en_US from '@/translations/en_US';
@@ -13,10 +13,11 @@ function createLocalVueInstance() {
   localVue.use(VueI18n);
   localVue.use(BootstrapVue);
   localVue.use(VueX);
+  localVue.use(veeValidate);
   localVue.use(VueToast);
   localVue.directive('click-outside', ClickOutside);
   localVue.directive('ens-resolver', EnsResolver);
-  localVue.use(veeValidate);
+
   localVue.filter('capitalize', function(value) {
     if (!value) return '';
     value = value.toString().toLowerCase();
