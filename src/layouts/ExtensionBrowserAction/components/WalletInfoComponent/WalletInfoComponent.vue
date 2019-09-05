@@ -62,7 +62,7 @@
             class="modal-token-item"
           >
             <div class="icon-name-container">
-              <img :src="token.icon" />
+              <img :src="token.logo.src" />
               <p>
                 {{ token.name }} (Custom) <br />
                 <span>{{ token.balance }}</span>
@@ -75,7 +75,7 @@
             class="modal-token-item"
           >
             <div class="icon-name-container">
-              <img :src="token.icon" />
+              <img :src="token.logo.src" />
               <p>
                 {{ token.name }} <br />
                 <span>{{ token.balance }}</span>
@@ -194,9 +194,7 @@
               </p>
               <p
                 :class="[token.balance !== 'Load' ? '' : 'manual-load']"
-                @click="
-                  token.balance !== 'Load' ? () => {} : fetchTokenBalance(token)
-                "
+                @click="token.balance !== 'Load' ? () => {} : fetchTokenBalance(token)"
               >
                 {{ token.balance }}
               </p>
@@ -347,7 +345,7 @@ export default {
       } else if (!findTokenBySymbol && addType !== '') {
         this.$refs.tokenModal.$refs.tokenModal.hide();
         Toast.responseHandler(
-          "A default or custom token with this symbol already exists! The token in our list may have the same symbol but a different contract address, try adding it again with a '2' after the symbol!",
+          `A default or custom token with this symbol already exists! The token in our list may have the same symbol but a different contract address, try adding it again with a '2' after the symbol!`,
           Toast.ERROR
         );
         return false;
@@ -445,6 +443,9 @@ export default {
       this.loading = true;
       let tokens = [];
       const tb = new TokenBalance(this.web3.currentProvider);
+      const newLogo = {
+        src: require(`@/assets/images/networks/${this.network.type.name.toLowerCase()}.svg`)
+      }
       try {
         tokens = await tb.getBalance(this.address);
         tokens = tokens.map(token => {
@@ -456,9 +457,8 @@ export default {
                 .toFixed(3)
             : 0;
           token.address = token.addr;
-          token.icon = token.icon
-            ? token.icon
-            : require(`@/assets/images/networks/${this.network.type.name.toLowerCase()}.svg`);
+          // token['logo'] = token.hasOwnProperty('logo') ? token.logo.hasOwnProperty('src') ? token.logo : newLogo : newLogo
+          token['logo'] = newLogo;
           delete token.addr;
           return token;
         });
@@ -468,9 +468,8 @@ export default {
       } catch (e) {
         tokens = this.network.type.tokens.map(token => {
           token.balance = 'Load';
-          token.icon = token.icon
-            ? token.icon
-            : require(`@/assets/images/networks/${this.network.type.name.toLowerCase()}.svg`);
+          // token['logo'] = token.hasOwnProperty('logo') ? token.logo.hasOwnProperty('src') ? token.logo : newLogo : newLogo
+          token['logo'] = newLogo;
           return token;
         });
         this.loading = false;
@@ -488,11 +487,13 @@ export default {
         ? storedTokens[this.network.type.name]
         : [];
 
-      this.customTokens = tokens.map(item => {
-        item.icon = item.icon
-          ? item.icon
-          : require(`@/assets/images/networks/${this.network.type.name.toLowerCase()}.svg`);
-        return item;
+      this.customTokens = tokens.map(token => {
+        const newLogo = {
+          src: require(`@/assets/images/networks/${this.network.type.name.toLowerCase()}.svg`)
+        }
+        // token['logo'] = token.hasOwnProperty('logo') ? token.logo.hasOwnProperty('src') ? token.logo : newLogo : newLogo
+        token['logo'] = newLogo;
+        return token;
       });
 
       this.localCustomTokens = this.customTokens.slice();

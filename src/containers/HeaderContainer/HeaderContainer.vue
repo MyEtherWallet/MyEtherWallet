@@ -173,10 +173,7 @@
                     >
                   </b-nav-item-dropdown>
                 </div>
-                <div
-                  v-if="address !== null"
-                  class="notification-menu-container"
-                >
+                <div class="notification-menu-container">
                   <notification ref="notification" />
                 </div>
                 <b-nav-item
