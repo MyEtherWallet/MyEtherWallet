@@ -6,9 +6,6 @@
         <span v-show="dateType === 'reveal'">
           {{ $t('dapps.revealsBid') }}
         </span>
-        <span v-show="dateType === 'auction'">
-          {{ $t('dapps.auctionCloses') }}
-        </span>
       </div>
       <b>{{ time }}</b>
     </div>

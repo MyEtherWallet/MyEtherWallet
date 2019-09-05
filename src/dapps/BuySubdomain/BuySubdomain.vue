@@ -17,7 +17,7 @@
             <button type="button" @click="query">Check</button>
           </div>
           <p v-if="hasError" class="errorText">
-            Invalid symbol: No white spaces
+            <span> Invalid symbol: No white spaces </span>
           </p>
         </div>
         <div v-show="results.length > 0" class="result-section">

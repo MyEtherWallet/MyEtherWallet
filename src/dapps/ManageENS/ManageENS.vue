@@ -74,7 +74,6 @@ const permanentRegistrar = {
 };
 
 const REGISTRAR_TYPES = {
-  AUCTION: 'auction',
   FIFS: 'fifs',
   PERMANENT: 'permanent'
 };
@@ -199,12 +198,7 @@ export default {
         RegistryAbi,
         this.network.type.ens.registry
       );
-      if (this.registrarType === REGISTRAR_TYPES.AUCTION) {
-        this.registrarContract = new web3.eth.Contract(
-          RegistrarAbi,
-          this.registrarAddress
-        );
-      } else if (this.registrarType === REGISTRAR_TYPES.FIFS) {
+      if (this.registrarType === REGISTRAR_TYPES.FIFS) {
         this.registrarContract = new web3.eth.Contract(
           FifsRegistrarAbi,
           this.registrarAddress
@@ -233,12 +227,7 @@ export default {
     },
     async transferDomain(toAddress) {
       let to, data;
-      if (this.registrarType === REGISTRAR_TYPES.AUCTION) {
-        data = this.registrarContract.methods
-          .transfer(this.labelHash, toAddress)
-          .encodeABI();
-        to = this.registrarAddress;
-      } else if (this.registrarType === REGISTRAR_TYPES.FIFS) {
+      if (this.registrarType === REGISTRAR_TYPES.FIFS) {
         data = this.ensRegistryContract.methods
           .setOwner(this.nameHash, toAddress)
           .encodeABI();
@@ -359,12 +348,7 @@ export default {
         this.loading = false;
       } else if (this.parsedTld === this.registrarTLD) {
         try {
-          if (this.registrarType === REGISTRAR_TYPES.AUCTION) {
-            const domainStatus = await this.registrarContract.methods
-              .entries(this.labelHash)
-              .call();
-            this.processResult(domainStatus);
-          } else if (this.registrarType === REGISTRAR_TYPES.FIFS) {
+          if (this.registrarType === REGISTRAR_TYPES.FIFS) {
             const expiryTime = await this.registrarContract.methods
               .expiryTimes(this.labelHash)
               .call();
@@ -612,18 +596,7 @@ export default {
         this.domainNameErr = false;
       }
     },
-    async getMoreInfo(deedOwner) {
-      let highestBidder = '0x';
-      if (
-        this.registrarType === REGISTRAR_TYPES.AUCTION &&
-        this.parsedTld === this.registrarTLD
-      ) {
-        const deedContract = new this.web3.eth.Contract(
-          DeedContractAbi,
-          deedOwner
-        );
-        highestBidder = await deedContract.methods.owner().call();
-      }
+    async getMoreInfo() {
       let owner;
       let resolverAddress;
       try {
@@ -646,7 +619,6 @@ export default {
 
       this.nameHash = nameHashPckg.hash(this.parsedDomainName);
       this.resolverAddress = resolverAddress;
-      this.deedOwner = highestBidder;
       this.owner = owner;
       if (this.$route.fullPath === '/interface/dapps/manage-ens') {
         this.$router.push({ path: 'manage-ens/owned' });
