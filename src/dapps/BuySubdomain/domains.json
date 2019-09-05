@@ -1,26 +1,52 @@
 [
-  {"name": "accepte", "version": "1.0"},
-  {"name": "asksfor", "version": "1.0"},
-  {"name": "atethereum", "version": "1.0"},
-  {"name": "atleeroy", "version": "1.0"},
-  {"name": "atpeepeth", "version": "1.0"},
-  {"name": "begsfor", "version": "1.0"},
-  {"name": "blockchainboss", "version": "1.0"},
-  {"name": "blockchaincontracts", "version": "1.0"},
-  {"name": "britishblockchain", "version": "1.0"},
-  {"name": "buymeatesla", "version": "1.0"},
-  {"name": "chainlinknode", "version": "1.0"},
-  {"name": "cryptoking", "version": "1.0"},
-  {"name": "deserves", "version": "1.0"},
-  {"name": "eth-gbg", "version": "1.0"},
-  {"name": "etherbase", "version": "1.0"},
-  {"name": "gimmethe", "version": "1.0"},
-  {"name": "paynonym", "version": "1.0"},
-  {"name": "sendmecrypto", "version": "1.0"},
-  {"name": "thecryptogirl", "version": "1.0"},
-  {"name": "thecryptoguy", "version": "1.0"},
-  {"name": "tokenid", "version": "1.0"},
-  {"name": "trustnobank", "version": "1.0"},
-  {"name": "wantsome", "version": "1.0"},
-  {"name": "xannyfamily", "version": "1.0"}
+  {
+    "name": "britishblockchain",
+    "version": "1.0",
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
+  },
+  {
+    "name": "blockchainboss",
+    "version": "1.0",
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
+  },
+  {
+    "name": "buymeatesla",
+    "version": "1.0",
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
+  },
+  {
+    "name": "codeinecrazy",
+    "version": "1.0",
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
+  },
+  {
+    "name": "cryptoking",
+    "version": "1.0",
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
+  },
+  {
+    "name": "mollypercocet",
+    "version": "1.0",
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
+  },
+  {
+    "name": "thecryptogirl",
+    "version": "1.0",
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
+  },
+  {
+    "name": "thecryptoguy",
+    "version": "1.0",
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
+  },
+  {
+    "name": "trustsnobank",
+    "version": "1.0",
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
+  },
+  {
+    "name": "xannyfamily",
+    "version": "1.0",
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
+  }
 ]
