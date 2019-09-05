@@ -176,7 +176,6 @@ export default {
       this.loading = false;
       this.password = '';
       this.filepath = '';
-      this.file = '';
     });
 
     this.$refs.generateNewWallet.$refs.generateNewWallet.$on('hidden', () => {

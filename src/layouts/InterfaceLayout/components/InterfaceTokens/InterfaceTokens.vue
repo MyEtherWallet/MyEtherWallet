@@ -201,6 +201,9 @@ export default {
       this.customTokens = storedTokens.hasOwnProperty(this.network.type.name)
         ? storedTokens[this.network.type.name]
         : [];
+      this.localCustomTokens = storedTokens.hasOwnProperty(this.network.type.name)
+        ? storedTokens[this.network.type.name]
+        : [];
     },
     async getSpecificTokenBalance(token) {
       for (let i = 0; i < this.tokens.length; i++) {
@@ -220,6 +223,7 @@ export default {
     removeToken(idx) {
       const storedTokens = store.get('customTokens');
       this.customTokens.splice(idx, 1);
+      this.localCustomTokens = this.customTokens.splice();
       storedTokens[this.network.type.name] = this.customTokens;
       store.set('customTokens', storedTokens);
       this.fetchTokens();
@@ -293,6 +297,7 @@ export default {
         this.customTokens =
           this.customTokens.length > 0 ? this.customTokens : [];
         this.customTokens.push(token);
+        this.localCustomTokens = this.customTokens.splice();
         currentCustomToken[this.network.type.name] = this.customTokens;
         store.set('customTokens', currentCustomToken);
         this.$refs.tokenModal.$refs.token.hide();
@@ -306,10 +311,10 @@ export default {
       this.$refs.expendUp.classList.toggle('hidden');
     },
     async assignTokens(arr, query) {
-      const oldArray =
+      const localCustomTok =
         this.customTokens.length > 0 ? this.customTokens.slice() : [];
       if (query !== '') {
-        this.customTokens = oldArray
+        this.customTokens = localCustomTok
           .filter(token => {
             if (token.name.toLowerCase().includes(query.toLowerCase())) {
               return token;
@@ -325,7 +330,7 @@ export default {
           .sort(sortByBalance);
       } else {
         this.localTokens = arr;
-        this.customTokens = oldArray;
+        this.customTokens = this.localCustomTokens;
       }
     }
   }
