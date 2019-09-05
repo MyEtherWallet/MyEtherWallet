@@ -6,6 +6,8 @@
       hide-header
       centered
       class="bootstrap-modal nopadding"
+      static
+      lazy
     >
       <div class="modal-contents">
         <h2>{{ $t('common.oops') }}</h2>

@@ -7,6 +7,8 @@
         hide-footer
         centered
         class="bootstrap-modal nopadding"
+        static
+        lazy
       >
         <div class="modal-contents">
           <full-width-dropdown
