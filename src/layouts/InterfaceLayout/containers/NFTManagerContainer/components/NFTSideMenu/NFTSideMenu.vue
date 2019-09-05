@@ -8,7 +8,7 @@
           :class="i.contract === selected ? 'selected' : ''"
           @click="selectNft(i)"
         >
-          <span class="title">{{ i.title }}</span> <span class="count">({{ i.count }})</span>
+          <span class="title">{{ i.title }}</span><span v-show="i.customNft" @click="removeCustomEntry(i)">x</span> <span class="count">({{ i.count }})</span>
         </li>
         <li>
           <span @click="openCustomModal">+Custom NFT</span>
@@ -100,6 +100,9 @@ export default {
     showDetails(nft) {
       this.searchResults = [];
       this.$emit('showTokenDetails', nft);
+    },
+    removeCustomEntry(nft) {
+      this.$emit('removeCustomNft', nft);
     }
   }
 };
