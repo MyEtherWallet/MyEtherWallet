@@ -18,8 +18,11 @@ const EXCEPTIONS = [
   'multicoin-address-validator',
   'bootstrap-vue',
   'web3-core-requestmanager',
-  'vue-tel-input',
-  '@vue/eslint-config-prettier'
+  '@vue/eslint-config-prettier',
+  'vee-validate',
+  '@xkeshi/vue-qrcode',
+  'webpack',
+  'babel-eslint'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

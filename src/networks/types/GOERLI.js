@@ -4,7 +4,7 @@ import { GOERLI } from '../tlds';
 import goerli from '@/assets/images/icons/network.svg';
 
 export default {
-  name: 'GOERLI',
+  name: 'GöETH',
   name_long: 'Goerli',
   homePage: 'https://github.com/goerli/testnet',
   blockExplorerTX: 'https://blockscout.com/eth/goerli/tx/[[txHash]]',
