@@ -268,14 +268,14 @@ export default {
       const findTokenBySymbol = this.searchBySymbol(symbol);
       const findTokenByAddr = this.searchByAddr(address);
       if (!findTokenByAddr && addType !== '') {
-        this.$refs.tokenModal.$refs.token.hide();
+        this.$refs.tokenModal.$refs.tokenModal.hide();
         Toast.responseHandler(
           'A default or custom token with this contract address already exists!',
           Toast.ERROR
         );
         return false;
       } else if (!findTokenBySymbol && addType !== '') {
-        this.$refs.tokenModal.$refs.token.hide();
+        this.$refs.tokenModal.$refs.tokenModal.hide();
         Toast.responseHandler(
           "A default or custom token with this symbol already exists! The token in our list may have the same symbol but a different contract address, try adding it again with a '2' after the symbol!",
           Toast.ERROR
@@ -302,7 +302,7 @@ export default {
         this.localCustomTokens = this.customTokens.splice();
         currentCustomToken[this.network.type.name] = this.customTokens;
         store.set('customTokens', currentCustomToken);
-        this.$refs.tokenModal.$refs.token.hide();
+        this.$refs.tokenModal.$refs.tokenModal.hide();
         await this.fetchTokens();
         Toast.responseHandler('Successfully added token!', Toast.SUCCESS);
       }
