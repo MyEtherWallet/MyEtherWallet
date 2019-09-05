@@ -18,6 +18,7 @@
         :sent-update="sentUpdate"
         @selected="changeSelectedContract"
         @openCustomModal="openCustomModal"
+        @removeCustomNft="removeCustomNft"
       >
       </nft-side-menu>
       <div v-if="showDetails">
@@ -226,8 +227,19 @@ export default {
         title: symbol
       });
       this.$refs.customModal.$refs.modal.hide();
-      // store.set('customNFTs', this.customNFTs);
+      store.set('customNFTs', this.customNFTs);
       this.setup();
+    },
+    removeCustomNft(item) {
+      const customNFTs = store.get('customNFTs');
+      if (customNFTs !== undefined && customNFTs !== null) {
+        const entryIndex = customNFTs.findIndex(
+          entry => item.contract === entry.contract
+        );
+        customNFTs.splice(entryIndex, 1);
+        store.set('customNFTs', customNFTs);
+        this.setup();
+      }
     },
     openCustomModal() {
       this.$refs.customModal.$refs.modal.show();
@@ -473,7 +485,6 @@ export default {
     async getOwnedTokens(contracts, address, nftData) {
       const tokenContract = new this.web3.eth.Contract(nftABI);
       tokenContract.options.address = this.tokenContractAddress;
-      console.log('contracts', contracts); // todo remove dev item
       for (let i = 0; i < contracts.length; i++) {
         nftData = await this.loadForContract(
           contracts[i],
