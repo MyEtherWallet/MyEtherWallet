@@ -278,7 +278,7 @@ export default {
             `${utils.fromWei(toGwei, 'ether')}`
           ).toFixed();
         } else {
-          this.customGas = 0;
+          this.customGas = 1;
         }
       }
     },
@@ -358,7 +358,6 @@ export default {
           ).toNumber()
         );
       } else {
-        if (!new BigNumber(this.customGas).gte(1)) return;
         this.$store.dispatch(
           'setGasPrice',
           new BigNumber(this.customGas).toNumber()
