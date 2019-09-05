@@ -74,7 +74,6 @@ export default {
   methods: {
     getAccounts(acc) {
       this.accounts = Object.keys(acc).filter(item => {
-        console.log(acc[item]);
         if (isAddress(item)) {
           if (JSON.parse(acc[item]).type !== 'watchOnly') return acc[item];
         }

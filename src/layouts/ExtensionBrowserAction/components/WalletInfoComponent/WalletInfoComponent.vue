@@ -56,7 +56,20 @@
         </div>
         <div v-show="!loading" class="tokens-container">
           <div
-            v-for="(token, idx) in localVersion"
+            v-for="(token, idx) in localCustomTokens"
+            :key="token.address + address + idx"
+            class="modal-token-item"
+          >
+            <div class="icon-name-container">
+              <img :src="token.icon" />
+              <p>
+                {{ token.name }} (Custom) <br />
+                <span>{{ token.balance }}</span>
+              </p>
+            </div>
+          </div>
+          <div
+            v-for="(token, idx) in localTokenVersion"
             :key="token.address + address + idx"
             class="modal-token-item"
           >
@@ -150,7 +163,24 @@
           </div>
           <div v-show="!loading">
             <div
-              v-for="(token, idx) in localVersion"
+              v-for="(token, idx) in localCustomTokens"
+              :key="token.address + idx"
+              class="token-item"
+            >
+              <p>
+                {{ token.name }}
+              </p>
+              <p
+                :class="[token.balance !== 'Load' ? '' : 'manual-load']"
+                @click="
+                  token.balance !== 'Load' ? () => {} : fetchTokenBalance(token)
+                "
+              >
+                {{ token.balance }}
+              </p>
+            </div>
+            <div
+              v-for="(token, idx) in localTokenVersion"
               :key="token.address + idx"
               class="token-item"
             >
@@ -181,6 +211,8 @@ import EditWalletModal from '../EditWalletModal';
 import RemoveWalletModal from '../RemoveWalletModal';
 import { mapState } from 'vuex';
 import { Toast } from '@/helpers';
+import store from 'store';
+import * as networkTypes from '@/networks/types';
 
 export default {
   components: {
@@ -223,7 +255,9 @@ export default {
       loading: false,
       tokens: [],
       search: '',
-      localVersion: []
+      localTokenVersion: [],
+      customTokens: [],
+      localCustomTokens: []
     };
   },
   computed: {
@@ -234,10 +268,15 @@ export default {
   },
   watch: {
     search(newVal) {
-      const oldVersion = this.tokens.slice();
       this.loading = true;
       if (newVal !== '') {
-        this.localVersion = oldVersion.filter(token => {
+        this.localTokenVersion = this.tokens.slice().filter(token => {
+          if (token.symbol.toLowerCase().includes(newVal.toLowerCase())) {
+            return token;
+          }
+        });
+
+        this.localCustomTokens = this.customTokens.slice().filter(token => {
           if (token.symbol.toLowerCase().includes(newVal.toLowerCase())) {
             return token;
           }
@@ -245,7 +284,8 @@ export default {
         this.loading = false;
       } else {
         this.loading = false;
-        this.localVersion = this.tokens;
+        this.localTokenVersion = this.tokens.slice();
+        this.localCustomTokens = this.customTokens.slice();
       }
     }
   },
@@ -262,6 +302,9 @@ export default {
     },
     async fetchTokenBalance(token) {
       const tokenIndex = this.tokens.findIndex(element => {
+        return element.address.toLowerCase() === token.address.toLowerCase();
+      });
+      const customIdx = this.customTokens.findIndex(element => {
         return element.address.toLowerCase() === token.address.toLowerCase();
       });
       const contractAbi = [
@@ -293,8 +336,15 @@ export default {
         .catch(e => {
           Toast.responseHandler(e, false);
         });
-      this.localVersion = this.localVersion.map((item, idx) => {
+      this.localTokenVersion = this.localTokenVersion.map((item, idx) => {
         if (idx === tokenIndex) {
+          item.balance = balance;
+        }
+        return item;
+      });
+
+      this.localCustomTokens = this.localCustomTokens.map((item, idx) => {
+        if (idx === customIdx) {
           item.balance = balance;
         }
         return item;
@@ -323,7 +373,7 @@ export default {
           return token;
         });
         this.loading = false;
-        this.localVersion = tokens.sort(sortByBalance);
+        this.localTokenVersion = tokens.sort(sortByBalance);
         this.tokens = tokens.sort(sortByBalance);
       } catch (e) {
         tokens = this.network.type.tokens.map(token => {
@@ -332,8 +382,49 @@ export default {
         });
         this.loading = false;
         this.tokens = tokens;
-        this.localVersion = tokens;
+        this.localTokenVersion = tokens;
       }
+      this.getCustomTokens();
+    },
+    getCustomTokens() {
+      if (store.get('localTokens') !== undefined) {
+        this.getV3Tokens();
+      }
+      const storedTokens = store.get('customTokens') || {};
+      this.customTokens = storedTokens.hasOwnProperty(this.network.type.name)
+        ? storedTokens[this.network.type.name]
+        : [];
+      this.localCustomTokens = this.customTokens.slice();
+    },
+    getV3Tokens() {
+      const v3Tokens = store.get('localTokens');
+      const v5CustomTokens = store.get('customTokens');
+      v3Tokens.forEach(token => {
+        const newObj = {
+          address: token.contractAddress,
+          decimals: token.decimal,
+          email: '',
+          name: token.symbol,
+          symbol: token.symbol,
+          website: '',
+          type: 'custom'
+        };
+        Object.keys(networkTypes).forEach(network => {
+          if (
+            token.network &&
+            (networkTypes[network].name.toLowerCase() ===
+              token.network.toLowerCase() ||
+              networkTypes[network].name_long.toLowerCase() ===
+                token.network.toLowerCase())
+          ) {
+            if (this.tokenError(newObj.address, newObj.symbol, '')) {
+              v5CustomTokens[networkTypes[network].name].push(newObj);
+            }
+          }
+        });
+      });
+      store.set('customTokens', v5CustomTokens);
+      store.remove('localTokens');
     },
     copyAddress() {
       this.$refs.addressInput.select();
