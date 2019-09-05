@@ -148,7 +148,14 @@
             </template>
             <b-dropdown-item @click="openAddCustom">Add</b-dropdown-item>
             <b-dropdown-item @click="fetchTokens">Refresh</b-dropdown-item>
-            <b-dropdown-item @click="() => {viewAllTokens(true);}">View All</b-dropdown-item>
+            <b-dropdown-item
+              @click="
+                () => {
+                  viewAllTokens(true);
+                }
+              "
+              >View All</b-dropdown-item
+            >
           </b-dropdown>
         </div>
         <div class="token-search-container">
@@ -170,7 +177,9 @@
               </p>
               <p
                 :class="[token.balance !== 'Load' ? '' : 'manual-load']"
-                @click="token.balance !== 'Load' ? () => {} : fetchTokenBalance(token)"
+                @click="
+                  token.balance !== 'Load' ? () => {} : fetchTokenBalance(token)
+                "
               >
                 {{ token.balance }}
               </p>
@@ -185,7 +194,9 @@
               </p>
               <p
                 :class="[token.balance !== 'Load' ? '' : 'manual-load']"
-                @click="token.balance !== 'Load' ? () => {} : fetchTokenBalance(token)"
+                @click="
+                  token.balance !== 'Load' ? () => {} : fetchTokenBalance(token)
+                "
               >
                 {{ token.balance }}
               </p>
@@ -445,7 +456,9 @@ export default {
                 .toFixed(3)
             : 0;
           token.address = token.addr;
-          token.icon = token.icon ? token.icon : require(`@/assets/images/networks/${this.network.type.name.toLowerCase()}.svg`)
+          token.icon = token.icon
+            ? token.icon
+            : require(`@/assets/images/networks/${this.network.type.name.toLowerCase()}.svg`);
           delete token.addr;
           return token;
         });
@@ -455,7 +468,9 @@ export default {
       } catch (e) {
         tokens = this.network.type.tokens.map(token => {
           token.balance = 'Load';
-          token.icon = token.icon ? token.icon : require(`@/assets/images/networks/${this.network.type.name.toLowerCase()}.svg`)
+          token.icon = token.icon
+            ? token.icon
+            : require(`@/assets/images/networks/${this.network.type.name.toLowerCase()}.svg`);
           return token;
         });
         this.loading = false;
@@ -474,7 +489,9 @@ export default {
         : [];
 
       this.customTokens = tokens.map(item => {
-        item.icon = item.icon ? item.icon : require(`@/assets/images/networks/${this.network.type.name.toLowerCase()}.svg`)
+        item.icon = item.icon
+          ? item.icon
+          : require(`@/assets/images/networks/${this.network.type.name.toLowerCase()}.svg`);
         return item;
       });
 
