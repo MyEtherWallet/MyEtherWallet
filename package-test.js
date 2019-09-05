@@ -14,6 +14,9 @@ const EXCEPTIONS = [
   'babel-jest',
   'multicoin-address-validator',
   'web3-core-requestmanager',
+  'vee-validate',
+  '@xkeshi/vue-qrcode',
+  'sass-loader'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
