@@ -5,6 +5,8 @@
     hide-footer
     class="bootstrap-modal nopadding"
     centered
+    static
+    lazy
   >
     <div class="finney-desktop">
       <div class="modal-content-right">
