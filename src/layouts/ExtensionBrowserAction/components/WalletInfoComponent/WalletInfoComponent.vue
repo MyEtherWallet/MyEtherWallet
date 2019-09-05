@@ -194,7 +194,9 @@
               </p>
               <p
                 :class="[token.balance !== 'Load' ? '' : 'manual-load']"
-                @click="token.balance !== 'Load' ? () => {} : fetchTokenBalance(token)"
+                @click="
+                  token.balance !== 'Load' ? () => {} : fetchTokenBalance(token)
+                "
               >
                 {{ token.balance }}
               </p>
@@ -445,7 +447,7 @@ export default {
       const tb = new TokenBalance(this.web3.currentProvider);
       const newLogo = {
         src: require(`@/assets/images/networks/${this.network.type.name.toLowerCase()}.svg`)
-      }
+      };
       try {
         tokens = await tb.getBalance(this.address);
         tokens = tokens.map(token => {
@@ -490,7 +492,7 @@ export default {
       this.customTokens = tokens.map(token => {
         const newLogo = {
           src: require(`@/assets/images/networks/${this.network.type.name.toLowerCase()}.svg`)
-        }
+        };
         // token['logo'] = token.hasOwnProperty('logo') ? token.logo.hasOwnProperty('src') ? token.logo : newLogo : newLogo
         token['logo'] = newLogo;
         return token;
