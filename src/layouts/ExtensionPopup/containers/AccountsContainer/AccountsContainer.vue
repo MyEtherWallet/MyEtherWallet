@@ -75,7 +75,8 @@
       hide-footer
       hide-header
       no-fade
-      class="quick-send-from-modal"
+      class="bootstrap-modal nopadding"
+      modal-class="quick-send-from-modal"
     >
       <div class="quick-send-from-content">
         <div class="quick-send-from-header">
