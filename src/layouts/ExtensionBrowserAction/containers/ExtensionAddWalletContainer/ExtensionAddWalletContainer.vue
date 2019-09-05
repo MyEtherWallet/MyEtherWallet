@@ -182,6 +182,10 @@ export default {
       this.password = '';
       this.nickname = '';
     });
+
+    this.$refs.verifyDetails.$refs.verifyDetails.$on('hidden', () => {
+      this.nickname = '';
+    });
   },
   methods: {
     openAddressOption() {

@@ -1,5 +1,6 @@
 <template>
   <div class="wallet-info-container">
+    <interface-tokens-modal ref="tokenModal" :add-token="addToken" />
     <edit-wallet-modal
       ref="editModal"
       :address="address"
@@ -140,18 +141,15 @@
         <div class="tokens-header">
           <p>
             Tokens
-            <i class="fa fa-repeat fa-lg" @click="fetchTokens" />
           </p>
-          <p
-            class="view"
-            @click="
-              () => {
-                viewAllTokens(true);
-              }
-            "
-          >
-            View All
-          </p>
+          <b-dropdown :no-caret="true" class="cx-dropdown">
+            <template slot="button-content">
+              <i class="fa fa-lg fa-ellipsis-h" />
+            </template>
+            <b-dropdown-item @click="fetchTokens">Refresh</b-dropdown-item>
+            <b-dropdown-item @click="() => {viewAllTokens(true);}">View All</b-dropdown-item>
+            <b-dropdown-item @click="openAddCustom">Add</b-dropdown-item>
+          </b-dropdown>
         </div>
         <div class="token-search-container">
           <input v-model="search" placeholder="Search tokens" />
@@ -172,9 +170,7 @@
               </p>
               <p
                 :class="[token.balance !== 'Load' ? '' : 'manual-load']"
-                @click="
-                  token.balance !== 'Load' ? () => {} : fetchTokenBalance(token)
-                "
+                @click="token.balance !== 'Load' ? () => {} : fetchTokenBalance(token)"
               >
                 {{ token.balance }}
               </p>
@@ -189,9 +185,7 @@
               </p>
               <p
                 :class="[token.balance !== 'Load' ? '' : 'manual-load']"
-                @click="
-                  token.balance !== 'Load' ? () => {} : fetchTokenBalance(token)
-                "
+                @click="token.balance !== 'Load' ? () => {} : fetchTokenBalance(token)"
               >
                 {{ token.balance }}
               </p>
@@ -213,12 +207,14 @@ import { mapState } from 'vuex';
 import { Toast } from '@/helpers';
 import store from 'store';
 import * as networkTypes from '@/networks/types';
-
+import utils from 'web3-utils';
+import InterfaceTokensModal from '@/layouts/InterfaceLayout/components/InterfaceTokensModal';
 export default {
   components: {
     blockie: Blockie,
     'edit-wallet-modal': EditWalletModal,
-    'remove-wallet-modal': RemoveWalletModal
+    'remove-wallet-modal': RemoveWalletModal,
+    'interface-tokens-modal': InterfaceTokensModal
   },
   props: {
     address: {
@@ -293,6 +289,86 @@ export default {
     this.fetchTokens();
   },
   methods: {
+    searchBySymbol(symbol) {
+      const searchNetwork = this.localTokens.find(item => {
+        return item.symbol.toLowerCase() === symbol.toLowerCase();
+      });
+
+      const searchCustom = this.customTokens.find(item => {
+        return item.symbol.toLowerCase() === symbol.toLowerCase();
+      });
+
+      if (searchNetwork !== undefined || searchCustom !== undefined) {
+        return false;
+      }
+      return true;
+    },
+    searchByAddr(addr) {
+      const searchNetwork = this.localTokens.find(item => {
+        return (
+          utils.toChecksumAddress(item.address) ===
+          utils.toChecksumAddress(addr)
+        );
+      });
+
+      const searchCustom = this.customTokens.find(item => {
+        return (
+          utils.toChecksumAddress(item.address) ===
+          utils.toChecksumAddress(addr)
+        );
+      });
+
+      if (searchNetwork !== undefined || searchCustom !== undefined) {
+        return false;
+      }
+      return true;
+    },
+    tokenError(address, symbol, addType) {
+      const findTokenBySymbol = this.searchBySymbol(symbol);
+      const findTokenByAddr = this.searchByAddr(address);
+      if (!findTokenByAddr && addType !== '') {
+        this.$refs.tokenModal.$refs.token.hide();
+        Toast.responseHandler(
+          'A default or custom token with this contract address already exists!',
+          Toast.ERROR
+        );
+        return false;
+      } else if (!findTokenBySymbol && addType !== '') {
+        this.$refs.tokenModal.$refs.token.hide();
+        Toast.responseHandler(
+          "A default or custom token with this symbol already exists! The token in our list may have the same symbol but a different contract address, try adding it again with a '2' after the symbol!",
+          Toast.ERROR
+        );
+        return false;
+      }
+      return findTokenByAddr || findTokenBySymbol;
+    },
+    async addToken(address, symbol, decimal) {
+      if (this.tokenError(address, symbol, 'manual')) {
+        const token = {
+          address: address,
+          decimals: decimal,
+          email: '',
+          name: symbol,
+          symbol: symbol,
+          website: '',
+          type: 'custom'
+        };
+        const currentCustomToken = store.get('customTokens');
+        this.customTokens =
+          this.customTokens.length > 0 ? this.customTokens : [];
+        this.customTokens.push(token);
+        this.localCustomTokens = this.customTokens.splice();
+        currentCustomToken[this.network.type.name] = this.customTokens;
+        store.set('customTokens', currentCustomToken);
+        this.$refs.tokenModal.$refs.token.hide();
+        await this.fetchTokens();
+        Toast.responseHandler('Successfully added token!', Toast.SUCCESS);
+      }
+    },
+    openAddCustom() {
+      this.$refs.tokenModal.$refs.tokenModal.show();
+    },
     cancelRemove() {
       this.edit();
       this.$refs.removeWalletModal.$refs.removeWalletModal.hide();
