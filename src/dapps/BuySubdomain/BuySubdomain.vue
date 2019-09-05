@@ -10,11 +10,15 @@
           <div class="subdomain-input">
             <input
               :placeholder="$t('dapps.subDomainPlaceholder')"
+              :class="hasError ? 'errorInput' : ''"
               type="text"
               @input="debounceInput"
             />
             <button type="button" @click="query">Check</button>
           </div>
+          <p v-if="hasError" class="errorText">
+            Invalid symbol: No white spaces
+          </p>
         </div>
         <div v-show="results.length > 0" class="result-section">
           <div class="title">
@@ -78,7 +82,8 @@ export default {
       ensContract: function() {},
       results: [],
       domainName: '',
-      knownRegistrarInstances: {}
+      knownRegistrarInstances: {},
+      hasError: false
     };
   },
   computed: {
@@ -117,7 +122,12 @@ export default {
   },
   methods: {
     debounceInput: web3.utils._.debounce(function(e) {
-      this.domainName = normalise(e.target.value);
+      if (e.target.value.indexOf(' ') >= 0) {
+        this.hasError = true;
+      } else {
+        this.hasError = false;
+        this.domainName = normalise(e.target.value);
+      }
     }, 1500),
     async query() {
       this.results = [];
