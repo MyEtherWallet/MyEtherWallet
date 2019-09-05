@@ -33,9 +33,9 @@
     "pre-commit": "npm run lint && npm run test"
   },
   "dependencies": {
-    "@sentry/browser": "5.6.2",
+    "@sentry/browser": "5.6.3",
     "@sentry/integrations": "5.6.1",
-    "form-data": "2.5.0",
+    "form-data": "2.5.1",
     "html2canvas": "1.0.0-rc.3",
     "idna-uts46": "1.1.0",
     "js-sha1": "0.6.0",
@@ -156,7 +156,9 @@
       "web3-utils",
       "multicoin-address-validator",
       "@xkeshi/vue-qrcode",
-      "web3-core-requestmanager"
+      "web3-core-requestmanager",
+      "vee-validate",
+      "sass-loader"
     ]
   }
 }
