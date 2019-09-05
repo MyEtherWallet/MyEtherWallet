@@ -5,6 +5,8 @@
     hide-footer
     class="bootstrap-modal modal-metamask nopadding"
     centered
+    static
+    lazy
     @shown="focusInput"
     @hide="clearInputs"
   >
