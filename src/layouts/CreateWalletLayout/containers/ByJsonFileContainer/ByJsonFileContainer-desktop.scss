@@ -106,3 +106,10 @@
     }
   }
 } // @media all and (min-width: calc(#{$tablet-width} + 1px))
+
+.generating {
+  p {
+    color: $white;
+    margin-top: 10px;
+  }
+}

@@ -95,9 +95,8 @@ xdescribe('ProvidersRadioSelector.vue', () => {
     const liElements = wrapper.vm.$el.querySelectorAll(
       '.radio-button-container ul li'
     );
-    for (let i = 0; i < liElements.length; i++) {
-      const liElement = liElements[i];
 
+    for (const [i, liElement] of liElements.entries()) {
       if (providerData[i] != undefined) {
         const rateDisplay =
           providerData[i].fromValue +

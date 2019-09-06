@@ -1,39 +1,40 @@
 @import '~@/scss/GlobalVariables';
 
-.bottom-image-container {
-  position: relative;
-  border-radius: 5px;
-  margin-top: 10px;
-  overflow: hidden;
+a {
+  text-decoration: none;
+  display: block;
+}
 
-  .content {
-    background-color: white;
-    display: block;
-    padding: 20px 35px;
-    background-image: url('~@/assets/images/ads/eth.png');
-    background-position: bottom right;
-    background-repeat: no-repeat;
-    height: 200px;
-    .buy-text {
-      p {
-        color: black;
-        font-size: 26px;
-        font-weight: bold;
-        margin-top: 26px;
-      }
-    }
-    .send-button-container {
-      margin-top: 30px;
-      margin-right: 15px;
-      display: inline-block;
-      width: 175px;
-    }
-    .cc-cards {
-      width: 25%;
-    }
-    .background-eth {
-      z-index: -1;
-      position: relative;
+.content-block {
+  background-image: url('~@/assets/images/ads/eth.png');
+  background-size: 200px;
+  background-position-x: right;
+  background-position-y: bottom;
+  background-repeat: no-repeat;
+  position: relative;
+  height: 137px;
+  width: 100%;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+
+.flex-vertical-center {
+  .top-block {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 24px;
+  }
+
+  .bottom-block {
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    img {
+      height: 25px;
+      width: initial;
+      margin-left: 10px;
     }
   }
 }
