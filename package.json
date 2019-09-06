@@ -59,7 +59,7 @@
     "@ensdomains/dnsregistrar": "0.3.6",
     "@ethereum-alarm-clock/lib": "0.3.5",
     "@keepkey/keepkey.js": "1.2.3",
-    "@ledgerhq/hw-app-eth": "4.68.4",
+    "@ledgerhq/hw-app-eth": "4.69.2",
     "@ledgerhq/hw-transport-u2f": "4.68.4",
     "@ledgerhq/hw-transport-webusb": "4.68.4",
     "@makerdao/dai": "0.18.4",
