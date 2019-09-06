@@ -15,7 +15,7 @@ const EXCEPTIONS = [
   'multicoin-address-validator',
   'web3-core-requestmanager',
   '@vue/eslint-config-prettier',
-  'vee-validate'
+  'vee-validate',
   '@xkeshi/vue-qrcode',
   'webpack',
   'babel-eslint'
