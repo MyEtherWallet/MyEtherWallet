@@ -28,7 +28,8 @@
             Invalid address given.
           </span>
           <span v-show="nonStandardMessage">
-            NFT token contract doesn't include a required method to add as a custom NFT.
+            NFT token contract doesn't include a required method to add as a
+            custom NFT.
           </span>
           <input
             v-validate="'required'"
@@ -120,7 +121,7 @@ export default {
     },
     async addCustom(address, symbol) {
       const result = await this.checkIfStandard(address);
-      if(result) this.addToken(address, symbol);
+      if (result) this.addToken(address, symbol);
       else {
         this.nonStandardMessage = true;
       }
@@ -129,7 +130,7 @@ export default {
       this.$refs.customModal.$refs.modal.show();
     },
     checkIfStandard(address) {
-      return new Promise((resolve) =>{
+      return new Promise(resolve => {
         const tokenContract = new this.web3.eth.Contract([
           {
             constant: true,
@@ -145,18 +146,16 @@ export default {
           }
         ]);
         tokenContract.options.address = address;
-        tokenContract.methods.tokenOfOwnerByIndex(this.activeAddress,0)
+        tokenContract.methods
+          .tokenOfOwnerByIndex(this.activeAddress, 0)
           .call()
-          .then(result =>{
-            console.log(result); // todo remove dev item
-            resolve(true)
+          .then(() => {
+            resolve(true);
           })
-          .catch(err =>{
-            console.log('error'); // todo remove dev item
-            console.log(err); // todo remove dev item
-            resolve(false)
-          })
-      })
+          .catch(() => {
+            resolve(false);
+          });
+      });
     }
   }
 };

@@ -67,6 +67,7 @@
     <div v-if="isReady && !hasNfts" class="inner-side-menu content-container">
       No NFTs
     </div>
+
     <div v-if="!isOnlineAndEth">
       <div v-show="!online">
         NFTs are
@@ -98,15 +99,6 @@ import { nftABI } from './abis';
 
 const URL_BASE = 'https://nft.mewapi.io/nft';
 
-const CUSTOM_NFTs = [
-  {
-    ERC721Extension: true,
-    contract: '0xb55c5cac5014c662fdbf21a2c59cd45403c482fd',
-    customNft: true,
-    title: 'demo'
-  }
-];
-
 export default {
   components: {
     'nft-custom-add-modal': NftCustomAddModal,
@@ -126,6 +118,7 @@ export default {
       mayHaveTokens: [true, true],
       countsRetrieved: false,
       showDetails: false,
+      reLoading: false,
       selectedContract: '0x06012c8cf97bead5deae237070f9587f8e7a266d',
       detailsFor: {},
       nftTokens: {},
@@ -220,6 +213,7 @@ export default {
   },
   methods: {
     addCustom(address, symbol) {
+      this.reLoading = true;
       this.customNFTs.push({
         ERC721Extension: true,
         contract: address,
@@ -228,17 +222,20 @@ export default {
       });
       this.$refs.customModal.$refs.modal.hide();
       store.set('customNFTs', this.customNFTs);
+      this.sentUpdate += 1;
       this.setup();
     },
     removeCustomNft(item) {
       const customNFTs = store.get('customNFTs');
       if (customNFTs !== undefined && customNFTs !== null) {
+        this.reLoading = true;
         const entryIndex = customNFTs.findIndex(
           entry => item.contract === entry.contract
         );
         customNFTs.splice(entryIndex, 1);
         store.set('customNFTs', customNFTs);
         this.setup();
+        this.sentUpdate += 1;
       }
     },
     openCustomModal() {
@@ -480,6 +477,7 @@ export default {
               }
             }
           }
+          this.reLoading = false;
         });
     },
     async getOwnedTokens(contracts, address, nftData) {
