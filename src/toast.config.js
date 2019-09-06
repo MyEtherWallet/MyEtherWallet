@@ -1,7 +1,7 @@
 import toastWarn from '@/assets/images/icons/toast-warn.svg';
 import toastErr from '@/assets/images/icons/toast-err.svg';
 import toastSuccess from '@/assets/images/icons/toast-success.svg';
-import xss from 'xss';
+import Misc from '@/helpers/misc';
 
 const toastObject = {
   position: 'bottom-right',
@@ -26,7 +26,7 @@ const error = {
       return `<div><img src="${toastErr}" /> &nbsp; Oops.. Something Went Wrong..</div>`;
     }
     // if there is a message show it with the message
-    return `<div><img src="${toastErr}" /> &nbsp; ${xss(
+    return `<div><img src="${toastErr}" /> &nbsp; ${Misc.stripTags(
       payload.message
     )}</div>`;
   },
@@ -43,7 +43,7 @@ const warn = {
       return `<div><img src="${toastWarn}" /> &nbsp; Something minor happened. Don't be alarmed</div>`;
     }
     // if there is a message show it with the message
-    return `<div><img src="${toastWarn}" /> &nbsp; Warning: ${xss(
+    return `<div><img src="${toastWarn}" /> &nbsp; Warning: ${Misc.stripTags(
       payload.message
     )}</div>`;
   },
@@ -60,7 +60,7 @@ const info = {
       return `<div><img src="${toastSuccess}" /> Good job! </div>`;
     }
     // if there is a message show it with the message
-    return `<div><img src="${toastSuccess}" /> &nbsp; ${xss(
+    return `<div><img src="${toastSuccess}" /> &nbsp; ${Misc.stripTags(
       payload.message
     )}</div>`;
   },
@@ -77,7 +77,7 @@ const success = {
       return `<div><img src="${toastSuccess}" /> &nbsp; Success!</div>`;
     }
     // if there is a message show it with the message
-    return `<div><img src="${toastSuccess}" /> &nbsp; ${xss(
+    return `<div><img src="${toastSuccess}" /> &nbsp; ${Misc.stripTags(
       payload.message
     )}</div>`;
   },

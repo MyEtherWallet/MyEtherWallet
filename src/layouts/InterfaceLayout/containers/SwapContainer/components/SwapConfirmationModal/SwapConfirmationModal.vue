@@ -126,7 +126,7 @@ export default {
     },
     fiatDest() {
       if (this.swapDetails.orderDetails) {
-        return this.swapDetails.orderDetails.output.owner.name;
+        return this.swapDetails.orderDetails.name;
       }
       return '';
     }
