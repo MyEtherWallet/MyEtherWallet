@@ -1,0 +1,159 @@
+@import '~@/scss/GlobalVariables';
+
+//***************************************************
+// modal-contents
+//***************************************************
+.modal-contents {
+  padding: 40px;
+  @media all and (max-width: $mobile-width) {
+    padding: 20px;
+  }
+}
+
+.pin-input-block {
+  margin-bottom: 30px;
+
+  .input-container {
+    display: flex;
+    flex-direction: column;
+
+    .input-headers {
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 10px 5px;
+    }
+
+    p {
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    input {
+      background-color: $light-grey-1;
+      border: 1px solid $light-grey-1;
+      font-size: 14px;
+      height: 55px;
+      padding: 0 20px;
+      width: 100%;
+    }
+
+    span {
+      color: $mew-green;
+      cursor: pointer;
+    }
+  }
+}
+
+p {
+  color: $dark-blue-6;
+}
+
+.main-title {
+  font-size: 25px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.sub-title {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 30px;
+}
+
+.button-matrix-block {
+  $button-element-size: 70px;
+  $grid-width-size: $button-element-size + 2px;
+
+  margin-top: 30px;
+  display: grid;
+  justify-items: center;
+  justify-content: center;
+  grid-gap: 10px;
+  grid-template-columns: $grid-width-size $grid-width-size $grid-width-size;
+  button {
+    cursor: pointer;
+    background: $light-grey-1;
+    border: 1px solid $mew-green;
+    height: $button-element-size;
+    width: $button-element-size;
+    border-radius: 5px;
+    position: relative;
+
+    &:active {
+      background-color: $light-grey-3;
+    }
+
+    &::after {
+      height: 8px;
+      width: 8px;
+      background-color: $mew-green;
+      position: absolute;
+      margin: auto;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      content: '';
+      border-radius: 100%;
+    }
+  }
+}
+
+.button-block {
+  padding-top: 40px;
+  text-align: center;
+
+  .checkbox-container {
+    margin-bottom: 30px;
+
+    input {
+      display: none;
+    }
+
+    label {
+      position: relative;
+      cursor: pointer;
+    }
+
+    .custom-marker {
+      background-color: $light-grey-6;
+      border: 1px solid $light-grey-6;
+      border-radius: 5px;
+      height: 20px;
+      left: 25px;
+      position: absolute;
+      width: 20px;
+    }
+
+    .enable {
+      background-color: $mew-green;
+      border: 1px solid $mew-green;
+      color: $white;
+    }
+  }
+
+  button {
+    background-color: $mew-green;
+    border: 1px solid $mew-green;
+    border-radius: 5px;
+    color: $white;
+    cursor: pointer;
+    display: inline-block;
+    font-weight: 500;
+    margin: 20px auto 0;
+    min-width: 250px;
+    padding: 18px 45px;
+    width: 100%;
+
+    &:hover {
+      opacity: 0.65;
+    }
+
+    &:disabled {
+      background-color: $light-grey-6 !important;
+      border: 1px solid $light-grey-6 !important;
+      pointer-events: none !important;
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "txTotal": "全部交易",
+  "scanQrCode": "掃描 QR code 來發送或交換",
+  "signingAddr": "簽名地址",
+  "confirmSigning": "確認簽名",
+  "approveOnDevice": "請在硬體錢包上批准",
+  "success": "成功",
+  "error": "錯誤"
+}

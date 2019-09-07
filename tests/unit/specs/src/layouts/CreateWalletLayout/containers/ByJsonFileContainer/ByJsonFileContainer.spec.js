@@ -1,19 +1,11 @@
 import Vue from 'vue';
-import { shallowMount, mount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils';
 import ByJsonFileContainer from '@/layouts/CreateWalletLayout/containers/ByJsonFileContainer/ByJsonFileContainer.vue';
 import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessModal/SuccessModal.vue';
 import ByJsonBlock from '@/layouts/CreateWalletLayout/components/ByJsonBlock/ByJsonBlock.vue';
-
 import sinon from 'sinon';
-import {
-  Tooling
-} from '@@/helpers';
-
-const RouterLinkStub = {
-  name: 'router-link',
-  template: '<div><slot></slot></div>',
-  props: ['to']
-}
+import { Tooling } from '@@/helpers';
+import { RouterLinkStub } from '@@/helpers/setupTooling';
 
 const showModal = sinon.stub();
 const hideModal = sinon.stub();
@@ -26,7 +18,7 @@ const BModalStub = {
     show: showModal,
     hide: hideModal
   }
-}
+};
 
 describe('ByJsonFileContainer.vue', () => {
   let localVue, i18n, wrapper, store;
@@ -36,8 +28,7 @@ describe('ByJsonFileContainer.vue', () => {
     i18n = baseSetup.i18n;
     store = baseSetup.store;
 
-    Vue.config.errorHandler = () => { };
-    Vue.config.warnHandler = () => { };
+    Vue.config.warnHandler = () => {};
   });
 
   beforeEach(() => {
@@ -56,11 +47,17 @@ describe('ByJsonFileContainer.vue', () => {
   });
 
   it('should render correct contents data', () => {
-    const contentElements = wrapper.vm.$el.querySelectorAll('.contents .content-block');
-    for (var i = 0; i < contentElements.length; i++) {
-      let contentElement = contentElements[i];
-      expect(contentElement.querySelector('h6').textContent.trim()).toEqual(wrapper.vm.$data.contents[i].title);
-      expect(contentElement.querySelector('p').textContent.trim()).toEqual(wrapper.vm.$data.contents[i].desc);
+    const contentElements = wrapper.vm.$el.querySelectorAll(
+      '.contents .content-block'
+    );
+
+    for (const [i, contentElement] of contentElements.entries()) {
+      expect(contentElement.querySelector('h6').textContent.trim()).toEqual(
+        wrapper.vm.$data.contents[i].title
+      );
+      expect(contentElement.querySelector('p').textContent.trim()).toEqual(
+        wrapper.vm.$data.contents[i].desc
+      );
     }
   });
 
@@ -73,20 +70,24 @@ describe('ByJsonFileContainer.vue', () => {
 
   it('should render correct walletJson data', () => {
     const walletJson = 'walletJson';
-    wrapper.setData({ walletJson })
-    expect(wrapper.vm.$el.querySelector('.user-button a').getAttribute('href')).toEqual(walletJson);
+    wrapper.setData({ walletJson });
+    expect(
+      wrapper.vm.$el.querySelector('.user-button a').getAttribute('href')
+    ).toEqual(walletJson);
   });
 
   it('should render correct name data', () => {
     const name = 'name';
-    wrapper.setData({ name })
-    expect(wrapper.vm.$el.querySelector('.user-button a').getAttribute('download')).toEqual(name);
+    wrapper.setData({ name });
+    expect(
+      wrapper.vm.$el.querySelector('.user-button a').getAttribute('download')
+    ).toEqual(name);
   });
 
   describe('ByJsonFileContainer.vue Methods', () => {
     it('should render correct downloadDone method', () => {
       wrapper.find('.user-button a').trigger('click');
       expect(showModal.called).toBe(true);
-    })
+    });
   });
 });

@@ -1,26 +1,53 @@
 @import '~@/scss/GlobalVariables';
 
+$dapp-button-mobile-width: 650px;
+
 .dapps-button {
+  background: $light-green-4;
+  border: 1px solid $light-green-4;
   border-radius: 5px;
+  color: $black;
   cursor: pointer;
+  height: 100%;
   padding: 40px 20px;
   text-align: center;
-  height: 100%;
-  background: rgb(241, 250, 250);
+
+  @media all and (max-width: $dapp-button-mobile-width) {
+    display: flex;
+    align-items: center;
+    text-align: left;
+    padding: 10px 20px;
+  }
 
   &:hover {
-    background-color: #c9f2ed;
+    border: 1px solid $mew-green;
+    background-color: $light-green-6;
   }
 
   img {
-    margin-bottom: 15px;
+    @media all and (max-width: $dapp-button-mobile-width) {
+      margin-top: 0;
+      margin-left: -10px;
+      margin-right: 22px;
+      width: 23%;
+      max-width: 90px;
+    }
   }
 
   h4 {
     margin-bottom: 5px;
+    font-size: 18px;
+    font-weight: 500;
   }
+}
+
+.disabled {
+  background-color: $white;
+  border: 1px solid $light-grey-6;
+  color: $light-grey-6;
+  pointer-events: none;
 
   p {
-    padding: 0 10px;
+    color: $light-grey-6;
   }
 }

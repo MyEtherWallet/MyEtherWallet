@@ -1,8 +1,5 @@
 export default class Worker {
-	constructor() {}
+  constructor() {}
 
-	postMessage() {
-
-	}
+  postMessage() {}
 }
-

@@ -5,32 +5,33 @@
       hide-footer
       centered
       class="bootstrap-modal-wide confirmation-modal nopadding"
-      title="Confirmation">
+      title="Confirmation"
+    >
       <div class="modal-content qrcode-modal">
         <div class="tx-info">
-          <div class="tx-data tx-from">
-            <!-- <img src="~@/assets/images/icons/eth.svg">
-            <h3>1.00000 <span>ETH</span></h3> -->
-            <div class="address-info">
-              <p class="address-title">From Address</p>
-              <p>{{ from }}</p>
-            </div>
+          <address-block
+            :currency="network.type.currencyName"
+            :icon="network.type.icon"
+            :address="from"
+            :value="value"
+            :token-transfer-val="tokenTransferVal"
+            :token-symbol="tokenSymbol"
+            direction="from"
+          />
+          <div v-show="to !== '' && to !== undefined" class="direction">
+            <img src="~@/assets/images/icons/right-arrow.svg" />
           </div>
-          <div
+          <address-block
             v-show="to !== '' && to !== undefined"
-            class="direction">
-            <img src="~@/assets/images/icons/right-arrow.svg">
-          </div>
-          <div
-            v-show="to !== '' && to !== undefined"
-            class="tx-data tx-to">
-            <!-- <img src="~@/assets/images/icons/btc.svg">
-            <h3>0.006345 <span>BTC</span></h3> -->
-            <div class="address-info">
-              <p class="address-title">To Address</p>
-              <p>{{ to }}</p>
-            </div>
-          </div>
+            :currency="network.type.currencyName"
+            :icon="network.type.icon"
+            :address="to"
+            :token-transfer-to="tokenTransferTo"
+            :token-transfer-val="tokenTransferVal"
+            :token-symbol="tokenSymbol"
+            :value="value"
+            direction="to"
+          />
         </div>
         <div class="detail-info">
           <div class="info">
@@ -39,68 +40,51 @@
               <label class="switch">
                 <input
                   type="checkbox"
-                  @click="modalDetailInformation = !modalDetailInformation" >
-                <span class="slider round"/>
+                  @click="modalDetailInformation = !modalDetailInformation"
+                />
+                <span class="slider round" />
               </label>
             </div>
           </div>
           <div
-            v-if="modalDetailInformation"
-            class="expended-info">
-            <div class="grid-block">
-              <p>Network</p><p>{{ $store.state.network.type.name }} by {{ $store.state.network.service }}</p>
-            </div>
-            <div class="grid-block">
-              <p>Gas Limit</p><p>{{ gas }} wei</p>
-            </div>
-            <div class="grid-block">
-              <p>Gas Price</p><p>{{ gasPrice }} gwei</p>
-            </div>
-            <div class="grid-block">
-              <p>Transaction Fee</p><p> {{ fee }} ETH</p>
-            </div>
-            <div class="grid-block">
-              <p>Nonce</p><p>{{ nonce }}</p>
-            </div>
-            <div class="grid-block">
-              <p>Data</p><p>{{ data }}</p>
+            :class="modalDetailInformation && 'expended-info-open'"
+            class="expended-info"
+          >
+            <div class="padding-container">
+              <div class="grid-block">
+                <p>{{ $t('interface.network') }}</p>
+                <p>{{ network.type.name }} by {{ network.service }}</p>
+              </div>
+              <div class="grid-block">
+                <p>{{ $t('common.gasLimit') }}</p>
+                <p>{{ gas }} wei</p>
+              </div>
+              <div class="grid-block">
+                <p>{{ $t('common.gasPrice') }}</p>
+                <p>{{ gasPrice }} gwei</p>
+              </div>
+              <div class="grid-block">
+                <p>{{ $t('common.txFee') }}</p>
+                <p>{{ fee }} {{ network.type.currencyName }}</p>
+              </div>
+              <div class="grid-block">
+                <p>Nonce</p>
+                <p>{{ nonce }}</p>
+              </div>
+              <div class="grid-block">
+                <p>{{ $t('common.data') }}</p>
+                <p>{{ data }}</p>
+              </div>
             </div>
           </div>
         </div>
 
         <div class="submit-button-container">
-          <div class="flex-center-align">
-            <div class="button-with-helper">
-              <div
-                ref="ConfirmAndSendButton"
-                :class="[signedTx !== ''? '': 'disabled','submit-button large-round-button-green-filled clickable']"
-                @click="sendTx">
-                Confirm and Send
-              </div>
-              <div class="tooltip-box-2">
-                <b-btn id="exPopover9">
-                  <img
-                    class="icon"
-                    src="~@/assets/images/icons/qr-code.svg">
-                </b-btn>
-                <b-popover
-                  target="exPopover9"
-                  triggers="hover focus"
-                  placement="top">
-                  <div class="qrcode-contents">
-                    <p class="qrcode-title">Scan QR code to send/swap instantly</p>
-                    <div class="qrcode-block">
-                      <qrcode
-                        :options="{ size: 100 }"
-                        value="Hello, World!"/>
-                    </div>
-                    <p class="qrcode-helper">What is that?</p>
-                  </div>
-                </b-popover>
-              </div>
-            </div>
-          </div>
-          <p class="learn-more">Have any issues? <a href="/">Learn more</a></p>
+          <standard-button
+            :options="buttonSendTx"
+            :button-disabled="signedTx !== '' ? false : true"
+            @click.native="sendTx"
+          />
         </div>
       </div>
     </b-modal>
@@ -108,18 +92,24 @@
 </template>
 
 <script>
-// eslint-disable-next-line
-const unit = require('ethjs-unit');
+import AddressBlock from '../AddressBlock';
+import { mapState } from 'vuex';
+import StandardButton from '@/components/Buttons/StandardButton';
+import parseTokensData from '@/helpers/parseTokensData.js';
 
 export default {
+  components: {
+    'address-block': AddressBlock,
+    'standard-button': StandardButton
+  },
   props: {
     confirmSendTx: {
       type: Function,
       default: function() {}
     },
     fee: {
-      type: Number,
-      default: 0
+      type: String,
+      default: ''
     },
     signedTx: {
       type: String,
@@ -127,31 +117,31 @@ export default {
     },
     data: {
       type: String,
-      default: ''
+      default: '0x'
     },
     from: {
       type: String,
       default: ''
     },
     gas: {
-      type: Number,
-      default: 0
+      type: String,
+      default: ''
     },
     gasPrice: {
       type: Number,
       default: 0
     },
     nonce: {
-      type: Number,
-      default: 0
+      type: String,
+      default: ''
     },
     to: {
       type: String,
       default: ''
     },
     value: {
-      type: Number,
-      default: 0
+      type: String,
+      default: ''
     },
     isHardwareWallet: {
       type: Boolean,
@@ -161,17 +151,37 @@ export default {
   data() {
     return {
       modalDetailInformation: false,
-      transactionSigned: false
+      transactionSigned: false,
+      tokenTransferTo: '',
+      tokenTransferVal: '',
+      tokenSymbol: '',
+      buttonSendTx: {
+        title: 'Confirm and Send',
+        buttonStyle: 'green',
+        mobileFullWidth: true,
+        helpCenter: true
+      }
     };
   },
   computed: {
+    ...mapState(['web3', 'network']),
     signedTransaction() {
       if (this.signedMessage) {
         return this.signedMessage;
       } else if (this.isHardwareWallet) {
-        return 'Please Approve on Hardware Wallet';
+        return this.$t('confirmation.approveOnDevice');
       }
       return '';
+    }
+  },
+  watch: {
+    data(newVal) {
+      this.parseData(newVal);
+    }
+  },
+  mounted() {
+    if (this.data !== '0x') {
+      this.parseData();
     }
   },
   methods: {
@@ -179,6 +189,19 @@ export default {
       if (this.signedTx !== '') {
         this.confirmSendTx();
       }
+    },
+    parseData(val) {
+      const localVal = val ? val : this.data;
+      const tokenInfo = parseTokensData(
+        localVal,
+        this.to,
+        this.web3,
+        this.network.type.tokens,
+        this.network.type.name
+      );
+      this.tokenTransferTo = tokenInfo.tokenTransferTo;
+      this.tokenTransferVal = tokenInfo.tokenTransferVal;
+      this.tokenSymbol = tokenInfo.tokenSymbol;
     }
   }
 };

@@ -1,11 +1,7 @@
-import Vue from 'vue';
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils';
 import SwapAddressSelector from '@/layouts/InterfaceLayout/containers/SwapContainer/components/SwapAddressSelector/SwapAddressSelector.vue';
 
-
-import {
-  Tooling
-} from '@@/helpers';
+import { Tooling } from '@@/helpers';
 
 describe('SwapAddressSelector.vue', () => {
   let localVue, i18n, wrapper, store;
@@ -22,7 +18,7 @@ describe('SwapAddressSelector.vue', () => {
       localVue,
       i18n,
       store,
-      attachToDocument: true,
+      attachToDocument: true
     });
   });
 
@@ -35,39 +31,49 @@ describe('SwapAddressSelector.vue', () => {
   });
 
   it('should render correct dropdownOpen data', () => {
-    expect(wrapper.find('.fa-chevron-down').exists()).toBe(true)
-    expect(wrapper.find('.fa-chevron-up').exists()).toBe(false)
+    expect(wrapper.find('.fa-chevron-down').exists()).toBe(true);
+    expect(wrapper.find('.fa-chevron-up').exists()).toBe(false);
     wrapper.setData({ dropdownOpen: true });
-    expect(wrapper.find('.fa-chevron-down').exists()).toBe(false)
-    expect(wrapper.find('.fa-chevron-up').exists()).toBe(true)
+    expect(wrapper.find('.fa-chevron-down').exists()).toBe(false);
+    expect(wrapper.find('.fa-chevron-up').exists()).toBe(true);
   });
 
   it('should render correct selectedAddress data', () => {
-    let selectedAddress = 'selectedAddress';
+    const selectedAddress = 'selectedAddress';
     wrapper.setData({ selectedAddress });
-    expect(wrapper.vm.$el.querySelector('.dropdown-input-box input').value).toEqual(selectedAddress);
+    expect(
+      wrapper.vm.$el.querySelector('.dropdown-input-box input').value
+    ).toEqual(selectedAddress);
   });
 
   it('should render correct addresses data', () => {
     wrapper.setData({ dropdownOpen: true });
-    const liElements = wrapper.vm.$el.querySelectorAll('.dropdown-list-box ul li');
-    for (var i = 0; i < liElements.length; i++) {
-      let liElement = liElements[i];
-      let address = wrapper.vm.$data.addresses[i].address;
-      let currency = wrapper.vm.$data.addresses[i].currency;
-      expect(liElement.querySelector('.listed-address').textContent.trim().indexOf(address)).toBeGreaterThan(-1);
+    const liElements = wrapper.vm.$el.querySelectorAll(
+      '.dropdown-list-box ul li'
+    );
+    for (const [i, liElement] of liElements.entries()) {
+      const address = wrapper.vm.$data.addresses[i].address;
+      const currency = wrapper.vm.$data.addresses[i].currency;
+      expect(
+        liElement
+          .querySelector('.listed-address')
+          .textContent.trim()
+          .indexOf(address)
+      ).toBeGreaterThan(-1);
       if (liElement.querySelector('.address-note') != null) {
-        expect(liElement.querySelector('.address-note').textContent.indexOf(currency)).toBeGreaterThan(-1);
+        expect(
+          liElement.querySelector('.address-note').textContent.indexOf(currency)
+        ).toBeGreaterThan(-1);
       }
     }
   });
 
   it('should validate address when address is changed', () => {
     let selectedAddress = '0x7545196a7339daf3fad6979208b2042f06e8c882';
-    wrapper.setData({ selectedAddress })
+    wrapper.setData({ selectedAddress });
     expect(wrapper.vm.$data.validAddress).toBe(true);
     selectedAddress = 'address';
-    wrapper.setData({ selectedAddress })
+    wrapper.setData({ selectedAddress });
     expect(wrapper.vm.$data.validAddress).toBe(false);
   });
 
@@ -76,11 +82,14 @@ describe('SwapAddressSelector.vue', () => {
       let dropdownOpen = true;
       wrapper.setData({ dropdownOpen: true });
       const liElements = wrapper.findAll('.dropdown-list-box ul li');
-      for (var i = 0; i < liElements.length; i++) {
+
+      for (let i = 0; i < liElements.length; i++) {
         liElements.at(i).trigger('click');
         dropdownOpen = !dropdownOpen;
         expect(wrapper.vm.$data.dropdownOpen).toBe(dropdownOpen);
-        expect(wrapper.vm.$data.selectedAddress).toEqual(wrapper.vm.$data.addresses[i].address);
+        expect(wrapper.vm.$data.selectedAddress).toEqual(
+          wrapper.vm.$data.addresses[i].address
+        );
       }
     });
   });

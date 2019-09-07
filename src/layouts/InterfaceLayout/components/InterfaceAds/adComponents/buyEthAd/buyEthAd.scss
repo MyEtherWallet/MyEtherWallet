@@ -1,0 +1,40 @@
+@import "~@/scss/GlobalVariables";
+
+a {
+  text-decoration: none;
+  display: block;
+}
+
+.content-block {
+  background-image: url("~@/assets/images/ads/eth.png");
+  background-size: 200px;
+  background-position-x: right;
+  background-position-y: bottom;
+  background-repeat: no-repeat;
+  position: relative;
+  height: 137px;
+  width: 100%;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+
+.flex-vertical-center {
+  .top-block {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 24px;
+  }
+
+  .bottom-block {
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    img {
+      height: 25px;
+      width: initial;
+      margin-left: 10px;
+    }
+  }
+}

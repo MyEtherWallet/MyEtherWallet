@@ -1,7 +1,33 @@
 @import '~@/scss/GlobalVariables';
 
+.vintage-header {
+  background-color: $mew-green;
+  color: $white;
+  text-align: center;
+  width: 100%;
+
+  a {
+    color: $white;
+    text-decoration: underline;
+  }
+}
 .wrap {
-  padding-top: 87px;
+  padding-top: 85px;
+
+  // Tablet
+  @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+    padding-top: 70px;
+  }
+
+  @media all and (max-width: $mobile-width) {
+    padding-top: 70px;
+  }
+}
+
+.page-container {
+  @media all and (max-width: $tablet-width) {
+    padding: 0;
+  }
 }
 
 .scrollup-container {
@@ -15,30 +41,46 @@
   }
 }
 
+//********************************************************
+// Desktop & Tablet menu
+//********************************************************
+.fixed-header-wrap {
+  @media all and (max-width: $tablet-width) {
+    display: none;
+  }
+}
+
+.fixed-header-border-bottom {
+  //border-bottom: 1px solid black;
+  box-shadow: 0 0 2px #0000003b;
+}
+
 .fixed-header {
   background-color: $background-color-white;
   left: 0;
   position: fixed;
+  // padding: 0 25px;
   top: 0;
   width: 100%;
-  z-index: $z-menu;
+  //z-index: $z-menu + 100;
+  z-index: 1000;
 
   &.tiny-header {
     box-shadow: 0 2px 13px $tiny-header-shadow-color;
 
     .header-container {
-      padding: 5px 0;
+      padding: 2.5px 25px;
     }
   }
 
   .header-container {
     align-items: center;
     display: flex;
-    padding: 12px 0;
+    padding: 12px 25px;
     transition: all 0.3s ease;
 
     @media all and (max-width: $tablet-width) {
-      padding: 15px 0;
+      padding: 20px 0;
     }
 
     .top-logo {
@@ -51,6 +93,12 @@
 
       .logo-small {
         height: 28px;
+      }
+
+      .beta-tag {
+        color: white;
+        margin-left: 5px;
+        height: 17px;
       }
     }
 
@@ -80,11 +128,16 @@
         .nav-item a span {
           color: $text-base-color;
           outline: none;
+        }
+      }
 
-          &.active {
-            color: $text-black;
-            font-weight: 500;
-          }
+      .buy-eth {
+        position: relative;
+        .buy-eth-icon {
+          position: absolute;
+          top: 19px;
+          left: -13px;
+          height: 24px;
         }
       }
 
@@ -108,14 +161,15 @@
       }
 
       .current-language-flag {
-        display: flex;
         align-items: center;
+        display: flex;
 
         img {
-          flex: 45;
-          margin-right: 10px;
-          height: 15px;
           border-radius: 3px;
+          box-shadow: 0 0 1pt 1pt $mew-green;
+          flex: 45;
+          height: 16px;
+          margin-right: 10px;
         }
       }
 
@@ -125,6 +179,14 @@
           font-size: 14px;
           margin-left: 26px;
           padding: 13px 0;
+
+          &.get-free-wallet {
+            margin-left: 10px;
+          }
+
+          &.first-button {
+            margin-left: 30px;
+          }
 
           &.nopadding {
             padding: 0;
@@ -136,56 +198,66 @@
         }
       }
     } // .top-menu
-
-    .mobile-menu {
-      display: none;
-      margin-left: auto;
-
-      @media all and (max-width: $tablet-width) {
-        display: block;
-      }
-
-      .mobile-menu-button {
-        padding: 10px 5px;
-
-        div {
-          background-color: $background-color-black;
-          border-radius: 2px;
-          height: 4px;
-          margin-bottom: 5px;
-          width: 30px;
-        }
-
-        .bar-3 {
-          margin: 0;
-          width: 15px;
-        }
-      }
-    } // .mobile-menu
   } // .header-container
 } // .fixed-header
+
+//********************************************************
+// .notification-menu-container
+//********************************************************
+.notification-menu-container {
+  display: flex;
+  align-items: center;
+  i {
+    font-size: 18px;
+    color: $dark-blue-1;
+  }
+}
 
 .identicon-dropdown {
   padding: 0 !important;
 }
 
+%button-templates {
+  border: 1px solid $border-green;
+  border-radius: 4px;
+  color: $text-white;
+  cursor: pointer;
+  display: block;
+  font-size: 12px;
+  overflow: hidden;
+  padding: 10px 20px;
+  position: relative;
+
+  &:hover {
+    background-color: $white;
+    color: $text-color-green;
+  }
+}
+
 .get-free-wallet {
   position: relative;
-  animation: fadeInFromNone 0.5s ease-out;
-  animation-fill-mode: forwards;
-  opacity: 1;
+  cursor: pointer;
+  //animation: fadeOutFromBlock 0.5s ease-out;
+  //animation-fill-mode: forwards;
+  display: none;
+  opacity: 0;
+  overflow: hidden;
+  margin-left: 10px;
+
+  .nav-link {
+    padding: 7px 0;
+  }
+
+  .access-button {
+    @extend %button-templates;
+
+    background-color: $text-color-green;
+  }
 
   .get-free-wallet-button {
-    border: 1px solid $border-green;
-    border-radius: 4px;
+    @extend %button-templates;
+
     color: $text-color-green;
-    cursor: pointer;
-    font-size: 12px;
-    padding: 10px 20px;
-    transition: background-color 0.2s ease;
-    display: block;
-    position: relative;
-    overflow: hidden;
 
     &:hover {
       background-color: $text-color-green;
@@ -193,54 +265,180 @@
     }
   }
 
-  &.noshow {
+  &.show {
+    animation: fadeInFromNone 0.5s ease-out;
+    animation-fill-mode: forwards;
+  }
+
+  &.hide {
     animation: fadeOutFromBlock 0.5s ease-out;
     animation-fill-mode: forwards;
   }
 
   @keyframes fadeInFromNone {
     0% {
-      width: 0;
       height: 0;
       opacity: 0;
-      margin-left: 0;
+      //margin-left: 0;
     }
 
     50% {
-      width: 173px;
+      display: inline-block;
       height: 54px;
-      opacity: 0;
-      margin-left: 20px;
+      opacity: 0.5;
     }
 
     100% {
-      width: 173px;
+      display: inline-block;
       height: 54px;
       opacity: 1;
-      margin-left: 20px;
     }
   }
 
   @keyframes fadeOutFromBlock {
     0% {
-      width: 173px;
       height: 54px;
       opacity: 1;
-      margin-left: 20px;
     }
 
     50% {
-      width: 173px;
+      display: none;
       height: 54px;
-      opacity: 0;
-      margin-left: 20px;
+      opacity: 0.5;
     }
 
     100% {
-      width: 0;
+      display: none;
       height: 0;
       opacity: 0;
-      margin-left: 0;
+      //margin-left: 0;
     }
   }
 } // .get-free-wallet
+
+//********************************************************
+// .settings-container
+//********************************************************
+.settings-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding-left: 20px;
+
+  .blockie-image {
+    position: absolute;
+    top: -9px;
+    right: 20px;
+  }
+
+  i {
+    color: $dark-blue-1;
+    font-size: 18px;
+    margin-left: 7px;
+  }
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+//********************************************************
+// .mobile-menu-content
+//********************************************************
+.mobile-menu--underblock {
+  @media all and (min-width: calc(#{$tablet-width} + 1px)) {
+    display: none;
+  }
+
+  pointer-events: none;
+  z-index: 999;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  transition: all 0.2s linear;
+  background-color: $menu-under-background-color;
+  opacity: 0;
+
+  &.mobile-menu-open {
+    opacity: 1;
+  }
+}
+
+.mobile-menu--container {
+  position: fixed;
+  width: 100vw;
+  //z-index: $z-menu + 100;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  transition: all 0.2s linear;
+  height: 0;
+  overflow: hidden;
+  background-color: white;
+
+  .menu-content {
+    padding-top: 80px;
+  }
+
+  ul {
+    padding: 0;
+    li {
+      > * {
+        padding: 20px;
+        font-size: 20px;
+        display: block;
+        color: $text-base-color;
+      }
+    }
+  }
+
+  @media all and (max-width: $tablet-width) {
+    &.mobile-menu-open-height-change {
+      height: 100vh;
+    }
+  }
+}
+
+@media all and (max-width: $tablet-width) {
+  .mobile-menu-boxshadow {
+    //box-shadow: 0 0 1px #adadad1f;
+  }
+}
+
+//********************************************************
+// .mobile-language-menu-container
+//********************************************************
+.mobile-language-menu-container {
+  user-select: none;
+  display: flex !important;
+  align-items: center;
+  padding: 16px 21px 16px 7px !important;
+
+  .arrows {
+    margin-left: auto;
+  }
+}
+
+.mobile-language-menu {
+  .current-language-flag {
+    display: flex;
+    align-items: center;
+
+    &::after {
+      display: none;
+    }
+
+    img {
+      height: 25px;
+      border-radius: 4px;
+    }
+    p {
+      margin-right: 15px;
+      font-size: 20px;
+      display: block;
+      color: #506175;
+    }
+  }
+}

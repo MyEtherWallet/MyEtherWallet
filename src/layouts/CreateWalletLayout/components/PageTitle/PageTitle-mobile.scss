@@ -1,0 +1,11 @@
+@import '~@/scss/GlobalVariables';
+@media all and (max-width: $mobile-width) {
+  .wrap {
+    background-color: $background-color-1;
+    padding: 45px 0 40px;
+
+    .page-title {
+      text-align: left;
+    }
+  }
+} // @media all and (max-width: $mobile-width) {

@@ -1,196 +1,356 @@
 <template>
   <div class="header">
-
-    <div
-      :class="isPageOnTop == false ? 'active' : ''"
-      class="scrollup-container">
-      <scrollupbutton/>
+    <!-- Modals ***************************************** -->
+    <disconnected-modal ref="mewConnectDisconnected" />
+    <settings-modal
+      v-if="address !== null"
+      ref="settings"
+      :gas-price="gasPrice"
+      :address="address"
+    />
+    <notifications-modal ref="notifications" />
+    <logout-modal ref="logout" />
+    <issue-log-modal
+      v-if="Object.keys.length > 0"
+      ref="issuelog"
+      :error="error"
+      :resolver="resolver"
+    />
+    <!-- Modals ***************************************** -->
+    <!-- Scroll up button ******************************* -->
+    <div class="scroll-up-button">
+      <div
+        :class="isPageOnTop == false ? 'active' : ''"
+        class="scrollup-container"
+      >
+        <router-link
+          v-show="
+            ($route.fullPath === '/create-wallet' ||
+              $route.fullPath === '/access-my-wallet') &&
+              !gettingStartedDone
+          "
+          to="/getting-started"
+        >
+          <user-reminder-button />
+        </router-link>
+        <scroll-up-button />
+      </div>
     </div>
+    <!-- Scroll up button ******************************* -->
+    <mobile-menu :opensettings="openSettings" :logout="logout" />
 
-    <div class="wrap">
+    <!-- Desktop menu *********************************** -->
+    <div class="fixed-header-wrap">
       <div
         ref="fixedHeader"
-        :class="isPageOnTop == false ? 'tiny-header' : ''"
-        class="fixed-header">
-        <div class="page-container">
+        :class="[
+          !isPageOnTop && !isMobileMenuOpen && 'tiny-header',
+          isMobileMenuOpen && 'fixed-header-border-bottom'
+        ]"
+        class="fixed-header"
+      >
+        <div v-if="$route.fullPath === '/'" class="vintage-header">
+          Missing the vintage MEW?
+          <a rel="noopener noreferrer" href="https://vintage.myetherwallet.com"
+            >Click here to go back!</a
+          >
+        </div>
+        <div
+          :class="[
+            (isMobileMenuOpen || !isPageOnTop) && 'mobile-menu-boxshadow',
+            address !== null ? '' : 'page-container'
+          ]"
+        >
           <div class="header-container">
             <router-link
               to="/"
-              @click.native="scrollTop()">
+              @click.native="
+                scrollTop();
+                isMobileMenuOpen = false;
+              "
+            >
               <div class="top-logo">
                 <img
-                  :class="isPageOnTop == false ? 'logo-small' : ''"
+                  :class="!isPageOnTop && !isMobileMenuOpen ? 'logo-small' : ''"
                   class="logo-large"
-                  src="~@/assets/images/logo.png">
+                  src="~@/assets/images/short-hand-logo.png"
+                />
               </div>
             </router-link>
             <div class="top-menu">
-
               <b-nav>
                 <b-nav-item
+                  href="https://ccswap.myetherwallet.com/#/"
+                  target="_blank"
+                  class="buy-eth"
+                >
+                  <img
+                    class="buy-eth-icon"
+                    src="@/assets/images/icons/buy-eth.svg"
+                  />
+                  Buy ETH
+                </b-nav-item>
+                <b-nav-item
+                  v-if="isHomePage"
                   to="/"
                   exact
-                  @click="scrollTop()"> {{ $t("header.home") }}</b-nav-item>
-                <b-nav-item to="/#about-mew">{{ $t("header.about") }}</b-nav-item>
-                <b-nav-item to="/#faqs">{{ $t("common.faqs") }}</b-nav-item>
-                <b-nav-item
-                  v-show="online"
-                  to="/#news">{{ $t("common.news") }}</b-nav-item>
-
+                  @click="scrollTop()"
+                  >{{ $t('header.home') }}</b-nav-item
+                >
+                <b-nav-item v-if="isHomePage" to="/#about-mew">
+                  {{ $t('header.about') }}
+                </b-nav-item>
+                <b-nav-item-dropdown
+                  v-if="address !== null"
+                  right
+                  no-caret
+                  class="tx-history-menu"
+                >
+                  <template slot="button-content">
+                    <p>Transaction History</p>
+                  </template>
+                  <b-dropdown-item :href="explorerUrl" target="_blank">
+                    <p>{{ serviceUrl }} ({{ network.type.name }})</p>
+                  </b-dropdown-item>
+                  <b-dropdown-item
+                    v-show="network.type.name === 'ETH'"
+                    :href="'https://ethplorer.io/address/' + address"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Ethplorer (Tokens)</b-dropdown-item
+                  >
+                </b-nav-item-dropdown>
+                <b-nav-item to="/#faqs">{{ $t('common.faqs') }}</b-nav-item>
                 <div class="language-menu-container">
                   <div class="arrows">
-                    <i
-                      class="fa fa-angle-down"
-                      aria-hidden="true"/>
+                    <i class="fa fa-angle-down" aria-hidden="true" />
                   </div>
                   <b-nav-item-dropdown
                     class="language-menu"
                     extra-toggle-classes="nav-link-custom"
-                    right>
+                    right
+                  >
                     <template slot="button-content">
                       <div class="current-language-flag">
                         <img
-                          :src="require(`@/assets/images/flags/${currentFlag}.svg`)"
-                          class="show">
+                          v-if="currentFlag !== null"
+                          :src="
+                            require(`@/assets/images/flags/${currentFlag}.svg`)
+                          "
+                          class="show"
+                        />
                         <p>{{ currentName }}</p>
                       </div>
                     </template>
                     <b-dropdown-item
                       v-for="language in supportedLanguages"
-                      :active="$root._i18n.locale === language.flag"
+                      :active="$root._i18n.locale === language.langCode"
                       :key="language.key"
+                      :data-language-code="language.langCode"
                       :data-flag-name="language.flag"
-                      @click="languageItemClicked">
-                      {{ language.name }}
-                    </b-dropdown-item>
+                      @click="languageItemClicked"
+                      >{{ language.name }}</b-dropdown-item
+                    >
                   </b-nav-item-dropdown>
                 </div>
-                <notification v-if="wallet !== null"/>
+                <div
+                  v-if="address !== null"
+                  class="notification-menu-container"
+                >
+                  <notification ref="notification" />
+                </div>
                 <b-nav-item
-                  v-if="wallet === null && $route.fullPath === '/'"
-                  :class="isPageOnTop == true ? 'noshow' : ''"
-                  class="get-free-wallet nopadding"
-                  to="/create-wallet">
-                  <div class="get-free-wallet-button">
-                    Get a Free Wallet
-                  </div>
+                  v-if="showButtons && !isPageOnTop"
+                  :class="[
+                    showGetFreeWallet ? 'show' : 'hide',
+                    'get-free-wallet first-button nopadding'
+                  ]"
+                  to="/create-wallet"
+                >
+                  <div class="get-free-wallet-button">New Wallet</div>
+                </b-nav-item>
+                <b-nav-item
+                  v-if="showButtons && !isPageOnTop"
+                  :class="[
+                    showGetFreeWallet ? 'show' : 'hide',
+                    'get-free-wallet nopadding'
+                  ]"
+                  to="/access-my-wallet"
+                >
+                  <div class="access-button">Access</div>
                 </b-nav-item>
                 <b-nav-item-dropdown
-                  v-if="wallet !== null"
+                  v-if="address !== null"
                   right
                   no-caret
-                  extra-toggle-classes="identicon-dropdown">
+                  extra-toggle-classes="identicon-dropdown"
+                  class="settings-menu"
+                >
                   <template slot="button-content">
-                    <blockie
-                      :address="wallet.getAddressString()"
-                      width="35px"
-                      height="35px"/>
+                    <div class="settings-container">
+                      <blockie
+                        :address="address"
+                        width="35px"
+                        height="35px"
+                        class="blockie-image"
+                      />
+                      <i class="fa fa-angle-down" aria-hidden="true" />
+                    </div>
                   </template>
-                  <b-dropdown-item @click="logout">
-                    Log out
-                  </b-dropdown-item>
+                  <b-dropdown-item @click="openSettings"
+                    >Settings</b-dropdown-item
+                  >
+                  <b-dropdown-item @click="logout">Log out</b-dropdown-item>
                 </b-nav-item-dropdown>
               </b-nav>
-
             </div>
-            <div class="mobile-menu">
-              <div class="mobile-menu-button">
-                <div class="bar-1"/>
-                <div class="bar-2"/>
-                <div class="bar-3"/>
-              </div>
-            </div>
-
+            <!-- .top-menu -->
           </div>
+          <!-- .header-container -->
         </div>
+        <!-- .page-container -->
       </div>
     </div>
+    <!-- Desktop menu *********************************** -->
   </div>
+  <!-- .header -->
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import store from 'store';
-import { Misc } from '@/helpers';
+import { Misc, Toast } from '@/helpers';
 import Blockie from '@/components/Blockie';
 import Notification from '@/components/Notification';
 import ScrollUpButton from '@/components/ScrollUpButton';
+import UserReminderButton from '@/components/UserReminderButton';
+import SettingsModal from '@/components/SettingsModal';
+import NotificationsModal from '@/components/NotificationsModal';
+import LogoutModal from '@/components/LogoutModal';
+import IssueLogModal from '@/components/IssueLogModal';
+import BigNumber from 'bignumber.js';
+import MobileMenu from './components/MobileMenu';
+import DisconnectedModal from '@/components/DisconnectedModal';
+
+const events = {
+  issueModal: 'issueModal',
+  mewConnectDisconnected: 'mewConnectDisconnected'
+};
 
 export default {
   components: {
     blockie: Blockie,
     notification: Notification,
-    scrollupbutton: ScrollUpButton
+    'scroll-up-button': ScrollUpButton,
+    'settings-modal': SettingsModal,
+    'notifications-modal': NotificationsModal,
+    'logout-modal': LogoutModal,
+    'issue-log-modal': IssueLogModal,
+    'user-reminder-button': UserReminderButton,
+    'mobile-menu': MobileMenu,
+    'disconnected-modal': DisconnectedModal
   },
   data() {
     return {
       supportedLanguages: [
-        { name: 'Deutsch', flag: 'de' },
-        { name: 'Ελληνικά', flag: 'gr' },
-        { name: 'English', flag: 'en' },
-        { name: 'Español', flag: 'es' },
-        { name: 'Farsi', flag: 'ir' },
-        { name: 'Suomi', flag: 'fi' },
-        { name: 'Magyar', flag: 'hu' },
-        { name: 'Haitian Creole', flag: 'ht' },
-        { name: 'Bahasa Indonesia', flag: 'id' },
-        { name: 'Italiano', flag: 'it' },
-        { name: '日本語', flag: 'ja' },
-        { name: '한국어', flag: 'ko' },
-        { name: 'Nederlands', flag: 'nl' },
-        { name: 'Norsk Bokmål', flag: 'no' },
-        { name: 'Polski', flag: 'pl' },
-        { name: 'Português', flag: 'pt' },
-        { name: 'Русский', flag: 'ru' },
-        { name: 'ภาษาไทย', flag: 'th' },
-        { name: 'Türkçe', flag: 'tr' },
-        { name: 'Tiếng Việt', flag: 'vn' },
-        { name: '简体中文', flag: 'zh-Hans' },
-        { name: '繁體中文', flag: 'zh-Hant' }
+        // { name: 'Deutsch', flag: 'de', langCode: 'de_DL' },
+        // { name: 'Ελληνικά', flag: 'gr', langCode: 'gr_GR' },
+        { name: 'English', flag: 'en', langCode: 'en_US' },
+        { name: 'Español', flag: 'es', langCode: 'es_ES' },
+        // { name: 'Farsi', flag: 'ir', langCode: 'ir_IR' },
+        // { name: 'Suomi', flag: 'fi', langCode: 'fi_FI' },
+        // { name: 'Magyar', flag: 'hu', langCode: 'hu_HU' },
+        // { name: 'Haitian Creole', flag: 'ht', langCode: 'ht_HT' },
+        // { name: 'Bahasa Indonesia', flag: 'id', langCode: 'id_ID' },
+        // { name: 'Italiano', flag: 'it', langCode: 'it_IT' },
+        { name: '日本語', flag: 'ja', langCode: 'ja_JP' },
+        { name: '한국어', flag: 'ko', langCode: 'ko_KR' },
+        // { name: 'Nederlands', flag: 'nl', langCode: 'nl_NL' },
+        // { name: 'Norsk Bokmål', flag: 'no', langCode: 'no_NO' },
+        // { name: 'Polski', flag: 'pl', langCode: 'pl_PL' },
+        // { name: 'Português', flag: 'pt', langCode: 'pt_PT' },
+        { name: 'Русский', flag: 'ru', langCode: 'ru_RU' },
+        // { name: 'ภาษาไทย', flag: 'th', langCode: 'th_TH' },
+        // { name: 'Türkçe', flag: 'tr', langCode: 'tr_TR' },
+        // { name: 'Tiếng Việt', flag: 'vn', langCode: 'vn_VN' },
+        { name: '简体中文', flag: 'zh-Hans', langCode: 'zh_CN' },
+        { name: '繁體中文', flag: 'tw', langCode: 'zh_TW' }
       ],
-      online: true,
       currentName: 'English',
       currentFlag: 'en',
-      isPageOnTop: true
+      isPageOnTop: true,
+      isMobileMenuOpen: false,
+      isHomePage: true,
+      showGetFreeWallet: false,
+      gasPrice: '0',
+      error: {},
+      resolver: () => {}
     };
   },
   computed: {
-    ...mapGetters({
-      wallet: 'wallet'
-    })
+    ...mapState(['network', 'web3', 'account', 'gettingStartedDone']),
+    showButtons() {
+      if (
+        this.address === null &&
+        (this.$route.fullPath === '/' ||
+          this.$route.fullPath === '/#about-mew' ||
+          this.$route.fullPath === '/#faqs' ||
+          this.$route.fullPath === '/convert-units' ||
+          this.$route.fullPath === '/team')
+      ) {
+        return true;
+      }
+      return false;
+    },
+    explorerUrl() {
+      return this.network.type.blockExplorerAddr.replace(
+        '[[address]]',
+        this.address
+      );
+    },
+    serviceUrl() {
+      return Misc.getService(this.network.type.blockExplorerAddr);
+    },
+    address() {
+      return this.account.address;
+    }
   },
   watch: {
-    online(newVal) {
-      this.online = newVal;
+    $route(newVal) {
+      if (newVal.path.includes('interface')) {
+        this.isHomePage = false;
+      } else {
+        this.isHomePage = true;
+      }
     },
-    notifications() {
-      this.$children[6].$refs.notification.show();
+    address() {
+      this.setHighGasPrice();
+    },
+    web3() {
+      this.setHighGasPrice();
     }
   },
+  created() {
+    this.$eventHub.$on('open-settings', this.openSettings);
+  },
   mounted() {
-    if (this.$store.state.online) {
-      this.online = true;
-    } else {
-      this.online = false;
-    }
-
     if (Misc.doesExist(store.get('locale'))) {
-      this.$root._i18n.locale = store.get('locale');
-      this.currentFlag = store.get('locale');
+      const storedLocale = this.supportedLanguages.find(item => {
+        return item.langCode === store.get('locale');
+      });
+      this._i18n.locale = store.get('locale');
+      this.currentFlag = storedLocale.flag;
     } else {
-      store.set('locale', this.$root._i18n.locale);
-      this.currentFlag = this.$root._i18n.locale;
+      const storedLocale = this.supportedLanguages.find(item => {
+        return item.langCode === this._i18n.locale;
+      });
+      store.set('locale', storedLocale.langCode);
+      this.currentFlag = storedLocale.flag;
     }
 
-    // https://github.com/MyEtherWallet/MyEtherWallet/projects/2#card-12172489
-    // trivial statement to convert dialects to primary language tags, with the exception of Chinese
-    if (!/zh[-_]/.test(this.currentFlag)) {
-      this.currentFlag = this.currentFlag.split(/[-_]/)[0];
-    }
-
-    this.currentName = this.supportedLanguages.filter(
+    this.currentName = this.supportedLanguages.find(
       item => item.flag === this.currentFlag
-    )[0].name;
+    ).name;
 
     // On load, if page is not on top, apply small menu and show scroll top button
     this.onPageScroll();
@@ -199,29 +359,75 @@ export default {
     window.onscroll = () => {
       this.onPageScroll();
     };
+
+    this.$eventHub.$on('issueModal', (error, resolve) => {
+      let errorPop = store.get('errorPop') || 0;
+      errorPop += 1;
+      store.set('errorPop', errorPop);
+      if (store.get('neverReport')) {
+        resolve(false);
+      } else {
+        this.$refs.issuelog.$refs.issuelog.show();
+        this.error = error;
+        this.resolver = resolve;
+      }
+    });
+
+    this.$eventHub.$on('mewConnectDisconnected', () => {
+      this.isMobileMenuOpen = false;
+      this.$refs.mewConnectDisconnected.$refs.disconnected.show();
+      this.$refs.mewConnectDisconnected.$refs.disconnected.$on('hidden', () => {
+        this.$router.push('/access-my-wallet');
+      });
+    });
+  },
+  beforeDestroy() {
+    Object.values(events).forEach(evt => {
+      this.$eventHub.$off(evt);
+    });
+    this.$eventHub.$off('open-settings');
   },
   methods: {
+    setHighGasPrice() {
+      this.web3.eth
+        .getGasPrice()
+        .then(res => {
+          this.gasPrice = new BigNumber(res).toString();
+        })
+        .catch(e => {
+          Toast.responseHandler(e, Toast.ERROR);
+        });
+    },
+    openSettings() {
+      this.$refs.settings.$refs.settings.show();
+      this.$refs.settings.$refs.settings.$on('hidden', () => {
+        this.isMobileMenuOpen = false;
+      });
+    },
     languageItemClicked(e) {
-      const flag = e.target.getAttribute('data-flag-name');
+      const code = e.target.parentNode.getAttribute('data-language-code');
+      const flag = e.target.parentNode.getAttribute('data-flag-name');
 
-      this.$root._i18n.locale = flag;
+      this.$i18n.locale = code;
       this.currentName = e.target.innerText.replace(/^\s+|\s+$|\s+(?=\s)/g, '');
       this.currentFlag = flag;
-      store.set('locale', flag);
+      store.set('locale', code);
     },
     scrollTop() {
       window.scrollTo(0, 0);
     },
     logout() {
-      this.$store.dispatch('clearWallet');
-      this.$router.push('/');
-    },
-    showNotifications() {
-      this.$children[6].$refs.notification.show();
+      this.$refs.logout.$refs.logout.show();
+      this.$refs.logout.$refs.logout.$on('hidden', () => {
+        this.isMobileMenuOpen = false;
+      });
     },
     onPageScroll() {
       const topPos = this.$root.$el.getBoundingClientRect().top;
       this.isPageOnTop = !(topPos < -150);
+      if (topPos < -150) {
+        this.showGetFreeWallet = true;
+      }
     }
   }
 };

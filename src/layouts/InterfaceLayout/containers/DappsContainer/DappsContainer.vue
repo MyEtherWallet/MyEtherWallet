@@ -1,63 +1,56 @@
 <template>
   <div class="dapps-container">
-    <div v-show="selectedDapp === ''">
-      <interface-container-title :title="$t('common.dapps')"/>
+    <div>
+      <interface-container-title :title="$t('common.dapps')" />
       <div class="buttons-container">
-        <dapp-buttons 
-          v-for="dapp in dapps" 
-          :key="dapp.title" 
-          :title="dapp.title" 
-          :icon="dapp.icon" 
-          :desc="dapp.desc" 
-          @click="switchView(dapp.param)"/>
+        <dapp-buttons
+          v-for="dapp in sortedObject"
+          :key="dapp.title"
+          :title="$t(dapp.title)"
+          :icon="dapp.icon"
+          :icon-disabled="dapp.iconDisabled"
+          :desc="$t(dapp.desc)"
+          :param="dapp.route"
+          :supported-networks="dapp.supportedNetworks"
+        />
       </div>
     </div>
-    <register-domain-container 
-      v-show="selectedDapp === 'register-domain'" 
-      :reset-view="switchView"/>
-    <domain-sale-container 
-      v-show="selectedDapp === 'domain-sale'" 
-      :reset-view="switchView"/>
   </div>
 </template>
 
 <script>
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import DappButtons from '../../components/DappButtons';
-import DomainSaleContainer from '../DomainSaleContainer';
-import RegisterDomainContainer from '../RegisterDomainContainer';
+import dapps from '@/dapps';
+import { mapState } from 'vuex';
 
-import domainSale from '@/assets/images/icons/domain-sale.svg';
-import registerDomain from '@/assets/images/icons/domain.svg';
 export default {
+  name: 'DappsContainer',
   components: {
     'interface-container-title': InterfaceContainerTitle,
-    'dapp-buttons': DappButtons,
-    'domain-sale-container': DomainSaleContainer,
-    'register-domain-container': RegisterDomainContainer
+    'dapp-buttons': DappButtons
   },
   data() {
     return {
-      selectedDapp: '',
-      dapps: [
-        {
-          param: 'register-domain',
-          icon: registerDomain,
-          title: this.$t('interface.registerDom'),
-          desc: this.$t('interface.registerDomDesc')
-        },
-        {
-          param: 'domain-sale',
-          icon: domainSale,
-          title: this.$t('interface.domSale'),
-          desc: this.$t('interface.domSaleDesc')
-        }
-      ]
+      localDapps: dapps
     };
   },
-  methods: {
-    switchView(param) {
-      this.selectedDapp = param;
+  computed: {
+    ...mapState(['network']),
+    sortedObject() {
+      const arrayedDapp = [];
+      Object.keys(dapps).forEach(dapp => {
+        arrayedDapp.push(dapps[dapp]);
+      });
+
+      return arrayedDapp.sort((a, b) => {
+        if (
+          a.supportedNetworks.includes(this.network.type.name) ||
+          b.supportedNetworks.includes(this.network.type.name)
+        )
+          return 1;
+        return 0;
+      });
     }
   }
 };

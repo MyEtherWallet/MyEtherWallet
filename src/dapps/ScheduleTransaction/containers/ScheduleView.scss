@@ -1,0 +1,239 @@
+@import '~@/scss/GlobalVariables';
+
+$input-title-color: #212529;
+$mew-green-light: #05c7aa;
+
+.schedule-view-container {
+  background-color: $white;
+  border-radius: 4px;
+  grid-area: main;
+  overflow: hidden;
+  margin-bottom: 10px;
+
+  .page-title {
+    text-align: center;
+    margin-top: 30px;
+  }
+}
+
+.schedule-view-content {
+  padding: 40px;
+
+  // Tablet
+  @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+    padding: 20px;
+  }
+
+  // Mobile
+  @media all and (max-width: $mobile-width) {
+    padding: 10px;
+  }
+}
+
+.schedule-view-form-container {
+  p {
+    color: $input-title-color;
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  .form {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.btn-group {
+  width: 100%;
+
+  & .btn {
+    background-color: $white;
+    border-color: $light-grey-7;
+    color: $black;
+    padding: 14px;
+    text-align: center;
+
+    &:hover {
+      background-color: $mew-green-light;
+      border-color: $mew-green-light;
+      color: $white;
+    }
+
+    &:active {
+      background-color: $mew-green;
+      border-color: $mew-green;
+      color: $white;
+    }
+
+    &.selected {
+      background-color: $mew-green;
+      border-color: $mew-green;
+      color: $white;
+    }
+  }
+}
+
+.input-title {
+  font-weight: 600;
+  font-size: 16px;
+  line-height: initial;
+  margin-right: 8px;
+  color: $input-title-color;
+  padding: 0 10px;
+  margin-bottom: 10px;
+}
+
+.container {
+  padding: 0;
+  margin: 0;
+  max-width: 100%;
+}
+
+.toggle-button-container {
+  display: flex;
+  // Mobile
+  @media all and (max-width: $mobile-width) {
+    display: block;
+  }
+
+  h4 {
+    padding: 0 8px;
+  }
+
+  .toggle-button {
+    align-items: center;
+    display: flex;
+    margin-left: auto;
+    user-select: none;
+
+    @media all and (max-width: $mobile-width) {
+      padding: 0 8px;
+    }
+
+    > span {
+      margin-right: 15px;
+    }
+  }
+}
+
+.toggle-button-col {
+  align-self: center;
+}
+
+.standard-input,
+.datetime-picker-container,
+.mode-container,
+.time-bounty-selector,
+.timezone-selector,
+.scheduling-currency-picker,
+.to-address {
+  padding: 12px 0;
+}
+
+.submit-button-container {
+  margin-top: 30px;
+  text-align: center;
+
+  @media all and (max-width: $mobile-width) {
+    margin-top: 30px;
+  }
+
+  .submit-button {
+    margin: 0 auto;
+    text-align: center;
+    @media all and (max-width: $mobile-width) {
+      width: 100%;
+    }
+  }
+
+  p {
+    margin-top: 20px;
+  }
+}
+
+.vertical-center-self {
+  align-self: center;
+}
+
+.horizontal-center {
+  text-align: center;
+}
+
+h2 {
+  margin: 0;
+}
+
+.bounty-usd-display {
+  margin-top: 28px;
+}
+
+.eac-logo {
+  margin: 30px;
+  float: right;
+  max-width: 160px;
+  width: 100%;
+  height: 32px;
+  background-image: url('~@/assets/images/scheduling/eac-logo.svg');
+  background-repeat: no-repeat;
+  display: block;
+  background-size: cover;
+}
+
+.timebounty-gasprice-coverage,
+.timebounty-gasprice-coverage span {
+  margin-top: 10px;
+  font-size: 12px;
+}
+
+.to-address {
+  position: relative;
+
+  .blockie-image {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    right: -41px;
+    top: -4px;
+  }
+
+  .title {
+    align-items: center;
+    display: flex;
+    position: relative;
+
+    h4 {
+      position: relative;
+    }
+
+    img {
+      height: 50px;
+      left: 98px;
+      position: absolute;
+      top: -14px;
+    }
+
+    .copy-button {
+      color: $text--link-color;
+      cursor: pointer;
+      margin-left: auto;
+    }
+  }
+
+  .address-block {
+    position: relative;
+
+    i {
+      bottom: 13px;
+      position: absolute;
+      right: 13px;
+    }
+
+    input {
+      background-color: #f9f9f9;
+      border: 0;
+      padding: 13px 45px 13px 15px;
+      resize: none;
+      width: 100%;
+    }
+  }
+}

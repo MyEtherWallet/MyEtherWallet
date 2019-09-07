@@ -1,0 +1,104 @@
+@import '~@/scss/GlobalVariables';
+@media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+  .wrap {
+    background-color: $background-color-1;
+    padding: 0;
+  }
+
+  .nav-tab-user-input-box {
+    background-color: $nav-tab-background-color;
+    margin: 0 auto;
+    max-width: 550px;
+
+    .progress-bar {
+      animation-duration: 0.5s;
+      animation-name: progressbarGrow;
+      background-color: $nav-tab--progress-bar-background-color;
+      height: 6px;
+      width: 66.66%;
+    }
+
+    @keyframes progressbarGrow {
+      from {
+        width: 33.33%;
+      }
+      to {
+        width: 66.66%;
+      }
+    }
+
+    .tab-pane {
+      min-height: 500px;
+      padding: 50px;
+    }
+  }
+
+  .contents {
+    margin-bottom: 40px;
+  }
+
+  .user-input-container {
+    display: flex;
+
+    .user-input {
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+
+      .user-button {
+        .next-button {
+          color: $background-color-white;
+          cursor: pointer;
+          display: block;
+          margin: 0 auto;
+          min-width: 200px;
+          text-decoration: none;
+          text-align: center;
+        }
+      }
+
+      .printer-icon {
+        margin-left: 20px;
+
+        .icon {
+          height: 30px;
+        }
+      }
+    }
+  }
+
+  .footer-text {
+    display: flex;
+
+    p {
+      font-size: 13px;
+      margin: 0 auto;
+
+      .tooltip-icon {
+        margin-left: 5px;
+      }
+
+      .icon {
+        height: 25px;
+        margin-right: 5px;
+      }
+    }
+  }
+
+  .disable {
+    background-color: $disabled;
+    cursor: default;
+    pointer-events: none;
+  }
+
+  .title-block {
+    display: flex;
+    margin-bottom: 40px;
+
+    .title-popover {
+      display: flex;
+      margin: 0 auto;
+      align-items: center;
+    }
+  }
+} // @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width)

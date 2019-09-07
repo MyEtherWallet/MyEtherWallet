@@ -1,24 +1,9 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
-import { shallowMount, mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils';
 import FooterContainer from '@/containers/FooterContainer/FooterContainer.vue';
-
-
-const $t = () => { }
-
-const RouterLinkStub = {
-  name: 'router-link',
-  template: '<p> <slot> </slot></p>',
-  props: ['to']
-}
-
-import {
-  Tooling
-} from '@@/helpers';
-
+import { Tooling } from '@@/helpers';
+import { RouterLinkStub } from '@@/helpers/setupTooling';
 
 describe('FooterContainer.vue', () => {
-
   let localVue, i18n, wrapper, store;
 
   beforeAll(() => {
@@ -26,84 +11,88 @@ describe('FooterContainer.vue', () => {
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
     store = baseSetup.store;
-
-    let getters = {
-      ethDonationAddress: () => { }
-    };
-
-    store = new Vuex.Store({
-      getters
-    });
   });
 
   beforeEach(() => {
+    const mockRoute = {
+      history: {
+        current: {
+          fullPath: '/'
+        }
+      }
+    };
     wrapper = mount(FooterContainer, {
       localVue,
       i18n,
       store,
       attachToDocument: true,
-      stubs: { 'router-link': RouterLinkStub }
+      stubs: { 'router-link': RouterLinkStub },
+      mocks: {
+        $router: mockRoute
+      }
     });
   });
 
-
   it('should render correct lowerLinks', () => {
+    const linkWrappers = wrapper.findAll(RouterLinkStub);
 
-    const linkWrappers = wrapper.findAll(RouterLinkStub)
-
-    var lowerLinkWrappers = []
-    for (var i = 0; i < linkWrappers.length; i++) {
+    const lowerLinkWrappers = [];
+    for (let i = 0; i < linkWrappers.length; i++) {
       const linkWrapper = linkWrappers.at(i);
-      if (linkWrapper.vm.$el.parentElement.parentElement.className.indexOf('foot-note') > -1) {
-        lowerLinkWrappers.push(linkWrapper)
+      if (
+        linkWrapper.vm.$el.parentElement.parentElement.className.indexOf(
+          'foot-note'
+        ) > -1
+      ) {
+        lowerLinkWrappers.push(linkWrapper);
       }
     }
 
-    for (var i = 0; i < wrapper.vm.$data.lowerLinks.length; i++) {
-      var lowerLink = wrapper.vm.$data.lowerLinks[i];
-      const lowerLinkWrapper = lowerLinkWrappers[i];
-      expect(lowerLinkWrapper.vm.to).toEqual(lowerLink.to)
+    for (const [i, lowerLinkWrapper] of lowerLinkWrappers.entries()) {
+      const lowerLink = wrapper.vm.$data.lowerLinks[i];
+      expect(lowerLinkWrapper.vm.to).toEqual(lowerLink.to);
     }
   });
 
   it('should render correct links', () => {
     const socialElement = wrapper.vm.$el.querySelector('.social');
-    const linksElements = socialElement.getElementsByTagName('a')
+    const linksElements = socialElement.getElementsByTagName('a');
 
-    for (var i = 0; i < wrapper.vm.$data.links.length; i++) {
+    for (const [i, link] of wrapper.vm.$data.links.entries()) {
       const linksElement = linksElements[i];
-      var link = wrapper.vm.$data.links[i];
-
-      let icoClassName = linksElement.getElementsByTagName('i')[0].className
-      icoClassName = icoClassName.replace('fa ', '')
-      expect(link.to).toEqual(linksElement.href)
-      expect(link.class).toEqual(icoClassName)
+      let icoClassName = linksElement.getElementsByTagName('i')[0].className;
+      icoClassName = icoClassName.replace('fa ', '');
+      expect(link.to).toEqual(linksElement.href);
+      expect(link.class).toEqual(icoClassName);
     }
   });
 
   it('should render correct footerContent', () => {
-    const contentWrappers = wrapper.findAll(RouterLinkStub)
+    const contentWrappers = wrapper.findAll(RouterLinkStub);
 
-    var contentsElements = []
-    for (var i = 0; i < contentWrappers.length; i++) {
+    const contentsElements = [];
+    for (let i = 0; i < contentWrappers.length; i++) {
       const contentWrapper = contentWrappers.at(i);
-      if (contentWrapper.vm.$el.parentElement.parentElement.className.indexOf('content-links') > -1) {
-        contentsElements.push(contentWrapper)
+      if (
+        contentWrapper.vm.$el.parentElement.parentElement.className.indexOf(
+          'content-links'
+        ) > -1
+      ) {
+        contentsElements.push(contentWrapper);
       }
     }
 
-    var contents = []
-    for (var i = 0; i < wrapper.vm.$data.footerContent.length; i++) {
-      var footerContent = wrapper.vm.$data.footerContent[i];
-      for (var j = 0; j < footerContent.contents.length; j++) {
-        if (footerContent.contents[j].to !== undefined) {
-          contents.push(footerContent.contents[j])
+    const contents = [];
+    for (const footerContent of wrapper.vm.$data.footerContent) {
+      for (const content of footerContent.contents) {
+        if (content.to !== undefined) {
+          contents.push(content);
         }
       }
     }
 
-    for (var i = 0; i < contentsElements.length; i++) {
-      expect(contents[i].to).toEqual(contentsElements[i].vm.to)
+    for (const [i, contentsElement] of contentsElements.entries()) {
+      expect(contents[i].to).toEqual(contentsElement.vm.to);
     }
   });
 });

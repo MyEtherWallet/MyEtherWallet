@@ -1,32 +1,31 @@
 <template>
   <div class="what-is-mew">
-
     <div class="block-progressbar">
       <dir class="block-progressbar__container">
         <div class="block-progressbar__title">
-          About Security
+          {{ $t('gettingStarted.aboutSecurity') }}
         </div>
         <div class="block-progressbar__progressbar">
-          <div :class="progressBarValue"/>
+          <div :class="progressBarValue" />
         </div>
         <div class="block-progressbar__content">
-          <h4>What if I lose my keys or password?</h4>
+          <h4>{{ $t('gettingStarted.lostPasswordTitle') }}</h4>
           <p>
-            We can not recover your information for you. If you lose your information,
-            it's <span>GONE FOREVER</span>. MEW doesn't store any data. After you've
-            received your keys and set up a password, we strongly suggest you:
+            {{ $t('gettingStarted.lostPasswordDescHalf') }}
+            <span>{{ $t('gettingStarted.lostPasswordDescCaps') }}</span
+            >. {{ $t('gettingStarted.lostPasswordDescCont') }}
           </p>
 
           <ul>
-            <li>Write Your Keys And Password Down. Keep Them Safe.</li>
-            <li>Don't Store Your Keys And Password on Your Computer or Phone.</li>
+            <li>{{ $t('gettingStarted.lostPasswordDescOpt1') }}</li>
+            <li>{{ $t('gettingStarted.lostPasswordDescOpt2') }}</li>
           </ul>
-
-          <div class="block-progressbar__warning hidden"/>
+          <div class="block-progressbar__warning">
+            {{ $t('gettingStarted.whatIsUpsideWarning') }}
+          </div>
         </div>
       </dir>
     </div>
-
   </div>
 </template>
 
@@ -45,5 +44,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../BlockWithProgressBar.scss';
+@import '../BlockWithProgressBar-desktop.scss';
+@import '../BlockWithProgressBar-tablet.scss';
+@import '../BlockWithProgressBar-mobile.scss';
 </style>

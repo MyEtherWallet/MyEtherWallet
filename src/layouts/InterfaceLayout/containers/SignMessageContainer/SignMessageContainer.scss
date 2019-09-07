@@ -5,23 +5,15 @@ p {
   padding: $interface-text-padding-1;
 }
 
-.bootstrap-modal {
-  .check-icon {
-    border: 3px solid $border-green;
-    border-radius: 200px;
-    color: $text-color-green;
-    font-size: 90px;
-    margin-bottom: 15px;
-    padding: 25px;
-  }
+.content-container {
+  @extend %send-form-base;
 }
 
-.deploy-contract-container {
+.sign-message-container {
   @extend %interface-container;
 
   .send-form {
-    @extend %send-form-base;
-
+    margin-bottom: 30px;
     .title-container {
       .title {
         align-items: center;
@@ -30,238 +22,31 @@ p {
         padding: $interface-text-padding-1;
         width: 100%;
 
-        .select-contract {
-          margin-left: auto;
+        h4 {
+          margin-right: 7px;
         }
 
         .copy-buttons {
           color: $text-color-3;
           margin-left: auto;
-
-          span {
-            cursor: pointer;
-            margin-left: 20px;
-          }
         }
-      }
-
-      .search-block {
-        margin-left: auto;
-      }
-
-      .buttons {
-        margin-bottom: 3px;
-        margin-left: auto;
       }
     }
 
     .form-block {
       @extend %form-block-base;
     }
-
-    .domain-name {
-      align-items: center;
-      display: flex;
-      position: relative;
-
-      input {
-        background-color: $background-color-1;
-        border: 0;
-        padding: 13px 15px;
-        width: 100%;
-      }
-
-      span {
-        font-size: 20px;
-        font-weight: 600;
-      }
-    }
-
-    .contract-address {
-      display: grid;
-      grid-template-columns: 70% 30%;
-      position: relative;
-
-      .address {
-        p {
-          border-bottom: 2px solid $border-color-5;
-          overflow: hidden;
-          padding: 10px 5px;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        }
-      }
-
-      .select-contract {
-        padding-left: 5px;
-
-        .dropdown-toggle {
-          padding: 10px 5px !important;
-        }
-      }
-    }
-  }
-
-  .send-form2 {
-    padding: 40px 60px 0;
-
-    .title-container {
-      align-items: flex-end;
-      display: flex;
-      margin-bottom: 10px;
-
-      .title {
-        padding: 0 8px;
-
-        h4 {
-          margin-bottom: 2px;
-        }
-      }
-
-      .buttons {
-        margin-bottom: 3px;
-        margin-left: auto;
-      }
-    }
-
-    .form-block {
-      border-radius: 5px;
-
-      .the-form {
-        background-color: $background-color-1;
-        border-radius: 5px;
-      }
-    }
-
-    .amount-to-address {
-      display: grid;
-      grid-column-gap: 5px;
-      grid-template-columns: 1fr 70px 1fr;
-
-      .title {
-        margin-bottom: 13px;
-        padding: 0 8px;
-      }
-
-      .exchange-icon {
-        color: $text-color-9;
-        font-size: 30px;
-        padding-top: 62px;
-        text-align: center;
-      }
-
-      .amount {
-        .dropdown-select-search-1 {
-          background-color: $background-color-1;
-          margin-bottom: 5px;
-          position: relative;
-
-          i {
-            color: $text-color-2;
-            left: 14px;
-            position: absolute;
-            top: 16px;
-          }
-        }
-
-        .amount-number {
-          position: relative;
-
-          input {
-            background-color: transparent;
-            border: 0;
-            padding: 13px 15px;
-            width: 100%;
-          }
-
-          i {
-            position: absolute;
-            right: 13px;
-            top: 13px;
-          }
-        }
-      }
-
-      .to-address {
-        position: relative;
-
-        .title {
-          align-items: center;
-          display: flex;
-          position: relative;
-
-          img {
-            height: 50px;
-            left: 98px;
-            position: absolute;
-            top: -14px;
-          }
-
-          .copy-button {
-            color: $text--link-color;
-            cursor: pointer;
-            margin-left: auto;
-          }
-        }
-
-        .address-block {
-          height: 98px;
-
-          i {
-            bottom: 13px;
-            position: absolute;
-            right: 13px;
-          }
-
-          textarea {
-            background-color: transparent;
-            border: 0;
-            height: 100%;
-            padding: 13px 15px;
-            resize: none;
-            width: 100%;
-          }
-        }
-      }
-    }
-
-    .gas-amount {
-      position: relative;
-
-      input {
-        background-color: $background-color-1;
-        border: 0;
-        padding: 13px 15px;
-        width: 100%;
-      }
-
-      .good-button-container {
-        align-items: center;
-        display: flex;
-        position: absolute;
-        right: 10px;
-        top: 12px;
-
-        p {
-          color: $text--link-color;
-          margin-right: 10px;
-        }
-      }
-    }
-
-    .error-message-container {
-      p {
-        color: $text-color-red;
-        margin: 7px 0 0 15px;
-      }
-    }
   }
 
   .submit-button-container {
-    padding: 40px 60px;
+    margin-top: 60px;
+
+    // Mobile
+    @media all and (max-width: $mobile-width) {
+      margin-top: 30px;
+    }
 
     .bottom-text {
-      margin-top: 20px;
       text-align: center;
     }
 
@@ -272,7 +57,11 @@ p {
       .submit-button {
         margin: 0 5px;
         text-align: center;
-        width: 300px;
+        min-width: 300px;
+
+        @media all and (max-width: $mobile-width) {
+          width: 100%;
+        }
       }
     }
   }

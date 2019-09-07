@@ -1,0 +1,15 @@
+@import '../InformationPages';
+
+.git-info-block {
+  max-width: 400px;
+  margin: 30px auto;
+
+  li {
+    border-radius: 4px;
+    background-color: $white;
+    padding: 15px 20px;
+    margin-bottom: 10px;
+    text-align: center;
+    font-weight: 500;
+  }
+}

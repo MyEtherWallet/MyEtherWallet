@@ -1,15 +1,14 @@
 import Vue from 'vue';
-import { shallowMount, mount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils';
 import CategoryButton from '@/layouts/HelpCenterLayout/components/CategoryButton/CategoryButton.vue';
 
-import {
-  Tooling
-} from '@@/helpers';
+import { Tooling } from '@@/helpers';
 
 const content = {
-  icon: 'https://media.kasperskydaily.com/wp-content/uploads/sites/92/2016/09/06021623/bitcoin-easy-explanation-featured.jpg',
+  icon:
+    'https://media.kasperskydaily.com/wp-content/uploads/sites/92/2016/09/06021623/bitcoin-easy-explanation-featured.jpg',
   title: 'CategoryButton  title'
-}
+};
 
 describe('CategoryButton.vue', () => {
   let localVue, i18n, wrapper, store;
@@ -19,7 +18,7 @@ describe('CategoryButton.vue', () => {
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
     store = baseSetup.store;
-    Vue.config.warnHandler = () => { };
+    Vue.config.warnHandler = () => {};
   });
 
   beforeEach(() => {
@@ -35,9 +34,13 @@ describe('CategoryButton.vue', () => {
   });
 
   it('should render correct contents', () => {
-    expect(wrapper.vm.$el.querySelector('.button-icon img').getAttribute('src')).toEqual(content.icon);
-    expect(wrapper.vm.$el.querySelector('.button-title').textContent.trim()).toEqual(content.title);
+    expect(
+      wrapper.vm.$el.querySelector('.button-icon img').getAttribute('src')
+    ).toEqual(content.icon);
+    expect(
+      wrapper.vm.$el.querySelector('.button-title').textContent.trim()
+    ).toEqual(content.title);
   });
 
-  describe('CategoryButton.vue Methods', () => { });
+  describe('CategoryButton.vue Methods', () => {});
 });

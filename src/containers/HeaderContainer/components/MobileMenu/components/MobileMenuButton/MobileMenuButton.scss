@@ -1,0 +1,84 @@
+@import '~@/scss/GlobalVariables';
+
+//********************************************************
+// mobile-menu-button
+//********************************************************
+.mobile-menu-button {
+  margin: 0;
+  padding: 0;
+}
+
+$button-size: 40px;
+
+.wrap {
+  margin: 0;
+  padding: 0;
+  height: $button-size;
+  width: $button-size;
+}
+
+.menu-button {
+  overflow: hidden;
+  height: $button-size;
+  width: $button-size;
+  position: relative;
+  border: 0;
+  background-color: transparent;
+  margin: 0;
+  padding: 0;
+  border-radius: 100%;
+
+  &:active {
+    background-color: $button-active-background-color;
+  }
+
+  .bar {
+    transition: all 0.2s linear;
+    height: 4px;
+    width: 25px;
+    border-radius: 3px;
+    background-color: black;
+    position: absolute;
+  }
+
+  $top-position: 10px;
+  $top-open-position: 18px;
+  $top-increment: 8px;
+  $left-position: 8px;
+
+  .bar-1 {
+    top: $top-position + (0 * $top-increment);
+    left: $left-position;
+  }
+
+  .bar-2 {
+    top: $top-position + (1 * $top-increment);
+    left: $left-position;
+  }
+
+  .bar-3 {
+    width: 15px;
+    top: $top-position + (2 * $top-increment);
+    left: $left-position;
+  }
+
+  &.menu-open {
+    .bar-1 {
+      top: $top-open-position;
+      left: $left-position;
+      transform: rotate(45deg);
+    }
+
+    .bar-2 {
+      top: $top-open-position;
+      left: $left-position;
+      transform: rotate(-45deg);
+    }
+
+    .bar-3 {
+      width: 15px;
+      top: 50px;
+      left: $left-position;
+    }
+  }
+}

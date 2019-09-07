@@ -1,21 +1,18 @@
 <template>
   <div class="home">
-    <top-banner/>
-    <about/>
-    <faqs/>
-    <news v-show="online"/>
-    <social/>
-    <promo/>
+    <top-banner />
+    <about />
+    <faqs />
+    <social />
   </div>
 </template>
 
 <script>
 import AboutContainer from '@/containers/AboutContainer';
 import FaqsContainer from '@/containers/FaqsContainer';
-import NewsContainer from '@/containers/NewsContainer';
-import Promo from './components/Promo';
 import Social from './components/Social';
 import TopBanner from './components/TopBanner';
+import { mapState } from 'vuex';
 
 export default {
   name: 'HomeContainer',
@@ -23,28 +20,16 @@ export default {
     'top-banner': TopBanner,
     about: AboutContainer,
     faqs: FaqsContainer,
-    news: NewsContainer,
-    social: Social,
-    promo: Promo
+    social: Social
   },
   data() {
     return {
-      online: true,
       address: '',
       resolvedAddress: ''
     };
   },
-  watch: {
-    online(newVal) {
-      this.online = newVal;
-    }
-  },
-  mounted() {
-    if (this.$store.state.online) {
-      this.online = true;
-    } else {
-      this.online = false;
-    }
+  computed: {
+    ...mapState(['online'])
   }
 };
 </script>

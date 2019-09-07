@@ -1,121 +1,105 @@
 <template>
-  <div class="deploy-contract-container">
-    <success-modal
-      message=""
-      link-message="Ok"/>
-    <interface-container-title :title="$t('common.signMessage')"/>
-    <div class="send-form">
-      <p>
-        Include your nickname and where
-        you use the nickname so someone
-        else cannot use it.
-        Include a specific reason
-        for the message so it cannot be
-        reused for a different purpose.
-      </p>
-
-      <div class="title-container">
-        <div class="title">
-          <h4>Message</h4>
-          <popover :popcontent="$t('popover.whatIsMessageContent')"/>
-        </div>
-      </div>
-
-      <div class="the-form">
-        <textarea
-          ref="message"
-          class="custom-textarea-1"/>
-      </div>
-    </div>
-
-    <div class="send-form">
-      <div class="title-container">
-        <div class="title">
-          <h4>Signature</h4>
-          <popover :popcontent="$t('popover.whatIsSignatureContent')"/>
-
-          <div class="copy-buttons">
-            <span @click="deleteInputText('signature')">Clear</span>
-            <span @click="copyToClipboard('signature')">Copy</span>
+  <div class="sign-message-container">
+    <signature-modal-modal ref="signatureModal" :signature="signature" />
+    <interface-container-title :title="$t('common.signMessage')" />
+    <div class="content-container">
+      <div class="send-form">
+        <p>{{ $t('interface.signMessageDesc') }}</p>
+        <div class="title-container">
+          <div class="title">
+            <h4>{{ $t('interface.txSideMenuMessage') }}</h4>
           </div>
+        </div>
 
+        <div class="the-form">
+          <textarea
+            v-validate="'required'"
+            v-model="message"
+            name="message"
+            class="custom-textarea-1"
+          />
+          <span v-show="errors.has('message')">
+            {{ errors.first('message') }}
+          </span>
         </div>
       </div>
-      <div class="the-form domain-name">
-        <textarea
-          ref="signature"
-          class="custom-textarea-1"
-          name=""/>
-      </div>
-    </div>
 
-    <div class="submit-button-container">
-      <div class="buttons">
-        <div
-          class="submit-button large-round-button-green-filled clickable"
-          @click="signMessage">
-          {{ $t('Sign') }}
+      <div class="submit-button-container">
+        <div class="buttons">
+          <button
+            :class="[
+              message.length > 0 ? '' : 'disabled',
+              'submit-button large-round-button-green-filled clickable'
+            ]"
+            @click="signMessage"
+          >
+            {{ $t('common.sign') }}
+          </button>
         </div>
+        <interface-bottom-text
+          :link-text="$t('interface.helpCenter')"
+          :question="$t('interface.haveIssues')"
+          link="https://kb.myetherwallet.com"
+        />
       </div>
-      <interface-bottom-text
-        :link-text="$t('interface.learnMore')"
-        :question="$t('interface.haveIssues')"
-        link="/"/>
     </div>
-
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
+import { Toast } from '@/helpers';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
-import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessModal/SuccessModal.vue';
+import SignatureModal from '../../components/SignatureModal';
 
 export default {
   name: 'SignMessage',
   components: {
     'interface-bottom-text': InterfaceBottomText,
     'interface-container-title': InterfaceContainerTitle,
-    'success-modal': SuccessModal
+    'signature-modal-modal': SignatureModal
   },
   data() {
-    return {};
+    return {
+      message: '',
+      signature: ''
+    };
+  },
+  computed: {
+    ...mapState(['account', 'web3'])
   },
   methods: {
     signMessage() {
-      this.$store.state.web3.eth
-        .sign(
-          this.$refs.message.value,
-          this.$store.state.wallet.getAddressString()
-        )
+      this.web3.eth
+        .sign(this.message, this.account.address)
         .then(_signedMessage => {
-          this.$refs.signature.value = JSON.stringify(
+          this.signature = JSON.stringify(
             {
-              address: this.$store.state.wallet.getAddressString(),
-              msg: this.$refs.message.value,
+              address: this.account.address,
+              msg: this.message,
               sig: _signedMessage,
               version: '3',
-              signer: this.$store.state.wallet.brand
-                ? this.$store.state.wallet.brand
-                : 'MEW'
+              signer: this.account.isHardware ? this.account.identifier : 'MEW'
             },
             null,
             2
           );
+          this.$refs.signatureModal.$refs.signatureModal.show();
         })
-        // eslint-disable-next-line
-        .catch(console.error);
+        .catch(e => {
+          Toast.responseHandler(e, false);
+        });
     },
-    successModalOpen() {
-      this.$children[0].$refs.success.show();
-    },
-    copyToClipboard(ref) {
-      this.$refs[ref].select();
+    copyToClipboard() {
+      this.$refs.signature.select();
       document.execCommand('copy');
       window.getSelection().removeAllRanges();
+      Toast.responseHandler('Copied', Toast.INFO);
     },
-    deleteInputText(ref) {
-      this.$refs[ref].value = '';
+    deleteInputText() {
+      this.signature = '';
+      this.message = '';
     }
   }
 };

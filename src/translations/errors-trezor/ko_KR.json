@@ -1,0 +1,13 @@
+{
+  "popupClosed": "Popup Closed",
+  "deviceDisconnect": "Device disconnected",
+  "deviceDisconnectAction": "device disconnected during action",
+  "userCancelledAction": "Action cancelled by user",
+  "noPermission": "Permissions not granted",
+  "callInProgress": "Device call in progress",
+  "transportMissing": "Transport is missing",
+  "cancelled": "Event cancelled by user",
+  "turnOnContractData": "Please enable Contract data on the Ethereum app Settings",
+  "iframeTimeout": "Make sure you enable pop-ups in the browser, and that your ad blocker is not blocking the pop-up",
+  "unsupportedBrowser": "Browser not supported! Please try using Trezor with Chrome or Firefox!"
+}

@@ -1,2 +1,6 @@
-@import '~@/scss/Globals';
-@import '~@/scss/GlobalVariables';
+.header-frontpage {
+  display: none;
+}
+html {
+  overflow: scroll;
+}

@@ -1,56 +1,54 @@
 <template>
   <div class="convert-units">
     <div class="wrap">
-
       <div class="page-container">
-        <div class="page-title">
-          <h2>Convert Units</h2>
-          <p>
-            MyEtherWallet is comprised of talented, inspiring, and hardworking
-            indivisuals from around the world. We share the passion to code.
-          </p>
-        </div>
+        <div class="page-title"><page-title :options="titleOptions" /></div>
 
-        <div>
-          <unit-input />
-        </div>
+        <div><unit-input :options="options" /></div>
 
         <div class="ether-unit-reference-guide">
-          <div class="block-title">
-            <h3>Ether Unit Reference Guide</h3>
-          </div>
+          <div class="block-title"><h3>Ether Unit Reference Guide</h3></div>
 
           <div class="unit-table">
             <table>
               <tbody>
-                <tr 
-                  v-for="eu in etherUnitRef" 
-                  :key="eu.key">
+                <tr v-for="eu in etherUnitRef" :key="eu.key">
                   <td>{{ eu.name }}</td>
-                  <td>{{ eu.unit1 }}</td>
-                  <td>{{ eu.unit2 }}<span>{{ eu.unit2e }}</span></td>
+                  <td class="unit-long">{{ eu.unit1 }}</td>
+                  <td class="unit-short">
+                    <div>
+                      {{ eu.unit2 }}<span>{{ eu.unit2e }}</span>
+                    </div>
+                  </td>
                   <td>{{ eu.desc }}</td>
                 </tr>
               </tbody>
             </table>
           </div>
-
         </div>
       </div>
-
     </div>
   </div>
 </template>
 
 <script>
 import UnitInput from './components/UnitInput';
+import TitleTextContentsLayout from '@/layouts/InformationPages/Components/TitleTextContentsLayout';
 
 export default {
   components: {
-    'unit-input': UnitInput
+    'unit-input': UnitInput,
+    'page-title': TitleTextContentsLayout
   },
   data() {
     return {
+      titleOptions: {
+        title: 'Convert Units',
+        boldSubTitle: '',
+        textContent: [
+          'Our helpful conversion tool and ether unit reference allow you to calculate the total cost of your transactions.'
+        ]
+      },
       etherUnitRef: [
         {
           name: 'Wei',
@@ -129,6 +127,19 @@ export default {
           unit2e: '30',
           desc: ''
         }
+      ],
+      options: [
+        'wei',
+        'kwei',
+        'mwei',
+        'gwei',
+        'szabo',
+        'finney',
+        'ether',
+        'kether',
+        'mether',
+        'gether',
+        'tether'
       ]
     };
   }

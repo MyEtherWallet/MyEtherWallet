@@ -1,0 +1,49 @@
+@import '~@/scss/GlobalVariables';
+
+.wrap {
+  //empty
+}
+
+.title-container {
+  padding: 12px 30px;
+  user-select: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+
+  .menu-title-component {
+    margin-right: 10px;
+  }
+
+  .notification-title {
+    font-weight: 600;
+  }
+
+  .time {
+    margin-left: auto;
+    font-weight: 400;
+    font-family: Dejavu Sans, sans-serif;
+    font-size: 14px;
+  }
+
+  i {
+    margin-left: 15px;
+  }
+}
+
+.contents-container {
+  border-top: 0;
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.3s ease;
+  margin: 0 15px;
+
+  .padding-block {
+    padding: 20px 15px;
+  }
+
+  &.opened {
+    border-top: 1px solid #e2e2e2;
+    max-height: 300px;
+  }
+}

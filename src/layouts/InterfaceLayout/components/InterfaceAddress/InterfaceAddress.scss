@@ -8,10 +8,21 @@
   opacity: 0;
   position: absolute;
   z-index: 1;
+  pointer-events: none;
 }
 
-.custom-tooltip {
-  background: none;
-  border: 0;
-  padding: 0;
+.blockie-image {
+  border: 4px solid white;
+  $blockie-size: 60px !important;
+
+  height: $blockie-size;
+  width: $blockie-size;
+  margin-right: 10px;
+}
+
+.info-block .button-address {
+  margin-left: 4px;
+  img {
+    height: 22px;
+  }
 }

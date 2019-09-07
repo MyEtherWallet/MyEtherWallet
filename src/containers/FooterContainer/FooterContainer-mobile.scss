@@ -1,0 +1,232 @@
+@import '~@/scss/GlobalVariables';
+@media all and (max-width: $mobile-width) {
+  a,
+  a:link,
+  a:visited,
+  a:hover,
+  a:active {
+    text-decoration: none;
+
+    * {
+      text-decoration: none;
+    }
+  }
+
+  .wrap {
+    background-color: $footer-background-color;
+    color: $text-color-1;
+    padding: 70px 0 20px;
+
+    @media all and (max-width: $tablet-width) {
+      padding: 7px 0;
+    }
+  }
+
+  .footer-contents {
+    @media all and (max-width: $tablet-width) {
+      display: block;
+    }
+
+    > div {
+      @media all and (max-width: $tablet-width) {
+        border-bottom: 1px solid $dark-blue-1;
+        padding: 25px 0;
+      }
+
+      display: flex;
+      flex-direction: column;
+
+      .content-title {
+        align-items: center;
+        display: flex;
+
+        h3 {
+          font-size: 19px;
+        }
+
+        p {
+          color: $white;
+          cursor: pointer;
+          display: block;
+          font-size: 20px;
+          font-weight: 400;
+          margin-left: auto;
+          text-align: center;
+        }
+
+        .close {
+          opacity: 1;
+          color: $white;
+          display: none;
+        }
+      }
+
+      .content-links {
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+        max-height: 0;
+        .content-links-animation-block {
+          padding-top: 20px;
+        }
+
+        .content {
+          margin-bottom: 15px;
+          &:last-child {
+            margin-bottom: 0;
+          }
+        }
+
+        .sub-title {
+          color: $text-color-1;
+        }
+
+        p {
+          color: $text--footer-link-color;
+        }
+
+        .no-margin {
+          margin-bottom: 3px;
+        }
+      }
+
+      &.content-open {
+        .content-links {
+          max-height: 400px;
+        }
+
+        .open {
+          display: none;
+        }
+
+        .close {
+          display: block;
+        }
+      }
+    }
+
+    .donate-us {
+      .content-title {
+        margin-bottom: 20px;
+      }
+
+      .crypto-link {
+        margin-bottom: 15px;
+        color: $link-text-color-2;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      p {
+        color: $text--footer-link-color;
+        margin-bottom: 15px;
+
+        &.no-padding {
+          margin: 0;
+        }
+      }
+
+      i {
+        border: 1px solid $text--footer-link-color;
+        border-radius: 100px;
+      }
+
+      h3 {
+        img {
+          height: 30px;
+          margin-top: -8px;
+          vertical-align: top;
+          margin-left: -9px;
+        }
+      }
+    }
+  } // .footer-contents
+
+  .foot-note {
+    align-items: center;
+    border-top: 1px solid $dark-blue-1;
+    margin-top: 40px;
+    padding-top: 40px;
+
+    @media all and (max-width: $tablet-width) {
+      border-top: 0;
+      flex-direction: column;
+      margin-top: 0;
+
+      .links {
+        order: 1;
+        text-align: center;
+
+        a:last-child {
+          span {
+            margin-right: 0;
+            padding-right: 0;
+          }
+        }
+      }
+
+      .social {
+        order: 2;
+      }
+
+      .copyright {
+        order: 3;
+      }
+    }
+
+    > div {
+      //margin: 0 auto;
+      margin-bottom: 20px;
+    }
+
+    .links {
+      display: flex;
+      align-items: center;
+
+      div {
+        border-right: 1px solid $border-color-2;
+        padding: 0 9px;
+      }
+
+      span {
+        color: $text-color-1;
+      }
+
+      div:last-child {
+        border-right: 0;
+      }
+    }
+
+    .copyright {
+      text-align: center;
+
+      p {
+        color: $text--footer-link-color;
+      }
+
+      a {
+        color: $white;
+      }
+    }
+
+    .social {
+      @media all and (max-width: $tablet-width) {
+        text-align: center;
+      }
+
+      i {
+        color: $text--footer-link-color;
+        font-size: 19px;
+        margin-left: 20px;
+
+        @media all and (max-width: $tablet-width) {
+          font-size: 24px;
+          line-height: 40px;
+        }
+      }
+
+      a:first-child i {
+        margin-left: 0;
+      }
+    }
+  }
+} // @media all and (max-width: $mobile-width)

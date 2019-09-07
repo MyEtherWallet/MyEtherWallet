@@ -1,10 +1,6 @@
 <template>
   <div class="content-block">
-    <div class="icon-block">
-      <img
-        :src="img"
-        class="icon">
-    </div>
+    <div class="icon-block"><img :src="img" class="icon" /></div>
     <div class="text-block">
       <h6>{{ title }}</h6>
       <p>{{ desc }}</p>
@@ -35,5 +31,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'ByJsonBlock.scss';
+@import 'ByJsonBlock-desktop.scss';
+@import 'ByJsonBlock-tablet.scss';
+@import 'ByJsonBlock-mobile.scss';
 </style>

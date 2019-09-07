@@ -1,4 +1,5 @@
 'use strict';
+import { toBuffer, stripZeros, rlp } from 'ethereumjs-util';
 
 const SecalotEth = function(comm, pinCode) {
   this.comm = comm;
@@ -70,6 +71,14 @@ SecalotEth.prototype.getAddress = function(path, callback) {
     }
   };
 
+  buffer = Buffer.alloc(4);
+  buffer[0] = 0x80;
+  buffer[1] = 0xc4;
+  buffer[2] = 0x00;
+  buffer[3] = 0x00;
+
+  apdus.push(buffer.toString('hex'));
+
   if (typeof this.pinCode !== 'undefined') {
     const pin = Buffer.from(this.pinCode, 'utf8');
     buffer = Buffer.alloc(5 + pin.length);
@@ -97,8 +106,16 @@ SecalotEth.prototype.getAddress = function(path, callback) {
   apdus.push(buffer.toString('hex'));
   self.comm.exchange(apdus.shift(), localCallback);
 };
-
+SecalotEth.prototype.signTransactionAsync = function(path, eTx) {
+  return new Promise((resolve, reject) => {
+    this.signTransaction(path, eTx, (result, error) => {
+      if (error) return reject(error);
+      resolve(result);
+    });
+  });
+};
 SecalotEth.prototype.signTransaction = function(path, eTx, callback) {
+  const chainID = eTx.getChainId();
   const splitPath = SecalotEth.splitPath(path);
   let offset = 0;
   let rawData = '';
@@ -120,8 +137,8 @@ SecalotEth.prototype.signTransaction = function(path, eTx, callback) {
         const result = {};
         let v = response[0] + 27;
 
-        if (eTx._chainId > 0) {
-          v += eTx._chainId * 2 + 8;
+        if (chainID > 0) {
+          v += chainID * 2 + 8;
         }
 
         result['v'] = Buffer.from([v]).toString('hex');
@@ -134,12 +151,15 @@ SecalotEth.prototype.signTransaction = function(path, eTx, callback) {
     }
   };
 
-  const savedRaw = eTx.raw.slice();
-  eTx.v = eTx._chainId;
-  eTx.r = 0;
-  eTx.s = 0;
-  const dataToHash = eTx.serialize();
-  eTx.raw = savedRaw;
+  const items = eTx.raw
+    .slice(0, 6)
+    .concat([
+      toBuffer(chainID),
+      stripZeros(toBuffer(0)),
+      stripZeros(toBuffer(0))
+    ]);
+
+  const dataToHash = rlp.encode(items);
 
   rawData = Buffer.from(dataToHash, 'hex');
 
@@ -178,7 +198,14 @@ SecalotEth.prototype.signTransaction = function(path, eTx, callback) {
   apdus.push(buffer.toString('hex'));
   self.comm.exchange(apdus.shift(), localCallback);
 };
-
+SecalotEth.prototype.signMessageAsync = function(path, message) {
+  return new Promise((resolve, reject) => {
+    this.signMessage(path, message, (result, error) => {
+      if (error) return reject(error);
+      resolve(result);
+    });
+  });
+};
 SecalotEth.prototype.signMessage = function(path, message, callback) {
   const splitPath = SecalotEth.splitPath(path);
   let offset = 0;
@@ -209,10 +236,9 @@ SecalotEth.prototype.signMessage = function(path, message, callback) {
       }
     }
   };
-
-  message =
-    '\x19Ethereum Signed Message:\n' + message.length.toString() + message;
-  rawData = Buffer.from(Buffer.from(message).toString('hex'), 'hex');
+  message = toBuffer(message);
+  const prefix = '\x19Ethereum Signed Message:\n' + message.length.toString();
+  rawData = Buffer.concat([toBuffer(prefix), message]);
 
   while (offset !== rawData.length) {
     const maxChunkSize = 64;

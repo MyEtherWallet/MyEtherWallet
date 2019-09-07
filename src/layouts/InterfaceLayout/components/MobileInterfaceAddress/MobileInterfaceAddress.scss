@@ -1,0 +1,95 @@
+@import '~@/scss/GlobalVariables';
+
+.wrap {
+  border-radius: 4px;
+  padding: 10px;
+  background-color: $transaction-block-address;
+  margin: 0 0;
+}
+
+//*******************************************
+// Top Block
+//*******************************************
+.top-block {
+  display: grid;
+  grid-template-columns: 50px auto 40px 120px;
+  align-items: center;
+  // Tablet
+  @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+    grid-template-columns: 50px auto 0 120px;
+  }
+}
+
+.hidden-input {
+  opacity: 0;
+  position: absolute;
+  z-index: 1;
+}
+
+.blockie-container {
+  border-radius: 100%;
+  border: 2px solid $white;
+  width: 41px;
+  height: 41px;
+  > * {
+    width: 37px !important;
+    height: 37px !important;
+  }
+}
+
+.address {
+  color: $white;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: right;
+  // Tablet
+  @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+    text-align: left;
+  }
+}
+
+.address-end {
+  color: $white;
+  text-align: left;
+  overflow: hidden;
+}
+
+.buttons-container {
+  text-align: right;
+  position: relative;
+
+  button {
+    position: relative;
+    background-color: transparent;
+    border: 0;
+    border-radius: 100%;
+    height: 40px;
+    width: 40px;
+
+    &:active {
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+    img {
+      height: 20px;
+    }
+  }
+}
+
+//*******************************************
+// Bottom Block
+//*******************************************
+.bottom-block {
+  margin-top: 10px;
+  button {
+    background-color: transparent;
+    border: 1px solid $white;
+    border-radius: 4px;
+    color: $white;
+    padding: 10px 0;
+    width: 100%;
+
+    &:active {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+  }
+}

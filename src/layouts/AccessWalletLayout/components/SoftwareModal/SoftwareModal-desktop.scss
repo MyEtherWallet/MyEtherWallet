@@ -1,0 +1,23 @@
+@import '~@/scss/GlobalVariables';
+@media all and (min-width: calc(#{$tablet-width} + 1px)) {
+  .content-block {
+    padding: 40px;
+  }
+
+  .modal-software {
+    .button-options {
+      display: grid;
+      grid-row-gap: 9px;
+    }
+  }
+}
+
+.button-container-block {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.hardware-link {
+  margin: 20px 0;
+  text-align: center;
+}

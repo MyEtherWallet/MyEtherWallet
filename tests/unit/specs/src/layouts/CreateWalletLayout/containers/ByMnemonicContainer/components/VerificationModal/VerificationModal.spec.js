@@ -1,11 +1,8 @@
-import Vue from 'vue';
-import { shallowMount, mount } from '@vue/test-utils';
+import { shallowMount } from '@vue/test-utils';
 import VerificationModal from '@/layouts/CreateWalletLayout/containers/ByMnemonicContainer/components/VerificationModal/VerificationModal.vue';
 import sinon from 'sinon';
 
-import {
-  Tooling
-} from '@@/helpers';
+import { Tooling } from '@@/helpers';
 
 describe('VerificationModal.vue', () => {
   let localVue, i18n, wrapper, store;
@@ -21,7 +18,7 @@ describe('VerificationModal.vue', () => {
       localVue,
       i18n,
       store,
-      attachToDocument: true,
+      attachToDocument: true
     });
   });
 
@@ -32,9 +29,11 @@ describe('VerificationModal.vue', () => {
     mnemonicValues.push('values3');
     wrapper.setProps({ mnemonicValues });
     const liElements = wrapper.vm.$el.querySelectorAll('li');
-    for (var i = 0; i < liElements.length; i++) {
-      let liElement = liElements[i];
-      expect(liElement.querySelector('span').textContent.trim()).toEqual(mnemonicValues[i])
+
+    for (const [i, liElement] of liElements.entries()) {
+      expect(liElement.querySelector('span').textContent.trim()).toEqual(
+        mnemonicValues[i]
+      );
     }
   });
 
@@ -44,6 +43,6 @@ describe('VerificationModal.vue', () => {
       wrapper.setProps({ mnemonicDoneModalOpen });
       wrapper.find('.verify-button').trigger('click');
       expect(mnemonicDoneModalOpen.called).toBe(true);
-    })
+    });
   });
 });

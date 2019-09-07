@@ -21,13 +21,19 @@
     .icons {
       display: flex;
       margin-left: auto;
+      flex-wrap: wrap;
 
       @media all and (max-width: $tablet-width) {
-        margin-top: 50px;
+        margin-top: 30px;
       }
 
-      @media all and (max-width: $mobile-width) {
-        justify-content: space-around;
+      a {
+        padding-bottom: 20px;
+        min-width: 80px;
+
+        &:hover {
+          text-decoration: none;
+        }
       }
 
       a:first-child > div {
@@ -37,13 +43,15 @@
       a > div {
         flex-direction: column;
         margin-left: 40px;
+        text-align: center;
 
-        @media all and (max-width: $mobile-width) {
+        @media all and (max-width: 570px) {
           margin-left: 0;
           margin-right: 0;
         }
 
         img {
+          border-radius: 100%;
           margin: 0 auto 9px;
         }
 
@@ -53,7 +61,7 @@
         }
       }
 
-      $mobile-subtract-value: 10;
+      $mobile-subtract-value: 20;
 
       div {
         img {
@@ -62,7 +70,7 @@
           height: $icon-size;
           width: $icon-size;
 
-          @media all and (max-width: $mobile-width) {
+          @media all and (max-width: 570px) {
             $mobile-icon-size: $icon-size - $mobile-subtract-value;
 
             height: $mobile-icon-size;

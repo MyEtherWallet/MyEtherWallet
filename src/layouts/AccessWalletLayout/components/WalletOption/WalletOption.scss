@@ -1,0 +1,68 @@
+@import '~@/scss/GlobalVariables';
+.wallet-option-container {
+  align-items: center;
+  border: 1px solid $light-grey-14;
+  border-radius: 5px;
+  color: $text-black;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 20px;
+  text-align: left;
+  user-select: none;
+
+  span {
+    font-weight: 500;
+    line-height: 16px;
+  }
+
+  &:hover,
+  &.selected {
+    border: 1px solid $mew-green;
+  }
+
+  &.selected {
+    box-shadow: 0 8px 15px 0 rgba(59, 64, 69, 0.12);
+
+    span {
+      font-weight: 700;
+    }
+  }
+
+  .icon {
+    margin-right: 8px;
+    width: 50px;
+  }
+
+  .img-title-container {
+    align-items: center;
+    display: flex;
+  }
+
+  .title-link-container {
+    display: flex;
+    flex-direction: column;
+
+    span {
+      font-size: 16px;
+    }
+
+    a {
+      display: block;
+      margin-top: 0;
+      font-size: 13px;
+    }
+  }
+}
+
+.inactive {
+  background-color: $white !important;
+
+  div {
+    background-color: $white !important;
+  }
+}
+
+.has-link {
+  padding: 20px 30px !important;
+}

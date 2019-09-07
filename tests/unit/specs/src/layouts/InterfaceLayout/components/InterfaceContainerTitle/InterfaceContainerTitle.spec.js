@@ -1,11 +1,7 @@
-import Vue from 'vue';
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle/InterfaceContainerTitle.vue';
 
-
-import {
-  Tooling
-} from '@@/helpers';
+import { Tooling } from '@@/helpers';
 
 const title = 'InterfaceContainerTitle title';
 
@@ -29,9 +25,11 @@ describe('InterfaceContainerTitle.vue', () => {
     });
   });
 
-  it('should render correct contents', () => {
-    expect(wrapper.vm.$el.querySelector('.content-title h2').textContent.trim()).toEqual(title);
+  it('should render correct title', () => {
+    expect(
+      wrapper.vm.$el.querySelector('.content-title h2').textContent.trim()
+    ).toEqual(title);
   });
 
-  describe('InterfaceContainerTitle.vue Methods', () => { });
+  describe('InterfaceContainerTitle.vue Methods', () => {});
 });

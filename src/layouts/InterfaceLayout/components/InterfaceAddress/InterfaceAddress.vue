@@ -4,54 +4,92 @@
       <div class="block-image">
         <blockie
           :address="address"
+          :size="8"
+          :scale="16"
           width="64px"
-          height="64px"/>
+          height="64px"
+          class="blockie-image"
+        />
         <input
           ref="copyAddress"
           :value="address"
           class="hidden-input"
-          autocomplete="off">
+          autocomplete="off"
+        />
       </div>
       <div class="block-content">
         <div class="information-container">
-          <h2>{{ $t("common.address") }}</h2>
+          <h2>{{ $t('common.address') }}</h2>
           <p class="address">{{ address }}</p>
         </div>
         <div class="icon-container">
-          <b-btn
-            id="print"
-            class="custom-tooltip">
-            <img src="~@/assets/images/icons/printer-white.svg">
+          <button
+            v-if="hasMultipleAddr"
+            id="popover-ref-switch"
+            class="change-button"
+            @click="switchAddr"
+          >
+            Switch
+          </button>
+          <b-btn id="popover-ref-qrcode" class="custom-tooltip" @click="qrcode">
+            <img src="~@/assets/images/icons/qr-code-white.svg" />
+          </b-btn>
+          <b-btn id="popover-ref-print" class="custom-tooltip" @click="print">
+            <img src="~@/assets/images/icons/printer-white.svg" />
+          </b-btn>
+          <b-btn id="popover-ref-copy" class="custom-tooltip" @click="copy">
+            <img src="~@/assets/images/icons/copy.svg" />
           </b-btn>
           <b-btn
-            id="copy"
-            class="custom-tooltip"
-            @click="copy">
-            <img src="~@/assets/images/icons/copy.svg">
+            v-show="displayAddr"
+            id="popover-ref-address"
+            class="custom-tooltip button-address"
+            @click="displayAddr"
+          >
+            <img src="~@/assets/images/icons/Interface/Buttons/Address.svg" />
           </b-btn>
-          <b-btn
-            id="switch"
-            class="custom-tooltip">
-            <img src="~@/assets/images/icons/change.svg">
-          </b-btn>
+          <b-popover
+            content="Switch Address"
+            target="popover-ref-address"
+            placement="top"
+            triggers="hover"
+            title
+          />
           <b-popover
             :content="$t('popover.print')"
-            target="print"
+            target="popover-ref-print"
             placement="top"
             triggers="hover"
-            title=""/>
+            title
+          />
           <b-popover
             :content="$t('popover.copy')"
-            target="copy"
+            target="popover-ref-copy"
             placement="top"
             triggers="hover"
-            title=""/>
+            title
+          />
           <b-popover
             :content="$t('popover.switchAddress')"
-            target="switch"
+            target="popover-ref-switch"
             placement="top"
             triggers="hover"
-            title=""/>
+            title
+          />
+          <b-popover
+            :content="$t('popover.displayAddress')"
+            target="popover-ref-address"
+            placement="top"
+            triggers="hover"
+            title
+          />
+          <b-popover
+            content="Address in Qrcode"
+            target="popover-ref-qrcode"
+            placement="top"
+            triggers="hover"
+            title
+          />
         </div>
       </div>
     </div>
@@ -60,6 +98,15 @@
 
 <script>
 import Blockie from '@/components/Blockie';
+import { mapState } from 'vuex';
+import { Toast } from '@/helpers';
+import {
+  KEYSTORE,
+  PRIV_KEY,
+  MEW_CONNECT,
+  WEB3_WALLET
+} from '@/wallets/bip44/walletTypes';
+
 export default {
   components: {
     blockie: Blockie
@@ -68,12 +115,51 @@ export default {
     address: {
       type: String,
       default: ''
+    },
+    print: {
+      type: Function,
+      default: function() {}
+    },
+    switchAddr: {
+      type: Function,
+      default: function() {}
+    },
+    displayAddr: {
+      type: Function,
+      default: undefined
+    },
+    qrcode: {
+      type: Function,
+      default: function() {}
+    }
+  },
+  data() {
+    return {
+      hasMultipleAddr: false
+    };
+  },
+  computed: {
+    ...mapState(['account'])
+  },
+  mounted() {
+    if (this.account.address !== null) {
+      if (
+        this.account.identifier !== KEYSTORE &&
+        this.account.identifier !== PRIV_KEY &&
+        this.account.identifier !== MEW_CONNECT &&
+        this.account.identifier !== WEB3_WALLET
+      ) {
+        this.hasMultipleAddr = true;
+      } else {
+        this.hasMultipleAddr = false;
+      }
     }
   },
   methods: {
     copy() {
       this.$refs.copyAddress.select();
       document.execCommand('copy');
+      Toast.responseHandler('Copied!', Toast.INFO);
     }
   }
 };

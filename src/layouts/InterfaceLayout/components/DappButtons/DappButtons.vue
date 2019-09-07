@@ -1,7 +1,10 @@
 <template>
-  <div @click.prevent="switcher">
-    <div class="dapps-button">
-      <img :src="icon">
+  <div
+    :class="['dapps-button', supported ? '' : 'disabled']"
+    @click="navigateTo"
+  >
+    <img :src="supported ? icon : iconDisabled" />
+    <div>
       <h4>{{ title }}</h4>
       <p>{{ desc }}</p>
     </div>
@@ -9,6 +12,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
   props: {
     title: {
@@ -22,11 +27,33 @@ export default {
     icon: {
       type: String,
       default: ''
+    },
+    iconDisabled: {
+      type: String,
+      default: ''
+    },
+    param: {
+      type: String,
+      default: ''
+    },
+    supportedNetworks: {
+      type: Array,
+      default: () => {
+        return [];
+      }
+    }
+  },
+  computed: {
+    ...mapState(['network', 'online']),
+    supported() {
+      if (this.online) {
+        return this.supportedNetworks.includes(this.network.type.name);
+      }
     }
   },
   methods: {
-    switcher() {
-      this.$emit('click');
+    navigateTo() {
+      this.$router.push(this.param);
     }
   }
 };

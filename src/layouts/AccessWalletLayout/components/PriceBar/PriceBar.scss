@@ -2,14 +2,20 @@
 
 .wrap {
   background-color: $price-bar-background-color;
-  overflow: none;
+  overflow: hidden;
 }
 
 .slider-container {
   align-items: center;
   display: flex;
+  // flex-direction: column;
   justify-content: center;
   margin: 20px 0;
+
+  // > div {
+  //   display: flex;
+  //   flex-direction: row;
+  // }
 }
 
 .token-container {
@@ -17,20 +23,46 @@
   color: $text-white;
   flex: 33;
   padding: 0 60px;
+  // width: 225px;
 
-  .token-text {
+  p {
     color: $text-white;
     font-size: 10px;
   }
 
   .percent-container {
-    align-items: center;
-    justify-content: space-around;
-    display: flex;
-    flex-direction: row;
-
     span {
       font-size: 10px;
     }
+
+    i {
+      margin-left: 5px;
+    }
+  }
+
+  &:last-child {
+    border: none;
   }
 }
+
+// .first-set-enter-active,
+// .second-set-enter-active {
+//   transition: all 0.5s ease-in;
+// }
+
+// .first-set-enter,
+// .second-set-enter {
+//   transform: translateY(20px);
+//   opacity: 1;
+// }
+
+// .first-set-leave,
+// .second-set-leave {
+//   transform: translateY(-20px);
+//   opacity: 1;
+// }
+
+// .first-set-leave-to,
+// .second-set-leave-to {
+//   opacity: 0;
+// }

@@ -1,11 +1,6 @@
-import Vue from 'vue';
-
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils';
 import WhatIfILoseMyKeysOrPassword from '@/layouts/GettingStarted/components/WhatIfILoseMyKeysOrPassword/WhatIfILoseMyKeysOrPassword.vue';
-import {
-  Tooling
-} from '@@/helpers';
-
+import { Tooling } from '@@/helpers';
 
 describe('WhatIfILoseMyKeysOrPassword.vue', () => {
   let localVue, i18n, wrapper, store;
@@ -29,8 +24,12 @@ describe('WhatIfILoseMyKeysOrPassword.vue', () => {
   });
 
   it('should render correct contents', () => {
-    expect(wrapper.vm.$el.querySelector('.block-progressbar__progressbar div').className.trim()).toEqual(progressBarValue);
+    expect(
+      wrapper.vm.$el
+        .querySelector('.block-progressbar__progressbar div')
+        .className.trim()
+    ).toEqual(progressBarValue);
   });
 
-  describe('WhatIfILoseMyKeysOrPassword.vue Methods', () => { });
+  describe('WhatIfILoseMyKeysOrPassword.vue Methods', () => {});
 });

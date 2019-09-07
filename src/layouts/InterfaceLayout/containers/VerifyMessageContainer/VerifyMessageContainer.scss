@@ -1,112 +1,52 @@
 @import '../InterfaceContainer';
 
-.bootstrap-modal {
-  .check-icon {
-    border: 3px solid $border-green;
-    border-radius: 200px;
-    color: $text-color-green;
-    font-size: 90px;
-    margin-bottom: 15px;
-    padding: 25px;
-  }
+p {
+  margin-bottom: 40px;
+  padding: $interface-text-padding-1;
 }
 
-.deploy-contract-container {
+.content-container {
+  @extend %send-form-base;
+}
+
+.sign-message-container {
   @extend %interface-container;
 
   .send-form {
-    @extend %send-form-base;
-
+    margin-bottom: 30px;
     .title-container {
       .title {
-        align-items: flex-end;
+        align-items: center;
         display: flex;
-        // align-items: center;
         margin-bottom: 10px;
-        padding: 0 8px;
+        padding: $interface-text-padding-1;
         width: 100%;
 
-        .select-contract {
-          margin-left: auto;
+        h4 {
+          margin-right: 7px;
         }
 
         .copy-buttons {
           color: $text-color-3;
           margin-left: auto;
-
-          span {
-            cursor: pointer;
-            margin-left: 20px;
-          }
         }
-      }
-
-      .search-block {
-        margin-left: auto;
-      }
-
-      .buttons {
-        margin-bottom: 3px;
-        margin-left: auto;
       }
     }
 
     .form-block {
       @extend %form-block-base;
     }
-
-    .domain-name {
-      align-items: center;
-      display: flex;
-      position: relative;
-
-      input {
-        background-color: $background-color-1;
-        border: 0;
-        padding: 13px 15px;
-        width: 100%;
-      }
-
-      span {
-        font-size: 20px;
-        font-weight: 600;
-      }
-    }
-
-    .contract-address {
-      display: grid;
-      grid-template-columns: 70% 30%;
-      position: relative;
-
-      .address {
-        p {
-          border-bottom: 2px solid $border-color-5;
-          overflow: hidden;
-          padding: 10px 5px;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        }
-      }
-
-      .select-contract {
-        padding-left: 5px;
-
-        .dropdown-toggle {
-          padding: 10px 5px !important;
-        }
-      }
-    }
-  }
-
-  .send-form-small-top-margin {
-    padding-top: 10px;
   }
 
   .submit-button-container {
-    padding: 40px 60px;
+    margin-top: 60px;
+
+    // Mobile
+    @media all and (max-width: $mobile-width) {
+      margin-top: 30px;
+    }
 
     .bottom-text {
-      margin-top: 20px;
       text-align: center;
     }
 
@@ -117,27 +57,12 @@
       .submit-button {
         margin: 0 5px;
         text-align: center;
-        width: 300px;
+        min-width: 300px;
+
+        @media all and (max-width: $mobile-width) {
+          width: 100%;
+        }
       }
     }
   }
-}
-
-%message {
-  border-radius: 5px;
-  margin-top: 10px;
-  padding: 10px 5px;
-  text-align: center;
-}
-
-.success-message {
-  @extend %message;
-
-  background-color: $light-green-1;
-}
-
-.error-message {
-  @extend %message;
-
-  background-color: $red-1;
 }

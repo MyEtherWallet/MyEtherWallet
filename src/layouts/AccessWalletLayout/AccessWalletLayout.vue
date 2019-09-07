@@ -1,10 +1,8 @@
 <template>
   <div>
-    <access-my-wallet-container/>
-    <price-bar 
-      :v-if="$store.state.online && tokens.length > 1" 
-      :tokens="tokens"/>
-    <faqs/>
+    <access-my-wallet-container />
+    <price-bar :v-if="online && tokens.length > 1" :tokens="tokens" />
+    <faqs />
   </div>
 </template>
 
@@ -12,6 +10,8 @@
 import AccessMyWalletContainer from './containers/AccessMyWalletContainer';
 import FaqsContainer from '@/containers/FaqsContainer';
 import PriceBar from './components/PriceBar';
+import { mapState } from 'vuex';
+import { Toast } from '@/helpers';
 
 export default {
   name: 'AccessWalletLayout',
@@ -25,28 +25,64 @@ export default {
       tokens: []
     };
   },
+  computed: {
+    ...mapState(['online'])
+  },
   async mounted() {
-    if (this.$store.state.online) {
+    if (this.online) {
       this.tokens = await this.getRates();
     }
   },
   methods: {
     async getRates() {
-      const rates = await fetch(
-        'https://still-waters-52916.herokuapp.com/ticker?filter=BTC,ETH,REP,KNC,OMG,EOS,XRP,BCH,LTC,TRX,NEO,ETC,QTUM,ADA,XMR,QTUM,SNT,ELF,BAT'
+      this.tokens = [];
+      const tokenNames = [
+        'BTC',
+        'ETH',
+        'REP',
+        'KNC',
+        'OMG',
+        'EOS',
+        'XRP',
+        'BCH',
+        'LTC',
+        'TRX',
+        'NEO',
+        'ETC',
+        'QTUM',
+        'ADA',
+        'XMR',
+        'QTUM',
+        'SNT',
+        'ELF'
+      ];
+      return await fetch(
+        'https://cryptorates.mewapi.io/ticker?filter=' + tokenNames.join(',')
       )
         .then(res => {
           return res.json();
         })
+        .then(rates => {
+          return Object.keys(rates.data)
+            .map(item => Object.assign(rates.data[item]))
+            .sort((a, b) => {
+              if (a.market_cap_rank < b.market_cap_rank) return -1;
+              if (a.market_cap_rank > b.market_cap_rank) return 1;
+              return 0;
+            })
+            .filter(item => {
+              if (
+                tokenNames.find(el => {
+                  return el === item.symbol;
+                }) !== undefined
+              ) {
+                return item;
+              }
+            });
+        })
         .catch(err => {
-          return err;
-        });
-      return Object.keys(rates.data)
-        .map(item => Object.assign(rates.data[item]))
-        .sort((a, b) => {
-          if (a.rank < b.rank) return -1;
-          if (a.rank > b.rank) return 1;
-          return 0;
+          Toast.responseHandler(err, Toast.ERROR);
+          return [];
         });
     }
   }

@@ -1,21 +1,18 @@
 @import '../InterfaceContainer';
 
+$contract-mobile-width: 600px;
+
 .interact-with-contract-container {
   @extend %interface-container;
 
-  .submit-button {
-    margin: 0 auto;
-    text-align: center;
-    width: 300px;
+  .contract-address-container {
+    margin-bottom: 30px;
   }
 
   .send-form {
-    @extend %send-form-base;
-
     .title-container {
       .title {
-        align-items: flex-end;
-        color: $dark-blue-7;
+        align-items: center;
         display: flex;
         margin-bottom: 10px;
         padding: 0 8px;
@@ -24,15 +21,21 @@
 
         .select-contract {
           margin-left: auto;
-          min-width: 330px;
+          min-width: 230px;
           position: absolute;
           right: 0;
-          top: -17px;
+          top: -12px;
+          @media all and (max-width: $contract-mobile-width) {
+            min-width: initial;
+            left: 0;
+            top: 35px;
+          }
         }
 
         .copy-buttons {
           color: $text-color-3;
           margin-left: auto;
+          min-width: 100px;
 
           span {
             cursor: pointer;
@@ -63,7 +66,7 @@
       input {
         background-color: $background-color-1;
         border: 0;
-        padding: 13px 15px;
+        padding: 13px 45px 13px 15px;
         width: 100%;
       }
 
@@ -73,23 +76,35 @@
       }
 
       i {
-        bottom: 3px;
+        bottom: 13px;
         position: absolute;
-        right: 3px;
+        right: 16px;
       }
 
       .address-validation-check {
         bottom: 13px;
-        right: 6px;
+        right: 16px;
       }
     }
   }
 
   .submit-button-container {
-    padding: 40px 60px;
+    margin-top: 60px;
+    text-align: center;
+
+    // Mobile
+    @media all and (max-width: $mobile-width) {
+      margin-top: 30px;
+    }
 
     .submit-button {
+      margin: 0 auto;
+      text-align: center;
+      width: 300px;
       position: relative;
+      @media all and (max-width: $mobile-width) {
+        width: 100%;
+      }
     }
 
     img {
@@ -105,76 +120,101 @@
       cursor: pointer;
     }
   }
-
-  .address-container {
-    align-items: center;
-    color: $dark-blue-7;
-    display: flex;
-    justify-content: space-between;
-    padding: 0 8px;
-
-    .address {
-      border-bottom: 2px solid $background-color-1;
-    }
-
-    .functions {
-      border: 1px solid $background-color-1;
-      border-radius: 5px;
-      flex: 30;
-    }
-  }
-
-  .interact-buttons {
-    display: flex;
-  }
-}
-
-.bool-input {
-  display: flex;
-  flex-direction: column;
-
-  .bool-input-container {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-    padding: 0 8px;
-  }
-}
-
-.contract-inputs {
-  margin-bottom: 10px;
 }
 
 .interact-div {
+  @extend %send-form-base;
+
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   min-height: 400px;
 }
 
-.result-container {
-  align-items: end !important;
-  flex-direction: column;
+.contract-methods-container {
+  @extend %send-form-base;
 
-  input {
-    margin-bottom: 10px;
+  h4 {
+    margin-bottom: 23px;
+    color: $dark-blue-7;
   }
 
-  label {
-    padding: 0 8px;
-  }
-
-  .result-inputs {
+  .contract-addr-container {
+    align-items: center;
     display: flex;
-    flex-direction: column;
-    width: 100%;
+    justify-content: space-between;
+
+    .contract-addr {
+      flex: 1;
+      border-bottom: 2px solid $light-grey-4;
+      margin-top: 20px;
+      padding-bottom: 9px;
+
+      p {
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+    }
+
+    .picker-container {
+      border: 1px solid $light-grey-14;
+      border-radius: 4px;
+    }
   }
 }
 
-.with-resolver {
-  display: block !important;
+.input-container {
+  display: flex;
+  position: relative;
 
-  i {
-    bottom: 33px !important;
+  .non-bool-i {
+    position: absolute;
+    right: 10px;
+    top: 13px;
   }
+}
+
+.interact-buttons {
+  display: flex;
+}
+
+%input-temp {
+  background-color: $background-color-1;
+  border: 0;
+  padding: 13px 15px;
+  width: 100%;
+}
+
+.non-bool-input,
+.result-input {
+  @extend %input-temp;
+}
+
+.method-arguments-container {
+  padding-top: 33px;
+}
+
+.bool-input-container {
+  display: flex;
+
+  .bool-items {
+    padding: 0 10px;
+  }
+}
+
+.result-container {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 5px;
+}
+
+.contract-address-title {
+  // Mobile
+  @media all and (max-width: $contract-mobile-width) {
+    margin-bottom: 55px;
+  }
+}
+
+.input-item-container {
+  padding: 10px 0;
 }

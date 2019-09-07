@@ -3,45 +3,45 @@
     <div class="wrap">
       <div class="block-left">
         <div class="select-block">
-          <select>
-            <option
-              v-for="data in leftDropDown"
-              :key="data.key"
-              value="data.value">{{ data.label }}
-            </option>
-          </select>
-          <p class="select-down-arrow">⌄</p>
+          <dropdown-unit-selector
+            :options="options"
+            :current-selected="selectedLeft"
+            :left="true"
+            @updateSelected="updateCurrency"
+          />
         </div>
         <div>
           <input
-            type="text"
-            name=""
-            placeholder="Amount">
+            v-model="valueLeft"
+            type="number"
+            step="any"
+            placeholder="Amount"
+          />
         </div>
       </div>
 
       <div class="block-center">
         <div class="convert-icon">
-          <img src="~@/assets/images/icons/swap.svg">
+          <img src="~@/assets/images/icons/swap.svg" />
         </div>
       </div>
 
       <div class="block-right">
         <div class="select-block">
-          <select>
-            <option
-              v-for="data in rightDropDown"
-              :key="data.key"
-              value="data.value">{{ data.label }}
-            </option>
-          </select>
-          <p class="select-down-arrow">⌄</p>
+          <dropdown-unit-selector
+            :options="options"
+            :current-selected="selectedRight"
+            :left="false"
+            @updateSelected="updateCurrency"
+          />
         </div>
         <div>
           <input
-            type="text"
-            name=""
-            placeholder="Amount">
+            v-model="valueRight"
+            type="number"
+            placeholder="Amount"
+            step="any"
+          />
         </div>
       </div>
     </div>
@@ -49,108 +49,83 @@
 </template>
 
 <script>
+import { BigNumber } from 'bignumber.js';
+import { mapState } from 'vuex';
+import DropDownUnitSelector from '../DropDownUnitSelector';
+import utils from 'web3-utils';
+
 export default {
+  components: {
+    'dropdown-unit-selector': DropDownUnitSelector
+  },
   props: {
-    content: {
-      type: String,
-      default: ''
+    options: {
+      type: Array,
+      default: function() {
+        return [];
+      }
     }
   },
   data() {
     return {
-      leftDropDown: [
-        {
-          label: 'Wei',
-          value: ''
-        },
-        {
-          label: 'Kwei',
-          value: ''
-        },
-        {
-          label: 'Mwei',
-          value: ''
-        },
-        {
-          label: 'Gwei',
-          value: ''
-        },
-        {
-          label: 'Szabo',
-          value: ''
-        },
-        {
-          label: 'Finney',
-          value: ''
-        },
-        {
-          label: 'Ether',
-          value: ''
-        },
-        {
-          label: 'Kether',
-          value: ''
-        },
-        {
-          label: 'Mether',
-          value: ''
-        },
-        {
-          label: 'Gether',
-          value: ''
-        },
-        {
-          label: 'Tether',
-          value: ''
-        }
-      ],
-      rightDropDown: [
-        {
-          label: 'Wei',
-          value: ''
-        },
-        {
-          label: 'Kwei',
-          value: ''
-        },
-        {
-          label: 'Mwei',
-          value: ''
-        },
-        {
-          label: 'Gwei',
-          value: ''
-        },
-        {
-          label: 'Szabo',
-          value: ''
-        },
-        {
-          label: 'Finney',
-          value: ''
-        },
-        {
-          label: 'Ether',
-          value: ''
-        },
-        {
-          label: 'Kether',
-          value: ''
-        },
-        {
-          label: 'Mether',
-          value: ''
-        },
-        {
-          label: 'Gether',
-          value: ''
-        },
-        {
-          label: 'Tether',
-          value: ''
-        }
-      ]
+      selectedLeft: 'wei',
+      selectedRight: 'ether',
+      valueLeft: 1000000000000000000,
+      valueRight: 1
     };
+  },
+  computed: {
+    ...mapState(['web3'])
+  },
+  watch: {
+    valueLeft(newVal) {
+      this.valueRight = this.convertFromTo(
+        newVal,
+        this.selectedLeft,
+        this.selectedRight
+      );
+    },
+    valueRight(newVal) {
+      this.valueLeft = this.convertFromTo(
+        newVal,
+        this.selectedRight,
+        this.selectedLeft
+      );
+    },
+    selectedLeft(newVal) {
+      this.valueRight = this.convertFromTo(
+        this.valueLeft,
+        newVal,
+        this.selectedRight
+      );
+    },
+    selectedRight(newVal) {
+      this.valueLeft = this.convertFromTo(
+        this.valueRight,
+        newVal,
+        this.selectedLeft
+      );
+    }
+  },
+  methods: {
+    getValueOfUnit(unit) {
+      unit = unit ? unit.toLowerCase() : 'ether';
+      const unitValue = utils.unitMap[unit];
+      return new BigNumber(unitValue, 10);
+    },
+    convertFromTo(amt, from, to) {
+      return new BigNumber(String(amt))
+        .times(this.getValueOfUnit(from))
+        .div(this.getValueOfUnit(to))
+        .toString(10);
+    },
+    updateCurrency(e) {
+      if (e[1] === 'left') {
+        this.selectedLeft = e[0];
+      } else {
+        this.selectedRight = e[0];
+      }
+    }
   }
 };
 </script>

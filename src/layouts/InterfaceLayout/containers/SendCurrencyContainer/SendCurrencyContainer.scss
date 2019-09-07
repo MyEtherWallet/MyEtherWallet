@@ -24,13 +24,21 @@
 
         .title-helper {
           display: flex;
+          align-items: center;
           margin-bottom: 2px;
+          h4 {
+            margin-right: 5px;
+          }
         }
       }
 
       .buttons {
         margin-bottom: 3px;
         margin-left: auto;
+
+        > div {
+          margin-left: 5px;
+        }
       }
     }
 
@@ -39,9 +47,16 @@
     }
 
     .amount-to-address {
+      /*
       display: grid;
       grid-column-gap: 5px;
       grid-template-columns: 2fr 3fr;
+      */
+      display: block;
+
+      @media all and (max-width: $mobile-width) {
+        display: block;
+      }
 
       .title {
         display: flex;
@@ -61,6 +76,14 @@
       }
 
       .amount {
+        display: grid;
+        grid-column-gap: 7px;
+        grid-template-columns: 2fr 3fr;
+
+        @media all and (max-width: $tablet-width) {
+          display: block;
+        }
+
         .dropdown-select-search-1 {
           background-color: $background-color-1;
           margin-bottom: 5px;
@@ -84,7 +107,7 @@
           input {
             background-color: transparent;
             border: 0;
-            padding: 13px 15px;
+            padding: 13px 45px 13px 15px;
             width: 100%;
           }
 
@@ -131,7 +154,6 @@
         }
 
         .address-block {
-          height: 98px;
           position: relative;
 
           i {
@@ -140,13 +162,33 @@
             right: 13px;
           }
 
-          textarea {
+          input {
             background-color: transparent;
             border: 0;
-            height: 100%;
-            padding: 13px 15px;
+            padding: 13px 45px 13px 15px;
             resize: none;
             width: 100%;
+          }
+        }
+      }
+      .tx-fee {
+        margin-top: 40px;
+
+        .copy-button {
+          color: $text--link-color;
+          cursor: pointer;
+          margin-left: auto;
+        }
+
+        .fee-value {
+          padding: 0 10px;
+          display: flex;
+          align-items: center;
+          .gwei {
+            //gwei
+          }
+          .usd {
+            margin-left: auto;
           }
         }
       }
@@ -186,7 +228,7 @@
   } // .send-form
 
   .advanced {
-    padding-top: 10px;
+    padding-top: 30px;
 
     .advanced-content {
       padding: 20px 0;
@@ -195,6 +237,10 @@
 
       .toggle-button-container {
         display: flex;
+        // Mobile
+        @media all and (max-width: $mobile-width) {
+          display: block;
+        }
 
         h4 {
           padding: 0 8px;
@@ -206,6 +252,10 @@
           margin-left: auto;
           user-select: none;
 
+          @media all and (max-width: $mobile-width) {
+            padding: 0 8px;
+          }
+
           > span {
             margin-right: 15px;
           }
@@ -213,8 +263,17 @@
       } // .toggle-button-container
 
       .input-container {
-        margin-top: 20px;
-        margin-bottom: -15px;
+        max-height: 0;
+        transition: max-height 0.3s ease;
+        overflow: hidden;
+
+        &.input-container-open {
+          max-height: 400px;
+        }
+
+        .margin-container {
+          margin-top: 20px;
+        }
 
         .user-input {
           margin-bottom: 5px;
@@ -224,17 +283,21 @@
   }
 
   .submit-button-container {
-    padding: 60px 0;
+    margin-top: 60px;
     text-align: center;
+    padding: 0 10px 40px 10px;
 
-    .bottom-text {
-      margin-top: 20px;
+    @media all and (max-width: $mobile-width) {
+      margin-top: 30px;
+      padding: 0 10px 30px 10px;
     }
 
     .submit-button {
       margin: 0 auto;
       text-align: center;
-      width: 300px;
+      @media all and (max-width: $mobile-width) {
+        width: 100%;
+      }
     }
 
     p {
@@ -244,5 +307,28 @@
 
   .tokens {
     border-radius: 5px;
+  }
+}
+
+.single-input-block {
+  margin-bottom: 30px;
+}
+
+.user-input {
+  align-items: center;
+  display: flex;
+
+  p {
+    color: $dark-blue-2;
+    flex: none;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 0 8px;
+  }
+
+  i {
+    right: 13px;
+    position: absolute;
+    bottom: 13px;
   }
 }
