@@ -33,7 +33,7 @@
     "pre-commit": "npm run lint && npm run test"
   },
   "dependencies": {
-    "@sentry/browser": "5.6.2",
+    "@sentry/browser": "5.6.3",
     "@sentry/integrations": "5.6.1",
     "html2canvas": "1.0.0-rc.3",
     "idna-uts46": "1.1.0",
@@ -75,11 +75,11 @@
     "@xkeshi/vue-qrcode": "git+https://github.com/MyEtherWallet/vue-qrcode.git",
     "axios": "0.19.0",
     "babel-core": "7.0.0-bridge.0",
-    "babel-eslint": "10.0.2",
+    "babel-eslint": "10.0.3",
     "babel-jest": "23.6.0",
     "bignumber.js": "9.0.0",
     "bip39": "3.0.2",
-    "bootstrap-vue": "2.0.0-rc.19",
+    "bootstrap-vue": "2.0.0-rc.28",
     "canvas": "1.6.13",
     "codecov": "3.5.0",
     "copy-webpack-plugin": "5.0.4",
@@ -88,7 +88,7 @@
     "eslint-plugin-security": "1.4.0",
     "eth-ens-namehash": "2.0.8",
     "ethereum-ens": "0.7.7",
-    "ethereumjs-tx": "2.1.0",
+    "ethereumjs-tx": "2.1.1",
     "ethereumjs-common": "1.3.1",
     "ethereumjs-util": "6.1.0",
     "ethereumjs-wallet": "0.6.3",
@@ -112,7 +112,7 @@
     "remark-cli": "7.0.0",
     "remark-preset-lint-recommended": "3.0.3",
     "rskjs-util": "1.0.3",
-    "sass-loader": "7.3.1",
+    "sass-loader": "8.0.0",
     "secp256k1": "3.7.1",
     "sinon": "7.4.1",
     "store": "2.0.12",
@@ -134,7 +134,7 @@
     "web3-core-method": "1.2.1",
     "web3-core-requestmanager": "1.2.1",
     "web3-utils": "1.2.1",
-    "webpack": "4.39.2",
+    "webpack": "4.39.3",
     "worker-loader": "2.0.0",
     "zxcvbn": "4.4.2"
   },
@@ -153,11 +153,9 @@
       "web3-core-helpers",
       "web3-core-method",
       "web3-utils",
-      "@xkeshi/vue-qrcode",
       "multicoin-address-validator",
-      "bootstrap-vue",
-      "web3-core-requestmanager",
-      "vue-tel-input"
+      "@xkeshi/vue-qrcode",
+      "web3-core-requestmanager"
     ]
   }
 }
