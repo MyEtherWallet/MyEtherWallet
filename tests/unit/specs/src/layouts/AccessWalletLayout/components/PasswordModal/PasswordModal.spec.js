@@ -22,18 +22,18 @@ describe('PasswordModal.vue', () => {
   });
 
   it('should render password data', () => {
-    const password = 'password';
+    const password = 'Strength1000!!!!AAAA***BB###';
     wrapper.setData({ password });
-    expect(wrapper.vm.$el.querySelector('.password-form input').value).toEqual(
-      password
-    );
+    const formPasswordValue = wrapper.vm.$el.querySelector('.password-form input').value;
+    expect(formPasswordValue).toEqual(password);
   });
 
   describe('PasswordModal.vue Methods', () => {
     it('should switch view password when image button clicked', () => {
-      wrapper.find('.password-form img').trigger('click');
+      const imgPasswordElement = wrapper.find('.password-form img');
+      imgPasswordElement.trigger('click');
       expect(wrapper.vm.$data.show).toBe(true);
-      wrapper.find('.password-form img').trigger('click');
+      imgPasswordElement.trigger('click');
       expect(wrapper.vm.$data.show).toBe(false);
     });
   });
