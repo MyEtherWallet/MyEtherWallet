@@ -4,7 +4,7 @@ import { Tooling } from '@@/helpers';
 
 describe('HardwarePasswordModal.vue', () => {
   let localVue, i18n, wrapper, store;
-
+  const hardwareBrand = 'hardwareBrand';
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
@@ -17,7 +17,8 @@ describe('HardwarePasswordModal.vue', () => {
       localVue,
       i18n,
       store,
-      attachToDocument: true
+      attachToDocument: true,
+      propsData: { hardwareBrand }
     });
   });
 
@@ -36,8 +37,6 @@ describe('HardwarePasswordModal.vue', () => {
   });
 
   it('should render correct hardwareBrand props', () => {
-    const hardwareBrand = 'hardwareBrand';
-    wrapper.setProps({ hardwareBrand });
     expect(
       wrapper
         .find('.submit-button')
@@ -59,7 +58,6 @@ describe('HardwarePasswordModal.vue', () => {
       let imgElement = wrapper.find('.input-container img');
       imgElement.trigger('click');
       expect(wrapper.vm.$data.show).toBe(true);
-      imgElement = wrapper.find('.input-container img');
       imgElement.trigger('click');
       expect(wrapper.vm.$data.show).toBe(false);
     });

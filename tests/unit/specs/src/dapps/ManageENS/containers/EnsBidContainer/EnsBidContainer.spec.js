@@ -68,7 +68,7 @@ describe('EnsBidContainer.vue', () => {
         $router: mockRouter
       },
       stubs: {
-        timer: TimerStub,
+        'timer': TimerStub,
         'b-modal': BModalStub,
         'json-string-modal': JsonStringModal
       }
