@@ -1,1 +1,8 @@
 @import "~@/scss/GlobalVariables";
+
+.toggle-button {
+  position: fixed;
+  left: 200px;
+  top: 200px;
+  z-index: 99999;
+}
