@@ -26,7 +26,7 @@ describe('partners', () => {
       }
     }, 100);
   }, 10000);
-  it('should return rates for all but simplex', async done => {
+  xit('should return rates for all but simplex', async done => {
     const fromCurrency = 'ETH';
     const toCurrency = 'REP';
     const fromValue = 1;
@@ -53,7 +53,7 @@ describe('partners', () => {
     expect(doesItHaveAll).toBe(true);
     done();
   }, 10000);
-  it('should return rates for bity and changelly', async done => {
+  xit('should return rates for bity and changelly', async done => {
     const fromCurrency = 'BTC';
     const toCurrency = 'ETH';
     const fromValue = 1;
@@ -72,7 +72,7 @@ describe('partners', () => {
     expect(results.length).toBe(2);
     done();
   });
-  it('should return rates only from simplex', async done => {
+  xit('should return rates only from simplex', async done => {
     const fromCurrency = 'USD';
     const toCurrency = 'ETH';
     const fromValue = 100;
@@ -91,7 +91,7 @@ describe('partners', () => {
     expect(results.length).toBe(1);
     done();
   });
-  it('Expect changelly market rate calculated value to be within 1% of exact value (to ETH)', async done => {
+  xit('Expect changelly market rate calculated value to be within 1% of exact value (to ETH)', async done => {
     const changelly = swap.getProvider(providerNames.changelly);
     const changellyCalls = changelly.getApiConnector();
     const currency = Object.values(changelly.currencies).find(
@@ -135,7 +135,7 @@ describe('partners', () => {
     expect(diff).toBeLessThan(percentVarianceAllowed);
     done();
   });
-  it('Expect market rate calculated value to be within 1% of exact value (from ETH) ', async () => {
+  xit('Expect market rate calculated value to be within 1% of exact value (from ETH) ', async () => {
     const changelly = swap.getProvider(providerNames.changelly);
     const changellyCalls = changelly.getApiConnector();
     const currency = Object.values(changelly.currencies).find(
