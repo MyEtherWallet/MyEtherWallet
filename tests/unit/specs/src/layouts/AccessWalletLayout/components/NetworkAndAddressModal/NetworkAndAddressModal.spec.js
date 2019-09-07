@@ -52,7 +52,7 @@ describe('NetworkAndAddressModal.vue', () => {
   describe('NetworkAndAddressModal.vue Methods', () => {
     xit('[9-4-19, feels like it should pass]should render correct unlockWallet method', () => {
       wrapper.vm.currentWallet = '0xfbeef911dc5821886e1dda71586d90ed28174b7d';
-      wrapper.vm.wallet = {}
+      wrapper.vm.wallet = {};
       wrapper.vm.unlockWallet();
       expect(spy.calledWith({ path: 'interface' })).toBe(true);
     });
