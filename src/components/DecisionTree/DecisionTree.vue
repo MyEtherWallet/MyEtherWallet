@@ -1,5 +1,6 @@
 <template>
   <div class="">
+    <button class="toggle-button" @click="toggle">toggle</button>
     <b-modal
       ref="DecisionTree"
       hide-footer
@@ -9,15 +10,23 @@
       lazy
       class="bootstrap-modal nopadding decision-tree-modal"
     >
-      <div class="modal-contents">Hi</div>
+      <div class="modal-contents">
+        <div>header</div>
+        <md-container />
+        <div>footer</div>
+      </div>
     </b-modal>
   </div>
 </template>
 
 <script>
+import MdContainer from './components/MdContainer';
+
 export default {
   name: 'DecisionTree',
-  components: {},
+  components: {
+    'md-container': MdContainer
+  },
   props: {},
   data() {
     return {};
