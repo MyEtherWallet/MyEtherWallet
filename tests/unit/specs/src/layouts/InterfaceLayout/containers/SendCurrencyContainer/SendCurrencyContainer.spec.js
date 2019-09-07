@@ -1,167 +1,88 @@
 import Vue from 'vue';
-import VueX from 'vuex';
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils';
 import SendCurrencyContainer from '@/layouts/InterfaceLayout/containers/SendCurrencyContainer/SendCurrencyContainer.vue';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle/InterfaceContainerTitle.vue';
-import GenerateInfo from '@/layouts/InterfaceLayout/components/GenerateInfo/GenerateInfo.vue';
-import GenerateTx from '@/layouts/InterfaceLayout/components/GenerateTx/GenerateTx.vue';
-import SendTx from '@/layouts/InterfaceLayout/components/SendTx/SendTx.vue';
 import PopOver from '@/components/PopOver/PopOver.vue';
-import BackButton from '@/layouts/InterfaceLayout/components/BackButton/BackButton.vue';
 import CurrencyPicker from '@/layouts/InterfaceLayout/components/CurrencyPicker/CurrencyPicker.vue';
-import nodeList from '@/networks';
-import url from 'url';
-import Web3 from 'web3';
-import store from 'store';
-
-import {
-  Tooling
-} from '@@/helpers';
-
+import { Tooling } from '@@/helpers';
 
 describe('SendCurrencyContainer.vue', () => {
   let localVue, i18n, wrapper, store;
-  const resetView = jest.fn()
 
   beforeAll(() => {
+    window.scrollTo = jest.fn().mockImplementation((valX, valY) => {
+      window.pageXOffset = valX;
+      window.pageYOffset = valY;
+    });
+
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
     store = baseSetup.store;
-    Vue.config.warnHandler = () => { };
-    Vue.config.errorHandler = () => { };
+    Vue.config.warnHandler = () => {};
   });
 
-  afterAll(() => setTimeout(() => process.exit(), 1000))
+  afterAll(() => setTimeout(() => process.exit(), 1000));
 
   beforeEach(() => {
-    let actions = {
-      setGasPrice: jest.fn()
-    };
-
-
-
-    const network = nodeList['ETH'][3];
-    const hostUrl = url.parse(network.url);
-
-    const newWeb3 = new Web3(
-      `${hostUrl.protocol}//${hostUrl.hostname}:${network.port}${
-      hostUrl.pathname
-      }`
-    );
-
-    const wallet = {
-      getChecksumAddressString: jest.fn(x => 0),
-      getAddressString: function () {
-        return '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D';
-      }
-    };
-
-
-    let getters = {
-      gasPrice: () => { },
-      wallet: () => {
-        return wallet;
-      },
-      web3: () => {
-        return newWeb3
-      },
-      account: () => {
-        return {
-          balance: {
-            result: ''
-          }
-        }
-      }
-    };
-
-    store = new VueX.Store({
-      getters,
-      actions,
-      state: {
-        web3: newWeb3,
-        network: network,
-        wallet: {
-          getAddressString: () => { return '0x72ea3508d9d817a91465abb59be10fef9857a055'; }
-        }
-      }
-    });
-
     wrapper = shallowMount(SendCurrencyContainer, {
       localVue,
       i18n,
       store,
       attachToDocument: true,
+      sync: false,
       stubs: {
-        'send-tx': SendTx,
-        'generate-tx': GenerateTx,
-        'generate-info': GenerateInfo,
         'interface-container-title': InterfaceContainerTitle,
-        'popover': PopOver,
+        popover: PopOver,
         'currency-picker': CurrencyPicker
       }
     });
   });
 
-  it('should render correct advancedExpend data', () => {
-    wrapper.setData({ advancedExpend: true });
-    expect(wrapper.find('.input-container').exists()).toBe(true);
-    wrapper.setData({ advancedExpend: false });
-    expect(wrapper.find('.input-container').exists()).toBe(false);
-  });
-
-  it('should render correct validAddress data', () => {
+  it('should render correct isValidAddress data', () => {
     const address = '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D';
     wrapper.setData({ address });
-    expect(wrapper.vm.$data.validAddress).toBe(true);
+    wrapper.vm.$nextTick(() => {
+      expect(wrapper.vm.$data.isValidAddress).toBe(true);
+    });
   });
 
-
   it('should render correct amount data', () => {
-    const amount = 100;
-    wrapper.setData({ amount })
-    expect(wrapper.vm.$el.querySelector('.amount-number input').value).toEqual(String(amount));
+    expect(wrapper.vm.$el.querySelector('.amount-number input').value).toEqual(
+      String(wrapper.vm.$data.value)
+    );
   });
 
   it('should render correct "data" data', () => {
-    const data = '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D';
-    wrapper.setData({ advancedExpend: true, data: data });
-    expect(wrapper.vm.$el.querySelector('.user-input input').value).toEqual(data);
-  });
-
-  it('should render correct gasAmount data', () => {
-    const gasAmount = 231122;
-    wrapper.setData({ advancedExpend: true, gasAmount: gasAmount });
-    expect(wrapper.vm.$el.querySelector('.gas-amount input').value).toEqual(String(gasAmount));
-  });
-
-  it('should render correct transactionFee data', () => {
-    const transactionFee = 100;
-    wrapper.setData({ transactionFee });
-    expect(wrapper.findAll('.title-container .title p').at(1).text()).toEqual('Transaction Fee: ' + wrapper.vm.transactionFee + ' ETH');
+    wrapper.setData({ advancedExpand: true });
+    expect(wrapper.vm.$el.querySelector('.user-input input').value).toEqual(
+      wrapper.vm.$data.data
+    );
   });
 
   it('should render correct gasLimit data', () => {
-    const gasLimit = 30000;
-    wrapper.setData({ gasLimit });
-    wrapper.setData({ advancedExpend: true });
-    expect(wrapper.vm.$el.querySelectorAll('.user-input input')[1].value).toEqual(String(gasLimit));
+    wrapper.setData({ advancedExpand: true });
+    expect(
+      wrapper.vm.$el.querySelectorAll('.user-input input')[1].value
+    ).toEqual(String(wrapper.vm.$data.gasLimit));
   });
 
   describe('SendCurrencyContainer.vue Methods', () => {
-    it('should render correct verifyAddr method', () => {
-      const address = '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D';
-      wrapper.setData({ address });
-      expect(wrapper.vm.verifyAddr()).toBe(false);
-    });
-
     it('should render correct selectedCurrency data', () => {
-      const currencyElements = wrapper.findAll('.currency-picker-container .item-container div');
-      for (var i = 0; i < currencyElements.length; i++) {
+      const currencyElements = wrapper.findAll(
+        '.currency-picker-container .item-container div'
+      );
+      for (let i = 0; i < currencyElements.length; i++) {
         const currencyElement = currencyElements.at(i);
         currencyElement.trigger('click');
         const selectedCurrency = wrapper.vm.$data.selectedCurrency;
-        expect(selectedCurrency.symbol + ' - ' + selectedCurrency.name).toEqual(currencyElement.find('p').text());
+        expect(
+          currencyElement
+            .find('p')
+            .text()
+            .trim()
+            .indexOf(selectedCurrency.name)
+        ).toBeGreaterThan(-1);
       }
     });
 
@@ -172,6 +93,5 @@ describe('SendCurrencyContainer.vue', () => {
       expect(window.pageXOffset).toBe(0);
       expect(window.pageYOffset).toBe(0);
     });
-
   });
 });

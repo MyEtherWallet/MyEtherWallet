@@ -21,48 +21,6 @@
   .modal-content {
     padding: 20px;
 
-    .direction {
-      display: flex;
-
-      img {
-        margin: 0 auto;
-      }
-    }
-
-    .tx-info {
-      display: grid;
-      grid-template-columns: 1fr 70px 1fr;
-      padding-bottom: 15px;
-
-      .tx-data {
-        background-color: $background-color-7;
-        border-radius: 10px;
-        padding: 20px;
-
-        h3 {
-          font-size: 20px;
-          margin-top: 10px;
-
-          span {
-            color: $text-color-4;
-            font-size: 20px;
-          }
-        }
-
-        p {
-          width: 200px;
-          word-wrap: break-word;
-        }
-
-        .address-title {
-          font-size: 16px;
-          font-weight: 600;
-          margin-bottom: 5px;
-          margin-top: 10px;
-        }
-      }
-    } // .tx-info
-
     .detail-info {
       border-bottom: 2px solid $border-color-6;
       border-top: 2px solid $border-color-6;
@@ -142,4 +100,45 @@
 
 .tokens {
   border-radius: 5px;
+}
+
+//***************************************************
+// .tx-info
+//***************************************************
+.tx-info {
+  .title {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 23px;
+  }
+
+  .message-to-sign {
+    background-color: $light-grey-1;
+    padding: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .from-address {
+    background-color: $light-grey-1;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+
+    > div {
+      margin-right: 10px;
+    }
+
+    > span {
+      font-size: 16px;
+    }
+  }
+} // .tx-info
+
+.tx-data {
+  margin-bottom: 40px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 }

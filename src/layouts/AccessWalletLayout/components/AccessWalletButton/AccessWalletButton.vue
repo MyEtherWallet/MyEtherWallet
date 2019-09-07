@@ -1,29 +1,15 @@
 <template>
-  <div
-    :class="[!disabled ? 'disabled': '','button-block']"
-    @click="func">
+  <button
+    :class="[disabled ? 'disabled' : '', 'button-block', classname]"
+    @click="func"
+  >
     <div class="button-image">
-      <img
-        :src="img"
-        class="icon">
+      <img :src="disabled ? imgDisabled : img" class="icon" />
     </div>
     <h3>{{ title }}</h3>
-    <p>{{ desc }}</p>
-    <p
-      :v-if="recommend !== ''"
-      class="small-note">{{ recommend }}</p>
-    <div class="tooltip-box">
-      <span>
-        <b-btn
-          v-b-tooltip.hover
-          :title="tooltip">
-          <i
-            class="fa fa-question-circle-o"
-            aria-hidden="true"/>
-        </b-btn>
-      </span>
-    </div>
-  </div>
+    <p class="desc">{{ desc }}</p>
+    <p :v-if="recommend !== ''" class="small-note">{{ recommend }}</p>
+  </button>
 </template>
 
 <script>
@@ -34,6 +20,10 @@ export default {
       default: function() {}
     },
     img: {
+      type: String,
+      default: ''
+    },
+    imgDisabled: {
       type: String,
       default: ''
     },
@@ -56,6 +46,10 @@ export default {
     disabled: {
       type: Boolean,
       default: true
+    },
+    classname: {
+      type: String,
+      default: ''
     }
   },
   data() {

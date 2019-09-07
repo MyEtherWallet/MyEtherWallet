@@ -2,6 +2,12 @@
 
 .side-menu {
   padding: 40px 20px;
+  background-color: $white;
+
+  @media all and (max-width: $mobile-width) {
+    width: 100vw;
+    height: 100vh;
+  }
 
   ul {
     li {
@@ -51,5 +57,52 @@
     i {
       color: $text-black !important;
     }
+  }
+}
+
+//--------------------------------------
+// .side-menu-header
+//--------------------------------------
+.side-menu-header {
+  align-items: center;
+  padding: 25px 25px;
+  box-shadow: 0 0 2px #0000003b;
+  display: none;
+
+  @media all and (max-width: $interface--mobile-side-menu--width) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  img {
+    height: 33px;
+  }
+
+  i {
+    cursor: pointer;
+  }
+}
+
+.child-tab {
+  display: none;
+}
+
+.show-child {
+  display: block;
+}
+
+.disabled-item {
+  cursor: none !important;
+  pointer-events: none !important;
+  position: relative !important;
+
+  .dash {
+    border-top: 2px solid $light-grey-7;
+    border-radius: 5px;
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    z-index: 1;
   }
 }

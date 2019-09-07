@@ -1,0 +1,77 @@
+@import '~@/scss/GlobalVariables';
+@media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+  .modal-content-container {
+    padding: 20px;
+  }
+
+  .modal-hardware {
+    .button-options {
+      display: grid;
+      grid-gap: 10px;
+      grid-template-columns: 1fr;
+      margin-bottom: 40px;
+
+      &.hardware-button-options {
+        margin-bottom: 30px;
+      }
+
+      li {
+        border: 1px solid $light-grey-3;
+        border-radius: 5px;
+        align-items: center;
+        color: $dark-grey-11;
+        cursor: pointer;
+        display: flex;
+        padding: 15px;
+        text-align: left;
+        user-select: none;
+
+        * {
+          pointer-events: none;
+        }
+
+        span {
+          line-height: 16px;
+        }
+
+        &.active {
+          //box-shadow: 0 3px 15px $box-shadow-color-1;
+          color: $text-black;
+          font-weight: 500;
+          background-color: $light-grey-4;
+
+          .icon {
+            display: none;
+          }
+
+          .icon-hover {
+            display: block;
+          }
+        }
+
+        &:hover {
+          color: $text-black;
+          font-weight: 500;
+
+          .icon {
+            display: none;
+          }
+
+          .icon-hover {
+            display: block;
+          }
+        }
+
+        .icon,
+        .icon-hover {
+          margin-right: 8px;
+          width: 50px;
+        }
+
+        .icon-hover {
+          display: none;
+        }
+      }
+    }
+  }
+} // @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width)

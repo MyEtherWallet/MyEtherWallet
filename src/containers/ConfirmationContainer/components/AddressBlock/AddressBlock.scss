@@ -1,0 +1,61 @@
+@import '~@/scss/GlobalVariables';
+
+.address-container {
+  background-color: $light-green-1;
+  border-radius: 4px;
+  color: $dark-blue-1;
+  padding: 18px 24px;
+  width: 248px;
+  word-break: break-word;
+
+  .currency-container {
+    align-items: baseline;
+    display: flex;
+    flex-direction: column;
+
+    .currency-amt {
+      color: $dark-blue-6;
+      font-size: 20px;
+      font-weight: 500;
+    }
+
+    .currency-type {
+      color: $dark-grey-2;
+      font-size: 20px;
+      font-weight: 500;
+    }
+
+    img {
+      width: 36px;
+    }
+
+    p {
+      margin: 10px 0;
+    }
+  }
+
+  p {
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .address {
+    width: 100%;
+    word-wrap: break-word;
+  }
+}
+
+.icon-matcher {
+  align-items: center;
+  background-color: #497391;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  height: 36px;
+  width: 36px;
+
+  img {
+    height: 26px !important;
+    width: auto !important;
+  }
+}

@@ -1,5 +1,7 @@
 @import '~@/scss/GlobalVariables';
 
+$confirmation-modal-mobile-width: 500px;
+
 .bootstrap-modal .modal-dialog {
   max-width: 700px;
 }
@@ -23,16 +25,41 @@
 
     .direction {
       display: flex;
+      align-items: center;
+      justify-content: center;
 
       img {
-        margin: 0 auto;
+        height: 25px;
+      }
+    }
+
+    @media all and (max-width: $tablet-width) {
+      .direction {
+        padding: 20px 0;
+        display: flex;
+
+        img {
+          transform: rotate(90deg);
+          margin: 0 auto;
+          height: 20px;
+        }
       }
     }
 
     .tx-info {
+      $tx-info-grid-size: 270px;
+
       display: grid;
-      grid-template-columns: 1fr 70px 1fr;
+      grid-template-columns: $tx-info-grid-size 70px $tx-info-grid-size;
       padding-bottom: 15px;
+
+      @media all and (max-width: $tablet-width) {
+        display: block;
+      }
+
+      .address-container {
+        width: 100%;
+      }
 
       .tx-data {
         background-color: $background-color-7;
@@ -70,7 +97,7 @@
 
       .info {
         align-items: center;
-        color: $text-color-8;
+        color: $dark-blue-2;
         display: flex;
 
         .sliding-switch-white {
@@ -79,17 +106,41 @@
       } // .info
 
       .expended-info {
-        padding-top: 10px;
+        max-height: 0;
+        transition: max-height 0.3s ease;
+        overflow: hidden;
+
+        &.expended-info-open {
+          max-height: 600px;
+        }
+
+        .padding-container {
+          padding-top: 10px;
+        }
 
         .grid-block {
           display: grid;
           grid-template-columns: 1fr 1fr;
           padding: 16px 0;
 
+          // Mobile
+          @media all and (max-width: $confirmation-modal-mobile-width) {
+            display: block;
+            padding: 16px 0 0 0;
+          }
+
           p:nth-child(even) {
             max-width: 295px;
             text-align: right;
+            white-space: nowrap;
+            overflow: hidden;
             text-overflow: ellipsis;
+
+            // Mobile
+            @media all and (max-width: $confirmation-modal-mobile-width) {
+              max-width: initial;
+              text-align: left;
+            }
           }
         }
       } // .expended-info
@@ -98,29 +149,6 @@
     .submit-button-container {
       padding: 50px 0 20px;
       text-align: center;
-
-      .flex-center-align {
-        display: flex;
-
-        .button-with-helper {
-          align-items: center;
-          display: flex;
-          margin: 0 auto;
-
-          .submit-button {
-            display: inline-block;
-          }
-
-          .tooltip-box-2 {
-            margin-left: 15px;
-            text-align: center;
-          }
-        }
-      }
-
-      .learn-more {
-        margin-top: 20px;
-      }
     }
   }
 }
@@ -132,7 +160,6 @@
   .submit-button {
     margin: 0 auto;
     text-align: center;
-    width: 300px;
   }
 
   p {

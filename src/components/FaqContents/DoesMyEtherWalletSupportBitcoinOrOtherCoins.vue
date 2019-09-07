@@ -4,55 +4,66 @@
       "Can I send Bitcoin or other coins (LTC STEEM ZEC) to MyEtherWallet?"*
     </h5>
     <p>
-      We support
-      <abbr>ETH</abbr>,
-      <abbr>ETC</abbr>,
-      <abbr>Testnet ETH</abbr>,
-      <abbr>UBQ</abbr>,
-      <abbr>EXP</abbr>, <abbr>RSK</abbr>,
-      <abbr>MUSICOIN</abbr>,
-      and any Ethereum Standard Tokens
-      - aka "ERC-20" Tokens.
+      We support <abbr>ETH</abbr>, <abbr>ETC</abbr>, <abbr>Testnet ETH</abbr>,
+      <abbr>UBQ</abbr>, <abbr>EXP</abbr>, <abbr>RSK</abbr>,
+      <abbr>MUSICOIN</abbr>, and any Ethereum Standard Tokens - aka "ERC-20"
+      Tokens.
     </p>
 
     <p>
       You can use
-      <a href="https://bity.com/">Bity.com</a> or
-      <a href="http://shapeshift.io/">Shapeshift.io</a>
-      or another exchange to swap / convert / exchange
-      your other coins into ETH or Ethereum Tokens.
-      However, you do not send those other coins directly
-      to your Ethereum address.
+      <a href="https://bity.com/" target="_blank" rel="noopener noreferrer"
+        >Bity.com</a
+      >
+      or
+      <a href="http://shapeshift.io/" target="_blank" rel="noopener noreferrer"
+        >Shapeshift.io</a
+      >
+      or another exchange to swap / convert / exchange your other coins into ETH
+      or Ethereum Tokens. However, you do not send those other coins directly to
+      your Ethereum address.
     </p>
 
     <p>
       We recommend
-      <a href="https://www.exodus.io/">Exodus.io</a>
+      <a href="https://www.exodus.io/" target="_blank" rel="noopener noreferrer"
+        >Exodus.io</a
+      >
       as a client-side, mutli-coin solution.
     </p>
 
     <p>
-      Here is a list of default ERC-20 tokens that MEW
-      supports (as of May 28, 2017).
-      However,
-      <a href="https://kb.myetherwallet.com/send/sending-and-adding-tokens.html">
-        any ERC-20 token can be added to your local
-        interface by following these instructions.
+      Here is a list of default ERC-20 tokens that MEW supports (as of May 28,
+      2017). However,
+      <a
+        href="https://kb.myetherwallet.com/send/sending-and-adding-tokens.html"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        any ERC-20 token can be added to your local interface by following these
+        instructions.
       </a>
     </p>
 
     <h5>Related Reading</h5>
     <ul>
       <li>
-        <a href="https://kb.myetherwallet.com/send/adding-new-token-and-sending-custom-tokens.html">
-          How can I add a non-default token to MEW?
-        </a>
+        <a
+          href="https://kb.myetherwallet.com/send/adding-new-token-and-sending-custom-tokens.html"
+          target="_blank"
+          rel="noopener noreferrer"
+          >How can I add a non-default token to MEW?</a
+        >
       </li>
       <li>
-        <a href="https://kb.myetherwallet.com/tokens/token-creators-add-your-token-to-myetherwallet.html">
-          I am throwing a #FOMOFest (aka a token sale,
-          token creation period, ICO) and want to add my token
-          to MEW for all my investors. What do I do?
+        <a
+          href="https://kb.myetherwallet.com/tokens/token-creators-add-your-token-to-myetherwallet.html"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          I am throwing a #FOMOFest (aka a token sale, token creation period,
+          ICO) and want to add my token to MEW for all my investors. What do I
+          do?
         </a>
       </li>
     </ul>
@@ -155,7 +166,6 @@
       <li>XID</li>
       <li>XRL</li>
     </ul>
-
   </div>
 </template>
 

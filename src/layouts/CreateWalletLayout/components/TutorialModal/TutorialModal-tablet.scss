@@ -1,0 +1,47 @@
+@import '~@/scss/GlobalVariables';
+@media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+  .bootstrap-modal {
+    button {
+      flex: 1;
+      padding: 15px 0;
+    }
+  }
+
+  a {
+    color: $white;
+    text-decoration: none;
+    padding: 15px 70px;
+  }
+
+  .modal-body {
+    background-image: url('~@/assets/images/modal/garlands.png');
+    background-position: center 20px;
+    background-repeat: no-repeat;
+    background-size: 91%;
+    padding: 60px 70px 50px;
+
+    .title {
+      color: $text-color-6;
+      font-size: 30px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .content {
+      color: $link-text-color-1;
+      font-size: 14px;
+      line-height: 21px;
+      margin-bottom: 40px;
+
+      span {
+        color: $text-color-2;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .wrap {
+    background-color: $background-color-1;
+    padding: 0;
+  }
+} // @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width)

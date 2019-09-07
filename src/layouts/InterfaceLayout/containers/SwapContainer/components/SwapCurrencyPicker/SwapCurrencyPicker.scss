@@ -1,0 +1,160 @@
+@import '~@/scss/GlobalVariables';
+
+%open {
+  background-color: $background-color-1;
+  border: 1px solid $mew-green;
+}
+
+.cc-icon {
+  font-size: 26px;
+  padding-right: 5px;
+}
+
+.icon-image {
+  height: 26px;
+  width: 26px;
+  padding-right: 5px;
+}
+
+.currency-picker-container {
+  margin-bottom: 5px;
+  min-width: 150px;
+  position: relative;
+}
+
+.dropdown-container {
+  border-radius: 4px;
+  display: flex;
+  position: relative;
+
+  .currency-symbol {
+    width: 40px;
+    margin-right: 0;
+  }
+
+  p {
+    display: flex;
+    align-items: center;
+  }
+
+  &.open {
+    @extend %open;
+
+    border-bottom: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+}
+
+%dropdown-text-container-base {
+  border: 1px solid $white;
+  border-bottom: 0;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 13px 15px;
+  user-select: none;
+  width: 100%;
+
+  i {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+  }
+
+  p {
+    padding-right: 15px;
+  }
+}
+
+.dropdown-text-container {
+  @extend %dropdown-text-container-base;
+
+  background-color: $background-color-1;
+}
+
+.dropdown-text-container-white {
+  @extend %dropdown-text-container-base;
+
+  background-color: $white;
+}
+
+.dropdown-search-container {
+  background-color: $background-color-1;
+  padding: 0 10px 8px;
+  position: relative;
+
+  input {
+    background-color: $white;
+    border: 0;
+    height: 30px;
+    padding-left: 25px;
+    width: 100%;
+  }
+
+  i {
+    color: $light-grey-6;
+    left: 15px;
+    position: absolute;
+    top: 8px;
+  }
+
+  &.open {
+    border-bottom: 1px solid $mew-green;
+  }
+}
+
+.dropdown-item-container {
+  background-color: $white;
+  position: absolute;
+  width: 100%;
+  z-index: 2;
+
+  &.open {
+    @extend %open;
+
+    border-radius: 4px;
+    border-top: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+
+  .item-container {
+    max-height: 200px;
+    overflow-y: scroll;
+  }
+
+  .item {
+    border-bottom: 1px solid $light-grey-6;
+    cursor: pointer;
+    padding: 10px 15px;
+
+    p {
+      display: flex;
+      align-items: center;
+
+      i {
+        width: 40px;
+      }
+    }
+
+    &:last-child {
+      border-bottom: 0;
+    }
+
+    &:hover {
+      background-color: $light-grey-3;
+    }
+
+    &.selected {
+      background-color: $light-grey-3;
+    }
+  }
+}
+
+.hide {
+  display: none;
+}
+
+.subname {
+  color: $light-blue-6;
+}

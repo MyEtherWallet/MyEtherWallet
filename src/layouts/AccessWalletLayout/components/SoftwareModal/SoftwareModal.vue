@@ -3,68 +3,69 @@
     ref="software"
     :title="$t('accessWallet.accessBySoftware')"
     hide-footer
-    class="bootstrap-modal modal-software"
-    centered>
-    <div class="d-block content-container text-center">
-      <ul class="button-options">
-        <li
-          :class="selected === 'byJson'? 'selected': ''"
-          @click="select('byJson')">
-          <img
-            :src="selected === 'byJson'? require('@/assets/images/icons/button-json-hover.svg'):require('@/assets/images/icons/button-json.svg')"
-            class="icon">
-          <img
-            class="hover-icon"
-            src="@/assets/images/icons/button-json-hover.svg">
-          <span>{{ $t("common.jsonF") }}</span>
-        </li>
-        <li
-          :class="selected === 'byMnem'? 'selected': ''"
-          @click="select('byMnem')">
-          <img
-            :src="selected === 'byMnem'? require('@/assets/images/icons/button-mnemonic-hover.svg'):require('@/assets/images/icons/button-mnemonic.svg')"
-            class="icon">
-          <img
-            class="hover-icon"
-            src="@/assets/images/icons/button-mnemonic-hover.svg">
-          <span>{{ $t("common.mnemonicP") }}</span>
-        </li>
-        <li
-          :class="selected === 'byPriv'? 'selected': ''"
-          @click="select('byPriv')">
-          <img
-            :src="selected === 'byPriv'? require('@/assets/images/icons/button-key-hover.svg'):require('@/assets/images/icons/button-key.svg')"
-            class="icon">
-          <img
-            class="hover-icon"
-            src="@/assets/images/icons/button-key-hover.svg">
-          <span>{{ $t("common.privKey") }}</span>
-        </li>
-      </ul>
-      <input
-        ref="jsonInput"
-        type="file"
-        name="file"
-        style="display: none"
-        @change="uploadFile">
+    class="bootstrap-modal nopadding modal-software"
+    centered
+  >
+    <div class="warning">
+      <warning-message />
     </div>
-    <div class="button-container">
-      <b-btn
-        :class="[selected !== ''? 'enabled': 'disabled','mid-round-button-green-filled']"
-        @click="continueAccess">
-        {{ $t("common.continue") }}
-      </b-btn>
+    <div class="content-block">
+      <div class="d-block content-container text-center">
+        <div class="button-options">
+          <wallet-option
+            v-for="(item, idx) in items"
+            :key="item.name + idx"
+            :selected="selected === item.name"
+            :hover-icon="item.imgHoverPath"
+            :text="item.text"
+            :name="item.name"
+            @updateSelected="updateSelected"
+          />
+        </div>
+        <div class="hardware-link">
+          <p>
+            {{ $t('accessWallet.buyHardwareWallet') }}
+          </p>
+          <router-link to="/hardware-wallet-affiliates">{{
+            $t('accessWallet.buyHardwareWalletLink')
+          }}</router-link>
+        </div>
+        <input
+          ref="jsonInput"
+          type="file"
+          name="file"
+          style="display: none"
+          @change="uploadFile"
+        />
+      </div>
+      <div class="button-container-block">
+        <standard-button
+          :button-disabled="selected !== '' ? false : true"
+          :options="continueButtonOptions"
+          @click.native="continueAccess"
+        />
+      </div>
+      <customer-support />
     </div>
-    <customer-support/>
   </b-modal>
 </template>
 
 <script>
 import CustomerSupport from '@/components/CustomerSupport';
+import WarningMessage from '@/components/WarningMessage';
+import byJsonImgHov from '@/assets/images/icons/button-json-hover.svg';
+import byMnemImgHov from '@/assets/images/icons/button-mnemonic-hover.svg';
+import privKeyImgHov from '@/assets/images/icons/button-key-hover.svg';
+import WalletOption from '../WalletOption';
+import StandardButton from '@/components/Buttons/StandardButton';
+import { Toast } from '@/helpers';
 
 export default {
   components: {
-    'customer-support': CustomerSupport
+    'customer-support': CustomerSupport,
+    'wallet-option': WalletOption,
+    'warning-message': WarningMessage,
+    'standard-button': StandardButton
   },
   props: {
     value: {
@@ -86,8 +87,31 @@ export default {
   },
   data() {
     return {
+      continueButtonOptions: {
+        title: this.$t('common.continue'),
+        buttonStyle: 'green',
+        noMinWidth: true,
+        fullWidth: true
+      },
       file: '',
-      selected: ''
+      selected: '',
+      items: [
+        {
+          name: 'byJson',
+          imgHoverPath: byJsonImgHov,
+          text: this.$t('common.jsonF')
+        },
+        {
+          name: 'byMnem',
+          imgHoverPath: byMnemImgHov,
+          text: this.$t('common.mnemonicP')
+        },
+        {
+          name: 'byPriv',
+          imgHoverPath: privKeyImgHov,
+          text: this.$t('common.privKey')
+        }
+      ]
     };
   },
   methods: {
@@ -105,15 +129,30 @@ export default {
         this.openMnemonicPhraseInput();
       }
     },
+    updateSelected(ref) {
+      if (this.selected !== ref) {
+        this.selected = ref;
+      } else {
+        this.selected = '';
+      }
+    },
     select(ref) {
-      this.selected = ref;
+      if (this.selected !== ref) {
+        this.selected = ref;
+      } else {
+        this.selected = '';
+      }
     },
     uploadFile(e) {
       const self = this;
       const reader = new FileReader();
       reader.onloadend = function(evt) {
-        self.$emit('file', JSON.parse(evt.target.result));
-        self.file = JSON.parse(evt.target.result);
+        try {
+          self.$emit('file', JSON.parse(evt.target.result));
+          self.file = JSON.parse(evt.target.result);
+        } catch (e) {
+          Toast.responseHandler(e, Toast.ERROR);
+        }
       };
       reader.readAsBinaryString(e.target.files[0]);
     }
@@ -122,5 +161,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'SoftwareModal.scss';
+@import 'SoftwareModal-desktop.scss';
+@import 'SoftwareModal-tablet.scss';
+@import 'SoftwareModal-mobile.scss';
 </style>

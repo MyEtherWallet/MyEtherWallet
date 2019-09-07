@@ -1,34 +1,45 @@
 <template>
-  <div>
-    <interface-network-modal/>
-    <div @click="networkModalOpen">
-      <div class="info-block network">
-        <div class="block-image">
-          <img
-            v-if="$store.state.network.type.name === 'ROP' || $store.state.network.type.name === 'RIN' || $store.state.network.type.name === 'KOV'"
-            class="icon"
-            src="~@/assets/images/icons/network.svg">
-          <img
-            v-else
-            :src="require(`@/assets/images/networks/${$store.state.network.type.name.toLowerCase()}.svg`)"
-            class="icon">
+  <div class="info-block-container">
+    <interface-network-modal ref="network" />
+    <div class="info-block network">
+      <div class="block-image">
+        <div class="network-type">
+          <div class="icon-block">
+            <img :src="network.type.icon" class="icon" />
+          </div>
         </div>
-        <div class="block-content">
-          <div class="helper">
-            <popover
-              :popcontent="$t('popover.whatIsMessageContent')"
-              :popovertype="'A'" />
+      </div>
+      <div class="block-content">
+        <div class="information-container">
+          <div class="title-and-helper">
+            <h2>{{ $t('interface.network') }}</h2>
           </div>
-          <div class="information-container">
-            <h2>{{ $t("interface.txNetworkTitle") }}</h2>
-            <p>{{ $store.state.network.service+"("+$store.state.network.type.name+")" }}</p>
-            <p>Last Block#: <span v-show="parsedNetwork !== ''"> {{ parsedNetwork }}</span> <i
-              v-show="parsedNetwork === ''"
-              class="fa fa-spinner fa-spin"/> </p>
-          </div>
-          <div class="icon-container">
-            <img src="~@/assets/images/icons/change.svg">
-          </div>
+          <p v-if="account.identifier !== identifier">
+            {{ network.service + '(' + network.type.name + ')' }}
+          </p>
+          <p v-else>{{ 'Web3 Provider' + '(' + network.type.name + ')' }}</p>
+          <p>
+            {{ $t('interface.lastBlock') }}# :
+            <span v-show="parsedNetwork !== ''"> {{ parsedNetwork }}</span>
+            <i v-show="parsedNetwork === ''" class="fa fa-spinner fa-spin" />
+          </p>
+        </div>
+        <div class="icon-container">
+          <button
+            v-if="account.identifier !== identifier"
+            id="networkModal"
+            class="change-button"
+            @click="networkModalOpen"
+          >
+            Change
+          </button>
+          <b-popover
+            content="Open Networks"
+            target="networkModal"
+            placement="top"
+            triggers="hover"
+            title=""
+          />
         </div>
       </div>
     </div>
@@ -37,6 +48,8 @@
 
 <script>
 import InterfaceNetworkModal from '../InterfaceNetworkModal';
+import { mapState } from 'vuex';
+import { WEB3_WALLET } from '@/wallets/bip44/walletTypes';
 
 export default {
   components: {
@@ -50,8 +63,12 @@ export default {
   },
   data() {
     return {
-      parsedNetwork: 0
+      parsedNetwork: 0,
+      identifier: WEB3_WALLET
     };
+  },
+  computed: {
+    ...mapState(['network', 'account', 'web3'])
   },
   watch: {
     blockNumber(newVal) {
@@ -65,7 +82,9 @@ export default {
   },
   methods: {
     networkModalOpen() {
-      this.$children[0].$refs.network.show();
+      if (this.account.identifier !== this.identifier) {
+        this.$refs.network.$refs.network.show();
+      }
     }
   }
 };

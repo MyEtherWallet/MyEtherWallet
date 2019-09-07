@@ -4,31 +4,43 @@
     :title="$t('accessWallet.password')"
     hide-footer
     class="bootstrap-modal modal-software"
-    centered>
+    centered
+    @shown="focusInput"
+  >
     <form class="password-form">
       <div class="input-container">
         <input
-          :type="show ? 'text': 'password'"
+          v-validate="'required'"
+          ref="passwordInput"
+          :type="show ? 'text' : 'password'"
           v-model="password"
           name="Password"
-          autocomplete="off">
+          autocomplete="off"
+        />
         <img
           v-if="show"
           src="@/assets/images/icons/show-password.svg"
-          @click.prevent="switchViewPassword">
+          @click.prevent="switchViewPassword"
+        />
         <img
           v-if="!show"
           src="@/assets/images/icons/hide-password.svg"
-          @click.prevent="switchViewPassword">
+          @click.prevent="switchViewPassword"
+        />
       </div>
-      <p
-        v-show="error !== ''"
-        class="error"> {{ error }} </p>
+      <p v-show="error !== ''" class="error">{{ error }}</p>
+      <p v-show="errors.has('password')" class="error">
+        {{ errors.first('password') }}
+      </p>
       <button
-        class="submit-button large-round-button-green-filled"
+        :class="[
+          errors.has('password') || password.length === 0 ? 'disabled' : '',
+          'submit-button large-round-button-green-filled'
+        ]"
         type="submit"
-        @click.prevent="unlockWallet">
-        {{ $t("accessWallet.unlock") }} {{ hardwareBrand }}
+        @click.prevent="unlockWallet"
+      >
+        {{ $t('accessWallet.unlock') }} {{ hardwareBrand }}
       </button>
     </form>
   </b-modal>
@@ -59,16 +71,16 @@ export default {
     }
   },
   methods: {
+    focusInput() {
+      this.password == '';
+      this.$refs.passwordInput.focus();
+    },
     unlockWallet() {
-      this.walletConstructor
-        .unlock({ password: this.password })
-        .then(wallet => {
-          this.$emit('hardwareWalletOpen', wallet);
+      this.walletConstructor('', this.password)
+        .then(_newWallet => {
+          this.$emit('hardwareWalletOpen', _newWallet);
         })
-        .catch(_error => {
-          // eslint-disable-next-line
-          console.error(_error); // todo replace with proper error
-        });
+        .catch(this.walletConstructor.errorHandler);
     },
     switchViewPassword() {
       this.show = !this.show;

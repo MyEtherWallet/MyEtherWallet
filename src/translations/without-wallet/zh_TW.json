@@ -1,0 +1,13 @@
+{
+  "generateInfo": "產生資訊",
+  "txFeeAndNonce": "交易手續費 & Nonce",
+  "signedTx": "簽署後的交易",
+  "rawTx": "原始的交易",
+  "txFee": "Gas 限制",
+  "nonce": "Nonce",
+  "fromAddress": "發送地址",
+  "confirmAndSend": "確認並發送",
+  "selectNetwork": "選擇網路",
+  "txDetails": "交易細節",
+  "txStatus": "交易狀態"
+}

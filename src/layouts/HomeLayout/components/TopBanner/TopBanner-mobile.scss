@@ -1,0 +1,103 @@
+@import '~@/scss/GlobalVariables';
+@media all and (max-width: $mobile-width) {
+  .wrap {
+    margin-bottom: 50px;
+  }
+
+  .banner {
+    padding: 40px 0 40px;
+
+    .banner-text {
+      flex: 1;
+
+      h1 {
+        color: $text-color-6;
+        font-size: 33px;
+        font-weight: 700;
+        line-height: 42px;
+        letter-spacing: -1px;
+        margin: 0;
+      }
+
+      p {
+        color: $text-base-color;
+        margin-top: 17px;
+        max-width: 420px;
+      }
+    }
+
+    .banner-image {
+      flex: 1;
+      display: none;
+
+      img {
+        display: block;
+        height: 452px;
+        margin: 0 0 0 auto;
+      }
+    }
+  } // .banner
+
+  .promo-cards {
+    grid-column-gap: 30px;
+    display: block;
+
+    .card-block {
+      border-radius: 4px;
+      color: $text-color-1;
+      margin-bottom: 15px;
+      padding: 11px;
+      position: relative;
+
+      &.create-wallet {
+        background-color: $create-wallet-background-color;
+      }
+
+      &.unlock-wallet {
+        background-color: $unlock-wallet-background-color;
+      }
+
+      .card-image {
+        padding-right: 40px;
+        display: none;
+
+        img {
+          width: 87px;
+        }
+      }
+
+      .card-content {
+        display: inline;
+        text-align: center;
+        width: 100%;
+
+        h2 {
+          font-size: 14px;
+          font-weight: 500;
+          margin-bottom: 0;
+          text-align: center;
+          display: block;
+        }
+
+        p {
+          line-height: 19px;
+          margin-bottom: 20px;
+          display: none;
+        }
+
+        .button {
+          color: $text-color-1;
+          display: none;
+          font-size: 15px;
+          font-weight: 500;
+
+          img {
+            margin-left: 5px;
+            vertical-align: middle;
+            width: 20px;
+          }
+        }
+      } // .card-content
+    } // .card-block
+  } // .promo-cards
+} // @media all and (max-width: $mobile-width)

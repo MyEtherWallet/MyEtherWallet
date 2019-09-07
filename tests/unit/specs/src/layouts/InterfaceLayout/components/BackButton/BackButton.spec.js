@@ -1,19 +1,24 @@
-import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils';
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton/BackButton.vue';
 import sinon from 'sinon';
-import {
-  Tooling
-} from '@@/helpers';
-
+import { Tooling } from '@@/helpers';
 
 describe('BackButton.vue', () => {
   let localVue, i18n, wrapper, store;
-  let spy = sinon.stub()
-  const mockRoute = {
-    go: spy
+  const spy = sinon.stub();
+  const mockRouter = {
+    push: spy,
+    go: spy,
+    history: {
+      current: {
+        path: '/interface/dapps/register-domain'
+      }
+    }
   };
 
+  const mockRoute = {
+    path: '/interface/dapps/register-domain'
+  };
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
@@ -28,19 +33,20 @@ describe('BackButton.vue', () => {
       store,
       attachToDocument: true,
       mocks: {
-        $router: mockRoute,
+        $router: mockRouter,
+        $route: mockRoute
       }
     });
   });
 
-  it('should render correct content', () => {
-
-  });
+  it('should render correct content', () => {});
 
   describe('BackButton.vue Methods', () => {
     it('should go back when button clicked', () => {
-      wrapper.find('.back-container').trigger('click')
-      expect(spy.calledWith(-1)).toBe(true)
+      const path = mockRoute.path.split('/');
+      const goToPath = path.slice(0, path.length - 1).join('/');
+      wrapper.find('.content-title').trigger('click');
+      expect(spy.calledWith(goToPath)).toBe(true);
     });
   });
 });

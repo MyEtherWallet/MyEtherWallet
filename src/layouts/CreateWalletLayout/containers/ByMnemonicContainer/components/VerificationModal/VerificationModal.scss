@@ -1,9 +1,10 @@
 @import '~@/scss/GlobalVariables';
-
 .verification {
   .content-block {
     padding: 60px;
-    padding-top: 40px;
+    @media all and (max-width: $tablet-width) {
+      padding: 30px;
+    }
 
     .block-title {
       margin-bottom: 30px;
@@ -12,9 +13,18 @@
     .phrases {
       ul {
         display: grid;
-        grid-column-gap: 20px;
-        grid-row-gap: 20px;
-        grid-template-columns: 1fr 1fr 1fr 1fr;
+        grid-gap: 20px;
+        grid-template-columns: 1fr 1fr 1fr;
+
+        @media all and (max-width: $tablet-width) {
+          grid-template-columns: 1fr 1fr;
+          grid-gap: 10px;
+        }
+
+        @media all and (max-width: 350px) {
+          grid-template-columns: 1fr;
+          grid-gap: 5px;
+        }
 
         li {
           border-bottom: 1px solid $border-bottom--mnemonic-phrase-key-color;
@@ -28,8 +38,9 @@
           }
 
           input {
+            margin-left: 10px;
             border: 0;
-            width: calc(100% - 25px);
+            width: calc(100% - 35px);
           }
         }
 
@@ -42,11 +53,15 @@
 
     .button-container {
       text-align: center;
+      margin-top: 40px;
 
       .verify-button {
         display: inline-block;
-        margin-top: 20px;
         padding: 20px 100px;
+        @media all and (max-width: 470px) {
+          width: 100%;
+          padding: 20px 0;
+        }
       }
     }
   }

@@ -1,14 +1,19 @@
 <template>
   <div>
-
     <h5>Getting Started</h5>
     <ol>
       <li>
-        Go to the <a href="https://www.myetherwallet.com/#contracts">Contract tab on MyEtherWallet.com</a>.
+        Go to the
+        <a
+          href="https://www.myetherwallet.com/#contracts"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Contract tab on MyEtherWallet.com</a
+        >.
       </li>
       <li>
-        There should be a Mist Multisig Contract ABI in the dropdown.
-        If not, you can manually use the ABI at the bottom of this page.
+        There should be a Mist Multisig Contract ABI in the dropdown. If not,
+        you can manually use the ABI at the bottom of this page.
       </li>
     </ol>
 
@@ -22,55 +27,89 @@
         Second, you want to <strong>EXECUTE</strong>.
         <ol>
           <li>Select <abbr>execute</abbr>from the dropdown.</li>
-          <li>Enter the address you want to send to in the <abbr>_to</abbr>field.</li>
-          <li>Enter the amount you want to send in the <abbr>_value</abbr>field.</li>
+          <li>
+            Enter the address you want to send to in the <abbr>_to</abbr>field.
+          </li>
+          <li>
+            Enter the amount you want to send in the <abbr>_value</abbr>field.
+          </li>
           <li>Leave the <abbr>data</abbr> field empty.</li>
-          <li><em>It is recommended that you test with a small amount first!</em></li>
-          <li>Unlock the owners address and click <abbr>WRITE</abbr> button.</li>
-          <li>A pop up will appear. Leave <abbr>Amount to Send</abbr> as <abbr>0</abbr>.</li>
-          <li>Click the <abbr>Generate Transaction</abbr> button & confirm & send.</li>
+          <li>
+            <em>It is recommended that you test with a small amount first!</em>
+          </li>
+          <li>
+            Unlock the owners address and click <abbr>WRITE</abbr> button.
+          </li>
+          <li>
+            A pop up will appear. Leave <abbr>Amount to Send</abbr> as
+            <abbr>0</abbr>.
+          </li>
+          <li>
+            Click the <abbr>Generate Transaction</abbr> button & confirm & send.
+          </li>
         </ol>
       </li>
-      <li>Click the Transaction ID that outputs with the success message. Copy this ID.</li>
-      <li>If it's a multisig with TWO owners, you will need to refresh that page and choose <strong>CONFIRM</strong> this time.
+      <li>
+        Click the Transaction ID that outputs with the success message. Copy
+        this ID.
+      </li>
+      <li>
+        If it's a multisig with TWO owners, you will need to refresh that page
+        and choose <strong>CONFIRM</strong> this time.
         <ol>
           <li>
-            In step 3, you opened the TX ID from the
-            <abbr>EXECUTE</abbr>call. You should have a page like this open:
-            <a href="https://etherscan.io/tx/0x0c643a1ae66637217f24791df05071c7849941a1231cf9fa2a0daf145da833e3">
-              https://etherscan.io/tx/0x0c643a1ae66637217f24791df05071c7849941a1231cf9fa2a0daf145da833e3
-            </a>
+            In step 3, you opened the TX ID from the <abbr>EXECUTE</abbr>call.
+            You should have a page like this open:
+            <a
+              href="https://etherscan.io/tx/0x0c643a1ae66637217f24791df05071c7849941a1231cf9fa2a0daf145da833e3"
+              target="_blank"
+              rel="noopener noreferrer"
+              >https://etherscan.io/tx/0x0c643a1ae66637217f24791df05071c7849941a1231cf9fa2a0daf145da833e3</a
+            >
           </li>
           <li>Click the <abbr>Event Logs</abbr>tab.</li>
           <li>
             On the above link (
-            <a href="https://etherscan.io/tx/0x47e4cc8748e296d9b5d85ebd9bd705177bb1940517b084a2efcca11feeb2391d#eventlog">https://etherscan.io/tx/0x47e4cc87...#eventlog</a>
+            <a
+              href="https://etherscan.io/tx/0x47e4cc8748e296d9b5d85ebd9bd705177bb1940517b084a2efcca11feeb2391d#eventlog"
+              target="_blank"
+              rel="noopener noreferrer"
+              >https://etherscan.io/tx/0x47e4cc87...#eventlog</a
+            >
             - not YOUR link), the <abbr>_h</abbr> field would be
-            <abbr>9228aeaf3ed560274899483646ea4ce9b322bccffac60cac2d035d08752617f4</abbr>
+            <abbr
+              >9228aeaf3ed560274899483646ea4ce9b322bccffac60cac2d035d08752617f4</abbr
+            >
           </li>
           <li>
             Look at the above link and see where it says <abbr>9228a....</abbr>.
             Look at your link and see what YOUR <abbr>_h</abbr> is. Copy it.
           </li>
           <li>
-            Go back to MyEtherWallet where you have the CONFIRM open and paste that hash into the
-            <abbr>_h</abbr> field.
+            Go back to MyEtherWallet where you have the CONFIRM open and paste
+            that hash into the <abbr>_h</abbr> field.
           </li>
-          <li>Click the <abbr>"WRITE"</abbr> button again and unlock the second owner's account.</li>
+          <li>
+            Click the <abbr>"WRITE"</abbr> button again and unlock the second
+            owner's account.
+          </li>
           <li>Generate &amp; send the transaction.</li>
         </ol>
       </li>
       <li>Make sure everything went as intended.</li>
       <li>
-        IF your multisig is a 3 of 5 multisig, you will repeat the confirm process
-        for each owner until it reaches the necessary approvals. Luckily, the
-        <abbr>_h</abbr>value is the same for each of them.
+        IF your multisig is a 3 of 5 multisig, you will repeat the confirm
+        process for each owner until it reaches the necessary approvals.
+        Luckily, the <abbr>_h</abbr>value is the same for each of them.
       </li>
       <li>
         See another approval for my previous example here:
-        <a href="https://etherscan.io/tx/0x47e4cc8748e296d9b5d85ebd9bd705177bb1940517b084a2efcca11feeb2391d#eventlog">
-          https://etherscan.io/tx/0x47e4cc8748e296d9b5d85ebd9bd705177bb1940517b084a2efcca11feeb2391d#eventlog
-        </a>
+        <a
+          href="https://etherscan.io/tx/0x47e4cc8748e296d9b5d85ebd9bd705177bb1940517b084a2efcca11feeb2391d#eventlog"
+          target="_blank"
+          rel="noopener noreferrer"
+          >https://etherscan.io/tx/0x47e4cc8748e296d9b5d85ebd9bd705177bb1940517b084a2efcca11feeb2391d#eventlog</a
+        >
       </li>
       <li>You can then repeat this process whenever you want to send ETH.</li>
     </ol>
@@ -82,11 +121,13 @@
 
     <h5>You can also copy the above from here:</h5>
     <p>
-      <a href="https://www.reddit.com/r/ethereum/comments/5nev1a/help_needed_how_to_find_multisig_contract_wallet/">
-        https://www.reddit.com/r/ethereum/comments/5nev1a/help_needed_how_to_find_multisig_contract_wallet/
-      </a>
+      <a
+        href="https://www.reddit.com/r/ethereum/comments/5nev1a/help_needed_how_to_find_multisig_contract_wallet/"
+        target="_blank"
+        rel="noopener noreferrer"
+        >https://www.reddit.com/r/ethereum/comments/5nev1a/help_needed_how_to_find_multisig_contract_wallet/</a
+      >
     </p>
-
   </div>
 </template>
 

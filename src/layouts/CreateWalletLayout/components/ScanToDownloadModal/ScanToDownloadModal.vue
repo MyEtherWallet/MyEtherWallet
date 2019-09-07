@@ -4,35 +4,34 @@
     :title="$t('createWallet.scanToDownload')"
     hide-footer
     centered
-    class="bootstrap-modal no-padding">
-
+    class="bootstrap-modal no-padding"
+  >
     <div class="qr-divider">
       <div class="ios">
         <div class="qr-image">
-          <img src="@/assets/images/etc/qr-code.png">
+          <img src="@/assets/images/etc/qr-code-apple.png" />
         </div>
         <div class="store-name-container">
           <div class="store-name">
-            <img src="@/assets/images/icons/apple.svg">
+            <img src="@/assets/images/icons/apple.svg" />
             <p>iOS</p>
           </div>
         </div>
-        <p>{{ $t("createWallet.iosVersions") }}</p>
+        <p>{{ $t('createWallet.iosVersions') }}</p>
       </div>
       <div class="android">
         <div class="qr-image">
-          <img src="@/assets/images/etc/qr-code.png">
+          <img src="@/assets/images/etc/qr-code-android.png" />
         </div>
         <div class="store-name-container">
           <div class="store-name">
-            <img src="@/assets/images/icons/android.svg">
+            <img src="@/assets/images/icons/android.svg" />
             <p>Android</p>
           </div>
         </div>
-        <p>{{ $t("createWallet.androidVersions") }}</p>
+        <p>{{ $t('createWallet.androidVersions') }}</p>
       </div>
     </div>
-
   </b-modal>
 </template>
 

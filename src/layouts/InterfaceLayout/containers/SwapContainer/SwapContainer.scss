@@ -1,5 +1,7 @@
 @import '../InterfaceContainer';
 
+$swap-custom-mobile-colleps-width: 700px;
+
 .swap-container {
   @extend %interface-container;
 
@@ -34,11 +36,17 @@
       color: $mew-green;
       cursor: pointer;
     }
+
+    .all-button {
+      margin-left: auto;
+      color: $mew-green;
+      cursor: pointer;
+      font-size: 12px;
+    }
   }
 
   .send-form {
-    @extend %send-form-base;
-
+    margin-bottom: 30px;
     .title-container {
       .title {
         padding: 0 8px;
@@ -46,10 +54,6 @@
         .title-and-popover {
           display: flex;
           align-items: center;
-        }
-
-        h4 {
-          margin-bottom: 2px;
         }
       }
 
@@ -68,6 +72,10 @@
       grid-column-gap: 5px;
       grid-template-columns: 1fr 70px 1fr;
 
+      @media all and (max-width: $swap-custom-mobile-colleps-width) {
+        display: block;
+      }
+
       .title {
         margin-bottom: 13px;
         padding: 0 8px;
@@ -78,6 +86,13 @@
         font-size: 30px;
         padding-top: 62px;
         text-align: center;
+        @media all and (max-width: $swap-custom-mobile-colleps-width) {
+          padding: 0;
+          margin: 10px auto -20px auto;
+          img {
+            transform: rotate(90deg);
+          }
+        }
       }
 
       .amount {
@@ -185,6 +200,12 @@
         margin: 7px 0 0 15px;
       }
     }
+    .warn-message-container {
+      p {
+        color: orange;
+        margin: 7px 0 0 15px;
+      }
+    }
   } // .send-form
 
   .advanced {
@@ -211,8 +232,12 @@
   } // .advanced
 
   .submit-button-container {
-    padding: 40px 0;
+    margin-top: 60px;
     text-align: center;
+    // Mobile
+    @media all and (max-width: $mobile-width) {
+      margin-top: 20px;
+    }
 
     h4 {
       margin-bottom: 20px;
@@ -223,6 +248,9 @@
       text-align: center;
       width: 300px;
       position: relative;
+      @media all and (max-width: $mobile-width) {
+        width: 100%;
+      }
 
       i {
         position: absolute;

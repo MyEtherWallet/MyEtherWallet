@@ -1,14 +1,16 @@
 @import '~@/scss/GlobalVariables';
 
 .scroll-up-button {
-  position: fixed;
   bottom: 5vh;
+  cursor: pointer;
+  position: fixed;
   right: 4vw;
+  z-index: 990;
 
   .button-block {
     img {
-      transform: rotate(180deg);
       cursor: pointer;
+      width: 50px;
     }
   }
 }

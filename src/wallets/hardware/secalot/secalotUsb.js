@@ -1,8 +1,8 @@
 'use strict';
-import { u2f } from '../utils/u2f-api';
+import u2f from 'u2f-api';
 
-const SecalotUsb = function(timeoutSeconds) {
-  this.timeoutSeconds = timeoutSeconds;
+const SecalotUsb = function() {
+  this.timeoutSeconds = 120;
 };
 
 SecalotUsb.webSafe64 = base64 =>
@@ -17,10 +17,35 @@ SecalotUsb.normal64 = base64 =>
 
 SecalotUsb.prototype.u2fCallback = function(response, callback) {
   if (typeof response['signatureData'] !== 'undefined') {
-    const data = Buffer.from(
+    let data = Buffer.from(
       SecalotUsb.normal64(response['signatureData']),
       'base64'
     );
+
+    if (data.length < 5 + 2) {
+      callback(
+        undefined,
+        'Please update your Secalot firmware to version 4 or greater.'
+      );
+      return;
+    }
+
+    if (
+      data[0] !== 0x01 ||
+      data[1] !== 0x00 ||
+      data[2] !== 0x00 ||
+      data[3] !== 0x00 ||
+      data[4] !== 0x00
+    ) {
+      callback(
+        undefined,
+        'Please update your Secalot firmware to version 4 or greater.'
+      );
+      return;
+    }
+
+    data = data.slice(5, data.length);
+
     callback(data.toString('hex'));
   } else {
     callback(undefined, response);
@@ -34,19 +59,20 @@ SecalotUsb.prototype.exchange = function(apduHex, callback) {
     'hex'
   );
   const key = {};
+  key['appId'] = location.origin;
+  key['challenge'] = SecalotUsb.webSafe64(challenge.toString('base64'));
   key['version'] = 'U2F_V2';
   key['keyHandle'] = SecalotUsb.webSafe64(apdu.toString('base64'));
   const self = this;
   const localCallback = function(result) {
     self.u2fCallback(result, callback);
   };
-  u2f.sign(
-    location.origin,
-    SecalotUsb.webSafe64(challenge.toString('base64')),
-    [key],
-    localCallback,
-    this.timeoutSeconds
-  );
+  u2f
+    .sign([key], this.timeoutSeconds)
+    .then(localCallback)
+    .catch(err => {
+      callback(undefined, err);
+    });
 };
 
 export default SecalotUsb;

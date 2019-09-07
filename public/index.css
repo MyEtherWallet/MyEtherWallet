@@ -1,0 +1,23 @@
+noscript {
+  align-items: center;
+  display: flex;
+  font-family: Tahoma, Geneva, Verdana, sans-serif;
+  justify-content: center;
+  padding-top: 30px;
+  width: 100%;
+}
+
+noscript > .text-container {
+  display: flex;
+  flex-direction: column;
+}
+
+p,
+h1,
+h3 {
+  margin: 5px 10px;
+}
+
+noscript > .img-container > img {
+  height: 200px;
+}

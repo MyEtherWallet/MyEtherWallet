@@ -1,0 +1,150 @@
+@import '../InformationPages';
+$block-opening-speed: 0.3s;
+$block-padding-size: 30px;
+$block-padding-size-mobile: 15px;
+
+.page-container {
+  max-width: 700px;
+
+  @media all and (max-width: $mobile-width) {
+    padding: 0 0;
+  }
+}
+
+.user-input-container {
+  margin-top: 50px;
+
+  li {
+    background-color: $white;
+    border-radius: 4px;
+    margin-bottom: 15px;
+  }
+}
+
+.input-title {
+  user-select: none;
+  padding: $block-padding-size;
+
+  @media all and (max-width: $mobile-width) {
+    padding: $block-padding-size-mobile;
+  }
+
+  .the-title {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+
+    p {
+      font-size: 20px;
+      font-weight: 500;
+      color: $black;
+
+      @media all and (max-width: $mobile-width) {
+        font-size: 18px;
+        line-height: 25px;
+      }
+    }
+    i {
+      padding-left: 20px;
+      margin-left: auto;
+    }
+  }
+
+  .the-description {
+    max-height: 0;
+    overflow: hidden;
+    transition: all $block-opening-speed ease;
+
+    &.the-description-open {
+      max-height: 200px;
+    }
+
+    p {
+      margin-top: 15px;
+    }
+
+    .link-block {
+      font-weight: 500;
+      margin-top: 15px;
+    }
+  }
+}
+
+.input-block {
+  max-height: 0;
+  overflow: hidden;
+  transition: all $block-opening-speed ease;
+
+  &.input-block-open {
+    max-height: 2000px;
+  }
+
+  .inputs,
+  .outputs {
+    border-top: 2px solid $light-grey-2;
+    padding: $block-padding-size;
+
+    @media all and (max-width: $mobile-width) {
+      padding: $block-padding-size-mobile;
+    }
+
+    > *:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .to-address {
+    position: relative;
+
+    span {
+      position: absolute;
+      right: 25px;
+      top: 18px;
+      font-weight: 500;
+      color: $mew-green;
+      cursor: pointer;
+    }
+  }
+
+  .the-input {
+    margin-bottom: 40px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .the-input-button-container {
+    width: 100%;
+    text-align: center;
+
+    & > * {
+      display: inline-block;
+    }
+
+    & > *:first-child {
+      margin-right: 10px;
+    }
+  }
+
+  .the-input-flex {
+    display: flex;
+    align-items: flex-end;
+
+    & > :first-child {
+      margin-right: 10px;
+    }
+  }
+
+  .the-input-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 15px;
+    grid-row-gap: 40px;
+    margin-bottom: 40px;
+
+    @media all and (max-width: $tablet-width) {
+      grid-template-columns: 1fr;
+    }
+  }
+}

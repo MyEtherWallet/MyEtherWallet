@@ -1,0 +1,130 @@
+@import '~@/scss/GlobalVariables';
+@media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+  .wrap {
+    margin-bottom: 50px;
+  }
+
+  .banner {
+    padding: 30px;
+    padding-right: 0;
+
+    @media all and (max-width: 1100px) {
+      padding: 40px 0 50px;
+    }
+
+    .banner-text {
+      flex: 1;
+
+      h1 {
+        color: $text-color-6;
+        font-size: 45px;
+        font-weight: 700;
+        line-height: 47px;
+        margin-bottom: 8px;
+        letter-spacing: -1px;
+      }
+
+      p {
+        color: $text-base-color;
+        margin-top: 17px;
+        max-width: 420px;
+      }
+    }
+
+    .banner-image {
+      flex: 1;
+
+      @media all and (max-width: 700px) {
+        display: none;
+      }
+
+      img {
+        display: block;
+        height: 452px;
+        margin: 0 0 0 auto;
+
+        @media all and (max-width: 1100px) {
+          height: initial;
+          margin-left: 20px;
+          width: 300px;
+        }
+      }
+    }
+  } // .banner
+
+  .promo-cards {
+    grid-column-gap: 30px;
+
+    @media all and (max-width: $tablet-width) {
+      display: block;
+    }
+
+    .card-block {
+      border-radius: 4px;
+      color: $text-color-1;
+      margin-bottom: 10px;
+      padding: 30px 40px;
+      position: relative;
+
+      &.create-wallet {
+        background-color: $create-wallet-background-color;
+      }
+
+      &.unlock-wallet {
+        background-color: $unlock-wallet-background-color;
+      }
+
+      @media all and (min-width: $tablet-width + 1) {
+        top: 0;
+        transition: all 0.3s ease;
+
+        &:hover {
+          box-shadow: 0 5px 24px $topbanner-block-box-shadow-color;
+          top: -10px;
+        }
+      }
+
+      @media all and (max-width: $mobile-width) {
+        padding: 30px;
+      }
+
+      .card-image {
+        padding-right: 40px;
+
+        @media all and (max-width: 550px) {
+          display: none;
+        }
+
+        img {
+          width: 87px;
+        }
+      }
+
+      .card-content {
+        h2 {
+          font-size: 24px;
+          font-weight: 500;
+          margin-bottom: 5px;
+        }
+
+        p {
+          line-height: 19px;
+          margin-bottom: 20px;
+        }
+
+        .button {
+          color: $text-color-1;
+          display: inline-block;
+          font-size: 15px;
+          font-weight: 500;
+
+          img {
+            margin-left: 5px;
+            vertical-align: middle;
+            width: 20px;
+          }
+        }
+      }
+    }
+  }
+} //@media all and ( min-width: calc(#{$mobile-width} + 1px) ) and ( max-width: $tablet-width )

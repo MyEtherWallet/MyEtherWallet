@@ -5,26 +5,39 @@
       hide-footer
       centered
       class="bootstrap-modal-wide confirmation-modal nopadding"
-      title="Confirmation">
+      title="Confirmation"
+    >
       <div class="modal-content qrcode-modal">
         <div class="tx-info">
           <div class="tx-data tx-from">
-            <!-- <img src="~@/assets/images/icons/eth.svg">
-            <h3>1.00000 <span>ETH</span></h3> -->
             <div class="address-info">
-              <p class="address-title">Signing Address</p>
-              <p>{{ from }}</p>
+              <p class="title address-title">
+                {{ $t('confirmation.signingAddr') }}
+              </p>
+              <div class="from-address">
+                <blockie
+                  :address="account.address"
+                  width="30px"
+                  height="30px"
+                />
+                <span>{{ from }}</span>
+              </div>
             </div>
           </div>
-          <div class="direction">
-            <img src="~@/assets/images/icons/right-arrow.svg">
+          <div v-if="hexToUtf8(messageToSign)" class="tx-data tx-to">
+            <div class="address-info">
+              <p class="title address-title">
+                {{ $t('interface.txSideMenuMessage') }}
+              </p>
+              <p class="message-to-sign">{{ hexToUtf8(messageToSign) }}</p>
+            </div>
           </div>
           <div class="tx-data tx-to">
-            <!-- <img src="~@/assets/images/icons/btc.svg">
-            <h3>0.006345 <span>BTC</span></h3> -->
             <div class="address-info">
-              <p class="address-title">Message</p>
-              <p>{{ messageToSign }}</p>
+              <p class="title address-title">
+                {{ $t('confirmation.messageInHex') }}
+              </p>
+              <p class="message-to-sign">{{ messageToSign }}</p>
             </div>
           </div>
         </div>
@@ -33,34 +46,25 @@
             <div class="button-with-helper">
               <div
                 ref="ConfirmAndSendButton"
-                :class="[signedMessage !== ''? '': 'disabled','submit-button large-round-button-green-filled clickable']"
-                @click="signMessage">
-                Confirm Signing
-              </div>
-              <div class="tooltip-box-2">
-                <b-btn id="exPopover9">
-                  <img
-                    class="icon"
-                    src="~@/assets/images/icons/qr-code.svg">
-                </b-btn>
-                <b-popover
-                  target="exPopover9"
-                  triggers="hover focus"
-                  placement="top">
-                  <div class="qrcode-contents">
-                    <p class="qrcode-title">Scan QR code to send/swap instantly</p>
-                    <div class="qrcode-block">
-                      <qrcode
-                        :options="{ size: 100 }"
-                        value="Hello, World!"/>
-                    </div>
-                    <p class="qrcode-helper">What is that?</p>
-                  </div>
-                </b-popover>
+                :class="[
+                  signedMessage !== '' ? '' : 'disabled',
+                  'submit-button large-round-button-green-filled clickable'
+                ]"
+                @click="signMessage"
+              >
+                {{ $t('confirmation.confirmSigning') }}
               </div>
             </div>
           </div>
-          <p class="learn-more">Have any issues? <a href="/">Learn more</a></p>
+          <p class="learn-more">
+            Have any issues?
+            <a
+              href="https:/kb.myetherwallet.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Learn more</a
+            >
+          </p>
         </div>
       </div>
     </b-modal>
@@ -68,7 +72,14 @@
 </template>
 
 <script>
+import Blockie from '@/components/Blockie';
+import utils from 'web3-utils';
+import { mapState } from 'vuex';
+
 export default {
+  components: {
+    blockie: Blockie
+  },
   props: {
     confirmSignMessage: {
       type: Function,
@@ -98,6 +109,7 @@ export default {
     };
   },
   computed: {
+    ...mapState(['account']),
     signedMessageSignature() {
       if (this.signedMessage) {
         return this.signedMessage;
@@ -111,6 +123,13 @@ export default {
     signMessage() {
       if (this.signedMessage !== '') {
         this.confirmSignMessage();
+      }
+    },
+    hexToUtf8(hex) {
+      try {
+        return utils.hexToUtf8(hex);
+      } catch (e) {
+        return false;
       }
     }
   }

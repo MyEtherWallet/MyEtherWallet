@@ -1,14 +1,8 @@
 <template>
   <div class="modal-container">
     <div class="wrap">
-      <div class="the-button large-round-button-green-filled">{{ buttonname }}</div>
-      <div class="qrcode-container">
-        <img
-          :src="qrcodeIconImage"
-          class="dummy-qrcode">
-        <div class="real-qrcode">
-          <img src="">
-        </div>
+      <div class="the-button large-round-button-green-filled">
+        {{ buttonname }}
       </div>
     </div>
   </div>

@@ -1,9 +1,26 @@
-@import '~@/scss/CustomModal';
+@import '~@/scss/GlobalVariables';
+.modal-content {
+  padding: 40px;
+
+  // Tablet
+  @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+    padding: 20px;
+  }
+
+  // Mobile
+  @media all and (max-width: $mobile-width) {
+    padding: 20px 10px;
+  }
+}
 
 .button-container {
   button {
     display: inline-block;
     width: 100%;
+  }
+
+  a {
+    color: $white;
   }
 }
 
@@ -32,5 +49,26 @@
       margin: 0 auto;
       max-width: 400px;
     }
+  }
+}
+
+.browser-catch {
+  padding: 30px 0;
+  text-align: center;
+
+  h4 {
+    color: $dark-blue-11 !important;
+    font-weight: 500;
+  }
+}
+
+.browser-logo-container {
+  align-items: center;
+  display: flex;
+  justify-content: space-around;
+  padding: 40px 0 30px;
+
+  img {
+    height: 75px;
   }
 }

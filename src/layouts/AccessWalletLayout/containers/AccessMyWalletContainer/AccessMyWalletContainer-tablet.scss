@@ -1,0 +1,17 @@
+@import '~@/scss/GlobalVariables';
+@media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+  .buttons-container {
+    user-select: none;
+    display: grid;
+    grid-column-gap: 20px;
+    grid-template-columns: repeat(4, auto);
+    @media all and (max-width: 750px) {
+      grid-template-columns: repeat(4, 200px);
+    }
+
+    margin: 0 auto;
+    overflow-y: auto;
+    position: relative;
+    text-align: center;
+  }
+}

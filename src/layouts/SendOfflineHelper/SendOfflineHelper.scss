@@ -1,0 +1,238 @@
+@import '~@/scss/GlobalVariables';
+
+.send-offline-helper {
+  background-color: $light-grey-2;
+  padding: 100px 0;
+
+  @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+    padding: 50px 0;
+  }
+  @media all and (max-width: $mobile-width) {
+    padding: 50px 0;
+  }
+}
+
+.wrap {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.page-title {
+  margin-bottom: 40px;
+}
+
+.page-content-container {
+  > * {
+    margin-bottom: 10px;
+  }
+}
+
+.button-container {
+  margin-top: 40px;
+  width: 100%;
+  text-align: center;
+  @media all and (max-width: $mobile-width) {
+    margin-top: 10px;
+  }
+  > * {
+    margin-right: 10px;
+    @media all and (max-width: 600px) {
+      margin: 0 0 10px 0;
+      width: 100%;
+    }
+
+    &:last-child {
+      margin: 0;
+    }
+  }
+}
+
+.standard-input {
+  margin-bottom: 25px;
+
+  &.no-margin {
+    margin-bottom: 0;
+  }
+}
+
+.current-network {
+  //background-color: $mew-green;
+  background-color: $dark-blue-2;
+  border-radius: 5px;
+  color: $white;
+}
+
+.collapse-container {
+  //margin-bottom: 10px;
+
+  &:last-child {
+    margin: 0;
+  }
+
+  ul.networks {
+    max-height: 300px;
+    overflow-y: auto;
+
+    li {
+      padding: 10px 5px;
+      border-bottom: 1px solid #ececec;
+
+      &:last-child {
+        border: 0;
+      }
+
+      .network-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-column-gap: 20px;
+        padding-left: 30px;
+        p {
+          cursor: pointer;
+          padding: 2px 5px;
+        }
+        @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+          grid-template-columns: 1fr 1fr;
+        }
+
+        @media all and (max-width: 600px) {
+          grid-template-columns: 1fr;
+          padding-left: 0;
+          p {
+            padding: 5px 10px;
+          }
+        }
+      }
+
+      .network-title {
+        display: flex;
+        align-items: center;
+        margin-bottom: 5px;
+
+        .network-icon {
+          width: 35px;
+          height: 35px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background-color: $grey-1;
+          margin-right: 10px;
+          border-radius: 100%;
+          .no-icon {
+            text-align: center;
+            p {
+              font-size: 11px;
+              line-height: 10px;
+              color: $white;
+            }
+          }
+          img {
+            height: 80%;
+          }
+        }
+
+        p {
+          font-size: 18px;
+          font-weight: 500;
+        }
+      }
+
+      // .network-title
+    }
+
+    // li
+  }
+
+  // ul
+}
+
+.detail-container {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+
+  .detail-name {
+    font-weight: 600;
+    font-size: 16px;
+    padding: 7px 20px;
+    position: relative;
+    display: block;
+
+    &.right-padding {
+      padding-right: 70px;
+    }
+  }
+
+  .show-all-btn {
+    cursor: pointer;
+    position: absolute;
+    right: 0;
+    font-size: 10px;
+
+    &:hover {
+      color: $mew-green;
+    }
+  }
+
+  .data-all {
+    overflow-wrap: break-word;
+  }
+}
+
+.with-divider {
+  //border-bottom: 1px solid $light-grey-7;
+}
+
+.hide {
+  display: none;
+}
+
+.raw-tx-input {
+  background-color: #f9f9f9;
+  border: 0;
+  font-size: 14px;
+  height: 150px;
+  padding: 18px 20px;
+  resize: none;
+  width: 100%;
+}
+
+.tx-hash-container {
+  color: $mew-green;
+  overflow: hidden;
+  padding-bottom: 20px;
+  text-overflow: ellipsis;
+
+  p {
+    color: $dark-blue-1;
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  a {
+    width: 100%;
+  }
+}
+
+.tx-receipt-container {
+  p {
+    color: $dark-blue-1;
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  .tx-receipt-items {
+    padding: 10px;
+
+    div {
+      align-content: center;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .right-side {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 300px;
+    }
+  }
+}

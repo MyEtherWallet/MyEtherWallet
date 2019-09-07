@@ -1,12 +1,22 @@
 @import '~@/scss/GlobalVariables';
 
 .qr-divider {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   padding: 25px 0;
+  @media all and (max-width: $mobile-width) {
+    grid-template-columns: 1fr;
+    max-width: 300px;
+    margin: 0 auto;
+  }
 
   > div {
     padding: 0 20px;
     padding-bottom: 10px;
     text-align: center;
+    @media all and (max-width: $mobile-width) {
+      padding: 20px;
+    }
   }
 
   .qr-image {
@@ -43,8 +53,9 @@
 
   .ios {
     border-right: 1px solid $light-grey-2;
+    @media all and (max-width: $mobile-width) {
+      border-right: 0;
+      border-bottom: 1px solid $light-grey-2;
+    }
   }
-
-  display: grid;
-  grid-template-columns: 1fr 1fr;
 }

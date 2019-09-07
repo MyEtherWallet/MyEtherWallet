@@ -1,0 +1,24 @@
+@import '../../ManageENS';
+
+.finalize-container {
+  @extend %template-container;
+
+  padding-bottom: 25px;
+  text-align: center;
+
+  h3 {
+    color: $light-orange-1;
+    font-size: 24px;
+    padding: 20px 6px;
+  }
+
+  .finalize-button {
+    background-color: $mew-green;
+    border: 1px solid $mew-green;
+    border-radius: 5px;
+    color: $white;
+    cursor: pointer;
+    padding: 20px;
+    width: 260px;
+  }
+}

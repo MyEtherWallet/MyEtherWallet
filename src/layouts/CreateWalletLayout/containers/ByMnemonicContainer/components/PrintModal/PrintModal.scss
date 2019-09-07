@@ -1,0 +1,19 @@
+@import '~@/scss/GlobalVariables';
+
+.modal-content-container {
+  padding: 30px;
+  @media all and (max-width: $tablet-width) {
+    padding: 20px;
+  }
+}
+
+.mnemonic-to-print {
+  position: fixed;
+  top: -3000px;
+  left: 0;
+  width: 800px;
+}
+
+.button-container {
+  padding-bottom: 30px;
+}

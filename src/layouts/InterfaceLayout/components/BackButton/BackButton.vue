@@ -1,28 +1,33 @@
 <template>
-  <div
-    class="back-container"
-    @click.prevent="resetView('')">
-    <div class="content-title">
+  <div class="back-container">
+    <div class="content-title" @click.prevent="back">
       <div class="back-icon-container">
-        <i
-          class="fa fa-arrow-left"
-          aria-hidden="true"/>
+        <i class="fa fa-arrow-left" aria-hidden="true" />
       </div>
       <p>{{ $t('common.back') }}</p>
     </div>
+    <div class="right-slot"><slot /></div>
   </div>
 </template>
 
 <script type="text/javascript">
 export default {
   props: {
-    resetView: {
-      type: Function,
-      default: function() {}
+    path: {
+      type: String,
+      default: ''
     }
   },
-  data() {
-    return {};
+  methods: {
+    back() {
+      const routePath = this.$route.path.split('/');
+      const goToPath = routePath.slice(0, routePath.length - 1).join('/');
+      if (this.path === '') {
+        this.$router.push(goToPath);
+      } else {
+        this.$router.push(this.path);
+      }
+    }
   }
 };
 </script>

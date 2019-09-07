@@ -1,0 +1,110 @@
+@import '~@/scss/GlobalVariables';
+@media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+  .button-container-block {
+    margin-bottom: 20px;
+  }
+
+  .contents {
+    padding: 20px;
+
+    .instruction {
+      margin-bottom: 20px;
+    }
+
+    .tools {
+      align-items: center;
+      display: flex;
+      margin-bottom: 10px;
+
+      .value-switch {
+        align-items: center;
+        display: flex;
+
+        .switch-label {
+          color: $text-color-4;
+          font-size: 14px;
+          margin-left: 10px;
+        }
+      }
+
+      .random-button {
+        cursor: pointer;
+        font-size: 14px;
+        margin-left: auto;
+
+        i {
+          margin-right: 5px;
+        }
+      }
+    }
+
+    .phrases {
+      margin-bottom: 40px;
+      ul {
+        display: grid;
+        grid-column-gap: 20px;
+        grid-row-gap: 20px;
+        grid-template-columns: 1fr 1fr 1fr;
+
+        li {
+          border-bottom: 1px solid $border-bottom--mnemonic-phrase-key-color;
+          color: $text--mnemonic-phrase-index-color;
+          font-size: 14px;
+          padding: 10px 0;
+          display: flex;
+          align-items: center;
+
+          span {
+            width: 23px;
+          }
+          input {
+            display: inline-block;
+            color: $text--mnemonic-phrase-key-color;
+            border: 0;
+            width: calc(100% - 30px);
+          }
+        } // li
+      } // ul
+    } // .phrases
+  } // .contents
+} // @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width)
+
+.user-input {
+  margin-bottom: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .icon {
+    height: 30px;
+    margin-left: 20px;
+  }
+} // .user-input
+
+.option-container-block {
+  margin-bottom: 20px;
+  .option-container {
+    padding: 10px 10px 0 10px;
+
+    form {
+      margin: 0;
+    }
+  }
+}
+
+.password-warning {
+  margin-top: 20px;
+  padding: 0 10px;
+
+  a {
+    font-size: inherit;
+    font-weight: inherit;
+    text-decoration: underline;
+  }
+
+  .read {
+    margin-top: 10px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+}
