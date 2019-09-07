@@ -32,7 +32,7 @@ describe('changelly.js', () => {
       .toNumber();
     expect(diff).toBeLessThan(percentVarianceAllowed);
   });
-  it('Expect market rate calculated value to be within 1% of exact value (from ETH) ', async () => {
+  xit('Expect market rate calculated value to be within 1% of exact value (from ETH) ', async () => {
     const currency = Object.values(changelly.currencies).find(
       entry => !entry.fixRateEnabled
     );
