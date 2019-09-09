@@ -1,6 +1,6 @@
 <template>
-  <div class="">
-    md
+  <div class="md-container">
+    <div v-html="md"></div>
   </div>
 </template>
 
@@ -8,7 +8,12 @@
 export default {
   name: 'MdContainer',
   components: {},
-  props: {},
+  props: {
+    md: {
+      type: String,
+      default: ''
+    }
+  },
   data() {
     return {};
   },
