@@ -1,8 +1,73 @@
-@import "~@/scss/GlobalVariables";
+@import '~@/scss/GlobalVariables';
 
 .toggle-button {
   position: fixed;
   left: 200px;
   top: 200px;
   z-index: 99999;
+}
+
+.modal-contents {
+  .header {
+    background-color: #0c2840;
+    //border-radius: 10px 10px 0 0;
+    padding: 14px;
+    display: flex;
+    align-items: center;
+
+    p {
+      margin-left: 10px;
+      color: white;
+      font-size: 17px;
+      font-weight: 600;
+    }
+
+    button {
+      background-color: transparent;
+      color: white;
+      font-size: 15px;
+      border: 1px solid white;
+      border-radius: 100%;
+      cursor: pointer;
+      height: 30px;
+      width: 30px;
+    }
+  }
+
+  .footer {
+    background-image: linear-gradient(to right, #3d9dcf, #33c7b0);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+
+    p {
+      color: white;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    button {
+      background-color: transparent;
+      color: white;
+      font-size: 15px;
+      border: 1px solid white;
+      border-radius: 100%;
+      cursor: pointer;
+      height: 30px;
+      width: 30px;
+    }
+  }
+}
+
+.md-content {
+  background-color: $white;
+
+  ul {
+    li {
+      p {
+        font-size: 14px;
+        font-weight: 600;
+      }
+    }
+  }
 }
