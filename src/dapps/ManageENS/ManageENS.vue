@@ -17,7 +17,6 @@
       :step="step"
       :domain-name-err="domainNameErr"
       :generate-key-phrase="generateKeyPhrase"
-      :finalize="finalize"
       :update-resolver="updateResolver"
       :transfer-domain="transferDomain"
       :tld="parsedTld === '' ? network.type.ens.registrarTLD : parsedTld"
@@ -274,22 +273,6 @@ export default {
         };
         web3.mew.sendBatchTransactions([setResolverTx, setAddrTx]);
       }
-    },
-    async finalize() {
-      const address = this.account.address;
-      const web3 = this.web3;
-      const data = await this.registrarContract.methods.encodeABI();
-
-      const raw = {
-        from: address,
-        value: 0,
-        to: this.registrarAddress,
-        data: data
-      };
-
-      web3.eth.sendTransaction(raw).catch(err => {
-        Toast.responseHandler(err, false);
-      });
     },
     async registerFifsName() {
       const address = this.account.address;

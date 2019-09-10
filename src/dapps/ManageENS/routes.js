@@ -5,7 +5,6 @@ const NameForbiddenENSContainer = () =>
   import('./containers/NameForbiddenENSContainer');
 const AlreadyOwnedENSContainer = () =>
   import('./containers/AlreadyOwnedENSContainer');
-const FinalizeContainer = () => import('./containers/FinalizeContainer');
 const ManageENSContainer = () => import('./containers/ManageENSContainer');
 const FifsBuyContainer = () => import('./containers/FifsBuyContainer');
 const ClaimDNSContainer = () => import('./containers/ClaimDNSContainer');
@@ -44,12 +43,6 @@ export default {
       path: 'forbidden',
       name: 'ENS forbidden',
       component: NameForbiddenENSContainer,
-      props: true
-    },
-    {
-      path: 'finalize',
-      name: 'ENS finalize',
-      component: FinalizeContainer,
       props: true
     },
     {
