@@ -8,6 +8,7 @@
 - Updated Bootstrap Vue. [#1393](https://github.com/MyEtherWallet/MyEtherWallet/pull/1393)
 - Compress images, Remove unused images and components [#1389](https://github.com/MyEtherWallet/MyEtherWallet/pull/1389)
 - Restore valid Lightsreams network [#1350](https://github.com/MyEtherWallet/MyEtherWallet/pull/1350)
+- Update packages [#1419](https://github.com/MyEtherWallet/MyEtherWallet/pull/1419)
 
 ### Release v5.1.2
 
