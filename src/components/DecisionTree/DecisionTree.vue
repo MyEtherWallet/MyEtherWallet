@@ -54,8 +54,8 @@
 
 <script>
 import MdContainer from './components/MdContainer';
-//import marked from 'marked';
-import qaIndex from './data/index.js';
+import marked from 'marked';
+import qaIndex from '@/data/DecisionTree/index.js';
 
 export default {
   name: 'DecisionTree',
@@ -91,8 +91,7 @@ export default {
       this.historyStack = [];
     },
     mdToHtml(md) {
-      return md;
-      //return marked(md);
+      return marked(md);
     }
   }
 };
