@@ -1,4 +1,4 @@
-@import '~@/scss/GlobalVariables';
+@import "~@/scss/GlobalVariables";
 
 .toggle-button {
   position: fixed;
@@ -36,14 +36,14 @@
 
   .footer {
     background-image: linear-gradient(to right, #3d9dcf, #33c7b0);
-    padding: 14px 20px;
+    padding: 16px 20px;
     display: flex;
     align-items: center;
 
     p {
       color: white;
-      font-size: 12px;
-      font-weight: 500;
+      font-size: 14px;
+      font-weight: 600;
     }
 
     button {
@@ -64,9 +64,33 @@
 
   ul {
     li {
-      p {
+      border-bottom: 1px solid rgb(224, 224, 224);
+      //min-height: 71px;
+      padding: 20px 20px;
+      color: rgb(11, 40, 64);
+      cursor: pointer;
+
+      &:last-child {
+        border-bottom: 0;
+      }
+
+      .qa-title-container {
+        margin-right: 20px;
+      }
+
+      .qa-title {
         font-size: 14px;
-        font-weight: 600;
+        font-weight: 500;
+        color: rgb(11, 40, 64);
+        line-height: 18px;
+        margin-bottom: 5px;
+      }
+
+      .qa-subtitle {
+        color: #96a8b6;
+        font-weight: 500;
+        font-size: 12px;
+        line-height: 16px;
       }
     }
   }
