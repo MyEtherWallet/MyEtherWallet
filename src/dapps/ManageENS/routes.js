@@ -1,5 +1,4 @@
 const ManageENS = () => import('./ManageENS');
-const EnsBidContainer = () => import('./containers/EnsBidContainer');
 const InitialENSStateContainer = () =>
   import('./containers/InitialENSStateContainer');
 const NameForbiddenENSContainer = () =>
@@ -36,27 +35,9 @@ export default {
       props: true
     },
     {
-      path: 'auction',
-      name: 'Bid on ENS and start auction',
-      component: EnsBidContainer,
-      props: true
-    },
-    {
-      path: 'bid',
-      name: 'Bid on ENS',
-      component: EnsBidContainer,
-      props: true
-    },
-    {
       path: 'owned',
       name: 'ENS owned',
       component: AlreadyOwnedENSContainer,
-      props: true
-    },
-    {
-      path: 'reveal',
-      name: 'Reveal ENS bid',
-      component: EnsBidContainer,
       props: true
     },
     {
