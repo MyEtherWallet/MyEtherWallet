@@ -19,7 +19,7 @@ const EXCEPTIONS = [
   'vee-validate',
   'webpack',
   'babel-eslint',
-  'sass-loader'
+  'sass-loader',
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
