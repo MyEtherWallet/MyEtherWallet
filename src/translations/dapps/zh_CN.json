@@ -28,6 +28,7 @@
   "updateResolver": "Update Resolving address",
   "transferEnsTo": "Transfer ENS domain to",
   "ensNotAvailable": "is not available yet",
+  "saveAndNext": "Save & Next",
   "sendMy": "Send My {value}",
   "nftOwnCount": "{perPage} Per Page | {count} Items Total",
   "noneOwned": "You own no NFTs",
