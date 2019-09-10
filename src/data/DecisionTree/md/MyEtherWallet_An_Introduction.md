@@ -9,9 +9,3 @@
 ###### h6 Heading
 
 ## Horizontal Rules
-
-* * *
-
-* * *
-
-* * *

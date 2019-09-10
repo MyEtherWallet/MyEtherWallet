@@ -24,12 +24,18 @@
             <li
               v-for="(qa, key) in currentIndex.sub"
               :key="key"
-              class="p-4 flex--row--align-center"
+              class="flex--row--align-center"
+              @click="getSub(index[qa])"
             >
-              <p class="qa-title" @click="getSub(index[qa])">
-                {{ index[qa].title }}
-              </p>
-              <p class="ml-auto right-arrow">></p>
+              <div class="qa-title-container">
+                <p class="qa-title">
+                  {{ index[qa].title }}
+                </p>
+                <p v-if="index[qa].subtitle" class="qa-subtitle">
+                  {{ index[qa].subtitle }}
+                </p>
+              </div>
+              <i class="fa fa-angle-right ml-auto" aria-hidden="true"></i>
             </li>
           </ul>
           <div v-else>
@@ -53,9 +59,9 @@
 </template>
 
 <script>
+import qaIndex from '@/data/DecisionTree/MDIndex.js';
 import MdContainer from './components/MdContainer';
 import marked from 'marked';
-import qaIndex from '@/data/DecisionTree/index.js';
 
 export default {
   name: 'DecisionTree',
@@ -104,8 +110,7 @@ export default {
 <style lang="scss">
 .decision-tree-modal {
   .modal-dialog {
-    max-width: 350px;
-    width: 350px;
+    width: 450px;
     position: fixed;
     right: 100px;
   }

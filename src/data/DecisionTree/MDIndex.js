@@ -28,10 +28,14 @@ export default {
   },
   Back_to_the_Basics_10_Tips_for_Beginners: {
     title: 'Back to the Basics: 10 Tips for Beginners',
+    subtitle: '(e.g. Ledger / Trezor...)',
     sub: ['Good_to_be_home']
   },
   Does_MEW_Support_BTC_or_other_Coins: {
-    title: 'Does MEW Support BTC or other Coins?',
+    title:
+      'Does MEW Support BTC or other Coins? oinherogj poergonerognerogn e ogrnon',
+    subtitle:
+      '(Tell me about you wo wopiej fpw jefpwj efpjwepfj wpeijf weoifjw jjgpoiwjgfpoiwj gpowj mom.)',
     md: MyEtherWallet_An_Introduction
   },
   Are_we_going_to_be_okay: {
