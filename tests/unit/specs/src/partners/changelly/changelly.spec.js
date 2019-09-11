@@ -55,7 +55,7 @@ describe('changelly.js', () => {
       .toNumber();
     expect(diff).toBeLessThan(percentVarianceAllowed);
   });
-  it('Expect fixed rate calculated value to be within 1% of exact value (to ETH)', async () => {
+  xit('Expect fixed rate calculated value to be within 1% of exact value (to ETH)', async () => {
     const fromCurrency = 'BTC';
     const toCurrency = 'ETH';
     const fromValue = 0.9;

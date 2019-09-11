@@ -12,6 +12,7 @@
     >
       <div class="modal-contents">
         <div class="header">
+          <div class="close" @click="close" />
           <button v-if="historyStack.length > 0" @click="back()">
             <i class="fa fa-angle-left" aria-hidden="true"></i>
           </button>
@@ -88,6 +89,9 @@ export default {
   methods: {
     toggle() {
       this.$refs.DecisionTree.toggle();
+    },
+    close() {
+      this.$refs.DecisionTree.hide();
     },
     getSub(qa) {
       this.historyStack.push(this.currentIndex);
