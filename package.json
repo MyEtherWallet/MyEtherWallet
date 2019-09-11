@@ -76,7 +76,7 @@
     "@xkeshi/vue-qrcode": "git+https://github.com/MyEtherWallet/vue-qrcode.git",
     "axios": "0.19.0",
     "babel-core": "7.0.0-bridge.0",
-    "babel-eslint": "10.0.2",
+    "babel-eslint": "10.0.3",
     "babel-jest": "23.6.0",
     "bignumber.js": "9.0.0",
     "bip39": "3.0.2",
@@ -135,7 +135,7 @@
     "web3-core-method": "1.2.1",
     "web3-core-requestmanager": "1.2.1",
     "web3-utils": "1.2.1",
-    "webpack": "4.39.2",
+    "webpack": "4.39.3",
     "worker-loader": "2.0.0",
     "zxcvbn": "4.4.2"
   },
@@ -157,7 +157,8 @@
       "multicoin-address-validator",
       "@xkeshi/vue-qrcode",
       "web3-core-requestmanager",
-      "vee-validate"
+      "vee-validate",
+      "sass-loader"
     ]
   }
 }
