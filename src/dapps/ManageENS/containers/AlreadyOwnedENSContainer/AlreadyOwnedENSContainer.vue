@@ -13,10 +13,6 @@
       <p class="label">{{ $t('dapps.owner') }}:</p>
       <p class="content">{{ owner }}</p>
     </div>
-    <div v-if="deedOwner != '0x'" class="content-container">
-      <p class="label">{{ $t('dapps.deedOwner') }}:</p>
-      <p class="content">{{ deedOwner }}</p>
-    </div>
     <div class="content-container">
       <p class="label">{{ $t('dapps.resolverAddr') }}:</p>
       <p class="content">{{ resolverAddress }}</p>
@@ -56,10 +52,6 @@ export default {
       default: ''
     },
     owner: {
-      type: String,
-      default: ''
-    },
-    deedOwner: {
       type: String,
       default: ''
     },
