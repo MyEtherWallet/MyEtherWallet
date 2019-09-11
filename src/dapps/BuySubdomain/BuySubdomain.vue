@@ -10,11 +10,15 @@
           <div class="subdomain-input">
             <input
               :placeholder="$t('dapps.subDomainPlaceholder')"
+              :class="hasError ? 'errorInput' : ''"
               type="text"
               @input="debounceInput"
             />
             <button type="button" @click="query">Check</button>
           </div>
+          <p v-if="hasError" class="errorText">
+            <span>Invalid symbols</span>
+          </p>
         </div>
         <div v-show="results.length > 0" class="result-section">
           <div class="title">
@@ -66,7 +70,6 @@ import web3 from 'web3';
 import { mapState } from 'vuex';
 import StandardButton from '@/components/Buttons/StandardButton';
 import { Toast } from '@/helpers';
-
 export default {
   components: {
     'interface-bottom-text': InterfaceBottomText,
@@ -79,7 +82,8 @@ export default {
       ensContract: function() {},
       results: [],
       domainName: '',
-      knownRegistrarInstances: {}
+      knownRegistrarInstances: {},
+      hasError: false
     };
   },
   computed: {
@@ -97,7 +101,6 @@ export default {
       const taken = newArr.filter(item => {
         return item.active === false;
       });
-
       const available = newArr.filter(item => {
         return item.active === true;
       });
@@ -119,7 +122,14 @@ export default {
   },
   methods: {
     debounceInput: web3.utils._.debounce(function(e) {
-      this.domainName = normalise(e.target.value);
+      try {
+        this.domainName = normalise(e.target.value);
+        this.hasError = false;
+      } catch (e) {
+        Toast.responseHandler(e, Toast.WARN);
+        this.hasError = true;
+        return;
+      }
     }, 1500),
     async query() {
       this.results = [];
@@ -168,14 +178,12 @@ export default {
               referrerAddress
             )
             .encodeABI());
-
       const raw = {
         from: ownerAddress,
         data: data,
         to: itemContract.registrar,
         value: item.price
       };
-
       this.web3.eth.sendTransaction(raw).catch(err => {
         Toast.responseHandler(err, false);
       });
