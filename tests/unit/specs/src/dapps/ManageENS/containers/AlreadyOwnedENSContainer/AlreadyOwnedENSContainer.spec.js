@@ -88,7 +88,7 @@ describe('AlreadyOwnedENSContainer.vue', () => {
   it('should render correct resolverAddress props', () => {
     expect(
       wrapper.vm.$el
-        .querySelectorAll('.content-container .content')[4]
+        .querySelectorAll('.content-container .content')[3]
         .textContent.trim()
     ).toEqual(resolverAddress);
   });
