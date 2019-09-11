@@ -19,7 +19,6 @@ describe('AlreadyOwnedENSContainer.vue', () => {
   const labelHash = 'labelHash';
   const nameHash = 'nameHash';
   const owner = 'owner';
-  const deedOwner = 'deedOwner';
   const resolverAddress = 'resolverAddress';
   const hostName = 'hostName';
   const tld = 'tld';
@@ -43,7 +42,6 @@ describe('AlreadyOwnedENSContainer.vue', () => {
         labelHash,
         nameHash,
         owner,
-        deedOwner,
         resolverAddress,
         hostName,
         tld
@@ -85,14 +83,6 @@ describe('AlreadyOwnedENSContainer.vue', () => {
         .querySelectorAll('.content-container .content')[2]
         .textContent.trim()
     ).toEqual(owner);
-  });
-
-  it('should render correct deedOwner props', () => {
-    expect(
-      wrapper.vm.$el
-        .querySelectorAll('.content-container .content')[3]
-        .textContent.trim()
-    ).toEqual(deedOwner);
   });
 
   it('should render correct resolverAddress props', () => {
