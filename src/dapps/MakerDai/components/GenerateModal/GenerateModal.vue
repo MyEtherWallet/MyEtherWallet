@@ -6,6 +6,8 @@
       centered
       class="bootstrap-modal nopadding"
       hide-footer
+      static
+      lazy
     >
       <div class="contents">
         <div class="inputs">
