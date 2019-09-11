@@ -350,13 +350,28 @@ export default {
         .on('transactionHash', hash => {
           this.txHash = hash;
           this.step += 1;
-          this.$store.dispatch('addNotification', ['Hash', this.raw.from, this.raw, hash]);
+          this.$store.dispatch('addNotification', [
+            'Hash',
+            this.raw.from,
+            this.raw,
+            hash
+          ]);
         })
         .on('receipt', res => {
-          this.$store.dispatch('addNotification', ['Receipt', this.raw.from, this.raw, res]);
+          this.$store.dispatch('addNotification', [
+            'Receipt',
+            this.raw.from,
+            this.raw,
+            res
+          ]);
         })
         .on('error', err => {
-          this.$store.dispatch('addNotification', ['Error', this.raw.from, this.raw, err]);
+          this.$store.dispatch('addNotification', [
+            'Error',
+            this.raw.from,
+            this.raw,
+            err
+          ]);
         });
     },
     actualCancel() {

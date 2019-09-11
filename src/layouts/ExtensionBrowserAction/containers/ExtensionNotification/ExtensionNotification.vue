@@ -34,17 +34,38 @@
         </div>
       </template>
       <div v-if="!detailsShown" class="notification-item-container">
-        <ul v-if="sortedNotifications !== undefined && Object.keys(sortedNotifications).length > 0">
-          <li v-for="(notification, address) in sortedNotifications" :key="address" v-show="notification.length > 0">
+        <ul
+          v-if="
+            sortedNotifications !== undefined &&
+              Object.keys(sortedNotifications).length > 0
+          "
+        >
+          <li
+            v-for="(notification, address) in sortedNotifications"
+            v-show="notification.length > 0"
+            :key="address"
+          >
             <div class="address-header">
               {{ address }}
               <div>
-                <i aria-hidden="true" :class="['fa fa-2x','fa-angle-down']" @click="expandAll(address)" />
-                <i aria-hidden="true" :class="['fa fa-2x', 'fa-angle-up']" @click="collapseAll(address)" />
+                <i
+                  :class="['fa fa-2x', 'fa-angle-down']"
+                  aria-hidden="true"
+                  @click="expandAll(address)"
+                />
+                <i
+                  :class="['fa fa-2x', 'fa-angle-up']"
+                  aria-hidden="true"
+                  @click="collapseAll(address)"
+                />
               </div>
             </div>
             <ul>
-              <li v-for="(noti, idx) in notification" :key="noti.id + idx" class="notification-item">
+              <li
+                v-for="(noti, idx) in notification"
+                :key="noti.id + idx"
+                class="notification-item"
+              >
                 <keep-alive
                   :max="10"
                   :exclude="['transaction-notification', 'transaction-error']"
@@ -89,7 +110,9 @@
           :address-link="addressLink"
           :process-status="processStatus"
           :error-message-string="errorMessageString"
-          :child-update-notification="childUpdateNotification(notificationDetails.index)"
+          :child-update-notification="
+            childUpdateNotification(notificationDetails.index)
+          "
         >
         </component>
       </div>
@@ -151,13 +174,15 @@ export default {
           notificationCopy[addr] = [];
         } else {
           notificationCopy[addr] = this.notifications[addr];
-          notificationCopy[addr].sort((a, b) => {
-            a = a.timestamp;
-            b = b.timestamp;
-            return a > b ? -1 : a < b ? 1 : 0;
-          }).filter(entry => entry.network === this.network.type.name);
+          notificationCopy[addr]
+            .sort((a, b) => {
+              a = a.timestamp;
+              b = b.timestamp;
+              return a > b ? -1 : a < b ? 1 : 0;
+            })
+            .filter(entry => entry.network === this.network.type.name);
         }
-      })
+      });
       return notificationCopy;
     }
   },
@@ -190,10 +215,12 @@ export default {
                   (new Date().getTime() - new Date(entry.timestamp).getTime()) /
                     1000 >
                   6000;
-                const isUnResolved = entry.status === notificationStatuses.PENDING;
+                const isUnResolved =
+                  entry.status === notificationStatuses.PENDING;
                 const notExternalSwap =
                   entry.type === notificationType.TRANSACTION ||
-                  (entry.type === notificationType.SWAP && entry.body.isDex === true);
+                  (entry.type === notificationType.SWAP &&
+                    entry.body.isDex === true);
                 const hasHash = entry.hash !== '' && entry.hash !== undefined;
                 return isOlder && isUnResolved && hasHash && notExternalSwap;
               });
@@ -230,8 +257,8 @@ export default {
               });
             });
           }
-        })
-      })
+        });
+      });
     },
     showNotifications() {
       this.shown = true;
@@ -271,9 +298,9 @@ export default {
           if (this.sortedNotifications[item].length > 0) {
             this.sortedNotifications[item].forEach(notif => {
               if (notif.read === false) this.unreadCount++;
-            })
+            });
           }
-        })
+        });
       }
     },
     expand(idx, notif, address) {
