@@ -2,7 +2,6 @@ import Vue from 'vue';
 import sinon from 'sinon';
 import { shallowMount } from '@vue/test-utils';
 import AlreadyOwnedENSContainer from '@/dapps/ManageENS/containers/AlreadyOwnedENSContainer/AlreadyOwnedENSContainer.vue';
-import FinalizeModal from '@/dapps/ManageENS/components/FinalizeModal/FinalizeModal.vue';
 import { Tooling } from '@@/helpers';
 const showModal = sinon.stub();
 
@@ -20,7 +19,6 @@ describe('AlreadyOwnedENSContainer.vue', () => {
   const labelHash = 'labelHash';
   const nameHash = 'nameHash';
   const owner = 'owner';
-  const deedOwner = 'deedOwner';
   const resolverAddress = 'resolverAddress';
   const hostName = 'hostName';
   const tld = 'tld';
@@ -44,14 +42,12 @@ describe('AlreadyOwnedENSContainer.vue', () => {
         labelHash,
         nameHash,
         owner,
-        deedOwner,
         resolverAddress,
         hostName,
         tld
       },
       stubs: {
-        'b-modal': BModalStub,
-        'finalize-modal': FinalizeModal
+        'b-modal': BModalStub
       }
     });
   });
@@ -89,26 +85,11 @@ describe('AlreadyOwnedENSContainer.vue', () => {
     ).toEqual(owner);
   });
 
-  it('should render correct deedOwner props', () => {
-    expect(
-      wrapper.vm.$el
-        .querySelectorAll('.content-container .content')[3]
-        .textContent.trim()
-    ).toEqual(deedOwner);
-  });
-
   it('should render correct resolverAddress props', () => {
     expect(
       wrapper.vm.$el
         .querySelectorAll('.content-container .content')[4]
         .textContent.trim()
     ).toEqual(resolverAddress);
-  });
-
-  describe('AlreadyOwnedENSContainer Method.vue', () => {
-    it('should render correct openFinalizeModal method', () => {
-      wrapper.vm.openFinalizeModal();
-      expect(showModal.called).toBe(true);
-    });
   });
 });
