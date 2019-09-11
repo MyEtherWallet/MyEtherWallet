@@ -48,9 +48,8 @@ describe('FooterContainer.vue', () => {
       }
     }
 
-    for (let i = 0; i < lowerLinkWrappers.length; i++) {
+    for (const [i, lowerLinkWrapper] of lowerLinkWrappers.entries()) {
       const lowerLink = wrapper.vm.$data.lowerLinks[i];
-      const lowerLinkWrapper = lowerLinkWrappers[i];
       expect(lowerLinkWrapper.vm.to).toEqual(lowerLink.to);
     }
   });
@@ -59,10 +58,8 @@ describe('FooterContainer.vue', () => {
     const socialElement = wrapper.vm.$el.querySelector('.social');
     const linksElements = socialElement.getElementsByTagName('a');
 
-    for (let i = 0; i < wrapper.vm.$data.links.length; i++) {
+    for (const [i, link] of wrapper.vm.$data.links.entries()) {
       const linksElement = linksElements[i];
-      const link = wrapper.vm.$data.links[i];
-
       let icoClassName = linksElement.getElementsByTagName('i')[0].className;
       icoClassName = icoClassName.replace('fa ', '');
       expect(link.to).toEqual(linksElement.href);
@@ -86,17 +83,16 @@ describe('FooterContainer.vue', () => {
     }
 
     const contents = [];
-    for (let i = 0; i < wrapper.vm.$data.footerContent.length; i++) {
-      const footerContent = wrapper.vm.$data.footerContent[i];
-      for (let j = 0; j < footerContent.contents.length; j++) {
-        if (footerContent.contents[j].to !== undefined) {
-          contents.push(footerContent.contents[j]);
+    for (const footerContent of wrapper.vm.$data.footerContent) {
+      for (const content of footerContent.contents) {
+        if (content.to !== undefined) {
+          contents.push(content);
         }
       }
     }
 
-    for (let i = 0; i < contentsElements.length; i++) {
-      expect(contents[i].to).toEqual(contentsElements[i].vm.to);
+    for (const [i, contentsElement] of contentsElements.entries()) {
+      expect(contents[i].to).toEqual(contentsElement.vm.to);
     }
   });
 });

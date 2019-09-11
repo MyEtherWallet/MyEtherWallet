@@ -34,8 +34,7 @@ describe('InterfaceNetworkModal.vue', () => {
       '.input-block-container select option'
     );
     const types = Object.keys(wrapper.vm.$data.types);
-    for (let i = 0; i < types.length; i++) {
-      const type = types[i];
+    for (const [i, type] of types.entries()) {
       if (optionElements[i] !== undefined) {
         expect(
           optionElements[i].textContent
