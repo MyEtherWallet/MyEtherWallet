@@ -5,6 +5,8 @@
     hide-footer
     class="bootstrap-modal nopadding modal-mew-connect"
     centered
+    static
+    lazy
   >
     <div class="modal-container">
       <ipad-modal ref="ipadModal" />
