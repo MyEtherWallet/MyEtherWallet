@@ -12,7 +12,6 @@
 - Fix the bug when user expend the token list, footer breaks [#1396](https://github.com/MyEtherWallet/MyEtherWallet/pull/1396)
 - Fix the Buy subdomain feature and removed auction from ENS [#1409](https://github.com/MyEtherWallet/MyEtherWallet/pull/1409)
 
-
 ### Devop
 
 - Sentry fixes, additional ledger errors, handle unlock wallet if wallet is null [#1394](https://github.com/MyEtherWallet/MyEtherWallet/pull/1394)
