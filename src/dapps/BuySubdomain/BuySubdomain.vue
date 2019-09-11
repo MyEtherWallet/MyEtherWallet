@@ -17,7 +17,7 @@
             <button type="button" @click="query">Check</button>
           </div>
           <p v-if="hasError" class="errorText">
-            <span> Invalid symbol: No white spaces </span>
+            <span>Invalid symbols</span>
           </p>
         </div>
         <div v-show="results.length > 0" class="result-section">
@@ -122,11 +122,13 @@ export default {
   },
   methods: {
     debounceInput: web3.utils._.debounce(function(e) {
-      if (e.target.value.indexOf(' ') >= 0) {
-        this.hasError = true;
-      } else {
-        this.hasError = false;
+      try {
         this.domainName = normalise(e.target.value);
+        this.hasError = false;
+      } catch (e) {
+        Toast.responseHandler(e, Toast.WARN);
+        this.hasError = true;
+        return;
       }
     }, 1500),
     async query() {
