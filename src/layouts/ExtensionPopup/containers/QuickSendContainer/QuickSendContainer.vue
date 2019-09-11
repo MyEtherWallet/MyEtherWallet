@@ -146,6 +146,7 @@ import { Misc } from '@/helpers';
 import { mapState } from 'vuex';
 import { ETH } from '@/networks/types';
 import ethUnit from 'ethjs-unit';
+import { CX_SEND_SIGNED_TX } from '@/builds/mewcx/cxHelpers/cxEvents';
 
 export default {
   components: {
@@ -345,34 +346,28 @@ export default {
     },
     async sendTransaction() {
       this.loading = true;
-      this.web3.eth
-        .sendSignedTransaction(this.signedTx.rawTransaction)
-        .on('transactionHash', hash => {
-          this.txHash = hash;
-          this.step += 1;
-          this.$store.dispatch('addNotification', [
-            'Hash',
-            this.raw.from,
-            this.raw,
-            hash
-          ]);
-        })
-        .on('receipt', res => {
-          this.$store.dispatch('addNotification', [
-            'Receipt',
-            this.raw.from,
-            this.raw,
-            res
-          ]);
-        })
-        .on('error', err => {
-          this.$store.dispatch('addNotification', [
-            'Error',
-            this.raw.from,
-            this.raw,
-            err
-          ]);
-        });
+      const payload = {
+        signedTx: this.signedTx.rawTransaction,
+        raw: this.raw
+      };
+      window.chrome.runtime.sendMessage(
+        window.chrome.runtime.id,
+        { event: CX_SEND_SIGNED_TX, payload: payload },
+        {},
+        hash => {
+          // eslint-disable-next-line
+          if (!!hash) {
+            this.txHash = hash;
+            this.step += 1;
+            this.$store.dispatch('addNotification', [
+              'Hash',
+              this.raw.from,
+              this.raw,
+              hash
+            ]);
+          }
+        }
+      );
     },
     actualCancel() {
       this.step = 1;
