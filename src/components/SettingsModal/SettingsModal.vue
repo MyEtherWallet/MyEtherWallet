@@ -81,6 +81,7 @@
             <div class="button-block">
               <standard-button
                 :options="buttonSave"
+                :button-disabled="selectedGasType === 'other' && customGas < 1"
                 @click.native="saveGasChanges"
               />
             </div>
@@ -259,12 +260,16 @@ export default {
   watch: {
     customGas(newVal) {
       if (newVal !== '') {
-        const toGwei = new BigNumber(
-          utils.toWei(`${newVal}`, 'gwei')
-        ).toFixed();
-        this.customGasEth = new BigNumber(
-          `${utils.fromWei(toGwei, 'ether')}`
-        ).toFixed();
+        if (new BigNumber(newVal).gte(1)) {
+          const toGwei = new BigNumber(
+            utils.toWei(`${newVal}`, 'gwei')
+          ).toFixed();
+          this.customGasEth = new BigNumber(
+            `${utils.fromWei(toGwei, 'ether')}`
+          ).toFixed();
+        } else {
+          this.customGas = 1;
+        }
       }
     },
     gasPrice() {
