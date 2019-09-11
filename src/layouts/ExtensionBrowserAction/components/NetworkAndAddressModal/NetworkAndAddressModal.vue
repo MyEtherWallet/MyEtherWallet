@@ -4,7 +4,7 @@
       ref="networkAddress"
       :title="$t('accessWallet.networkAndAddress')"
       hide-footer
-      class="bootstrap-modal nopadding modal-network-and-address"
+      modal-class="modal-network-and-address nopadding"
       centered
     >
       <div class="modal-content-container">

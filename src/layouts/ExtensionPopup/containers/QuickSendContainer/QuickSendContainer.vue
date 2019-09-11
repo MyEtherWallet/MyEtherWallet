@@ -2,11 +2,12 @@
   <div class="quick-send-container">
     <div class="quick-send-header">
       <p v-show="step === 1">Quick Send</p>
-      <p v-show="step !== 1" class="clickable" @click="back">
+      <p v-show="step === 4">Success!</p>
+      <p v-show="step > 1 && step < 4" class="clickable" @click="back">
         <img src="@/assets/images/icons/arrow-left.svg" />
         Back
       </p>
-      <p class="clickable" @click="actualCancel">Cancel</p>
+      <p v-show="step !== 4" class="clickable" @click="actualCancel">Cancel</p>
     </div>
     <b-progress
       :value="perc"
@@ -18,7 +19,7 @@
       <h4 v-show="step < 4" class="title">
         STEP {{ step }}. {{ steps[step] }}
       </h4>
-      <div v-show="step === 1">
+      <form v-show="step === 1" @submit.prevent="next">
         <div class="from-text">
           <p>From</p>
           <p @click="switchWallet">Change</p>
@@ -43,8 +44,8 @@
             {{ error }}
           </span>
         </div>
-      </div>
-      <div v-show="step === 2">
+      </form>
+      <form v-show="step === 2" @submit.prevent="next">
         <div class="to-address-container">
           <label for="toAddress"> To Address </label>
           <div class="to-address-input">
@@ -83,7 +84,7 @@
             />
           </div>
         </div>
-      </div>
+      </form>
       <div v-show="step === 3" class="confirmation-container">
         <div class="confirmation-amount">
           <p><b>Amount</b></p>
@@ -349,8 +350,14 @@ export default {
         .on('transactionHash', hash => {
           this.txHash = hash;
           this.step += 1;
+          this.$store.dispatch('addNotification', ['Hash', this.raw.from, this.raw, hash]);
         })
-        .on('error', console.error);
+        .on('receipt', res => {
+          this.$store.dispatch('addNotification', ['Receipt', this.raw.from, this.raw, res]);
+        })
+        .on('error', err => {
+          this.$store.dispatch('addNotification', ['Error', this.raw.from, this.raw, err]);
+        });
     },
     actualCancel() {
       this.step = 1;
