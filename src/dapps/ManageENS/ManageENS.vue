@@ -302,6 +302,7 @@ export default {
 
       this.loading = true;
       const web3 = this.web3;
+
       this.labelHash = web3.utils.sha3(this.parsedHostName);
       if (this.parsedTld !== '' && isSupported === undefined) {
         Toast.responseHandler(
@@ -531,7 +532,10 @@ export default {
       let owner;
       let resolverAddress;
       try {
-        if (this.registrarType === REGISTRAR_TYPES.PERMANENT) {
+        if (
+          this.registrarType === REGISTRAR_TYPES.PERMANENT &&
+          this.parsedTld === this.registrarTLD
+        ) {
           owner = await this.registrarContract.methods
             .ownerOf(this.labelHash)
             .call();
