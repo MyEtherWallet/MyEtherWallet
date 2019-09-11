@@ -1,5 +1,7 @@
-@import '~@/scss/GlobalVariables';
+@import "~@/scss/GlobalVariables";
 
 .md-container {
   background-color: $white;
+  height: 700px;
+  overflow-y: auto;
 }
