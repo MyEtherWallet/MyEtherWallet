@@ -16,10 +16,11 @@
           <button v-if="historyStack.length > 0" @click="back()">
             <i class="fa fa-angle-left" aria-hidden="true"></i>
           </button>
-          <div v-else class="mr-1">
+          <div v-else class="question">
             <img src="@/assets/images/icons/DecisionTree/question.svg" />
           </div>
-          <p>{{ currentIndex.title }}</p>
+          <p v-if="currentIndex.title.length < 25">{{ currentIndex.title }}</p>
+          <p v-else class="long-title">{{ currentIndex.title }}</p>
         </div>
 
         <search-container>
