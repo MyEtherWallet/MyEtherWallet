@@ -17,7 +17,10 @@
           </button>
           <p>header</p>
         </div>
-        <div class="search">search</div>
+
+        <search-container>
+          <input type="text" placeholder="Search" />
+        </search-container>
 
         <div class="md-content">
           <ul v-if="currentIndex.sub">
@@ -59,14 +62,16 @@
 </template>
 
 <script>
-import qaIndex from '@/data/DecisionTree/MDIndex.js';
 import MdContainer from './components/MdContainer';
+import SearchContainer from './components/SearchContainer';
+import qaIndex from '@/data/DecisionTree/MDIndex.js';
 import marked from 'marked';
 
 export default {
   name: 'DecisionTree',
   components: {
-    'md-container': MdContainer
+    'md-container': MdContainer,
+    'search-container': SearchContainer
   },
   props: {},
   data() {
