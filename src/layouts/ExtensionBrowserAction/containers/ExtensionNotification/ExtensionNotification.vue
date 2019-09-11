@@ -143,6 +143,7 @@ import {
 } from '@/helpers/notificationFormatters';
 
 import { SwapProviders } from '@/partners';
+import { clearTimeout } from 'timers';
 
 export default {
   components: {
@@ -159,7 +160,8 @@ export default {
       ethPrice: new BigNumber(0),
       detailsShown: false,
       detailType: '',
-      notificationDetails: {}
+      notificationDetails: {},
+      checkLoop: () => {}
     };
   },
   computed: {
@@ -204,8 +206,11 @@ export default {
     this.countUnread();
     if (this.online) {
       this.fetchBalanceData();
-      this.checkForUnResolvedTxNotifications();
+      this.checkLoop = setInterval(this.checkForUnResolvedTxNotifications, 14000);
     }
+  },
+  destroyed() {
+    clearInterval(this.checkLoop);
   },
   methods: {
     hiddenModal() {
@@ -221,10 +226,6 @@ export default {
             const check = this.notifications[item]
               .filter(entry => entry.network === this.network.type.name)
               .filter(entry => {
-                const isOlder =
-                  (new Date().getTime() - new Date(entry.timestamp).getTime()) /
-                    1000 >
-                  6000;
                 const isUnResolved =
                   entry.status === notificationStatuses.PENDING;
                 const notExternalSwap =
@@ -232,13 +233,10 @@ export default {
                   (entry.type === notificationType.SWAP &&
                     entry.body.hasOwnProperty('isDex') && entry.body.isDex === true);
                 const hasHash = entry.hash !== '' && entry.hash !== undefined;
-                console.log(isUnResolved, notExternalSwap, hasHash);
-                return isOlder && isUnResolved && hasHash && notExternalSwap;
+                return isUnResolved && hasHash && notExternalSwap;
               });
-            console.log(check);
             check.forEach(entry => {
               this.web3.eth.getTransactionReceipt(entry.hash).then(result => {
-                console.log(result);
                 if (result === null) return;
                 const noticeIdx = this.notifications[item].findIndex(
                   noticeEntry => entry.id === noticeEntry.id
@@ -261,7 +259,6 @@ export default {
                       : notificationStatuses.FAILED;
                     entry.body.timeRemaining = -1;
                   }
-                  console.log('here again')
                   this.$store.dispatch('updateNotification', [
                     item,
                     noticeIdx,
