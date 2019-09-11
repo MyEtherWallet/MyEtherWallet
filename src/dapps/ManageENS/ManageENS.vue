@@ -302,7 +302,7 @@ export default {
 
       this.loading = true;
       const web3 = this.web3;
-
+      console.error('registrarType', this.registrarType)
       this.labelHash = web3.utils.sha3(this.parsedHostName);
       if (this.parsedTld !== '' && isSupported === undefined) {
         Toast.responseHandler(
@@ -344,6 +344,7 @@ export default {
             const domainStatus = await this.legacyRegistrar.methods
               .entries(this.labelHash)
               .call();
+            console.error('domainStatu', domainStatus[0])
             if (domainStatus[0] === '2') {
               const deedContract = new this.web3.eth.Contract(
                 DeedContractAbi,
@@ -365,6 +366,7 @@ export default {
             }
           }
         } catch (e) {
+          console.error('e', e)
           Toast.responseHandler(e, false);
           this.loading = false;
         }
@@ -392,6 +394,7 @@ export default {
             this.processDNSresult('dnsNotSetup'); // DNSEC not setup properly
           }
         } catch (e) {
+          console.error('else', e)
           this.loading = false;
           Toast.responseHandler(
             'Something went wrong! Please try again.',
