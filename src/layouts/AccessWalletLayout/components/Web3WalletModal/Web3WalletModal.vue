@@ -237,6 +237,7 @@ export default {
         this.signIn(window.web3);
       }
     },
+<<<<<<< HEAD:src/layouts/AccessWalletLayout/components/Web3WalletModal/Web3WalletModal.vue
     async signIn(web3, type) {
       try {
         const newWeb3 = new Web3(web3.currentProvider);
@@ -252,6 +253,29 @@ export default {
         ]);
         this.$router.push({
           path: 'interface'
+=======
+    signIn(web3, type) {
+      new Web3(web3.currentProvider).eth
+        .getAccounts()
+        .then(accounts => {
+          if (type === 'ethereum') {
+            window.ethereum.autoRefreshOnNetworkChange = false;
+          }
+          if (!accounts.length) return (this.unlockWeb3Wallet = true);
+          const address = accounts[0];
+          const wallet = new Web3Wallet(address);
+          this.$store
+            .dispatch('decryptWallet', [wallet, web3.currentProvider])
+            .then(() => {
+              this.$router.push({
+                path: 'interface'
+              });
+            });
+        })
+        .catch(e => {
+          Toast.responseHandler(e, Toast.ERROR);
+          return (this.web3WalletExists = false);
+>>>>>>> 7c3fb14cb958fb2ee9a0e30576451a921b7d88fd:src/layouts/AccessWalletLayout/components/MetamaskModal/MetamaskModal.vue
         });
       } catch (e) {
         Toast.responseHandler(e, Toast.ERROR);

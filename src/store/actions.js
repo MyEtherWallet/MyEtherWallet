@@ -90,7 +90,9 @@ const createAndSignTx = function({ commit }, val) {
 };
 
 const decryptWallet = function({ commit, dispatch }, params) {
-  if (params[0]) {
+  // if the wallet param (param[0]) is undefined or null then all the subsequent setup steps will also fail.
+  // just explicitly stop it here.
+  if (params[0] !== undefined && params[0] !== null) {
     if (params[0].identifier === MEW_CONNECT) {
       params[0].mewConnect().on('RtcClosedEvent', () => {
         if (params[0].mewConnect().getConnectonState()) {
@@ -99,10 +101,18 @@ const decryptWallet = function({ commit, dispatch }, params) {
         }
       });
     }
-  }
 
-  commit('DECRYPT_WALLET', params[0]);
-  dispatch('setWeb3Instance', params[1]);
+    commit('DECRYPT_WALLET', params[0]);
+    dispatch('setWeb3Instance', params[1]);
+  } else {
+    // Could replace this (sentry gets triggered) with a toast, to handle more gracefully
+    // Or some means of informing the user of an issue
+    return Promise.reject(
+      Error(
+        'Received null or undefined wallet parameter. Please refresh the page and try again'
+      )
+    );
+  }
 };
 
 const setAccountBalance = function({ commit }, balance) {
@@ -205,7 +215,13 @@ const updateNotification = function({ commit, state }, val) {
     newNotif[item] = state.notifications[item];
   });
 
-  newNotif[address][val[1]] = val[2];
+  const idIndex = newNotif[address].findIndex(entry => entry.id === val[2].id);
+  if (idIndex > -1) {
+    newNotif[address][idIndex] = val[2];
+  } else {
+    newNotif[address][val[1]] = val[2];
+  }
+
   commit('UPDATE_NOTIFICATION', newNotif);
 };
 
