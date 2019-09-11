@@ -18,7 +18,8 @@ const EXCEPTIONS = [
   'vee-validate',
   '@xkeshi/vue-qrcode',
   'webpack',
-  'babel-eslint'
+  'babel-eslint',
+  'sass-loader'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
