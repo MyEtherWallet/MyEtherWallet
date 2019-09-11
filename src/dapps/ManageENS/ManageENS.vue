@@ -513,7 +513,6 @@ export default {
           break;
       }
     },
-    processPermanentRegistrar() {},
     updateDomainName(value) {
       try {
         this.domainName = normalise(value);
