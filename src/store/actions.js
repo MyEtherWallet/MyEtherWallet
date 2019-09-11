@@ -213,7 +213,13 @@ const updateNotification = function({ commit, state }, val) {
     newNotif[item] = state.notifications[item];
   });
 
-  newNotif[address][val[1]] = val[2];
+  const idIndex = newNotif[address].findIndex(entry => entry.id === val[2].id);
+  if (idIndex > -1) {
+    newNotif[address][idIndex] = val[2];
+  } else {
+    newNotif[address][val[1]] = val[2];
+  }
+
   commit('UPDATE_NOTIFICATION', newNotif);
 };
 
