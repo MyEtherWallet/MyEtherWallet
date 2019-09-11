@@ -1,4 +1,4 @@
-@import "~@/scss/GlobalVariables";
+@import '~@/scss/GlobalVariables';
 
 .toggle-button {
   position: fixed;
@@ -56,6 +56,8 @@
 
 .md-content {
   background-color: $white;
+  height: 500px;
+  overflow-y: auto;
 
   ul {
     li {
@@ -64,10 +66,6 @@
       padding: 20px 20px;
       color: rgb(11, 40, 64);
       cursor: pointer;
-
-      &:last-child {
-        border-bottom: 0;
-      }
 
       .qa-title-container {
         margin-right: 20px;

@@ -44,9 +44,7 @@
               <i class="fa fa-angle-right ml-auto" aria-hidden="true"></i>
             </li>
           </ul>
-          <div v-else>
-            <md-container :md="mdToHtml(currentIndex.md)" />
-          </div>
+          <md-container v-else :md="mdToHtml(currentIndex.md)" />
         </div>
 
         <div class="footer">
@@ -118,7 +116,7 @@ export default {
 <style lang="scss">
 .decision-tree-modal {
   .modal-dialog {
-    width: 450px;
+    width: 400px;
     position: fixed;
     right: 100px;
   }
