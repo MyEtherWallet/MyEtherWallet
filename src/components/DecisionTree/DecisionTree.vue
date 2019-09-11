@@ -12,10 +12,13 @@
     >
       <div class="modal-contents">
         <div class="header">
-          <button @click="back()">
+          <button v-if="historyStack.length > 0" @click="back()">
             <i class="fa fa-angle-left" aria-hidden="true"></i>
           </button>
-          <p>header</p>
+          <div v-else class="mr-1">
+            <img src="@/assets/images/icons/DecisionTree/question.svg" />
+          </div>
+          <p>{{ currentIndex.title }}</p>
         </div>
 
         <search-container>
@@ -53,7 +56,7 @@
             <p>Help center</p>
           </div>
           <button class="ml-auto" @click="top()">
-            <i class="fa fa-angle-left" aria-hidden="true"></i>
+            <img src="@/assets/images/icons/DecisionTree/home.svg" />
           </button>
         </div>
       </div>

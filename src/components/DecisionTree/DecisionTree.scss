@@ -1,4 +1,4 @@
-@import '~@/scss/GlobalVariables';
+@import "~@/scss/GlobalVariables";
 
 .toggle-button {
   position: fixed;
@@ -47,14 +47,9 @@
     }
 
     button {
-      background-color: transparent;
-      color: white;
-      font-size: 15px;
-      border: 1px solid white;
-      border-radius: 100%;
       cursor: pointer;
-      height: 30px;
-      width: 30px;
+      background-color: transparent;
+      border: 0;
     }
   }
 }
