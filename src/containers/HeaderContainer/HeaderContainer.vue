@@ -173,8 +173,20 @@
                   </b-nav-item-dropdown>
                 </div>
                 <div class="notification-menu-container">
-                  <notification ref="notification" v-if="$route.fullPath.includes('view-wallet-info') || $route.fullPath.includes('interface')" />
-                  <extension-notification ref="extensionNotification" v-if="!$route.fullPath.includes('view-wallet-info') && !$route.fullPath.includes('interface')" />
+                  <notification
+                    v-if="
+                      $route.fullPath.includes('view-wallet-info') ||
+                        $route.fullPath.includes('interface')
+                    "
+                    ref="notification"
+                  />
+                  <extension-notification
+                    v-if="
+                      !$route.fullPath.includes('view-wallet-info') &&
+                        !$route.fullPath.includes('interface')
+                    "
+                    ref="extensionNotification"
+                  />
                 </div>
                 <b-nav-item
                   v-if="showButtons && !isPageOnTop"
