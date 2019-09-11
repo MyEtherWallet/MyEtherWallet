@@ -344,7 +344,9 @@ export default {
           new BigNumber(this.customGas).toNumber()
         );
       }
-      this.$refs.gasDropdown.dropdownOpen = false;
+      if (this.$refs.gasDropdown) {
+        this.$refs.gasDropdown.dropdownOpen = false;
+      }
     },
     selectGasType(type) {
       this.selectedGasType = type;
