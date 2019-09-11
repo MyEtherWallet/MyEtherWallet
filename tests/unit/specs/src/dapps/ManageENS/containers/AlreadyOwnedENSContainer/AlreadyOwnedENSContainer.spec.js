@@ -19,6 +19,7 @@ describe('AlreadyOwnedENSContainer.vue', () => {
   const labelHash = 'labelHash';
   const nameHash = 'nameHash';
   const owner = 'owner';
+  const deedOwner = 'deedOwner';
   const resolverAddress = 'resolverAddress';
   const hostName = 'hostName';
   const tld = 'tld';
@@ -42,6 +43,7 @@ describe('AlreadyOwnedENSContainer.vue', () => {
         labelHash,
         nameHash,
         owner,
+        deedOwner,
         resolverAddress,
         hostName,
         tld
@@ -55,7 +57,7 @@ describe('AlreadyOwnedENSContainer.vue', () => {
   it('should render correct fullDomainName computed data', () => {
     expect(
       wrapper.vm.$el
-        .querySelectorAll('.already-owned-container h3')[1]
+        .querySelectorAll('.already-owned-container h3')[0]
         .textContent.trim()
         .indexOf(wrapper.vm.fullDomainName)
     ).toBeGreaterThan(-1);
@@ -83,6 +85,14 @@ describe('AlreadyOwnedENSContainer.vue', () => {
         .querySelectorAll('.content-container .content')[2]
         .textContent.trim()
     ).toEqual(owner);
+  });
+
+  it('should render correct deedOwner props', () => {
+    expect(
+      wrapper.vm.$el
+        .querySelectorAll('.content-container .content')[3]
+        .textContent.trim()
+    ).toEqual(deedOwner);
   });
 
   it('should render correct resolverAddress props', () => {
