@@ -94,9 +94,7 @@
           :address-link="addressLink"
           :process-status="processStatus"
           :error-message-string="errorMessageString"
-          :child-update-notification="
-            childUpdateNotification(notificationDetails.index)
-          "
+          :child-update-notification="childUpdateNotification(notificationDetails.index)"
         >
         </component>
       </div>
