@@ -1,3 +1,21 @@
+### Release v5.1.3
+
+### Feature
+
+- Add ETC Coop Node [#1418](https://github.com/MyEtherWallet/MyEtherWallet/pull/1418)
+
+### Bug
+
+- Fix the bug when user expend the token list, footer breaks [#1396](https://github.com/MyEtherWallet/MyEtherWallet/pull/1396)
+
+### Devop
+
+- Fix finney modal layout [#1392](https://github.com/MyEtherWallet/MyEtherWallet/pull/1392)
+- Updated Bootstrap Vue. [#1393](https://github.com/MyEtherWallet/MyEtherWallet/pull/1393)
+- Compress images, Remove unused images and components [#1389](https://github.com/MyEtherWallet/MyEtherWallet/pull/1389)
+- Restore valid Lightsreams network [#1350](https://github.com/MyEtherWallet/MyEtherWallet/pull/1350)
+- Update packages [#1419](https://github.com/MyEtherWallet/MyEtherWallet/pull/1419)
+
 ### Release v5.1.2
 
 ### Devop
