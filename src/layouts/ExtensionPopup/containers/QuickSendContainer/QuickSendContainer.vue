@@ -218,6 +218,9 @@ export default {
       this.getGasPrice();
       this.estimateGas();
       this.error = '';
+    },
+    password() {
+      this.error = '';
     }
   },
   methods: {
