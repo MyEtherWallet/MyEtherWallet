@@ -46,7 +46,7 @@
           <img
             :src="
               isMetaMask
-                ? require('@/assets/images/icons/button-metamask-fox.svg')
+                ? require('@/assets/images/icons/button-metamask.svg')
                 : require('@/assets/images/logo-small.png')
             "
             class="icon"
@@ -95,7 +95,7 @@
         <div class="modal-multi-icons">
           <img
             class="icon metamask"
-            src="~@/assets/images/icons/button-metamask-fox.png"
+            src="@/assets/images/icons/button-metamask-fox.png"
           />
         </div>
         <div class="d-block content-container text-center">

@@ -8,7 +8,6 @@
       :gas-price="gasPrice"
       :address="address"
     />
-    <notifications-modal ref="notifications" />
     <logout-modal ref="logout" />
     <issue-log-modal
       v-if="Object.keys.length > 0"
@@ -174,7 +173,8 @@
                   </b-nav-item-dropdown>
                 </div>
                 <div class="notification-menu-container">
-                  <notification ref="notification" />
+                  <notification ref="notification" v-if="$route.fullPath.includes('view-wallet-info') || $route.fullPath.includes('interface')" />
+                  <extension-notification ref="extensionNotification" v-if="!$route.fullPath.includes('view-wallet-info') && !$route.fullPath.includes('interface')" />
                 </div>
                 <b-nav-item
                   v-if="showButtons && !isPageOnTop"
@@ -242,12 +242,12 @@ import Notification from '@/components/Notification';
 import ScrollUpButton from '@/components/ScrollUpButton';
 import UserReminderButton from '@/components/UserReminderButton';
 import SettingsModal from '@/components/SettingsModal';
-import NotificationsModal from '@/components/NotificationsModal';
 import LogoutModal from '@/components/LogoutModal';
 import IssueLogModal from '@/components/IssueLogModal';
 import BigNumber from 'bignumber.js';
 import MobileMenu from './components/MobileMenu';
 import DisconnectedModal from '@/components/DisconnectedModal';
+import ExtensionNotification from '@/layouts/ExtensionBrowserAction/containers/ExtensionNotification';
 
 const events = {
   issueModal: 'issueModal',
@@ -260,12 +260,12 @@ export default {
     notification: Notification,
     'scroll-up-button': ScrollUpButton,
     'settings-modal': SettingsModal,
-    'notifications-modal': NotificationsModal,
     'logout-modal': LogoutModal,
     'issue-log-modal': IssueLogModal,
     'user-reminder-button': UserReminderButton,
     'mobile-menu': MobileMenu,
-    'disconnected-modal': DisconnectedModal
+    'disconnected-modal': DisconnectedModal,
+    'extension-notification': ExtensionNotification
   },
   data() {
     return {

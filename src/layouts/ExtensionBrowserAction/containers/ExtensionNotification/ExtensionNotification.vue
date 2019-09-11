@@ -34,48 +34,43 @@
         </div>
       </template>
       <div v-if="!detailsShown" class="notification-item-container">
-        <ul
-          v-if="
-            sortedNotifications !== undefined && sortedNotifications.length > 0
-          "
-        >
-          <li>
-            <p @click="expandAll">
-              <i aria-hidden="true" class="fa fa-2x fa-angle-down"></i>
-            </p>
-            <p @click="CallapseAll">
-              <i aria-hidden="true" class="fa fa-2x fa-angle-up"></i>
-            </p>
-          </li>
-          <li
-            v-for="(notification, idx) in sortedNotifications"
-            :key="notification.id + idx"
-            class="notification-item"
-          >
-            <keep-alive
-              :max="10"
-              :exclude="['transaction-notification', 'transaction-error']"
-            >
-              <component
-                :is="useComponent(notification.type)"
-                :expand="expand(idx, notification)"
-                :shown="shown"
-                :notice="notification"
-                :convert-to-gwei="convertToGwei"
-                :convert-to-eth="convertToEth"
-                :get-fiat-value="getFiatValue"
-                :date-string="dateString"
-                :time-string="timeString"
-                :hash-link="hashLink"
-                :address-link="addressLink"
-                :process-status="processStatus"
-                :error-message-string="errorMessageString"
-                :index="idx"
-                :child-update-notification="childUpdateNotification(idx)"
-                @showDetails="showDetails"
-              >
-              </component>
-            </keep-alive>
+        <ul v-if="sortedNotifications !== undefined && Object.keys(sortedNotifications).length > 0">
+          <li v-for="(notification, address) in sortedNotifications" :key="address" v-show="notification.length > 0">
+            <div class="address-header">
+              {{ address }}
+              <div>
+                <i aria-hidden="true" :class="['fa fa-2x','fa-angle-down']" @click="expandAll(address)" />
+                <i aria-hidden="true" :class="['fa fa-2x', 'fa-angle-up']" @click="collapseAll(address)" />
+              </div>
+            </div>
+            <ul>
+              <li v-for="(noti, idx) in notification" :key="noti.id + idx" class="notification-item">
+                <keep-alive
+                  :max="10"
+                  :exclude="['transaction-notification', 'transaction-error']"
+                >
+                  <component
+                    :is="useComponent(noti.type)"
+                    :expand="expand(idx, noti, address)"
+                    :shown="shown"
+                    :notice="noti"
+                    :convert-to-gwei="convertToGwei"
+                    :convert-to-eth="convertToEth"
+                    :get-fiat-value="getFiatValue"
+                    :date-string="dateString"
+                    :time-string="timeString"
+                    :hash-link="hashLink"
+                    :address-link="addressLink"
+                    :process-status="processStatus"
+                    :error-message-string="errorMessageString"
+                    :index="idx"
+                    :child-update-notification="childUpdateNotification(idx)"
+                    @showDetails="showDetails"
+                  >
+                  </component>
+                </keep-alive>
+              </li>
+            </ul>
           </li>
         </ul>
         <div v-else class="notification-no-item">No notifications found :(</div>
@@ -104,9 +99,10 @@
 
 <script>
 import { mapState } from 'vuex';
-import store from 'store';
 import unit from 'ethjs-unit';
 import BigNumber from 'bignumber.js';
+import { isAddress } from '@/helpers/addressUtils';
+import { ExtensionHelpers } from '@/helpers';
 
 import SwapNotification from './components/NotificationTypes/SwapNotification/SwapNotification';
 import TransactionNotification from './components/NotificationTypes/TransactionNotification/TransactionNotification';
@@ -146,18 +142,23 @@ export default {
     };
   },
   computed: {
-    ...mapState(['web3', 'network', 'notifications', 'account', 'online']),
+    ...mapState(['web3', 'network', 'notifications', 'online']),
     sortedNotifications() {
-      if (!this.notifications[this.account.address]) return [];
-      const notifications = this.notifications[this.account.address];
-      return notifications
-        .sort((a, b) => {
-          a = a.timestamp;
-          b = b.timestamp;
+      const notificationCopy = {};
 
-          return a > b ? -1 : a < b ? 1 : 0;
-        })
-        .filter(entry => entry.network === this.network.type.name);
+      Object.keys(this.notifications).forEach(addr => {
+        if (!this.notifications[addr]) {
+          notificationCopy[addr] = [];
+        } else {
+          notificationCopy[addr] = this.notifications[addr];
+          notificationCopy[addr].sort((a, b) => {
+            a = a.timestamp;
+            b = b.timestamp;
+            return a > b ? -1 : a < b ? 1 : 0;
+          }).filter(entry => entry.network === this.network.type.name);
+        }
+      })
+      return notificationCopy;
     }
   },
   watch: {
@@ -166,10 +167,6 @@ export default {
     }
   },
   mounted() {
-    if (this.notifications[this.account.address] === undefined) {
-      this.notifications[this.account.address] = [];
-      store.set('notifications', this.notifications);
-    }
     this.countUnread();
     if (this.online) {
       this.fetchBalanceData();
@@ -182,53 +179,59 @@ export default {
       this.hideDetails();
     },
     checkForUnResolvedTxNotifications() {
-      if (!this.notifications[this.account.address]) return [];
-      const check = this.notifications[this.account.address]
-        .filter(entry => entry.network === this.network.type.name)
-        .filter(entry => {
-          const isOlder =
-            (new Date().getTime() - new Date(entry.timestamp).getTime()) /
-              1000 >
-            6000;
-          const isUnResolved = entry.status === notificationStatuses.PENDING;
-          const notExternalSwap =
-            entry.type === notificationType.TRANSACTION ||
-            (entry.type === notificationType.SWAP && entry.body.isDex === true);
-          const hasHash = entry.hash !== '' && entry.hash !== undefined;
-          return isOlder && isUnResolved && hasHash && notExternalSwap;
-        });
-      check.forEach(entry => {
-        this.web3.eth.getTransactionReceipt(entry.hash).then(result => {
-          if (result === null) return;
-          const noticeIdx = this.notifications[this.account.address].findIndex(
-            noticeEntry => entry.id === noticeEntry.id
-          );
-          if (noticeIdx >= 0) {
-            entry.status = result.status
-              ? notificationStatuses.COMPLETE
-              : notificationStatuses.FAILED;
-            entry.body.error = !result.status;
-            entry.body.errorMessage = result.status
-              ? ''
-              : INVESTIGATE_FAILURE_KEY;
-            entry.body.gasUsed = new BigNumber(result.gasUsed).toString();
-            entry.body.blockNumber = new BigNumber(
-              result.blockNumber
-            ).toString();
-            if (entry.body.isDex) {
-              entry.swapStatus = result.status
-                ? notificationStatuses.COMPLETE
-                : notificationStatuses.FAILED;
-              entry.body.timeRemaining = -1;
-            }
-            this.$store.dispatch('updateNotification', [
-              this.account.address,
-              noticeIdx,
-              entry
-            ]);
+      ExtensionHelpers.getAccounts(accs => {
+        Object.keys(accs).forEach(item => {
+          if (isAddress(item)) {
+            if (this.notifications[item]) return [];
+            const check = this.notifications[item]
+              .filter(entry => entry.network === this.network.type.name)
+              .filter(entry => {
+                const isOlder =
+                  (new Date().getTime() - new Date(entry.timestamp).getTime()) /
+                    1000 >
+                  6000;
+                const isUnResolved = entry.status === notificationStatuses.PENDING;
+                const notExternalSwap =
+                  entry.type === notificationType.TRANSACTION ||
+                  (entry.type === notificationType.SWAP && entry.body.isDex === true);
+                const hasHash = entry.hash !== '' && entry.hash !== undefined;
+                return isOlder && isUnResolved && hasHash && notExternalSwap;
+              });
+            check.forEach(entry => {
+              this.web3.eth.getTransactionReceipt(entry.hash).then(result => {
+                if (result === null) return;
+                const noticeIdx = this.notifications[item].findIndex(
+                  noticeEntry => entry.id === noticeEntry.id
+                );
+                if (noticeIdx >= 0) {
+                  entry.status = result.status
+                    ? notificationStatuses.COMPLETE
+                    : notificationStatuses.FAILED;
+                  entry.body.error = !result.status;
+                  entry.body.errorMessage = result.status
+                    ? ''
+                    : INVESTIGATE_FAILURE_KEY;
+                  entry.body.gasUsed = new BigNumber(result.gasUsed).toString();
+                  entry.body.blockNumber = new BigNumber(
+                    result.blockNumber
+                  ).toString();
+                  if (entry.body.isDex) {
+                    entry.swapStatus = result.status
+                      ? notificationStatuses.COMPLETE
+                      : notificationStatuses.FAILED;
+                    entry.body.timeRemaining = -1;
+                  }
+                  this.$store.dispatch('updateNotification', [
+                    item,
+                    noticeIdx,
+                    entry
+                  ]);
+                }
+              });
+            });
           }
-        });
-      });
+        })
+      })
     },
     showNotifications() {
       this.shown = true;
@@ -262,13 +265,18 @@ export default {
     },
     countUnread() {
       this.unreadCount = 0;
-      if (this.sortedNotifications.length) {
-        this.sortedNotifications.forEach(notif => {
-          if (notif.read === false) this.unreadCount++;
-        });
+      const notifications = Object.keys(this.sortedNotifications);
+      if (notifications.length) {
+        notifications.forEach(item => {
+          if (this.sortedNotifications[item].length > 0) {
+            this.sortedNotifications[item].forEach(notif => {
+              if (notif.read === false) this.unreadCount++;
+            })
+          }
+        })
       }
     },
-    expand(idx, notif) {
+    expand(idx, notif, address) {
       return () => {
         const updatedNotif = notif;
         if (notif.expanded !== true) {
@@ -279,32 +287,40 @@ export default {
         }
 
         this.$store.dispatch('updateNotification', [
-          this.account.address,
+          address,
           idx,
           updatedNotif
         ]);
       };
     },
-    expandAll() {
-      this.notifications[this.account.address].forEach((notice, idx) => {
+    hasExpanded(address) {
+      const hasExpanded = this.notifications[address].find(notice => {
+        return notice.expanded === true;
+      });
+
+      // eslint-disable-next-line
+      return !!hasExpanded;
+    },
+    expandAll(address) {
+      this.notifications[address].forEach((notice, idx) => {
         const updatedNotif = notice;
         if (notice.expanded !== true) {
           updatedNotif.read = true;
           updatedNotif.expanded = true;
         }
         this.$store.dispatch('updateNotification', [
-          this.account.address,
+          address,
           idx,
           updatedNotif
         ]);
       });
     },
-    CallapseAll() {
-      this.notifications[this.account.address].forEach((notice, idx) => {
+    collapseAll(address) {
+      this.notifications[address].forEach((notice, idx) => {
         const updatedNotif = notice;
         updatedNotif.expanded = false;
         this.$store.dispatch('updateNotification', [
-          this.account.address,
+          address,
           idx,
           updatedNotif
         ]);
@@ -398,5 +414,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import './Notification.scss';
+@import './ExtensionNotification.scss';
 </style>

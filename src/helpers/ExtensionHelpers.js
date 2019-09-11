@@ -23,6 +23,7 @@ const addWalletToStore = (
 ) => {
   const checksummedAddr = toChecksumAddress(address).toLowerCase();
   const chrome = window.chrome;
+
   getAccounts(item => {
     const foundAddress = Object.keys(item).find(key => {
       if (isAddress(key)) {

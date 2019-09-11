@@ -19,7 +19,11 @@ const EXCEPTIONS = [
   'vee-validate',
   'webpack',
   'babel-eslint',
-  'sass-loader'
+  'sass-loader',
+  'vue-router',
+  '@ensdomains/dnsregistrar',
+  'ethereumjs-tx',
+  'sinon'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

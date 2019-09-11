@@ -185,6 +185,7 @@ export default {
 
     this.$refs.verifyDetails.$refs.verifyDetails.$on('hidden', () => {
       this.nickname = '';
+      this.loading = false;
     });
   },
   methods: {
