@@ -157,7 +157,8 @@
       "multicoin-address-validator",
       "@xkeshi/vue-qrcode",
       "web3-core-requestmanager",
-      "vee-validate"
+      "vee-validate",
+      "sass-loader"
     ]
   }
 }
