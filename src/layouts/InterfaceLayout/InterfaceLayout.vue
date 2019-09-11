@@ -485,7 +485,11 @@ export default {
         });
       }
     },
+<<<<<<< HEAD
     matchWeb3WalletNetwork() {
+=======
+    matchMetamaskNetwork() {
+>>>>>>> 7c3fb14cb958fb2ee9a0e30576451a921b7d88fd
       this.web3.eth.net.getId().then(id => {
         this.checkAndSetNetwork(id);
       });
@@ -504,9 +508,18 @@ export default {
       if (this.online) {
         if (this.account.address !== null) {
           if (this.account.identifier === WEB3_TYPE) {
+<<<<<<< HEAD
             if (window.ethereum.isMetaMask || window.ethereum.isMew) {
               this.checkWeb3WalletAddrChange();
               this.matchWeb3WalletNetwork();
+=======
+            if (
+              window.web3.currentProvider.isMetaMask ||
+              window.web3.currentProvider.isMew
+            ) {
+              this.checkMetamaskAddrChange();
+              this.matchMetamaskNetwork();
+>>>>>>> 7c3fb14cb958fb2ee9a0e30576451a921b7d88fd
             } else {
               this.web3WalletPollNetwork();
               this.web3WalletPollAddress();

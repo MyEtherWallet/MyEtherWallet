@@ -25,30 +25,6 @@ export default [
   },
   {
     constant: true,
-    inputs: [
-      { name: 'hash', type: 'bytes32' },
-      { name: 'owner', type: 'address' },
-      { name: 'value', type: 'uint256' },
-      { name: 'salt', type: 'bytes32' }
-    ],
-    name: 'shaBid',
-    outputs: [{ name: 'sealedBid', type: 'bytes32' }],
-    payable: false,
-    type: 'function'
-  },
-  {
-    constant: false,
-    inputs: [
-      { name: 'bidder', type: 'address' },
-      { name: 'seal', type: 'bytes32' }
-    ],
-    name: 'cancelBid',
-    outputs: [],
-    payable: false,
-    type: 'function'
-  },
-  {
-    constant: true,
     inputs: [{ name: '_hash', type: 'bytes32' }],
     name: 'entries',
     outputs: [
@@ -71,29 +47,9 @@ export default [
   },
   {
     constant: false,
-    inputs: [
-      { name: '_hash', type: 'bytes32' },
-      { name: '_value', type: 'uint256' },
-      { name: '_salt', type: 'bytes32' }
-    ],
-    name: 'unsealBid',
-    outputs: [],
-    payable: false,
-    type: 'function'
-  },
-  {
-    constant: false,
     inputs: [{ name: '_hash', type: 'bytes32' }],
     name: 'transferRegistrars',
     outputs: [],
-    payable: false,
-    type: 'function'
-  },
-  {
-    constant: true,
-    inputs: [{ name: '', type: 'address' }, { name: '', type: 'bytes32' }],
-    name: 'sealedBids',
-    outputs: [{ name: '', type: 'address' }],
     payable: false,
     type: 'function'
   },
@@ -128,14 +84,6 @@ export default [
     type: 'function'
   },
   {
-    constant: false,
-    inputs: [{ name: '_hash', type: 'bytes32' }],
-    name: 'finalizeAuction',
-    outputs: [],
-    payable: false,
-    type: 'function'
-  },
-  {
     constant: true,
     inputs: [],
     name: 'registryStarted',
@@ -153,24 +101,8 @@ export default [
   },
   {
     constant: false,
-    inputs: [{ name: 'sealedBid', type: 'bytes32' }],
-    name: 'newBid',
-    outputs: [],
-    payable: true,
-    type: 'function'
-  },
-  {
-    constant: false,
     inputs: [{ name: 'labels', type: 'bytes32[]' }],
     name: 'eraseNode',
-    outputs: [],
-    payable: false,
-    type: 'function'
-  },
-  {
-    constant: false,
-    inputs: [{ name: '_hashes', type: 'bytes32[]' }],
-    name: 'startAuctions',
     outputs: [],
     payable: false,
     type: 'function'
@@ -188,30 +120,11 @@ export default [
     type: 'function'
   },
   {
-    constant: false,
-    inputs: [{ name: '_hash', type: 'bytes32' }],
-    name: 'startAuction',
-    outputs: [],
-    payable: false,
-    type: 'function'
-  },
-  {
     constant: true,
     inputs: [],
     name: 'rootNode',
     outputs: [{ name: '', type: 'bytes32' }],
     payable: false,
-    type: 'function'
-  },
-  {
-    constant: false,
-    inputs: [
-      { name: 'hashes', type: 'bytes32[]' },
-      { name: 'sealedBid', type: 'bytes32' }
-    ],
-    name: 'startAuctionsAndBid',
-    outputs: [],
-    payable: true,
     type: 'function'
   },
   {
@@ -222,36 +135,6 @@ export default [
     ],
     payable: false,
     type: 'constructor'
-  },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: true, name: 'hash', type: 'bytes32' },
-      { indexed: false, name: 'registrationDate', type: 'uint256' }
-    ],
-    name: 'AuctionStarted',
-    type: 'event'
-  },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: true, name: 'hash', type: 'bytes32' },
-      { indexed: true, name: 'bidder', type: 'address' },
-      { indexed: false, name: 'deposit', type: 'uint256' }
-    ],
-    name: 'NewBid',
-    type: 'event'
-  },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: true, name: 'hash', type: 'bytes32' },
-      { indexed: true, name: 'owner', type: 'address' },
-      { indexed: false, name: 'value', type: 'uint256' },
-      { indexed: false, name: 'status', type: 'uint8' }
-    ],
-    name: 'BidRevealed',
-    type: 'event'
   },
   {
     anonymous: false,
