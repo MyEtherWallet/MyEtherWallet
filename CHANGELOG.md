@@ -1,3 +1,9 @@
+### Release v5.1.3
+
+### Feature
+
+- Add ETC Coop Node [#1418](https://github.com/MyEtherWallet/MyEtherWallet/pull/1418)
+
 ### Bug
 
 - Fix the bug when user expend the token list, footer breaks [#1396](https://github.com/MyEtherWallet/MyEtherWallet/pull/1396)
