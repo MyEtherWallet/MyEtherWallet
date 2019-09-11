@@ -114,5 +114,6 @@
   "reviewSwap": "Review swap",
   "emailPopOver": "Only used if any problems arise with the deposit, otherwise if omitted the value will be refunded to the sending address if any problems arise.",
   "dashboard": "Dashboard",
-  "dashboardSwap": "MEW has partnered with Bity, Kyber Network, Changelly, and Simplex to allow users to swap fiat to crypto, ETH and BTC, ETH and ERC-20."
+  "dashboardSwap": "MEW has partnered with Bity, Kyber Network, Changelly, and Simplex to allow users to swap fiat to crypto, ETH and BTC, ETH and ERC-20.",
+  "availableFor": "Available for iOS<br />and Android"
 }
