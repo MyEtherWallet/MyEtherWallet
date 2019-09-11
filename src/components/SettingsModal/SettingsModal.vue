@@ -99,13 +99,12 @@
             </p>
             <div class="import-button-block">
               <div class="filename">
-                <standard-input :options="inputFileName" />
+                {{ inputFileName }}
               </div>
               <input
                 ref="uploadInput"
                 type="file"
                 name="file"
-                style="display: none"
                 @change="receiveUploadedFile"
               />
               <standard-button
@@ -116,6 +115,7 @@
             <div class="button-block">
               <standard-button
                 :options="buttonImport"
+                :button-disabled="importedFile === ''"
                 @click.native="setDataFromImportedFile"
               />
             </div>
@@ -196,19 +196,7 @@ export default {
         fullWidth: true,
         noMinWidth: false
       },
-      inputFileName: {
-        title: '',
-        value: '',
-        type: 'text',
-        buttonCopy: false,
-        buttonClear: false,
-        buttonCustom: '',
-        topTextInfo: '',
-        popover: '',
-        placeHolder: '',
-        rightInputText: '',
-        readOnly: true
-      },
+      inputFileName: '',
       selectedGasType: 'regular',
       customGas: 0,
       customGasEth: 0,
@@ -327,17 +315,8 @@ export default {
       reader.readAsBinaryString(this.importedFile);
     },
     receiveUploadedFile(e) {
-      this.inputFileName = {
-        value: e.target.value,
-        type: 'text',
-        buttonCopy: false,
-        buttonClear: false,
-        buttonCustom: '',
-        topTextInfo: '',
-        popover: '',
-        placeHolder: '',
-        rightInputText: ''
-      };
+      const pathParts = e.target.value.split('\\');
+      this.inputFileName = pathParts[pathParts.length - 1];
 
       this.importedFile = e.target.files[0];
     },
