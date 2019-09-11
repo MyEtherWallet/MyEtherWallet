@@ -110,9 +110,7 @@
           :address-link="addressLink"
           :process-status="processStatus"
           :error-message-string="errorMessageString"
-          :child-update-notification="
-            childUpdateNotification(notificationDetails.index)
-          "
+          :child-update-notification="childUpdateNotification(notificationDetails.index)"
         >
         </component>
       </div>
@@ -131,7 +129,7 @@ import SwapNotification from './components/NotificationTypes/SwapNotification/Sw
 import TransactionNotification from './components/NotificationTypes/TransactionNotification/TransactionNotification';
 import TransactionDetails from './components/NotificationTypes/NotificationDetails';
 import SwapDetails from './components/NotificationTypes/SwapDetails';
-
+import store from 'store';
 import {
   statusTypes,
   listComponentMapping,
@@ -192,6 +190,17 @@ export default {
     }
   },
   mounted() {
+    ExtensionHelpers.getAccounts(items => {
+      Object.keys(items).forEach(item => {
+        if (isAddress(item)) {
+          if (this.notifications[item] === undefined) {
+            this.notifications[item] = [];
+            store.set('notifications', this.notifications);
+          }
+        }
+      });
+    });
+
     this.countUnread();
     if (this.online) {
       this.fetchBalanceData();
@@ -207,7 +216,8 @@ export default {
       ExtensionHelpers.getAccounts(accs => {
         Object.keys(accs).forEach(item => {
           if (isAddress(item)) {
-            if (this.notifications[item]) return [];
+            console.log(this.notifications[item]);
+            if (!this.notifications[item]) return [];
             const check = this.notifications[item]
               .filter(entry => entry.network === this.network.type.name)
               .filter(entry => {
@@ -220,12 +230,15 @@ export default {
                 const notExternalSwap =
                   entry.type === notificationType.TRANSACTION ||
                   (entry.type === notificationType.SWAP &&
-                    entry.body.isDex === true);
+                    entry.body.hasOwnProperty('isDex') && entry.body.isDex === true);
                 const hasHash = entry.hash !== '' && entry.hash !== undefined;
+                console.log(isUnResolved, notExternalSwap, hasHash);
                 return isOlder && isUnResolved && hasHash && notExternalSwap;
               });
+            console.log(check);
             check.forEach(entry => {
               this.web3.eth.getTransactionReceipt(entry.hash).then(result => {
+                console.log(result);
                 if (result === null) return;
                 const noticeIdx = this.notifications[item].findIndex(
                   noticeEntry => entry.id === noticeEntry.id
@@ -248,6 +261,7 @@ export default {
                       : notificationStatuses.FAILED;
                     entry.body.timeRemaining = -1;
                   }
+                  console.log('here again')
                   this.$store.dispatch('updateNotification', [
                     item,
                     noticeIdx,
