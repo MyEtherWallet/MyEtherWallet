@@ -183,7 +183,7 @@
                   <extension-notification
                     v-if="
                       buildType === 'mewcx' &&
-                      !$route.fullPath.includes('view-wallet-info') &&
+                        !$route.fullPath.includes('view-wallet-info') &&
                         !$route.fullPath.includes('interface')
                     "
                     ref="extensionNotification"

@@ -142,7 +142,7 @@ export default {
         gasPrice: gasPrice,
         gas: gas,
         to: to,
-        value: value,
+        value: value === '0x' ? 0x0 : value,
         data: data,
         from: from,
         tokenTransferVal: tokenTransferVal,
