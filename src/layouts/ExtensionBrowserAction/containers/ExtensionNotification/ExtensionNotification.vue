@@ -186,7 +186,6 @@ export default {
             .filter(entry => entry.network === this.network.type.name);
         }
       });
-      console.log(notificationCopy);
       return notificationCopy;
     }
   },

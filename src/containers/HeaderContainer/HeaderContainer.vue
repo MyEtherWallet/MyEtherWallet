@@ -97,6 +97,7 @@
                   href="https://ccswap.myetherwallet.com/#/"
                   target="_blank"
                   class="buy-eth"
+                  rel="noreferrer"
                 >
                   <img
                     class="buy-eth-icon"
