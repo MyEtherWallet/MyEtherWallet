@@ -143,7 +143,6 @@ import {
 } from '@/helpers/notificationFormatters';
 
 import { SwapProviders } from '@/partners';
-import { clearTimeout } from 'timers';
 
 export default {
   components: {
@@ -221,7 +220,6 @@ export default {
       ExtensionHelpers.getAccounts(accs => {
         Object.keys(accs).forEach(item => {
           if (isAddress(item)) {
-            console.log(this.notifications[item]);
             if (!this.notifications[item]) return [];
             const check = this.notifications[item]
               .filter(entry => entry.network === this.network.type.name)
