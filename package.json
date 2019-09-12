@@ -89,12 +89,13 @@
     "eslint-plugin-security": "1.4.0",
     "eth-ens-namehash": "2.0.8",
     "ethereum-ens": "0.7.7",
-    "ethereumjs-tx": "2.1.1",
     "ethereumjs-common": "1.3.2",
+    "ethereumjs-tx": "2.1.1",
     "ethereumjs-util": "6.1.0",
     "ethereumjs-wallet": "0.6.3",
     "ethjs-unit": "0.1.6",
     "hdkey": "1.1.1",
+    "html-webpack-plugin": "3.2.0",
     "i18n-iso-countries": "4.3.1",
     "iban": "0.0.12",
     "imagemin-mozjpeg": "8.0.0",
@@ -109,6 +110,7 @@
     "package-json": "6.5.0",
     "postcss-import": "12.0.1",
     "postcss-url": "8.0.0",
+    "preload-webpack-plugin": "3.0.0-beta.4",
     "prettier": "1.18.2",
     "remark-cli": "7.0.0",
     "remark-preset-lint-recommended": "3.0.3",
@@ -158,7 +160,8 @@
       "@xkeshi/vue-qrcode",
       "web3-core-requestmanager",
       "vee-validate",
-      "sass-loader"
+      "sass-loader",
+      "preload-webpack-plugin"
     ]
   }
 }
