@@ -49,6 +49,10 @@ export default {
     noIcon: {
       type: Boolean,
       default: false
+    },
+    show: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -78,6 +82,11 @@ export default {
       return `mailto:support@myetherwallet.com?subject=${encodeURIComponent(
         subject
       )}&body=${encodeURIComponent(body)}`;
+    }
+  },
+  watch: {
+    show() {
+      this.showModal();
     }
   },
   mounted() {

@@ -1,5 +1,6 @@
 <template>
   <div class="">
+    <customer-support :no-icon="true" :show="showCustomerSupport" />
     <button class="toggle-button" @click="toggle">toggle</button>
     <b-modal
       ref="DecisionTree"
@@ -51,7 +52,12 @@
 
         <div class="footer">
           <div class="help flex--row--align-center">
-            <p>Contact support</p>
+            <p
+              class="cursor-pointer"
+              @click="showCustomerSupport = !showCustomerSupport"
+            >
+              Contact support
+            </p>
             <p class="ml-2 mr-2">|</p>
             <a href="https://kb.myetherwallet.com/" target="_blank">
               <p>Help center</p>
@@ -69,6 +75,7 @@
 <script>
 import MdContainer from './components/MdContainer';
 import SearchContainer from './components/SearchContainer';
+import CustomerSupport from '@/components/CustomerSupport';
 import qaIndex from '@/data/DecisionTree/MDIndex.js';
 import marked from 'marked';
 
@@ -76,14 +83,16 @@ export default {
   name: 'DecisionTree',
   components: {
     'md-container': MdContainer,
-    'search-container': SearchContainer
+    'search-container': SearchContainer,
+    'customer-support': CustomerSupport
   },
   props: {},
   data() {
     return {
       index: qaIndex,
       currentIndex: qaIndex.ROOT,
-      historyStack: []
+      historyStack: [],
+      showCustomerSupport: false
     };
   },
   mounted() {
