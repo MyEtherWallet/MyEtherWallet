@@ -158,8 +158,7 @@
       "@xkeshi/vue-qrcode",
       "web3-core-requestmanager",
       "vee-validate",
-      "sass-loader",
-      "preload-webpack-plugin"
+      "sass-loader"
     ]
   }
 }
