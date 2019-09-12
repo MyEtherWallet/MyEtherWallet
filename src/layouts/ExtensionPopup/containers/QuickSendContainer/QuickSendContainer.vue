@@ -357,17 +357,12 @@ export default {
         window.chrome.runtime.id,
         { event: CX_SEND_SIGNED_TX, payload: payload },
         {},
-        hash => {
+        res => {
+          console.log(res, res.hasOwnProperty('message'));
           // eslint-disable-next-line
-          if (!!hash) {
-            this.txHash = hash;
+          if (!!res && !res.hasOwnProperty('message')) {
+            this.txHash = res;
             this.step += 1;
-            this.$store.dispatch('addNotification', [
-              'Hash',
-              this.raw.from,
-              this.raw,
-              hash
-            ]);
           }
         }
       );
