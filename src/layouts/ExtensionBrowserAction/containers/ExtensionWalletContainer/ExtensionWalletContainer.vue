@@ -96,7 +96,6 @@ import { WalletInterface } from '@/wallets';
 import walletWorker from 'worker-loader!@/workers/wallet.worker.js';
 import { mapState } from 'vuex';
 import { isAddress, toChecksumAddress } from '@/helpers/addressUtils';
-
 export default {
   components: {
     'wallet-side-menu': WalletSideMenu,
@@ -104,18 +103,6 @@ export default {
     'wallet-info-component': WalletInfoComponent,
     'password-only-modal': PasswordOnlyModal
   },
-  // props: {
-  //   accounts: {
-  //     type: Array,
-  //     default: () => {
-  //       return [];
-  //     }
-  //   },
-  //   getAccounts: {
-  //     type: Function,
-  //     default: () => {}
-  //   }
-  // },
   data() {
     return {
       label: 'myWallets',
