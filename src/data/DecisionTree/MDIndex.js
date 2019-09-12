@@ -30,13 +30,15 @@ export default {
     title: 'What issue are you having?',
     sub: [
       'Cant_access_wallet',
-      'Cant_find_address',
+      'Cant_find_address'
+      /*
       'Funds_missing',
       'Cant_send_tx',
       'Making_swap',
       'Using_dapp',
       'Buying_ETH',
       'Other'
+      */
     ]
   },
 
