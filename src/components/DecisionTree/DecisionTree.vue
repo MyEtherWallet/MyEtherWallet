@@ -19,7 +19,7 @@
           <div v-else class="question">
             <img src="@/assets/images/icons/DecisionTree/question.svg" />
           </div>
-          <p v-if="currentIndex.title.length < 25">{{ currentIndex.title }}</p>
+          <p v-if="currentIndex.title.length < 27">{{ currentIndex.title }}</p>
           <p v-else class="long-title">{{ currentIndex.title }}</p>
         </div>
 
@@ -53,7 +53,9 @@
           <div class="help flex--row--align-center">
             <p>Contact support</p>
             <p class="ml-2 mr-2">|</p>
-            <p>Help center</p>
+            <a href="https://kb.myetherwallet.com/" target="_blank">
+              <p>Help center</p>
+            </a>
           </div>
           <button class="ml-auto" @click="top()">
             <img src="@/assets/images/icons/DecisionTree/home.svg" />
