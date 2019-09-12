@@ -25,7 +25,7 @@
         </div>
 
         <search-container>
-          <input type="text" placeholder="Search" />
+          <input v-model="searchKeyword" type="text" placeholder="Search" />
         </search-container>
 
         <div class="md-content">
@@ -92,8 +92,16 @@ export default {
       index: qaIndex,
       currentIndex: qaIndex.ROOT,
       historyStack: [],
-      showCustomerSupport: false
+      showCustomerSupport: false,
+      searchKeyword: ''
     };
+  },
+  watch: {
+    searchKeyword(val) {
+      if (val !== '') {
+        console.log(val);
+      }
+    }
   },
   mounted() {
     this.toggle();
