@@ -19,7 +19,8 @@ const EXCEPTIONS = [
   '@xkeshi/vue-qrcode',
   'webpack',
   'babel-eslint',
-  'sass-loader'
+  'sass-loader',
+  'preload-webpack-plugin'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
