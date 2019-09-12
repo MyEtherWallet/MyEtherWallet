@@ -87,7 +87,7 @@
           {{ $t('createWallet.byMnemonicAlreadyWritten') }}
         </div>
         <div @click="openPrintModal">
-          <img class="icon" src="~@/assets/images/icons/printer.svg" />
+          <img alt class="icon" src="~@/assets/images/icons/printer.svg" />
         </div>
       </div>
       <input-footer />

@@ -51,7 +51,10 @@
       >
         <div v-if="$route.fullPath === '/'" class="vintage-header">
           Missing the vintage MEW?
-          <a rel="noopener noreferrer" href="https://vintage.myetherwallet.com"
+          <a
+            rel="noopener noreferrer"
+            aria-label="Vintage MyEtherWallet"
+            href="https://vintage.myetherwallet.com"
             >Click here to go back!</a
           >
         </div>
@@ -83,6 +86,7 @@
                   href="https://ccswap.myetherwallet.com/#/"
                   target="_blank"
                   class="buy-eth"
+                  rel="noopener noreferrer"
                 >
                   <img
                     class="buy-eth-icon"

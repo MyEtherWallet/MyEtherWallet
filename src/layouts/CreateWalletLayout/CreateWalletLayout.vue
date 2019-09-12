@@ -32,12 +32,14 @@
                       rel="noopener noreferrer"
                     >
                       <img
+                        alt
                         src="~@/assets/images/icons/appstore.svg"
                         height="40"
                       />
                     </a>
                     <div v-else @click="openIpadModal">
                       <img
+                        alt
                         src="~@/assets/images/icons/appstore.svg"
                         height="40"
                       />
@@ -48,6 +50,7 @@
                       rel="noopener noreferrer"
                     >
                       <img
+                        alt
                         src="~@/assets/images/icons/google-play.svg"
                         height="40"
                       />
@@ -61,7 +64,7 @@
                 </div>
               </div>
               <div class="bottom-image">
-                <img src="@/assets/images/etc/phones.png" />
+                <img alt src="@/assets/images/etc/phones.png" />
               </div>
             </b-tab>
             <b-tab

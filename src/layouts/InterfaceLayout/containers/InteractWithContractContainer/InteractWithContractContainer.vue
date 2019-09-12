@@ -80,7 +80,7 @@
           @click="switchView('forward')"
         >
           {{ $t('common.continue') }}
-          <img src="~@/assets/images/icons/right-arrow.png" />
+          <img src="~@/assets/images/icons/right-arrow.png" alt />
         </div>
         <interface-bottom-text
           :link-text="$t('interface.helpCenter')"
