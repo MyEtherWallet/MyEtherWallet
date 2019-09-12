@@ -110,7 +110,9 @@
           :address-link="addressLink"
           :process-status="processStatus"
           :error-message-string="errorMessageString"
-          :child-update-notification="childUpdateNotification(notificationDetails.index)"
+          :child-update-notification="
+            childUpdateNotification(notificationDetails.index)
+          "
         >
         </component>
       </div>
@@ -205,7 +207,10 @@ export default {
     this.countUnread();
     if (this.online) {
       this.fetchBalanceData();
-      this.checkLoop = setInterval(this.checkForUnResolvedTxNotifications, 14000);
+      this.checkLoop = setInterval(
+        this.checkForUnResolvedTxNotifications,
+        14000
+      );
     }
   },
   destroyed() {
@@ -229,7 +234,8 @@ export default {
                 const notExternalSwap =
                   entry.type === notificationType.TRANSACTION ||
                   (entry.type === notificationType.SWAP &&
-                    entry.body.hasOwnProperty('isDex') && entry.body.isDex === true);
+                    entry.body.hasOwnProperty('isDex') &&
+                    entry.body.isDex === true);
                 const hasHash = entry.hash !== '' && entry.hash !== undefined;
                 return isUnResolved && hasHash && notExternalSwap;
               });

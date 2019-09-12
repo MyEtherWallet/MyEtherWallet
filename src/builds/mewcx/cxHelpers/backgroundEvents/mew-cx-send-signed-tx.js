@@ -60,8 +60,6 @@ export default async ({ event, payload }, callback, next) => {
         payload.raw,
         err
       ]);
-      console.log('gets here?', err);
-      // callback(err);
     });
   chrome.notifications.onClicked.addListener(listenerFunc);
 };
