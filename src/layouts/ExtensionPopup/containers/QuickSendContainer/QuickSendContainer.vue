@@ -358,7 +358,6 @@ export default {
         { event: CX_SEND_SIGNED_TX, payload: payload },
         {},
         res => {
-          console.log(res, res.hasOwnProperty('message'));
           // eslint-disable-next-line
           if (!!res && !res.hasOwnProperty('message')) {
             this.txHash = res;
