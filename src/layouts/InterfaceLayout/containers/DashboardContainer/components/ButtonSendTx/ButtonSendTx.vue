@@ -3,7 +3,7 @@
     <div :class="disabled ? 'button-disabled' : ''" class="content-container">
       <img :src="left" class="left" />
       <img :src="right" class="right" />
-      <img :src="spaceman" class="spaceman" />
+      <img :src="spaceman" class="spaceman" alt="Spaceman" />
       <div class="text-content">
         <p class="title">Send<br />Transaction</p>
         <p v-if="disabled" class="button-disabled">

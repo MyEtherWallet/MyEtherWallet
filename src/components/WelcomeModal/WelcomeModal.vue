@@ -11,7 +11,7 @@
     lazy
   >
     <div class="welcome-modal">
-      <img src="@/assets/images/modal/garlands.png" />
+      <img src="@/assets/images/modal/garlands.png" alt />
       <div class="welcome-modal-container">
         <div class="welcome-modal-text">
           <h3>{{ $t('home.welcomeTov5') }}</h3>
