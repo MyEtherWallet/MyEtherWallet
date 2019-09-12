@@ -20,7 +20,6 @@ const EXCEPTIONS = [
   'webpack',
   'babel-eslint',
   'sass-loader',
-  'preload-webpack-plugin'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
