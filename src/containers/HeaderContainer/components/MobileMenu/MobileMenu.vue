@@ -27,9 +27,13 @@
         </div>
       </router-link>
       <div class="mobile-menu-button--container">
-        <a href="https://ccswap.myetherwallet.com/#/" target="_blank">
+        <a
+          href="https://ccswap.myetherwallet.com/#/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           <div class="buy-eth">
-            <img src="@/assets/images/icons/buy-eth.svg" />
+            <img src="@/assets/images/icons/buy-eth.svg" alt />
             <p>Buy ETH</p>
           </div>
         </a>

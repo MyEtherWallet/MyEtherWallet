@@ -25,6 +25,7 @@
           </i18n>
           <i18n path="home.welcomeToV5Desc2" tag="p" for="home.welcomeToLink2">
             <a
+              aria-label="Vintage MyEtherWallet"
               href="https://vintage.myetherwallet.com"
               target="_blank"
               rel="noopener noreferrer"

@@ -14,9 +14,10 @@
               :key="link.name + index"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="{{link.name}}"
             >
               <div :class="link.name">
-                <img :src="link.img" />
+                <img :src="link.img" alt />
                 <p>{{ link.name | capitalize }}</p>
               </div>
             </a>

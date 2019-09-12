@@ -33,7 +33,7 @@
           <div class="grid-col-2 mew-features">
             <dir class="content">
               <div class="image">
-                <img src="~@/assets/images/home/icon-wallet.svg" />
+                <img src="~@/assets/images/home/icon-wallet.svg" alt />
               </div>
               <div class="text">
                 <h3>{{ $t('home.aboutMewWallet') }}</h3>
@@ -42,7 +42,7 @@
             </dir>
             <dir class="content">
               <div class="image">
-                <img src="~@/assets/images/home/icon-hardware.svg" />
+                <img src="~@/assets/images/home/icon-hardware.svg" alt />
               </div>
               <div class="text">
                 <h3>{{ $t('home.aboutHardwareWallet') }}</h3>
@@ -51,7 +51,7 @@
             </dir>
             <dir class="content">
               <div class="image">
-                <img src="~@/assets/images/home/icon-swap.svg" />
+                <img src="~@/assets/images/home/icon-swap.svg" alt />
               </div>
               <div class="text">
                 <h3>{{ $t('common.swap') }}</h3>
@@ -60,7 +60,7 @@
             </dir>
             <dir class="content">
               <div class="image">
-                <img src="~@/assets/images/home/icon-mew-connect.svg" />
+                <img src="~@/assets/images/home/icon-mew-connect.svg" alt />
               </div>
               <div class="text">
                 <h3>{{ $t('common.mewConnect') }}</h3>
