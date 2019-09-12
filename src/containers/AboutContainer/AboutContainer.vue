@@ -12,6 +12,7 @@
               </div>
               <div class="image-content">
                 <img
+                  alt="mew-icon"
                   class="mew-icon"
                   src="~@/assets/images/home/mew-icon.png"
                 />
@@ -20,6 +21,7 @@
                 <img
                   class="spaceman"
                   src="~@/assets/images/home/spaceman.png"
+                  alt="Spaceman"
                 />
               </div>
             </div>
