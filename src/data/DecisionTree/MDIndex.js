@@ -1,5 +1,23 @@
-import Find_and_install_the_MetaMask from 'raw-loader!@/data/DecisionTree/md/Find_and_install_the_MetaMask.md';
-import MyEtherWallet_An_Introduction from 'raw-loader!@/data/DecisionTree/md/MyEtherWallet_An_Introduction.md';
+import _Access_Ledger from 'raw-loader!@/data/DecisionTree/md/_Access_Ledger.md';
+import _Access_Trezor from 'raw-loader!@/data/DecisionTree/md/_Access_Trezor.md';
+import _Access_other from 'raw-loader!@/data/DecisionTree/md/_Access_other.md';
+import _Access_phrase from 'raw-loader!@/data/DecisionTree/md/_Access_phrase.md';
+import _Access_file from 'raw-loader!@/data/DecisionTree/md/_Access_file.md';
+import _Access_key from 'raw-loader!@/data/DecisionTree/md/_Access_key.md';
+import _Cant_scan_access from 'raw-loader!@/data/DecisionTree/md/_Cant_scan_access.md';
+import _Forgot_pass_access from 'raw-loader!@/data/DecisionTree/md/_Forgot_pass_access.md';
+import _Using_CX_access from 'raw-loader!@/data/DecisionTree/md/_Using_CX_access.md';
+import _Using_MM_access from 'raw-loader!@/data/DecisionTree/md/_Using_MM_access.md';
+import _created_on_MEW from 'raw-loader!@/data/DecisionTree/md/_created_on_MEW.md';
+import _created_other from 'raw-loader!@/data/DecisionTree/md/_created_other.md';
+import _Find_CX from 'raw-loader!@/data/DecisionTree/md/_Find_CX.md';
+import _Find_file from 'raw-loader!@/data/DecisionTree/md/_Find_file.md';
+import _Find_key from 'raw-loader!@/data/DecisionTree/md/_Find_key.md';
+import _Find_Ledger from 'raw-loader!@/data/DecisionTree/md/_Find_Ledger.md';
+import _Find_Trezor from 'raw-loader!@/data/DecisionTree/md/_Find_Trezor.md';
+import _Find_MEWconnect from 'raw-loader!@/data/DecisionTree/md/_Find_MEWconnect.md';
+import _Find_other from 'raw-loader!@/data/DecisionTree/md/_Find_other.md';
+import _Find_MM from 'raw-loader!@/data/DecisionTree/md/_Find_MM.md';
 
 export default {
   /*
@@ -7,61 +25,235 @@ export default {
   ROOT
   =====================================================================================
   */
+
   ROOT: {
-    title: 'Have a question?',
+    title: 'What issue are you having?',
     sub: [
-      'Back_to_the_Basics_10_Tips_for_Beginners',
-      'Does_MEW_Support_BTC_or_other_Coins',
-      'How_to_Access_Your_Wallet',
-      'How_to_Create_a_Wallet'
+      'Cant_access_wallet',
+      'Cant_find_address',
+      'Funds_missing',
+      'Cant_send_tx',
+      'Making_swap',
+      'Using_dapp',
+      'Buying_ETH',
+      'Other'
     ]
   },
 
   /*
   =====================================================================================
-  How to create new wallet
+  I can't access my wallet
   =====================================================================================
   */
-  Good_to_be_home: {
-    title: 'Good to be home',
-    sub: ['Do_you_have_a_dog', 'My_name_is_Great_man']
+
+  Cant_access_wallet: {
+    title: "I can't access my wallet",
+    sub: [
+      'Access_hardware_wallet',
+      'Access_software_wallet',
+      'Using_MEWconnect_access',
+      'Using_CX_access',
+      'Using_MM_access'
+    ]
   },
-  Back_to_the_Basics_10_Tips_for_Beginners: {
-    title: 'Back to the Basics: 10 Tips for Beginners',
-    subtitle: '(e.g. Ledger / Trezor...)',
-    sub: ['Good_to_be_home']
+
+  /*
+  Accessing via Hardware 
+  */
+
+  Access_hardware_wallet: {
+    title: "I'm using a hardware wallet",
+    subtitle: '(Ledger, Trezor, etc.)',
+    sub: ['Access_Ledger', 'Access_Trezor', 'Access_other']
   },
-  Does_MEW_Support_BTC_or_other_Coins: {
-    title:
-      'Does MEW Support BTC or other Coins? oinherogj poergonerognerogn e ogrnon',
-    subtitle:
-      '(Tell me about you wo wopiej fpw jefpwj efpjwepfj wpeijf weoifjw jjgpoiwjgfpoiwj gpowj mom.)',
-    md: MyEtherWallet_An_Introduction
+
+  Access_Ledger: {
+    title: "I'm using a Ledger",
+    md: _Access_Ledger
   },
-  Are_we_going_to_be_okay: {
-    title: 'Are you going to be okay?',
-    md: MyEtherWallet_An_Introduction
+
+  Access_Trezor: {
+    title: "I'm using a Trezor",
+    md: _Access_Trezor
   },
-  Do_you_have_a_dog: {
-    title: 'Do you have a dog?',
-    md: MyEtherWallet_An_Introduction
+
+  Access_other: {
+    title: "I'm using something else",
+    subtitle: '(Bitbox, Secalot, Keepkey, etc.)',
+    md: _Access_other
   },
-  My_name_is_Great_man: {
-    title: 'My name is Great man?',
-    md: Find_and_install_the_MetaMask
+
+  /*
+  Accessing via Software 
+  */
+
+  Access_software_wallet: {
+    title: "I'm using a software wallet",
+    subtitle: '(Mnemonic phrase, Keystore file, Private key..)',
+    sub: ['Access_phrase', 'Access_file', 'Access_key']
+  },
+
+  Access_phrase: {
+    title: "I'm using a Mnemonic Phrase",
+    md: _Access_phrase
+  },
+
+  Access_file: {
+    title: "I'm using a Keystore File",
+    md: _Access_file
+  },
+
+  Access_key: {
+    title: "I'm using a Private Key",
+    md: _Access_key
+  },
+
+  /*
+  Accessing via MEWconnect
+  */
+
+  Using_MEWconnect_access: {
+    title: "I'm using MEWconnect",
+    sub: ['Cant_scan_access', 'Forgot_pass_access']
+  },
+
+  Cant_scan_access: {
+    title: "I can't scan the QR code with my phone camera",
+    md: _Cant_scan_access
+  },
+
+  Forgot_pass_access: {
+    title: 'I forgot my password',
+    md: _Forgot_pass_access
+  },
+
+  /*
+  Accessing via MEW CX 
+  */
+
+  Using_CX_access: {
+    title: "I'm using MEW CX",
+    md: _Using_CX_access
+  },
+
+  /*
+  Accessing via MetaMask
+  */
+
+  Using_MM_access: {
+    title: "I'm using MetaMask",
+    md: _Using_MM_access
   },
 
   /*
   =====================================================================================
-  How to access wallet
+  I can't find my wallet address
   =====================================================================================
   */
-  How_to_Access_Your_Wallet: {
-    title: 'How to Access Your Wallet',
-    sub: ['How_to_Create_a_Wallet', 'Does_MEW_Support_BTC_or_other_Coins']
+
+  Cant_find_address: {
+    title: "I can't find my wallet address",
+    sub: [
+      'Find_hardware',
+      'Find_software',
+      'Find_MEWconnect',
+      'Find_CX',
+      'Find_MM'
+    ]
   },
-  How_to_Create_a_Wallet: {
-    title: 'How to Create a Wallet',
-    md: MyEtherWallet_An_Introduction
+
+  /*
+  Finding Hardware address
+  */
+
+  Find_hardware: {
+    title: "I'm using a hardware wallet",
+    subtitle: '(Ledger, Trezor, etc.)',
+    sub: ['Find_Ledger', 'Find_Trezor', 'Find_other']
+  },
+
+  Find_Ledger: {
+    title: "I'm using a Ledger",
+    md: _Find_Ledger
+  },
+
+  Find_Trezor: {
+    title: "I'm using a Trezor",
+    md: _Find_Trezor
+  },
+
+  Find_other: {
+    title: "I'm using something else",
+    subtitle: '(Bitbox, Secalot, Keepkey, etc.)',
+    md: _Find_other
+  },
+
+  /*
+  Finding Software address
+  */
+
+  Find_software: {
+    title: "I'm using a software wallet",
+    subtitle: '(Mnemonic phrase, Keystore file, Private key..)',
+    sub: ['Find_phrase', 'Find_file', 'Find_key']
+  },
+
+  Find_phrase: {
+    title: "I'm accessing with my Mnemonic Phrase",
+    sub: ['created_on_MEW', 'created_other']
+  },
+
+  created_on_MEW: {
+    title: 'I created the phrase on MEW',
+    md: _created_on_MEW
+  },
+
+  created_other: {
+    title: 'I created the phrase somewhere else',
+    subtitle: '(MEWconnect, Another wallet, etc.)',
+    md: _created_other
+  },
+
+  Find_file: {
+    title: "I'm accessing with my Keystore File",
+    md: _Find_file
+  },
+
+  Find_key: {
+    title: "I'm accessing with my Private Key",
+    md: _Find_key
+  },
+
+  /*
+  Finding MEWconnect address
+  */
+
+  Find_MEWconnect: {
+    title: "I'm using MEWconnect",
+    md: _Find_MEWconnect
+  },
+
+  /*
+  Finding MEW CX address
+  */
+
+  Find_CX: {
+    title: "I'm using MEW CX",
+    md: _Find_CX
+  },
+
+  /*
+  Finding MetaMask address
+  */
+
+  Find_MM: {
+    title: "I'm using MetaMask",
+    md: _Find_MM
   }
+
+  /*
+  =====================================================================================
+  My funds are missing
+  =====================================================================================
+  */
 };
