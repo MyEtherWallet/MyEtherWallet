@@ -103,7 +103,8 @@ import { Transaction } from 'ethereumjs-tx';
 import { Misc } from '@/helpers';
 import {
   REJECT_MEW_TX_SIGN,
-  MEW_TX_HASH
+  MEW_TX_HASH,
+  CX_SEND_SIGNED_TX
 } from '@/builds/mewcx/cxHelpers/cxEvents';
 export default {
   components: {
@@ -219,35 +220,42 @@ export default {
       const _self = this;
       const newTx = new Transaction(_self.txParams);
       const signedTx = await wallet.signTransaction(newTx);
-      this.web3.eth.sendSignedTransaction(signedTx.rawTransaction, function(
-        e,
-        hash
-      ) {
-        if (e) {
+      const payload = {
+        signedTx: signedTx.rawTransaction,
+        raw: _self.txParams
+      };
+      window.chrome.runtime.sendMessage(
+        window.chrome.runtime.id,
+        { event: CX_SEND_SIGNED_TX, payload: payload },
+        {},
+        res => {
+          if (res.hasOwnProperty('message')) {
+            window.chrome.tabs.query(
+              { url: `*://*.${Misc.getService(_self.linkQuery.url)}/*` },
+              function(tab) {
+                const obj = {
+                  event: REJECT_MEW_TX_SIGN,
+                  payload: res.message
+                };
+                window.chrome.tabs.sendMessage(tab[0].id, obj);
+                window.close();
+              }
+            );
+            return;
+          }
           window.chrome.tabs.query(
             { url: `*://*.${Misc.getService(_self.linkQuery.url)}/*` },
             function(tab) {
               const obj = {
-                event: REJECT_MEW_TX_SIGN,
-                payload: e.message
+                event: MEW_TX_HASH,
+                payload: res
               };
               window.chrome.tabs.sendMessage(tab[0].id, obj);
               window.close();
             }
           );
         }
-        window.chrome.tabs.query(
-          { url: `*://*.${Misc.getService(_self.linkQuery.url)}/*` },
-          function(tab) {
-            const obj = {
-              event: MEW_TX_HASH,
-              payload: hash
-            };
-            window.chrome.tabs.sendMessage(tab[0].id, obj);
-            window.close();
-          }
-        );
-      });
+      );
     }
   }
 };
