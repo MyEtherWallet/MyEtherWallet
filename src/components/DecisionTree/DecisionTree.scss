@@ -1,4 +1,4 @@
-@import '~@/scss/GlobalVariables';
+@import "~@/scss/GlobalVariables";
 
 .toggle-button {
   position: fixed;
@@ -69,7 +69,7 @@
       top: auto;
       bottom: auto;
       &::before {
-        content: '';
+        content: "";
         position: absolute;
         height: 1px;
         width: 20px;
@@ -79,7 +79,7 @@
         transform: rotate(45deg);
       }
       &::after {
-        content: '';
+        content: "";
         position: absolute;
         height: 1px;
         width: 20px;
@@ -139,6 +139,10 @@
       color: rgb(11, 40, 64);
       cursor: pointer;
 
+      i {
+        font-size: 17px;
+      }
+
       .qa-title-container {
         margin-right: 20px;
       }
@@ -148,7 +152,7 @@
         font-weight: 500;
         color: rgb(11, 40, 64);
         line-height: 18px;
-        margin-bottom: 5px;
+        margin-bottom: 3px;
       }
 
       .qa-subtitle {
@@ -158,5 +162,19 @@
         line-height: 16px;
       }
     }
+  }
+}
+
+.search {
+  position: relative;
+
+  .search-result {
+    background-color: white;
+    position: absolute;
+    left: 0;
+    bottom: -40px;
+    width: 100%;
+    z-index: 999;
+    padding: 20px;
   }
 }
