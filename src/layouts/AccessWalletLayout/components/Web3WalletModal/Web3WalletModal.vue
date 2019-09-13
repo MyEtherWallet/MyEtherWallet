@@ -210,7 +210,7 @@ export default {
   computed: {
     ...mapState(['path']),
     isMetaMask() {
-      return window.ethereum.isMetaMask;
+      return window.ethereum && window.ethereum.isMetaMask;
     }
   },
   mounted() {
