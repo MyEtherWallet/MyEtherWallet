@@ -165,16 +165,17 @@
   }
 }
 
-.search {
+.decision-tree-search {
+  border-bottom: 3px solid $mew-green;
+  background: rgb(242, 244, 250);
   position: relative;
+  height: 50px;
 
-  .search-result {
-    background-color: white;
+  img {
     position: absolute;
-    left: 0;
-    bottom: -40px;
-    width: 100%;
-    z-index: 999;
-    padding: 20px;
+    top: 16px;
+    left: 18px;
+    height: 15px;
+    opacity: 0.6;
   }
 }
