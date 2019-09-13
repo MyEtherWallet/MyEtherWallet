@@ -30,6 +30,7 @@
             placeholder="Search"
           >
           </model-select>
+          <img src="@/assets/images/icons/magnifier.svg" />
         </div>
 
         <div class="md-content">
@@ -166,8 +167,24 @@ export default {
   }
 
   .decision-tree-search {
-    input {
-      padding: 30px;
+    .search {
+      position: relative;
+      height: 100%;
+
+      input {
+        background-color: transparent;
+        padding-left: 50px;
+        border: 0;
+        border-radius: 0;
+        width: 100%;
+      }
+
+      .text {
+        position: absolute;
+        top: auto;
+        bottom: auto;
+        left: 50px;
+      }
     }
   }
 }
