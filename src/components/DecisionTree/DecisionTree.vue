@@ -30,7 +30,8 @@
             placeholder="Search"
           >
           </model-select>
-          <img src="@/assets/images/icons/magnifier.svg" />
+          <img class="magnifier" src="@/assets/images/icons/magnifier.svg" />
+          <p class="clear">Clear</p>
         </div>
 
         <div class="md-content">
@@ -104,16 +105,22 @@ export default {
   },
   watch: {
     searchSelect(val) {
-      this.getSub(val.value);
+      if (val.value) {
+        this.getSearchItem(val.value);
+        this.searchSelect = {};
+      }
     }
   },
   beforeMount() {
+    // Push all searchable items to local variable
     for (const key in qaIndex) {
-      const index = {
-        value: qaIndex[key],
-        text: qaIndex[key].title + qaIndex[key].subtitle
-      };
-      this.searchOptions.push(index);
+      if (!qaIndex[key].nosearch) {
+        const index = {
+          value: qaIndex[key],
+          text: qaIndex[key].title + ' ' + qaIndex[key].subtitle
+        };
+        this.searchOptions.push(index);
+      }
     }
   },
   mounted() {
@@ -125,6 +132,10 @@ export default {
     },
     close() {
       this.$refs.DecisionTree.hide();
+    },
+    getSearchItem(qa) {
+      this.historyStack.push(this.currentIndex);
+      this.currentIndex = qa;
     },
     getSub(qa) {
       this.historyStack.push(this.currentIndex);
@@ -151,6 +162,8 @@ export default {
 </style>
 
 <style lang="scss">
+@import '~@/scss/GlobalVariables';
+
 .decision-tree-modal {
   .modal-dialog {
     width: 400px;
@@ -171,9 +184,16 @@ export default {
       position: relative;
       height: 100%;
 
+      &.active {
+        .text {
+          color: #c3c3c3;
+        }
+      }
+
       input {
         background-color: transparent;
-        padding-left: 50px;
+        padding-left: 45px;
+        padding-right: 70px;
         border: 0;
         border-radius: 0;
         width: 100%;
@@ -181,9 +201,72 @@ export default {
 
       .text {
         position: absolute;
-        top: auto;
-        bottom: auto;
-        left: 50px;
+        top: 13px;
+        left: 45px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 330px;
+        pointer-events: none;
+        color: #b3b3b3;
+      }
+
+      .menu {
+        position: absolute;
+        top: 50px;
+        left: 0;
+        background-color: white;
+        //border-bottom: 3px solid $mew-green;
+        max-height: 500px;
+        overflow-y: auto;
+        width: 100%;
+        background-color: #f2f4fa;
+        //box-shadow: 0 0 10px #00000066;
+
+        &::before {
+          position: absolute;
+          top: 10px;
+          left: auto;
+          right: auto;
+          content: '';
+        }
+
+        .item {
+          border-bottom: 1px solid #e0e0e0;
+          padding: 13px 20px;
+          padding-left: 50px;
+          cursor: pointer;
+          font-size: 12px;
+          font-weight: 500;
+          color: #444444;
+          line-height: 18px;
+          position: relative;
+
+          &::after {
+            content: 'A';
+            position: absolute;
+            left: 18px;
+            top: calc(50% - 10px);
+            border-radius: 100%;
+            background-color: #dcdcdc;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 12px;
+          }
+
+          &.selected {
+            background-color: #ececec;
+          }
+
+          &:hover {
+            background-color: #ececec;
+          }
+        }
       }
     }
   }

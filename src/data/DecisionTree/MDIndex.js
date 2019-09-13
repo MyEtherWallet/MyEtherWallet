@@ -29,6 +29,7 @@ export default {
   ROOT: {
     title: 'What issue are you having?',
     subtitle: '',
+    nosearch: true,
     sub: [
       'Cant_access_wallet',
       'Cant_find_address'
