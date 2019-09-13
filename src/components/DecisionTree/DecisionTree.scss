@@ -134,7 +134,6 @@
 
     li {
       border-bottom: 1px solid rgb(224, 224, 224);
-      //min-height: 71px;
       padding: 20px 20px;
       color: rgb(11, 40, 64);
       cursor: pointer;
@@ -166,16 +165,33 @@
 }
 
 .decision-tree-search {
-  border-bottom: 3px solid $mew-green;
+  border-bottom: 3px solid #e0e0e0;
   background: rgb(242, 244, 250);
   position: relative;
   height: 50px;
 
-  img {
+  .magnifier {
     position: absolute;
     top: 16px;
     left: 18px;
     height: 15px;
     opacity: 0.6;
+  }
+
+  .clear {
+    position: absolute;
+    top: 9px;
+    right: 18px;
+    opacity: 0.6;
+    font-size: 12px;
+    font-weight: 500;
+    //text-transform: uppercase;
+    color: #b3b3b3;
+    cursor: pointer;
+    padding: 5px;
+    display: block;
+    &:hover {
+      color: #777777;
+    }
   }
 }
