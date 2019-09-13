@@ -28,6 +28,7 @@ export default {
 
   ROOT: {
     title: 'What issue are you having?',
+    subtitle: '',
     sub: [
       'Cant_access_wallet',
       'Cant_find_address'
@@ -50,6 +51,7 @@ export default {
 
   Cant_access_wallet: {
     title: "I can't access my wallet",
+    subtitle: '',
     sub: [
       'Access_hardware_wallet',
       'Access_software_wallet',
@@ -71,11 +73,13 @@ export default {
 
   Access_Ledger: {
     title: "I'm using a Ledger",
+    subtitle: '',
     md: _Access_Ledger
   },
 
   Access_Trezor: {
     title: "I'm using a Trezor",
+    subtitle: '',
     md: _Access_Trezor
   },
 
@@ -97,16 +101,19 @@ export default {
 
   Access_phrase: {
     title: "I'm using a Mnemonic Phrase",
+    subtitle: '',
     md: _Access_phrase
   },
 
   Access_file: {
     title: "I'm using a Keystore File",
+    subtitle: '',
     md: _Access_file
   },
 
   Access_key: {
     title: "I'm using a Private Key",
+    subtitle: '',
     md: _Access_key
   },
 
@@ -116,16 +123,19 @@ export default {
 
   Using_MEWconnect_access: {
     title: "I'm using MEWconnect",
+    subtitle: '',
     sub: ['Cant_scan_access', 'Forgot_pass_access']
   },
 
   Cant_scan_access: {
     title: "I can't scan the QR code with my phone camera",
+    subtitle: '',
     md: _Cant_scan_access
   },
 
   Forgot_pass_access: {
     title: 'I forgot my password',
+    subtitle: '',
     md: _Forgot_pass_access
   },
 
@@ -135,6 +145,7 @@ export default {
 
   Using_CX_access: {
     title: "I'm using MEW CX",
+    subtitle: '',
     md: _Using_CX_access
   },
 
@@ -144,6 +155,7 @@ export default {
 
   Using_MM_access: {
     title: "I'm using MetaMask",
+    subtitle: '',
     md: _Using_MM_access
   },
 
@@ -155,6 +167,7 @@ export default {
 
   Cant_find_address: {
     title: "I can't find my wallet address",
+    subtitle: '',
     sub: [
       'Find_hardware',
       'Find_software',
@@ -176,11 +189,13 @@ export default {
 
   Find_Ledger: {
     title: "I'm using a Ledger",
+    subtitle: '',
     md: _Find_Ledger
   },
 
   Find_Trezor: {
     title: "I'm using a Trezor",
+    subtitle: '',
     md: _Find_Trezor
   },
 
@@ -202,11 +217,13 @@ export default {
 
   Find_phrase: {
     title: "I'm accessing with my Mnemonic Phrase",
+    subtitle: '',
     sub: ['created_on_MEW', 'created_other']
   },
 
   created_on_MEW: {
     title: 'I created the phrase on MEW',
+    subtitle: '',
     md: _created_on_MEW
   },
 
@@ -218,11 +235,13 @@ export default {
 
   Find_file: {
     title: "I'm accessing with my Keystore File",
+    subtitle: '',
     md: _Find_file
   },
 
   Find_key: {
     title: "I'm accessing with my Private Key",
+    subtitle: '',
     md: _Find_key
   },
 
@@ -232,6 +251,7 @@ export default {
 
   Find_MEWconnect: {
     title: "I'm using MEWconnect",
+    subtitle: '',
     md: _Find_MEWconnect
   },
 
@@ -241,6 +261,7 @@ export default {
 
   Find_CX: {
     title: "I'm using MEW CX",
+    subtitle: '',
     md: _Find_CX
   },
 
@@ -250,6 +271,7 @@ export default {
 
   Find_MM: {
     title: "I'm using MetaMask",
+    subtitle: '',
     md: _Find_MM
   }
 

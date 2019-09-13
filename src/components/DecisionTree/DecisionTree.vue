@@ -8,7 +8,6 @@
       hide-header
       centered
       static
-      lazy
       class="bootstrap-modal nopadding decision-tree-modal"
     >
       <div class="modal-contents">
@@ -24,9 +23,14 @@
           <p v-else class="long-title">{{ currentIndex.title }}</p>
         </div>
 
-        <search-container>
-          <input v-model="searchKeyword" type="text" placeholder="Search" />
-        </search-container>
+        <div class="decision-tree-search">
+          <model-select
+            :options="searchOptions"
+            v-model="searchSelect"
+            placeholder="Search"
+          >
+          </model-select>
+        </div>
 
         <div class="md-content">
           <ul v-if="currentIndex.sub">
@@ -74,17 +78,17 @@
 
 <script>
 import MdContainer from './components/MdContainer';
-import SearchContainer from './components/SearchContainer';
 import CustomerSupport from '@/components/CustomerSupport';
 import qaIndex from '@/data/DecisionTree/MDIndex.js';
 import marked from 'marked';
+import { ModelSelect } from 'vue-search-select';
 
 export default {
   name: 'DecisionTree',
   components: {
     'md-container': MdContainer,
-    'search-container': SearchContainer,
-    'customer-support': CustomerSupport
+    'customer-support': CustomerSupport,
+    'model-select': ModelSelect
   },
   props: {},
   data() {
@@ -93,14 +97,22 @@ export default {
       currentIndex: qaIndex.ROOT,
       historyStack: [],
       showCustomerSupport: false,
-      searchKeyword: ''
+      searchOptions: [],
+      searchSelect: {}
     };
   },
   watch: {
-    searchKeyword(val) {
-      if (val !== '') {
-        console.log(val);
-      }
+    searchSelect(val) {
+      this.getSub(val.value);
+    }
+  },
+  beforeMount() {
+    for (const key in qaIndex) {
+      const index = {
+        value: qaIndex[key],
+        text: qaIndex[key].title + qaIndex[key].subtitle
+      };
+      this.searchOptions.push(index);
     }
   },
   mounted() {
@@ -151,6 +163,12 @@ export default {
 
   .modal-body {
     background-color: transparent;
+  }
+
+  .decision-tree-search {
+    input {
+      padding: 30px;
+    }
   }
 }
 </style>
