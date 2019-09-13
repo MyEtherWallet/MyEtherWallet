@@ -76,6 +76,7 @@
               <div class="top-logo">
                 <img
                   :class="!isPageOnTop && !isMobileMenuOpen ? 'logo-small' : ''"
+                  alt
                   class="logo-large"
                   src="~@/assets/images/short-hand-logo.png"
                 />
@@ -90,6 +91,7 @@
                   rel="noopener noreferrer"
                 >
                   <img
+                    alt
                     class="buy-eth-icon"
                     src="@/assets/images/icons/buy-eth.svg"
                   />
@@ -142,6 +144,7 @@
                           :src="
                             require(`@/assets/images/flags/${currentFlag}.svg`)
                           "
+                          alt
                           class="show"
                         />
                         <p>{{ currentName }}</p>
