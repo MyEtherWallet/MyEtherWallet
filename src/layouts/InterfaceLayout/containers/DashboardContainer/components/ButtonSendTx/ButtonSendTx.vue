@@ -1,9 +1,9 @@
 <template>
   <div class="button-send-tx">
     <div :class="disabled ? 'button-disabled' : ''" class="content-container">
-      <img :src="left" class="left" />
-      <img :src="right" class="right" />
-      <img :src="spaceman" class="spaceman" alt="Spaceman" />
+      <img :src="left" class="left" alt />
+      <img :src="right" class="right" alt />
+      <img :src="spaceman" class="spaceman" alt />
       <div class="text-content">
         <p class="title">Send<br />Transaction</p>
         <p v-if="disabled" class="button-disabled">

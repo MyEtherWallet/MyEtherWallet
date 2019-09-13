@@ -66,6 +66,7 @@
         >
           <div class="header-container">
             <router-link
+              aria-label="Home"
               to="/"
               @click.native="
                 scrollTop();

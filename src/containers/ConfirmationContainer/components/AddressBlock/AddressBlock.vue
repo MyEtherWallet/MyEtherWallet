@@ -2,7 +2,7 @@
   <div class="address-container">
     <div class="currency-container">
       <div class="icon-matcher">
-        <img :src="iconFetcher" />
+        <img :src="iconFetcher" alt />
       </div>
       <p>
         <span class="currency-amt">

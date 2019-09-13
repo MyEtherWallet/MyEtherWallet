@@ -2,7 +2,9 @@
   <div class="about-mew">
     <div class="wrap">
       <div class="top-section">
-        <div class="circle"><img src="~@/assets/images/home/circle.png" /></div>
+        <div class="circle">
+          <img src="~@/assets/images/home/circle.png" alt />
+        </div>
         <div id="about-mew" class="star-background">
           <div class="page-container">
             <div class="flex-col-1-1-vertical-center content">
