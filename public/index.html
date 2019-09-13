@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
   <meta charset="utf-8" />
@@ -19,8 +19,8 @@
   <meta name="twitter:creator" content="@myetherwallet" />
   <meta name="apple-mobile-web-app-title" content="MyEtherWallet.com: Your Key to Ethereum" />
   <meta name="apple-mobile-web-app-status-bar-style" content="#0B2840" />
-  <link rel="icon" sizes="192x192" href="<%= BASE_URL %>img/icons/android-chrome-192x192.png"/>
-  <link rel="shortcut icon" type="image/png" href="<%= BASE_URL %>favicon.png"/>
+  <link rel="icon prefetch" sizes="192x192" href="<%= BASE_URL %>img/icons/android-chrome-192x192.png" as="image"/>
+  <link rel="shortcut icon prefetch" type="image/png" href="<%= BASE_URL %>favicon.png" as="image"/>
   <title>MyEtherWallet | MEW</title>
   <script type="application/ld+json">
       {
@@ -49,7 +49,7 @@
       ]
       }
     </script>
-  <link href="<%= BASE_URL %>index.css" rel="stylesheet" type="text/css"/>
+  <link href="<%= BASE_URL %>index.css" rel="stylesheet preload" type="text/css" as="style"/>
 </head>
 
 <body>

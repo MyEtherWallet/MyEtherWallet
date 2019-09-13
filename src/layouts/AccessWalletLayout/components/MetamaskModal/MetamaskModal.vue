@@ -21,18 +21,23 @@
             rel="noopener noreferrer"
             target="_blank"
           >
-            <img :src="browser.logo" />
+            <img :src="browser.logo" alt />
           </a>
         </div>
       </div>
       <div v-else-if="web3WalletExists">
         <div class="modal-multi-icons">
           <img
+            alt
             class="icon metamask"
             src="~@/assets/images/icons/button-metamask-fox.png"
           />
-          <img class="icon" src="~@/assets/images/icons/clip.svg" />
-          <img class="icon logo-small" src="~@/assets/images/logo-small.png" />
+          <img alt class="icon" src="~@/assets/images/icons/clip.svg" />
+          <img
+            alt
+            class="icon logo-small"
+            src="~@/assets/images/logo-small.png"
+          />
         </div>
         <div class="d-block content-container text-center">
           <h4 v-show="!unlockWeb3Wallet">
@@ -74,6 +79,7 @@
       <div v-else>
         <div class="modal-multi-icons">
           <img
+            alt
             class="icon metamask"
             src="~@/assets/images/icons/button-metamask-fox.png"
           />
