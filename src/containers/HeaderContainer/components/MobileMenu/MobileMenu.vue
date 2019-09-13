@@ -14,6 +14,7 @@
     >
       <router-link
         to="/"
+        aria-label="Home"
         @click.native="
           scrollTop();
           isMenuOpen = false;
@@ -101,6 +102,7 @@
                 <div>{{ currentLang }}</div>
                 <img
                   :src="require(`@/assets/images/flags/${currentFlag}.svg`)"
+                  alt
                 />
               </div>
               <i class="fa fa-angle-right" aria-hidden="true"></i>
