@@ -1,3 +1,7 @@
+### Bug
+
+- Gas price not saving properly []()
+
 ### Release v5.1.3
 
 ### Feature
