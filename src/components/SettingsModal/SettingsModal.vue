@@ -7,6 +7,8 @@
         hide-footer
         centered
         class="bootstrap-modal nopadding"
+        static
+        lazy
       >
         <div class="modal-contents">
           <full-width-dropdown
@@ -79,6 +81,7 @@
             <div class="button-block">
               <standard-button
                 :options="buttonSave"
+                :button-disabled="selectedGasType === 'other' && customGas < 1"
                 @click.native="saveGasChanges"
               />
             </div>
@@ -97,13 +100,12 @@
             </p>
             <div class="import-button-block">
               <div class="filename">
-                <standard-input :options="inputFileName" />
+                {{ inputFileName }}
               </div>
               <input
                 ref="uploadInput"
                 type="file"
                 name="file"
-                style="display: none"
                 @change="receiveUploadedFile"
               />
               <standard-button
@@ -114,6 +116,7 @@
             <div class="button-block">
               <standard-button
                 :options="buttonImport"
+                :button-disabled="importedFile === ''"
                 @click.native="setDataFromImportedFile"
               />
             </div>
@@ -194,19 +197,7 @@ export default {
         fullWidth: true,
         noMinWidth: false
       },
-      inputFileName: {
-        title: '',
-        value: '',
-        type: 'text',
-        buttonCopy: false,
-        buttonClear: false,
-        buttonCustom: '',
-        topTextInfo: '',
-        popover: '',
-        placeHolder: '',
-        rightInputText: '',
-        readOnly: true
-      },
+      inputFileName: '',
       selectedGasType: 'regular',
       customGas: 0,
       customGasEth: 0,
@@ -269,12 +260,16 @@ export default {
   watch: {
     customGas(newVal) {
       if (newVal !== '') {
-        const toGwei = new BigNumber(
-          utils.toWei(`${newVal}`, 'gwei')
-        ).toFixed();
-        this.customGasEth = new BigNumber(
-          `${utils.fromWei(toGwei, 'ether')}`
-        ).toFixed();
+        if (new BigNumber(newVal).gte(1)) {
+          const toGwei = new BigNumber(
+            utils.toWei(`${newVal}`, 'gwei')
+          ).toFixed();
+          this.customGasEth = new BigNumber(
+            `${utils.fromWei(toGwei, 'ether')}`
+          ).toFixed();
+        } else {
+          this.customGas = 1;
+        }
       }
     },
     gasPrice() {
@@ -325,17 +320,8 @@ export default {
       reader.readAsBinaryString(this.importedFile);
     },
     receiveUploadedFile(e) {
-      this.inputFileName = {
-        value: e.target.value,
-        type: 'text',
-        buttonCopy: false,
-        buttonClear: false,
-        buttonCustom: '',
-        topTextInfo: '',
-        popover: '',
-        placeHolder: '',
-        rightInputText: ''
-      };
+      const pathParts = e.target.value.split('\\');
+      this.inputFileName = pathParts[pathParts.length - 1];
 
       this.importedFile = e.target.files[0];
     },
@@ -358,7 +344,9 @@ export default {
           new BigNumber(this.customGas).toNumber()
         );
       }
-      this.$refs.gasDropdown.dropdownOpen = false;
+      if (this.$refs.gasDropdown) {
+        this.$refs.gasDropdown.dropdownOpen = false;
+      }
     },
     selectGasType(type) {
       this.selectedGasType = type;

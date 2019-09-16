@@ -3,6 +3,8 @@
     ref="metamask"
     :title="$t('accessWallet.accessByMetaMask')"
     hide-footer
+    static
+    lazy
     class="bootstrap-modal nopadding modal-metamask"
     centered
   >
@@ -26,8 +28,8 @@
       <div v-else-if="web3WalletExists">
         <div class="modal-multi-icons">
           <img
-            class="icon"
-            src="~@/assets/images/icons/button-metamask-fox.svg"
+            class="icon metamask"
+            src="~@/assets/images/icons/button-metamask-fox.png"
           />
           <img class="icon" src="~@/assets/images/icons/clip.svg" />
           <img class="icon logo-small" src="~@/assets/images/logo-small.png" />
@@ -72,8 +74,8 @@
       <div v-else>
         <div class="modal-multi-icons">
           <img
-            class="icon"
-            src="~@/assets/images/icons/button-metamask-fox.svg"
+            class="icon metamask"
+            src="~@/assets/images/icons/button-metamask-fox.png"
           />
         </div>
         <div class="d-block content-container text-center">
@@ -201,10 +203,13 @@ export default {
           if (!accounts.length) return (this.unlockWeb3Wallet = true);
           const address = accounts[0];
           const wallet = new Web3Wallet(address);
-          this.$store.dispatch('decryptWallet', [wallet, web3.currentProvider]);
-          this.$router.push({
-            path: 'interface'
-          });
+          this.$store
+            .dispatch('decryptWallet', [wallet, web3.currentProvider])
+            .then(() => {
+              this.$router.push({
+                path: 'interface'
+              });
+            });
         })
         .catch(e => {
           Toast.responseHandler(e, Toast.ERROR);
