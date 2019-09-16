@@ -1,6 +1,6 @@
 ### Bug
 
-- Gas price not saving properly []()
+- Gas price not saving properly [#1434](https://github.com/MyEtherWallet/MyEtherWallet/pull/1434)
 
 ### Release v5.1.3
 
