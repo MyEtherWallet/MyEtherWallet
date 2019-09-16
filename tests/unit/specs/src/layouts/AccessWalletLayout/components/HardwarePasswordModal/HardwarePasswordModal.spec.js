@@ -55,7 +55,7 @@ describe('HardwarePasswordModal.vue', () => {
     });
 
     it('should change show data when button click', () => {
-      let imgElement = wrapper.find('.input-container img');
+      const imgElement = wrapper.find('.input-container img');
       imgElement.trigger('click');
       expect(wrapper.vm.$data.show).toBe(true);
       imgElement.trigger('click');

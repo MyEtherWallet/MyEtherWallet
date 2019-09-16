@@ -50,17 +50,20 @@ describe('LoadingSign.vue', () => {
   it('should render correct loadingmessage1 props', () => {
     const loadingmessage1 = 'Loading...';
     expect(wrapper.find('.loading-message1').exists()).toBe(false);
-    wrapper.setProps({loadingmessage1});
+    wrapper.setProps({ loadingmessage1 });
     expect(wrapper.find('.loading-message1').exists()).toBe(true);
-    expect(wrapper.vm.$el.querySelector('.loading-message1').textContent.trim()).toEqual(loadingmessage1);
+    expect(
+      wrapper.vm.$el.querySelector('.loading-message1').textContent.trim()
+    ).toEqual(loadingmessage1);
   });
 
   it('should render correct loadingmessage2 props', () => {
     const loadingmessage2 = 'Loading...';
     expect(wrapper.find('.loading-message2').exists()).toBe(false);
-    wrapper.setProps({loadingmessage2});
+    wrapper.setProps({ loadingmessage2 });
     expect(wrapper.find('.loading-message2').exists()).toBe(true);
-    expect(wrapper.vm.$el.querySelector('.loading-message2').textContent.trim()).toEqual(loadingmessage2);
+    expect(
+      wrapper.vm.$el.querySelector('.loading-message2').textContent.trim()
+    ).toEqual(loadingmessage2);
   });
 });
-
