@@ -25,7 +25,7 @@ describe('InterfaceContainerTitle.vue', () => {
     });
   });
 
-  xit('issues:2019-07-19 should render correct title', () => {
+  it('should render correct title', () => {
     expect(
       wrapper.vm.$el.querySelector('.content-title h2').textContent.trim()
     ).toEqual(title);
