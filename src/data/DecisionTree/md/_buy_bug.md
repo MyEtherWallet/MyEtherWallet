@@ -1,8 +1,8 @@
-## Using MEW CX
+## Using Simplex with MEW
 
-#### Try adding your wallet again through the same method as last time, via Keystore file, Mnemonic Phrase, or Private Key.
+#### There is a bug preventing me from buying ETH on the MEW site.
 
-##### If that doesn’t work, please reach out to us with as much information as possible.
+##### Please reach out to us with more information.
 
 ##### Refer to the contact form below.
 
@@ -16,3 +16,11 @@
       \* Please include as many details as possible, such as phone / computer model, OS number, version of the app / site you are using, browser version etc.
   <br>
 - Attach screenshots (optional)
+
+* * *
+
+#### There is a bug preventing me from buying ETH on the Simplex site.
+
+Please reach out toe Simplex with as much information as possible, so they can further assist you.
+
+Their email is support@simplex.com.

@@ -1,8 +1,8 @@
-## Using MetaMask
+## Using DApps (ENS, SafeSend, etc.)
 
-#### If you’re having trouble using MetaMask with MEW, please reach out to us with details on your browsers used and time of error.
+#### If you are having trouble using a DApp, please reach out to us with as much information as possible.
 
-##### If it’s not a MEW issue, you may want to reach out to MetaMask.
+##### Refer to the contact form below.
 
 * * *
 
