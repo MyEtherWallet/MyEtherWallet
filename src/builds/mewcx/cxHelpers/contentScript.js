@@ -11,7 +11,9 @@ import {
   CX_WEB3_DETECTED,
   WEB3_RPC_REQUEST,
   WEB3_CHAIN_CHANGE,
-  WEB3_NETWORK_CHANGE
+  WEB3_NETWORK_CHANGE,
+  WEB3_SUBSCRIBE,
+  CX_SUBSCRIPTION
 } from './cxEvents';
 import {
   csErrors,
@@ -71,6 +73,17 @@ chrome.runtime.onMessage.addListener(function(request, _, callback) {
 });
 
 const events = {};
+events[WEB3_SUBSCRIBE] = function(e) {
+  chrome.runtime.sendMessage(
+    extensionID,
+    {
+      event: CX_SUBSCRIPTION,
+      payload: e.detail
+    },
+    {},
+    console.log()
+  );
+};
 events[WEB3_DETECTED] = function() {
   chrome.runtime.sendMessage(extensionID, {
     event: CX_WEB3_DETECTED

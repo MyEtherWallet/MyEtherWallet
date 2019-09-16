@@ -24,6 +24,9 @@ const CX_SEND_SIGNED_TX = 'sendSignedTx';
 const WEB3_RPC_REQUEST = 'web3RPCRequest';
 const NETWORK_SWITCH_AND_CHAIN_ID = 'networkAndChainIdChanged';
 const WEB3_INJECT_SUCCESS = 'web3{{id}}ScriptInjectedSuccessfuly';
+const CX_SUBSCRIPTION = 'cxSubscription';
+const WEB3_SUBSCRIPTION = 'web3{{id}}Subscription';
+const WEB3_SUBSCRIBE = 'web3{{id}}Subscribe';
 
 export {
   WEB3_DETECTED,
@@ -51,5 +54,8 @@ export {
   CX_SEND_SIGNED_TX,
   WEB3_RPC_REQUEST,
   NETWORK_SWITCH_AND_CHAIN_ID,
-  WEB3_INJECT_SUCCESS
+  WEB3_INJECT_SUCCESS,
+  CX_SUBSCRIPTION,
+  WEB3_SUBSCRIPTION,
+  WEB3_SUBSCRIBE
 };
