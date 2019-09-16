@@ -18,7 +18,7 @@
         :sent-update="sentUpdate"
         @selected="changeSelectedContract"
         @openCustomModal="openCustomModal"
-        @removeCustomNft="removeCustomNft"
+        @removeCustomNft="openRemovalConfirmModal"
       >
       </nft-side-menu>
       <div v-if="showDetails">
@@ -82,6 +82,13 @@
       :add-token="addCustom"
       :active-address="activeAddress"
     ></nft-custom-add-modal>
+    <nft-custom-confirm-remove-modal
+      ref="customRemoveModal"
+      :for-removal="forRemoval"
+      @remove="removeCustomNft"
+    >
+
+    </nft-custom-confirm-remove-modal>
   </div>
 </template>
 
@@ -93,6 +100,7 @@ import ContentBlockTitle from '@/layouts/InterfaceLayout/components/ContentBlock
 import NFTSideMenu from '@/layouts/InterfaceLayout/containers/NFTManagerContainer/components/NFTSideMenu';
 import NftDetails from './components/NftDetails';
 import NftCustomAddModal from './components/NftCustomAddModal';
+import NftCustomConfirmRemove from './components/NftCustomConfirmRemove';
 import { mapState } from 'vuex';
 import hexDecoder from './binaryDecoderNFT';
 import { nftABI } from './abis';
@@ -102,6 +110,7 @@ const URL_BASE = 'https://nft.mewapi.io/nft';
 export default {
   components: {
     'nft-custom-add-modal': NftCustomAddModal,
+    'nft-custom-confirm-remove-modal': NftCustomConfirmRemove,
     'loading-sign': LoadingSign,
     'content-block-title': ContentBlockTitle,
     'nft-side-menu': NFTSideMenu,
@@ -126,7 +135,8 @@ export default {
       ownedTokens: [],
       tokenContractAddress: '0xeA3352C1a3480Ac5a32Fcd1F2854529BA7193F14',
       sentUpdate: 0,
-      customNFTs: []
+      customNFTs: [],
+      forRemoval: {}
     };
   },
   computed: {
@@ -237,6 +247,10 @@ export default {
         this.setup();
         this.sentUpdate += 1;
       }
+    },
+    openRemovalConfirmModal(item) {
+      this.forRemoval = item;
+      this.$refs.customRemoveModal.$refs.modal.show();
     },
     openCustomModal() {
       this.$refs.customModal.$refs.modal.show();
