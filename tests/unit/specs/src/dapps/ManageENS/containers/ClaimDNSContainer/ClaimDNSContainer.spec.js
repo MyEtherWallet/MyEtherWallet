@@ -1,7 +1,8 @@
 import Vue from 'vue';
 import sinon from 'sinon';
 import { shallowMount } from '@vue/test-utils';
-import AlreadyOwnedENSContainer from '@/dapps/ManageENS/containers/AlreadyOwnedENSContainer/AlreadyOwnedENSContainer.vue';
+import ClaimDNSContainer from '@/dapps/ManageENS/containers/ClaimDNSContainer/ClaimDNSContainer.vue';
+import InterfaceBottomText from '@/components/InterfaceBottomText';
 import { Tooling } from '@@/helpers';
 const showModal = sinon.stub();
 
@@ -19,14 +20,18 @@ const mockRouter = {
   push: push
 };
 
-describe('AlreadyOwnedENSContainer.vue', () => {
+describe('ClaimDNSContainer.vue', () => {
   let localVue, i18n, wrapper, store;
   const labelHash = 'labelHash';
   const nameHash = 'nameHash';
   const owner = 'owner';
+  const deedOwner = 'deedOwner';
   const resolverAddress = 'resolverAddress';
   const hostName = 'hostName';
   const tld = 'tld';
+  const claimFunc = sinon.stub();
+  const dnsOwner = 'dnsOwner';
+  const fullDomainName = 'fullDomainName';
 
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
@@ -38,7 +43,7 @@ describe('AlreadyOwnedENSContainer.vue', () => {
   });
 
   beforeEach(() => {
-    wrapper = shallowMount(AlreadyOwnedENSContainer, {
+    wrapper = shallowMount(ClaimDNSContainer, {
       localVue,
       i18n,
       store,
@@ -47,12 +52,16 @@ describe('AlreadyOwnedENSContainer.vue', () => {
         labelHash,
         nameHash,
         owner,
+        deedOwner,
         resolverAddress,
         hostName,
-        tld
+        tld,
+        claimFunc,
+        dnsOwner
       },
       stubs: {
-        'b-modal': BModalStub
+        'b-modal': BModalStub,
+        'interface-bottom-text': InterfaceBottomText
       },
       mocks: {
         $router: mockRouter
@@ -60,44 +69,32 @@ describe('AlreadyOwnedENSContainer.vue', () => {
     });
   });
 
-  it('should render correct fullDomainName computed data', () => {
+  it('should render correct dnsOwner props data', () => {
     expect(
       wrapper.vm.$el
-        .querySelectorAll('.already-owned-container h3')[0]
+        .querySelectorAll('.claim-dns-content p')[1]
         .textContent.trim()
-        .indexOf(wrapper.vm.fullDomainName)
+        .indexOf(dnsOwner)
     ).toBeGreaterThan(-1);
   });
 
-  it('should render correct labelHash props', () => {
-    expect(
-      wrapper.vm.$el
-        .querySelectorAll('.content-container .content')[0]
-        .textContent.trim()
-    ).toEqual(labelHash);
+  it('should render correct claimFunc props func', () => {
+    wrapper.find('.large-round-button-green-filled').trigger('click');
+    expect(claimFunc.called).toBe(true);
   });
 
-  it('should render correct nameHash props', () => {
+  it('should render correct loading props data', () => {
     expect(
-      wrapper.vm.$el
-        .querySelectorAll('.content-container .content')[1]
-        .textContent.trim()
-    ).toEqual(nameHash);
+      wrapper.find('.large-round-button-green-filled span').isVisible()
+    ).toBe(true);
   });
 
-  it('should render correct owner props', () => {
+  it('should render correct fullDomainName computed data', () => {
     expect(
       wrapper.vm.$el
-        .querySelectorAll('.content-container .content')[2]
+        .querySelectorAll('.claim-dns-content p')[0]
         .textContent.trim()
-    ).toEqual(owner);
-  });
-
-  it('should render correct resolverAddress props', () => {
-    expect(
-      wrapper.vm.$el
-        .querySelectorAll('.content-container .content')[3]
-        .textContent.trim()
-    ).toEqual(resolverAddress);
+        .indexOf(wrapper.vm.fullDomainName)
+    ).toBeGreaterThan(-1);
   });
 });

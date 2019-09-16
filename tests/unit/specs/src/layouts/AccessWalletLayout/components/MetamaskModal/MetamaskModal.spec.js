@@ -60,7 +60,7 @@ describe('MetamaskModal.vue', () => {
     ).toBe(false);
   });
 
-  xit('should render correct unlockWeb3Wallet data', () => {
+  it('should render correct unlockWeb3Wallet data', () => {
     wrapper.setData({ web3WalletExists: true });
     expect(
       wrapper
@@ -90,7 +90,7 @@ describe('MetamaskModal.vue', () => {
   });
 
   describe('MetamaskModal.vue Methods', () => {
-    xit('should render correct getWeb3Wallet methods', () => {
+    it('should render correct getWeb3Wallet methods', () => {
       window.web3 = state.newWeb3;
       wrapper.vm.getWeb3Wallet();
     });
