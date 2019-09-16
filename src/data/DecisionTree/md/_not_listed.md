@@ -1,8 +1,8 @@
-## Using MetaMask
+## Issue Not Listed
 
-#### If you’re having trouble using MetaMask with MEW, please reach out to us with details on your browsers used and time of error.
+#### These are our most sought out answers, but we still have a dedicated support team ready to answer any questions or issues you have.
 
-##### If it’s not a MEW issue, you may want to reach out to MetaMask.
+##### If your issue seems common, we’ll add it to the list!
 
 * * *
 

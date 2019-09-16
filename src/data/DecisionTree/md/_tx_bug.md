@@ -1,8 +1,8 @@
-## Using MetaMask
+## There's a Bug With the Interface
 
-#### If you’re having trouble using MetaMask with MEW, please reach out to us with details on your browsers used and time of error.
+#### If there is a bug preventing you from using MEW, please reach out to us with as much information as possible.
 
-##### If it’s not a MEW issue, you may want to reach out to MetaMask.
+##### Refer to the contact form below.
 
 * * *
 
