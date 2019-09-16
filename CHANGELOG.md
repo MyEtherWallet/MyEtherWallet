@@ -1,3 +1,8 @@
+### Bug
+
+- Gas price not saving properly [#1434](https://github.com/MyEtherWallet/MyEtherWallet/pull/1434)
+- Fix u2f timeout for bitbox on windows [#1423](https://github.com/MyEtherWallet/MyEtherWallet/pull/1423)
+
 ### Release v5.1.3
 
 ### Feature
