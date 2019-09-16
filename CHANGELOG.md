@@ -1,3 +1,7 @@
+### Devop
+
+- More tests [#1435](https://github.com/MyEtherWallet/MyEtherWallet/pull/1435)
+
 ### Bug
 
 - Gas price not saving properly [#1434](https://github.com/MyEtherWallet/MyEtherWallet/pull/1434)
