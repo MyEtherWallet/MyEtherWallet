@@ -1,3 +1,5 @@
+### Release v5.1.4
+
 ### Bug
 
 - Gas price not saving properly [#1434](https://github.com/MyEtherWallet/MyEtherWallet/pull/1434)
