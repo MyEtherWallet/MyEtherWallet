@@ -8,12 +8,17 @@
           :class="i.contract === selected ? 'selected' : ''"
           @click="selectNft(i)"
         >
-          <span class="title">{{ i.title }}</span
-          ><span v-show="i.customNft" @click="removeCustomEntry(i)">x</span>
+          <span class="title">{{ i.title }}</span>
+
           <span class="count">({{ i.count }})</span>
+          <i
+            v-show="i.customNft"
+            class="fa fa-times-circle clickable remove"
+            @click="removeCustomEntry(i)"
+          />
         </li>
         <li>
-          <span @click="openCustomModal">+Custom NFT</span>
+          <span class="add-custom" @click="openCustomModal">+Custom NFT</span>
         </li>
       </ul>
     </div>
