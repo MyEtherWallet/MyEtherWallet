@@ -5,6 +5,8 @@
     hide-footer
     class="bootstrap-modal modal-software nopadding"
     centered
+    static
+    lazy
     @shown="focusInput"
   >
     <div>
@@ -137,11 +139,12 @@ export default {
       }
     },
     setUnlockedWallet(wallet) {
-      this.$store.dispatch('decryptWallet', [wallet]);
-      this.spinner = false;
-      this.password = '';
-      this.$router.push({
-        path: 'interface'
+      this.$store.dispatch('decryptWallet', [wallet]).then(() => {
+        this.spinner = false;
+        this.password = '';
+        this.$router.push({
+          path: 'interface'
+        });
       });
     },
     switchViewPassword() {

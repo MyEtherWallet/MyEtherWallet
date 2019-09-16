@@ -5,6 +5,8 @@
     hide-footer
     class="bootstrap-modal modal-software nopadding"
     centered
+    static
+    lazy
     @shown="focusInput"
   >
     <div class="warning">
