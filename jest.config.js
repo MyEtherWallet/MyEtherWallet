@@ -25,6 +25,7 @@ module.exports = {
   },
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
+    '^@/networks$': '<rootDir>/tests/unit/__mocks__/networksMock.js',
     '^@@/(.*)$': '<rootDir>/tests/unit/$1',
     '^@/tests$': '<rootDir>/tests/index.js',
     '^@/tests/(.*)$': '<rootDir>/tests/$1',
