@@ -8,14 +8,15 @@ export default async ({ payload }, res, next) => {
   if (payload.method !== 'eth_subscribe') return next();
   const id = window.extensionID;
   new Promise((resolve, reject) => {
-    const actualEvent = new CustomEvent(
-      WEB3_SUBSCRIBE.replace('{{id}}', id),
-      payload
-    );
+    const actualEvent = new CustomEvent(WEB3_SUBSCRIBE.replace('{{id}}', id), {
+      detail: payload
+    });
     window.addEventListener(WEB3_SUBSCRIPTION.replace('{{id}}', id), res => {
+      console.log('what', res);
       resolve(res.detail);
     });
     window.addEventListener(WEB3_REJECT, res => {
+      console.log('what', res);
       if (res.detail) {
         reject(new Error(res.detail));
       } else {
