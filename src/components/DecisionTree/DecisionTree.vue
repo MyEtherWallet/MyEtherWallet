@@ -1,7 +1,7 @@
 <template>
   <div class="">
     <button :class="button ? 'active' : ''" class="show-button" @click="toggle">
-      <img src="@/assets/images/icons/DecisionTree/question.svg" />
+      <img src="@/assets/images/icons/DecisionTree/need-help.svg" />
     </button>
 
     <customer-support :no-icon="true" :show="showCustomerSupport" />
@@ -173,10 +173,12 @@ export default {
 @import '~@/scss/GlobalVariables';
 
 .decision-tree-modal {
-  .modal-dialog {
-    width: 400px;
-    position: fixed;
-    right: 100px;
+  @media all and (min-width: $tablet-width + 1px) {
+    .modal-dialog {
+      width: 400px;
+      position: fixed;
+      right: 50px;
+    }
   }
 
   .modal-content {
@@ -206,6 +208,9 @@ export default {
         padding-top: 10px;
         font-size: 13px;
         font-weight: 400;
+        @media all and (max-width: $tablet-width) {
+          height: 400px;
+        }
       }
 
       &.visible::after {
@@ -248,7 +253,9 @@ export default {
         width: 100%;
         background-color: #f2f4fa;
         z-index: 2;
-        //height: 500px;
+        @media all and (max-width: $tablet-width) {
+          max-height: 400px;
+        }
 
         .item {
           border-bottom: 1px solid #e0e0e0;
