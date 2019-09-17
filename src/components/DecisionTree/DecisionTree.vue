@@ -39,7 +39,7 @@
           <p class="clear">Clear</p>
         </div>
 
-        <div class="md-content">
+        <div ref="mdList" class="md-content">
           <ul v-if="currentIndex.sub">
             <li
               v-for="(qa, key) in currentIndex.sub"
@@ -144,19 +144,23 @@ export default {
     getSearchItem(qa) {
       this.historyStack.push(this.currentIndex);
       this.currentIndex = qa;
+      this.$refs.mdList.scrollTop = 0;
     },
     getSub(qa) {
       this.historyStack.push(this.currentIndex);
       this.currentIndex = qa;
+      this.$refs.mdList.scrollTop = 0;
     },
     back() {
       if (this.historyStack.length > 0) {
         this.currentIndex = this.historyStack.pop();
+        this.$refs.mdList.scrollTop = 0;
       }
     },
     top() {
       this.currentIndex = qaIndex.ROOT;
       this.historyStack = [];
+      this.$refs.mdList.scrollTop = 0;
     },
     mdToHtml(md) {
       return marked(md);
