@@ -1,10 +1,24 @@
-@import '~@/scss/GlobalVariables';
+@import "~@/scss/GlobalVariables";
 
-.toggle-button {
+.show-button {
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s ease;
   position: fixed;
-  left: 200px;
-  top: 200px;
-  z-index: 99999;
+  background-color: white;
+  border-radius: 100%;
+  border: 1px solid $mew-green;
+  height: 50px;
+  width: 50px;
+  bottom: 11.4vh;
+  cursor: pointer;
+  right: 4vw;
+  z-index: 990;
+
+  &.active {
+    opacity: 1;
+    pointer-events: initial;
+  }
 }
 
 .modal-contents {
@@ -69,7 +83,7 @@
       top: auto;
       bottom: auto;
       &::before {
-        content: '';
+        content: "";
         position: absolute;
         height: 1px;
         width: 20px;
@@ -79,7 +93,7 @@
         transform: rotate(45deg);
       }
       &::after {
-        content: '';
+        content: "";
         position: absolute;
         height: 1px;
         width: 20px;

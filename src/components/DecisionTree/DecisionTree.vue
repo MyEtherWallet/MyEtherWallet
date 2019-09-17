@@ -1,7 +1,11 @@
 <template>
   <div class="">
+    <button :class="button ? 'active' : ''" class="show-button" @click="toggle">
+      <img src="@/assets/images/icons/DecisionTree/question.svg" />
+    </button>
+
     <customer-support :no-icon="true" :show="showCustomerSupport" />
-    <button class="toggle-button" @click="toggle">toggle</button>
+
     <b-modal
       ref="DecisionTree"
       hide-footer
@@ -93,7 +97,12 @@ export default {
     'customer-support': CustomerSupport,
     'model-select': ModelSelect
   },
-  props: {},
+  props: {
+    button: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       index: qaIndex,
@@ -124,9 +133,7 @@ export default {
       }
     }
   },
-  mounted() {
-    this.toggle();
-  },
+  mounted() {},
   methods: {
     toggle() {
       this.$refs.DecisionTree.toggle();
@@ -197,6 +204,8 @@ export default {
         background-color: #f2f4fa;
         display: none;
         padding-top: 10px;
+        font-size: 13px;
+        font-weight: 400;
       }
 
       &.visible::after {
