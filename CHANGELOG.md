@@ -1,3 +1,5 @@
+### Release v5.1.4
+
 ### Bug
 
 - Fix generate mnemonic [#1439](https://github.com/MyEtherWallet/MyEtherWallet/pull/1439)
