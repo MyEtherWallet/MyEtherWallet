@@ -1,6 +1,6 @@
 <template>
   <div class="header">
-    <decision-tree />
+    <decision-tree :button="!isPageOnTop" />
 
     <!-- Modals ***************************************** -->
     <disconnected-modal ref="mewConnectDisconnected" />
