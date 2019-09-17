@@ -1,4 +1,4 @@
-@import "~@/scss/GlobalVariables";
+@import '~@/scss/GlobalVariables';
 
 .md-container .dynamic-content {
   div,
@@ -115,7 +115,11 @@
     padding-left: 5px;
     font-size: 15px;
     font-weight: 300;
-    margin-bottom: 10px;
+    margin-bottom: 18px;
+  }
+
+  ul li {
+    list-style-type: circle;
   }
 
   note {
@@ -125,8 +129,8 @@
     display: block;
     border: 1px solid #9e9e9e;
     color: #545454;
-    padding: 7px 10px;
+    padding: 7px 11px;
     background-color: #f7f7f7;
-    border-radius: 5px;
+    border-radius: 2px;
   }
 }

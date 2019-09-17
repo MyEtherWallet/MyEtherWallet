@@ -28,6 +28,7 @@
             :options="searchOptions"
             v-model="searchSelect"
             placeholder="Search"
+            class="search-results"
           >
           </model-select>
           <img class="magnifier" src="@/assets/images/icons/magnifier.svg" />
@@ -184,6 +185,24 @@ export default {
       position: relative;
       height: 100%;
 
+      &::after {
+        position: absolute;
+        top: 50px;
+        left: 0;
+        content: 'No results found.';
+        text-align: center;
+        width: 100%;
+        height: 500px;
+        z-index: 1;
+        background-color: #f2f4fa;
+        display: none;
+        padding-top: 10px;
+      }
+
+      &.visible::after {
+        display: block;
+      }
+
       &.active {
         .text {
           color: #c3c3c3;
@@ -215,21 +234,12 @@ export default {
         position: absolute;
         top: 50px;
         left: 0;
-        background-color: white;
-        //border-bottom: 3px solid $mew-green;
         max-height: 500px;
         overflow-y: auto;
         width: 100%;
         background-color: #f2f4fa;
-        //box-shadow: 0 0 10px #00000066;
-
-        &::before {
-          position: absolute;
-          top: 10px;
-          left: auto;
-          right: auto;
-          content: '';
-        }
+        z-index: 2;
+        //height: 500px;
 
         .item {
           border-bottom: 1px solid #e0e0e0;
