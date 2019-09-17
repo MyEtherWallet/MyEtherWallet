@@ -64,8 +64,16 @@ DigitalBitboxUsb.prototype.exchange = function(msg, callback) {
       version: 'U2F_V2',
       keyHandle: DigitalBitboxUsb.webSafe64(kh.toString('base64'))
     };
+    // Set timeout to 35 seconds for Windows 10 to wait for user confirmation
+    // Keep 3 seconds for other plaforms so that polling is fast enough
+    let timeout;
+    navigator.platform.indexOf('Win') >= 0 &&
+    (navigator.userAgent.indexOf('Windows NT 10.0') != -1 ||
+      navigator.userAgent.indexOf('Windows 10.0') != -1)
+      ? (timeout = 35)
+      : (timeout = 3);
     u2f
-      .sign(key, 3) // 3-second timeout so that polling is fast enough
+      .sign(key, timeout)
       .then(localCallback)
       .catch(err => {
         callback(undefined, err);

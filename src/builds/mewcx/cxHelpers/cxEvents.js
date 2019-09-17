@@ -27,6 +27,8 @@ const WEB3_INJECT_SUCCESS = 'web3{{id}}ScriptInjectedSuccessfuly';
 const CX_SUBSCRIPTION = 'cxSubscription';
 const WEB3_SUBSCRIPTION = 'web3{{id}}Subscription';
 const WEB3_SUBSCRIBE = 'web3{{id}}Subscribe';
+const WEB3_SUBSCRIPTION_RES = 'web3SubscriptionRes';
+const WEB3_SUBSCRIPTION_ERR = 'web3SubscriptionErr';
 
 export {
   WEB3_DETECTED,
@@ -57,5 +59,7 @@ export {
   WEB3_INJECT_SUCCESS,
   CX_SUBSCRIPTION,
   WEB3_SUBSCRIPTION,
-  WEB3_SUBSCRIBE
+  WEB3_SUBSCRIBE,
+  WEB3_SUBSCRIPTION_RES,
+  WEB3_SUBSCRIPTION_ERR
 };

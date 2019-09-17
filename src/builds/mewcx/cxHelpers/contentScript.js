@@ -13,7 +13,11 @@ import {
   WEB3_CHAIN_CHANGE,
   WEB3_NETWORK_CHANGE,
   WEB3_SUBSCRIBE,
-  CX_SUBSCRIPTION
+  CX_SUBSCRIPTION,
+  WEB3_SUBSCRIPTION_RES,
+  WEB3_SUBSCRIPTION_ERR,
+  WEB3_SUBSCRIPTION,
+  WEB3_REJECT
 } from './cxEvents';
 import {
   csErrors,
@@ -80,10 +84,25 @@ events[WEB3_SUBSCRIBE] = function(e) {
       event: CX_SUBSCRIPTION,
       payload: e.detail
     },
-    {},
-    console.log()
+    {}
   );
 };
+
+events[WEB3_SUBSCRIPTION_RES] = function(res) {
+  window.dispatchEvent(
+    new CustomEvent(WEB3_SUBSCRIPTION.replace('{{id}}', extensionID), {
+      detail: res
+    })
+  );
+};
+events[WEB3_SUBSCRIPTION_ERR] = function(res) {
+  window.dispatchEvent(
+    new CustomEvent(WEB3_REJECT, {
+      detail: res
+    })
+  );
+};
+
 events[WEB3_DETECTED] = function() {
   chrome.runtime.sendMessage(extensionID, {
     event: CX_WEB3_DETECTED
