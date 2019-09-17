@@ -5,17 +5,22 @@
   pointer-events: none;
   transition: all 0.3s ease;
   position: fixed;
-  background-color: white;
-  border-radius: 100%;
-  border: 1px solid $mew-green;
-  height: 50px;
-  width: 50px;
-  bottom: 11.4vh;
+  background-color: transparent;
+  border: 0;
+  bottom: 20px;
   cursor: pointer;
-  right: 4vw;
+  right: 2vw;
   z-index: 990;
+  padding: 0;
+  margin: 0;
+
+  img {
+    height: 40px;
+    width: 40px;
+  }
 
   &.active {
+    bottom: 70px;
     opacity: 1;
     pointer-events: initial;
   }
@@ -142,6 +147,9 @@
   background-color: $white;
   height: 500px;
   overflow-y: auto;
+  @media all and (max-width: $tablet-width) {
+    height: 400px;
+  }
 
   ul {
     user-select: none;
