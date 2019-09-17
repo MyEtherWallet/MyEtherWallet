@@ -1,6 +1,6 @@
 <template>
   <div class="md-container">
-    <div v-html="md"></div>
+    <div class="dynamic-content" v-html="md"></div>
   </div>
 </template>
 
@@ -23,5 +23,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.md-container {
+  padding: 20px;
+}
+</style>
+
+<style lang="scss">
 @import 'MdContainer.scss';
 </style>
