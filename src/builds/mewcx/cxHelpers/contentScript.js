@@ -13,7 +13,7 @@ import {
   WEB3_CHAIN_CHANGE,
   WEB3_NETWORK_CHANGE,
   WEB3_SUBSCRIBE,
-  CX_SUBSCRIPTION
+  CX_SUBSCRIBE
 } from './cxEvents';
 import {
   csErrors,
@@ -23,6 +23,7 @@ import {
   csTxHash,
   csWebInjectionSuccessful,
   csWeb3SubscriptionError,
+  csWeb3SubscribeSuccess,
   csWeb3SubscriptionSuccess
 } from './contentScriptEvents';
 import { extractRootDomain } from './extractRootDomain';
@@ -71,6 +72,7 @@ chrome.runtime.onMessage.addListener(function(request, _, callback) {
   middleware.use(csTxHash);
   middleware.use(csWebInjectionSuccessful);
   middleware.use(csWeb3SubscriptionError);
+  middleware.use(csWeb3SubscribeSuccess);
   middleware.use(csWeb3SubscriptionSuccess);
   middleware.run(obj, callback);
   return true;
@@ -81,7 +83,7 @@ events[WEB3_SUBSCRIBE] = function(e) {
   chrome.runtime.sendMessage(
     extensionID,
     {
-      event: CX_SUBSCRIPTION,
+      event: CX_SUBSCRIBE,
       payload: e.detail
     },
     {}
