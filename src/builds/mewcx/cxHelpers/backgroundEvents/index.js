@@ -5,6 +5,7 @@ import mewCxSendSignedTx from './mew-cx-send-signed-tx';
 import web3RpcRequest from './web3-rpc-request';
 import web3Detected from './web3-detected';
 import web3Subscription from './web3-subscription';
+import web3Unsubscribe from './web3-unsubscribe';
 
 export {
   mewCxFetchAccounts,
@@ -13,5 +14,6 @@ export {
   web3RpcRequest,
   web3Detected,
   web3Subscription,
-  mewCxSendSignedTx
+  mewCxSendSignedTx,
+  web3Unsubscribe
 };

@@ -4,6 +4,7 @@ import ethSign from './eth_sign';
 import ethAccounts from './eth_accounts';
 import ethCoinbase from './eth_coinbase';
 import ethSubscribe from './eth_subscribe';
+import ethUnsubscribe from './eth_unsubscribe';
 
 export {
   ethSendTransaction,
@@ -11,5 +12,6 @@ export {
   ethAccounts,
   ethCoinbase,
   ethRequestAccounts,
-  ethSubscribe
+  ethSubscribe,
+  ethUnsubscribe
 };

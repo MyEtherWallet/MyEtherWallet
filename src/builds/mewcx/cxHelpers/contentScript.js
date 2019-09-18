@@ -13,7 +13,11 @@ import {
   WEB3_CHAIN_CHANGE,
   WEB3_NETWORK_CHANGE,
   WEB3_SUBSCRIBE,
-  CX_SUBSCRIBE
+  CX_SUBSCRIBE,
+  WEB3_UNSUBSCRIBE,
+  CX_UNSUBSCRIBE,
+  WEB3_REJECT,
+  WEB3_UNSUBSCRIBE_RES
 } from './cxEvents';
 import {
   csErrors,
@@ -87,6 +91,31 @@ events[WEB3_SUBSCRIBE] = function(e) {
       payload: e.detail
     },
     {}
+  );
+};
+events[WEB3_UNSUBSCRIBE] = function(e) {
+  chrome.runtime.sendMessage(
+    extensionID,
+    {
+      event: CX_UNSUBSCRIBE,
+      payload: e.detail
+    },
+    {},
+    data => {
+      if (data.error) {
+        window.dispatchEvent(
+          new CustomEvent(WEB3_REJECT.replace('{{id}}', extensionID), {
+            detail: data.error
+          })
+        );
+      } else {
+        window.dispatchEvent(
+          new CustomEvent(WEB3_UNSUBSCRIBE_RES.replace('{{id}}', extensionID), {
+            detail: data.response
+          })
+        );
+      }
+    }
   );
 };
 

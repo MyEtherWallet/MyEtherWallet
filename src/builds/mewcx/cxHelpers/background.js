@@ -9,7 +9,8 @@ import {
   web3RpcRequest,
   mewCxSendSignedTx,
   web3Detected,
-  web3Subscription
+  web3Subscription,
+  web3Unsubscribe
 } from './backgroundEvents';
 import store from '@/store';
 import {
@@ -109,6 +110,7 @@ const eventsListeners = (request, _, callback) => {
   middleware.use(web3RpcRequest);
   middleware.use(web3Detected);
   middleware.use(web3Subscription);
+  middleware.use(web3Unsubscribe);
   middleware.run(obj, callback);
   return true;
 };
