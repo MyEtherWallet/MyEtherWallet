@@ -24,10 +24,12 @@ const CX_SEND_SIGNED_TX = 'sendSignedTx';
 const WEB3_RPC_REQUEST = 'web3RPCRequest';
 const NETWORK_SWITCH_AND_CHAIN_ID = 'networkAndChainIdChanged';
 const WEB3_INJECT_SUCCESS = 'web3{{id}}ScriptInjectedSuccessfuly';
-const CX_SUBSCRIPTION = 'cxSubscription';
-const WEB3_SUBSCRIPTION = 'web3{{id}}Subscription';
+const CX_SUBSCRIBE = 'cxSubscription';
+const WEB3_SUBSCRIBE_LISTENER = 'web3{{id}}SubscribeListener';
+const WEB3_SUBSCRIPTION_LISTENER = 'web3{{id}}SubscriptionListener';
 const WEB3_SUBSCRIBE = 'web3{{id}}Subscribe';
-const WEB3_SUBSCRIPTION_RES = 'web3SubscriptionRes';
+const WEB3_SUBSCRIBE_RES = 'web3SubscribeRes';
+const WEB3_SUBSCRIBTION_RES = 'web3SubscribtionRes';
 const WEB3_SUBSCRIPTION_ERR = 'web3SubscriptionErr';
 
 export {
@@ -57,9 +59,11 @@ export {
   WEB3_RPC_REQUEST,
   NETWORK_SWITCH_AND_CHAIN_ID,
   WEB3_INJECT_SUCCESS,
-  CX_SUBSCRIPTION,
-  WEB3_SUBSCRIPTION,
+  CX_SUBSCRIBE,
+  WEB3_SUBSCRIBE_LISTENER,
+  WEB3_SUBSCRIPTION_LISTENER,
   WEB3_SUBSCRIBE,
-  WEB3_SUBSCRIPTION_RES,
+  WEB3_SUBSCRIBE_RES,
+  WEB3_SUBSCRIBTION_RES,
   WEB3_SUBSCRIPTION_ERR
 };

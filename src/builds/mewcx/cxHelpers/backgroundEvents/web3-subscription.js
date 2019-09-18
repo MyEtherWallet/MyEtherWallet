@@ -1,12 +1,13 @@
 import {
-  CX_SUBSCRIPTION,
-  WEB3_SUBSCRIPTION_RES,
+  CX_SUBSCRIBE,
+  WEB3_SUBSCRIBE_RES,
+  WEB3_SUBSCRIBTION_RES,
   WEB3_SUBSCRIPTION_ERR
 } from '../cxEvents';
 import store from '@/store';
 
 export default async ({ event, payload }, res, next) => {
-  if (event !== CX_SUBSCRIPTION) return next();
+  if (event !== CX_SUBSCRIBE) return next();
   const possibleEvents = {
     syncing: 'syncing',
     logs: 'logs',
@@ -21,7 +22,6 @@ export default async ({ event, payload }, res, next) => {
   let subscription = null;
   let timer = null;
   const cb = (e, response) => {
-    console.log(e, response);
     const obj = {
       error: e ? e.message : e,
       response: response
@@ -31,7 +31,7 @@ export default async ({ event, payload }, res, next) => {
       chrome.tabs.query({}, tabs => {
         tabs.forEach(tab => {
           chrome.tabs.sendMessage(tab.id, {
-            event: WEB3_SUBSCRIPTION_RES + 'notification',
+            event: WEB3_SUBSCRIBTION_RES,
             payload: {
               jsonrpc: '2.0',
               method: 'eth_subscription',
@@ -46,8 +46,6 @@ export default async ({ event, payload }, res, next) => {
     } else {
       clearInterval(timer);
     }
-    //console.log(obj, subscription);
-    //res(obj);
   };
 
   subscription = options
@@ -56,33 +54,16 @@ export default async ({ event, payload }, res, next) => {
   timer = setInterval(() => {
     if (subscription.id) {
       clearInterval(timer);
-      console.log(subscription, subscription.id);
       chrome.tabs.query({}, tabs => {
         tabs.forEach(tab => {
           chrome.tabs.sendMessage(tab.id, {
-            event: WEB3_SUBSCRIPTION_RES,
+            event: WEB3_SUBSCRIBE_RES,
             payload: subscription.id
           });
         });
       });
     }
   }, 500);
-  // web3.currentProvider.send(payload, cb);
-
-  // subscription.on('data', res => {
-  //   console.log(res, subscription);
-  //   chrome.tabs.query({}, tabs => {
-  //     tabs.forEach(tab => {
-  //       chrome.tabs.sendMessage(tab.id, {
-  //         event: WEB3_SUBSCRIPTION_RES + 'notification',
-  //         payload: {
-  //           subscription: subscription.id,
-  //           result: res
-  //         }
-  //       });
-  //     });
-  //   });
-  // });
 
   subscription.on('error', res => {
     chrome.tabs.query({}, tabs => {

@@ -6,6 +6,7 @@ class MEWCXRequestManager {
     return new Web3RequestManager(this);
   }
   send(payload, callback) {
+    console.log(payload, callback);
     const obj = {
       detail: payload
     };
