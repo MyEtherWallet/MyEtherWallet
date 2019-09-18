@@ -31,6 +31,9 @@ const WEB3_SUBSCRIBE = 'web3{{id}}Subscribe';
 const WEB3_SUBSCRIBE_RES = 'web3SubscribeRes';
 const WEB3_SUBSCRIBTION_RES = 'web3SubscribtionRes';
 const WEB3_SUBSCRIPTION_ERR = 'web3SubscriptionErr';
+const WEB3_UNSUBSCRIBE = 'web3{{id}}Unsubscribe';
+const CX_UNSUBSCRIBE = 'cxUnsubcribe';
+const WEB3_UNSUBSCRIBE_RES = 'web3{{id}}UnsubscribeRes';
 
 export {
   WEB3_DETECTED,
@@ -65,5 +68,8 @@ export {
   WEB3_SUBSCRIBE,
   WEB3_SUBSCRIBE_RES,
   WEB3_SUBSCRIBTION_RES,
-  WEB3_SUBSCRIPTION_ERR
+  WEB3_SUBSCRIPTION_ERR,
+  WEB3_UNSUBSCRIBE,
+  CX_UNSUBSCRIBE,
+  WEB3_UNSUBSCRIBE_RES
 };

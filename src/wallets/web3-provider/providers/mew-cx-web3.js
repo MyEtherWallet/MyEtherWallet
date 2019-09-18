@@ -11,7 +11,8 @@ import {
   ethSendTransaction,
   ethSign,
   ethRequestAccounts,
-  ethSubscribe
+  ethSubscribe,
+  ethUnsubscribe
 } from '../cx-web3-methods';
 
 const EventEmitter = require('events');
@@ -27,6 +28,7 @@ class MewCxEthereum extends EventEmitter {
     this.middleware.use(ethAccounts);
     this.middleware.use(ethCoinbase);
     this.middleware.use(ethSubscribe);
+    this.middleware.use(ethUnsubscribe);
     this.requestManager = new MEWCXProvider();
     this._id = 0;
     this.setListeners();

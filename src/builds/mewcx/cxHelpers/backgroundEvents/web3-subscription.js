@@ -28,17 +28,19 @@ export default async ({ event, payload }, res, next) => {
     };
     if (!e) {
       delete obj['error'];
-      chrome.tabs.query({ active: true, lastFocusedWindow: true }, tabs => {
-        chrome.tabs.sendMessage(tabs[0].id, {
-          event: WEB3_SUBSCRIBTION_RES,
-          payload: {
-            jsonrpc: '2.0',
-            method: 'eth_subscription',
-            params: {
-              subscription: subscription.id,
-              result: response
+      chrome.tabs.query({}, tabs => {
+        tabs.forEach(tab => {
+          chrome.tabs.sendMessage(tab.id, {
+            event: WEB3_SUBSCRIBTION_RES,
+            payload: {
+              jsonrpc: '2.0',
+              method: 'eth_subscription',
+              params: {
+                subscription: subscription.id,
+                result: response
+              }
             }
-          }
+          });
         });
       });
     } else {
@@ -52,20 +54,24 @@ export default async ({ event, payload }, res, next) => {
   timer = setInterval(() => {
     if (subscription.id) {
       clearInterval(timer);
-      chrome.tabs.query({ active: true, lastFocusedWindow: true }, tabs => {
-        chrome.tabs.sendMessage(tabs[0].id, {
-          event: WEB3_SUBSCRIBE_RES,
-          payload: subscription.id
+      chrome.tabs.query({}, tabs => {
+        tabs.forEach(tab => {
+          chrome.tabs.sendMessage(tab.id, {
+            event: WEB3_SUBSCRIBE_RES,
+            payload: subscription.id
+          });
         });
       });
     }
   }, 500);
 
   subscription.on('error', res => {
-    chrome.tabs.query({ active: true, lastFocusedWindow: true }, tabs => {
-      chrome.tabs.sendMessage(tabs[0].id, {
-        event: WEB3_SUBSCRIPTION_ERR,
-        payload: res
+    chrome.tabs.query({}, tabs => {
+      tabs.forEach(tab => {
+        chrome.tabs.sendMessage(tab.id, {
+          event: WEB3_SUBSCRIPTION_ERR,
+          payload: res
+        });
       });
     });
   });
