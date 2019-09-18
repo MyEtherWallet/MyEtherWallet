@@ -119,70 +119,92 @@ chrome.tabs.onActivated.addListener(onActivatedCb);
 chrome.tabs.onRemoved.addListener(onRemovedCb);
 
 function onRemovedCb(id) {
-  chrome.storage.sync.remove(urls[id], () => {});
-  delete urls[id];
+  if (urls[id]) {
+    chrome.storage.sync.remove(urls[id], () => {});
+    delete urls[id];
+  }
 }
-
+const isChromeUrl = url => {
+  if (!url) return true;
+  return url.startsWith('chrome://') || url.startsWith('chrome-extension://');
+};
 function onUpdatedCb(_, __, tab) {
-  chrome.runtime.onMessage.removeListener(eventsListeners);
-  if (typeof tab !== 'undefined' && Object.keys(tab).length > 0) {
+  if (
+    typeof tab !== 'undefined' &&
+    Object.keys(tab).length > 0 &&
+    !isChromeUrl(tab.url)
+  ) {
+    chrome.runtime.onMessage.removeListener(eventsListeners);
     urls[tab.id] = extractRootDomain(tab.url);
     querycB(tab);
+    chrome.runtime.onMessage.addListener(eventsListeners);
   }
-  chrome.runtime.onMessage.addListener(eventsListeners);
 }
 function onActivatedCb(info) {
-  chrome.runtime.onMessage.removeListener(eventsListeners);
   chrome.tabs.get(info.tabId, function(tab) {
     if (
       typeof tab !== 'undefined' &&
       Object.keys(tab).length > 0 &&
-      tab.url !== undefined
+      !isChromeUrl(tab.url)
     ) {
+      chrome.runtime.onMessage.removeListener(eventsListeners);
       urls[info.tabId] = extractRootDomain(tab.url);
       querycB(tab);
+      chrome.runtime.onMessage.addListener(eventsListeners);
     }
   });
-  chrome.runtime.onMessage.addListener(eventsListeners);
 }
 
 function querycB(tab) {
-  const SEARCH_STRING = ['myetherwallet'];
-  const ealBlacklisted = Object.assign({}, helpers.blackListDomains['eal']),
-    iosiroBlacklisted = Object.assign({}, helpers.blackListDomains['iosiro']),
-    phishfortBlacklisted = Object.assign(
-      {},
-      helpers.blackListDomains['phishfort']
-    ),
-    mewBlacklisted = Object.assign({}, helpers.blackListDomains['mew']),
-    ealWhitelisted = Object.assign({}, helpers.whiteListDomains['eal']),
-    mewWhitelisted = Object.assign({}, helpers.whiteListDomains['mew']);
+  if (tab.url) {
+    const SEARCH_STRING = ['myetherwallet'];
+    const ealBlacklisted = Object.assign({}, helpers.blackListDomains['eal']),
+      iosiroBlacklisted = Object.assign({}, helpers.blackListDomains['iosiro']),
+      phishfortBlacklisted = Object.assign(
+        {},
+        helpers.blackListDomains['phishfort']
+      ),
+      mewBlacklisted = Object.assign({}, helpers.blackListDomains['mew']),
+      ealWhitelisted = Object.assign({}, helpers.whiteListDomains['eal']),
+      mewWhitelisted = Object.assign({}, helpers.whiteListDomains['mew']);
 
-  let allBlacklistedDomains = [];
-  let allWhitelistedDomains = [];
-  allBlacklistedDomains = ealBlacklisted.domains
-    .concat(iosiroBlacklisted.domains)
-    .concat(phishfortBlacklisted.domains)
-    .concat(mewBlacklisted.domains);
-  allWhitelistedDomains = mewWhitelisted.domains.concat(ealWhitelisted.domains);
+    let allBlacklistedDomains = [];
+    let allWhitelistedDomains = [];
+    allBlacklistedDomains = ealBlacklisted.domains
+      .concat(iosiroBlacklisted.domains)
+      .concat(phishfortBlacklisted.domains)
+      .concat(mewBlacklisted.domains);
+    allWhitelistedDomains = mewWhitelisted.domains.concat(
+      ealWhitelisted.domains
+    );
 
-  let urlRedirect;
-  const foundWhitelist = allWhitelistedDomains.find(dom => {
-    return dom === extractRootDomain(tab.url);
-  });
-  const foundBlacklist = allBlacklistedDomains.find(dom => {
-    return dom === extractRootDomain(tab.url);
-  });
+    let urlRedirect;
+    const foundWhitelist = allWhitelistedDomains.find(dom => {
+      return dom === extractRootDomain(tab.url);
+    });
+    const foundBlacklist = allBlacklistedDomains.find(dom => {
+      return dom === extractRootDomain(tab.url);
+    });
 
-  if (foundWhitelist === undefined) {
-    if (
-      foundBlacklist !== undefined ||
-      helpers.checkUrlSimilarity(tab.url, SEARCH_STRING)
-    ) {
-      urlRedirect = encodeURI(
-        `https://www.myetherwallet.com/phishing.html?phishing-address=${tab.url}`
-      );
-      chrome.tabs.update(null, { url: urlRedirect });
+    if (foundWhitelist === undefined) {
+      if (
+        foundBlacklist !== undefined ||
+        helpers.checkUrlSimilarity(tab.url, SEARCH_STRING)
+      ) {
+        urlRedirect = encodeURI(
+          `https://www.myetherwallet.com/phishing.html?phishing-address=${tab.url}`
+        );
+        chrome.tabs.update(null, { url: urlRedirect });
+      } else {
+        // Injects web3
+        chrome.tabs.sendMessage(tab.id, { event: CX_INJECT_WEB3 }, function() {
+          store.state.web3.eth.net.getId().then(() => {
+            chrome.tabs.sendMessage(tab.id, {
+              event: WEB3_INJECT_SUCCESS.replace('{{id}}', 'internal') // triggers connect call
+            });
+          });
+        });
+      }
     } else {
       // Injects web3
       chrome.tabs.sendMessage(tab.id, { event: CX_INJECT_WEB3 }, function() {
@@ -193,14 +215,5 @@ function querycB(tab) {
         });
       });
     }
-  } else {
-    // Injects web3
-    chrome.tabs.sendMessage(tab.id, { event: CX_INJECT_WEB3 }, function() {
-      store.state.web3.eth.net.getId().then(() => {
-        chrome.tabs.sendMessage(tab.id, {
-          event: WEB3_INJECT_SUCCESS.replace('{{id}}', 'internal') // triggers connect call
-        });
-      });
-    });
   }
 }
