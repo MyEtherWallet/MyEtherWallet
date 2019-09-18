@@ -97,6 +97,7 @@
                   href="https://ccswap.myetherwallet.com/#/"
                   target="_blank"
                   class="buy-eth"
+                  rel="noreferrer"
                 >
                   <img
                     class="buy-eth-icon"
@@ -182,7 +183,8 @@
                   />
                   <extension-notification
                     v-if="
-                      !$route.fullPath.includes('view-wallet-info') &&
+                      buildType === 'mewcx' &&
+                        !$route.fullPath.includes('view-wallet-info') &&
                         !$route.fullPath.includes('interface')
                     "
                     ref="extensionNotification"

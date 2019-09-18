@@ -8,7 +8,8 @@ import {
   mewCxSignMsg,
   web3RpcRequest,
   mewCxSendSignedTx,
-  web3Detected
+  web3Detected,
+  web3Subscription
 } from './backgroundEvents';
 import store from '@/store';
 import {
@@ -107,6 +108,7 @@ const eventsListeners = (request, _, callback) => {
   middleware.use(mewCxSendSignedTx);
   middleware.use(web3RpcRequest);
   middleware.use(web3Detected);
+  middleware.use(web3Subscription);
   middleware.run(obj, callback);
   return true;
 };

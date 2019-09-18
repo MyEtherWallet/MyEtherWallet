@@ -4,30 +4,36 @@ import store from '@/store';
 export default async ({ event, payload }, callback, next) => {
   if (event !== CX_SEND_SIGNED_TX) return next();
   let funcHash = '';
-  const listenerFunc = id => {
-    if (id === 'mew-cx-tx-success') {
+  let errored = false;
+  const listenerFunc = () => {
+    if (errored) {
+      chrome.tabs.create({
+        url: 'https://github.com/MyEtherWallet/MyEtherWallet/issues/new'
+      });
+    } else {
       chrome.tabs.create({
         url: store.state.network.type.blockExplorerTX.replace(
           '[[txHash]]',
           funcHash
         )
       });
-    } else {
-      chrome.tabs.create({
-        url: 'https://github.com/MyEtherWallet/MyEtherWallet/issues/new'
-      });
     }
   };
-  console.log('gets here');
   store.state.web3.eth
     .sendSignedTransaction(payload.signedTx)
     .once('transactionHash', hash => {
       funcHash = hash;
-      console.log('got here for sure?');
+      store.dispatch('addNotification', [
+        'Hash',
+        payload.raw.from,
+        payload.raw,
+        hash
+      ]);
       callback(hash);
     })
     .once('receipt', res => {
-      chrome.notifications.create('mew-cx-tx-success', {
+      errored = false;
+      chrome.notifications.create('', {
         type: 'basic',
         iconUrl: chrome.runtime.getURL('img/icons/icon192.png'),
         title: 'Transaction confirmed!',
@@ -41,7 +47,8 @@ export default async ({ event, payload }, callback, next) => {
       ]);
     })
     .on('error', err => {
-      chrome.notifications.create('mew-cx-tx-error', {
+      errored = true;
+      chrome.notifications.create('', {
         type: 'basic',
         iconUrl: chrome.runtime.getURL('img/icons/icon192.png'),
         title: 'Something went wrong!',
@@ -54,6 +61,5 @@ export default async ({ event, payload }, callback, next) => {
         err
       ]);
     });
-  chrome.notifications.onClicked.addListener(listenerFunc);
   chrome.notifications.onClicked.addListener(listenerFunc);
 };

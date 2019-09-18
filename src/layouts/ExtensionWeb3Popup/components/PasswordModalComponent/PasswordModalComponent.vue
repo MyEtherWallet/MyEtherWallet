@@ -5,7 +5,7 @@
       hide-footer
       hide-header
       title="Address"
-      class="cx-password-modal"
+      modal-class="cx-password-modal"
     >
       <div class="modal-contents">
         <div class="header-container">

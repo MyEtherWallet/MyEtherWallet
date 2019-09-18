@@ -1,3 +1,11 @@
+### Release v5.1.4
+
+### Bug
+
+- Fix generate mnemonic [#1439](https://github.com/MyEtherWallet/MyEtherWallet/pull/1439)
+- Gas price not saving properly [#1434](https://github.com/MyEtherWallet/MyEtherWallet/pull/1434)
+- Fix u2f timeout for bitbox on windows [#1423](https://github.com/MyEtherWallet/MyEtherWallet/pull/1423)
+
 ### Release v5.1.3
 
 ### Feature
@@ -12,6 +20,7 @@
 - Restrict gas price minimum to 1 gwei [#1386](https://github.com/MyEtherWallet/MyEtherWallet/pull/1386)
 - Fix the bug when user expend the token list, footer breaks [#1396](https://github.com/MyEtherWallet/MyEtherWallet/pull/1396)
 - Fix the Buy subdomain feature and removed auction from ENS [#1409](https://github.com/MyEtherWallet/MyEtherWallet/pull/1409)
+- Remove deedOwner from ManageENS and fix getting ENS owner [#1425](https://github.com/MyEtherWallet/MyEtherWallet/pull/1425)
 
 ### Devop
 
