@@ -42,7 +42,6 @@
         >
           <li
             v-for="(notification, address) in sortedNotifications"
-            v-show="notification.length > 0"
             :key="address"
           >
             <div class="address-header">
@@ -60,7 +59,7 @@
                 />
               </div>
             </div>
-            <ul>
+            <ul v-if="notification.length > 0">
               <li
                 v-for="(noti, idx) in notification"
                 :key="noti.id + idx"
@@ -92,6 +91,9 @@
                 </keep-alive>
               </li>
             </ul>
+            <div v-else class="notification-no-item">
+              No notifications found :(
+            </div>
           </li>
         </ul>
         <div v-else class="notification-no-item">No notifications found :(</div>
@@ -110,7 +112,9 @@
           :address-link="addressLink"
           :process-status="processStatus"
           :error-message-string="errorMessageString"
-          :child-update-notification="childUpdateNotification(notificationDetails.index)"
+          :child-update-notification="
+            childUpdateNotification(notificationDetails.index)
+          "
         >
         </component>
       </div>
@@ -190,28 +194,38 @@ export default {
       this.countUnread();
     }
   },
+  created() {
+    window.chrome.storage.onChanged.addListener(this.notificationsSetup);
+  },
   mounted() {
-    ExtensionHelpers.getAccounts(items => {
-      Object.keys(items).forEach(item => {
-        if (isAddress(item)) {
-          if (this.notifications[item] === undefined) {
-            this.notifications[item] = [];
-            store.set('notifications', this.notifications);
-          }
-        }
-      });
-    });
-
-    this.countUnread();
-    if (this.online) {
-      this.fetchBalanceData();
-      this.checkLoop = setInterval(this.checkForUnResolvedTxNotifications, 14000);
-    }
+    this.notificationsSetup();
   },
   destroyed() {
     clearInterval(this.checkLoop);
+    window.chrome.storage.onChanged.removeListener(this.notificationsSetup);
   },
   methods: {
+    notificationsSetup() {
+      ExtensionHelpers.getAccounts(items => {
+        Object.keys(items).forEach(item => {
+          if (isAddress(item)) {
+            if (this.notifications[item] === undefined) {
+              this.notifications[item] = [];
+              store.set('notifications', this.notifications);
+            }
+          }
+        });
+      });
+
+      this.countUnread();
+      if (this.online) {
+        this.fetchBalanceData();
+        this.checkLoop = setInterval(
+          this.checkForUnResolvedTxNotifications,
+          14000
+        );
+      }
+    },
     hiddenModal() {
       this.shown = false;
       this.hideDetails();
@@ -229,7 +243,8 @@ export default {
                 const notExternalSwap =
                   entry.type === notificationType.TRANSACTION ||
                   (entry.type === notificationType.SWAP &&
-                    entry.body.hasOwnProperty('isDex') && entry.body.isDex === true);
+                    entry.body.hasOwnProperty('isDex') &&
+                    entry.body.isDex === true);
                 const hasHash = entry.hash !== '' && entry.hash !== undefined;
                 return isUnResolved && hasHash && notExternalSwap;
               });

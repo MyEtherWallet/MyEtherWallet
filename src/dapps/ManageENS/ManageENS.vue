@@ -532,7 +532,10 @@ export default {
       let owner;
       let resolverAddress;
       try {
-        if (this.registrarType === REGISTRAR_TYPES.PERMANENT) {
+        if (
+          this.registrarType === REGISTRAR_TYPES.PERMANENT &&
+          this.parsedTld === this.registrarTLD
+        ) {
           owner = await this.registrarContract.methods
             .ownerOf(this.labelHash)
             .call();

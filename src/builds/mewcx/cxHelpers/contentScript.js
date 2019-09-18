@@ -11,7 +11,9 @@ import {
   CX_WEB3_DETECTED,
   WEB3_RPC_REQUEST,
   WEB3_CHAIN_CHANGE,
-  WEB3_NETWORK_CHANGE
+  WEB3_NETWORK_CHANGE,
+  WEB3_SUBSCRIBE,
+  CX_SUBSCRIPTION
 } from './cxEvents';
 import {
   csErrors,
@@ -19,7 +21,9 @@ import {
   csSelecctedAcc,
   csSignedMsg,
   csTxHash,
-  csWebInjectionSuccessful
+  csWebInjectionSuccessful,
+  csWeb3SubscriptionError,
+  csWeb3SubscriptionSuccess
 } from './contentScriptEvents';
 import { extractRootDomain } from './extractRootDomain';
 import MiddleWare from '@/wallets/web3-provider/middleware';
@@ -66,11 +70,24 @@ chrome.runtime.onMessage.addListener(function(request, _, callback) {
   middleware.use(csSignedMsg);
   middleware.use(csTxHash);
   middleware.use(csWebInjectionSuccessful);
+  middleware.use(csWeb3SubscriptionError);
+  middleware.use(csWeb3SubscriptionSuccess);
   middleware.run(obj, callback);
   return true;
 });
 
 const events = {};
+events[WEB3_SUBSCRIBE] = function(e) {
+  chrome.runtime.sendMessage(
+    extensionID,
+    {
+      event: CX_SUBSCRIPTION,
+      payload: e.detail
+    },
+    {}
+  );
+};
+
 events[WEB3_DETECTED] = function() {
   chrome.runtime.sendMessage(extensionID, {
     event: CX_WEB3_DETECTED
