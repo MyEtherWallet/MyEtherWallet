@@ -13,11 +13,7 @@ import {
   WEB3_CHAIN_CHANGE,
   WEB3_NETWORK_CHANGE,
   WEB3_SUBSCRIBE,
-  CX_SUBSCRIPTION,
-  WEB3_SUBSCRIPTION_RES,
-  WEB3_SUBSCRIPTION_ERR,
-  WEB3_SUBSCRIPTION,
-  WEB3_REJECT
+  CX_SUBSCRIPTION
 } from './cxEvents';
 import {
   csErrors,
@@ -25,7 +21,9 @@ import {
   csSelecctedAcc,
   csSignedMsg,
   csTxHash,
-  csWebInjectionSuccessful
+  csWebInjectionSuccessful,
+  csWeb3SubscriptionError,
+  csWeb3SubscriptionSuccess
 } from './contentScriptEvents';
 import { extractRootDomain } from './extractRootDomain';
 import MiddleWare from '@/wallets/web3-provider/middleware';
@@ -72,6 +70,8 @@ chrome.runtime.onMessage.addListener(function(request, _, callback) {
   middleware.use(csSignedMsg);
   middleware.use(csTxHash);
   middleware.use(csWebInjectionSuccessful);
+  middleware.use(csWeb3SubscriptionError);
+  middleware.use(csWeb3SubscriptionSuccess);
   middleware.run(obj, callback);
   return true;
 });
@@ -85,21 +85,6 @@ events[WEB3_SUBSCRIBE] = function(e) {
       payload: e.detail
     },
     {}
-  );
-};
-
-events[WEB3_SUBSCRIPTION_RES] = function(res) {
-  window.dispatchEvent(
-    new CustomEvent(WEB3_SUBSCRIPTION.replace('{{id}}', extensionID), {
-      detail: res
-    })
-  );
-};
-events[WEB3_SUBSCRIPTION_ERR] = function(res) {
-  window.dispatchEvent(
-    new CustomEvent(WEB3_REJECT, {
-      detail: res
-    })
   );
 };
 

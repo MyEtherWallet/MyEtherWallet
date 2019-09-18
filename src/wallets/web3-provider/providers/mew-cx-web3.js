@@ -62,15 +62,14 @@ class MewCxEthereum extends EventEmitter {
           });
         });
       },
-      send: function(payload, cb) {
-        this.sendPromise(payload.method, payload.params)
-          .then(result => {
-            result.id = payload.id ? payload.id : result.id;
-            cb(null, result);
-          })
-          .catch(e => {
-            cb(e);
-          });
+      send: function(payload, params) {
+        return new Promise((resolve, reject) => {
+          this.sendPromise(payload, params)
+            .then(result => {
+              resolve(result.result);
+            })
+            .catch(reject);
+        });
       },
       sendAsync: function(payload, cb) {
         this.sendPromise(payload.method, payload.params)
@@ -87,6 +86,7 @@ class MewCxEthereum extends EventEmitter {
       isMew: true,
       on: this.on,
       emit: this.emit,
+      requestManager: this.requestManager,
       removeListener: () => {
         this.removeListener();
         this.clearListeners();
