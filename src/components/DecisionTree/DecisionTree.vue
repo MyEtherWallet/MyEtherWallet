@@ -88,14 +88,12 @@ import MdContainer from './components/MdContainer';
 import CustomerSupport from '@/components/CustomerSupport';
 import qaIndex from '@/data/DecisionTree/MDIndex.js';
 import marked from 'marked';
-import { ModelSelect } from 'vue-search-select';
 
 export default {
   name: 'DecisionTree',
   components: {
     'md-container': MdContainer,
-    'customer-support': CustomerSupport,
-    'model-select': ModelSelect
+    'customer-support': CustomerSupport
   },
   props: {
     button: {
