@@ -13,6 +13,7 @@ const homoglyphs = require('./homoglyphs');
 const levenshtein = require('levenshtein');
 
 const checkUrlSimilarity = (url, arr) => {
+  if (!url) return false;
   const newUrl = transformHomoglyphs(parseUrl(url));
   if (isSimilar(newUrl, url, arr, 0.8) && !isNewBlacklist(url, arr)) {
     return true;

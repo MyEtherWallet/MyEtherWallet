@@ -13,6 +13,7 @@ const extractHostname = url => {
 };
 
 const extractRootDomain = url => {
+  if (!url) return '';
   let domain = extractHostname(url);
   const splitArr = domain.split('.');
   const arrLen = splitArr.length;
