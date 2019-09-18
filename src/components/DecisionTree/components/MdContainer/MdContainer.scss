@@ -1,4 +1,4 @@
-@import "~@/scss/GlobalVariables";
+@import '~@/scss/GlobalVariables';
 
 .md-container .dynamic-content {
   div,
@@ -93,6 +93,11 @@
     color: blue;
   }
 
+  p {
+    font-size: 13px;
+    font-weight: 300;
+  }
+
   h2 {
     font-size: 20px;
     font-weight: 300;
@@ -115,22 +120,50 @@
     padding-left: 5px;
     font-size: 13px;
     font-weight: 300;
-    margin-bottom: 18px;
+    margin-bottom: 13px;
   }
 
   ul li {
     list-style-type: circle;
+    word-break: break-word;
+  }
+
+  ol {
+    li {
+      ul {
+        li {
+          margin-bottom: 7px;
+          list-style-type: disc;
+          padding-left: 0;
+        }
+      }
+    }
   }
 
   note {
+    font-family: sans-serif;
     font-size: 12px;
-    line-height: 17px;
-    font-weight: 300;
+    line-height: 16px;
+    font-weight: 400;
     display: block;
-    border: 1px solid #ffbd44;
-    color: #000000;
-    padding: 8px 11px;
+    color: #000;
+    padding: 10px 16px;
     background-color: #f7f7f7;
-    border-radius: 2px;
+    border-radius: 5px;
+    box-shadow: 1px 1px 0 #e8e8e8;
+    margin-top: 3px;
+
+    ul {
+      li {
+        font-family: sans-serif;
+        font-size: 12px;
+        line-height: 16px;
+        font-weight: 400;
+      }
+    }
+  }
+
+  strong {
+    font-weight: 500;
   }
 }

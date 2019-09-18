@@ -7,6 +7,4 @@
 #### Contact Form:
 
 - Email us at support@myetherwallet.com
-  <br>
-
 - Include a detailed description of the suggestion.
