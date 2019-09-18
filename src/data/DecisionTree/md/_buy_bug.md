@@ -11,10 +11,8 @@
 #### Contact Form:
 
 - Email us at support@myetherwallet.com
-  <br>
-- Include a detailed description of the issue.
-      \* Please include as many details as possible, such as phone / computer model, OS number, version of the app / site you are using, browser version etc.
-  <br>
+- <p>Include a detailed description of the issue.</p>
+  <note>Please include as many details as possible, such as phone / computer model, OS number, version of the app / site you are using, browser version etc.</note>
 - Attach screenshots (optional)
 
 * * *
