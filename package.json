@@ -1,6 +1,6 @@
 {
   "name": "wallet",
-  "version": "0.1.1",
+  "version": "1.0.0",
   "description": "Client side XinFin Wallet",
   "scripts": {
     "build:offline": "WEBPACK_INTEGRITY=false npm run build:hash",
@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "@sentry/browser": "4.6.0",
-    "detect-browser": "4.1.0",
+    "detect-browser": "^4.1.0",
     "html2canvas": "1.0.0-alpha.12",
     "idna-uts46": "1.1.0",
     "print-js": "1.0.54",
@@ -108,7 +108,7 @@
     "web3-utils": "1.0.0-beta.37",
     "webpack": "4.28.4",
     "worker-loader": "2.0.0",
-    "worker-timers": "5.0.9",
+    "worker-timers": "^5.0.9",
     "zxcvbn": "4.4.2"
   },
   "engines": {
