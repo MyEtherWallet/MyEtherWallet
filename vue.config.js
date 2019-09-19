@@ -179,7 +179,15 @@ if (process.env.NODE_ENV === 'production') {
           'src/builds/web/public/img/icons/safari-pinned-tab.svg',
           'src/builds/web/public/img/spaceman.png',
           'src/builds/web/public/manifest.json',
-          'src/builds/web/public/robots.txt'
+          'src/builds/web/public/robots.txt',
+          'src/assets/images/icons/qa.png',
+          'src/components/DecisionTree/components/SearchContainer/index.js',
+          'src/components/DecisionTree/components/SearchContainer/SearchContainer.scss',
+          'src/components/DecisionTree/components/SearchContainer/SearchContainer.vue',
+          'src/components/DecisionTree/data/doc/Find_and_install_the_MetaMask.html',
+          'src/components/DecisionTree/data/doc/Find_and_install_the_MetaMask.vue',
+          'src/components/DecisionTree/data/doc/MyEtherWallet_An_Introduction.vue',
+          'src/components/DecisionTree/data/index.js'
         ]
       }
     })
