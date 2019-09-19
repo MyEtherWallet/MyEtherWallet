@@ -59,6 +59,10 @@
                   <i class="fa fa-align-left" aria-hidden="true"></i>
                   Subcategories
                 </p>
+                <p v-if="index[qa].md" class="sub-categories">
+                  <i class="fa fa-book" aria-hidden="true"></i>
+                  Read
+                </p>
                 <p class="qa-title">
                   {{ index[qa].title }}
                 </p>

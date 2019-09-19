@@ -172,12 +172,15 @@
 
       .sub-categories {
         font-size: 12px;
-        line-height: 15px;
-        //text-transform: uppercase;
-        color: #b9b9b9;
+        line-height: 14px;
+        color: #bfbfbf;
+        margin-bottom: 1px;
+        display: flex;
+        align-items: center;
 
         i {
-          font-size: 10px;
+          font-size: 12px;
+          margin-right: 3px;
         }
       }
 
