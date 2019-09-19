@@ -36,11 +36,14 @@
             track-by="name"
           >
             <span slot="noResult" class="no-result"
-              >Oops! No search results found.</span
+              ><i class="fa fa-meh-o" aria-hidden="true"></i> Oops! No search
+              results found.</span
             >
           </multiselect>
           <img class="magnifier" src="@/assets/images/icons/magnifier.svg" />
-          <p class="clear">Clear</p>
+          <p class="clear">
+            <i class="fa fa-times-circle" aria-hidden="true"></i>
+          </p>
         </div>
 
         <div ref="mdList" class="md-content">
@@ -52,6 +55,10 @@
               @click="getSub(index[qa])"
             >
               <div class="qa-title-container">
+                <p v-if="!index[qa].md" class="sub-categories">
+                  <i class="fa fa-align-left" aria-hidden="true"></i>
+                  Subcategories
+                </p>
                 <p class="qa-title">
                   {{ index[qa].title }}
                 </p>
@@ -205,10 +212,12 @@ export default {
       height: 100%;
     }
     .multiselect__input {
-      padding-left: 45px;
+      padding-left: 45px !important;
+      padding-right: 50px !important;
       height: 100%;
       border: 0;
       background-color: transparent;
+      width: 100% !important;
     }
 
     .multiselect__content-wrapper {
@@ -247,7 +256,7 @@ export default {
 
     .multiselect__placeholder {
       position: absolute;
-      top: 13px;
+      top: 14px;
       left: 45px;
     }
 
@@ -258,10 +267,19 @@ export default {
       padding: 10px 20px;
       display: block;
       font-size: 14px;
-      font-weight: 400;
+      font-weight: 600;
       text-align: center;
       width: 100%;
-      background-color: #ffa935;
+      background-color: black;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+
+      i {
+        font-size: 22px;
+        margin-right: 10px;
+      }
     }
   }
 }
