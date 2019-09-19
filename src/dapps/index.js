@@ -41,6 +41,15 @@ const dapps = {
     title: 'dappsMaker.maker_title',
     desc: 'dappsMaker.maker_desc',
     supportedNetworks: [ETH.name, KOV.name]
+  },
+  ambrpay: {
+    route: '/interface/dapps/ambrpay',
+    icon: makerdai,
+    iconDisabled: secureTransactionHov,
+    title: 'Ambrpay',
+    desc:
+      'With ambrpay you can accept recurring cryptocurrency payments in no time. Currently we do crypt-to-crypto recurring payments, with crypto-to-fiat coming soon.',
+    supportedNetworks: [ETH.name, KOV.name]
   }
 };
 

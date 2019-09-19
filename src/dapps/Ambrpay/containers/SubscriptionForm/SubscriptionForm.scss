@@ -1,0 +1,35 @@
+@import '~@/scss/GlobalVariables';
+
+$input-title-color: #212529;
+$mew-green-light: #05c7aa;
+
+.ambrpay-container {
+  background-color: $white;
+  border-radius: 4px;
+  grid-area: main;
+  overflow: hidden;
+  margin-bottom: 10px;
+
+  .page-title {
+    text-align: center;
+    margin-top: 30px;
+  }
+}
+
+.ambrpay-content {
+  padding: 40px;
+
+  // Tablet
+  @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+    padding: 20px;
+  }
+
+  // Mobile
+  @media all and (max-width: $mobile-width) {
+    padding: 10px;
+  }
+}
+
+.text-danger {
+  color: $text-color-red;
+}
