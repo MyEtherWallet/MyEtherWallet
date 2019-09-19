@@ -9,7 +9,7 @@ describe('bity.js', () => {
   beforeAll(() => {
     bity = new Bity({ network: 'ETH' });
   });
-  it('Expect market rate calculated value to be within 1% of exact value (to ETH)', async () => {
+  xit('Expect market rate calculated value to be within 1% of exact value (to ETH)', async () => {
     const fromCurrency = 'BTC';
     const toCurrency = 'ETH';
     const fromValue = 1;

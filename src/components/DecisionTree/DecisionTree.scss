@@ -198,6 +198,7 @@
     left: 18px;
     height: 15px;
     opacity: 0.6;
+    pointer-events: none;
   }
 
   .clear {
@@ -206,8 +207,8 @@
     right: 18px;
     opacity: 0.6;
     font-size: 12px;
-    font-weight: 500;
-    //text-transform: uppercase;
+    font-weight: 400;
+    text-transform: uppercase;
     color: #b3b3b3;
     cursor: pointer;
     padding: 5px;
