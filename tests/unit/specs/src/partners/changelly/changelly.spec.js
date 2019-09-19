@@ -3,7 +3,7 @@ import changellyCalls from '@/partners/changelly/changelly-calls';
 import BigNumber from 'bignumber.js';
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
-describe('changelly.js', () => {
+xdescribe('changelly.js', () => {
   let changelly;
   const percentVarianceAllowed = 0.009;
   beforeAll(() => {

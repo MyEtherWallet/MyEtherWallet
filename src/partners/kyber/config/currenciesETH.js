@@ -379,7 +379,7 @@ const KyberCurrenciesETH = {
   },
   LRC: {
     symbol: 'LRC',
-    name: 'LoopringCoin',
+    name: 'Loopring',
     decimals: 18,
     contractAddress: '0xbbbbca6a901c926f240b89eacb641d8aec7aeafd'
   },
