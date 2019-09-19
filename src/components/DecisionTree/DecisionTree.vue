@@ -31,17 +31,14 @@
           <multiselect
             v-model="searchSelect"
             :options="searchOptions"
-            placeholder="Select one"
+            placeholder="Search"
             label="name"
             track-by="name"
-          />
-          <model-select
-            :options="searchOptions"
-            v-model="searchSelect"
-            placeholder="Search"
-            class="search-results"
           >
-          </model-select>
+            <span slot="noResult" class="no-result"
+              >Oops! No search results found.</span
+            >
+          </multiselect>
           <img class="magnifier" src="@/assets/images/icons/magnifier.svg" />
           <p class="clear">Clear</p>
         </div>
@@ -122,7 +119,7 @@ export default {
   },
   watch: {
     searchSelect(val) {
-      if (val.value) {
+      if (val !== null && val.value) {
         this.getSearchItem(val.value);
         this.searchSelect = {};
       }
@@ -201,110 +198,70 @@ export default {
   }
 
   .decision-tree-search {
-    .search {
-      position: relative;
+    .multiselect {
       height: 100%;
+    }
+    .multiselect__tags {
+      height: 100%;
+    }
+    .multiselect__input {
+      padding-left: 45px;
+      height: 100%;
+      border: 0;
+      background-color: transparent;
+    }
 
-      &::after {
-        position: absolute;
-        top: 50px;
-        left: 0;
-        content: 'No results found.';
-        text-align: center;
-        width: 100%;
-        height: 500px;
-        z-index: 1;
-        background-color: #f2f4fa;
-        display: none;
-        padding-top: 10px;
-        font-size: 13px;
-        font-weight: 400;
-        @media all and (max-width: $tablet-width) {
-          height: 400px;
-        }
+    .multiselect__content-wrapper {
+      overflow: auto;
+      max-height: 500px !important;
+      background-color: #f1f1f1;
+      margin-top: 3px;
+      box-shadow: 0px 4px 10px #00000033;
+      @media all and (max-width: $tablet-width) {
+        max-height: 400px !important;
       }
+    }
 
-      &.visible::after {
+    .multiselect__element {
+      border-bottom: 1px solid #e0e0e0;
+
+      cursor: pointer;
+
+      span {
         display: block;
       }
 
-      &.active {
-        .text {
-          color: #c3c3c3;
+      span span {
+        padding: 10px 20px;
+        font-size: 13px;
+        font-weight: 400;
+      }
+
+      &:hover {
+        background-color: #ececec;
+        span {
+          font-weight: 400;
         }
       }
+    }
 
-      input {
-        background-color: transparent;
-        padding-left: 45px;
-        padding-right: 70px;
-        border: 0;
-        border-radius: 0;
-        width: 100%;
-      }
+    .multiselect__placeholder {
+      position: absolute;
+      top: 13px;
+      left: 45px;
+    }
 
-      .text {
-        position: absolute;
-        top: 13px;
-        left: 45px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        width: 330px;
-        pointer-events: none;
-        color: #b3b3b3;
-      }
-
-      .menu {
-        position: absolute;
-        top: 50px;
-        left: 0;
-        max-height: 500px;
-        overflow-y: auto;
-        width: 100%;
-        background-color: #f2f4fa;
-        z-index: 2;
-        @media all and (max-width: $tablet-width) {
-          max-height: 400px;
-        }
-
-        .item {
-          border-bottom: 1px solid #e0e0e0;
-          padding: 13px 20px;
-          padding-left: 50px;
-          cursor: pointer;
-          font-size: 12px;
-          font-weight: 500;
-          color: #444444;
-          line-height: 18px;
-          position: relative;
-
-          &::after {
-            content: 'A';
-            position: absolute;
-            left: 18px;
-            top: calc(50% - 10px);
-            border-radius: 100%;
-            background-color: #dcdcdc;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 700;
-            font-size: 12px;
-          }
-
-          &.selected {
-            background-color: #ececec;
-          }
-
-          &:hover {
-            background-color: #ececec;
-          }
-        }
-      }
+    .multiselect__content {
+      width: 100%;
+    }
+    .no-result {
+      padding: 10px 20px;
+      display: block;
+      font-size: 14px;
+      font-weight: 400;
+      text-align: center;
+      width: 100%;
+      background-color: #ffa935;
     }
   }
 }
