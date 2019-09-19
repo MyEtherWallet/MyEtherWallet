@@ -147,10 +147,10 @@
 
 .md-content {
   background-color: $white;
-  height: 500px;
+  height: 550px;
   overflow-y: auto;
   @media all and (max-width: $tablet-width) {
-    height: 400px;
+    height: 450px;
   }
 
   ul {
@@ -174,7 +174,7 @@
         font-size: 12px;
         line-height: 14px;
         color: #bfbfbf;
-        margin-bottom: 1px;
+        margin-bottom: 4px;
         display: flex;
         align-items: center;
 

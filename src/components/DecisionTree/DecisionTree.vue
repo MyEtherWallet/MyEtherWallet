@@ -27,7 +27,7 @@
           <p v-else class="long-title">{{ currentIndex.title }}</p>
         </div>
 
-        <div class="decision-tree-search">
+        <div class="decision-tree-search hidden">
           <multiselect
             v-model="searchSelect"
             :options="searchOptions"
@@ -226,12 +226,12 @@ export default {
 
     .multiselect__content-wrapper {
       overflow: auto;
-      max-height: 500px !important;
+      max-height: 550px !important;
       background-color: #f1f1f1;
       margin-top: 3px;
       box-shadow: 0px 4px 10px #00000033;
       @media all and (max-width: $tablet-width) {
-        max-height: 400px !important;
+        max-height: 450px !important;
       }
     }
 
