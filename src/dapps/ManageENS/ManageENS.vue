@@ -4,27 +4,19 @@
     <router-view
       :contract-initiated="contractInitiated"
       :check-domain="checkDomain"
-      :bid-amount="bidAmount"
-      :bid-mask="bidMask"
       :secret-phrase="secretPhrase"
-      :start-auction-and-bid="startAuctionAndBid"
       :host-name="parsedHostName"
       :domain-name="parsedDomainName"
-      :auction-date-end="auctionDateEnd"
       :loading="loading"
       :name-hash="nameHash"
       :label-hash="labelHash"
       :owner="owner"
       :resolver-address="resolverAddress"
       :deed-owner="deedOwner"
-      :highest-bidder="highestBid"
       :raw="raw"
       :step="step"
-      :send-bid="sendBid"
-      :reveal-bid="revealBid"
       :domain-name-err="domainNameErr"
       :generate-key-phrase="generateKeyPhrase"
-      :finalize="finalize"
       :update-resolver="updateResolver"
       :transfer-domain="transferDomain"
       :tld="parsedTld === '' ? network.type.ens.registrarTLD : parsedTld"
@@ -40,8 +32,6 @@
       :minimum-age="minimumAge"
       :commitment-created="commitmentCreated"
       @updateSecretPhrase="updateSecretPhrase"
-      @updateBidAmount="updateBidAmount"
-      @updateBidMask="updateBidMask"
       @domainNameChange="updateDomainName"
       @updateStep="updateStep"
       @updateDuration="updateDuration"
@@ -74,7 +64,6 @@ const permanentRegistrar = {
 };
 
 const REGISTRAR_TYPES = {
-  AUCTION: 'auction',
   FIFS: 'fifs',
   PERMANENT: 'permanent'
 };
@@ -86,8 +75,6 @@ export default {
     return {
       domainName: '',
       loading: false,
-      bidAmount: 0.01,
-      bidMask: 0.02,
       nameHash: '',
       labelHash: '',
       owner: '',
@@ -95,9 +82,7 @@ export default {
       deedOwner: '',
       secretPhrase: '',
       registrarAddress: '',
-      auctionDateEnd: 0,
       raw: {},
-      highestBid: '',
       contractInitiated: false,
       step: 1,
       domainNameErr: false,
@@ -163,8 +148,6 @@ export default {
       this.isPermanentLive = true;
       this.domainName = '';
       this.loading = false;
-      this.bidAmount = 0.01;
-      this.bidMask = 0.02;
       this.nameHash = '';
       this.labelHash = '';
       this.owner = '';
@@ -172,9 +155,7 @@ export default {
       this.deedOwner = '';
       this.secretPhrase = '';
       this.registrarAddress = '';
-      this.auctionDateEnd = 0;
       this.raw = {};
-      this.highestBid = '';
       this.contractInitiated = false;
       this.step = 1;
       this.contractInitiated = false;
@@ -199,12 +180,7 @@ export default {
         RegistryAbi,
         this.network.type.ens.registry
       );
-      if (this.registrarType === REGISTRAR_TYPES.AUCTION) {
-        this.registrarContract = new web3.eth.Contract(
-          RegistrarAbi,
-          this.registrarAddress
-        );
-      } else if (this.registrarType === REGISTRAR_TYPES.FIFS) {
+      if (this.registrarType === REGISTRAR_TYPES.FIFS) {
         this.registrarContract = new web3.eth.Contract(
           FifsRegistrarAbi,
           this.registrarAddress
@@ -233,12 +209,7 @@ export default {
     },
     async transferDomain(toAddress) {
       let to, data;
-      if (this.registrarType === REGISTRAR_TYPES.AUCTION) {
-        data = this.registrarContract.methods
-          .transfer(this.labelHash, toAddress)
-          .encodeABI();
-        to = this.registrarAddress;
-      } else if (this.registrarType === REGISTRAR_TYPES.FIFS) {
+      if (this.registrarType === REGISTRAR_TYPES.FIFS) {
         data = this.ensRegistryContract.methods
           .setOwner(this.nameHash, toAddress)
           .encodeABI();
@@ -303,24 +274,6 @@ export default {
         web3.mew.sendBatchTransactions([setResolverTx, setAddrTx]);
       }
     },
-    async finalize() {
-      const address = this.account.address;
-      const web3 = this.web3;
-      const data = await this.registrarContract.methods
-        .finalizeAuction(this.labelHash)
-        .encodeABI();
-
-      const raw = {
-        from: address,
-        value: 0,
-        to: this.registrarAddress,
-        data: data
-      };
-
-      web3.eth.sendTransaction(raw).catch(err => {
-        Toast.responseHandler(err, false);
-      });
-    },
     async registerFifsName() {
       const address = this.account.address;
       const web3 = this.web3;
@@ -359,12 +312,7 @@ export default {
         this.loading = false;
       } else if (this.parsedTld === this.registrarTLD) {
         try {
-          if (this.registrarType === REGISTRAR_TYPES.AUCTION) {
-            const domainStatus = await this.registrarContract.methods
-              .entries(this.labelHash)
-              .call();
-            this.processResult(domainStatus);
-          } else if (this.registrarType === REGISTRAR_TYPES.FIFS) {
+          if (this.registrarType === REGISTRAR_TYPES.FIFS) {
             const expiryTime = await this.registrarContract.methods
               .expiryTimes(this.labelHash)
               .call();
@@ -565,38 +513,6 @@ export default {
           break;
       }
     },
-    processPermanentRegistrar() {},
-    processResult(res) {
-      this.auctionDateEnd = res[2] * 1000;
-      switch (res[0]) {
-        case '0':
-          this.generateKeyPhrase();
-          this.$router.push({
-            path: 'manage-ens/auction'
-          });
-          this.loading = false;
-          break;
-        case '1':
-          this.generateKeyPhrase();
-          this.loading = false;
-          this.$router.push({ path: 'manage-ens/bid' });
-          break;
-        case '2':
-          this.getMoreInfo(res[1]);
-          break;
-        case '3':
-          this.loading = false;
-          this.$router.push({
-            path: 'manage-ens/forbidden'
-          });
-          break;
-        case '4':
-          this.loading = false;
-          this.highestBid = unit.fromWei(res[4], 'ether').toString();
-          this.$router.push({ path: 'manage-ens/reveal' });
-          break;
-      }
-    },
     updateDomainName(value) {
       try {
         this.domainName = normalise(value);
@@ -612,22 +528,14 @@ export default {
         this.domainNameErr = false;
       }
     },
-    async getMoreInfo(deedOwner) {
-      let highestBidder = '0x';
-      if (
-        this.registrarType === REGISTRAR_TYPES.AUCTION &&
-        this.parsedTld === this.registrarTLD
-      ) {
-        const deedContract = new this.web3.eth.Contract(
-          DeedContractAbi,
-          deedOwner
-        );
-        highestBidder = await deedContract.methods.owner().call();
-      }
+    async getMoreInfo() {
       let owner;
       let resolverAddress;
       try {
-        if (this.registrarType === REGISTRAR_TYPES.PERMANENT) {
+        if (
+          this.registrarType === REGISTRAR_TYPES.PERMANENT &&
+          this.parsedTld === this.registrarTLD
+        ) {
           owner = await this.registrarContract.methods
             .ownerOf(this.labelHash)
             .call();
@@ -646,7 +554,6 @@ export default {
 
       this.nameHash = nameHashPckg.hash(this.parsedDomainName);
       this.resolverAddress = resolverAddress;
-      this.deedOwner = highestBidder;
       this.owner = owner;
       if (this.$route.fullPath === '/interface/dapps/manage-ens') {
         this.$router.push({ path: 'manage-ens/owned' });
@@ -655,77 +562,11 @@ export default {
       }
       this.loading = false;
     },
-    async createTransaction(type) {
-      this.loading = true;
-      const address = this.account.address;
-      const utils = this.web3.utils;
-      const bidHash = await this.registrarContract.methods
-        .shaBid(
-          this.labelHash,
-          address,
-          utils.toWei(this.bidAmount.toString(), 'ether'),
-          utils.sha3(this.secretPhrase)
-        )
-        .call();
-
-      let contractReference;
-      if (type === 'start') {
-        contractReference = this.registrarContract.methods.startAuctionsAndBid(
-          [this.labelHash],
-          bidHash
-        );
-      } else if (type === 'bid') {
-        contractReference = this.registrarContract.methods.newBid(bidHash);
-      } else if (type === 'reveal') {
-        contractReference = this.registrarContract.methods.unsealBid(
-          this.labelHash,
-          utils.toWei(this.bidAmount.toString(), 'ether'),
-          utils.sha3(this.secretPhrase)
-        );
-      }
-
-      const date = new Date();
-      const auctionDateEnd = date.setDate(date.getDate() + 5);
-      const revealDate = date.setDate(date.getDate() - 2);
-      const raw = {
-        from: address,
-        value:
-          type === 'reveal' ? 0 : unit.toWei(this.bidMask, 'ether').toString(),
-        to: this.registrarAddress,
-        data: contractReference.encodeABI(),
-        name: this.domainName,
-        nameSHA3: utils.sha3(this.domainName),
-        bidAmount: this.bidAmount,
-        bidMask: this.bidMask,
-        secretPhrase: this.secretPhrase,
-        secretPhraseSHA3: utils.sha3(this.secretPhrase),
-        auctionDateEnd: new Date(auctionDateEnd),
-        revealDate: new Date(revealDate)
-      };
-      this.raw = raw;
-      this.loading = false;
-      this.step = 2;
-    },
-    startAuctionAndBid() {
-      this.createTransaction('start');
-    },
-    sendBid() {
-      this.createTransaction('bid');
-    },
-    revealBid() {
-      this.createTransaction('reveal');
-    },
     updateSecretPhrase(e) {
       this.secretPhrase = e;
     },
     updateDuration(e) {
       this.duration = e;
-    },
-    updateBidAmount(val) {
-      this.bidAmount = val;
-    },
-    updateBidMask(val) {
-      this.bidMask = val;
     },
     generateKeyPhrase() {
       const wordsArray = [];
