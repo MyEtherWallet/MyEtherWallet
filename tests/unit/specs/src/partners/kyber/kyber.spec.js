@@ -78,7 +78,7 @@ describe('kyber.js', () => {
     expect(gasLimit.swapGasLimit).toBe(750000);
   });
 
-  it('should return gas limits array from api', async done => {
+  xit('should return gas limits array from api', async done => {
     const gasLimitList = await kyberCalls.getGasLimits('ETH');
     expect(gasLimitList.data).toBeInstanceOf(Array);
     done();

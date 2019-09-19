@@ -28,6 +28,13 @@
         </div>
 
         <div class="decision-tree-search">
+          <multiselect
+            v-model="searchSelect"
+            :options="searchOptions"
+            placeholder="Select one"
+            label="name"
+            track-by="name"
+          />
           <model-select
             :options="searchOptions"
             v-model="searchSelect"
@@ -84,6 +91,7 @@
 </template>
 
 <script>
+import Multiselect from 'vue-multiselect';
 import MdContainer from './components/MdContainer';
 import CustomerSupport from '@/components/CustomerSupport';
 import qaIndex from '@/data/DecisionTree/MDIndex.js';
@@ -93,7 +101,8 @@ export default {
   name: 'DecisionTree',
   components: {
     'md-container': MdContainer,
-    'customer-support': CustomerSupport
+    'customer-support': CustomerSupport,
+    multiselect: Multiselect
   },
   props: {
     button: {
@@ -125,7 +134,7 @@ export default {
       if (!qaIndex[key].nosearch) {
         const index = {
           value: qaIndex[key],
-          text: qaIndex[key].title + ' ' + qaIndex[key].subtitle
+          name: qaIndex[key].title + ' ' + qaIndex[key].subtitle
         };
         this.searchOptions.push(index);
       }
