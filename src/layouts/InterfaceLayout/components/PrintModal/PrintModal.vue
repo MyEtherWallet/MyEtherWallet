@@ -57,7 +57,7 @@
                 <span>
                   {{ newAddress.slice(0, 21) }}
                   <br>
-                  {{ newAddress.slice(21, 42) }}
+                  {{ newAddress.slice(21, 43) }}
                 </span>
               </div>
             </div>
