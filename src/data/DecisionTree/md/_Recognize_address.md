@@ -1,17 +1,17 @@
 ## My Funds are Missing
 
-#### Check your public address on EthVM for a full list of recent activity
+#### Check your public address on Etherscan.io for a full list of recent activity
 
 1. It all looks familiar.
 
-- If everything looks in order, but you’re missing funds, please reach out to us for further information. 
-  - Refer to the contact form at the end of the page.
+    - If everything looks in order, but you’re missing funds, please reach out to us for further information. 
+      - Refer to the contact form at the end of the page.
 
 2. It looks very unfamiliar!
 
-- If you’re seeing unfamiliar transactions, it’s possible that your wallet has been compromised. 
-  - Please think back to your most recent actions. 
-  - Did you enter your key on any sites, or access your wallet from an unsecure location?
+    - If you’re seeing unfamiliar transactions, it’s possible that your wallet has been compromised. 
+      - Please think back to your most recent actions. 
+      - Did you enter your key on any sites, or access your wallet from an unsecure location?
 
 <note>
 **We cannot recover funds, reverse transactions, or locate the IP of any wallet address. We are an empty, client-side interface used to interact with the Ethereum blockchain, but we do not control the blockchain.
