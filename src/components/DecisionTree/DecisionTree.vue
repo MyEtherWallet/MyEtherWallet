@@ -99,7 +99,7 @@
               <p>Help center</p>
             </a>
           </div>
-          <button class="ml-auto" @click="top()">
+          <button v-if="historyStack.length > 0" class="ml-auto" @click="top()">
             <img src="@/assets/images/icons/DecisionTree/home.svg" />
           </button>
         </div>
