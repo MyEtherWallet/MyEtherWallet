@@ -281,6 +281,7 @@ export default {
       this.getEthPrice();
     }
     this.exportConfig();
+    this.getGasType();
   },
   methods: {
     setDataFromImportedFile() {
@@ -325,6 +326,25 @@ export default {
 
       this.importedFile = e.target.files[0];
     },
+    getGasType() {
+      const type = store.get('gasPriceType');
+      const amt = store.get('gasPrice');
+      if (type) {
+        this.selectedGasType = type;
+      }
+
+      if (amt) {
+        if (this.gasPriceInputs[type] !== undefined) {
+          this.$store.dispatch(
+            'setGasPrice',
+            new BigNumber(this.gasPriceInputs[type].gwei).toNumber()
+          );
+        } else {
+          this.customGas = amt;
+          this.$store.dispatch('setGasPrice', new BigNumber(amt).toNumber());
+        }
+      }
+    },
     uploadFile() {
       const uploadInput = this.$refs.uploadInput;
       uploadInput.value = '';
@@ -349,6 +369,7 @@ export default {
       }
     },
     selectGasType(type) {
+      store.set('gasPriceType', type);
       this.selectedGasType = type;
       if (type === 'other') {
         this.$refs.customInput.focus();
