@@ -51,7 +51,8 @@ describe('HardwarePasswordModal.vue', () => {
       const inputText = 'testpassword';
       inputElement.setValue(inputText);
       inputElement.trigger('change');
-      expect(wrapper.vm.$data.password).toBe(inputText);
+      const {password} = wrapper.vm.$data;
+      expect(password).toBe(inputText);
     });
 
     it('should change show data when button click', () => {

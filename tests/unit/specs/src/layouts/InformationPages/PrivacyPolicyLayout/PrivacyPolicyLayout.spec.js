@@ -1,10 +1,10 @@
 import { shallowMount } from '@vue/test-utils';
-import TeamLayout from '@/layouts/TeamLayout/TeamLayout.vue';
+import PrivacyPolicyLayout from '@/layouts/InformationPages/PrivacyPolicyLayout/PrivacyPolicyLayout.vue';
 import TitleTextContentsLayout from '@/layouts/InformationPages/Components/TitleTextContentsLayout';
 
 import { Tooling } from '@@/helpers';
 
-describe('TeamLayout.vue', () => {
+describe('PrivacyPolicyLayout.vue', () => {
   let localVue, i18n, wrapper, store;
 
   beforeAll(() => {
@@ -15,7 +15,7 @@ describe('TeamLayout.vue', () => {
   });
 
   beforeEach(() => {
-    wrapper = shallowMount(TeamLayout, {
+    wrapper = shallowMount(PrivacyPolicyLayout, {
       localVue,
       i18n,
       store,
@@ -24,21 +24,6 @@ describe('TeamLayout.vue', () => {
         'title-text-contents': TitleTextContentsLayout
       }
     });
-  });
-
-  it('should render correct team members data', () => {
-    const { members } = wrapper.vm.$data;
-    const memberElements = wrapper.vm.$el.getElementsByClassName('member');
-    for (let i = 0; i < memberElements.length; i++) {
-      const memberElement = memberElements[i];
-      const member = members[i];
-      expect(member.name).toEqual(
-        memberElement.querySelector('h4').textContent.trim()
-      );
-      expect(member.position).toEqual(
-        memberElement.querySelector('h6').textContent.trim()
-      );
-    }
   });
 
   it('should render correct titleAndTextContents data', () => {

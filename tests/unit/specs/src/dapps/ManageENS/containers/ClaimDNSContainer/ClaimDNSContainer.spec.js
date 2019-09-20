@@ -66,7 +66,7 @@ describe('ClaimDNSContainer.vue', () => {
         'interface-bottom-text': InterfaceBottomText
       },
       mocks: {
-        $router: mockRouxter
+        $router: mockRouter
       }
     });
   });

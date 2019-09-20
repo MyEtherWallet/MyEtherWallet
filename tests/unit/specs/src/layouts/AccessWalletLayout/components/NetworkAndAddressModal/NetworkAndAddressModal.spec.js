@@ -58,7 +58,8 @@ describe('NetworkAndAddressModal.vue', () => {
       let customPath = { label: 'label', path: 'dpath' };
       wrapper.setData({ customPath });
       wrapper.vm.showCustomPathInput();
-      expect(wrapper.vm.$data.customPathInput).toBe(true);
+      const {customPathInput} = wrapper.vm.$data;
+      expect(customPathInput).toBe(true);
       customPath = { label: '', path: '' };
       expect(wrapper.vm.$data.customPath).toEqual(customPath);
     });

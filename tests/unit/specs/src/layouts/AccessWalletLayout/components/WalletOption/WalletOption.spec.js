@@ -47,10 +47,4 @@ describe('WalletOption.vue', () => {
         .indexOf('selected')
     ).toBeGreaterThan(-1);
   });
-
-  // describe('WalletOption.vue Methods', () => {
-  //   it('should toggle expanded data when click checkbox', () => {
-
-  //   });
-  // });
 });

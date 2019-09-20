@@ -28,44 +28,37 @@ describe('Categories.vue', () => {
   });
 
   it('should render correct contents', () => {
+    const {categoryButtons} = wrapper.vm.$data;
     const categoryButtonElements = wrapper.vm.$el.querySelectorAll(
       '.category-buttons li'
     );
 
     for (const [i, categoryButtonElement] of categoryButtonElements.entries()) {
-      expect(
-        categoryButtonElement.querySelector('.button-title').textContent.trim()
-      ).toEqual(wrapper.vm.$data.categoryButtons[i].title);
+      const pButtonTitle = categoryButtonElement.querySelector('.button-title');
+      expect(pButtonTitle.textContent.trim()).toEqual(categoryButtons[i].title);
     }
 
     const linkBlockElements = wrapper.vm.$el.querySelectorAll('.link-block');
 
     for (const [i, linkBlockElement] of linkBlockElements.entries()) {
-      expect(
-        linkBlockElement.querySelector('.block-icon img').getAttribute('src')
-      ).toEqual(wrapper.vm.$data.linkBlocks[i].icon);
-      expect(
-        linkBlockElement.querySelector('.description').textContent.trim()
-      ).toEqual(wrapper.vm.$data.linkBlocks[i].description);
-      expect(
-        linkBlockElement.querySelector('.block-title').textContent.trim()
-      ).toEqual(wrapper.vm.$data.linkBlocks[i].title);
-      expect(
-        linkBlockElement.querySelector('.email a').href.replace('mailto:', '')
-      ).toEqual(wrapper.vm.$data.linkBlocks[i].email);
+      const {icon, description, email, title} = wrapper.vm.$data.linkBlocks[i];
 
+      const imgIcon = linkBlockElement.querySelector('.block-icon img');
+      const pTitle = linkBlockElement.querySelector('.block-title');
+      const pDescription = linkBlockElement.querySelector('.description');
+      const aEmail = linkBlockElement.querySelector('.email a');
       const socialElements = linkBlockElement.querySelectorAll('.social div');
-
+      
       for (const [j, socialElement] of socialElements.entries()) {
-        expect(socialElement.querySelector('a').href).toEqual(
-          wrapper.vm.$data.linkBlocks[i].social[j].link + '/'
-        );
+        expect(socialElement.querySelector('a').href).toEqual(`${social[j].link}/`);
         expect(socialElement.querySelector('img').getAttribute('src')).toEqual(
-          wrapper.vm.$data.linkBlocks[i].social[j].icon
+          social[j].icon
         );
       }
+      expect(imgIcon.getAttribute('src')).toEqual(icon);
+      expect(pTitle.textContent.trim()).toEqual(description);
+      expect(pDescription.textContent.trim()).toEqual(title);
+      expect(aEmail.href.replace('mailto:', '')).toEqual(email);
     }
   });
-
-  describe('Categories.vue Methods', () => {});
 });
