@@ -2,6 +2,7 @@
   <div class="extension-wallets-container">
     <wallet-side-menu :selected-view="label" :switch-view="switchView" />
     <div class="wallets-container">
+      <interface-network-modal ref="network" />
       <watch-only-modal
         ref="watchOnlyModal"
         :add-watch-only="addWatchOnlyWallet"
@@ -17,21 +18,36 @@
       />
       <div v-show="label === 'myWallets'" class="my-wallets-container">
         <div class="wallets-container-header">
-          <div class="title-balance">
-            <h3>{{ name }}</h3>
-            <p v-show="!loading">
-              {{ totalBalance }} <span>{{ network.type.name }}</span>
-              <span class="total-balance"> (Total Balance) </span>
-            </p>
-            <i v-show="loading" class="fa fa-spin fa-spinner" />
+          <div class="header-title-container">
+            <div class="title-balance">
+              <h2>{{ name }}</h2>
+            </div>
+            <div class="add-button" @click="addWallet">
+              + Add More
+            </div>
           </div>
-          <div class="add-button" @click="addWallet">
-            + Add
+          <div class="dropdown-container">
+            <span class="network-text">NETWORK</span>
+            <span class="current-network" @click="openNetworkModal">
+              {{ network.type.name }} - {{ network.service }}
+            </span>
+          </div>
+        </div>
+        <div class="total-balance-container">
+          <div class="title-name">
+            Total Balance
+          </div>
+          <div class="balance-container">
+            <p class="actual-balance">
+              {{ totalBalance }} <span>{{ network.type.name }} </span>
+            </p>
+            <p v-if="network.type.name ==='ETH'" class="converted-balance">{{ convertedBalance }}</p>
           </div>
         </div>
         <div v-show="myWallets.length > 0 || loading" class="wallets">
           <wallet-info-component
             v-for="wallet in myWallets"
+            :usd="ethPrice"
             :key="wallet.address"
             :address="wallet.address"
             :balance="wallet.balance"
@@ -52,15 +68,16 @@
       <div v-show="label === 'watchOnlyWallets'" class="watch-only-container">
         <div class="wallets-container-header">
           <div class="title-balance">
-            <h3>{{ name }}</h3>
+            <h2>{{ name }}</h2>
           </div>
           <div class="add-button" @click="openWatchOnlyModal">
-            + Add
+            + Add More
           </div>
         </div>
         <div v-show="watchOnlyAddresses.length > 0 || loading" class="wallets">
           <wallet-info-component
             v-for="wallet in watchOnlyAddresses"
+            :usd="ethPrice"
             :key="wallet.address"
             :address="wallet.address"
             :balance="wallet.balance"
@@ -96,12 +113,14 @@ import { WalletInterface } from '@/wallets';
 import walletWorker from 'worker-loader!@/workers/wallet.worker.js';
 import { mapState } from 'vuex';
 import { isAddress, toChecksumAddress } from '@/helpers/addressUtils';
+import InterfaceNetworkModal from '@/layouts/InterfaceLayout/components/InterfaceNetworkModal';
 export default {
   components: {
     'wallet-side-menu': WalletSideMenu,
     'watch-only-modal': WatchOnlyModal,
     'wallet-info-component': WalletInfoComponent,
-    'password-only-modal': PasswordOnlyModal
+    'password-only-modal': PasswordOnlyModal,
+    'interface-network-modal': InterfaceNetworkModal
   },
   data() {
     return {
@@ -115,7 +134,9 @@ export default {
       path: '',
       password: '',
       nickname: '',
-      hasAccounts: ''
+      hasAccounts: '',
+      convertedBalance: '$ 0',
+      ethPrice: 0
     };
   },
   computed: {
@@ -137,6 +158,30 @@ export default {
     window.chrome.storage.onChanged.removeListener(this.getAccounts);
   },
   methods: {
+    openNetworkModal() {
+      this.$refs.network.$refs.network.show();
+    },
+    async fetchEthBalance() {
+      if (this.network.type.name === 'ETH') {
+        const price = await fetch(
+          'https://cryptorates.mewapi.io/ticker?filter=ETH'
+        )
+          .then(res => {
+            return res.json();
+          })
+          .catch(e => {
+            console.log(e);
+          });
+
+        this.convertedBalance = `$ ${new BigNumber(
+          price.data.ETH.quotes.USD.price
+        )
+          .times(this.totalBalance)
+          .toFixed(2)}`;
+
+        this.ethPrice = price.data.ETH.quotes.USD.price;
+      }
+    },
     getAccountsCb(res) {
       const accounts = Object.keys(res)
         .filter(item => {
@@ -253,6 +298,7 @@ export default {
       this.watchOnlyAddresses = watchOnlyAddresses;
       this.myWallets = myWallets;
       this.loading = false;
+      this.fetchEthBalance();
     },
     async getBalance(addr) {
       const balance = await this.web3.eth.getBalance(addr);
