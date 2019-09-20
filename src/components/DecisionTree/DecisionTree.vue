@@ -23,8 +23,18 @@
           <div v-else class="question">
             <img src="@/assets/images/icons/DecisionTree/question.svg" />
           </div>
-          <p v-if="currentIndex.title.length < 27">{{ currentIndex.title }}</p>
-          <p v-else class="long-title">{{ currentIndex.title }}</p>
+          <div class="tree-title">
+            <div v-if="historyStack.length > 0" class="breadcrumb">
+              <p v-for="h in historyStack" :key="h.key">
+                <i class="fa fa-chevron-circle-down" aria-hidden="true"></i>
+                {{ h.title }}
+              </p>
+            </div>
+            <p v-if="currentIndex.title.length < 27">
+              {{ currentIndex.title }}
+            </p>
+            <p v-else class="long-title">{{ currentIndex.title }}</p>
+          </div>
         </div>
 
         <div class="decision-tree-search hidden">

@@ -1,4 +1,4 @@
-@import '~@/scss/GlobalVariables';
+@import "~@/scss/GlobalVariables";
 
 .show-button {
   opacity: 0;
@@ -31,7 +31,7 @@
     background-color: #0c2840;
     //border-radius: 10px 10px 0 0;
     min-height: 65px;
-    padding: 5px 20px;
+    padding: 10px 20px;
     padding-right: 60px;
     padding-left: 63px;
     display: flex;
@@ -72,6 +72,21 @@
       }
     }
 
+    .tree-title {
+      .breadcrumb {
+        background-color: transparent;
+        margin: 0;
+        padding: 0;
+        line-height: 12px;
+        p {
+          font-size: 11px;
+          margin: 0;
+          padding: 0;
+          line-height: 13px;
+        }
+      }
+    }
+
     .question {
       position: absolute;
       top: auto;
@@ -88,7 +103,7 @@
       top: auto;
       bottom: auto;
       &::before {
-        content: '';
+        content: "";
         position: absolute;
         height: 1px;
         width: 20px;
@@ -98,7 +113,7 @@
         transform: rotate(45deg);
       }
       &::after {
-        content: '';
+        content: "";
         position: absolute;
         height: 1px;
         width: 20px;
