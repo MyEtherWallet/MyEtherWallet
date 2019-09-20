@@ -1,4 +1,4 @@
-## Accessing with Trezor
+## Using a Trezor
 
 #### If you’ve recently updated your device, it might have gotten reset. Restore your old Trezor wallet using the recovery phrase given when first setting it up.
 

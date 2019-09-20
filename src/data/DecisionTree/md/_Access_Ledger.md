@@ -1,4 +1,4 @@
-## Accessing with Ledger
+## Using a Ledger
 
 #### To get your Ledger working properly, please try all of the steps outlined below:
 

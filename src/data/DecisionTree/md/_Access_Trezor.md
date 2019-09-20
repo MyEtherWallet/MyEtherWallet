@@ -1,4 +1,4 @@
-## Accessing with Trezor
+## Using a Trezor
 
 #### To get your Trezor working properly, please try all of the steps outlined below:
 
