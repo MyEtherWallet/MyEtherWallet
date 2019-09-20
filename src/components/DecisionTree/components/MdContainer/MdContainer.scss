@@ -1,4 +1,4 @@
-@import "~@/scss/GlobalVariables";
+@import '~@/scss/GlobalVariables';
 
 .md-container .dynamic-content {
   div,
@@ -97,6 +97,11 @@
     color: blue;
   }
 
+  strong {
+    font-size: 12px;
+    font-weight: 500;
+  }
+
   p {
     font-size: 13px;
     font-weight: 300;
@@ -104,21 +109,19 @@
 
   h2 {
     font-size: 20px;
-    font-weight: 300;
+    font-weight: 500;
     line-height: 27px;
     margin-bottom: 20px;
   }
 
   h4 {
     font-size: 16px;
-    font-weight: 300;
+    font-weight: 400;
     line-height: 22px;
     margin-bottom: 20px;
     margin-top: 20px;
-    //border-left: 5px solid #d2d2d2;
-    //padding-left: 10px;
-    border: 15px solid #efefef;
-    padding: 12px;
+    border-left: 4px solid #e6e6e6;
+    padding-left: 10px;
   }
 
   h5 {
@@ -130,7 +133,7 @@
 
   li {
     margin-left: 20px;
-    padding-left: 5px;
+    padding-left: 0;
     font-size: 13px;
     font-weight: 300;
     margin-bottom: 13px;
@@ -142,8 +145,15 @@
   }
 
   ol {
-    li {
+    > li {
+      //font-size: 15px;
+      margin-bottom: 10px;
+      > p {
+        //font-size: 15px;
+        margin-left: 5px;
+      }
       ul {
+        margin-top: 5px;
         li {
           margin-bottom: 7px;
           list-style-type: disc;
@@ -174,9 +184,5 @@
         font-weight: 400;
       }
     }
-  }
-
-  strong {
-    font-weight: 500;
   }
 }

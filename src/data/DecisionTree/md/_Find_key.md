@@ -6,7 +6,7 @@
 2. Search your computer for a ‘UTC’ file that you might have made when generating your wallet for the first time. It will require a password, so make your best guess.
 3. If that doesn’t solve your issue, reach out to us with as much info as possible about your situation. **But do not send us your private key!**
 
-#### Please keep in mind we cannot recover private keys.
+**Please keep in mind we cannot recover private keys.**
 
 * * *
 
