@@ -1,15 +1,24 @@
 <template>
   <div class="ambrpay-container">
     <back-button />
-    <div class="ambrpay-header mt-5">
-      <h3 class="page-title">Ambrpay</h3>
+    <b-container>
+      <div class="ambrpay-header mt-5">
+        <h3 class="page-title">Ambrpay</h3>
 
-      <div class="btns-container">
-        <b-button class="withdraw-btn">Withdraw Funds</b-button>
-        <b-button class="add-btn">Add Funds</b-button>
+        <div class="btns-container">
+          <b-button class="withdraw-btn">Withdraw Funds</b-button>
+          <b-button class="add-btn">Add Funds</b-button>
+        </div>
       </div>
-    </div>
-    <subscription-form></subscription-form>
+      <div class="funds-container">
+        <span class="fund-text">Subscriptions Balance</span>
+        <div>
+          <span class="fund-text">{{ fundsBalance }} ETH </span>
+          <span class="usd-text">USD</span>
+        </div>
+      </div>
+      <subscription-form></subscription-form>
+    </b-container>
   </div>
 </template>
 
@@ -23,6 +32,11 @@ export default {
   components: {
     'subscription-form': SubscriptionForm,
     'back-button': BackButton
+  },
+  data() {
+    return {
+      fundsBalance: 0
+    };
   },
   computed: {
     ...mapState(['web3', 'account', 'network'])
@@ -42,6 +56,7 @@ export default {
       ambrpay
         .getSubscriptionFunds()
         .then(res => {
+          this.fundsBalance = res;
           // eslint-disable-next-line
           console.log('res', res);
         })

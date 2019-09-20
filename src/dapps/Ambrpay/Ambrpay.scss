@@ -1,8 +1,5 @@
 @import '~@/scss/GlobalVariables';
 
-$input-title-color: #212529;
-$mew-green-light: #05c7aa;
-
 .ambrpay-container {
   background-color: $white;
   border-radius: 4px;
@@ -13,18 +10,21 @@ $mew-green-light: #05c7aa;
   .ambrpay-header {
     align-items: center;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
+    margin-top: 25px;
 
     .withdraw-btn {
       border: none;
       background-color: $white;
-      color: $mew-green-light;
+      color: $mew-green;
+      font-family: AvenirNext-Medium;
     }
 
     .add-btn {
-      border-color: $mew-green-light;
+      border-color: $mew-green;
       background-color: $white;
-      color: $mew-green-light;
+      color: $mew-green;
+      font-family: AvenirNext-Medium;
     }
   }
 }
@@ -45,4 +45,35 @@ $mew-green-light: #05c7aa;
 
 .text-danger {
   color: $text-color-red;
+}
+
+.page-title {
+  color: $dark-blue-6;
+  font-family: AvenirNext-DemiBold;
+  font-weight: 600;
+  font-size: 24px;
+}
+
+.funds-container {
+  align-items: center;
+  background-color: $dark-blue-12;
+  border-radius: 4px;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 25px;
+  padding: 15px;
+}
+
+.fund-text {
+  color: $white;
+  font-family: AvenirNext-DemiBold;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.usd-text {
+  color: $white;
+  display: block;
+  font-family: AvenirNext-DemiBold;
+  text-align: right;
 }

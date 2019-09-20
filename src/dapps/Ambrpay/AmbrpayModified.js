@@ -60,7 +60,7 @@ export default function Ambrpay(account, web3) {
 
           switch (account.netId) {
             case "1":
-              throw "mainnet is currently not available";
+              // throw "mainnet is currently not available";
 
               if(ambrpay.network == 'mainnet' || ambrpay.network == 'auto') {
 
