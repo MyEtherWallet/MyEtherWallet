@@ -12,6 +12,13 @@ $dapp-button-mobile-width: 650px;
   padding: 40px 20px;
   text-align: center;
 
+  .ambrpay-icon {
+    height: 30%;
+    margin-top: 1em;
+    margin-bottom: 0.4em;
+    vertical-align: baseline;
+  }
+
   @media all and (max-width: $dapp-button-mobile-width) {
     display: flex;
     align-items: center;

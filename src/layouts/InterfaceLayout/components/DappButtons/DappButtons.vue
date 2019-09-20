@@ -3,7 +3,10 @@
     :class="['dapps-button', supported ? '' : 'disabled']"
     @click="navigateTo"
   >
-    <img :src="supported ? icon : iconDisabled" />
+    <img
+      :src="supported ? icon : iconDisabled"
+      :class="title === 'Ambrpay' ? 'ambrpay-icon' : ''"
+    />
     <div>
       <h4>{{ title }}</h4>
       <p>{{ desc }}</p>

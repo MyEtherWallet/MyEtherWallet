@@ -6,6 +6,7 @@ import secureTransactionHov from '@/assets/images/icons/button-key.svg';
 import scheduleTransaction from '@/assets/images/icons/eac.svg';
 import scheduleTransactionHov from '@/assets/images/icons/eac-hov.svg';
 import makerdai from '@/assets/images/icons/dapps/makerdai.svg';
+import ambrpay from '@/assets/images/icons/dapps/ambrpay.png';
 import { ETH, GOERLI, ROP, RIN, KOV } from '@/networks/types';
 
 const dapps = {
@@ -44,11 +45,11 @@ const dapps = {
   },
   ambrpay: {
     route: '/interface/dapps/ambrpay',
-    icon: makerdai,
+    icon: ambrpay,
     iconDisabled: secureTransactionHov,
     title: 'Ambrpay',
     desc:
-      'With ambrpay you can accept recurring cryptocurrency payments in no time. Currently we do crypt-to-crypto recurring payments, with crypto-to-fiat coming soon.',
+      'With Ambrpay you can accept recurring cryptocurrency payments in no time.',
     supportedNetworks: [ETH.name, KOV.name]
   }
 };
