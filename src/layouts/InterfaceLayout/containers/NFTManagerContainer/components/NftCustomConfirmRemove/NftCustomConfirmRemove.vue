@@ -2,12 +2,12 @@
   <div>
     <b-modal
       ref="modal"
+      :title="$t('dapps.removeCustomNFT')"
       hide-footer
       class="bootstrap-modal nopadding max-height-1"
       centered
-      title="Add Custom Token"
     >
-      <div class="button-block">
+      <div class="button-container">
         <standard-button
           :options="removeButton"
           @click.native="continueRemove"
@@ -45,14 +45,14 @@ export default {
         title: 'Remove',
         buttonStyle: 'red',
         helpCenter: false,
-        noMinWidth: false,
+        noMinWidth: true,
         fullWidth: false
       },
       cancelButton: {
         title: 'Cancel',
         buttonStyle: 'grey-border',
         helpCenter: false,
-        noMinWidth: false,
+        noMinWidth: true,
         fullWidth: false
       }
     };
