@@ -84,7 +84,7 @@
         border-radius: 5px;
         display: flex;
         justify-content: space-between;
-        padding: 20px 30px;
+        padding: 15px 20px;
 
         p {
           font-weight: bold;
@@ -98,6 +98,12 @@
             font-size: 14px;
             font-weight: normal;
           }
+        }
+
+        .dollar-balance {
+          color: $light-blue-2;
+          font-weight: normal;
+          text-align: right;
         }
       }
     }

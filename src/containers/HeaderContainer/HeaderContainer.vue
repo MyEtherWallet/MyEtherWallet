@@ -191,7 +191,7 @@
                   />
                 </div>
                 <b-nav-item
-                  v-if="showButtons && !isPageOnTop"
+                  v-if="showButtons && !isPageOnTop && buildType !== 'mewcx'"
                   :class="[
                     showGetFreeWallet ? 'show' : 'hide',
                     'get-free-wallet first-button nopadding'
@@ -201,7 +201,7 @@
                   <div class="get-free-wallet-button">New Wallet</div>
                 </b-nav-item>
                 <b-nav-item
-                  v-if="showButtons && !isPageOnTop"
+                  v-if="showButtons && !isPageOnTop && buildType !== 'mewcx'"
                   :class="[
                     showGetFreeWallet ? 'show' : 'hide',
                     'get-free-wallet nopadding'

@@ -16,9 +16,10 @@
 .my-wallets-container,
 .watch-only-container {
   display: grid;
-  grid-template-columns: 95% 1fr;
+  grid-template-columns: 85% 1fr;
 
-  .wallets-container-header {
+  .wallets-container-header,
+  .total-balance-container {
     grid-column-start: 1;
   }
 
@@ -29,34 +30,73 @@
 }
 
 .wallets-container-header {
+  align-items: center;
   display: flex;
   justify-content: space-between;
 
-  .add-button {
-    align-items: center;
-    border: 1px solid $mew-green;
-    border-radius: 5px;
-    color: $mew-green;
-    cursor: pointer;
-    display: flex;
-    height: 45px;
-    padding: 10px 15px;
+  h2 {
+    margin: 0 15px 0 0 !important;
   }
 
-  .title-balance {
-    font-size: 20px !important;
+  .add-button {
+    color: $mew-green;
+    cursor: pointer;
+  }
 
-    p {
+  .header-title-container {
+    align-items: center;
+    display: flex;
+  }
+
+  .dropdown-container {
+    span {
+      font-size: 12px;
+    }
+
+    .network-text {
+      color: $dark-grey-11;
+      padding-right: 15px;
+    }
+
+    .current-network {
+      background-color: $white;
+      border: 1px solid $light-grey-8;
+      border-radius: 5px;
+      cursor: pointer;
+      padding: 10px;
+    }
+  }
+}
+
+.total-balance-container {
+  align-items: center;
+  background: $white;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding: 15px;
+  width: 100%;
+
+  .title-name {
+    font-weight: bold;
+  }
+
+  .balance-container {
+    .actual-balance {
       color: $light-blue-1 !important;
-      font-size: 15px !important;
-
-      .total-balance {
-        color: $dark-grey-11 !important;
-      }
+      font-size: 20px !important;
+      font-weight: bold;
 
       span {
-        font-size: 12px !important;
+        font-size: 20px !important;
+        font-weight: normal;
       }
+    }
+
+    .converted-balance {
+      color: $light-blue-2;
+      text-align: right;
     }
   }
 }

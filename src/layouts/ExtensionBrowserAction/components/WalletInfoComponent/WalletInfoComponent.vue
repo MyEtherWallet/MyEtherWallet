@@ -132,9 +132,14 @@
         </div>
         <div class="balance-container">
           <p>Balance</p>
-          <p class="actual-balance">
-            {{ balance }} <span>{{ network.type.name }}</span>
-          </p>
+          <div>
+            <p class="actual-balance">
+              {{ balance }} <span>{{ network.type.name }}</span>
+            </p>
+            <p v-if="network.type.name ==='ETH'" class="dollar-balance">
+              {{ convertedBalance }}
+            </p>
+          </div>
         </div>
       </div>
       <div class="tokens-container">
@@ -255,6 +260,10 @@ export default {
     balance: {
       type: String,
       default: ''
+    },
+    usd: {
+      type: Number,
+      default: 0
     }
   },
   data() {
@@ -271,6 +280,10 @@ export default {
     ...mapState(['web3', 'network']),
     parsedWallet() {
       return JSON.parse(this.wallet);
+    },
+    convertedBalance() {
+      const balance = new BigNumber(this.balance).times(this.usd).toFixed(2);
+      return `$ ${balance}`;
     }
   },
   watch: {
