@@ -46,17 +46,17 @@ describe('CurrencyPicker.vue', () => {
   });
 
   it('should render correct selectedCurrency data', () => {
-    const pDropdownContainer = wrapper.vm.$el.querySelectorAll('.dropdown-container p');
+    const pDropdownContainers = wrapper.vm.$el.querySelectorAll(
+      '.dropdown-container p'
+    );
     expect(
-      wrapper.vm.$el
-        .querySelectorAll('.dropdown-container p')[0]
-        .textContent.trim()
+      pDropdownContainers[0].textContent
+        .trim()
         .indexOf(wrapper.vm.$data.selectedCurrency.name)
     ).toBeGreaterThan(-1);
     expect(
-      wrapper.vm.$el
-        .querySelectorAll('.dropdown-container p')[1]
-        .textContent.trim()
+      pDropdownContainers[1].textContent
+        .trim()
         .indexOf(wrapper.vm.$data.selectedCurrency.name)
     ).toBeGreaterThan(-1);
   });

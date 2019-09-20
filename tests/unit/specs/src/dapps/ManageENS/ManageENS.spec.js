@@ -7,11 +7,16 @@ import { Tooling } from '@@/helpers';
 describe('ManageENS.vue', () => {
   let localVue, i18n, wrapper, store;
   const domainName = 'domainName';
+  const bidAmount = 0.001;
+  const bidMask = 0.002;
   const nameHash = 'nameHash';
   const labelHash = 'labelHash';
   const owner = 'owner';
   const resolverAddress = 'resolverAddress';
+  const deedOwner = 'deedOwner';
   const secretPhrase = 'secretPhrase';
+  const auctionDateEnd = Date.now();
+  const highestBid = 'highestBid';
   const contractInitiated = true;
   const step = 10;
 
@@ -42,6 +47,20 @@ describe('ManageENS.vue', () => {
     );
   });
 
+  it('should render correct bidAmount data', () => {
+    wrapper.setData({ bidAmount });
+    expect(wrapper.find('router-view').attributes('bid-amount')).toEqual(
+      String(bidAmount)
+    );
+  });
+
+  it('should render correct bidMask data', () => {
+    wrapper.setData({ bidMask });
+    expect(wrapper.find('router-view').attributes('bid-mask')).toEqual(
+      String(bidMask)
+    );
+  });
+
   it('should render correct nameHash data', () => {
     wrapper.setData({ nameHash });
     expect(wrapper.find('router-view').attributes('name-hash')).toEqual(
@@ -67,12 +86,35 @@ describe('ManageENS.vue', () => {
       resolverAddress
     );
   });
+
+  it('should render correct deedOwner data', () => {
+    wrapper.setData({ deedOwner });
+    expect(wrapper.find('router-view').attributes('deed-owner')).toEqual(
+      deedOwner
+    );
+  });
+
   it('should render correct secretPhrase data', () => {
     wrapper.setData({ secretPhrase });
     expect(wrapper.find('router-view').attributes('secret-phrase')).toEqual(
       secretPhrase
     );
   });
+
+  it('should render correct auctionDateEnd data', () => {
+    wrapper.setData({ auctionDateEnd });
+    expect(wrapper.find('router-view').attributes('auction-date-end')).toEqual(
+      String(auctionDateEnd)
+    );
+  });
+
+  it('should render correct highestBidder data', () => {
+    wrapper.setData({ highestBid });
+    expect(wrapper.find('router-view').attributes('highest-bidder')).toEqual(
+      highestBid
+    );
+  });
+
   it('should render correct contractInitiated data', () => {
     wrapper.setData({ contractInitiated });
     expect(

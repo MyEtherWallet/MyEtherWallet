@@ -55,7 +55,7 @@ describe('LinkBlock.vue', () => {
   });
 
   it('should render correct contents', () => {
-    const {title, description, email, icon, social } = content;
+    const { title, description, email, icon, social } = content;
     const imgIcon = wrapper.vm.$el.querySelector('.block-icon img');
     const pTitle = wrapper.vm.$el.querySelector('.block-title');
     const pDescription = wrapper.vm.$el.querySelector('.description');
@@ -68,7 +68,9 @@ describe('LinkBlock.vue', () => {
     expect(aEmail.href.replace('mailto:', '')).toEqual(email);
 
     for (const [i, socialElement] of socialElements.entries()) {
-      expect(socialElement.querySelector('a').href).toEqual(`${social[i].link}/`);
+      expect(socialElement.querySelector('a').href).toEqual(
+        `${social[i].link}/`
+      );
       expect(socialElement.querySelector('img').getAttribute('src')).toEqual(
         social[i].icon
       );

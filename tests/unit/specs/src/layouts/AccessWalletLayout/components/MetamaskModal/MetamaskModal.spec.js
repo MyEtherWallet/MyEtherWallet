@@ -51,7 +51,7 @@ describe('MetamaskModal.vue', () => {
         .isVisible()
     ).toBe(true);
     wrapper.find('a.close-button').trigger('click');
-    const {refreshPage} = wrapper.vm.$data;
+    const { refreshPage } = wrapper.vm.$data;
     expect(refreshPage).toBe(true);
     expect(
       wrapper

@@ -56,10 +56,15 @@ describe('PrivateKeyModal.vue', () => {
       });
     });
 
-
     it('should reset the privateKey via input element', () => {
-    
+      const newPrivateKey =
+        'b7420d4287f425479375c7f6eab7338cabd8a61c7b85fd51b00dac3d7443a8ea';
+      const textInput = wrapper.find('.input-container input');
+      textInput.setValue(newPrivateKey);
+      const { privateKey } = wrapper.vm.$data;
+      expect(privateKey).toBe(newPrivateKey);
     });
+  });
 
   describe('PrivateKeyModal.vue Methods', () => {
     let localVue, i18n, wrapper, store;
@@ -101,7 +106,7 @@ describe('PrivateKeyModal.vue', () => {
       });
     });
 
-    xit('should reset the privateKey directly', () => {
+    it('should reset the privateKey directly', () => {
       const privateKey =
         'b7420d4287f425479375c7f6eab7338cabd8a61c7b85fd51b00dac3d7443a8ea';
       const btnSubmit = wrapper.find('.submit-button');
@@ -112,7 +117,7 @@ describe('PrivateKeyModal.vue', () => {
       });
     });
 
-    xit('should navigate to interface page', () => {
+    it('should navigate to interface page', () => {
       const privateKey =
         'b7420d4287f425479375c7f6eab7338cabd8a61c7b85fd51b00dac3d7443a8ea';
       const btnSubmit = wrapper.find('.submit-button');
