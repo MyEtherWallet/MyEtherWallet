@@ -31,7 +31,6 @@ describe('ClaimDNSContainer.vue', () => {
   const tld = 'tld';
   const claimFunc = sinon.stub();
   const dnsOwner = 'dnsOwner';
-  const fullDomainName = 'fullDomainName';
 
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
@@ -56,6 +55,7 @@ describe('ClaimDNSContainer.vue', () => {
         resolverAddress,
         hostName,
         tld,
+
         claimFunc,
         dnsOwner
       },

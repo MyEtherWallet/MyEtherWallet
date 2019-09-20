@@ -35,11 +35,13 @@ describe('InterfaceBalanceModal.vue', () => {
       '.equivalent-values'
     );
 
-    const {equivalentValues} = wrapper.vm.$data;
+    const { equivalentValues } = wrapper.vm.$data;
     for (const [i, valuesElement] of valuesElements.entries()) {
-      const {name,value} = equivalentValues[i];
+      const { name, value } = equivalentValues[i];
       expect(valuesElement.querySelector('p').textContent.trim()).toEqual(name);
-      expect(valuesElement.querySelector('p.ev-value').textContent.trim()).toEqual(value);
+      expect(
+        valuesElement.querySelector('p.ev-value').textContent.trim()
+      ).toEqual(value);
     }
   });
 });

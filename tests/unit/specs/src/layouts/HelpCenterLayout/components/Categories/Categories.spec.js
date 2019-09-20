@@ -28,7 +28,7 @@ describe('Categories.vue', () => {
   });
 
   it('should render correct contents', () => {
-    const {categoryButtons} = wrapper.vm.$data;
+    const { categoryButtons } = wrapper.vm.$data;
     const categoryButtonElements = wrapper.vm.$el.querySelectorAll(
       '.category-buttons li'
     );
@@ -41,16 +41,24 @@ describe('Categories.vue', () => {
     const linkBlockElements = wrapper.vm.$el.querySelectorAll('.link-block');
 
     for (const [i, linkBlockElement] of linkBlockElements.entries()) {
-      const {icon, description, email, title} = wrapper.vm.$data.linkBlocks[i];
+      const {
+        icon,
+        description,
+        email,
+        title,
+        social
+      } = wrapper.vm.$data.linkBlocks[i];
 
       const imgIcon = linkBlockElement.querySelector('.block-icon img');
       const pTitle = linkBlockElement.querySelector('.block-title');
       const pDescription = linkBlockElement.querySelector('.description');
       const aEmail = linkBlockElement.querySelector('.email a');
       const socialElements = linkBlockElement.querySelectorAll('.social div');
-      
+
       for (const [j, socialElement] of socialElements.entries()) {
-        expect(socialElement.querySelector('a').href).toEqual(`${social[j].link}/`);
+        expect(socialElement.querySelector('a').href).toEqual(
+          `${social[j].link}/`
+        );
         expect(socialElement.querySelector('img').getAttribute('src')).toEqual(
           social[j].icon
         );

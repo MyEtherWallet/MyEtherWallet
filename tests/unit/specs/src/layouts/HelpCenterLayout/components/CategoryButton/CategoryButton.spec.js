@@ -33,7 +33,7 @@ describe('CategoryButton.vue', () => {
   });
 
   it('should render correct contents', () => {
-    const {icon, title} = content;
+    const { icon, title } = content;
     const imgIcon = wrapper.vm.$el.querySelector('.button-icon img');
     const pTitle = wrapper.vm.$el.querySelector('.button-title');
     expect(imgIcon.getAttribute('src')).toEqual(icon);

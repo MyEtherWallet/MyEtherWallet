@@ -29,19 +29,29 @@ describe('PrivacyPolicyLayout.vue', () => {
   it('should render correct titleAndTextContents data', () => {
     const { titleAndTextContents } = wrapper.vm.$data;
 
-    if(titleAndTextContents.title) {
-      const spanTitle = wrapper.vm.$el.querySelector('.title-text-contents .title span');
+    if (titleAndTextContents.title) {
+      const spanTitle = wrapper.vm.$el.querySelector(
+        '.title-text-contents .title span'
+      );
       expect(titleAndTextContents.title).toEqual(spanTitle.textContent.trim());
     }
 
-    if(titleAndTextContents.boldSubTitle) {
-      const divSubTitle = wrapper.vm.$el.querySelector('.title-text-contents .bold-sub-title');
-      expect(titleAndTextContents.boldSubTitle).toEqual(divSubTitle.textContent.trim());
+    if (titleAndTextContents.boldSubTitle) {
+      const divSubTitle = wrapper.vm.$el.querySelector(
+        '.title-text-contents .bold-sub-title'
+      );
+      expect(titleAndTextContents.boldSubTitle).toEqual(
+        divSubTitle.textContent.trim()
+      );
     }
 
-    if(titleAndTextContents.textContent) {
-      const txtContent = wrapper.vm.$el.querySelector('.title-text-contents .text-content');
-      expect(titleAndTextContents.textContent.join()).toEqual(txtContent.textContent.trim());
+    if (titleAndTextContents.textContent) {
+      const txtContent = wrapper.vm.$el.querySelector(
+        '.title-text-contents .text-content'
+      );
+      expect(titleAndTextContents.textContent.join()).toEqual(
+        txtContent.textContent.trim()
+      );
     }
   });
 });
