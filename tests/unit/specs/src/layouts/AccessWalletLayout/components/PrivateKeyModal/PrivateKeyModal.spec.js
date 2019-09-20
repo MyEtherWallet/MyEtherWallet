@@ -57,11 +57,12 @@ describe('PrivateKeyModal.vue', () => {
     });
 
     it('should reset the privateKey via input element', () => {
-      const privateKey =
+      const newPrivateKey =
         'b7420d4287f425479375c7f6eab7338cabd8a61c7b85fd51b00dac3d7443a8ea';
       const textInput = wrapper.find('.input-container input');
-      textInput.setValue(privateKey);
-      expect(wrapper.vm.$data.privateKey).toBe(privateKey);
+      textInput.setValue(newPrivateKey);
+      const {privateKey} = wrapper.vm.$data;
+      expect(privateKey).toBe(newPrivateKey);
     });
   });
 
