@@ -1,0 +1,11 @@
+@import '~@/scss/GlobalVariables';
+
+.mew-btn {
+  background-color: $mew-green;
+  border-radius: 4px;
+  border: none;
+  color: $white;
+  cursor: pointer;
+  font-family: AvenirNext-Medium;
+  padding: 21px 55px;
+}

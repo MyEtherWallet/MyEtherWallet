@@ -1,0 +1,18 @@
+@import '~@/scss/GlobalVariables';
+
+.balance-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px;
+
+  .balance-txt {
+    color: $dark-blue-2;
+    font-family: AvenirNext-DemiBold;
+    font-size: 16px;
+    font-weight: 600;
+  }
+}
+
+.btn-container {
+  text-align: center;
+}

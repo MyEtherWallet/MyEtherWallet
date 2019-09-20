@@ -5,10 +5,7 @@
         <b-container>
           <b-row>
             <span class="label-text">To Address</span>
-            <p
-              class="action-text prevent-user-select"
-              @click="copyToCsAliSDFDSpboard('address')"
-            >
+            <p class="action-text prevent-user-select" @click="sdfasdf()">
               {{ $t('common.copy') }}
             </p>
           </b-row>
@@ -34,7 +31,7 @@
             <input type="text" placeholder="Day(s)" />
           </b-row>
           <b-row class="mt-4">
-            <b-button class="mx-auto start-btn">Start Recurring</b-button>
+            <b-button class="mx-auto mew-btn">Start Recurring</b-button>
           </b-row>
           <b-row>
             <b-button class="mx-auto active-sub-btn"
@@ -89,5 +86,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '../../AmbrpayGlobal.scss';
 @import 'SubscriptionForm.scss';
 </style>

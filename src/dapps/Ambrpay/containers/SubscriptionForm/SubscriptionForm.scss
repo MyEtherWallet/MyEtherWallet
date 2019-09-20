@@ -1,8 +1,5 @@
 @import '~@/scss/GlobalVariables';
 
-$input-title-color: #212529;
-$mew-green-light: #05c7aa;
-
 .ambrpay-container {
   background-color: $white;
   border-radius: 4px;
@@ -84,16 +81,6 @@ input::placeholder {
   color: $dark-blue-12;
   text-align: right;
   padding-right: 10px;
-}
-
-.start-btn {
-  background-color: $mew-green;
-  border-radius: 4px;
-  border: none;
-  color: $white;
-  font-family: AvenirNext-Medium;
-  height: 62px;
-  width: 240px;
 }
 
 .active-sub-btn {
