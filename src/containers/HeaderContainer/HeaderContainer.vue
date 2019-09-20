@@ -72,7 +72,7 @@
                 <img
                   :class="!isPageOnTop && !isMobileMenuOpen ? 'logo-small' : ''"
                   class="logo-large"
-                  src=""
+                  src="~@/assets/images/short-hand-logo.png"	
                 />
               </div>
             </router-link>
