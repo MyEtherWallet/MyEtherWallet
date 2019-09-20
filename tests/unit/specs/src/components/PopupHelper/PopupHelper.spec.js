@@ -23,7 +23,9 @@ describe('PopupHelper.vue', () => {
 
   it('should render correct text prop data', () => {
     const text = 'text';
-    wrapper.setProps({text});
-    expect(wrapper.vm.$el.querySelector('.helper-box p').textContent.trim()).toEqual(text);
+    wrapper.setProps({ text });
+    expect(
+      wrapper.vm.$el.querySelector('.helper-box p').textContent.trim()
+    ).toEqual(text);
   });
 });

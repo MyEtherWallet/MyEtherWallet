@@ -31,7 +31,7 @@ describe('ClaimDNSContainer.vue', () => {
   const tld = 'tld';
   const claimFunc = sinon.stub();
   const dnsOwner = 'dnsOwner';
-  const fullDomainName ='fullDomainName';
+  const fullDomainName = 'fullDomainName';
 
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
@@ -56,10 +56,8 @@ describe('ClaimDNSContainer.vue', () => {
         resolverAddress,
         hostName,
         tld,
-
-       claimFunc,
-       dnsOwner
-
+        claimFunc,
+        dnsOwner
       },
       stubs: {
         'b-modal': BModalStub,
@@ -72,7 +70,12 @@ describe('ClaimDNSContainer.vue', () => {
   });
 
   it('should render correct dnsOwner props data', () => {
-    expect(wrapper.vm.$el.querySelectorAll('.claim-dns-content p')[1].textContent.trim().indexOf(dnsOwner)).toBeGreaterThan(-1);
+    expect(
+      wrapper.vm.$el
+        .querySelectorAll('.claim-dns-content p')[1]
+        .textContent.trim()
+        .indexOf(dnsOwner)
+    ).toBeGreaterThan(-1);
   });
 
   it('should render correct claimFunc props func', () => {
@@ -81,10 +84,17 @@ describe('ClaimDNSContainer.vue', () => {
   });
 
   it('should render correct loading props data', () => {
-    expect(wrapper.find('.large-round-button-green-filled span').isVisible()).toBe(true);
+    expect(
+      wrapper.find('.large-round-button-green-filled span').isVisible()
+    ).toBe(true);
   });
 
   it('should render correct fullDomainName computed data', () => {
-    expect(wrapper.vm.$el.querySelectorAll('.claim-dns-content p')[0].textContent.trim().indexOf(wrapper.vm.fullDomainName)).toBeGreaterThan(-1);
+    expect(
+      wrapper.vm.$el
+        .querySelectorAll('.claim-dns-content p')[0]
+        .textContent.trim()
+        .indexOf(wrapper.vm.fullDomainName)
+    ).toBeGreaterThan(-1);
   });
 });

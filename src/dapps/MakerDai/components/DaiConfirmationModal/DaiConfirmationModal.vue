@@ -6,6 +6,8 @@
       centered
       class="bootstrap-modal bootstrap-modal-wide padding-40-20"
       hide-footer
+      static
+      lazy
     >
       <div class="modal-content-container">
         <div class="tx-amount">
