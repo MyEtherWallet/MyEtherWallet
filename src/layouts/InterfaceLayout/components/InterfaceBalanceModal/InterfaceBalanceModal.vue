@@ -54,18 +54,22 @@ export default {
           value: '102.22453'
         },
         {
-          name: 'REP',
-          value: '5656.22'
+          name: 'XETH',
+          value: '0.0000050200'
         },
         {
-          name: 'CHF',
-          value: '12410004.22453'
+          name: 'XRP',
+          value: '0.0040400000'
         },
         {
-          name: 'USD'
+          name: 'USDT'
         },
         {
           name: 'EUR',
+          value: '12410.22'
+        },
+        {
+          name: 'BCHABC',
           value: '12410.22'
         },
         {
