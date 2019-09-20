@@ -162,7 +162,6 @@
 
 <script>
 import { mapState } from 'vuex';
-import PopUpHelper from '@/components/PopupHelper';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import BottomHelpLink from '@/components/BottomHelpLink';
@@ -181,7 +180,6 @@ const toBigNumber = num => {
 
 export default {
   components: {
-    'pop-up-helper': PopUpHelper,
     'interface-container-title': InterfaceContainerTitle,
     'interface-bottom-text': InterfaceBottomText,
     blockie: Blockie,

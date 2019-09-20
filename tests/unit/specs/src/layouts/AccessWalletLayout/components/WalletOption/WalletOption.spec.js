@@ -19,7 +19,7 @@ describe('WalletOption.vue', () => {
       i18n,
       store,
       attachToDocument: true,
-      propsData: {text}
+      propsData: { text }
     });
   });
 

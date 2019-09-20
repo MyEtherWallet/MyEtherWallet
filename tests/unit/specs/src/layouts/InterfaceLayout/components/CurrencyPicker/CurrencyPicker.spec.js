@@ -133,7 +133,7 @@ describe('CurrencyPicker.vue', () => {
 
   describe('CurrencyPicker.vue Methods', () => {
     it('should change open data when open dropdown method is called', () => {
-      let dropdownContainer = wrapper.find('.dropdown-container');
+      const dropdownContainer = wrapper.find('.dropdown-container');
       dropdownContainer.trigger('click');
       expect(wrapper.vm.$data['open']).toBe(true);
       dropdownContainer.trigger('click');

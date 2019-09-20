@@ -23,8 +23,8 @@ describe('BottomHelpLink.vue', () => {
 
   it('should render correct issues props data', () => {
     expect(wrapper.find('.issues').exists()).toBe(true);
-    const type='';
-    wrapper.setProps({type});
+    const type = '';
+    wrapper.setProps({ type });
     expect(wrapper.find('.issues').exists()).toBe(false);
   });
 });

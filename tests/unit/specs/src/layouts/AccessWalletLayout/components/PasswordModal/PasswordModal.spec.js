@@ -24,7 +24,9 @@ describe('PasswordModal.vue', () => {
   it('should render password data', () => {
     const password = 'Strength1000!!!!AAAA***BB###';
     wrapper.setData({ password });
-    const formPasswordValue = wrapper.vm.$el.querySelector('.password-form input').value;
+    const formPasswordValue = wrapper.vm.$el.querySelector(
+      '.password-form input'
+    ).value;
     expect(formPasswordValue).toEqual(password);
   });
 

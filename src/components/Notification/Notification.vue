@@ -14,6 +14,8 @@
       centered
       no-padding
       class="bootstrap-modal-wide nopadding"
+      static
+      lazy
       @show="countUnread"
       @hide="hiddenModal"
     >
@@ -349,7 +351,7 @@ export default {
       }
     },
     dateString(notice) {
-      if (notice !== {}) {
+      if (notice !== {} && this._i18n.locale !== null) {
         return new Date(notice.timestamp).toLocaleDateString(
           this._i18n.locale.replace('_', '-')
         );
@@ -357,7 +359,7 @@ export default {
       return '';
     },
     timeString(notice) {
-      if (notice !== {}) {
+      if (notice !== {} && this._i18n.locale !== null) {
         return new Date(notice.timestamp).toLocaleTimeString(
           this._i18n.locale.replace('_', '-')
         );
