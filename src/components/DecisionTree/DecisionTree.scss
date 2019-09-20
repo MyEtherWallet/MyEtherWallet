@@ -73,16 +73,22 @@
     }
 
     .tree-title {
+      overflow: hidden;
+
       .breadcrumb {
         background-color: transparent;
         margin: 0;
         padding: 0;
         line-height: 12px;
+        margin-bottom: 1px;
         p {
           font-size: 11px;
           margin: 0;
           padding: 0;
           line-height: 13px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
       }
     }
@@ -201,7 +207,7 @@
 
       .qa-title {
         font-size: 14px;
-        font-weight: 500;
+        font-weight: 600;
         color: rgb(11, 40, 64);
         line-height: 18px;
         margin-bottom: 3px;
