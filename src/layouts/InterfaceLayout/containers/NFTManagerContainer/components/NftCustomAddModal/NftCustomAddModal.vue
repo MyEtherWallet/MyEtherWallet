@@ -2,10 +2,10 @@
   <div>
     <b-modal
       ref="modal"
+      :title="$t('dapps.addCustomNFT')"
       hide-footer
       class="bootstrap-modal nopadding max-height-1"
       centered
-      title="Add Custom Token"
       @hidden="resetCompState"
     >
       <form class="tokens-modal-body" @keydown.enter.prevent>

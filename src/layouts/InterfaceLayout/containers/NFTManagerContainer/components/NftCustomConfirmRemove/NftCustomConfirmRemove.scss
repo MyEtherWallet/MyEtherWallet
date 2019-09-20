@@ -1,28 +1,10 @@
 @import '~@/scss/GlobalVariables';
 
-.tokens-modal-body {
+.button-container {
   display: flex;
   flex-direction: row;
   height: auto;
-  justify-content: space-between;
-  //min-height: 325px;
-  //padding: 30px 30px;
-
-  //button {
-  //  //max-width: 300px;
-  //  width: 50%;
-  //
-  //  .remove{
-  //
-  //  }
-  //  .cancel{
-  //
-  //  }
-  //}
-  //
-  //div {
-  //  text-align: center;
-  //}
+  justify-content: space-evenly;
 }
 
 .invalid-address {
@@ -35,4 +17,5 @@
 
 .button-block {
   margin-top: 30px;
+
 }
