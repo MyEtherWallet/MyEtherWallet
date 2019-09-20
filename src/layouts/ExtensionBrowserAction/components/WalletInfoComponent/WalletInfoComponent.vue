@@ -446,6 +446,7 @@ export default {
       let tokens = [];
       const tb = new TokenBalance(this.web3.currentProvider);
       const newLogo = {
+        // eslint-disable-next-line
         src: require(`@/assets/images/networks/${this.network.type.name.toLowerCase()}.svg`)
       };
       try {
@@ -491,6 +492,7 @@ export default {
 
       this.customTokens = tokens.map(token => {
         const newLogo = {
+          // eslint-disable-next-line
           src: require(`@/assets/images/networks/${this.network.type.name.toLowerCase()}.svg`)
         };
         // token['logo'] = token.hasOwnProperty('logo') ? token.logo.hasOwnProperty('src') ? token.logo : newLogo : newLogo
