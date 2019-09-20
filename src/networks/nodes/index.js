@@ -1,4 +1,5 @@
 import xdc from './xdc-mainnet';
+import xdcapothem from './xdc-apothem';
 
 // import ethethscan from './eth-ethscan';
 // import ethinfura from './eth-infura';
@@ -36,6 +37,7 @@ import ropmew from './rop-mew';
 // import goerli from './goerli-mew-ws';
 export {
   xdc,
+  xdcapothem,
   // ethethscan,
   // ethinfura,
   // ethinfuraws,
