@@ -37,7 +37,7 @@ describe('FAQs.vue', () => {
       expect(showFAQs.faq5).toBe(true);
       linkWrappers.at(5).trigger('click');
       expect(showFAQs.faq6).toBe(true);
-      linkWrappers.at(0).trigger('click');
+      linkWrappers.at(6).trigger('click');
       expect(showFAQs.faq7).toBe(true);
       linkWrappers.at(7).trigger('click');
       expect(showFAQs.faq8).toBe(true);
