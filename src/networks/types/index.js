@@ -1,4 +1,5 @@
 import XDC from './XDC.js';
+import XDCapothem from './XDCapothem.js';
 import RIN from './RIN.js';
 import ROP from './ROP.js';
 import POA from './POA.js';
@@ -23,6 +24,7 @@ import ETH from './ETH.js';
 // import GOERLI from './GOERLI';
 export {
   XDC,
+  XDCapothem,
   RIN,
   ROP,
   ETH,

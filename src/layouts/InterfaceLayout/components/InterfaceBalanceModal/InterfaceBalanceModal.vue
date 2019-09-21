@@ -54,18 +54,22 @@ export default {
           value: '102.22453'
         },
         {
-          name: 'REP',
-          value: '5656.22'
+          name: 'XETH',
+          value: '0.0000050200'
         },
         {
-          name: 'CHF',
-          value: '12410004.22453'
+          name: 'XRP',
+          value: '0.0040400000'
         },
         {
-          name: 'USD'
+          name: 'USDT'
         },
         {
           name: 'EUR',
+          value: '12410.22'
+        },
+        {
+          name: 'BCHABC',
           value: '12410.22'
         },
         {
@@ -92,7 +96,7 @@ export default {
   methods: {
     async fetchBalanceData() {
       const newArr = [];
-      const url = 'https://cryptorates.mewapi.io/convert/ETH';
+      const url = 'https://www.alphaex.net/convert/XDC';
       const fetchValues = await fetch(url);
       const values = await fetchValues.json();
       delete values['lastCalled'];
