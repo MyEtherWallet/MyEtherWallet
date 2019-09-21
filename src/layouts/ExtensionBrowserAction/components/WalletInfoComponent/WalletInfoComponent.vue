@@ -136,7 +136,7 @@
             <p class="actual-balance">
               {{ balance }} <span>{{ network.type.name }}</span>
             </p>
-            <p v-if="network.type.name ==='ETH'" class="dollar-balance">
+            <p v-if="network.type.name === 'ETH'" class="dollar-balance">
               {{ convertedBalance }}
             </p>
           </div>

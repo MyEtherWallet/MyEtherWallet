@@ -10,9 +10,14 @@
           <div class="wallet-component-container">
             <div class="total-balance-container">
               <p>Total Balance:</p>
-              <p>
-                {{ concatBalance }} <b>{{ network.type.name }}</b>
-              </p>
+              <div>
+                <p>
+                  {{ concatBalance }} <b>{{ network.type.name }}</b>
+                </p>
+                <p v-if="network.type.name === 'ETH'" class="converted-balance">
+                  {{ convertedBalance }}
+                </p>
+              </div>
             </div>
             <wallet-view-component
               v-for="item in myWallets"
@@ -143,6 +148,10 @@ export default {
     addWallet: {
       type: Function,
       default: () => {}
+    },
+    usd: {
+      type: Number,
+      default: 0
     }
   },
   data() {
@@ -159,10 +168,14 @@ export default {
   computed: {
     ...mapState(['web3', 'network']),
     concatBalance() {
-      const stringifiedBal = `${this.totalBalance}`;
-      return stringifiedBal.length > 11
-        ? `${stringifiedBal.substr(0, 11)}...`
-        : stringifiedBal;
+      const balance = new Bignumber(this.totalBalance).toFixed(5);
+      return balance;
+    },
+    convertedBalance() {
+      const balance = new BigNumber(this.usd)
+        .times(this.totalBalance)
+        .toFixed(2);
+      return `$ ${balance}`;
     }
   },
   watch: {

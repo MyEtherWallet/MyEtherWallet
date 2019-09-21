@@ -1,7 +1,11 @@
 <template>
   <div class="popover-container">
     <div v-if="hasAccounts">
-      <accounts-container :add-wallet="addWallet" :accounts="accounts" />
+      <accounts-container
+        :add-wallet="addWallet"
+        :accounts="accounts"
+        :usd="ethPrice"
+      />
     </div>
     <div v-else>
       <welcome-container :add-wallet="addWallet" />
@@ -15,6 +19,7 @@ import WelcomeContainer from './containers/WelcomeContainer';
 import AccountsContainer from './containers/AccountsContainer';
 import { ExtensionHelpers } from '@/helpers';
 import { isAddress } from '@/helpers/addressUtils';
+import BigNumber from 'bignumber.js';
 
 export default {
   components: {
@@ -24,7 +29,8 @@ export default {
   data() {
     return {
       hasAccounts: false,
-      accounts: []
+      accounts: [],
+      ethPrice: 0
     };
   },
   created() {
@@ -45,6 +51,25 @@ export default {
         window.open(chrome.runtime.getURL('index.html'));
       }
     },
+    async fetchEthBalance() {
+      const price = await fetch(
+        'https://cryptorates.mewapi.io/ticker?filter=ETH'
+      )
+        .then(res => {
+          return res.json();
+        })
+        .catch(e => {
+          console.log(e);
+        });
+
+      this.convertedBalance = `$ ${new BigNumber(
+        price.data.ETH.quotes.USD.price
+      )
+        .times(this.totalBalance)
+        .toFixed(2)}`;
+
+      this.ethPrice = price.data.ETH.quotes.USD.price;
+    },
     getAccountsCb(res) {
       const accounts = Object.keys(res)
         .filter(item => {
@@ -57,6 +82,7 @@ export default {
         });
       this.hasAccounts = accounts.length > 0;
       this.accounts = this.hasAccounts ? accounts : {};
+      this.fetchEthBalance();
     }
   }
 };
