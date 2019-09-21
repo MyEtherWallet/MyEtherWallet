@@ -25,7 +25,7 @@
 
   .total-balance-container {
     align-items: center;
-    background-color: $mew-green;
+    background-color: $light-blue-1;
     border-radius: 5px;
     display: flex;
     justify-content: space-between;
@@ -37,6 +37,10 @@
       color: $white;
       font-size: 13px;
       margin: 0 !important;
+    }
+
+    .converted-balance {
+      text-align: right;
     }
   }
 

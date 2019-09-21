@@ -41,7 +41,9 @@
             <p class="actual-balance">
               {{ totalBalance }} <span>{{ network.type.name }} </span>
             </p>
-            <p v-if="network.type.name ==='ETH'" class="converted-balance">{{ convertedBalance }}</p>
+            <p v-if="network.type.name === 'ETH'" class="converted-balance">
+              {{ convertedBalance }}
+            </p>
           </div>
         </div>
         <div v-show="myWallets.length > 0 || loading" class="wallets">
@@ -162,25 +164,23 @@ export default {
       this.$refs.network.$refs.network.show();
     },
     async fetchEthBalance() {
-      if (this.network.type.name === 'ETH') {
-        const price = await fetch(
-          'https://cryptorates.mewapi.io/ticker?filter=ETH'
-        )
-          .then(res => {
-            return res.json();
-          })
-          .catch(e => {
-            console.log(e);
-          });
+      const price = await fetch(
+        'https://cryptorates.mewapi.io/ticker?filter=ETH'
+      )
+        .then(res => {
+          return res.json();
+        })
+        .catch(e => {
+          console.log(e);
+        });
 
-        this.convertedBalance = `$ ${new BigNumber(
-          price.data.ETH.quotes.USD.price
-        )
-          .times(this.totalBalance)
-          .toFixed(2)}`;
+      this.convertedBalance = `$ ${new BigNumber(
+        price.data.ETH.quotes.USD.price
+      )
+        .times(this.totalBalance)
+        .toFixed(2)}`;
 
-        this.ethPrice = price.data.ETH.quotes.USD.price;
-      }
+      this.ethPrice = price.data.ETH.quotes.USD.price;
     },
     getAccountsCb(res) {
       const accounts = Object.keys(res)
