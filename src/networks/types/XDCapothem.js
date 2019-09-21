@@ -6,7 +6,7 @@ export default {
   name: 'XDC Apothem',
   name_long: 'XDC Apothem',
   homePage: 'https://xinfin.org/',
-  blockExplorerAddr: 'https://explorer.apothem.network/account/[[address]]',
+  blockExplorerAddr: 'https://explorer.apothem.network/addr/[[address]]',
   blockExplorerTX: 'https://explorer.apothem.network/tx/[[txHash]]',
   chainID: 51,
   tokens: tokens,
