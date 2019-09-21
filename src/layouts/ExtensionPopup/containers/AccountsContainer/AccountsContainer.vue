@@ -168,7 +168,7 @@ export default {
   computed: {
     ...mapState(['web3', 'network']),
     concatBalance() {
-      const balance = new Bignumber(this.totalBalance).toFixed(5);
+      const balance = new BigNumber(this.totalBalance).toFixed(5);
       return balance;
     },
     convertedBalance() {
