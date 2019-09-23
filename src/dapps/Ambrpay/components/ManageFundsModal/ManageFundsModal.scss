@@ -1,18 +1,53 @@
 @import '~@/scss/GlobalVariables';
 
-.balance-container {
-  display: flex;
-  justify-content: space-between;
-  padding: 15px;
+.modal-container {
+  .balance-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 2em 2em 1em 2em;
+  }
 
-  .balance-txt {
+  .funds-txt {
     color: $dark-blue-2;
     font-family: AvenirNext-DemiBold;
     font-size: 16px;
     font-weight: 600;
   }
+
+  .btn-container {
+    text-align: center;
+  }
+
+  .action-container {
+    padding: 2em 2em 1em 2em;
+  }
 }
 
-.btn-container {
+.action-txt {
+  text-transform: lowercase;
+}
+
+.confirmation-container {
   text-align: center;
+
+  .check-icon {
+    border: 3px solid $border-green;
+    border-radius: 200px;
+    color: $text-color-green;
+    font-size: 70px;
+    margin-bottom: 15px;
+    padding: 25px;
+  }
+
+  p {
+    color: $dark-blue-2;
+    font-family: AvenirNext-Medium;
+    font-size: 16px;
+  }
+
+  .mew-txt {
+    color: $mew-green;
+    font-family: AvenirNext-Medium;
+    font-size: 16px;
+  }
 }

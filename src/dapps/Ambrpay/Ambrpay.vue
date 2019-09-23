@@ -18,12 +18,22 @@
       </div>
       <div class="funds-container">
         <span class="fund-text">Subscriptions Balance</span>
-        <div>
-          <span class="fund-text">{{ availableBalanceEth }} ETH </span>
-          <span class="usd-text">USD</span>
+        <div class="balance-container">
+          <i v-show="loadingBalance" class="fa fa-spinner fa-spin" />
+          <span v-show="!loadingBalance" class="fund-text"
+            >{{ availableBalanceEth }} ETH
+          </span>
+          <span v-show="!loadingBalance" class="usd-text"
+            >{{ convertToUSD }} USD</span
+          >
         </div>
       </div>
       <subscription-form></subscription-form>
+      <b-row class="mb-4">
+        <b-button class="mx-auto active-sub-btn"
+          >My Active Subscriptions</b-button
+        >
+      </b-row>
     </b-container>
     <manage-funds-modal
       ref="manageFunds"
@@ -40,6 +50,8 @@ import ManageFundsModal from './components/ManageFundsModal';
 import Ambrpay from './AmbrpayModified';
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
 import { mapState } from 'vuex';
+import BigNumber from 'bignumber.js';
+import { Toast } from '@/helpers';
 
 export default {
   components: {
@@ -51,14 +63,29 @@ export default {
     return {
       availableBalanceEth: 0,
       availableBalanceUSD: 0,
-      manageFundsText: ''
+      manageFundsText: '',
+      ethPrice: 0,
+      loadingBalance: true
     };
   },
   computed: {
-    ...mapState(['web3', 'account', 'network'])
+    ...mapState(['web3', 'account', 'network', 'online']),
+    convertToUSD() {
+      if (this.availableBalanceEth) {
+        return new BigNumber(
+          new BigNumber(this.availableBalanceEth).times(
+            new BigNumber(this.ethPrice)
+          )
+        )
+          .toFixed(2)
+          .toString();
+      }
+      return '--';
+    }
   },
   mounted() {
     this.init();
+    if (this.online && this.network.type.name === 'ETH') this.getEthPrice();
   },
   methods: {
     init() {
@@ -73,18 +100,29 @@ export default {
         .getSubscriptionFunds()
         .then(res => {
           this.availableBalanceEth = res;
-          // eslint-disable-next-line
-          console.log('res', res);
+          this.loadingBalance = false;
         })
         .catch(err => {
-          // eslint-disable-next-line
-          console.log('err', err);
+          this.loadingBalance = false;
+          Toast.responseHandler(err, Toast.ERROR);
         });
     },
     openManageFundsModal(str) {
       this.manageFundsText = str;
-      console.error('in here');
       this.$refs.manageFunds.$refs.manageFundsModal.show();
+    },
+    async getEthPrice() {
+      const price = await fetch(
+        'https://cryptorates.mewapi.io/ticker?filter=ETH'
+      )
+        .then(res => {
+          return res.json();
+        })
+        .catch(e => {
+          Toast.responseHandler(e, Toast.ERROR);
+        });
+      this.ethPrice =
+        typeof price === 'object' ? price.data.ETH.quotes.USD.price : 0;
     }
   }
 };

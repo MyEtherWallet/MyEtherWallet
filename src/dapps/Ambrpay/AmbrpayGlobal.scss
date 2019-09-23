@@ -9,3 +9,20 @@
   font-family: AvenirNext-Medium;
   padding: 21px 55px;
 }
+
+input,
+.fake-input {
+  background: $light-grey-17;
+  border: none;
+  border-radius: 4px;
+  color: $dark-blue-12;
+  height: 52px;
+  padding-left: 15px;
+  width: 100%;
+}
+
+input::placeholder {
+  color: $dark-blue-12;
+  text-align: right;
+  padding-right: 10px;
+}
