@@ -15,7 +15,7 @@ importScripts("workbox-v3.6.3/workbox-sw.js");
 workbox.setConfig({modulePathPrefix: "workbox-v3.6.3"});
 
 importScripts(
-  "precache-manifest.421a2d496a9e7ad8db480f3bbd9e2403.js"
+  "precache-manifest.3b57c3811fc3b2a8eaa50a34ddbfcf4f.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "wallet"});
