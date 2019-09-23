@@ -7,6 +7,7 @@
         active-tab-class="accounts-container-active-b-tab"
       >
         <b-tab :active="hasMyWallets" title="My Wallets" class="tab-container">
+          <network-component />
           <div class="wallet-component-container">
             <div class="total-balance-container">
               <p>Total Balance:</p>
@@ -39,6 +40,7 @@
           title="Watch-Only Wallets"
           class="tab-container"
         >
+          <network-component />
           <div class="wallet-component-container">
             <wallet-view-component
               v-for="item in watchOnlyWallets"
@@ -125,6 +127,7 @@
 <script>
 import { WATCH_ONLY } from '@/wallets/bip44/walletTypes';
 import WalletViewComponent from '../../components/WalletViewComponent';
+import NetworkCompoent from '../../components/NetworkComponent';
 import QuickSendContainer from '../QuickSendContainer';
 import BigNumber from 'bignumber.js';
 import Blockie from '@/components/Blockie';
@@ -136,7 +139,8 @@ export default {
   components: {
     'wallet-view-component': WalletViewComponent,
     'quick-send-container': QuickSendContainer,
-    blockie: Blockie
+    blockie: Blockie,
+    'network-component': NetworkCompoent
   },
   props: {
     accounts: {
@@ -182,6 +186,9 @@ export default {
     accounts(newVal) {
       if (newVal !== undefined && newVal.length > 0)
         this.parseReceivedWallets();
+    },
+    network() {
+      this.parseReceivedWallets();
     }
   },
   mounted() {
@@ -198,6 +205,7 @@ export default {
   methods: {
     async parseReceivedWallets() {
       this.loading = true;
+      this.totalBalance = 0;
       const watchOnlyWallets = [];
       const myOwnWallets = [];
       let totalBalance = new BigNumber(this.totalBalance);
