@@ -54,7 +54,7 @@ export default {
           value: '102.22453'
         },
         {
-          name: 'XETH',
+          name: 'ETHER',
           value: '0.0000050200'
         },
         {
