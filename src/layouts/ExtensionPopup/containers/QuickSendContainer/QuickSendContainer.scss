@@ -115,20 +115,29 @@
         width: 100%;
         position: relative;
 
-        input {
+        textarea {
           background-color: $light-grey-1;
           border: none;
           border-radius: 5px;
-          padding: 15px;
-          padding-left: 45px;
+          max-height: 72px;
+          min-height: 52px;
+          padding: 5px 45px;
+          // padding-left: 45px;
+          resize: none;
           width: 100%;
         }
 
         .blockie-container {
           left: 12px;
           position: absolute;
-          top: 13px;
+          top: 10px;
         }
+
+        // .dropdown-container {
+        //   position: absolute;
+        //   top: 0px;
+        //   right: 0px;
+        // }
 
         .blockie-temp {
           background-color: $light-grey-4;

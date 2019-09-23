@@ -9,7 +9,13 @@
           <span v-show="name !== ''" class="name"
             >{{ name.length > 14 ? concatName : name }} </span
           ><br />
-          <span>{{ concatAddr }}</span>
+          <span id="address-popover" class="address">{{ concatAddr }}</span>
+          <b-popover
+            :content="address"
+            target="address-popover"
+            triggers="hover focus"
+            placement="top"
+          />
         </p>
       </div>
     </div>
@@ -70,7 +76,7 @@ export default {
       return new BigNumber(this.balance).gt(0) ? balance : this.balance;
     },
     convertedBalance() {
-      return new BigNumber(this.balance).times(this.usd).toFixed(5);
+      return new BigNumber(this.balance).times(this.usd).toFixed(2);
     }
   }
 };

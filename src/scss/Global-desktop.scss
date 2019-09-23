@@ -1490,24 +1490,6 @@
   }
 }
 
-.quick-send-from-modal {
-  .modal-dialog {
-    bottom: 0;
-    margin: 0 !important;
-    position: absolute;
-    width: 100%;
-  }
-
-  .modal-content {
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
-  }
-
-  .modal-body {
-    padding: 0 !important;
-  }
-}
-
 .custom-progress {
   border-radius: 0 !important;
   height: 0.5rem !important;
