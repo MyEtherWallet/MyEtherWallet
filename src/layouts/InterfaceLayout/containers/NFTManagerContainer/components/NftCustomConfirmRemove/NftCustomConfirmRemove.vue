@@ -12,10 +12,7 @@
           :options="removeButton"
           @click.native="continueRemove"
         />
-        <standard-button
-          :options="cancelButton"
-          @click.native="cancelRemove"
-        />
+        <standard-button :options="cancelButton" @click.native="cancelRemove" />
       </div>
     </b-modal>
   </div>
@@ -24,7 +21,6 @@
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import StandardButton from '@/components/Buttons/StandardButton';
-
 
 export default {
   components: {
