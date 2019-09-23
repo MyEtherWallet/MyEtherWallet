@@ -1,6 +1,6 @@
 @import '~@/scss/GlobalVariables';
 
-.ambrpay-container {
+.subscription-container {
   background-color: $white;
   border-radius: 4px;
   grid-area: main;
@@ -17,21 +17,13 @@
   }
 }
 
-.ambrpay-content {
+.subscription-content {
   padding-top: 25px;
 }
 
 .row {
   justify-content: space-between;
   padding-bottom: 10px;
-
-  input {
-    background: $light-grey-17;
-    border-radius: 4px;
-    height: 52px;
-    border: none;
-    width: 100%;
-  }
 }
 
 .text-danger {
@@ -48,6 +40,7 @@
 
 .action-text {
   color: $mew-green;
+  cursor: pointer;
   font-family: AvenirNext-Regular;
   font-size: 14px;
   font-weight: normal;
@@ -70,22 +63,32 @@
 .fee-text {
   color: $dark-blue-12;
   font-family: AvenirNext-Regular;
-  text-align: center;
+  margin-left: 10px;
 }
 
-input {
-  color: $dark-blue-12;
+.blockie-image {
+  position: absolute;
+  margin-top: 10px;
+  margin-left: 10px;
 }
 
-input::placeholder {
-  color: $dark-blue-12;
-  text-align: right;
-  padding-right: 10px;
+.input-address {
+  padding-left: 50px;
 }
 
-.active-sub-btn {
-  background: none;
-  border: none;
-  color: $mew-green;
-  font-family: AvenirNext-Medium;
+.token-txt {
+  color: $black;
+}
+
+.fake-input {
+  display: table;
+
+  img {
+    padding-right: 5px;
+  }
+
+  p {
+    display: table-cell;
+    vertical-align: middle;
+  }
 }
