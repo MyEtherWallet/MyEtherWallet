@@ -69,11 +69,19 @@
       </div>
       <div v-show="label === 'watchOnlyWallets'" class="watch-only-container">
         <div class="wallets-container-header">
-          <div class="title-balance">
-            <h2>{{ name }}</h2>
+          <div class="header-title-container">
+            <div class="title-balance">
+              <h2>{{ name }}</h2>
+            </div>
+            <div class="add-button" @click="addWallet">
+              + Add More
+            </div>
           </div>
-          <div class="add-button" @click="openWatchOnlyModal">
-            + Add More
+          <div class="dropdown-container">
+            <span class="network-text">NETWORK</span>
+            <span class="current-network" @click="openNetworkModal">
+              {{ network.type.name }} - {{ network.service }}
+            </span>
           </div>
         </div>
         <div v-show="watchOnlyAddresses.length > 0 || loading" class="wallets">
@@ -203,7 +211,20 @@ export default {
         this.$router.push('/access-my-wallet');
       }
     },
-    getAccounts() {
+    getAccounts(changed) {
+      if (changed && changed.hasOwnProperty('defNetwork')) {
+        const networkProps = JSON.parse(changed['defNetwork'].newValue);
+        const network = this.$store.state.Networks[networkProps.key].find(
+          actualNetwork => {
+            return actualNetwork.url === networkProps.url;
+          }
+        );
+        this.$store.dispatch('switchNetwork', network).then(() => {
+          this.$store.dispatch('setWeb3Instance');
+        });
+      } else {
+        this.$store.dispatch('setWeb3Instance');
+      }
       ExtensionHelpers.getAccounts(this.getAccountsCb);
     },
     walletRequirePass(ethjson) {
