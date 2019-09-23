@@ -27,7 +27,7 @@
       }
 
       .address {
-        overflow-wrap: break-word;
+        cursor: pointer;
       }
     }
 
@@ -56,7 +56,7 @@
 
     .converted-balance {
       font-weight: normal !important;
-      opacity: .8;
+      opacity: 0.8;
     }
   }
 }

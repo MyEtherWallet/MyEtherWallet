@@ -77,6 +77,7 @@
         :selected-wallet="selectedWallet"
         :cancel="cancel"
         :switch-wallet="moveToQuicksend"
+        :usd="usd"
       />
     </div>
     <b-modal

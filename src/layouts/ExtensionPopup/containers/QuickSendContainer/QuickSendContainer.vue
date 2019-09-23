@@ -25,6 +25,7 @@
           <p @click="switchWallet">Change</p>
         </div>
         <wallet-view-component
+          :usd="usd"
           :address="selectedWallet.address"
           :name="selectedWallet.nick"
           :balance="selectedWallet.balance"
@@ -49,12 +50,25 @@
         <div class="to-address-container">
           <label for="toAddress"> To Address </label>
           <div class="to-address-input">
-            <input
+            <textarea
               v-model="toAddress"
               type="text"
               placeholder="Enter address"
               name="toAddress"
             />
+            <!-- <div class="dropdown-container">
+              <b-dropdown toggle-class="quick-send-dropdown" toggle-tag="div">
+                <template v-slot:button-content>
+                  <i class="fa fa-angle-down" />
+                </template>
+                <b-dropdown-item>First Action</b-dropdown-item>
+                <b-dropdown-item>Second Action</b-dropdown-item>
+                <b-dropdown-item>Third Action</b-dropdown-item>
+                <b-dropdown-divider></b-dropdown-divider>
+                <b-dropdown-item active>Active action</b-dropdown-item>
+                <b-dropdown-item disabled>Disabled action</b-dropdown-item>
+              </b-dropdown>
+            </div> -->
             <div class="blockie-container">
               <blockie
                 v-show="toAddress !== ''"
@@ -92,6 +106,7 @@
         </div>
         <p><b>From</b></p>
         <wallet-view-component
+          :usd="usd"
           :address="selectedWallet.address"
           :name="selectedWallet.nick"
           :balance="selectedWallet.balance"
@@ -167,6 +182,10 @@ export default {
       default: () => {
         return {};
       }
+    },
+    usd: {
+      type: Number,
+      default: 0
     }
   },
   data() {
@@ -349,6 +368,22 @@ export default {
     },
     async sendTransaction() {
       this.loading = true;
+      const chrome = window.chrome;
+      chrome.storage.sync.get(null, res => {
+        if (res.hasOwnProperty('knownAddresses')) {
+          const arr = JSON.parse(res['knownAddresses']);
+          arr.push(this.toAddress);
+
+          chrome.storage.sync.set({
+            knownAddresses: JSON.stringify(arr)
+          })
+        } else {
+          const newArr = [this.toAddress];
+          chrome.storage.sync.set({
+            knownAddresses: JSON.stringify(newArr)
+          })
+        }
+      })
       const payload = {
         signedTx: this.signedTx.rawTransaction,
         raw: this.raw
@@ -384,6 +419,30 @@ export default {
 };
 </script>
 
+<style lang="scss">
+.quick-send-dropdown {
+  color: black;
+  height: 72px;
+  width: 45px;
+}
+.quick-send-from-modal {
+  .modal-dialog {
+    bottom: 0;
+    margin: 0 !important;
+    position: absolute;
+    width: 100%;
+  }
+
+  .modal-content {
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+  }
+
+  .modal-body {
+    padding: 0 !important;
+  }
+}
+</style>
 <style lang="scss" scoped>
 @import 'QuickSendContainer.scss';
 </style>

@@ -80,13 +80,13 @@
   }
 
   .quick-send-from-content {
+    height: 360px;
     padding: 10px 10px 0 10px;
   }
 
   .from-address-container {
     max-height: 400px;
     overflow-y: scroll;
-    // padding-right: 15px;
 
     .wallet-from-view {
       background-color: $light-green-1;
