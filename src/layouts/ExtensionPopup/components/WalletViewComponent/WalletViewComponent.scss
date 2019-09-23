@@ -53,5 +53,10 @@
     .balance {
       color: $light-blue-1;
     }
+
+    .converted-balance {
+      font-weight: normal !important;
+      opacity: .8;
+    }
   }
 }
