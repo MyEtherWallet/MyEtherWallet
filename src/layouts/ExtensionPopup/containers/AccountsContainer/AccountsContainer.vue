@@ -27,6 +27,7 @@
               :name="item.nick"
               :key="item.address"
               :balance="item.balance"
+              :usd="usd"
             />
             <div v-if="myWallets.length === 0" class="no-wallet-container">
               <h3>
@@ -49,6 +50,7 @@
               :name="item.nick"
               :key="item.address"
               :balance="item.balance"
+              :usd="usd"
             />
             <div
               v-if="watchOnlyWallets.length === 0"
@@ -173,7 +175,7 @@ export default {
     ...mapState(['web3', 'network']),
     concatBalance() {
       const balance = new BigNumber(this.totalBalance).toFixed(5);
-      return balance;
+      return this.totalBalance > 0 ? balance : this.totalBalance;
     },
     convertedBalance() {
       const balance = new BigNumber(this.usd)

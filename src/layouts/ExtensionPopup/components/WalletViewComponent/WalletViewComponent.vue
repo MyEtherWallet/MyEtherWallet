@@ -4,30 +4,20 @@
       <div>
         <blockie :address="address" width="50px" height="50px" />
       </div>
-      <div v-show="shouldConcat">
+      <div>
         <p class="name-address">
           <span v-show="name !== ''" class="name"
             >{{ name.length > 14 ? concatName : name }} </span
           ><br />
-          <span v-show="!showFullAddr">{{ concatAddr }}</span>
-          <span v-show="showFullAddr">{{ address }}</span>
-        </p>
-        <i
-          :class="[showFullAddr ? 'fa-chevron-up' : 'fa-chevron-down', 'fa']"
-          @click="showFullAddr = !showFullAddr"
-        />
-      </div>
-      <div v-show="!shouldConcat">
-        <p class="name-address">
-          <span v-show="name !== ''" class="name"
-            >{{ name.length > 14 ? concatName : name }} </span
-          ><br />
-          <span>{{ address }}</span>
+          <span>{{ concatAddr }}</span>
         </p>
       </div>
     </div>
     <div class="wallet-view-balance">
       <p>Balance:</p>
+      <p v-if="network.type.name === 'ETH'" class="converted-balance">
+        $ {{ convertedBalance }}
+      </p>
       <p class="balance">
         <span> {{ concatBalance }} </span> {{ network.type.name }}
       </p>
@@ -37,6 +27,7 @@
 
 <script>
 import Blockie from '@/components/Blockie';
+import BigNumber from 'bignumber.js';
 import { mapState } from 'vuex';
 export default {
   components: {
@@ -55,15 +46,13 @@ export default {
       type: String,
       default: '0'
     },
-    shouldConcat: {
-      type: Boolean,
-      default: true
+    usd: {
+      type: Number,
+      default: 0
     }
   },
   data() {
-    return {
-      showFullAddr: false
-    };
+    return {};
   },
   computed: {
     ...mapState(['network']),
@@ -71,16 +60,17 @@ export default {
       return `${this.name.substring(0, 14)}...`;
     },
     concatAddr() {
-      return `${this.address.substr(0, 10)}...${this.address.substr(
+      return `${this.address.substr(0, 18)}...${this.address.substr(
         this.address.length - 4,
         this.address.length
       )}`;
     },
     concatBalance() {
-      const stringifiedBal = `${this.balance}`;
-      return stringifiedBal.length > 11
-        ? `${stringifiedBal.substr(0, 11)}...`
-        : stringifiedBal;
+      const balance = new BigNumber(this.balance).toFixed(5);
+      return new BigNumber(this.balance).gt(0) ? balance : this.balance;
+    },
+    convertedBalance() {
+      return new BigNumber(this.balance).times(this.usd).toFixed(5);
     }
   }
 };
