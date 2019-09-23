@@ -199,9 +199,7 @@
               </p>
               <p
                 :class="[token.balance !== 'Load' ? '' : 'manual-load']"
-                @click="
-                  token.balance !== 'Load' ? () => {} : fetchTokenBalance(token)
-                "
+                @click="token.balance !== 'Load' ? () => {} : fetchTokenBalance(token)"
               >
                 {{ token.balance }}
               </p>
@@ -309,8 +307,14 @@ export default {
       }
     }
   },
+  created() {
+    window.chrome.storage.onChanged.addListener(this.fetchTokens);
+  },
   mounted() {
     this.fetchTokens();
+  },
+  destroyed() {
+    window.chrome.storage.onChanged.removeListener(this.fetchTokens);
   },
   methods: {
     searchBySymbol(symbol) {
