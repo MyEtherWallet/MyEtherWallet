@@ -112,9 +112,7 @@
           :address-link="addressLink"
           :process-status="processStatus"
           :error-message-string="errorMessageString"
-          :child-update-notification="
-            childUpdateNotification(notificationDetails.index)
-          "
+          :child-update-notification="childUpdateNotification(notificationDetails.index)"
         >
         </component>
       </div>
@@ -168,7 +166,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['web3', 'network', 'notifications', 'online']),
+    ...mapState(['web3', 'network', 'notifications']),
     sortedNotifications() {
       const notificationCopy = {};
 
@@ -183,7 +181,10 @@ export default {
               b = b.timestamp;
               return a > b ? -1 : a < b ? 1 : 0;
             })
-            .filter(entry => entry.network === this.network.type.name);
+            .filter(entry => {
+              console.log(entry, this.network.type.name);
+              return entry.network === this.network.type.name;
+            });
         }
       });
       return notificationCopy;
@@ -218,13 +219,12 @@ export default {
       });
 
       this.countUnread();
-      if (this.online) {
-        this.fetchBalanceData();
-        this.checkLoop = setInterval(
-          this.checkForUnResolvedTxNotifications,
-          14000
-        );
-      }
+      this.fetchBalanceData();
+      this.checkForUnResolvedTxNotifications();
+      this.checkLoop = setInterval(
+        this.checkForUnResolvedTxNotifications,
+        14000
+      );
     },
     hiddenModal() {
       this.shown = false;
