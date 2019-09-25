@@ -36,7 +36,10 @@ const CX_UNSUBSCRIBE = 'cxUnsubcribe';
 const WEB3_UNSUBSCRIBE_RES = 'web3{{id}}UnsubscribeRes';
 const WEB3_QUERY_GASPRICE = 'web3{{id}}QueryGasPrice';
 const WEB3_RECEIVE_GASPRICE = 'web3{{id}}ReceiveGasPrice';
-const CX_GET_GASPRICE = 'cxGetGasprice';
+const CX_GET_GASPRICE = 'cxGetGasPrice';
+const WEB3_GET_TX_COUNT = 'web3{{id}}GetTxCount';
+const CX_GET_TX_COUNT = 'cxGetTxCount';
+const WEB3_RECEIVE_TX_COUNT = 'web3{{id}}ReceiveTxCount';
 
 export {
   WEB3_DETECTED,
@@ -77,5 +80,8 @@ export {
   WEB3_UNSUBSCRIBE_RES,
   WEB3_QUERY_GASPRICE,
   WEB3_RECEIVE_GASPRICE,
-  CX_GET_GASPRICE
+  CX_GET_GASPRICE,
+  WEB3_GET_TX_COUNT,
+  CX_GET_TX_COUNT,
+  WEB3_RECEIVE_TX_COUNT
 };
