@@ -199,7 +199,9 @@
               </p>
               <p
                 :class="[token.balance !== 'Load' ? '' : 'manual-load']"
-                @click="token.balance !== 'Load' ? () => {} : fetchTokenBalance(token)"
+                @click="
+                  token.balance !== 'Load' ? () => {} : fetchTokenBalance(token)
+                "
               >
                 {{ token.balance }}
               </p>

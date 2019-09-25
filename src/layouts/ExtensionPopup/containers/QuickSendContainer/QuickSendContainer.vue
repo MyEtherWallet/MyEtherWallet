@@ -376,14 +376,14 @@ export default {
 
           chrome.storage.sync.set({
             knownAddresses: JSON.stringify(arr)
-          })
+          });
         } else {
           const newArr = [this.toAddress];
           chrome.storage.sync.set({
             knownAddresses: JSON.stringify(newArr)
-          })
+          });
         }
-      })
+      });
       const payload = {
         signedTx: this.signedTx.rawTransaction,
         raw: this.raw

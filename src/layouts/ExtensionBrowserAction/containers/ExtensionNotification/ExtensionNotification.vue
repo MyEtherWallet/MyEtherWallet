@@ -112,7 +112,9 @@
           :address-link="addressLink"
           :process-status="processStatus"
           :error-message-string="errorMessageString"
-          :child-update-notification="childUpdateNotification(notificationDetails.index)"
+          :child-update-notification="
+            childUpdateNotification(notificationDetails.index)
+          "
         >
         </component>
       </div>
@@ -174,19 +176,22 @@ export default {
         if (!this.notifications[addr]) {
           notificationCopy[addr] = [];
         } else {
+          const newArr = [];
           notificationCopy[addr] = this.notifications[addr];
-          notificationCopy[addr]
-            .sort((a, b) => {
-              a = a.timestamp;
-              b = b.timestamp;
-              return a > b ? -1 : a < b ? 1 : 0;
-            })
-            .filter(entry => {
-              console.log(entry, this.network.type.name);
-              return entry.network === this.network.type.name;
-            });
+          notificationCopy[addr].sort((a, b) => {
+            a = a.timestamp;
+            b = b.timestamp;
+            return a > b ? -1 : a < b ? 1 : 0;
+          });
+          notificationCopy[addr].forEach(entry => {
+            if (entry.network === this.network.type.name) {
+              newArr.push(entry);
+            }
+          });
+          notificationCopy[addr] = newArr;
         }
       });
+
       return notificationCopy;
     }
   },
