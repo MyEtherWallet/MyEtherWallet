@@ -179,6 +179,7 @@ export default {
           return res.json();
         })
         .catch(e => {
+          // eslint-disable-next-line
           console.log(e);
         });
 

@@ -18,6 +18,7 @@
       :title="title"
       :back="back"
       :add-wallet="addWalletToStore"
+      :usd="ethPrice"
       @nickname="updateNickname"
     />
     <import-private-key-modal
@@ -149,7 +150,8 @@ export default {
       mnemonicPhrase: '',
       selectedAccountPath: '',
       selectedAddress: '',
-      accCount: 0
+      accCount: 0,
+      ethPrice: 0
     };
   },
   computed: {
@@ -187,8 +189,23 @@ export default {
       this.nickname = '';
       this.loading = false;
     });
+    this.fetchEthBalance();
   },
   methods: {
+    async fetchEthBalance() {
+      const price = await fetch(
+        'https://cryptorates.mewapi.io/ticker?filter=ETH'
+      )
+        .then(res => {
+          return res.json();
+        })
+        .catch(e => {
+          // eslint-disable-next-line
+          console.log(e);
+        });
+
+      this.ethPrice = price.data.ETH.quotes.USD.price;
+    },
     openAddressOption() {
       this.loading = true;
       const mnemonicPhrase = this.mnemonicPhrase;

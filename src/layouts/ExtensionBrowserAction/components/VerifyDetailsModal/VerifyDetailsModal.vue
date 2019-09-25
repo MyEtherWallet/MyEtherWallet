@@ -15,6 +15,7 @@
               :should-concat="false"
               :address="address"
               :balance="balance"
+              :usd="usd"
             />
           </div>
           <div class="input-container">
@@ -64,6 +65,10 @@ export default {
     'wallet-view-component': WalletViewComponent
   },
   props: {
+    usd: {
+      type: Number,
+      default: 0
+    },
     loading: {
       type: Boolean,
       default: false
