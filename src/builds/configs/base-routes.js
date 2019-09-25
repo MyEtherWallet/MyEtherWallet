@@ -171,6 +171,17 @@ const router = [
   }
 ];
 
+if (BUILD_TYPE === 'mewcx') {
+  const newArr = [];
+  router[12].children.forEach(item => {
+    if (item.path !== 'send-offline') {
+      newArr.push(item);
+    }
+  });
+
+  router[12].children = newArr;
+}
+
 Object.keys(dapps).forEach(dapp => {
   router[router.length - 1].children.push(dapps[dapp]);
 });

@@ -90,7 +90,7 @@
     "codecov": "3.5.0",
     "copy-webpack-plugin": "5.0.4",
     "detectrtc": "1.3.9",
-    "eslint-plugin-prettier": "3.1.0",
+    "eslint-plugin-prettier": "3.1.1",
     "eslint-plugin-security": "1.4.0",
     "eth-ens-namehash": "2.0.8",
     "ethereum-ens": "0.7.7",

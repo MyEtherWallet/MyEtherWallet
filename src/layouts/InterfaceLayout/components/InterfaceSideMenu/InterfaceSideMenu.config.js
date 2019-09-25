@@ -1,4 +1,4 @@
-export default {
+const config = {
   tabs: [
     {
       name: 'dashboard',
@@ -166,3 +166,14 @@ export default {
     }
   ]
 };
+if (BUILD_TYPE === 'mewcx') {
+  const newArr = [];
+  config.tabs[1].children.forEach(item => {
+    if (item.name !== 'send-offline') {
+      newArr.push(item);
+    }
+  });
+
+  config.tabs[1].children = newArr;
+}
+export default config;

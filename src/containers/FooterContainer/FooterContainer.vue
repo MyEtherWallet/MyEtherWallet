@@ -279,6 +279,18 @@ export default {
   computed: {
     ...mapState(['ethDonationAddress'])
   },
+  mounted() {
+    if (BUILD_TYPE === 'mewcx') {
+      const newArr = [];
+      this.footerContent[0].contents.forEach(item => {
+        if (item.to !== '/send-offline-helper') {
+          newArr.push(item);
+        }
+      });
+
+      this.footerContent[0].contents = newArr;
+    }
+  },
   methods: {
     openFeedbackModal() {
       this.$children[0].$refs.feedback.show();
