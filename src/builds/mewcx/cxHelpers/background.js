@@ -10,7 +10,8 @@ import {
   mewCxSendSignedTx,
   web3Detected,
   web3Subscription,
-  web3Unsubscribe
+  web3Unsubscribe,
+  web3QueryGasPrice
 } from './backgroundEvents';
 import store from '@/store';
 import {
@@ -111,6 +112,7 @@ const eventsListeners = (request, _, callback) => {
   middleware.use(web3Detected);
   middleware.use(web3Subscription);
   middleware.use(web3Unsubscribe);
+  middleware.use(web3QueryGasPrice);
   middleware.run(obj, callback);
   return true;
 };

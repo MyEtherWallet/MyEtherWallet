@@ -34,6 +34,9 @@ const WEB3_SUBSCRIPTION_ERR = 'web3SubscriptionErr';
 const WEB3_UNSUBSCRIBE = 'web3{{id}}Unsubscribe';
 const CX_UNSUBSCRIBE = 'cxUnsubcribe';
 const WEB3_UNSUBSCRIBE_RES = 'web3{{id}}UnsubscribeRes';
+const WEB3_QUERY_GASPRICE = 'web3{{id}}QueryGasPrice';
+const WEB3_RECEIVE_GASPRICE = 'web3{{id}}ReceiveGasPrice';
+const CX_GET_GASPRICE = 'cxGetGasprice';
 
 export {
   WEB3_DETECTED,
@@ -71,5 +74,8 @@ export {
   WEB3_SUBSCRIPTION_ERR,
   WEB3_UNSUBSCRIBE,
   CX_UNSUBSCRIBE,
-  WEB3_UNSUBSCRIBE_RES
+  WEB3_UNSUBSCRIBE_RES,
+  WEB3_QUERY_GASPRICE,
+  WEB3_RECEIVE_GASPRICE,
+  CX_GET_GASPRICE
 };

@@ -2,12 +2,14 @@ import eventHandler from './eventHandler';
 import { toPayload } from '../jsonrpc';
 import { getSanitizedTx } from '../methods/utils';
 import EthCalls from '../web3Calls';
-import store from '@/store';
-import unit from 'ethjs-unit';
+// import store from '@/store';
+// import unit from 'ethjs-un it';
 import {
   WEB3_SEND_TX,
   WEB3_RECEIVE_TX_HASH,
-  WEB3_REJECT
+  WEB3_REJECT,
+  WEB3_QUERY_GASPRICE,
+  WEB3_RECEIVE_GASPRICE
 } from '@/builds/mewcx/cxHelpers/cxEvents.js';
 
 export default async ({ payload, requestManager }, res, next) => {
@@ -15,7 +17,18 @@ export default async ({ payload, requestManager }, res, next) => {
   const ethCalls = new EthCalls(requestManager);
   const id = window.extensionID;
   const tx = Object.assign({}, payload.params[0]);
-  tx.gasPrice = unit.toWei(store.state.gasPrice, 'gwei').toString();
+  const eventName = WEB3_SEND_TX.replace('{{id}}', id);
+  const resolveName = WEB3_RECEIVE_TX_HASH.replace('{{id}}', id);
+  const rejectName = WEB3_REJECT.replace('{{id}}', id);
+  const web3QueryEvent = WEB3_QUERY_GASPRICE.replace('{{id}}', id);
+  const web3ReceiveEvent = WEB3_RECEIVE_GASPRICE.replace('{{id}}', id);
+  const gasPrice = await eventHandler(
+    web3QueryEvent,
+    {},
+    web3ReceiveEvent,
+    rejectName
+  );
+  tx.gasPrice = gasPrice;
   try {
     tx.nonce = !tx.nonce
       ? await ethCalls.getTransactionCount(tx.from)
@@ -33,9 +46,6 @@ export default async ({ payload, requestManager }, res, next) => {
           tx: _tx
         }
       };
-      const eventName = WEB3_SEND_TX.replace('{{id}}', id);
-      const resolveName = WEB3_RECEIVE_TX_HASH.replace('{{id}}', id);
-      const rejectName = WEB3_REJECT.replace('{{id}}', id);
 
       eventHandler(eventName, obj, resolveName, rejectName)
         .then(response => {

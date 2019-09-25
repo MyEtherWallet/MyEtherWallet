@@ -17,7 +17,10 @@ import {
   WEB3_UNSUBSCRIBE,
   CX_UNSUBSCRIBE,
   WEB3_REJECT,
-  WEB3_UNSUBSCRIBE_RES
+  WEB3_UNSUBSCRIBE_RES,
+  WEB3_QUERY_GASPRICE,
+  CX_GET_GASPRICE,
+  WEB3_RECEIVE_GASPRICE
 } from './cxEvents';
 import {
   csErrors,
@@ -91,6 +94,22 @@ events[WEB3_SUBSCRIBE] = function(e) {
       payload: e.detail
     },
     {}
+  );
+};
+events[WEB3_QUERY_GASPRICE] = function() {
+  chrome.runtime.sendMessage(
+    extensionID,
+    {
+      event: CX_GET_GASPRICE
+    },
+    {},
+    data => {
+      window.dispatchEvent(
+        new CustomEvent(WEB3_RECEIVE_GASPRICE.replace('{{id}}', extensionID), {
+          detail: data
+        })
+      );
+    }
   );
 };
 events[WEB3_UNSUBSCRIBE] = function(e) {
