@@ -44,7 +44,7 @@
           </div>
         </div>
 
-        <expending-option title="Detail Information">
+        <expanding-option title="Detail Information">
           <div class="padding-container">
             <div class="grid-block">
               <p>{{ $t('dappsMaker.maxWithdrawAvailable') }}</p>
@@ -77,7 +77,7 @@
               </p>
             </div>
           </div>
-        </expending-option>
+        </expanding-option>
 
         <div
           v-if="!newCollateralRatioSafe && notZero(amount)"
@@ -127,7 +127,7 @@
 
 <script>
 import { mapState } from 'vuex';
-import ExpendingOption from '@/components/ExpendingOption';
+import ExpandingOption from '@/components/ExpandingOption';
 import StandardButton from '@/components/Buttons/StandardButton';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
 import CheckBox from '../CheckBox';
@@ -142,7 +142,7 @@ export default {
   components: {
     'help-center-button': HelpCenterButton,
     'check-box': CheckBox,
-    'expending-option': ExpendingOption,
+    'expanding-option': ExpandingOption,
     'standard-button': StandardButton
   },
   props: {

@@ -49,7 +49,7 @@
                 ? require('@/assets/images/icons/button-metamask.svg')
                 : require('@/assets/images/logo-small.png')
             "
-            class="icon"
+            :class="[isMetaMask ? 'metamask' : 'mew', 'icon']"
           />
           <img class="icon" src="~@/assets/images/icons/clip.svg" />
           <img class="icon logo-small" src="~@/assets/images/logo-small.png" />
