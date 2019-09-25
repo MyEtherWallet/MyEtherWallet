@@ -54,6 +54,7 @@
     background-color: $background-color-2;
     box-shadow: 0 5px 20px $box-shadow-color-1;
     top: -8px;
+    transform: scale(1.1);
 
     @media all and (max-width: $tablet-width) {
       top: 0;
