@@ -53,7 +53,7 @@
           </ul>
         </div>
         <div class="option-container-block">
-          <expending-option
+          <expanding-option
             title="Password"
             button-text="Optional"
             @expanded="passwordInputViewChange"
@@ -65,7 +65,7 @@
                 :full-width="true"
               />
             </div>
-          </expending-option>
+          </expanding-option>
         </div>
         <p v-show="error !== ''" class="error">{{ error }}</p>
         <div class="button-container-block">
@@ -86,7 +86,7 @@ import CustomerSupport from '@/components/CustomerSupport';
 import WarningMessage from '@/components/WarningMessage';
 import StandardButton from '@/components/Buttons/StandardButton';
 import CreateWalletInput from './components/CreateWalletInput';
-import ExpendingOption from '@/components/ExpendingOption';
+import ExpandingOption from '@/components/ExpandingOption';
 import { MnemonicWallet } from '@/wallets';
 import { Toast } from '@/helpers';
 
@@ -96,7 +96,7 @@ export default {
     'warning-message': WarningMessage,
     'standard-button': StandardButton,
     'create-wallet-input': CreateWalletInput,
-    'expending-option': ExpendingOption
+    'expanding-option': ExpandingOption
   },
   props: {
     hardwareWalletOpen: {

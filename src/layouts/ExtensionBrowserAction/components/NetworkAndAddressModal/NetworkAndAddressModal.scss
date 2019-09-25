@@ -1,4 +1,8 @@
 @import '~@/scss/GlobalVariables';
+
+// Colors
+$color-white: #fff;
+
 // Green Filled Button Colors
 $green-filled-button-background: #3bc1aa;
 $green-filled-button-background--hover: #3ed7bc;
@@ -8,6 +12,7 @@ $green-filled-button-background--click: #269983;
 $red-filled-button-background: #ff436d;
 $red-filled-button-background--hover: #ff7795;
 $red-filled-button-background--click: #ff5a7f;
+$collapse-button-color: $dark-blue-12;
 
 .modal-content-container {
   padding: 10px;
@@ -19,16 +24,77 @@ $red-filled-button-background--click: #ff5a7f;
     margin: 0;
   }
 
+  ul.networks {
+    max-height: 300px;
+    overflow-y: auto;
+    li {
+      padding: 10px 5px;
+      border-bottom: 1px solid #ececec;
+      &:last-child {
+        border: 0;
+      }
+
+      .network-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 0;
+      }
+
+      .network-title {
+        display: flex;
+        align-items: center;
+        margin-bottom: 5px;
+
+        .network-icon-container {
+          width: 35px;
+          height: 35px;
+          text-align: center;
+          background-color: $dark-grey-11;
+          border-radius: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-right: 10px;
+          overflow: hidden;
+          img {
+            height: 60%;
+            margin: 0;
+          }
+
+          .no-icon {
+            text-align: center;
+
+            p {
+              font-weight: 700;
+              font-size: 10px;
+              line-height: 10px;
+            }
+          }
+        }
+
+        p {
+          font-size: 18px;
+          font-weight: 500;
+        }
+      } // .network-title
+    } // li
+  } // ul
+
   .collapse-content {
     padding: 10px;
   }
 
   .collapse-open-button {
     width: 100%;
-    background-color: $dark-blue-12 !important;
-    border-color: $dark-blue-12 !important;
+    background-color: $collapse-button-color !important;
+    border-color: $collapse-button-color !important;
     display: flex;
     align-items: center;
+
+    .network {
+      display: flex;
+      align-items: center;
+    }
 
     p {
       text-align: left;
@@ -145,9 +211,8 @@ $red-filled-button-background--click: #ff5a7f;
         }
 
         &.selected {
-          background-color: $light-green-1;
           color: $text-color-6;
-          font-weight: 600;
+          font-weight: 500;
         }
 
         li {
@@ -218,7 +283,7 @@ $red-filled-button-background--click: #ff5a7f;
       border: 1px solid $green-filled-button-background;
     }
 
-    color: $white;
+    color: $color-white;
 
     &:hover {
       background-color: $green-filled-button-background--hover;
@@ -238,34 +303,6 @@ $red-filled-button-background--click: #ff5a7f;
   grid-template-columns: 1fr 1fr;
 }
 
-.input-container {
-  display: flex;
-  flex-direction: column;
-  padding: 10px 0;
-
-  input {
-    background-color: $light-grey-2;
-    border: none;
-    padding: 15px;
-    width: 100%;
-  }
-
-  label {
-    color: $dark-blue-12;
-    font-weight: bold;
-  }
-
-  .keystore-password-input {
-    position: relative;
-
-    img {
-      cursor: pointer;
-      position: absolute;
-      top: 18px;
-      right: 15px;
-    }
-  }
-}
 
 .network-submit {
   background-color: $mew-green;

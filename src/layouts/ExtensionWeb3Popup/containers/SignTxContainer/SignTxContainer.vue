@@ -114,7 +114,7 @@ export default {
   },
   data() {
     return {
-      showDetails: true,
+      showDetails: false,
       signingKeystore: '',
       wallet: {},
       password: '',
@@ -189,6 +189,7 @@ export default {
       });
       worker.onmessage = function(e) {
         _self.loading = false;
+        _self.$refs.passwordModal.$refs.passwordModal.hide();
         _self.signAndSend(
           new WalletInterface(Buffer.from(e.data._privKey), false, keyStoreType)
         );

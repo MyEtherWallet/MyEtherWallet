@@ -1,7 +1,7 @@
 <template>
   <div
     :class="hidebottomborder ? 'hide-bottom-border' : ''"
-    class="expending-option"
+    class="expanding-option"
   >
     <div class="title-bar-container">
       <div class="input-title">{{ title }}</div>
@@ -52,5 +52,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'ExpendingOption.scss';
+@import 'ExpandingOption.scss';
 </style>
