@@ -1,4 +1,4 @@
-import MEWCXProvider from '../providers/mew-cx-request-manager';
+import MEWCXRequestManager from '../providers/mew-cx-request-manager';
 import MiddleWare from '../middleware';
 import {
   WEB3_NETWORK_CHANGE,
@@ -15,9 +15,9 @@ import {
   ethUnsubscribe
 } from '../cx-web3-methods';
 
-const EventEmitter = require('events');
+const EventEmitter = require('events').EventEmitter;
 
-class MewCxEthereum extends EventEmitter {
+class MewCxProvider extends EventEmitter {
   constructor(host) {
     super();
     this.host = host;
@@ -29,7 +29,7 @@ class MewCxEthereum extends EventEmitter {
     this.middleware.use(ethCoinbase);
     this.middleware.use(ethSubscribe);
     this.middleware.use(ethUnsubscribe);
-    this.requestManager = new MEWCXProvider();
+    this.requestManager = new MEWCXRequestManager();
     this._id = 0;
     this.setListeners();
 
@@ -140,4 +140,4 @@ class MewCxEthereum extends EventEmitter {
   }
 }
 
-export { MewCxEthereum };
+export default MewCxProvider;

@@ -1,7 +1,7 @@
 // eslint-disable-next-line
-import { MewCxEthereum as ethereumProvider } from '@/wallets/web3-provider/providers/mew-cx-web3';
+import MewCxProvider from '@/wallets/web3-provider/providers/mew-cx-web3';
 import { WEB3_DETECTED } from './cxEvents';
-const ethereum = new ethereumProvider().setMaxListeners(0); // setting to 0 to remove listener warning
+const ethereumProvider = new MewCxProvider().setMaxListeners(0); // setting to 0 to remove listener warning
 if (
   (window.hasOwnProperty('web3') &&
     !window.web3.currentProvider.hasOwnProperty('isMew')) ||
@@ -15,5 +15,5 @@ if (
 } else if (!window.hasOwnProperty('web3')) {
   // eslint-disable-next-line
   console.info('MEWCX Web3 provider injected');
-  window.ethereum = ethereum;
+  window.ethereum = ethereumProvider;
 }
