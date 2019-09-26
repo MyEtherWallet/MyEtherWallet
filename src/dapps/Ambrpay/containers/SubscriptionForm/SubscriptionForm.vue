@@ -150,7 +150,7 @@ export default {
         this.amountErrMsg = 'The minimum amount is 0.01 or greater';
       } else if (totalAmt.gt(accountBalance)) {
         this.amountErrMsg =
-          'Amount higher than balance (including automation fee)';
+          'Amount higher than balance (including 1% automation fee)';
       } else {
         this.amountErrMsg = '';
       }
