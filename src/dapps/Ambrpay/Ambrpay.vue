@@ -1,7 +1,7 @@
 <template>
   <div class="ambrpay-container">
     <back-button />
-    <b-container>
+    <b-container class="pl-5 pr-5">
       <div class="ambrpay-header mt-5">
         <h3 class="page-title">Ambrpay</h3>
 
@@ -24,13 +24,16 @@
             >{{ availableBalanceEth }} ETH
           </span>
           <span v-show="!loadingBalance" class="usd-text"
-            >{{ convertToUSD }} USD</span
+            >{{ availableBalanceUSD }} USD</span
           >
         </div>
       </div>
-      <subscription-form></subscription-form>
+      <subscription-form
+        :available-balance-eth="availableBalanceEth"
+        @startSubscription="startSubscription"
+      ></subscription-form>
       <b-row class="mb-4">
-        <b-button class="mx-auto active-sub-btn"
+        <b-button class="mx-auto active-sub-btn" @click="openManageSubModal()"
           >My Active Subscriptions</b-button
         >
       </b-row>
@@ -38,8 +41,15 @@
     <manage-funds-modal
       ref="manageFunds"
       :manage-funds-text="manageFundsText"
-      :availabe-balance-eth="availableBalanceEth"
-      :availabe-balance-usd="availableBalanceUSD"
+      :available-balance-eth="availableBalanceEth"
+      :available-balance-usd="availableBalanceUSD"
+      @addFunds="addFunds"
+      @withdrawFunds="withdrawFunds"
+    />
+    <manage-subscriptions-modal
+      ref="manageSubs"
+      :subscriptions="subscriptions"
+      @unsubscribeSub="unsubscribeSub"
     />
   </div>
 </template>
@@ -47,6 +57,7 @@
 <script>
 import SubscriptionForm from './containers/SubscriptionForm';
 import ManageFundsModal from './components/ManageFundsModal';
+import ManageSubscriptionsModal from './components/ManageSubscriptionsModal';
 import Ambrpay from './AmbrpayModified';
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
 import { mapState } from 'vuex';
@@ -57,49 +68,43 @@ export default {
   components: {
     'subscription-form': SubscriptionForm,
     'back-button': BackButton,
-    'manage-funds-modal': ManageFundsModal
+    'manage-funds-modal': ManageFundsModal,
+    'manage-subscriptions-modal': ManageSubscriptionsModal
   },
   data() {
     return {
-      availableBalanceEth: 0,
-      availableBalanceUSD: 0,
+      availableBalanceEth: '',
+      availableBalanceUSD: '',
       manageFundsText: '',
       ethPrice: 0,
-      loadingBalance: true
+      loadingBalance: true,
+      ambrpay: '',
+      subscriptions: []
     };
   },
   computed: {
-    ...mapState(['web3', 'account', 'network', 'online']),
-    convertToUSD() {
-      if (this.availableBalanceEth) {
-        return new BigNumber(
-          new BigNumber(this.availableBalanceEth).times(
-            new BigNumber(this.ethPrice)
-          )
-        )
-          .toFixed(2)
-          .toString();
-      }
-      return '--';
-    }
+    ...mapState(['web3', 'account', 'network', 'online'])
   },
   mounted() {
     this.init();
+    this.getSubscriptions();
     if (this.online && this.network.type.name === 'ETH') this.getEthPrice();
   },
   methods: {
     init() {
       const account = {
-          publicApiKey: 'api_public_DXfGdjBB4eIVgbURCCCAIQ2S',
-          address: this.account.address,
-          netId: this.network.type.chainID.toString()
-        },
-        ambrpay = new Ambrpay(account, this.web3);
-
-      ambrpay
+        publicApiKey: 'api_public_DXfGdjBB4eIVgbURCCCAIQ2S',
+        address: this.account.address,
+        netId: this.network.type.chainID.toString()
+      };
+      this.ambrpay = new Ambrpay(account, this.web3);
+      this.ambrpay
         .getSubscriptionFunds()
         .then(res => {
-          this.availableBalanceEth = res;
+          this.availableBalanceEth = new BigNumber(
+            this.web3.utils.fromWei(res, 'ether')
+          ).toFixed();
+          this.convertToUSD();
           this.loadingBalance = false;
         })
         .catch(err => {
@@ -107,9 +112,23 @@ export default {
           Toast.responseHandler(err, Toast.ERROR);
         });
     },
+    convertToUSD() {
+      this.availableBalanceUSD = '--';
+
+      if (this.availableBalanceEth) {
+        this.availableBalanceUSD = new BigNumber(
+          new BigNumber(this.availableBalanceEth).times(
+            new BigNumber(this.ethPrice)
+          )
+        ).toFixed(2);
+      }
+    },
     openManageFundsModal(str) {
       this.manageFundsText = str;
       this.$refs.manageFunds.$refs.manageFundsModal.show();
+    },
+    openManageSubModal() {
+      this.$refs.manageSubs.$refs.manageSubscriptionsModal.show();
     },
     async getEthPrice() {
       const price = await fetch(
@@ -123,6 +142,36 @@ export default {
         });
       this.ethPrice =
         typeof price === 'object' ? price.data.ETH.quotes.USD.price : 0;
+    },
+    startSubscription(params) {
+      this.ambrpay.subscribe(params).catch(err => {
+        Toast.responseHandler(err, Toast.ERROR);
+      });
+    },
+    addFunds(amt) {
+      this.ambrpay.addFunds(amt).catch(err => {
+        Toast.responseHandler(err, Toast.ERROR);
+      });
+    },
+    withdrawFunds(amt) {
+      this.ambrpay.withdrawFunds(amt).catch(err => {
+        Toast.responseHandler(err, Toast.ERROR);
+      });
+    },
+    unsubscribeSub(data) {
+      this.ambrpay.unsubscribe(data.pos, data.addr).catch(err => {
+        Toast.responseHandler(err, Toast.ERROR);
+      });
+    },
+    getSubscriptions() {
+      this.ambrpay
+        .getSubscriptions()
+        .then(res => {
+          this.subscriptions = res;
+        })
+        .catch(err => {
+          Toast.responseHandler(err, Toast.ERROR);
+        });
     }
   }
 };

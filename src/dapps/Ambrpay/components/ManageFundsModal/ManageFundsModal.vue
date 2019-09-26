@@ -3,7 +3,6 @@
     <b-modal
       ref="manageFundsModal"
       :title="`${manageFundsText} Funds`"
-      class="bootstrap-modal"
       centered
       hide-footer
       static
@@ -14,30 +13,38 @@
           <span class="funds-txt">Available Balance</span>
           <div>
             <p class="funds-txt">{{ availableBalanceEth }} ETH</p>
-            <p>{{ availableBalanceUSD }}</p>
+            <p class="text-right">${{ availableBalanceUsd }}</p>
           </div>
         </div>
         <hr />
         <div v-if="actionStep" class="action-container">
           <p class="funds-txt">
-            How many ETH you want to
+            How much ETH do you want to
             <span class="action-txt"> {{ manageFundsText }}? </span>
           </p>
-          <input id="" class="mt-3" type="text" name="" />
+          <span class="eth-text">ETH</span>
+          <input v-model="ethAmount" class="mt-3" type="number" />
+          <p v-show="errMsg" class="err-msg pl-2">{{ errMsg }}</p>
         </div>
         <div v-if="!actionStep" class="confirmation-container">
           <i class="check-icon fa fa-check" aria-hidden="true" />
           <p v-if="manageFundsText === 'Add'" class="mr-5 ml-5 mt-3 mb-1">
-            Your subscription fund <span class="mew-txt">(1 ETH)</span> should
-            be updated within the next miunte.
+            Your subscription fund
+            <span class="mew-txt">{{ ethAmount }}</span> should be updated
+            within the next miunte.
           </p>
           <p v-if="manageFundsText === 'Withdraw'" class="mr-5 ml-5 mt-2">
-            Your withdraw fund <span class="mew-txt"> (0.0031 ETH)</span> should
-            be in your wallet within the next miunte.
+            Your withdraw fund
+            <span class="mew-txt">{{ ethAmount }}</span> should be in your
+            wallet within the next miunte.
           </p>
         </div>
         <div class="btn-container">
-          <button class="mew-btn mt-4 mb-4">
+          <button
+            :class="errMsg || !ethAmount ? 'disabled' : ''"
+            class="mew-btn mt-4 mb-4"
+            @click="onClick()"
+          >
             {{ actionStep ? manageFundsText : 'OK' }}
           </button>
         </div>
@@ -47,6 +54,9 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+import BigNumber from 'bignumber.js';
+
 export default {
   props: {
     manageFundsText: {
@@ -54,20 +64,68 @@ export default {
       default: ''
     },
     availableBalanceEth: {
-      type: Number,
-      default: 0
+      type: String,
+      default: ''
     },
-    availableBalanceUSD: {
-      type: Number,
-      default: 0
+    availableBalanceUsd: {
+      type: String,
+      default: ''
     }
   },
   data() {
     return {
-      actionStep: false
+      actionStep: true,
+      ethAmount: 0,
+      errMsg: ''
     };
   },
-  methods: {}
+  computed: {
+    ...mapState(['web3', 'account'])
+  },
+  watch: {
+    manageFundsText(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        this.ethAmount = 0;
+      }
+    },
+    ethAmount(newVal) {
+      const value = new BigNumber(newVal);
+      const accountBalance = this.web3.utils.fromWei(
+        new BigNumber(this.account.balance).toFixed(),
+        'ether'
+      );
+      const subAccountBalance = new BigNumber(this.availableBalanceEth);
+
+      if (this.manageFundsText === 'Add' && value.gt(accountBalance)) {
+        this.errMsg = 'Amount higher than balance';
+      } else if (
+        this.manageFundsText === 'Withdraw' &&
+        value.gt(subAccountBalance)
+      ) {
+        this.errMsg = 'Amount higher than subscription balance';
+      } else {
+        this.errMsg = '';
+      }
+    }
+  },
+  methods: {
+    onClick() {
+      if (this.manageFundsText === 'Add' && this.actionStep === true) {
+        this.$emit('addFunds', this.ethAmount);
+        this.actionStep = false;
+      } else if (
+        this.manageFundsText === 'Withdraw' &&
+        this.actionStep === true
+      ) {
+        this.$emit('withdrawFunds', this.ethAmount);
+        this.actionStep = false;
+      } else {
+        this.$refs['manageFundsModal'].hide();
+        this.actionStep = true;
+        this.ethAmount = '';
+      }
+    }
+  }
 };
 </script>
 

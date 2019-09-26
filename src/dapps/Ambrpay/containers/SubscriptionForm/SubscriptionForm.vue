@@ -9,27 +9,37 @@
               {{ $t('common.copy') }}
             </p>
           </b-row>
-          <b-row>
-            <blockie
-              v-show="isValidAddress"
-              :address="address"
-              :size="6"
-              :scale="16"
-              width="32px"
-              height="32px"
-              class="blockie-image"
-            />
-            <input
-              v-ens-resolver="'address'"
-              ref="address"
-              v-model="address"
-              name="name"
-              autocomplete="off"
-              type="text"
-            />
+          <b-row class="address-block">
+            <span class="row-style">
+              <blockie
+                v-show="isValidAddress"
+                :address="hexAddress"
+                :size="6"
+                :scale="16"
+                width="32px"
+                height="32px"
+                class="blockie-image"
+              />
+              <input
+                v-ens-resolver="'address'"
+                ref="address"
+                v-model="address"
+                :class="isValidAddress ? 'input-address' : ''"
+                name="name"
+                autocomplete="off"
+                type="text"
+              />
+              <i
+                :class="[
+                  isValidAddress && hexAddress.length !== 0 ? '' : 'not-good',
+                  'fa fa-check-circle good-button'
+                ]"
+                aria-hidden="true"
+              />
+            </span>
           </b-row>
           <b-row>
-            <b-col cols="12" md="5">
+            <b-col class="mt-3" cols="12" md="5">
               <span class="label-text">Type</span>
               <div class="fake-input">
                 <p>
@@ -41,21 +51,44 @@
                 </p>
               </div>
             </b-col>
-            <b-col class="amount-container" cols="12" md="7">
+            <b-col class="amount-container mt-3" cols="12" md="7">
               <div class="amount-text">
                 <span class="label-text">Amount</span>
-                <span class="action-text">Entire Balance</span>
+                <span class="action-text" @click="sendEntireBalance"
+                  >Entire Balance</span
+                >
               </div>
-              <input type="text" placeholder="0.0000" />
-              <p class="fee-text">1% automation-fee will be added on top</p>
+              <input
+                v-model="sendAmount"
+                type="number"
+                placeholder="0.01"
+                min="0.01"
+              />
+              <p class="sub-text">1% automation-fee will be added on top</p>
+              <p v-show="amountErrMsg" class="sub-text err-msg">
+                {{ amountErrMsg }}
+              </p>
             </b-col>
           </b-row>
-          <b-row>
+          <b-row class="row-style mt-1 interval-container">
             <span class="label-text">Interval in Every</span>
-            <input type="text" placeholder="Day(s)" />
+            <span v-show="intervalDays" class="days-text">Day(s)</span>
+            <input
+              v-model="intervalDays"
+              type="number"
+              min="1"
+              placeholder="Day(s)"
+            />
+            <p v-show="intervalErrMsg" class="sub-text err-msg">
+              {{ intervalErrMsg }}
+            </p>
           </b-row>
-          <b-row class="mt-5">
-            <b-button class="mx-auto mew-btn">Start Recurring</b-button>
+          <b-row class="mt-4">
+            <b-button
+              :class="[isValidInput ? '' : 'disabled', 'mx-auto mew-btn']"
+              @click="startSubscription"
+              >Start Recurring</b-button
+            >
           </b-row>
         </b-container>
       </div>
@@ -65,46 +98,97 @@
 
 <script>
 import Blockie from '@/components/Blockie';
-import StandardInput from '@/components/StandardInput';
 import { mapState } from 'vuex';
-import { canBeConvertedToWei } from '../../AmbrpayHelpers';
 import { Toast } from '@/helpers';
-import { isAddress } from '@/helpers/addressUtils';
+import BigNumber from 'bignumber.js';
 
 export default {
   components: {
-    blockie: Blockie,
-    'standard-input': StandardInput
+    blockie: Blockie
+  },
+  props: {
+    availableBalanceEth: {
+      type: String,
+      default: ''
+    }
   },
   data() {
     return {
       address: '',
-      amount: 0,
-      amountInputOptions() {
-        return {
-          title: 'Amount',
-          value: this.amount,
-          type: 'number'
-        };
-      }
+      isValidAddress: false,
+      hexAddress: '',
+      intervalDays: '',
+      sendAmount: '',
+      amountErrMsg: '',
+      intervalErrMsg: ''
     };
   },
   computed: {
-    ...mapState(['web3']),
-    isValidAddress() {
-      return isAddress(this.address);
+    ...mapState(['web3', 'network', 'account']),
+    isValidInput() {
+      return (
+        this.isValidAddress &&
+        !this.amountErrMsg &&
+        this.sendAmount &&
+        this.address &&
+        !this.intervalErrMsg
+      );
     }
   },
-  isValidAmount() {
-    if (!canBeConvertedToWei(this.web3, this.amount.toString())) return false;
+  watch: {
+    sendAmount(newVal) {
+      const value = new BigNumber(newVal);
+      const accountBalance = new BigNumber(this.availableBalanceEth);
+      const automationFee = new BigNumber(value.times(0.1));
+      const totalAmt = value.plus(automationFee);
 
-    // const enteredAmount = new BigNumber(this.amount);
+      if (!newVal) {
+        return (this.amountErrMsg = '');
+      }
+
+      if (value.lt(0.01)) {
+        this.amountErrMsg = 'The minimum amount is 0.01 or greater';
+      } else if (totalAmt.gt(accountBalance)) {
+        this.amountErrMsg =
+          'Amount higher than balance (including automation fee)';
+      } else {
+        this.amountErrMsg = '';
+      }
+    },
+    intervalDays(newVal) {
+      if (newVal.startsWith('0') && newVal.length > 1) {
+        this.intervalErrMsg = 'Please enter a correct number';
+      } else {
+        this.intervalErrMsg = '';
+      }
+    }
   },
   methods: {
     copyToClipboard() {
       this.$refs.address.select();
       document.execCommand('copy');
       Toast.responseHandler('Copied', Toast.INFO);
+    },
+    sendEntireBalance() {
+      if (this.account) {
+        this.sendAmount = new BigNumber(this.availableBalanceEth).toFixed();
+      }
+    },
+    startSubscription() {
+      const data = {
+        subscriptionPlan: 'sp_W6ViaE8Fh7MsXK',
+        amount: new BigNumber(this.sendAmount),
+        receiverWallet: this.address,
+        interval: new BigNumber(this.intervalDays)
+      };
+
+      this.$emit('startSubscription', data);
+
+      this.$nextTick(() => {
+        this.sendAmount = '';
+        this.address = '';
+        this.intervalDays = '';
+      });
     }
   }
 };

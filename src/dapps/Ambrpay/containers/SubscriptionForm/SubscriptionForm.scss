@@ -23,7 +23,6 @@
 
 .row {
   justify-content: space-between;
-  padding-bottom: 10px;
 }
 
 .text-danger {
@@ -56,11 +55,25 @@
   padding: 0;
 }
 
-.amount-container {
-  padding-left: 10px;
+.row-style {
+  position: relative;
 }
 
-.fee-text {
+.amount-container {
+  padding-left: 10px;
+
+  @media all and (max-width: 767px) {
+    padding: 0;
+  }
+}
+
+.interval-container {
+  @media all and (max-width: 767px) {
+    margin-top: 10px !important;
+  }
+}
+
+.sub-text {
   color: $dark-blue-12;
   font-family: AvenirNext-Regular;
   margin-left: 10px;
@@ -91,4 +104,28 @@
     display: table-cell;
     vertical-align: middle;
   }
+}
+
+.address-block {
+  span {
+    width: 100%;
+  }
+
+  i {
+    background-color: transparent;
+    margin-top: 15px;
+    position: absolute;
+    right: 12px;
+  }
+}
+
+.days-text {
+  color: $dark-blue-12;
+  font-family: AvenirNext-Regular;
+  font-size: 14px;
+  position: absolute;
+  right: 20px;
+  text-align: right;
+  top: 39px;
+  width: 100%;
 }

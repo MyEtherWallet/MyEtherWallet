@@ -23,6 +23,15 @@
   }
 }
 
+.eth-text {
+  color: $dark-blue-12;
+  font-family: AvenirNext-Regular;
+  margin-top: 30px;
+  position: absolute;
+  right: 45px;
+  text-align: right;
+}
+
 .action-txt {
   text-transform: lowercase;
 }

@@ -1,5 +1,9 @@
 @import '~@/scss/GlobalVariables';
 
+.err-msg {
+  color: $red-1 !important;
+}
+
 .mew-btn {
   background-color: $mew-green;
   border-radius: 4px;
@@ -23,6 +27,10 @@ input,
 
 input::placeholder {
   color: $dark-blue-12;
-  text-align: right;
   padding-right: 10px;
+}
+
+.disabled {
+  background-color: $dark-grey-11;
+  pointer-events: none;
 }
