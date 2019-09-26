@@ -1,5 +1,14 @@
 @import '~@/scss/GlobalVariables';
 
+.no-sub-container {
+  padding: 30px;
+  text-align: center;
+  
+  p {
+    font-size: 15px;
+  }
+}
+
 .subscription-container {
   background-color: $light-grey-2;
   border-radius: 4px;
