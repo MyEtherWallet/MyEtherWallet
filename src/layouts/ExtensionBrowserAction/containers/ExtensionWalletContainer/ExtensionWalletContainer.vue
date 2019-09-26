@@ -73,7 +73,7 @@
             <div class="title-balance">
               <h2>{{ name }}</h2>
             </div>
-            <div class="add-button" @click="addWallet">
+            <div class="add-button" @click="openWatchOnlyModal">
               + Add More
             </div>
           </div>
