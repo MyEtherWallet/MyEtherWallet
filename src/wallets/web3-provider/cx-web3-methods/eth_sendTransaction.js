@@ -19,12 +19,12 @@ export default async ({ payload }, res, next) => {
   const eventName = WEB3_SEND_TX.replace('{{id}}', id);
   const resolveName = WEB3_RECEIVE_TX_HASH.replace('{{id}}', id);
   const rejectName = WEB3_REJECT.replace('{{id}}', id);
-  const web3QueryEvent = WEB3_QUERY_GASPRICE.replace('{{id}}', id);
+  const web3QueryGas = WEB3_QUERY_GASPRICE.replace('{{id}}', id);
   const web3ReceiveGas = WEB3_RECEIVE_GASPRICE.replace('{{id}}', id);
   const web3GetNonce = WEB3_GET_TX_COUNT.replace('{{id}}', id);
   const web3ReceiveNonce = WEB3_RECEIVE_TX_COUNT.replace('{{id}}', id);
   const gasPrice = await eventHandler(
-    web3QueryEvent,
+    web3QueryGas,
     {},
     web3ReceiveGas,
     rejectName
