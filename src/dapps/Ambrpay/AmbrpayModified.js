@@ -175,7 +175,7 @@ export default function Ambrpay(account, web3) {
             receiverWallet = subscriptionPlan.wallet;
           }
 
-          if(!_web3.isAddress(receiverWallet)) {
+          if(!_web3.utils.isAddress(receiverWallet)) {
 
             throw "receiverAddress is not a valid address";
           }
@@ -241,7 +241,7 @@ export default function Ambrpay(account, web3) {
           subscriptionFeeAmount = amount / 100 * subscriptionPlan.fee;
           subscriptionFeeAmount = subscriptionFeeAmount * 1000000000000000000 / 1000000000000000000;
 
-          if(_web3.isAddress(subscriptionPlan.wallet)) {
+          if(_web3.utils.isAddress(subscriptionPlan.wallet)) {
 
             var subscriptionTotalAmount = parseFloat(subscriptionAmount);
 
@@ -254,28 +254,30 @@ export default function Ambrpay(account, web3) {
 
           return new Promise(function(resolve, reject) {
 
-            var instance = _web3.eth.contract(ambrpay.ABI.abi).at(ambrpay.contractAddress);
+            var instance = new _web3.eth.Contract(ambrpay.ABI.abi, ambrpay.contractAddress);
 
-            return instance.createSubscriptionWithTransfer(
+            return instance.methods.createSubscriptionWithTransfer(
               receiverWallet,
               subscriptionPlan.daysInterval,
-              _web3.toWei(subscriptionPriceLimit),
+              _web3.utils.toWei(subscriptionPriceLimit.toString(), 'ether'),
               transferOut,
-              _web3.toWei(subscriptionFeeAmount),
-              {
-                value: _web3.toWei(subscriptionTotalAmount),
+              _web3.utils.toWei(subscriptionFeeAmount.toString(), 'ether'))
+              .send({
+                value: _web3.utils.toWei(subscriptionTotalAmount.toString(), 'ether'),
                 gas: 500000,
                 gasPrice: 1000000000,
                 from: senderWallet
-              },
-              function(e, res) {
-                if (e) { return reject(e); }
+              })
+              .then((res) =>{
                 return resolve(res);
+              })
+              .catch((e) => {
+                return reject(e);
               });
           });
         })
         .then((txHash) => {
-
+          
           var customer = {
             subscriptionPlanId: subscriptionPlan.id,
             senderWallet: senderWallet,
@@ -444,8 +446,8 @@ export default function Ambrpay(account, web3) {
           .then((address) => {
             return _web3.eth.getBalance(address, function(e, o) {
               if (e) return reject(e);
-              var value = _web3.fromWei(o, 'ether');
-              value = web3.toDecimal(value);
+              var value = _web3.utils.fromWei(o, 'ether');
+              value = web3.utils.toDecimal(value);
               return resolve(value);
             });
           });
@@ -454,17 +456,20 @@ export default function Ambrpay(account, web3) {
     unsubscribe: function(pos, contractAddress) {
 
       return new Promise(function(resolve, reject) {
-
-        var instance = _web3.eth.contract(ambrpay.ABI.abi).at(contractAddress);
+        var instance = new _web3.eth.Contract(ambrpay.ABI.abi, contractAddress);
 
         return ambrpay.getMetaMaskAccount()
           .then((address) => {
 
-            return instance.deactivateSubscription(pos, { gas: 500000, from: address }, function(e, res) {
-              if (e) { return reject(e); }
-              return resolve(res);
-            });
-          });
+            return instance.methods.deactivateSubscription(pos)
+              .send({ gas: 500000, from: address })
+              .then((res) => {
+                resolve(res);
+              })
+              .catch((err) => {
+                reject(err);
+              });
+          })
       });
     },
     addFunds: function(amount) {
@@ -473,12 +478,16 @@ export default function Ambrpay(account, web3) {
 
         return ambrpay.getMetaMaskAccount()
           .then((address) => {
-            var instance = _web3.eth.contract(ambrpay.ABI.abi).at(ambrpay.contractAddress);
+            var instance = new _web3.eth.Contract(ambrpay.ABI.abi, ambrpay.contractAddress);
 
-            return instance.addFunds(address, { value: _web3.toWei(amount), gas: 500000, from: address }, function(e, res) {
-              if (e) { return reject(e); }
-              return resolve(res);
-            });
+            return instance.methods.addFunds(address)
+                    .send({ value: _web3.utils.toWei(amount), gas: 500000, from: address })
+                    .then((res) => {
+                      return resolve(res);
+                    })
+                    .catch((err) => {
+                      return reject(err);
+                    });
           });
       });
     },
@@ -488,12 +497,16 @@ export default function Ambrpay(account, web3) {
 
         return ambrpay.getMetaMaskAccount()
           .then((address) => {
-            var instance = _web3.eth.contract(ambrpay.ABI.abi).at(ambrpay.contractAddress);
+            var instance = new _web3.eth.Contract(ambrpay.ABI.abi, ambrpay.contractAddress);
 
-            return instance.withdrawFunds(_web3.toWei(amount), { gas: 500000, from: address }, function(e, res) {
-              if (e) { return reject(e); }
-              return resolve(res);
-            });
+            return instance.methods.withdrawFunds(_web3.utils.toWei(amount))
+                      .send({gas: 500000, from: address})
+                      .then((res) => {
+                        return resolve(res);
+                      })
+                      .catch((err) => {
+                        return reject(err);
+                      })
           });
       });
     },

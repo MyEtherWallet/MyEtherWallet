@@ -1,1 +1,93 @@
 @import '~@/scss/GlobalVariables';
+
+.subscription-container {
+  background-color: $light-grey-2;
+  border-radius: 4px;
+  margin: 15px;
+
+  .info-container {
+    margin: 15px;
+    padding: 15px;
+  }
+
+  .header-txt {
+    color: $mew-green;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+
+    .active-txt {
+      font-family: AvenirNext-Medium;
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    .check-icon {
+      background-color: $mew-green;
+      border: 3px solid $border-green;
+      border-radius: 200px;
+      color: $white;
+      font-size: 12px;
+      margin-right: 3px;
+      padding: 1px;
+    }
+
+    .next-pay-txt {
+      color: $dark-grey-11;
+      font-family: AvenirNext-Regular;
+      font-size: 15px;
+    }
+
+    .fa-angle-down,
+    .fa-angle-up {
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .fa-angle-down {
+      color: $dark-grey-2;
+    }
+  }
+
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+  }
+
+  .info-title {
+    color: $dark-blue-12;
+    font-family: AvenirNext-Medium;
+    width: 100%;
+  }
+
+  .address-txt {
+    color: $mew-green;
+    cursor: pointer;
+    font-family: PTMono-Regular;
+    white-space: nowrap;
+    overflow: hidden;
+    text-decoration: underline;
+    text-overflow: ellipsis;
+  }
+
+  .info-txt {
+    color: $dark-blue-12;
+    font-family: AvenirNext-Regular;
+    text-align: right;
+    width: 100%;
+  }
+
+  .btn-container {
+    text-align: center;
+    button {
+      border: none;
+      background: none;
+      color: $red-5;
+      font-family: AvenirNext-Medium;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+  }
+}
