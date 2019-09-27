@@ -49,9 +49,7 @@ describe('NetworkAndAddressModal.vue', () => {
   });
 
   describe('NetworkAndAddressModal.vue Methods', () => {
-    xit('[9-4-19, feels like it should pass]should render correct unlockWallet method', () => {
-      wrapper.vm.currentWallet = '0xfbeef911dc5821886e1dda71586d90ed28174b7d';
-      wrapper.vm.wallet = {};
+    it('should render correct unlockWallet method', () => {
       wrapper.vm.unlockWallet();
       expect(spy.calledWith({ path: 'interface' })).toBe(true);
     });
@@ -60,7 +58,8 @@ describe('NetworkAndAddressModal.vue', () => {
       let customPath = { label: 'label', path: 'dpath' };
       wrapper.setData({ customPath });
       wrapper.vm.showCustomPathInput();
-      expect(wrapper.vm.$data.customPathInput).toBe(true);
+      const { customPathInput } = wrapper.vm.$data;
+      expect(customPathInput).toBe(true);
       customPath = { label: '', path: '' };
       expect(wrapper.vm.$data.customPath).toEqual(customPath);
     });
