@@ -4,7 +4,7 @@
 
 - Add ETC Coop Node [#1418](https://github.com/MyEtherWallet/MyEtherWallet/pull/1418)
 - Add Ethercluster and ETC Coop Node [#1407](https://github.com/MyEtherWallet/MyEtherWallet/pull/1407)
-- Add Ambrpay [#1441] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1441)
+- Add Ambrpay [#1441](https://github.com/MyEtherWallet/MyEtherWallet/pull/1441)
 
 ### Bug
 

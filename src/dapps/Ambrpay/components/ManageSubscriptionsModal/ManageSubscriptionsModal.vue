@@ -9,12 +9,12 @@
       lazy
     >
       <div class="modal-contents">
-        <div class="no-sub-container" v-show="subscriptions.length === 0">
+        <div v-show="subscriptions.length === 0" class="no-sub-container">
           <p class="mx-auto pl-3">You have no active subscriptions!</p>
         </div>
         <div
-          v-show="subscriptions.length > 0"
           v-for="sub in subscriptions"
+          v-show="subscriptions.length > 0"
           :key="sub.key"
           class="subscription-container"
         >
