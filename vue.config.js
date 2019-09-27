@@ -1,8 +1,6 @@
 const imageminMozjpeg = require('imagemin-mozjpeg');
 const ImageminPlugin = require('imagemin-webpack-plugin').default;
 const webpack = require('webpack');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { UnusedFilesWebpackPlugin } = require('unused-files-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const UglifyJS = require('uglify-es');
@@ -32,8 +30,6 @@ const webpackConfig = {
     }
   },
   plugins: [
-    new CleanWebpackPlugin(),
-    new HtmlWebpackPlugin({title: 'Caching'}),
     new webpack.DefinePlugin(env_vars),
     new webpack.NormalModuleReplacementPlugin(/^any-promise$/, 'bluebird'),
     new ImageminPlugin({
@@ -69,10 +65,6 @@ const webpackConfig = {
       }
     ])
   ],
-  output: {
-    filename: '[name].[hash].js',
-    path: path.resolve(__dirname, 'dist')
-  },
   optimization: {
     runtimeChunk: 'single',
     splitChunks: {
