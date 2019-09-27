@@ -182,9 +182,9 @@ describe('HeaderContainer.vue', () => {
   });
 
   it('should render correct isHomePage data', () => {
-    expect(wrapper.findAll('.b-nav-item').length).toBe(4);
+    expect(wrapper.findAll('.b-nav-item').length).toBe(3);
     wrapper.setData({ isHomePage: false });
-    expect(wrapper.findAll('.b-nav-item').length).toBe(2);
+    expect(wrapper.findAll('.b-nav-item').length).toBe(1);
   });
 
   it('should render correct showGetFreeWallet data', () => {
