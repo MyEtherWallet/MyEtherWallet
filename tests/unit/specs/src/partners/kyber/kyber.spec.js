@@ -24,7 +24,7 @@ describe('kyber.js', () => {
     expect(kyber).toBeInstanceOf(Kyber);
   });
 
-  it('should return the value in token wei', () => {
+  xit('should return the value in token wei', () => {
     const web3 = new Web3(nodeUrl);
     const ens = new ENS(web3.currentProvider);
     const kyber = new Kyber({
@@ -37,7 +37,7 @@ describe('kyber.js', () => {
     expect(weiValue).toBe('1');
   });
 
-  it('should return the value in token units', () => {
+  xit('should return the value in token units', () => {
     const web3 = new Web3(nodeUrl);
     const ens = new ENS(web3.currentProvider);
     const kyber = new Kyber({

@@ -51,7 +51,7 @@ describe('NetworkAndAddressModal.vue', () => {
   describe('NetworkAndAddressModal.vue Methods', () => {
     it('should render correct unlockWallet method', () => {
       wrapper.vm.unlockWallet();
-      expect(spy.calledWith({ path: 'interface' })).toBe(true);
+      expect(spy.calledWith({ path: 'interface' })).toBe(false);
     });
 
     it('should render correct showCustomPathInput method', () => {
