@@ -380,7 +380,6 @@ describe('kyber.js', () => {
         0.382958,
         '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D'
       );
-      console.log(dataForTxs); // todo remove dev item
       expect(dataForTxs).toEqual(expect.anything());
     });
   }

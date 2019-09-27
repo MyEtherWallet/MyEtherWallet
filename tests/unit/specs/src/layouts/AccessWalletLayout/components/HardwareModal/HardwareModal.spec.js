@@ -26,7 +26,7 @@ describe('HardwareModal.vue', () => {
   });
 
   it('should render correct contents', () => {
-    console.log(wrapper.find('li').exists());
+    // console.log(wrapper.find('li').exists());
     // const liElements = wrapper.findAll('li');
     //const liElement = liElements.at(0);
     //liElement.trigger('click');
