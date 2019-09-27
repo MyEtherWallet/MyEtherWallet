@@ -96,8 +96,8 @@ export default {
         'ether'
       );
       const subAccountBalance = new BigNumber(this.availableBalanceEth);
-      
-      if (newVal <= 0 ) {
+
+      if (newVal <= 0) {
         this.errMsg = 'Amount must be higher than 0';
       } else if (this.manageFundsText === 'Add' && value.gt(accountBalance)) {
         this.errMsg = 'Amount higher than balance';

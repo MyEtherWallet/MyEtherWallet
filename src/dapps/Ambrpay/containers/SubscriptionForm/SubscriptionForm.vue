@@ -106,12 +106,6 @@ export default {
   components: {
     blockie: Blockie
   },
-  props: {
-    availableBalanceEth: {
-      type: String,
-      default: ''
-    }
-  },
   data() {
     return {
       address: '',
@@ -138,9 +132,12 @@ export default {
   watch: {
     sendAmount(newVal) {
       const value = new BigNumber(newVal);
-      const accountBalance = new BigNumber(this.availableBalanceEth);
+      const accountBalance = this.web3.utils.fromWei(
+        new BigNumber(this.account.balance).toFixed(),
+        'ether'
+      );
       const automationFee = new BigNumber(value.times(0.1));
-      const totalAmt = value.plus(automationFee);
+      const totalVal = value.plus(automationFee);
 
       if (!newVal) {
         return (this.amountErrMsg = '');
@@ -148,7 +145,7 @@ export default {
 
       if (value.lt(0.01)) {
         this.amountErrMsg = 'The minimum amount is 0.01 or greater';
-      } else if (totalAmt.gt(accountBalance)) {
+      } else if (totalVal.gt(accountBalance)) {
         this.amountErrMsg =
           'Amount higher than balance (including 1% automation fee)';
       } else {
@@ -171,15 +168,20 @@ export default {
     },
     sendEntireBalance() {
       if (this.account) {
-        this.sendAmount = new BigNumber(this.availableBalanceEth).toFixed();
+        this.sendAmount = this.web3.utils.fromWei(
+          new BigNumber(this.account.balance).toFixed(),
+          'ether'
+        );
       }
     },
     startSubscription() {
       const data = {
-        subscriptionPlan: 'sp_W6ViaE8Fh7MsXK',
+        subscriptionPlan: 'sp_SYh4plL76BSu1Y',
         amount: new BigNumber(this.sendAmount),
         receiverWallet: this.address,
-        interval: new BigNumber(this.intervalDays)
+        interval: new BigNumber(this.intervalDays),
+        transferOut: true,
+        network: 'auto'
       };
 
       this.$emit('startSubscription', data);

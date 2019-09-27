@@ -29,7 +29,6 @@
         </div>
       </div>
       <subscription-form
-        :available-balance-eth="availableBalanceEth"
         @startSubscription="startSubscription"
       ></subscription-form>
       <b-row class="mb-4">
