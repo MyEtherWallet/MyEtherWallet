@@ -46,8 +46,7 @@ xdescribe('SendOfflineContainer.vue', () => {
     // expect(
     //   wrapper.vm.$el.querySelector('router-view').getAttribute('nonce')
     // ).toBe(String(wrapper.vm.$data.nonce));
-
-    console.log(wrapper.vm.$el.querySelector('.gas-amount input').textContent);
+    // console.log(wrapper.vm.$el.querySelector('.gas-amount input').textContent);
   });
 
   xit('should render correct gasLimit data', () => {

@@ -48,10 +48,8 @@ xdescribe('MobileLanguageSelector.vue', () => {
       '.language-menu-content-container ul li'
     );
     for (let i = 0; i < liElements.length; i++) {
+      // eslint-disable-next-line
       const liElement = liElements[i];
-      console.log(liElement.getAttribute('data-language-code'));
-      console.log(liElement.getAttribute('data-flag-name'));
-      console.log(liElement.getAttribute('active'));
     }
   });
 });
