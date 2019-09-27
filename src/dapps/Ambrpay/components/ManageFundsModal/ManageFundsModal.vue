@@ -86,6 +86,7 @@ export default {
     manageFundsText(newVal, oldVal) {
       if (newVal !== oldVal) {
         this.ethAmount = 0;
+        this.errMsg = '';
       }
     },
     ethAmount(newVal) {
@@ -95,8 +96,10 @@ export default {
         'ether'
       );
       const subAccountBalance = new BigNumber(this.availableBalanceEth);
-
-      if (this.manageFundsText === 'Add' && value.gt(accountBalance)) {
+      
+      if (newVal <= 0 ) {
+        this.errMsg = 'Amount must be higher than 0';
+      } else if (this.manageFundsText === 'Add' && value.gt(accountBalance)) {
         this.errMsg = 'Amount higher than balance';
       } else if (
         this.manageFundsText === 'Withdraw' &&
