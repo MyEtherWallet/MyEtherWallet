@@ -225,7 +225,10 @@ export default {
         });
     },
     checkWeb3() {
-      return typeof window.ethereum !== 'undefined' || typeof window.web3 !== 'undefined';
+      return (
+        typeof window.ethereum !== 'undefined' ||
+        typeof window.web3 !== 'undefined'
+      );
     }
   }
 };
