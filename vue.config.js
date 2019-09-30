@@ -66,7 +66,6 @@ const webpackConfig = {
     ])
   ],
   optimization: {
-    runtimeChunk: 'single',
     splitChunks: {
       cacheGroups: {
         commons: {
