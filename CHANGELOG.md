@@ -8,7 +8,7 @@
 
 ### Devop
 
-- Fix desktop audit issues [#1428] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1428)
+- Fix browser audit issues [#1428](https://github.com/MyEtherWallet/MyEtherWallet/pull/1428)
 
 ### Release v5.1.3
 
