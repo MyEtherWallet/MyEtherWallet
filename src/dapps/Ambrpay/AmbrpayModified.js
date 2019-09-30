@@ -184,6 +184,10 @@ export default function Ambrpay(account, web3) {
             throw "Subscription plan has interval set to custom, therefore param 'interval' is required when calling ambrpay.subscribe()";
           }
 
+          if(subscriptionPlan.daysInterval == -1 && !ambrpay.isInt(data.interval)) {
+            throw "interval must be an integer";
+          }
+
           // todo: only for CRYPTO plans?
           if(subscriptionPlan.daysInterval == -1 && data.interval && parseInt(data.interval) >= 1 && parseInt(data.interval) <= 365) {
 
@@ -192,6 +196,10 @@ export default function Ambrpay(account, web3) {
           } else if(subscriptionPlan.daysInterval == -1 && data.interval) {
 
             throw "interval must be between 1 and 365";
+          }
+
+          if (typeof data.transferOut !== 'undefined' && typeof data.transferOut !== "boolean") {
+            throw "transferOut must be a boolean"
           }
 
           if(data.transferOut && subscriptionPlan.transferOut == 1) {
@@ -210,6 +218,10 @@ export default function Ambrpay(account, web3) {
           } else {
 
             if(data.amount) {
+
+              if(!ambrpay.isInt(data.amount) && !ambrpay.isFloat(data.amount)) {
+                throw "amount must be an integer or a float";
+              }
 
               customPrice = data.amount;
 
@@ -510,6 +522,12 @@ export default function Ambrpay(account, web3) {
           });
       });
     },
+    isInt: function isInt(n){
+      return Number(n) === n && n % 1 === 0;
+    },
+    isFloat: function isFloat(n){
+      return Number(n) === n && n % 1 !== 0;
+    }
   }
 
   ambrpay.setApiKey(account.publicApiKey);

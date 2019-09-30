@@ -177,9 +177,9 @@ export default {
     startSubscription() {
       const data = {
         subscriptionPlan: 'sp_SYh4plL76BSu1Y',
-        amount: new BigNumber(this.sendAmount),
+        amount: new BigNumber(this.sendAmount).toNumber(),
         receiverWallet: this.address,
-        interval: new BigNumber(this.intervalDays),
+        interval: new BigNumber(this.intervalDays).toNumber(),
         transferOut: true,
         network: 'auto'
       };

@@ -50,7 +50,7 @@ const dapps = {
     title: 'Ambrpay',
     desc:
       'With Ambrpay you can accept recurring cryptocurrency payments in no time.',
-    supportedNetworks: [ETH.name, KOV.name]
+    supportedNetworks: [ETH.name]
   }
 };
 
