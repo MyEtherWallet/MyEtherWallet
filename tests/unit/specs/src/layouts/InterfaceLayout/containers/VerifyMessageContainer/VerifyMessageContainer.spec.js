@@ -41,6 +41,5 @@ describe('VerifyMessageContainer.vue', () => {
   });
 
   it('should render correct content', () => {
-    // console.log(wrapper.html());
   });
 });
