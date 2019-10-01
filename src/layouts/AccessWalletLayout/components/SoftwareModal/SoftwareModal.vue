@@ -5,6 +5,8 @@
     hide-footer
     class="bootstrap-modal nopadding modal-software"
     centered
+    static
+    lazy
   >
     <div class="warning">
       <warning-message />
