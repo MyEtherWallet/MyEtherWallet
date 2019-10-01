@@ -1,3 +1,7 @@
+### Feature
+
+- Add network to query [#1460](https://github.com/MyEtherWallet/MyEtherWallet/pull/1460)
+
 ### Release v5.1.4
 
 ### Bug
