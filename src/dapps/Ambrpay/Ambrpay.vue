@@ -87,7 +87,10 @@ export default {
   mounted() {
     this.init();
     this.getSubscriptions();
-    if (this.online && this.network.type.name === 'ETH') this.getEthPrice();
+    this.$refs.manageSubs.$refs.manageSubscriptionsModal.$on('show', () => {
+      this.getSubscriptions();
+    });
+    if (this.online) this.getEthPrice();
   },
   methods: {
     init() {

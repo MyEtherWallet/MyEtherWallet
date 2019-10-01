@@ -124,7 +124,9 @@ export default {
   },
   methods: {
     formatDate(param) {
-      return param.split('.').join('/');
+      return (
+        param.substr(3, 2) + '/' + param.substr(0, 2) + '/' + param.substr(6, 4)
+      );
     },
     toggleMoreInfo() {
       this.moreInfo = !this.moreInfo;
@@ -139,6 +141,10 @@ export default {
     },
     unsubscribe(pos, addr) {
       this.$emit('unsubscribeSub', { pos: pos, addr: addr });
+
+      this.$nextTick(() => {
+        this.$refs['manageSubscriptionsModal'].hide();
+      });
     }
   }
 };

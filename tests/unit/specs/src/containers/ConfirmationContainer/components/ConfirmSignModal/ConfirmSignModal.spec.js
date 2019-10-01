@@ -25,6 +25,9 @@ describe('ConfirmSignModal.vue', () => {
 
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
+    document.execCommand = jest.fn().mockImplementation(command => {
+      return command;
+    });
     localVue = baseSetup.localVue;
     i18n = baseSetup.i18n;
     store = baseSetup.store;
