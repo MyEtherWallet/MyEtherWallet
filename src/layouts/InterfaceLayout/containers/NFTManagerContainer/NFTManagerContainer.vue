@@ -172,6 +172,7 @@ export default {
     ...mapState(['account', 'web3', 'online', 'network']),
     endIndex() {
       if (this.nftData[this.selectedContract]) {
+        if (!this.nftData[this.selectedContract].details) return 0;
         const ids_retrieved = this.nftData[this.selectedContract].details
           .length;
         const increment =
@@ -455,6 +456,7 @@ export default {
           return this.nftData[contract].details;
         })
         .then(list => {
+          if(!list) return;
           if (list.length > 0) {
             const retrieveCount =
               list.length > this.countPerPage ? this.countPerPage : list.length;
@@ -510,6 +512,7 @@ export default {
           });
         })
         .then(list => {
+          if(!list) return;
           this.nftData[contract].details = list;
           this.$set(this.nftData[contract], 'details', list);
           if (list.length > 0) {

@@ -29,7 +29,7 @@
           </span>
           <span v-show="nonStandardMessage">
             NFT token contract doesn't include a required method to add as a
-            custom NFT.
+            custom NFT or you do not have
           </span>
           <input
             v-validate="'required'"
@@ -131,6 +131,7 @@ export default {
     },
     checkIfStandard(address) {
       return new Promise(resolve => {
+        // 0x780e9d63
         const tokenContract = new this.web3.eth.Contract([
           {
             constant: true,
@@ -143,18 +144,47 @@ export default {
             payable: false,
             stateMutability: 'view',
             type: 'function'
+          },
+          {
+            constant: true,
+            inputs: [{ name: '_interfaceId', type: 'bytes4' }],
+            name: 'supportsInterface',
+            outputs: [{ name: '', type: 'bool' }],
+            payable: false,
+            stateMutability: 'view',
+            type: 'function'
           }
         ]);
         tokenContract.options.address = address;
         tokenContract.methods
-          .tokenOfOwnerByIndex(this.activeAddress, 0)
+          .supportsInterface('0x780e9d63')
           .call()
-          .then(() => {
-            resolve(true);
+          .then(res => {
+            if (res) resolve(true);
+            else {
+              tokenContract.methods
+                .tokenOfOwnerByIndex(this.activeAddress, 0)
+                .call()
+                .then(() => {
+                  resolve(true);
+                })
+                .catch(() => {
+                  resolve(false);
+                });
+            }
           })
           .catch(() => {
             resolve(false);
           });
+        // tokenContract.methods
+        //   .tokenOfOwnerByIndex(this.activeAddress, 0)
+        //   .call()
+        //   .then(() => {
+        //     resolve(true);
+        //   })
+        //   .catch(() => {
+        //     resolve(false);
+        //   });
       });
     }
   }
