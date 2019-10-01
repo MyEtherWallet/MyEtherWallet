@@ -229,6 +229,11 @@ export default {
           await window.ethereum.enable();
         } catch (e) {
           Toast.responseHandler(e, Toast.WARN);
+
+          if (e.stack.includes('Error: User denied account authorization')) {
+            return (this.unlockWeb3Wallet = true);
+          }
+
           this.web3WalletExists = false;
           return;
         }
@@ -254,12 +259,19 @@ export default {
           path: 'interface'
         });
       } catch (e) {
+        if (e.stack.includes('Error: User denied account authorization')) {
+          Toast.responseHandler(e.stack, Toast.ERROR);
+          return (this.unlockWeb3Wallet = true);
+        }
         Toast.responseHandler(e, Toast.ERROR);
         return (this.web3WalletExists = false);
       }
     },
     checkWeb3() {
-      return window.ethereum !== 'undefined' || window.web3 !== 'undefined';
+      return (
+        typeof window.ethereum !== 'undefined' ||
+        typeof window.web3 !== 'undefined'
+      );
     }
   }
 };
