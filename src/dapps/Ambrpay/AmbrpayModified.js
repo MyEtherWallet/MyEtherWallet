@@ -297,7 +297,7 @@ export default function Ambrpay(account, web3) {
             customerId: data.customerId,
             customerEmail: data.customerEmail,
             customerDescription: data.customerDescription,
-            transactionHash: txHash,
+            transactionHash: txHash.transactionHash,
             subscriptionCurrency: "ETH",
             subscriptionPrice: subscriptionAmount,
             customPrice: customPrice,
@@ -308,7 +308,7 @@ export default function Ambrpay(account, web3) {
 
           return ambrpay.createSubscription(customer)
             .then(() => {
-              return txHash;
+              return txHash.transactionHash;
             });
         });
     },

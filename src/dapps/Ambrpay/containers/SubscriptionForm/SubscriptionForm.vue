@@ -5,7 +5,10 @@
         <b-container>
           <b-row>
             <span class="label-text">To Address</span>
-            <p class="action-text prevent-user-select" @click="copyToClipboard">
+            <p
+              class="action-text prevent-user-select copy-text"
+              @click="copyToClipboard"
+            >
               {{ $t('common.copy') }}
             </p>
           </b-row>
@@ -54,7 +57,9 @@
             <b-col class="amount-container mt-3" cols="12" md="7">
               <div class="amount-text">
                 <span class="label-text">Amount</span>
-                <span class="action-text" @click="sendEntireBalance"
+                <span
+                  class="action-text entire-balance"
+                  @click="sendEntireBalance"
                   >Entire Balance</span
                 >
               </div>
