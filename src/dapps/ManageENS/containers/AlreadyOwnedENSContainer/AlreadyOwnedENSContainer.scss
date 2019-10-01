@@ -45,13 +45,6 @@
   flex-direction: column;
   margin-top: 43px;
 
-  .finalize-button {
-    @extend %button-template;
-
-    background-color: $mew-green;
-    color: $white;
-  }
-
   .manage-button {
     @extend %button-template;
 

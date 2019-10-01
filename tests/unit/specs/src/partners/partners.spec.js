@@ -91,7 +91,7 @@ describe('partners', () => {
     expect(results.length).toBe(1);
     done();
   });
-  it('Expect changelly market rate calculated value to be within 1% of exact value (to ETH)', async done => {
+  xit('Expect changelly market rate calculated value to be within 1% of exact value (to ETH)', async done => {
     const changelly = swap.getProvider(providerNames.changelly);
     const changellyCalls = changelly.getApiConnector();
     const currency = Object.values(changelly.currencies).find(
@@ -135,7 +135,7 @@ describe('partners', () => {
     expect(diff).toBeLessThan(percentVarianceAllowed);
     done();
   });
-  it('Expect market rate calculated value to be within 1% of exact value (from ETH) ', async () => {
+  xit('Expect market rate calculated value to be within 1% of exact value (from ETH) ', async () => {
     const changelly = swap.getProvider(providerNames.changelly);
     const changellyCalls = changelly.getApiConnector();
     const currency = Object.values(changelly.currencies).find(

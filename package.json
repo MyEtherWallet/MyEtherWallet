@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "5.1.2",
+  "version": "5.1.4",
   "description": "Client side ethereum wallet",
   "license": "MIT",
   "repository": "https://github.com/myetherwallet/myetherwallet",
@@ -155,9 +155,8 @@
       "web3-core-helpers",
       "web3-core-method",
       "web3-utils",
-      "@xkeshi/vue-qrcode",
       "multicoin-address-validator",
-      "bootstrap-vue",
+      "@xkeshi/vue-qrcode",
       "web3-core-requestmanager",
       "vee-validate",
       "sass-loader"
