@@ -29,7 +29,7 @@
             <div class="the-form amount-number">
               <input
                 v-validate="'min_value:0'"
-                v-model="value"
+                v-model="toValue"
                 type="number"
                 placeholder="Amount"
                 min="0"
@@ -140,7 +140,7 @@
             <div v-show="!isToken" class="the-form user-input">
               <p>Add Data</p>
               <input
-                v-model="data"
+                v-model="toData"
                 type="text"
                 placeholder="Add Data (e.g. 0x7834f874g298hf298h234f)"
                 autocomplete="off"
@@ -215,6 +215,42 @@ export default {
     'currency-picker': CurrencyPicker
   },
   props: {
+    checkPrefilled: {
+      type: Function,
+      default: () => {}
+    },
+    clearPrefilled: {
+      type: Function,
+      default: () => {}
+    },
+    prefilled: {
+      type: Boolean,
+      default: false
+    },
+    value: {
+      type: String,
+      default: '0'
+    },
+    data: {
+      type: String,
+      default: ''
+    },
+    to: {
+      type: String,
+      default: ''
+    },
+    gaslimit: {
+      type: String,
+      default: ''
+    },
+    gas: {
+      type: Number,
+      default: 0
+    },
+    tokensymbol: {
+      type: String,
+      default: ''
+    },
     tokensWithBalance: {
       type: Array,
       default: function() {
@@ -236,9 +272,9 @@ export default {
       isValidAddress: false,
       hexAddress: '',
       address: '',
-      value: '0',
+      toValue: '0',
       gasLimit: '21000',
-      data: '',
+      toData: '',
       selectedCurrency: '',
       ethPrice: 0
     };
@@ -282,15 +318,15 @@ export default {
         ' ' +
         this.$t('errorsGlobal.toSend');
       const invalidValueMsg = this.$t('errorsGlobal.invalidValue');
-      const enoughTokenBalance = new BigNumber(this.value).lte(
+      const enoughTokenBalance = new BigNumber(this.toValue).lte(
         this.selectedCurrency.balance
       );
-      const enoughCurrency = new BigNumber(this.value)
+      const enoughCurrency = new BigNumber(this.toValue)
         .plus(this.txFeeEth)
         .lte(this.balanceDefault);
       const enoughGas = new BigNumber(this.txFeeEth).lte(this.balanceDefault);
       const validDecimal = this.isValidDecimals;
-      if (new BigNumber(this.value).lt(0)) {
+      if (new BigNumber(this.toValue).lt(0)) {
         return {
           msg: invalidValueMsg,
           valid: false
@@ -319,7 +355,7 @@ export default {
       };
     },
     isValidDecimals() {
-      const decimals = (this.value + '').split('.')[1];
+      const decimals = (this.toValue + '').split('.')[1];
       if (!decimals) return true;
       if (this.isToken) {
         return decimals.length <= this.selectedCurrency.decimals;
@@ -327,7 +363,7 @@ export default {
       return decimals.length <= 18;
     },
     isValidData() {
-      return Misc.validateHexString(this.data);
+      return Misc.validateHexString(this.toData);
     },
     isValidGasLimit() {
       return new BigNumber(this.gasLimit).gte(0);
@@ -340,7 +376,7 @@ export default {
         this.isValidAmount.valid &&
         this.isValidAddress &&
         new BigNumber(this.gasLimit).gte(0) &&
-        Misc.validateHexString(this.data)
+        Misc.validateHexString(this.toData)
       );
     },
     isToken() {
@@ -350,17 +386,19 @@ export default {
     txData() {
       if (this.isToken) {
         return this.getTokenTransferABI(
-          this.value,
+          this.toValue,
           this.selectedCurrency.decimals
         );
       }
-      return Misc.sanitizeHex(this.data);
+      return Misc.sanitizeHex(this.toData);
     },
     txValue() {
       if (this.isToken) {
         return '0x00';
       }
-      return Misc.sanitizeHex(ethUnit.toWei(this.value, 'ether').toString(16));
+      return Misc.sanitizeHex(
+        ethUnit.toWei(this.toValue, 'ether').toString(16)
+      );
     },
     txTo() {
       return this.isToken
@@ -369,9 +407,9 @@ export default {
     },
     multiWatch() {
       return (
-        this.value,
+        this.toValue,
         this.isValidAddress,
-        this.data,
+        this.toData,
         this.selectedCurrency,
         new Date().getTime() / 1000
       );
@@ -391,59 +429,48 @@ export default {
     multiWatch: utils._.debounce(function() {
       if (this.validInputs) this.estimateGas();
     }, 500),
-    tokensWithBalance() {
-      if (Object.keys(this.linkQuery).length > 0) {
-        const { data, to, value, gaslimit, tokensymbol } = this.linkQuery;
-        const foundToken = tokensymbol
-          ? this.tokensWithBalance.find(item => {
-              return item.symbol.toLowerCase() === tokensymbol.toLowerCase();
-            })
-          : undefined;
-
-        if (data && Misc.validateHexString(data)) {
-          this.data = data;
-          if (this.data.length > 0) {
-            this.advancedExpand = true;
-          }
-        } else {
-          this.data = '';
-        }
-
-        this.value = value ? new BigNumber(value).toFixed() : 0;
-        this.hexAddress = to ? to : '';
-        this.address = to ? to : '';
-
-        if (gaslimit) {
-          this.gasLimit = new BigNumber(gaslimit).toString();
-          this.advancedExpand = true;
-        } else {
-          this.gasLimit = '21000';
-        }
-
-        this.selectedCurrency = foundToken ? foundToken : this.selectedCurrency;
-
-        Toast.responseHandler(
-          'Form has been prefilled. Please proceed with caution!',
-          Toast.WARN
-        );
-        this.$store.dispatch('saveQueryVal', {});
-      }
-    },
     network(newVal) {
       if (this.online && newVal.type.name === 'ETH') this.getEthPrice();
     }
   },
   mounted() {
     if (this.online && this.network.type.name === 'ETH') this.getEthPrice();
+    this.prefillForm();
   },
   methods: {
+    prefillForm: utils._.debounce(function() {
+      this.checkPrefilled();
+      if (this.prefilled) {
+        const foundToken = this.tokensymbol
+          ? this.tokensWithBalance.find(item => {
+              return (
+                item.symbol.toLowerCase() === this.tokensymbol.toLowerCase()
+              );
+            })
+          : undefined;
+
+        this.toData = Misc.validateHexString(this.data) ? this.data : '';
+        this.toValue = this.value;
+        this.hexAddress = this.to;
+        this.address = this.to;
+        this.gasLimit = new BigNumber(this.gaslimit).toString();
+
+        this.selectedCurrency = foundToken ? foundToken : this.selectedCurrency;
+        this.advancedExpand = true;
+        Toast.responseHandler(
+          'Form has been prefilled. Please proceed with caution!',
+          Toast.WARN
+        );
+        this.clearPrefilled();
+      }
+    }, 500),
     openSettings() {
       this.$eventHub.$emit('open-settings');
     },
     sendEntireBalance() {
-      if (this.isToken) this.value = this.selectedCurrency.balance;
+      if (this.isToken) this.toValue = this.selectedCurrency.balance;
       else
-        this.value =
+        this.toValue =
           this.balanceDefault > 0
             ? this.balanceDefault.minus(
                 ethUnit.fromWei(

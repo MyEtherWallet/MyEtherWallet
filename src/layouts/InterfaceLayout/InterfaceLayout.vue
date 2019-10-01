@@ -81,6 +81,15 @@
             :tokens="tokens"
             :highest-gas="highestGas"
             :nonce="nonce"
+            :value="value"
+            :data="data"
+            :to="to"
+            :gaslimit="gaslimit"
+            :gas="gas"
+            :tokensymbol="tokensymbol"
+            :prefilled="prefilled"
+            :clear-prefilled="clearPrefilled"
+            :check-prefilled="checkPrefilled"
           />
           <div class="tokens">
             <interface-tokens
@@ -184,7 +193,14 @@ export default {
       walletConstructor: () => {},
       hardwareBrand: '',
       phrase: '',
-      nonce: '0'
+      nonce: '0',
+      value: '0',
+      data: '',
+      to: '',
+      gaslimit: '21000',
+      gas: 0,
+      tokensymbol: '',
+      prefilled: false
     };
   },
   computed: {
@@ -203,7 +219,8 @@ export default {
       'web3',
       'Networks',
       'sidemenuOpen',
-      'wallet'
+      'wallet',
+      'linkQuery'
     ])
   },
   watch: {
@@ -221,6 +238,45 @@ export default {
     this.clearIntervals();
   },
   methods: {
+    checkPrefilled() {
+      if (Object.keys(this.linkQuery).length > 0) {
+        this.prefilled = true;
+        const {
+          value,
+          data,
+          to,
+          gaslimit,
+          gas,
+          tokensymbol,
+          network
+        } = this.linkQuery;
+        this.value = value ? new BigNumber(value).toFixed() : '0';
+        this.data = data ? data : '';
+        this.to = to ? to : '';
+        this.gaslimit = gaslimit ? gaslimit : '21000';
+        this.gas = gas ? new BigNumber(gas) : 0;
+        this.tokensymbol = tokensymbol ? tokensymbol : '';
+        if (network) {
+          const foundNetwork = this.Networks[network.toUpperCase()];
+          // eslint-disable-next-line
+          if (!!foundNetwork) {
+            this.$store.dispatch('switchNetwork', foundNetwork[0]).then(() => {
+              this.$store.dispatch('setWeb3Instance');
+            });
+          }
+        }
+        this.$store.dispatch('saveQueryVal', {});
+      }
+    },
+    clearPrefilled() {
+      this.value = '0';
+      this.data = '';
+      this.to = '';
+      this.gaslimit = '21000';
+      this.gas = 0;
+      this.tokensymbol = '';
+      this.prefilled = false;
+    },
     openAddressQrcode() {
       this.$refs.addressQrcodeModal.$refs.addressQrcode.show();
     },
