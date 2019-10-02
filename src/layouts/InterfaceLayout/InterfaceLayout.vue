@@ -133,6 +133,7 @@ import TokenBalance from '@myetherwallet/eth-token-balance';
 import sortByBalance from '@/helpers/sortByBalance.js';
 import AddressQrcodeModal from '@/components/AddressQrcodeModal';
 import web3Utils from 'web3-utils';
+import { isAddress } from '@/helpers/addressUtils';
 import {
   LedgerWallet,
   TrezorWallet,
@@ -252,11 +253,11 @@ export default {
           tokensymbol,
           network
         } = _self.linkQuery;
-        _self.value = value ? new BigNumber(value).toFixed() : '0';
-        _self.data = data ? data : '';
-        _self.to = to ? to : '';
-        _self.gaslimit = gaslimit ? gaslimit : '21000';
-        _self.gas = gas ? new BigNumber(gas) : 0;
+        _self.value = value && new BigNumber(value).gt(0) ? new BigNumber(value).toFixed() : '0';
+        _self.data = data && web3Utils.isHexStrict(data) ? data : '';
+        _self.to = to && isAddress(to) ? to : '';
+        _self.gaslimit = gaslimit && new BigNumber(gaslimit).gt(0) ? gaslimit : '21000';
+        _self.gas = gas && new BigNumber(gas).gt(0) ? new BigNumber(gas) : 0;
         _self.tokensymbol = tokensymbol ? tokensymbol : '';
         if (network) {
           const foundNetwork = _self.Networks[network.toUpperCase()];
