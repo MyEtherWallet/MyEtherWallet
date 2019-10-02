@@ -391,7 +391,7 @@ export default {
         this.localGasPrice = new BigNumber(this.gas).toFixed();
         this.selectedCoinType = foundToken ? foundToken : this.selectedCoinType;
         Toast.responseHandler(
-          'Form has been prefilled. Please proceed with caution!'
+          'Form has been prefilled. Please proceed with caution!',
           Toast.WARN
         );
         this.clearPrefilled();
