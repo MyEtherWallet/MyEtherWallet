@@ -1,6 +1,7 @@
 ### Devop
 
 - Custom NFTs [#1403](https://github.com/MyEtherWallet/MyEtherWallet/pull/1403)
+
 ### Bug
 
 - Fix check for login to metamask wallet [#1457](https://github.com/MyEtherWallet/MyEtherWallet/pull/1457)
