@@ -66,9 +66,6 @@ describe('AccessMyWalletContainer.vue', () => {
         'another-component': true
       }
     });
-    // wrapper.$options.mounted = [
-    //   () => console.log('this is the successful mock of mounted')
-    // ];
   }
 
   beforeEach(() => {
