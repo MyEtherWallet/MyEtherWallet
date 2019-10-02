@@ -1,0 +1,36 @@
+@import '~@/scss/GlobalVariables';
+
+.tokens-modal-body {
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  justify-content: space-between;
+  //min-height: 325px;
+  padding: 30px 30px;
+
+  input {
+    margin: 5px 0;
+    width: 100%;
+  }
+
+  button {
+    max-width: 300px;
+    width: 100%;
+  }
+
+  div {
+    text-align: center;
+  }
+}
+
+.invalid-address {
+  border: 1px solid $red-1;
+}
+
+.error-message {
+  color: $red-1;
+}
+
+.button-block {
+  margin-top: 30px;
+}
