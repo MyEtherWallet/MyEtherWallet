@@ -37,7 +37,7 @@
                 <div class="animated-background"></div>
               </div>
               <div v-show="hasImage(nft)">
-                <img :src="getImage(nft)" @load="hasLoaded(nft)" />
+                <img :src="getImage(nft)" alt @load="hasLoaded(nft)" />
               </div>
               <p>#{{ nft.token }}</p>
             </div>

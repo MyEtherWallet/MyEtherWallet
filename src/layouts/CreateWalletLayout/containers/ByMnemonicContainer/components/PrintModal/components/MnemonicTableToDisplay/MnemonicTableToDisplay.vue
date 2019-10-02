@@ -5,11 +5,12 @@
         <img
           :src="require(`@/assets/images/short-hand-logo-${buildType}.png`)"
           height="30px"
+          alt
         />
         <span>Mnemonic Phrase</span>
       </div>
       <div class="support">
-        <img src="~@/assets/images/icons/support.svg" />
+        <img alt src="~@/assets/images/icons/support.svg" />
         <p>support@myetherwallet.com</p>
       </div>
     </div>

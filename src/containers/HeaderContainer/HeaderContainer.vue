@@ -57,7 +57,10 @@
           class="vintage-header"
         >
           Missing the vintage MEW?
-          <a rel="noopener noreferrer" href="https://vintage.myetherwallet.com"
+          <a
+            rel="noopener noreferrer"
+            aria-label="Vintage MyEtherWallet"
+            href="https://vintage.myetherwallet.com"
             >Click here to go back!</a
           >
         </div>
@@ -69,6 +72,7 @@
         >
           <div class="header-container">
             <router-link
+              aria-label="Home"
               to="/"
               @click.native="
                 scrollTop();
@@ -88,6 +92,7 @@
                   :src="
                     require(`@/assets/images/short-hand-logo-${buildType}.png`)
                   "
+                  alt
                 />
               </div>
             </router-link>
@@ -97,9 +102,10 @@
                   href="https://ccswap.myetherwallet.com/#/"
                   target="_blank"
                   class="buy-eth"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                 >
                   <img
+                    alt
                     class="buy-eth-icon"
                     src="@/assets/images/icons/buy-eth.svg"
                   />
@@ -157,6 +163,7 @@
                           :src="
                             require(`@/assets/images/flags/${currentFlag}.svg`)
                           "
+                          alt
                           class="show"
                         />
                         <p>{{ currentName }}</p>
