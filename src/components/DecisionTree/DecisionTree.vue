@@ -24,7 +24,7 @@
             <img src="@/assets/images/icons/DecisionTree/question.svg" />
           </div>
           <div class="tree-title">
-            <div v-if="historyStack.length > 0" class="breadcrumb">
+            <div v-if="historyStack.length > 0" class="breadcrumb hidden">
               <p v-for="h in historyStack" :key="h.key">
                 <i class="fa fa-chevron-circle-down" aria-hidden="true"></i>
                 {{ h.title }}
@@ -54,6 +54,18 @@
           <p class="clear">
             <i class="fa fa-times-circle" aria-hidden="true"></i>
           </p>
+        </div>
+
+        <div class="breadcrumb-container">
+          <i class="fa fa-home" aria-hidden="true"></i>&nbsp;Home
+          <span v-for="h in historyStack" v-if="h.breadcrumb" :key="h.key">
+            <i class="fa fa-angle-right" aria-hidden="true"></i>
+            {{ h.breadcrumb }}
+          </span>
+          <span v-if="currentIndex.breadcrumb">
+            <i class="fa fa-angle-right" aria-hidden="true"></i>
+            {{ currentIndex.breadcrumb }}
+          </span>
         </div>
 
         <div ref="mdList" class="md-content">
@@ -112,7 +124,7 @@
 import Multiselect from 'vue-multiselect';
 import MdContainer from './components/MdContainer';
 import CustomerSupport from '@/components/CustomerSupport';
-import qaIndex from '@/data/DecisionTree/MDIndex.js';
+import mdIndex from '@/data/DecisionTree/MDIndex.js';
 import marked from 'marked';
 
 export default {
@@ -130,8 +142,8 @@ export default {
   },
   data() {
     return {
-      index: qaIndex,
-      currentIndex: qaIndex.ROOT,
+      index: mdIndex,
+      currentIndex: mdIndex.ROOT,
       historyStack: [],
       showCustomerSupport: false,
       searchOptions: [],
@@ -148,11 +160,11 @@ export default {
   },
   beforeMount() {
     // Push all searchable items to local variable
-    for (const key in qaIndex) {
-      if (!qaIndex[key].nosearch) {
+    for (const key in mdIndex) {
+      if (!mdIndex[key].nosearch) {
         const index = {
-          value: qaIndex[key],
-          name: qaIndex[key].title + ' ' + qaIndex[key].subtitle
+          value: mdIndex[key],
+          name: mdIndex[key].title + ' ' + mdIndex[key].subtitle
         };
         this.searchOptions.push(index);
       }
@@ -183,7 +195,7 @@ export default {
       }
     },
     top() {
-      this.currentIndex = qaIndex.ROOT;
+      this.currentIndex = mdIndex.ROOT;
       this.historyStack = [];
       this.$refs.mdList.scrollTop = 0;
     },
