@@ -4,7 +4,7 @@
       <back-button @click.native="goBack" />
       <div class="grid-container">
         <div class="kitty-image">
-          <img :src="getImage(nft)" />
+          <img :src="getImage(nft)" alt />
         </div>
         <div class="kitty-text">
           <h3>{{ $t('dapps.sendMy', { value: selectedTitle }) }}</h3>

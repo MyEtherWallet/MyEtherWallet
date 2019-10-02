@@ -35,7 +35,7 @@
               {{ fromAddress.address }}
             </p>
           </div>
-          <div class="right-arrow"><img :src="arrowImage" /></div>
+          <div class="right-arrow"><img :src="arrowImage" alt /></div>
           <!-- Fiat to Crypto-->
           <div v-if="!toFiat" class="to-address">
             <div class="icon">

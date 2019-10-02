@@ -5,7 +5,7 @@
       <div class="block-image">
         <div class="network-type">
           <div class="icon-block">
-            <img :src="network.type.icon" class="icon" />
+            <img :src="network.type.icon" alt class="icon" />
           </div>
         </div>
       </div>

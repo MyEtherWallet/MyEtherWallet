@@ -28,7 +28,7 @@
               </p>
             </li>
             <li>
-              <p class="swap-right-arrow"><img :src="arrowImage" /></p>
+              <p class="swap-right-arrow"><img :src="arrowImage" alt /></p>
             </li>
             <li>
               <p class="icon to-swap-icon">

@@ -1,7 +1,7 @@
 <template>
   <div class="scroll-up-button">
     <div class="button-block" @click="scrollToTop">
-      <img src="~@/assets/images/icons/arrow.png" />
+      <img src="~@/assets/images/icons/arrow.png" alt />
     </div>
   </div>
 </template>
