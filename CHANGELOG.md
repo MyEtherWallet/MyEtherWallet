@@ -1,3 +1,9 @@
+### Release v5.1.5
+
+### Feature
+
+- Add network to query [#1460](https://github.com/MyEtherWallet/MyEtherWallet/pull/1460)
+
 ### Bug
 
 - Fix check for login to metamask wallet [#1457](https://github.com/MyEtherWallet/MyEtherWallet/pull/1457)
