@@ -1,3 +1,7 @@
+### Develop
+
+- Update Ella links [#1454](https://github.com/MyEtherWallet/MyEtherWallet/pull/1454)
+
 ### Release v5.1.4
 
 ### Bug
