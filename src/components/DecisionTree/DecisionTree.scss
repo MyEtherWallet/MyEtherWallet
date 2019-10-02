@@ -1,4 +1,4 @@
-@import "~@/scss/GlobalVariables";
+@import '~@/scss/GlobalVariables';
 
 .show-button {
   opacity: 0;
@@ -111,7 +111,7 @@
       top: auto;
       bottom: auto;
       &::before {
-        content: "";
+        content: '';
         position: absolute;
         height: 1px;
         width: 20px;
@@ -121,7 +121,7 @@
         transform: rotate(45deg);
       }
       &::after {
-        content: "";
+        content: '';
         position: absolute;
         height: 1px;
         width: 20px;
