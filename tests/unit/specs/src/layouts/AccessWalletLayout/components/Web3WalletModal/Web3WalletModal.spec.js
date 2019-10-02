@@ -51,7 +51,8 @@ describe('Web3WalletModal.vue', () => {
         .isVisible()
     ).toBe(true);
     wrapper.find('a.close-button').trigger('click');
-    expect(wrapper.vm.$data.refreshPage).toBe(true);
+    const { refreshPage } = wrapper.vm.$data;
+    expect(refreshPage).toBe(true);
     expect(
       wrapper
         .findAll('.close-button')
@@ -60,7 +61,7 @@ describe('Web3WalletModal.vue', () => {
     ).toBe(false);
   });
 
-  xit('should render correct unlockWeb3Wallet data', () => {
+  it('should render correct unlockWeb3Wallet data', () => {
     wrapper.setData({ web3WalletExists: true });
     expect(
       wrapper
@@ -89,8 +90,8 @@ describe('Web3WalletModal.vue', () => {
     ).toEqual(true);
   });
 
-  describe('Web3WalletModal.vue Methods', () => {
-    xit('should render correct getWeb3Wallet methods', () => {
+  describe('MetamaskModal.vue Methods', () => {
+    it('should render correct getWeb3Wallet methods', () => {
       window.web3 = state.newWeb3;
       wrapper.vm.getWeb3Wallet();
     });
