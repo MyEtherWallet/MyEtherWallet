@@ -61,7 +61,7 @@
     "@ethereum-alarm-clock/lib": "0.3.5",
     "@keepkey/keepkey.js": "1.2.3",
     "@ledgerhq/hw-app-eth": "4.70.0",
-    "@ledgerhq/hw-transport-u2f": "4.70.0",
+    "@ledgerhq/hw-transport-u2f": "4.70.2",
     "@ledgerhq/hw-transport-webusb": "4.70.0",
     "@makerdao/dai": "0.18.5",
     "@myetherwallet/eth-token-balance": "0.1.4",
