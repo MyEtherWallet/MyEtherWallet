@@ -35,7 +35,7 @@ import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/Interf
 import SmallBackButton from '@/layouts/InterfaceLayout/components/SmallBackButton';
 import DropDownAddressSelector from '@/components/DropDownAddressSelector';
 import StandardButton from '@/components/Buttons/StandardButton';
-import placeholderImage from '@/assets/images/logo-small.png';
+import placeholderImage from '@/assets/images/icons/defaultToken.png';
 
 export default {
   components: {

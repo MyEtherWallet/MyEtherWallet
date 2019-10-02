@@ -176,15 +176,6 @@ export default {
           .catch(() => {
             resolve(false);
           });
-        // tokenContract.methods
-        //   .tokenOfOwnerByIndex(this.activeAddress, 0)
-        //   .call()
-        //   .then(() => {
-        //     resolve(true);
-        //   })
-        //   .catch(() => {
-        //     resolve(false);
-        //   });
       });
     }
   }

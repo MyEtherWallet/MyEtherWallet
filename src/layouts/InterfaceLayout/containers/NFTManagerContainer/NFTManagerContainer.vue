@@ -116,7 +116,7 @@ import { mapState } from 'vuex';
 import hexDecoder from './binaryDecoderNFT';
 import { nftABI } from './abis';
 import StandardButton from '@/components/Buttons/StandardButton';
-import placeholderImage from '@/assets/images/logo-small.png';
+import placeholderImage from '@/assets/images/icons/defaultToken.png';
 
 const URL_BASE = 'https://nft.mewapi.io/nft';
 
