@@ -1,13 +1,10 @@
 import { shallowMount } from '@vue/test-utils';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle/InterfaceContainerTitle.vue';
-
 import { Tooling } from '@@/helpers';
-
-const title = 'InterfaceContainerTitle title';
 
 describe('InterfaceContainerTitle.vue', () => {
   let localVue, i18n, wrapper, store;
-
+  const title = 'InterfaceContainer';
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
@@ -25,11 +22,8 @@ describe('InterfaceContainerTitle.vue', () => {
     });
   });
 
-  xit('issues:2019-07-19 should render correct title', () => {
-    expect(
-      wrapper.vm.$el.querySelector('.content-title h2').textContent.trim()
-    ).toEqual(title);
+  xit('should render correct title', () => {
+    const hTitle = wrapper.vm.$el.querySelector('.content-title h2');
+    expect(hTitle.textContent.trim()).toEqual(title);
   });
-
-  describe('InterfaceContainerTitle.vue Methods', () => {});
 });

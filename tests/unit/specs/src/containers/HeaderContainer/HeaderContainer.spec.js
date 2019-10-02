@@ -181,10 +181,10 @@ describe('HeaderContainer.vue', () => {
     ).toBeGreaterThan(-1);
   });
 
-  xit('[Failing 2019-07-16] should render correct isHomePage data', () => {
-    expect(wrapper.findAll('.b-nav-item').length).toBe(3);
+  it('should render correct isHomePage data', () => {
+    expect(wrapper.findAll('.b-nav-item').length).toBe(4);
     wrapper.setData({ isHomePage: false });
-    expect(wrapper.findAll('.b-nav-item').length).toBe(1);
+    expect(wrapper.findAll('.b-nav-item').length).toBe(2);
   });
 
   it('should render correct showGetFreeWallet data', () => {
