@@ -1,7 +1,7 @@
 import nodeList from '@/networks';
 import url from 'url';
 import Web3 from 'web3';
-const network = nodeList['ETH'][3];
+const network = nodeList['ETH'][0];
 const hostUrl = url.parse(network.url);
 
 const newWeb3 = new Web3(
