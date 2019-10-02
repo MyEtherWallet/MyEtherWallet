@@ -26,17 +26,17 @@
             target="_blank"
             rel="noopener noreferrer"
           >
-            <img src="~@/assets/images/icons/appstore.svg" height="35" />
+            <img alt src="~@/assets/images/icons/appstore.svg" height="35" />
           </a>
           <div v-else @click="openIpadModal">
-            <img src="~@/assets/images/icons/appstore.svg" height="35" />
+            <img alt src="~@/assets/images/icons/appstore.svg" height="35" />
           </div>
           <a
             href="http://play.google.com/store/apps/details?id=com.myetherwallet.mewconnect"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <img src="~@/assets/images/icons/google-play.svg" height="35" />
+            <img alt src="~@/assets/images/icons/google-play.svg" height="35" />
           </a>
         </div>
         <p class="download-now">{{ $t('accessWallet.mewConnectDesc2') }}</p>

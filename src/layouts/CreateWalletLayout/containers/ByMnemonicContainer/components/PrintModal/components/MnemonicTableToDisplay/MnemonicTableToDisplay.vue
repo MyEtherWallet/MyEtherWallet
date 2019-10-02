@@ -2,11 +2,11 @@
   <div class="mnemonic-table-container">
     <div class="header">
       <div class="block-title">
-        <img src="~@/assets/images/short-hand-logo.png" height="30px" />
+        <img alt src="~@/assets/images/short-hand-logo.png" height="30px" />
         <span>Mnemonic Phrase</span>
       </div>
       <div class="support">
-        <img src="~@/assets/images/icons/support.svg" />
+        <img alt src="~@/assets/images/icons/support.svg" />
         <p>support@myetherwallet.com</p>
       </div>
     </div>

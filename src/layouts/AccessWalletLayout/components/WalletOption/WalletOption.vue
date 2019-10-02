@@ -13,7 +13,7 @@
       ]"
     >
       <div class="img-title-container">
-        <img :src="hoverIcon ? hoverIcon : regularIcon" class="icon" />
+        <img :src="hoverIcon ? hoverIcon : regularIcon" class="icon" alt />
         <div class="title-link-container">
           <span>{{ text }}</span>
           <a
