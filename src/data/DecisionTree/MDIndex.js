@@ -71,7 +71,7 @@ export default {
   Cant_access_wallet: {
     title: "I can't access my wallet",
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'access wallet',
     sub: [
       'Access_hardware_wallet',
       'Access_software_wallet',
@@ -88,28 +88,28 @@ export default {
   Access_hardware_wallet: {
     title: "I'm using a hardware wallet",
     subtitle: '(Ledger, Trezor, etc.)',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'hardware',
     sub: ['Access_Ledger', 'Access_Trezor', 'Access_other']
   },
 
   Access_Ledger: {
     title: "I'm using a Ledger",
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'ledger',
     md: _Access_Ledger
   },
 
   Access_Trezor: {
     title: "I'm using a Trezor",
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'trezor',
     md: _Access_Trezor
   },
 
   Access_other: {
     title: "I'm using something else",
     subtitle: '(Bitbox, Secalot, Keepkey, etc.)',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'other',
     md: _Access_other
   },
 
@@ -120,28 +120,28 @@ export default {
   Access_software_wallet: {
     title: "I'm using a software wallet",
     subtitle: '(Mnemonic phrase, Keystore file, Private key..)',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'software',
     sub: ['Access_phrase', 'Access_file', 'Access_key']
   },
 
   Access_phrase: {
     title: "I'm using a Mnemonic Phrase",
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'mnemonic phrase',
     md: _Access_phrase
   },
 
   Access_file: {
     title: "I'm using a Keystore File",
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'keystore file',
     md: _Access_file
   },
 
   Access_key: {
     title: "I'm using a Private Key",
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'private key',
     md: _Access_key
   },
 
@@ -152,21 +152,21 @@ export default {
   Using_MEWconnect_access: {
     title: "I'm using MEWconnect",
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'mewconnect',
     sub: ['Cant_scan_access', 'Forgot_pass_access']
   },
 
   Cant_scan_access: {
     title: "I can't scan the QR code with my phone camera",
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'scan qr code',
     md: _Cant_scan_access
   },
 
   Forgot_pass_access: {
     title: 'I forgot my password',
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'forgot password',
     md: _Forgot_pass_access
   },
 
@@ -177,7 +177,7 @@ export default {
   Using_CX_access: {
     title: "I'm using MEW CX",
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'mew cx',
     md: _Using_CX_access
   },
 
@@ -188,7 +188,7 @@ export default {
   Using_MM_access: {
     title: "I'm using MetaMask",
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'metamask',
     md: _Using_MM_access
   },
 
@@ -201,7 +201,7 @@ export default {
   Cant_find_address: {
     title: "I can't find my wallet address",
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'find address',
     sub: [
       'Find_hardware',
       'Find_software',
@@ -218,28 +218,28 @@ export default {
   Find_hardware: {
     title: "I'm using a hardware wallet",
     subtitle: '(Ledger, Trezor, etc.)',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'hardware',
     sub: ['Find_Ledger', 'Find_Trezor', 'Find_other']
   },
 
   Find_Ledger: {
     title: "I'm using a Ledger",
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'ledger',
     md: _Find_Ledger
   },
 
   Find_Trezor: {
     title: "I'm using a Trezor",
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'trezor',
     md: _Find_Trezor
   },
 
   Find_other: {
     title: "I'm using something else",
     subtitle: '(Bitbox, Secalot, Keepkey, etc.)',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'other',
     md: _Find_other
   },
 
@@ -250,42 +250,42 @@ export default {
   Find_software: {
     title: "I'm using a software wallet",
     subtitle: '(Mnemonic phrase, Keystore file, Private key..)',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'software',
     sub: ['Find_phrase', 'Find_file', 'Find_key']
   },
 
   Find_phrase: {
     title: "I'm accessing with my Mnemonic Phrase",
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'mnemonic phrase',
     sub: ['created_on_MEW', 'created_other']
   },
 
   created_on_MEW: {
     title: 'I created the phrase on MEW',
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'created on mew',
     md: _created_on_MEW
   },
 
   created_other: {
     title: 'I created the phrase somewhere else',
     subtitle: '(MEWconnect, Another wallet, etc.)',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'created elsewhere',
     md: _created_other
   },
 
   Find_file: {
     title: "I'm accessing with my Keystore File",
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'keystore file',
     md: _Find_file
   },
 
   Find_key: {
     title: "I'm accessing with my Private Key",
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'private key',
     md: _Find_key
   },
 
@@ -296,7 +296,7 @@ export default {
   Find_MEWconnect: {
     title: "I'm using MEWconnect",
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'mewconnect',
     md: _Find_MEWconnect
   },
 
@@ -307,7 +307,7 @@ export default {
   Find_CX: {
     title: "I'm using MEW CX",
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'mew cx',
     md: _Find_CX
   },
 
@@ -318,7 +318,7 @@ export default {
   Find_MM: {
     title: "I'm using MetaMask",
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'metamask',
     md: _Find_MM
   },
 
@@ -331,7 +331,7 @@ export default {
   Funds_missing: {
     title: 'My funds are missing',
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'missing funds',
     sub: ['Funds_from_MEW', 'Funds_to_MEW', 'Funds_gone', 'Funds_other']
   },
 
@@ -342,21 +342,21 @@ export default {
   Funds_from_MEW: {
     title: 'I sent funds from MEW to another wallet',
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'from mew',
     sub: ['Saved_hash', 'No_hash']
   },
 
   Saved_hash: {
     title: 'I saved my transaction hash',
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'saved tx hash',
     md: _Saved_hash
   },
 
   No_hash: {
     title: 'I did not save my transaction hash',
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'no tx hash',
     md: _No_hash
   },
 
@@ -367,28 +367,28 @@ export default {
   Funds_to_MEW: {
     title: "I'm expecting to receive funds from another wallet",
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'to mew',
     sub: ['Given_hash', 'Notgiven_hash', 'Tokens_custom']
   },
 
   Given_hash: {
     title: "I've been given a transaction hash",
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'given tx hash',
     md: _Given_hash
   },
 
   Notgiven_hash: {
     title: 'I have not been given a transaction hash',
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'no tx hash',
     md: _Notgiven_hash
   },
 
   Tokens_custom: {
     title: 'My tokens show in my wallet on EthVM, but I cannot see them on MEW',
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'custom tokens',
     md: _Tokens_custom
   },
 
@@ -399,21 +399,21 @@ export default {
   Funds_gone: {
     title: "I did not send funds from MEW, but they're gone",
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'did not send',
     sub: ['Recognize_address', 'Different_address']
   },
 
   Recognize_address: {
     title: 'When I unlock my wallet, I recognize the public address',
     subtitle: '(0x...)',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'recognize address',
     md: _Recognize_address
   },
 
   Different_address: {
     title: 'When I unlock my wallet, I see an unfamiliar address',
     subtitle: '(0x...)',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'different address',
     md: _Different_address
   },
 
@@ -424,7 +424,7 @@ export default {
   Funds_other: {
     title: "I'm expecting non-Ethereum funds",
     subtitle: '(ETC, CLO, EXP, MIX, PIRL, TOMO, etc.)',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'other funds',
     md: _Funds_network
   },
 
@@ -437,28 +437,28 @@ export default {
   Cant_send_tx: {
     title: "I can't send a transaction",
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'cant send tx',
     sub: ['tx_bug', 'tx_error', 'tx_other']
   },
 
   tx_bug: {
     title: 'There is a bug with the interface preventing me',
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'bug',
     md: _tx_bug
   },
 
   tx_error: {
     title: 'I see an error',
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'error',
     md: _tx_error
   },
 
   tx_other: {
     title: 'My reason is not listed',
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'other',
     md: _tx_other
   },
 
@@ -471,70 +471,70 @@ export default {
   Making_swap: {
     title: "I'm trying to make a swap",
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'swap',
     sub: ['fiat_to_crypto', 'crypto_to_fiat', 'swap_done', 'swap_fail']
   },
 
   fiat_to_crypto: {
     title: "I'm swapping fiat for crypto",
     subtitle: '(USD$ -> ETH/BTC, etc.)',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'buying crypto',
     sub: ['Buying_ETH']
   },
 
   crypto_to_fiat: {
     title: "I'm swapping crypto for fiat",
     subtitle: '(ETH/BTC -> USD$, etc.)',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'selling crypto',
     md: _bity
   },
 
   swap_done: {
     title: "The swap went through, but I don't see my funds",
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'swap complete',
     sub: ['kyber', 'bity', 'changelly']
   },
 
   kyber: {
     title: "I'm using Kyber Network",
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'kyber',
     md: _kyber
   },
 
   bity: {
     title: "I'm using Bity",
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'bity',
     md: _bity
   },
 
   changelly: {
     title: "I'm using Changelly",
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'changelly',
     md: _changelly
   },
 
   swap_fail: {
     title: 'I could not get the swap to go through',
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'swap failed',
     sub: ['swap_bug', 'swap_error']
   },
 
   swap_bug: {
     title: 'There is a bug with the interface preventing me',
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'bug',
     md: _tx_bug
   },
 
   swap_error: {
     title: 'I get an error',
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'error',
     md: _swap_error
   },
 
@@ -547,21 +547,21 @@ export default {
   Using_dapp: {
     title: "I'm trying to use a DApp",
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'using dapp',
     sub: ['dapp_MakerDAO', 'dapp_other']
   },
 
   dapp_MakerDAO: {
     title: 'MakerDAO',
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'makerdao',
     md: _dapp_MakerDAO
   },
 
   dapp_other: {
     title: 'Other',
     subtitle: '(ENS, SafeSend, etc.)',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'other',
     md: _dapp_other
   },
 
@@ -574,21 +574,21 @@ export default {
   Buying_ETH: {
     title: "I'm trying to buy ETH",
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'buying eth',
     sub: ['buy_bug', 'buy_fail']
   },
 
   buy_bug: {
     title: 'There is a bug preventing me',
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'bug',
     md: _buy_bug
   },
 
   buy_fail: {
     title: 'I completed the process, but do not see my ETH',
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'missing funds',
     md: _simplex
   },
 
@@ -601,21 +601,21 @@ export default {
   Other: {
     title: "It's an issue that isn't listed",
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'other',
     sub: ['suggestions', 'not_listed']
   },
 
   suggestions: {
     title: 'I have suggestions for improvement',
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'suggestions',
     md: _suggestions
   },
 
   not_listed: {
     title: "My issue wasn't listed",
     subtitle: '',
-    breadcrumb: 'Access wallet',
+    breadcrumb: 'not listed',
     md: _not_listed
   }
 };
