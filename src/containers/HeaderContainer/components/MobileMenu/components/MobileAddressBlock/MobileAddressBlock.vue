@@ -16,13 +16,13 @@
         <p class="the-address">{{ account.address }}</p>
         <div class="buttons-container">
           <button>
-            <img src="~@/assets/images/icons/printer-white.svg" />
+            <img alt src="~@/assets/images/icons/printer-white.svg" />
           </button>
           <button>
-            <img src="~@/assets/images/icons/copy.svg" />
+            <img alt src="~@/assets/images/icons/copy.svg" />
           </button>
           <button>
-            <img src="~@/assets/images/icons/change.svg" />
+            <img alt src="~@/assets/images/icons/change.svg" />
           </button>
         </div>
       </div>

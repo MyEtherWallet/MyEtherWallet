@@ -11,6 +11,7 @@ describe('ManageENS.vue', () => {
   const labelHash = 'labelHash';
   const owner = 'owner';
   const resolverAddress = 'resolverAddress';
+  const deedOwner = 'deedOwner';
   const secretPhrase = 'secretPhrase';
   const contractInitiated = true;
   const step = 10;
@@ -67,12 +68,21 @@ describe('ManageENS.vue', () => {
       resolverAddress
     );
   });
+
+  it('should render correct deedOwner data', () => {
+    wrapper.setData({ deedOwner });
+    expect(wrapper.find('router-view').attributes('deed-owner')).toEqual(
+      deedOwner
+    );
+  });
+
   it('should render correct secretPhrase data', () => {
     wrapper.setData({ secretPhrase });
     expect(wrapper.find('router-view').attributes('secret-phrase')).toEqual(
       secretPhrase
     );
   });
+
   it('should render correct contractInitiated data', () => {
     wrapper.setData({ contractInitiated });
     expect(

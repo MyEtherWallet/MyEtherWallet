@@ -2,7 +2,7 @@
   <div>
     <div class="ad-image-container">
       <a :href="useUrl(url)" rel="noopener noreferrer" target="_blank">
-        <img :src="useImage(image)" class="icon" />
+        <img :src="useImage(image)" alt class="icon" />
       </a>
     </div>
   </div>

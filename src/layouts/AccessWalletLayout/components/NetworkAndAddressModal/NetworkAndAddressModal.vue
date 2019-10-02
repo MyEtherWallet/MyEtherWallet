@@ -39,6 +39,7 @@
                   <img
                     v-if="Networks[key][0].type.icon"
                     :src="Networks[key][0].type.icon"
+                    alt
                   />
                   <div v-else class="no-icon">
                     <p>No</p>

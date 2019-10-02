@@ -18,7 +18,7 @@ describe('AccessWalletButton.vue', () => {
   const desc = 'AccessWalletButton desc';
   const recommend = 'AccessWalletButton recommend';
   const tooltip = 'AccessWalletButton tooltip';
-  const clickHandler = sinon.stub();
+  const func = sinon.stub();
 
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
@@ -42,7 +42,7 @@ describe('AccessWalletButton.vue', () => {
         desc,
         recommend,
         tooltip,
-        func: clickHandler
+        func
       }
     });
   });
@@ -72,7 +72,7 @@ describe('AccessWalletButton.vue', () => {
     it('should call propsData "func" when click button', () => {
       const btnBlock = wrapper.find('.button-block');
       btnBlock.trigger('click');
-      expect(clickHandler.called).toBe(true);
+      expect(func.called).toBe(true);
     });
   });
 });

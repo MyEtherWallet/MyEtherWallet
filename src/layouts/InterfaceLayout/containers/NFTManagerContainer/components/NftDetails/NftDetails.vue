@@ -4,7 +4,7 @@
       <back-button @click.native="goBack" />
       <div class="grid-container">
         <div class="kitty-image">
-          <img :src="nft.image" />
+          <img :src="getImage(nft)" alt />
         </div>
         <div class="kitty-text">
           <h3>{{ $t('dapps.sendMy', { value: selectedTitle }) }}</h3>
@@ -35,6 +35,7 @@ import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/Interf
 import SmallBackButton from '@/layouts/InterfaceLayout/components/SmallBackButton';
 import DropDownAddressSelector from '@/components/DropDownAddressSelector';
 import StandardButton from '@/components/Buttons/StandardButton';
+import placeholderImage from '@/assets/images/icons/defaultToken.png';
 
 export default {
   components: {
@@ -113,6 +114,12 @@ export default {
     ]);
   },
   methods: {
+    getImage(nft) {
+      if (nft.customNft) {
+        return placeholderImage;
+      }
+      return nft.image;
+    },
     prepareTransfer(toAddress) {
       this.toAddress = toAddress;
       this.ERC721tokenContract.options.address = this.nft.contract;
@@ -169,5 +176,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'NftDetails.scss';
+@import 'NftDetails';
 </style>
