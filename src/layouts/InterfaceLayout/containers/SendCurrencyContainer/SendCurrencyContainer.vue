@@ -460,7 +460,7 @@ export default {
         this.selectedCurrency = foundToken ? foundToken : this.selectedCurrency;
         this.advancedExpand = true;
         Toast.responseHandler(
-          'Form has been prefilled. Please proceed with caution!'
+          'Form has been prefilled. Please proceed with caution!',
           Toast.WARN
         );
         this.clearPrefilled();
