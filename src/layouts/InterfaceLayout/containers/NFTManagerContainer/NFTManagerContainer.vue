@@ -456,7 +456,7 @@ export default {
           return this.nftData[contract].details;
         })
         .then(list => {
-          if(!list) return;
+          if (!list) return;
           if (list.length > 0) {
             const retrieveCount =
               list.length > this.countPerPage ? this.countPerPage : list.length;
@@ -512,7 +512,7 @@ export default {
           });
         })
         .then(list => {
-          if(!list) return;
+          if (!list) return;
           this.nftData[contract].details = list;
           this.$set(this.nftData[contract], 'details', list);
           if (list.length > 0) {
