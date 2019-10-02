@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils';
 import LinkBlock from '@/layouts/HelpCenterLayout/components/LinkBlock/LinkBlock.vue';
-
 import { Tooling } from '@@/helpers';
 
 const content = {
@@ -50,36 +49,31 @@ describe('LinkBlock.vue', () => {
       store,
       attachToDocument: true,
       propsData: {
-        content: content
+        content
       }
     });
   });
 
   it('should render correct contents', () => {
-    expect(
-      wrapper.vm.$el.querySelector('.block-icon img').getAttribute('src')
-    ).toEqual(content.icon);
-    expect(
-      wrapper.vm.$el.querySelector('.description').textContent.trim()
-    ).toEqual(content.description);
-    expect(
-      wrapper.vm.$el.querySelector('.block-title').textContent.trim()
-    ).toEqual(content.title);
-    expect(
-      wrapper.vm.$el.querySelector('.email a').href.replace('mailto:', '')
-    ).toEqual(content.email);
-
+    const { title, description, email, icon, social } = content;
+    const imgIcon = wrapper.vm.$el.querySelector('.block-icon img');
+    const pTitle = wrapper.vm.$el.querySelector('.block-title');
+    const pDescription = wrapper.vm.$el.querySelector('.description');
+    const aEmail = wrapper.vm.$el.querySelector('.email a');
     const socialElements = wrapper.vm.$el.querySelectorAll('.social div');
+
+    expect(imgIcon.getAttribute('src')).toEqual(icon);
+    expect(pDescription.textContent.trim()).toEqual(description);
+    expect(pTitle.textContent.trim()).toEqual(title);
+    expect(aEmail.href.replace('mailto:', '')).toEqual(email);
 
     for (const [i, socialElement] of socialElements.entries()) {
       expect(socialElement.querySelector('a').href).toEqual(
-        content.social[i].link + '/'
+        `${social[i].link}/`
       );
       expect(socialElement.querySelector('img').getAttribute('src')).toEqual(
-        content.social[i].icon
+        social[i].icon
       );
     }
   });
-
-  describe('LinkBlock.vue Methods', () => {});
 });
