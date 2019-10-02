@@ -69,7 +69,7 @@
                 rel="noopener noreferrer"
               >
                 <p :data-eth="ethDonationAddress" class="crypto-link">
-                  <img src="~@/assets/images/icons/eth.svg" alt />
+                  <img src="@/assets/images/currency/eth.svg" alt />
                   &nbsp;Ethereum Donation
                 </p>
               </a>
@@ -83,8 +83,8 @@
                   class="crypto-link no-padding"
                   data-btc="1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9"
                 >
-                  <img src="~@/assets/images/icons/btc.svg" alt /> &nbsp;Bitcoin
-                  Donation
+                  <img src="@/assets/images/currency/btc.svg" alt />
+                  &nbsp;Bitcoin Donation
                 </p>
               </a>
             </div>
