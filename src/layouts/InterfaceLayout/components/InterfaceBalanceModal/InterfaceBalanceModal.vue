@@ -29,6 +29,7 @@
               :src="
                 require(`@/assets/images/currency/${ev.name.toLowerCase()}.svg`)
               "
+              alt
             />
             <p>{{ ev.name }}</p>
             <p class="ev-value">{{ ev.value }}</p>
