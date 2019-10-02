@@ -5,7 +5,7 @@
       <div class="top-block">
         <div class="block-title">{{ $t('common.balance') }}</div>
         <button class="show-balance-button" @click="showBalanceModal">
-          <img src="~@/assets/images/icons/more.svg" />
+          <img src="~@/assets/images/icons/more.svg" alt />
         </button>
       </div>
       <div class="bottom-block">

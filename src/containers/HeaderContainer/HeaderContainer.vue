@@ -51,7 +51,10 @@
       >
         <div v-if="$route.fullPath === '/'" class="vintage-header">
           Missing the vintage MEW?
-          <a rel="noopener noreferrer" href="https://vintage.myetherwallet.com"
+          <a
+            rel="noopener noreferrer"
+            aria-label="Vintage MyEtherWallet"
+            href="https://vintage.myetherwallet.com"
             >Click here to go back!</a
           >
         </div>
@@ -63,6 +66,7 @@
         >
           <div class="header-container">
             <router-link
+              aria-label="Home"
               to="/"
               @click.native="
                 scrollTop();
@@ -72,6 +76,7 @@
               <div class="top-logo">
                 <img
                   :class="!isPageOnTop && !isMobileMenuOpen ? 'logo-small' : ''"
+                  alt
                   class="logo-large"
                   src="~@/assets/images/short-hand-logo.png"
                 />
@@ -83,8 +88,10 @@
                   href="https://ccswap.myetherwallet.com/#/"
                   target="_blank"
                   class="buy-eth"
+                  rel="noopener noreferrer"
                 >
                   <img
+                    alt
                     class="buy-eth-icon"
                     src="@/assets/images/icons/buy-eth.svg"
                   />
@@ -137,6 +144,7 @@
                           :src="
                             require(`@/assets/images/flags/${currentFlag}.svg`)
                           "
+                          alt
                           class="show"
                         />
                         <p>{{ currentName }}</p>

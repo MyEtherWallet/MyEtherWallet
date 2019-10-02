@@ -8,6 +8,7 @@
             <div class="title-container">
               <h4>{{ $t('interface.tokens') }}</h4>
               <img
+                alt
                 src="~@/assets/images/icons/change.svg"
                 @click="fetchTokens"
               />
