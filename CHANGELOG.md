@@ -1,6 +1,8 @@
 ### Develop
 
+- Fix browser audit issues [#1428](https://github.com/MyEtherWallet/MyEtherWallet/pull/1428)
 - Update greenkeeper packages [#1453](https://github.com/MyEtherWallet/MyEtherWallet/pull/1453)
+- Update Ella links [#1454](https://github.com/MyEtherWallet/MyEtherWallet/pull/1454)
 
 ### Release v5.1.4
 
@@ -9,6 +11,7 @@
 - Fix generate mnemonic [#1439](https://github.com/MyEtherWallet/MyEtherWallet/pull/1439)
 - Gas price not saving properly [#1434](https://github.com/MyEtherWallet/MyEtherWallet/pull/1434)
 - Fix u2f timeout for bitbox on windows [#1423](https://github.com/MyEtherWallet/MyEtherWallet/pull/1423)
+- Fix check for login to metamask wallet [#1457](https://github.com/MyEtherWallet/MyEtherWallet/pull/1457)
 
 ### Release v5.1.3
 

@@ -6,7 +6,7 @@
 
         <div class="extensions-container">
           <div v-for="ext in extensions" :key="ext.key">
-            <div class="logo"><img :src="ext.image" /></div>
+            <div class="logo"><img :src="ext.image" alt /></div>
             <div class="text">
               <p class="title">{{ ext.title }}</p>
               <p class="description">{{ ext.description }}</p>

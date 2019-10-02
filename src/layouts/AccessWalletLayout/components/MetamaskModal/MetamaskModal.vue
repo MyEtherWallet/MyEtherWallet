@@ -21,18 +21,23 @@
             rel="noopener noreferrer"
             target="_blank"
           >
-            <img :src="browser.logo" />
+            <img :src="browser.logo" alt />
           </a>
         </div>
       </div>
       <div v-else-if="web3WalletExists">
         <div class="modal-multi-icons">
           <img
+            alt
             class="icon metamask"
             src="~@/assets/images/icons/button-metamask-fox.png"
           />
-          <img class="icon" src="~@/assets/images/icons/clip.svg" />
-          <img class="icon logo-small" src="~@/assets/images/logo-small.png" />
+          <img alt class="icon" src="~@/assets/images/icons/clip.svg" />
+          <img
+            alt
+            class="icon logo-small"
+            src="~@/assets/images/logo-small.png"
+          />
         </div>
         <div class="d-block content-container text-center">
           <h4 v-show="!unlockWeb3Wallet">
@@ -74,6 +79,7 @@
       <div v-else>
         <div class="modal-multi-icons">
           <img
+            alt
             class="icon metamask"
             src="~@/assets/images/icons/button-metamask-fox.png"
           />
@@ -185,6 +191,11 @@ export default {
           await window.ethereum.enable();
         } catch (e) {
           Toast.responseHandler(e, Toast.WARN);
+
+          if (e.stack.includes('Error: User denied account authorization')) {
+            return (this.unlockWeb3Wallet = true);
+          }
+
           this.web3WalletExists = false;
           return;
         }
@@ -212,12 +223,18 @@ export default {
             });
         })
         .catch(e => {
-          Toast.responseHandler(e, Toast.ERROR);
+          if (e.stack.includes('Error: User denied account authorization')) {
+            return (this.unlockWeb3Wallet = true);
+          }
+
           return (this.web3WalletExists = false);
         });
     },
     checkWeb3() {
-      return window.ethereum !== 'undefined' || window.web3 !== 'undefined';
+      return (
+        typeof window.ethereum !== 'undefined' ||
+        typeof window.web3 !== 'undefined'
+      );
     }
   }
 };

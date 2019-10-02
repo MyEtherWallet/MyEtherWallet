@@ -2,7 +2,7 @@
   <div class="user-reminder-button" popup="Security">
     <div class="popup-box">{{ $t('header.security') }}</div>
     <div class="button-block">
-      <img src="~@/assets/images/icons/acknowledge.png" />
+      <img src="~@/assets/images/icons/acknowledge.png" alt />
     </div>
   </div>
 </template>
