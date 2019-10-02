@@ -6,10 +6,10 @@ import * as Integrations from '@sentry/integrations';
 import { getApp } from '@/builds/configs';
 import BootstrapVue from 'bootstrap-vue';
 
-import '@/assets/font-awesome.css';
-import '@/assets/google-fonts.css';
-import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap-vue/dist/bootstrap-vue.css';
+import(/* webpackPreload: true */ '@/assets/font-awesome.css');
+import(/* webpackPreload: true */ '@/assets/google-fonts.css');
+import(/* webpackPreload: true */ 'bootstrap/dist/css/bootstrap.css');
+import(/* webpackPreload: true */ 'bootstrap-vue/dist/bootstrap-vue.css');
 
 import Vue from 'vue';
 import Router from 'vue-router';

@@ -2,6 +2,11 @@
 
 - Add network to query [#1460](https://github.com/MyEtherWallet/MyEtherWallet/pull/1460)
 
+### Develop
+
+- Update Ella links [#1454](https://github.com/MyEtherWallet/MyEtherWallet/pull/1454)
+
+
 ### Release v5.1.4
 
 ### Bug
@@ -10,6 +15,10 @@
 - Gas price not saving properly [#1434](https://github.com/MyEtherWallet/MyEtherWallet/pull/1434)
 - Fix u2f timeout for bitbox on windows [#1423](https://github.com/MyEtherWallet/MyEtherWallet/pull/1423)
 - Fix check for login to metamask wallet [#1457](https://github.com/MyEtherWallet/MyEtherWallet/pull/1457)
+
+### Devop
+
+- Fix browser audit issues [#1428](https://github.com/MyEtherWallet/MyEtherWallet/pull/1428)
 
 ### Release v5.1.3
 

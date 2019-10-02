@@ -45,7 +45,7 @@
                 <span
                   :class="['currency-symbol', 'cc', pair.from, 'cc-icon']"
                 ></span>
-                <img src="@/assets/images/icons/swap.svg" />
+                <img src="@/assets/images/icons/swap.svg" alt />
                 <span
                   :class="['currency-symbol', 'cc', pair.to, 'cc-icon']"
                 ></span>
