@@ -8,8 +8,9 @@
 
 - Fix check for login to metamask wallet [#1457](https://github.com/MyEtherWallet/MyEtherWallet/pull/1457)
 
-### Develop
+### Devop
 
+- Custom NFTs [#1403](https://github.com/MyEtherWallet/MyEtherWallet/pull/1403)
 - Fix browser audit issues [#1428](https://github.com/MyEtherWallet/MyEtherWallet/pull/1428)
 - Update greenkeeper packages [#1453](https://github.com/MyEtherWallet/MyEtherWallet/pull/1453)
 - Update Ella links [#1454](https://github.com/MyEtherWallet/MyEtherWallet/pull/1454)
