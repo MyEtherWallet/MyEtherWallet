@@ -14,6 +14,7 @@
 - Fix browser audit issues [#1428](https://github.com/MyEtherWallet/MyEtherWallet/pull/1428)
 - Update greenkeeper packages [#1453](https://github.com/MyEtherWallet/MyEtherWallet/pull/1453)
 - Update Ella links [#1454](https://github.com/MyEtherWallet/MyEtherWallet/pull/1454)
+- Font fix [#1465](https://github.com/MyEtherWallet/MyEtherWallet/pull/1465)
 
 ### Release v5.1.4
 
