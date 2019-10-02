@@ -2,7 +2,7 @@ noscript {
   align-items: center;
   display: flex;
   font-family: Tahoma, Geneva, Verdana, sans-serif;
-  font-display: optional;
+  font-display: block;
   justify-content: center;
   padding-top: 30px;
   width: 100%;
