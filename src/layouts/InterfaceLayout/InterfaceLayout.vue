@@ -87,7 +87,7 @@
             :gaslimit="gaslimit"
             :gas="gas"
             :tokensymbol="tokensymbol"
-            :prefilled="prefilled"
+            :is-prefilled="prefilled"
             :clear-prefilled="clearPrefilled"
             :check-prefilled="checkPrefilled"
           />
@@ -239,8 +239,10 @@ export default {
   },
   methods: {
     checkPrefilled() {
-      if (Object.keys(this.linkQuery).length > 0) {
-        this.prefilled = true;
+      const _self = this;
+      const hasLinkQuery = Object.keys(_self.linkQuery).length;
+      if (hasLinkQuery > 0) {
+        _self.prefilled = true;
         const {
           value,
           data,
@@ -249,23 +251,23 @@ export default {
           gas,
           tokensymbol,
           network
-        } = this.linkQuery;
-        this.value = value ? new BigNumber(value).toFixed() : '0';
-        this.data = data ? data : '';
-        this.to = to ? to : '';
-        this.gaslimit = gaslimit ? gaslimit : '21000';
-        this.gas = gas ? new BigNumber(gas) : 0;
-        this.tokensymbol = tokensymbol ? tokensymbol : '';
+        } = _self.linkQuery;
+        _self.value = value ? new BigNumber(value).toFixed() : '0';
+        _self.data = data ? data : '';
+        _self.to = to ? to : '';
+        _self.gaslimit = gaslimit ? gaslimit : '21000';
+        _self.gas = gas ? new BigNumber(gas) : 0;
+        _self.tokensymbol = tokensymbol ? tokensymbol : '';
         if (network) {
-          const foundNetwork = this.Networks[network.toUpperCase()];
+          const foundNetwork = _self.Networks[network.toUpperCase()];
           // eslint-disable-next-line
           if (!!foundNetwork) {
-            this.$store.dispatch('switchNetwork', foundNetwork[0]).then(() => {
-              this.$store.dispatch('setWeb3Instance');
+            _self.$store.dispatch('switchNetwork', foundNetwork[0]).then(() => {
+              _self.$store.dispatch('setWeb3Instance');
             });
           }
         }
-        this.$store.dispatch('saveQueryVal', {});
+        _self.$store.dispatch('saveQueryVal', {});
       }
     },
     clearPrefilled() {

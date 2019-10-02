@@ -223,7 +223,7 @@ export default {
       type: Function,
       default: () => {}
     },
-    prefilled: {
+    isPrefilled: {
       type: Boolean,
       default: false
     },
@@ -431,16 +431,18 @@ export default {
     }, 500),
     network(newVal) {
       if (this.online && newVal.type.name === 'ETH') this.getEthPrice();
+    },
+    isPrefilled() {
+      this.prefillForm();
     }
   },
   mounted() {
+    this.checkPrefilled();
     if (this.online && this.network.type.name === 'ETH') this.getEthPrice();
-    this.prefillForm();
   },
   methods: {
-    prefillForm: utils._.debounce(function() {
-      this.checkPrefilled();
-      if (this.prefilled) {
+    prefillForm() {
+      if (this.isPrefilled) {
         const foundToken = this.tokensymbol
           ? this.tokensWithBalance.find(item => {
               return (
@@ -458,12 +460,12 @@ export default {
         this.selectedCurrency = foundToken ? foundToken : this.selectedCurrency;
         this.advancedExpand = true;
         Toast.responseHandler(
-          'Form has been prefilled. Please proceed with caution!',
+          'Form has been isPrefilled. Please proceed with caution!',
           Toast.WARN
         );
         this.clearPrefilled();
       }
-    }, 500),
+    },
     openSettings() {
       this.$eventHub.$emit('open-settings');
     },

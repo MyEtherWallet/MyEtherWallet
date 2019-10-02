@@ -244,7 +244,7 @@ export default {
       type: Function,
       default: () => {}
     },
-    prefilled: {
+    isPrefilled: {
       type: Boolean,
       default: false
     },
@@ -364,12 +364,17 @@ export default {
     },
     selectedCoinType(newVal) {
       this.createDataHex(null, null, newVal);
+    },
+    isPrefilled() {
+      this.prefillForm();
     }
   },
+  mounted() {
+    this.checkPrefilled();
+  },
   methods: {
-    prefillForm: utils._.debounce(function() {
-      this.checkPrefilled();
-      if (this.tokens.length > 0 && this.prefilled) {
+    prefillForm() {
+      if (this.tokens.length > 0 && this.isPrefilled) {
         const foundToken = this.tokensymbol
           ? this.tokens.find(item => {
               return (
@@ -386,12 +391,12 @@ export default {
         this.localGasPrice = new BigNumber(this.gas).toFixed();
         this.selectedCoinType = foundToken ? foundToken : this.selectedCoinType;
         Toast.responseHandler(
-          'Form has been prefilled. Please proceed with caution!',
+          'Form has been isPrefilled. Please proceed with caution!',
           Toast.WARN
         );
         this.clearPrefilled();
       }
-    }, 500),
+    },
     debouncedAmount: utils._.debounce(function(e) {
       const symbol = this.network.type.currencyName;
       const decimals =
