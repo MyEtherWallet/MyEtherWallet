@@ -25,11 +25,12 @@
         </div>
         <div class="link-container">
           <p>
-            <img height="15px" src="~@/assets/images/icons/support.svg" />
+            <img alt height="15px" src="~@/assets/images/icons/support.svg" />
             {{ link1 }}
           </p>
           <p>
             <img
+              alt
               height="15px"
               src="~@/assets/images/icons/web-solution-white.svg"
             />
@@ -41,6 +42,7 @@
         <div class="header-text">
           <b>
             <img
+              alt
               src="~@/assets/images/short-hand-logo-white.png"
               height="30px"
             />
@@ -59,11 +61,13 @@
         </div>
       </div>
       <img
+        alt
         src="~@/assets/images/background/404bg.jpg"
         width="100%"
         class="floating-img"
       />
       <img
+        alt
         src="~@/assets/images/etc/spaceman.png"
         width="100%"
         class="floating-spaceman"
@@ -71,7 +75,7 @@
     </div>
     <div class="between">
       <div class="text">
-        <img height="15px" src="~@/assets/images/icons/scissor.svg" />
+        <img alt height="15px" src="~@/assets/images/icons/scissor.svg" />
         <p>Cut Here</p>
       </div>
       <div class="dash"></div>
@@ -116,11 +120,15 @@
     <div class="footer-container">
       <div class="link-container">
         <p>
-          <img height="17px" src="~@/assets/images/icons/support.svg" />
+          <img alt height="17px" src="~@/assets/images/icons/support.svg" />
           {{ link1 }}
         </p>
         <p>
-          <img height="15px" src="~@/assets/images/icons/web-solution.svg" />
+          <img
+            alt
+            height="15px"
+            src="~@/assets/images/icons/web-solution.svg"
+          />
           {{ link2 }}
         </p>
       </div>
@@ -128,6 +136,7 @@
         <img
           :src="require(`@/assets/images/short-hand-logo-${buildType}.png`)"
           height="25px"
+          alt
         />
         <p class="border-line"></p>
         <p>{{ paper }}</p>

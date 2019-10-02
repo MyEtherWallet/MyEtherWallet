@@ -35,7 +35,7 @@
         >
           <div class="network-title">
             <div class="network-icon">
-              <img :src="Networks[key][0].type.icon" />
+              <img :src="Networks[key][0].type.icon" alt />
             </div>
             <h4 :class="key.toLowerCase()">{{ key }}</h4>
           </div>

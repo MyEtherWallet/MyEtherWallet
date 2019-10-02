@@ -14,6 +14,7 @@
     >
       <router-link
         to="/"
+        aria-label="Home"
         @click.native="
           scrollTop();
           isMenuOpen = false;
@@ -26,6 +27,7 @@
           <img
             :src="require(`@/assets/images/short-hand-logo-${buildType}.png`)"
             class="logo"
+            alt
           />
         </div>
       </router-link>
@@ -33,10 +35,10 @@
         <a
           href="https://ccswap.myetherwallet.com/#/"
           target="_blank"
-          rel="noreferrer"
+          rel="noopener noreferrer"
         >
           <div class="buy-eth">
-            <img src="@/assets/images/icons/buy-eth.svg" />
+            <img src="@/assets/images/icons/buy-eth.svg" alt />
             <p>Buy ETH</p>
           </div>
         </a>
@@ -104,6 +106,7 @@
                 <div>{{ currentLang }}</div>
                 <img
                   :src="require(`@/assets/images/flags/${currentFlag}.svg`)"
+                  alt
                 />
               </div>
               <i class="fa fa-angle-right" aria-hidden="true"></i>

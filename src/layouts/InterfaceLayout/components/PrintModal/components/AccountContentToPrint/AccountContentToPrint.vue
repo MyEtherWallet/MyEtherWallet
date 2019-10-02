@@ -25,13 +25,18 @@
         </div>
         <div class="link-container">
           <p>
-            <img height="15px" src="~@/assets/images/icons/support.svg" />
+            <img
+              height="15px"
+              src="~@/assets/images/icons/support.svg"
+              alt="Support"
+            />
             {{ link1 }}
           </p>
           <p>
             <img
               height="15px"
               src="~@/assets/images/icons/web-solution-white.svg"
+              alt
             />
             {{ link2 }}
           </p>
@@ -43,6 +48,7 @@
             <img
               src="~@/assets/images/short-hand-logo-white.png"
               height="30px"
+              alt
             />
             {{ mew }}
           </b>
@@ -63,16 +69,19 @@
         src="~@/assets/images/background/404bg.jpg"
         width="100%"
         class="floating-img"
+        alt
       />
       <img
         src="~@/assets/images/etc/spaceman.png"
         width="100%"
         class="floating-spaceman"
+        alt="Spaceman"
       />
     </div>
     <div class="between">
       <div class="text">
-        <img height="15px" src="~@/assets/images/icons/scissor.svg" /> Cut Here
+        <img height="15px" src="~@/assets/images/icons/scissor.svg" alt /> Cut
+        Here
       </div>
       <div class="dash"></div>
     </div>
@@ -114,11 +123,19 @@
     <div class="footer-container">
       <div class="link-container">
         <p>
-          <img height="17px" src="~@/assets/images/icons/support.svg" />
+          <img
+            height="17px"
+            src="~@/assets/images/icons/support.svg"
+            alt="Support"
+          />
           {{ link1 }}
         </p>
         <p>
-          <img height="15px" src="~@/assets/images/icons/web-solution.svg" />
+          <img
+            height="15px"
+            src="~@/assets/images/icons/web-solution.svg"
+            alt
+          />
           {{ link2 }}
         </p>
       </div>
@@ -126,6 +143,7 @@
         <img
           :src="require(`@/assets/images/short-hand-logo-${buildType}.png`)"
           height="25px"
+          alt
         />
         <p class="border-line"></p>
         <p>{{ paper }}</p>

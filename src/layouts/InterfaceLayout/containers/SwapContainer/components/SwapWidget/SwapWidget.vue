@@ -69,7 +69,7 @@
                   </div>
                 </div>
                 <div class="exchange-icon" @click="flipCurrencies">
-                  <img :src="images.swap" />
+                  <img :src="images.swap" alt />
                 </div>
                 <div class="amount">
                   <div class="title">

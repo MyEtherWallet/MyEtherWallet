@@ -39,6 +39,7 @@
                   <a
                     v-else-if="content.to === undefined"
                     :href="content.href"
+                    :aria-label="content.text"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -55,7 +56,7 @@
             <div class="content-title">
               <h3 class="lite">
                 {{ $t('footer.love') }}
-                <img src="@/assets/images/icons/heart.svg" />
+                <img src="~@/assets/images/icons/heart.svg" alt />
                 {{ $t('footer.donate') }}
               </h3>
             </div>
@@ -68,7 +69,7 @@
                 rel="noopener noreferrer"
               >
                 <p :data-eth="ethDonationAddress" class="crypto-link">
-                  <img src="@/assets/images/icons/eth-colored.svg" />
+                  <img src="~@/assets/images/icons/eth.svg" alt />
                   &nbsp;Ethereum Donation
                 </p>
               </a>
@@ -82,8 +83,8 @@
                   class="crypto-link no-padding"
                   data-btc="1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9"
                 >
-                  <img src="@/assets/images/icons/btc-colored.svg" />
-                  &nbsp;Bitcoin Donation
+                  <img src="~@/assets/images/icons/btc.svg" alt /> &nbsp;Bitcoin
+                  Donation
                 </p>
               </a>
             </div>
@@ -123,6 +124,7 @@
               v-for="link in links"
               :href="link.to"
               :key="link.class"
+              :aria-label="link.to"
               rel="noopener noreferrer"
               target="_blank"
             >
