@@ -80,17 +80,17 @@ describe('SuccessModal.vue', () => {
     wrapper.setData({ etherscanLink: 'etherscanLink' });
     expect(
       wrapper.vm.$el
-        .querySelectorAll('.standard-button .the-button-box')[0]
+        .querySelectorAll('.standard-button .the-button-box')[1]
         .textContent.trim()
-    ).toEqual('');
+    ).toEqual(wrapper.vm.buttonCheckEtherscan.title);
   });
 
   it('should render correct buttonOk computed data', () => {
     expect(
       wrapper.vm.$el
-        .querySelectorAll('.standard-button .the-button-box')[0]
+        .querySelectorAll('.standard-button .the-button-box')[1]
         .textContent.trim()
-    ).toEqual('');
+    ).toEqual(wrapper.vm.buttonOk.title);
   });
 
   describe('SuccessModal.vue Methods', () => {

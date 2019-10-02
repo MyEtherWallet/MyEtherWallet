@@ -6,6 +6,10 @@
 
 ### Release v5.1.4
 
+### Devop
+
+- More tests [#1435](https://github.com/MyEtherWallet/MyEtherWallet/pull/1435)
+
 ### Bug
 
 - Fix generate mnemonic [#1439](https://github.com/MyEtherWallet/MyEtherWallet/pull/1439)

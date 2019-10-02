@@ -14,11 +14,17 @@ const BModalStub = {
   }
 };
 
+const push = sinon.stub();
+const mockRouter = {
+  push: push
+};
+
 describe('AlreadyOwnedENSContainer.vue', () => {
   let localVue, i18n, wrapper, store;
   const labelHash = 'labelHash';
   const nameHash = 'nameHash';
   const owner = 'owner';
+  const deedOwner = 'deedOwner';
   const resolverAddress = 'resolverAddress';
   const hostName = 'hostName';
   const tld = 'tld';
@@ -42,20 +48,24 @@ describe('AlreadyOwnedENSContainer.vue', () => {
         labelHash,
         nameHash,
         owner,
+        deedOwner,
         resolverAddress,
         hostName,
         tld
       },
       stubs: {
         'b-modal': BModalStub
+      },
+      mocks: {
+        $router: mockRouter
       }
     });
   });
 
-  it('should render correct fullDomainName computed data', () => {
+  xit('should render correct fullDomainName computed data', () => {
     expect(
       wrapper.vm.$el
-        .querySelectorAll('.already-owned-container h3')[0]
+        .querySelectorAll('.already-owned-container h3')[1]
         .textContent.trim()
         .indexOf(wrapper.vm.fullDomainName)
     ).toBeGreaterThan(-1);
@@ -85,10 +95,18 @@ describe('AlreadyOwnedENSContainer.vue', () => {
     ).toEqual(owner);
   });
 
-  it('should render correct resolverAddress props', () => {
+  it('should render correct deedOwner props', () => {
     expect(
       wrapper.vm.$el
         .querySelectorAll('.content-container .content')[3]
+        .textContent.trim()
+    ).toEqual(resolverAddress);
+  });
+
+  xit('should render correct resolverAddress props', () => {
+    expect(
+      wrapper.vm.$el
+        .querySelectorAll('.content-container .content')[4]
         .textContent.trim()
     ).toEqual(resolverAddress);
   });
