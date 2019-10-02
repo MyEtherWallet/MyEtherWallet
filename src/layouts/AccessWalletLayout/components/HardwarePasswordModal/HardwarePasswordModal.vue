@@ -21,11 +21,13 @@
         />
         <img
           v-if="show"
+          alt
           src="@/assets/images/icons/show-password.svg"
           @click.prevent="switchViewPassword"
         />
         <img
           v-if="!show"
+          alt
           src="@/assets/images/icons/hide-password.svg"
           @click.prevent="switchViewPassword"
         />

@@ -54,7 +54,7 @@
             <p>{{ displayFixedValue(depositInPeth, 6) }} PETH</p>
           </div>
         </div>
-        <div class="arrow"><img :src="arrowImage" /></div>
+        <div class="arrow"><img :src="arrowImage" alt /></div>
         <div>
           <div class="interface__block-title">
             {{ $t('dappsMaker.generate') }}
