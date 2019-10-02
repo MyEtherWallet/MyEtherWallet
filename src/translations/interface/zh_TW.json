@@ -40,7 +40,7 @@
   "constructor": "建構子",
   "contractName": "合約名稱",
   "nameYourWallet": "Name Your Wallet",
-  "nameYourWalletDesc": "Give your address a human readable name on a registered ENS domain.",
+  "nameYourWalletDesc": "Set up a subdomain to give your address a human readable name  from a list of registered ENS domains.",
   "signMessageDesc": "Include your nickname and where you use the nickname so someone else cannot use it. Include a specific reason for the message so it cannot be reused for a different purpose.",
   "verifiedMessage": "尚未簽署這個訊息",
   "walletNotFound": "糟了! 找不到錢包! :(",
