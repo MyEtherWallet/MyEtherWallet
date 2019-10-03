@@ -124,6 +124,7 @@ export default {
   },
   methods: {
     formatDate(param) {
+      if (!param) return '';
       return (
         param.substr(3, 2) + '/' + param.substr(0, 2) + '/' + param.substr(6, 4)
       );
