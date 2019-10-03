@@ -1,5 +1,6 @@
 /* eslint camelcase: 0 */
-import common from './common/en_US';
+import commonold from './common/en_US';
+import common from './common-temp/en_US';
 import confirmation from './confirmation/en_US';
 import dapps from './dapps/en_US';
 import dappsMaker from './dapps-maker/en_US';
@@ -25,6 +26,7 @@ import buyHardwareWallet from './buy-hardware-wallet/en_US';
 
 const en_US = {
   common: common,
+  commonold: commonold,
   confirmation: confirmation,
   dapps: dapps,
   header: header,

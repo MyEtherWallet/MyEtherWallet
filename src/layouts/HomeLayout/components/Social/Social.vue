@@ -4,8 +4,8 @@
       <div class="page-container">
         <div class="flex-col-vertical-center content">
           <div class="title">
-            <h2>{{ $t('home.socialTitle') }}</h2>
-            <h5>{{ $t('home.socialSubheading') }}</h5>
+            <h2>{{ $t('home.social.title') }}</h2>
+            <h5>{{ $t('home.social.text') }}</h5>
           </div>
           <div class="icons">
             <a
