@@ -6,13 +6,13 @@
           <div class="title">
             <h2>{{ $t('common.faqs') }}</h2>
             <h5>
-              {{ $t('home.faqsSubheading') }}
+              {{ $t('home.faqs.subtitle') }}
               <a
                 target="_blank"
                 rel="noopener noreferrer"
                 href="https://kb.myetherwallet.com/"
               >
-                {{ $t('home.faqsSeeMore') }}
+                {{ $t('home.faqs.button-see-more') }}
               </a>
             </h5>
           </div>
@@ -74,40 +74,40 @@ export default {
       faqs: {
         faq1: {
           open: false,
-          title: this.$t('home.howToCreateWalletTitle'),
-          content: this.$t('home.howToCreateWalletDesc'),
-          linkText: this.$t('home.here'),
+          title: this.$t('home.faqs.create-wallet.title'),
+          content: this.$t('home.faqs.create-wallet.text'),
+          linkText: this.$t('home.faqs.button-here'),
           link:
             'https://kb.myetherwallet.com/getting-started/creating-a-new-wallet-on-myetherwallet.html'
         },
         faq2: {
           open: false,
-          title: this.$t('home.whatIsMewConnectTitle'),
-          content: this.$t('home.whatIsMewConnectDesc'),
-          linkText: this.$t('home.here'),
+          title: this.$t('home.faqs.mewconnect.title'),
+          content: this.$t('home.faqs.mewconnect.text'),
+          linkText: this.$t('home.faqs.button-here'),
           link: 'https://mewconnect.myetherwallet.com/'
         },
         faq3: {
           open: false,
-          title: this.$t('home.workingWOtherWalletsTitle'),
-          content: this.$t('home.workingWOtherWalletsDesc'),
-          linkText: this.$t('home.here'),
+          title: this.$t('home.faqs.other-wallets.title'),
+          content: this.$t('home.faqs.other-wallets.text'),
+          linkText: this.$t('home.faqs.button-here'),
           link:
             'https://kb.myetherwallet.com/getting-started/accessing-your-new-eth-wallet.html'
         },
         faq4: {
           open: false,
-          title: this.$t('home.howToSendTxTitle'),
-          content: this.$t('home.howToSendTxDesc'),
-          linkText: this.$t('home.here'),
+          title: this.$t('home.faqs.send-txs.title'),
+          content: this.$t('home.faqs.send-txs.text'),
+          linkText: this.$t('home.faqs.button-here'),
           link:
             'https://kb.myetherwallet.com/transactions/how-to-send-transaction.html'
         },
         faq5: {
           open: false,
-          title: this.$t('home.forgotPasswordPrivKeyTitle'),
-          content: this.$t('home.forgotPasswordPrivKeyDesc'),
-          linkText: this.$t('home.here'),
+          title: this.$t('home.faqs.forgot-pwd.title'),
+          content: this.$t('home.faqs.forgot-pwd.text'),
+          linkText: this.$t('home.faqs.button-here'),
           link:
             'https://kb.myetherwallet.com/private-keys-passwords/lost-eth-private-key.html'
         }
