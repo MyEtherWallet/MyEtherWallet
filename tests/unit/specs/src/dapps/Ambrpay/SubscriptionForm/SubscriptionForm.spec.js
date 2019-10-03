@@ -39,6 +39,10 @@ describe('SubscriptionForm.vue', () => {
     wrapper.destroy();
   });
 
+  it('should be a vue instance', () => {
+    expect(wrapper.isVueInstance).toBeTruthy();
+  });
+
   it('should return the correct data', () => {
     expect(wrapper.vm.$data.address).toEqual('');
     expect(wrapper.vm.$data.isValidAddress).toEqual(false);
@@ -107,6 +111,7 @@ describe('SubscriptionForm.vue', () => {
     jest.spyOn(Toast, 'responseHandler').mockReturnValue('true');
 
     wrapper.find('p.copy-text').trigger('click');
+
     expect(document.execCommand).toHaveBeenCalledWith('copy');
     expect(Toast.responseHandler).toHaveBeenCalled();
   });
@@ -115,5 +120,12 @@ describe('SubscriptionForm.vue', () => {
     wrapper.setData({ sendAmount: '3' });
     wrapper.find('.entire-balance').trigger('click');
     expect(wrapper.vm.$data.sendAmount).toBe('0');
+  });
+
+  it('should send $emit on button click', () => {
+    wrapper.find('.mew-btn').trigger('click');
+    wrapper.vm.$emit('startSubscription');
+
+    expect(wrapper.emitted().startSubscription).toBeTruthy();
   });
 });
