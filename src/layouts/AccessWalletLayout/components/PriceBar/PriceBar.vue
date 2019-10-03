@@ -48,18 +48,6 @@ export default {
       }
     }
   },
-  data() {
-    return {
-      token1: [],
-      token2: [],
-      hidden: true
-    };
-  },
-  mounted() {
-    setInterval(() => {
-      this.hidden = !this.hidden;
-    }, 3000);
-  },
   methods: {
     roundPercentage(num) {
       return new BigNumber(num).toFixed(2);
