@@ -104,15 +104,6 @@ export default function Ambrpay(account, web3) {
           return ambrpay.contractAddress;
         });
     },
-    getMetaMaskPermission: async function() {
-
-      if(typeof ethereum !== 'undefined') {
-
-        await ethereum.enable();
-      } else {
-        return true;
-      }
-    },
     getSubscriptionPlan: function(id) {
 
       var url = apiEndpoint + '/plan/' + id;
@@ -139,13 +130,7 @@ export default function Ambrpay(account, web3) {
 
       return ambrpay.getContractAddresses()
         .then(() => {
-          return ambrpay.getMetaMaskPermission();
-        })
-        .then(() => {
           return ambrpay.metaMaskLoaded()
-        })
-        .then(() => {
-          return ambrpay.metaMaskLocked()
         })
         .then(() => {
           return ambrpay.getMetaMaskAccount()
@@ -381,15 +366,6 @@ export default function Ambrpay(account, web3) {
 
         if(_web3 == 'undefined') {
           reject("MetaMask is missing. Please download the MetaMask browser extension.");
-        }
-        return resolve(true);
-      });
-    },
-    metaMaskLocked: function() {
-      return new Promise(function(resolve, reject) {
-
-        if(_web3.eth.accounts.length == 0) {
-          reject("MetaMask is locked. Please login to your MetaMask account.");
         }
         return resolve(true);
       });
