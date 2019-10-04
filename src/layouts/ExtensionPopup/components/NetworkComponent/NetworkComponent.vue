@@ -96,6 +96,8 @@ export default {
 
 <style lang="scss">
 .network-component-modal {
+  padding-left: 0 !important;
+
   .modal-body {
     padding: 15px;
     height: calc(100vh - 110px);
@@ -104,10 +106,11 @@ export default {
 
   .modal-dialog {
     margin: 0 !important;
-    margin-top: 110px !important;
+    margin-top: 108px !important;
   }
 
   .modal-content {
+    border: none;
     border-radius: 0 !important;
     box-shadow: none !important;
   }
