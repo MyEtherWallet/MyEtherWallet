@@ -34,7 +34,9 @@
           </i18n>
         </div>
         <div class="welcome-modal-button">
-          <button @click="closeModal">{{ $t('home.welcome.button-onwards') }}!</button>
+          <button @click="closeModal">
+            {{ $t('home.welcome.button-onwards') }}!
+          </button>
         </div>
       </div>
     </div>
