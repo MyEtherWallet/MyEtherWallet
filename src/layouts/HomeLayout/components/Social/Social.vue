@@ -12,11 +12,12 @@
               v-for="(link, index) in links"
               :href="link.to"
               :key="link.name + index"
+              :aria-label="link.name"
               target="_blank"
               rel="noopener noreferrer"
             >
               <div :class="link.name">
-                <img :src="link.img" />
+                <img :src="link.img" alt />
                 <p>{{ link.name | capitalize }}</p>
               </div>
             </a>

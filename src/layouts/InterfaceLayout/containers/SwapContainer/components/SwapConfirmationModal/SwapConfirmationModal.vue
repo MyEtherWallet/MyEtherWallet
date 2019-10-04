@@ -26,7 +26,7 @@
           <p class="address">{{ fromAddress.address }}</p>
         </div>
         <div class="right-arrow">
-          <img :src="arrowImage" />
+          <img :src="arrowImage" alt />
         </div>
         <div v-if="!toFiat" class="to-address">
           <div class="icon">

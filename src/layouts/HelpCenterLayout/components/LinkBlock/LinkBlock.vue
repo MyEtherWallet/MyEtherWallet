@@ -1,6 +1,6 @@
 <template>
   <div class="link-block wrap">
-    <div class="block-icon"><img :src="content.icon" /></div>
+    <div class="block-icon"><img :src="content.icon" alt /></div>
     <div>
       <p class="block-title">{{ content.title }}</p>
       <p class="description">{{ content.description }}</p>
@@ -17,7 +17,7 @@
       <div v-if="content.social" class="social">
         <div v-for="social in content.social" :key="social.key">
           <a :href="social.link" target="_blank" rel="noopener noreferrer">
-            <img :src="social.icon" />
+            <img :src="social.icon" alt />
           </a>
         </div>
       </div>

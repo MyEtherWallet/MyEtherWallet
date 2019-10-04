@@ -11,7 +11,7 @@
     lazy
   >
     <div class="welcome-modal">
-      <img src="@/assets/images/modal/garlands.png" />
+      <img src="@/assets/images/modal/garlands.png" alt />
       <div class="welcome-modal-container">
         <div class="welcome-modal-text">
           <h3>{{ $t('home.welcomeTov5') }}</h3>
@@ -25,6 +25,7 @@
           </i18n>
           <i18n path="home.welcomeToV5Desc2" tag="p" for="home.welcomeToLink2">
             <a
+              aria-label="Vintage MyEtherWallet"
               href="https://vintage.myetherwallet.com"
               target="_blank"
               rel="noopener noreferrer"

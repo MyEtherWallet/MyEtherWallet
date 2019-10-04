@@ -8,7 +8,19 @@
           :class="i.contract === selected ? 'selected' : ''"
           @click="selectNft(i)"
         >
-          {{ i.title }} ({{ i.count }})
+          <span class="title">{{ i.title }}</span>
+
+          <span class="count">({{ i.count }})</span>
+          <i
+            v-show="i.customNft"
+            class="fa fa-times-circle clickable remove"
+            @click="removeCustomEntry(i)"
+          />
+        </li>
+        <li>
+          <span class="add-custom" @click="openCustomModal"
+            >+{{ $t('dapps.customNFT') }}</span
+          >
         </li>
       </ul>
     </div>
@@ -80,6 +92,9 @@ export default {
     this.selected = this.initialHighlighted;
   },
   methods: {
+    openCustomModal() {
+      this.$emit('openCustomModal');
+    },
     setSelectedToTop() {
       this.selected = this.sortByCount[0].contract;
       this.$emit('selected', this.selected);
@@ -94,6 +109,9 @@ export default {
     showDetails(nft) {
       this.searchResults = [];
       this.$emit('showTokenDetails', nft);
+    },
+    removeCustomEntry(nft) {
+      this.$emit('removeCustomNft', nft);
     }
   }
 };
