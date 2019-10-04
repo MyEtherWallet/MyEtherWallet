@@ -55,7 +55,7 @@ const fetchAddressDarkList = async () => {
       JSON.stringify(jsonToStore)
     );
   } catch (e) {
-    console.log(e); // Not captured by sentry
+    console.error(e); // Not captured by sentry
   }
 };
 
@@ -118,7 +118,7 @@ const fetchUrlDarklist = async () => {
       });
     });
   } catch (e) {
-    console.log(e); // Not captured by sentry
+    console.error(e); // Not captured by sentry
   }
 };
 
@@ -170,7 +170,7 @@ const fetchUrlLightlist = async () => {
       });
     });
   } catch (e) {
-    console.log(e); // Not captured by sentry
+    console.error(e); // Not captured by sentry
   }
 };
 
