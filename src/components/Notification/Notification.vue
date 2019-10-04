@@ -1,7 +1,11 @@
 <template lang="html">
   <div class="notification-container">
     <div class="notification-logo" @click="showNotifications">
-      <img class="logo-large" src="~@/assets/images/icons/notification.svg" />
+      <img
+        alt="Notifications"
+        class="logo-large"
+        src="~@/assets/images/icons/notification.svg"
+      />
       <div v-show="unreadCount > 0" class="notification-dot">
         <div class="parent">
           <div class="heart"></div>
@@ -351,7 +355,7 @@ export default {
       }
     },
     dateString(notice) {
-      if (notice !== {}) {
+      if (notice !== {} && this._i18n.locale !== null) {
         return new Date(notice.timestamp).toLocaleDateString(
           this._i18n.locale.replace('_', '-')
         );
@@ -359,7 +363,7 @@ export default {
       return '';
     },
     timeString(notice) {
-      if (notice !== {}) {
+      if (notice !== {} && this._i18n.locale !== null) {
         return new Date(notice.timestamp).toLocaleTimeString(
           this._i18n.locale.replace('_', '-')
         );

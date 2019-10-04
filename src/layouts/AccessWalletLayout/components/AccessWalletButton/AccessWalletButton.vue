@@ -4,7 +4,7 @@
     @click="func"
   >
     <div class="button-image">
-      <img :src="disabled ? imgDisabled : img" class="icon" />
+      <img :src="disabled ? imgDisabled : img" alt class="icon" />
     </div>
     <h3>{{ title }}</h3>
     <p class="desc">{{ desc }}</p>

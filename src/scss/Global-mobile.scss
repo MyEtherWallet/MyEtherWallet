@@ -84,6 +84,7 @@
   audio,
   video {
     font-family: 'Montserrat', sans-serif;
+    font-display: block;
     font-size: 14px;
     margin: 0;
     padding: 0;
@@ -1137,6 +1138,7 @@
       border: solid 1px $button--border-color-2;
       color: $text-color-6;
       font-family: Arial, sans-serif;
+      font-display: block;
       min-width: 180px;
       padding: 8px 15px;
       text-align: left;
@@ -1165,6 +1167,7 @@
       border: solid 1px $button--border-color-2;
       color: $text-color-6;
       font-family: Arial, sans-serif;
+      font-display: block;
       min-width: 180px;
       padding: 8px 15px;
       text-align: left;

@@ -1,7 +1,7 @@
 <template>
   <div class="input-search">
     <slot />
-    <img src="@/assets/images/icons/magnifier.svg" />
+    <img src="@/assets/images/icons/magnifier.svg" alt="Search" />
   </div>
 </template>
 
