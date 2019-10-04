@@ -57,10 +57,10 @@
   },
   "welcome": {
     "title": "Welcome to MEW V5",
-    "welcomeToV5Desc1": "Welcome to the brand new MEW! If this is your first time visiting, check out our {0}.",
-    "welcomeToV5Desc2": "Vintage MEW can still be accessed {0}, or at the bottom of the page.",
-    "welcomeToLink1": "Medium article on what's new",
-    "welcomeToLink2": "here",
+    "desc1": "Welcome to the brand new MEW! If this is your first time visiting, check out our {0}.",
+    "desc2": "Vintage MEW can still be accessed {0}, or at the bottom of the page.",
+    "link1": "Medium article on what's new",
+    "link2": "here",
     "button-onwards": "Onwards"
   },
   "message-lost": "Oops! Looks like you're lost."
