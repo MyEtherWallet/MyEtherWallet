@@ -1,8 +1,4 @@
 @import '~@/scss/GlobalVariables';
-template {
-  font-family: 'Avenir Next';
-}
-
 .error {
   color: $text-color-red;
   margin-top: 5px;
@@ -15,6 +11,7 @@ template {
 
 .form-group {
   font-weight: 600;
+  margin-bottom: 3.6rem;
   margin-top: 5px;
   text-align: left;
 

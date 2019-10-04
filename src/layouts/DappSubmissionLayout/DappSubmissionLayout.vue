@@ -18,6 +18,7 @@
       <b-progress :value="bannerValue" class="dapp-progress-bar"></b-progress>
     </div>
     <div class="dapp-container">
+      <sotd />
       <router-view
         :update-name="updateName"
         :update-category="updateCategory"
@@ -64,6 +65,7 @@
 import AboutYourDappContainer from './containers/AboutYourDappContainer';
 import StrengthOfInfoComponent from './components/StrengthOfInfoComponent';
 import BannerComponent from './components/BannerComponent';
+import SOTDComponent from './components/SOTDComponent';
 import BannerSubmitComponent from './components/BannerSubmitComponent';
 import MewSupportComponent from './components/MewSupportComponent';
 import AboutYourTeamContainer from './containers/AboutYourTeamContainer';
@@ -82,7 +84,8 @@ export default {
     'mew-support': MewSupportComponent,
     'about-your-team': AboutYourTeamContainer,
     'summary-container': SummaryContainer,
-    'success-modal': SuccessModal
+    'success-modal': SuccessModal,
+    sotd: SOTDComponent
   },
   data() {
     return {
@@ -331,6 +334,7 @@ export default {
     },
     submitForm() {
       const formData = new FormData();
+      this.form._cc = 'support@stateofthedapps.com';
 
       for (const key in this.form) {
         if (
