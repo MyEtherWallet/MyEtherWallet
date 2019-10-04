@@ -8,9 +8,10 @@ const getAccounts = callback => {
   chrome.storage.sync.get(null, callback);
 };
 
-const getPrivFromMnemonicWallet = (mnemonic, path) => {
-  const hdKey = HDKey.fromMasterSeed(bip39.mnemonicToSeedSync(mnemonic, ''));
-  return hdKey.derive(path)._privateKey;
+const getPrivFromMnemonicWallet = (mnem, path) => {
+  const seed = bip39.mnemonicToSeedSync(mnem);
+  const hdKey = HDKey.fromMasterSeed(seed);
+  return hdKey.derive(path).privateKey;
 };
 
 const addWalletToStore = (

@@ -233,13 +233,11 @@
               <form>
                 <expanding-option title="Password" button-text="Optional">
                   <div class="input-container">
-                    <label for="keystorePassword"> Password </label>
-                    <div class="keystore-password-input">
+                    <div class="network-password-input">
                       <input
                         v-model="locPassword"
                         :type="show ? 'text' : 'password'"
                         placeholder="Enter your password"
-                        name="keystorePassword"
                       />
                       <img
                         :src="show ? showIcon : hide"
@@ -395,7 +393,7 @@ export default {
       this.unselectAllAddresses('address' + account.index);
       this.$emit('accountPath', [
         `${this.selectedPath}/${account.index}`,
-        account.account.getAddressString()
+        account.account.getChecksumAddressString()
       ]);
       this.currentWallet = account.account;
     },

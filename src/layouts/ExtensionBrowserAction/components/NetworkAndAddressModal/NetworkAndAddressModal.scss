@@ -321,3 +321,42 @@ $collapse-button-color: $dark-blue-12;
   color: $light-grey-6;
   pointer-events: none;
 }
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 0;
+
+  input {
+    background-color: $light-grey-2;
+    border: none;
+    padding: 15px;
+  }
+
+  label {
+    color: $dark-blue-12;
+    font-weight: bold;
+  }
+}
+
+%network-inputs {
+  align-items: center;
+  display: flex;
+  width: 100%;
+}
+
+.network-password-input {
+  @extend %network-inputs;
+
+  position: relative;
+
+  img {
+    cursor: pointer;
+    position: absolute;
+    right: 10px;
+  }
+
+  input {
+    flex: auto;
+  }
+}
