@@ -85,7 +85,7 @@ export default {
     'about-your-team': AboutYourTeamContainer,
     'summary-container': SummaryContainer,
     'success-modal': SuccessModal,
-    sotd: SOTDComponent
+    'sotd': SOTDComponent
   },
   data() {
     return {
