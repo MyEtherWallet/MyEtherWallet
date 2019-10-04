@@ -203,7 +203,7 @@ export default {
         })
         .catch(e => {
           // eslint-disable-next-line
-          console.log(e);
+          console.error(e);
         });
 
       this.ethPrice = price.data.ETH.quotes.USD.price;

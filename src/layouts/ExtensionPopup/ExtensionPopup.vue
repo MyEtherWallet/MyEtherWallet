@@ -59,7 +59,8 @@ export default {
           return res.json();
         })
         .catch(e => {
-          console.log(e);
+          // eslint-disable-next-line
+          console.error(e);
         });
 
       this.convertedBalance = `$ ${new BigNumber(
