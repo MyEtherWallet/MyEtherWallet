@@ -54,11 +54,9 @@
           </div>
           <div class="donate-us">
             <div class="content-title">
-              <h3 class="lite">
-                {{ $t('footer.love') }}
-                <img src="~@/assets/images/icons/heart.svg" alt />
-                {{ $t('footer.donate') }}
-              </h3>
+              <i18n path="footer.title.love" tag="h3">
+                <img slot="heart" src="~@/assets/images/icons/heart.svg" alt />
+              </i18n>
             </div>
             <div class="links">
               <p>{{ $t('footer.welcomeDes') }}</p>
@@ -173,7 +171,7 @@ export default {
       footerContent: [
         {
           class: 'e1',
-          title: this.$t('footer.discover'),
+          title: this.$t('footer.title.discover'),
           contents: [
             {
               text: this.$t('footer.units'),
@@ -204,12 +202,12 @@ export default {
         },
         {
           class: 'e2',
-          title: this.$t('footer.affiliates'),
+          title: this.$t('footer.title.affiliates'),
           contents: affiliates
         },
         {
           class: 'e3',
-          title: this.$t('footer.mew'),
+          title: this.$t('footer.title.mew'),
           contents: [
             {
               text: this.$t('footer.about'),
