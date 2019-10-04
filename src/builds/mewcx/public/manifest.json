@@ -1,5 +1,5 @@
 {
-  "name": "MyEtherWallet",
+  "name": "MEW CX",
   "manifest_version": 2,
   "description": "MyEtherWallet Chrome Extension",
   "homepage_url": "https://www.myetherwallet.com/",
@@ -10,7 +10,7 @@
   },
   "browser_action": {
     "default_icon": "img/icons/icon32.png",
-    "default_title": "MyEtherWallet CX",
+    "default_title": "MEW CX",
     "default_popup": "index.html#/popup"
   },
   "options_page": "index.html",
