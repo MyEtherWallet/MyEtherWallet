@@ -98,7 +98,7 @@ export default {
 .network-component-modal {
   .modal-body {
     padding: 15px;
-    height: 275px;
+    height: calc(100vh - 110px);
     overflow-y: auto;
   }
 
