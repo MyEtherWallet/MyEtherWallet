@@ -148,6 +148,7 @@ export default {
       generateOnly: false,
       privateKey: '',
       mnemonicPhrase: '',
+      internalMnem: '',
       selectedAccountPath: '',
       selectedAddress: '',
       accCount: 0,
@@ -159,6 +160,7 @@ export default {
   },
   mounted() {
     this.$refs.mnemonicPhrase.$refs.mnemonicPhrase.$on('hidden', () => {
+      this.internalMnem = this.mnemonicPhrase;
       this.mnemonicPhrase = new Array(this.mnemonicSize).fill('');
     });
     this.$refs.networkAddress.$refs.networkAddress.$on('hidden', () => {
@@ -226,9 +228,11 @@ export default {
     generateFromMnemonicPriv() {
       this.loading = true;
       const privateKey = ExtensionHelpers.getPrivFromMnemonicWallet(
-        this.mnemonicPhrase,
+        this.internalMnem,
         this.selectedAccountPath
       );
+
+      this.internalMnem = this.mnemonicPhrase;
       this.generateWalletFromPriv(privateKey, 'mnem');
     },
     generateWalletFromPriv(priv, type) {

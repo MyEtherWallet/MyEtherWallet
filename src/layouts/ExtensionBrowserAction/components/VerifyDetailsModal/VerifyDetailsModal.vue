@@ -105,6 +105,7 @@ export default {
   computed: {
     ...mapState(['web3']),
     address() {
+      console.log(this.wallet);
       const hasWallet = Object.keys(this.wallet).length > 0;
       return hasWallet
         ? this.wallet.hasOwnProperty('isHardware')

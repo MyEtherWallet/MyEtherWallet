@@ -2,7 +2,6 @@
 
 - Chrome Extension Beta release [#1151](https://github.com/MyEtherWallet/MyEtherWallet/pull/1151)
 
-
 ### Release v5.1.5
 
 ### Feature
