@@ -125,6 +125,7 @@
   .tags {
     color: $dark-blue-2;
     font-weight: normal;
+    margin-bottom: 3rem;
     span {
       margin-right: 15px;
     }
@@ -200,4 +201,8 @@
     text-align: right;
     width: 100%;
   }
+}
+
+.tags-form-group {
+  margin-bottom: 1rem !important;
 }

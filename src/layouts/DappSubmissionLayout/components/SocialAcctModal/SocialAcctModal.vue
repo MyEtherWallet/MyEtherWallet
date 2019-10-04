@@ -6,8 +6,8 @@
       centered
       hide-footer
       title="Add a social account"
-      static="true"
-      lazy="true"
+      static
+      lazy
     >
       <div class="modal-contents">
         <b-form>

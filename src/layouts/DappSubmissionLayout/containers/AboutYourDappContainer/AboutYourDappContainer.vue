@@ -38,7 +38,7 @@
           {{ errors.first('category') }}
         </p>
       </b-form-group>
-      <b-form-group class="input-tags-group">
+      <b-form-group class="input-tags-group tags-form-group">
         <label class="dapp-label"
           >Tags
           <popover
