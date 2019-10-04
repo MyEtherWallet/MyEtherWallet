@@ -1,27 +1,17 @@
 {
   "home": "Home",
-  "about": "About",
-  "transaction": "Transaction",
-  "swap": "Swap",
-  "security": "Security",
-  "detailInfo": "Detail Information",
-  "transactionDetail": "Transaction Detail",
-  "swapDetail": "Swap Detail",
-  "status": "Status",
-  "amount": "Amount",
-  "gasUsed": "Gas Used",
-  "nonce": "Nonce",
-  "time": "Time",
-  "timeRemaining": "Time Remaining",
-  "transactionHash": "Transaction Hash",
-  "more": "More",
-  "errorMessage": "Error Message",
-  "maxTxFee": "Max Transaction Fee",
-  "investigate": "Use the transaction hash to investigate why this transaction failed.",
-  "contractCreation": "Contract Creation",
-  "mewConnectDisconnected": "Seems like you are disconnected from MEWconnect, please reconnect using the App.",
-  "providerDepositAddress": "Deposit Address",
-  "orderID": "{provider} order ID",
-  "provider": "Provider",
-  "invalidIBAN": "Invalid IBAN"
+  "vintage": {
+    "text": "Missing the vintage MEW?",
+    "link": "Click here to go back!"
+  },
+  "buy-eth": "Buy ETH",
+  "tx": {
+    "history": "Transaction History"
+  },
+  "wallet": {
+    "new": "New Wallet",
+    "access": "Access"
+  },
+  "settings": "Settings",
+  "log-out": "Log Out"
 }

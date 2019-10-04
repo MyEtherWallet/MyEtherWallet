@@ -50,12 +50,12 @@
         class="fixed-header"
       >
         <div v-if="$route.fullPath === '/'" class="vintage-header">
-          Missing the vintage MEW?
+         {{ $t('header.vintage.text') }}
           <a
             rel="noopener noreferrer"
             aria-label="Vintage MyEtherWallet"
             href="https://vintage.myetherwallet.com"
-            >Click here to go back!</a
+            >{{ $t('header.vintage.link') }}</a
           >
         </div>
         <div
@@ -95,7 +95,7 @@
                     class="buy-eth-icon"
                     src="@/assets/images/icons/buy-eth.svg"
                   />
-                  Buy ETH
+                  {{ $t('header.buy-eth') }}
                 </b-nav-item>
                 <b-nav-item
                   v-if="isHomePage"
@@ -105,7 +105,7 @@
                   >{{ $t('header.home') }}</b-nav-item
                 >
                 <b-nav-item v-if="isHomePage" to="/#about-mew">
-                  {{ $t('header.about') }}
+                  {{ $t('common.about') }}
                 </b-nav-item>
                 <b-nav-item-dropdown
                   v-if="address !== null"
@@ -114,7 +114,7 @@
                   class="tx-history-menu"
                 >
                   <template slot="button-content">
-                    <p>Transaction History</p>
+                    <p>{{ $t('header.tx.history') }}</p>
                   </template>
                   <b-dropdown-item :href="explorerUrl" target="_blank">
                     <p>{{ serviceUrl }} ({{ network.type.name }})</p>
@@ -124,7 +124,7 @@
                     :href="'https://ethplorer.io/address/' + address"
                     target="_blank"
                     rel="noopener noreferrer"
-                    >Ethplorer (Tokens)</b-dropdown-item
+                    >Ethplorer ({{ $tc('common.token', 2) }})</b-dropdown-item
                   >
                 </b-nav-item-dropdown>
                 <b-nav-item to="/#faqs">{{ $t('common.faqs') }}</b-nav-item>
@@ -175,7 +175,7 @@
                   ]"
                   to="/create-wallet"
                 >
-                  <div class="get-free-wallet-button">New Wallet</div>
+                  <div class="get-free-wallet-button">{{ $t('header.wallet.new') }}</div>
                 </b-nav-item>
                 <b-nav-item
                   v-if="showButtons && !isPageOnTop"
@@ -185,7 +185,7 @@
                   ]"
                   to="/access-my-wallet"
                 >
-                  <div class="access-button">Access</div>
+                  <div class="access-button">{{ $t('header.wallet.access') }}</div>
                 </b-nav-item>
                 <b-nav-item-dropdown
                   v-if="address !== null"
@@ -206,9 +206,9 @@
                     </div>
                   </template>
                   <b-dropdown-item @click="openSettings"
-                    >Settings</b-dropdown-item
+                    >{{ $t('header.settings') }}</b-dropdown-item
                   >
-                  <b-dropdown-item @click="logout">Log out</b-dropdown-item>
+                  <b-dropdown-item @click="logout">{{ $t('header.log-out') }}</b-dropdown-item>
                 </b-nav-item-dropdown>
               </b-nav>
             </div>
