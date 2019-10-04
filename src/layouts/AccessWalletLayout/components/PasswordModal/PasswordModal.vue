@@ -25,11 +25,13 @@
           />
           <img
             v-if="show"
+            alt
             src="@/assets/images/icons/show-password.svg"
             @click.prevent="switchViewPassword"
           />
           <img
             v-if="!show"
+            alt
             src="@/assets/images/icons/hide-password.svg"
             @click.prevent="switchViewPassword"
           />
@@ -139,11 +141,12 @@ export default {
       }
     },
     setUnlockedWallet(wallet) {
-      this.$store.dispatch('decryptWallet', [wallet]);
-      this.spinner = false;
-      this.password = '';
-      this.$router.push({
-        path: 'interface'
+      this.$store.dispatch('decryptWallet', [wallet]).then(() => {
+        this.spinner = false;
+        this.password = '';
+        this.$router.push({
+          path: 'interface'
+        });
       });
     },
     switchViewPassword() {

@@ -5,7 +5,7 @@
       :key="providerName + idx"
     >
       <div class="provider-image">
-        <img :src="providerLogo(providerName)" />
+        <img :src="providerLogo(providerName)" alt />
       </div>
       <div>
         <div>

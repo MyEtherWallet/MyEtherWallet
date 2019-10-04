@@ -39,6 +39,7 @@
                   <img
                     v-if="Networks[key][0].type.icon"
                     :src="Networks[key][0].type.icon"
+                    alt
                   />
                   <div v-else class="no-icon">
                     <p>No</p>
@@ -417,16 +418,23 @@ export default {
       });
     }, 1000),
     unlockWallet() {
-      this.$store.dispatch('decryptWallet', [this.currentWallet]);
-      if (!this.wallet !== null) {
-        if (!this.$route.path.split('/').includes('interface')) {
-          this.$router.push({
-            path: 'interface'
-          });
-        }
-      }
+      this.$store
+        .dispatch('decryptWallet', [this.currentWallet])
+        .then(() => {
+          if (this.wallet !== null) {
+            if (!this.$route.path.split('/').includes('interface')) {
+              this.$router.push({
+                path: 'interface'
+              });
+            }
+          }
 
-      this.$refs.networkAndAddress.hide();
+          this.$refs.networkAndAddress.hide();
+        })
+        .catch(error => {
+          // the wallet param (param[0]) is undefined or null
+          Toast.responseHandler(error, Toast.ERROR);
+        });
     },
     async setHDAccounts() {
       if (!this.web3.eth) this.$store.dispatch('setWeb3Instance');

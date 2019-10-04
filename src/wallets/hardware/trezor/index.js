@@ -103,6 +103,9 @@ const createWallet = async basePath => {
 createWallet.errorHandler = errorHandler;
 const getRootPubKey = async _path => {
   const result = await Trezor.ethereumGetPublicKey({ path: _path });
+  if (!result.payload) {
+    throw new Error('popup failed to open');
+  }
   if (!result.success) throw new Error(result.payload.error);
   return {
     publicKey: result.payload.publicKey,

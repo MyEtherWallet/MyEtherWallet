@@ -48,6 +48,4 @@ describe('MewConnectModal.vue', () => {
     wrapper.setData({ QrCode: QrCode });
     expect(wrapper.vm.$data.QrCode).toEqual(QrCode);
   });
-
-  describe('MewConnectModal.vue Methods', () => {});
 });

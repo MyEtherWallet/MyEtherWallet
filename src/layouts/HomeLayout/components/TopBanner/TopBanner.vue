@@ -9,7 +9,7 @@
             <p>{{ $t('home.subheading') }}</p>
           </div>
           <div class="banner-image">
-            <img src="~@/assets/images/home/big-spaceman.png" />
+            <img alt src="~@/assets/images/home/big-spaceman.png" />
           </div>
         </div>
         <div class="grid-col-2 promo-cards">
@@ -17,7 +17,7 @@
             <div class="card-block create-wallet">
               <div class="flex-col-vertical-center">
                 <div class="card-image">
-                  <img src="~@/assets/images/home/create-wallet.png" />
+                  <img alt src="~@/assets/images/home/create-wallet.png" />
                 </div>
                 <div class="card-content">
                   <h2 class="color-white">
@@ -26,7 +26,7 @@
                   <p class="color-white">{{ $t('home.obtainAddress') }}</p>
                   <p class="button">
                     {{ $t('home.getStarted') }}
-                    <img src="~@/assets/images/icons/right-arrow.png" />
+                    <img alt src="~@/assets/images/icons/right-arrow.png" />
                   </p>
                 </div>
               </div>
@@ -43,14 +43,14 @@
             <div class="card-block unlock-wallet">
               <div class="flex-col-vertical-center">
                 <div class="card-image">
-                  <img src="~@/assets/images/home/unlock-wallet.png" />
+                  <img alt src="~@/assets/images/home/unlock-wallet.png" />
                 </div>
                 <div class="card-content">
                   <h2 class="color-white">{{ $t('common.accessMyWallet') }}</h2>
                   <p class="color-white">{{ $t('home.accessMyWalletDesc') }}</p>
                   <p class="button">
                     {{ $t('home.accessNow') }}
-                    <img src="~@/assets/images/icons/right-arrow.png" />
+                    <img alt src="~@/assets/images/icons/right-arrow.png" />
                   </p>
                 </div>
               </div>

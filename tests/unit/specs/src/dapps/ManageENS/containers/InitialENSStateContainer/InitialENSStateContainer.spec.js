@@ -7,7 +7,7 @@ import { Tooling } from '@@/helpers';
 describe('InitialENSStateContainer.vue', () => {
   let localVue, i18n, wrapper, store;
   const checkDomain = sinon.stub();
-  const domainName = '';
+  const domainName = 'domainName';
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;

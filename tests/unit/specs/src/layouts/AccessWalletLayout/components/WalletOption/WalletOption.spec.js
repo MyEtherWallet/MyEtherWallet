@@ -4,6 +4,7 @@ import { Tooling } from '@@/helpers';
 
 describe('WalletOption.vue', () => {
   let localVue, i18n, wrapper, store;
+  const text = 'walletOption';
 
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
@@ -17,13 +18,12 @@ describe('WalletOption.vue', () => {
       localVue,
       i18n,
       store,
-      attachToDocument: true
+      attachToDocument: true,
+      propsData: { text }
     });
   });
 
   it('should render correct text props', () => {
-    const text = 'text';
-    wrapper.setProps({ text });
     expect(
       wrapper.vm.$el
         .querySelector('.wallet-option-container div span')
@@ -47,10 +47,4 @@ describe('WalletOption.vue', () => {
         .indexOf('selected')
     ).toBeGreaterThan(-1);
   });
-
-  // describe('WalletOption.vue Methods', () => {
-  //   it('should toggle expanded data when click checkbox', () => {
-
-  //   });
-  // });
 });
