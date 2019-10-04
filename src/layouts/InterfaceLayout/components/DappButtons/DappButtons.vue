@@ -6,6 +6,7 @@
     <img
       :src="supported ? icon : iconDisabled"
       :class="title === 'Ambrpay' ? 'ambrpay-icon' : ''"
+      alt
     />
     <div>
       <h4>{{ title }}</h4>

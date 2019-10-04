@@ -16,10 +16,7 @@ const EXCEPTIONS = [
   'web3-core-requestmanager',
   '@vue/eslint-config-prettier',
   'vee-validate',
-  '@xkeshi/vue-qrcode',
-  'webpack',
-  'babel-eslint',
-  'sass-loader'
+  '@xkeshi/vue-qrcode'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
