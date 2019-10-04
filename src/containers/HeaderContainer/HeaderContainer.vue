@@ -50,7 +50,7 @@
         class="fixed-header"
       >
         <div v-if="$route.fullPath === '/'" class="vintage-header">
-         {{ $t('header.vintage.text') }}
+          {{ $t('header.vintage.text') }}
           <a
             rel="noopener noreferrer"
             aria-label="Vintage MyEtherWallet"
@@ -175,7 +175,9 @@
                   ]"
                   to="/create-wallet"
                 >
-                  <div class="get-free-wallet-button">{{ $t('header.wallet.new') }}</div>
+                  <div class="get-free-wallet-button">
+                    {{ $t('header.wallet.new') }}
+                  </div>
                 </b-nav-item>
                 <b-nav-item
                   v-if="showButtons && !isPageOnTop"
@@ -185,7 +187,9 @@
                   ]"
                   to="/access-my-wallet"
                 >
-                  <div class="access-button">{{ $t('header.wallet.access') }}</div>
+                  <div class="access-button">
+                    {{ $t('header.wallet.access') }}
+                  </div>
                 </b-nav-item>
                 <b-nav-item-dropdown
                   v-if="address !== null"
@@ -205,10 +209,12 @@
                       <i class="fa fa-angle-down" aria-hidden="true" />
                     </div>
                   </template>
-                  <b-dropdown-item @click="openSettings"
-                    >{{ $t('header.settings') }}</b-dropdown-item
-                  >
-                  <b-dropdown-item @click="logout">{{ $t('header.log-out') }}</b-dropdown-item>
+                  <b-dropdown-item @click="openSettings">{{
+                    $t('header.settings')
+                  }}</b-dropdown-item>
+                  <b-dropdown-item @click="logout">{{
+                    $t('header.log-out')
+                  }}</b-dropdown-item>
                 </b-nav-item-dropdown>
               </b-nav>
             </div>
