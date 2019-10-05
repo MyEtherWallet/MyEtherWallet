@@ -80,7 +80,7 @@
     "babel-jest": "23.6.0",
     "bignumber.js": "9.0.0",
     "bip39": "3.0.2",
-    "bootstrap-vue": "2.0.2",
+    "bootstrap-vue": "2.0.3",
     "canvas": "1.6.13",
     "codecov": "3.6.1",
     "copy-webpack-plugin": "5.0.4",
