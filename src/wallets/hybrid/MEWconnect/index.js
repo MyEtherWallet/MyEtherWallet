@@ -102,7 +102,6 @@ class MEWconnectWallet {
     };
     const address = await signalerConnect(
       V1_SIGNAL_URL,
-      V2_SIGNAL_URL,
       this.mewConnect
     );
 
