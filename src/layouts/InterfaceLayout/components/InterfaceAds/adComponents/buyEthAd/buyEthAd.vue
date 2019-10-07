@@ -8,7 +8,7 @@
             :options="sendButton"
             @click.native="showSwapWidget"
           />
-          <img class="cc-cards" src="@/assets/images/etc/visamaster.png" />
+          <img alt class="cc-cards" src="@/assets/images/etc/visamaster.png" />
         </div>
       </div>
     </div>
