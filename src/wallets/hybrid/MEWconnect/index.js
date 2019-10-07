@@ -100,10 +100,7 @@ class MEWconnectWallet {
     const mewConnect = () => {
       return this.mewConnect;
     };
-    const address = await signalerConnect(
-      V1_SIGNAL_URL,
-      this.mewConnect
-    );
+    const address = await signalerConnect(V1_SIGNAL_URL, this.mewConnect);
 
     return new MEWconnectWalletInterface(
       sanitizeHex(address),
