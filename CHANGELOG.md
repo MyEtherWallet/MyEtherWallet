@@ -10,6 +10,7 @@
 
 ### Devop
 
+- Remove Aldo from team page [#1482](https://github.com/MyEtherWallet/MyEtherWallet/pull/1482)
 - Custom NFTs [#1403](https://github.com/MyEtherWallet/MyEtherWallet/pull/1403)
 - Fix browser audit issues [#1428](https://github.com/MyEtherWallet/MyEtherWallet/pull/1428)
 - Update greenkeeper packages [#1453](https://github.com/MyEtherWallet/MyEtherWallet/pull/1453)
