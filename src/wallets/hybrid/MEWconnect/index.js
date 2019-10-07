@@ -13,7 +13,9 @@ import { hashPersonalMessage, toBuffer } from 'ethereumjs-util';
 import errorHandler from './errorHandler';
 import commonGenerator from '@/helpers/commonGenerator';
 
-const SIGNALER_URL = 'wss://0ec2scxqck.execute-api.us-west-1.amazonaws.com/dev'; //https://connect.mewapi.io';
+const V1_SIGNAL_URL = 'https://connect.mewapi.io';
+const V2_SIGNAL_URL =
+  'wss://0ec2scxqck.execute-api.us-west-1.amazonaws.com/dev';
 const IS_HARDWARE = true;
 
 // TODO: add listener and ui notification on RtcConnectedEvent and RtcClosedEvent
@@ -41,7 +43,10 @@ class MEWconnectWallet {
   constructor() {
     this.identifier = mewConnectType;
     this.isHardware = IS_HARDWARE;
-    this.mewConnect = new MEWconnect.Initiator();
+    this.mewConnect = new MEWconnect.Initiator({
+      v1Url: V1_SIGNAL_URL,
+      v2Url: V2_SIGNAL_URL
+    });
   }
   async init(qrcode) {
     this.mewConnect.on('codeDisplay', qrcode);
@@ -95,7 +100,11 @@ class MEWconnectWallet {
     const mewConnect = () => {
       return this.mewConnect;
     };
-    const address = await signalerConnect(SIGNALER_URL, this.mewConnect);
+    const address = await signalerConnect(
+      V1_SIGNAL_URL,
+      V2_SIGNAL_URL,
+      this.mewConnect
+    );
 
     return new MEWconnectWalletInterface(
       sanitizeHex(address),
