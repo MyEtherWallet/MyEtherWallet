@@ -21,7 +21,7 @@
             direction="from"
           />
           <div v-show="to !== '' && to !== undefined" class="direction">
-            <img src="~@/assets/images/icons/right-arrow.svg" />
+            <img src="~@/assets/images/icons/right-arrow.svg" alt />
           </div>
           <address-block
             v-show="to !== '' && to !== undefined"

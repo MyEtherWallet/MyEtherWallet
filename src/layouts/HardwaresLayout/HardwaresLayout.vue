@@ -40,6 +40,7 @@
             <div class="hardware-item-logo">
               <img
                 :src="require(`@/assets/images/affiliates/${item.logo}.png`)"
+                alt
               />
             </div>
           </div>
