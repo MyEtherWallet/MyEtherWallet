@@ -14,8 +14,7 @@ import errorHandler from './errorHandler';
 import commonGenerator from '@/helpers/commonGenerator';
 
 const V1_SIGNAL_URL = 'https://connect.mewapi.io';
-const V2_SIGNAL_URL =
-  'wss://0ec2scxqck.execute-api.us-west-1.amazonaws.com/dev';
+const V2_SIGNAL_URL = 'wss://connect2.mewapi.io/staging';
 const IS_HARDWARE = true;
 
 // TODO: add listener and ui notification on RtcConnectedEvent and RtcClosedEvent
