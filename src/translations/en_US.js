@@ -26,7 +26,6 @@ import buyHardwareWallet from './other/buy-hardware-wallet/en_US';
 import convertUnits from './other/convert-units/en_US';
 import verifyMessage from './other/verify-message/en_US';
 
-
 const en_US = {
   common: common,
   commonold: commonold,
@@ -53,6 +52,6 @@ const en_US = {
   buyHardwareWallet: buyHardwareWallet,
   dappsMaker: dappsMaker,
   convertUnits: convertUnits,
-  verifyMessage: verifyMessage,
+  verifyMessage: verifyMessage
 };
 export default en_US;
