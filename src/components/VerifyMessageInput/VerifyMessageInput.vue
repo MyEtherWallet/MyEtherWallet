@@ -29,7 +29,9 @@
           <br v-if="JSON.parse(message).msg.length > 20" />
           <b>{{ JSON.parse(message).msg }}</b>
         </p>
-        <p v-if="errors.has('signature')">{{ $t('verifyMessage.message.validation-fail') }}</p>
+        <p v-if="errors.has('signature')">
+          {{ $t('verifyMessage.message.validation-fail') }}
+        </p>
       </div>
     </div>
 
@@ -99,7 +101,10 @@ export default {
         let hash = hashPersonalMessage(toBuffer(json.msg));
         const sig = Buffer.from(json.sig.replace('0x', ''), 'hex');
         if (sig.length !== 65) {
-          Toast.responseHandler(`${this.$t('errorsGlobal.something-went-wrong')}`, Toast.ERROR);
+          Toast.responseHandler(
+            `${this.$t('errorsGlobal.something-went-wrong')}`,
+            Toast.ERROR
+          );
           return;
         }
         sig[64] = sig[64] === 0 || sig[64] === 1 ? sig[64] + 27 : sig[64];
