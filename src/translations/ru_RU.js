@@ -20,7 +20,7 @@ import ledgerError from './errors-ledger/ru_RU';
 import secalotError from './errors-secalot/ru_RU';
 import keepkeyError from './errors-keepkey/ru_RU';
 import bitboxError from './errors-bitbox/ru_RU';
-import buyHardwareWallet from './buy-hardware-wallet/ru_RU';
+import buyHardwareWallet from './other/buy-hardware-wallet/ru_RU';
 import dappsMaker from './dapps-maker/ru_RU';
 
 const ru_RU = {

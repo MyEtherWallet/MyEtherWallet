@@ -22,7 +22,8 @@ import ledgerError from './errors-ledger/en_US';
 import secalotError from './errors-secalot/en_US';
 import keepkeyError from './errors-keepkey/en_US';
 import bitboxError from './errors-bitbox/en_US';
-import buyHardwareWallet from './buy-hardware-wallet/en_US';
+import buyHardwareWallet from './other/buy-hardware-wallet/en_US';
+import convertUnits from './other/convert-units/en_US';
 
 const en_US = {
   common: common,
@@ -48,6 +49,7 @@ const en_US = {
   keepkeyError: keepkeyError,
   bitboxError: bitboxError,
   buyHardwareWallet: buyHardwareWallet,
-  dappsMaker: dappsMaker
+  dappsMaker: dappsMaker,
+  convertUnits: convertUnits
 };
 export default en_US;

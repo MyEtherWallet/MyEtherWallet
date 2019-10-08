@@ -7,7 +7,9 @@
         <div><unit-input :options="options" /></div>
 
         <div class="ether-unit-reference-guide">
-          <div class="block-title"><h3>Ether Unit Reference Guide</h3></div>
+          <div class="block-title">
+            <h3>{{ $t('convertUnits.title-refference') }}</h3>
+          </div>
 
           <div class="unit-table">
             <table>
@@ -43,11 +45,9 @@ export default {
   data() {
     return {
       titleOptions: {
-        title: 'Convert Units',
+        title: this.$t('convertUnits.page.title'),
         boldSubTitle: '',
-        textContent: [
-          'Our helpful conversion tool and ether unit reference allow you to calculate the total cost of your transactions.'
-        ]
+        textContent: [this.$t('convertUnits.page.desc')]
       },
       etherUnitRef: [
         {
