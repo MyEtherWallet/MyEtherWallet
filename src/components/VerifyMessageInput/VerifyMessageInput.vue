@@ -3,7 +3,7 @@
     <div class="send-form">
       <div class="title-container">
         <div class="title">
-          <h4>Signature:</h4>
+          <h4>{{ $t('verifyMessage.signature') }}:</h4>
           <div class="copy-buttons">
             <span @click="deleteInput">{{ $t('common.clear') }}</span>
             <span @click="copyToClipboard">{{ $t('common.copy') }}</span>
@@ -25,11 +25,11 @@
           class="success-message"
         >
           {{ JSON.parse(message).address }}
-          {{ $t('interface.verifiedMessage') }}:
+          {{ $t('verifyMessage.message.address-signed') }}:
           <br v-if="JSON.parse(message).msg.length > 20" />
           <b>{{ JSON.parse(message).msg }}</b>
         </p>
-        <p v-if="errors.has('signature')">{{ errors.first('signature') }}</p>
+        <p v-if="errors.has('signature')">{{ $t('verifyMessage.message.validation-fail') }}</p>
       </div>
     </div>
 
@@ -42,7 +42,7 @@
           ]"
           @click="verifyMessage"
         >
-          {{ $t('common.verifyMessage') }}
+          {{ $t('verifyMessage.title') }}
         </button>
       </div>
     </div>
@@ -99,7 +99,7 @@ export default {
         let hash = hashPersonalMessage(toBuffer(json.msg));
         const sig = Buffer.from(json.sig.replace('0x', ''), 'hex');
         if (sig.length !== 65) {
-          Toast.responseHandler('Something went wrong!', Toast.ERROR);
+          Toast.responseHandler(`${this.$t('errorsGlobal.something-went-wrong')}`, Toast.ERROR);
           return;
         }
         sig[64] = sig[64] === 0 || sig[64] === 1 ? sig[64] + 27 : sig[64];
@@ -118,7 +118,7 @@ export default {
         ) {
           this.showMessage = false;
           Toast.responseHandler(
-            'Signer address is different from the derived address!',
+            `${this.$t('errorsGlobal.signer-address-different')}`,
             Toast.ERROR
           );
         } else {

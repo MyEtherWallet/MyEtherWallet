@@ -24,6 +24,8 @@ import keepkeyError from './errors-keepkey/en_US';
 import bitboxError from './errors-bitbox/en_US';
 import buyHardwareWallet from './other/buy-hardware-wallet/en_US';
 import convertUnits from './other/convert-units/en_US';
+import verifyMessage from './other/verify-message/en_US';
+
 
 const en_US = {
   common: common,
@@ -50,6 +52,7 @@ const en_US = {
   bitboxError: bitboxError,
   buyHardwareWallet: buyHardwareWallet,
   dappsMaker: dappsMaker,
-  convertUnits: convertUnits
+  convertUnits: convertUnits,
+  verifyMessage: verifyMessage,
 };
 export default en_US;
