@@ -1,0 +1,9 @@
+{
+  "title": "Verify Message",
+  "page-desc": "Customize actions, debug reveals, and more with this set of advance tools. Please be mindful of the capabilities and limitations of these tools before using.",
+  "signature": "Signature",
+  "message": {
+    "validation-fail": "The signature field is required",
+    "address-signed": "did sign the message"
+  }
+}
