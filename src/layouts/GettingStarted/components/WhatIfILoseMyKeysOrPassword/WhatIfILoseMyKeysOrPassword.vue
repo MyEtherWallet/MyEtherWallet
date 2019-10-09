@@ -3,25 +3,24 @@
     <div class="block-progressbar">
       <dir class="block-progressbar__container">
         <div class="block-progressbar__title">
-          {{ $t('gettingStarted.aboutSecurity') }}
+          {{ $t('gettingStarted.title-security') }}
         </div>
         <div class="block-progressbar__progressbar">
           <div :class="progressBarValue" />
         </div>
         <div class="block-progressbar__content">
-          <h4>{{ $t('gettingStarted.lostPasswordTitle') }}</h4>
-          <p>
-            {{ $t('gettingStarted.lostPasswordDescHalf') }}
-            <span>{{ $t('gettingStarted.lostPasswordDescCaps') }}</span
-            >. {{ $t('gettingStarted.lostPasswordDescCont') }}
-          </p>
-
+          <h4>{{ $t('gettingStarted.lost-password.title') }}</h4>
+          <i18n path="gettingStarted.lost-password.desc" tag="p">
+            <span slot="goneForever" alt>{{
+              $t('gettingStarted.lost-password.desc-caps-gone-forever')
+            }}</span>
+          </i18n>
           <ul>
-            <li>{{ $t('gettingStarted.lostPasswordDescOpt1') }}</li>
-            <li>{{ $t('gettingStarted.lostPasswordDescOpt2') }}</li>
+            <li>{{ $t('gettingStarted.lost-password.option1') }}</li>
+            <li>{{ $t('gettingStarted.lost-password.option2') }}</li>
           </ul>
           <div class="block-progressbar__warning">
-            {{ $t('gettingStarted.whatIsUpsideWarning') }}
+            {{ $t('gettingStarted.lost-password.warning') }}
           </div>
         </div>
       </dir>

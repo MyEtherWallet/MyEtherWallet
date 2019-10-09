@@ -3,16 +3,16 @@
     <div class="block-progressbar">
       <dir class="block-progressbar__container">
         <div class="block-progressbar__title">
-          {{ $t('gettingStarted.whatIsUpsideTitle') }}
+          {{ $t('gettingStarted.title-upside') }}
         </div>
         <div class="block-progressbar__progressbar">
           <div :class="progressBarValue" />
         </div>
         <div class="block-progressbar__content">
-          <h4>{{ $t('gettingStarted.whatIsUpsideSubTitle') }}</h4>
-          <p>{{ $t('gettingStarted.whatIsUpsideDesc1') }}</p>
-          <p>{{ $t('gettingStarted.whatIsUpsideDesc2') }}</p>
-          <p>{{ $t('gettingStarted.whatIsUpsideDesc3') }}</p>
+          <h4>{{ $t('gettingStarted.upside.title') }}</h4>
+          <p>{{ $t('gettingStarted.upside.desc1') }}</p>
+          <p>{{ $t('gettingStarted.upside.desc2') }}</p>
+          <p>{{ $t('gettingStarted.upside.desc3') }}</p>
         </div>
       </dir>
     </div>

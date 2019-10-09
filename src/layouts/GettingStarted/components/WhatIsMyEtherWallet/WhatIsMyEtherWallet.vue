@@ -3,17 +3,17 @@
     <div class="block-progressbar">
       <dir class="block-progressbar__container">
         <div class="block-progressbar__title">
-          {{ $t('gettingStarted.aboutMew') }}
+          {{ $t('gettingStarted.title-about') }}
         </div>
         <div class="block-progressbar__progressbar">
           <div :class="progressBarValue" />
         </div>
         <div class="block-progressbar__content">
-          <h4>{{ $t('gettingStarted.whatIsMewTitle') }}</h4>
-          <p>{{ $t('gettingStarted.whatIsMewDesc1') }}</p>
-          <p>{{ $t('gettingStarted.whatIsMewDesc2') }}</p>
+          <h4>{{ $t('gettingStarted.what-is-mew.title') }}</h4>
+          <p>{{ $t('gettingStarted.what-is-mew.desc1') }}</p>
+          <p>{{ $t('gettingStarted.what-is-mew.desc2') }}</p>
           <div class="block-progressbar__warning">
-            {{ $t('gettingStarted.whatIsMewWarning') }}
+            {{ $t('gettingStarted.what-is-mew.warning') }}
           </div>
         </div>
       </dir>

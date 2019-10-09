@@ -27,7 +27,7 @@
                     {{ $t('home.create-new-wallet.text') }}
                   </p>
                   <p class="button">
-                    {{ $t('home.create-new-wallet.button') }}
+                    {{ $t('common.get-started') }}
                     <img alt src="~@/assets/images/icons/right-arrow.png" />
                   </p>
                 </div>
