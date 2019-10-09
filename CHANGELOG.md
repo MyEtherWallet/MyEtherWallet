@@ -1,3 +1,7 @@
+### Bug
+
+- Fix Goerli erroring when set to default []()
+
 ### Release v5.1.5
 
 ### Feature
