@@ -1,3 +1,8 @@
+### Release v5.1.6
+
+### Devop
+- Update packages [#1474](https://github.com/MyEtherWallet/MyEtherWallet/pull/1474)
+
 ### Bug
 
 - Fix Goerli erroring when set to default [#1488](https://github.com/MyEtherWallet/MyEtherWallet/pull/1488)
