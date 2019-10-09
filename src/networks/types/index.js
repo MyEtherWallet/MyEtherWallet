@@ -8,7 +8,7 @@ import ETC from './ETC.js';
 import ETH from './ETH.js';
 import ETHO from './ETHO.js';
 import EXP from './EXP.js';
-import GOERLI from './GOERLI';
+import GöETH from './GöETH';
 import GO from './GO.js';
 import IOLITE from './IOLITE.js';
 import KOV from './KOV.js';
@@ -41,7 +41,7 @@ export {
   ETH,
   ETHO,
   EXP,
-  GOERLI,
+  GöETH,
   GO,
   IOLITE,
   KOV,
