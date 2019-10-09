@@ -310,6 +310,7 @@ export default {
       return networks;
     },
     selectedNetwork() {
+      if (this.selectedNetworkName === 'GöETH') return this.types['GOERLI'];
       return this.types[this.selectedNetworkName];
     }
   },
