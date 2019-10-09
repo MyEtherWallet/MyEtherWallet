@@ -9,9 +9,12 @@
     lazy
   >
     <div class="modal-content-block">
+      <img src="@/assets/images/modal/garlands.png" />
       <div class="d-block text-center">
         <i class="check-icon fa fa-check" aria-hidden="true" />
-        <h2 class="title">{{ $t('confirmation.success') }}</h2>
+        <h2 class="title">
+          {{ successTitle ? successTitle : $t('confirmation.success') }}
+        </h2>
         <p>{{ message }}</p>
       </div>
 
@@ -56,6 +59,10 @@ export default {
     etherscanLink: {
       type: String,
       default: null
+    },
+    successTitle: {
+      type: String,
+      default: null
     }
   },
   computed: {
@@ -83,6 +90,11 @@ export default {
     hideModal() {
       if (this.linkTo !== '/') {
         this.$router.push({ path: this.linkTo });
+      } else if (
+        this.linkTo === '/' &&
+        this.successTitle === 'Congratulations'
+      ) {
+        this.$router.push({ path: '/' });
       }
       this.$refs.success.hide();
     }

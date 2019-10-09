@@ -1,0 +1,37 @@
+@import '~@/scss/GlobalVariables';
+
+.banner {
+  max-width: 100%;
+}
+
+.banner-container {
+  margin-top: 90px;
+  position: relative;
+  text-align: center;
+}
+
+.banner-text {
+  color: $white;
+  font-size: 40px;
+  font-weight: bold;
+  height: 48px;
+  left: 50%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 50%;
+  width: 100%;
+}
+
+// Mobile
+@media all and (max-width: $mobile-width) {
+  .banner-text {
+    font-size: 21px;
+  }
+}
+
+// Tablet
+@media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+  .banner-text {
+    font-size: 26px;
+  }
+}
