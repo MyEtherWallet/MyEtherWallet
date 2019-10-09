@@ -20,7 +20,8 @@
     "create": "Create Wallet",
     "access-my": "Access My Wallet",
     "access": "Access Wallet",
-    "unlock": "Unlock Wallet"
+    "unlock": "Unlock Wallet",
+    "do-not-have": "Do not have a wallet?"
   },
   "mewconnect": {
     "string": "MEWconnect",
@@ -28,5 +29,15 @@
   },
   "swap": "Swap",
   "token": "Token | Tokens",
-  "vintage": "Vintage"
+  "vintage": "Vintage",
+  "not-recommended": {
+    "string": "Not recommended",
+    "warning1": "This is not a recommended way to access your wallet. | This is not a recommended way to create your wallet.",
+    "warning2": "Due to the sensitivity of the information involved, these options should only be used in offline settings by experienced users."
+  },
+  "read": "Read",
+  "article": {
+    "using-mew-offline": "Using MEW Offline"
+  },
+  "password": "Password"
 }

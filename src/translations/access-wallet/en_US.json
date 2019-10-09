@@ -1,39 +1,70 @@
 {
-  "hdDerivationPath": "HD Derivation Path",
-  "customPaths": "Custom Paths",
-  "addCustomPath": "Add Custom Path",
-  "interactAddr": "Address to Interact With",
-  "id": "ID",
-  "acceptTerms": "To Access my Wallet, I accept",
-  "accessBySoftware": "Access by Software",
-  "accessByHardware": "Access by Hardware",
-  "accessByMnemonicPhrase": "Access by Mnemonic Phrase",
-  "accessByMetaMask": "Access by MetaMask",
-  "accessByPrivateKey": "Access by Private Key",
-  "networkAndAddress": "Network and Address",
-  "pleaseTypeInMnemonicPhrase": "Please type in your mnemonic phrase.",
-  "accessDeviceAddresses": "Choose a Hardware",
-  "password": "Password",
-  "mewConnectDesc": "Use MEWconnect to access my wallet",
-  "metaMaskDesc": "Use the MetaMask extension to access my wallet",
-  "installMetaMaskModalDesc": "Please install the Metamask extension and refresh your page.",
-  "refresh": "Refresh",
-  "unlockMetamaskWallet": "Can't access wallet! Please unlock your wallet through the Metamask extension",
-  "metaMaskModalDesc": "Please use MyEtherWallet on a secure (SSL/HTTPS) connection to connect.",
-  "software": "Software",
-  "softwareDesc": "Keystore file, Private key, Mnemonic phrase",
-  "notRecommended": "Not recommended",
-  "unlock": "Unlock wallet",
-  "installMetamask": "Install MetaMask",
-  "tryAgain": "Try Again",
-  "invalidPathDesc": "The path: {path} is not valid for this device",
-  "invalidPathDescCont": "",
-  "mewConnectTitle": "Access by MEWconnect",
-  "mewConnectDesc1": "Please use MEWconnect App to scan the QR code above",
-  "mewConnectDesc2": "Don't have the App? Download now.",
-  "notARecommendedWay": "This is not a recommended way to access your wallet. Due to the sensitivity of the information involved, these options should only be used in offline settings by experienced users.",
-  "buyHardwareWallet": "Purchase a hardware wallet for the highest security when accessing your crypto.",
-  "buyHardwareWalletLink": "Purchase a hardware wallet....",
-  "connectDevice": "Please make sure your device is connected.",
-  "buy": "Buy Now"
+  "mewconnect": {
+    "option-text": "Use MEWconnect to access my wallet",
+    "modal": {
+      "title": "Access by MEWconnect",
+      "text1": "Please use MEWconnect App to scan the QR code above",
+      "text2": "Don't have the App? Download now."
+    }
+  },
+  "hardware": {
+    "option-title": "Hardware",
+    "warning": {
+      "not-connected": "Please make sure your device is connected."
+    },
+    "modal": {
+      "title": "Access by Hardware",
+      "button-buy": "Buy Now",
+      "button-choose": "Choose a Hardware"
+    }
+  },
+  "software": {
+    "option-title": "Software",
+    "option-text": "Keystore file, Private key, Mnemonic phrase",
+    "modal": {
+      "title": "Access by Software",
+      "purchase-text": "Purchase a hardware wallet for the highest security when accessing your crypto.",
+      "purchase-link": "Purchase a hardware wallet...."
+    }
+  },
+  "metamask": {
+    "option-title": "Metamask",
+    "option-text": "Use the MetaMask extension to access my wallet",
+    "warning": {
+      "safari": "MetaMask is only available in these browsers:",
+      "install-promt": "Please install the Metamask extension and refresh your page.",
+      "unlock": "Can't access wallet! Please unlock your wallet through the Metamask extension"
+    },
+    "modal": {
+      "title": "Access by MetaMask",
+      "text": "Please use MyEtherWallet on a secure (SSL/HTTPS) connection to connect.",
+      "button-install": "Install Metamask",
+      "button-refresh": "Refresh",
+      "terms": "To Access my Wallet, I accept {terms}."
+    }
+  },
+  "mnemonic": {
+    "string": "Mnemonic Phrase",
+    "modal": {
+      "title": "Access by Mnemonic Phrase",
+      "text": "Please type in your mnemonic phrase."
+    }
+  },
+  "ledger": {
+    "modal": {
+      "text": "Please choose the App you have opened in Ledger"
+    },
+    "path": {
+      "string": "Path",
+      "alias": "Alias",
+      "add-custom": "Add Custom Path"
+    }
+  },
+  "private-key": {
+    "string":  "Private Key",
+    "modal": {
+      "title": "Access by Private Key"
+    }
+  },
+  "json-file": "Keystore File"
 }
