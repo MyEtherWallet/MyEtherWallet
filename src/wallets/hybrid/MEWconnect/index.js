@@ -129,7 +129,4 @@ const signalerConnect = (url, mewConnect) => {
   });
 };
 
-
-
-
 export default createWallet;
