@@ -37,7 +37,7 @@ describe('ManageENSContainer.vue', () => {
   });
 
   it('should push correct route', () => {
-    expect(push.calledWith('/interface/dapps/manage-ens'));
+    expect(push.calledWith('/interface/dapps/register-domain'));
   });
 
   it('should render correct domainName props', () => {

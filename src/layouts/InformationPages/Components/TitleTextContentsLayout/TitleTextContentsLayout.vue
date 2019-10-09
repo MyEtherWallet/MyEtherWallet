@@ -2,7 +2,7 @@
   <div class="title-text-contents">
     <div v-if="options.title" class="title-block">
       <div class="title">
-        <img v-if="options.titleIcon" :src="options.titleIcon" />
+        <img v-if="options.titleIcon" :src="options.titleIcon" alt />
         <span>{{ options.title }}</span>
       </div>
     </div>

@@ -1,19 +1,8 @@
 import Changelly from '@/partners/changelly/changelly.js';
-import changellyCalls from '@/partners/changelly/changelly-calls';
-import BigNumber from 'bignumber.js';
+
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-
-xdescribe('changelly.js', () => {
-  let changelly;
-  const percentVarianceAllowed = 0.009;
-  beforeAll(() => {
-    changelly = new Changelly({ network: 'ETH' });
-  });
-  it('Expect market rate calculated value to be within 1% of exact value (to ETH)', async () => {
-    const currency = Object.values(changelly.currencies).find(
-      entry => !entry.fixRateEnabled
-    );
-
+describe('changelly.js', () => {
+  xit('testing', async () => {
     const fromCurrency = currency.symbol;
     const toCurrency = 'ETH';
     const fromValue = 100;
