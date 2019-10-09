@@ -81,7 +81,9 @@
                   class="crypto-link no-padding"
                   data-btc="1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9"
                 >
-                  <img src="~@/assets/images/icons/btc.svg" alt /> &nbsp;{{ $t('footer.donation.bitcoin') }}
+                  <img src="~@/assets/images/icons/btc.svg" alt /> &nbsp;{{
+                    $t('footer.donation.bitcoin')
+                  }}
                 </p>
               </a>
             </div>
