@@ -38,13 +38,9 @@ describe('kyber.js', () => {
   });
 
   xit('should return gas limits array from api', async done => {
-    const gasLimitList = await kyberCalls.getGasLimits('ETH');
-    expect(gasLimitList.data).toBeInstanceOf(Array);
+    // const gasLimitList = await kyberCalls.getGasLimits('ETH');
+    // expect(gasLimitList.data).toBeInstanceOf(Array);
     done();
-  });
-
-    const baseValue = kyber.convertToTokenWei('GTO', 1);
-    expect(baseValue).toBe('100000');
   });
 
   xit('should return data for kyber trade tx', async () => {
