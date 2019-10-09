@@ -1,7 +1,7 @@
 <template>
   <b-modal
     ref="mewConnect"
-    :title="$t('accessWallet.mewConnectTitle')"
+    :title="$t('accessWallet.mewconnect.modal.title')"
     hide-footer
     class="bootstrap-modal nopadding modal-mew-connect"
     centered
@@ -15,7 +15,7 @@
       </div>
       <div class="d-block content-container text-center">
         <h3 class="modal-large-text">
-          {{ $t('accessWallet.mewConnectDesc1') }}
+          {{ $t('accessWallet.mewconnect.modal.text1') }}
         </h3>
       </div>
       <div class="appstore-button-container">
@@ -39,7 +39,9 @@
             <img alt src="~@/assets/images/icons/google-play.svg" height="35" />
           </a>
         </div>
-        <p class="download-now">{{ $t('accessWallet.mewConnectDesc2') }}</p>
+        <p class="download-now">
+          {{ $t('accessWallet.mewconnect.modal.text2') }}
+        </p>
       </div>
       <customer-support />
     </div>
