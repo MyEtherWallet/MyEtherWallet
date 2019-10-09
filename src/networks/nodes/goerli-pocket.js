@@ -1,6 +1,6 @@
-import { GöETH } from '../types';
+import { GOERLI } from '../types';
 export default {
-  type: GöETH,
+  type: GOERLI,
   service: 'pokt.network',
   url: 'pokt.network/goerli', // not a real url (decentralized provider)
   port: 443,
