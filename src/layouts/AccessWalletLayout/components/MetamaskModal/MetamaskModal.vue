@@ -1,7 +1,7 @@
 <template>
   <b-modal
     ref="metamask"
-    :title="$t('accessWallet.accessByMetaMask')"
+    :title="$t('accessWallet.metamask.modal.title')"
     hide-footer
     static
     lazy
@@ -11,7 +11,7 @@
     <div class="modal-content">
       <div v-if="isSafari" class="browser-catch">
         <h4>
-          MetaMask is only available in these browsers:
+          {{ $t('accessWallet.metamask.warning.safari') }}
         </h4>
         <div class="browser-logo-container">
           <a
@@ -41,7 +41,7 @@
         </div>
         <div class="d-block content-container text-center">
           <h4 v-show="!unlockWeb3Wallet">
-            {{ $t('accessWallet.metaMaskModalDesc') }}
+            {{ $t('accessWallet.metamask.modal.text') }}
           </h4>
           <h4 v-show="unlockWeb3Wallet">
             {{ $t('accessWallet.unlockMetamaskWallet') }}
@@ -49,10 +49,12 @@
         </div>
         <div class="accept-terms">
           <label class="checkbox-container">
-            {{ $t('accessWallet.acceptTerms') }}
-            <router-link to="/terms-and-conditions">
-              {{ $t('common.terms') }} </router-link
-            >.
+            <i18n path="accessWallet.metamask.modal.terms" tag="label">
+              <router-link slot="terms" to="/terms-and-conditions">{{
+                $t('common.terms')
+              }}</router-link
+              >.
+            </i18n>
             <input
               type="checkbox"
               @click="accessMyWalletBtnDisabled = !accessMyWalletBtnDisabled"
@@ -66,7 +68,7 @@
             :disabled="accessMyWalletBtnDisabled"
             class="mid-round-button-green-filled close-button"
             @click="getWeb3Wallet"
-            >{{ $t('common.accessMyWallet') }}</b-btn
+            >{{ $t('common.wallet.access-my') }}</b-btn
           >
           <b-btn
             v-show="unlockWeb3Wallet"
@@ -85,7 +87,7 @@
           />
         </div>
         <div class="d-block content-container text-center">
-          <h4>{{ $t('accessWallet.installMetaMaskModalDesc') }}</h4>
+          <h4>{{ $t('accessWallet.metamask.warning.install-promt') }}</h4>
         </div>
         <div class="accept-terms hidden">
           <label class="checkbox-container">
@@ -103,13 +105,13 @@
             rel="noopener noreferrer"
             class="mid-round-button-green-filled close-button"
             @click="refreshPage = true"
-            >{{ $t('accessWallet.installMetamask') }}</a
+            >{{ $t('accessWallet.metamask.modal.button-install') }}</a
           >
           <b-btn
             v-show="refreshPage"
             class="mid-round-button-green-filled close-button"
             @click="reload"
-            >{{ $t('accessWallet.refresh') }}</b-btn
+            >{{ $t('accessWallet.metamask.modal.button-refresh') }}</b-btn
           >
         </div>
       </div>
