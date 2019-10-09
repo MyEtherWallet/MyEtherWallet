@@ -1,6 +1,6 @@
 ### Bug
 
-- Fix Goerli erroring when set to default []()
+- Fix Goerli erroring when set to default [#1488](https://github.com/MyEtherWallet/MyEtherWallet/pull/1488)
 
 ### Release v5.1.5
 
