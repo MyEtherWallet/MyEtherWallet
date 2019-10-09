@@ -24,7 +24,7 @@
             <label :for="provider.provider" />
           </div>
           <div class="provider-image">
-            <img :src="providerLogo(provider)" />
+            <img :src="providerLogo(provider)" alt />
           </div>
           <div
             :class="[
@@ -83,7 +83,7 @@
             <input type="radio" name="provider" /> <label :for="provider" />
           </div>
           <div class="provider-image">
-            <img :src="providerLogo(provider)" />
+            <img :src="providerLogo(provider)" alt />
           </div>
           <div class="background-masker" />
         </li>
@@ -100,7 +100,7 @@
             <input type="radio" name="provider" /> <label :for="provider" />
           </div>
           <div class="provider-image">
-            <img :src="providerLogo(provider)" />
+            <img :src="providerLogo(provider)" alt />
           </div>
           <div class="background-masker" />
         </li>
@@ -136,7 +136,9 @@
           <div class="mew-custom-form__radio-button">
             <input type="radio" name="provider" />
           </div>
-          <div class="provider-image"><img :src="providerLogo('mew')" /></div>
+          <div class="provider-image">
+            <img :src="providerLogo('mew')" alt />
+          </div>
           <div>
             {{ $t('interface.loadRateError') }}
             {{ noProvidersPair.fromCurrency }} {{ $t('interface.articleTo') }}

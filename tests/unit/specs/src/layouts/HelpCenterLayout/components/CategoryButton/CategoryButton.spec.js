@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import { shallowMount } from '@vue/test-utils';
 import CategoryButton from '@/layouts/HelpCenterLayout/components/CategoryButton/CategoryButton.vue';
-
 import { Tooling } from '@@/helpers';
 
 const content = {
@@ -28,19 +27,16 @@ describe('CategoryButton.vue', () => {
       store,
       attachToDocument: true,
       propsData: {
-        content: content
+        content
       }
     });
   });
 
   it('should render correct contents', () => {
-    expect(
-      wrapper.vm.$el.querySelector('.button-icon img').getAttribute('src')
-    ).toEqual(content.icon);
-    expect(
-      wrapper.vm.$el.querySelector('.button-title').textContent.trim()
-    ).toEqual(content.title);
+    const { icon, title } = content;
+    const imgIcon = wrapper.vm.$el.querySelector('.button-icon img');
+    const pTitle = wrapper.vm.$el.querySelector('.button-title');
+    expect(imgIcon.getAttribute('src')).toEqual(icon);
+    expect(pTitle.textContent.trim()).toEqual(title);
   });
-
-  describe('CategoryButton.vue Methods', () => {});
 });

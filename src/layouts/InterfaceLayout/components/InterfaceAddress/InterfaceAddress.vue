@@ -32,13 +32,13 @@
             Switch
           </button>
           <b-btn id="popover-ref-qrcode" class="custom-tooltip" @click="qrcode">
-            <img src="~@/assets/images/icons/qr-code-white.svg" />
+            <img alt src="~@/assets/images/icons/qr-code-white.svg" />
           </b-btn>
           <b-btn id="popover-ref-print" class="custom-tooltip" @click="print">
-            <img src="~@/assets/images/icons/printer-white.svg" />
+            <img alt src="~@/assets/images/icons/printer-white.svg" />
           </b-btn>
           <b-btn id="popover-ref-copy" class="custom-tooltip" @click="copy">
-            <img src="~@/assets/images/icons/copy.svg" />
+            <img alt src="~@/assets/images/icons/copy.svg" />
           </b-btn>
           <b-btn
             v-show="displayAddr"
@@ -46,7 +46,10 @@
             class="custom-tooltip button-address"
             @click="displayAddr"
           >
-            <img src="~@/assets/images/icons/Interface/Buttons/Address.svg" />
+            <img
+              alt
+              src="~@/assets/images/icons/Interface/Buttons/Address.svg"
+            />
           </b-btn>
           <b-popover
             content="Switch Address"

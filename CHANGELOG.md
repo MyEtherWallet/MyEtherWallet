@@ -1,4 +1,35 @@
+### Release v5.1.6
+
+### Devop
+
+- Remove Aldo from team page [#1482](https://github.com/MyEtherWallet/MyEtherWallet/pull/1482)
+- Add decision tree [#1442](https://github.com/MyEtherWallet/MyEtherWallet/pull/1442)
+- Update packages [#1474](https://github.com/MyEtherWallet/MyEtherWallet/pull/1474)
+
+
+### Release v5.1.5
+
+### Feature
+
+- Add network to query [#1460](https://github.com/MyEtherWallet/MyEtherWallet/pull/1460)
+
+### Bug
+
+- Fix check for login to metamask wallet [#1457](https://github.com/MyEtherWallet/MyEtherWallet/pull/1457)
+
+### Devop
+
+- Custom NFTs [#1403](https://github.com/MyEtherWallet/MyEtherWallet/pull/1403)
+- Fix browser audit issues [#1428](https://github.com/MyEtherWallet/MyEtherWallet/pull/1428)
+- Update greenkeeper packages [#1453](https://github.com/MyEtherWallet/MyEtherWallet/pull/1453)
+- Update Ella links [#1454](https://github.com/MyEtherWallet/MyEtherWallet/pull/1454)
+- Font fix [#1465](https://github.com/MyEtherWallet/MyEtherWallet/pull/1465)
+
 ### Release v5.1.4
+
+### Devop
+
+- More tests [#1435](https://github.com/MyEtherWallet/MyEtherWallet/pull/1435)
 
 ### Bug
 
@@ -6,9 +37,6 @@
 - Gas price not saving properly [#1434](https://github.com/MyEtherWallet/MyEtherWallet/pull/1434)
 - Fix u2f timeout for bitbox on windows [#1423](https://github.com/MyEtherWallet/MyEtherWallet/pull/1423)
 
-### Devop
-
-- Add decision tree [#1442](https://github.com/MyEtherWallet/MyEtherWallet/pull/1442)
 
 ### Release v5.1.3
 
