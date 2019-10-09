@@ -1,6 +1,6 @@
-import { GöETH } from '../types';
+import { GOERLI } from '../types';
 export default {
-  type: GöETH,
+  type: GOERLI,
   service: 'myetherwallet.com',
   url: 'wss://ws.mewapi.io/goerli',
   port: 443,
