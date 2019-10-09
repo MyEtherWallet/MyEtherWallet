@@ -59,7 +59,7 @@
               </i18n>
             </div>
             <div class="links">
-              <p>{{ $t('footer.welcomeDes') }}</p>
+              <p>{{ $t('footer.donation.desc') }}</p>
 
               <a
                 :href="'https://etherscan.io/address/' + ethDonationAddress"
@@ -68,7 +68,7 @@
               >
                 <p :data-eth="ethDonationAddress" class="crypto-link">
                   <img src="~@/assets/images/icons/eth.svg" alt />
-                  &nbsp;Ethereum Donation
+                  &nbsp;{{ $t('footer.donation.ether') }}
                 </p>
               </a>
 
@@ -81,8 +81,7 @@
                   class="crypto-link no-padding"
                   data-btc="1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9"
                 >
-                  <img src="~@/assets/images/icons/btc.svg" alt /> &nbsp;Bitcoin
-                  Donation
+                  <img src="~@/assets/images/icons/btc.svg" alt /> &nbsp;{{ $t('footer.donation.bitcoin') }}
                 </p>
               </a>
             </div>
@@ -174,7 +173,7 @@ export default {
           title: this.$t('footer.title.discover'),
           contents: [
             {
-              text: this.$t('footer.units'),
+              text: this.$t('convertUnits.page.title'),
               to: '/convert-units'
             },
             // {
@@ -187,7 +186,7 @@ export default {
                 'https://chrome.google.com/webstore/detail/myetherwallet/nlbmnnijcnlegkjjpcfjclmcfggfefdm?hl=en'
             },
             {
-              text: 'Buy a Hardware wallet',
+              text: this.$t('buyHardwareWallet.page.title'),
               to: '/hardware-wallet-affiliates'
             },
             {
@@ -195,7 +194,7 @@ export default {
               to: '/send-offline-helper'
             },
             {
-              text: this.$t('footer.verifyMessage'),
+              text: this.$t('verifyMessage.title'),
               to: '/verify-message'
             }
           ]
@@ -230,7 +229,7 @@ export default {
               href: 'https://vintage.myetherwallet.com'
             },
             {
-              text: this.$t('common.customerSupport'),
+              text: this.$t('common.cstm-support'),
               href: 'mailto:support@myetherwallet.com'
             },
             {
