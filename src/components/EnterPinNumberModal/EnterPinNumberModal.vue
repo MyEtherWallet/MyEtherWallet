@@ -11,14 +11,16 @@
     >
       <div class="modal-contents">
         <div class="pin-input-block">
-          <p class="main-title">{{$t('accessWallet.pin.enter') }} {{ deviceInfo.name }}</p>
+          <p class="main-title">
+            {{ $t('accessWallet.pin.enter') }} {{ deviceInfo.name }}
+          </p>
           <p class="sub-title">
-           {{$t('accessWallet.pin.layout') }}
+            {{ $t('accessWallet.pin.layout') }}
           </p>
           <div class="input-container">
             <div class="input-headers">
-              <p>{{$t('accessWallet.pin.string') }}</p>
-              <span @click="clear">{{$t('common.clear') }}</span>
+              <p>{{ $t('accessWallet.pin.string') }}</p>
+              <span @click="clear">{{ $t('common.clear') }}</span>
             </div>
             <input v-model="pin" type="password" readonly="true" />
           </div>
@@ -38,15 +40,18 @@
               >
                 <i v-if="acknowledgedTerms" class="fa fa-check" />
               </span>
-              <input name="terms" type="checkbox" />{{$t('accessWallet.pin.access')}}
-              <br /> {{$t('accessWallet.pin.accept')}}
+              <input name="terms" type="checkbox" />{{
+                $t('accessWallet.pin.access')
+              }}
+              <br />
+              {{ $t('accessWallet.pin.accept') }}
               <router-link to="/terms-and-conditions">
-                {{$t('accessWallet.pin.terms')}}
+                {{ $t('accessWallet.pin.terms') }}
               </router-link>
             </label>
           </div>
           <button :disabled="!acknowledgedTerms" @click="actualClick">
-            {{$t('common.wallet.access-my')}}
+            {{ $t('common.wallet.access-my') }}
           </button>
         </div>
       </div>
