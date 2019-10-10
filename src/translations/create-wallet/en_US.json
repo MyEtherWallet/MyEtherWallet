@@ -1,38 +1,64 @@
 {
-  "title": "Welcome to MEW",
-  "yourPw": "Your Password",
-  "doNotForget": "DO NOT FORGET",
-  "doNotForgetDesc": "to save your password. You will need this",
-  "keyPass": "Password + Keystore",
-  "keyPassDesc": "File to unlock your wallet.",
-  "passMnem": "Password + Mnemonic Phrase",
-  "passMnemDesc": "to unlock your wallet.",
-  "byMnemonic": "By Mnemonic Phrase",
-  "byMnemonicSuccess": "Success",
-  "byMnemonicSuccessfullyCreated": "Your have created your wallet successfully.",
-  "byMnemonicValue": "Value",
-  "byMnemonicRandom": "Random",
-  "byMnemonicWriteDown": "Write Down Mnemonic Phrase Key",
-  "byMnemonicAlreadyWritten": "I Wrote Down My Mnemonic Phrase",
-  "byJsonFile": "By Keystore File",
-  "byJsonFileSaveKeystore": "Save My Keystore File",
-  "byJsonFileDontLoseTitle": "Don't Lose It",
-  "byJsonFileDontLoseDesc": "Be careful, it can not be recovered if you lose it.",
-  "byJsonFileDontShareTitle": "Don't Share It",
-  "byJsonFileDontShareDesc": "Your funds will be stolen if you use this file on a malicious phishing site.",
-  "byJsonFileMakeBackupTitle": "Make a Backup",
-  "byJsonFileMakeBackupDesc": "Secure it like the millions of dollars it may one day be worth.",
-  "byJsonFileDownloadKeyFile": "Download Keystore File",
-  "pageTitleAlreadyHave": "Already have a wallet?",
+  "title": "Get a New Wallet",
+  "sub-title": "Already have a wallet?",
   "pageFooterTitle": "Want to learn more about Blockchain or MEW? Please go to",
-  "titleMEWConnect": "Recommended Method",
-  "mewConnectDesc": "Safe and easy access to your wallet in 3 steps.",
-  "scanToDownload": "Scan to Download",
-  "iosVersions": "iOS 10.0 or up",
-  "androidVersions": "Android 8.0 or up",
-  "tutorialModalHeader": "Welcome to MEW",
-  "tutorialModalDesc": "Please take a moment to read through this short introduction. It’s very important for your own security that you understand these warnings. Ignoring this step will highly increase the chances of your funds being lost or stolen, in which case we won’t be able to help you. {0} at your own risk.",
-  "tutorialModalSkip": "Skip",
-  "notARecommendedWay": "This is NOT a recommended way of creating a wallet. This information is sensitive, and these options should only be used in offline settings by experienced crypto users.",
-  "mnemonicPasswordWarning": "If you choose to include a password, understand you will ALWAYS need this password with your mnemonic phrase. You can not change it. It becomes a permanent part of your phrase. Read more about the password option here."
+  "welcome": {
+    "title": "Welcome to MEW",
+    "tutorialModalDesc": "Please take a moment to read through this short introduction. It’s very important for your own security that you understand these warnings. Ignoring this step will highly increase the chances of your funds being lost or stolen, in which case we won’t be able to help you. {0} at your own risk.",
+    "Button-skip": "Skip"
+  },
+  "mewconnect": {
+    "title": "Recommended Method",
+    "desc": "Safe and easy access to your wallet in 3 steps.",
+    "scan": "Scan to Download",
+    "version": {
+      "ios": "iOS 10.0 or up",
+      "android": "Android 8.0 or up"
+    }
+  },
+  "password": {
+    "text": "Your Password",
+    "doNotForget": "DO NOT FORGET",
+    "doNotForgetDesc": "to save your password. You will need this"
+  },
+  "keystore": {
+    "title-tab": "By Keystore File",
+    "keyPass": "Password + Keystore",
+    "keyPassDesc": "File to unlock your wallet.",
+    "title-save": "Save My Keystore File",
+    "Button-download": "Download Keystore File",
+    "loose": {
+      "title": "Don't Lose It",
+      "desc": "Be careful, it can not be recovered if you lose it."
+    },
+    "share": {
+      "title": "Don't Share It",
+      "desc": "Your funds will be stolen if you use this file on a malicious phishing site."
+    },
+    "backup": {
+      "title": "Make a Backup",
+      "desc": "Secure it like the millions of dollars it may one day be worth."
+    }
+  },
+  "mnemonic": {
+    "title-tab": "By Mnemonic Phrase",
+    "value": "Value",
+    "random": "Random",
+    "passMnem": "Password + Mnemonic Phrase",
+    "passMnemDesc": "to unlock your wallet.",
+    "button-wrote -it down": "I Wrote Down My Mnemonic Phrase",
+    "warning": {
+      "write-down": "Write Down Mnemonic Phrase Key",
+      "password": "If you choose to include a password, understand you will ALWAYS need this password with your mnemonic phrase. You can not change it. It becomes a permanent part of your phrase. Read more about the password option here."
+    },
+    "verify": {
+      "title": "Verification",
+      "text": "Please enter and fill out the empty boxes below to verify your mnemonic phrase key",
+    "button": "Verify"
+    }
+  },
+  "created": {
+    "title": "Success",
+    "text": "Your have created your wallet successfully."
+  }
 }

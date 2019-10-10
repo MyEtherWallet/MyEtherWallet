@@ -5,12 +5,12 @@
       hide-footer
       centered
       class="bootstrap-modal nopadding"
-      title="Address"
+      :title="$t('common.addr')"
       static
       lazy
     >
       <div class="modal-contents">
-        MEWconnect is not compatible with iPads.
+        {{ this.$t('accessWallet.mewconnect.warning')}}
       </div>
     </b-modal>
   </div>
