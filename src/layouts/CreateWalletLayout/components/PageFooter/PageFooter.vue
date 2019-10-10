@@ -3,7 +3,9 @@
     <div class="wrap">
       <div class="page-container">
         <i18n path="createWallet.page-footer-title" tag="p">
-          <router-link slot="faq" to="/#faqs">{{ $t('common.faqs') }}</router-link>
+          <router-link slot="faq" to="/#faqs">{{
+            $t('common.faqs')
+          }}</router-link>
         </i18n>
       </div>
     </div>
