@@ -11,17 +11,17 @@
             <div v-if="showProgressBar && false" class="progress-bar" />
             <b-tab
               class="mew-connect-block"
-              title="MEWconnect"
+              :title="this.$t('common.mewconnect.string')"
               active
               @click="showProgressBar = false"
             >
               <div class="tab-content-block">
                 <div class="title-block">
                   <div class="title-popover">
-                    <h3>{{ $t('createWallet.titleMEWConnect') }}</h3>
-                    <popover :popcontent="$t('home.aboutMewConnectDesc')" />
+                    <h3>{{ $t('createWallet.mewconnect.title') }}</h3>
+                    <popover :popcontent="$t('common.mewconnect.desc')" />
                   </div>
-                  <p>{{ $t('createWallet.mewConnectDesc') }}</p>
+                  <p>{{ $t('createWallet.mewconnect.desc') }}</p>
                 </div>
                 <div class="appstores">
                   <div class="icons">
@@ -58,7 +58,7 @@
                   </div>
                   <div class="download">
                     <p @click="scanToDownloadModalOpen">
-                      {{ $t('createWallet.scanToDownload') }}
+                      {{ $t('createWallet.mewconnect.scan') }}
                     </p>
                   </div>
                 </div>

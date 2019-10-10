@@ -5,7 +5,8 @@
       "title": "Access by MEWconnect",
       "text1": "Please use MEWconnect App to scan the QR code above",
       "text2": "Don't have the App? Download now."
-    }
+    },
+    "warning": "MEWconnect is not compatible with iPads."
   },
   "hardware": {
     "option-title": "Hardware",
