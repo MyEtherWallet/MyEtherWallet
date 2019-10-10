@@ -203,6 +203,10 @@ export default {
             {
               text: this.$t('footer.viewWalletInfo'),
               to: '/view-wallet-info'
+            },
+            {
+              text: 'Submit DApp',
+              to: '/dapp-submission'
             }
           ]
         },

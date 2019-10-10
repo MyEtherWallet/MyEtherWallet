@@ -9,6 +9,13 @@ const NotFoundLayout = () => import('@/layouts/NotFoundLayout');
 const GettingStarted = () => import('@/layouts/GettingStarted');
 const SendOfflineHelper = () => import('@/layouts/SendOfflineHelper');
 const VerifyMessageLayout = () => import('@/layouts/VerifyMessageLayout');
+const DappSubmission = () => import('@/layouts/DappSubmissionLayout');
+const AboutYourDapp = () =>
+  import('@/layouts/DappSubmissionLayout/containers/AboutYourDappContainer');
+const AboutYourTeam = () =>
+  import('@/layouts/DappSubmissionLayout/containers/AboutYourTeamContainer');
+const DappSummary = () =>
+  import('@/layouts/DappSubmissionLayout/containers/SummaryContainer');
 
 const DappsContainer = () =>
   import('@/layouts/InterfaceLayout/containers/DappsContainer');
@@ -90,6 +97,36 @@ const router = [
     name: 'SendOfflineHelper',
     component: SendOfflineHelper,
     meta: { requiresAuth: false }
+  },
+  {
+    path: '/dapp-submission',
+    component: DappSubmission,
+    children: [
+      {
+        path: '',
+        name: 'DappSubmission',
+        component: AboutYourDapp,
+        meta: { requiresAuth: false }
+      },
+      {
+        path: 'about-your-dapp',
+        name: 'AboutYourDapp',
+        component: AboutYourDapp,
+        meta: { requiresAuth: false }
+      },
+      {
+        path: 'about-your-team',
+        name: 'AboutYourTeam',
+        component: AboutYourTeam,
+        meta: { requiresAuth: false }
+      },
+      {
+        path: 'dapp-summary',
+        name: 'DappSummary',
+        component: DappSummary,
+        meta: { requiresAuth: false }
+      }
+    ]
   },
   {
     path: '/verify-message',
