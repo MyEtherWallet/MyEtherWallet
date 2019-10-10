@@ -16,6 +16,13 @@
   @media all and (max-width: $mobile-width) {
     padding: 40px 20px;
   }
+
+  img {
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
 }
 
 .buttons {

@@ -78,6 +78,14 @@ const affiliates = [
     href: 'http://lddy.no/a4im',
     currency: '$',
     logo: 'keepkey'
+  },
+  {
+    text: 'footer.sotd',
+    price: '',
+    description: '',
+    href: 'https://www.stateofthedapps.com/',
+    currency: '',
+    logo: ''
   }
 ];
 
