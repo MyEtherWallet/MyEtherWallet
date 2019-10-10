@@ -91,10 +91,17 @@
         </div>
         <div class="accept-terms hidden">
           <label class="checkbox-container">
-            {{ $t('accessWallet.acceptTerms') }}
-            <router-link to="/terms-and-conditions">
-              {{ $t('common.terms') }} </router-link
-            >. <input type="checkbox" /> <span class="checkmark" />
+            <i18n path="accessWallet.metamask.modal.terms" tag="label">
+              <router-link slot="terms" to="/terms-and-conditions">{{
+                $t('common.terms')
+              }}</router-link
+              >.
+            </i18n>
+            <input
+              type="checkbox"
+              @click="accessMyWalletBtnDisabled = !accessMyWalletBtnDisabled"
+            />
+            <span class="checkmark" />
           </label>
         </div>
         <div class="button-container">
