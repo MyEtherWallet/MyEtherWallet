@@ -72,7 +72,7 @@
                 <a
                   href="https://kb.myetherwallet.com/posts/security-and-privacy/mnemonic-phrase-password/"
                   target="_blank"
-                  >{{$t('common.article.mnemonic-password')}}</a
+                  >{{ $t('common.article.mnemonic-password') }}</a
                 >
               </div>
             </div>

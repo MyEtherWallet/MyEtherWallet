@@ -1,10 +1,10 @@
 <template>
   <b-modal
     ref="verification"
+    :title="$t('createWallet.mnemonic.verify.title')"
     hide-footer
     centered
     class="bootstrap-modal-wide verification nopadding"
-    :title="$t('createWallet.mnemonic.verify.title')"
     static
     lazy
   >
@@ -28,7 +28,9 @@
         <div
           class="verify-button large-round-button-green-filled"
           @click="verifyMnemonic"
-        >{{$t('common.verify')}}</div>
+        >
+          {{ $t('common.verify') }}
+        </div>
       </div>
     </div>
   </b-modal>
