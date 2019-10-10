@@ -61,7 +61,8 @@
   "private-key": {
     "string":  "Private Key",
     "modal": {
-      "title": "Access by Private Key"
+      "title": "Access by Private Key",
+      "placeholder": "Enter Private Key"
     }
   },
   "network-addr":{
