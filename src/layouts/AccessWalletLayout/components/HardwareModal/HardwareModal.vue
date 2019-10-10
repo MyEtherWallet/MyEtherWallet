@@ -1,7 +1,7 @@
 <template>
   <b-modal
     ref="hardware"
-    :title="$t('accessWallet.accessByHardware')"
+    :title="$t('accessWallet.hardware.modal.title')"
     hide-footer
     class="bootstrap-modal modal-hardware nopadding"
     centered
@@ -11,7 +11,7 @@
     <div class="modal-content-container">
       <div class="d-block text-center">
         <b-alert :show="mayNotBeAttached" fade variant="warning">{{
-          $t('accessWallet.connectDevice')
+          $t('accessWallet.hardware.warning.not-connected')
         }}</b-alert>
         <div class="button-options hardware-button-options">
           <wallet-option
@@ -36,7 +36,7 @@
           ]"
           @click="continueAccess"
         >
-          {{ $t('accessWallet.accessDeviceAddresses') }}
+          {{ $t('accessWallet.hardware.modal.button-choose') }}
         </div>
       </div>
       <customer-support />

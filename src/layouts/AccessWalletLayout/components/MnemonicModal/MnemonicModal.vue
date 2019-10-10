@@ -1,7 +1,7 @@
 <template>
   <b-modal
     ref="mnemonicPhrase"
-    :title="$t('accessWallet.accessByMnemonicPhrase')"
+    :title="$t('accessWallet.mnemonic.modal.title')"
     hide-footer
     class="bootstrap-modal modal-metamask nopadding"
     centered
@@ -15,7 +15,7 @@
     </div>
     <div class="contents">
       <p class="instruction">
-        {{ $t('accessWallet.pleaseTypeInMnemonicPhrase') }}
+        {{ $t('accessWallet.mnemonic.modal.text') }}
       </p>
       <div class="tools">
         <div class="value-switch noselect">
@@ -34,7 +34,7 @@
             </div>
           </div>
           <span class="text__base link switch-label">{{
-            $t('createWallet.byMnemonicValue')
+            $t('common.value')
           }}</span>
         </div>
       </div>
@@ -54,8 +54,8 @@
         </div>
         <div class="option-container-block">
           <expending-option
-            title="Password"
-            button-text="Optional"
+            :title="$t('common.password.string')"
+            :button-text="$t('common.optional')"
             @expanded="passwordInputViewChange"
           >
             <div class="option-container">

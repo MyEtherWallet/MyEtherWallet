@@ -55,9 +55,7 @@
       "text": "Please choose the App you have opened in Ledger"
     },
     "path": {
-      "string": "Path",
-      "alias": "Alias",
-      "add-custom": "Add Custom Path"
+
     }
   },
   "private-key": {
@@ -66,5 +64,19 @@
       "title": "Access by Private Key"
     }
   },
-  "json-file": "Keystore File"
+  "network-addr":{
+    "string": "Network and Address",
+    "addr-to-interact": "Address to Interact With",
+    "id": "ID"
+  },
+  "path": {
+    "string": "Path",
+    "hd-derivation": "HD Derivation Path",
+    "custom": "Custom Paths",
+    "add-custom": "Add Custom Path",
+    "invalid-desc": "The path: {path} is not valid for this device",
+    "alias": "Alias"
+  },
+  "json-file": "Keystore File",
+  "accept-terms": "To Access my Wallet, I accept {terms}"
 }

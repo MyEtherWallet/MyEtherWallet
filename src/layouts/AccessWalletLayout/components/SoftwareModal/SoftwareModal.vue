@@ -1,7 +1,7 @@
 <template>
   <b-modal
     ref="software"
-    :title="$t('accessWallet.accessBySoftware')"
+    :title="$t('accessWallet.software.modal.title')"
     hide-footer
     class="bootstrap-modal nopadding modal-software"
     centered
@@ -26,10 +26,10 @@
         </div>
         <div class="hardware-link">
           <p>
-            {{ $t('accessWallet.buyHardwareWallet') }}
+            {{ $t('accessWallet.software.modal.purchase-text') }}
           </p>
           <router-link to="/hardware-wallet-affiliates">{{
-            $t('accessWallet.buyHardwareWalletLink')
+            $t('accessWallet.software.modal.purchase-link')
           }}</router-link>
         </div>
         <input
@@ -101,17 +101,17 @@ export default {
         {
           name: 'byJson',
           imgHoverPath: byJsonImgHov,
-          text: this.$t('common.jsonF')
+          text: this.$t('accessWallet.json-file')
         },
         {
           name: 'byMnem',
           imgHoverPath: byMnemImgHov,
-          text: this.$t('common.mnemonicP')
+          text: this.$t('accessWallet.mnemonic.string')
         },
         {
           name: 'byPriv',
           imgHoverPath: privKeyImgHov,
-          text: this.$t('common.privKey')
+          text: this.$t('accessWallet.private-key.string')
         }
       ]
     };

@@ -23,7 +23,7 @@
             rel="noopener noreferrer"
             @click.stop
           >
-            {{ $t('accessWallet.buy') }} >
+            {{ $t('accessWallet.hardware.modal.button-buy') }} >
           </a>
         </div>
       </div>

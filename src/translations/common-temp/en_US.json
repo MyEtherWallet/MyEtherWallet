@@ -10,6 +10,7 @@
   "copy": "Copy",
   "clear": "Clear",
   "edit": "Edit",
+  "cancel": "Cancel",
   "yes": "Yes",
   "no": "No",
   "verify": "Verify",
@@ -39,5 +40,13 @@
   "article": {
     "using-mew-offline": "Using MEW Offline"
   },
-  "password": "Password"
+  "password": {
+    "string": "Password",
+    "enter": "Enter password"
+  },
+  "optional":  "Optional",
+  "value": "Value",
+  "network": "Network",
+  "addr": "Address",
+  "balance": "Balance"
 }
