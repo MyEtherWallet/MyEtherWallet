@@ -194,12 +194,7 @@ if (process.env.NODE_ENV === 'production') {
           'src/layouts/DappSubmissionLayout/containers/SummaryContainer/index.js',
           'src/layouts/DappSubmissionLayout/containers/SummaryContainer/SummaryContainer.scss',
           'src/layouts/DappSubmissionLayout/containers/SummaryContainer/SummaryContainer.vue',
-          'src/layouts/DappSubmissionLayout/components/TagComponent/index.js',
-          'src/translations/dapps-submission/es_ES.json',
-          'src/translations/dapps-submission/ja_JP.json',
-          'src/translations/dapps-submission/ko_KR.json',
-          'src/translations/dapps-submission/ru_RU.json',
-          'src/translations/dapps-submission/zh_CN.json'
+          'src/layouts/DappSubmissionLayout/components/TagComponent/index.js'
         ]
       }
     })
