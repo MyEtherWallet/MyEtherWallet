@@ -2,6 +2,7 @@
 import common from './common/ja_JP';
 import confirmation from './confirmation/ja_JP';
 import dapps from './dapps/ja_JP';
+import dappsSubmission from './dapps-submission/ja_JP';
 import header from './header/ja_JP';
 import home from './home/ja_JP';
 import footer from './footer/ja_JP';
@@ -46,6 +47,7 @@ const ja_JP = {
   keepkeyError: keepkeyError,
   bitboxError: bitboxError,
   buyHardwareWallet: buyHardwareWallet,
-  dappsMaker: dappsMaker
+  dappsMaker: dappsMaker,
+  dappsSubmission: dappsSubmission
 };
 export default ja_JP;
