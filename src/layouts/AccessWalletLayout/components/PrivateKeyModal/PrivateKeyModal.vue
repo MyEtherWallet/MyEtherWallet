@@ -1,7 +1,7 @@
 <template>
   <b-modal
     ref="privateKey"
-    :title="$t('accessWallet.accessByPrivateKey')"
+    :title="$t('accessWallet.private-key.modal.title')"
     hide-footer
     class="bootstrap-modal nopadding modal-software"
     centered
@@ -22,7 +22,7 @@
             type="text"
             name="PrivateKey"
             autocomplete="off"
-            placeholder="Enter Private Key"
+            :placeholder="$t('accessWallet.private-key.modal.placeholder')"
           />
         </div>
         <standard-button
@@ -56,7 +56,7 @@ export default {
   data() {
     return {
       accessWalletButtonOptions: {
-        title: this.$t('common.accessWallet'),
+        title: this.$t('common.wallet.access'),
         buttonStyle: 'green',
         noMinWidth: true
       },
