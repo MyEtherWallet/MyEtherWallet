@@ -2,10 +2,9 @@
   <div class="page-footer">
     <div class="wrap">
       <div class="page-container">
-        <p class="footer-text">
-          {{ $t('createWallet.pageFooterTitle') }}
-          <router-link to="/#faqs">{{ $t('common.faqs') }}</router-link>
-        </p>
+        <i18n path="createWallet.page-footer-title" tag="p">
+          <router-link slot="faq" to="/#faqs">{{ $t('common.faqs') }}</router-link>
+        </i18n>
       </div>
     </div>
   </div>

@@ -4,15 +4,12 @@
     hide-footer
     centered
     class="bootstrap-modal-wide verification nopadding"
-    title="Verification"
+    :title="$t('createWallet.mnemonic.verify.title')"
     static
     lazy
   >
     <div class="content-block">
-      <p class="block-title">
-        Please enter and fill out the empty boxes below to verify your mnemonic
-        phrase key.
-      </p>
+      <p class="block-title">{{ $t('createWallet.mnemonic.verify.text') }}</p>
       <div class="phrases">
         <ul>
           <li
@@ -21,8 +18,9 @@
             :data-index="index"
             class="word"
           >
-            {{ index + 1 }}.<span>{{ value }}</span>
-            <input class="hidden" type="text" name="" autocomplete="off" />
+            {{ index + 1 }}.
+            <span>{{ value }}</span>
+            <input class="hidden" type="text" name autocomplete="off" />
           </li>
         </ul>
       </div>
@@ -30,9 +28,7 @@
         <div
           class="verify-button large-round-button-green-filled"
           @click="verifyMnemonic"
-        >
-          Verify
-        </div>
+        >{{$t('common.verify')}}</div>
       </div>
     </div>
   </b-modal>
