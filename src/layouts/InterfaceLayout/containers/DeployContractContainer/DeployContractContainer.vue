@@ -208,7 +208,7 @@ export default {
   computed: {
     ...mapState(['gasPrice', 'web3', 'network']),
     isValidAbi() {
-      return Misc.isJson(this.abi);
+      return Misc.isJson(this.abi) && Array.isArray(JSON.parse(this.abi));
     },
     txValue() {
       return Misc.sanitizeHex(ethUnit.toWei(this.value, 'ether').toString(16));
