@@ -1,8 +1,8 @@
 <template>
   <div class="price-bar">
     <div class="wrap">
-      <div class="page-container">
-        <slider-bar duration="20s" delay="1s">
+      <div>
+        <slider-bar duration="40s" delay="1s">
           <div class="slider-container">
             <div
               v-for="token in tokens"
@@ -47,18 +47,6 @@ export default {
         return [];
       }
     }
-  },
-  data() {
-    return {
-      token1: [],
-      token2: [],
-      hidden: true
-    };
-  },
-  mounted() {
-    setInterval(() => {
-      this.hidden = !this.hidden;
-    }, 3000);
   },
   methods: {
     roundPercentage(num) {
