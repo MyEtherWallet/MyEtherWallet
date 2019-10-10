@@ -19,9 +19,9 @@
             ref="passwordInput"
             :type="show ? 'text' : 'password'"
             v-model="password"
+            :placeholder="$t('common.password.enter')"
             name="Password"
             autocomplete="off"
-            :placeholder="$t('common.password.enter')"
           />
           <img
             v-if="show"
