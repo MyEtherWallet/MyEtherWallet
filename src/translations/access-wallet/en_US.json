@@ -52,10 +52,8 @@
   },
   "ledger": {
     "modal": {
+      "title": "Choose the App",
       "text": "Please choose the App you have opened in Ledger"
-    },
-    "path": {
-
     }
   },
   "private-key": {
@@ -75,8 +73,17 @@
     "hd-derivation": "HD Derivation Path",
     "custom": "Custom Paths",
     "add-custom": "Add Custom Path",
+    "ivalid-custom": "Invalid Custom Path",
     "invalid-desc": "The path: {path} is not valid for this device",
     "alias": "Alias"
+  },
+  "pin": {
+    "string": "PIN",
+    "enter": "Enter PIN for your",
+    "layout": "The PIN layout is displayed on your Hardware wallet",
+    "access": "To access my wallet,",
+    "accept": "I accept the",
+    "terms": "Terms and Conditions"
   },
   "json-file": "Keystore File",
   "accept-terms": "To Access my Wallet, I accept {terms}"

@@ -1,7 +1,7 @@
 <template>
   <b-modal
     ref="password"
-    :title="$t('accessWallet.password')"
+    :title="$t('common.password.string')"
     hide-footer
     class="bootstrap-modal modal-software"
     centered
@@ -18,6 +18,7 @@
           v-model="password"
           name="Password"
           autocomplete="off"
+          :placeholder="$t('common.password.enter')"
         />
         <img
           v-if="show"
@@ -44,7 +45,7 @@
         type="submit"
         @click.prevent="unlockWallet"
       >
-        {{ $t('accessWallet.unlock') }} {{ hardwareBrand }}
+        {{ $t('common.wallet.unlock') }} {{ hardwareBrand }}
       </button>
     </form>
   </b-modal>
