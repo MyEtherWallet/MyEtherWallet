@@ -1,0 +1,106 @@
+@import '~@/scss/GlobalVariables';
+.error {
+  color: $text-color-red;
+  margin-top: 5px;
+  width: 90%;
+}
+
+.about-your-dapp {
+  display: inline-block;
+}
+
+.form-group {
+  font-weight: 600;
+  margin-bottom: 3.6rem;
+  margin-top: 5px;
+  text-align: left;
+
+  input {
+    background: $light-blue-9;
+    border: none;
+    height: 52px;
+    max-width: 90%;
+    width: 90%;
+  }
+
+  select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: $light-blue-9;
+    border: none;
+    height: 52px;
+  }
+
+  input::placeholder,
+  select::placeholder,
+  textarea::placeholder {
+    color: $light-blue-10;
+  }
+
+  .dapp-select-label {
+    width: 90%;
+    height: 52px;
+    position: relative;
+  }
+
+  .dapp-select-label::after {
+    color: $dark-blue-2;
+    content: '>';
+    font-family: Beirut;
+    font-size: 20px;
+    transform: rotate(-90deg);
+    pointer-events: none;
+    position: absolute;
+    right: 0;
+    width: 5%;
+  }
+
+  .dapp-input {
+    display: flex;
+    width: 100%;
+    align-items: center;
+
+    span {
+      color: $red-9;
+      font-size: 16px;
+      height: 19px;
+      padding-left: 10px;
+    }
+  }
+
+  .requiredIcon {
+    color: $red-9;
+    font-size: 16px;
+    height: 19px;
+    padding-left: 10px;
+  }
+
+  textarea {
+    background: $light-blue-9;
+    border: none;
+    font-size: 14px;
+    width: 90%;
+  }
+
+  .dapp-text-info {
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    width: 90%;
+  }
+
+  input[type='file'] {
+    position: absolute;
+    font-size: 100px;
+    left: 0;
+    right: 0;
+    opacity: 0;
+  }
+
+  .dapp-popover {
+    height: 16px;
+    width: 16px;
+    margin-left: 8px;
+  }
+}

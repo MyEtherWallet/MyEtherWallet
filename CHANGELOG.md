@@ -4,6 +4,10 @@
 
 ### Release v5.1.6
 
+### Feature
+
+- Dapp submission page [#1339](https://github.com/MyEtherWallet/MyEtherWallet/pull/1339)
+
 ### Devop
 
 - Remove Aldo from team page [#1482](https://github.com/MyEtherWallet/MyEtherWallet/pull/1482)
