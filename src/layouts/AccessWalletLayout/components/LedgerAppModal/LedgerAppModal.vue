@@ -11,7 +11,7 @@
       @hidden="reset"
     >
       <div class="ledger-app-selection-container">
-        <h4>{{$t('accessWallet.ledger.modal.text')}}</h4>
+        <h4>{{ $t('accessWallet.ledger.modal.text') }}</h4>
         <div class="ledger-app-info">
           <div class="selected-app-icon">
             <img :src="selectedApp.network.icon" alt />
@@ -49,7 +49,9 @@
             class="custom-path-inputs"
           >
             <div class="path-input">
-              <label for="custom-label"> {{ $t('accessWallet.path.allias') }}</label>
+              <label for="custom-label">
+                {{ $t('accessWallet.path.allias') }}</label
+              >
               <input
                 v-model="customLabel"
                 name="custom-label"
@@ -57,7 +59,9 @@
               />
             </div>
             <div class="path-input">
-              <label for="custom-path">{{ $t('accessWallet.path.string') }}</label>
+              <label for="custom-path">{{
+                $t('accessWallet.path.string')
+              }}</label>
               <input
                 v-model="customPath"
                 name="custom-path"
