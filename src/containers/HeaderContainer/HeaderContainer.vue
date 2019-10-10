@@ -1,5 +1,7 @@
 <template>
   <div class="header">
+    <decision-tree :button="!isPageOnTop" />
+
     <!-- Modals ***************************************** -->
     <disconnected-modal ref="mewConnectDisconnected" />
     <settings-modal
@@ -269,6 +271,7 @@ import BigNumber from 'bignumber.js';
 import MobileMenu from './components/MobileMenu';
 import DisconnectedModal from '@/components/DisconnectedModal';
 import ExtensionNotification from '@/layouts/ExtensionBrowserAction/containers/ExtensionNotification';
+import DecisionTree from '@/components/DecisionTree';
 
 const events = {
   issueModal: 'issueModal',
@@ -286,7 +289,8 @@ export default {
     'user-reminder-button': UserReminderButton,
     'mobile-menu': MobileMenu,
     'disconnected-modal': DisconnectedModal,
-    'extension-notification': ExtensionNotification
+    'extension-notification': ExtensionNotification,
+    'decision-tree': DecisionTree
   },
   data() {
     return {
