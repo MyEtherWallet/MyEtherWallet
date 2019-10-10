@@ -2,6 +2,7 @@
 import common from './common/ko_KR';
 import confirmation from './confirmation/ko_KR';
 import dapps from './dapps/ko_KR';
+import dappsSubmission from './dapps-submission/ko_KR';
 import header from './header/ko_KR';
 import home from './home/ko_KR';
 import footer from './footer/ko_KR';
@@ -46,6 +47,7 @@ const ko_KR = {
   keepkeyError: keepkeyError,
   bitboxError: bitboxError,
   buyHardwareWallet: buyHardwareWallet,
-  dappsMaker: dappsMaker
+  dappsMaker: dappsMaker,
+  dappsSubmission: dappsSubmission
 };
 export default ko_KR;
