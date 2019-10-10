@@ -10,8 +10,8 @@
           <b-tabs class="x100">
             <div v-if="showProgressBar && false" class="progress-bar" />
             <b-tab
-              class="mew-connect-block"
               :title="this.$t('common.mewconnect.string')"
+              class="mew-connect-block"
               active
               @click="showProgressBar = false"
             >
@@ -68,16 +68,16 @@
               </div>
             </b-tab>
             <b-tab
-              :title="$t('createWallet.byJsonFile')"
+              :title="$t('createWallet.keystore.title-tab')"
               @click="showProgressBar = true"
             >
               <div class="warning">
-                <warning-message />
+                <warning-message warningType="create"/>
               </div>
               <div class="tab-content-block">
                 <div class="title-block">
                   <div class="title-popover">
-                    <h3>{{ $t('createWallet.yourPw') }}</h3>
+                    <h3>{{ $t('common.password.your') }}</h3>
                     <popover :popcontent="$t('popover.password')" />
                   </div>
                 </div>
@@ -87,8 +87,8 @@
                   :param="'Json'"
                 />
                 <create-wallet-input-footer
-                  :combo="$t('createWallet.keyPass')"
-                  :desc="$t('createWallet.keyPassDesc')"
+                  :combo="$t('createWallet.password.key-pass')"
+                  :desc="$t('createWallet.password.key-pass-desc')"
                 />
               </div>
             </b-tab>

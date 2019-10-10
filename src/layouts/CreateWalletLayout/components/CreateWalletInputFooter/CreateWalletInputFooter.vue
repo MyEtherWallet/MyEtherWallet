@@ -1,8 +1,8 @@
 <template>
   <div class="footer-text">
     <p>
-      <span>{{ $t('createWallet.doNotForget') }}</span>
-      {{ $t('createWallet.doNotForgetDesc') }}<span> {{ combo }}</span>
+      <span>{{ $t('createWallet.password.do-not-forget') }}</span>
+      {{ $t('createWallet.password.do-not-forget-desc') }}<span> {{ combo }}</span>
       {{ desc }}
     </p>
   </div>

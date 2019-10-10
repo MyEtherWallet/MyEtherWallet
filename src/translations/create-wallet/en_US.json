@@ -17,16 +17,16 @@
     }
   },
   "password": {
-    "text": "Your Password",
-    "doNotForget": "DO NOT FORGET",
-    "doNotForgetDesc": "to save your password. You will need this"
+    "do-not-forget": "DO NOT FORGET",
+    "do-not-forget-desc": "to save your password. You will need this",
+    "key-pass": "Password + Keystore",
+    "key-pass-desc": "File to unlock your wallet."
   },
   "keystore": {
     "title-tab": "By Keystore File",
-    "keyPass": "Password + Keystore",
-    "keyPassDesc": "File to unlock your wallet.",
     "title-save": "Save My Keystore File",
-    "Button-download": "Download Keystore File",
+    "message-wait": "Please wait while we generate your keystore file...",
+    "button-download": "Download Keystore File",
     "loose": {
       "title": "Don't Lose It",
       "desc": "Be careful, it can not be recovered if you lose it."
