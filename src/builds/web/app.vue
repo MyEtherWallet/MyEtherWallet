@@ -1,7 +1,12 @@
 <template>
   <div id="app">
     <logout-warning-modal ref="logoutWarningModal" />
-    <header-container v-show="$route.fullPath !== '/getting-started'" />
+    <header-container
+      v-show="
+        $route.fullPath !== '/getting-started' &&
+          !$route.fullPath.includes('/dapp-submission')
+      "
+    />
     <welcome-modal ref="welcome" />
     <router-view />
     <footer-container />
