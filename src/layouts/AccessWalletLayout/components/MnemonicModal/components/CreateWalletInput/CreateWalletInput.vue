@@ -11,9 +11,9 @@
           :type="password.showPassword ? 'text' : 'password'"
           :value="value"
           name="password"
-          placeholder="Please Enter Password"
           autocomplete="off"
           @input="updateValue($event.target.value)"
+           :placeholder="$t('common.password.enter')"
         />
       </div>
       <div

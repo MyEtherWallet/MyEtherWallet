@@ -38,11 +38,14 @@
   },
   "read": "Read",
   "article": {
-    "using-mew-offline": "Using MEW Offline"
+    "using-mew-offline": "Using MEW Offline",
+    "using-offline": "Using MEW Offline",
+    "Mnemonic-password": "Mnemonic Phrase: Should I Include a Password?"
   },
   "password": {
     "string": "Password",
-    "enter": "Enter password"
+    "enter": "Enter password",
+    "your": "Your Password"
   },
   "optional":  "Optional",
   "value": "Value",
