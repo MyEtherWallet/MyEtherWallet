@@ -210,6 +210,9 @@ export default {
     isValidAbi() {
       return Misc.isJson(this.abi);
     },
+    txValue() {
+      return Misc.sanitizeHex(ethUnit.toWei(this.value, 'ether').toString(16));
+    },
     abiConstructor() {
       let _constructor = null;
       if (this.isValidAbi) {
@@ -231,15 +234,27 @@ export default {
       }
       return _constructor;
     },
+    rawByteCode() {
+      try {
+        const remixBytecode = JSON.parse(this.bytecode);
+        if (
+          remixBytecode.object &&
+          Misc.validateHexString(remixBytecode.object)
+        )
+          return '0x' + remixBytecode.object;
+      } catch (err) {
+        return this.bytecode;
+      }
+    },
     isValidByte() {
       return (
-        this.bytecode &&
-        this.bytecode.substr(0, 2) === '0x' &&
-        Misc.validateHexString(this.bytecode)
+        this.rawByteCode &&
+        this.rawByteCode.substr(0, 2) === '0x' &&
+        Misc.validateHexString(this.rawByteCode)
       );
     },
     txByteCode() {
-      return Misc.sanitizeHex(this.bytecode);
+      return Misc.sanitizeHex(this.rawByteCode);
     },
     deployArgs() {
       const _deployArgs = [];
@@ -292,6 +307,7 @@ export default {
         const nonce = await web3.eth.getTransactionCount(coinbase);
         const _tx = new Transaction({
           nonce: nonce,
+          value: this.txValue,
           gasPrice: Misc.sanitizeHex(
             ethUnit.toWei(this.gasPrice, 'gwei').toString(16)
           ),
@@ -341,7 +357,8 @@ export default {
       const coinbase = await this.web3.eth.getCoinbase();
       const params = {
         from: coinbase,
-        data: this.txData
+        data: this.txData,
+        value: this.txValue
       };
       this.gasLimit = await this.web3.eth.estimateGas(params).catch(err => {
         Toast.responseHandler(err, Toast.WARN);
