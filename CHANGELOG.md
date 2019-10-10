@@ -9,6 +9,10 @@
 - Remove Aldo from team page [#1482](https://github.com/MyEtherWallet/MyEtherWallet/pull/1482)
 - Update packages [#1474](https://github.com/MyEtherWallet/MyEtherWallet/pull/1474)
 
+### Bug
+
+- Fix Goerli erroring when set to default [#1488](https://github.com/MyEtherWallet/MyEtherWallet/pull/1488)
+
 ### Release v5.1.5
 
 ### Feature
