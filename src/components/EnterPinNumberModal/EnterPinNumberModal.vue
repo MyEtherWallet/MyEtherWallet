@@ -11,14 +11,14 @@
     >
       <div class="modal-contents">
         <div class="pin-input-block">
-          <p class="main-title">Enter PIN for your {{ deviceInfo.name }}</p>
+          <p class="main-title">{{$t('accessWallet.pin.enter') }} {{ deviceInfo.name }}</p>
           <p class="sub-title">
-            The PIN layout is displayed on your Hardware wallet
+           {{$t('accessWallet.pin.layout') }}
           </p>
           <div class="input-container">
             <div class="input-headers">
-              <p>PIN</p>
-              <span @click="clear">Clear</span>
+              <p>{{$t('accessWallet.pin.string') }}</p>
+              <span @click="clear">{{$t('common.clear') }}</span>
             </div>
             <input v-model="pin" type="password" readonly="true" />
           </div>
@@ -38,15 +38,15 @@
               >
                 <i v-if="acknowledgedTerms" class="fa fa-check" />
               </span>
-              <input name="terms" type="checkbox" /> To access my wallet,
-              <br />I accept the
+              <input name="terms" type="checkbox" />{{$t('accessWallet.pin.access')}}
+              <br /> {{$t('accessWallet.pin.accept')}}
               <router-link to="/terms-and-conditions">
-                Terms and Conditions
+                {{$t('accessWallet.pin.terms')}}
               </router-link>
             </label>
           </div>
           <button :disabled="!acknowledgedTerms" @click="actualClick">
-            Access My Wallet
+            {{$t('common.wallet.access-my')}}
           </button>
         </div>
       </div>

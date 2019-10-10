@@ -19,10 +19,10 @@
           <input
             ref="privateKeyInput"
             v-model="privateKey"
+            :placeholder="$t('accessWallet.private-key.modal.placeholder')"
             type="text"
             name="PrivateKey"
             autocomplete="off"
-            :placeholder="$t('accessWallet.private-key.modal.placeholder')"
           />
         </div>
         <standard-button
