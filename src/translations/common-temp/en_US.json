@@ -40,7 +40,7 @@
   "article": {
     "using-mew-offline": "Using MEW Offline",
     "using-offline": "Using MEW Offline",
-    "Mnemonic-password": "Mnemonic Phrase: Should I Include a Password?"
+    "mnemonic-password": "Mnemonic Phrase: Should I Include a Password?"
   },
   "password": {
     "string": "Password",

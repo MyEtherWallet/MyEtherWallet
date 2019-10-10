@@ -93,16 +93,16 @@
               </div>
             </b-tab>
             <b-tab
-              :title="$t('createWallet.byMnemonic')"
+              :title="$t('createWallet.mnemonic.title-tab')"
               @click="showProgressBar = true"
             >
               <div class="warning">
-                <warning-message />
+                <warning-message warning-type="create" />
               </div>
               <div class="tab-content-block">
                 <div class="title-block">
                   <div class="title-popover">
-                    <h3>{{ $t('createWallet.yourPw') }}</h3>
+                    <h3>{{ $t('common.password.your') }}</h3>
                     <popover :popcontent="$t('popover.password')" />
                   </div>
                 </div>
