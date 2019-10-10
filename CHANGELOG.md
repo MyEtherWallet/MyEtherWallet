@@ -7,6 +7,7 @@
 ### Devop
 
 - Remove Aldo from team page [#1482](https://github.com/MyEtherWallet/MyEtherWallet/pull/1482)
+- Add decision tree [#1442](https://github.com/MyEtherWallet/MyEtherWallet/pull/1442)
 - Update packages [#1474](https://github.com/MyEtherWallet/MyEtherWallet/pull/1474)
 
 ### Bug
@@ -42,6 +43,7 @@
 - Fix generate mnemonic [#1439](https://github.com/MyEtherWallet/MyEtherWallet/pull/1439)
 - Gas price not saving properly [#1434](https://github.com/MyEtherWallet/MyEtherWallet/pull/1434)
 - Fix u2f timeout for bitbox on windows [#1423](https://github.com/MyEtherWallet/MyEtherWallet/pull/1423)
+
 
 ### Release v5.1.3
 

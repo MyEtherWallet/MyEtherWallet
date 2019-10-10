@@ -48,7 +48,7 @@ const webpackConfig = {
     new CopyWebpackPlugin([
       {
         from: 'src/builds/' + JSON.parse(env_vars.BUILD_TYPE) + '/public',
-        transform: function(content, filePath) {
+        transform: function (content, filePath) {
           if (filePath.split('.').pop() === ('js' || 'JS'))
             return UglifyJS.minify(content.toString()).code;
           if (
@@ -180,6 +180,14 @@ if (process.env.NODE_ENV === 'production') {
           'src/builds/web/public/img/spaceman.png',
           'src/builds/web/public/manifest.json',
           'src/builds/web/public/robots.txt',
+          'src/assets/images/icons/qa.png',
+          'src/components/DecisionTree/components/SearchContainer/index.js',
+          'src/components/DecisionTree/components/SearchContainer/SearchContainer.scss',
+          'src/components/DecisionTree/components/SearchContainer/SearchContainer.vue',
+          'src/components/DecisionTree/data/doc/Find_and_install_the_MetaMask.html',
+          'src/components/DecisionTree/data/doc/Find_and_install_the_MetaMask.vue',
+          'src/components/DecisionTree/data/doc/MyEtherWallet_An_Introduction.vue',
+          'src/components/DecisionTree/data/index.js',
           'src/layouts/DappSubmissionLayout/components/InputComponent/index.js',
           'src/layouts/DappSubmissionLayout/components/InputComponent/InputComponent.scss',
           'src/layouts/DappSubmissionLayout/components/InputComponent/InputComponent.vue',
