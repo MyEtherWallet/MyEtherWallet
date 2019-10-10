@@ -10,10 +10,10 @@
           v-validate="param === 'Json' ? 'required|min:9' : ''"
           :type="password.showPassword ? 'text' : 'password'"
           :value="value"
+          :placeholder="$t('common.password.enter')"
           name="password"
           autocomplete="off"
           @input="updateValue($event.target.value)"
-           :placeholder="$t('common.password.enter')"
         />
       </div>
       <div

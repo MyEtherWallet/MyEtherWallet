@@ -3,8 +3,8 @@
     <success-modal
       ref="successModal"
       :message="$t('createWallet.created.text')"
-      link-to="/access-my-wallet"
       :link-message="$t('common.wallet.access-my')"
+      link-to="/access-my-wallet"
     />
     <div class="wrap">
       <div class="nav-tab-user-input-box">
