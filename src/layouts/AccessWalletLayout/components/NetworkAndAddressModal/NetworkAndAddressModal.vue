@@ -10,17 +10,25 @@
   >
     <div class="modal-content-container">
       <div class="collapse-container">
-        <b-btn v-b-toggle.collapse1 class="collapse-open-button" variant="primary">
+        <b-btn
+          v-b-toggle.collapse1
+          class="collapse-open-button"
+          variant="primary"
+        >
           <p class="button-number">1</p>
           <div class="network">
             <p>{{ $t('common.network') }}</p>
-            <p
-              class="network-name monospace"
-            >({{ selectedNetwork.type.name }} - {{ selectedNetwork.service }})</p>
+            <p class="network-name monospace">
+              ({{ selectedNetwork.type.name }} - {{ selectedNetwork.service }})
+            </p>
           </div>
           <p v-if="false" class="right-button">{{ $t('common.cancel') }}</p>
         </b-btn>
-        <b-collapse id="collapse1" v-model="showCollapse1" class="collapse-content">
+        <b-collapse
+          id="collapse1"
+          v-model="showCollapse1"
+          class="collapse-content"
+        >
           <ul class="networks">
             <li
               v-for="(key, index) in Object.keys(reorderNetworkList)"
@@ -28,7 +36,11 @@
             >
               <div class="network-title">
                 <div class="network-icon-container">
-                  <img v-if="Networks[key][0].type.icon" :src="Networks[key][0].type.icon" alt />
+                  <img
+                    v-if="Networks[key][0].type.icon"
+                    :src="Networks[key][0].type.icon"
+                    alt
+                  />
                   <div v-else class="no-icon">
                     <p>No</p>
                     <p>Icon</p>
@@ -48,20 +60,33 @@
                       : ''
                   "
                   @click="switchNetwork(net)"
-                >{{ net.service }}</p>
+                >
+                  {{ net.service }}
+                </p>
               </div>
             </li>
           </ul>
         </b-collapse>
       </div>
       <div class="collapse-container">
-        <b-btn v-b-toggle.collapse2 class="collapse-open-button" variant="primary">
+        <b-btn
+          v-b-toggle.collapse2
+          class="collapse-open-button"
+          variant="primary"
+        >
           <p class="button-number">2</p>
           <p>{{ $t('common.addr') }}</p>
         </b-btn>
-        <b-collapse id="collapse2" v-model="showCollapse2" class="collapse-content">
+        <b-collapse
+          id="collapse2"
+          v-model="showCollapse2"
+          class="collapse-content"
+        >
           <!-- Derivation Path Drop down -->
-          <div v-show="hardwareWallet.identifier !== ledgerType" class="content-container-1">
+          <div
+            v-show="hardwareWallet.identifier !== ledgerType"
+            class="content-container-1"
+          >
             <div class="hd-derivation">
               <h4>{{ $t('accessWallet.path.hd-derivation') }}</h4>
               <div class="dropdown-button-container">
@@ -76,9 +101,12 @@
                     :class="selectedPath === val.path ? 'active' : ''"
                     :key="'base' + key"
                     @click="changePath(key)"
-                  >{{ val.label }}</b-dropdown-item>
+                    >{{ val.label }}</b-dropdown-item
+                  >
                   <b-dropdown-divider />
-                  <b-dropdown-item>{{ $t('accessWallet.path.custom') }}</b-dropdown-item>
+                  <b-dropdown-item>{{
+                    $t('accessWallet.path.custom')
+                  }}</b-dropdown-item>
                   <b-dropdown-item
                     v-for="(val, key) in customPaths"
                     :class="selectedPath === val.path ? 'active' : ''"
@@ -87,38 +115,53 @@
                     <div class="custom-networks">
                       <div @click="changePath(key)">{{ val.label }}</div>
                       <span>
-                        <i class="fa fa-times-circle" @click.prevent="removeCustomPath(val)" />
+                        <i
+                          class="fa fa-times-circle"
+                          @click.prevent="removeCustomPath(val)"
+                        />
                       </span>
                     </div>
                   </b-dropdown-item>
-                  <b-dropdown-item
-                    @click="showCustomPathInput"
-                  >{{ $t('accessWallet.path.add-custom') }}</b-dropdown-item>
+                  <b-dropdown-item @click="showCustomPathInput">{{
+                    $t('accessWallet.path.add-custom')
+                  }}</b-dropdown-item>
                 </b-dropdown>
               </div>
             </div>
-            <p v-show="invalidPath !== '' && customPathInput" class="error-message-container">
+            <p
+              v-show="invalidPath !== '' && customPathInput"
+              class="error-message-container"
+            >
               {{
-              $t('accessWallet.path.invalid-desc', { path: invalidPath.path })
+                $t('accessWallet.path.invalid-desc', { path: invalidPath.path })
               }}
             </p>
-            <p
-              v-show="!customPathInput"
-              class="derivation-brands monospace"
-            >{{ getPathLabel(selectedPath) }} ({{ selectedPath }})</p>
+            <p v-show="!customPathInput" class="derivation-brands monospace">
+              {{ getPathLabel(selectedPath) }} ({{ selectedPath }})
+            </p>
             <div v-show="customPathInput" class="custom-path-container">
-              <label for="customPathLabel">{{ $t('accessWallet.path.alias') }}</label>
-              <input id="customPathLabel" v-model="customPath.label" placeholder="my custom path" />
-              <label for="customPathInput">{{ $t('accessWallet.path.string') }}</label>
-              <input id="customPathInput" v-model="customPath.path" placeholder="m/44'/1'/0'/0" />
-              <button
-                class="submit-button cancel"
-                @click="showCustomPathInput"
-              >{{ $t('common.cancel') }}</button>
-              <button
-                class="submit-button submit"
-                @click="addCustomPath"
-              >{{ $t('accessWallet.path.add-custom') }}</button>
+              <label for="customPathLabel">{{
+                $t('accessWallet.path.alias')
+              }}</label>
+              <input
+                id="customPathLabel"
+                v-model="customPath.label"
+                placeholder="my custom path"
+              />
+              <label for="customPathInput">{{
+                $t('accessWallet.path.string')
+              }}</label>
+              <input
+                id="customPathInput"
+                v-model="customPath.path"
+                placeholder="m/44'/1'/0'/0"
+              />
+              <button class="submit-button cancel" @click="showCustomPathInput">
+                {{ $t('common.cancel') }}
+              </button>
+              <button class="submit-button submit" @click="addCustomPath">
+                {{ $t('accessWallet.path.add-custom') }}
+              </button>
             </div>
           </div>
           <!-- Address List -->
@@ -153,7 +196,9 @@
                     height="30px"
                   />
                 </li>
-                <li class="monospace">{{ account.account.getChecksumAddressString() | concatAddr }}</li>
+                <li class="monospace">
+                  {{ account.account.getChecksumAddressString() | concatAddr }}
+                </li>
                 <li class="monospace">{{ convertBalance(account.balance) }}</li>
                 <li class="user-input-checkbox">
                   <label class="checkbox-container checkbox-container-small">
@@ -169,8 +214,12 @@
             </div>
             <!-- .address-block-container -->
             <div class="address-nav">
-              <span @click="previousAddressSet()">&lt; {{ $t('common.previous') }}</span>
-              <span @click="nextAddressSet()">{{ $t('common.next') }} &gt;</span>
+              <span @click="previousAddressSet()"
+                >&lt; {{ $t('common.previous') }}</span
+              >
+              <span @click="nextAddressSet()"
+                >{{ $t('common.next') }} &gt;</span
+              >
             </div>
           </div>
           <!-- .content-container-2 -->
@@ -178,8 +227,8 @@
             <label class="checkbox-container">
               <i18n path="accessWallet.accept-terms" tag="label">
                 <router-link slot="terms" to="/terms-and-conditions">
-                  {{ $t('common.terms') }}
-                </router-link>.
+                  {{ $t('common.terms') }} </router-link
+                >.
               </i18n>
               <input
                 type="checkbox"
@@ -193,7 +242,8 @@
               :disabled="!isDisabled"
               class="mid-round-button-green-filled close-button"
               @click.prevent="unlockWallet"
-            >{{ $t('common.wallet.access-my') }}</b-btn>
+              >{{ $t('common.wallet.access-my') }}</b-btn
+            >
           </div>
           <customer-support />
         </b-collapse>
