@@ -72,7 +72,7 @@
               @click="showProgressBar = true"
             >
               <div class="warning">
-                <warning-message warningType="create"/>
+                <warning-message warning-type="create" />
               </div>
               <div class="tab-content-block">
                 <div class="title-block">
