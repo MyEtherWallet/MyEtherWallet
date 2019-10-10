@@ -1,0 +1,24 @@
+@import '~@/scss/GlobalVariables';
+body {
+  font-family: 'Avenir Next';
+}
+
+.dapp-container-right {
+  display: inline-block;
+  vertical-align: top;
+  position: sticky;
+  position: -webkit-sticky;
+  top: 60px;
+}
+
+.dapp-container {
+  text-align: center;
+}
+
+.dapp-progress-bar {
+  height: 5px;
+}
+
+.fake-form {
+  opacity: 0;
+}
