@@ -19,7 +19,7 @@
       </div>
       <div class="block-content">
         <div class="information-container">
-          <h2>{{ $t('common.address') }}</h2>
+          <h2>{{ $t('common.addr') }}</h2>
           <p class="address">{{ address }}</p>
         </div>
         <div class="icon-container">

@@ -54,13 +54,5 @@
     "title": "Join MEW Community",
     "text": "Get in the know and see your balance grow (we hope)!"
   },
-  "welcome": {
-    "title": "Welcome to MEW V5",
-    "desc1": "Welcome to the brand new MEW! If this is your first time visiting, check out our {0}.",
-    "desc2": "Vintage MEW can still be accessed {0}, or at the bottom of the page.",
-    "link1": "Medium article on what's new",
-    "link2": "here",
-    "button-onwards": "Onwards"
-  },
   "message-lost": "Oops! Looks like you're lost."
 }

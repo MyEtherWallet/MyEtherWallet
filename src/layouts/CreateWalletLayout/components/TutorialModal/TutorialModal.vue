@@ -11,9 +11,9 @@
     lazy
   >
     <div class="d-block text-center">
-      <h3 class="title">{{ $t('createWallet.tutorialModalHeader') }}</h3>
-      <i18n path="createWallet.tutorialModalDesc" tag="p" class="content">
-        <span @click="skip">{{ $t('createWallet.tutorialModalSkip') }}</span>
+      <h3 class="title">{{ $t('createWallet.welcome.title') }}</h3>
+      <i18n path="createWallet.welcome.desc" tag="p" class="content">
+        <span slot="skip" @click="skip">{{ $t('createWallet.welcome.button-skip') }}</span>
       </i18n>
     </div>
     <div class="button-container">
