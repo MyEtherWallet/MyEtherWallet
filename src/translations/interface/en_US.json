@@ -21,8 +21,21 @@
     "button-switch": "Switch"
   },
 
-  "tokens": "Tokens",
-  "customToken": "Custom Tokens",
+  "tokens": {
+    "custom": "Custom Tokens",
+    "warning-offline":   "Can't load balances in offline mode",
+    "no-tokens": "No tokens found :(",
+    "modal": {
+      "title": "Add Custom Tokens",
+      "ph-contract-addr": "Token Contract Address",
+      "ph-symbol": "Token Symbol",
+      "ph-decimals": "Decimals",
+      "invalid-addr": "Invalid address given."
+    }
+  },
+
+
+
   "dataGas": "Data & Gas Limit",
   "sendTx": "Send Transaction",
   "haveIssues": "Have any issues?",
