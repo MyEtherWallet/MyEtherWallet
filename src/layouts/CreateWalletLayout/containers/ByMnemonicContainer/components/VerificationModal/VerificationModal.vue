@@ -22,16 +22,29 @@
             class="word"
           >
             {{ index + 1 }}.<span>{{ value }}</span>
-            <input class="hidden" type="text" name="" autocomplete="off" />
+            <input
+              v-model="inputs[index]"
+              class="hidden"
+              type="text"
+              name=""
+              autocomplete="off"
+            />
           </li>
         </ul>
       </div>
+      <div v-show="errorMsg.length > 0" class="error-msg-container">
+        {{ errorMsg }}
+      </div>
       <div class="button-container">
         <div
-          class="verify-button large-round-button-green-filled"
+          :class="[
+            loading ? 'disabled' : '',
+            'verify-button large-round-button-green-filled'
+          ]"
           @click="verifyMnemonic"
         >
-          Verify
+          <span v-show="!loading"> Verify </span>
+          <i v-show="loading" class="fa fa-lg fa-spin fa-spinner" />
         </div>
       </div>
     </div>
@@ -41,10 +54,6 @@
 <script>
 export default {
   props: {
-    mnemonic24: {
-      type: Boolean,
-      default: false
-    },
     mnemonicValues: {
       type: Array,
       default: function() {
@@ -54,27 +63,29 @@ export default {
   },
   data() {
     return {
-      verificationValues: []
+      inputs: {},
+      loading: false,
+      errorMsg: ''
     };
   },
   mounted() {
     this.$refs.verification.$on('shown', () => {
       // Generate random numbers to choose which blocks to hide
-      let ranNums;
+      const newArr = [...this.mnemonicValues.keys()];
+      const ranNums = this.shuffle(newArr);
+      // this.mnemonicValues.forEach((item, idx) => {
+      //   this.inputs[idx] = item;
+      // });
+
       document.querySelectorAll('.phrases .word').forEach(function(el) {
         el.classList.remove('verification');
         el.querySelector('span').classList.remove('hidden');
         el.querySelector('input').classList.add('hidden');
       });
 
-      if (this.mnemonic24 === true) {
-        ranNums = this.shuffle(this.generateArr(24));
-      } else {
-        ranNums = this.shuffle(this.generateArr(12));
-      }
-
       // Hide 5 random mnemonic blocks
       for (let c = 0; c < 5; c++) {
+        this.inputs[ranNums[c]] = '';
         document
           .querySelector('.phrases .word[data-index="' + ranNums[c] + '"]')
           .classList.add('verification');
@@ -82,20 +93,29 @@ export default {
           .querySelector('.phrases .word[data-index="' + ranNums[c] + '"]')
           .querySelector('span')
           .classList.add('hidden');
-        this.verificationValues.push({
-          word: document
-            .querySelector('.phrases .word[data-index="' + ranNums[c] + '"]')
-            .querySelector('span').textContent,
-          no: ranNums[c]
-        });
         document
           .querySelector('.phrases .word[data-index="' + ranNums[c] + '"]')
           .querySelector('input')
           .classList.remove('hidden');
       }
     });
+    this.$refs.verification.$on('hidden', () => {
+      this.inputs = {};
+      this.loading = false;
+      this.errorMsg = '';
+    });
   },
   methods: {
+    hasEmpty() {
+      let emptyInputs = 0;
+      const inputs = Object.keys(this.inputs);
+      inputs.forEach(input => {
+        if (this.inputs[input] === '') {
+          emptyInputs++;
+        }
+      });
+      return emptyInputs === 0;
+    },
     shuffle(arr) {
       for (let i = arr.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -103,35 +123,21 @@ export default {
       }
       return arr;
     },
-    generateArr(val) {
-      const arr = [];
-      for (let i = 0; i < val; i++) {
-        arr[i] = i;
-      }
-      return arr;
-    },
     verifyMnemonic() {
-      let valid = false;
-      this.verificationValues.forEach(function(value) {
-        const userInputText = document
-          .querySelector('.phrases .word[data-index="' + value.no + '"]')
-          .querySelector('input').value;
-
-        if (
-          userInputText ===
-          document
-            .querySelector('.phrases .word[data-index="' + value.no + '"]')
-            .querySelector('span').textContent
-        ) {
-          valid = true;
-        } else {
-          valid = false;
-        }
+      this.loading = true;
+      this.errorMsg = '';
+      const updatedArray = [...this.mnemonicValues];
+      Object.keys(this.inputs).forEach(item => {
+        updatedArray.splice(item, 1, this.inputs[item]);
       });
-
-      if (valid === true) {
+      if (!this.hasEmpty()) {
+        this.errorMsg = `Some fields are still missing!`;
+      } else if (updatedArray.join() === this.mnemonicValues.join()) {
         this.$emit('verifiedMnemonic');
+      } else {
+        this.errorMsg = `Mnemonic doesn't match! Please write it down correctly!`;
       }
+      this.loading = false;
     }
   }
 };
