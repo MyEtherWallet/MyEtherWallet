@@ -6,14 +6,14 @@
         <div class="token-search">
           <div class="block-title">
             <div class="title-container">
-              <h4>{{ $t('interface.tokens') }}</h4>
+              <h4>{{ $tc('common.token', 2) }}</h4>
               <img
                 alt
                 src="~@/assets/images/icons/change.svg"
                 @click="fetchTokens"
               />
             </div>
-            <p @click="addTokenModal">+ {{ $t('interface.customToken') }}</p>
+            <p @click="addTokenModal">+ {{ $t('interface.tokens.custom') }}</p>
           </div>
           <div class="search-block">
             <input v-model="search" placeholder="Search" autocomplete="off" />
@@ -21,7 +21,7 @@
           </div>
         </div>
         <div v-show="!online" class="cant-load">
-          Can't load balances on offline mode
+          {{ $t('interface.tokens.warning-offline') }}
         </div>
         <div ref="tokenTableContainer" class="token-table-container">
           <table v-show="customTokens.length > 0 && receivedTokens">
@@ -70,7 +70,7 @@
             "
             class="spinner-container"
           >
-            No tokens found :(
+            {{ $t('interface.tokens.no-tokens') }}
           </div>
         </div>
         <div

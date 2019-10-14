@@ -5,7 +5,7 @@
       hide-footer
       class="bootstrap-modal nopadding max-height-1"
       centered
-      title="Add Custom Token"
+      :title="$t('interface.tokens.modal.title')"
       static
       lazy
       @hidden="resetCompState"
@@ -21,20 +21,20 @@
             ]"
             name="Address"
             type="text"
-            placeholder="Token Contract Address"
+            :placeholder="$t('interface.tokens.modal.ph-contract-addr')"
           />
           <span
             v-show="tokenAddress !== '' && !validAddress"
             class="error-message"
           >
-            Invalid address given.
+            {{$t('interface.tokens.modal.error.addr')}}
           </span>
           <input
             v-validate="'required'"
             v-model="tokenSymbol"
             name="Symbol"
             type="text"
-            placeholder="Token Symbol"
+            :placeholder="$t('interface.tokens.modal.ph-symbol')"
             class="custom-input-text-1"
           />
           <input
@@ -44,14 +44,14 @@
             type="number"
             min="0"
             max="18"
-            placeholder="Decimals"
+            :placeholder="$t('interface.tokens.modal.ph-decimals')"
             class="custom-input-text-1"
           />
           <span
             v-show="tokenDecimal < 0 || tokenDecimal > 18"
             class="error-message"
           >
-            Invalid Decimal. Decimal can only be between 0 and 18.
+            {{$t('interface.tokens.modal.error.decimals')}}
           </span>
         </div>
         <div class="button-block">
