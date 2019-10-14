@@ -1,6 +1,6 @@
 ### Bug
 
-- Fix mnemonic phrase validation []()
+- Fix mnemonic phrase validation [#1506](https://github.com/MyEtherWallet/MyEtherWallet/pull/1506)
 
 ### Release v5.1.6
 
