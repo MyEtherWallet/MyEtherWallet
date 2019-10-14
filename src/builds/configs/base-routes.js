@@ -209,14 +209,17 @@ const router = [
 ];
 
 if (BUILD_TYPE === 'mewcx') {
+  const interfaceIdx = router.findIndex(item => {
+    return item.path === '/interface';
+  });
   const newArr = [];
-  router[12].children.forEach(item => {
+  router[interfaceIdx].children.forEach(item => {
     if (item.path !== 'send-offline') {
       newArr.push(item);
     }
   });
 
-  router[12].children = newArr;
+  router[interfaceIdx].children = newArr;
 }
 
 Object.keys(dapps).forEach(dapp => {
