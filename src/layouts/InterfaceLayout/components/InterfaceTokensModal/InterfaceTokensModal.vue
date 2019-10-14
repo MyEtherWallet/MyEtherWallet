@@ -2,10 +2,10 @@
   <div>
     <b-modal
       ref="token"
+      :title="$t('interface.tokens.modal.title')"
       hide-footer
       class="bootstrap-modal nopadding max-height-1"
       centered
-      :title="$t('interface.tokens.modal.title')"
       static
       lazy
       @hidden="resetCompState"
@@ -19,39 +19,39 @@
               'custom-input-text-1',
               tokenAddress !== '' && !validAddress ? 'invalid-address' : ''
             ]"
+            :placeholder="$t('interface.tokens.modal.ph-contract-addr')"
             name="Address"
             type="text"
-            :placeholder="$t('interface.tokens.modal.ph-contract-addr')"
           />
           <span
             v-show="tokenAddress !== '' && !validAddress"
             class="error-message"
           >
-            {{$t('interface.tokens.modal.error.addr')}}
+            {{ $t('interface.tokens.modal.error.addr') }}
           </span>
           <input
             v-validate="'required'"
             v-model="tokenSymbol"
+            :placeholder="$t('interface.tokens.modal.ph-symbol')"
             name="Symbol"
             type="text"
-            :placeholder="$t('interface.tokens.modal.ph-symbol')"
             class="custom-input-text-1"
           />
           <input
             v-validate="'required|numeric'"
             v-model="tokenDecimal"
+            :placeholder="$t('interface.tokens.modal.ph-decimals')"
             name="Decimal"
             type="number"
             min="0"
             max="18"
-            :placeholder="$t('interface.tokens.modal.ph-decimals')"
             class="custom-input-text-1"
           />
           <span
             v-show="tokenDecimal < 0 || tokenDecimal > 18"
             class="error-message"
           >
-            {{$t('interface.tokens.modal.error.decimals')}}
+            {{ $t('interface.tokens.modal.error.decimals') }}
           </span>
         </div>
         <div class="button-block">
