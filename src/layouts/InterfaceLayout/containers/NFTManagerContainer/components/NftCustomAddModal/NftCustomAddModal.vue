@@ -48,11 +48,11 @@
             ]"
             @click.prevent="addCustom(contractAddress, tokenSymbol)"
           >
-            {{ $t('interface.save') }}
+            {{ $t('common.save') }}
           </button>
           <interface-bottom-text
-            :link-text="$t('interface.helpCenter')"
-            :question="$t('interface.dontKnow')"
+            :link-text="$t('common.help-center')"
+            :question="$t('common.dont-know')"
             link="https://kb.myetherwallet.com"
           />
         </div>

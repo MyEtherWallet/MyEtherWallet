@@ -5,7 +5,7 @@
     <div class="content-container">
       <div class="submit-button-container">
         <interface-bottom-text
-          :link-text="$t('interface.helpCenter')"
+          :link-text="$t('common.help-center')"
           :question="$t('interface.haveIssues')"
           link="https://kb.myetherwallet.com"
         />

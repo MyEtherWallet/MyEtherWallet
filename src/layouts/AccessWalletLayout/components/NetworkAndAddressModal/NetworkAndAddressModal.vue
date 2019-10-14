@@ -232,7 +232,7 @@
               </i18n>
               <input
                 type="checkbox"
-                @click="accessMyWalletBtnDisabled = !accessMyWalletBtnDisabled"
+                @click="acceptTerms = !acceptTerms"
               />
               <span class="checkmark" />
             </label>

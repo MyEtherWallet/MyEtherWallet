@@ -12,7 +12,7 @@
       <div class="modal-content">
         <div class="network-info-container">
           <p>
-            <span>{{ $t('interface.network') }}</span>
+            <span>{{ $t('common.network') }}</span>
             {{ network.type.name }} by {{ network.service }}
           </p>
           <div>

@@ -1,9 +1,17 @@
 {
-  "addCustomNode": "Add Custom Network/Node",
-  "save": "Save",
-  "dontKnow": "Don't know what it is?",
-  "helpCenter": "Help Center",
-  "httpBasicAccess": "HTTP Basic Access Authentication",
+  "network-modal": {
+    "custom": "Custom Networks",
+    "add-custom": "Add Custom Network/Node",
+    "http-access": "HTTP Basic Access Authentication",
+    "warning": "Warning: This information will be saved to your local storage, make sure your computer is secure.",
+    "dont-know": "Don't know what it is?",
+    "eth-node": "ETH Node Name",
+    "user-name": "User Name",
+    "port": "Port",
+    "button-change": "Change",
+    "popup-open-networks": "Open Networks"
+  },
+
   "tokens": "Tokens",
   "customToken": "Custom Tokens",
   "dataGas": "Data & Gas Limit",
@@ -21,8 +29,6 @@
   "sendPubTx": "Send/Publish Transaction",
   "generate": "Generate",
   "registerENSDescShort": "Register an ENS domain",
-  "balance": "Balance",
-  "network": "Network",
   "equivalentValues": "Equivalent Values",
   "readWriteC": "Read / Write Contract",
   "read": "Read",
