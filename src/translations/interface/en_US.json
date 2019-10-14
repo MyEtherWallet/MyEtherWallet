@@ -20,7 +20,6 @@
   "addr": {
     "button-switch": "Switch"
   },
-
   "tokens": {
     "custom": "Custom Tokens",
     "warning-offline":   "Can't load balances in offline mode",
@@ -30,8 +29,17 @@
       "ph-contract-addr": "Token Contract Address",
       "ph-symbol": "Token Symbol",
       "ph-decimals": "Decimals",
-      "invalid-addr": "Invalid address given."
+      "error": {
+        "decimals": "Invalid Decimal. Decimal can only be between 0 and 18.",
+        "addr": "Invalid address given."
+      }
     }
+  },
+  "ads": {
+    "buy-with-credit": "Buy ETH with Credit Card",
+    "ios": "Available for iOS",
+    "android": "and Android",
+    "twitter": "Follow us on Twitter"
   },
 
 
@@ -82,7 +90,7 @@
   "refund": "{currency} address for refund (if needed) from Changelly",
   "providers": "Providers",
   "buyEth": "Buy ETH with",
-  "buyWithCreditCard": "Buy ETH with Credit Card",
+
   "noProviderFound": "No providers found :(",
   "loadingProviders": "Please wait while we load provider rates...",
   "loadRateError": "An Error occurred while retrieving the rates for {currency}",
