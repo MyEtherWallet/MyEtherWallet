@@ -11,6 +11,12 @@
     "button-change": "Change",
     "popup-open-networks": "Open Networks"
   },
+  "check-balance": {
+    "string": "Check Balance",
+    "equivalent": "Equivalent Values",
+    "total-balance": "Total Balance",
+    "refresh": "Refresh Balance"
+  },
 
   "tokens": "Tokens",
   "customToken": "Custom Tokens",

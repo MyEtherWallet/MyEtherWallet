@@ -31,7 +31,7 @@
             class="change-button"
             @click="networkModalOpen"
           >
-            {{ $t('interface.network-modal.button-change' )}}
+            {{ $t('interface.network-modal.button-change') }}
           </button>
           <b-popover
             :content="$t('interface.network-modal.popup-open-networks')"

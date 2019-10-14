@@ -50,7 +50,10 @@
   "value": "Value",
   "network": "Network",
   "addr": "Address",
-  "balance": "Balance",
+  "balance": {
+    "string": "Balance",
+    "total" : "Total Balance"
+  },
   "advanced": "Advanced",
   "chain-id": "Chain ID",
   "save": "Save",

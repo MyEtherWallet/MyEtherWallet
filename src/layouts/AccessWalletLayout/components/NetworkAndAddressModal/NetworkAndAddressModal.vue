@@ -174,7 +174,7 @@
               <ul class="address-block table-header fours">
                 <li>{{ $t('accessWallet.network-addr.id') }}</li>
                 <li>{{ $t('common.addr') }}</li>
-                <li>{{ $t('common.balance') }}</li>
+                <li>{{ $t('common.balance.string') }}</li>
               </ul>
 
               <ul
@@ -230,10 +230,7 @@
                   {{ $t('common.terms') }} </router-link
                 >.
               </i18n>
-              <input
-                type="checkbox"
-                @click="acceptTerms = !acceptTerms"
-              />
+              <input type="checkbox" @click="acceptTerms = !acceptTerms" />
               <span class="checkmark" />
             </label>
           </div>
