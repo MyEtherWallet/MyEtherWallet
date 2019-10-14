@@ -17,6 +17,9 @@
     "total-balance": "Total Balance",
     "refresh": "Refresh Balance"
   },
+  "addr": {
+    "button-switch": "Switch"
+  },
 
   "tokens": "Tokens",
   "customToken": "Custom Tokens",
@@ -73,7 +76,6 @@
   "pleaseTryAgain": "please wait a moment and try again",
   "articleTo": "to",
   "send": "Send",
-  "addr": "Address",
   "search": "Search",
   "timeRemaining": "Time Remaining",
   "sendTxType": "Type",
