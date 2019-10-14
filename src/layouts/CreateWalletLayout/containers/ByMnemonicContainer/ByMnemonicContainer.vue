@@ -9,7 +9,6 @@
     <verification-modal
       ref="verification"
       :mnemonic-values="mnemonicValues"
-      :mnemonic24="mnemonic24"
       @verifiedMnemonic="openFinish"
     />
     <div class="wrap">

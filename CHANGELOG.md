@@ -1,3 +1,7 @@
+### Bug
+
+- Fix mnemonic phrase validation []()
+
 ### Release v5.1.6
 
 ### Feature
