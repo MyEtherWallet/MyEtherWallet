@@ -167,13 +167,16 @@ const config = {
   ]
 };
 if (BUILD_TYPE === 'mewcx') {
+  const tabIdx = config.tabs.findIndex(item => {
+    return item.name === 'send-transaction';
+  });
   const newArr = [];
-  config.tabs[1].children.forEach(item => {
+  config.tabs[tabIdx].children.forEach(item => {
     if (item.name !== 'send-offline') {
       newArr.push(item);
     }
   });
 
-  config.tabs[1].children = newArr;
+  config.tabs[tabIdx].children = newArr;
 }
 export default config;
