@@ -2,7 +2,7 @@
   <div class="modal-container">
     <b-modal
       ref="balance"
-      :title="$t('common.balance')"
+      :title="$t('common.balance.string')"
       hide-footer
       centered
       class="bootstrap-modal balance nopadding"
@@ -11,7 +11,7 @@
     >
       <div class="content-block total-balance">
         <div class="flex-container">
-          <h4 class="modal-title">{{ $t('common.totalBalance') }}</h4>
+          <h4 class="modal-title">{{ $t('common.balance.total') }}</h4>
           <div class="margin-left-auto total-balance-amount">
             <span>{{ balance }}</span>
             {{ network.type.currencyName }}
@@ -21,7 +21,7 @@
 
       <div class="content-block">
         <h4 class="equivalent-values-title">
-          {{ $t('interface.equivalentValues') }}
+          {{ $t('interface.check-balance.equivalent') }}
         </h4>
         <ul class="equivalent-values">
           <li v-for="ev in equivalentValues" :key="ev.key">

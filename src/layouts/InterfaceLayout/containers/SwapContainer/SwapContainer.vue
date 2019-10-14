@@ -32,7 +32,7 @@
                   class="all-button prevent-user-select"
                   @click="swapAll"
                 >
-                  {{ $t('common.totalBalance') }}
+                  {{ $t('common.balance.total') }}
                 </p>
               </div>
               <swap-currency-picker

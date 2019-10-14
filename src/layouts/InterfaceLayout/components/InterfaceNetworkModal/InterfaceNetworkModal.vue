@@ -90,10 +90,10 @@
             <input
               v-validate="'required'"
               v-model="name"
+              :placeholder="$t('interface.network-modal.eth-node')"
               class="custom-input-text-1"
               type="text"
               name="nodeName"
-              :placeholder="$t('interface.network-modal.eth-node')"
               autocomplete="off"
             />
             <select v-model="selectedNetworkName" class="custom-select-1">
@@ -125,10 +125,10 @@
             />
             <input
               v-model="port"
+              :placeholder="$t('interface.network-modal.port')"
               class="custom-input-text-1"
               type="number"
               name="nodePort"
-              :placeholder="$t('interface.network-modal.port')"
               autocomplete="off"
             />
             <input
@@ -145,10 +145,10 @@
               v-validate="'required|numeric'"
               v-show="selectedNetworkName === 'CUS'"
               v-model="chainID"
+              :placeholder="$t('common.chain-id')"
               class="custom-input-text-1"
               type="number"
               name="customChain"
-              :placeholder="$t('common.chain-id')"
               autocomplete="off"
             />
             <input
@@ -190,9 +190,11 @@
         <div class="content-block">
           <div class="flex-container">
             <div>
-              <h4 class="modal-title">{{ $t('interface.network-modal.http-access') }}</h4>
+              <h4 class="modal-title">
+                {{ $t('interface.network-modal.http-access') }}
+              </h4>
               <p class="warning-msg">
-                {{$t('interface.network-modal.warning')}}
+                {{ $t('interface.network-modal.warning') }}
               </p>
             </div>
             <div class="margin-left-auto add-custom-network">
@@ -207,18 +209,18 @@
           <div ref="authForm" class="auth-form-container hidden">
             <input
               v-model="username"
+              :placeholder="$t('interface.network-modal.user-name')"
               class="custom-input-text-1"
               type="text"
               name
-              :placeholder="$t('interface.network-modal.user-name')"
               autocomplete="off"
             />
             <input
               v-model="password"
+              :placeholder="$t('common.password.string')"
               class="custom-input-text-1"
               type="password"
               name
-              :placeholder="$t('common.password.string')"
               autocomplete="off"
             />
           </div>
