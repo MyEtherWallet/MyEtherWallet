@@ -83,7 +83,7 @@
           <img src="~@/assets/images/icons/right-arrow.png" alt />
         </div>
         <interface-bottom-text
-          :link-text="$t('interface.helpCenter')"
+          :link-text="$t('common.help-center')"
           :question="$t('interface.haveIssues')"
           link="https://kb.myetherwallet.com"
         />
@@ -259,7 +259,7 @@
           </div>
         </div>
         <interface-bottom-text
-          :link-text="$t('interface.helpCenter')"
+          :link-text="$t('common.help-center')"
           :question="$t('interface.haveIssues')"
           link="https://kb.myetherwallet.com"
         />

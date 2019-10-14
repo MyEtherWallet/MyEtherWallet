@@ -39,7 +39,6 @@
   "read": "Read",
   "article": {
     "using-mew-offline": "Using MEW Offline",
-    "using-offline": "Using MEW Offline",
     "mnemonic-password": "Mnemonic Phrase: Should I Include a Password?"
   },
   "password": {
@@ -51,5 +50,9 @@
   "value": "Value",
   "network": "Network",
   "addr": "Address",
-  "balance": "Balance"
+  "balance": "Balance",
+  "advanced": "Advanced",
+  "chain-id": "Chain ID",
+  "save": "Save",
+  "dont-know": "Don't know what it is?"
 }

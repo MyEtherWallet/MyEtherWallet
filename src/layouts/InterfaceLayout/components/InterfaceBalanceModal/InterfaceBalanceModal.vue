@@ -2,7 +2,7 @@
   <div class="modal-container">
     <b-modal
       ref="balance"
-      :title="$t('interface.balance')"
+      :title="$t('common.balance')"
       hide-footer
       centered
       class="bootstrap-modal balance nopadding"

@@ -2,7 +2,7 @@
   <div class="modal-container">
     <b-modal
       ref="network"
-      :title="$t('interface.network')"
+      :title="$t('common.network')"
       hide-footer
       centered
       class="bootstrap-modal network nopadding max-height-1"
@@ -13,7 +13,7 @@
         <div class="flex-container">
           <h4 class="modal-title">{{ $t('common.advanced') }}</h4>
           <div class="margin-left-auto add-custom-network">
-            <p>{{ $t('interface.addCustomNode') }}</p>
+            <p>{{ $t('interface.network-modal.add-custom') }}</p>
             <div class="sliding-switch-white">
               <label class="switch">
                 <input
@@ -58,7 +58,7 @@
           </div>
         </div>
         <div v-if="customNetworks.length > 0" class="content-block">
-          <h4 class="cust">Custom Networks</h4>
+          <h4 class="cust">{{ $t('interface.network-modal.custom') }}</h4>
           <div
             v-for="(net, idx) in customNetworks"
             :key="net.service + '(' + net.type.name + ')' + idx"
@@ -93,7 +93,7 @@
               class="custom-input-text-1"
               type="text"
               name="nodeName"
-              placeholder="ETH Node Name"
+              :placeholder="$t('interface.network-modal.eth-node')"
               autocomplete="off"
             />
             <select v-model="selectedNetworkName" class="custom-select-1">
@@ -128,7 +128,7 @@
               class="custom-input-text-1"
               type="number"
               name="nodePort"
-              placeholder="Port"
+              :placeholder="$t('interface.network-modal.port')"
               autocomplete="off"
             />
             <input
@@ -148,7 +148,7 @@
               class="custom-input-text-1"
               type="number"
               name="customChain"
-              placeholder="Chain ID"
+              :placeholder="$t('common.chain-id')"
               autocomplete="off"
             />
             <input
@@ -190,10 +190,9 @@
         <div class="content-block">
           <div class="flex-container">
             <div>
-              <h4 class="modal-title">{{ $t('interface.httpBasicAccess') }}</h4>
+              <h4 class="modal-title">{{ $t('interface.network-modal.http-access') }}</h4>
               <p class="warning-msg">
-                Warning: This information will be saved to your local storage,
-                make sure your computer is secure.
+                {{$t('interface.network-modal.warning')}}
               </p>
             </div>
             <div class="margin-left-auto add-custom-network">
@@ -211,7 +210,7 @@
               class="custom-input-text-1"
               type="text"
               name
-              placeholder="User Name"
+              :placeholder="$t('interface.network-modal.user-name')"
               autocomplete="off"
             />
             <input
@@ -219,7 +218,7 @@
               class="custom-input-text-1"
               type="password"
               name
-              placeholder="Password"
+              :placeholder="$t('common.password.string')"
               autocomplete="off"
             />
           </div>
@@ -240,7 +239,7 @@
               ]"
               @click.prevent="saveCustomNetwork"
             >
-              {{ $t('interface.save') }}
+              {{ $t('common.save') }}
             </button>
             <button
               v-show="selectedNetworkName === 'CUS'"
@@ -261,11 +260,11 @@
               ]"
               @click.prevent="saveCustomNetwork"
             >
-              {{ $t('interface.save') }}
+              {{ $t('common.save') }}
             </button>
             <interface-bottom-text
-              :link-text="$t('interface.helpCenter')"
-              :question="$t('interface.dontKnow')"
+              :link-text="$t('common.help-center')"
+              :question="$t('common.dont-know')"
               link="https://kb.myetherwallet.com"
             />
           </div>
