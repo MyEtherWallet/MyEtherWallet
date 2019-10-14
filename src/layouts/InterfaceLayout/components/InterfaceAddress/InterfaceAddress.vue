@@ -29,7 +29,7 @@
             class="change-button"
             @click="switchAddr"
           >
-            Switch
+            {{ $t('interface.addr.button-switch')}}
           </button>
           <b-btn id="popover-ref-qrcode" class="custom-tooltip" @click="qrcode">
             <img alt src="~@/assets/images/icons/qr-code-white.svg" />
@@ -52,7 +52,7 @@
             />
           </b-btn>
           <b-popover
-            content="Switch Address"
+            :content="$t('popover.addr-switch')"
             target="popover-ref-address"
             placement="top"
             triggers="hover"
@@ -66,28 +66,28 @@
             title
           />
           <b-popover
-            :content="$t('popover.copy')"
+            :content="$t('common.copy')"
             target="popover-ref-copy"
             placement="top"
             triggers="hover"
             title
           />
           <b-popover
-            :content="$t('popover.switchAddress')"
+            :content="$t('popover.addr-switch')"
             target="popover-ref-switch"
             placement="top"
             triggers="hover"
             title
           />
           <b-popover
-            :content="$t('popover.displayAddress')"
+            :content="$t('popover.addr-display')"
             target="popover-ref-address"
             placement="top"
             triggers="hover"
             title
           />
           <b-popover
-            content="Address in Qrcode"
+            :content="$t('popover.addr-qr')"
             target="popover-ref-qrcode"
             placement="top"
             triggers="hover"
