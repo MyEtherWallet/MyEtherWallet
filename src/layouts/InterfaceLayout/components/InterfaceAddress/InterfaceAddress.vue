@@ -29,7 +29,7 @@
             class="change-button"
             @click="switchAddr"
           >
-            {{ $t('interface.addr.button-switch')}}
+            {{ $t('interface.addr.button-switch') }}
           </button>
           <b-btn id="popover-ref-qrcode" class="custom-tooltip" @click="qrcode">
             <img alt src="~@/assets/images/icons/qr-code-white.svg" />
