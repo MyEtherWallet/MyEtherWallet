@@ -9,7 +9,8 @@
     "user-name": "User Name",
     "port": "Port",
     "button-change": "Change",
-    "popup-open-networks": "Open Networks"
+    "popup-open-networks": "Open Networks",
+    "last-block": "Last block"
   },
   "check-balance": {
     "string": "Check Balance",
@@ -42,6 +43,17 @@
     "twitter": "Follow us on Twitter"
   },
 
+  "menu": {
+    "string": "Menu",
+    "dashboard": "Dashboard",
+    "send": "Send",
+    "ntf": "NFT Manager",
+    "contract": "Contract",
+    "interact-contract": "Interact with Contract",
+    "message": "Message",
+    "deploy": "Deploy Contract",
+    "sign-message": "Sign Message"
+  },
 
 
   "dataGas": "Data & Gas Limit",
@@ -70,8 +82,8 @@
   "fromAddr": "From Address",
   "myAddr": "My Address",
   "txSideMenuTitle": "Send",
-  "txSideMenuContract": "Contract",
-  "txSideMenuMessage": "Message",
+
+
   "byteCode": "Byte Code",
   "constructor": "Constructor",
   "contractName": "Contract Name",
@@ -83,7 +95,7 @@
   "signedTx": "Signed Transaction",
   "raw": "Raw",
   "copyAndCont": "Copy and Continue",
-  "lastBlock": "Last block",
+
   "depAmount": "Deposit Amount",
   "notEnoughBalance": "You have insufficient funds.",
   "swapButtonLoading": "Finalizing Swap Details",
@@ -148,7 +160,7 @@
   "unableToValidateAddress": "Currently unable to validate addresses for {currency}. It is likely correct, but Please double check it is correct before sending.",
   "reviewSwap": "Review swap",
   "emailPopOver": "Only used if any problems arise with the deposit, otherwise if omitted the value will be refunded to the sending address if any problems arise.",
-  "dashboard": "Dashboard",
+
   "dashboardSwap": "MEW has partnered with Bity, Kyber Network, Changelly, and Simplex to allow users to swap fiat to crypto, ETH and BTC, ETH and ERC-20.",
   "availableFor": "Available for iOS<br />and Android"
 }

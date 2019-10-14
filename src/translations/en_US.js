@@ -26,6 +26,7 @@ import buyHardwareWallet from './other/buy-hardware-wallet/en_US';
 import convertUnits from './other/convert-units/en_US';
 import verifyMessage from './other/verify-message/en_US';
 import welcomeMessage from './welcome-message/en_US';
+import sendTx from './send-tx/en_US';
 
 const en_US = {
   common: common,
@@ -54,6 +55,7 @@ const en_US = {
   dappsMaker: dappsMaker,
   convertUnits: convertUnits,
   verifyMessage: verifyMessage,
-  welcomeMessage: welcomeMessage
+  welcomeMessage: welcomeMessage,
+  sendTx: sendTx
 };
 export default en_US;
