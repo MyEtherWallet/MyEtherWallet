@@ -1,0 +1,36 @@
+{
+
+    "send-tx": "Send Transaction",
+    "send-offline": "Send Offline",
+    "to-addr": "To Address",
+    "from-addr": "From Address",
+    "type": "Type",
+    "amount": "Amount",
+    "tx-fee": "Transaction Fee",
+    "advanced": "Advanced",
+    "add-data": "Add Data",
+    "nonce": "Nonce",
+    "data": "Data",
+
+  "data-gas": "Data & Gas Limit",
+  "dep-amount": "Deposit Amount",
+  "button-entire": "Entire Balance",
+  "confirmation": {
+    "title": "Confirmation",
+    "detail-ino": "Detail Information",
+    "button": "Confirm and Send"
+  },
+  "generate-tx": "Generate Transaction",
+  "generate-info": "Generate Information",
+  "not-enough-funds": "You have insufficient funds.",
+  "signed": {
+    "tx": "Signed Transaction",
+    "raw": "Raw",
+    "button-copy-cont": "Copy and Continue"
+  },
+  "success": {
+    "title": "Success",
+    "sub-title": "Transaction sent!",
+    "button-check-status": "Check Status on Etherscan.io"
+  }
+}
