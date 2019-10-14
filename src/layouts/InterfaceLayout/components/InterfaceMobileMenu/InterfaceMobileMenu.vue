@@ -33,7 +33,7 @@
         </div>
       </b-dropdown>
       <p class="menu-small-title">
-        MENU <i class="fa fa-angle-down" aria-hidden="true"></i>
+        {{$t('interface.menu.string')}} <i class="fa fa-angle-down" aria-hidden="true"></i>
       </p>
     </div>
   </div>
