@@ -2,9 +2,9 @@
   "createANewWallet": "Create A New Wallet",
   "accessMyWallet": "Access My Wallet",
   "accessWallet": "Access Wallet",
-  "faqs": "FAQs",
+
   "sendTx": "Send Transaction",
-  "swap": "Swap",
+
   "unlockWallet": "Unlock Wallet",
   "createWallet": "Create Wallet",
   "customerSupport": "Customer Support",
@@ -44,10 +44,9 @@
   "txFee": "Transaction Fee",
   "dapps": "Dapps",
   "news": "News",
-  "interactWcontract": "Interact with Contract",
-  "depContract": "Deploy Contract",
+
   "signMessage": "Sign Message",
-  "signTx": "Sign Transaction",
+
   "verifyMessage": "Verify Message",
   "signature": "Signature",
   "sign": "Sign",
