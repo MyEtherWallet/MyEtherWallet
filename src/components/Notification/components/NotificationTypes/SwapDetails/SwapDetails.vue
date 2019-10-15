@@ -67,7 +67,7 @@
           </div>
         </li>
         <li v-if="isEthereum">
-          <p>{{ $t('common.toAddress') }}:</p>
+          <p>{{ $t('sendTx.to-addr') }}:</p>
           <div class="detail-data">
             <p>
               <a

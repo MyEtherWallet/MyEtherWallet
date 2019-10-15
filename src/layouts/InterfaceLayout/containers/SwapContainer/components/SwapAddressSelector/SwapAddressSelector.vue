@@ -80,7 +80,7 @@
               </p>
             </div>
             <p v-if="addr.address === currentAddress" class="address-note">
-              {{ $t('interface.myAddr') }}
+              {{ $t('common.my-addr') }}
             </p>
             <i
               v-if="toAddressCheckMark"

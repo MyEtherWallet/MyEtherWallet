@@ -11,7 +11,7 @@
     >
       <div class="time-remaining">
         <h1>{{ timeRemaining }}</h1>
-        <p>{{ $t('interface.timeRemaining') }}</p>
+        <p>{{ $t('swap.time-remain') }}</p>
       </div>
       <div class="swap-detail">
         <div class="from-address">
@@ -22,7 +22,7 @@
             {{ fromAddress.value }}
             <span>{{ fromAddress.name }}</span>
           </p>
-          <p class="block-title">{{ $t('interface.fromAddr') }}</p>
+          <p class="block-title">{{ $t('sendTx.from-addr') }}</p>
           <p class="address">{{ fromAddress.address }}</p>
         </div>
         <div class="right-arrow">
@@ -36,7 +36,7 @@
             {{ toAddress.value }}
             <span>{{ toAddress.name }}</span>
           </p>
-          <p class="block-title">{{ $t('interface.sendTxToAddr') }}</p>
+          <p class="block-title">{{ $t('send-tx.to-addr') }}</p>
           <p class="address">{{ toAddress.address }}</p>
         </div>
         <div v-else class="to-address">

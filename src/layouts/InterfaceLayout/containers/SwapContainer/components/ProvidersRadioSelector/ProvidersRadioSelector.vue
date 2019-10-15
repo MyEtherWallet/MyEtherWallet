@@ -118,7 +118,7 @@
       class="radio-button-container animated-background"
     >
       <div class="provider-loading-message">
-        {{ $t('interface.loadingProviders') }}
+        {{ $t('swap.providers.loading-rates') }}
       </div>
       <provider-info-list
         :all-supported-providers="allSupportedProviders"
@@ -140,10 +140,10 @@
             <img :src="providerLogo('mew')" alt />
           </div>
           <div>
-            {{ $t('interface.loadRateError') }}
-            {{ noProvidersPair.fromCurrency }} {{ $t('interface.articleTo') }}
+            {{ $t('swap.providers.load-rate-error') }}
+            {{ noProvidersPair.fromCurrency }} {{ $t('swap.providers.article-to') }}
             {{ noProvidersPair.toCurrency }}
-            {{ $t('interface.pleaseTryAgain') }}
+            {{ $t('swap.warning.try-again') }}
           </div>
         </li>
       </ul>
@@ -152,7 +152,7 @@
     <!-- =========================================================================== -->
     <div v-show="noAvaliableProviders" class="radio-button-container">
       <div class="no-provider-message">
-        {{ $t('interface.noProviderFound') }}
+        {{ $t('swap.providers.no-provider-found') }}
       </div>
       <ul>
         <provider-info-list

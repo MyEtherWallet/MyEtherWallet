@@ -11,7 +11,7 @@
           <p>#{{ nft.token }}</p>
           <div class="address-input-container">
             <address-selector
-              :title="$t('interface.sendTxToAddr')"
+              :title="$t('send-tx.to-addr')"
               @toAddress="prepareTransfer"
             />
             <div class="send-button-container">
@@ -74,7 +74,7 @@ export default {
       cryptoKittiesContract: {},
       cryptoKittiesConfig: '0x06012c8cf97bead5deae237070f9587f8e7a266d',
       sendButton: {
-        title: this.$t('interface.send'),
+        title: this.$t('sendTx.send'),
         buttonStyle: 'green',
         helpCenter: true,
         noMinWidth: true,
