@@ -171,6 +171,8 @@ const getLedgerTransport = async () => {
   // eslint-disable-next-line
   console.log(webAuthnSupport); // todo remove dev item
   const webHidSupport = await isWebHidSupported();
+  // eslint-disable-next-line
+  console.log(webHidSupport); // todo remove dev item
   if (webAuthnSupport) {
     transport = await TransportWebAuthn.create();
   } else if (webHidSupport) {
