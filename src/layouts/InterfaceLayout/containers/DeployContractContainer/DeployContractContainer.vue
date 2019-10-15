@@ -135,8 +135,8 @@
           <input
             ref="value"
             v-model="value"
+            :placeholder="$t('contract.value-in-eth')"
             step="any"
-            :placeholder="$t('contract.value-in-eth') "
           />
         </div>
       </div>
