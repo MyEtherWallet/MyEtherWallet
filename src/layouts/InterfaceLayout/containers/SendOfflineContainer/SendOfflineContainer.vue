@@ -59,8 +59,8 @@
                 <textarea
                   ref="toaddress"
                   v-model="address"
-                  name="name"
                   :placeholder="$t('common.enter-addr')"
+                  name="name"
                 />
                 <i
                   :class="[
@@ -190,7 +190,7 @@
             class="submit-button large-round-button-green-border"
             @click="uploadClick"
           >
-            {{ $t('sendTx.import-json')}}
+            {{ $t('sendTx.import-json') }}
           </div>
           <div
             :class="[
@@ -202,9 +202,9 @@
             {{ $t('sendTx.generate-tx') }}
           </div>
           <interface-bottom-text
-            link="https://kb.myetherwallet.com"
             :question="$t('common.have-issues')"
             :link-text="$t('common.help-center')"
+            link="https://kb.myetherwallet.com"
           />
         </div>
       </div>
