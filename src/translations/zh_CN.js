@@ -2,6 +2,7 @@
 import common from './common/zh_CN';
 import confirmation from './confirmation/zh_CN';
 import dapps from './dapps/zh_CN';
+import dappsSubmission from './dapps-submission/zh_CN';
 import header from './header/zh_CN';
 import home from './home/zh_CN';
 import footer from './footer/zh_CN';
@@ -46,6 +47,7 @@ const zh_CN = {
   keepkeyError: keepkeyError,
   bitboxError: bitboxError,
   buyHardwareWallet: buyHardwareWallet,
-  dappsMaker: dappsMaker
+  dappsMaker: dappsMaker,
+  dappsSubmission: dappsSubmission
 };
 export default zh_CN;

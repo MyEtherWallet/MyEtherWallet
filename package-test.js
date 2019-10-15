@@ -22,7 +22,6 @@ const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
 };
 const ALL_PACKAGES = Object.assign(
-  {},
   package.dependencies,
   package.devDependencies
 );
