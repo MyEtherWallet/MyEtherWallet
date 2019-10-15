@@ -47,11 +47,11 @@
           </p>
         </li>
         <li>
-          <p>{{ $t('common.gasPrice') }}:</p>
+          <p>{{ $t('common.gas.price') }}:</p>
           <p>{{ convertToGwei(details.gasPrice) }} Gwei</p>
         </li>
         <li>
-          <p>{{ $t('common.gasLimit') }}:</p>
+          <p>{{ $t('common.gas.limit') }}:</p>
           <p>{{ details.gasLimit }}</p>
         </li>
         <li v-if="notice.body.gasUsed">

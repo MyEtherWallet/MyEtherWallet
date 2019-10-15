@@ -2,10 +2,10 @@
   <div class="modal-container">
     <b-modal
       ref="confirmation"
+      :title="$t('sendTx.confirmation.title')"
       hide-footer
       centered
       class="bootstrap-modal-wide confirmation-modal nopadding"
-      title="Confirmation"
       static
       lazy
     >
@@ -37,7 +37,7 @@
         </div>
         <div class="detail-info">
           <div class="info">
-            <h4>Detail Information</h4>
+            <h4>{{ $t('sendTx.confirmation.detail-info') }}</h4>
             <div class="sliding-switch-white">
               <label class="switch">
                 <input
@@ -58,23 +58,23 @@
                 <p>{{ network.type.name }} by {{ network.service }}</p>
               </div>
               <div class="grid-block">
-                <p>{{ $t('common.gasLimit') }}</p>
+                <p>{{ $t('common.gas.limit') }}</p>
                 <p>{{ gas }} wei</p>
               </div>
               <div class="grid-block">
-                <p>{{ $t('common.gasPrice') }}</p>
+                <p>{{ $t('common.gas.price') }}</p>
                 <p>{{ gasPrice }} gwei</p>
               </div>
               <div class="grid-block">
-                <p>{{ $t('common.txFee') }}</p>
+                <p>{{ $t('sendTx.tx-fee') }}</p>
                 <p>{{ fee }} {{ network.type.currencyName }}</p>
               </div>
               <div class="grid-block">
-                <p>Nonce</p>
+                <p>{{ $t('sendTx.nonce') }}</p>
                 <p>{{ nonce }}</p>
               </div>
               <div class="grid-block">
-                <p>{{ $t('common.data') }}</p>
+                <p>{{ $t('sendTx.data') }}</p>
                 <p>{{ data }}</p>
               </div>
             </div>
@@ -158,7 +158,7 @@ export default {
       tokenTransferVal: '',
       tokenSymbol: '',
       buttonSendTx: {
-        title: 'Confirm and Send',
+        title: `${this.$t('sendTx.confirmation.button')}`,
         buttonStyle: 'green',
         mobileFullWidth: true,
         helpCenter: true

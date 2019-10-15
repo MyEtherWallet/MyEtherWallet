@@ -74,11 +74,11 @@
             </div>
             <b-collapse :id="`accordion${idx}`" class="body">
               <div class="body-item">
-                <span class="item-title">{{ $t('common.gasLimit') }}t</span>
+                <span class="item-title">{{ $t('common.gas.limit') }}t</span>
                 <span>{{ web3.utils.hexToNumberString(item.gas) }}</span>
               </div>
               <div class="body-item">
-                <span class="item-title">{{ $t('common.gasPrice') }}</span>
+                <span class="item-title">{{ $t('common.gas.price') }}</span>
                 <span>
                   {{ web3.utils.fromWei(item.gasPrice, 'gwei') }}
                   Gwei
@@ -144,7 +144,7 @@
           </div>
         </div>
         <p class="learn-more">
-          Have any issues?
+          {{ $t('common.have-issues') }}
           <a
             href="https:/kb.myetherwallet.com"
             target="_blank"
