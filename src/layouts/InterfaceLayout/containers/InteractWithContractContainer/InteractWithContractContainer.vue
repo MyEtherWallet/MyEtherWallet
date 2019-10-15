@@ -84,7 +84,7 @@
         </div>
         <interface-bottom-text
           :link-text="$t('common.help-center')"
-          :question="$t('interface.haveIssues')"
+          :question="$t('common.have-issues')"
           link="https://kb.myetherwallet.com"
         />
       </div>
@@ -260,7 +260,7 @@
         </div>
         <interface-bottom-text
           :link-text="$t('common.help-center')"
-          :question="$t('interface.haveIssues')"
+          :question="$t('common.have-issues')"
           link="https://kb.myetherwallet.com"
         />
       </div>

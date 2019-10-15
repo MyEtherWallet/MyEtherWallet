@@ -104,7 +104,7 @@
           <div class="title-container">
             <div class="title">
               <div class="title-helper">
-                <h4>{{ $t('common.gasLimit') }}</h4>
+                <h4>{{ $t('common.gas.limit') }}</h4>
                 <popover :popcontent="$t('popover.gasLimit')" />
               </div>
             </div>
@@ -112,7 +112,7 @@
           <div class="the-form gas-amount">
             <input
               v-model="gasLimit"
-              :placeholder="$t('common.gasLimit')"
+              :placeholder="$t('common.gas.limit')"
               type="number"
             />
             <div class="good-button-container">
@@ -156,7 +156,7 @@
           <div class="title-container">
             <div class="title">
               <div class="title-helper">
-                <h4>{{ $t('common.gasPrice') }}</h4>
+                <h4>{{ $t('common.gas.price') }}</h4>
                 <popover :popcontent="txSpeedMsg" />
               </div>
             </div>
@@ -164,7 +164,7 @@
           <div class="the-form gas-amount">
             <input
               v-model="localGasPrice"
-              :placeholder="$t('common.gasPrice')"
+              :placeholder="$t('common.gas.price')"
               type="number"
             />
             <div class="good-button-container">
