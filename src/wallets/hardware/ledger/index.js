@@ -3,6 +3,7 @@ import { byContractAddress } from '@ledgerhq/hw-app-eth/erc20';
 import { Transaction } from 'ethereumjs-tx';
 import u2fTransport from '@ledgerhq/hw-transport-u2f';
 import TransportWebAuthn from '@ledgerhq/hw-transport-webauthn';
+import TransportWebHID from '@ledgerhq/hw-transport-webhid';
 import webUsbTransport from '@ledgerhq/hw-transport-webusb';
 import { LEDGER as ledgerType } from '../../bip44/walletTypes';
 import bip44Paths from '../../bip44';
@@ -154,12 +155,26 @@ const isWebAuthnSupported = async () => {
   );
 };
 
+const isWebHidSupported = async () => {
+  const isSupported = await TransportWebHID.isSupported();
+  return (
+    isSupported && platform.os.family !== 'Windows' // take it out later once the windows issue is fixed
+  );
+};
+
 const getLedgerTransport = async () => {
   let transport;
   const support = await isWebUsbSupported();
+  // eslint-disable-next-line
+  console.log(support); // todo remove dev item
   const webAuthnSupport = await isWebAuthnSupported();
+  // eslint-disable-next-line
+  console.log(webAuthnSupport); // todo remove dev item
+  const webHidSupport = await isWebHidSupported();
   if (webAuthnSupport) {
     transport = await TransportWebAuthn.create();
+  } else if (webHidSupport) {
+    transport = await TransportWebHID.create();
   } else if (support) {
     transport = await webUsbTransport.create();
   } else {
