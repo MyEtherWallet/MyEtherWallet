@@ -2,7 +2,7 @@
   <div class="send-offline-confirmation-modal">
     <b-modal
       ref="sendOfflineConfirmation"
-      title="Confirmation"
+      :title="$t('sendTx.confirmation.title')"
       hide-footer
       centered
       class="bootstrap-modal-wide nopadding"
@@ -12,44 +12,47 @@
       <div class="modal-contents">
         <div class="tx-info-container">
           <ul>
-            <li>From Address</li>
+            <li>{{ $t('sendTx.from-addr') }}</li>
             <li>{{ rawTx.from }}</li>
           </ul>
           <ul>
-            <li>To Address</li>
+            <li>{{ $t('sendTx.to-addr') }}</li>
             <li>{{ rawTx.to }}</li>
           </ul>
           <ul>
-            <li>Nonce</li>
+            <li>{{ $t('sendTx.nonce') }}</li>
             <li>{{ rawTx.nonce }}</li>
           </ul>
           <ul>
-            <li>Value</li>
+            <li>{{ $t('common.value') }}/li></li>
             <li>{{ rawTx.value }}</li>
           </ul>
           <ul>
-            <li>Data</li>
+            <li>{{ $t('sendTx.data') }}</li>
             <li class="data">{{ rawTx.data }}</li>
           </ul>
           <ul>
-            <li>Chain ID</li>
+            <li>{{ $t('common.chain-id') }}</li>
             <li>{{ rawTx.chainID }}</li>
           </ul>
           <ul>
-            <li>Gas Limit</li>
+            <li>{{ $t('common.gas.limit') }}t</li>
             <li>{{ rawTx.gasLimit }}</li>
           </ul>
           <ul>
-            <li>Gas Price</li>
+            <li>{{ $t('common.gas.price') }}</li>
             <li>{{ rawTx.gasPrice }}</li>
           </ul>
         </div>
-        <expending-option :hidebottomborder="true" title="Signed Transaction">
+        <expending-option
+          :hidebottomborder="true"
+          :title="$t('sendTx.signed.tx')"
+        >
           <div class="raw-signed">
             {{ signedTx }}
           </div>
         </expending-option>
-        <expending-option title="Raw Transaction">
+        <expending-option :title="$t('sendTx.raw-tx')">
           {{ rawTx }}
         </expending-option>
         <div class="button-block-container">

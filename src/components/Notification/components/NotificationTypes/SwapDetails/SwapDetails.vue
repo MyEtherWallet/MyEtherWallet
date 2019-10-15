@@ -137,13 +137,13 @@
           </div>
         </li>
         <li v-if="isEthereum">
-          <p>{{ $t('common.gasPrice') }}:</p>
+          <p>{{ $t('common.gas.price') }}:</p>
           <div class="detail-data">
             <p>{{ convertToGwei(details.gasPrice) }} Gwei</p>
           </div>
         </li>
         <li v-if="isEthereum">
-          <p>{{ $t('common.gasLimit') }}:</p>
+          <p>{{ $t('common.gas.limit') }}:</p>
           <div class="detail-data">
             <p>{{ details.gasLimit }}</p>
           </div>
