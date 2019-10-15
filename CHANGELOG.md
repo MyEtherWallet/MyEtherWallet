@@ -1,3 +1,8 @@
+### Release v5.1.7
+
+### Devop
+- Add (experimental) support for WebAuthn for ledger [#510](https://github.com/MyEtherWallet/MyEtherWallet/pull/1510)
+
 ### Release v5.1.6
 
 ### Feature
