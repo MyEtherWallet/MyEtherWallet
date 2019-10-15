@@ -51,6 +51,7 @@
   "network": "Network",
   "addr": "Address",
   "my-addr": "My Address",
+  "enter-addr": "Please enter the address",
   "balance": {
     "string": "Balance",
     "total" : "Total Balance"

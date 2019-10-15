@@ -141,7 +141,8 @@
           </div>
           <div>
             {{ $t('swap.providers.load-rate-error') }}
-            {{ noProvidersPair.fromCurrency }} {{ $t('swap.providers.article-to') }}
+            {{ noProvidersPair.fromCurrency }}
+            {{ $t('swap.providers.article-to') }}
             {{ noProvidersPair.toCurrency }}
             {{ $t('swap.warning.try-again') }}
           </div>

@@ -192,7 +192,7 @@ export default {
       if (!this.allSigned && this.isHardwareWallet) {
         return this.$t('confirmation.approveOnDevice');
       }
-      return this.$t('common.confirmAndSend');
+      return this.$t('sendTx.confirmation.button');
     },
     allSigned() {
       if (this.signedArray.length === 0) return false;

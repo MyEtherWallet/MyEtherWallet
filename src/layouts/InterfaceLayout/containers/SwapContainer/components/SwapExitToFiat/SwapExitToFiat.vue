@@ -222,7 +222,7 @@ export default {
       },
       inputAddress1: {
         title: this.$t('swap.exit-to-fiat.billing-addr'),
-        placeHolder: 'Address 1',
+        placeHolder: this.$t('swap.exit.to-fiat.addr-placeholder'),
         value: ''
       },
       inputAddress2: {
