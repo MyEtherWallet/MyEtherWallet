@@ -1,0 +1,41 @@
+@import '~@/scss/GlobalVariables';
+
+.sotd-wrapper {
+  .sotd-container {
+    align-items: center;
+    border-radius: 6px;
+    border: 1px solid $light-yellow-3;
+    background-color: $opaque-yellow;
+    color: $dark-blue-2;
+    display: flex;
+    justify-content: space-between;
+    margin: auto;
+    padding: 20px;
+    width: 75%;
+
+    .text-container {
+      align-items: center;
+      display: flex;
+      justify-content: center;
+    }
+
+    img {
+      height: 30px;
+      margin-left: 10px;
+      margin-right: 20px;
+    }
+
+    p {
+      text-align: left;
+    }
+
+    a {
+      text-decoration: underline;
+    }
+
+    .fa-times {
+      color: $dark-blue-2;
+      cursor: pointer;
+    }
+  }
+}

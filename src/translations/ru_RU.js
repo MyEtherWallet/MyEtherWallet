@@ -2,6 +2,7 @@
 import common from './common/ru_RU';
 import confirmation from './confirmation/ru_RU';
 import dapps from './dapps/ru_RU';
+import dappsSubmission from './dapps-submission/ru_RU';
 import header from './header/ru_RU';
 import home from './home/ru_RU';
 import footer from './footer/ru_RU';
@@ -46,6 +47,7 @@ const ru_RU = {
   keepkeyError: keepkeyError,
   bitboxError: bitboxError,
   buyHardwareWallet: buyHardwareWallet,
-  dappsMaker: dappsMaker
+  dappsMaker: dappsMaker,
+  dappsSubmission: dappsSubmission
 };
 export default ru_RU;
