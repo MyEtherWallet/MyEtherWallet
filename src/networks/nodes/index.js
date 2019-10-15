@@ -4,8 +4,6 @@ import clo from './clo';
 import egem from './egem';
 import ella from './ella';
 import esn from './esn';
-import etcethereumcommonwealthgeth from './etc-ethereumcommonwealth-geth';
-import etcethereumcommonwealthparity from './etc-ethereumcommonwealth-parity';
 import etcethereumclassiccooperativeparityclassic from './etc-ethereumclassiccooperative-parity-classic';
 import etcethereumclassiccooperativeparity from './etc-ethereumclassiccooperative-parity';
 import etcethereumclassiccooperativeparityws from './etc-ethereumclassiccooperative-parity-ws';
@@ -57,8 +55,6 @@ export {
   egem,
   ella,
   esn,
-  etcethereumcommonwealthgeth,
-  etcethereumcommonwealthparity,
   etcethereumclassiccooperativeparityclassic,
   etcethereumclassiccooperativeparity,
   etcethereumclassiccooperativeparityws,
