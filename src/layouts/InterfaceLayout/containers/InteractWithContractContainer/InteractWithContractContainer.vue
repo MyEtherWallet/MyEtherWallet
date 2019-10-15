@@ -22,9 +22,9 @@
           <input
             v-validate="'required'"
             v-model="address"
+            :placeholder="$t('contract.enter-addr')"
             type="text"
             name="nameAddr"
-            :placeholder="$t('contract.enter-addr')"
           />
 
           <i
@@ -185,7 +185,7 @@
         <div v-if="selectedMethod.constant">
           <div class="title-container">
             <div class="title">
-              <h4>{{$t('contract.result')}}:</h4>
+              <h4>{{ $t('contract.result') }}:</h4>
             </div>
           </div>
           <div class="result-inputs">
