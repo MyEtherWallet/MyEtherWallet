@@ -21,12 +21,12 @@
         />
       </div>
       <div class="scan-download-container">
-        <h4 class="block-title">Scan QR code</h4>
+        <h4 class="block-title">{{$t('sendTx.signed.scan')}}</h4>
         <div v-if="signedTx !== ''" class="scan-download-items">
           <qrcode
             :value="JSON.parse(signedTx).rawTransaction"
             :options="{ size: 200 }"
-          />or <a :href="jsonFile" :download="jsonFileName">Download JSON</a>
+          />{{$t('sendTx.signed.or')}} <a :href="jsonFile" :download="jsonFileName">{{$t('sendTx.signed.download')}}</a>
         </div>
       </div>
       <div class="raw">

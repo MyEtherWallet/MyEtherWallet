@@ -89,7 +89,7 @@
                 <span>{{ web3.utils.hexToNumberString(item.nonce) }}</span>
               </div>
               <div class="body-item">
-                <span class="item-title">{{ $t('common.data') }}</span>
+                <span class="item-title">{{ $t('sendTx.data') }}</span>
                 <span class="data-string">{{ item.input || item.data }}</span>
               </div>
             </b-collapse>

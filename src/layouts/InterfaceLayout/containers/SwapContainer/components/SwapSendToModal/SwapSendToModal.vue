@@ -45,7 +45,7 @@
               {{ toAddress.value }} <span>{{ toAddress.name }}</span>
             </p>
             <p v-show="toAddress.address !== ''" class="block-title">
-              {{ $t('send-tx.to-addr') }}
+              {{ $t('sendTx.to-addr') }}
             </p>
             <p v-show="toAddress.address !== ''" class="address">
               {{ toAddress.address }}

@@ -17,8 +17,8 @@
         <input
           ref="addressInput"
           v-model="selectedAddress"
-          type="text"
           :placeholder="$t('common.enter-addr')"
+          type="text"
           @focus="dropdownOpen = false"
         />
         <div v-if="!validAddress" class="blockie-place-holder-image" />
