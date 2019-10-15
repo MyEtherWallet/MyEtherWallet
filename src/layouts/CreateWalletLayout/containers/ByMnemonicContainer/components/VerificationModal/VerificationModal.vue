@@ -73,9 +73,6 @@ export default {
       // Generate random numbers to choose which blocks to hide
       const newArr = [...this.mnemonicValues.keys()];
       const ranNums = this.shuffle(newArr);
-      // this.mnemonicValues.forEach((item, idx) => {
-      //   this.inputs[idx] = item;
-      // });
 
       document.querySelectorAll('.phrases .word').forEach(function(el) {
         el.classList.remove('verification');
