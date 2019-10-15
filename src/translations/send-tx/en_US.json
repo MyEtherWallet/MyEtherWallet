@@ -27,12 +27,16 @@
   "signed": {
     "tx": "Signed Transaction",
     "raw": "Raw",
-    "button-copy-cont": "Copy and Continue"
+    "button-copy-cont": "Copy and Continue",
+    "scan":"Scan QR code",
+    "or": "or",
+    "download": "Download JSON"
   },
   "success": {
     "title": "Success",
     "sub-title": "Transaction sent!",
     "button-check-status": "Check Status on Etherscan.io"
   },
-  "via-contract": "Via Contract"
+  "via-contract": "Via Contract",
+  "import-json": "Import JSON"
 }

@@ -45,11 +45,11 @@
               <div class="the-form amount-number">
                 <input
                   v-model="fromValue"
+                  :placeholder="$t('swap.deposit-amount')"
                   type="number"
                   name
                   value
                   step="any"
-                  :placeholder="$t('swap.deposit-amount')"
                   @input="amountChanged('from')"
                 />
               </div>
@@ -78,11 +78,11 @@
               <div class="the-form amount-number">
                 <input
                   v-model="toValue"
+                  :placeholder="$t('swap.recieve-amount')"
                   type="number"
                   name
                   value
                   step="any"
-                  :placeholder="$t('swap.recieve-amount')"
                   @input="amountChanged('to')"
                 />
               </div>

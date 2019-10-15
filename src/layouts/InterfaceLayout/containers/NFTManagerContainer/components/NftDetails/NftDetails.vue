@@ -11,7 +11,7 @@
           <p>#{{ nft.token }}</p>
           <div class="address-input-container">
             <address-selector
-              :title="$t('send-tx.to-addr')"
+              :title="$t('sendTx.to-addr')"
               @toAddress="prepareTransfer"
             />
             <div class="send-button-container">

@@ -1,6 +1,6 @@
 <template>
   <div class="send-offline-container">
-    <interface-container-title :title="$t('common.offline')" />
+    <interface-container-title :title="$t('sendTx.send-offline')" />
     <div class="generate-tx">
       <div class="wrap">
         <div class="send-form">
@@ -24,12 +24,12 @@
               </li>
               <li class="amount">
                 <div class="title">
-                  <h4>{{ $t('send-tx.amount') }}</h4>
+                  <h4>{{ $t('sendTx.amount') }}</h4>
                 </div>
                 <div class="the-form amount-number">
                   <input
                     :value="toAmt"
-                    :placeholder="$t('interface.depAmount')"
+                    :placeholder="$t('sendTx.dep-amount')"
                     type="number"
                     step="any"
                     name
@@ -40,7 +40,7 @@
             </ul>
             <div class="to-address">
               <div class="title">
-                <h4>{{ $t('send-tx.to-addr') }} &nbsp;</h4>
+                <h4>{{ $t('sendTx.to-addr') }} &nbsp;</h4>
                 <blockie
                   v-show="address !== '' && validAddress"
                   :address="address"
@@ -60,7 +60,7 @@
                   ref="toaddress"
                   v-model="address"
                   name="name"
-                  placeholder="Please Enter The Address"
+                  :placeholder="$t('common.enter-addr')"
                 />
                 <i
                   :class="[
@@ -78,7 +78,7 @@
           <div class="title-container">
             <div class="title">
               <div class="title-helper">
-                <h4>{{ $t('common.data') }}</h4>
+                <h4>{{ $t('sendTx.data') }}</h4>
               </div>
             </div>
           </div>
@@ -130,7 +130,7 @@
           <div class="title-container">
             <div class="title">
               <div class="title-helper">
-                <h4>{{ $t('common.nonce') }}</h4>
+                <h4>{{ $t('sendTx.nonce') }}</h4>
                 <popover :popcontent="$t('popover.nonce')" />
               </div>
             </div>
@@ -138,7 +138,7 @@
           <div class="the-form gas-amount">
             <input
               v-model="localNonce"
-              :placeholder="$t('common.nonce')"
+              :placeholder="$t('sendTx.nonce')"
               type="number"
             />
             <div class="good-button-container">
@@ -190,7 +190,7 @@
             class="submit-button large-round-button-green-border"
             @click="uploadClick"
           >
-            Import JSON
+            {{ $t('sendTx.import-json')}}
           </div>
           <div
             :class="[
@@ -199,12 +199,12 @@
             ]"
             @click="generateTx"
           >
-            {{ $t('send-tx.generate-tx') }}
+            {{ $t('sendTx.generate-tx') }}
           </div>
           <interface-bottom-text
             link="https://kb.myetherwallet.com"
-            question="Have issues?"
-            link-text="Help Center"
+            :question="$t('common.have-issues')"
+            :link-text="$t('common.help-center')"
           />
         </div>
       </div>

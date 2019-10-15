@@ -36,7 +36,7 @@
             {{ toAddress.value }}
             <span>{{ toAddress.name }}</span>
           </p>
-          <p class="block-title">{{ $t('send-tx.to-addr') }}</p>
+          <p class="block-title">{{ $t('sendTx.to-addr') }}</p>
           <p class="address">{{ toAddress.address }}</p>
         </div>
         <div v-else class="to-address">
