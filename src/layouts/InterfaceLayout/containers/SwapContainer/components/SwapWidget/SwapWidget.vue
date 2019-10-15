@@ -56,7 +56,7 @@
                       name
                       value
                       step="any"
-                      placeholder="Deposit Amount"
+                      :placeholder="$t('swap.deposit-amount')"
                       @input="amountChanged('from')"
                     />
                   </div>
@@ -90,7 +90,7 @@
                       name
                       value
                       step="any"
-                      placeholder="Received Amount"
+                      :placeholder="$t('swap.recieve-amount')"
                       @input="amountChanged('to')"
                     />
                   </div>
@@ -421,7 +421,7 @@ export default {
     fromAboveMaxAllowed() {
       if (this.selectedProvider.provider === this.providerNames.bity) {
         if (this.checkBityMax) {
-          return this.$t('swap.above-max-swap', {
+          return this.$t('swap.value-above-max', {
             value: toBigNumber(this.selectedProvider.maxValue).toFixed(6),
             currency: this.fromCurrency
           });
@@ -433,7 +433,7 @@ export default {
         ) &&
         toBigNumber(this.selectedProvider.maxValue).gt(toBigNumber(0))
       )
-        return this.$t('swap.above-max-swap', {
+        return this.$t('swap.value-above-max', {
           value: toBigNumber(this.selectedProvider.maxValue).toFixed(6),
           currency: this.fromCurrency
         });

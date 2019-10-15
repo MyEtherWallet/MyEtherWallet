@@ -49,7 +49,7 @@
                   name
                   value
                   step="any"
-                  placeholder="Deposit Amount"
+                  :placeholder="$t('swap.deposit-amount')"
                   @input="amountChanged('from')"
                 />
               </div>
@@ -82,7 +82,7 @@
                   name
                   value
                   step="any"
-                  placeholder="Received Amount"
+                  :placeholder="$t('swap.recieve-amount')"
                   @input="amountChanged('to')"
                 />
               </div>
@@ -108,7 +108,11 @@
             />
           </div>
           <div v-show="!validAddress" class="error-message-container">
-            <p>{{ $t('swap.warning.supply-valid-addr', { currency: toCurrency }) }}</p>
+            <p>
+              {{
+                $t('swap.warning.supply-valid-addr', { currency: toCurrency })
+              }}
+            </p>
           </div>
           <div v-show="unableToValidate" class="warn-message-container">
             <p>
@@ -394,7 +398,7 @@ export default {
     fromAboveMaxAllowed() {
       if (this.selectedProvider.provider === this.providerNames.bity) {
         if (this.checkBityMax) {
-          return this.$t('swap.above-max-swap', {
+          return this.$t('swap.value-above-max', {
             value: this.selectedProvider.maxValue,
             currency: this.fromCurrency
           });
@@ -406,7 +410,7 @@ export default {
         ) &&
         new BigNumber(this.selectedProvider.maxValue).gt(new BigNumber(0))
       )
-        return this.$t('swap.above-max-swap', {
+        return this.$t('swap.value-above-max', {
           value: this.selectedProvider.maxValue,
           currency: this.fromCurrency
         });
