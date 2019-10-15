@@ -1,23 +1,23 @@
 {
-
-    "send-tx": "Send Transaction",
-    "send-offline": "Send Offline",
-    "to-addr": "To Address",
-    "from-addr": "From Address",
-    "type": "Type",
-    "amount": "Amount",
-    "tx-fee": "Transaction Fee",
-    "advanced": "Advanced",
-    "add-data": "Add Data",
-    "nonce": "Nonce",
-    "data": "Data",
-
+  "send-tx": "Send Transaction",
+  "send-offline": "Send Offline",
+  "to-addr": "To Address",
+  "from-addr": "From Address",
+  "raw-tx": "Raw Transaction",
+  "type": "Type",
+  "amount": "Amount",
+  "tx-fee": "Transaction Fee",
+  "cost-eth-convert": "Cost {txFeeEth} ETH = ${convert}",
+  "add-data": "Add Data",
+  "ph-add-data": "Add Data (e.g. 0x7834f874g298hf298h234f)",
+  "nonce": "Nonce",
+  "data": "Data",
   "data-gas": "Data & Gas Limit",
   "dep-amount": "Deposit Amount",
   "button-entire": "Entire Balance",
   "confirmation": {
     "title": "Confirmation",
-    "detail-ino": "Detail Information",
+    "detail-info": "Detail Information",
     "button": "Confirm and Send"
   },
   "generate-tx": "Generate Transaction",
@@ -32,5 +32,6 @@
     "title": "Success",
     "sub-title": "Transaction sent!",
     "button-check-status": "Check Status on Etherscan.io"
-  }
+  },
+  "via-contract": "Via Contract"
 }

@@ -58,5 +58,10 @@
   "chain-id": "Chain ID",
   "save": "Save",
   "dont-know": "Don't know what it is?",
-  "dapps": "Dapps"
+  "have-issues": "Have any issues?",
+  "dapps": "Dapps",
+  "gas": {
+    "limit": "Gas Limit",
+    "price": "Gas Price"
+  }
 }
