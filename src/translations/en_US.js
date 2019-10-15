@@ -28,6 +28,7 @@ import verifyMessage from './other/verify-message/en_US';
 import welcomeMessage from './welcome-message/en_US';
 import sendTx from './send-tx/en_US';
 import swap from './swap/en_US';
+import contract from './contract/en_US';
 
 const en_US = {
   common: common,
@@ -58,6 +59,7 @@ const en_US = {
   verifyMessage: verifyMessage,
   welcomeMessage: welcomeMessage,
   sendTx: sendTx,
-  swap: swap
+  swap: swap,
+  contract: contract
 };
 export default en_US;
