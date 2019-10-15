@@ -4,7 +4,7 @@
       <interface-container-title
         ><h3 @click="backButtonAction">
           <i class="fa fa-arrow-left"></i>
-          {{ $t('interface.back') }}
+          {{ $t('common.back') }}
         </h3></interface-container-title
       >
 
@@ -13,7 +13,7 @@
           <!-- Bank Details - accordion-menu ******************************** -->
           <accordion-menu
             :isopen="true"
-            :title="$t('interface.bankInfo')"
+            :title="$t('swap.exit-to-fiat.bank-info')"
             :greytitle="false"
             :editbutton="true"
             number="1"
@@ -21,7 +21,7 @@
           >
             <ul>
               <li v-if="previouslyVerified">
-                <p>{{ $t('interface.previouslyVerified') }}</p>
+                <p>{{ $t('swap.exit-to-fiat.prev-verified') }}</p>
               </li>
               <li>
                 <standard-input
@@ -40,7 +40,7 @@
           <!-- Personal Details - accordion-menu ******************************** -->
           <accordion-menu
             :isopen="true"
-            :title="$t('interface.personalInfo')"
+            :title="$t('swap.exit-to-fiat.person-info')"
             :greytitle="false"
             :editbutton="true"
             number="2"
@@ -88,7 +88,7 @@
                   />
                   <standard-dropdown
                     :options="countryOptions"
-                    :placeholder="$t('interface.country')"
+                    :placeholder="$t('swap.exit-to-fiat.country')"
                     :option-display-key="'1'"
                     :option-value-key="'0'"
                     class="country"
@@ -118,7 +118,7 @@
             class="disabled submit-button large-round-button-green-filled clickable"
           >
             <i class="fa fa-spinner fa-spin" />
-            {{ $t('interface.swapButtonLoading') }}
+            {{ $t('swap.button-loading') }}
           </div>
         </div>
         <!-- .button-container -->
@@ -184,87 +184,87 @@ export default {
         step2: false
       },
       inputCountryCode: {
-        title: this.$t('interface.countryCode'),
+        title: this.$t('swap.exit-to-fiat.country-code'),
         placeHolder: '000'
       },
       inputPhoneNumber: {
-        title: this.$t('interface.phoneNumber'),
+        title: this.$t('swap.exit-to-fiat.phone-number'),
         placeHolder: '000-000-0000'
       },
       inputVerification: {
-        title: this.$t('interface.verificationCode'),
+        title: this.$t('swap.exit-to-fiat.verification-code'),
         placeHolder: '000000'
       },
       inputBicSwift: {
-        title: this.$t('interface.bicSwiftCode'),
-        popover: this.$t('interface.bicSwiftPopOver'),
+        title: this.$t('swap.exit-to-fiat.bic-swift'),
+        popover: this.$t('swap.exit-to-fiat.popover-bic-swift'),
         value: ''
       },
       inputAbaNumber: {
-        title: this.$t('interface.abaNumber'),
-        popover: this.$t('interface.abaPopOver'),
+        title: this.$t('swap.exit-to-fiat.aba-num'),
+        popover: this.$t('swap.exit-to-fiat.popover-aba-num'),
         value: ''
       },
       inputIbanNumber: {
-        title: this.$t('interface.ibanNumber'),
-        popover: this.$t('interface.ibanPopOver'),
+        title: this.$t('swap.exit-to-fiat.iban-num'),
+        popover: this.$t('swap.exit-to-fiat.popover-iban-num'),
         value: ''
       },
       inputName: {
-        title: this.$t('interface.ownerName'),
+        title: this.$t('swap.exit-to-fiat.acc-owner-name'),
         value: ''
       },
       inputEmail: {
-        title: this.$t('interface.email'),
-        popover: this.$t('interface.emailPopOver'),
+        title: this.$t('swap.exit-to-fiat.email'),
+        popover: this.$t('swap.exit-to-fiat.popover-email'),
         placeHolder: 'user@example.com',
         value: ''
       },
       inputAddress1: {
-        title: this.$t('interface.billingAddress'),
+        title: this.$t('swap.exit-to-fiat.billing-addr'),
         placeHolder: 'Address 1',
         value: ''
       },
       inputAddress2: {
-        placeHolder: this.$t('interface.addressOptional'),
+        placeHolder: this.$t('swap.exit-to-fiat.addr-optional'),
         value: ''
       },
       inputCity: {
-        placeHolder: this.$t('interface.city'),
+        placeHolder: this.$t('swap.exit-to-fiat.city'),
         value: ''
       },
       inputState: {
-        placeHolder: this.$t('interface.state'),
+        placeHolder: this.$t('swap.exit-to-fiat.state'),
         value: ''
       },
       inputZip: {
-        placeHolder: this.$t('interface.zipCode'),
+        placeHolder: this.$t('swap.exit-to-fiat.zip-code'),
         value: ''
       },
       inputCountry: {
-        placeHolder: this.$t('interface.country'),
+        placeHolder: this.$t('swap.exit-to-fiat.country'),
         value: ''
       },
       button1: {
-        title: this.$t('interface.send'),
+        title: this.$t('sendTx.send'),
         buttonStyle: 'green',
         value: '',
         noWalletTerms: true
       },
       verifyButton: {
-        title: this.$t('interface.verify'),
+        title: this.$t('common.verify'),
         buttonStyle: 'green',
         value: '',
         noWalletTerms: true
       },
       button2: {
-        title: this.$t('interface.continue'),
+        title: this.$t('common.continue'),
         buttonStyle: 'green',
         value: '',
         noWalletTerms: true
       },
       button3: {
-        title: this.$t('interface.submit'),
+        title: this.$t('swap.exit-to-fiat.button-submit'),
         buttonStyle: 'green',
         value: '',
         noWalletTerms: true

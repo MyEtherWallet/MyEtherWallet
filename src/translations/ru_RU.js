@@ -23,6 +23,7 @@ import bitboxError from './errors-bitbox/ru_RU';
 import buyHardwareWallet from './other/buy-hardware-wallet/ru_RU';
 import dappsMaker from './dapps-maker/ru_RU';
 import sendTx from './send-tx/ru_RU';
+import swap from './swap/ru_RU';
 
 const ru_RU = {
   common: common,
@@ -48,6 +49,7 @@ const ru_RU = {
   bitboxError: bitboxError,
   buyHardwareWallet: buyHardwareWallet,
   dappsMaker: dappsMaker,
-  sendTx: sendTx
+  sendTx: sendTx,
+  swap: swap
 };
 export default ru_RU;

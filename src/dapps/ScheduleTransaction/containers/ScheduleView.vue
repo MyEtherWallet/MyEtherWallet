@@ -8,7 +8,7 @@
           <b-row>
             <b-col cols="12" md="4">
               <div class="scheduling-currency-picker">
-                <div class="input-title">{{ $t('interface.sendTxType') }}</div>
+                <div class="input-title">{{ $t('sendTx.type') }}</div>
                 <currency-picker
                   :currency="tokensWithBalance"
                   :page="'sendEgasAmountthAndTokens'"

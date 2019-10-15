@@ -1,4 +1,5 @@
 {
+  "send": "Send",
   "send-tx": "Send Transaction",
   "send-offline": "Send Offline",
   "to-addr": "To Address",

@@ -8,7 +8,7 @@
             <ul class="type-amount">
               <li class="type">
                 <div class="title">
-                  <h4>{{ $t('interface.sendTxType') }}</h4>
+                  <h4>{{ $t('sendTx.type') }}</h4>
                 </div>
                 <currency-picker
                   :currency="allTokens"
@@ -24,7 +24,7 @@
               </li>
               <li class="amount">
                 <div class="title">
-                  <h4>{{ $t('interface.sendTxAmount') }}</h4>
+                  <h4>{{ $t('send-tx.amount') }}</h4>
                 </div>
                 <div class="the-form amount-number">
                   <input
@@ -40,7 +40,7 @@
             </ul>
             <div class="to-address">
               <div class="title">
-                <h4>{{ $t('interface.sendTxToAddr') }} &nbsp;</h4>
+                <h4>{{ $t('send-tx.to-addr') }} &nbsp;</h4>
                 <blockie
                   v-show="address !== '' && validAddress"
                   :address="address"
@@ -199,7 +199,7 @@
             ]"
             @click="generateTx"
           >
-            {{ $t('interface.generateTx') }}
+            {{ $t('send-tx.generate-tx') }}
           </div>
           <interface-bottom-text
             link="https://kb.myetherwallet.com"

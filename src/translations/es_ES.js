@@ -23,6 +23,7 @@ import bitboxError from './errors-bitbox/es_ES';
 import buyHardwareWallet from './other/buy-hardware-wallet/es_ES';
 import dappsMaker from './dapps-maker/es_ES';
 import sendTx from './send-tx/es_ES';
+import swap from './swap/es_ES';
 
 const es_ES = {
   common: common,
@@ -48,6 +49,7 @@ const es_ES = {
   bitboxError: bitboxError,
   buyHardwareWallet: buyHardwareWallet,
   dappsMaker: dappsMaker,
-  sendTx: sendTx
+  sendTx: sendTx,
+  swap: swap
 };
 export default es_ES;

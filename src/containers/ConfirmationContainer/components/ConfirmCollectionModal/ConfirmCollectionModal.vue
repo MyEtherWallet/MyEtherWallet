@@ -41,7 +41,7 @@
                     </span>
                   </p>
                   <div>
-                    <span>{{ $t('common.from') }}</span>
+                    <span>{{ $t('swap.from') }}</span>
                     {{ account.address | concatAddr }}
                   </div>
                 </div>

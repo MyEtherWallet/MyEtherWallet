@@ -50,6 +50,7 @@
   "value": "Value",
   "network": "Network",
   "addr": "Address",
+  "my-addr": "My Address",
   "balance": {
     "string": "Balance",
     "total" : "Total Balance"
@@ -63,5 +64,6 @@
   "gas": {
     "limit": "Gas Limit",
     "price": "Gas Price"
-  }
+  },
+  "search": "Search"
 }
