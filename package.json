@@ -64,7 +64,7 @@
     "@ledgerhq/hw-app-eth": "4.72.1",
     "@ledgerhq/hw-transport-u2f": "4.72.1",
     "@ledgerhq/hw-transport-webauthn": "4.72.1",
-    "@ledgerhq/hw-transport-webhid": "^4.72.1",
+    "@ledgerhq/hw-transport-webhid": "4.72.1",
     "@ledgerhq/hw-transport-webusb": "4.72.1",
     "@makerdao/dai": "0.18.8",
     "@myetherwallet/eth-token-balance": "0.1.4",

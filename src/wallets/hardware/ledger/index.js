@@ -156,6 +156,7 @@ const isWebAuthnSupported = async () => {
 };
 
 const isWebHidSupported = async () => {
+  // WebUSB is currently only supported on Google Chrome / Chromium DEV version and by explicitly enabling chrome://flags/#enable-experimental-web-platform-features
   const isSupported = await TransportWebHID.isSupported();
   return (
     isSupported && platform.os.family !== 'Windows' // take it out later once the windows issue is fixed
