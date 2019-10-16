@@ -1,4 +1,4 @@
-<template>
+<template functional>
   <div class="search-container">
     <img src="@/assets/images/icons/magnifier.svg" />
     <slot />
@@ -7,14 +7,7 @@
 
 <script>
 export default {
-  name: 'SearchContainer',
-  components: {},
-  props: {},
-  data() {
-    return {};
-  },
-  mounted() {},
-  methods: {}
+  name: 'SearchContainer'
 };
 </script>
 

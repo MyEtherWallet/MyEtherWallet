@@ -1,4 +1,4 @@
-<template>
+<template functional>
   <div class="what-is-mew">
     <div class="block-progressbar">
       <dir class="block-progressbar__container">
@@ -6,7 +6,7 @@
           {{ $t('gettingStarted.aboutMew') }}
         </div>
         <div class="block-progressbar__progressbar">
-          <div :class="progressBarValue" />
+          <div :class="props.progressBarValue" />
         </div>
         <div class="block-progressbar__content">
           <h4>{{ $t('gettingStarted.whatIsMewTitle') }}</h4>
@@ -28,9 +28,6 @@ export default {
       type: String,
       default: ''
     }
-  },
-  data() {
-    return {};
   }
 };
 </script>

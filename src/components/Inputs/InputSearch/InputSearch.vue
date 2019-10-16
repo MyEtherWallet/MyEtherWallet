@@ -1,4 +1,4 @@
-<template>
+<template functional>
   <div class="input-search">
     <slot />
     <img src="@/assets/images/icons/magnifier.svg" alt="Search" />
@@ -6,22 +6,7 @@
 </template>
 
 <script>
-export default {
-  props: {
-    options: {
-      type: Array,
-      default: function() {
-        return [];
-      }
-    }
-  },
-  data() {
-    return {};
-  },
-  computed: {},
-  watch: {},
-  methods: {}
-};
+export default {};
 </script>
 
 <style lang="scss" scoped>
