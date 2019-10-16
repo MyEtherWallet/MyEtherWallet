@@ -1,12 +1,12 @@
-<template>
+<template functional>
   <div class="link-block wrap">
-    <div class="block-icon"><img :src="content.icon" alt /></div>
+    <div class="block-icon"><img :src="props.content.icon" alt /></div>
     <div>
-      <p class="block-title">{{ content.title }}</p>
-      <p class="description">{{ content.description }}</p>
-      <div v-if="content.email" class="email">
+      <p class="block-title">{{ props.content.title }}</p>
+      <p class="description">{{ props.content.description }}</p>
+      <div v-if="props.content.email" class="email">
         <a
-          :href="'mailto:' + content.email"
+          :href="'mailto:' + props.content.email"
           rel="noopener noreferrer"
           target="_blank"
         >
@@ -14,8 +14,8 @@
           <i class="fa fa-long-arrow-right" aria-hidden="true" />
         </a>
       </div>
-      <div v-if="content.social" class="social">
-        <div v-for="social in content.social" :key="social.key">
+      <div v-if="props.content.social" class="social">
+        <div v-for="social in props.content.social" :key="social.key">
           <a :href="social.link" target="_blank" rel="noopener noreferrer">
             <img :src="social.icon" alt />
           </a>
@@ -32,9 +32,6 @@ export default {
       type: String,
       default: ''
     }
-  },
-  data() {
-    return {};
   }
 };
 </script>
