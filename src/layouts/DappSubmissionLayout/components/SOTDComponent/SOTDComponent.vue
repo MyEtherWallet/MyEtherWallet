@@ -10,7 +10,7 @@
       </div>
       <div class="info-box">
         <p>
-          By submitting your dapp information, you acknowledge that your Dapp
+          By submitting your Dapp information, you acknowledge that your Dapp
           will be listed on
           <a href="https://www.stateofthedapps.com/">stateofthedapps.com</a>.
         </p>
