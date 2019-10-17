@@ -3,11 +3,11 @@
     <div
       v-for="option in options"
       :key="option.label"
-      :class="[selectedView === option.label ? 'active' : '', 'wallet-menu']"
-      @click="switchView(option)"
+      :class="[shouldBeActive(option.label) ? 'active' : '', 'wallet-menu']"
+      @click="navigateTo(option.path)"
     >
       <img
-        :src="selectedView === option.label ? option.icon : option.inActive"
+        :src="shouldBeActive(option.label) ? option.icon : option.inActive"
       />
       <span>
         {{ option.name }}
@@ -22,16 +22,6 @@ import myWalletsHov from '@/assets/images/icons/button-generate-hover.svg';
 import watchOnly from '@/assets/images/icons/hide-password.svg';
 import watchOnlyHov from '@/assets/images/icons/show-password.svg';
 export default {
-  props: {
-    switchView: {
-      type: Function,
-      default: () => {}
-    },
-    selectedView: {
-      type: String,
-      default: ''
-    }
-  },
   data() {
     return {
       options: [
@@ -39,16 +29,45 @@ export default {
           name: 'My Wallets',
           icon: myWalletsHov,
           inActive: myWallets,
-          label: 'myWallets'
+          label: 'myWallets',
+          path: '/wallets'
         },
         {
           name: 'Watch-Only Wallets',
           icon: watchOnlyHov,
           inActive: watchOnly,
-          label: 'watchOnlyWallets'
-        }
+          label: 'watchOnlyWallets',
+          path: '/watch-only'
+        },
+        // {
+        //   name: 'Dapps',
+        //   icon: watchOnlyHov,
+        //   inActive: watchOnly,
+        //   label: 'dapps',
+        //   path: '/dapps'
+        // }
       ]
     };
+  },
+  methods: {
+    shouldBeActive(label) {
+      if (label === 'dapps' && this.$route.fullPath.includes('dapps'))
+        return true;
+      if (
+        label === 'watchOnlyWallets' &&
+        this.$route.fullPath.includes('watch-only')
+      )
+        return true;
+      if (
+        label === 'myWallets' &&
+        (this.$route.fullPath.includes('wallets') || this.$route.path === '/')
+      )
+        return true;
+      return false;
+    },
+    navigateTo(path) {
+      this.$router.push(path);
+    }
   }
 };
 </script>

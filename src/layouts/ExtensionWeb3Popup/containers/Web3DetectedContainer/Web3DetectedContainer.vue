@@ -1,6 +1,6 @@
-<template>
+<template functional>
   <div class="web-detected-container">
-    <img :src="alien" />
+    <img src="~@/assets/images/icons/alien-spaceship.svg" />
     <p>
       We've detected other Web3 applications (a wallet browser extension, i.e.
       MetaMask) running in the background. In order for MEW CX to function
@@ -9,14 +9,7 @@
   </div>
 </template>
 <script>
-import alien from '@/assets/images/icons/alien-spaceship.svg';
-export default {
-  data() {
-    return {
-      alien: alien
-    };
-  }
-};
+export default {};
 </script>
 <style lang="scss" scoped>
 @import 'Web3DetectedContainer.scss';
