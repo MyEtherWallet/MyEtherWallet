@@ -1,12 +1,12 @@
 <template functional>
   <div class="welcome-section">
     <div class="header">
-      MEW | Chrome Extension
+      MEWCX | Chrome Extension
     </div>
     <div class="content">
       <img src="@/assets/images/logo-small.png" width="75" />
       <div class="text-content">
-        <h3>MyEtherWallet Official Chrome Extension</h3>
+        <h3>MyEtherWallet's Official Chrome Extension</h3>
         <p>
           You don't have any wallet saved. Click Add Wallet to get started
         </p>

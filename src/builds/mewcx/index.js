@@ -18,8 +18,8 @@ const ExtensionWalletContainer = () =>
   import(
     '@/layouts/ExtensionBrowserAction/containers/ExtensionWalletContainer'
   );
-const DappsContainer = () =>
-  import('@/layouts/ExtensionBrowserAction/containers/DappsContainer');
+// const DappsContainer = () =>
+//   import('@/layouts/ExtensionBrowserAction/containers/DappsContainer');
 const MyWalletsContainer = () =>
   import('@/layouts/ExtensionBrowserAction/containers/MyWalletsContainer');
 const WatchOnlyWalletsContainer = () =>
