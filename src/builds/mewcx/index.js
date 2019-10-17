@@ -1,14 +1,31 @@
-import app from './app';
-import ExtensionPopup from '@/layouts/ExtensionPopup';
-import ExtensionWeb3Popup from '@/layouts/ExtensionWeb3Popup';
-import Web3DetectedContainer from '@/layouts/ExtensionWeb3Popup/containers/Web3DetectedContainer';
-import AccountAccessContainer from '@/layouts/ExtensionWeb3Popup/containers/AccountAccessContainer';
-import SignTxContainer from '@/layouts/ExtensionWeb3Popup/containers/SignTxContainer';
-import SignMsgContainer from '@/layouts/ExtensionWeb3Popup/containers/SignMsgContainer';
-import ExtensionBrowserAction from '@/layouts/ExtensionBrowserAction';
-import ExtensionAddWalletContainer from '@/layouts/ExtensionBrowserAction/containers/ExtensionAddWalletContainer';
-import ExtensionWalletContainer from '@/layouts/ExtensionBrowserAction/containers/ExtensionWalletContainer';
-
+const app = () => import('./app');
+const ExtensionPopup = () => import('@/layouts/ExtensionPopup');
+const ExtensionWeb3Popup = () => import('@/layouts/ExtensionWeb3Popup');
+const Web3DetectedContainer = () =>
+  import('@/layouts/ExtensionWeb3Popup/containers/Web3DetectedContainer');
+const AccountAccessContainer = () =>
+  import('@/layouts/ExtensionWeb3Popup/containers/AccountAccessContainer');
+const SignTxContainer = () =>
+  import('@/layouts/ExtensionWeb3Popup/containers/SignTxContainer');
+const SignMsgContainer = () =>
+  import('@/layouts/ExtensionWeb3Popup/containers/SignMsgContainer');
+const ExtensionBrowserAction = () => import('@/layouts/ExtensionBrowserAction');
+const ExtensionAddWalletContainer = () =>
+  import(
+    '@/layouts/ExtensionBrowserAction/containers/ExtensionAddWalletContainer'
+  );
+const ExtensionWalletContainer = () =>
+  import(
+    '@/layouts/ExtensionBrowserAction/containers/ExtensionWalletContainer'
+  );
+const DappsContainer = () =>
+  import('@/layouts/ExtensionBrowserAction/containers/DappsContainer');
+const MyWalletsContainer = () =>
+  import('@/layouts/ExtensionBrowserAction/containers/MyWalletsContainer');
+const WatchOnlyWalletsContainer = () =>
+  import(
+    '@/layouts/ExtensionBrowserAction/containers/WatchOnlyWalletsContainer'
+  );
 const cxRoutes = [
   {
     path: '/extension-popups',
@@ -50,9 +67,33 @@ const cxRoutes = [
     children: [
       {
         path: '',
-        name: 'View Wallets',
         component: ExtensionWalletContainer,
-        meta: { requiresAuth: false }
+        meta: { requiresAuth: false },
+        children: [
+          {
+            path: '',
+            meta: { requiresAuth: false },
+            component: MyWalletsContainer
+          },
+          {
+            path: 'wallets',
+            name: 'myWallets',
+            meta: { requiresAuth: false },
+            component: MyWalletsContainer
+          },
+          {
+            path: 'watch-only',
+            name: '',
+            meta: { requiresAuth: false },
+            component: WatchOnlyWalletsContainer
+          }
+          // {
+          //   path: 'dapps',
+          //   name: '',
+          //   meta: { requiresAuth: false },
+          //   component: DappsContainer
+          // }
+        ]
       },
       {
         path: '/access-my-wallet',

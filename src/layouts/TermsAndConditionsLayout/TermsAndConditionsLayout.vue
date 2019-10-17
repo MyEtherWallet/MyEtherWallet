@@ -1,4 +1,4 @@
-<template>
+<template functional>
   <div class="terms-and-conditions">
     <div class="wrap">
       <div class="page-container">
@@ -24,12 +24,7 @@
 </template>
 
 <script>
-export default {
-  name: 'Terms',
-  data() {
-    return {};
-  }
-};
+export default {};
 </script>
 
 <style lang="scss" scoped>

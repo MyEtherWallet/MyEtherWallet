@@ -56,19 +56,6 @@
               placeholder="Enter address"
               name="toAddress"
             />
-            <!-- <div class="dropdown-container">
-              <b-dropdown toggle-class="quick-send-dropdown" toggle-tag="div">
-                <template v-slot:button-content>
-                  <i class="fa fa-angle-down" />
-                </template>
-                <b-dropdown-item>First Action</b-dropdown-item>
-                <b-dropdown-item>Second Action</b-dropdown-item>
-                <b-dropdown-item>Third Action</b-dropdown-item>
-                <b-dropdown-divider></b-dropdown-divider>
-                <b-dropdown-item active>Active action</b-dropdown-item>
-                <b-dropdown-item disabled>Disabled action</b-dropdown-item>
-              </b-dropdown>
-            </div> -->
             <div class="blockie-container">
               <blockie
                 v-show="toAddress !== ''"

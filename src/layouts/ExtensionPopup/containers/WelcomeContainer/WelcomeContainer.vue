@@ -1,4 +1,4 @@
-<template>
+<template functional>
   <div class="welcome-section">
     <div class="header">
       MEW | Chrome Extension
@@ -12,7 +12,7 @@
         </p>
       </div>
     </div>
-    <div class="add-wallet-content" @click="addWallet">
+    <div class="add-wallet-content" @click="props.addWallet">
       Add Wallet
     </div>
   </div>

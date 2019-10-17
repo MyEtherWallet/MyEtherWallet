@@ -1,22 +1,22 @@
-<template>
-  <div class="address-detail-container" @click="selectAccount(address)">
+<template functional>
+  <div class="address-detail-container" @click="selectAccount(props.address)">
     <div class="check-mark-container">
       <i
         :class="[
-          selectedAccount === address ? 'icon-selected' : 'icon-not-selected',
+          props.selectedAccount === props.address ? 'icon-selected' : 'icon-not-selected',
           'fa fa-check-circle fa-lg'
         ]"
       />
     </div>
     <div
-      :class="[selectedAccount === address ? 'selected' : '', 'address-detail']"
+      :class="[props.selectedAccount === props.address ? 'selected' : '', 'address-detail']"
     >
-      <blockie :address="address" width="30px" height="30px" />
+      <component :is="injections.components.Blockie" :address="props.address" width="30px" height="30px" />
       <div class="address-text">
-        <p>{{ address | concatAddr }}</p>
+        <p>{{ props.address | concatAddr }}</p>
         <div class="balance">
           <span>Balance:</span>
-          <span>{{ balance.substr(0, 7) }} {{ currency }}</span>
+          <span>{{ props.balance.substr(0, 7) }} {{ currency }}</span>
         </div>
       </div>
     </div>
@@ -26,8 +26,12 @@
 <script>
 import Blockie from '@/components/Blockie';
 export default {
-  components: {
-    blockie: Blockie
+  inject: {
+    components: {
+      default: {
+        Blockie
+      }
+    }
   },
   props: {
     address: {

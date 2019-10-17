@@ -1,6 +1,6 @@
 <template>
   <div class="extension-wallets-container">
-    <wallet-side-menu :selected-view="label" :switch-view="switchView" />
+    <wallet-side-menu />
     <div class="wallets-container">
       <interface-network-modal ref="network" />
       <watch-only-modal
@@ -16,95 +16,20 @@
         :loading="loading"
         @password="updatePassword"
       />
-      <div v-show="label === 'myWallets'" class="my-wallets-container">
-        <div class="wallets-container-header">
-          <div class="header-title-container">
-            <div class="title-balance">
-              <h2>{{ name }}</h2>
-            </div>
-            <div class="add-button" @click="addWallet">
-              + Add More
-            </div>
-          </div>
-          <div class="dropdown-container">
-            <span class="network-text">NETWORK</span>
-            <span class="current-network" @click="openNetworkModal">
-              {{ network.type.name }} - {{ network.service }}
-            </span>
-          </div>
-        </div>
-        <div class="total-balance-container">
-          <div class="title-name">
-            Total Balance
-          </div>
-          <div class="balance-container">
-            <p class="actual-balance">
-              {{ totalBalance }} <span>{{ network.type.name }} </span>
-            </p>
-            <p v-if="network.type.name === 'ETH'" class="converted-balance">
-              {{ convertedBalance }}
-            </p>
-          </div>
-        </div>
-        <div v-show="myWallets.length > 0 || loading" class="wallets">
-          <wallet-info-component
-            v-for="wallet in myWallets"
-            :usd="ethPrice"
-            :key="wallet.address"
-            :address="wallet.address"
-            :balance="wallet.balance"
-            :wallet="wallet.wallet"
-            :nickname="wallet.nickname"
-            :wallet-type="wallet.type"
-            :access="togglePasswordModal"
-            :detail="togglePasswordModal"
-          />
-        </div>
-        <div v-show="myWallets.length === 0 && !loading" class="wallets-info">
-          <h2>No Wallet found...</h2>
-        </div>
-        <div v-show="loading && myWallets.length === 0" class="wallets-info">
-          <h2>Loading Wallets...</h2>
-        </div>
-      </div>
-      <div v-show="label === 'watchOnlyWallets'" class="watch-only-container">
-        <div class="wallets-container-header">
-          <div class="header-title-container">
-            <div class="title-balance">
-              <h2>{{ name }}</h2>
-            </div>
-            <div class="add-button" @click="openWatchOnlyModal">
-              + Add More
-            </div>
-          </div>
-          <div class="dropdown-container">
-            <span class="network-text">NETWORK</span>
-            <span class="current-network" @click="openNetworkModal">
-              {{ network.type.name }} - {{ network.service }}
-            </span>
-          </div>
-        </div>
-        <div v-show="watchOnlyAddresses.length > 0 || loading" class="wallets">
-          <wallet-info-component
-            v-for="wallet in watchOnlyAddresses"
-            :usd="ethPrice"
-            :key="wallet.address"
-            :address="wallet.address"
-            :balance="wallet.balance"
-            :wallet="wallet.wallet"
-            :wallet-type="wallet.type"
-          />
-        </div>
-        <div
-          v-show="watchOnlyAddresses.length === 0 && !loading"
-          class="wallets-info"
-        >
-          <h2>No Wallet found...</h2>
-        </div>
-        <div v-show="loading && myWallets.length === 0" class="wallets-info">
-          <h2>Loading Wallets...</h2>
-        </div>
-      </div>
+      <router-view
+        :my-wallets="myWallets"
+        :watch-only-wallets="watchOnlyAddresses"
+        :network="network"
+        :toggle-password-modal="togglePasswordModal"
+        :total-balance="totalBalance"
+        :converted-balance="convertedBalance"
+        :loading="loading"
+        :open-network-modal="openNetworkModal"
+        :add-wallet="addWallet"
+        :eth-price="ethPrice"
+        :watch-only-addresses="watchOnlyAddresses"
+        :open-watch-only-modal="openWatchOnlyModal"
+      />
     </div>
   </div>
 </template>
@@ -113,7 +38,6 @@
 import { KEYSTORE as keyStoreType } from '@/wallets/bip44/walletTypes';
 import WalletSideMenu from '../../components/WalletSideMenu';
 import WatchOnlyModal from '../../components/WatchOnlyModal';
-import WalletInfoComponent from '../../components/WalletInfoComponent';
 import PasswordOnlyModal from '../../components/PasswordOnlyModal';
 import { WATCH_ONLY } from '@/wallets/bip44/walletTypes';
 import { Toast, ExtensionHelpers } from '@/helpers';
@@ -128,18 +52,15 @@ export default {
   components: {
     'wallet-side-menu': WalletSideMenu,
     'watch-only-modal': WatchOnlyModal,
-    'wallet-info-component': WalletInfoComponent,
     'password-only-modal': PasswordOnlyModal,
     'interface-network-modal': InterfaceNetworkModal
   },
   data() {
     return {
-      label: 'myWallets',
-      name: 'My Wallets',
       loading: false,
       watchOnlyAddresses: [],
       myWallets: [],
-      totalBalance: 0,
+      totalBalance: '0',
       file: '',
       path: '',
       password: '',
@@ -293,7 +214,7 @@ export default {
       this.$refs.passwordOnlyModal.$refs.passwordOnlyModal.show();
     },
     async processAccounts(accs) {
-      this.totalBalance = 0;
+      this.totalBalance = '0';
       this.loading = true;
       let balance = new BigNumber(this.totalBalance);
       const watchOnlyAddresses = [];
@@ -328,10 +249,6 @@ export default {
     },
     addWallet() {
       this.$router.push('access-my-wallet');
-    },
-    switchView(val) {
-      this.label = val.label;
-      this.name = val.name;
     },
     addWatchOnlyWalletCb() {
       this.loading = false;
