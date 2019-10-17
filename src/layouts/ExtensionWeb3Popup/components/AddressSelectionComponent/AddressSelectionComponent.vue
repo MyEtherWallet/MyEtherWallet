@@ -3,15 +3,25 @@
     <div class="check-mark-container">
       <i
         :class="[
-          props.selectedAccount === props.address ? 'icon-selected' : 'icon-not-selected',
+          props.selectedAccount === props.address
+            ? 'icon-selected'
+            : 'icon-not-selected',
           'fa fa-check-circle fa-lg'
         ]"
       />
     </div>
     <div
-      :class="[props.selectedAccount === props.address ? 'selected' : '', 'address-detail']"
+      :class="[
+        props.selectedAccount === props.address ? 'selected' : '',
+        'address-detail'
+      ]"
     >
-      <component :is="injections.components.Blockie" :address="props.address" width="30px" height="30px" />
+      <component
+        :is="injections.components.Blockie"
+        :address="props.address"
+        width="30px"
+        height="30px"
+      />
       <div class="address-text">
         <p>{{ props.address | concatAddr }}</p>
         <div class="balance">

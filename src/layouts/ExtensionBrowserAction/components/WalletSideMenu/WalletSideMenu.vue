@@ -38,7 +38,7 @@ export default {
           inActive: watchOnly,
           label: 'watchOnlyWallets',
           path: '/watch-only'
-        },
+        }
         // {
         //   name: 'Dapps',
         //   icon: watchOnlyHov,
