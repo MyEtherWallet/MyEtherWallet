@@ -4,6 +4,7 @@
 
 ### Devop
 
+- Fix static "help" and "tutorial" button size and position [#1531](https://github.com/MyEtherWallet/MyEtherWallet/pull/1531)
 - Remove Ethereum commonwealth nodes in case they shut it down [#1507](https://github.com/MyEtherWallet/MyEtherWallet/pull/1507)
 
 ### Release v5.1.6
