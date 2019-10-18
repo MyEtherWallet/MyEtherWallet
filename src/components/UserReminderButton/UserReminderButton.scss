@@ -1,9 +1,9 @@
-@import '~@/scss/GlobalVariables';
+@import "~@/scss/GlobalVariables";
 
 .user-reminder-button {
   cursor: pointer;
   position: fixed;
-  bottom: 140px;
+  bottom: 150px;
   right: 60px;
   z-index: 990;
   padding: 0;
@@ -28,18 +28,18 @@
   }
 
   @media all and (max-width: $tablet-width) {
-    bottom: 80px;
-    right: 5px;
+    bottom: 70px;
+    right: 0px;
     opacity: 1;
 
     img {
-      height: 40px;
-      width: 40px;
+      height: 30px;
+      width: 30px;
     }
 
     p {
-      font-size: 11px;
-      font-weight: 500;
+      font-size: 10px;
+      font-weight: 600;
     }
   }
 }
