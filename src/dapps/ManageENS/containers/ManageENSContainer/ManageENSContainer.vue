@@ -2,9 +2,16 @@
   <div class="manage-ens-container">
     <h3>{{ $t('dapps.manage') }} {{ domainName }}</h3>
     <div class="inputs-container">
-      <div class="form-container">
+      <div v-show="resolverMultiCoinSupport" class="form-container">
         <form class="manage-multi-coin-form">
-          <h4>Multi-Coin: (ETH, ETC, LTC, BTC)</h4>
+          <div class="title-and-dropdown-container">
+            <h4>Multi-Coin:</h4>
+            <b-dd :text="selectedCurrency" class="dropdown-button-2">
+              <b-dd-item v-for="(item, idx) in Object.keys(supportedCoins)" :key="item + idx" @click="addInput(item)">
+                {{ item }}
+              </b-dd-item>
+            </b-dd>
+          </div>
           <div
             v-for="(v, k) in inputs"
             :key="k.id"
@@ -32,15 +39,6 @@
             />
           </div>
           <div class="multi-coin-submit-container">
-            <button
-              :class="[
-                Object.keys(inputs).length === 4 ? 'disabled' : '',
-                'add'
-              ]"
-              @click.prevent="addInput"
-            >
-              Add
-            </button>
             <button @click.prevent="checkAndSend">
               Save
             </button>
@@ -126,7 +124,8 @@ export default {
       multiCoinSupport: false,
       isAddress: isAddress,
       MultiCoinValidator,
-      inputs: newObj
+      inputs: newObj,
+      selectedCurrency: 'ETH'
     };
   },
   computed: {
@@ -147,17 +146,16 @@ export default {
 
       return copiedObj;
     },
-    addInput() {
+    addInput(item) {
+      this.selectedCurrency = item;
       const unRefSupportedCoins = this.copySupported();
       const newObj = Object.assign({}, this.inputs);
-      const currencies = ['ETH', 'ETC', 'LTC', 'BTC'];
-      for (let i = 0; i < currencies.length; i++) {
-        if (!newObj[currencies[i]]) {
-          newObj[currencies[i]] = unRefSupportedCoins[currencies[i]];
-          break;
-        }
+      if (!newObj[item]) {
+        newObj[item] = unRefSupportedCoins[item];
+        this.inputs = newObj;
+      } else {
+        Toast.responseHandler(`Currency ${item} is already added for ${this.domainName}`, Toast.WARN);
       }
-      this.inputs = newObj;
     },
     removeInput(name) {
       const newObj = Object.assign({}, this.inputs);
@@ -168,24 +166,17 @@ export default {
       const changed = [];
       const inputsObj = Object.assign({}, this.inputs);
       const currentSupported = Object.assign({}, this.supportedCoins);
-      console.log(inputsObj, currentSupported);
       Object.keys(currentSupported).forEach(item => {
         if (
           inputsObj[item] &&
           currentSupported[item].value !== inputsObj[item].value
         ) {
-          console.log(
-            currentSupported[item].value,
-            inputsObj[item].value,
-            'something changed'
-          );
           if (
             this.MultiCoinValidator.validate(
               inputsObj[item].value,
               inputsObj[item].validator
             )
           ) {
-            console.log('change is valid');
             changed.push(inputsObj[item]);
           } else {
             Toast.responseHandler(
@@ -195,16 +186,19 @@ export default {
           }
         }
       });
-      if (changed.length > 0) {
-        let counter = 0;
-        changed.forEach(item => {
-          const fireFunction = setInterval(() => {
-            this.setMultiCoin(item);
-            counter++;
-            if (counter === changed.length) clearInterval(fireFunction);
-          }, 14000);
-        });
-      }
+      // Update setMulticoin to receive an array
+      // create an array of txs
+      // send as batch instead
+      // if (changed.length > 0) {
+      //   let counter = 0;
+      //   changed.forEach(item => {
+      //     const fireFunction = setInterval(() => {
+      //       this.setMultiCoin(item);
+      //       counter++;
+      //       if (counter === changed.length) clearInterval(fireFunction);
+      //     }, 14000);
+      //   });
+      // }
     }
   }
 };
