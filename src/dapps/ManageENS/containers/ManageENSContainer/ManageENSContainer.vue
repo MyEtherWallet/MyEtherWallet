@@ -2,7 +2,7 @@
   <div class="manage-ens-container">
     <h3>{{ $t('dapps.manage') }} {{ domainName }}</h3>
     <div class="inputs-container">
-      <div v-for="(v, k) in supportedCoins" :key="k.id" class="form-container">
+      <div v-for="(v, k) in filteredCoins" :key="k.id" class="form-container">
         <form class="manage-form">
           <div class="input-container">
             <label for="updateResolver">{{ k }}:</label>
@@ -62,7 +62,6 @@
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import { isAddress } from '@/helpers/addressUtils';
 import { mapState } from 'vuex';
-import supportedCoins from '../../supportedCoins';
 import MultiCoinValidator from 'multicoin-address-validator';
 export default {
   components: {
@@ -84,18 +83,32 @@ export default {
     tld: {
       type: String,
       default: ''
+    },
+    resolverMultiCoinSupport: {
+      type: Boolean,
+      default: false
+    },
+    supportedCoins: {
+      type: Object,
+      default: function() {}
     }
   },
   data() {
     return {
       transferTo: '',
+      multiCoinSupport: false,
       isAddress: isAddress,
-      supportedCoins,
       MultiCoinValidator
     };
   },
   computed: {
-    ...mapState(['web3'])
+    ...mapState(['web3']),
+    filteredCoins() {
+      if (this.resolverMultiCoinSupport) return this.supportedCoins;
+      return {
+        ETH: this.supportedCoins.ETH
+      };
+    }
   },
   mounted() {
     if (this.domainName === '.') {
