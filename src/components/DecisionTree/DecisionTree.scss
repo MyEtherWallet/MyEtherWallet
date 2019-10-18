@@ -1,28 +1,52 @@
 @import '~@/scss/GlobalVariables';
 
+.decision-tree-container {
+  height: 0;
+}
+
 .show-button {
-  opacity: 0;
-  pointer-events: none;
-  transition: all 0.3s ease;
+  //transition: opacity 0.2s ease;
+  opacity: 0.6;
   position: fixed;
   background-color: transparent;
   border: 0;
-  bottom: 20px;
+  bottom: 60px;
+  right: 60px;
   cursor: pointer;
-  right: 2vw;
   z-index: 990;
   padding: 0;
   margin: 0;
+  min-width: 70px;
 
   img {
-    height: 40px;
-    width: 40px;
+    height: 50px;
+    width: 50px;
   }
 
-  &.active {
-    bottom: 70px;
+  p {
+    font-size: 12px;
+    font-weight: 600;
+    color: gray;
+  }
+
+  &:hover {
     opacity: 1;
-    pointer-events: initial;
+  }
+
+  @media all and (max-width: $tablet-width) {
+    bottom: 10px;
+    right: 5px;
+    opacity: 1;
+
+    img {
+      height: 40px;
+      width: 40px;
+    }
+
+    p {
+      font-size: 11px;
+      font-weight: 500;
+    }
   }
 }
 
