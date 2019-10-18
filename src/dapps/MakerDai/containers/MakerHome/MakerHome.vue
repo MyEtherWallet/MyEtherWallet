@@ -1,12 +1,10 @@
 <template functional>
   <div>
-    <keep-alive>
-      <component
-        :is="injections.components.LoadingSign"
-        :loadingmessage1="$t('dappsMaker.initialLoadingOne')"
-        :loadingmessage2="$t('dappsMaker.initialLoadingTwo')"
-      />
-    </keep-alive>
+    <component
+      :is="injections.components.LoadingSign"
+      :loadingmessage1="props.loadingMessage1"
+      :loadingmessage2="props.loadingMessage2"
+    />
   </div>
 </template>
 
@@ -19,6 +17,16 @@ export default {
       default: {
         LoadingSign
       }
+    }
+  },
+  props: {
+    loadingMessage1: {
+      type: String,
+      default: ''
+    },
+    loadingMessage2: {
+      type: String,
+      default: ''
     }
   }
 };

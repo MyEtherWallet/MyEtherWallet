@@ -1,8 +1,6 @@
 <template functional>
   <div class="schedule-transaction">
-    <keep-alive>
-      <component :is="injections.components.BackButton" />
-    </keep-alive>
+    <component :is="injections.components.BackButton" />
     <router-view :tokens-with-balance="props.tokensWithBalance" />
   </div>
 </template>

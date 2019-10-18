@@ -1,6 +1,6 @@
 <template functional>
-  <div class="loading-sign">
-    <div :class="props.color" class="loading-container">
+  <div>
+    <div :class="[props.color, 'loading-container', 'loading-sign']">
       <div class="lds-spinner">
         <div></div>
         <div></div>

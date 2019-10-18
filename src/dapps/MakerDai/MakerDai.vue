@@ -165,6 +165,8 @@
       :values="activeValues"
       :get-cdp="getCdp"
       :has-cdp="hasCdp"
+      :loading-message1="$t('dappsMaker.initialLoadingOne')"
+      :loading-message2="$t('dappsMaker.initialLoadingTwo')"
       @activeCdpId="setupCdpManage"
       @cdpOpened="addCdp"
       @cdpClosed="removeCdp"

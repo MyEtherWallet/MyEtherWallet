@@ -231,7 +231,7 @@ import { mapState } from 'vuex';
 import store from 'store';
 import { Misc, Toast } from '@/helpers';
 import Blockie from '@/components/Blockie';
-import Notification from '@/components/Notification';
+import Notification from '@/containers/NotificationsContainer';
 import ScrollUpButton from '@/components/ScrollUpButton';
 import UserReminderButton from '@/components/UserReminderButton';
 import SettingsModal from '@/components/SettingsModal';
