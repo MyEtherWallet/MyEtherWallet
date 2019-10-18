@@ -30,6 +30,8 @@
       :register-with-duration="registerWithDuration"
       :minimum-age="minimumAge"
       :commitment-created="commitmentCreated"
+      :resolver-multi-coin-support="resolverMultiCoinSupport"
+      :supported-coins="supportedCoins"
       @updateSecretPhrase="updateSecretPhrase"
       @domainNameChange="updateDomainName"
       @updateStep="updateStep"
@@ -92,7 +94,10 @@ export default {
       legacyRegistrar: {},
       minimumAge: 0,
       duration: 1,
-      commitmentCreated: false
+      commitmentCreated: false,
+      publicResolverAddress: '',
+      resolverMultiCoinSupport: false,
+      supportedCoins
     };
   },
   computed: {
@@ -165,11 +170,15 @@ export default {
       this.minimumAge = 0;
       this.duration = 1;
       this.commitmentCreated = false;
+      this.publicResolverAddress = '';
+      this.resolverMultiCoinSupport = false;
+      this.supportedCoins = supportedCoins;
 
       if (this.ens) {
         this.setRegistrar();
       }
-      for (const type in supportedCoins) supportedCoins[type].value = '';
+      for (const type in this.supportedCoins)
+        this.supportedCoins[type].value = '';
     },
     async setRegistrar() {
       const web3 = this.web3;
@@ -234,9 +243,7 @@ export default {
     async setMultiCoin(coin) {
       const web3 = this.web3;
       const address = this.account.address;
-      // Public resolver address
-      const resolver = await this.ens.resolver('resolver.eth');
-      const publicResolverAddress = await resolver.addr();
+      const publicResolverAddress = this.publicResolverAddress;
       const currentResolverAddress = await this.ensRegistryContract.methods
         .resolver(this.nameHash)
         .call();
@@ -253,6 +260,11 @@ export default {
         value: 0,
         gasPrice: new BigNumber(unit.toWei(this.gasPrice, 'gwei')).toFixed()
       };
+      if (!this.resolverMultiCoinSupport) {
+        setAddrTx.data = publicResolverContract.methods
+          .setAddr(this.nameHash, coin.decode(coin.value))
+          .encodeABI();
+      }
       if (
         currentResolverAddress.toLowerCase() ===
         publicResolverAddress.toLowerCase()
@@ -271,15 +283,18 @@ export default {
           gasPrice: new BigNumber(unit.toWei(this.gasPrice, 'gwei')).toFixed()
         };
         let migrateEthAddress = null;
-        if (coin.id !== supportedCoins.ETH.id && supportedCoins.ETH.value) {
+        if (
+          coin.id !== this.supportedCoins.ETH.id &&
+          this.supportedCoins.ETH.value
+        ) {
           migrateEthAddress = {
             from: address,
             to: publicResolverAddress,
             data: publicResolverContract.methods
               .setAddr(
                 this.nameHash,
-                supportedCoins.ETH.id,
-                coin.decode(supportedCoins.ETH.value)
+                this.supportedCoins.ETH.id,
+                coin.decode(this.supportedCoins.ETH.value)
               )
               .encodeABI(),
             value: 0,
@@ -547,6 +562,9 @@ export default {
     },
     async getMoreInfo() {
       let owner;
+      const resolver = await this.ens.resolver('resolver.eth');
+      this.publicResolverAddress = await resolver.addr();
+      this.nameHash = nameHashPckg.hash(this.parsedDomainName);
       try {
         if (
           this.registrarType === REGISTRAR_TYPES.PERMANENT &&
@@ -563,7 +581,17 @@ export default {
         Toast.responseHandler(e, false);
       }
       try {
-        this.nameHash = nameHashPckg.hash(this.parsedDomainName);
+        const publicResolverContract = new this.web3.eth.Contract(
+          ResolverAbi,
+          this.publicResolverAddress
+        );
+        this.resolverMultiCoinSupport = await publicResolverContract.methods
+          .supportsInterface(MULTICOIN_SUPPORT_INTERFACE)
+          .call();
+      } catch (e) {
+        this.resolverMultiCoinSupport = false;
+      }
+      try {
         const currentResolverAddress = await this.ensRegistryContract.methods
           .resolver(this.nameHash)
           .call();
@@ -574,27 +602,29 @@ export default {
         const supportMultiCoin = await resolverContract.methods
           .supportsInterface(MULTICOIN_SUPPORT_INTERFACE)
           .call();
+        for (const type in this.supportedCoins)
+          this.supportedCoins[type].value = '';
         if (supportMultiCoin) {
-          for (const type in supportedCoins) {
-            this.ens
+          for (const type in this.supportedCoins) {
+            await this.ens
               .resolver(this.parsedDomainName, ResolverAbi)
-              .addr(supportedCoins[type].id)
+              .addr(this.supportedCoins[type].id)
               .then(address => {
                 if (address) {
-                  supportedCoins[type].value = supportedCoins[type].encode(
-                    address
-                  );
+                  this.supportedCoins[type].value = this.supportedCoins[
+                    type
+                  ].encode(address);
                 }
               });
           }
         } else {
-          supportedCoins['ETH'].value = await this.ens
+          this.supportedCoins['ETH'].value = await this.ens
             .resolver(this.parsedDomainName)
             .addr();
         }
       } catch (e) {
         console.log(e);
-        supportedCoins['ETH'].value = '0x';
+        this.supportedCoins['ETH'].value = '0x';
       }
       this.owner = owner;
       if (this.$route.fullPath === '/interface/dapps/manage-ens') {

@@ -42,7 +42,6 @@
 
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText';
-import supportedCoins from '../../supportedCoins';
 
 import { mapState } from 'vuex';
 export default {
@@ -69,12 +68,14 @@ export default {
     tld: {
       type: String,
       default: ''
+    },
+    supportedCoins: {
+      type: Object,
+      default: function() {}
     }
   },
   data() {
-    return {
-      supportedCoins
-    };
+    return {};
   },
   computed: {
     ...mapState(['account']),
