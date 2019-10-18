@@ -15,7 +15,7 @@
     </div>
     <div class="content-container">
       <h4>{{ $t('dapps.multiCoin') }}:</h4>
-      <div v-for="(v, k) in localSupportedCoins" v-if="v.value" :key="k.id">
+      <div v-for="(v, k) in supportedCoins" v-if="v.value" :key="k.id">
         <span class="currency">{{ v.symbol }} address: </span>
         <span class="content">{{ v.value }}</span>
       </div>
@@ -66,12 +66,13 @@ export default {
       type: String,
       default: ''
     },
-    localSupportedCoins: {
+    supportedCoins: {
       type: Object,
-      default: () => {
-        return {};
-      }
+      default: function() {}
     }
+  },
+  data() {
+    return {};
   },
   computed: {
     ...mapState(['account']),
