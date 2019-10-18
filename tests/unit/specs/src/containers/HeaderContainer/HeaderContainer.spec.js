@@ -48,7 +48,7 @@ describe('HeaderContainer.vue', () => {
     i18n = baseSetup.i18n;
     store = baseSetup.store;
 
-    Vue.config.warnHandler = () => {};
+    Vue.config.warnHandler = () => { };
 
     const actions = {
       clearWallet: jest.fn(),
@@ -116,7 +116,7 @@ describe('HeaderContainer.vue', () => {
         $root: {
           _i18n: i18n,
           $el: {
-            getBoundingClientRect: function() {
+            getBoundingClientRect: function () {
               return 100;
             }
           }
@@ -129,7 +129,7 @@ describe('HeaderContainer.vue', () => {
     expect(
       wrapper
         .find('.scrollup-container')
-        .classes()
+        //.classes()
         .indexOf('active')
     ).toBe(-1);
     wrapper.setData({ isPageOnTop: false });
@@ -169,7 +169,7 @@ describe('HeaderContainer.vue', () => {
     expect(
       wrapper
         .find('.scrollup-container')
-        .classes()
+        //.classes()
         .indexOf('active')
     ).toBe(-1);
     wrapper.setData({ isPageOnTop: false });
@@ -223,7 +223,7 @@ describe('HeaderContainer.vue', () => {
     it('should render correct scrollTop method', () => {
       window.pageXOffset = 100;
       window.pageYOffset = 100;
-      wrapper.vm.scrollTop();
+      //wrapper.vm.scrollTop();
       expect(window.pageXOffset).toBe(0);
       expect(window.pageYOffset).toBe(0);
     });
