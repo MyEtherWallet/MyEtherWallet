@@ -817,7 +817,7 @@ export default {
               } else if (entry.provider === this.providerNames.changelly) {
                 Toast.responseHandler(
                   `Failed to retrieve Changelly rate from ${fromCurrency} to ${toCurrency}`,
-                  true
+                  3
                 );
               }
             }),
