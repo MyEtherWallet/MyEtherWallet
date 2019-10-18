@@ -623,7 +623,6 @@ export default {
             .addr();
         }
       } catch (e) {
-        console.log(e);
         this.supportedCoins['ETH'].value = '0x';
       }
       this.owner = owner;
