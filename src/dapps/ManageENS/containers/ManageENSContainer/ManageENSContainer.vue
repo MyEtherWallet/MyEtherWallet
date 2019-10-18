@@ -20,7 +20,7 @@
             <i :class="[v.value !== ''? 'disabled-icon': '', 'fa fa-lg fa-times']" @click="removeInput" />
           </div>
           <div class="multi-coin-submit-container">
-            <button :class="[Object.keys(inputs) === 4 ? 'disabled' : '', 'add']" @click.prevent="addInput">
+            <button :class="[Object.keys(inputs).length === 4 ? 'disabled' : '', 'add']" @click.prevent="addInput">
               Add
             </button>
             <button @click.prevent="addInput">
