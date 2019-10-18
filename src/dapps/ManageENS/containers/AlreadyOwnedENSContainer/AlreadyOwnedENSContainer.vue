@@ -13,9 +13,15 @@
       <p class="label">{{ $t('dapps.owner') }}:</p>
       <p class="content">{{ owner }}</p>
     </div>
-    <div class="content-container">
-      <p class="label">{{ $t('dapps.resolverAddr') }}:</p>
-      <p class="content">{{ resolverAddress }}</p>
+    <h4>{{ $t('dapps.multiCoin') }}.</h4>
+    <div
+      v-for="(v, k) in supportedCoins"
+      v-if="v.value"
+      :key="k.id"
+      class="content-container"
+    >
+      <p class="label">{{ v.name }} address:</p>
+      <p class="content">{{ v.value }}</p>
     </div>
     <div class="owner-options">
       <button
@@ -36,6 +42,7 @@
 
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText';
+import supportedCoins from '../../supportedCoins';
 
 import { mapState } from 'vuex';
 export default {
@@ -55,10 +62,6 @@ export default {
       type: String,
       default: ''
     },
-    resolverAddress: {
-      type: String,
-      default: ''
-    },
     hostName: {
       type: String,
       default: ''
@@ -69,7 +72,9 @@ export default {
     }
   },
   data() {
-    return {};
+    return {
+      supportedCoins
+    };
   },
   computed: {
     ...mapState(['account']),
