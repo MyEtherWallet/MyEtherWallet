@@ -85,26 +85,24 @@
         <div v-else class="notification-no-item">No notifications found :(</div>
       </div>
       <div v-if="detailsShown" class="notification-item-container">
-        <keep-alive>
-          <component
-            :is="useDetailComponent(detailType)"
-            :shown="shown"
-            :notice="notificationDetails"
-            :convert-to-gwei="convertToGwei"
-            :convert-to-eth="convertToEth"
-            :get-fiat-value="getFiatValue"
-            :date-string="dateString"
-            :time-string="timeString"
-            :hash-link="hashLink"
-            :address-link="addressLink"
-            :process-status="processStatus"
-            :error-message-string="errorMessageString"
-            :child-update-notification="
-              childUpdateNotification(notificationDetails.index)
-            "
-          >
-          </component>
-        </keep-alive>
+        <component
+          :is="useDetailComponent(detailType)"
+          :shown="shown"
+          :notice="notificationDetails"
+          :convert-to-gwei="convertToGwei"
+          :convert-to-eth="convertToEth"
+          :get-fiat-value="getFiatValue"
+          :date-string="dateString"
+          :time-string="timeString"
+          :hash-link="hashLink"
+          :address-link="addressLink"
+          :process-status="processStatus"
+          :error-message-string="errorMessageString"
+          :child-update-notification="
+            childUpdateNotification(notificationDetails.index)
+          "
+        >
+        </component>
       </div>
     </b-modal>
   </div>
@@ -406,5 +404,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import './Notification.scss';
+@import './NotificationsContainer.scss';
 </style>

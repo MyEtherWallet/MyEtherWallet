@@ -1,4 +1,4 @@
-<template lang="html" functional>
+<template lang="html">
   <b-modal
     ref="done"
     hide-footer
@@ -17,7 +17,7 @@
       <div class="button-container">
         <b-btn
           class="mid-round-button-green-filled close-button"
-          @click="props.unlock"
+          @click="unlock"
         >
           {{ $t('common.unlockWallet') }}
         </b-btn>

@@ -4,7 +4,7 @@
 ### Devop
 
 - Remove Ethereum commonwealth nodes in case they shut it down [#1507](https://github.com/MyEtherWallet/MyEtherWallet/pull/1507)
-- Improve app speed [#1519](https://github.com/MyEtherWallet/MyEtherWallet/pull/1519)
+- App optimization [#1519](https://github.com/MyEtherWallet/MyEtherWallet/pull/1519)
 
 ### Release v5.1.6
 

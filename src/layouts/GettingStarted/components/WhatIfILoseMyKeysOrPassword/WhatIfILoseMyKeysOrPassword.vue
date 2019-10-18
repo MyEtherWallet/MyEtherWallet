@@ -1,4 +1,4 @@
-<template functional>
+<template>
   <div class="what-is-mew">
     <div class="block-progressbar">
       <dir class="block-progressbar__container">
@@ -6,7 +6,7 @@
           {{ $t('gettingStarted.aboutSecurity') }}
         </div>
         <div class="block-progressbar__progressbar">
-          <div :class="props.progressBarValue" />
+          <div :class="progressBarValue" />
         </div>
         <div class="block-progressbar__content">
           <h4>{{ $t('gettingStarted.lostPasswordTitle') }}</h4>

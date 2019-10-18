@@ -1,8 +1,8 @@
 <template functional>
   <div class="footer-text">
     <p>
-      <span>{{ $t('createWallet.doNotForget') }}</span>
-      {{ $t('createWallet.doNotForgetDesc') }}<span> {{ props.combo }}</span>
+      <span>{{ props.doNotForget }}</span>
+      {{ props.doNotForgetDesc }}<span> {{ props.combo }}</span>
       {{ props.desc }}
     </p>
   </div>
@@ -16,6 +16,14 @@ export default {
       default: ''
     },
     desc: {
+      type: String,
+      default: ''
+    },
+    doNotForget: {
+      type: String,
+      default: ''
+    },
+    doNotForgetDesc: {
       type: String,
       default: ''
     }

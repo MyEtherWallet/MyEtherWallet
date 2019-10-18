@@ -1,14 +1,10 @@
 <template functional>
   <div class="loading-overlay">
-    <div class="loading-sign">
-      <keep-alive>
-        <component
-          :is="injections.components.LoadingSign"
-          :loadingmessage1="props.loadingmessage"
-          color="white"
-        />
-      </keep-alive>
-    </div>
+    <component
+      :is="injections.components.LoadingSign"
+      :loadingmessage1="props.loadingmessage"
+      color="white"
+    />
   </div>
 </template>
 

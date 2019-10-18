@@ -1,4 +1,4 @@
-<template functional>
+<template>
   <b-modal
     ref="tutorial"
     hide-footer
@@ -13,9 +13,7 @@
     <div class="d-block text-center">
       <h3 class="title">{{ $t('createWallet.tutorialModalHeader') }}</h3>
       <i18n path="createWallet.tutorialModalDesc" tag="p" class="content">
-        <span @click="props.skip">{{
-          $t('createWallet.tutorialModalSkip')
-        }}</span>
+        <span @click="skip">{{ $t('createWallet.tutorialModalSkip') }}</span>
       </i18n>
     </div>
     <div class="button-container">
