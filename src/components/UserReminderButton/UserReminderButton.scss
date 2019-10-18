@@ -1,4 +1,4 @@
-@import "~@/scss/GlobalVariables";
+@import '~@/scss/GlobalVariables';
 
 .user-reminder-button {
   cursor: pointer;
@@ -29,7 +29,7 @@
 
   @media all and (max-width: $tablet-width) {
     bottom: 70px;
-    right: 0px;
+    right: 0;
     opacity: 1;
 
     img {
