@@ -2,24 +2,26 @@
   <div class="manage-ens-container">
     <h3>{{ $t('dapps.manage') }} {{ domainName }}</h3>
     <div class="inputs-container">
-      <div class="form-container">
+      <div v-for="(v, k) in supportedCoins" :key="k.id" class="form-container">
         <form class="manage-form">
           <div class="input-container">
-            <label for="updateResolver"
-              >{{ $t('dapps.updateResolver') }}:</label
-            >
+            <label for="updateResolver">{{ k }}:</label>
             <input
-              v-model="locResolverAddr"
+              v-model="v.value"
+              :placeholder="v.name + ' address'"
               type="text"
               name="updateResolver"
-              placeholder="0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D"
             />
           </div>
           <div class="submit-container">
             <button
-              :class="!isAddress(locResolverAddr) ? 'disabled' : ''"
+              :class="
+                !v.value || !MultiCoinValidator.validate(v.value, v.validator)
+                  ? 'disabled'
+                  : ''
+              "
               type="submit"
-              @click.prevent="updateResolver(locResolverAddr)"
+              @click.prevent="setMultiCoin(v)"
             >
               Update
             </button>
@@ -60,6 +62,8 @@
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import { isAddress } from '@/helpers/addressUtils';
 import { mapState } from 'vuex';
+import supportedCoins from '../../supportedCoins';
+import MultiCoinValidator from 'multicoin-address-validator';
 export default {
   components: {
     'interface-bottom-text': InterfaceBottomText
@@ -69,17 +73,13 @@ export default {
       type: String,
       default: ''
     },
-    updateResolver: {
+    setMultiCoin: {
       type: Function,
       default: function() {}
     },
     transferDomain: {
       type: Function,
       default: function() {}
-    },
-    resolverAddress: {
-      type: String,
-      default: ''
     },
     tld: {
       type: String,
@@ -88,9 +88,10 @@ export default {
   },
   data() {
     return {
-      locResolverAddr: this.resolverAddress,
       transferTo: '',
-      isAddress: isAddress
+      isAddress: isAddress,
+      supportedCoins,
+      MultiCoinValidator
     };
   },
   computed: {
