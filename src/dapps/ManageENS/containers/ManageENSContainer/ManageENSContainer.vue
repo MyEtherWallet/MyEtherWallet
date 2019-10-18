@@ -17,10 +17,22 @@
               type="text"
               name="updateResolver"
             />
-            <i :class="[v.value !== ''? 'disabled-icon': '', 'fa fa-lg fa-times']" @click="removeInput" />
+            <i
+              :class="[
+                v.value !== '' ? 'disabled-icon' : '',
+                'fa fa-lg fa-times'
+              ]"
+              @click="() => {removeInput(k)}"
+            />
           </div>
           <div class="multi-coin-submit-container">
-            <button :class="[Object.keys(inputs).length === 4 ? 'disabled' : '', 'add']" @click.prevent="addInput">
+            <button
+              :class="[
+                Object.keys(inputs).length === 4 ? 'disabled' : '',
+                'add'
+              ]"
+              @click.prevent="addInput"
+            >
               Add
             </button>
             <button @click.prevent="addInput">
@@ -130,8 +142,10 @@ export default {
       }
       this.inputs = newObj;
     },
-    removeInput() {
-
+    removeInput(name) {
+      const newObj = Object.assign({}, this.inputs);
+      delete newObj[name];
+      this.inputs = newObj;
     }
   }
 };

@@ -55,6 +55,16 @@ label {
     margin: 0 !important;
     padding-right: 15px;
   }
+
+  i {
+    cursor: pointer;
+    padding-left: 10px;
+  }
+
+  .disabled-icon {
+    color: $dark-grey-11 !important;
+    pointer-events: none;
+  }
 }
 
 .submit-container {
@@ -89,12 +99,5 @@ label {
     color: $mew-green;
   }
 
-  i {
-    cursor: pointer;
-  }
 
-  .disabled-icon {
-    color: $light-grey-1;
-    pointer-events: none;
-  }
 }
