@@ -71,6 +71,7 @@ label {
   text-align: center;
   button {
     background-color: $mew-green;
+    border: 1px solid $mew-green;
     border: 0;
     border-radius: 4px;
     color: $white;
@@ -82,6 +83,8 @@ label {
 
   .disabled {
     background-color: $dark-grey-11 !important;
+    border: 1px solid $dark-grey-11 !important;
+    color: $white !important;
     pointer-events: none;
   }
 }
@@ -98,6 +101,4 @@ label {
     border: 1px solid $mew-green;
     color: $mew-green;
   }
-
-
 }
