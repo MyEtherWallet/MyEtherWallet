@@ -116,9 +116,12 @@ export default class Changelly {
     );
 
     if (!Array.isArray(changellyDetails)) {
-      throw Error(
-        `Failed to retrieve changelly rate from ${fromCurrency} to ${toCurrency}`
-      );
+      return {
+        fromCurrency,
+        toCurrency,
+        provider: this.name,
+        rate: 0
+      };
     }
 
     return {
