@@ -19,10 +19,16 @@
             />
             <i
               :class="[
-                v.value !== '' ? 'disabled-icon' : '',
+                v.hasOwnProperty('value') && v.value !== ''
+                  ? 'disabled-icon'
+                  : '',
                 'fa fa-lg fa-times'
               ]"
-              @click="() => {removeInput(k)}"
+              @click="
+                () => {
+                  removeInput(k);
+                }
+              "
             />
           </div>
           <div class="multi-coin-submit-container">
@@ -35,7 +41,7 @@
             >
               Add
             </button>
-            <button @click.prevent="addInput">
+            <button @click.prevent="checkAndSend">
               Save
             </button>
           </div>
@@ -76,6 +82,8 @@ import InterfaceBottomText from '@/components/InterfaceBottomText';
 import { isAddress } from '@/helpers/addressUtils';
 import { mapState } from 'vuex';
 import MultiCoinValidator from 'multicoin-address-validator';
+import { Toast } from '@/helpers';
+import utils from 'web3-utils';
 export default {
   components: {
     'interface-bottom-text': InterfaceBottomText
@@ -107,12 +115,11 @@ export default {
     }
   },
   data() {
-    const newObj = {};
-    Object.keys(this.supportedCoins).forEach(item => {
-      if (this.supportedCoins[item].value !== '') {
-        newObj[item] = this.supportedCoins[item];
-      }
-    });
+    const newObj = this.copySupported();
+    for (const key in newObj) {
+      if (newObj[key].hasOwnProperty('value') && newObj[key].value === '')
+        delete newObj[key];
+    }
 
     return {
       transferTo: '',
@@ -126,17 +133,27 @@ export default {
     ...mapState(['web3'])
   },
   mounted() {
-    // if (this.domainName === '.') {
-    //   this.$router.push('/interface/dapps/manage-ens');
-    // }
+    if (this.domainName === '.') {
+      this.$router.push('/interface/dapps/manage-ens');
+    }
   },
   methods: {
+    copySupported() {
+      const newObj = utils._.map(this.supportedCoins, utils._.clone);
+      const copiedObj = {};
+      newObj.forEach(item => {
+        copiedObj[item.symbol] = item;
+      });
+
+      return copiedObj;
+    },
     addInput() {
+      const unRefSupportedCoins = this.copySupported();
       const newObj = Object.assign({}, this.inputs);
       const currencies = ['ETH', 'ETC', 'LTC', 'BTC'];
       for (let i = 0; i < currencies.length; i++) {
         if (!newObj[currencies[i]]) {
-          newObj[currencies[i]] = this.supportedCoins[currencies[i]];
+          newObj[currencies[i]] = unRefSupportedCoins[currencies[i]];
           break;
         }
       }
@@ -146,6 +163,48 @@ export default {
       const newObj = Object.assign({}, this.inputs);
       delete newObj[name];
       this.inputs = newObj;
+    },
+    checkAndSend() {
+      const changed = [];
+      const inputsObj = Object.assign({}, this.inputs);
+      const currentSupported = Object.assign({}, this.supportedCoins);
+      console.log(inputsObj, currentSupported);
+      Object.keys(currentSupported).forEach(item => {
+        if (
+          inputsObj[item] &&
+          currentSupported[item].value !== inputsObj[item].value
+        ) {
+          console.log(
+            currentSupported[item].value,
+            inputsObj[item].value,
+            'something changed'
+          );
+          if (
+            this.MultiCoinValidator.validate(
+              inputsObj[item].value,
+              inputsObj[item].validator
+            )
+          ) {
+            console.log('change is valid');
+            changed.push(inputsObj[item]);
+          } else {
+            Toast.responseHandler(
+              'Something went wrong! The address you input might be wrong!',
+              Toast.ERROR
+            );
+          }
+        }
+      });
+      if (changed.length > 0) {
+        let counter = 0;
+        changed.forEach(item => {
+          const fireFunction = setInterval(() => {
+            this.setMultiCoin(item);
+            counter++;
+            if (counter === changed.length) clearInterval(fireFunction);
+          }, 14000);
+        });
+      }
     }
   }
 };
