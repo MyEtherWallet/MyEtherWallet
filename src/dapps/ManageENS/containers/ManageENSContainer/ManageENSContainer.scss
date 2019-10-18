@@ -102,3 +102,9 @@ label {
     color: $mew-green;
   }
 }
+
+.title-and-dropdown-container {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
