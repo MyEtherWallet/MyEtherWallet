@@ -110,14 +110,14 @@ export default class Changelly {
   getFixedRate(fromCurrency, toCurrency, fromValue) {
     return new Promise(async resolve => {
       const timeout = setTimeout(() => {
-        console.log('timeout'); // todo remove dev item
         resolve({
           fromCurrency,
           toCurrency,
           provider: this.name,
           rate: 0
         });
-      }, 2000);
+      }, 20000);
+
       const changellyDetails = await changellyCalls.getFixRate(
         fromCurrency,
         toCurrency,
@@ -125,6 +125,7 @@ export default class Changelly {
         this.network
       );
       clearTimeout(timeout);
+
       if (!Array.isArray(changellyDetails)) {
         return {
           fromCurrency,
@@ -151,25 +152,44 @@ export default class Changelly {
   }
 
   async getMarketRate(fromCurrency, toCurrency, fromValue) {
-    const changellyDetails = await Promise.all([
-      changellyCalls.getMin(fromCurrency, toCurrency, fromValue, this.network),
-      changellyCalls.getRate(fromCurrency, toCurrency, fromValue, this.network)
-    ]);
+    try {
+      const changellyDetails = await Promise.all([
+        changellyCalls.getMin(
+          fromCurrency,
+          toCurrency,
+          fromValue,
+          this.network
+        ),
+        changellyCalls.getRate(
+          fromCurrency,
+          toCurrency,
+          fromValue,
+          this.network
+        )
+      ]);
 
-    const minAmount = new BigNumber(changellyDetails[0])
-      .times(0.001)
-      .plus(new BigNumber(changellyDetails[0]))
-      .toFixed();
+      const minAmount = new BigNumber(changellyDetails[0])
+        .times(0.001)
+        .plus(new BigNumber(changellyDetails[0]))
+        .toFixed();
 
-    const estValueResponse = changellyDetails[1][0];
+      const estValueResponse = changellyDetails[1][0];
 
-    return {
-      fromCurrency,
-      toCurrency,
-      provider: this.name,
-      minValue: minAmount,
-      rate: estValueResponse.rate
-    };
+      return {
+        fromCurrency,
+        toCurrency,
+        provider: this.name,
+        minValue: minAmount,
+        rate: estValueResponse.rate
+      };
+    } catch (e) {
+      return {
+        fromCurrency,
+        toCurrency,
+        provider: this.name,
+        rate: 0
+      };
+    }
   }
 
   getInitialCurrencyEntries(collectMapFrom, collectMapTo) {
