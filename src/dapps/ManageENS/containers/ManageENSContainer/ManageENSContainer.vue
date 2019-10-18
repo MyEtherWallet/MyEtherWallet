@@ -2,9 +2,21 @@
   <div class="manage-ens-container">
     <h3>{{ $t('dapps.manage') }} {{ domainName }}</h3>
     <div class="inputs-container">
-      <div v-for="(v, k) in supportedCoins" :key="k.id" class="form-container">
-        <form class="manage-form">
-          <div class="input-container">
+      <div v-show="resolverMultiCoinSupport" class="form-container">
+        <form class="manage-multi-coin-form">
+          <div class="title-and-dropdown-container">
+            <h4>Multi-Coin:</h4>
+            <b-dd :text="selectedCurrency" class="dropdown-button-2">
+              <b-dd-item v-for="(item, idx) in Object.keys(supportedCoins)" :key="item + idx" @click="addInput(item)">
+                {{ item }}
+              </b-dd-item>
+            </b-dd>
+          </div>
+          <div
+            v-for="(v, k) in inputs"
+            :key="k.id"
+            class="multi-coin-input-container"
+          >
             <label for="updateResolver">{{ k }}:</label>
             <input
               v-model="v.value"
@@ -12,18 +24,23 @@
               type="text"
               name="updateResolver"
             />
-          </div>
-          <div class="submit-container">
-            <button
-              :class="
-                !v.value || !MultiCoinValidator.validate(v.value, v.validator)
-                  ? 'disabled'
-                  : ''
+            <i
+              :class="[
+                v.hasOwnProperty('value') && v.value !== ''
+                  ? 'disabled-icon'
+                  : '',
+                'fa fa-lg fa-times'
+              ]"
+              @click="
+                () => {
+                  removeInput(k);
+                }
               "
-              type="submit"
-              @click.prevent="setMultiCoin(v)"
-            >
-              Update
+            />
+          </div>
+          <div class="multi-coin-submit-container">
+            <button @click.prevent="checkAndSend">
+              Save
             </button>
           </div>
         </form>
@@ -62,8 +79,9 @@
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import { isAddress } from '@/helpers/addressUtils';
 import { mapState } from 'vuex';
-import supportedCoins from '../../supportedCoins';
 import MultiCoinValidator from 'multicoin-address-validator';
+import { Toast } from '@/helpers';
+import utils from 'web3-utils';
 export default {
   components: {
     'interface-bottom-text': InterfaceBottomText
@@ -84,14 +102,30 @@ export default {
     tld: {
       type: String,
       default: ''
+    },
+    resolverMultiCoinSupport: {
+      type: Boolean,
+      default: false
+    },
+    supportedCoins: {
+      type: Object,
+      default: function() {}
     }
   },
   data() {
+    const newObj = this.copySupported();
+    for (const key in newObj) {
+      if (newObj[key].hasOwnProperty('value') && newObj[key].value === '')
+        delete newObj[key];
+    }
+
     return {
       transferTo: '',
+      multiCoinSupport: false,
       isAddress: isAddress,
-      supportedCoins,
-      MultiCoinValidator
+      MultiCoinValidator,
+      inputs: newObj,
+      selectedCurrency: 'ETH'
     };
   },
   computed: {
@@ -100,6 +134,71 @@ export default {
   mounted() {
     if (this.domainName === '.') {
       this.$router.push('/interface/dapps/manage-ens');
+    }
+  },
+  methods: {
+    copySupported() {
+      const newObj = utils._.map(this.supportedCoins, utils._.clone);
+      const copiedObj = {};
+      newObj.forEach(item => {
+        copiedObj[item.symbol] = item;
+      });
+
+      return copiedObj;
+    },
+    addInput(item) {
+      this.selectedCurrency = item;
+      const unRefSupportedCoins = this.copySupported();
+      const newObj = Object.assign({}, this.inputs);
+      if (!newObj[item]) {
+        newObj[item] = unRefSupportedCoins[item];
+        this.inputs = newObj;
+      } else {
+        Toast.responseHandler(`Currency ${item} is already added for ${this.domainName}`, Toast.WARN);
+      }
+    },
+    removeInput(name) {
+      const newObj = Object.assign({}, this.inputs);
+      delete newObj[name];
+      this.inputs = newObj;
+    },
+    checkAndSend() {
+      const changed = [];
+      const inputsObj = Object.assign({}, this.inputs);
+      const currentSupported = Object.assign({}, this.supportedCoins);
+      Object.keys(currentSupported).forEach(item => {
+        if (
+          inputsObj[item] &&
+          currentSupported[item].value !== inputsObj[item].value
+        ) {
+          if (
+            this.MultiCoinValidator.validate(
+              inputsObj[item].value,
+              inputsObj[item].validator
+            )
+          ) {
+            changed.push(inputsObj[item]);
+          } else {
+            Toast.responseHandler(
+              'Something went wrong! The address you input might be wrong!',
+              Toast.ERROR
+            );
+          }
+        }
+      });
+      // Update setMulticoin to receive an array
+      // create an array of txs
+      // send as batch instead
+      // if (changed.length > 0) {
+      //   let counter = 0;
+      //   changed.forEach(item => {
+      //     const fireFunction = setInterval(() => {
+      //       this.setMultiCoin(item);
+      //       counter++;
+      //       if (counter === changed.length) clearInterval(fireFunction);
+      //     }, 14000);
+      //   });
+      // }
     }
   }
 };
