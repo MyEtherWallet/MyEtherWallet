@@ -2,9 +2,14 @@
   <div class="manage-ens-container">
     <h3>{{ $t('dapps.manage') }} {{ domainName }}</h3>
     <div class="inputs-container">
-      <div v-for="(v, k) in filteredCoins" :key="k.id" class="form-container">
-        <form class="manage-form">
-          <div class="input-container">
+      <div class="form-container">
+        <form class="manage-multi-coin-form">
+          <h4>Multi-Coin: (ETH, ETC, LTC, BTC)</h4>
+          <div
+            v-for="(v, k) in inputs"
+            :key="k.id"
+            class="multi-coin-input-container"
+          >
             <label for="updateResolver">{{ k }}:</label>
             <input
               v-model="v.value"
@@ -12,18 +17,14 @@
               type="text"
               name="updateResolver"
             />
+            <i :class="[v.value !== ''? 'disabled-icon': '', 'fa fa-lg fa-times']" @click="removeInput" />
           </div>
-          <div class="submit-container">
-            <button
-              :class="
-                !v.value || !MultiCoinValidator.validate(v.value, v.validator)
-                  ? 'disabled'
-                  : ''
-              "
-              type="submit"
-              @click.prevent="setMultiCoin(v)"
-            >
-              Update
+          <div class="multi-coin-submit-container">
+            <button :class="[Object.keys(inputs) === 4 ? 'disabled' : '', 'add']" @click.prevent="addInput">
+              Add
+            </button>
+            <button @click.prevent="addInput">
+              Save
             </button>
           </div>
         </form>
@@ -94,25 +95,43 @@ export default {
     }
   },
   data() {
+    const newObj = {};
+    Object.keys(this.supportedCoins).forEach(item => {
+      if (this.supportedCoins[item].value !== '') {
+        newObj[item] = this.supportedCoins[item];
+      }
+    });
+
     return {
       transferTo: '',
       multiCoinSupport: false,
       isAddress: isAddress,
-      MultiCoinValidator
+      MultiCoinValidator,
+      inputs: newObj
     };
   },
   computed: {
-    ...mapState(['web3']),
-    filteredCoins() {
-      if (this.resolverMultiCoinSupport) return this.supportedCoins;
-      return {
-        ETH: this.supportedCoins.ETH
-      };
-    }
+    ...mapState(['web3'])
   },
   mounted() {
-    if (this.domainName === '.') {
-      this.$router.push('/interface/dapps/manage-ens');
+    // if (this.domainName === '.') {
+    //   this.$router.push('/interface/dapps/manage-ens');
+    // }
+  },
+  methods: {
+    addInput() {
+      const newObj = Object.assign({}, this.inputs);
+      const currencies = ['ETH', 'ETC', 'LTC', 'BTC'];
+      for (let i = 0; i < currencies.length; i++) {
+        if (!newObj[currencies[i]]) {
+          newObj[currencies[i]] = this.supportedCoins[currencies[i]];
+          break;
+        }
+      }
+      this.inputs = newObj;
+    },
+    removeInput() {
+
     }
   }
 };
