@@ -814,6 +814,11 @@ export default {
                       .toString(10);
                   }
                 };
+              } else if (entry.provider === this.providerNames.changelly) {
+                Toast.responseHandler(
+                  `Failed to retrieve Changelly rate from ${fromCurrency} to ${toCurrency}`,
+                  true
+                );
               }
             }),
             fromValue

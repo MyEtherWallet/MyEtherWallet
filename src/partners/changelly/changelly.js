@@ -107,32 +107,43 @@ export default class Changelly {
     return this.getRate(fromCurrency, toCurrency, fromValue, toValue, isFiat);
   }
 
-  async getFixedRate(fromCurrency, toCurrency, fromValue) {
-    const changellyDetails = await changellyCalls.getFixRate(
-      fromCurrency,
-      toCurrency,
-      fromValue,
-      this.network
-    );
+  getFixedRate(fromCurrency, toCurrency, fromValue) {
+    return new Promise(async resolve => {
+      const timeout = setTimeout(() => {
+        console.log('timeout'); // todo remove dev item
+        resolve({
+          fromCurrency,
+          toCurrency,
+          provider: this.name,
+          rate: 0
+        });
+      }, 2000);
+      const changellyDetails = await changellyCalls.getFixRate(
+        fromCurrency,
+        toCurrency,
+        fromValue,
+        this.network
+      );
+      clearTimeout(timeout);
+      if (!Array.isArray(changellyDetails)) {
+        return {
+          fromCurrency,
+          toCurrency,
+          provider: this.name,
+          rate: 0
+        };
+      }
 
-    if (!Array.isArray(changellyDetails)) {
-      return {
+      resolve({
         fromCurrency,
         toCurrency,
         provider: this.name,
-        rate: 0
-      };
-    }
-
-    return {
-      fromCurrency,
-      toCurrency,
-      provider: this.name,
-      minValue: changellyDetails[0].min,
-      maxValue: changellyDetails[0].max,
-      rate: changellyDetails[0].result,
-      rateId: changellyDetails[0].id
-    };
+        minValue: changellyDetails[0].min,
+        maxValue: changellyDetails[0].max,
+        rate: changellyDetails[0].result,
+        rateId: changellyDetails[0].id
+      });
+    });
   }
 
   calculateRate(inVal, outVal) {
