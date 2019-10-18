@@ -1,4 +1,5 @@
 ### Bug
+
 - Fix value on interact/deploy contract [#1502](https://github.com/MyEtherWallet/MyEtherWallet/pull/1502)
 
 ### Devop
