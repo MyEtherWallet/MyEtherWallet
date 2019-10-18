@@ -13,15 +13,12 @@
       <p class="label">{{ $t('dapps.owner') }}:</p>
       <p class="content">{{ owner }}</p>
     </div>
-    <h4>{{ $t('dapps.multiCoin') }}.</h4>
-    <div
-      v-for="(v, k) in supportedCoins"
-      v-if="v.value"
-      :key="k.id"
-      class="content-container"
-    >
-      <p class="label">{{ v.name }} address:</p>
-      <p class="content">{{ v.value }}</p>
+    <div v-show="resolverMultiCoinSupport" class="content-container">
+      <h4>{{ $t('dapps.multiCoin') }}:</h4>
+      <div v-for="(v, k) in supportedCoins" v-if="v.value" :key="k.id">
+        <span class="currency">{{ v.symbol }} address: </span>
+        <span class="content">{{ v.value }}</span>
+      </div>
     </div>
     <div class="owner-options">
       <button
@@ -42,7 +39,6 @@
 
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText';
-import supportedCoins from '../../supportedCoins';
 
 import { mapState } from 'vuex';
 export default {
@@ -69,12 +65,18 @@ export default {
     tld: {
       type: String,
       default: ''
+    },
+    supportedCoins: {
+      type: Object,
+      default: function() {}
+    },
+    resolverMultiCoinSupport: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
-    return {
-      supportedCoins
-    };
+    return {};
   },
   computed: {
     ...mapState(['account']),
