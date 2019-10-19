@@ -1,6 +1,6 @@
 ### Feature
 
-- ENS Multicoin support [#1521](https://github.com/MyEtherWallet/MyEtherWallet/pull/1521)
+- Multicoin ENS support [#1521](https://github.com/MyEtherWallet/MyEtherWallet/pull/1521)
 
 ### Bug
 
