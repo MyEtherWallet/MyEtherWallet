@@ -31,7 +31,7 @@
             <i
               :class="[
                 'validity-indication fa',
-                !MultiCoinValidator.validate(v.value, v.validator)
+                v.value !== '' && !MultiCoinValidator.validate(v.value, v.validator)
                   ? 'error fa-times-circle-o'
                   : 'valid fa-check-circle-o'
               ]"
@@ -144,7 +144,7 @@ export default {
     isValidAddresses() {
       for (const type in this.inputs) {
         if (
-          !MultiCoinValidator.validate(
+          this.inputs[type].value !== '' && !MultiCoinValidator.validate(
             this.inputs[type].value,
             this.inputs[type].validator
           )
@@ -193,7 +193,7 @@ export default {
     },
     removeInput(name) {
       const newObj = Object.assign({}, this.inputs);
-      delete newObj[name];
+      newObj[name].value = '';
       this.inputs = newObj;
     },
     checkAndSend() {
@@ -205,19 +205,7 @@ export default {
           inputsObj[item] &&
           currentSupported[item].value !== inputsObj[item].value
         ) {
-          if (
-            this.MultiCoinValidator.validate(
-              inputsObj[item].value,
-              inputsObj[item].validator
-            )
-          ) {
-            changed.push(inputsObj[item]);
-          } else {
-            Toast.responseHandler(
-              'Something went wrong! The address you input might be wrong!',
-              Toast.ERROR
-            );
-          }
+          changed.push(inputsObj[item]);
         }
       });
       if (changed.length > 0) {
