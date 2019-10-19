@@ -251,15 +251,18 @@ export default {
         ResolverAbi,
         publicResolverAddress
       );
-      const setAddrTx = {
-        from: address,
-        to: publicResolverAddress,
-        data: publicResolverContract.methods
-          .setAddr(this.nameHash, coin.id, coin.decode(coin.value))
-          .encodeABI(),
-        value: 0,
-        gasPrice: new BigNumber(unit.toWei(this.gasPrice, 'gwei')).toFixed()
-      };
+      const setAddrTx = coin.map(item => {
+        return {
+          from: address,
+          to: publicResolverAddress,
+          data: publicResolverContract.methods
+            .setAddr(this.nameHash, item.id, item.decode(coin.value))
+            .encodeABI(),
+          value: 0,
+          gasPrice: new BigNumber(unit.toWei(this.gasPrice, 'gwei')).toFixed()
+        };
+      });
+
       if (!this.resolverMultiCoinSupport) {
         setAddrTx.data = publicResolverContract.methods
           .setAddr(this.nameHash, coin.decode(coin.value))
@@ -269,9 +272,13 @@ export default {
         currentResolverAddress.toLowerCase() ===
         publicResolverAddress.toLowerCase()
       ) {
-        web3.eth.sendTransaction(setAddrTx).catch(err => {
-          Toast.responseHandler(err, false);
-        });
+        if (coin.length === 1) {
+          web3.eth.sendTransaction(setAddrTx[0]).catch(err => {
+            Toast.responseHandler(err, false);
+          });
+        } else {
+          web3.mew.sendBatchTransactions([...setAddrTx].filter(Boolean));
+        }
       } else {
         const setResolverTx = {
           from: address,
@@ -302,7 +309,7 @@ export default {
           };
         }
         web3.mew.sendBatchTransactions(
-          [setResolverTx, setAddrTx, migrateEthAddress].filter(Boolean)
+          [setResolverTx, ...setAddrTx, migrateEthAddress].filter(Boolean)
         );
       }
     },

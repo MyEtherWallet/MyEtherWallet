@@ -7,7 +7,11 @@
           <div class="title-and-dropdown-container">
             <h4>Multi-Coin:</h4>
             <b-dd :text="selectedCurrency" class="dropdown-button-2">
-              <b-dd-item v-for="(item, idx) in Object.keys(supportedCoins)" :key="item + idx" @click="addInput(item)">
+              <b-dd-item
+                v-for="(item, idx) in Object.keys(supportedCoins)"
+                :key="item + idx"
+                @click="addInput(item)"
+              >
                 {{ item }}
               </b-dd-item>
             </b-dd>
@@ -26,6 +30,14 @@
             />
             <i
               :class="[
+                'validity-indication fa',
+                !MultiCoinValidator.validate(v.value, v.validator)
+                  ? 'error fa-times-circle-o'
+                  : 'valid fa-check-circle-o'
+              ]"
+            />
+            <i
+              :class="[
                 v.hasOwnProperty('value') && v.value !== ''
                   ? 'disabled-icon'
                   : '',
@@ -39,7 +51,10 @@
             />
           </div>
           <div class="multi-coin-submit-container">
-            <button @click.prevent="checkAndSend">
+            <button
+              :class="isValidAddresses ? '' : 'disabled'"
+              @click.prevent="checkAndSend"
+            >
               Save
             </button>
           </div>
@@ -125,11 +140,32 @@ export default {
       isAddress: isAddress,
       MultiCoinValidator,
       inputs: newObj,
-      selectedCurrency: 'ETH'
+      selectedCurrency: 'ETH',
+      hasError: false
     };
   },
   computed: {
-    ...mapState(['web3'])
+    ...mapState(['web3']),
+    isValidAddresses() {
+      for (const type in this.inputs) {
+        if (
+          !MultiCoinValidator.validate(
+            this.inputs[type].value,
+            this.inputs[type].validator
+          )
+        )
+          return false;
+      }
+      return true;
+    }
+  },
+  watch: {
+    inputs: {
+      handler: function(newVal) {
+        this.inputs = newVal;
+      },
+      deep: true
+    }
   },
   mounted() {
     if (this.domainName === '.') {
@@ -154,7 +190,10 @@ export default {
         newObj[item] = unRefSupportedCoins[item];
         this.inputs = newObj;
       } else {
-        Toast.responseHandler(`Currency ${item} is already added for ${this.domainName}`, Toast.WARN);
+        Toast.responseHandler(
+          `Currency ${item} is already added for ${this.domainName}`,
+          Toast.WARN
+        );
       }
     },
     removeInput(name) {
@@ -186,19 +225,9 @@ export default {
           }
         }
       });
-      // Update setMulticoin to receive an array
-      // create an array of txs
-      // send as batch instead
-      // if (changed.length > 0) {
-      //   let counter = 0;
-      //   changed.forEach(item => {
-      //     const fireFunction = setInterval(() => {
-      //       this.setMultiCoin(item);
-      //       counter++;
-      //       if (counter === changed.length) clearInterval(fireFunction);
-      //     }, 14000);
-      //   });
-      // }
+      if (changed.length > 0) {
+        this.setMultiCoin(changed);
+      }
     }
   }
 };
