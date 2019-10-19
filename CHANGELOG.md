@@ -1,3 +1,7 @@
+### Feature
+
+- ENS Multicoin support [#1521](https://github.com/MyEtherWallet/MyEtherWallet/pull/1521)
+
 ### Bug
 
 - Fix mnemonic phrase validation [#1506](https://github.com/MyEtherWallet/MyEtherWallet/pull/1506)
