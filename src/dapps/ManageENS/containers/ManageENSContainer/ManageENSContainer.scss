@@ -46,6 +46,7 @@ label {
   align-items: center;
   display: flex;
   padding: 5px 0;
+  position: relative;
 
   h4 {
     padding-bottom: 10px;
@@ -64,6 +65,20 @@ label {
   .disabled-icon {
     color: $dark-grey-11 !important;
     pointer-events: none;
+  }
+
+  .validity-indication {
+    cursor: initial;
+    position: absolute !important;
+    right: 35px;
+  }
+
+  .valid {
+    color: $mew-green;
+  }
+
+  .error {
+    color: $red-1;
   }
 }
 
