@@ -37,12 +37,7 @@
               ]"
             />
             <i
-              :class="[
-                v.hasOwnProperty('value') && v.value !== ''
-                  ? 'disabled-icon'
-                  : '',
-                'fa fa-lg fa-times'
-              ]"
+              class="fa fa-lg fa-times"
               @click="
                 () => {
                   removeInput(k);

@@ -256,7 +256,7 @@ export default {
           from: address,
           to: publicResolverAddress,
           data: publicResolverContract.methods
-            .setAddr(this.nameHash, item.id, item.decode(coin.value))
+            .setAddr(this.nameHash, item.id, item.decode(item.value))
             .encodeABI(),
           value: 0,
           gasPrice: new BigNumber(unit.toWei(this.gasPrice, 'gwei')).toFixed()
@@ -265,7 +265,7 @@ export default {
 
       if (!this.resolverMultiCoinSupport) {
         setAddrTx.data = publicResolverContract.methods
-          .setAddr(this.nameHash, coin.decode(coin.value))
+          .setAddr(this.nameHash, coin[0].decode(coin[0].value))
           .encodeABI();
       }
       if (
