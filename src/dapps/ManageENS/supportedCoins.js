@@ -10,6 +10,7 @@ const ethEncode = bytes => {
   return utils.toHex(bytes);
 };
 const ethDecode = addr => {
+  if (addr === '') return '0x';
   return addr;
 };
 export default {
