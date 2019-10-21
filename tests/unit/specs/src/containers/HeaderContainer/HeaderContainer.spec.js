@@ -4,7 +4,6 @@ import { shallowMount } from '@vue/test-utils';
 import HeaderContainer from '@/containers/HeaderContainer/HeaderContainer.vue';
 import Blockie from '@/components/Blockie';
 import Notification from '@/components/Notification';
-import ScrollUpButton from '@/components/ScrollUpButton';
 import SettingsModal from '@/components/SettingsModal';
 import sinon from 'sinon';
 import { Tooling } from '@@/helpers';
@@ -103,7 +102,6 @@ describe('HeaderContainer.vue', () => {
         blockie: Blockie,
         notification: Notification,
         'b-modal': BModalStub,
-        'scroll-up-button': ScrollUpButton,
         'settings-modal': SettingsModal,
         'logout-modal': LogoutModal
       },
