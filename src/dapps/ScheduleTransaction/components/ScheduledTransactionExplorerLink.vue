@@ -1,10 +1,10 @@
-<template>
+<template functional>
   <a
-    :href="'https://app.chronologic.network/awaiting/scheduler/' + txHash"
+    :href="'https://app.chronologic.network/awaiting/scheduler/' + props.txHash"
     target="_blank"
     rel="noopener noreferrer"
   >
-    {{ linkText ? linkText : txHash }}
+    {{ props.linkText ? props.linkText : props.txHash }}
   </a>
 </template>
 
