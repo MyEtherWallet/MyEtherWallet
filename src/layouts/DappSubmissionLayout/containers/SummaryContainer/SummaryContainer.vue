@@ -41,7 +41,7 @@
             <span class="summary-content">{{ form.description }}</span>
           </div>
         </b-col>
-        <b-col>
+        <b-col class="pl-5">
           <div class="mt-5">
             <p class="summary-title mb-3">Category</p>
             <p class="summary-content">{{ form.category }}</p>
@@ -100,7 +100,7 @@
             <p class="summary-content">{{ form.companyWebsite }}</p>
           </div>
         </b-col>
-        <b-col>
+        <b-col class="pl-5">
           <div class="mt-5">
             <p class="summary-title mb-3">Social media</p>
             <div
