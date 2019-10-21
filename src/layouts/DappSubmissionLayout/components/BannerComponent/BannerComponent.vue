@@ -1,7 +1,7 @@
-<template>
+<template functional>
   <div class="banner-container">
     <img class="banner" src="~@/assets/images/banners/bg.png" />
-    <div class="banner-text">{{ bannerText }}</div>
+    <div class="banner-text">{{ props.bannerText }}</div>
   </div>
 </template>
 

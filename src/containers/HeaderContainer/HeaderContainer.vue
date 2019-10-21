@@ -210,7 +210,7 @@ import { mapState } from 'vuex';
 import store from 'store';
 import { Misc, Toast } from '@/helpers';
 import Blockie from '@/components/Blockie';
-import Notification from '@/components/Notification';
+import NotificationsContainer from '@/containers/NotificationsContainer';
 import UserReminderButton from '@/components/UserReminderButton';
 import SettingsModal from '@/components/SettingsModal';
 import NotificationsModal from '@/components/NotificationsModal';
@@ -229,7 +229,7 @@ const events = {
 export default {
   components: {
     blockie: Blockie,
-    notification: Notification,
+    notification: NotificationsContainer,
     'settings-modal': SettingsModal,
     'notifications-modal': NotificationsModal,
     'logout-modal': LogoutModal,

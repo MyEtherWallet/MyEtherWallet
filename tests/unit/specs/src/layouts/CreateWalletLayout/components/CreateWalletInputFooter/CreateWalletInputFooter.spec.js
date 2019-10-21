@@ -3,7 +3,7 @@ import { shallowMount } from '@vue/test-utils';
 import CreateWalletInputFooter from '@/layouts/CreateWalletLayout/components/CreateWalletInputFooter/CreateWalletInputFooter.vue';
 import { Tooling } from '@@/helpers';
 
-describe('CreateWalletInputFooter.vue', () => {
+xdescribe('CreateWalletInputFooter.vue', () => {
   let localVue, i18n, wrapper, store;
   const combo = 'combo';
   const desc = 'desc';
