@@ -3,6 +3,7 @@
 ### Feature
 
 - Multicoin ENS support [#1521](https://github.com/MyEtherWallet/MyEtherWallet/pull/1521)
+- Move State of the Dapp text to the left column [#1518](https://github.com/MyEtherWallet/MyEtherWallet/pull/1518)
 
 ### Bug
 
@@ -11,8 +12,10 @@
 
 ### Devop
 
+- Fix static "help" and "tutorial" button size and position [#1531](https://github.com/MyEtherWallet/MyEtherWallet/pull/1531)
 - Remove Ethereum commonwealth nodes in case they shut it down [#1507](https://github.com/MyEtherWallet/MyEtherWallet/pull/1507)
 - App optimization [#1519](https://github.com/MyEtherWallet/MyEtherWallet/pull/1519)
+- changelly timeout error handling [#1522](https://github.com/MyEtherWallet/MyEtherWallet/pull/1522)
 
 ### Release v5.1.6
 

@@ -201,7 +201,7 @@ export default {
               to: '/verify-message'
             },
             {
-              text: 'Submit DApp',
+              text: 'Submit Dapp',
               to: '/dapp-submission'
             }
           ]

@@ -1,8 +1,8 @@
-import Changelly from '@/partners/changelly/changelly.js';
+//import Changelly from '@/partners/changelly/changelly.js';
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 describe('changelly.js', () => {
-  xit('testing', async () => {
+  /*xit('testing', async () => {
     const fromCurrency = currency.symbol;
     const toCurrency = 'ETH';
     const fromValue = 100;
@@ -64,8 +64,9 @@ describe('changelly.js', () => {
       .toNumber();
     expect(diff).toBeLessThan(percentVarianceAllowed);
   });
+  */
   xit('Expect fixed rate calculated value to be within 1% of exact value (from ETH) ', async () => {
-    const fromCurrency = 'ETH';
+    /*const fromCurrency = 'ETH';
     const toCurrency = 'BTC';
     const fromValue = 0.9;
     const rate = await changelly.getRate(fromCurrency, toCurrency, fromValue);
@@ -81,6 +82,6 @@ describe('changelly.js', () => {
       .minus(1)
       .abs()
       .toNumber();
-    expect(diff).toBeLessThan(percentVarianceAllowed);
+    expect(diff).toBeLessThan(percentVarianceAllowed);*/
   });
 });
