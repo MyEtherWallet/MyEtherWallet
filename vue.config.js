@@ -194,7 +194,8 @@ if (process.env.NODE_ENV === 'production') {
           'src/layouts/DappSubmissionLayout/containers/SummaryContainer/index.js',
           'src/layouts/DappSubmissionLayout/containers/SummaryContainer/SummaryContainer.scss',
           'src/layouts/DappSubmissionLayout/containers/SummaryContainer/SummaryContainer.vue',
-          'src/layouts/DappSubmissionLayout/components/TagComponent/index.js'
+          'src/layouts/DappSubmissionLayout/components/TagComponent/index.js',
+          'src/assets/images/icons/arrow.png'
         ]
       }
     })
