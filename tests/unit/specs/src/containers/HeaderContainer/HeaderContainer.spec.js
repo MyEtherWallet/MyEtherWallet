@@ -3,7 +3,7 @@ import VueX from 'vuex';
 import { shallowMount } from '@vue/test-utils';
 import HeaderContainer from '@/containers/HeaderContainer/HeaderContainer.vue';
 import Blockie from '@/components/Blockie';
-import Notification from '@/components/Notification';
+import NotificationsContainer from '@/containers/NotificationsContainer';
 import ScrollUpButton from '@/components/ScrollUpButton';
 import SettingsModal from '@/components/SettingsModal';
 import sinon from 'sinon';
@@ -101,7 +101,7 @@ describe('HeaderContainer.vue', () => {
       stubs: {
         'b-nav-item': BNavItemStub,
         blockie: Blockie,
-        notification: Notification,
+        notification: NotificationsContainer,
         'b-modal': BModalStub,
         'scroll-up-button': ScrollUpButton,
         'settings-modal': SettingsModal,
