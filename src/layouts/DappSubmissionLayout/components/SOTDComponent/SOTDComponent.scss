@@ -2,27 +2,32 @@
 
 .sotd-wrapper {
   .sotd-container {
-    align-items: center;
+    background: $light-green-1;
     border-radius: 6px;
-    border: 1px solid $light-yellow-3;
-    background-color: $opaque-yellow;
-    color: $dark-blue-2;
-    display: flex;
-    justify-content: space-between;
-    margin: auto;
-    padding: 20px;
-    width: 75%;
+    height: 197px;
+    padding: 30px;
+    width: 324px;
 
     .text-container {
-      align-items: center;
+      align-items: flex-start;
       display: flex;
       justify-content: center;
+
+      .header {
+        color: $dark-blue-2;
+        font-size: 20px;
+        font-weight: bold;
+        height: 24px;
+        text-align: left;
+      }
+    }
+
+    .info-box {
+      margin-top: 20px;
     }
 
     img {
-      height: 30px;
-      margin-left: 10px;
-      margin-right: 20px;
+      height: 40px;
     }
 
     p {

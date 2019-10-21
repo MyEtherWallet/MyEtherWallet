@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "5.1.6",
+  "version": "5.1.7",
   "description": "Client side ethereum wallet",
   "license": "MIT",
   "repository": "https://github.com/myetherwallet/myetherwallet",
@@ -79,6 +79,7 @@
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "10.0.3",
     "babel-jest": "23.6.0",
+    "bs58": "4.0.1",
     "bignumber.js": "9.0.0",
     "bip39": "3.0.2",
     "bootstrap-vue": "2.0.4",
