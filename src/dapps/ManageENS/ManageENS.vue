@@ -11,13 +11,12 @@
       :name-hash="nameHash"
       :label-hash="labelHash"
       :owner="owner"
-      :resolver-address="resolverAddress"
       :deed-owner="deedOwner"
       :raw="raw"
       :step="step"
       :domain-name-err="domainNameErr"
       :generate-key-phrase="generateKeyPhrase"
-      :update-resolver="updateResolver"
+      :set-multi-coin="setMultiCoin"
       :transfer-domain="transferDomain"
       :tld="parsedTld === '' ? network.type.ens.registrarTLD : parsedTld"
       :network-name="network.type.name"
@@ -31,6 +30,8 @@
       :register-with-duration="registerWithDuration"
       :minimum-age="minimumAge"
       :commitment-created="commitmentCreated"
+      :resolver-multi-coin-support="resolverMultiCoinSupport"
+      :supported-coins="supportedCoins"
       @updateSecretPhrase="updateSecretPhrase"
       @domainNameChange="updateDomainName"
       @updateStep="updateStep"
@@ -55,6 +56,7 @@ import { mapState } from 'vuex';
 import { Toast } from '@/helpers';
 import DNSRegistrar from '@ensdomains/dnsregistrar';
 import BigNumber from 'bignumber.js';
+import supportedCoins from './supportedCoins';
 
 const bip39 = require('bip39');
 
@@ -62,7 +64,7 @@ const permanentRegistrar = {
   INTERFACE_CONTROLLER: '0x018fac06',
   INTERFACE_LEGACY_REGISTRAR: '0x7ba18ba1'
 };
-
+const MULTICOIN_SUPPORT_INTERFACE = '0xf1cb7e06';
 const REGISTRAR_TYPES = {
   FIFS: 'fifs',
   PERMANENT: 'permanent'
@@ -78,7 +80,6 @@ export default {
       nameHash: '',
       labelHash: '',
       owner: '',
-      resolverAddress: '',
       deedOwner: '',
       secretPhrase: '',
       registrarAddress: '',
@@ -93,7 +94,10 @@ export default {
       legacyRegistrar: {},
       minimumAge: 0,
       duration: 1,
-      commitmentCreated: false
+      commitmentCreated: false,
+      publicResolverAddress: '',
+      resolverMultiCoinSupport: false,
+      supportedCoins
     };
   },
   computed: {
@@ -151,7 +155,6 @@ export default {
       this.nameHash = '';
       this.labelHash = '';
       this.owner = '';
-      this.resolverAddress = '';
       this.deedOwner = '';
       this.secretPhrase = '';
       this.registrarAddress = '';
@@ -167,10 +170,15 @@ export default {
       this.minimumAge = 0;
       this.duration = 1;
       this.commitmentCreated = false;
+      this.publicResolverAddress = '';
+      this.resolverMultiCoinSupport = false;
+      this.supportedCoins = supportedCoins;
 
       if (this.ens) {
         this.setRegistrar();
       }
+      for (const type in this.supportedCoins)
+        this.supportedCoins[type].value = '';
     },
     async setRegistrar() {
       const web3 = this.web3;
@@ -232,12 +240,10 @@ export default {
         });
       }
     },
-    async updateResolver(newResolverAddr) {
+    async setMultiCoin(coin) {
       const web3 = this.web3;
       const address = this.account.address;
-      // Public resolver address
-      const resolver = await this.ens.resolver('resolver.eth');
-      const publicResolverAddress = await resolver.addr();
+      const publicResolverAddress = this.publicResolverAddress;
       const currentResolverAddress = await this.ensRegistryContract.methods
         .resolver(this.nameHash)
         .call();
@@ -245,33 +251,66 @@ export default {
         ResolverAbi,
         publicResolverAddress
       );
-      const setAddrTx = {
-        from: address,
-        to: publicResolverAddress,
-        data: await publicResolverContract.methods
-          .setAddr(this.nameHash, newResolverAddr)
-          .encodeABI(),
-        value: 0,
-        gasPrice: new BigNumber(unit.toWei(this.gasPrice, 'gwei')).toFixed()
-      };
+      const setAddrTx = coin.map(item => {
+        return {
+          from: address,
+          to: publicResolverAddress,
+          data: publicResolverContract.methods
+            .setAddr(this.nameHash, item.id, item.decode(item.value))
+            .encodeABI(),
+          value: 0,
+          gasPrice: new BigNumber(unit.toWei(this.gasPrice, 'gwei')).toFixed()
+        };
+      });
+
+      if (!this.resolverMultiCoinSupport) {
+        setAddrTx.data = publicResolverContract.methods
+          .setAddr(this.nameHash, coin[0].decode(coin[0].value))
+          .encodeABI();
+      }
       if (
         currentResolverAddress.toLowerCase() ===
         publicResolverAddress.toLowerCase()
       ) {
-        web3.eth.sendTransaction(setAddrTx).catch(err => {
-          Toast.responseHandler(err, false);
-        });
+        if (coin.length === 1) {
+          web3.eth.sendTransaction(setAddrTx[0]).catch(err => {
+            Toast.responseHandler(err, false);
+          });
+        } else {
+          web3.mew.sendBatchTransactions([...setAddrTx].filter(Boolean));
+        }
       } else {
         const setResolverTx = {
           from: address,
           to: this.network.type.ens.registry,
-          data: await this.ensRegistryContract.methods
+          data: this.ensRegistryContract.methods
             .setResolver(this.nameHash, publicResolverAddress)
             .encodeABI(),
           value: 0,
           gasPrice: new BigNumber(unit.toWei(this.gasPrice, 'gwei')).toFixed()
         };
-        web3.mew.sendBatchTransactions([setResolverTx, setAddrTx]);
+        let migrateEthAddress = null;
+        if (
+          coin.id !== this.supportedCoins.ETH.id &&
+          this.supportedCoins.ETH.value
+        ) {
+          migrateEthAddress = {
+            from: address,
+            to: publicResolverAddress,
+            data: publicResolverContract.methods
+              .setAddr(
+                this.nameHash,
+                this.supportedCoins.ETH.id,
+                this.supportedCoins.ETH.decode(this.supportedCoins.ETH.value)
+              )
+              .encodeABI(),
+            value: 0,
+            gasPrice: new BigNumber(unit.toWei(this.gasPrice, 'gwei')).toFixed()
+          };
+        }
+        web3.mew.sendBatchTransactions(
+          [setResolverTx, ...setAddrTx, migrateEthAddress].filter(Boolean)
+        );
       }
     },
     async registerFifsName() {
@@ -530,7 +569,9 @@ export default {
     },
     async getMoreInfo() {
       let owner;
-      let resolverAddress;
+      const resolver = await this.ens.resolver('resolver.eth');
+      this.publicResolverAddress = await resolver.addr();
+      this.nameHash = nameHashPckg.hash(this.parsedDomainName);
       try {
         if (
           this.registrarType === REGISTRAR_TYPES.PERMANENT &&
@@ -547,13 +588,50 @@ export default {
         Toast.responseHandler(e, false);
       }
       try {
-        resolverAddress = await this.ens.resolver(this.parsedDomainName).addr();
+        const publicResolverContract = new this.web3.eth.Contract(
+          ResolverAbi,
+          this.publicResolverAddress
+        );
+        this.resolverMultiCoinSupport = await publicResolverContract.methods
+          .supportsInterface(MULTICOIN_SUPPORT_INTERFACE)
+          .call();
       } catch (e) {
-        resolverAddress = '0x';
+        this.resolverMultiCoinSupport = false;
       }
-
-      this.nameHash = nameHashPckg.hash(this.parsedDomainName);
-      this.resolverAddress = resolverAddress;
+      try {
+        const currentResolverAddress = await this.ensRegistryContract.methods
+          .resolver(this.nameHash)
+          .call();
+        const resolverContract = new this.web3.eth.Contract(
+          ResolverAbi,
+          currentResolverAddress
+        );
+        const supportMultiCoin = await resolverContract.methods
+          .supportsInterface(MULTICOIN_SUPPORT_INTERFACE)
+          .call();
+        for (const type in this.supportedCoins)
+          this.supportedCoins[type].value = '';
+        if (supportMultiCoin) {
+          for (const type in this.supportedCoins) {
+            await this.ens
+              .resolver(this.parsedDomainName, ResolverAbi)
+              .addr(this.supportedCoins[type].id)
+              .then(address => {
+                if (address) {
+                  this.supportedCoins[type].value = this.supportedCoins[
+                    type
+                  ].encode(address);
+                }
+              });
+          }
+        } else {
+          this.supportedCoins['ETH'].value = await this.ens
+            .resolver(this.parsedDomainName)
+            .addr();
+        }
+      } catch (e) {
+        this.supportedCoins['ETH'].value = '0x';
+      }
       this.owner = owner;
       if (this.$route.fullPath === '/interface/dapps/manage-ens') {
         this.$router.push({ path: 'manage-ens/owned' });
