@@ -1,39 +1,26 @@
-<template>
-  <div class="mt-4 sotd-wrapper">
-    <div v-show="show" class="sotd-container">
+<template functional>
+  <div class="sotd-wrapper">
+    <div class="mt-5 ml-5 sotd-container">
       <div class="text-container">
+        <p class="header">A Joint Effort With State of The Dapps.</p>
         <img
           src="~@/assets/images/icons/dapps/sotd.png"
-          alt="State of the DApps"
+          alt="State of the Dapps"
         />
-        <p>
-          A joint effort with State of the DApps. By submitting your dapp
-          information, you acknowledge that your Dapp will be listed on
-          <a href="https://www.stateofthedapps.com/">stateofthedapps.com</a>
-        </p>
       </div>
-      <div>
-        <i class="fa fa-times" @click="hideText()" />
+      <div class="info-box">
+        <p>
+          By submitting your Dapp information, you acknowledge that your Dapp
+          will be listed on
+          <a href="https://www.stateofthedapps.com/">stateofthedapps.com</a>.
+        </p>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {
-  data() {
-    return {
-      show: true
-    };
-  },
-  methods: {
-    hideText() {
-      if (this.show === true) {
-        this.show = false;
-      }
-    }
-  }
-};
+export default {};
 </script>
 
 <style lang="scss" scoped>
