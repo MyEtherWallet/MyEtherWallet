@@ -22,7 +22,6 @@
   "detailWarning": "You CAN NOT claim your name unless you have this information during the reveal process. We suggest that you have to save those information.",
   "revealDate": "Reveal Date",
   "saveAndNext": "Save & Next",
-  "registerEnsPlaceholder": "Please enter at least 7 Characters",
   "registerEnsWarn1": "Domain name is less than 7 characters.",
   "registerEnsWarn2": "Invalid symbols on domain",
   "registerEnsContractNotReady": "Contract is not ready yet, transaction might fail.",

@@ -8,8 +8,8 @@
           <div class="circle" />
         </div>
         <h3>
-          Hang on tight! <br />
-          We are finalizing the registration for <br />
+          {{ $t('ens.hang-on') }} <br />
+          {{ $t('ens.finalize-registration') }} <br />
           <span class="domain-name"> {{ fullDomainName }}. </span>
         </h3>
       </div>
@@ -22,7 +22,7 @@
           @click="registerWithDuration"
         >
           <span>
-            {{ canRegister ? 'Register' : ticker }}
+            {{ canRegister ? $t('ens.register') : ticker }}
           </span>
         </button>
       </div>

@@ -13,8 +13,8 @@ const dapps = {
     route: '/interface/dapps/manage-ens',
     icon: manageEns,
     iconDisabled: manageEnsHov,
-    title: 'interface.ensManager',
-    desc: 'interface.registerENSDescShort',
+    title: 'ens.title',
+    desc: 'ens.dapp-desc',
     supportedNetworks: [ETH.name, GOERLI.name, ROP.name, RIN.name]
   },
   domainSale: {

@@ -1,20 +1,20 @@
 <template lang="html">
   <div class="already-owned-container">
-    <h3>{{ fullDomainName }} {{ $t('dapps.alreadyOwned') }}.</h3>
+    <h3>{{ $t('ens.already-owned', { domain: fullDomainName }) }}</h3>
     <div class="content-container">
-      <p class="label">{{ $t('dapps.labelHash') }}({{ hostName }}):</p>
+      <p class="label">{{ $t('ens.label-hash') }}({{ hostName }}):</p>
       <p class="content">{{ labelHash }}</p>
     </div>
     <div class="content-container">
-      <p class="label">{{ $t('dapps.nameHash') }}({{ fullDomainName }}):</p>
+      <p class="label">{{ $t('ens.name-hash') }}({{ fullDomainName }}):</p>
       <p class="content">{{ nameHash }}</p>
     </div>
     <div class="content-container">
-      <p class="label">{{ $t('dapps.owner') }}:</p>
+      <p class="label">{{ $t('ens.owner') }}:</p>
       <p class="content">{{ owner }}</p>
     </div>
     <div class="content-container">
-      <p class="label">{{ $t('dapps.resolverAddr') }}:</p>
+      <p class="label">{{ $t('common.addr') }}:</p>
       <p class="content">{{ resolverAddress }}</p>
     </div>
     <div class="owner-options">
@@ -23,7 +23,7 @@
         class="manage-button"
         @click="manageEns"
       >
-        {{ $t('dapps.manage') }}
+        {{ $t('ens.manage') }}
       </button>
     </div>
     <interface-bottom-text

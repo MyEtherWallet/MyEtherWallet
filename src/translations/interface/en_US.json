@@ -54,9 +54,14 @@
     "deploy": "Deploy Contract",
     "sign-message": "Sign Message"
   },
+  "actions": "Actions",
+  "view-all": "View All",
+  "ens": {
+   "title": "ENS Manager",
+   "desc": "Register an ENS domain"
+  },
 
 
-  "ensManager": "ENS Manager",
   "registerEnsDesc": "Search for a domain name. Once you have registered one, you can tell your friends to send ETH to \"_____.eth\", instead of your public address (0x.....).",
   "checkDomain": "Check Domain",
   "subDomain": "Sub Domain",
@@ -66,24 +71,19 @@
   "offline": "Offline",
 
 
-  "registerENSDescShort": "Register an ENS domain",
+
 
   "equivalentValues": "Equivalent Values",
 
   "readWriteC": "Read / Write Contract",
-  "read": "Read",
-  "write": "Write",
-  "contractAddr": "Contract Address",
-  "abiJsonInt": "ABI/JSON Interface",
 
 
 
 
 
-  "byteCode": "Byte Code",
 
   "constructor": "Constructor",
-  "contractName": "Contract Name",
+
   "nameYourWallet": "Name Your Wallet",
   "nameYourWalletDesc": "Give your address a human readable name on a registered ENS domain.",
   "signMessageDesc": "Include your nickname and where you use the nickname so someone else cannot use it. Include a specific reason for the message so it cannot be reused for a different purpose.",
@@ -111,11 +111,7 @@
 
   "countryCodeRequired": "Country Code Required",
 
-  "bityTagLine": "Swap ETH, BTC, REP, or sell for fiat using your phone!",
 
-  "kybernetworkTagLine": "Swap ETH and ERC20 tokens!",
-  "changellyTagLine": "Swap ETH, ERC20 tokens, and more!",
-  "simplexTagLine": "Buy crypto with a credit card!",
   "CryptoToFiatBeta": "Please note Crypto to Fiat is currently a beta feature of Bity",
 
   "invalidTanCode": "Invalid Code",

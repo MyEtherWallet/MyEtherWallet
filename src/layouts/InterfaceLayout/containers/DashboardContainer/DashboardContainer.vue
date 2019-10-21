@@ -3,7 +3,7 @@
     <div class="container--flex container--top">
       <div class="container--card block--actions">
         <div class="title">
-          <h4>{{ $t('common.actions') }}</h4>
+          <h4>{{ $t('interface.actions') }}</h4>
         </div>
         <div class="buttons">
           <button-send-tx
@@ -64,7 +64,7 @@
             class="title-button prevent-user-select"
             @click="goTo('dapps')"
           >
-            {{ $t('common.viewAll') }}
+            {{ $t('interface.view-all') }}
           </button>
         </div>
         <div class="block--container">

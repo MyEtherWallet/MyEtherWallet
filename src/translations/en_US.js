@@ -29,7 +29,7 @@ import welcomeMessage from './welcome-message/en_US';
 import sendTx from './send-tx/en_US';
 import swap from './swap/en_US';
 import contract from './contract/en_US';
-
+import ens from './dapps-ens/en_US';
 const en_US = {
   common: common,
   commonold: commonold,
@@ -60,6 +60,7 @@ const en_US = {
   welcomeMessage: welcomeMessage,
   sendTx: sendTx,
   swap: swap,
-  contract: contract
+  contract: contract,
+  ens: ens
 };
 export default en_US;

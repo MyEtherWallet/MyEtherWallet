@@ -1,10 +1,9 @@
 <template lang="html">
   <div class="transfer-registrar-container">
     <div class="transfer-registrar-content">
-      <h3>{{ fullDomainName }} is still in the old registrar!</h3>
+      <h3>{{ $t('ens.domain-old', { domain: fullDomainName }) }}</h3>
       <p v-show="isOwner">
-        Since you are are the owner of {{ fullDomainName }} you can transfer the
-        name to the new registrar using transfer button
+        {{ $t('ens.domain-owner', { domain: fullDomainName }) }}
       </p>
       <div class="transfer-registrar-button">
         <button
@@ -16,7 +15,7 @@
           @click="transferFunc"
         >
           <span v-show="!loading">
-            Transfer
+            {{ $t('ens.transfer') }}
           </span>
           <i v-show="loading" class="fa fa-spinner fa-spin" />
         </button>
