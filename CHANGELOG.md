@@ -7,6 +7,8 @@
 
 ### Bug
 
+- transferDomain func fix on ROP []
+(
 - Fix mnemonic phrase validation [#1506](https://github.com/MyEtherWallet/MyEtherWallet/pull/1506)
 - Fix value on interact/deploy contract [#1502](https://github.com/MyEtherWallet/MyEtherWallet/pull/1502)
 
