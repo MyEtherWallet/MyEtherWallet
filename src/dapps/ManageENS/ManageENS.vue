@@ -234,11 +234,9 @@ export default {
         data,
         value: 0
       };
-      if (this.registrarType === REGISTRAR_TYPES.PERMANENT) {
-        this.web3.eth.sendTransaction(transferTx).catch(err => {
-          Toast.responseHandler(err, false);
-        });
-      }
+      this.web3.eth.sendTransaction(transferTx).catch(err => {
+        Toast.responseHandler(err, false);
+      });
     },
     async setMultiCoin(coin) {
       const web3 = this.web3;
