@@ -4,7 +4,7 @@ import ManageENS from '@/dapps/ManageENS/ManageENS.vue';
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton/BackButton.vue';
 import { Tooling } from '@@/helpers';
 
-describe('ManageENS.vue', () => {
+xdescribe('ManageENS.vue', () => {
   let localVue, i18n, wrapper, store;
   const domainName = 'domainName';
   const nameHash = 'nameHash';
