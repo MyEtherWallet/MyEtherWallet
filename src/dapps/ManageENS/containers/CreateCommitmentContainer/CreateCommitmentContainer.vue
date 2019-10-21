@@ -1,12 +1,10 @@
 <template lang="html">
   <div class="transfer-registrar-container">
     <div class="transfer-registrar-content">
-      <h3>Congratulations! {{ fullDomainName }} is available!</h3>
-      <p>Do you want to register {{ fullDomainName }}?</p>
+      <h3>{{ $t('ens.commit.is-available', { domain: fullDomainName }) }}</h3>
+      <p>{{ $t('ens.commit.register-domain', { domain: fullDomainName }) }}</p>
       <div class="secret-phrase-container">
-        <label for="range-slider"
-          >How many years do you want to keep the name?</label
-        >
+        <label for="range-slider">{{ $t('ens.commit.how-many-years') }}</label>
         <b-form-input
           id="range-slider"
           v-model="duration"
@@ -15,7 +13,13 @@
           max="20"
           step="1"
         />
-        <div>{{ duration > 1 ? `${duration} years` : `${duration} year` }}</div>
+        <div>
+          {{
+            duration > 1
+              ? $tc('ens.commit.year', 2, { duration: duration })
+              : $tc('ens.commit.year', 1)
+          }}
+        </div>
       </div>
       <div class="transfer-registrar-button">
         <button
@@ -27,7 +31,7 @@
           @click="createCommitment"
         >
           <span v-show="!loading">
-            Register
+            {{ $t('ens.register') }}
           </span>
           <i v-show="loading" class="fa fa-spinner fa-spin" />
         </button>
@@ -83,7 +87,7 @@ export default {
       if (balance === '0') {
         return {
           disable: true,
-          msg: 'You have no balance to send a Tx'
+          msg: this.$t('ens.commit.no-balance')
         };
       }
       return {

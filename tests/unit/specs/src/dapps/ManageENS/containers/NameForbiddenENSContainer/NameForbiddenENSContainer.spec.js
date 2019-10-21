@@ -29,6 +29,6 @@ describe('NameForbiddenENSContainer.vue', () => {
       wrapper.vm.$el
         .querySelector('.name-forbidden-container h3')
         .textContent.trim()
-    ).toEqual(`${domainName}.eth is not available yet!`);
+    ).toEqual(`${domainName} is not available yet!`);
   });
 });

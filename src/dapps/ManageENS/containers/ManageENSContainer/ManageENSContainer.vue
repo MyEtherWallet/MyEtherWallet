@@ -1,13 +1,11 @@
 <template>
   <div class="manage-ens-container">
-    <h3>{{ $t('dapps.manage') }} {{ domainName }}</h3>
+    <h3>{{ $t('ens.manage') }} {{ domainName }}</h3>
     <div class="inputs-container">
       <div class="form-container">
         <form class="manage-form">
           <div class="input-container">
-            <label for="updateResolver"
-              >{{ $t('dapps.updateResolver') }}:</label
-            >
+            <label for="updateResolver">{{ $t('ens.update-resolver') }}:</label>
             <input
               v-model="locResolverAddr"
               type="text"
@@ -21,7 +19,7 @@
               type="submit"
               @click.prevent="updateResolver(locResolverAddr)"
             >
-              Update
+              {{ $t('ens.update') }}
             </button>
           </div>
         </form>
@@ -29,7 +27,7 @@
       <div class="form-container">
         <form class="manage-form">
           <div class="input-container">
-            <label for="transferEns">{{ $t('dapps.transferEnsTo') }}:</label>
+            <label for="transferEns">{{ $t('ens.transfer-to') }}:</label>
             <input
               v-model="transferTo"
               type="text"
@@ -43,7 +41,7 @@
               type="submit"
               @click.prevent="transferDomain(transferTo)"
             >
-              Transfer
+              {{ $t('ens.transfer') }}
             </button>
           </div>
         </form>
