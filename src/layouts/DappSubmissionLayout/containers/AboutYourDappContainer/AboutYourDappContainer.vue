@@ -174,9 +174,8 @@
           />
           <span>*</span>
         </div>
-        <p v-if="mockFileError" class="error">
-          The image dimensions are too big. Dimensions must be 1200px width by
-          630px height and less than 5MB.
+        <p v-show="mockFileError" class="error">
+          {{ mockFileError }}
         </p>
       </b-form-group>
       <b-form-group>
@@ -248,8 +247,8 @@
             >*</span
           >
         </div>
-        <p v-if="dappIconError" class="error">
-          The image dimensions are too big. Dimensions must be 192px by 192px.
+        <p v-show="dappIconError" class="error">
+          {{ dappIconError }}
         </p>
       </b-form-group>
       <b-form-group>
@@ -299,9 +298,8 @@
             >*</span
           >
         </div>
-        <p v-if="bannerError" class="error">
-          The image dimensions are too small. Dimensions must be at least 1200px
-          * 206px.
+        <p v-show="bannerError" class="error">
+          {{ bannerError }}
         </p>
       </b-form-group>
       <b-form-group>
@@ -447,9 +445,9 @@ export default {
       ],
       tagInput: '',
       displayTags: this.form.tags,
-      mockFileError: false,
-      dappIconError: false,
-      bannerError: false,
+      mockFileError: null,
+      dappIconError: null,
+      bannerError: null,
       mockFlowImgName: '',
       dappTagsError: false
     };
@@ -499,28 +497,42 @@ export default {
         url = URL.createObjectURL(file),
         vm = this;
 
+      this.form.mockFlowFile = '';
+      this.form.mockFlowUrl = '';
+
+      if (!url) {
+        this.onMockFileChangeError('uploadError');
+      }
+
       if (file.type === 'application/pdf') {
         file.size > 5000000
-          ? this.onMockFileChangeError()
+          ? this.onMockFileChangeError('exceededSize')
           : this.onMockFileChangeSuccess(file, url);
       } else {
         img.src = url;
 
         img.onload = function() {
           img.width > 1200 || img.height > 630
-            ? vm.onMockFileChangeError()
+            ? vm.onMockFileChangeError('exceededSize')
             : vm.onMockFileChangeSuccess(file, url);
+        };
+
+        img.onerror = function() {
+          vm.onMockFileChangeError('uploadError');
         };
       }
     },
     onMockFileChangeSuccess(file, url) {
-      this.mockFileError = false;
+      this.mockFileError = null;
       this.form.mockFlowFile = file;
       this.form.mockFlowUrl = url;
       this.updateMockFlow(false);
     },
-    onMockFileChangeError() {
-      this.mockFileError = true;
+    onMockFileChangeError(type) {
+      this.mockFileError =
+        type === 'exceededSize'
+          ? 'The image dimensions are too big. Dimensions must be 1200px width by 630px height and less than 5MB.'
+          : 'Upload error. Please try a different file.';
       this.updateMockFlow(true);
     },
     onDappIconChange(e) {
@@ -531,17 +543,25 @@ export default {
         vm = this;
 
       img.src = url;
+      vm.form.dappIconFile = '';
+      vm.form.dappIconUrl = '';
 
       img.onload = function() {
         if (img.height > 192 || img.width > 192) {
-          vm.dappIconError = true;
+          vm.dappIconError =
+            'The image dimensions are too big. Dimensions must be 192px by 192px.';
           vm.updateDappIcon(true);
         } else {
-          vm.dappIconError = false;
+          vm.dappIconError = null;
           vm.form.dappIconFile = file;
           vm.form.dappIconUrl = url;
           vm.updateDappIcon(false);
         }
+      };
+
+      img.onerror = function() {
+        vm.dappIconError = 'Upload error. Please try a different file.';
+        vm.updateDappIcon(true);
       };
     },
     onBannerChange(e) {
@@ -551,18 +571,26 @@ export default {
         url = URL.createObjectURL(file),
         vm = this;
 
+      vm.form.bannerFile = '';
+      vm.form.bannerUrl = '';
       img.src = url;
 
       img.onload = function() {
         if (img.width < 1200 || img.height < 206) {
-          vm.bannerError = true;
+          vm.bannerError =
+            'The image dimensions are too small. Dimensions must be at least 1200px* 206px.';
           vm.updateBanner(true);
         } else {
-          vm.bannerError = false;
+          vm.bannerError = null;
           vm.form.bannerFile = file;
           vm.form.bannerUrl = url;
           vm.updateBanner(false);
         }
+      };
+
+      img.onerror = function() {
+        vm.bannerError = 'Upload error. Please try a different file.';
+        vm.updateBanner(true);
       };
     }
   }

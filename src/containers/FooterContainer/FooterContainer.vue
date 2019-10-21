@@ -201,7 +201,7 @@ export default {
               to: '/verify-message'
             },
             {
-              text: 'Submit DApp',
+              text: 'Submit Dapp',
               to: '/dapp-submission'
             }
           ]
@@ -230,10 +230,6 @@ export default {
             {
               text: 'MEWtopia',
               href: 'https://www.mewtopia.com'
-            },
-            {
-              text: this.$t('common.vintage'),
-              href: 'https://vintage.myetherwallet.com'
             },
             {
               text: this.$t('common.customerSupport'),

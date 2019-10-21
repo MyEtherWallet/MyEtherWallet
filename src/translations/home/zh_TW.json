@@ -36,7 +36,6 @@
   "forgotPasswordPrivKeyDesc": "MEW 並不提供幫忙復原或者重設密碼/私鑰的支援。我們非常建議您在實體的紙上面寫下密碼與私鑰以安全地保存您的資料。或者將其存在您的電腦上。更多資訊請點擊",
   "welcomeTov5": "歡迎使用 MEW V5",
   "welcomeToV5Desc1": "歡迎來到全新的 MEW！如果這次您第一次拜訪，看看我們的 {0} 吧！",
-  "welcomeToV5Desc2": "經典版 MEW 依然能被使用 {0}，可以到網頁底部找到相關資訊。",
   "welcomeToLink1": "來看看我們在 Medium 上面的最新消息",
   "welcomeToLink2": "點此",
   "onwards": "下一步"

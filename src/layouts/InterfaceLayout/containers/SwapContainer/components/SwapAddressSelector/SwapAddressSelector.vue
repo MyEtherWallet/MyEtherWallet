@@ -70,13 +70,6 @@
             <div class="address-block">
               <p class="listed-address">
                 {{ addr.address }}
-                <!-- Address book feature
-                <span
-                  v-if="addr.address !== currentAddress && addr.currency !== 'ETH'"
-                  class="address-note"
-                  >{{ addr.currency }} {{ $t('interface.addr') }}</span
-                >
-                -->
               </p>
             </div>
             <p v-if="addr.address === currentAddress" class="address-note">
@@ -92,18 +85,37 @@
       </div>
     </div>
     <!-- .dropdown--content -->
+    <div v-show="validityState === 2" class="error-message-container">
+      <p>{{ $t('interface.notValidAddr', { currency: currency }) }}</p>
+    </div>
+    <div v-show="validityState === 3" class="warn-message-container">
+      <p>
+        {{
+          $t('interface.unableToValidateAddress', {
+            currency: currency
+          })
+        }}
+      </p>
+    </div>
+    <div v-show="validityState === 4" class="warn-message-container">
+      <p>
+        {{ EnsAddress }}
+      </p>
+    </div>
   </div>
 </template>
 
 <script>
 import '@/assets/images/currency/coins/asFont/cryptocoins.css';
 import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
+import { mapState } from 'vuex';
 import debugLogger from 'debug';
 import WAValidator from 'wallet-address-validator';
 import MAValidator from 'multicoin-address-validator';
 import Blockie from '@/components/Blockie';
 import { EthereumTokens, BASE_CURRENCY, hasIcon } from '@/partners';
 import { canValidate } from '@/partners/helpers';
+import getMultiCoinAddress from '@/helpers/ENSMultiCoin.js';
 
 const errorLogger = debugLogger('v5:error');
 
@@ -135,6 +147,9 @@ export default {
   },
   data() {
     return {
+      validityState: 0,
+      EnsAddress: '',
+      validEnsAddress: false,
       EthereumTokens: EthereumTokens,
       selectedAddress: '',
       validAddress: false,
@@ -143,6 +158,9 @@ export default {
       addresses: [],
       toAddressCheckMark: false
     };
+  },
+  computed: {
+    ...mapState(['ens'])
   },
   watch: {
     currentAddress(address) {
@@ -185,17 +203,71 @@ export default {
       this.dropdownOpen = !this.dropdownOpen;
       this.selectedAddress = address;
     },
-    validateAddress(addr) {
+    async checkForEns(address) {
+      if (address.includes('.')) {
+        const currency =
+          this.currency === 'ETH'
+            ? 'ETH'
+            : this.isToken(this.currency)
+            ? 'ETH'
+            : this.currency;
+        try {
+          const nativeAddress = await getMultiCoinAddress(
+            this.ens,
+            address,
+            currency
+          );
+          this.validityResult('VALID_ENS');
+          this.EnsAddress = nativeAddress;
+          return nativeAddress;
+        } catch (e) {
+          this.validityResult('INVALID_ENS');
+          return address;
+        }
+      } else {
+        this.validityResult('INVALID_ENS');
+        return address;
+      }
+    },
+    validityResult(state) {
+      const validityStates = {
+        VALID: 1,
+        INVALID: 2,
+        MAYBE_VALID: 3,
+        VALID_ENS: 4,
+        INVALID_ENS: 5
+      };
+      const validStates = [1, 3, 4];
+      if (typeof state === 'undefined') {
+        return validStates.includes(this.validityState);
+      } else if (typeof state === 'boolean') {
+        if (state) {
+          if (this.validityState !== 4) {
+            this.validityState = validityStates['VALID'];
+          }
+        } else {
+          this.validityState = validityStates['INVALID'];
+        }
+      } else {
+        this.validityState = validityStates[state];
+      }
+    },
+    async validateAddress(addr) {
       if (this.selectedAddress !== '') {
-        const checkAddress = addr.address ? addr.address : addr;
+        this.validAddress = false;
+        this.unableToValidate = false;
+        let checkAddress = addr.address ? addr.address : addr;
+        checkAddress = await this.checkForEns(checkAddress);
         if (EthereumTokens[this.currency]) {
           this.validAddress = WAValidator.validate(checkAddress, 'ETH');
+          this.validityResult(this.validAddress);
         } else {
           try {
             this.validAddress = WAValidator.validate(
               checkAddress,
               this.currency
             );
+            this.validityResult(this.validAddress);
           } catch (e) {
             if (canValidate(this.currency)) {
               try {
@@ -203,30 +275,27 @@ export default {
                   checkAddress,
                   this.currency
                 );
+                this.validityResult(this.validAddress);
               } catch (e) {
                 errorLogger(e);
+                this.validityResult('INVALID');
                 this.validAddress = false;
               }
             } else {
+              this.validityResult('MAYBE_VALID');
               this.validAddress = true;
               this.unableToValidate = true;
             }
           }
         }
 
-        if (this.validAddress) {
-          if (this.unableToValidate) {
-            this.$emit('unableToValidate', true);
-          } else {
-            this.$emit('unableToValidate', false);
-          }
+        if (this.validityResult()) {
           this.$emit('toAddress', checkAddress);
-          this.$emit('validAddress', true);
         } else {
           this.$emit('toAddress', '');
-          this.$emit('validAddress', false);
-          this.$emit('unableToValidate', false);
         }
+      } else if (this.validityState !== 0) {
+        this.validityResult('INVALID');
       }
     }
   }
