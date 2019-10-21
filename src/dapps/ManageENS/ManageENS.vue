@@ -301,7 +301,7 @@ export default {
               .setAddr(
                 this.nameHash,
                 this.supportedCoins.ETH.id,
-                coin.decode(this.supportedCoins.ETH.value)
+                this.supportedCoins.ETH.decode(this.supportedCoins.ETH.value)
               )
               .encodeABI(),
             value: 0,
