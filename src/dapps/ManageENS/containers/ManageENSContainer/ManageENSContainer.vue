@@ -31,7 +31,8 @@
             <i
               :class="[
                 'validity-indication fa',
-                v.value !== '' && !MultiCoinValidator.validate(v.value, v.validator)
+                v.value !== '' &&
+                !MultiCoinValidator.validate(v.value, v.validator)
                   ? 'error fa-times-circle-o'
                   : 'valid fa-check-circle-o'
               ]"
@@ -144,7 +145,8 @@ export default {
     isValidAddresses() {
       for (const type in this.inputs) {
         if (
-          this.inputs[type].value !== '' && !MultiCoinValidator.validate(
+          this.inputs[type].value !== '' &&
+          !MultiCoinValidator.validate(
             this.inputs[type].value,
             this.inputs[type].validator
           )

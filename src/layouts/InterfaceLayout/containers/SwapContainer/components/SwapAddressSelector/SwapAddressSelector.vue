@@ -70,13 +70,6 @@
             <div class="address-block">
               <p class="listed-address">
                 {{ addr.address }}
-                <!-- Address book feature
-                                <span
-                                  v-if="addr.address !== currentAddress && addr.currency !== 'ETH'"
-                                  class="address-note"
-                                  >{{ addr.currency }} {{ $t('interface.addr') }}</span
-                                >
-                                -->
               </p>
             </div>
             <p v-if="addr.address === currentAddress" class="address-note">
