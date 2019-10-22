@@ -2,10 +2,10 @@
   <div class="modal-container">
     <b-modal
       ref="swapconfirmation"
+      :title="$t('common.confirmation')"
       hide-footer
       centered
       class="bootstrap-modal bootstrap-modal-wide padding-40-20"
-      :title="$t('common.confirmation')"
       static
       lazy
     >

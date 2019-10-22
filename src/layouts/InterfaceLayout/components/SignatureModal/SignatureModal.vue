@@ -2,17 +2,17 @@
   <div>
     <b-modal
       ref="signatureModal"
+      :title="$t('signMessage.signature')"
       hide-footer
       centered
       class="bootstrap-modal"
-      :title="$t('signMessage.signature')"
       static
       lazy
     >
       <div class="modal-contents">
         <div>
           <div class="copy-container">
-            <h4>{{$t('signMessage.signed')}}</h4>
+            <h4>{{ $t('signMessage.signed') }}</h4>
             <div class="copy-buttons">
               <span @click="copy">{{ $t('common.copy') }}</span>
             </div>
