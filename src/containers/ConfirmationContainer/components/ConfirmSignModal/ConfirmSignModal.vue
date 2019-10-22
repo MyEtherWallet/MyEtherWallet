@@ -2,10 +2,10 @@
   <div class="modal-container">
     <b-modal
       ref="signConfirmation"
+      :title="$t('common.confirmation')"
       hide-footer
       centered
       class="bootstrap-modal-wide confirmation-modal nopadding"
-      :title="$t('common.confirmation')"
       static
       lazy
     >
@@ -59,7 +59,7 @@
             </div>
           </div>
           <p class="learn-more">
-           {{ $t('common.have-issues') }}
+            {{ $t('common.have-issues') }}
             <a
               href="https:/kb.myetherwallet.com"
               target="_blank"
