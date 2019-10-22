@@ -53,10 +53,16 @@
               <i class="fa fa-chevron-left"></i>
             </span>
             <span v-show="!collectionLoading">{{
-              $t('nftManager.showing-range', { first: startIndex, last: endIndex })
+              $t('nftManager.showing-range', {
+                first: startIndex,
+                last: endIndex
+              })
             }}</span>
             <span v-show="collectionLoading">{{
-              $t('nftManager.loading-range', { first: startIndex, last: endIndex })
+              $t('nftManager.loading-range', {
+                first: startIndex,
+                last: endIndex
+              })
             }}</span>
             <span
               v-show="showNextButton"
@@ -82,7 +88,7 @@
 
     <div v-if="!isOnlineAndEth">
       <div v-show="!online">
-        {{ $t('nftManager.nft-are')}}
+        {{ $t('nftManager.nft-are') }}
       </div>
       <div v-show="online">
         {{ $t('nftManager.not-supported', { value: network.type.name_long }) }}
