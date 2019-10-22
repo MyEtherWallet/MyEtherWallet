@@ -5,7 +5,7 @@ import ManageENSContainer from '@/dapps/ManageENS/containers/ManageENSContainer/
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import { Tooling } from '@@/helpers';
 
-describe('ManageENSContainer.vue', () => {
+xdescribe('ManageENSContainer.vue', () => {
   let localVue, i18n, wrapper, store;
   const push = sinon.stub();
   const resolverAddress = '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068C';

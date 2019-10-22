@@ -35,12 +35,7 @@
 </template>
 
 <script>
-import InputSearch from '@/components/Inputs/InputSearch';
-
 export default {
-  components: {
-    'input-search': InputSearch
-  },
   props: {
     supportedNftObj: {
       type: Object,
