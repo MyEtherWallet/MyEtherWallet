@@ -55,8 +55,7 @@
       @approveDai="approveDai"
       @approveMkr="approveMkr"
       @closeCdp="closeCdp"
-    >
-    </close-cdp-modal>
+    ></close-cdp-modal>
     <move-cdp-modal
       ref="moveCdp"
       :values="activeValues"
@@ -69,8 +68,7 @@
       :tokens-with-balance="tokensWithBalance"
       @moveCdp="moveCdp"
       @checkForProxy="checkIfDestAddressHasProxy"
-    >
-    </move-cdp-modal>
+    ></move-cdp-modal>
     <back-button :path="'/interface/dapps/'">
       <div class="back-bar-container">
         <div v-if="showMoveOrClose" class="header-buttons-container">
@@ -100,9 +98,7 @@
         <div v-for="(value, idx) in cdpsWithoutProxy" :key="idx + value">
           <div class="dapps-button">
             <div @click="migrateCdpExternal(value)">
-              <h4>
-                {{ $t('dappsMaker.migrateCdp', { value: value }) }}
-              </h4>
+              <h4>{{ $t('dappsMaker.migrateCdp', { value: value }) }}</h4>
             </div>
           </div>
         </div>
@@ -177,17 +173,13 @@
       @showGenerate="showGenerate"
       @showDeposit="showDeposit"
       @migrateCdp="migrateCdpExternal"
-    >
-    </router-view>
+    ></router-view>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
-import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
-import InterfaceBottomText from '@/components/InterfaceBottomText';
-import Blockie from '@/components/Blockie';
 import CloseCdpModal from './components/CloseCdpModal';
 import MoveCdpModal from './components/MoveCdpModal';
 import GenerateModal from './components/GenerateModal';
@@ -215,13 +207,10 @@ const bnOver = (one, two, three) => {
 
 export default {
   components: {
-    'interface-container-title': InterfaceContainerTitle,
-    'interface-bottom-text': InterfaceBottomText,
     'generate-modal': GenerateModal,
     'deposit-modal': DepositModal,
     'withdraw-modal': WithdrawModal,
     'payback-modal': PaybackModal,
-    blockie: Blockie,
     'back-button': BackButton,
     'close-cdp-modal': CloseCdpModal,
     'move-cdp-modal': MoveCdpModal

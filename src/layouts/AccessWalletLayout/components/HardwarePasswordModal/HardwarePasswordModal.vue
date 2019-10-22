@@ -12,10 +12,10 @@
     <form class="password-form">
       <div class="input-container">
         <input
-          v-validate="'required'"
           ref="passwordInput"
-          :type="show ? 'text' : 'password'"
           v-model="password"
+          v-validate="'required'"
+          :type="show ? 'text' : 'password'"
           name="Password"
           autocomplete="off"
         />

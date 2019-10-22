@@ -4,14 +4,11 @@
       <div class="hardware-container">
         <div class="hardware-text">
           <h2>{{ $t('buyHardwareWallet.pageTitle') }}</h2>
-          <p>
-            {{ $t('buyHardwareWallet.pageSubTtile') }}
-          </p>
+          <p>{{ $t('buyHardwareWallet.pageSubTtile') }}</p>
         </div>
         <div class="hardware-items-container">
           <div
-            v-for="item in items"
-            v-if="item.logo !== ''"
+            v-for="item in filteredItems"
             :key="item.text"
             class="hardware-item"
           >
@@ -21,21 +18,16 @@
               </p>
               <div class="price-container">
                 <span>{{ item.currency }}</span>
-                <p>
-                  {{ item.price }}
-                </p>
+                <p>{{ item.price }}</p>
               </div>
-              <p class="item-description">
-                {{ item.description }}
-              </p>
+              <p class="item-description">{{ item.description }}</p>
               <a
                 :href="item.href"
                 class="more-info"
                 target="_blank"
                 rel="noopener noreferrer"
+                >{{ $t('buyHardwareWallet.moreInfo') }} ></a
               >
-                {{ $t('buyHardwareWallet.moreInfo') }} >
-              </a>
             </div>
             <div class="hardware-item-logo">
               <img
@@ -58,6 +50,15 @@ export default {
     return {
       items: affiliates
     };
+  },
+  computed: {
+    filteredItems() {
+      const filtered = {};
+      for (const type in this.items) {
+        if (this.items[type].logo !== '') filtered[type] = this.items[type];
+      }
+      return filtered;
+    }
   }
 };
 </script>

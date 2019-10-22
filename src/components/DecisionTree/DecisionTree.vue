@@ -46,10 +46,10 @@
             label="name"
             track-by="name"
           >
-            <span slot="noResult" class="no-result"
-              ><i class="fa fa-meh-o" aria-hidden="true"></i> Oops! No search
-              results found.</span
-            >
+            <span slot="noResult" class="no-result">
+              <i class="fa fa-meh-o" aria-hidden="true"></i> Oops! No search
+              results found.
+            </span>
           </multiselect>
           <img class="magnifier" src="@/assets/images/icons/magnifier.svg" />
           <p class="clear">
@@ -59,7 +59,7 @@
 
         <div class="breadcrumb-container">
           <i class="fa fa-home" aria-hidden="true"></i>&nbsp;Home
-          <span v-for="h in historyStack" v-if="h.breadcrumb" :key="h.key">
+          <span v-for="h in historyStackFiltered" :key="h.key">
             <i class="fa fa-angle-right" aria-hidden="true"></i>
             {{ h.breadcrumb }}
           </span>
@@ -86,9 +86,7 @@
                   <i class="fa fa-book" aria-hidden="true"></i>
                   Read
                 </p>
-                <p class="qa-title">
-                  {{ index[qa].title }}
-                </p>
+                <p class="qa-title">{{ index[qa].title }}</p>
                 <p v-if="index[qa].subtitle" class="qa-subtitle">
                   {{ index[qa].subtitle }}
                 </p>
@@ -150,6 +148,15 @@ export default {
       searchOptions: [],
       searchSelect: {}
     };
+  },
+  computed: {
+    historyStackFiltered() {
+      const filtered = {};
+      for (const h in this.historyStack) {
+        if (this.historyStack[h].breadcrumb) filtered[h] = this.historyStack[h];
+      }
+      return filtered;
+    }
   },
   watch: {
     searchSelect(val) {

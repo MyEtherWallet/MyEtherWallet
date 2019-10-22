@@ -28,8 +28,8 @@
             </div>
             <div class="the-form amount-number">
               <input
-                v-validate="'min_value:0'"
                 v-model="toValue"
+                v-validate="'min_value:0'"
                 type="number"
                 placeholder="Amount"
                 min="0"
@@ -76,9 +76,9 @@
           </div>
           <div class="the-form address-block">
             <input
-              v-ens-resolver="'address'"
               ref="address"
               v-model="address"
+              v-ens-resolver="'address'"
               type="text"
               name="name"
               autocomplete="off"

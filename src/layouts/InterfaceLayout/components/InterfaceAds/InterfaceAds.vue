@@ -9,9 +9,7 @@
         <div
           class="global__interface-block flex--row--align-center twitter-ad-block"
         >
-          <p class="block-title">
-            {{ $t('common.twitterFollow') }}
-          </p>
+          <p class="block-title">{{ $t('common.twitterFollow') }}</p>
           <div class="margin--left--auto block-twitter">
             <i class="fa fa-twitter"></i>
           </div>
@@ -42,15 +40,12 @@
 
 <script>
 import { mapState } from 'vuex';
-import InterfaceTokensModal from '../InterfaceTokensModal';
 
 import ads from './adComponents';
 
 export default {
   components: {
-    'interface-tokens-modal': InterfaceTokensModal,
     'buy-eth-ad': ads.buyEthAd,
-    'static-ad': ads.staticAd,
     'mew-connect-ad': ads.mewConnectAd
   },
   props: {},

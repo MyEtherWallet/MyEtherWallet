@@ -15,7 +15,7 @@
     </div>
     <div v-show="resolverMultiCoinSupport" class="content-container">
       <h4>{{ $t('dapps.multiCoin') }}:</h4>
-      <div v-for="(v, k) in supportedCoins" v-if="v.value" :key="k.id">
+      <div v-for="(v, k) in supportedCoinsWithValue" :key="k.id">
         <span class="currency">{{ v.symbol }} address: </span>
         <span class="content">{{ v.value }}</span>
       </div>
@@ -82,6 +82,14 @@ export default {
     ...mapState(['account']),
     fullDomainName() {
       return `${this.hostName}.${this.tld}`;
+    },
+    supportedCoinsWithValue() {
+      const valueCoins = {};
+      for (const type in this.supportedCoins) {
+        if (this.supportedCoins[type].value)
+          valueCoins[type] = this.supportedCoins[type];
+      }
+      return valueCoins;
     }
   },
   mounted() {

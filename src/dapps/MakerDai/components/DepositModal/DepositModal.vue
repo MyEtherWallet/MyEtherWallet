@@ -73,14 +73,14 @@
               <div class="grid-block">
                 <p>{{ $t('dappsMaker.projectedCollatRatio') }}</p>
                 <p>
-                  <b
-                    >{{
+                  <b>
+                    {{
                       displayFixedValue(
                         displayPercentValue(newCollateralRatio),
                         3
                       )
-                    }}%</b
-                  >
+                    }}%
+                  </b>
                 </p>
               </div>
             </div>
@@ -109,7 +109,6 @@ import { mapState } from 'vuex';
 import ethUnit from 'ethjs-unit';
 import StandardButton from '@/components/Buttons/StandardButton';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
-import CheckBox from '../CheckBox';
 import BigNumber from 'bignumber.js/bignumber.js';
 import { displayFixedValue, displayPercentValue } from '../../helpers';
 
@@ -120,7 +119,6 @@ const toBigNumber = num => {
 export default {
   components: {
     'help-center-button': HelpCenterButton,
-    'check-box': CheckBox,
     'standard-button': StandardButton
   },
   props: {

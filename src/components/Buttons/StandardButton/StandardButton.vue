@@ -165,6 +165,7 @@ export default {
         case 'blue-border':
           return 'standard-button__blue-border';
         default:
+          return '';
       }
     }
   },

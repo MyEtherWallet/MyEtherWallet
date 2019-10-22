@@ -88,8 +88,8 @@
         <div class="content-block">
           <div class="input-block-container">
             <input
-              v-validate="'required'"
               v-model="name"
+              v-validate="'required'"
               class="custom-input-text-1"
               type="text"
               name="nodeName"
@@ -99,8 +99,8 @@
             <select v-model="selectedNetworkName" class="custom-select-1">
               <option
                 v-for="type in types"
-                :value="type.name"
                 :key="type.name + type.name_long"
+                :value="type.name"
                 :selected="selectedNetworkName === type.name"
               >
                 {{ type.name | capitalize }} -
@@ -108,6 +108,7 @@
               </option>
             </select>
             <input
+              v-model="url"
               v-validate="{
                 required: true,
                 url: {
@@ -116,7 +117,6 @@
                   require_tld: false
                 }
               }"
-              v-model="url"
               class="custom-input-text-1"
               type="text"
               name="nodeUrl"
@@ -132,9 +132,9 @@
               autocomplete="off"
             />
             <input
-              v-validate="'required|url:require_protocol'"
               v-show="selectedNetworkName === 'CUS'"
               v-model="blockExplorerTX"
+              v-validate="'required|url:require_protocol'"
               class="custom-input-text-1"
               type="text"
               name="customExplorerTx"
@@ -142,9 +142,9 @@
               autocomplete="off"
             />
             <input
-              v-validate="'required|numeric'"
               v-show="selectedNetworkName === 'CUS'"
               v-model="chainID"
+              v-validate="'required|numeric'"
               class="custom-input-text-1"
               type="number"
               name="customChain"
@@ -152,9 +152,9 @@
               autocomplete="off"
             />
             <input
-              v-validate="'required|url:require_protocol'"
               v-show="selectedNetworkName === 'CUS'"
               v-model="blockExplorerAddr"
+              v-validate="'required|url:require_protocol'"
               class="custom-input-text-1"
               type="text"
               name="customExplorerAddr"

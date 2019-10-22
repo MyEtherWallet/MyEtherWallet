@@ -12,10 +12,8 @@
       <div class="modal-content-container">
         <div class="inputs-container">
           <div class="input-container">
-            <p class="message">
-              {{ $t('dappsMaker.withdrawNotice') }}
-            </p>
-            <label> {{ $t('dappsMaker.withdrawQuestion') }}</label>
+            <p class="message">{{ $t('dappsMaker.withdrawNotice') }}</p>
+            <label>{{ $t('dappsMaker.withdrawQuestion') }}</label>
             <div class="top-buttons">
               <p class="max-withdraw" @click="maxWithdraw">
                 {{ $t('dappsMaker.maxWithdraw') }}
@@ -49,9 +47,11 @@
             <div class="grid-block">
               <p>{{ $t('dappsMaker.maxWithdrawAvailable') }}</p>
               <p>
-                <b>{{
-                  values.maxDai ? displayFixedValue(values.maxEthDraw, 5) : 0
-                }}</b>
+                <b>
+                  {{
+                    values.maxDai ? displayFixedValue(values.maxEthDraw, 5) : 0
+                  }}
+                </b>
                 {{ digitalCurrency }}
               </p>
             </div>
@@ -66,14 +66,14 @@
             <div class="grid-block">
               <p>{{ $t('dappsMaker.projectedCollatRatio') }}</p>
               <p>
-                <b
-                  >{{
+                <b>
+                  {{
                     displayFixedValue(
                       displayPercentValue(newCollateralRatio),
                       3
                     )
-                  }}%</b
-                >
+                  }}%
+                </b>
               </p>
             </div>
           </div>
@@ -259,6 +259,7 @@ export default {
       if (this.values) {
         return this.values.collateralRatio;
       }
+      return null;
     },
     newCollateralRatio() {
       if (this.canCompute) {

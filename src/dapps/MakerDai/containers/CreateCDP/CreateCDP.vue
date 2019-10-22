@@ -17,12 +17,8 @@
       :loadingmessage="$t('dappsMaker.creatingMessage')"
     />
     <div class="manage-container">
-      <p class="top-title">
-        {{ $t('dappsMaker.maker_title') }}
-      </p>
-      <p class="top-title-sub">
-        {{ $t('dappsMaker.createInstruct') }}
-      </p>
+      <p class="top-title">{{ $t('dappsMaker.maker_title') }}</p>
+      <p class="top-title-sub">{{ $t('dappsMaker.createInstruct') }}</p>
 
       <div class="currency-ops-new">
         <div class="currency-picker-container">
@@ -33,7 +29,7 @@
             <p>
               <span class="cc ETH cc-icon currency-symbol" />
               ETH
-              <span class="subname">- Ethereum </span>
+              <span class="subname">- Ethereum</span>
             </p>
           </div>
           <input
@@ -54,7 +50,9 @@
             <p>{{ displayFixedValue(depositInPeth, 6) }} PETH</p>
           </div>
         </div>
-        <div class="arrow"><img :src="arrowImage" alt /></div>
+        <div class="arrow">
+          <img :src="arrowImage" alt />
+        </div>
         <div>
           <div class="interface__block-title">
             {{ $t('dappsMaker.generate') }}
@@ -63,7 +61,7 @@
             <p>
               <span class="cc DAI cc-icon cc-icon-dai currency-symbol" />
               DAI
-              <span class="subname">- Maker DAI </span>
+              <span class="subname">- Maker DAI</span>
             </p>
           </div>
           <input
@@ -154,9 +152,6 @@
 <script>
 import { mapState } from 'vuex';
 import ethUnit from 'ethjs-unit';
-import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
-import InterfaceBottomText from '@/components/InterfaceBottomText';
-import Blockie from '@/components/Blockie';
 import DaiConfirmationModal from '../../components/DaiConfirmationModal';
 import LoadingOverlay from '@/components/LoadingOverlay';
 import {
@@ -180,9 +175,6 @@ const bnOver = (one, two, three) => {
 
 export default {
   components: {
-    'interface-container-title': InterfaceContainerTitle,
-    'interface-bottom-text': InterfaceBottomText,
-    blockie: Blockie,
     'dai-confirmation-modal': DaiConfirmationModal,
     'loading-overlay': LoadingOverlay
   },

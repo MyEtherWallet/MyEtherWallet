@@ -12,9 +12,9 @@
         </label>
         <div class="dapp-input">
           <b-form-input
-            v-validate="'required'"
             id="authors"
             v-model="form.authors"
+            v-validate="'required'"
             name="authors"
             placeholder="e.g. James Lee; Emilie Roy; Edward McCormick"
             type="text"
@@ -31,9 +31,9 @@
         <label class="dapp-label">My full name </label>
         <div class="dapp-input">
           <b-form-input
-            v-validate="'required'"
             id="fullName"
             v-model="form.fullName"
+            v-validate="'required'"
             name="name"
             type="text"
             @update="updateFullName"
@@ -49,9 +49,9 @@
         <label class="dapp-label">My email </label>
         <div class="dapp-input">
           <b-form-input
-            v-validate="'email|required'"
             id="emailAddress"
             v-model="form.email"
+            v-validate="'email|required'"
             name="email"
             type="text"
             @update="updateEmail"
@@ -78,8 +78,8 @@
           <div v-if="socialAccts.length > 0" class="social-links-content">
             <div
               v-for="(acct, idx) in socialAccts"
-              :idx="idx"
               :key="acct + idx"
+              :idx="idx"
               class="social-account"
             >
               <div class="fake-input mt-2">
@@ -102,9 +102,9 @@
         <label class="dapp-label">Company website </label>
         <div class="dapp-input">
           <b-form-input
-            v-validate="'url:require_protocol'"
             id="companyWebsite"
             v-model="form.companyWebsite"
+            v-validate="'url:require_protocol'"
             type="text"
             name="website"
             placeholder="URL link"
@@ -138,8 +138,8 @@
         <label class="dapp-label">Additional notes</label>
         <div class="dapp-input">
           <b-form-textarea
-            v-validate="'max:300'"
             v-model="form.additionalNotes"
+            v-validate="'max:300'"
             size="lg"
             rows="5"
             name="notes"

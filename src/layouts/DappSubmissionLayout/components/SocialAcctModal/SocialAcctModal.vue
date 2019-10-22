@@ -22,8 +22,8 @@
           </b-form-group>
           <b-form-group>
             <b-form-input
-              v-validate="'url:require_protocol'"
               v-model="dappSocialLink"
+              v-validate="'url:require_protocol'"
               name="url"
               placeholder="URL link"
               type="url"

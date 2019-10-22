@@ -45,13 +45,9 @@
           </ul>
         </div>
         <expending-option :hidebottomborder="true" title="Signed Transaction">
-          <div class="raw-signed">
-            {{ signedTx }}
-          </div>
+          <div class="raw-signed">{{ signedTx }}</div>
         </expending-option>
-        <expending-option title="Raw Transaction">
-          {{ rawTx }}
-        </expending-option>
+        <expending-option title="Raw Transaction">{{ rawTx }}</expending-option>
         <div class="button-block-container">
           <standard-button :options="buttonConfirmAndSend" />
         </div>
@@ -61,18 +57,14 @@
 </template>
 
 <script>
-import StandardInput from '@/components/StandardInput';
 import Standardbutton from '@/components/Buttons/StandardButton';
 import ExpendingOption from '@/components/ExpendingOption';
 
-import AddressBlock from '../AddressBlock';
 export default {
   name: 'SendOfflineConfirmation',
   components: {
-    'standard-input': StandardInput,
     'standard-button': Standardbutton,
-    'expending-option': ExpendingOption,
-    'address-block': AddressBlock
+    'expending-option': ExpendingOption
   },
   props: {
     envDetails: {

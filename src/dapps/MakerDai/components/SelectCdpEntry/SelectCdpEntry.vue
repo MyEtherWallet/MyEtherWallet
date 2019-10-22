@@ -42,17 +42,20 @@
                     </div>
                     <div>
                       {{ displayFixedValue(aCdp.pethCollateral, 5, true) }}
-                      <span>PETH</span> /
+                      <span>PETH</span>
+                      /
                       {{ displayFixedValue(aCdp.usdCollateral, 2) }}
                       <span>USD</span>
                     </div>
                     <div>
                       <br />
                       <div>{{ $t('dappsMaker.liquidPrice') }} (ETH/USD)</div>
-                      <span :class="safeRank(aCdp.collatRatio)">{{
-                        aCdp ? displayFixedValue(aCdp.liquidationPrice, 2) : 0
-                      }}</span>
-                      <span class="liq-usd"> USD</span>
+                      <span :class="safeRank(aCdp.collatRatio)">
+                        {{
+                          aCdp ? displayFixedValue(aCdp.liquidationPrice, 2) : 0
+                        }}
+                      </span>
+                      <span class="liq-usd">USD</span>
                     </div>
                   </div>
                 </div>
@@ -61,7 +64,10 @@
                     <div>
                       <p>{{ $t('dappsMaker.generated') }}</p>
                     </div>
-                    <div>{{ aCdp.debtValue }} <span>DAI</span></div>
+                    <div>
+                      {{ aCdp.debtValue }}
+                      <span>DAI</span>
+                    </div>
                     <div>
                       {{ displayFixedValue(aCdp.debtValue, 2) }}
                       <span>USD</span>
@@ -92,9 +98,6 @@
 
 <script>
 import { mapState } from 'vuex';
-import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
-import InterfaceBottomText from '@/components/InterfaceBottomText';
-import Blockie from '@/components/Blockie';
 import BigNumber from 'bignumber.js/bignumber.js';
 
 const toBigNumber = num => {
@@ -102,11 +105,6 @@ const toBigNumber = num => {
 };
 
 export default {
-  components: {
-    'interface-container-title': InterfaceContainerTitle,
-    'interface-bottom-text': InterfaceBottomText,
-    blockie: Blockie
-  },
   props: {
     cdpId: {
       type: String,

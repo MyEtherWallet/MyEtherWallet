@@ -12,9 +12,9 @@
       </div>
       <div class="the-form signature">
         <textarea
-          v-validate="'required'"
           ref="signature"
           v-model="message"
+          v-validate="'required'"
           name="signature"
           class="custom-textarea-1"
         />

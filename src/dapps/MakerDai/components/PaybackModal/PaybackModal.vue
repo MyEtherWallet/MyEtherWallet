@@ -111,7 +111,6 @@ import { mapState } from 'vuex';
 import ethUnit from 'ethjs-unit';
 import ExpendingOption from '@/components/ExpendingOption';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
-import CheckBox from '../CheckBox';
 import BigNumber from 'bignumber.js/bignumber.js';
 import { displayFixedValue, displayPercentValue } from '../../helpers';
 import StandardButton from '@/components/Buttons/StandardButton';
@@ -123,7 +122,6 @@ const toBigNumber = num => {
 export default {
   components: {
     'help-center-button': HelpCenterButton,
-    'check-box': CheckBox,
     'expending-option': ExpendingOption,
     'standard-button': StandardButton
   },

@@ -24,6 +24,11 @@
         <div class="item-container">
           <div
             v-for="(curr, idx) in localCurrency"
+            :key="
+              token
+                ? curr.name + idx + curr.symbol + page
+                : curr.name + page + idx
+            "
             :class="[
               token
                 ? selectedCurrency.symbol === curr.symbol
@@ -34,11 +39,6 @@
                 : '',
               'item'
             ]"
-            :key="
-              token
-                ? curr.name + idx + curr.symbol + page
-                : curr.name + page + idx
-            "
             @click="selectCurrency(curr)"
           >
             <p v-show="token">

@@ -40,9 +40,9 @@
               </span>
               <input name="terms" type="checkbox" /> To access my wallet,
               <br />I accept the
-              <router-link to="/terms-and-conditions">
-                Terms and Conditions
-              </router-link>
+              <router-link to="/terms-and-conditions"
+                >Terms and Conditions</router-link
+              >
             </label>
           </div>
           <button :disabled="!acknowledgedTerms" @click="actualClick">
@@ -55,15 +55,8 @@
 </template>
 
 <script>
-import StandardInput from '@/components/StandardInput';
-import Standardbutton from '@/components/Buttons/StandardButton';
-
 export default {
   name: 'WalletPassword',
-  components: {
-    'standard-input': StandardInput,
-    'standard-button': Standardbutton
-  },
   data() {
     return {
       deviceInfo: {},

@@ -20,9 +20,7 @@
               {{ newTotal }}
               DAI
             </p>
-            <p class="max" @click="maxDai">
-              {{ $t('dappsMaker.maxBalance') }}
-            </p>
+            <p class="max" @click="maxDai">{{ $t('dappsMaker.maxBalance') }}</p>
           </div>
           <div :class="['input-box', allOk ? '' : 'danger']">
             <input v-model="amount" />
@@ -46,9 +44,9 @@
             <div class="grid-block">
               <p>{{ $t('dappsMaker.maxGenerateAvailable') }}</p>
               <p>
-                <b>
-                  {{ values.maxDai ? displayFixedValue(values.maxDai) : 0 }}
-                </b>
+                <b>{{
+                  values.maxDai ? displayFixedValue(values.maxDai) : 0
+                }}</b>
                 DAI
               </p>
             </div>
@@ -84,11 +82,11 @@
                 }}
               </p>
               <check-box @changeStatus="checkBoxClicked">
-                <template v-slot:terms
-                  ><p class="checkbox-label">
+                <template v-slot:terms>
+                  <p class="checkbox-label">
                     {{ $t('dappsMaker.understandAndAgree') }}
-                  </p></template
-                >
+                  </p>
+                </template>
               </check-box>
             </div>
           </div>
@@ -263,6 +261,7 @@ export default {
       if (this.values) {
         return this.values.collateralRatio;
       }
+      return null;
     },
     newCollateralRatio() {
       if (this.canCompute || this.values) {
