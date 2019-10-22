@@ -147,15 +147,12 @@ const eventsListeners = (request, _, callback) => {
       chrome.storage.remove('warned');
     }, 900000);
   }
-  console.log(request.payload, 'before');
   const payload = utils._.mapObject(
     Object.assign({}, request.payload),
     function(val) {
       return valueStripper(val);
     }
   );
-
-  console.log(payload, 'after');
 
   const obj = {
     event: request.event,
