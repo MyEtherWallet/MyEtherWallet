@@ -45,5 +45,6 @@ const ko_KR = {
   bitboxError: bitboxError,
   buyHardwareWallet: buyHardwareWallet,
   dappsMaker: dappsMaker
+  // dappsSubmission: dappsSubmission
 };
 export default ko_KR;

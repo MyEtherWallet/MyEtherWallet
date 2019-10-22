@@ -87,8 +87,10 @@
                   :param="'Json'"
                 />
                 <create-wallet-input-footer
-                  :combo="$t('createWallet.password.key-pass')"
-                  :desc="$t('createWallet.password.key-pass-desc')"
+                  :combo="$t('createWallet.key-pass')"
+                  :desc="$t('createWallet.key-pass-dec')"
+                  :do-not-forget="$t('createWallet.doNotForget')"
+                  :do-not-forget-desc="$t('createWallet.doNotForgetDesc')"
                 />
               </div>
             </b-tab>

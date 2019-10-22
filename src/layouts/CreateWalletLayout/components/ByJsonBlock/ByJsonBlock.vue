@@ -1,9 +1,9 @@
-<template>
+<template functional>
   <div class="content-block">
-    <div class="icon-block"><img :src="img" class="icon" alt /></div>
+    <div class="icon-block"><img :src="props.img" class="icon" alt /></div>
     <div class="text-block">
-      <h6>{{ title }}</h6>
-      <p>{{ desc }}</p>
+      <h6>{{ props.title }}</h6>
+      <p>{{ props.desc }}</p>
     </div>
   </div>
 </template>
@@ -23,9 +23,6 @@ export default {
       type: String,
       default: ''
     }
-  },
-  data() {
-    return {};
   }
 };
 </script>

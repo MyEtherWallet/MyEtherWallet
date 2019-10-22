@@ -40,7 +40,7 @@
   "constructor": "Constructor",
   "contractName": "Contract Name",
   "nameYourWallet": "Name Your Wallet",
-  "nameYourWalletDesc": "Give your address a human readable name on a registered ENS domain.",
+  "nameYourWalletDesc": "Set up a subdomain to give your address a human readable name  from a list of registered ENS domains.",
   "signMessageDesc": "あなたのニックネームと他の誰かがそれを使用できないので、ニックネームが使用してあります。異なる目的に再使用できないように、メッセージの特定の理由があります。",
   "verifiedMessage": "メッセージに署名をしました。",
   "walletNotFound": "おっと! 財布が見つかりません! :(",

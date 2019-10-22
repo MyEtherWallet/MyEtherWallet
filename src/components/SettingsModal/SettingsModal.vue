@@ -13,7 +13,7 @@
         <div class="modal-contents">
           <full-width-dropdown
             ref="gasDropdown"
-            :title=" $t('interface.config.tx-speed')"
+            :title="$t('interface.config.tx-speed')"
             class="tx-speed"
           >
             <div class="radio-buttons">
@@ -91,11 +91,11 @@
             :title="$t('interface.config.import')"
             class="import-config"
           >
-            <b-alert :show="popup" fade variant="info"
-              >{{ $t('interface.config.import-success')}}</b-alert
-            >
+            <b-alert :show="popup" fade variant="info">{{
+              $t('interface.config.import-success')
+            }}</b-alert>
             <p>
-              {{ $t('interface.config.import-desc')}}
+              {{ $t('interface.config.import-desc') }}
             </p>
             <div class="import-button-block">
               <div class="filename">
@@ -126,7 +126,7 @@
             class="export-config"
           >
             <p>
-              {{ $t('interface.config.export-desc')}}
+              {{ $t('interface.config.export-desc') }}
             </p>
             <div class="button-block">
               <a :href="file" :download="fileName" class="export-button">

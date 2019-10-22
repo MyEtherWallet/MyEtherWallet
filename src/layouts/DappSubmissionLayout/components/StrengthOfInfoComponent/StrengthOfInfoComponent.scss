@@ -1,0 +1,90 @@
+@import '~@/scss/GlobalVariables';
+
+.strength-of-info-box {
+  background: $light-green-1;
+  border-radius: 6px;
+  height: 152px;
+  width: 324px;
+}
+
+.circle {
+  display: flex;
+  border: 5px solid transparent;
+  border-radius: 50%;
+  height: 100px;
+  position: absolute;
+  width: 100px;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5em;
+
+  --percentage: 0deg;
+}
+
+.lack-of-info-progress {
+  background: linear-gradient($light-green-1, $light-green-1) content-box
+      no-repeat,
+    conic-gradient(
+        from calc(-1 * var(--percentage)),
+        $red-9 var(--percentage, 0),
+        transparent var(--percentage, 0)
+      )
+      border-box;
+}
+
+.good-strength-progress {
+  background: linear-gradient($light-green-1, $light-green-1) content-box
+      no-repeat,
+    conic-gradient(
+        from calc(-1 * var(--percentage)),
+        $mew-green var(--percentage, 0),
+        transparent var(--percentage, 0)
+      )
+      border-box;
+}
+
+.lack-of-info-text {
+  color: $red-9;
+  font-weight: bold;
+}
+
+.good-strength-text {
+  color: $mew-green;
+  font-weight: bold;
+}
+
+.info-text {
+  color: $light-blue-3;
+}
+
+.strength-of-info-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.text-wrapper {
+  width: 157px;
+  text-align: left;
+}
+
+.circle-wrapper {
+  align-items: center;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  margin-right: 20px;
+  width: 103px;
+}
+
+.strength-text {
+  align-items: center;
+  display: flex;
+  font-size: 20px;
+  font-weight: bold;
+  height: 24px;
+  justify-content: center;
+  width: 48px;
+  z-index: 999;
+}
