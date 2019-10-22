@@ -17,25 +17,25 @@
               'custom-input-text-1',
               contractAddress !== '' && !validAddress ? 'invalid-address' : ''
             ]"
+            :placeholder="$t('nftManager.ph-token-addr')"
             name="Address"
             type="text"
-            :placeholder="$t('nftManager.ph-token-addr')"
           />
           <span
             v-show="contractAddress !== '' && !validAddress"
             class="error-message"
           >
-            {{ $t('nftManager.invalid-addr')}}
+            {{ $t('nftManager.invalid-addr') }}
           </span>
           <span v-show="nonStandardMessage">
-            {{ $t('nftManager.no-method-no-token', {token: tokenSymbol})}}
+            {{ $t('nftManager.no-method-no-token', { token: tokenSymbol }) }}
           </span>
           <input
             v-validate="'required'"
             v-model="tokenSymbol"
+            :placeholder="$t('nftManager.name')"
             name="Symbol"
             type="text"
-            :placeholder="$t('nftManager.name')"
             class="custom-input-text-1"
           />
         </div>

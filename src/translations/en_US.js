@@ -32,7 +32,7 @@ import contract from './contract/en_US';
 import ens from './dapps-ens/en_US';
 import subDomain from './dapps-sub-domain/en_US';
 import scheduleTx from './dapps-schedule-tx/en_US';
-import nftManager from './nft-manager/en_US'
+import nftManager from './nft-manager/en_US';
 const en_US = {
   common: common,
   commonold: commonold,
