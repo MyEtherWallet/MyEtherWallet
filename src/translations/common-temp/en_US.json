@@ -67,5 +67,6 @@
     "limit": "Gas Limit",
     "price": "Gas Price"
   },
-  "search": "Search"
+  "search": "Search",
+  "loading": "Loading"
 }

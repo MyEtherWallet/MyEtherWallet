@@ -7,7 +7,7 @@
           <img :src="getImage(nft)" alt />
         </div>
         <div class="kitty-text">
-          <h3>{{ $t('dapps.sendMy', { value: selectedTitle }) }}</h3>
+          <h3>{{ $t('nftManager.send-my', { value: selectedTitle }) }}</h3>
           <p>#{{ nft.token }}</p>
           <div class="address-input-container">
             <address-selector

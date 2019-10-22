@@ -1,6 +1,6 @@
 <template>
   <div class="crypto-kitties-manager">
-    <interface-container-title :title="$t('common.ntfManager')" />
+    <interface-container-title :title="$t('nftManager.title')" />
     <div
       v-if="!isReady && isOnlineAndEth"
       class="inner-side-menu content-container"
@@ -53,10 +53,10 @@
               <i class="fa fa-chevron-left"></i>
             </span>
             <span v-show="!collectionLoading">{{
-              $t('dapps.showingRange', { first: startIndex, last: endIndex })
+              $t('nftManager.showing-range', { first: startIndex, last: endIndex })
             }}</span>
             <span v-show="collectionLoading">{{
-              $t('dapps.loadingRange', { first: startIndex, last: endIndex })
+              $t('nftManager.loading-range', { first: startIndex, last: endIndex })
             }}</span>
             <span
               v-show="showNextButton"
@@ -71,21 +71,21 @@
     </div>
     <div v-if="isReady && !hasNfts" class="inner-side-menu content-container">
       <div v-show="!reLoading">
-        <h3 class="no-nft-notice">{{ $t('dapps.noNFTs') }}</h3>
+        <h3 class="no-nft-notice">{{ $t('nftManager.no-nft') }}</h3>
         <standard-button
           :options="onlyCustom"
           @click.native="openCustomModal"
         />
       </div>
-      <span v-show="reLoading">{{ $t('dapps.reloading') }}</span>
+      <span v-show="reLoading">{{ $t('nftManager.reloading') }}</span>
     </div>
 
     <div v-if="!isOnlineAndEth">
       <div v-show="!online">
-        NFTs are
+        {{ $t('nftManager.nft-are')}}
       </div>
       <div v-show="online">
-        {{ $t('dapps.removeCustomNFT', { value: network.type.name_long }) }}
+        {{ $t('nftManager.not-supported', { value: network.type.name_long }) }}
       </div>
     </div>
     <div class="flex--row--align-start mft-manager-content-container"></div>
@@ -160,7 +160,7 @@ export default {
       forRemoval: {},
       collectionLoading: false,
       onlyCustom: {
-        title: this.$t('dapps.addCustomNFT'),
+        title: this.$t('nftManager.add-custom'),
         buttonStyle: 'green',
         helpCenter: false,
         noMinWidth: true,
@@ -184,7 +184,7 @@ export default {
       if (this.nftData[this.selectedContract]) {
         return this.nftData[this.selectedContract].title;
       }
-      return 'Loading';
+      return `${this.$t('common.loading')}`;
     },
     nftToShow() {
       if (this.nftData[this.selectedContract]) {
@@ -202,13 +202,13 @@ export default {
     },
     ntfCount() {
       if (this.nftData[this.selectedContract]) {
-        return this.$t('dapps.nftOwnCount', {
+        return this.$t('nftManager.per-page-count', {
           perPage: this.countPerPage,
           count: this.nftData[this.selectedContract].count
         });
       }
 
-      return this.$t('dapps.noneOwned');
+      return this.$t('nftManager.none-owned');
     },
     selectedNtf() {
       if (this.nftData[this.selectedContract]) {
