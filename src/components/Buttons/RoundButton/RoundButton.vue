@@ -1,6 +1,6 @@
-<template>
+<template functional>
   <div class="round-button">
-    <button>{{ title }}</button>
+    <button>{{ props.title }}</button>
   </div>
 </template>
 
@@ -13,9 +13,6 @@ export default {
         return {};
       }
     }
-  },
-  data() {
-    return {};
   }
 };
 </script>

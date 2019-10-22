@@ -1,6 +1,7 @@
-<template>
+<template functional>
   <div ref="tagContainer" class="tag-container">
-    {{ name }} <span @click="deleteFunc(idx)"><i class="fa fa-times"/></span>
+    {{ props.name }}
+    <span @click="props.deleteFunc(props.idx)"><i class="fa fa-times"/></span>
   </div>
 </template>
 

@@ -107,18 +107,6 @@
               @unableToValidate="unableToValidate = $event"
             />
           </div>
-          <div v-show="!validAddress" class="error-message-container">
-            <p>{{ $t('interface.notValidAddr', { currency: toCurrency }) }}</p>
-          </div>
-          <div v-show="unableToValidate" class="warn-message-container">
-            <p>
-              {{
-                $t('interface.unableToValidateAddress', {
-                  currency: toCurrency
-                })
-              }}
-            </p>
-          </div>
         </div>
 
         <div
@@ -136,20 +124,6 @@
               @unableToValidate="unableToValidateExit = $event"
             />
           </div>
-          <div v-show="!validExitAddress" class="error-message-container">
-            <p>
-              {{ $t('interface.notValidAddrSrc', { currency: fromCurrency }) }}
-            </p>
-          </div>
-          <div v-show="unableToValidateExit" class="warn-message-container">
-            <p>
-              {{
-                $t('interface.unableToValidateAddress', {
-                  currency: toCurrency
-                })
-              }}
-            </p>
-          </div>
         </div>
 
         <div v-show="showRefundAddress" class="send-form">
@@ -163,20 +137,6 @@
               @validAddress="validRefundAddress = $event"
               @unableToValidate="unableToValidateRefund = $event"
             />
-          </div>
-          <div v-show="!validRefundAddress" class="error-message-container">
-            <p>
-              {{ $t('interface.notValidAddr', { currency: fromCurrency }) }}
-            </p>
-          </div>
-          <div v-show="unableToValidateRefund" class="warn-message-container">
-            <p>
-              {{
-                $t('interface.unableToValidateAddress', {
-                  currency: toCurrency
-                })
-              }}
-            </p>
           </div>
         </div>
 
@@ -814,6 +774,11 @@ export default {
                       .toString(10);
                   }
                 };
+              } else if (entry.provider === this.providerNames.changelly) {
+                Toast.responseHandler(
+                  `Failed to retrieve Changelly rate from ${fromCurrency} to ${toCurrency}`,
+                  3
+                );
               }
             }),
             fromValue

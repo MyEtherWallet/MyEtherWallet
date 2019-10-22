@@ -34,9 +34,6 @@ export default {
       type: Function,
       default: function() {}
     }
-  },
-  data() {
-    return {};
   }
 };
 </script>

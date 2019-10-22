@@ -1,4 +1,4 @@
-<template function>
+<template functional>
   <div class="flex--row--align-center content-block-title">
     <h4>{{ props.title }}</h4>
     <div class="margin--left--auto">
