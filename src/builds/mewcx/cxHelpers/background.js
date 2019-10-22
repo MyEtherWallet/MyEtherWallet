@@ -1,5 +1,6 @@
 import helpers from './helpers';
 import { isAddress } from '@/helpers/addressUtils';
+import Misc from '@/helpers/misc';
 import { extractRootDomain } from './extractRootDomain';
 import MiddleWare from '@/wallets/web3-provider/middleware';
 import {
@@ -20,6 +21,7 @@ import {
   CX_WEB3_DETECTED,
   WEB3_INJECT_SUCCESS
 } from './cxEvents';
+import utils from 'web3-utils';
 const chrome = window.chrome;
 // Set default values on init
 const networkChanger = items => {
@@ -30,16 +32,19 @@ const networkChanger = items => {
         return actualNetwork.url === networkProps.url;
       }
     );
-    store.dispatch('switchNetwork', network).then(() => {
-      store.dispatch('setWeb3Instance', network.url).then(() => {
-        store.state.web3.eth.net.getId().then(res => {
-          chrome.storage.sync.set({
-            defChainID: store.state.network.type.chainID,
-            defNetVersion: res
+    // eslint-disable-next-line
+    if (!!network) {
+      store.dispatch('switchNetwork', network).then(() => {
+        store.dispatch('setWeb3Instance', network.url).then(() => {
+          store.state.web3.eth.net.getId().then(res => {
+            chrome.storage.sync.set({
+              defChainID: store.state.network.type.chainID,
+              defNetVersion: res
+            });
           });
         });
       });
-    });
+    }
   } else {
     store.dispatch('setWeb3Instance');
     store.state.web3.eth.net.getId().then(res => {
@@ -70,7 +75,9 @@ chrome.storage.onChanged.addListener(items => {
       );
     }
     if (item === 'defNetwork') {
-      const networkProps = JSON.parse(items['defNetwork'].newValue);
+      const networkProps = JSON.parse(
+        Misc.stripTags(items['defNetwork'].newValue)
+      );
       const network = store.state.Networks[networkProps.key].find(
         actualNetwork => {
           return actualNetwork.url === networkProps.url;
@@ -99,9 +106,18 @@ const eventsListeners = (request, _, callback) => {
       chrome.storage.remove('warned');
     }, 900000);
   }
+  const payload = utils._.mapObject(request.payload, function(val) {
+    if (utils._.isObject(val)) {
+      return utils._.mapObject(val, function(val1) {
+        return Misc.stripTags(val1);
+      });
+    }
+    return Misc.stripTags(val);
+  });
+
   const obj = {
     event: request.event,
-    payload: request.payload
+    payload: payload
   };
 
   const middleware = new MiddleWare();
