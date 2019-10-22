@@ -13,7 +13,7 @@
         <div class="modal-contents">
           <full-width-dropdown
             ref="gasDropdown"
-            title="Transaction Speed"
+            :title=" $t('interface.config.tx-speed')"
             class="tx-speed"
           >
             <div class="radio-buttons">
@@ -88,15 +88,14 @@
           </full-width-dropdown>
 
           <full-width-dropdown
-            title="Import Configurations"
+            :title="$t('interface.config.import')"
             class="import-config"
           >
             <b-alert :show="popup" fade variant="info"
-              >Imported file successfully!</b-alert
+              >{{ $t('interface.config.import-success')}}</b-alert
             >
             <p>
-              Please click the button below to open and import you configuration
-              file from your local computer.
+              {{ $t('interface.config.import-desc')}}
             </p>
             <div class="import-button-block">
               <div class="filename">
@@ -123,12 +122,11 @@
           </full-width-dropdown>
 
           <full-width-dropdown
-            title="Export Configurations"
+            :title="$t('interface.config.export')"
             class="export-config"
           >
             <p>
-              Please click the button below to download your configuration file
-              into your local computer.
+              {{ $t('interface.config.export-desc')}}
             </p>
             <div class="button-block">
               <a :href="file" :download="fileName" class="export-button">
