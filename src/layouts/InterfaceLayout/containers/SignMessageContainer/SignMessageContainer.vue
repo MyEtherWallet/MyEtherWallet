@@ -1,13 +1,13 @@
 <template>
   <div class="sign-message-container">
     <signature-modal-modal ref="signatureModal" :signature="signature" />
-    <interface-container-title :title="$t('common.signMessage')" />
+    <interface-container-title :title="$t('signMessage.title')" />
     <div class="content-container">
       <div class="send-form">
-        <p>{{ $t('interface.signMessageDesc') }}</p>
+        <p>{{ $t('signMessage.desc') }}</p>
         <div class="title-container">
           <div class="title">
-            <h4>{{ $t('interface.txSideMenuMessage') }}</h4>
+            <h4>{{ $t('signMessage.message') }}</h4>
           </div>
         </div>
 
@@ -33,7 +33,7 @@
             ]"
             @click="signMessage"
           >
-            {{ $t('common.sign') }}
+            {{ $t('signMessage.sign') }}
           </button>
         </div>
         <interface-bottom-text

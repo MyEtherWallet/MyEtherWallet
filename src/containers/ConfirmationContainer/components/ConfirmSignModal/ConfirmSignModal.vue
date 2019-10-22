@@ -5,7 +5,7 @@
       hide-footer
       centered
       class="bootstrap-modal-wide confirmation-modal nopadding"
-      title="Confirmation"
+      :title="$t('common.confirmation')"
       static
       lazy
     >
@@ -29,7 +29,7 @@
           <div v-if="hexToUtf8(messageToSign)" class="tx-data tx-to">
             <div class="address-info">
               <p class="title address-title">
-                {{ $t('interface.txSideMenuMessage') }}
+                {{ $t('signMessage.message') }}
               </p>
               <p class="message-to-sign">{{ hexToUtf8(messageToSign) }}</p>
             </div>
@@ -59,12 +59,12 @@
             </div>
           </div>
           <p class="learn-more">
-            Have any issues?
+           {{ $t('common.have-issues') }}
             <a
               href="https:/kb.myetherwallet.com"
               target="_blank"
               rel="noopener noreferrer"
-              >Learn more</a
+              >{{ $t('common.learn-more') }}</a
             >
           </p>
         </div>
