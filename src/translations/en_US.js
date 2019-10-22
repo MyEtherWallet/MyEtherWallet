@@ -31,6 +31,7 @@ import swap from './swap/en_US';
 import contract from './contract/en_US';
 import ens from './dapps-ens/en_US';
 import subDomain from './dapps-sub-domain/en_US';
+import scheduleTx from './dapps-schedule-tx/en_US';
 
 const en_US = {
   common: common,
@@ -64,6 +65,7 @@ const en_US = {
   swap: swap,
   contract: contract,
   ens: ens,
-  subDomain: subDomain
+  subDomain: subDomain,
+  scheduleTx: scheduleTx
 };
 export default en_US;

@@ -14,10 +14,12 @@
               type="text"
               @input="debounceInput"
             />
-            <button type="button" @click="query">{{ $t('subDomain.check')}}</button>
+            <button type="button" @click="query">
+              {{ $t('subDomain.check') }}
+            </button>
           </div>
           <p v-if="hasError" class="errorText">
-            <span>{{ $t('subDomain.invalid-symbol')}}</span>
+            <span>{{ $t('subDomain.invalid-symbol') }}</span>
           </p>
         </div>
         <div v-show="results.length > 0" class="result-section">

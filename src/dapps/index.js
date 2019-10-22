@@ -29,9 +29,8 @@ const dapps = {
     route: '/interface/dapps/schedule-transaction',
     icon: scheduleTransaction,
     iconDisabled: scheduleTransactionHov,
-    title: 'Schedule a transaction',
-    desc:
-      'Schedule a transaction using the decentralized Ethereum Alarm Clock protocol',
+    title: 'scheduleTx.title',
+    desc: 'scheduleTx.dapp-desc',
     supportedNetworks: [ETH.name, KOV.name]
   },
   maker: {
