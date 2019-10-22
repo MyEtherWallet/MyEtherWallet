@@ -3,7 +3,7 @@ import RoundButton from '@/components/Buttons/RoundButton/RoundButton.vue';
 import { shallowMount } from '@vue/test-utils';
 import { Tooling } from '@@/helpers';
 
-describe('RoundButton.vue', () => {
+xdescribe('RoundButton.vue', () => {
   let localVue, i18n, wrapper, store;
 
   beforeAll(() => {

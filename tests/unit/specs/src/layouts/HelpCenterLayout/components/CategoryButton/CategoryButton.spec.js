@@ -9,7 +9,7 @@ const content = {
   title: 'CategoryButton  title'
 };
 
-describe('CategoryButton.vue', () => {
+xdescribe('CategoryButton.vue', () => {
   let localVue, i18n, wrapper, store;
 
   beforeAll(() => {

@@ -236,6 +236,42 @@ export default {
     'interface-container-title': InterfaceContainerTitle
   },
   props: {
+    checkPrefilled: {
+      type: Function,
+      default: () => {}
+    },
+    clearPrefilled: {
+      type: Function,
+      default: () => {}
+    },
+    isPrefilled: {
+      type: Boolean,
+      default: false
+    },
+    value: {
+      type: String,
+      default: '0'
+    },
+    data: {
+      type: String,
+      default: ''
+    },
+    to: {
+      type: String,
+      default: ''
+    },
+    gaslimit: {
+      type: String,
+      default: ''
+    },
+    gas: {
+      type: Number,
+      default: 0
+    },
+    tokensymbol: {
+      type: String,
+      default: ''
+    },
     tokens: {
       type: Array,
       default: function() {
@@ -318,27 +354,6 @@ export default {
         this.toData = '0x';
       }
     },
-    tokens(newVal) {
-      if (newVal.length > 0 && Object.keys(this.linkQuery).length > 0) {
-        const { data, to, value, gaslimit, gas, tokensymbol } = this.linkQuery;
-        const foundToken = tokensymbol
-          ? newVal.find(item => {
-              return item.symbol.toLowerCase() === tokensymbol.toLowerCase();
-            })
-          : undefined;
-        this.toAmt = value ? new BigNumber(value).toFixed() : 0;
-        this.toData = data ? (Misc.validateHexString(data) ? data : '') : '';
-        this.address = to ? to : '';
-        this.gasLimit = gaslimit ? new BigNumber(gaslimit).toString() : '21000';
-        this.localGasPrice = gas ? new BigNumber(gas).toFixed() : 0;
-        this.selectedCoinType = foundToken ? foundToken : this.selectedCoinType;
-        Toast.responseHandler(
-          'Form has been prefilled. Please proceed with caution!',
-          Toast.WARN
-        );
-        this.$store.dispatch('saveQueryVal', {});
-      }
-    },
     toAmt(newVal) {
       this.createDataHex(newVal, null, null);
     },
@@ -349,9 +364,39 @@ export default {
     },
     selectedCoinType(newVal) {
       this.createDataHex(null, null, newVal);
+    },
+    isPrefilled() {
+      this.prefillForm();
     }
   },
+  mounted() {
+    this.checkPrefilled();
+  },
   methods: {
+    prefillForm() {
+      if (this.tokens.length > 0 && this.isPrefilled) {
+        const foundToken = this.tokensymbol
+          ? this.tokens.find(item => {
+              return (
+                item.symbol.toLowerCase() === this.tokensymbol.toLowerCase()
+              );
+            })
+          : undefined;
+        this.toAmt = new BigNumber(this.value).toFixed();
+        this.toData = Misc.validateHexString(this.data) ? this.data : '';
+        this.address = this.to;
+        this.gasLimit = this.gaslimit
+          ? new BigNumber(this.gaslimit).toString()
+          : '21000';
+        this.localGasPrice = new BigNumber(this.gas).toFixed();
+        this.selectedCoinType = foundToken ? foundToken : this.selectedCoinType;
+        Toast.responseHandler(
+          'Form has been prefilled. Please proceed with caution!',
+          Toast.WARN
+        );
+        this.clearPrefilled();
+      }
+    },
     debouncedAmount: utils._.debounce(function(e) {
       const symbol = this.network.type.currencyName;
       const decimals =

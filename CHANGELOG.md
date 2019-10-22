@@ -1,3 +1,46 @@
+### Release v5.1.7
+
+### Feature
+
+- Multicoin ENS support [#1521](https://github.com/MyEtherWallet/MyEtherWallet/pull/1521)
+- Move State of the Dapp text to the left column [#1518](https://github.com/MyEtherWallet/MyEtherWallet/pull/1518)
+
+### Bug
+
+- transferDomain func fix on ROP [#1538](https://github.com/MyEtherWallet/MyEtherWallet/pull/1538)
+- Fix mnemonic phrase validation [#1506](https://github.com/MyEtherWallet/MyEtherWallet/pull/1506)
+- Fix value on interact/deploy contract [#1502](https://github.com/MyEtherWallet/MyEtherWallet/pull/1502)
+- Fix ENS subdomain issue [#1547](https://github.com/MyEtherWallet/MyEtherWallet/pull/1547)
+
+### Devop
+
+- Fix static "help" and "tutorial" button size and position [#1531](https://github.com/MyEtherWallet/MyEtherWallet/pull/1531)
+- Remove Ethereum commonwealth nodes in case they shut it down [#1507](https://github.com/MyEtherWallet/MyEtherWallet/pull/1507)
+- App optimization [#1519](https://github.com/MyEtherWallet/MyEtherWallet/pull/1519)
+- changelly timeout error handling [#1522](https://github.com/MyEtherWallet/MyEtherWallet/pull/1522)
+
+### Release v5.1.6
+
+### Feature
+
+- Dapp submission page [#1339](https://github.com/MyEtherWallet/MyEtherWallet/pull/1339)
+
+### Devop
+
+- Remove Aldo from team page [#1482](https://github.com/MyEtherWallet/MyEtherWallet/pull/1482)
+- Add decision tree [#1442](https://github.com/MyEtherWallet/MyEtherWallet/pull/1442)
+- Update packages [#1474](https://github.com/MyEtherWallet/MyEtherWallet/pull/1474)
+
+### Bug
+
+- Fix Goerli erroring when set to default [#1488](https://github.com/MyEtherWallet/MyEtherWallet/pull/1488)
+
+### Release v5.1.5
+
+### Feature
+
+- Add network to query [#1460](https://github.com/MyEtherWallet/MyEtherWallet/pull/1460)
+
 ### Bug
 
 - Fix check for login to metamask wallet [#1457](https://github.com/MyEtherWallet/MyEtherWallet/pull/1457)

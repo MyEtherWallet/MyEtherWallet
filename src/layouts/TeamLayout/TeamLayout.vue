@@ -36,7 +36,6 @@ import samantha from '@/assets/images/team/Samantha.jpg';
 import alex from '@/assets/images/team/Alex.jpg';
 import misha from '@/assets/images/team/Misha.jpg';
 import katya from '@/assets/images/team/Katya.jpg';
-import aldo from '@/assets/images/team/Aldo.jpg';
 import semaja from '@/assets/images/team/Semaja.jpg';
 
 export default {
@@ -75,11 +74,6 @@ export default {
           name: 'Misha',
           position: 'Lead Mobile Developer',
           img: misha
-        },
-        {
-          name: 'Aldo',
-          position: 'Lead Software Engineer - EthVM',
-          img: aldo
         },
         {
           name: 'Yel',

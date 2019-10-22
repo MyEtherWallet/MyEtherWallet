@@ -23,15 +23,6 @@
               >{{ $t('welcomeMessage.link1') }}</a
             >
           </i18n>
-          <i18n path="welcomeMessage.desc2" tag="p" for="welcomeMessage.link2">
-            <a
-              aria-label="Vintage MyEtherWallet"
-              href="https://vintage.myetherwallet.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              >{{ $t('welcomeMessage.link2') }}</a
-            >
-          </i18n>
         </div>
         <div class="welcome-modal-button">
           <button @click="closeModal">

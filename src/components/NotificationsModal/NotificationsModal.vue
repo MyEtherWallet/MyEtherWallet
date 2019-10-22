@@ -13,7 +13,7 @@
 
       <div class="modal-contents">
         <full-width-dropdown
-          :title=" $t('interface.config.tx-speed')"
+          :title="$t('interface.config.tx-speed')"
           popup="What is TX speed"
           class="tx-speed"
         >

@@ -2,6 +2,7 @@
 import common from './common/es_ES';
 import confirmation from './confirmation/es_ES';
 import dapps from './dapps/es_ES';
+// import dappsSubmission from './dapps-submission/es_ES';
 import home from './home/es_ES';
 import footer from './footer/es_ES';
 import gettingStarted from './getting-started/es_ES';

@@ -45,5 +45,6 @@ const ja_JP = {
   bitboxError: bitboxError,
   buyHardwareWallet: buyHardwareWallet,
   dappsMaker: dappsMaker
+  // dappsSubmission: dappsSubmission
 };
 export default ja_JP;

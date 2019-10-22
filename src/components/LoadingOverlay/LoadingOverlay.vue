@@ -1,8 +1,10 @@
-<template>
+<template functional>
   <div class="loading-overlay">
-    <div class="loading-sign">
-      <loading-sign :loadingmessage1="loadingmessage" color="white" />
-    </div>
+    <component
+      :is="injections.components.LoadingSign"
+      :loadingmessage1="props.loadingmessage"
+      color="white"
+    />
   </div>
 </template>
 
@@ -10,17 +12,18 @@
 import LoadingSign from '@/components/LoadingSign';
 
 export default {
-  components: {
-    'loading-sign': LoadingSign
+  inject: {
+    components: {
+      default: {
+        LoadingSign
+      }
+    }
   },
   props: {
     loadingmessage: {
       type: String,
       default: ''
     }
-  },
-  data() {
-    return {};
   }
 };
 </script>
