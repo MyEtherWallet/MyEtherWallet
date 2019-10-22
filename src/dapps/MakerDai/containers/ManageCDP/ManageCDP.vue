@@ -29,7 +29,10 @@
           <div class="block-content">
             <div class="item">
               <p>{{ $t('dappsMaker.currentPrice') }}(ETH/USD)</p>
-              <div>{{ ethPriceDisplay }} <span>USD</span></div>
+              <div>
+                {{ ethPriceDisplay }}
+                <span>USD</span>
+              </div>
             </div>
             <div class="item">
               <p>{{ $t('dappsMaker.liquidationPenalty') }}</p>
@@ -81,7 +84,8 @@
                 </div>
                 <div>
                   {{ pethCollateral }}
-                  <span>PETH</span> /
+                  <span>PETH</span>
+                  /
                   {{ usdCollateral }}
                   <span>USD</span>
                 </div>
@@ -99,7 +103,8 @@
                 </div>
                 <div>
                   {{ maxPethDrawDisplay }}
-                  <span>PETH</span> /
+                  <span>PETH</span>
+                  /
                   {{ maxUsdDrawDisplay }}
                   <span>USD</span>
                 </div>
@@ -125,7 +130,10 @@
             <div class="block-content">
               <div class="item">
                 <p>{{ $t('dappsMaker.generated') }}</p>
-                <div>{{ debtValue }} <span>DAI</span></div>
+                <div>
+                  {{ debtValue }}
+                  <span>DAI</span>
+                </div>
                 <div>
                   {{ debtValueDisplay }}
                   <span>USD</span>
@@ -162,10 +170,7 @@
 
 <script>
 import { mapState } from 'vuex';
-import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
-import InterfaceBottomText from '@/components/InterfaceBottomText';
 import BottomHelpLink from '@/components/BottomHelpLink';
-import Blockie from '@/components/Blockie';
 import {
   displayFixedPercent,
   displayFixedValue,
@@ -180,9 +185,6 @@ const toBigNumber = num => {
 
 export default {
   components: {
-    'interface-container-title': InterfaceContainerTitle,
-    'interface-bottom-text': InterfaceBottomText,
-    blockie: Blockie,
     'help-link': BottomHelpLink
   },
   props: {
@@ -325,11 +327,13 @@ export default {
       if (this.activeCdp) {
         return this.activeCdp.noProxy;
       }
+      return null;
     },
     finishMigration() {
       if (this.activeCdp) {
         return this.activeCdp.needToFinishMigrating;
       }
+      return null;
     },
     collateralRatioColoring() {
       if (this.values) {

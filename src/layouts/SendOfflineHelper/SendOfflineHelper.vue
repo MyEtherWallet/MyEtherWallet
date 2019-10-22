@@ -110,9 +110,9 @@
                 </li>
                 <li class="detail-container">
                   <span class="detail-name">Retrieved:</span>
-                  <span class="detail-text">
-                    {{ dateTimeDisplay(genInfo.timestamp) }}
-                  </span>
+                  <span class="detail-text">{{
+                    dateTimeDisplay(genInfo.timestamp)
+                  }}</span>
                 </li>
                 <li class="detail-container">
                   <span class="detail-name">at block:</span>
@@ -356,7 +356,6 @@ import TitleTextContentsLayout from '@/layouts/InformationPages/Components/Title
 import AccordionMenu from '@/components/AccordionMenu';
 import DropDownAddressSelector from '@/components/DropDownAddressSelector';
 import StandardButton from '@/components/Buttons/StandardButton';
-import StandardInput from '@/components/StandardInput';
 import ExpendingOption from '@/components/ExpendingOption';
 import ConfirmationModal from './components/ConfirmationModal';
 
@@ -366,7 +365,6 @@ export default {
     'accordion-menu': AccordionMenu,
     'dropdown-address-selector': DropDownAddressSelector,
     'standard-button': StandardButton,
-    'standard-input': StandardInput,
     'expending-option': ExpendingOption,
     'confirmation-modal': ConfirmationModal
   },

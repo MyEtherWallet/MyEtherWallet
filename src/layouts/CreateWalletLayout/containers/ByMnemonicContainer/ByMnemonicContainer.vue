@@ -28,9 +28,9 @@
                 <span class="label-right">24</span>
               </div>
             </div>
-            <span class="text__base link switch-label">{{
-              $t('createWallet.byMnemonicValue')
-            }}</span>
+            <span class="text__base link switch-label">
+              {{ $t('createWallet.byMnemonicValue') }}
+            </span>
           </div>
 
           <div
@@ -44,7 +44,8 @@
         <div class="phrases">
           <ul>
             <li v-for="(value, index) in mnemonicValues" :key="index">
-              {{ index + 1 }}.<span>{{ value }}</span>
+              {{ index + 1 }}.
+              <span>{{ value }}</span>
             </li>
           </ul>
         </div>
@@ -63,9 +64,7 @@
               :full-width="true"
             />
             <div class="password-warning">
-              <p>
-                {{ $t('createWallet.mnemonicPasswordWarning') }}
-              </p>
+              <p>{{ $t('createWallet.mnemonicPasswordWarning') }}</p>
               <div class="read">
                 > {{ $t('common.read') }}:
                 <a
@@ -100,7 +99,6 @@ import CreateWalletInputFooter from '@/layouts/CreateWalletLayout/components/Cre
 import FinishModal from './components/FinishModal';
 import PrintModal from './components/PrintModal';
 import VerificationModal from './components/VerificationModal';
-import PasswordInput from '@/components/PasswordInput';
 import ExpendingOption from '@/components/ExpendingOption';
 import CreateWalletInput from '../../components/CreateWalletInput';
 
@@ -112,7 +110,6 @@ export default {
     'verification-modal': VerificationModal,
     'print-modal': PrintModal,
     'input-footer': CreateWalletInputFooter,
-    'password-input': PasswordInput,
     'expending-option': ExpendingOption,
     'create-wallet-input': CreateWalletInput
   },

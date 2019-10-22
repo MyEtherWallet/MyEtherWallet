@@ -13,8 +13,8 @@
       <form class="tokens-modal-body" @keydown.enter.prevent>
         <div>
           <input
-            v-validate="'required'"
             v-model="tokenAddress"
+            v-validate="'required'"
             :class="[
               'custom-input-text-1',
               tokenAddress !== '' && !validAddress ? 'invalid-address' : ''
@@ -30,16 +30,16 @@
             Invalid address given.
           </span>
           <input
-            v-validate="'required'"
             v-model="tokenSymbol"
+            v-validate="'required'"
             name="Symbol"
             type="text"
             placeholder="Token Symbol"
             class="custom-input-text-1"
           />
           <input
-            v-validate="'required|numeric'"
             v-model="tokenDecimal"
+            v-validate="'required|numeric'"
             name="Decimal"
             type="number"
             min="0"

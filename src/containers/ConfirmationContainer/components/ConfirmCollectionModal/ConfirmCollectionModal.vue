@@ -36,9 +36,7 @@
                 <div>
                   <p>
                     - {{ web3.utils.hexToNumberString(item.value) }}
-                    <span>
-                      {{ network.type.currencyName }}
-                    </span>
+                    <span>{{ network.type.currencyName }}</span>
                   </p>
                   <div>
                     <span>{{ $t('common.from') }}</span>
@@ -57,9 +55,7 @@
                 <div>
                   <p>
                     + {{ web3.utils.hexToNumberString(item.value) }}
-                    <span>
-                      {{ network.type.currencyName }}
-                    </span>
+                    <span>{{ network.type.currencyName }}</span>
                   </p>
                   <div>
                     <span>{{ $t('common.to') }}</span>
@@ -157,13 +153,9 @@
   </div>
 </template>
 <script>
-import AddressBlock from '../AddressBlock';
 import { mapState } from 'vuex';
 
 export default {
-  components: {
-    'address-block': AddressBlock
-  },
   props: {
     unSignedArray: {
       type: Array,

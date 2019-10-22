@@ -55,9 +55,9 @@
             </div>
             <div class="the-form address-block">
               <input
-                v-ens-resolver="'address'"
                 ref="address"
                 v-model="address"
+                v-ens-resolver="'address'"
                 type="text"
                 name="name"
                 autocomplete="off"
@@ -135,9 +135,8 @@
                     :key="index"
                     :class="['btn-group', bounty === timeBounty && 'selected']"
                     @click="timeBounty = bounty"
+                    >{{ bounty }}</b-button
                   >
-                    {{ bounty }}
-                  </b-button>
                 </b-button-group>
                 <div class="timebounty-gasprice-coverage">
                   Covers up to
@@ -195,9 +194,8 @@
                       :key="index"
                       :class="['mode-btn', mode === selectedMode && 'selected']"
                       @click="selectedMode = mode"
+                      >{{ mode.name }}</b-button
                     >
-                      {{ mode.name }}
-                    </b-button>
                   </b-button-group>
                 </div>
               </b-col>
@@ -308,7 +306,6 @@ import 'moment-timezone';
 import * as unit from 'ethjs-unit';
 import { Toast } from '@/helpers';
 
-import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
 import CurrencyPicker from '../../../layouts/InterfaceLayout/components/CurrencyPicker';
 import StandardInput from '@/components/StandardInput';
 import StandardDropdown from '@/components/StandardDropdown';
@@ -324,7 +321,6 @@ import {
 export default {
   name: 'ScheduleView',
   components: {
-    'back-button': BackButton,
     'currency-picker': CurrencyPicker,
     'standard-input': StandardInput,
     'standard-dropdown': StandardDropdown,

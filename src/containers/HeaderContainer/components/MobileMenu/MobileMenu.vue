@@ -127,7 +127,6 @@
 <script>
 import { mapState } from 'vuex';
 import MobileMenuButton from './components/MobileMenuButton';
-import MobileAddressBlock from './components/MobileAddressBlock';
 import MobileBalanceBlock from './components/MobileBalanceBlock';
 import MobileNetworkBlock from './components/MobileNetworkBlock';
 import MobileLanguageSelector from './components/MobileLanguageSelector';
@@ -135,7 +134,6 @@ import MobileLanguageSelector from './components/MobileLanguageSelector';
 export default {
   components: {
     'mobile-menu-button': MobileMenuButton,
-    'mobile-address-block': MobileAddressBlock,
     'mobile-balance-block': MobileBalanceBlock,
     'mobile-network-block': MobileNetworkBlock,
     'mobile-language-selector': MobileLanguageSelector

@@ -157,6 +157,7 @@ const setWeb3Instance = function({ dispatch, commit, state }, provider) {
   web3Instance.currentProvider.sendAsync = web3Instance.currentProvider.send;
   web3Instance['mew'] = {};
   web3Instance['mew'].sendBatchTransactions = arr => {
+    // eslint-disable-next-line no-async-promise-executor
     return new Promise(async resolve => {
       for (let i = 0; i < arr.length; i++) {
         const localTx = {

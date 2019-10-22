@@ -10,8 +10,8 @@
           <div class="icons">
             <a
               v-for="(link, index) in links"
-              :href="link.to"
               :key="link.name + index"
+              :href="link.to"
               :aria-label="link.name"
               target="_blank"
               rel="noopener noreferrer"

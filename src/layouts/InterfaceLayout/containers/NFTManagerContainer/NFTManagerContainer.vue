@@ -5,8 +5,10 @@
       v-if="!isReady && isOnlineAndEth"
       class="inner-side-menu content-container"
     >
-      <nft-side-menu :supported-nft-obj="sideMenuData" :nft-config="nftConfig">
-      </nft-side-menu>
+      <nft-side-menu
+        :supported-nft-obj="sideMenuData"
+        :nft-config="nftConfig"
+      ></nft-side-menu>
       <loading-sign :loadingmessage1="$t('common.loading')" />
     </div>
     <div v-if="isReady && hasNfts" class="inner-side-menu content-container">
@@ -19,8 +21,7 @@
         @selected="changeSelectedContract"
         @openCustomModal="openCustomModal"
         @removeCustomNft="openRemovalConfirmModal"
-      >
-      </nft-side-menu>
+      ></nft-side-menu>
       <div v-if="showDetails">
         <nft-details
           :nft="detailsFor"
@@ -52,12 +53,16 @@
             >
               <i class="fa fa-chevron-left"></i>
             </span>
-            <span v-show="!collectionLoading">{{
-              $t('dapps.showingRange', { first: startIndex, last: endIndex })
-            }}</span>
-            <span v-show="collectionLoading">{{
-              $t('dapps.loadingRange', { first: startIndex, last: endIndex })
-            }}</span>
+            <span v-show="!collectionLoading">
+              {{
+                $t('dapps.showingRange', { first: startIndex, last: endIndex })
+              }}
+            </span>
+            <span v-show="collectionLoading">
+              {{
+                $t('dapps.loadingRange', { first: startIndex, last: endIndex })
+              }}
+            </span>
             <span
               v-show="showNextButton"
               class="internal-nav next"
@@ -81,9 +86,7 @@
     </div>
 
     <div v-if="!isOnlineAndEth">
-      <div v-show="!online">
-        NFTs are
-      </div>
+      <div v-show="!online">NFTs are</div>
       <div v-show="online">
         {{ $t('dapps.removeCustomNFT', { value: network.type.name_long }) }}
       </div>
@@ -98,8 +101,7 @@
       ref="customRemoveModal"
       :for-removal="forRemoval"
       @remove="removeCustomNft"
-    >
-    </nft-custom-confirm-remove-modal>
+    ></nft-custom-confirm-remove-modal>
   </div>
 </template>
 
@@ -179,6 +181,7 @@ export default {
           ids_retrieved > this.countPerPage ? this.countPerPage : ids_retrieved;
         return this.nftData[this.selectedContract].currentIndex + increment;
       }
+      return null;
     },
     nftTitle() {
       if (this.nftData[this.selectedContract]) {
@@ -223,6 +226,7 @@ export default {
           this.endIndex !== ids_retrieved && this.endIndex <= ids_retrieved
         );
       }
+      return null;
     },
     sideMenuData() {
       return this.nftData;

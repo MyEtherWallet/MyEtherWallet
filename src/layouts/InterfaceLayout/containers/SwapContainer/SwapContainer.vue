@@ -233,7 +233,6 @@ import {
 } from '@/partners';
 
 const errorLogger = debug('v5:swapContainer');
-import SwapSendForm from './components/SwapExitToFiat';
 
 export default {
   components: {
@@ -244,7 +243,6 @@ export default {
     'providers-radio-selector': ProvidersRadioSelector,
     'swap-confirmation-modal': SwapConfirmationModal,
     'swap-exit-to-fiat': SwapExitToFiat,
-    'swap-send-form': SwapSendForm,
     'swap-send-to-modal': SwapSendToModal
   },
   props: {
@@ -336,6 +334,7 @@ export default {
       } catch (e) {
         errorLogger(e);
       }
+      return null;
     },
     fromBelowMinAllowed() {
       if (new BigNumber(MIN_SWAP_AMOUNT).gt(new BigNumber(this.fromValue)))
