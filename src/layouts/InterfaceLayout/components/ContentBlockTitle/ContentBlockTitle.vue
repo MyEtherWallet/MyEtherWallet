@@ -1,15 +1,14 @@
-<template>
+<template functional>
   <div class="flex--row--align-center content-block-title">
-    <h4>{{ title }}</h4>
+    <h4>{{ props.title }}</h4>
     <div class="margin--left--auto">
-      <p>{{ buttonText }}</p>
+      <p>{{ props.buttonText }}</p>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  components: {},
   props: {
     title: {
       type: String,
@@ -19,14 +18,7 @@ export default {
       type: String,
       default: ''
     }
-  },
-  data() {
-    return {};
-  },
-
-  computed: {},
-  watch: {},
-  mounted() {}
+  }
 };
 </script>
 
