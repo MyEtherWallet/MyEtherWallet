@@ -1,4 +1,4 @@
-<template>
+<template functional>
   <div class="mnemonic-table-container">
     <div class="header">
       <div class="block-title">
@@ -22,14 +22,14 @@
       </p>
     </div>
     <div class="content">
-      <div v-show="isTwentyFour" class="mnemonic full-mnemonic">
-        <div v-for="(item, idx) in mnemonic" :key="item" class="item">
+      <div v-show="props.isTwentyFour" class="mnemonic full-mnemonic">
+        <div v-for="(item, idx) in props.mnemonic" :key="item" class="item">
           <span>{{ idx + 1 }}. </span>{{ item }}
         </div>
       </div>
-      <div v-show="!isTwentyFour" class="mnemonic half-mnemonic">
+      <div v-show="!props.isTwentyFour" class="mnemonic half-mnemonic">
         <div
-          v-for="(item, idx) in mnemonic.slice(0, 12)"
+          v-for="(item, idx) in props.mnemonic.slice(0, 12)"
           :key="item"
           class="item"
         >

@@ -1,14 +1,20 @@
-<template>
+<template functional>
   <button
-    :class="[disabled ? 'disabled' : '', 'button-block', classname]"
-    @click="func"
+    :class="[props.disabled ? 'disabled' : '', 'button-block', props.classname]"
+    @click="props.func"
   >
     <div class="button-image">
-      <img :src="disabled ? imgDisabled : img" alt class="icon" />
+      <img
+        :src="props.disabled ? props.imgDisabled : props.img"
+        alt
+        class="icon"
+      />
     </div>
-    <h3>{{ title }}</h3>
-    <p class="desc">{{ desc }}</p>
-    <p :v-if="recommend !== ''" class="small-note">{{ recommend }}</p>
+    <h3>{{ props.title }}</h3>
+    <p class="desc">{{ props.desc }}</p>
+    <p :v-if="props.recommend !== ''" class="small-note">
+      {{ props.recommend }}
+    </p>
   </button>
 </template>
 
@@ -39,10 +45,6 @@ export default {
       type: String,
       default: ''
     },
-    tooltip: {
-      type: String,
-      default: ''
-    },
     disabled: {
       type: Boolean,
       default: true
@@ -51,9 +53,6 @@ export default {
       type: String,
       default: ''
     }
-  },
-  data() {
-    return {};
   }
 };
 </script>

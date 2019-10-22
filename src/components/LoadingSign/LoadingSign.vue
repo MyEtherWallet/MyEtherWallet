@@ -1,6 +1,6 @@
-<template>
-  <div class="loading-sign">
-    <div :class="color" class="loading-container">
+<template functional>
+  <div>
+    <div :class="[props.color, 'loading-container', 'loading-sign']">
       <div class="lds-spinner">
         <div></div>
         <div></div>
@@ -15,11 +15,11 @@
         <div></div>
         <div></div>
       </div>
-      <p v-if="loadingmessage1 != ''" class="loading-message1">
-        {{ loadingmessage1 }}
+      <p v-if="props.loadingmessage1 != ''" class="loading-message1">
+        {{ props.loadingmessage1 }}
       </p>
-      <p v-if="loadingmessage2 != ''" class="loading-message2">
-        {{ loadingmessage2 }}
+      <p v-if="props.loadingmessage2 != ''" class="loading-message2">
+        {{ props.loadingmessage2 }}
       </p>
     </div>
   </div>
@@ -28,7 +28,6 @@
 <script>
 export default {
   name: 'LoadingSign',
-  components: {},
   props: {
     type: {
       type: String,
@@ -46,14 +45,7 @@ export default {
       type: String,
       default: 'black'
     }
-  },
-  data() {
-    return {};
-  },
-  computed: {},
-  watch: {},
-  mounted() {},
-  methods: {}
+  }
 };
 </script>
 

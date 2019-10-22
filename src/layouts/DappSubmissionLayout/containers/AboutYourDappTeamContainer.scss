@@ -7,6 +7,10 @@
 
 .about-your-dapp {
   display: inline-block;
+
+  @media all and (max-width: 736px) {
+    margin-bottom: 0 !important;
+  }
 }
 
 .form-group {
