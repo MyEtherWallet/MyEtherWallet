@@ -1,5 +1,5 @@
 {
-  "buy": "Buy",
+
 
 
   "areYouFinalizingCont": "and claim this name?",
@@ -16,21 +16,6 @@
   "txDetails": "Details",
   "detailWarning": "You CAN NOT claim your name unless you have this information during the reveal process. We suggest that you have to save those information.",
   "revealDate": "Reveal Date",
-  "saveAndNext": "Save & Next",
+  "saveAndNext": "Save & Next"
 
-
-
-
-
-  "sendMy": "Send My {value}",
-  "nftOwnCount": "{perPage} Per Page | {count} Items Total",
-  "noneOwned": "You own no NFTs",
-  "showingRange": " Showing {first} - {last}",
-  "loadingRange": " Loading {first} - {last}",
-  "addCustomNFT": "Add Custom NFT",
-  "removeCustomNFT": "Remove Custom NFT",
-  "customNFT": "Custom NFT",
-  "notSupportedNFT": "NFTs are not supported on {value}",
-  "noNFTs": "No NFTs",
-  "reloading": "reloading"
 }

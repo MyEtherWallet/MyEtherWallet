@@ -2,7 +2,7 @@
   <div>
     <b-modal
       ref="modal"
-      :title="$t('dapps.addCustomNFT')"
+      :title="$t('nftManager.add-custom')"
       hide-footer
       class="bootstrap-modal nopadding max-height-1"
       centered
@@ -19,24 +19,23 @@
             ]"
             name="Address"
             type="text"
-            placeholder="Token Contract Address"
+            :placeholder="$t('nftManager.ph-token-addr')"
           />
           <span
             v-show="contractAddress !== '' && !validAddress"
             class="error-message"
           >
-            Invalid address given.
+            {{ $t('nftManager.invalid-addr')}}
           </span>
           <span v-show="nonStandardMessage">
-            NFT token contract doesn't include a required method to add as a
-            custom NFT or you do not have
+            {{ $t('nftManager.no-method-no-token', {token: tokenSymbol})}}
           </span>
           <input
             v-validate="'required'"
             v-model="tokenSymbol"
             name="Symbol"
             type="text"
-            placeholder="NFT name"
+            :placeholder="$t('nftManager.name')"
             class="custom-input-text-1"
           />
         </div>
