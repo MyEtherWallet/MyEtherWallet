@@ -1,5 +1,5 @@
 <template functional>
-  <div class="address-detail-container" @click="selectAccount(props.address)">
+  <div class="address-detail-container" @click="props.selectAccount(props.address)">
     <div class="check-mark-container">
       <i
         :class="[

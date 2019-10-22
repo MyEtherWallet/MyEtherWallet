@@ -8,7 +8,7 @@
       {{ props.textOne }}
     </button>
     <button class="reject" @click.prevent.stop="props.funcTwo">
-      {{ tprops.extTwo }}
+      {{ props.textTwo }}
     </button>
   </div>
 </template>

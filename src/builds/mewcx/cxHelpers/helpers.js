@@ -6,6 +6,8 @@ import phishfortDarklist from '@/url-darklist/phishfort-blacklisted-domains.json
 import mewLightlist from '@/url-lightlist/mew-whitelisted-domains.json';
 import ealLightlist from '@/url-lightlist/eal-whitelisted-domains.json';
 
+import Misc from '@/helpers/misc';
+
 const similarity = require('similarity');
 const punycode = require('punycode');
 const uniMap = require('unicode/category/Ll');
@@ -111,7 +113,7 @@ const queryBuilder = function(request) {
         arr.push(
           encodeURIComponent(i.replace('og:', '')) +
             '=' +
-            encodeURIComponent(request.meta[i])
+            Misc.stripTags(encodeURIComponent(request.meta[i]))
         );
       }
     }
@@ -124,7 +126,9 @@ const queryBuilder = function(request) {
     for (const i in request.tx) {
       if (request.tx.hasOwnProperty(i)) {
         arr.push(
-          encodeURIComponent(i) + '=' + encodeURIComponent(request.tx[i])
+          encodeURIComponent(i) +
+            '=' +
+            Misc.stripTags(encodeURIComponent(request.tx[i]))
         );
       }
     }
