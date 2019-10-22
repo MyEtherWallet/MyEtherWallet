@@ -1,4 +1,5 @@
 {
+  "home": "Home",
   "faqs": "FAQs",
   "cstm-support": "Customer Support",
   "help-center": "Help Center",
@@ -47,7 +48,7 @@
     "enter": "Enter password",
     "your": "Your Password"
   },
-  "optional":  "Optional",
+  "optional": "Optional",
   "value": "Value",
   "network": "Network",
   "addr": "Address",
@@ -55,7 +56,7 @@
   "enter-addr": "Please enter the address",
   "balance": {
     "string": "Balance",
-    "total" : "Total Balance"
+    "total": "Total Balance"
   },
   "advanced": "Advanced",
   "chain-id": "Chain ID",
@@ -70,5 +71,20 @@
   },
   "search": "Search",
   "loading": "Loading",
-  "confirmation": "Confirmation"
+  "confirmation": "Confirmation",
+  "signature": "Signature",
+  "to": "To",
+  "ok": "OK",
+  "buy-eth": "Buy ETH",
+  "header": {
+    "new-wallet": "New Wallet",
+    "access": "Access",
+    "vintage-text": "Missing the vintage MEW?",
+    "vintage-link": "Click here to go back!"
+  },
+  "security": "Security",
+  "status": "Status",
+  "time": "Time",
+  "time-remain": "Time Remaining",
+  "error-message": "Error Message"
 }

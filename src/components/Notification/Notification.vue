@@ -334,7 +334,7 @@ export default {
     },
     errorMessageString(notice) {
       if (notice.body.errorMessage === INVESTIGATE_FAILURE_KEY) {
-        return this.$t('header.investigate');
+        return this.$t('interface.investigate');
       }
       return notice.body.errorMessage;
     },

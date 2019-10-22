@@ -42,7 +42,6 @@
     "android": "and Android",
     "twitter": "Follow us on Twitter"
   },
-
   "menu": {
     "string": "Menu",
     "dashboard": "Dashboard",
@@ -56,44 +55,25 @@
   },
   "actions": "Actions",
   "view-all": "View All",
-  "ens": {
-   "title": "ENS Manager",
-   "desc": "Register an ENS domain"
-  },
-
-
-  "registerEnsDesc": "Search for a domain name. Once you have registered one, you can tell your friends to send ETH to \"_____.eth\", instead of your public address (0x.....).",
-  "checkDomain": "Check Domain",
-  "subDomain": "Sub Domain",
-  "allSubDomains": "All Sub Domains",
-  "online": "Online",
-
-  "offline": "Offline",
-
-
-
-
-  "equivalentValues": "Equivalent Values",
-
-  "readWriteC": "Read / Write Contract",
+  "settings": "Settings",
+  "logout": "Log Out",
+  "logout-warning": "It seems like you forgot to logout your wallet. For your wallet security, please log out your wallet to continue, or go back to your wallet.",
+  "oops": "Oops!",
+  "language": "Language",
+  "change-addr": "Change Address",
+  "created-contract": "Created Contract Address",
+  "go-back": "Go back",
+  "tx-history": "Transaction History",
+  "investigate": "Use the transaction hash to investigate why this transaction failed.",
+  "contract-creation": "Contract Creation",
+  "mewconnect-disconnected": "Seems like you are disconnected from MEWconnect, please reconnect using the App.",
 
 
 
 
 
 
-  "constructor": "Constructor",
-
-  "nameYourWallet": "Name Your Wallet",
-  "nameYourWalletDesc": "Give your address a human readable name on a registered ENS domain.",
-  "signMessageDesc": "Include your nickname and where you use the nickname so someone else cannot use it. Include a specific reason for the message so it cannot be reused for a different purpose.",
-  "verifiedMessage": "did sign the message",
-  "walletNotFound": "Oops! Wallet not found! :(",
-
-
-
-
-
+   "walletNotFound": "Oops! Wallet not found! :(",
 
   "enterPhoneForSMS": "Please enter your mobile phone number.  This number is used for verification via a SMS message code.",
 
@@ -115,8 +95,6 @@
   "CryptoToFiatBeta": "Please note Crypto to Fiat is currently a beta feature of Bity",
 
   "invalidTanCode": "Invalid Code",
-
-
   "dashboardSwap": "MEW has partnered with Bity, Kyber Network, Changelly, and Simplex to allow users to swap fiat to crypto, ETH and BTC, ETH and ERC-20.",
   "availableFor": "Available for iOS<br />and Android"
 }

@@ -50,12 +50,12 @@
         class="fixed-header"
       >
         <div v-if="$route.fullPath === '/'" class="vintage-header">
-          {{ $t('header.vintage.text') }}
+          {{ $t('common.header.vintage-text') }}
           <a
             rel="noopener noreferrer"
             aria-label="Vintage MyEtherWallet"
             href="https://vintage.myetherwallet.com"
-            >{{ $t('header.vintage.link') }}</a
+            >{{ $t('common.header.vintage-link') }}</a
           >
         </div>
         <div
@@ -95,14 +95,14 @@
                     class="buy-eth-icon"
                     src="@/assets/images/icons/buy-eth.svg"
                   />
-                  {{ $t('header.buy-eth') }}
+                  {{ $t('common.buy-eth') }}
                 </b-nav-item>
                 <b-nav-item
                   v-if="isHomePage"
                   to="/"
                   exact
                   @click="scrollTop()"
-                  >{{ $t('header.home') }}</b-nav-item
+                  >{{ $t('common.home') }}</b-nav-item
                 >
                 <b-nav-item v-if="isHomePage" to="/#about-mew">
                   {{ $t('common.about') }}
@@ -114,7 +114,7 @@
                   class="tx-history-menu"
                 >
                   <template slot="button-content">
-                    <p>{{ $t('header.tx.history') }}</p>
+                    <p>{{ $t('interface.tx-history') }}</p>
                   </template>
                   <b-dropdown-item :href="explorerUrl" target="_blank">
                     <p>{{ serviceUrl }} ({{ network.type.name }})</p>
@@ -176,7 +176,7 @@
                   to="/create-wallet"
                 >
                   <div class="get-free-wallet-button">
-                    {{ $t('header.wallet.new') }}
+                    {{ $t('common.header.new-wallet') }}
                   </div>
                 </b-nav-item>
                 <b-nav-item
@@ -188,7 +188,7 @@
                   to="/access-my-wallet"
                 >
                   <div class="access-button">
-                    {{ $t('header.wallet.access') }}
+                    {{ $t('common.header.access') }}
                   </div>
                 </b-nav-item>
                 <b-nav-item-dropdown
@@ -210,10 +210,10 @@
                     </div>
                   </template>
                   <b-dropdown-item @click="openSettings">{{
-                    $t('header.settings')
+                    $t('interface.settings')
                   }}</b-dropdown-item>
                   <b-dropdown-item @click="logout">{{
-                    $t('header.log-out')
+                    $t('interface.logout')
                   }}</b-dropdown-item>
                 </b-nav-item-dropdown>
               </b-nav>

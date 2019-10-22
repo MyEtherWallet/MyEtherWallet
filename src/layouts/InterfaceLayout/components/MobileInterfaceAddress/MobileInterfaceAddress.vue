@@ -37,7 +37,7 @@
         </div>
       </div>
       <div v-if="hasMultipleAddr" class="bottom-block">
-        <button @click="switchAddr">{{ $t('common.changeAddress') }}</button>
+        <button @click="switchAddr">{{ $t('interface.change-addr') }}</button>
       </div>
     </div>
     <!-- .wrap -->

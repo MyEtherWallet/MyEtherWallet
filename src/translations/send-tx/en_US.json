@@ -1,4 +1,6 @@
 {
+  "tx": "Transaction",
+  "tx-detail": "Transaction Detail",
   "send": "Send",
   "send-tx": "Send Transaction",
   "send-offline": "Send Offline",
@@ -8,6 +10,8 @@
   "type": "Type",
   "amount": "Amount",
   "tx-fee": "Transaction Fee",
+  "tx-hash": "Transaction Hash",
+  "max-tx-fee": "Max Transaction Fee",
   "cost-eth-convert": "Cost {txFeeEth} ETH = ${convert}",
   "add-data": "Add Data",
   "ph-add-data": "Add Data (e.g. 0x7834f874g298hf298h234f)",

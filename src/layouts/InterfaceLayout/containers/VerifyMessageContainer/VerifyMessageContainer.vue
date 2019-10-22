@@ -1,6 +1,6 @@
 <template>
   <div class="sign-message-container">
-    <interface-container-title :title="$t('common.verifyMessage')" />
+    <interface-container-title :title="$t('verifyMessage.title')" />
     <verify-message-input />
     <div class="content-container">
       <div class="submit-button-container">

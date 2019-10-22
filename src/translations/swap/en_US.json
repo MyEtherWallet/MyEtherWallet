@@ -3,6 +3,7 @@
   "from": "From",
   "to": "To",
   "deposit-amount": "Deposit Amount",
+  "deposit-addr": "Deposit Address",
   "recieve-amount": "Received Amount",
   "review": "Review swap",
   "sent-my-coins": "I sent my {currency}",
@@ -15,7 +16,7 @@
   "refund": "{currency} address for refund (if needed) from Changelly",
   "button-loading": "Finalizing Swap Details",
   "providers": {
-    "string": "Providers",
+    "string": "Provider | Providers",
     "no-provider-found": "No providers found :(",
     "loading-rates": "Please wait while we load provider rates...",
     "load-rate-error": "An Error occurred while retrieving the rates for {currency}",
@@ -58,5 +59,6 @@
     "popover-email": "Only used if any problems arise with the deposit, otherwise if omitted the value will be refunded to the sending address if any problems arise.",
     "verification-code": "Verification Code",
     "button-submit": "Submit"
-  }
+  },
+  "order-id": "{provider} order ID"
 }

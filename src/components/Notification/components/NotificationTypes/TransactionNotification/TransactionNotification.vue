@@ -17,15 +17,15 @@
     >
       <ul>
         <li v-if="isTokenTransfer">
-          <p>{{ $t('header.amount') }}:</p>
+          <p>{{ $t('sendTx.amount') }}:</p>
           <p>{{ details.tokenTransferVal }} {{ details.tokenSymbol }}</p>
         </li>
         <li v-if="!isTokenTransfer">
-          <p>{{ $t('header.amount') }}:</p>
+          <p>{{ $t('sendTx.amount') }}:</p>
           <p>{{ convertToEth(details.amount) }} {{ network.type.name }}</p>
         </li>
         <li>
-          <p>{{ $t('common.toAddress') }}:</p>
+          <p>{{ $t('sendTx.to-addr') }}:</p>
           <p>
             <a
               :href="addressLink(details.tokenTransferTo || details.to)"
@@ -49,7 +49,7 @@
           </p>
         </li>
         <li v-if="isContractCreation">
-          <p>{{ $t('common.createdContract') }}:</p>
+          <p>{{ $t('interface.created-contract') }}:</p>
           <p>
             <a
               :href="addressLink(details.contractAddress)"
@@ -61,7 +61,7 @@
           </p>
         </li>
         <li v-if="notice.body.gasUsed">
-          <p>{{ $t('common.txFee') }}:</p>
+          <p>{{ $t('sendTx.tx-fee') }}:</p>
           <p>
             {{ convertToEth(details.gasPrice * details.gasUsed) }}
             {{ network.type.name }}
@@ -71,7 +71,7 @@
           </p>
         </li>
         <li>
-          <p>{{ $t('header.maxTxFee') }}:</p>
+          <p>{{ $t('sendTx.max-tx-fee') }}:</p>
           <p>
             {{ convertToEth(details.gasPrice * details.gasLimit) }}
             {{ network.type.name }} (${{
@@ -80,7 +80,7 @@
           </p>
         </li>
         <li v-if="notice.hash">
-          <p>{{ $t('header.transactionHash') }}:</p>
+          <p>{{ $t('sendTx.tx-hash') }}:</p>
         </li>
         <li v-if="notice.hash">
           <a
@@ -92,11 +92,11 @@
           </a>
         </li>
         <li v-if="isError">
-          <p>{{ $t('header.errorMessage') }}:</p>
+          <p>{{ $t('common.error-message') }}:</p>
           <p>{{ errorMessage }}</p>
         </li>
         <li class="show-pointer" @click="emitShowDetails">
-          {{ $t('header.more') }}
+          {{ $t('common.more') }}
         </li>
       </ul>
     </div>
