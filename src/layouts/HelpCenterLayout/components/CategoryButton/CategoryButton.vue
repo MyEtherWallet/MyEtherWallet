@@ -1,8 +1,8 @@
-<template>
+<template functional>
   <div class="category-button">
     <div class="wrap">
-      <div class="button-icon"><img :src="content.icon" alt /></div>
-      <div class="button-title">{{ content.title }}</div>
+      <div class="button-icon"><img :src="props.content.icon" alt /></div>
+      <div class="button-title">{{ props.content.title }}</div>
     </div>
   </div>
 </template>
@@ -16,9 +16,6 @@ export default {
         return {};
       }
     }
-  },
-  data() {
-    return {};
   }
 };
 </script>

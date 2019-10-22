@@ -236,10 +236,6 @@ export default {
               href: 'https://www.mewtopia.com'
             },
             {
-              text: this.$t('common.vintage'),
-              href: 'https://vintage.myetherwallet.com'
-            },
-            {
               text: this.$t('common.customerSupport'),
               href: 'mailto:support@myetherwallet.com'
             },
