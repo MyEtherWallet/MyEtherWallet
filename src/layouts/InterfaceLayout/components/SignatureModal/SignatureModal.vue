@@ -5,14 +5,14 @@
       hide-footer
       centered
       class="bootstrap-modal"
-      title="Signature"
+      :title="$t('signMessage.signature')"
       static
       lazy
     >
       <div class="modal-contents">
         <div>
           <div class="copy-container">
-            <h4>Signed Message:</h4>
+            <h4>{{$t('signMessage.signed')}}</h4>
             <div class="copy-buttons">
               <span @click="copy">{{ $t('common.copy') }}</span>
             </div>
@@ -28,7 +28,7 @@
               class="submit-button large-round-button-green-filled clickable"
               @click="copy('main')"
             >
-              Copy
+              {{ $t('common.copy') }}
             </button>
           </div>
         </div>

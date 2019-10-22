@@ -33,6 +33,7 @@ import ens from './dapps-ens/en_US';
 import subDomain from './dapps-sub-domain/en_US';
 import scheduleTx from './dapps-schedule-tx/en_US';
 import nftManager from './nft-manager/en_US';
+import signMessage from './sign-message/en_US'
 const en_US = {
   common: common,
   commonold: commonold,
@@ -67,6 +68,7 @@ const en_US = {
   ens: ens,
   subDomain: subDomain,
   scheduleTx: scheduleTx,
-  nftManager: nftManager
+  nftManager: nftManager,
+  signMessage: signMessage
 };
 export default en_US;

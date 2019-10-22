@@ -5,7 +5,7 @@
       hide-footer
       centered
       class="bootstrap-modal bootstrap-modal-wide padding-40-20"
-      title="Confirmation"
+      :title="$t('common.confirmation')"
       static
       lazy
     >

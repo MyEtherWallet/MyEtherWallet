@@ -62,11 +62,13 @@
   "save": "Save",
   "dont-know": "Don't know what it is?",
   "have-issues": "Have any issues?",
+  "learn-more": "Learn more",
   "dapps": "Dapps",
   "gas": {
     "limit": "Gas Limit",
     "price": "Gas Price"
   },
   "search": "Search",
-  "loading": "Loading"
+  "loading": "Loading",
+  "confirmation": "Confirmation"
 }

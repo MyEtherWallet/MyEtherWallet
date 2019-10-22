@@ -149,7 +149,7 @@
             href="https:/kb.myetherwallet.com"
             target="_blank"
             rel="noopener noreferrer"
-            >Learn more</a
+            >{{ $t('common.learn-more') }}</a
           >
         </p>
       </div>
