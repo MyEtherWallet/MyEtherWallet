@@ -1,3 +1,8 @@
+### Release v5.1.8
+
+### Bug
+- Fix total NFT issue [#1550](https://github.com/MyEtherWallet/MyEtherWallet/pull/1550)
+
 ### Release v5.1.7
 
 ### Feature
