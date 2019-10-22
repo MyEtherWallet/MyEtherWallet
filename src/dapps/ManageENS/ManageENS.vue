@@ -133,6 +133,9 @@ export default {
     },
     parsedDomainName() {
       return this.parsedHostName + '.' + this.parsedTld;
+    },
+    isSubDomain() {
+      return this.domainName.split('.').length - 1 > 1;
     }
   },
   watch: {
@@ -349,7 +352,10 @@ export default {
         this.loading = false;
       } else if (this.parsedTld === this.registrarTLD) {
         try {
-          if (this.registrarType === REGISTRAR_TYPES.FIFS) {
+          if (
+            this.registrarType === REGISTRAR_TYPES.FIFS &&
+            !this.isSubDomain
+          ) {
             const expiryTime = await this.registrarContract.methods
               .expiryTimes(this.labelHash)
               .call();
@@ -361,7 +367,10 @@ export default {
               this.getMoreInfo();
               this.loading = false;
             }
-          } else if (this.registrarType === REGISTRAR_TYPES.PERMANENT) {
+          } else if (
+            this.registrarType === REGISTRAR_TYPES.PERMANENT &&
+            !this.isSubDomain
+          ) {
             if (!this.isPermanentLive) {
               Toast.responseHandler(
                 'ENS Permanent registrar is not available yet, please try again later',
@@ -399,6 +408,13 @@ export default {
                 this.$router.push({ path: 'manage-ens/create-commitment' });
                 this.loading = false;
               }
+            }
+          } else if (this.isSubDomain) {
+            const owner = await this.ens.owner(this.parsedDomainName);
+            if (owner === '0x0000000000000000000000000000000000000000') {
+              Toast.responseHandler('This subdomain is not owned', Toast.WARN);
+            } else {
+              this.getMoreInfo();
             }
           }
         } catch (e) {
@@ -573,7 +589,8 @@ export default {
       try {
         if (
           this.registrarType === REGISTRAR_TYPES.PERMANENT &&
-          this.parsedTld === this.registrarTLD
+          this.parsedTld === this.registrarTLD &&
+          !this.isSubDomain
         ) {
           owner = await this.registrarContract.methods
             .ownerOf(this.labelHash)
