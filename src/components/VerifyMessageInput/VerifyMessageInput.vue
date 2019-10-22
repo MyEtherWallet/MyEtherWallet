@@ -3,7 +3,7 @@
     <div class="send-form">
       <div class="title-container">
         <div class="title">
-          <h4>{{ $t('verifyMessage.signature') }}:</h4>
+          <h4>{{ $t('common.signature') }}:</h4>
           <div class="copy-buttons">
             <span @click="deleteInput">{{ $t('common.clear') }}</span>
             <span @click="copyToClipboard">{{ $t('common.copy') }}</span>

@@ -2,7 +2,6 @@
 import common from './common/zh_TW';
 import confirmation from './confirmation/zh_TW';
 import dapps from './dapps/zh_TW';
-import header from './header/zh_TW';
 import home from './home/zh_TW';
 import footer from './footer/zh_TW';
 import gettingStarted from './getting-started/zh_TW';
@@ -26,7 +25,6 @@ const zh_TW = {
   common: common,
   confirmation: confirmation,
   dapps: dapps,
-  header: header,
   home: home,
   footer: footer,
   gettingStarted: gettingStarted,

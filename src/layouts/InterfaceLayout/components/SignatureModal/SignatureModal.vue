@@ -2,7 +2,7 @@
   <div>
     <b-modal
       ref="signatureModal"
-      :title="$t('signMessage.signature')"
+      :title="$t('common.signature')"
       hide-footer
       centered
       class="bootstrap-modal"

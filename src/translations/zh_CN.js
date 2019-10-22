@@ -2,7 +2,6 @@
 import common from './common/zh_CN';
 import confirmation from './confirmation/zh_CN';
 import dapps from './dapps/zh_CN';
-import header from './header/zh_CN';
 import home from './home/zh_CN';
 import footer from './footer/zh_CN';
 import gettingStarted from './getting-started/zh_CN';
@@ -27,7 +26,6 @@ const zh_CN = {
   common: common,
   confirmation: confirmation,
   dapps: dapps,
-  header: header,
   home: home,
   footer: footer,
   gettingStarted: gettingStarted,

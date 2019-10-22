@@ -114,7 +114,7 @@
               v-show="sending"
               class="submit-button large-round-button-green-filled clickable disabled"
             >
-              {{ $t('common.waitingForHash') }}
+              {{ $t('confirmation.waiting-for-hash') }}
               <i class="fa fa-spinner fa-spin" />
             </div>
             <div class="tooltip-box-2">

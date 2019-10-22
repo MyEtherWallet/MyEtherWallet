@@ -187,7 +187,7 @@
         <div class="send-form">
           <div class="title-container">
             <div class="title title-and-copy">
-              <h4>{{ $t('swap.providers.string') }}</h4>
+              <h4>{{ $tc('swap.providers.string', 2) }}</h4>
             </div>
           </div>
           <providers-radio-selector

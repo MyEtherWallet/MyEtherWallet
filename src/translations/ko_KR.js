@@ -2,7 +2,6 @@
 import common from './common/ko_KR';
 import confirmation from './confirmation/ko_KR';
 import dapps from './dapps/ko_KR';
-import header from './header/ko_KR';
 import home from './home/ko_KR';
 import footer from './footer/ko_KR';
 import gettingStarted from './getting-started/ko_KR';
@@ -27,7 +26,6 @@ const ko_KR = {
   common: common,
   confirmation: confirmation,
   dapps: dapps,
-  header: header,
   home: home,
   footer: footer,
   gettingStarted: gettingStarted,

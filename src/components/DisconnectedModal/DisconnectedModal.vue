@@ -20,7 +20,7 @@
           Oops!
         </div>
         <div class="text-content">
-          {{ $t('header.mewConnectDisconnected') }}
+          {{ $t('interface.mewconnect-disconnected') }}
         </div>
         <div class="ok-button">
           <standard-button :options="okayButtonOptions" @click.native="close" />

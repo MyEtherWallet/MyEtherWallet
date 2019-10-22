@@ -1,29 +1,29 @@
 <template lang="html">
   <div>
-    <div class="notification-header">{{ $t('header.transactionDetail') }}</div>
+    <div class="notification-header">{{ $t('sendTx.tx-detail') }}</div>
     <div class="notification-content">
       <ul>
         <li>
-          <p>{{ $t('header.time') }}:</p>
+          <p>{{ $t('common.time') }}:</p>
           <div class="time-date">
             <p>{{ timeString(notice) }}</p>
             <p>{{ dateString(notice) }}</p>
           </div>
         </li>
         <li class="notification-type-status">
-          <p>{{ $t('header.status') }}:</p>
+          <p>{{ $t('common.status') }}:</p>
           <p :class="['status', txStatus.class]">({{ txStatus.text }})</p>
         </li>
         <li v-if="isTokenTransfer">
-          <p>{{ $t('header.amount') }}:</p>
+          <p>{{ $t('sendTx.amount') }}:</p>
           <p>{{ details.tokenTransferVal }} {{ details.tokenSymbol }}</p>
         </li>
         <li v-if="!isTokenTransfer">
-          <p>{{ $t('header.amount') }}:</p>
+          <p>{{ $t('sendTx.amount') }}:</p>
           <p>{{ convertToEth(details.amount) }} {{ network.type.name }}</p>
         </li>
         <li>
-          <p>{{ $t('common.toAddress') }}:</p>
+          <p>{{ $t('sendTx.to-addr') }}:</p>
           <p>
             <a
               :href="addressLink(details.tokenTransferTo || details.to)"
@@ -55,7 +55,7 @@
           <p>{{ details.gasLimit }}</p>
         </li>
         <li v-if="notice.body.gasUsed">
-          <p>{{ $t('common.txFee') }}:</p>
+          <p>{{ $t('sendTx.tx-fee') }}:</p>
           <p>
             {{ convertToEth(details.gasPrice * details.gasUsed) }}
             {{ network.type.name }} (${{
@@ -64,7 +64,7 @@
           </p>
         </li>
         <li>
-          <p>{{ $t('header.maxTxFee') }}:</p>
+          <p>{{ $t('sendTx.max-tx-fee') }}:</p>
           <p>
             {{ convertToEth(details.gasPrice * details.gasLimit) }}
             {{ network.type.name }} (${{
@@ -73,11 +73,11 @@
           </p>
         </li>
         <li>
-          <p>{{ $t('header.nonce') }}:</p>
+          <p>{{ $t('sendTx.nonce') }}:</p>
           <p>{{ details.nonce }}</p>
         </li>
         <li v-if="notice.hash">
-          <p>{{ $t('header.transactionHash') }}:</p>
+          <p>{{ $t('sendTx.tx-hash') }}:</p>
         </li>
         <li v-if="notice.hash">
           <p>
@@ -91,7 +91,7 @@
           </p>
         </li>
         <li v-if="isError">
-          <p>{{ $t('header.errorMessage') }}:</p>
+          <p>{{ $t('common.error-message') }}:</p>
           <p>{{ errorMessage }}</p>
         </li>
       </ul>

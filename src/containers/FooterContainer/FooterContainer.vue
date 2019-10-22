@@ -27,7 +27,7 @@
                   :key="content.text + index"
                   class="content"
                 >
-                  <div v-if="content.text === $t('common.customerSupport')">
+                  <div v-if="content.text === $t('common.cstm-support')">
                     <customer-support :no-icon="true" />
                   </div>
                   <router-link
