@@ -30,6 +30,8 @@ import sendTx from './send-tx/en_US';
 import swap from './swap/en_US';
 import contract from './contract/en_US';
 import ens from './dapps-ens/en_US';
+import subDomain from './dapps-sub-domain/en_US';
+
 const en_US = {
   common: common,
   commonold: commonold,
@@ -61,6 +63,7 @@ const en_US = {
   sendTx: sendTx,
   swap: swap,
   contract: contract,
-  ens: ens
+  ens: ens,
+  subDomain: subDomain
 };
 export default en_US;

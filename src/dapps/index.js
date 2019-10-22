@@ -21,8 +21,8 @@ const dapps = {
     route: '/interface/dapps/name-wallet',
     icon: domainSale,
     iconDisabled: domainSaleHov,
-    title: 'interface.nameYourWallet',
-    desc: 'interface.nameYourWalletDesc',
+    title: 'subDomain.title',
+    desc: 'subDomain.dapp-desc',
     supportedNetworks: [ETH.name]
   },
   scheduleTransaction: {
