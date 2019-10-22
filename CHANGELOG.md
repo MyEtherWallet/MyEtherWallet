@@ -1,6 +1,29 @@
+### Release v5.1.8
+
 ### Feature
 
-- Add Ambrpay [#1441](https://github.com/MyEtherWallet/MyEtherWallet/pull/1441)
+- Ambrpay Integration[#1441](https://github.com/MyEtherWallet/MyEtherWallet/pull/1441)
+
+### Release v5.1.7
+
+### Feature
+
+- Multicoin ENS support [#1521](https://github.com/MyEtherWallet/MyEtherWallet/pull/1521)
+- Move State of the Dapp text to the left column [#1518](https://github.com/MyEtherWallet/MyEtherWallet/pull/1518)
+
+### Bug
+
+- transferDomain func fix on ROP [#1538](https://github.com/MyEtherWallet/MyEtherWallet/pull/1538)
+- Fix mnemonic phrase validation [#1506](https://github.com/MyEtherWallet/MyEtherWallet/pull/1506)
+- Fix value on interact/deploy contract [#1502](https://github.com/MyEtherWallet/MyEtherWallet/pull/1502)
+- Fix ENS subdomain issue [#1547](https://github.com/MyEtherWallet/MyEtherWallet/pull/1547)
+
+### Devop
+
+- Fix static "help" and "tutorial" button size and position [#1531](https://github.com/MyEtherWallet/MyEtherWallet/pull/1531)
+- Remove Ethereum commonwealth nodes in case they shut it down [#1507](https://github.com/MyEtherWallet/MyEtherWallet/pull/1507)
+- App optimization [#1519](https://github.com/MyEtherWallet/MyEtherWallet/pull/1519)
+- changelly timeout error handling [#1522](https://github.com/MyEtherWallet/MyEtherWallet/pull/1522)
 
 ### Release v5.1.6
 
@@ -47,7 +70,6 @@
 - Fix generate mnemonic [#1439](https://github.com/MyEtherWallet/MyEtherWallet/pull/1439)
 - Gas price not saving properly [#1434](https://github.com/MyEtherWallet/MyEtherWallet/pull/1434)
 - Fix u2f timeout for bitbox on windows [#1423](https://github.com/MyEtherWallet/MyEtherWallet/pull/1423)
-
 
 ### Release v5.1.3
 

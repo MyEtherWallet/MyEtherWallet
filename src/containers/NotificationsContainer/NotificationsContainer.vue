@@ -114,8 +114,8 @@ import store from 'store';
 import unit from 'ethjs-unit';
 import BigNumber from 'bignumber.js';
 
-import SwapNotification from './components/NotificationTypes/SwapNotification/SwapNotification';
-import TransactionNotification from './components/NotificationTypes/TransactionNotification/TransactionNotification';
+import SwapNotification from './components/NotificationTypes/SwapNotification';
+import TransactionNotification from './components/NotificationTypes/TransactionNotification';
 import TransactionDetails from './components/NotificationTypes/NotificationDetails';
 import SwapDetails from './components/NotificationTypes/SwapDetails';
 
@@ -404,5 +404,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import './Notification.scss';
+@import './NotificationsContainer.scss';
 </style>

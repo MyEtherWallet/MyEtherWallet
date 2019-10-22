@@ -18,7 +18,6 @@
       <b-progress :value="bannerValue" class="dapp-progress-bar"></b-progress>
     </div>
     <div class="dapp-container">
-      <sotd />
       <router-view
         :update-name="updateName"
         :update-category="updateCategory"
@@ -48,6 +47,7 @@
           :strength-of-info="strengthPercentage"
           class="strength-of-info ml-5"
         />
+        <sotd />
         <mew-support />
       </div>
       <success-modal

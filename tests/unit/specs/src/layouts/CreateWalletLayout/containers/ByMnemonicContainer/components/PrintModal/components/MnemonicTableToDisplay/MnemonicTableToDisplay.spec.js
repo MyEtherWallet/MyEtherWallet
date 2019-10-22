@@ -2,7 +2,7 @@ import { shallowMount } from '@vue/test-utils';
 import MnemonicTableToDisplay from '@/layouts/CreateWalletLayout/containers/ByMnemonicContainer/components/PrintModal/components/MnemonicTableToDisplay';
 import { Tooling } from '@@/helpers';
 
-describe('MnemonicTableToDisplay.vue', () => {
+xdescribe('MnemonicTableToDisplay.vue', () => {
   let localVue, i18n, wrapper, store;
 
   beforeAll(() => {
