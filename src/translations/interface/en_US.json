@@ -68,8 +68,17 @@
   "contract-creation": "Contract Creation",
   "mewconnect-disconnected": "Seems like you are disconnected from MEWconnect, please reconnect using the App.",
 
-
-
+  "config": {
+    "tx-speed": "Transaction Speed",
+    "import": "Import Configuration",
+    "import-desc": "Please click the button below to open and import you configuration file from your local computer.",
+    "import-success": "Imported file successfully!",
+    "export-short": "Export",
+    "import-short": "Import",
+    "export": "Export Configurations",
+    "export-desc": "Please click the button below to download your configuration file into your local computer.",
+    "upload-f": "Upload File..."
+  },
 
 
 

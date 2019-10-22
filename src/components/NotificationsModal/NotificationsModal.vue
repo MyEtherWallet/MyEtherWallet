@@ -13,7 +13,7 @@
 
       <div class="modal-contents">
         <full-width-dropdown
-          title="Transaction Speed"
+          :title=" $t('interface.config.tx-speed')"
           popup="What is TX speed"
           class="tx-speed"
         >
@@ -24,12 +24,12 @@
           </div>
         </full-width-dropdown>
         <full-width-dropdown
-          title="Import Configurations"
+          :title="$t('interface.config.import')"
           class="import-config"
         >
         </full-width-dropdown>
         <full-width-dropdown
-          title="Export Configurations"
+          :title="$t('interface.config.export')"
           class="export-config"
         >
         </full-width-dropdown>
