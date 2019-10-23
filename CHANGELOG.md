@@ -1,6 +1,6 @@
 ### Feature
 
-- Ens TXT records support []()
+- Ens TXT records support [#1559](https://github.com/MyEtherWallet/MyEtherWallet/pull/1559)
 
 ### Release v5.1.8
 
