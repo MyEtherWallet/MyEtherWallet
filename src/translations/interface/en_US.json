@@ -57,6 +57,7 @@
   "view-all": "View All",
   "settings": "Settings",
   "logout": "Log Out",
+  "logout-wallet": "Log Out of Wallet",
   "logout-warning": "It seems like you forgot to logout your wallet. For your wallet security, please log out your wallet to continue, or go back to your wallet.",
   "oops": "Oops!",
   "language": "Language",

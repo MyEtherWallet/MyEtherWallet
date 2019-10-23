@@ -35,7 +35,7 @@ export default {
         noMinWidth: true
       },
       buttonYes: {
-        title: this.$t('interface.logoutWallet'),
+        title: this.$t('interface.logout-wallet'),
         buttonStyle: 'red',
         rightArrow: false,
         leftArrow: false,
