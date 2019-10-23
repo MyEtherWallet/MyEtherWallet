@@ -1,3 +1,7 @@
+### Feature
+
+- Ens TXT records support []()
+
 ### Release v5.1.8
 
 ### Bug
