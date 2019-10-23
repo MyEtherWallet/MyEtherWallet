@@ -1,6 +1,9 @@
 import { formatsByName } from '@ensdomains/address-encoder';
 import MultiCoinValidator from 'multicoin-address-validator';
-import { isValidChecksumAddress as isValidRSKChecksumAddress } from 'rskjs-util';
+import {
+  isValidChecksumAddress as isValidRSKChecksumAddress,
+  toChecksumAddress as toRSKChecksumAddress
+} from 'rskjs-util';
 import { RSK } from '@/networks/types';
 
 class MValidator {
@@ -11,14 +14,21 @@ class MValidator {
     return MultiCoinValidator.validate(address, this.type);
   }
 }
-class RSKValidator {
+class RSKUtils {
   constructor(chainID) {
     this.chainID = chainID;
   }
   validate(address) {
-    return isValidRSKChecksumAddress(address, this.chainID);
+    return (
+      /^0x[0-9a-f]{40}$/.test(address) ||
+      isValidRSKChecksumAddress(address, this.chainID)
+    );
+  }
+  toChecksumAddress(address) {
+    return toRSKChecksumAddress('0x' + address.toString('hex'), this.chainID);
   }
 }
+const rskUtils = new RSKUtils(RSK.chainID);
 export default {
   ETH: {
     id: 60,
@@ -72,8 +82,8 @@ export default {
     id: 137,
     symbol: 'RSK',
     name: 'RootStock',
-    validator: new RSKValidator(RSK.chainID),
-    encode: formatsByName['RSK'].encoder,
+    validator: rskUtils,
+    encode: rskUtils.toChecksumAddress.bind(rskUtils),
     decode: formatsByName['RSK'].decoder
   },
   XRP: {
