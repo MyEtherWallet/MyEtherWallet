@@ -11,9 +11,8 @@
                 v-for="(item, idx) in Object.keys(supportedCoins)"
                 :key="item + idx"
                 @click="addInput(item)"
+                >{{ item }}</b-dd-item
               >
-                {{ item }}
-              </b-dd-item>
             </b-dd>
           </div>
           <div
@@ -31,8 +30,7 @@
             <i
               :class="[
                 'validity-indication fa',
-                v.value !== '' &&
-                !MultiCoinValidator.validate(v.value, v.validator)
+                v.value !== '' && !v.validator.validate(v.value)
                   ? 'error fa-times-circle-o'
                   : 'valid fa-check-circle-o'
               ]"
@@ -90,7 +88,6 @@
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import { isAddress } from '@/helpers/addressUtils';
 import { mapState } from 'vuex';
-import MultiCoinValidator from 'multicoin-address-validator';
 import { Toast } from '@/helpers';
 import utils from 'web3-utils';
 export default {
@@ -134,7 +131,6 @@ export default {
       transferTo: '',
       multiCoinSupport: false,
       isAddress: isAddress,
-      MultiCoinValidator,
       inputs: newObj,
       selectedCurrency: 'ETH',
       hasError: false
@@ -146,10 +142,7 @@ export default {
       for (const type in this.inputs) {
         if (
           this.inputs[type].value !== '' &&
-          !MultiCoinValidator.validate(
-            this.inputs[type].value,
-            this.inputs[type].validator
-          )
+          !this.inputs[type].validator.validate(this.inputs[type].value)
         )
           return false;
       }
