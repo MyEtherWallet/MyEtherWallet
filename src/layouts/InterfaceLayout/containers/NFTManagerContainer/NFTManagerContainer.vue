@@ -25,7 +25,8 @@
         <nft-details
           :nft="detailsFor"
           :selected-title="nftTitle"
-          @nftTransfered="removeSentNft"
+          @nftTransferred="removeSentNft"
+          @resetNFT="resetNFT"
           @back="comeBack"
         ></nft-details>
       </div>
@@ -123,6 +124,7 @@ import hexDecoder from './binaryDecoderNFT';
 import { nftABI } from './abis';
 import StandardButton from '@/components/Buttons/StandardButton';
 import placeholderImage from '@/assets/images/icons/defaultToken.png';
+import utils from 'web3-utils';
 
 const URL_BASE = 'https://nft.mewapi.io/nft';
 
@@ -171,7 +173,8 @@ export default {
         helpCenter: false,
         noMinWidth: true,
         fullWidth: false
-      }
+      },
+      nftObjectClone: {}
     };
   },
   computed: {
@@ -302,6 +305,7 @@ export default {
       }
     },
     removeSentNft(nft) {
+      this.nftObjectClone = utils._.clone(this.nftData[nft.contract]);
       const afterSent = this.nftData[nft.contract].details.filter(entry => {
         return entry.token !== nft.token;
       });
@@ -309,6 +313,9 @@ export default {
       this.nftData[nft.contract].count -= 1;
       if (this.nftData[nft.contract].count === 0) this.sentUpdate += 1;
       this.showDetails = false;
+    },
+    resetNFT(nft) {
+      this.nftData[nft.contract] = this.nftObjectClone;
     },
     changeSelectedContract(selectedContract) {
       this.selectedContract = selectedContract;
