@@ -160,12 +160,16 @@ export default {
           to: this.nft.contract,
           data: txData
         };
-        this.web3.eth.sendTransaction(raw).catch(err => {
-          Toast.responseHandler(err, Toast.ERROR);
-        });
-        this.$emit('nftTransfered', this.nft);
-
-        this.toAddress = '';
+        this.web3.eth
+          .sendTransaction(raw)
+          .on('transactionHash', () => {
+            this.$emit('nftTransferred', this.nft);
+            this.toAddress = '';
+          })
+          .catch(err => {
+            this.$emit('resetNFT', this.nft);
+            Toast.responseHandler(err, Toast.ERROR);
+          });
       }
     },
     goBack() {
