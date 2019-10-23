@@ -32,6 +32,8 @@
       :commitment-created="commitmentCreated"
       :resolver-multi-coin-support="resolverMultiCoinSupport"
       :supported-coins="supportedCoins"
+      :txt-records="txtRecords"
+      :set-record="setRercord"
       @updateSecretPhrase="updateSecretPhrase"
       @domainNameChange="updateDomainName"
       @updateStep="updateStep"
@@ -100,7 +102,8 @@ export default {
       resolverMultiCoinSupport: false,
       supportedCoins,
       txtRecords: {},
-      supportedTxt
+      supportedTxt,
+      recordContract: {}
     };
   },
   computed: {
@@ -180,6 +183,7 @@ export default {
       this.resolverMultiCoinSupport = false;
       this.supportedCoins = supportedCoins;
       this.txtRecords = {};
+      this.recordContract = {};
 
       if (this.ens) {
         this.setRegistrar();
@@ -662,11 +666,25 @@ export default {
       this.loading = false;
     },
     async fetchTxtRecords(resolver) {
+      this.recordContract = resolver;
       const newObj = {};
       for (const el of this.supportedTxt) {
-        newObj[el.name] = await resolver.methods.text(this.nameHash, el.name).call();
+        newObj[el.name] = await resolver.methods
+          .text(this.nameHash, el.name)
+          .call();
       }
       this.txtRecords = Object.assign({}, newObj);
+    },
+    async setRercord(obj) {
+      const recordCount = Object.keys(obj).length;
+      if (recordCount > 1) {
+        const txs = [];
+        for(const i in obj) {}
+        web3.mew.sendBatchTransactions(
+          [setResolverTx, ...setAddrTx, migrateEthAddress].filter(Boolean)
+        )
+      } else if (recordCount === 1) {
+      }
     },
     updateSecretPhrase(e) {
       this.secretPhrase = e;
