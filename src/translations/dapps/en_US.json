@@ -40,5 +40,6 @@
   "customNFT": "Custom NFT",
   "notSupportedNFT": "NFTs are not supported on {value}",
   "noNFTs": "No NFTs",
-  "reloading": "reloading"
+  "reloading": "reloading",
+  "txtRecord": "Txt Record"
 }
