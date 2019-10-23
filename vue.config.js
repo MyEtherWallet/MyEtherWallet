@@ -14,7 +14,8 @@ const webpackConfig = {
   devServer: {
     https: true,
     disableHostCheck: true,
-    host: 'localhost',
+    // host: 'localhost',
+    host: '0.0.0.0',
     hotOnly: true,
     port: 8080,
     writeToDisk: JSON.parse(env_vars.BUILD_TYPE) === 'mewcx',

@@ -168,7 +168,7 @@ export default {
         {
           func: this.hardwareModalOpen,
           title: this.$t('common.hardware'),
-          desc: 'Ledger wallet, FINNEY, Trezor, BitBox, Secalot, KeepKey',
+          desc: 'Ledger wallet, FINNEY, Trezor, BitBox, Secalot, KeepKey, XWallet',
           recommend: '',
           tooltip: '',
           img: hardwareImg,
