@@ -163,10 +163,11 @@ export default {
         this.web3.eth
           .sendTransaction(raw)
           .on('transactionHash', () => {
-            this.$emit('nftTransfered', this.nft);
+            this.$emit('nftTransferred', this.nft);
             this.toAddress = '';
           })
           .catch(err => {
+            this.$emit('resetNFT', this.nft);
             Toast.responseHandler(err, Toast.ERROR);
           });
       }
