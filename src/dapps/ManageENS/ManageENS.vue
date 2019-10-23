@@ -31,9 +31,10 @@
       :minimum-age="minimumAge"
       :commitment-created="commitmentCreated"
       :resolver-multi-coin-support="resolverMultiCoinSupport"
+      :resolver-txt-support="resolverTxtSupport"
       :supported-coins="supportedCoins"
       :txt-records="txtRecords"
-      :set-record="setRercord"
+      :set-record="setRecord"
       @updateSecretPhrase="updateSecretPhrase"
       @domainNameChange="updateDomainName"
       @updateStep="updateStep"
@@ -68,6 +69,7 @@ const permanentRegistrar = {
   INTERFACE_LEGACY_REGISTRAR: '0x7ba18ba1'
 };
 const MULTICOIN_SUPPORT_INTERFACE = '0xf1cb7e06';
+const TEXT_RECORD_SUPPORT_INTERFACE = '0x59d1d43c';
 const REGISTRAR_TYPES = {
   FIFS: 'fifs',
   PERMANENT: 'permanent'
@@ -103,7 +105,8 @@ export default {
       supportedCoins,
       txtRecords: {},
       supportedTxt,
-      recordContract: {}
+      recordContract: {},
+      resolverTxtSupport: false
     };
   },
   computed: {
@@ -181,6 +184,7 @@ export default {
       this.commitmentCreated = false;
       this.publicResolverAddress = '';
       this.resolverMultiCoinSupport = false;
+      this.resolverTxtSupport = false;
       this.supportedCoins = supportedCoins;
       this.txtRecords = {};
       this.recordContract = {};
@@ -621,6 +625,7 @@ export default {
           .call();
       } catch (e) {
         this.resolverMultiCoinSupport = false;
+        this.resolverTxtSupport = false;
       }
       try {
         const currentResolverAddress = await this.ensRegistryContract.methods
@@ -666,24 +671,42 @@ export default {
       this.loading = false;
     },
     async fetchTxtRecords(resolver) {
-      this.recordContract = resolver;
-      const newObj = {};
-      for (const el of this.supportedTxt) {
-        newObj[el.name] = await resolver.methods
-          .text(this.nameHash, el.name)
-          .call();
+      const supportsTxt = await resolver.methods
+        .supportsInterface(TEXT_RECORD_SUPPORT_INTERFACE)
+        .call();
+      this.resolverTxtSupport = supportsTxt;
+      if (supportsTxt) {
+        this.recordContract = resolver;
+        const newObj = {};
+        for (const el of this.supportedTxt) {
+          newObj[el.name] = await resolver.methods
+            .text(this.nameHash, el.name)
+            .call();
+        }
+        this.txtRecords = Object.assign({}, newObj);
+      } else {
+        this.recordContract = {};
+        this.txtRecords = {};
       }
-      this.txtRecords = Object.assign({}, newObj);
     },
-    async setRercord(obj) {
-      const recordCount = Object.keys(obj).length;
-      if (recordCount > 1) {
-        const txs = [];
-        for(const i in obj) {}
-        web3.mew.sendBatchTransactions(
-          [setResolverTx, ...setAddrTx, migrateEthAddress].filter(Boolean)
-        )
-      } else if (recordCount === 1) {
+    async setRecord(obj) {
+      const address = this.account.address;
+      const resolverAddr = this.publicResolverAddress;
+      const contract = this.recordContract;
+      const txs = [];
+      for (const i in obj) {
+        txs.push({
+          from: address,
+          to: resolverAddr,
+          data: contract.methods.setText(this.nameHash, i, obj[i]).encodeABI(),
+          gasPrice: new BigNumber(unit.toWei(this.gasPrice, 'gwei')).toFixed(),
+          value: 0
+        });
+      }
+      if (txs.length > 1) {
+        this.web3.mew.sendBatchTransactions([...txs].filter(Boolean));
+      } else {
+        this.web3.eth.sendTransaction(txs[0]);
       }
     },
     updateSecretPhrase(e) {
