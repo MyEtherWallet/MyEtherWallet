@@ -6,6 +6,7 @@
 
 ### Devop
 
+- Fix new BTC multicoin encoding and add new currency types [#1551](https://github.com/MyEtherWallet/MyEtherWallet/pull/1551)
 - update egem [#1548](https://github.com/MyEtherWallet/MyEtherWallet/pull/1548)
 
 ### Release v5.1.7
