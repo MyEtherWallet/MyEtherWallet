@@ -1,5 +1,9 @@
 ### Release v5.1.8
 
+### Bug
+
+- Fix total NFT issue [#1550](https://github.com/MyEtherWallet/MyEtherWallet/pull/1550)
+
 ### Devop
 
 - update egem [#1548](https://github.com/MyEtherWallet/MyEtherWallet/pull/1548)
