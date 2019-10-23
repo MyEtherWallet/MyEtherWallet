@@ -35,8 +35,7 @@ describe('DropDownAddressSelector.vue', () => {
     const addressElements = wrapper.vm.$el.querySelectorAll(
       '.dropdown-list-box .listed-address'
     );
-    for (let i = 0; i < addressElements.length; i++) {
-      const addressElement = addressElements[i];
+    for (const [i, addressElement] of addressElements.entries()) {
       expect(addressElement.textContent.trim()).toEqual(
         shortenAddress(wrapper.vm.$data.addresses[i])
       );

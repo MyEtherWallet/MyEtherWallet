@@ -1,7 +1,7 @@
 <template>
   <div class="transactions-side-menu">
     <div class="side-menu-header">
-      <img src="~@/assets/images/logo.png" />
+      <img alt src="~@/assets/images/logo.png" />
       <div @click="toggleSideMenu">
         <i class="fa fa-lg fa-times"></i>
       </div>
@@ -25,6 +25,7 @@
               :src="
                 isTabActive(tab.routes) ? tab.icons.active : tab.icons.inactive
               "
+              alt
             />
             <p>{{ $t(tab.titleKey) }}</p>
             <i

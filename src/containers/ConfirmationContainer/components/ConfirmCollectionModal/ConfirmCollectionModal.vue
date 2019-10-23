@@ -6,6 +6,8 @@
       hide-footer
       centered
       class="bootstrap-modal-wide confirmation-modal nopadding"
+      static
+      lazy
     >
       <div class="modal-content">
         <div class="network-info-container">
@@ -30,7 +32,7 @@
           >
             <div v-b-toggle.prevent="`accordion${idx}`" class="header">
               <div class="header-item">
-                <img :src="network.type.icon ? network.type.icon : ''" />
+                <img :src="network.type.icon ? network.type.icon : ''" alt />
                 <div>
                   <p>
                     - {{ web3.utils.hexToNumberString(item.value) }}
@@ -48,10 +50,10 @@
                 v-show="item.to !== '' && item.to !== undefined"
                 class="direction"
               >
-                <img src="~@/assets/images/icons/right-arrow.svg" />
+                <img alt src="~@/assets/images/icons/right-arrow.svg" />
               </div>
               <div class="header-item">
-                <img :src="network.type.icon ? network.type.icon : ''" />
+                <img :src="network.type.icon ? network.type.icon : ''" alt />
                 <div>
                   <p>
                     + {{ web3.utils.hexToNumberString(item.value) }}
@@ -117,7 +119,11 @@
             </div>
             <div class="tooltip-box-2">
               <b-btn id="exPopover9">
-                <img class="icon" src="~@/assets/images/icons/qr-code.svg" />
+                <img
+                  alt
+                  class="icon"
+                  src="~@/assets/images/icons/qr-code.svg"
+                />
               </b-btn>
               <b-popover
                 target="exPopover9"

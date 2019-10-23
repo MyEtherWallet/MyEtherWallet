@@ -9,7 +9,7 @@
           <div :class="progressBarValue" />
         </div>
         <div class="block-progressbar__content text-cented">
-          <img src="~@/assets/images/icons/drink.svg" />
+          <img alt src="~@/assets/images/icons/drink.svg" />
 
           <p>
             {{ $t('gettingStarted.congratulationsDesc') }}

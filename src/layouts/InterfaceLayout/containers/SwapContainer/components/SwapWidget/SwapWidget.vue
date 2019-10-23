@@ -6,6 +6,8 @@
       centered
       class="bootstrap-modal bootstrap-modal-wide padding-40-20"
       hide-footer
+      static
+      lazy
     >
       <div class="swap-container">
         <div v-show="!bityExitToFiat">
@@ -67,7 +69,7 @@
                   </div>
                 </div>
                 <div class="exchange-icon" @click="flipCurrencies">
-                  <img :src="images.swap" />
+                  <img :src="images.swap" alt />
                 </div>
                 <div class="amount">
                   <div class="title">

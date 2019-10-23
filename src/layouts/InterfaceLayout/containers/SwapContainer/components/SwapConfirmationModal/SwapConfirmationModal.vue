@@ -6,6 +6,8 @@
       centered
       class="bootstrap-modal bootstrap-modal-wide padding-40-20"
       title="Confirmation"
+      static
+      lazy
     >
       <div class="time-remaining">
         <h1>{{ timeRemaining }}</h1>
@@ -24,7 +26,7 @@
           <p class="address">{{ fromAddress.address }}</p>
         </div>
         <div class="right-arrow">
-          <img :src="arrowImage" />
+          <img :src="arrowImage" alt />
         </div>
         <div v-if="!toFiat" class="to-address">
           <div class="icon">

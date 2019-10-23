@@ -1,16 +1,22 @@
-<template>
+<template functional>
   <div class="title-text-contents">
-    <div v-if="options.title" class="title-block">
+    <div v-if="props.options.title" class="title-block">
       <div class="title">
-        <img v-if="options.titleIcon" :src="options.titleIcon" />
-        <span>{{ options.title }}</span>
+        <img
+          v-if="props.options.titleIcon"
+          :src="props.options.titleIcon"
+          alt
+        />
+        <span>{{ props.options.title }}</span>
       </div>
     </div>
-    <div v-if="options.boldSubTitle" class="bold-sub-title">
-      {{ options.boldSubTitle }}
+    <div v-if="props.options.boldSubTitle" class="bold-sub-title">
+      {{ props.options.boldSubTitle }}
     </div>
-    <div v-if="options.textContent" class="text-content">
-      <p v-for="text in options.textContent" :key="text.key">{{ text }}</p>
+    <div v-if="props.options.textContent" class="text-content">
+      <p v-for="text in props.options.textContent" :key="text.key">
+        {{ text }}
+      </p>
     </div>
   </div>
 </template>
@@ -24,9 +30,6 @@ export default {
         return {};
       }
     }
-  },
-  data() {
-    return {};
   }
 };
 </script>

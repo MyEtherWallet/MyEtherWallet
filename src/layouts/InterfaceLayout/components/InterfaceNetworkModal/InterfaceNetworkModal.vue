@@ -6,6 +6,8 @@
       hide-footer
       centered
       class="bootstrap-modal network nopadding max-height-1"
+      static
+      lazy
     >
       <div class="content-block">
         <div class="flex-container">
@@ -33,7 +35,7 @@
         >
           <div class="network-title">
             <div class="network-icon">
-              <img :src="Networks[key][0].type.icon" />
+              <img :src="Networks[key][0].type.icon" alt />
             </div>
             <h4 :class="key.toLowerCase()">{{ key }}</h4>
           </div>

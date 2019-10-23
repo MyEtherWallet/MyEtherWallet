@@ -60,8 +60,6 @@ describe('DropDownUnitSelector.vue', () => {
   it('should render correct options props', () => {
     const options = ['option1', 'option2'];
     wrapper.setProps({ options });
-    console.log(wrapper.find('.dropdown-list-box').html());
-
     const liElements = wrapper.vm.$el.querySelectorAll(
       '.dropdown-list-box ul li'
     );

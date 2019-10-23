@@ -6,7 +6,7 @@
           <div class="block-title">404</div>
           <div class="block-text">{{ $t('home.lostTitle') }}</div>
           <div class="ailien-spaceship">
-            <img src="~@/assets/images/icons/alien-spaceship.svg" />
+            <img src="~@/assets/images/icons/alien-spaceship.svg" alt />
           </div>
         </div>
       </div>

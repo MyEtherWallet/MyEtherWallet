@@ -4,6 +4,7 @@
  */
 @font-face {
   font-family: 'FontAwesome';
+  font-display: block;
   src: url('~@/assets/fonts/fontawesome-webfont.eot');
   src: url('~@/assets/fonts/fontawesome-webfont.ie.eot')
       format('embedded-opentype'),

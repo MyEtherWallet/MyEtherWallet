@@ -80,12 +80,8 @@ export default {
       routes: [
         '/interface/dapps',
         '/interface/dapps/manage-ens',
-        '/interface/dapps/manage-ens/auction',
-        '/interface/dapps/manage-ens/bid',
         '/interface/dapps/manage-ens/owned',
-        '/interface/dapps/manage-ens/reveal',
         '/interface/dapps/manage-ens/forbidden',
-        '/interface/dapps/manage-ens/finalize',
         '/interface/dapps/manage-ens/manage',
         '/interface/dapps/manage-ens/fifs',
         '/interface/dapps/manage-ens/claim',

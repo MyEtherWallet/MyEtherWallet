@@ -46,8 +46,6 @@ xdescribe('SendOfflineContainer.vue', () => {
     // expect(
     //   wrapper.vm.$el.querySelector('router-view').getAttribute('nonce')
     // ).toBe(String(wrapper.vm.$data.nonce));
-
-    console.log(wrapper.vm.$el.querySelector('.gas-amount input').textContent);
   });
 
   xit('should render correct gasLimit data', () => {
@@ -66,8 +64,8 @@ xdescribe('SendOfflineContainer.vue', () => {
     const pointerEventsElements = wrapper.vm.$el.querySelectorAll(
       'div.prevent-pointer-events'
     );
-    for (let i = 0; i < pointerEventsElements.length; i++) {
-      const pointerEventsElement = pointerEventsElements[i];
+
+    for (const [i, pointerEventsElement] of pointerEventsElements.entries()) {
       expect(
         pointerEventsElement.querySelector('p.title').textContent.trim()
       ).toEqual(wrapper.vm.$data.tabs[i].title);

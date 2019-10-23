@@ -28,8 +28,7 @@ describe('Social.vue', () => {
       .getElementsByTagName('a');
     const imgElements = wrapper.vm.$el.getElementsByTagName('img');
 
-    for (let i = 0; i < wrapper.vm.$data.links.length; i++) {
-      const data = wrapper.vm.$data.links[i];
+    for (const [i, data] of wrapper.vm.$data.links.entries()) {
       const link = data.to;
       let linkElement = linkElements[i].href;
       if (

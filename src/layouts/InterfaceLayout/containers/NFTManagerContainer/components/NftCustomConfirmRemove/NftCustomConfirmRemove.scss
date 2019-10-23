@@ -1,0 +1,20 @@
+@import '~@/scss/GlobalVariables';
+
+.button-container {
+  display: flex;
+  flex-direction: row;
+  height: auto;
+  justify-content: space-evenly;
+}
+
+.invalid-address {
+  border: 1px solid $red-1;
+}
+
+.error-message {
+  color: $red-1;
+}
+
+.button-block {
+  margin-top: 30px;
+}

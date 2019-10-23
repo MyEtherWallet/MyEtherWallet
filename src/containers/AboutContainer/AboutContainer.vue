@@ -2,7 +2,9 @@
   <div class="about-mew">
     <div class="wrap">
       <div class="top-section">
-        <div class="circle"><img src="~@/assets/images/home/circle.png" /></div>
+        <div class="circle">
+          <img src="~@/assets/images/home/circle.png" alt />
+        </div>
         <div id="about-mew" class="star-background">
           <div class="page-container">
             <div class="flex-col-1-1-vertical-center content">
@@ -12,6 +14,7 @@
               </div>
               <div class="image-content">
                 <img
+                  alt="mew-icon"
                   class="mew-icon"
                   src="~@/assets/images/home/mew-icon.png"
                 />
@@ -20,6 +23,7 @@
                 <img
                   class="spaceman"
                   src="~@/assets/images/home/spaceman.png"
+                  alt="Spaceman"
                 />
               </div>
             </div>
@@ -31,7 +35,7 @@
           <div class="grid-col-2 mew-features">
             <dir class="content">
               <div class="image">
-                <img src="~@/assets/images/home/icon-wallet.svg" />
+                <img src="~@/assets/images/home/icon-wallet.svg" alt />
               </div>
               <div class="text">
                 <h3>{{ $t('home.aboutMewWallet') }}</h3>
@@ -40,7 +44,7 @@
             </dir>
             <dir class="content">
               <div class="image">
-                <img src="~@/assets/images/home/icon-hardware.svg" />
+                <img src="~@/assets/images/home/icon-hardware.svg" alt />
               </div>
               <div class="text">
                 <h3>{{ $t('home.aboutHardwareWallet') }}</h3>
@@ -49,7 +53,7 @@
             </dir>
             <dir class="content">
               <div class="image">
-                <img src="~@/assets/images/home/icon-swap.svg" />
+                <img src="~@/assets/images/home/icon-swap.svg" alt />
               </div>
               <div class="text">
                 <h3>{{ $t('common.swap') }}</h3>
@@ -58,7 +62,7 @@
             </dir>
             <dir class="content">
               <div class="image">
-                <img src="~@/assets/images/home/icon-mew-connect.svg" />
+                <img src="~@/assets/images/home/icon-mew-connect.svg" alt />
               </div>
               <div class="text">
                 <h3>{{ $t('common.mewConnect') }}</h3>

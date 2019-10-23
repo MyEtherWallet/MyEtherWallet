@@ -1,3 +1,95 @@
+### Release v5.1.7
+
+### Feature
+
+- Multicoin ENS support [#1521](https://github.com/MyEtherWallet/MyEtherWallet/pull/1521)
+- Move State of the Dapp text to the left column [#1518](https://github.com/MyEtherWallet/MyEtherWallet/pull/1518)
+
+### Bug
+
+- transferDomain func fix on ROP [#1538](https://github.com/MyEtherWallet/MyEtherWallet/pull/1538)
+- Fix mnemonic phrase validation [#1506](https://github.com/MyEtherWallet/MyEtherWallet/pull/1506)
+- Fix value on interact/deploy contract [#1502](https://github.com/MyEtherWallet/MyEtherWallet/pull/1502)
+- Fix ENS subdomain issue [#1547](https://github.com/MyEtherWallet/MyEtherWallet/pull/1547)
+
+### Devop
+
+- Fix static "help" and "tutorial" button size and position [#1531](https://github.com/MyEtherWallet/MyEtherWallet/pull/1531)
+- Remove Ethereum commonwealth nodes in case they shut it down [#1507](https://github.com/MyEtherWallet/MyEtherWallet/pull/1507)
+- App optimization [#1519](https://github.com/MyEtherWallet/MyEtherWallet/pull/1519)
+- changelly timeout error handling [#1522](https://github.com/MyEtherWallet/MyEtherWallet/pull/1522)
+
+### Release v5.1.6
+
+### Feature
+
+- Dapp submission page [#1339](https://github.com/MyEtherWallet/MyEtherWallet/pull/1339)
+
+### Devop
+
+- Remove Aldo from team page [#1482](https://github.com/MyEtherWallet/MyEtherWallet/pull/1482)
+- Add decision tree [#1442](https://github.com/MyEtherWallet/MyEtherWallet/pull/1442)
+- Update packages [#1474](https://github.com/MyEtherWallet/MyEtherWallet/pull/1474)
+
+### Bug
+
+- Fix Goerli erroring when set to default [#1488](https://github.com/MyEtherWallet/MyEtherWallet/pull/1488)
+
+### Release v5.1.5
+
+### Feature
+
+- Add network to query [#1460](https://github.com/MyEtherWallet/MyEtherWallet/pull/1460)
+
+### Bug
+
+- Fix check for login to metamask wallet [#1457](https://github.com/MyEtherWallet/MyEtherWallet/pull/1457)
+
+### Devop
+
+- Custom NFTs [#1403](https://github.com/MyEtherWallet/MyEtherWallet/pull/1403)
+- Fix browser audit issues [#1428](https://github.com/MyEtherWallet/MyEtherWallet/pull/1428)
+- Update greenkeeper packages [#1453](https://github.com/MyEtherWallet/MyEtherWallet/pull/1453)
+- Update Ella links [#1454](https://github.com/MyEtherWallet/MyEtherWallet/pull/1454)
+- Font fix [#1465](https://github.com/MyEtherWallet/MyEtherWallet/pull/1465)
+
+### Release v5.1.4
+
+### Devop
+
+- More tests [#1435](https://github.com/MyEtherWallet/MyEtherWallet/pull/1435)
+
+### Bug
+
+- Fix generate mnemonic [#1439](https://github.com/MyEtherWallet/MyEtherWallet/pull/1439)
+- Gas price not saving properly [#1434](https://github.com/MyEtherWallet/MyEtherWallet/pull/1434)
+- Fix u2f timeout for bitbox on windows [#1423](https://github.com/MyEtherWallet/MyEtherWallet/pull/1423)
+
+### Release v5.1.3
+
+### Feature
+
+- Add ETC Coop Node [#1418](https://github.com/MyEtherWallet/MyEtherWallet/pull/1418)
+- Add Ethercluster and ETC Coop Node [#1407](https://github.com/MyEtherWallet/MyEtherWallet/pull/1407)
+
+### Bug
+
+- Network changing throws an error [#1424](https://github.com/MyEtherWallet/MyEtherWallet/pull/1424)
+- Fix network mismatch when using metamask [#1384](https://github.com/MyEtherWallet/MyEtherWallet/pull/1384)
+- Restrict gas price minimum to 1 gwei [#1386](https://github.com/MyEtherWallet/MyEtherWallet/pull/1386)
+- Fix the bug when user expend the token list, footer breaks [#1396](https://github.com/MyEtherWallet/MyEtherWallet/pull/1396)
+- Fix the Buy subdomain feature and removed auction from ENS [#1409](https://github.com/MyEtherWallet/MyEtherWallet/pull/1409)
+- Remove deedOwner from ManageENS and fix getting ENS owner [#1425](https://github.com/MyEtherWallet/MyEtherWallet/pull/1425)
+
+### Devop
+
+- Sentry fixes, additional ledger errors, handle unlock wallet if wallet is null [#1394](https://github.com/MyEtherWallet/MyEtherWallet/pull/1394)
+- Fix finney modal layout [#1392](https://github.com/MyEtherWallet/MyEtherWallet/pull/1392)
+- Updated Bootstrap Vue. [#1393](https://github.com/MyEtherWallet/MyEtherWallet/pull/1393)
+- Compress images, Remove unused images and components [#1389](https://github.com/MyEtherWallet/MyEtherWallet/pull/1389)
+- Restore valid Lightsreams network [#1350](https://github.com/MyEtherWallet/MyEtherWallet/pull/1350)
+- Update packages [#1419](https://github.com/MyEtherWallet/MyEtherWallet/pull/1419)
+
 ### Release v5.1.2
 
 ### Devop

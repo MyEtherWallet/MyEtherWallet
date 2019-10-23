@@ -6,13 +6,15 @@
       hide-footer
       class="bootstrap-modal"
       centered
+      static
+      lazy
       @hidden="reset"
     >
       <div class="ledger-app-selection-container">
         <h4>Please choose the App you have opened in Ledger</h4>
         <div class="ledger-app-info">
           <div class="selected-app-icon">
-            <img :src="selectedApp.network.icon" />
+            <img :src="selectedApp.network.icon" alt />
           </div>
           <div class="toggle-apps" @click="toggled = !toggled">
             <div>

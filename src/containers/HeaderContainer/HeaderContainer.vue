@@ -1,5 +1,17 @@
 <template>
   <div class="header">
+    <decision-tree />
+    <router-link
+      v-show="
+        $route.fullPath === '/create-wallet' ||
+          $route.fullPath === '/access-my-wallet'
+      "
+      to="/getting-started"
+    >
+      <user-reminder-button />
+    </router-link>
+    <mobile-menu :opensettings="openSettings" :logout="logout" />
+
     <!-- Modals ***************************************** -->
     <disconnected-modal ref="mewConnectDisconnected" />
     <settings-modal
@@ -16,28 +28,6 @@
       :error="error"
       :resolver="resolver"
     />
-    <!-- Modals ***************************************** -->
-    <!-- Scroll up button ******************************* -->
-    <div class="scroll-up-button">
-      <div
-        :class="isPageOnTop == false ? 'active' : ''"
-        class="scrollup-container"
-      >
-        <router-link
-          v-show="
-            ($route.fullPath === '/create-wallet' ||
-              $route.fullPath === '/access-my-wallet') &&
-              !gettingStartedDone
-          "
-          to="/getting-started"
-        >
-          <user-reminder-button />
-        </router-link>
-        <scroll-up-button />
-      </div>
-    </div>
-    <!-- Scroll up button ******************************* -->
-    <mobile-menu :opensettings="openSettings" :logout="logout" />
 
     <!-- Desktop menu *********************************** -->
     <div class="fixed-header-wrap">
@@ -49,12 +39,6 @@
         ]"
         class="fixed-header"
       >
-        <div v-if="$route.fullPath === '/'" class="vintage-header">
-          Missing the vintage MEW?
-          <a rel="noopener noreferrer" href="https://vintage.myetherwallet.com"
-            >Click here to go back!</a
-          >
-        </div>
         <div
           :class="[
             (isMobileMenuOpen || !isPageOnTop) && 'mobile-menu-boxshadow',
@@ -63,6 +47,7 @@
         >
           <div class="header-container">
             <router-link
+              aria-label="Home"
               to="/"
               @click.native="
                 scrollTop();
@@ -72,6 +57,7 @@
               <div class="top-logo">
                 <img
                   :class="!isPageOnTop && !isMobileMenuOpen ? 'logo-small' : ''"
+                  alt
                   class="logo-large"
                   src="~@/assets/images/short-hand-logo.png"
                 />
@@ -83,8 +69,10 @@
                   href="https://ccswap.myetherwallet.com/#/"
                   target="_blank"
                   class="buy-eth"
+                  rel="noopener noreferrer"
                 >
                   <img
+                    alt
                     class="buy-eth-icon"
                     src="@/assets/images/icons/buy-eth.svg"
                   />
@@ -137,6 +125,7 @@
                           :src="
                             require(`@/assets/images/flags/${currentFlag}.svg`)
                           "
+                          alt
                           class="show"
                         />
                         <p>{{ currentName }}</p>
@@ -221,8 +210,7 @@ import { mapState } from 'vuex';
 import store from 'store';
 import { Misc, Toast } from '@/helpers';
 import Blockie from '@/components/Blockie';
-import Notification from '@/components/Notification';
-import ScrollUpButton from '@/components/ScrollUpButton';
+import NotificationsContainer from '@/containers/NotificationsContainer';
 import UserReminderButton from '@/components/UserReminderButton';
 import SettingsModal from '@/components/SettingsModal';
 import NotificationsModal from '@/components/NotificationsModal';
@@ -231,6 +219,7 @@ import IssueLogModal from '@/components/IssueLogModal';
 import BigNumber from 'bignumber.js';
 import MobileMenu from './components/MobileMenu';
 import DisconnectedModal from '@/components/DisconnectedModal';
+import DecisionTree from '@/components/DecisionTree';
 
 const events = {
   issueModal: 'issueModal',
@@ -240,15 +229,15 @@ const events = {
 export default {
   components: {
     blockie: Blockie,
-    notification: Notification,
-    'scroll-up-button': ScrollUpButton,
+    notification: NotificationsContainer,
     'settings-modal': SettingsModal,
     'notifications-modal': NotificationsModal,
     'logout-modal': LogoutModal,
     'issue-log-modal': IssueLogModal,
     'user-reminder-button': UserReminderButton,
     'mobile-menu': MobileMenu,
-    'disconnected-modal': DisconnectedModal
+    'disconnected-modal': DisconnectedModal,
+    'decision-tree': DecisionTree
   },
   data() {
     return {
@@ -412,9 +401,6 @@ export default {
       this.currentName = e.target.innerText.replace(/^\s+|\s+$|\s+(?=\s)/g, '');
       this.currentFlag = flag;
       store.set('locale', code);
-    },
-    scrollTop() {
-      window.scrollTo(0, 0);
     },
     logout() {
       this.$refs.logout.$refs.logout.show();

@@ -4,7 +4,7 @@ import { Tooling } from '@@/helpers';
 
 describe('HardwarePasswordModal.vue', () => {
   let localVue, i18n, wrapper, store;
-
+  const hardwareBrand = 'hardwareBrand';
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
     localVue = baseSetup.localVue;
@@ -17,7 +17,8 @@ describe('HardwarePasswordModal.vue', () => {
       localVue,
       i18n,
       store,
-      attachToDocument: true
+      attachToDocument: true,
+      propsData: { hardwareBrand }
     });
   });
 
@@ -36,8 +37,6 @@ describe('HardwarePasswordModal.vue', () => {
   });
 
   it('should render correct hardwareBrand props', () => {
-    const hardwareBrand = 'hardwareBrand';
-    wrapper.setProps({ hardwareBrand });
     expect(
       wrapper
         .find('.submit-button')
@@ -52,14 +51,14 @@ describe('HardwarePasswordModal.vue', () => {
       const inputText = 'testpassword';
       inputElement.setValue(inputText);
       inputElement.trigger('change');
-      expect(wrapper.vm.$data.password).toBe(inputText);
+      const { password } = wrapper.vm.$data;
+      expect(password).toBe(inputText);
     });
 
     it('should change show data when button click', () => {
-      let imgElement = wrapper.find('.input-container img');
+      const imgElement = wrapper.find('.input-container img');
       imgElement.trigger('click');
       expect(wrapper.vm.$data.show).toBe(true);
-      imgElement = wrapper.find('.input-container img');
       imgElement.trigger('click');
       expect(wrapper.vm.$data.show).toBe(false);
     });

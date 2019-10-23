@@ -21,7 +21,6 @@
 
 <script>
 export default {
-  components: {},
   props: {
     greytitle: {
       type: Boolean,
@@ -47,9 +46,6 @@ export default {
       type: String,
       default: ''
     }
-  },
-  data() {
-    return {};
   },
   methods: {
     titleClicked() {

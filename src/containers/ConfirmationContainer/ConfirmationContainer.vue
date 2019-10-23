@@ -367,21 +367,23 @@ export default {
       };
 
       this.$nextTick(() => {
-        this.$refs.swapWidget.$refs.modal.show();
-        this.$refs.swapWidget.$refs.modal.$on('hidden', () => {
-          this.swapWigetData = {
-            destAddress: '',
-            fromCurrency: {
-              symbol: 'ETH',
-              name: ''
-            },
-            toCurrency: {
-              symbol: 'ETH',
-              name: ''
-            },
-            fromValue: 0
-          };
-        });
+        if (this.$refs.swapWidget) {
+          this.$refs.swapWidget.$refs.modal.show();
+          this.$refs.swapWidget.$refs.modal.$on('hidden', () => {
+            this.swapWigetData = {
+              destAddress: '',
+              fromCurrency: {
+                symbol: 'ETH',
+                name: ''
+              },
+              toCurrency: {
+                symbol: 'ETH',
+                name: ''
+              },
+              fromValue: 0
+            };
+          });
+        }
       });
     },
     confirmationModalOpen() {

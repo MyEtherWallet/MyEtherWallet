@@ -2,15 +2,28 @@
   <div class="popover-container">
     <b-col>
       <b-btn v-if="!popovertype" :id="popOverId" class="popover-button">
-        <img class="nohover-icon" src="@/assets/images/icons/explanation.svg" />
-        <img class="hover-icon" src="@/assets/images/icons/explanation2.svg" />
+        <img
+          class="nohover-icon"
+          src="@/assets/images/icons/explanation.svg"
+          alt
+        />
+        <img
+          class="hover-icon"
+          src="@/assets/images/icons/explanation2.svg"
+          alt
+        />
       </b-btn>
       <b-btn v-if="popovertype === 'A'" :id="popOverId" class="popover-button">
         <img
           class="nohover-icon"
           src="@/assets/images/icons/question-mark.svg"
+          alt
         />
-        <img class="hover-icon" src="@/assets/images/icons/question-mark.svg" />
+        <img
+          class="hover-icon"
+          src="@/assets/images/icons/question-mark.svg"
+          alt
+        />
       </b-btn>
       <b-popover :target="popOverId" triggers="hover focus" placement="top">
         <template v-if="poptitle" slot="title">{{ poptitle }}</template>

@@ -23,11 +23,13 @@
       >
         <img
           v-if="!password.showPassword"
+          alt
           class="hide-password"
           src="~@/assets/images/icons/hide-password.svg"
         />
         <img
           v-if="password.showPassword"
+          alt
           class="show-password"
           src="~@/assets/images/icons/show-password.svg"
         />
@@ -55,7 +57,7 @@
       @click.prevent="switcher(param)"
     >
       {{ $t('common.next') }}
-      <img src="~@/assets/images/icons/right-arrow.png" />
+      <img alt src="~@/assets/images/icons/right-arrow.png" />
     </button>
   </form>
 </template>

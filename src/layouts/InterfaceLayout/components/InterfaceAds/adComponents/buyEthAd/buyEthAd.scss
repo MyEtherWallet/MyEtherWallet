@@ -1,4 +1,4 @@
-@import "~@/scss/GlobalVariables";
+@import '~@/scss/GlobalVariables';
 
 a {
   text-decoration: none;
@@ -6,7 +6,7 @@ a {
 }
 
 .content-block {
-  background-image: url("~@/assets/images/ads/eth.png");
+  background-image: url('~@/assets/images/ads/eth.png');
   background-size: 200px;
   background-position-x: right;
   background-position-y: bottom;

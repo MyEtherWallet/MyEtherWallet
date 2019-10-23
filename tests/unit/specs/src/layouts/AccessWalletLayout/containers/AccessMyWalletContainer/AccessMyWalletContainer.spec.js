@@ -66,9 +66,6 @@ describe('AccessMyWalletContainer.vue', () => {
         'another-component': true
       }
     });
-    // wrapper.$options.mounted = [
-    //   () => console.log('this is the successful mock of mounted')
-    // ];
   }
 
   beforeEach(() => {
@@ -96,8 +93,8 @@ describe('AccessMyWalletContainer.vue', () => {
     const accessWalletButtons = wrapper.vm.$el.querySelectorAll(
       '.wrap .page-container .buttons-container div.button-block'
     );
-    for (let i = 0; i < accessWalletButtons.length; i++) {
-      const accessWalletButton = accessWalletButtons[i];
+
+    for (const [i, accessWalletButton] of accessWalletButtons.entries()) {
       expect(
         accessWalletButton.querySelector('.small-note').textContent.trim()
       ).toEqual(wrapper.vm.$data.buttons[i].recommend);

@@ -5,11 +5,16 @@
       hide-footer
       hide-header
       centered
+      static
+      lazy
       class="bootstrap-modal nopadding"
     >
       <div class="modal-contents">
         <div class="icon">
-          <img src="@/assets/images/icons/disconnected.png" />
+          <img
+            alt="Disconnected"
+            src="@/assets/images/icons/disconnected.png"
+          />
         </div>
         <div class="modal-title">
           Oops!

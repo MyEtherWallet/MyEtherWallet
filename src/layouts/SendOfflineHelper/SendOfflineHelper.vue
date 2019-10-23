@@ -37,6 +37,7 @@
                             Networks[key][0].type.icon
                         "
                         :src="Networks[key][0].type.icon"
+                        alt
                       />
                       <div
                         v-if="

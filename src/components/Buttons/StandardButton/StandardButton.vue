@@ -46,30 +46,35 @@
         <img
           v-if="options.loadingIcon"
           class="loading-left"
+          alt="Loading"
           src="@/assets/images/icons/loading.png"
         />
 
         <img
           v-if="options.rightArrow && options.buttonStyle == 'green'"
           class="arrow-right"
+          alt="Right arrow"
           src="@/assets/images/icons/arrow-right.svg"
         />
 
         <img
           v-if="options.rightArrow && options.buttonStyle == 'green-border'"
           class="arrow-right"
+          alt="Right arrow"
           src="@/assets/images/icons/arrow-right.svg"
         />
 
         <img
           v-if="options.leftArrow && options.buttonStyle == 'green'"
           class="arrow-left"
+          alt="Left arrow"
           src="@/assets/images/icons/arrow-left.svg"
         />
 
         <img
           v-if="options.leftArrow && options.buttonStyle == 'green-border'"
           class="arrow-left"
+          alt="Left arrow"
           src="@/assets/images/icons/arrow-green-left.svg"
         />
       </button>

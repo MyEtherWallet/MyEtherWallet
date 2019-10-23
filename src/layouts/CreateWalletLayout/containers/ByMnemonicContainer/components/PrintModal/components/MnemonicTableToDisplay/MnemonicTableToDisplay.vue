@@ -1,12 +1,12 @@
-<template>
+<template functional>
   <div class="mnemonic-table-container">
     <div class="header">
       <div class="block-title">
-        <img src="~@/assets/images/short-hand-logo.png" height="30px" />
+        <img alt src="~@/assets/images/short-hand-logo.png" height="30px" />
         <span>Mnemonic Phrase</span>
       </div>
       <div class="support">
-        <img src="~@/assets/images/icons/support.svg" />
+        <img alt src="~@/assets/images/icons/support.svg" />
         <p>support@myetherwallet.com</p>
       </div>
     </div>
@@ -22,14 +22,14 @@
       </p>
     </div>
     <div class="content">
-      <div v-show="isTwentyFour" class="mnemonic full-mnemonic">
-        <div v-for="(item, idx) in mnemonic" :key="item" class="item">
+      <div v-show="props.isTwentyFour" class="mnemonic full-mnemonic">
+        <div v-for="(item, idx) in props.mnemonic" :key="item" class="item">
           <span>{{ idx + 1 }}. </span>{{ item }}
         </div>
       </div>
-      <div v-show="!isTwentyFour" class="mnemonic half-mnemonic">
+      <div v-show="!props.isTwentyFour" class="mnemonic half-mnemonic">
         <div
-          v-for="(item, idx) in mnemonic.slice(0, 12)"
+          v-for="(item, idx) in props.mnemonic.slice(0, 12)"
           :key="item"
           class="item"
         >
