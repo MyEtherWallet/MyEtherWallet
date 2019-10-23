@@ -57,6 +57,7 @@ import { Toast } from '@/helpers';
 import DNSRegistrar from '@ensdomains/dnsregistrar';
 import BigNumber from 'bignumber.js';
 import supportedCoins from './supportedCoins';
+import supportedTxt from './supportedTxt';
 
 const bip39 = require('bip39');
 
@@ -97,7 +98,9 @@ export default {
       commitmentCreated: false,
       publicResolverAddress: '',
       resolverMultiCoinSupport: false,
-      supportedCoins
+      supportedCoins,
+      txtRecords: {},
+      supportedTxt
     };
   },
   computed: {
@@ -176,6 +179,7 @@ export default {
       this.publicResolverAddress = '';
       this.resolverMultiCoinSupport = false;
       this.supportedCoins = supportedCoins;
+      this.txtRecords = {};
 
       if (this.ens) {
         this.setRegistrar();
@@ -607,6 +611,7 @@ export default {
           ResolverAbi,
           this.publicResolverAddress
         );
+        this.fetchTxtRecords(publicResolverContract);
         this.resolverMultiCoinSupport = await publicResolverContract.methods
           .supportsInterface(MULTICOIN_SUPPORT_INTERFACE)
           .call();
@@ -621,6 +626,7 @@ export default {
           ResolverAbi,
           currentResolverAddress
         );
+        this.fetchTxtRecords(resolverContract);
         const supportMultiCoin = await resolverContract.methods
           .supportsInterface(MULTICOIN_SUPPORT_INTERFACE)
           .call();
@@ -654,6 +660,13 @@ export default {
         this.$router.push({ path: 'owned' });
       }
       this.loading = false;
+    },
+    async fetchTxtRecords(resolver) {
+      const newObj = {};
+      for (const el of this.supportedTxt) {
+        newObj[el.name] = await resolver.methods.text(this.nameHash, el.name).call();
+      }
+      this.txtRecords = Object.assign({}, newObj);
     },
     updateSecretPhrase(e) {
       this.secretPhrase = e;
