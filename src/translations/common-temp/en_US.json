@@ -2,10 +2,14 @@
   "home": "Home",
   "faqs": "FAQs",
   "cstm-support": "Customer Support",
+  "contact-support": "Contact Support",
   "help-center": "Help Center",
+  "help": "Help",
+  "oops": "Oops!",
   "about": "About",
   "continue": "Continue",
   "previous": "Previous",
+  "thank-you": "Thank you",
   "back": "Back",
   "next": "Next",
   "copy": "Copy",
@@ -15,9 +19,30 @@
   "more": "More",
   "yes": "Yes",
   "no": "No",
+  "send": "Send",
   "verify": "Verify",
   "terms": "Terms",
+  "eth": "ETH",
+  "btc": "BTC",
   "get-started": "Get Started",
+  "feedback": {
+    "send-us-feedback": "If you want to send us your feedback, please use",
+    "feedback-title": "Feedback / Customer Support"
+  },
+  "support-email": "support@myetherwallet.com",
+  "support": {
+    "browser": "Browser",
+    "os": "Operating System",
+    "device": "Device/Wallet type (If any)",
+    "address": "Wallet PUBLIC address (If any)",
+    "url": "Url",
+    "description": "Describe the issue"
+  },
+  "issue-log": {
+    "error-text": "Something went wrong",
+    "inform-error": "Do you want to inform MEW about this error?",
+    "never-show": "Never show again"
+  },
   "wallet": {
     "create-new": "Create A New Wallet",
     "create": "Create Wallet",
@@ -48,6 +73,10 @@
     "enter": "Enter password",
     "your": "Your Password"
   },
+  "decision-tree": {
+    "subcategories": "Subcategories",
+    "no-results": "Oops! No search results found."
+  },
   "optional": "Optional",
   "value": "Value",
   "network": "Network",
@@ -63,6 +92,8 @@
   "save": "Save",
   "dont-know": "Don't know what it is?",
   "have-issues": "Have any issues?",
+  "having-issues": "Having issues?",
+  "issue-info": "Issue information",
   "learn-more": "Learn more",
   "dapps": "Dapps",
   "gas": {

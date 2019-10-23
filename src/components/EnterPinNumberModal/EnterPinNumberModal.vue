@@ -2,7 +2,7 @@
   <div class="enter-pin-number-modal">
     <b-modal
       ref="enterpin"
-      title="Password"
+      :title="$t('common.password.string')"
       hide-footer
       centered
       static

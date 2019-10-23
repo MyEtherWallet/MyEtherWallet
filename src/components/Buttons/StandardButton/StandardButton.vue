@@ -84,12 +84,12 @@
     </div>
     <div v-if="options.helpCenter" class="help-center-block">
       <p>
-        Having issues?
+        {{ $t('common.having-issues') }}
         <a
           href="https://kb.myetherwallet.com/"
           rel="noopener noreferrer"
           target="_blank"
-          >Help Center</a
+          >{{ $t('common.help-center') }}</a
         >
       </p>
     </div>

@@ -17,7 +17,7 @@
           />
         </div>
         <div class="modal-title">
-          Oops!
+          {{ $t('common.oops') }}
         </div>
         <div class="text-content">
           {{ $t('interface.mewconnect-disconnected') }}
