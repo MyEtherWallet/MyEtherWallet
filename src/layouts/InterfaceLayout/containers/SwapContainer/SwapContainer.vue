@@ -158,6 +158,7 @@
             :provider-selected="selectedProvider"
             :switch-currency-order="switchCurrencyOrder"
             :all-supported-providers="supportedProviders"
+            :provider-selected-name="providerSelectedName"
             @selectedProvider="setSelectedProvider"
           />
         </div>
@@ -258,6 +259,7 @@ export default {
   data() {
     return {
       baseCurrency: BASE_CURRENCY,
+      providerSelectedName: '',
       toAddress: '',
       currentAddress: '',
       refundAddress: '',
@@ -453,28 +455,35 @@ export default {
       return validBaseToAddress;
     },
     hasEnough() {
-      if (
-        SwapProviders.isToken(this.fromCurrency) &&
-        this.fromCurrency !== this.baseCurrency
-      ) {
-        const enteredVal = this.swap.convertToTokenWei(
-          this.fromCurrency,
-          this.fromValue
-        );
-
-        return new BigNumber(this.tokenBalances[this.fromCurrency]).gte(
-          new BigNumber(enteredVal)
-        );
-      } else if (this.fromCurrency === this.baseCurrency) {
-        const enteredVal = this.swap.convertToTokenWei(
-          this.fromCurrency,
-          this.fromValue
-        );
-        return new BigNumber(this.account.balance).gt(
-          new BigNumber(enteredVal)
-        );
-      }
-      return true;
+      return this.swap.hasEnough(
+        this.fromCurrency,
+        this.fromValue,
+        this.baseCurrency,
+        this.tokenBalances,
+        this.account.balance
+      );
+      // if (
+      //   SwapProviders.isToken(this.fromCurrency) &&
+      //   this.fromCurrency !== this.baseCurrency
+      // ) {
+      //   const enteredVal = this.swap.convertToTokenWei(
+      //     this.fromCurrency,
+      //     this.fromValue
+      //   );
+      //
+      //   return new BigNumber(this.tokenBalances[this.fromCurrency]).gte(
+      //     new BigNumber(enteredVal)
+      //   );
+      // } else if (this.fromCurrency === this.baseCurrency) {
+      //   const enteredVal = this.swap.convertToTokenWei(
+      //     this.fromCurrency,
+      //     this.fromValue
+      //   );
+      //   return new BigNumber(this.account.balance).gt(
+      //     new BigNumber(enteredVal)
+      //   );
+      // }
+      // return true;
     },
     exitSourceAddress() {
       return this.isExitToFiat && this.fromCurrency === this.baseCurrency
@@ -547,6 +556,7 @@ export default {
       this.bityExitToFiat = false;
     },
     flipCurrencies() {
+      this.providerSelectedName = '';
       this.switchCurrencyOrder = true;
       const origTo = this.toValue;
       this.fromCurrency = this.currencyDetails.to.symbol;
@@ -565,6 +575,7 @@ export default {
       this.selectedProvider = this.providerList.find(entry => {
         return entry.provider === provider;
       });
+      this.providerSelectedName = this.selectedProvider.provider;
       this.updateEstimate('from');
     },
     setToAddress(address) {
@@ -584,6 +595,7 @@ export default {
       this.amountChanged('from');
     },
     setFromCurrency(value, dir = 'from') {
+      this.providerSelectedName = '';
       this.currencyDetails.from = value;
       this.fromCurrency = value.symbol;
       this.getBalance(this.fromCurrency);
@@ -596,6 +608,7 @@ export default {
       );
     },
     setToCurrency(value, dir = 'to') {
+      this.providerSelectedName = '';
       this.currencyDetails.to = value;
       this.toCurrency = value.symbol;
       this.fromArray = this.swap.setFromCurrencyBuilder(value);
