@@ -58,6 +58,7 @@
     "xss": "1.0.6"
   },
   "devDependencies": {
+    "@ensdomains/address-encoder": "0.1.1",
     "@ensdomains/dnsregistrar": "0.3.9",
     "@ethereum-alarm-clock/lib": "0.3.5",
     "@keepkey/keepkey.js": "1.2.3",
@@ -79,10 +80,10 @@
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "10.0.3",
     "babel-jest": "23.6.0",
-    "bs58": "4.0.1",
     "bignumber.js": "9.0.0",
     "bip39": "3.0.2",
     "bootstrap-vue": "2.0.4",
+    "bs58": "4.0.1",
     "canvas": "1.6.13",
     "codecov": "3.6.1",
     "copy-webpack-plugin": "5.0.4",

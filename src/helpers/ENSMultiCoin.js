@@ -11,7 +11,11 @@ const getMultiCoinAddress = (ens, name, coinType) => {
       .addr(supportedCoins[coinType].id)
       .then(bytes => {
         if (bytes) {
-          resolve(supportedCoins[coinType].encode(bytes));
+          resolve(
+            supportedCoins[coinType].encode(
+              new Buffer(bytes.replace('0x', ''), 'hex')
+            )
+          );
         } else {
           reject();
         }
