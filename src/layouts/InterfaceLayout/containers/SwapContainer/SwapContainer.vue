@@ -462,28 +462,6 @@ export default {
         this.tokenBalances,
         this.account.balance
       );
-      // if (
-      //   SwapProviders.isToken(this.fromCurrency) &&
-      //   this.fromCurrency !== this.baseCurrency
-      // ) {
-      //   const enteredVal = this.swap.convertToTokenWei(
-      //     this.fromCurrency,
-      //     this.fromValue
-      //   );
-      //
-      //   return new BigNumber(this.tokenBalances[this.fromCurrency]).gte(
-      //     new BigNumber(enteredVal)
-      //   );
-      // } else if (this.fromCurrency === this.baseCurrency) {
-      //   const enteredVal = this.swap.convertToTokenWei(
-      //     this.fromCurrency,
-      //     this.fromValue
-      //   );
-      //   return new BigNumber(this.account.balance).gt(
-      //     new BigNumber(enteredVal)
-      //   );
-      // }
-      // return true;
     },
     exitSourceAddress() {
       return this.isExitToFiat && this.fromCurrency === this.baseCurrency

@@ -1,3 +1,8 @@
+### Release v5.1.8
+
+### Devop
+- persist selected swap provider over rate refresh cycles [#1552](https://github.com/MyEtherWallet/MyEtherWallet/pull/1552)
+
 ### Release v5.1.7
 
 ### Feature
