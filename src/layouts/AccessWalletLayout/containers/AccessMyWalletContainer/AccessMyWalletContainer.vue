@@ -15,6 +15,7 @@
       :ledger-app-open="ledgerAppModalOpen"
       :network-and-address-open="networkAndAddressOpen"
       :open-finney="finneyModalOpen"
+      :open-xwallet="xwalletModalOpen"
       @hardwareRequiresPassword="hardwarePasswordModalOpen"
       @hardwareWalletOpen="hardwareWalletOpen"
     />
@@ -58,6 +59,7 @@
 
     <wallet-password-modal />
     <finney-modal ref="finney" />
+    <xwallet-modal ref="xwallet" />
     <enter-pin-number-modal />
 
     <div class="wrap">
@@ -107,6 +109,7 @@ import MnemonicModal from '../../components/MnemonicModal';
 import LedgerAppModal from '../../components/LedgerAppModal';
 import WalletPasswordModal from '@/components/WalletPasswordModal';
 import EnterPinNumberModal from '@/components/EnterPinNumberModal';
+import XwalletModal from '../../components/XwalletModal';
 
 import mewConnectImg from '@/assets/images/icons/button-mewconnect.svg';
 import hardwareImg from '@/assets/images/icons/button-hardware.svg';
@@ -139,7 +142,8 @@ export default {
     'wallet-password-modal': WalletPasswordModal,
     'enter-pin-number-modal': EnterPinNumberModal,
     'ledger-app-modal': LedgerAppModal,
-    'finney-modal': FinneyModal
+    'finney-modal': FinneyModal,
+    'xwallet-modal': XwalletModal
   },
   data() {
     return {
@@ -268,6 +272,9 @@ export default {
     },
     finneyModalOpen() {
       this.$refs.finney.$refs.finneyModal.show();
+    },
+    xwalletModalOpen() {
+      this.$refs.xwallet.$refs.xwalletModal.show();
     },
     hardwareWalletOpen(wallet) {
       // if (this.$refs.mnemonicPhrasePassword.$refs.password.visible) {
