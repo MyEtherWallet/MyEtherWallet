@@ -645,7 +645,7 @@ export default {
                 if (address) {
                   this.supportedCoins[type].value = this.supportedCoins[
                     type
-                  ].encode(address);
+                  ].encode(new Buffer(address.replace('0x', ''), 'hex'));
                 }
               });
           }
