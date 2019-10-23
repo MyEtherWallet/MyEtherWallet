@@ -19,7 +19,7 @@
           <a
             v-show="name === xwalletType"
             class="no-link"
-            href="https://www.pundix.com/"
+            href="https://xwallet.pundix.com"
             target="_blank"
           >
             By Pundi X >
