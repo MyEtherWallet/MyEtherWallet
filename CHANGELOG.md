@@ -1,3 +1,9 @@
+### Release v5.1.8
+
+### Devop
+
+- update egem [#1548](https://github.com/MyEtherWallet/MyEtherWallet/pull/1548)
+
 ### Release v5.1.7
 
 ### Feature
