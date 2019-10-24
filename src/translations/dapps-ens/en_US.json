@@ -58,5 +58,6 @@
   "already-owned": "{domain} is already owned.",
   "label-hash": "Labelhash",
   "name-hash": "Namehash",
-  "owner": "Owner"
+  "owner": "Owner",
+  "multi-coin": "Multi-coin"
 }

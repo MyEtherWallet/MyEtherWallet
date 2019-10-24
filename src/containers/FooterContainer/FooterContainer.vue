@@ -112,7 +112,7 @@
                 href="https://coingecko.com/"
                 target="_blank"
                 rel="noopener noreferrer"
-                >CoinGecko</a
+                >{{ $t('footer.coingecko') }}</a
               >
               <br />
               {{ $t('footer.copyright') }}

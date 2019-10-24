@@ -16,7 +16,9 @@
     <div v-show="resolverMultiCoinSupport" class="content-container">
       <h4>{{ $t('dapps.multiCoin') }}:</h4>
       <div v-for="(v, k) in supportedCoins" v-if="v.value" :key="k.id">
-        <span class="currency">{{ v.symbol }} address: </span>
+        <span class="currency"
+          >{{ v.symbol }} {{ $t('common.lowercase-addr') }}:
+        </span>
         <span class="content">{{ v.value }}</span>
       </div>
     </div>

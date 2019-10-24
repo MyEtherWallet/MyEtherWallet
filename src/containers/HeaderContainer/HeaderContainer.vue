@@ -105,7 +105,9 @@
                     :href="'https://ethplorer.io/address/' + address"
                     target="_blank"
                     rel="noopener noreferrer"
-                    >Ethplorer ({{ $tc('common.token', 2) }})</b-dropdown-item
+                    >{{ $t('common.header.ethplorer') }} ({{
+                      $tc('common.token', 2)
+                    }})</b-dropdown-item
                   >
                 </b-nav-item-dropdown>
                 <b-nav-item to="/#faqs">{{ $t('common.faqs') }}</b-nav-item>

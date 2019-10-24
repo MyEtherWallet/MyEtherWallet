@@ -121,7 +121,7 @@
             ]"
           >
             <div @click="openMigrate(value)">
-              <h4>CDP #{{ value }}</h4>
+              <h4>{{ $t('dappsMaker.cdp') }} #{{ value }}</h4>
             </div>
           </div>
         </div>
@@ -136,7 +136,7 @@
           ]"
         >
           <div @click="openManage(value)">
-            <h4>CDP #{{ value }}</h4>
+            <h4>{{ $t('dappsMaker.cdp') }} #{{ value }}</h4>
           </div>
         </div>
       </div>

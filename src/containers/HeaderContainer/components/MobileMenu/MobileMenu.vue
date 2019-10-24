@@ -35,7 +35,7 @@
         >
           <div class="buy-eth">
             <img src="@/assets/images/icons/buy-eth.svg" alt />
-            <p>Buy ETH</p>
+            <p>{{ $t('common.buy-eth') }}</p>
           </div>
         </a>
         <mobile-menu-button
