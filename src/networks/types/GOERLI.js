@@ -1,7 +1,7 @@
 import tokens from '@/tokens/tokens-goerli.json';
 import contracts from '@/contracts/contract-abi-goerli.json';
 import { GOERLI } from '../tlds';
-import goerli from '@/assets/images/icons/network.svg';
+import goerli from '@/assets/images/networks/default.svg';
 
 export default {
   name: 'GOERLI',

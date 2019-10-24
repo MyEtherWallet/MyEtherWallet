@@ -1,7 +1,6 @@
 import Router from 'vue-router';
 import store from '@/store';
 import { getMode, getRoutes } from '@/builds/configs';
-import Misc from '@/helpers/misc';
 
 const router = new Router({
   mode: getMode(),
@@ -27,9 +26,9 @@ router.beforeResolve((to, ___, next) => {
     const queryKeys = Object.keys(to.query);
     if (queryKeys.length > 0) {
       const blankObj = {};
-      for (const key in to.query) {
-        blankObj[key] = Misc.stripTags(to.query[key]);
-      }
+      // for (const key in to.query) {
+      //   blankObj[key] = Misc.stripTags(to.query[key]);
+      // }
 
       store.dispatch('saveQueryVal', blankObj);
     }
