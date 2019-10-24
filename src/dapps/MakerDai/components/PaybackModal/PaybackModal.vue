@@ -19,7 +19,7 @@
               <b>{{ $t('dappsMaker.mkrBalance') }}</b>
             </p>
             <p>
-              <b>{{ mkrBalance }} MKR</b>
+              <b>{{ mkrBalance }} {{ $t('dappsMaker.mkr') }}</b>
             </p>
           </div>
           <p class="get-mkr" @click="getMkr()">
@@ -32,7 +32,7 @@
           </div>
           <div :class="['dai-amount', hasEnoughDai ? '' : 'danger']">
             <input v-model="amount" />
-            <p class="floating-text">DAI</p>
+            <p class="floating-text">{{ $t('dappsMaker.dai') }}</p>
           </div>
         </div>
 
@@ -44,13 +44,13 @@
                 <b>{{
                   values.debtValue ? displayFixedValue(values.debtValue, 3) : 0
                 }}</b>
-                DAI
+                {{ $t('dappsMaker.dai') }}
               </p>
             </li>
             <li>
               <p>{{ $t('dappsMaker.stabilityFeeOwed') }}</p>
               <p>
-                <b>{{ values.governanceFeeOwed }}</b> MKR
+                <b>{{ values.governanceFeeOwed }}</b> {{ $t('dappsMaker.mkr') }}
               </p>
             </li>
             <li>

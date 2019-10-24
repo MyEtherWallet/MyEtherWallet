@@ -3,7 +3,7 @@
     <div class="modal-container">
       <b-modal
         ref="settings"
-        title="Settings"
+        :title="$t('interface.settings')"
         hide-footer
         centered
         class="bootstrap-modal nopadding"
@@ -34,7 +34,7 @@
                     />
                     <label :for="key">
                       {{ key | capitalize }} ({{ gasPriceInputs[key].gwei }}
-                      Gwei)
+                      {{ $t('common.gas.gwei') }})
                     </label>
                   </div>
                   <p class="hidden">
@@ -61,7 +61,7 @@
                       type="number"
                       @focus="selectedGasType = 'other'"
                     />
-                    <p class="gwei">Gwei</p>
+                    <p class="gwei">{{ $t('common.gas.gwei') }}</p>
                   </div>
                   <p class="hidden">
                     {{ customGasEth }}

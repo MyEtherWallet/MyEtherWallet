@@ -55,15 +55,18 @@
             <div class="padding-container">
               <div class="grid-block">
                 <p>{{ $t('common.network') }}</p>
-                <p>{{ network.type.name }} by {{ network.service }}</p>
+                <p>
+                  {{ network.type.name }} {{ $t('common.by') }}
+                  {{ network.service }}
+                </p>
               </div>
               <div class="grid-block">
                 <p>{{ $t('common.gas.limit') }}</p>
-                <p>{{ gas }} wei</p>
+                <p>{{ gas }} {{ $t('common.gas.wei') }}</p>
               </div>
               <div class="grid-block">
                 <p>{{ $t('common.gas.price') }}</p>
-                <p>{{ gasPrice }} gwei</p>
+                <p>{{ gasPrice }} {{ $t('common.gas.gwei') }}</p>
               </div>
               <div class="grid-block">
                 <p>{{ $t('sendTx.tx-fee') }}</p>

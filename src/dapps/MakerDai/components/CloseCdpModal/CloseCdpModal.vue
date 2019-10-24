@@ -27,7 +27,7 @@
                 <b>{{ $t('dappsMaker.mkrBalance') }}</b>
               </p>
               <p>
-                <b>{{ mkrBalance }} MKR</b>
+                <b>{{ mkrBalance }} {{ $t('dappsMaker.mkr') }}</b>
               </p>
             </div>
             <p v-show="!enoughMkr" class="get-mkr" @click="getMkr()">
@@ -41,7 +41,7 @@
                 <b>{{ $t('dappsMaker.daiBalance') }}</b>
               </p>
               <p>
-                <b>{{ daiBalance }} DAI</b>
+                <b>{{ daiBalance }} {{ $t('dappsMaker.dai') }}</b>
               </p>
             </div>
             <p v-show="!enoughDai" class="get-mkr" @click="getDai()">
@@ -52,7 +52,7 @@
             <div class="value-block">
               <p>{{ $t('dappsMaker.outstandingDai') }}</p>
               <p>
-                <b>{{ values.debtValue }} DAI</b>
+                <b>{{ values.debtValue }} {{ $t('dappsMaker.dai') }}</b>
               </p>
             </div>
             <div class="value-block">
@@ -66,7 +66,7 @@
                 }}
               </p>
               <p>
-                <b>{{ getfeeOwed }} MKR</b>
+                <b>{{ getfeeOwed }} {{ $t('dappsMaker.mkr') }}</b>
               </p>
             </div>
           </div>

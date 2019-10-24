@@ -15,7 +15,11 @@
         <div class="block-item">
           <div class="block-title">
             <div class="for-pop">
-              <p>{{ $t('dappsMaker.liquidPrice') }} (ETH/USD)</p>
+              <p>
+                {{ $t('dappsMaker.liquidPrice') }} ({{
+                  $t('common.currency.eth')
+                }}/{{ $t('common.currency.usd') }})
+              </p>
               <p v-if="liquidationPriceDisplay === '--'" class="pop-icon">
                 <popover :popcontent="$t('dappsMaker.whatIsDashes')" />
               </p>
@@ -23,13 +27,20 @@
 
             <div class="blue">
               <span class="blue-bold">{{ liquidationPriceDisplay }}</span>
-              USD
+              {{ $t('common.currency.usd') }}
             </div>
           </div>
           <div class="block-content">
             <div class="item">
-              <p>{{ $t('dappsMaker.currentPrice') }}(ETH/USD)</p>
-              <div>{{ ethPriceDisplay }} <span>USD</span></div>
+              <p>
+                {{ $t('dappsMaker.currentPrice') }}({{
+                  $t('common.currency.eth')
+                }}/{{ $t('common.currency.usd') }})
+              </p>
+              <div>
+                {{ ethPriceDisplay }}
+                <span>{{ $t('common.currency.usd') }}</span>
+              </div>
             </div>
             <div class="item">
               <p>{{ $t('dappsMaker.liquidationPenalty') }}</p>
@@ -77,13 +88,13 @@
                 <p>{{ $t('dappsMaker.deposited') }}</p>
                 <div>
                   {{ ethCollateral }}
-                  <span>ETH</span>
+                  <span>{{ $t('common.currency.eth') }}</span>
                 </div>
                 <div>
                   {{ pethCollateral }}
-                  <span>PETH</span> /
+                  <span>{{ $t('dappsMaker.peth') }}</span> /
                   {{ usdCollateral }}
-                  <span>USD</span>
+                  <span>{{ $t('common.currency.usd') }}</span>
                 </div>
                 <button @click="showDeposit">
                   {{ $t('dappsMaker.deposit') }} >
@@ -95,13 +106,13 @@
                 <p>{{ $t('dappsMaker.maxWithDraw') }}</p>
                 <div>
                   {{ maxEthDrawDisplay }}
-                  <span>ETH</span>
+                  <span>{{ $t('common.currency.eth') }}</span>
                 </div>
                 <div>
                   {{ maxPethDrawDisplay }}
-                  <span>PETH</span> /
+                  <span>{{ $t('dappsMaker.peth') }}</span> /
                   {{ maxUsdDrawDisplay }}
-                  <span>USD</span>
+                  <span>{{ $t('common.currency.usd') }}</span>
                 </div>
                 <button @click="showWithdraw">
                   {{ $t('dappsMaker.withdraw') }} >
@@ -125,10 +136,12 @@
             <div class="block-content">
               <div class="item">
                 <p>{{ $t('dappsMaker.generated') }}</p>
-                <div>{{ debtValue }} <span>DAI</span></div>
+                <div>
+                  {{ debtValue }} <span>{{ $t('dappsMaker.dai') }}</span>
+                </div>
                 <div>
                   {{ debtValueDisplay }}
-                  <span>USD</span>
+                  <span>{{ $t('common.currency.usd') }}</span>
                 </div>
                 <button @click="showPayback">
                   {{ $t('dappsMaker.payBack') }} >
@@ -140,11 +153,11 @@
                 <p>{{ $t('dappsMaker.maxAvailable') }}</p>
                 <div>
                   {{ maxDai }}
-                  <span>DAI</span>
+                  <span>{{ $t('dappsMaker.dai') }}</span>
                 </div>
                 <div>
                   {{ maxUsd }}
-                  <span>USD</span>
+                  <span>{{ $t('common.currency.usd') }}</span>
                 </div>
                 <button @click="showGenerate">
                   {{ $t('dappsMaker.generate') }} >

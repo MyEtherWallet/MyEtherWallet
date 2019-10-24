@@ -20,7 +20,9 @@
               <div class="icon">
                 <img src="~@/assets/images/currency/eth.svg" />
               </div>
-              <div class="amount">{{ collateral }}<span>ETH</span></div>
+              <div class="amount">
+                {{ collateral }}<span>{{ $t('common.currency.eth') }}</span>
+              </div>
             </div>
           </div>
           <div class="arrow">
@@ -34,7 +36,9 @@
               <div class="icon">
                 <img src="~@/assets/images/currency/coins/AllImages/DAI.svg" />
               </div>
-              <div class="amount">{{ generate }}<span>DAI</span></div>
+              <div class="amount">
+                {{ generate }}<span>{{ $t('dappsMaker.dai') }}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -42,12 +46,22 @@
           <expending-option :title="$t('dappsMaker.details')">
             <ul>
               <li>
-                <p>{{ $t('dappsMaker.liquidPrice') }} (ETH/USD)</p>
-                <p class="bold">{{ liquidationPrice }} USD</p>
+                <p>
+                  {{ $t('dappsMaker.liquidPrice') }} ({{
+                    $t('common.currency.eth')
+                  }}/{{ $t('common.currency.usd') }})
+                </p>
+                <p class="bold">
+                  {{ liquidationPrice }} {{ $t('common.currency.usd') }}
+                </p>
               </li>
               <li>
-                <p>{{ $t('dappsMaker.currentPrice') }} (ETH/USD)</p>
-                <p>{{ currentPrice }} USD</p>
+                <p>
+                  {{ $t('dappsMaker.currentPrice') }} ({{
+                    $t('common.currency.eth')
+                  }}/{{ $t('common.currency.usd') }})
+                </p>
+                <p>{{ currentPrice }} {{ $t('common.currency.usd') }}</p>
               </li>
               <li>
                 <p>{{ $t('dappsMaker.liquidationPenalty') }}</p>

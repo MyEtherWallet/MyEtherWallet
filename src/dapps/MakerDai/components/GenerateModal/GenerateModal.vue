@@ -26,7 +26,7 @@
           </div>
           <div :class="['input-box', allOk ? '' : 'danger']">
             <input v-model="amount" />
-            <p class="input-unit">DAI</p>
+            <p class="input-unit">{{ $t('dappsMaker.dai') }}</p>
           </div>
           <div class="sub-text">
             <p v-if="!canGenerateDaiAmount" class="above-max">

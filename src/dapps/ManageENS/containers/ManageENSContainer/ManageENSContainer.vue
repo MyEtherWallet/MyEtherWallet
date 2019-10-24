@@ -5,7 +5,7 @@
       <div v-show="resolverMultiCoinSupport" class="form-container">
         <form class="manage-multi-coin-form">
           <div class="title-and-dropdown-container">
-            <h4>Multi-Coin:</h4>
+            <h4>{{ $t('ens.multi-coin') }}:</h4>
             <b-dd :text="selectedCurrency" class="dropdown-button-2">
               <b-dd-item
                 v-for="(item, idx) in Object.keys(supportedCoins)"
@@ -49,7 +49,7 @@
               :class="isValidAddresses ? '' : 'disabled'"
               @click.prevent="checkAndSend"
             >
-              Save
+              {{ $t('common.save') }}
             </button>
           </div>
         </form>

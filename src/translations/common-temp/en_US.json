@@ -20,14 +20,24 @@
   "yes": "Yes",
   "no": "No",
   "send": "Send",
+  "random": "Random",
   "verify": "Verify",
   "terms": "Terms",
-  "eth": "ETH",
-  "btc": "BTC",
+  "by": "by",
   "get-started": "Get Started",
+  "tutorial": "Tutorial",
+  "what-is-that": "What is that?",
+  "confirm-logout": "Are you sure you want to logout of your wallet?",
   "feedback": {
     "send-us-feedback": "If you want to send us your feedback, please use",
     "feedback-title": "Feedback / Customer Support"
+  },
+  "currency": {
+    "eth": "ETH",
+    "btc": "BTC",
+    "usd": "USD",
+    "peth": "PETH",
+    "ethereum": "Ethereum"
   },
   "support-email": "support@myetherwallet.com",
   "support": {
@@ -49,7 +59,8 @@
     "access-my": "Access My Wallet",
     "access": "Access Wallet",
     "unlock": "Unlock Wallet",
-    "do-not-have": "Do not have a wallet?"
+    "do-not-have": "Do not have a wallet?",
+    "passphrase": "Passphrase"
   },
   "mewconnect": {
     "string": "MEWconnect",
@@ -57,7 +68,6 @@
   },
   "swap": "Swap",
   "token": "Token | Tokens",
-  "vintage": "Vintage",
   "not-recommended": {
     "string": "Not recommended",
     "warning1": "This is not a recommended way to access your wallet. | This is not a recommended way to create your wallet.",
@@ -71,7 +81,13 @@
   "password": {
     "string": "Password",
     "enter": "Enter password",
-    "your": "Your Password"
+    "your": "Your Password",
+    "weak": "Weak strength password",
+    "weak-note": "Your password needs to be minimum 10 charactors long.",
+    "medium": "Medium strength password",
+    "medium-note": "Add numbers to make your password stronger.",
+    "strong": "Strong strength password",
+    "strong-note": "Good! Your password is very strong."
   },
   "decision-tree": {
     "subcategories": "Subcategories",
@@ -81,11 +97,15 @@
   "value": "Value",
   "network": "Network",
   "addr": "Address",
+  "lowercase-addr": "address",
   "my-addr": "My Address",
   "enter-addr": "Please enter the address",
   "balance": {
     "string": "Balance",
     "total": "Total Balance"
+  },
+  "notifications": {
+    "no-notifications": ">No notifications found :("
   },
   "advanced": "Advanced",
   "chain-id": "Chain ID",
@@ -98,7 +118,9 @@
   "dapps": "Dapps",
   "gas": {
     "limit": "Gas Limit",
-    "price": "Gas Price"
+    "price": "Gas Price",
+    "gwei": "gwei",
+    "wei": "wei"
   },
   "search": "Search",
   "loading": "Loading",
@@ -110,8 +132,7 @@
   "header": {
     "new-wallet": "New Wallet",
     "access": "Access",
-    "vintage-text": "Missing the vintage MEW?",
-    "vintage-link": "Click here to go back!"
+    "ethplorer": "Ethplorer"
   },
   "security": "Security",
   "status": "Status",

@@ -32,8 +32,10 @@
           <div class="dropdown-text-container dropdown-container">
             <p>
               <span class="cc ETH cc-icon currency-symbol" />
-              ETH
-              <span class="subname">- Ethereum </span>
+              {{ $t('common.currency.eth') }}
+              <span class="subname"
+                >- {{ $t('common.currency.ethereum') }}
+              </span>
             </p>
           </div>
           <input
@@ -46,12 +48,18 @@
             ]"
           />
           <div class="input-block-message">
-            <p v-if="!hasEnoughEth" class="red-text">Not enough ETH</p>
+            <p v-if="!hasEnoughEth" class="red-text">
+              {{ $t('dappsMaker.not-enough-eth') }}
+            </p>
             <p>
               {{ $t('dappsMaker.minCollat') }}
-              <b>{{ displayFixedValue(minEth, 6) }}</b> ETH
+              <b>{{ displayFixedValue(minEth, 6) }}</b>
+              {{ $t('common.currency.eth') }}
             </p>
-            <p>{{ displayFixedValue(depositInPeth, 6) }} PETH</p>
+            <p>
+              {{ displayFixedValue(depositInPeth, 6) }}
+              {{ $t('dappsMaker.peth') }}
+            </p>
           </div>
         </div>
         <div class="arrow"><img :src="arrowImage" alt /></div>
@@ -62,8 +70,8 @@
           <div class="dropdown-text-container dropdown-container">
             <p>
               <span class="cc DAI cc-icon cc-icon-dai currency-symbol" />
-              DAI
-              <span class="subname">- Maker DAI </span>
+              {{ $t('dappsMaker.dai') }}
+              <span class="subname">- {{ $t('dappsMaker.maker-dai') }} </span>
             </p>
           </div>
           <input
@@ -79,7 +87,8 @@
           <div class="input-block-message">
             <p>
               {{ $t('dappsMaker.maxGenerate') }}
-              <b>{{ displayFixedValue(maxDaiDraw, 6) }}</b> DAI
+              <b>{{ displayFixedValue(maxDaiDraw, 6) }}</b>
+              {{ $t('dappsMaker.dai') }}
             </p>
           </div>
         </div>
@@ -89,17 +98,22 @@
         <ul>
           <li>
             <p>{{ $t('dappsMaker.minEthReq') }}</p>
-            <p>{{ displayFixedValue(minEth, 6) }} ETH</p>
+            <p>
+              {{ displayFixedValue(minEth, 6) }} {{ $t('common.currency.eth') }}
+            </p>
           </li>
           <li>
             <p>{{ $t('dappsMaker.liquidPrice') }}</p>
             <p>
-              <b>{{ liquidationPrice }}</b> USD
+              <b>{{ liquidationPrice }}</b> {{ $t('common.currency.usd') }}
             </p>
           </li>
           <li>
             <p>{{ $t('dappsMaker.currentPriceInfo') }}</p>
-            <p>{{ displayFixedValue(ethPrice, 2) }} USD</p>
+            <p>
+              {{ displayFixedValue(ethPrice, 2) }}
+              {{ $t('common.currency.usd') }}
+            </p>
           </li>
           <li>
             <p>{{ $t('dappsMaker.liquidationPenalty') }}</p>

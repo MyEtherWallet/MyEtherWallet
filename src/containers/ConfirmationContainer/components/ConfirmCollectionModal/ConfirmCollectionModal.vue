@@ -81,11 +81,11 @@
                 <span class="item-title">{{ $t('common.gas.price') }}</span>
                 <span>
                   {{ web3.utils.fromWei(item.gasPrice, 'gwei') }}
-                  Gwei
+                  {{ $t('common.gas.gwei') }}
                 </span>
               </div>
               <div class="body-item">
-                <span class="item-title">Nonce</span>
+                <span class="item-title">{{ $t('sendTx.nonce') }}</span>
                 <span>{{ web3.utils.hexToNumberString(item.nonce) }}</span>
               </div>
               <div class="body-item">
@@ -125,21 +125,6 @@
                   src="~@/assets/images/icons/qr-code.svg"
                 />
               </b-btn>
-              <b-popover
-                target="exPopover9"
-                triggers="hover focus"
-                placement="top"
-              >
-                <div class="qrcode-contents">
-                  <p class="qrcode-title">
-                    {{ $t('confirmation.scanQrCode') }}
-                  </p>
-                  <div class="qrcode-block">
-                    <qrcode :options="{ size: 100 }" value="Hello, World!" />
-                  </div>
-                  <p class="qrcode-helper">What is that?</p>
-                </div>
-              </b-popover>
             </div>
           </div>
         </div>
