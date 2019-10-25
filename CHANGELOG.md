@@ -2,6 +2,11 @@
 
 - Fix scrolltop issue, keep one collapse open on network address modal [#1561](https://github.com/MyEtherWallet/MyEtherWallet/pull/1561)
 
+### Release v5.1.8-hotfix.1
+
+### Hotfix
+- Update list to bring back contract addresses [#1567](https://github.com/MyEtherWallet/MyEtherWallet/pull/1567)
+
 ### Release v5.1.8
 
 ### Bug
