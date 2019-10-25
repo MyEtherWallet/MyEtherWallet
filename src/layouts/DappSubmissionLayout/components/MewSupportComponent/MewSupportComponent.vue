@@ -2,10 +2,12 @@
   <div>
     <div class="mew-support-box ml-5 mt-5">
       <div class="mew-support-container">
-        <p class="mew-support-header">MEW Support</p>
+        <p class="mew-support-header">
+          {{ $t('dappsSubmission.mew-support.title') }}
+        </p>
         <div class="text-container">
           <p class="mew-support-info">
-            Any question? Get in touch and we’ll get back as soon as we can.
+            {{ $t('dappsSubmission.mew-support.info') }}
           </p>
           <img class="msg-logo" src="~@/assets/images/message.png" />
         </div>
@@ -14,7 +16,7 @@
         class="email-us-btn mt-3"
         href="mailto:support@myetherwallet.com"
         target="_blank"
-        >Contact Support</b-link
+        >{{ $t('common.contact-support') }}</b-link
       >
     </div>
   </div>

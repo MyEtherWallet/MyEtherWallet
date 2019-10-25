@@ -9,12 +9,12 @@
             <span
               :class="openFAQs ? 'active' : ''"
               @click="(openFAQs = true), (openCategories = false)"
-              >FAQs</span
+              >{{ $t('common.faqs') }}</span
             >
             <span
               :class="openCategories ? 'active' : ''"
               @click="(openFAQs = false), (openCategories = true)"
-              >Categories</span
+              >{{ $t('helpCenter.categories') }}</span
             >
           </div>
           <div v-if="openFAQs"><faqs /></div>

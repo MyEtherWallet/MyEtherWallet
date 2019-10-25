@@ -7,11 +7,13 @@
       :class="props.showPreview ? 'submit-preview-text' : ''"
       class="submit-text"
     >
-      Submit Dapp
+      {{ props.submitDappText }}
     </span>
-    <p v-if="props.showPreview" class="preview-txt mr-3">Preview</p>
+    <p v-if="props.showPreview" class="preview-txt mr-3">
+      {{ props.previewText }}
+    </p>
     <button v-if="props.showBack" class="back-btn mr-3" @click="props.back">
-      Back
+      {{ props.backText }}
     </button>
     <button
       :class="[
@@ -56,6 +58,18 @@ export default {
     lackOfInfo: {
       type: Boolean,
       default: false
+    },
+    submitDappText: {
+      type: String,
+      default: ''
+    },
+    backText: {
+      type: String,
+      default: ''
+    },
+    previewText: {
+      type: String,
+      default: ''
     }
   }
 };

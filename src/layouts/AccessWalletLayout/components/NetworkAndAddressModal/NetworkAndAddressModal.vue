@@ -42,8 +42,8 @@
                     alt
                   />
                   <div v-else class="no-icon">
-                    <p>No</p>
-                    <p>Icon</p>
+                    <p>{{ $t('common.no') }}</p>
+                    <p>{{ $t('accessWallet.network-addr.icon') }}</p>
                   </div>
                 </div>
                 <p>{{ key }}</p>

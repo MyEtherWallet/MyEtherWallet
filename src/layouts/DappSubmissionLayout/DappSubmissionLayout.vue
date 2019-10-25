@@ -6,13 +6,16 @@
         :show-back="$route.fullPath !== '/dapp-submission'"
         :btn-text="
           $route.fullPath.includes('/dapp-summary')
-            ? 'Submit'
-            : 'Save & Continue'
+            ? $t('dappsSubmission.submit')
+            : $t('dappsSubmission.save')
         "
         :next="next"
         :back="previous"
         :disable-submit="isDisabledBtn()"
         :lack-of-info="strengthPercentage < 50 ? true : false"
+        :submit-dapp-text="$t('dappsSubmission.banner-submit.submit-dapp')"
+        :back-text="$t('dappsSubmission.banner-submit.back')"
+        :preview-text="$t('dappsSubmission.banner-submit.preview')"
       />
       <banner-component :banner-text="bannerText" />
       <b-progress :value="bannerValue" class="dapp-progress-bar"></b-progress>
@@ -37,6 +40,7 @@
         :form="form"
         :lack-of-info="strengthPercentage < 50 ? true : false"
         :social-accts="socialAccts"
+        :update-translations="updateTranslations"
       />
       <div
         v-if="$route.fullPath !== '/dapp-submission/dapp-summary'"
@@ -47,29 +51,28 @@
           :strength-of-info="strengthPercentage"
           class="strength-of-info ml-5"
         />
-        <sotd />
+        <sotd
+          :title="$t('dappsSubmission.sotd.title')"
+          :info="$t('dappsSubmission.sotd.info')"
+          :url="$t('dappsSubmission.sotd.url')"
+        />
         <mew-support />
       </div>
       <success-modal
         ref="successModal"
-        :success-title="'Congratulations'"
-        :message="
-          'It takes about 3-5 business days to review your Dapp. And an email will be sent to you if the the status update.'
-        "
+        :success-title="$t('dappsSubmission.congrats')"
+        :message="$t('dappsSubmission.congrats-msg')"
       />
     </div>
   </div>
 </template>
 
 <script>
-import AboutYourDappContainer from './containers/AboutYourDappContainer';
 import StrengthOfInfoComponent from './components/StrengthOfInfoComponent';
 import BannerComponent from './components/BannerComponent';
 import SOTDComponent from './components/SOTDComponent';
 import BannerSubmitComponent from './components/BannerSubmitComponent';
 import MewSupportComponent from './components/MewSupportComponent';
-import AboutYourTeamContainer from './containers/AboutYourTeamContainer';
-import SummaryContainer from './containers/SummaryContainer';
 import axios from 'axios';
 import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessModal';
 import { Toast } from '@/helpers';
@@ -77,13 +80,10 @@ import FormData from 'form-data';
 
 export default {
   components: {
-    'about-your-dapp': AboutYourDappContainer,
     'strength-of-info': StrengthOfInfoComponent,
     'banner-component': BannerComponent,
     'banner-submit-component': BannerSubmitComponent,
     'mew-support': MewSupportComponent,
-    'about-your-team': AboutYourTeamContainer,
-    'summary-container': SummaryContainer,
     'success-modal': SuccessModal,
     sotd: SOTDComponent
   },
@@ -145,6 +145,10 @@ export default {
     }
   },
   methods: {
+    updateTranslations(str) {
+      const fullStr = 'dappsSubmission.' + str;
+      return this.$t(fullStr);
+    },
     next() {
       switch (this.$route.fullPath) {
         case '/dapp-submission':

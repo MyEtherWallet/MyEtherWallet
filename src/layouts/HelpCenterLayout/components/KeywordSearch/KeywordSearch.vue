@@ -2,7 +2,9 @@
   <div class="keyword-search">
     <div class="wrap">
       <div class="page-container">
-        <div class="block-title"><h1>Got lost? Let me help you.</h1></div>
+        <div class="block-title">
+          <h1>{{ $t('helpCenter.keyword-search.lost') }}</h1>
+        </div>
 
         <div class="search-form mew-custom-form__search">
           <div class="search-input-block">
@@ -16,8 +18,7 @@
 
         <div class="searchable-contents">
           <p>
-            Top Searches: MEWconnect / Swap / Send ETH / Security/ Blockchain /
-            Create a Wallet
+            {{ $t('helpCenter.keyword-search.top-searches') }}
           </p>
         </div>
       </div>

@@ -20,7 +20,8 @@
     "do-not-forget": "DO NOT FORGET",
     "do-not-forget-desc": "to save your password. You will need this",
     "key-pass": "Password + Keystore",
-    "key-pass-desc": "File to unlock your wallet."
+    "key-pass-desc": "File to unlock your wallet.",
+    "password-strength": "Password strength"
   },
   "keystore": {
     "title-tab": "By Keystore File",
@@ -54,6 +55,20 @@
       "title": "Verification",
       "text": "Please enter and fill out the empty boxes below to verify your mnemonic phrase key",
       "button": "Verify"
+    },
+    "print": {
+      "print-title": "Print Preview"
+    },
+    "table": {
+      "title": "Mnemonic Phrase",
+      "safe-place": "Please Keep This Sheet at a Very Safe Place. It is your property!",
+      "we": "We",
+      "can-not": "CAN NOT",
+      "change-pw": "change your password. Please",
+      "dont-forget": "DO NOT FORGET",
+      "save": "to save your password, and it is your private key. You will need this",
+      "requirements": "Password + Mnemonic Phrase",
+      "access-wallet": "to access your wallet"
     }
   },
   "created": {

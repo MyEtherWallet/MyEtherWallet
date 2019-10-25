@@ -10,7 +10,7 @@
           rel="noopener noreferrer"
           target="_blank"
         >
-          <span>Email us</span>
+          <span>{{ $t('helpCenter.link-block.email-us') }}</span>
           <i class="fa fa-long-arrow-right" aria-hidden="true" />
         </a>
       </div>

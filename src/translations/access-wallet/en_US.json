@@ -8,6 +8,17 @@
     },
     "warning": "MEWconnect is not compatible with iPads."
   },
+  "finney": {
+    "scan-qr": "To connect, scan the QR code from",
+    "finney-wallet": "FinneyWallet",
+    "app-on": "app on your",
+    "finney-bc": "FINNEY™ BLOCKCHAIN SMARTPHONE",
+    "get-your": "Get your",
+    "finney": "FINNEY™",
+    "now": "now",
+    "mobile": "moble",
+    "finney-connect": "FINNEY Connect"
+  },
   "hardware": {
     "option-title": "Hardware",
     "warning": {
@@ -67,7 +78,8 @@
   "network-addr":{
     "string": "Network and Address",
     "addr-to-interact": "Address to Interact With",
-    "id": "ID"
+    "id": "ID",
+    "icon": "icon"
   },
   "path": {
     "string": "Path",
