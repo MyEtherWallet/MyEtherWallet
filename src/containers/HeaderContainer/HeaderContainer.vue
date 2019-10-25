@@ -85,12 +85,9 @@
                   />
                   Buy ETH
                 </b-nav-item>
-                <b-nav-item
-                  v-if="isHomePage"
-                  to="/"
-                  exact
-                  >{{ $t('header.home') }}</b-nav-item
-                >
+                <b-nav-item v-if="isHomePage" to="/" exact>{{
+                  $t('header.home')
+                }}</b-nav-item>
                 <b-nav-item
                   v-if="isHomePage && buildType !== 'mewcx'"
                   to="/#about-mew"
