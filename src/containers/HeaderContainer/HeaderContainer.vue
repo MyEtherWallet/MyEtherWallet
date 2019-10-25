@@ -89,7 +89,6 @@
                   v-if="isHomePage"
                   to="/"
                   exact
-                  @click="scrollTop()"
                   >{{ $t('header.home') }}</b-nav-item
                 >
                 <b-nav-item

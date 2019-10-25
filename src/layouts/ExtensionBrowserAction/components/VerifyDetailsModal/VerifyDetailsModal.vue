@@ -118,7 +118,7 @@ export default {
   },
   watch: {
     locNickname(newVal) {
-      this.$emit('nickname', newVal);
+      this.$emit('nicknameUpdated', newVal);
     },
     wallet(newVal) {
       if (Object.keys(newVal).length > 0 && newVal.identifier === 'keystore') {

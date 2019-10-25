@@ -63,6 +63,8 @@
 import { isValidPrivate } from 'ethereumjs-util';
 import hide from '@/assets/images/icons/hide-password.svg';
 import showIcon from '@/assets/images/icons/show-password.svg';
+import { Toast } from '@/helpers';
+
 export default {
   props: {
     loading: {
@@ -100,12 +102,22 @@ export default {
     }
   },
   watch: {
+    password(newVal) {
+      this.locPassword = newVal;
+    },
+    privKey(newVal) {
+      this.locPrivKey = newVal;
+    },
     locPrivKey(newVal) {
-      this.validPriv = isValidPrivate(Buffer.from(newVal, 'hex'));
-      this.$emit('privateKey', newVal);
+      try {
+        this.validPriv = isValidPrivate(Buffer.from(newVal, 'hex'));
+        this.$emit('privateKey', newVal);
+      } catch (e) {
+        Toast.responseHandler(e, Toast.ERROR);
+      }
     },
     locPassword(newVal) {
-      this.$emit('password', newVal);
+      this.$emit('passwordUpdated', newVal);
     }
   },
   methods: {

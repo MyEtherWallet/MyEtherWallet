@@ -97,46 +97,6 @@ chrome.storage.onChanged.addListener(items => {
   });
 });
 
-const varType = variable => {
-  const isArray =
-    variable && variable instanceof Array && typeof variable === 'object';
-  const isObject =
-    variable && variable instanceof Object && typeof variable === 'object';
-  const isBoolean = variable && typeof x === 'boolean';
-  const isNumber = variable && typeof x === 'number';
-  const isString = variable && typeof x === 'string';
-
-  if (isArray) return 'array';
-  if (isObject) return 'object';
-  if (isBoolean) return 'boolean';
-  if (isNumber) return 'number';
-  if (isString) return 'string';
-};
-
-const valueStripper = val => {
-  if (varType(val) === 'array') {
-    return val.map(item => {
-      if (varType(item) === 'object') {
-        return valueStripper(item);
-      }
-      return Misc.stripTags(item);
-    });
-  } else if (varType(val) === 'object') {
-    const newObj = {};
-    Object.keys(val).forEach(item => {
-      if (varType(val[item]) === 'object' || varType(val[item]) === 'array') {
-        newObj[item] = valueStripper(val[item]);
-      }
-      newObj[item] = Misc.stripTags(val[item]);
-    });
-    return newObj;
-  } else if (varType(val) === 'string') {
-    return Misc.stripTags(val);
-  }
-
-  return val;
-};
-
 const urls = {};
 // eslint-disable-next-line
 let metamaskChecker;
@@ -150,7 +110,7 @@ const eventsListeners = (request, _, callback) => {
   const payload = utils._.mapObject(
     Object.assign({}, request.payload),
     function(val) {
-      return valueStripper(val);
+      return helpers.recursivePayloadStripper(val);
     }
   );
 

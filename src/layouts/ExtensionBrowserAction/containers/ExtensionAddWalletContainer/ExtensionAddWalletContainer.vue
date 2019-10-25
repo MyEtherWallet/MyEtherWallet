@@ -9,8 +9,10 @@
       ref="generateNewWallet"
       :generate-wallet="generateWallet"
       :loading="loading"
-      @nickname="updateNickname"
-      @password="updatePassword"
+      :nickname="nickname"
+      :password="password"
+      @nicknameUpdated="updateNickname"
+      @passwordUpdated="updatePassword"
     />
     <verify-details-modal
       ref="verifyDetails"
@@ -19,32 +21,36 @@
       :back="back"
       :add-wallet="addWalletToStore"
       :usd="ethPrice"
-      @nickname="updateNickname"
+      :nickname="nickname"
+      @nicknameUpdated="updateNickname"
     />
     <import-private-key-modal
       ref="importPrivateKey"
       :generate-wallet="generateWalletFromPriv"
       :priv-key="privateKey"
       :loading="loading"
+      :password="password"
       @privateKey="updatePrivKey"
-      @password="updatePassword"
+      @passwordUpdated="updatePassword"
     />
     <import-keystore-modal
       ref="importKeystore"
       :filepath="filepath"
       :loading="loading"
       :unlock-json="unlockJson"
+      :password="password"
       @filepath="updateFilePath"
       @file="updateFile"
-      @password="updatePassword"
+      @passwordUpdated="updatePassword"
     />
     <network-address-modal
       ref="networkAddress"
       :generate-from-mnemonic-priv="generateFromMnemonicPriv"
       :wallet-instance="wallet"
       :loading="loading"
+      :password="password"
       @accountPath="updateSelectedPath"
-      @password="updatePassword"
+      @passwordUpdated="updatePassword"
     />
     <h2>Add My Wallet</h2>
     <p>How would you like to add your wallet?</p>
@@ -174,6 +180,7 @@ export default {
     this.$refs.importPrivateKey.$refs.importPrivateKey.$on('hidden', () => {
       this.password = '';
       this.privateKey = '';
+      console.log('what?');
     });
 
     this.$refs.importKeystore.$refs.importKeystore.$on('hidden', () => {
@@ -190,6 +197,7 @@ export default {
     this.$refs.verifyDetails.$refs.verifyDetails.$on('hidden', () => {
       this.nickname = '';
       this.loading = false;
+      console.log('shouldve gotten here?');
     });
     this.fetchEthBalance();
   },
