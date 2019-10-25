@@ -1,6 +1,5 @@
 /* eslint camelcase: 0 */
-import commonold from './common/en_US';
-import common from './common-temp/en_US';
+import common from './common/en_US';
 import confirmation from './confirmation/en_US';
 import dapps from './dapps/en_US';
 import dappsMaker from './dapps-maker/en_US';
@@ -39,7 +38,6 @@ import informationPages from './information-pages/en_US';
 
 const en_US = {
   common: common,
-  commonold: commonold,
   confirmation: confirmation,
   dapps: dapps,
   home: home,
