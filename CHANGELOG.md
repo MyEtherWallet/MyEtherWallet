@@ -1,7 +1,7 @@
 ### Release v5.1.8-hotfix.1
 
 ### Hotfix
-- Update list to bring back contract addresses []()
+- Update list to bring back contract addresses [#1567](https://github.com/MyEtherWallet/MyEtherWallet/pull/1567)
 
 ### Release v5.1.8
 
