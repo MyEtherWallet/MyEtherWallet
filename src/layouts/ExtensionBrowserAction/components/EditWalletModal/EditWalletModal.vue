@@ -64,11 +64,6 @@ export default {
       locName: this.name
     };
   },
-  mounted() {
-    this.$refs.editModal.$on('hidden', () => {
-      this.locName = this.name;
-    });
-  },
   methods: {
     saveWallet() {
       const wallet = Object.assign({}, this.wallet);

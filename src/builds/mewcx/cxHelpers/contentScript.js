@@ -25,6 +25,9 @@ import {
   WEB3_RECEIVE_TX_COUNT,
   CX_GET_TX_COUNT
 } from './cxEvents';
+
+import helpers from './helpers';
+
 import {
   csErrors,
   csInjectedWeb3,
@@ -38,6 +41,7 @@ import {
 } from './contentScriptEvents';
 import { extractRootDomain } from './extractRootDomain';
 import MiddleWare from '@/wallets/web3-provider/middleware';
+
 const chrome = window.chrome;
 const extensionID = chrome.runtime.id;
 let getAccountModalIsOPen = false;
@@ -90,21 +94,23 @@ chrome.runtime.onMessage.addListener(function(request, _, callback) {
 
 const events = {};
 events[WEB3_SUBSCRIBE] = function(e) {
+  const payload = helpers.recursivePayloadStripper(e.detail);
   chrome.runtime.sendMessage(
     extensionID,
     {
       event: CX_SUBSCRIBE,
-      payload: e.detail
+      payload: payload
     },
     {}
   );
 };
 events[WEB3_GET_TX_COUNT] = function(e) {
+  const payload = helpers.recursivePayloadStripper(e.detail);
   chrome.runtime.sendMessage(
     extensionID,
     {
       event: CX_GET_TX_COUNT,
-      payload: e.detail
+      payload: payload
     },
     {},
     data => {
@@ -133,11 +139,12 @@ events[WEB3_QUERY_GASPRICE] = function() {
   );
 };
 events[WEB3_UNSUBSCRIBE] = function(e) {
+  const payload = helpers.recursivePayloadStripper(e.detail);
   chrome.runtime.sendMessage(
     extensionID,
     {
       event: CX_UNSUBSCRIBE,
-      payload: e.detail
+      payload: payload
     },
     {},
     data => {
@@ -169,7 +176,7 @@ events[WEB3_RPC_REQUEST] = function(e) {
     extensionID,
     {
       event: WEB3_RPC_REQUEST,
-      payload: e.detail
+      payload: helpers.recursivePayloadStripper(e.detail)
     },
     {},
     data => {
@@ -205,6 +212,12 @@ events[WEB3_GET_ACC] = function(e) {
     tags.forEach(tag => {
       meta[tag.attributes[0].value] = tag.attributes[1].value;
     });
+
+    const newPayload = {
+      url: helpers.importedXssStripper(window.location.origin),
+      meta: helpers.recursivePayloadStripper(meta)
+    };
+
     if (Object.keys(storedAccounts).length > 0) {
       window.dispatchEvent(
         new CustomEvent(WEB3_RECEIVE_ACC.replace('{{id}}', extensionID), {
@@ -217,10 +230,7 @@ events[WEB3_GET_ACC] = function(e) {
       if (!getAccountModalIsOPen) {
         chrome.runtime.sendMessage(extensionID, {
           event: CX_FETCH_MEW_ACCS,
-          payload: {
-            url: window.location.origin,
-            meta: meta
-          }
+          payload: newPayload
         });
         getAccountModalIsOPen = true;
       }
@@ -229,23 +239,25 @@ events[WEB3_GET_ACC] = function(e) {
 };
 
 events[WEB3_SEND_TX] = function(e) {
+  const newPayload = {
+    tx: helpers.recursivePayloadStripper(e.detail.tx),
+    url: helpers.importedXssStripper(window.location.origin)
+  };
   chrome.runtime.sendMessage(extensionID, {
     event: CX_CONFIRM_SEND_TX,
-    payload: {
-      tx: e.detail.tx,
-      url: window.location.origin
-    }
+    payload: newPayload
   });
 };
 
 events[WEB3_SEND_SIGN_MSG] = function(e) {
+  const newPayload = {
+    msgToSign: helpers.recursivePayloadStripper(e.detail.msgToSign),
+    address: helpers.importedXssStripper(e.detail.address),
+    url: helpers.importedXssStripper(window.location.origin)
+  };
   chrome.runtime.sendMessage(extensionID, {
     event: CX_SIGN_MSG,
-    payload: {
-      msgToSign: e.detail.msgToSign,
-      address: e.detail.address,
-      url: window.location.origin
-    }
+    payload: newPayload
   });
 };
 

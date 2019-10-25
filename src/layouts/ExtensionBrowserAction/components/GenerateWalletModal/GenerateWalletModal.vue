@@ -86,18 +86,18 @@ export default {
     }
   },
   watch: {
+    password(newVal) {
+      this.locPassword = newVal
+    },
+    nickname(newVal) {
+      this.locNickname = newVal
+    },
     locPassword(newVal) {
-      this.$emit('password', newVal);
+      this.$emit('passwordUpdated', newVal);
     },
     locNickname(newVal) {
-      this.$emit('nickname', newVal);
+      this.$emit('nicknameUpdated', newVal);
     }
-  },
-  mounted() {
-    this.$refs.generateNewWallet.$on('hidden', () => {
-      this.locPassword = '';
-      this.locNickname = '';
-    });
   }
 };
 </script>

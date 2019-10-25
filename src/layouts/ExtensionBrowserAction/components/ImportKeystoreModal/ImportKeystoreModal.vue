@@ -103,7 +103,7 @@ export default {
   },
   watch: {
     locPassword(newVal) {
-      this.$emit('password', newVal);
+      this.$emit('passwordUpdated', newVal);
     }
   },
   mounted() {

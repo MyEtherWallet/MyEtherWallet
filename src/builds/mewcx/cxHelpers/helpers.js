@@ -137,9 +137,54 @@ const queryBuilder = function(request) {
   return '';
 };
 
+const varType = variable => {
+  const isArray =
+    variable && variable instanceof Array && typeof variable === 'object';
+  const isObject =
+    variable && variable instanceof Object && typeof variable === 'object';
+  const isBoolean = variable && typeof x === 'boolean';
+  const isNumber = variable && typeof x === 'number';
+  const isString = variable && typeof x === 'string';
+
+  if (isArray) return 'array';
+  if (isObject) return 'object';
+  if (isBoolean) return 'boolean';
+  if (isNumber) return 'number';
+  if (isString) return 'string';
+};
+
+const recursivePayloadStripper = val => {
+  if (varType(val) === 'array') {
+    return val.map(item => {
+      if (varType(item) === 'object') {
+        return recursivePayloadStripper(item);
+      }
+      return Misc.stripTags(item);
+    });
+  } else if (varType(val) === 'object') {
+    const newObj = {};
+    Object.keys(val).forEach(item => {
+      if (varType(val[item]) === 'object' || varType(val[item]) === 'array') {
+        newObj[item] = recursivePayloadStripper(val[item]);
+      } else {
+        newObj[item] = Misc.stripTags(val[item]);
+      }
+    });
+    return newObj;
+  } else if (varType(val) === 'string') {
+    return Misc.stripTags(val);
+  }
+
+  return val;
+};
+
+const importedXssStripper = Misc.stripTags;
+
 export default {
   checkUrlSimilarity,
   blackListDomains,
   whiteListDomains,
-  queryBuilder
+  queryBuilder,
+  recursivePayloadStripper,
+  importedXssStripper
 };
