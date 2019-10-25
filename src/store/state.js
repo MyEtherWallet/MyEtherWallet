@@ -18,7 +18,6 @@ if (storedNetwork !== undefined) {
     });
   }
 }
-console.log(network);
 const notifications =
   store.get('notifications') !== undefined ? store.get('notifications') : {};
 const gasPrice =
