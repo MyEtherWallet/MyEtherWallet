@@ -2,6 +2,8 @@
   "tx": "Transaction",
   "tx-detail": "Transaction Detail",
   "send": "Send",
+  "sender": "Sender",
+  "receiver": "Receiver",
   "send-tx": "Send Transaction",
   "send-offline": "Send Offline",
   "to-addr": "To Address",
@@ -20,6 +22,7 @@
   "data-gas": "Data & Gas Limit",
   "dep-amount": "Deposit Amount",
   "button-entire": "Entire Balance",
+  "transaction-receipt": "Transaction Receipt",
   "confirmation": {
     "title": "Confirmation",
     "detail-info": "Detail Information",
@@ -42,5 +45,10 @@
     "button-check-status": "Check Status on Etherscan.io"
   },
   "via-contract": "Via Contract",
-  "import-json": "Import JSON"
+  "import-json": "Import JSON",
+  "retrieved": "Retrieved",
+  "at-block": "at block",
+  "invalid-signature": "Invalid Signature",
+  "signed-chain-id": "Signed Chain ID",
+  "chain-no-match": "does not match chain id for selected network"
 }

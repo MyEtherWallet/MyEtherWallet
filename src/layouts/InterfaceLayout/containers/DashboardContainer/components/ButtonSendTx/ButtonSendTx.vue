@@ -5,9 +5,9 @@
       <img :src="right" class="right" alt />
       <img :src="spaceman" class="spaceman" alt />
       <div class="text-content">
-        <p class="title">Send<br />Transaction</p>
+        <p class="title">{{ $t('sendTx.send') }}<br />{{ $t('sendTx.tx') }}</p>
         <p v-if="disabled" class="button-disabled">
-          This function is not available.
+          {{ $t('interface.no-avail') }}
         </p>
       </div>
     </div>
