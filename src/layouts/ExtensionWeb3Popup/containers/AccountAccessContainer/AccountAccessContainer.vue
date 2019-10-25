@@ -14,6 +14,12 @@
     <div class="accounts-container">
       <div class="account-container">
         <address-selection-component
+          :selected-account="selectedAccount"
+          :select-account="selectAccount"
+          :wallet-type="'burner'"
+          :address="null"
+        />
+        <address-selection-component
           v-for="(acc, idx) in accWithBal"
           :key="acc.address + idx"
           :address="acc.address"
@@ -46,6 +52,7 @@ import {
   REJECT_MEW_CX_ACC,
   SELECTED_MEW_CX_ACC
 } from '@/builds/mewcx/cxHelpers/cxEvents.js';
+import { Wallet } from '@/helpers';
 export default {
   components: {
     'address-selection-component': AddressSelectionComponent,
@@ -114,7 +121,10 @@ export default {
       );
     },
     sendAccount() {
-      const account = this.selectedAccount;
+      const generatedAccount = new Wallet.generate();
+      const account = isAddress(this.selectedAccount)
+        ? this.selectedAccount
+        : generatedAccount.getAddressString();
       const chrome = window.chrome;
       const eventObj = {};
       eventObj[`${this.request.connectionRequest.toLowerCase()}`] = account;
