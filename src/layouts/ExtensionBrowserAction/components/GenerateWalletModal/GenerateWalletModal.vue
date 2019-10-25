@@ -87,10 +87,10 @@ export default {
   },
   watch: {
     password(newVal) {
-      this.locPassword = newVal
+      this.locPassword = newVal;
     },
     nickname(newVal) {
-      this.locNickname = newVal
+      this.locNickname = newVal;
     },
     locPassword(newVal) {
       this.$emit('passwordUpdated', newVal);
