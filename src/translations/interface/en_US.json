@@ -68,7 +68,6 @@
   "investigate": "Use the transaction hash to investigate why this transaction failed.",
   "contract-creation": "Contract Creation",
   "mewconnect-disconnected": "Seems like you are disconnected from MEWconnect, please reconnect using the App.",
-
   "config": {
     "tx-speed": "Transaction Speed",
     "import": "Import Configuration",
@@ -80,32 +79,7 @@
     "export-desc": "Please click the button below to download your configuration file into your local computer.",
     "upload-f": "Upload File..."
   },
-
-
-
-   "walletNotFound": "Oops! Wallet not found! :(",
-
-  "enterPhoneForSMS": "Please enter your mobile phone number.  This number is used for verification via a SMS message code.",
-
-
-  "clickToContinue": "Click '{label}' to continue.",
-
-
-  "verifyCodeInstructions": " You will receive a 6 digit verification code via SMS.  This may take a few moments.  Once you receive this 6 digit verification code please enter it below.",
-
-
-  "enterVerification": "Enter Verification",
-
-  "phoneRequired": "Phone Number Required",
-
-
-  "countryCodeRequired": "Country Code Required",
-
-
-  "CryptoToFiatBeta": "Please note Crypto to Fiat is currently a beta feature of Bity",
-
-  "invalidTanCode": "Invalid Code",
-  "dashboardSwap": "MEW has partnered with Bity, Kyber Network, Changelly, and Simplex to allow users to swap fiat to crypto, ETH and BTC, ETH and ERC-20.",
-  "availableFor": "Available for iOS<br />and Android"
+  "no-avail": "This function is not available.",
+  "dashboard-swap": "MEW has partnered with Bity, Kyber Network, Changelly, and Simplex to allow users to swap fiat to crypto, ETH and BTC, ETH and ERC-20.",
 }
 

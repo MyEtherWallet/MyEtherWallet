@@ -24,6 +24,7 @@
   "verify": "Verify",
   "terms": "Terms",
   "by": "by",
+  "show-all": "Show All",
   "get-started": "Get Started",
   "tutorial": "Tutorial",
   "what-is-that": "What is that?",
@@ -32,6 +33,7 @@
     "send-us-feedback": "If you want to send us your feedback, please use",
     "feedback-title": "Feedback / Customer Support"
   },
+  "uppercase-icon": "Icon",
   "currency": {
     "eth": "ETH",
     "btc": "BTC",
@@ -117,10 +119,13 @@
   "learn-more": "Learn more",
   "dapps": "Dapps",
   "gas": {
+    "current-gas": "Current Gas Price",
     "limit": "Gas Limit",
     "price": "Gas Price",
     "gwei": "gwei",
-    "wei": "wei"
+    "uppercase-gwei": "Gwei",
+    "wei": "wei",
+    "fee": "Fee"
   },
   "search": "Search",
   "loading": "Loading",
@@ -138,5 +143,8 @@
   "status": "Status",
   "time": "Time",
   "time-remain": "Time Remaining",
-  "error-message": "Error Message"
+  "error-message": "Error Message",
+  "print-modal": {
+    "cut": "Cut Here"
+  }
 }

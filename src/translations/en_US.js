@@ -35,6 +35,7 @@ import scheduleTx from './dapps-schedule-tx/en_US';
 import nftManager from './nft-manager/en_US';
 import signMessage from './sign-message/en_US';
 import helpCenter from './help-center/en_US';
+import informationPages from './information-pages/en_US';
 
 const en_US = {
   common: common,
@@ -72,6 +73,7 @@ const en_US = {
   nftManager: nftManager,
   signMessage: signMessage,
   dappsSubmission: dappsSubmission,
-  helpCenter: helpCenter
+  helpCenter: helpCenter,
+  informationPages: informationPages
 };
 export default en_US;

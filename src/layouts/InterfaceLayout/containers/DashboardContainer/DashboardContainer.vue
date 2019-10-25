@@ -29,7 +29,7 @@
           </button>
         </div>
         <p class="section-description">
-          {{ $t('interface.dashboardSwap') }}
+          {{ $t('interface.dashboard-swap') }}
         </p>
         <div class="swap-info">
           <div v-for="pair in swapPairs" :key="pair.from + pair.to">

@@ -5,8 +5,8 @@
         <title-text-contents :options="titleAndTextContents" />
 
         <ul class="git-info-block">
-          <li>Latest Release(V 5.0.5)</li>
-          <li>Legacy Site & CX</li>
+          <li>{{ $t('informationPages.mew-github.release') }}</li>
+          <li>{{ $t('informationPages.mew-github.legacy') }}</li>
         </ul>
       </div>
     </div>

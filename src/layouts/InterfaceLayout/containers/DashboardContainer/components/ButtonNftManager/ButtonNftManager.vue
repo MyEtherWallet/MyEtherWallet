@@ -3,9 +3,11 @@
     <div :class="disabled ? 'button-disabled' : ''" class="content-container">
       <img :src="kitties" class="kitties" alt="kitties" />
       <div class="text-content">
-        <p class="title">NFT<br />Manager</p>
+        <p class="title">
+          {{ $t('nftManager.nft') }}<br />{{ $t('nftManager.manager') }}
+        </p>
         <p v-if="disabled" class="button-disabled">
-          This function is not available.
+          {{ $t('interface.no-avail') }}
         </p>
       </div>
     </div>

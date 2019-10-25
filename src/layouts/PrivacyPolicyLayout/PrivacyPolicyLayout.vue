@@ -26,7 +26,7 @@
                   href="mailto:support@myetherwallet.com"
                   rel="noopener noreferrer"
                 >
-                  support@myetherwallet.com
+                  {{ $t('common.support-email') }}
                 </a>
               </p>
               <p v-else-if="item.includes('Item')">
