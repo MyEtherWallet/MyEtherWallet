@@ -180,7 +180,6 @@ export default {
     this.$refs.importPrivateKey.$refs.importPrivateKey.$on('hidden', () => {
       this.password = '';
       this.privateKey = '';
-      console.log('what?');
     });
 
     this.$refs.importKeystore.$refs.importKeystore.$on('hidden', () => {
@@ -197,7 +196,6 @@ export default {
     this.$refs.verifyDetails.$refs.verifyDetails.$on('hidden', () => {
       this.nickname = '';
       this.loading = false;
-      console.log('shouldve gotten here?');
     });
     this.fetchEthBalance();
   },

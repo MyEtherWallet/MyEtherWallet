@@ -1,12 +1,15 @@
 <template functional>
   <div
     class="address-detail-container"
-    @click="props.selectAccount(props.address)"
+    @click="
+      props.selectAccount(props.address ? props.address : props.walletType)
+    "
   >
     <div class="check-mark-container">
       <i
         :class="[
-          props.selectedAccount === props.address
+          props.selectedAccount === props.address ||
+          props.selectedAccount === props.walletType
             ? 'icon-selected'
             : 'icon-not-selected',
           'fa fa-check-circle fa-lg'
@@ -15,21 +18,32 @@
     </div>
     <div
       :class="[
-        props.selectedAccount === props.address ? 'selected' : '',
+        props.selectedAccount === props.address ||
+        props.selectedAccount === props.walletType
+          ? 'selected'
+          : '',
         'address-detail'
       ]"
     >
       <component
+        v-if="props.walletType === 'wallet'"
         :is="injections.components.Blockie"
         :address="props.address"
         width="30px"
         height="30px"
       />
       <div class="address-text">
-        <p>{{ props.address | concatAddr }}</p>
-        <div class="balance">
-          <span>Balance:</span>
-          <span>{{ props.balance.substr(0, 7) }} {{ currency }}</span>
+        <div v-if="props.walletType === 'wallet'">
+          <p>{{ props.address | concatAddr }}</p>
+          <div class="balance">
+            <span>Balance:</span>
+            <span>{{ props.balance.substr(0, 7) }} {{ currency }}</span>
+          </div>
+        </div>
+        <div v-else>
+          <p>
+            Use a burner account!
+          </p>
         </div>
       </div>
     </div>
@@ -66,6 +80,10 @@ export default {
     currency: {
       type: String,
       default: 'ETH'
+    },
+    walletType: {
+      type: String,
+      default: 'wallet'
     }
   }
 };
