@@ -7,14 +7,18 @@ const gettingStartedDone =
   store.get('skipTutorial') !== undefined ? store.get('skipTutorial') : false;
 const storedNetwork = store.get('network');
 let network = nodeList['ETH'][0];
-
 if (storedNetwork !== undefined) {
-  network = storedNetwork;
   if (storedNetwork.type.name !== 'CUS') {
+    network = storedNetwork;
     network.type = nodeList[storedNetwork.type.name][0].type;
+    nodeList[storedNetwork.type.name].forEach(node => {
+      if (storedNetwork.service === node.service) {
+        network = node;
+      }
+    });
   }
 }
-
+console.log(network);
 const notifications =
   store.get('notifications') !== undefined ? store.get('notifications') : {};
 const gasPrice =
