@@ -1,3 +1,8 @@
+### Release v5.1.8-hotfix.1
+
+### Hotfix
+- Update list to bring back contract addresses []()
+
 ### Release v5.1.8
 
 ### Bug
