@@ -111,7 +111,8 @@
                   >
                 </b-nav-item-dropdown>
                 <b-nav-item to="/#faqs">{{ $t('common.faqs') }}</b-nav-item>
-                <div class="language-menu-container">
+                <!-- commented out for now until we finish translations -->
+                <!-- <div class="language-menu-container">
                   <div class="arrows">
                     <i class="fa fa-angle-down" aria-hidden="true" />
                   </div>
@@ -143,7 +144,7 @@
                       >{{ language.name }}</b-dropdown-item
                     >
                   </b-nav-item-dropdown>
-                </div>
+                </div> -->
                 <div
                   v-if="address !== null"
                   class="notification-menu-container"
