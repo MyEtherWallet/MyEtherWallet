@@ -2,7 +2,7 @@
   <div class="sotd-wrapper">
     <div class="mt-5 ml-5 sotd-container">
       <div class="text-container">
-        <p class="header">A Joint Effort With State of The Dapps.</p>
+        <p class="header">{{ props.title }}</p>
         <img
           src="~@/assets/images/icons/dapps/sotd.png"
           alt="State of the Dapps"
@@ -10,9 +10,9 @@
       </div>
       <div class="info-box">
         <p>
-          By submitting your Dapp information, you acknowledge that your Dapp
-          will be listed on
-          <a href="https://www.stateofthedapps.com/">stateofthedapps.com</a>.
+          {{ props.info }}
+          <a href="https://www.stateofthedapps.com/">{{ props.url }}</a
+          >.
         </p>
       </div>
     </div>
@@ -20,7 +20,22 @@
 </template>
 
 <script>
-export default {};
+export default {
+  props: {
+    title: {
+      type: String,
+      default: ''
+    },
+    info: {
+      type: String,
+      default: ''
+    },
+    url: {
+      type: String,
+      default: ''
+    }
+  }
+};
 </script>
 
 <style lang="scss" scoped>

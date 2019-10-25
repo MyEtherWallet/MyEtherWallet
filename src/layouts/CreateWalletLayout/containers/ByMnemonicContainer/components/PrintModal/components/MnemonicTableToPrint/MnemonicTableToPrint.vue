@@ -3,22 +3,22 @@
     <div class="header">
       <div class="block-title">
         <img alt src="~@/assets/images/short-hand-logo.png" height="30px" />
-        <span>Mnemonic Phrase</span>
+        <span>{{ props.title }}</span>
       </div>
       <div class="support">
         <img alt src="~@/assets/images/icons/support.svg" />
-        <p>support@myetherwallet.com</p>
+        <p>{{ props.supportEmail }}</p>
       </div>
     </div>
     <div class="warnings">
       <h3>
-        Please Keep This Sheet at a Very Safe Place. It is your property!
+        {{ props.safeText }}
       </h3>
       <p>
-        We <span>CAN NOT</span> change your password. Please
-        <span>DO NOT FORGET</span> to save your password, and it is your private
-        key. You will need this <span>Password + Mnemonic Phrase</span> to
-        access your wallet.
+        {{ props.weText }} <span>{{ props.canNot }}</span> {{ props.changePw }}
+        <span>{{ props.dontForget }}</span
+        >{{ props.saveText }} <span>{{ props.requirements }}</span>
+        {{ props.accessWallet }}.
       </p>
     </div>
     <div class="content">
@@ -49,6 +49,46 @@ export default {
     isTwentyFour: {
       type: Boolean,
       default: false
+    },
+    title: {
+      type: String,
+      default: ''
+    },
+    supportEmail: {
+      type: String,
+      default: ''
+    },
+    safeText: {
+      type: String,
+      default: ''
+    },
+    weText: {
+      type: String,
+      default: ''
+    },
+    canNot: {
+      type: String,
+      default: ''
+    },
+    changePw: {
+      type: String,
+      default: ''
+    },
+    dontForget: {
+      type: String,
+      default: ''
+    },
+    saveText: {
+      type: String,
+      default: ''
+    },
+    requirements: {
+      type: String,
+      default: ''
+    },
+    accessWallet: {
+      type: String,
+      default: ''
     }
   }
 };
