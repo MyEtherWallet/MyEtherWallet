@@ -3,7 +3,6 @@ const fs = require('fs');
 const configs = require('./configs');
 const tokenList = require('./lists/tokens.json');
 const contractList = require('./lists/contracts.json');
-//fsdfs
 
 const fetchTokens = async () => {
   try {
@@ -181,7 +180,8 @@ const fetchContracts = async () => {
     }
 
     const contractFileURL =
-      'https://cdn.jsdelivr.net/gh/MyEtherWallet/ethereum-lists@master/dist/contracts/';
+      // 'https://cdn.jsdelivr.net/gh/MyEtherWallet/ethereum-lists@master/dist/contracts/';
+      'https://raw.githubusercontent.com/MyEtherWallet/ethereum-lists/master/dist/contracts/';
     if (contractList !== undefined && contractList.length > 0) {
       for (let i = 0; i < contractList.length; i++) {
         const contractFile = contractList[i];
