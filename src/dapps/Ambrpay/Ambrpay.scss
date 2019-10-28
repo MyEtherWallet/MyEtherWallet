@@ -25,6 +25,26 @@
       color: $mew-green;
     }
   }
+
+  .active-sub-btn {
+    align-items: center;
+    background: none;
+    display: flex;
+    border: none;
+    color: $mew-green;
+  }
+
+  .subscriptions-number {
+    border: 1px solid $mew-green;
+    border-radius: 50%;
+    color: $mew-green;
+    font-size: 11px;
+    font-weight: 500;
+    height: 19px;
+    margin-left: 2px;
+    text-align: center;
+    width: 19px;
+  }
 }
 
 .ambrpay-content {
@@ -79,10 +99,4 @@
   color: $white;
   display: block;
   text-align: right;
-}
-
-.active-sub-btn {
-  background: none;
-  border: none;
-  color: $mew-green;
 }

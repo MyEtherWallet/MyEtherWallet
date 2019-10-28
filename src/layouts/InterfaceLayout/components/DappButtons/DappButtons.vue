@@ -1,10 +1,7 @@
 <template>
-  <div
-    :class="['dapps-button', supported ? '' : 'disabled']"
-    @click="navigateTo"
-  >
+  <div :class="['dapps-button', supported ? '' : '']" @click="navigateTo">
     <img
-      :src="supported ? icon : iconDisabled"
+      :src="supported ? icon : icon"
       :class="title === 'Ambrpay' ? 'ambrpay-icon' : ''"
       alt
     />
