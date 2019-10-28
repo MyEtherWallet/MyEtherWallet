@@ -135,7 +135,8 @@ export default {
         { url: `*://*.${Misc.getService(_self.linkQuery.url)}/*` },
         function(tab) {
           const obj = {
-            event: REJECT_MEW_SIGN_MSG
+            event: REJECT_MEW_SIGN_MSG,
+            payload: 'User rejected action!'
           };
           window.chrome.tabs.sendMessage(tab[0].id, obj);
           window.close();

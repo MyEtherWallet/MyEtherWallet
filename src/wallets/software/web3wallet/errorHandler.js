@@ -2,7 +2,9 @@ import { Toast } from '@/helpers';
 const ERRORS = {
   REJECT_TX:
     'Returned error: Error: MetaMask Tx Signature: User denied transaction signature.',
-  MEW_REJECT_TX: 'User rejected action!'
+  'User rejected action!': 'User rejected action!',
+  "Can't sign messages from a burner account!":
+    "Can't sign messages from a burner account!"
 };
 const WARNING = {};
 
