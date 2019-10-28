@@ -319,13 +319,15 @@ export default {
       this.amount = this.values.debtValue;
     },
     async drawDai() {
+      console.log('this.amount', this.amount.toString()); // todo remove dev item
       if (toBigNumber(this.amount).gte(0)) {
         this.delayCloseModal();
         if (this.newCollateralRatioSafe) {
-          this.currentCdp.drawDai(this.amount)
+          // this.currentCdp.drawDai(this.amount, true)
+          this.currentCdp.drawDai(this.amount, this.riskyBypass)
           // this.$emit('drawDai', [this.amount, null]);
         } else {
-          this.currentCdp.drawDai(this.amount, this.currentCdp.drawDai(this.amount))
+          this.currentCdp.drawDai(this.amount, this.riskyBypass)
           // this.$emit('drawDai', [this.amount, this.currentCdp.drawDai(this.amount)]);
         }
       }

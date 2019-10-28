@@ -313,19 +313,20 @@ export default class MakerCDP extends MakerCdpBase {
   }
 
   drawDai(amount, acknowledgeBypass = false) {
-    console.log('draw dai', amount, acknowledgeBypass); // todo remove dev item
+    console.log('draw dai', amount.toString(), toBigNumber(amount), acknowledgeBypass); // todo remove dev item
     if (
       this.calcCollatRatio(this.collateralAmount, this.debtValue.plus(amount)).gt(
         2
       ) ||
       acknowledgeBypass
     ) {
+
       try {
         if (this.noProxy) {
           return;
         }
         this.needsUpdate = true;
-        this.cdpService.drawDai(amount);
+        this.cdpService.drawDaiProxy(this._proxyAddress, this.cdpId, MDAI(amount));
       } catch (e) {
         // eslint-disable-next-line
         console.error(e);
