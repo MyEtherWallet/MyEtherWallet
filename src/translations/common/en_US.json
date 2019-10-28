@@ -39,7 +39,8 @@
     "btc": "BTC",
     "usd": "USD",
     "peth": "PETH",
-    "ethereum": "Ethereum"
+    "ethereum": "Ethereum",
+    "etc": "ETC"
   },
   "support-email": "support@myetherwallet.com",
   "support": {

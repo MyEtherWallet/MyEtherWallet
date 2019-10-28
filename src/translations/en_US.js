@@ -1,7 +1,6 @@
 /* eslint camelcase: 0 */
 import common from './common/en_US';
 import confirmation from './confirmation/en_US';
-import dapps from './dapps/en_US';
 import dappsMaker from './dapps-maker/en_US';
 import dappsSubmission from './dapps-submission/en_US';
 import home from './home/en_US';
@@ -35,11 +34,11 @@ import nftManager from './nft-manager/en_US';
 import signMessage from './sign-message/en_US';
 import helpCenter from './help-center/en_US';
 import informationPages from './information-pages/en_US';
+import notifications from './notifications/en_US';
 
 const en_US = {
   common: common,
   confirmation: confirmation,
-  dapps: dapps,
   home: home,
   footer: footer,
   gettingStarted: gettingStarted,
@@ -72,6 +71,7 @@ const en_US = {
   signMessage: signMessage,
   dappsSubmission: dappsSubmission,
   helpCenter: helpCenter,
-  informationPages: informationPages
+  informationPages: informationPages,
+  notifications: notifications
 };
 export default en_US;

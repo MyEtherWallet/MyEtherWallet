@@ -18,9 +18,11 @@
           class="tx-speed"
         >
           <div class="tx-success">
-            Your transaction amount <span>2.100000 ETH</span> to address
+            {{ $t('notifications.your-transaction-amount') }}
+            <span>2.100000 {{ $t('common.currency.eth') }}</span>
+            {{ $t('notifications.to-address') }}
             <p>0x1d3649b580f77f8fd81a6546398d1926c49eb336</p>
-            has been successfully transferred.
+            {{ $t('notifications.successfully-transferred') }}
           </div>
         </full-width-dropdown>
         <full-width-dropdown
