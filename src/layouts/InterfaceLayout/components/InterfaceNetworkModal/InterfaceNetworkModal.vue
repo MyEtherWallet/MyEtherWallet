@@ -135,10 +135,10 @@
               v-validate="'required|url:require_protocol'"
               v-show="selectedNetworkName === 'CUS'"
               v-model="blockExplorerTX"
+              :placeholder="$t('interface.etherscan-tx-url')"
               class="custom-input-text-1"
               type="text"
               name="customExplorerTx"
-              placeholder="https://etherscan.io/tx/[[txHash]]"
               autocomplete="off"
             />
             <input
@@ -155,10 +155,10 @@
               v-validate="'required|url:require_protocol'"
               v-show="selectedNetworkName === 'CUS'"
               v-model="blockExplorerAddr"
+              :placeholder="$t('interface.etherscan-address-url')"
               class="custom-input-text-1"
               type="text"
               name="customExplorerAddr"
-              placeholder="https://etherscan.io/address/[[address]]"
               autocomplete="off"
             />
           </div>

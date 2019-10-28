@@ -34,7 +34,7 @@
                     />
                     <label :for="key">
                       {{ key | capitalize }} ({{ gasPriceInputs[key].gwei }}
-                      {{ $t('common.gas.gwei') }})
+                      {{ $t('common.gas.uppercase-gwei') }})
                     </label>
                   </div>
                   <p class="hidden">
@@ -61,7 +61,7 @@
                       type="number"
                       @focus="selectedGasType = 'other'"
                     />
-                    <p class="gwei">{{ $t('common.gas.gwei') }}</p>
+                    <p class="gwei">{{ $t('common.gas.uppercase-gwei') }}</p>
                   </div>
                   <p class="hidden">
                     {{ customGasEth }}
