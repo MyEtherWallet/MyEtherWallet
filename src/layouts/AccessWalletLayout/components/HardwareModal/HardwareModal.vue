@@ -10,9 +10,9 @@
   >
     <div class="modal-content-container">
       <div class="d-block text-center">
-        <b-alert :show="mayNotBeAttached" fade variant="warning">{{
-          $t('accessWallet.connectDevice')
-        }}</b-alert>
+        <b-alert :show="mayNotBeAttached" fade variant="warning">
+          {{ $t('accessWallet.connectDevice') }}
+        </b-alert>
         <div class="button-options hardware-button-options">
           <wallet-option
             v-for="(item, idx) in items"
@@ -60,14 +60,17 @@ import {
   KeepkeyWallet,
   TrezorWallet,
   BitBoxWallet,
-  SecalotWallet
+  SecalotWallet,
+  WalletConnectWallet
 } from '@/wallets';
 import {
   LEDGER as LEDGER_TYPE,
   TREZOR as TREZOR_TYPE,
   BITBOX as BITBOX_TYPE,
   SECALOT as SECALOT_TYPE,
-  KEEPKEY as KEEPKEY_TYPE
+  KEEPKEY as KEEPKEY_TYPE,
+  FINNEY as FINNEY_TYPE,
+  WALLET_CONNECT as WALLETCONNECT_TYPE
 } from '@/wallets/bip44/walletTypes';
 export default {
   components: {
@@ -99,6 +102,14 @@ export default {
       isU2FSupported: false,
       items: [
         {
+          name: WALLETCONNECT_TYPE,
+          imgPath: ledger,
+          text: 'WalletConnect',
+          disabled: false,
+          msg: '',
+          link: ''
+        },
+        {
           name: LEDGER_TYPE,
           imgPath: ledger,
           text: 'Ledger',
@@ -107,7 +118,7 @@ export default {
           link: 'https://www.ledger.com?r=fa4b'
         },
         {
-          name: 'finney',
+          name: FINNEY_TYPE,
           imgPath: finney,
           text: 'FINNEY',
           disabled: false,
@@ -236,7 +247,20 @@ export default {
               KeepkeyWallet.errorHandler(e);
             });
           break;
-        case 'finney':
+        case WALLETCONNECT_TYPE:
+          WalletConnectWallet()
+            .then(_newWallet => {
+              this.$store.dispatch('decryptWallet', [_newWallet]).then(() => {
+                this.$router.push({
+                  path: 'interface'
+                });
+              });
+            })
+            .catch(e => {
+              WalletConnectWallet.errorHandler(e);
+            });
+          break;
+        case FINNEY_TYPE:
           this.openFinney();
           this.$refs.hardware.hide();
           break;
