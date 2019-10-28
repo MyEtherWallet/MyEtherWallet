@@ -26,7 +26,6 @@
     margin-bottom: 15px;
 
     .active-txt {
-      font-family: AvenirNext-Medium;
       font-size: 15px;
       font-weight: 500;
     }
@@ -43,7 +42,6 @@
 
     .next-pay-txt {
       color: $dark-grey-11;
-      font-family: AvenirNext-Regular;
       font-size: 15px;
     }
 
@@ -66,14 +64,12 @@
 
   .info-title {
     color: $dark-blue-12;
-    font-family: AvenirNext-Medium;
     width: 100%;
   }
 
   .address-txt {
     color: $mew-green;
     cursor: pointer;
-    font-family: PTMono-Regular;
     white-space: nowrap;
     overflow: hidden;
     text-decoration: underline;
@@ -82,7 +78,6 @@
 
   .info-txt {
     color: $dark-blue-12;
-    font-family: AvenirNext-Regular;
     text-align: right;
     width: 100%;
   }
@@ -93,7 +88,6 @@
       border: none;
       background: none;
       color: $red-5;
-      font-family: AvenirNext-Medium;
       font-size: 14px;
       font-weight: 600;
       margin-bottom: 1rem;

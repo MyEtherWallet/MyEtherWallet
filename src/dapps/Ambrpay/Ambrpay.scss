@@ -17,14 +17,12 @@
       border: none;
       background-color: $white;
       color: $mew-green;
-      font-family: AvenirNext-Medium;
     }
 
     .add-btn {
       border-color: $mew-green;
       background-color: $white;
       color: $mew-green;
-      font-family: AvenirNext-Medium;
     }
   }
 }
@@ -49,7 +47,6 @@
 
 .page-title {
   color: $dark-blue-6;
-  font-family: AvenirNext-DemiBold;
   font-weight: 600;
   font-size: 24px;
 }
@@ -74,7 +71,6 @@
 
 .fund-text {
   color: $white;
-  font-family: AvenirNext-DemiBold;
   font-size: 16px;
   font-weight: 600;
 }
@@ -82,7 +78,6 @@
 .usd-text {
   color: $white;
   display: block;
-  font-family: AvenirNext-DemiBold;
   text-align: right;
 }
 
@@ -90,5 +85,4 @@
   background: none;
   border: none;
   color: $mew-green;
-  font-family: AvenirNext-Medium;
 }

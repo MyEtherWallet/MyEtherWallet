@@ -9,7 +9,6 @@
 
   .funds-txt {
     color: $dark-blue-2;
-    font-family: AvenirNext-DemiBold;
     font-size: 16px;
     font-weight: 600;
   }
@@ -25,7 +24,6 @@
 
 .eth-text {
   color: $dark-blue-12;
-  font-family: AvenirNext-Regular;
   margin-top: 30px;
   position: absolute;
   right: 45px;
@@ -50,13 +48,11 @@
 
   p {
     color: $dark-blue-2;
-    font-family: AvenirNext-Medium;
     font-size: 16px;
   }
 
   .mew-txt {
     color: $mew-green;
-    font-family: AvenirNext-Medium;
     font-size: 16px;
   }
 }
