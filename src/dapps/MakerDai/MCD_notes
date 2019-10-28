@@ -1,0 +1,7 @@
+
+- New Methods and associated user flow options will need to be added (selecting the type of collateral and support for the DAI savings rate)
+	- Transfering tokens to proxy contract for use in creating a MCDP
+
+
+- Review existing methods for additional parameters
+- Review package for helper methods that can replace custom implementations

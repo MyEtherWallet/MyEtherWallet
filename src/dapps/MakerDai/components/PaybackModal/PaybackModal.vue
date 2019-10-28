@@ -142,11 +142,9 @@ export default {
       type: Object,
       default: function() {
         return {
-          maxPethDraw: '',
           maxEthDraw: '',
           maxUsdDraw: '',
           ethCollateral: '',
-          pethCollateral: '',
           usdCollateral: '',
           debtValue: '',
           maxDai: '',
@@ -168,6 +166,10 @@ export default {
       default: function() {}
     },
     calcLiquidationPriceDaiChg: {
+      type: Function,
+      default: function() {}
+    },
+    getValueOrFunction: {
       type: Function,
       default: function() {}
     }
@@ -345,26 +347,26 @@ export default {
       return 0;
     },
     needsDaiApprove() {
-      if (toBigNumber(this.values.proxyAllowanceDai).gt(0)) {
+      if (toBigNumber(this.getProxyAllowances()['DAI']).gt(0)) {
         if (
-          toBigNumber(this.values.proxyAllowanceDai).lt(this.values.debtValue)
+          toBigNumber(this.getProxyAllowances()['DAI']).lt(this.values.debtValue)
         ) {
           return true;
         }
       }
-      return toBigNumber(this.values.proxyAllowanceDai).eq(0);
+      return toBigNumber(this.getProxyAllowances()['DAI']).eq(0);
     },
     needsMkrApprove() {
-      if (toBigNumber(this.values.proxyAllowanceMkr).gt(0)) {
+      if (toBigNumber(this.getProxyAllowances()['MKR']).gt(0)) {
         if (
-          toBigNumber(this.values.proxyAllowanceMkr).lt(
+          toBigNumber(this.getProxyAllowances()['MKR']).lt(
             this.values.governanceFeeOwed
           )
         ) {
           return true;
         }
       }
-      return toBigNumber(this.values.proxyAllowanceMkr).eq(0);
+      return toBigNumber(this.getProxyAllowances()['MKR']).eq(0);
     }
   },
   watch: {},
@@ -375,6 +377,13 @@ export default {
     });
   },
   methods: {
+    getProxyAllowances(){
+      const allowances = this.getValueOrFunction('proxyAllowances');
+      if(allowances){
+        return allowances;
+      }
+      return {};
+    },
     submitBtn() {
       if (!this.canProceed) return;
       this.wipeDai();
