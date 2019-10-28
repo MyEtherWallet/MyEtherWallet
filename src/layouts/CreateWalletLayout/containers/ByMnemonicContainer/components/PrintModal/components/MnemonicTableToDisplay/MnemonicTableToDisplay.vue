@@ -57,7 +57,7 @@ export default {
   },
   data() {
     return {
-      buildType: BUILD_TYPE
+      buildType: BUILD_TYPE ? BUILD_TYPE : 'web'
     };
   }
 };
