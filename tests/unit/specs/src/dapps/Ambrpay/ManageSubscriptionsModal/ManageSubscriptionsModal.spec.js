@@ -97,7 +97,7 @@ describe('ManageSubscriptionsModal.vue', () => {
       expect(wrapper.find('i.fa-angle-up').exists()).toBe(true);
       expect(wrapper.vm.$data.moreInfo).toBe(true);
     });
-    
+
     it('should call unsubscribe() on btn click', () => {
       const unsubscribeStub = sinon.stub();
       wrapper.setMethods({ unsubscribe: unsubscribeStub });
