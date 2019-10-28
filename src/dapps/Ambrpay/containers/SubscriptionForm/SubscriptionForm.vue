@@ -82,7 +82,8 @@
               v-model="intervalDays"
               type="number"
               min="1"
-              placeholder="Day(s)"
+              max="365"
+              placeholder="Enter the number of day(s)"
             />
             <p v-show="intervalErrMsg" class="sub-text err-msg">
               {{ intervalErrMsg }}
@@ -160,6 +161,8 @@ export default {
     intervalDays(newVal) {
       if (newVal.startsWith('0') && newVal.length > 1) {
         this.intervalErrMsg = 'Please enter a correct number';
+      } else if (newVal > 365) {
+        this.intervalErrMsg = 'Number cannot exceed 365 days';
       } else {
         this.intervalErrMsg = '';
       }

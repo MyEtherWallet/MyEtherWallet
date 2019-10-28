@@ -31,11 +31,16 @@
       <subscription-form
         @startSubscription="startSubscription"
       ></subscription-form>
-      <b-row class="mb-4">
-        <b-button class="mx-auto active-sub-btn" @click="openManageSubModal()"
-          >My Active Subscriptions</b-button
-        >
-      </b-row>
+      <div class="mb-4">
+        <b-button
+          class="mx-auto active-sub-btn my-subscriptions-container"
+          @click="openManageSubModal()"
+          >My Subscriptions
+          <span v-if="subscriptions.length > 0" class="subscriptions-number">{{
+            subscriptions.length
+          }}</span>
+        </b-button>
+      </div>
     </b-container>
     <manage-funds-modal
       ref="manageFunds"

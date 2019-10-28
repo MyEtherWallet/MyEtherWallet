@@ -47,14 +47,14 @@
             </div>
             <div class="info-row">
               <span class="info-title">Receiver wallet</span>
-              <span
-                ref="receiverWallet"
+              <a
                 :title="sub.receiverWallet"
+                :href="'https://etherscan.io/address/' + sub.receiverWallet"
+                rel="noopener noreferrer"
                 class="address-txt prevent-user-select"
-                @click="copyToClipboard(sub.receiverWallet)"
               >
                 {{ sub.receiverWallet }}
-              </span>
+              </a>
             </div>
             <div class="info-row">
               <span class="info-title">Amount</span
@@ -106,7 +106,6 @@
 </template>
 
 <script>
-import { Toast } from '@/helpers';
 
 export default {
   props: {
@@ -131,14 +130,6 @@ export default {
     },
     toggleMoreInfo() {
       this.moreInfo = !this.moreInfo;
-    },
-    copyToClipboard(addr) {
-      try {
-        navigator.clipboard.writeText(addr);
-        Toast.responseHandler('Copied', Toast.INFO);
-      } catch (err) {
-        Toast.responseHandler('Unable to copy', Toast.ERROR);
-      }
     },
     unsubscribe(pos, addr) {
       this.$emit('unsubscribeSub', { pos: pos, addr: addr });
