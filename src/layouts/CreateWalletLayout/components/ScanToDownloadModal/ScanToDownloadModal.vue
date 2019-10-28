@@ -16,7 +16,7 @@
         <div class="store-name-container">
           <div class="store-name">
             <img alt src="@/assets/images/icons/apple.svg" />
-            <p>iOS</p>
+            <p>{{ $t('createWallet.mewconnect.ios') }}</p>
           </div>
         </div>
         <p>{{ $t('createWallet.mewconnect.version.ios') }}</p>
@@ -28,7 +28,7 @@
         <div class="store-name-container">
           <div class="store-name">
             <img alt src="@/assets/images/icons/android.svg" />
-            <p>Android</p>
+            <p>{{ $t('createWallet.mewconnect.android') }}</p>
           </div>
         </div>
         <p>{{ $t('createWallet.mewconnect.version.android') }}</p>

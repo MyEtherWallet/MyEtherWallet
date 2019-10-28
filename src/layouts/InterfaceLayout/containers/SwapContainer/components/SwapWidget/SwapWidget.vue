@@ -2,7 +2,7 @@
   <div class="modal-container">
     <b-modal
       ref="modal"
-      title="Swap Widget"
+      :title="$t('swap.swap-widget')"
       centered
       class="bootstrap-modal bootstrap-modal-wide padding-40-20"
       hide-footer

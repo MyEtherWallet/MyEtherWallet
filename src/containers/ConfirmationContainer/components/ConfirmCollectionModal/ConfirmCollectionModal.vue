@@ -13,7 +13,7 @@
         <div class="network-info-container">
           <p>
             <span>{{ $t('common.network') }}</span>
-            {{ network.type.name }} by {{ network.service }}
+            {{ network.type.name }} {{ $t('common.by') }} {{ network.service }}
           </p>
           <div>
             <div class="line" />

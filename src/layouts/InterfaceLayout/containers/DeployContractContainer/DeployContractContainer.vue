@@ -93,7 +93,7 @@
                   :name="input.name"
                   type="radio"
                 />
-                <label :for="input.name">True</label>
+                <label :for="input.name">{{ $t('contract.true') }}</label>
               </div>
               <div>
                 <input
@@ -103,7 +103,7 @@
                   type="radio"
                   checked
                 />
-                <label :for="input.name">False</label>
+                <label :for="input.name">{{ $t('contract.false') }}</label>
               </div>
             </div>
             <i

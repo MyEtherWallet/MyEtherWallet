@@ -14,7 +14,9 @@
     "version": {
       "ios": "iOS 10.0 or up",
       "android": "Android 8.0 or up"
-    }
+    },
+    "android": "Android",
+    "ios": "iOS"
   },
   "password": {
     "do-not-forget": "DO NOT FORGET",

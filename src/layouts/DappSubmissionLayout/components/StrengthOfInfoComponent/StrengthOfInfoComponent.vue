@@ -1,6 +1,6 @@
 <template>
   <div class="mt-5">
-    <h4 class="text-left">Strength of Information</h4>
+    <h4 class="text-left">{{ $t('dappsSubmission.strength-of') }}</h4>
     <div class="strength-of-info-box mt-2">
       <div class="strength-of-info-wrapper">
         <div class="circle-wrapper">

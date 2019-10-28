@@ -2,7 +2,7 @@
   <div class="modal-container">
     <b-modal
       ref="notifications"
-      title="Notifications"
+      :title="$t('notifications.notifications')"
       hide-footer
       centered
       class="bootstrap-modal nopadding"
