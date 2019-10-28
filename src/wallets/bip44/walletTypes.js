@@ -4,10 +4,12 @@ const BITBOX = 'bitbox';
 const SECALOT = 'secalot';
 const KEEPKEY = 'keepkey';
 const MEW_CONNECT = 'mew_connect';
+const WALLET_CONNECT = 'wallet_connect';
 const KEYSTORE = 'keystore';
 const MNEMONIC = 'mnemonic';
 const WEB3_WALLET = 'web3_wallet';
 const PRIV_KEY = 'priv_key';
+const FINNEY = 'finney';
 export {
   LEDGER,
   TREZOR,
@@ -15,8 +17,10 @@ export {
   SECALOT,
   KEEPKEY,
   MEW_CONNECT,
+  WALLET_CONNECT,
   KEYSTORE,
   MNEMONIC,
   WEB3_WALLET,
-  PRIV_KEY
+  PRIV_KEY,
+  FINNEY
 };
