@@ -60,5 +60,6 @@
     "verification-code": "Verification Code",
     "button-submit": "Submit"
   },
-  "order-id": "{provider} order ID"
+  "order-id": "{provider} order ID",
+  "swap-widget": "Swap Widget"
 }
