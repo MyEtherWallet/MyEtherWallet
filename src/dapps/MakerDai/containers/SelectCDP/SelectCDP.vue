@@ -1,31 +1,6 @@
 <template>
   <div>
-    <!--    <div class="container-maker">
-      <div class="manage-container">
-        <div class="content-container">
-          <p class="cpd-title">{{ $t('dappsMaker.cdpPortal') }}</p>
-          <div class="cdp-id">
-            <p>
-              {{ $t('dappsMaker.currentPrice') }}: <b>{{ ethPrice }}</b> USD
-            </p>
-          </div>
-        </div>
-        <div v-if="!cdpDetailsLoaded">
-          {{ $t('dappsMaker.loadingMessage') }}
-        </div>
-        <div v-if="cdpDetailsLoaded">
-          <div
-            v-for="(cdp, idx) in Object.keys(availableCdps)"
-            :key="cdp + idx"
-          >
-            <select-cdp-entry
-              :a-cdp="cdpOptions[cdp]"
-              :cdp-id="cdp"
-            ></select-cdp-entry>
-          </div>
-        </div>
-      </div>
-    </div>-->
+
   </div>
 </template>
 

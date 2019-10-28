@@ -17,10 +17,19 @@
             </div>
 
             <div class="amount-block">
-              <div class="icon">
-                <img src="~@/assets/images/currency/eth.svg" />
+              <!--              <div class="icon">-->
+              <!--                <img src="~@/assets/images/currency/eth.svg" />-->
+              <!--              </div>-->
+              <i
+                v-if="getIcon(currency) !== ''"
+                :class="['icon', 'cc', getIcon(currency), 'cc-icon']"
+              />
+              <div v-if="getIcon(currency) === ''" class="icon">
+                <img :src="iconFetcher(currency)" />
               </div>
-              <div class="amount">{{ collateral }}<span>ETH</span></div>
+              <div class="amount">
+                {{ collateral }}<span>{{ currency }}</span>
+              </div>
             </div>
           </div>
           <div class="arrow">
@@ -42,11 +51,11 @@
           <expending-option :title="$t('dappsMaker.details')">
             <ul>
               <li>
-                <p>{{ $t('dappsMaker.liquidPrice') }} (ETH/USD)</p>
+                <p>{{ $t('dappsMaker.liquidPrice') }} ({{ currency }}/USD)</p>
                 <p class="bold">{{ liquidationPrice }} USD</p>
               </li>
               <li>
-                <p>{{ $t('dappsMaker.currentPrice') }} (ETH/USD)</p>
+                <p>{{ $t('dappsMaker.currentPrice') }} ({{ currency }}/USD)</p>
                 <p>{{ currentPrice }} USD</p>
               </li>
               <li>
@@ -76,8 +85,11 @@
 </template>
 
 <script>
+import '@/assets/images/currency/coins/asFont/cryptocoins.css';
+import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
 import ExpendingOption from '@/components/ExpendingOption';
 import StandardButton from '@/components/Buttons/StandardButton';
+import { hasIcon } from '@/partners';
 
 export default {
   components: {
@@ -116,6 +128,10 @@ export default {
     generate: {
       type: String,
       default: 'Error'
+    },
+    currency: {
+      type: String,
+      default: 'Error'
     }
   },
   data() {
@@ -131,6 +147,20 @@ export default {
   watch: {},
   mounted() {},
   methods: {
+    iconFetcher(currency) {
+      let icon;
+      try {
+        // eslint-disable-next-line
+        icon = require(`@/assets/images/currency/coins/AllImages/${currency}.svg`);
+      } catch (e) {
+        // eslint-disable-next-line
+        return require(`@/assets/images/icons/web-solution.svg`);
+      }
+      return icon;
+    },
+    getIcon(currency) {
+      return hasIcon(currency);
+    },
     confirmClicked() {
       this.opencdp();
     }

@@ -4,6 +4,10 @@ const CreateCDP = () => import('./containers/CreateCDP');
 const ManageCDP = () => import('./containers/ManageCDP');
 const SelectCDP = () => import('./containers/SelectCDP');
 const ProxyMigrateCDP = () => import('./containers/ProxyMigrateCDP');
+const migrateDAI = () => import('./containers/MigrateDai');
+const migrateCDP = () => import('./containers/MigrateCDP');
+
+const MakerLoading = () => import('./containers/MakerLoading');
 
 export default {
   path: 'dapps/maker-dai',
@@ -18,6 +22,12 @@ export default {
       props: true
     },
     {
+      path: 'makerLoading',
+      name: 'makerLoading',
+      component: MakerLoading,
+      props: true
+    },
+    {
       path: 'create',
       name: 'create',
       component: CreateCDP,
@@ -27,6 +37,18 @@ export default {
       path: 'select',
       name: 'select',
       component: SelectCDP,
+      props: true
+    },
+    {
+      path: 'migrateDAI',
+      name: 'migrateDAI',
+      component: migrateDAI,
+      props: true
+    },
+    {
+      path: 'migrateCDP',
+      name: 'migrateCDP',
+      component: migrateCDP,
       props: true
     },
     {

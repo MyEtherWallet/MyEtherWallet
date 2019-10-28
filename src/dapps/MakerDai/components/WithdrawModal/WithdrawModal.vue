@@ -29,17 +29,6 @@
               <p v-if="canWithdrawEthNotice" class="above-max">
                 {{ $t('dappsMaker.overMaxWithdraw') }}
               </p>
-              <div class="peth">
-                <p class="peth-value">
-                  {{
-                    values.toPeth
-                      ? displayFixedValue(values.toPeth(amount), 5, false)
-                      : 0
-                  }}
-                  PETH
-                </p>
-                <popover :popcontent="$t('dappsMaker.pethPopover')" />
-              </div>
             </div>
           </div>
         </div>
@@ -160,11 +149,9 @@ export default {
       type: Object,
       default: function() {
         return {
-          maxPethDraw: '',
           maxEthDraw: '',
           maxUsdDraw: '',
           ethCollateral: '',
-          pethCollateral: '',
           usdCollateral: '',
           debtValue: '',
           maxDai: '',
@@ -186,6 +173,10 @@ export default {
       default: function() {}
     },
     calcLiquidationPriceDaiChg: {
+      type: Function,
+      default: function() {}
+    },
+    getValueOrFunction: {
       type: Function,
       default: function() {}
     }
@@ -305,6 +296,13 @@ export default {
     });
   },
   methods: {
+    getProxyAllowances(){
+      const allowances = this.getValueOrFunction('proxyAllowances');
+      if(allowances){
+        return allowances;
+      }
+      return {};
+    },
     submitBtn() {
       if (!this.canProceed) return;
       this.freeEth();

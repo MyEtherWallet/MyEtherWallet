@@ -8,9 +8,10 @@
       :collat-ratio="displayFixedPercent(collatRatio)"
       :liquidation-penalty="displayPercentValue(liquidationPenalty)"
       :min-ratio="displayPercentValue(liquidationRatio)"
-      :current-price="displayFixedValue(ethPrice, 2)"
+      :current-price="displayFixedValue(getCurrentPrice, 2)"
       :collateral="ethQty.toString()"
       :generate="daiQty.toString()"
+      :currency="selectedCurrency.symbol"
     />
     <loading-overlay
       v-if="loading"
@@ -29,13 +30,10 @@
           <div class="interface__block-title">
             {{ $t('dappsMaker.collateral') }}
           </div>
-          <div class="dropdown-text-container dropdown-container">
-            <p>
-              <span class="cc ETH cc-icon currency-symbol" />
-              ETH
-              <span class="subname">- Ethereum </span>
-            </p>
-          </div>
+          <currency-picker
+            :currencies="collateralOptions"
+            @selectedCurrency="selectedCurrency = $event"
+          ></currency-picker>
           <input
             v-model="ethQty"
             :class="[
@@ -46,15 +44,19 @@
             ]"
           />
           <div class="input-block-message">
-            <p v-if="!hasEnoughEth" class="red-text">Not enough ETH</p>
+            <p v-if="!hasEnoughEth" class="red-text">
+              {{
+                $t('dappsMaker.notEnough', { symbol: selectedCurrency.symbol })
+              }}
+            </p>
             <p>
               {{ $t('dappsMaker.minCollat') }}
-              <b>{{ displayFixedValue(minEth, 6) }}</b> ETH
+              <b>{{ displayFixedValue(minInSelectedCurrency, 6) }}</b>
+              {{ selectedCurrency.symbol }}
             </p>
-            <p>{{ displayFixedValue(depositInPeth, 6) }} PETH</p>
           </div>
         </div>
-        <div class="arrow"><img :src="arrowImage" alt /></div>
+        <div class="arrow"><img :src="arrowImage" /></div>
         <div>
           <div class="interface__block-title">
             {{ $t('dappsMaker.generate') }}
@@ -89,7 +91,10 @@
         <ul>
           <li>
             <p>{{ $t('dappsMaker.minEthReq') }}</p>
-            <p>{{ displayFixedValue(minEth, 6) }} ETH</p>
+            <p>
+              {{ displayFixedValue(minInSelectedCurrency, 6) }}
+              {{ selectedCurrency.symbol }}
+            </p>
           </li>
           <li>
             <p>{{ $t('dappsMaker.liquidPrice') }}</p>
@@ -99,7 +104,10 @@
           </li>
           <li>
             <p>{{ $t('dappsMaker.currentPriceInfo') }}</p>
-            <p>{{ displayFixedValue(ethPrice, 2) }} USD</p>
+            <p>
+              {{ displayFixedValue(getCurrentPrice, 2) }}
+              USD
+            </p>
           </li>
           <li>
             <p>{{ $t('dappsMaker.liquidationPenalty') }}</p>
@@ -135,7 +143,17 @@
           </li>
         </ul>
       </div>
-
+      <div
+        v-if="selectedCurrency.symbol !== 'ETH' && !hasEnoughAllowance()"
+        class="buttons-container"
+      >
+        <div
+          class="submit-button large-round-button-green-filled"
+          @click="approveCurrency"
+        >
+          Set Allowance
+        </div>
+      </div>
       <div class="buttons-container">
         <div
           :class="[
@@ -154,6 +172,7 @@
 <script>
 import { mapState } from 'vuex';
 import ethUnit from 'ethjs-unit';
+import CurrencyPicker from '../../components/CurrencyPicker';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
@@ -184,7 +203,8 @@ export default {
     'interface-bottom-text': InterfaceBottomText,
     blockie: Blockie,
     'dai-confirmation-modal': DaiConfirmationModal,
-    'loading-overlay': LoadingOverlay
+    'loading-overlay': LoadingOverlay,
+    'currency-picker': CurrencyPicker
   },
   props: {
     tokensWithBalance: {
@@ -205,10 +225,6 @@ export default {
       type: BigNumber,
       default: toBigNumber(0)
     },
-    pethPrice: {
-      type: BigNumber,
-      default: toBigNumber(0)
-    },
     liquidationPenalty: {
       type: BigNumber,
       default: toBigNumber(0)
@@ -218,14 +234,6 @@ export default {
       default: toBigNumber(0)
     },
     liquidationRatio: {
-      type: BigNumber,
-      default: toBigNumber(0)
-    },
-    wethToPethRatio: {
-      type: BigNumber,
-      default: toBigNumber(0)
-    },
-    pethMin: {
       type: BigNumber,
       default: toBigNumber(0)
     },
@@ -251,15 +259,21 @@ export default {
       type: Function,
       default: function() {}
     },
+    getCollateralOptions: {
+      type: Function,
+      default: function() {}
+    },
+    getValueOrFunction: {
+      type: Function,
+      default: function() {}
+    },
     values: {
       type: Object,
       default: function() {
         return {
-          maxPethDraw: '',
           maxEthDraw: '',
           maxUsdDraw: '',
           ethCollateral: '',
-          pethCollateral: '',
           usdCollateral: '',
           debtValue: '',
           maxDai: '',
@@ -268,23 +282,23 @@ export default {
           stabilityFee: '',
           minEth: '',
           liquidationRatio: '',
-          wethToPethRatio: '',
           liquidationPenalty: '',
-          targetPrice: '',
-          pethPrice: ''
+          targetPrice: ''
         };
       }
     }
   },
   data() {
     return {
+      emptyMakerCreated: false,
       arrowImage: Arrow,
       daiPrice: 0,
       priceFloor: 0,
       ethQty: 0,
       daiQty: 0,
       txInfo: {},
-      loading: false
+      loading: false,
+      selectedCurrency: { symbol: 'ETH', name: 'Ethereum' }
     };
   },
   computed: {
@@ -297,17 +311,29 @@ export default {
         if (toBigNumber(this.maxDaiDraw).lte(toBigNumber(this.daiQty)))
           return false;
         if (toBigNumber(this.collatRatio).lte(1.501)) return false;
-        return toBigNumber(ethUnit.toWei(this.ethQty, 'ether').toString()).lte(
-          this.account.balance
-        );
+        return this.hasEnoughEth;
+        // return toBigNumber(ethUnit.toWei(this.ethQty, 'ether').toString()).lte(
+        //   this.account.balance
+        // );
       }
       return false;
+      // return true;
     },
     hasEnoughEth() {
-      if (toBigNumber(this.ethQty).isNaN()) return false;
-      return toBigNumber(ethUnit.toWei(this.ethQty, 'ether').toString()).lte(
-        this.account.balance
-      );
+      // return true;
+      if (this.emptyMakerCreated) {
+        return this.hasEnough();
+      }
+      return true;
+    },
+
+
+    minInSelectedCurrency() {
+      const minEth = toBigNumber(this.getValueOrFunction('minEth'));
+
+      return toBigNumber(minEth)
+        .times(this.getCurrentPriceFor('ETH'))
+        .div(this.getCurrentPrice);
     },
     atSetFloor() {
       if (this.priceFloor <= 0) return 0;
@@ -344,78 +370,140 @@ export default {
       }
       return false;
     },
-    depositInPeth() {
-      if (this.ethQty <= 0) return 0;
-      return this.toPeth(this.ethQty);
-    },
     minEth() {
-      if (this.wethToPethRatio) {
-        return toBigNumber(this.pethMin).times(this.wethToPethRatio);
+        return toBigNumber(this.getValueOrFunction('minEth'));
+    },
+    collateralOptions() {
+      const mcdCollateralOptions = this.getValueOrFunction('mcdCurrencies');
+      if (mcdCollateralOptions) {
+        return Object.keys(mcdCollateralOptions).reduce((acc, entry) => {
+          acc.push({
+            symbol: entry,
+            name: mcdCollateralOptions[entry].ilk
+          });
+          return acc;
+        }, []);
       }
-      return '--';
+    },
+    getCurrentPrice() {
+      return this.getCurrentPriceFor(this.selectedCurrency.symbol);
     }
   },
   async mounted() {
     this.buildEmptyInstance();
   },
   methods: {
+    getCurrentPriceFor(symbol) {
+      if (!symbol) return 0;
+      if (this.getValueOrFunction('mcdCurrencies')) {
+        if (this.getValueOrFunction('mcdCurrencies')[symbol]) {
+          return this.getValueOrFunction('mcdCurrencies')[
+            symbol
+          ].price._amount.toString();
+        }
+      }
+      return 0;
+    },
+    getAllowanceFor(symbol) {
+      if (!symbol) return 0;
+      const allowances = this.getValueOrFunction('proxyAllowances');
+      if (allowances) {
+        return allowances[symbol];
+      }
+      return 0;
+    },
+    getBalanceFor(symbol) {
+      if (!symbol) return 0;
+      const balances = this.getValueOrFunction('balances');
+      if (balances) {
+        return balances[symbol];
+      }
+      return 0;
+    },
     async buildEmptyInstance() {
       this.makerCDP = await this.buildEmpty();
       this.$forceUpdate();
+      this.emptyMakerCreated = true;
     },
     displayPercentValue,
     displayFixedValue,
     displayFixedPercent,
     async openCdp() {
-      this.loading = true;
+      // this.loading = true;
+      //
+      // if (this.ethQty <= 0) return 0;
+      // setTimeout(() => {
+      //   this.loading = false;
+      // }, 5000);
+      //
+      // // [Note from David to Steve] This should be implemented on TX core.
+      // // Close DAI confirmation modal
+      // this.$eventHub.$on('showTxConfirmModal', () => {
+      //   this.$emit('cdpOpened');
+      //   if (this.loading) {
+      //     this.$refs.daiconfirmation.$refs.modal.hide();
+      //     this.loading = false;
+      //   }
+      // });
 
-      if (this.ethQty <= 0) return 0;
-      setTimeout(() => {
-        this.loading = false;
-      }, 5000);
-
-      // [Note from David to Steve] This should be implemented on TX core.
-      // Close DAI confirmation modal
-      this.$eventHub.$on('showTxConfirmModal', () => {
-        this.$emit('cdpOpened');
-        if (this.loading) {
-          this.$refs.daiconfirmation.$refs.modal.hide();
-          this.loading = false;
-        }
-      });
-
-      await this.makerCDP.openCdp(this.ethQty, this.daiQty);
+      await this.makerCDP.openCdp(
+        this.getValueOrFunction('mcdCurrencies')[this.selectedCurrency.symbol],
+        this.ethQty,
+        this.daiQty
+      );
     },
     openDaiConfirmation() {
       this.$refs.daiconfirmation.$refs.modal.show();
     },
     toUSD(eth) {
       if (eth === undefined || eth === null) return toBigNumber(0);
-      const toUsd = this.ethPrice.times(toBigNumber(eth));
+      const toUsd = toBigNumber(this.getCurrentPrice).times(toBigNumber(eth));
       if (toUsd.lt(0)) {
         return toBigNumber(0);
       }
       return toUsd;
     },
+    hasEnough() {
+      // return true;
+      console.log(this.makerCDP); // todo remove dev item
+      if (this.makerCDP) {
+        return this.makerCDP.hasEnough(
+          this.ethQty,
+          this.selectedCurrency.symbol,
+          this.account.balance
+        );
+      }
+      return true;
 
-    toPeth(eth) {
-      if (!toBigNumber(eth).eq(0)) {
-        return toBigNumber(eth).div(this.wethToPethRatio);
-      }
-      return toBigNumber(0);
+      // console.log(this.getBalanceFor('ETH').toString()); // todo remove dev item
+      // if (toBigNumber(this.ethQty).isNaN()) return false;
+      // if (this.selectedCurrency.symbol === 'ETH') {
+      //   return toBigNumber(ethUnit.toWei(this.ethQty, 'ether').toString()).lte(
+      //     this.account.balance
+      //   );
+      // }
+      // return toBigNumber(ethUnit.toWei(this.ethQty, 'ether').toString()).lte(
+      //   ethUnit.toWei(this.getBalanceFor(this.selectedCurrency.symbol), 'ether')
+      // );
     },
-    fromPeth(peth) {
-      if (!toBigNumber(peth).eq(0)) {
-        return toBigNumber(peth).times(this.wethToPethRatio);
+    hasEnoughAllowance() {
+      if (this.emptyMakerCreated) {
+        console.log(this.makerCDP.hasEnoughAllowance(
+                this.ethQty,
+                this.selectedCurrency.symbol
+        )); // todo remove dev item
+        return this.makerCDP.hasEnoughAllowance(
+                this.ethQty,
+                this.selectedCurrency.symbol
+        );
       }
-      return toBigNumber(0);
     },
     calcMinCollatRatio(priceFloor) {
       return bnOver(this.ethPrice, this.liquidationRatio, priceFloor);
     },
     calcDaiDraw(
       ethQty,
-      ethPrice = this.ethPrice,
+      ethPrice = this.getCurrentPrice,
       liquidationRatio = this.liquidationRatio
     ) {
       if (ethQty <= 0) return 0;
@@ -424,7 +512,7 @@ export default {
 
     calcMinEthDeposit(
       daiQty,
-      ethPrice = this.ethPrice,
+      ethPrice = this.getCurrentPrice,
       liquidationRatio = this.liquidationRatio
     ) {
       if (daiQty <= 0) return 0;
@@ -433,27 +521,18 @@ export default {
 
     calcCollatRatio(ethQty, daiQty) {
       if (ethQty <= 0 || daiQty <= 0) return 0;
-      return bnOver(this.ethPrice, ethQty, daiQty);
+      return bnOver(this.getCurrentPrice, ethQty, daiQty);
     },
 
     calcLiquidationPrice(ethQty, daiQty) {
-      if (ethQty <= 0 || daiQty <= 0) return 0;
-      const getInt = parseInt(this.ethPrice);
-      for (let i = getInt; i > 0; i--) {
-        const atValue = bnOver(i, ethQty, daiQty).lte(this.liquidationRatio);
-        if (atValue) {
-          return i;
-        }
-      }
-      for (let i = 100; i > 0; i--) {
-        const atValue = bnOver(i / 100, ethQty, daiQty).lte(
-          this.liquidationRatio
-        );
-        if (atValue) {
-          return i / 100;
-        }
-      }
-      return 0;
+      return this.makerCDP.calcLiquidationPrice(
+        ethQty,
+        daiQty,
+        this.selectedCurrency.symbol
+      );
+    },
+    approveCurrency() {
+      this.$emit('approveCurrency', this.selectedCurrency.symbol);
     }
   }
 };

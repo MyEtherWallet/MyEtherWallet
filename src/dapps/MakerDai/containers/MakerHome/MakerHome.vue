@@ -1,32 +1,220 @@
-<template functional>
-  <div>
-    <component
-      :is="injections.components.LoadingSign"
-      :loadingmessage1="props.loadingMessage1"
-      :loadingmessage2="props.loadingMessage2"
-    />
+<template>
+  <div class="boundary">
+    <div class="grid-col-2 promo-cards">
+      <div class="card-block create-wallet" @click="migrateDai">
+        <div class="flex-col-vertical-center">
+          <div class="card-content">
+            <h2 class="color-white">
+              {{ migrateOldDai }}
+            </h2>
+            <p class="color-white">{{ $t('home.obtainAddress') }}</p>
+            <p class="button">
+              {{ $t('home.getStarted') }}
+              <img src="~@/assets/images/icons/right-arrow.png" />
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-block unlock-wallet" @click="migrateCDP">
+        <div class="flex-col-vertical-center">
+          <div class="card-content">
+            <h2 class="color-white">{{ migrateOldCDP }}</h2>
+            <p class="color-white">{{ $t('home.accessMyWalletDesc') }}</p>
+            <p class="button">
+              {{ $t('home.accessNow') }}
+              <img src="~@/assets/images/icons/right-arrow.png" />
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-col-2 promo-cards">
+      <!--      <div v-show="!makerActive" class="card-block create-wallet">-->
+      <!--        <div class="flex-col-vertical-center">-->
+      <!--          <loading-sign-->
+      <!--            :loadingmessage1="loadingMessage"-->
+      <!--            :loadingmessage2="$t('dappsMaker.initialLoadingTwo')"-->
+      <!--          />-->
+      <!--        </div>-->
+      <!--      </div>-->
+      <div class="card-block create-wallet" @click="goToManage">
+        <div v-show="makerActive" class="flex-col-vertical-center">
+          <div class="card-content">
+            <h2 class="color-white">
+              {{ manage }}
+            </h2>
+            <p class="color-white">{{ $t('home.obtainAddress') }}</p>
+            <p class="button">
+              {{ $t('home.getStarted') }}
+              <img src="~@/assets/images/icons/right-arrow.png" />
+            </p>
+          </div>
+        </div>
+        <div v-show="!makerActive" class="flex-col-vertical-center">
+          <loading-sign
+            :loadingmessage1="loadingMessage"
+            :loadingmessage2="$t('dappsMaker.initialLoadingTwo')"
+          />
+        </div>
+      </div>
+
+      <div class="card-block unlock-wallet" @click="gotoCreate">
+        <div v-show="makerActive" class="flex-col-vertical-center">
+          <div class="card-content">
+            <h2 class="color-white">{{ create }}</h2>
+            <p class="color-white">{{ $t('home.accessMyWalletDesc') }}</p>
+            <p class="button">
+              {{ $t('home.getStarted') }}
+              <img src="~@/assets/images/icons/right-arrow.png" />
+            </p>
+          </div>
+        </div>
+        <div v-show="!makerActive" class="flex-col-vertical-center">
+          <loading-sign
+            :loadingmessage1="loadingMessage"
+            :loadingmessage2="$t('dappsMaker.initialLoadingTwo')"
+          />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import LoadingSign from '@/components/LoadingSign';
-
+// IDEA is to place all the functionality and links to 'what is this?', 'how do I...?' in one place.
 export default {
-  inject: {
-    components: {
-      default: {
-        LoadingSign
-      }
-    }
+  components: {
+    'loading-sign': LoadingSign
   },
   props: {
-    loadingMessage1: {
-      type: String,
-      default: ''
+    cdps: {
+      type: Array,
+      default: function() {
+        return [];
+      }
     },
-    loadingMessage2: {
+    cdpsWithoutProxy: {
+      type: Array,
+      default: function() {
+        return [];
+      }
+    },
+    makerActive: {
+      type: Boolean,
+      default: false
+    },
+    loadingState: {
       type: String,
-      default: ''
+      default: 'none'
+    }
+  },
+  data() {
+    return {
+      migrateOldDai: "Migrate 'old' DAI to 'new' DAI",
+      migrateOldCDP: 'Migrate Single Collateral CDP to Multi-Collateral',
+      manage: 'Manage Your CDP',
+      create: 'Create a CDP'
+    };
+  },
+  computed: {
+    loadingMessage() {
+      return this.loadingState;
+      // return `Loading: ${this.loadingState}`
+    },
+    hasCdps() {
+      return this.cdps.length > 0;
+    },
+    showManage() {
+      return (
+        this.listCdps ||
+        (this.cdps.length >= 1 && this.cdpsWithoutProxy.length >= 1)
+      );
+    },
+    listCdps() {
+      return this.cdps.length > 1 || this.cdpsWithoutProxy.length > 1;
+    }
+  },
+  mounted() {},
+  methods: {
+    clicked() {
+      console.log('clicked'); // todo remove dev item
+    },
+    gotoCreate() {
+      if (this.$route.path.includes('maker-dai')) {
+        if (this.makerActive) {
+          this.activeValues = this.systemValues;
+          this.$router.push({
+            name: 'create'
+          });
+        } else {
+          this.$emit('proceedtoCreateOrManage');
+          this.$emit('setAfterLoadPage', 'CREATE');
+          this.$router.push({
+            name: 'makerLoading'
+          });
+        }
+      }
+    },
+    migrateDai() {
+      if (this.$route.path.includes('maker-dai')) {
+        this.$router.push({
+          name: 'migrateDAI'
+        });
+      }
+    },
+    migrateCDP() {
+      if (this.$route.path.includes('maker-dai')) {
+        this.$router.push({
+          name: 'migrateCDP'
+        });
+      }
+    },
+    gotoLoading() {
+      this.$emit('proceedtoCreateOrManage');
+      if (!this.makerActive) {
+        this.$router.push({
+          name: 'makerLoading'
+        });
+      } else {
+        this.goToManage();
+      }
+    },
+    goToManage() {
+      if (this.$route.path.includes('maker-dai')) {
+        if (this.makerActive) {
+          if (this.cdps.length === 1) {
+            this.$router.push({
+              name: 'manage',
+              params: {
+                cdpId: this.cdps[0]
+              }
+            });
+          } else if (this.cdpsWithoutProxy.length === 1) {
+            this.$router.push({
+              name: 'migrate',
+              params: {
+                cdpId: this.cdpsWithoutProxy[0]
+              }
+            });
+          } else if (this.showManage) {
+            // The listing screen may not work and can be removed
+            this.$router.push({
+              name: 'select'
+            });
+          } else {
+            this.gotoCreate();
+          }
+        } else {
+          this.$emit('proceedtoCreateOrManage');
+          this.$emit('setAfterLoadPage', 'MANAGE');
+          this.$router.push({
+            name: 'makerLoading'
+          });
+        }
+      }
     }
   }
 };

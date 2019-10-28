@@ -5,17 +5,35 @@ import {
   calcCollatRatio,
   maxPethDraw,
   maxEthDraw,
-  maxDai
-} from './helpers';
-const { MKR, DAI } = Maker;
+  maxDai,
+  getMakerCurrencies,
+  displayFixedValue
+} from './makerHelpers';
+import {
+  ETH,
+  REP,
+  ZRX,
+  OMG,
+  BAT,
+  GNT,
+  DGD,
+  MDAI,
+  MKR,
+  default as TKNS
+} from '@makerdao/dai-plugin-mcd';
+import ethUnit from 'ethjs-unit';
+import MakerCdpBase from './MakerCdpBase';
+const { DAI } = Maker;
 
 const toBigNumber = num => {
   return new BigNumber(num);
 };
 
-export default class MakerCDP {
+export default class MakerCDP extends MakerCdpBase {
   constructor(cdpId, web3, services, sysVars) {
-    this.cdpId = cdpId;
+    super(cdpId, web3, services, sysVars);
+    this.cdpId = typeof cdpId !== 'number' ? cdpId.id : cdpId;
+    this.cdpIdFull = cdpId;
     this.cdp = {};
     this.web3 = web3 || {};
     this.ready = false;
@@ -29,198 +47,23 @@ export default class MakerCDP {
     this.migrated = false;
     this.migrateCdpActive = false;
     this.migrateCdpStage = 0;
-
-    this._liqPrice = toBigNumber(0);
-    this.isSafe = false;
-    this.debtValue = toBigNumber(0);
-    this._collatRatio = 0;
-    this.ethCollateral = toBigNumber(0);
-    this.pethCollateral = toBigNumber(0);
-    this._usdCollateral = toBigNumber(0);
-    this._governanceFee = toBigNumber(0);
   }
 
   // Getters
-  get currentAddress() {
-    return this.services.account.address;
-  }
+  // See MakerCdpBase
 
-  get liquidationPenalty() {
-    return this.services.liquidationPenalty;
-  }
-
-  get stabilityFee() {
-    return this.services.stabilityFee;
-  }
-
-  get ethPrice() {
-    return this.services.ethPrice;
-  }
-
-  get pethPrice() {
-    return this.services._pethPrice;
-  }
-
-  get wethToPethRatio() {
-    return this.services.wethToPethRatio;
-  }
-
-  get liquidationRatio() {
-    return this.services.liquidationRatio;
-  }
-
-  get proxyAddress() {
-    return this.services._proxyAddress;
-  }
-
-  get hasProxy() {
-    return this.services.hasProxy;
-  }
-
-  get proxyAllowanceDai() {
-    return this.services.proxyAllowanceDai;
-  }
-
-  get proxyAllowanceMkr() {
-    return this.services.proxyAllowanceMkr;
-  }
-
-  get daiToken() {
-    return this.services._daiToken;
-  }
-
-  get daiBalance() {
-    return this.services.daiBalance;
-  }
-
-  get mkrToken() {
-    return this.services._mkrToken;
-  }
-
-  get mkrBalance() {
-    return this.services.mkrBalance;
-  }
-
-  get proxyService() {
-    return this.services._proxyService;
-  }
-
-  get cdpService() {
-    return this.services._cdpService;
-  }
-
-  get minEth() {
-    return this.services.minEth();
-  }
-
-  get pethMin() {
-    return this.services.pethMin;
-  }
-
-  // CDP Instance/item values
-
-  get zeroDebt() {
-    return toBigNumber(this.debtValue).eq(0);
-  }
-
-  get usdCollateral() {
-    return this.toUSD(this.ethCollateral);
-  }
-
-  get ethCollateralNum() {
-    return this.ethCollateral.toNumber();
-  }
-
-  get collatRatio() {
-    return this._collatRatio;
-  }
-
-  get liquidationPrice() {
-    return this._liqPrice;
-  }
-
-  get governanceFeeOwed() {
-    return this._governanceFee;
-  }
-
-  get maxDai() {
-    if (
-      this.ethPrice &&
-      this.ethCollateral &&
-      this.liquidationRatio &&
-      this.debtValue
-    ) {
-      return maxDai(
-        this.ethPrice,
-        this.ethCollateral,
-        this.liquidationRatio.plus(0.001),
-        this.debtValue
-      );
-    }
-    return toBigNumber(0);
-  }
-
-  get maxEthDraw() {
-    if (this.ethPrice && this.debtValue && this.liquidationRatio) {
-      if (this.zeroDebt) {
-        return maxEthDraw(
-          this.ethCollateral,
-          this.liquidationRatio,
-          this.debtValue,
-          this.ethPrice,
-          this.minEth.times(0)
-        );
-      }
-      return maxEthDraw(
-        this.ethCollateral,
-        this.liquidationRatio,
-        this.debtValue,
-        this.ethPrice
-      );
-    }
-    return toBigNumber(0);
-  }
-
-  get maxPethDraw() {
-    if (this.pethPrice && this.pethCollateral && this.liquidationRatio) {
-      if (this.zeroDebt) {
-        return maxPethDraw(
-          this.pethCollateral,
-          this.liquidationRatio,
-          this.debtValue,
-          this.pethPrice,
-          this.pethMin.times(0)
-        );
-      }
-      return maxPethDraw(
-        this.pethCollateral,
-        this.liquidationRatio,
-        this.debtValue,
-        this.pethPrice
-      );
-    }
-    return toBigNumber(0);
-  }
-
-  get maxUsdDraw() {
-    if (this.pethPrice && this.pethCollateral && this.liquidationRatio) {
-      return this.toUSD(this.maxEthDraw);
-    }
-    return toBigNumber(0);
-  }
-
-  get needToFinishMigrating() {
-    return this._proxyAddress && this.noProxy;
-  }
-
-  // Methods
+  // Setup Methods =====================================================================================================
   async init(cdpId = this.cdpId) {
     await this.updateValues(cdpId);
-    this._governanceFee = (await this.cdpService.getGovernanceFee(
-      this.cdpId,
-      MKR
-    )).toBigNumber();
-
+    try {
+      // TODO why is this returning undefined
+      this._governanceFee = (await this.cdpService.getGovernanceFee(
+        this.cdpId,
+        MKR
+      )).toBigNumber();
+    } catch (e) {
+      this._governanceFee = false;
+    }
     this.ready = true;
     return this;
   }
@@ -233,10 +76,10 @@ export default class MakerCDP {
     } else {
       this.cdp = await this.services.getCdp(cdpId, false);
     }
-    const liqPrice = await this.cdp.getLiquidationPrice();
-    this._liqPrice = liqPrice.toBigNumber().toFixed(2);
-    this.isSafe = await this.cdp.isSafe();
-    this.debtValue = (await this.cdp.getDebtValue()).toBigNumber();
+    // const liqPrice = await this.cdp.getLiquidationPrice();
+    // this._liqPrice = liqPrice.toBigNumber().toFixed(2);
+    this.isSafe = this.cdp.isSafe;
+    // this.debtValue = (await this.cdp.getDebtValue()).toBigNumber();
     this._collatRatio = await this.cdp.getCollateralizationRatio();
     this.ethCollateral = (await this.cdp.getCollateralValue()).toBigNumber();
     this.pethCollateral = (await this.cdp.getCollateralValue(
@@ -269,6 +112,160 @@ export default class MakerCDP {
     this._proxyAddress = await this.services.getProxy();
   }
 
+  // Gat balances/values ===============================================================================================
+
+  async getCombinedDebtValue(proxyAddress = this._proxyAddress) {
+    return this.mcdManager.getCombinedDebtValue(proxyAddress);
+  }
+
+  // ====================================================================================================================
+
+  // get (non-getter) methods
+  getBalanceOf(currency) {
+    return this.services.balances[currency];
+  }
+
+  getProxyAllowancefor(currency) {
+    return this.services.proxyAllowances[currency];
+  }
+
+  getTokenObjectFor(currency) {
+    return this.services.tokens[currency];
+  }
+
+  async checkIfDestAddressHasProxy(address) {
+    await this.getProxy();
+    const proxy = await this.proxyService.getProxyAddress(address);
+    return proxy;
+  }
+
+  enoughMkrToWipe(amount) {
+    return this.cdpService.enoughMkrToWipe(amount, DAI.wei);
+  }
+
+  // Calculations
+
+  toPeth(eth) {
+    return this.services.toPeth(eth);
+  }
+
+  calcCollatRatio(ethQty, daiQty) {
+    if (ethQty <= 0 || daiQty <= 0) return toBigNumber(0);
+    const value = this.getPriceOfCurrency(this.cdpCollateralType);
+    console.log(value.toString()); // todo remove dev item
+    return calcCollatRatio(value, ethQty, daiQty);
+  }
+
+  calcLiquidationPrice(ethQty, daiQty) {
+    if (ethQty <= 0 || daiQty <= 0) return toBigNumber(0);
+    const value = this.getPriceOfCurrency(this.cdpCollateralType);
+    return calcLiquidationPrice(ethQty, daiQty, value, this.liquidationRatio);
+  }
+
+  calcCollatRatioDaiChg(daiQty, changeAmountOnly = false) {
+    if (changeAmountOnly) {
+      daiQty = toBigNumber(this.debtValue).plus(toBigNumber(daiQty));
+      console.log('calcCollatRatioDaiChg', daiQty.toString()); // todo remove dev item
+      console.log(this.collateralAmount.toString()); // todo remove dev item
+      console.log("==========="); // todo remove dev item
+    }
+    return toBigNumber(this.calcCollatRatio(this.collateralAmount, daiQty));
+  }
+
+  calcCollatRatioEthChg(ethQty, changeAmountOnly = false) {
+    if (changeAmountOnly) {
+      ethQty = toBigNumber(this.debtValue).plus(toBigNumber(ethQty));
+    }
+    return toBigNumber(this.calcCollatRatio(ethQty, this.debtValue));
+  }
+
+  calcLiquidationPriceDaiChg(daiQty, changeAmountOnly = false) {
+    if (changeAmountOnly) {
+      daiQty = toBigNumber(this.debtValue).plus(toBigNumber(daiQty));
+      console.log(daiQty.toString()); // todo remove dev item
+    }
+    return toBigNumber(
+      this.calcLiquidationPrice(this.collateralAmount, daiQty)
+    );
+  }
+
+  calcLiquidationPriceEthChg(ethQty, changeAmountOnly = false) {
+    if (changeAmountOnly) {
+      ethQty = toBigNumber(this.debtValue).plus(toBigNumber(ethQty));
+    }
+    return toBigNumber(this.calcLiquidationPrice(ethQty, this.debtValue));
+  }
+
+  // Helpers
+  minInSelectedCurrency(symbol) {
+    const minEth = toBigNumber(this.pethMin).times(this.wethToPethRatio);
+
+    return toBigNumber(minEth)
+      .times(this.getCurrentPriceFor('ETH'))
+      .div(this.getCurrentPriceFor(symbol));
+  }
+
+  getCurrentPriceFor(symbol) {
+    if (!symbol) return 0;
+    this.getTokenObjectFor(symbol).price._amount.toString();
+    return 0;
+  }
+
+  collateralOptions() {
+    return Object.keys(this.services.tokens).reduce((acc, entry) => {
+      acc.push({
+        symbol: entry,
+        name: this.services.tokens[entry].ilk
+      });
+      return acc;
+    }, []);
+  }
+
+  hasEnough(ethQty, currency = 'ETH', balance = null) {
+    // return true;
+    if (toBigNumber(ethQty).isNaN()) return false;
+    if (currency === 'ETH' && balance !== null) {
+      console.log(currency); // todo remove dev item
+      return toBigNumber(ethUnit.toWei(ethQty, 'ether').toString()).lte(
+        balance
+      );
+    }
+    return toBigNumber(ethUnit.toWei(ethQty, 'ether').toString()).lte(
+      ethUnit.toWei(this.getBalanceOf(currency), 'ether')
+    );
+  }
+
+  hasEnoughAllowance(ethQty, currency = 'ETH') {
+    // return true;
+    if (toBigNumber(ethQty).isNaN()) return false;
+    if (currency === 'ETH') return true;
+    const currentAllowance = this.getProxyAllowancefor(currency);
+    return toBigNumber(ethUnit.toWei(ethQty, 'ether').toString()).lte(
+      currentAllowance
+    );
+  }
+
+  getPriceOfCurrency(type) {
+    const curr = this.mcdCurrencies[type];
+    if (curr) {
+      return curr.price._amount;
+    }
+    return 0;
+  }
+  async approveDai() {
+    await this.daiToken.approveUnlimited(this.proxyAddress);
+  }
+
+  async approveMkr() {
+    await this.mkrToken.approveUnlimited(this.proxyAddress);
+  }
+
+  async getDaiBalances() {
+    this.daiBalance = await this.services.daiToken.balance();
+    return this.daiBalance;
+  }
+
+  // Interaction / Operation methods ===================================================================================
   async migrateCdp() {
     const currentProxy = await this.getProxy();
     if (!currentProxy) {
@@ -280,27 +277,18 @@ export default class MakerCDP {
     }
   }
 
-  async openCdp(ethQty, daiQty) {
+  async openCdp(type, ethQty, daiQty) {
     if (ethQty <= 0) return 0;
-    let newCdp;
-    if (!this.hasProxy) {
-      this.opening = true;
-      this.needsUpdate = true;
-      newCdp = await this.cdpService.openProxyCdpLockEthAndDrawDai(
-        ethQty,
-        daiQty,
-        null
-      );
-    } else {
-      this.opening = true;
-      this.needsUpdate = true;
-      newCdp = await this.cdpService.openProxyCdpLockEthAndDrawDai(
-        ethQty,
-        daiQty,
-        this.proxyAddress
-      );
-    }
+    // --------------------------
+    this.opening = true;
+    this.needsUpdate = true;
+    // TODO structure to accept multiple currencies
 
+    const newCdp = await this.mcdManager.openLockAndDraw(
+      type.ilk,
+      getMakerCurrencies()[type.currency.symbol](ethQty),
+      MDAI(daiQty)
+    );
     return newCdp.id;
   }
 
@@ -309,11 +297,14 @@ export default class MakerCDP {
       if (this.noProxy) {
         return;
       }
+      const owner = await this.mcdManager.getOwner(this.cdpId);
       this.needsUpdate = true;
-      await this.cdpService.lockEthProxy(
-        this._proxyAddress,
+      console.log(this.getProxyAllowancefor(this.cdpType).toString()); // todo remove dev item
+      await this.mcdManager.lock(
         this.cdpId,
-        amount
+        this.cdpType,
+        this.cdpTypeObject(amount),
+        owner
       );
     } catch (e) {
       // eslint-disable-next-line
@@ -322,8 +313,9 @@ export default class MakerCDP {
   }
 
   drawDai(amount, acknowledgeBypass = false) {
+    console.log('draw dai', amount, acknowledgeBypass); // todo remove dev item
     if (
-      this.calcCollatRatio(this.ethCollateral, this.debtValue.plus(amount)).gt(
+      this.calcCollatRatio(this.collateralAmount, this.debtValue.plus(amount)).gt(
         2
       ) ||
       acknowledgeBypass
@@ -333,7 +325,7 @@ export default class MakerCDP {
           return;
         }
         this.needsUpdate = true;
-        this.cdpService.drawDaiProxy(this._proxyAddress, this.cdpId, amount);
+        this.cdpService.drawDai(amount);
       } catch (e) {
         // eslint-disable-next-line
         console.error(e);
@@ -406,12 +398,6 @@ export default class MakerCDP {
     // }
   }
 
-  async checkIfDestAddressHasProxy(address) {
-    await this.getProxy();
-    const proxy = await this.proxyService.getProxyAddress(address);
-    return proxy;
-  }
-
   async moveCdp(address) {
     await this.getProxy();
     const proxy = await this.proxyService.getProxyAddress(address);
@@ -428,80 +414,5 @@ export default class MakerCDP {
       this.closing = true;
       await this.cdpService.give(this.cdpId, address);
     }
-  }
-
-  enoughMkrToWipe(amount) {
-    return this.cdpService.enoughMkrToWipe(amount, DAI.wei);
-  }
-
-  // Calculations
-  toUSD(eth) {
-    const toUsd = this.services.toUSD(eth);
-    if (toUsd.lt(0)) {
-      return toBigNumber(0);
-    }
-    return toUsd;
-  }
-
-  toPeth(eth) {
-    return this.services.toPeth(eth);
-  }
-
-  maxDaiDraw() {
-    const tl = toBigNumber(this.ethPrice).times(
-      toBigNumber(this.ethCollateral)
-    );
-    const tr = toBigNumber(this.debtValue).times(
-      toBigNumber(this.liquidationRatio)
-    );
-    return tl.minus(tr).div(toBigNumber(this.ethPrice));
-  }
-
-  calcCollatRatio(ethQty, daiQty) {
-    if (ethQty <= 0 || daiQty <= 0) return toBigNumber(0);
-    return calcCollatRatio(this.ethPrice, ethQty, daiQty);
-  }
-
-  calcLiquidationPrice(ethQty, daiQty) {
-    if (ethQty <= 0 || daiQty <= 0) return toBigNumber(0);
-    return calcLiquidationPrice(
-      ethQty,
-      daiQty,
-      this.ethPrice,
-      this.liquidationRatio
-    );
-  }
-
-  // Helpers
-  async approveDai() {
-    await this.daiToken.approveUnlimited(this.proxyAddress);
-  }
-
-  async approveMkr() {
-    await this.mkrToken.approveUnlimited(this.proxyAddress);
-  }
-
-  async getDaiBalances() {
-    this.daiBalance = await this.services.daiToken.balance();
-    return this.daiBalance;
-  }
-
-  // Static Helpers
-  static toNumber(val) {
-    if (BigNumber.isBigNumber(val)) {
-      return val.toNumber();
-    }
-    return toBigNumber(val).toNumber();
-  }
-
-  static displayPercentValue(raw) {
-    if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);
-    return raw.times(100).toString();
-  }
-
-  static displayFixedValue(raw, decimals = 3, round = true) {
-    if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);
-    if (round) return raw.toFixed(decimals, BigNumber.ROUND_DOWN).toString();
-    return raw.toFixed(decimals).toString();
   }
 }
