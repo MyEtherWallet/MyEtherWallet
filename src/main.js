@@ -16,7 +16,6 @@ import { Promise } from 'q';
 import VueI18n from 'vue-i18n';
 import vuetify from '@/plugins/vuetify';
 
-//Vue.use(vuetify);
 Vue.prototype.$eventHub = new Vue();
 
 //Router
