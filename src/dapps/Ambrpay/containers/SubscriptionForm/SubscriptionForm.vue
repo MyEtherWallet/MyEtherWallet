@@ -4,7 +4,7 @@
       <div class="subscription-form-container">
         <b-container>
           <b-row>
-            <span class="label-text">To Address</span>
+            <span class="label-text">{{ $t('dappsAmbrpay.to-address') }}</span>
             <p
               class="action-text prevent-user-select copy-text"
               @click="copyToClipboard"
@@ -43,24 +43,25 @@
           </b-row>
           <b-row>
             <b-col class="mt-3" cols="12" md="5">
-              <span class="label-text">Type</span>
+              <span class="label-text">{{ $t('dappsAmbrpay.type') }}</span>
               <div class="fake-input">
                 <p>
                   <img
                     class="currency-icon"
                     src="@/assets/images/currency/eth.svg"
                   />
-                  <span class="token-txt">ETH</span>-Ethereum
+                  <span class="token-txt">{{ $t('dappsAmbrpay.eth') }}</span
+                  >-{{ $t('dappsAmbrpay.ethereum') }}
                 </p>
               </div>
             </b-col>
             <b-col class="amount-container mt-3" cols="12" md="7">
               <div class="amount-text">
-                <span class="label-text">Amount</span>
+                <span class="label-text">{{ $t('dappsAmbrpay.amount') }}</span>
                 <span
                   class="action-text entire-balance"
                   @click="sendEntireBalance"
-                  >Entire Balance</span
+                  >{{ $t('dappsAmbrpay.entire-balance') }}</span
                 >
               </div>
               <input
@@ -69,21 +70,25 @@
                 placeholder="0.01"
                 min="0.01"
               />
-              <p class="sub-text">1% automation-fee will be added on top</p>
+              <p class="sub-text">{{ $t('dappsAmbrpay.automation-fee') }}</p>
               <p v-show="amountErrMsg" class="sub-text err-msg">
                 {{ amountErrMsg }}
               </p>
             </b-col>
           </b-row>
           <b-row class="row-style mt-1 interval-container">
-            <span class="label-text">Interval in Every</span>
-            <span v-show="intervalDays" class="days-text">Day(s)</span>
+            <span class="label-text">{{
+              $t('dappsAmbrpay.interval-in-every')
+            }}</span>
+            <span v-show="intervalDays" class="days-text">{{
+              $t('dappsAmbrpay.days')
+            }}</span>
             <input
               v-model="intervalDays"
+              :placeholder="$t('dappsAmbrpay.enter-days')"
               type="number"
               min="1"
               max="365"
-              placeholder="Enter the number of day(s)"
             />
             <p v-show="intervalErrMsg" class="sub-text err-msg">
               {{ intervalErrMsg }}
@@ -93,7 +98,7 @@
             <b-button
               :class="[isValidInput ? '' : 'disabled', 'mx-auto mew-btn']"
               @click="startSubscription"
-              >Start Recurring</b-button
+              >{{ $t('dappsAmbrpay.start-recurring') }}</b-button
             >
           </b-row>
         </b-container>
