@@ -178,13 +178,10 @@ const recursivePayloadStripper = val => {
   return val;
 };
 
-const importedXssStripper = Misc.stripTags;
-
 export default {
   checkUrlSimilarity,
   blackListDomains,
   whiteListDomains,
   queryBuilder,
-  recursivePayloadStripper,
-  importedXssStripper
+  recursivePayloadStripper
 };

@@ -26,7 +26,59 @@ import {
   CX_GET_TX_COUNT
 } from './cxEvents';
 
-import helpers from './helpers';
+import xss from 'css';
+
+const varType = variable => {
+  const isArray =
+    variable && variable instanceof Array && typeof variable === 'object';
+  const isObject =
+    variable && variable instanceof Object && typeof variable === 'object';
+  const isBoolean = variable && typeof x === 'boolean';
+  const isNumber = variable && typeof x === 'number';
+  const isString = variable && typeof x === 'string';
+
+  if (isArray) return 'array';
+  if (isObject) return 'object';
+  if (isBoolean) return 'boolean';
+  if (isNumber) return 'number';
+  if (isString) return 'string';
+};
+
+const stripTags = content => {
+  const insertToDom = new DOMParser().parseFromString(content, 'text/html');
+  insertToDom.body.textContent.replace(/(<([^>]+)>)/gi, '') || '';
+  const string = xss(insertToDom.body.textContent, {
+    whitelist: [],
+    stripIgnoreTag: true,
+    stripIgnoreTagBody: '*'
+  });
+  return string;
+};
+
+const recursivePayloadStripper = val => {
+  if (varType(val) === 'array') {
+    return val.map(item => {
+      if (varType(item) === 'object') {
+        return recursivePayloadStripper(item);
+      }
+      return stripTags(item);
+    });
+  } else if (varType(val) === 'object') {
+    const newObj = {};
+    Object.keys(val).forEach(item => {
+      if (varType(val[item]) === 'object' || varType(val[item]) === 'array') {
+        newObj[item] = recursivePayloadStripper(val[item]);
+      } else {
+        newObj[item] = stripTags(val[item]);
+      }
+    });
+    return newObj;
+  } else if (varType(val) === 'string') {
+    return stripTags(val);
+  }
+
+  return val;
+};
 
 import {
   csErrors,
@@ -94,7 +146,7 @@ chrome.runtime.onMessage.addListener(function(request, _, callback) {
 
 const events = {};
 events[WEB3_SUBSCRIBE] = function(e) {
-  const payload = helpers.recursivePayloadStripper(e.detail);
+  const payload = recursivePayloadStripper(e.detail);
   chrome.runtime.sendMessage(
     extensionID,
     {
@@ -105,7 +157,7 @@ events[WEB3_SUBSCRIBE] = function(e) {
   );
 };
 events[WEB3_GET_TX_COUNT] = function(e) {
-  const payload = helpers.recursivePayloadStripper(e.detail);
+  const payload = recursivePayloadStripper(e.detail);
   chrome.runtime.sendMessage(
     extensionID,
     {
@@ -139,7 +191,7 @@ events[WEB3_QUERY_GASPRICE] = function() {
   );
 };
 events[WEB3_UNSUBSCRIBE] = function(e) {
-  const payload = helpers.recursivePayloadStripper(e.detail);
+  const payload = recursivePayloadStripper(e.detail);
   chrome.runtime.sendMessage(
     extensionID,
     {
@@ -176,7 +228,7 @@ events[WEB3_RPC_REQUEST] = function(e) {
     extensionID,
     {
       event: WEB3_RPC_REQUEST,
-      payload: helpers.recursivePayloadStripper(e.detail)
+      payload: recursivePayloadStripper(e.detail)
     },
     {},
     data => {
@@ -214,8 +266,8 @@ events[WEB3_GET_ACC] = function(e) {
     });
 
     const newPayload = {
-      url: helpers.importedXssStripper(window.location.origin),
-      meta: helpers.recursivePayloadStripper(meta)
+      url: stripTags(window.location.origin),
+      meta: recursivePayloadStripper(meta)
     };
 
     if (Object.keys(storedAccounts).length > 0) {
@@ -240,8 +292,8 @@ events[WEB3_GET_ACC] = function(e) {
 
 events[WEB3_SEND_TX] = function(e) {
   const newPayload = {
-    tx: helpers.recursivePayloadStripper(e.detail.tx),
-    url: helpers.importedXssStripper(window.location.origin)
+    tx: recursivePayloadStripper(e.detail.tx),
+    url: stripTags(window.location.origin)
   };
   chrome.runtime.sendMessage(extensionID, {
     event: CX_CONFIRM_SEND_TX,
@@ -251,9 +303,9 @@ events[WEB3_SEND_TX] = function(e) {
 
 events[WEB3_SEND_SIGN_MSG] = function(e) {
   const newPayload = {
-    msgToSign: helpers.recursivePayloadStripper(e.detail.msgToSign),
-    address: helpers.importedXssStripper(e.detail.address),
-    url: helpers.importedXssStripper(window.location.origin)
+    msgToSign: recursivePayloadStripper(e.detail.msgToSign),
+    address: stripTags(e.detail.address),
+    url: stripTags(window.location.origin)
   };
   chrome.runtime.sendMessage(extensionID, {
     event: CX_SIGN_MSG,
