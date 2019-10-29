@@ -21,7 +21,7 @@
         :currency="
           txParams.tokenSymbol ? txParams.tokenSymbol : network.type.name
         "
-        :contract-address="txParams.tokenTransferTo"
+        :receiver="txParams.tokenTransferTo"
       />
     </div>
     <div :class="[showDetails ? 'add-margin' : '', 'details-container']">
@@ -158,6 +158,8 @@ export default {
     window.chrome.storage.sync.get(_self.linkQuery.from, function(res) {
       _self.signingKeystore = JSON.parse(res[_self.linkQuery.from]).priv;
     });
+
+    console.log(this.txParams);
   },
   methods: {
     toggleDetails() {

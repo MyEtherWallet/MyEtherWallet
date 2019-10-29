@@ -8,9 +8,9 @@
         {{ direction === 'to' ? '+' : '-' }} {{ concattedAmount }}
         <span>{{ currency.toUpperCase() }}</span>
       </p>
-      <p class="address-text">Address: {{ concat(address) }}</p>
+      <p class="address-text">Address: {{ currency !== $store.state.network.type.name ?  concat(receiver) : concat(address)}}</p>
       <p v-if="currency !== $store.state.network.type.name">
-        via Contract address {{ contractAddr }}
+        via Contract address {{ concat(address) }}
       </p>
     </div>
   </div>
@@ -34,9 +34,9 @@ export default {
       type: String,
       default: 'to'
     },
-    contractAddr: {
+    receiver: {
       type: String,
-      default: 'to'
+      default: ''
     }
   },
   computed: {
