@@ -600,6 +600,20 @@ export default {
         this.domainNameErr = false;
       }
     },
+    async checkTxRecordsSupport(resolver) {
+      const supportsTxt = await resolver.methods
+        .supportsInterface(TEXT_RECORD_SUPPORT_INTERFACE)
+        .call();
+
+      if (!supportsTxt) {
+        resolver = new this.web3.eth.Contract(
+          ResolverAbi,
+          this.publicResolverAddress
+        );
+      }
+
+      this.fetchTxtRecords(resolver);
+    },
     async getMoreInfo() {
       let owner;
       const resolver = await this.ens.resolver('resolver.eth');
@@ -640,7 +654,7 @@ export default {
           ResolverAbi,
           currentResolverAddress
         );
-        this.fetchTxtRecords(resolverContract);
+        this.checkTxRecordsSupport(resolverContract);
         const supportMultiCoin = await resolverContract.methods
           .supportsInterface(MULTICOIN_SUPPORT_INTERFACE)
           .call();
