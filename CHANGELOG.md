@@ -1,8 +1,27 @@
-### Release V5.1.9
+### Release v5.2.0
+
+### Feature
+- Ambrpay Integration[#1441](https://github.com/MyEtherWallet/MyEtherWallet/pull/1441)
+
+### Release v5.1.9
+
+### Devop
+- persist selected swap provider over rate refresh cycles [#1552](https://github.com/MyEtherWallet/MyEtherWallet/pull/1552)
 
 ### Feature
 
-- Ambrpay Integration[#1441](https://github.com/MyEtherWallet/MyEtherWallet/pull/1441)
+- Ens TXT records support [#1559](https://github.com/MyEtherWallet/MyEtherWallet/pull/1559)
+
+### Bug
+
+- Fix scrolltop issue, keep one collapse open on network address modal [#1561](https://github.com/MyEtherWallet/MyEtherWallet/pull/1561)
+- Fix ENS empty address issue [#1573](https://github.com/MyEtherWallet/MyEtherWallet/pull/1573)
+- Fix Schedule Transaction button [#1574] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1574)
+
+### Release v5.1.8-hotfix.1
+
+### Hotfix
+- Update list to bring back contract addresses [#1567](https://github.com/MyEtherWallet/MyEtherWallet/pull/1567)
 
 ### Release v5.1.8
 
