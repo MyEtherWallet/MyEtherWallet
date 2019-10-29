@@ -120,7 +120,11 @@ const getStatus = async orderInfo => {
       buildPath(),
       utils.buildPayload(bityMethods.status, [orderInfo])
     );
+
     if (results.error) {
+      if (Object.keys(results.error.message).length === 0) {
+        return;
+      }
       throw Error(results.error.message);
     }
     return results.result;
