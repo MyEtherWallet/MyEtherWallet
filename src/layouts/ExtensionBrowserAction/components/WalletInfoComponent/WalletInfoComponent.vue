@@ -551,6 +551,7 @@ export default {
     copyAddress() {
       this.$refs.addressInput.select();
       document.execCommand('copy');
+      Toast.responseHandler('Successfully Copied', Toast.SUCCESS)
     },
     viewAllTokens(bool) {
       if (bool) {
