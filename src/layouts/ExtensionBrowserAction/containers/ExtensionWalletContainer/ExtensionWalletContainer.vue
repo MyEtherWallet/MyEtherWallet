@@ -83,6 +83,10 @@ export default {
     window.chrome.storage.onChanged.addListener(this.getAccounts);
   },
   mounted() {
+    this.$refs.watchOnlyModal.$refs.watchOnlyWallet.$on('hidden', () => {
+      this.loading = false;
+    });
+
     this.getAccounts();
   },
   destroyed() {
