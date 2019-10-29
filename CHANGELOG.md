@@ -3,6 +3,7 @@
 ### Bug
 
 - Fix scrolltop issue, keep one collapse open on network address modal [#1561](https://github.com/MyEtherWallet/MyEtherWallet/pull/1561)
+- Fix ENS empty address issue [#1573](https://github.com/MyEtherWallet/MyEtherWallet/pull/1573)
 
 ### Release v5.1.8-hotfix.1
 
