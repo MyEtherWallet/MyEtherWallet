@@ -479,7 +479,6 @@ export default {
                 .toFixed(3)
             : 0;
           token.address = token.addr;
-          // token['logo'] = token.hasOwnProperty('logo') ? token.logo.hasOwnProperty('src') ? token.logo : newLogo : newLogo
           token['logo'] = newLogo;
           delete token.addr;
           return token;
@@ -490,7 +489,6 @@ export default {
       } catch (e) {
         tokens = this.network.type.tokens.map(token => {
           token.balance = 'Load';
-          // token['logo'] = token.hasOwnProperty('logo') ? token.logo.hasOwnProperty('src') ? token.logo : newLogo : newLogo
           token['logo'] = newLogo;
           return token;
         });
@@ -514,7 +512,6 @@ export default {
           // eslint-disable-next-line
           src: require(`@/assets/images/networks/eth.svg`)
         };
-        // token['logo'] = token.hasOwnProperty('logo') ? token.logo.hasOwnProperty('src') ? token.logo : newLogo : newLogo
         token['logo'] = newLogo;
         return token;
       });

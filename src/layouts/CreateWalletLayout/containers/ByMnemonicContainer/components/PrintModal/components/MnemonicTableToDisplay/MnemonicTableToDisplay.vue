@@ -20,9 +20,9 @@
       </h3>
       <p>
         We <span>CAN NOT</span> change your password. Please
-        <span>DO NOT FORGET</span> to save your password, and it is your private
-        key. You will need this <span>Password + Mnemonic Phrase</span> to
-        access your wallet.
+        <span><b>DO NOT</b> FORGET</span> to save your password, and it is your
+        private key. You will need this
+        <span>Password + Mnemonic Phrase</span> to access your wallet.
       </p>
     </div>
     <div class="content">

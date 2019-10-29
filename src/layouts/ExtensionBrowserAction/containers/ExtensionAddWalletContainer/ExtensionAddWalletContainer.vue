@@ -290,10 +290,7 @@ export default {
     },
     storeWalletCb() {
       this.loading = false;
-      Toast.responseHandler(
-        `Successfully added ${this.nickname} wallet!`,
-        Toast.SUCCESS
-      );
+      this.$eventHub.$emit('showSuccessModal', 'Successfully added a wallet!');
       this.$router.push('/');
       this.reset();
       this.toggleVerifyDetails(false, '');

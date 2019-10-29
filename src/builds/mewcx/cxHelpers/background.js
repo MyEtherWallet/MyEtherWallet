@@ -34,7 +34,7 @@ const networkChanger = items => {
       }
     );
     // eslint-disable-next-line
-    if (!!network) {
+    if (!!network === network) {
       store.dispatch('switchNetwork', network).then(() => {
         store.dispatch('setWeb3Instance', network.url).then(() => {
           store.state.web3.eth.net.getId().then(res => {
@@ -218,7 +218,7 @@ function querycB(tab) {
         helpers.checkUrlSimilarity(tab.url, SEARCH_STRING)
       ) {
         urlRedirect = encodeURI(
-          `https://www.myetherwallet.com/phishing.html?phishing-address=${tab.url}`
+          `https://www.myetherwallet.com/phishing-catcher?phishing-address=${tab.url}`
         );
         chrome.tabs.update(null, { url: urlRedirect });
       } else {

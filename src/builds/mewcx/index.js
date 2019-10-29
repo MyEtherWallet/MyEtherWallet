@@ -105,6 +105,18 @@ const cxRoutes = [
   }
 ];
 const configRoutes = routes => {
+  const interfaceIdx = routes.findIndex(item => {
+    return item.path === '/interface';
+  });
+  const newArr = [];
+  routes[interfaceIdx].children.forEach(item => {
+    if (item.path !== 'send-offline') {
+      newArr.push(item);
+    }
+  });
+
+  routes[interfaceIdx].children = newArr;
   return routes.concat(cxRoutes);
 };
+
 export { app, configRoutes };

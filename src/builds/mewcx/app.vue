@@ -14,7 +14,7 @@
           !$route.fullPath.includes('/extension-popups')
       "
     />
-    <confirmation-container v-if="wallet !== null" />
+    <confirmation-container />
   </div>
 </template>
 

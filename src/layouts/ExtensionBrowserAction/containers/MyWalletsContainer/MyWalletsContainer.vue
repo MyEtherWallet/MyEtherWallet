@@ -9,12 +9,11 @@
           + Add More
         </div>
       </div>
-      <div class="dropdown-container">
-        <span class="network-text">NETWORK</span>
-        <span class="current-network" @click="props.openNetworkModal">
-          {{ props.network.type.name }} - {{ props.network.service }}
-        </span>
-      </div>
+      <component
+        :is="injections.components.NetworkPickerComponent"
+        :network="props.network"
+        :open-network-modal="props.openNetworkModal"
+      />
     </div>
     <div class="total-balance-container">
       <div class="title-name">
@@ -61,11 +60,13 @@
 
 <script>
 import WalletInfoComponent from '../../components/WalletInfoComponent';
+import NetworkPickerComponent from '../../components/NetworkPickerComponent';
 export default {
   inject: {
     components: {
       default: {
-        WalletInfoComponent
+        WalletInfoComponent,
+        NetworkPickerComponent
       }
     }
   },
