@@ -166,8 +166,10 @@ const recursivePayloadStripper = val => {
     Object.keys(val).forEach(item => {
       if (varType(val[item]) === 'object' || varType(val[item]) === 'array') {
         newObj[item] = recursivePayloadStripper(val[item]);
-      } else {
+      } else if (varType(val[item]) === 'string') {
         newObj[item] = Misc.stripTags(val[item]);
+      } else {
+        newObj[item] = val[item];
       }
     });
     return newObj;

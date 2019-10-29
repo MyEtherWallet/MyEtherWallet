@@ -9,7 +9,9 @@ import {
   WEB3_QUERY_GASPRICE,
   WEB3_RECEIVE_GASPRICE,
   WEB3_GET_TX_COUNT,
-  WEB3_RECEIVE_TX_COUNT
+  WEB3_RECEIVE_TX_COUNT,
+  WEB3_GET_GAS,
+  WEB3_RECEIVE_GAS
 } from '@/builds/mewcx/cxHelpers/cxEvents.js';
 
 export default async ({ payload }, res, next) => {
@@ -19,14 +21,17 @@ export default async ({ payload }, res, next) => {
   const eventName = WEB3_SEND_TX.replace('{{id}}', id);
   const resolveName = WEB3_RECEIVE_TX_HASH.replace('{{id}}', id);
   const rejectName = WEB3_REJECT.replace('{{id}}', id);
-  const web3QueryGas = WEB3_QUERY_GASPRICE.replace('{{id}}', id);
-  const web3ReceiveGas = WEB3_RECEIVE_GASPRICE.replace('{{id}}', id);
+  const web3QueryGasPrice = WEB3_QUERY_GASPRICE.replace('{{id}}', id);
+  const web3ReceiveGasPrice = WEB3_RECEIVE_GASPRICE.replace('{{id}}', id);
   const web3GetNonce = WEB3_GET_TX_COUNT.replace('{{id}}', id);
   const web3ReceiveNonce = WEB3_RECEIVE_TX_COUNT.replace('{{id}}', id);
+  const web3GetGas = WEB3_GET_GAS.replace('{{id}}', id);
+  const web3ReceiveGas = WEB3_RECEIVE_GAS.replace('{{id}}', id);
+
   const gasPrice = await eventHandler(
-    web3QueryGas,
+    web3QueryGasPrice,
     {},
-    web3ReceiveGas,
+    web3ReceiveGasPrice,
     rejectName
   );
   const nonce = await eventHandler(
@@ -39,10 +44,21 @@ export default async ({ payload }, res, next) => {
     web3ReceiveNonce,
     rejectName
   );
+  const gas = await eventHandler(
+    web3GetGas,
+    {
+      detail: {
+        tx: tx
+      }
+    },
+    web3ReceiveGas,
+    rejectName
+  );
+
   tx.gasPrice = gasPrice;
   try {
     tx.nonce = !tx.nonce ? await nonce : tx.nonce;
-    tx.gas = !tx.gas ? nonce : tx.gas;
+    tx.gas = !tx.gas ? gas : tx.gas;
   } catch (e) {
     res(e);
     return;

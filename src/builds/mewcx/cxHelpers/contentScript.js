@@ -23,7 +23,10 @@ import {
   WEB3_RECEIVE_GASPRICE,
   WEB3_GET_TX_COUNT,
   WEB3_RECEIVE_TX_COUNT,
-  CX_GET_TX_COUNT
+  CX_GET_TX_COUNT,
+  WEB3_GET_GAS,
+  WEB3_RECEIVE_GAS,
+  CX_GET_GAS
 } from './cxEvents';
 
 import xss from 'xss';
@@ -68,8 +71,10 @@ const recursivePayloadStripper = val => {
     Object.keys(val).forEach(item => {
       if (varType(val[item]) === 'object' || varType(val[item]) === 'array') {
         newObj[item] = recursivePayloadStripper(val[item]);
-      } else {
+      } else if (varType(val[item]) === 'string') {
         newObj[item] = stripTags(val[item]);
+      } else {
+        newObj[item] = val[item];
       }
     });
     return newObj;
@@ -184,6 +189,24 @@ events[WEB3_QUERY_GASPRICE] = function() {
     data => {
       window.dispatchEvent(
         new CustomEvent(WEB3_RECEIVE_GASPRICE.replace('{{id}}', extensionID), {
+          detail: data
+        })
+      );
+    }
+  );
+};
+events[WEB3_GET_GAS] = function(e) {
+  const payload = recursivePayloadStripper(e.detail);
+  chrome.runtime.sendMessage(
+    extensionID,
+    {
+      event: CX_GET_GAS,
+      payload: payload
+    },
+    {},
+    data => {
+      window.dispatchEvent(
+        new CustomEvent(WEB3_RECEIVE_GAS.replace('{{id}}', extensionID), {
           detail: data
         })
       );

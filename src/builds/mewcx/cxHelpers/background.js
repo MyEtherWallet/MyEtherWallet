@@ -13,7 +13,8 @@ import {
   web3Subscription,
   web3Unsubscribe,
   web3QueryGasPrice,
-  web3GetTxCount
+  web3GetTxCount,
+  web3GetGas
 } from './backgroundEvents';
 import store from '@/store';
 import {
@@ -107,6 +108,7 @@ const eventsListeners = (request, _, callback) => {
       chrome.storage.remove('warned');
     }, 900000);
   }
+
   const payload = utils._.mapObject(
     Object.assign({}, request.payload),
     function(val) {
@@ -130,6 +132,7 @@ const eventsListeners = (request, _, callback) => {
   middleware.use(web3Unsubscribe);
   middleware.use(web3QueryGasPrice);
   middleware.use(web3GetTxCount);
+  middleware.use(web3GetGas);
   middleware.run(obj, callback);
   return true;
 };
