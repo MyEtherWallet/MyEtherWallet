@@ -4,6 +4,18 @@
 
 - Chrome Extension Beta release [#1151](https://github.com/MyEtherWallet/MyEtherWallet/pull/1151)
 
+### Release v5.1.9
+
+### Feature
+
+- Ens TXT records support [#1559](https://github.com/MyEtherWallet/MyEtherWallet/pull/1559)
+
+### Bug
+
+- Fix scrolltop issue, keep one collapse open on network address modal [#1561](https://github.com/MyEtherWallet/MyEtherWallet/pull/1561)
+- Fix ENS empty address issue [#1573](https://github.com/MyEtherWallet/MyEtherWallet/pull/1573)
+- Fix Schedule Transaction button [#1574] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1574)
+
 ### Release v5.1.8-hotfix.1
 
 ### Hotfix

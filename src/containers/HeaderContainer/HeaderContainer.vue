@@ -48,10 +48,7 @@
             <router-link
               aria-label="Home"
               to="/"
-              @click.native="
-                scrollTop();
-                isMobileMenuOpen = false;
-              "
+              @click.native="isMobileMenuOpen = false"
             >
               <div class="top-logo">
                 <img
