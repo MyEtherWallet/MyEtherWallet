@@ -1,6 +1,12 @@
 <template>
-  <div class="home">
-    HELLO
+  <div id="app">
+    <v-btn
+      text
+      href="https://github.com/vuetifyjs/vuetify/releases/latest"
+      target="_blank"
+    >
+      <span class="mr-2">Latest Release</span>
+    </v-btn>
   </div>
 </template>
 

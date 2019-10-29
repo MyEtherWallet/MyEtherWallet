@@ -1,7 +1,9 @@
 const imageminMozjpeg = require('imagemin-mozjpeg');
 const ImageminPlugin = require('imagemin-webpack-plugin').default;
 const webpack = require('webpack');
-const { UnusedFilesWebpackPlugin } = require('unused-files-webpack-plugin');
+const {
+  UnusedFilesWebpackPlugin
+} = require('unused-files-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const UglifyJS = require('uglify-es');
 const env_vars = require('./ENV_VARS');
@@ -18,10 +20,8 @@ const webpackConfig = {
     port: 8080,
     writeToDisk: JSON.parse(env_vars.BUILD_TYPE) === 'mewcx',
     headers: {
-      'Strict-Transport-Security':
-        'max-age=63072000; includeSubdomains; preload',
-      'Content-Security-Policy':
-        "default-src 'self' blob:; frame-src 'self' connect.trezor.io:443; img-src 'self' https://nft.mewapi.io data: blob: ; script-src 'unsafe-eval' 'unsafe-inline' blob: https:; style-src 'self' 'unsafe-inline' https:; object-src 'none'; connect-src *;",
+      'Strict-Transport-Security': 'max-age=63072000; includeSubdomains; preload',
+      'Content-Security-Policy': "default-src 'self' blob:; frame-src 'self' connect.trezor.io:443; img-src 'self' https://nft.mewapi.io data: blob: ; script-src 'unsafe-eval' 'unsafe-inline' blob: https:; style-src 'self' 'unsafe-inline' https:; object-src 'none'; connect-src *;",
       'X-Content-Type-Options': 'nosniff',
       'X-Frame-Options': 'DENY',
       'X-XSS-Protection': '1; mode=block',
@@ -44,25 +44,23 @@ const webpackConfig = {
         })
       ]
     }),
-    new CopyWebpackPlugin([
-      {
-        from: 'src/builds/' + JSON.parse(env_vars.BUILD_TYPE) + '/public',
-        transform: function (content, filePath) {
-          if (filePath.split('.').pop() === ('js' || 'JS'))
-            return UglifyJS.minify(content.toString()).code;
-          if (
-            filePath.replace(/^.*[\\\/]/, '') === 'manifest.json' &&
-            JSON.parse(env_vars.BUILD_TYPE) === 'mewcx'
-          ) {
-            const version = require('./package.json').version;
-            const json = JSON.parse(content);
-            json.version = version;
-            return JSON.stringify(json, null, 2);
-          }
-          return content;
+    new CopyWebpackPlugin([{
+      from: 'src/builds/' + JSON.parse(env_vars.BUILD_TYPE) + '/public',
+      transform: function (content, filePath) {
+        if (filePath.split('.').pop() === ('js' || 'JS'))
+          return UglifyJS.minify(content.toString()).code;
+        if (
+          filePath.replace(/^.*[\\\/]/, '') === 'manifest.json' &&
+          JSON.parse(env_vars.BUILD_TYPE) === 'mewcx'
+        ) {
+          const version = require('./package.json').version;
+          const json = JSON.parse(content);
+          json.version = version;
+          return JSON.stringify(json, null, 2);
         }
+        return content;
       }
-    ])
+    }])
   ],
   optimization: {
     splitChunks: {
