@@ -11,6 +11,10 @@ import ExtensionWalletContainer from '@/layouts/ExtensionBrowserAction/container
 import MyWalletsContainer from '@/layouts/ExtensionBrowserAction/containers/MyWalletsContainer';
 import WatchOnlyWalletsContainer from '@/layouts/ExtensionBrowserAction/containers/WatchOnlyWalletsContainer';
 
+import ExtensionDappsContainer from '@/layouts/ExtensionBrowserAction/containers/ExtensionDappsContainer';
+import ExtensionDappsItemContainer from '@/layouts/ExtensionBrowserAction/containers/ExtensionDappsItemContainer';
+import ExtensionDappContainer from '@/layouts/ExtensionBrowserAction/containers/ExtensionDappContainer';
+
 const cxRoutes = [
   {
     path: '/extension-popups',
@@ -71,13 +75,24 @@ const cxRoutes = [
             name: '',
             meta: { requiresAuth: false },
             component: WatchOnlyWalletsContainer
+          },
+          {
+            path: 'dapps',
+            meta: { requiresAuth: false },
+            component: ExtensionDappsContainer,
+            children: [
+              {
+                path: '',
+                meta: { requiresAuth: false },
+                component: ExtensionDappsItemContainer
+              },
+              {
+                path: '/dapps/:slug',
+                meta: { requiresAuth: false },
+                component: ExtensionDappContainer
+              }
+            ]
           }
-          // {
-          //   path: 'dapps',
-          //   name: '',
-          //   meta: { requiresAuth: false },
-          //   component: DappsContainer
-          // }
         ]
       },
       {

@@ -21,6 +21,8 @@ import myWallets from '@/assets/images/icons/button-generate.svg';
 import myWalletsHov from '@/assets/images/icons/button-generate-hover.svg';
 import watchOnly from '@/assets/images/icons/hide-password.svg';
 import watchOnlyHov from '@/assets/images/icons/show-password.svg';
+import dapp from '@/assets/images/sidemenu/dapps.svg';
+import dappHov from '@/assets/images/sidemenu/dapps-active.svg';
 export default {
   data() {
     return {
@@ -38,14 +40,14 @@ export default {
           inActive: watchOnly,
           label: 'watchOnlyWallets',
           path: '/watch-only'
+        },
+        {
+          name: 'Dapps',
+          icon: dappHov,
+          inActive: dapp,
+          label: 'dapps',
+          path: '/dapps'
         }
-        // {
-        //   name: 'Dapps',
-        //   icon: watchOnlyHov,
-        //   inActive: watchOnly,
-        //   label: 'dapps',
-        //   path: '/dapps'
-        // }
       ]
     };
   },
