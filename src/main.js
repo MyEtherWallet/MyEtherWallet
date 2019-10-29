@@ -14,7 +14,9 @@ import languages from '@/translations';
 import './registerServiceWorker';
 import { Promise } from 'q';
 import VueI18n from 'vue-i18n';
+import vuetify from '@/plugins/vuetify';
 
+//Vue.use(vuetify);
 Vue.prototype.$eventHub = new Vue();
 
 //Router
@@ -41,10 +43,14 @@ const vue = new Vue({
   i18n,
   router,
   store,
+  vuetify,
   render: h => h(getApp())
 });
 
-const integration = new Integrations.Vue({ Vue, attachProps: true });
+const integration = new Integrations.Vue({
+  Vue,
+  attachProps: true
+});
 
 Sentry.init({
   dsn: 'https://2c4e977d74fd44d1b18083e63a3b265f@sentry.mewapi.io/1',
