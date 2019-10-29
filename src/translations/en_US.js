@@ -23,6 +23,7 @@ import secalotError from './errors-secalot/en_US';
 import keepkeyError from './errors-keepkey/en_US';
 import bitboxError from './errors-bitbox/en_US';
 import buyHardwareWallet from './buy-hardware-wallet/en_US';
+import dappsAmbrpay from './dapps-ambrpay/en_US';
 
 const en_US = {
   common: common,
@@ -48,6 +49,7 @@ const en_US = {
   bitboxError: bitboxError,
   buyHardwareWallet: buyHardwareWallet,
   dappsMaker: dappsMaker,
-  dappsSubmission: dappsSubmission
+  dappsSubmission: dappsSubmission,
+  dappsAmbrpay: dappsAmbrpay
 };
 export default en_US;

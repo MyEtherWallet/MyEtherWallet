@@ -3,8 +3,13 @@
     <back-button />
     <b-container class="pl-5 pr-5">
       <div class="ambrpay-header mt-5">
-        <h3 class="page-title">Ambrpay</h3>
-
+        <div class="title-container">
+          <h3 class="page-title">Ambrpay</h3>
+          <popover
+            :popcontent="$t('dappsSubmission.tags')"
+            class="dapp-popover"
+          ></popover>
+        </div>
         <div class="btns-container">
           <b-button
             class="withdraw-btn"
@@ -105,6 +110,9 @@ export default {
         netId: this.network.type.chainID.toString()
       };
       this.ambrpay = new Ambrpay(account, this.web3);
+      this.getSubscriptionFunds();
+    },
+    getSubscriptionFunds() {
       this.ambrpay
         .getSubscriptionFunds()
         .then(res => {
@@ -151,24 +159,36 @@ export default {
         typeof price === 'object' ? price.data.ETH.quotes.USD.price : 0;
     },
     startSubscription(params) {
-      this.ambrpay.subscribe(params).catch(err => {
-        Toast.responseHandler(err, Toast.ERROR);
-      });
+      this.ambrpay
+        .subscribe(params)
+        .then(this.getSubscriptions)
+        .catch(err => {
+          Toast.responseHandler(err, Toast.ERROR);
+        });
     },
     addFunds(amt) {
-      this.ambrpay.addFunds(amt).catch(err => {
-        Toast.responseHandler(err, Toast.ERROR);
-      });
+      this.ambrpay
+        .addFunds(amt)
+        .then(this.getSubscriptionFunds)
+        .catch(err => {
+          Toast.responseHandler(err, Toast.ERROR);
+        });
     },
     withdrawFunds(amt) {
-      this.ambrpay.withdrawFunds(amt).catch(err => {
-        Toast.responseHandler(err, Toast.ERROR);
-      });
+      this.ambrpay
+        .withdrawFunds(amt)
+        .then(this.getSubscriptionFunds)
+        .catch(err => {
+          Toast.responseHandler(err, Toast.ERROR);
+        });
     },
     unsubscribeSub(data) {
-      this.ambrpay.unsubscribe(data.pos, data.addr).catch(err => {
-        Toast.responseHandler(err, Toast.ERROR);
-      });
+      this.ambrpay
+        .unsubscribe(data.pos, data.addr)
+        .then(this.getSubscriptions)
+        .catch(err => {
+          Toast.responseHandler(err, Toast.ERROR);
+        });
     },
     getSubscriptions() {
       this.ambrpay

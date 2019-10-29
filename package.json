@@ -65,7 +65,7 @@
     "@ledgerhq/hw-app-eth": "4.73.1",
     "@ledgerhq/hw-transport-u2f": "4.73.1",
     "@ledgerhq/hw-transport-webusb": "4.73.1",
-    "@makerdao/dai": "0.18.9",
+    "@makerdao/dai": "0.19.0-rc1",
     "@myetherwallet/eth-token-balance": "0.1.4",
     "@myetherwallet/mewconnect-web-client": "1.0.14",
     "@vue/cli-plugin-babel": "3.12.0",
@@ -162,7 +162,12 @@
       "@xkeshi/vue-qrcode",
       "web3-core-requestmanager",
       "vee-validate",
-      "sass-loader"
+      "sass-loader",
+      "@vue/cli-plugin-babel",
+      "@vue/cli-plugin-eslint",
+      "@vue/cli-plugin-pwa",
+      "@vue/cli-plugin-unit-jest",
+      "@vue/cli-service"
     ]
   }
 }

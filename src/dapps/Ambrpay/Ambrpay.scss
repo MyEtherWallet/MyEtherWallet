@@ -13,6 +13,17 @@
     justify-content: space-between;
     margin-top: 25px;
 
+    .title-container {
+      align-items: baseline;
+      display: flex;
+
+      .popover-container {
+        height: 16px;
+        margin-left: 7px;
+        width: 16px;
+      }
+    }
+
     .withdraw-btn {
       border: none;
       background-color: $white;
