@@ -669,20 +669,26 @@ export default {
       this.loading = false;
     },
     async fetchTxtRecords(resolver) {
-      const supportsTxt = await resolver.methods
-        .supportsInterface(TEXT_RECORD_SUPPORT_INTERFACE)
-        .call();
-      this.resolverTxtSupport = supportsTxt;
-      if (supportsTxt) {
-        this.recordContract = resolver;
-        const newObj = {};
-        for (const el of this.supportedTxt) {
-          newObj[el.name] = await resolver.methods
-            .text(this.nameHash, el.name)
-            .call();
+      try {
+        const supportsTxt = await resolver.methods
+          .supportsInterface(TEXT_RECORD_SUPPORT_INTERFACE)
+          .call();
+        this.resolverTxtSupport = supportsTxt;
+        if (supportsTxt) {
+          this.recordContract = resolver;
+          const newObj = {};
+          for (const el of this.supportedTxt) {
+            newObj[el.name] = await resolver.methods
+              .text(this.nameHash, el.name)
+              .call();
+          }
+          this.txtRecords = Object.assign({}, newObj);
+        } else {
+          this.recordContract = {};
+          this.txtRecords = {};
+          this.resolverTxtSupport = false;
         }
-        this.txtRecords = Object.assign({}, newObj);
-      } else {
+      } catch (e) {
         this.recordContract = {};
         this.txtRecords = {};
         this.resolverTxtSupport = false;
