@@ -253,9 +253,9 @@ export default {
     addWatchOnlyWalletCb() {
       this.loading = false;
       this.$refs.watchOnlyModal.$refs.watchOnlyWallet.hide();
-      Toast.responseHandler(
-        'Added Watch-Only account successfully!',
-        Toast.SUCCESS
+      this.$eventHub.$emit(
+        'showSuccessModal',
+        'Successfully added a watch only wallet!'
       );
     },
     addWatchOnlyWallet(name, address) {

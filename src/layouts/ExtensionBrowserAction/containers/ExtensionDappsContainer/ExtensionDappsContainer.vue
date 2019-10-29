@@ -15,12 +15,10 @@
           </h2>
         </div>
       </div>
-      <div class="dropdown-container">
-        <span class="network-text">NETWORK</span>
-        <span class="current-network" @click="openNetworkModal">
-          {{ network.type.name }} - {{ network.service }}
-        </span>
-      </div>
+      <network-picker-component
+        :network="network"
+        :open-network-modal="openNetworkModal"
+      />
     </div>
     <div />
     <router-view :dapps="dapps" />
@@ -28,7 +26,11 @@
 </template>
 
 <script>
+import NetworkPickerComponent from '../../components/NetworkPickerComponent';
 export default {
+  components: {
+    'network-picker-component': NetworkPickerComponent
+  },
   props: {
     network: {
       type: Object,

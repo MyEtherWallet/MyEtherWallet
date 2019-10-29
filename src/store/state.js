@@ -5,7 +5,7 @@ if (store.get('notifications') === undefined) store.set('notifications', {});
 const gettingStartedDone =
   store.get('skipTutorial') !== undefined ? store.get('skipTutorial') : false;
 const storedNetwork = store.get('network');
-let network = BUILD_TYPE !== 'mewcx' ? nodeList['ETH'][2] : nodeList['ETH'][1];
+let network = BUILD_TYPE !== 'mewcx' ? nodeList['ETH'][0] : nodeList['ETH'][1];
 
 if (BUILD_TYPE !== 'mewcx' && storedNetwork !== undefined) {
   network = storedNetwork;
@@ -31,7 +31,7 @@ const state = {
   customPaths: customPaths,
   ens: null,
   Errors: {},
-  ethDonationAddress: '0xDECAF9CDx2367cdbb726E904cD6397eDFcAe6068D',
+  ethDonationAddress: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
   gasPrice: gasPrice,
   Networks: nodeList,
   network: network,
