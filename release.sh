@@ -4,14 +4,16 @@ GITHUB_TOKEN="$2"
 REPO="$3"
 CHANGELOG=`awk -v version="$RELEASE" '/### Release / {printit = $3 == version}; printit;' 'CHANGELOG.md'`
 mkdir release
-cd dist; zip -r ../release/MyEtherWallet-$RELEASE.zip *; sha256sum * > ../release/MyEtherWallet-$RELEASE-CHECKSUM-SHA256; cd ..
-cd chrome-extension; zip -r ../release/MEW-CX-$RELEASE.zip *; sha256sum * >  ../release/MEW-CX-$RELEASE-CHECKSUM-SHA256; cd ..
+cd dist; zip -r ../release/MyEtherWallet-$RELEASE.zip *; cd ..
+cd chrome-extension; zip -r ../release/MEW-CX-$RELEASE.zip *; cd ..
 
 if [ -n "$4" ]; then
     for f in release/*; do
         gpg --output $f.sig --detach-sig $f
     done
 fi
+
+sha256sum * > ../release/MyEtherWallet-$RELEASE-CHECKSUM-SHA256; sha256sum * >  ../release/MEW-CX-$RELEASE-CHECKSUM-SHA256;
 
 GH_API="https://api.github.com"
 GH_REPO="$GH_API/repos/$REPO"
