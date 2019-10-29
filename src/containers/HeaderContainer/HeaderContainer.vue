@@ -49,10 +49,7 @@
             <router-link
               aria-label="Home"
               to="/"
-              @click.native="
-                scrollTop();
-                isMobileMenuOpen = false;
-              "
+              @click.native="isMobileMenuOpen = false"
             >
               <div class="top-logo">
                 <img
@@ -78,13 +75,9 @@
                   />
                   Buy ETH
                 </b-nav-item>
-                <b-nav-item
-                  v-if="isHomePage"
-                  to="/"
-                  exact
-                  @click="scrollTop()"
-                  >{{ $t('header.home') }}</b-nav-item
-                >
+                <b-nav-item v-if="isHomePage" to="/" exact>{{
+                  $t('header.home')
+                }}</b-nav-item>
                 <b-nav-item v-if="isHomePage" to="/#about-mew">
                   {{ $t('header.about') }}
                 </b-nav-item>
