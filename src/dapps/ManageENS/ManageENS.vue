@@ -619,13 +619,11 @@ export default {
           ResolverAbi,
           this.publicResolverAddress
         );
-        this.fetchTxtRecords(publicResolverContract);
         this.resolverMultiCoinSupport = await publicResolverContract.methods
           .supportsInterface(MULTICOIN_SUPPORT_INTERFACE)
           .call();
       } catch (e) {
         this.resolverMultiCoinSupport = false;
-        this.resolverTxtSupport = false;
       }
       try {
         const currentResolverAddress = await this.ensRegistryContract.methods
@@ -687,6 +685,7 @@ export default {
       } else {
         this.recordContract = {};
         this.txtRecords = {};
+        this.resolverTxtSupport = false;
       }
     },
     async setRecord(obj) {
