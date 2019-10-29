@@ -2,6 +2,10 @@
 
 - Ens TXT records support [#1559](https://github.com/MyEtherWallet/MyEtherWallet/pull/1559)
 
+### Bug
+
+- Fix ENS empty address issue [#1573](https://github.com/MyEtherWallet/MyEtherWallet/pull/1573)
+
 ### Release v5.1.8
 
 ### Bug
