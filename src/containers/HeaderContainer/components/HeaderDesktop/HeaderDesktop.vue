@@ -4,11 +4,12 @@
       <v-app-bar color="transparent" dark flat>
         <v-img src="@/assets/images/common/logo-light.png" max-width="130" />
         <v-spacer></v-spacer>
-        <v-btn icon>
-          <v-icon>mdi-heart</v-icon>
-        </v-btn>
-        <v-btn icon>
-          <v-icon>mdi-magnify</v-icon>
+        <v-btn class="white--text" large depressed outlined>
+          <v-img
+            src="@/assets/images/common/icons/buy-eth.svg"
+            class="mr-1 ml-n1"
+          />
+          Buy ETH
         </v-btn>
       </v-app-bar>
     </v-container>

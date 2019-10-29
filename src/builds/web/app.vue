@@ -21,6 +21,10 @@ export default {
 
 <style>
 i {
-  font-family: 'Material Icons';
+  font-family: 'Material Icons' !important;
+}
+
+.v-btn {
+  text-transform: initial;
 }
 </style>
