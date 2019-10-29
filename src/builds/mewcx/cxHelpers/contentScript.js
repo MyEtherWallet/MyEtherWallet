@@ -26,7 +26,7 @@ import {
   CX_GET_TX_COUNT
 } from './cxEvents';
 
-import xss from 'css';
+import xss from 'xss';
 
 const varType = variable => {
   const isArray =
