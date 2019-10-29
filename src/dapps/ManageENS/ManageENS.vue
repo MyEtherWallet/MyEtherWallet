@@ -264,12 +264,19 @@ export default {
         ResolverAbi,
         publicResolverAddress
       );
+      const getDecodedAddress = _coinItem => {
+        let decodedAddress = '0x';
+        if (_coinItem.value !== '' && _coinItem.value) {
+          decodedAddress = _coinItem.decode(_coinItem.value);
+        }
+        return decodedAddress;
+      };
       const setAddrTx = coin.map(item => {
         return {
           from: address,
           to: publicResolverAddress,
           data: publicResolverContract.methods
-            .setAddr(this.nameHash, item.id, item.decode(item.value))
+            .setAddr(this.nameHash, item.id, getDecodedAddress(item))
             .encodeABI(),
           value: 0,
           gasPrice: new BigNumber(unit.toWei(this.gasPrice, 'gwei')).toFixed()
@@ -278,7 +285,7 @@ export default {
 
       if (!this.resolverMultiCoinSupport) {
         setAddrTx.data = publicResolverContract.methods
-          .setAddr(this.nameHash, coin[0].decode(coin[0].value))
+          .setAddr(this.nameHash, getDecodedAddress(coin[0]))
           .encodeABI();
       }
       if (
@@ -314,7 +321,7 @@ export default {
               .setAddr(
                 this.nameHash,
                 this.supportedCoins.ETH.id,
-                this.supportedCoins.ETH.decode(this.supportedCoins.ETH.value)
+                getDecodedAddress(this.supportedCoins.ETH)
               )
               .encodeABI(),
             value: 0,
