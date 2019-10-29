@@ -1,3 +1,8 @@
+### Release v5.2.0
+
+### Bug
+- Fix Txt records [#1579] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1579)
+
 ### Release v5.1.9
 
 ### Devop
