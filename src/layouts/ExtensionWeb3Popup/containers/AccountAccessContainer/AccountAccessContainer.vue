@@ -4,7 +4,7 @@
       <div class="website-logos">
         <img :src="request.favicon" class="site-logo" />
         <img src="~@/assets/images/icons/clip.svg" class="clip-logo" />
-        <img class="site-logo" src="~@/assets/images/logo-small.png" />
+        <img class="site-logo" src="~@/assets/images/mew-cx-logo.png" />
       </div>
       <p>
         {{ request.connectionRequest }} is trying to access MEW CX. Please

@@ -47,7 +47,7 @@
             :src="
               isMetaMask
                 ? require('@/assets/images/icons/button-metamask.svg')
-                : require('@/assets/images/logo-small.png')
+                : require('@/assets/images/mew-cx-logo.png')
             "
             :class="[isMetaMask ? 'metamask' : 'mew', 'icon']"
             alt
