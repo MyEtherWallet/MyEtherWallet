@@ -6,6 +6,9 @@
 
 ### Release v5.1.9
 
+### Devop
+- persist selected swap provider over rate refresh cycles [#1552](https://github.com/MyEtherWallet/MyEtherWallet/pull/1552)
+
 ### Feature
 
 - Ens TXT records support [#1559](https://github.com/MyEtherWallet/MyEtherWallet/pull/1559)
