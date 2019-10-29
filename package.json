@@ -65,7 +65,7 @@
     "@ledgerhq/hw-app-eth": "4.73.1",
     "@ledgerhq/hw-transport-u2f": "4.73.1",
     "@ledgerhq/hw-transport-webusb": "4.73.1",
-    "@makerdao/dai": "0.18.9",
+    "@makerdao/dai": "0.19.0-rc1",
     "@makerdao/dai-plugin-config": "0.2.14-rc.1",
     "@makerdao/dai-plugin-mcd": "0.2.14-2",
     "@myetherwallet/eth-token-balance": "0.1.4",
