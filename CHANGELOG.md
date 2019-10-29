@@ -1,7 +1,29 @@
-### Release v5.1.8
+### Release v5.1.9
 
 ### Devop
 - persist selected swap provider over rate refresh cycles [#1552](https://github.com/MyEtherWallet/MyEtherWallet/pull/1552)
+
+### Bug
+
+- Fix scrolltop issue, keep one collapse open on network address modal [#1561](https://github.com/MyEtherWallet/MyEtherWallet/pull/1561)
+- Fix ENS empty address issue [#1573](https://github.com/MyEtherWallet/MyEtherWallet/pull/1573)
+- Fix Schedule Transaction button [#1574] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1574)
+
+### Release v5.1.8-hotfix.1
+
+### Hotfix
+- Update list to bring back contract addresses [#1567](https://github.com/MyEtherWallet/MyEtherWallet/pull/1567)
+
+### Release v5.1.8
+
+### Bug
+
+- Fix total NFT issue [#1550](https://github.com/MyEtherWallet/MyEtherWallet/pull/1550)
+
+### Devop
+
+- Fix new BTC multicoin encoding and add new currency types [#1551](https://github.com/MyEtherWallet/MyEtherWallet/pull/1551)
+- update egem [#1548](https://github.com/MyEtherWallet/MyEtherWallet/pull/1548)
 
 ### Release v5.1.7
 
