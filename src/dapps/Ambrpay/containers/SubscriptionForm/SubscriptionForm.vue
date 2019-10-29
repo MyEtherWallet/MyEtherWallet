@@ -184,7 +184,7 @@ export default {
     },
     startSubscription() {
       const data = {
-        subscriptionPlan: 'sp_SYh4plL76BSu1Y',
+        subscriptionPlan: 'sp_f06PoxHvvutJZd',
         amount: new BigNumber(this.sendAmount).toNumber(),
         receiverWallet: this.address,
         interval: new BigNumber(this.intervalDays).toNumber(),

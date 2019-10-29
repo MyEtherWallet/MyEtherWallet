@@ -48,8 +48,7 @@ const dapps = {
     icon: ambrpay,
     iconDisabled: secureTransactionHov,
     title: 'Ambrpay',
-    desc:
-      'With Ambrpay you can accept recurring cryptocurrency payments in no time.',
+    desc: 'With Ambrpay you can create and manage recurring payments.',
     supportedNetworks: [ETH.name]
   }
 };
