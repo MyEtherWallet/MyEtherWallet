@@ -1,5 +1,6 @@
 {
-  "name": "MEW CX",
+  "name": "MyEtherWallet Extension",
+  "short_name": "MEW CX",
   "manifest_version": 2,
   "description": "MyEtherWallet Chrome Extension",
   "homepage_url": "https://www.myetherwallet.com/",
