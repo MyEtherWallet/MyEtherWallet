@@ -4,9 +4,9 @@
     <b-container class="pl-5 pr-5">
       <div class="ambrpay-header mt-5">
         <div class="title-container">
-          <h3 class="page-title">Ambrpay</h3>
+          <h3 class="page-title">{{ $t('dappsAmbrpay.title') }}</h3>
           <popover
-            :popcontent="$t('dappsSubmission.tags')"
+            :popcontent="$t('dappsAmbrpay.ambrpay-popover')"
             class="dapp-popover"
           ></popover>
         </div>
@@ -14,22 +14,22 @@
           <b-button
             class="withdraw-btn"
             @click="openManageFundsModal('Withdraw')"
-            >Withdraw Funds</b-button
+            >{{ $t('dappsAmbrpay.withdraw-funds') }}</b-button
           >
-          <b-button class="add-btn" @click="openManageFundsModal('Add')"
-            >Add Funds</b-button
-          >
+          <b-button class="add-btn" @click="openManageFundsModal('Add')">{{
+            $t('dappsAmbrpay.add-funds')
+          }}</b-button>
         </div>
       </div>
       <div class="funds-container">
-        <span class="fund-text">Subscriptions Balance</span>
+        <span class="fund-text">{{ $t('dappsAmbrpay.balance') }}</span>
         <div class="balance-container">
           <i v-show="loadingBalance" class="fa fa-spinner fa-spin" />
           <span v-show="!loadingBalance" class="fund-text"
-            >{{ availableBalanceEth }} ETH
+            >{{ availableBalanceEth }} {{ $t('dappsAmbrpay.eth') }}
           </span>
           <span v-show="!loadingBalance" class="usd-text"
-            >{{ availableBalanceUSD }} USD</span
+            >{{ availableBalanceUSD }} {{ $t('dappsAmbrpay.usd') }}</span
           >
         </div>
       </div>
@@ -40,7 +40,7 @@
         <b-button
           class="mx-auto active-sub-btn my-subscriptions-container"
           @click="openManageSubModal()"
-          >My Subscriptions
+          >{{ $t('dappsAmbrpay.my-subscriptions') }}
           <span v-if="subscriptions.length > 0" class="subscriptions-number">{{
             subscriptions.length
           }}</span>

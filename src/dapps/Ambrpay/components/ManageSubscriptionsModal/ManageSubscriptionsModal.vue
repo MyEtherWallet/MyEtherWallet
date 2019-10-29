@@ -2,7 +2,7 @@
   <div class="modal-container">
     <b-modal
       ref="manageSubscriptionsModal"
-      title="My Subscriptions"
+      :title="$t('dappsAmbrpay.my-subscriptions')"
       centered
       hide-footer
       static
@@ -10,7 +10,9 @@
     >
       <div class="modal-contents">
         <div v-show="subscriptions.length === 0" class="no-sub-container">
-          <p class="mx-auto pl-3">You have no active subscriptions!</p>
+          <p class="mx-auto pl-3">
+            {{ $t('dappsAmbrpay.manage-subscriptions.no-active') }}
+          </p>
         </div>
         <div
           v-for="sub in subscriptions"
@@ -24,10 +26,11 @@
                 <i class="check-icon fa fa-check" aria-hidden="true" /><span
                   class="active-txt"
                 >
-                  Active
+                  {{ $t('dappsAmbrpay.manage-subscriptions.active') }}
                 </span>
                 <span class="next-pay-txt"
-                  >(Next payment {{ formatDate(sub.cycleEnd) }})</span
+                  >({{ $t('dappsAmbrpay.manage-subscriptions.next-payment') }}
+                  {{ formatDate(sub.cycleEnd) }})</span
                 >
               </span>
               <span>
@@ -46,7 +49,9 @@
               </span>
             </div>
             <div class="info-row">
-              <span class="info-title">Receiver wallet</span>
+              <span class="info-title">{{
+                $t('dappsAmbrpay.manage-subscriptions.receiver-wallet')
+              }}</span>
               <a
                 :title="sub.receiverWallet"
                 :href="'https://etherscan.io/address/' + sub.receiverWallet"
@@ -57,12 +62,16 @@
               </a>
             </div>
             <div class="info-row">
-              <span class="info-title">Amount</span
-              ><span class="info-txt">{{ sub.price }} ETH</span>
+              <span class="info-title">{{ $t('dappsAmbrpay.amount') }}</span
+              ><span class="info-txt"
+                >{{ sub.price }} {{ $t('dappsAmbrpay.eth') }}</span
+              >
             </div>
             <div v-show="moreInfo" class="more-info-container">
               <div v-show="sub.subscriptionInterval" class="info-row">
-                <span class="info-title">Current cycle</span
+                <span class="info-title">{{
+                  $t('dappsAmbrpay.manage-subscriptions.current-cycle')
+                }}</span
                 ><span class="info-txt"
                   >{{ formatDate(sub.cycleStart) }}-{{
                     formatDate(sub.cycleEnd)
@@ -70,23 +79,31 @@
                 >
               </div>
               <div v-show="sub.subscriptionInterval" class="info-row">
-                <span class="info-title">Interval</span
+                <span class="info-title">{{ $t('dappsAmbrpay.interval') }}</span
                 ><span class="info-txt"
-                  >In every {{ sub.subscriptionInterval }} day(s)</span
+                  >{{ $t('dappsAmbrpay.in-every') }}
+                  {{ sub.subscriptionInterval }}
+                  {{ $t('dappsAmbrpay.days-lowercase') }}</span
                 >
               </div>
               <div v-show="sub.subscriptionPlan" class="info-row">
-                <span class="info-title">Subscription plan</span
+                <span class="info-title">{{
+                  $t('dappsAmbrpay.manage-subscriptions.sub-plan')
+                }}</span
                 ><span class="info-txt">{{ sub.subscriptionPlan }}</span>
               </div>
               <div v-show="sub.subscriptionCurrencyCode" class="info-row">
-                <span class="info-title">Subscription currency</span
+                <span class="info-title">{{
+                  $t('dappsAmbrpay.manage-subscriptions.sub-currency')
+                }}</span
                 ><span class="info-txt">{{
                   sub.subscriptionCurrencyCode
                 }}</span>
               </div>
               <div v-show="sub.subscriptionStatus" class="info-row">
-                <span class="info-title">Subscription status</span
+                <span class="info-title">{{
+                  $t('dappsAmbrpay.manage-subscriptions.sub-status')
+                }}</span
                 ><span class="info-txt">{{ sub.subscriptionStatus }}</span>
               </div>
             </div>
@@ -96,7 +113,7 @@
             <button
               @click="unsubscribe(sub.storagePos, sub.smartContractAddress)"
             >
-              Unsubscribe
+              {{ $t('dappsAmbrpay.manage-subscriptions.unsubscribe') }}
             </button>
           </div>
         </div>
