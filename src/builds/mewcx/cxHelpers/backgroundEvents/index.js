@@ -8,6 +8,7 @@ import web3Subscription from './web3-subscription';
 import web3Unsubscribe from './web3-unsubscribe';
 import web3QueryGasPrice from './web3-query-gasprice';
 import web3GetTxCount from './web3-get-tx-count';
+import web3GetGas from './web3-get-gas';
 
 export {
   mewCxFetchAccounts,
@@ -19,5 +20,6 @@ export {
   mewCxSendSignedTx,
   web3Unsubscribe,
   web3QueryGasPrice,
-  web3GetTxCount
+  web3GetTxCount,
+  web3GetGas
 };

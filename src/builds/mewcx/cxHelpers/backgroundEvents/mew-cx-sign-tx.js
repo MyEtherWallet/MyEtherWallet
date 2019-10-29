@@ -7,7 +7,6 @@ export default async ({ event, payload }, _, next) => {
   if (event !== CX_CONFIRM_SEND_TX) return next();
   const q = helpers.queryBuilder(payload);
   chrome.storage.sync.get(payload.tx.from, res => {
-    console.log(res, payload.tx.from);
     if (res[payload.tx.from]) {
       chrome.windows.create({
         url: chrome.runtime.getURL(
