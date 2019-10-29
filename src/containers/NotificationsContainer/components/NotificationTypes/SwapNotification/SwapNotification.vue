@@ -77,7 +77,7 @@ import { mapState } from 'vuex';
 import '@/assets/images/currency/coins/asFont/cryptocoins.css';
 import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
 import Arrow from '@/assets/images/etc/single-arrow.svg';
-
+import * as moment from 'moment';
 import NotificationHeader from '../../NotificationHeader';
 import { providerMap, providerNames } from '@/partners';
 
@@ -245,13 +245,7 @@ export default {
     statusUpdater() {
       let updating = false;
       const getStatus = async () => {
-        if (!updating) {
-          updating = true;
-          const newStatus = await this.provider.getOrderStatus(
-            this.notice.body,
-            this.network.type.name
-          );
-          if (typeof newStatus === 'undefined') return;
+        const updateStatus = newStatus => {
           if (this.currentStatus !== newStatus) {
             this.currentStatus = newStatus;
             if (swapOnlyStatuses[newStatus]) {
@@ -262,6 +256,27 @@ export default {
             }
             this.childUpdateNotification(this.notice);
           }
+        };
+
+        if (!updating) {
+          updating = true;
+
+          const createdAt = moment(
+            this.notice.body.createdAt.replace(/T.*/, '')
+          );
+          const currentTime = moment();
+          const timeSince = currentTime.diff(createdAt, 'days');
+          if (timeSince >= 5) {
+            updateStatus(swapOnlyStatuses.CANCELLED);
+            return;
+          }
+          const newStatus = await this.provider.getOrderStatus(
+            this.notice.body,
+            this.network.type.name
+          );
+
+          if (typeof newStatus === 'undefined') return;
+          updateStatus(newStatus);
 
           if (!this.shouldCheckStatus()) {
             clearInterval(this.statusInterval);
