@@ -54,9 +54,9 @@
                 <img
                   :class="[
                     !isPageOnTop && !isMobileMenuOpen
-                      ? `logo-small${isMewCx ? '' : '-' + buildType}`
+                      ? `logo-small${!isMewCx ? '' : '-' + buildType}`
                       : '',
-                    `logo-large${isMewCx ? '' : '-' + buildType}`
+                    `logo-large${!isMewCx ? '' : '-' + buildType}`
                   ]"
                   :src="
                     require(`@/assets/images/short-hand-logo-${buildType}.png`)

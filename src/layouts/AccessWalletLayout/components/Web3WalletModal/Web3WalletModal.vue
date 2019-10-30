@@ -100,8 +100,8 @@
         <div class="modal-multi-icons">
           <img
             alt
-            class="icon metamask"
-            src="@/assets/images/icons/button-metamask-fox.png"
+            class="icon mew cx"
+            src="@/assets/images/mew-cx-logo.png"
           />
         </div>
         <div class="d-block content-container text-center">
@@ -118,16 +118,12 @@
         <div class="button-container">
           <a
             v-show="!refreshPage"
-            :href="
-              isMetaMask
-                ? 'https://metamask.io/'
-                : 'https://chrome.google.com/webstore/detail/myetherwallet/nlbmnnijcnlegkjjpcfjclmcfggfefdm?hl=en'
-            "
+            href="https://chrome.google.com/webstore/detail/myetherwallet/nlbmnnijcnlegkjjpcfjclmcfggfefdm?hl=en"
             target="_blank"
             rel="noopener noreferrer"
             class="mid-round-button-green-filled close-button"
             @click="refreshPage = true"
-            >{{ isMetaMask ? 'Install MetaMask' : 'Install Web3 Wallet' }}</a
+            >Install MEW CX</a
           >
           <b-btn
             v-show="refreshPage"
