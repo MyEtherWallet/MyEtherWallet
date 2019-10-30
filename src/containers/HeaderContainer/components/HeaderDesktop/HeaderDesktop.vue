@@ -20,7 +20,7 @@
                 About<MenuOpenArrow
               /></v-btn>
             </template>
-            <div class="white pa-5">
+            <div class="white">
               <v-list-item>
                 <v-list-item-content>
                   <v-list-item-title>Company</v-list-item-title>
@@ -61,29 +61,97 @@
             </template>
             <div class="white pa-5">
               <v-row>
-                <v-col>
-                  <div class="font-weight-bold text-uppercase">Popular</div>
+                <v-col class="px-6">
+                  <div class="font-weight-bold text-uppercase mb-4 mx-2">
+                    Popular
+                  </div>
                   <v-divider></v-divider>
                   <div>
-                    <v-list>
-                      <v-list-item-group v-model="item" color="primary">
-                        <v-list-item>
-                          <v-list-item-icon>
-                            <v-img :src="icons.wallet" />
-                          </v-list-item-icon>
-                          <v-list-item-content>
-                            <v-list-item-title
-                              >View wallet info</v-list-item-title
-                            >
-                          </v-list-item-content>
-                        </v-list-item>
-                      </v-list-item-group>
+                    <v-list min-width="200" class="px-2">
+                      <v-list-item class="px-0">
+                        <v-img
+                          class="mr-3"
+                          :src="icons.wallet"
+                          max-width="25"
+                        />
+                        <div>View wallet info</div>
+                      </v-list-item>
+                      <v-list-item class="px-0">
+                        <v-img
+                          class="mr-3"
+                          :src="icons.wallet"
+                          max-width="25"
+                        />
+                        <div>View wallet info</div>
+                      </v-list-item>
+                      <v-list-item class="px-0">
+                        <v-img
+                          class="mr-3"
+                          :src="icons.wallet"
+                          max-width="25"
+                        />
+                        <div>View wallet info</div>
+                      </v-list-item>
+                      <v-list-item class="px-0">
+                        <v-img
+                          class="mr-3"
+                          :src="icons.wallet"
+                          max-width="25"
+                        />
+                        <div>View wallet info</div>
+                      </v-list-item>
                     </v-list>
                   </div>
                 </v-col>
-                <v-col>
-                  <div class="font-weight-bold text-uppercase">Advanced</div>
+                <v-col class="px-6">
+                  <div class="font-weight-bold text-uppercase mb-4 mx-2">
+                    Advanced
+                  </div>
                   <v-divider></v-divider>
+                  <div>
+                    <v-list min-width="200" class="px-2">
+                      <v-list-item class="px-0">
+                        <v-img
+                          class="mr-3"
+                          :src="icons.wallet"
+                          max-width="25"
+                        />
+                        <div>View wallet info</div>
+                      </v-list-item>
+                      <v-list-item class="px-0">
+                        <v-img
+                          class="mr-3"
+                          :src="icons.wallet"
+                          max-width="25"
+                        />
+                        <div>View wallet info</div>
+                      </v-list-item>
+                      <v-list-item class="px-0">
+                        <v-img
+                          class="mr-3"
+                          :src="icons.wallet"
+                          max-width="25"
+                        />
+                        <div>View wallet info</div>
+                      </v-list-item>
+                      <v-list-item class="px-0">
+                        <v-img
+                          class="mr-3"
+                          :src="icons.wallet"
+                          max-width="25"
+                        />
+                        <div>View wallet info</div>
+                      </v-list-item>
+                      <v-list-item class="px-0">
+                        <v-img
+                          class="mr-3"
+                          :src="icons.wallet"
+                          max-width="25"
+                        />
+                        <div>View wallet info</div>
+                      </v-list-item>
+                    </v-list>
+                  </div>
                 </v-col>
               </v-row>
             </div>

@@ -1,11 +1,22 @@
 * {
   font-family: 'Open Sans';
+  letter-spacing: -0.1px;
 }
 
 i {
   font-family: 'Material Icons' !important;
 }
 
+div {
+  font-size: 14px;
+}
+
+// Remove default background color
+.theme--light.v-application {
+  background: white !important;
+}
+
+// Remove uppercase style for all buttons
 .v-btn {
   text-transform: initial;
 }
