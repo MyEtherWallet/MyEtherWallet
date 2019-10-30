@@ -5,6 +5,7 @@
       v-show="
         $route.fullPath === '/create-wallet' ||
           $route.fullPath === '/access-my-wallet'
+          && !isMewCx
       "
       to="/getting-started"
     >

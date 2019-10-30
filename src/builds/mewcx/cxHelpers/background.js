@@ -34,7 +34,7 @@ const networkChanger = items => {
       }
     );
     // eslint-disable-next-line
-    if (!!network === network) {
+    if (!!network) {
       store.dispatch('switchNetwork', network).then(() => {
         store.dispatch('setWeb3Instance', network.url).then(() => {
           store.state.web3.eth.net.getId().then(res => {
@@ -60,6 +60,7 @@ const networkChanger = items => {
     });
   }
 };
+
 chrome.storage.sync.get(null, networkChanger);
 
 // Listens for network changes and sets background store to match client store
