@@ -1,8 +1,18 @@
+### Release v5.2.1
+
+### Feature
+- Ambrpay Integration[#1441](https://github.com/MyEtherWallet/MyEtherWallet/pull/1441)
+
 ### Release v5.2.0
 
 ### Feature
 
-- Ambrpay Integration[#1441](https://github.com/MyEtherWallet/MyEtherWallet/pull/1441)
+- Chrome Extension Beta release [#1151](https://github.com/MyEtherWallet/MyEtherWallet/pull/1151)
+
+### Devop
+
+- Add hackerone link to README for vulnerability reporting [#1577](https://github.com/MyEtherWallet/MyEtherWallet/pull/1577)
+- bitbox: update semantic versioning to be less restrictive [#1582](https://github.com/MyEtherWallet/MyEtherWallet/pull/1582)
 
 ### Release v5.1.9
 

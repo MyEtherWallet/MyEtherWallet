@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="100px" height="100px" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 49.2 (51160) - http://www.bohemiancoding.com/sketch -->
-    <title>mnemonic1</title>
+<svg width="74px" height="75px" viewBox="0 0 74 75" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 54.1 (76490) - https://sketchapp.com -->
+    <title>Optionals</title>
     <desc>Created with Sketch.</desc>
-    <defs>
-        <rect id="path-1" x="0" y="0" width="53" height="63" rx="3"></rect>
-    </defs>
-    <g id="mnemonic1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Group-7" transform="translate(24.000000, 19.000000)">
-            <g id="Rectangle-11-Copy">
-                <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
-                <rect stroke="#003945" stroke-width="5.5" x="2.75" y="2.75" width="47.5" height="57.5" rx="3"></rect>
-            </g>
-            <g id="Group-2" transform="translate(12.000000, 13.000000)" fill="#003945" stroke="#003945">
-                <ellipse id="Oval-2" cx="3.58343651" cy="3.47626979" rx="3.58343651" ry="3.47626979"></ellipse>
-                <ellipse id="Oval-2" cx="3.58343651" cy="18.3745689" rx="3.58343651" ry="3.47626979"></ellipse>
-                <ellipse id="Oval-2" cx="3.58343651" cy="32.2796481" rx="3.58343651" ry="3.47626979"></ellipse>
-                <rect id="Rectangle-3" x="11.262229" y="0.993219941" width="17.405263" height="4.96609971" rx="1"></rect>
-                <rect id="Rectangle-3" x="11.262229" y="15.8915191" width="17.405263" height="4.96609971" rx="1"></rect>
-                <rect id="Rectangle-3" x="11.262229" y="29.7965982" width="17.405263" height="4.96609971" rx="1"></rect>
+    <g id="Extension" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="my-wallet-12-copy-3" transform="translate(-600.000000, -322.000000)">
+            <g id="Group-8" transform="translate(396.000000, 302.000000)">
+                <g id="metamask-copy-16" transform="translate(166.000000, 0.000000)">
+                    <g id="Group-7" transform="translate(44.642384, 27.000000)">
+                        <path d="M12,8 C11.4477153,8 11,8.44771525 11,9 L11,53 C11,53.5522847 11.4477153,54 12,54 L48.0922662,54 C48.644551,54 49.0922662,53.5522847 49.0922662,53 L49.0922662,9 C49.0922662,8.44771525 48.644551,8 48.0922662,8 L12,8 Z" id="Rectangle-11-Copy" stroke="#0B2840" stroke-width="4" fill="#FFFFFF"></path>
+                        <g id="Group-2" transform="translate(19.102144, 17.016949)">
+                            <ellipse id="Oval-2" fill="#05C0A5" cx="2.78980303" cy="2.79921675" rx="2.78980303" ry="2.79921675"></ellipse>
+                            <ellipse id="Oval-2" fill="#05C0A5" cx="2.78980303" cy="14.79586" rx="2.78980303" ry="2.79921675"></ellipse>
+                            <ellipse id="Oval-2" fill="#05C0A5" cx="2.78980303" cy="25.992727" rx="2.78980303" ry="2.79921675"></ellipse>
+                            <path d="M9.76795238,0.799776215 L21.3184242,0.799776215 C21.870709,0.799776215 22.3184242,1.24749147 22.3184242,1.79977622 L22.3184242,3.79865729 C22.3184242,4.35094204 21.870709,4.79865729 21.3184242,4.79865729 L9.76795238,4.79865729 C9.21566763,4.79865729 8.76795238,4.35094204 8.76795238,3.79865729 L8.76795238,1.79977622 C8.76795238,1.24749147 9.21566763,0.799776215 9.76795238,0.799776215 Z" id="Rectangle-3" fill="#0B2840"></path>
+                            <path d="M9.76795238,12.7964194 L21.3184242,12.7964194 C21.870709,12.7964194 22.3184242,13.2441347 22.3184242,13.7964194 L22.3184242,15.7953005 C22.3184242,16.3475853 21.870709,16.7953005 21.3184242,16.7953005 L9.76795238,16.7953005 C9.21566763,16.7953005 8.76795238,16.3475853 8.76795238,15.7953005 L8.76795238,13.7964194 C8.76795238,13.2441347 9.21566763,12.7964194 9.76795238,12.7964194 Z" id="Rectangle-3" fill="#0B2840"></path>
+                            <path d="M9.76795238,23.9932865 L21.3184242,23.9932865 C21.870709,23.9932865 22.3184242,24.4410017 22.3184242,24.9932865 L22.3184242,26.9921675 C22.3184242,27.5444523 21.870709,27.9921675 21.3184242,27.9921675 L9.76795238,27.9921675 C9.21566763,27.9921675 8.76795238,27.5444523 8.76795238,26.9921675 L8.76795238,24.9932865 C8.76795238,24.4410017 9.21566763,23.9932865 9.76795238,23.9932865 Z" id="Rectangle-3" fill="#0B2840"></path>
+                        </g>
+                    </g>
+                </g>
             </g>
         </g>
     </g>
