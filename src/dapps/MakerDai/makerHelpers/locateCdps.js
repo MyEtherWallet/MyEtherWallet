@@ -41,6 +41,7 @@ async function locateCdpsWithoutProxy(self, _cdpService) {
   const directCdpsCheckSum = await _cdpService.getCdpIds(
     toChecksumAddress(self.account.address)
   );
+  console.log(directCdpsCheckSum, directCdps); // todo remove dev item
   return directCdps.concat(directCdpsCheckSum);
 }
 
@@ -55,6 +56,7 @@ async function locateCdpsDirectly(self) {
   const results = await contract.methods
     .getCdpsAsc(addresses.CDP_MANAGER, proxy)
     .call();
+  console.log('results raw', results); // todo remove dev item
   console.log('results', results.ids); // todo remove dev item
   return results.ids;
 }
