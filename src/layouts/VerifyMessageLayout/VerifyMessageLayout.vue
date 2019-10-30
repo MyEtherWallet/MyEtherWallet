@@ -1,4 +1,4 @@
-<template>
+<template functional>
   <div class="verify-message-layout">
     <div class="page-container">
       <div class="title-block">
@@ -9,7 +9,7 @@
           tools before using.
         </p>
       </div>
-      <verify-message-input />
+      <component :is="injections.components.VerifyMessageInput" />
     </div>
   </div>
 </template>
@@ -17,8 +17,12 @@
 <script>
 import VerifyMessageInput from '@/components/VerifyMessageInput';
 export default {
-  components: {
-    'verify-message-input': VerifyMessageInput
+  inject: {
+    components: {
+      default: {
+        VerifyMessageInput
+      }
+    }
   }
 };
 </script>

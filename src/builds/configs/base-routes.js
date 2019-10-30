@@ -3,7 +3,6 @@ const TeamLayout = () => import('@/layouts/TeamLayout');
 const PrivacyPolicyLayout = () => import('@/layouts/PrivacyPolicyLayout');
 const TermsAndConditionsLayout = () =>
   import('@/layouts/TermsAndConditionsLayout');
-const AccessWalletLayout = () => import('@/layouts/AccessWalletLayout');
 const InterfaceLayout = () => import('@/layouts/InterfaceLayout');
 const HelpCenterLayout = () => import('@/layouts/HelpCenterLayout');
 const NotFoundLayout = () => import('@/layouts/NotFoundLayout');
@@ -37,6 +36,8 @@ const SignMessageContainer = () =>
 const VerifyMessageContainer = () =>
   import('@/layouts/InterfaceLayout/containers/VerifyMessageContainer');
 const HardwaresLayout = () => import('@/layouts/HardwaresLayout');
+const ViewWalletInfoLayout = () => import('@/layouts/ViewWalletInfoLayout');
+const PhishingCatcherLayout = () => import('@/layouts/PhishingCatcherLayout');
 const DashboardContainer = () =>
   import('@/layouts/InterfaceLayout/containers/DashboardContainer');
 
@@ -62,15 +63,15 @@ const router = [
     meta: { requiresAuth: false }
   },
   {
-    path: '/access-my-wallet',
-    name: 'AccessWalletLayout',
-    component: AccessWalletLayout,
-    meta: { requiresAuth: false }
-  },
-  {
     path: '/help-center',
     name: 'HelpCenterLayout',
     component: HelpCenterLayout,
+    meta: { requiresAuth: false }
+  },
+  {
+    path: '/phishing-catcher',
+    name: 'PhishingCatcherLayout',
+    component: PhishingCatcherLayout,
     meta: { requiresAuth: false }
   },
   {
@@ -138,6 +139,11 @@ const router = [
     name: '404',
     component: NotFoundLayout,
     meta: { requiresAuth: false }
+  },
+  {
+    path: '/view-wallet-info',
+    name: 'ViewWalletInfoLayout',
+    component: ViewWalletInfoLayout
   },
   {
     path: '/interface',

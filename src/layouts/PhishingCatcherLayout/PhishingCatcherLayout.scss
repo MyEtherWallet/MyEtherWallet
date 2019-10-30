@@ -1,0 +1,40 @@
+@import '~@/scss/GlobalVariables';
+
+.phishing-catcher-contianer {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  height: 700px;
+  background-image: url('~@/assets/images/background/404bg.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+
+  .catcher-text {
+    h4 {
+      color: $white;
+      font-size: 120px;
+      font-weight: bold;
+      line-height: 100px;
+      text-align: center;
+    }
+
+    p {
+      color: $white;
+      font-size: 20px;
+      padding-top: 30px;
+      text-align: center;
+    }
+
+    .code-container {
+      padding-top: 30px;
+      text-align: center;
+
+      code {
+        background-color: $light-grey-4;
+        border-radius: 5px;
+        padding: 15px;
+      }
+    }
+  }
+}
