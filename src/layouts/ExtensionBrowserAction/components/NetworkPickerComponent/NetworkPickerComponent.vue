@@ -2,7 +2,15 @@
   <div class="dropdown-container">
     <span class="network-text">NETWORK</span>
     <span class="current-network" @click="props.openNetworkModal">
-      {{ props.network.hasOwnProperty('type') ? props.network.type.name : 'ETH' }} - {{ props.network.hasOwnProperty('service') ? props.network.service : 'mewapi.io'  }}
+      {{
+        props.network.hasOwnProperty('type') ? props.network.type.name : 'ETH'
+      }}
+      -
+      {{
+        props.network.hasOwnProperty('service')
+          ? props.network.service
+          : 'mewapi.io'
+      }}
       <i class="fa fa-caret-down" />
     </span>
   </div>

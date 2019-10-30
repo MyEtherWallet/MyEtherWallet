@@ -143,6 +143,7 @@ import FeedbackModal from '@/components/FeedbackModal';
 import CustomerSupport from '@/components/CustomerSupport';
 import affiliates from './affiliates.js';
 const version = VERSION;
+import { Misc } from '@/helpers';
 
 export default {
   components: {
@@ -282,15 +283,18 @@ export default {
     ...mapState(['ethDonationAddress'])
   },
   mounted() {
-    if (BUILD_TYPE === 'mewcx') {
-      const newArr = [];
-      this.footerContent[0].contents.forEach(item => {
-        if (item.to !== '/send-offline-helper') {
-          newArr.push(item);
+    if (Misc.isMewCx()) {
+      this.footerContent[0].contents = this.footerContent[0].contents.filter(
+        item => {
+          if (item.to !== '/send-offline-helper') return item;
         }
-      });
+      );
 
-      this.footerContent[0].contents = newArr;
+      this.footerContent[2].contents = this.footerContent[2].contents.filter(
+        item => {
+          if (item.to !== '/#about-mew' && item.to !== '/#faqs') return item;
+        }
+      );
     }
   },
   methods: {

@@ -403,7 +403,7 @@ export default {
       this.$store.dispatch('switchNetwork', network).then(() => {
         this.$store.dispatch('setWeb3Instance').then(() => {
           this.selectedNetworkName = network.type.name;
-          if (BUILD_TYPE === 'mewcx') {
+          if (Misc.isMewCx()) {
             this.web3.eth.net.getId().then(id => {
               window.chrome.storage.sync.set({
                 defChainID: network.type.chainID,

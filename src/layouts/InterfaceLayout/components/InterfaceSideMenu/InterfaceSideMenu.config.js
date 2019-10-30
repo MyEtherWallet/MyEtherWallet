@@ -1,3 +1,5 @@
+import { Misc } from '@/helpers';
+
 const config = {
   tabs: [
     {
@@ -166,7 +168,7 @@ const config = {
     }
   ]
 };
-if (BUILD_TYPE === 'mewcx') {
+if (Misc.isMewCx()) {
   const tabIdx = config.tabs.findIndex(item => {
     return item.name === 'send-transaction';
   });
