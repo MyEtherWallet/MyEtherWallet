@@ -222,6 +222,10 @@ const stripTags = content => {
   return string;
 };
 
+const isMewCx = () => {
+  return BUILD_TYPE === 'mewcx';
+};
+
 export default {
   isJson,
   doesExist,
@@ -241,5 +245,6 @@ export default {
   getService,
   stringToArray,
   isContractArgValid,
-  stripTags
+  stripTags,
+  isMewCx
 };
