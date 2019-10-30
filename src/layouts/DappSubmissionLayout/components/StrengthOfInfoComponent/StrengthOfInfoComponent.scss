@@ -4,7 +4,11 @@
   background: $light-green-1;
   border-radius: 6px;
   height: 152px;
-  width: 324px;
+  width: 400px;
+
+  @media all and (max-width: 742px) {
+    width: 85%;
+  }
 }
 
 .circle {
@@ -65,7 +69,7 @@
 }
 
 .text-wrapper {
-  width: 157px;
+  width: 221px;
   text-align: left;
 }
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="about-your-dapp w-50 mb-5 mt-5">
+  <div class="about-your-dapp mb-5 mt-5">
     <b-form onsubmit="return false;">
       <b-form-group>
         <label class="dapp-label">Dapp name</label>
@@ -167,6 +167,7 @@
             <button class="upload-btn">Upload</button>
           </label>
           <input
+            class="mock-user-flow-input"
             id="customUpload"
             ref="mockUserFlow"
             type="file"
@@ -193,7 +194,7 @@
             v-model="form.contractAddress"
             name="address"
             type="text"
-            @update="updateContractAddress"
+            @update="onContractAddressChange"
           >
           </b-form-input>
           <span>*</span>
@@ -243,7 +244,7 @@
           </div>
           <span
             :class="form.dappIconUrl ? 'uploaded-required-icon' : ''"
-            class="requiredIcon"
+            class="required-icon"
             >*</span
           >
         </div>
@@ -340,6 +341,7 @@
 <script>
 import TagComponentVue from '../../components/TagComponent/TagComponent.vue';
 import PopOver from '@/components/PopOver';
+import { isAddress } from '@/helpers/addressUtils';
 
 export default {
   components: {
@@ -592,6 +594,13 @@ export default {
         vm.bannerError = 'Upload error. Please try a different file.';
         vm.updateBanner(true);
       };
+    },
+    onContractAddressChange(e) {
+      if (!isAddress(e)) {
+        this.contractAddressErr = 'Please enter a valid address'
+      } else {
+        this.contractAddressErr = null;
+      }
     }
   }
 };
