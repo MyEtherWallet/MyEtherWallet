@@ -1,3 +1,6 @@
+### Feature
+- Update Dapp Submission UI [#1585](https://github.com/MyEtherWallet/MyEtherWallet/pull/1585)
+
 ### Release v5.2.0
 
 ### Feature
