@@ -3,7 +3,9 @@
     <import-mnemonic-modal
       ref="mnemonicPhrase"
       :open-address-option="openAddressOption"
+      :password="password"
       @mnemonicPhrase="updateMnemonic"
+      @passwordUpdated="updatePassword"
     />
     <generate-wallet-modal
       ref="generateNewWallet"
@@ -168,6 +170,7 @@ export default {
     this.$refs.mnemonicPhrase.$refs.mnemonicPhrase.$on('hidden', () => {
       this.internalMnem = this.mnemonicPhrase;
       this.mnemonicPhrase = new Array(this.mnemonicSize).fill('');
+      this.password = '';
     });
     this.$refs.networkAddress.$refs.networkAddress.$on('hidden', () => {
       if (this.selectedAccountPath === '' || this.selectedAddress === '') {
@@ -217,7 +220,7 @@ export default {
     openAddressOption() {
       this.loading = true;
       const mnemonicPhrase = this.mnemonicPhrase;
-      MnemonicWallet(mnemonicPhrase, '')
+      MnemonicWallet(mnemonicPhrase, this.password)
         .then(wallet => {
           this.loading = false;
           this.wallet = wallet;
