@@ -5,6 +5,7 @@
     hide-footer
     class="bootstrap-modal padding-20"
     centered
+    static
   >
     <div class="contents">
       <p class="instruction">
@@ -14,14 +15,14 @@
         <div class="value-switch noselect">
           <div class="sliding-switch">
             <label class="switch">
-              <input type="checkbox" />
+              <input ref="checkyboi" type="checkbox"/>
               <span class="slider round" @click="mnemonicValueBitSizeChange" />
             </label>
             <div class="labels">
-              <span :class="[!mnemonic24 ? 'white' : '', 'label-left']"
+              <span :class="[locMnemonicPhrase.length <= 12 ? 'white' : '', 'label-left']"
                 >12</span
               >
-              <span :class="[mnemonic24 ? 'white' : '', 'label-right']"
+              <span :class="[locMnemonicPhrase.length > 12 ? 'white' : '', 'label-right']"
                 >24</span
               >
             </div>
@@ -82,8 +83,8 @@ export default {
   data() {
     return {
       locMnemonicPhrase: new Array(this.mnemonicSize).fill(''),
-      mnemonic24: false,
-      mnemonicSize: 12
+      mnemonicSize: 12,
+      isTwelve: true
     };
   },
   computed: {
@@ -94,12 +95,14 @@ export default {
   watch: {
     locMnemonicPhrase(newVal) {
       if (newVal[0] !== ' ' && newVal[0].indexOf(' ') >= 0) {
+        const length = newVal[0].split(' ').length;
+        if (this.mnemonicSize !== length)
+          this.$refs.checkyboi.click();
         if (
-          newVal[0].split(' ').length === 12 ||
-          newVal[0].split(' ').length === 24
+          length === 12 ||
+          length === 24
         ) {
-          this.mnemonicSize = newVal[0].split(' ').length;
-          this.mnemonic24 = this.mnemonicSize === 24;
+          this.mnemonicSize = length;
           this.locMnemonicPhrase = newVal[0].split(' ');
         }
       }
@@ -113,8 +116,7 @@ export default {
   },
   methods: {
     mnemonicValueBitSizeChange() {
-      this.mnemonic24 = !this.mnemonic24;
-      this.mnemonic24 ? (this.mnemonicSize = 24) : (this.mnemonicSize = 12);
+      this.mnemonicSize = this.mnemonicSize === 12 ? 24 : 12;
       this.locMnemonicPhrase = new Array(this.mnemonicSize).fill('');
     }
   }
