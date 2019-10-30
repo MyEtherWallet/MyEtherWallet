@@ -20,13 +20,6 @@ export default {
 </script>
 
 <style lang="scss">
-* {
-  font-family: 'Open Sans';
-}
-i {
-  font-family: 'Material Icons' !important;
-}
-.v-btn {
-  text-transform: initial;
-}
+@import '@/assets/styles/GlobalVariables.scss';
+@import '@/assets/styles/GlobalStyles.scss';
 </style>
