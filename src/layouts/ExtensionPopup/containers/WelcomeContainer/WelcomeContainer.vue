@@ -4,7 +4,7 @@
       MEWCX | Chrome Extension
     </div>
     <div class="content">
-      <img src="@/assets/images/logo-small.png" width="75" />
+      <img src="@/assets/images/mew-cx-logo.png" width="75" />
       <div class="text-content">
         <h3>MyEtherWallet's Official Chrome Extension</h3>
         <p>

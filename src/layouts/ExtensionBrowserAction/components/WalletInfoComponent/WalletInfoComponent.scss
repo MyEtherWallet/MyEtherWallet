@@ -30,7 +30,7 @@
   }
 
   .wallet-content {
-    display: flex;
+    display: -webkit-box;
     background-color: $white;
 
     .address-and-balance-container {

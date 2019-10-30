@@ -113,6 +113,7 @@
           Details
         </div>
         <div class="clickable" @click="edit">Edit</div>
+        <div class="clickable d-block d-xl-none" @click="viewAllTokens(true)">View Tokens</div>
       </div>
     </div>
     <div class="wallet-content">
@@ -122,7 +123,8 @@
             <blockie :address="address" width="70px" height="70px" />
             <div class="actual-address">
               <p>Address</p>
-              <p>{{ address }}</p>
+              <p class="d-none d-xl-block">{{ address }}</p>
+              <p class="d-block d-xl-none">{{ address | concatAddress }}</p>
               <input ref="addressInput" :value="address" />
             </div>
           </div>
@@ -142,7 +144,7 @@
           </div>
         </div>
       </div>
-      <div class="tokens-container">
+      <div class="tokens-container d-none d-xl-block">
         <div class="tokens-header">
           <p>
             Tokens
@@ -231,6 +233,12 @@ import * as networkTypes from '@/networks/types';
 import utils from 'web3-utils';
 import InterfaceTokensModal from '@/layouts/InterfaceLayout/components/InterfaceTokensModal';
 export default {
+  filters: {
+    concatAddress(value) {
+      if (!value) return '';
+      return `${value.substr(0, 32)}...${value.substr(value.length - 7)}`;
+    }
+  },
   components: {
     blockie: Blockie,
     'edit-wallet-modal': EditWalletModal,
