@@ -152,6 +152,14 @@
           justify-content: space-between;
           padding: 7px 10px;
 
+          .balance-container {
+            display: flex;
+
+            i {
+              cursor: pointer;
+            }
+          }
+
           .manual-load {
             cursor: pointer;
           }
