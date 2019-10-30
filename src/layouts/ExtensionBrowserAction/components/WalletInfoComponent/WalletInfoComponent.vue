@@ -398,6 +398,7 @@ export default {
           website: '',
           type: 'custom'
         };
+        token['balance'] = await this.fetchTokenBalance(token);
         const currentCustomToken = store.get('customTokens');
         this.customTokens =
           this.customTokens.length > 0 ? this.customTokens : [];
@@ -470,6 +471,8 @@ export default {
         }
         return item;
       });
+
+      return balance;
     },
     openRemoveWallet() {
       this.$refs.editModal.$refs.editModal.hide();
@@ -521,6 +524,7 @@ export default {
       const tokens = storedTokens.hasOwnProperty(this.network.type.name)
         ? storedTokens[this.network.type.name]
         : [];
+      console.log(storedTokens)
 
       this.customTokens = tokens.map(token => {
         const newLogo = {
