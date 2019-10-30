@@ -1,4 +1,5 @@
 import BigNumber from 'bignumber.js';
+import { ERC20 } from './ABIs';
 
 export function toBigNumber(num) {
   const bignumber = new BigNumber(num);
@@ -104,7 +105,14 @@ export function maxEthDraw(
 }
 
 export function calcCollatRatio(ethPrice, ethQty, daiQty) {
-  console.log("ethQty", ethQty.toString(), "daiQty", daiQty.toString(), "ethPrice", ethPrice.toString()); // todo remove dev item
+  console.log(
+    'ethQty',
+    ethQty.toString(),
+    'daiQty',
+    daiQty.toString(),
+    'ethPrice',
+    ethPrice.toString()
+  ); // todo remove dev item
   return bnOver(toBigNumber(ethPrice), ethQty, daiQty);
 }
 
@@ -132,4 +140,9 @@ export function calcLiquidationPrice(
     }
   }
   return 0;
+}
+
+export function checkAllowance(web3, tokenAddress, userAddress, proxyAddress) {
+  const contract = new web3.eth.contract(ERC20, tokenAddress);
+  return contract.methods.allowance(userAddress, proxyAddress).call();
 }

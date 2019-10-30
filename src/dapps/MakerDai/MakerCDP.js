@@ -54,6 +54,7 @@ export default class MakerCDP extends MakerCdpBase {
 
   // Setup Methods =====================================================================================================
   async init(cdpId = this.cdpId) {
+    console.log('cdpId',cdpId); // todo remove dev item
     await this.updateValues(cdpId);
     try {
       // TODO why is this returning undefined
@@ -71,11 +72,17 @@ export default class MakerCDP extends MakerCdpBase {
   async updateValues(cdpId = this.cdpId) {
     this._proxyAddress = await this.services.getProxy();
     this.noProxy = this._proxyAddress === null;
-    if (this._proxyAddress) {
-      this.cdp = await this.services.getCdp(cdpId, this._proxyAddress);
-    } else {
-      this.cdp = await this.services.getCdp(cdpId, false);
-    }
+    try{
+      // console.log('cdpId, this._proxyAddress', cdpId, this._proxyAddress); // todo remove dev item
+      // this.cdp = await this.services.getMakerCdp(cdpId);
+      if (this._proxyAddress) {
+        this.cdp = await this.services.getMakerCdp(cdpId, this._proxyAddress);
+      } else {
+        this.cdp = await this.services.getMakerCdp(cdpId, false);
+      }
+      } catch(e){
+            console.error(e);
+        }
     // const liqPrice = await this.cdp.getLiquidationPrice();
     // this._liqPrice = liqPrice.toBigNumber().toFixed(2);
     this.isSafe = this.cdp.isSafe;

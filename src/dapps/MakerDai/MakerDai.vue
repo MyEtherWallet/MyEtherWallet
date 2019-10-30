@@ -240,7 +240,8 @@ import {
   setupCdpManage,
   updateActiveCdp,
   loadCdpDetails,
-  buildEmpty
+  buildEmpty,
+  loadCdpDetail
 } from './makerHelpers';
 
 import MewPlugin from 'mew-maker-plugin';
@@ -603,6 +604,8 @@ export default {
             // this._cdpService
           );
 
+
+
           this.cdpsWithType = withType;
           this.cdps = withProxy;
           this.cdpsWithoutProxy = withoutProxy;
@@ -757,6 +760,9 @@ export default {
         this.gotoCreate();
       }
     },
+    async loadCdpDetail(cdpId){
+      return loadCdpDetail(this, cdpId);
+    },
     // TODO doulble check the vue object observer bug isn't back
     async loadCdpDetails(
       cdps = this.cdps,
@@ -862,6 +868,7 @@ export default {
       console.log('getCdp', cdpId); // todo remove dev item
       // could be a string.  use type cohesion to convert to number
       if (!this.activeCdps) return false;
+      console.log(this.activeCdps[cdpId]); // todo remove dev item
       return this.activeCdps[cdpId];
     },
 

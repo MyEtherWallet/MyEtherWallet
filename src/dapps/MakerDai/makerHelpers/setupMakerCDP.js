@@ -65,6 +65,13 @@ export async function loadCdpDetails(
   console.log(self.activeCdps); // todo remove dev item
 }
 
+export async function loadCdpDetail(
+  self,
+  cdpId
+) {
+  return await buildCdpObject.bind(self)(cdpId);
+}
+
 export async function updateActiveCdp(self) {
   const currentCdpIds = Object.keys(self.activeCdps);
   await locateCdps(self, self._cdpService);
@@ -115,7 +122,7 @@ export async function buildEmpty(self) {
   return await buildCdpObject.bind(self)(null);
 }
 
-export async function buildCdpObject(cdpId, options = {}) {
+export async function buildCdpObject(cdpId, options = {}, useOld=false) {
   const sysVars = {
     ...options,
     tokens: this.tokens,
@@ -152,7 +159,7 @@ export async function buildCdpObject(cdpId, options = {}) {
     doUpdate: this.doUpdate,
     getProxy: this.getProxy,
     hasProxy: this.hasProxy,
-    getCdp: this.getMakerCdp,
+    getMakerCdp: this.getMakerCdp,
     toUSD: this.toUSD,
     _proxyAddress: this.proxyAddress,
     liquidationPenalty: this.liquidationPenalty,
@@ -175,7 +182,11 @@ export async function buildCdpObject(cdpId, options = {}) {
     makerCDP = new MakerCDP(cdpId, this.web3, services, sysVars);
     console.log(makerCDP); // todo remove dev item
     if (cdpId) {
-      return await makerCDP.init(cdpId);
+      if(useOld){
+        return await makerCDP.init(cdpId, useOld);
+      } else {
+        return await makerCDP.init(cdpId);
+      }
     }
     return makerCDP;
   } catch (e) {
