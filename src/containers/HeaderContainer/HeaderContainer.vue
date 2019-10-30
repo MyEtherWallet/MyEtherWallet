@@ -1,17 +1,19 @@
 <template>
   <div>
     <HeaderDesktop />
-    desktop
+    <HeaderMobile />
   </div>
 </template>
 
 <script>
 import HeaderDesktop from './components/HeaderDesktop';
+import HeaderMobile from './components/HeaderMobile';
 
 export default {
   name: 'HeaderContainer',
   components: {
-    HeaderDesktop
+    HeaderDesktop,
+    HeaderMobile
   }
 };
 </script>

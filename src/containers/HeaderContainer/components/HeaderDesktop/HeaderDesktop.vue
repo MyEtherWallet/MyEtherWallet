@@ -9,14 +9,16 @@
         <v-toolbar-items>
           <v-menu open-on-hover bottom offset-y>
             <template v-slot:activator="{ on }">
-              <v-btn text dark v-on="on">
+              <v-btn text dark class="mx-3" v-on="on">
                 How it works
               </v-btn>
             </template>
           </v-menu>
           <v-menu open-on-hover bottom offset-y>
             <template v-slot:activator="{ on }">
-              <v-btn text dark v-on="on"> About<MenuOpenArrow /></v-btn>
+              <v-btn class="mx-3" text dark v-on="on">
+                About<MenuOpenArrow
+              /></v-btn>
             </template>
             <div class="white">
               <v-list-item>
@@ -44,7 +46,9 @@
           </v-menu>
           <v-menu open-on-hover bottom offset-y>
             <template v-slot:activator="{ on }">
-              <v-btn text dark v-on="on"> Tools<MenuOpenArrow /></v-btn>
+              <v-btn class="mx-3" text dark v-on="on">
+                Tools<MenuOpenArrow
+              /></v-btn>
             </template>
             <v-list>
               <v-list-item>
@@ -55,7 +59,7 @@
           </v-menu>
           <v-menu open-on-hover bottom offset-y>
             <template v-slot:activator="{ on }">
-              <v-btn text dark v-on="on">
+              <v-btn class="mx-3" text dark v-on="on">
                 Support
               </v-btn>
             </template>
