@@ -98,11 +98,7 @@
       </div>
       <div v-else>
         <div class="modal-multi-icons">
-          <img
-            alt
-            class="icon mew cx"
-            src="@/assets/images/mew-cx-logo.png"
-          />
+          <img alt class="icon mew cx" src="@/assets/images/mew-cx-logo.png" />
         </div>
         <div class="d-block content-container text-center">
           <h4>{{ $t('accessWallet.installWeb3WalletModalDesc') }}</h4>

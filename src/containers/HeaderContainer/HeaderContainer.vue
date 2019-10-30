@@ -10,7 +10,11 @@
     >
       <user-reminder-button />
     </router-link>
-    <mobile-menu :opensettings="openSettings" :logout="logout" :build-type="buildType" />
+    <mobile-menu
+      :opensettings="openSettings"
+      :logout="logout"
+      :build-type="buildType"
+    />
 
     <!-- Modals ***************************************** -->
     <disconnected-modal ref="mewConnectDisconnected" />
@@ -109,7 +113,7 @@
                 <b-nav-item v-if="!isMewCx" to="/#faqs">{{
                   $t('common.faqs')
                 }}</b-nav-item>
-                <div class="language-menu-container">
+                <div v-show="!isMewCx" class="language-menu-container">
                   <div class="arrows">
                     <i class="fa fa-angle-down" aria-hidden="true" />
                   </div>

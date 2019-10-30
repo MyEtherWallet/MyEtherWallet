@@ -184,7 +184,9 @@
                 <p
                   :class="[token.balance !== 'Load' ? '' : 'manual-load']"
                   @click="
-                    token.balance !== 'Load' ? () => {} : fetchTokenBalance(token)
+                    token.balance !== 'Load'
+                      ? () => {}
+                      : fetchTokenBalance(token)
                   "
                 >
                   {{ token.balance }}
@@ -524,7 +526,6 @@ export default {
       const tokens = storedTokens.hasOwnProperty(this.network.type.name)
         ? storedTokens[this.network.type.name]
         : [];
-      console.log(storedTokens)
 
       this.customTokens = tokens.map(token => {
         const newLogo = {
