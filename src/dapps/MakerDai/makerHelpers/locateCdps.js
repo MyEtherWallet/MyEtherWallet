@@ -37,6 +37,7 @@ async function locateCdps(self, _cdpService) {
 async function getMcdCdp() {}
 
 async function locateCdpsWithoutProxy(self, _cdpService) {
+  console.log(_cdpService); // todo remove dev item
   const directCdps = await _cdpService.getCdpIds(self.account.address);
   const directCdpsCheckSum = await _cdpService.getCdpIds(
     toChecksumAddress(self.account.address)
