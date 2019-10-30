@@ -41,6 +41,12 @@ MyEtherWallet is a doorway to the Ethereum blockchain, allowing users to manage 
 
 If you find a bug, or want a new feature added, please submit it on the [Github Issues](https://github.com/MyEtherWallet/MyEtherWallet/issues)
 
+## Reporting a Vulnerability
+
+**Please do not file a public ticket** mentioning the vulnerability.
+
+To find out how to disclose a vulnerability visit [hackerone.com/myetherwallet](https://hackerone.com/myetherwallet).
+
 ## Getting started
 
 1. Open terminal

@@ -1,0 +1,131 @@
+@import '~@/scss/GlobalVariables';
+
+.popup-accounts-container {
+  .tab-container {
+    padding: 15px 0 15px 15px;
+    outline: none !important;
+  }
+
+  .popup-button-options {
+    align-items: center;
+    display: flex;
+    justify-content: space-around;
+
+    .button-option {
+      border: 1px solid $mew-green;
+      border-radius: 5px;
+      color: $mew-green;
+      cursor: pointer;
+      flex: 1;
+      margin: 10px;
+      padding: 15px;
+      text-align: center;
+    }
+  }
+
+  .total-balance-container {
+    align-items: center;
+    background-color: $light-blue-1;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    padding: 10px 20px;
+    text-align: center;
+
+    p {
+      color: $white;
+      font-size: 13px;
+      margin: 0 !important;
+    }
+
+    div > p {
+      line-height: 14px;
+    }
+
+    .converted-balance {
+      opacity: 0.7;
+      text-align: right;
+    }
+  }
+
+  .wallet-component-container {
+    max-height: 300px;
+    overflow-y: scroll;
+    padding-right: 15px;
+  }
+}
+
+.no-wallet-container {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  height: 140px;
+}
+
+.quick-send-from-modal {
+  .quick-send-from-header {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+
+    h3 {
+      font-weight: bold;
+      margin: 0 !important;
+    }
+
+    i {
+      cursor: pointer;
+    }
+  }
+
+  .quick-send-from-content {
+    height: 360px;
+    padding: 10px 10px 0 10px;
+  }
+
+  .from-address-container {
+    max-height: 400px;
+    overflow-y: scroll;
+
+    .wallet-from-view {
+      background-color: $light-green-1;
+      border-radius: 5px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 10px;
+      padding: 10px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      div {
+        pointer-events: none;
+      }
+
+      .info-container {
+        padding-left: 20px;
+        text-align: left;
+        word-break: break-word;
+
+        p {
+          margin: 0 !important;
+        }
+
+        p:nth-child(2) {
+          color: $dark-blue-12;
+        }
+
+        p:nth-child(3) {
+          color: $light-blue-1;
+        }
+      }
+    }
+
+    .selected {
+      border: 1px solid $mew-green;
+    }
+  }
+}
