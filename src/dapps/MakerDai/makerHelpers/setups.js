@@ -73,6 +73,9 @@ export async function checkAllowances(self, address, proxyAddress) {
   self.proxyAllowances = {};
   if (proxyAddress) {
     const keys = Object.keys(self.tokens);
+    keys.push('MKR');
+    keys.push('DAI');
+    console.log(keys); // todo remove dev item
     for (let i = 0; i < keys.length; i++) {
       try {
         if (typeof self.tokens[keys[i]]._contract.allowance === 'function') {

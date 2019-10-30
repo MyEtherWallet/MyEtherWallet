@@ -62,7 +62,8 @@ import {
   addresses,
   migrateABI,
   ERC20,
-  ProxyContract
+  ProxyContract,
+  locateCdps
 } from '../../makerHelpers';
 import ethUnit from 'ethjs-unit';
 import utils from 'web3-utils';
@@ -94,12 +95,12 @@ export default {
       type: Boolean,
       default: false
     },
-    cdps: {
-      type: Array,
-      default: function() {
-        return [];
-      }
-    },
+    // cdps: {
+    //   type: Array,
+    //   default: function() {
+    //     return [];
+    //   }
+    // },
     availableCdps: {
       type: Object,
       default: function() {
@@ -113,10 +114,15 @@ export default {
     getCdp: {
       type: Function,
       default: function() {}
+    },
+    getValueOrFunction: {
+      type: Function,
+      default: function() {}
     }
   },
   data() {
     return {
+      cdps: [],
       daiGenerated: 0,
       migrateContractBalance: 0,
       selectedCdp: 0,
@@ -136,16 +142,44 @@ export default {
   },
   async mounted() {
     this.migrateContractBalance = 0;
+    this.getProxy = this.getValueOrFunction('getProxy');
+    this.proxyAllowances = this.getValueOrFunction('proxyAllowances');
+    this.findCdps();
     this.getMigrateContractSaiBalance();
     console.log(this.cdps); // todo remove dev item
   },
   methods: {
+    async checkAllowance(tokenAddress) {
+      const contract = new this.web3.eth.Contract(ERC20, tokenAddress);
+      return contract.methods
+        .allowance(this.account.address, this.proxyAddress)
+        .call();
+    },
+    async findCdps() {
+      const { withType, withProxy, withoutProxy } = await locateCdps(
+        this,
+        this.getValueOrFunction('_cdpService')
+      );
+      console.log(withType, withProxy, withoutProxy); // todo remove dev item
+      this.cdps = withProxy.concat(withoutProxy);
+      this.mkrAllowance = await this.checkAllowance('0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd')
+      console.log(this.mkrAllowance); // todo remove dev item
+    },
     async beginMigration() {
       if (this.selectedCdp !== 0) {
         const txs = [];
-        const details = this.getCdp(this.selectedCdp);
-        this.proxyAddress = details.proxyAddress;
-        txs.push(await this.approveMkr(details.governanceFeeOwed));
+        // console.log(this.getCdp); // todo remove dev item
+        this.proxyAddress = this.getValueOrFunction('proxyAddress');
+        const details = await this.getValueOrFunction('_cdpService').getCdp(this.selectedCdp, this.proxyAddress);
+        // const details = this.getCdp(this.selectedCdp);
+        // console.log(details); // todo remove dev item
+        // this.proxyAddress = details.proxyAddress;
+        const fee = await details.getGovernanceFee();
+        // console.log(fee.toBigNumber().toString()); // todo remove dev item
+        if(toBigNumber(this.mkrAllowance).lt(fee.toBigNumber())){
+          txs.push(await this.approveMkr(details.governanceFeeOwed));
+        }
+        // txs.push(await this.approveMkr(details.governanceFeeOwed));
         // const datas = await this.buildProxyContractCall(
         //   await this.migrate(this.selectedCdp)
         // );
@@ -178,7 +212,7 @@ export default {
         addresses.MIGRATION
       );
       console.log(cdpId); // todo remove dev item
-      const cdpId2 = utils.fromAscii(cdpId.toString())
+      const cdpId2 = utils.fromAscii(cdpId.toString());
       // const cpdIdPadded = '0x' + ethUtils.setLengthLeft(cdpId2, 32)
       console.log(cdpId2); // todo remove dev item
       const data = contract.methods.migrate(cdpId2).encodeABI();

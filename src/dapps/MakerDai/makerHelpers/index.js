@@ -11,6 +11,7 @@ import {
 import {
   setupCdpManage,
   updateActiveCdp,
+  loadCdpDetail,
   loadCdpDetails,
   buildEmpty
 } from './setupMakerCDP';
@@ -39,6 +40,7 @@ import {
 import { createCurrencyDetails } from './dataContainers';
 
 export {
+  loadCdpDetail,
   locateCdps,
   setupPriceAndRatios,
   setupServices,
