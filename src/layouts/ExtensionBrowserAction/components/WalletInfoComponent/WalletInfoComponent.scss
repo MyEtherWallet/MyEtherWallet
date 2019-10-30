@@ -153,10 +153,12 @@
           padding: 7px 10px;
 
           .balance-container {
+            align-items: center;
             display: flex;
 
             i {
               cursor: pointer;
+              padding-left: 5px;
             }
           }
 
