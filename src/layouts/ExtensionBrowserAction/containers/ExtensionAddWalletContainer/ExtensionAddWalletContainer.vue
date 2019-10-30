@@ -231,9 +231,9 @@ export default {
           this.toggleImportMnemonicPhrase(false);
         });
     },
-    generateFromMnemonicPriv() {
+    async generateFromMnemonicPriv() {
       this.loading = true;
-      const privateKey = ExtensionHelpers.getPrivFromMnemonicWallet(
+      const privateKey = await ExtensionHelpers.getPrivFromMnemonicWallet(
         this.internalMnem,
         this.selectedAccountPath
       );
