@@ -231,21 +231,19 @@
                 </div>
               </div>
               <form>
-                <expanding-option title="Password" button-text="Optional">
-                  <div class="input-container">
-                    <div class="network-password-input">
-                      <input
-                        v-model="locPassword"
-                        :type="show ? 'text' : 'password'"
-                        placeholder="Enter your password"
-                      />
-                      <img
-                        :src="show ? showIcon : hide"
-                        @click.prevent="show = !show"
-                      />
-                    </div>
+                <div class="input-container">
+                  <div class="network-password-input">
+                    <input
+                      v-model="locPassword"
+                      :type="show ? 'text' : 'password'"
+                      placeholder="Enter your password"
+                    />
+                    <img
+                      :src="show ? showIcon : hide"
+                      @click.prevent="show = !show"
+                    />
                   </div>
-                </expanding-option>
+                </div>
                 <div class="button-container">
                   <b-btn
                     :class="[
@@ -280,14 +278,12 @@ import BigNumber from 'bignumber.js';
 import Blockie from '@/components/Blockie';
 import hide from '@/assets/images/icons/hide-password.svg';
 import showIcon from '@/assets/images/icons/show-password.svg';
-import ExpandingOption from '@/components/ExpandingOption';
 
 const MAX_ADDRESSES = 5;
 export default {
   components: {
     'customer-support': CustomerSupport,
-    blockie: Blockie,
-    'expanding-option': ExpandingOption
+    blockie: Blockie
   },
   props: {
     walletInstance: {
@@ -344,7 +340,7 @@ export default {
       return Misc.reorderNetworks();
     },
     validInputs() {
-      return this.currentWallet;
+      return this.currentWallet && this.locPassword !== '';
     }
   },
   watch: {
