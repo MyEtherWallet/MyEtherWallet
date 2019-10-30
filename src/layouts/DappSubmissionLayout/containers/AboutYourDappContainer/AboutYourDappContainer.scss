@@ -102,14 +102,14 @@
   .dapp-tags-input {
     max-width: 100%;
     width: 100%;
-    padding-left: 10.5px;
+    padding-left: 25px;
   }
 }
 
 .tag-holder {
   display: flex;
   justify-content: space-around;
-  left: 5px;
+  left: 20px;
   position: absolute;
   top: 13px;
 }
@@ -128,7 +128,12 @@
     font-weight: normal;
     margin-bottom: 3rem;
     span {
+      cursor: pointer;
       margin-right: 15px;
+    }
+
+    span:hover {
+      color: $mew-green;
     }
   }
 }

@@ -78,11 +78,11 @@
       <div class="suggested-tags-container mb-3">
         <p class="title">Suggested Tags</p>
         <p class="tags">
-          <span>Games</span>
-          <span>Defi Lending</span>
-          <span>Social</span>
-          <span>Finance</span>
-          <span>Wallet</span>
+          <span @click="addTags('games')">Games</span>
+          <span @click="addTags('defi lending')">Defi Lending</span>
+          <span @click="addTags('social')">Social</span>
+          <span @click="addTags('finance')">Finance</span>
+          <span @click="addTags('wallet')">Wallet</span>
         </p>
       </div>
       <b-form-group id="form-group-description">
@@ -167,9 +167,9 @@
             <button class="upload-btn">Upload</button>
           </label>
           <input
-            class="mock-user-flow-input"
             id="customUpload"
             ref="mockUserFlow"
+            class="mock-user-flow-input"
             type="file"
             @change="onMockFileChange"
           />
@@ -201,6 +201,9 @@
         </div>
         <p v-if="errors.has('address')" class="error">
           {{ errors.first('address') }}
+        </p>
+        <p v-if="contractAddressErr" class="error">
+          {{ contractAddressErr }}
         </p>
       </b-form-group>
       <b-form-group>
@@ -451,21 +454,27 @@ export default {
       dappIconError: null,
       bannerError: null,
       mockFlowImgName: '',
-      dappTagsError: false
+      dappTagsError: false,
+      contractAddressErr: null,
+      spacePressCount: 0
     };
   },
   methods: {
+    pushTag() {
+      this.displayTags.push(this.tagInput);
+      this.tagInput = '';
+      setTimeout(() => this.updateWidth());
+    },
     onKeyDown(e) {
+      if (e.keyCode === 32) {
+        this.spacePressCount++;
+      }
       if (
-        e.keyCode === 13 &&
-        this.$refs.tagHolder.offsetWidth <=
-          this.$refs.dappTagsInput.offsetWidth - 10
+        e.keyCode === 13 ||
+        (e.keyCode === 32 && this.spacePressCount === 2)
       ) {
-        if (this.tagInput.length > 0) {
-          this.displayTags.push(this.tagInput);
-          this.tagInput = '';
-          setTimeout(() => this.updateWidth());
-        }
+        this.tagInput.length > 0 ? this.pushTag() : '';
+        this.spacePressCount = 0;
       } else if (e.keyCode === 8) {
         if (this.tagInput.length <= 0) {
           const lastTag = this.displayTags.splice(
@@ -477,6 +486,7 @@ export default {
             this.tagInput = lastTag.toString();
           });
         }
+        this.spacePressCount = 0;
       }
       this.dappTagsError = this.displayTags.length === 0;
       this.updateTags(this.displayTags);
@@ -490,8 +500,8 @@ export default {
     updateWidth() {
       this.$refs.dappTagsInput.style.paddingLeft =
         this.$refs.tagHolder.offsetWidth > 0
-          ? `${this.$refs.tagHolder.offsetWidth + 8}px`
-          : '10.5px';
+          ? `${this.$refs.tagHolder.offsetWidth + 25}px`
+          : '25px';
     },
     onMockFileChange(e) {
       const file = e.target.files[0],
@@ -597,10 +607,16 @@ export default {
     },
     onContractAddressChange(e) {
       if (!isAddress(e)) {
-        this.contractAddressErr = 'Please enter a valid address'
+        this.contractAddressErr = 'Please enter a valid address';
+        this.updateMockFlow(true);
       } else {
         this.contractAddressErr = null;
+        this.updateMockFlow(false);
       }
+    },
+    addTags(tag) {
+      this.tagInput = tag;
+      this.pushTag();
     }
   }
 };
