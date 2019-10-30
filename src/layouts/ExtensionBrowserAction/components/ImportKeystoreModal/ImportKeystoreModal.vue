@@ -9,9 +9,6 @@
     >
       <form>
         <div class="modal-contents">
-          <div class="not-recommended">
-            {{ $t('accessWallet.notARecommendedWay') }}
-          </div>
           <div class="input-container">
             <label for="filePath"> Your Wallet File </label>
             <div class="keystore-filepath-input">

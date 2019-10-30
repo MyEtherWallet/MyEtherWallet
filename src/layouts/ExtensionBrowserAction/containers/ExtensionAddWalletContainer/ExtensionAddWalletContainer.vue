@@ -228,7 +228,6 @@ export default {
           this.loading = false;
           Toast.responseHandler(e, Toast.ERROR);
           this.wallet = {};
-          this.toggleImportMnemonicPhrase(false);
         });
     },
     async generateFromMnemonicPriv() {

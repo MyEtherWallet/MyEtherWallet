@@ -8,9 +8,6 @@
       class="bootstrap-modal"
     >
       <div class="modal-contents">
-        <div class="not-recommended">
-          {{ $t('accessWallet.notARecommendedWay') }}
-        </div>
         <form>
           <div class="input-container">
             <label for="privateKeyInput">Your Private Key</label>
