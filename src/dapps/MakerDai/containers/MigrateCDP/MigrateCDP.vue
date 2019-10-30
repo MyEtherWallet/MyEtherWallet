@@ -171,18 +171,14 @@ export default {
         // console.log(this.getCdp); // todo remove dev item
         this.proxyAddress = this.getValueOrFunction('proxyAddress');
         const details = await this.getValueOrFunction('_cdpService').getCdp(this.selectedCdp, this.proxyAddress);
-        // const details = this.getCdp(this.selectedCdp);
-        // console.log(details); // todo remove dev item
-        // this.proxyAddress = details.proxyAddress;
-        const fee = await details.getGovernanceFee();
+
+        // const fee = await details.getGovernanceFee();
         // console.log(fee.toBigNumber().toString()); // todo remove dev item
-        if(toBigNumber(this.mkrAllowance).lt(fee.toBigNumber())){
-          txs.push(await this.approveMkr(details.governanceFeeOwed));
-        }
-        // txs.push(await this.approveMkr(details.governanceFeeOwed));
-        // const datas = await this.buildProxyContractCall(
-        //   await this.migrate(this.selectedCdp)
-        // );
+        // if(toBigNumber(this.mkrAllowance).lt(fee.toBigNumber())){
+        //   txs.push(await this.approveMkr(details.governanceFeeOwed));
+        // }
+
+        txs.push(await this.approveMkr(details.governanceFeeOwed));
 
         const datas = await this.migrate(this.selectedCdp);
         txs.push(datas);
@@ -194,10 +190,10 @@ export default {
         //   .then(console.log)
         //   .catch(console.error);
 
-        // this.web3.mew
-        //   .sendBatchTransactions(txs)
-        //   .then(console.log)
-        //   .catch(console.error);
+        this.web3.mew
+          .sendBatchTransactions(txs)
+          .then(console.log)
+          .catch(console.error);
       }
     },
     selectCDP(cdpSelected) {
@@ -215,19 +211,30 @@ export default {
       const cdpId2 = utils.fromAscii(cdpId.toString());
       // const cpdIdPadded = '0x' + ethUtils.setLengthLeft(cdpId2, 32)
       console.log(cdpId2); // todo remove dev item
-      const data = contract.methods.migrate(cdpId2).encodeABI();
-      console.log('data', data); // todo remove dev item
+      const dataOrig = contract.methods.migrate(cdpId2).encodeABI();
+/*      const len = cdpId2.length;
+      const withOut0x = cdpId2.replace(/^0x/, '');
+      const methodSig = dataOrig.slice(0,10);
+      console.log(methodSig); // todo remove dev item
+      let pad = '';
+      for(let i=0; i<(64-(len-2));i++){
+        pad = pad + '0';
+      }
+      const data = methodSig + pad + withOut0x;*/
+      console.log('data', dataOrig); // todo remove dev item
       // return data;
       return {
         from: this.account.address,
         to: addresses.MIGRATION,
         value: 0,
         gas: 500000,
-        data: data
+        data: dataOrig
       };
     },
     async approveMkr() {
-      const tokenAddress = addresses.SAI_MKR;
+      // SAI_MKR: '0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd'
+
+      const tokenAddress = '0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd';
 
       const contract = new this.web3.eth.Contract(ERC20, tokenAddress);
 
