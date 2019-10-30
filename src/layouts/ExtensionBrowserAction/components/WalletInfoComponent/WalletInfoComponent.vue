@@ -180,14 +180,17 @@
               <p>
                 {{ token.name }}
               </p>
-              <p
-                :class="[token.balance !== 'Load' ? '' : 'manual-load']"
-                @click="
-                  token.balance !== 'Load' ? () => {} : fetchTokenBalance(token)
-                "
-              >
-                {{ token.balance }}
-              </p>
+              <div class="balance-container">
+                <p
+                  :class="[token.balance !== 'Load' ? '' : 'manual-load']"
+                  @click="
+                    token.balance !== 'Load' ? () => {} : fetchTokenBalance(token)
+                  "
+                >
+                  {{ token.balance }}
+                </p>
+                <i class="fa fa-times" @click="removeCustomToken(token)" />
+              </div>
             </div>
             <div
               v-for="(token, idx) in localTokenVersion"
@@ -319,6 +322,17 @@ export default {
     window.chrome.storage.onChanged.removeListener(this.fetchTokens);
   },
   methods: {
+    removeCustomToken(token) {
+      const idx = this.customTokens.findIndex(item => {
+        return item.address.toLowerCase() === token.address.toLowerCase();
+      });
+      const storedTokens = store.get('customTokens');
+      this.customTokens.splice(idx, 1);
+      this.localCustomTokens = this.customTokens.splice();
+      storedTokens[this.network.type.name] = this.customTokens;
+      store.set('customTokens', storedTokens);
+      this.fetchTokens();
+    },
     searchBySymbol(symbol) {
       const searchNetwork = this.localTokenVersion.find(item => {
         return item.symbol.toLowerCase() === symbol.toLowerCase();
@@ -392,6 +406,7 @@ export default {
         currentCustomToken[this.network.type.name] = this.customTokens;
         store.set('customTokens', currentCustomToken);
         this.$refs.tokenModal.$refs.tokenModal.hide();
+        this.fetchTokenBalance(token);
         await this.fetchTokens();
         Toast.responseHandler('Successfully added token!', Toast.SUCCESS);
       }
