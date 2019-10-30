@@ -1,17 +1,16 @@
-const bip39 = require('bip39');
-import * as HDKey from 'hdkey';
 import Toast from './responseHandler';
 import { toChecksumAddress, isAddress } from './addressUtils';
+import { MnemonicWallet } from '@/wallets';
+import Misc from './misc';
 
 const getAccounts = callback => {
   const chrome = window.chrome;
   chrome.storage.sync.get(null, callback);
 };
 
-const getPrivFromMnemonicWallet = (mnem, path) => {
-  const seed = bip39.mnemonicToSeedSync(mnem);
-  const hdKey = HDKey.fromMasterSeed(seed);
-  return hdKey.derive(path).privateKey;
+const getPrivFromMnemonicWallet = async (mnem, path) => {
+  const wallet = await MnemonicWallet(mnem, '');
+  return wallet.hdKey.derive(path ? path : wallet.basePath).privateKey;
 };
 
 const addWalletToStore = (
@@ -51,8 +50,7 @@ const addWalletToStore = (
         return;
       }
     }
-
-    nickname = nickname.replace(/(<([^>]+)>)/gi, '');
+    nickname = Misc.stripTags(nickname.replace(/(<([^>]+)>)/gi, ''));
     const value = {
       nick: nickname,
       priv: encStr,

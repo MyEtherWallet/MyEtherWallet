@@ -106,7 +106,7 @@ const eventsListeners = (request, _, callback) => {
     clearTimeout(metamaskChecker);
     metamaskChecker = setTimeout(function() {
       chrome.storage.remove('warned');
-    }, 900000);
+    }, 300000); // Clear var in 5 minutes
   }
 
   const payload = utils._.mapObject(
