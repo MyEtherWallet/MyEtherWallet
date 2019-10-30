@@ -80,7 +80,7 @@
               </div>
             </router-link>
           </li>
-          <li v-if="isHomePage && buildType !== 'mewcx'">
+          <li v-if="isHomePage && !isMewCx">
             <router-link to="/#about-mew" @click.native="isMenuOpen = false">
               <div class="menu-link-block">
                 <div>{{ $t('header.about') }}</div>
@@ -88,7 +88,7 @@
               </div>
             </router-link>
           </li>
-          <li v-if="buildType !== 'mewcx'">
+          <li v-if="isMewCx">
             <router-link to="/#faqs" @click.native="isMenuOpen = false">
               <div class="menu-link-block">
                 <div>{{ $t('common.faqs') }}</div>
@@ -135,6 +135,7 @@ import MobileAddressBlock from './components/MobileAddressBlock';
 import MobileBalanceBlock from './components/MobileBalanceBlock';
 import MobileNetworkBlock from './components/MobileNetworkBlock';
 import MobileLanguageSelector from './components/MobileLanguageSelector';
+import {Misc} from '@/helpers';
 
 export default {
   components: {
@@ -159,6 +160,7 @@ export default {
     }
   },
   data() {
+    const isMewCx = Misc.isMewCx();
     return {
       localGasPrice: '10',
       balance: 0,
@@ -167,7 +169,8 @@ export default {
       isHomePage: true,
       langSelectorOpen: false,
       currentLang: 'English',
-      currentFlag: 'en'
+      currentFlag: 'en',
+      isMewCx: isMewCx
     };
   },
   computed: {

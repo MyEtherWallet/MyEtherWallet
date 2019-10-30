@@ -10,7 +10,7 @@
     >
       <user-reminder-button />
     </router-link>
-    <mobile-menu :opensettings="openSettings" :logout="logout" />
+    <mobile-menu :opensettings="openSettings" :logout="logout" :build-type="buildType" />
 
     <!-- Modals ***************************************** -->
     <disconnected-modal ref="mewConnectDisconnected" />
@@ -54,11 +54,9 @@
                 <img
                   :class="[
                     !isPageOnTop && !isMobileMenuOpen
-                      ? `logo-small${
-                          buildType === 'web' ? '' : '-' + buildType
-                        }`
+                      ? `logo-small${isMewCx ? '' : '-' + buildType}`
                       : '',
-                    `logo-large${buildType === 'web' ? '' : '-' + buildType}`
+                    `logo-large${isMewCx ? '' : '-' + buildType}`
                   ]"
                   :src="
                     require(`@/assets/images/short-hand-logo-${buildType}.png`)
@@ -85,10 +83,7 @@
                 <b-nav-item v-if="isHomePage" to="/" exact>{{
                   $t('header.home')
                 }}</b-nav-item>
-                <b-nav-item
-                  v-if="isHomePage && buildType !== 'mewcx'"
-                  to="/#about-mew"
-                >
+                <b-nav-item v-if="isHomePage && !isMewCx" to="/#about-mew">
                   {{ $t('header.about') }}
                 </b-nav-item>
                 <b-nav-item-dropdown
@@ -111,7 +106,7 @@
                     >Ethplorer (Tokens)</b-dropdown-item
                   >
                 </b-nav-item-dropdown>
-                <b-nav-item v-if="buildType !== 'mewcx'" to="/#faqs">{{
+                <b-nav-item v-if="!isMewCx" to="/#faqs">{{
                   $t('common.faqs')
                 }}</b-nav-item>
                 <div class="language-menu-container">
@@ -157,7 +152,7 @@
                   />
                   <extension-notification
                     v-if="
-                      buildType === 'mewcx' &&
+                      isMewCx &&
                         !$route.fullPath.includes('view-wallet-info') &&
                         !$route.fullPath.includes('interface')
                     "
@@ -165,7 +160,7 @@
                   />
                 </div>
                 <b-nav-item
-                  v-if="showButtons && !isPageOnTop && buildType !== 'mewcx'"
+                  v-if="showButtons && !isPageOnTop && !isMewCx"
                   :class="[
                     showGetFreeWallet ? 'show' : 'hide',
                     'get-free-wallet first-button nopadding'
@@ -175,7 +170,7 @@
                   <div class="get-free-wallet-button">New Wallet</div>
                 </b-nav-item>
                 <b-nav-item
-                  v-if="showButtons && !isPageOnTop && buildType !== 'mewcx'"
+                  v-if="showButtons && !isPageOnTop && !isMewCx"
                   :class="[
                     showGetFreeWallet ? 'show' : 'hide',
                     'get-free-wallet nopadding'
@@ -256,6 +251,7 @@ export default {
     'decision-tree': DecisionTree
   },
   data() {
+    const isMewCx = Misc.isMewCx();
     return {
       supportedLanguages: [
         // { name: 'Deutsch', flag: 'de', langCode: 'de_DL' },
@@ -290,6 +286,7 @@ export default {
       gasPrice: '0',
       error: {},
       resolver: () => {},
+      isMewCx: isMewCx,
       buildType: BUILD_TYPE
     };
   },

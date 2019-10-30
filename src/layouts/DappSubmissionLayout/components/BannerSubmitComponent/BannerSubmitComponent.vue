@@ -2,7 +2,7 @@
   <div class="submit-container">
     <router-link to="/">
       <img
-        :src="require(`@/assets/images/short-hand-logo-${buildType}.png`)"
+        :src="require(`@/assets/images/short-hand-logo-${props.buildType}.png`)"
         class="logo ml-4"
       />
     </router-link>
@@ -59,6 +59,10 @@ export default {
     lackOfInfo: {
       type: Boolean,
       default: false
+    },
+    buildType: {
+      type: String,
+      default: 'mew'
     }
   }
 };

@@ -91,7 +91,7 @@
 
 <script>
 import { mapState } from 'vuex';
-import { Toast } from '@/helpers';
+import { Toast, Misc } from '@/helpers';
 import store from 'store';
 import TokenBalance from '@myetherwallet/eth-token-balance';
 import PrintModal from '@/layouts/InterfaceLayout/components/PrintModal';
@@ -200,7 +200,7 @@ export default {
       if (itemKey === 'privKey') {
         return !!this.account.isHardware;
       } else if (itemKey === 'keyStor') {
-        if (this.build === 'mewcx') {
+        if (Misc.isMewCx()) {
           return false;
         }
         return true;
@@ -214,7 +214,7 @@ export default {
       this.$refs.balance.$refs.balance.show();
     },
     downloadKeystore() {
-      if (this.build === 'mewcx') {
+      if (Misc.isMewCx()) {
         window.chrome.downloads.download({
           filename: this.filename,
           url: this.walletJson
