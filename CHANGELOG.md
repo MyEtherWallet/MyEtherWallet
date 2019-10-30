@@ -5,6 +5,7 @@
 - Chrome Extension Beta release [#1151](https://github.com/MyEtherWallet/MyEtherWallet/pull/1151)
 
 ### Devop
+
 - Add hackerone link to README for vulnerability reporting [#1577](https://github.com/MyEtherWallet/MyEtherWallet/pull/1577)
 
 ### Release v5.1.9

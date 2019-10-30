@@ -113,7 +113,9 @@
           Details
         </div>
         <div class="clickable" @click="edit">Edit</div>
-        <div class="clickable d-block d-xl-none" @click="viewAllTokens(true)">View Tokens</div>
+        <div class="clickable d-block d-xl-none" @click="viewAllTokens(true)">
+          View Tokens
+        </div>
       </div>
     </div>
     <div class="wallet-content">

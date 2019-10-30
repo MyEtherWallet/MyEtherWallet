@@ -55,14 +55,31 @@
           </ul>
         </div>
         <div class="button-container">
-          <b-btn
-            :class="[hasEmpty ? 'disabled' : '', 'mnemonic-submit']"
-            type="submit"
-            @click.prevent="openAddressOption"
-          >
-            <span v-show="!loading"> {{ $t('common.continue') }} </span>
-            <i v-show="loading" class="fa fa-spin fa-spinner fa-lg" />
-          </b-btn>
+          <expanding-option title="Password">
+            <div class="input-container">
+              <div class="mnemonic-password-input">
+                <input
+                  v-model="locPassword"
+                  :type="show ? 'text' : 'password'"
+                  placeholder="Enter your password"
+                />
+                <img
+                  :src="show ? showIcon : hide"
+                  @click.prevent="show = !show"
+                />
+              </div>
+            </div>
+          </expanding-option>
+          <div>
+            <b-btn
+              :class="[hasEmpty ? 'disabled' : '', 'mnemonic-submit']"
+              type="submit"
+              @click.prevent="openAddressOption"
+            >
+              <span v-show="!loading"> {{ $t('common.continue') }} </span>
+              <i v-show="loading" class="fa fa-spin fa-spinner fa-lg" />
+            </b-btn>
+          </div>
         </div>
       </form>
     </div>
@@ -73,10 +90,14 @@
 
 <script>
 import CustomerSupport from '@/components/CustomerSupport';
+import ExpandingOption from '@/components/ExpandingOption';
+import hide from '@/assets/images/icons/hide-password.svg';
+import showIcon from '@/assets/images/icons/show-password.svg';
 
 export default {
   components: {
-    'customer-support': CustomerSupport
+    'customer-support': CustomerSupport,
+    'expanding-option': ExpandingOption
   },
   props: {
     openAddressOption: {
@@ -86,13 +107,21 @@ export default {
     loading: {
       type: Boolean,
       default: false
+    },
+    password: {
+      type: String,
+      default: ''
     }
   },
   data() {
     return {
       locMnemonicPhrase: new Array(this.mnemonicSize).fill(''),
       mnemonicSize: 12,
-      isTwelve: true
+      isTwelve: true,
+      show: false,
+      locPassword: this.password,
+      hide: hide,
+      showIcon: showIcon
     };
   },
   computed: {
@@ -111,11 +140,15 @@ export default {
         }
       }
       this.$emit('mnemonicPhrase', newVal);
+    },
+    locPassword(newVal) {
+      this.$emit('passwordUpdated', newVal);
     }
   },
   mounted() {
     this.$refs.mnemonicPhrase.$on('hidden', () => {
       this.locMnemonicPhrase = new Array(this.mnemonicSize).fill('');
+      this.locPassword = '';
     });
   },
   methods: {

@@ -23,7 +23,7 @@
 describe('PrintModal.vue', () => {
   it('making test pass', () => {
     expect(1).toBe(1);
-  })
+  });
   // let localVue, i18n, wrapper, store;
 
   // beforeAll(() => {
