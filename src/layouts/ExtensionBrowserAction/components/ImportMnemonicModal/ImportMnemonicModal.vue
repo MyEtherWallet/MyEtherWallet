@@ -15,14 +15,22 @@
         <div class="value-switch noselect">
           <div class="sliding-switch">
             <label class="switch">
-              <input ref="checkyboi" type="checkbox"/>
+              <input ref="checkyboi" type="checkbox" />
               <span class="slider round" @click="mnemonicValueBitSizeChange" />
             </label>
             <div class="labels">
-              <span :class="[locMnemonicPhrase.length <= 12 ? 'white' : '', 'label-left']"
+              <span
+                :class="[
+                  locMnemonicPhrase.length <= 12 ? 'white' : '',
+                  'label-left'
+                ]"
                 >12</span
               >
-              <span :class="[locMnemonicPhrase.length > 12 ? 'white' : '', 'label-right']"
+              <span
+                :class="[
+                  locMnemonicPhrase.length > 12 ? 'white' : '',
+                  'label-right'
+                ]"
                 >24</span
               >
             </div>
@@ -96,12 +104,8 @@ export default {
     locMnemonicPhrase(newVal) {
       if (newVal[0] !== ' ' && newVal[0].indexOf(' ') >= 0) {
         const length = newVal[0].split(' ').length;
-        if (this.mnemonicSize !== length)
-          this.$refs.checkyboi.click();
-        if (
-          length === 12 ||
-          length === 24
-        ) {
+        if (this.mnemonicSize !== length) this.$refs.checkyboi.click();
+        if (length === 12 || length === 24) {
           this.mnemonicSize = length;
           this.locMnemonicPhrase = newVal[0].split(' ');
         }
