@@ -3,9 +3,7 @@
     <router-link to="/">
       <img class="logo ml-4" src="~@/assets/images/short-hand-logo.png" />
     </router-link>
-    <span
-      class="submit-text"
-    >
+    <span class="submit-text">
       Submit Dapp
     </span>
     <button v-if="props.showBack" class="back-btn mr-3" @click="props.back">
@@ -13,9 +11,7 @@
     </button>
     <button
       :class="[
-        props.disableSubmit || (props.lackOfInfo)
-          ? 'disabled'
-          : 'submit-btn'
+        props.disableSubmit || props.lackOfInfo ? 'disabled' : 'submit-btn'
       ]"
       class="mr-5"
       @click="props.next"
