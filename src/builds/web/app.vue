@@ -19,11 +19,13 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
+* {
+  font-family: 'Open Sans';
+}
 i {
   font-family: 'Material Icons' !important;
 }
-
 .v-btn {
   text-transform: initial;
 }
