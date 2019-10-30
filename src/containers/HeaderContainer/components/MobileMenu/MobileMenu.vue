@@ -1,6 +1,7 @@
 <template>
   <div class="mobile-menu">
     <mobile-language-selector
+      v-show="!isMewCx"
       :open="langSelectorOpen"
       @isopen="langSelectorOpen = false"
       @currentlang="langChange"
@@ -135,7 +136,7 @@ import MobileAddressBlock from './components/MobileAddressBlock';
 import MobileBalanceBlock from './components/MobileBalanceBlock';
 import MobileNetworkBlock from './components/MobileNetworkBlock';
 import MobileLanguageSelector from './components/MobileLanguageSelector';
-import {Misc} from '@/helpers';
+import { Misc } from '@/helpers';
 
 export default {
   components: {
