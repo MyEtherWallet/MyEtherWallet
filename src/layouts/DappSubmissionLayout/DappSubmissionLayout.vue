@@ -2,7 +2,6 @@
   <div>
     <div class="dapp-header">
       <banner-submit-component
-        :show-preview="$route.fullPath === '/dapp-submission/dapp-summary'"
         :show-back="$route.fullPath !== '/dapp-submission'"
         :btn-text="
           $route.fullPath.includes('/dapp-summary')

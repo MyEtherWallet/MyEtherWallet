@@ -7,9 +7,11 @@
 
 .about-your-dapp {
   display: inline-block;
+  width: 40%;
 
-  @media all and (max-width: 736px) {
+  @media all and (max-width: 742px) {
     margin-bottom: 0 !important;
+    width: 80%;
   }
 }
 
@@ -65,6 +67,14 @@
     width: 100%;
     align-items: center;
 
+    .mock-user-flow-input {
+      cursor: pointer;
+    }
+
+    input {
+      padding-left: 25px;
+    }
+
     span {
       color: $red-9;
       font-size: 16px;
@@ -73,7 +83,7 @@
     }
   }
 
-  .requiredIcon {
+  .required-icon {
     color: $red-9;
     font-size: 16px;
     height: 19px;
