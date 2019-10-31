@@ -36,7 +36,7 @@ const KyberCurrencies = {
 
 const walletDepositeAddress = '0x4247951c2eb6d0bA38d233fe7d542c8c80c9d46A'; // i.e. where payments go
 const kyberNetworkENS = 'kybernetwork.eth';
-const kyberValidNetworks = ['ETH', 'ROP', 'KOV'];
+const kyberValidNetworks = ['ETH']; //['ETH', 'ROP', 'KOV'];
 
 const defaultValues = {
   tradeGasLimit: 500000,

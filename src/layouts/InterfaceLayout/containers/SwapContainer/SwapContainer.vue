@@ -323,7 +323,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account', 'ens', 'gasPrice', 'web3', 'network']),
+    ...mapState(['account', 'ens', 'gasPrice', 'web3', 'network', 'online']),
     bestRate() {
       try {
         if (this.providerData.length > 0) {
@@ -470,8 +470,11 @@ export default {
     }
   },
   watch: {
+    online(value){
+
+    },
     ['this.network.type.name']() {
-      this.swap.updateNetwork(this.network.type.name);
+      this.swap.updateNetwork(this.network.type.name, this.web3);
     },
     ['swap.updateProviderRates']() {
       const { toArray, fromArray } = this.swap.initialCurrencyLists;
@@ -768,6 +771,16 @@ export default {
               } else if (entry.provider === this.providerNames.changelly) {
                 Toast.responseHandler(
                   `Failed to retrieve Changelly rate from ${fromCurrency} to ${toCurrency}`,
+                  3
+                );
+              } else if (entry.provider === this.providerNames.bity) {
+                Toast.responseHandler(
+                  `Failed to retrieve Bity rate from ${fromCurrency} to ${toCurrency}`,
+                  3
+                );
+              } else if (entry.provider === this.providerNames.kyber) {
+                Toast.responseHandler(
+                  `Failed to retrieve Kyber Network rate from ${fromCurrency} to ${toCurrency}`,
                   3
                 );
               }
