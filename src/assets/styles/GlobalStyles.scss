@@ -21,6 +21,10 @@ div {
   text-transform: initial;
 }
 
+.v-toolbar__content {
+  padding: 0;
+}
+
 // Common classes
 .pointer-event--none {
   pointer-events: none;

@@ -6,7 +6,7 @@
 
         <v-spacer></v-spacer>
 
-        <v-toolbar-items>
+        <div>
           <v-menu open-on-hover bottom offset-y transition="fade-transition">
             <template v-slot:activator="{ on }">
               <v-btn text dark class="mx-3" v-on="on">
@@ -23,13 +23,13 @@
             <div class="white pa-5">
               <v-list-item>
                 <v-list-item-content>
-                  <v-list-item-title><div>Company</div></v-list-item-title>
+                  <v-list-item-title>Company</v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
 
               <v-list-item>
                 <v-list-item-content>
-                  <v-list-item-title><div>Team</div></v-list-item-title>
+                  <v-list-item-title>Team</v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
 
@@ -62,7 +62,9 @@
             <div class="white pa-5">
               <v-row>
                 <v-col class="px-6">
-                  <div class="font-weight-bold text-uppercase mb-4 mx-2">
+                  <div
+                    class="font-weight-bold text-uppercase mb-3 mx-2 subtitle-1"
+                  >
                     Popular
                   </div>
                   <v-divider></v-divider>
@@ -96,7 +98,9 @@
                   </div>
                 </v-col>
                 <v-col class="px-6">
-                  <div class="font-weight-bold text-uppercase mb-4 mx-2">
+                  <div
+                    class="font-weight-bold text-uppercase mb-3 mx-2 subtitle-1"
+                  >
                     Advanced
                   </div>
                   <v-divider></v-divider>
@@ -151,7 +155,7 @@
               </v-btn>
             </template>
           </v-menu>
-        </v-toolbar-items>
+        </div>
 
         <v-spacer></v-spacer>
 
