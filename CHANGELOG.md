@@ -1,3 +1,7 @@
+### Bug
+
+- Fix copy to actually copy signed tx, not raw on offline tx []()
+
 ### Release v5.2.0
 
 ### Feature
