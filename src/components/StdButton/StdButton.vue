@@ -3,35 +3,47 @@
     x-large
     dark
     depressed
-    class="the-button-component"
-    v-text="label"
+    class="std-button"
+    :class="buttonclass"
     :disabled="disabled"
-  ></v-btn>
+  >
+    <slot />
+  </v-btn>
 </template>
 
 <script>
 export default {
   props: {
-    label: String,
-    disabled: Boolean
+    buttonclass: { default: 'button--green', type: String },
+    disabled: { default: false, type: Boolean }
   },
   data: () => ({})
 };
 </script>
 
 <style lang="scss" scoped>
-@import "@/global.scss";
+@import '@/assets/styles/GlobalVariables.scss';
 
-.the-button-component {
-  background-color: $color--primary--royal-blue !important;
-  height: $button--height !important;
-  min-width: $button--min-width !important;
-  text-transform: $button--text-transform;
-  letter-spacing: $button--letter-spacing;
+.std-button {
+  height: 60px !important;
+  min-width: 180px !important;
+  text-transform: none;
+  letter-spacing: -0.1px;
+  font-size: 14px !important;
+  font-weight: 600;
 }
 
-.theme--dark.v-btn.v-btn--disabled:not(.v-btn--flat):not(.v-btn--text):not(.v-btn--outlined) {
-  background-color: $button--primary--disabled--background-color !important;
-  color: $button--primary--disabled--text-color !important;
+.button--green {
+  background-color: $emerald !important;
+}
+
+.button--green-border {
+  background-color: transparent !important;
+  border: 1px solid $emerald;
+  color: $emerald !important;
+}
+
+.v-btn--disabled {
+  border: 0px;
 }
 </style>
