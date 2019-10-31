@@ -928,6 +928,26 @@ export default {
                       .toString(10);
                   }
                 };
+              } else if (entry.provider === this.providerNames.changelly) {
+                Toast.responseHandler(
+                  `Failed to retrieve Changelly rate from ${fromCurrency} to ${toCurrency}`,
+                  3
+                );
+              } else if (entry.provider === this.providerNames.bity) {
+                Toast.responseHandler(
+                  `Failed to retrieve Bity rate from ${fromCurrency} to ${toCurrency}`,
+                  3
+                );
+              } else if (entry.provider === this.providerNames.kyber) {
+                Toast.responseHandler(
+                  `Failed to retrieve Kyber Network rate from ${fromCurrency} to ${toCurrency}`,
+                  3
+                );
+              } else if (entry.provider === this.providerNames.simplex) {
+                Toast.responseHandler(
+                  `Failed to retrieve Simplex rate from ${fromCurrency} to ${toCurrency}`,
+                  3
+                );
               }
             }),
             fromValue
