@@ -11,6 +11,13 @@ div {
   font-size: 14px;
 }
 
+h1 {
+  font-size: 42px;
+  font-weight: 500;
+}
+
+
+// Vuetify custom styles =========================================
 // Remove default background color
 .theme--light.v-application {
   background: white !important;
@@ -24,6 +31,7 @@ div {
 .v-toolbar__content {
   padding: 0;
 }
+
 
 // Common classes
 .pointer-event--none {
