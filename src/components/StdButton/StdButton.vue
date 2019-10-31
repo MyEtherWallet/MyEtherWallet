@@ -1,26 +1,26 @@
 <template>
   <v-btn
-    :disabled="disabled"
     x-large
     dark
     depressed
     class="the-button-component"
     v-text="label"
+    :disabled="disabled"
   ></v-btn>
 </template>
 
 <script>
 export default {
   props: {
-    //label: String,
-    //disabled: Boolean
+    label: String,
+    disabled: Boolean
   },
   data: () => ({})
 };
 </script>
 
 <style lang="scss" scoped>
-@import '@/global.scss';
+@import "@/global.scss";
 
 .the-button-component {
   background-color: $color--primary--royal-blue !important;
