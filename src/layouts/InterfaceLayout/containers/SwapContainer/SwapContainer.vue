@@ -783,6 +783,11 @@ export default {
                   `Failed to retrieve Kyber Network rate from ${fromCurrency} to ${toCurrency}`,
                   3
                 );
+              } else if (entry.provider === this.providerNames.simplex) {
+                Toast.responseHandler(
+                  `Failed to retrieve Simplex rate from ${fromCurrency} to ${toCurrency}`,
+                  3
+                );
               }
             }),
             fromValue
