@@ -473,6 +473,7 @@ export default {
         e.keyCode === 13 ||
         (e.keyCode === 32 && this.spacePressCount === 2)
       ) {
+        this.tagInput = this.tagInput.replace(/\s+/g, '');
         this.tagInput.length > 0 ? this.pushTag() : '';
         this.spacePressCount = 0;
       } else if (e.keyCode === 8) {
