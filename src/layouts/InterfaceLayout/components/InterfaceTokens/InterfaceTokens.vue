@@ -129,6 +129,14 @@ export default {
     resetTokenSelection: {
       type: Function,
       default: function() {}
+    },
+    ads: {
+      type: Boolean,
+      default: true
+    },
+    address: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -153,7 +161,6 @@ export default {
     },
     search(newVal) {
       this.assignTokens(this.tokens, newVal);
-      this.getCustomTokens();
     }
   },
   methods: {
@@ -195,6 +202,11 @@ export default {
       this.customTokens = storedTokens.hasOwnProperty(this.network.type.name)
         ? storedTokens[this.network.type.name]
         : [];
+      this.localCustomTokens = storedTokens.hasOwnProperty(
+        this.network.type.name
+      )
+        ? storedTokens[this.network.type.name]
+        : [];
     },
     async getSpecificTokenBalance(token) {
       for (let i = 0; i < this.tokens.length; i++) {
@@ -209,11 +221,12 @@ export default {
       this.resetTokenSelection();
     },
     addTokenModal() {
-      this.$refs.tokenModal.$refs.token.show();
+      this.$refs.tokenModal.$refs.tokenModal.show();
     },
     removeToken(idx) {
       const storedTokens = store.get('customTokens');
       this.customTokens.splice(idx, 1);
+      this.localCustomTokens = this.customTokens.splice();
       storedTokens[this.network.type.name] = this.customTokens;
       store.set('customTokens', storedTokens);
       this.fetchTokens();
@@ -256,14 +269,14 @@ export default {
       const findTokenBySymbol = this.searchBySymbol(symbol);
       const findTokenByAddr = this.searchByAddr(address);
       if (!findTokenByAddr && addType !== '') {
-        this.$refs.tokenModal.$refs.token.hide();
+        this.$refs.tokenModal.$refs.tokenModal.hide();
         Toast.responseHandler(
           'A default or custom token with this contract address already exists!',
           Toast.ERROR
         );
         return false;
       } else if (!findTokenBySymbol && addType !== '') {
-        this.$refs.tokenModal.$refs.token.hide();
+        this.$refs.tokenModal.$refs.tokenModal.hide();
         Toast.responseHandler(
           "A default or custom token with this symbol already exists! The token in our list may have the same symbol but a different contract address, try adding it again with a '2' after the symbol!",
           Toast.ERROR
@@ -287,9 +300,10 @@ export default {
         this.customTokens =
           this.customTokens.length > 0 ? this.customTokens : [];
         this.customTokens.push(token);
+        this.localCustomTokens = this.customTokens.splice();
         currentCustomToken[this.network.type.name] = this.customTokens;
         store.set('customTokens', currentCustomToken);
-        this.$refs.tokenModal.$refs.token.hide();
+        this.$refs.tokenModal.$refs.tokenModal.hide();
         await this.fetchTokens();
         Toast.responseHandler('Successfully added token!', Toast.SUCCESS);
       }
@@ -300,9 +314,10 @@ export default {
       this.$refs.expendUp.classList.toggle('hidden');
     },
     async assignTokens(arr, query) {
-      const oldArray = this.customTokens ? this.customTokens.slice() : [];
+      const localCustomTok =
+        this.customTokens.length > 0 ? this.customTokens.slice() : [];
       if (query !== '') {
-        this.customTokens = oldArray
+        this.customTokens = localCustomTok
           .filter(token => {
             if (token.name.toLowerCase().includes(query.toLowerCase())) {
               return token;
@@ -318,6 +333,7 @@ export default {
           .sort(sortByBalance);
       } else {
         this.localTokens = arr;
+        this.customTokens = this.localCustomTokens;
       }
     }
   }

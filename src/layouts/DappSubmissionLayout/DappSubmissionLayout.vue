@@ -13,6 +13,7 @@
         :back="previous"
         :disable-submit="isDisabledBtn()"
         :lack-of-info="strengthPercentage < 50 ? true : false"
+        :build-type="buildType"
       />
       <banner-component :banner-text="bannerText" />
       <b-progress :value="bannerValue" class="dapp-progress-bar"></b-progress>
@@ -131,7 +132,8 @@ export default {
       dappSocialLinksUpdated: false,
       disableBtn: false,
       socialAccts: [],
-      imgHasError: false
+      imgHasError: false,
+      buildType: BUILD_TYPE
     };
   },
   computed: {

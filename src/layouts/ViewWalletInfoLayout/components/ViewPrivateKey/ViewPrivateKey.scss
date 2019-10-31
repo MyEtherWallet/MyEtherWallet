@@ -1,0 +1,39 @@
+@import '~@/scss/GlobalVariables';
+
+.modal-contents {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 20px;
+
+  .priv-key {
+    color: $dark-blue-6;
+    margin: 0 !important;
+    padding-top: 20px;
+    text-align: center;
+    width: 300px;
+    word-break: break-all;
+  }
+
+  .copy-button {
+    color: $mew-green;
+    cursor: pointer;
+    padding: 20px;
+    position: relative;
+
+    input {
+      opacity: 0;
+      position: absolute;
+      z-index: -1;
+    }
+  }
+
+  .red-warning {
+    color: $red-6;
+    background-color: $light-red-1;
+    border: 1px solid $red-6;
+    border-radius: 5px;
+    padding: 20px 30px;
+  }
+}
