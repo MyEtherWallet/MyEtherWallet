@@ -1,8 +1,6 @@
 <template>
   <div class="light-blue darken-4 top-banner">
-    <div
-      class="banner-container pointer-event--none user-select--none line-height--0"
-    >
+    <div class="pointer-event--none user-select--none line-height--0">
       <img
         class="banner-img"
         src="@/assets/images/banners/homepage-top-banner.svg"
@@ -54,22 +52,13 @@ export default {
 .top-banner {
   position: relative;
 }
-
-.banner-container {
-  position: relative;
-
-  img {
-  }
-}
-
 .banner-img {
   width: 100%;
 }
-
 .banner-content-container {
   height: 400px;
   position: absolute;
-  top: 13vw;
+  top: 12vw;
   left: 0;
   right: 0;
   margin: 0 auto;
