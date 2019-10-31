@@ -6,14 +6,11 @@
           <h4>{{ $t('common.actions') }}</h4>
         </div>
         <div class="buttons">
-          <button-send-tx
-            class="clickable"
-            :go-to="goTo"
-          />
+          <button-send-tx :go-to="goTo" class="clickable" />
           <button-nft-manager
             :disabled="!isOnlineAndEth"
-            class="clickable"
             :go-to="goTo"
+            class="clickable"
           />
         </div>
       </div>
