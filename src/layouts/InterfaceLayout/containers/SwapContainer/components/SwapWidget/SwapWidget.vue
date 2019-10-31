@@ -571,7 +571,7 @@ export default {
   },
   watch: {
     ['this.network.type.name']() {
-      this.swap.updateNetwork(this.network.type.name);
+      this.swap.updateNetwork(this.network.type.name, this.web3);
     },
     ['swap.updateProviderRates']() {
       const { toArray, fromArray } = this.swap.initialCurrencyLists;
