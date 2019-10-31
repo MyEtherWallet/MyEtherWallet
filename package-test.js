@@ -22,7 +22,11 @@ const EXCEPTIONS = [
   "@vue/cli-plugin-eslint",
   "@vue/cli-plugin-pwa",
   "@vue/cli-plugin-unit-jest",
-  "@vue/cli-service"
+  "@vue/cli-service",
+  'web3',
+  'web3-core-helpers',
+  'web3-core-method',
+  'web3-utils'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'

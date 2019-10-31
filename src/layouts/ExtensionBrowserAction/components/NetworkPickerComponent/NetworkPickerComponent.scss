@@ -1,0 +1,19 @@
+@import '~@/scss/GlobalVariables';
+.dropdown-container {
+  span {
+    font-size: 12px;
+  }
+
+  .network-text {
+    color: $dark-grey-11;
+    padding-right: 15px;
+  }
+
+  .current-network {
+    background-color: $white;
+    border: 1px solid $light-grey-8;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 10px;
+  }
+}
