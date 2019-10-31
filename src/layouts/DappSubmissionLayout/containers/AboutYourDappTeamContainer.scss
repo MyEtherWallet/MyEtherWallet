@@ -26,6 +26,7 @@
     border: none;
     height: 52px;
     max-width: 90%;
+    padding-left: 25px;
     width: 90%;
   }
 
@@ -36,6 +37,7 @@
     background: $light-blue-9;
     border: none;
     height: 52px;
+    padding-left: 25px;
   }
 
   input::placeholder,
@@ -95,6 +97,8 @@
     border: none;
     font-size: 14px;
     width: 90%;
+    padding-left: 25px;
+    padding-top: 15px;
   }
 
   .dapp-text-info {
