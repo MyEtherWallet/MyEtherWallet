@@ -8,12 +8,12 @@
         <div class="buttons">
           <button-send-tx
             class="clickable"
-            @click.native="goTo('send-transaction')"
+            :go-to="goTo"
           />
           <button-nft-manager
             :disabled="!isOnlineAndEth"
             class="clickable"
-            @click.native="goTo('nft-manager', !isOnlineAndEth)"
+            :go-to="goTo"
           />
         </div>
       </div>

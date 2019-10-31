@@ -2,7 +2,7 @@
 
 <img src="./img/icons/icon192.png" />
 
-## Build
+### Build
 
 Like the webapp version, the chrome extension is also built with Vue.
 With that in mind, You can run this command on your terminal:
