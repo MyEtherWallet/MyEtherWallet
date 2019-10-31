@@ -1,3 +1,7 @@
+### Bug
+
+- Remove lighstreams on ledger options, show custom if found []()
+
 ### Release v5.2.0
 
 ### Feature
