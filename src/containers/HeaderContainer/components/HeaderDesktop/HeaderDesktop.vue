@@ -7,16 +7,12 @@
         <v-spacer></v-spacer>
 
         <div>
+          <v-btn class="mx-3" text :ripple="false">
+            How it works
+          </v-btn>
           <v-menu open-on-hover bottom offset-y transition="fade-transition">
             <template v-slot:activator="{ on }">
-              <v-btn text dark class="mx-3" v-on="on">
-                How it works
-              </v-btn>
-            </template>
-          </v-menu>
-          <v-menu open-on-hover bottom offset-y transition="fade-transition">
-            <template v-slot:activator="{ on }">
-              <v-btn class="mx-3" text dark v-on="on">
+              <v-btn class="mx-3" text :ripple="false" v-on="on">
                 About<MenuOpenArrow
               /></v-btn>
             </template>
@@ -55,7 +51,7 @@
           </v-menu>
           <v-menu open-on-hover bottom offset-y transition="fade-transition">
             <template v-slot:activator="{ on }">
-              <v-btn class="mx-3" text dark v-on="on">
+              <v-btn class="mx-3" text :ripple="false" v-on="on">
                 Tools<MenuOpenArrow
               /></v-btn>
             </template>
@@ -148,13 +144,9 @@
               </v-row>
             </div>
           </v-menu>
-          <v-menu open-on-hover bottom offset-y transition="fade-transition">
-            <template v-slot:activator="{ on }">
-              <v-btn class="mx-3" text dark v-on="on">
-                Support
-              </v-btn>
-            </template>
-          </v-menu>
+          <v-btn class="mx-3" text :ripple="false">
+            Support
+          </v-btn>
         </div>
 
         <v-spacer></v-spacer>
@@ -201,21 +193,7 @@ export default {
       ensdebugger: ensdebugger,
       sha3: sha3,
       convert: convert
-    },
-    menuItems: [
-      {
-        title: 'How it works'
-      },
-      {
-        title: 'About'
-      },
-      {
-        title: 'Tools'
-      },
-      {
-        title: 'Support'
-      }
-    ]
+    }
   })
 };
 </script>
