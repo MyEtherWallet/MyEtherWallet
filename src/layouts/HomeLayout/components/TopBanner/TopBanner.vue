@@ -1,6 +1,8 @@
 <template>
   <div class="light-blue darken-4 top-banner">
-    <div class="banner-container pointer-event--none user-select--none">
+    <div
+      class="banner-container pointer-event--none user-select--none line-height--0"
+    >
       <img
         class="banner-img"
         src="@/assets/images/banners/homepage-top-banner.svg"
@@ -48,7 +50,7 @@ export default {
 }
 
 .banner-content-container {
-  height: 100%;
+  height: 400px;
   position: absolute;
   top: 200px;
   left: 0;
