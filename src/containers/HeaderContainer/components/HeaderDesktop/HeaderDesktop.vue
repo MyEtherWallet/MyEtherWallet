@@ -20,23 +20,23 @@
                 About<MenuOpenArrow
               /></v-btn>
             </template>
-            <div class="white">
+            <div class="white pa-5">
               <v-list-item>
                 <v-list-item-content>
-                  <v-list-item-title>Company</v-list-item-title>
+                  <v-list-item-title><div>Company</div></v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
 
               <v-list-item>
                 <v-list-item-content>
-                  <v-list-item-title>Team</v-list-item-title>
+                  <v-list-item-title><div>Team</div></v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
 
               <v-list-item>
                 <v-list-item-content>
                   <v-list-item-title>Why MEW</v-list-item-title>
-                  <v-list-item-subtitle
+                  <v-list-item-subtitle class="caption"
                     >Let us show you why you should use
                     MEW.</v-list-item-subtitle
                   >
@@ -46,7 +46,7 @@
               <v-list-item>
                 <v-list-item-content>
                   <v-list-item-title>MEWtopia</v-list-item-title>
-                  <v-list-item-subtitle>
+                  <v-list-item-subtitle class="caption">
                     Get help from other enthusiastic users.
                   </v-list-item-subtitle>
                 </v-list-item-content>
@@ -67,7 +67,7 @@
                   </div>
                   <v-divider></v-divider>
                   <div>
-                    <v-list min-width="200" class="px-2">
+                    <v-list min-width="240" class="px-2">
                       <v-list-item class="px-0">
                         <v-img
                           class="mr-3"
@@ -101,7 +101,7 @@
                   </div>
                   <v-divider></v-divider>
                   <div>
-                    <v-list min-width="200" class="px-2">
+                    <v-list min-width="240" class="px-2">
                       <v-list-item class="px-0">
                         <v-img
                           class="mr-3"

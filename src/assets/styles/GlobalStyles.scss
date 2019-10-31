@@ -20,3 +20,12 @@ div {
 .v-btn {
   text-transform: initial;
 }
+
+// Common classes
+.pointer-event--none {
+  pointer-events: none;
+}
+
+.user-select--none {
+  user-select: none;
+}

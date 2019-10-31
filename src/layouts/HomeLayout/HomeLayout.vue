@@ -1,18 +1,23 @@
 <template>
-  <div>
-    <h1>Hello</h1>
-    <v-btn>
-      <span class="mr-2">Latest Release</span>
-    </v-btn>
+  <div class="light-blue darken-4 home-layout">
+    <TopBanner />
   </div>
 </template>
 
 <script>
+import TopBanner from './components/TopBanner';
+
 export default {
-  name: 'HomeContainer'
+  name: 'HomeContainer',
+  components: {
+    TopBanner
+  }
 };
 </script>
 
 <style lang="scss" scoped>
-@import 'HomeLayout.scss';
+@import '@/assets/styles/GlobalVariables';
+
+.home-layout {
+}
 </style>
