@@ -298,7 +298,7 @@
           </div>
           <span
             :class="form.bannerUrl ? 'uploaded-required-icon' : ''"
-            class="requiredIcon"
+            class="required-icon"
             >*</span
           >
         </div>

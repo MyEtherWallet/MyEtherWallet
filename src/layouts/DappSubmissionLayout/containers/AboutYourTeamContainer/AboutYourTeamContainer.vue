@@ -73,7 +73,7 @@
                 Add +
               </button>
             </div>
-            <span class="requiredIcon">*</span>
+            <span class="required-icon">*</span>
           </div>
           <div v-if="socialAccts.length > 0" class="social-links-content">
             <div
