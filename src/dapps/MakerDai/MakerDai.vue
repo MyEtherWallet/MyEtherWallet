@@ -598,6 +598,8 @@ export default {
 
         this.curentlyLoading = 'Checking For CDPs';
         try {
+          console.log('this._mcdManager', this._mcdManager); // todo remove dev item
+          console.log('this._cdpService', this._cdpService); // todo remove dev item
           const { withType, withProxy, withoutProxy } = await locateCdps(
             this,
             this._mcdManager

@@ -140,15 +140,24 @@ export default {
       return this.selectedCdp !== 0;
     }
   },
+  watch: {
+    $route: 'setup',
+    makerActive: 'setup'
+  },
   async mounted() {
-    this.migrateContractBalance = 0;
-    this.getProxy = this.getValueOrFunction('getProxy');
-    this.proxyAllowances = this.getValueOrFunction('proxyAllowances');
-    this.findCdps();
-    this.getMigrateContractSaiBalance();
+    this.setup();
     console.log(this.cdps); // todo remove dev item
   },
   methods: {
+    setup() {
+      if (this.makerActive) {
+        this.migrateContractBalance = 0;
+        this.getProxy = this.getValueOrFunction('getProxy');
+        this.proxyAllowances = this.getValueOrFunction('proxyAllowances');
+        this.findCdps();
+        this.getMigrateContractSaiBalance();
+      }
+    },
     async checkAllowance(tokenAddress) {
       const contract = new this.web3.eth.Contract(ERC20, tokenAddress);
       return contract.methods
@@ -156,13 +165,16 @@ export default {
         .call();
     },
     async findCdps() {
+
       const { withType, withProxy, withoutProxy } = await locateCdps(
         this,
         this.getValueOrFunction('_cdpService')
       );
       console.log(withType, withProxy, withoutProxy); // todo remove dev item
       this.cdps = withProxy.concat(withoutProxy);
-      this.mkrAllowance = await this.checkAllowance('0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd')
+      this.mkrAllowance = await this.checkAllowance(
+        '0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd'
+      );
       console.log(this.mkrAllowance); // todo remove dev item
     },
     async beginMigration() {
@@ -170,7 +182,10 @@ export default {
         const txs = [];
         // console.log(this.getCdp); // todo remove dev item
         this.proxyAddress = this.getValueOrFunction('proxyAddress');
-        const details = await this.getValueOrFunction('_cdpService').getCdp(this.selectedCdp, this.proxyAddress);
+        const details = await this.getValueOrFunction('_cdpService').getCdp(
+          this.selectedCdp,
+          this.proxyAddress
+        );
 
         // const fee = await details.getGovernanceFee();
         // console.log(fee.toBigNumber().toString()); // todo remove dev item
@@ -203,6 +218,10 @@ export default {
     // MIGRATION CONTRACT
     // https://github.com/makerdao/scd-mcd-migration/blob/master/src/ScdMcdMigration.sol#L59
     async migrate(cdpId) {
+      const proxy = new this.web3.eth.Contract(
+        ProxyContract,
+        this.proxyAddress
+      );
       const contract = new this.web3.eth.Contract(
         migrateABI,
         addresses.MIGRATION
@@ -212,7 +231,9 @@ export default {
       // const cpdIdPadded = '0x' + ethUtils.setLengthLeft(cdpId2, 32)
       console.log(cdpId2); // todo remove dev item
       const dataOrig = contract.methods.migrate(cdpId2).encodeABI();
-/*      const len = cdpId2.length;
+      console.log(dataOrig); // todo remove dev item
+      const data = proxy.methods.execute(addresses.MIGRATION, dataOrig);
+      /*      const len = cdpId2.length;
       const withOut0x = cdpId2.replace(/^0x/, '');
       const methodSig = dataOrig.slice(0,10);
       console.log(methodSig); // todo remove dev item
@@ -225,10 +246,10 @@ export default {
       // return data;
       return {
         from: this.account.address,
-        to: addresses.MIGRATION,
+        to: this.proxyAddress,
         value: 0,
-        gas: 500000,
-        data: dataOrig
+        gas: 5000000,
+        data: data
       };
     },
     async approveMkr() {
