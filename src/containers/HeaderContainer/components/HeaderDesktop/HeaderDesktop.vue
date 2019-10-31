@@ -77,28 +77,20 @@
                         <div>View wallet info</div>
                       </v-list-item>
                       <v-list-item class="px-0">
-                        <v-img
-                          class="mr-3"
-                          :src="icons.wallet"
-                          max-width="25"
-                        />
-                        <div>View wallet info</div>
+                        <v-img class="mr-3" :src="icons.send" max-width="25" />
+                        <div>Send offline helper</div>
                       </v-list-item>
                       <v-list-item class="px-0">
                         <v-img
                           class="mr-3"
-                          :src="icons.wallet"
+                          :src="icons.message"
                           max-width="25"
                         />
-                        <div>View wallet info</div>
+                        <div>Verify message</div>
                       </v-list-item>
                       <v-list-item class="px-0">
-                        <v-img
-                          class="mr-3"
-                          :src="icons.wallet"
-                          max-width="25"
-                        />
-                        <div>View wallet info</div>
+                        <v-img class="mr-3" :src="icons.eth" max-width="25" />
+                        <div>Ethereum units</div>
                       </v-list-item>
                     </v-list>
                   </div>
@@ -113,42 +105,38 @@
                       <v-list-item class="px-0">
                         <v-img
                           class="mr-3"
-                          :src="icons.wallet"
+                          :src="icons.grabber"
                           max-width="25"
                         />
-                        <div>View wallet info</div>
+                        <div>Data grabber</div>
                       </v-list-item>
                       <v-list-item class="px-0">
                         <v-img
                           class="mr-3"
-                          :src="icons.wallet"
+                          :src="icons.privatekey"
                           max-width="25"
                         />
-                        <div>View wallet info</div>
+                        <div>Mistyped private key</div>
                       </v-list-item>
                       <v-list-item class="px-0">
                         <v-img
                           class="mr-3"
-                          :src="icons.wallet"
+                          :src="icons.ensdebugger"
                           max-width="25"
                         />
-                        <div>View wallet info</div>
+                        <div>ENS debugger</div>
+                      </v-list-item>
+                      <v-list-item class="px-0">
+                        <v-img class="mr-3" :src="icons.sha3" max-width="25" />
+                        <div>SHA3 (Keccak-256)</div>
                       </v-list-item>
                       <v-list-item class="px-0">
                         <v-img
                           class="mr-3"
-                          :src="icons.wallet"
+                          :src="icons.convert"
                           max-width="25"
                         />
-                        <div>View wallet info</div>
-                      </v-list-item>
-                      <v-list-item class="px-0">
-                        <v-img
-                          class="mr-3"
-                          :src="icons.wallet"
-                          max-width="25"
-                        />
-                        <div>View wallet info</div>
+                        <div>Convert hex & decimal</div>
                       </v-list-item>
                     </v-list>
                   </div>
@@ -183,7 +171,15 @@
 import MenuOpenArrow from '@/components/Common/MenuOpenArrow';
 
 import wallet from '@/assets/images/common/icons/iconset1/wallet.svg';
+import send from '@/assets/images/common/icons/iconset1/send.svg';
+import message from '@/assets/images/common/icons/iconset1/message.svg';
 import eth from '@/assets/images/common/icons/iconset1/eth.svg';
+
+import grabber from '@/assets/images/common/icons/iconset1/grabber.svg';
+import privatekey from '@/assets/images/common/icons/iconset1/privatekey.svg';
+import ensdebugger from '@/assets/images/common/icons/iconset1/ensdebugger.svg';
+import sha3 from '@/assets/images/common/icons/iconset1/sha3.svg';
+import convert from '@/assets/images/common/icons/iconset1/convert.svg';
 
 export default {
   name: 'HeaderDesktop',
@@ -193,7 +189,14 @@ export default {
   data: () => ({
     icons: {
       wallet: wallet,
-      eth: eth
+      send: send,
+      message: message,
+      eth: eth,
+      grabber: grabber,
+      privatekey: privatekey,
+      ensdebugger: ensdebugger,
+      sha3: sha3,
+      convert: convert
     },
     menuItems: [
       {
