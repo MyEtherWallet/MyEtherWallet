@@ -3,7 +3,7 @@ import { shallowMount } from '@vue/test-utils';
 
 import { Tooling } from '@@/helpers';
 
-describe('InterfaceBottomText.vue', () => {
+xdescribe('InterfaceBottomText.vue', () => {
   let localVue, i18n, wrapper, store;
   const link = 'link';
   const linkText = 'linkText';

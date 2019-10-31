@@ -107,18 +107,6 @@
               @unableToValidate="unableToValidate = $event"
             />
           </div>
-          <div v-show="!validAddress" class="error-message-container">
-            <p>{{ $t('interface.notValidAddr', { currency: toCurrency }) }}</p>
-          </div>
-          <div v-show="unableToValidate" class="warn-message-container">
-            <p>
-              {{
-                $t('interface.unableToValidateAddress', {
-                  currency: toCurrency
-                })
-              }}
-            </p>
-          </div>
         </div>
 
         <div
@@ -136,20 +124,6 @@
               @unableToValidate="unableToValidateExit = $event"
             />
           </div>
-          <div v-show="!validExitAddress" class="error-message-container">
-            <p>
-              {{ $t('interface.notValidAddrSrc', { currency: fromCurrency }) }}
-            </p>
-          </div>
-          <div v-show="unableToValidateExit" class="warn-message-container">
-            <p>
-              {{
-                $t('interface.unableToValidateAddress', {
-                  currency: toCurrency
-                })
-              }}
-            </p>
-          </div>
         </div>
 
         <div v-show="showRefundAddress" class="send-form">
@@ -163,20 +137,6 @@
               @validAddress="validRefundAddress = $event"
               @unableToValidate="unableToValidateRefund = $event"
             />
-          </div>
-          <div v-show="!validRefundAddress" class="error-message-container">
-            <p>
-              {{ $t('interface.notValidAddr', { currency: fromCurrency }) }}
-            </p>
-          </div>
-          <div v-show="unableToValidateRefund" class="warn-message-container">
-            <p>
-              {{
-                $t('interface.unableToValidateAddress', {
-                  currency: toCurrency
-                })
-              }}
-            </p>
           </div>
         </div>
 
@@ -198,6 +158,7 @@
             :provider-selected="selectedProvider"
             :switch-currency-order="switchCurrencyOrder"
             :all-supported-providers="supportedProviders"
+            :provider-selected-name="providerSelectedName"
             @selectedProvider="setSelectedProvider"
           />
         </div>
@@ -298,6 +259,7 @@ export default {
   data() {
     return {
       baseCurrency: BASE_CURRENCY,
+      providerSelectedName: '',
       toAddress: '',
       currentAddress: '',
       refundAddress: '',
@@ -493,28 +455,13 @@ export default {
       return validBaseToAddress;
     },
     hasEnough() {
-      if (
-        SwapProviders.isToken(this.fromCurrency) &&
-        this.fromCurrency !== this.baseCurrency
-      ) {
-        const enteredVal = this.swap.convertToTokenWei(
-          this.fromCurrency,
-          this.fromValue
-        );
-
-        return new BigNumber(this.tokenBalances[this.fromCurrency]).gte(
-          new BigNumber(enteredVal)
-        );
-      } else if (this.fromCurrency === this.baseCurrency) {
-        const enteredVal = this.swap.convertToTokenWei(
-          this.fromCurrency,
-          this.fromValue
-        );
-        return new BigNumber(this.account.balance).gt(
-          new BigNumber(enteredVal)
-        );
-      }
-      return true;
+      return this.swap.hasEnough(
+        this.fromCurrency,
+        this.fromValue,
+        this.baseCurrency,
+        this.tokenBalances,
+        this.account.balance
+      );
     },
     exitSourceAddress() {
       return this.isExitToFiat && this.fromCurrency === this.baseCurrency
@@ -587,6 +534,7 @@ export default {
       this.bityExitToFiat = false;
     },
     flipCurrencies() {
+      this.providerSelectedName = '';
       this.switchCurrencyOrder = true;
       const origTo = this.toValue;
       this.fromCurrency = this.currencyDetails.to.symbol;
@@ -605,6 +553,7 @@ export default {
       this.selectedProvider = this.providerList.find(entry => {
         return entry.provider === provider;
       });
+      this.providerSelectedName = this.selectedProvider.provider;
       this.updateEstimate('from');
     },
     setToAddress(address) {
@@ -624,6 +573,7 @@ export default {
       this.amountChanged('from');
     },
     setFromCurrency(value, dir = 'from') {
+      this.providerSelectedName = '';
       this.currencyDetails.from = value;
       this.fromCurrency = value.symbol;
       this.getBalance(this.fromCurrency);
@@ -636,6 +586,7 @@ export default {
       );
     },
     setToCurrency(value, dir = 'to') {
+      this.providerSelectedName = '';
       this.currencyDetails.to = value;
       this.toCurrency = value.symbol;
       this.fromArray = this.swap.setFromCurrencyBuilder(value);
@@ -814,6 +765,11 @@ export default {
                       .toString(10);
                   }
                 };
+              } else if (entry.provider === this.providerNames.changelly) {
+                Toast.responseHandler(
+                  `Failed to retrieve Changelly rate from ${fromCurrency} to ${toCurrency}`,
+                  3
+                );
               }
             }),
             fromValue

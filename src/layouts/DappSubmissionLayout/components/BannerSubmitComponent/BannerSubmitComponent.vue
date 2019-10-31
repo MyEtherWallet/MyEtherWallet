@@ -1,21 +1,31 @@
-<template>
+<template functional>
   <div class="submit-container">
     <router-link to="/">
-      <img class="logo ml-4" src="~@/assets/images/short-hand-logo.png" />
+      <img
+        :src="require(`@/assets/images/short-hand-logo-${props.buildType}.png`)"
+        class="logo ml-4"
+      />
     </router-link>
-    <span :class="showPreview ? 'submit-preview-text' : ''" class="submit-text">
+    <span
+      :class="props.showPreview ? 'submit-preview-text' : ''"
+      class="submit-text"
+    >
       Submit Dapp
     </span>
-    <p v-if="showPreview" class="preview-txt mr-3">Preview</p>
-    <button v-if="showBack" class="back-btn mr-3" @click="back">Back</button>
+    <p v-if="props.showPreview" class="preview-txt mr-3">Preview</p>
+    <button v-if="props.showBack" class="back-btn mr-3" @click="props.back">
+      Back
+    </button>
     <button
       :class="[
-        disableSubmit || (lackOfInfo && showPreview) ? 'disabled' : 'submit-btn'
+        props.disableSubmit || (props.lackOfInfo && props.showPreview)
+          ? 'disabled'
+          : 'submit-btn'
       ]"
       class="mr-5"
-      @click="next"
+      @click="props.next"
     >
-      {{ btnText }}
+      {{ props.btnText }}
     </button>
   </div>
 </template>
@@ -49,6 +59,10 @@ export default {
     lackOfInfo: {
       type: Boolean,
       default: false
+    },
+    buildType: {
+      type: String,
+      default: 'mew'
     }
   }
 };

@@ -1,5 +1,5 @@
 import EventNames from '../events';
-import { toPayload } from './jsonrpc';
+import { toPayload } from '../jsonrpc';
 export default async ({ payload, eventHub }, res, next) => {
   if (payload.method !== 'eth_sign') return next();
   const msg = payload.params[1];

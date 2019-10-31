@@ -1,3 +1,68 @@
+### Release v5.2.0
+
+### Feature
+
+- Chrome Extension Beta release [#1151](https://github.com/MyEtherWallet/MyEtherWallet/pull/1151)
+
+### Devop
+
+- Add hackerone link to README for vulnerability reporting [#1577](https://github.com/MyEtherWallet/MyEtherWallet/pull/1577)
+- bitbox: update semantic versioning to be less restrictive [#1582](https://github.com/MyEtherWallet/MyEtherWallet/pull/1582)
+
+### Release v5.1.9
+
+### Devop
+
+- persist selected swap provider over rate refresh cycles [#1552](https://github.com/MyEtherWallet/MyEtherWallet/pull/1552)
+
+### Feature
+
+- Ens TXT records support [#1559](https://github.com/MyEtherWallet/MyEtherWallet/pull/1559)
+
+### Bug
+
+- Fix scrolltop issue, keep one collapse open on network address modal [#1561](https://github.com/MyEtherWallet/MyEtherWallet/pull/1561)
+- Fix ENS empty address issue [#1573](https://github.com/MyEtherWallet/MyEtherWallet/pull/1573)
+- Fix Schedule Transaction button [#1574](https://github.com/MyEtherWallet/MyEtherWallet/pull/1574)
+
+### Release v5.1.8-hotfix.1
+
+### Hotfix
+
+- Update list to bring back contract addresses [#1567](https://github.com/MyEtherWallet/MyEtherWallet/pull/1567)
+
+### Release v5.1.8
+
+### Bug
+
+- Fix total NFT issue [#1550](https://github.com/MyEtherWallet/MyEtherWallet/pull/1550)
+
+### Devop
+
+- Fix new BTC multicoin encoding and add new currency types [#1551](https://github.com/MyEtherWallet/MyEtherWallet/pull/1551)
+- update egem [#1548](https://github.com/MyEtherWallet/MyEtherWallet/pull/1548)
+
+### Release v5.1.7
+
+### Feature
+
+- Multicoin ENS support [#1521](https://github.com/MyEtherWallet/MyEtherWallet/pull/1521)
+- Move State of the Dapp text to the left column [#1518](https://github.com/MyEtherWallet/MyEtherWallet/pull/1518)
+
+### Bug
+
+- transferDomain func fix on ROP [#1538](https://github.com/MyEtherWallet/MyEtherWallet/pull/1538)
+- Fix mnemonic phrase validation [#1506](https://github.com/MyEtherWallet/MyEtherWallet/pull/1506)
+- Fix value on interact/deploy contract [#1502](https://github.com/MyEtherWallet/MyEtherWallet/pull/1502)
+- Fix ENS subdomain issue [#1547](https://github.com/MyEtherWallet/MyEtherWallet/pull/1547)
+
+### Devop
+
+- Fix static "help" and "tutorial" button size and position [#1531](https://github.com/MyEtherWallet/MyEtherWallet/pull/1531)
+- Remove Ethereum commonwealth nodes in case they shut it down [#1507](https://github.com/MyEtherWallet/MyEtherWallet/pull/1507)
+- App optimization [#1519](https://github.com/MyEtherWallet/MyEtherWallet/pull/1519)
+- changelly timeout error handling [#1522](https://github.com/MyEtherWallet/MyEtherWallet/pull/1522)
+
 ### Release v5.1.6
 
 ### Feature
@@ -43,7 +108,6 @@
 - Fix generate mnemonic [#1439](https://github.com/MyEtherWallet/MyEtherWallet/pull/1439)
 - Gas price not saving properly [#1434](https://github.com/MyEtherWallet/MyEtherWallet/pull/1434)
 - Fix u2f timeout for bitbox on windows [#1423](https://github.com/MyEtherWallet/MyEtherWallet/pull/1423)
-
 
 ### Release v5.1.3
 

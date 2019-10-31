@@ -10,7 +10,7 @@
   "digital": "BitBox",
   "ethCard": "Ether Card",
   "trezor": "Trezor",
-  "sotd": "State of the DApps",
+  "sotd": "State of the Dapps",
   "bity": "Bity",
   "mew": "MEW",
   "about": "About",
@@ -29,5 +29,6 @@
   "verifyMessage": "Verify Message",
   "keepkey": "KeepKey",
   "secalot": "Secalot",
-  "bitbox": "Bitbox"
+  "bitbox": "Bitbox",
+  "viewWalletInfo": "View Wallet Info"
 }
