@@ -96,3 +96,14 @@
     }
   }
 }
+
+.error-msg-container {
+  color: $red-1;
+  padding-top: 30px;
+  text-align: center;
+}
+
+.disabled {
+  background-color: $dark-grey-11 !important;
+  pointer-events: none !important;
+}

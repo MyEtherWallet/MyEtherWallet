@@ -89,6 +89,8 @@
                 <create-wallet-input-footer
                   :combo="$t('createWallet.keyPass')"
                   :desc="$t('createWallet.keyPassDesc')"
+                  :do-not-forget="$t('createWallet.doNotForget')"
+                  :do-not-forget-desc="$t('createWallet.doNotForgetDesc')"
                 />
               </div>
             </b-tab>

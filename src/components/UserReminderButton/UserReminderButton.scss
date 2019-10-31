@@ -1,45 +1,45 @@
 @import '~@/scss/GlobalVariables';
 
 .user-reminder-button {
-  bottom: 13vh;
   cursor: pointer;
   position: fixed;
-  right: 4vw;
-  z-index: 999;
-}
+  bottom: 150px;
+  right: 60px;
+  z-index: 990;
+  padding: 0;
+  margin: 0;
+  opacity: 0.6;
+  text-align: center;
+  min-width: 70px;
 
-.popup-box {
-  display: none;
-  position: absolute;
-  left: -3px;
-  top: -29px;
-  background-color: $white;
-  font-size: 11px;
-  padding: 2px 5px;
-  border-radius: 4px;
-  box-shadow: 0 0 25px rgba(0, 0, 0, 0.18);
-
-  &:hover {
-    display: block;
-  }
-
-  &::after {
-    border-color: $white transparent transparent transparent;
-    content: '';
-    position: absolute;
-    bottom: -6px;
-    left: 0;
-    border-width: 6px 6px 0 6px;
-    border-style: solid;
-    right: 0;
-    margin: auto;
-    width: 0;
-  }
-}
-
-.button-block {
   img {
     cursor: pointer;
+    height: 50px;
     width: 50px;
+  }
+  p {
+    font-size: 12px;
+    font-weight: 600;
+    color: gray;
+  }
+
+  &:hover {
+    opacity: 1;
+  }
+
+  @media all and (max-width: $tablet-width) {
+    bottom: 70px;
+    right: 0;
+    opacity: 1;
+
+    img {
+      height: 30px;
+      width: 30px;
+    }
+
+    p {
+      font-size: 10px;
+      font-weight: 600;
+    }
   }
 }

@@ -13,9 +13,19 @@
       <p class="label">{{ $t('dapps.owner') }}:</p>
       <p class="content">{{ owner }}</p>
     </div>
-    <div class="content-container">
-      <p class="label">{{ $t('dapps.resolverAddr') }}:</p>
-      <p class="content">{{ resolverAddress }}</p>
+    <div v-show="resolverMultiCoinSupport" class="content-container">
+      <h4>{{ $t('dapps.multiCoin') }}:</h4>
+      <div v-for="(v, k) in supportedCoins" v-if="v.value" :key="k.id">
+        <span class="currency">{{ v.symbol }} address: </span>
+        <span class="content">{{ v.value }}</span>
+      </div>
+    </div>
+    <div v-show="hasAnyTxt" class="content-container">
+      <h4>{{ $t('dapps.txtRecord') }}:</h4>
+      <div v-for="(value, key) in txtRecords" v-if="value !== ''" :key="key">
+        <span class="currency">{{ key }}: </span>
+        <span class="content">{{ value }}</span>
+      </div>
     </div>
     <div class="owner-options">
       <button
@@ -55,10 +65,6 @@ export default {
       type: String,
       default: ''
     },
-    resolverAddress: {
-      type: String,
-      default: ''
-    },
     hostName: {
       type: String,
       default: ''
@@ -66,15 +72,32 @@ export default {
     tld: {
       type: String,
       default: ''
+    },
+    supportedCoins: {
+      type: Object,
+      default: function() {}
+    },
+    resolverMultiCoinSupport: {
+      type: Boolean,
+      default: false
+    },
+    txtRecords: {
+      type: Object,
+      default: function() {}
     }
-  },
-  data() {
-    return {};
   },
   computed: {
     ...mapState(['account']),
     fullDomainName() {
       return `${this.hostName}.${this.tld}`;
+    },
+    hasAnyTxt() {
+      for (const i in this.txtRecords) {
+        if (this.txtRecords[i] !== '') {
+          return true;
+        }
+      }
+      return false;
     }
   },
   mounted() {

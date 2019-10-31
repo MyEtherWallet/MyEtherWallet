@@ -13,12 +13,12 @@
         :back="previous"
         :disable-submit="isDisabledBtn()"
         :lack-of-info="strengthPercentage < 50 ? true : false"
+        :build-type="buildType"
       />
       <banner-component :banner-text="bannerText" />
       <b-progress :value="bannerValue" class="dapp-progress-bar"></b-progress>
     </div>
     <div class="dapp-container">
-      <sotd />
       <router-view
         :update-name="updateName"
         :update-category="updateCategory"
@@ -48,6 +48,7 @@
           :strength-of-info="strengthPercentage"
           class="strength-of-info ml-5"
         />
+        <sotd />
         <mew-support />
       </div>
       <success-modal
@@ -131,7 +132,8 @@ export default {
       dappSocialLinksUpdated: false,
       disableBtn: false,
       socialAccts: [],
-      imgHasError: false
+      imgHasError: false,
+      buildType: BUILD_TYPE
     };
   },
   computed: {

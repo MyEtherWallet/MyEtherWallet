@@ -27,6 +27,7 @@
   "registerEnsWarn2": "Invalid symbols on domain",
   "registerEnsContractNotReady": "Contract is not ready yet, transaction might fail.",
   "updateResolver": "Update Resolving address",
+  "multiCoin": "Multi coin support",
   "transferEnsTo": "Transfer ENS domain to",
   "ensNotAvailable": "is not available yet",
   "sendMy": "Send My {value}",
@@ -39,5 +40,6 @@
   "customNFT": "Custom NFT",
   "notSupportedNFT": "NFTs are not supported on {value}",
   "noNFTs": "No NFTs",
-  "reloading": "reloading"
+  "reloading": "reloading",
+  "txtRecord": "Text Records"
 }

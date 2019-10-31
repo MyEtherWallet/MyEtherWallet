@@ -9,7 +9,6 @@
     <verification-modal
       ref="verification"
       :mnemonic-values="mnemonicValues"
-      :mnemonic24="mnemonic24"
       @verifiedMnemonic="openFinish"
     />
     <div class="wrap">
@@ -52,7 +51,7 @@
       </div>
 
       <div class="option-container-block">
-        <expending-option
+        <expanding-option
           title="Password"
           button-text="Optional"
           @expanded="passwordInputViewChange"
@@ -77,7 +76,7 @@
               </div>
             </div>
           </div>
-        </expending-option>
+        </expanding-option>
       </div>
 
       <div class="user-input">
@@ -102,7 +101,7 @@ import FinishModal from './components/FinishModal';
 import PrintModal from './components/PrintModal';
 import VerificationModal from './components/VerificationModal';
 import PasswordInput from '@/components/PasswordInput';
-import ExpendingOption from '@/components/ExpendingOption';
+import ExpandingOption from '@/components/ExpandingOption';
 import CreateWalletInput from '../../components/CreateWalletInput';
 
 const bip39 = require('bip39');
@@ -114,7 +113,7 @@ export default {
     'print-modal': PrintModal,
     'input-footer': CreateWalletInputFooter,
     'password-input': PasswordInput,
-    'expending-option': ExpendingOption,
+    'expanding-option': ExpandingOption,
     'create-wallet-input': CreateWalletInput
   },
   data() {
