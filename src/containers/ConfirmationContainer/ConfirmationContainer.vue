@@ -332,6 +332,10 @@ export default {
       });
     }
 
+    this.$refs.signConfirmModal.$refs.signConfirmation.$on('hidden', () => {
+      this.signedMessage = '';
+    });
+
     this.$refs.successModal.$refs.success.$on('hide', () => {
       this.successMessage = '';
       this.linkMessage = 'OK';
