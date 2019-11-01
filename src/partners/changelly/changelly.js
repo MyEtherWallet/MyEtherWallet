@@ -247,7 +247,7 @@ export default class Changelly {
       swapDetails.validFor = swapDetails.parsed.validFor;
       return swapDetails;
     }
-    return Error('From amount below changelly minimun for currency pair');
+    return Error('From amount below changelly minimum for currency pair');
   }
 
   async createTransaction({

@@ -26,8 +26,8 @@
         </b-btn>
         <b-collapse
           id="collapse1"
-          v-model="showCollapse1"
           class="collapse-content"
+          accordion="networkaddraccordion"
         >
           <ul class="networks">
             <li
@@ -79,7 +79,8 @@
         </b-btn>
         <b-collapse
           id="collapse2"
-          v-model="showCollapse2"
+          accordion="networkaddraccordion"
+          visible
           class="collapse-content"
         >
           <!-- Derivation Path Drop down -->
@@ -223,27 +224,26 @@
             </div>
           </div>
           <!-- .content-container-2 -->
-          <div class="accept-terms">
-            <label class="checkbox-container">
-              <i18n path="accessWallet.accept-terms" tag="label">
-                <router-link slot="terms" to="/terms-and-conditions">
-                  {{ $t('common.terms') }} </router-link
-                >.
-              </i18n>
-              <input type="checkbox" @click="acceptTerms = !acceptTerms" />
-              <span class="checkmark" />
-            </label>
-          </div>
-          <div class="button-container">
-            <b-btn
-              :disabled="!isDisabled"
-              class="mid-round-button-green-filled close-button"
-              @click.prevent="unlockWallet"
-              >{{ $t('common.wallet.access-my') }}</b-btn
-            >
-          </div>
-          <customer-support />
         </b-collapse>
+        <div class="accept-terms">
+          <label class="checkbox-container">
+            {{ $t('accessWallet.acceptTerms') }}
+            <router-link to="/terms-and-conditions"
+              >{{ $t('common.terms') }}.</router-link
+            >
+            <input v-model="acceptTerms" type="checkbox" />
+            <span class="checkmark" />
+          </label>
+        </div>
+        <div class="button-container">
+          <b-btn
+            :disabled="!isDisabled"
+            class="mid-round-button-green-filled close-button"
+            @click.prevent="unlockWallet"
+            >{{ $t('common.accessMyWallet') }}</b-btn
+          >
+        </div>
+        <customer-support />
       </div>
     </div>
     <!-- .modal-content-container -->
@@ -284,8 +284,7 @@ export default {
       customPathInput: false,
       currentWallet: null,
       customPath: { label: '', dpath: '' },
-      showCollapse1: false,
-      showCollapse2: true,
+      showCollapse: false,
       ledgerType: LEDGER_TYPE,
       acceptTerms: false
     };
@@ -325,6 +324,13 @@ export default {
       this.currentWallet = null;
       this.customPath = { label: '', path: '' };
       this.resetPaginationValues();
+    });
+
+    this.$root.$on('bv::collapse::state', (collapseId, isJustShown) => {
+      if (collapseId === 'collapse1' && !isJustShown)
+        this.$root.$emit('bv::toggle::collapse', 'collapse2');
+      if (collapseId === 'collapse2' && !isJustShown)
+        this.$root.$emit('bv::toggle::collapse', 'collapse1');
     });
   },
   methods: {

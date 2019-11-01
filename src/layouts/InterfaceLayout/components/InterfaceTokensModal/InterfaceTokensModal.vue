@@ -1,7 +1,7 @@
 <template lang="html">
   <div>
     <b-modal
-      ref="token"
+      ref="tokenModal"
       :title="$t('interface.tokens.modal.title')"
       hide-footer
       class="bootstrap-modal nopadding max-height-1"

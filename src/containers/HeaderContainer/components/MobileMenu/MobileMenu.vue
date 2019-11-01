@@ -1,6 +1,7 @@
 <template>
   <div class="mobile-menu">
     <mobile-language-selector
+      v-show="!isMewCx"
       :open="langSelectorOpen"
       @isopen="langSelectorOpen = false"
       @currentlang="langChange"
@@ -24,7 +25,11 @@
           :class="!isOnTop && !isMenuOpen ? 'small-menu' : ''"
           class="logo-image--container"
         >
-          <img class="logo" src="~@/assets/images/short-hand-logo.png" alt />
+          <img
+            :src="require(`@/assets/images/short-hand-logo-${buildType}.png`)"
+            class="logo"
+            alt
+          />
         </div>
       </router-link>
       <div class="mobile-menu-button--container">
@@ -76,7 +81,7 @@
               </div>
             </router-link>
           </li>
-          <li v-if="isHomePage">
+          <li v-if="isHomePage && !isMewCx">
             <router-link to="/#about-mew" @click.native="isMenuOpen = false">
               <div class="menu-link-block">
                 <div>{{ $t('common.about') }}</div>
@@ -84,7 +89,7 @@
               </div>
             </router-link>
           </li>
-          <li>
+          <li v-if="isMewCx">
             <router-link to="/#faqs" @click.native="isMenuOpen = false">
               <div class="menu-link-block">
                 <div>{{ $t('common.faqs') }}</div>
@@ -131,6 +136,7 @@ import MobileAddressBlock from './components/MobileAddressBlock';
 import MobileBalanceBlock from './components/MobileBalanceBlock';
 import MobileNetworkBlock from './components/MobileNetworkBlock';
 import MobileLanguageSelector from './components/MobileLanguageSelector';
+import { Misc } from '@/helpers';
 
 export default {
   components: {
@@ -148,9 +154,14 @@ export default {
     logout: {
       type: Function,
       default: function() {}
+    },
+    buildType: {
+      type: String,
+      default: 'web'
     }
   },
   data() {
+    const isMewCx = Misc.isMewCx();
     return {
       localGasPrice: '10',
       balance: 0,
@@ -159,7 +170,8 @@ export default {
       isHomePage: true,
       langSelectorOpen: false,
       currentLang: 'English',
-      currentFlag: 'en'
+      currentFlag: 'en',
+      isMewCx: isMewCx
     };
   },
   computed: {

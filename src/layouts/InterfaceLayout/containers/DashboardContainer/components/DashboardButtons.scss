@@ -1,7 +1,8 @@
 .content-container {
   height: 100%;
-  position: relative;
   border-radius: 5px;
+  min-height: 150px;
   overflow: hidden;
+  position: relative;
   user-select: none;
 }

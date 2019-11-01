@@ -67,6 +67,7 @@ import makeBackup from '@/assets/images/icons/make-a-backup.svg';
 import walletWorker from 'worker-loader!@/workers/wallet.worker.js';
 import { Toast, Wallet, Configs } from '@/helpers';
 import { mapState } from 'vuex';
+import createBlob from '@/helpers/createBlob.js';
 
 export default {
   components: {
@@ -111,7 +112,7 @@ export default {
       const worker = new walletWorker();
       worker.postMessage({ type: 'createWallet', data: [this.password] });
       worker.onmessage = e => {
-        this.walletJson = this.createBlob('mime', e.data.walletJson);
+        this.walletJson = createBlob(e.data.walletJson, 'mime');
         this.downloadable = true;
         this.name = e.data.name.toString();
       };
@@ -120,7 +121,7 @@ export default {
       };
     } else {
       const _wallet = this.createWallet(this.password);
-      this.walletJson = this.createBlob('mime', _wallet.walletJson);
+      this.walletJson = createBlob(_wallet.walletJson, 'mime');
       this.downloadable = true;
       this.name = _wallet.name.toString();
     }
@@ -138,14 +139,6 @@ export default {
       });
       createdWallet.name = wallet.getV3Filename();
       return createdWallet;
-    },
-    createBlob(mime, str) {
-      const string = typeof str === 'object' ? JSON.stringify(str) : str;
-      if (string === null) return '';
-      const blob = new Blob([string], {
-        type: mime
-      });
-      return window.URL.createObjectURL(blob);
     }
   }
 };
