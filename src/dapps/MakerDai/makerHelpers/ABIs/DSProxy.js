@@ -19,22 +19,6 @@ export default [{
   'stateMutability': 'payable',
   'type': 'function'
 }, {
-  'constant': false,
-  'inputs': [{'internalType': 'bytes', 'name': '_code', 'type': 'bytes'}, {
-    'internalType': 'bytes',
-    'name': '_data',
-    'type': 'bytes'
-  }],
-  'name': 'execute',
-  'outputs': [{
-    'internalType': 'address',
-    'name': 'target',
-    'type': 'address'
-  }, {'internalType': 'bytes', 'name': 'response', 'type': 'bytes'}],
-  'payable': true,
-  'stateMutability': 'payable',
-  'type': 'function'
-}, {
   'constant': true,
   'inputs': [],
   'name': 'cache',

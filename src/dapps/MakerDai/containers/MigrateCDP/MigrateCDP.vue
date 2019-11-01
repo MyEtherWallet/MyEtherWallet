@@ -165,7 +165,6 @@ export default {
         .call();
     },
     async findCdps() {
-
       const { withType, withProxy, withoutProxy } = await locateCdps(
         this,
         this.getValueOrFunction('_cdpService')
@@ -173,7 +172,7 @@ export default {
       console.log(withType, withProxy, withoutProxy); // todo remove dev item
       this.cdps = withProxy.concat(withoutProxy);
       this.mkrAllowance = await this.checkAllowance(
-        '0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd'
+        '0x1dad4783cf3fe3085c1426157ab175a6119a04ba'
       );
       console.log(this.mkrAllowance); // todo remove dev item
     },
@@ -193,7 +192,7 @@ export default {
         //   txs.push(await this.approveMkr(details.governanceFeeOwed));
         // }
 
-        txs.push(await this.approveMkr(details.governanceFeeOwed));
+        txs.push(await this.approveMkr(100));
 
         const datas = await this.migrate(this.selectedCdp);
         txs.push(datas);
@@ -218,32 +217,52 @@ export default {
     // MIGRATION CONTRACT
     // https://github.com/makerdao/scd-mcd-migration/blob/master/src/ScdMcdMigration.sol#L59
     async migrate(cdpId) {
+      /*
+
+// example:
+0x1cff79cd
+00000000000000000000000017134c5ab1ea28f21df9c8203b817bd3b9f9a12d
+0000000000000000000000000000000000000000000000000000000000000040
+0000000000000000000000000000000000000000000000000000000000000044
+d25d7cc000000000000000000000000097cb5a9abcdbe291d0cd85915fa5b087
+46fe948a00000000000000000000000000000000000000000000000000000000
+00001a5b00000000000000000000000000000000000000000000000000000000
+
+
+0x1cff79cd
+00000000000000000000000097cb5a9abcdbe291d0cd85915fa5b08746fe948a
+0000000000000000000000000000000000000000000000000000000000000040
+0000000000000000000000000000000000000000000000000000000000000024
+e19b8ee336383537000000000000000000000000000000000000000000000000
+0000000000000000000000000000000000000000000000000000000000000000
+
+* * */
+
+      //TODO use seth to get tokens (MCD_GOV is maker address for deployments)
+      // TODO: look at and follow: https://github.com/makerdao/developerguides/blob/master/mcd/upgrading-to-multi-collateral-dai/cli-mcd-migration.md#migrating-cdps
       const proxy = new this.web3.eth.Contract(
         ProxyContract,
         this.proxyAddress
       );
+
       const contract = new this.web3.eth.Contract(
         migrateABI,
         addresses.MIGRATION
       );
+
       console.log(cdpId); // todo remove dev item
       const cdpId2 = utils.fromAscii(cdpId.toString());
-      // const cpdIdPadded = '0x' + ethUtils.setLengthLeft(cdpId2, 32)
+
       console.log(cdpId2); // todo remove dev item
       const dataOrig = contract.methods.migrate(cdpId2).encodeABI();
+
       console.log(dataOrig); // todo remove dev item
-      const data = proxy.methods.execute(addresses.MIGRATION, dataOrig);
-      /*      const len = cdpId2.length;
-      const withOut0x = cdpId2.replace(/^0x/, '');
-      const methodSig = dataOrig.slice(0,10);
-      console.log(methodSig); // todo remove dev item
-      let pad = '';
-      for(let i=0; i<(64-(len-2));i++){
-        pad = pad + '0';
-      }
-      const data = methodSig + pad + withOut0x;*/
-      console.log('data', dataOrig); // todo remove dev item
-      // return data;
+      const data = proxy.methods
+        .execute(addresses.MIGRATION_PROXY_ACTIONS, dataOrig)
+        .encodeABI();
+
+      console.log('dataOrig', dataOrig); // todo remove dev item
+      console.log('data', data); // todo remove dev item
       return {
         from: this.account.address,
         to: this.proxyAddress,
@@ -255,7 +274,8 @@ export default {
     async approveMkr() {
       // SAI_MKR: '0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd'
 
-      const tokenAddress = '0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd';
+      // const tokenAddress = '0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd';
+      const tokenAddress = '0x1dad4783cf3fe3085c1426157ab175a6119a04ba';
 
       const contract = new this.web3.eth.Contract(ERC20, tokenAddress);
 
@@ -267,7 +287,7 @@ export default {
       console.log(mkrBalance); // todo remove dev item
       const val = ethUnit.toWei(mkrBalance, 'ether').toString();
       const data = contract.methods
-        .approve(addresses.MIGRATION, val)
+        .approve(addresses.MIGRATION_PROXY_ACTIONS, val)
         .encodeABI();
 
       return {
@@ -278,12 +298,12 @@ export default {
       };
     },
     async approve(val) {
-      const tokenAddress = '0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd';
-
+      // const tokenAddress = '0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd';
+      const tokenAddress = '0x1dad4783cf3fe3085c1426157ab175a6119a04ba';
       const contract = new this.web3.eth.Contract(ERC20, tokenAddress);
 
       const data = contract.methods
-        .approve(addresses.MIGRATION, val)
+        .approve(addresses.MIGRATION_PROXY_ACTIONS, val)
         .encodeABI();
 
       return {
