@@ -9,6 +9,10 @@
 
 - Chrome Extension Beta release [#1151](https://github.com/MyEtherWallet/MyEtherWallet/pull/1151)
 
+### Bug
+
+- Fix dashboard buttons, fix missing image [#1588](https://github.com/MyEtherWallet/MyEtherWallet/pull/1588)
+
 ### Devop
 
 - Add hackerone link to README for vulnerability reporting [#1577](https://github.com/MyEtherWallet/MyEtherWallet/pull/1577)
