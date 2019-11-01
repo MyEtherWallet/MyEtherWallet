@@ -1,11 +1,11 @@
 <template>
-  <div class="block-title" :class="center ? 'text-center' : ''">
+  <div class="block-title" :class="centered ? 'text-center' : ''">
     <div
-      class="title text-uppercase font-weight-bold grey--text text--lighten-1"
+      class="top-title text-uppercase font-weight-bold grey--text text--lighten-1 mb-1"
     >
       {{ title }}
     </div>
-    <div class="display-1 font-weight-bold">{{ description }}</div>
+    <div class="top-description font-weight-bold">{{ description }}</div>
   </div>
 </template>
 
@@ -15,7 +15,7 @@ export default {
   props: {
     title: { default: '', type: String },
     description: { default: '', type: String },
-    center: { default: false, type: Boolean }
+    centered: { default: false, type: Boolean }
   },
   data: () => ({})
 };
@@ -24,7 +24,15 @@ export default {
 <style lang="scss" scoped>
 @import '@/assets/styles/GlobalVariables';
 
-.subtitle-1 {
+.top-title {
   letter-spacing: -0.3px;
+  font-size: 16px;
+}
+.top-description {
+  letter-spacing: -1px;
+  font-size: 30px;
+  line-height: 38px;
+  max-width: 500px;
+  display: inline-block;
 }
 </style>
