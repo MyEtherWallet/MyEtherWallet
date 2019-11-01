@@ -1,7 +1,7 @@
 <template>
   <div class="block-title" :class="centered ? 'text-center' : ''">
     <div
-      class="top-title text-uppercase font-weight-bold grey--text text--lighten-1 mb-1"
+      class="top-title text-uppercase font-weight-bold grey--text text--lighten-1 mb-2"
     >
       {{ title }}
     </div>
@@ -31,7 +31,7 @@ export default {
 .top-description {
   letter-spacing: -1px;
   font-size: 30px;
-  line-height: 38px;
+  line-height: 36px;
   max-width: 500px;
   display: inline-block;
 }

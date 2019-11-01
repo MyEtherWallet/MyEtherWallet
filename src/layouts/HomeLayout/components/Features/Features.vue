@@ -14,25 +14,25 @@
         <v-tab class="px-12">Dapps</v-tab>
         <v-tab class="px-12">Tokens</v-tab>
 
-        <v-tab-item class="mt-10">
+        <v-tab-item class="">
           <img
             class="tab-image"
             src="@/assets/images/Banners/LandingPage/Features/Swap.svg"
           />
         </v-tab-item>
-        <v-tab-item class="mt-10">
+        <v-tab-item class="">
           <img
             class="tab-image"
             src="@/assets/images/Banners/LandingPage/Features/Swap.svg"
           />
         </v-tab-item>
-        <v-tab-item class="mt-10">
+        <v-tab-item class="">
           <img
             class="tab-image"
             src="@/assets/images/Banners/LandingPage/Features/Swap.svg"
           />
         </v-tab-item>
-        <v-tab-item class="mt-10">
+        <v-tab-item class="">
           <img
             class="tab-image"
             src="@/assets/images/Banners/LandingPage/Features/Swap.svg"
@@ -44,15 +44,11 @@
 </template>
 
 <script>
-//import Flexbox from '@/components/Common/Flexbox';
-//import StdButton from '@/components/StdButton';
 import BlockTitle from '../Common/BlockTitle';
 
 export default {
   name: 'HomeFeatures',
   components: {
-    //Flexbox,
-    //StdButton,
     BlockTitle
   }
 };
@@ -61,10 +57,6 @@ export default {
 <style lang="scss" scoped>
 @import '@/assets/styles/GlobalVariables';
 
-.home-features {
-  padding: 50px 0;
-}
-
 .v-tab {
   text-transform: initial;
   font-weight: 700;
@@ -72,6 +64,7 @@ export default {
 }
 
 .tab-image {
+  padding-top: 30px;
   width: 100%;
 }
 </style>
