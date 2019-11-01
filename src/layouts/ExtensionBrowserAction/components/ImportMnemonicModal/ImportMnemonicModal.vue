@@ -1,7 +1,7 @@
 <template>
   <b-modal
     ref="mnemonicPhrase"
-    :title="$t('accessWallet.accessByMnemonicPhrase')"
+    :title="$t('accessWallet.access-by-mnemonic-phrase')"
     hide-footer
     class="bootstrap-modal padding-20"
     centered
@@ -9,7 +9,7 @@
   >
     <div class="contents">
       <p class="instruction">
-        {{ $t('accessWallet.pleaseTypeInMnemonicPhrase') }}
+        {{ $t('accessWallet.please-type-in-mnemonic-phrase') }}
       </p>
       <div class="tools">
         <div class="value-switch noselect">

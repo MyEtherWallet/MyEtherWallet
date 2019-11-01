@@ -107,7 +107,7 @@
           </div>
           <div class="copyright">
             <p>
-              {{ $t('footer.pricingP') }}
+              {{ $t('footer.pricing-p') }}
               <a
                 href="https://coingecko.com/"
                 target="_blank"
@@ -193,7 +193,7 @@ export default {
               to: '/hardware-wallet-affiliates'
             },
             {
-              text: this.$t('footer.sendOffline'),
+              text: this.$t('footer.send-offline'),
               to: '/send-offline-helper'
             },
             {
@@ -201,7 +201,7 @@ export default {
               to: '/verify-message'
             },
             {
-              text: this.$t('footer.viewWalletInfo'),
+              text: this.$t('footer.view-wallet-info'),
               to: '/view-wallet-info'
             },
             {

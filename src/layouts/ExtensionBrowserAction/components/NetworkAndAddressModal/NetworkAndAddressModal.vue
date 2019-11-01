@@ -2,7 +2,7 @@
   <div>
     <b-modal
       ref="networkAddress"
-      :title="$t('accessWallet.networkAndAddress')"
+      :title="$t('accessWallet.network-and-address')"
       hide-footer
       modal-class="modal-network-and-address nopadding"
       centered
@@ -84,7 +84,7 @@
               <!-- Derivation Path Drop down -->
               <div class="content-container-1">
                 <div class="hd-derivation">
-                  <h4>{{ $t('accessWallet.hdDerivationPath') }}</h4>
+                  <h4>{{ $t('accessWallet.hd-derivation-path') }}</h4>
                   <div class="dropdown-button-container">
                     <b-dropdown
                       id="hd-derivation-path"
@@ -101,7 +101,7 @@
                       >
                       <b-dropdown-divider />
                       <b-dropdown-item>
-                        {{ $t('accessWallet.customPaths') }}
+                        {{ $t('accessWallet.custom-paths') }}
                       </b-dropdown-item>
                       <b-dropdown-item
                         v-for="(val, key) in customPaths"
@@ -118,7 +118,7 @@
                         </span>
                       </b-dropdown-item>
                       <b-dropdown-item @click="showCustomPathInput">
-                        {{ $t('accessWallet.addCustomPath') }}
+                        {{ $t('accessWallet.add-custom-path') }}
                       </b-dropdown-item>
                     </b-dropdown>
                   </div>
@@ -128,7 +128,7 @@
                   class="error-message-container"
                 >
                   {{
-                    $t('accessWallet.invalidPathDesc', {
+                    $t('accessWallet.invalid-path-desc', {
                       path: invalidPath.path
                     })
                   }}
@@ -160,7 +160,7 @@
                     {{ $t('common.cancel') }}
                   </button>
                   <button class="submit-button submit" @click="addCustomPath">
-                    {{ $t('accessWallet.addCustomPath') }}
+                    {{ $t('accessWallet.add-custom-path') }}
                   </button>
                 </div>
               </div>
@@ -168,7 +168,7 @@
               <div class="content-container-2">
                 <div class="address-block-container">
                   <div class="block-title">
-                    <h4>{{ $t('accessWallet.interactAddr') }}</h4>
+                    <h4>{{ $t('accessWallet.interact-addr') }}</h4>
                   </div>
 
                   <ul class="address-block table-header fours">
