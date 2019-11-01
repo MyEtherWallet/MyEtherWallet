@@ -301,7 +301,10 @@ export default {
     ...mapState(['network', 'gasPrice', 'account', 'web3']),
     mergedContracts() {
       const customContracts = store.get('customContracts') || [];
-      return this.network.type.contracts.concat(customContracts);
+      const concatContracts = this.network.type.contracts.concat(
+        customContracts
+      );
+      return concatContracts;
     },
     isValidAbi() {
       return Misc.isJson(this.abi);

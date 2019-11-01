@@ -30,5 +30,7 @@
     "ether": "Ethereum Donation",
     "bitcoin": "Bitcoin Donation"
   },
-  "coingecko": "Coingecko"
+  "coingecko": "Coingecko",
+  "verifyMessage": "Verify Message",
+  "viewWalletInfo": "View Wallet Info"
 }

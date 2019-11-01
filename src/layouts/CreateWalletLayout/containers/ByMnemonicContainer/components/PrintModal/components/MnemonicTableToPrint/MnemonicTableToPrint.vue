@@ -2,7 +2,11 @@
   <div class="mnemonic-table-container">
     <div class="header">
       <div class="block-title">
-        <img alt src="~@/assets/images/short-hand-logo.png" height="30px" />
+        <img
+          :src="require(`@/assets/images/short-hand-logo-${buildType}.png`)"
+          height="30px"
+          alt
+        />
         <span>{{ props.title }}</span>
       </div>
       <div class="support">
@@ -90,6 +94,11 @@ export default {
       type: String,
       default: ''
     }
+  },
+  data() {
+    return {
+      buildType: BUILD_TYPE
+    };
   }
 };
 </script>

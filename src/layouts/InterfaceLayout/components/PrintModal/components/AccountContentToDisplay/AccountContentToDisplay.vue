@@ -109,10 +109,10 @@
       <div v-if="!!wallet && !wallet.isPubOnly" class="my-priv-container">
         <div class="text-container">
           <h3>{{ myPriv }}</h3>
-          <p>{{ wallet.privateKey.toString('hex') }}</p>
+          <p>{{ wallet.getPrivateKeyString() }}</p>
         </div>
         <qrcode
-          :value="wallet.privateKey.toString('hex')"
+          :value="wallet.getPrivateKeyString()"
           :options="{ size: 120 }"
         />
       </div>
@@ -133,7 +133,11 @@
         </p>
       </div>
       <div class="logo-container">
-        <img alt src="~@/assets/images/short-hand-logo.png" height="25px" />
+        <img
+          :src="require(`@/assets/images/short-hand-logo-${buildType}.png`)"
+          height="25px"
+          alt
+        />
         <p class="border-line"></p>
         <p>{{ paper }}</p>
       </div>
@@ -170,7 +174,8 @@ export default {
         text3: 'Share Your Private Key With Anyone!',
         red1: 'SAFE',
         red2: 'DO NOT'
-      }
+      },
+      buildType: BUILD_TYPE
     };
   },
   computed: {

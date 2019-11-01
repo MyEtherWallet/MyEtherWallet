@@ -1,12 +1,19 @@
-<template>
+<template functional>
   <div class="button-nft-manager">
-    <div :class="disabled ? 'button-disabled' : ''" class="content-container">
-      <img :src="kitties" class="kitties" alt="kitties" />
+    <div
+      :class="props.disabled ? 'button-disabled' : ''"
+      class="content-container"
+    >
+      <img
+        src="~@/assets/images/buttons/nft-manager/crypto-kitties.png"
+        class="kitties"
+        alt="kitties"
+      />
       <div class="text-content">
         <p class="title">
           {{ $t('nftManager.nft') }}<br />{{ $t('nftManager.manager') }}
         </p>
-        <p v-if="disabled" class="button-disabled">
+        <p v-if="props.disabled" class="button-disabled">
           {{ $t('interface.no-avail') }}
         </p>
       </div>
@@ -15,23 +22,13 @@
 </template>
 
 <script>
-import CryptoKitties from '@/assets/images/buttons/nft-manager/crypto-kitties.png';
-
 export default {
-  name: 'ButtonNftManager',
-  components: {},
   props: {
     disabled: {
       type: Boolean,
       default: false
     }
-  },
-  data() {
-    return {
-      kitties: CryptoKitties
-    };
-  },
-  computed: {}
+  }
 };
 </script>
 

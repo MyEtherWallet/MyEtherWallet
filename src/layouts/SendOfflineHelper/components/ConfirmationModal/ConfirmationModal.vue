@@ -44,17 +44,17 @@
             <li>{{ rawTx.gasPrice }}</li>
           </ul>
         </div>
-        <expending-option
+        <expanding-option
           :hidebottomborder="true"
           :title="$t('sendTx.signed.tx')"
         >
           <div class="raw-signed">
             {{ signedTx }}
           </div>
-        </expending-option>
-        <expending-option :title="$t('sendTx.raw-tx')">
+        </expanding-option>
+        <expanding-option :title="$t('sendTx.raw-tx')">
           {{ rawTx }}
-        </expending-option>
+        </expanding-option>
         <div class="button-block-container">
           <standard-button :options="buttonConfirmAndSend" />
         </div>
@@ -66,7 +66,7 @@
 <script>
 import StandardInput from '@/components/StandardInput';
 import Standardbutton from '@/components/Buttons/StandardButton';
-import ExpendingOption from '@/components/ExpendingOption';
+import ExpandingOption from '@/components/ExpandingOption';
 
 import AddressBlock from '../AddressBlock';
 export default {
@@ -74,7 +74,7 @@ export default {
   components: {
     'standard-input': StandardInput,
     'standard-button': Standardbutton,
-    'expending-option': ExpendingOption,
+    'expanding-option': ExpandingOption,
     'address-block': AddressBlock
   },
   props: {

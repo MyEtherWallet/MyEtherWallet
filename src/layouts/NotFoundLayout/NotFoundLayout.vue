@@ -1,4 +1,4 @@
-<template>
+<template functional>
   <div class="not-found">
     <div class="wrap">
       <div class="page-container">
@@ -15,11 +15,7 @@
 </template>
 
 <script>
-export default {
-  data() {
-    return {};
-  }
-};
+export default {};
 </script>
 
 <style lang="scss" scoped>

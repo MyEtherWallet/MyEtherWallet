@@ -1,4 +1,7 @@
 module.exports = {
+  globals: {
+    BUILD_TYPE: 'readonly'
+  },
   env: {
     jest: true
   },

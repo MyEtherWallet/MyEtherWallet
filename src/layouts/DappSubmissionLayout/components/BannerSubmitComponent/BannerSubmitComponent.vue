@@ -1,7 +1,10 @@
 <template functional>
   <div class="submit-container">
     <router-link to="/">
-      <img class="logo ml-4" src="~@/assets/images/short-hand-logo.png" />
+      <img
+        :src="require(`@/assets/images/short-hand-logo-${props.buildType}.png`)"
+        class="logo ml-4"
+      />
     </router-link>
     <span
       :class="props.showPreview ? 'submit-preview-text' : ''"
@@ -70,6 +73,10 @@ export default {
     previewText: {
       type: String,
       default: ''
+    },
+    buildType: {
+      type: String,
+      default: 'mew'
     }
   }
 };

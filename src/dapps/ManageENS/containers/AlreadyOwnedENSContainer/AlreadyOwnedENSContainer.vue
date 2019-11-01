@@ -22,6 +22,13 @@
         <span class="content">{{ v.value }}</span>
       </div>
     </div>
+    <div v-show="hasAnyTxt" class="content-container">
+      <h4>{{ $t('dapps.txtRecord') }}:</h4>
+      <div v-for="(value, key) in txtRecords" v-if="value !== ''" :key="key">
+        <span class="currency">{{ key }}: </span>
+        <span class="content">{{ value }}</span>
+      </div>
+    </div>
     <div class="owner-options">
       <button
         v-if="owner.toLowerCase() === account.address.toLowerCase()"
@@ -75,15 +82,24 @@ export default {
     resolverMultiCoinSupport: {
       type: Boolean,
       default: false
+    },
+    txtRecords: {
+      type: Object,
+      default: function() {}
     }
-  },
-  data() {
-    return {};
   },
   computed: {
     ...mapState(['account']),
     fullDomainName() {
       return `${this.hostName}.${this.tld}`;
+    },
+    hasAnyTxt() {
+      for (const i in this.txtRecords) {
+        if (this.txtRecords[i] !== '') {
+          return true;
+        }
+      }
+      return false;
     }
   },
   mounted() {
