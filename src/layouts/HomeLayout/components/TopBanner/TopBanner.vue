@@ -3,7 +3,7 @@
     <div class="pointer-event--none user-select--none line-height--0">
       <img
         class="banner-img"
-        src="@/assets/images/banners/homepage-top-banner.svg"
+        src="@/assets/images/Banners/LandingPage/homepage-top-banner.svg"
       />
     </div>
     <v-container class="banner-content-container">

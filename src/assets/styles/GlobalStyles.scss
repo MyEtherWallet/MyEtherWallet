@@ -1,6 +1,8 @@
+// Style reset ======================================================
 * {
   font-family: 'Open Sans';
   letter-spacing: -0.1px;
+  color: $dark-sacramento;
 }
 
 i {
@@ -16,8 +18,7 @@ h1 {
   font-weight: 500;
 }
 
-
-// Vuetify custom styles =========================================
+// Vuetify custom styles ============================================
 // Remove default background color
 .theme--light.v-application {
   background: white !important;
@@ -32,8 +33,7 @@ h1 {
   padding: 0;
 }
 
-
-// Common classes
+// Common classes ===================================================
 .pointer-event--none {
   pointer-events: none;
 }
@@ -44,4 +44,8 @@ h1 {
 
 .line-height--0 {
   line-height: 0;
+}
+
+.text-transform--initial {
+  text-transform: initial
 }
