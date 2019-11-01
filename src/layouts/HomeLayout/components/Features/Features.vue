@@ -1,5 +1,5 @@
 <template>
-  <div class="py-12">
+  <div class="home-features">
     <v-container>
       <BlockTitle
         centered
@@ -60,6 +60,10 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/assets/styles/GlobalVariables';
+
+.home-features {
+  padding: 50px 0;
+}
 
 .v-tab {
   text-transform: initial;

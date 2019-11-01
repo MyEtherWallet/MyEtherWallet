@@ -2,7 +2,7 @@
   <div class="light-blue darken-4">
     <v-container>
       <v-app-bar color="transparent" dark flat>
-        <v-img src="@/assets/images/common/logo-light.png" max-width="130" />
+        <v-img src="@/assets/images/Common/logo-light.png" max-width="130" />
 
         <v-spacer></v-spacer>
 
@@ -153,7 +153,7 @@
 
         <v-btn class="white--text" large depressed outlined>
           <v-img
-            src="@/assets/images/common/icons/buy-eth.svg"
+            src="@/assets/images/Common/Icons/buy-eth.svg"
             class="mr-1 ml-n1"
           />
           Buy ETH
@@ -166,16 +166,16 @@
 <script>
 import MenuOpenArrow from '@/components/Common/MenuOpenArrow';
 
-import wallet from '@/assets/images/common/icons/iconset1/wallet.svg';
-import send from '@/assets/images/common/icons/iconset1/send.svg';
-import message from '@/assets/images/common/icons/iconset1/message.svg';
-import eth from '@/assets/images/common/icons/iconset1/eth.svg';
+import wallet from '@/assets/images/Common/Icons/IconSet1/wallet.svg';
+import send from '@/assets/images/Common/Icons/IconSet1/send.svg';
+import message from '@/assets/images/Common/Icons/IconSet1/message.svg';
+import eth from '@/assets/images/Common/Icons/IconSet1/eth.svg';
 
-import grabber from '@/assets/images/common/icons/iconset1/grabber.svg';
-import privatekey from '@/assets/images/common/icons/iconset1/privatekey.svg';
-import ensdebugger from '@/assets/images/common/icons/iconset1/ensdebugger.svg';
-import sha3 from '@/assets/images/common/icons/iconset1/sha3.svg';
-import convert from '@/assets/images/common/icons/iconset1/convert.svg';
+import grabber from '@/assets/images/Common/Icons/IconSet1/grabber.svg';
+import privatekey from '@/assets/images/Common/Icons/IconSet1/privatekey.svg';
+import ensdebugger from '@/assets/images/Common/Icons/IconSet1/ensdebugger.svg';
+import sha3 from '@/assets/images/Common/Icons/IconSet1/sha3.svg';
+import convert from '@/assets/images/Common/Icons/IconSet1/convert.svg';
 
 export default {
   name: 'HeaderDesktop',
