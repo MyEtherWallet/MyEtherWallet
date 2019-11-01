@@ -3,19 +3,22 @@
     <div class="light-blue darken-4 home-layout">
       <TopBanner />
     </div>
-    <Features />
+    <Features class="py-12" />
+    <WhyMew />
   </div>
 </template>
 
 <script>
 import TopBanner from './components/TopBanner';
 import Features from './components/Features';
+import WhyMew from './components/WhyMew';
 
 export default {
   name: 'HomeLayout',
   components: {
     TopBanner,
-    Features
+    Features,
+    WhyMew
   }
 };
 </script>
