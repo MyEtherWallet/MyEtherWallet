@@ -3,9 +3,9 @@
     <div v-show="!finishMigration" class="manage-container">
       <!-- ==================================================== -->
       <div class="title-content-container">
-        <p class="cpd-title">{{ $t('dappsMaker.cdpPortal') }}</p>
+        <p class="cpd-title">{{ $t('dappsMaker.cdp-portal') }}</p>
         <p class="cdp-id">
-          {{ $t('dappsMaker.positionLabel', { value: cdpIdDisplay }) }}
+          {{ $t('dappsMaker.position-label', { value: cdpIdDisplay }) }}
         </p>
       </div>
       <!-- ==================================================== -->
@@ -16,7 +16,7 @@
           <div class="block-title">
             <div class="for-pop">
               <p>
-                {{ $t('dappsMaker.liquidPrice') }} ({{
+                {{ $t('dappsMaker.liquid-price') }} ({{
                   $t('common.currency.eth')
                 }}/{{ $t('common.currency.usd') }})
               </p>
@@ -33,7 +33,7 @@
           <div class="block-content">
             <div class="item">
               <p>
-                {{ $t('dappsMaker.currentPrice') }}({{
+                {{ $t('dappsMaker.current-price') }}({{
                   $t('common.currency.eth')
                 }}/{{ $t('common.currency.usd') }})
               </p>
@@ -43,7 +43,7 @@
               </div>
             </div>
             <div class="item">
-              <p>{{ $t('dappsMaker.liquidationPenalty') }}</p>
+              <p>{{ $t('dappsMaker.liquidation-penalty') }}</p>
               <div>{{ liquidationPenaltyDisplay }}%</div>
             </div>
           </div>
@@ -51,7 +51,7 @@
         <div class="block-item">
           <div class="block-title">
             <div class="for-pop">
-              <p>{{ $t('dappsMaker.collateralRatio') }}</p>
+              <p>{{ $t('dappsMaker.collateral-ratio') }}</p>
               <p v-if="liquidationPriceDisplay === '--'" class="pop-icon">
                 <popover :popcontent="$t('dappsMaker.whatIsDashes')" />
               </p>

@@ -34,7 +34,7 @@
             </p>
             <p>
               {{
-                $t('dappsMaker.collateralRatioVal', {
+                $t('dappsMaker.collateral-ratio-val', {
                   value: newCollateralRatio
                 })
               }}

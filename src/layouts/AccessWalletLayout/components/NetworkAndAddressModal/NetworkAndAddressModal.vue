@@ -227,7 +227,7 @@
         </b-collapse>
         <div class="accept-terms">
           <label class="checkbox-container">
-            {{ $t('accessWallet.acceptTerms') }}
+            {{ $t('accessWallet.accept-terms') }}
             <router-link to="/terms-and-conditions"
               >{{ $t('common.terms') }}.</router-link
             >

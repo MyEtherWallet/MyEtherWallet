@@ -59,5 +59,6 @@
   "label-hash": "Labelhash",
   "name-hash": "Namehash",
   "owner": "Owner",
-  "multi-coin": "Multi-coin"
+  "multi-coin": "Multi-coin",
+  "txt-record": "Text Records"
 }

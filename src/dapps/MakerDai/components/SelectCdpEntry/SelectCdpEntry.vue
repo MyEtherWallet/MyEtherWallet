@@ -7,7 +7,7 @@
             <div class="block-item">
               <div class="block-title">
                 <div class="select-label">
-                  <p>{{ $t('dappsMaker.positionLabel', { value: cdpId }) }}</p>
+                  <p>{{ $t('dappsMaker.position-label', { value: cdpId }) }}</p>
 
                   <p>
                     <span class="standard-button__green-border">
@@ -49,7 +49,7 @@
                     <div>
                       <br />
                       <div>
-                        {{ $t('dappsMaker.liquidPrice') }} ({{
+                        {{ $t('dappsMaker.liquid-price') }} ({{
                           $t('common.currency.eth')
                         }}/{{ $t('common.currency.usd') }})
                       </div>
@@ -77,7 +77,7 @@
                     </div>
                     <div>
                       <br />
-                      <div>{{ $t('dappsMaker.collateralRatio') }}</div>
+                      <div>{{ $t('dappsMaker.collateral-ratio') }}</div>
                       <span :class="safeRank(aCdp.collatRatio)">
                         {{
                           aCdp

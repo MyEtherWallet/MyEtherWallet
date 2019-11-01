@@ -3,10 +3,10 @@
     <!--    <div class="container-maker">
       <div class="manage-container">
         <div class="content-container">
-          <p class="cpd-title">{{ $t('dappsMaker.cdpPortal') }}</p>
+          <p class="cpd-title">{{ $t('dappsMaker.cdp-portal') }}</p>
           <div class="cdp-id">
             <p>
-              {{ $t('dappsMaker.currentPrice') }}: <b>{{ ethPrice }}</b> USD
+              {{ $t('dappsMaker.current-price') }}: <b>{{ ethPrice }}</b> USD
             </p>
           </div>
         </div>

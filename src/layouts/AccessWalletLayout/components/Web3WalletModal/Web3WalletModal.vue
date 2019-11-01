@@ -66,7 +66,7 @@
             {{ $t('accessWallet.metamask.modal.text') }}
           </h4>
           <h4 v-show="unlockWeb3Wallet">
-            {{ $t('accessWallet.unlockWeb3Wallet') }}
+            {{ $t('accessWallet.unlock-web3-wallet') }}
           </h4>
         </div>
         <div class="accept-terms">
@@ -96,7 +96,7 @@
             v-show="unlockWeb3Wallet"
             class="mid-round-button-green-filled close-button"
             @click="getWeb3Wallet"
-            >{{ $t('accessWallet.tryAgain') }}</b-btn
+            >{{ $t('accessWallet.try-again') }}</b-btn
           >
         </div>
       </div>

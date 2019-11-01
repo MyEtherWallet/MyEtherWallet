@@ -103,7 +103,7 @@
             </p>
           </li>
           <li>
-            <p>{{ $t('dappsMaker.liquidPrice') }}</p>
+            <p>{{ $t('dappsMaker.liquid-price') }}</p>
             <p>
               <b>{{ liquidationPrice }}</b> {{ $t('common.currency.usd') }}
             </p>
@@ -116,11 +116,11 @@
             </p>
           </li>
           <li>
-            <p>{{ $t('dappsMaker.liquidationPenalty') }}</p>
+            <p>{{ $t('dappsMaker.liquidation-penalty') }}</p>
             <p>{{ displayPercentValue(liquidationPenalty) }}%</p>
           </li>
           <li>
-            <p>{{ $t('dappsMaker.collateralRatio') }}</p>
+            <p>{{ $t('dappsMaker.collateral-ratio') }}</p>
             <p
               :class="[
                 veryRisky ? 'red-text' : '',

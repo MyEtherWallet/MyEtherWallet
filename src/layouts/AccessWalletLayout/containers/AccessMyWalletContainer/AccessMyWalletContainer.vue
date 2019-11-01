@@ -175,7 +175,7 @@ export default {
         {
           func: this.metamaskModalOpen,
           title: 'Web3 Wallet',
-          desc: this.$t('accessWallet.web3WalletDesc'),
+          desc: this.$t('accessWallet.web3-wallet-desc'),
           recommend: '',
           tooltip: '',
           img: metamaskImg,

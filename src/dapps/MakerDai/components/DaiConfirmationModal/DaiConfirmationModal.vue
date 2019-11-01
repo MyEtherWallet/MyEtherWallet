@@ -47,7 +47,7 @@
             <ul>
               <li>
                 <p>
-                  {{ $t('dappsMaker.liquidPrice') }} ({{
+                  {{ $t('dappsMaker.liquid-price') }} ({{
                     $t('common.currency.eth')
                   }}/{{ $t('common.currency.usd') }})
                 </p>
@@ -57,18 +57,18 @@
               </li>
               <li>
                 <p>
-                  {{ $t('dappsMaker.currentPrice') }} ({{
+                  {{ $t('dappsMaker.current-price') }} ({{
                     $t('common.currency.eth')
                   }}/{{ $t('common.currency.usd') }})
                 </p>
                 <p>{{ currentPrice }} {{ $t('common.currency.usd') }}</p>
               </li>
               <li>
-                <p>{{ $t('dappsMaker.liquidationPenalty') }}</p>
+                <p>{{ $t('dappsMaker.liquidation-penalty') }}</p>
                 <p>{{ liquidationPenalty }}%</p>
               </li>
               <li>
-                <p>{{ $t('dappsMaker.collateralRatio') }}</p>
+                <p>{{ $t('dappsMaker.collateral-ratio') }}</p>
                 <p class="bold">{{ collatRatio }} %</p>
               </li>
               <li>
