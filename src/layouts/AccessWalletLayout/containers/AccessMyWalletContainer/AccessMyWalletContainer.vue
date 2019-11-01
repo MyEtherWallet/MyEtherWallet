@@ -31,7 +31,11 @@
       :hardware-wallet="hardwareWallet"
     />
 
-    <metamask-modal ref="metamaskModal" />
+    <metamask-modal
+      ref="metamaskModal"
+      :is-meta-mask="isMetaMask"
+      :web3-wallet-exists="web3WalletExists"
+    />
 
     <software-modal
       ref="softwareModal"
@@ -49,12 +53,6 @@
       ref="mnemonicPhraseModal"
       :hardware-wallet-open="hardwareWalletOpen"
     />
-
-    <!--    <mnemonic-password-modal
-      ref="mnemonicPhrasePassword"
-      :hardware-wallet-open="hardwareWalletOpen"
-      :phrase="phrase"
-    />-->
 
     <wallet-password-modal />
     <finney-modal ref="finney" />
@@ -194,7 +192,9 @@ export default {
           disabled: false,
           classname: 'button-software'
         }
-      ]
+      ],
+      isMetaMask: false,
+      web3WalletExists: false
     };
   },
   computed: {
@@ -205,9 +205,20 @@ export default {
       this.buttons.forEach(btn => {
         btn.disabled = this.isDisabled(btn.classname);
       });
+
+      this.checkWeb3Wallet();
+      this.checkWeb3();
     });
   },
   methods: {
+    checkWeb3Wallet() {
+      this.checkWeb3Wallet = window.ethereum && window.ethereum.isMetaMask;
+    },
+    checkWeb3() {
+      this.web3WalletExists =
+        typeof window.ethereum !== 'undefined' ||
+        typeof window.web3 !== 'undefined';
+    },
     isDisabled(className) {
       switch (className) {
         case 'button-mewconnect':
