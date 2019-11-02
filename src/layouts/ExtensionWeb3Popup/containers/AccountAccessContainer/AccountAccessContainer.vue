@@ -7,7 +7,7 @@
         <img class="site-logo" src="~@/assets/images/mew-cx-logo.png" />
       </div>
       <p>
-        {{ request.connectionRequest }} is trying to access MEW CX. Please
+        {{ request.connectionRequest.toLowerCase() }} is trying to access MEW CX. Please
         choose a wallet that you want to connect.
       </p>
     </div>
@@ -23,6 +23,7 @@
           v-for="(acc, idx) in accWithBal"
           :key="acc.address + idx"
           :address="acc.address"
+          :nickname="acc.nickname"
           :balance="acc.balance"
           :selected-account="selectedAccount"
           :select-account="selectAccount"

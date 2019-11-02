@@ -34,6 +34,7 @@
       />
       <div class="address-text">
         <div v-if="props.walletType === 'wallet'">
+          <p> {{ props.nickname }} </p>
           <p>{{ props.address | concatAddr }}</p>
           <div class="balance">
             <span>Balance:</span>
@@ -61,6 +62,10 @@ export default {
     }
   },
   props: {
+    nickname: {
+      type: String,
+      default: ''
+    },
     address: {
       type: String,
       default: ''
