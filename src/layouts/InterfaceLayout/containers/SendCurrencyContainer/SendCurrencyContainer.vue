@@ -303,22 +303,22 @@ export default {
     },
     isValidAmount() {
       const notEnoughGasMsg =
-        this.$t('errorsGlobal.notAValidAmountTotal') +
+        this.$t('errorsGlobal.not-valid-amount-total') +
         ' Gas ' +
-        this.$t('errorsGlobal.toSend');
+        this.$t('errorsGlobal.to-send');
       const notEnoughTokenMsg =
-        this.$t('errorsGlobal.notAValidAmountTotal') +
+        this.$t('errorsGlobal.not-valid-amount-total') +
         ' ' +
         this.selectedCurrency.symbol +
         ' ' +
-        this.$t('errorsGlobal.toSend');
+        this.$t('errorsGlobal.to-send');
       const notEnoughCurrencyMsg =
-        this.$t('errorsGlobal.notAValidAmountTotal') +
+        this.$t('errorsGlobal.not-valid-amount-total') +
         ' ' +
         this.network.type.currencyName +
         ' ' +
-        this.$t('errorsGlobal.toSend');
-      const invalidValueMsg = this.$t('errorsGlobal.invalidValue');
+        this.$t('errorsGlobal.to-send');
+      const invalidValueMsg = this.$t('errorsGlobal.invalid-value');
       const enoughTokenBalance = new BigNumber(this.toValue).lte(
         this.selectedCurrency.balance
       );

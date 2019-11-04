@@ -11,7 +11,7 @@
           </div>
         </div>
         <div v-if="!cdpDetailsLoaded">
-          {{ $t('dappsMaker.loadingMessage') }}
+          {{ $t('dappsMaker.loading-message') }}
         </div>
         <div v-if="cdpDetailsLoaded">
           <div

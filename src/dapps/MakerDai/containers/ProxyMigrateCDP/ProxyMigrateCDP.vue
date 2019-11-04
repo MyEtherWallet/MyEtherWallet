@@ -51,11 +51,11 @@
           </div>
           <div class="block-content">
             <div class="item">
-              <p>{{ $t('dappsMaker.minimumRatio') }}</p>
+              <p>{{ $t('dappsMaker.minimum-ratio') }}</p>
               <div>{{ liquidationRatioDisplay }}%</div>
             </div>
             <div class="item">
-              <p>{{ $t('dappsMaker.stabilityFee') }}</p>
+              <p>{{ $t('dappsMaker.stability-fee') }}</p>
               <div>{{ stabilityFeeDisplay }}%</div>
             </div>
           </div>
@@ -67,7 +67,7 @@
       <div class="information-single-block">
         <div class="block-item">
           <div class="block-title">
-            <p>{{ $t('dappsMaker.ethCollateral') }}</p>
+            <p>{{ $t('dappsMaker.eth-collateral') }}</p>
           </div>
 
           <div class="block-content-container">
@@ -88,7 +88,7 @@
             </div>
             <div class="block-content">
               <div class="item">
-                <p>{{ $t('dappsMaker.maxWithDraw') }}</p>
+                <p>{{ $t('dappsMaker.max-withdraw') }}</p>
                 <div>
                   {{ maxEthDrawDisplay }}
                   <span>{{ $t('common.currency.eth') }}</span>
@@ -111,7 +111,7 @@
       <div class="information-single-block">
         <div class="block-item">
           <div class="block-title">
-            <p>{{ $t('dappsMaker.daiPosition') }}</p>
+            <p>{{ $t('dappsMaker.dai-position') }}</p>
           </div>
 
           <div class="block-content-container">
@@ -129,7 +129,7 @@
             </div>
             <div class="block-content">
               <div class="item">
-                <p>{{ $t('dappsMaker.maxAvailable') }}</p>
+                <p>{{ $t('dappsMaker.max-available') }}</p>
                 <div>
                   {{ maxDai }}
                   <span>{{ $t('dappsMaker.dai') }}</span>
