@@ -114,7 +114,7 @@
         <div class="button-container">
           <a
             v-show="!refreshPage"
-            href="https://chrome.google.com/webstore/detail/myetherwallet/nlbmnnijcnlegkjjpcfjclmcfggfefdm?hl=en"
+            href="https://www.mewcx.com"
             target="_blank"
             rel="noopener noreferrer"
             class="mid-round-button-green-filled close-button"
