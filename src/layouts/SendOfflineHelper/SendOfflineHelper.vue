@@ -19,7 +19,7 @@
             <accordion-menu
               :greytitle="false"
               :isopen="stage1"
-              :title="$t('withoutWallet.selectNetwork')"
+              :title="$t('withoutWallet.select-network')"
               :right-text="networkTitle"
               number="1"
               @titleClicked="stage1 = !stage1"
@@ -78,7 +78,7 @@
             :greytitle="false"
             :editbutton="true"
             :isopen="stage2"
-            :title="$t('withoutWallet.generateInfo')"
+            :title="$t('withoutWallet.generate-info')"
             number="2"
             @titleClicked="stage2 = !stage2"
           >
@@ -155,7 +155,7 @@
           <accordion-menu
             :greytitle="false"
             :isopen="stage3"
-            :title="$t('withoutWallet.signedTx')"
+            :title="$t('withoutWallet.signed-tx')"
             number="3"
             @titleClicked="stage3 = !stage3"
           >
@@ -209,7 +209,7 @@
             :greytitle="false"
             :editbutton="false"
             :isopen="stage4"
-            :title="$t('withoutWallet.txDetails')"
+            :title="$t('withoutWallet.tx-details')"
             number="4"
             @titleClicked="stage4 = !stage4"
           >
@@ -291,7 +291,7 @@
             :greytitle="false"
             :editbutton="false"
             :isopen="stage5"
-            :title="$t('withoutWallet.txStatus')"
+            :title="$t('withoutWallet.tx-status')"
             number="5"
             @titleClicked="stage5 = !stage5"
           >
