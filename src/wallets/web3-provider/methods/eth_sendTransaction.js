@@ -47,10 +47,7 @@ export default async (
   tx.chainId = !tx.chainId ? store.state.network.type.chainID : tx.chainId;
   getSanitizedTx(tx)
     .then(_tx => {
-      if (
-        store.state.wallet.identifier === WEB3_WALLET ||
-        store.state.wallet.identifier === WALLET_CONNECT
-      ) {
+      if (store.state.wallet.identifier === WEB3_WALLET) {
         eventHub.$emit(EventNames.SHOW_WEB3_CONFIRM_MODAL, _tx, _promiObj => {
           setEvents(_promiObj, _tx, store.dispatch);
           _promiObj

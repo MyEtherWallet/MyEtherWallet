@@ -55,14 +55,35 @@ class WalletConnectWallet {
   }
   init() {
     return new Promise(resolve => {
+      console.log(Transaction);
       const txSigner = tx => {
         const from = tx.from;
+        const networkId = tx.chainId;
         tx = new Transaction(tx, {
           common: commonGenerator(store.state.network)
         });
+        console.log(tx);
         const txJSON = tx.toJSON(true);
         txJSON.from = from;
-        return this.walletConnect.sendTransaction(txJSON);
+        return new Promise((resolve, reject) => {
+          this.walletConnect
+            .signTransaction(txJSON)
+            .then(signed => {
+              console.log(signed);
+              const _tx = new Transaction(signed);
+              const signedChainId = calculateChainIdFromV(_tx.v);
+              if (signedChainId !== networkId)
+                throw new Error(
+                  'Invalid networkId signature returned. Expected: ' +
+                    networkId +
+                    ', Got: ' +
+                    signedChainId,
+                  'InvalidNetworkId'
+                );
+              resolve(getSignTransactionObject(_tx));
+            })
+            .catch(reject);
+        });
       };
       const msgSigner = msg => {
         return new Promise(resolve => {});
