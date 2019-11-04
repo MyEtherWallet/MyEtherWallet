@@ -64,7 +64,8 @@ import {
   ERC20,
   ProxyContract,
   locateCdps,
-  TokenFaucet
+  TokenFaucet,
+  MigrationProxyActions
 } from '../../makerHelpers';
 import ethUnit from 'ethjs-unit';
 import utils from 'web3-utils';
@@ -132,6 +133,10 @@ export default {
   },
   computed: {
     ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
+    migrationContractAddress() {
+      return '0x97cB5A9aBcdBE291D0CD85915fA5b08746Fe948A';
+    },
+    migrationProxyAddress() {},
     migrationPossible() {
       return toBigNumber(this.daiGenerated).lt(
         toBigNumber(this.migrateContractBalance)
@@ -170,63 +175,44 @@ export default {
         this,
         this.getValueOrFunction('_cdpService')
       );
-      console.log(withType, withProxy, withoutProxy); // todo remove dev item
       this.cdps = withProxy.concat(withoutProxy);
       this.mkrAllowance = await this.checkAllowance(
         '0x1dad4783cf3fe3085c1426157ab175a6119a04ba'
       );
-      console.log(this.mkrAllowance); // todo remove dev item
     },
-    /*
-
-// example:
-0x1cff79cd
-00000000000000000000000017134c5ab1ea28f21df9c8203b817bd3b9f9a12d
-0000000000000000000000000000000000000000000000000000000000000040
-0000000000000000000000000000000000000000000000000000000000000044
-d25d7cc000000000000000000000000097cb5a9abcdbe291d0cd85915fa5b087
-46fe948a00000000000000000000000000000000000000000000000000000000
-00001a5b00000000000000000000000000000000000000000000000000000000
-
-
-0x1cff79cd
-00000000000000000000000097cb5a9abcdbe291d0cd85915fa5b08746fe948a
-0000000000000000000000000000000000000000000000000000000000000040
-0000000000000000000000000000000000000000000000000000000000000024
-e19b8ee336383537000000000000000000000000000000000000000000000000
-0000000000000000000000000000000000000000000000000000000000000000
-
-* * */
 
     //TODO use seth to get tokens (MCD_GOV is maker address for deployments)
     // TODO: look at and follow: https://github.com/makerdao/developerguides/blob/master/mcd/upgrading-to-multi-collateral-dai/cli-mcd-migration.md#migrating-cdps
     async beginMigration() {
       if (this.selectedCdp !== 0) {
-        const txs = [];
-        // console.log(this.getCdp); // todo remove dev item
         this.proxyAddress = this.getValueOrFunction('proxyAddress');
         const details = await this.getValueOrFunction('_cdpService').getCdp(
           this.selectedCdp,
           this.proxyAddress
         );
+        const _governanceFee = (await details.getGovernanceFee()).toBigNumber();
 
-        this.faucet()
-          .then(() => {
-            return this.approveMkr(100);
-          })
-          .then(() => {
-            return this.migrate(this.selectedCdp);
-          })
+        const needsApproval = await this.needsApproval(_governanceFee);
+        if (needsApproval) {
+          const txs = [];
+          const approve = await this.approveMkr(_governanceFee);
+          txs.push(approve);
+          const migrate = await this.migrate(this.selectedCdp);
+          txs.push(migrate);
+          /*        this.web3.mew
+          .sendBatchTransactions(txs)
           .then(console.log)
-          .catch(console.error);
+          .catch(console.error);*/
+        } else {
+          const migrate = await this.migrate(this.selectedCdp);
+          // this.web3.eth
+          //   .sendTransaction(migrate)
+          //   .then(console.log)
+          //   .catch(console.error);
+        }
 
         // this.web3.eth
         //   .sendTransaction(datas)
-        //   .then(console.log)
-        //   .catch(console.error);
-
-        // this.web3.mew
-        //   .sendBatchTransactions(txs)
         //   .then(console.log)
         //   .catch(console.error);
       }
@@ -235,81 +221,68 @@ e19b8ee336383537000000000000000000000000000000000000000000000000
     // MIGRATION CONTRACT
     // https://github.com/makerdao/scd-mcd-migration/blob/master/src/ScdMcdMigration.sol#L59
     async migrate(cdpId) {
-      // =============================================================
-      // related to
-      // export calldata="$(seth calldata 'migrate(address,bytes32)' "$MIGRATION" "$CDPID")"
-      const contract = new this.web3.eth.Contract(
-        migrateABI,
-        addresses.MIGRATION
-      );
-
-      const dataOrig = contract.methods
-        .migrate('0x' + toBigNumber(cdpId).toString(16))
-        .encodeABI();
-
-      // =============================================================
-      // related to:
-      // seth send "$MYPROXY" 'execute(address,bytes memory)' "$MIGRATION_PROXY_ACTIONS" "$calldata" -G 5000000
-      const proxy = new this.web3.eth.Contract(
-        ProxyContract,
-        this.proxyAddress
-      );
-      const data = proxy.methods
-        .execute(addresses.MIGRATION_PROXY_ACTIONS, dataOrig)
-        .encodeABI();
-
-      // =============================================================
-
-      console.log('dataOrig', dataOrig); // todo remove dev item
-      console.log('data', data); // todo remove dev item
-      return this.web3.eth.sendTransaction({
+      return {
         from: this.account.address,
         to: this.proxyAddress,
         value: 0,
         gas: 5000000,
-        data: data
-      });
-
+        data: new this.web3.eth.Contract(
+          ProxyContract,
+          this.proxyAddress
+        ).methods
+          .execute(
+            addresses.MIGRATION_PROXY_ACTIONS,
+            this.fixImproperEncoding(
+              new this.web3.eth.Contract(MigrationProxyActions).methods
+                .migrate(
+                  addresses.MIGRATION,
+                  '0x' + toBigNumber(cdpId).toString(16)
+                )
+                .encodeABI()
+            )
+          )
+          .encodeABI()
+      };
     },
-    async faucet() {
-      const faucet = new this.web3.eth.Contract(TokenFaucet, addresses.FAUCET);
-      const data = faucet.methods.gulp(addresses.MCD_GOV).encodeABI();
+    fixImproperEncoding(calldata, cdpId) {
+      const parts = calldata.slice(0, calldata.length - 64);
+      let cdpIdData = toBigNumber(cdpId).toString(16);
+      for (let i = 0; cdpIdData.length < 64; i++) {
+        cdpIdData = '0' + cdpIdData;
+      }
+      return parts + cdpIdData;
+    },
+    async needsApproval(requiredApproval) {
+      const contract = new this.web3.eth.Contract(ERC20, addresses.MCD_GOV);
 
-      return this.web3.eth.sendTransaction({
-        from: this.account.address,
-        to: addresses.FAUCET,
-        value: 0,
-        gas: 5000000,
-        data: data
-      });
+      const currentApproval = await contract.methods
+        .allowance(this.account.address, this.proxyAddress)
+        .call();
+
+      return currentApproval < requiredApproval;
     },
     async approveMkr() {
-      // =============================================================
-
-      // related to:
-      // seth send "$MCD_GOV" 'approve(address,uint256)' "$MYPROXY" "$(seth --to-uint256 "$(seth --to-wei 1000000000 ETH)")"
-      const tokenAddress = addresses.MCD_GOV;
-
-      const contract = new this.web3.eth.Contract(ERC20, tokenAddress);
-
-      const mkrBalance = await contract.methods
-        .balanceOf(this.account.address)
-        .call();
+      const contract = new this.web3.eth.Contract(ERC20, addresses.MCD_GOV);
 
       // was getting a too big decimal error.  So, just approve the entire maker balance
       const data = contract.methods
         .approve(
           this.proxyAddress,
-          ethUnit.toWei(mkrBalance, 'ether').toString()
+          ethUnit
+            .toWei(
+              await contract.methods.balanceOf(this.account.address).call(),
+              'ether'
+            )
+            .toString()
         )
         .encodeABI();
       // =============================================================
-      return this.web3.eth.sendTransaction({
+      return {
         from: this.account.address,
-        to: tokenAddress,
+        to: addresses.MCD_GOV,
         value: 0,
         data: data
-      });
+      };
     },
     selectCDP(cdpSelected) {
       this.selectedCdp = cdpSelected;
