@@ -81,22 +81,34 @@ export default {
   },
   methods: {
     getAccounts(acc) {
-      this.accounts = Object.keys(acc).filter(item => {
+      const nonWatchOnly = Object.keys(acc).filter(item => {
         if (isAddress(item)) {
-          if (JSON.parse(acc[item]).type !== 'watchOnly') return acc[item];
+          const parsedAcc = JSON.parse(acc[item]);
+          if (parsedAcc.type !== 'watchOnly') {
+            return acc[item];
+          }
         }
+      });
+      this.accounts = nonWatchOnly.map(item => {
+        const parsed = JSON.parse(acc[item]);
+        return {
+          nickname: parsed.nick,
+          address: item
+        };
       });
       this.getBalance();
     },
     async getBalance() {
       for (let i = 0; i < this.accounts.length; i++) {
-        if (isAddress(this.accounts[i])) {
-          const balance = await this.web3.eth.getBalance(this.accounts[i]);
+        if (isAddress(this.accounts[i].address)) {
+          const balance = await this.web3.eth.getBalance(
+            this.accounts[i].address
+          );
           const balanceToWei = this.web3.utils.fromWei(balance);
-          this.accWithBal.push({
-            balance: new BigNumber(balanceToWei).toString(),
-            address: this.accounts[i]
+          const pushableItem = Object.assign({}, this.accounts[i], {
+            balance: new BigNumber(balanceToWei).toString()
           });
+          this.accWithBal.push(pushableItem);
         }
       }
     },

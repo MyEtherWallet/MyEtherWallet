@@ -235,7 +235,6 @@ export default {
             return (this.unlockWeb3Wallet = true);
           }
 
-          this.web3WalletExists = false;
           return;
         }
         this.signIn(web3, 'ethereum');
@@ -265,7 +264,6 @@ export default {
           return (this.unlockWeb3Wallet = true);
         }
         Toast.responseHandler(e, Toast.ERROR);
-        return (this.web3WalletExists = false);
       }
     }
   }
