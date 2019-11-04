@@ -1,0 +1,52 @@
+@import '~@/scss/GlobalVariables';
+
+.warning-text-container {
+  padding-top: 30px;
+  text-align: center;
+
+  p {
+    font-size: 16px !important;
+  }
+
+  h2 {
+    color: $dark-blue-6;
+    font-weight: bold;
+  }
+
+  .text-container {
+    padding: 10px 30px;
+  }
+}
+
+.remove-modal-buttons {
+  align-items: center;
+  display: flex;
+  justify-content: space-around;
+  padding-top: 40px;
+
+  %button-temp {
+    border: 1px solid;
+    border-radius: 5px;
+    cursor: pointer;
+    flex: 1;
+    margin: 5px;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .cancel,
+  .remove {
+    @extend %button-temp;
+  }
+
+  .remove {
+    background-color: $red-7;
+    border: 1px solid $red-7;
+    color: $white;
+  }
+
+  .cancel {
+    border: 1px solid $dark-grey-11;
+    color: $dark-grey-11;
+  }
+}

@@ -12,6 +12,10 @@
     margin-bottom: 15px !important;
     padding-bottom: 15px !important;
   }
+
+  .form-container {
+    padding: 20px 30px 30px;
+  }
 }
 
 .inputs-container {
@@ -122,4 +126,17 @@ label {
   align-items: center;
   display: flex;
   justify-content: space-between;
+}
+
+.collapse-open-button {
+  width: 100%;
+  background-color: $dark-blue-12 !important;
+  border-color: $dark-blue-12 !important;
+  display: flex;
+  align-items: center;
+  margin: 5px 0;
+
+  p {
+    color: $white !important;
+  }
 }

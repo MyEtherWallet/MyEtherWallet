@@ -1,0 +1,51 @@
+@import '~@/scss/GlobalVariables';
+
+.extension-wallets-container {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  grid-template-rows: 1fr;
+  min-height: 500px;
+}
+
+.wallets-container {
+  background-color: $light-grey-2;
+  height: 100%;
+  padding: 50px;
+}
+
+.my-wallets-container,
+.dapps-container,
+.watch-only-container {
+  display: grid;
+  grid-template-columns: 85% 1fr;
+
+  .wallets-container-header,
+  .total-balance-container {
+    grid-column-start: 1;
+  }
+
+  .wallets,
+  .wallets-info {
+    grid-column-start: 1;
+  }
+}
+
+.wallets-container-header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+
+  h2 {
+    margin: 0 15px 0 0 !important;
+  }
+
+  .add-button {
+    color: $mew-green;
+    cursor: pointer;
+  }
+
+  .header-title-container {
+    align-items: center;
+    display: flex;
+  }
+}
