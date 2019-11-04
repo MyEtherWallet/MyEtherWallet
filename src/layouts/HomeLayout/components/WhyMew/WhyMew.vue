@@ -6,21 +6,20 @@
         title="Why Mew"
         description="Make Ethereum Blockchain easy and secure"
       />
+      <FriendlyToUse> </FriendlyToUse>
     </v-container>
   </div>
 </template>
 
 <script>
-//import Flexbox from '@/components/Common/Flexbox';
-//import StdButton from '@/components/StdButton';
 import BlockTitle from '../Common/BlockTitle';
+import FriendlyToUse from './components/FriendlyToUse';
 
 export default {
   name: 'HomeFeatures',
   components: {
-    //Flexbox,
-    //StdButton,
-    BlockTitle
+    BlockTitle,
+    FriendlyToUse
   }
 };
 </script>
