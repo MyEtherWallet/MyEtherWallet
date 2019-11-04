@@ -1,3 +1,8 @@
+### Bug
+
+- Various web and cx bugs [#1594](https://github.com/MyEtherWallet/MyEtherWallet/pull/1594)
+
+
 ### Release v5.2.0
 
 ### Feature
