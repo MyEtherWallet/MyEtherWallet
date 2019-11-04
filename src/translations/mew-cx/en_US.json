@@ -1,0 +1,14 @@
+{
+  "edit-modal": "Edit Modal",
+  "wallet-name": "Wallet Name",
+  "submit": "Submit",
+  "remove-wallet": "Remove Wallet",
+  "add-wallet-nickname": "Please add a wallet nickname",
+  "generate-wallet": "Generate a New Wallet",
+  "password": "Password",
+  "add-wallet": "Add Wallet",
+  "keystore-file": "Keystore File (UTC/JSON)",
+  "your-wallet": "Your Wallet File",
+  "upload-file": "Upload File",
+  "enter-pw": "Enter your password"
+}

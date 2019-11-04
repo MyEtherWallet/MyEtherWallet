@@ -35,6 +35,7 @@ import signMessage from './sign-message/en_US';
 import helpCenter from './help-center/en_US';
 import informationPages from './information-pages/en_US';
 import notifications from './notifications/en_US';
+import mewCX from './mew-cx/en_US';
 
 const en_US = {
   common: common,
@@ -72,6 +73,7 @@ const en_US = {
   dappsSubmission: dappsSubmission,
   helpCenter: helpCenter,
   informationPages: informationPages,
-  notifications: notifications
+  notifications: notifications,
+  mewCX: mewCX
 };
 export default en_US;

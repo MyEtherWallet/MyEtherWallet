@@ -6,14 +6,11 @@
           <h4>{{ $t('interface.actions') }}</h4>
         </div>
         <div class="buttons">
-          <button-send-tx
-            class="clickable"
-            @click.native="goTo('send-transaction')"
-          />
+          <button-send-tx :go-to="goTo" class="clickable" />
           <button-nft-manager
             :disabled="!isOnlineAndEth"
+            :go-to="goTo"
             class="clickable"
-            @click.native="goTo('nft-manager', !isOnlineAndEth)"
           />
         </div>
       </div>

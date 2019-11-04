@@ -4,16 +4,16 @@
       ref="editModal"
       hide-footer
       class="bootstrap-modal"
-      title="Edit Modal"
+      :title="$t('mewCx.edit-modal')"
       centered
     >
       <div class="modal-contents">
         <form>
           <div class="input-container">
-            <label for="walletName"> Wallet Name </label>
+            <label for="walletName"> {{$t('mewCx.wallet-name')}} </label>
             <input
               v-model="locName"
-              placeholder="Please add a wallet nickname"
+              :placeholder="$t('mewCx.add-wallet-nickname')"
               name="walletName"
             />
           </div>
@@ -22,13 +22,13 @@
             type="submit"
             @click.prevent="saveWallet"
           >
-            Submit
+            {{$t('mewCx.submit')}}
           </button>
           <button
             class="remove-button large-round-button-white-filled"
             @click.stop.prevent="removeWallet"
           >
-            Remove Wallet
+           {{$t('mewCx.remove-wallet')}}
           </button>
         </form>
       </div>
