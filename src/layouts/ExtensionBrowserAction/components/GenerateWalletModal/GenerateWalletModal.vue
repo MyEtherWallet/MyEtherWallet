@@ -4,20 +4,20 @@
       ref="generateNewWallet"
       hide-footer
       centered
-      title="Generate a New Wallet"
+      :title="$t('mewCx.generateWallet')"
     >
       <div class="modal-contents">
         <form>
           <div class="input-container">
-            <label for="walletName"> Wallet Name </label>
+            <label for="walletName"> {{ $t('mewCx.wallet-name')}} </label>
             <input
               v-model="locNickname"
-              placeholder="Please add a wallet nickname"
+              :placeholder="$t('mewCx.add-wallet-nickname')"
               name="walletName"
             />
           </div>
           <div class="input-container">
-            <label for="walletPassword"> Password </label>
+            <label for="walletPassword"> {{ $t('mewCx.password') }} </label>
             <div class="password-input">
               <input
                 v-model="locPassword"

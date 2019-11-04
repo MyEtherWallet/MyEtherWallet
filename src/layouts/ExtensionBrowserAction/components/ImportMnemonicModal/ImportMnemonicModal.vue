@@ -61,7 +61,7 @@
                 <input
                   v-model="locPassword"
                   :type="show ? 'text' : 'password'"
-                  placeholder="Enter your password"
+                  :placeholder="$t('mewCx.enter-pw')"
                 />
                 <img
                   :src="show ? showIcon : hide"

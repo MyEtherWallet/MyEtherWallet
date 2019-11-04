@@ -1,5 +1,8 @@
 <template functional>
-  <div class="button-nft-manager">
+  <div
+    class="button-nft-manager"
+    @click="props.goTo('nft-manager', props.disabled)"
+  >
     <div
       :class="props.disabled ? 'button-disabled' : ''"
       class="content-container"
@@ -27,6 +30,10 @@ export default {
     disabled: {
       type: Boolean,
       default: false
+    },
+    goTo: {
+      type: Function,
+      default: () => {}
     }
   }
 };
