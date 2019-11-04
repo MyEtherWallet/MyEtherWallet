@@ -4,11 +4,13 @@ import GetCdps from '@/dapps/MakerDai/makerHelpers/ABIs/GetCdps';
 import ProxyRegistry from '@/dapps/MakerDai/makerHelpers/ABIs/ProxyRegistry';
 import ProxyContract from '@/dapps/MakerDai/makerHelpers/ABIs/DSProxy';
 import CdpManager from '@/dapps/MakerDai/makerHelpers/ABIs/DssCdpManager'
+import TokenFaucet from '@/dapps/MakerDai/makerHelpers/ABIs/TokenFaucet';
 export {
   migrateABI,
   ERC20,
   GetCdps,
   ProxyRegistry,
   ProxyContract,
-  CdpManager
+  CdpManager,
+  TokenFaucet
 }
