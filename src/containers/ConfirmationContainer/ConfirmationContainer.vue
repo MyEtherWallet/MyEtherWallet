@@ -330,16 +330,16 @@ export default {
           this.reset();
         }
       });
+
+      this.$refs.signConfirmModal.$refs.signConfirmation.$on('hidden', () => {
+        this.signedMessage = '';
+      });
+
+      this.$refs.successModal.$refs.success.$on('hide', () => {
+        this.successMessage = '';
+        this.linkMessage = 'OK';
+      });
     }
-
-    this.$refs.signConfirmModal.$refs.signConfirmation.$on('hidden', () => {
-      this.signedMessage = '';
-    });
-
-    this.$refs.successModal.$refs.success.$on('hide', () => {
-      this.successMessage = '';
-      this.linkMessage = 'OK';
-    });
   },
   methods: {
     swapWidgetModalOpen(
