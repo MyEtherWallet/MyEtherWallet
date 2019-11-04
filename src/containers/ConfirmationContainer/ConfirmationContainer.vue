@@ -177,6 +177,26 @@ export default {
       }
     }
   },
+  watch: {
+    wallet(newVal) {
+      if (newVal !== null) {
+        this.$refs.confirmModal.$refs.confirmation.$on('hidden', () => {
+          if (this.dismissed) {
+            this.reset();
+          }
+        });
+
+        this.$refs.signConfirmModal.$refs.signConfirmation.$on('hidden', () => {
+          this.signedMessage = '';
+        });
+
+        this.$refs.successModal.$refs.success.$on('hide', () => {
+          this.successMessage = '';
+          this.linkMessage = 'OK';
+        });
+      }
+    }
+  },
   beforeDestroy() {
     Object.values(events).forEach(evt => {
       this.$eventHub.$off(evt);
@@ -322,24 +342,6 @@ export default {
         );
       }
     );
-  },
-  mounted() {
-    if (this.wallet !== null) {
-      this.$refs.confirmModal.$refs.confirmation.$on('hidden', () => {
-        if (this.dismissed) {
-          this.reset();
-        }
-      });
-
-      this.$refs.signConfirmModal.$refs.signConfirmation.$on('hidden', () => {
-        this.signedMessage = '';
-      });
-
-      this.$refs.successModal.$refs.success.$on('hide', () => {
-        this.successMessage = '';
-        this.linkMessage = 'OK';
-      });
-    }
   },
   methods: {
     swapWidgetModalOpen(
