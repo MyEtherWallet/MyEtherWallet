@@ -35,7 +35,8 @@ import {
   ProxyRegistry,
   ProxyContract,
   CdpManager,
-  TokenFaucet
+  TokenFaucet,
+  MigrationProxyActions
 } from './ABIs';
 
 import { createCurrencyDetails } from './dataContainers';
@@ -73,6 +74,7 @@ export {
   ProxyContract,
   CdpManager,
   TokenFaucet,
+  MigrationProxyActions,
   // classes/containers
   createCurrencyDetails
 };
