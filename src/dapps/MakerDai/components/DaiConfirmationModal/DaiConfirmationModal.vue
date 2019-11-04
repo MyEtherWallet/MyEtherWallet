@@ -2,7 +2,7 @@
   <div class="modal-container">
     <b-modal
       ref="modal"
-      :title="$t('dappsMaker.DAIConfirmation')"
+      :title="$t('dappsMaker.dai-confirmation')"
       centered
       class="bootstrap-modal bootstrap-modal-wide padding-40-20"
       hide-footer
@@ -72,7 +72,7 @@
                 <p class="bold">{{ collatRatio }} %</p>
               </li>
               <li>
-                <p>{{ $t('dappsMaker.minimumRatio') }}</p>
+                <p>{{ $t('dappsMaker.minimum-ratio') }}</p>
                 <p>{{ minRatio }}%</p>
               </li>
             </ul>
@@ -135,7 +135,7 @@ export default {
   data() {
     return {
       confirmButton: {
-        title: this.$t('dappsMaker.confirmAndCreate'),
+        title: this.$t('dappsMaker.confirm-and-create'),
         buttonStyle: 'green',
         helpCenter: true
       }

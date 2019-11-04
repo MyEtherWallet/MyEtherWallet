@@ -76,11 +76,11 @@
         <div v-if="showMoveOrClose" class="header-buttons-container">
           <div class="inner-container">
             <button class="move-btn" @click="showMove">
-              <h4>{{ $t('dappsMaker.moveTitle') }}</h4>
+              <h4>{{ $t('dappsMaker.move-title') }}</h4>
             </button>
             <div v-if="!((!hasProxy && !onCreate) || showCdpMigrateButtons)">
               <button class="close-btn" @click="showClose">
-                <h4>{{ $t('dappsMaker.closeTitle') }}</h4>
+                <h4>{{ $t('dappsMaker.close-title') }}</h4>
               </button>
             </div>
           </div>
@@ -90,25 +90,25 @@
     <div v-if="makerActive" class="buttons-container">
       <div v-if="showCreateProxy">
         <div class="dapps-button" @click="buildProxy">
-          <h4>{{ $t('dappsMaker.createProxy') }}</h4>
+          <h4>{{ $t('dappsMaker.create-proxy') }}</h4>
         </div>
       </div>
       <div v-if="showCreateProxy" class="proxy-container">
-        {{ $t('dappsMaker.proxyInstructions') }}
+        {{ $t('dappsMaker.proxy-instructions') }}
       </div>
       <div v-if="showCdpMigrateButtons">
         <div v-for="(value, idx) in cdpsWithoutProxy" :key="idx + value">
           <div class="dapps-button">
             <div @click="migrateCdpExternal(value)">
               <h4>
-                {{ $t('dappsMaker.migrateCdp', { value: value }) }}
+                {{ $t('dappsMaker.migrate-cdp', { value: value }) }}
               </h4>
             </div>
           </div>
         </div>
       </div>
       <div v-if="showCdpMigrateButtons" class="proxy-container">
-        {{ $t('dappsMaker.migrateInstructions') }}
+        {{ $t('dappsMaker.migrate-instructions') }}
       </div>
     </div>
     <div v-show="makerActive" class="buttons-container">
@@ -165,8 +165,8 @@
       :values="activeValues"
       :get-cdp="getCdp"
       :has-cdp="hasCdp"
-      :loading-message1="$t('dappsMaker.initialLoadingOne')"
-      :loading-message2="$t('dappsMaker.initialLoadingTwo')"
+      :loading-message1="$t('dappsMaker.initial-loading-one')"
+      :loading-message2="$t('dappsMaker.initial-loading-two')"
       @activeCdpId="setupCdpManage"
       @cdpOpened="addCdp"
       @cdpClosed="removeCdp"

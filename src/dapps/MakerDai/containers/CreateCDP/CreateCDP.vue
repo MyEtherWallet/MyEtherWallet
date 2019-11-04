@@ -14,14 +14,14 @@
     />
     <loading-overlay
       v-if="loading"
-      :loadingmessage="$t('dappsMaker.creatingMessage')"
+      :loadingmessage="$t('dappsMaker.creating-message')"
     />
     <div class="manage-container">
       <p class="top-title">
         {{ $t('dappsMaker.maker_title') }}
       </p>
       <p class="top-title-sub">
-        {{ $t('dappsMaker.createInstruct') }}
+        {{ $t('dappsMaker.create-instruct') }}
       </p>
 
       <div class="currency-ops-new">
@@ -52,7 +52,7 @@
               {{ $t('dappsMaker.not-enough-eth') }}
             </p>
             <p>
-              {{ $t('dappsMaker.minCollat') }}
+              {{ $t('dappsMaker.min-collat') }}
               <b>{{ displayFixedValue(minEth, 6) }}</b>
               {{ $t('common.currency.eth') }}
             </p>
@@ -86,7 +86,7 @@
           />
           <div class="input-block-message">
             <p>
-              {{ $t('dappsMaker.maxGenerate') }}
+              {{ $t('dappsMaker.max-generate') }}
               <b>{{ displayFixedValue(maxDaiDraw, 6) }}</b>
               {{ $t('dappsMaker.dai') }}
             </p>
@@ -97,7 +97,7 @@
       <div class="cdp-info-block cdp-info-entry">
         <ul>
           <li>
-            <p>{{ $t('dappsMaker.minEthReq') }}</p>
+            <p>{{ $t('dappsMaker.min-eth-req') }}</p>
             <p>
               {{ displayFixedValue(minEth, 6) }} {{ $t('common.currency.eth') }}
             </p>
@@ -109,7 +109,7 @@
             </p>
           </li>
           <li>
-            <p>{{ $t('dappsMaker.currentPriceInfo') }}</p>
+            <p>{{ $t('dappsMaker.current-price-info') }}</p>
             <p>
               {{ displayFixedValue(ethPrice, 2) }}
               {{ $t('common.currency.usd') }}
@@ -131,7 +131,7 @@
             </p>
           </li>
           <li>
-            <p>{{ $t('dappsMaker.minimumRatio') }}</p>
+            <p>{{ $t('dappsMaker.minimum-ratio') }}</p>
             <p>{{ displayPercentValue(liquidationRatio) }}%</p>
           </li>
         </ul>
@@ -141,7 +141,7 @@
           <li>
             <p>
               {{
-                $t('dappsMaker.stabilityFeeInMkr', {
+                $t('dappsMaker.stability-fee-in-mkr', {
                   value: displayFixedPercent(stabilityFee).toString()
                 })
               }}
@@ -158,7 +158,7 @@
           ]"
           @click="openDaiConfirmation"
         >
-          {{ $t('dappsMaker.collatAndGenerate') }}
+          {{ $t('dappsMaker.collat-and-generate') }}
         </div>
       </div>
     </div>

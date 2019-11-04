@@ -170,16 +170,16 @@ export default {
             !window.navigator ||
             !window.navigator.usb;
           item.disabled = disable;
-          item.msg = disable ? this.$t('errorsGlobal.browserNonWebUsb') : '';
+          item.msg = disable ? this.$t('errorsGlobal.browser-non-web-usb') : '';
         }
         if (u2fhw.includes(item.name)) {
           item.disabled = !res;
-          item.msg = !res ? this.$t('errorsGlobal.browserNonU2f') : '';
+          item.msg = !res ? this.$t('errorsGlobal.browser-non-u2f') : '';
         }
         if (this.isMobile()) {
           const disable = !inMobile.includes(item.name);
           item.disabled = disable;
-          item.msg = disable ? this.$t('errorsGlobal.noMobileSupport') : '';
+          item.msg = disable ? this.$t('errorsGlobal.no-mobile-support') : '';
         }
       });
     });

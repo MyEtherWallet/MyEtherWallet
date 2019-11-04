@@ -2,7 +2,7 @@
   <div class="modal-container">
     <b-modal
       ref="modal"
-      :title="$t('dappsMaker.generateTitle')"
+      :title="$t('dappsMaker.generate-title')"
       centered
       class="bootstrap-modal nopadding"
       hide-footer
@@ -12,7 +12,7 @@
       <div class="contents">
         <div class="inputs">
           <div class="interface__block-title">
-            {{ $t('dappsMaker.generateQuestion') }}
+            {{ $t('dappsMaker.generate-question') }}
           </div>
           <div class="top-buttons">
             <p class="total">
@@ -21,7 +21,7 @@
               DAI
             </p>
             <p class="max" @click="maxDai">
-              {{ $t('dappsMaker.maxBalance') }}
+              {{ $t('dappsMaker.max-balance') }}
             </p>
           </div>
           <div :class="['input-box', allOk ? '' : 'danger']">
@@ -30,7 +30,7 @@
           </div>
           <div class="sub-text">
             <p v-if="!canGenerateDaiAmount" class="above-max">
-              {{ $t('dappsMaker.aboveMaxDai') }}
+              {{ $t('dappsMaker.above-max-dai') }}
             </p>
             <p>
               {{
@@ -44,7 +44,7 @@
         <expanding-option title="Details">
           <div class="detail-container">
             <div class="grid-block">
-              <p>{{ $t('dappsMaker.maxGenerateAvailable') }}</p>
+              <p>{{ $t('dappsMaker.max-generate-available') }}</p>
               <p>
                 <b>
                   {{ values.maxDai ? displayFixedValue(values.maxDai) : 0 }}
@@ -53,14 +53,14 @@
               </p>
             </div>
             <div class="grid-block">
-              <p>{{ $t('dappsMaker.projectedLiquidation') }}</p>
+              <p>{{ $t('dappsMaker.projected-liquidation') }}</p>
               <p>
                 <b>{{ displayFixedValue(newLiquidationPrice, 2) }}</b>
                 {{ fiatCurrency }}
               </p>
             </div>
             <div class="grid-block">
-              <p>{{ $t('dappsMaker.projectedCollatRatio') }}</p>
+              <p>{{ $t('dappsMaker.projected-collat-ratio') }}</p>
               <p>
                 <b>{{ newCollateralRatio }}%</b>
               </p>
@@ -78,7 +78,7 @@
               <p class="title">{{ $t('dappsMaker.caution') }}</p>
               <p class="warning-details">
                 {{
-                  $t('dappsMaker.liquidationRisk', {
+                  $t('dappsMaker.liquidation-risk', {
                     value: newCollateralRatio
                   })
                 }}
@@ -86,7 +86,7 @@
               <check-box @changeStatus="checkBoxClicked">
                 <template v-slot:terms
                   ><p class="checkbox-label">
-                    {{ $t('dappsMaker.understandAndAgree') }}
+                    {{ $t('dappsMaker.understand-and-agree') }}
                   </p></template
                 >
               </check-box>

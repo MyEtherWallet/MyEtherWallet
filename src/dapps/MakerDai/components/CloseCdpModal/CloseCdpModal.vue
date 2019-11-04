@@ -2,7 +2,7 @@
   <div class="modal-container">
     <b-modal
       ref="modal"
-      :title="$t('dappsMaker.closeTitle')"
+      :title="$t('dappsMaker.close-title')"
       centered
       class="bootstrap-modal nopadding"
       static
@@ -11,46 +11,46 @@
     >
       <div class="contents">
         <div v-if="!enoughMkr" class="message-container">
-          {{ $t('dappsMaker.notEnoughMkrClose') }}
+          {{ $t('dappsMaker.not-enough-mkr-close') }}
         </div>
         <div v-if="!enoughDai" class="message-container">
-          {{ $t('dappsMaker.notEnoughDaiClose') }}
+          {{ $t('dappsMaker.not-enough-dai-close') }}
         </div>
         <p class="top-text">
-          {{ $t('dappsMaker.closingNotice') }}
+          {{ $t('dappsMaker.closing-notice') }}
         </p>
 
         <div class="value-table-container">
           <div class="value-table mkr-balance">
             <div class="value-block">
               <p>
-                <b>{{ $t('dappsMaker.mkrBalance') }}</b>
+                <b>{{ $t('dappsMaker.mkr-balance') }}</b>
               </p>
               <p>
                 <b>{{ mkrBalance }} {{ $t('dappsMaker.mkr') }}</b>
               </p>
             </div>
             <p v-show="!enoughMkr" class="get-mkr" @click="getMkr()">
-              {{ $t('dappsMaker.getMkr') }}
+              {{ $t('dappsMaker.get-mkr') }}
             </p>
           </div>
 
           <div class="value-table mkr-balance">
             <div class="value-block">
               <p>
-                <b>{{ $t('dappsMaker.daiBalance') }}</b>
+                <b>{{ $t('dappsMaker.dai-balance') }}</b>
               </p>
               <p>
                 <b>{{ daiBalance }} {{ $t('dappsMaker.dai') }}</b>
               </p>
             </div>
             <p v-show="!enoughDai" class="get-mkr" @click="getDai()">
-              {{ $t('dappsMaker.getDai') }}
+              {{ $t('dappsMaker.get-dai') }}
             </p>
           </div>
           <div class="value-table other-values">
             <div class="value-block">
-              <p>{{ $t('dappsMaker.outstandingDai') }}</p>
+              <p>{{ $t('dappsMaker.outstanding-dai') }}</p>
               <p>
                 <b>{{ values.debtValue }} {{ $t('dappsMaker.dai') }}</b>
               </p>
@@ -58,7 +58,7 @@
             <div class="value-block">
               <p>
                 {{
-                  $t('dappsMaker.stabilityFeeInMkr', {
+                  $t('dappsMaker.stability-fee-in-mkr', {
                     value: displayFixedValue(
                       displayPercentValue(values.stabilityFee)
                     )
