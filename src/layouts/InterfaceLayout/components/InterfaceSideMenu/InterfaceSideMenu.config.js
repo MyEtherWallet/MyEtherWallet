@@ -1,4 +1,6 @@
-export default {
+import { Misc } from '@/helpers';
+
+const config = {
   tabs: [
     {
       name: 'dashboard',
@@ -166,3 +168,17 @@ export default {
     }
   ]
 };
+if (Misc.isMewCx()) {
+  const tabIdx = config.tabs.findIndex(item => {
+    return item.name === 'send-transaction';
+  });
+  const newArr = [];
+  config.tabs[tabIdx].children.forEach(item => {
+    if (item.name !== 'send-offline') {
+      newArr.push(item);
+    }
+  });
+
+  config.tabs[tabIdx].children = newArr;
+}
+export default config;

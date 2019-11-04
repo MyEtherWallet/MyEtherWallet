@@ -1,0 +1,42 @@
+@import '~@/scss/GlobalVariables';
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 0;
+
+  input {
+    background-color: $light-grey-2;
+    border: none;
+    padding: 15px;
+  }
+
+  label {
+    color: $dark-blue-12;
+    font-weight: bold;
+  }
+}
+
+.modal-contents {
+  padding: 10px;
+}
+
+.submit-button-container {
+  align-items: center;
+  display: flex;
+  padding-top: 30px;
+  width: 100%;
+
+  .back-button {
+    border: 1px solid $dark-grey-8;
+    border-radius: 5px;
+    color: $dark-grey-8;
+    cursor: pointer;
+    margin-right: 20px;
+    padding: 21px 55px;
+  }
+
+  .submit-button {
+    flex: 1;
+  }
+}

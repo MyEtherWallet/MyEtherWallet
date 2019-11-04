@@ -6,6 +6,7 @@ import utils from 'web3-utils';
 import store from '@/store';
 import { uint, address, string, bytes, bool } from './solidityTypes';
 import xss from 'xss';
+import { MEW_CX } from '@/builds/configs/types';
 
 const capitalize = value => {
   if (!value) return '';
@@ -222,6 +223,10 @@ const stripTags = content => {
   return string;
 };
 
+const isMewCx = () => {
+  return BUILD_TYPE === MEW_CX;
+};
+
 export default {
   isJson,
   doesExist,
@@ -241,5 +246,6 @@ export default {
   getService,
   stringToArray,
   isContractArgValid,
-  stripTags
+  stripTags,
+  isMewCx
 };
