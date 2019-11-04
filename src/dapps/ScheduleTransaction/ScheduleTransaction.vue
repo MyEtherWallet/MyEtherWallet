@@ -1,7 +1,7 @@
-<template functional>
+<template>
   <div class="schedule-transaction">
-    <component :is="injections.components.BackButton" />
-    <router-view :tokens-with-balance="props.tokensWithBalance" />
+    <back-button />
+    <router-view :tokens-with-balance="tokensWithBalance" />
   </div>
 </template>
 
@@ -9,12 +9,8 @@
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
 
 export default {
-  inject: {
-    components: {
-      default: {
-        BackButton
-      }
-    }
+  components: {
+    'back-button': BackButton
   },
   props: {
     tokensWithBalance: {
