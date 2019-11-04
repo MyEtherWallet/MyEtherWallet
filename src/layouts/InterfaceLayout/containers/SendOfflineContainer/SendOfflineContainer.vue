@@ -105,7 +105,7 @@
             <div class="title">
               <div class="title-helper">
                 <h4>{{ $t('common.gas.limit') }}</h4>
-                <popover :popcontent="$t('popover.gasLimit')" />
+                <popover :popcontent="$t('popover.gas-limit')" />
               </div>
             </div>
           </div>
@@ -306,10 +306,10 @@ export default {
     txSpeedMsg() {
       const net = this.network.type.name;
       // eslint-disable-next-line
-      const msg = `${this.$t('popover.txSpeedPt1').replace(
+      const msg = `${this.$t('popover.tx-speed-pt-1').replace(
         '{0}',
         net
-      )} ${this.$t('popover.txSpeedPt2').replace('{0}', net)}`;
+      )} ${this.$t('popover.tx-speed-pt-2').replace('{0}', net)}`;
       return msg;
     },
     validAddress() {
