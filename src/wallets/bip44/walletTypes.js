@@ -10,6 +10,7 @@ const MNEMONIC = 'mnemonic';
 const WEB3_WALLET = 'web3_wallet';
 const PRIV_KEY = 'priv_key';
 const FINNEY = 'finney';
+const WATCH_ONLY = 'watchOnly';
 export {
   LEDGER,
   TREZOR,
@@ -22,5 +23,6 @@ export {
   MNEMONIC,
   WEB3_WALLET,
   PRIV_KEY,
-  FINNEY
+  FINNEY,
+  WATCH_ONLY
 };

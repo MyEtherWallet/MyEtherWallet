@@ -1,0 +1,57 @@
+@import '~@/scss/GlobalVariables';
+
+.network-selection-container {
+  align-items: center;
+  box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+  display: flex;
+  justify-content: space-between;
+  padding: 15px;
+  margin: -15px 0 15px -15px;
+
+  .network {
+    color: $dark-grey-11;
+    font-weight: bold;
+    font-size: 12px;
+  }
+
+  .network-name {
+    color: $dark-blue-2;
+    cursor: pointer;
+    font-size: 12px;
+  }
+}
+
+.network-container {
+  border-radius: 5px;
+  background-color: $light-green-1;
+  margin-bottom: 20px;
+  padding: 15px 20px;
+
+  .node-container {
+    border-top: 1px solid #dfeeee;
+    padding-top: 20px;
+
+    .node {
+      align-items: center;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .active {
+      color: $mew-green;
+      font-weight: bold;
+    }
+
+    .check-active {
+      background-color: $mew-green;
+      border-radius: 50%;
+      color: $white;
+      padding: 1px 5px;
+    }
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
