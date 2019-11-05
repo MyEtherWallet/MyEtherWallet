@@ -20,6 +20,7 @@
   "days-lowercase": "day(s)",
   "start-recurring": "Start Recurring",
   "enter-days": "Enter the number of day(s)",
+  "exit-dapp": "Exit Dapp",
   "manage-subscriptions": {
     "no-active": "You have no active subscriptions!",
     "active": "Active",

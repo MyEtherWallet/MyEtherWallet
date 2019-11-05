@@ -1,6 +1,6 @@
 <template>
   <div class="ambrpay-container">
-    <back-button />
+    <back-button :title="$t('dappsAmbrpay.exit-dapp')" />
     <b-container class="pl-5 pr-5">
       <div class="ambrpay-header mt-5">
         <div class="title-container">
@@ -183,7 +183,6 @@ export default {
         });
     },
     unsubscribeSub(data) {
-      console.error('data', data)
       this.ambrpay
         .unsubscribe(data.pos, data.addr)
         .then(this.getSubscriptions)
