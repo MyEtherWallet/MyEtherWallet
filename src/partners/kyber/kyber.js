@@ -256,7 +256,7 @@ export default class Kyber {
       fromValueWei
     );
     logger(rates);
-    if(!rates){
+    if (!rates) {
       return -1;
     }
     if (new BigNumber(rates['expectedRate']).eq(new BigNumber(0))) {
