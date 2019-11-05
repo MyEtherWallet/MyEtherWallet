@@ -22,7 +22,7 @@
               <input
                 v-model="locPassword"
                 :type="show ? 'text' : 'password'"
-                placeholder="Create your password here"
+                :placeholder="$t('mewCx.create-pw')"
                 name="walletPassword"
               />
               <img
@@ -40,7 +40,7 @@
             type="submit"
             @click.prevent="generateWallet"
           >
-            <span v-show="!loading"> Add Wallet </span>
+            <span v-show="!loading"> {{ $t('mewCx.add-wallet') }} </span>
             <i v-show="loading" class="fa fa-spinner fa-spin" />
           </b-btn>
         </form>
