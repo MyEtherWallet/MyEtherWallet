@@ -25,7 +25,6 @@ export default {
   path: 'dapps/manage-ens',
   component: ManageENS,
   props: true,
-  meta: { requiresAuth: true },
   children: [
     {
       path: '',

@@ -1,7 +1,8 @@
-### Release v5.2.2
+### Release v5.2.1
 
 ### Feature
 
+- Ambrpay Integration[#1441](https://github.com/MyEtherWallet/MyEtherWallet/pull/1441)
 - Update Dapp Submission UI [#1585](https://github.com/MyEtherWallet/MyEtherWallet/pull/1585)
 
 ### Bug
