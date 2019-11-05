@@ -28,7 +28,6 @@ const getRates = async () => {
       utils.buildPayload(bityMethods.getCryptoRates)
     );
     if (results.error) {
-      // return results.error.message;
       throw Error(results.error.message);
     }
     return results.result;
@@ -44,7 +43,6 @@ const getExitRates = async () => {
       utils.buildPayload(bityMethods.getFiatRates)
     );
     if (results.error) {
-      // return results.error.message;
       throw Error(results.error.message);
     }
     return results.result;
@@ -60,7 +58,6 @@ const getEstimate = async orderInfo => {
       utils.buildPayload(bityMethods.getEstimate, orderInfo)
     );
     if (results.error) {
-      // return results.error.message;
       throw Error(results.error.message);
     }
     return results.result;
@@ -76,7 +73,6 @@ const createOrder = async orderInfo => {
       utils.buildPayload(bityMethods.createOrder, orderInfo)
     );
     if (results.error) {
-      // return results.error.message;
       throw Error(results.error.message);
     }
 
