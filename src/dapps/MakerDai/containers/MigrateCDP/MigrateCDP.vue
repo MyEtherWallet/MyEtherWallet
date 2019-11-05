@@ -152,7 +152,6 @@ export default {
   },
   async mounted() {
     this.setup();
-    console.log(this.cdps); // todo remove dev item
   },
   methods: {
     setup() {
@@ -164,21 +163,12 @@ export default {
         this.getMigrateContractSaiBalance();
       }
     },
-    async checkAllowance(tokenAddress) {
-      const contract = new this.web3.eth.Contract(ERC20, tokenAddress);
-      return contract.methods
-        .allowance(this.account.address, this.proxyAddress)
-        .call();
-    },
     async findCdps() {
       const { withType, withProxy, withoutProxy } = await locateCdps(
         this,
         this.getValueOrFunction('_cdpService')
       );
       this.cdps = withProxy.concat(withoutProxy);
-      this.mkrAllowance = await this.checkAllowance(
-        '0x1dad4783cf3fe3085c1426157ab175a6119a04ba'
-      );
     },
 
     //TODO use seth to get tokens (MCD_GOV is maker address for deployments)
@@ -199,28 +189,24 @@ export default {
           txs.push(approve);
           const migrate = await this.migrate(this.selectedCdp);
           txs.push(migrate);
-          /*        this.web3.mew
-          .sendBatchTransactions(txs)
-          .then(console.log)
-          .catch(console.error);*/
+          // this.web3.mew.sendBatchTransactions(txs).catch(err => {
+          //   Toast.responseHandler(err, Toast.ERROR);
+          // });
         } else {
           const migrate = await this.migrate(this.selectedCdp);
-          // this.web3.eth
-          //   .sendTransaction(migrate)
-          //   .then(console.log)
-          //   .catch(console.error);
+          // this.web3.eth.sendTransaction(migrate).catch(err => {
+          //   Toast.responseHandler(err, Toast.ERROR);
+          // });
         }
-
-        // this.web3.eth
-        //   .sendTransaction(datas)
-        //   .then(console.log)
-        //   .catch(console.error);
       }
     },
 
     // MIGRATION CONTRACT
     // https://github.com/makerdao/scd-mcd-migration/blob/master/src/ScdMcdMigration.sol#L59
     async migrate(cdpId) {
+      const val = await this.getMigrateContractSaiBalance();
+      console.log(val); // todo remove dev item
+      console.log(toBigNumber(cdpId).toString(16)); // todo remove dev item
       return {
         from: this.account.address,
         to: this.proxyAddress,
@@ -238,7 +224,8 @@ export default {
                   addresses.MIGRATION,
                   '0x' + toBigNumber(cdpId).toString(16)
                 )
-                .encodeABI()
+                .encodeABI(),
+              cdpId
             )
           )
           .encodeABI()
@@ -276,7 +263,6 @@ export default {
             .toString()
         )
         .encodeABI();
-      // =============================================================
       return {
         from: this.account.address,
         to: addresses.MCD_GOV,
@@ -287,50 +273,9 @@ export default {
     selectCDP(cdpSelected) {
       this.selectedCdp = cdpSelected;
     },
-    getMigrateContractSaiBalance() {},
-    async approve(val) {
-      // const tokenAddress = '0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd';
-      const tokenAddress = '0x1dad4783cf3fe3085c1426157ab175a6119a04ba';
-      const contract = new this.web3.eth.Contract(ERC20, tokenAddress);
+    async getMigrateContractSaiBalance() {
 
-      const data = contract.methods
-        .approve(addresses.MIGRATION_PROXY_ACTIONS, val)
-        .encodeABI();
-
-      return {
-        from: this.account.address,
-        to: tokenAddress,
-        value: 0,
-        data: data
-      };
-    },
-    async buildProxyContractCall(mainData) {
-      /*
-        execute(contract, method, args, options, address) {
-    if (!address && typeof this._currentProxy !== 'string') {
-      throw new Error('No proxy found for current account');
-    }
-    const proxyAddress = address ? address : this._currentProxy;
-    const proxyContract = this.getUnwrappedProxyContract(proxyAddress);
-    const data = contract.interface.functions[method](...args).data;
-    return proxyContract.execute(contract.address, data, options);
-  }
-      */
-      console.log(mainData); // todo remove dev item
-      const proxyAddress = this.proxyAddress.toLowerCase();
-
-      const contract = new this.web3.eth.Contract(ProxyContract, proxyAddress);
-
-      const data = contract.methods
-        .execute(addresses.MIGRATION_PROXY_ACTIONS, mainData)
-        .encodeABI();
-
-      return {
-        from: this.account.address,
-        to: proxyAddress,
-        value: 0,
-        data: data
-      };
+      return await new this.web3.eth.Contract(ERC20, '0xc4375b7de8af5a38a93548eb8453a498222c4ff2').methods.balanceOf(addresses.MIGRATION).call()
     },
     async submitTransaction() {
       window.scrollTo(0, 0);
