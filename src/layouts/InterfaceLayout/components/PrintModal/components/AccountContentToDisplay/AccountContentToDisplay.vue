@@ -68,7 +68,7 @@
       />
       <img
         alt
-        src="~@/assets/images/etc/spaceman.png"
+        src="~@/assets/images/etc/access-spaceman.png"
         width="100%"
         class="floating-spaceman"
       />

@@ -69,6 +69,11 @@ export default {
   computed: {
     ...mapState(['account', 'web3'])
   },
+  mounted() {
+    this.$refs.signatureModal.$refs.signatureModal.$on('hidden', () => {
+      this.signature = '';
+    });
+  },
   methods: {
     signMessage() {
       try {

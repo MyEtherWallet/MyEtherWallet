@@ -1,5 +1,5 @@
 <template>
-  <div class="about-your-dapp w-50 mb-5 mt-5">
+  <div class="about-your-dapp mb-5 mt-5">
     <social-acct-modal ref="socialacct" @addSocialAccount="addSocialAccount" />
     <b-form onsubmit="return false;">
       <b-form-group>
@@ -81,7 +81,7 @@
                 {{ $t('dappsSubmission.about-your-team.add') }} +
               </button>
             </div>
-            <span class="requiredIcon">*</span>
+            <span class="required-icon">*</span>
           </div>
           <div v-if="socialAccts.length > 0" class="social-links-content">
             <div

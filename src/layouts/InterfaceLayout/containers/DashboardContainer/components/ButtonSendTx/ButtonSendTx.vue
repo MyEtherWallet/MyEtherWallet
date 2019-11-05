@@ -1,10 +1,18 @@
 <template functional>
   <div class="button-send-tx" @click="props.goTo('send-transaction')">
     <div :class="disabled ? 'button-disabled' : ''" class="content-container">
-      <img src="~@/assets/images/buttons/send-tx/left.png" class="left" alt />
-      <img src="~@/assets/images/buttons/send-tx/right.png" class="right" alt />
       <img
-        src="~@/assets/images/buttons/send-tx/spaceman.png"
+        src="~@/assets/images/buttons/send-tx/send-tx-left.png"
+        class="left"
+        alt
+      />
+      <img
+        src="~@/assets/images/buttons/send-tx/send-tx-right.png"
+        class="right"
+        alt
+      />
+      <img
+        src="~@/assets/images/buttons/send-tx/send-tx-spaceman.png"
         class="spaceman"
         alt
       />

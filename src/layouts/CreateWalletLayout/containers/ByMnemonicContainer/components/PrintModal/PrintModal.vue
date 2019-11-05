@@ -24,6 +24,7 @@
             :save-text="$t('createWallet.mnemonic.table.save')"
             :requirements="$t('createWallet.mnemonic.table.requirements')"
             :access-wallet="$t('createWallet.mnemonic.table.access-wallet')"
+            :build-type="buildType"
           />
         </div>
         <div class="mnemonic-to-display">
@@ -40,6 +41,7 @@
             :save-text="$t('createWallet.mnemonic.table.save')"
             :requirements="$t('createWallet.mnemonic.table.requirements')"
             :access-wallet="$t('createWallet.mnemonic.table.access-wallet')"
+            :build-type="buildType"
           />
         </div>
         <div class="button-container">
@@ -83,7 +85,8 @@ export default {
         buttonStyle: 'green-border',
         noMinWidth: true,
         fullWidth: true
-      }
+      },
+      buildType: BUILD_TYPE
     };
   },
   methods: {

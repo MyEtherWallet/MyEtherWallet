@@ -3,7 +3,11 @@
     <div class="header">
       <div class="block-title">
         <img
-          :src="require(`@/assets/images/short-hand-logo-${buildType}.png`)"
+          :src="
+            require(`@/assets/images/short-hand-logo-${
+              buildType ? buildType : 'web'
+            }.png`)
+          "
           height="30px"
           alt
         />
@@ -93,12 +97,11 @@ export default {
     accessWallet: {
       type: String,
       default: ''
+    },
+    buildType: {
+      type: String,
+      default: 'web'
     }
-  },
-  data() {
-    return {
-      buildType: BUILD_TYPE
-    };
   }
 };
 </script>

@@ -15,7 +15,7 @@
         <code>{{ JSON.parse(signedTx).rawTransaction }}</code>
         <input
           ref="signedTxInput"
-          :value="signedTx"
+          :value="JSON.parse(signedTx).rawTransaction"
           style="position: absolute; top: 0; opacity: 0;"
           autocomplete="off"
         />

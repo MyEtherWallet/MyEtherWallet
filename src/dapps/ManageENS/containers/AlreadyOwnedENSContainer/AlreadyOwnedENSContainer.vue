@@ -14,7 +14,7 @@
       <p class="content">{{ owner }}</p>
     </div>
     <div v-show="resolverMultiCoinSupport" class="content-container">
-      <h4>{{ $t('dapps.multi-coin') }}:</h4>
+      <h4>{{ $t('ens.multi-coin') }}:</h4>
       <div v-for="(v, k) in supportedCoins" v-if="v.value" :key="k.id">
         <span class="currency"
           >{{ v.symbol }} {{ $t('common.lowercase-addr') }}:
@@ -23,7 +23,7 @@
       </div>
     </div>
     <div v-show="hasAnyTxt" class="content-container">
-      <h4>{{ $t('dapps.txt-record') }}:</h4>
+      <h4>{{ $t('ens.txt-record') }}:</h4>
       <div v-for="(value, key) in txtRecords" v-if="value !== ''" :key="key">
         <span class="currency">{{ key }}: </span>
         <span class="content">{{ value }}</span>

@@ -502,7 +502,7 @@ export default {
       const tb = new TokenBalance(this.web3.currentProvider);
       const newLogo = {
         // eslint-disable-next-line
-        src: require(`@/assets/images/networks/eth.svg`)
+        src: require(`@/assets/images/networks/eth-logo.svg`)
       };
       try {
         tokens = await tb.getBalance(this.address);
@@ -546,7 +546,7 @@ export default {
       this.customTokens = tokens.map(token => {
         const newLogo = {
           // eslint-disable-next-line
-          src: require(`@/assets/images/networks/eth.svg`)
+          src: require(`@/assets/images/networks/eth-logo.svg`)
         };
         token['logo'] = newLogo;
         return token;
