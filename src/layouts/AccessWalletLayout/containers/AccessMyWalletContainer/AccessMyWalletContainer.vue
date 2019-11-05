@@ -171,7 +171,7 @@ export default {
           classname: 'button-hardware'
         },
         {
-          func: this.metamaskModalOpen,
+          func: this.web3WalletModal,
           title: 'Web3 Wallet',
           desc: this.$t('accessWallet.web3WalletDesc'),
           recommend: '',
@@ -206,13 +206,13 @@ export default {
         btn.disabled = this.isDisabled(btn.classname);
       });
 
-      this.checkWeb3Wallet();
       this.checkWeb3();
+      this.checkIsMetamask();
     });
   },
   methods: {
-    checkWeb3Wallet() {
-      this.checkWeb3Wallet = window.ethereum && window.ethereum.isMetaMask;
+    checkIsMetamask() {
+      this.isMetaMask = window.ethereum && window.ethereum.isMetaMask;
     },
     checkWeb3() {
       this.web3WalletExists =
@@ -241,7 +241,9 @@ export default {
     hardwareModalOpen() {
       this.$refs.hardwareModal.$refs.hardware.show();
     },
-    metamaskModalOpen() {
+    web3WalletModal() {
+      this.checkWeb3();
+      this.checkIsMetamask();
       this.$refs.metamaskModal.$refs.metamask.show();
     },
     softwareModalOpen() {
