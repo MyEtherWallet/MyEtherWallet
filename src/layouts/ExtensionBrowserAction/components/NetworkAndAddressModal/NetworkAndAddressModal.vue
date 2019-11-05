@@ -41,8 +41,8 @@
                       :src="Networks[key][0].type.icon"
                     />
                     <div v-else class="no-icon">
-                      <p>No</p>
-                      <p>Icon</p>
+                      <p>{{ $t('common.no') }}</p>
+                      <p>{{ $t('common.uppercase-icon') }}</p>
                     </div>
                   </div>
                   <p>{{ key }}</p>
@@ -73,7 +73,7 @@
             class="collapse-open-button"
             variant="primary"
           >
-            <p>Address</p>
+            <p>{{ $t('common.addr') }}</p>
           </b-btn>
           <b-collapse
             id="collapse2"
@@ -141,13 +141,13 @@
                 </p>
                 <div v-show="customPathInput" class="custom-path-container">
                   <!-- TODO: how to structure the path input? -->
-                  <label for="customPathLabel">Alias</label>
+                  <label for="customPathLabel">{{ $t('mewCx.alias') }}</label>
                   <input
                     id="customPathLabel"
                     v-model="customPath.label"
-                    placeholder="my custom path"
+                    :placeholder="$t('mewCx.custom-path')"
                   />
-                  <label for="customPathInput">Path</label>
+                  <label for="customPathInput">{{ $t('mewCx.path') }}</label>
                   <input
                     id="customPathInput"
                     v-model="customPath.path"
@@ -236,7 +236,7 @@
                     <input
                       v-model="locPassword"
                       :type="show ? 'text' : 'password'"
-                      placeholder="Enter your password"
+                      :placeholder="$t('mewCx.enter-pw')"
                     />
                     <img
                       :src="show ? showIcon : hide"
@@ -254,7 +254,9 @@
                     type="submit"
                     @click.prevent="generateFromMnemonicPriv"
                   >
-                    <span v-show="!loading"> Add Wallet </span>
+                    <span v-show="!loading">
+                      {{ $t('mewCx.add-wallet') }}
+                    </span>
                     <i v-show="loading" class="fa fa-spinner fa-spin" />
                   </b-btn>
                 </div>

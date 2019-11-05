@@ -1,7 +1,8 @@
 import { Toast } from '@/helpers';
 import Vue from 'vue';
 const ERRORS = {
-  'Failed to sign with Ledger device: U2F TIMEOUT': 'ledgerError.failed-to-sign',
+  'Failed to sign with Ledger device: U2F TIMEOUT':
+    'ledgerError.failed-to-sign',
   'Failed to sign with Ledger device: U2F DEVICE_INELIGIBLE':
     'ledgerError.failed-sign-ineligible',
   'No Ledger device found (timeout)': 'ledgerError.no-device',
@@ -16,7 +17,8 @@ const ERRORS = {
   'Ledger Device is busy (lock provideERC20TokenInformation)':
     'ledgerError.device-busy-1',
   'Ledger Device is busy (lock signTransaction)': 'ledgerError.device-busy-1',
-  'Ledger Device is busy (lock signPersonalMessage)': 'ledgerError.device-busy-1',
+  'Ledger Device is busy (lock signPersonalMessage)':
+    'ledgerError.device-busy-1',
   'TransportError: Failed to sign with Ledger device: U2F OTHER_ERROR':
     'ledgerError.failed-to-sign-other',
   'TransportStatusError: Ledger device: UNKNOWN_ERROR (0x6801)':

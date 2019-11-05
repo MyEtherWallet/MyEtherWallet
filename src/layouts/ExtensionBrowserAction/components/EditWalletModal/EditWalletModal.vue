@@ -2,15 +2,15 @@
   <div>
     <b-modal
       ref="editModal"
+      :title="$t('mewCx.edit-modal')"
       hide-footer
       class="bootstrap-modal"
-      :title="$t('mewCx.edit-modal')"
       centered
     >
       <div class="modal-contents">
         <form>
           <div class="input-container">
-            <label for="walletName"> {{$t('mewCx.wallet-name')}} </label>
+            <label for="walletName"> {{ $t('mewCx.wallet-name') }} </label>
             <input
               v-model="locName"
               :placeholder="$t('mewCx.add-wallet-nickname')"
@@ -22,13 +22,13 @@
             type="submit"
             @click.prevent="saveWallet"
           >
-            {{$t('mewCx.submit')}}
+            {{ $t('mewCx.submit') }}
           </button>
           <button
             class="remove-button large-round-button-white-filled"
             @click.stop.prevent="removeWallet"
           >
-           {{$t('mewCx.remove-wallet')}}
+            {{ $t('mewCx.remove-wallet') }}
           </button>
         </form>
       </div>

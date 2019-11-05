@@ -10,21 +10,23 @@
       <div class="modal-contents">
         <form>
           <div class="input-container">
-            <label for="privateKeyInput">{{$t('mewCx.your-private-key')}}</label>
+            <label for="privateKeyInput">{{
+              $t('mewCx.your-private-key')
+            }}</label>
             <textarea
               v-model="locPrivKey"
-              name="privateKeyInput"
               :placeholder="$t('mewCx.enter-private-key')"
+              name="privateKeyInput"
             />
           </div>
           <div class="input-container">
-            <label for="privateKeyInput">{{$t('mewCx.password')}}</label>
+            <label for="privateKeyInput">{{ $t('mewCx.password') }}</label>
             <div class="password-input">
               <input
                 :type="show ? 'text' : 'password'"
                 v-model="locPassword"
-                name="privateKeyInput"
                 :placeholder="$t('mewCx.enter-pw-hash')"
+                name="privateKeyInput"
               />
               <img
                 :src="show ? showIcon : hide"
@@ -46,7 +48,7 @@
                 }
               "
             >
-              <span v-show="!loading"> {{$t('mewCx.add-wallet')}} </span>
+              <span v-show="!loading"> {{ $t('mewCx.add-wallet') }} </span>
               <i v-show="loading" class="fa fa-spinner fa-spin" />
             </button>
           </div>
