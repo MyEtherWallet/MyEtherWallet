@@ -205,7 +205,7 @@ export default {
               to: '/view-wallet-info'
             },
             {
-              text: 'Submit DApp',
+              text: 'Submit Dapp',
               to: '/dapp-submission'
             }
           ]
