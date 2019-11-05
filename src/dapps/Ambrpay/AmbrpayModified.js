@@ -265,14 +265,11 @@ export default function Ambrpay(account, web3) {
                 gas: 500000,
                 gasPrice: 1000000000,
                 from: senderWallet
-              })
-              .then((res) =>{
-                // eslint-disable-next-line
-                console.log(res);
-                return resolve(res);
-              })
-              .catch((e) => {
-                return reject(e);
+              },
+              function(e, res) {
+                  console.error('e', e, res)
+                  if (e) { return reject(e); }
+                  return resolve(res);
               });
           });
         })
@@ -280,7 +277,7 @@ export default function Ambrpay(account, web3) {
           // eslint-disable-next-line
           console.log('afterSend');
           // eslint-disable-next-line
-          console.log(txHash);
+          console.log('tx', txHash);
           var customer = {
             subscriptionPlanId: subscriptionPlan.id,
             senderWallet: senderWallet,
