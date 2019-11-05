@@ -1,6 +1,6 @@
 import tokens from '@/tokens/tokens-eth.json';
 import contracts from '@/contracts/contract-abi-eth.json';
-import eth from '@/assets/images/networks/eth.svg';
+import eth from '@/assets/images/networks/eth-logo.svg';
 import { ETH } from '../tlds';
 
 export default {
