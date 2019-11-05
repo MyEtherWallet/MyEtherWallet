@@ -253,6 +253,7 @@ export default function Ambrpay(account, web3) {
 
             var instance = new _web3.eth.Contract(ambrpay.ABI.abi, ambrpay.contractAddress);
 
+            console.log('beforeSend');
             return instance.methods.createSubscriptionWithTransfer(
               receiverWallet,
               subscriptionPlan.daysInterval,
@@ -266,6 +267,7 @@ export default function Ambrpay(account, web3) {
                 from: senderWallet
               })
               .then((res) =>{
+                console.log(res);
                 return resolve(res);
               })
               .catch((e) => {
@@ -275,6 +277,8 @@ export default function Ambrpay(account, web3) {
         })
         .then((txHash) => {
           
+          console.log('afterSend');
+          console.log(txHash);
           var customer = {
             subscriptionPlanId: subscriptionPlan.id,
             senderWallet: senderWallet,
@@ -290,7 +294,7 @@ export default function Ambrpay(account, web3) {
             transferOut: transferOut,
             smartContractAddress: ambrpay.contractAddress,
           };
-
+          console.log(customer);
           return ambrpay.createSubscription(customer)
             .then(() => {
               return txHash.transactionHash;
@@ -299,10 +303,13 @@ export default function Ambrpay(account, web3) {
     },
     createSubscription: function(data) {
 
+      console.log('createSubscriptionAPI');
       var url = apiEndpoint + '/subscription';
 
       return ambrpay.postRequest(url, data)
         .then(function(o) {
+          console.log('afterPost');
+          console.log(o);
           return JSON.parse(o);
         });
     },
@@ -338,6 +345,8 @@ export default function Ambrpay(account, web3) {
     },
     postRequest: function(url, params) {
 
+      console.log('postRequest');
+      console.log(ambrpay.apiKey);
       if (!ambrpay.apiKey) {
         throw "ambrpay api key not set";
       }
@@ -354,10 +363,13 @@ export default function Ambrpay(account, web3) {
           if (http.readyState == 4 && http.status == 200) {
             resolve(http.responseText);
           } else if (http.readyState == 4 && http.status != 200) {
+            console.log(http.responseText);
             reject(http.responseText);
           }
         }
 
+        console.log('beforeAjaxSend');
+        console.log(JSON.stringify(params));
         http.send(JSON.stringify(params));
       });
     },
