@@ -28,6 +28,7 @@
   "update-resolver": "Update Resolving address",
   "transfer-to": "Transfer ENS domain to",
   "transfer": "Transfer",
+  "transfer-domain": "Transfer Domain",
   "register": "Register",
   "hang-on": "Hang on tight!",
   "finalize-registration": "We are finalizing the registration for ",

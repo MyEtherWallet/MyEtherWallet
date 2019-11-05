@@ -1,6 +1,6 @@
 <template>
   <div ref="networkComponent" class="network-selection-container">
-    <p class="network">NETWORK</p>
+    <p class="network">{{$t('mewCx.network')}}</p>
     <p class="network-name" @click="openSelection">
       {{ network.type.name }} - {{ network.service }}
       <i :class="['fa fa-lg', !isOpen ? 'fa-angle-down' : 'fa-angle-up']" />

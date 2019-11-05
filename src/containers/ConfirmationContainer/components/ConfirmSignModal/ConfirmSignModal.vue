@@ -14,7 +14,7 @@
           <div class="tx-data tx-from">
             <div class="address-info">
               <p class="title address-title">
-                {{ $t('confirmation.signingAddr') }}
+                {{ $t('confirmation.signing-addr') }}
               </p>
               <div class="from-address">
                 <blockie
@@ -37,7 +37,7 @@
           <div class="tx-data tx-to">
             <div class="address-info">
               <p class="title address-title">
-                {{ $t('confirmation.messageInHex') }}
+                {{ $t('confirmation.message-in-hex') }}
               </p>
               <p class="message-to-sign">{{ messageToSign }}</p>
             </div>
@@ -54,7 +54,7 @@
                 ]"
                 @click="signMessage"
               >
-                {{ $t('confirmation.confirmSigning') }}
+                {{ $t('confirmation.confirm-signing') }}
               </div>
             </div>
           </div>

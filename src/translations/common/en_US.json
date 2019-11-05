@@ -24,6 +24,8 @@
   "verify": "Verify",
   "terms": "Terms",
   "by": "by",
+  "please": "Please",
+  "do-not": "DO NOT",
   "show-all": "Show All",
   "get-started": "Get Started",
   "tutorial": "Tutorial",
@@ -63,7 +65,8 @@
     "access": "Access Wallet",
     "unlock": "Unlock Wallet",
     "do-not-have": "Do not have a wallet?",
-    "passphrase": "Passphrase"
+    "passphrase": "Passphrase",
+    "s-wallet": "s wallet"
   },
   "mewconnect": {
     "string": "MEWconnect",
@@ -100,6 +103,7 @@
   "value": "Value",
   "network": "Network",
   "addr": "Address",
+  "via-contract-address": "via Contract address",
   "lowercase-addr": "address",
   "my-addr": "My Address",
   "enter-addr": "Please enter the address",
@@ -128,7 +132,8 @@
     "gwei": "gwei",
     "uppercase-gwei": "Gwei",
     "wei": "wei",
-    "fee": "Fee"
+    "fee": "Fee",
+    "uppercase-string": "Gas"
   },
   "search": "Search",
   "loading": "Loading",

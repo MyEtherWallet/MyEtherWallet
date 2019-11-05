@@ -30,7 +30,7 @@
                       ? displayFixedValue(values.toPeth(amount), 5, false)
                       : 0
                   }}
-                  PETH
+                  {{ $t('common.currency.peth') }}
                 </p>
                 <popover :popcontent="$t('dappsMaker.peth-popover')" />
               </div>

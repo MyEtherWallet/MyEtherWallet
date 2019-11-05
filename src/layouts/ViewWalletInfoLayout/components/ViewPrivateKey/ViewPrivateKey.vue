@@ -14,12 +14,11 @@
           {{ privKey }}
         </p>
         <div class="copy-button" @click="copy">
-          Copy
+          {{$t('common.copy')}}
           <input ref="privKey" :value="privKey" />
         </div>
         <p class="red-warning">
-          Please <b>DO NOT</b> share your private key to anyone! You may lose
-          your money if you share it!
+          {{$t('common.please')}} <b>{{$t('common.do-not')}}</b> {{$t('accessWallet.private-key.do-not-share')}}!
         </p>
       </div>
     </b-modal>

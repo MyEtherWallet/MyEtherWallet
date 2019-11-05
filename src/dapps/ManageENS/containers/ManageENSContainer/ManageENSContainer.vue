@@ -7,7 +7,7 @@
       class="collapse-open-button"
       variant="primary"
     >
-      <p>Multi coin</p>
+      <p>{{ $t('ens.multi-coin') }}</p>
     </b-btn>
     <b-collapse
       id="multicoinsec"
@@ -74,7 +74,7 @@
       class="collapse-open-button"
       variant="primary"
     >
-      <p>Text Records</p>
+      <p>{{ $t('ens.txt-record') }}s</p>
     </b-btn>
     <b-collapse
       id="textrecords"
@@ -85,7 +85,7 @@
       <div class="form-container">
         <form class="manage-multi-coin-form">
           <div class="title-and-dropdown-container">
-            <h4>Text Records:</h4>
+            <h4>{{ $t('ens.txt-record') }}:</h4>
             <b-dd :text="selectedText | capitalize" class="dropdown-button-2">
               <b-dd-item
                 v-for="(item, idx) in Object.keys(txtRecords)"
@@ -132,7 +132,7 @@
               :class="validTextRecords ? 'disabled' : ''"
               @click.prevent="checkAndSendTxtRecs"
             >
-              Save
+              {{ $t('common.save') }}
             </button>
           </div>
         </form>
@@ -143,7 +143,7 @@
       class="collapse-open-button"
       variant="primary"
     >
-      <p>Transfer Domain</p>
+      <p>{{ $t('ens.transfer-domain') }}</p>
     </b-btn>
     <b-collapse
       id="transferens"

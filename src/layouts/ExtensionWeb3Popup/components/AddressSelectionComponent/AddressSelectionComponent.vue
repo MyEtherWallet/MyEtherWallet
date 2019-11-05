@@ -39,13 +39,13 @@
           </p>
           <p>{{ props.address | concatAddr }}</p>
           <div class="balance">
-            <span>Balance:</span>
+            <span>{{$t('common.balance.string')}}:</span>
             <span>{{ props.balance.substr(0, 7) }} {{ currency }}</span>
           </div>
         </div>
         <div v-else>
           <p>
-            Use a burner account!
+            {{$t('mewCx.use-burner')}}!
           </p>
         </div>
       </div>

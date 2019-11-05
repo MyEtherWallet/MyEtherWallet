@@ -204,7 +204,7 @@ export default {
               to: '/view-wallet-info'
             },
             {
-              text: 'Submit DApp',
+              text: this.$t('dappsSubmission.banner-submit.submit-dapp'),
               to: '/dapp-submission'
             }
           ]

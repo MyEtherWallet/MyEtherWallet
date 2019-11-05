@@ -1,7 +1,7 @@
 <template>
   <div class="sign-transaction-container">
     <div class="sign-transaction-header">
-      <p>Confirmation</p>
+      <p>{{$t('common.confirmation')}}</p>
     </div>
     <div class="sign-transaction-addresses">
       <amount-info-component
@@ -26,7 +26,7 @@
     </div>
     <div :class="[showDetails ? 'add-margin' : '', 'details-container']">
       <div class="details-header-container">
-        <p>Details</p>
+        <p>{{$t('mewCx.details')}}</p>
         <div class="sliding-switch-white">
           <label class="switch">
             <input
@@ -45,29 +45,29 @@
         ]"
       >
         <div class="detail-item">
-          <span class="title">Network </span>
+          <span class="title">{{$t('common.network')}}</span>
           <span class="content"
-            >{{ network.type.name }} by {{ network.service }}
+            >{{ network.type.name }} {{$t('common.by')}} {{ network.service }}
           </span>
         </div>
         <div class="detail-item">
-          <span class="title"> Gas </span>
+          <span class="title"> {{$t('common.gas.uppercase-string')}} </span>
           <span class="content">
             {{ hexToNumString(txParams.gas) }}
           </span>
         </div>
         <div class="detail-item">
-          <span class="title"> Gas Price </span>
+          <span class="title"> {{$t('common.gas.price')}} </span>
           <span class="content">
             {{ hexToNumString(txParams.gasPrice, 'gwei') }}
           </span>
         </div>
         <div class="detail-item">
-          <span class="title"> Nonce </span>
+          <span class="title"> {{$t('sendTx.nonce')}} </span>
           <span class="content"> {{ hexToNumString(txParams.nonce) }} </span>
         </div>
         <div class="detail-item">
-          <span class="title"> Data </span>
+          <span class="title"> {{$t('sendTx.data')}} </span>
           <span class="content"> {{ txParams.data }} </span>
         </div>
       </div>

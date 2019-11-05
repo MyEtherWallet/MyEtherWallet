@@ -29,7 +29,7 @@
       </div>
       <div v-if="isSafari && !isMetaMask" class="browser-catch">
         <h4>
-          MEWCX is only available in these browsers:
+          {{ $t('mewCX.mewcx-only') }}:
         </h4>
         <div class="browser-logo-container">
           <a
@@ -130,7 +130,7 @@
             rel="noopener noreferrer"
             class="mid-round-button-green-filled close-button"
             @click="refreshPage = true"
-            >Install MEW CX</a
+            >{{ $t('mewCX.install-mewcx') }}</a
           >
           <b-btn
             v-show="refreshPage"
