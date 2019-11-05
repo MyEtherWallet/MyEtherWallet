@@ -36,7 +36,7 @@
             </div>
           </div>
           <span class="text__base link switch-label">{{
-            $t('createWallet.byMnemonicValue')
+            $t('mewCx.value')
           }}</span>
         </div>
       </div>
@@ -55,7 +55,7 @@
           </ul>
         </div>
         <div class="button-container">
-          <expanding-option title="Password">
+          <expanding-option :title="$t(mewCx.password)">
             <div class="input-container">
               <div class="mnemonic-password-input">
                 <input

@@ -10,5 +10,11 @@
   "keystore-file": "Keystore File (UTC/JSON)",
   "your-wallet": "Your Wallet File",
   "upload-file": "Upload File",
-  "enter-pw": "Enter your password"
+  "enter-pw": "Enter your password",
+  "create-pw": "Create your password here",
+  "value": "Value",
+  "private-key": "Private Key",
+  "your-private-key": "Your Private Key",
+  "enter-pw-hash": "Enter password for hashing",
+  "enter-private-key": "Enter private key"
 }
