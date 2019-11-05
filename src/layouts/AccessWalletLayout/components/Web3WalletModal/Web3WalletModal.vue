@@ -114,7 +114,7 @@
         <div class="button-container">
           <a
             v-show="!refreshPage"
-            href="https://chrome.google.com/webstore/detail/myetherwallet/nlbmnnijcnlegkjjpcfjclmcfggfefdm?hl=en"
+            href="https://www.mewcx.com"
             target="_blank"
             rel="noopener noreferrer"
             class="mid-round-button-green-filled close-button"
@@ -155,13 +155,20 @@ export default {
     networkAndAddressOpen: {
       type: Function,
       default: function() {}
+    },
+    isMetaMask: {
+      type: Boolean,
+      default: false
+    },
+    web3WalletExists: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
     return {
       accessMyWalletBtnDisabled: true,
       unlockWeb3Wallet: false,
-      web3WalletExists: false,
       refreshPage: false,
       isSafari: false,
       browsers: [
@@ -206,21 +213,17 @@ export default {
     };
   },
   computed: {
-    ...mapState(['path']),
-    isMetaMask() {
-      return window.ethereum && window.ethereum.isMetaMask;
-    }
+    ...mapState(['path'])
   },
   mounted() {
     this.isSafari = platform.name.toLowerCase() === 'safari';
-    this.web3WalletExists = this.checkWeb3();
   },
   methods: {
     reload() {
       window.location.reload();
     },
     async getWeb3Wallet() {
-      if (this.checkWeb3() !== true) return;
+      if (!this.web3WalletExists) return;
       if (window.ethereum) {
         const web3 = new Web3(window.ethereum);
         try {
@@ -232,7 +235,6 @@ export default {
             return (this.unlockWeb3Wallet = true);
           }
 
-          this.web3WalletExists = false;
           return;
         }
         this.signIn(web3, 'ethereum');
@@ -262,14 +264,7 @@ export default {
           return (this.unlockWeb3Wallet = true);
         }
         Toast.responseHandler(e, Toast.ERROR);
-        return (this.web3WalletExists = false);
       }
-    },
-    checkWeb3() {
-      return (
-        typeof window.ethereum !== 'undefined' ||
-        typeof window.web3 !== 'undefined'
-      );
     }
   }
 };
