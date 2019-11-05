@@ -1,11 +1,22 @@
+### Release v5.2.1
+
 ### Feature
+
 - Update Dapp Submission UI [#1585](https://github.com/MyEtherWallet/MyEtherWallet/pull/1585)
+
+### Bug
+
+- Fix copy to actually copy signed tx, not raw on offline tx [#1590](https://github.com/MyEtherWallet/MyEtherWallet/pull/1590)
 
 ### Release v5.2.0
 
 ### Feature
 
 - Chrome Extension Beta release [#1151](https://github.com/MyEtherWallet/MyEtherWallet/pull/1151)
+
+### Bug
+
+- Fix dashboard buttons, fix missing image [#1588](https://github.com/MyEtherWallet/MyEtherWallet/pull/1588)
 
 ### Devop
 
