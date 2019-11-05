@@ -1,5 +1,9 @@
-import { Wallet, Configs } from '@/helpers';
+import Wallet from 'ethereumjs-wallet';
 
+const Configs = {
+  kdf: 'scrypt',
+  n: 131072
+};
 const fromMyEtherWalletV2 = json => {
   if (json.privKey.length !== 64) {
     throw new Error('Invalid private key length');
