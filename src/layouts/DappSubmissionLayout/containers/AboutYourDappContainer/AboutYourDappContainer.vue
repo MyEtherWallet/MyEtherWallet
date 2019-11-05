@@ -1,5 +1,5 @@
 <template>
-  <div class="about-your-dapp w-50 mb-5 mt-5">
+  <div class="about-your-dapp mb-5 mt-5">
     <b-form onsubmit="return false;">
       <b-form-group>
         <label class="dapp-label">{{
@@ -84,11 +84,21 @@
           {{ $t('dappsSubmission.about-your-dapp.suggested-tags') }}
         </p>
         <p class="tags">
-          <span>{{ $t('dappsSubmission.about-your-dapp.games') }}</span>
-          <span>{{ $t('dappsSubmission.about-your-dapp.defi') }}</span>
-          <span>{{ $t('dappsSubmission.about-your-dapp.social') }}</span>
-          <span>{{ $t('dappsSubmission.about-your-dapp.finance') }}</span>
-          <span>{{ $t('dappsSubmission.about-your-dapp.wallet') }}</span>
+          <span @click="addTags('games')">{{
+            $t('dappsSubmission.about-your-dapp.games')
+          }}</span>
+          <span @click="addTags('defi lending')">{{
+            $t('dappsSubmission.about-your-dapp.defi')
+          }}</span>
+          <span @click="addTags('social')">{{
+            $t('dappsSubmission.about-your-dapp.social')
+          }}</span>
+          <span @click="addTags('finance')">{{
+            $t('dappsSubmission.about-your-dapp.finance')
+          }}</span>
+          <span @click="addTags('wallet')">{{
+            $t('dappsSubmission.about-your-dapp.wallet')
+          }}</span>
         </p>
       </div>
       <b-form-group id="form-group-description">
@@ -182,6 +192,7 @@
           <input
             id="customUpload"
             ref="mockUserFlow"
+            class="mock-user-flow-input"
             type="file"
             @change="onMockFileChange"
           />
@@ -206,13 +217,16 @@
             v-model="form.contractAddress"
             name="address"
             type="text"
-            @update="updateContractAddress"
+            @update="onContractAddressChange"
           >
           </b-form-input>
           <span>*</span>
         </div>
         <p v-if="errors.has('address')" class="error">
           {{ errors.first('address') }}
+        </p>
+        <p v-if="contractAddressErr" class="error">
+          {{ contractAddressErr }}
         </p>
       </b-form-group>
       <b-form-group>
@@ -260,7 +274,7 @@
           </div>
           <span
             :class="form.dappIconUrl ? 'uploaded-required-icon' : ''"
-            class="requiredIcon"
+            class="required-icon"
             >*</span
           >
         </div>
@@ -318,7 +332,7 @@
           </div>
           <span
             :class="form.bannerUrl ? 'uploaded-required-icon' : ''"
-            class="requiredIcon"
+            class="required-icon"
             >*</span
           >
         </div>
@@ -366,6 +380,7 @@
 <script>
 import TagComponentVue from '../../components/TagComponent/TagComponent.vue';
 import PopOver from '@/components/PopOver';
+import { isAddress } from '@/helpers/addressUtils';
 
 export default {
   components: {
@@ -475,21 +490,28 @@ export default {
       dappIconError: null,
       bannerError: null,
       mockFlowImgName: '',
-      dappTagsError: false
+      dappTagsError: false,
+      contractAddressErr: null,
+      spacePressCount: 0
     };
   },
   methods: {
+    pushTag() {
+      this.displayTags.push(this.tagInput);
+      this.tagInput = '';
+      setTimeout(() => this.updateWidth());
+    },
     onKeyDown(e) {
+      if (e.keyCode === 32) {
+        this.spacePressCount++;
+      }
       if (
-        e.keyCode === 13 &&
-        this.$refs.tagHolder.offsetWidth <=
-          this.$refs.dappTagsInput.offsetWidth - 10
+        e.keyCode === 13 ||
+        (e.keyCode === 32 && this.spacePressCount === 2)
       ) {
-        if (this.tagInput.length > 0) {
-          this.displayTags.push(this.tagInput);
-          this.tagInput = '';
-          setTimeout(() => this.updateWidth());
-        }
+        this.tagInput = this.tagInput.replace(/\s+/g, '');
+        this.tagInput.length > 0 ? this.pushTag() : '';
+        this.spacePressCount = 0;
       } else if (e.keyCode === 8) {
         if (this.tagInput.length <= 0) {
           const lastTag = this.displayTags.splice(
@@ -501,6 +523,7 @@ export default {
             this.tagInput = lastTag.toString();
           });
         }
+        this.spacePressCount = 0;
       }
       this.dappTagsError = this.displayTags.length === 0;
       this.updateTags(this.displayTags);
@@ -514,8 +537,8 @@ export default {
     updateWidth() {
       this.$refs.dappTagsInput.style.paddingLeft =
         this.$refs.tagHolder.offsetWidth > 0
-          ? `${this.$refs.tagHolder.offsetWidth + 8}px`
-          : '10.5px';
+          ? `${this.$refs.tagHolder.offsetWidth + 25}px`
+          : '25px';
     },
     onMockFileChange(e) {
       const file = e.target.files[0],
@@ -618,6 +641,19 @@ export default {
         vm.bannerError = 'Upload error. Please try a different file.';
         vm.updateBanner(true);
       };
+    },
+    onContractAddressChange(e) {
+      if (!isAddress(e)) {
+        this.contractAddressErr = 'Please enter a valid address';
+        this.updateMockFlow(true);
+      } else {
+        this.contractAddressErr = null;
+        this.updateMockFlow(false);
+      }
+    },
+    addTags(tag) {
+      this.tagInput = tag;
+      this.pushTag();
     }
   }
 };

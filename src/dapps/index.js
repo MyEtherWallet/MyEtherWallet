@@ -6,6 +6,7 @@ import secureTransactionHov from '@/assets/images/icons/button-key.svg';
 import scheduleTransaction from '@/assets/images/icons/eac.svg';
 import scheduleTransactionHov from '@/assets/images/icons/eac-hov.svg';
 import makerdai from '@/assets/images/icons/dapps/makerdai.svg';
+import ambrpay from '@/assets/images/icons/dapps/ambrpay.png';
 import { ETH, GOERLI, ROP, RIN, KOV } from '@/networks/types';
 
 const dapps = {
@@ -40,6 +41,14 @@ const dapps = {
     title: 'dappsMaker.maker_title',
     desc: 'dappsMaker.maker_desc',
     supportedNetworks: [ETH.name, KOV.name]
+  },
+  ambrpay: {
+    route: '/interface/dapps/ambrpay',
+    icon: ambrpay,
+    iconDisabled: secureTransactionHov,
+    title: 'Ambrpay',
+    desc: 'With Ambrpay you can create and manage recurring payments.',
+    supportedNetworks: [ETH.name]
   }
 };
 

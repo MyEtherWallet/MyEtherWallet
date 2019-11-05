@@ -5,7 +5,12 @@
     "mew": "MEW",
     "love": "Love {heart} MEW? Donate"
   },
-  "extension": "MyEtherWallet CX",
+  "units": "Units",
+  "txStat": "TX Status",
+  "debugs": "Debugs",
+  "extension": "MEW CX",
+  "others": "Others",
+  "affiliates": "Affiliates",
   "ledger": "Ledger Wallet",
   "ethCard": "Ether Card",
   "bitbox": "BitBox",

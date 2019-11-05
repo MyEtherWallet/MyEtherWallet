@@ -325,13 +325,6 @@ export default {
       this.customPath = { label: '', path: '' };
       this.resetPaginationValues();
     });
-
-    this.$root.$on('bv::collapse::state', (collapseId, isJustShown) => {
-      if (collapseId === 'collapse1' && !isJustShown)
-        this.$root.$emit('bv::toggle::collapse', 'collapse2');
-      if (collapseId === 'collapse2' && !isJustShown)
-        this.$root.$emit('bv::toggle::collapse', 'collapse1');
-    });
   },
   methods: {
     switchNetwork(network) {
@@ -476,16 +469,18 @@ export default {
       this.setHDAccounts();
     },
     getPathLabel(path) {
-      for (const _p in this.availablePaths) {
-        if (this.availablePaths[_p].path === path) {
-          return this.availablePaths[_p].label;
-        }
-      }
       for (const _p in this.customPaths) {
         if (this.customPaths[_p].path === path) {
           return this.customPaths[_p].label;
         }
       }
+
+      for (const _p in this.availablePaths) {
+        if (this.availablePaths[_p].path === path) {
+          return this.availablePaths[_p].label;
+        }
+      }
+
       return 'Unknown';
     },
     getPaths() {

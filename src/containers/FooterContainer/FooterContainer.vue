@@ -185,8 +185,7 @@ export default {
             // },
             {
               text: this.$t('footer.extension'),
-              href:
-                'https://chrome.google.com/webstore/detail/myetherwallet/nlbmnnijcnlegkjjpcfjclmcfggfefdm?hl=en'
+              href: 'https://www.mewcx.com'
             },
             {
               text: this.$t('buyHardwareWallet.page.title'),

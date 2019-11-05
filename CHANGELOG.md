@@ -1,5 +1,19 @@
 - Refactor translations [#1475](https://github.com/MyEtherWallet/MyEtherWallet/pull/1475)
 
+### Release v5.2.1
+
+### Feature
+
+- Ambrpay Integration[#1441](https://github.com/MyEtherWallet/MyEtherWallet/pull/1441)
+- Update Dapp Submission UI [#1585](https://github.com/MyEtherWallet/MyEtherWallet/pull/1585)
+
+### Bug
+
+- Various web and cx bugs [#1594](https://github.com/MyEtherWallet/MyEtherWallet/pull/1594)
+- Fix copy to actually copy signed tx, not raw on offline tx [#1590](https://github.com/MyEtherWallet/MyEtherWallet/pull/1590)
+- Remove lighstreams on ledger options, show custom if found [#1589](https://github.com/MyEtherWallet/MyEtherWallet/pull/1589)
+- Various web and cx bugs [#1594](https://github.com/MyEtherWallet/MyEtherWallet/pull/1594)
+
 ### Release v5.2.0
 
 ### Feature
