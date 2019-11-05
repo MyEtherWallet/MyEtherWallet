@@ -148,6 +148,7 @@ export default {
       this.moreInfo = !this.moreInfo;
     },
     unsubscribe(pos, addr) {
+      console.error('addr', addr)
       this.$emit('unsubscribeSub', { pos: pos, addr: addr });
 
       this.$nextTick(() => {
