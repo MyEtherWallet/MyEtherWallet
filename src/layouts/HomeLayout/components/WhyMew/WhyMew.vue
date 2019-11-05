@@ -6,7 +6,14 @@
         title="Why Mew"
         description="Make Ethereum Blockchain easy and secure"
       />
-      <FriendlyToUse> </FriendlyToUse>
+      <div class="pt-10 d-flex">
+        <FriendlyToUse class="mr-10" />
+        <div>
+          <Swap class="mb-10" />
+          <HardwareWallet />
+        </div>
+        <SecureMyFunds class="ml-10" />
+      </div>
     </v-container>
   </div>
 </template>
@@ -14,12 +21,18 @@
 <script>
 import BlockTitle from '../Common/BlockTitle';
 import FriendlyToUse from './components/FriendlyToUse';
+import Swap from './components/Swap';
+import HardwareWallet from './components/HardwareWallet';
+import SecureMyFunds from './components/SecureMyFunds';
 
 export default {
   name: 'HomeFeatures',
   components: {
     BlockTitle,
-    FriendlyToUse
+    FriendlyToUse,
+    Swap,
+    HardwareWallet,
+    SecureMyFunds
   }
 };
 </script>
