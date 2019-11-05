@@ -9,13 +9,37 @@ i {
   font-family: 'Material Icons' !important;
 }
 
-div {
+div,
+p {
   font-size: 14px;
+  line-height: 20px;
+  padding: 0;
+  margin: 0;
 }
 
 h1 {
   font-size: 42px;
   font-weight: 500;
+}
+
+h2 {
+  font-size: 30px;
+  font-weight: 400;
+}
+
+h3 {
+  font-size: 24px;
+  font-weight: 400;
+}
+
+h4 {
+  font-size: 20px;
+  font-weight: 400;
+}
+
+h5 {
+  font-size: 16px;
+  font-weight: 400;
 }
 
 // Vuetify custom styles ============================================

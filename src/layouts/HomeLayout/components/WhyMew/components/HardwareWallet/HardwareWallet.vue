@@ -1,19 +1,11 @@
 <template>
-  <v-card class="pa-8" max-width="300">
-    <v-img
-      class="white--text align-end my-3"
-      height="150px"
-      contain
-      src="@/assets/images/Etc/LandingPage/friendly.svg"
-    />
-
+  <v-card class="pa-8" max-width="400">
     <h4 class="link-box-title font-weight-bold mb-4">
-      Friendly user interface
+      Secure my funds
     </h4>
     <div>
-      Access the Ethereum blockchain's original and most-trusted wallet client,
-      now with a host of new features all contained in an elegant, easy and
-      friendly interface.
+      MEWconnect, an official, free companion app for MEW that helps you secure
+      your funds as never before.
     </div>
 
     <div class="action-block mt-2 ml-n4">
@@ -37,5 +29,9 @@ export default {
 h4 {
   font-size: 22px;
   letter-spacing: -0.6px;
+}
+
+span {
+  font-weight: 600;
 }
 </style>
