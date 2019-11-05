@@ -255,9 +255,7 @@ export default {
       return false;
     },
     needsDaiApprove() {
-      if (
-        toBigNumber(this.getProxyAllowances()['DAI']).gt(0)
-      ) {
+      if (toBigNumber(this.getProxyAllowances()['DAI']).gt(0)) {
         if (
           toBigNumber(this.getProxyAllowances()['DAI']).lte(
             this.values.debtValue
@@ -266,14 +264,10 @@ export default {
           return true;
         }
       }
-      return toBigNumber(this.getProxyAllowances()['DAI']).eq(
-        0
-      );
+      return toBigNumber(this.getProxyAllowances()['DAI']).eq(0);
     },
     needsMkrApprove() {
-      if (
-        toBigNumber(this.getProxyAllowances()['MKR']).gt(0)
-      ) {
+      if (toBigNumber(this.getProxyAllowances()['MKR']).gt(0)) {
         if (
           toBigNumber(this.getProxyAllowances()['MKR']).lt(
             this.values.governanceFeeOwed
@@ -282,9 +276,7 @@ export default {
           return true;
         }
       }
-      return toBigNumber(this.getProxyAllowances()['MKR']).eq(
-        0
-      );
+      return toBigNumber(this.getProxyAllowances()['MKR']).eq(0);
     },
     canClose() {
       return (
@@ -308,9 +300,9 @@ export default {
     });
   },
   methods: {
-    getProxyAllowances(){
+    getProxyAllowances() {
       const allowances = this.getValueOrFunction('proxyAllowances');
-      if(allowances){
+      if (allowances) {
         return allowances;
       }
       return {};

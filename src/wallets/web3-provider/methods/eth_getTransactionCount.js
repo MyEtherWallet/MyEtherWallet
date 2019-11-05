@@ -1,5 +1,5 @@
 import utils from 'web3-utils';
-import { toPayload } from './jsonrpc';
+import { toPayload } from '../jsonrpc';
 import EthCalls from '../web3Calls';
 import store from 'store';
 import BigNumber from 'bignumber.js';

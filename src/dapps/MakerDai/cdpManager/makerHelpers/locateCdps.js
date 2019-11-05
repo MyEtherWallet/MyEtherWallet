@@ -21,15 +21,9 @@ async function locateCdpsWithoutProxy(self, _cdpService) {
   return directCdps.concat(directCdpsCheckSum);
 }
 
-
 async function locateCdpsProxy(self, _cdpService) {
   self.proxyAddress = await self.getProxy();
   return await _cdpService.getCdpIds(self.proxyAddress);
 }
 
-export {
-  locateCdps,
-  getMcdCdp,
-  locateCdpsWithoutProxy,
-  locateCdpsProxy
-};
+export { locateCdps, getMcdCdp, locateCdpsWithoutProxy, locateCdpsProxy };

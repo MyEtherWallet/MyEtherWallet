@@ -1,6 +1,3 @@
-
-
-
 export async function doUpdate(self) {
   self.proxyAddress = await self.getProxy();
   let afterClose = false;

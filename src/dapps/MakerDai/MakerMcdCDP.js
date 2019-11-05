@@ -41,8 +41,6 @@ export default class MakerCDP {
     this._governanceFee = toBigNumber(0);
   }
 
-
-
   maxDai() {
     if (
       this.ethPrice &&
@@ -420,11 +418,7 @@ export default class MakerCDP {
     return raw.toFixed(decimals).toString();
   }
 
-
-
-  getAllowanceFor(){
-    
-  }
+  getAllowanceFor() {}
   // Getters
 
   get currentAddress() {

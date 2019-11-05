@@ -149,7 +149,7 @@ export default class ManagerCopy extends EventEmitter {
         liquidationPenalty: this.liquidationPenalty,
         targetPrice: this._targetPrice,
         pethPrice: this.pethPrice
-      })
+      });
 
       const proxyReg = new this.web3.eth.Contract(
         ProxyRegistry,
@@ -502,8 +502,6 @@ export default class ManagerCopy extends EventEmitter {
     }
     return this.proxyAddress;
   }
-
-
 
   async approveDai() {
     await this._tokenService.getToken(DAI).approveUnlimited(this.proxyAddress);

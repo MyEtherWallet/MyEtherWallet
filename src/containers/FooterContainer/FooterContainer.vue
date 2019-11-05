@@ -69,7 +69,7 @@
                 rel="noopener noreferrer"
               >
                 <p :data-eth="ethDonationAddress" class="crypto-link">
-                  <img src="~@/assets/images/icons/eth.svg" alt />
+                  <img src="@/assets/images/currency/eth.svg" alt />
                   &nbsp;Ethereum Donation
                 </p>
               </a>
@@ -83,8 +83,8 @@
                   class="crypto-link no-padding"
                   data-btc="1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9"
                 >
-                  <img src="~@/assets/images/icons/btc.svg" alt /> &nbsp;Bitcoin
-                  Donation
+                  <img src="@/assets/images/currency/btc.svg" alt />
+                  &nbsp;Bitcoin Donation
                 </p>
               </a>
             </div>
@@ -143,6 +143,7 @@ import FeedbackModal from '@/components/FeedbackModal';
 import CustomerSupport from '@/components/CustomerSupport';
 import affiliates from './affiliates.js';
 const version = VERSION;
+import { Misc } from '@/helpers';
 
 export default {
   components: {
@@ -185,8 +186,7 @@ export default {
             // },
             {
               text: this.$t('footer.extension'),
-              href:
-                'https://chrome.google.com/webstore/detail/myetherwallet/nlbmnnijcnlegkjjpcfjclmcfggfefdm?hl=en'
+              href: 'https://www.mewcx.com'
             },
             {
               text: 'Buy a Hardware wallet',
@@ -201,7 +201,11 @@ export default {
               to: '/verify-message'
             },
             {
-              text: 'Submit Dapp',
+              text: this.$t('footer.viewWalletInfo'),
+              to: '/view-wallet-info'
+            },
+            {
+              text: 'Submit DApp',
               to: '/dapp-submission'
             }
           ]
@@ -276,6 +280,21 @@ export default {
   },
   computed: {
     ...mapState(['ethDonationAddress'])
+  },
+  mounted() {
+    if (Misc.isMewCx()) {
+      this.footerContent[0].contents = this.footerContent[0].contents.filter(
+        item => {
+          if (item.to !== '/send-offline-helper') return item;
+        }
+      );
+
+      this.footerContent[2].contents = this.footerContent[2].contents.filter(
+        item => {
+          if (item.to !== '/#about-mew' && item.to !== '/#faqs') return item;
+        }
+      );
+    }
   },
   methods: {
     openFeedbackModal() {

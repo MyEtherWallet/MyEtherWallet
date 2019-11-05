@@ -234,7 +234,7 @@ import ProvidersRadioSelector from '../ProvidersRadioSelector';
 import DropDownAddressSelector from '../SwapAddressSelector';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import InterfaceContainerTitle from '../../../../components/InterfaceContainerTitle';
-import swapIcon from '@/assets/images/icons/swap.svg';
+import swapIcon from '@/assets/images/icons/swap-widget.svg';
 import ImageKybernetowrk from '@/assets/images/etc/kybernetwork.png';
 import ImageBity from '@/assets/images/etc/bity.png';
 import ImageVisaMaster from '@/assets/images/etc/visamaster.png';

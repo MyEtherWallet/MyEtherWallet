@@ -3,9 +3,12 @@
 .mew-support-box {
   background: $light-green-1;
   border-radius: 6px;
-  height: 197px;
   padding: 30px;
-  width: 324px;
+  width: 400px;
+
+  @media all and (max-width: 742px) {
+    width: 80%;
+  }
 }
 
 .mew-support-header {
@@ -23,7 +26,6 @@
   line-height: 18px;
   text-align: left;
   margin-top: 10px;
-  width: 180px;
 }
 
 .msg-logo {

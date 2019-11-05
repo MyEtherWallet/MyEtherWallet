@@ -459,7 +459,7 @@ export default {
     getCollateralOptions() {
       return this.mcdCurrencies;
     },
-    setAfterLoadPage(page){
+    setAfterLoadPage(page) {
       this.afterLoadShow = afterLoadShow[page];
     },
     async setupMCD() {
@@ -580,7 +580,7 @@ export default {
           minEth: this.minEth,
           liquidationRatio: this.liquidationRatio,
           liquidationPenalty: this.liquidationPenalty,
-          targetPrice: this._targetPrice,
+          targetPrice: this._targetPrice
           // proxyAllowances: this.proxyAllowances,
           // mcdCurrencies: this.mcdCurrencies
         };
@@ -606,8 +606,6 @@ export default {
             // this._cdpService
           );
 
-
-
           this.cdpsWithType = withType;
           this.cdps = withProxy;
           this.cdpsWithoutProxy = withoutProxy;
@@ -626,15 +624,15 @@ export default {
       }
 
       if (this.showLoading) {
-        if(this.afterLoadShow === 'CREATE'){
+        if (this.afterLoadShow === 'CREATE') {
           this.gotoCreate();
         } else {
           if (this.cdps.length > 0 || this.cdpsWithoutProxy.length > 0) {
             this.cdpDetailsLoaded = true;
             this.makerActive = true;
             if (
-                    this.$route.name !== 'create' &&
-                    this.$route.path.includes('maker-dai')
+              this.$route.name !== 'create' &&
+              this.$route.path.includes('maker-dai')
             ) {
               this.goToManage();
             }
@@ -762,7 +760,7 @@ export default {
         this.gotoCreate();
       }
     },
-    async loadCdpDetail(cdpId){
+    async loadCdpDetail(cdpId) {
       return loadCdpDetail(this, cdpId);
     },
     // TODO doulble check the vue object observer bug isn't back

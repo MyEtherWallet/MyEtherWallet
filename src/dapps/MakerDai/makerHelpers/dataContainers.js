@@ -12,7 +12,6 @@ class CurrencyDetails {
   }
 }
 
-export function createCurrencyDetails(value, symbol){
+export function createCurrencyDetails(value, symbol) {
   return new CurrencyDetails(value, symbol);
 }
-
