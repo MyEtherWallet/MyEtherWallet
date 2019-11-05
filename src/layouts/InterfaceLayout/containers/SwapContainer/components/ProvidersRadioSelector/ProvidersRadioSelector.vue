@@ -166,10 +166,7 @@
     <!-- =========================================================================== -->
     <!-- Message when offline -->
     <!-- =========================================================================== -->
-    <div
-      v-show="displayToShow === 'offline'"
-      class="radio-button-container"
-    >
+    <div v-show="displayToShow === 'offline'" class="radio-button-container">
       <div class="no-provider-message">
         {{ $t('interface.noSwapOffline') }}
       </div>
@@ -211,7 +208,7 @@ import Changelly from '@/assets/images/etc/changelly.png';
 import bityBeta from '@/assets/images/etc/bitybeta.png';
 
 import ProviderInfoList from './ProviderInfoList';
-import {mapState} from 'vuex';
+import { mapState } from 'vuex';
 
 const toBigNumber = num => {
   return new BigNumber(num);
@@ -304,8 +301,8 @@ export default {
       if (!this.online) {
         return 'offline';
       }
-      if(this.network.type.name !== 'ETH'){
-        return 'onlyMainNet'
+      if (this.network.type.name !== 'ETH') {
+        return 'onlyMainNet';
       }
       if (this.loadingProviderRates) {
         return 'loadingProviderRates';

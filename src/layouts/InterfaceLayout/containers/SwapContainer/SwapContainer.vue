@@ -470,9 +470,6 @@ export default {
     }
   },
   watch: {
-    online(value){
-
-    },
     ['this.network.type.name']() {
       this.swap.updateNetwork(this.network.type.name, this.web3);
     },
