@@ -43,6 +43,12 @@ export default {
   color: $emerald !important;
 }
 
+.button--white-border {
+  background-color: transparent !important;
+  border: 1px solid white;
+  color: white !important;
+}
+
 .v-btn--disabled {
   border: 0px;
 }

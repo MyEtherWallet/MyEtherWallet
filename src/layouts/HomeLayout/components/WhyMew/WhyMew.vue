@@ -7,12 +7,12 @@
         description="Make Ethereum Blockchain easy and secure"
       />
       <div class="pt-10 d-flex">
-        <FriendlyToUse class="mr-10" />
+        <FriendlyToUse class="box-shadow mr-10" />
         <div>
-          <Swap class="mb-10" />
-          <HardwareWallet />
+          <Swap class="box-shadow mb-10" />
+          <HardwareWallet class="box-shadow" />
         </div>
-        <SecureMyFunds class="ml-10" />
+        <SecureMyFunds class="box-shadow ml-10" />
       </div>
     </v-container>
   </div>
@@ -40,13 +40,7 @@ export default {
 <style lang="scss" scoped>
 @import '@/assets/styles/GlobalVariables';
 
-.v-tab {
-  text-transform: initial;
-  font-weight: 700;
-  color: $disabled--2;
-}
-
-.tab-image {
-  width: 100%;
+.box-shadow {
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.04);
 }
 </style>

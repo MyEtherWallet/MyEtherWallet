@@ -5,6 +5,7 @@
     </div>
     <Features class="py-12" />
     <WhyMew />
+    <Ad1 class="py-12" />
   </div>
 </template>
 
@@ -12,13 +13,15 @@
 import TopBanner from './components/TopBanner';
 import Features from './components/Features';
 import WhyMew from './components/WhyMew';
+import Ad1 from './components/Ad1';
 
 export default {
   name: 'HomeLayout',
   components: {
     TopBanner,
     Features,
-    WhyMew
+    WhyMew,
+    Ad1
   }
 };
 </script>
