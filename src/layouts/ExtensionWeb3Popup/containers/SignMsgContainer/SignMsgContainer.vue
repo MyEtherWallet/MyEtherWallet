@@ -1,10 +1,10 @@
 <template>
   <div class="sign-message-container">
     <div class="sign-message-header">
-      <p>Confirmation</p>
+      <p>{{$t('common.confirmation')}}</p>
     </div>
     <div class="sign-message-address">
-      <p>Signing Address</p>
+      <p>{{$t('confirmation.signing-addr')}}</p>
       <div class="signing-address">
         <blockie :address="address" width="30px" height="30px" />
         <p>
@@ -13,7 +13,7 @@
       </div>
     </div>
     <div class="sign-message-content">
-      <p>Message</p>
+      <p>{{$t('interface.menu.message')}}</p>
       <div class="message-container">
         {{ message }}
       </div>

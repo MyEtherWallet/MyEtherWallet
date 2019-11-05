@@ -174,7 +174,7 @@ export default {
       if (this.signedMessage) {
         return this.signedMessage;
       } else if (this.isHardwareWallet) {
-        return this.$t('confirmation.approveOnDevice');
+        return this.$t('confirmation.approve-on-device');
       }
       return '';
     }

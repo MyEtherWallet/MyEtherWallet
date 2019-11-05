@@ -5,7 +5,7 @@
       hide-footer
       centered
       class="bootstrap-modal"
-      title="Wallet Password"
+      :title="$t('mewCx.wallet-password')"
     >
       <div class="modal-contents">
         <p>{{ $t('mewCx.wallet-encrypted') }}</p>

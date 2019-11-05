@@ -73,7 +73,8 @@
     "modal": {
       "title": "Access by Private Key",
       "placeholder": "Enter Private Key"
-    }
+    },
+    "do-not-share": "share your private key to anyone! You may lose your money if you share it"
   },
   "network-addr":{
     "string": "Network and Address",
@@ -112,5 +113,7 @@
   "refresh": "Refresh",
   "unlock-web3-wallet": "Can't access wallet! Please unlock your wallet through the Web3 Wallet extension",
   "try-again": "Try Again",
-  "invalid-path-desc": "The path: {path} is not valid for this device"
+  "invalid-path-desc": "The path: {path} is not valid for this device",
+  "wallet-info": "Wallet Information",
+  "wallet-options": "Check your transaction history, download a new keystore file, print a paper wallet, and more!"
 }

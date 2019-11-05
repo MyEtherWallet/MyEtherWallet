@@ -19,7 +19,7 @@
             <div class="line" />
           </div>
           <p>
-            <span>{{ $t('confirmation.txTotal') }}:</span>
+            <span>{{ $t('confirmation.tx-total') }}:</span>
             {{ txTotal }}
             {{ network.type.currencyName }}
           </p>
@@ -175,7 +175,7 @@ export default {
     ...mapState(['web3', 'network', 'account']),
     buttonText() {
       if (!this.allSigned && this.isHardwareWallet) {
-        return this.$t('confirmation.approveOnDevice');
+        return this.$t('confirmation.approve-on-device');
       }
       return this.$t('sendTx.confirmation.button');
     },

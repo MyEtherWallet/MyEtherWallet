@@ -18,7 +18,7 @@
             <p class="total">
               <span>{{ $t('dappsMaker.total') }}</span>
               {{ newTotal }}
-              DAI
+              {{ $t('dappsMaker.dai') }}
             </p>
             <p class="max" @click="maxDai">
               {{ $t('dappsMaker.max-balance') }}
@@ -49,7 +49,7 @@
                 <b>
                   {{ values.maxDai ? displayFixedValue(values.maxDai) : 0 }}
                 </b>
-                DAI
+                {{ $t('dappsMaker.dai') }}
               </p>
             </div>
             <div class="grid-block">
