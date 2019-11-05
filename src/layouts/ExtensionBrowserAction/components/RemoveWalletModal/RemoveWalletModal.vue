@@ -14,8 +14,8 @@
           <div v-show="walletType === 'wallet'" class="text-container">
             Be sure you have saved the private key and/or Keystore File and the
             password before you remove it. If you want to use this wallet with
-            your MyEtherWallet CX in the future, you will need to manually
-            re-add it using the private key/JSON and password..
+            your MEW CX in the future, you will need to manually re-add it using
+            the private key/JSON and password..
           </div>
           <h3 v-show="walletType === 'watchOnly'">
             Are you sure you want to delete wallet {{ `${nickname}` }}?

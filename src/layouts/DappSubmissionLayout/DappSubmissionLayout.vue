@@ -2,7 +2,6 @@
   <div>
     <div class="dapp-header">
       <banner-submit-component
-        :show-preview="$route.fullPath === '/dapp-submission/dapp-summary'"
         :show-back="$route.fullPath !== '/dapp-submission'"
         :btn-text="
           $route.fullPath.includes('/dapp-summary')
@@ -132,7 +131,7 @@ export default {
       dappSocialLinksUpdated: false,
       disableBtn: false,
       socialAccts: [],
-      imgHasError: false,
+      hasError: false,
       buildType: BUILD_TYPE
     };
   },
@@ -236,7 +235,7 @@ export default {
           this.form.contractAddress &&
           this.form.dappIconFile &&
           this.form.bannerFile &&
-          !this.imgHasError &&
+          !this.hasError &&
           !this.disableBtn
         );
       } else if (this.$route.fullPath === '/dapp-submission/about-your-team') {
@@ -271,7 +270,7 @@ export default {
       );
     },
     updateMockFlow(hasError) {
-      this.imgHasError = hasError;
+      this.hasError = hasError;
 
       this.dappMockUserFlowUpdated = this.updateStrengthPercentage(
         this.form.mockFlowUrl,
@@ -279,7 +278,9 @@ export default {
         5
       );
     },
-    updateContractAddress() {
+    updateContractAddress(hasError) {
+      this.hasError = hasError;
+
       this.dappContractAddressUpdated = this.updateStrengthPercentage(
         this.form.contractAddress,
         this.dappContractAddressUpdated,
@@ -287,7 +288,7 @@ export default {
       );
     },
     updateDappIcon(hasError) {
-      this.imgHasError = hasError;
+      this.hasError = hasError;
 
       this.dappIconUpdated = this.updateStrengthPercentage(
         this.form.dappIconUrl,
@@ -296,7 +297,7 @@ export default {
       );
     },
     updateBanner(hasError) {
-      this.imgHasError = hasError;
+      this.hasError = hasError;
 
       this.dappBannerUpdated = this.updateStrengthPercentage(
         this.form.bannerUrl,
