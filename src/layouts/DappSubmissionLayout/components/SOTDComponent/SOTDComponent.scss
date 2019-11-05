@@ -4,14 +4,21 @@
   .sotd-container {
     background: $light-green-1;
     border-radius: 6px;
-    height: 197px;
     padding: 30px;
-    width: 324px;
+    width: 400px;
+
+    @media all and (max-width: 742px) {
+      width: 80%;
+    }
 
     .text-container {
       align-items: flex-start;
       display: flex;
       justify-content: center;
+
+      @media all and (max-width: 742px) {
+        justify-content: space-between;
+      }
 
       .header {
         color: $dark-blue-2;
