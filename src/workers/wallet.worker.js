@@ -8,6 +8,7 @@ const fromMyEtherWalletV2 = json => {
   return new Wallet(privKey);
 };
 const getWalletFromPrivKeyFile = (jsonfile, password) => {
+  console.log('adasdasd');
   // filename hack for getting the file name once unlocked
   let wallet;
   if (jsonfile.encseed != null) {
@@ -15,6 +16,7 @@ const getWalletFromPrivKeyFile = (jsonfile, password) => {
     wallet.filename = wallet.getV3Filename();
     return wallet;
   } else if (jsonfile.Crypto != null || jsonfile.crypto != null) {
+    console.log('here....');
     wallet = Wallet.fromV3(jsonfile, password, true);
     wallet.filename = wallet.getV3Filename();
     return wallet;
@@ -52,6 +54,7 @@ const create = password => {
   return createdWallet;
 };
 const unlock = (file, password) => {
+  console.error('file', file, password);
   const newFile = {};
   // Small hack because non strict wasn't working..
   Object.keys(file).forEach(key => {
@@ -71,6 +74,7 @@ if (
       const workerResult = create(event.data.data[0]);
       postMessage(workerResult);
     } else if (event.data.type === 'unlockWallet') {
+      console.error('in here');
       const workerResult = unlock(event.data.data[0], event.data.data[1]);
       postMessage(workerResult);
     } else if (event.data.type === 'generateFromPrivateKey') {
