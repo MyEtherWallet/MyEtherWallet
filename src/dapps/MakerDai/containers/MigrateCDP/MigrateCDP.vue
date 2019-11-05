@@ -25,12 +25,10 @@
             </p>
           </div>
         </div>
-
-        <div v-show="migrationPossible" class="input-block-message">
+        {{ migrationPossible }}
+        <div v-show="!migrationPossible" class="input-block-message">
           <p>
-            Not enough Sai 'old DAI' in the Maker Migration Contract to complete
-            this migration. Please try again later of contact the maker
-            foundation at integrate@makerdao.com
+            {{ $t('dappsMaker.migrationContractBalanceBelow') }}
           </p>
         </div>
 
@@ -60,20 +58,13 @@ import BigNumber from 'bignumber.js';
 import SelectCdpEntry from '../../components/SelectCdpEntry';
 import {
   addresses,
-  migrateABI,
   ERC20,
   ProxyContract,
   locateCdps,
-  TokenFaucet,
   MigrationProxyActions
 } from '../../makerHelpers';
 import ethUnit from 'ethjs-unit';
-import utils from 'web3-utils';
 import { Toast } from '@/helpers';
-
-const KOVAN_SERVER_URL = 'https://sai-kovan.makerfoundation.com/v1';
-
-// eslint-disable-next-line
 
 const toBigNumber = num => {
   return new BigNumber(num);
@@ -97,12 +88,6 @@ export default {
       type: Boolean,
       default: false
     },
-    // cdps: {
-    //   type: Array,
-    //   default: function() {
-    //     return [];
-    //   }
-    // },
     availableCdps: {
       type: Object,
       default: function() {
@@ -128,22 +113,20 @@ export default {
       daiGenerated: 0,
       migrateContractBalance: 0,
       selectedCdp: 0,
-      proxyAddress: ''
+      proxyAddress: '',
+      migrationNotPossible: false,
+      daiAddress: '0xc4375b7de8af5a38a93548eb8453a498222c4ff2'
     };
   },
   computed: {
     ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
-    migrationContractAddress() {
-      return '0x97cB5A9aBcdBE291D0CD85915fA5b08746Fe948A';
-    },
-    migrationProxyAddress() {},
     migrationPossible() {
       return toBigNumber(this.daiGenerated).lt(
         toBigNumber(this.migrateContractBalance)
       );
     },
     validInputs() {
-      return this.selectedCdp !== 0;
+      return this.selectedCdp !== 0 && this.migrationPossible;
     }
   },
   watch: {
@@ -159,8 +142,12 @@ export default {
         this.migrateContractBalance = 0;
         this.getProxy = this.getValueOrFunction('getProxy');
         this.proxyAllowances = this.getValueOrFunction('proxyAllowances');
+        this.proxyAddress = this.getValueOrFunction('proxyAddress');
         this.findCdps();
-        this.getMigrateContractSaiBalance();
+        this.getMigrationContractBalance().then(
+          value => (this.migrateContractBalance = value)
+        );
+        this.checkMigrateContractSaiBalance();
       }
     },
     async findCdps() {
@@ -170,7 +157,6 @@ export default {
       );
       this.cdps = withProxy.concat(withoutProxy);
     },
-
     //TODO use seth to get tokens (MCD_GOV is maker address for deployments)
     // TODO: look at and follow: https://github.com/makerdao/developerguides/blob/master/mcd/upgrading-to-multi-collateral-dai/cli-mcd-migration.md#migrating-cdps
     async beginMigration() {
@@ -181,22 +167,27 @@ export default {
           this.proxyAddress
         );
         const _governanceFee = (await details.getGovernanceFee()).toBigNumber();
-
-        const needsApproval = await this.needsApproval(_governanceFee);
-        if (needsApproval) {
-          const txs = [];
-          const approve = await this.approveMkr(_governanceFee);
-          txs.push(approve);
-          const migrate = await this.migrate(this.selectedCdp);
-          txs.push(migrate);
-          // this.web3.mew.sendBatchTransactions(txs).catch(err => {
-          //   Toast.responseHandler(err, Toast.ERROR);
-          // });
-        } else {
-          const migrate = await this.migrate(this.selectedCdp);
-          // this.web3.eth.sendTransaction(migrate).catch(err => {
-          //   Toast.responseHandler(err, Toast.ERROR);
-          // });
+        const cdpDaiBalance = (await details.getDebtValue()).toBigNumber();
+        const contractHasEnough = await this.checkMigrateContractSaiBalance(
+          cdpDaiBalance
+        );
+        if (contractHasEnough) {
+          const needsApproval = await this.needsApproval(_governanceFee);
+          if (needsApproval) {
+            const txs = [];
+            const approve = await this.approveMkr(_governanceFee);
+            txs.push(approve);
+            const migrate = await this.migrate(this.selectedCdp, cdpDaiBalance);
+            txs.push(migrate);
+            this.web3.mew.sendBatchTransactions(txs).catch(err => {
+              Toast.responseHandler(err, Toast.ERROR);
+            });
+          } else {
+            const migrate = await this.migrate(this.selectedCdp);
+            this.web3.eth.sendTransaction(migrate).catch(err => {
+              Toast.responseHandler(err, Toast.ERROR);
+            });
+          }
         }
       }
     },
@@ -204,9 +195,6 @@ export default {
     // MIGRATION CONTRACT
     // https://github.com/makerdao/scd-mcd-migration/blob/master/src/ScdMcdMigration.sol#L59
     async migrate(cdpId) {
-      const val = await this.getMigrateContractSaiBalance();
-      console.log(val); // todo remove dev item
-      console.log(toBigNumber(cdpId).toString(16)); // todo remove dev item
       return {
         from: this.account.address,
         to: this.proxyAddress,
@@ -270,12 +258,31 @@ export default {
         data: data
       };
     },
-    selectCDP(cdpSelected) {
+    async selectCDP(cdpSelected) {
       this.selectedCdp = cdpSelected;
+      const details = await this.getValueOrFunction('_cdpService').getCdp(
+        cdpSelected,
+        this.proxyAddress
+      );
+      this.daiGenerated = (await details.getDebtValue()).toBigNumber();
+      console.log(cdpSelected); // todo remove dev item
     },
-    async getMigrateContractSaiBalance() {
-
-      return await new this.web3.eth.Contract(ERC20, '0xc4375b7de8af5a38a93548eb8453a498222c4ff2').methods.balanceOf(addresses.MIGRATION).call()
+    async checkMigrateContractSaiBalance(cdpBalance = 0) {
+      // 2nd layer check. if the user tries to beat the button change (valid to invalid)
+      this.migrateContractBalance = await this.getMigrationContractBalance();
+      if (
+        toBigNumber(cdpBalance).lt(toBigNumber(this.migrateContractBalance))
+      ) {
+        return true;
+      }
+      return true; // the contract is reporting a 0 balance?
+    },
+    async getMigrationContractBalance() {
+      return 2;
+      // return await new this.web3.eth.Contract(ERC20, this.daiAddress).methods
+      //   .balanceOf(addresses.MIGRATION)
+      //   .call();
+      // the contract is reporting a 0 balance?
     },
     async submitTransaction() {
       window.scrollTo(0, 0);
@@ -290,6 +297,7 @@ export default {
         Toast.responseHandler(e, Toast.ERROR);
       }
     },
+
     displayPercentValue(raw) {
       if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);
       return raw.times(100).toString();

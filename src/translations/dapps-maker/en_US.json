@@ -85,5 +85,6 @@
   "moveWithProxy": "This CDP will be moved to the MakerCDP proxy registered with the destination address.",
   "moveWithoutProxy": "When accessing the CDP from the destination address for the first time a MakerCDP proxy will need to be registered first before any interaction with the CDP can occur.",
   "proxyAddress": "Proxy Address: {value}",
-  "whatIsDashes": "A value of -- indicates this CDP has no DAI so these calculations are only meaningful if this CDP has created DAI"
+  "whatIsDashes": "A value of -- indicates this CDP has no DAI so these calculations are only meaningful if this CDP has created DAI",
+  "migrationContractBalanceBelow": "Not enough Sai 'old DAI' in the Maker Migration Contract to complete this migration. Please try again later or contact the maker foundation at integrate@makerdao.com"
 }
