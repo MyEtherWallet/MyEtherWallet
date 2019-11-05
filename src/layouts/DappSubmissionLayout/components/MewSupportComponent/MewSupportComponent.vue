@@ -11,7 +11,7 @@
         </div>
       </div>
       <b-link
-        class="email-us-btn mt-3"
+        class="email-us-btn"
         href="mailto:support@myetherwallet.com"
         target="_blank"
         >Contact Support</b-link
