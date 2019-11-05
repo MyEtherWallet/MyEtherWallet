@@ -108,7 +108,9 @@
     "total": "Total Balance"
   },
   "notifications": {
-    "no-notifications": ">No notifications found :("
+    "no-notifications": ">No notifications found :(",
+    "notification-singular": "Notification",
+    "string": "Notifications"
   },
   "advanced": "Advanced",
   "chain-id": "Chain ID",

@@ -90,7 +90,9 @@
                   :combo="$t('createWallet.key-pass')"
                   :desc="$t('createWallet.key-pass-dec')"
                   :do-not-forget="$t('createWallet.password.do-not-forget')"
-                  :do-not-forget-desc="$t('createWallet.password.do-no-forget-desc')"
+                  :do-not-forget-desc="
+                    $t('createWallet.password.do-no-forget-desc')
+                  "
                 />
               </div>
             </b-tab>

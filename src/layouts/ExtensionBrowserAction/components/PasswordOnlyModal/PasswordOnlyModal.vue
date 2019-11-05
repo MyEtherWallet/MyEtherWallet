@@ -8,15 +8,15 @@
       title="Wallet Password"
     >
       <div class="modal-contents">
-        <p>Your wallet is encrypted. Please enter the password</p>
+        <p>{{ $t('mewCx.wallet-encrypted') }}</p>
         <form>
           <div class="input-container">
-            <label for="walletPassword"> Password </label>
+            <label for="walletPassword"> {{ $t('mewCx.password') }} </label>
             <div class="password-input">
               <input
                 v-model="locPassword"
                 :type="show ? 'text' : 'password'"
-                placeholder="Create your password here"
+                :placeholder="$t('mewCx.create-pw')"
                 name="walletPassword"
               />
               <img

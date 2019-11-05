@@ -2,14 +2,14 @@
   <div>
     <b-modal
       ref="generateNewWallet"
+      :title="$t('mewCx.generateWallet')"
       hide-footer
       centered
-      :title="$t('mewCx.generateWallet')"
     >
       <div class="modal-contents">
         <form>
           <div class="input-container">
-            <label for="walletName"> {{ $t('mewCx.wallet-name')}} </label>
+            <label for="walletName"> {{ $t('mewCx.wallet-name') }} </label>
             <input
               v-model="locNickname"
               :placeholder="$t('mewCx.add-wallet-nickname')"
