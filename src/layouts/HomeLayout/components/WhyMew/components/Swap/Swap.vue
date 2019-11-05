@@ -1,5 +1,5 @@
 <template>
-  <v-card class="pa-8" outlined max-width="450">
+  <v-card class="pa-8" outlined max-width="500">
     <h4 class="link-box-title font-weight-bold mb-4">
       Swap easily
     </h4>

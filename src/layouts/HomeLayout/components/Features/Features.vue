@@ -9,30 +9,30 @@
     </v-container>
     <div class="pt-7">
       <v-tabs color="deep-purple accent-4" centered>
-        <v-tab class="px-12 ">Send</v-tab>
-        <v-tab class="px-12">Swap</v-tab>
-        <v-tab class="px-12">Dapps</v-tab>
-        <v-tab class="px-12">Tokens</v-tab>
+        <v-tab>Send</v-tab>
+        <v-tab>Swap</v-tab>
+        <v-tab>Dapps</v-tab>
+        <v-tab>Tokens</v-tab>
 
-        <v-tab-item class="">
+        <v-tab-item>
           <img
             class="tab-image"
             src="@/assets/images/Banners/LandingPage/Features/Swap.svg"
           />
         </v-tab-item>
-        <v-tab-item class="">
+        <v-tab-item>
           <img
             class="tab-image"
             src="@/assets/images/Banners/LandingPage/Features/Swap.svg"
           />
         </v-tab-item>
-        <v-tab-item class="">
+        <v-tab-item>
           <img
             class="tab-image"
             src="@/assets/images/Banners/LandingPage/Features/Swap.svg"
           />
         </v-tab-item>
-        <v-tab-item class="">
+        <v-tab-item>
           <img
             class="tab-image"
             src="@/assets/images/Banners/LandingPage/Features/Swap.svg"
@@ -61,10 +61,11 @@ export default {
   text-transform: initial;
   font-weight: 700;
   color: $disabled--2;
+  min-width: 120px;
 }
 
 .tab-image {
-  padding-top: 30px;
+  padding-top: 50px;
   width: 100%;
 }
 </style>
