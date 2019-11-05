@@ -1,7 +1,7 @@
 <template>
-  <v-card class="pa-8" max-width="300">
+  <v-card class="pa-8" outlined max-width="300">
     <v-img
-      class="white--text align-end my-3"
+      class="white--text align-end"
       height="150px"
       contain
       src="@/assets/images/Etc/LandingPage/friendly.svg"
@@ -37,5 +37,9 @@ export default {
 h4 {
   font-size: 22px;
   letter-spacing: -0.6px;
+}
+
+.v-card {
+  border-radius: 10px !important;
 }
 </style>

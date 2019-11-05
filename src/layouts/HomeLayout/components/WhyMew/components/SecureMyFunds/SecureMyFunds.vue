@@ -1,14 +1,11 @@
 <template>
-  <v-card class="pa-8" max-width="400">
+  <v-card class="pa-8" outlined max-width="300">
     <h4 class="link-box-title font-weight-bold mb-4">
-      Swap easily
+      Secure my funds
     </h4>
     <div>
-      Partnered with
-      <span class="font-italic">
-        Bity, Kyber Network, Changelly, and Simplex
-      </span>
-      to allow users to swap fiat to crypto, ETH to BTC, ETH to ERC-20.
+      MEWconnect, an official, free companion app for MEW that helps you secure
+      your funds as never before.
     </div>
 
     <div class="action-block mt-2 ml-n4">
@@ -34,7 +31,7 @@ h4 {
   letter-spacing: -0.6px;
 }
 
-span {
-  font-weight: 600;
+.v-card {
+  border-radius: 10px !important;
 }
 </style>
