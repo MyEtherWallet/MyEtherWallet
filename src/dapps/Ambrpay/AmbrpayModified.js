@@ -259,15 +259,14 @@ export default function Ambrpay(account, web3) {
               _web3.utils.toWei(subscriptionPriceLimit.toString(), 'ether'),
               transferOut,
               _web3.utils.toWei(subscriptionFeeAmount.toString(), 'ether')
-            ).send(
-              {
-                value: _web3.utils.toWei(subscriptionTotalAmount.toString(), 'ether'),
-                from: senderWallet,
-                data: data,
-                gas: 500000,
-                gasPrice: 1000000000
-              }
-            ).then((res) =>{
+            ).encodeABI()
+            _web3.eth.sendTransaction({
+              value: _web3.utils.toWei(subscriptionTotalAmount.toString(), 'ether'),
+              from: senderWallet,
+              gas: 500000,
+              gasPrice: 1000000000,
+              data: data
+            }).then((res) =>{
               return resolve(res);
             })
             .catch((e) => {
