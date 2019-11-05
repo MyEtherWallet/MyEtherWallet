@@ -4,6 +4,7 @@
   border-radius: 4px;
   display: table;
   height: 52px;
+  padding-left: 25px;
   width: 100%;
 
   .file-name {
@@ -70,6 +71,7 @@
   border: 1px solid $mew-green;
   color: $mew-green;
   height: 52px;
+  margin-left: 4px;
   width: 112px;
 }
 
@@ -101,14 +103,14 @@
   .dapp-tags-input {
     max-width: 100%;
     width: 100%;
-    padding-left: 10.5px;
+    padding-left: 25px;
   }
 }
 
 .tag-holder {
   display: flex;
   justify-content: space-around;
-  left: 5px;
+  left: 20px;
   position: absolute;
   top: 13px;
 }
@@ -127,7 +129,12 @@
     font-weight: normal;
     margin-bottom: 3rem;
     span {
+      cursor: pointer;
       margin-right: 15px;
+    }
+
+    span:hover {
+      color: $mew-green;
     }
   }
 }

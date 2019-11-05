@@ -1,5 +1,9 @@
 ### Release v5.2.1
 
+### Feature
+
+- Update Dapp Submission UI [#1585](https://github.com/MyEtherWallet/MyEtherWallet/pull/1585)
+
 ### Bug
 
 - Fix copy to actually copy signed tx, not raw on offline tx [#1590](https://github.com/MyEtherWallet/MyEtherWallet/pull/1590)
