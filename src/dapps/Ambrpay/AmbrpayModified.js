@@ -265,11 +265,14 @@ export default function Ambrpay(account, web3) {
                 gas: 500000,
                 gasPrice: 1000000000,
                 from: senderWallet
-              },
-              function(e, res) {
-                  console.error('e', e, res)
-                  if (e) { return reject(e); }
-                  return resolve(res);
+              })
+              .then((res) =>{
+                // eslint-disable-next-line
+                console.log('res', res);
+                return resolve(res);
+              })
+              .catch((e) => {
+                return reject(e);
               });
           });
         })
