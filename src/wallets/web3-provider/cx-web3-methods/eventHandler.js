@@ -13,6 +13,7 @@ const eventHandler = (event, data, responseEvent, rejectEvent) => {
     window.addEventListener(rejectEvent, res => {
       clearListeners(responseEvent, rejectEvent);
       if (res.detail) {
+        console.log(res);
         reject(new Error(res.detail));
       } else {
         reject(new Error('User cancelled request!'));
