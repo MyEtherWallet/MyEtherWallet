@@ -18,7 +18,6 @@
               :value="provider.provider"
               type="radio"
               name="provider"
-              @input="setSelectedProvider(provider.provider)"
             />
 
             <label :for="provider.provider" />
@@ -227,6 +226,10 @@ export default {
         return {};
       }
     },
+    providerSelectedName: {
+      type: String,
+      default: ''
+    },
     fromValue: {
       type: Number,
       default: 0
@@ -277,6 +280,21 @@ export default {
         });
       } else if (this.noAvaliableProviders) {
         return this.allSupportedProviders;
+      }
+    }
+  },
+  watch: {
+    loadingData(val) {
+      if (this.providerSelectedName !== '' && !val) {
+        this.$nextTick(() => {
+          this.$emit('selectedProvider', this.providerSelectedName);
+          const clickedEl = document.getElementsByClassName(
+            this.providerSelectedName
+          )[0];
+          clickedEl.classList.add('radio-selected');
+          const inputEl = document.getElementById(this.providerSelectedName);
+          inputEl.checked = true;
+        });
       }
     }
   },

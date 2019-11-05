@@ -24,10 +24,10 @@ export default {
     return {};
   },
   computed: {
-    loadingMessage(){
-      return this.loadingState
+    loadingMessage() {
+      return this.loadingState;
       // return `Loading: ${this.loadingState}`
-    },
+    }
   },
   mounted() {},
   methods: {}

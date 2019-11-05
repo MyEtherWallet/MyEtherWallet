@@ -13,7 +13,6 @@ export default {
   path: 'dapps/maker-dai',
   component: MakerDai,
   props: true,
-  meta: { requiresAuth: true },
   children: [
     {
       path: '',

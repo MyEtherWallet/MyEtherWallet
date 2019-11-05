@@ -48,7 +48,7 @@
           </div>
         </div>
         <div class="detail-info">
-          <expending-option :title="$t('dappsMaker.details')">
+          <expanding-option :title="$t('dappsMaker.details')">
             <ul>
               <li>
                 <p>{{ $t('dappsMaker.liquidPrice') }} ({{ currency }}/USD)</p>
@@ -71,7 +71,7 @@
                 <p>{{ minRatio }}%</p>
               </li>
             </ul>
-          </expending-option>
+          </expanding-option>
         </div>
         <div class="button-container">
           <standard-button
@@ -85,15 +85,13 @@
 </template>
 
 <script>
-import '@/assets/images/currency/coins/asFont/cryptocoins.css';
-import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
-import ExpendingOption from '@/components/ExpendingOption';
+import ExpandingOption from '@/components/ExpandingOption';
 import StandardButton from '@/components/Buttons/StandardButton';
 import { hasIcon } from '@/partners';
 
 export default {
   components: {
-    'expending-option': ExpendingOption,
+    'expanding-option': ExpandingOption,
     'standard-button': StandardButton
   },
   props: {

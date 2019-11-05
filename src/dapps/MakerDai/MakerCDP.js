@@ -54,7 +54,7 @@ export default class MakerCDP extends MakerCdpBase {
 
   // Setup Methods =====================================================================================================
   async init(cdpId = this.cdpId) {
-    console.log('cdpId',cdpId); // todo remove dev item
+    console.log('cdpId', cdpId); // todo remove dev item
     await this.updateValues(cdpId);
     try {
       // TODO why is this returning undefined
@@ -72,7 +72,7 @@ export default class MakerCDP extends MakerCdpBase {
   async updateValues(cdpId = this.cdpId) {
     this._proxyAddress = await this.services.getProxy();
     this.noProxy = this._proxyAddress === null;
-    try{
+    try {
       // console.log('cdpId, this._proxyAddress', cdpId, this._proxyAddress); // todo remove dev item
       // this.cdp = await this.services.getMakerCdp(cdpId);
       if (this._proxyAddress) {
@@ -80,9 +80,9 @@ export default class MakerCDP extends MakerCdpBase {
       } else {
         this.cdp = await this.services.getMakerCdp(cdpId, false);
       }
-      } catch(e){
-            console.error(e);
-        }
+    } catch (e) {
+      console.error(e);
+    }
     // const liqPrice = await this.cdp.getLiquidationPrice();
     // this._liqPrice = liqPrice.toBigNumber().toFixed(2);
     this.isSafe = this.cdp.isSafe;
@@ -174,7 +174,7 @@ export default class MakerCDP extends MakerCdpBase {
       daiQty = toBigNumber(this.debtValue).plus(toBigNumber(daiQty));
       console.log('calcCollatRatioDaiChg', daiQty.toString()); // todo remove dev item
       console.log(this.collateralAmount.toString()); // todo remove dev item
-      console.log("==========="); // todo remove dev item
+      console.log('==========='); // todo remove dev item
     }
     return toBigNumber(this.calcCollatRatio(this.collateralAmount, daiQty));
   }
@@ -320,20 +320,29 @@ export default class MakerCDP extends MakerCdpBase {
   }
 
   drawDai(amount, acknowledgeBypass = false) {
-    console.log('draw dai', amount.toString(), toBigNumber(amount), acknowledgeBypass); // todo remove dev item
+    console.log(
+      'draw dai',
+      amount.toString(),
+      toBigNumber(amount),
+      acknowledgeBypass
+    ); // todo remove dev item
     if (
-      this.calcCollatRatio(this.collateralAmount, this.debtValue.plus(amount)).gt(
-        2
-      ) ||
+      this.calcCollatRatio(
+        this.collateralAmount,
+        this.debtValue.plus(amount)
+      ).gt(2) ||
       acknowledgeBypass
     ) {
-
       try {
         if (this.noProxy) {
           return;
         }
         this.needsUpdate = true;
-        this.cdpService.drawDaiProxy(this._proxyAddress, this.cdpId, MDAI(amount));
+        this.cdpService.drawDaiProxy(
+          this._proxyAddress,
+          this.cdpId,
+          MDAI(amount)
+        );
       } catch (e) {
         // eslint-disable-next-line
         console.error(e);

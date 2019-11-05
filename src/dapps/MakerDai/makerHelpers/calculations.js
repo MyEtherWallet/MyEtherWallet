@@ -10,7 +10,6 @@ const bnOver = (one, two, three) => {
     .div(toBigNumber(three));
 };
 
-
 // Calculations
 
 export function maxDai(ethPrice, ethCollateral, liquidationRatio, debtValue) {

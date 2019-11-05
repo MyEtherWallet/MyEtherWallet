@@ -65,10 +65,7 @@ export async function loadCdpDetails(
   console.log(self.activeCdps); // todo remove dev item
 }
 
-export async function loadCdpDetail(
-  self,
-  cdpId
-) {
+export async function loadCdpDetail(self, cdpId) {
   return await buildCdpObject.bind(self)(cdpId);
 }
 
@@ -122,7 +119,7 @@ export async function buildEmpty(self) {
   return await buildCdpObject.bind(self)(null);
 }
 
-export async function buildCdpObject(cdpId, options = {}, useOld=false) {
+export async function buildCdpObject(cdpId, options = {}, useOld = false) {
   const sysVars = {
     ...options,
     tokens: this.tokens,
@@ -182,11 +179,10 @@ export async function buildCdpObject(cdpId, options = {}, useOld=false) {
     makerCDP = new MakerCDP(cdpId, this.web3, services, sysVars);
     console.log(makerCDP); // todo remove dev item
     if (cdpId) {
-      if(useOld){
+      if (useOld) {
         return await makerCDP.init(cdpId, useOld);
-      } else {
-        return await makerCDP.init(cdpId);
       }
+      return await makerCDP.init(cdpId);
     }
     return makerCDP;
   } catch (e) {

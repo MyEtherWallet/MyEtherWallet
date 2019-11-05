@@ -6,7 +6,7 @@ import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessM
 import PopOver from '@/components/PopOver/PopOver.vue';
 import { Tooling } from '@@/helpers';
 
-describe('SignMessageContainer.vue', () => {
+xdescribe('SignMessageContainer.vue', () => {
   let localVue, i18n, wrapper, store;
 
   beforeAll(() => {
@@ -31,7 +31,7 @@ describe('SignMessageContainer.vue', () => {
     });
   });
 
-  it('should render correct data', () => {
+  xit('should render correct data', () => {
     const message = 'message';
     wrapper.setData({ message });
     expect(wrapper.vm.$el.querySelector('.the-form textarea').value).toEqual(

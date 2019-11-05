@@ -1,18 +1,8 @@
-
-
-
-export default class CdpInterface{
-  constructor(){
-
-  }
+export default class CdpInterface {
+  constructor() {}
 
   // liquidationPrice
-  getLiquidationPriceForCdp(){
+  getLiquidationPriceForCdp() {}
 
-  }
-
-  getCollateralRatio(){
-
-  }
-
+  getCollateralRatio() {}
 }

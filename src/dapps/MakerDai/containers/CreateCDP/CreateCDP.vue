@@ -327,7 +327,6 @@ export default {
       return true;
     },
 
-
     minInSelectedCurrency() {
       const minEth = toBigNumber(this.getValueOrFunction('minEth'));
 
@@ -371,7 +370,7 @@ export default {
       return false;
     },
     minEth() {
-        return toBigNumber(this.getValueOrFunction('minEth'));
+      return toBigNumber(this.getValueOrFunction('minEth'));
     },
     collateralOptions() {
       const mcdCollateralOptions = this.getValueOrFunction('mcdCurrencies');
@@ -488,13 +487,15 @@ export default {
     },
     hasEnoughAllowance() {
       if (this.emptyMakerCreated) {
-        console.log(this.makerCDP.hasEnoughAllowance(
-                this.ethQty,
-                this.selectedCurrency.symbol
-        )); // todo remove dev item
+        console.log(
+          this.makerCDP.hasEnoughAllowance(
+            this.ethQty,
+            this.selectedCurrency.symbol
+          )
+        ); // todo remove dev item
         return this.makerCDP.hasEnoughAllowance(
-                this.ethQty,
-                this.selectedCurrency.symbol
+          this.ethQty,
+          this.selectedCurrency.symbol
         );
       }
     },

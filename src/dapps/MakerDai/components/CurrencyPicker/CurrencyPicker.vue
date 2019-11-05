@@ -55,9 +55,7 @@
                 : '',
               'item'
             ]"
-            :key="
-              idx
-            "
+            :key="idx"
             @click="selectCurrency(curr)"
           >
             <p>

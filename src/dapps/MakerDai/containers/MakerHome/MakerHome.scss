@@ -138,10 +138,9 @@ $dapps-container-mobile-width: 650px;
   }
 } //@media all and ( min-width: calc(#{$tablet-width} + 1px) ) {
 
-.boundary{
- padding: 40px;
+.boundary {
+  padding: 40px;
 }
-
 
 @keyframes placeHolderShimmer {
   0% {
@@ -285,7 +284,7 @@ $dapps-container-mobile-width: 650px;
     font-stretch: normal;
     line-height: normal;
     letter-spacing: normal;
-    color: #0b2840;
+    color: $dark-blue-2;
   }
 
   .Please-text-somethin {
@@ -315,6 +314,6 @@ $dapps-container-mobile-width: 650px;
     font-stretch: normal;
     line-height: normal;
     letter-spacing: normal;
-    color: #0b2840;
+    color: $dark-blue-2;
   }
 }

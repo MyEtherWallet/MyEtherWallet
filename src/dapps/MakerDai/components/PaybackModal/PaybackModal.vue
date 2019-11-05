@@ -36,7 +36,7 @@
           </div>
         </div>
 
-        <expending-option title="Detail Information">
+        <expanding-option title="Detail Information">
           <ul class="details">
             <li>
               <p>{{ $t('dappsMaker.outstandingDai') }}</p>
@@ -74,7 +74,7 @@
               </p>
             </li>
           </ul>
-        </expending-option>
+        </expanding-option>
         <div class="buttons">
           <div v-if="needsDaiApprove">
             <standard-button
@@ -109,7 +109,7 @@
 <script>
 import { mapState } from 'vuex';
 import ethUnit from 'ethjs-unit';
-import ExpendingOption from '@/components/ExpendingOption';
+import ExpandingOption from '@/components/ExpandingOption';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
 import CheckBox from '../CheckBox';
 import BigNumber from 'bignumber.js/bignumber.js';
@@ -124,7 +124,7 @@ export default {
   components: {
     'help-center-button': HelpCenterButton,
     'check-box': CheckBox,
-    'expending-option': ExpendingOption,
+    'expanding-option': ExpandingOption,
     'standard-button': StandardButton
   },
   props: {
@@ -349,7 +349,9 @@ export default {
     needsDaiApprove() {
       if (toBigNumber(this.getProxyAllowances()['DAI']).gt(0)) {
         if (
-          toBigNumber(this.getProxyAllowances()['DAI']).lt(this.values.debtValue)
+          toBigNumber(this.getProxyAllowances()['DAI']).lt(
+            this.values.debtValue
+          )
         ) {
           return true;
         }
@@ -377,9 +379,9 @@ export default {
     });
   },
   methods: {
-    getProxyAllowances(){
+    getProxyAllowances() {
       const allowances = this.getValueOrFunction('proxyAllowances');
-      if(allowances){
+      if (allowances) {
         return allowances;
       }
       return {};
