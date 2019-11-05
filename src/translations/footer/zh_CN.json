@@ -3,7 +3,7 @@
   "units": "单元",
   "txStat": "交易状态",
   "debugs": "调试",
-  "extension": "MyEtherWallet CX",
+  "extension": "MEW CX",
   "others": "其它",
   "affiliates": "合作品牌",
   "ledger": "Ledger Wallet",
@@ -29,5 +29,6 @@
   "verifyMessage": "Verify Message",
   "keepkey": "KeepKey",
   "secalot": "Secalot",
-  "bitbox": "Bitbox"
+  "bitbox": "Bitbox",
+  "viewWalletInfo": "View Wallet Info"
 }
