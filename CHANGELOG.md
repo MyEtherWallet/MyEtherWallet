@@ -1,3 +1,8 @@
+### Release v5.2.2
+
+### Bug
+- Fix spacing between footer list items [#1599](https://github.com/MyEtherWallet/MyEtherWallet/pull/1599)
+
 ### Release v5.2.1
 
 ### Feature
