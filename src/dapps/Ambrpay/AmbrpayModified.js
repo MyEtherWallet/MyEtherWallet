@@ -252,8 +252,6 @@ export default function Ambrpay(account, web3) {
           return new Promise(function(resolve, reject) {
 
             var instance = new _web3.eth.Contract(ambrpay.ABI.abi, ambrpay.contractAddress);
-            // eslint-disable-next-line
-            console.log('beforeSend');
             return instance.methods.createSubscriptionWithTransfer(
               receiverWallet,
               subscriptionPlan.daysInterval,
@@ -267,8 +265,6 @@ export default function Ambrpay(account, web3) {
                 from: senderWallet
               })
               .then((res) =>{
-                // eslint-disable-next-line
-                console.log('res', res);
                 return resolve(res);
               })
               .catch((e) => {
@@ -277,10 +273,6 @@ export default function Ambrpay(account, web3) {
           });
         })
         .then((txHash) => {
-          // eslint-disable-next-line
-          console.log('afterSend');
-          // eslint-disable-next-line
-          console.log('tx', txHash);
           var customer = {
             subscriptionPlanId: subscriptionPlan.id,
             senderWallet: senderWallet,
@@ -296,8 +288,6 @@ export default function Ambrpay(account, web3) {
             transferOut: transferOut,
             smartContractAddress: ambrpay.contractAddress,
           };
-          // eslint-disable-next-line
-          console.log(customer);
           return ambrpay.createSubscription(customer)
             .then(() => {
               return txHash.transactionHash;
@@ -305,16 +295,10 @@ export default function Ambrpay(account, web3) {
         });
     },
     createSubscription: function(data) {
-      // eslint-disable-next-line
-      console.log('createSubscriptionAPI');
       var url = apiEndpoint + '/subscription';
 
       return ambrpay.postRequest(url, data)
         .then(function(o) {
-          // eslint-disable-next-line
-          console.log('afterPost');
-          // eslint-disable-next-line
-          console.log(o);
           return JSON.parse(o);
         });
     },
@@ -349,10 +333,6 @@ export default function Ambrpay(account, web3) {
       });
     },
     postRequest: function(url, params) {
-      // eslint-disable-next-line
-      console.log('postRequest');
-      // eslint-disable-next-line
-      console.log(ambrpay.apiKey);
       if (!ambrpay.apiKey) {
         throw "ambrpay api key not set";
       }
@@ -369,15 +349,9 @@ export default function Ambrpay(account, web3) {
           if (http.readyState == 4 && http.status == 200) {
             resolve(http.responseText);
           } else if (http.readyState == 4 && http.status != 200) {
-            // eslint-disable-next-line
-            console.log(http.responseText);
             reject(http.responseText);
           }
         }
-        // eslint-disable-next-line
-        console.log('beforeAjaxSend');
-        // eslint-disable-next-line
-        console.log(JSON.stringify(params));
         http.send(JSON.stringify(params));
       });
     },
