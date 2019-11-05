@@ -1,11 +1,11 @@
 <template>
-  <v-card class="pa-8" max-width="400">
+  <v-card class="pa-8" outlined max-width="450">
     <h4 class="link-box-title font-weight-bold mb-4">
-      Secure my funds
+      Hardware wallet support
     </h4>
     <div>
-      MEWconnect, an official, free companion app for MEW that helps you secure
-      your funds as never before.
+      MEW offers support for all major hardware wallets including Leder, Trezor,
+      and many more.
     </div>
 
     <div class="action-block mt-2 ml-n4">
@@ -33,5 +33,9 @@ h4 {
 
 span {
   font-weight: 600;
+}
+
+.v-card {
+  border-radius: 10px !important;
 }
 </style>
