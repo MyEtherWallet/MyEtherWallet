@@ -183,6 +183,7 @@ export default {
         });
     },
     unsubscribeSub(data) {
+      console.error('data', data)
       this.ambrpay
         .unsubscribe(data.pos, data.addr)
         .then(this.getSubscriptions)
