@@ -28,37 +28,45 @@ export default async ({ payload }, res, next) => {
   const web3GetGas = WEB3_GET_GAS.replace('{{id}}', id);
   const web3ReceiveGas = WEB3_RECEIVE_GAS.replace('{{id}}', id);
 
-  const gasPrice = await eventHandler(
-    web3QueryGasPrice,
-    {},
-    web3ReceiveGasPrice,
-    rejectName
-  );
-  const nonce = await eventHandler(
-    web3GetNonce,
-    {
-      detail: {
-        from: tx.from
-      }
-    },
-    web3ReceiveNonce,
-    rejectName
-  );
-  const gas = await eventHandler(
-    web3GetGas,
-    {
-      detail: {
-        tx: tx
-      }
-    },
-    web3ReceiveGas,
-    rejectName
-  );
-
-  tx.gasPrice = gasPrice;
   try {
-    tx.nonce = !tx.nonce ? await nonce : tx.nonce;
-    tx.gas = !tx.gas ? gas : tx.gas;
+    const gasPrice = tx.gasPrice
+      ? tx.gasPrice
+      : await eventHandler(
+          web3QueryGasPrice,
+          {},
+          web3ReceiveGasPrice,
+          rejectName
+        );
+
+    const nonce = tx.nonce
+      ? tx.nonce
+      : await eventHandler(
+          web3GetNonce,
+          {
+            detail: {
+              from: tx.from
+            }
+          },
+          web3ReceiveNonce,
+          rejectName
+        );
+
+    const gas = tx.gas
+      ? tx.gas
+      : await eventHandler(
+          web3GetGas,
+          {
+            detail: {
+              tx: tx
+            }
+          },
+          web3ReceiveGas,
+          rejectName
+        );
+
+    tx.gasPrice = gasPrice;
+    tx.nonce = nonce;
+    tx.gas = gas;
   } catch (e) {
     res(e);
     return;
@@ -66,6 +74,7 @@ export default async ({ payload }, res, next) => {
 
   getSanitizedTx(tx)
     .then(_tx => {
+      console.log(_tx);
       const obj = {
         detail: {
           tx: _tx

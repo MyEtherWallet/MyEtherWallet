@@ -8,7 +8,7 @@ export default function Ambrpay(account, web3) {
   if(!apiEndpoint) {
     var apiEndpoint = 'https://ambrpay.io/api';
   }
-  
+
   var _web3 = web3;
   var ethAddress = account.address;
   var ambrpay = {
@@ -252,28 +252,29 @@ export default function Ambrpay(account, web3) {
           return new Promise(function(resolve, reject) {
 
             var instance = new _web3.eth.Contract(ambrpay.ABI.abi, ambrpay.contractAddress);
-            // eslint-disable-next-line
-            console.log('beforeSend');
-            return instance.methods.createSubscriptionWithTransfer(
+
+            const data = instance.methods.createSubscriptionWithTransfer(
               receiverWallet,
               subscriptionPlan.daysInterval,
               _web3.utils.toWei(subscriptionPriceLimit.toString(), 'ether'),
               transferOut,
-              _web3.utils.toWei(subscriptionFeeAmount.toString(), 'ether'))
-              .send({
+              _web3.utils.toWei(subscriptionFeeAmount.toString(), 'ether')
+            ).encodeABI()
+
+            _web3.eth.sendTransaction(
+              {
                 value: _web3.utils.toWei(subscriptionTotalAmount.toString(), 'ether'),
+                from: senderWallet,
+                data: data,
                 gas: 500000,
-                gasPrice: 1000000000,
-                from: senderWallet
-              })
-              .then((res) =>{
-                // eslint-disable-next-line
-                console.log('res', res);
-                return resolve(res);
-              })
-              .catch((e) => {
-                return reject(e);
-              });
+                gasPrice: 1000000000
+              }
+            ).then((res) =>{
+              return resolve(res);
+            })
+            .catch((e) => {
+              return reject(e);
+            });
           });
         })
         .then((txHash) => {
