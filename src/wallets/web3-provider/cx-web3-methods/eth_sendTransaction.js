@@ -74,7 +74,6 @@ export default async ({ payload }, res, next) => {
 
   getSanitizedTx(tx)
     .then(_tx => {
-      console.log(_tx);
       const obj = {
         detail: {
           tx: _tx

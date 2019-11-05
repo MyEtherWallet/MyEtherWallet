@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 import { CX_WEB3_DETECTED } from '../cxEvents';
-export default async ({ event }, res, next) => {
+export default async ({ event }, _, next) => {
   if (event !== CX_WEB3_DETECTED) return next();
   chrome.storage.sync.get('warned', item => {
     if (Object.keys(item).length === 0) {

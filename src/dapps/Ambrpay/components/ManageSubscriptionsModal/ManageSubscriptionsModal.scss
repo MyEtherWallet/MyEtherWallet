@@ -91,6 +91,11 @@
       font-size: 14px;
       font-weight: 600;
       margin-bottom: 1rem;
+
+      .disable {
+        cursor: none;
+        color: $dark-grey-11;
+      }
     }
   }
 }

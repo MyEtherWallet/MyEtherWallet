@@ -253,25 +253,25 @@ export default function Ambrpay(account, web3) {
 
             var instance = new _web3.eth.Contract(ambrpay.ABI.abi, ambrpay.contractAddress);
 
-            const data = instance.methods.createSubscriptionWithTransfer(
+            const tx = instance.methods.createSubscriptionWithTransfer(
               receiverWallet,
               subscriptionPlan.daysInterval,
               _web3.utils.toWei(subscriptionPriceLimit.toString(), 'ether'),
               transferOut,
               _web3.utils.toWei(subscriptionFeeAmount.toString(), 'ether')
-            ).encodeABI()
-            _web3.eth.sendTransaction({
+            ).send({
               value: _web3.utils.toWei(subscriptionTotalAmount.toString(), 'ether'),
               from: senderWallet,
               gas: 500000,
-              gasPrice: 1000000000,
-              data: data
+              gasPrice: 1000000000
             }).then((res) =>{
               return resolve(res);
             })
             .catch((e) => {
               return reject(e);
             });
+
+            return tx;
           });
         })
         .then((txHash) => {
