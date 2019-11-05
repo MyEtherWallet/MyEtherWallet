@@ -1,5 +1,6 @@
 import Wallet from 'ethereumjs-wallet';
-
+import ThirdPartyWallets from 'ethereumjs-wallet/thirdparty';
+Wallet.ThirdParty = ThirdPartyWallets;
 const Configs = {
   kdf: 'scrypt',
   n: 131072
