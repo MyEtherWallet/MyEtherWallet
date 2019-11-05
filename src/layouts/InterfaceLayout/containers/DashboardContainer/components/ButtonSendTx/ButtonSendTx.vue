@@ -1,5 +1,5 @@
 <template functional>
-  <div class="button-send-tx">
+  <div class="button-send-tx" @click="props.goTo('send-transaction')">
     <div :class="disabled ? 'button-disabled' : ''" class="content-container">
       <img src="~@/assets/images/buttons/send-tx/left.png" class="left" alt />
       <img src="~@/assets/images/buttons/send-tx/right.png" class="right" alt />
@@ -24,6 +24,10 @@ export default {
     disabled: {
       type: Boolean,
       default: false
+    },
+    goTo: {
+      type: Function,
+      default: () => {}
     }
   }
 };
