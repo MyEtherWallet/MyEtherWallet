@@ -9,7 +9,7 @@
         <span>{{ currency.toUpperCase() }}</span>
       </p>
       <p class="address-text">
-        {{$t('common.addr')}}:
+        {{ $t('common.addr') }}:
         {{
           currency !== $store.state.network.type.name
             ? concat(receiver)
@@ -17,7 +17,7 @@
         }}
       </p>
       <p v-if="currency !== $store.state.network.type.name">
-        {{$t('common.via-contract-address')}} {{ concat(address) }}
+        {{ $t('common.via-contract-address') }} {{ concat(address) }}
       </p>
     </div>
   </div>

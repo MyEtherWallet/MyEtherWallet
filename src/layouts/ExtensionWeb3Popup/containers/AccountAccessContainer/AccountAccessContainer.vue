@@ -7,7 +7,8 @@
         <img class="site-logo" src="~@/assets/images/mew-cx-logo.png" />
       </div>
       <p>
-        {{ request.connectionRequest.toLowerCase() }} {{$t('mewCx.trying-to-access-mew')}}
+        {{ request.connectionRequest.toLowerCase() }}
+        {{ $t('mewCx.trying-to-access-mew') }}
       </p>
     </div>
     <div class="accounts-container">

@@ -3,10 +3,10 @@
     <div class="wallets-container-header">
       <div class="header-title-container">
         <div class="title-balance">
-          <h2>{{ $t('mewCx.my-wallets') }}</h2>
+          <h2>{{ parent.$t('mewCx.my-wallets') }}</h2>
         </div>
         <div class="add-button" @click="props.addWallet">
-          + {{ $t('mewCx.add-more') }}
+          + {{ parent.$t('mewCx.add-more') }}
         </div>
       </div>
       <component
@@ -17,7 +17,7 @@
     </div>
     <div class="total-balance-container">
       <div class="title-name">
-        {{ $t('common.balance.total') }}
+        {{ parent.$t('common.balance.total') }}
       </div>
       <div class="balance-container">
         <p class="actual-balance">
@@ -47,13 +47,13 @@
       v-show="props.myWallets.length === 0 && !props.loading"
       class="wallets-info"
     >
-      <h2>{{ $t('mewCx.no-wallet-found') }}...</h2>
+      <h2>{{ parent.$t('mewCx.no-wallet-found') }}...</h2>
     </div>
     <div
       v-show="props.loading && props.myWallets.length === 0"
       class="wallets-info"
     >
-      <h2>{{ $t('mewCx.loading-wallets') }}...</h2>
+      <h2>{{ parent.$t('mewCx.loading-wallets') }}...</h2>
     </div>
   </div>
 </template>

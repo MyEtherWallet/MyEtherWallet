@@ -14,11 +14,12 @@
           {{ privKey }}
         </p>
         <div class="copy-button" @click="copy">
-          {{$t('common.copy')}}
+          {{ $t('common.copy') }}
           <input ref="privKey" :value="privKey" />
         </div>
         <p class="red-warning">
-          {{$t('common.please')}} <b>{{$t('common.do-not')}}</b> {{$t('accessWallet.private-key.do-not-share')}}!
+          {{ $t('common.please') }} <b>{{ $t('common.do-not') }}</b>
+          {{ $t('accessWallet.private-key.do-not-share') }}!
         </p>
       </div>
     </b-modal>

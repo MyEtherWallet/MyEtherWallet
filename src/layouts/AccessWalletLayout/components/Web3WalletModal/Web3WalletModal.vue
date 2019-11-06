@@ -28,9 +28,7 @@
         </div>
       </div>
       <div v-if="isSafari && !isMetaMask" class="browser-catch">
-        <h4>
-          {{ $t('mewCX.mewcx-only') }}:
-        </h4>
+        <h4>{{ $t('mewCX.mewcx-only') }}:</h4>
         <div class="browser-logo-container">
           <a
             v-for="browser in mewSupportedBrowsers"

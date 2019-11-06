@@ -86,14 +86,7 @@
                   :switcher="switcher"
                   :param="'Json'"
                 />
-                <create-wallet-input-footer
-                  :combo="$t('createWallet.key-pass')"
-                  :desc="$t('createWallet.key-pass-dec')"
-                  :do-not-forget="$t('createWallet.password.do-not-forget')"
-                  :do-not-forget-desc="
-                    $t('createWallet.password.do-no-forget-desc')
-                  "
-                />
+                <create-wallet-input-footer />
               </div>
             </b-tab>
             <b-tab

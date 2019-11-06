@@ -2,9 +2,9 @@
   <div class="verify-message-layout">
     <div class="page-container">
       <div class="title-block">
-        <h2>{{ $t('verifyMessage.title') }}</h2>
+        <h2>{{ parent.$t('verifyMessage.title') }}</h2>
         <p>
-          {{ $t('verifyMessage.page-desc') }}
+          {{ parent.$t('verifyMessage.page-desc') }}
         </p>
       </div>
       <component :is="injections.components.VerifyMessageInput" />

@@ -4,20 +4,22 @@
     <view-private-key-modal ref="viewPriv" />
     <print-modal ref="printModal" :address="account.address" />
     <div class="title">
-      <h2>{{$t('footer.view-wallet-info')}}</h2>
+      <h2>{{ $t('footer.view-wallet-info') }}</h2>
       <p>
-        {{$t('accessWallet.wallet-options')}}
+        {{ $t('accessWallet.wallet-options') }}
       </p>
     </div>
     <div class="wallet-info-container">
       <div class="wallet-info">
         <div class="wallet-info-header">
-          <h3>{{$t('accessWallet.wallet-info')}}</h3>
-          <router-link to="/interface">{{$t('common.wallet.access')}}</router-link>
+          <h3>{{ $t('accessWallet.wallet-info') }}</h3>
+          <router-link to="/interface">{{
+            $t('common.wallet.access')
+          }}</router-link>
         </div>
         <div class="balance-container">
           <div class="balance-main-container">
-            <h4>{{$t('common.balance.string')}}</h4>
+            <h4>{{ $t('common.balance.string') }}</h4>
             <div class="balance-and-buttons">
               <p>
                 <b v-show="!fetchingBalance">{{ balance }}</b>
@@ -25,7 +27,7 @@
                   v-show="fetchingBalance"
                   class="fa fa-spinner fa-lg fa-spin"
                 />
-                {{$t('common.currency.eth')}}
+                {{ $t('common.currency.eth') }}
               </p>
               <div class="balance-button-container">
                 <i class="fa fa-refresh fa-lg" @click="fetchBalance" />
@@ -40,7 +42,9 @@
         <div class="account-details">
           <div class="blockie-container">
             <blockie :address="account.address" width="80px" height="80px" />
-            <h3 v-show="hasNickname">{{ account.nickname }}'{{$t('common.wallet.s-wallet')}}</h3>
+            <h3 v-show="hasNickname">
+              {{ account.nickname }}'{{ $t('common.wallet.s-wallet') }}
+            </h3>
             <div class="address-copy-container">
               <input ref="copyAddress" :value="account.address" />
               <p>{{ account.address | concatAddr }}</p>
