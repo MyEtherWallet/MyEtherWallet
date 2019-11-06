@@ -2,10 +2,10 @@
   <div>
     <b-modal
       ref="passwordOnlyModal"
+      :title="$t('mewCx.wallet-password')"
       hide-footer
       centered
       class="bootstrap-modal"
-      :title="$t('mewCx.wallet-password')"
     >
       <div class="modal-contents">
         <p>{{ $t('mewCx.wallet-encrypted') }}</p>

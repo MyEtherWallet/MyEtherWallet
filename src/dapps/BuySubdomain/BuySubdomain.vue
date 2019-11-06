@@ -37,7 +37,8 @@
               >
               <div class="buy-button-container">
                 <span class="amt"
-                  >{{ web3.utils.fromWei(item.price, 'ether') }} {{ $t('common.currency.eth') }}</span
+                  >{{ web3.utils.fromWei(item.price, 'ether') }}
+                  {{ $t('common.currency.eth') }}</span
                 >
                 <button @click="buyDomain(item)">
                   <span v-if="item.active">{{ $t('subDomain.buy') }}</span>

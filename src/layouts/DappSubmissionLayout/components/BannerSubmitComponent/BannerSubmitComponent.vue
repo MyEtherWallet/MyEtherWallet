@@ -7,10 +7,10 @@
       />
     </router-link>
     <span class="submit-text">
-      {{ props.submitDappText }}
+      {{ parent.$t('dappsSubmission.banner-submit.submit-dapp') }}
     </span>
     <button v-if="props.showBack" class="back-btn mr-3" @click="props.back">
-      {{ props.backText }}
+      {{ parent.$t('dappsSubmission.banner-submit.back') }}
     </button>
     <button
       :class="[
@@ -49,18 +49,6 @@ export default {
     lackOfInfo: {
       type: Boolean,
       default: false
-    },
-    submitDappText: {
-      type: String,
-      default: ''
-    },
-    backText: {
-      type: String,
-      default: ''
-    },
-    previewText: {
-      type: String,
-      default: ''
     },
     buildType: {
       type: String,

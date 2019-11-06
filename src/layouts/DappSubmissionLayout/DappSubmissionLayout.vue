@@ -12,9 +12,6 @@
         :back="previous"
         :disable-submit="isDisabledBtn()"
         :lack-of-info="strengthPercentage < 50 ? true : false"
-        :submit-dapp-text="$t('dappsSubmission.banner-submit.submit-dapp')"
-        :back-text="$t('dappsSubmission.banner-submit.back')"
-        :preview-text="$t('dappsSubmission.banner-submit.preview')"
         :build-type="buildType"
       />
       <banner-component :banner-text="bannerText" />
@@ -40,7 +37,6 @@
         :form="form"
         :lack-of-info="strengthPercentage < 50 ? true : false"
         :social-accts="socialAccts"
-        :update-translations="updateTranslations"
       />
       <div
         v-if="$route.fullPath !== '/dapp-submission/dapp-summary'"
@@ -51,11 +47,7 @@
           :strength-of-info="strengthPercentage"
           class="strength-of-info ml-5"
         />
-        <sotd
-          :title="$t('dappsSubmission.sotd.title')"
-          :info="$t('dappsSubmission.sotd.info')"
-          :url="$t('dappsSubmission.sotd.url')"
-        />
+        <sotd />
         <mew-support />
       </div>
       <success-modal
@@ -146,10 +138,6 @@ export default {
     }
   },
   methods: {
-    updateTranslations(str) {
-      const fullStr = 'dappsSubmission.' + str;
-      return this.$t(fullStr);
-    },
     next() {
       switch (this.$route.fullPath) {
         case '/dapp-submission':

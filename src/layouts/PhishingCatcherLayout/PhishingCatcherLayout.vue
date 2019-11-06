@@ -1,7 +1,7 @@
 <template>
   <div class="phishing-catcher-contianer">
     <div class="catcher-text">
-      <h4>{{$t('phishing.redirected')}}!</h4>
+      <h4>{{ $t('phishing.redirected') }}!</h4>
       <div>
         <div class="code-container">
           <code>
@@ -9,8 +9,8 @@
           </code>
         </div>
         <p>
-          {{$t('phishing.site-flagged')}} <br />
-          {{$t('phishing.redirected-browser')}}
+          {{ $t('phishing.site-flagged') }} <br />
+          {{ $t('phishing.redirected-browser') }}
         </p>
       </div>
     </div>
