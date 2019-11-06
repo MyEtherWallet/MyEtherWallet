@@ -1,4 +1,5 @@
-export async function doUpdate(self) {
+
+export async function doUpdate(self, Toast) {
   self.proxyAddress = await self.getProxy();
   let afterClose = false;
   const afterOpen = self.$route.name === 'create';
@@ -24,15 +25,14 @@ export async function doUpdate(self) {
     }
   }
 
-  self.daiBalance = (await self.daiToken.balance()).toBigNumber();
-  self.mkrBalance = (await self.mkrToken.balance()).toBigNumber();
+  await self.checkBalances();
   await self.checkAllowances();
 
   if (!Object.keys(self.activeCdps).includes(self.currentCdpId)) {
     await self.loadCdpDetails();
-    await self.setupCdpManage(self.currentCdpId);
+    await self.setupCdpManageFunc(self.currentCdpId);
   } else {
-    await self.setupCdpManage(self.currentCdpId);
+    await self.setupCdpManageFunc(self.currentCdpId);
   }
 
   const runAfterUpdate = () => {

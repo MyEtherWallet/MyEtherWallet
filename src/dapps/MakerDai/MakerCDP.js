@@ -133,7 +133,11 @@ export default class MakerCDP extends MakerCdpBase {
 
   // get (non-getter) methods
   getBalanceOf(currency) {
-    return this.services.balances[currency];
+    console.log(currency, this.services.balances[currency].toString()); // todo remove dev item
+    if (this.services.balances[currency]) {
+      return this.services.balances[currency];
+    }
+    return toBigNumber(0);
   }
 
   getProxyAllowancefor(currency) {
@@ -236,14 +240,15 @@ export default class MakerCDP extends MakerCdpBase {
 
   hasEnough(ethQty, currency = 'ETH', balance = null) {
     // return true;
+    console.log(ethQty); // todo remove dev item
     if (toBigNumber(ethQty).isNaN()) return false;
+    const _ethQty = toBigNumber(ethQty).toFixed(18);
     if (currency === 'ETH' && balance !== null) {
-      console.log(currency); // todo remove dev item
-      return toBigNumber(ethUnit.toWei(toBigNumber(ethQty), 'ether').toString()).lte(
-        balance
-      );
+      return toBigNumber(
+        ethUnit.toWei(toBigNumber(_ethQty), 'ether').toString()
+      ).lte(balance);
     }
-    return toBigNumber(ethUnit.toWei(ethQty, 'ether').toString()).lte(
+    return toBigNumber(ethUnit.toWei(_ethQty, 'ether').toString()).lte(
       ethUnit.toWei(this.getBalanceOf(currency), 'ether')
     );
   }
@@ -252,8 +257,9 @@ export default class MakerCDP extends MakerCdpBase {
     // return true;
     if (toBigNumber(ethQty).isNaN()) return false;
     if (currency === 'ETH') return true;
+    const _ethQty = toBigNumber(ethQty).toFixed(18);
     const currentAllowance = this.getProxyAllowancefor(currency);
-    return toBigNumber(ethUnit.toWei(toBigNumber(ethQty), 'ether').toString()).lte(
+    return toBigNumber(ethUnit.toWei(_ethQty, 'ether').toString()).lte(
       currentAllowance
     );
   }
