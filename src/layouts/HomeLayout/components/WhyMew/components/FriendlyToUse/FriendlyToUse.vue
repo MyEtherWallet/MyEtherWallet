@@ -1,12 +1,13 @@
 <template>
-  <v-card class="pa-8" outlined max-width="300">
+  <v-card class="pa-8 d-flex flex-column" outlined max-width="300">
+    <v-spacer />
     <v-img
       class="white--text align-end"
-      height="150px"
+      height="130px"
       contain
       src="@/assets/images/Etc/LandingPage/friendly.svg"
     />
-
+    <v-spacer />
     <h4 class="link-box-title font-weight-bold mb-4">
       Friendly user interface
     </h4>

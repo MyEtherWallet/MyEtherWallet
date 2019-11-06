@@ -1,5 +1,5 @@
 <template>
-  <v-card class="pa-8" outlined max-width="500">
+  <v-card class="pa-8 card-contents-box" outlined max-width="500">
     <h4 class="link-box-title font-weight-bold mb-4">
       Swap easily
     </h4>
@@ -16,6 +16,7 @@
         Learn more<v-icon class="ml-1 title">mdi-arrow-right</v-icon>
       </v-btn>
     </div>
+    <img class="circles" src="@/assets/images/Etc/LandingPage/circles.svg" />
   </v-card>
 </template>
 
@@ -40,5 +41,16 @@ span {
 
 .v-card {
   border-radius: 10px !important;
+}
+
+.card-contents-box {
+  position: relative;
+}
+
+.circles {
+  position: absolute;
+  bottom: -5px;
+  right: -18px;
+  height: 110px;
 }
 </style>
