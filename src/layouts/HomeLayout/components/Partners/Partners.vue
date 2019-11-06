@@ -6,6 +6,18 @@
         title="Partners"
         description="Connect with the powerful crypto communities"
       />
+      <v-row>
+        <v-col cols="2">1</v-col>
+        <v-col cols="2">1</v-col>
+        <v-col cols="2">1</v-col>
+        <v-col cols="2">1</v-col>
+        <v-col cols="2">1</v-col>
+        <v-col cols="2">1</v-col>
+        <v-col cols="2">1</v-col>
+        <v-col cols="2">1</v-col>
+        <v-col cols="2">1</v-col>
+        <v-col cols="2">1</v-col>
+      </v-row>
     </v-container>
   </div>
 </template>
