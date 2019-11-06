@@ -294,47 +294,6 @@ export default {
       }
       return '--';
     },
-    // newCollateralRatio() {
-    //   if (this.amount > 0) {
-    //     return this.calcCollateralRatio;
-    //   } else if (this.values) {
-    //     return this.values.collatRatio;
-    //   }
-    //   return '--';
-    // },
-    // newCollateralRatioSafe() {
-    //   if (this.amount > 0) {
-    //     if (this.calcCollateralRatio.lte(new BigNumber(0.000009))) {
-    //       return true;
-    //     }
-    //     return this.calcCollateralRatio.gte(2);
-    //   } else if (this.values) {
-    //     return toBigNumber(this.values.collatRatio).gte(2);
-    //   }
-    //   return true;
-    // },
-    // newCollateralRatioInvalid() {
-    //   if (this.amount > 0) {
-    //     // If less than a very small number
-    //     if (this.calcCollateralRatio.lte(new BigNumber(0.000009))) {
-    //       return true;
-    //     }
-    //     return this.calcCollateralRatio.gte(1.5);
-    //   } else if (this.values) {
-    //     return toBigNumber(this.values.collatRatio).lte(1.5);
-    //   }
-    //   return true;
-    // },
-    // newLiquidationPrice() {
-    //   if (this.values.debtValue && this.amount > 0) {
-    //     return this.calcLiquidationPriceDaiChg(
-    //       toBigNumber(this.values.debtValue).minus(this.amount)
-    //     );
-    //   } else if (this.values.liquidationPrice) {
-    //     return this.values.liquidationPrice;
-    //   }
-    //   return 0;
-    // },
     mkrBalance() {
       if (this.mkrToken) {
         return this.mkrToken.balance;
@@ -480,7 +439,12 @@ export default {
       );
     },
     currentDai() {
-      this.amount = this.values.debtValue;
+      console.log(toBigNumber(this.values.debtValue)); // todo remove dev item
+      if(this.currentCdp.hasEnough(this.values.debtValue, 'MDAI')){
+        this.amount = this.values.debtValue;
+      } else {
+        this.amount = this.currentCdp.getBalanceOf('MDAI')
+      }
     },
     async wipeDai() {
       if (toBigNumber(this.amount).gte(0)) {
