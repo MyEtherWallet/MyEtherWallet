@@ -320,7 +320,7 @@ export default class MakerCDP extends MakerCdpBase {
     }
   }
 
-  drawDai(amount, acknowledgeBypass = false) {
+  async drawDai(amount, acknowledgeBypass = false) {
     console.log(
       'draw dai',
       amount.toString(),
@@ -339,10 +339,16 @@ export default class MakerCDP extends MakerCdpBase {
           return;
         }
         this.needsUpdate = true;
+        console.log('_mcdManager', this.mcdManager.drawDai); // todo remove dev item
+        console.log('cdpService', this.cdpService.drawDaiProxy); // todo remove dev item
+
+/*        await this.mcdManager.drawDai(
+          amount
+        );*/
         this.cdpService.drawDaiProxy(
           this._proxyAddress,
           this.cdpId,
-          MDAI(amount)
+          amount
         );
       } catch (e) {
         // eslint-disable-next-line
