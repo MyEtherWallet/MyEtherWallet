@@ -12,11 +12,11 @@
         </div>
         <v-spacer />
         <StdButton class="standard-button" buttonclass="button--white">
-          <v-img
-            width="40"
-            height="40"
+          <img
+            width="60"
+            height="60"
             src="@/assets/images/Common/Icons/wallet.svg"
-            class="mr-3 mt-2"
+            class="mr-2 mt-2 ml-n3"
           />
           Get a new wallet
         </StdButton>
@@ -46,5 +46,7 @@ export default {
 
 .standard-button {
   box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1) !important;
+  height: 76px !important;
+  min-width: 253px !important;
 }
 </style>
