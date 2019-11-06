@@ -3,6 +3,7 @@
 ### Bug
 
 - Correct wrong property path for config object in wallet.worker.js [#1604](https://github.com/MyEtherWallet/MyEtherWallet/pull/1604)
+- Fix web3 out of gas error [#1607](https://github.com/MyEtherWallet/MyEtherWallet/pull/1607)
 
 ### Release v5.2.1
 
