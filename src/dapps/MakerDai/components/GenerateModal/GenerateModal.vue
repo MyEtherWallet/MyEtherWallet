@@ -319,7 +319,6 @@ export default {
       this.amount = this.values.debtValue;
     },
     async drawDai() {
-      console.log('this.amount', this.amount.toString()); // todo remove dev item
       if (toBigNumber(this.amount).gte(0)) {
         this.delayCloseModal();
         if (this.newCollateralRatioSafe) {

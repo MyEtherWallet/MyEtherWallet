@@ -56,7 +56,7 @@
             <li>
               <p>{{ $t('dappsMaker.projectedLiquidation') }}</p>
               <p>
-                <b>{{ displayFixedValue(newLiquidationPrice, 2) }}</b>
+                <b>{{ displayFixedValue(newLiquidationPrice(), 2) }}</b>
                 {{ fiatCurrency }}
               </p>
             </li>
@@ -66,7 +66,7 @@
                 <b
                   >{{
                     displayFixedValue(
-                      displayPercentValue(newCollateralRatio),
+                      displayPercentValue(newCollateralRatio()),
                       3
                     )
                   }}%</b
@@ -224,6 +224,7 @@ export default {
   },
   computed: {
     ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
+    // ===========================================================================================================
     amountPresent() {
       return (
         (this.amount || this.amount !== '') && !toBigNumber(this.amount).lte(0)
@@ -234,7 +235,7 @@ export default {
     },
     allOk() {
       if (this.amountPresent) {
-        return this.newCollateralRatioSafe && this.canGenerateDaiAmount;
+        return this.newCollateralRatioSafe() && this.canGenerateDaiAmount;
       }
       return true;
     },
@@ -293,47 +294,47 @@ export default {
       }
       return '--';
     },
-    newCollateralRatio() {
-      if (this.amount > 0) {
-        return this.calcCollateralRatio;
-      } else if (this.values) {
-        return this.values.collatRatio;
-      }
-      return '--';
-    },
-    newCollateralRatioSafe() {
-      if (this.amount > 0) {
-        if (this.calcCollateralRatio.lte(new BigNumber(0.000009))) {
-          return true;
-        }
-        return this.calcCollateralRatio.gte(2);
-      } else if (this.values) {
-        return toBigNumber(this.values.collatRatio).gte(2);
-      }
-      return true;
-    },
-    newCollateralRatioInvalid() {
-      if (this.amount > 0) {
-        // If less than a very small number
-        if (this.calcCollateralRatio.lte(new BigNumber(0.000009))) {
-          return true;
-        }
-        return this.calcCollateralRatio.gte(1.5);
-      } else if (this.values) {
-        return toBigNumber(this.values.collatRatio).lte(1.5);
-      }
-      return true;
-    },
-    newLiquidationPrice() {
-      if (this.values.debtValue && this.amount > 0) {
-        return this.calcLiquidationPriceDaiChg(
-          toBigNumber(this.values.debtValue).minus(this.amount)
-        );
-      } else if (this.values.liquidationPrice) {
-        return this.values.liquidationPrice;
-      }
-      return 0;
-    },
+    // newCollateralRatio() {
+    //   if (this.amount > 0) {
+    //     return this.calcCollateralRatio;
+    //   } else if (this.values) {
+    //     return this.values.collatRatio;
+    //   }
+    //   return '--';
+    // },
+    // newCollateralRatioSafe() {
+    //   if (this.amount > 0) {
+    //     if (this.calcCollateralRatio.lte(new BigNumber(0.000009))) {
+    //       return true;
+    //     }
+    //     return this.calcCollateralRatio.gte(2);
+    //   } else if (this.values) {
+    //     return toBigNumber(this.values.collatRatio).gte(2);
+    //   }
+    //   return true;
+    // },
+    // newCollateralRatioInvalid() {
+    //   if (this.amount > 0) {
+    //     // If less than a very small number
+    //     if (this.calcCollateralRatio.lte(new BigNumber(0.000009))) {
+    //       return true;
+    //     }
+    //     return this.calcCollateralRatio.gte(1.5);
+    //   } else if (this.values) {
+    //     return toBigNumber(this.values.collatRatio).lte(1.5);
+    //   }
+    //   return true;
+    // },
+    // newLiquidationPrice() {
+    //   if (this.values.debtValue && this.amount > 0) {
+    //     return this.calcLiquidationPriceDaiChg(
+    //       toBigNumber(this.values.debtValue).minus(this.amount)
+    //     );
+    //   } else if (this.values.liquidationPrice) {
+    //     return this.values.liquidationPrice;
+    //   }
+    //   return 0;
+    // },
     mkrBalance() {
       if (this.mkrToken) {
         return this.mkrToken.balance;
@@ -374,11 +375,86 @@ export default {
   watch: {},
   mounted() {
     this.$refs.modal.$on('shown', () => {
+      this.cdpId = this.$route.params.cdpId;
+      this.isVisible = true;
       this.amount = 0;
+      this.getActiveCdp();
       this.getBalances();
     });
+
+    this.$refs.modal.$on('hidden', () => {
+      this.isVisible = false;
+    });
+
+    if (this.makerActive) {
+      this.getActiveCdp();
+    }
   },
   methods: {
+    getActiveCdp() {
+      if (this.cdpId > 0) {
+        this.currentCdp = this.getValueOrFunction('getCdp')(this.cdpId);
+        console.log(this.currentCdp); // todo remove dev item
+        this.currentCdpType = this.currentCdp.cdpCollateralType;
+        this.$forceUpdate();
+      }
+    },
+    collateralAmount() {
+      if (this.currentCdp) {
+        return this.currentCdp.collateralAmount;
+      }
+    },
+    newCollateralRatio() {
+      if (this.currentCdp && this.amount > 0) {
+        console.log(
+          this.currentCdp
+            .calcCollatRatioDaiChg(toBigNumber(this.amount).negated(), true)
+            .toString()
+        ); // todo remove dev item
+        return this.currentCdp.calcCollatRatioDaiChg(
+          toBigNumber(this.amount).negated(),
+          true
+        );
+      } else if (this.currentCdp) {
+        return this.currentCdp.collateralizationRatio;
+      }
+      return 0;
+    },
+    newCollateralRatioSafe() {
+      if (this.currentCdp && this.amount > 0) {
+        return this.newCollateralRatio()
+          .gte(2);
+      } else if (this.currentCdp) {
+        return this.newCollateralRatio().gte(2);
+      }
+      return true;
+    },
+    newCollateralRatioInvalid() {
+      if (this.currentCdp && this.amount > 0) {
+        return this.newCollateralRatio().lte(1.5);
+      } else if (this.currentCdp) {
+        return this.newCollateralRatio().lte(1.5);
+      }
+      return true;
+    },
+    newLiquidationPrice() {
+      if (this.currentCdp && this.amount > 0) {
+        console.log(
+          'newLiquidationPrice',
+          this.currentCdp
+            .calcLiquidationPriceDaiChg(toBigNumber(this.amount).negated(), true)
+            .toString()
+        ); // todo remove dev item
+        return this.currentCdp.calcLiquidationPriceDaiChg(
+          toBigNumber(this.amount).negated(),
+          true
+        );
+      } else if (this.currentCdp) {
+        return this.currentCdp.liquidationPrice;
+      }
+      return 0;
+    },
+    // =========================================
     getProxyAllowances() {
       const allowances = this.getValueOrFunction('proxyAllowances');
       if (allowances) {

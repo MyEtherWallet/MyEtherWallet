@@ -15,12 +15,9 @@ export async function setupCdpManage(self, cdpId) {
 }
 
 export async function getValuesForManage(cdpId) {
-  console.log(cdpId); // todo remove dev item
   if (typeof cdpId !== 'number') cdpId = cdpId.id;
-  console.log(this.activeCdps); // todo remove dev item
   const currentCdp = this.activeCdps[cdpId];
   this.currentCdp = currentCdp;
-  console.log(currentCdp); // todo remove dev item
   const systemValues = this.systemValues;
   return {
     ...systemValues,
@@ -62,7 +59,6 @@ export async function loadCdpDetails(
       noProxy: true
     });
   }
-  console.log(self.activeCdps); // todo remove dev item
 }
 
 export async function loadCdpDetail(self, cdpId) {
@@ -177,7 +173,6 @@ export async function buildCdpObject(cdpId, options = {}, useOld = false) {
   let makerCDP;
   try {
     makerCDP = new MakerCDP(cdpId, this.web3, services, sysVars);
-    console.log(makerCDP); // todo remove dev item
     if (cdpId) {
       if (useOld) {
         return await makerCDP.init(cdpId, useOld);

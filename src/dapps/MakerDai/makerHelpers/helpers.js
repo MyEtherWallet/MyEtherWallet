@@ -139,7 +139,7 @@ export function calcLiquidationPrice(
       return i / 100;
     }
   }
-  return 0;
+  return toBigNumber(0.01);
 }
 
 export function checkAllowance(web3, tokenAddress, userAddress, proxyAddress) {
