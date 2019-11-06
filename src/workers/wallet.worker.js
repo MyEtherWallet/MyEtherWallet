@@ -39,8 +39,8 @@ const createJsonWalletFromPrivateKey = (privateKey, password) => {
   const createdWallet = {};
   const wallet = new Wallet.fromPrivateKey(Buffer.from(privateKey, 'hex'));
   createdWallet.walletJson = wallet.toV3(password, {
-    kdf: Configs.wallet.kdf,
-    n: Configs.wallet.n
+    kdf: Configs.kdf,
+    n: Configs.n
   });
   createdWallet.name = wallet.getV3Filename();
   return createdWallet;
@@ -50,8 +50,8 @@ const create = password => {
   const createdWallet = {};
   const wallet = new Wallet.generate();
   createdWallet.walletJson = wallet.toV3(password, {
-    kdf: Configs.wallet.kdf,
-    n: Configs.wallet.n
+    kdf: Configs.kdf,
+    n: Configs.n
   });
   createdWallet.name = wallet.getV3Filename();
   return createdWallet;
