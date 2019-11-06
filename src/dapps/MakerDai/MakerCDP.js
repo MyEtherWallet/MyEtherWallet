@@ -32,7 +32,7 @@ const toBigNumber = num => {
 export default class MakerCDP extends MakerCdpBase {
   constructor(cdpId, web3, services, sysVars) {
     super(cdpId, web3, services, sysVars);
-    if(cdpId === null){
+    if (cdpId === null) {
       this.cdpId = cdpId;
     } else {
       this.cdpId = typeof cdpId !== 'number' ? cdpId.id : cdpId;
@@ -83,6 +83,7 @@ export default class MakerCDP extends MakerCdpBase {
       } else {
         this.cdp = await this.services.getMakerCdp(cdpId, false);
       }
+      console.log(this.cdp); // todo remove dev item
     } catch (e) {
       console.error(e);
     }
@@ -190,8 +191,12 @@ export default class MakerCDP extends MakerCdpBase {
       daiQty = toBigNumber(this.debtValue).plus(toBigNumber(daiQty));
       console.log('daiQty', daiQty.toString()); // todo remove dev item
     }
-    console.log('calcLiquidationPrice', toBigNumber(
-      this.calcLiquidationPrice(this.collateralAmount, daiQty)).toString()); // todo remove dev item
+    console.log(
+      'calcLiquidationPrice',
+      toBigNumber(
+        this.calcLiquidationPrice(this.collateralAmount, daiQty)
+      ).toString()
+    ); // todo remove dev item
     return toBigNumber(
       this.calcLiquidationPrice(this.collateralAmount, daiQty)
     );
@@ -234,7 +239,7 @@ export default class MakerCDP extends MakerCdpBase {
     if (toBigNumber(ethQty).isNaN()) return false;
     if (currency === 'ETH' && balance !== null) {
       console.log(currency); // todo remove dev item
-      return toBigNumber(ethUnit.toWei(ethQty, 'ether').toString()).lte(
+      return toBigNumber(ethUnit.toWei(toBigNumber(ethQty), 'ether').toString()).lte(
         balance
       );
     }
@@ -248,7 +253,7 @@ export default class MakerCDP extends MakerCdpBase {
     if (toBigNumber(ethQty).isNaN()) return false;
     if (currency === 'ETH') return true;
     const currentAllowance = this.getProxyAllowancefor(currency);
-    return toBigNumber(ethUnit.toWei(ethQty, 'ether').toString()).lte(
+    return toBigNumber(ethUnit.toWei(toBigNumber(ethQty), 'ether').toString()).lte(
       currentAllowance
     );
   }
@@ -341,15 +346,9 @@ export default class MakerCDP extends MakerCdpBase {
         this.needsUpdate = true;
         console.log('_mcdManager', this.mcdManager.drawDai); // todo remove dev item
         console.log('cdpService', this.cdpService.drawDaiProxy); // todo remove dev item
-
-/*        await this.mcdManager.drawDai(
-          amount
-        );*/
-        this.cdpService.drawDaiProxy(
-          this._proxyAddress,
-          this.cdpId,
-          amount
-        );
+        console.log('cdp.drawdai', this.cdp.drawDai); // todo remove dev item
+        await this.cdp.drawDai(MDAI(amount));
+        // this.cdpService.drawDaiProxy(this._proxyAddress, this.cdpId, amount);
       } catch (e) {
         // eslint-disable-next-line
         console.error(e);

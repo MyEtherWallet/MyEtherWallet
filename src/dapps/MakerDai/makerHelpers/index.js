@@ -6,15 +6,13 @@ import {
   getDetailsForTokens,
   checkAllowances,
   checkAllowanceFor,
-  collateralOptions
-} from './setups';
-import {
+  collateralOptions,
   setupCdpManage,
   updateActiveCdp,
   loadCdpDetail,
   loadCdpDetails,
   buildEmpty
-} from './setupMakerCDP';
+} from './setups';
 import { getMakerCurrencies } from './currencyHelper';
 import {
   calcLiquidationPrice,

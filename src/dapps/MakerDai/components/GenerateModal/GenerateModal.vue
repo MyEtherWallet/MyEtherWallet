@@ -17,7 +17,8 @@
           <div class="top-buttons">
             <p class="total">
               <span>{{ $t('dappsMaker.total') }}</span>
-              {{ newTotal }}
+              {{displayFixedValue(newTotal, 10)}}
+<!--              {{ newTotal }}-->
               DAI
             </p>
             <p class="max" @click="maxDai">
