@@ -44,11 +44,7 @@
           </div>
           <div class="mt-5">
             <p class="summary-title mb-3">
-              {{
-                $t(
-                  'dappsSubmission.about-your-dapp.contract-address-title'
-                )
-              }}
+              {{ $t('dappsSubmission.about-your-dapp.contract-address-title') }}
             </p>
             <p class="summary-content">{{ form.contractAddress }}</p>
           </div>
@@ -102,11 +98,7 @@
           </div>
           <div class="mt-5">
             <p class="summary-title mb-3">
-              {{
-                $t(
-                  'dappsSubmission.about-your-dapp.contract-audit-title'
-                )
-              }}
+              {{ $t('dappsSubmission.about-your-dapp.contract-audit-title') }}
             </p>
             <p class="summary-content">{{ form.contractAudit }}</p>
           </div>
@@ -171,9 +163,7 @@
           </div>
           <div class="mt-5">
             <p class="summary-title mb-3">
-              {{
-                $t('dappsSubmission.about-your-team.additional-notes')
-              }}
+              {{ $t('dappsSubmission.about-your-team.additional-notes') }}
             </p>
             <p class="summary-content">{{ form.additionalNotes }}</p>
           </div>

@@ -14,7 +14,9 @@
       />
       <div class="text-content">
         <p class="title">
-          {{ parent.$t('nftManager.nft') }}<br />{{ parent.$t('nftManager.manager') }}
+          {{ parent.$t('nftManager.nft') }}<br />{{
+            parent.$t('nftManager.manager')
+          }}
         </p>
         <p v-if="props.disabled" class="button-disabled">
           {{ parent.$t('interface.no-avail') }}

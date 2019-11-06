@@ -17,7 +17,9 @@
         alt
       />
       <div class="text-content">
-        <p class="title">{{ parent.$t('sendTx.send') }}<br />{{ parent.$t('sendTx.tx') }}</p>
+        <p class="title">
+          {{ parent.$t('sendTx.send') }}<br />{{ parent.$t('sendTx.tx') }}
+        </p>
         <p v-if="disabled" class="button-disabled">
           {{ parent.$t('interface.no-avail') }}
         </p>
