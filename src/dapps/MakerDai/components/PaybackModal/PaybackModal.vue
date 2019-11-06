@@ -76,13 +76,13 @@
           </ul>
         </expanding-option>
         <div class="buttons">
-          <div v-if="needsDaiApprove">
+          <div v-if="needsDaiApprove()">
             <standard-button
               :options="approveDaiButton"
               @click.native="approveDai"
             />
           </div>
-          <div v-if="needsMkrApprove">
+          <div v-if="needsMkrApprove()">
             <standard-button
               :options="approveMkrButton"
               @click.native="approveMkr"
@@ -300,36 +300,6 @@ export default {
       }
       return 0;
     },
-    daiBalance() {
-      if (this.daiToken) {
-        return this.daiToken.balance;
-      }
-      return 0;
-    },
-    needsDaiApprove() {
-      if (toBigNumber(this.getProxyAllowances()['DAI']).gt(0)) {
-        if (
-          toBigNumber(this.getProxyAllowances()['DAI']).lt(
-            this.values.debtValue
-          )
-        ) {
-          return true;
-        }
-      }
-      return toBigNumber(this.getProxyAllowances()['DAI']).eq(0);
-    },
-    needsMkrApprove() {
-      if (toBigNumber(this.getProxyAllowances()['MKR']).gt(0)) {
-        if (
-          toBigNumber(this.getProxyAllowances()['MKR']).lt(
-            this.values.governanceFeeOwed
-          )
-        ) {
-          return true;
-        }
-      }
-      return toBigNumber(this.getProxyAllowances()['MKR']).eq(0);
-    }
   },
   watch: {},
   mounted() {
@@ -381,8 +351,7 @@ export default {
     },
     newCollateralRatioSafe() {
       if (this.currentCdp && this.amount > 0) {
-        return this.newCollateralRatio()
-          .gte(2);
+        return this.newCollateralRatio().gte(2);
       } else if (this.currentCdp) {
         return this.newCollateralRatio().gte(2);
       }
@@ -401,7 +370,10 @@ export default {
         console.log(
           'newLiquidationPrice',
           this.currentCdp
-            .calcLiquidationPriceDaiChg(toBigNumber(this.amount).negated(), true)
+            .calcLiquidationPriceDaiChg(
+              toBigNumber(this.amount).negated(),
+              true
+            )
             .toString()
         ); // todo remove dev item
         return this.currentCdp.calcLiquidationPriceDaiChg(
@@ -414,6 +386,26 @@ export default {
       return 0;
     },
     // =========================================
+    daiBalance() {
+      if (this.currentCdp) {
+        return this.currentCdp.getBalanceOf('MDAI');
+      }
+      return 0;
+    },
+    needsDaiApprove() {
+      if (this.currentCdp) {
+        if(toBigNumber(this.amount).gt(0)){
+          return this.currentCdp.hasEnoughAllowance(this.amount, 'MDAI');
+        }
+      }
+      return false;
+    },
+    needsMkrApprove() {
+      if (this.currentCdp) {
+        return this.currentCdp.hasEnoughAllowance(this.values.governanceFeeOwed, 'MKR');
+      }
+      return false;
+    },
     getProxyAllowances() {
       const allowances = this.getValueOrFunction('proxyAllowances');
       if (allowances) {
@@ -439,11 +431,15 @@ export default {
       );
     },
     currentDai() {
-      console.log(toBigNumber(this.values.debtValue)); // todo remove dev item
-      if(this.currentCdp.hasEnough(this.values.debtValue, 'MDAI')){
-        this.amount = this.values.debtValue;
+      console.log(
+        toBigNumber(this.values.debtValue)
+          .toFixed(18)
+          .toString()
+      ); // todo remove dev item
+      if (this.currentCdp.hasEnough(this.currentCdp.debtValue, 'MDAI')) {
+        this.amount = this.currentCdp.debtValue;
       } else {
-        this.amount = this.currentCdp.getBalanceOf('MDAI')
+        this.amount = this.currentCdp.getBalanceOf('MDAI');
       }
     },
     async wipeDai() {

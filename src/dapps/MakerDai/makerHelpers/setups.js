@@ -15,7 +15,6 @@ import Maker from '@makerdao/dai';
 import { locateCdps } from '@/dapps/MakerDai/cdpManager/makerHelpers/index';
 import MakerCDP from '../MakerCDP';
 const { DAI } = Maker;
-
 const toBigNumber = num => {
   return new BigNumber(num);
 };
@@ -57,6 +56,7 @@ export async function getDetailsForTokens(self, collateralTokens) {
   self.daiBalance = (await self.daiToken.balance()).toBigNumber();
   self.mkrToken = self._tokenService.getToken(MKR);
   self.mkrBalance = (await self.mkrToken.balance()).toBigNumber();
+  const MdaiToken = self.maker.getToken(MDAI);
 
   for (let i = 0; i < collateralTokens.length; i++) {
     const token = self._tokenService.getToken(collateralTokens[i].currency);
@@ -65,6 +65,12 @@ export async function getDetailsForTokens(self, collateralTokens) {
       collateralTokens[i].currency.symbol
     ] = (await token.balance()).toBigNumber();
   }
+  console.log(MdaiToken); // todo remove dev item
+  const token = self._tokenService.getToken(MDAI);
+  self.tokens[MdaiToken.symbol] = token;
+  self.balances[
+    MdaiToken.symbol
+  ] = (await token.balance()).toBigNumber();
 
   self.balances['DAI'] = self.daiBalance;
   self.balances['MKR'] = self.mkrBalance;
@@ -76,9 +82,14 @@ export async function checkAllowances(self, address, proxyAddress) {
     const keys = Object.keys(self.tokens);
     keys.push('MKR');
     keys.push('DAI');
+    keys.push('MDAI');
     for (let i = 0; i < keys.length; i++) {
       try {
-        if (typeof self.tokens[keys[i]] !== 'undefined' && typeof self.tokens[keys[i]]._contract !== 'undefined' && typeof self.tokens[keys[i]]._contract.allowance === 'function') {
+        if (
+          typeof self.tokens[keys[i]] !== 'undefined' &&
+          typeof self.tokens[keys[i]]._contract !== 'undefined' &&
+          typeof self.tokens[keys[i]]._contract.allowance === 'function'
+        ) {
           self.proxyAllowances[keys[i]] = toBigNumber(
             await self.tokens[keys[i]]._contract.allowance(
               address,
@@ -99,6 +110,7 @@ export async function checkAllowances(self, address, proxyAddress) {
       }
     }
   }
+  console.log('self.proxyAllowances', self.proxyAllowances); // todo remove dev item
   return self.proxyAllowances;
 }
 
