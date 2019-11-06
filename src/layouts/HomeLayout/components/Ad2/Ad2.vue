@@ -11,7 +11,7 @@
           </div>
         </div>
         <v-spacer />
-        <StdButton buttonclass="button--white">
+        <StdButton class="standard-button" buttonclass="button--white">
           <v-img
             width="40"
             height="40"
@@ -41,5 +41,10 @@ export default {
 
 .ad2 {
   background: linear-gradient(90deg, #24a2ca 0%, #32bfa5 100%);
+  padding: 80px 0;
+}
+
+.standard-button {
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1) !important;
 }
 </style>

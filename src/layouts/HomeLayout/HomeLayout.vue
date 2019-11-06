@@ -6,8 +6,8 @@
     <Features class="py-12" />
     <WhyMew />
     <Ad1 class="py-12" />
-    <Partners />
-    <Ad2 class="py-12" />
+    <Partners class="py-12" />
+    <Ad2 />
   </div>
 </template>
 
