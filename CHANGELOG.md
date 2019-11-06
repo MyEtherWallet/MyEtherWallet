@@ -3,6 +3,7 @@
 ### Bug
 
 - Correct wrong property path for config object in wallet.worker.js [#1604](https://github.com/MyEtherWallet/MyEtherWallet/pull/1604)
+- Increase ENS register wait time to 90 seconds to provide an additional buffer [#1605](https://github.com/MyEtherWallet/MyEtherWallet/pull/1605)
 
 ### Release v5.2.1
 
