@@ -7,7 +7,7 @@
     :class="buttonclass"
     :disabled="disabled"
   >
-    <slot />
+    <slot class="d-flex align-center" />
   </v-btn>
 </template>
 
@@ -40,6 +40,11 @@ export default {
 .button--green-border {
   background-color: transparent !important;
   border: 1px solid $emerald;
+  color: $emerald !important;
+}
+
+.button--white {
+  background-color: white !important;
   color: $emerald !important;
 }
 
