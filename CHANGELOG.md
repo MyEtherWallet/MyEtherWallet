@@ -1,5 +1,11 @@
 ### Release v5.2.1
 
+### Devop
+
+- reduce coin image count from 656 to 34 [#1601](https://github.com/MyEtherWallet/MyEtherWallet/pull/1601)
+
+### Release v5.2.1
+
 ### Feature
 
 - Ambrpay Integration[#1441](https://github.com/MyEtherWallet/MyEtherWallet/pull/1441)
