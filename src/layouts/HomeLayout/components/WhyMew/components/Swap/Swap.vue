@@ -1,5 +1,5 @@
 <template>
-  <v-card class="pa-8 card-contents-box" outlined max-width="500">
+  <v-card class="pa-8 position--relative" outlined max-width="500">
     <h4 class="link-box-title font-weight-bold mb-4">
       Swap easily
     </h4>
@@ -22,13 +22,12 @@
 
 <script>
 export default {
-  name: 'FriendlyToUse',
   components: {}
 };
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/GlobalVariables';
+//@import '@/assets/styles/GlobalVariables';
 
 h4 {
   font-size: 22px;
@@ -41,10 +40,6 @@ span {
 
 .v-card {
   border-radius: 10px !important;
-}
-
-.card-contents-box {
-  position: relative;
 }
 
 .circles {

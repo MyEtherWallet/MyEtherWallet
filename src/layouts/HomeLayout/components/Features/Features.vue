@@ -1,5 +1,5 @@
 <template>
-  <div class="home-features">
+  <div>
     <v-container>
       <BlockTitle
         centered

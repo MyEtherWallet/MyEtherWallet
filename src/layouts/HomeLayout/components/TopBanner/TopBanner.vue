@@ -1,5 +1,5 @@
 <template>
-  <div class="light-blue darken-4 home-top-banner">
+  <div class="light-blue darken-4 position--relative">
     <div class="pointer-event--none user-select--none line-height--0">
       <img
         class="banner-img"
@@ -45,11 +45,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/GlobalVariables';
+//@import '@/assets/styles/GlobalVariables';
 
-.home-top-banner {
-  position: relative;
-}
 .banner-img {
   width: 100%;
 }

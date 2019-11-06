@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-card class="card-content d-flex align-center">
+    <v-card class="card-content d-flex align-center" flat>
       <div>
         <div class="white--text font-weight-bold display-1">
           Newbie in crypto?
@@ -19,7 +19,7 @@
 import StdButton from '@/components/StdButton';
 
 export default {
-  name: 'HomeContainer',
+  name: 'HomeAd1',
   components: {
     StdButton
   }
@@ -27,7 +27,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/GlobalVariables';
+//@import '@/assets/styles/GlobalVariables';
+
 .v-card {
   border-radius: 10px !important;
 }
