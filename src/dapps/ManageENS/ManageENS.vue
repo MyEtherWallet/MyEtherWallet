@@ -482,9 +482,7 @@ export default {
             utils.sha3(this.secretPhrase)
           )
           .call();
-        this.minimumAge = await this.registrarControllerContract.methods
-          .minCommitmentAge()
-          .call();
+        this.minimumAge = '90';
         await this.registrarControllerContract.methods
           .commit(commitment)
           .send({ from: this.account.address })
