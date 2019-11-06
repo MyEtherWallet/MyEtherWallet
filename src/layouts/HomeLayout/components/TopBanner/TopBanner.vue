@@ -17,7 +17,7 @@
               Generate the free Ethereum wallet, and interact with the Ethereum
               blockchain easily and securely.
             </div>
-            <Flexbox class="mt-7">
+            <div class="mt-7">
               <StdButton buttonclass="button--green" class="mr-4">
                 Get a new wallet
               </StdButton>
@@ -25,7 +25,7 @@
               <StdButton buttonclass="button--green-border">
                 Access my wallet
               </StdButton>
-            </Flexbox>
+            </div>
           </v-card>
         </v-col>
       </v-row>
@@ -34,13 +34,11 @@
 </template>
 
 <script>
-import Flexbox from '@/components/Common/Flexbox';
 import StdButton from '@/components/StdButton';
 
 export default {
   name: 'HomeContainer',
   components: {
-    Flexbox,
     StdButton
   }
 };
