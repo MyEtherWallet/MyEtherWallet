@@ -1,12 +1,16 @@
 // Style reset ======================================================
 * {
-  font-family: 'Open Sans';
+  font-family: "Open Sans";
   letter-spacing: -0.1px;
   color: $dark-sacramento;
 }
 
+a {
+  color: inherit !important;
+}
+
 i {
-  font-family: 'Material Icons' !important;
+  font-family: "Material Icons" !important;
 }
 
 div,

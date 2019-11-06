@@ -1,12 +1,25 @@
 <template>
   <div class="ad2">
     <v-container>
-      <div class="d-flex align-center">
-        <div class="white--text font-weight-bold display-1">
-          Ready? Get your wallet today.
+      <div class="d-flex align-center px-6">
+        <div>
+          <div class="white--text font-weight-bold display-1 mb-2">
+            Ready? Get your wallet today.
+          </div>
+          <div class="white--text">
+            Still don't know how to do it? Go to <a href="/">Help center</a>.
+          </div>
         </div>
         <v-spacer />
-        <StdButton />
+        <StdButton buttonclass="button--white">
+          <v-img
+            width="40"
+            height="40"
+            src="@/assets/images/Common/Icons/wallet.svg"
+            class="mr-3 mt-2"
+          />
+          Get a new wallet
+        </StdButton>
       </div>
     </v-container>
   </div>
