@@ -1,5 +1,11 @@
 ### Release v5.2.1
 
+### Bug
+
+- Correct wrong property path for config object in wallet.worker.js [#1604](https://github.com/MyEtherWallet/MyEtherWallet/pull/1604)
+
+### Release v5.2.1
+
 ### Feature
 
 - Ambrpay Integration[#1441](https://github.com/MyEtherWallet/MyEtherWallet/pull/1441)
