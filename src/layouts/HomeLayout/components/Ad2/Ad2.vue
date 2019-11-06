@@ -3,12 +3,12 @@
     <v-container>
       <div class="d-flex align-center px-6">
         <div>
-          <div class="white--text font-weight-bold display-1 mb-2">
+          <h2 class="white--text mb-3">
             Ready? Get your wallet today.
-          </div>
-          <div class="white--text">
+          </h2>
+          <p class="white--text ma-0">
             Still don't know how to do it? Go to <a href="/">Help center</a>.
-          </div>
+          </p>
         </div>
         <v-spacer />
         <StdButton class="standard-button" buttonclass="button--white">

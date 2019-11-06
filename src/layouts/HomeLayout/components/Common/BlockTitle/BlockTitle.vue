@@ -5,7 +5,7 @@
     >
       {{ title }}
     </div>
-    <div class="top-description font-weight-bold">{{ description }}</div>
+    <h2 class="top-description">{{ description }}</h2>
   </div>
 </template>
 
@@ -29,9 +29,6 @@ export default {
   font-size: 16px;
 }
 .top-description {
-  letter-spacing: -1px;
-  font-size: 30px;
-  line-height: 36px;
   max-width: 450px;
   display: inline-block;
 }

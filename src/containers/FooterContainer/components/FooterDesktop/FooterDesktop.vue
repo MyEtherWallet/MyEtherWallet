@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div class="pt-6">
     <v-container>
       <v-row>
         <v-col>
-          <div class="subtitle-1 font-weight-bold">Tools</div>
+          <div class="subtitle-1 font-weight-bold mb-1">Tools</div>
           <v-list>
             <v-list-item class="px-0">Verify Message</v-list-item>
             <v-list-item class="px-0">Txn Status</v-list-item>
@@ -15,7 +15,7 @@
           </v-list>
         </v-col>
         <v-col>
-          <div class="subtitle-1 font-weight-bold">MEW</div>
+          <div class="subtitle-1 font-weight-bold mb-1">MEW</div>
           <v-list>
             <v-list-item class="px-0">How It Works</v-list-item>
             <v-list-item class="px-0">Company</v-list-item>
@@ -31,7 +31,7 @@
           </v-list>
         </v-col>
         <v-col>
-          <div class="subtitle-1 font-weight-bold">Hardware Wallets</div>
+          <div class="subtitle-1 font-weight-bold mb-1">Hardware Wallets</div>
           <v-list>
             <v-list-item class="px-0">
               <a href="https://www.ledger.com/?r=fa4b" target="_blank">
@@ -83,7 +83,7 @@
           </v-list>
         </v-col>
         <v-col>
-          <div class="subtitle-1 font-weight-bold">Love MEW? Donate.</div>
+          <div class="subtitle-1 font-weight-bold mb-1">Love MEW? Donate.</div>
           <p>
             MEW is a open-source and free to the community. Your donations go a
             long way towards making that possible.

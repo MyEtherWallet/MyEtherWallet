@@ -2,12 +2,12 @@
   <v-container>
     <v-card class="card-content d-flex align-center" flat>
       <div>
-        <div class="white--text font-weight-bold display-1">
+        <h2 class="white--text">
           Newbie in crypto?
-        </div>
-        <div class="white--text font-weight-bold display-1">
+        </h2>
+        <h2 class="white--text">
           Join our journey to MEW.
-        </div>
+        </h2>
       </div>
       <v-spacer />
       <StdButton buttonclass="button--white-border">Get Started</StdButton>
