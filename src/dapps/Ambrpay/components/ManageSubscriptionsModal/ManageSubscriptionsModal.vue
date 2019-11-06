@@ -111,7 +111,11 @@
           <hr v-show="moreInfo" />
           <div v-show="moreInfo" class="btn-container mb-2">
             <button
-              :class="sub.subscriptionStatus !== 'active' ? 'disable' : ''"
+              :class="
+                sub.subscriptionStatus.toLowerCase() !== 'active'
+                  ? 'disabled'
+                  : ''
+              "
               @click="unsubscribe(sub.storagePos, sub.smartContractAddress)"
             >
               {{ $t('dappsAmbrpay.manage-subscriptions.unsubscribe') }}

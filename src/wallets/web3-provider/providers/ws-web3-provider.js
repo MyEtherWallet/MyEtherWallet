@@ -124,7 +124,7 @@ WebsocketProvider.prototype._parseResponse = function(data) {
 };
 
 WebsocketProvider.prototype._addResponseCallback = function(payload, callback) {
-  const id = payload instanceof Array ? payload[0].id : payload.id;
+  const id = payload.id || payload[0].id;
   const method = payload.method || payload[0].method;
 
   this.responseCallbacks[id] = callback;
