@@ -559,9 +559,6 @@ export default {
 
         await getDetailsForTokens(this, this._typeService.cdpTypes);
         await checkAllowances(this, this.account.address, this.proxyAddress);
-        console.log(this.tokens); // todo remove dev item
-        console.log(this.balances); // todo remove dev item
-        console.log(this.proxyAllowances); // todo remove dev item
         console.log(
           this._mcdManager._serviceManager
             .dependency('smartContract')
@@ -598,14 +595,12 @@ export default {
 
         this.curentlyLoading = 'Checking For CDPs';
         try {
-          console.log('this._mcdManager', this._mcdManager); // todo remove dev item
-          console.log('this._cdpService', this._cdpService); // todo remove dev item
           const { withType, withProxy, withoutProxy } = await locateCdps(
             this,
             this._mcdManager
             // this._cdpService
           );
-
+          console.log('withType, withProxy, withoutProxy', withType, withProxy, withoutProxy); // todo remove dev item
           this.cdpsWithType = withType;
           this.cdps = withProxy;
           this.cdpsWithoutProxy = withoutProxy;
@@ -865,15 +860,12 @@ export default {
     },
 
     getCdp(cdpId) {
-      console.log('getCdp', cdpId); // todo remove dev item
       // could be a string.  use type cohesion to convert to number
       if (!this.activeCdps) return false;
-      console.log(this.activeCdps[cdpId]); // todo remove dev item
       return this.activeCdps[cdpId];
     },
 
     async getMakerCdp(cdpId) {
-      console.log(cdpId); // todo remove dev item
       cdpId = CdpNum(cdpId);
       if (cdpId === null) return;
       if (this.cdpsWithoutProxy.includes(cdpId)) {

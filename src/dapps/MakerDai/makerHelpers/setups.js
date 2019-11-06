@@ -58,7 +58,6 @@ export async function getDetailsForTokens(self, collateralTokens) {
 
   for (let i = 0; i < collateralTokens.length; i++) {
     const token = self._tokenService.getToken(collateralTokens[i].currency);
-    console.log(token); // todo remove dev item
     self.tokens[collateralTokens[i].currency.symbol] = token;
     self.balances[
       collateralTokens[i].currency.symbol
@@ -75,7 +74,6 @@ export async function checkAllowances(self, address, proxyAddress) {
     const keys = Object.keys(self.tokens);
     keys.push('MKR');
     keys.push('DAI');
-    console.log(keys); // todo remove dev item
     for (let i = 0; i < keys.length; i++) {
       try {
         if (typeof self.tokens[keys[i]]._contract.allowance === 'function') {

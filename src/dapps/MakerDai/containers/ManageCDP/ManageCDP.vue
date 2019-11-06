@@ -384,7 +384,6 @@ export default {
     },
     maxEthDrawDisplay() {
       if (this.currentCdpLoaded) {
-        console.log(this.currentCdp.minSafeCollateralAmount.toString()); // todo remove dev item
         return displayFixedValue(this.currentCdp.maxEthDraw, 5);
       }
       // if (this.values) {
@@ -471,7 +470,6 @@ export default {
       }
     }
     console.log(this.$route.params); // todo remove dev item
-    console.log(typeof this.cdpId); // todo remove dev item
     if (this.cdpId && this.cdpId !== undefined) {
       this.getActiveCdp();
     }
@@ -480,13 +478,11 @@ export default {
     getActiveCdp() {
       const cdpId = typeof this.cdpId === 'number' ? this.cdpId : this.cdpId.id;
       const val = this.getValueOrFunction('activeCdpId');
-      console.log(val); // todo remove dev item
       this.currentCdp = this.getValueOrFunction('getCdp')(cdpId);
       if (this.currentCdp) {
         this.currentCdpLoaded = true;
         this.$forceUpdate();
       }
-      console.log(this.currentCdp); // todo remove dev item
       this.getTotalDebt();
     },
     async getTotalDebt() {

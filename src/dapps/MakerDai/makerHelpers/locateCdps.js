@@ -7,7 +7,6 @@ async function locateCdps(self, _cdpService) {
   const cdpsWithoutProxy = await locateCdpsWithoutProxy(self, _cdpService);
   self.cdps = [];
   const cdps = await locateCdpsProxy(self, _cdpService);
-  console.log(cdps); // todo remove dev item
   const cdpsDirect = await locateCdpsDirectly(self);
   self.allCdpIds = [...cdpsWithoutProxy, ...cdps, ...cdpsDirect].map(entry =>
     typeof entry !== 'number' ? entry.id : entry
@@ -21,7 +20,6 @@ async function locateCdps(self, _cdpService) {
     acc[cur.id] = cur.ilk;
     return acc;
   }, {});
-  console.log(self.allCdpIds); // todo remove dev item
   self.cdpsWithType = cdpIdToTypeMapping;
   return {
     withType: cdpIdToTypeMapping,
@@ -37,12 +35,10 @@ async function locateCdps(self, _cdpService) {
 async function getMcdCdp() {}
 
 async function locateCdpsWithoutProxy(self, _cdpService) {
-  console.log(_cdpService); // todo remove dev item
   const directCdps = await _cdpService.getCdpIds(self.account.address);
   const directCdpsCheckSum = await _cdpService.getCdpIds(
     toChecksumAddress(self.account.address)
   );
-  console.log(directCdpsCheckSum, directCdps); // todo remove dev item
   return directCdps.concat(directCdpsCheckSum);
 }
 
@@ -57,8 +53,6 @@ async function locateCdpsDirectly(self) {
   const results = await contract.methods
     .getCdpsAsc(addresses.CDP_MANAGER, proxy)
     .call();
-  console.log('results raw', results); // todo remove dev item
-  console.log('results', results.ids); // todo remove dev item
   return results.ids;
 }
 

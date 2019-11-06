@@ -15,7 +15,11 @@ const toBigNumber = num => {
 // Basically just to hold the various getters and static methods to somewhat de-clutter the implementation
 export default class MakerCdpBase {
   constructor(cdpId, web3, services, sysVars) {
-    this.cdpId = typeof cdpId !== 'number' ? cdpId.id : cdpId;
+    if(cdpId === null){
+      this.cdpId = cdpId;
+    } else {
+      this.cdpId = typeof cdpId !== 'number' ? cdpId.id : cdpId;
+    }
     this.cdpIdFull = cdpId;
     this.cdp = {};
     this.web3 = web3 || {};
@@ -33,7 +37,6 @@ export default class MakerCdpBase {
     this.migrateCdpActive = false;
     this.migrateCdpStage = 0;
     this.cdpTypeObject = getMakerCurrencies()[this.cdpType];
-    console.log(services, sysVars, this.cdp); // todo remove dev item
 
     this._liqPrice = toBigNumber(0);
     this.isSafe = false;

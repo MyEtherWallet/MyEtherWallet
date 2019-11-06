@@ -32,7 +32,11 @@ const toBigNumber = num => {
 export default class MakerCDP extends MakerCdpBase {
   constructor(cdpId, web3, services, sysVars) {
     super(cdpId, web3, services, sysVars);
-    this.cdpId = typeof cdpId !== 'number' ? cdpId.id : cdpId;
+    if(cdpId === null){
+      this.cdpId = cdpId;
+    } else {
+      this.cdpId = typeof cdpId !== 'number' ? cdpId.id : cdpId;
+    }
     this.cdpIdFull = cdpId;
     this.cdp = {};
     this.web3 = web3 || {};
@@ -54,7 +58,6 @@ export default class MakerCDP extends MakerCdpBase {
 
   // Setup Methods =====================================================================================================
   async init(cdpId = this.cdpId) {
-    console.log('cdpId', cdpId); // todo remove dev item
     await this.updateValues(cdpId);
     try {
       // TODO why is this returning undefined
@@ -159,22 +162,12 @@ export default class MakerCDP extends MakerCdpBase {
   calcCollatRatio(ethQty, daiQty) {
     if (ethQty <= 0 || daiQty <= 0) return toBigNumber(0);
     const value = this.getPriceOfCurrency(this.cdpCollateralType);
-    console.log(value.toString()); // todo remove dev item
     return calcCollatRatio(value, ethQty, daiQty);
-  }
-
-  calcLiquidationPrice(ethQty, daiQty) {
-    if (ethQty <= 0 || daiQty <= 0) return toBigNumber(0);
-    const value = this.getPriceOfCurrency(this.cdpCollateralType);
-    return calcLiquidationPrice(ethQty, daiQty, value, this.liquidationRatio);
   }
 
   calcCollatRatioDaiChg(daiQty, changeAmountOnly = false) {
     if (changeAmountOnly) {
       daiQty = toBigNumber(this.debtValue).plus(toBigNumber(daiQty));
-      console.log('calcCollatRatioDaiChg', daiQty.toString()); // todo remove dev item
-      console.log(this.collateralAmount.toString()); // todo remove dev item
-      console.log('==========='); // todo remove dev item
     }
     return toBigNumber(this.calcCollatRatio(this.collateralAmount, daiQty));
   }
@@ -186,11 +179,19 @@ export default class MakerCDP extends MakerCdpBase {
     return toBigNumber(this.calcCollatRatio(ethQty, this.debtValue));
   }
 
+  calcLiquidationPrice(ethQty, daiQty) {
+    if (ethQty <= 0 || daiQty <= 0) return toBigNumber(0);
+    const value = this.getPriceOfCurrency(this.cdpCollateralType);
+    return calcLiquidationPrice(ethQty, daiQty, value, this.liquidationRatio);
+  }
+
   calcLiquidationPriceDaiChg(daiQty, changeAmountOnly = false) {
     if (changeAmountOnly) {
       daiQty = toBigNumber(this.debtValue).plus(toBigNumber(daiQty));
-      console.log(daiQty.toString()); // todo remove dev item
+      console.log('daiQty', daiQty.toString()); // todo remove dev item
     }
+    console.log('calcLiquidationPrice', toBigNumber(
+      this.calcLiquidationPrice(this.collateralAmount, daiQty)).toString()); // todo remove dev item
     return toBigNumber(
       this.calcLiquidationPrice(this.collateralAmount, daiQty)
     );
