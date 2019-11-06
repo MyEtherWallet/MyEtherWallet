@@ -32,7 +32,7 @@ export default {
   letter-spacing: -1px;
   font-size: 30px;
   line-height: 36px;
-  max-width: 500px;
+  max-width: 400px;
   display: inline-block;
 }
 </style>

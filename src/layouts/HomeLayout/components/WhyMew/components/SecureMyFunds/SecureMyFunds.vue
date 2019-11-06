@@ -29,13 +29,12 @@
 
 <script>
 export default {
-  name: 'FriendlyToUse',
   components: {}
 };
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/GlobalVariables';
+//@import '@/assets/styles/GlobalVariables';
 
 h4 {
   font-size: 22px;

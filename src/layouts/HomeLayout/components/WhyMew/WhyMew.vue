@@ -1,5 +1,5 @@
 <template>
-  <div class="home-why-mew">
+  <div>
     <v-container>
       <BlockTitle
         :centered="false"
@@ -26,7 +26,7 @@ import HardwareWallet from './components/HardwareWallet';
 import SecureMyFunds from './components/SecureMyFunds';
 
 export default {
-  name: 'HomeFeatures',
+  name: 'HomeWhyMew',
   components: {
     BlockTitle,
     FriendlyToUse,
@@ -38,7 +38,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/GlobalVariables';
+//@import '@/assets/styles/GlobalVariables';
 
 .box-shadow {
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.04);

@@ -1,11 +1,13 @@
 <template>
-  <div class="home-layout">
+  <div>
     <div class="light-blue darken-4 home-layout">
       <TopBanner />
     </div>
     <Features class="py-12" />
     <WhyMew />
     <Ad1 class="py-12" />
+    <Partners />
+    <Ad2 class="py-12" />
   </div>
 </template>
 
@@ -14,6 +16,8 @@ import TopBanner from './components/TopBanner';
 import Features from './components/Features';
 import WhyMew from './components/WhyMew';
 import Ad1 from './components/Ad1';
+import Ad2 from './components/Ad2';
+import Partners from './components/Partners';
 
 export default {
   name: 'HomeLayout',
@@ -21,11 +25,13 @@ export default {
     TopBanner,
     Features,
     WhyMew,
-    Ad1
+    Ad1,
+    Ad2,
+    Partners
   }
 };
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/GlobalVariables';
+//@import '@/assets/styles/GlobalVariables';
 </style>
