@@ -252,7 +252,7 @@ export default {
             this.selectedApp.paths.unshift(this.selectedPath);
           });
       } else {
-        Toast.responseHandler('Invalid Custom Path', Toast.ERROR);
+        Toast.responseHandler(this.$t('access-wallet.path.ivalid-custom'), Toast.ERROR);
       }
     },
     cancel() {

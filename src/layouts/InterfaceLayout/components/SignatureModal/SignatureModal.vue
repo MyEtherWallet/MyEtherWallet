@@ -51,7 +51,7 @@ export default {
     copy(type) {
       this.$refs.signedMess.select();
       document.execCommand('copy');
-      Toast.responseHandler('Copied!', Toast.INFO);
+      Toast.responseHandler(this.$t('common.copied'), Toast.INFO);
       if (type === 'main') this.$refs.signatureModal.hide();
     }
   }

@@ -246,7 +246,7 @@ export default {
     copy() {
       this.$refs.copyAddress.select();
       document.execCommand('copy');
-      Toast.responseHandler('Copied!', Toast.INFO);
+      Toast.responseHandler(this.$t('common.copied'), Toast.INFO);
     },
     async getTokenBalance(token) {
       try {

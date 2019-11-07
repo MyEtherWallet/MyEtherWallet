@@ -106,7 +106,7 @@ export default {
       this.$refs.signature.select();
       document.execCommand('copy');
       window.getSelection().removeAllRanges();
-      Toast.responseHandler('Copied', Toast.INFO);
+      Toast.responseHandler(this.$t('common.copied'), Toast.INFO);
     },
     deleteInputText() {
       this.signature = '';

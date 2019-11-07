@@ -305,7 +305,7 @@ export default {
         store.set('customTokens', currentCustomToken);
         this.$refs.tokenModal.$refs.tokenModal.hide();
         await this.fetchTokens();
-        Toast.responseHandler('Successfully added token!', Toast.SUCCESS);
+        Toast.responseHandler(this.$t('interface.tokens.token-added-success'), Toast.SUCCESS);
       }
     },
     tokenListExpend() {
