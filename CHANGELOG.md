@@ -1,8 +1,12 @@
+### Bug
+
+- Web3 modal weird behavior [#1613](https://github.com/MyEtherWallet/MyEtherWallet/pull/1613)
+
 ### Release v5.2.2
 
 ### Feature
 
-- XWallet Integration[#1609](https://github.com/MyEtherWallet/MyEtherWallet/pull/1609)
+- XWallet Integration [#1609](https://github.com/MyEtherWallet/MyEtherWallet/pull/1609)
 
 ### Release v5.2.1-hotfix.1
 
