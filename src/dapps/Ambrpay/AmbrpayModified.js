@@ -257,8 +257,7 @@ export default function Ambrpay(account, web3) {
               subscriptionPlan.daysInterval,
               _web3.utils.toWei(subscriptionPriceLimit.toString(), 'ether'),
               transferOut,
-              _web3.utils.toWei(subscriptionFeeAmount.toString(), 'ether')
-            )
+              _web3.utils.toWei(subscriptionFeeAmount.toString(), 'ether'))
             .send({
               value: _web3.utils.toWei(subscriptionTotalAmount.toString(), 'ether'),
               from: senderWallet,
