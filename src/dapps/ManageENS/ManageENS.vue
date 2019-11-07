@@ -485,6 +485,7 @@ export default {
         this.minimumAge = await this.registrarControllerContract.methods
           .minCommitmentAge()
           .call();
+        this.minimumAge = `${parseInt(this.minimumAge) + 30}`;
         await this.registrarControllerContract.methods
           .commit(commitment)
           .send({ from: this.account.address })
