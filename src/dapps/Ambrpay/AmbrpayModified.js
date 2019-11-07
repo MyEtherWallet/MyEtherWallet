@@ -439,15 +439,9 @@ export default function Ambrpay(account, web3) {
 
         return ambrpay.getMetaMaskAccount()
           .then((address) => {
-
-            return instance.methods.deactivateSubscription(pos)
-              .send({ gas: 500000, from: address })
-              .then((res) => {
-                resolve(res);
-              })
-              .catch((err) => {
-                reject(err);
-              });
+            const tx = instance.methods.deactivateSubscription(pos)
+              .send({ gas: 500000, from: address }).on('receipt', resolve).on('error', reject);
+            return tx;
           })
       });
     },
