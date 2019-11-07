@@ -1,3 +1,9 @@
+### Release v5.2.2
+
+### Feature
+
+- XWallet Integration[#1609](https://github.com/MyEtherWallet/MyEtherWallet/pull/1609)
+
 ### Release v5.2.1-hotfix.1
 
 ### Bug
