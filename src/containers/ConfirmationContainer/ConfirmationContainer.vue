@@ -180,15 +180,21 @@ export default {
   watch: {
     wallet(newVal) {
       if (newVal !== null) {
-        this.$refs.confirmModal.$refs.confirmation.$on('hidden', () => {
-          if (this.dismissed) {
-            this.reset();
-          }
-        });
+        if (this.$refs.hasOwnProperty('confirmModal')) {
+          this.$refs.confirmModal.$refs.confirmation.$on('hidden', () => {
+            if (this.dismissed) {
+              this.reset();
+            }
+          });
+        }
+        if (this.$refs.hasOwnProperty('signConfirmModal')) {
+          this.$refs.signConfirmModal.$refs.signConfirmation.$on('hidden', () => {
+            this.signedMessage = '';
+          });
+        }
 
-        this.$refs.signConfirmModal.$refs.signConfirmation.$on('hidden', () => {
-          this.signedMessage = '';
-        });
+
+        console.log(this.$refs)
       }
     }
   },
