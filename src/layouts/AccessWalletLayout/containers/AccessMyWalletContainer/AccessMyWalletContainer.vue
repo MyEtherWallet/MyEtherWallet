@@ -15,6 +15,7 @@
       :ledger-app-open="ledgerAppModalOpen"
       :network-and-address-open="networkAndAddressOpen"
       :open-finney="finneyModalOpen"
+      :open-xwallet="xwalletModalOpen"
       @hardwareRequiresPassword="hardwarePasswordModalOpen"
       @hardwareWalletOpen="hardwareWalletOpen"
     />
@@ -31,7 +32,11 @@
       :hardware-wallet="hardwareWallet"
     />
 
-    <metamask-modal ref="metamaskModal" />
+    <metamask-modal
+      ref="metamaskModal"
+      :is-meta-mask="isMetaMask"
+      :web3-wallet-exists="web3WalletExists"
+    />
 
     <software-modal
       ref="softwareModal"
@@ -50,14 +55,9 @@
       :hardware-wallet-open="hardwareWalletOpen"
     />
 
-    <!--    <mnemonic-password-modal
-      ref="mnemonicPhrasePassword"
-      :hardware-wallet-open="hardwareWalletOpen"
-      :phrase="phrase"
-    />-->
-
     <wallet-password-modal />
     <finney-modal ref="finney" />
+    <xwallet-modal ref="xwallet" />
     <enter-pin-number-modal />
 
     <div class="wrap">
@@ -107,15 +107,16 @@ import MnemonicModal from '../../components/MnemonicModal';
 import LedgerAppModal from '../../components/LedgerAppModal';
 import WalletPasswordModal from '@/components/WalletPasswordModal';
 import EnterPinNumberModal from '@/components/EnterPinNumberModal';
+import XwalletModal from '../../components/XwalletModal';
 
 import mewConnectImg from '@/assets/images/icons/button-mewconnect.svg';
 import hardwareImg from '@/assets/images/icons/button-hardware.svg';
-import metamaskImg from '@/assets/images/icons/button-metamask.svg';
+import web3Img from '@/assets/images/icons/button-web3.svg';
 import softwareImg from '@/assets/images/icons/button-software.svg';
 
 import mewConnectImgDisabled from '@/assets/images/icons/button-mewconnect-disabled.svg';
 import hardwareImgDisabled from '@/assets/images/icons/button-hardware-disabled.svg';
-import metamaskImgDisabled from '@/assets/images/icons/button-metamask-disabled.svg';
+import web3ImgDisabled from '@/assets/images/icons/button-web3-disabled.svg';
 import softwareImgDisabled from '@/assets/images/icons/button-software-disabled.svg';
 
 import { mapState } from 'vuex';
@@ -139,7 +140,8 @@ export default {
     'wallet-password-modal': WalletPasswordModal,
     'enter-pin-number-modal': EnterPinNumberModal,
     'ledger-app-modal': LedgerAppModal,
-    'finney-modal': FinneyModal
+    'finney-modal': FinneyModal,
+    'xwallet-modal': XwalletModal
   },
   data() {
     return {
@@ -164,7 +166,8 @@ export default {
         {
           func: this.hardwareModalOpen,
           title: this.$t('common.hardware'),
-          desc: 'Ledger wallet, FINNEY, Trezor, BitBox, Secalot, KeepKey',
+          desc:
+            'Ledger wallet, FINNEY, Trezor, BitBox, Secalot, KeepKey, XWallet',
           recommend: '',
           tooltip: '',
           img: hardwareImg,
@@ -173,13 +176,13 @@ export default {
           classname: 'button-hardware'
         },
         {
-          func: this.metamaskModalOpen,
+          func: this.web3WalletModal,
           title: 'Web3 Wallet',
           desc: this.$t('accessWallet.web3WalletDesc'),
           recommend: '',
           tooltip: '',
-          img: metamaskImg,
-          imgDisabled: metamaskImgDisabled,
+          img: web3Img,
+          imgDisabled: web3ImgDisabled,
           disabled: false,
           classname: 'button-metamask'
         },
@@ -194,7 +197,9 @@ export default {
           disabled: false,
           classname: 'button-software'
         }
-      ]
+      ],
+      isMetaMask: false,
+      web3WalletExists: false
     };
   },
   computed: {
@@ -205,9 +210,20 @@ export default {
       this.buttons.forEach(btn => {
         btn.disabled = this.isDisabled(btn.classname);
       });
+
+      this.checkWeb3();
+      this.checkIsMetamask();
     });
   },
   methods: {
+    checkIsMetamask() {
+      this.isMetaMask = window.ethereum && window.ethereum.isMetaMask;
+    },
+    checkWeb3() {
+      this.web3WalletExists =
+        typeof window.ethereum !== 'undefined' ||
+        typeof window.web3 !== 'undefined';
+    },
     isDisabled(className) {
       switch (className) {
         case 'button-mewconnect':
@@ -230,7 +246,9 @@ export default {
     hardwareModalOpen() {
       this.$refs.hardwareModal.$refs.hardware.show();
     },
-    metamaskModalOpen() {
+    web3WalletModal() {
+      this.checkWeb3();
+      this.checkIsMetamask();
       this.$refs.metamaskModal.$refs.metamask.show();
     },
     softwareModalOpen() {
@@ -268,6 +286,9 @@ export default {
     },
     finneyModalOpen() {
       this.$refs.finney.$refs.finneyModal.show();
+    },
+    xwalletModalOpen() {
+      this.$refs.xwallet.$refs.xwalletModal.show();
     },
     hardwareWalletOpen(wallet) {
       // if (this.$refs.mnemonicPhrasePassword.$refs.password.visible) {

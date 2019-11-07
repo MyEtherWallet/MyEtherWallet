@@ -43,6 +43,13 @@
         overflow: hidden;
         transition: all 0.3s ease;
 
+        .content {
+          margin-bottom: 15px;
+          &:last-child {
+            margin-bottom: 0;
+          }
+        }
+
         .sub-title {
           color: $text-color-1;
         }
@@ -69,6 +76,7 @@
         display: flex;
         overflow: hidden;
         text-overflow: ellipsis;
+        padding-top: 15px;
 
         img {
           height: 30px;

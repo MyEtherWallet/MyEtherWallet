@@ -186,8 +186,7 @@ export default {
             // },
             {
               text: this.$t('footer.extension'),
-              href:
-                'https://chrome.google.com/webstore/detail/myetherwallet/nlbmnnijcnlegkjjpcfjclmcfggfefdm?hl=en'
+              href: 'https://www.mewcx.com'
             },
             {
               text: 'Buy a Hardware wallet',
@@ -206,7 +205,7 @@ export default {
               to: '/view-wallet-info'
             },
             {
-              text: 'Submit DApp',
+              text: 'Submit Dapp',
               to: '/dapp-submission'
             }
           ]

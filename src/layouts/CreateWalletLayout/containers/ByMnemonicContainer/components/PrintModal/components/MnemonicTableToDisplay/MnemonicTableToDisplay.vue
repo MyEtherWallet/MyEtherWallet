@@ -3,7 +3,11 @@
     <div class="header">
       <div class="block-title">
         <img
-          :src="require(`@/assets/images/short-hand-logo-${buildType}.png`)"
+          :src="
+            require(`@/assets/images/short-hand-logo-${
+              buildType ? buildType : 'web'
+            }.png`)
+          "
           height="30px"
           alt
         />
@@ -53,12 +57,11 @@ export default {
     isTwentyFour: {
       type: Boolean,
       default: false
+    },
+    buildType: {
+      type: String,
+      default: 'web'
     }
-  },
-  data() {
-    return {
-      buildType: BUILD_TYPE
-    };
   }
 };
 </script>
