@@ -1,3 +1,6 @@
+### Devop
+- Add translation guidelines to dapp_integration.md and PR guide [#1617](https://github.com/MyEtherWallet/MyEtherWallet/pull/1617)
+
 ### Release v5.2.2
 
 ### Feature
