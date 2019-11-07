@@ -7,8 +7,8 @@
         <img class="site-logo" src="~@/assets/images/mew-cx-logo.png" />
       </div>
       <p>
-        {{ request.connectionRequest }} is trying to access MEW CX. Please
-        choose a wallet that you want to connect.
+        {{ request.connectionRequest.toLowerCase() }} is trying to access MEW
+        CX. Please choose a wallet that you want to connect.
       </p>
     </div>
     <div class="accounts-container">
@@ -23,6 +23,7 @@
           v-for="(acc, idx) in accWithBal"
           :key="acc.address + idx"
           :address="acc.address"
+          :nickname="acc.nickname"
           :balance="acc.balance"
           :selected-account="selectedAccount"
           :select-account="selectAccount"
@@ -80,22 +81,34 @@ export default {
   },
   methods: {
     getAccounts(acc) {
-      this.accounts = Object.keys(acc).filter(item => {
+      const nonWatchOnly = Object.keys(acc).filter(item => {
         if (isAddress(item)) {
-          if (JSON.parse(acc[item]).type !== 'watchOnly') return acc[item];
+          const parsedAcc = JSON.parse(acc[item]);
+          if (parsedAcc.type !== 'watchOnly') {
+            return acc[item];
+          }
         }
+      });
+      this.accounts = nonWatchOnly.map(item => {
+        const parsed = JSON.parse(acc[item]);
+        return {
+          nickname: parsed.nick,
+          address: item
+        };
       });
       this.getBalance();
     },
     async getBalance() {
       for (let i = 0; i < this.accounts.length; i++) {
-        if (isAddress(this.accounts[i])) {
-          const balance = await this.web3.eth.getBalance(this.accounts[i]);
+        if (isAddress(this.accounts[i].address)) {
+          const balance = await this.web3.eth.getBalance(
+            this.accounts[i].address
+          );
           const balanceToWei = this.web3.utils.fromWei(balance);
-          this.accWithBal.push({
-            balance: new BigNumber(balanceToWei).toString(),
-            address: this.accounts[i]
+          const pushableItem = Object.assign({}, this.accounts[i], {
+            balance: new BigNumber(balanceToWei).toString()
           });
+          this.accWithBal.push(pushableItem);
         }
       }
     },
