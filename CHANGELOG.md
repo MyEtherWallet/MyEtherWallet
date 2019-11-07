@@ -1,6 +1,7 @@
 ### Bug
 
 - CX interaction with ambrpay [#1597](https://github.com/MyEtherWallet/MyEtherWallet/pull/1597)
+
 ### Release v5.2.2
 
 ### Feature

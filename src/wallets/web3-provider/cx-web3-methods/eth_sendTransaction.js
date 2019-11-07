@@ -91,4 +91,5 @@ export default async ({ payload }, res, next) => {
     .catch(e => {
       res(e);
     });
+  return true;
 };
