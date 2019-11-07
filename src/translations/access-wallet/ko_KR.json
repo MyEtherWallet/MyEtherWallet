@@ -35,5 +35,7 @@
   "buyHardwareWallet": "Purchase a hardware wallet for the highest security when accessing your crypto.",
   "buyHardwareWalletLink": "Purchase a hardware wallet....",
   "connectDevice": "Please make sure your device is connected.",
-  "buy": "Buy Now"
+  "buy": "Buy Now",
+  "xwalletDesc": "Please use XWallet App MEW DApp  to scan the QR code above",
+  "xwallettTitle": "Access by XWallet"
 }
