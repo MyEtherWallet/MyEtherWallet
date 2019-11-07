@@ -673,7 +673,7 @@ export default {
       await this.doUpdate();
     },
     async doUpdate() {
-      await doUpdate(this, Toastget);
+      await doUpdate(this, Toast);
       // this.proxyAddress = await this.getProxy();
       // let afterClose = false;
       // const afterOpen = this.$route.name === 'create';
