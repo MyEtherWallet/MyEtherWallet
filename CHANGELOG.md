@@ -1,3 +1,12 @@
+### Release v5.2.1-hotfix.1
+
+### Bug
+
+- Correct wrong property path for config object in wallet.worker.js [#1604](https://github.com/MyEtherWallet/MyEtherWallet/pull/1604)
+- Increase ENS register wait time to 90 seconds to provide an additional buffer [#1605](https://github.com/MyEtherWallet/MyEtherWallet/pull/1605)
+- Fix web3 out of gas error [#1607](https://github.com/MyEtherWallet/MyEtherWallet/pull/1607)
+- Fix spacing between footer list items [#1599](https://github.com/MyEtherWallet/MyEtherWallet/pull/1599)
+
 ### Release v5.2.1
 
 ### Feature
