@@ -8,7 +8,7 @@ export default function Ambrpay(account, web3) {
   if(!apiEndpoint) {
     var apiEndpoint = 'https://ambrpay.io/api';
   }
-  
+
   var _web3 = web3;
   var ethAddress = account.address;
   var ambrpay = {
@@ -255,21 +255,22 @@ export default function Ambrpay(account, web3) {
             return instance.methods.createSubscriptionWithTransfer(
               receiverWallet,
               subscriptionPlan.daysInterval,
-              _web3.utils.toWei(subscriptionPriceLimit.toString(), 'ether'),
+              _web3.utils.toWei(sfbscriptionPriceLimit.toString(), 'ether'),
               transferOut,
-              _web3.utils.toWei(subscriptionFeeAmount.toString(), 'ether'))
-              .send({
-                value: _web3.utils.toWei(subscriptionTotalAmount.toString(), 'ether'),
-                gas: 500000,
-                gasPrice: 1000000000,
-                from: senderWallet
-              })
-              .then((res) =>{
-                return resolve(res);
-              })
-              .catch((e) => {
-                return reject(e);
-              });
+              _web3.utils.toWei(subscriptionFeeAmount.toString(), 'ether')
+            )
+            .send({
+              value: _web3.utils.toWei(subscriptionTotalAmount.toString(), 'ether'),
+              from: senderWallet,
+              gas: 500000,
+              gasPrice: 1000000000
+            })
+            .on('receipt', function(receipt){
+              resolve(receipt);
+            })
+            .on('error', function(err) {
+              reject(err);
+            });
           });
         })
         .then((txHash) => {
@@ -442,13 +443,12 @@ export default function Ambrpay(account, web3) {
 
         return ambrpay.getMetaMaskAccount()
           .then((address) => {
-
             return instance.methods.deactivateSubscription(pos)
               .send({ gas: 500000, from: address })
-              .then((res) => {
-                resolve(res);
+              .on('receipt', function(receipt) {
+                resolve(receipt);
               })
-              .catch((err) => {
+              .on('error', function(err){
                 reject(err);
               });
           })
