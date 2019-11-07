@@ -10,9 +10,9 @@
   >
     <div class="modal-content-container">
       <div class="d-block text-center">
-        <b-alert :show="mayNotBeAttached" fade variant="warning">{{
-          $t('accessWallet.connectDevice')
-        }}</b-alert>
+        <b-alert :show="mayNotBeAttached" fade variant="warning">
+          {{ $t('accessWallet.connectDevice') }}
+        </b-alert>
         <div class="button-options hardware-button-options">
           <wallet-option
             v-for="(item, idx) in items"
@@ -135,7 +135,7 @@ export default {
           text: 'XWallet',
           disabled: false,
           msg: '',
-          link: 'https://digitalbitbox.com/?ref=mew'
+          link: 'https://xwallet.pundix.com'
         },
         {
           name: TREZOR_TYPE,
