@@ -558,7 +558,7 @@ export default {
     removeCdp(vals) {
       try {
         delete this.availableCdps[vals.id];
-        Toast.responseHandler('CDP Closed', Toast.INFO);
+        Toast.responseHandler(this.$t('dapps-maker.cdp-closed'), Toast.INFO);
       } catch (e) {
         // eslint-disable-next-line
         console.error(e);
@@ -629,10 +629,10 @@ export default {
       if (this.creatingCdp) {
         this.creatingCdp = false;
         await this.updateActiveCdp();
-        Toast.responseHandler('CDP Created', Toast.INFO);
+        Toast.responseHandler(this.$t('dapps-maker.cdp-closed'), Toast.INFO);
       } else {
         this.valuesUpdated++;
-        Toast.responseHandler('CDP Updated', Toast.INFO);
+        Toast.responseHandler(this.$t('dapps-maker.cdp-closed'), Toast.INFO);
       }
     },
 

@@ -443,7 +443,7 @@ export default {
       if (Array.isArray(e)) {
         this.mnemonicPhrase = e.join(' ');
       } else {
-        Toast.responseHandler('Invalid Mnemonic', Toast.ERROR);
+        Toast.responseHandler(this.$t('mew-cx.invalid-mnemonic'), Toast.ERROR);
       }
     },
     updateSelectedPath(e) {

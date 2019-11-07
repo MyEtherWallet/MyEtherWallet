@@ -70,5 +70,14 @@
   "use-burner": "Use a burner account",
   "by-entering-pw": "By entering your password, you accept our",
   "trying-to-access-mew": "is trying to access MEW CX. Please choose a wallet that you want to connect.",
-  "web3-detected": "We've detected other Web3 applications (a wallet browser extension, i.e. MetaMask) running in the background. In order for MEW CX to function properly, please make sure all other Web3 instances are closed."
+  "web3-detected": "We've detected other Web3 applications (a wallet browser extension, i.e. MetaMask) running in the background. In order for MEW CX to function properly, please make sure all other Web3 instances are closed.",
+  "nickname-found": "Nickname found!",
+  "address-already-stored": "Address already stored!",
+  "something-went-wrong": "Something went wrong!",
+  "wallet-update-success": "Wallet successfully updated!",
+  "wallet-remove-success": "Wallet successfully removed!",
+  "token-added-success": "Successfully added token!",
+  "copy-success": "Successfully Copied",
+  "invalid-mnemonic": "Invalid Mnemonic"
+
 }

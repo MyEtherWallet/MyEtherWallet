@@ -427,7 +427,7 @@ export default {
         this.$refs.tokenModal.$refs.tokenModal.hide();
         this.fetchTokenBalance(token);
         await this.fetchTokens();
-        Toast.responseHandler('Successfully added token!', Toast.SUCCESS);
+        Toast.responseHandler(this.$t('mew-cx.token-added-success'), Toast.SUCCESS);
       }
     },
     openAddCustom() {
@@ -587,7 +587,7 @@ export default {
     copyAddress() {
       this.$refs.addressInput.select();
       document.execCommand('copy');
-      Toast.responseHandler('Successfully Copied', Toast.SUCCESS);
+      Toast.responseHandler(this.$t('mew-cx.copy-success'), Toast.SUCCESS);
     },
     viewAllTokens(bool) {
       if (bool) {

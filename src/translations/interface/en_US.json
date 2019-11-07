@@ -19,7 +19,8 @@
     "refresh": "Refresh Balance"
   },
   "addr": {
-    "button-switch": "Switch"
+    "button-switch": "Switch",
+    "copied-private-key":  "Successfully copied Private Key!"
   },
   "tokens": {
     "custom": "Custom Tokens",
@@ -34,7 +35,8 @@
         "decimals": "Invalid Decimal. Decimal can only be between 0 and 18.",
         "addr": "Invalid address given."
       }
-    }
+    },
+    "token-added-success": "Successfully added token!"
   },
   "ads": {
     "buy-with-credit": "Buy ETH with Credit Card",
