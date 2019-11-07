@@ -101,11 +101,7 @@ export default class SwapProviders {
   }
 
   getProviders() {
-    if (this.providers !== null) {
-      console.log('errors here?');
-      return utils.mapToObject(this.providers);
-    }
-    return {};
+    return utils.mapToObject(this.providers);
   }
 
   getProvider(name) {
