@@ -232,13 +232,19 @@ export default {
       this.fetchTokens();
     },
     searchBySymbol(symbol) {
-      const searchNetwork = this.localTokens.find(item => {
-        return item.symbol.toLowerCase() === symbol.toLowerCase();
-      });
+      const searchNetwork =
+        this.localTokens && this.localTokens.length > 0
+          ? this.localTokens.find(item => {
+              return item.symbol.toLowerCase() === symbol.toLowerCase();
+            })
+          : undefined;
 
-      const searchCustom = this.customTokens.find(item => {
-        return item.symbol.toLowerCase() === symbol.toLowerCase();
-      });
+      const searchCustom =
+        this.customTokens && this.customTokens.length > 0
+          ? this.customTokens.find(item => {
+              return item.symbol.toLowerCase() === symbol.toLowerCase();
+            })
+          : undefined;
 
       if (searchNetwork !== undefined || searchCustom !== undefined) {
         return false;
@@ -246,19 +252,25 @@ export default {
       return true;
     },
     searchByAddr(addr) {
-      const searchNetwork = this.localTokens.find(item => {
-        return (
-          utils.toChecksumAddress(item.address) ===
-          utils.toChecksumAddress(addr)
-        );
-      });
+      const searchNetwork =
+        this.localTokens && this.localTokens.length > 0
+          ? this.localTokens.find(item => {
+              return (
+                utils.toChecksumAddress(item.address) ===
+                utils.toChecksumAddress(addr)
+              );
+            })
+          : undefined;
 
-      const searchCustom = this.customTokens.find(item => {
-        return (
-          utils.toChecksumAddress(item.address) ===
-          utils.toChecksumAddress(addr)
-        );
-      });
+      const searchCustom =
+        this.customTokens && this.customTokens.length > 0
+          ? this.customTokens.find(item => {
+              return (
+                utils.toChecksumAddress(item.address) ===
+                utils.toChecksumAddress(addr)
+              );
+            })
+          : undefined;
 
       if (searchNetwork !== undefined || searchCustom !== undefined) {
         return false;
