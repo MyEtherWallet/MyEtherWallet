@@ -1,4 +1,4 @@
-### Feature
+### Devop
 
 - Sort Dapps by integration/release dates [#1616](https://github.com/MyEtherWallet/MyEtherWallet/pull/1616)
 
