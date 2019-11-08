@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="28px" height="28px" viewBox="0 0 28 28" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>ETH</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="footer" transform="translate(-981.000000, -171.000000)">
+            <g id="Group-32">
+                <g transform="translate(981.000000, 47.000000)">
+                    <g id="welcome-donate-us3" transform="translate(0.000000, 124.000000)">
+                        <g id="Group-5">
+                            <g id="ETH">
+                                <path d="M28,14 C28,21.73206 21.73206,28 14,28 C6.26808,28 0,21.73206 0,14 C0,6.26794 6.26808,0 14,0 C21.73206,0 28,6.26794 28,14" id="Fill-506" fill="#5577FF"></path>
+                                <path d="M14.5651685,4.68421053 L19.9497057,14.8658127 L14.5651685,17.6146916 L9,14.8658127 L14.5651685,4.68421053 Z M9,15.8550645 L14.5595675,18.6198701 L19.9497057,15.8550645 L14.5595675,22.6842105 L9,15.8550645 Z" id="Combined-Shape" fill="#FFFFFF"></path>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

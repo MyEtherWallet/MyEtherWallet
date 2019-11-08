@@ -2,7 +2,7 @@
   <div class="pt-6">
     <v-container>
       <v-row>
-        <v-col>
+        <v-col cols="2">
           <div class="subtitle-1 font-weight-bold mb-1">Tools</div>
           <v-list>
             <v-list-item class="px-0">Verify Message</v-list-item>
@@ -14,7 +14,7 @@
             <v-list-item class="px-0">All Tools</v-list-item>
           </v-list>
         </v-col>
-        <v-col>
+        <v-col cols="2">
           <div class="subtitle-1 font-weight-bold mb-1">MEW</div>
           <v-list>
             <v-list-item class="px-0">How It Works</v-list-item>
@@ -30,7 +30,7 @@
             </v-list-item>
           </v-list>
         </v-col>
-        <v-col>
+        <v-col cols="2">
           <div class="subtitle-1 font-weight-bold mb-1">Hardware Wallets</div>
           <v-list>
             <v-list-item class="px-0">
@@ -83,13 +83,41 @@
           </v-list>
         </v-col>
         <v-col>
-          <div class="subtitle-1 font-weight-bold mb-1">Love MEW? Donate.</div>
+          <div class="subtitle-1 font-weight-bold mb-5">
+            Love
+            <img src="" />
+            MEW? Donate.
+          </div>
           <p>
             MEW is a open-source and free to the community. Your donations go a
             long way towards making that possible.
           </p>
-          <div>ETH Donation</div>
-          <div>BTC Donation</div>
+          <a
+            class="d-flex align-center mb-3"
+            target="_blank"
+            href="https://etherscan.io/address/0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D"
+          >
+            <img src="@/assets/images/Common/Icons/eth.svg" class="mr-3" />
+            <div>
+              <div>ETH Donation</div>
+              <div class="overline">
+                Address: 0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D
+              </div>
+            </div>
+          </a>
+          <a
+            class="d-flex align-center"
+            target="_blank"
+            href="https://blockchain.info/address/1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9"
+          >
+            <img src="@/assets/images/Common/Icons/btc.svg" class="mr-3" />
+            <div>
+              <div>BTC Donation</div>
+              <div class="overline">
+                Address: 1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9
+              </div>
+            </div>
+          </a>
         </v-col>
       </v-row>
     </v-container>
@@ -105,6 +133,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+//@import '@/assets/styles/GlobalVariables';
+
 a {
   text-decoration: none;
 }

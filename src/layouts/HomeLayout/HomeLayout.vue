@@ -7,7 +7,7 @@
     <WhyMew />
     <Ad1 class="py-12" />
     <Partners class="py-12" />
-    <Ad2 />
+    <Ad2 class="mt-4" />
   </div>
 </template>
 
