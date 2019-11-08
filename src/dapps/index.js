@@ -16,7 +16,9 @@ const dapps = {
     iconDisabled: manageEnsHov,
     title: 'interface.ensManager',
     desc: 'interface.registerENSDescShort',
-    supportedNetworks: [ETH.name, GOERLI.name, ROP.name, RIN.name]
+    supportedNetworks: [ETH.name, GOERLI.name, ROP.name, RIN.name],
+    lastUpdated: '11/06/2019',
+    releaseDate: '10/05/2018'
   },
   domainSale: {
     route: '/interface/dapps/name-wallet',
@@ -24,7 +26,9 @@ const dapps = {
     iconDisabled: domainSaleHov,
     title: 'interface.nameYourWallet',
     desc: 'interface.nameYourWalletDesc',
-    supportedNetworks: [ETH.name]
+    supportedNetworks: [ETH.name],
+    lastUpdated: '09/20/2019',
+    releaseDate: '10/08/2018'
   },
   scheduleTransaction: {
     route: '/interface/dapps/schedule-transaction',
@@ -33,7 +37,9 @@ const dapps = {
     title: 'Schedule a transaction',
     desc:
       'Schedule a transaction using the decentralized Ethereum Alarm Clock protocol',
-    supportedNetworks: [ETH.name, KOV.name]
+    supportedNetworks: [ETH.name, KOV.name],
+    lastUpdated: '10/28/2019',
+    releaseDate: '02/21/2019'
   },
   maker: {
     route: '/interface/dapps/maker-dai',
@@ -41,7 +47,9 @@ const dapps = {
     iconDisabled: secureTransactionHov,
     title: 'dappsMaker.maker_title',
     desc: 'dappsMaker.maker_desc',
-    supportedNetworks: [ETH.name, KOV.name]
+    supportedNetworks: [ETH.name, KOV.name],
+    lastUpdated: '08/14/2019',
+    releaseDate: '06/14/2019'
   },
   ambrpay: {
     route: '/interface/dapps/ambrpay',
@@ -49,7 +57,9 @@ const dapps = {
     iconDisabled: secureTransactionHov,
     title: 'Ambrpay',
     desc: 'With Ambrpay you can create and manage recurring payments.',
-    supportedNetworks: [ETH.name]
+    supportedNetworks: [ETH.name],
+    lastUpdated: '11/05/2019',
+    releaseDate: '11/05/2019'
   }
 };
 
