@@ -121,13 +121,16 @@
         </v-col>
       </v-row>
     </v-container>
+    <FootNote />
   </div>
 </template>
 
 <script>
+import FootNote from './components/FootNote';
+
 export default {
   name: 'FooterDesktop',
-  components: {},
+  components: { FootNote },
   data: () => ({})
 };
 </script>

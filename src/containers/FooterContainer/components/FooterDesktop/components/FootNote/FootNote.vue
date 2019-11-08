@@ -1,15 +1,74 @@
 <template>
-  <div class="pt-6">
-    <v-container> </v-container>
+  <div class="foot-note py-3">
+    <v-container>
+      <div class="d-flex align-center">
+        <div class="cyan--text text--lighten-3">V6.0.0-beta.3</div>
+        <v-spacer />
+        <div class="teal--text text--lighten-1">
+          ©2019 MyEtherWallet. All rights reserved. Pricing taken from
+          <a class="cyan--text text--lighten-3" href="/">CoinMarketCap</a>.
+        </div>
+        <v-spacer />
+        <div>
+          <v-autocomplete
+            v-model="input1"
+            :items="languages"
+            item-text="name"
+            item-value="value"
+          >
+            <template v-slot:selection="data">
+              <img :src="data.item.flag" height="30" width="30" class="mr-3" />
+              {{ data.item.name }}
+            </template>
+            <template v-slot:item="data">
+              <template v-if="typeof data.item !== 'object'">
+                <v-list-item-content v-text="data.item"></v-list-item-content>
+              </template>
+              <template v-else>
+                <v-list-item-avatar>
+                  <img :src="data.item.flag" />
+                </v-list-item-avatar>
+                <v-list-item-content>
+                  <v-list-item-title>
+                    {{ data.item.name }}
+                  </v-list-item-title>
+                </v-list-item-content>
+              </template>
+            </template>
+          </v-autocomplete>
+        </div>
+      </div>
+    </v-container>
   </div>
 </template>
 
 <script>
+import uk from '@/assets/images/Common/Icons/Flags/uk.png';
+import ru from '@/assets/images/Common/Icons/Flags/russia.png';
+import kr from '@/assets/images/Common/Icons/Flags/korea.png';
+import jp from '@/assets/images/Common/Icons/Flags/japan.png';
+import ge from '@/assets/images/Common/Icons/Flags/germany.png';
+import ch from '@/assets/images/Common/Icons/Flags/china.png';
+
 export default {
-  data: () => ({})
+  data: () => ({
+    input1: '',
+    languages: [
+      { name: 'English', value: 'en', flag: uk },
+      { name: 'Russian', value: 'ru', flag: ru },
+      { name: 'Germany', value: 'jp', flag: ge },
+      { name: 'China', value: 'ch', flag: ch },
+      { name: 'Korean', value: 'kr', flag: kr },
+      { name: 'Japanese', value: 'jp', flag: jp }
+    ]
+  })
 };
 </script>
 
 <style lang="scss" scoped>
-//@import '@/assets/styles/GlobalVariables';
+@import '@/assets/styles/GlobalVariables';
+
+.foot-note {
+  background-color: $dark-space;
+}
 </style>
