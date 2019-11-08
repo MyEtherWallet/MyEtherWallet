@@ -1,8 +1,12 @@
+### Feature
+
+- Sort Dapps by integration/release dates [#1616](https://github.com/MyEtherWallet/MyEtherWallet/pull/1616)
+
 ### Release v5.2.2
 
 ### Feature
 
-- XWallet Integration[#1609](https://github.com/MyEtherWallet/MyEtherWallet/pull/1609)
+- XWallet Integration [#1609](https://github.com/MyEtherWallet/MyEtherWallet/pull/1609)
 
 ### Release v5.2.1-hotfix.1
 
