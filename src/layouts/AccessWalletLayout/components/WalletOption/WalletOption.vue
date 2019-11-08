@@ -22,7 +22,7 @@
             href="https://xwallet.pundix.com"
             target="_blank"
           >
-            By Pundi X >
+            Get It Now >
           </a>
           <a
             v-show="link !== '' && name !== xwalletType"
