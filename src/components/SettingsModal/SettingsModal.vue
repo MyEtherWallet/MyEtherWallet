@@ -131,7 +131,12 @@
               into your local computer.
             </p>
             <div class="button-block">
-              <a :href="file" :download="fileName" class="export-button">
+              <a
+                :href="file"
+                :download="fileName"
+                rel="noopener noreferrer"
+                class="export-button"
+              >
                 <standard-button :options="buttonExport" />
               </a>
             </div>

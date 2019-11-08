@@ -6,7 +6,9 @@
       <p class="message">{{ options.message }}</p>
       <div v-if="options.link.url" class="link">
         > {{ $t('common.read') }}:
-        <a :href="options.link.url" target="_blank">{{ options.link.text }}</a>
+        <a :href="options.link.url" rel="noopener noreferrer" target="_blank">{{
+          options.link.text
+        }}</a>
       </div>
     </div>
   </div>
