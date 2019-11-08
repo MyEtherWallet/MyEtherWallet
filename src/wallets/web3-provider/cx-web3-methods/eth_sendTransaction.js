@@ -80,7 +80,7 @@ export default async ({ payload }, res, next) => {
         }
       };
 
-      eventHandler(eventName, obj, resolveName, rejectName)
+      return eventHandler(eventName, obj, resolveName, rejectName)
         .then(response => {
           res(null, toPayload(payload.id, response.payload));
         })
@@ -91,5 +91,4 @@ export default async ({ payload }, res, next) => {
     .catch(e => {
       res(e);
     });
-  return true;
 };
