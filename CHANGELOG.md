@@ -1,6 +1,6 @@
 ### Devop
 
-- Sort Dapps by integration/release dates [#1616](https://github.com/MyEtherWallet/MyEtherWallet/pull/1616)
+- Sort Dapps by integration/release dates [#1619](https://github.com/MyEtherWallet/MyEtherWallet/pull/1619)
 
 ### Release v5.2.2
 
