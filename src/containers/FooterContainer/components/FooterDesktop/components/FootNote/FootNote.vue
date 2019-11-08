@@ -9,34 +9,16 @@
           <a class="cyan--text text--lighten-3" href="/">CoinMarketCap</a>.
         </div>
         <v-spacer />
-        <div>
-          <v-autocomplete
-            v-model="input1"
+        <v-sheet width="150" color="transparent">
+          <v-select
+            v-model="select"
             :items="languages"
             item-text="name"
             item-value="value"
-          >
-            <template v-slot:selection="data">
-              <img :src="data.item.flag" height="30" width="30" class="mr-3" />
-              {{ data.item.name }}
-            </template>
-            <template v-slot:item="data">
-              <template v-if="typeof data.item !== 'object'">
-                <v-list-item-content v-text="data.item"></v-list-item-content>
-              </template>
-              <template v-else>
-                <v-list-item-avatar>
-                  <img :src="data.item.flag" />
-                </v-list-item-avatar>
-                <v-list-item-content>
-                  <v-list-item-title>
-                    {{ data.item.name }}
-                  </v-list-item-title>
-                </v-list-item-content>
-              </template>
-            </template>
-          </v-autocomplete>
-        </div>
+            return-object
+            single-line
+          ></v-select>
+        </v-sheet>
       </div>
     </v-container>
   </div>
@@ -52,7 +34,7 @@ import ch from '@/assets/images/Common/Icons/Flags/china.png';
 
 export default {
   data: () => ({
-    input1: '',
+    select: '',
     languages: [
       { name: 'English', value: 'en', flag: uk },
       { name: 'Russian', value: 'ru', flag: ru },
@@ -70,5 +52,13 @@ export default {
 
 .foot-note {
   background-color: $dark-space;
+}
+
+.v-avatar img {
+  border-radius: 0;
+}
+
+.v-list-item__content {
+  //margin
 }
 </style>
