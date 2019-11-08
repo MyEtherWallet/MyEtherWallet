@@ -5,7 +5,11 @@
         <div class="title-balance">
           <h2>
             Dapps
-            <a href="https://www.stateofthedapps.com" target="_blank">
+            <a
+              href="https://www.stateofthedapps.com"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
               Powered by
               <img
                 src="@/assets/images/icons/dapps/sotd.png"
