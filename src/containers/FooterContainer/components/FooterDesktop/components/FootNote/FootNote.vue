@@ -17,6 +17,7 @@
             item-value="value"
             return-object
             single-line
+            dark
           ></v-select>
         </v-sheet>
       </div>
@@ -34,7 +35,7 @@ import ch from '@/assets/images/Common/Icons/Flags/china.png';
 
 export default {
   data: () => ({
-    select: '',
+    select: 'en',
     languages: [
       { name: 'English', value: 'en', flag: uk },
       { name: 'Russian', value: 'ru', flag: ru },
@@ -57,8 +58,24 @@ export default {
 .v-avatar img {
   border-radius: 0;
 }
+</style>
 
-.v-list-item__content {
-  //margin
+<style lang="scss">
+.foot-note {
+  .v-select__selection {
+    color: #80deea !important;
+    width: 100%;
+    text-align: right;
+  }
+
+  .v-text-field > .v-input__control > .v-input__slot:before,
+  .v-text-field > .v-input__control > .v-input__slot:after,
+  .v-select.v-text-field input {
+    display: none;
+  }
+
+  .v-text-field .v-input__append-inner {
+    margin-left: -15px;
+  }
 }
 </style>
