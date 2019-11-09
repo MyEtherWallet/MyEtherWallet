@@ -1,6 +1,6 @@
 <template>
-  <div class="pt-6">
-    <v-container>
+  <div>
+    <v-container class="py-12">
       <v-row>
         <v-col cols="2">
           <div class="subtitle-1 font-weight-bold mb-1">Tools</div>
@@ -120,6 +120,18 @@
           </a>
         </v-col>
       </v-row>
+      <div class="d-flex align-center mt-12">
+        <div class="d-flex align-center">
+          <v-list>
+            <v-list-item>
+              Feedback
+            </v-list-item>
+            | Privacy | Terms</v-list
+          >
+        </div>
+        <v-spacer />
+        <div>a</div>
+      </div>
     </v-container>
     <FootNote />
   </div>

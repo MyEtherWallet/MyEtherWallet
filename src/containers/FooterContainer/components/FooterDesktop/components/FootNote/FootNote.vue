@@ -70,12 +70,19 @@ export default {
 
   .v-text-field > .v-input__control > .v-input__slot:before,
   .v-text-field > .v-input__control > .v-input__slot:after,
-  .v-select.v-text-field input {
+  .v-select.v-text-field input,
+  .v-text-field__details {
     display: none;
   }
 
   .v-text-field .v-input__append-inner {
     margin-left: -15px;
+  }
+
+  .v-text-field,
+  .v-input__slot {
+    margin: 0;
+    padding: 0;
   }
 }
 </style>
