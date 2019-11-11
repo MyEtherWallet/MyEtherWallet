@@ -106,7 +106,7 @@
     "iban": "0.0.12",
     "imagemin-mozjpeg": "8.0.0",
     "imagemin-webpack-plugin": "2.4.2",
-    "jest-skipped-reporter": "0.0.4",
+    "jest-skipped-reporter": "0.0.5",
     "jspdf": "1.5.3",
     "keccak": "2.0.0",
     "marked": "0.7.0",
