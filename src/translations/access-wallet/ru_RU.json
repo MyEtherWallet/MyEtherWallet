@@ -15,7 +15,7 @@
   "accessDeviceAddresses": "Choose a Hardware",
   "password": "Пароль",
   "mewConnectDesc": "Использовать MEWconnect для получения доступа к моему кошельку",
-  "web3WalletDesc": "Use a Web3 Wallet to access my wallet",
+  "web3WalletDesc": "Use a Web3 Wallet (MEW CX, MetaMask, Dapper, Etc) to access my wallet",
   "installWeb3WalletModalDesc": "Please install a Web3 Wallet and refresh your page.",
   "refresh": "Обновить",
   "unlockWeb3Wallet": "Can't access wallet! Please unlock your wallet through the Web3 Wallet extension",
