@@ -108,7 +108,11 @@
               Contact support
             </p>
             <p class="ml-2 mr-2">|</p>
-            <a href="https://kb.myetherwallet.com/" target="_blank">
+            <a
+              href="https://kb.myetherwallet.com/"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
               <p>Help center</p>
             </a>
           </div>

@@ -21,6 +21,7 @@
             class="no-link"
             href="https://xwallet.pundix.com"
             target="_blank"
+            rel="noopener noreferrer"
           >
             By Pundi X >
           </a>
