@@ -110,7 +110,11 @@
               {{ $t('common.contact-support') }}
             </p>
             <p class="ml-2 mr-2">|</p>
-            <a href="https://kb.myetherwallet.com/" target="_blank">
+            <a
+              href="https://kb.myetherwallet.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <p>{{ $t('common.help-center') }}</p>
             </a>
           </div>

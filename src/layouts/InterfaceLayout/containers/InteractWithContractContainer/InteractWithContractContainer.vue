@@ -72,7 +72,8 @@
           :class="[
             isValidAbi &&
             isValidAddress &&
-            (!errors.has('nameAddr') && !errors.has('abiField'))
+            !errors.has('nameAddr') &&
+            !errors.has('abiField')
               ? ''
               : 'disabled',
             'submit-button large-round-button-green-filled clickable'

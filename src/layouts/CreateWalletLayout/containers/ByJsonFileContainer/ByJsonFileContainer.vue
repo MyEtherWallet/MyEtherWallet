@@ -37,6 +37,7 @@
                       'nopadding'
                     ]"
                     :download="name"
+                    rel="noopener noreferrer"
                     @click="downloadDone()"
                   >
                     <span v-if="downloadable">{{

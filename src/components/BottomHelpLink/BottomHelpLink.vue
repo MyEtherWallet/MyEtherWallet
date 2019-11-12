@@ -2,9 +2,12 @@
   <div class="Bottom-help-link">
     <div v-if="type == 'issues'" class="issues">
       {{ $t('common.having-issues') }}
-      <a href="https://kb.myetherwallet.com/" target="_blank">{{
-        $t('common.help-center')
-      }}</a>
+      <a
+        href="https://kb.myetherwallet.com/"
+        target="_blank"
+        rel="noopener noreferrer"
+        >{{ $t('common.help-center') }}</a
+      >
     </div>
   </div>
 </template>

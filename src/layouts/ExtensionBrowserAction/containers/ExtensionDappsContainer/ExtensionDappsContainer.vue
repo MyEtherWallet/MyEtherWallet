@@ -5,7 +5,11 @@
         <div class="title-balance">
           <h2>
             {{ $t('mewCx.dapps') }}
-            <a href="https://www.stateofthedapps.com" target="_blank">
+            <a
+              href="https://www.stateofthedapps.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               {{ $t('mewCx.powered-by') }}
               <img
                 :alt="$t('mewCx.sotd')"
