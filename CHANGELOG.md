@@ -2,6 +2,9 @@
 
 - Update web3 icons [#1614](https://github.com/MyEtherWallet/MyEtherWallet/pull/1614)
 
+### Bug
+
+- Web3 modal weird behavior [#1613](https://github.com/MyEtherWallet/MyEtherWallet/pull/1613)
 
 ### Release v5.2.2
 
