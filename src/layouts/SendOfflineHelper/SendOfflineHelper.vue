@@ -128,6 +128,7 @@
                 ref="generatedDownloadLink"
                 :href="generatedJson"
                 :download="exportFileName"
+                rel="noopener noreferrer"
               >
                 <standard-button
                   :options="{
@@ -322,6 +323,7 @@
                       :href="replaceUrl('', txReceipt[item])"
                       target="_blank"
                       class="right-side"
+                      rel="noopener noreferrer"
                       >{{ txReceipt[item] }}</a
                     >
                     <a
@@ -605,21 +607,21 @@ export default {
     },
     async generateInformation(address) {
       if (address === '') return;
-      this.genInfo.address = address;
-      this.genInfo.gasPrice = await this.web3.eth.getGasPrice();
-      this.genInfo.nonce = await this.web3.eth.getTransactionCount(address);
-      this.genInfo.blockNumber = await this.web3.eth.getBlockNumber();
-      this.genInfo.chainID = this.selectedNetwork.type.chainID;
-      this.genInfo.timestamp = Date.now(); //;
+      this.genInfo['address'] = address;
+      this.genInfo['gasPrice'] = await this.web3.eth.getGasPrice();
+      this.genInfo['nonce'] = await this.web3.eth.getTransactionCount(address);
+      this.genInfo['blockNumber'] = await this.web3.eth.getBlockNumber();
+      this.genInfo['chainID'] = this.selectedNetwork.type.chainID;
+      this.genInfo['timestamp'] = Date.now(); //;
       this.exportGeneratedInfo();
       this.informationGenerated = true;
     },
     exportGeneratedInfo() {
-      const createBlob = (mime, str) => {
+      const createBlob = (str, type) => {
         const string = typeof str === 'object' ? JSON.stringify(str) : str;
         if (string === null) return '';
         const blob = new Blob([string], {
-          type: mime
+          type: type
         });
         this.downloadable = true;
         return window.URL.createObjectURL(blob);

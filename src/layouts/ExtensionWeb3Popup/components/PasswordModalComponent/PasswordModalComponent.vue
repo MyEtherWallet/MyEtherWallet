@@ -49,6 +49,7 @@
           <a
             href="https://www.myetherwallet.com/terms-and-conditions"
             target="_blank"
+            rel="noopener noreferrer"
           >
             {{ $t('accessWallet.pin.terms') }}
           </a>

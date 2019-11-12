@@ -26,10 +26,14 @@
           <qrcode
             :value="JSON.parse(signedTx).rawTransaction"
             :options="{ size: 200 }"
+            head
           />{{ $t('sendTx.signed.or') }}
-          <a :href="jsonFile" :download="jsonFileName">{{
-            $t('sendTx.signed.download')
-          }}</a>
+          <a
+            :href="jsonFile"
+            :download="jsonFileName"
+            rel="noopener noreferrer"
+            >{{ $t('sendTx.signed.download') }}</a
+          >
         </div>
       </div>
       <div class="raw">

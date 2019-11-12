@@ -14,6 +14,7 @@
       </div>
       <b-link
         class="email-us-btn"
+        rel="noopener noreferrer"
         href="mailto:support@myetherwallet.com"
         target="_blank"
         >{{ $t('common.contact-support') }}</b-link

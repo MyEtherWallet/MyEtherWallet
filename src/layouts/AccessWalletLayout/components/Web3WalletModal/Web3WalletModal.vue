@@ -225,7 +225,15 @@ export default {
     ...mapState(['path'])
   },
   mounted() {
-    this.isSafari = platform.name.toLowerCase() === 'safari';
+    this.$refs.metamask.$on('hidden', () => {
+      this.accessMyWalletBtnDisabled = true;
+      this.unlockWeb3Wallet = false;
+      this.refreshPage = false;
+      this.isSafari = false;
+    });
+    this.$refs.metamask.$on('shown', () => {
+      this.isSafari = platform.name.toLowerCase() === 'safari';
+    });
   },
   methods: {
     reload() {

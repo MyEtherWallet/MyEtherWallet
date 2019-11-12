@@ -73,6 +73,7 @@
               :href="walletJson"
               :download="filename"
               target="_blank"
+              rel="noopener noreferrer"
             />
           </div>
         </div>
