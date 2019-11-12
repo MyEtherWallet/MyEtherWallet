@@ -1,6 +1,6 @@
-
 ### Devop
 
+- Sort Dapps by integration/release dates [#1619](https://github.com/MyEtherWallet/MyEtherWallet/pull/1619)
 - Update web3 icons [#1614](https://github.com/MyEtherWallet/MyEtherWallet/pull/1614)
 
 ### Bug
