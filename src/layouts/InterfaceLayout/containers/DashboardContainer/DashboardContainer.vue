@@ -73,6 +73,7 @@
             :icon-disabled="dapp.iconDisabled"
             :desc="$t(dapp.desc)"
             :param="dapp.route"
+            :release-date="dapp.releaseDate"
             :supported-networks="dapp.supportedNetworks"
             class="dapp"
           />
@@ -180,19 +181,20 @@ export default {
     sortedObject() {
       const arrayedDapp = [];
       Object.keys(dapps).forEach(dapp => {
-        if (this.dappsToShow.includes(dapp)) {
-          arrayedDapp.push(dapps[dapp]);
-        }
+        arrayedDapp.push(dapps[dapp]);
       });
-
-      return arrayedDapp.sort((a, b) => {
-        if (
-          a.supportedNetworks.includes(this.network.type.name) ||
-          b.supportedNetworks.includes(this.network.type.name)
-        )
-          return 1;
-        return 0;
-      });
+      return arrayedDapp
+        .sort((a, b) => {
+          return new Date(b.releaseDate) - new Date(a.releaseDate);
+        })
+        .sort((a, b) => {
+          if (
+            a.supportedNetworks.includes(this.network.type.name) ||
+            b.supportedNetworks.includes(this.network.type.name)
+          )
+            return 1;
+          return 0;
+        });
     },
     isOnlineAndEth() {
       return this.online && this.network.type.name === 'ETH';
