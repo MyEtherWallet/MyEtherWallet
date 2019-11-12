@@ -134,3 +134,41 @@ $mobile-width: 530px;
     margin-top: 40px;
   }
 }
+
+//***************************************************
+// Address Book
+//***************************************************
+.address-book {
+  .address-inputs {
+    align-items: center;
+    display: flex;
+    margin-bottom: 10px;
+    margin-top: 15px;
+    input {
+      background-color: $light-grey-1;
+      border: 0;
+      border-radius: 4px 0 0 4px;
+      height: 52px;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    .address-input {
+      width: 70%;
+    }
+
+    .address-input-blockie {
+      width: 60%;
+    }
+
+    .nickname-input {
+      margin-left: 10px;
+      width: 30%;
+    }
+  }
+
+  .disabled {
+    background-color: $dark-grey-11;
+    pointer-events: none;
+  }
+}

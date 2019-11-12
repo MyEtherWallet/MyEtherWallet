@@ -142,18 +142,45 @@
             </div>
           </full-width-dropdown>
 
-          <full-width-dropdown
-            title="Address Book"
-            class="address-book"
-          >
+          <full-width-dropdown title="Address Book" class="address-book">
             <p>
-              <!-- Please click the button below to download your configuration file
-              into your local computer. -->
+              You can add up to 10 contacts
             </p>
+            <div v-if="addressContacts.length > 0">
+              <div v-for="contact in addressContacts" :key="contact.key">
+                <input type="text">
+              </div>
+            </div>
+            <div class="address-inputs">
+              <blockie
+                v-show="isValidAddress"
+                :address="contactAddress"
+                width="32px"
+                height="32px"
+                class="blockie-image"
+              />
+              <input
+                v-ens-resolver="'contactAddress'"
+                :class="
+                  isValidAddress ? 'address-input-blockie' : 'address-input'
+                "
+                v-model="contactAddress"
+                type="text"
+                placeholder="Address"
+              />
+              <input
+                v-model="contactNickname"
+                class="nickname-input"
+                type="text"
+                placeholder="Nickname"
+              />
+            </div>
             <div class="button-block">
-              <!-- <a :href="file" :download="fileName" class="export-button"> -->
-              <standard-button :options="buttonAddress" @click.native="addContact" />
-              <!-- </a> -->
+              <standard-button
+                :options="buttonAddress"
+                :button-disabled="!contactAddress || !isValidAddress"
+                @click.native="addContact"
+              />
             </div>
           </full-width-dropdown>
         </div>
@@ -169,11 +196,13 @@ import utils from 'web3-utils';
 import store from 'store';
 import { Toast } from '@/helpers';
 import { mapState } from 'vuex';
+import Blockie from '@/components/Blockie';
 
 export default {
   name: 'Settings',
   components: {
-    'full-width-dropdown': FullWidthDropdownMenu
+    'full-width-dropdown': FullWidthDropdownMenu,
+    blockie: Blockie
   },
   props: {
     gasPrice: {
@@ -218,7 +247,7 @@ export default {
         noMinWidth: false
       },
       buttonAddress: {
-        title: 'Add Address',
+        title: 'Add Contact',
         buttonStyle: 'green',
         rightArrow: false,
         leftArrow: false,
@@ -233,7 +262,11 @@ export default {
       fileName: '',
       file: '',
       importedFile: '',
-      popup: false
+      popup: false,
+      isValidAddress: false,
+      contactAddress: '',
+      contactNickname: '',
+      addressContacts: []
     };
   },
   computed: {
@@ -310,6 +343,7 @@ export default {
     }
     this.exportConfig();
     this.getGasType();
+    this.getContacts();
   },
   methods: {
     setDataFromImportedFile() {
@@ -465,6 +499,19 @@ export default {
         });
 
       this.ethPrice = price.data.ETH.quotes.USD.price;
+    },
+    addContact() {
+      this.addressContacts.push({
+        'address': this.contactAddress,
+        'nickname': this.contactNickname
+      })
+
+      store.set('addressBook', this.addressContacts);
+      console.error('this', this.addressContacts)
+    },
+    getContacts() {
+      this.addressContacts = store.get('addressBook')
+      console.error('this', this.addressContacts)
     }
   }
 };
