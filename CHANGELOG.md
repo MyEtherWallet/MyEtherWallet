@@ -1,11 +1,17 @@
-### Bug
-
-- Send Offline Helper export actual data [#1637](https://github.com/MyEtherWallet/MyEtherWallet/pull/1637)
+### Release v5.2.3
 
 ### Devop
 
+- Sort Dapps by integration/release dates [#1619](https://github.com/MyEtherWallet/MyEtherWallet/pull/1619)
+- Update web3 icons [#1614](https://github.com/MyEtherWallet/MyEtherWallet/pull/1614)
+
+### Bug
+
+- Web3 modal weird behavior [#1613](https://github.com/MyEtherWallet/MyEtherWallet/pull/1613)
+- Fix sentry error on user login [#1615](https://github.com/MyEtherWallet/MyEtherWallet/pull/1615)
 - reduce coin image count from 656 to 34 [#1601](https://github.com/MyEtherWallet/MyEtherWallet/pull/1601)
 - Add rel="noopener noreferrer" to links[#1618](https://github.com/MyEtherWallet/MyEtherWallet/pull/1618)
+- Send Offline Helper export actual data [#1637](https://github.com/MyEtherWallet/MyEtherWallet/pull/1637)
 
 ### Release v5.2.2
 
