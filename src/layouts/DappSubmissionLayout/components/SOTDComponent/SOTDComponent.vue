@@ -11,9 +11,10 @@
       <div class="info-box">
         <p>
           {{ parent.$t('dappsSubmission.sotd.info') }}
-          <a href="https://www.stateofthedapps.com/">{{
-            parent.$t('dappsSubmission.sotd.url')
-          }}</a
+          <a
+            rel="noopener noreferrer"
+            href="https://www.stateofthedapps.com/"
+            >{{ parent.$t('dappsSubmission.sotd.url') }}</a
           >.
         </p>
       </div>
