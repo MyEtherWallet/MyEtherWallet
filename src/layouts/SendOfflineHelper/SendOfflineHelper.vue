@@ -363,7 +363,7 @@ import BigNumber from 'bignumber.js';
 import web3Utils from 'web3-utils';
 import * as networkTypes from '@/networks/types';
 import store from 'store';
-import TitleTextContentsLayout from '@/layouts/InformationPages/Components/TitleTextContentsLayout';
+import PageTitleComponent from '@/components/PageTitleComponent';
 import AccordionMenu from '@/components/AccordionMenu';
 import DropDownAddressSelector from '@/components/DropDownAddressSelector';
 import StandardButton from '@/components/Buttons/StandardButton';
@@ -373,7 +373,7 @@ import ConfirmationModal from './components/ConfirmationModal';
 
 export default {
   components: {
-    'page-title': TitleTextContentsLayout,
+    'page-title': PageTitleComponent,
     'accordion-menu': AccordionMenu,
     'dropdown-address-selector': DropDownAddressSelector,
     'standard-button': StandardButton,

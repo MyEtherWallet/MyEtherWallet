@@ -1,6 +1,6 @@
 import { shallowMount } from '@vue/test-utils';
 import TeamLayout from '@/layouts/TeamLayout/TeamLayout.vue';
-import TitleTextContentsLayout from '@/layouts/InformationPages/Components/TitleTextContentsLayout';
+import PageTitle from '@/components/PageTitleComponent';
 
 import { Tooling } from '@@/helpers';
 
