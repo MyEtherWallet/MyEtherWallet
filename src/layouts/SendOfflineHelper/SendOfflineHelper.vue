@@ -125,6 +125,7 @@
                 ref="generatedDownloadLink"
                 :href="generatedJson"
                 :download="exportFileName"
+                rel="noopener noreferrer"
               >
                 <standard-button
                   :options="{
@@ -313,6 +314,7 @@
                       :href="replaceUrl('', txReceipt[item])"
                       target="_blank"
                       class="right-side"
+                      rel="noopener noreferrer"
                       >{{ txReceipt[item] }}</a
                     >
                     <a
