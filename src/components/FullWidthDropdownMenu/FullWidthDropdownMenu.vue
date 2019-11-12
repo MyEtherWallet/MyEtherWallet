@@ -1,7 +1,7 @@
 <template>
   <div class="full-width-dropdown-menu">
     <div class="wrap">
-      <div class="title-container" @click="dropdownOpen = !dropdownOpen">
+      <div class="title-container" :class="dropdownOpen && title === 'Address Book' ? 'address-title-container' : ''" @click="dropdownOpen = !dropdownOpen">
         <menu-title :title="title" class="menu-title-component" />
         <popover v-if="popup" :popcontent="popup" class="popover-box" />
         <i v-if="!dropdownOpen" class="fa fa-angle-down" aria-hidden="true" />
