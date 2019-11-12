@@ -97,7 +97,7 @@ export default class MakerCdpBase {
     if (this.cdp) {
       console.log(this.cdp.debtValue._amount); // todo remove dev item
       console.log(toBigNumber(this.cdp.debtValue._amount).toFixed(18).toString()); // todo remove dev item
-      return toBigNumber(this.cdp.debtValue._amount).toFixed(18);
+      return toBigNumber(toBigNumber(this.cdp.debtValue._amount).toFixed(18));
     }
     return toBigNumber(0);
   }

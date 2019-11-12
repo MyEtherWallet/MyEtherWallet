@@ -338,6 +338,7 @@ export default class MakerCDP extends MakerCdpBase {
       toBigNumber(amount),
       acknowledgeBypass
     ); // todo remove dev item
+    console.log('this.debtValue', this.debtValue); // todo remove dev item
     if (
       this.calcCollatRatio(
         this.collateralAmount,
