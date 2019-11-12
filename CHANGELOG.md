@@ -1,8 +1,12 @@
+### Bug
+
+- Send Offline Helper export actual data [#1637](https://github.com/MyEtherWallet/MyEtherWallet/pull/1637)
+
 ### Release v5.2.2
 
 ### Feature
 
-- XWallet Integration[#1609](https://github.com/MyEtherWallet/MyEtherWallet/pull/1609)
+- XWallet Integration [#1609](https://github.com/MyEtherWallet/MyEtherWallet/pull/1609)
 
 ### Release v5.2.1-hotfix.1
 
@@ -17,7 +21,7 @@
 
 ### Feature
 
-- Ambrpay Integration[#1441](https://github.com/MyEtherWallet/MyEtherWallet/pull/1441)
+- Ambrpay Integration [#1441](https://github.com/MyEtherWallet/MyEtherWallet/pull/1441)
 - Update Dapp Submission UI [#1585](https://github.com/MyEtherWallet/MyEtherWallet/pull/1585)
 
 ### Bug
