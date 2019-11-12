@@ -104,7 +104,7 @@ export default {
         this.localDomainName.replace(
           '.' + this.network.type.ens.registrarTLD,
           ''
-        ).length > 6
+        ).length >= 3
       );
     }
   },
