@@ -5,6 +5,7 @@ export async function doUpdate(self, Toast) {
   const afterOpen = self.$route.name === 'create';
   await self.updateActiveCdp();
   for (const idProp in self.activeCdps) {
+    console.log('self.activeCdps[idProp]', self.activeCdps[idProp]); // todo remove dev item
     if (self.activeCdps[idProp].needsUpdate) {
       if (self.activeCdps[idProp].closing) {
         afterClose = true;
