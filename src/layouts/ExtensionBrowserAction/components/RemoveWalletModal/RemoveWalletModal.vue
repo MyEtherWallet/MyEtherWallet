@@ -59,7 +59,10 @@ export default {
     },
     removeCb() {
       this.$refs.removeWalletModal.hide();
-      Toast.responseHandler(this.$t('mew-cx.wallet-remove-success'), Toast.SUCCESS);
+      Toast.responseHandler(
+        this.$t('mew-cx.wallet-remove-success'),
+        Toast.SUCCESS
+      );
     }
   }
 };

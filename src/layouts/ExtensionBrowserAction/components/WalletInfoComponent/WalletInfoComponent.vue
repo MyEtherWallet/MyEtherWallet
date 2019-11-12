@@ -427,7 +427,10 @@ export default {
         this.$refs.tokenModal.$refs.tokenModal.hide();
         this.fetchTokenBalance(token);
         await this.fetchTokens();
-        Toast.responseHandler(this.$t('mew-cx.token-added-success'), Toast.SUCCESS);
+        Toast.responseHandler(
+          this.$t('mew-cx.token-added-success'),
+          Toast.SUCCESS
+        );
       }
     },
     openAddCustom() {

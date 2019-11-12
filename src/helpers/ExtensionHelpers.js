@@ -46,7 +46,10 @@ const addWalletToStore = (
       }
     } else {
       if (foundAddress) {
-        Toast.responseHandler(this.$t('mew-cx.address-already-stored'), Toast.ERROR);
+        Toast.responseHandler(
+          this.$t('mew-cx.address-already-stored'),
+          Toast.ERROR
+        );
         return;
       }
     }
@@ -62,7 +65,10 @@ const addWalletToStore = (
     try {
       chrome.storage.sync.set(obj, callback);
     } catch (e) {
-      Toast.responseHandler(this.$t('mew-cx.something-went-wrong'), Toast.ERROR);
+      Toast.responseHandler(
+        this.$t('mew-cx.something-went-wrong'),
+        Toast.ERROR
+      );
     }
   });
 };
