@@ -49,6 +49,7 @@
           <a
             href="https://www.myetherwallet.com/terms-and-conditions"
             target="_blank"
+            rel="noopener noreferrer"
           >
             Terms and conditions
           </a>
