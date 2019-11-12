@@ -169,7 +169,7 @@
     <!-- =========================================================================== -->
     <div v-show="displayToShow === 'offline'" class="radio-button-container">
       <div class="no-provider-message">
-        {{ $t('interface.noSwapOffline') }}
+        {{ $t('swap.warning.no-swap-offline') }}
       </div>
       <ul>
         <provider-info-list
@@ -186,7 +186,7 @@
       class="radio-button-container"
     >
       <div class="no-provider-message">
-        {{ $t('interface.swapOnlyMainNet') }}
+        {{ $t('swap.warning.swap-only-mainnet') }}
       </div>
       <ul>
         <provider-info-list
