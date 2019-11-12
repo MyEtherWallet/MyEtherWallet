@@ -35,5 +35,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'TitleTextContentsLayout.scss';
+@import 'PageTitleComponent.scss';
 </style>
