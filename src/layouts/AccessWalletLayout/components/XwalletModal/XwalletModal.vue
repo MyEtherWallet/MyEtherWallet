@@ -37,7 +37,9 @@
             <img src="~@/assets/images/icons/google-play.svg" height="35" />
           </a>
         </div>
-        <p class="download-now">{{ $t('accessWallet.mewconnect.modal.text2') }}</p>
+        <p class="download-now">
+          {{ $t('accessWallet.mewconnect.modal.text2') }}
+        </p>
       </div>
       <customer-support />
     </div>

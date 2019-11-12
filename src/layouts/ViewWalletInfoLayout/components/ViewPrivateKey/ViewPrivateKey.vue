@@ -40,7 +40,10 @@ export default {
     copy() {
       this.$refs.privKey.select();
       document.execCommand('copy');
-      Toast.responseHandler(this.$t('interface.addr.copied-private-key'), Toast.SUCCESS);
+      Toast.responseHandler(
+        this.$t('interface.addr.copied-private-key'),
+        Toast.SUCCESS
+      );
     }
   }
 };
