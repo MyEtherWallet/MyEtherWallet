@@ -1,5 +1,8 @@
 <template functional>
-  <div class="button-nft-manager">
+  <div
+    class="button-nft-manager"
+    @click="props.goTo('nft-manager', props.disabled)"
+  >
     <div
       :class="props.disabled ? 'button-disabled' : ''"
       class="content-container"
@@ -10,9 +13,13 @@
         alt="kitties"
       />
       <div class="text-content">
-        <p class="title">NFT<br />Manager</p>
+        <p class="title">
+          {{ parent.$t('nftManager.nft') }}<br />{{
+            parent.$t('nftManager.manager')
+          }}
+        </p>
         <p v-if="props.disabled" class="button-disabled">
-          This function is not available.
+          {{ parent.$t('interface.no-avail') }}
         </p>
       </div>
     </div>
@@ -25,6 +32,10 @@ export default {
     disabled: {
       type: Boolean,
       default: false
+    },
+    goTo: {
+      type: Function,
+      default: () => {}
     }
   }
 };

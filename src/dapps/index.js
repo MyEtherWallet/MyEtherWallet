@@ -6,6 +6,7 @@ import secureTransactionHov from '@/assets/images/icons/button-key.svg';
 import scheduleTransaction from '@/assets/images/icons/eac.svg';
 import scheduleTransactionHov from '@/assets/images/icons/eac-hov.svg';
 import makerdai from '@/assets/images/icons/dapps/makerdai.svg';
+import ambrpay from '@/assets/images/icons/dapps/ambrpay.png';
 import { ETH, GOERLI, ROP, RIN, KOV } from '@/networks/types';
 
 const dapps = {
@@ -13,25 +14,24 @@ const dapps = {
     route: '/interface/dapps/manage-ens',
     icon: manageEns,
     iconDisabled: manageEnsHov,
-    title: 'interface.ensManager',
-    desc: 'interface.registerENSDescShort',
+    title: 'ens.title',
+    desc: 'ens.dapp-desc',
     supportedNetworks: [ETH.name, GOERLI.name, ROP.name, RIN.name]
   },
   domainSale: {
     route: '/interface/dapps/name-wallet',
     icon: domainSale,
     iconDisabled: domainSaleHov,
-    title: 'interface.nameYourWallet',
-    desc: 'interface.nameYourWalletDesc',
+    title: 'subDomain.title',
+    desc: 'subDomain.dapp-desc',
     supportedNetworks: [ETH.name]
   },
   scheduleTransaction: {
     route: '/interface/dapps/schedule-transaction',
     icon: scheduleTransaction,
     iconDisabled: scheduleTransactionHov,
-    title: 'Schedule a transaction',
-    desc:
-      'Schedule a transaction using the decentralized Ethereum Alarm Clock protocol',
+    title: 'scheduleTx.title',
+    desc: 'scheduleTx.dapp-desc',
     supportedNetworks: [ETH.name, KOV.name]
   },
   maker: {
@@ -41,6 +41,14 @@ const dapps = {
     title: 'dappsMaker.maker_title',
     desc: 'dappsMaker.maker_desc',
     supportedNetworks: [ETH.name, KOV.name]
+  },
+  ambrpay: {
+    route: '/interface/dapps/ambrpay',
+    icon: ambrpay,
+    iconDisabled: secureTransactionHov,
+    title: 'Ambrpay',
+    desc: 'With Ambrpay you can create and manage recurring payments.',
+    supportedNetworks: [ETH.name]
   }
 };
 

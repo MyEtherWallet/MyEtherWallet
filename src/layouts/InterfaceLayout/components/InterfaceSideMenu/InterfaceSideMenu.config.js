@@ -10,7 +10,7 @@ const config = {
         active: require('@/assets/images/sidemenu/dashboard-active.svg'),
         inactive: require('@/assets/images/sidemenu/dashboard.svg')
       },
-      titleKey: 'interface.dashboard',
+      titleKey: 'interface.menu.dashboard',
       children: []
     },
     {
@@ -28,7 +28,7 @@ const config = {
         active: require('@/assets/images/sidemenu/send-active.svg'),
         inactive: require('@/assets/images/sidemenu/send.svg')
       },
-      titleKey: 'interface.txSideMenuTitle',
+      titleKey: 'interface.menu.send',
       children: [
         {
           name: 'send-transaction',
@@ -37,7 +37,7 @@ const config = {
             active: '',
             inactive: ''
           },
-          titleKey: 'common.sendTx'
+          titleKey: 'sendTx.send-tx'
         },
         {
           name: 'send-offline',
@@ -51,7 +51,7 @@ const config = {
             active: '',
             inactive: ''
           },
-          titleKey: 'common.offline'
+          titleKey: 'sendTx.send-offline'
         },
         {
           name: 'nft-manager',
@@ -61,7 +61,7 @@ const config = {
             active: '',
             inactive: ''
           },
-          titleKey: 'common.ntfManager'
+          titleKey: 'interface.menu.ntf'
         }
       ]
     },
@@ -114,7 +114,7 @@ const config = {
         active: require('@/assets/images/sidemenu/contract-active.svg'),
         inactive: require('@/assets/images/sidemenu/contract.svg')
       },
-      titleKey: 'interface.txSideMenuContract',
+      titleKey: 'interface.menu.contract',
       children: [
         {
           name: 'interact-with-contract',
@@ -123,7 +123,7 @@ const config = {
             active: '',
             inactive: ''
           },
-          titleKey: 'common.interactWcontract'
+          titleKey: 'interface.menu.interact-contract'
         },
         {
           name: 'deploy-contract',
@@ -132,7 +132,7 @@ const config = {
             active: '',
             inactive: ''
           },
-          titleKey: 'common.depContract'
+          titleKey: 'interface.menu.deploy'
         }
       ]
     },
@@ -144,7 +144,7 @@ const config = {
         active: require('@/assets/images/sidemenu/message-active.svg'),
         inactive: require('@/assets/images/sidemenu/message.svg')
       },
-      titleKey: 'interface.txSideMenuMessage',
+      titleKey: 'interface.menu.message',
       children: [
         {
           name: 'sign-message',
@@ -153,7 +153,7 @@ const config = {
             active: '',
             inactive: ''
           },
-          titleKey: 'common.signMessage'
+          titleKey: 'interface.menu.sign-message'
         },
         {
           name: 'verify-message',
@@ -162,7 +162,7 @@ const config = {
             active: '',
             inactive: ''
           },
-          titleKey: 'common.verifyMessage'
+          titleKey: 'verifyMessage.title'
         }
       ]
     }

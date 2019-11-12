@@ -23,7 +23,7 @@ describe('WarningMessage.vue', () => {
     });
   });
 
-  it('should render correct options props', () => {
+  xit('should render correct options props', () => {
     expect(
       wrapper.vm.$el.querySelector('.warning-message .title').textContent.trim()
     ).toEqual(wrapper.props().options.title);

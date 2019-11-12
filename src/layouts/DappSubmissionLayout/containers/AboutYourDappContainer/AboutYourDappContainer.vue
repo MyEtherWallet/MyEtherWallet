@@ -1,8 +1,10 @@
 <template>
-  <div class="about-your-dapp w-50 mb-5 mt-5">
+  <div class="about-your-dapp mb-5 mt-5">
     <b-form onsubmit="return false;">
       <b-form-group>
-        <label class="dapp-label">Dapp name</label>
+        <label class="dapp-label">{{
+          $t('dappsSubmission.about-your-dapp.name')
+        }}</label>
         <div class="dapp-input">
           <b-form-input
             v-validate="'required'"
@@ -20,7 +22,9 @@
         </p>
       </b-form-group>
       <b-form-group>
-        <label class="dapp-label">Category</label>
+        <label class="dapp-label">{{
+          $t('dappsSubmission.about-your-dapp.category')
+        }}</label>
         <div class="dapp-input">
           <label class="dapp-select-label">
             <b-form-select
@@ -40,9 +44,9 @@
       </b-form-group>
       <b-form-group class="input-tags-group tags-form-group">
         <label class="dapp-label"
-          >Tags
+          >{{ $t('dappsSubmission.about-your-dapp.tags-title') }}
           <popover
-            :popcontent="$t('dappsSubmission.tags')"
+            :popcontent="$t('dappsSubmission.about-your-dapp.tags')"
             class="dapp-popover"
           ></popover>
         </label>
@@ -72,30 +76,46 @@
           <span>*</span>
         </div>
         <p v-if="dappTagsError" class="error">
-          The tags field is required
+          {{ $t('dappsSubmission.about-your-dapp.tags-required') }}
         </p>
       </b-form-group>
       <div class="suggested-tags-container mb-3">
-        <p class="title">Suggested Tags</p>
+        <p class="title">
+          {{ $t('dappsSubmission.about-your-dapp.suggested-tags') }}
+        </p>
         <p class="tags">
-          <span>Games</span>
-          <span>Defi Lending</span>
-          <span>Social</span>
-          <span>Finance</span>
-          <span>Wallet</span>
+          <span @click="addTags('games')">{{
+            $t('dappsSubmission.about-your-dapp.games')
+          }}</span>
+          <span @click="addTags('defi lending')">{{
+            $t('dappsSubmission.about-your-dapp.defi')
+          }}</span>
+          <span @click="addTags('social')">{{
+            $t('dappsSubmission.about-your-dapp.social')
+          }}</span>
+          <span @click="addTags('finance')">{{
+            $t('dappsSubmission.about-your-dapp.finance')
+          }}</span>
+          <span @click="addTags('wallet')">{{
+            $t('dappsSubmission.about-your-dapp.wallet')
+          }}</span>
         </p>
       </div>
       <b-form-group id="form-group-description">
-        <label class="dapp-label">Description</label>
+        <label class="dapp-label">{{
+          $t('dappsSubmission.about-your-dapp.description')
+        }}</label>
         <b-form-invalid-feedback id="form-group-description">
-          This is a required field.
+          {{ $t('dappsSubmission.about-your-dapp.required-field') }}.
         </b-form-invalid-feedback>
         <div class="dapp-input">
           <b-form-textarea
             v-validate="'max:800|required'"
             v-model="form.description"
+            :placeholder="
+              $t('dappsSubmission.about-your-dapp.description-placeholder')
+            "
             name="description"
-            placeholder="800 characters"
             rows="7"
             size="lg"
             @update="updateDescription"
@@ -108,9 +128,9 @@
         </p>
       </b-form-group>
       <b-form-group>
-        <label class="dapp-label"
-          >Is your Dapp available for use in the United States?</label
-        >
+        <label class="dapp-label">{{
+          $t('dappsSubmission.about-your-dapp.dapp-us')
+        }}</label>
         <div class="dapp-input">
           <label class="dapp-select-label">
             <b-form-select
@@ -129,7 +149,9 @@
         </p>
       </b-form-group>
       <b-form-group>
-        <label class="dapp-label">Dapp status</label>
+        <label class="dapp-label">{{
+          $t('dappsSubmission.about-your-dapp.dapp-status')
+        }}</label>
         <div class="dapp-input">
           <label class="dapp-select-label">
             <b-form-select
@@ -149,26 +171,28 @@
       </b-form-group>
       <b-form-group>
         <label class="dapp-label"
-          >Mock user flow
+          >{{ $t('dappsSubmission.about-your-dapp.mock-flow-title') }}
           <popover
-            :popcontent="$t('dappsSubmission.mockUserFlow')"
+            :popcontent="$t('dappsSubmission.about-your-dapp.mock-user-flow')"
             class="dapp-popover"
           ></popover>
         </label>
         <p class="dapp-text-info mb-3">
-          Dimensions must be 1200px width by 630px height; JPEG or PDF file
-          only; Image size no large than 5MB
+          {{ $t('dappsSubmission.about-your-dapp.mock-requirements') }}
         </p>
         <div class="dapp-input">
           <label for="customUpload" class="upload-btn-wrapper">
             <div class="fake-input">
               <p class="file-name">{{ form.mockFlowFile.name }}</p>
             </div>
-            <button class="upload-btn">Upload</button>
+            <button class="upload-btn">
+              {{ $t('dappsSubmission.upload') }}
+            </button>
           </label>
           <input
             id="customUpload"
             ref="mockUserFlow"
+            class="mock-user-flow-input"
             type="file"
             @change="onMockFileChange"
           />
@@ -180,9 +204,9 @@
       </b-form-group>
       <b-form-group>
         <label class="dapp-label"
-          >Contract address
+          >{{ $t('dappsSubmission.about-your-dapp.contract-address-title') }}
           <popover
-            :popcontent="$t('dappsSubmission.contractAddress')"
+            :popcontent="$t('dappsSubmission.about-your-dapp.contract-address')"
             class="dapp-popover"
           ></popover>
         </label>
@@ -193,7 +217,7 @@
             v-model="form.contractAddress"
             name="address"
             type="text"
-            @update="updateContractAddress"
+            @update="onContractAddressChange"
           >
           </b-form-input>
           <span>*</span>
@@ -201,17 +225,22 @@
         <p v-if="errors.has('address')" class="error">
           {{ errors.first('address') }}
         </p>
+        <p v-if="contractAddressErr" class="error">
+          {{ contractAddressErr }}
+        </p>
       </b-form-group>
       <b-form-group>
         <label class="dapp-label">
-          <span class="dapp-icon-label"> Dapp icon </span>
+          <span class="dapp-icon-label">
+            {{ $t('dappsSubmission.about-your-dapp.dapp-icon-title') }}
+          </span>
           <popover
-            :popcontent="$t('dappsSubmission.dappIcon')"
+            :popcontent="$t('dappsSubmission.about-your-dapp.dapp-icon')"
             class="dapp-popover"
           ></popover>
-          <label v-if="form.dappIconUrl" for="dappIcon" class="replace-label"
-            >Replace</label
-          >
+          <label v-if="form.dappIconUrl" for="dappIcon" class="replace-label">{{
+            $t('dappsSubmission.replace')
+          }}</label>
         </label>
         <div class="image-wrapper">
           <div
@@ -222,10 +251,10 @@
               <div class="image-placeholder">
                 <i v-if="!form.dappIconUrl" class="fa fa-cloud-upload"></i>
                 <h4 class="image-text">
-                  Drop your icon here, or select a file from your computer.
+                  {{ $t('dappsSubmission.about-your-dapp.icon-text') }}
                 </h4>
                 <p class="image-requirements">
-                  JPEG or PNG, at least 192px * 192px
+                  {{ $t('dappsSubmission.about-your-dapp.icon-requirements') }}
                 </p>
               </div>
               <img
@@ -235,7 +264,9 @@
               />
               <b-form-file
                 id="dappIcon"
-                drop-placeholder="Drop your icon here"
+                :drop-placeholder="
+                  $t('dappsSubmission.about-your-dapp.dapp-icon-placeholder')
+                "
                 type="file"
                 @change="onDappIconChange"
               ></b-form-file>
@@ -243,7 +274,7 @@
           </div>
           <span
             :class="form.dappIconUrl ? 'uploaded-required-icon' : ''"
-            class="requiredIcon"
+            class="required-icon"
             >*</span
           >
         </div>
@@ -253,13 +284,16 @@
       </b-form-group>
       <b-form-group>
         <label class="dapp-label"
-          >Banner
+          >{{ $t('dappsSubmission.about-your-dapp.banner-title') }}
           <popover
-            :popcontent="$t('dappsSubmission.banner')"
+            :popcontent="$t('dappsSubmission.about-your-dapp.banner')"
             class="dapp-popover"
           ></popover>
-          <label v-if="form.bannerUrl" for="bannerImage" class="replace-label"
-            >Replace</label
+          <label
+            v-if="form.bannerUrl"
+            for="bannerImage"
+            class="replace-label"
+            >{{ $t('dappsSubmission.replace') }}</label
           >
         </label>
         <div class="image-wrapper">
@@ -271,10 +305,12 @@
               <div class="image-placeholder">
                 <i v-if="!form.bannerUrl" class="fa fa-cloud-upload"></i>
                 <h4 class="image-text">
-                  Drop your image here, or select a file from your computer.
+                  {{ $t('dappsSubmission.about-your-dapp.image-text') }}
                 </h4>
                 <p class="image-requirements">
-                  JPEG or PNG, at least 1200px * 206px
+                  {{
+                    $t('dappsSubmission.about-your-dapp.banner-requirements')
+                  }}
                 </p>
               </div>
               <img
@@ -284,8 +320,10 @@
               />
               <b-form-file
                 id="bannerImage"
+                :drop-placeholder="
+                  $t('dappsSubmission.about-your-dapp.banner-placeholder')
+                "
                 accept="image/*"
-                drop-placeholder="Drop your banner here"
                 type="file"
                 @change="onBannerChange"
               >
@@ -294,7 +332,7 @@
           </div>
           <span
             :class="form.bannerUrl ? 'uploaded-required-icon' : ''"
-            class="requiredIcon"
+            class="required-icon"
             >*</span
           >
         </div>
@@ -303,13 +341,15 @@
         </p>
       </b-form-group>
       <b-form-group>
-        <label class="dapp-label">Dapp website</label>
+        <label class="dapp-label">{{
+          $t('dappsSubmission.about-your-dapp.dapp-website')
+        }}</label>
         <b-form-input
           v-validate="'url:require_protocol'"
           id="dappWebsite"
           v-model="form.dappWebsite"
+          :placeholder="$t('dappsSubmission.url-placeholder')"
           name="website"
-          placeholder="URL link"
           type="text"
           @change="updateDisableBtn(errors)"
         ></b-form-input>
@@ -319,9 +359,9 @@
       </b-form-group>
       <b-form-group>
         <label class="dapp-label"
-          >Dapp contract audit
+          >{{ $t('dappsSubmission.about-your-dapp.contract-audit-title') }}
           <popover
-            :popcontent="$t('dappsSubmission.contractAudit')"
+            :popcontent="$t('dappsSubmission.about-your-dapp.contract-audit')"
             class="dapp-popover"
           ></popover>
         </label>
@@ -340,6 +380,7 @@
 <script>
 import TagComponentVue from '../../components/TagComponent/TagComponent.vue';
 import PopOver from '@/components/PopOver';
+import { isAddress } from '@/helpers/addressUtils';
 
 export default {
   components: {
@@ -449,21 +490,28 @@ export default {
       dappIconError: null,
       bannerError: null,
       mockFlowImgName: '',
-      dappTagsError: false
+      dappTagsError: false,
+      contractAddressErr: null,
+      spacePressCount: 0
     };
   },
   methods: {
+    pushTag() {
+      this.displayTags.push(this.tagInput);
+      this.tagInput = '';
+      setTimeout(() => this.updateWidth());
+    },
     onKeyDown(e) {
+      if (e.keyCode === 32) {
+        this.spacePressCount++;
+      }
       if (
-        e.keyCode === 13 &&
-        this.$refs.tagHolder.offsetWidth <=
-          this.$refs.dappTagsInput.offsetWidth - 10
+        e.keyCode === 13 ||
+        (e.keyCode === 32 && this.spacePressCount === 2)
       ) {
-        if (this.tagInput.length > 0) {
-          this.displayTags.push(this.tagInput);
-          this.tagInput = '';
-          setTimeout(() => this.updateWidth());
-        }
+        this.tagInput = this.tagInput.replace(/\s+/g, '');
+        this.tagInput.length > 0 ? this.pushTag() : '';
+        this.spacePressCount = 0;
       } else if (e.keyCode === 8) {
         if (this.tagInput.length <= 0) {
           const lastTag = this.displayTags.splice(
@@ -475,6 +523,7 @@ export default {
             this.tagInput = lastTag.toString();
           });
         }
+        this.spacePressCount = 0;
       }
       this.dappTagsError = this.displayTags.length === 0;
       this.updateTags(this.displayTags);
@@ -488,8 +537,8 @@ export default {
     updateWidth() {
       this.$refs.dappTagsInput.style.paddingLeft =
         this.$refs.tagHolder.offsetWidth > 0
-          ? `${this.$refs.tagHolder.offsetWidth + 8}px`
-          : '10.5px';
+          ? `${this.$refs.tagHolder.offsetWidth + 25}px`
+          : '25px';
     },
     onMockFileChange(e) {
       const file = e.target.files[0],
@@ -592,6 +641,19 @@ export default {
         vm.bannerError = 'Upload error. Please try a different file.';
         vm.updateBanner(true);
       };
+    },
+    onContractAddressChange(e) {
+      if (!isAddress(e)) {
+        this.contractAddressErr = 'Please enter a valid address';
+        this.updateMockFlow(true);
+      } else {
+        this.contractAddressErr = null;
+        this.updateMockFlow(false);
+      }
+    },
+    addTags(tag) {
+      this.tagInput = tag;
+      this.pushTag();
     }
   }
 };

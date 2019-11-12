@@ -4,12 +4,12 @@
       <div class="header-title-container">
         <div class="title-balance">
           <h2>
-            Dapps
+            {{ $t('mewCx.dapps') }}
             <a href="https://www.stateofthedapps.com" target="_blank">
-              Powered by
+              {{ $t('mewCx.powered-by') }}
               <img
+                :alt="$t('mewCx.sotd')"
                 src="@/assets/images/icons/dapps/sotd.png"
-                alt="state of the dapps"
               />
             </a>
           </h2>

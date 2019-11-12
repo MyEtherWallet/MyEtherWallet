@@ -2,11 +2,18 @@
   <div class="warning-message">
     <div class="left">⚠️</div>
     <div class="right">
-      <p class="title">{{ options.title }}</p>
-      <p class="message">{{ options.message }}</p>
-      <div v-if="options.link.url" class="link">
+      <p class="title">{{ this.$t('common.not-recommended.string') }}</p>
+      <p class="message">
+        {{ this.$tc('common.not-recommended.warning1', getString) }}
+        {{ this.$tc('common.not-recommended.warning2') }}
+      </p>
+      <div class="link">
         > {{ $t('common.read') }}:
-        <a :href="options.link.url" target="_blank">{{ options.link.text }}</a>
+        <a
+          href="https://kb.myetherwallet.com/posts/offline/using-mew-offline/"
+          target="_blank"
+          >{{ this.$t('common.article.using-mew-offline') }}</a
+        >
       </div>
     </div>
   </div>
@@ -15,24 +22,21 @@
 <script>
 export default {
   props: {
-    options: {
-      type: Object,
-      default: function() {
-        return {
-          title: this.$t('common.notRecommended'),
-          message: this.$t('common.notRecommendedMessage'),
-          link: {
-            text: this.$t('common.usingMewOffline'),
-            url: 'https://kb.myetherwallet.com/posts/offline/using-mew-offline/'
-          }
-        };
-      }
+    warningType: {
+      type: String,
+      default: 'access'
     }
   },
   data() {
     return {
-      expanded: false
+      warningTypes: ['access', 'create']
     };
+  },
+
+  computed: {
+    getString() {
+      return this.warningType === 'access' ? 1 : 2;
+    }
   }
 };
 </script>

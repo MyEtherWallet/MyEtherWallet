@@ -72,7 +72,7 @@
         alt
       />
       <img
-        src="~@/assets/images/etc/spaceman.png"
+        src="~@/assets/images/etc/access-spaceman.png"
         width="100%"
         class="floating-spaceman"
         alt="Spaceman"
@@ -80,8 +80,8 @@
     </div>
     <div class="between">
       <div class="text">
-        <img height="15px" src="~@/assets/images/icons/scissor.svg" alt /> Cut
-        Here
+        <img height="15px" src="~@/assets/images/icons/scissor.svg" alt />
+        {{ $t('common.print-modal.cut') }}
       </div>
       <div class="dash"></div>
     </div>

@@ -223,10 +223,8 @@ export default {
           );
         } catch (e) {
           this.isPermanentLive = false;
-          Toast.responseHandler(
-            'ENS Permanent registrar is not available yet, please try again later',
-            Toast.ERROR
-          );
+          const toastText = this.$t('ens.error.permanent-not-available');
+          Toast.responseHandler(toastText, Toast.ERROR);
         }
       }
     },
@@ -364,10 +362,10 @@ export default {
 
       this.labelHash = web3.utils.sha3(this.parsedHostName);
       if (this.parsedTld !== '' && isSupported === undefined) {
-        Toast.responseHandler(
-          `Domain TLD ${this.parsedTld} is not supported in this node!`,
-          Toast.ERROR
-        );
+        const toastText = this.$t('ens.error.domain-tld-not-supported', {
+          parsedTld: this.parsedTld
+        });
+        Toast.responseHandler(toastText, Toast.ERROR);
         this.loading = false;
       } else if (this.parsedTld === this.registrarTLD) {
         try {
@@ -391,10 +389,8 @@ export default {
             !this.isSubDomain
           ) {
             if (!this.isPermanentLive) {
-              Toast.responseHandler(
-                'ENS Permanent registrar is not available yet, please try again later',
-                Toast.ERROR
-              );
+              const toastText = this.$t('ens.error.permanent-not-available');
+              Toast.responseHandler(toastText, Toast.ERROR);
               return;
             }
             const oldRegistrarAddress = await this.ens
@@ -465,10 +461,8 @@ export default {
           }
         } catch (e) {
           this.loading = false;
-          Toast.responseHandler(
-            'Something went wrong! Please try again.',
-            Toast.ERROR
-          );
+          const toastText = this.$t('ens.error.something-went-wrong');
+          Toast.responseHandler(toastText, Toast.ERROR);
         }
       }
     },
@@ -485,6 +479,7 @@ export default {
         this.minimumAge = await this.registrarControllerContract.methods
           .minCommitmentAge()
           .call();
+        this.minimumAge = `${parseInt(this.minimumAge) + 30}`;
         await this.registrarControllerContract.methods
           .commit(commitment)
           .send({ from: this.account.address })
@@ -506,6 +501,7 @@ export default {
       const SECONDS_YEAR = 60 * 60 * 24 * 365.25;
       const duration = Math.ceil(SECONDS_YEAR * this.duration);
       try {
+        const toastRecieptText = this.$t('ens.toast.success-register');
         const rentPrice = await this.registrarControllerContract.methods
           .rentPrice(this.parsedHostName, duration)
           .call();
@@ -522,32 +518,29 @@ export default {
           })
           .once('receipt', () => {
             this.getMoreInfo();
-            Toast.responseHandler('Successfully Registered!', Toast.SUCCESS);
+            Toast.responseHandler(toastRecieptText, Toast.SUCCESS);
           });
       } catch (e) {
         this.loading = false;
-        Toast.responseHandler(
-          'Something went wrong! Please try again.',
-          Toast.ERROR
-        );
+        const toastText = this.$t('ens.error.something-went-wrong');
+        Toast.responseHandler(toastText, Toast.ERROR);
       }
     },
     transferFunc() {
       this.loading = true;
       try {
+        const toastText = this.$t('ens.toast.success-transfer');
         this.legacyRegistrar.methods
           .transferRegistrars(this.labelHash)
           .send({ from: this.account.address })
           .once('receipt', () => {
             this.getMoreInfo();
-            Toast.responseHandler('Successfully Transferred!', Toast.SUCCESS);
+            Toast.responseHandler(toastText, Toast.SUCCESS);
           });
       } catch (e) {
         this.loading = false;
-        Toast.responseHandler(
-          'Something went wrong! Please try again.',
-          Toast.ERROR
-        );
+        const toastText = this.$t('ens.error.something-went-wrong');
+        Toast.responseHandler(toastText, Toast.ERROR);
       }
     },
     async claimFunc() {
@@ -559,10 +552,8 @@ export default {
         this.loading = false;
       } catch (e) {
         this.loading = false;
-        Toast.responseHandler(
-          'Something went wrong! Please try again.',
-          Toast.ERROR
-        );
+        const toastText = this.$t('ens.error.something-went-wrong');
+        Toast.responseHandler(toastText, Toast.ERROR);
       }
     },
     updateStep(val) {

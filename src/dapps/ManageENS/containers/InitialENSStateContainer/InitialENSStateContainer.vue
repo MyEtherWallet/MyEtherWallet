@@ -4,16 +4,16 @@
       <div class="title-container">
         <div class="title">
           <h4>
-            {{ $t('interface.ensManager') }}
+            {{ $t('ens.title') }}
           </h4>
-          <p>{{ $t('interface.registerEnsDesc') }}</p>
+          <p>{{ $t('ens.search-domain-desc') }}</p>
         </div>
       </div>
       <div class="the-form domain-name">
         <input
           v-model="localDomainName"
           :class="[domainNameErr ? 'errored' : '']"
-          :placeholder="$t('dapps.registerEnsPlaceholder')"
+          :placeholder="$t('ens.ph.seven-char')"
           type="text"
           name=""
         />
@@ -24,13 +24,13 @@
           v-show="contractInitiated === false"
           class="contract-loading-warning"
         >
-          {{ $t('dapps.registerEnsContractNotReady') }}
+          {{ $t('ens.warning.contract-not-ready') }}
         </p>
         <p v-show="domainNameErr" class="erroredMsg">
           <span v-if="!isValidLength && localDomainName !== ''">
-            {{ $t('dapps.registerEnsWarn1') }}
+            {{ $t('ens.warning.not-enough-char') }}
           </span>
-          <span v-else> {{ $t('dapps.registerEnsWarn2') }} </span>
+          <span v-else> {{ $t('ens.warning.invalid-symbol') }} </span>
         </p>
       </div>
       <div class="submit-button-container">
@@ -41,15 +41,15 @@
           ]"
           @click.prevent="checkDomain"
         >
-          <span v-show="!loading"> {{ $t('interface.checkDomain') }} </span>
+          <span v-show="!loading"> {{ $t('ens.check-domain') }} </span>
           <i v-show="loading" class="fa fa-spinner fa-spin" />
         </button>
       </div>
     </form>
 
     <interface-bottom-text
-      :link-text="$t('interface.helpCenter')"
-      :question="$t('interface.haveIssues')"
+      :link-text="$t('common.help-center')"
+      :question="$t('common.have-issues')"
       link="https://kb.myetherwallet.com"
     />
   </div>
