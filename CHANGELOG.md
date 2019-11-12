@@ -1,3 +1,7 @@
+### Devop
+
+- Add rel="noopener noreferrer" to links[#1618](https://github.com/MyEtherWallet/MyEtherWallet/pull/1618)
+
 ### Release v5.2.2
 
 ### Feature
