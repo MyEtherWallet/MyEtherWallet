@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-container class="py-12">
+    <v-container class="pt-12 pb-6">
       <v-row>
         <v-col cols="2">
           <div class="subtitle-1 font-weight-bold mb-1">Tools</div>
@@ -83,10 +83,14 @@
           </v-list>
         </v-col>
         <v-col>
-          <div class="subtitle-1 font-weight-bold mb-5">
+          <div class="subtitle-1 font-weight-bold mb-5 d-flex align-center">
             Love
-            <img src="" />
-            MEW? Donate.
+            <img
+              class="ml-n1"
+              height="27"
+              src="@/assets/images/Common/Icons/heart.svg"
+            />
+            MEW? Donate!
           </div>
           <p>
             MEW is a open-source and free to the community. Your donations go a
@@ -121,16 +125,104 @@
         </v-col>
       </v-row>
       <div class="d-flex align-center mt-12">
-        <div class="d-flex align-center">
-          <v-list>
-            <v-list-item>
-              Feedback
-            </v-list-item>
-            | Privacy | Terms</v-list
-          >
+        <div class="d-flex align-center mx-n6">
+          <div class="d-flex align-center">
+            <div class="px-6">
+              <a href="/">Feedback</a>
+            </div>
+            <div>|</div>
+            <div class="px-6">
+              <a href="/">Privacy</a>
+            </div>
+            <div>|</div>
+            <div class="px-6">
+              <a href="/">Terms</a>
+            </div>
+          </div>
         </div>
         <v-spacer />
-        <div>a</div>
+        <div class="social-icons">
+          <v-btn
+            text
+            icon
+            color="blue-grey"
+            class="mr-1"
+            href="https://www.facebook.com/MyEtherWallet"
+            target="_blank"
+          >
+            <v-icon class="title">mdi-facebook</v-icon>
+          </v-btn>
+          <v-btn
+            text
+            icon
+            color="blue-grey"
+            class="mr-1"
+            href="https://twitter.com/myetherwallet"
+            target="_blank"
+          >
+            <v-icon class="title">mdi-twitter</v-icon>
+          </v-btn>
+          <v-btn
+            text
+            icon
+            color="blue-grey"
+            class="mr-1"
+            href="https://www.instagram.com/myetherwallet/"
+            target="_blank"
+          >
+            <v-icon class="title">mdi-instagram</v-icon>
+          </v-btn>
+          <v-btn
+            text
+            icon
+            color="blue-grey"
+            class="mr-1"
+            href="https://www.linkedin.com/company/myetherwallet"
+            target="_blank"
+          >
+            <v-icon class="title">mdi-linkedin</v-icon>
+          </v-btn>
+          <v-btn
+            text
+            icon
+            color="blue-grey"
+            class="mr-1"
+            href="https://github.com/myetherwallet"
+            target="_blank"
+          >
+            <v-icon class="title">mdi-github-circle</v-icon>
+          </v-btn>
+          <v-btn
+            text
+            icon
+            color="blue-grey"
+            class="mr-1"
+            href="https://www.reddit.com/r/MyEtherWallet/"
+            target="_blank"
+          >
+            <v-icon class="title">mdi-reddit</v-icon>
+          </v-btn>
+          <v-btn
+            text
+            icon
+            color="blue-grey"
+            class="mr-1"
+            href="https://www.youtube.com/channel/UCQU5QbObwmaHNEMsuX3uQKA"
+            target="_blank"
+          >
+            <v-icon class="title">mdi-youtube</v-icon>
+          </v-btn>
+          <v-btn
+            text
+            icon
+            color="blue-grey"
+            class="mr-1"
+            href="https://medium.com/@myetherwallet"
+            target="_blank"
+          >
+            <v-icon class="title">mdi-medium</v-icon>
+          </v-btn>
+        </div>
       </div>
     </v-container>
     <FootNote />
@@ -148,7 +240,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-//@import '@/assets/styles/GlobalVariables';
+@import '@/assets/styles/GlobalVariables';
 
 a {
   text-decoration: none;

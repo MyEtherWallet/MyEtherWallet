@@ -8,10 +8,14 @@
       />
       <v-row class="mt-8 px-4">
         <v-col cols="2">
-          <img src="@/assets/images/Etc/LandingPage/Partners/Ledger.png" />
+          <a href="https://www.ledger.com/?r=fa4b" target="_blank">
+            <img src="@/assets/images/Etc/LandingPage/Partners/Ledger.png" />
+          </a>
         </v-col>
         <v-col cols="2">
-          <img src="@/assets/images/Etc/LandingPage/Partners/Trezor.png" />
+          <a href="https://trezor.io/?offer_id=12&aff_id=2029" target="_blank">
+            <img src="@/assets/images/Etc/LandingPage/Partners/Trezor.png" />
+          </a>
         </v-col>
         <v-col cols="2">
           <img src="@/assets/images/Etc/LandingPage/Partners/Bitbox.png" />
