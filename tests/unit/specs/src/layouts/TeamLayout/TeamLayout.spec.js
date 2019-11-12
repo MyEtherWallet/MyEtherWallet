@@ -1,6 +1,6 @@
 import { shallowMount } from '@vue/test-utils';
 import TeamLayout from '@/layouts/TeamLayout/TeamLayout.vue';
-import PageTitle from '@/components/PageTitleComponent';
+import PageTitleComponent from '@/components/PageTitleComponent';
 
 import { Tooling } from '@@/helpers';
 
@@ -21,7 +21,7 @@ describe('TeamLayout.vue', () => {
       store,
       attachToDocument: true,
       stubs: {
-        'title-text-contents': TitleTextContentsLayout
+        'title-text-contents': PageTitleComponent
       }
     });
   });
