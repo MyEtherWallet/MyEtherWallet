@@ -24,11 +24,13 @@ module.exports = {
     '^.+\\.jsx?$': 'babel-jest'
   },
   moduleNameMapper: {
+    '^@/networks$': '<rootDir>/tests/unit/__mocks__/networksMock.js',
     '^@/(.*)$': '<rootDir>/src/$1',
     '^@@/(.*)$': '<rootDir>/tests/unit/$1',
     '^@/tests$': '<rootDir>/tests/index.js',
     '^@/tests/(.*)$': '<rootDir>/tests/$1',
-    '\\.worker.js': '<rootDir>/tests/unit/__mocks__/workerMock.js'
+    '\\.worker.js': '<rootDir>/tests/unit/__mocks__/workerMock.js',
+    '\\.md': '<rootDir>/tests/unit/__mocks__/mdMockup.js'
   },
   transformIgnorePatterns: [
     'node_modules/(?!(vue-router|bootstrap|register-service-worker|vue-tel-input))'

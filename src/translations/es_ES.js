@@ -2,6 +2,7 @@
 import common from './common/es_ES';
 import confirmation from './confirmation/es_ES';
 import dapps from './dapps/es_ES';
+import dappsSubmission from './dapps-submission/es_ES';
 import header from './header/es_ES';
 import home from './home/es_ES';
 import footer from './footer/es_ES';
@@ -46,6 +47,7 @@ const es_ES = {
   keepkeyError: keepkeyError,
   bitboxError: bitboxError,
   buyHardwareWallet: buyHardwareWallet,
-  dappsMaker: dappsMaker
+  dappsMaker: dappsMaker,
+  dappsSubmission: dappsSubmission
 };
 export default es_ES;

@@ -152,10 +152,11 @@ $dapps-container-mobile-width: 650px;
     font-size: 16px;
     font-weight: 600;
     font-style: normal;
+    font-display: block;
     font-stretch: normal;
     line-height: normal;
     letter-spacing: normal;
-    color: #0b2840;
+    color: $dark-blue-2;
   }
 
   .Please-text-somethin {
@@ -165,6 +166,7 @@ $dapps-container-mobile-width: 650px;
     font-size: 14px;
     font-weight: normal;
     font-style: normal;
+    font-display: block;
     font-stretch: normal;
     line-height: normal;
     letter-spacing: normal;
@@ -182,9 +184,10 @@ $dapps-container-mobile-width: 650px;
     font-size: 16px;
     font-weight: 600;
     font-style: normal;
+    font-display: block;
     font-stretch: normal;
     line-height: normal;
     letter-spacing: normal;
-    color: #0b2840;
+    color: $dark-blue-2;
   }
 }

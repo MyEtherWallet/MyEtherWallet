@@ -74,10 +74,11 @@ describe('EnterPinNumberModal.vue', () => {
     }
 
     let strPosition = '';
-    for (let i = 0; i < wrapper.vm.$data.positions.length; i++) {
-      const position = wrapper.vm.$data.positions[i];
+
+    for (const position of wrapper.vm.$data.positions) {
       strPosition = strPosition + position;
     }
+
     expect(wrapper.vm.$data.pin).toBe(strPosition);
   });
 

@@ -25,11 +25,12 @@
         </div>
         <div class="link-container">
           <p>
-            <img height="15px" src="~@/assets/images/icons/support.svg" />
+            <img alt height="15px" src="~@/assets/images/icons/support.svg" />
             {{ link1 }}
           </p>
           <p>
             <img
+              alt
               height="15px"
               src="~@/assets/images/icons/web-solution-white.svg"
             />
@@ -41,6 +42,7 @@
         <div class="header-text">
           <b>
             <img
+              alt
               src="~@/assets/images/short-hand-logo-white.png"
               height="30px"
             />
@@ -59,19 +61,21 @@
         </div>
       </div>
       <img
+        alt
         src="~@/assets/images/background/404bg.jpg"
         width="100%"
         class="floating-img"
       />
       <img
-        src="~@/assets/images/etc/spaceman.png"
+        alt
+        src="~@/assets/images/etc/access-spaceman.png"
         width="100%"
         class="floating-spaceman"
       />
     </div>
     <div class="between">
       <div class="text">
-        <img height="15px" src="~@/assets/images/icons/scissor.svg" />
+        <img alt height="15px" src="~@/assets/images/icons/scissor.svg" />
         <p>Cut Here</p>
       </div>
       <div class="dash"></div>
@@ -105,10 +109,10 @@
       <div v-if="!!wallet && !wallet.isPubOnly" class="my-priv-container">
         <div class="text-container">
           <h3>{{ myPriv }}</h3>
-          <p>{{ wallet.privateKey.toString('hex') }}</p>
+          <p>{{ wallet.getPrivateKeyString() }}</p>
         </div>
         <qrcode
-          :value="wallet.privateKey.toString('hex')"
+          :value="wallet.getPrivateKeyString()"
           :options="{ size: 120 }"
         />
       </div>
@@ -116,16 +120,24 @@
     <div class="footer-container">
       <div class="link-container">
         <p>
-          <img height="17px" src="~@/assets/images/icons/support.svg" />
+          <img alt height="17px" src="~@/assets/images/icons/support.svg" />
           {{ link1 }}
         </p>
         <p>
-          <img height="15px" src="~@/assets/images/icons/web-solution.svg" />
+          <img
+            alt
+            height="15px"
+            src="~@/assets/images/icons/web-solution.svg"
+          />
           {{ link2 }}
         </p>
       </div>
       <div class="logo-container">
-        <img src="~@/assets/images/short-hand-logo.png" height="25px" />
+        <img
+          :src="require(`@/assets/images/short-hand-logo-${buildType}.png`)"
+          height="25px"
+          alt
+        />
         <p class="border-line"></p>
         <p>{{ paper }}</p>
       </div>
@@ -162,7 +174,8 @@ export default {
         text3: 'Share Your Private Key With Anyone!',
         red1: 'SAFE',
         red2: 'DO NOT'
-      }
+      },
+      buildType: BUILD_TYPE
     };
   },
   computed: {

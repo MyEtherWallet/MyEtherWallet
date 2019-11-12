@@ -69,27 +69,38 @@ export default {
   computed: {
     ...mapState(['account', 'web3'])
   },
+  mounted() {
+    this.$refs.signatureModal.$refs.signatureModal.$on('hidden', () => {
+      this.signature = '';
+    });
+  },
   methods: {
     signMessage() {
-      this.web3.eth
-        .sign(this.message, this.account.address)
-        .then(_signedMessage => {
-          this.signature = JSON.stringify(
-            {
-              address: this.account.address,
-              msg: this.message,
-              sig: _signedMessage,
-              version: '3',
-              signer: this.account.isHardware ? this.account.identifier : 'MEW'
-            },
-            null,
-            2
-          );
-          this.$refs.signatureModal.$refs.signatureModal.show();
-        })
-        .catch(e => {
-          Toast.responseHandler(e, false);
-        });
+      try {
+        this.web3.eth
+          .sign(this.message, this.account.address)
+          .then(_signedMessage => {
+            this.signature = JSON.stringify(
+              {
+                address: this.account.address,
+                msg: this.message,
+                sig: _signedMessage,
+                version: '3',
+                signer: this.account.isHardware
+                  ? this.account.identifier
+                  : 'MEW'
+              },
+              null,
+              2
+            );
+            this.$refs.signatureModal.$refs.signatureModal.show();
+          })
+          .catch(e => {
+            Toast.responseHandler(e, Toast.ERROR);
+          });
+      } catch (e) {
+        Toast.responseHandler(e, Toast.ERROR);
+      }
     },
     copyToClipboard() {
       this.$refs.signature.select();

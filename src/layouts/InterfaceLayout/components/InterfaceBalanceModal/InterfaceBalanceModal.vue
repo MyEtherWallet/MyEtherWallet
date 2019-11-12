@@ -6,6 +6,8 @@
       hide-footer
       centered
       class="bootstrap-modal balance nopadding"
+      static
+      lazy
     >
       <div class="content-block total-balance">
         <div class="flex-container">
@@ -27,8 +29,9 @@
               :src="
                 require(`@/assets/images/currency/${ev.name.toLowerCase()}.svg`)
               "
+              alt
             />
-            <p>{{ ev.name }}</p>
+            <p class="ev-name">{{ ev.name }}</p>
             <p class="ev-value">{{ ev.value }}</p>
           </li>
         </ul>

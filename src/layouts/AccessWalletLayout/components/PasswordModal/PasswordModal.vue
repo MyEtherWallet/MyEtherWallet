@@ -5,6 +5,8 @@
     hide-footer
     class="bootstrap-modal modal-software nopadding"
     centered
+    static
+    lazy
     @shown="focusInput"
   >
     <div>
@@ -23,11 +25,13 @@
           />
           <img
             v-if="show"
+            alt
             src="@/assets/images/icons/show-password.svg"
             @click.prevent="switchViewPassword"
           />
           <img
             v-if="!show"
+            alt
             src="@/assets/images/icons/hide-password.svg"
             @click.prevent="switchViewPassword"
           />
@@ -108,11 +112,17 @@ export default {
           data: [this.file, this.password]
         });
         worker.onmessage = function(e) {
+          const obj = {
+            file: this.file,
+            name: e.data.filename
+          };
           self.setUnlockedWallet(
             new WalletInterface(
               Buffer.from(e.data._privKey),
               false,
-              keyStoreType
+              keyStoreType,
+              '',
+              JSON.stringify(obj)
             )
           );
         };
@@ -137,11 +147,12 @@ export default {
       }
     },
     setUnlockedWallet(wallet) {
-      this.$store.dispatch('decryptWallet', [wallet]);
-      this.spinner = false;
-      this.password = '';
-      this.$router.push({
-        path: 'interface'
+      this.$store.dispatch('decryptWallet', [wallet]).then(() => {
+        this.spinner = false;
+        this.password = '';
+        this.$router.push({
+          path: 'interface'
+        });
       });
     },
     switchViewPassword() {

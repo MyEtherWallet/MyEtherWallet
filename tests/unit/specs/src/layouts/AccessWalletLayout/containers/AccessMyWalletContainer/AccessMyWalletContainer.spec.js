@@ -5,7 +5,7 @@ import AccessMyWalletContainer from '@/layouts/AccessWalletLayout/containers/Acc
 import HardwarePasswordModal from '@/layouts/AccessWalletLayout/components/HardwarePasswordModal/HardwarePasswordModal.vue';
 import AccessWalletButton from '@/layouts/AccessWalletLayout/components/AccessWalletButton/AccessWalletButton.vue';
 import HardwareModal from '@/layouts/AccessWalletLayout/components/HardwareModal/HardwareModal.vue';
-import MetamaskModal from '@/layouts/AccessWalletLayout/components/MetamaskModal/MetamaskModal.vue';
+import Web3WalletModal from '@/layouts/AccessWalletLayout/components/Web3WalletModal/Web3WalletModal.vue';
 import MewConnectModal from '@/layouts/AccessWalletLayout/components/MewConnectModal/MewConnectModal.vue';
 import SoftwareModal from '@/layouts/AccessWalletLayout/components/SoftwareModal/SoftwareModal.vue';
 import MnemonicModal from '@/layouts/AccessWalletLayout/components/MnemonicModal';
@@ -57,7 +57,7 @@ describe('AccessMyWalletContainer.vue', () => {
         'hardware-password-modal': HardwarePasswordModal,
         'access-wallet-button': AccessWalletButton,
         'hardware-modal': HardwareModal,
-        'metamask-modal': MetamaskModal,
+        'metamask-modal': Web3WalletModal,
         'mew-connect-modal': MewConnectModal,
         'software-modal': SoftwareModal,
         'mnemonic-modal': MnemonicModal,
@@ -66,9 +66,6 @@ describe('AccessMyWalletContainer.vue', () => {
         'another-component': true
       }
     });
-    // wrapper.$options.mounted = [
-    //   () => console.log('this is the successful mock of mounted')
-    // ];
   }
 
   beforeEach(() => {
@@ -96,8 +93,8 @@ describe('AccessMyWalletContainer.vue', () => {
     const accessWalletButtons = wrapper.vm.$el.querySelectorAll(
       '.wrap .page-container .buttons-container div.button-block'
     );
-    for (let i = 0; i < accessWalletButtons.length; i++) {
-      const accessWalletButton = accessWalletButtons[i];
+
+    for (const [i, accessWalletButton] of accessWalletButtons.entries()) {
       expect(
         accessWalletButton.querySelector('.small-note').textContent.trim()
       ).toEqual(wrapper.vm.$data.buttons[i].recommend);

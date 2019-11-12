@@ -6,6 +6,8 @@
       centered
       class="bootstrap-modal bootstrap-modal-wide padding-40-20"
       hide-footer
+      static
+      lazy
     >
       <div class="modal-content-container">
         <div class="tx-amount">
@@ -37,7 +39,7 @@
           </div>
         </div>
         <div class="detail-info">
-          <expending-option :title="$t('dappsMaker.details')">
+          <expanding-option :title="$t('dappsMaker.details')">
             <ul>
               <li>
                 <p>{{ $t('dappsMaker.liquidPrice') }} (ETH/USD)</p>
@@ -60,7 +62,7 @@
                 <p>{{ minRatio }}%</p>
               </li>
             </ul>
-          </expending-option>
+          </expanding-option>
         </div>
         <div class="button-container">
           <standard-button
@@ -74,12 +76,12 @@
 </template>
 
 <script>
-import ExpendingOption from '@/components/ExpendingOption';
+import ExpandingOption from '@/components/ExpandingOption';
 import StandardButton from '@/components/Buttons/StandardButton';
 
 export default {
   components: {
-    'expending-option': ExpendingOption,
+    'expanding-option': ExpandingOption,
     'standard-button': StandardButton
   },
   props: {

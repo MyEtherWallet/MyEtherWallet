@@ -140,7 +140,7 @@ const dexon = {
   label: 'DEXON Network'
 };
 const lightstreamsNetwork = {
-  path: "m/44'/60'/0'/0",
+  path: "m/44'/60'/0'",
   label: 'Lightstreams Network'
 };
 export {

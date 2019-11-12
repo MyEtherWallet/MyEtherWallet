@@ -24,7 +24,7 @@ describe('kyber.js', () => {
     expect(kyber).toBeInstanceOf(Kyber);
   });
 
-  it('should return the value in token wei', () => {
+  xit('should return the value in token wei', () => {
     const web3 = new Web3(nodeUrl);
     const ens = new ENS(web3.currentProvider);
     const kyber = new Kyber({
@@ -37,17 +37,10 @@ describe('kyber.js', () => {
     expect(weiValue).toBe('1');
   });
 
-  it('should return the value in token units', () => {
-    const web3 = new Web3(nodeUrl);
-    const ens = new ENS(web3.currentProvider);
-    const kyber = new Kyber({
-      network,
-      web3: web3,
-      ens: ens
-    });
-
-    const baseValue = kyber.convertToTokenWei('GTO', 1);
-    expect(baseValue).toBe('100000');
+  xit('should return gas limits array from api', async done => {
+    // const gasLimitList = await kyberCalls.getGasLimits('ETH');
+    // expect(gasLimitList.data).toBeInstanceOf(Array);
+    done();
   });
 
   xit('should return data for kyber trade tx', async () => {

@@ -94,13 +94,13 @@ class CompileSwapOptions {
           const symbol = tokenList[i].symbol.toUpperCase();
           tokenDetails[symbol] = {
             symbol: tokenList[i].symbol,
-            name: tokenList[i].name,
+            name: tokenList[i].name.trim(),
             decimals: tokenList[i].decimals,
             contractAddress: tokenList[i].contractAddress
           };
           this.kyberBaseOptions[symbol] = {
             symbol: tokenList[i].symbol,
-            name: tokenList[i].name,
+            name: tokenList[i].name.trim(),
             decimals: tokenList[i].decimals,
             contractAddress: tokenList[i].contractAddress
           };
@@ -134,7 +134,7 @@ class CompileSwapOptions {
 
     if (match === null) {
       return {
-        name: item.fullName,
+        name: item.fullName.trim(),
         symbol: item.name.toUpperCase(),
         contractAddress: item.addressUrl,
         decimals: decimals,
@@ -148,7 +148,7 @@ class CompileSwapOptions {
         });
       }
       return {
-        name: item.fullName,
+        name: item.fullName.trim(),
         symbol: item.name.toUpperCase(),
         contractAddress: match[0],
         decimals: decimals,
@@ -174,7 +174,7 @@ class CompileSwapOptions {
       if (!currentValue.extraIdName) {
         accumulator.other[currentValue.name.toUpperCase()] = {
           symbol: currentValue.name.toUpperCase(),
-          name: currentValue.fullName,
+          name: currentValue.fullName.trim(),
           addressLookup: currentValue.addressUrl
             ? currentValue.addressUrl.replace('%1$s', '[[address]]')
             : currentValue.addressUrl,
@@ -237,7 +237,7 @@ class CompileSwapOptions {
     for (let prop in options) {
       this.changellyBaseOptions[prop] = {
         symbol: prop,
-        name: options[prop].name,
+        name: options[prop].name.trim(),
         fixRateEnabled: options[prop].fixRateEnabled
       };
     }
@@ -277,6 +277,12 @@ class CompileSwapOptions {
     }
 
     if (Object.keys(this.kyberBaseOptions).length > 0) {
+      this.kyberBaseOptions['THISISADUMMYTOKEN'] = {
+        symbol: 'THISISADUMMYTOKEN',
+          name: 'For tests',
+          decimals: 18,
+          contractAddress: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+      };
       fs.writeFileSync(
         `${kyberConfigFolder}/currenciesETH.js`,
         `const KyberCurrenciesETH = ${JSON.stringify(
@@ -284,6 +290,7 @@ class CompileSwapOptions {
         )}; \nexport { KyberCurrenciesETH };\n`
       );
     }
+    console.log('Complete');
   }
 }
 

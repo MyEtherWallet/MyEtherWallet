@@ -1,0 +1,54 @@
+@import '~@/scss/GlobalVariables';
+
+.sign-message-container {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+
+  .sign-message-header {
+    p {
+      color: $dark-blue-12;
+      font-size: 20px;
+      font-weight: bold;
+      margin: 0;
+    }
+  }
+  .sign-message-address,
+  .sign-message-content {
+    padding-top: 35px;
+
+    p {
+      color: $dark-blue-12;
+      font-weight: bold;
+      margin: 0;
+      padding: 10px;
+    }
+  }
+
+  .sign-message-address {
+    .signing-address {
+      align-items: center;
+      background-color: $light-green-1;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-around;
+      padding: 15px 10px;
+
+      p {
+        color: $dark-blue-12;
+        font-weight: normal;
+        padding: 0;
+      }
+    }
+  }
+
+  .sign-message-content {
+    .message-container {
+      background-color: $light-green-1;
+      border-radius: 5px;
+      min-height: 140px;
+      overflow-wrap: break-word;
+      padding: 15px 20px;
+    }
+  }
+}

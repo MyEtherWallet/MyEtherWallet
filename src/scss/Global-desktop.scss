@@ -84,6 +84,7 @@
   audio,
   video {
     font-family: 'Montserrat', sans-serif;
+    font-display: block;
     font-size: 14px;
     margin: 0;
     padding: 0;
@@ -231,6 +232,7 @@
   p {
     color: $text-base-color;
     line-height: 21px;
+    margin-bottom: 0 !important;
   }
 
   h1 {
@@ -1104,6 +1106,7 @@
       border: solid 1px $button--border-color-2;
       color: $text-color-6;
       font-family: Arial, sans-serif;
+      font-display: block;
       min-width: 180px;
       padding: 8px 15px;
       text-align: left;
@@ -1132,6 +1135,7 @@
       border: solid 1px $button--border-color-2;
       color: $text-color-6;
       font-family: Arial, sans-serif;
+      font-display: block;
       min-width: 180px;
       padding: 8px 15px;
       text-align: left;
@@ -1438,6 +1442,7 @@
 // *********************************************************************
 .monospace {
   font-family: 'Inconsolata', monospace;
+  font-display: block;
 }
 
 //*********************************************************************
@@ -1472,6 +1477,48 @@
     font-size: 15px;
     margin-top: 2px;
     margin-left: 5px;
+  }
+}
+
+.cx-token-modal {
+  .modal-dialog {
+    margin: 0;
+    min-width: 400px;
+    position: absolute;
+    right: 0;
+  }
+
+  .modal-content {
+    border-radius: 0;
+    height: 100vh;
+  }
+}
+
+.custom-progress {
+  border-radius: 0 !important;
+  height: 0.5rem !important;
+
+  .bg-success {
+    background-color: $mew-green !important;
+  }
+}
+
+.cx-password-modal {
+  .modal-dialog {
+    bottom: 0;
+    margin: 0;
+    position: absolute;
+    width: 100%;
+  }
+
+  .modal-content {
+    border: none;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+  }
+
+  .modal-body {
+    padding: 1rem !important;
   }
 }
 
@@ -1510,6 +1557,10 @@
   flex-grow: 1;
 }
 
+.cursor-pointer {
+  cursor: pointer;
+}
+
 //*********************************************************************
 // [GLOBAL] INTERFACE BLOCK STYLE
 //*********************************************************************
@@ -1521,4 +1572,15 @@
 
 .global__interface-block__margin-top {
   margin-top: 15px;
+}
+
+.cx-dropdown {
+  .btn {
+    padding: 0 !important;
+  }
+
+  .btn-secondary {
+    background-color: transparent !important;
+    border: none !important;
+  }
 }

@@ -4,8 +4,9 @@ import clo from './clo';
 import egem from './egem';
 import ella from './ella';
 import esn from './esn';
-import etcethereumcommonwealthgeth from './etc-ethereumcommonwealth-geth';
-import etcethereumcommonwealthparity from './etc-ethereumcommonwealth-parity';
+import etcethereumclassiccooperativeparityclassic from './etc-ethereumclassiccooperative-parity-classic';
+import etcethereumclassiccooperativeparity from './etc-ethereumclassiccooperative-parity';
+import etcethereumclassiccooperativeparityws from './etc-ethereumclassiccooperative-parity-ws';
 import ethethscan from './eth-ethscan';
 import ethinfura from './eth-infura';
 import ethinfuraws from './eth-infura-ws';
@@ -17,6 +18,7 @@ import go from './go';
 import kovethscan from './kov-ethscan';
 import kovinfura from './kov-infura';
 import kovpocket from './kov-pocket';
+import kovmewws from './kov-mew-ws';
 import metadium from './meta';
 import music from './music';
 import pirl from './pirl';
@@ -53,8 +55,9 @@ export {
   egem,
   ella,
   esn,
-  etcethereumcommonwealthgeth,
-  etcethereumcommonwealthparity,
+  etcethereumclassiccooperativeparityclassic,
+  etcethereumclassiccooperativeparity,
+  etcethereumclassiccooperativeparityws,
   ethethscan,
   ethinfura,
   ethinfuraws,
@@ -69,6 +72,7 @@ export {
   iolite,
   kovethscan,
   kovinfura,
+  kovmewws,
   kovpocket,
   metadium,
   mix,

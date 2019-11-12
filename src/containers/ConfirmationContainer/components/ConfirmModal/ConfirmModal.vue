@@ -6,6 +6,8 @@
       centered
       class="bootstrap-modal-wide confirmation-modal nopadding"
       title="Confirmation"
+      static
+      lazy
     >
       <div class="modal-content qrcode-modal">
         <div class="tx-info">
@@ -19,7 +21,7 @@
             direction="from"
           />
           <div v-show="to !== '' && to !== undefined" class="direction">
-            <img src="~@/assets/images/icons/right-arrow.svg" />
+            <img src="~@/assets/images/icons/right-arrow.svg" alt />
           </div>
           <address-block
             v-show="to !== '' && to !== undefined"

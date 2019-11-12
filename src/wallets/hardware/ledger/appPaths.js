@@ -24,7 +24,6 @@ import {
   PHT
 } from '@/networks/types';
 import {
-  ethereum,
   ledgerEthereum,
   ledgerLiveEthereum,
   ledgerEthereumClassic,
@@ -48,7 +47,8 @@ import {
   mixBlockchain,
   rskMainnet,
   rskTestnet,
-  thundercore
+  thundercore,
+  lightstreamsNetwork
 } from '../../bip44/paths';
 const appList = [
   {
@@ -164,7 +164,7 @@ const appList = [
   {
     network: PHT,
     prefixes: ["m/44'/60'"],
-    paths: [ethereum]
+    paths: [lightstreamsNetwork]
   }
 ];
 export default appList;

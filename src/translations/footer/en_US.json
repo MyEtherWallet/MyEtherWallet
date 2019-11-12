@@ -3,13 +3,14 @@
   "units": "Units",
   "txStat": "TX Status",
   "debugs": "Debugs",
-  "extension": "MyEtherWallet CX",
+  "extension": "MEW CX",
   "others": "Others",
   "affiliates": "Affiliates",
   "ledger": "Ledger Wallet",
   "digital": "BitBox",
   "ethCard": "Ether Card",
   "trezor": "Trezor",
+  "sotd": "State of the Dapps",
   "bity": "Bity",
   "mew": "MEW",
   "about": "About",
@@ -28,5 +29,6 @@
   "verifyMessage": "Verify Message",
   "keepkey": "KeepKey",
   "secalot": "Secalot",
-  "bitbox": "Bitbox"
+  "bitbox": "Bitbox",
+  "viewWalletInfo": "View Wallet Info"
 }

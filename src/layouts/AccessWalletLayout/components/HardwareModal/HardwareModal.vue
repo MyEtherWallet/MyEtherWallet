@@ -5,12 +5,14 @@
     hide-footer
     class="bootstrap-modal modal-hardware nopadding"
     centered
+    static
+    lazy
   >
     <div class="modal-content-container">
       <div class="d-block text-center">
-        <b-alert :show="mayNotBeAttached" fade variant="warning">{{
-          $t('accessWallet.connectDevice')
-        }}</b-alert>
+        <b-alert :show="mayNotBeAttached" fade variant="warning">
+          {{ $t('accessWallet.connectDevice') }}
+        </b-alert>
         <div class="button-options hardware-button-options">
           <wallet-option
             v-for="(item, idx) in items"
@@ -50,6 +52,7 @@ import secalot from '@/assets/images/icons/HardwareWallet/secalot.svg';
 import trezor from '@/assets/images/icons/HardwareWallet/trezor.svg';
 import keepkey from '@/assets/images/icons/HardwareWallet/keepkey.svg';
 import finney from '@/assets/images/icons/button-finney-hover.png';
+import xwallet from '@/assets/images/icons/HardwareWallet/xwallet.svg';
 import WalletOption from '../WalletOption';
 import { Toast } from '@/helpers';
 import { isSupported } from 'u2f-api';
@@ -65,7 +68,8 @@ import {
   TREZOR as TREZOR_TYPE,
   BITBOX as BITBOX_TYPE,
   SECALOT as SECALOT_TYPE,
-  KEEPKEY as KEEPKEY_TYPE
+  KEEPKEY as KEEPKEY_TYPE,
+  XWALLET as XWALLET_TYPE
 } from '@/wallets/bip44/walletTypes';
 export default {
   components: {
@@ -86,6 +90,10 @@ export default {
       default: function() {}
     },
     openFinney: {
+      type: Function,
+      default: function() {}
+    },
+    openXwallet: {
       type: Function,
       default: function() {}
     }
@@ -120,6 +128,14 @@ export default {
           disabled: false,
           msg: '',
           link: 'https://shiftcrypto.ch/?ref=mew'
+        },
+        {
+          name: XWALLET_TYPE,
+          imgPath: xwallet,
+          text: 'XWallet',
+          disabled: false,
+          msg: '',
+          link: 'https://xwallet.pundix.com'
         },
         {
           name: TREZOR_TYPE,
@@ -236,6 +252,10 @@ export default {
           break;
         case 'finney':
           this.openFinney();
+          this.$refs.hardware.hide();
+          break;
+        case XWALLET_TYPE:
+          this.openXwallet();
           this.$refs.hardware.hide();
           break;
         default:

@@ -18,13 +18,12 @@
               :value="provider.provider"
               type="radio"
               name="provider"
-              @input="setSelectedProvider(provider.provider)"
             />
 
             <label :for="provider.provider" />
           </div>
           <div class="provider-image">
-            <img :src="providerLogo(provider)" />
+            <img :src="providerLogo(provider)" alt />
           </div>
           <div
             :class="[
@@ -83,7 +82,7 @@
             <input type="radio" name="provider" /> <label :for="provider" />
           </div>
           <div class="provider-image">
-            <img :src="providerLogo(provider)" />
+            <img :src="providerLogo(provider)" alt />
           </div>
           <div class="background-masker" />
         </li>
@@ -100,7 +99,7 @@
             <input type="radio" name="provider" /> <label :for="provider" />
           </div>
           <div class="provider-image">
-            <img :src="providerLogo(provider)" />
+            <img :src="providerLogo(provider)" alt />
           </div>
           <div class="background-masker" />
         </li>
@@ -136,7 +135,9 @@
           <div class="mew-custom-form__radio-button">
             <input type="radio" name="provider" />
           </div>
-          <div class="provider-image"><img :src="providerLogo('mew')" /></div>
+          <div class="provider-image">
+            <img :src="providerLogo('mew')" alt />
+          </div>
           <div>
             {{ $t('interface.loadRateError') }}
             {{ noProvidersPair.fromCurrency }} {{ $t('interface.articleTo') }}
@@ -225,6 +226,10 @@ export default {
         return {};
       }
     },
+    providerSelectedName: {
+      type: String,
+      default: ''
+    },
     fromValue: {
       type: Number,
       default: 0
@@ -275,6 +280,21 @@ export default {
         });
       } else if (this.noAvaliableProviders) {
         return this.allSupportedProviders;
+      }
+    }
+  },
+  watch: {
+    loadingData(val) {
+      if (this.providerSelectedName !== '' && !val) {
+        this.$nextTick(() => {
+          this.$emit('selectedProvider', this.providerSelectedName);
+          const clickedEl = document.getElementsByClassName(
+            this.providerSelectedName
+          )[0];
+          clickedEl.classList.add('radio-selected');
+          const inputEl = document.getElementById(this.providerSelectedName);
+          inputEl.checked = true;
+        });
       }
     }
   },

@@ -1,9 +1,21 @@
-<template>
-  <div class="button-send-tx">
+<template functional>
+  <div class="button-send-tx" @click="props.goTo('send-transaction')">
     <div :class="disabled ? 'button-disabled' : ''" class="content-container">
-      <img :src="left" class="left" />
-      <img :src="right" class="right" />
-      <img :src="spaceman" class="spaceman" />
+      <img
+        src="~@/assets/images/buttons/send-tx/send-tx-left.png"
+        class="left"
+        alt
+      />
+      <img
+        src="~@/assets/images/buttons/send-tx/send-tx-right.png"
+        class="right"
+        alt
+      />
+      <img
+        src="~@/assets/images/buttons/send-tx/send-tx-spaceman.png"
+        class="spaceman"
+        alt
+      />
       <div class="text-content">
         <p class="title">Send<br />Transaction</p>
         <p v-if="disabled" class="button-disabled">
@@ -15,27 +27,17 @@
 </template>
 
 <script>
-import LeftCircle from '@/assets/images/buttons/send-tx/left.png';
-import RightCircle from '@/assets/images/buttons/send-tx/right.png';
-import Spaceman from '@/assets/images/buttons/send-tx/spaceman.png';
-
 export default {
-  name: 'ButtonSendTx',
-  components: {},
   props: {
     disabled: {
       type: Boolean,
       default: false
+    },
+    goTo: {
+      type: Function,
+      default: () => {}
     }
-  },
-  data() {
-    return {
-      left: LeftCircle,
-      right: RightCircle,
-      spaceman: Spaceman
-    };
-  },
-  computed: {}
+  }
 };
 </script>
 

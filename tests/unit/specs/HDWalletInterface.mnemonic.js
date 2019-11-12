@@ -1,13 +1,13 @@
 import HDWalletInterface from '@/wallets/HDWalletInterface';
 import * as HDKey from 'hdkey';
+import bip39 from 'bip39';
 import { hashPersonalMessage, ecsign, toBuffer } from 'ethereumjs-util';
-import { Transaction } from 'ethereumjs-tx';
-
-const bip39 = require('bip39');
+import ethTx from 'ethereumjs-tx';
 const ETH_PATH = "m/44'/60'/0'/0";
 const mnemonic =
   'board shadow cave liquid sand hour maid capable stand candy frog slogan intact error glimpse project galaxy tackle table sausage salute west airport umbrella';
-const seed = bip39.mnemonicToSeedSync(mnemonic);
+
+const seed = bip39.mnemonicToSeed(mnemonic);
 const accountList = {
   0: {
     address: '0x232d4F524498eFC37cc0624A3C486a75ed84412A',
@@ -61,7 +61,7 @@ for (let i = 0; i < 3; i++)
       'mnemonic',
       () => {},
       tx => {
-        tx = new Transaction(tx);
+        tx = new ethTx(tx);
         return new Promise(resolve => {
           tx.sign(hdk.derive(ETH_PATH + '/' + i).privateKey);
           resolve(tx);
@@ -82,12 +82,11 @@ for (let i = 0; i < 3; i++)
             ])
           );
         });
-      },
-      null
+      }
     )
   );
-describe('[Failing 6-17-19] (update to ethereum-tx package) HDWalletInterface Mnemonic', () => {
-  xit(' should derive correct keys', async () => {
+describe('HDWalletInterface Mnemonic', () => {
+  it('should derive correct keys', async () => {
     for (const i in testWallets) {
       expect(testWallets[i].getPublicKeyString()).toEqual(
         accountList[i].pubkey
@@ -99,7 +98,7 @@ describe('[Failing 6-17-19] (update to ethereum-tx package) HDWalletInterface Mn
         accountList[i].address
       );
       const signedTx = await testWallets[i].signTransaction(txParams);
-      const _signedTx = new Transaction(txParams);
+      const _signedTx = new ethTx(txParams);
       _signedTx.sign(
         Buffer.from(accountList[i].privkey.replace('0x', ''), 'hex')
       );

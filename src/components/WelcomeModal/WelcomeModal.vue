@@ -7,9 +7,11 @@
     no-close-on-esc
     centered
     class="bootstrap-modal nopadding"
+    static
+    lazy
   >
     <div class="welcome-modal">
-      <img src="@/assets/images/modal/garlands.png" />
+      <img src="@/assets/images/modal/garlands.png" alt />
       <div class="welcome-modal-container">
         <div class="welcome-modal-text">
           <h3>{{ $t('home.welcomeTov5') }}</h3>
@@ -19,14 +21,6 @@
               target="_blank"
               rel="noopener noreferrer"
               >{{ $t('home.welcomeToLink1') }}</a
-            >
-          </i18n>
-          <i18n path="home.welcomeToV5Desc2" tag="p" for="home.welcomeToLink2">
-            <a
-              href="https://vintage.myetherwallet.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              >{{ $t('home.welcomeToLink2') }}</a
             >
           </i18n>
         </div>

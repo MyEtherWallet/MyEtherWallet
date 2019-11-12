@@ -1,4 +1,6 @@
-export default {
+import { Misc } from '@/helpers';
+
+const config = {
   tabs: [
     {
       name: 'dashboard',
@@ -80,12 +82,8 @@ export default {
       routes: [
         '/interface/dapps',
         '/interface/dapps/manage-ens',
-        '/interface/dapps/manage-ens/auction',
-        '/interface/dapps/manage-ens/bid',
         '/interface/dapps/manage-ens/owned',
-        '/interface/dapps/manage-ens/reveal',
         '/interface/dapps/manage-ens/forbidden',
-        '/interface/dapps/manage-ens/finalize',
         '/interface/dapps/manage-ens/manage',
         '/interface/dapps/manage-ens/fifs',
         '/interface/dapps/manage-ens/claim',
@@ -170,3 +168,17 @@ export default {
     }
   ]
 };
+if (Misc.isMewCx()) {
+  const tabIdx = config.tabs.findIndex(item => {
+    return item.name === 'send-transaction';
+  });
+  const newArr = [];
+  config.tabs[tabIdx].children.forEach(item => {
+    if (item.name !== 'send-offline') {
+      newArr.push(item);
+    }
+  });
+
+  config.tabs[tabIdx].children = newArr;
+}
+export default config;

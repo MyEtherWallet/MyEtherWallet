@@ -9,10 +9,6 @@ $actionsSwapCollepsePoint: 700px;
   background-color: transparent;
 }
 
-.clickable {
-  cursor: pointer;
-}
-
 .container--flex {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -38,7 +34,6 @@ $actionsSwapCollepsePoint: 700px;
 .container--card {
   background-color: $white;
   padding: 20px;
-  height: 100%;
   border-radius: 5px;
 
   .section-description {
@@ -75,6 +70,7 @@ $actionsSwapCollepsePoint: 700px;
   .swap-to {
     margin: 10px 0;
     background-color: $light-green-1;
+    cursor: pointer;
     padding: 8px 20px;
     display: flex;
     align-items: center;
@@ -86,8 +82,9 @@ $actionsSwapCollepsePoint: 700px;
     }
 
     &.swap-disabled {
+      cursor: initial;
       filter: grayscale(100%);
-      opacity: 0.8;
+      opacity: 0.4;
       background-color: $light-green-2;
     }
 

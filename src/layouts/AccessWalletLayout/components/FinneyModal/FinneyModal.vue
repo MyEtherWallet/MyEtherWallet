@@ -5,46 +5,41 @@
     hide-footer
     class="bootstrap-modal nopadding"
     centered
+    static
+    lazy
   >
-    <div class="finney-modal-content">
-      <div class="content-container">
-        <div class="finney-img">
-          <img :src="finneyImg" />
-        </div>
-        <div class="finney-text-container">
-          <div class="scan-container">
+    <div class="finney-desktop">
+      <div class="modal-content-right">
+        <p>
+          To connect, scan the QR code from <b>FinneyWallet</b> app on your
+          <b>FINNEY™ BLOCKCHAIN SMARTPHONE</b>
+        </p>
+        <qrcode
+          :value="qrcode"
+          :options="{ size: 186 }"
+          class="qrcode-container"
+        />
+        <div class="text-container">
+          <a
+            href="http://shop.sirinlabs.com?rfsn=2397639.54fdf&utm_source=refersion&utm_medium=affiliate&utm_campaign=2397639.54fdf"
+            target="blank"
+            rel="noopener noreferrer"
+          >
             <p>
-              To connect please scan the QR code from FinneyWallet app on your
-              FINNEY device
+              Get your
             </p>
-          </div>
-          <div class="qr-container">
-            <div class="large">
-              <qrcode :value="qrcode" :options="{ size: 186 }" />
-            </div>
-            <div class="small">
-              <qrcode :value="qrcode" :options="{ size: 125 }" />
-            </div>
-          </div>
-          <div class="text-container">
-            <a
-              href="http://shop.sirinlabs.com?rfsn=2397639.54fdf&utm_source=refersion&utm_medium=affiliate&utm_campaign=2397639.54fdf"
-              target="blank"
-              rel="noopener noreferrer"
-            >
-              <span>
-                Get your
-              </span>
-              <h3>
-                FINNEY™
-              </h3>
-              <span>
-                now
-              </span>
-            </a>
-          </div>
+            <h3>
+              FINNEY™
+            </h3>
+            <p>
+              now
+            </p>
+          </a>
         </div>
       </div>
+    </div>
+    <div v-if="false" class="finney-mobile">
+      mobile
     </div>
   </b-modal>
 </template>
@@ -53,13 +48,11 @@
 import { MewConnectWallet } from '@/wallets';
 import { Toast } from '@/helpers';
 import { mapState } from 'vuex';
-import finneyImg from '@/assets/images/etc/finney.png';
 
 export default {
   data() {
     return {
-      qrcode: '',
-      finneyImg: finneyImg
+      qrcode: ''
     };
   },
   computed: {

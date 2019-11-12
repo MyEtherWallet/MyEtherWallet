@@ -36,7 +36,11 @@ $collepse-width: 650px;
 
   ul {
     li {
-      padding: 15px 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      grid-gap: 10px;
+      position: relative;
+      padding: 5px 20px;
       color: $dark-grey-7;
       cursor: pointer;
       user-select: none;
@@ -46,6 +50,27 @@ $collepse-width: 650px;
       &.selected {
         color: $dark-grey-9;
         font-weight: 600;
+      }
+      .title {
+        grid-column-start: 1;
+        grid-column-end: 2;
+        display: inline-block;
+        width: 120px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+      .count {
+        grid-column: 3;
+      }
+      .remove {
+        grid-column: 4;
+        padding-left: 5px;
+        padding-top: 4px;
+      }
+      .add-custom {
+        grid-column-start: 1;
+        grid-column-end: 4;
       }
     }
   }

@@ -22,6 +22,7 @@
             <img
               :src="iconFetcher(selectedCurrency.symbol)"
               class="icon-image"
+              alt
             />
           </span>
 
@@ -67,7 +68,7 @@
                 class="currency-symbol"
               />
               <span v-if="getIcon(curr.symbol) === ''" class="currency-symbol">
-                <img :src="iconFetcher(curr.symbol)" class="icon-image" />
+                <img :src="iconFetcher(curr.symbol)" class="icon-image" alt />
               </span>
               {{ curr.symbol }}
               <span class="subname">- {{ curr.name }}</span>

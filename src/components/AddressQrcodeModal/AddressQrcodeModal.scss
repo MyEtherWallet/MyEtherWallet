@@ -10,7 +10,6 @@
 
 .address {
   word-break: break-all;
-  width: 230px;
   margin: 0 auto;
   display: block;
   border: 0;
@@ -18,6 +17,9 @@
   white-space: normal;
   text-align: justify;
   text-align-last: center;
+  width: 100%;
+  max-width: 210px;
+  height: 70px;
 }
 
 button {
@@ -26,4 +28,9 @@ button {
   border: 0;
   margin-top: 10px;
   font-weight: 500;
+}
+
+canvas {
+  width: 100%;
+  max-width: 200px;
 }

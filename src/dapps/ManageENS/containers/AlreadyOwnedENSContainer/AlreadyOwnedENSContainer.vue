@@ -1,10 +1,5 @@
 <template lang="html">
   <div class="already-owned-container">
-    <finalize-modal
-      ref="finalizeModal"
-      :domain-name="hostName"
-      :finalize="finalize"
-    />
     <h3>{{ fullDomainName }} {{ $t('dapps.alreadyOwned') }}.</h3>
     <div class="content-container">
       <p class="label">{{ $t('dapps.labelHash') }}({{ hostName }}):</p>
@@ -18,25 +13,21 @@
       <p class="label">{{ $t('dapps.owner') }}:</p>
       <p class="content">{{ owner }}</p>
     </div>
-    <div v-if="deedOwner != '0x'" class="content-container">
-      <p class="label">{{ $t('dapps.deedOwner') }}:</p>
-      <p class="content">{{ deedOwner }}</p>
+    <div v-show="resolverMultiCoinSupport" class="content-container">
+      <h4>{{ $t('dapps.multiCoin') }}:</h4>
+      <div v-for="(v, k) in supportedCoins" v-if="v.value" :key="k.id">
+        <span class="currency">{{ v.symbol }} address: </span>
+        <span class="content">{{ v.value }}</span>
+      </div>
     </div>
-    <div class="content-container">
-      <p class="label">{{ $t('dapps.resolverAddr') }}:</p>
-      <p class="content">{{ resolverAddress }}</p>
+    <div v-show="hasAnyTxt" class="content-container">
+      <h4>{{ $t('dapps.txtRecord') }}:</h4>
+      <div v-for="(value, key) in txtRecords" v-if="value !== ''" :key="key">
+        <span class="currency">{{ key }}: </span>
+        <span class="content">{{ value }}</span>
+      </div>
     </div>
     <div class="owner-options">
-      <button
-        v-if="
-          deedOwner.toLowerCase() === account.address.toLowerCase() &&
-            owner === '0x0000000000000000000000000000000000000000'
-        "
-        class="finalize-button"
-        @click="openFinalizeModal"
-      >
-        {{ $t('dapps.finalize') }}
-      </button>
       <button
         v-if="owner.toLowerCase() === account.address.toLowerCase()"
         class="manage-button"
@@ -55,13 +46,11 @@
 
 <script>
 import InterfaceBottomText from '@/components/InterfaceBottomText';
-import FinalizeModal from '../../components/FinalizeModal/';
 
 import { mapState } from 'vuex';
 export default {
   components: {
-    'interface-bottom-text': InterfaceBottomText,
-    'finalize-modal': FinalizeModal
+    'interface-bottom-text': InterfaceBottomText
   },
   props: {
     labelHash: {
@@ -76,14 +65,6 @@ export default {
       type: String,
       default: ''
     },
-    deedOwner: {
-      type: String,
-      default: ''
-    },
-    resolverAddress: {
-      type: String,
-      default: ''
-    },
     hostName: {
       type: String,
       default: ''
@@ -92,18 +73,31 @@ export default {
       type: String,
       default: ''
     },
-    finalize: {
-      type: Function,
-      default: () => {}
+    supportedCoins: {
+      type: Object,
+      default: function() {}
+    },
+    resolverMultiCoinSupport: {
+      type: Boolean,
+      default: false
+    },
+    txtRecords: {
+      type: Object,
+      default: function() {}
     }
-  },
-  data() {
-    return {};
   },
   computed: {
     ...mapState(['account']),
     fullDomainName() {
       return `${this.hostName}.${this.tld}`;
+    },
+    hasAnyTxt() {
+      for (const i in this.txtRecords) {
+        if (this.txtRecords[i] !== '') {
+          return true;
+        }
+      }
+      return false;
     }
   },
   mounted() {
@@ -112,9 +106,6 @@ export default {
     }
   },
   methods: {
-    openFinalizeModal() {
-      this.$refs.finalizeModal.$refs.finalize.show();
-    },
     manageEns() {
       this.$router.push('manage');
     }

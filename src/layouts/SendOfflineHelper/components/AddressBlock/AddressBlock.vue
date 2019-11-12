@@ -3,6 +3,7 @@
     <div class="currency-container">
       <img
         :src="require(`@/assets/images/currency/${lowerCaseCurrency}.svg`)"
+        alt
       />
       <p>
         <span class="currency-amt">

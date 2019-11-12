@@ -21,7 +21,6 @@
           <i class="fa fa-angle-down" aria-hidden="true" />
         </p>
       </div>
-
       <what-is-mew
         ref="cww1"
         :progress-bar-value="'__20percent'"

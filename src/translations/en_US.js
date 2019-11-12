@@ -3,6 +3,7 @@ import common from './common/en_US';
 import confirmation from './confirmation/en_US';
 import dapps from './dapps/en_US';
 import dappsMaker from './dapps-maker/en_US';
+import dappsSubmission from './dapps-submission/en_US';
 import header from './header/en_US';
 import home from './home/en_US';
 import footer from './footer/en_US';
@@ -22,6 +23,7 @@ import secalotError from './errors-secalot/en_US';
 import keepkeyError from './errors-keepkey/en_US';
 import bitboxError from './errors-bitbox/en_US';
 import buyHardwareWallet from './buy-hardware-wallet/en_US';
+import dappsAmbrpay from './dapps-ambrpay/en_US';
 
 const en_US = {
   common: common,
@@ -46,6 +48,8 @@ const en_US = {
   keepkeyError: keepkeyError,
   bitboxError: bitboxError,
   buyHardwareWallet: buyHardwareWallet,
-  dappsMaker: dappsMaker
+  dappsMaker: dappsMaker,
+  dappsSubmission: dappsSubmission,
+  dappsAmbrpay: dappsAmbrpay
 };
 export default en_US;

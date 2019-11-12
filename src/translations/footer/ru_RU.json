@@ -3,13 +3,14 @@
   "units": "Единицы",
   "txStat": "Статус транзакции",
   "debugs": "Отладка",
-  "extension": "MyEtherWallet CX",
+  "extension": "MEW CX",
   "others": "Другие",
   "affiliates": "Партнеры",
   "ledger": "Кошелек Ledger",
   "digital": "BitBox",
   "ethCard": "Карта Ether",
   "trezor": "Trezor",
+  "sotd": "State of the Dapps",
   "bity": "Bity",
   "mew": "MEW",
   "about": "About",
@@ -28,5 +29,6 @@
   "verifyMessage": "Verify Message",
   "keepkey": "KeepKey",
   "secalot": "Secalot",
-  "bitbox": "Bitbox"
+  "bitbox": "Bitbox",
+  "viewWalletInfo": "View Wallet Info"
 }

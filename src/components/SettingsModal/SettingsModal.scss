@@ -97,6 +97,10 @@ $mobile-width: 530px;
     grid-gap: 10px;
     grid-template-columns: 1fr 183px;
 
+    input[type='file'] {
+      display: none !important;
+    }
+
     @media all and (max-width: $mobile-width) {
       margin-top: 10px;
       display: block;

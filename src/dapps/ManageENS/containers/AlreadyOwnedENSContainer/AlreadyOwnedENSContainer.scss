@@ -28,6 +28,11 @@
       color: $dark-blue-1;
       font-size: 14px;
     }
+
+    .currency {
+      color: $dark-blue-2;
+      font-weight: bold;
+    }
   }
 }
 
@@ -44,13 +49,6 @@
   display: flex;
   flex-direction: column;
   margin-top: 43px;
-
-  .finalize-button {
-    @extend %button-template;
-
-    background-color: $mew-green;
-    color: $white;
-  }
 
   .manage-button {
     @extend %button-template;

@@ -84,6 +84,10 @@ export default class BitySwap {
     return {};
   }
 
+  get ratesRetrieved() {
+    return this.hasRates > 0 && this.rates.size > 0;
+  }
+
   async retrieveRates() {
     try {
       if (!this.isValidNetwork) return;
@@ -91,6 +95,7 @@ export default class BitySwap {
       const exitData = exitRates.pairs;
       const rates = await getRates();
       const data = rates.objects;
+
       exitData.forEach(entry => {
         if (entry.enabled) {
           data.forEach(rateEntry => {
@@ -106,7 +111,6 @@ export default class BitySwap {
           });
         }
       });
-
       data.forEach(pair => {
         if (~this.mainPairs.indexOf(pair.pair.substring(3))) {
           if (pair.is_enabled && !this.fiatCurrencies.includes(pair.source)) {
@@ -147,6 +151,10 @@ export default class BitySwap {
     return await getEstimate(reqInfo);
   }
 
+  calculateRate(inVal, outVal) {
+    return new BigNumber(outVal).div(inVal);
+  }
+
   async getRate(fromCurrency, toCurrency, fromValue) {
     const expRate = await this._getRateEstimate(
       fromCurrency,
@@ -154,13 +162,17 @@ export default class BitySwap {
       fromValue
     );
 
-    const rate = this._getRate(fromCurrency, toCurrency);
-
+    const rate = this.calculateRate(
+      expRate.input.amount,
+      expRate.output.amount
+    );
+    this.rates.set(`${fromCurrency}/${toCurrency}`, rate);
     return {
       fromCurrency,
       toCurrency,
       provider: this.name,
       rate: rate,
+      toValue: expRate.output.amount,
       minValue: new BigNumber(expRate.input.minimum_amount).plus(
         new BigNumber(expRate.input.minimum_amount).times(0.000001)
       ), // because we truncate the number at 6 decimal places
@@ -176,7 +188,12 @@ export default class BitySwap {
       toCurrency,
       fromValue
     );
-    const rate = this._getRate(fromCurrency, toCurrency);
+
+    const rate = this.calculateRate(
+      expRate.input.amount,
+      expRate.output.amount
+    );
+    this.rates.set(`${fromCurrency}/${toCurrency}`, rate);
 
     return {
       fromCurrency,
