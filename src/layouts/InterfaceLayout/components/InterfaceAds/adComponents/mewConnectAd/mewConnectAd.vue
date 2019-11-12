@@ -3,9 +3,9 @@
     <a href="https://mewconnect.myetherwallet.com/#/" target="_blank">
       <div class="content-block">
         <div class="text-content">
-          <h3>MEWconnect</h3>
-          <p>Available for iOS</p>
-          <p>and Android</p>
+          <h3>{{ $t('common.mewconnect.string') }}</h3>
+          <p>{{ $t('interface.ads.ios') }}</p>
+          <p>{{ $t('interface.ads.android') }}</p>
         </div>
       </div>
     </a>

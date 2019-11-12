@@ -11,7 +11,9 @@
                 class="the-title"
                 @click="ensDebuggerOpen = !ensDebuggerOpen"
               >
-                <p>ENS Debugger & Data Grabber</p>
+                <p>
+                  {{ $t('informationPages.advanced-tools-layout.ens-title') }}
+                </p>
                 <i
                   v-if="!ensDebuggerOpen"
                   class="fa fa-angle-down"
@@ -28,9 +30,7 @@
                 class="the-description"
               >
                 <p>
-                  The measured steps are meant to avoid an escalation of
-                  operations by Russia to more serious computer-based attacks on
-                  US information systems and infrastructure.
+                  {{ $t('informationPages.advanced-tools-layout.description') }}
                 </p>
               </div>
             </div>
@@ -59,7 +59,9 @@
               <div class="outputs">
                 <div class="the-input to-address">
                   <standard-input :options="inputToAddress" />
-                  <span>Detail</span>
+                  <span>{{
+                    $t('informationPages.advanced-tools-layout.detail')
+                  }}</span>
                 </div>
 
                 <div class="the-input-grid-2">
@@ -86,7 +88,9 @@
                 class="the-title"
                 @click="convertDecHexOpen = !convertDecHexOpen"
               >
-                <p>Convert Decimal to Hexadecimal & Hex to Decimal</p>
+                <p>
+                  {{ $t('informationPages.advanced-tools-layout.hex-title') }}
+                </p>
                 <i
                   v-if="!convertDecHexOpen"
                   class="fa fa-angle-down"
@@ -103,9 +107,7 @@
                 class="the-description"
               >
                 <p>
-                  The measured steps are meant to avoid an escalation of
-                  operations by Russia to more serious computer-based attacks on
-                  US information systems and infrastructure.
+                  {{ $t('informationPages.advanced-tools-layout.description') }}
                 </p>
               </div>
             </div>
@@ -133,7 +135,11 @@
                 class="the-title"
                 @click="mistypedPrivateKeyOpen = !mistypedPrivateKeyOpen"
               >
-                <p>Mistyped Private Key</p>
+                <p>
+                  {{
+                    $t('informationPages.advanced-tools-layout.mistyped-title')
+                  }}
+                </p>
                 <i
                   v-if="!mistypedPrivateKeyOpen"
                   class="fa fa-angle-down"
@@ -150,9 +156,7 @@
                 class="the-description"
               >
                 <p>
-                  The measured steps are meant to avoid an escalation of
-                  operations by Russia to more serious computer-based attacks on
-                  US information systems and infrastructure.
+                  {{ $t('informationPages.advanced-tools-layout.description') }}
                 </p>
                 <div class="link-block">
                   <a
@@ -160,7 +164,7 @@
                     href="https:/kb.myetherwallet.com"
                     target="_blank"
                   >
-                    >Learn more</a
+                    >{{ $t('common.learn-more') }}</a
                   >
                 </div>
               </div>
@@ -198,7 +202,9 @@
           <li>
             <div class="input-title">
               <div class="the-title" @click="SHA3Open = !SHA3Open">
-                <p>"SHA3" (Keccak-256) It!</p>
+                <p>
+                  {{ $t('informationPages.advanced-tools-layout.sha-title') }}
+                </p>
                 <i
                   v-if="!SHA3Open"
                   class="fa fa-angle-down"
@@ -211,14 +217,12 @@
                 class="the-description"
               >
                 <p>
-                  The measured steps are meant to avoid an escalation of
-                  operations by Russia to more serious computer-based attacks on
-                  US information systems and infrastructure.
+                  {{ $t('informationPages.advanced-tools-layout.description') }}
                 </p>
                 <div class="link-block">
-                  <a href="#" rel="noopener noreferrer" target="_blank"
-                    >Yooo... sha3 !== Keccak-256?!</a
-                  >
+                  <a href="#" rel="noopener noreferrer" target="_blank">{{
+                    $t('informationPages.advanced-tools-layout.sha-link')
+                  }}</a>
                 </div>
               </div>
             </div>

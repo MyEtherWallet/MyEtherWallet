@@ -1,12 +1,12 @@
 <template>
   <div class="interact-with-contract-container">
-    <interface-container-title :title="$t('common.interactWcontract')" />
+    <interface-container-title :title="$t('contract.interact')" />
     <div v-if="!interact" class="interact-div">
       <div class="send-form contract-address-container">
         <div class="title-container">
           <div class="title">
             <h4 class="contract-address-title">
-              {{ $t('interface.contractAddr') }}
+              {{ $t('contract.addr') }}
             </h4>
             <div class="select-contract no-border">
               <currency-picker
@@ -22,9 +22,9 @@
           <input
             v-validate="'required'"
             v-model="address"
+            :placeholder="$t('contract.enter-addr')"
             type="text"
             name="nameAddr"
-            placeholder="Enter Contract Address"
           />
 
           <i
@@ -41,7 +41,7 @@
       <div class="send-form">
         <div class="title-container">
           <div class="title">
-            <h4>{{ $t('interface.abiJsonInt') }}</h4>
+            <h4>{{ $t('contract.abi-json-int') }}</h4>
             <div class="copy-buttons">
               <span @click="deleteInput('abi')">{{ $t('common.clear') }}</span>
               <span @click="copyToClipboard('abi')">
@@ -83,17 +83,17 @@
           <img src="~@/assets/images/icons/right-arrow.png" alt />
         </div>
         <interface-bottom-text
-          :link-text="$t('interface.helpCenter')"
-          :question="$t('interface.haveIssues')"
+          :link-text="$t('common.help-center')"
+          :question="$t('common.have-issues')"
           link="https://kb.myetherwallet.com"
         />
       </div>
     </div>
     <div v-else class="contract-methods-container">
-      <h4>Read/Write Contract</h4>
+      <h4>{{ $t('contract.read-write') }}</h4>
       <div class="contract-addr-container">
         <div class="contract-addr">
-          <p>Contract Address: {{ address }}</p>
+          <p>{{ $t('contract.addr') }}: {{ address }}</p>
         </div>
         <div class="picker-container">
           <currency-picker
@@ -138,7 +138,7 @@
                   :name="input.name"
                   type="radio"
                 />
-                <label :for="input.name">True</label>
+                <label :for="input.name">{{ $t('contract.true') }}</label>
               </div>
               <div class="bool-items">
                 <input
@@ -148,7 +148,7 @@
                   type="radio"
                   checked
                 />
-                <label :for="input.name">False</label>
+                <label :for="input.name">{{ $t('contract.false') }}</label>
               </div>
             </div>
             <i
@@ -170,7 +170,7 @@
         <div>
           <div class="title-container">
             <div class="title">
-              <h4>{{ $t('common.value') }} in ETH:</h4>
+              <h4>{{ $t('contract.value-in-eth') }}:</h4>
             </div>
           </div>
           <input
@@ -185,7 +185,7 @@
         <div v-if="selectedMethod.constant">
           <div class="title-container">
             <div class="title">
-              <h4>Result:</h4>
+              <h4>{{ $t('contract.result') }}:</h4>
             </div>
           </div>
           <div class="result-inputs">
@@ -249,18 +249,18 @@
             ]"
             @click="write"
           >
-            <span v-show="!loading && !selectedMethod.constant">{{
-              $t('interface.write')
-            }}</span>
-            <span v-show="!loading && selectedMethod.constant">
-              {{ $t('interface.read') }}
+            <span v-show="!loading && !selectedMethod.constant">
+              {{ $t('contract.write') }}
             </span>
+            <span v-show="!loading && selectedMethod.constant">{{
+              $t('contract.read')
+            }}</span>
             <i v-show="loading" class="fa fa-spinner fa-spin fa-lg" />
           </div>
         </div>
         <interface-bottom-text
-          :link-text="$t('interface.helpCenter')"
-          :question="$t('interface.haveIssues')"
+          :link-text="$t('common.help-center')"
+          :question="$t('common.have-issues')"
           link="https://kb.myetherwallet.com"
         />
       </div>

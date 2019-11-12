@@ -3,10 +3,10 @@
     <div class="wallets-container-header">
       <div class="header-title-container">
         <div class="title-balance">
-          <h2>Watch Only Wallets</h2>
+          <h2>{{ parent.$t('mewCx.watch-wallets-only') }}</h2>
         </div>
         <div class="add-button" @click="props.openWatchOnlyModal">
-          + Add More
+          + {{ parent.$t('mewCx.add-more') }}
         </div>
       </div>
       <component
@@ -34,13 +34,13 @@
       v-show="props.watchOnlyAddresses.length === 0 && !props.loading"
       class="wallets-info"
     >
-      <h2>No Wallet found...</h2>
+      <h2>{{ parent.$t('mewCx.no-wallet-found') }}...</h2>
     </div>
     <div
       v-show="props.loading && props.watchOnlyAddresses.length === 0"
       class="wallets-info"
     >
-      <h2>Loading Wallets...</h2>
+      <h2>{{ parent.$t('mewCx.loading-wallets') }}...</h2>
     </div>
   </div>
 </template>

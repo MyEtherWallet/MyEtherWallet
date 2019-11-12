@@ -2,7 +2,7 @@
   <div class="interface-ads">
     <div class="global__interface-block__margin-top">
       <a
-        :title="$t('common.twitterFollow')"
+        :title="$t('interface.ads.twitter')"
         href="https://twitter.com/intent/follow?screen_name=myetherwallet"
         onclick="window.open(this.href, 'twitter-share', 'width=580,height=296');return false;"
       >
@@ -10,7 +10,7 @@
           class="global__interface-block flex--row--align-center twitter-ad-block"
         >
           <p class="block-title">
-            {{ $t('common.twitterFollow') }}
+            {{ $t('interface.ads.twitter') }}
           </p>
           <div class="margin--left--auto block-twitter">
             <i class="fa fa-twitter"></i>

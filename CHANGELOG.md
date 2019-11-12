@@ -1,8 +1,43 @@
+- Refactor translations [#1475](https://github.com/MyEtherWallet/MyEtherWallet/pull/1475)
+
+### Release v5.2.2
+
+### Feature
+
+- XWallet Integration[#1609](https://github.com/MyEtherWallet/MyEtherWallet/pull/1609)
+
+### Release v5.2.1-hotfix.1
+
+### Bug
+
+- Correct wrong property path for config object in wallet.worker.js [#1604](https://github.com/MyEtherWallet/MyEtherWallet/pull/1604)
+- Increase ENS register wait time to 90 seconds to provide an additional buffer [#1605](https://github.com/MyEtherWallet/MyEtherWallet/pull/1605)
+- Fix web3 out of gas error [#1607](https://github.com/MyEtherWallet/MyEtherWallet/pull/1607)
+- Fix spacing between footer list items [#1599](https://github.com/MyEtherWallet/MyEtherWallet/pull/1599)
+
+### Release v5.2.1
+
+### Feature
+
+- Ambrpay Integration[#1441](https://github.com/MyEtherWallet/MyEtherWallet/pull/1441)
+- Update Dapp Submission UI [#1585](https://github.com/MyEtherWallet/MyEtherWallet/pull/1585)
+
+### Bug
+
+- Various web and cx bugs [#1594](https://github.com/MyEtherWallet/MyEtherWallet/pull/1594)
+- Fix copy to actually copy signed tx, not raw on offline tx [#1590](https://github.com/MyEtherWallet/MyEtherWallet/pull/1590)
+- Remove lighstreams on ledger options, show custom if found [#1589](https://github.com/MyEtherWallet/MyEtherWallet/pull/1589)
+- Various web and cx bugs [#1594](https://github.com/MyEtherWallet/MyEtherWallet/pull/1594)
+
 ### Release v5.2.0
 
 ### Feature
 
 - Chrome Extension Beta release [#1151](https://github.com/MyEtherWallet/MyEtherWallet/pull/1151)
+
+### Bug
+
+- Fix dashboard buttons, fix missing image [#1588](https://github.com/MyEtherWallet/MyEtherWallet/pull/1588)
 
 ### Devop
 

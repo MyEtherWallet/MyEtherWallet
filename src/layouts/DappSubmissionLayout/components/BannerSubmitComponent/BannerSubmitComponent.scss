@@ -13,24 +13,6 @@
   z-index: 9999;
 }
 
-.submit-preview-text {
-  margin-left: 6em;
-}
-
-// Mobile
-@media all and (max-width: $mobile-width) {
-  .submit-preview-text {
-    margin-left: 0;
-  }
-}
-
-// Tablet
-@media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
-  .submit-preview-text {
-    margin-left: 1em;
-  }
-}
-
 .submit-text {
   color: $dark-blue-2;
   font-size: 24px;
@@ -52,7 +34,7 @@
   font-weight: 500;
   height: 52px;
   pointer-events: none;
-  width: 180px;
+  width: 15%;
 }
 
 .submit-btn {
@@ -60,7 +42,7 @@
   background-color: $button--background-color-1;
   border-radius: 6px;
   height: 52px;
-  width: 180px;
+  width: 15%;
   color: $text-white;
   font-size: 14px;
   font-weight: 500;
@@ -85,10 +67,4 @@
     color: $text-white;
     border: 1px solid $white;
   }
-}
-
-.preview-txt {
-  color: $mew-green;
-  font-family: PingFangSC-Medium;
-  font-weight: 500;
 }

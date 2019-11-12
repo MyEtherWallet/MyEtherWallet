@@ -36,7 +36,8 @@
       </div>
 
       <p v-show="value.length > 0" class="passwd-strength">
-        Password strength: <span :class="strengthClass">{{ strength }}</span>
+        {{ $t('createWallet.password.password-strength') }}:
+        <span :class="strengthClass">{{ strength }}</span>
       </p>
       <p v-if="value.length > 0" class="passwd-strength">
         {{ errors.first('password') }}
