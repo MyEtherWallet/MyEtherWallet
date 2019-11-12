@@ -6,5 +6,7 @@
   "browserNonU2f": "Browser not u2f compliant. Try using Chrome or Opera!",
   "browserNonWebUsb": "Browser does not support WebUSB. Try using Chrome or Opera!",
   "noMobileSupport": "Hardware wallet not supported by mobile browser!",
-  "failedToFetch": "Failed to fetch"
+  "failedToFetch": "Failed to fetch",
+  "something-went-wrong": "Something went wrong!",
+  "signer-address-different": "Signer address is different from the derived address!"
 }
