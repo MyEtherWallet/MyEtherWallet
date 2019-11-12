@@ -2,11 +2,12 @@ import domainSale from '@/assets/images/icons/domain-sale.svg';
 import domainSaleHov from '@/assets/images/icons/domain-sale-hov.svg';
 import manageEns from '@/assets/images/icons/domain.svg';
 import manageEnsHov from '@/assets/images/icons/domain-hov.svg';
-import secureTransactionHov from '@/assets/images/icons/button-key.svg';
 import scheduleTransaction from '@/assets/images/icons/eac.svg';
 import scheduleTransactionHov from '@/assets/images/icons/eac-hov.svg';
 import makerdai from '@/assets/images/icons/dapps/makerdai.svg';
+import makerdaiDisabled from '@/assets/images/icons/dapps/makerdai-disabled.svg';
 import ambrpay from '@/assets/images/icons/dapps/ambrpay.png';
+import ambrpayDisabled from '@/assets/images/icons/dapps/ambrpay-disabled.png';
 import { ETH, GOERLI, ROP, RIN, KOV } from '@/networks/types';
 
 const dapps = {
@@ -44,7 +45,7 @@ const dapps = {
   maker: {
     route: '/interface/dapps/maker-dai',
     icon: makerdai,
-    iconDisabled: secureTransactionHov,
+    iconDisabled: makerdaiDisabled,
     title: 'dappsMaker.maker_title',
     desc: 'dappsMaker.maker_desc',
     supportedNetworks: [ETH.name, KOV.name],
@@ -54,7 +55,7 @@ const dapps = {
   ambrpay: {
     route: '/interface/dapps/ambrpay',
     icon: ambrpay,
-    iconDisabled: secureTransactionHov,
+    iconDisabled: ambrpayDisabled,
     title: 'Ambrpay',
     desc: 'With Ambrpay you can create and manage recurring payments.',
     supportedNetworks: [ETH.name],
