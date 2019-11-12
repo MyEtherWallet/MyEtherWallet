@@ -35,6 +35,7 @@
       transfers can be viewed on the "
       <a
         href="https://etherscan.io/address/0x7cb57b5a97eabe94205c07890be4c1ad31e486a8#tokentxns"
+        rel="noopener noreferrer"
         >Token Transfers</a
       >" tab.
     </p>
