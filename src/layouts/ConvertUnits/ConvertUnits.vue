@@ -35,12 +35,12 @@
 
 <script>
 import UnitInput from './components/UnitInput';
-import TitleTextContentsLayout from '@/layouts/InformationPages/Components/TitleTextContentsLayout';
+import PageTitleComponent from '@/components/PageTitleComponent';
 
 export default {
   components: {
     'unit-input': UnitInput,
-    'page-title': TitleTextContentsLayout
+    'page-title': PageTitleComponent
   },
   data() {
     return {

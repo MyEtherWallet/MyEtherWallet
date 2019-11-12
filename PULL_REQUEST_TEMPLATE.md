@@ -4,6 +4,7 @@
 
 - [ ] Updated CHANGELOG.md
 - [ ] Add PR label
+- [ ] No hard-coded strings
 
 ### Feature
 
@@ -12,6 +13,7 @@
   - [ ] Link to issue:
 - [ ] Add test cases or procedure
 - [ ] Add PR label
+- [ ] No hard-coded strings
 
 ### Bug
 
@@ -19,6 +21,7 @@
 - [ ] Is this a user submitted bug?
   - [ ] Link to issue:
 - [ ] Add PR label
+- [ ] No hard-coded strings
 
 ### Release
 
@@ -27,3 +30,4 @@
   - [ ] Link to release:
 - [ ] Add PR label
 - [ ] Updated package.json version
+- [ ] No hard-coded strings

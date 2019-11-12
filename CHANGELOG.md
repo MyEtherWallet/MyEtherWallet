@@ -1,10 +1,28 @@
+### Release v5.2.3
+
+### Devop
+
+- Add translation guidelines to dapp_integration.md and PR guide [#1617](https://github.com/MyEtherWallet/MyEtherWallet/pull/1617)
+- reduce coin image count from 656 to 34 [#1601](https://github.com/MyEtherWallet/MyEtherWallet/pull/1601)
+- Add rel="noopener noreferrer" to links[#1618](https://github.com/MyEtherWallet/MyEtherWallet/pull/1618)
+- Sort Dapps by integration/release dates [#1619](https://github.com/MyEtherWallet/MyEtherWallet/pull/1619)
+- Update web3 icons [#1614](https://github.com/MyEtherWallet/MyEtherWallet/pull/1614)
+- Update ENS length [#1636](https://github.com/MyEtherWallet/MyEtherWallet/pull/1636)
+- reduce coin image count from 656 to 34 [#1601](https://github.com/MyEtherWallet/MyEtherWallet/pull/1601)
+- Add rel="noopener noreferrer" to links [#1618](https://github.com/MyEtherWallet/MyEtherWallet/pull/1618)
 - Refactor translations [#1475](https://github.com/MyEtherWallet/MyEtherWallet/pull/1475)
+
+### Bug
+
+- Web3 modal weird behavior [#1613](https://github.com/MyEtherWallet/MyEtherWallet/pull/1613)
+- Fix sentry error on user login [#1615](https://github.com/MyEtherWallet/MyEtherWallet/pull/1615)
+- Send Offline Helper export actual data [#1637](https://github.com/MyEtherWallet/MyEtherWallet/pull/1637)
 
 ### Release v5.2.2
 
 ### Feature
 
-- XWallet Integration[#1609](https://github.com/MyEtherWallet/MyEtherWallet/pull/1609)
+- XWallet Integration [#1609](https://github.com/MyEtherWallet/MyEtherWallet/pull/1609)
 
 ### Release v5.2.1-hotfix.1
 
@@ -19,7 +37,7 @@
 
 ### Feature
 
-- Ambrpay Integration[#1441](https://github.com/MyEtherWallet/MyEtherWallet/pull/1441)
+- Ambrpay Integration [#1441](https://github.com/MyEtherWallet/MyEtherWallet/pull/1441)
 - Update Dapp Submission UI [#1585](https://github.com/MyEtherWallet/MyEtherWallet/pull/1585)
 
 ### Bug

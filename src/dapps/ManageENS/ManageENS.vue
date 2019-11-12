@@ -586,7 +586,7 @@ export default {
       }
       if (this.parsedTld === this.registrarTLD) {
         this.domainNameErr =
-          value.substr(0, 2) === '0x' || this.parsedHostName.length < 7;
+          value.substr(0, 2) === '0x' || this.parsedHostName.length < 3;
       } else {
         this.domainNameErr = false;
       }
