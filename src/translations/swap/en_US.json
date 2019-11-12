@@ -27,7 +27,15 @@
     "not-valid-addr-src": "Not a valid {currency} address",
     "supply-valid-addr": "Please supply a valid {currency} address",
     "try-again": "please wait a moment and try again",
-    "not-enough-funds": "You don't have enough funds"
+    "not-enough-funds": "You don't have enough funds",
+    "no-swap-offline": "swap is not available offline",
+    "swap-only-mainnet": "Swap is only available on mainnet"
+  },
+  "notice": {
+    "retrieve-changelly-rate-failed":"Failed to retrieve Changelly rate from {fromCurrency} to {toCurrency}",
+    "retrieve-bity-rate-failed":"Failed to retrieve Bity rate from {fromCurrency} to {toCurrency}",
+    "retrieve-kyber-rate-failed":"Failed to retrieve Kyber Network rate from {fromCurrency} to {toCurrency}",
+    "retrieve-simplex-rate-failed":"Failed to retrieve Simplex rate from {fromCurrency} to {toCurrency}"
   },
   "tag-line": {
     "bity": "Swap ETH, BTC, REP, or sell for fiat using your phone!",
@@ -61,7 +69,5 @@
     "button-submit": "Submit"
   },
   "order-id": "{provider} order ID",
-  "swap-widget": "Swap Widget",
-  "no-swap-offline": "swap is not available offline",
-  "swap-only-mainNet": "Swap is only available on mainnet"
+  "swap-widget": "Swap Widget"
 }
