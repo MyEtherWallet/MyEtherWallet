@@ -12,7 +12,9 @@
         <p>
           By submitting your Dapp information, you acknowledge that your Dapp
           will be listed on
-          <a href="https://www.stateofthedapps.com/">stateofthedapps.com</a>.
+          <a rel="noopener noreferrer" href="https://www.stateofthedapps.com/"
+            >stateofthedapps.com</a
+          >.
         </p>
       </div>
     </div>
