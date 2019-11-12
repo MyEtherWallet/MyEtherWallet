@@ -26,7 +26,10 @@
           <qrcode
             :value="JSON.parse(signedTx).rawTransaction"
             :options="{ size: 200 }"
-          />or <a :href="jsonFile" :download="jsonFileName">Download JSON</a>
+          />or
+          <a :href="jsonFile" :download="jsonFileName" rel="noopener noreferrer"
+            >Download JSON</a
+          >
         </div>
       </div>
       <div class="raw">
