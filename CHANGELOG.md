@@ -7,6 +7,9 @@
 - Add rel="noopener noreferrer" to links[#1618](https://github.com/MyEtherWallet/MyEtherWallet/pull/1618)
 - Sort Dapps by integration/release dates [#1619](https://github.com/MyEtherWallet/MyEtherWallet/pull/1619)
 - Update web3 icons [#1614](https://github.com/MyEtherWallet/MyEtherWallet/pull/1614)
+- Update ENS length [#1636](https://github.com/MyEtherWallet/MyEtherWallet/pull/1636)
+- reduce coin image count from 656 to 34 [#1601](https://github.com/MyEtherWallet/MyEtherWallet/pull/1601)
+- Add rel="noopener noreferrer" to links [#1618](https://github.com/MyEtherWallet/MyEtherWallet/pull/1618)
 
 ### Bug
 
