@@ -22,7 +22,7 @@
             href="https://xwallet.pundix.com"
             target="_blank"
           >
-            By Pundi X >
+            {{ $t('accessWallet.get-it-now') }} >
           </a>
           <a
             v-show="link !== '' && name !== xwalletType"

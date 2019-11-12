@@ -117,5 +117,6 @@
   "wallet-info": "Wallet Information",
   "wallet-options": "Check your transaction history, download a new keystore file, print a paper wallet, and more!",
   "xwallet-desc": "Please use XWallet App MEW DApp  to scan the QR code above",
-  "xwallet-title": "Access by XWallet"
+  "xwallet-title": "Access by XWallet",
+  "get-it-now": "Get It Now"
 }
