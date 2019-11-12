@@ -136,6 +136,21 @@
               </a>
             </div>
           </full-width-dropdown>
+
+          <full-width-dropdown
+            title="Address Book"
+            class="address-book"
+          >
+            <p>
+              <!-- Please click the button below to download your configuration file
+              into your local computer. -->
+            </p>
+            <div class="button-block">
+              <!-- <a :href="file" :download="fileName" class="export-button"> -->
+              <standard-button :options="buttonAddress" @click.native="addContact" />
+              <!-- </a> -->
+            </div>
+          </full-width-dropdown>
         </div>
       </b-modal>
     </div>
@@ -191,6 +206,14 @@ export default {
       },
       buttonImport: {
         title: 'Import',
+        buttonStyle: 'green',
+        rightArrow: false,
+        leftArrow: false,
+        fullWidth: true,
+        noMinWidth: false
+      },
+      buttonAddress: {
+        title: 'Add Address',
         buttonStyle: 'green',
         rightArrow: false,
         leftArrow: false,
