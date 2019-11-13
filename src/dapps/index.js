@@ -15,8 +15,8 @@ const dapps = {
     route: '/interface/dapps/manage-ens',
     icon: manageEns,
     iconDisabled: manageEnsHov,
-    title: 'interface.ensManager',
-    desc: 'interface.registerENSDescShort',
+    title: 'ens.title',
+    desc: 'ens.dapp-desc',
     supportedNetworks: [ETH.name, GOERLI.name, ROP.name, RIN.name],
     lastUpdated: '11/06/2019',
     releaseDate: '10/05/2018'
@@ -25,8 +25,8 @@ const dapps = {
     route: '/interface/dapps/name-wallet',
     icon: domainSale,
     iconDisabled: domainSaleHov,
-    title: 'interface.nameYourWallet',
-    desc: 'interface.nameYourWalletDesc',
+    title: 'subDomain.title',
+    desc: 'subDomain.dapp-desc',
     supportedNetworks: [ETH.name],
     lastUpdated: '09/20/2019',
     releaseDate: '10/08/2018'
@@ -35,9 +35,8 @@ const dapps = {
     route: '/interface/dapps/schedule-transaction',
     icon: scheduleTransaction,
     iconDisabled: scheduleTransactionHov,
-    title: 'Schedule a transaction',
-    desc:
-      'Schedule a transaction using the decentralized Ethereum Alarm Clock protocol',
+    title: 'scheduleTx.title',
+    desc: 'scheduleTx.dapp-desc',
     supportedNetworks: [ETH.name, KOV.name],
     lastUpdated: '10/28/2019',
     releaseDate: '02/21/2019'
@@ -56,8 +55,8 @@ const dapps = {
     route: '/interface/dapps/ambrpay',
     icon: ambrpay,
     iconDisabled: ambrpayDisabled,
-    title: 'Ambrpay',
-    desc: 'With Ambrpay you can create and manage recurring payments.',
+    title: 'dappsAmbrpay.title',
+    desc: 'dappsAmbrpay.ambrpay-popover',
     supportedNetworks: [ETH.name],
     lastUpdated: '11/05/2019',
     releaseDate: '11/05/2019'

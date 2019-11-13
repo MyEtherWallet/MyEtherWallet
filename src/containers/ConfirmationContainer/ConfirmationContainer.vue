@@ -508,7 +508,7 @@ export default {
         promiEvent.on('error', onError);
         promiEvent.once('transactionHash', hash => {
           this.showSuccessModal(
-            'Transaction sent!',
+            `${this.$t('sendTx.success.sub-title')}`,
             'Okay',
             this.network.type.blockExplorerTX.replace('[[txHash]]', hash)
           );
@@ -556,7 +556,7 @@ export default {
 
       if (this.raw.generateOnly) return;
       this.showSuccessModal(
-        'Transaction sent!',
+        `${this.$t('sendTx.success.sub-title')}`,
         'Okay',
         this.network.type.blockExplorerTX.replace(
           '[[txHash]]',

@@ -139,7 +139,7 @@ describe('HeaderContainer.vue', () => {
     ).toBeGreaterThan(-1);
   });
 
-  it('should render correct currentName data', () => {
+  xit('should render correct currentName data', () => {
     expect(
       wrapper.vm.$el
         .querySelector('.current-language-flag p')

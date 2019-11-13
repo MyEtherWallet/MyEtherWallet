@@ -4,7 +4,6 @@ const PrivacyPolicyLayout = () => import('@/layouts/PrivacyPolicyLayout');
 const TermsAndConditionsLayout = () =>
   import('@/layouts/TermsAndConditionsLayout');
 const InterfaceLayout = () => import('@/layouts/InterfaceLayout');
-const HelpCenterLayout = () => import('@/layouts/HelpCenterLayout');
 const NotFoundLayout = () => import('@/layouts/NotFoundLayout');
 const GettingStarted = () => import('@/layouts/GettingStarted');
 const SendOfflineHelper = () => import('@/layouts/SendOfflineHelper');
@@ -60,12 +59,6 @@ const router = [
     path: '/terms-and-conditions',
     name: 'TermsAndConditionsLayout',
     component: TermsAndConditionsLayout,
-    meta: { requiresAuth: false }
-  },
-  {
-    path: '/help-center',
-    name: 'HelpCenterLayout',
-    component: HelpCenterLayout,
     meta: { requiresAuth: false }
   },
   {

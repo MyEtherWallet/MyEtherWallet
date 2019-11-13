@@ -82,7 +82,9 @@
             </keep-alive>
           </li>
         </ul>
-        <div v-else class="notification-no-item">No notifications found :(</div>
+        <div v-else class="notification-no-item">
+          {{ $t('common.notifications.no-notifications') }}
+        </div>
       </div>
       <div v-if="detailsShown" class="notification-item-container">
         <component
@@ -334,7 +336,7 @@ export default {
     },
     errorMessageString(notice) {
       if (notice.body.errorMessage === INVESTIGATE_FAILURE_KEY) {
-        return this.$t('header.investigate');
+        return this.$t('interface.investigate');
       }
       return notice.body.errorMessage;
     },

@@ -5,9 +5,9 @@
         class="checkmark"
       ></span>
       <span v-if="terms" class="terms">
-        To access my wallet, I accept
+        {{ $t('accessWallet.access') }}, {{ $t('accessWallet.accept') }}
         <router-link :to="{ name: 'TermsAndConditionsLayout' }" target="_blank">
-          Terms
+          {{ $t('common.terms') }}
         </router-link>
         .</span
       >

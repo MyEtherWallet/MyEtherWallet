@@ -17,9 +17,11 @@
         alt
       />
       <div class="text-content">
-        <p class="title">Send<br />Transaction</p>
+        <p class="title">
+          {{ parent.$t('sendTx.send') }}<br />{{ parent.$t('sendTx.tx') }}
+        </p>
         <p v-if="disabled" class="button-disabled">
-          This function is not available.
+          {{ parent.$t('interface.no-avail') }}
         </p>
       </div>
     </div>

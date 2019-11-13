@@ -7,11 +7,11 @@
           <img :src="getImage(nft)" alt />
         </div>
         <div class="kitty-text">
-          <h3>{{ $t('dapps.sendMy', { value: selectedTitle }) }}</h3>
+          <h3>{{ $t('nftManager.send-my', { value: selectedTitle }) }}</h3>
           <p>#{{ nft.token }}</p>
           <div class="address-input-container">
             <address-selector
-              :title="$t('interface.sendTxToAddr')"
+              :title="$t('sendTx.to-addr')"
               @toAddress="prepareTransfer"
             />
             <div class="send-button-container">
@@ -74,7 +74,7 @@ export default {
       cryptoKittiesContract: {},
       cryptoKittiesConfig: '0x06012c8cf97bead5deae237070f9587f8e7a266d',
       sendButton: {
-        title: this.$t('interface.send'),
+        title: this.$t('sendTx.send'),
         buttonStyle: 'green',
         helpCenter: true,
         noMinWidth: true,

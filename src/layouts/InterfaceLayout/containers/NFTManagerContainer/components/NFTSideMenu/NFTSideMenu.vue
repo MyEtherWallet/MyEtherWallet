@@ -19,7 +19,7 @@
         </li>
         <li>
           <span class="add-custom" @click="openCustomModal"
-            >+{{ $t('dapps.customNFT') }}</span
+            >+{{ $t('nftManager.custom') }}</span
           >
         </li>
       </ul>
