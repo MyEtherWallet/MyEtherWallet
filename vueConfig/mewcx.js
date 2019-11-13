@@ -34,7 +34,7 @@ const webpackConfig = {
             } else {
               json.version = version;
             }
-            json.browser_action.default_popup = `popup.html`;
+            json.browser_action.default_popup = `browserAction.html`;
             Object.keys(json).forEach(key => {
               if (hasJSFile.includes(key)) {
                 if (Array.isArray(json[key])) {
@@ -79,10 +79,17 @@ const exportObj = {
       template: 'public/index.html',
       filename: 'index.html'
     },
-    bapopup: {
-      entry: 'src/builds/mewcx/popupPage/popupPage.js',
+    browserAction: {
+      entry: 'src/builds/mewcx/browserAction/browserAction.js',
       template: 'public/index.html',
-      filename: 'popup.html'
+      filename: 'browserAction.html',
+      chunks: ['browserAction']
+    },
+    popup: {
+      entry: 'src/builds/mewcx/popup/popup.js',
+      template: 'public/index.html',
+      filename: 'popup.html',
+      chunks: ['popup']
     }
   },
   publicPath: './',
@@ -94,11 +101,6 @@ const exportObj = {
   filenameHashing: false,
   productionSourceMap: false,
   chainWebpack: config => {
-    // config.plugin('html').tap(args => {
-    //   // eslint-disable-next-line no-param-reassign
-    //   args[0].excludeChunks = ['background', 'contentScript', 'cxWeb3'];
-    //   return args;
-    // });
     config.plugins.delete('pwa');
     config.plugins.delete('workbox');
   }

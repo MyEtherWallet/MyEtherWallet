@@ -1,10 +1,4 @@
 import app from './app';
-// import ExtensionPopup from '@/layouts/ExtensionPopup';
-import ExtensionWeb3Popup from '@/layouts/ExtensionWeb3Popup';
-import Web3DetectedContainer from '@/layouts/ExtensionWeb3Popup/containers/Web3DetectedContainer';
-import AccountAccessContainer from '@/layouts/ExtensionWeb3Popup/containers/AccountAccessContainer';
-import SignTxContainer from '@/layouts/ExtensionWeb3Popup/containers/SignTxContainer';
-import SignMsgContainer from '@/layouts/ExtensionWeb3Popup/containers/SignMsgContainer';
 import ExtensionBrowserAction from '@/layouts/ExtensionBrowserAction';
 import ExtensionAddWalletContainer from '@/layouts/ExtensionBrowserAction/containers/ExtensionAddWalletContainer';
 import ExtensionWalletContainer from '@/layouts/ExtensionBrowserAction/containers/ExtensionWalletContainer';
@@ -16,40 +10,6 @@ import ExtensionDappsItemContainer from '@/layouts/ExtensionBrowserAction/contai
 import ExtensionDappContainer from '@/layouts/ExtensionBrowserAction/containers/ExtensionDappContainer';
 
 const cxRoutes = [
-  {
-    path: '/extension-popups',
-    name: 'Web3 Detected',
-    component: ExtensionWeb3Popup,
-    meta: { requiresAuth: false },
-    children: [
-      {
-        path: 'web3-detected',
-        component: Web3DetectedContainer,
-        meta: { requiresAuth: false }
-      },
-      {
-        path: 'account-access',
-        component: AccountAccessContainer,
-        meta: { requiresAuth: false }
-      },
-      {
-        path: 'sign-tx',
-        component: SignTxContainer,
-        meta: { requiresAuth: false }
-      },
-      {
-        path: 'sign-msg',
-        component: SignMsgContainer,
-        meta: { requiresAuth: false }
-      }
-    ]
-  },
-  // {
-  //   path: '/popup',
-  //   name: 'Popup',
-  //   component: ExtensionPopup,
-  //   meta: { requiresAuth: false }
-  // },
   {
     path: '/',
     component: ExtensionBrowserAction,

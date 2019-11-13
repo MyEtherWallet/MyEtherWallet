@@ -29,6 +29,7 @@ import store from '@/store';
 import Vuex from 'vuex';
 
 import EnsResolver from '@/directives/EnsResolver';
+import ConcatAddr from '@/filters/ConcatAddr';
 
 // etc
 import languages from '@/translations';
@@ -58,6 +59,7 @@ const router = new Router({
 Vue.router = router;
 
 Vue.directive('ens-resolver', EnsResolver);
+Vue.filter('concatAddr', ConcatAddr);
 
 Vue.config.productionTip = false;
 

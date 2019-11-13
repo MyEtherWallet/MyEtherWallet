@@ -8,6 +8,9 @@
         :direction="'from'"
         :address="txParams.from"
         :amount="hexToNumString(txParams.value, 'ether')"
+        :currency="
+          txParams.tokenSymbol ? txParams.tokenSymbol : network.type.name
+        "
       />
       <img src="@/assets/images/icons/arrow-down-blue.svg" />
       <amount-info-component
