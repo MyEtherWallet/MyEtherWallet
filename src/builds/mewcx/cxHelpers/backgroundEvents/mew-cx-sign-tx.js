@@ -10,7 +10,7 @@ export default async ({ event, payload }, _, next) => {
     if (res[payload.tx.from]) {
       chrome.windows.create({
         url: chrome.runtime.getURL(
-          `index.html#/extension-popups/sign-tx?url=${payload.url}&${q}`
+          `popup.html#/sign-tx?url=${payload.url}&${q}`
         ),
         type: 'popup',
         height: 500,
