@@ -571,7 +571,7 @@ export default {
   },
   watch: {
     ['this.network.type.name']() {
-      this.swap.updateNetwork(this.network.type.name);
+      this.swap.updateNetwork(this.network.type.name, this.web3);
     },
     ['swap.updateProviderRates']() {
       const { toArray, fromArray } = this.swap.initialCurrencyLists;
@@ -928,6 +928,38 @@ export default {
                       .toString(10);
                   }
                 };
+              } else if (entry.provider === this.providerNames.changelly) {
+                Toast.responseHandler(
+                  this.$t('swap.notice.retrieve-changelly-rate-failed', {
+                    fromCurrency,
+                    toCurrency
+                  }),
+                  3
+                );
+              } else if (entry.provider === this.providerNames.bity) {
+                Toast.responseHandler(
+                  this.$t('swap.notice.retrieve-bity-rate-failed', {
+                    fromCurrency,
+                    toCurrency
+                  }),
+                  3
+                );
+              } else if (entry.provider === this.providerNames.kyber) {
+                Toast.responseHandler(
+                  this.$t('swap.notice.retrieve-kyber-rate-failed', {
+                    fromCurrency,
+                    toCurrency
+                  }),
+                  3
+                );
+              } else if (entry.provider === this.providerNames.simplex) {
+                Toast.responseHandler(
+                  this.$t('swap.notice.retrieve-simplex-rate-failed', {
+                    fromCurrency,
+                    toCurrency
+                  }),
+                  3
+                );
               }
             }),
             fromValue

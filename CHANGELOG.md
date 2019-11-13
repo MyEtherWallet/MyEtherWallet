@@ -15,6 +15,7 @@
 - reduce coin image count from 656 to 34 [#1601](https://github.com/MyEtherWallet/MyEtherWallet/pull/1601)
 - Add rel="noopener noreferrer" to links [#1618](https://github.com/MyEtherWallet/MyEtherWallet/pull/1618)
 - Refactor translations [#1475](https://github.com/MyEtherWallet/MyEtherWallet/pull/1475)
+- Improve handling of failure to get rates, offline, and restrict usage to main net [#1587](https://github.com/MyEtherWallet/MyEtherWallet/pull/1587)
 
 ### Bug
 
