@@ -1,7 +1,9 @@
 <template>
   <b-modal
     ref="metamask"
-    :title="isMetaMask ? 'Access via MetaMask' : 'Access via MEWCX'"
+    :title="
+      isMetaMask ? $t('accessWallet.metamask.modal.title') : 'Access via MEWCX'
+    "
     hide-footer
     static
     lazy
@@ -11,7 +13,7 @@
     <div class="modal-content">
       <div v-if="isSafari && isMetaMask" class="browser-catch">
         <h4>
-          MetaMask is only available in these browsers:
+          {{ $t('accessWallet.metamask.warning.safari') }}
         </h4>
         <div class="browser-logo-container">
           <a
@@ -26,9 +28,7 @@
         </div>
       </div>
       <div v-if="isSafari && !isMetaMask" class="browser-catch">
-        <h4>
-          MEWCX is only available in these browsers:
-        </h4>
+        <h4>{{ $t('mewCX.mewcx-only') }}:</h4>
         <div class="browser-logo-container">
           <a
             v-for="browser in mewSupportedBrowsers"
@@ -61,18 +61,20 @@
         </div>
         <div class="d-block content-container text-center">
           <h4 v-show="!unlockWeb3Wallet">
-            {{ $t('accessWallet.web3WalletModalDesc') }}
+            {{ $t('accessWallet.metamask.modal.text') }}
           </h4>
           <h4 v-show="unlockWeb3Wallet">
-            {{ $t('accessWallet.unlockWeb3Wallet') }}
+            {{ $t('accessWallet.unlock-web3-wallet') }}
           </h4>
         </div>
         <div class="accept-terms">
           <label class="checkbox-container">
-            {{ $t('accessWallet.acceptTerms') }}
-            <router-link to="/terms-and-conditions">
-              {{ $t('common.terms') }} </router-link
-            >.
+            <i18n path="accessWallet.metamask.modal.terms" tag="label">
+              <router-link slot="terms" to="/terms-and-conditions">{{
+                $t('common.terms')
+              }}</router-link
+              >.
+            </i18n>
             <input
               type="checkbox"
               @click="accessMyWalletBtnDisabled = !accessMyWalletBtnDisabled"
@@ -86,13 +88,13 @@
             :disabled="accessMyWalletBtnDisabled"
             class="mid-round-button-green-filled close-button"
             @click="getWeb3Wallet"
-            >{{ $t('common.accessMyWallet') }}</b-btn
+            >{{ $t('common.wallet.access-my') }}</b-btn
           >
           <b-btn
             v-show="unlockWeb3Wallet"
             class="mid-round-button-green-filled close-button"
             @click="getWeb3Wallet"
-            >{{ $t('accessWallet.tryAgain') }}</b-btn
+            >{{ $t('accessWallet.try-again') }}</b-btn
           >
         </div>
       </div>
@@ -101,14 +103,21 @@
           <img alt class="icon mew cx" src="@/assets/images/mew-cx-logo.png" />
         </div>
         <div class="d-block content-container text-center">
-          <h4>{{ $t('accessWallet.installWeb3WalletModalDesc') }}</h4>
+          <h4>{{ $t('accessWallet.metamask.warning.install-promt') }}</h4>
         </div>
         <div class="accept-terms hidden">
           <label class="checkbox-container">
-            {{ $t('accessWallet.acceptTerms') }}
-            <router-link to="/terms-and-conditions">
-              {{ $t('common.terms') }} </router-link
-            >. <input type="checkbox" /> <span class="checkmark" />
+            <i18n path="accessWallet.metamask.modal.terms" tag="label">
+              <router-link slot="terms" to="/terms-and-conditions">{{
+                $t('common.terms')
+              }}</router-link
+              >.
+            </i18n>
+            <input
+              type="checkbox"
+              @click="accessMyWalletBtnDisabled = !accessMyWalletBtnDisabled"
+            />
+            <span class="checkmark" />
           </label>
         </div>
         <div class="button-container">
@@ -119,13 +128,13 @@
             rel="noopener noreferrer"
             class="mid-round-button-green-filled close-button"
             @click="refreshPage = true"
-            >Install MEW CX</a
+            >{{ $t('mewCX.install-mewcx') }}</a
           >
           <b-btn
             v-show="refreshPage"
             class="mid-round-button-green-filled close-button"
             @click="reload"
-            >{{ $t('accessWallet.refresh') }}</b-btn
+            >{{ $t('accessWallet.metamask.modal.button-refresh') }}</b-btn
           >
         </div>
       </div>

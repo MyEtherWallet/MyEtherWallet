@@ -8,14 +8,14 @@
           <div class="circle" />
         </div>
         <h3>
-          Registration in progress for <br />
+          {{ $t('ens.register-progress') }} <br />
           <span class="domain-name"> {{ fullDomainName }}... </span>
         </h3>
       </div>
     </div>
     <interface-bottom-text
-      :link-text="$t('interface.helpCenter')"
-      :question="$t('interface.haveIssues')"
+      :link-text="$t('common.help-center')"
+      :question="$t('common.have-issues')"
       link="https://kb.myetherwallet.com"
     />
   </div>

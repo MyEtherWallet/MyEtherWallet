@@ -15,11 +15,12 @@
       </p>
     </div>
     <div class="identicon-container">
-      <p>{{ direction | capitalize }} Address</p>
+      <p v-if="direction === 'to'">{{ $t('sendTx.to-addr') }}</p>
+      <p v-else>{{ $t('sendTx.from-addr') }}</p>
     </div>
     <div class="address">{{ checksumAddress }}</div>
     <div v-if="tokenSymbol !== '' && direction === 'to'">
-      <p>Via contract</p>
+      <p>{{ $t('sendTx.via-contract') }}</p>
       <div class="address">{{ tokenChecksumAddress }}</div>
     </div>
   </div>

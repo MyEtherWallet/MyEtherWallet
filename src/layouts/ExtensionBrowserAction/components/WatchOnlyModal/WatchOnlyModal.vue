@@ -2,26 +2,26 @@
   <div>
     <b-modal
       ref="watchOnlyWallet"
+      :title="$t('mewCx.add-watch-only')"
       hide-footer
       centered
       class="bootstrap-modal"
-      title="Add Watch-Only Wallet"
     >
       <div class="modal-contents">
         <form>
           <div class="input-container">
-            <label for="walletName"> Wallet Name </label>
+            <label for="walletName"> {{ $t('mewCx.wallet-name') }} </label>
             <input
               v-model="name"
-              placeholder="Please add a wallet nickname"
+              :placeholder="$t('mewCx.add-wallet-nickname')"
               name="walletName"
             />
           </div>
           <div class="input-container">
-            <label for="walletAddr"> Address </label>
+            <label for="walletAddr"> {{ $t('common.addr') }} </label>
             <input
               v-model="address"
-              placeholder="Please enter the wallet address"
+              :placeholder="$t('mewCx.enter-address')"
               name="walletAddr"
             />
           </div>
@@ -34,7 +34,7 @@
             type="submit"
             @click.prevent="submit"
           >
-            <span v-show="!loading"> Add Wallet </span>
+            <span v-show="!loading"> {{ $t('mewCx.add-wallet') }} </span>
             <i v-show="loading" class="fa fa-spinner fa-spin" />
           </button>
         </form>

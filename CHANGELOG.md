@@ -1,3 +1,7 @@
+### Bug
+
+- Reset modal variable so it reopens account request []()
+
 ### Release v5.2.3
 
 ### Devop
@@ -10,12 +14,13 @@
 - Update ENS length [#1636](https://github.com/MyEtherWallet/MyEtherWallet/pull/1636)
 - reduce coin image count from 656 to 34 [#1601](https://github.com/MyEtherWallet/MyEtherWallet/pull/1601)
 - Add rel="noopener noreferrer" to links [#1618](https://github.com/MyEtherWallet/MyEtherWallet/pull/1618)
+- Refactor translations [#1475](https://github.com/MyEtherWallet/MyEtherWallet/pull/1475)
 
 ### Bug
 
 - Web3 modal weird behavior [#1613](https://github.com/MyEtherWallet/MyEtherWallet/pull/1613)
 - Fix sentry error on user login [#1615](https://github.com/MyEtherWallet/MyEtherWallet/pull/1615)
-- Reset modal variable so it reopens account request [](<>)
+- Send Offline Helper export actual data [#1637](https://github.com/MyEtherWallet/MyEtherWallet/pull/1637)
 
 ### Release v5.2.2
 
@@ -36,7 +41,7 @@
 
 ### Feature
 
-- Ambrpay Integration[#1441](https://github.com/MyEtherWallet/MyEtherWallet/pull/1441)
+- Ambrpay Integration [#1441](https://github.com/MyEtherWallet/MyEtherWallet/pull/1441)
 - Update Dapp Submission UI [#1585](https://github.com/MyEtherWallet/MyEtherWallet/pull/1585)
 
 ### Bug

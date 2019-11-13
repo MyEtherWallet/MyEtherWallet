@@ -2,19 +2,19 @@ import { Toast } from '@/helpers';
 import Vue from 'vue';
 
 const ERRORS = {
-  'Popup closed': 'trezorError.popupClosed',
-  'Device disconnected': 'trezorError.deviceDisconnect',
-  'device disconnected during action': 'trezorError.deviceDisconnectAction',
-  'Action cancelled by user': 'trezorError.userCancelledAction',
-  'Permissions not granted': 'trezorError.noPermission',
-  'Device call in progress': 'trezorError.callInProgress',
-  'Transport is missing': 'trezorError.transportMissing',
+  'Popup closed': 'trezorError.popup-closed',
+  'Device disconnected': 'trezorError.device-disconnect',
+  'device disconnected during action': 'trezorError.device-disconnect-action',
+  'Action cancelled by user': 'trezorError.user-cancelled-action',
+  'Permissions not granted': 'trezorError.no-permission',
+  'Device call in progress': 'trezorError.call-in-progress',
+  'Transport is missing': 'trezorError.transport-missing',
   'EthAppPleaseEnableContractData: Please enable Contract data on the Ethereum app Settings':
-    'trezorError.turnOnContractData',
+    'trezorError.turn-on-contract-data',
   Cancelled: 'trezorError.cancelled',
-  'Iframe timeout': 'trezor.iframeTimeout',
-  'Browser not supported': 'trezor.unsupportedBrowser',
-  'popup failed to open': 'trezor.popupFailedToOpen'
+  'Iframe timeout': 'trezor.iframe-timeout',
+  'Browser not supported': 'trezor.unsupported-browser',
+  'popup failed to open': 'trezor.popup-failed-to-open'
 };
 
 const WARNING = {};

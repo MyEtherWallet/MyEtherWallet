@@ -14,12 +14,12 @@
           {{ privKey }}
         </p>
         <div class="copy-button" @click="copy">
-          Copy
+          {{ $t('common.copy') }}
           <input ref="privKey" :value="privKey" />
         </div>
         <p class="red-warning">
-          Please <b>DO NOT</b> share your private key to anyone! You may lose
-          your money if you share it!
+          {{ $t('common.please') }} <b>{{ $t('common.do-not') }}</b>
+          {{ $t('accessWallet.private-key.do-not-share') }}!
         </p>
       </div>
     </b-modal>
@@ -40,7 +40,10 @@ export default {
     copy() {
       this.$refs.privKey.select();
       document.execCommand('copy');
-      Toast.responseHandler('Successfully copied Private Key!', Toast.SUCCESS);
+      Toast.responseHandler(
+        this.$t('interface.addr.copied-private-key'),
+        Toast.SUCCESS
+      );
     }
   }
 };
