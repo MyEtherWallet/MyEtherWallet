@@ -75,6 +75,9 @@
             <p v-if="addr.address === currentAddress" class="address-note">
               {{ $t('interface.myAddr') }}
             </p>
+            <p v-if="addr.address !== currentAddress" class="address-note">
+              {{ addr.nickname }}
+            </p>
             <i
               v-if="toAddressCheckMark"
               aria-hidden="true"
@@ -155,22 +158,23 @@ export default {
       validAddress: false,
       dropdownOpen: false,
       unableToValidate: false,
-      addresses: [],
-      toAddressCheckMark: false
+      toAddressCheckMark: false,
+      addresses: []
     };
   },
   computed: {
-    ...mapState(['ens'])
+    ...mapState(['ens', 'addressBook'])
   },
   watch: {
     currentAddress(address) {
+      console.error('address', this.addressBook)
       if (this.addresses.findIndex(addr => addr.address === address) === -1) {
         this.addresses = [
           {
             address: address,
             currency: BASE_CURRENCY
           },
-          ...this.addresses
+          ...this.addressBook
         ];
       }
     },
