@@ -3,9 +3,9 @@
     <div class="page-container">
       <div class="hardware-container">
         <div class="hardware-text">
-          <h2>{{ $t('buyHardwareWallet.pageTitle') }}</h2>
+          <h2>{{ $t('buyHardwareWallet.page.title') }}</h2>
           <p>
-            {{ $t('buyHardwareWallet.pageSubTtile') }}
+            {{ $t('buyHardwareWallet.page.title') }}
           </p>
         </div>
         <div class="hardware-items-container">
@@ -17,7 +17,7 @@
           >
             <div class="hardware-item-text">
               <p class="starting-from">
-                {{ $t('buyHardwareWallet.priceStartingFrom') }}
+                {{ $t('buyHardwareWallet.caption-starting-from') }}
               </p>
               <div class="price-container">
                 <span>{{ item.currency }}</span>
@@ -26,7 +26,7 @@
                 </p>
               </div>
               <p class="item-description">
-                {{ item.description }}
+                {{ getItemDesc(item.description) }}
               </p>
               <a
                 :href="item.href"
@@ -34,7 +34,7 @@
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {{ $t('buyHardwareWallet.moreInfo') }} >
+                {{ $t('buyHardwareWallet.button-more-info') }} >
               </a>
             </div>
             <div class="hardware-item-logo">
@@ -58,6 +58,11 @@ export default {
     return {
       items: affiliates
     };
+  },
+  methods: {
+    getItemDesc(desc) {
+      return `${this.$t(desc)}`;
+    }
   }
 };
 </script>

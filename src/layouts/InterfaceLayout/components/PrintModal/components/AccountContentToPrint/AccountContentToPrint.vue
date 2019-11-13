@@ -80,8 +80,8 @@
     </div>
     <div class="between">
       <div class="text">
-        <img height="15px" src="~@/assets/images/icons/scissor.svg" alt /> Cut
-        Here
+        <img height="15px" src="~@/assets/images/icons/scissor.svg" alt />
+        {{ $t('common.print-modal.cut') }}
       </div>
       <div class="dash"></div>
     </div>

@@ -2,12 +2,12 @@
   <div class="address-qrcode-modal">
     <b-modal
       ref="addressQrcode"
+      :title="$t('common.addr')"
       hide-footer
       centered
       static
       lazy
       class="bootstrap-modal nopadding"
-      title="Address"
     >
       <div class="modal-contents">
         <qrcode :value="address" :options="{ size: 160 }" />
@@ -17,7 +17,7 @@
           class="address"
           readonly
         ></textarea>
-        <button @click="copyToClipboard">Copy</button>
+        <button @click="copyToClipboard">{{ $t('common.copy') }}</button>
       </div>
     </b-modal>
   </div>

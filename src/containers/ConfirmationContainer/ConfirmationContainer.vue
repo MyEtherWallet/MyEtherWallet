@@ -180,15 +180,21 @@ export default {
   watch: {
     wallet(newVal) {
       if (newVal !== null) {
-        this.$refs.confirmModal.$refs.confirmation.$on('hidden', () => {
-          if (this.dismissed) {
-            this.reset();
-          }
-        });
-
-        this.$refs.signConfirmModal.$refs.signConfirmation.$on('hidden', () => {
-          this.signedMessage = '';
-        });
+        if (this.$refs.hasOwnProperty('confirmModal')) {
+          this.$refs.confirmModal.$refs.confirmation.$on('hidden', () => {
+            if (this.dismissed) {
+              this.reset();
+            }
+          });
+        }
+        if (this.$refs.hasOwnProperty('signConfirmModal')) {
+          this.$refs.signConfirmModal.$refs.signConfirmation.$on(
+            'hidden',
+            () => {
+              this.signedMessage = '';
+            }
+          );
+        }
       }
     }
   },
@@ -502,7 +508,7 @@ export default {
         promiEvent.on('error', onError);
         promiEvent.once('transactionHash', hash => {
           this.showSuccessModal(
-            'Transaction sent!',
+            `${this.$t('sendTx.success.sub-title')}`,
             'Okay',
             this.network.type.blockExplorerTX.replace('[[txHash]]', hash)
           );
@@ -550,7 +556,7 @@ export default {
 
       if (this.raw.generateOnly) return;
       this.showSuccessModal(
-        'Transaction sent!',
+        `${this.$t('sendTx.success.sub-title')}`,
         'Okay',
         this.network.type.blockExplorerTX.replace(
           '[[txHash]]',

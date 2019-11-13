@@ -21,8 +21,9 @@
             class="no-link"
             href="https://xwallet.pundix.com"
             target="_blank"
+            rel="noopener noreferrer"
           >
-            By Pundi X >
+            {{ $t('accessWallet.get-it-now') }} >
           </a>
           <a
             v-show="link !== '' && name !== xwalletType"
@@ -31,7 +32,7 @@
             rel="noopener noreferrer"
             @click.stop
           >
-            {{ $t('accessWallet.buy') }} >
+            {{ $t('accessWallet.hardware.modal.button-buy') }} >
           </a>
         </div>
       </div>

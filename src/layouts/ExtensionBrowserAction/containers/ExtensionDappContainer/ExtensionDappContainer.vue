@@ -2,7 +2,7 @@
   <div class="dapp-container">
     <div>
       <router-link to="/dapps">
-        Dapps
+        {{ $t('mewCx.dapps') }}
       </router-link>
       >
       <span>
@@ -31,6 +31,7 @@
               :href="dapp.sites[item]"
               class="website-button"
               target="_blank"
+              rel="noopener noreferrer"
             >
               {{ getText(item) }}
             </a>
@@ -42,6 +43,7 @@
               :key="idx"
               :href="item.url"
               target="_blank"
+              rel="noopener noreferrer"
             >
               <i :class="[getFontIcon(item.platform), 'fa fa-lg']" />
             </a>
