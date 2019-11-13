@@ -1,4 +1,14 @@
 @import "~@/scss/GlobalVariables";
+
+.cx-menu-container {
+  box-shadow: 0 2px 13px rgba(0, 0, 0, 0.2);
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: white;
+  width: 100%;
+}
+
 a {
   text-decoration: none;
 }
@@ -39,8 +49,4 @@ a {
 
 .cx-menu {
   padding: 10px 10px;
-}
-
-.cx-menu-container {
-  box-shadow: 0 2px 13px rgba(0, 0, 0, 0.1);
 }
