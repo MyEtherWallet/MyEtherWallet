@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="cx-container">
     <b-container>
       <keep-alive>
         <router-view />
@@ -16,4 +16,8 @@ export default {
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss" scoped>
+.cx-container {
+  background-color: #cacaca;
+}
+</style>
