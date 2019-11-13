@@ -1,12 +1,12 @@
 <template>
   <div class="sign-message-container">
-    <interface-container-title :title="$t('common.verifyMessage')" />
+    <interface-container-title :title="$t('verifyMessage.title')" />
     <verify-message-input />
     <div class="content-container">
       <div class="submit-button-container">
         <interface-bottom-text
-          :link-text="$t('interface.helpCenter')"
-          :question="$t('interface.haveIssues')"
+          :link-text="$t('common.help-center')"
+          :question="$t('common.have-issues')"
           link="https://kb.myetherwallet.com"
         />
       </div>

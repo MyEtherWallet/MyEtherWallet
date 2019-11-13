@@ -177,7 +177,7 @@ export default {
     copyToClipboard() {
       this.$refs.address.select();
       document.execCommand('copy');
-      Toast.responseHandler('Copied', Toast.INFO);
+      Toast.responseHandler(this.$t('common.copied'), Toast.INFO);
     },
     sendEntireBalance() {
       if (this.account) {

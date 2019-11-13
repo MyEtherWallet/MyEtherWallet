@@ -121,9 +121,10 @@ export default class Kyber {
       .call();
   }
 
-  setNetwork(network) {
+  setNetwork(network, web3) {
     this.network = network;
     if (this.isValidNetwork) {
+      this.web3 = web3;
       this.getMainNetAddress(kyberAddressFallback[this.network]);
       this.getSupportedTokenList();
     }
@@ -255,6 +256,9 @@ export default class Kyber {
       fromValueWei
     );
     logger(rates);
+    if (!rates) {
+      return -1;
+    }
     if (new BigNumber(rates['expectedRate']).eq(new BigNumber(0))) {
       return -1;
     }

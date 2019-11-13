@@ -2,7 +2,7 @@
   <div class="modal-container">
     <b-modal
       ref="modal"
-      :title="$t('dappsMaker.depositTitle')"
+      :title="$t('dappsMaker.deposit-title')"
       centered
       class="bootstrap-modal nopadding"
       hide-footer
@@ -13,7 +13,7 @@
         <div class="inputs-container">
           <div class="input-container">
             <div class="interface__block-title">
-              {{ $t('dappsMaker.depositQuestion') }}
+              {{ $t('dappsMaker.deposit-question') }}
             </div>
             <div :class="['input-box', hasEnoughEth ? '' : 'danger']">
               <input v-model="amount" />
@@ -30,9 +30,9 @@
                       ? displayFixedValue(values.toPeth(amount), 5, false)
                       : 0
                   }}
-                  PETH
+                  {{ $t('common.currency.peth') }}
                 </p>
-                <popover :popcontent="$t('dappsMaker.pethPopover')" />
+                <popover :popcontent="$t('dappsMaker.peth-popover')" />
               </div>
             </div>
           </div>
@@ -40,7 +40,7 @@
 
         <div class="detail-info">
           <div class="info">
-            <h4>{{ $t('dappsMaker.DetailInfo') }}</h4>
+            <h4>{{ $t('dappsMaker.detail-info') }}</h4>
             <div class="sliding-switch-white">
               <label class="switch">
                 <input
@@ -57,21 +57,21 @@
           >
             <div class="padding-container">
               <div class="grid-block">
-                <p>{{ $t('dappsMaker.currentlyDeposited') }}</p>
+                <p>{{ $t('dappsMaker.currently-deposited') }}</p>
                 <p>
                   <b>{{ displayFixedValue(values.ethCollateral, 5) }}</b>
                   {{ digitalCurrency }}
                 </p>
               </div>
               <div class="grid-block">
-                <p>{{ $t('dappsMaker.projectedLiquidation') }}</p>
+                <p>{{ $t('dappsMaker.projected-liquidation') }}</p>
                 <p>
                   <b>{{ displayFixedValue(newLiquidationPrice, 2) }}</b>
                   {{ fiatCurrency }}
                 </p>
               </div>
               <div class="grid-block">
-                <p>{{ $t('dappsMaker.projectedCollatRatio') }}</p>
+                <p>{{ $t('dappsMaker.projected-collat-ratio') }}</p>
                 <p>
                   <b
                     >{{

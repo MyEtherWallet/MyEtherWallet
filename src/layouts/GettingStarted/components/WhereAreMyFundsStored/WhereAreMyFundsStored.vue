@@ -3,20 +3,20 @@
     <div class="block-progressbar">
       <dir class="block-progressbar__container">
         <div class="block-progressbar__title">
-          {{ $t('gettingStarted.aboutMew') }}
+          {{ $t('gettingStarted.title-about') }}
         </div>
         <div class="block-progressbar__progressbar">
           <div :class="progressBarValue" />
         </div>
         <div class="block-progressbar__content">
-          <h4>{{ $t('gettingStarted.whereAreMyFundsTitle') }}</h4>
-          <p>{{ $t('gettingStarted.whereAreMyFundsDesc') }}</p>
+          <h4>{{ $t('gettingStarted.where-are-my-funds.title') }}</h4>
+          <p>{{ $t('gettingStarted.where-are-my-funds.desc') }}</p>
           <div class="block-progressbar__warning">
-            {{ $t('gettingStarted.whereAreMyFundsWarning') }}
+            {{ $t('gettingStarted.where-are-my-funds.warning') }}
           </div>
           <div class="block-progressbar__sliding-switch-expender">
             <div class="title">
-              <h4>{{ $t('gettingStarted.whatIsBlockchainTitle') }}</h4>
+              <h4>{{ $t('gettingStarted.what-is-blockchain.title') }}</h4>
               <div class="sliding-switch sliding-switch-white">
                 <label class="switch">
                   <input
@@ -28,8 +28,8 @@
               </div>
             </div>
             <div v-if="expenderContentShow" class="content">
-              <p>{{ $t('gettingStarted.whatIsBlockchainDesc1') }}</p>
-              <p>{{ $t('gettingStarted.whatIsBlockchainDesc2') }}</p>
+              <p>{{ $t('gettingStarted.what-is-blockchain.desc1') }}</p>
+              <p>{{ $t('gettingStarted.what-is-blockchain.desc2') }}</p>
             </div>
           </div>
         </div>
