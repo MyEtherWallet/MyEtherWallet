@@ -224,7 +224,6 @@ function querycB(tab) {
         chrome.tabs.update(null, { url: urlRedirect });
       } else {
         // Injects web3
-        console.log('attempts to inject web3')
         chrome.tabs.sendMessage(tab.id, { event: CX_INJECT_WEB3 }, function() {
           store.state.web3.eth.net.getId().then(() => {
             chrome.tabs.sendMessage(tab.id, {
@@ -235,7 +234,6 @@ function querycB(tab) {
       }
     } else {
       // Injects web3
-      console.log('attempts to inject web3')
       chrome.tabs.sendMessage(tab.id, { event: CX_INJECT_WEB3 }, function() {
         store.state.web3.eth.net.getId().then(() => {
           chrome.tabs.sendMessage(tab.id, {
