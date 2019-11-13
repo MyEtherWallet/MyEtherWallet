@@ -19,7 +19,7 @@
             <accordion-menu
               :greytitle="false"
               :isopen="stage1"
-              :title="$t('withoutWallet.selectNetwork')"
+              :title="$t('withoutWallet.select-network')"
               :right-text="networkTitle"
               number="1"
               @titleClicked="stage1 = !stage1"
@@ -46,8 +46,8 @@
                         "
                         class="no-icon"
                       >
-                        <p>No</p>
-                        <p>Icon</p>
+                        <p>{{ $t('common.no') }}</p>
+                        <p>{{ $t('common.uppercase-icon') }}</p>
                       </div>
                     </div>
                     <p>{{ key }}</p>
@@ -78,7 +78,7 @@
             :greytitle="false"
             :editbutton="true"
             :isopen="stage2"
-            :title="$t('withoutWallet.generateInfo')"
+            :title="$t('withoutWallet.generate-info')"
             number="2"
             @titleClicked="stage2 = !stage2"
           >
@@ -89,33 +89,36 @@
             <div v-if="informationGenerated">
               <ul>
                 <li class="detail-container">
-                  <span class="detail-name">Sender:</span>
+                  <span class="detail-name">{{ $t('sendTx.sender') }}:</span>
                   <span class="detail-text">{{ genInfo.address }}</span>
                 </li>
                 <li class="detail-container">
-                  <span class="detail-name">Nonce:</span>
+                  <span class="detail-name">{{ $t('sendTx.nonce') }}:</span>
                   <span class="detail-text">{{ genInfo.nonce }}</span>
                 </li>
                 <li class="detail-container">
-                  <span class="detail-name">Chain ID:</span>
+                  <span class="detail-name">{{ $t('common.chain-id') }}:</span>
                   <span class="detail-text"
                     >{{ genInfo.chainID }} ({{ genInfo.networkName }})</span
                   >
                 </li>
                 <li class="detail-container with-divider">
-                  <span class="detail-name">Current Gas Price:</span>
+                  <span class="detail-name"
+                    >{{ $t('common.gas.current-gas') }}:</span
+                  >
                   <span class="detail-text"
-                    >{{ toGwei(genInfo.gasPrice) }} Gwei</span
+                    >{{ toGwei(genInfo.gasPrice) }}
+                    {{ $t('common.gas.uppercase-gwei') }}</span
                   >
                 </li>
                 <li class="detail-container">
-                  <span class="detail-name">Retrieved:</span>
+                  <span class="detail-name">{{ $t('sendTx.retrieved') }}:</span>
                   <span class="detail-text">
                     {{ dateTimeDisplay(genInfo.timestamp) }}
                   </span>
                 </li>
                 <li class="detail-container">
-                  <span class="detail-name">at block:</span>
+                  <span class="detail-name">{{ $t('sendTx.at-block') }}:</span>
                   <span class="detail-text">{{ genInfo.blockNumber }}</span>
                 </li>
               </ul>
@@ -153,18 +156,19 @@
           <accordion-menu
             :greytitle="false"
             :isopen="stage3"
-            :title="$t('withoutWallet.signedTx')"
+            :title="$t('withoutWallet.signed-tx')"
             number="3"
             @titleClicked="stage3 = !stage3"
           >
             <textarea v-model="rawSigned" class="no-margin raw-tx-input" />
-            <p v-if="invalidSignature">Invalid Signature</p>
+            <p v-if="invalidSignature">{{ $t('sendTx.invalid-signature') }}</p>
             <p v-if="wrongNetwork && correctNetwork === ''">
-              Signed Chain ID does not match chain id for selected network
+              {{ $t('sendTx.signed-chain-id') }}
+              {{ $t('sendTx.chain-no-match') }}
             </p>
             <p v-if="wrongNetwork && correctNetwork !== ''">
-              Signed Chain ID ({{ correctNetwork }}) does not match chain id for
-              selected network
+              {{ $t('sendTx.signed-chain-id') }} ({{ correctNetwork }})
+              {{ $t('sendTx.chain-no-match') }}
             </p>
             <expanding-option title="Raw Transaction">
               <textarea
@@ -206,36 +210,38 @@
             :greytitle="false"
             :editbutton="false"
             :isopen="stage4"
-            :title="$t('withoutWallet.txDetails')"
+            :title="$t('withoutWallet.tx-details')"
             number="4"
             @titleClicked="stage4 = !stage4"
           >
             <ul>
               <li class="detail-container">
-                <span class="detail-name">Sender:</span>
+                <span class="detail-name">{{ $t('sendTx.sender') }}:</span>
                 <span class="detail-text">{{ from }}</span>
               </li>
               <li class="detail-container">
-                <span class="detail-name">Receiver:</span>
+                <span class="detail-name">{{ $t('sendTx.receiver') }}:</span>
                 <span class="detail-text">{{ to }}</span>
               </li>
               <li class="detail-container">
-                <span class="detail-name">Nonce:</span>
+                <span class="detail-name">{{ $t('sendTx.nonce') }}:</span>
                 <span class="detail-text">{{ nonce }}</span>
               </li>
               <li class="detail-container">
-                <span class="detail-name">Value:</span>
+                <span class="detail-name">{{ $t('common.value') }}:</span>
                 <span class="detail-text">
                   {{ toEth(value) }}
                   {{ selectedNetwork.type.currencyName }}
                 </span>
               </li>
               <li class="detail-container">
-                <span class="detail-name">Data:</span>
+                <span class="detail-name">{{ $t('sendTx.data') }}:</span>
                 <span v-if="data !== '0x'" class="detail-text">
                   {{ truncateData(data) }}
-                  <span class="show-all-btn" @click="showAllData = !showAllData"
-                    >Show All</span
+                  <span
+                    class="show-all-btn"
+                    @click="showAllData = !showAllData"
+                    >{{ $t('common.show-all') }}</span
                   >
                 </span>
                 <span v-else class="data-all">{{ data }}</span>
@@ -243,21 +249,24 @@
               </li>
 
               <li class="detail-container with-divider">
-                <span class="detail-name">Chain ID:</span>
+                <span class="detail-name">{{ $t('common.chain-id') }}:</span>
                 <span class="detail-text"
                   >{{ chainID }} ({{ selectedNetwork.type.name_long }})</span
                 >
               </li>
               <li class="detail-container">
-                <span class="detail-name">Gas Limit:</span>
+                <span class="detail-name">{{ $t('common.gas.limit') }}:</span>
                 <span class="detail-text">{{ gasLimit }}</span>
               </li>
               <li class="detail-container">
-                <span class="detail-name">Gas Price:</span>
-                <span class="detail-text">{{ toGwei(gasPrice) }} Gwei</span>
+                <span class="detail-name">{{ $t('common.gas.price') }}:</span>
+                <span class="detail-text"
+                  >{{ toGwei(gasPrice) }}
+                  {{ $t('common.gas.uppercase-gwei') }}</span
+                >
               </li>
               <li class="detail-container">
-                <span class="detail-name">Fee:</span>
+                <span class="detail-name">{{ $t('common.gas.fee') }}:</span>
                 <span class="detail-text">
                   {{ toEth(fee) }}
                   {{ selectedNetwork.type.currencyName }}
@@ -283,13 +292,13 @@
             :greytitle="false"
             :editbutton="false"
             :isopen="stage5"
-            :title="$t('withoutWallet.txStatus')"
+            :title="$t('withoutWallet.tx-status')"
             number="5"
             @titleClicked="stage5 = !stage5"
           >
             <ul v-if="error === ''">
               <li class="tx-hash-container">
-                <p>Transaction Hash:</p>
+                <p>{{ $t('sendTx.tx-hash') }}:</p>
                 <a
                   :href="replaceUrl('', txHash)"
                   class="detail-text"
@@ -299,7 +308,7 @@
                 >
               </li>
               <li class="tx-receipt-container">
-                <p>Transaction Receipt:</p>
+                <p>{{ $t('sendTx.transaction-receipt') }}:</p>
                 <div
                   v-if="Object.keys(txReceipt).length > 0"
                   class="tx-receipt-items"
@@ -328,7 +337,7 @@
                     <span v-else class="right-side">{{ txReceipt[item] }}</span>
                   </div>
                 </div>
-                <div v-else class="loading">Loading....</div>
+                <div v-else class="loading">{{ $t('common.loading') }}....</div>
               </li>
             </ul>
             <div v-else>{{ error }}</div>
@@ -354,7 +363,7 @@ import BigNumber from 'bignumber.js';
 import web3Utils from 'web3-utils';
 import * as networkTypes from '@/networks/types';
 import store from 'store';
-import TitleTextContentsLayout from '@/layouts/InformationPages/Components/TitleTextContentsLayout';
+import PageTitleComponent from '@/components/PageTitleComponent';
 import AccordionMenu from '@/components/AccordionMenu';
 import DropDownAddressSelector from '@/components/DropDownAddressSelector';
 import StandardButton from '@/components/Buttons/StandardButton';
@@ -364,7 +373,7 @@ import ConfirmationModal from './components/ConfirmationModal';
 
 export default {
   components: {
-    'page-title': TitleTextContentsLayout,
+    'page-title': PageTitleComponent,
     'accordion-menu': AccordionMenu,
     'dropdown-address-selector': DropDownAddressSelector,
     'standard-button': StandardButton,
@@ -598,21 +607,21 @@ export default {
     },
     async generateInformation(address) {
       if (address === '') return;
-      this.genInfo.address = address;
-      this.genInfo.gasPrice = await this.web3.eth.getGasPrice();
-      this.genInfo.nonce = await this.web3.eth.getTransactionCount(address);
-      this.genInfo.blockNumber = await this.web3.eth.getBlockNumber();
-      this.genInfo.chainID = this.selectedNetwork.type.chainID;
-      this.genInfo.timestamp = Date.now(); //;
+      this.genInfo['address'] = address;
+      this.genInfo['gasPrice'] = await this.web3.eth.getGasPrice();
+      this.genInfo['nonce'] = await this.web3.eth.getTransactionCount(address);
+      this.genInfo['blockNumber'] = await this.web3.eth.getBlockNumber();
+      this.genInfo['chainID'] = this.selectedNetwork.type.chainID;
+      this.genInfo['timestamp'] = Date.now(); //;
       this.exportGeneratedInfo();
       this.informationGenerated = true;
     },
     exportGeneratedInfo() {
-      const createBlob = (mime, str) => {
+      const createBlob = (str, type) => {
         const string = typeof str === 'object' ? JSON.stringify(str) : str;
         if (string === null) return '';
         const blob = new Blob([string], {
-          type: mime
+          type: type
         });
         this.downloadable = true;
         return window.URL.createObjectURL(blob);

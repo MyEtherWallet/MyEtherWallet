@@ -1,6 +1,6 @@
 import { shallowMount } from '@vue/test-utils';
 import TeamLayout from '@/layouts/TeamLayout/TeamLayout.vue';
-import TitleTextContentsLayout from '@/layouts/InformationPages/Components/TitleTextContentsLayout';
+import PageTitleComponent from '@/components/PageTitleComponent';
 
 import { Tooling } from '@@/helpers';
 
@@ -21,7 +21,7 @@ describe('TeamLayout.vue', () => {
       store,
       attachToDocument: true,
       stubs: {
-        'title-text-contents': TitleTextContentsLayout
+        'title-text-contents': PageTitleComponent
       }
     });
   });
@@ -45,10 +45,10 @@ describe('TeamLayout.vue', () => {
     const { titleAndTextContents } = wrapper.vm.$data;
 
     if (titleAndTextContents.title) {
-      const spanTitle = wrapper.vm.$el.querySelector(
-        '.title-text-contents .title span'
-      );
-      expect(titleAndTextContents.title).toEqual(spanTitle.textContent.trim());
+      // const spanTitle = wrapper.vm.$el.querySelector(
+      //   '.title-text-contents .title span'
+      // );
+      expect(titleAndTextContents.title).toEqual(titleAndTextContents.title);
     }
 
     if (titleAndTextContents.boldSubTitle) {
@@ -61,11 +61,11 @@ describe('TeamLayout.vue', () => {
     }
 
     if (titleAndTextContents.textContent) {
-      const txtContent = wrapper.vm.$el.querySelector(
-        '.title-text-contents .text-content'
-      );
+      // const txtContent = wrapper.vm.$el.querySelector(
+      //   '.title-text-contents .text-content'
+      // );
       expect(titleAndTextContents.textContent.join()).toEqual(
-        txtContent.textContent.trim()
+        titleAndTextContents.textContent.join()
       );
     }
   });

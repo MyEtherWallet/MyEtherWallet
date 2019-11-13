@@ -13,9 +13,13 @@
         alt="kitties"
       />
       <div class="text-content">
-        <p class="title">NFT<br />Manager</p>
+        <p class="title">
+          {{ parent.$t('nftManager.nft') }}<br />{{
+            parent.$t('nftManager.manager')
+          }}
+        </p>
         <p v-if="props.disabled" class="button-disabled">
-          This function is not available.
+          {{ parent.$t('interface.no-avail') }}
         </p>
       </div>
     </div>

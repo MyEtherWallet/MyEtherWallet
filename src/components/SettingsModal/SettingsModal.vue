@@ -3,7 +3,7 @@
     <div class="modal-container">
       <b-modal
         ref="settings"
-        title="Settings"
+        :title="$t('interface.settings')"
         hide-footer
         centered
         class="bootstrap-modal nopadding"
@@ -13,7 +13,7 @@
         <div class="modal-contents">
           <full-width-dropdown
             ref="gasDropdown"
-            title="Transaction Speed"
+            :title="$t('interface.config.tx-speed')"
             class="tx-speed"
           >
             <div class="radio-buttons">
@@ -34,7 +34,7 @@
                     />
                     <label :for="key">
                       {{ key | capitalize }} ({{ gasPriceInputs[key].gwei }}
-                      Gwei)
+                      {{ $t('common.gas.uppercase-gwei') }})
                     </label>
                   </div>
                   <p class="hidden">
@@ -61,7 +61,7 @@
                       type="number"
                       @focus="selectedGasType = 'other'"
                     />
-                    <p class="gwei">Gwei</p>
+                    <p class="gwei">{{ $t('common.gas.uppercase-gwei') }}</p>
                   </div>
                   <p class="hidden">
                     {{ customGasEth }}
@@ -88,15 +88,14 @@
           </full-width-dropdown>
 
           <full-width-dropdown
-            title="Import Configurations"
+            :title="$t('interface.config.import')"
             class="import-config"
           >
-            <b-alert :show="popup" fade variant="info"
-              >Imported file successfully!</b-alert
-            >
+            <b-alert :show="popup" fade variant="info">{{
+              $t('interface.config.import-success')
+            }}</b-alert>
             <p>
-              Please click the button below to open and import you configuration
-              file from your local computer.
+              {{ $t('interface.config.import-desc') }}
             </p>
             <div class="import-button-block">
               <div class="filename">
@@ -123,12 +122,11 @@
           </full-width-dropdown>
 
           <full-width-dropdown
-            title="Export Configurations"
+            :title="$t('interface.config.export')"
             class="export-config"
           >
             <p>
-              Please click the button below to download your configuration file
-              into your local computer.
+              {{ $t('interface.config.export-desc') }}
             </p>
             <div class="button-block">
               <a
@@ -142,13 +140,18 @@
             </div>
           </full-width-dropdown>
 
-          <full-width-dropdown title="Address Book" class="address-book">
+          <full-width-dropdown
+            title="Manage Contact Addresses"
+            class="address-book"
+          >
             <p>
-              You could 
+              {{ $t('interface.contact-add-max') }}
             </p>
             <div v-if="addressBook.length > 0">
               <div v-for="(contact, index) in addressBook" :key="contact.key">
-                <p> {{index + 1}}. {{contact.address}} {{contact.nickname}} </p>
+                <p>
+                  {{ index + 1 }}. {{ contact.address }} {{ contact.nickname }}
+                </p>
                 <!-- <input type="text" /> -->
               </div>
             </div>

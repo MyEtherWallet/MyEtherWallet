@@ -5,8 +5,8 @@
         :show-back="$route.fullPath !== '/dapp-submission'"
         :btn-text="
           $route.fullPath.includes('/dapp-summary')
-            ? 'Submit'
-            : 'Save & Continue'
+            ? $t('dappsSubmission.submit')
+            : $t('dappsSubmission.save')
         "
         :next="next"
         :back="previous"
@@ -52,24 +52,19 @@
       </div>
       <success-modal
         ref="successModal"
-        :success-title="'Congratulations'"
-        :message="
-          'It takes about 3-5 business days to review your Dapp. And an email will be sent to you if the the status update.'
-        "
+        :success-title="$t('dappsSubmission.congrats')"
+        :message="$t('dappsSubmission.congrats-msg')"
       />
     </div>
   </div>
 </template>
 
 <script>
-import AboutYourDappContainer from './containers/AboutYourDappContainer';
 import StrengthOfInfoComponent from './components/StrengthOfInfoComponent';
 import BannerComponent from './components/BannerComponent';
 import SOTDComponent from './components/SOTDComponent';
 import BannerSubmitComponent from './components/BannerSubmitComponent';
 import MewSupportComponent from './components/MewSupportComponent';
-import AboutYourTeamContainer from './containers/AboutYourTeamContainer';
-import SummaryContainer from './containers/SummaryContainer';
 import axios from 'axios';
 import SuccessModal from '@/containers/ConfirmationContainer/components/SuccessModal';
 import { Toast } from '@/helpers';
@@ -77,13 +72,10 @@ import FormData from 'form-data';
 
 export default {
   components: {
-    'about-your-dapp': AboutYourDappContainer,
     'strength-of-info': StrengthOfInfoComponent,
     'banner-component': BannerComponent,
     'banner-submit-component': BannerSubmitComponent,
     'mew-support': MewSupportComponent,
-    'about-your-team': AboutYourTeamContainer,
-    'summary-container': SummaryContainer,
     'success-modal': SuccessModal,
     sotd: SOTDComponent
   },

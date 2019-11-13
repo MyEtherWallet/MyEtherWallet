@@ -12,6 +12,7 @@
           :desc="$t(dapp.desc)"
           :param="dapp.route"
           :supported-networks="dapp.supportedNetworks"
+          :release-date="dapp.releaseDate"
         />
       </div>
     </div>
@@ -32,25 +33,28 @@ export default {
   },
   data() {
     return {
-      localDapps: dapps
+      dapps
     };
   },
   computed: {
     ...mapState(['network']),
     sortedObject() {
       const arrayedDapp = [];
-      Object.keys(dapps).forEach(dapp => {
-        arrayedDapp.push(dapps[dapp]);
+      Object.keys(this.dapps).forEach(dapp => {
+        arrayedDapp.push(this.dapps[dapp]);
       });
-
-      return arrayedDapp.sort((a, b) => {
-        if (
-          a.supportedNetworks.includes(this.network.type.name) ||
-          b.supportedNetworks.includes(this.network.type.name)
-        )
-          return 1;
-        return 0;
-      });
+      return arrayedDapp
+        .sort((a, b) => {
+          return new Date(b.releaseDate) - new Date(a.releaseDate);
+        })
+        .sort((a, b) => {
+          if (
+            a.supportedNetworks.includes(this.network.type.name) ||
+            b.supportedNetworks.includes(this.network.type.name)
+          )
+            return 1;
+          return 0;
+        });
     }
   }
 };

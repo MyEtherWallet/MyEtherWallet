@@ -37,7 +37,7 @@
         </div>
       </div>
       <div v-if="hasMultipleAddr" class="bottom-block">
-        <button @click="switchAddr">{{ $t('common.changeAddress') }}</button>
+        <button @click="switchAddr">{{ $t('interface.change-addr') }}</button>
       </div>
     </div>
     <!-- .wrap -->
@@ -101,7 +101,7 @@ export default {
     copy() {
       this.$refs.copyAddress.select();
       document.execCommand('copy');
-      Toast.responseHandler('Copied!', Toast.INFO);
+      Toast.responseHandler(this.$t('common.copied'), Toast.INFO);
     },
     openQrcode() {
       this.$refs.qrcode.$refs.addressQrcode.show();
