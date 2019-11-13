@@ -15,6 +15,7 @@
 
 - Web3 modal weird behavior [#1613](https://github.com/MyEtherWallet/MyEtherWallet/pull/1613)
 - Fix sentry error on user login [#1615](https://github.com/MyEtherWallet/MyEtherWallet/pull/1615)
+- Reset modal variable so it reopens account request [](<>)
 
 ### Release v5.2.2
 
