@@ -1,3 +1,7 @@
+### Bug
+
+- Reset modal variable so it reopens account request [#1640](https://github.com/MyEtherWallet/MyEtherWallet/pull/1640)
+
 ### Release v5.2.3
 
 ### Devop
