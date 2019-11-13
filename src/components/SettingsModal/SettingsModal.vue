@@ -144,11 +144,12 @@
 
           <full-width-dropdown title="Address Book" class="address-book">
             <p>
-              You can add up to 10 contacts
+              You could 
             </p>
-            <div v-if="addressContacts.length > 0">
-              <div v-for="contact in addressContacts" :key="contact.key">
-                <input type="text">
+            <div v-if="addressBook.length > 0">
+              <div v-for="(contact, index) in addressBook" :key="contact.key">
+                <p> {{index + 1}}. {{contact.address}} {{contact.nickname}} </p>
+                <!-- <input type="text" /> -->
               </div>
             </div>
             <div class="address-inputs">
@@ -265,12 +266,11 @@ export default {
       popup: false,
       isValidAddress: false,
       contactAddress: '',
-      contactNickname: '',
-      addressContacts: []
+      contactNickname: ''
     };
   },
   computed: {
-    ...mapState(['network', 'online']),
+    ...mapState(['network', 'online', 'addressBook']),
     gasPriceInputs() {
       return {
         economy: {
@@ -343,7 +343,6 @@ export default {
     }
     this.exportConfig();
     this.getGasType();
-    this.getContacts();
   },
   methods: {
     setDataFromImportedFile() {
@@ -501,17 +500,13 @@ export default {
       this.ethPrice = price.data.ETH.quotes.USD.price;
     },
     addContact() {
-      this.addressContacts.push({
-        'address': this.contactAddress,
-        'nickname': this.contactNickname
-      })
+      this.addressBook.push({
+        address: this.contactAddress,
+        nickname: this.contactNickname
+      });
 
-      store.set('addressBook', this.addressContacts);
-      console.error('this', this.addressContacts)
-    },
-    getContacts() {
-      this.addressContacts = store.get('addressBook')
-      console.error('this', this.addressContacts)
+      this.$store.dispatch('setAddressBook', this.addressBook);
+      console.error('this', this.addressBook);
     }
   }
 };
