@@ -1,0 +1,23 @@
+@import "~@/scss/GlobalVariables";
+
+.d-flex {
+  display: flex;
+  align-items: center;
+}
+
+.logo-block {
+  p {
+    color: $mew-green;
+    margin-left: 10px;
+    padding-left: 15px;
+    border-left: 1px solid $mew-green;
+  }
+}
+
+.spacer {
+  margin: 0 auto;
+}
+
+.mobile-menu {
+  padding: 10px 0;
+}
