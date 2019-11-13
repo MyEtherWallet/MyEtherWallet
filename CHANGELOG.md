@@ -1,7 +1,3 @@
-### Bug
-
-- Reset modal variable so it reopens account request [#1640](https://github.com/MyEtherWallet/MyEtherWallet/pull/1640)
-
 ### Release v5.2.3
 
 ### Devop
@@ -13,7 +9,6 @@
 - Update web3 icons [#1614](https://github.com/MyEtherWallet/MyEtherWallet/pull/1614)
 - Update ENS length [#1636](https://github.com/MyEtherWallet/MyEtherWallet/pull/1636)
 - reduce coin image count from 656 to 34 [#1601](https://github.com/MyEtherWallet/MyEtherWallet/pull/1601)
-- Add rel="noopener noreferrer" to links [#1618](https://github.com/MyEtherWallet/MyEtherWallet/pull/1618)
 - Refactor translations [#1475](https://github.com/MyEtherWallet/MyEtherWallet/pull/1475)
 - Improve handling of failure to get rates, offline, and restrict usage to main net [#1587](https://github.com/MyEtherWallet/MyEtherWallet/pull/1587)
 
@@ -22,6 +17,7 @@
 - Web3 modal weird behavior [#1613](https://github.com/MyEtherWallet/MyEtherWallet/pull/1613)
 - Fix sentry error on user login [#1615](https://github.com/MyEtherWallet/MyEtherWallet/pull/1615)
 - Send Offline Helper export actual data [#1637](https://github.com/MyEtherWallet/MyEtherWallet/pull/1637)
+- Reset modal variable so it reopens account request [#1640](https://github.com/MyEtherWallet/MyEtherWallet/pull/1640)
 
 ### Release v5.2.2
 
