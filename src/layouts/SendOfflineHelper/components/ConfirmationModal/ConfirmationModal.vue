@@ -6,6 +6,8 @@
       hide-footer
       centered
       class="bootstrap-modal-wide nopadding"
+      static
+      lazy
     >
       <div class="modal-contents">
         <div class="tx-info-container">
@@ -42,14 +44,14 @@
             <li>{{ rawTx.gasPrice }}</li>
           </ul>
         </div>
-        <expending-option :hidebottomborder="true" title="Signed Transaction">
+        <expanding-option :hidebottomborder="true" title="Signed Transaction">
           <div class="raw-signed">
             {{ signedTx }}
           </div>
-        </expending-option>
-        <expending-option title="Raw Transaction">
+        </expanding-option>
+        <expanding-option title="Raw Transaction">
           {{ rawTx }}
-        </expending-option>
+        </expanding-option>
         <div class="button-block-container">
           <standard-button :options="buttonConfirmAndSend" />
         </div>
@@ -61,7 +63,7 @@
 <script>
 import StandardInput from '@/components/StandardInput';
 import Standardbutton from '@/components/Buttons/StandardButton';
-import ExpendingOption from '@/components/ExpendingOption';
+import ExpandingOption from '@/components/ExpandingOption';
 
 import AddressBlock from '../AddressBlock';
 export default {
@@ -69,7 +71,7 @@ export default {
   components: {
     'standard-input': StandardInput,
     'standard-button': Standardbutton,
-    'expending-option': ExpendingOption,
+    'expanding-option': ExpandingOption,
     'address-block': AddressBlock
   },
   props: {

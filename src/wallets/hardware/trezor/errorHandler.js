@@ -13,7 +13,8 @@ const ERRORS = {
     'trezorError.turnOnContractData',
   Cancelled: 'trezorError.cancelled',
   'Iframe timeout': 'trezor.iframeTimeout',
-  'Browser not supported': 'trezor.unsupportedBrowser'
+  'Browser not supported': 'trezor.unsupportedBrowser',
+  'popup failed to open': 'trezor.popupFailedToOpen'
 };
 
 const WARNING = {};

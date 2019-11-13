@@ -6,6 +6,8 @@
       hide-footer
       centered
       class="bootstrap-modal nopadding"
+      static
+      lazy
     >
       <div class="modal-contents">
         <div class="passphrase-container">

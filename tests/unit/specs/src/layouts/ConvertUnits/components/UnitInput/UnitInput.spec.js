@@ -39,8 +39,4 @@ describe('UnitInput.vue', () => {
       String(wrapper.vm.$data.valueRight)
     );
   });
-
-  it('should render correct options data', () => {
-    // console.log(wrapper.vm.$el.querySelector('.block-right .select-block .dropdown-list-box'));
-  });
 });

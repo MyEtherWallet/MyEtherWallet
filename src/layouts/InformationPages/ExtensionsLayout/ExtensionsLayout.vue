@@ -6,7 +6,7 @@
 
         <div class="extensions-container">
           <div v-for="ext in extensions" :key="ext.key">
-            <div class="logo"><img :src="ext.image" /></div>
+            <div class="logo"><img :src="ext.image" alt /></div>
             <div class="text">
               <p class="title">{{ ext.title }}</p>
               <p class="description">{{ ext.description }}</p>
@@ -30,7 +30,7 @@
 <script>
 import TitleTextContentsLayout from '../Components/TitleTextContentsLayout';
 import mewLogo from '@/assets/images/logo-small.png';
-import metamask from '@/assets/images/icons/button-metamask-fox.svg';
+import metamask from '@/assets/images/icons/button-metamask.svg';
 import ethereum from '@/assets/images/icons/ethereum-icon.png';
 
 export default {

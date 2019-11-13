@@ -53,79 +53,75 @@ describe('InterfaceNetworkModal.vue', () => {
   });
 
   it('should render correct username data', () => {
-    const username = 'username';
+    const username = 'TEST_WALLET';
     wrapper.setData({ username });
-    expect(
-      wrapper.vm.$el.querySelectorAll('.auth-form-container input')[0].value
-    ).toEqual(username);
+    const inputUsername = wrapper.vm.$el.querySelectorAll(
+      '.auth-form-container input'
+    )[0];
+    expect(inputUsername.value).toEqual(username);
   });
 
   it('should render correct password data', () => {
-    const password = 'password';
+    const password = '&3aB#(CC@0dk@x';
     wrapper.setData({ password });
-    expect(
-      wrapper.vm.$el.querySelectorAll('.auth-form-container input')[1].value
-    ).toEqual(password);
+    const inputPassword = wrapper.vm.$el.querySelectorAll(
+      '.auth-form-container input'
+    )[1];
+    expect(inputPassword.value).toEqual(password);
   });
 
   it('should render correct name data', () => {
-    const name = 'name';
+    const name = 'James';
     wrapper.setData({ name });
-    expect(
-      wrapper.vm.$el.querySelectorAll(
-        '.content-block .input-block-container input'
-      )[0].value
-    ).toEqual(name);
+    const inputName = wrapper.vm.$el.querySelectorAll(
+      '.content-block .input-block-container input'
+    )[0];
+    expect(inputName.value).toEqual(name);
   });
 
   it('should render correct url data', () => {
-    const url = 'url';
+    const url = 'https://localhost:8000';
     wrapper.setData({ url });
-    expect(
-      wrapper.vm.$el.querySelectorAll(
-        '.content-block .input-block-container input'
-      )[1].value
-    ).toEqual(url);
+    const inputURL = wrapper.vm.$el.querySelectorAll(
+      '.content-block .input-block-container input'
+    )[1];
+    expect(inputURL.value).toEqual(url);
   });
 
   it('should render correct port data', () => {
     const port = 80;
     wrapper.setData({ port });
-    expect(
-      wrapper.vm.$el.querySelectorAll(
-        '.content-block .input-block-container input'
-      )[2].value
-    ).toEqual(String(port));
+    const inputPort = wrapper.vm.$el.querySelectorAll(
+      '.content-block .input-block-container input'
+    )[2];
+    expect(inputPort.value).toEqual(String(port));
   });
 
   it('should render correct blockExplorerTX data', () => {
-    const blockExplorerTX = '123';
+    const blockExplorerTX = 'blockExplorerTX';
     wrapper.setData({ blockExplorerTX });
-    expect(
-      wrapper.vm.$el.querySelectorAll(
-        '.content-block .input-block-container input'
-      )[3].value
-    ).toEqual(String(blockExplorerTX));
+    const inputBlockExplorerTX = wrapper.vm.$el.querySelectorAll(
+      '.content-block .input-block-container input'
+    )[3];
+    expect(inputBlockExplorerTX.value).toEqual(String(blockExplorerTX));
   });
 
   it('should render correct chainID data', () => {
-    const chainID = '333221';
+    const chainID = '100000000';
     wrapper.setData({ chainID });
-    expect(
-      wrapper.vm.$el.querySelectorAll(
-        '.content-block .input-block-container input'
-      )[4].value
-    ).toEqual(String(chainID));
+    const inputChainID = wrapper.vm.$el.querySelectorAll(
+      '.content-block .input-block-container input'
+    )[4];
+    expect(inputChainID.value).toEqual(String(chainID));
   });
 
   it('should render correct blockExplorerAddr data', () => {
-    const blockExplorerAddr = '423432';
+    const blockExplorerAddr = '100000000';
     wrapper.setData({ blockExplorerAddr });
-    expect(
-      wrapper.vm.$el.querySelectorAll(
-        '.content-block .input-block-container input'
-      )[5].value
-    ).toEqual(String(blockExplorerAddr));
+    const inputBlockExplorerAddr = wrapper.vm.$el.querySelectorAll(
+      '.content-block .input-block-container input'
+    )[5];
+    expect(inputBlockExplorerAddr.value).toEqual(String(blockExplorerAddr));
   });
 
   describe('InterfaceNetworkModal.vue Methods', () => {
@@ -143,12 +139,20 @@ describe('InterfaceNetworkModal.vue', () => {
 
     it('should reset state when button click', () => {
       wrapper.find('.save-button').trigger('click');
-      expect(wrapper.vm.$data.username).toEqual('');
-      expect(wrapper.vm.$data.password).toEqual('');
-      expect(wrapper.vm.$data.name).toEqual('');
-      expect(wrapper.vm.$data.port).toEqual(443);
-      expect(wrapper.vm.$data.blockExplorerAddr).toEqual('');
-      expect(wrapper.vm.$data.blockExplorerTX).toEqual('');
+      const {
+        username,
+        password,
+        name,
+        port,
+        blockExplorerAddr,
+        blockExplorerTX
+      } = wrapper.vm.$data;
+      expect(username).toEqual('');
+      expect(password).toEqual('');
+      expect(name).toEqual('');
+      expect(port).toEqual(443);
+      expect(blockExplorerAddr).toEqual('');
+      expect(blockExplorerTX).toEqual('');
     });
   });
 });

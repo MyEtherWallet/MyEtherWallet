@@ -6,6 +6,8 @@
       centered
       class="bootstrap-modal bootstrap-modal-wide padding-40-20"
       hide-footer
+      static
+      lazy
     >
       <div class="swap-container">
         <div v-show="!bityExitToFiat">
@@ -67,7 +69,7 @@
                   </div>
                 </div>
                 <div class="exchange-icon" @click="flipCurrencies">
-                  <img :src="images.swap" />
+                  <img :src="images.swap" alt />
                 </div>
                 <div class="amount">
                   <div class="title">
@@ -232,7 +234,7 @@ import ProvidersRadioSelector from '../ProvidersRadioSelector';
 import DropDownAddressSelector from '../SwapAddressSelector';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import InterfaceContainerTitle from '../../../../components/InterfaceContainerTitle';
-import swapIcon from '@/assets/images/icons/swap.svg';
+import swapIcon from '@/assets/images/icons/swap-widget.svg';
 import ImageKybernetowrk from '@/assets/images/etc/kybernetwork.png';
 import ImageTotle from '@/assets/images/etc/totle.png';
 import ImageBity from '@/assets/images/etc/bity.png';

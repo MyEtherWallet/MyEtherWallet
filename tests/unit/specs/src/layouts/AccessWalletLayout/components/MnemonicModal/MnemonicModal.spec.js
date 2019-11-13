@@ -117,12 +117,12 @@ xdescribe('MnemonicModal.vue', () => {
       });
     });
 
-    xit('[5-10-19] should convert the word array to a single string before passing it to the mnemonicPhrasePasswordModalOpen prop function', () => {
+    it('should convert the word array to a single string before passing it to the mnemonicPhrasePasswordModalOpen prop function', () => {
       wrapper.setData({ mnemonicPhrase: longMnemonic.split(' ') });
       wrapper.vm.openPasswordModal();
     });
 
-    xit('[5-10-19] should populate and submit a 12 word mnemonic phrase', done => {
+    it('should populate and submit a 12 word mnemonic phrase', done => {
       wrapper.setProps({
         mnemonicPhrasePasswordModalOpen: function() {
           // expect(MnemonicPhrase).toEqual(shortMnemonic);
@@ -139,7 +139,7 @@ xdescribe('MnemonicModal.vue', () => {
       wrapper.vm.openPasswordModal();
     });
 
-    xit('[5-10-19] should populate and submit a 24 word mnemonic phrase', done => {
+    it('should populate and submit a 24 word mnemonic phrase', done => {
       wrapper.vm.mnemonicValueBitSizeChange();
       const phrase = longMnemonic.split(' ');
       for (let i = 0; i < 24; i++) {

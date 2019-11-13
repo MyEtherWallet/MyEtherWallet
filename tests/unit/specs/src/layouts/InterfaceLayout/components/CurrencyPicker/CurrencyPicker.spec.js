@@ -32,30 +32,31 @@ describe('CurrencyPicker.vue', () => {
     );
 
     for (const [i, currencyElement] of currencyElements.entries()) {
-      const localCurrency = wrapper.vm.localCurrency[i];
+      const { name } = wrapper.vm.localCurrency[i];
       expect(
         currencyElement
           .querySelectorAll('p')[0]
           .textContent.trim()
-          .indexOf(localCurrency.name)
+          .indexOf(name)
       ).toBeGreaterThan(-1);
       expect(
         currencyElement.querySelectorAll('p')[2].textContent.trim()
-      ).toEqual(localCurrency.name);
+      ).toEqual(name);
     }
   });
 
   it('should render correct selectedCurrency data', () => {
+    const pDropdownContainers = wrapper.vm.$el.querySelectorAll(
+      '.dropdown-container p'
+    );
     expect(
-      wrapper.vm.$el
-        .querySelectorAll('.dropdown-container p')[0]
-        .textContent.trim()
+      pDropdownContainers[0].textContent
+        .trim()
         .indexOf(wrapper.vm.$data.selectedCurrency.name)
     ).toBeGreaterThan(-1);
     expect(
-      wrapper.vm.$el
-        .querySelectorAll('.dropdown-container p')[1]
-        .textContent.trim()
+      pDropdownContainers[1].textContent
+        .trim()
         .indexOf(wrapper.vm.$data.selectedCurrency.name)
     ).toBeGreaterThan(-1);
   });
@@ -104,16 +105,16 @@ describe('CurrencyPicker.vue', () => {
     );
 
     for (const [i, currencyElement] of currencyElements.entries()) {
-      const localCurrency = wrapper.vm.localCurrency[i];
+      const { name } = wrapper.vm.localCurrency[i];
       expect(
         currencyElement
           .querySelectorAll('p')[0]
           .textContent.trim()
-          .indexOf(localCurrency.name)
+          .indexOf(name)
       ).toBeGreaterThan(-1);
       expect(
         currencyElement.querySelectorAll('p')[2].textContent.trim()
-      ).toEqual(localCurrency.name);
+      ).toEqual(name);
     }
   });
 
@@ -124,30 +125,30 @@ describe('CurrencyPicker.vue', () => {
     inputElement.setValue(search);
     inputElement.trigger('change');
 
-    expect(wrapper.vm.localCurrency[0].name).toEqual(currency[0].name);
-    expect(wrapper.vm.localCurrency[0].symbol).toEqual(currency[0].symbol);
+    const { localCurrency } = wrapper.vm;
+    const { name, symbol } = currency[0];
+    expect(localCurrency[0].name).toEqual(name);
+    expect(localCurrency[0].symbol).toEqual(symbol);
   });
 
   describe('CurrencyPicker.vue Methods', () => {
     it('should change open data when open dropdown method is called', () => {
-      wrapper.find('.dropdown-container').trigger('click');
+      const dropdownContainer = wrapper.find('.dropdown-container');
+      dropdownContainer.trigger('click');
       expect(wrapper.vm.$data['open']).toBe(true);
-      wrapper.find('.dropdown-container').trigger('click');
+      dropdownContainer.trigger('click');
       expect(wrapper.vm.$data['open']).toBe(false);
     });
 
-    it('should render correct localCurrency data', () => {
+    it('should render correct localCurrency data when button is triggered', () => {
       const currencyElements = wrapper.findAll('.item-container div');
       for (let i = 0; i < currencyElements.length; i++) {
         const currencyElement = currencyElements.at(i);
-        const localCurrency = wrapper.vm.localCurrency[i];
+        const currency = wrapper.vm.localCurrency[i];
         currencyElement.trigger('click');
-        expect(localCurrency.name).toEqual(
-          wrapper.vm.$data.selectedCurrency.name
-        );
-        expect(localCurrency.symbol).toEqual(
-          wrapper.vm.$data.selectedCurrency.symbol
-        );
+        const { name, symbol } = wrapper.vm.$data.selectedCurrency;
+        expect(currency.name).toEqual(name);
+        expect(currency.symbol).toEqual(symbol);
       }
     });
   });

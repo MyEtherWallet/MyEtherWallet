@@ -1,6 +1,7 @@
 <script>
 export default {
-  name: 'VueInfiniteSlideBar',
+  // eslint-disable-next-line
+  name: 'vue-infinite-slide-bar',
   props: {
     barStyle: {
       type: Object,
@@ -37,11 +38,12 @@ export default {
       { class: 'vifnslb-bar' },
       this.$slots.default
     );
-    return createElement(
+    const slider = createElement(
       'div',
-      { class: ['vifnslb-container'], style: this.customStyle },
+      { class: ['vifnslb-element'], style: this.customStyle },
       [bar, bar]
     );
+    return createElement('div', { class: ['vifnslb-container'] }, [slider]);
   }
 };
 </script>
@@ -53,16 +55,22 @@ export default {
   }
 }
 .vifnslb-container {
+  width: 100%;
+  overflow: hidden;
+}
+.vifnslb-element {
   transform: translate3d(0, 0, 0); /* Hey browser, please use my GPU */
   position: relative;
   overflow: hidden;
-  width: 200%;
   animation-name: moveSlideshow;
   animation-iteration-count: infinite;
   animation-timing-function: linear;
   display: flex;
+  width: max-content;
+  min-width: 300%;
 }
 .vifnslb-bar {
-  display: flex;
+  width: 50%;
+  /* display: flex; */
 }
 </style>

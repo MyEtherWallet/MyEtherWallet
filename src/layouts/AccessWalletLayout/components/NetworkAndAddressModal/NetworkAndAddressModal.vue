@@ -5,6 +5,8 @@
     hide-footer
     class="bootstrap-modal nopadding modal-network-and-address"
     centered
+    static
+    lazy
   >
     <div class="modal-content-container">
       <div class="collapse-container">
@@ -24,8 +26,8 @@
         </b-btn>
         <b-collapse
           id="collapse1"
-          v-model="showCollapse1"
           class="collapse-content"
+          accordion="networkaddraccordion"
         >
           <ul class="networks">
             <li
@@ -37,6 +39,7 @@
                   <img
                     v-if="Networks[key][0].type.icon"
                     :src="Networks[key][0].type.icon"
+                    alt
                   />
                   <div v-else class="no-icon">
                     <p>No</p>
@@ -76,7 +79,8 @@
         </b-btn>
         <b-collapse
           id="collapse2"
-          v-model="showCollapse2"
+          accordion="networkaddraccordion"
+          visible
           class="collapse-content"
         >
           <!-- Derivation Path Drop down -->
@@ -216,26 +220,26 @@
             </div>
           </div>
           <!-- .content-container-2 -->
-          <div class="accept-terms">
-            <label class="checkbox-container">
-              {{ $t('accessWallet.acceptTerms') }}
-              <router-link to="/terms-and-conditions"
-                >{{ $t('common.terms') }}.</router-link
-              >
-              <input v-model="acceptTerms" type="checkbox" />
-              <span class="checkmark" />
-            </label>
-          </div>
-          <div class="button-container">
-            <b-btn
-              :disabled="!isDisabled"
-              class="mid-round-button-green-filled close-button"
-              @click.prevent="unlockWallet"
-              >{{ $t('common.accessMyWallet') }}</b-btn
-            >
-          </div>
-          <customer-support />
         </b-collapse>
+        <div class="accept-terms">
+          <label class="checkbox-container">
+            {{ $t('accessWallet.acceptTerms') }}
+            <router-link to="/terms-and-conditions"
+              >{{ $t('common.terms') }}.</router-link
+            >
+            <input v-model="acceptTerms" type="checkbox" />
+            <span class="checkmark" />
+          </label>
+        </div>
+        <div class="button-container">
+          <b-btn
+            :disabled="!isDisabled"
+            class="mid-round-button-green-filled close-button"
+            @click.prevent="unlockWallet"
+            >{{ $t('common.accessMyWallet') }}</b-btn
+          >
+        </div>
+        <customer-support />
       </div>
     </div>
     <!-- .modal-content-container -->
@@ -276,8 +280,7 @@ export default {
       customPathInput: false,
       currentWallet: null,
       customPath: { label: '', dpath: '' },
-      showCollapse1: false,
-      showCollapse2: true,
+      showCollapse: false,
       ledgerType: LEDGER_TYPE,
       acceptTerms: false
     };
@@ -415,16 +418,23 @@ export default {
       });
     }, 1000),
     unlockWallet() {
-      this.$store.dispatch('decryptWallet', [this.currentWallet]);
-      if (!this.wallet !== null) {
-        if (!this.$route.path.split('/').includes('interface')) {
-          this.$router.push({
-            path: 'interface'
-          });
-        }
-      }
+      this.$store
+        .dispatch('decryptWallet', [this.currentWallet])
+        .then(() => {
+          if (this.wallet !== null) {
+            if (!this.$route.path.split('/').includes('interface')) {
+              this.$router.push({
+                path: 'interface'
+              });
+            }
+          }
 
-      this.$refs.networkAndAddress.hide();
+          this.$refs.networkAndAddress.hide();
+        })
+        .catch(error => {
+          // the wallet param (param[0]) is undefined or null
+          Toast.responseHandler(error, Toast.ERROR);
+        });
     },
     async setHDAccounts() {
       if (!this.web3.eth) this.$store.dispatch('setWeb3Instance');
@@ -455,16 +465,18 @@ export default {
       this.setHDAccounts();
     },
     getPathLabel(path) {
-      for (const _p in this.availablePaths) {
-        if (this.availablePaths[_p].path === path) {
-          return this.availablePaths[_p].label;
-        }
-      }
       for (const _p in this.customPaths) {
         if (this.customPaths[_p].path === path) {
           return this.customPaths[_p].label;
         }
       }
+
+      for (const _p in this.availablePaths) {
+        if (this.availablePaths[_p].path === path) {
+          return this.availablePaths[_p].label;
+        }
+      }
+
       return 'Unknown';
     },
     getPaths() {

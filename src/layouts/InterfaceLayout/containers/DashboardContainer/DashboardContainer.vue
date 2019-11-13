@@ -6,14 +6,11 @@
           <h4>{{ $t('common.actions') }}</h4>
         </div>
         <div class="buttons">
-          <button-send-tx
-            class="clickable"
-            @click.native="goTo('send-transaction')"
-          />
+          <button-send-tx :go-to="goTo" class="clickable" />
           <button-nft-manager
             :disabled="!isOnlineAndEth"
+            :go-to="goTo"
             class="clickable"
-            @click.native="goTo('nft-manager', !isOnlineAndEth)"
           />
         </div>
       </div>
@@ -45,7 +42,7 @@
                 <span
                   :class="['currency-symbol', 'cc', pair.from, 'cc-icon']"
                 ></span>
-                <img src="@/assets/images/icons/swap.svg" />
+                <img src="@/assets/images/icons/swap-widget.svg" alt />
                 <span
                   :class="['currency-symbol', 'cc', pair.to, 'cc-icon']"
                 ></span>

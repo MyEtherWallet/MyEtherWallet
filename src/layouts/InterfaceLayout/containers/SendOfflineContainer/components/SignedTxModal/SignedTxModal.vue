@@ -4,6 +4,8 @@
     :title="$t('interface.signedTx')"
     hide-footer
     class="bootstrap-modal signed-tx-modal"
+    static
+    lazy
   >
     <div class="d-block">
       <div class="title-block">
@@ -13,7 +15,7 @@
         <code>{{ JSON.parse(signedTx).rawTransaction }}</code>
         <input
           ref="signedTxInput"
-          :value="signedTx"
+          :value="JSON.parse(signedTx).rawTransaction"
           style="position: absolute; top: 0; opacity: 0;"
           autocomplete="off"
         />

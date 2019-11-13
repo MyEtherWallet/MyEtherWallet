@@ -6,6 +6,8 @@
       hide-header
       centered
       class="bootstrap-modal nopadding"
+      static
+      lazy
     >
       <div class="modal-contents">
         <h2>{{ $t('common.oops') }}</h2>
@@ -53,7 +55,7 @@ export default {
       this.$refs.logoutWarningModal.hide();
     },
     cancel() {
-      this.$router.push('interface');
+      this.$router.go(-1);
       this.$refs.logoutWarningModal.hide();
     }
   }

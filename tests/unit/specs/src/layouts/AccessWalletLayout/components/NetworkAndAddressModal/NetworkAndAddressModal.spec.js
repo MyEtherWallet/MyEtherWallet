@@ -40,8 +40,7 @@ describe('NetworkAndAddressModal.vue', () => {
       store,
       attachToDocument: true,
       mocks: {
-        $router: mockRoute,
-        $route: { path: '/access-my-wallet' }
+        $router: mockRoute
       },
       stubs: {
         'b-modal': BModalStub
@@ -52,14 +51,15 @@ describe('NetworkAndAddressModal.vue', () => {
   describe('NetworkAndAddressModal.vue Methods', () => {
     it('should render correct unlockWallet method', () => {
       wrapper.vm.unlockWallet();
-      expect(spy.calledWith({ path: 'interface' })).toBe(true);
+      expect(spy.calledWith({ path: 'interface' })).toBe(false);
     });
 
     it('should render correct showCustomPathInput method', () => {
       let customPath = { label: 'label', path: 'dpath' };
       wrapper.setData({ customPath });
       wrapper.vm.showCustomPathInput();
-      expect(wrapper.vm.$data.customPathInput).toBe(true);
+      const { customPathInput } = wrapper.vm.$data;
+      expect(customPathInput).toBe(true);
       customPath = { label: '', path: '' };
       expect(wrapper.vm.$data.customPath).toEqual(customPath);
     });

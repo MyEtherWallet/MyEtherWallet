@@ -44,9 +44,9 @@
             <h4>{{ $t('interface.abiJsonInt') }}</h4>
             <div class="copy-buttons">
               <span @click="deleteInput('abi')">{{ $t('common.clear') }}</span>
-              <span @click="copyToClipboard('abi')">{{
-                $t('common.copy')
-              }}</span>
+              <span @click="copyToClipboard('abi')">
+                {{ $t('common.copy') }}
+              </span>
             </div>
           </div>
         </div>
@@ -80,7 +80,7 @@
           @click="switchView('forward')"
         >
           {{ $t('common.continue') }}
-          <img src="~@/assets/images/icons/right-arrow.png" />
+          <img src="~@/assets/images/icons/right-arrow.png" alt />
         </div>
         <interface-bottom-text
           :link-text="$t('interface.helpCenter')"
@@ -211,9 +211,9 @@
                 :key="item.name + idx"
                 class="result-container"
               >
-                <label :for="item.name !== '' ? item.name : item.type + idx">{{
-                  item.name !== '' ? item.name : item.type | capitalize
-                }}</label>
+                <label :for="item.name !== '' ? item.name : item.type + idx">
+                  {{ item.name !== '' ? item.name : item.type | capitalize }}
+                </label>
                 <input
                   :name="item.name !== '' ? item.name : item.type + idx"
                   :value="result[idx]"
@@ -249,12 +249,12 @@
             ]"
             @click="write"
           >
-            <span v-show="!loading && !selectedMethod.constant">
-              {{ $t('interface.write') }}
-            </span>
-            <span v-show="!loading && selectedMethod.constant">{{
-              $t('interface.read')
+            <span v-show="!loading && !selectedMethod.constant">{{
+              $t('interface.write')
             }}</span>
+            <span v-show="!loading && selectedMethod.constant">
+              {{ $t('interface.read') }}
+            </span>
             <i v-show="loading" class="fa fa-spinner fa-spin fa-lg" />
           </div>
         </div>
@@ -301,7 +301,10 @@ export default {
     ...mapState(['network', 'gasPrice', 'account', 'web3']),
     mergedContracts() {
       const customContracts = store.get('customContracts') || [];
-      return this.network.type.contracts.concat(customContracts);
+      const concatContracts = this.network.type.contracts.concat(
+        customContracts
+      );
+      return concatContracts;
     },
     isValidAbi() {
       return Misc.isJson(this.abi);
@@ -347,6 +350,9 @@ export default {
         });
       }
       return _contractArgs;
+    },
+    txValue() {
+      return Misc.sanitizeHex(unit.toWei(this.value, 'ether').toString(16));
     }
   },
   watch: {
@@ -467,7 +473,10 @@ export default {
         const gasLimit = await contract.methods[this.selectedMethod.name](
           ...this.contractArgs
         )
-          .estimateGas({ from: this.account.address.toLowerCase() })
+          .estimateGas({
+            from: this.account.address.toLowerCase(),
+            value: this.txValue
+          })
           .then(res => {
             return res;
           })
@@ -486,7 +495,7 @@ export default {
             gas: gasLimit,
             nonce: nonce,
             gasPrice: Number(unit.toWei(this.gasPrice, 'gwei')),
-            value: 0,
+            value: this.txValue,
             to: this.address.toLowerCase(),
             data: data
           };

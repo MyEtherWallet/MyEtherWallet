@@ -8,22 +8,15 @@
 .slider-container {
   align-items: center;
   display: flex;
-  // flex-direction: column;
   justify-content: center;
   margin: 20px 0;
-
-  // > div {
-  //   display: flex;
-  //   flex-direction: row;
-  // }
 }
 
 .token-container {
   border-right: 1px solid $text-white;
   color: $text-white;
-  flex: 33;
-  padding: 0 60px;
-  // width: 225px;
+  min-width: 137px;
+  text-align: center;
 
   p {
     color: $text-white;
@@ -39,30 +32,4 @@
       margin-left: 5px;
     }
   }
-
-  &:last-child {
-    border: none;
-  }
 }
-
-// .first-set-enter-active,
-// .second-set-enter-active {
-//   transition: all 0.5s ease-in;
-// }
-
-// .first-set-enter,
-// .second-set-enter {
-//   transform: translateY(20px);
-//   opacity: 1;
-// }
-
-// .first-set-leave,
-// .second-set-leave {
-//   transform: translateY(-20px);
-//   opacity: 1;
-// }
-
-// .first-set-leave-to,
-// .second-set-leave-to {
-//   opacity: 0;
-// }

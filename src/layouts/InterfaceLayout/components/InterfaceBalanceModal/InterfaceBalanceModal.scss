@@ -54,10 +54,15 @@
 
         img {
           margin-right: 10px;
+          width: 26px;
+        }
+
+        .ev-name {
+          margin: 0;
         }
 
         .ev-value {
-          margin-left: auto;
+          margin: 0 0 0 auto;
           font-weight: 600;
         }
       }

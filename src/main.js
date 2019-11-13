@@ -6,10 +6,10 @@ import * as Integrations from '@sentry/integrations';
 import { getApp } from '@/builds/configs';
 import BootstrapVue from 'bootstrap-vue';
 
-import '@/assets/font-awesome.css';
-import '@/assets/google-fonts.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
+import(/* webpackPreload: true */ '@/assets/font-awesome.css');
+import(/* webpackPreload: true */ '@/assets/google-fonts.css');
 
 import Vue from 'vue';
 import Router from 'vue-router';
@@ -105,7 +105,7 @@ Object.keys(toastConfig).forEach(item => {
   );
 });
 
-/* eslint-disable no-new */
+/* eslint-disable-next-line */
 const vue = new Vue({
   el: '#app',
   i18n,
@@ -115,7 +115,6 @@ const vue = new Vue({
 });
 
 const integration = new Integrations.Vue({ Vue, attachProps: true });
-
 Sentry.init({
   dsn: 'https://2c4e977d74fd44d1b18083e63a3b265f@sentry.mewapi.io/1',
   integrations: [integration],

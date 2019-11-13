@@ -3,13 +3,14 @@
   "units": "단위",
   "txStat": "TX 상태 ",
   "debugs": "디버그 ",
-  "extension": "MyEtherWallet CX",
+  "extension": "MEW CX",
   "others": "기타 ",
   "affiliates": "제휴 ",
   "ledger": "출납부 지갑 ",
   "digital": "BitBox",
   "ethCard": "이더 카드 ",
   "trezor": "트레조",
+  "sotd": "State of the Dapps",
   "bity": "비티 ",
   "mew": "MEW",
   "about": "About",
@@ -28,5 +29,6 @@
   "verifyMessage": "Verify Message",
   "keepkey": "KeepKey",
   "secalot": "Secalot",
-  "bitbox": "Bitbox"
+  "bitbox": "Bitbox",
+  "viewWalletInfo": "View Wallet Info"
 }

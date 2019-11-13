@@ -37,6 +37,7 @@
                             Networks[key][0].type.icon
                         "
                         :src="Networks[key][0].type.icon"
+                        alt
                       />
                       <div
                         v-if="
@@ -164,13 +165,13 @@
               Signed Chain ID ({{ correctNetwork }}) does not match chain id for
               selected network
             </p>
-            <expending-option title="Raw Transaction">
+            <expanding-option title="Raw Transaction">
               <textarea
                 :value="JSON.stringify(rawTx)"
                 class="no-margin raw-tx-input"
                 disabled
               />
-            </expending-option>
+            </expanding-option>
             <div class="button-container">
               <input
                 ref="jsonInput"
@@ -356,7 +357,7 @@ import AccordionMenu from '@/components/AccordionMenu';
 import DropDownAddressSelector from '@/components/DropDownAddressSelector';
 import StandardButton from '@/components/Buttons/StandardButton';
 import StandardInput from '@/components/StandardInput';
-import ExpendingOption from '@/components/ExpendingOption';
+import ExpandingOption from '@/components/ExpandingOption';
 import ConfirmationModal from './components/ConfirmationModal';
 
 export default {
@@ -366,7 +367,7 @@ export default {
     'dropdown-address-selector': DropDownAddressSelector,
     'standard-button': StandardButton,
     'standard-input': StandardInput,
-    'expending-option': ExpendingOption,
+    'expanding-option': ExpandingOption,
     'confirmation-modal': ConfirmationModal
   },
   data() {
@@ -614,7 +615,7 @@ export default {
         this.downloadable = true;
         return window.URL.createObjectURL(blob);
       };
-      this.generatedJson = createBlob('mime', this.genInfo);
+      this.generatedJson = createBlob(this.genInfo, 'mime');
       this.exportFileName = `generated-offline-tx-${Date.now()}.json`;
     },
     uploadClick() {

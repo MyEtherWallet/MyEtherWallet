@@ -23,10 +23,15 @@ $collepse-width: 1300px;
   }
 }
 
+.no-nft-notice {
+  padding-bottom: 20px;
+}
+
 .kitty {
   text-align: center;
   cursor: pointer;
   .kitty-img {
+    max-width: 200px;
     img {
       width: 75%;
     }

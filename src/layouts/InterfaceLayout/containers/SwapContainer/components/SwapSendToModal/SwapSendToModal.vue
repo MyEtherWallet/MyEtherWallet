@@ -6,6 +6,8 @@
       hide-footer
       centered
       class="bootstrap-modal bootstrap-modal-wide padding-40-20"
+      static
+      lazy
     >
       <div class="time-remaining">
         <h1>{{ timeRemaining }}</h1>
@@ -33,7 +35,7 @@
               {{ fromAddress.address }}
             </p>
           </div>
-          <div class="right-arrow"><img :src="arrowImage" /></div>
+          <div class="right-arrow"><img :src="arrowImage" alt /></div>
           <!-- Fiat to Crypto-->
           <div v-if="!toFiat" class="to-address">
             <div class="icon">

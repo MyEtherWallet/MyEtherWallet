@@ -33,10 +33,10 @@ import iconNetwork from '@/assets/images/icons/network.svg';
 import iconOffline from '@/assets/images/HelpCenter/offline.svg';
 import iconReddit from '@/assets/images/icons/reddit.svg';
 import iconSecurity from '@/assets/images/HelpCenter/security.svg';
-import iconSend from '@/assets/images/HelpCenter/send.svg';
+import iconSend from '@/assets/images/HelpCenter/category-send.svg';
 import iconSlack from '@/assets/images/icons/slack.svg';
 import iconSuggestions from '@/assets/images/HelpCenter/suggestions.svg';
-import iconSupport from '@/assets/images/HelpCenter/support.svg';
+import iconSupport from '@/assets/images/HelpCenter/category-support.svg';
 import iconTokens from '@/assets/images/HelpCenter/tokens.svg';
 import iconTx from '@/assets/images/HelpCenter/tx.svg';
 

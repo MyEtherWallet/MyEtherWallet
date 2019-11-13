@@ -5,7 +5,7 @@ import { Tooling } from '@@/helpers';
 describe('NameForbiddenENSContainer.vue', () => {
   let localVue, i18n, wrapper, store;
 
-  const domainName = 'MyEtherWallet';
+  const domainName = 'domainName';
 
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();

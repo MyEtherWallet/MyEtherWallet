@@ -7,6 +7,7 @@ import Vue from 'vue';
 import { Tooling } from '@@/helpers';
 
 describe('VerifyMessageContainer.vue', () => {
+  // eslint-disable-next-line
   let localVue, i18n, wrapper, store;
   beforeAll(() => {
     const baseSetup = Tooling.createLocalVueInstance();
@@ -40,7 +41,5 @@ describe('VerifyMessageContainer.vue', () => {
     });
   });
 
-  it('should render correct content', () => {
-    console.log(wrapper.html());
-  });
+  it('should render correct content', () => {});
 });

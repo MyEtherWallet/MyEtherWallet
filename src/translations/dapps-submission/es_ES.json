@@ -1,0 +1,10 @@
+{
+  "tags": "A 5-7 word description of your DApp. Please don't include self-promotion or obvious words such as 'blockchain', 'decentralized', or 'Ethereum', (e.g. Game, Social, Finance...)",
+  "mockUserFlow": "For live dApps, representative documentation of the current user flow. For dapps in development, a rough mockup of what prospective user flow as it might look on the MEW interface.",
+  "contractAddress": "DApps without contract addresses will not be considered.",
+  "dappIcon": "Dimensions must be 192px width by 192px height (JPEG or PNG format)",
+  "banner": "Dimensions must be 1200px width by 206px height (JPEG or PNG format)",
+  "contractAudit": "Audits are not required for application, but are required by final step.",
+  "authors": "Separate names or organizations with a comma",
+  "softwareLicense": "(e.g. MIT, GPL, Proprietary)"
+}
