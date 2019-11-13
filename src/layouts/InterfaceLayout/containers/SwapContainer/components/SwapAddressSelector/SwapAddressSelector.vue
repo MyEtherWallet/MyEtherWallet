@@ -167,7 +167,7 @@ export default {
   },
   watch: {
     currentAddress(address) {
-      console.error('address', this.addressBook)
+      console.error('address', this.addressBook);
       if (this.addresses.findIndex(addr => addr.address === address) === -1) {
         this.addresses = [
           {

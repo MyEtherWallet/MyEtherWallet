@@ -164,18 +164,25 @@
                     height="25px"
                     class="blockie-image"
                   />
-                  <a rel="noopener noreferrer" :href="'https://etherscan.io/address/' + contact.address" class="contact-addr">{{ contact.address }}</a>
+                  <a
+                    :href="'https://etherscan.io/address/' + contact.address"
+                    rel="noopener noreferrer"
+                    class="contact-addr"
+                    >{{ contact.address }}</a
+                  >
                 </td>
                 <td>
                   {{ contact.nickname }}
                 </td>
                 <td>
-                  <span class="remove-txt" @click="removeContact(index)"> Remove </span>
+                  <span class="remove-txt" @click="removeContact(index)">
+                    Remove
+                  </span>
                 </td>
               </tr>
-            </table> 
-          
-            <span v-if="addrBookErrMsg" class="err">{{addrBookErrMsg}}</span>
+            </table>
+
+            <span v-if="addrBookErrMsg" class="err">{{ addrBookErrMsg }}</span>
 
             <div class="address-inputs">
               <blockie
@@ -186,8 +193,8 @@
                 class="blockie-image"
               />
               <input
-                :class="isValidAddress ? 'blockie-input': ''"
                 v-ens-resolver="'contactAddress'"
+                :class="isValidAddress ? 'blockie-input' : ''"
                 v-model="contactAddress"
                 type="text"
                 placeholder="Address"
@@ -202,7 +209,9 @@
               />
               <standard-button
                 :options="buttonAddress"
-                :button-disabled="!contactAddress || !isValidAddress || addrBookErrMsg"
+                :button-disabled="
+                  !contactAddress || !isValidAddress || addrBookErrMsg
+                "
                 @click.native="addContact"
               />
             </div>
@@ -529,13 +538,14 @@ export default {
     },
     addContact() {
       if (this.addressBook.length > 9) {
-        this.addrBookErrMsg = 'You could add up to 10 contact addresses maximum.';
+        this.addrBookErrMsg =
+          'You could add up to 10 contact addresses maximum.';
         return;
       }
 
       this.addressBook.push({
         address: this.contactAddress,
-        nickname: this.contactNickname 
+        nickname: this.contactNickname
       });
 
       this.$store.dispatch('setAddressBook', this.addressBook);

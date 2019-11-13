@@ -166,7 +166,8 @@ $mobile-width: 530px;
       font-size: 13px;
     }
 
-    th,td {
+    th,
+    td {
       padding: 10px;
     }
 
@@ -219,7 +220,6 @@ $mobile-width: 530px;
     padding-right: 20px;
     width: 100%;
   }
-
 
   .disabled {
     background-color: $dark-grey-11;
