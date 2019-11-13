@@ -147,14 +147,36 @@
             <p>
               {{ $t('interface.contact-add-max') }}
             </p>
-            <div v-if="addressBook.length > 0">
-              <div v-for="(contact, index) in addressBook" :key="contact.key">
-                <p>
-                  {{ index + 1 }}. {{ contact.address }} {{ contact.nickname }}
-                </p>
-                <!-- <input type="text" /> -->
-              </div>
-            </div>
+            <!-- remmeber translations -->
+            <table v-if="addressBook.length > 0" class="contact-container">
+              <tr class="header">
+                <th>#</th>
+                <th>ADDRESS</th>
+                <th>NICKNAME</th>
+                <th></th>
+              </tr>
+              <tr v-for="(contact, index) in addressBook" :key="contact.key">
+                <td class="numbered">{{ index + 1 }}.</td>
+                <td class="addr-container">
+                  <blockie
+                    :address="contact.address"
+                    width="25px"
+                    height="25px"
+                    class="blockie-image"
+                  />
+                  <a rel="noopener noreferrer" :href="'https://etherscan.io/address/' + contact.address" class="contact-addr">{{ contact.address }}</a>
+                </td>
+                <td>
+                  {{ contact.nickname }}
+                </td>
+                <td>
+                  <span class="remove-txt" @click="removeContact(index)"> Remove </span>
+                </td>
+              </tr>
+            </table> 
+          
+            <span v-if="addrBookErrMsg" class="err">{{addrBookErrMsg}}</span>
+
             <div class="address-inputs">
               <blockie
                 v-show="isValidAddress"
@@ -164,25 +186,23 @@
                 class="blockie-image"
               />
               <input
+                :class="isValidAddress ? 'blockie-input': ''"
                 v-ens-resolver="'contactAddress'"
-                :class="
-                  isValidAddress ? 'address-input-blockie' : 'address-input'
-                "
                 v-model="contactAddress"
                 type="text"
                 placeholder="Address"
               />
+            </div>
+            <div class="addr-btn-container">
               <input
                 v-model="contactNickname"
                 class="nickname-input"
                 type="text"
                 placeholder="Nickname"
               />
-            </div>
-            <div class="button-block">
               <standard-button
                 :options="buttonAddress"
-                :button-disabled="!contactAddress || !isValidAddress"
+                :button-disabled="!contactAddress || !isValidAddress || addrBookErrMsg"
                 @click.native="addContact"
               />
             </div>
@@ -269,7 +289,8 @@ export default {
       popup: false,
       isValidAddress: false,
       contactAddress: '',
-      contactNickname: ''
+      contactNickname: '',
+      addrBookErrMsg: null
     };
   },
   computed: {
@@ -502,14 +523,25 @@ export default {
 
       this.ethPrice = price.data.ETH.quotes.USD.price;
     },
+    removeContact(idx) {
+      this.addressBook.splice(idx, 1);
+      this.$store.dispatch('setAddressBook', this.addressBook);
+    },
     addContact() {
+      if (this.addressBook.length > 9) {
+        this.addrBookErrMsg = 'You could add up to 10 contact addresses maximum.';
+        return;
+      }
+
       this.addressBook.push({
         address: this.contactAddress,
-        nickname: this.contactNickname
+        nickname: this.contactNickname 
       });
 
       this.$store.dispatch('setAddressBook', this.addressBook);
-      console.error('this', this.addressBook);
+
+      this.contactAddress = '';
+      this.contactNickname = '';
     }
   }
 };
