@@ -1,7 +1,7 @@
 <template>
   <b-modal
     ref="xwalletModal"
-    :title="$t('accessWallet.xwallettTitle')"
+    :title="$t('accessWallet.xwallet-title')"
     hide-footer
     class="bootstrap-modal nopadding modal-mew-connect"
     centered
@@ -13,7 +13,7 @@
       </div>
       <div class="d-block content-container text-center">
         <h3 class="modal-large-text">
-          {{ $t('accessWallet.xwalletDesc') }}
+          {{ $t('accessWallet.xwallet-desc') }}
         </h3>
       </div>
       <div class="appstore-button-container">
@@ -37,7 +37,9 @@
             <img src="~@/assets/images/icons/google-play.svg" height="35" />
           </a>
         </div>
-        <p class="download-now">{{ $t('accessWallet.mewConnectDesc2') }}</p>
+        <p class="download-now">
+          {{ $t('accessWallet.mewconnect.modal.text2') }}
+        </p>
       </div>
       <customer-support />
     </div>
