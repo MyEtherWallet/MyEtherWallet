@@ -1,0 +1,73 @@
+@import '~@/scss/GlobalVariables';
+
+//********************************************************
+// Wrap
+//********************************************************
+.wrap {
+  background-color: $light-purple-1;
+  color: $white;
+  margin: 0 10px;
+  padding: 10px 20px;
+  border-radius: 5px;
+  display: flex;
+  align-items: flex-start;
+}
+
+//********************************************************
+// Blockie Image
+//********************************************************
+.blockie-container {
+  //width: 75px;
+  padding-top: 10px;
+  .blockie-image {
+    border: 3px solid $white;
+  }
+}
+//********************************************************
+// Address Data Block
+//********************************************************
+.data-block {
+  margin-left: 20px;
+
+  .top-title {
+    line-height: 35px;
+    font-size: 20px;
+    font-weight: 500;
+    color: $white;
+  }
+
+  .the-address {
+    //font-size: 20px;
+    line-height: 19px;
+    font-weight: 400;
+    color: $white;
+    word-break: break-all;
+  }
+
+  .buttons-container {
+    margin-left: -7px;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+
+    > button {
+      $button-size: 40px;
+
+      &:active {
+        background-color: rgba(0, 0, 0, 0.2);
+      }
+
+      width: $button-size;
+      height: $button-size;
+      border-radius: 100%;
+      margin-right: 10px;
+      background-color: transparent;
+      border: 0;
+      display: inline-block;
+
+      img {
+        height: 20px;
+      }
+    }
+  }
+}

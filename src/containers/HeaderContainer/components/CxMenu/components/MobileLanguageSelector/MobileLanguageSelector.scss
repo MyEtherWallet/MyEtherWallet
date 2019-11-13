@@ -1,0 +1,61 @@
+@import '~@/scss/GlobalVariables';
+
+//********************************************************
+// mobile-language-selector
+//********************************************************
+.mobile-language-selector {
+  margin: 0;
+  padding: 0;
+  position: relative;
+  opacity: 0;
+  pointer-events: none;
+  //transition: all 0.7s linear;
+
+  &.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+}
+
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+}
+
+//********************************************************
+// Language Menu Content Container (Fixed Position)
+//********************************************************
+.language-menu-content-container {
+  user-select: none;
+  background-color: $white;
+  //border: 1px solid $light-grey-2;
+  border-radius: 4px;
+  //padding: 20px;
+  //box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  z-index: 10001;
+  top: 70px;
+  left: 0;
+  right: 0;
+  max-width: 70vw;
+  //min-width: 50vw;
+  margin: 0 auto;
+  height: 40vh;
+  overflow-y: auto;
+
+  ul {
+    li {
+      padding: 15px 20px;
+      //border-bottom: 1px solid $light-grey-2;
+
+      &:active {
+        background-color: rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+}

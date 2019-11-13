@@ -1,8 +1,10 @@
 <template>
   <div>
-    <keep-alive>
-      <router-view />
-    </keep-alive>
+    <b-container>
+      <keep-alive>
+        <router-view />
+      </keep-alive>
+    </b-container>
   </div>
 </template>
 
@@ -10,17 +12,8 @@
 export default {
   data() {
     return {};
-  },
-  mounted() {
-    // Add chrome-extention-root class
-    const element = document.getElementById('app');
-    element.classList.add('chrome-extention-root');
   }
 };
 </script>
 
-<style lang="scss">
-.chrome-extention-root {
-  min-width: 1200px;
-}
-</style>
+<style lang="scss"></style>
