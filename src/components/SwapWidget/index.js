@@ -1,1 +1,3 @@
-export { default } from '@/layouts/InterfaceLayout/containers/SwapContainer/components/SwapWidget';
+export {
+  default
+} from '@/layouts/InterfaceLayout/containers/SwapContainer/components/SwapWidget';
