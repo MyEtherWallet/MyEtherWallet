@@ -1,8 +1,6 @@
 <template>
   <div>
-    <b-container>
-      <cx-menu />
-    </b-container>
+    <cx-menu />
 
     <div v-if="!isMewCx" class="header">
       <decision-tree />

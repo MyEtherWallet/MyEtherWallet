@@ -1,4 +1,7 @@
 @import "~@/scss/GlobalVariables";
+a {
+  text-decoration: none;
+}
 
 .d-flex {
   display: flex;
@@ -14,10 +17,30 @@
   }
 }
 
+.menu-items {
+  p {
+    font-size: 13px;
+  }
+
+  > * {
+    margin-left: 30px;
+  }
+}
+
+.buy-eth {
+  p {
+    margin-left: 2px;
+  }
+}
+
 .spacer {
   margin: 0 auto;
 }
 
-.mobile-menu {
-  padding: 10px 0;
+.cx-menu {
+  padding: 10px 10px;
+}
+
+.cx-menu-container {
+  box-shadow: 0 2px 13px rgba(0, 0, 0, 0.1);
 }
