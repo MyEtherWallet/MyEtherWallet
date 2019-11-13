@@ -40,7 +40,7 @@
         >
           <div class="buy-eth">
             <img src="@/assets/images/icons/buy-eth.svg" alt />
-            <p>Buy ETH</p>
+            <p>{{ $t('common.buy-eth') }}</p>
           </div>
         </a>
         <mobile-menu-button
@@ -76,7 +76,7 @@
               "
             >
               <div class="menu-link-block">
-                <div>{{ $t('header.home') }}</div>
+                <div>{{ $t('common.home') }}</div>
                 <i class="fa fa-angle-right" aria-hidden="true"></i>
               </div>
             </router-link>
@@ -84,7 +84,7 @@
           <li v-if="isHomePage && !isMewCx">
             <router-link to="/#about-mew" @click.native="isMenuOpen = false">
               <div class="menu-link-block">
-                <div>{{ $t('header.about') }}</div>
+                <div>{{ $t('common.about') }}</div>
                 <i class="fa fa-angle-right" aria-hidden="true"></i>
               </div>
             </router-link>
@@ -102,7 +102,7 @@
               class="menu-link-block"
               @click="langSelectorOpen = !langSelectorOpen"
             >
-              <div>{{ $t('common.language') }}</div>
+              <div>{{ $t('interface.language') }}</div>
               <div class="selected-lang">
                 <div>{{ currentLang }}</div>
                 <img
@@ -115,13 +115,13 @@
           </li>
           <li v-if="account.address">
             <div class="menu-link-block" @click="opensettings">
-              <div>{{ $t('common.settings') }}</div>
+              <div>{{ $t('interface.settings') }}</div>
               <i class="fa fa-angle-right" aria-hidden="true"></i>
             </div>
           </li>
         </ul>
         <div v-if="account.address" class="logout-button" @click="logout">
-          <button>{{ $t('common.logout') }}</button>
+          <button>{{ $t('interface.logout') }}</button>
         </div>
       </div>
     </div>

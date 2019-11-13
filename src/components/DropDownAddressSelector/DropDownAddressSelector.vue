@@ -17,8 +17,8 @@
         <input
           ref="addressInput"
           v-model="selectedAddress"
+          :placeholder="$t('common.enter-addr')"
           type="text"
-          placeholder="Please enter the address"
           @focus="dropdownOpen = false"
         />
         <div v-if="!validAddress" class="blockie-place-holder-image" />
@@ -74,7 +74,7 @@
               </p>
             </div>
             <p v-if="addr.address === currentAddress" class="address-note">
-              {{ $t('interface.myAddr') }}
+              {{ $t('common.my-addr') }}
             </p>
             <i
               v-if="toAddressCheckMark"

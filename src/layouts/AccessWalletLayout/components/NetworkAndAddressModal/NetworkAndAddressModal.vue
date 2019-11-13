@@ -1,7 +1,7 @@
 <template>
   <b-modal
     ref="networkAndAddress"
-    :title="$t('accessWallet.networkAndAddress')"
+    :title="$t('accessWallet.network-addr.string')"
     hide-footer
     class="bootstrap-modal nopadding modal-network-and-address"
     centered
@@ -42,8 +42,8 @@
                     alt
                   />
                   <div v-else class="no-icon">
-                    <p>No</p>
-                    <p>Icon</p>
+                    <p>{{ $t('common.no') }}</p>
+                    <p>{{ $t('accessWallet.network-addr.icon') }}</p>
                   </div>
                 </div>
                 <p>{{ key }}</p>
@@ -75,7 +75,7 @@
           variant="primary"
         >
           <p class="button-number">2</p>
-          <p>{{ $t('common.address') }}</p>
+          <p>{{ $t('common.addr') }}</p>
         </b-btn>
         <b-collapse
           id="collapse2"
@@ -89,7 +89,7 @@
             class="content-container-1"
           >
             <div class="hd-derivation">
-              <h4>{{ $t('accessWallet.hdDerivationPath') }}</h4>
+              <h4>{{ $t('accessWallet.path.hd-derivation') }}</h4>
               <div class="dropdown-button-container">
                 <b-dropdown
                   id="hd-derivation-path"
@@ -105,9 +105,9 @@
                     >{{ val.label }}</b-dropdown-item
                   >
                   <b-dropdown-divider />
-                  <b-dropdown-item>
-                    {{ $t('accessWallet.customPaths') }}
-                  </b-dropdown-item>
+                  <b-dropdown-item>{{
+                    $t('accessWallet.path.custom')
+                  }}</b-dropdown-item>
                   <b-dropdown-item
                     v-for="(val, key) in customPaths"
                     :class="selectedPath === val.path ? 'active' : ''"
@@ -123,9 +123,9 @@
                       </span>
                     </div>
                   </b-dropdown-item>
-                  <b-dropdown-item @click="showCustomPathInput">
-                    {{ $t('accessWallet.addCustomPath') }}
-                  </b-dropdown-item>
+                  <b-dropdown-item @click="showCustomPathInput">{{
+                    $t('accessWallet.path.add-custom')
+                  }}</b-dropdown-item>
                 </b-dropdown>
               </div>
             </div>
@@ -134,20 +134,24 @@
               class="error-message-container"
             >
               {{
-                $t('accessWallet.invalidPathDesc', { path: invalidPath.path })
+                $t('accessWallet.path.invalid-desc', { path: invalidPath.path })
               }}
             </p>
             <p v-show="!customPathInput" class="derivation-brands monospace">
               {{ getPathLabel(selectedPath) }} ({{ selectedPath }})
             </p>
             <div v-show="customPathInput" class="custom-path-container">
-              <label for="customPathLabel">{{ $t('common.alias') }}</label>
+              <label for="customPathLabel">{{
+                $t('accessWallet.path.alias')
+              }}</label>
               <input
                 id="customPathLabel"
                 v-model="customPath.label"
                 placeholder="my custom path"
               />
-              <label for="customPathInput">{{ $t('common.path') }}</label>
+              <label for="customPathInput">{{
+                $t('accessWallet.path.string')
+              }}</label>
               <input
                 id="customPathInput"
                 v-model="customPath.path"
@@ -157,7 +161,7 @@
                 {{ $t('common.cancel') }}
               </button>
               <button class="submit-button submit" @click="addCustomPath">
-                {{ $t('accessWallet.addCustomPath') }}
+                {{ $t('accessWallet.path.add-custom') }}
               </button>
             </div>
           </div>
@@ -165,13 +169,13 @@
           <div class="content-container-2">
             <div class="address-block-container">
               <div class="block-title">
-                <h4>{{ $t('accessWallet.interactAddr') }}</h4>
+                <h4>{{ $t('accessWallet.network-addr.addr-to-interact') }}</h4>
               </div>
 
               <ul class="address-block table-header fours">
-                <li>{{ $t('accessWallet.id') }}</li>
-                <li>{{ $t('common.address') }}</li>
-                <li>{{ $t('common.balance') }}</li>
+                <li>{{ $t('accessWallet.network-addr.id') }}</li>
+                <li>{{ $t('common.addr') }}</li>
+                <li>{{ $t('common.balance.string') }}</li>
               </ul>
 
               <ul
@@ -223,7 +227,7 @@
         </b-collapse>
         <div class="accept-terms">
           <label class="checkbox-container">
-            {{ $t('accessWallet.acceptTerms') }}
+            {{ $t('accessWallet.accept-terms') }}
             <router-link to="/terms-and-conditions"
               >{{ $t('common.terms') }}.</router-link
             >

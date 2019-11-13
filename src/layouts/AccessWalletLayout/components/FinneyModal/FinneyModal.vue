@@ -1,7 +1,7 @@
 <template>
   <b-modal
     ref="finneyModal"
-    title="FINNEY Connect"
+    :title="$t('accessWallet.finney.finney-connect')"
     hide-footer
     class="bootstrap-modal nopadding"
     centered
@@ -11,8 +11,10 @@
     <div class="finney-desktop">
       <div class="modal-content-right">
         <p>
-          To connect, scan the QR code from <b>FinneyWallet</b> app on your
-          <b>FINNEY™ BLOCKCHAIN SMARTPHONE</b>
+          {{ $t('accessWallet.finney.scan-qr') }}
+          <b>{{ $t('accessWallet.finney.finney-wallet') }}</b>
+          {{ $t('accessWallet.finney.app-on') }}
+          <b>{{ $t('accessWallet.finney.finney-bc') }}</b>
         </p>
         <qrcode
           :value="qrcode"
@@ -26,20 +28,20 @@
             rel="noopener noreferrer"
           >
             <p>
-              Get your
+              {{ $t('accessWallet.finney.get-your') }}
             </p>
             <h3>
-              FINNEY™
+              {{ $t('accessWallet.finney.finney') }}
             </h3>
             <p>
-              now
+              {{ $t('accessWallet.finney.now') }}
             </p>
           </a>
         </div>
       </div>
     </div>
     <div v-if="false" class="finney-mobile">
-      mobile
+      {{ $t('accessWallet.finney.mobile') }}
     </div>
   </b-modal>
 </template>

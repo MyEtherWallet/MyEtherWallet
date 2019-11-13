@@ -1,13 +1,13 @@
 <template>
   <div class="sign-message-container">
     <signature-modal-modal ref="signatureModal" :signature="signature" />
-    <interface-container-title :title="$t('common.signMessage')" />
+    <interface-container-title :title="$t('signMessage.title')" />
     <div class="content-container">
       <div class="send-form">
-        <p>{{ $t('interface.signMessageDesc') }}</p>
+        <p>{{ $t('signMessage.desc') }}</p>
         <div class="title-container">
           <div class="title">
-            <h4>{{ $t('interface.txSideMenuMessage') }}</h4>
+            <h4>{{ $t('signMessage.message') }}</h4>
           </div>
         </div>
 
@@ -33,12 +33,12 @@
             ]"
             @click="signMessage"
           >
-            {{ $t('common.sign') }}
+            {{ $t('signMessage.sign') }}
           </button>
         </div>
         <interface-bottom-text
-          :link-text="$t('interface.helpCenter')"
-          :question="$t('interface.haveIssues')"
+          :link-text="$t('common.help-center')"
+          :question="$t('common.have-issues')"
           link="https://kb.myetherwallet.com"
         />
       </div>
@@ -106,7 +106,7 @@ export default {
       this.$refs.signature.select();
       document.execCommand('copy');
       window.getSelection().removeAllRanges();
-      Toast.responseHandler('Copied', Toast.INFO);
+      Toast.responseHandler(this.$t('common.copied'), Toast.INFO);
     },
     deleteInputText() {
       this.signature = '';

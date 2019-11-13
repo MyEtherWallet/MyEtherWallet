@@ -31,4 +31,3 @@
 - [ ] Add PR label
 - [ ] Updated package.json version
 - [ ] No hard-coded strings
-

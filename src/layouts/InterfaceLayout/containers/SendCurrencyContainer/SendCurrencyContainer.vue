@@ -1,12 +1,12 @@
 <template>
   <div class="send-currency-container">
-    <interface-container-title :title="$t('common.sendTx')" />
+    <interface-container-title :title="$t('sendTx.send-tx')" />
     <div class="send-form">
       <div class="form-block amount-to-address">
         <div class="amount">
           <div class="single-input-block">
             <div class="title">
-              <h4>{{ $t('interface.sendTxType') }}</h4>
+              <h4>{{ $t('sendTx.type') }}</h4>
             </div>
             <currency-picker
               :currency="tokensWithBalance"
@@ -18,20 +18,20 @@
           </div>
           <div class="single-input-block">
             <div class="title">
-              <h4>{{ $t('interface.sendTxAmount') }}</h4>
+              <h4>{{ $t('sendTx.amount') }}</h4>
               <p
                 class="title-button prevent-user-select"
                 @click="sendEntireBalance"
               >
-                Entire Balance
+                {{ $t('sendTx.button-entire') }}
               </p>
             </div>
             <div class="the-form amount-number">
               <input
                 v-validate="'min_value:0'"
-                v-model="toValue"
+                v-model="value"
+                :placeholder="$t('sendTx.amount')"
                 type="number"
-                placeholder="Amount"
                 min="0"
                 name="value"
                 step="any"
@@ -55,7 +55,7 @@
         <div class="to-address">
           <div class="title">
             <h4>
-              {{ $t('interface.sendTxToAddr') }}
+              {{ $t('sendTx.to-addr') }}
               <blockie
                 v-show="isValidAddress"
                 :address="hexAddress"
@@ -94,20 +94,21 @@
         </div>
         <div class="tx-fee">
           <div class="title">
-            <h4>
-              {{ $t('common.txFee') }}
-            </h4>
+            <h4>{{ $t('sendTx.tx-fee') }}</h4>
             <p class="copy-button prevent-user-select" @click="openSettings">
               {{ $t('common.edit') }}
             </p>
           </div>
           <div class="fee-value">
             <div class="gwei">
-              {{ gasPrice }} Gwei
+              {{ gasPrice }} {{ $t('common.gas.uppercase-gwei') }}
               <!--(Economic)-->
             </div>
             <div v-show="network.type.name === 'ETH'" class="usd">
-              Cost {{ txFeeEth }} ETH = ${{ convert }}
+              <i18n path="sendTx.cost-eth-convert" tag="div">
+                <span slot="txFeeEth">{{ txFeeEth }}</span>
+                <span slot="convert">{{ convert }}</span>
+              </i18n>
             </div>
           </div>
         </div>
@@ -119,7 +120,7 @@
         <div class="toggle-button-container">
           <h4>{{ $t('common.advanced') }}</h4>
           <div class="toggle-button">
-            <span>{{ $t('interface.dataGas') }}</span>
+            <span>{{ $t('sendTx.data-gas') }}</span>
             <!-- Rounded switch -->
             <div class="sliding-switch-white">
               <label class="switch">
@@ -138,11 +139,11 @@
         >
           <div class="margin-container">
             <div v-show="!isToken" class="the-form user-input">
-              <p>Add Data</p>
+              <p>{{ $t('sendTx.add-data') }}</p>
               <input
-                v-model="toData"
+                v-model="data"
+                :placeholder="$t('sendTx.ph-add-data')"
                 type="text"
-                placeholder="Add Data (e.g. 0x7834f874g298hf298h234f)"
                 autocomplete="off"
               />
               <i
@@ -154,10 +155,10 @@
               />
             </div>
             <div class="the-form user-input">
-              <p>{{ $t('common.gasLimit') | capitalize }}</p>
+              <p>{{ $t('common.gas.limit') | capitalize }}</p>
               <input
                 v-model="gasLimit"
-                :placeholder="$t('common.gasLimit')"
+                :placeholder="$t('common.gas.limit')"
                 type="number"
                 min="0"
                 name
@@ -183,11 +184,11 @@
         ]"
         @click="submitTransaction"
       >
-        {{ $t('interface.sendTx') }}
+        {{ $t('sendTx.send-tx') }}
       </div>
       <interface-bottom-text
-        :link-text="$t('interface.helpCenter')"
-        :question="$t('interface.haveIssues')"
+        :link-text="$t('common.help-center')"
+        :question="$t('common.have-issues')"
         link="https://kb.myetherwallet.com"
       />
     </div>
@@ -302,22 +303,22 @@ export default {
     },
     isValidAmount() {
       const notEnoughGasMsg =
-        this.$t('errorsGlobal.notAValidAmountTotal') +
+        this.$t('errorsGlobal.not-valid-amount-total') +
         ' Gas ' +
-        this.$t('errorsGlobal.toSend');
+        this.$t('errorsGlobal.to-send');
       const notEnoughTokenMsg =
-        this.$t('errorsGlobal.notAValidAmountTotal') +
+        this.$t('errorsGlobal.not-valid-amount-total') +
         ' ' +
         this.selectedCurrency.symbol +
         ' ' +
-        this.$t('errorsGlobal.toSend');
+        this.$t('errorsGlobal.to-send');
       const notEnoughCurrencyMsg =
-        this.$t('errorsGlobal.notAValidAmountTotal') +
+        this.$t('errorsGlobal.not-valid-amount-total') +
         ' ' +
         this.network.type.currencyName +
         ' ' +
-        this.$t('errorsGlobal.toSend');
-      const invalidValueMsg = this.$t('errorsGlobal.invalidValue');
+        this.$t('errorsGlobal.to-send');
+      const invalidValueMsg = this.$t('errorsGlobal.invalid-value');
       const enoughTokenBalance = new BigNumber(this.toValue).lte(
         this.selectedCurrency.balance
       );

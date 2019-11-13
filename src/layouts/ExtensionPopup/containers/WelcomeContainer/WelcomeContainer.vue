@@ -1,19 +1,19 @@
 <template functional>
   <div class="welcome-section">
     <div class="header">
-      MEWCX | Chrome Extension
+      {{ parent.$t('mewCx.welcome-header') }}
     </div>
     <div class="content">
       <img src="@/assets/images/mew-cx-logo.png" width="75" />
       <div class="text-content">
-        <h3>MyEtherWallet's Official Chrome Extension</h3>
+        <h3>{{ parent.$t('mewCx.mew-cx-official') }}</h3>
         <p>
-          You don't have any wallet saved. Click Add Wallet to get started
+          {{ parent.$t('mewCx.no-wallet-add') }}
         </p>
       </div>
     </div>
     <div class="add-wallet-content" @click="props.addWallet">
-      Add Wallet
+      {{ parent.$t('mewCx.add-wallet') }}
     </div>
   </div>
 </template>
