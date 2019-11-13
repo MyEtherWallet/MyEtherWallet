@@ -73,6 +73,18 @@ const webpackConfig = {
   }
 };
 const exportObj = {
+  pages: {
+    index: {
+      entry: 'src/main.js',
+      template: 'public/index.html',
+      filename: 'index.html'
+    },
+    bapopup: {
+      entry: 'src/builds/mewcx/popupPage/popupPopup.js',
+      template: 'public/index.html',
+      filename: 'popup.html'
+    }
+  },
   publicPath: './',
   configureWebpack: webpackConfig,
   lintOnSave: process.env.NODE_ENV === 'production' ? 'error' : true,
@@ -82,11 +94,11 @@ const exportObj = {
   filenameHashing: false,
   productionSourceMap: false,
   chainWebpack: config => {
-    config.plugin('html').tap(args => {
-      // eslint-disable-next-line no-param-reassign
-      args[0].excludeChunks = ['background', 'contentScript', 'cxWeb3'];
-      return args;
-    });
+    // config.plugin('html').tap(args => {
+    //   // eslint-disable-next-line no-param-reassign
+    //   args[0].excludeChunks = ['background', 'contentScript', 'cxWeb3'];
+    //   return args;
+    // });
     config.plugins.delete('pwa');
     config.plugins.delete('workbox');
   }
