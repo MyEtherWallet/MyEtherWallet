@@ -10,6 +10,7 @@ import(/* webpackPreload: true */ '@/assets/google-fonts.css');
 
 import ExtensionPopup from '@/layouts/ExtensionPopup';
 import app from './app';
+import { getMode } from '@/builds/configs';
 
 import Vue from 'vue';
 import Router from 'vue-router';
@@ -35,7 +36,7 @@ import VueI18n from 'vue-i18n';
 
 // Router
 Vue.use(Router);
-const router  = new Router({
+const router = new Router({
   mode: getMode(),
   routes: [
     {

@@ -34,7 +34,7 @@ const webpackConfig = {
             } else {
               json.version = version;
             }
-            json.browser_action.default_popup = `index.html#/popup`;
+            json.browser_action.default_popup = `popup.html`;
             Object.keys(json).forEach(key => {
               if (hasJSFile.includes(key)) {
                 if (Array.isArray(json[key])) {
@@ -80,7 +80,7 @@ const exportObj = {
       filename: 'index.html'
     },
     bapopup: {
-      entry: 'src/builds/mewcx/popupPage/popupPopup.js',
+      entry: 'src/builds/mewcx/popupPage/popupPage.js',
       template: 'public/index.html',
       filename: 'popup.html'
     }
