@@ -321,15 +321,7 @@ export default {
     },
     collateralRatioColoring() {
       if (this.currentCdpLoaded) {
-        if (this.getCollateralizationRatio() >= 2) {
-          return 'green';
-        } else if (
-          this.getCollateralizationRatio() >= 1.75 &&
-          this.getCollateralizationRatio() < 2
-        ) {
-          return 'orange';
-        }
-        return 'red';
+        return this.currentCdp.collateralStatus;
       }
       return '';
     },
@@ -356,20 +348,20 @@ export default {
       return '--';
     },
     liquidationRatioDisplay() {
-      if (this.values) {
-        return displayFixedValue(displayPercentValue(this.liquidationRatio));
+      if (this.currentCdpLoaded) {
+        return displayFixedValue(displayPercentValue(this.currentCdp.liquidationRatio));
       }
       return '--';
     },
     liquidationPenaltyDisplay() {
-      if (this.values) {
-        return displayFixedValue(displayPercentValue(this.liquidationPenalty));
+      if (this.currentCdpLoaded) {
+        return displayFixedValue(displayPercentValue(this.currentCdp.liquidationPenalty));
       }
       return '--';
     },
     stabilityFeeDisplay() {
-      if (this.values) {
-        return displayFixedValue(displayPercentValue(this.stabilityFee));
+      if (this.currentCdpLoaded) {
+        return displayFixedValue(displayPercentValue(this.currentCdp.stabilityFee));
       }
       return '--';
     },

@@ -83,7 +83,9 @@ export default class MakerCDP extends MakerCdpBase {
       } else {
         this.cdp = await this.services.getMakerCdp(cdpId, false);
       }
-      console.log(this.cdp); // todo remove dev item
+      console.log('CDP', this.cdp); // todo remove dev item
+      console.log('CDP.type.liquidationPenalty', this.cdp.type.liquidationPenalty); // todo remove dev item
+
     } catch (e) {
       console.error(e);
     }
@@ -92,6 +94,7 @@ export default class MakerCDP extends MakerCdpBase {
     this.isSafe = this.cdp.isSafe;
     // this.debtValue = (await this.cdp.getDebtValue()).toBigNumber();
     this._collatRatio = await this.cdp.getCollateralizationRatio();
+    console.log(this._collatRatio); // todo remove dev item
     this.ethCollateral = (await this.cdp.getCollateralValue()).toBigNumber();
     this.pethCollateral = (await this.cdp.getCollateralValue(
       Maker.PETH
