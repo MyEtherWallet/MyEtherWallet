@@ -1,5 +1,5 @@
 import app from './app';
-import ExtensionPopup from '@/layouts/ExtensionPopup';
+// import ExtensionPopup from '@/layouts/ExtensionPopup';
 import ExtensionWeb3Popup from '@/layouts/ExtensionWeb3Popup';
 import Web3DetectedContainer from '@/layouts/ExtensionWeb3Popup/containers/Web3DetectedContainer';
 import AccountAccessContainer from '@/layouts/ExtensionWeb3Popup/containers/AccountAccessContainer';
@@ -44,12 +44,12 @@ const cxRoutes = [
       }
     ]
   },
-  {
-    path: '/popup',
-    name: 'Popup',
-    component: ExtensionPopup,
-    meta: { requiresAuth: false }
-  },
+  // {
+  //   path: '/popup',
+  //   name: 'Popup',
+  //   component: ExtensionPopup,
+  //   meta: { requiresAuth: false }
+  // },
   {
     path: '/',
     component: ExtensionBrowserAction,
