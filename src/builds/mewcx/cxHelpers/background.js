@@ -105,9 +105,9 @@ let metamaskChecker;
 const eventsListeners = (request, _, callback) => {
   if (request.event === CX_WEB3_DETECTED) {
     clearTimeout(metamaskChecker);
-    metamaskChecker = setTimeout(function() {
-      chrome.storage.remove('warned');
-    }, 300000); // Clear var in 5 minutes
+    metamaskChecker = setTimeout(() => {
+      chrome.storage.sync.remove('warned');
+    }, 180000); // Clear var in 3 minutes
   }
 
   const payload = utils._.mapObject(
@@ -224,6 +224,7 @@ function querycB(tab) {
         chrome.tabs.update(null, { url: urlRedirect });
       } else {
         // Injects web3
+        console.log('attempts to inject web3')
         chrome.tabs.sendMessage(tab.id, { event: CX_INJECT_WEB3 }, function() {
           store.state.web3.eth.net.getId().then(() => {
             chrome.tabs.sendMessage(tab.id, {
@@ -234,6 +235,7 @@ function querycB(tab) {
       }
     } else {
       // Injects web3
+      console.log('attempts to inject web3')
       chrome.tabs.sendMessage(tab.id, { event: CX_INJECT_WEB3 }, function() {
         store.state.web3.eth.net.getId().then(() => {
           chrome.tabs.sendMessage(tab.id, {
