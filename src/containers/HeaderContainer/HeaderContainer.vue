@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-container>
-      aaaaaaaaa
+      <cx-menu />
     </b-container>
 
     <div v-if="!isMewCx" class="header">
@@ -241,6 +241,7 @@ import MobileMenu from './components/MobileMenu';
 import DisconnectedModal from '@/components/DisconnectedModal';
 import ExtensionNotification from '@/layouts/ExtensionBrowserAction/containers/ExtensionNotification';
 import DecisionTree from '@/components/DecisionTree';
+import CxMenu from '@/containers/HeaderContainer/components/CxMenu';
 
 const events = {
   issueModal: 'issueModal',
@@ -258,7 +259,8 @@ export default {
     'mobile-menu': MobileMenu,
     'disconnected-modal': DisconnectedModal,
     'extension-notification': ExtensionNotification,
-    'decision-tree': DecisionTree
+    'decision-tree': DecisionTree,
+    'cx-menu': CxMenu
   },
   data() {
     const isMewCx = Misc.isMewCx();
