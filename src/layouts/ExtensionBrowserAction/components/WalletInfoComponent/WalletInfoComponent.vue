@@ -122,11 +122,15 @@
       <div class="address-and-balance-container">
         <div class="address-content-container">
           <div class="address-info">
-            <blockie :address="address" width="70px" height="70px" />
+            <div class="blockie-container">
+              <blockie :address="address" width="50px" height="50px" />
+            </div>
             <div class="actual-address">
               <p>Address</p>
-              <p class="d-none d-xl-block">{{ address }}</p>
-              <p class="d-block d-xl-none">{{ address | concatAddress }}</p>
+              <p class="d-none d-xl-block address-value">{{ address }}</p>
+              <p class="d-block d-xl-none address-value">
+                {{ address | concatAddress }}
+              </p>
               <input ref="addressInput" :value="address" />
             </div>
           </div>

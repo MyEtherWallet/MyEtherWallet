@@ -30,10 +30,10 @@
     </div>
     <div v-show="props.myWallets.length > 0 || props.loading" class="wallets">
       <component
-        v-for="wallet in props.myWallets"
         :is="injections.components.WalletInfoComponent"
-        :usd="props.ethPrice"
+        v-for="wallet in props.myWallets"
         :key="wallet.address"
+        :usd="props.ethPrice"
         :address="wallet.address"
         :balance="wallet.balance"
         :wallet="wallet.wallet"
