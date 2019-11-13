@@ -68,9 +68,7 @@ export async function getDetailsForTokens(self, collateralTokens) {
   console.log(MdaiToken); // todo remove dev item
   const token = self._tokenService.getToken(MDAI);
   self.tokens[MdaiToken.symbol] = token;
-  self.balances[
-    MdaiToken.symbol
-  ] = (await token.balance()).toBigNumber();
+  self.balances[MdaiToken.symbol] = (await token.balance()).toBigNumber();
 
   self.balances['DAI'] = self.daiBalance;
   self.balances['MKR'] = self.mkrBalance;
@@ -206,29 +204,39 @@ export async function loadCdpDetail(self, cdpId) {
 }
 
 export async function updateActiveCdp(self) {
+  const removeObject = val => {
+    return typeof val === 'number'
+      ? val
+      : typeof val === 'object'
+      ? val.hasOwnProperty('id')
+        ? val.id
+        : 0
+      : val;
+  };
   const currentCdpIds = Object.keys(self.activeCdps);
-  console.log('currentCdpIds', currentCdpIds); // todo remove dev item
-  // await locateCdps(self, self._mcdManager);
   const { withType, withProxy, withoutProxy } = await locateCdps(
     self,
     self._mcdManager
   );
+  self.cdpsWithType = withType;
+  self.cdps = withProxy.map(removeObject);
+  self.cdpsWithoutProxy = withoutProxy;
 
-  const newCdps = self.cdps.filter(
-    item => !Object.keys(self.activeCdps).includes(item.toString())
-  );
-
+  const newCdps = self.cdps.filter(item => {
+    return !currentCdpIds.includes(item.toString());
+  });
   const newCdpsWithoutProxy = self.cdpsWithoutProxy.filter(
-    item => !Object.keys(self.activeCdps).includes(item.toString())
+    item => !Object.keys(self.activeCdps).includes(item)
   );
 
-  const removedCdps = currentCdpIds.filter(
-    item =>
-      !(
-        self.cdps.includes(item.toString()) ||
-        self.cdpsWithoutProxy.includes(item.toString())
-      )
-  );
+  const removedCdps = currentCdpIds.filter(item => {
+    return !(
+      (self.cdps.includes(item.toString()) ||
+      self.cdps.includes(parseInt(item))) ||
+      (self.cdpsWithoutProxy.includes(item.toString()) ||
+        self.cdpsWithoutProxy.includes(parseInt(item)))
+    );
+  });
 
   if (removedCdps.length > 0) {
     removedCdps.forEach(item => delete self.activeCdps[item]);
@@ -318,3 +326,69 @@ export async function buildCdpObject(cdpId, options = {}, useOld = false) {
     return makerCDP;
   }
 }
+
+
+export async function doUpdate(self, Toast) {
+  self.proxyAddress = await self.getProxy();
+  let afterClose = false;
+  const afterOpen = self.$route.name === 'create';
+  await self.updateActiveCdp();
+  for (const idProp in self.activeCdps) {
+    console.log('self.activeCdps[idProp] 1', self.activeCdps[idProp]); // todo remove dev item
+    if (self.activeCdps[idProp].needsUpdate) {
+      console.log('self.activeCdps[idProp] 2', self.activeCdps[idProp]); // todo remove dev item
+
+      if (self.activeCdps[idProp].closing) {
+        afterClose = true;
+        delete self.activeCdps[idProp];
+        self.cdps = self.cdps.filter(item => item !== idProp);
+        self.cdpsWithoutProxy = self.cdpsWithoutProxy.filter(
+          item => item !== idProp
+        );
+      } else if (self.activeCdps[idProp].opening) {
+        await self.activeCdps[idProp].updateValues();
+      } else {
+        self.activeCdps[idProp] = await self.activeCdps[idProp].update();
+      }
+    }
+    if (idProp === self.currentCdpId) {
+      await self.currentCdp.update();
+      await self.setupCdpManage(self.currentCdpId);
+    }
+  }
+
+  await self.checkBalances();
+  await self.checkAllowances();
+
+  if (!Object.keys(self.activeCdps).includes(self.currentCdpId)) {
+    await self.loadCdpDetails();
+    await self.setupCdpManageFunc(self.currentCdpId);
+  } else {
+    await self.setupCdpManageFunc(self.currentCdpId);
+  }
+
+  const runAfterUpdate = () => {
+    if (self.afterUpdate.length > 0) {
+      const fn = self.afterUpdate.pop();
+      fn();
+      runAfterUpdate();
+    }
+  };
+  runAfterUpdate();
+  if (afterClose || afterOpen || self.creatingCdp) {
+    if (self.cdps.length > 0 || self.cdpsWithoutProxy.length > 0) {
+      self.goToManage();
+    } else {
+      self.gotoCreate();
+    }
+  }
+  if (self.creatingCdp) {
+    self.creatingCdp = false;
+    await self.updateActiveCdp();
+    Toast.responseHandler('CDP Created', Toast.INFO);
+  } else {
+    self.valuesUpdated++;
+    Toast.responseHandler('CDP Updated', Toast.INFO);
+  }
+}
+

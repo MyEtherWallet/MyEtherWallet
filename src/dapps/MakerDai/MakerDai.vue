@@ -99,6 +99,7 @@
         </div>
       </div>
     </back-button>
+    <button @click="doThing">Do Thing</button>
     <div v-if="makerActive" class="buttons-container">
       <div v-if="showCreateProxy">
         <div class="dapps-button" @click="buildProxy">
@@ -439,6 +440,9 @@ export default {
     await this.setup();
   },
   methods: {
+    async doThing(){
+      await this.doUpdate()
+    },
     backPath() {
       switch (this.$route.name) {
         case 'Maker':
@@ -673,67 +677,14 @@ export default {
       await this.doUpdate();
     },
     async doUpdate() {
+      console.log(
+        'withType, withProxy, withoutProxy',
+        this.cdpsWithType,
+        this.cdps,
+        this.cdpsWithoutProxy
+      ); // todo remove dev item
       await doUpdate(this, Toast);
-      // this.proxyAddress = await this.getProxy();
-      // let afterClose = false;
-      // const afterOpen = this.$route.name === 'create';
-      // await this.updateActiveCdp();
-      // for (const idProp in this.activeCdps) {
-      //   if (this.activeCdps[idProp].needsUpdate) {
-      //     if (this.activeCdps[idProp].closing) {
-      //       afterClose = true;
-      //       delete this.activeCdps[idProp];
-      //       this.cdps = this.cdps.filter(item => item !== idProp);
-      //       this.cdpsWithoutProxy = this.cdpsWithoutProxy.filter(
-      //         item => item !== idProp
-      //       );
-      //     } else if (this.activeCdps[idProp].opening) {
-      //       await this.activeCdps[idProp].updateValues();
-      //     } else {
-      //       this.activeCdps[idProp] = await this.activeCdps[idProp].update();
-      //     }
-      //   }
-      //   if (idProp === this.currentCdpId) {
-      //     await this.currentCdp.update();
-      //     await this.setupCdpManageFunc(this.currentCdpId);
-      //   }
-      // }
 
-      // await getDetailsForTokens(this, this._typeService.cdpTypes);
-      // this.daiBalance = this.balances['DAI'];
-      // this.mkrBalance = this.balances['MKR'];
-      // await checkAllowances(this, this.account.address, this.proxyAddress);
-      //
-      // if (!Object.keys(this.activeCdps).includes(this.currentCdpId)) {
-      //   await this.loadCdpDetails();
-      //   await this.setupCdpManageFunc(this.currentCdpId);
-      // } else {
-      //   await this.setupCdpManageFunc(this.currentCdpId);
-      // }
-      //
-      // const runAfterUpdate = () => {
-      //   if (this.afterUpdate.length > 0) {
-      //     const fn = this.afterUpdate.pop();
-      //     fn();
-      //     runAfterUpdate();
-      //   }
-      // };
-      // runAfterUpdate();
-      // if (afterClose || afterOpen || this.creatingCdp) {
-      //   if (this.cdps.length > 0 || this.cdpsWithoutProxy.length > 0) {
-      //     this.goToManage();
-      //   } else {
-      //     this.gotoCreate();
-      //   }
-      // }
-      // if (this.creatingCdp) {
-      //   this.creatingCdp = false;
-      //   await this.updateActiveCdp();
-      //   Toast.responseHandler('CDP Created', Toast.INFO);
-      // } else {
-      //   this.valuesUpdated++;
-      //   Toast.responseHandler('CDP Updated', Toast.INFO);
-      // }
     },
 
     async checkAllowances() {
