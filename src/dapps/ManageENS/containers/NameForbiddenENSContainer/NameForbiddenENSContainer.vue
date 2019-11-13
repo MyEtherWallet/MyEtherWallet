@@ -1,9 +1,9 @@
 <template lang="html">
   <div class="name-forbidden-container">
-    <h3>{{ domainName }}.eth {{ $t('dapps.ensNotAvailable') }}!</h3>
+    <h3>{{ $t('ens.not-available', { domain: domainName }) }}</h3>
     <interface-bottom-text
-      :link-text="$t('interface.helpCenter')"
-      :question="$t('interface.haveIssues')"
+      :link-text="$t('common.help-center')"
+      :question="$t('common.have-issues')"
       link="https://kb.myetherwallet.com"
     />
   </div>

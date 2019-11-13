@@ -3,7 +3,7 @@
     <interface-balance-modal ref="balanceModal" :balance="accountBalance" />
     <div class="wrap">
       <div class="top-block">
-        <div class="block-title">{{ $t('common.balance') }}</div>
+        <div class="block-title">{{ $t('common.balance.string') }}</div>
         <button class="show-balance-button" @click="showBalanceModal">
           <img src="~@/assets/images/icons/more.svg" alt />
         </button>

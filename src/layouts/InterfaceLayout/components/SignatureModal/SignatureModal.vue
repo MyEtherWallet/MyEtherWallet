@@ -2,17 +2,17 @@
   <div>
     <b-modal
       ref="signatureModal"
+      :title="$t('common.signature')"
       hide-footer
       centered
       class="bootstrap-modal"
-      title="Signature"
       static
       lazy
     >
       <div class="modal-contents">
         <div>
           <div class="copy-container">
-            <h4>Signed Message:</h4>
+            <h4>{{ $t('signMessage.signed') }}</h4>
             <div class="copy-buttons">
               <span @click="copy">{{ $t('common.copy') }}</span>
             </div>
@@ -28,7 +28,7 @@
               class="submit-button large-round-button-green-filled clickable"
               @click="copy('main')"
             >
-              Copy
+              {{ $t('common.copy') }}
             </button>
           </div>
         </div>
@@ -51,7 +51,7 @@ export default {
     copy(type) {
       this.$refs.signedMess.select();
       document.execCommand('copy');
-      Toast.responseHandler('Copied!', Toast.INFO);
+      Toast.responseHandler(this.$t('common.copied'), Toast.INFO);
       if (type === 'main') this.$refs.signatureModal.hide();
     }
   }
