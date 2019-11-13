@@ -61,11 +61,11 @@
           >
             <div class="list-blockie">
               <blockie :address="addr.address" width="30px" height="30px" />
-              <img
+              <!-- <img
                 class="currency-icon"
                 src="@/assets/images/currency/eth.svg"
                 alt
-              />
+              /> -->
             </div>
             <div class="address-block">
               <p class="listed-address">
@@ -73,7 +73,7 @@
               </p>
             </div>
             <p v-if="addr.address === currentAddress" class="address-note">
-              {{ $t('interface.myAddr') }}
+              {{ $t('common.my-addr') }}
             </p>
             <p v-if="addr.address !== currentAddress" class="address-note">
               {{ addr.nickname }}
@@ -89,12 +89,12 @@
     </div>
     <!-- .dropdown--content -->
     <div v-show="validityState === 2" class="error-message-container">
-      <p>{{ $t('interface.notValidAddr', { currency: currency }) }}</p>
+      <p>{{ $t('swap.warning.not-valid-addr-src', { currency: currency }) }}</p>
     </div>
     <div v-show="validityState === 3" class="warn-message-container">
       <p>
         {{
-          $t('interface.unableToValidateAddress', {
+          $t('swap.warning.unable-validate-addr', {
             currency: currency
           })
         }}

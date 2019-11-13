@@ -3,7 +3,7 @@
     <div class="wrap">
       <div
         :class="
-          dropdownOpen && title === 'Address Book'
+          dropdownOpen && title === 'Manage Contact Addresses'
             ? 'address-title-container'
             : ''
         "
