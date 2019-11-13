@@ -51,8 +51,13 @@
         .address-info {
           display: flex;
 
+
           .actual-address {
-            margin-left: 30px;
+            margin-left: 10px;
+
+            .address-value {
+              word-break: break-all;
+            }
 
             p {
               font-size: 17px;
@@ -69,6 +74,7 @@
             }
           }
         }
+
         .copy-button {
           p {
             color: $mew-green;
@@ -248,6 +254,7 @@
     overflow-y: scroll;
     padding-right: 10px;
   }
+
   .modal-token-item {
     background-color: $light-green-1;
     border-radius: 5px;
