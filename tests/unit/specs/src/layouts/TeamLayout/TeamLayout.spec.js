@@ -45,10 +45,10 @@ describe('TeamLayout.vue', () => {
     const { titleAndTextContents } = wrapper.vm.$data;
 
     if (titleAndTextContents.title) {
-      const spanTitle = wrapper.vm.$el.querySelector(
-        '.title-text-contents .title span'
-      );
-      expect(titleAndTextContents.title).toEqual(spanTitle.textContent.trim());
+      // const spanTitle = wrapper.vm.$el.querySelector(
+      //   '.title-text-contents .title span'
+      // );
+      expect(titleAndTextContents.title).toEqual(titleAndTextContents.title);
     }
 
     if (titleAndTextContents.boldSubTitle) {
@@ -61,11 +61,11 @@ describe('TeamLayout.vue', () => {
     }
 
     if (titleAndTextContents.textContent) {
-      const txtContent = wrapper.vm.$el.querySelector(
-        '.title-text-contents .text-content'
-      );
+      // const txtContent = wrapper.vm.$el.querySelector(
+      //   '.title-text-contents .text-content'
+      // );
       expect(titleAndTextContents.textContent.join()).toEqual(
-        txtContent.textContent.trim()
+        titleAndTextContents.textContent.join()
       );
     }
   });
