@@ -73,6 +73,18 @@ export default class MakerCdpBase {
     return this.cdp.collateralAvailable;
   }
 
+  get collateralStatus() {
+    if (this.collateralizationRatio.gte(this.liquidationRatio.plus(0.5))) {
+      return 'green';
+    } else if (
+      this.collateralizationRatio.gte(this.liquidationRatio.plus(0.25)) &&
+      this.collateralizationRatio.lte(this.liquidationRatio.plus(0.5))
+    ) {
+      return 'orange';
+    }
+    return 'red';
+  }
+
   get collateralValue() {
     return this.cdp.collateralValue.toBigNumber();
   }
@@ -95,8 +107,6 @@ export default class MakerCdpBase {
 
   get debtValue() {
     if (this.cdp) {
-      console.log(this.cdp.debtValue._amount); // todo remove dev item
-      console.log(toBigNumber(this.cdp.debtValue._amount).toFixed(18).toString()); // todo remove dev item
       return toBigNumber(toBigNumber(this.cdp.debtValue._amount).toFixed(18));
     }
     return toBigNumber(0);
@@ -127,11 +137,17 @@ export default class MakerCdpBase {
   }
 
   get liquidationPenalty() {
-    return this.services.liquidationPenalty;
+    if (this.cdp) {
+      return toBigNumber(this.cdp.type.liquidationPenalty);
+    }
+    return toBigNumber(0);
   }
 
   get liquidationRatio() {
-    return this.services.liquidationRatio;
+    if (this.cdp) {
+      return toBigNumber(this.cdp.type.liquidationRatio._amount);
+    }
+    return toBigNumber(0);
   }
 
   get liquidationPrice() {
@@ -196,7 +212,10 @@ export default class MakerCdpBase {
   }
 
   get stabilityFee() {
-    return this.services.stabilityFee;
+    if (this.cdp) {
+      return toBigNumber(this.cdp.type.annualStabilityFee);
+    }
+    return toBigNumber(0);
   }
 
   get wethToPethRatio() {

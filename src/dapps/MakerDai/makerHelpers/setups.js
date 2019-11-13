@@ -207,7 +207,12 @@ export async function loadCdpDetail(self, cdpId) {
 
 export async function updateActiveCdp(self) {
   const currentCdpIds = Object.keys(self.activeCdps);
-  await locateCdps(self, self._cdpService);
+  console.log('currentCdpIds', currentCdpIds); // todo remove dev item
+  // await locateCdps(self, self._mcdManager);
+  const { withType, withProxy, withoutProxy } = await locateCdps(
+    self,
+    self._mcdManager
+  );
 
   const newCdps = self.cdps.filter(
     item => !Object.keys(self.activeCdps).includes(item.toString())
