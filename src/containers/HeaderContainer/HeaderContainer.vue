@@ -107,7 +107,7 @@
                     :href="'https://ethplorer.io/address/' + address"
                     target="_blank"
                     rel="noopener noreferrer"
-                    >{{ $t('common.header.ethplorer') }} ({{
+                    >{{ $t('header.ethplorer') }} ({{
                       $tc('common.token', 2)
                     }})</b-dropdown-item
                   >
@@ -175,7 +175,7 @@
                   to="/create-wallet"
                 >
                   <div class="get-free-wallet-button">
-                    {{ $t('common.header.new-wallet') }}
+                    {{ $t('header.new-wallet') }}
                   </div>
                 </b-nav-item>
                 <b-nav-item
@@ -187,7 +187,7 @@
                   to="/access-my-wallet"
                 >
                   <div class="access-button">
-                    {{ $t('common.header.access') }}
+                    {{ $t('header.access') }}
                   </div>
                 </b-nav-item>
                 <b-nav-item-dropdown

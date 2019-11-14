@@ -162,14 +162,19 @@
           >
             <textarea v-model="rawSigned" class="no-margin raw-tx-input" />
             <p v-if="invalidSignature">{{ $t('sendTx.invalid-signature') }}</p>
-            <p v-if="wrongNetwork && correctNetwork === ''">
-              {{ $t('sendTx.signed-chain-id') }}
-              {{ $t('sendTx.chain-no-match') }}
-            </p>
-            <p v-if="wrongNetwork && correctNetwork !== ''">
-              {{ $t('sendTx.signed-chain-id') }} ({{ correctNetwork }})
-              {{ $t('sendTx.chain-no-match') }}
-            </p>
+            <i18n
+              v-if="wrongNetwork && correctNetwork === ''"
+              tag="p"
+              path="sendTx.signed-chain-id"
+            >
+            </i18n>
+            <i18n
+              v-if="wrongNetwork && correctNetwork !== ''"
+              tag="p"
+              path="sendTx.signed-chain-id"
+            >
+              <span slot="network">({{ correctNetwork }})</span>
+            </i18n>
             <expanding-option title="Raw Transaction">
               <textarea
                 :value="JSON.stringify(rawTx)"
@@ -261,8 +266,7 @@
               <li class="detail-container">
                 <span class="detail-name">{{ $t('common.gas.price') }}:</span>
                 <span class="detail-text"
-                  >{{ toGwei(gasPrice) }}
-                  {{ $t('common.gas.gwei') }}</span
+                  >{{ toGwei(gasPrice) }} {{ $t('common.gas.gwei') }}</span
                 >
               </li>
               <li class="detail-container">
