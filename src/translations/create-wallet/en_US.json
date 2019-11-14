@@ -20,7 +20,7 @@
   },
   "password": {
     "do-not-forget": "DO NOT FORGET",
-    "do-not-forget-save-pw": "{do-not} to save your password. You will need this {key-pass} File to unlock your wallet.",
+    "do-not-forget-save-pw": "{do-not-forget} to save your password. You will need this {key-pass} File to unlock your wallet.",
     "key-pass": "Password + Keystore",
     "password-strength": "Password strength"
   },
