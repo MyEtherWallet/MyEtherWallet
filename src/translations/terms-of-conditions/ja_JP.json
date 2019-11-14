@@ -1,12 +1,12 @@
 {
   "title": "利用規約",
   "date": "最終更新 2018年5月10日",
-  "paragraph1": "安全・安心のために：私たちは損失と盗難を防ぐ方法ついての私たちのガイドを読むことを強く推奨します．これにはセキュリティに積極的になるため方法についてのいくつかの推奨事項が載っています．",
-  "paragraph2": "Always backup your keys: MyEtherWallet.com & MEW CX are not \"web wallets\". You do not create an account or give us your funds to hold onto. No data leaves your computer / your browser. We make it easy for you to create, save, and access your information and interact with the blockchain.",
-  "paragraph3": "We are not responsible for any loss: Ethereum, MyEtherWallet.com & MEW CX, and some of the underlying Javascript libraries we use are under active development. While we have thoroughly tested & tens of thousands of wallets have been successfully created by people all over the globe, there is always the possibility something unexpected happens that causes your funds to be lost. Please do not invest more than you are willing to lose, and please be careful.",
-  "paragraph4": "MyEtherWalletの翻訳：コミュニティはMyEtherWalletを様々な言語に翻訳するという驚くべき仕事をしています．しかしながら，MyEtherWalletは英語で提供された情報しか正当性と正確性を検証することができません．したがって，英語版が私たちの公式テキストです",
-  "paragraph5": "MIT License Copyright © 2015-2019 MyEtherWallet INC",
-  "paragraph6": "本ソフトウェアおよび関連するドキュメンテーションファイル（以下「本ソフトウェア」といいます）のコピーを取得した者は、本ソフトウェアを制限なく使用、複製、改変、マージする、 本ソフトウェアのコピーを発行、配布、サブライセンス許諾、および/または販売することを含み，これに限定されるものではない権利を持つ．本ソフトウェアが提供されている人は、以下の条件に従うこと：",
-  "paragraph7": "上記の著作権表示およびこの許可通知は、本ソフトウェアのすべてのコピーまたは価値のある部分に含まれるものとします。",
-  "paragraph8": "本ソフトウェアは、商品性、特定の目的への適合性および非侵害性の保証を含むが、明示的または黙示的ないかなる保証もなく、現状のまま提供されます。 作者または著作権者は、いかなる場合も、本ソフトウェアまたはその使用に関連して発生したものであっても、その使用に起因するものであっても、契約違反、その他の損害賠償その他の損害賠償の責任は負わないものとします。"
+  "paragraph-1": "Be safe & secure: We highly recommend that you read our guide on How to Prevent Loss & Theft for some recommendations on how to be proactive about your security.",
+  "paragraph-2": "Always backup your keys: MyEtherWallet.com & MyEtherWallet CX are not \"web wallets\". You do not create an account or give us your funds to hold onto. No data leaves your computer / your browser. We make it easy for you to create, save, and access your information and interact with the blockchain.",
+  "paragraph-3": "We are not responsible for any loss: Ethereum, MyEtherWallet.com & MyEtherWallet CX, and some of the underlying Javascript libraries we use are under active development. While we have thoroughly tested & tens of thousands of wallets have been successfully created by people all over the globe, there is always the possibility something unexpected happens that causes your funds to be lost. Please do not invest more than you are willing to lose, and please be careful.",
+  "paragraph-4": "Translations of MyEtherWallet: The community has done an amazing job translating MyEtherWallet into a variety of languages. However, MyEtherWallet can only verify the validity and accuracy of the information provided in English and, because of this, the English version of our website is the official text.",
+  "paragraph-5": "MIT License Copyright © 2015-2019 MyEtherWallet INC",
+  "paragraph-6": "Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:",
+  "paragraph-7": "The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.",
+  "paragraph-8": "THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
 }
