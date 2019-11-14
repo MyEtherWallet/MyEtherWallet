@@ -182,7 +182,8 @@ export default {
       const arrayedDapp = [];
       const actualReturnedDapp = [];
       Object.keys(dapps).forEach(dapp => {
-        if (dapp === 'manageEns' || dapp === 'maker') actualReturnedDapp.push(dapps[dapp]);
+        if (dapp === 'manageEns' || dapp === 'maker')
+          actualReturnedDapp.push(dapps[dapp]);
         arrayedDapp.push(dapps[dapp]);
       });
       const newestDapp = arrayedDapp.sort((a, b) => {
