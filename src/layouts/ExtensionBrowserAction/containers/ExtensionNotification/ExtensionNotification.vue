@@ -96,12 +96,12 @@
               </li>
             </ul>
             <div v-else class="notification-no-item">
-              {{ $t('common.no-notifications') }}
+              {{ $t('common.notifications.no-notifications') }}
             </div>
           </li>
         </ul>
         <div v-else class="notification-no-item">
-          {{ $t('common.no-notifications') }}
+          {{ $t('common.notifications.no-notifications') }}
         </div>
       </div>
       <div v-if="detailsShown" class="notification-item-container">
