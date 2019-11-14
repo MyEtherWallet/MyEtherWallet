@@ -1,15 +1,21 @@
 <template>
   <div class="cx-container">
-    <b-container>
+    <div class="max-width-limit">
+      <cx-menu />
       <keep-alive>
         <router-view />
       </keep-alive>
-    </b-container>
+    </div>
   </div>
 </template>
 
 <script>
+import CxMenu from '@/containers/HeaderContainer/components/CxMenu';
+
 export default {
+  components: {
+    'cx-menu': CxMenu
+  },
   data() {
     return {};
   }
@@ -19,6 +25,11 @@ export default {
 <style lang="scss" scoped>
 .cx-container {
   background-color: #cacaca;
-  padding-top: 70px;
+  min-width: 960px;
+}
+
+.max-width-limit {
+  max-width: 1000px;
+  margin: 0 auto;
 }
 </style>

@@ -21,9 +21,6 @@
 .my-wallets-container,
 .dapps-container,
 .watch-only-container {
-  display: grid;
-  grid-template-columns: 85% 1fr;
-
   .wallets-container-header,
   .total-balance-container {
     grid-column-start: 1;
@@ -41,7 +38,7 @@
   justify-content: space-between;
 
   h2 {
-    margin: 0 15px 0 0 !important;
+    margin: 0 !important;
   }
 
   .add-button {
@@ -50,7 +47,7 @@
   }
 
   .header-title-container {
-    align-items: center;
-    display: flex;
+    //align-items: center;
+    //display: flex;
   }
 }

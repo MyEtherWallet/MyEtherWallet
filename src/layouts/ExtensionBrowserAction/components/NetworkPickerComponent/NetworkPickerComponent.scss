@@ -1,12 +1,12 @@
-@import '~@/scss/GlobalVariables';
-.dropdown-container {
-  span {
+@import "~@/scss/GlobalVariables";
+.network-picker {
+  p {
     font-size: 12px;
   }
 
   .network-text {
     color: $dark-grey-11;
-    padding-right: 15px;
+    text-align: right;
   }
 
   .current-network {

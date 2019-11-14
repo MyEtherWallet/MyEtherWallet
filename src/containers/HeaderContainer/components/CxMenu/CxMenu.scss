@@ -1,13 +1,16 @@
-@import '~@/scss/GlobalVariables';
+@import "~@/scss/GlobalVariables";
 
 .cx-menu-container {
-  box-shadow: 0 2px 13px rgba(0, 0, 0, 0.1);
+  /*
   position: fixed;
   top: 0;
   left: 0;
-  background-color: white;
-  width: 100%;
   z-index: 1;
+  width: 100%;
+  */
+  //box-shadow: 0 2px 13px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  border-bottom: 1px solid #e8e8e8;
 }
 
 a {
