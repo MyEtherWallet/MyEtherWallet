@@ -52,13 +52,11 @@
         </div>
       </div>
 
-      <div class="card-block unlock-wallet" @click="goToSave">
+      <div class="card-block unlock-wallet" @click="gotoCreate">
         <div v-show="makerActive" class="flex-col-vertical-center">
           <div class="card-content">
-            <h2 class="color-white">
-              {{ save }}
-            </h2>
-            <p class="color-white">{{ $t('home.obtainAddress') }}</p>
+            <h2 class="color-white">{{ create }}</h2>
+            <p class="color-white">{{ $t('home.accessMyWalletDesc') }}</p>
             <p class="button">
               {{ $t('home.getStarted') }}
               <img src="~@/assets/images/icons/right-arrow.png" />
@@ -77,43 +75,19 @@
     </div>
 
     <div class="grid-col-2 promo-cards">
-<!--      <div class="card-block create-wallet" @click="goToManage">-->
-<!--        <div v-show="makerActive" class="flex-col-vertical-center">-->
-<!--          <div class="card-content">-->
-<!--            <h2 class="color-white">-->
-<!--              {{ manage }}-->
-<!--            </h2>-->
-<!--            <p class="color-white">{{ $t('home.obtainAddress') }}</p>-->
-<!--            <p class="button">-->
-<!--              {{ $t('home.getStarted') }}-->
-<!--              <img src="~@/assets/images/icons/right-arrow.png" />-->
-<!--            </p>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--        <div v-show="!makerActive" class="flex-col-vertical-center">-->
-<!--          <loading-sign-->
-<!--            :loadingmessage1="loadingMessage"-->
-<!--            :loadingmessage2="$t('dappsMaker.initialLoadingTwo')"-->
-<!--          />-->
-<!--        </div>-->
-<!--      </div>-->
 
-      <div class="card-block create-wallet" @click="gotoCreate">
-        <div v-show="makerActive" class="flex-col-vertical-center">
+      <div class="card-block unlock-wallet" @click="goToSave">
+        <div class="flex-col-vertical-center">
           <div class="card-content">
-            <h2 class="color-white">{{ create }}</h2>
-            <p class="color-white">{{ $t('home.accessMyWalletDesc') }}</p>
+            <h2 class="color-white">
+              {{ save }}
+            </h2>
+            <p class="color-white">{{ $t('home.obtainAddress') }}</p>
             <p class="button">
               {{ $t('home.getStarted') }}
               <img src="~@/assets/images/icons/right-arrow.png" />
             </p>
           </div>
-        </div>
-        <div v-show="!makerActive" class="flex-col-vertical-center">
-          <loading-sign
-            :loadingmessage1="loadingMessage"
-            :loadingmessage2="$t('dappsMaker.initialLoadingTwo')"
-          />
         </div>
       </div>
     </div>
@@ -222,7 +196,11 @@ export default {
       }
     },
     goToSave(){
-
+      if (this.$route.path.includes('maker-dai')) {
+        this.$router.push({
+          name: 'save'
+        });
+      }
     },
     goToManage() {
       if (this.$route.path.includes('maker-dai')) {
