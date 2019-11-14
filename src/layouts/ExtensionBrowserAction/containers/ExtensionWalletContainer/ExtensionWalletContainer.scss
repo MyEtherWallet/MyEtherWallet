@@ -33,21 +33,21 @@
 }
 
 .wallets-container-header {
+  margin-bottom: 20px;
   align-items: center;
   display: flex;
   justify-content: space-between;
 
   h2 {
     margin: 0 !important;
+    font-size: 26px;
+    font-weight: 700;
   }
 
   .add-button {
     color: $mew-green;
     cursor: pointer;
-  }
-
-  .header-title-container {
-    //align-items: center;
-    //display: flex;
+    font-weight: 600;
+    font-size: 13px;
   }
 }
