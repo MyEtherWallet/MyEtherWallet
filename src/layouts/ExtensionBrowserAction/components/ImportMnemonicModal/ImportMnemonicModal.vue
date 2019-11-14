@@ -55,7 +55,7 @@
           </ul>
         </div>
         <div class="button-container">
-          <expanding-option :title="$t(mewCX.password)">
+          <expanding-option :title="$t('mewCX.password')">
             <div class="input-container">
               <div class="mnemonic-password-input">
                 <input
