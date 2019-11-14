@@ -29,7 +29,7 @@
     </div>
     <div :class="[showDetails ? 'add-margin' : '', 'details-container']">
       <div class="details-header-container">
-        <p>{{ $t('mewCx.details') }}</p>
+        <p>{{ $t('mewCX.details') }}</p>
         <div class="sliding-switch-white">
           <label class="switch">
             <input

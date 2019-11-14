@@ -9,7 +9,7 @@
     >
       <div class="modal-contents">
         <div class="header-container">
-          <p>{{ $t('mewCx.password') }}</p>
+          <p>{{ $t('mewCX.password') }}</p>
           <i class="fa fa-times fa-lg" @click="close" />
         </div>
         <form class="password-form">
@@ -45,7 +45,7 @@
           </button>
         </form>
         <p class="terms">
-          {{ $t('mewCx.by-entering-pw') }}
+          {{ $t('mewCX.by-entering-pw') }}
           <a
             href="https://www.myetherwallet.com/terms-and-conditions"
             target="_blank"

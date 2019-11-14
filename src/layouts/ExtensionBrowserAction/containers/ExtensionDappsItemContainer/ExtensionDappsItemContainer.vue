@@ -8,7 +8,7 @@
           <p>{{ dapp.teaser }}</p>
         </div>
         <router-link :to="`dapps/${dapp.slug}`" class="view-button" tag="div">
-          {{ $t('mewCx.view-more') }}
+          {{ $t('mewCX.view-more') }}
         </router-link>
       </div>
     </div>

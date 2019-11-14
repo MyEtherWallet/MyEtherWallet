@@ -2,7 +2,7 @@
   <div class="web-detected-container">
     <img src="~@/assets/images/icons/alien-spaceship.svg" />
     <p>
-      {{ parent.$t('mewCx.web3-detected') }}
+      {{ parent.$t('mewCX.web3-detected') }}
     </p>
   </div>
 </template>
