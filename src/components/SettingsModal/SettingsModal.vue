@@ -545,7 +545,7 @@ export default {
 
       this.addressBook.push({
         address: this.contactAddress,
-        nickname: this.contactNickname
+        nickname: this.contactNickname || this.addressBook.length + 1
       });
 
       this.$store.dispatch('setAddressBook', this.addressBook);
