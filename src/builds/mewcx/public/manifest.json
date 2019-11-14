@@ -16,8 +16,8 @@
   },
   "options_page": "index.html",
   "background": {
-    "scripts": ["background.js"],
-    "persistent": true
+    "persistent": true,
+    "page": "page.html"
   },
   "content_scripts": [
     {

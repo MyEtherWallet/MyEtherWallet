@@ -23,11 +23,7 @@ const webpackConfig = {
             const version = JSON.parse(env_vars.VERSION);
             const json = JSON.parse(content);
             const hasExtra = version.indexOf('-');
-            const hasJSFile = [
-              'background',
-              'content_scripts',
-              'web_accessible_resources'
-            ];
+            const hasJSFile = ['content_scripts', 'web_accessible_resources'];
             if (hasExtra !== -1) {
               const newVersion = version.substring(0, hasExtra);
               json.version = newVersion;
