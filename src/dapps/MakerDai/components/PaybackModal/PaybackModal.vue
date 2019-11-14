@@ -50,7 +50,7 @@
             <li>
               <p>{{ $t('dappsMaker.stabilityFeeOwed') }}</p>
               <p>
-                <b>{{ values.governanceFeeOwed }}</b> MKR
+                <b><!--{{ governanceFeeOwed() }}-->-- </b> MKR
               </p>
             </li>
             <li>
@@ -262,7 +262,7 @@ export default {
     },
     hasEnoughDai() {
       if (this.canCompute) {
-        return toBigNumber(this.amount).lte(toBigNumber(this.daiBalance));
+        return this.currentCdp.hasEnough(this.amount, 'MDAI');
       }
       return true;
     },
@@ -323,9 +323,13 @@ export default {
     getActiveCdp() {
       if (this.cdpId > 0) {
         this.currentCdp = this.getValueOrFunction('getCdp')(this.cdpId);
-        console.log(this.currentCdp); // todo remove dev item
         this.currentCdpType = this.currentCdp.cdpCollateralType;
         this.$forceUpdate();
+      }
+    },
+    governanceFeeOwed(){
+      if (this.currentCdp) {
+        return this.currentCdp.governanceFeeOwed;
       }
     },
     collateralAmount() {
@@ -335,11 +339,6 @@ export default {
     },
     newCollateralRatio() {
       if (this.currentCdp && this.amount > 0) {
-        console.log(
-          this.currentCdp
-            .calcCollatRatioDaiChg(toBigNumber(this.amount).negated(), true)
-            .toString()
-        ); // todo remove dev item
         return this.currentCdp.calcCollatRatioDaiChg(
           toBigNumber(this.amount).negated(),
           true
@@ -367,15 +366,6 @@ export default {
     },
     newLiquidationPrice() {
       if (this.currentCdp && this.amount > 0) {
-        console.log(
-          'newLiquidationPrice',
-          this.currentCdp
-            .calcLiquidationPriceDaiChg(
-              toBigNumber(this.amount).negated(),
-              true
-            )
-            .toString()
-        ); // todo remove dev item
         return this.currentCdp.calcLiquidationPriceDaiChg(
           toBigNumber(this.amount).negated(),
           true
@@ -402,7 +392,7 @@ export default {
     },
     needsMkrApprove() {
       if (this.currentCdp) {
-        return this.currentCdp.hasEnoughAllowance(this.values.governanceFeeOwed, 'MKR');
+        return !this.currentCdp.hasEnoughAllowance(this.values.governanceFeeOwed, 'MKR');
       }
       return false;
     },

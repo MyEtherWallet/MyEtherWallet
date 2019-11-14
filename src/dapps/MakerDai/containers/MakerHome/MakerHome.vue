@@ -31,14 +31,6 @@
     </div>
 
     <div class="grid-col-2 promo-cards">
-      <!--      <div v-show="!makerActive" class="card-block create-wallet">-->
-      <!--        <div class="flex-col-vertical-center">-->
-      <!--          <loading-sign-->
-      <!--            :loadingmessage1="loadingMessage"-->
-      <!--            :loadingmessage2="$t('dappsMaker.initialLoadingTwo')"-->
-      <!--          />-->
-      <!--        </div>-->
-      <!--      </div>-->
       <div class="card-block create-wallet" @click="goToManage">
         <div v-show="makerActive" class="flex-col-vertical-center">
           <div class="card-content">
@@ -60,7 +52,53 @@
         </div>
       </div>
 
-      <div class="card-block unlock-wallet" @click="gotoCreate">
+      <div class="card-block unlock-wallet" @click="goToSave">
+        <div v-show="makerActive" class="flex-col-vertical-center">
+          <div class="card-content">
+            <h2 class="color-white">
+              {{ save }}
+            </h2>
+            <p class="color-white">{{ $t('home.obtainAddress') }}</p>
+            <p class="button">
+              {{ $t('home.getStarted') }}
+              <img src="~@/assets/images/icons/right-arrow.png" />
+            </p>
+          </div>
+        </div>
+        <div v-show="!makerActive" class="flex-col-vertical-center">
+          <loading-sign
+            :loadingmessage1="loadingMessage"
+            :loadingmessage2="$t('dappsMaker.initialLoadingTwo')"
+          />
+        </div>
+      </div>
+
+
+    </div>
+
+    <div class="grid-col-2 promo-cards">
+<!--      <div class="card-block create-wallet" @click="goToManage">-->
+<!--        <div v-show="makerActive" class="flex-col-vertical-center">-->
+<!--          <div class="card-content">-->
+<!--            <h2 class="color-white">-->
+<!--              {{ manage }}-->
+<!--            </h2>-->
+<!--            <p class="color-white">{{ $t('home.obtainAddress') }}</p>-->
+<!--            <p class="button">-->
+<!--              {{ $t('home.getStarted') }}-->
+<!--              <img src="~@/assets/images/icons/right-arrow.png" />-->
+<!--            </p>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div v-show="!makerActive" class="flex-col-vertical-center">-->
+<!--          <loading-sign-->
+<!--            :loadingmessage1="loadingMessage"-->
+<!--            :loadingmessage2="$t('dappsMaker.initialLoadingTwo')"-->
+<!--          />-->
+<!--        </div>-->
+<!--      </div>-->
+
+      <div class="card-block create-wallet" @click="gotoCreate">
         <div v-show="makerActive" class="flex-col-vertical-center">
           <div class="card-content">
             <h2 class="color-white">{{ create }}</h2>
@@ -116,7 +154,8 @@ export default {
       migrateOldDai: "Migrate 'old' DAI to 'new' DAI",
       migrateOldCDP: 'Migrate Single Collateral CDP to Multi-Collateral',
       manage: 'Manage Your CDP',
-      create: 'Create a CDP'
+      create: 'Create a CDP',
+      save: 'Save'
     };
   },
   computed: {
@@ -181,6 +220,9 @@ export default {
       } else {
         this.goToManage();
       }
+    },
+    goToSave(){
+
     },
     goToManage() {
       if (this.$route.path.includes('maker-dai')) {

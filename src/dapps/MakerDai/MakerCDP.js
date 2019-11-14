@@ -7,7 +7,9 @@ import {
   maxEthDraw,
   maxDai,
   getMakerCurrencies,
-  displayFixedValue
+  displayFixedValue,
+  addresses,
+  ERC20
 } from './makerHelpers';
 import {
   ETH,
@@ -84,15 +86,17 @@ export default class MakerCDP extends MakerCdpBase {
         this.cdp = await this.services.getMakerCdp(cdpId, false);
       }
       console.log('CDP', this.cdp); // todo remove dev item
-      console.log('CDP.type.liquidationPenalty', this.cdp.type.liquidationPenalty); // todo remove dev item
-
+      console.log(
+        'CDP.type.liquidationPenalty',
+        this.cdp.type.liquidationPenalty
+      ); // todo remove dev item
     } catch (e) {
       console.error(e);
     }
     // const liqPrice = await this.cdp.getLiquidationPrice();
     // this._liqPrice = liqPrice.toBigNumber().toFixed(2);
     this.isSafe = this.cdp.isSafe;
-    // this.debtValue = (await this.cdp.getDebtValue()).toBigNumber();
+
     this._collatRatio = await this.cdp.getCollateralizationRatio();
     console.log(this._collatRatio); // todo remove dev item
     this.ethCollateral = (await this.cdp.getCollateralValue()).toBigNumber();
@@ -147,6 +151,16 @@ export default class MakerCDP extends MakerCdpBase {
     return this.services.proxyAllowances[currency];
   }
 
+  async getRawProxyAllowanceforMkr() {
+    const contract = new this.web3.eth.Contract(ERC20, addresses.MCD_GOV);
+    const result = await contract.methods
+      .allowance(this.currentAddress, this.proxyAddress)
+      .call();
+    console.log(result); // todo remove dev item
+    return result;
+    // return this.services.proxyAllowances[currency];
+  }
+
   getTokenObjectFor(currency) {
     return this.services.tokens[currency];
   }
@@ -196,14 +210,7 @@ export default class MakerCDP extends MakerCdpBase {
   calcLiquidationPriceDaiChg(daiQty, changeAmountOnly = false) {
     if (changeAmountOnly) {
       daiQty = toBigNumber(this.debtValue).plus(toBigNumber(daiQty));
-      console.log('daiQty', daiQty.toString()); // todo remove dev item
     }
-    console.log(
-      'calcLiquidationPrice',
-      toBigNumber(
-        this.calcLiquidationPrice(this.collateralAmount, daiQty)
-      ).toString()
-    ); // todo remove dev item
     return toBigNumber(
       this.calcLiquidationPrice(this.collateralAmount, daiQty)
     );
@@ -262,8 +269,16 @@ export default class MakerCDP extends MakerCdpBase {
     if (currency === 'ETH') return true;
     const _ethQty = toBigNumber(ethQty).toFixed(18);
     const currentAllowance = this.getProxyAllowancefor(currency);
-    return toBigNumber(ethUnit.toWei(_ethQty, 'ether').toString()).lte(
-      currentAllowance
+    console.log(currentAllowance.gt(_ethQty)); // todo remove dev item
+    console.log(currentAllowance.toString()); // todo remove dev item
+    console.log(
+      toBigNumber(ethUnit.toWei(_ethQty, 'ether').toString()).toString()
+    ); // todo remove dev item
+    console.log( toBigNumber(currentAllowance).gte(
+      toBigNumber(ethUnit.toWei(_ethQty, 'ether').toString())
+    )); // todo remove dev item
+    return toBigNumber(currentAllowance).gte(
+      toBigNumber(ethUnit.toWei(_ethQty, 'ether').toString())
     );
   }
 
@@ -398,11 +413,15 @@ export default class MakerCDP extends MakerCdpBase {
         return;
       }
       this.needsUpdate = true;
-      await this.cdpService.wipeDaiProxy(
-        this._proxyAddress,
-        this.cdpId,
-        amount
-      );
+      // await this.cdp.wipeDai(amount);
+      console.log(amount); // todo remove dev item
+      console.log(MDAI(amount)); // todo remove dev item
+      await this.cdp.unsafeWipe(MDAI(amount))
+      // await this.cdpService.wipeDaiProxy(
+      //   this._proxyAddress,
+      //   this.cdpId,
+      //   amount
+      // );
     } catch (e) {
       // eslint-disable-next-line
       console.error(e);
