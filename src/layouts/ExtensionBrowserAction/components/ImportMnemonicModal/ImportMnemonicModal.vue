@@ -36,7 +36,7 @@
             </div>
           </div>
           <span class="text__base link switch-label">{{
-            $t('mewCx.value')
+            $t('mewCX.value')
           }}</span>
         </div>
       </div>
@@ -55,13 +55,13 @@
           </ul>
         </div>
         <div class="button-container">
-          <expanding-option :title="$t(mewCx.password)">
+          <expanding-option :title="$t(mewCX.password)">
             <div class="input-container">
               <div class="mnemonic-password-input">
                 <input
                   v-model="locPassword"
                   :type="show ? 'text' : 'password'"
-                  :placeholder="$t('mewCx.enter-pw')"
+                  :placeholder="$t('mewCX.enter-pw')"
                 />
                 <img
                   :src="show ? showIcon : hide"

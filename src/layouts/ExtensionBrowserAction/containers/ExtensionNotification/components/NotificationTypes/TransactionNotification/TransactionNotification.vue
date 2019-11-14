@@ -37,7 +37,7 @@
           </p>
         </li>
         <li v-if="isTokenTransfer">
-          <p>{{ $t('mewCx.via-contract') }}</p>
+          <p>{{ $t('mewCX.via-contract') }}</p>
           <p>
             <a
               :href="addressLink(details.to)"
