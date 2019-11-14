@@ -9,9 +9,11 @@
       <div class="icon-block">
         <img
           :src="shouldBeActive(option.label) ? option.icon : option.inActive"
+          width="20"
+          height="20"
         />
       </div>
-      <span>
+      <span class="menu-name">
         {{ option.name }}
       </span>
     </div>
