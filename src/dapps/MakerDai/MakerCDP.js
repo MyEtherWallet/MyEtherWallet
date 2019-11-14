@@ -216,9 +216,10 @@ export default class MakerCDP {
   // Methods
   async init(cdpId = this.cdpId) {
     await this.updateValues(cdpId);
-    this._governanceFee = (
-      await this.cdpService.getGovernanceFee(this.cdpId, MKR)
-    ).toBigNumber();
+    this._governanceFee = (await this.cdpService.getGovernanceFee(
+      this.cdpId,
+      MKR
+    )).toBigNumber();
 
     this.ready = true;
     return this;
@@ -238,12 +239,12 @@ export default class MakerCDP {
     this.debtValue = (await this.cdp.getDebtValue()).toBigNumber();
     this._collatRatio = await this.cdp.getCollateralizationRatio();
     this.ethCollateral = (await this.cdp.getCollateralValue()).toBigNumber();
-    this.pethCollateral = (
-      await this.cdp.getCollateralValue(Maker.PETH)
-    ).toBigNumber();
-    this._usdCollateral = (
-      await this.cdp.getCollateralValue(Maker.USD)
-    ).toBigNumber();
+    this.pethCollateral = (await this.cdp.getCollateralValue(
+      Maker.PETH
+    )).toBigNumber();
+    this._usdCollateral = (await this.cdp.getCollateralValue(
+      Maker.USD
+    )).toBigNumber();
   }
 
   async update() {
