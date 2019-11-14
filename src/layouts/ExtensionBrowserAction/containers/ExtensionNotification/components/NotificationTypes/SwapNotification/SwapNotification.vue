@@ -46,7 +46,7 @@
           </ul>
         </li>
         <li v-if="notice.hash" class="tx-hash">
-          <p>{{ $t('header.transactionHash') }}:</p>
+          <p>{{ $t('sendTx.tx-hash') }}:</p>
         </li>
         <li v-if="notice.hash" class="tx-hash">
           <a
@@ -58,7 +58,7 @@
           </a>
         </li>
         <li v-if="isError" class="tx-info">
-          <p>{{ $t('header.errorMessage') }}:</p>
+          <p>{{ $t('common.error-message') }}:</p>
           <p>{{ errorMessage }}</p>
         </li>
         <li>
