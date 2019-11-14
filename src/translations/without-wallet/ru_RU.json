@@ -1,13 +1,13 @@
 {
-  "generateInfo": "Generate Information",
+  "generateInfo": "Сгенерировать информацию",
   "txFeeAndNonce": "Transaction Fee & Nonce",
-  "signedTx": "Signed Transaction",
+  "signedTx": "Подписанная транзакция",
   "rawTx": "Raw Transaction",
-  "txFee": "Gas Limit",
-  "nonce": "Nonce",
-  "fromAddress": "From Address",
-  "confirmAndSend": "Confirm & Send",
-  "selectNetwork": "Select Network",
-  "txDetails": "Transaction Details",
-  "txStatus": "Transaction Status"
+  "txFee": "Лимит Газа",
+  "nonce": "Nonce-Число",
+  "fromAddress": "С адреса",
+  "confirmAndSend": "Подтвердить и отправить",
+  "selectNetwork": "Выберите Сеть",
+  "txDetails": "Детали Транзакции",
+  "txStatus": "Статус Транзакции"
 }
