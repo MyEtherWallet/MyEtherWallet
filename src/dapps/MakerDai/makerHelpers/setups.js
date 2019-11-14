@@ -12,7 +12,7 @@ import {
   MKR
 } from '@makerdao/dai-plugin-mcd';
 import Maker from '@makerdao/dai';
-import { locateCdps } from '@/dapps/MakerDai/cdpManager/makerHelpers/index';
+import { locateCdps } from './locateCdps';
 import MakerCDP from '../MakerCDP';
 const { DAI } = Maker;
 const toBigNumber = num => {
@@ -65,11 +65,12 @@ export async function getDetailsForTokens(self, collateralTokens) {
       collateralTokens[i].currency.symbol
     ] = (await token.balance()).toBigNumber();
   }
-  console.log(MdaiToken); // todo remove dev item
   const token = self._tokenService.getToken(MDAI);
   self.tokens[MdaiToken.symbol] = token;
   self.balances[MdaiToken.symbol] = (await token.balance()).toBigNumber();
 
+  self.tokens['MKR'] = self.mkrToken;
+  self.tokens['DAI'] = self.daiToken;
   self.balances['DAI'] = self.daiBalance;
   self.balances['MKR'] = self.mkrBalance;
 }
@@ -88,6 +89,8 @@ export async function checkAllowances(self, address, proxyAddress) {
           typeof self.tokens[keys[i]]._contract !== 'undefined' &&
           typeof self.tokens[keys[i]]._contract.allowance === 'function'
         ) {
+          console.log(self.tokens[keys[i]]); // todo remove dev item
+
           self.proxyAllowances[keys[i]] = toBigNumber(
             await self.tokens[keys[i]]._contract.allowance(
               address,
@@ -95,6 +98,7 @@ export async function checkAllowances(self, address, proxyAddress) {
             ) // TODO likely not part of the public (stable) API
             // await self.tokens[keys[i]].allowance(address, proxyAddress) // TODO return to this to see if they fixed it
           );
+          console.log(keys[i], self.proxyAllowances[keys[i]].toString()); // todo remove dev item
         } else {
           self.proxyAllowances[keys[i]] = toBigNumber(0);
         }
@@ -172,8 +176,6 @@ export async function getValuesForManage(cdpId) {
     isSafe: false,
     governanceFeeOwed: currentCdp.governanceFeeOwed,
     ethCollateralNum: currentCdp.ethCollateralNum,
-    // proxyAllowances: this.proxyAllowances,
-    // mcdCurrencies: this.mcdCurrencies,
     zeroDebt: currentCdp.zeroDebt,
     cdpsWithType: this.cdpsWithType
   };
@@ -285,6 +287,7 @@ export async function buildCdpObject(cdpId, options = {}, useOld = false) {
   };
 
   const services = {
+    address: this.account.address,
     _typeService: this._typeService,
     _mcdManager: this._mcdManager,
     _proxyService: this._proxyService,

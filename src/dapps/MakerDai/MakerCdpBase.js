@@ -45,7 +45,7 @@ export default class MakerCdpBase {
     this.ethCollateral = toBigNumber(0);
     this.pethCollateral = toBigNumber(0);
     this._usdCollateral = toBigNumber(0);
-    this._governanceFee = toBigNumber(0);
+    this._governanceFee = toBigNumber(12345);
   }
 
   // Getters
@@ -54,7 +54,7 @@ export default class MakerCdpBase {
   }
 
   get currentAddress() {
-    return this.services.account.address;
+    return this.services.address;
   }
 
   get currentPrice() {
@@ -129,6 +129,7 @@ export default class MakerCdpBase {
   }
 
   get governanceFeeOwed() {
+    console.log(this.cdp); // todo remove dev item
     return this._governanceFee;
   }
 
