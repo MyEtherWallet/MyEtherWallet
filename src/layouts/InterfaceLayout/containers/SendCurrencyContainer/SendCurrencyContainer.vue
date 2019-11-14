@@ -141,7 +141,7 @@
             <div v-show="!isToken" class="the-form user-input">
               <p>{{ $t('sendTx.add-data') }}</p>
               <input
-                v-model="data"
+                v-model="toData"
                 :placeholder="$t('sendTx.ph-add-data')"
                 type="text"
                 autocomplete="off"
