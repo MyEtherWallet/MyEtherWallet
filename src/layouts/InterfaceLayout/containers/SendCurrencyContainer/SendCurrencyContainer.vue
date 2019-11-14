@@ -29,7 +29,7 @@
             <div class="the-form amount-number">
               <input
                 v-validate="'min_value:0'"
-                v-model="value"
+                v-model="toValue"
                 :placeholder="$t('sendTx.amount')"
                 type="number"
                 min="0"

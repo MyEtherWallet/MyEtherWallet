@@ -1,6 +1,8 @@
+### Release v5.2.3-hotfix.1
+
 ### Bug
 
-- Reset modal variable so it reopens account request [#1640](https://github.com/MyEtherWallet/MyEtherWallet/pull/1640)
+- Fix send transaction page
 
 ### Release v5.2.3
 
@@ -22,6 +24,7 @@
 - Web3 modal weird behavior [#1613](https://github.com/MyEtherWallet/MyEtherWallet/pull/1613)
 - Fix sentry error on user login [#1615](https://github.com/MyEtherWallet/MyEtherWallet/pull/1615)
 - Send Offline Helper export actual data [#1637](https://github.com/MyEtherWallet/MyEtherWallet/pull/1637)
+- Reset modal variable so it reopens account request [#1640](https://github.com/MyEtherWallet/MyEtherWallet/pull/1640)
 
 ### Release v5.2.2
 
