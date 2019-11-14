@@ -113,7 +113,7 @@
           Details
         </div>
         <div class="clickable" @click="edit">Edit</div>
-        <div class="clickable d-block d-xl-none" @click="viewAllTokens(true)">
+        <div v-if="false" class="clickable" @click="viewAllTokens(true)">
           View Tokens
         </div>
       </div>
@@ -126,16 +126,19 @@
               <blockie :address="address" width="50px" height="50px" />
             </div>
             <div class="actual-address">
-              <p>Address</p>
+              <div class="d-flex address-title">
+                <p>Address</p>
+                <div class="copy-button">
+                  <p @click="copyAddress">Copy</p>
+                </div>
+              </div>
+
               <p class="d-none d-xl-block address-value">{{ address }}</p>
               <p class="d-block d-xl-none address-value">
                 {{ address | concatAddress }}
               </p>
               <input ref="addressInput" :value="address" />
             </div>
-          </div>
-          <div class="copy-button">
-            <p @click="copyAddress">Copy</p>
           </div>
         </div>
         <div class="balance-container">
@@ -150,7 +153,7 @@
           </div>
         </div>
       </div>
-      <div class="tokens-container d-none d-xl-block">
+      <div class="tokens-container">
         <div class="tokens-header">
           <p>
             Tokens

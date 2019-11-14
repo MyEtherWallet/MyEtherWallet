@@ -1,4 +1,5 @@
 @import '~@/scss/GlobalVariables';
+
 .network-picker {
   p {
     font-size: 12px;
@@ -7,6 +8,7 @@
   .network-text {
     color: $dark-grey-11;
     text-align: right;
+    font-weight: 600;
   }
 
   .current-network {
@@ -14,6 +16,7 @@
     border: 1px solid $light-grey-8;
     border-radius: 5px;
     cursor: pointer;
-    padding: 10px;
+    padding: 10px 20px;
+    font-weight: 600;
   }
 }

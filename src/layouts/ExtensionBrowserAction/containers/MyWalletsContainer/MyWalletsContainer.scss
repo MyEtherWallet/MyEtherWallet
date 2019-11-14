@@ -6,8 +6,8 @@
   border-radius: 5px;
   display: flex;
   justify-content: space-between;
-  margin-top: 10px;
-  padding: 15px;
+  margin-bottom: 10px;
+  padding: 15px 30px;
   width: 100%;
 
   .title-name {
@@ -29,6 +29,7 @@
     .converted-balance {
       color: $light-blue-2;
       text-align: right;
+      font-weight: 600;
     }
   }
 }

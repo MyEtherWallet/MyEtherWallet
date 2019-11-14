@@ -1,7 +1,12 @@
 @import '~@/scss/GlobalVariables';
 
+.d-flex {
+  display: flex;
+  align-items: center;
+}
+
 .wallet-info-container {
-  padding-top: 20px;
+  padding-bottom: 20px;
   width: 100%;
 
   .nickname-and-buttons {
@@ -11,17 +16,20 @@
     border-top-right-radius: 5px;
     display: flex;
     justify-content: space-between;
-    padding: 10px;
+    padding: 10px 10px;
 
     p {
       color: $white !important;
-      font-weight: 500;
+      font-weight: 600;
+      font-size: 18px;
+      padding: 0 10px;
     }
 
     .button-container {
       display: flex;
 
       .clickable {
+        font-size: 13px;
         color: $white;
         cursor: pointer;
         padding: 5px 15px;
@@ -36,34 +44,51 @@
     .address-and-balance-container {
       border-bottom-left-radius: 5px;
       border-bottom-right-radius: 5px;
+      padding: 15px;
       display: flex;
-      flex: auto;
       flex-direction: column;
       justify-content: space-between;
-      min-height: 250px;
-      padding: 15px;
 
       .address-content-container {
         display: flex;
         justify-content: space-between;
-        padding: 30px;
+        padding: 20px;
 
         .address-info {
           display: flex;
+          width: 100%;
 
           .actual-address {
-            margin-left: 10px;
+            margin-left: 20px;
+            flex-grow: 1;
 
             .address-value {
               word-break: break-all;
+              font-family: Courier, Monaco, monospace;
             }
 
             p {
-              font-size: 17px;
-              padding: 5px;
+              font-size: 14px;
 
               &:first-child {
+                font-size: 17px;
                 font-weight: bold;
+              }
+            }
+
+            .address-title {
+              margin-bottom: 10px;
+
+              .copy-button {
+                margin-left: auto;
+
+                p {
+                  color: $mew-green;
+                  cursor: pointer;
+                  font-size: 13px;
+                  font-weight: 600;
+                  text-transform: uppercase;
+                }
               }
             }
 
@@ -71,14 +96,6 @@
               position: absolute;
               opacity: 0;
             }
-          }
-        }
-
-        .copy-button {
-          p {
-            color: $mew-green;
-            cursor: pointer;
-            font-size: 17px;
           }
         }
       }
@@ -89,7 +106,7 @@
         border-radius: 5px;
         display: flex;
         justify-content: space-between;
-        padding: 15px 20px;
+        padding: 15px 30px;
 
         p {
           font-weight: bold;
@@ -107,14 +124,15 @@
 
         .dollar-balance {
           color: $light-blue-2;
-          font-weight: normal;
           text-align: right;
+          font-size: 12px;
+          font-weight: 600;
         }
       }
     }
 
     .tokens-container {
-      border-left: 1px solid $dark-grey-11;
+      border-left: 5px solid #f2f4fa;
       flex: auto;
       max-width: 350px;
       min-width: 225px;
@@ -155,7 +173,12 @@
           align-items: center;
           display: flex;
           justify-content: space-between;
-          padding: 7px 10px;
+          padding: 0 10px;
+
+          p {
+            font-family: Courier, Monaco, monospace;
+            font-size: 12px;
+          }
 
           .balance-container {
             align-items: center;
@@ -182,7 +205,7 @@
 }
 
 .token-search-container {
-  padding: 5px 0;
+  padding: 0 0 5px 0;
   position: relative;
 
   input {
@@ -195,7 +218,7 @@
   i {
     left: 10px;
     position: absolute;
-    top: 13px;
+    top: 8px;
   }
 }
 
