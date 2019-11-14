@@ -1,22 +1,28 @@
-@import '~@/scss/GlobalVariables';
+@import "~@/scss/GlobalVariables";
 .wallet-side-menu {
   background-color: $white;
   height: 100%;
-  min-height: 600px;
-  padding-top: 50px;
-  width: 100%;
+  width: 70px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 
   .wallet-menu {
     align-items: center;
     color: $light-grey-10;
     cursor: pointer;
     display: flex;
-    padding: 20px 30px;
+    //padding: 20px 30px;
 
     img {
       margin-right: 20px;
     }
   }
+}
+
+.icon-block {
+  height: 50px;
+  width: 50px;
 }
 
 .active {
