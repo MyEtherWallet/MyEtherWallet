@@ -1,6 +1,6 @@
 ### Bug
 
-- Fix dashboard dapps []()
+- Fix dashboard dapps [#1650](https://github.com/MyEtherWallet/MyEtherWallet/pull/1650)
 
 ### Release v5.2.3-hotfix.1
 
