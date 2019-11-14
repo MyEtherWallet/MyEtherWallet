@@ -1,3 +1,7 @@
+### Devop
+
+- Update translations[#1651](https://github.com/MyEtherWallet/MyEtherWallet/pull/1651)
+
 ### Bug
 
 - Reset modal variable so it reopens account request [#1640](https://github.com/MyEtherWallet/MyEtherWallet/pull/1640)
