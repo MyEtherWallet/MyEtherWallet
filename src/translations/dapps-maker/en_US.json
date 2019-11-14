@@ -88,7 +88,6 @@
   "what-is-dashes": "A value of -- indicates this CDP has no DAI so these calculations are only meaningful if this CDP has created DAI",
   "mkr": "MKR",
   "dai": "DAI",
-  "peth": "PETH",
   "maker-dai": "Maker Dai",
   "cdp": "CDP"
 }

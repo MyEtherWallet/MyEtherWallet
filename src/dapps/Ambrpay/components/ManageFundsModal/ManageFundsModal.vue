@@ -49,9 +49,7 @@
             class="mew-btn mt-4 mb-4"
             @click="onClick()"
           >
-            {{
-              actionStep ? manageFundsText : $t('common.ok')
-            }}
+            {{ actionStep ? manageFundsText : $t('common.ok') }}
           </button>
         </div>
       </div>

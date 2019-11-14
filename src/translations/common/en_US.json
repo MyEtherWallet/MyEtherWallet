@@ -141,11 +141,6 @@
   "to": "To",
   "ok": "OK",
   "buy-eth": "Buy ETH",
-  "header": {
-    "new-wallet": "New Wallet",
-    "access": "Access",
-    "ethplorer": "Ethplorer"
-  },
   "security": "Security",
   "status": "Status",
   "time": "Time",
