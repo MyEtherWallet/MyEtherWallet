@@ -52,7 +52,6 @@ export default async (
           setEvents(_promiObj, _tx, store.dispatch);
           _promiObj
             .once('transactionHash', hash => {
-              console.log(toPayload(payload.id, hash));
               res(null, toPayload(payload.id, hash));
             })
             .on('error', err => {
