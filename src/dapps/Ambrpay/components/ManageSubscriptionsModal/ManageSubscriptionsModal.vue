@@ -64,7 +64,7 @@
             <div class="info-row">
               <span class="info-title">{{ $t('dappsAmbrpay.amount') }}</span
               ><span class="info-txt"
-                >{{ sub.price }} {{ $t('dappsAmbrpay.eth') }}</span
+                >{{ sub.price }} {{ $t('common.currency.eth') }}</span
               >
             </div>
             <div v-show="moreInfo" class="more-info-container">

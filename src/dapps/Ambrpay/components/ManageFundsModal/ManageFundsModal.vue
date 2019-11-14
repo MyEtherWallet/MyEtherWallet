@@ -15,7 +15,7 @@
           }}</span>
           <div>
             <p class="funds-txt">
-              {{ availableBalanceEth }} {{ $t('dappsAmbrpay.eth') }}
+              {{ availableBalanceEth }} {{ $t('common.currency.eth') }}
             </p>
             <p class="text-right">${{ availableBalanceUsd }}</p>
           </div>
@@ -26,7 +26,7 @@
             {{ $t('dappsAmbrpay.manage-funds.how-much-eth') }}
             <span class="action-txt"> {{ manageFundsText }}? </span>
           </p>
-          <span class="eth-text">{{ $t('dappsAmbrpay.eth') }}</span>
+          <span class="eth-text">{{ $t('common.currency.eth') }}</span>
           <input v-model="ethAmount" class="mt-3" type="number" />
           <p v-show="errMsg" class="err-msg pl-2">{{ errMsg }}</p>
         </div>
@@ -50,7 +50,7 @@
             @click="onClick()"
           >
             {{
-              actionStep ? manageFundsText : $t('dappsAmbrpay.manage-funds.ok')
+              actionStep ? manageFundsText : $t('common.ok')
             }}
           </button>
         </div>
