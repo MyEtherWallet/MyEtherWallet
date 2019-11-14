@@ -19,5 +19,6 @@ export default {
 <style lang="scss" scoped>
 .cx-container {
   background-color: #cacaca;
+  padding-top: 70px;
 }
 </style>

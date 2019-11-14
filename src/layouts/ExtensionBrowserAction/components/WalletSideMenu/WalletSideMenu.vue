@@ -6,9 +6,11 @@
       :class="[shouldBeActive(option.label) ? 'active' : '', 'wallet-menu']"
       @click="navigateTo(option.path)"
     >
-      <img
-        :src="shouldBeActive(option.label) ? option.icon : option.inActive"
-      />
+      <div class="icon-block">
+        <img
+          :src="shouldBeActive(option.label) ? option.icon : option.inActive"
+        />
+      </div>
       <span>
         {{ option.name }}
       </span>
