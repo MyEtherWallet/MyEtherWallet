@@ -45,8 +45,6 @@
   "mnemonic": {
     "title-tab": "By Mnemonic Phrase",
     "random": "Random",
-    "passMnem": "Password + Mnemonic Phrase",
-    "passMnemDesc": "to unlock your wallet.",
     "button-wrote-it-down": "I Wrote Down My Mnemonic Phrase",
     "warning": {
       "write-down": "Write Down Mnemonic Phrase Key",

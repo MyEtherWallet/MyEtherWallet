@@ -47,7 +47,7 @@
                         class="no-icon"
                       >
                         <p>{{ $t('common.no') }}</p>
-                        <p>{{ $t('common.uppercase-icon') }}</p>
+                        <p>{{ $t('common.icon') }}</p>
                       </div>
                     </div>
                     <p>{{ key }}</p>
@@ -108,7 +108,7 @@
                   >
                   <span class="detail-text"
                     >{{ toGwei(genInfo.gasPrice) }}
-                    {{ $t('common.gas.uppercase-gwei') }}</span
+                    {{ $t('common.gas.gwei') }}</span
                   >
                 </li>
                 <li class="detail-container">
@@ -262,7 +262,7 @@
                 <span class="detail-name">{{ $t('common.gas.price') }}:</span>
                 <span class="detail-text"
                   >{{ toGwei(gasPrice) }}
-                  {{ $t('common.gas.uppercase-gwei') }}</span
+                  {{ $t('common.gas.gwei') }}</span
                 >
               </li>
               <li class="detail-container">

@@ -4,7 +4,7 @@
       <div class="subscription-form-container">
         <b-container>
           <b-row>
-            <span class="label-text">{{ $t('dappsAmbrpay.to-address') }}</span>
+            <span class="label-text">{{ $t('sendTx.to-addr') }}</span>
             <p
               class="action-text prevent-user-select copy-text"
               @click="copyToClipboard"
@@ -43,25 +43,25 @@
           </b-row>
           <b-row>
             <b-col class="mt-3" cols="12" md="5">
-              <span class="label-text">{{ $t('dappsAmbrpay.type') }}</span>
+              <span class="label-text">{{ $t('sendTx.type') }}</span>
               <div class="fake-input">
                 <p>
                   <img
                     class="currency-icon"
                     src="@/assets/images/currency/eth.svg"
                   />
-                  <span class="token-txt">{{ $t('dappsAmbrpay.eth') }}</span
-                  >-{{ $t('dappsAmbrpay.ethereum') }}
+                  <span class="token-txt">{{ $t('common.currency.eth') }}</span
+                  >-{{ $t('common.currency.ethereum') }}
                 </p>
               </div>
             </b-col>
             <b-col class="amount-container mt-3" cols="12" md="7">
               <div class="amount-text">
-                <span class="label-text">{{ $t('dappsAmbrpay.amount') }}</span>
+                <span class="label-text">{{ $t('sendTx.amount') }}</span>
                 <span
                   class="action-text entire-balance"
                   @click="sendEntireBalance"
-                  >{{ $t('dappsAmbrpay.entire-balance') }}</span
+                  >{{ $t('sendTx.button-entire') }}</span
                 >
               </div>
               <input

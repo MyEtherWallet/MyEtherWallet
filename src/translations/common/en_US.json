@@ -36,7 +36,7 @@
     "send-us-feedback": "If you want to send us your feedback, please use",
     "feedback-title": "Feedback / Customer Support"
   },
-  "uppercase-icon": "Icon",
+  "icon": "Icon",
   "currency": {
     "eth": "ETH",
     "btc": "BTC",
@@ -67,7 +67,7 @@
     "unlock": "Unlock Wallet",
     "do-not-have": "Do not have a wallet?",
     "passphrase": "Passphrase",
-    "s-wallet": "s wallet"
+    "own": "{nickname}'s wallet"
   },
   "mewconnect": {
     "string": "MEWconnect",
@@ -113,9 +113,8 @@
     "total": "Total Balance"
   },
   "notifications": {
-    "no-notifications": ">No notifications found :(",
-    "notification-singular": "Notification",
-    "string": "Notifications"
+    "no-notifications": "No notifications found :(",
+    "title": "Notification | Notifications"
   },
   "advanced": "Advanced",
   "chain-id": "Chain ID",
@@ -130,11 +129,10 @@
     "current-gas": "Current Gas Price",
     "limit": "Gas Limit",
     "price": "Gas Price",
-    "gwei": "gwei",
-    "uppercase-gwei": "Gwei",
-    "wei": "wei",
+    "gwei": "Gwei",
+    "wei": "Wei",
     "fee": "Fee",
-    "uppercase-string": "Gas"
+    "string": "Gas"
   },
   "search": "Search",
   "loading": "Loading",

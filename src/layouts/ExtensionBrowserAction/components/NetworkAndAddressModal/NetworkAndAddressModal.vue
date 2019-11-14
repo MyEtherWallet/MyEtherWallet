@@ -42,7 +42,7 @@
                     />
                     <div v-else class="no-icon">
                       <p>{{ $t('common.no') }}</p>
-                      <p>{{ $t('common.uppercase-icon') }}</p>
+                      <p>{{ $t('common.icon') }}</p>
                     </div>
                   </div>
                   <p>{{ key }}</p>
