@@ -1,20 +1,23 @@
 <template>
   <div class="cx-container">
     <div class="max-width-limit">
-      <cx-menu />
+      <cx-header />
       <keep-alive>
         <router-view />
       </keep-alive>
+      <cx-footer />
     </div>
   </div>
 </template>
 
 <script>
-import CxMenu from '@/containers/HeaderContainer/components/CxMenu';
+import CxHeader from '@/layouts/ExtensionBrowserAction/components/CxHeader';
+import CxFooter from '@/layouts/ExtensionBrowserAction/components/CxFooter';
 
 export default {
   components: {
-    'cx-menu': CxMenu
+    'cx-header': CxHeader,
+    'cx-footer': CxFooter
   },
   data() {
     return {};
@@ -29,7 +32,7 @@ export default {
 }
 
 .max-width-limit {
-  max-width: 1000px;
+  max-width: 1024px;
   margin: 0 auto;
 }
 </style>

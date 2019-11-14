@@ -1,9 +1,9 @@
 <template>
-  <div v-if="!isMewCx" class="footer">
+  <div class="footer">
     <!-- Modal -->
     <feedback-modal />
     <div class="wrap">
-      <div class="page-container">
+      <div>
         <div class="grid-col-1-1-1-2 footer-contents">
           <div
             v-for="(item, index) in footerContent"
@@ -327,7 +327,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'FooterContainer-desktop.scss';
-@import 'FooterContainer-tablet.scss';
-@import 'FooterContainer-mobile.scss';
+@import 'CxFooter.scss';
 </style>
