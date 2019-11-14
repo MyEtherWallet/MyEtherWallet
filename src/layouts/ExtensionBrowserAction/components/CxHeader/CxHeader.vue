@@ -55,5 +55,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'CxMenu.scss';
+@import 'CxHeader.scss';
 </style>

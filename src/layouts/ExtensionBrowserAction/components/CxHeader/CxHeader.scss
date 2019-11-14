@@ -1,4 +1,8 @@
-@import "~@/scss/GlobalVariables";
+@import '~@/scss/GlobalVariables';
+
+.cx-menu {
+  padding: 10px 20px 10px 10px;
+}
 
 .cx-menu-container {
   /*
@@ -49,8 +53,4 @@ a {
 
 .spacer {
   margin: 0 auto;
-}
-
-.cx-menu {
-  padding: 10px 10px;
 }
