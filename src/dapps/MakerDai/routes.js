@@ -6,6 +6,7 @@ const SelectCDP = () => import('./containers/SelectCDP');
 const ProxyMigrateCDP = () => import('./containers/ProxyMigrateCDP');
 const migrateDAI = () => import('./containers/MigrateDai');
 const migrateCDP = () => import('./containers/MigrateCDP');
+const MakerSave = () => import('./containers/MakerSave');
 
 const MakerLoading = () => import('./containers/MakerLoading');
 
@@ -60,6 +61,12 @@ export default {
       path: 'migrate/:cdpId',
       name: 'migrate',
       component: ProxyMigrateCDP,
+      props: true
+    },
+    {
+      path: 'save',
+      name: 'save',
+      component: MakerSave,
       props: true
     }
   ]
