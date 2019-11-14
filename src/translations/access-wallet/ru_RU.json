@@ -1,10 +1,10 @@
 {
   "mewconnect": {
-    "option-text": "Use MEWconnect to access my wallet",
+    "option-text": "Использовать MEW Connect для доступа к моему кошельку",
     "modal": {
-      "title": "Access by MEWconnect",
-      "text1": "Please use MEWconnect App to scan the QR code above",
-      "text2": "Don't have the App? Download now."
+      "title": "Доступ с помощью MEWconnect",
+      "text1": "Используйте приложение MEWconnect для сканирования указанного выше QR-кода",
+      "text2": "Нет приложения? Загрузите сейчас."
     },
     "warning": "MEWconnect is not compatible with iPads."
   },
