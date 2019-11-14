@@ -1,3 +1,7 @@
+### Bug
+
+- Fix dashboard dapps []()
+
 ### Release v5.2.3-hotfix.1
 
 ### Bug

@@ -180,21 +180,16 @@ export default {
     ...mapState(['account', 'web3', 'network', 'online']),
     sortedObject() {
       const arrayedDapp = [];
+      const actualReturnedDapp = [];
       Object.keys(dapps).forEach(dapp => {
+        if (dapp === 'manageEns' || dapp === 'maker') actualReturnedDapp.push(dapps[dapp]);
         arrayedDapp.push(dapps[dapp]);
       });
-      return arrayedDapp
-        .sort((a, b) => {
-          return new Date(b.releaseDate) - new Date(a.releaseDate);
-        })
-        .sort((a, b) => {
-          if (
-            a.supportedNetworks.includes(this.network.type.name) ||
-            b.supportedNetworks.includes(this.network.type.name)
-          )
-            return 1;
-          return 0;
-        });
+      const newestDapp = arrayedDapp.sort((a, b) => {
+        return new Date(b.releaseDate) - new Date(a.releaseDate);
+      })[0];
+      actualReturnedDapp.push(newestDapp);
+      return actualReturnedDapp;
     },
     isOnlineAndEth() {
       return this.online && this.network.type.name === 'ETH';
