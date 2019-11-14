@@ -14,6 +14,7 @@ import {
 import BigNumber from 'bignumber.js';
 
 const addNotification = function({ commit, state }, val) {
+  console.log('here');
   let address;
 
   if (val[1] != undefined) {
