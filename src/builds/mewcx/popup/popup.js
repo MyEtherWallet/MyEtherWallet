@@ -8,14 +8,18 @@ import 'bootstrap-vue/dist/bootstrap-vue.css';
 import(/* webpackPreload: true */ '@/assets/font-awesome.css');
 import(/* webpackPreload: true */ '@/assets/google-fonts.css');
 
-import ExtensionWeb3Popup from '@/layouts/ExtensionWeb3Popup';
-import Web3DetectedContainer from '@/layouts/ExtensionWeb3Popup/containers/Web3DetectedContainer';
-import AccountAccessContainer from '@/layouts/ExtensionWeb3Popup/containers/AccountAccessContainer';
-import SignTxContainer from '@/layouts/ExtensionWeb3Popup/containers/SignTxContainer';
-import SignMsgContainer from '@/layouts/ExtensionWeb3Popup/containers/SignMsgContainer';
+const ExtensionWeb3Popup = () => import('@/layouts/ExtensionWeb3Popup');
+const Web3DetectedContainer = () =>
+  import('@/layouts/ExtensionWeb3Popup/containers/Web3DetectedContainer');
+const AccountAccessContainer = () =>
+  import('@/layouts/ExtensionWeb3Popup/containers/AccountAccessContainer');
+const SignTxContainer = () =>
+  import('@/layouts/ExtensionWeb3Popup/containers/SignTxContainer');
+const SignMsgContainer = () =>
+  import('@/layouts/ExtensionWeb3Popup/containers/SignMsgContainer');
 import { Misc, ExtensionHelpers } from '@/helpers';
 import { isAddress } from '@/helpers/addressUtils';
-import app from './app';
+const app = () => import('./app');
 import { getMode } from '@/builds/configs';
 
 import Vue from 'vue';

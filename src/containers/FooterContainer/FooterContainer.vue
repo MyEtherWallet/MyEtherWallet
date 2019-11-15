@@ -293,6 +293,12 @@ export default {
           if (item.to !== '/#about-mew' && item.to !== '/#faqs') return item;
         }
       );
+    } else {
+      this.footerContent[0].contents = this.footerContent[0].contents.filter(
+        item => {
+          if (item.to !== '/view-wallet-info') return item;
+        }
+      );
     }
   },
   methods: {
