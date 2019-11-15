@@ -5,6 +5,7 @@
 ### Bug
 
 - Fix MEWCX PromiEvent [#1646](https://github.com/MyEtherWallet/MyEtherWallet/pull/1646)
+- Fix MEWCX mobile ui [#1657](https://github.com/MyEtherWallet/MyEtherWallet/pull/1657)
 
 ### Release v5.2.3-hotfix.1
 
