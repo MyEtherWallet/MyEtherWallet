@@ -74,17 +74,6 @@ const webpackConfig = {
     }
   }
 };
-if (process.env.NODE_ENV === 'production') {
-  webpackConfig.plugins.push(
-    new UnusedFilesWebpackPlugin({
-      patterns: ['src/**/*.*'],
-      failOnUnused: true,
-      globOptions: {
-        ignore: []
-      }
-    })
-  );
-}
 const pwa = {
   name: 'MyEtherWallet',
   workboxOptions: {
