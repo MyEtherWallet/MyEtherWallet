@@ -52,14 +52,9 @@
 </template>
 
 <script>
-import { Toast } from '@/helpers';
+import { Toast, Misc } from '@/helpers';
 import { mapState } from 'vuex';
-import {
-  toBuffer,
-  hashPersonalMessage,
-  ecrecover,
-  pubToAddress
-} from 'ethereumjs-util';
+import { hashPersonalMessage, ecrecover, pubToAddress } from 'ethereumjs-util';
 
 export default {
   props: {
@@ -98,7 +93,7 @@ export default {
     verifyMessage() {
       try {
         const json = JSON.parse(this.message);
-        let hash = hashPersonalMessage(toBuffer(json.msg));
+        let hash = hashPersonalMessage(Misc.toBuffer(json.msg));
         const sig = Buffer.from(json.sig.replace('0x', ''), 'hex');
         if (sig.length !== 65) {
           Toast.responseHandler(
