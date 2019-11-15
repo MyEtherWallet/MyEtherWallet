@@ -211,7 +211,6 @@ import GenerateModal from './components/GenerateModal';
 import DepositModal from './components/DepositModal';
 import WithdrawModal from './components/WithdrawModal';
 import PaybackModal from './components/PaybackModal';
-import BigNumber from 'bignumber.js';
 import Maker from '@makerdao/dai';
 import McdPlugin, {
   ETH,
@@ -243,7 +242,9 @@ import {
   loadCdpDetails,
   buildEmpty,
   loadCdpDetail,
-  doUpdate
+  doUpdate,
+  toBigNumber,
+  ProxyContract
 } from './makerHelpers';
 
 import MewPlugin from 'mew-maker-plugin';
@@ -251,10 +252,6 @@ import { GetCdps, ProxyRegistry, CdpManager } from './makerHelpers';
 import addresses from './makerHelpers/addresses';
 
 const { DAI } = Maker;
-
-const toBigNumber = num => {
-  return new BigNumber(num);
-};
 
 const bnOver = (one, two, three) => {
   return toBigNumber(one)
@@ -686,20 +683,27 @@ export default {
       await doUpdate(this, Toast);
 
     },
-
+    async generateProxyTx(address, abi){
+      new this.web3.eth.Contract(
+        ProxyContract,
+        this.proxyAddress
+      ).methods
+        .execute(
+          addresses.MIGRATION_PROXY_ACTIONS,
+          this.fixImproperEncoding(
+            new this.web3.eth.Contract(MigrationProxyActions).methods
+              .migrate(
+                addresses.MIGRATION,
+                '0x' + toBigNumber(cdpId).toString(16)
+              )
+              .encodeABI(),
+            cdpId
+          )
+        )
+        .encodeABI()
+    },
     async checkAllowances() {
       await checkAllowances(this, this.account.address, this.proxyAddress);
-      if (this.proxyAddress) {
-        // this._proxyAllowanceDai = (await this.tokens['DAI'].allowance(
-        //   this.account.address,
-        //   this.proxyAddress
-        // )).toBigNumber();
-        //
-        // this._proxyAllowanceMkr = (await this.tokens['MKR'].allowance(
-        //   this.account.address,
-        //   this.proxyAddress
-        // )).toBigNumber();
-      }
     },
     async checkBalances(){
       await getDetailsForTokens(this, this._typeService.cdpTypes);

@@ -113,12 +113,8 @@ import ExpandingOption from '@/components/ExpandingOption';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
 import CheckBox from '../CheckBox';
 import BigNumber from 'bignumber.js/bignumber.js';
-import { displayFixedValue, displayPercentValue } from '../../helpers';
+import { displayFixedValue, displayPercentValue, toBigNumber } from '../../makerHelpers';
 import StandardButton from '@/components/Buttons/StandardButton';
-
-const toBigNumber = num => {
-  return new BigNumber(num);
-};
 
 export default {
   components: {
