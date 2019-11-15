@@ -5,19 +5,19 @@
       <router-view />
     </v-content>
     <FooterContainer />
+    <GlobalElementsContainer />
   </v-app>
 </template>
 
 <script>
 import HeaderContainer from '@/containers/HeaderContainer';
 import FooterContainer from '@/containers/FooterContainer';
+import GlobalElementsContainer from '@/containers/GlobalElementsContainer';
 
 export default {
   name: 'App',
-  components: { HeaderContainer, FooterContainer },
-  data: () => ({
-    //
-  })
+  components: { HeaderContainer, FooterContainer, GlobalElementsContainer },
+  data: () => ({})
 };
 </script>
 
