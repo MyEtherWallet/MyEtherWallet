@@ -2,14 +2,22 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const env_vars = require('../ENV_VARS');
 const path = require('path');
 const defaultConfig = require('./defaultConfigs');
-const webpackConfig = {
+const webpackConfigCXWeb3 = {
   devtool: 'source-map',
   entry: {
-    app: './src/main.js',
+    cxWeb3: './src/builds/mewcx/cxHelpers/cxWeb3.js',
     contentScript: './src/builds/mewcx/cxHelpers/contentScript.js',
-    background: './src/builds/mewcx/cxHelpers/background.js',
-    cxWeb3: './src/builds/mewcx/cxHelpers/cxWeb3.js'
+    background: './src/builds/mewcx/cxHelpers/background.js'
   },
+  node: {
+    process: true
+  },
+  optimization: {
+    splitChunks: false
+  }
+};
+const webpackConfig = {
+  devtool: 'source-map',
   node: {
     process: true
   },
@@ -63,11 +71,14 @@ const webpackConfig = {
         }
       }
     ])
-  ]),
-  optimization: {
-    splitChunks: false
-  }
+  ])
 };
+const pluginOptions = {
+  configureMultiCompilerWebpack: [webpackConfigCXWeb3, webpackConfig]
+};
+if (process.env.NODE_ENV !== 'production') {
+  webpackConfig.entry = webpackConfigCXWeb3.entry;
+}
 const exportObj = {
   pages: {
     index: {
@@ -78,21 +89,19 @@ const exportObj = {
     browserAction: {
       entry: 'src/builds/mewcx/browserAction/browserAction.js',
       template: 'public/index.html',
-      filename: 'browserAction.html',
-      chunks: ['browserAction']
+      filename: 'browserAction.html'
     },
     popup: {
       entry: 'src/builds/mewcx/popup/popup.js',
       template: 'public/index.html',
-      filename: 'popup.html',
-      chunks: ['popup']
+      filename: 'popup.html'
     }
   },
   publicPath: './',
   configureWebpack: webpackConfig,
   lintOnSave: process.env.NODE_ENV === 'production' ? 'error' : true,
   integrity: true,
-  pwa: defaultConfig.pwa,
+  pluginOptions,
   outputDir: path.resolve(__dirname, '../', 'chrome-extension'),
   filenameHashing: false,
   productionSourceMap: false,

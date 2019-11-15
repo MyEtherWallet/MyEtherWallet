@@ -144,6 +144,7 @@
     "web3-core-requestmanager": "1.2.1",
     "web3-utils": "1.2.1",
     "webpack": "4.41.2",
+    "webpack-merge": "4.2.2",
     "worker-loader": "2.0.0",
     "zxcvbn": "4.4.2"
   },
@@ -172,6 +173,11 @@
       "@vue/cli-plugin-pwa",
       "@vue/cli-plugin-unit-jest",
       "@vue/cli-service"
+    ]
+  },
+  "vuePlugins": {
+    "service": [
+      "./vueConfig/multiCompiler.js"
     ]
   }
 }
