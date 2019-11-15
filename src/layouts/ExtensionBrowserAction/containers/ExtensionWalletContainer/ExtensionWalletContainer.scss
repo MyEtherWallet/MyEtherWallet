@@ -21,6 +21,8 @@
 .my-wallets-container,
 .dapps-container,
 .watch-only-container {
+  max-width: 1024px;
+
   .wallets-container-header,
   .total-balance-container {
     grid-column-start: 1;
