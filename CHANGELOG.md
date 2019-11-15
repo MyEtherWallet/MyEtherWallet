@@ -6,6 +6,7 @@
 
 ### Bug
 
+- Fix toBuffer [#1658](https://github.com/MyEtherWallet/MyEtherWallet/pull/1658)
 - Fix dashboard dapps [#1650](https://github.com/MyEtherWallet/MyEtherWallet/pull/1650)
 - Fix MEWCX PromiEvent [#1646](https://github.com/MyEtherWallet/MyEtherWallet/pull/1646)
 
