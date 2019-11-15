@@ -35,7 +35,6 @@ const SignMessageContainer = () =>
 const VerifyMessageContainer = () =>
   import('@/layouts/InterfaceLayout/containers/VerifyMessageContainer');
 const HardwaresLayout = () => import('@/layouts/HardwaresLayout');
-const ViewWalletInfoLayout = () => import('@/layouts/ViewWalletInfoLayout');
 const PhishingCatcherLayout = () => import('@/layouts/PhishingCatcherLayout');
 const DashboardContainer = () =>
   import('@/layouts/InterfaceLayout/containers/DashboardContainer');
@@ -132,11 +131,6 @@ const router = [
     name: '404',
     component: NotFoundLayout,
     meta: { requiresAuth: false }
-  },
-  {
-    path: '/view-wallet-info',
-    name: 'ViewWalletInfoLayout',
-    component: ViewWalletInfoLayout
   },
   {
     path: '/interface',

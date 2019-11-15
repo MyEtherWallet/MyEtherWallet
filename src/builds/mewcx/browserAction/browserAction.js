@@ -8,8 +8,8 @@ import 'bootstrap-vue/dist/bootstrap-vue.css';
 import(/* webpackPreload: true */ '@/assets/font-awesome.css');
 import(/* webpackPreload: true */ '@/assets/google-fonts.css');
 
-import ExtensionPopup from '@/layouts/ExtensionPopup';
-import app from './app';
+const ExtensionPopup = () => import('@/layouts/ExtensionPopup');
+const app = () => import('./app');
 import { getMode } from '@/builds/configs';
 
 import Vue from 'vue';
