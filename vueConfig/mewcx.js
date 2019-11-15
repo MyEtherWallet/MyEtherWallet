@@ -95,12 +95,9 @@ const webpackConfig = {
       }
     ])
   ])
-<<<<<<< HEAD
 };
 const pluginOptions = {
   configureMultiCompilerWebpack: [webpackConfigCXWeb3, webpackConfig]
-=======
->>>>>>> 03ade183a45777ae42aad5432e14d11952465c38
 };
 if (process.env.NODE_ENV !== 'production') {
   webpackConfig.entry = webpackConfigCXWeb3.entry;
