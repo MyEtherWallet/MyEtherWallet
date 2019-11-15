@@ -1,4 +1,5 @@
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const env_vars = require('../ENV_VARS');
 const path = require('path');
 const defaultConfig = require('./defaultConfigs');
@@ -22,6 +23,27 @@ const webpackConfig = {
     process: true
   },
   plugins: defaultConfig.plugins.concat([
+    new HtmlWebpackPlugin({
+      template: './src/builds/mewcx/public/page.html',
+      templateParameters: {
+        jsFolder:
+          process.env.NODE_ENV === 'production'
+            ? 'js/background.js'
+            : 'background.js'
+      },
+      filename: 'page.html',
+      excludeChunks: [
+        'index',
+        'popup',
+        'browserAction',
+        'contentScript',
+        'cxWeb3',
+        'app',
+        'background',
+        'chunk-common',
+        'chunk-vendors'
+      ]
+    }),
     new CopyWebpackPlugin([
       {
         from: 'src/builds/mewcx/public',
@@ -67,14 +89,18 @@ const webpackConfig = {
 
             return JSON.stringify(json, null, 2);
           }
+
           return content;
         }
       }
     ])
   ])
+<<<<<<< HEAD
 };
 const pluginOptions = {
   configureMultiCompilerWebpack: [webpackConfigCXWeb3, webpackConfig]
+=======
+>>>>>>> 03ade183a45777ae42aad5432e14d11952465c38
 };
 if (process.env.NODE_ENV !== 'production') {
   webpackConfig.entry = webpackConfigCXWeb3.entry;
