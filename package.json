@@ -70,7 +70,7 @@
     "@ledgerhq/hw-app-eth": "4.73.7",
     "@ledgerhq/hw-transport-u2f": "4.73.7",
     "@ledgerhq/hw-transport-webusb": "4.73.7",
-    "@makerdao/dai": "0.21.0",
+    "@makerdao/dai": "0.21.1",
     "@myetherwallet/eth-token-balance": "0.1.6",
     "@myetherwallet/mewconnect-web-client": "1.0.14",
     "@vue/cli-plugin-babel": "3.12.0",
