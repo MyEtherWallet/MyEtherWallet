@@ -6,6 +6,7 @@
           dai savings rate
         </div>
         {{ yearlyRate }}
+        <p>{{ daiBalance }}</p>
         <p>
           <button @click="showDeposit(true)">Deposit</button>
           <button @click="showDeposit(false)">Withdraw</button>
@@ -41,7 +42,7 @@
                 validInputs ? '' : 'disabled',
                 'submit-button large-round-button-green-filled'
               ]"
-              @click="submitTransaction"
+              @click="deposit"
             >
               Deposit
             </div>
@@ -78,7 +79,7 @@
                 validInputs ? '' : 'disabled',
                 'submit-button large-round-button-green-filled'
               ]"
-              @click="submitTransaction"
+              @click="withdraw"
             >
               Withdraw
             </div>
@@ -97,15 +98,21 @@ import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
 import BigNumber from 'bignumber.js';
 import SelectCdpEntry from '../../components/SelectCdpEntry';
-import { addresses, migrateABI, ERC20 } from '../../makerHelpers';
+import { addresses, migrateABI, ERC20, ProxyContract, toBigNumber } from '../../makerHelpers';
 import ethUnit from 'ethjs-unit';
 import { Toast } from '@/helpers';
-
+import {
+  ETH,
+  REP,
+  ZRX,
+  OMG,
+  BAT,
+  GNT,
+  DGD,
+  MDAI,
+  MKR
+} from '@makerdao/dai-plugin-mcd';
 // const KOVAN_SERVER_URL = 'https://sai-kovan.makerfoundation.com/v1';
-
-const toBigNumber = num => {
-  return new BigNumber(num);
-};
 
 export default {
   components: {
@@ -150,15 +157,24 @@ export default {
     return {
       showDepositDisplay: true,
       setupComplete: false,
+      userHasProxy: false,
+      proxyAddress: null,
       daiQty: 0,
       gasLimit: -1,
-      yearlyRate: 0
+      yearlyRate: 0,
+      daiBalance: 0
     };
   },
   computed: {
     ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
     validInputs() {
-      return toBigNumber(this.daiQty).gt(0);
+      return toBigNumber(this.daiQty).gt(0) && this.hasEnough && this.proxyPresent;
+    },
+    hasEnough(){
+      return this.daiBalance >= this.daiQty;
+    },
+    proxyPresent(){
+      return this.hasProxy() != null;
     }
   },
   watch: {
@@ -182,48 +198,82 @@ export default {
         this.yearlyRate = toBigNumber(
           await this.makerSaver.getYearlyRate()
         ).toFixed(10);
+        this.hasProxy();
+        this.checkBalance();
       }
       return 0;
     },
-    showDeposit(val){
+    showDeposit(val) {
       this.showDepositDisplay = val;
     },
-    // MIGRATION CONTRACT
-    // https://github.com/makerdao/scd-mcd-migration/blob/master/src/ScdMcdMigration.sol#L59
-    async deposit(val) {
-      await this.makerSaver.join(val)
+    async deposit() {
+      await this.makerSaver.join(MDAI(this.daiQty));
     },
-    async withdraw(val) {
-      await this.makerSaver.exit(val)
-      // const contract = new this.web3.eth.Contract(
-      //   migrateABI,
-      //   addresses.MIGRATION
-      // );
-      //
-      // const data = contract.methods.swapSaiToDai(val).encodeABI();
-      // return {
-      //   from: this.account.address,
-      //   to: addresses.MIGRATION,
-      //   value: 0,
-      //   gas: 500000,
-      //   data: data
-      // };
+    async withdraw() {
+      await this.makerSaver.exit(MDAI(this.daiQty));
+    },
+    async checkBalance() {
+      if (this.setupComplete) {
+        const daiBalance = this.getValueOrFunction('balances')['MDAI'];
+        console.log(daiBalance); // todo remove dev item
+        this.daiBalance = daiBalance.toString();
+        if(this.proxyAddress){
+          this.daiAllowance = await this.getAllowance();
+          console.log(this.daiAllowance); // todo remove dev item
+        }
+      }
+      return toBigNumber(0);
+    },
+    async hasProxy() {
+      if (this.setupComplete) {
+        this.proxyAddress = await this.getValueOrFunction('getProxy')();
+        if (!this.proxyAddress) {
+          this.proxyAddress = null;
+          return null;
+        }
+        this.daiAllowance = await this.getAllowance();
+        console.log('daiAllowance', this.daiAllowance); // todo remove dev item
+        return this.proxyAddress;
+      }
+      return null;
+    },
+    async BuildProxy() {
+      if (this.setupComplete) {
+        this.proxyAddress = await this.getValueOrFunction('getProxy')();
+        if (!this.proxyAddress) {
+          await this.getValueOrFunction('_proxyService').build();
+          this.proxyAddress = await this.getValueOrFunction(
+            '_proxyService'
+          ).currentProxy();
+          return this.proxyAddress;
+        }
+        return this.proxyAddress;
+      }
+    },
+    adapterAddress(ilk) {
+      const key = 'MCD_JOIN_' + ilk.replace(/-/g, '_');
+      return this.get('smartContract').getContractAddress(key);
+    },
+    async getAllowance() {
+      const contract = new this.web3.eth.Contract(ERC20, addresses.MCD_DAI);
+
+      return await contract.methods
+        .allowance(this.getValueOrFunction('account').address, this.proxyAddress)
+        .call();
     },
     async approve(val) {
-      const tokenAddress = '0xc4375b7de8af5a38a93548eb8453a498222c4ff2';
+      const contract = new this.web3.eth.Contract(ERC20, addresses.MCD_DAI);
 
-      const contract = new this.web3.eth.Contract(ERC20, tokenAddress);
+      await contract.methods
+        .approve(this.proxyAddress, val)
+        .send();
 
-      const data = contract.methods
-        .approve(addresses.MIGRATION, val)
-        .encodeABI();
-
-      return {
-        from: this.account.address,
-        to: tokenAddress,
-        value: 0,
-        data: data
-      };
+      // return {
+      //   from: this.account.address,
+      //   to: addresses.MCD_DAI,
+      //   value: 0,
+      //   data: data
+      // };
     },
     async submitTransaction() {
       // window.scrollTo(0, 0);

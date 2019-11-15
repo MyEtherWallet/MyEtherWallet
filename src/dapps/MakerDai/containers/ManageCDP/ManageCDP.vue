@@ -169,14 +169,9 @@ import Blockie from '@/components/Blockie';
 import {
   displayFixedPercent,
   displayFixedValue,
-  displayPercentValue
+  displayPercentValue,
+  toBigNumber
 } from '../../makerHelpers';
-
-import BigNumber from 'bignumber.js';
-
-const toBigNumber = num => {
-  return new BigNumber(num);
-};
 
 export default {
   components: {

@@ -181,15 +181,13 @@ import LoadingOverlay from '@/components/LoadingOverlay';
 import {
   displayFixedValue,
   displayPercentValue,
-  displayFixedPercent
-} from '../../helpers';
+  displayFixedPercent,
+  toBigNumber
+} from '../../makerHelpers';
 
 import BigNumber from 'bignumber.js';
 import Arrow from '@/assets/images/etc/single-arrow.svg';
 
-const toBigNumber = num => {
-  return new BigNumber(num);
-};
 
 const bnOver = (one, two, three) => {
   return toBigNumber(one)
