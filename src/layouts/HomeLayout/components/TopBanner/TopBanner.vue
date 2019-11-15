@@ -53,7 +53,7 @@ export default {
 .banner-content-container {
   height: 400px;
   position: absolute;
-  top: 12vw;
+  top: 13vw;
   left: 0;
   right: 0;
   margin: 0 auto;
