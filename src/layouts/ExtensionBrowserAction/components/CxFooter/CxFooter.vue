@@ -56,7 +56,11 @@
             <div class="content-title">
               <h3 class="lite">
                 <i18n path="footer.title.love" tag="h3">
-                  <img slot="heart" src="~@/assets/images/icons/heart.svg" alt />
+                  <img
+                    slot="heart"
+                    src="~@/assets/images/icons/heart.svg"
+                    alt
+                  />
                 </i18n>
               </h3>
             </div>
@@ -84,9 +88,7 @@
                   data-btc="1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9"
                 >
                   <img src="@/assets/images/currency/btc.svg" alt />
-                  &nbsp;{{
-                    $t('footer.donation.bitcoin')
-                  }}
+                  &nbsp;{{ $t('footer.donation.bitcoin') }}
                 </p>
               </a>
             </div>

@@ -114,9 +114,6 @@
           {{ $t('mewCX.details') }}
         </div>
         <div class="clickable" @click="edit">{{ $t('mewCX.edit') }}</div>
-        <div class="clickable d-block d-xl-none" @click="viewAllTokens(true)">
-          {{ $t('mewCX.view-tokens') }}
-        </div>
       </div>
     </div>
     <div class="wallet-content">

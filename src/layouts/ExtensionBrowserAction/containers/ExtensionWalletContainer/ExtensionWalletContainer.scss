@@ -1,6 +1,10 @@
 @import '~@/scss/GlobalVariables';
 
 .extension-wallets-container {
+  align-items: center;
+  background-color: $light-grey-2;
+  display: flex;
+  justify-content: center;
   position: relative;
 }
 
@@ -12,16 +16,15 @@
 }
 
 .wallets-container {
-  background-color: $light-grey-2;
   height: 100%;
   padding: 50px;
-  margin-left: 70px;
 }
 
 .my-wallets-container,
 .dapps-container,
 .watch-only-container {
   max-width: 1024px;
+  min-width: 800px;
 
   .wallets-container-header,
   .total-balance-container {
