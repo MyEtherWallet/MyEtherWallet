@@ -29,7 +29,7 @@
               </div>
             </div>
             <span class="text__base link switch-label">{{
-              $t('createWallet.byMnemonicValue')
+              $t('common.value')
             }}</span>
           </div>
 
@@ -38,7 +38,7 @@
             @click="mnemonicValueRefresh"
           >
             <i class="fa fa-refresh" aria-hidden="true" />
-            <span>{{ $t('createWallet.byMnemonicRandom') }}</span>
+            <span>{{ $t('createWallet.mnemonic.random') }}</span>
           </div>
         </div>
         <div class="phrases">
@@ -64,7 +64,7 @@
             />
             <div class="password-warning">
               <p>
-                {{ $t('createWallet.mnemonicPasswordWarning') }}
+                {{ $t('createWallet.mnemonic.warning.password') }}
               </p>
               <div class="read">
                 > {{ $t('common.read') }}:
@@ -72,7 +72,7 @@
                   href="https://kb.myetherwallet.com/posts/security-and-privacy/mnemonic-phrase-password/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  >Mnemonic Phrase: Should I Include a Password?</a
+                  >{{ $t('common.article.mnemonic-password') }}</a
                 >
               </div>
             </div>
@@ -85,7 +85,7 @@
           class="next-button large-round-button-green-filled clickable"
           @click="mnemonicVerificationModalOpen"
         >
-          {{ $t('createWallet.byMnemonicAlreadyWritten') }}
+          {{ $t('createWallet.mnemonic.button-wrote-it-down') }}
         </div>
         <div @click="openPrintModal">
           <img alt class="icon" src="~@/assets/images/icons/printer.svg" />

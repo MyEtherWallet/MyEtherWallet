@@ -1,12 +1,10 @@
 <template>
-  <div class="cx-container">
-    <div class="max-width-limit">
-      <cx-header />
-      <keep-alive>
-        <router-view />
-      </keep-alive>
-      <cx-footer />
-    </div>
+  <div>
+    <cx-header />
+    <keep-alive>
+      <router-view />
+    </keep-alive>
+    <cx-footer />
   </div>
 </template>
 

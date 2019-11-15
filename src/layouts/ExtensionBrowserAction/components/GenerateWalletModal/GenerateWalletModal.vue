@@ -2,27 +2,27 @@
   <div>
     <b-modal
       ref="generateNewWallet"
+      :title="$t('mewCX.generateWallet')"
       hide-footer
       centered
-      title="Generate a New Wallet"
     >
       <div class="modal-contents">
         <form>
           <div class="input-container">
-            <label for="walletName"> Wallet Name </label>
+            <label for="walletName"> {{ $t('mewCX.wallet-name') }} </label>
             <input
               v-model="locNickname"
-              placeholder="Please add a wallet nickname"
+              :placeholder="$t('mewCX.add-wallet-nickname')"
               name="walletName"
             />
           </div>
           <div class="input-container">
-            <label for="walletPassword"> Password </label>
+            <label for="walletPassword"> {{ $t('mewCX.password') }} </label>
             <div class="password-input">
               <input
                 v-model="locPassword"
                 :type="show ? 'text' : 'password'"
-                placeholder="Create your password here"
+                :placeholder="$t('mewCX.create-pw')"
                 name="walletPassword"
               />
               <img
@@ -40,7 +40,7 @@
             type="submit"
             @click.prevent="generateWallet"
           >
-            <span v-show="!loading"> Add Wallet </span>
+            <span v-show="!loading"> {{ $t('mewCX.add-wallet') }} </span>
             <i v-show="loading" class="fa fa-spinner fa-spin" />
           </b-btn>
         </form>

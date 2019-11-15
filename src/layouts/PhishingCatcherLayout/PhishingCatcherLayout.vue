@@ -1,7 +1,7 @@
 <template>
   <div class="phishing-catcher-contianer">
     <div class="catcher-text">
-      <h4>YOU HAVE BEEN REDIRECTED!</h4>
+      <h4>{{ $t('phishing.redirected') }}!</h4>
       <div>
         <div class="code-container">
           <code>
@@ -9,8 +9,8 @@
           </code>
         </div>
         <p>
-          This site has been flagged for suspicious activity, <br />
-          so we've redirected your browser. Stay safe out there!
+          {{ $t('phishing.site-flagged') }} <br />
+          {{ $t('phishing.redirected-browser') }}
         </p>
       </div>
     </div>

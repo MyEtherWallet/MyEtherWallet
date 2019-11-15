@@ -1,41 +1,122 @@
 {
-  "hdDerivationPath": "HD Derivation Path",
-  "customPaths": "Custom Paths",
-  "addCustomPath": "Add Custom Path",
-  "interactAddr": "Address to Interact With",
+  "mewconnect": {
+    "option-text": "Use MEWconnect to access my wallet",
+    "modal": {
+      "title": "Access by MEWconnect",
+      "text1": "Please use MEWconnect App to scan the QR code above",
+      "text2": "Don't have the App? Download now."
+    },
+    "warning": "MEWconnect is not compatible with iPads."
+  },
+  "finney": {
+    "scan-qr": "To connect, scan the QR code from",
+    "finney-wallet": "FinneyWallet",
+    "app-on": "app on your",
+    "finney-bc": "FINNEY™ BLOCKCHAIN SMARTPHONE",
+    "get-your": "Get your",
+    "finney": "FINNEY™",
+    "now": "now",
+    "mobile": "moble",
+    "finney-connect": "FINNEY Connect"
+  },
+  "hardware": {
+    "option-title": "Hardware",
+    "warning": {
+      "not-connected": "Please make sure your device is connected."
+    },
+    "modal": {
+      "title": "Access by Hardware",
+      "button-buy": "Buy Now",
+      "button-choose": "Choose a Hardware"
+    }
+  },
+  "software": {
+    "option-title": "Software",
+    "option-text": "Keystore file, Private key, Mnemonic phrase",
+    "modal": {
+      "title": "Access by Software",
+      "purchase-text": "Purchase a hardware wallet for the highest security when accessing your crypto.",
+      "purchase-link": "Purchase a hardware wallet...."
+    }
+  },
+  "metamask": {
+    "option-title": "Metamask",
+    "option-text": "Use the MetaMask extension to access my wallet",
+    "warning": {
+      "safari": "MetaMask is only available in these browsers:",
+      "install-promt": "Please install the Metamask extension and refresh your page.",
+      "unlock": "Can't access wallet! Please unlock your wallet through the Metamask extension"
+    },
+    "modal": {
+      "title": "Access via MetaMask",
+      "text": "Please use MyEtherWallet on a secure (SSL/HTTPS) connection to connect.",
+      "button-install": "Install Metamask",
+      "button-refresh": "Refresh",
+      "terms": "To Access my Wallet, I accept {terms}."
+    }
+  },
+  "mnemonic": {
+    "string": "Mnemonic Phrase",
+    "modal": {
+      "title": "Access by Mnemonic Phrase",
+      "text": "Please type in your mnemonic phrase."
+    }
+  },
+  "ledger": {
+    "modal": {
+      "title": "Choose the App",
+      "text": "Please choose the App you have opened in Ledger"
+    }
+  },
+  "private-key": {
+    "string":  "Private Key",
+    "modal": {
+      "title": "Access by Private Key",
+      "placeholder": "Enter Private Key"
+    },
+    "do-not-share": "share your private key to anyone! You may lose your money if you share it"
+  },
+  "network-addr":{
+    "string": "Network and Address",
+    "addr-to-interact": "Address to Interact With",
+    "id": "ID",
+    "icon": "icon"
+  },
+  "path": {
+    "string": "Path",
+    "hd-derivation": "HD Derivation Path",
+    "custom": "Custom Paths",
+    "add-custom": "Add Custom Path",
+    "ivalid-custom": "Invalid Custom Path",
+    "invalid-desc": "The path: {path} is not valid for this device",
+    "alias": "Alias"
+  },
+  "pin": {
+    "string": "PIN",
+    "enter": "Enter PIN for your",
+    "layout": "The PIN layout is displayed on your Hardware wallet",
+    "access": "To access my wallet,",
+    "accept": "I accept the",
+    "terms": "Terms and Conditions"
+  },
+  "json-file": "Keystore File",
+  "accept-terms": "To Access my Wallet, I accept {terms}",
+  "hd-derivation-path": "HD Derivation Path",
+  "custom-paths": "Custom Paths",
+  "add-custom-path": "Add Custom Path",
+  "interact-addr": "Address to Interact With",
   "id": "ID",
-  "acceptTerms": "To Access my Wallet, I accept",
-  "accessBySoftware": "Access by Software",
-  "accessByHardware": "Access by Hardware",
-  "accessByMnemonicPhrase": "Access by Mnemonic Phrase",
-  "accessByWeb3Wallet": "Access by MetaMask",
-  "accessByPrivateKey": "Access by Private Key",
-  "networkAndAddress": "Network and Address",
-  "pleaseTypeInMnemonicPhrase": "Please type in your mnemonic phrase.",
-  "accessDeviceAddresses": "Choose a Hardware",
+  "network-and-address": "Network and Address",
+  "please-type-in-mnemonic-phrase": "Please type in your mnemonic phrase.",
   "password": "Password",
-  "mewConnectDesc": "Use MEWconnect to access my wallet",
-  "web3WalletDesc": "Use a Web3 Wallet to access my wallet",
-  "installWeb3WalletModalDesc": "Please install a Web3 Wallet and refresh your page.",
+  "web3-wallet-desc": "Use a Web3 Wallet to access my wallet",
   "refresh": "Refresh",
-  "unlockWeb3Wallet": "Can't access wallet! Please unlock your wallet through the Web3 Wallet extension",
-  "web3WalletModalDesc": "Please use MyEtherWallet on a secure (SSL/HTTPS) connection to connect.",
-  "software": "Software",
-  "softwareDesc": "Keystore file, Private key, Mnemonic phrase",
-  "notRecommended": "Not recommended",
-  "unlock": "Unlock wallet",
-  "installWeb3Wallet": "Install MetaMask",
-  "tryAgain": "Try Again",
-  "invalidPathDesc": "The path: {path} is not valid for this device",
-  "invalidPathDescCont": "",
-  "mewConnectTitle": "Access by MEWconnect",
-  "mewConnectDesc1": "Please use MEWconnect App to scan the QR code above",
-  "mewConnectDesc2": "Don't have the App? Download now.",
-  "notARecommendedWay": "This is not a recommended way to access your wallet. Due to the sensitivity of the information involved, these options should only be used in offline settings by experienced users.",
-  "buyHardwareWallet": "Purchase a hardware wallet for the highest security when accessing your crypto.",
-  "buyHardwareWalletLink": "Purchase a hardware wallet....",
-  "connectDevice": "Please make sure your device is connected.",
-  "buy": "Buy Now",
-  "xwalletDesc": "Please use XWallet App MEW DApp  to scan the QR code above",
-  "xwallettTitle": "Access by XWallet"
+  "unlock-web3-wallet": "Can't access wallet! Please unlock your wallet through the Web3 Wallet extension",
+  "try-again": "Try Again",
+  "invalid-path-desc": "The path: {path} is not valid for this device",
+  "wallet-info": "Wallet Information",
+  "wallet-options": "Check your transaction history, download a new keystore file, print a paper wallet, and more!",
+  "xwallet-desc": "Please use XWallet App MEW DApp  to scan the QR code above",
+  "xwallet-title": "Access by XWallet",
+  "get-it-now": "Get It Now"
 }

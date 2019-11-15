@@ -2,31 +2,28 @@
   <div>
     <b-modal
       ref="removeWalletModal"
+      :title="$t('mewCX.remove-wallet')"
       hide-footer
       hide-header
       centered
       class="bootstrap-modal"
-      title="Remove Wallet Wallet"
     >
       <div class="modal-contents">
         <div class="warning-text-container">
-          <h2>Remove Wallet</h2>
+          <h2>{{ $t('mewCX.remove-wallet') }}</h2>
           <div v-show="walletType === 'wallet'" class="text-container">
-            Be sure you have saved the private key and/or Keystore File and the
-            password before you remove it. If you want to use this wallet with
-            your MEW CX in the future, you will need to manually re-add it using
-            the private key/JSON and password..
+            {{ $t('mewCX.remove-wallet-desc') }}
           </div>
           <h3 v-show="walletType === 'watchOnly'">
-            Are you sure you want to delete wallet {{ `${nickname}` }}?
+            {{ $t('mewCX.are-you-sure-delete') }} {{ `${nickname}` }}?
           </h3>
         </div>
         <div class="remove-modal-buttons">
           <div class="cancel" @click="cancelRemove">
-            Cancel
+            {{ $t('common.cancel') }}
           </div>
           <div class="remove" @click="removeWallet">
-            Remove
+            {{ $t('mewCX.remove') }}
           </div>
         </div>
       </div>
@@ -62,7 +59,10 @@ export default {
     },
     removeCb() {
       this.$refs.removeWalletModal.hide();
-      Toast.responseHandler('Wallet successfully removed!', Toast.SUCCESS);
+      Toast.responseHandler(
+        this.$t('mew-cx.wallet-remove-success'),
+        Toast.SUCCESS
+      );
     }
   }
 };

@@ -55,13 +55,13 @@
           <div class="donate-us">
             <div class="content-title">
               <h3 class="lite">
-                {{ $t('footer.love') }}
-                <img src="~@/assets/images/icons/heart.svg" alt />
-                {{ $t('footer.donate') }}
+                <i18n path="footer.title.love" tag="h3">
+                  <img slot="heart" src="~@/assets/images/icons/heart.svg" alt />
+                </i18n>
               </h3>
             </div>
             <div class="links">
-              <p>{{ $t('footer.welcomeDes') }}</p>
+              <p>{{ $t('footer.donation.desc') }}</p>
 
               <a
                 :href="'https://etherscan.io/address/' + ethDonationAddress"
@@ -70,7 +70,7 @@
               >
                 <p :data-eth="ethDonationAddress" class="crypto-link">
                   <img src="@/assets/images/currency/eth.svg" alt />
-                  &nbsp;Ethereum Donation
+                  &nbsp;{{ $t('footer.donation.ether') }}
                 </p>
               </a>
 
@@ -84,7 +84,9 @@
                   data-btc="1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9"
                 >
                   <img src="@/assets/images/currency/btc.svg" alt />
-                  &nbsp;Bitcoin Donation
+                  &nbsp;{{
+                    $t('footer.donation.bitcoin')
+                  }}
                 </p>
               </a>
             </div>
@@ -108,7 +110,7 @@
           </div>
           <div class="copyright">
             <p>
-              {{ $t('footer.pricingP') }}
+              {{ $t('footer.pricing-p') }}
               <a
                 href="https://coingecko.com/"
                 target="_blank"
@@ -176,7 +178,7 @@ export default {
       footerContent: [
         {
           class: 'e1',
-          title: this.$t('footer.discover'),
+          title: this.$t('footer.title.discover'),
           contents: [
             {
               text: this.$t('footer.units'),
@@ -188,7 +190,7 @@ export default {
             // },
             {
               text: this.$t('footer.extension'),
-              href: 'https://www.mewcx.com'
+              href: 'https://www.mewCX.com'
             },
             {
               text: 'Buy a Hardware wallet',
@@ -214,12 +216,12 @@ export default {
         },
         {
           class: 'e2',
-          title: this.$t('footer.affiliates'),
+          title: this.$t('footer.title.affiliates'),
           contents: affiliates
         },
         {
           class: 'e3',
-          title: this.$t('footer.mew'),
+          title: this.$t('footer.title.mew'),
           contents: [
             {
               text: this.$t('footer.about'),

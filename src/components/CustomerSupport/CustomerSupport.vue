@@ -8,33 +8,36 @@
         <img alt="Help center" src="~@/assets/images/icons/help-center.svg" />
       </div>
       <div v-if="!noIcon" class="support-label">
-        <h5>{{ $t('common.customerSupport') }}</h5>
+        <h5>{{ $t('common.cstm-support') }}</h5>
       </div>
-      <p v-else>{{ $t('common.customerSupport') }}</p>
+      <p v-else>{{ $t('common.cstm-support') }}</p>
     </div>
     <b-modal
       ref="emailPrefill"
+      :title="$t('common.issue-info')"
       hide-footer
       centered
       class="bootstrap-modal nopadding"
-      title="Issue information"
       static
       lazy
     >
       <div class="email-prefill-inputs">
-        <input v-model="browser" placeholder="Browser" />
-        <input v-model="os" placeholder="Operating System" />
-        <input v-model="device" placeholder="Device/Wallet type (If any)" />
-        <input v-model="address" placeholder="Wallet PUBLIC address (If any)" />
-        <input v-model="url" placeholder="Url" />
-        <textarea v-model="description" placeholder="Describe the issue" />
+        <input v-model="browser" :placeholder="$t('common.support.browser')" />
+        <input v-model="os" :placeholder="$t('common.support.os')" />
+        <input v-model="device" :placeholder="$t('common.support.device')" />
+        <input v-model="address" :placeholder="$t('common.support.address')" />
+        <input v-model="url" :placeholder="$t('common.support.url')" />
+        <textarea
+          v-model="description"
+          :placeholder="$t('common.support.description')"
+        />
         <a
           :href="issueLinkOut"
           target="_blank"
           rel="noopener noreferrer"
           class="mid-round-button-green-filled"
         >
-          Send
+          {{ $t('common.send') }}
         </a>
       </div>
     </b-modal>
