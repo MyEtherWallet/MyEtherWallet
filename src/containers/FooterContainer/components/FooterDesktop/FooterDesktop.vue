@@ -126,17 +126,19 @@
       </v-row>
       <div class="d-flex align-center mt-12">
         <div class="d-flex align-center mx-n6">
-          <div class="d-flex align-center">
-            <div class="px-6">
-              <a href="/">Feedback</a>
+          <div class="d-flex align-center line-height-small">
+            <div class="px-6 border-right">
+              <a href="mailto:support@myetherwallet.com" target="_blank">
+                Feedback
+              </a>
             </div>
-            <div>|</div>
-            <div class="px-6">
-              <a href="/">Privacy</a>
+            <div class="px-6 border-right">
+              <a href="https://www.myetherwallet.com/privacy-policy">Privacy</a>
             </div>
-            <div>|</div>
             <div class="px-6">
-              <a href="/">Terms</a>
+              <a href="https://www.myetherwallet.com/terms-and-conditions">
+                Terms
+              </a>
             </div>
           </div>
         </div>
@@ -247,5 +249,13 @@ a {
 }
 .v-list-item {
   min-height: 35px;
+}
+.border-right {
+  border-right: 1px solid black;
+}
+.line-height-small {
+  > div {
+    line-height: 11px;
+  }
 }
 </style>

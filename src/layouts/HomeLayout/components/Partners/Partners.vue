@@ -18,28 +18,44 @@
           </a>
         </v-col>
         <v-col cols="2">
-          <img src="@/assets/images/Etc/LandingPage/Partners/Bitbox.png" />
+          <a href="https://shiftcrypto.ch/?ref=mew" target="_blank">
+            <img src="@/assets/images/Etc/LandingPage/Partners/Bitbox.png" />
+          </a>
         </v-col>
         <v-col cols="2">
-          <img src="@/assets/images/Etc/LandingPage/Partners/Secalot.png" />
+          <a href="https://www.secalot.com/" target="_blank">
+            <img src="@/assets/images/Etc/LandingPage/Partners/Secalot.png" />
+          </a>
         </v-col>
         <v-col cols="2">
-          <img src="@/assets/images/Etc/LandingPage/Partners/Bity.png" />
+          <a href="https://bity.com/af/jshkb37v" target="_blank">
+            <img src="@/assets/images/Etc/LandingPage/Partners/Bity.png" />
+          </a>
         </v-col>
         <v-col cols="2">
-          <img src="@/assets/images/Etc/LandingPage/Partners/Sirin.png" />
+          <a href="https://sirinlabs.com/" target="_blank">
+            <img src="@/assets/images/Etc/LandingPage/Partners/Sirin.png" />
+          </a>
         </v-col>
         <v-col cols="2">
-          <img src="@/assets/images/Etc/LandingPage/Partners/Keepkey.png" />
+          <a href="http://lddy.no/a4im" target="_blank">
+            <img src="@/assets/images/Etc/LandingPage/Partners/Keepkey.png" />
+          </a>
         </v-col>
         <v-col cols="2">
-          <img src="@/assets/images/Etc/LandingPage/Partners/Kyber.png" />
+          <a href="https://kyber.network/" target="_blank">
+            <img src="@/assets/images/Etc/LandingPage/Partners/Kyber.png" />
+          </a>
         </v-col>
         <v-col cols="2">
-          <img src="@/assets/images/Etc/LandingPage/Partners/Changelly.png" />
+          <a href="https://changelly.com/" target="_blank">
+            <img src="@/assets/images/Etc/LandingPage/Partners/Changelly.png" />
+          </a>
         </v-col>
         <v-col cols="2">
-          <img src="@/assets/images/Etc/LandingPage/Partners/Simplex.png" />
+          <a href="https://www.simplex.com/" target="_blank">
+            <img src="@/assets/images/Etc/LandingPage/Partners/Simplex.png" />
+          </a>
         </v-col>
       </v-row>
     </v-container>

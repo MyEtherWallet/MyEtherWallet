@@ -7,19 +7,24 @@
             Ready? Get your wallet today.
           </h2>
           <p class="white--text ma-0">
-            Still don't know how to do it? Go to <a href="/">Help center</a>.
+            Still don't know how to do it? Go to
+            <a href="https://kb.myetherwallet.com/" target="_blank">
+              Help center </a
+            >.
           </p>
         </div>
         <v-spacer />
-        <StdButton class="standard-button" buttonclass="button--white">
-          <img
-            width="60"
-            height="60"
-            src="@/assets/images/Common/Icons/wallet.svg"
-            class="mr-2 mt-2 ml-n3"
-          />
-          Get a new wallet
-        </StdButton>
+        <a href="/" class="text-decoration-none">
+          <StdButton class="standard-button" buttonclass="button--white">
+            <img
+              width="60"
+              height="60"
+              src="@/assets/images/Common/Icons/wallet.svg"
+              class="mr-2 mt-2 ml-n3"
+            />
+            Get a new wallet
+          </StdButton>
+        </a>
       </div>
     </v-container>
   </div>
