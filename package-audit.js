@@ -1,11 +1,10 @@
 const exec = require('child_process').exec;
 
-const AUDIT_EXCEPTIONS = [];
+const AUDIT_EXCEPTIONS = [handlebars];
 
 const execute = (command, callback) => {
   exec(
-    command,
-    {
+    command, {
       maxBuffer: 2000 * 1024
     },
     (error, stdout, stderr) => {
