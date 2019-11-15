@@ -25,6 +25,7 @@ export async function setupServices(self, maker) {
   self._proxyService = await maker.service('proxy');
   self._tokenService = await maker.service('token');
   self._mcdManager = maker.service('mcd:cdpManager');
+  self._mcdSaving = maker.service('mcd:savings');
   return self;
 }
 
@@ -290,6 +291,7 @@ export async function buildCdpObject(cdpId, options = {}, useOld = false) {
     address: this.account.address,
     _typeService: this._typeService,
     _mcdManager: this._mcdManager,
+    _mcdSaving: this._mcdSaving,
     _proxyService: this._proxyService,
     priceService: this.priceService,
     _cdpService: this._cdpService,

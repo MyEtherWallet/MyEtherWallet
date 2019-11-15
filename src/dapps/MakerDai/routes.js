@@ -6,7 +6,7 @@ const SelectCDP = () => import('./containers/SelectCDP');
 const ProxyMigrateCDP = () => import('./containers/ProxyMigrateCDP');
 const migrateDAI = () => import('./containers/MigrateDai');
 const migrateCDP = () => import('./containers/MigrateCDP');
-const MakerSave = () => import('./containers/MakerSave');
+const MakerSave = () => import('./containers/MakerSavings');
 
 const MakerLoading = () => import('./containers/MakerLoading');
 

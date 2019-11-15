@@ -3,38 +3,85 @@
     <div class="currency-ops-new">
       <div class="currency-picker-container">
         <div class="interface__block-title">
-          Migrate to 'new' DAI
+          dai savings rate
         </div>
-        <div class="dropdown-text-container dropdown-container no-point">
-          <p>
-            <span class="cc DAI cc-icon cc-icon-dai currency-symbol" />
-            DAI
-            <span class="subname">- Maker DAI </span>
-          </p>
-        </div>
-        <input
-          v-model="daiQty"
-          :class="[
-            'currency-picker-container',
-            'dropdown-text-container',
-            'dropdown-container'
-          ]"
-        />
-        <div class="input-block-message">
-          <p>
-            Some Error, info, or instructions
-          </p>
-        </div>
-
-        <div class="buttons-container">
-          <div
+        {{ yearlyRate }}
+        <p>
+          <button @click="showDeposit(true)">Deposit</button>
+          <button @click="showDeposit(false)">Withdraw</button>
+        </p>
+        <div v-if="showDepositDisplay">
+          <div class="interface__block-title">
+            Deposit
+          </div>
+          <div class="dropdown-text-container dropdown-container no-point">
+            <p>
+              <span class="cc DAI cc-icon cc-icon-dai currency-symbol" />
+              DAI
+              <span class="subname">- Maker DAI </span>
+            </p>
+          </div>
+          <input
+            v-model="daiQty"
             :class="[
-              validInputs ? '' : 'disabled',
-              'submit-button large-round-button-green-filled'
+              'currency-picker-container',
+              'dropdown-text-container',
+              'dropdown-container'
             ]"
-            @click="submitTransaction"
-          >
-            save
+          />
+          <div class="input-block-message">
+            <p>
+              Some Error, info, or instructions
+            </p>
+          </div>
+
+          <div class="buttons-container">
+            <div
+              :class="[
+                validInputs ? '' : 'disabled',
+                'submit-button large-round-button-green-filled'
+              ]"
+              @click="submitTransaction"
+            >
+              Deposit
+            </div>
+          </div>
+        </div>
+        <div v-if="!showDepositDisplay">
+          <div class="interface__block-title">
+            Withdraw
+          </div>
+          <div class="dropdown-text-container dropdown-container no-point">
+            <p>
+              <span class="cc DAI cc-icon cc-icon-dai currency-symbol" />
+              DAI
+              <span class="subname">- Maker DAI </span>
+            </p>
+          </div>
+          <input
+            v-model="daiQty"
+            :class="[
+              'currency-picker-container',
+              'dropdown-text-container',
+              'dropdown-container'
+            ]"
+          />
+          <div class="input-block-message">
+            <p>
+              Some Error, info, or instructions
+            </p>
+          </div>
+
+          <div class="buttons-container">
+            <div
+              :class="[
+                validInputs ? '' : 'disabled',
+                'submit-button large-round-button-green-filled'
+              ]"
+              @click="submitTransaction"
+            >
+              Withdraw
+            </div>
           </div>
         </div>
       </div>
@@ -93,12 +140,19 @@ export default {
     cdpDetailsLoaded: {
       type: Boolean,
       default: false
+    },
+    getValueOrFunction: {
+      type: Function,
+      default: function() {}
     }
   },
   data() {
     return {
+      showDepositDisplay: true,
+      setupComplete: false,
       daiQty: 0,
-      gasLimit: -1
+      gasLimit: -1,
+      yearlyRate: 0
     };
   },
   computed: {
@@ -107,11 +161,40 @@ export default {
       return toBigNumber(this.daiQty).gt(0);
     }
   },
-  async mounted() {},
+  watch: {
+    makerActive(newVal) {
+      if (newVal) {
+        this.setup();
+      }
+    }
+  },
+  async mounted() {
+    this.setup();
+  },
   methods: {
+    async setup() {
+      this.makerSaver = this.getValueOrFunction('_mcdSaving');
+      this.setupComplete = this.makerSaver !== undefined;
+      await this.getValues();
+    },
+    async getValues() {
+      if (this.setupComplete) {
+        this.yearlyRate = toBigNumber(
+          await this.makerSaver.getYearlyRate()
+        ).toFixed(10);
+      }
+      return 0;
+    },
+    showDeposit(val){
+      this.showDepositDisplay = val;
+    },
     // MIGRATION CONTRACT
     // https://github.com/makerdao/scd-mcd-migration/blob/master/src/ScdMcdMigration.sol#L59
-    async migrate(val) {
+    async deposit(val) {
+      await this.makerSaver.join(val)
+    },
+    async withdraw(val) {
+      await this.makerSaver.exit(val)
       // const contract = new this.web3.eth.Contract(
       //   migrateABI,
       //   addresses.MIGRATION
@@ -168,5 +251,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'MakerSave';
+@import 'MakerSavings';
 </style>
