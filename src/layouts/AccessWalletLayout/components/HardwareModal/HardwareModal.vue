@@ -1,7 +1,7 @@
 <template>
   <b-modal
     ref="hardware"
-    :title="$t('accessWallet.accessByHardware')"
+    :title="$t('accessWallet.hardware.modal.title')"
     hide-footer
     class="bootstrap-modal modal-hardware nopadding"
     centered
@@ -10,9 +10,9 @@
   >
     <div class="modal-content-container">
       <div class="d-block text-center">
-        <b-alert :show="mayNotBeAttached" fade variant="warning">
-          {{ $t('accessWallet.connectDevice') }}
-        </b-alert>
+        <b-alert :show="mayNotBeAttached" fade variant="warning">{{
+          $t('accessWallet.hardware.warning.not-connected')
+        }}</b-alert>
         <div class="button-options hardware-button-options">
           <wallet-option
             v-for="(item, idx) in items"
@@ -36,7 +36,7 @@
           ]"
           @click="continueAccess"
         >
-          {{ $t('accessWallet.accessDeviceAddresses') }}
+          {{ $t('accessWallet.hardware.modal.button-choose') }}
         </div>
       </div>
       <customer-support />
@@ -184,16 +184,16 @@ export default {
             !window.navigator ||
             !window.navigator.usb;
           item.disabled = disable;
-          item.msg = disable ? this.$t('errorsGlobal.browserNonWebUsb') : '';
+          item.msg = disable ? this.$t('errorsGlobal.browser-non-web-usb') : '';
         }
         if (u2fhw.includes(item.name)) {
           item.disabled = !res;
-          item.msg = !res ? this.$t('errorsGlobal.browserNonU2f') : '';
+          item.msg = !res ? this.$t('errorsGlobal.browser-non-u2f') : '';
         }
         if (this.isMobile()) {
           const disable = !inMobile.includes(item.name);
           item.disabled = disable;
-          item.msg = disable ? this.$t('errorsGlobal.noMobileSupport') : '';
+          item.msg = disable ? this.$t('errorsGlobal.no-mobile-support') : '';
         }
       });
     });

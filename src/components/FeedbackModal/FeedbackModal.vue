@@ -2,21 +2,21 @@
   <div class="modal-container">
     <b-modal
       ref="feedback"
+      :title="$t('common.feedback.feedback-title')"
       hide-footer
       centered
       class="bootstrap-modal"
-      title="Feedback / Custommer Support"
       static
       lazy
     >
       <div class="modal-content">
-        If you want to send us your feedback, please use
+        {{ $t('common.feedback.send-us-feedback') }}
         <a
           href="mailto:support@myetherwallet.com"
           target="_blank"
           rel="noopener noreferrer"
-          >support@myetherwallet.com</a
-        >. Thank you.
+          >{{ $t('common.support-email') }}</a
+        >. {{ $t('common.thank-you') }}.
       </div>
     </b-modal>
   </div>

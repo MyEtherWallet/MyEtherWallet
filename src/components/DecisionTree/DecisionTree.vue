@@ -2,7 +2,7 @@
   <div class="decision-tree-container">
     <button :class="button ? 'active' : ''" class="show-button" @click="toggle">
       <img src="@/assets/images/icons/DecisionTree/need-help.svg" />
-      <p>Help</p>
+      <p>{{ $t('common.help') }}</p>
     </button>
 
     <customer-support :no-icon="true" :show="showCustomerSupport" />
@@ -42,13 +42,13 @@
           <multiselect
             v-model="searchSelect"
             :options="searchOptions"
-            placeholder="Search"
+            :placeholder="$t('common.search')"
             label="name"
             track-by="name"
           >
             <span slot="noResult" class="no-result"
-              ><i class="fa fa-meh-o" aria-hidden="true"></i> Oops! No search
-              results found.</span
+              ><i class="fa fa-meh-o" aria-hidden="true"></i
+              >{{ $t('common.decision-tree.no-results') }}</span
             >
           </multiselect>
           <img class="magnifier" src="@/assets/images/icons/magnifier.svg" />
@@ -58,7 +58,9 @@
         </div>
 
         <div class="breadcrumb-container">
-          <i class="fa fa-home" aria-hidden="true"></i>&nbsp;Home
+          <i class="fa fa-home" aria-hidden="true"></i>&nbsp;{{
+            $t('common.home')
+          }}
           <span v-for="h in historyStack" v-if="h.breadcrumb" :key="h.key">
             <i class="fa fa-angle-right" aria-hidden="true"></i>
             {{ h.breadcrumb }}
@@ -80,11 +82,11 @@
               <div class="qa-title-container">
                 <p v-if="!index[qa].md" class="sub-categories">
                   <i class="fa fa-align-left" aria-hidden="true"></i>
-                  Subcategories
+                  {{ $t('common.decision-tree.subcategories') }}
                 </p>
                 <p v-if="index[qa].md" class="sub-categories">
                   <i class="fa fa-book" aria-hidden="true"></i>
-                  Read
+                  {{ $t('common.read') }}
                 </p>
                 <p class="qa-title">
                   {{ index[qa].title }}
@@ -105,15 +107,15 @@
               class="cursor-pointer"
               @click="showCustomerSupport = !showCustomerSupport"
             >
-              Contact support
+              {{ $t('common.contact-support') }}
             </p>
             <p class="ml-2 mr-2">|</p>
             <a
               href="https://kb.myetherwallet.com/"
-              rel="noopener noreferrer"
               target="_blank"
+              rel="noopener noreferrer"
             >
-              <p>Help center</p>
+              <p>{{ $t('common.help-center') }}</p>
             </a>
           </div>
           <button v-if="historyStack.length > 0" class="ml-auto" @click="top()">

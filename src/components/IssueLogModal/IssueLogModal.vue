@@ -12,9 +12,9 @@
       >
         <div class="modal-contents">
           <div class="modal-header-block">
-            <h2 class="title">Something went wrong.</h2>
+            <h2 class="title">{{ $t('common.issue-log.error-text') }}</h2>
             <p class="sub-text">
-              Do you want to inform MEW about this error?
+              {{ $t('common.issue-log.inform-error') }}
             </p>
           </div>
           <div class="modal-user-input-block">
@@ -38,7 +38,8 @@
                 <span :class="[neverShow ? 'enable' : '', 'custom-marker']">
                   <i v-if="neverShow" class="fa fa-check" />
                 </span>
-                <input name="terms" type="checkbox" /> Never Show again
+                <input name="terms" type="checkbox" />
+                {{ $t('common.issue-log.never-show') }}
               </label>
             </div>
           </div>

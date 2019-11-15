@@ -10,11 +10,11 @@ const statusTypes = {
 };
 
 const notificationHeaderLabels = {
-  swap: 'header.swap',
-  swapError: 'header.swap',
-  transactionError: 'header.transaction',
-  transaction: 'header.transaction',
-  contractCreation: 'header.contractCreation'
+  swap: 'common.swap',
+  swapError: 'common.swap',
+  transactionError: 'sendTx.tx',
+  transaction: 'sendTx.tx',
+  contractCreation: 'interface.contract-creation'
 };
 
 const listComponentMapping = {

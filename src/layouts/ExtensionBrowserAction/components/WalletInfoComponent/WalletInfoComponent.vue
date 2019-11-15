@@ -24,7 +24,7 @@
       <div class="modal-header-contaier">
         <div>
           <h3>
-            All Tokens
+            {{ $t('mewCX.all-tokens') }}
             <span class="token-count"> {{ tokens.length }} </span>
           </h3>
           <div class="modal-nickname">
@@ -48,12 +48,13 @@
         </div>
       </div>
       <div class="token-search-container">
-        <input v-model="search" placeholder="Search tokens" />
+        <input v-model="search" :placeholder="$t('mewCX.search-tokens')" />
         <i class="fa fa-search" />
       </div>
       <div class="modal-tokens-container">
         <div v-show="loading" class="loading-container">
-          <i class="fa fa-spinner fa-spin" /> Loading Tokens...
+          <i class="fa fa-spinner fa-spin" />
+          {{ $t('mewCX.loading-tokens') }}...
         </div>
         <div v-show="!loading" class="tokens-container">
           <div
@@ -64,7 +65,7 @@
             <div class="icon-name-container">
               <img :src="token.logo.src" />
               <p>
-                {{ token.name }} (Custom) <br />
+                {{ token.name }} ({{ $t('mewCX.custom') }}) <br />
                 <span>{{ token.balance }}</span>
               </p>
             </div>
@@ -99,7 +100,7 @@
             }
           "
         >
-          Access
+          {{ $t('common.header.access') }}
         </div>
         <div
           v-show="walletType !== 'watchOnly'"
@@ -110,11 +111,11 @@
             }
           "
         >
-          Details
+          {{ $t('mewCX.details') }}
         </div>
-        <div class="clickable" @click="edit">Edit</div>
-        <div v-if="false" class="clickable" @click="viewAllTokens(true)">
-          View Tokens
+        <div class="clickable" @click="edit">{{ $t('mewCX.edit') }}</div>
+        <div class="clickable d-block d-xl-none" @click="viewAllTokens(true)">
+          {{ $t('mewCX.view-tokens') }}
         </div>
       </div>
     </div>
@@ -126,23 +127,18 @@
               <blockie :address="address" width="50px" height="50px" />
             </div>
             <div class="actual-address">
-              <div class="d-flex address-title">
-                <p>Address</p>
-                <div class="copy-button">
-                  <p @click="copyAddress">Copy</p>
-                </div>
-              </div>
-
-              <p class="d-none d-xl-block address-value">{{ address }}</p>
-              <p class="d-block d-xl-none address-value">
-                {{ address | concatAddress }}
-              </p>
+              <p>{{ $t('common.addr') }}</p>
+              <p class="d-none d-xl-block">{{ address }}</p>
+              <p class="d-block d-xl-none">{{ address | concatAddress }}</p>
               <input ref="addressInput" :value="address" />
             </div>
           </div>
+          <div class="copy-button">
+            <p @click="copyAddress">{{ $t('common.copy') }}</p>
+          </div>
         </div>
         <div class="balance-container">
-          <p>Balance</p>
+          <p>{{ $t('common.balance.string') }}</p>
           <div>
             <p class="actual-balance">
               {{ balance }} <span>{{ network.type.name }}</span>
@@ -156,31 +152,36 @@
       <div class="tokens-container">
         <div class="tokens-header">
           <p>
-            Tokens
+            {{ $t('mewCX.tokens') }}
           </p>
           <b-dropdown :no-caret="true" class="cx-dropdown">
             <template slot="button-content">
               <i class="fa fa-lg fa-ellipsis-h" />
             </template>
-            <b-dropdown-item @click="openAddCustom">Add</b-dropdown-item>
-            <b-dropdown-item @click="fetchTokens">Refresh</b-dropdown-item>
+            <b-dropdown-item @click="openAddCustom">{{
+              $t('mewCX.add')
+            }}</b-dropdown-item>
+            <b-dropdown-item @click="fetchTokens">{{
+              $t('mewCX.refresh')
+            }}</b-dropdown-item>
             <b-dropdown-item
               @click="
                 () => {
                   viewAllTokens(true);
                 }
               "
-              >View All</b-dropdown-item
+              >{{ $t('mewCX.view-all') }}</b-dropdown-item
             >
           </b-dropdown>
         </div>
         <div class="token-search-container">
-          <input v-model="search" placeholder="Search tokens" />
+          <input v-model="search" :placeholder="$t('mewCX.search-tokens')" />
           <i class="fa fa-search" />
         </div>
         <div class="actual-tokens-container">
           <div v-show="loading" class="loading-container">
-            <i class="fa fa-spinner fa-spin" /> Loading Tokens...
+            <i class="fa fa-spinner fa-spin" />
+            {{ $t('mewCX.loading-tokens') }}...
           </div>
           <div v-show="!loading">
             <div
@@ -428,7 +429,10 @@ export default {
         this.$refs.tokenModal.$refs.tokenModal.hide();
         this.fetchTokenBalance(token);
         await this.fetchTokens();
-        Toast.responseHandler('Successfully added token!', Toast.SUCCESS);
+        Toast.responseHandler(
+          this.$t('mew-cx.token-added-success'),
+          Toast.SUCCESS
+        );
       }
     },
     openAddCustom() {
@@ -588,7 +592,7 @@ export default {
     copyAddress() {
       this.$refs.addressInput.select();
       document.execCommand('copy');
-      Toast.responseHandler('Successfully Copied', Toast.SUCCESS);
+      Toast.responseHandler(this.$t('mew-cx.copy-success'), Toast.SUCCESS);
     },
     viewAllTokens(bool) {
       if (bool) {

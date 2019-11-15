@@ -3,10 +3,10 @@
     <div class="wallets-container-header">
       <div class="header-title-container">
         <div class="title-balance">
-          <h2>My Wallets</h2>
+          <h2>{{ parent.$t('mewCX.my-wallets') }}</h2>
         </div>
         <div class="add-button" @click="props.addWallet">
-          + Add More
+          + {{ parent.$t('mewCX.add-more') }}
         </div>
       </div>
       <component
@@ -17,7 +17,7 @@
     </div>
     <div class="total-balance-container">
       <div class="title-name">
-        Total Balance
+        {{ parent.$t('common.balance.total') }}
       </div>
       <div class="balance-container">
         <p class="actual-balance">
@@ -30,8 +30,8 @@
     </div>
     <div v-show="props.myWallets.length > 0 || props.loading" class="wallets">
       <component
-        :is="injections.components.WalletInfoComponent"
         v-for="wallet in props.myWallets"
+        :is="injections.components.WalletInfoComponent"
         :key="wallet.address"
         :usd="props.ethPrice"
         :address="wallet.address"
@@ -47,13 +47,13 @@
       v-show="props.myWallets.length === 0 && !props.loading"
       class="wallets-info"
     >
-      <h2>No Wallet found...</h2>
+      <h2>{{ parent.$t('mewCX.no-wallet-found') }}...</h2>
     </div>
     <div
       v-show="props.loading && props.myWallets.length === 0"
       class="wallets-info"
     >
-      <h2>Loading Wallets...</h2>
+      <h2>{{ parent.$t('mewCX.loading-wallets') }}...</h2>
     </div>
   </div>
 </template>

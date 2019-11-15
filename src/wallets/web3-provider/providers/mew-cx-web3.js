@@ -93,9 +93,13 @@ class MewCxProvider extends EventEmitter {
         this.clearListeners();
       },
       enable: function() {
-        return this.sendPromise('eth_requestAccounts').then(res => {
-          return res.result;
-        });
+        return this.sendPromise('eth_requestAccounts')
+          .then(res => {
+            return res.result;
+          })
+          .catch(e => {
+            return e.message;
+          });
       }
     };
 
