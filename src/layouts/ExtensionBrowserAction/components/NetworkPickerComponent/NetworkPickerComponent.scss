@@ -1,7 +1,7 @@
 @import '~@/scss/GlobalVariables';
 
 .network-picker {
-  p {
+  span {
     font-size: 12px;
   }
 
@@ -16,7 +16,8 @@
     border: 1px solid $light-grey-8;
     border-radius: 5px;
     cursor: pointer;
-    padding: 10px 20px;
     font-weight: 600;
+    padding: 10px 20px;
+    margin-left: 20px;
   }
 }
