@@ -1,3 +1,15 @@
+### Release v5.2.3-hotfix.2
+
+### Devop
+
+- Use ens register with config to optimize ens registration [#1646](https://github.com/MyEtherWallet/MyEtherWallet/pull/1646)
+
+### Bug
+
+- Fix toBuffer [#1658](https://github.com/MyEtherWallet/MyEtherWallet/pull/1658)
+- Fix dashboard dapps [#1650](https://github.com/MyEtherWallet/MyEtherWallet/pull/1650)
+- Fix MEWCX PromiEvent [#1646](https://github.com/MyEtherWallet/MyEtherWallet/pull/1646)
+
 ### Release v5.2.3-hotfix.1
 
 ### Bug
