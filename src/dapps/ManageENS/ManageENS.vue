@@ -369,6 +369,8 @@ export default {
         this.loading = false;
       } else if (this.parsedTld === this.registrarTLD) {
         try {
+          const resolver = await this.ens.resolver('resolver.eth');
+          this.publicResolverAddress = await resolver.addr();
           if (
             this.registrarType === REGISTRAR_TYPES.FIFS &&
             !this.isSubDomain
@@ -470,10 +472,12 @@ export default {
       const utils = this.web3.utils;
       try {
         const commitment = await this.registrarControllerContract.methods
-          .makeCommitment(
+          .makeCommitmentWithConfig(
             this.parsedHostName,
             this.account.address,
-            utils.sha3(this.secretPhrase)
+            utils.sha3(this.secretPhrase),
+            this.publicResolverAddress,
+            this.account.address
           )
           .call();
         this.minimumAge = await this.registrarControllerContract.methods
@@ -506,11 +510,13 @@ export default {
           .rentPrice(this.parsedHostName, duration)
           .call();
         this.registrarControllerContract.methods
-          .register(
+          .registerWithConfig(
             this.parsedHostName,
             this.account.address,
             duration,
-            utils.sha3(this.secretPhrase)
+            utils.sha3(this.secretPhrase),
+            this.publicResolverAddress,
+            this.account.address
           )
           .send({ from: this.account.address, value: rentPrice })
           .once('transactionHash', () => {
@@ -593,8 +599,6 @@ export default {
     },
     async getMoreInfo() {
       let owner;
-      const resolver = await this.ens.resolver('resolver.eth');
-      this.publicResolverAddress = await resolver.addr();
       this.nameHash = nameHashPckg.hash(this.parsedDomainName);
       try {
         if (
