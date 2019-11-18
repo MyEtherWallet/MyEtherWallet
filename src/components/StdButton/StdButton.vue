@@ -28,7 +28,8 @@ export default {
   height: 60px !important;
   min-width: 180px !important;
   text-transform: none;
-  letter-spacing: -0.1px;
+  //letter-spacing: -0.1px;
+  letter-spacing: 0px;
   font-size: 14px !important;
   font-weight: 600;
 }
