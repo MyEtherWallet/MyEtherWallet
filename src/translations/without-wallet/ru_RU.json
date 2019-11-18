@@ -1,7 +1,7 @@
 {
   "generate-info": "Generate Information",
   "signed-tx": "Signed Transaction",
-  "nonce": "Nonce-Число",
+  "nonce": "Nonce",
   "select-network": "Select Network",
   "tx-details": "Transaction Details",
   "tx-status": "Transaction Status"
