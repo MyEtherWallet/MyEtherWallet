@@ -47,7 +47,7 @@
                   <v-list-item-title class="subtitle-2">
                     MEWtopia
                   </v-list-item-title>
-                  <v-list-item-subtitle class="caption"
+                  <v-list-item-subtitle v-if="false" class="caption"
                     >Get help from our support team!</v-list-item-subtitle
                   >
                 </v-list-item-content>
