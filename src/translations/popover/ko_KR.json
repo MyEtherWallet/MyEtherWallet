@@ -2,7 +2,7 @@
   "signature": "A personal identifier to accompany your transaction",
   "tx-speed-pt-1": "This field regulates speed of transaction, which is always paid in {0}.",
   "tx-speed-pt-2": "We recommend having at least .01 {0} before making transactions.",
-  "print": "인쇄 ",
+  "print": "Print",
   "addr-switch": "Switch Address",
   "addr-qr": "Address in QR code",
   "addr-display": "Display Address on your device",
