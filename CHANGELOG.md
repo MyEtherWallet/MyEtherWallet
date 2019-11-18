@@ -2,6 +2,24 @@
 
 - Address book [#1647] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1647)
 
+### Release v5.2.3-hotfix.2
+
+### Devop
+
+- Use ens register with config to optimize ens registration [#1646](https://github.com/MyEtherWallet/MyEtherWallet/pull/1646)
+
+### Bug
+
+- Fix toBuffer [#1658](https://github.com/MyEtherWallet/MyEtherWallet/pull/1658)
+- Fix dashboard dapps [#1650](https://github.com/MyEtherWallet/MyEtherWallet/pull/1650)
+- Fix MEWCX PromiEvent [#1646](https://github.com/MyEtherWallet/MyEtherWallet/pull/1646)
+
+### Release v5.2.3-hotfix.1
+
+### Bug
+
+- Fix send transaction page
+
 ### Release v5.2.3
 
 ### Devop
@@ -15,12 +33,14 @@
 - reduce coin image count from 656 to 34 [#1601](https://github.com/MyEtherWallet/MyEtherWallet/pull/1601)
 - Add rel="noopener noreferrer" to links [#1618](https://github.com/MyEtherWallet/MyEtherWallet/pull/1618)
 - Refactor translations [#1475](https://github.com/MyEtherWallet/MyEtherWallet/pull/1475)
+- Improve handling of failure to get rates, offline, and restrict usage to main net [#1587](https://github.com/MyEtherWallet/MyEtherWallet/pull/1587)
 
 ### Bug
 
 - Web3 modal weird behavior [#1613](https://github.com/MyEtherWallet/MyEtherWallet/pull/1613)
 - Fix sentry error on user login [#1615](https://github.com/MyEtherWallet/MyEtherWallet/pull/1615)
 - Send Offline Helper export actual data [#1637](https://github.com/MyEtherWallet/MyEtherWallet/pull/1637)
+- Reset modal variable so it reopens account request [#1640](https://github.com/MyEtherWallet/MyEtherWallet/pull/1640)
 
 ### Release v5.2.2
 

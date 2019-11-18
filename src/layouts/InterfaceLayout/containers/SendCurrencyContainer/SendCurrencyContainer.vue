@@ -29,7 +29,7 @@
             <div class="the-form amount-number">
               <input
                 v-validate="'min_value:0'"
-                v-model="value"
+                v-model="toValue"
                 :placeholder="$t('sendTx.amount')"
                 type="number"
                 min="0"
@@ -107,7 +107,7 @@
             <div v-show="!isToken" class="the-form user-input">
               <p>{{ $t('sendTx.add-data') }}</p>
               <input
-                v-model="data"
+                v-model="toData"
                 :placeholder="$t('sendTx.ph-add-data')"
                 type="text"
                 autocomplete="off"

@@ -4,8 +4,7 @@ import {
   ethSendTransaction,
   ethSign,
   ethSignTransaction,
-  ethGetTransactionCount,
-  ethGetTransactionReceipt
+  ethGetTransactionCount
 } from '../methods';
 class GivenProvider {
   constructor(host, options, store, eventHub) {
@@ -29,7 +28,6 @@ class GivenProvider {
       middleware.use(ethSendTransaction);
       middleware.use(ethSignTransaction);
       middleware.use(ethGetTransactionCount);
-      middleware.use(ethGetTransactionReceipt);
       middleware.use(ethSign);
       middleware.run(req, callback).then(() => {
         this.givenProvider.send_(payload, callback);
