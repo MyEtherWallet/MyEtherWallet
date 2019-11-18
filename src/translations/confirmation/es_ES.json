@@ -5,6 +5,6 @@
   "confirm-signing": "Confirm Signing",
   "approve-on-device": "Please Approve on Hardware Wallet",
   "success": "Success",
-  "error": "Erreur",
+  "error": "Error",
   "waiting-for-hash": "Waiting for Transaction Hash"
 }
