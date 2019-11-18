@@ -234,8 +234,10 @@ export default {
 
         if (this.isValidAddress) {
           this.$emit('toAddress', { address: checkAddress, valid: true });
+          this.$emit('validAddress', true);
         } else {
           this.$emit('toAddress', { address: '', valid: false });
+          this.$emit('validAddress', false);
         }
       }
     }
