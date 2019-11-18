@@ -8,6 +8,7 @@
 
 .drop-down-address-selector {
   position: relative;
+  width: 100%;
 }
 
 .dropdown-input-box {
@@ -19,6 +20,12 @@
     border: 1px solid $grey-1;
     border-bottom: 1px solid $background-color-1;
     border-radius: 4px 4px 0 0;
+  }
+
+  .address-check {
+    bottom: 17px;
+    position: absolute;
+    right: 71px;
   }
 
   input {
@@ -70,7 +77,7 @@
       margin-top: 11px;
     }
   }
-} // .dropdown-input-box
+}
 
 .dropdown-list-box {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
@@ -80,7 +87,7 @@
   background-color: $background-color-1;
   border: 1px solid $grey-1;
   border-radius: 0 0 4px 4px;
-  z-index: 1;
+  z-index: 9999;
   overflow-y: auto;
   overflow-x: hidden;
   max-height: 230px;
@@ -139,5 +146,15 @@
 }
 
 .good-button {
+  background-color: transparent;
   text-align: right;
+}
+
+.title-button {
+  color: $mew-green;
+}
+
+.add-addr {
+  color: $mew-green;
+  grid-template-columns: none !important;
 }

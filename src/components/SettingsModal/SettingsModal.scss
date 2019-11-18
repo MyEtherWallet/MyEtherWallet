@@ -139,55 +139,75 @@ $mobile-width: 530px;
 // Address Book
 //***************************************************
 .address-book {
-  .contact-container {
-    background-color: $light-grey-2;
-    border-radius: 4px;
-    max-height: 200px;
-    display: block;
+  .table-container {
     margin-top: 10px;
-    width: 100%;
-    overflow-y: auto;
+    max-height: 300px;
+    overflow: auto;
 
-    .blockie-image {
-      margin-right: 5px;
-    }
+    .contact-container {
+      background-color: $light-grey-2;
+      border-radius: 4px;
+      display: table;
+      overflow-y: auto;
+      table-layout: fixed;
+      width: 100%;
 
-    .numbered {
-      color: $dark-grey-7;
-    }
+      .header {
+        th {
+          text-transform: uppercase;
+        }
+      }
 
-    .header {
-      background-color: $light-blue-11;
-    }
+      thead tr th {
+        background-color: $light-blue-11;
+        position: sticky;
+        top: 0;
+      }
 
-    th {
-      color: #476081;
-      font-weight: 400;
-      font-size: 13px;
-    }
+      tbody {
+        tr {
+          border-bottom: 1px solid $light-blue-11;
+        }
+      }
 
-    th,
-    td {
-      padding: 10px;
-    }
+      th {
+        color: #476081;
+        font-weight: 400;
+        font-size: 13px;
+      }
 
-    .addr-container {
-      align-items: center;
-      display: flex;
-    }
+      th,
+      td {
+        padding: 10px;
+      }
 
-    .contact-addr {
-      color: $light-blue-8;
-      max-width: 215px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
+      .blockie-image {
+        margin-right: 5px;
+        min-width: 25px;
+      }
 
-    .remove-txt {
-      color: $red-2;
-      cursor: pointer;
-      font-weight: 500;
+      .numbered {
+        color: $dark-grey-7;
+      }
+
+      .addr-container {
+        align-items: center;
+        display: flex;
+      }
+
+      .contact-addr {
+        color: $light-blue-8;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 100%;
+      }
+
+      .remove-txt {
+        color: $red-2;
+        cursor: pointer;
+        font-weight: 500;
+      }
     }
   }
   .address-inputs {
@@ -236,5 +256,9 @@ $mobile-width: 530px;
 
   .err {
     color: $red-1;
+  }
+
+  .numbered-col {
+    width: 20px;
   }
 }

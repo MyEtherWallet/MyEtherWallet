@@ -3,43 +3,11 @@
     <div class="subscription-content">
       <div class="subscription-form-container">
         <b-container>
-          <b-row>
-            <span class="label-text">{{ $t('dappsAmbrpay.to-address') }}</span>
-            <p
-              class="action-text prevent-user-select copy-text"
-              @click="copyToClipboard"
-            >
-              {{ $t('common.copy') }}
-            </p>
-          </b-row>
           <b-row class="address-block">
-            <span class="row-style">
-              <blockie
-                v-show="isValidAddress"
-                :address="hexAddress"
-                :size="6"
-                :scale="16"
-                width="32px"
-                height="32px"
-                class="blockie-image"
-              />
-              <input
-                v-ens-resolver="'address'"
-                ref="address"
-                v-model="address"
-                :class="isValidAddress ? 'input-address' : ''"
-                name="name"
-                autocomplete="off"
-                type="text"
-              />
-              <i
-                :class="[
-                  isValidAddress && hexAddress.length !== 0 ? '' : 'not-good',
-                  'fa fa-check-circle good-button'
-                ]"
-                aria-hidden="true"
-              />
-            </span>
+            <dropdown-address-selector
+              title="To Address"
+              @toAddress="getToAddress($event)"
+            />
           </b-row>
           <b-row>
             <b-col class="mt-3" cols="12" md="5">
@@ -110,12 +78,13 @@
 <script>
 import Blockie from '@/components/Blockie';
 import { mapState } from 'vuex';
-import { Toast } from '@/helpers';
 import BigNumber from 'bignumber.js';
+import DropDownAddressSelector from '@/components/DropDownAddressSelector';
 
 export default {
   components: {
-    blockie: Blockie
+    blockie: Blockie,
+    'dropdown-address-selector': DropDownAddressSelector
   },
   data() {
     return {
@@ -174,10 +143,10 @@ export default {
     }
   },
   methods: {
-    copyToClipboard() {
-      this.$refs.address.select();
-      document.execCommand('copy');
-      Toast.responseHandler(this.$t('common.copied'), Toast.INFO);
+    getToAddress(data) {
+      this.address = data.address;
+      this.hexAddress = data.address;
+      this.isValidAddress = data.valid;
     },
     sendEntireBalance() {
       if (this.account) {
