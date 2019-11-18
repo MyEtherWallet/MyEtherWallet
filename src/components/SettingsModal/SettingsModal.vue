@@ -141,46 +141,63 @@
           </full-width-dropdown>
 
           <full-width-dropdown
-            title="Manage Contact Addresses"
+            :title="$t('interface.address-book.title')"
             class="address-book"
           >
             <p>
-              {{ $t('interface.contact-add-max') }}
+              {{ $t('interface.address-book.add-up-to') }}
             </p>
-            <!-- remmeber translations -->
-            <table v-if="addressBook.length > 0" class="contact-container">
-              <tr class="header">
-                <th>#</th>
-                <th>ADDRESS</th>
-                <th>NICKNAME</th>
-                <th></th>
-              </tr>
-              <tr v-for="(contact, index) in addressBook" :key="contact.key">
-                <td class="numbered">{{ index + 1 }}.</td>
-                <td class="addr-container">
-                  <blockie
-                    :address="contact.address"
-                    width="25px"
-                    height="25px"
-                    class="blockie-image"
-                  />
-                  <a
-                    :href="'https://etherscan.io/address/' + contact.address"
-                    rel="noopener noreferrer"
-                    class="contact-addr"
-                    >{{ contact.address }}</a
+            <div class="table-container">
+              <table v-if="addressBook.length > 0" class="contact-container">
+                <colgroup>
+                  <col width="5%" />
+                  <col width="55%" />
+                  <col width="20%" />
+                  <col width="20%" />
+                </colgroup>
+                <thead>
+                  <tr class="header">
+                    <th>#</th>
+                    <th>{{ $t('common.addr') }}</th>
+                    <th>{{ $t('interface.address-book.nickname') }}</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    v-for="(contact, index) in addressBook"
+                    :key="contact.key"
                   >
-                </td>
-                <td>
-                  {{ contact.nickname }}
-                </td>
-                <td>
-                  <span class="remove-txt" @click="removeContact(index)">
-                    Remove
-                  </span>
-                </td>
-              </tr>
-            </table>
+                    <td class="numbered">{{ index + 1 }}.</td>
+                    <td class="addr-container">
+                      <blockie
+                        :address="contact.address"
+                        width="25px"
+                        height="25px"
+                        class="blockie-image"
+                      />
+                      <a
+                        :href="
+                          'https://etherscan.io/address/' + contact.address
+                        "
+                        rel="noopener noreferrer"
+                        class="contact-addr"
+                        target="_blank"
+                        >{{ contact.address }}</a
+                      >
+                    </td>
+                    <td>
+                      {{ contact.nickname }}
+                    </td>
+                    <td>
+                      <span class="remove-txt" @click="removeContact(index)">
+                        {{ $t('interface.address-book.remove') }}
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
 
             <span v-if="addrBookErrMsg" class="err">{{ addrBookErrMsg }}</span>
 
@@ -196,16 +213,16 @@
                 v-ens-resolver="'contactAddress'"
                 :class="isValidAddress ? 'blockie-input' : ''"
                 v-model="contactAddress"
+                :placeholder="$t('common.addr')"
                 type="text"
-                placeholder="Address"
               />
             </div>
             <div class="addr-btn-container">
               <input
                 v-model="contactNickname"
+                :placeholder="$t('interface.address-book.nickname')"
                 class="nickname-input"
                 type="text"
-                placeholder="Nickname"
               />
               <standard-button
                 :options="buttonAddress"
@@ -405,9 +422,7 @@ export default {
           }, 1500);
         } catch (e) {
           Toast.responseHandler(
-            new Error(
-              'Something went wrong while importing file, please make sure it is a valid file'
-            ),
+            new Error(this.$t('interface.import-error')),
             Toast.ERROR
           );
         }
@@ -538,13 +553,17 @@ export default {
     },
     addContact() {
       if (this.addressBook.length > 9) {
-        this.addrBookErrMsg =
-          'You could add up to 10 contact addresses maximum.';
+        this.addrBookErrMsg = this.$t('interface.address-book.add-up-to');
+        this.contactAddress = '';
+        this.contactNickname = '';
         return;
       }
 
+      this.addrBookErrMsg = null;
+
       this.addressBook.push({
         address: this.contactAddress,
+        currency: 'ETH',
         nickname: this.contactNickname || this.addressBook.length + 1
       });
 

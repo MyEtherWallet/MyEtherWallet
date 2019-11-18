@@ -80,6 +80,7 @@
             :isopen="stage2"
             :title="$t('withoutWallet.generate-info')"
             number="2"
+            class="address-selector"
             @titleClicked="stage2 = !stage2"
           >
             <dropdown-address-selector
@@ -605,11 +606,13 @@ export default {
         .precision(2, BigNumber.ROUND_UP)
         .toNumber();
     },
-    async generateInformation(address) {
-      if (address === '') return;
-      this.genInfo['address'] = address;
+    async generateInformation(data) {
+      if (data.address === '') return;
+      this.genInfo['address'] = data.address;
       this.genInfo['gasPrice'] = await this.web3.eth.getGasPrice();
-      this.genInfo['nonce'] = await this.web3.eth.getTransactionCount(address);
+      this.genInfo['nonce'] = await this.web3.eth.getTransactionCount(
+        data.address
+      );
       this.genInfo['blockNumber'] = await this.web3.eth.getBlockNumber();
       this.genInfo['chainID'] = this.selectedNetwork.type.chainID;
       this.genInfo['timestamp'] = Date.now(); //;

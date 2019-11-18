@@ -39,37 +39,10 @@
               </li>
             </ul>
             <div class="to-address">
-              <div class="title">
-                <h4>{{ $t('sendTx.to-addr') }} &nbsp;</h4>
-                <blockie
-                  v-show="address !== '' && validAddress"
-                  :address="address"
-                  class="blockie-image-icon"
-                  width="32px"
-                  height="32px"
-                />
-                <button
-                  class="title-button copy-button prevent-user-select"
-                  @click="copyToAddress"
-                >
-                  {{ $t('common.copy') }}
-                </button>
-              </div>
-              <div class="the-form address-block">
-                <textarea
-                  ref="toaddress"
-                  v-model="address"
-                  :placeholder="$t('common.enter-addr')"
-                  name="name"
-                />
-                <i
-                  :class="[
-                    validAddress ? '' : 'not-good',
-                    'fa fa-check-circle good-button'
-                  ]"
-                  aria-hidden="true"
-                />
-              </div>
+              <dropdown-address-selector
+                title="To Address"
+                @toAddress="getToAddress($event)"
+              />
             </div>
           </div>
         </div>
@@ -226,6 +199,7 @@ import { isAddress } from '@/helpers/addressUtils';
 import store from 'store';
 import { Misc, Toast } from '@/helpers';
 import utils from 'web3-utils';
+import DropDownAddressSelector from '@/components/DropDownAddressSelector';
 
 export default {
   components: {
@@ -233,7 +207,8 @@ export default {
     blockie: Blockie,
     'signed-tx-modal': SignedTxModal,
     'currency-picker': CurrencyPicker,
-    'interface-container-title': InterfaceContainerTitle
+    'interface-container-title': InterfaceContainerTitle,
+    'dropdown-address-selector': DropDownAddressSelector
   },
   props: {
     checkPrefilled: {
@@ -451,11 +426,8 @@ export default {
           .encodeABI();
       }
     },
-    copyToAddress() {
-      const el = this.$refs.toaddress;
-      el.select();
-      document.execCommand('copy');
-      window.getSelection().removeAllRanges();
+    getToAddress(data) {
+      this.address = data.address;
     },
     uploadClick() {
       const jsonInput = this.$refs.jsonInput;
