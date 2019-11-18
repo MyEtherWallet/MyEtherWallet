@@ -428,6 +428,7 @@ export default {
     },
     getToAddress(data) {
       this.address = data.address;
+      this.validAddress = data.valid;
     },
     uploadClick() {
       const jsonInput = this.$refs.jsonInput;
