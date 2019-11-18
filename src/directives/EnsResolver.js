@@ -18,7 +18,7 @@ const EnsResolver = {
           errorPar.innerText =
             isDarklisted.msg.length > 0
               ? isDarklisted.msg
-              : this.t('dappsEns.ens-resolver.address-reported-error');
+              : this.$t('ens.ens-resolver.address-reported-error');
           el.parentNode.parentNode.appendChild(errorPar);
           return true;
         }
@@ -84,12 +84,10 @@ const EnsResolver = {
         removeElements();
         if (e.length > 0) {
           if (e.length !== 42 || !utils.isHexStrict(e)) {
-            errorPar.innerText = this.t(
-              'dappsEns.ens-resolver.invalid-eth-addr'
-            );
+            errorPar.innerText = this.$t('ens.ens-resolver.invalid-eth-addr');
           } else if (!utils.checkAddressChecksum(e)) {
-            errorPar.innerText = this.t(
-              'dappsEns.ens-resolver.addr-not-checksummed'
+            errorPar.innerText = this.$t(
+              'ens.ens-resolver.addr-not-checksummed'
             );
             // 'Incorrect checksum: check address format on EthVM';
           }
