@@ -29,6 +29,9 @@
         <i
           :class="[
             isValidAddress && hexAddress.length !== 0 ? '' : 'not-good',
+            !isValidAddress && selectedAddress.length > 0
+              ? 'resolver-err-icon'
+              : '',
             'fa fa-check-circle good-button address-check'
           ]"
           aria-hidden="true"
@@ -175,6 +178,12 @@ export default {
       if (!this.selectedAddress) {
         Toast.responseHandler(
           this.$t('interface.address-book.cannot-add'),
+          Toast.ERROR
+        );
+        return;
+      } else if (!this.isValidAddress) {
+        Toast.responseHandler(
+          this.$t('ens.ens-resolver.invalid-eth-addr'),
           Toast.ERROR
         );
         return;

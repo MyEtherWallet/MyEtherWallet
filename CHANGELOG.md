@@ -1,6 +1,6 @@
 ### Feature
 
-- Address book [#1647] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1647)
+- Address book [#1647](https://github.com/MyEtherWallet/MyEtherWallet/pull/1647)
 
 ### Release v5.2.3-hotfix.2
 
