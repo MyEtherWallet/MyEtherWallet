@@ -9,7 +9,7 @@
     <v-container class="banner-content-container">
       <v-row no-gutters>
         <v-col>
-          <v-card color="transparent" flat tile max-width="500">
+          <v-card color="transparent" flat tile max-width="510">
             <div class="white--text display-2 font-weight-bold">
               The most popular free Ethereum wallet
             </div>
