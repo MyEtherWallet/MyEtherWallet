@@ -550,6 +550,7 @@ export default {
     removeContact(idx) {
       this.addressBook.splice(idx, 1);
       this.$store.dispatch('setAddressBook', this.addressBook);
+      this.addrBookErrMsg = null;
     },
     addContact() {
       if (this.addressBook.length > 9) {
