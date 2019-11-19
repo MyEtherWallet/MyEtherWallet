@@ -356,7 +356,14 @@ export default {
       if (this.network.type.chainID === 1 || this.network.type.chainID === 3) {
         const tb = new TokenBalance(this.web3.currentProvider);
         try {
-          tokens = await tb.getBalance(this.account.address);
+          tokens = await tb.getBalance(
+            this.account.address,
+            true,
+            true,
+            true,
+            0,
+            { gas: '0x11e1a300' }
+          );
           tokens = tokens.map(token => {
             token.address = token.addr;
             delete token.addr;
