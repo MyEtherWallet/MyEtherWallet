@@ -1,3 +1,7 @@
+### Devop
+
+- Make use of River nodes [#1568](https://github.com/MyEtherWallet/MyEtherWallet/pull/1568)
+
 ### Release v5.2.3-hotfix.2
 
 ### Devop
