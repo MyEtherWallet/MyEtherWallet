@@ -175,7 +175,6 @@
         </div>
       </div>
     </div>
-
     <div class="submit-button-container">
       <div
         :class="[
@@ -442,6 +441,15 @@ export default {
     if (this.online && this.network.type.name === 'ETH') this.getEthPrice();
   },
   methods: {
+    clear() {
+      this.toData = '';
+      this.toValue = '0';
+      this.hexAddress = '';
+      this.address = '';
+      this.gasLimit = '21000';
+      this.isValidAddress = false;
+      this.advancedExpand = false;
+    },
     prefillForm() {
       if (this.isPrefilled) {
         const foundToken = this.tokensymbol
@@ -547,9 +555,11 @@ export default {
         const _tx = new Transaction(raw);
         const json = _tx.toJSON(true);
         json.from = coinbase;
-        this.web3.eth.sendTransaction(json).catch(err => {
-          Toast.responseHandler(err, Toast.ERROR);
-        });
+        this.web3.eth.sendTransaction(json)
+          .catch(err => {
+            Toast.responseHandler(err, Toast.ERROR);
+          });
+        this.clear();
       } catch (e) {
         Toast.responseHandler(e, Toast.ERROR);
       }
