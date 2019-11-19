@@ -177,7 +177,7 @@ export default {
         },
         {
           func: this.web3WalletModal,
-          title: 'Web3 Wallet',
+          title: this.$t('accessWallet.web3-wallet'),
           desc: this.$t('accessWallet.web3-wallet-desc'),
           recommend: '',
           tooltip: '',
