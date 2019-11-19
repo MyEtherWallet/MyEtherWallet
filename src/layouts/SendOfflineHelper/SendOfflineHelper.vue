@@ -46,8 +46,7 @@
                         "
                         class="no-icon"
                       >
-                        <p>{{ $t('common.no') }}</p>
-                        <p>{{ $t('common.icon') }}</p>
+                        <p>{{ $t('common.no-icon') }}</p>
                       </div>
                     </div>
                     <p>{{ key }}</p>
