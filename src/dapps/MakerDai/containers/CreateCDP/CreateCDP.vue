@@ -231,10 +231,10 @@ export default {
       type: BigNumber,
       default: toBigNumber(0)
     },
-    liquidationRatio: {
-      type: BigNumber,
-      default: toBigNumber(0)
-    },
+    // liquidationRatio: {
+    //   type: BigNumber,
+    //   default: toBigNumber(0)
+    // },
     priceService: {
       type: Object,
       default: function() {
@@ -326,11 +326,7 @@ export default {
     },
 
     minInSelectedCurrency() {
-      const minEth = toBigNumber(this.getValueOrFunction('minEth'));
-
-      return toBigNumber(minEth)
-        .times(this.getCurrentPriceFor('ETH'))
-        .div(this.getCurrentPrice);
+      return this.minEthDeposit;
     },
     atSetFloor() {
       if (this.priceFloor <= 0) return 0;
@@ -344,14 +340,19 @@ export default {
       if (this.daiQty <= 0 || this.ethQty <= 0) return 0;
       return this.calcLiquidationPrice(this.ethQty, this.daiQty);
     },
+    liquidationRatio(){
+      if(this.emptyMakerCreated){
+        return this.makerCDP.mcdCurrencies[this.selectedCurrency].liquidationRatio._amount
+      }
+    },
     maxDaiDraw() {
       if (this.ethQty <= 0) return 0;
       const bufferVal = this.calcDaiDraw(this.ethQty).times(0.01);
       return toBigNumber(this.calcDaiDraw(this.ethQty)).minus(bufferVal);
     },
     minEthDeposit() {
-      if (this.daiQty <= 0) return 0;
-      return this.calcMinEthDeposit(this.daiQty);
+      // if (this.daiQty <= 0) return 0;
+      return this.calcMinEthDeposit(20);
     },
     risky() {
       const collRatio = this.collatRatio;
@@ -372,6 +373,7 @@ export default {
     },
     collateralOptions() {
       const mcdCollateralOptions = this.getValueOrFunction('mcdCurrencies');
+      console.log(mcdCollateralOptions); // todo remove dev item
       if (mcdCollateralOptions) {
         return Object.keys(mcdCollateralOptions).reduce((acc, entry) => {
           acc.push({
@@ -384,6 +386,14 @@ export default {
     },
     getCurrentPrice() {
       return this.getCurrentPriceFor(this.selectedCurrency.symbol);
+    }
+  },
+  watch: {
+    selectedCurrency(val){
+      if(this.emptyMakerCreated){
+        console.log(val); // todo remove dev item
+        this.makerCDP.setType(val)
+      }
     }
   },
   async mounted() {
@@ -421,6 +431,7 @@ export default {
       this.makerCDP = await this.buildEmpty();
       this.$forceUpdate();
       this.emptyMakerCreated = true;
+      console.log('mcdCurrencies val:', this.makerCDP.mcdCurrencies); // todo remove dev item
     },
     displayPercentValue,
     displayFixedValue,
@@ -514,7 +525,9 @@ export default {
       ethPrice = this.getCurrentPrice,
       liquidationRatio = this.liquidationRatio
     ) {
+      console.log('calcMinEthDeposit'); // todo remove dev item
       if (daiQty <= 0) return 0;
+      console.log(bnOver(liquidationRatio, daiQty, ethPrice)); // todo remove dev item
       return bnOver(liquidationRatio, daiQty, ethPrice);
     },
 

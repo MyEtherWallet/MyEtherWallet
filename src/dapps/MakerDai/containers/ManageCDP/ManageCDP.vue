@@ -166,6 +166,8 @@ import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/Interf
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import BottomHelpLink from '@/components/BottomHelpLink';
 import Blockie from '@/components/Blockie';
+import BigNumber from 'bignumber.js';
+
 import {
   displayFixedPercent,
   displayFixedValue,
