@@ -1,16 +1,22 @@
 import nodeList from '@/networks';
 import darklist from '@/address-darklist/address-darklist.json';
 import store from 'store';
+import { MEW_CX } from '@/builds/configs/types';
 if (store.get('notifications') === undefined) store.set('notifications', {});
 const gettingStartedDone =
   store.get('skipTutorial') !== undefined ? store.get('skipTutorial') : false;
 const storedNetwork = store.get('network');
-let network = BUILD_TYPE !== 'mewcx' ? nodeList['ETH'][0] : nodeList['ETH'][1];
-
-if (BUILD_TYPE !== 'mewcx' && storedNetwork !== undefined) {
+let network = BUILD_TYPE !== MEW_CX ? nodeList['ETH'][0] : nodeList['ETH'][1];
+if (BUILD_TYPE !== MEW_CX && storedNetwork !== undefined) {
   network = storedNetwork;
   if (storedNetwork.type.name !== 'CUS') {
+    network = storedNetwork;
     network.type = nodeList[storedNetwork.type.name][0].type;
+    nodeList[storedNetwork.type.name].forEach(node => {
+      if (storedNetwork.service === node.service) {
+        network = node;
+      }
+    });
   }
 }
 
