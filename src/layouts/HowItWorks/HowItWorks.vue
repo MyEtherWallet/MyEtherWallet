@@ -1,16 +1,16 @@
 <template>
   <div>
     <PageTitle title="How it works" />
-    <Tabs />
+    <TabContent />
   </div>
 </template>
 
 <script>
 import PageTitle from '@/layouts/components/PageTitle';
-import Tabs from './components/Tabs';
+import TabContent from './components/TabContent';
 
 export default {
   name: 'HowItWorks',
-  components: { PageTitle, Tabs }
+  components: { PageTitle, TabContent }
 };
 </script>
