@@ -54,8 +54,8 @@
       @accountPath="updateSelectedPath"
       @passwordUpdated="updatePassword"
     />
-    <h2>Add My Wallet</h2>
-    <p>How would you like to add your wallet?</p>
+    <h2>{{ $t('mewCx.add-my-wallet') }}</h2>
+    <p>{{ $t('mewCx.how-would-you-add-wallet') }}</p>
     <div class="add-wallet-options">
       <access-wallet-button
         v-for="(button, index) in options"
@@ -443,7 +443,7 @@ export default {
       if (Array.isArray(e)) {
         this.mnemonicPhrase = e.join(' ');
       } else {
-        Toast.responseHandler('Invalid Mnemonic', Toast.ERROR);
+        Toast.responseHandler(this.$t('mew-cx.invalid-mnemonic'), Toast.ERROR);
       }
     },
     updateSelectedPath(e) {

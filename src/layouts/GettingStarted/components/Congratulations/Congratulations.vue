@@ -3,31 +3,27 @@
     <div class="block-progressbar">
       <dir class="block-progressbar__container">
         <div class="block-progressbar__title">
-          {{ $t('gettingStarted.congratulationsTitle') }}
+          {{ $t('gettingStarted.title-congrats') }}
         </div>
         <div class="block-progressbar__progressbar">
           <div :class="progressBarValue" />
         </div>
         <div class="block-progressbar__content text-cented">
           <img alt src="~@/assets/images/icons/drink.svg" />
-
-          <p>
-            {{ $t('gettingStarted.congratulationsDesc') }}
+          <i18n path="gettingStarted.congratulations.desc" tag="p">
             <a
+              slot="helpCenter"
               rel="noopener noreferrer"
               target="_blank"
               href="https://kb.myetherwallet.com"
+              >{{ $t('common.help-center') }}</a
             >
-              {{ $t('gettingStarted.congratulationsLink') }}
-            </a>
-            {{ $t('gettingStarted.congratulationsDescCont') }}
-          </p>
-
+          </i18n>
           <div
             class="done-button mid-round-button-green-filled-green-border"
             @click="done"
           >
-            Get Started
+            {{ $t('common.get-started') }}
           </div>
         </div>
       </dir>

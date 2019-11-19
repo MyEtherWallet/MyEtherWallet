@@ -10,7 +10,7 @@
       <form>
         <div class="modal-contents">
           <div class="input-container">
-            <label> Your Wallet </label>
+            <label> {{ $t('mewCx.your-wallet') }} </label>
             <wallet-view-component
               :should-concat="false"
               :address="address"
@@ -19,12 +19,12 @@
             />
           </div>
           <div class="input-container">
-            <label> Nickname </label>
+            <label> {{ $t('mewCx.nickname') }} </label>
             <input v-model="locNickname" />
           </div>
           <div class="submit-button-container">
             <div class="back-button" @click.prevent="back">
-              Back
+              {{ $t('common.back') }}
             </div>
             <button
               class="submit-button large-round-button-green-filled"
@@ -35,7 +35,7 @@
                 }
               "
             >
-              <span v-show="!loading"> Add Wallet </span>
+              <span v-show="!loading"> {{ $t('mewCx.add-wallet') }} </span>
               <i v-show="loading" class="fa fa-spinner fa-spin" />
             </button>
           </div>

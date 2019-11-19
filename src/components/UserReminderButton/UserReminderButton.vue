@@ -1,7 +1,7 @@
 <template>
   <div class="user-reminder-button">
     <img src="~@/assets/images/icons/acknowledge.png" />
-    <p>Tutorial</p>
+    <p>{{ $t('common.tutorial') }}</p>
   </div>
 </template>
 

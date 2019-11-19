@@ -2,7 +2,7 @@
   <div class="modal-container">
     <b-modal
       ref="modal"
-      title="Swap Widget"
+      :title="$t('swap.swap-widget')"
       centered
       class="bootstrap-modal bootstrap-modal-wide padding-40-20"
       hide-footer
@@ -32,13 +32,13 @@
               <div class="form-block amount-to-address">
                 <div class="amount">
                   <div class="title title-and-copy">
-                    <h4>{{ $t('common.from') }}</h4>
+                    <h4>{{ $t('swap.from') }}</h4>
                     <p
                       v-if="tokenBalances[fromCurrency] > 0"
                       class="all-button prevent-user-select"
                       @click="swapAll"
                     >
-                      {{ $t('common.totalBalance') }}
+                      {{ $t('common.balance.total') }}
                     </p>
                   </div>
                   <swap-currency-picker
@@ -52,18 +52,18 @@
                   <div class="the-form amount-number">
                     <input
                       v-model="fromValue"
+                      :placeholder="$t('swap.deposit-amount')"
                       type="number"
                       name
                       value
                       step="any"
-                      placeholder="Deposit Amount"
                       @input="amountChanged('from')"
                     />
                   </div>
                   <div class="error-message-container">
                     <p v-if="fromBelowMinAllowed">{{ fromBelowMinAllowed }}</p>
                     <p v-if="!hasEnough && !fromBelowMinAllowed">
-                      {{ $t('common.dontHaveEnough') }}
+                      {{ $t('swap.warning.not-enough-funds') }}
                     </p>
                     <p v-if="fromAboveMaxAllowed">{{ fromAboveMaxAllowed }}</p>
                   </div>
@@ -73,7 +73,7 @@
                 </div>
                 <div class="amount">
                   <div class="title">
-                    <h4>{{ $t('common.to') }}</h4>
+                    <h4>{{ $t('swap.to') }}</h4>
                   </div>
                   <swap-currency-picker
                     :currencies="toArray"
@@ -86,11 +86,11 @@
                   <div class="the-form amount-number">
                     <input
                       v-model="toValue"
+                      :placeholder="$t('swap.recieve-amount')"
                       type="number"
                       name
                       value
                       step="any"
-                      placeholder="Received Amount"
                       @input="amountChanged('to')"
                     />
                   </div>
@@ -109,7 +109,7 @@
                   :currency="toCurrency"
                   :current-address="currentAddress"
                   :copybutton="true"
-                  :title="$t('common.toAddress')"
+                  :title="$t('sendTx.to-addr')"
                   :pre-fill="true"
                   :pre-fill-address="destAddress"
                   @toAddress="setToAddress"
@@ -118,7 +118,7 @@
               </div>
               <div v-show="!validAddress" class="error-message-container">
                 <p>
-                  {{ $t('interface.notValidAddr', { currency: toCurrency }) }}
+                  {{ $t('swap.supply-valid-addr', { currency: toCurrency }) }}
                 </p>
               </div>
             </div>
@@ -132,7 +132,7 @@
                   :currency="fromCurrency"
                   :current-address="currentAddress"
                   :copybutton="true"
-                  :title="$t('interface.fromAddr')"
+                  :title="$t('sendTx.from-addr')"
                   @toAddress="setExitFromAddress"
                   @validAddress="validExitAddress = $event"
                 />
@@ -140,7 +140,7 @@
               <div v-show="!validExitAddress" class="error-message-container">
                 <p>
                   {{
-                    $t('interface.notValidAddrSrc', { currency: fromCurrency })
+                    $t('swap.not-valid-addr-src', { currency: fromCurrency })
                   }}
                 </p>
               </div>
@@ -152,14 +152,14 @@
                   :currency="fromCurrency"
                   :current-address="currentAddress"
                   :copybutton="true"
-                  :title="$t('interface.refund', { currency: fromCurrency })"
+                  :title="$t('swap.refund', { currency: fromCurrency })"
                   @toAddress="setRefundAddress"
                   @validAddress="validRefundAddress = $event"
                 />
               </div>
               <div v-show="!validRefundAddress" class="error-message-container">
                 <p>
-                  {{ $t('interface.notValidAddr', { currency: fromCurrency }) }}
+                  {{ $t('swap.supply-valid-addr', { currency: fromCurrency }) }}
                 </p>
               </div>
             </div>
@@ -167,7 +167,7 @@
             <div class="send-form">
               <div class="title-container">
                 <div class="title title-and-copy">
-                  <h4>{{ $t('interface.providers') }}</h4>
+                  <h4>{{ $tc('swap.providers.string', 2) }}</h4>
                 </div>
               </div>
               <providers-radio-selector
@@ -192,7 +192,7 @@
                 class="disabled submit-button large-round-button-green-filled clickable"
               >
                 <i class="fa fa-spinner fa-spin" />
-                {{ $t('interface.swapButtonLoading') }}
+                {{ $t('swap.button-loading') }}
               </div>
               <div
                 v-show="!finalizingSwap"
@@ -206,8 +206,8 @@
                 <i class="fa fa-long-arrow-right" aria-hidden="true" />
               </div>
               <interface-bottom-text
-                :link-text="$t('interface.helpCenter')"
-                :question="$t('interface.haveIssues')"
+                :link-text="$t('common.help-center')"
+                :question="$t('common.have-issues')"
                 link="https://kb.myetherwallet.com"
               />
             </div>
@@ -234,7 +234,7 @@ import ProvidersRadioSelector from '../ProvidersRadioSelector';
 import DropDownAddressSelector from '../SwapAddressSelector';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import InterfaceContainerTitle from '../../../../components/InterfaceContainerTitle';
-import swapIcon from '@/assets/images/icons/swap.svg';
+import swapIcon from '@/assets/images/icons/swap-widget.svg';
 import ImageKybernetowrk from '@/assets/images/etc/kybernetwork.png';
 import ImageBity from '@/assets/images/etc/bity.png';
 import ImageVisaMaster from '@/assets/images/etc/visamaster.png';
@@ -406,13 +406,13 @@ export default {
     },
     fromBelowMinAllowed() {
       if (new BigNumber(MIN_SWAP_AMOUNT).gt(new BigNumber(this.fromValue)))
-        return `${this.$t('interface.belowMin')} ${MIN_SWAP_AMOUNT}`;
+        return `${this.$t('swap.value-below-min')} ${MIN_SWAP_AMOUNT}`;
       if (
         new BigNumber(this.selectedProvider.minValue).gt(
           new BigNumber(this.fromValue)
         )
       )
-        return this.$t('interface.belowMin', {
+        return this.$t('swap.value-below-min', {
           value: toBigNumber(this.selectedProvider.maxValue).toFixed(6),
           currency: this.fromCurrency
         });
@@ -421,7 +421,7 @@ export default {
     fromAboveMaxAllowed() {
       if (this.selectedProvider.provider === this.providerNames.bity) {
         if (this.checkBityMax) {
-          return this.$t('interface.aboveMax', {
+          return this.$t('swap.value-above-max', {
             value: toBigNumber(this.selectedProvider.maxValue).toFixed(6),
             currency: this.fromCurrency
           });
@@ -433,20 +433,20 @@ export default {
         ) &&
         toBigNumber(this.selectedProvider.maxValue).gt(toBigNumber(0))
       )
-        return this.$t('interface.aboveMaxSwap', {
+        return this.$t('swap.value-above-max', {
           value: toBigNumber(this.selectedProvider.maxValue).toFixed(6),
           currency: this.fromCurrency
         });
       return false;
     },
     toBelowMinAllowed() {
-      if (this.checkBityMin) return this.$t('interface.belowMinGeneral');
+      if (this.checkBityMin) return this.$t('swap.below-min-swap');
       if (toBigNumber(0).gte(toBigNumber(this.toValue)))
-        return this.$t('interface.belowMinGeneral');
+        return this.$t('swap.below-min-swap');
       return false;
     },
     toAboveMaxAllowed() {
-      if (this.checkBityMax) return this.$t('interface.aboveMaxGeneral');
+      if (this.checkBityMax) return this.$t('swap.above-max-swap');
       return false;
     },
     providerList() {
@@ -571,7 +571,7 @@ export default {
   },
   watch: {
     ['this.network.type.name']() {
-      this.swap.updateNetwork(this.network.type.name);
+      this.swap.updateNetwork(this.network.type.name, this.web3);
     },
     ['swap.updateProviderRates']() {
       const { toArray, fromArray } = this.swap.initialCurrencyLists;
@@ -928,6 +928,38 @@ export default {
                       .toString(10);
                   }
                 };
+              } else if (entry.provider === this.providerNames.changelly) {
+                Toast.responseHandler(
+                  this.$t('swap.notice.retrieve-changelly-rate-failed', {
+                    fromCurrency,
+                    toCurrency
+                  }),
+                  3
+                );
+              } else if (entry.provider === this.providerNames.bity) {
+                Toast.responseHandler(
+                  this.$t('swap.notice.retrieve-bity-rate-failed', {
+                    fromCurrency,
+                    toCurrency
+                  }),
+                  3
+                );
+              } else if (entry.provider === this.providerNames.kyber) {
+                Toast.responseHandler(
+                  this.$t('swap.notice.retrieve-kyber-rate-failed', {
+                    fromCurrency,
+                    toCurrency
+                  }),
+                  3
+                );
+              } else if (entry.provider === this.providerNames.simplex) {
+                Toast.responseHandler(
+                  this.$t('swap.notice.retrieve-simplex-rate-failed', {
+                    fromCurrency,
+                    toCurrency
+                  }),
+                  3
+                );
               }
             }),
             fromValue

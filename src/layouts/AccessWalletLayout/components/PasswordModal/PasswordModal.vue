@@ -1,7 +1,7 @@
 <template>
   <b-modal
     ref="password"
-    :title="$t('accessWallet.password')"
+    :title="$t('common.password.string')"
     hide-footer
     class="bootstrap-modal modal-software nopadding"
     centered
@@ -19,9 +19,9 @@
             ref="passwordInput"
             :type="show ? 'text' : 'password'"
             v-model="password"
+            :placeholder="$t('common.password.enter')"
             name="Password"
             autocomplete="off"
-            placeholder="Enter password"
           />
           <img
             v-if="show"
@@ -42,7 +42,7 @@
           type="submit"
           @click.prevent="unlockWallet"
         >
-          <span v-show="!spinner">{{ $t('common.accessWallet') }}</span>
+          <span v-show="!spinner">{{ $t('common.wallet.access') }}</span>
           <i v-show="spinner" class="fa fa-spin fa-spinner fa-lg" />
         </button>
       </form>

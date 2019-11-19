@@ -561,6 +561,7 @@ export default {
         this.checkAndSetNetwork(id);
       });
       window.ethereum.on('networkChanged', netId => {
+        this.setupOnlineEnvironment();
         this.checkAndSetNetwork(netId);
       });
     },

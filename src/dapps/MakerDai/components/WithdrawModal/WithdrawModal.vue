@@ -2,7 +2,7 @@
   <div class="modal-container">
     <b-modal
       ref="modal"
-      :title="$t('dappsMaker.withdrawTitle')"
+      :title="$t('dappsMaker.withdraw-title')"
       centered
       class="bootstrap-modal nopadding"
       hide-footer
@@ -13,12 +13,12 @@
         <div class="inputs-container">
           <div class="input-container">
             <p class="message">
-              {{ $t('dappsMaker.withdrawNotice') }}
+              {{ $t('dappsMaker.withdraw-notice') }}
             </p>
-            <label> {{ $t('dappsMaker.withdrawQuestion') }}</label>
+            <label> {{ $t('dappsMaker.withdraw-question') }}</label>
             <div class="top-buttons">
               <p class="max-withdraw" @click="maxWithdraw">
-                {{ $t('dappsMaker.maxWithdraw') }}
+                {{ $t('dappsMaker.max-withdraw') }}
               </p>
             </div>
             <div :class="['input-box', newCollateralRatioSafe ? '' : 'danger']">
@@ -27,7 +27,7 @@
             </div>
             <div class="sub-text">
               <p v-if="canWithdrawEthNotice" class="above-max">
-                {{ $t('dappsMaker.overMaxWithdraw') }}
+                {{ $t('dappsMaker.over-max-withdraw') }}
               </p>
               <div class="peth">
                 <p class="peth-value">
@@ -36,9 +36,9 @@
                       ? displayFixedValue(values.toPeth(amount), 5, false)
                       : 0
                   }}
-                  PETH
+                  {{ $t('dappsMaker.peth') }}
                 </p>
-                <popover :popcontent="$t('dappsMaker.pethPopover')" />
+                <popover :popcontent="$t('dappsMaker.peth-popover')" />
               </div>
             </div>
           </div>
@@ -47,7 +47,7 @@
         <expanding-option title="Detail Information">
           <div class="padding-container">
             <div class="grid-block">
-              <p>{{ $t('dappsMaker.maxWithdrawAvailable') }}</p>
+              <p>{{ $t('dappsMaker.max-withdraw-available') }}</p>
               <p>
                 <b>{{
                   values.maxDai ? displayFixedValue(values.maxEthDraw, 5) : 0
@@ -57,14 +57,14 @@
             </div>
 
             <div class="grid-block">
-              <p>{{ $t('dappsMaker.projectedLiquidation') }}</p>
+              <p>{{ $t('dappsMaker.projected-liquidation') }}</p>
               <p>
                 <b>{{ displayFixedValue(newLiquidationPrice, 2) }}</b>
                 {{ fiatCurrency }}
               </p>
             </div>
             <div class="grid-block">
-              <p>{{ $t('dappsMaker.projectedCollatRatio') }}</p>
+              <p>{{ $t('dappsMaker.projected-collat-ratio') }}</p>
               <p>
                 <b
                   >{{
@@ -89,7 +89,7 @@
               <p class="title">{{ $t('dappsMaker.caution') }}</p>
               <p class="warning-details">
                 {{
-                  $t('dappsMaker.liquidationRisk', {
+                  $t('dappsMaker.liquidation-risk', {
                     value: displayFixedValue(
                       displayPercentValue(newCollateralRatio)
                     )
@@ -99,7 +99,7 @@
               <check-box @changeStatus="checkBoxClicked">
                 <template v-slot:terms>
                   <p class="checkbox-label">
-                    {{ $t('dappsMaker.understandAndAgree') }}
+                    {{ $t('dappsMaker.understand-and-agree') }}
                   </p>
                 </template>
               </check-box>

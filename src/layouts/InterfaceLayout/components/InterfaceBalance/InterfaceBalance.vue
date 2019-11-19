@@ -9,7 +9,7 @@
       </div>
       <div class="block-content">
         <div class="information-container">
-          <h2>{{ $t('common.balance') }}</h2>
+          <h2>{{ $t('common.balance.string') }}</h2>
           <div class="balance-text-container">
             <div v-show="balance !== undefined" class="balance-text">
               <p>
@@ -43,14 +43,14 @@
             <i v-show="fetchingBalance" class="fa fa-lg fa-spinner fa-spin" />
           </b-btn>
           <b-popover
-            content="Check Balance"
+            :content="$t('interface.check-balance.string')"
             target="balanceCheck"
             placement="top"
             triggers="hover"
             title
           />
           <b-popover
-            content="Refresh Balance"
+            :content="$t('interface.check-balance.refresh')"
             target="refreshBalance"
             placement="top"
             triggers="hover"

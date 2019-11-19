@@ -7,13 +7,13 @@ import {
 import {
   hashPersonalMessage,
   publicToAddress,
-  toBuffer,
   bufferToHex,
   ecsign,
   isValidPrivate,
   isValidPublic,
   privateToPublic
 } from 'ethereumjs-util';
+import { Misc } from '@/helpers';
 import commonGenerator from '@/helpers/commonGenerator';
 import { Transaction } from 'ethereumjs-tx';
 import { toChecksumAddress } from '@/helpers/addressUtils';
@@ -116,7 +116,7 @@ class WalletInterface {
       throw new Error('public key only wallets needs a signer');
     return new Promise((resolve, reject) => {
       if (!this.isPubOnly) {
-        const msgHash = hashPersonalMessage(toBuffer(msg));
+        const msgHash = hashPersonalMessage(Misc.toBuffer(msg));
         const signed = ecsign(msgHash, this.privateKey);
         resolve(
           Buffer.concat([
