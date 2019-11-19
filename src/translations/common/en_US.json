@@ -37,6 +37,7 @@
     "feedback-title": "Feedback / Customer Support"
   },
   "icon": "Icon",
+  "no-icon": "No Icon",
   "currency": {
     "eth": "ETH",
     "btc": "BTC",

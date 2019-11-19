@@ -41,8 +41,7 @@
                       :src="Networks[key][0].type.icon"
                     />
                     <div v-else class="no-icon">
-                      <p>{{ $t('common.no') }}</p>
-                      <p>{{ $t('common.icon') }}</p>
+                      <p>{{ $t('common.no-icon') }}</p>
                     </div>
                   </div>
                   <p>{{ key }}</p>

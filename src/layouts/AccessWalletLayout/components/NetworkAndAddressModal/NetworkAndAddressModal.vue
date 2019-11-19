@@ -42,8 +42,7 @@
                     alt
                   />
                   <div v-else class="no-icon">
-                    <p>{{ $t('common.no') }}</p>
-                    <p>{{ $t('accessWallet.network-addr.icon') }}</p>
+                    <p>{{ $t('common.no-icon') }}</p>
                   </div>
                 </div>
                 <p>{{ key }}</p>
@@ -227,12 +226,13 @@
         </b-collapse>
         <div class="accept-terms">
           <label class="checkbox-container">
-            {{ $t('accessWallet.accept-terms') }}
-            <router-link to="/terms-and-conditions"
-              >{{ $t('common.terms') }}.</router-link
-            >
-            <input v-model="acceptTerms" type="checkbox" />
-            <span class="checkmark" />
+            <i18n tag="span" path="accessWallet.accept-terms">
+              <router-link slot="terms" to="/terms-and-conditions"
+                >{{ $t('common.terms') }}.</router-link
+              >
+              <input v-model="acceptTerms" type="checkbox" />
+              <span class="checkmark" />
+            </i18n>
           </label>
         </div>
         <div class="button-container">
@@ -240,7 +240,7 @@
             :disabled="!isDisabled"
             class="mid-round-button-green-filled close-button"
             @click.prevent="unlockWallet"
-            >{{ $t('common.accessMyWallet') }}</b-btn
+            >{{ $t('common.wallet.access-my') }}</b-btn
           >
         </div>
         <customer-support />
