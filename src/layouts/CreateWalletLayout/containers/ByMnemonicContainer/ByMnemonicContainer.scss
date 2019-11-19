@@ -109,3 +109,13 @@
     font-weight: 500;
   }
 }
+
+.footer-text {
+  text-align: center;
+  p {
+    span {
+      color: $text-color-5;
+      font-weight: 500;
+    }
+  }
+}
