@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import BlockTitle from '../Common/BlockTitle';
+import BlockTitle from '@/layouts/components/BlockTitle';
 import FriendlyToUse from './components/FriendlyToUse';
 import Swap from './components/Swap';
 import HardwareWallet from './components/HardwareWallet';

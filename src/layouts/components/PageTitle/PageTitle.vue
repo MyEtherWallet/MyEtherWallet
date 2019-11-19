@@ -1,5 +1,9 @@
 <template>
-  <v-sheet class="page-title-container pb-11 pt-5" color="light-blue darken-4">
+  <v-sheet
+    tile
+    class="page-title-container pb-11 pt-5"
+    color="light-blue darken-4"
+  >
     <v-container class="text-center">
       <div class="white--text display-1 font-weight-black">
         {{ title }}

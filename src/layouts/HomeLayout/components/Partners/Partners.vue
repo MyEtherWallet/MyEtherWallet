@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import BlockTitle from '../Common/BlockTitle';
+import BlockTitle from '@/layouts/components/BlockTitle';
 
 export default {
   name: 'HomePartners',
