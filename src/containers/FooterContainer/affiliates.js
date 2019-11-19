@@ -46,7 +46,7 @@ const affiliates = [
     text: 'footer.bitbox',
     price: '44.00',
     description: 'buyHardwareWallet.desc.bitbox',
-    href: 'https://shiftcrypto.ch/?ref=mew',
+    href: 'https://shiftcrypto.ch/?ref=MEW',
     currency: '€',
     logo: 'bitbox'
   },
