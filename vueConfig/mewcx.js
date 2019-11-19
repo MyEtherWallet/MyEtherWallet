@@ -1,5 +1,5 @@
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+// const HtmlWebpackPlugin = require('html-webpack-plugin');
 const env_vars = require('../ENV_VARS');
 const path = require('path');
 const defaultConfig = require('./defaultConfigs');
@@ -22,28 +22,12 @@ const webpackConfig = {
   node: {
     process: true
   },
+  optimization: {
+    splitChunks: {
+      chunks: 'all'
+    }
+  },
   plugins: defaultConfig.plugins.concat([
-    new HtmlWebpackPlugin({
-      template: './src/builds/mewcx/public/page.html',
-      templateParameters: {
-        jsFolder:
-          process.env.NODE_ENV === 'production'
-            ? 'js/background.js'
-            : 'background.js'
-      },
-      filename: 'page.html',
-      excludeChunks: [
-        'index',
-        'popup',
-        'browserAction',
-        'contentScript',
-        'cxWeb3',
-        'app',
-        'background',
-        'chunk-common',
-        'chunk-vendors'
-      ]
-    }),
     new CopyWebpackPlugin([
       {
         from: 'src/builds/mewcx/public',
@@ -109,15 +93,15 @@ const exportObj = {
       template: 'public/index.html',
       filename: 'index.html'
     },
-    browserAction: {
-      entry: 'src/builds/mewcx/browserAction/browserAction.js',
-      template: 'public/index.html',
-      filename: 'browserAction.html'
-    },
-    popup: {
-      entry: 'src/builds/mewcx/popup/popup.js',
-      template: 'public/index.html',
-      filename: 'popup.html'
+    browserAction: 'src/builds/mewcx/browserAction/browserAction.js',
+    popup: 'src/builds/mewcx/popup/popup.js',
+    page: {
+      entry: 'src/builds/mewcx/public/page.js',
+      template: 'src/builds/mewcx/public/page.html',
+      filename: 'page.html',
+      jsFolder: process.env.NODE_ENV === 'production'
+      ? 'js/background.js'
+      : 'background.js'
     }
   },
   publicPath: './',
