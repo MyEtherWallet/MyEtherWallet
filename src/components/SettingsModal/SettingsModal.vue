@@ -227,7 +227,7 @@
               <standard-button
                 :options="buttonAddress"
                 :button-disabled="
-                  !contactAddress || !isValidAddress || addrBookErrMsg
+                  !contactAddress || !isValidAddress || addrBookErrMsg !== null
                 "
                 @click.native="addContact"
               />
