@@ -7,6 +7,7 @@ import store from '@/store';
 import { isHexString, toBuffer as utilsToBuffer } from 'ethereumjs-util';
 import { uint, address, string, bytes, bool } from './solidityTypes';
 import xss from 'xss';
+import { MEW_CX } from '@/builds/configs/types';
 
 const toBuffer = v => {
   if (isHexString(v)) {
@@ -230,7 +231,7 @@ const stripTags = content => {
 };
 
 const isMewCx = () => {
-  return BUILD_TYPE === 'mewcx';
+  return BUILD_TYPE === MEW_CX;
 };
 
 export default {
