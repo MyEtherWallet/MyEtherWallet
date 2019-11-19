@@ -26,7 +26,7 @@
         </div>
       </div>
       <div v-if="isSafari && !isMetaMask" class="browser-catch">
-        <h4>{{ $t('mewCX.mewcx-only') }}:</h4>
+        <h4>{{ $t('mewcx.mewcx-only') }}:</h4>
         <div class="browser-logo-container">
           <a
             v-for="browser in mewSupportedBrowsers"
@@ -119,12 +119,12 @@
         <div class="button-container">
           <a
             v-show="!refreshPage"
-            href="https://www.mewCX.com"
+            href="https://www.mewcx.com"
             target="_blank"
             rel="noopener noreferrer"
             class="mid-round-button-green-filled close-button"
             @click="refreshPage = true"
-            >{{ $t('mewCX.install-mewcx') }}</a
+            >{{ $t('mewcx.install-mewcx') }}</a
           >
           <b-btn
             v-show="refreshPage"

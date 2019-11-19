@@ -2,7 +2,7 @@
   <div>
     <b-modal
       ref="watchOnlyWallet"
-      :title="$t('mewCX.add-watch-only')"
+      :title="$t('mewcx.add-watch-only')"
       hide-footer
       centered
       class="bootstrap-modal"
@@ -10,10 +10,10 @@
       <div class="modal-contents">
         <form>
           <div class="input-container">
-            <label for="walletName"> {{ $t('mewCX.wallet-name') }} </label>
+            <label for="walletName"> {{ $t('mewcx.wallet-name') }} </label>
             <input
               v-model="name"
-              :placeholder="$t('mewCX.add-wallet-nickname')"
+              :placeholder="$t('mewcx.add-wallet-nickname')"
               name="walletName"
             />
           </div>
@@ -21,7 +21,7 @@
             <label for="walletAddr"> {{ $t('common.addr') }} </label>
             <input
               v-model="address"
-              :placeholder="$t('mewCX.enter-address')"
+              :placeholder="$t('mewcx.enter-address')"
               name="walletAddr"
             />
           </div>
@@ -34,7 +34,7 @@
             type="submit"
             @click.prevent="submit"
           >
-            <span v-show="!loading"> {{ $t('mewCX.add-wallet') }} </span>
+            <span v-show="!loading"> {{ $t('mewcx.add-wallet') }} </span>
             <i v-show="loading" class="fa fa-spinner fa-spin" />
           </button>
         </form>

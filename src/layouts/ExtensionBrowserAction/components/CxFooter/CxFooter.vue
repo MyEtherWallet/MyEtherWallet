@@ -192,7 +192,7 @@ export default {
             // },
             {
               text: this.$t('footer.extension'),
-              href: 'https://www.mewCX.com'
+              href: 'https://www.mewcx.com'
             },
             {
               text: 'Buy a Hardware wallet',
