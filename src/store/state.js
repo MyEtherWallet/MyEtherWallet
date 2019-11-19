@@ -15,7 +15,7 @@ if (BUILD_TYPE !== 'mewcx' && storedNetwork !== undefined) {
 }
 
 const addressBook =
-  store.get('addressBook') !== undefined ? store.get('addressBook') : {};
+  store.get('addressBook') !== undefined ? store.get('addressBook') : [];
 const notifications =
   store.get('notifications') !== undefined ? store.get('notifications') : {};
 const gasPrice =
