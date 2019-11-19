@@ -8,7 +8,13 @@
         <v-spacer></v-spacer>
 
         <div>
-          <v-btn class="mx-3" text :ripple="false">
+          <v-btn
+            class="mx-3 white--text"
+            depressed
+            text
+            :ripple="false"
+            to="/how-it-works"
+          >
             How it works
           </v-btn>
           <v-menu open-on-hover bottom offset-y transition="fade-transition">
@@ -205,7 +211,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.theme--dark.v-btn:hover::before {
+.theme--dark.v-btn:hover::before,
+.theme--dark.v-btn::before {
   opacity: 0;
 }
 </style>
