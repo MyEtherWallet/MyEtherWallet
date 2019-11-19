@@ -1,6 +1,6 @@
 <template>
   <div>
-    <PageTitle />
+    <PageTitle title="How it works" />
     <Tabs />
   </div>
 </template>

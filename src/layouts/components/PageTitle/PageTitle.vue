@@ -1,12 +1,19 @@
 <template>
-  <div>
-    <v-container class="text-center">PageTitle</v-container>
-  </div>
+  <v-sheet class="page-title-container pb-11 pt-5" color="light-blue darken-4">
+    <v-container class="text-center">
+      <div class="white--text display-1 font-weight-black">
+        {{ title }}
+      </div>
+    </v-container>
+  </v-sheet>
 </template>
 
 <script>
 export default {
   name: 'PageTitle',
-  components: {}
+  components: {},
+  props: { title: { default: '', type: String } }
 };
 </script>
+
+<style lang="scss" scoped></style>
