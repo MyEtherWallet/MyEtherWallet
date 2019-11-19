@@ -401,16 +401,6 @@ export default {
     currentProxyAddress() {
       return this.proxyAddress;
     }
-    // backPath() {
-    //   console.log(this.$route); // todo remove dev item
-    //   switch (this.currentPath) {
-    //     case 'Maker':
-    //     case 'makerLoading':
-    //       return '/interface/dapps/';
-    //     default:
-    //       return '/interface/dapps/maker-dai';
-    //   }
-    // }
   },
   watch: {
     ['account.address']() {
@@ -482,8 +472,10 @@ export default {
           { currency: GNT, ilk: 'GNT-A' }
         ];
         this.curentlyLoading = 'Loading: Multi Collateral Types';
+        console.log(this._typeService.cdpTypes); // todo remove dev item
         this.mcdCurrencies = this._typeService.cdpTypes.reduce((acc, entry) => {
           // acc[entry.ilk] = entry;
+          console.log(entry.liquidationRatio._amount.toString()); // todo remove dev item
           acc[entry.currency.symbol] = entry;
           acc[entry.currency.symbol].symbol = entry.currency.symbol;
           return acc;
@@ -491,6 +483,7 @@ export default {
 
         console.log(this.mcdCurrencies); // todo remove dev item
         this.collateralList = collateralOptions(this.mcdCurrencies);
+        console.log(this.collateralList); // todo remove dev item
         // setupService('mcd:queryApi');
         // setupService('mcd:savings');
         // setupService('mcd:auction');

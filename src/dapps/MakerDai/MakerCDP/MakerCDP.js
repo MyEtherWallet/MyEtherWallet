@@ -9,8 +9,9 @@ import {
   getMakerCurrencies,
   displayFixedValue,
   addresses,
-  ERC20
-} from './makerHelpers';
+  ERC20,
+  Spotter
+} from '../makerHelpers';
 import {
   ETH,
   REP,
@@ -136,6 +137,20 @@ export default class MakerCDP extends MakerCdpBase {
     return this.mcdManager.getCombinedDebtValue(proxyAddress);
   }
 
+  setType(type){
+    if(this.cdpId === null){
+      this.cdpTypeObject = getMakerCurrencies()[type.symbol]
+    }
+  }
+
+  async getLiquidationRatioFor(type) {
+return this.mcdCurrencies[type].liquidationRatio._amount;
+    // const contract = new this.web3.eth.Contract(Spotter, addresses.MCD_GOV);
+    // const result = await contract.methods
+    //   .allowance(this.currentAddress, this.proxyAddress)
+    //   .call();
+  }
+
   // ====================================================================================================================
 
   // get (non-getter) methods
@@ -250,7 +265,7 @@ export default class MakerCDP extends MakerCdpBase {
 
   hasEnough(ethQty, currency = 'ETH', balance = null) {
     // return true;
-    console.log(ethQty); // todo remove dev item
+    // console.log(ethQty); // todo remove dev item
     if (toBigNumber(ethQty).isNaN()) return false;
     const _ethQty = toBigNumber(ethQty).toFixed(18);
     if (currency === 'ETH' && balance !== null) {
@@ -269,14 +284,14 @@ export default class MakerCDP extends MakerCdpBase {
     if (currency === 'ETH') return true;
     const _ethQty = toBigNumber(ethQty).toFixed(18);
     const currentAllowance = this.getProxyAllowancefor(currency);
-    console.log(currentAllowance.gt(_ethQty)); // todo remove dev item
-    console.log(currentAllowance.toString()); // todo remove dev item
-    console.log(
-      toBigNumber(ethUnit.toWei(_ethQty, 'ether').toString()).toString()
-    ); // todo remove dev item
-    console.log( toBigNumber(currentAllowance).gte(
-      toBigNumber(ethUnit.toWei(_ethQty, 'ether').toString())
-    )); // todo remove dev item
+    // console.log(currentAllowance.gt(_ethQty)); // todo remove dev item
+    // console.log(currentAllowance.toString()); // todo remove dev item
+    // console.log(
+    //   toBigNumber(ethUnit.toWei(_ethQty, 'ether').toString()).toString()
+    // ); // todo remove dev item
+    // console.log( toBigNumber(currentAllowance).gte(
+    //   toBigNumber(ethUnit.toWei(_ethQty, 'ether').toString())
+    // )); // todo remove dev item
     return toBigNumber(currentAllowance).gte(
       toBigNumber(ethUnit.toWei(_ethQty, 'ether').toString())
     );

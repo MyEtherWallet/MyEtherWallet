@@ -19,13 +19,27 @@ const toBigNumber = num => {
   return new BigNumber(num);
 };
 
+const ServiceRoles = {
+  PRICE: 'price',
+  CDP: 'cdp',
+  PROXY: 'proxy',
+  TOKEN: 'token',
+  CDP_MANAGER: 'mcd:cdpManager',
+  CDP_TYPE: 'mcd:cdpType',
+  AUCTION: 'mcd:auction',
+  SYSTEM_DATA: 'mcd:systemData',
+  QUERY_API: 'mcd:queryApi',
+  SAVINGS: 'mcd:savings'
+};
+
 export async function setupServices(self, maker) {
-  self._priceService = maker.service('price');
-  self._cdpService = await maker.service('cdp');
-  self._proxyService = await maker.service('proxy');
-  self._tokenService = await maker.service('token');
-  self._mcdManager = maker.service('mcd:cdpManager');
-  self._mcdSaving = maker.service('mcd:savings');
+  self._priceService = maker.service(ServiceRoles.PRICE);
+  self._cdpService = await maker.service(ServiceRoles.CDP);
+  self._proxyService = await maker.service(ServiceRoles.PROXY);
+  self._tokenService = await maker.service(ServiceRoles.TOKEN);
+  self._mcdManager = maker.service(ServiceRoles.CDP_MANAGER);
+  self._mcdSaving = maker.service(ServiceRoles.SAVINGS);
+  self._typeService = maker.service(ServiceRoles.CDP_TYPE);
   return self;
 }
 

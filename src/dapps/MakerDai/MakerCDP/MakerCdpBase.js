@@ -6,7 +6,9 @@ import {
   getMakerCurrencies,
   displayFixedValue,
   calcLiquidationPrice
-} from './makerHelpers';
+} from '../makerHelpers';
+
+import * as maths from './daiMath'
 
 const toBigNumber = num => {
   return new BigNumber(num);
@@ -28,7 +30,7 @@ export default class MakerCdpBase {
     this.cdps = [];
     this.noProxy = sysVars.noProxy || false;
     this.sysVars = sysVars; // todo make sure this doesn't bring in the issue with vue walking the tree and breaking things
-    this.cdpType = sysVars.cdpsWithType[this.cdpId];
+    this.cdpType = this.cdpId ? sysVars.cdpsWithType[this.cdpId] : getMakerCurrencies()['ETH'];
     this.services = services || null;
     this.needsUpdate = false;
     this.closing = false;
@@ -36,7 +38,7 @@ export default class MakerCdpBase {
     this.migrated = false;
     this.migrateCdpActive = false;
     this.migrateCdpStage = 0;
-    this.cdpTypeObject = getMakerCurrencies()[this.cdpType];
+    this.cdpTypeObject = this.cdpId ? getMakerCurrencies()[this.cdpType] : getMakerCurrencies()['ETH'];
 
     this._liqPrice = toBigNumber(0);
     this.isSafe = false;
@@ -129,7 +131,6 @@ export default class MakerCdpBase {
   }
 
   get governanceFeeOwed() {
-    console.log(this.cdp); // todo remove dev item
     return this._governanceFee;
   }
 
@@ -145,9 +146,13 @@ export default class MakerCdpBase {
   }
 
   get liquidationRatio() {
-    if (this.cdp) {
+    console.log('liquidationRatio this.cdp', this.cdp); // todo remove dev item
+    console.log('this.cdpTypeObject', this.cdpTypeObject.liquidationRatio); // todo remove dev item
+    if (Object.keys(this.cdp).length > 0) {
       return toBigNumber(this.cdp.type.liquidationRatio._amount);
     }
+    console.log('this.cdpTypeObject.liquidationRatio._amount', this.cdpTypeObject.liquidationRatio._amount); // todo remove dev item
+    return toBigNumber(this.cdpTypeObject.liquidationRatio._amount);
     return toBigNumber(0);
   }
 
