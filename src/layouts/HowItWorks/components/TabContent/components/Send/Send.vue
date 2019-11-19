@@ -1,12 +1,11 @@
 <template>
-  <v-container>
-    Tabs
-  </v-container>
+  <div>Send</div>
 </template>
 
 <script>
 export default {
-  name: 'Tabs',
   components: {}
 };
 </script>
+
+<style lang="scss" scoped></style>
