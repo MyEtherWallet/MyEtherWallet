@@ -2,8 +2,9 @@
   <div class="light-blue darken-4">
     <v-container>
       <v-app-bar color="transparent" dark flat>
-        <v-img src="@/assets/images/Common/logo-light.png" max-width="130" />
-
+        <router-link to="/">
+          <v-img src="@/assets/images/Common/logo-light.png" max-width="130" />
+        </router-link>
         <v-spacer></v-spacer>
 
         <div>
