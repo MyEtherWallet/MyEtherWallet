@@ -1,6 +1,6 @@
 <template functional>
   <div class="dropdown-container network-picker">
-    <span class="network-text">{{ parent.$t('mewCX.network') }}</span>
+    <span class="network-text">{{ parent.$t('mewcx.network') }}</span>
     <span class="current-network" @click="props.openNetworkModal">
       {{
         props.network.hasOwnProperty('type')

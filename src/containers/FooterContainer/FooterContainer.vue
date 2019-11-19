@@ -187,7 +187,7 @@ export default {
             // },
             {
               text: this.$t('footer.extension'),
-              href: 'https://www.mewCX.com'
+              href: 'https://www.mewcx.com'
             },
             {
               text: this.$t('buyHardwareWallet.page.title'),

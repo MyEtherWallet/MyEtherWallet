@@ -8,7 +8,7 @@
       </div>
       <p>
         {{ request.connectionRequest.toLowerCase() }}
-        {{ $t('mewCX.trying-to-access-mew') }}
+        {{ $t('mewcx.trying-to-access-mew') }}
       </p>
     </div>
     <div class="accounts-container">

@@ -24,7 +24,7 @@
       <div class="modal-header-contaier">
         <div>
           <h3>
-            {{ $t('mewCX.all-tokens') }}
+            {{ $t('mewcx.all-tokens') }}
             <span class="token-count"> {{ tokens.length }} </span>
           </h3>
           <div class="modal-nickname">
@@ -48,13 +48,13 @@
         </div>
       </div>
       <div class="token-search-container">
-        <input v-model="search" :placeholder="$t('mewCX.search-tokens')" />
+        <input v-model="search" :placeholder="$t('mewcx.search-tokens')" />
         <i class="fa fa-search" />
       </div>
       <div class="modal-tokens-container">
         <div v-show="loading" class="loading-container">
           <i class="fa fa-spinner fa-spin" />
-          {{ $t('mewCX.loading-tokens') }}...
+          {{ $t('mewcx.loading-tokens') }}...
         </div>
         <div v-show="!loading" class="tokens-container">
           <div
@@ -65,7 +65,7 @@
             <div class="icon-name-container">
               <img :src="token.logo.src" />
               <p>
-                {{ token.name }} ({{ $t('mewCX.custom') }}) <br />
+                {{ token.name }} ({{ $t('mewcx.custom') }}) <br />
                 <span>{{ token.balance }}</span>
               </p>
             </div>
@@ -111,9 +111,9 @@
             }
           "
         >
-          {{ $t('mewCX.details') }}
+          {{ $t('mewcx.details') }}
         </div>
-        <div class="clickable" @click="edit">{{ $t('mewCX.edit') }}</div>
+        <div class="clickable" @click="edit">{{ $t('mewcx.edit') }}</div>
       </div>
     </div>
     <div class="wallet-content">
@@ -149,17 +149,17 @@
       <div class="tokens-container">
         <div class="tokens-header">
           <p>
-            {{ $t('mewCX.tokens') }}
+            {{ $t('mewcx.tokens') }}
           </p>
           <b-dropdown :no-caret="true" class="cx-dropdown">
             <template slot="button-content">
               <i class="fa fa-lg fa-ellipsis-h" />
             </template>
             <b-dropdown-item @click="openAddCustom">{{
-              $t('mewCX.add')
+              $t('mewcx.add')
             }}</b-dropdown-item>
             <b-dropdown-item @click="fetchTokens">{{
-              $t('mewCX.refresh')
+              $t('mewcx.refresh')
             }}</b-dropdown-item>
             <b-dropdown-item
               @click="
@@ -167,18 +167,18 @@
                   viewAllTokens(true);
                 }
               "
-              >{{ $t('mewCX.view-all') }}</b-dropdown-item
+              >{{ $t('mewcx.view-all') }}</b-dropdown-item
             >
           </b-dropdown>
         </div>
         <div class="token-search-container">
-          <input v-model="search" :placeholder="$t('mewCX.search-tokens')" />
+          <input v-model="search" :placeholder="$t('mewcx.search-tokens')" />
           <i class="fa fa-search" />
         </div>
         <div class="actual-tokens-container">
           <div v-show="loading" class="loading-container">
             <i class="fa fa-spinner fa-spin" />
-            {{ $t('mewCX.loading-tokens') }}...
+            {{ $t('mewcx.loading-tokens') }}...
           </div>
           <div v-show="!loading">
             <div

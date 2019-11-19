@@ -4,15 +4,15 @@
       <div class="header-title-container">
         <div class="title-balance">
           <h2>
-            {{ $t('mewCX.dapps') }}
+            {{ $t('mewcx.dapps') }}
             <a
               href="https://www.stateofthedapps.com"
               target="_blank"
               rel="noopener noreferrer"
             >
-              {{ $t('mewCX.powered-by') }}
+              {{ $t('mewcx.powered-by') }}
               <img
-                :alt="$t('mewCX.sotd')"
+                :alt="$t('mewcx.sotd')"
                 src="@/assets/images/icons/dapps/sotd.png"
               />
             </a>

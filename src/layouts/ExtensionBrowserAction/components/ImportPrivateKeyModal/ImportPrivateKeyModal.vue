@@ -2,7 +2,7 @@
   <div>
     <b-modal
       ref="importPrivateKey"
-      :title="$t('mewCX.private-key')"
+      :title="$t('mewcx.private-key')"
       hide-footer
       centered
       class="bootstrap-modal"
@@ -11,21 +11,21 @@
         <form>
           <div class="input-container">
             <label for="privateKeyInput">{{
-              $t('mewCX.your-private-key')
+              $t('mewcx.your-private-key')
             }}</label>
             <textarea
               v-model="locPrivKey"
-              :placeholder="$t('mewCX.enter-private-key')"
+              :placeholder="$t('mewcx.enter-private-key')"
               name="privateKeyInput"
             />
           </div>
           <div class="input-container">
-            <label for="privateKeyInput">{{ $t('mewCX.password') }}</label>
+            <label for="privateKeyInput">{{ $t('mewcx.password') }}</label>
             <div class="password-input">
               <input
                 :type="show ? 'text' : 'password'"
                 v-model="locPassword"
-                :placeholder="$t('mewCX.enter-pw-hash')"
+                :placeholder="$t('mewcx.enter-pw-hash')"
                 name="privateKeyInput"
               />
               <img
@@ -48,7 +48,7 @@
                 }
               "
             >
-              <span v-show="!loading"> {{ $t('mewCX.add-wallet') }} </span>
+              <span v-show="!loading"> {{ $t('mewcx.add-wallet') }} </span>
               <i v-show="loading" class="fa fa-spinner fa-spin" />
             </button>
           </div>

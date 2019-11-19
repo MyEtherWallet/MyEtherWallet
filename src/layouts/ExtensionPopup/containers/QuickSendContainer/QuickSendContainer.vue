@@ -1,8 +1,8 @@
 <template>
   <div class="quick-send-container">
     <div class="quick-send-header">
-      <p v-show="step === 1">{{ $t('mewCX.quick-send') }}</p>
-      <p v-show="step === 4">{{ $t('mewCX.success') }}!</p>
+      <p v-show="step === 1">{{ $t('mewcx.quick-send') }}</p>
+      <p v-show="step === 4">{{ $t('mewcx.success') }}!</p>
       <p v-show="step > 1 && step < 4" class="clickable" @click="back">
         <img src="@/assets/images/icons/arrow-left.svg" />
         {{ $t('common.back') }}
@@ -19,12 +19,12 @@
     />
     <div class="quick-send-step-contents">
       <h4 v-show="step < 4" class="title">
-        {{ $t('mewCX.step') }} {{ step }}. {{ steps[step] }}
+        {{ $t('mewcx.step') }} {{ step }}. {{ steps[step] }}
       </h4>
       <form v-show="step === 1" @submit.prevent="next">
         <div class="from-text">
-          <p>{{ $t('mewCX.from') }}</p>
-          <p @click="switchWallet">{{ $t('mewCX.change') }}</p>
+          <p>{{ $t('mewcx.from') }}</p>
+          <p @click="switchWallet">{{ $t('mewcx.change') }}</p>
         </div>
         <wallet-view-component
           :usd="usd"
@@ -33,7 +33,7 @@
           :balance="selectedWallet.balance"
         />
         <div class="password-container">
-          <label for="walletPassword"> {{ $t('mewCX.password') }} </label>
+          <label for="walletPassword"> {{ $t('mewcx.password') }} </label>
           <div class="password-input">
             <input
               v-model="password"
@@ -75,7 +75,7 @@
         </div>
         <div class="to-amount-container">
           <label for="amountToSend">
-            <p>{{ $t('mewCX.amount-to-send') }}</p>
+            <p>{{ $t('mewcx.amount-to-send') }}</p>
             <p @click="entireBalance">{{ $t('sendTx.button-entire') }}</p>
           </label>
           <div class="to-amount-input">
@@ -96,7 +96,7 @@
           <p>{{ value }} {{ network.type.name }}</p>
         </div>
         <p>
-          <b> {{ $t('mewCX.from') }}</b>
+          <b> {{ $t('mewcx.from') }}</b>
         </p>
         <wallet-view-component
           :usd="usd"
@@ -120,8 +120,8 @@
         <div class="check-icon">
           <i class="fa fa-check" aria-hidden="true" />
         </div>
-        <h3>{{ $t('mewCX.success') }}</h3>
-        <p>{{ $t('mewCX.your-tx-hash') }}</p>
+        <h3>{{ $t('mewcx.success') }}</h3>
+        <p>{{ $t('mewcx.your-tx-hash') }}</p>
         <a :href="txLinkAndHash" target="_blank" rel="noopener noreferrer">{{
           txHash | concatAddr
         }}</a>
@@ -133,10 +133,10 @@
         <i v-show="loading" class="fa fa-spinner fa-spin" />
       </p>
       <p v-show="step === 3">
-        <span v-show="!loading">{{ $t('mewCX.confirm-send') }}</span>
+        <span v-show="!loading">{{ $t('mewcx.confirm-send') }}</span>
         <i v-show="loading" class="fa fa-spinner fa-spin" />
       </p>
-      <p v-show="step === 4">{{ $t('mewCX.done') }}</p>
+      <p v-show="step === 4">{{ $t('mewcx.done') }}</p>
     </div>
   </div>
 </template>
