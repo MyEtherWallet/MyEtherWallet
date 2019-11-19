@@ -1,12 +1,14 @@
 <template>
   <div>
-    How it works 111111111111111111
+    <Tabs />
   </div>
 </template>
 
 <script>
+import Tabs from './components/Tabs';
+
 export default {
   name: 'HowItWorks',
-  components: {}
+  components: { Tabs }
 };
 </script>
