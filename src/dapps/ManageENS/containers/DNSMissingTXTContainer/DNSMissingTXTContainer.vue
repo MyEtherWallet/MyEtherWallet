@@ -4,23 +4,14 @@
       v-if="owner === '0x0000000000000000000000000000000000000000'"
       class="dns-process-content"
     >
-      <h3>No TXT setup found for {{ domainName }}!</h3>
-      <p>
-        On your DNS management console, please add a TXT type DNS entry "{{
-          '_ens.' + domainName
-        }}" with a value containing your Ethereum address in the format of
-        "a=YOURETHREUMADDRESS"
-      </p>
+      <h3>{{ $t('ens.txt.setup-not-found', { domain: domainName }) }}</h3>
+      <p>{{ $t('ens.txt.add-txt-type-entry', { txtString: typeString }) }}</p>
     </div>
     <div v-else class="dns-process-content">
       <h3>
-        This name is currently owned in ENS by {{ owner }} but TXT record is no
-        longer available for {{ domainName }}!
+        {{ $t('ens.txt.name-owned', { owner: owner, domain: domainName }) }}
       </h3>
-      <p>
-        You can unclaim this {{ domainName }} from ENS by clicking the following
-        button
-      </p>
+      <p>{{ $t('ens.txt.unclaim-desc', { domain: domainName }) }}</p>
       <div class="claim-dns-button">
         <button
           :class="[
@@ -30,7 +21,7 @@
           @click="claimFunc"
         >
           <span v-show="!loading">
-            Unclaim
+            {{ $t('ens.txt.unclaim') }}
           </span>
           <i v-show="loading" class="fa fa-spinner fa-spin" />
         </button>
@@ -38,8 +29,8 @@
     </div>
 
     <interface-bottom-text
-      :link-text="$t('interface.helpCenter')"
-      :question="$t('interface.haveIssues')"
+      :link-text="$t('common.help-center')"
+      :question="$t('common.have-issues')"
       link="https://kb.myetherwallet.com"
     />
   </div>
@@ -73,6 +64,11 @@ export default {
     loading: {
       type: Boolean,
       default: false
+    }
+  },
+  computed: {
+    typeString() {
+      return `{{'_ens.' + ${this.domainName}}}`;
     }
   },
   mounted() {

@@ -1,13 +1,15 @@
 <template>
   <div class="quick-send-container">
     <div class="quick-send-header">
-      <p v-show="step === 1">Quick Send</p>
-      <p v-show="step === 4">Success!</p>
+      <p v-show="step === 1">{{ $t('mewCx.quick-send') }}</p>
+      <p v-show="step === 4">{{ $t('mewCx.success') }}!</p>
       <p v-show="step > 1 && step < 4" class="clickable" @click="back">
         <img src="@/assets/images/icons/arrow-left.svg" />
-        Back
+        {{ $t('common.back') }}
       </p>
-      <p v-show="step !== 4" class="clickable" @click="actualCancel">Cancel</p>
+      <p v-show="step !== 4" class="clickable" @click="actualCancel">
+        {{ $t('common.cancel') }}
+      </p>
     </div>
     <b-progress
       :value="perc"
@@ -17,12 +19,12 @@
     />
     <div class="quick-send-step-contents">
       <h4 v-show="step < 4" class="title">
-        STEP {{ step }}. {{ steps[step] }}
+        {{ $t('mewCx.step') }} {{ step }}. {{ steps[step] }}
       </h4>
       <form v-show="step === 1" @submit.prevent="next">
         <div class="from-text">
-          <p>From</p>
-          <p @click="switchWallet">Change</p>
+          <p>{{ $t('mewCx.from') }}</p>
+          <p @click="switchWallet">{{ $t('mewCx.change') }}</p>
         </div>
         <wallet-view-component
           :usd="usd"
@@ -31,7 +33,7 @@
           :balance="selectedWallet.balance"
         />
         <div class="password-container">
-          <label for="walletPassword"> Password </label>
+          <label for="walletPassword"> {{ $t('mewCx.password') }} </label>
           <div class="password-input">
             <input
               v-model="password"
@@ -48,7 +50,7 @@
       </form>
       <form v-show="step === 2" @submit.prevent="next">
         <div class="to-address-container">
-          <label for="toAddress"> To Address </label>
+          <label for="toAddress"> {{ $t('sendTx.to-addr') }} </label>
           <div class="to-address-input">
             <textarea
               v-model="toAddress"
@@ -73,8 +75,8 @@
         </div>
         <div class="to-amount-container">
           <label for="amountToSend">
-            <p>Amount To Send</p>
-            <p @click="entireBalance">Entire Balance</p>
+            <p>{{ $t('mewCx.amount-to-send') }}</p>
+            <p @click="entireBalance">{{ $t('sendTx.button-entire') }}</p>
           </label>
           <div class="to-amount-input">
             <input
@@ -88,17 +90,23 @@
       </form>
       <div v-show="step === 3" class="confirmation-container">
         <div class="confirmation-amount">
-          <p><b>Amount</b></p>
+          <p>
+            <b>{{ $t('sendTx.amount') }}</b>
+          </p>
           <p>{{ value }} {{ network.type.name }}</p>
         </div>
-        <p><b>From</b></p>
+        <p>
+          <b> {{ $t('mewCx.from') }}</b>
+        </p>
         <wallet-view-component
           :usd="usd"
           :address="selectedWallet.address"
           :name="selectedWallet.nick"
           :balance="selectedWallet.balance"
         />
-        <p><b>To Address</b></p>
+        <p>
+          <b>{{ $t('sendTx.to-addr') }}</b>
+        </p>
         <div class="to-address-confirmation">
           <div>
             <blockie :address="toAddress" width="50px" height="50px" />
@@ -112,8 +120,8 @@
         <div class="check-icon">
           <i class="fa fa-check" aria-hidden="true" />
         </div>
-        <h3>Success</h3>
-        <p>Your TxHash</p>
+        <h3>{{ $t('mewCx.success') }}</h3>
+        <p>{{ $t('mewCx.your-tx-hash') }}</p>
         <a :href="txLinkAndHash" target="_blank" rel="noopener noreferrer">{{
           txHash | concatAddr
         }}</a>
@@ -121,14 +129,14 @@
     </div>
     <div :class="[isValid ? '' : 'disabled', 'next-button']" @click="next">
       <p v-show="step === 1 || step === 2">
-        <span v-show="!loading">Next</span>
+        <span v-show="!loading">{{ $t('common.next') }}</span>
         <i v-show="loading" class="fa fa-spinner fa-spin" />
       </p>
       <p v-show="step === 3">
-        <span v-show="!loading">Confirm & Send</span>
+        <span v-show="!loading">{{ $t('mewCx.confirm-send') }}</span>
         <i v-show="loading" class="fa fa-spinner fa-spin" />
       </p>
-      <p v-show="step === 4">Done</p>
+      <p v-show="step === 4">{{ $t('mewCx.done') }}</p>
     </div>
   </div>
 </template>

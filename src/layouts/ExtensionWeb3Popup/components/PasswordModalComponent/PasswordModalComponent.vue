@@ -2,14 +2,14 @@
   <div>
     <b-modal
       ref="passwordModal"
+      :title="$t('common.addr')"
       hide-footer
       hide-header
-      title="Address"
       modal-class="cx-password-modal"
     >
       <div class="modal-contents">
         <div class="header-container">
-          <p>Password</p>
+          <p>{{ $t('mewCx.password') }}</p>
           <i class="fa fa-times fa-lg" @click="close" />
         </div>
         <form class="password-form">
@@ -45,12 +45,13 @@
           </button>
         </form>
         <p class="terms">
-          By entering your password, you accept our
+          {{ $t('mewCx.by-entering-pw') }}
           <a
             href="https://www.myetherwallet.com/terms-and-conditions"
             target="_blank"
+            rel="noopener noreferrer"
           >
-            Terms and conditions
+            {{ $t('accessWallet.pin.terms') }}
           </a>
         </p>
       </div>

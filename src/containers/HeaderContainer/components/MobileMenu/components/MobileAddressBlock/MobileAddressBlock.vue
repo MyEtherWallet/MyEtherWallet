@@ -11,7 +11,7 @@
       </div>
       <div class="data-block">
         <div class="top-title">
-          Address
+          {{ $t('common.addr') }}
         </div>
         <p class="the-address">{{ account.address }}</p>
         <div class="buttons-container">

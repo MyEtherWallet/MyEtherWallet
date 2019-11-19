@@ -68,7 +68,7 @@
       />
       <img
         alt
-        src="~@/assets/images/etc/spaceman.png"
+        src="~@/assets/images/etc/access-spaceman.png"
         width="100%"
         class="floating-spaceman"
       />
@@ -76,7 +76,7 @@
     <div class="between">
       <div class="text">
         <img alt height="15px" src="~@/assets/images/icons/scissor.svg" />
-        <p>Cut Here</p>
+        <p>{{ $t('common.print-modal.cut') }}</p>
       </div>
       <div class="dash"></div>
     </div>

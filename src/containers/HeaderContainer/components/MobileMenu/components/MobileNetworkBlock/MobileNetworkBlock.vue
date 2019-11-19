@@ -7,7 +7,7 @@
           {{ $t('common.network') }}
         </div>
         <button class="change-button" @click="networkModalOpen">
-          {{ $t('common.change') }}
+          {{ $t('interface.network-modal.button-change') }}
         </button>
       </div>
       <div class="bottom-block">
@@ -17,7 +17,7 @@
         <!--<p v-show="parsedNetwork !== ''" class="network">M{{ parsedNetwork }}</p>-->
 
         <p class="last-block">
-          {{ $t('interface.lastBlock') }}# : {{ blockNumber }}
+          {{ $t('interface.network-modal.last-block') }}# : {{ blockNumber }}
         </p>
         <i v-show="parsedNetwork === ''" class="fa fa-spinner fa-spin" />
       </div>
