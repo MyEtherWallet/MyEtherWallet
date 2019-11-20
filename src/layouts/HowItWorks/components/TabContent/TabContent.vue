@@ -42,9 +42,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.tab-image {
-  padding-top: 50px;
-  width: 100%;
-}
-</style>
+<style lang="scss" scoped></style>
