@@ -7,7 +7,7 @@
       {{ toptitle }}
     </div>
     <h2 v-if="title" class="top-description">{{ title }}</h2>
-    <div v-if="description" class="mt-2">{{ description }}</div>
+    <div v-if="description" class="mt-3">{{ description }}</div>
   </div>
 </template>
 
