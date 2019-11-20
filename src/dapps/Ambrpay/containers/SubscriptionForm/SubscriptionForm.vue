@@ -94,9 +94,14 @@
               {{ intervalErrMsg }}
             </p>
           </b-row>
-          <b-row class="mt-4">
+          <b-row class="mt-5 button-container">
             <b-button
-              :class="[isValidInput ? '' : 'disabled', 'mx-auto mew-btn']"
+              class="active-sub-btn my-subscriptions-container"
+              @click="openManageSubModal"
+              >{{ $t('dappsAmbrpay.manage-subscriptions.title') }}
+            </b-button>
+            <b-button
+              :class="[isValidInput ? '' : 'disabled', 'mew-btn']"
               @click="startSubscription"
               >{{ $t('dappsAmbrpay.start-recurring') }}</b-button
             >
@@ -116,6 +121,14 @@ import BigNumber from 'bignumber.js';
 export default {
   components: {
     blockie: Blockie
+  },
+  props: {
+    subscriptions: {
+      type: Array,
+      default: function() {
+        return [];
+      }
+    }
   },
   data() {
     return {
@@ -186,6 +199,9 @@ export default {
           'ether'
         );
       }
+    },
+    openManageSubModal() {
+      this.$emit('openManageSubModal');
     },
     startSubscription() {
       const data = {

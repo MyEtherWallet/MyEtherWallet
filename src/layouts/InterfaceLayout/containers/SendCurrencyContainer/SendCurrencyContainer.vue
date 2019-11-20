@@ -185,11 +185,9 @@
       >
         {{ $t('sendTx.send-tx') }}
       </div>
-      <interface-bottom-text
-        :link-text="$t('common.help-center')"
-        :question="$t('common.have-issues')"
-        link="https://kb.myetherwallet.com"
-      />
+      <div class="clear-all-btn" @click="clear()">
+        {{ $t('common.clear-all') }}
+      </div>
     </div>
   </div>
 </template>
@@ -198,7 +196,6 @@
 import { mapState } from 'vuex';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import CurrencyPicker from '../../components/CurrencyPicker';
-import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
 import { Transaction } from 'ethereumjs-tx';
 import { Misc, Toast } from '@/helpers';
@@ -210,7 +207,6 @@ import fetch from 'node-fetch';
 export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
-    'interface-bottom-text': InterfaceBottomText,
     blockie: Blockie,
     'currency-picker': CurrencyPicker
   },
@@ -449,6 +445,10 @@ export default {
       this.gasLimit = '21000';
       this.isValidAddress = false;
       this.advancedExpand = false;
+      this.selectedCurrency = {
+        name: 'Ethereum',
+        symbol: 'ETH'
+      };
     },
     prefillForm() {
       if (this.isPrefilled) {
@@ -555,10 +555,9 @@ export default {
         const _tx = new Transaction(raw);
         const json = _tx.toJSON(true);
         json.from = coinbase;
-        this.web3.eth.sendTransaction(json)
-          .catch(err => {
-            Toast.responseHandler(err, Toast.ERROR);
-          });
+        this.web3.eth.sendTransaction(json).catch(err => {
+          Toast.responseHandler(err, Toast.ERROR);
+        });
         this.clear();
       } catch (e) {
         Toast.responseHandler(e, Toast.ERROR);

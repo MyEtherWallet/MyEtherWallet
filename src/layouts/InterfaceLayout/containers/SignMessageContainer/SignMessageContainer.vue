@@ -36,11 +36,9 @@
             {{ $t('signMessage.sign') }}
           </button>
         </div>
-        <interface-bottom-text
-          :link-text="$t('common.help-center')"
-          :question="$t('common.have-issues')"
-          link="https://kb.myetherwallet.com"
-        />
+        <div class="clear-all-btn" @click="deleteInputText()">
+          {{ $t('common.clear-all') }}
+        </div>
       </div>
     </div>
   </div>
@@ -49,14 +47,12 @@
 <script>
 import { mapState } from 'vuex';
 import { Toast } from '@/helpers';
-import InterfaceBottomText from '@/components/InterfaceBottomText';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import SignatureModal from '../../components/SignatureModal';
 
 export default {
   name: 'SignMessage',
   components: {
-    'interface-bottom-text': InterfaceBottomText,
     'interface-container-title': InterfaceContainerTitle,
     'signature-modal-modal': SignatureModal
   },

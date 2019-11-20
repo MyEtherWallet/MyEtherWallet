@@ -35,16 +35,16 @@
               </span>
               <span>
                 <i
-                  v-show="moreInfo"
+                  v-show="sub.moreInfo"
                   class="fa fa-angle-up"
                   aria-hidden="true"
-                  @click="toggleMoreInfo"
+                  @click="toggleMoreInfo(sub)"
                 />
                 <i
-                  v-show="!moreInfo"
+                  v-show="!sub.moreInfo"
                   class="fa fa-angle-down"
                   aria-hidden="true"
-                  @click="toggleMoreInfo"
+                  @click="toggleMoreInfo(sub)"
                 />
               </span>
             </div>
@@ -67,7 +67,7 @@
                 >{{ sub.price }} {{ $t('dappsAmbrpay.eth') }}</span
               >
             </div>
-            <div v-show="moreInfo" class="more-info-container">
+            <div v-show="sub.moreInfo" class="more-info-container">
               <div v-show="sub.subscriptionInterval" class="info-row">
                 <span class="info-title">{{
                   $t('dappsAmbrpay.manage-subscriptions.current-cycle')
@@ -108,8 +108,8 @@
               </div>
             </div>
           </div>
-          <hr v-show="moreInfo" />
-          <div v-show="moreInfo" class="btn-container mb-2">
+          <hr v-show="sub.moreInfo" />
+          <div v-show="sub.moreInfo" class="btn-container mb-2">
             <button
               @click="unsubscribe(sub.storagePos, sub.smartContractAddress)"
             >
@@ -132,11 +132,6 @@ export default {
       }
     }
   },
-  data() {
-    return {
-      moreInfo: false
-    };
-  },
   methods: {
     formatDate(param) {
       if (!param) return '';
@@ -144,8 +139,8 @@ export default {
         param.substr(3, 2) + '/' + param.substr(0, 2) + '/' + param.substr(6, 4)
       );
     },
-    toggleMoreInfo() {
-      this.moreInfo = !this.moreInfo;
+    toggleMoreInfo(sub) {
+      sub.moreInfo = !sub.moreInfo;
     },
     unsubscribe(pos, addr) {
       this.$emit('unsubscribeSub', { pos: pos, addr: addr });

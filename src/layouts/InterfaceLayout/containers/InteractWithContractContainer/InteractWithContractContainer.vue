@@ -83,11 +83,9 @@
           {{ $t('common.continue') }}
           <img src="~@/assets/images/icons/right-arrow.png" alt />
         </div>
-        <interface-bottom-text
-          :link-text="$t('common.help-center')"
-          :question="$t('common.have-issues')"
-          link="https://kb.myetherwallet.com"
-        />
+        <div class="clear-all-btn" @click="resetDefaults()">
+          {{ $t('common.clear-all') }}
+        </div>
       </div>
     </div>
     <div v-else class="contract-methods-container">
@@ -259,11 +257,9 @@
             <i v-show="loading" class="fa fa-spinner fa-spin fa-lg" />
           </div>
         </div>
-        <interface-bottom-text
-          :link-text="$t('common.help-center')"
-          :question="$t('common.have-issues')"
-          link="https://kb.myetherwallet.com"
-        />
+        <div class="clear-all-btn" @click="resetDefaults()">
+          {{ $t('common.clear-all') }}
+        </div>
       </div>
     </div>
   </div>
@@ -273,7 +269,6 @@
 import { mapState } from 'vuex';
 import CurrencyPicker from '../../components/CurrencyPicker';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
-import InterfaceBottomText from '@/components/InterfaceBottomText';
 import { Misc, Toast } from '@/helpers';
 import { isAddress } from '@/helpers/addressUtils';
 import * as unit from 'ethjs-unit';
@@ -282,7 +277,6 @@ import store from 'store';
 export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
-    'interface-bottom-text': InterfaceBottomText,
     'currency-picker': CurrencyPicker
   },
   data() {
