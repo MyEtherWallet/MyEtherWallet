@@ -15,19 +15,12 @@
         :open-network-modal="props.openNetworkModal"
       />
     </div>
-    <div class="total-balance-container">
-      <div class="title-name">
-        {{ parent.$t('common.balance.total') }}
-      </div>
-      <div class="balance-container">
-        <p class="actual-balance">
-          {{ props.totalBalance }} <span>{{ props.network.type.name }} </span>
-        </p>
-        <p v-if="props.network.type.name === 'ETH'" class="converted-balance">
-          {{ props.convertedBalance }}
-        </p>
-      </div>
-    </div>
+    <component
+      :is="injections.components.TotalBalanceContainer"
+      :network="props.network"
+      :total-balance="props.totalBalance"
+      :converted-balance="props.convertedBalance"
+    />
     <div v-show="props.myWallets.length > 0 || props.loading" class="wallets">
       <component
         v-for="wallet in props.myWallets"
@@ -61,12 +54,14 @@
 <script>
 import WalletInfoComponent from '../../components/WalletInfoComponent';
 import NetworkPickerComponent from '../../components/NetworkPickerComponent';
+import TotalBalanceContainer from '../../components/TotalBalanceContainer';
 export default {
   inject: {
     components: {
       default: {
         WalletInfoComponent,
-        NetworkPickerComponent
+        NetworkPickerComponent,
+        TotalBalanceContainer
       }
     }
   },
