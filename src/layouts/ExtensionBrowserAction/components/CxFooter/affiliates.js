@@ -2,7 +2,8 @@ const affiliates = [
   {
     text: 'footer.ledger',
     price: '59.00',
-    description: 'buyHardwareWallet.desc.ledger',
+    description:
+      'A light, yet solid multicurrency hardware wallet for cryptocurrencies. It is easy to carry everywhere thanks to its USB format.',
     href: 'https://www.ledger.com?r=fa4b',
     currency: '$',
     logo: 'ledger'
@@ -36,7 +37,7 @@ const affiliates = [
   {
     text: 'footer.finney',
     price: '999.00',
-    description: 'buyHardwareWallet.desc.finney',
+    description: 'Uncompromised Security In a Blockchain Smartphone',
     href:
       'http://shop.sirinlabs.com?rfsn=2397639.54fdf&utm_source=refersion&utm_medium=affiliate&utm_campaign=2397639.54fdf',
     currency: '$',
@@ -45,15 +46,17 @@ const affiliates = [
   {
     text: 'footer.bitbox',
     price: '44.00',
-    description: 'buyHardwareWallet.desc.bitbox',
-    href: 'https://shiftcrypto.ch/?ref=MEW',
+    description:
+      'Our aim is to equip you for independence, with ease, in the digital world.',
+    href: 'https://shiftcrypto.ch/?ref=mew',
     currency: '€',
     logo: 'bitbox'
   },
   {
     text: 'footer.trezor',
     price: '83.49',
-    description: 'buyHardwareWallet.desc.trezor',
+    description:
+      'The most trusted hardware wallet in the world. Get yours today!',
     href: 'https://trezor.io/?offer_id=12&aff_id=2029',
     currency: '€',
     logo: 'trezor'
@@ -61,7 +64,8 @@ const affiliates = [
   {
     text: 'footer.secalot',
     price: '50.00',
-    description: 'buyHardwareWallet.desc.secalot',
+    description:
+      'Your all-in-one digital security companion. it is a small USB dongle that packs a wide range of features.',
     href: 'https://www.secalot.com/',
     currency: '$',
     logo: 'secalot'
@@ -69,7 +73,8 @@ const affiliates = [
   {
     text: 'footer.keepkey',
     price: '79.00',
-    description: 'buyHardwareWallet.desc.keepkey',
+    description:
+      'Protect your cryptocurrencies, store your private keys offline, and safeguard your assets from hackers.',
     href: 'http://lddy.no/a4im',
     currency: '$',
     logo: 'keepkey'
