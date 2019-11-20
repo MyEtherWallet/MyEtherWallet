@@ -1,9 +1,9 @@
 <template>
-  <div v-if="!isMewCx" class="footer">
+  <div class="footer">
     <!-- Modal -->
     <feedback-modal />
     <div class="wrap">
-      <div class="page-container">
+      <div>
         <div class="grid-col-1-1-1-2 footer-contents">
           <div
             v-for="(item, index) in footerContent"
@@ -27,7 +27,7 @@
                   :key="content.text + index"
                   class="content"
                 >
-                  <div v-if="content.text === $t('common.cstm-support')">
+                  <div v-if="content.text === $t('common.customerSupport')">
                     <customer-support :no-icon="true" />
                   </div>
                   <router-link
@@ -54,9 +54,15 @@
           </div>
           <div class="donate-us">
             <div class="content-title">
-              <i18n path="footer.title.love" tag="h3">
-                <img slot="heart" src="~@/assets/images/icons/heart.svg" alt />
-              </i18n>
+              <h3 class="lite">
+                <i18n path="footer.title.love" tag="h3">
+                  <img
+                    slot="heart"
+                    src="~@/assets/images/icons/heart.svg"
+                    alt
+                  />
+                </i18n>
+              </h3>
             </div>
             <div class="links">
               <p>{{ $t('footer.donation.desc') }}</p>
@@ -67,7 +73,7 @@
                 rel="noopener noreferrer"
               >
                 <p :data-eth="ethDonationAddress" class="crypto-link">
-                  <img src="~@/assets/images/currency/eth.svg" alt />
+                  <img src="@/assets/images/currency/eth.svg" alt />
                   &nbsp;{{ $t('footer.donation.ether') }}
                 </p>
               </a>
@@ -81,9 +87,8 @@
                   class="crypto-link no-padding"
                   data-btc="1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9"
                 >
-                  <img src="~@/assets/images/currency/btc.svg" alt /> &nbsp;{{
-                    $t('footer.donation.bitcoin')
-                  }}
+                  <img src="@/assets/images/currency/btc.svg" alt />
+                  &nbsp;{{ $t('footer.donation.bitcoin') }}
                 </p>
               </a>
             </div>
@@ -112,7 +117,7 @@
                 href="https://coingecko.com/"
                 target="_blank"
                 rel="noopener noreferrer"
-                >{{ $t('footer.coingecko') }}</a
+                >CoinGecko</a
               >
               <br />
               {{ $t('footer.copyright') }}
@@ -178,7 +183,7 @@ export default {
           title: this.$t('footer.title.discover'),
           contents: [
             {
-              text: this.$t('convertUnits.page.title'),
+              text: this.$t('footer.units'),
               to: '/convert-units'
             },
             // {
@@ -190,23 +195,23 @@ export default {
               href: 'https://www.mewcx.com'
             },
             {
-              text: this.$t('buyHardwareWallet.page.title'),
+              text: 'Buy a Hardware wallet',
               to: '/hardware-wallet-affiliates'
             },
             {
-              text: this.$t('footer.send-offline'),
+              text: this.$t('footer.sendOffline'),
               to: '/send-offline-helper'
             },
             {
-              text: this.$t('verifyMessage.title'),
+              text: this.$t('footer.verifyMessage'),
               to: '/verify-message'
             },
             {
-              text: this.$t('footer.view-wallet-info'),
+              text: this.$t('footer.viewWalletInfo'),
               to: '/view-wallet-info'
             },
             {
-              text: this.$t('dappsSubmission.banner-submit.submit-dapp'),
+              text: 'Submit Dapp',
               to: '/dapp-submission'
             }
           ]
@@ -237,7 +242,7 @@ export default {
               href: 'https://www.mewtopia.com'
             },
             {
-              text: this.$t('common.cstm-support'),
+              text: this.$t('common.customerSupport'),
               href: 'mailto:support@myetherwallet.com'
             },
             {
@@ -326,7 +331,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'FooterContainer-desktop.scss';
-@import 'FooterContainer-tablet.scss';
-@import 'FooterContainer-mobile.scss';
+@import 'CxFooter.scss';
 </style>

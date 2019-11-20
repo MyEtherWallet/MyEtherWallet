@@ -54,8 +54,8 @@
       @accountPath="updateSelectedPath"
       @passwordUpdated="updatePassword"
     />
-    <h2>{{ $t('mewCx.add-my-wallet') }}</h2>
-    <p>{{ $t('mewCx.how-would-you-add-wallet') }}</p>
+    <h2>{{ $t('mewcx.add-my-wallet') }}</h2>
+    <p>{{ $t('mewcx.how-would-you-add-wallet') }}</p>
     <div class="add-wallet-options">
       <access-wallet-button
         v-for="(button, index) in options"
