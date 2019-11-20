@@ -107,6 +107,10 @@ export default {
     inputvalue: {
       type: String,
       default: ''
+    },
+    clearInput: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -125,6 +129,11 @@ export default {
           return 'border-green';
         default:
       }
+    }
+  },
+  watch: {
+    clearInput() {
+      this.inputValue = null;
     }
   },
   methods: {

@@ -12,6 +12,7 @@
               <currency-picker
                 :currency="mergedContracts"
                 :token="false"
+                :clear-currency="clearCurrency"
                 page="interactWContract"
                 @selectedCurrency="selectedContract"
               />
@@ -97,6 +98,7 @@
         <div class="picker-container">
           <currency-picker
             :currency="contractMethods"
+            :clear-currency="clearCurrency"
             :token="false"
             page="interactWContract"
             @selectedCurrency="selectedFunction"
@@ -289,7 +291,8 @@ export default {
       result: '',
       loading: false,
       value: 0,
-      inputs: {}
+      inputs: {},
+      clearCurrency: false
     };
   },
   computed: {
@@ -371,6 +374,7 @@ export default {
       this.loading = false;
       this.value = 0;
       this.inputs = {};
+      this.clearCurrency = !this.clearCurrency;
     },
     isValidInput: Misc.isContractArgValid,
     getType: Misc.solidityType,
