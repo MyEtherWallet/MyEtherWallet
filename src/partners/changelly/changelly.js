@@ -82,7 +82,7 @@ export default class Changelly {
   }
 
   validSwap(fromCurrency, toCurrency) {
-    if(disabled.includes(fromCurrency) || disabled.includes(toCurrency)){
+    if (disabled.includes(fromCurrency) || disabled.includes(toCurrency)) {
       return false;
     }
     if (this.isValidNetwork) {
