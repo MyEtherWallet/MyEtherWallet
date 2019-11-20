@@ -45,11 +45,17 @@
       }
 
       .website-button {
-        background-color: $dark-blue-2;
+        background-color: $white;
+        border: 1px solid $mew-green;
         border-radius: 5px;
-        color: $white !important;
+        color: $mew-green !important;
         margin: 5px 0;
         padding: 10px;
+
+        &:hover {
+          background-color: $mew-green;
+          color: $white !important;
+        }
       }
 
       .dapp-links {
