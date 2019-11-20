@@ -106,6 +106,11 @@
               >{{ $t('dappsAmbrpay.start-recurring') }}</b-button
             >
           </b-row>
+          <b-row>
+            <div class="clear-all-btn mx-auto mt-4" @click="clear()">
+              {{ $t('common.clear-all') }}
+            </div>
+          </b-row>
         </b-container>
       </div>
     </div>
@@ -187,6 +192,15 @@ export default {
     }
   },
   methods: {
+    clear() {
+      this.address = '';
+      this.isValidAddress = false;
+      this.hexAddress = '';
+      this.intervalDays = '';
+      this.sendAmount = '';
+      this.amountErrMsg = '';
+      this.intervalErrMsg = '';
+    },
     copyToClipboard() {
       this.$refs.address.select();
       document.execCommand('copy');
