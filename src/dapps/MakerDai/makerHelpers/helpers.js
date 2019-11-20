@@ -54,11 +54,11 @@ export function CdpNum(cdpId) {
 }
 
 // Calculations
-const bnOver = (one, two, three) => {
+export function bnOver (one, two, three) {
   return toBigNumber(one)
     .times(toBigNumber(two))
     .div(toBigNumber(three));
-};
+}
 
 export function maxDai(ethPrice, ethCollateral, liquidationRatio, debtValue) {
   return bnOver(
