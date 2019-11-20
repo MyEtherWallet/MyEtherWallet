@@ -1,5 +1,6 @@
 <template>
-  <div class="pt-10">
+  <div>
+    <div class="py-7" />
     <BlockTitle :title="titleText" centered />
   </div>
 </template>
