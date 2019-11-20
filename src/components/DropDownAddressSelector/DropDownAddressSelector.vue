@@ -175,6 +175,10 @@ export default {
   },
   methods: {
     addAddress() {
+      const alreadyExists = Object.keys(this.addressBook).some(key => {
+        return this.addressBook[key].address === this.selectedAddress;
+      });
+
       if (!this.selectedAddress) {
         Toast.responseHandler(
           this.$t('interface.address-book.cannot-add'),
@@ -187,9 +191,17 @@ export default {
           Toast.ERROR
         );
         return;
+      } else if (alreadyExists) {
+        Toast.responseHandler(
+          this.$t('interface.address-book.already-exists'),
+          Toast.ERROR
+        );
+        return;
       }
+
       this.addressBook.push({
         address: this.selectedAddress,
+        currency: 'ETH',
         nickname: this.addressBook.length + 1
       });
 

@@ -2,7 +2,6 @@ import SubscriptionForm from '@/dapps/Ambrpay/containers/SubscriptionForm/Subscr
 import { shallowMount } from '@vue/test-utils';
 import Blockie from '@/components/Blockie';
 import Vue from 'vue';
-import { Toast } from '@/helpers';
 import { Tooling } from '@@/helpers';
 
 describe('SubscriptionForm.vue', () => {
