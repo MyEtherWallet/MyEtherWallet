@@ -357,7 +357,7 @@ class CompileSwapOptions {
         )}; \nexport { TotleCurrenciesETH };\n`
       );
     }
-    
+
     console.log('Complete');
   }
 }

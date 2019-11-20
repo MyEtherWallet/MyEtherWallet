@@ -4,12 +4,12 @@
       <div class="content-header">
         <div>
           <h3>{{ domainName }}</h3>
-          <p>{{ $t('dapps.domainIsAvailable') }}</p>
+          <p>{{ $t('ens.is-available') }}</p>
         </div>
       </div>
       <div class="buttons-container" @click="registerFifsName()">
         <div class="submit-button large-round-button-green-filled">
-          Register
+          {{ $t('ens.register') }}
         </div>
       </div>
     </div>

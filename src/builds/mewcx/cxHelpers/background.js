@@ -105,9 +105,9 @@ let metamaskChecker;
 const eventsListeners = (request, _, callback) => {
   if (request.event === CX_WEB3_DETECTED) {
     clearTimeout(metamaskChecker);
-    metamaskChecker = setTimeout(function() {
-      chrome.storage.remove('warned');
-    }, 300000); // Clear var in 5 minutes
+    metamaskChecker = setTimeout(() => {
+      chrome.storage.sync.remove('warned');
+    }, 180000); // Clear var in 3 minutes
   }
 
   const payload = utils._.mapObject(

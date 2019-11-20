@@ -63,11 +63,11 @@
     <div class="wrap">
       <div class="page-container">
         <div class="title">
-          <h2>{{ $t('common.accessMyWallet') }}</h2>
+          <h2>{{ $t('common.wallet.access-my') }}</h2>
           <h5>
-            {{ $t('common.noWallet') }}
+            {{ $t('common.wallet.do-not-have') }}
             <router-link :to="'/create-wallet'" class="nounderline">
-              {{ $t('common.createANewWallet') }}
+              {{ $t('common.wallet.create-new') }}
             </router-link>
           </h5>
         </div>
@@ -154,8 +154,8 @@ export default {
       buttons: [
         {
           func: this.mewConnectModalOpen,
-          title: this.$t('common.mewConnect'),
-          desc: this.$t('accessWallet.mewConnectDesc'),
+          title: this.$t('common.mewconnect.string'),
+          desc: this.$t('accessWallet.mewconnect.option-text'),
           recommend: '',
           tooltip: '',
           img: mewConnectImg,
@@ -165,7 +165,7 @@ export default {
         },
         {
           func: this.hardwareModalOpen,
-          title: this.$t('common.hardware'),
+          title: this.$t('accessWallet.hardware.option-title'),
           desc:
             'Ledger wallet, FINNEY, Trezor, BitBox, Secalot, KeepKey, XWallet',
           recommend: '',
@@ -177,8 +177,8 @@ export default {
         },
         {
           func: this.web3WalletModal,
-          title: 'Web3 Wallet',
-          desc: this.$t('accessWallet.web3WalletDesc'),
+          title: this.$t('accessWallet.web3-wallet'),
+          desc: this.$t('accessWallet.web3-wallet-desc'),
           recommend: '',
           tooltip: '',
           img: web3Img,
@@ -188,9 +188,9 @@ export default {
         },
         {
           func: this.softwareModalOpen,
-          title: this.$t('accessWallet.software'),
-          desc: this.$t('accessWallet.softwareDesc'),
-          recommend: this.$t('accessWallet.notRecommended'),
+          title: this.$t('accessWallet.software.option-title'),
+          desc: this.$t('accessWallet.software.option-text'),
+          recommend: this.$t('common.not-recommended.string'),
           tooltip: '',
           img: softwareImg,
           imgDisabled: softwareImgDisabled,
