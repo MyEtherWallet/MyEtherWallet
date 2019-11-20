@@ -6,15 +6,14 @@
         All-in-one gateway to your Ethereum Blockchain service
       </div>
     </v-sheet>
-    <BlockTitle :title="titleText" centered />
-    <div class="py-8" />
+    <div class="py-10" />
     <v-row>
       <v-col cols="4" class="text-content">
         <BlockTitle
           title="Send"
           description="MyEtherWallet - please, call us MEW - puts the ETH blockchain at your
           fingertips."
-          class="mb-10"
+          class="mb-8"
         />
         <div class="mb-6 d-flex">
           <div>111</div>
@@ -79,9 +78,7 @@ import BlockTitle from '@/layouts/components/BlockTitle';
 
 export default {
   components: { BlockTitle },
-  data: () => ({
-    titleText: ''
-  })
+  data: () => ({})
 };
 </script>
 
