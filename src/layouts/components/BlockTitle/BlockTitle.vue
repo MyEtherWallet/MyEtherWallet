@@ -1,11 +1,12 @@
 <template>
   <div class="block-title" :class="centered ? 'text-center' : ''">
     <div
+      v-if="toptitle"
       class="top-title text-uppercase font-weight-bold grey--text text--lighten-1 mb-2"
     >
-      {{ title }}
+      {{ toptitle }}
     </div>
-    <h2 class="top-description">{{ description }}</h2>
+    <h2 v-if="title" class="top-description">{{ title }}</h2>
   </div>
 </template>
 
@@ -13,8 +14,8 @@
 export default {
   name: 'BlockTitle',
   props: {
+    toptitle: { default: '', type: String },
     title: { default: '', type: String },
-    description: { default: '', type: String },
     centered: { default: false, type: Boolean }
   },
   data: () => ({})

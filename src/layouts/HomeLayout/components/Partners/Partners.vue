@@ -3,8 +3,8 @@
     <v-container>
       <BlockTitle
         :centered="false"
-        title="Partners"
-        description="Connect with the powerful crypto communities"
+        toptitle="Partners"
+        title="Connect with the powerful crypto communities"
       />
       <v-row class="mt-8 px-4">
         <v-col cols="3" md="3" lg="2">

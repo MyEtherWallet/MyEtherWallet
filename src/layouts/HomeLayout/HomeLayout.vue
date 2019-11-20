@@ -1,13 +1,17 @@
 <template>
   <div>
-    <div class="light-blue darken-4 home-layout">
-      <TopBanner />
-    </div>
-    <Features class="py-12" />
+    <TopBanner />
+    <div class="py-6" />
+    <Features />
+    <div class="py-6" />
     <WhyMew />
-    <Ad1 class="py-12" />
-    <Partners class="py-12" />
-    <Ad2 class="mt-4" />
+    <div class="py-5" />
+    <Ad1 />
+    <div class="py-11" />
+    <Partners />
+    <div class="py-9" />
+    <Ad2 />
+    <div class="py-1" />
   </div>
 </template>
 

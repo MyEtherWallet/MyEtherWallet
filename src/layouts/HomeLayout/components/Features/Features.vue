@@ -3,8 +3,8 @@
     <v-container>
       <BlockTitle
         centered
-        title="Features"
-        description="All-in-one gateway to your Ethereum Blockchain service"
+        toptitle="Features"
+        title="All-in-one gateway to your Ethereum Blockchain service"
       />
     </v-container>
     <div class="pt-7">
