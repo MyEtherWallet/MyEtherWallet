@@ -553,8 +553,20 @@ export default {
       this.addrBookErrMsg = null;
     },
     addContact() {
+      const alreadyExists = Object.keys(this.addressBook).some(key => {
+        return this.addressBook[key].address === this.contactAddress;
+      });
+
       if (this.addressBook.length > 9) {
         this.addrBookErrMsg = this.$t('interface.address-book.add-up-to');
+        this.contactAddress = '';
+        this.contactNickname = '';
+        return;
+      } else if (alreadyExists) {
+        Toast.responseHandler(
+          new Error(this.$t('interface.address-book.already-exists')),
+          Toast.ERROR
+        );
         this.contactAddress = '';
         this.contactNickname = '';
         return;
