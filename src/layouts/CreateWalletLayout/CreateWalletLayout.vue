@@ -99,8 +99,8 @@
               <div class="tab-content-block">
                 <div class="title-block">
                   <div class="title-popover">
-                    <h3>{{ $t('common.password.your') }}</h3>
-                    <popover :popcontent="$t('popover.password')" />
+                    <h3>{{ $t('createWallet.mnemonic.title') }}</h3>
+                    <!-- <popover :popcontent="$t('popover.password')" /> -->
                   </div>
                 </div>
                 <by-mnemonic-container />
