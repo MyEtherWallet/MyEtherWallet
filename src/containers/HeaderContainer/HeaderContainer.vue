@@ -1,5 +1,5 @@
 <template>
-  <div class="header">
+  <div v-if="!isMewCx" class="header">
     <decision-tree />
     <router-link
       v-show="
@@ -140,8 +140,8 @@
                     </template>
                     <b-dropdown-item
                       v-for="language in supportedLanguages"
-                      :active="$root._i18n.locale === language.langCode"
                       :key="language.key"
+                      :active="$root._i18n.locale === language.langCode"
                       :data-language-code="language.langCode"
                       :data-flag-name="language.flag"
                       @click="languageItemClicked"
@@ -377,6 +377,8 @@ export default {
     };
 
     this.$eventHub.$on('issueModal', (error, resolve) => {
+      // eslint-disable-next-line
+      console.log(error);
       let errorPop = store.get('errorPop') || 0;
       errorPop += 1;
       store.set('errorPop', errorPop);
