@@ -143,6 +143,10 @@ export default {
     preFillAddress: {
       type: String,
       default: ''
+    },
+    clearAddress: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -179,6 +183,9 @@ export default {
     },
     currency() {
       this.validateAddress(this.selectedAddress);
+    },
+    clearAddress() {
+      this.selectedAddress = '';
     }
   },
   mounted() {

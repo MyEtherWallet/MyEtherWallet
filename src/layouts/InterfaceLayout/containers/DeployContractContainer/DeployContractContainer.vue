@@ -167,18 +167,15 @@
             {{ $t('contract.sign-tx') }}
           </div>
         </div>
-        <interface-bottom-text
-          :link-text="$t('common.help-center')"
-          :question="$t('common.have-issues')"
-          link="https://kb.myetherwallet.com"
-        />
+        <div class="clear-all-btn" @click="clear()">
+          {{ $t('common.clear-all') }}
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import InterfaceBottomText from '@/components/InterfaceBottomText';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import { Misc, Toast } from '@/helpers';
 import ethUnit from 'ethjs-unit';
@@ -191,7 +188,6 @@ import { mapState } from 'vuex';
 export default {
   name: 'DeployContract',
   components: {
-    'interface-bottom-text': InterfaceBottomText,
     'interface-container-title': InterfaceContainerTitle
   },
   data() {
@@ -297,6 +293,11 @@ export default {
     }
   },
   methods: {
+    clear() {
+      this.bytecode = '';
+      this.abi = '';
+      this.contractName = '';
+    },
     isValidInput: Misc.isContractArgValid,
     getType: Misc.solidityType,
     async sendTransaction() {

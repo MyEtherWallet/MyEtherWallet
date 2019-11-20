@@ -155,5 +155,6 @@
   "error-message": "Error Message",
   "print-modal": {
     "cut": "Cut Here"
-  }
+  },
+  "clear-all": "Clear All"
 }
