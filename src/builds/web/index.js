@@ -1,6 +1,6 @@
 import HomeLayout from '@/layouts/HomeLayout';
 import HowItWorks from '@/layouts/HowItWorks';
-import AboutUs from '@/layouts/AboutUs';
+import AboutUsCompany from '@/layouts/AboutUs/Company';
 
 import app from './app';
 const webRoutes = [
@@ -21,9 +21,9 @@ const webRoutes = [
     }
   },
   {
-    path: '/about-us',
-    name: 'AboutUs',
-    component: AboutUs,
+    path: '/about-us/company',
+    name: 'AboutUsCompany',
+    component: AboutUsCompany,
     meta: {
       requiresAuth: false
     }
