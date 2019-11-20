@@ -29,6 +29,8 @@ const toBigNumber = num => {
   return new BigNumber(num);
 };
 
+const DAI = 'DAI';
+
 export default class Kyber {
   constructor(props = {}) {
     this.name = Kyber.getName();
@@ -466,7 +468,7 @@ export default class Kyber {
       value: Object.values(networkSymbols).includes(fromCurrency)
         ? fromValueWei
         : 0,
-      gas: this.getTokenTradeGas(fromCurrency, toCurrency),
+      gas: this.getTokenTradeGas(fromCurrency, toCurrency, fromValueWei),
       data
     };
   }
@@ -565,7 +567,13 @@ export default class Kyber {
     );
   }
 
-  getTokenTradeGas(fromCurrency, toCurrency) {
+  getTokenTradeGas(fromCurrency, toCurrency, fromValueWei) {
+    if (
+      toCurrency === 'DAI' &&
+      toBigNumber(fromValueWei).gt(this.convertToTokenWei('ETH', 499))
+    ) {
+      return toBigNumber(1500000);
+    }
     const fromGas = this.getTokenSwapGas(fromCurrency);
     const toGas = this.getTokenSwapGas(toCurrency);
     return toBigNumber(fromGas)
