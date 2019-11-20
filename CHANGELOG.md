@@ -1,3 +1,7 @@
+### Devop
+
+- Gas limit update for large eth to dai via kyber, disable usdt for changelly [#1671](https://github.com/MyEtherWallet/MyEtherWallet/pull/1671)
+
 ### Release v5.2.3-hotfix.2
 
 ### Devop
