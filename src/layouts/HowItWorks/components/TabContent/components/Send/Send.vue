@@ -52,6 +52,20 @@
               Dolor tempor ipsum lorem sadipscing, erat sadipscing et dolor sed
               stet takimata ipsum invidunt, est ea no dolor.
             </div>
+            <div class="d-flex align-center mt-4">
+              <a
+                href="#"
+                class="mr-5 teal--text text--lighten-2 font-weight-bold"
+              >
+                Try free demo
+              </a>
+              <a
+                href="#"
+                class="mr-5 teal--text text--lighten-2 font-weight-bold"
+              >
+                Watch tutorial
+              </a>
+            </div>
           </div>
         </div>
       </v-col>
@@ -72,6 +86,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.text-content {
+//@import '@/assets/styles/GlobalVariables';
+
+a {
+  text-decoration: underline;
 }
 </style>
