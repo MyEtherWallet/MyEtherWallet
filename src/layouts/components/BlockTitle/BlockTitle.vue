@@ -7,6 +7,7 @@
       {{ toptitle }}
     </div>
     <h2 v-if="title" class="top-description">{{ title }}</h2>
+    <div v-if="description" class="mt-2">{{ description }}</div>
   </div>
 </template>
 
@@ -16,6 +17,7 @@ export default {
   props: {
     toptitle: { default: '', type: String },
     title: { default: '', type: String },
+    description: { default: '', type: String },
     centered: { default: false, type: Boolean }
   },
   data: () => ({})
