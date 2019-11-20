@@ -8,7 +8,7 @@
       />
     </v-container>
     <div class="pt-7">
-      <v-tabs color="deep-purple accent-4" centered>
+      <Tabs>
         <v-tab>Send</v-tab>
         <v-tab>Swap</v-tab>
         <v-tab>Dapps</v-tab>
@@ -38,17 +38,19 @@
             src="@/assets/images/Banners/LandingPage/Features/Swap.svg"
           />
         </v-tab-item>
-      </v-tabs>
+      </Tabs>
     </div>
   </div>
 </template>
 
 <script>
+import Tabs from '@/layouts/components/Tabs';
 import BlockTitle from '@/layouts/components/BlockTitle';
 
 export default {
   name: 'HomeFeatures',
   components: {
+    Tabs,
     BlockTitle
   }
 };
