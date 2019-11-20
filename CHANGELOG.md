@@ -1,3 +1,6 @@
+### Bug
+- Fix MEWCX mobile ui [#1657](https://github.com/MyEtherWallet/MyEtherWallet/pull/1657)
+
 ### Devop
 
 - Update translations[#1651](https://github.com/MyEtherWallet/MyEtherWallet/pull/1651)
@@ -20,7 +23,6 @@
 - Fix toBuffer [#1658](https://github.com/MyEtherWallet/MyEtherWallet/pull/1658)
 - Fix dashboard dapps [#1650](https://github.com/MyEtherWallet/MyEtherWallet/pull/1650)
 - Fix MEWCX PromiEvent [#1646](https://github.com/MyEtherWallet/MyEtherWallet/pull/1646)
-- Fix MEWCX mobile ui [#1657](https://github.com/MyEtherWallet/MyEtherWallet/pull/1657)
 
 ### Release v5.2.3-hotfix.1
 
