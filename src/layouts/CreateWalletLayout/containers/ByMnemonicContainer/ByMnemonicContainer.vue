@@ -52,7 +52,7 @@
 
       <div class="option-container-block">
         <expanding-option
-          :title="$t('common.password.string')"
+          :title="$t('createWallet.mnemonic.extra-word')"
           :button-text="$t('common.optional')"
           @expanded="passwordInputViewChange"
         >
@@ -64,7 +64,7 @@
             />
             <div class="password-warning">
               <p>
-                {{ $t('createWallet.mnemonic.warning.password') }}
+                {{ $t('createWallet.mnemonic.warning.extra-word') }}
               </p>
               <div class="read">
                 > {{ $t('common.read') }}:

@@ -45,12 +45,14 @@
   "mnemonic": {
     "title": "Your Mnemonic Phrase",
     "title-tab": "By Mnemonic Phrase",
+    "extra-word": "Extra Word",
+    "popover": "A mnemonic phrase is a list of 12 - 24 words that can be used to access your wallet.",
     "random": "Random",
     "button-wrote-it-down": "I Wrote Down My Mnemonic Phrase",
     "do-not-forget-save-mnemonic": "{do-not-forget} to save your mnemonic phrase. You will need this to access your wallet.",
     "warning": {
       "write-down": "Write Down Mnemonic Phrase Key",
-      "password": "If you choose to include a password, understand you will ALWAYS need this password with your mnemonic phrase. You can not change it. It becomes a permanent part of your phrase. Read more about the password option here."
+      "extra-word": "If you choose to include an extra word, understand you will ALWAYS need this extra word with your mnemonic phrase. You can not change it. It becomes a permanent part of your phrase."
     },
     "verify": {
       "title": "Verification",

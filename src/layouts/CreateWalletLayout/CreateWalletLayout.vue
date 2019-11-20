@@ -100,7 +100,9 @@
                 <div class="title-block">
                   <div class="title-popover">
                     <h3>{{ $t('createWallet.mnemonic.title') }}</h3>
-                    <!-- <popover :popcontent="$t('popover.password')" /> -->
+                    <popover
+                      :popcontent="$t('createWallet.mnemonic.popover')"
+                    />
                   </div>
                 </div>
                 <by-mnemonic-container />
