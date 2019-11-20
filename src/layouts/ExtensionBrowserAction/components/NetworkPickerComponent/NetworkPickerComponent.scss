@@ -1,12 +1,14 @@
 @import '~@/scss/GlobalVariables';
-.dropdown-container {
+
+.network-picker {
   span {
     font-size: 12px;
   }
 
   .network-text {
     color: $dark-grey-11;
-    padding-right: 15px;
+    text-align: right;
+    font-weight: 600;
   }
 
   .current-network {
@@ -14,6 +16,8 @@
     border: 1px solid $light-grey-8;
     border-radius: 5px;
     cursor: pointer;
-    padding: 10px;
+    font-weight: 600;
+    padding: 10px 20px;
+    margin-left: 20px;
   }
 }

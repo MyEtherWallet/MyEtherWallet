@@ -1,5 +1,5 @@
 <template>
-  <div class="footer">
+  <div v-if="!isMewCx" class="footer">
     <!-- Modal -->
     <feedback-modal />
     <div class="wrap">
@@ -150,7 +150,9 @@ export default {
     'customer-support': CustomerSupport
   },
   data() {
+    const isMewCx = Misc.isMewCx();
     return {
+      isMewCx: isMewCx,
       version: version,
       lowerLinks: [
         {

@@ -44,7 +44,7 @@
           </div>
         </div>
         <div v-else>
-          <p>{{ parent.$t('mewCX.use-burner') }}!</p>
+          <p>{{ parent.$t('mewcx.use-burner') }}!</p>
         </div>
       </div>
     </div>

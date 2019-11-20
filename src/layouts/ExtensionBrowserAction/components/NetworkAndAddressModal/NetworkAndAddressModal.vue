@@ -141,13 +141,13 @@
                 </p>
                 <div v-show="customPathInput" class="custom-path-container">
                   <!-- TODO: how to structure the path input? -->
-                  <label for="customPathLabel">{{ $t('mewCX.alias') }}</label>
+                  <label for="customPathLabel">{{ $t('mewcx.alias') }}</label>
                   <input
                     id="customPathLabel"
                     v-model="customPath.label"
-                    :placeholder="$t('mewCX.custom-path')"
+                    :placeholder="$t('mewcx.custom-path')"
                   />
-                  <label for="customPathInput">{{ $t('mewCX.path') }}</label>
+                  <label for="customPathInput">{{ $t('mewcx.path') }}</label>
                   <input
                     id="customPathInput"
                     v-model="customPath.path"
@@ -236,7 +236,7 @@
                     <input
                       v-model="locPassword"
                       :type="show ? 'text' : 'password'"
-                      :placeholder="$t('mewCX.enter-pw')"
+                      :placeholder="$t('mewcx.enter-pw')"
                     />
                     <img
                       :src="show ? showIcon : hide"
@@ -255,7 +255,7 @@
                     @click.prevent="generateFromMnemonicPriv"
                   >
                     <span v-show="!loading">
-                      {{ $t('mewCX.add-wallet') }}
+                      {{ $t('mewcx.add-wallet') }}
                     </span>
                     <i v-show="loading" class="fa fa-spinner fa-spin" />
                   </b-btn>
