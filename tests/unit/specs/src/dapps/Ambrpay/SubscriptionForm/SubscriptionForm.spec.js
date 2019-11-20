@@ -53,33 +53,6 @@ describe('SubscriptionForm.vue', () => {
     expect(wrapper.vm.$data.intervalErrMsg).toEqual('');
   });
 
-  it('should render the correct address', () => {
-    const address = '0x29D7d1dd5B6f9C864d9db560D72a247c178aE86B';
-    wrapper.setData({ address });
-    const inputAddress = wrapper.vm.$el.querySelectorAll(
-      '.address-block .row-style input'
-    )[0];
-
-    expect(inputAddress.value).toEqual(address);
-  });
-
-  it('should render the correct address', () => {
-    const address = '0x29D7d1dd5B6f9C864d9db560D72a247c178aE86B';
-    wrapper.setData({ address });
-    const inputAddress = wrapper.vm.$el.querySelectorAll(
-      '.address-block .row-style input'
-    )[0];
-
-    expect(inputAddress.value).toEqual(address);
-  });
-
-  it('should render the correct address', () => {
-    const address = '0x29D7d1dd5B6f9C864d9db560D72a247c178aE86B';
-    wrapper.setData({ address });
-
-    expect(wrapper.vm.$data.isValidAddress).toEqual(true);
-  });
-
   it('should set an amount error message if sendAmount < 0.01', () => {
     const sendAmount = 0.001;
     wrapper.setData({ sendAmount });
@@ -105,15 +78,6 @@ describe('SubscriptionForm.vue', () => {
     expect(wrapper.vm.$data.intervalErrMsg).toEqual(
       'Please enter a correct number'
     );
-  });
-
-  it('should call copyToClipboard on click to copy', () => {
-    jest.spyOn(Toast, 'responseHandler').mockReturnValue('true');
-
-    wrapper.find('p.copy-text').trigger('click');
-
-    expect(document.execCommand).toHaveBeenCalledWith('copy');
-    expect(Toast.responseHandler).toHaveBeenCalled();
   });
 
   it('should call sendEntireBalance on click to entire balance', () => {
