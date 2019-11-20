@@ -2,7 +2,7 @@ import { ETH } from '../types';
 export default {
   type: ETH,
   service: 'myetherwallet.com',
-  url: 'https://api.myetherwallet.com/eth',
+  url: 'https://ethrpc.mewapi.io',
   port: 443,
   auth: false,
   username: '',

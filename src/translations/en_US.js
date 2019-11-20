@@ -34,7 +34,7 @@ import nftManager from './nft-manager/en_US';
 import signMessage from './sign-message/en_US';
 import helpCenter from './help-center/en_US';
 import notifications from './notifications/en_US';
-import mewCX from './mew-cx/en_US';
+import mewcx from './mew-cx/en_US';
 import dappsAmbrpay from './dapps-ambrpay/en_US';
 import phishing from './other/phishing/en_US';
 import header from './header/en_US';
@@ -75,7 +75,7 @@ const en_US = {
   dappsSubmission: dappsSubmission,
   helpCenter: helpCenter,
   notifications: notifications,
-  mewCX: mewCX,
+  mewcx: mewcx,
   dappsAmbrpay: dappsAmbrpay,
   phising: phishing,
   header: header
