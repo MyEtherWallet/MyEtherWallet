@@ -638,15 +638,13 @@ export default {
 
     async checkAllowances() {
       if (this.proxyAddress) {
-        this._proxyAllowanceDai = (await this.daiToken.allowance(
-          this.account.address,
-          this.proxyAddress
-        )).toBigNumber();
+        this._proxyAllowanceDai = (
+          await this.daiToken.allowance(this.account.address, this.proxyAddress)
+        ).toBigNumber();
 
-        this._proxyAllowanceMkr = (await this.mkrToken.allowance(
-          this.account.address,
-          this.proxyAddress
-        )).toBigNumber();
+        this._proxyAllowanceMkr = (
+          await this.mkrToken.allowance(this.account.address, this.proxyAddress)
+        ).toBigNumber();
       }
     },
     async setupCdpManage(cdpId) {

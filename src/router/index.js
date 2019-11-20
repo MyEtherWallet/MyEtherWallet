@@ -4,6 +4,7 @@ import { getMode, getRoutes } from '@/builds/configs';
 import { ExtensionHelpers } from '@/helpers';
 import { isAddress } from '@/helpers/addressUtils';
 import Misc from '@/helpers/misc';
+import { MEW_CX } from '@/builds/configs/types';
 
 const storeQuery = query => {
   const queryKeys = Object.keys(query);
@@ -36,7 +37,7 @@ router.beforeResolve((to, from, next) => {
     next();
   } else {
     if (store.state.wallet === null) {
-      if (BUILD_TYPE === 'mewcx') {
+      if (BUILD_TYPE === MEW_CX) {
         ExtensionHelpers.getAccounts(item => {
           const hasStoredWallet = Object.keys(item).filter(key => {
             const newObj = {};

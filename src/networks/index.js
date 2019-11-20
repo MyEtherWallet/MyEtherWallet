@@ -1,6 +1,7 @@
 const platform = require('platform');
 import * as types from './types';
 import * as nodes from './nodes';
+import { MEW_CX } from '@/builds/configs/types';
 
 let nodeList = {};
 Object.keys(types).forEach(key => {
@@ -22,7 +23,7 @@ Object.keys(nodes).forEach(key => {
   }
 });
 
-if (BUILD_TYPE === 'mewcx') {
+if (BUILD_TYPE === MEW_CX) {
   const obj = {};
   Object.keys(nodeList).forEach(network => {
     obj[network] = nodeList[network].filter(item => {
