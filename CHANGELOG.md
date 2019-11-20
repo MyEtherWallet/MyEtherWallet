@@ -1,3 +1,7 @@
+### Feature
+
+- Add clear btn to forms [#1673] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1673)
+
 ### Release v5.2.4
 
 ### Devop
