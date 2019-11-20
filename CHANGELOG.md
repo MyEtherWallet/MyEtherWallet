@@ -1,3 +1,7 @@
+### Devop
+
+- Display token symbol [#1674](https://github.com/MyEtherWallet/MyEtherWallet/pull/1674)
+
 ### Release v5.2.4
 
 ### Devop
