@@ -1,3 +1,23 @@
+### Release v5.2.4
+
+### Devop
+
+- Update packages [#1669](https://github.com/MyEtherWallet/MyEtherWallet/pull/1669)
+- Make use of River nodes [#1568](https://github.com/MyEtherWallet/MyEtherWallet/pull/1568)
+
+### Release v5.2.3-hotfix.2
+
+### Devop
+
+- Use ens register with config to optimize ens registration [#1646](https://github.com/MyEtherWallet/MyEtherWallet/pull/1646)
+
+### Bug
+
+- Fix toBuffer [#1658](https://github.com/MyEtherWallet/MyEtherWallet/pull/1658)
+- Fix dashboard dapps [#1650](https://github.com/MyEtherWallet/MyEtherWallet/pull/1650)
+- Fix MEWCX PromiEvent [#1646](https://github.com/MyEtherWallet/MyEtherWallet/pull/1646)
+- Fix MEWCX mobile ui [#1657](https://github.com/MyEtherWallet/MyEtherWallet/pull/1657)
+
 ### Release v5.2.3-hotfix.1
 
 ### Bug

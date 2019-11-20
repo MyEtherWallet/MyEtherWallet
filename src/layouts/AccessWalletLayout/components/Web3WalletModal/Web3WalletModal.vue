@@ -12,9 +12,7 @@
   >
     <div class="modal-content">
       <div v-if="isSafari && isMetaMask" class="browser-catch">
-        <h4>
-          {{ $t('accessWallet.metamask.warning.safari') }}
-        </h4>
+        <h4>{{ $t('accessWallet.metamask.warning.safari') }}</h4>
         <div class="browser-logo-container">
           <a
             v-for="browser in browsers"
@@ -28,7 +26,7 @@
         </div>
       </div>
       <div v-if="isSafari && !isMetaMask" class="browser-catch">
-        <h4>{{ $t('mewCX.mewcx-only') }}:</h4>
+        <h4>{{ $t('mewcx.mewcx-only') }}:</h4>
         <div class="browser-logo-container">
           <a
             v-for="browser in mewSupportedBrowsers"
@@ -70,9 +68,8 @@
         <div class="accept-terms">
           <label class="checkbox-container">
             <i18n path="accessWallet.metamask.modal.terms" tag="label">
-              <router-link slot="terms" to="/terms-and-conditions">{{
-                $t('common.terms')
-              }}</router-link
+              <router-link slot="terms" to="/terms-and-conditions">
+                {{ $t('common.terms') }} </router-link
               >.
             </i18n>
             <input
@@ -108,9 +105,8 @@
         <div class="accept-terms hidden">
           <label class="checkbox-container">
             <i18n path="accessWallet.metamask.modal.terms" tag="label">
-              <router-link slot="terms" to="/terms-and-conditions">{{
-                $t('common.terms')
-              }}</router-link
+              <router-link slot="terms" to="/terms-and-conditions">
+                {{ $t('common.terms') }} </router-link
               >.
             </i18n>
             <input
@@ -128,7 +124,7 @@
             rel="noopener noreferrer"
             class="mid-round-button-green-filled close-button"
             @click="refreshPage = true"
-            >{{ $t('mewCX.install-mewcx') }}</a
+            >{{ $t('mewcx.install-mewcx') }}</a
           >
           <b-btn
             v-show="refreshPage"
@@ -260,17 +256,13 @@ export default {
     },
     async signIn(web3, type) {
       try {
-        const newWeb3 = new Web3(web3.currentProvider);
-        const acc = await newWeb3.eth.getAccounts();
+        const acc = await web3.eth.getAccounts();
         if (type === 'ethereum') {
           window.ethereum.autoRefreshOnNetworkChange = false;
         }
         if (!acc.length) return (this.unlockWeb3Wallet = true);
         const wallet = new Web3Wallet(acc[0]);
-        this.$store.dispatch('decryptWallet', [
-          wallet,
-          newWeb3.currentProvider
-        ]);
+        this.$store.dispatch('decryptWallet', [wallet, web3.currentProvider]);
         this.$router.push({
           path: 'interface'
         });

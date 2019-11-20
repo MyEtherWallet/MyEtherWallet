@@ -1,19 +1,19 @@
 <template functional>
   <div class="welcome-section">
     <div class="header">
-      {{ parent.$t('mewCX.welcome-header') }}
+      {{ parent.$t('mewcx.welcome-header') }}
     </div>
     <div class="content">
       <img src="@/assets/images/mew-cx-logo.png" width="75" />
       <div class="text-content">
-        <h3>{{ parent.$t('mewCX.mew-cx-official') }}</h3>
+        <h3>{{ parent.$t('mewcx.mew-cx-official') }}</h3>
         <p>
-          {{ parent.$t('mewCX.no-wallet-add') }}
+          {{ parent.$t('mewcx.no-wallet-add') }}
         </p>
       </div>
     </div>
     <div class="add-wallet-content" @click="props.addWallet">
-      {{ parent.$t('mewCX.add-wallet') }}
+      {{ parent.$t('mewcx.add-wallet') }}
     </div>
   </div>
 </template>
