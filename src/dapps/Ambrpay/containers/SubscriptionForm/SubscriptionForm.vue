@@ -107,7 +107,7 @@
             >
           </b-row>
           <b-row>
-            <div class="clear-all-btn mx-auto mt-4" @click="clear()">
+            <div class="clear-all-btn mx-auto mt-3" @click="clear()">
               {{ $t('common.clear-all') }}
             </div>
           </b-row>

@@ -323,6 +323,7 @@ export default {
         });
         const contractAddr = bufferToHex(generateAddress(coinbase, nonce));
         this.pushContractToStore(contractAddr);
+        this.clear();
       } catch (e) {
         Toast.responseHandler(e, false);
       }

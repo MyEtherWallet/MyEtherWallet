@@ -90,6 +90,7 @@ export default {
               2
             );
             this.$refs.signatureModal.$refs.signatureModal.show();
+            this.deleteInputText();
           })
           .catch(e => {
             Toast.responseHandler(e, Toast.ERROR);
