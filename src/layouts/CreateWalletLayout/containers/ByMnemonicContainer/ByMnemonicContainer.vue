@@ -52,8 +52,8 @@
 
       <div class="option-container-block">
         <expanding-option
-          title="Password"
-          button-text="Optional"
+          :title="$t('common.password.string')"
+          :button-text="$t('common.optional')"
           @expanded="passwordInputViewChange"
         >
           <div class="option-container">
@@ -91,7 +91,13 @@
           <img alt class="icon" src="~@/assets/images/icons/printer.svg" />
         </div>
       </div>
-      <input-footer />
+      <div class="footer-text">
+        <i18n tag="p" path="createWallet.mnemonic.do-not-forget-save-mnemonic">
+          <span slot="do-not-forget">{{
+            $t('createWallet.password.do-not-forget')
+          }}</span>
+        </i18n>
+      </div>
     </div>
   </div>
 </template>
