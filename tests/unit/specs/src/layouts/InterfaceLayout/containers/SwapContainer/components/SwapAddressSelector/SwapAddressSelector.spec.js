@@ -30,14 +30,6 @@ describe('SwapAddressSelector.vue', () => {
     expect(wrapper.find('.selected-address-blockie').exists()).toBe(true);
   });
 
-  it('should render correct dropdownOpen data', () => {
-    expect(wrapper.find('.fa-chevron-down').exists()).toBe(true);
-    expect(wrapper.find('.fa-chevron-up').exists()).toBe(false);
-    wrapper.setData({ dropdownOpen: true });
-    expect(wrapper.find('.fa-chevron-down').exists()).toBe(false);
-    expect(wrapper.find('.fa-chevron-up').exists()).toBe(true);
-  });
-
   it('should render correct selectedAddress data', () => {
     const selectedAddress = 'selectedAddress';
     wrapper.setData({ selectedAddress });
