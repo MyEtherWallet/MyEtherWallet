@@ -569,7 +569,7 @@ export default class Kyber {
 
   getTokenTradeGas(fromCurrency, toCurrency, fromValueWei) {
     if (
-      toCurrency === 'DAI' &&
+      toCurrency === DAI &&
       toBigNumber(fromValueWei).gt(this.convertToTokenWei('ETH', 499))
     ) {
       return toBigNumber(1500000);
