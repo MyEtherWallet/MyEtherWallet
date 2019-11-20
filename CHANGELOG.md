@@ -1,3 +1,7 @@
+### Feature
+
+- Add Totle as a provider to DEXes [#1672](https://github.com/MyEtherWallet/MyEtherWallet/pull/1672)
+
 ### Release v5.2.4
 
 ### Devop
