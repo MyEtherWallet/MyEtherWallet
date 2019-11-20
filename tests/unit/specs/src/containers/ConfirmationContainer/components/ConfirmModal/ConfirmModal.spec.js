@@ -65,7 +65,7 @@ describe('ConfirmModal.vue', () => {
         .querySelectorAll('.grid-block')[1]
         .querySelectorAll('p')[1]
         .textContent.trim()
-    ).toEqual(wrapper.props().gas + ' wei');
+    ).toEqual(wrapper.props().gas + ' Wei');
   });
 
   it('should render correct gasPrice props', () => {
@@ -75,7 +75,7 @@ describe('ConfirmModal.vue', () => {
         .querySelectorAll('.grid-block')[2]
         .querySelectorAll('p')[1]
         .textContent.trim()
-    ).toEqual(wrapper.props().gasPrice + ' gwei');
+    ).toEqual(wrapper.props().gasPrice + ' Gwei');
   });
 
   it('should render correct fee props', () => {
