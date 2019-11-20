@@ -27,7 +27,10 @@ const kyberNetworkAbi = [
   },
   {
     constant: true,
-    inputs: [{ name: '', type: 'address' }, { name: '', type: 'bytes32' }],
+    inputs: [
+      { name: '', type: 'address' },
+      { name: '', type: 'bytes32' }
+    ],
     name: 'perReserveListedPairs',
     outputs: [{ name: '', type: 'bool' }],
     payable: false,
@@ -284,7 +287,10 @@ const kyberNetworkAbi = [
       }
     ],
     name: 'findBestRate',
-    outputs: [{ name: '', type: 'uint256' }, { name: '', type: 'uint256' }],
+    outputs: [
+      { name: '', type: 'uint256' },
+      { name: '', type: 'uint256' }
+    ],
     payable: false,
     stateMutability: 'view',
     type: 'function'
