@@ -3,6 +3,7 @@
     <div class="currency-container">
       <img
         :src="require(`@/assets/images/currency/${lowerCaseCurrency}.svg`)"
+        alt
       />
       <p>
         <span class="currency-amt">
@@ -15,7 +16,7 @@
       </p>
     </div>
     <div class="identicon-container">
-      <p>{{ direction | capitalize }} Address</p>
+      <p>{{ direction | capitalize }} {{ $t('common.addr') }}</p>
     </div>
     <div class="address">{{ checksumAddress }}</div>
   </div>

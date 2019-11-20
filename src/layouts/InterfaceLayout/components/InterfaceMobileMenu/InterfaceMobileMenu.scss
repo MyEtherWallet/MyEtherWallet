@@ -1,0 +1,130 @@
+@import '~@/scss/GlobalVariables';
+
+.interface-mobile-menu .mobile-menu-container {
+  position: relative;
+
+  .disabled-item {
+    user-select: none;
+  }
+
+  .menu-small-title {
+    position: absolute;
+    top: 20px;
+    right: 23px;
+    color: $mew-green;
+    z-index: 1;
+    pointer-events: none;
+    font-size: 14px;
+    font-weight: 700;
+    i {
+      font-weight: 700;
+    }
+    @media all and (max-width: 400px) {
+      font-size: 10px;
+    }
+  }
+
+  .btn-group {
+    width: 100%;
+    .btn-secondary,
+    .btn-secondary:not(:disabled):not(.disabled):active,
+    .btn-secondary.dropdown-toggle {
+      background-color: $dark-blue-2;
+      border: 0;
+      border-radius: 0 0;
+      text-align: left;
+      padding: 15px 20px;
+      font-size: 20px;
+      font-weight: 600;
+    }
+  }
+
+  .dropdown-menu-item {
+    border-bottom: 2px solid $light-grey-5;
+    padding: 15px 10px;
+
+    &:last-child {
+      border-bottom: 0;
+    }
+
+    &.disabled-item {
+      background-color: yellow;
+    }
+
+    .cat-title {
+      display: flex;
+      align-items: center;
+      padding: 10px 0;
+      p {
+        font-size: 22px;
+        //line-height: 30px;
+        font-weight: 600;
+        color: $light-grey-7;
+      }
+
+      i {
+        margin-left: auto;
+        color: $light-grey-7;
+      }
+
+      &.active p,
+      &.active i {
+        color: $dark-blue-2;
+      }
+    }
+
+    .sub-menu {
+      overflow: hidden;
+      max-height: 0;
+      //padding-left: 10px;
+      user-select: none;
+      transition: max-height 0.2s ease;
+
+      .active a {
+        font-weight: 500;
+        color: $dark-blue-2;
+      }
+
+      a {
+        padding: 0;
+        margin: 0;
+        color: $light-grey-7;
+      }
+
+      li {
+        //padding-top: 10px;
+
+        a {
+          //margin-top: 10px;
+          padding: 10px 0;
+          font-size: 18px;
+          //line-height: 40px;
+        }
+      }
+    }
+
+    &:hover .sub-menu {
+      max-height: 300px;
+      user-select: all;
+    }
+  }
+
+  .btn {
+    border-radius: 5px 5px 0 0 !important;
+  }
+
+  .dropdown-toggle::after {
+    display: none;
+  }
+
+  .dropdown-menu.show {
+    width: 100%;
+    transform: translate3d(0, 57px, 0) !important;
+    z-index: 1 !important;
+  }
+
+  .dropdown-menu {
+    border-radius: 0 0 5px 5px;
+    padding: 0 20px;
+  }
+}

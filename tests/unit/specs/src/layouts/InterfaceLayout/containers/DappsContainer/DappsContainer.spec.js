@@ -15,8 +15,8 @@ const RouterLinkStub = {
 function translate(lang) {
   const arrLang = lang.split('.');
   let langObj = languages.en_US;
-  for (let i = 0; i < arrLang.length; i++) {
-    langObj = langObj[arrLang[i]];
+  for (const language of arrLang) {
+    langObj = langObj[language];
   }
   if (langObj) return langObj;
   return lang;
@@ -52,22 +52,13 @@ describe('DappsContainer.vue', () => {
   });
 
   it('should render correct localDapps data', () => {
-    for (let i = 0; i < wrapper.vm.sortedObject.length; i++) {
-      const sortedObject = wrapper.vm.sortedObject[i];
+    for (const [i, sortedObject] of wrapper.vm.sortedObject.entries()) {
       const dappsButtonTitle = wrapper.vm.$el.querySelectorAll(
         '.dapps-button h4'
-      )[i];
-      const dappsButtonRoute = wrapper.vm.$el.querySelectorAll(
-        '.dapps-button .param'
       )[i];
       expect(translate(sortedObject.title)).toEqual(
         dappsButtonTitle.textContent.trim()
       );
-      expect(translate(sortedObject.route)).toEqual(
-        dappsButtonRoute.textContent.trim()
-      );
-      // console.log(translate(sortedObject.desc));
-      // console.log(wrapper.findAll('.dapps-button p').at(i).html());
     }
   });
 });

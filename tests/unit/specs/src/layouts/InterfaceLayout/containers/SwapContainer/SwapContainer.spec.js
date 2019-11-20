@@ -46,8 +46,9 @@ describe('SwapContainer.vue', () => {
       '.item-container'
     );
     const fromToElements = containerElements[0];
-    for (let i = 0; i < fromToElements.querySelectorAll('div').length; i++) {
-      const currencyElement = fromToElements.querySelectorAll('div')[i];
+    for (const [i, currencyElement] of fromToElements
+      .querySelectorAll('div')
+      .entries()) {
       if (i > 0) {
         const symbol = wrapper.vm.$data.fromArray[i - 1].symbol;
         const name = wrapper.vm.$data.fromArray[i - 1].name;
@@ -66,8 +67,9 @@ describe('SwapContainer.vue', () => {
       '.item-container'
     );
     const fromToElements = containerElements[1];
-    for (let i = 0; i < fromToElements.querySelectorAll('div').length; i++) {
-      const currencyElement = fromToElements.querySelectorAll('div')[i];
+    for (const [i, currencyElement] of fromToElements
+      .querySelectorAll('div')
+      .entries()) {
       if (i > 0) {
         const symbol = wrapper.vm.$data.fromArray[i - 1].symbol;
         const name = wrapper.vm.$data.fromArray[i - 1].name;

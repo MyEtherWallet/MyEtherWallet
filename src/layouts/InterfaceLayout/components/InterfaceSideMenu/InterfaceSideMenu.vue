@@ -1,7 +1,7 @@
 <template>
   <div class="transactions-side-menu">
     <div class="side-menu-header">
-      <img src="~@/assets/images/logo.png" />
+      <img alt src="~@/assets/images/logo.png" />
       <div @click="toggleSideMenu">
         <i class="fa fa-lg fa-times"></i>
       </div>
@@ -25,6 +25,7 @@
               :src="
                 isTabActive(tab.routes) ? tab.icons.active : tab.icons.inactive
               "
+              alt
             />
             <p>{{ $t(tab.titleKey) }}</p>
             <i
@@ -47,7 +48,10 @@
             <li
               v-for="(child, cidx) in tab.children"
               :key="child.name + cidx"
-              :class="isTabActive(child.routes) ? 'active' : ''"
+              :class="[
+                isTabActive(child.routes) ? 'active' : '',
+                child.onlineOnly && !online ? 'disabled-item' : ''
+              ]"
               @click.prevent="tabAction(child)"
             >
               {{ $t(child.titleKey) }}

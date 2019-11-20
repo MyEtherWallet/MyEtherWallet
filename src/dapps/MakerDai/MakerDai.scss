@@ -14,45 +14,48 @@ $confirmation-modal-mobile-width: 500px;
   }
 }
 
-.header-buttons-container {
-  display: flex;
-  align-items: center;
-  position: absolute;
-  top: 16px;
-  right: 100px;
-
-  @media all and (max-width: 600px) {
-    top: 79px;
-    left: 8px;
-  }
-
-  .inner-container {
+.back-bar-container {
+  position: relative;
+  .header-buttons-container {
     display: flex;
-    // Mobile
+    align-items: center;
+    position: absolute;
+    top: 16px;
+    right: 100px;
 
-    button {
-      margin-left: 10px;
-      text-align: center;
-      border-radius: 5px;
-      cursor: pointer;
-      display: block;
+    @media all and (max-width: 600px) {
+      top: 79px;
+      left: 8px;
     }
 
-    .move-btn {
-      background-color: $white;
-      width: 120px;
-      height: 34px;
-      border-radius: 4px;
-      border: solid 1px #05c0a5;
-      color: #05c0a5;
-    }
-    .close-btn {
-      background-color: $white;
-      width: 120px;
-      height: 34px;
-      border-radius: 4px;
-      border: solid 1px #e96071;
-      color: #e96071;
+    .inner-container {
+      display: flex;
+      // Mobile
+
+      button {
+        margin-left: 10px;
+        text-align: center;
+        border-radius: 5px;
+        cursor: pointer;
+        display: block;
+      }
+
+      .move-btn {
+        background-color: $white;
+        width: 120px;
+        height: 34px;
+        border-radius: 4px;
+        border: solid 1px #05c0a5;
+        color: #05c0a5;
+      }
+      .close-btn {
+        background-color: $white;
+        width: 120px;
+        height: 34px;
+        border-radius: 4px;
+        border: solid 1px #e96071;
+        color: #e96071;
+      }
     }
   }
 }
@@ -204,10 +207,11 @@ $confirmation-modal-mobile-width: 500px;
     font-size: 16px;
     font-weight: 600;
     font-style: normal;
+    font-display: block;
     font-stretch: normal;
     line-height: normal;
     letter-spacing: normal;
-    color: #0b2840;
+    color: $dark-blue-2;
   }
 
   .Please-text-somethin {
@@ -217,6 +221,7 @@ $confirmation-modal-mobile-width: 500px;
     font-size: 14px;
     font-weight: normal;
     font-style: normal;
+    font-display: block;
     font-stretch: normal;
     line-height: normal;
     letter-spacing: normal;
@@ -234,9 +239,10 @@ $confirmation-modal-mobile-width: 500px;
     font-size: 16px;
     font-weight: 600;
     font-style: normal;
+    font-display: block;
     font-stretch: normal;
     line-height: normal;
     letter-spacing: normal;
-    color: #0b2840;
+    color: $dark-blue-2;
   }
 }

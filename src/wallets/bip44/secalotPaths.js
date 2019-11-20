@@ -19,7 +19,8 @@ import {
   atheios,
   tomoChain,
   mixBlockchain,
-  iolite
+  iolite,
+  lightstreamsNetwork
 } from './paths';
 export default [
   ethereum,
@@ -42,5 +43,6 @@ export default [
   atheios,
   tomoChain,
   mixBlockchain,
-  iolite
+  iolite,
+  lightstreamsNetwork
 ];

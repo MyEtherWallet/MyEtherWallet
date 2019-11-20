@@ -1,12 +1,12 @@
 <template>
   <div class="helpcenter-button">
     <div class="wrap">
-      Having issues?
+      {{ $t('common.having-issues') }}
       <a
         href="https://kb.myetherwallet.com"
         target="_blank"
         rel="noopener noreferrer"
-        >Help Center</a
+        >{{ $t('common.help-center') }}</a
       >
     </div>
   </div>

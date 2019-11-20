@@ -9,7 +9,7 @@
     <verification-modal
       ref="verification"
       :mnemonic-values="mnemonicValues"
-      :mnemonic-done-modal-open="mnemonicDoneModalOpen"
+      @verifiedMnemonic="openFinish"
     />
     <div class="wrap">
       <div class="contents">
@@ -29,7 +29,7 @@
               </div>
             </div>
             <span class="text__base link switch-label">{{
-              $t('createWallet.byMnemonicValue')
+              $t('common.value')
             }}</span>
           </div>
 
@@ -38,7 +38,7 @@
             @click="mnemonicValueRefresh"
           >
             <i class="fa fa-refresh" aria-hidden="true" />
-            <span>{{ $t('createWallet.byMnemonicRandom') }}</span>
+            <span>{{ $t('createWallet.mnemonic.random') }}</span>
           </div>
         </div>
         <div class="phrases">
@@ -51,7 +51,7 @@
       </div>
 
       <div class="option-container-block">
-        <expending-option
+        <expanding-option
           title="Password"
           button-text="Optional"
           @expanded="passwordInputViewChange"
@@ -64,19 +64,20 @@
             />
             <div class="password-warning">
               <p>
-                {{ $t('createWallet.mnemonicPasswordWarning') }}
+                {{ $t('createWallet.mnemonic.warning.password') }}
               </p>
               <div class="read">
                 > {{ $t('common.read') }}:
                 <a
                   href="https://kb.myetherwallet.com/posts/security-and-privacy/mnemonic-phrase-password/"
                   target="_blank"
-                  >Mnemonic Phrase: Should I Include a Password?</a
+                  rel="noopener noreferrer"
+                  >{{ $t('common.article.mnemonic-password') }}</a
                 >
               </div>
             </div>
           </div>
-        </expending-option>
+        </expanding-option>
       </div>
 
       <div class="user-input">
@@ -84,10 +85,10 @@
           class="next-button large-round-button-green-filled clickable"
           @click="mnemonicVerificationModalOpen"
         >
-          {{ $t('createWallet.byMnemonicAlreadyWritten') }}
+          {{ $t('createWallet.mnemonic.button-wrote-it-down') }}
         </div>
         <div @click="openPrintModal">
-          <img class="icon" src="~@/assets/images/icons/printer.svg" />
+          <img alt class="icon" src="~@/assets/images/icons/printer.svg" />
         </div>
       </div>
       <input-footer />
@@ -101,7 +102,7 @@ import FinishModal from './components/FinishModal';
 import PrintModal from './components/PrintModal';
 import VerificationModal from './components/VerificationModal';
 import PasswordInput from '@/components/PasswordInput';
-import ExpendingOption from '@/components/ExpendingOption';
+import ExpandingOption from '@/components/ExpandingOption';
 import CreateWalletInput from '../../components/CreateWalletInput';
 
 const bip39 = require('bip39');
@@ -113,7 +114,7 @@ export default {
     'print-modal': PrintModal,
     'input-footer': CreateWalletInputFooter,
     'password-input': PasswordInput,
-    'expending-option': ExpendingOption,
+    'expanding-option': ExpandingOption,
     'create-wallet-input': CreateWalletInput
   },
   data() {
@@ -163,93 +164,11 @@ export default {
         right.classList.remove('white');
       }
     },
-    mnemonicDoneModalOpen() {
-      let valid = false;
-
-      this.verificationValues.forEach(function(value) {
-        const userInputText = document
-          .querySelector('.phrases .word[data-index="' + value.no + '"]')
-          .querySelector('input').value;
-
-        if (
-          userInputText ===
-          document
-            .querySelector('.phrases .word[data-index="' + value.no + '"]')
-            .querySelector('span').textContent
-        ) {
-          valid = true;
-        } else {
-          valid = false;
-        }
-      });
-
-      if (valid === true) {
-        this.$refs.finish.$refs.done.show();
-      }
+    openFinish() {
+      this.$refs.verification.$refs.verification.hide();
+      this.$refs.finish.$refs.done.show();
     },
     mnemonicVerificationModalOpen() {
-      // Generate random numbers to choose which blocks to hide
-      function generateNumArr(limit) {
-        const ret = [];
-        for (let i = 1; i < limit; i++) {
-          ret.push(i);
-        }
-
-        return ret;
-      }
-
-      function shuffle(array) {
-        let i = array.length;
-        let j = 0;
-        let temp;
-        while (i--) {
-          j = Math.floor(Math.random() * (i + 1));
-          // swap randomly chosen element with current element
-          temp = array[i];
-          array[i] = array[j];
-          array[j] = temp;
-        }
-        return array;
-      }
-
-      let ranNums = [];
-      this.verificationValues = [];
-
-      document.querySelectorAll('.phrases .word').forEach(function(el) {
-        el.classList.remove('verification');
-        el.querySelector('span').classList.remove('hidden');
-        el.querySelector('input').classList.add('hidden');
-      });
-
-      if (this.mnemonic24 === true) {
-        ranNums = shuffle(generateNumArr(25));
-      } else {
-        ranNums = shuffle(generateNumArr(13));
-      }
-
-      // Hide 5 random mnemonic blocks
-      for (let c = 0; c < 5; c++) {
-        document
-          .querySelector('.phrases .word[data-index="' + ranNums[c] + '"]')
-          .classList.add('verification');
-
-        document
-          .querySelector('.phrases .word[data-index="' + ranNums[c] + '"]')
-          .querySelector('span')
-          .classList.add('hidden');
-        this.verificationValues.push({
-          word: document
-            .querySelector('.phrases .word[data-index="' + ranNums[c] + '"]')
-            .querySelector('span').textContent,
-          no: ranNums[c]
-        });
-
-        document
-          .querySelector('.phrases .word[data-index="' + ranNums[c] + '"]')
-          .querySelector('input')
-          .classList.remove('hidden');
-      }
-
       this.$refs.verification.$refs.verification.show();
     },
     openPrintModal() {

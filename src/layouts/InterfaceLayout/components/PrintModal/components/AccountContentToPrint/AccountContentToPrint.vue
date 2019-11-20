@@ -25,13 +25,18 @@
         </div>
         <div class="link-container">
           <p>
-            <img height="15px" src="~@/assets/images/icons/support.svg" />
+            <img
+              height="15px"
+              src="~@/assets/images/icons/support.svg"
+              alt="Support"
+            />
             {{ link1 }}
           </p>
           <p>
             <img
               height="15px"
               src="~@/assets/images/icons/web-solution-white.svg"
+              alt
             />
             {{ link2 }}
           </p>
@@ -43,6 +48,7 @@
             <img
               src="~@/assets/images/short-hand-logo-white.png"
               height="30px"
+              alt
             />
             {{ mew }}
           </b>
@@ -63,16 +69,19 @@
         src="~@/assets/images/background/404bg.jpg"
         width="100%"
         class="floating-img"
+        alt
       />
       <img
-        src="~@/assets/images/etc/spaceman.png"
+        src="~@/assets/images/etc/access-spaceman.png"
         width="100%"
         class="floating-spaceman"
+        alt="Spaceman"
       />
     </div>
     <div class="between">
       <div class="text">
-        <img height="15px" src="~@/assets/images/icons/scissor.svg" /> Cut Here
+        <img height="15px" src="~@/assets/images/icons/scissor.svg" alt />
+        {{ $t('common.print-modal.cut') }}
       </div>
       <div class="dash"></div>
     </div>
@@ -100,13 +109,13 @@
           <qrcode :value="address" :options="{ size: 120 }" />
         </div>
       </div>
-      <div v-if="!wallet.isPubOnly" class="my-priv-container">
+      <div v-if="!!wallet && !wallet.isPubOnly" class="my-priv-container">
         <div class="text-container">
           <h3>{{ myPriv }}</h3>
-          <p>{{ wallet.privateKey.toString('hex') }}</p>
+          <p>{{ wallet.getPrivateKeyString() }}</p>
         </div>
         <qrcode
-          :value="wallet.privateKey.toString('hex')"
+          :value="wallet.getPrivateKeyString()"
           :options="{ size: 120 }"
         />
       </div>
@@ -114,16 +123,28 @@
     <div class="footer-container">
       <div class="link-container">
         <p>
-          <img height="17px" src="~@/assets/images/icons/support.svg" />
+          <img
+            height="17px"
+            src="~@/assets/images/icons/support.svg"
+            alt="Support"
+          />
           {{ link1 }}
         </p>
         <p>
-          <img height="15px" src="~@/assets/images/icons/web-solution.svg" />
+          <img
+            height="15px"
+            src="~@/assets/images/icons/web-solution.svg"
+            alt
+          />
           {{ link2 }}
         </p>
       </div>
       <div class="logo-container">
-        <img src="~@/assets/images/short-hand-logo.png" height="25px" />
+        <img
+          :src="require(`@/assets/images/short-hand-logo-${buildType}.png`)"
+          height="25px"
+          alt
+        />
         <p class="border-line"></p>
         <p>{{ paper }}</p>
       </div>
@@ -160,13 +181,13 @@ export default {
         text3: 'Share Your Private Key With Anyone!',
         red1: 'SAFE',
         red2: 'DO NOT'
-      }
+      },
+      buildType: BUILD_TYPE
     };
   },
   computed: {
     ...mapState(['wallet'])
-  },
-  methods: {}
+  }
 };
 </script>
 <style lang="scss" scoped>

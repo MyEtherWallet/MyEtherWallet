@@ -6,10 +6,12 @@
       hide-header
       centered
       class="bootstrap-modal nopadding"
+      static
+      lazy
     >
       <div class="modal-contents">
-        <h2>{{ $t('common.oops') }}</h2>
-        <p>{{ $t('common.logoutWarning') }}</p>
+        <h2>{{ $t('interface.oops') }}</h2>
+        <p>{{ $t('interface.logout-warning') }}</p>
         <div class="buttons">
           <standard-button :options="buttonNo" @click.native="cancel" />
           <standard-button :options="buttonYes" @click.native="logout" />
@@ -25,7 +27,7 @@ export default {
   data() {
     return {
       buttonNo: {
-        title: this.$t('common.goBack'),
+        title: this.$t('interface.go-back'),
         buttonStyle: 'green-border',
         rightArrow: false,
         leftArrow: false,
@@ -33,7 +35,7 @@ export default {
         noMinWidth: true
       },
       buttonYes: {
-        title: this.$t('common.logOutWallet'),
+        title: this.$t('interface.logout-wallet'),
         buttonStyle: 'red',
         rightArrow: false,
         leftArrow: false,
@@ -44,11 +46,16 @@ export default {
   },
   methods: {
     logout() {
+      const path = this.$route.fullPath;
+      if (path !== '/interface') {
+        this.$store.dispatch('setLastPath', path);
+      }
       this.$store.dispatch('clearWallet');
+      this.$store.dispatch('setLastPath', '');
       this.$refs.logoutWarningModal.hide();
     },
     cancel() {
-      this.$router.push('interface');
+      this.$router.go(-1);
       this.$refs.logoutWarningModal.hide();
     }
   }

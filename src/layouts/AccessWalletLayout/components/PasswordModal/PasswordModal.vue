@@ -1,10 +1,12 @@
 <template>
   <b-modal
     ref="password"
-    :title="$t('accessWallet.password')"
+    :title="$t('common.password.string')"
     hide-footer
     class="bootstrap-modal modal-software nopadding"
     centered
+    static
+    lazy
     @shown="focusInput"
   >
     <div>
@@ -17,17 +19,19 @@
             ref="passwordInput"
             :type="show ? 'text' : 'password'"
             v-model="password"
+            :placeholder="$t('common.password.enter')"
             name="Password"
             autocomplete="off"
-            placeholder="Enter password"
           />
           <img
             v-if="show"
+            alt
             src="@/assets/images/icons/show-password.svg"
             @click.prevent="switchViewPassword"
           />
           <img
             v-if="!show"
+            alt
             src="@/assets/images/icons/hide-password.svg"
             @click.prevent="switchViewPassword"
           />
@@ -38,7 +42,7 @@
           type="submit"
           @click.prevent="unlockWallet"
         >
-          <span v-show="!spinner">{{ $t('common.accessWallet') }}</span>
+          <span v-show="!spinner">{{ $t('common.wallet.access') }}</span>
           <i v-show="spinner" class="fa fa-spin fa-spinner fa-lg" />
         </button>
       </form>
@@ -100,7 +104,7 @@ export default {
     unlockWallet() {
       this.spinner = true;
 
-      if (this.online && window.Worker) {
+      if (this.online && window.Worker && window.origin !== 'null') {
         const worker = new walletWorker();
         const self = this;
         worker.postMessage({
@@ -108,11 +112,17 @@ export default {
           data: [this.file, this.password]
         });
         worker.onmessage = function(e) {
+          const obj = {
+            file: this.file,
+            name: e.data.filename
+          };
           self.setUnlockedWallet(
             new WalletInterface(
               Buffer.from(e.data._privKey),
               false,
-              keyStoreType
+              keyStoreType,
+              '',
+              JSON.stringify(obj)
             )
           );
         };
@@ -137,11 +147,12 @@ export default {
       }
     },
     setUnlockedWallet(wallet) {
-      this.$store.dispatch('decryptWallet', [wallet]);
-      this.spinner = false;
-      this.password = '';
-      this.$router.push({
-        path: 'interface'
+      this.$store.dispatch('decryptWallet', [wallet]).then(() => {
+        this.spinner = false;
+        this.password = '';
+        this.$router.push({
+          path: 'interface'
+        });
       });
     },
     switchViewPassword() {

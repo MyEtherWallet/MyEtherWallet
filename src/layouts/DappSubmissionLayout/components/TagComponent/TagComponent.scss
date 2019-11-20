@@ -1,0 +1,22 @@
+@import '~@/scss/GlobalVariables';
+.tag-container {
+  background-color: $light-blue-7;
+  border-radius: 5px;
+  color: $white;
+  display: inline-flex;
+  font-size: 14px;
+  font-weight: normal;
+  margin-left: 2px;
+  max-height: 30px;
+  overflow: hidden;
+  padding: 2px 8px;
+  white-space: nowrap;
+
+  span {
+    cursor: pointer;
+  }
+
+  i {
+    margin-left: 2px;
+  }
+}

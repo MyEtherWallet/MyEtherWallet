@@ -6,18 +6,20 @@
       hide-footer
       centered
       class="bootstrap-modal-wide confirmation-modal nopadding"
+      static
+      lazy
     >
       <div class="modal-content">
         <div class="network-info-container">
           <p>
-            <span>{{ $t('interface.network') }}</span>
-            {{ network.type.name }} by {{ network.service }}
+            <span>{{ $t('common.network') }}</span>
+            {{ network.type.name }} {{ $t('common.by') }} {{ network.service }}
           </p>
           <div>
             <div class="line" />
           </div>
           <p>
-            <span>{{ $t('confirmation.txTotal') }}:</span>
+            <span>{{ $t('confirmation.tx-total') }}:</span>
             {{ txTotal }}
             {{ network.type.currencyName }}
           </p>
@@ -30,7 +32,7 @@
           >
             <div v-b-toggle.prevent="`accordion${idx}`" class="header">
               <div class="header-item">
-                <img :src="network.type.icon ? network.type.icon : ''" />
+                <img :src="network.type.icon ? network.type.icon : ''" alt />
                 <div>
                   <p>
                     - {{ web3.utils.hexToNumberString(item.value) }}
@@ -39,7 +41,7 @@
                     </span>
                   </p>
                   <div>
-                    <span>{{ $t('common.from') }}</span>
+                    <span>{{ $t('swap.from') }}</span>
                     {{ account.address | concatAddr }}
                   </div>
                 </div>
@@ -48,10 +50,10 @@
                 v-show="item.to !== '' && item.to !== undefined"
                 class="direction"
               >
-                <img src="~@/assets/images/icons/right-arrow.svg" />
+                <img alt src="~@/assets/images/icons/right-arrow.svg" />
               </div>
               <div class="header-item">
-                <img :src="network.type.icon ? network.type.icon : ''" />
+                <img :src="network.type.icon ? network.type.icon : ''" alt />
                 <div>
                   <p>
                     + {{ web3.utils.hexToNumberString(item.value) }}
@@ -72,22 +74,22 @@
             </div>
             <b-collapse :id="`accordion${idx}`" class="body">
               <div class="body-item">
-                <span class="item-title">{{ $t('common.gasLimit') }}t</span>
+                <span class="item-title">{{ $t('common.gas.limit') }}t</span>
                 <span>{{ web3.utils.hexToNumberString(item.gas) }}</span>
               </div>
               <div class="body-item">
-                <span class="item-title">{{ $t('common.gasPrice') }}</span>
+                <span class="item-title">{{ $t('common.gas.price') }}</span>
                 <span>
                   {{ web3.utils.fromWei(item.gasPrice, 'gwei') }}
-                  Gwei
+                  {{ $t('common.gas.gwei') }}
                 </span>
               </div>
               <div class="body-item">
-                <span class="item-title">Nonce</span>
+                <span class="item-title">{{ $t('sendTx.nonce') }}</span>
                 <span>{{ web3.utils.hexToNumberString(item.nonce) }}</span>
               </div>
               <div class="body-item">
-                <span class="item-title">{{ $t('common.data') }}</span>
+                <span class="item-title">{{ $t('sendTx.data') }}</span>
                 <span class="data-string">{{ item.input || item.data }}</span>
               </div>
             </b-collapse>
@@ -112,38 +114,27 @@
               v-show="sending"
               class="submit-button large-round-button-green-filled clickable disabled"
             >
-              {{ $t('common.waitingForHash') }}
+              {{ $t('confirmation.waiting-for-hash') }}
               <i class="fa fa-spinner fa-spin" />
             </div>
             <div class="tooltip-box-2">
               <b-btn id="exPopover9">
-                <img class="icon" src="~@/assets/images/icons/qr-code.svg" />
+                <img
+                  alt
+                  class="icon"
+                  src="~@/assets/images/icons/qr-code.svg"
+                />
               </b-btn>
-              <b-popover
-                target="exPopover9"
-                triggers="hover focus"
-                placement="top"
-              >
-                <div class="qrcode-contents">
-                  <p class="qrcode-title">
-                    {{ $t('confirmation.scanQrCode') }}
-                  </p>
-                  <div class="qrcode-block">
-                    <qrcode :options="{ size: 100 }" value="Hello, World!" />
-                  </div>
-                  <p class="qrcode-helper">What is that?</p>
-                </div>
-              </b-popover>
             </div>
           </div>
         </div>
         <p class="learn-more">
-          Have any issues?
+          {{ $t('common.have-issues') }}
           <a
             href="https:/kb.myetherwallet.com"
             target="_blank"
             rel="noopener noreferrer"
-            >Learn more</a
+            >{{ $t('common.learn-more') }}</a
           >
         </p>
       </div>
@@ -184,9 +175,9 @@ export default {
     ...mapState(['web3', 'network', 'account']),
     buttonText() {
       if (!this.allSigned && this.isHardwareWallet) {
-        return this.$t('confirmation.approveOnDevice');
+        return this.$t('confirmation.approve-on-device');
       }
-      return this.$t('common.confirmAndSend');
+      return this.$t('sendTx.confirmation.button');
     },
     allSigned() {
       if (this.signedArray.length === 0) return false;

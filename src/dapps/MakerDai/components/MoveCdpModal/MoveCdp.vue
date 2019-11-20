@@ -2,30 +2,42 @@
   <div class="modal-container">
     <b-modal
       ref="modal"
-      :title="$t('dappsMaker.moveTitle')"
+      :title="$t('dappsMaker.move-title')"
       hide-footer
       centered
       class="bootstrap-modal nopadding"
+      static
+      lazy
     >
       <div class="modal-content">
         <p class="top-text">
-          {{ $t('dappsMaker.moveNotice') }}
+          {{ $t('dappsMaker.move-notice') }}
         </p>
         <check-box @changeStatus="checkBoxClicked">
           <template v-slot:terms
             ><p class="checkbox-label">
-              {{ $t('dappsMaker.understandAndAgree') }}
+              {{ $t('dappsMaker.understand-and-agree') }}
             </p></template
           >
         </check-box>
 
         <div class="input-container">
-          <label>{{ $t('dappsMaker.moveQuestion') }}</label>
+          <label>{{ $t('dappsMaker.move-question') }}</label>
           <div class="input-box">
             <input v-model="address" />
           </div>
         </div>
-
+        <div>
+          <div v-if="destAddressHasProxy">
+            <p>
+              {{ $t('dappsMaker.proxy-address', { value: destAddressProxy }) }}
+            </p>
+            {{ $t('dappsMaker.move-with-proxy') }}
+          </div>
+          <div v-if="!destAddressHasProxy">
+            {{ $t('dappsMaker.move-without-proxy') }}
+          </div>
+        </div>
         <div class="buttons">
           <standard-button :options="cancelButton" @click.native="closeModal" />
           <standard-button
@@ -82,6 +94,14 @@ export default {
           cdpId: ''
         };
       }
+    },
+    destAddressHasProxy: {
+      type: Boolean,
+      default: false
+    },
+    destAddressProxy: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -113,7 +133,13 @@ export default {
       return Misc.isValidETHAddress(this.address) && this.checkBoxChecked;
     }
   },
-  watch: {},
+  watch: {
+    address(newVal) {
+      if (Misc.isValidETHAddress(newVal)) {
+        this.$emit('checkForProxy', newVal);
+      }
+    }
+  },
   mounted() {
     this.$refs.modal.$on('shown', () => {
       this.address = '';

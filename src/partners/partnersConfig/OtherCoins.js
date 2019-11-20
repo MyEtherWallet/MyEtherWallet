@@ -2,9 +2,24 @@ export default {
   ADA: {
     symbol: 'ADA',
     name: 'Cardano',
-    addressLookup: 'https://cardanoexplorer.com/address/[[address]]',
-    explorer: 'https://cardanoexplorer.com/tx/[[txHash]]',
+    addressLookup: 'https://adascan.net/address/[[address]]',
+    explorer: 'https://adascan.net/transaction/[[txHash]]',
     fixRateEnabled: true
+  },
+  AION: {
+    symbol: 'AION',
+    name: 'Aion',
+    addressLookup: 'https://mainnet.aion.network/#/account/[[address]]',
+    explorer: 'https://mainnet.aion.network/#/transaction/[[txHash]]',
+    fixRateEnabled: true
+  },
+  AMP: {
+    symbol: 'AMP',
+    name: 'Synereo',
+    addressLookup:
+      'https://omniexplorer.info/lookupadd.aspx?address=[[address]]',
+    explorer: 'https://omniexplorer.info/lookuptx.aspx?txid=[[txHash]]',
+    fixRateEnabled: false
   },
   ARK: {
     symbol: 'ARK',
@@ -21,15 +36,15 @@ export default {
     explorer: 'http://explorer.btcd.io/#/TX?loading=true&TX=[[txHash]]',
     fixRateEnabled: true
   },
-  BCHABC: {
-    symbol: 'BCHABC',
+  BCH: {
+    symbol: 'BCH',
     name: 'Bitcoin Cash ABC',
     addressLookup: 'https://blockdozer.com/address/[[address]]',
     explorer: 'https://blockdozer.com/tx/[[txHash]]',
     fixRateEnabled: true
   },
-  BCHSV: {
-    symbol: 'BCHSV',
+  BSV: {
+    symbol: 'BSV',
     name: 'Bitcoin Cash SV',
     addressLookup: 'https://bchsvexplorer.com/address/[[address]]',
     explorer: 'https://bchsvexplorer.com/tx/[[txHash]]',
@@ -107,7 +122,7 @@ export default {
     name: 'Gas',
     addressLookup: 'https://neotracker.io/address/[[address]]',
     explorer: 'https://neotracker.io/tx/[[txHash]]',
-    fixRateEnabled: false
+    fixRateEnabled: true
   },
   GRS: {
     symbol: 'GRS',
@@ -145,13 +160,6 @@ export default {
     explorer: 'https://omniexplorer.info/lookuptx.aspx?txid=[[txHash]]',
     fixRateEnabled: true
   },
-  NAV: {
-    symbol: 'NAV',
-    name: 'NAV Coin',
-    addressLookup: 'https://chainz.cryptoid.info/nav/address.dws?[[address]]',
-    explorer: 'https://chainz.cryptoid.info/nav/tx.dws?[[txHash]]',
-    fixRateEnabled: true
-  },
   NEO: {
     symbol: 'NEO',
     name: 'Neo',
@@ -166,12 +174,12 @@ export default {
     explorer: 'https://nimiq.watch/#[[txHash]]',
     fixRateEnabled: false
   },
-  ONT: {
-    symbol: 'ONT',
-    name: 'Ontology',
-    addressLookup: 'https://explorer.ont.io/address/[[address]]/10/1',
-    explorer: 'https://explorer.ont.io/transaction/[[txHash]]',
-    fixRateEnabled: true
+  PROC: {
+    symbol: 'PROC',
+    name: 'ProCurrency',
+    addressLookup: 'https://procsight.com/address/[[address]]',
+    explorer: 'https://procsight.com/tx/[[txHash]]',
+    fixRateEnabled: false
   },
   QTUM: {
     symbol: 'QTUM',
@@ -208,6 +216,13 @@ export default {
       'https://omniexplorer.info/lookupadd.aspx?address=[[address]]',
     explorer: 'https://omniexplorer.info/lookuptx.aspx?txid=[[txHash]]',
     fixRateEnabled: true
+  },
+  VET: {
+    symbol: 'VET',
+    name: 'VeChainThor',
+    addressLookup: 'https://explore.veforge.com/accounts/[[address]]',
+    explorer: 'https://explore.veforge.com/transactions/[[txHash]]',
+    fixRateEnabled: false
   },
   WAVES: {
     symbol: 'WAVES',

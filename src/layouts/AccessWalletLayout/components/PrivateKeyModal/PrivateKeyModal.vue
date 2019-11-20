@@ -1,10 +1,12 @@
 <template>
   <b-modal
     ref="privateKey"
-    :title="$t('accessWallet.accessByPrivateKey')"
+    :title="$t('accessWallet.private-key.modal.title')"
     hide-footer
     class="bootstrap-modal nopadding modal-software"
     centered
+    static
+    lazy
     @shown="focusInput"
     @hide="privateKey = ''"
   >
@@ -17,10 +19,10 @@
           <input
             ref="privateKeyInput"
             v-model="privateKey"
+            :placeholder="$t('accessWallet.private-key.modal.placeholder')"
             type="text"
             name="PrivateKey"
             autocomplete="off"
-            placeholder="Enter Private Key"
           />
         </div>
         <standard-button
@@ -54,7 +56,7 @@ export default {
   data() {
     return {
       accessWalletButtonOptions: {
-        title: this.$t('common.accessWallet'),
+        title: this.$t('common.wallet.access'),
         buttonStyle: 'green',
         noMinWidth: true
       },
@@ -73,14 +75,17 @@ export default {
   methods: {
     unlockWallet() {
       this.spinner = true;
-      this.$store.dispatch('decryptWallet', [
-        new WalletInterface(this.privateKey, false, privKeyType)
-      ]);
-      this.privateKey = '';
-      this.spinner = false;
-      this.$router.push({
-        path: 'interface'
-      });
+      this.$store
+        .dispatch('decryptWallet', [
+          new WalletInterface(this.privateKey, false, privKeyType)
+        ])
+        .then(() => {
+          this.privateKey = '';
+          this.spinner = false;
+          this.$router.push({
+            path: 'interface'
+          });
+        });
     },
     focusInput() {
       this.$refs.privateKeyInput.focus();

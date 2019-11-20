@@ -8,7 +8,7 @@ import ETC from './ETC.js';
 import ETH from './ETH.js';
 import ETHO from './ETHO.js';
 import EXP from './EXP.js';
-import GOERLI from './GOERLI';
+import GOERLI from './GOERLI.js';
 import GO from './GO.js';
 import IOLITE from './IOLITE.js';
 import KOV from './KOV.js';
@@ -28,6 +28,7 @@ import WEB from './WEB.js';
 import TT from './TT.js';
 import SUM from './SUM.js';
 import DXN from './DXN.js';
+import PHT from './PHT.js';
 
 export {
   AKA,
@@ -59,5 +60,6 @@ export {
   WEB,
   TT,
   SUM,
-  DXN
+  DXN,
+  PHT
 };

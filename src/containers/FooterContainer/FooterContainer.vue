@@ -27,7 +27,7 @@
                   :key="content.text + index"
                   class="content"
                 >
-                  <div v-if="content.text === $t('common.customerSupport')">
+                  <div v-if="content.text === $t('common.cstm-support')">
                     <customer-support :no-icon="true" />
                   </div>
                   <router-link
@@ -39,6 +39,7 @@
                   <a
                     v-else-if="content.to === undefined"
                     :href="content.href"
+                    :aria-label="content.text"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -53,14 +54,12 @@
           </div>
           <div class="donate-us">
             <div class="content-title">
-              <h3 class="lite">
-                {{ $t('footer.love') }}
-                <img src="~@/assets/images/icons/heart.svg" />
-                {{ $t('footer.donate') }}
-              </h3>
+              <i18n path="footer.title.love" tag="h3">
+                <img slot="heart" src="~@/assets/images/icons/heart.svg" alt />
+              </i18n>
             </div>
             <div class="links">
-              <p>{{ $t('footer.welcomeDes') }}</p>
+              <p>{{ $t('footer.donation.desc') }}</p>
 
               <a
                 :href="'https://etherscan.io/address/' + ethDonationAddress"
@@ -68,8 +67,8 @@
                 rel="noopener noreferrer"
               >
                 <p :data-eth="ethDonationAddress" class="crypto-link">
-                  <img src="~@/assets/images/icons/eth.svg" /> &nbsp;Ethereum
-                  Donation
+                  <img src="~@/assets/images/currency/eth.svg" alt />
+                  &nbsp;{{ $t('footer.donation.ether') }}
                 </p>
               </a>
 
@@ -82,8 +81,9 @@
                   class="crypto-link no-padding"
                   data-btc="1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9"
                 >
-                  <img src="~@/assets/images/icons/btc.svg" /> &nbsp;Bitcoin
-                  Donation
+                  <img src="~@/assets/images/currency/btc.svg" alt /> &nbsp;{{
+                    $t('footer.donation.bitcoin')
+                  }}
                 </p>
               </a>
             </div>
@@ -107,12 +107,12 @@
           </div>
           <div class="copyright">
             <p>
-              {{ $t('footer.pricingP') }}
+              {{ $t('footer.pricing-p') }}
               <a
                 href="https://coingecko.com/"
                 target="_blank"
                 rel="noopener noreferrer"
-                >CoinGecko</a
+                >{{ $t('footer.coingecko') }}</a
               >
               <br />
               {{ $t('footer.copyright') }}
@@ -123,6 +123,7 @@
               v-for="link in links"
               :href="link.to"
               :key="link.class"
+              :aria-label="link.to"
               rel="noopener noreferrer"
               target="_blank"
             >
@@ -141,6 +142,7 @@ import FeedbackModal from '@/components/FeedbackModal';
 import CustomerSupport from '@/components/CustomerSupport';
 import affiliates from './affiliates.js';
 const version = VERSION;
+import { Misc } from '@/helpers';
 
 export default {
   components: {
@@ -171,10 +173,10 @@ export default {
       footerContent: [
         {
           class: 'e1',
-          title: this.$t('footer.discover'),
+          title: this.$t('footer.title.discover'),
           contents: [
             {
-              text: this.$t('footer.units'),
+              text: this.$t('convertUnits.page.title'),
               to: '/convert-units'
             },
             // {
@@ -183,31 +185,38 @@ export default {
             // },
             {
               text: this.$t('footer.extension'),
-              href:
-                'https://chrome.google.com/webstore/detail/myetherwallet/nlbmnnijcnlegkjjpcfjclmcfggfefdm?hl=en'
+              href: 'https://www.mewcx.com'
             },
             {
-              text: 'Buy a Hardware wallet',
+              text: this.$t('buyHardwareWallet.page.title'),
               to: '/hardware-wallet-affiliates'
             },
             {
-              text: this.$t('footer.sendOffline'),
+              text: this.$t('footer.send-offline'),
               to: '/send-offline-helper'
             },
             {
-              text: this.$t('footer.verifyMessage'),
+              text: this.$t('verifyMessage.title'),
               to: '/verify-message'
+            },
+            {
+              text: this.$t('footer.view-wallet-info'),
+              to: '/view-wallet-info'
+            },
+            {
+              text: this.$t('dappsSubmission.banner-submit.submit-dapp'),
+              to: '/dapp-submission'
             }
           ]
         },
         {
           class: 'e2',
-          title: this.$t('footer.affiliates'),
+          title: this.$t('footer.title.affiliates'),
           contents: affiliates
         },
         {
           class: 'e3',
-          title: this.$t('footer.mew'),
+          title: this.$t('footer.title.mew'),
           contents: [
             {
               text: this.$t('footer.about'),
@@ -222,11 +231,11 @@ export default {
               to: '/#faqs'
             },
             {
-              text: this.$t('common.vintage'),
-              href: 'https://vintage.myetherwallet.com'
+              text: 'MEWtopia',
+              href: 'https://www.mewtopia.com'
             },
             {
-              text: this.$t('common.customerSupport'),
+              text: this.$t('common.cstm-support'),
               href: 'mailto:support@myetherwallet.com'
             },
             {
@@ -270,6 +279,21 @@ export default {
   },
   computed: {
     ...mapState(['ethDonationAddress'])
+  },
+  mounted() {
+    if (Misc.isMewCx()) {
+      this.footerContent[0].contents = this.footerContent[0].contents.filter(
+        item => {
+          if (item.to !== '/send-offline-helper') return item;
+        }
+      );
+
+      this.footerContent[2].contents = this.footerContent[2].contents.filter(
+        item => {
+          if (item.to !== '/#about-mew' && item.to !== '/#faqs') return item;
+        }
+      );
+    }
   },
   methods: {
     openFeedbackModal() {

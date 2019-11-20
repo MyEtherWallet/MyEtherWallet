@@ -3,11 +3,11 @@
     <div class="wrap">
       <div class="page-container">
         <div class="page-title">
-          <h2>{{ $t('home.getANewWallet') }}</h2>
+          <h2>{{ $t('createWallet.title') }}</h2>
           <h5>
-            {{ $t('createWallet.pageTitleAlreadyHave') }}
+            {{ $t('createWallet.sub-title') }}
             <router-link to="/access-my-wallet">{{
-              $t('common.accessMyWallet')
+              $t('common.wallet.access-my')
             }}</router-link>
           </h5>
         </div>

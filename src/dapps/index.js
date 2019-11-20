@@ -2,11 +2,12 @@ import domainSale from '@/assets/images/icons/domain-sale.svg';
 import domainSaleHov from '@/assets/images/icons/domain-sale-hov.svg';
 import manageEns from '@/assets/images/icons/domain.svg';
 import manageEnsHov from '@/assets/images/icons/domain-hov.svg';
-import secureTransaction from '@/assets/images/icons/button-key-hover.svg';
-import secureTransactionHov from '@/assets/images/icons/button-key.svg';
 import scheduleTransaction from '@/assets/images/icons/eac.svg';
 import scheduleTransactionHov from '@/assets/images/icons/eac-hov.svg';
 import makerdai from '@/assets/images/icons/dapps/makerdai.svg';
+import makerdaiDisabled from '@/assets/images/icons/dapps/makerdai-disabled.svg';
+import ambrpay from '@/assets/images/icons/dapps/ambrpay.png';
+import ambrpayDisabled from '@/assets/images/icons/dapps/ambrpay-disabled.png';
 import { ETH, GOERLI, ROP, RIN, KOV } from '@/networks/types';
 
 const dapps = {
@@ -14,42 +15,51 @@ const dapps = {
     route: '/interface/dapps/manage-ens',
     icon: manageEns,
     iconDisabled: manageEnsHov,
-    title: 'interface.ensManager',
-    desc: 'interface.registerENSDescShort',
-    supportedNetworks: [ETH.name, GOERLI.name, ROP.name, RIN.name]
+    title: 'ens.title',
+    desc: 'ens.dapp-desc',
+    supportedNetworks: [ETH.name, GOERLI.name, ROP.name, RIN.name],
+    lastUpdated: '11/06/2019',
+    releaseDate: '10/05/2018'
   },
   domainSale: {
-    route: '/interface/dapps/buy-subdomain',
+    route: '/interface/dapps/name-wallet',
     icon: domainSale,
     iconDisabled: domainSaleHov,
-    title: 'interface.subdomains',
-    desc: 'interface.buySubDomains',
-    supportedNetworks: [ETH.name]
-  },
-  secureTransaction: {
-    route: '/interface/dapps/secure-transaction',
-    icon: secureTransaction,
-    iconDisabled: secureTransactionHov,
-    title: 'dapps.safesend_title',
-    desc: 'dapps.safesend_desc',
-    supportedNetworks: [ETH.name]
+    title: 'subDomain.title',
+    desc: 'subDomain.dapp-desc',
+    supportedNetworks: [ETH.name],
+    lastUpdated: '09/20/2019',
+    releaseDate: '10/08/2018'
   },
   scheduleTransaction: {
     route: '/interface/dapps/schedule-transaction',
     icon: scheduleTransaction,
     iconDisabled: scheduleTransactionHov,
-    title: 'Schedule a transaction',
-    desc:
-      'Schedule a transaction using the decentralized Ethereum Alarm Clock protocol',
-    supportedNetworks: [ETH.name, ROP.name, KOV.name]
+    title: 'scheduleTx.title',
+    desc: 'scheduleTx.dapp-desc',
+    supportedNetworks: [ETH.name, KOV.name],
+    lastUpdated: '10/28/2019',
+    releaseDate: '02/21/2019'
   },
   maker: {
     route: '/interface/dapps/maker-dai',
     icon: makerdai,
-    iconDisabled: secureTransactionHov,
+    iconDisabled: makerdaiDisabled,
     title: 'dappsMaker.maker_title',
     desc: 'dappsMaker.maker_desc',
-    supportedNetworks: [ETH.name]
+    supportedNetworks: [ETH.name, KOV.name],
+    lastUpdated: '08/14/2019',
+    releaseDate: '06/14/2019'
+  },
+  ambrpay: {
+    route: '/interface/dapps/ambrpay',
+    icon: ambrpay,
+    iconDisabled: ambrpayDisabled,
+    title: 'dappsAmbrpay.title',
+    desc: 'dappsAmbrpay.ambrpay-popover',
+    supportedNetworks: [ETH.name],
+    lastUpdated: '11/05/2019',
+    releaseDate: '11/05/2019'
   }
 };
 

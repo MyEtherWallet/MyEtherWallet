@@ -22,6 +22,7 @@
             <img
               :src="iconFetcher(selectedCurrency.symbol)"
               class="icon-image"
+              alt
             />
           </span>
 
@@ -39,7 +40,7 @@
         :class="[open ? 'open' : 'hide', 'dropdown-item-container']"
       >
         <div class="dropdown-search-container">
-          <input v-model="search" :placeholder="$t('interface.search')" />
+          <input v-model="search" :placeholder="$t('common.search')" />
           <i class="fa fa-search" />
         </div>
         <div class="item-container">
@@ -67,7 +68,7 @@
                 class="currency-symbol"
               />
               <span v-if="getIcon(curr.symbol) === ''" class="currency-symbol">
-                <img :src="iconFetcher(curr.symbol)" class="icon-image" />
+                <img :src="iconFetcher(curr.symbol)" class="icon-image" alt />
               </span>
               {{ curr.symbol }}
               <span class="subname">- {{ curr.name }}</span>

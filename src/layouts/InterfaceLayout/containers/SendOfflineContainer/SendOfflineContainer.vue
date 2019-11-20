@@ -1,6 +1,6 @@
 <template>
   <div class="send-offline-container">
-    <interface-container-title :title="$t('common.offline')" />
+    <interface-container-title :title="$t('sendTx.send-offline')" />
     <div class="generate-tx">
       <div class="wrap">
         <div class="send-form">
@@ -8,7 +8,7 @@
             <ul class="type-amount">
               <li class="type">
                 <div class="title">
-                  <h4>{{ $t('interface.sendTxType') }}</h4>
+                  <h4>{{ $t('sendTx.type') }}</h4>
                 </div>
                 <currency-picker
                   :currency="allTokens"
@@ -24,12 +24,12 @@
               </li>
               <li class="amount">
                 <div class="title">
-                  <h4>{{ $t('interface.sendTxAmount') }}</h4>
+                  <h4>{{ $t('sendTx.amount') }}</h4>
                 </div>
                 <div class="the-form amount-number">
                   <input
                     :value="toAmt"
-                    :placeholder="$t('interface.depAmount')"
+                    :placeholder="$t('sendTx.dep-amount')"
                     type="number"
                     step="any"
                     name
@@ -40,7 +40,7 @@
             </ul>
             <div class="to-address">
               <div class="title">
-                <h4>{{ $t('interface.sendTxToAddr') }} &nbsp;</h4>
+                <h4>{{ $t('sendTx.to-addr') }} &nbsp;</h4>
                 <blockie
                   v-show="address !== '' && validAddress"
                   :address="address"
@@ -59,8 +59,8 @@
                 <textarea
                   ref="toaddress"
                   v-model="address"
+                  :placeholder="$t('common.enter-addr')"
                   name="name"
-                  placeholder="Please Enter The Address"
                 />
                 <i
                   :class="[
@@ -78,7 +78,7 @@
           <div class="title-container">
             <div class="title">
               <div class="title-helper">
-                <h4>{{ $t('common.data') }}</h4>
+                <h4>{{ $t('sendTx.data') }}</h4>
               </div>
             </div>
           </div>
@@ -104,15 +104,15 @@
           <div class="title-container">
             <div class="title">
               <div class="title-helper">
-                <h4>{{ $t('common.gasLimit') }}</h4>
-                <popover :popcontent="$t('popover.gasLimit')" />
+                <h4>{{ $t('common.gas.limit') }}</h4>
+                <popover :popcontent="$t('popover.gas-limit')" />
               </div>
             </div>
           </div>
           <div class="the-form gas-amount">
             <input
               v-model="gasLimit"
-              :placeholder="$t('common.gasLimit')"
+              :placeholder="$t('common.gas.limit')"
               type="number"
             />
             <div class="good-button-container">
@@ -130,7 +130,7 @@
           <div class="title-container">
             <div class="title">
               <div class="title-helper">
-                <h4>{{ $t('common.nonce') }}</h4>
+                <h4>{{ $t('sendTx.nonce') }}</h4>
                 <popover :popcontent="$t('popover.nonce')" />
               </div>
             </div>
@@ -138,7 +138,7 @@
           <div class="the-form gas-amount">
             <input
               v-model="localNonce"
-              :placeholder="$t('common.nonce')"
+              :placeholder="$t('sendTx.nonce')"
               type="number"
             />
             <div class="good-button-container">
@@ -156,7 +156,7 @@
           <div class="title-container">
             <div class="title">
               <div class="title-helper">
-                <h4>{{ $t('common.gasPrice') }}</h4>
+                <h4>{{ $t('common.gas.price') }}</h4>
                 <popover :popcontent="txSpeedMsg" />
               </div>
             </div>
@@ -164,7 +164,7 @@
           <div class="the-form gas-amount">
             <input
               v-model="localGasPrice"
-              :placeholder="$t('common.gasPrice')"
+              :placeholder="$t('common.gas.price')"
               type="number"
             />
             <div class="good-button-container">
@@ -190,7 +190,7 @@
             class="submit-button large-round-button-green-border"
             @click="uploadClick"
           >
-            Import JSON
+            {{ $t('sendTx.import-json') }}
           </div>
           <div
             :class="[
@@ -199,12 +199,12 @@
             ]"
             @click="generateTx"
           >
-            {{ $t('interface.generateTx') }}
+            {{ $t('sendTx.generate-tx') }}
           </div>
           <interface-bottom-text
+            :question="$t('common.have-issues')"
+            :link-text="$t('common.help-center')"
             link="https://kb.myetherwallet.com"
-            question="Have issues?"
-            link-text="Help Center"
           />
         </div>
       </div>
@@ -236,6 +236,42 @@ export default {
     'interface-container-title': InterfaceContainerTitle
   },
   props: {
+    checkPrefilled: {
+      type: Function,
+      default: () => {}
+    },
+    clearPrefilled: {
+      type: Function,
+      default: () => {}
+    },
+    isPrefilled: {
+      type: Boolean,
+      default: false
+    },
+    value: {
+      type: String,
+      default: '0'
+    },
+    data: {
+      type: String,
+      default: ''
+    },
+    to: {
+      type: String,
+      default: ''
+    },
+    gaslimit: {
+      type: String,
+      default: ''
+    },
+    gas: {
+      type: Number,
+      default: 0
+    },
+    tokensymbol: {
+      type: String,
+      default: ''
+    },
     tokens: {
       type: Array,
       default: function() {
@@ -270,10 +306,10 @@ export default {
     txSpeedMsg() {
       const net = this.network.type.name;
       // eslint-disable-next-line
-      const msg = `${this.$t('popover.txSpeedPt1').replace(
+      const msg = `${this.$t('popover.tx-speed-pt-1').replace(
         '{0}',
         net
-      )} ${this.$t('popover.txSpeedPt2').replace('{0}', net)}`;
+      )} ${this.$t('popover.tx-speed-pt-2').replace('{0}', net)}`;
       return msg;
     },
     validAddress() {
@@ -318,27 +354,6 @@ export default {
         this.toData = '0x';
       }
     },
-    tokens(newVal) {
-      if (newVal.length > 0 && Object.keys(this.linkQuery).length > 0) {
-        const { data, to, value, gaslimit, gas, tokensymbol } = this.linkQuery;
-        const foundToken = tokensymbol
-          ? newVal.find(item => {
-              return item.symbol.toLowerCase() === tokensymbol.toLowerCase();
-            })
-          : undefined;
-        this.toAmt = value ? new BigNumber(value).toFixed() : 0;
-        this.toData = data ? (Misc.validateHexString(data) ? data : '') : '';
-        this.address = to ? to : '';
-        this.gasLimit = gaslimit ? new BigNumber(gaslimit).toString() : '21000';
-        this.localGasPrice = gas ? new BigNumber(gas).toFixed() : 0;
-        this.selectedCoinType = foundToken ? foundToken : this.selectedCoinType;
-        Toast.responseHandler(
-          'Form has been prefilled. Please proceed with caution!',
-          Toast.WARN
-        );
-        this.$store.dispatch('saveQueryVal', {});
-      }
-    },
     toAmt(newVal) {
       this.createDataHex(newVal, null, null);
     },
@@ -349,9 +364,39 @@ export default {
     },
     selectedCoinType(newVal) {
       this.createDataHex(null, null, newVal);
+    },
+    isPrefilled() {
+      this.prefillForm();
     }
   },
+  mounted() {
+    this.checkPrefilled();
+  },
   methods: {
+    prefillForm() {
+      if (this.tokens.length > 0 && this.isPrefilled) {
+        const foundToken = this.tokensymbol
+          ? this.tokens.find(item => {
+              return (
+                item.symbol.toLowerCase() === this.tokensymbol.toLowerCase()
+              );
+            })
+          : undefined;
+        this.toAmt = new BigNumber(this.value).toFixed();
+        this.toData = Misc.validateHexString(this.data) ? this.data : '';
+        this.address = this.to;
+        this.gasLimit = this.gaslimit
+          ? new BigNumber(this.gaslimit).toString()
+          : '21000';
+        this.localGasPrice = new BigNumber(this.gas).toFixed();
+        this.selectedCoinType = foundToken ? foundToken : this.selectedCoinType;
+        Toast.responseHandler(
+          'Form has been prefilled. Please proceed with caution!',
+          Toast.WARN
+        );
+        this.clearPrefilled();
+      }
+    },
     debouncedAmount: utils._.debounce(function(e) {
       const symbol = this.network.type.currencyName;
       const decimals =
@@ -364,7 +409,6 @@ export default {
           : new BigNumber(e.target.valueAsNumber)
               .decimalPlaces(decimals)
               .toFixed();
-      // e.target.value = this.toAmt;
     }, 300),
     async createDataHex(amount, address, currency) {
       const locAmount = amount !== null ? amount : this.toAmt;

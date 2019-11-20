@@ -1,7 +1,12 @@
 <template>
   <div id="app">
     <logout-warning-modal ref="logoutWarningModal" />
-    <header-container v-show="$route.fullPath !== '/getting-started'" />
+    <header-container
+      v-show="
+        $route.fullPath !== '/getting-started' &&
+          !$route.fullPath.includes('/dapp-submission')
+      "
+    />
     <welcome-modal ref="welcome" />
     <router-view />
     <footer-container />
@@ -34,12 +39,10 @@ export default {
   watch: {
     $route(to, from) {
       if (
-        from.matched.length &&
-        from.matched[0].path === '/interface' &&
-        to.matched[0].path !== '/interface' &&
-        this.wallet != null
+        !from.meta.hasOwnProperty('requiresAuth') &&
+        to.meta.hasOwnProperty('requiresAuth') &&
+        this.wallet !== null
       ) {
-        // Show logout warning modal
         this.$refs.logoutWarningModal.$refs.logoutWarningModal.show();
       }
     }
@@ -69,6 +72,10 @@ export default {
 
     this.$refs.welcome.$refs.welcome.$on('hidden', () => {
       store.set('notFirstTimeVisit', true);
+    });
+
+    this.$refs.logoutWarningModal.$refs.logoutWarningModal.$on('hidden', () => {
+      window.scrollTo(0, 0);
     });
   },
   destroyed() {

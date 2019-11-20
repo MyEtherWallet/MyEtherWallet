@@ -1,11 +1,11 @@
 <template>
   <div class="deploy-contract-container">
-    <interface-container-title :title="$t('common.depContract')" />
+    <interface-container-title :title="$t('contract.deploy')" />
     <div class="content-container">
       <div class="send-form">
         <div class="title-container">
           <div class="title">
-            <h4>{{ $t('interface.byteCode') }}</h4>
+            <h4>{{ $t('contract.byte-code') }}</h4>
             <div class="copy-buttons">
               <button class="title-button" @click="deleteInput('bytecode')">
                 {{ $t('common.clear') }}
@@ -35,7 +35,7 @@
       <div class="send-form">
         <div class="title-container">
           <div class="title">
-            <h4>{{ $t('interface.abiJsonInt') }}</h4>
+            <h4>{{ $t('contract.abi-json-int') }}</h4>
             <div class="copy-buttons">
               <button class="title-button" @click="deleteInput('abi')">
                 {{ $t('common.clear') }}
@@ -62,7 +62,7 @@
         <div class="title-container">
           <div class="title">
             <h4>
-              {{ $t('interface.constructor') }}
+              {{ $t('contract.constructor') }}
               {{ abiConstructor ? 'Inputs' : 'Input' }}:
             </h4>
           </div>
@@ -93,7 +93,7 @@
                   :name="input.name"
                   type="radio"
                 />
-                <label :for="input.name">True</label>
+                <label :for="input.name">{{ $t('contract.true') }}</label>
               </div>
               <div>
                 <input
@@ -103,7 +103,7 @@
                   type="radio"
                   checked
                 />
-                <label :for="input.name">False</label>
+                <label :for="input.name">{{ $t('contract.false') }}</label>
               </div>
             </div>
             <i
@@ -128,29 +128,29 @@
       >
         <div class="title-container">
           <div class="title">
-            <h4>Value in ETH:</h4>
+            <h4>{{ $t('contract.value-in-eth') }}:</h4>
           </div>
         </div>
         <div class="the-form contract-name">
           <input
             ref="value"
             v-model="value"
+            :placeholder="$t('contract.value-in-eth')"
             step="any"
-            placeholder="Value in ETH"
           />
         </div>
       </div>
       <div class="send-form">
         <div class="title-container">
           <div class="title">
-            <h4>{{ $t('interface.contractName') }}</h4>
+            <h4>{{ $t('contract.name') }}</h4>
           </div>
         </div>
         <div class="the-form contract-name">
           <input
             ref="contractName"
             v-model="contractName"
-            placeholder="Name for the contract"
+            :placeholder="$t('contract.name-for-contract')"
           />
         </div>
       </div>
@@ -164,12 +164,12 @@
             ]"
             @click="confirmationModalOpen"
           >
-            {{ $t('common.signTx') }}
+            {{ $t('contract.sign-tx') }}
           </div>
         </div>
         <interface-bottom-text
-          :link-text="$t('interface.helpCenter')"
-          :question="$t('interface.haveIssues')"
+          :link-text="$t('common.help-center')"
+          :question="$t('common.have-issues')"
           link="https://kb.myetherwallet.com"
         />
       </div>
@@ -208,7 +208,10 @@ export default {
   computed: {
     ...mapState(['gasPrice', 'web3', 'network']),
     isValidAbi() {
-      return Misc.isJson(this.abi);
+      return Misc.isJson(this.abi) && Array.isArray(JSON.parse(this.abi));
+    },
+    txValue() {
+      return Misc.sanitizeHex(ethUnit.toWei(this.value, 'ether').toString(16));
     },
     abiConstructor() {
       let _constructor = null;
@@ -231,15 +234,27 @@ export default {
       }
       return _constructor;
     },
+    rawByteCode() {
+      try {
+        const remixBytecode = JSON.parse(this.bytecode);
+        if (
+          remixBytecode.object &&
+          Misc.validateHexString(remixBytecode.object)
+        )
+          return '0x' + remixBytecode.object;
+      } catch (err) {
+        return this.bytecode;
+      }
+    },
     isValidByte() {
       return (
-        this.bytecode &&
-        this.bytecode.substr(0, 2) === '0x' &&
-        Misc.validateHexString(this.bytecode)
+        this.rawByteCode &&
+        this.rawByteCode.substr(0, 2) === '0x' &&
+        Misc.validateHexString(this.rawByteCode)
       );
     },
     txByteCode() {
-      return Misc.sanitizeHex(this.bytecode);
+      return Misc.sanitizeHex(this.rawByteCode);
     },
     deployArgs() {
       const _deployArgs = [];
@@ -259,9 +274,11 @@ export default {
       return _deployArgs;
     },
     txData() {
-      return new this.web3.eth.Contract(JSON.parse(this.abi))
-        .deploy({ data: this.txByteCode, arguments: this.deployArgs })
-        .encodeABI();
+      return this.abi !== ''
+        ? new this.web3.eth.Contract(JSON.parse(this.abi))
+            .deploy({ data: this.txByteCode, arguments: this.deployArgs })
+            .encodeABI()
+        : '0x';
     },
     allValid() {
       let _allvalid = true;
@@ -290,6 +307,7 @@ export default {
         const nonce = await web3.eth.getTransactionCount(coinbase);
         const _tx = new Transaction({
           nonce: nonce,
+          value: this.txValue,
           gasPrice: Misc.sanitizeHex(
             ethUnit.toWei(this.gasPrice, 'gwei').toString(16)
           ),
@@ -339,7 +357,8 @@ export default {
       const coinbase = await this.web3.eth.getCoinbase();
       const params = {
         from: coinbase,
-        data: this.txData
+        data: this.txData,
+        value: this.txValue
       };
       this.gasLimit = await this.web3.eth.estimateGas(params).catch(err => {
         Toast.responseHandler(err, Toast.WARN);

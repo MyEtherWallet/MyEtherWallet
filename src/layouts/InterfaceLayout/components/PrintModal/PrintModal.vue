@@ -2,11 +2,13 @@
   <div class="modal-container">
     <b-modal
       ref="print"
-      title="Print Preview"
+      :title="$t('createWallet.print.print-title')"
       hide-footer
       centered
       class="nopadding print-mod"
       size="lg"
+      static
+      lazy
     >
       <div class="modal-content-container">
         <div ref="printContainer" class="print-modal">
@@ -18,7 +20,9 @@
           <account-content-to-display :address="address" />
         </div>
         <div class="button-container">
-          <div class="print-button" @click="print">Print</div>
+          <div class="print-button" @click="print">
+            {{ $t('popover.print') }}
+          </div>
         </div>
       </div>
     </b-modal>

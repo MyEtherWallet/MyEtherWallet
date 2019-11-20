@@ -84,10 +84,18 @@
   overflow: hidden;
   transition: all 0.4s ease;
   &.faq-open {
-    max-height: 500px;
+    max-height: 400px;
   }
   .qa-text {
-    padding-top: 20px;
+    padding: 30px;
+    background-color: $light-grey-1;
+    border: 1px solid $light-grey-4;
+    border-radius: 5px;
+    margin-top: 15px;
+    line-height: 24px;
+    @media all and (max-width: $mobile-width) {
+      padding: 20px;
+    }
   }
 } // .qa__contents--content
 

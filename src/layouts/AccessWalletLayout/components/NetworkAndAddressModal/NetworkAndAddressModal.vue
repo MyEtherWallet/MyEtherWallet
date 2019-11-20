@@ -1,10 +1,12 @@
 <template>
   <b-modal
     ref="networkAndAddress"
-    :title="$t('accessWallet.networkAndAddress')"
+    :title="$t('accessWallet.network-addr.string')"
     hide-footer
     class="bootstrap-modal nopadding modal-network-and-address"
     centered
+    static
+    lazy
   >
     <div class="modal-content-container">
       <div class="collapse-container">
@@ -15,17 +17,17 @@
         >
           <p class="button-number">1</p>
           <div class="network">
-            <p>Network</p>
+            <p>{{ $t('common.network') }}</p>
             <p class="network-name monospace">
               ({{ selectedNetwork.type.name }} - {{ selectedNetwork.service }})
             </p>
           </div>
-          <p v-if="false" class="right-button">Cancel</p>
+          <p v-if="false" class="right-button">{{ $t('common.cancel') }}</p>
         </b-btn>
         <b-collapse
           id="collapse1"
-          v-model="showCollapse1"
           class="collapse-content"
+          accordion="networkaddraccordion"
         >
           <ul class="networks">
             <li
@@ -37,10 +39,11 @@
                   <img
                     v-if="Networks[key][0].type.icon"
                     :src="Networks[key][0].type.icon"
+                    alt
                   />
                   <div v-else class="no-icon">
-                    <p>No</p>
-                    <p>Icon</p>
+                    <p>{{ $t('common.no') }}</p>
+                    <p>{{ $t('accessWallet.network-addr.icon') }}</p>
                   </div>
                 </div>
                 <p>{{ key }}</p>
@@ -72,11 +75,12 @@
           variant="primary"
         >
           <p class="button-number">2</p>
-          <p>Address</p>
+          <p>{{ $t('common.addr') }}</p>
         </b-btn>
         <b-collapse
           id="collapse2"
-          v-model="showCollapse2"
+          accordion="networkaddraccordion"
+          visible
           class="collapse-content"
         >
           <!-- Derivation Path Drop down -->
@@ -85,7 +89,7 @@
             class="content-container-1"
           >
             <div class="hd-derivation">
-              <h4>{{ $t('accessWallet.hdDerivationPath') }}</h4>
+              <h4>{{ $t('accessWallet.path.hd-derivation') }}</h4>
               <div class="dropdown-button-container">
                 <b-dropdown
                   id="hd-derivation-path"
@@ -101,9 +105,9 @@
                     >{{ val.label }}</b-dropdown-item
                   >
                   <b-dropdown-divider />
-                  <b-dropdown-item>
-                    {{ $t('accessWallet.customPaths') }}
-                  </b-dropdown-item>
+                  <b-dropdown-item>{{
+                    $t('accessWallet.path.custom')
+                  }}</b-dropdown-item>
                   <b-dropdown-item
                     v-for="(val, key) in customPaths"
                     :class="selectedPath === val.path ? 'active' : ''"
@@ -119,9 +123,9 @@
                       </span>
                     </div>
                   </b-dropdown-item>
-                  <b-dropdown-item @click="showCustomPathInput">
-                    {{ $t('accessWallet.addCustomPath') }}
-                  </b-dropdown-item>
+                  <b-dropdown-item @click="showCustomPathInput">{{
+                    $t('accessWallet.path.add-custom')
+                  }}</b-dropdown-item>
                 </b-dropdown>
               </div>
             </div>
@@ -130,21 +134,24 @@
               class="error-message-container"
             >
               {{
-                $t('accessWallet.invalidPathDesc', { path: invalidPath.path })
+                $t('accessWallet.path.invalid-desc', { path: invalidPath.path })
               }}
             </p>
             <p v-show="!customPathInput" class="derivation-brands monospace">
               {{ getPathLabel(selectedPath) }} ({{ selectedPath }})
             </p>
             <div v-show="customPathInput" class="custom-path-container">
-              <!-- TODO: how to structure the path input? -->
-              <label for="customPathLabel">Alias</label>
+              <label for="customPathLabel">{{
+                $t('accessWallet.path.alias')
+              }}</label>
               <input
                 id="customPathLabel"
                 v-model="customPath.label"
                 placeholder="my custom path"
               />
-              <label for="customPathInput">Path</label>
+              <label for="customPathInput">{{
+                $t('accessWallet.path.string')
+              }}</label>
               <input
                 id="customPathInput"
                 v-model="customPath.path"
@@ -154,7 +161,7 @@
                 {{ $t('common.cancel') }}
               </button>
               <button class="submit-button submit" @click="addCustomPath">
-                {{ $t('accessWallet.addCustomPath') }}
+                {{ $t('accessWallet.path.add-custom') }}
               </button>
             </div>
           </div>
@@ -162,13 +169,13 @@
           <div class="content-container-2">
             <div class="address-block-container">
               <div class="block-title">
-                <h4>{{ $t('accessWallet.interactAddr') }}</h4>
+                <h4>{{ $t('accessWallet.network-addr.addr-to-interact') }}</h4>
               </div>
 
               <ul class="address-block table-header fours">
-                <li>{{ $t('accessWallet.id') }}</li>
-                <li>{{ $t('common.address') }}</li>
-                <li>{{ $t('common.balance') }}</li>
+                <li>{{ $t('accessWallet.network-addr.id') }}</li>
+                <li>{{ $t('common.addr') }}</li>
+                <li>{{ $t('common.balance.string') }}</li>
               </ul>
 
               <ul
@@ -217,26 +224,26 @@
             </div>
           </div>
           <!-- .content-container-2 -->
-          <div class="accept-terms">
-            <label class="checkbox-container">
-              {{ $t('accessWallet.acceptTerms') }}
-              <router-link to="/terms-and-conditions"
-                >{{ $t('common.terms') }}.</router-link
-              >
-              <input v-model="acceptTerms" type="checkbox" />
-              <span class="checkmark" />
-            </label>
-          </div>
-          <div class="button-container">
-            <b-btn
-              :disabled="!isDisabled"
-              class="mid-round-button-green-filled close-button"
-              @click.prevent="unlockWallet"
-              >{{ $t('common.accessMyWallet') }}</b-btn
-            >
-          </div>
-          <customer-support />
         </b-collapse>
+        <div class="accept-terms">
+          <label class="checkbox-container">
+            {{ $t('accessWallet.accept-terms') }}
+            <router-link to="/terms-and-conditions"
+              >{{ $t('common.terms') }}.</router-link
+            >
+            <input v-model="acceptTerms" type="checkbox" />
+            <span class="checkmark" />
+          </label>
+        </div>
+        <div class="button-container">
+          <b-btn
+            :disabled="!isDisabled"
+            class="mid-round-button-green-filled close-button"
+            @click.prevent="unlockWallet"
+            >{{ $t('common.accessMyWallet') }}</b-btn
+          >
+        </div>
+        <customer-support />
       </div>
     </div>
     <!-- .modal-content-container -->
@@ -277,8 +284,7 @@ export default {
       customPathInput: false,
       currentWallet: null,
       customPath: { label: '', dpath: '' },
-      showCollapse1: false,
-      showCollapse2: true,
+      showCollapse: false,
       ledgerType: LEDGER_TYPE,
       acceptTerms: false
     };
@@ -401,25 +407,38 @@ export default {
     },
     setBalances: web3utils._.debounce(function() {
       this.HDAccounts.forEach(account => {
-        this.web3.eth
-          .getBalance(account.account.getAddressString())
-          .then(balance => {
-            account.balance = balance;
-          })
-          .catch(e => {
-            Toast.responseHandler(e, Toast.ERROR);
-          });
+        if (account.account) {
+          this.web3.eth
+            .getBalance(account.account.getAddressString())
+            .then(balance => {
+              account.balance = balance;
+            })
+            .catch(e => {
+              Toast.responseHandler(e, Toast.ERROR);
+            });
+        } else {
+          account.balance = 0;
+        }
       });
     }, 1000),
     unlockWallet() {
-      this.$store.dispatch('decryptWallet', [this.currentWallet]);
-      if (!this.wallet !== null) {
-        this.$router.push({
-          path: 'interface'
-        });
-      }
+      this.$store
+        .dispatch('decryptWallet', [this.currentWallet])
+        .then(() => {
+          if (this.wallet !== null) {
+            if (!this.$route.path.split('/').includes('interface')) {
+              this.$router.push({
+                path: 'interface'
+              });
+            }
+          }
 
-      this.$refs.networkAndAddress.hide();
+          this.$refs.networkAndAddress.hide();
+        })
+        .catch(error => {
+          // the wallet param (param[0]) is undefined or null
+          Toast.responseHandler(error, Toast.ERROR);
+        });
     },
     async setHDAccounts() {
       if (!this.web3.eth) this.$store.dispatch('setWeb3Instance');
@@ -450,16 +469,18 @@ export default {
       this.setHDAccounts();
     },
     getPathLabel(path) {
-      for (const _p in this.availablePaths) {
-        if (this.availablePaths[_p].path === path) {
-          return this.availablePaths[_p].label;
-        }
-      }
       for (const _p in this.customPaths) {
         if (this.customPaths[_p].path === path) {
           return this.customPaths[_p].label;
         }
       }
+
+      for (const _p in this.availablePaths) {
+        if (this.availablePaths[_p].path === path) {
+          return this.availablePaths[_p].label;
+        }
+      }
+
       return 'Unknown';
     },
     getPaths() {

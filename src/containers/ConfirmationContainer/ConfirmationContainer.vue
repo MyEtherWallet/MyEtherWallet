@@ -1,6 +1,7 @@
 <template>
   <div>
     <confirm-modal
+      v-if="wallet !== null"
       ref="confirmModal"
       :confirm-send-tx="sendTx"
       :signed-tx="signedTx"
@@ -15,6 +16,7 @@
       :nonce="nonce"
     />
     <confirm-collection-modal
+      v-if="wallet !== null"
       ref="confirmCollectionModal"
       :send-batch-transactions="sendBatchTransactions"
       :is-hardware-wallet="isHardwareWallet"
@@ -23,6 +25,7 @@
       :sending="sending"
     />
     <confirm-modal
+      v-if="wallet !== null"
       ref="offlineGenerateConfirmModal"
       :confirm-send-tx="generateTx"
       :signed-tx="signedTx"
@@ -37,6 +40,7 @@
       :nonce="nonce"
     />
     <confirm-sign-modal
+      v-if="wallet !== null"
       ref="signConfirmModal"
       :confirm-sign-message="messageReturn"
       :show-success="showSuccessModal"
@@ -57,6 +61,15 @@
       :message="successMessage"
       :link-message="linkMessage"
     />
+    <swap-widget
+      v-if="wallet !== null"
+      ref="swapWidget"
+      :supplied-from="swapWigetData['fromCurrency']"
+      :supplied-to="swapWigetData['toCurrency']"
+      :supplied-from-amount="swapWigetData['fromValue']"
+      :supplied-to-amount="swapWigetData['toValue']"
+      :dest-address="swapWigetData['destAddress']"
+    />
   </div>
 </template>
 
@@ -75,6 +88,7 @@ import { WEB3_WALLET, KEEPKEY } from '@/wallets/bip44/walletTypes';
 import { Toast, Misc } from '@/helpers';
 import locStore from 'store';
 import parseTokensData from '@/helpers/parseTokensData.js';
+import SwapWidget from '@/layouts/InterfaceLayout/containers/SwapContainer/components/SwapWidget';
 
 const events = {
   showSuccessModal: 'showSuccessModal',
@@ -92,7 +106,8 @@ export default {
     'confirm-collection-modal': ConfirmCollectionModal,
     'success-modal': SuccessModal,
     'error-modal': ErrorModal,
-    'confirm-sign-modal': ConfirmSignModal
+    'confirm-sign-modal': ConfirmSignModal,
+    'swap-widget': SwapWidget
   },
   props: {
     active: {
@@ -117,7 +132,7 @@ export default {
       nonce: '',
       gasLimit: '21000',
       data: '0x',
-      gasAmount: this.gasPrice,
+      gasPrice: 0,
       parsedBalance: 0,
       toAddress: '',
       transactionFee: '',
@@ -138,14 +153,48 @@ export default {
       txBatch: null,
       sending: false,
       unSignedArray: [],
-      signCallback: {}
+      signCallback: {},
+      swapWigetData: {
+        destAddress: '',
+        fromCurrency: {
+          symbol: 'ETH',
+          name: ''
+        },
+        toCurrency: {
+          symbol: 'ETH',
+          name: ''
+        },
+        fromValue: undefined,
+        toValue: undefined
+      }
     };
   },
   computed: {
-    ...mapState(['gasPrice', 'wallet', 'web3', 'account', 'network']),
+    ...mapState(['wallet', 'web3', 'account', 'network']),
     fromAddress() {
       if (this.account) {
         return this.account.address;
+      }
+    }
+  },
+  watch: {
+    wallet(newVal) {
+      if (newVal !== null) {
+        if (this.$refs.hasOwnProperty('confirmModal')) {
+          this.$refs.confirmModal.$refs.confirmation.$on('hidden', () => {
+            if (this.dismissed) {
+              this.reset();
+            }
+          });
+        }
+        if (this.$refs.hasOwnProperty('signConfirmModal')) {
+          this.$refs.signConfirmModal.$refs.signConfirmation.$on(
+            'hidden',
+            () => {
+              this.signedMessage = '';
+            }
+          );
+        }
       }
     }
   },
@@ -269,20 +318,94 @@ export default {
         this.signConfirmationModalOpen();
       }
     });
+
+    this.$eventHub.$on(
+      'showSwapWidget',
+      (destAddress, toCurrency, fromCurrency, fromValue) => {
+        this.swapWidgetModalOpen(
+          destAddress,
+          toCurrency,
+          fromCurrency,
+          fromValue
+        );
+      }
+    );
+
+    this.$eventHub.$on(
+      'showSwapWidgetTo',
+      (destAddress, toCurrency, fromCurrency, toValue) => {
+        this.swapWidgetModalOpen(
+          destAddress,
+          toCurrency,
+          fromCurrency,
+          undefined,
+          toValue
+        );
+      }
+    );
   },
   mounted() {
-    this.$refs.confirmModal.$refs.confirmation.$on('hidden', () => {
-      if (this.dismissed) {
-        this.reset();
-      }
-    });
-
     this.$refs.successModal.$refs.success.$on('hide', () => {
       this.successMessage = '';
       this.linkMessage = 'OK';
     });
   },
   methods: {
+    swapWidgetModalOpen(
+      destAddress,
+      fromCurrency,
+      toCurrency,
+      fromValue,
+      toValue
+    ) {
+      if (typeof toCurrency === 'string') {
+        this.$set(this.swapWigetData.toCurrency, 'symbol', toCurrency);
+      } else if (typeof toCurrency === 'object') {
+        this.$set(this.swapWigetData, 'toCurrency', toCurrency);
+      } else {
+        throw Error(
+          'swap widget requires requires toCurrency to be a string or object'
+        );
+      }
+
+      if (typeof fromCurrency === 'string') {
+        this.$set(this.swapWigetData.fromCurrency, 'symbol', fromCurrency);
+      } else if (typeof toCurrency === 'object') {
+        this.$set(this.swapWigetData, 'fromCurrency', fromCurrency);
+      } else {
+        throw Error(
+          'swap widget requires requires fromCurrency to be a string or object'
+        );
+      }
+
+      this.swapWigetData = {
+        destAddress: destAddress,
+        fromCurrency: this.swapWigetData.fromCurrency,
+        toCurrency: this.swapWigetData.toCurrency,
+        fromValue: fromValue,
+        toValue: toValue
+      };
+
+      this.$nextTick(() => {
+        if (this.$refs.swapWidget) {
+          this.$refs.swapWidget.$refs.modal.show();
+          this.$refs.swapWidget.$refs.modal.$on('hidden', () => {
+            this.swapWigetData = {
+              destAddress: '',
+              fromCurrency: {
+                symbol: 'ETH',
+                name: ''
+              },
+              toCurrency: {
+                symbol: 'ETH',
+                name: ''
+              },
+              fromValue: 0
+            };
+          });
+        }
+      });
+    },
     confirmationModalOpen() {
       window.scrollTo(0, 0);
       this.$refs.confirmModal.$refs.confirmation.show();
@@ -331,6 +454,9 @@ export default {
       this.nonce = tx.nonce === '0x' ? 0 : new BigNumber(tx.nonce).toFixed();
       this.data = tx.data;
       this.gasLimit = new BigNumber(tx.gas).toFixed();
+      this.gasPrice = parseInt(
+        unit.fromWei(new BigNumber(tx.gasPrice).toFixed(), 'gwei')
+      );
       this.toAddress = tx.to;
       this.amount = tx.value === '0x' ? '0' : new BigNumber(tx.value).toFixed();
       this.transactionFee = unit
@@ -346,7 +472,6 @@ export default {
       this.dismissed = false;
       this.responseFunction(this.signedMessage);
       this.$refs.signConfirmModal.$refs.signConfirmation.hide();
-      // this.showSuccessModal();
     },
     generateTx() {
       this.dismissed = false;
@@ -383,7 +508,7 @@ export default {
         promiEvent.on('error', onError);
         promiEvent.once('transactionHash', hash => {
           this.showSuccessModal(
-            'Transaction sent!',
+            `${this.$t('sendTx.success.sub-title')}`,
             'Okay',
             this.network.type.blockExplorerTX.replace('[[txHash]]', hash)
           );
@@ -431,7 +556,7 @@ export default {
 
       if (this.raw.generateOnly) return;
       this.showSuccessModal(
-        'Transaction sent!',
+        `${this.$t('sendTx.success.sub-title')}`,
         'Okay',
         this.network.type.blockExplorerTX.replace(
           '[[txHash]]',
@@ -448,7 +573,7 @@ export default {
       this.nonce = '';
       this.gasLimit = '21000';
       this.data = '0x';
-      this.gasAmount = this.gasPrice;
+      this.gasPrice = 0;
       this.parsedBalance = 0;
       this.toAddress = '';
       this.transactionFee = '';
@@ -461,6 +586,18 @@ export default {
       this.txBatch = null;
       this.sending = false;
       this.signCallback = {};
+      this.swapWigetData = {
+        destAddress: '',
+        fromCurrency: {
+          symbol: 'ETH',
+          name: ''
+        },
+        toCurrency: {
+          symbol: 'ETH',
+          name: ''
+        },
+        fromValue: 0
+      };
     }
   }
 };

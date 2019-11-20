@@ -23,18 +23,21 @@
       >
         <img
           v-if="!password.showPassword"
+          alt
           class="hide-password"
           src="~@/assets/images/icons/hide-password.svg"
         />
         <img
           v-if="password.showPassword"
+          alt
           class="show-password"
           src="~@/assets/images/icons/show-password.svg"
         />
       </div>
 
       <p v-show="value.length > 0" class="passwd-strength">
-        Password strength: <span :class="strengthClass">{{ strength }}</span>
+        {{ $t('createWallet.password.password-strength') }}:
+        <span :class="strengthClass">{{ strength }}</span>
       </p>
       <p v-if="value.length > 0" class="passwd-strength">
         {{ errors.first('password') }}
@@ -55,7 +58,7 @@
       @click.prevent="switcher(param)"
     >
       {{ $t('common.next') }}
-      <img src="~@/assets/images/icons/right-arrow.png" />
+      <img alt src="~@/assets/images/icons/right-arrow.png" />
     </button>
   </form>
 </template>

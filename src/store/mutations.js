@@ -51,12 +51,15 @@ const CLEAR_WALLET = function(state) {
   };
 };
 
-//
 const DECRYPT_WALLET = function(state, wallet) {
   state.wallet = wallet;
   state.account['address'] = wallet.getAddressString();
   state.account['isHardware'] = wallet.isHardware;
   state.account['identifier'] = wallet.identifier;
+  if (!wallet.hasOwnProperty('isHardWare')) {
+    state.account['nickname'] = wallet.getNickname();
+    state.account['keystore'] = wallet.getKeystore();
+  }
 };
 
 const INIT_STATES = function(state, stateObj) {
@@ -89,9 +92,11 @@ const SET_WEB3_INSTANCE = function(state, web3) {
 const SWITCH_NETWORK = function(state, networkObj) {
   state.network = networkObj;
   const _netObj = Object.assign({}, networkObj);
-  _netObj.type = {
-    name: networkObj.type.name
-  };
+  if (_netObj.type.name !== 'CUS') {
+    _netObj.type = {
+      name: networkObj.type.name
+    };
+  }
   store.set('network', _netObj);
 };
 

@@ -43,6 +43,13 @@
         overflow: hidden;
         transition: all 0.3s ease;
 
+        .content {
+          margin-bottom: 15px;
+          &:last-child {
+            margin-bottom: 0;
+          }
+        }
+
         .sub-title {
           color: $text-color-1;
         }
@@ -64,9 +71,17 @@
       }
 
       .crypto-link {
+        align-items: center;
         color: $link-text-color-2;
+        display: flex;
         overflow: hidden;
         text-overflow: ellipsis;
+        padding-top: 15px;
+
+        img {
+          height: 30px;
+          vertical-align: top;
+        }
       }
 
       p {
@@ -77,15 +92,6 @@
       i {
         border: 1px solid $text--footer-link-color;
         border-radius: 100px;
-      }
-
-      h3 {
-        img {
-          height: 30px;
-          margin-top: -8px;
-          vertical-align: top;
-          margin-left: -9px;
-        }
       }
     }
   } // .footer-contents

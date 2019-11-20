@@ -5,7 +5,7 @@
       :key="providerName + idx"
     >
       <div class="provider-image">
-        <img :src="providerLogo(providerName)" />
+        <img :src="providerLogo(providerName)" alt />
       </div>
       <div>
         <div>
@@ -88,7 +88,7 @@ export default {
       );
     },
     getTagLine(name) {
-      return this.$t(`interface.${name}TagLine`);
+      return this.$t(`swap.tag-line.${name}`);
     }
   }
 };

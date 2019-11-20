@@ -68,6 +68,13 @@ $mobile-width: 700px;
         font-weight: 600;
         color: $dark-blue-2;
       }
+      .for-pop {
+        display: flex;
+        align-items: center;
+        .pop-icon {
+          padding-left: 5px;
+        }
+      }
       .blue {
         font-size: 16px;
         span {

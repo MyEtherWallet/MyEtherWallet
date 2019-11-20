@@ -12,7 +12,6 @@
 
 describe('SwapConfirmationModal.vue', () => {
   // let localVue, i18n, wrapper, store;
-  // const resetView = jest.fn(() => console.log('resetView function called'));
   // beforeAll(() => {
   //   const baseSetup = Tooling.createLocalVueInstance();
   //   localVue = baseSetup.localVue;

@@ -1,35 +1,37 @@
 <template>
   <b-modal
     ref="scantodownload"
-    :title="$t('createWallet.scanToDownload')"
+    :title="$t('createWallet.mewconnect.scan')"
     hide-footer
     centered
     class="bootstrap-modal no-padding"
+    static
+    lazy
   >
     <div class="qr-divider">
       <div class="ios">
         <div class="qr-image">
-          <img src="@/assets/images/etc/qr-code-apple.png" />
+          <img alt src="@/assets/images/etc/qr-code-apple.png" />
         </div>
         <div class="store-name-container">
           <div class="store-name">
-            <img src="@/assets/images/icons/apple.svg" />
-            <p>iOS</p>
+            <img alt src="@/assets/images/icons/apple.svg" />
+            <p>{{ $t('createWallet.mewconnect.ios') }}</p>
           </div>
         </div>
-        <p>{{ $t('createWallet.iosVersions') }}</p>
+        <p>{{ $t('createWallet.mewconnect.version.ios') }}</p>
       </div>
       <div class="android">
         <div class="qr-image">
-          <img src="@/assets/images/etc/qr-code-android.png" />
+          <img alt src="@/assets/images/etc/qr-code-android.png" />
         </div>
         <div class="store-name-container">
           <div class="store-name">
-            <img src="@/assets/images/icons/android.svg" />
-            <p>Android</p>
+            <img alt src="@/assets/images/icons/android.svg" />
+            <p>{{ $t('createWallet.mewconnect.android') }}</p>
           </div>
         </div>
-        <p>{{ $t('createWallet.androidVersions') }}</p>
+        <p>{{ $t('createWallet.mewconnect.version.android') }}</p>
       </div>
     </div>
   </b-modal>

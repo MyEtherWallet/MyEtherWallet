@@ -4,12 +4,12 @@
     <div class="info-block balance">
       <div class="block-image">
         <div class="icon-border">
-          <img class="icon" src="~@/assets/images/icons/wallet.svg" />
+          <img alt class="icon" src="~@/assets/images/icons/wallet.svg" />
         </div>
       </div>
       <div class="block-content">
         <div class="information-container">
-          <h2>{{ $t('common.balance') }}</h2>
+          <h2>{{ $t('common.balance.string') }}</h2>
           <div class="balance-text-container">
             <div v-show="balance !== undefined" class="balance-text">
               <p>
@@ -28,7 +28,7 @@
             class="custom-tooltip"
             @click="balanceModalOpen"
           >
-            <img src="~@/assets/images/icons/more.svg" />
+            <img alt src="~@/assets/images/icons/more.svg" />
           </b-btn>
           <b-btn
             id="refreshBalance"
@@ -37,19 +37,20 @@
           >
             <img
               v-show="!fetchingBalance"
+              alt
               src="~@/assets/images/icons/change.svg"
             />
             <i v-show="fetchingBalance" class="fa fa-lg fa-spinner fa-spin" />
           </b-btn>
           <b-popover
-            content="Check Balance"
+            :content="$t('interface.check-balance.string')"
             target="balanceCheck"
             placement="top"
             triggers="hover"
             title
           />
           <b-popover
-            content="Refresh Balance"
+            :content="$t('interface.check-balance.refresh')"
             target="refreshBalance"
             placement="top"
             triggers="hover"

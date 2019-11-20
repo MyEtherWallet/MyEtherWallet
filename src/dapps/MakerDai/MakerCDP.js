@@ -165,15 +165,15 @@ export default class MakerCDP {
       if (this.zeroDebt) {
         return maxEthDraw(
           this.ethCollateral,
-          this.liquidationRatio.plus(0.001),
+          this.liquidationRatio,
           this.debtValue,
           this.ethPrice,
-          this.minEth.times(1.0)
+          this.minEth.times(0)
         );
       }
       return maxEthDraw(
         this.ethCollateral,
-        this.liquidationRatio.plus(0.001),
+        this.liquidationRatio,
         this.debtValue,
         this.ethPrice
       );
@@ -186,15 +186,15 @@ export default class MakerCDP {
       if (this.zeroDebt) {
         return maxPethDraw(
           this.pethCollateral,
-          this.liquidationRatio.plus(0.001),
+          this.liquidationRatio,
           this.debtValue,
           this.pethPrice,
-          this.pethMin.times(1.0)
+          this.pethMin.times(0)
         );
       }
       return maxPethDraw(
         this.pethCollateral,
-        this.liquidationRatio.plus(0.001),
+        this.liquidationRatio,
         this.debtValue,
         this.pethPrice
       );
@@ -216,10 +216,9 @@ export default class MakerCDP {
   // Methods
   async init(cdpId = this.cdpId) {
     await this.updateValues(cdpId);
-    this._governanceFee = (await this.cdpService.getGovernanceFee(
-      this.cdpId,
-      MKR
-    )).toBigNumber();
+    this._governanceFee = (
+      await this.cdpService.getGovernanceFee(this.cdpId, MKR)
+    ).toBigNumber();
 
     this.ready = true;
     return this;
@@ -239,12 +238,12 @@ export default class MakerCDP {
     this.debtValue = (await this.cdp.getDebtValue()).toBigNumber();
     this._collatRatio = await this.cdp.getCollateralizationRatio();
     this.ethCollateral = (await this.cdp.getCollateralValue()).toBigNumber();
-    this.pethCollateral = (await this.cdp.getCollateralValue(
-      Maker.PETH
-    )).toBigNumber();
-    this._usdCollateral = (await this.cdp.getCollateralValue(
-      Maker.USD
-    )).toBigNumber();
+    this.pethCollateral = (
+      await this.cdp.getCollateralValue(Maker.PETH)
+    ).toBigNumber();
+    this._usdCollateral = (
+      await this.cdp.getCollateralValue(Maker.USD)
+    ).toBigNumber();
   }
 
   async update() {
@@ -404,6 +403,12 @@ export default class MakerCDP {
       console.error(e);
     }
     // }
+  }
+
+  async checkIfDestAddressHasProxy(address) {
+    await this.getProxy();
+    const proxy = await this.proxyService.getProxyAddress(address);
+    return proxy;
   }
 
   async moveCdp(address) {

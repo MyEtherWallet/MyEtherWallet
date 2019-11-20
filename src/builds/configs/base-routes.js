@@ -3,13 +3,18 @@ const TeamLayout = () => import('@/layouts/TeamLayout');
 const PrivacyPolicyLayout = () => import('@/layouts/PrivacyPolicyLayout');
 const TermsAndConditionsLayout = () =>
   import('@/layouts/TermsAndConditionsLayout');
-const AccessWalletLayout = () => import('@/layouts/AccessWalletLayout');
 const InterfaceLayout = () => import('@/layouts/InterfaceLayout');
-const HelpCenterLayout = () => import('@/layouts/HelpCenterLayout');
 const NotFoundLayout = () => import('@/layouts/NotFoundLayout');
 const GettingStarted = () => import('@/layouts/GettingStarted');
 const SendOfflineHelper = () => import('@/layouts/SendOfflineHelper');
 const VerifyMessageLayout = () => import('@/layouts/VerifyMessageLayout');
+const DappSubmission = () => import('@/layouts/DappSubmissionLayout');
+const AboutYourDapp = () =>
+  import('@/layouts/DappSubmissionLayout/containers/AboutYourDappContainer');
+const AboutYourTeam = () =>
+  import('@/layouts/DappSubmissionLayout/containers/AboutYourTeamContainer');
+const DappSummary = () =>
+  import('@/layouts/DappSubmissionLayout/containers/SummaryContainer');
 
 const DappsContainer = () =>
   import('@/layouts/InterfaceLayout/containers/DappsContainer');
@@ -17,6 +22,8 @@ const DeployContractContainer = () =>
   import('@/layouts/InterfaceLayout/containers/DeployContractContainer');
 const InteractWithContractContainer = () =>
   import('@/layouts/InterfaceLayout/containers/InteractWithContractContainer');
+const NFTManagerContainer = () =>
+  import('@/layouts/InterfaceLayout/containers/NFTManagerContainer');
 const SendCurrencyContainer = () =>
   import('@/layouts/InterfaceLayout/containers/SendCurrencyContainer');
 const SendOfflineContainer = () =>
@@ -28,6 +35,10 @@ const SignMessageContainer = () =>
 const VerifyMessageContainer = () =>
   import('@/layouts/InterfaceLayout/containers/VerifyMessageContainer');
 const HardwaresLayout = () => import('@/layouts/HardwaresLayout');
+const ViewWalletInfoLayout = () => import('@/layouts/ViewWalletInfoLayout');
+const PhishingCatcherLayout = () => import('@/layouts/PhishingCatcherLayout');
+const DashboardContainer = () =>
+  import('@/layouts/InterfaceLayout/containers/DashboardContainer');
 
 import dapps from '@/dapps/routes';
 
@@ -51,15 +62,9 @@ const router = [
     meta: { requiresAuth: false }
   },
   {
-    path: '/access-my-wallet',
-    name: 'AccessWalletLayout',
-    component: AccessWalletLayout,
-    meta: { requiresAuth: false }
-  },
-  {
-    path: '/help-center',
-    name: 'HelpCenterLayout',
-    component: HelpCenterLayout,
+    path: '/phishing-catcher',
+    name: 'PhishingCatcherLayout',
+    component: PhishingCatcherLayout,
     meta: { requiresAuth: false }
   },
   {
@@ -87,6 +92,36 @@ const router = [
     meta: { requiresAuth: false }
   },
   {
+    path: '/dapp-submission',
+    component: DappSubmission,
+    children: [
+      {
+        path: '',
+        name: 'DappSubmission',
+        component: AboutYourDapp,
+        meta: { requiresAuth: false }
+      },
+      {
+        path: 'about-your-dapp',
+        name: 'AboutYourDapp',
+        component: AboutYourDapp,
+        meta: { requiresAuth: false }
+      },
+      {
+        path: 'about-your-team',
+        name: 'AboutYourTeam',
+        component: AboutYourTeam,
+        meta: { requiresAuth: false }
+      },
+      {
+        path: 'dapp-summary',
+        name: 'DappSummary',
+        component: DappSummary,
+        meta: { requiresAuth: false }
+      }
+    ]
+  },
+  {
     path: '/verify-message',
     name: 'VerifyMessageLayout',
     component: VerifyMessageLayout,
@@ -99,13 +134,23 @@ const router = [
     meta: { requiresAuth: false }
   },
   {
+    path: '/view-wallet-info',
+    name: 'ViewWalletInfoLayout',
+    component: ViewWalletInfoLayout
+  },
+  {
     path: '/interface',
     component: InterfaceLayout,
     children: [
       {
         path: '',
-        name: 'Send Transaction',
-        component: SendCurrencyContainer
+        name: 'Dashboard',
+        component: DashboardContainer
+      },
+      {
+        path: 'dashboard',
+        name: 'Dashboard Container',
+        component: DashboardContainer
       },
       {
         path: 'dapps',
@@ -146,6 +191,11 @@ const router = [
         path: 'verify-message',
         name: 'Verify Message',
         component: VerifyMessageContainer
+      },
+      {
+        path: 'nft-manager',
+        name: 'NFTManager',
+        component: NFTManagerContainer
       }
     ]
   }

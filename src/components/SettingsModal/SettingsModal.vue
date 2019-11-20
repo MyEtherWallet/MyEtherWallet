@@ -3,15 +3,17 @@
     <div class="modal-container">
       <b-modal
         ref="settings"
-        title="Settings"
+        :title="$t('interface.settings')"
         hide-footer
         centered
         class="bootstrap-modal nopadding"
+        static
+        lazy
       >
         <div class="modal-contents">
           <full-width-dropdown
             ref="gasDropdown"
-            title="Transaction Speed"
+            :title="$t('interface.config.tx-speed')"
             class="tx-speed"
           >
             <div class="radio-buttons">
@@ -32,7 +34,7 @@
                     />
                     <label :for="key">
                       {{ key | capitalize }} ({{ gasPriceInputs[key].gwei }}
-                      Gwei)
+                      {{ $t('common.gas.uppercase-gwei') }})
                     </label>
                   </div>
                   <p class="hidden">
@@ -59,7 +61,7 @@
                       type="number"
                       @focus="selectedGasType = 'other'"
                     />
-                    <p class="gwei">Gwei</p>
+                    <p class="gwei">{{ $t('common.gas.uppercase-gwei') }}</p>
                   </div>
                   <p class="hidden">
                     {{ customGasEth }}
@@ -79,31 +81,30 @@
             <div class="button-block">
               <standard-button
                 :options="buttonSave"
+                :button-disabled="selectedGasType === 'other' && customGas < 1"
                 @click.native="saveGasChanges"
               />
             </div>
           </full-width-dropdown>
 
           <full-width-dropdown
-            title="Import Configurations"
+            :title="$t('interface.config.import')"
             class="import-config"
           >
-            <b-alert :show="popup" fade variant="info"
-              >Imported file successfully!</b-alert
-            >
+            <b-alert :show="popup" fade variant="info">{{
+              $t('interface.config.import-success')
+            }}</b-alert>
             <p>
-              Please click the button below to open and import you configuration
-              file from your local computer.
+              {{ $t('interface.config.import-desc') }}
             </p>
             <div class="import-button-block">
               <div class="filename">
-                <standard-input :options="inputFileName" />
+                {{ inputFileName }}
               </div>
               <input
                 ref="uploadInput"
                 type="file"
                 name="file"
-                style="display: none"
                 @change="receiveUploadedFile"
               />
               <standard-button
@@ -114,21 +115,26 @@
             <div class="button-block">
               <standard-button
                 :options="buttonImport"
+                :button-disabled="importedFile === ''"
                 @click.native="setDataFromImportedFile"
               />
             </div>
           </full-width-dropdown>
 
           <full-width-dropdown
-            title="Export Configurations"
+            :title="$t('interface.config.export')"
             class="export-config"
           >
             <p>
-              Please click the button below to download your configuration file
-              into your local computer.
+              {{ $t('interface.config.export-desc') }}
             </p>
             <div class="button-block">
-              <a :href="file" :download="fileName" class="export-button">
+              <a
+                :href="file"
+                :download="fileName"
+                rel="noopener noreferrer"
+                class="export-button"
+              >
                 <standard-button :options="buttonExport" />
               </a>
             </div>
@@ -194,19 +200,7 @@ export default {
         fullWidth: true,
         noMinWidth: false
       },
-      inputFileName: {
-        title: '',
-        value: '',
-        type: 'text',
-        buttonCopy: false,
-        buttonClear: false,
-        buttonCustom: '',
-        topTextInfo: '',
-        popover: '',
-        placeHolder: '',
-        rightInputText: '',
-        readOnly: true
-      },
+      inputFileName: '',
       selectedGasType: 'regular',
       customGas: 0,
       customGasEth: 0,
@@ -269,12 +263,16 @@ export default {
   watch: {
     customGas(newVal) {
       if (newVal !== '') {
-        const toGwei = new BigNumber(
-          utils.toWei(`${newVal}`, 'gwei')
-        ).toFixed();
-        this.customGasEth = new BigNumber(
-          `${utils.fromWei(toGwei, 'ether')}`
-        ).toFixed();
+        if (new BigNumber(newVal).gte(1)) {
+          const toGwei = new BigNumber(
+            utils.toWei(`${newVal}`, 'gwei')
+          ).toFixed();
+          this.customGasEth = new BigNumber(
+            `${utils.fromWei(toGwei, 'ether')}`
+          ).toFixed();
+        } else {
+          this.customGas = 1;
+        }
       }
     },
     gasPrice() {
@@ -286,6 +284,7 @@ export default {
       this.getEthPrice();
     }
     this.exportConfig();
+    this.getGasType();
   },
   methods: {
     setDataFromImportedFile() {
@@ -325,19 +324,29 @@ export default {
       reader.readAsBinaryString(this.importedFile);
     },
     receiveUploadedFile(e) {
-      this.inputFileName = {
-        value: e.target.value,
-        type: 'text',
-        buttonCopy: false,
-        buttonClear: false,
-        buttonCustom: '',
-        topTextInfo: '',
-        popover: '',
-        placeHolder: '',
-        rightInputText: ''
-      };
+      const pathParts = e.target.value.split('\\');
+      this.inputFileName = pathParts[pathParts.length - 1];
 
       this.importedFile = e.target.files[0];
+    },
+    getGasType() {
+      const type = store.get('gasPriceType');
+      const amt = store.get('gasPrice');
+      if (type) {
+        this.selectedGasType = type;
+      }
+
+      if (amt) {
+        if (this.gasPriceInputs[type] !== undefined) {
+          this.$store.dispatch(
+            'setGasPrice',
+            new BigNumber(this.gasPriceInputs[type].gwei).toNumber()
+          );
+        } else {
+          this.customGas = amt;
+          this.$store.dispatch('setGasPrice', new BigNumber(amt).toNumber());
+        }
+      }
     },
     uploadFile() {
       const uploadInput = this.$refs.uploadInput;
@@ -358,9 +367,12 @@ export default {
           new BigNumber(this.customGas).toNumber()
         );
       }
-      this.$refs.gasDropdown.dropdownOpen = false;
+      if (this.$refs.gasDropdown) {
+        this.$refs.gasDropdown.dropdownOpen = false;
+      }
     },
     selectGasType(type) {
+      store.set('gasPriceType', type);
       this.selectedGasType = type;
       if (type === 'other') {
         this.$refs.customInput.focus();

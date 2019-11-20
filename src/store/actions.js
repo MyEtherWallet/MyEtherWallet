@@ -5,6 +5,7 @@ import MEWProvider from '@/wallets/web3-provider';
 import { MEW_CONNECT } from '@/wallets/bip44/walletTypes';
 import * as unit from 'ethjs-unit';
 import { formatters } from 'web3-core-helpers';
+import { MEW_CX } from '@/builds/configs/types';
 import {
   txIndexes,
   swapIndexes,
@@ -77,10 +78,11 @@ const gettingStartedDone = function({ commit }) {
 };
 
 const clearWallet = function({ commit, state }) {
-  if (state.wallet.identifier === MEW_CONNECT) {
+  const linkTo = state.path !== '' ? state.path : '/';
+  if (state.wallet && state.wallet.identifier === MEW_CONNECT) {
     state.wallet.mewConnect().disconnectRTC();
   }
-  Vue.router.push('/');
+  Vue.router.push(linkTo);
   commit('CLEAR_WALLET');
 };
 
@@ -89,7 +91,9 @@ const createAndSignTx = function({ commit }, val) {
 };
 
 const decryptWallet = function({ commit, dispatch }, params) {
-  if (params[0]) {
+  // if the wallet param (param[0]) is undefined or null then all the subsequent setup steps will also fail.
+  // just explicitly stop it here.
+  if (params[0] !== undefined && params[0] !== null) {
     if (params[0].identifier === MEW_CONNECT) {
       params[0].mewConnect().on('RtcClosedEvent', () => {
         if (params[0].mewConnect().getConnectonState()) {
@@ -98,10 +102,18 @@ const decryptWallet = function({ commit, dispatch }, params) {
         }
       });
     }
-  }
 
-  commit('DECRYPT_WALLET', params[0]);
-  dispatch('setWeb3Instance', params[1]);
+    commit('DECRYPT_WALLET', params[0]);
+    dispatch('setWeb3Instance', params[1]);
+  } else {
+    // Could replace this (sentry gets triggered) with a toast, to handle more gracefully
+    // Or some means of informing the user of an issue
+    return Promise.reject(
+      Error(
+        'Received null or undefined wallet parameter. Please refresh the page and try again'
+      )
+    );
+  }
 };
 
 const setAccountBalance = function({ commit }, balance) {
@@ -117,7 +129,9 @@ const setState = function({ commit }, stateObj) {
 };
 
 const setWeb3Instance = function({ dispatch, commit, state }, provider) {
-  const hostUrl = url.parse(state.network.url);
+  const hostUrl = state.network.url
+    ? url.parse(state.network.url)
+    : state.Networks['ETH'][0];
   const options = {};
   // eslint-disable-next-line
   const parsedUrl = `${hostUrl.protocol}//${hostUrl.host}${
@@ -142,46 +156,48 @@ const setWeb3Instance = function({ dispatch, commit, state }, provider) {
     )
   );
   web3Instance.currentProvider.sendAsync = web3Instance.currentProvider.send;
-  web3Instance['mew'] = {};
-  web3Instance['mew'].sendBatchTransactions = arr => {
-    return new Promise(async resolve => {
-      for (let i = 0; i < arr.length; i++) {
-        const localTx = {
-          to: arr[i].to,
-          data: arr[i].data,
-          from: arr[i].from,
-          value: arr[i].value,
-          gasPrice: arr[i].gasPrice
-        };
-        const gas = await (arr[i].gas === undefined
-          ? web3Instance.eth.estimateGas(localTx)
-          : arr[i].gas);
-        const nonce = await (arr[i].nonce === undefined
-          ? web3Instance.eth.getTransactionCount(state.account.address)
-          : arr[i].nonce);
-        arr[i].nonce = new BigNumber(nonce + i).toFixed();
-        arr[i].gas = gas;
-        arr[i].chainId = !arr[i].chainId
-          ? state.network.type.chainID
-          : arr[i].chainId;
-        arr[i].gasPrice =
-          arr[i].gasPrice === undefined
-            ? unit.toWei(state.gasPrice, 'gwei')
-            : arr[i].gasPrice;
-        arr[i] = formatters.inputCallFormatter(arr[i]);
-      }
+  if (BUILD_TYPE !== MEW_CX) {
+    web3Instance['mew'] = {};
+    web3Instance['mew'].sendBatchTransactions = arr => {
+      return new Promise(async resolve => {
+        for (let i = 0; i < arr.length; i++) {
+          const localTx = {
+            to: arr[i].to,
+            data: arr[i].data,
+            from: arr[i].from,
+            value: arr[i].value,
+            gasPrice: arr[i].gasPrice
+          };
+          const gas = await (arr[i].gas === undefined
+            ? web3Instance.eth.estimateGas(localTx)
+            : arr[i].gas);
+          const nonce = await (arr[i].nonce === undefined
+            ? web3Instance.eth.getTransactionCount(state.account.address)
+            : arr[i].nonce);
+          arr[i].nonce = new BigNumber(nonce + i).toFixed();
+          arr[i].gas = gas;
+          arr[i].chainId = !arr[i].chainId
+            ? state.network.type.chainID
+            : arr[i].chainId;
+          arr[i].gasPrice =
+            arr[i].gasPrice === undefined
+              ? unit.toWei(state.gasPrice, 'gwei')
+              : arr[i].gasPrice;
+          arr[i] = formatters.inputCallFormatter(arr[i]);
+        }
 
-      const batchSignCallback = promises => {
-        resolve(promises);
-      };
-      this._vm.$eventHub.$emit(
-        'showTxCollectionConfirmModal',
-        arr,
-        batchSignCallback,
-        state.wallet.isHardware
-      );
-    });
-  };
+        const batchSignCallback = promises => {
+          resolve(promises);
+        };
+        this._vm.$eventHub.$emit(
+          'showTxCollectionConfirmModal',
+          arr,
+          batchSignCallback,
+          state.wallet.isHardware
+        );
+      });
+    };
+  }
   commit('SET_WEB3_INSTANCE', web3Instance);
 };
 
@@ -200,7 +216,13 @@ const updateNotification = function({ commit, state }, val) {
     newNotif[item] = state.notifications[item];
   });
 
-  newNotif[address][val[1]] = val[2];
+  const idIndex = newNotif[address].findIndex(entry => entry.id === val[2].id);
+  if (idIndex > -1) {
+    newNotif[address][idIndex] = val[2];
+  } else {
+    newNotif[address][val[1]] = val[2];
+  }
+
   commit('UPDATE_NOTIFICATION', newNotif);
 };
 

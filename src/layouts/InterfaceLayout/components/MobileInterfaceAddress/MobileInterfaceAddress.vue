@@ -23,21 +23,21 @@
         </div>
         <div class="buttons-container">
           <button @click="openQrcode">
-            <img src="~@/assets/images/icons/qr-code-white.svg" />
+            <img alt src="~@/assets/images/icons/qr-code-white.svg" />
             <div class="floating-barcode">
               <div class="barcode-image"></div>
             </div>
           </button>
           <button @click="print">
-            <img src="~@/assets/images/icons/printer-white.svg" />
+            <img alt src="~@/assets/images/icons/printer-white.svg" />
           </button>
           <button @click="copy">
-            <img src="~@/assets/images/icons/copy.svg" />
+            <img alt src="~@/assets/images/icons/copy.svg" />
           </button>
         </div>
       </div>
       <div v-if="hasMultipleAddr" class="bottom-block">
-        <button @click="switchAddr">{{ $t('common.changeAddress') }}</button>
+        <button @click="switchAddr">{{ $t('interface.change-addr') }}</button>
       </div>
     </div>
     <!-- .wrap -->
@@ -101,7 +101,7 @@ export default {
     copy() {
       this.$refs.copyAddress.select();
       document.execCommand('copy');
-      Toast.responseHandler('Copied!', Toast.INFO);
+      Toast.responseHandler(this.$t('common.copied'), Toast.INFO);
     },
     openQrcode() {
       this.$refs.qrcode.$refs.addressQrcode.show();

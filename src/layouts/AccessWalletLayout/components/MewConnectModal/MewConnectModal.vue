@@ -1,10 +1,12 @@
 <template>
   <b-modal
     ref="mewConnect"
-    :title="$t('accessWallet.mewConnectTitle')"
+    :title="$t('accessWallet.mewconnect.modal.title')"
     hide-footer
     class="bootstrap-modal nopadding modal-mew-connect"
     centered
+    static
+    lazy
   >
     <div class="modal-container">
       <ipad-modal ref="ipadModal" />
@@ -13,7 +15,7 @@
       </div>
       <div class="d-block content-container text-center">
         <h3 class="modal-large-text">
-          {{ $t('accessWallet.mewConnectDesc1') }}
+          {{ $t('accessWallet.mewconnect.modal.text1') }}
         </h3>
       </div>
       <div class="appstore-button-container">
@@ -24,20 +26,22 @@
             target="_blank"
             rel="noopener noreferrer"
           >
-            <img src="~@/assets/images/icons/appstore.svg" height="35" />
+            <img alt src="~@/assets/images/icons/appstore.svg" height="35" />
           </a>
           <div v-else @click="openIpadModal">
-            <img src="~@/assets/images/icons/appstore.svg" height="35" />
+            <img alt src="~@/assets/images/icons/appstore.svg" height="35" />
           </div>
           <a
             href="http://play.google.com/store/apps/details?id=com.myetherwallet.mewconnect"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <img src="~@/assets/images/icons/google-play.svg" height="35" />
+            <img alt src="~@/assets/images/icons/google-play.svg" height="35" />
           </a>
         </div>
-        <p class="download-now">{{ $t('accessWallet.mewConnectDesc2') }}</p>
+        <p class="download-now">
+          {{ $t('accessWallet.mewconnect.modal.text2') }}
+        </p>
       </div>
       <customer-support />
     </div>

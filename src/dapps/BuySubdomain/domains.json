@@ -1,148 +1,33 @@
 [
   {
-    "name": "etherbase",
-    "version": "1.0",
-    "registrar": "0x0b07463b30b302a98407d3e3df85ebc073b0dbd1"
-  },
-  {
-    "name": "gimmethe",
-    "version": "1.0",
-    "registrar": "0x0b07463b30b302a98407d3e3df85ebc073b0dbd1"
-  },
-  {
-    "name": "wantsome",
-    "version": "1.0",
-    "registrar": "0x0b07463b30b302a98407d3e3df85ebc073b0dbd1"
-  },
-  {
     "name": "accepte",
     "version": "1.0",
-    "registrar": "0x0b07463b30b302a98407d3e3df85ebc073b0dbd1"
-  },
-  {
-    "name": "appleid",
-    "version": "0.9",
-    "registrar": "0xfa6512358d241b636edf5f8ccaaf86676dec21a7"
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
   },
   {
     "name": "asksfor",
     "version": "1.0",
-    "registrar": "0x0b07463b30b302a98407d3e3df85ebc073b0dbd1"
-  },
-  {
-    "name": "begsfor",
-    "version": "1.0",
-    "registrar": "0x0b07463b30b302a98407d3e3df85ebc073b0dbd1"
-  },
-  {
-    "name": "atdiscord",
-    "version": "0.9",
-    "registrar": "0xfa6512358d241b636edf5f8ccaaf86676dec21a7"
-  },
-  {
-    "name": "atdtube",
-    "version": "0.9",
-    "registrar": "0xfa6512358d241b636edf5f8ccaaf86676dec21a7"
-  },
-  {
-    "name": "atdistrict0x",
-    "version": "0.9",
-    "registrar": "0xfa6512358d241b636edf5f8ccaaf86676dec21a7"
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
   },
   {
     "name": "atethereum",
-    "version": "0.9",
-    "registrar": "0xfa6512358d241b636edf5f8ccaaf86676dec21a7"
-  },
-  {
-    "name": "atfacebook",
-    "version": "0.9",
-    "registrar": "0xfa6512358d241b636edf5f8ccaaf86676dec21a7"
-  },
-  {
-    "name": "aticloud",
-    "version": "0.9",
-    "registrar": "0xfa6512358d241b636edf5f8ccaaf86676dec21a7"
-  },
-  {
-    "name": "atinstagram",
-    "version": "0.9",
-    "registrar": "0xfa6512358d241b636edf5f8ccaaf86676dec21a7"
-  },
-  {
-    "name": "atleeroy",
-    "version": "0.9",
-    "registrar": "0xfa6512358d241b636edf5f8ccaaf86676dec21a7"
-  },
-  {
-    "name": "atmedium",
-    "version": "0.9",
-    "registrar": "0xfa6512358d241b636edf5f8ccaaf86676dec21a7"
-  },
-  {
-    "name": "atopenbazaar",
-    "version": "0.9",
-    "registrar": "0xfa6512358d241b636edf5f8ccaaf86676dec21a7"
+    "version": "1.0",
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
   },
   {
     "name": "atpeepeth",
     "version": "1.0",
-    "registrar": "0x0b07463b30b302a98407d3e3df85ebc073b0dbd1"
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
   },
   {
-    "name": "atreddit",
-    "version": "0.9",
-    "registrar": "0xfa6512358d241b636edf5f8ccaaf86676dec21a7"
+    "name": "begsfor",
+    "version": "1.0",
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
   },
   {
-    "name": "atrocketchat",
-    "version": "0.9",
-    "registrar": "0xfa6512358d241b636edf5f8ccaaf86676dec21a7"
-  },
-  {
-    "name": "atslack",
-    "version": "0.9",
-    "registrar": "0xfa6512358d241b636edf5f8ccaaf86676dec21a7"
-  },
-  {
-    "name": "atskype",
-    "version": "0.9",
-    "registrar": "0xfa6512358d241b636edf5f8ccaaf86676dec21a7"
-  },
-  {
-    "name": "atsnapchat",
-    "version": "0.9",
-    "registrar": "0xfa6512358d241b636edf5f8ccaaf86676dec21a7"
-  },
-  {
-    "name": "atsteemit",
-    "version": "0.9",
-    "registrar": "0xfa6512358d241b636edf5f8ccaaf86676dec21a7"
-  },
-  {
-    "name": "attelegram",
-    "version": "0.9",
-    "registrar": "0xfa6512358d241b636edf5f8ccaaf86676dec21a7"
-  },
-  {
-    "name": "attwitter",
-    "version": "0.9",
-    "registrar": "0xfa6512358d241b636edf5f8ccaaf86676dec21a7"
-  },
-  {
-    "name": "atwechat",
-    "version": "0.9",
-    "registrar": "0xfa6512358d241b636edf5f8ccaaf86676dec21a7"
-  },
-  {
-    "name": "atwhatsapp",
-    "version": "0.9",
-    "registrar": "0xfa6512358d241b636edf5f8ccaaf86676dec21a7"
-  },
-  {
-    "name": "atyoutube",
-    "version": "0.9",
-    "registrar": "0xfa6512358d241b636edf5f8ccaaf86676dec21a7"
+    "name": "blockchaincontracts",
+    "version": "1.0",
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
   },
   {
     "name": "britishblockchain",
@@ -160,19 +45,14 @@
     "registrar": "0xc32659651d137a18b79925449722855aa327231d"
   },
   {
-    "name": "buymecoffee",
-    "version": "0.9",
-    "registrar": "0xfa6512358d241b636edf5f8ccaaf86676dec21a7"
+    "name": "chainlinknode",
+    "version": "1.0",
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
   },
   {
     "name": "codeinecrazy",
     "version": "1.0",
     "registrar": "0xc32659651d137a18b79925449722855aa327231d"
-  },
-  {
-    "name": "coinsto",
-    "version": "1.0",
-    "registrar": "0x0b07463b30b302a98407d3e3df85ebc073b0dbd1"
   },
   {
     "name": "cryptoking",
@@ -182,67 +62,37 @@
   {
     "name": "deserves",
     "version": "1.0",
-    "registrar": "0x0b07463b30b302a98407d3e3df85ebc073b0dbd1"
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
   },
   {
-    "name": "desires",
+    "name": "eth-gbg",
     "version": "1.0",
-    "registrar": "0x0b07463b30b302a98407d3e3df85ebc073b0dbd1"
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
   },
   {
-    "name": "ethereumpurse",
-    "version": "0.9",
-    "registrar": "0xfa6512358d241b636edf5f8ccaaf86676dec21a7"
-  },
-  {
-    "name": "extravagant",
+    "name": "etherbase",
     "version": "1.0",
-    "registrar": "0x0b07463b30b302a98407d3e3df85ebc073b0dbd1"
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
   },
   {
-    "name": "ishername",
-    "version": "0.9",
-    "registrar": "0xfa6512358d241b636edf5f8ccaaf86676dec21a7"
-  },
-  {
-    "name": "my-bank",
+    "name": "gimmethe",
     "version": "1.0",
-    "registrar": "0x0b07463b30b302a98407d3e3df85ebc073b0dbd1"
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
   },
   {
-    "name": "necesita",
+    "name": "paynonym",
     "version": "1.0",
-    "registrar": "0x0b07463b30b302a98407d3e3df85ebc073b0dbd1"
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
   },
   {
-    "name": "needsmore",
+    "name": "sendmecrypto",
     "version": "1.0",
-    "registrar": "0x0b07463b30b302a98407d3e3df85ebc073b0dbd1"
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
   },
   {
     "name": "mollypercocet",
     "version": "1.0",
     "registrar": "0xc32659651d137a18b79925449722855aa327231d"
-  },
-  {
-    "name": "requires",
-    "version": "1.0",
-    "registrar": "0x0b07463b30b302a98407d3e3df85ebc073b0dbd1"
-  },
-  {
-    "name": "satoshiwallet",
-    "version": "0.9",
-    "registrar": "0xfa6512358d241b636edf5f8ccaaf86676dec21a7"
-  },
-  {
-    "name": "sendmecrypto",
-    "version": "1.0",
-    "registrar": "0x0b07463b30b302a98407d3e3df85ebc073b0dbd1"
-  },
-  {
-    "name": "smartaddress",
-    "version": "0.9",
-    "registrar": "0xfa6512358d241b636edf5f8ccaaf86676dec21a7"
   },
   {
     "name": "thecryptogirl",
@@ -255,9 +105,9 @@
     "registrar": "0xc32659651d137a18b79925449722855aa327231d"
   },
   {
-    "name": "thisisme",
-    "version": "0.9",
-    "registrar": "0xfa6512358d241b636edf5f8ccaaf86676dec21a7"
+    "name": "tokenid",
+    "version": "1.0",
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
   },
   {
     "name": "trustsnobank",
@@ -265,23 +115,13 @@
     "registrar": "0xc32659651d137a18b79925449722855aa327231d"
   },
   {
-    "name": "viewwallet",
-    "version": "0.9",
-    "registrar": "0xfa6512358d241b636edf5f8ccaaf86676dec21a7"
-  },
-  {
-    "name": "wantsmore",
+    "name": "wantsome",
     "version": "1.0",
-    "registrar": "0x0b07463b30b302a98407d3e3df85ebc073b0dbd1"
+    "registrar": "0xc32659651d137a18b79925449722855aa327231d"
   },
   {
     "name": "xannyfamily",
     "version": "1.0",
     "registrar": "0xc32659651d137a18b79925449722855aa327231d"
-  },
-  {
-    "name": "yourass",
-    "version": "0.9",
-    "registrar": "0xfa6512358d241b636edf5f8ccaaf86676dec21a7"
   }
 ]

@@ -2,14 +2,16 @@
   <div class="modal-container">
     <b-modal
       ref="swapconfirmation"
+      :title="$t('swap.review')"
       hide-footer
       centered
       class="bootstrap-modal bootstrap-modal-wide padding-40-20"
-      title="Confirmation"
+      static
+      lazy
     >
       <div class="time-remaining">
         <h1>{{ timeRemaining }}</h1>
-        <p>{{ $t('interface.timeRemaining') }}</p>
+        <p>{{ $t('swap.time-remain') }}</p>
       </div>
       <div>
         <div class="swap-detail">
@@ -24,7 +26,7 @@
               v-show="fromAddress.address !== '' && !isFromFiat"
               class="block-title"
             >
-              {{ $t('interface.fromAddr') }}
+              {{ $t('sendTx.from-addr') }}
             </p>
             <p
               v-show="fromAddress.address !== '' && !isFromFiat"
@@ -33,7 +35,7 @@
               {{ fromAddress.address }}
             </p>
           </div>
-          <div class="right-arrow"><img :src="arrowImage" /></div>
+          <div class="right-arrow"><img :src="arrowImage" alt /></div>
           <!-- Fiat to Crypto-->
           <div v-if="!toFiat" class="to-address">
             <div class="icon">
@@ -43,7 +45,7 @@
               {{ toAddress.value }} <span>{{ toAddress.name }}</span>
             </p>
             <p v-show="toAddress.address !== ''" class="block-title">
-              {{ $t('interface.sendTxToAddr') }}
+              {{ $t('sendTx.to-addr') }}
             </p>
             <p v-show="toAddress.address !== ''" class="address">
               {{ toAddress.address }}
@@ -67,7 +69,7 @@
             <div class="provider-address-details">
               <h4>
                 {{
-                  $t('interface.notFromEthSwap', {
+                  $t('swap.send-value-curr', {
                     value: fromAddress.value,
                     currency: fromAddress.name
                   })
@@ -87,7 +89,7 @@
               <button-with-qrcode
                 :qrcode="qrcode"
                 :buttonname="
-                  $t('interface.sentCoins', { currency: fromAddress.name })
+                  $t('swap.sent-my-coins', { currency: fromAddress.name })
                 "
               />
             </div>
@@ -155,7 +157,7 @@ export default {
     },
     fiatDest() {
       if (this.swapDetails.orderDetails) {
-        return this.swapDetails.orderDetails.output.owner.name;
+        return this.swapDetails.orderDetails.name;
       }
       return '';
     },

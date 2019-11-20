@@ -1,6 +1,7 @@
 <template>
   <div class="mobile-menu">
     <mobile-language-selector
+      v-show="!isMewCx"
       :open="langSelectorOpen"
       @isopen="langSelectorOpen = false"
       @currentlang="langChange"
@@ -14,6 +15,7 @@
     >
       <router-link
         to="/"
+        aria-label="Home"
         @click.native="
           scrollTop();
           isMenuOpen = false;
@@ -23,10 +25,24 @@
           :class="!isOnTop && !isMenuOpen ? 'small-menu' : ''"
           class="logo-image--container"
         >
-          <img class="logo" src="~@/assets/images/short-hand-logo.png" />
+          <img
+            :src="require(`@/assets/images/short-hand-logo-${buildType}.png`)"
+            class="logo"
+            alt
+          />
         </div>
       </router-link>
       <div class="mobile-menu-button--container">
+        <a
+          href="https://ccswap.myetherwallet.com/#/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <div class="buy-eth">
+            <img src="@/assets/images/icons/buy-eth.svg" alt />
+            <p>{{ $t('common.buy-eth') }}</p>
+          </div>
+        </a>
         <mobile-menu-button
           :ismenuopen="isMenuOpen"
           @click.native="isMenuOpen = !isMenuOpen"
@@ -60,20 +76,20 @@
               "
             >
               <div class="menu-link-block">
-                <div>{{ $t('header.home') }}</div>
+                <div>{{ $t('common.home') }}</div>
                 <i class="fa fa-angle-right" aria-hidden="true"></i>
               </div>
             </router-link>
           </li>
-          <li v-if="isHomePage">
+          <li v-if="isHomePage && !isMewCx">
             <router-link to="/#about-mew" @click.native="isMenuOpen = false">
               <div class="menu-link-block">
-                <div>{{ $t('header.about') }}</div>
+                <div>{{ $t('common.about') }}</div>
                 <i class="fa fa-angle-right" aria-hidden="true"></i>
               </div>
             </router-link>
           </li>
-          <li>
+          <li v-if="isMewCx">
             <router-link to="/#faqs" @click.native="isMenuOpen = false">
               <div class="menu-link-block">
                 <div>{{ $t('common.faqs') }}</div>
@@ -86,11 +102,12 @@
               class="menu-link-block"
               @click="langSelectorOpen = !langSelectorOpen"
             >
-              <div>{{ $t('common.language') }}</div>
+              <div>{{ $t('interface.language') }}</div>
               <div class="selected-lang">
                 <div>{{ currentLang }}</div>
                 <img
                   :src="require(`@/assets/images/flags/${currentFlag}.svg`)"
+                  alt
                 />
               </div>
               <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -98,13 +115,13 @@
           </li>
           <li v-if="account.address">
             <div class="menu-link-block" @click="opensettings">
-              <div>{{ $t('common.settings') }}</div>
+              <div>{{ $t('interface.settings') }}</div>
               <i class="fa fa-angle-right" aria-hidden="true"></i>
             </div>
           </li>
         </ul>
         <div v-if="account.address" class="logout-button" @click="logout">
-          <button>{{ $t('common.logout') }}</button>
+          <button>{{ $t('interface.logout') }}</button>
         </div>
       </div>
     </div>
@@ -119,6 +136,7 @@ import MobileAddressBlock from './components/MobileAddressBlock';
 import MobileBalanceBlock from './components/MobileBalanceBlock';
 import MobileNetworkBlock from './components/MobileNetworkBlock';
 import MobileLanguageSelector from './components/MobileLanguageSelector';
+import { Misc } from '@/helpers';
 
 export default {
   components: {
@@ -136,9 +154,14 @@ export default {
     logout: {
       type: Function,
       default: function() {}
+    },
+    buildType: {
+      type: String,
+      default: 'web'
     }
   },
   data() {
+    const isMewCx = Misc.isMewCx();
     return {
       localGasPrice: '10',
       balance: 0,
@@ -147,7 +170,8 @@ export default {
       isHomePage: true,
       langSelectorOpen: false,
       currentLang: 'English',
-      currentFlag: 'en'
+      currentFlag: 'en',
+      isMewCx: isMewCx
     };
   },
   computed: {

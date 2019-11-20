@@ -17,15 +17,19 @@
         <input
           ref="addressInput"
           v-model="selectedAddress"
+          :placeholder="$t('common.enter-addr')"
           type="text"
-          placeholder="Please enter the address"
           @focus="dropdownOpen = false"
         />
         <div v-if="!validAddress" class="blockie-place-holder-image" />
         <div v-if="validAddress" class="selected-address-blockie">
           <blockie :address="selectedAddress" width="30px" height="30px" />
           <div v-if="isToken(currency)">
-            <img class="currency-icon" src="@/assets/images/currency/eth.svg" />
+            <img
+              alt="Ethereum"
+              class="currency-icon"
+              src="@/assets/images/currency/eth.svg"
+            />
           </div>
           <div v-else>
             <i
@@ -52,6 +56,7 @@
             <div class="list-blockie">
               <blockie :address="addr.address" width="30px" height="30px" />
               <img
+                alt="Ethereum"
                 class="currency-icon"
                 src="@/assets/images/currency/eth.svg"
               />
@@ -69,7 +74,7 @@
               </p>
             </div>
             <p v-if="addr.address === currentAddress" class="address-note">
-              {{ $t('interface.myAddr') }}
+              {{ $t('common.my-addr') }}
             </p>
             <i
               v-if="toAddressCheckMark"

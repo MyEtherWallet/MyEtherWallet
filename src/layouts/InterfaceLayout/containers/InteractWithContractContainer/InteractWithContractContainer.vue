@@ -1,12 +1,12 @@
 <template>
   <div class="interact-with-contract-container">
-    <interface-container-title :title="$t('common.interactWcontract')" />
+    <interface-container-title :title="$t('contract.interact')" />
     <div v-if="!interact" class="interact-div">
       <div class="send-form contract-address-container">
         <div class="title-container">
           <div class="title">
             <h4 class="contract-address-title">
-              {{ $t('interface.contractAddr') }}
+              {{ $t('contract.addr') }}
             </h4>
             <div class="select-contract no-border">
               <currency-picker
@@ -22,9 +22,9 @@
           <input
             v-validate="'required'"
             v-model="address"
+            :placeholder="$t('contract.enter-addr')"
             type="text"
             name="nameAddr"
-            placeholder="Enter Contract Address"
           />
 
           <i
@@ -41,12 +41,12 @@
       <div class="send-form">
         <div class="title-container">
           <div class="title">
-            <h4>{{ $t('interface.abiJsonInt') }}</h4>
+            <h4>{{ $t('contract.abi-json-int') }}</h4>
             <div class="copy-buttons">
               <span @click="deleteInput('abi')">{{ $t('common.clear') }}</span>
-              <span @click="copyToClipboard('abi')">{{
-                $t('common.copy')
-              }}</span>
+              <span @click="copyToClipboard('abi')">
+                {{ $t('common.copy') }}
+              </span>
             </div>
           </div>
         </div>
@@ -72,7 +72,8 @@
           :class="[
             isValidAbi &&
             isValidAddress &&
-            (!errors.has('nameAddr') && !errors.has('abiField'))
+            !errors.has('nameAddr') &&
+            !errors.has('abiField')
               ? ''
               : 'disabled',
             'submit-button large-round-button-green-filled clickable'
@@ -80,20 +81,20 @@
           @click="switchView('forward')"
         >
           {{ $t('common.continue') }}
-          <img src="~@/assets/images/icons/right-arrow.png" />
+          <img src="~@/assets/images/icons/right-arrow.png" alt />
         </div>
         <interface-bottom-text
-          :link-text="$t('interface.helpCenter')"
-          :question="$t('interface.haveIssues')"
+          :link-text="$t('common.help-center')"
+          :question="$t('common.have-issues')"
           link="https://kb.myetherwallet.com"
         />
       </div>
     </div>
     <div v-else class="contract-methods-container">
-      <h4>Read/Write Contract</h4>
+      <h4>{{ $t('contract.read-write') }}</h4>
       <div class="contract-addr-container">
         <div class="contract-addr">
-          <p>Contract Address: {{ address }}</p>
+          <p>{{ $t('contract.addr') }}: {{ address }}</p>
         </div>
         <div class="picker-container">
           <currency-picker
@@ -138,7 +139,7 @@
                   :name="input.name"
                   type="radio"
                 />
-                <label :for="input.name">True</label>
+                <label :for="input.name">{{ $t('contract.true') }}</label>
               </div>
               <div class="bool-items">
                 <input
@@ -148,7 +149,7 @@
                   type="radio"
                   checked
                 />
-                <label :for="input.name">False</label>
+                <label :for="input.name">{{ $t('contract.false') }}</label>
               </div>
             </div>
             <i
@@ -170,7 +171,7 @@
         <div>
           <div class="title-container">
             <div class="title">
-              <h4>{{ $t('common.value') }} in ETH:</h4>
+              <h4>{{ $t('contract.value-in-eth') }}:</h4>
             </div>
           </div>
           <input
@@ -185,7 +186,7 @@
         <div v-if="selectedMethod.constant">
           <div class="title-container">
             <div class="title">
-              <h4>Result:</h4>
+              <h4>{{ $t('contract.result') }}:</h4>
             </div>
           </div>
           <div class="result-inputs">
@@ -211,9 +212,9 @@
                 :key="item.name + idx"
                 class="result-container"
               >
-                <label :for="item.name !== '' ? item.name : item.type + idx">{{
-                  item.name !== '' ? item.name : item.type | capitalize
-                }}</label>
+                <label :for="item.name !== '' ? item.name : item.type + idx">
+                  {{ item.name !== '' ? item.name : item.type | capitalize }}
+                </label>
                 <input
                   :name="item.name !== '' ? item.name : item.type + idx"
                   :value="result[idx]"
@@ -250,17 +251,17 @@
             @click="write"
           >
             <span v-show="!loading && !selectedMethod.constant">
-              {{ $t('interface.write') }}
+              {{ $t('contract.write') }}
             </span>
             <span v-show="!loading && selectedMethod.constant">{{
-              $t('interface.read')
+              $t('contract.read')
             }}</span>
             <i v-show="loading" class="fa fa-spinner fa-spin fa-lg" />
           </div>
         </div>
         <interface-bottom-text
-          :link-text="$t('interface.helpCenter')"
-          :question="$t('interface.haveIssues')"
+          :link-text="$t('common.help-center')"
+          :question="$t('common.have-issues')"
           link="https://kb.myetherwallet.com"
         />
       </div>
@@ -301,7 +302,10 @@ export default {
     ...mapState(['network', 'gasPrice', 'account', 'web3']),
     mergedContracts() {
       const customContracts = store.get('customContracts') || [];
-      return this.network.type.contracts.concat(customContracts);
+      const concatContracts = this.network.type.contracts.concat(
+        customContracts
+      );
+      return concatContracts;
     },
     isValidAbi() {
       return Misc.isJson(this.abi);
@@ -347,6 +351,9 @@ export default {
         });
       }
       return _contractArgs;
+    },
+    txValue() {
+      return Misc.sanitizeHex(unit.toWei(this.value, 'ether').toString(16));
     }
   },
   watch: {
@@ -427,11 +434,13 @@ export default {
     switchView(direction) {
       switch (direction) {
         case 'forward':
-          JSON.parse(this.abi).forEach(item => {
-            if (item.type !== 'constructor' && item.constant !== undefined) {
-              this.contractMethods.push(item);
-            }
-          });
+          if (this.abi !== '') {
+            JSON.parse(this.abi).forEach(item => {
+              if (item.type !== 'constructor' && item.constant !== undefined) {
+                this.contractMethods.push(item);
+              }
+            });
+          }
           this.interact = true;
           this.loading = false;
           break;
@@ -465,7 +474,10 @@ export default {
         const gasLimit = await contract.methods[this.selectedMethod.name](
           ...this.contractArgs
         )
-          .estimateGas({ from: this.account.address.toLowerCase() })
+          .estimateGas({
+            from: this.account.address.toLowerCase(),
+            value: this.txValue
+          })
           .then(res => {
             return res;
           })
@@ -484,7 +496,7 @@ export default {
             gas: gasLimit,
             nonce: nonce,
             gasPrice: Number(unit.toWei(this.gasPrice, 'gwei')),
-            value: 0,
+            value: this.txValue,
             to: this.address.toLowerCase(),
             data: data
           };

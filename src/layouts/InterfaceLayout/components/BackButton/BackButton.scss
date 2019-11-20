@@ -2,6 +2,10 @@
 
 .back-container {
   cursor: pointer;
+  display: flex;
+  align-items: cneter;
+  background-color: $background-color-white;
+  border-bottom: 2px solid $background-color-1;
 
   .back-icon-container {
     border: 1px solid $black;
@@ -24,8 +28,6 @@
 
   .content-title {
     align-items: center;
-    background-color: $background-color-white;
-    border-bottom: 2px solid $background-color-1;
     display: flex;
     padding: 20px 25px;
 
@@ -34,4 +36,8 @@
       font-weight: 500;
     }
   }
+}
+
+.right-slot {
+  margin-left: auto;
 }

@@ -20,7 +20,6 @@ const BModalStub = {
   }
 };
 
-//xdescribe
 describe('ByJsonFileContainer.vue', () => {
   let localVue, i18n, wrapper, store;
   beforeAll(() => {
@@ -51,8 +50,8 @@ describe('ByJsonFileContainer.vue', () => {
     const contentElements = wrapper.vm.$el.querySelectorAll(
       '.contents .content-block'
     );
-    for (let i = 0; i < contentElements.length; i++) {
-      const contentElement = contentElements[i];
+
+    for (const [i, contentElement] of contentElements.entries()) {
       expect(contentElement.querySelector('h6').textContent.trim()).toEqual(
         wrapper.vm.$data.contents[i].title
       );

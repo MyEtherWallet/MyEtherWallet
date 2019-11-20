@@ -3,7 +3,7 @@ import ByJsonBlock from '@/layouts/CreateWalletLayout/components/ByJsonBlock/ByJ
 
 import { Tooling } from '@@/helpers';
 
-describe('ByJsonBlock.vue', () => {
+xdescribe('ByJsonBlock.vue', () => {
   let localVue, i18n, wrapper, store;
   const img =
     'https://media.kasperskydaily.com/wp-content/uploads/sites/92/2016/09/06021623/bitcoin-easy-explanation-featured.jpg';

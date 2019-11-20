@@ -1,0 +1,61 @@
+@import '~@/scss/GlobalVariables';
+
+a {
+  text-decoration: none;
+  display: block;
+}
+
+.content-block {
+  background-image: url('~@/assets/images/ads/mewconnect.png');
+  background-size: cover;
+  background-position-x: right;
+  background-position-y: top;
+  background-repeat: no-repeat;
+  background-color: $light-green-7;
+  position: relative;
+  height: 137px;
+  width: 100%;
+  @media all and (max-width: 1024px) {
+    background-size: 385px;
+  }
+
+  .text-content {
+    position: relative;
+    padding: 20px 40px;
+
+    h3,
+    p {
+      color: $black;
+    }
+
+    h3 {
+      font-size: 1.6vw;
+      font-weight: 600;
+      margin-bottom: 5px;
+      text-shadow: 1px 2px 0 $white;
+
+      @media all and (min-width: 1900px) {
+        font-size: 33px;
+      }
+      @media all and (max-width: 1270px) {
+        font-size: 27px;
+      }
+    }
+
+    p {
+      font-size: 1vw;
+      font-weight: 400;
+      line-height: 1.3vw;
+      text-shadow: 1px 2px 0 $white;
+
+      @media all and (min-width: 1900px) {
+        font-size: 19px;
+        line-height: 22px;
+      }
+      @media all and (max-width: 1270px) {
+        font-size: 16px;
+        line-height: 22px;
+      }
+    }
+  }
+}

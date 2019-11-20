@@ -64,55 +64,51 @@
       :calc-collat-ratio-eth-chg="calcCollatRatioEthChg"
       :calc-liquidation-price-eth-chg="calcLiquidationPriceEthChg"
       :calc-liquidation-price-dai-chg="calcLiquidationPriceDaiChg"
+      :dest-address-has-proxy="destAddressHasProxy"
+      :dest-address-proxy="destAddressProxy"
       :tokens-with-balance="tokensWithBalance"
       @moveCdp="moveCdp"
+      @checkForProxy="checkIfDestAddressHasProxy"
     >
     </move-cdp-modal>
-    <interface-container-title :title="'MAKER'">
-      <template v-slot:right>
-        <div style="padding-left: 20px; cursor: pointer;">
-          <i
-            v-show="showRefresh"
-            class="fa fa-refresh"
-            @click="refreshExternal"
-          ></i>
-        </div>
+    <back-button :path="'/interface/dapps/'">
+      <div class="back-bar-container">
         <div v-if="showMoveOrClose" class="header-buttons-container">
           <div class="inner-container">
             <button class="move-btn" @click="showMove">
-              <h4>{{ $t('dappsMaker.moveTitle') }}</h4>
+              <h4>{{ $t('dappsMaker.move-title') }}</h4>
             </button>
             <div v-if="!((!hasProxy && !onCreate) || showCdpMigrateButtons)">
               <button class="close-btn" @click="showClose">
-                <h4>{{ $t('dappsMaker.closeTitle') }}</h4>
+                <h4>{{ $t('dappsMaker.close-title') }}</h4>
               </button>
             </div>
           </div>
         </div>
-      </template>
-    </interface-container-title>
-    <div v-show="makerActive" class="buttons-container">
+      </div>
+    </back-button>
+    <div v-if="makerActive" class="buttons-container">
       <div v-if="showCreateProxy">
         <div class="dapps-button" @click="buildProxy">
-          <h4>{{ $t('dappsMaker.createProxy') }}</h4>
+          <h4>{{ $t('dappsMaker.create-proxy') }}</h4>
         </div>
       </div>
       <div v-if="showCreateProxy" class="proxy-container">
-        {{ $t('dappsMaker.proxyInstructions') }}
+        {{ $t('dappsMaker.proxy-instructions') }}
       </div>
       <div v-if="showCdpMigrateButtons">
         <div v-for="(value, idx) in cdpsWithoutProxy" :key="idx + value">
           <div class="dapps-button">
             <div @click="migrateCdpExternal(value)">
               <h4>
-                {{ $t('dappsMaker.migrateCdp', { value: value }) }}
+                {{ $t('dappsMaker.migrate-cdp', { value: value }) }}
               </h4>
             </div>
           </div>
         </div>
       </div>
       <div v-if="showCdpMigrateButtons" class="proxy-container">
-        {{ $t('dappsMaker.migrateInstructions') }}
+        {{ $t('dappsMaker.migrate-instructions') }}
       </div>
     </div>
     <div v-show="makerActive" class="buttons-container">
@@ -125,7 +121,7 @@
             ]"
           >
             <div @click="openMigrate(value)">
-              <h4>CDP #{{ value }}</h4>
+              <h4>{{ $t('dappsMaker.cdp') }} #{{ value }}</h4>
             </div>
           </div>
         </div>
@@ -140,7 +136,7 @@
           ]"
         >
           <div @click="openManage(value)">
-            <h4>CDP #{{ value }}</h4>
+            <h4>{{ $t('dappsMaker.cdp') }} #{{ value }}</h4>
           </div>
         </div>
       </div>
@@ -169,6 +165,8 @@
       :values="activeValues"
       :get-cdp="getCdp"
       :has-cdp="hasCdp"
+      :loading-message1="$t('dappsMaker.initial-loading-one')"
+      :loading-message2="$t('dappsMaker.initial-loading-two')"
       @activeCdpId="setupCdpManage"
       @cdpOpened="addCdp"
       @cdpClosed="removeCdp"
@@ -246,6 +244,8 @@ export default {
   },
   data() {
     return {
+      destAddressProxy: '',
+      destAddressHasProxy: false,
       afterUpdate: [],
       allCdpIds: [],
       activeCdp: {},
@@ -447,6 +447,7 @@ export default {
       this.$refs.moveCdp.$refs.modal.$on('hidden', () => {
         this.$emit('modalHidden');
       });
+      this.destAddressHasProxy = false;
       this.$refs.moveCdp.$refs.modal.show();
     },
     async setup() {
@@ -557,7 +558,7 @@ export default {
     removeCdp(vals) {
       try {
         delete this.availableCdps[vals.id];
-        Toast.responseHandler('CDP Closed', Toast.INFO);
+        Toast.responseHandler(this.$t('dapps-maker.cdp-closed'), Toast.INFO);
       } catch (e) {
         // eslint-disable-next-line
         console.error(e);
@@ -628,24 +629,22 @@ export default {
       if (this.creatingCdp) {
         this.creatingCdp = false;
         await this.updateActiveCdp();
-        Toast.responseHandler('CDP Created', Toast.INFO);
+        Toast.responseHandler(this.$t('dapps-maker.cdp-closed'), Toast.INFO);
       } else {
         this.valuesUpdated++;
-        Toast.responseHandler('CDP Updated', Toast.INFO);
+        Toast.responseHandler(this.$t('dapps-maker.cdp-closed'), Toast.INFO);
       }
     },
 
     async checkAllowances() {
       if (this.proxyAddress) {
-        this._proxyAllowanceDai = (await this.daiToken.allowance(
-          this.account.address,
-          this.proxyAddress
-        )).toBigNumber();
+        this._proxyAllowanceDai = (
+          await this.daiToken.allowance(this.account.address, this.proxyAddress)
+        ).toBigNumber();
 
-        this._proxyAllowanceMkr = (await this.mkrToken.allowance(
-          this.account.address,
-          this.proxyAddress
-        )).toBigNumber();
+        this._proxyAllowanceMkr = (
+          await this.mkrToken.allowance(this.account.address, this.proxyAddress)
+        ).toBigNumber();
       }
     },
     async setupCdpManage(cdpId) {
@@ -746,7 +745,9 @@ export default {
         for (let i = 0; i < newCdpsWithoutProxy.length; i++) {
           this.activeCdps[newCdpsWithoutProxy[i]] = await this.buildCdpObject(
             newCdpsWithoutProxy[i],
-            { noProxy: true }
+            {
+              noProxy: true
+            }
           );
         }
       }
@@ -865,6 +866,17 @@ export default {
     },
     closeCdp() {
       this.currentCdp.closeCdp();
+    },
+    checkIfDestAddressHasProxy(val) {
+      this.currentCdp
+        .checkIfDestAddressHasProxy(val)
+        .then(result => {
+          this.destAddressProxy = result;
+          this.destAddressHasProxy = result !== null;
+        })
+        .catch(err => {
+          throw err;
+        });
     },
     moveCdp(val) {
       this.currentCdp.moveCdp(val);

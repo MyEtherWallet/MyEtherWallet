@@ -25,7 +25,8 @@ import {
   thundercore,
   solidum,
   metadium,
-  dexon
+  dexon,
+  lightstreamsNetwork
 } from './paths';
 export default [
   ethereum,
@@ -54,5 +55,6 @@ export default [
   thundercore,
   solidum,
   metadium,
-  dexon
+  dexon,
+  lightstreamsNetwork
 ];

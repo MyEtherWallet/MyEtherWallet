@@ -1,9 +1,7 @@
 <template>
-  <div class="user-reminder-button" popup="Security">
-    <div class="popup-box">{{ $t('header.security') }}</div>
-    <div class="button-block">
-      <img src="~@/assets/images/icons/acknowledge.png" />
-    </div>
+  <div class="user-reminder-button">
+    <img src="~@/assets/images/icons/acknowledge.png" />
+    <p>{{ $t('common.tutorial') }}</p>
   </div>
 </template>
 

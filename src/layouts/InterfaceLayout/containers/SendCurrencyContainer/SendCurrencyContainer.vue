@@ -1,12 +1,12 @@
 <template>
   <div class="send-currency-container">
-    <interface-container-title :title="$t('common.sendTx')" />
+    <interface-container-title :title="$t('sendTx.send-tx')" />
     <div class="send-form">
       <div class="form-block amount-to-address">
         <div class="amount">
           <div class="single-input-block">
             <div class="title">
-              <h4>{{ $t('interface.sendTxType') }}</h4>
+              <h4>{{ $t('sendTx.type') }}</h4>
             </div>
             <currency-picker
               :currency="tokensWithBalance"
@@ -18,20 +18,20 @@
           </div>
           <div class="single-input-block">
             <div class="title">
-              <h4>{{ $t('interface.sendTxAmount') }}</h4>
+              <h4>{{ $t('sendTx.amount') }}</h4>
               <p
                 class="title-button prevent-user-select"
                 @click="sendEntireBalance"
               >
-                Entire Balance
+                {{ $t('sendTx.button-entire') }}
               </p>
             </div>
             <div class="the-form amount-number">
               <input
                 v-validate="'min_value:0'"
-                v-model="value"
+                v-model="toValue"
+                :placeholder="$t('sendTx.amount')"
                 type="number"
-                placeholder="Amount"
                 min="0"
                 name="value"
                 step="any"
@@ -55,7 +55,7 @@
         <div class="to-address">
           <div class="title">
             <h4>
-              {{ $t('interface.sendTxToAddr') }}
+              {{ $t('sendTx.to-addr') }}
               <blockie
                 v-show="isValidAddress"
                 :address="hexAddress"
@@ -94,20 +94,21 @@
         </div>
         <div class="tx-fee">
           <div class="title">
-            <h4>
-              {{ $t('common.txFee') }}
-            </h4>
+            <h4>{{ $t('sendTx.tx-fee') }}</h4>
             <p class="copy-button prevent-user-select" @click="openSettings">
               {{ $t('common.edit') }}
             </p>
           </div>
           <div class="fee-value">
             <div class="gwei">
-              {{ gasPrice }} Gwei
+              {{ gasPrice }} {{ $t('common.gas.uppercase-gwei') }}
               <!--(Economic)-->
             </div>
             <div v-show="network.type.name === 'ETH'" class="usd">
-              Cost {{ txFeeEth }} ETH = ${{ convert }}
+              <i18n path="sendTx.cost-eth-convert" tag="div">
+                <span slot="txFeeEth">{{ txFeeEth }}</span>
+                <span slot="convert">{{ convert }}</span>
+              </i18n>
             </div>
           </div>
         </div>
@@ -119,7 +120,7 @@
         <div class="toggle-button-container">
           <h4>{{ $t('common.advanced') }}</h4>
           <div class="toggle-button">
-            <span>{{ $t('interface.dataGas') }}</span>
+            <span>{{ $t('sendTx.data-gas') }}</span>
             <!-- Rounded switch -->
             <div class="sliding-switch-white">
               <label class="switch">
@@ -138,11 +139,11 @@
         >
           <div class="margin-container">
             <div v-show="!isToken" class="the-form user-input">
-              <p>Add Data</p>
+              <p>{{ $t('sendTx.add-data') }}</p>
               <input
-                v-model="data"
+                v-model="toData"
+                :placeholder="$t('sendTx.ph-add-data')"
                 type="text"
-                placeholder="Add Data (e.g. 0x7834f874g298hf298h234f)"
                 autocomplete="off"
               />
               <i
@@ -154,10 +155,10 @@
               />
             </div>
             <div class="the-form user-input">
-              <p>{{ $t('common.gasLimit') | capitalize }}</p>
+              <p>{{ $t('common.gas.limit') | capitalize }}</p>
               <input
                 v-model="gasLimit"
-                :placeholder="$t('common.gasLimit')"
+                :placeholder="$t('common.gas.limit')"
                 type="number"
                 min="0"
                 name
@@ -183,11 +184,11 @@
         ]"
         @click="submitTransaction"
       >
-        {{ $t('interface.sendTx') }}
+        {{ $t('sendTx.send-tx') }}
       </div>
       <interface-bottom-text
-        :link-text="$t('interface.helpCenter')"
-        :question="$t('interface.haveIssues')"
+        :link-text="$t('common.help-center')"
+        :question="$t('common.have-issues')"
         link="https://kb.myetherwallet.com"
       />
     </div>
@@ -215,6 +216,42 @@ export default {
     'currency-picker': CurrencyPicker
   },
   props: {
+    checkPrefilled: {
+      type: Function,
+      default: () => {}
+    },
+    clearPrefilled: {
+      type: Function,
+      default: () => {}
+    },
+    isPrefilled: {
+      type: Boolean,
+      default: false
+    },
+    value: {
+      type: String,
+      default: '0'
+    },
+    data: {
+      type: String,
+      default: ''
+    },
+    to: {
+      type: String,
+      default: ''
+    },
+    gaslimit: {
+      type: String,
+      default: ''
+    },
+    gas: {
+      type: Number,
+      default: 0
+    },
+    tokensymbol: {
+      type: String,
+      default: ''
+    },
     tokensWithBalance: {
       type: Array,
       default: function() {
@@ -236,9 +273,9 @@ export default {
       isValidAddress: false,
       hexAddress: '',
       address: '',
-      value: '0',
+      toValue: '0',
       gasLimit: '21000',
-      data: '',
+      toData: '',
       selectedCurrency: '',
       ethPrice: 0
     };
@@ -266,31 +303,31 @@ export default {
     },
     isValidAmount() {
       const notEnoughGasMsg =
-        this.$t('errorsGlobal.notAValidAmountTotal') +
+        this.$t('errorsGlobal.not-valid-amount-total') +
         ' Gas ' +
-        this.$t('errorsGlobal.toSend');
+        this.$t('errorsGlobal.to-send');
       const notEnoughTokenMsg =
-        this.$t('errorsGlobal.notAValidAmountTotal') +
+        this.$t('errorsGlobal.not-valid-amount-total') +
         ' ' +
         this.selectedCurrency.symbol +
         ' ' +
-        this.$t('errorsGlobal.toSend');
+        this.$t('errorsGlobal.to-send');
       const notEnoughCurrencyMsg =
-        this.$t('errorsGlobal.notAValidAmountTotal') +
+        this.$t('errorsGlobal.not-valid-amount-total') +
         ' ' +
         this.network.type.currencyName +
         ' ' +
-        this.$t('errorsGlobal.toSend');
-      const invalidValueMsg = this.$t('errorsGlobal.invalidValue');
-      const enoughTokenBalance = new BigNumber(this.value).lte(
+        this.$t('errorsGlobal.to-send');
+      const invalidValueMsg = this.$t('errorsGlobal.invalid-value');
+      const enoughTokenBalance = new BigNumber(this.toValue).lte(
         this.selectedCurrency.balance
       );
-      const enoughCurrency = new BigNumber(this.value)
+      const enoughCurrency = new BigNumber(this.toValue)
         .plus(this.txFeeEth)
         .lte(this.balanceDefault);
       const enoughGas = new BigNumber(this.txFeeEth).lte(this.balanceDefault);
       const validDecimal = this.isValidDecimals;
-      if (new BigNumber(this.value).lt(0)) {
+      if (new BigNumber(this.toValue).lt(0)) {
         return {
           msg: invalidValueMsg,
           valid: false
@@ -319,7 +356,7 @@ export default {
       };
     },
     isValidDecimals() {
-      const decimals = (this.value + '').split('.')[1];
+      const decimals = (this.toValue + '').split('.')[1];
       if (!decimals) return true;
       if (this.isToken) {
         return decimals.length <= this.selectedCurrency.decimals;
@@ -327,7 +364,7 @@ export default {
       return decimals.length <= 18;
     },
     isValidData() {
-      return Misc.validateHexString(this.data);
+      return Misc.validateHexString(this.toData);
     },
     isValidGasLimit() {
       return new BigNumber(this.gasLimit).gte(0);
@@ -340,7 +377,7 @@ export default {
         this.isValidAmount.valid &&
         this.isValidAddress &&
         new BigNumber(this.gasLimit).gte(0) &&
-        Misc.validateHexString(this.data)
+        Misc.validateHexString(this.toData)
       );
     },
     isToken() {
@@ -350,17 +387,19 @@ export default {
     txData() {
       if (this.isToken) {
         return this.getTokenTransferABI(
-          this.value,
+          this.toValue,
           this.selectedCurrency.decimals
         );
       }
-      return Misc.sanitizeHex(this.data);
+      return Misc.sanitizeHex(this.toData);
     },
     txValue() {
       if (this.isToken) {
         return '0x00';
       }
-      return Misc.sanitizeHex(ethUnit.toWei(this.value, 'ether').toString(16));
+      return Misc.sanitizeHex(
+        ethUnit.toWei(this.toValue, 'ether').toString(16)
+      );
     },
     txTo() {
       return this.isToken
@@ -369,9 +408,9 @@ export default {
     },
     multiWatch() {
       return (
-        this.value,
+        this.toValue,
         this.isValidAddress,
-        this.data,
+        this.toData,
         this.selectedCurrency,
         new Date().getTime() / 1000
       );
@@ -391,44 +430,50 @@ export default {
     multiWatch: utils._.debounce(function() {
       if (this.validInputs) this.estimateGas();
     }, 500),
-    tokensWithBalance() {
-      if (Object.keys(this.linkQuery).length > 0) {
-        const { data, to, value, gaslimit, tokensymbol } = this.linkQuery;
-        const foundToken = tokensymbol
+    network(newVal) {
+      if (this.online && newVal.type.name === 'ETH') this.getEthPrice();
+    },
+    isPrefilled() {
+      this.prefillForm();
+    }
+  },
+  mounted() {
+    this.checkPrefilled();
+    if (this.online && this.network.type.name === 'ETH') this.getEthPrice();
+  },
+  methods: {
+    prefillForm() {
+      if (this.isPrefilled) {
+        const foundToken = this.tokensymbol
           ? this.tokensWithBalance.find(item => {
-              return item.symbol.toLowerCase() === tokensymbol.toLowerCase();
+              return (
+                item.symbol.toLowerCase() === this.tokensymbol.toLowerCase()
+              );
             })
           : undefined;
 
-        this.data = data ? (Misc.validateHexString(data) ? data : '') : '';
-        this.value = value ? new BigNumber(value).toFixed() : 0;
-        this.hexAddress = to ? to : '';
-        this.address = to ? to : '';
-        this.gasLimit = gaslimit ? new BigNumber(gaslimit).toString() : '21000';
-        this.selectedCurrency = foundToken ? foundToken : this.selectedCurrency;
+        this.toData = Misc.validateHexString(this.data) ? this.data : '';
+        this.toValue = this.value;
+        this.hexAddress = this.to;
+        this.address = this.to;
+        this.gasLimit = new BigNumber(this.gaslimit).toString();
 
+        this.selectedCurrency = foundToken ? foundToken : this.selectedCurrency;
+        this.advancedExpand = true;
         Toast.responseHandler(
           'Form has been prefilled. Please proceed with caution!',
           Toast.WARN
         );
-        this.$store.dispatch('saveQueryVal', {});
+        this.clearPrefilled();
       }
     },
-    network(newVal) {
-      if (this.online && newVal.type.name === 'ETH') this.getEthPrice();
-    }
-  },
-  mounted() {
-    if (this.online && this.network.type.name === 'ETH') this.getEthPrice();
-  },
-  methods: {
     openSettings() {
       this.$eventHub.$emit('open-settings');
     },
     sendEntireBalance() {
-      if (this.isToken) this.value = this.selectedCurrency.balance;
+      if (this.isToken) this.toValue = this.selectedCurrency.balance;
       else
-        this.value =
+        this.toValue =
           this.balanceDefault > 0
             ? this.balanceDefault.minus(
                 ethUnit.fromWei(
@@ -519,7 +564,8 @@ export default {
         .catch(e => {
           Toast.responseHandler(e, Toast.ERROR);
         });
-      this.ethPrice = price.data.ETH.quotes.USD.price;
+      this.ethPrice =
+        typeof price === 'object' ? price.data.ETH.quotes.USD.price : 0;
     },
     copyToClipboard(ref) {
       this.$refs[ref].select();

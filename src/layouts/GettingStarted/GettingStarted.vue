@@ -21,7 +21,6 @@
           <i class="fa fa-angle-down" aria-hidden="true" />
         </p>
       </div>
-
       <what-is-mew
         ref="cww1"
         :progress-bar-value="'__20percent'"
@@ -74,7 +73,7 @@
         <div class="create-wallet-warnings__footer">
           <div class="create-wallet-warnings__links">
             <router-link class="footer-color" to="/">
-              {{ $t('header.home') }}
+              {{ $t('common.home') }}
             </router-link>
             <router-link class="footer-color" to="/privacy-policy">
               {{ $t('footer.privacy') }}

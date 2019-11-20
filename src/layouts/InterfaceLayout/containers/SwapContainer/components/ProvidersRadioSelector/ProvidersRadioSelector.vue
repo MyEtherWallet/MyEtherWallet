@@ -1,7 +1,7 @@
 <template>
   <div class="providers-radio-selector">
     <!-- =========================================================================== -->
-    <div v-show="providerData.length > 0" class="radio-button-container">
+    <div v-show="displayToShow === 'rates'" class="radio-button-container">
       <ul>
         <li
           v-for="(provider, idx) in providerData"
@@ -18,13 +18,12 @@
               :value="provider.provider"
               type="radio"
               name="provider"
-              @input="setSelectedProvider(provider.provider)"
             />
 
             <label :for="provider.provider" />
           </div>
           <div class="provider-image">
-            <img :src="providerLogo(provider)" />
+            <img :src="providerLogo(provider)" alt />
           </div>
           <div
             :class="[
@@ -74,7 +73,7 @@
     </div>
     <!-- Animation while retrieving rates for available providers when switching to and from currencies-->
     <div
-      v-show="switchCurrencyOrder"
+      v-show="displayToShow === 'switchCurrencyOrder'"
       class="radio-button-container animated-background"
     >
       <ul>
@@ -83,7 +82,7 @@
             <input type="radio" name="provider" /> <label :for="provider" />
           </div>
           <div class="provider-image">
-            <img :src="providerLogo(provider)" />
+            <img :src="providerLogo(provider)" alt />
           </div>
           <div class="background-masker" />
         </li>
@@ -91,7 +90,7 @@
     </div>
     <!-- Animation while retrieving rates for available providers -->
     <div
-      v-show="loadingData"
+      v-show="displayToShow === 'loadingData'"
       class="radio-button-container animated-background"
     >
       <ul>
@@ -100,7 +99,7 @@
             <input type="radio" name="provider" /> <label :for="provider" />
           </div>
           <div class="provider-image">
-            <img :src="providerLogo(provider)" />
+            <img :src="providerLogo(provider)" alt />
           </div>
           <div class="background-masker" />
         </li>
@@ -114,11 +113,11 @@
     <!-- Animation while retrieving the supporting providers rates -->
     <!-- =========================================================================== -->
     <div
-      v-show="loadingProviderRates"
+      v-show="displayToShow === 'loadingProviderRates'"
       class="radio-button-container animated-background"
     >
       <div class="provider-loading-message">
-        {{ $t('interface.loadingProviders') }}
+        {{ $t('swap.providers.loading-rates') }}
       </div>
       <provider-info-list
         :all-supported-providers="allSupportedProviders"
@@ -128,7 +127,7 @@
     <!-- Message When Error Seems to have occured while retrieving rate -->
     <!-- =========================================================================== -->
     <div
-      v-show="loadingProviderError && !noAvaliableProviders"
+      v-show="displayToShow === 'loadingProviderError'"
       class="radio-button-container animated-background"
     >
       <ul>
@@ -136,26 +135,63 @@
           <div class="mew-custom-form__radio-button">
             <input type="radio" name="provider" />
           </div>
-          <div class="provider-image"><img :src="providerLogo('mew')" /></div>
+          <div class="provider-image">
+            <img :src="providerLogo('mew')" alt />
+          </div>
           <div>
-            {{ $t('interface.loadRateError') }}
-            {{ noProvidersPair.fromCurrency }} {{ $t('interface.articleTo') }}
+            {{ $t('swap.providers.load-rate-error') }}
+            {{ noProvidersPair.fromCurrency }}
+            {{ $t('swap.providers.article-to') }}
             {{ noProvidersPair.toCurrency }}
-            {{ $t('interface.pleaseTryAgain') }}
+            {{ $t('swap.warning.try-again') }}
           </div>
         </li>
       </ul>
     </div>
     <!-- Message when no valid provider is found for the selected pair -->
     <!-- =========================================================================== -->
-    <div v-show="noAvaliableProviders" class="radio-button-container">
+    <div
+      v-show="displayToShow === 'noAvailableProviders'"
+      class="radio-button-container"
+    >
       <div class="no-provider-message">
-        {{ $t('interface.noProviderFound') }}
+        {{ $t('swap.providers.no-provider-found') }}
       </div>
       <ul>
         <provider-info-list
           :all-supported-providers="allSupportedProviders"
           :unavailable-providers="unavailableProviders"
+        />
+      </ul>
+    </div>
+    <!-- =========================================================================== -->
+    <!-- Message when offline -->
+    <!-- =========================================================================== -->
+    <div v-show="displayToShow === 'offline'" class="radio-button-container">
+      <div class="no-provider-message">
+        {{ $t('swap.warning.no-swap-offline') }}
+      </div>
+      <ul>
+        <provider-info-list
+          :all-supported-providers="allSupportedProviders"
+          :unavailable-providers="unavailableProviders"
+        />
+      </ul>
+    </div>
+    <!-- =========================================================================== -->
+    <!-- Message when not mainnet -->
+    <!-- =========================================================================== -->
+    <div
+      v-show="displayToShow === 'onlyMainNet'"
+      class="radio-button-container"
+    >
+      <div class="no-provider-message">
+        {{ $t('swap.warning.swap-only-mainnet') }}
+      </div>
+      <ul>
+        <provider-info-list
+          :all-supported-providers="allSupportedProviders"
+          :unavailable-providers="allSupportedProviders"
         />
       </ul>
     </div>
@@ -174,6 +210,11 @@ import Changelly from '@/assets/images/etc/changelly.png';
 import bityBeta from '@/assets/images/etc/bitybeta.png';
 
 import ProviderInfoList from './ProviderInfoList';
+import { mapState } from 'vuex';
+
+const toBigNumber = num => {
+  return new BigNumber(num);
+};
 
 export default {
   components: {
@@ -222,6 +263,10 @@ export default {
         return {};
       }
     },
+    providerSelectedName: {
+      type: String,
+      default: ''
+    },
     fromValue: {
       type: Number,
       default: 0
@@ -237,6 +282,7 @@ export default {
   },
   data() {
     return {
+      onMainNet: true,
       providerChosen: '',
       otherProviderList: [],
       logos: {
@@ -253,7 +299,35 @@ export default {
     };
   },
   computed: {
-    noAvaliableProviders() {
+    ...mapState(['online', 'network']),
+    displayToShow() {
+      if (!this.online) {
+        return 'offline';
+      }
+      if (this.network.type.name !== 'ETH') {
+        return 'onlyMainNet';
+      }
+      if (this.loadingProviderRates) {
+        return 'loadingProviderRates';
+      }
+      if (this.loadingData) {
+        return 'loadingData';
+      }
+      if (this.providerData.length > 0) {
+        return 'rates';
+      }
+      if (this.switchCurrencyOrder) {
+        return 'switchCurrencyOrder';
+      }
+      if (this.noAvailableProviders) {
+        return 'noAvailableProviders';
+      }
+      if (this.loadingProviderError && !this.noAvailableProviders) {
+        return 'loadingProviderError';
+      }
+      return 'loadingData';
+    },
+    noAvailableProviders() {
       return (
         (this.providersFound.length === 0 || this.providerData.length === 0) &&
         !this.loadingData
@@ -271,8 +345,23 @@ export default {
         return this.allSupportedProviders.filter(entry => {
           return !activeProviders.includes(entry);
         });
-      } else if (this.noAvaliableProviders) {
+      } else if (this.noAvailableProviders) {
         return this.allSupportedProviders;
+      }
+    }
+  },
+  watch: {
+    loadingData(val) {
+      if (this.providerSelectedName !== '' && !val) {
+        this.$nextTick(() => {
+          this.$emit('selectedProvider', this.providerSelectedName);
+          const clickedEl = document.getElementsByClassName(
+            this.providerSelectedName
+          )[0];
+          clickedEl.classList.add('radio-selected');
+          const inputEl = document.getElementById(this.providerSelectedName);
+          inputEl.checked = true;
+        });
       }
     }
   },
@@ -335,25 +424,33 @@ export default {
     },
     minNote(details) {
       if (details.minValue > 0) {
-        return [`${details.minValue} ${details.fromCurrency} (From Min.)`];
+        return [
+          `${toBigNumber(details.minValue).toFixed(6)} ${
+            details.fromCurrency
+          } (From Min.)`
+        ];
       }
       return '';
     },
     maxNote(details) {
       if (details.maxValue > 0) {
-        return `${details.maxValue} ${details.fromCurrency} (Max.)`;
+        return `${toBigNumber(details.maxValue).toFixed(6)} ${
+          details.fromCurrency
+        } (Max.)`;
       }
       return '';
     },
     formatRateDisplay(fromValue, fromCurrency, toValue, toCurrency) {
-      return `${fromValue} ${fromCurrency} = ${toValue} ${toCurrency}`;
+      return `${toBigNumber(fromValue).toFixed(
+        6
+      )} ${fromCurrency} = ${toBigNumber(toValue).toFixed(6)} ${toCurrency}`;
     },
     normalizedRateDisplay(source) {
       const toValue = this.valueForRate(this.fromValue, source.rate);
       return `${source.fromValue} ${source.fromCurrency} = ${toValue} ${source.toCurrency}`;
     },
     valueForRate(rate, value) {
-      return new BigNumber(value)
+      return toBigNumber(value)
         .times(rate)
         .toFixed(6)
         .toString(10);
