@@ -3,8 +3,8 @@
     <v-container>
       <BlockTitle
         :centered="false"
-        title="Why Mew"
-        description="Make Ethereum Blockchain easy and secure"
+        toptitle="Why Mew"
+        title="Make Ethereum Blockchain easy and secure"
       />
       <div class="pt-10 d-flex">
         <FriendlyToUse class="box-shadow mr-10" />

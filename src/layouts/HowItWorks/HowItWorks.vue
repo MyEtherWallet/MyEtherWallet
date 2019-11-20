@@ -1,6 +1,7 @@
 <template>
   <div>
     <PageTitle title="How it works" />
+    <div class="pt-7" />
     <TabContent />
   </div>
 </template>
