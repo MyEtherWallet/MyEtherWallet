@@ -104,7 +104,6 @@ export async function checkAllowances(self, address, proxyAddress) {
           typeof self.tokens[keys[i]]._contract !== 'undefined' &&
           typeof self.tokens[keys[i]]._contract.allowance === 'function'
         ) {
-          console.log(self.tokens[keys[i]]); // todo remove dev item
 
           self.proxyAllowances[keys[i]] = toBigNumber(
             await self.tokens[keys[i]]._contract.allowance(
@@ -113,7 +112,6 @@ export async function checkAllowances(self, address, proxyAddress) {
             ) // TODO likely not part of the public (stable) API
             // await self.tokens[keys[i]].allowance(address, proxyAddress) // TODO return to this to see if they fixed it
           );
-          console.log(keys[i], self.proxyAllowances[keys[i]].toString()); // todo remove dev item
         } else {
           self.proxyAllowances[keys[i]] = toBigNumber(0);
         }
@@ -301,6 +299,7 @@ export async function buildCdpObject(cdpId, options = {}, useOld = false) {
     cdpsWithType: this.cdpsWithType
   };
 
+  console.log('this.mcdCurrencies', this.mcdCurrencies); // todo remove dev item
   const services = {
     address: this.account.address,
     _typeService: this._typeService,

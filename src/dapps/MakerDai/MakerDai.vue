@@ -475,7 +475,6 @@ export default {
         console.log(this._typeService.cdpTypes); // todo remove dev item
         this.mcdCurrencies = this._typeService.cdpTypes.reduce((acc, entry) => {
           // acc[entry.ilk] = entry;
-          console.log(entry.liquidationRatio._amount.toString()); // todo remove dev item
           acc[entry.currency.symbol] = entry;
           acc[entry.currency.symbol].symbol = entry.currency.symbol;
           return acc;
@@ -595,12 +594,6 @@ export default {
             this._mcdManager
             // this._cdpService
           );
-          console.log(
-            'withType, withProxy, withoutProxy',
-            withType,
-            withProxy,
-            withoutProxy
-          ); // todo remove dev item
           this.cdpsWithType = withType;
           this.cdps = withProxy;
           this.cdpsWithoutProxy = withoutProxy;

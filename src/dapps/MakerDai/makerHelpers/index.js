@@ -25,7 +25,8 @@ import {
   displayFixedValue,
   displayPercentValue,
   CdpNum,
-  toBigNumber
+  toBigNumber,
+  bnOver
 } from './helpers';
 import {
   migrateABI,
@@ -65,6 +66,7 @@ export {
   CdpNum,
   doUpdate,
   toBigNumber,
+  bnOver,
   addresses,
   // ABIs
   migrateABI,

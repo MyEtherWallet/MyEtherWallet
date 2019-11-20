@@ -10,7 +10,9 @@ import {
   displayFixedValue,
   addresses,
   ERC20,
-  Spotter
+  Spotter,
+  toBigNumber,
+  bnOver
 } from '../makerHelpers';
 import {
   ETH,
@@ -28,32 +30,10 @@ import ethUnit from 'ethjs-unit';
 import MakerCdpBase from './MakerCdpBase';
 const { DAI } = Maker;
 
-const toBigNumber = num => {
-  return new BigNumber(num);
-};
 
 export default class MakerCDP extends MakerCdpBase {
   constructor(cdpId, web3, services, sysVars) {
     super(cdpId, web3, services, sysVars);
-    if (cdpId === null) {
-      this.cdpId = cdpId;
-    } else {
-      this.cdpId = typeof cdpId !== 'number' ? cdpId.id : cdpId;
-    }
-    this.cdpIdFull = cdpId;
-    this.cdp = {};
-    this.web3 = web3 || {};
-    this.ready = false;
-    this.doUpdate = 0;
-    this.cdps = [];
-    this.noProxy = sysVars.noProxy || false;
-    this.services = services || null;
-    this.needsUpdate = false;
-    this.closing = false;
-    this.opening = false;
-    this.migrated = false;
-    this.migrateCdpActive = false;
-    this.migrateCdpStage = 0;
   }
 
   // Getters
@@ -127,74 +107,7 @@ export default class MakerCDP extends MakerCdpBase {
     return this;
   }
 
-  async getProxy() {
-    this._proxyAddress = await this.services.getProxy();
-  }
-
-  // Gat balances/values ===============================================================================================
-
-  async getCombinedDebtValue(proxyAddress = this._proxyAddress) {
-    return this.mcdManager.getCombinedDebtValue(proxyAddress);
-  }
-
-  setType(type){
-    if(this.cdpId === null){
-      this.cdpTypeObject = getMakerCurrencies()[type.symbol]
-    }
-  }
-
-  async getLiquidationRatioFor(type) {
-return this.mcdCurrencies[type].liquidationRatio._amount;
-    // const contract = new this.web3.eth.Contract(Spotter, addresses.MCD_GOV);
-    // const result = await contract.methods
-    //   .allowance(this.currentAddress, this.proxyAddress)
-    //   .call();
-  }
-
-  // ====================================================================================================================
-
-  // get (non-getter) methods
-  getBalanceOf(currency) {
-    console.log(currency, this.services.balances[currency].toString()); // todo remove dev item
-    if (this.services.balances[currency]) {
-      return this.services.balances[currency];
-    }
-    return toBigNumber(0);
-  }
-
-  getProxyAllowancefor(currency) {
-    return this.services.proxyAllowances[currency];
-  }
-
-  async getRawProxyAllowanceforMkr() {
-    const contract = new this.web3.eth.Contract(ERC20, addresses.MCD_GOV);
-    const result = await contract.methods
-      .allowance(this.currentAddress, this.proxyAddress)
-      .call();
-    console.log(result); // todo remove dev item
-    return result;
-    // return this.services.proxyAllowances[currency];
-  }
-
-  getTokenObjectFor(currency) {
-    return this.services.tokens[currency];
-  }
-
-  async checkIfDestAddressHasProxy(address) {
-    await this.getProxy();
-    const proxy = await this.proxyService.getProxyAddress(address);
-    return proxy;
-  }
-
-  enoughMkrToWipe(amount) {
-    return this.cdpService.enoughMkrToWipe(amount, DAI.wei);
-  }
-
-  // Calculations
-
-  toPeth(eth) {
-    return this.services.toPeth(eth);
-  }
+  // ====================== alphabetical (roughly) ============================
 
   calcCollatRatio(ethQty, daiQty) {
     if (ethQty <= 0 || daiQty <= 0) return toBigNumber(0);
@@ -238,6 +151,88 @@ return this.mcdCurrencies[type].liquidationRatio._amount;
     return toBigNumber(this.calcLiquidationPrice(ethQty, this.debtValue));
   }
 
+  async checkIfDestAddressHasProxy(address) {
+    await this.getProxy();
+    const proxy = await this.proxyService.getProxyAddress(address);
+    return proxy;
+  }
+
+  enoughMkrToWipe(amount) {
+    return this.cdpService.enoughMkrToWipe(amount, DAI.wei);
+  }
+
+
+  async getProxy() {
+    this._proxyAddress = await this.services.getProxy();
+  }
+
+
+  async getCombinedDebtValue(proxyAddress = this._proxyAddress) {
+    return this.mcdManager.getCombinedDebtValue(proxyAddress);
+  }
+
+  setType(type){
+    if(this.cdpId === null){
+      this.cdpTypeObject = this.services.mcdCurrencies[type.symbol]
+    }
+  }
+
+  minDeposit(
+    daiQty = 20,
+    ethPrice = this.currentPrice,
+    liquidationRatio = this.liquidationRatio
+  ) {
+    if (daiQty <= 0) daiQty = 20;
+    console.log(liquidationRatio, daiQty, ethPrice); // todo remove dev item
+    console.log('calcMinDeposite', bnOver(liquidationRatio, daiQty, ethPrice)); // todo remove dev item
+    return bnOver(liquidationRatio, daiQty, ethPrice);
+  }
+
+
+  minDepositFor(){
+
+  }
+  // ====================================================================================================================
+
+  // get (non-getter) methods
+  getBalanceOf(currency) {
+    console.log('getBalanceOf', currency, this.services.balances[currency].toString()); // todo remove dev item
+    if (this.services.balances[currency]) {
+      return this.services.balances[currency];
+    }
+    return toBigNumber(0);
+  }
+
+  getProxyAllowancefor(currency) {
+    return this.services.proxyAllowances[currency];
+  }
+
+  async getRawProxyAllowanceforMkr() {
+    const contract = new this.web3.eth.Contract(ERC20, addresses.MCD_GOV);
+    const result = await contract.methods
+      .allowance(this.currentAddress, this.proxyAddress)
+      .call();
+    console.log(result); // todo remove dev item
+    return result;
+    // return this.services.proxyAllowances[currency];
+  }
+
+  getTokenObjectFor(currency) {
+    return this.services.tokens[currency];
+  }
+
+
+
+
+
+  // Calculations
+
+  toPeth(eth) {
+    return this.services.toPeth(eth);
+  }
+
+
+
   // Helpers
   minInSelectedCurrency(symbol) {
     const minEth = toBigNumber(this.pethMin).times(this.wethToPethRatio);
@@ -249,8 +244,7 @@ return this.mcdCurrencies[type].liquidationRatio._amount;
 
   getCurrentPriceFor(symbol) {
     if (!symbol) return 0;
-    this.getTokenObjectFor(symbol).price._amount.toString();
-    return 0;
+    return this.getPriceOfCurrency(symbol);
   }
 
   collateralOptions() {
@@ -264,8 +258,6 @@ return this.mcdCurrencies[type].liquidationRatio._amount;
   }
 
   hasEnough(ethQty, currency = 'ETH', balance = null) {
-    // return true;
-    // console.log(ethQty); // todo remove dev item
     if (toBigNumber(ethQty).isNaN()) return false;
     const _ethQty = toBigNumber(ethQty).toFixed(18);
     if (currency === 'ETH' && balance !== null) {
@@ -284,14 +276,6 @@ return this.mcdCurrencies[type].liquidationRatio._amount;
     if (currency === 'ETH') return true;
     const _ethQty = toBigNumber(ethQty).toFixed(18);
     const currentAllowance = this.getProxyAllowancefor(currency);
-    // console.log(currentAllowance.gt(_ethQty)); // todo remove dev item
-    // console.log(currentAllowance.toString()); // todo remove dev item
-    // console.log(
-    //   toBigNumber(ethUnit.toWei(_ethQty, 'ether').toString()).toString()
-    // ); // todo remove dev item
-    // console.log( toBigNumber(currentAllowance).gte(
-    //   toBigNumber(ethUnit.toWei(_ethQty, 'ether').toString())
-    // )); // todo remove dev item
     return toBigNumber(currentAllowance).gte(
       toBigNumber(ethUnit.toWei(_ethQty, 'ether').toString())
     );

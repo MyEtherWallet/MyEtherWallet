@@ -8,7 +8,7 @@ import {
   calcLiquidationPrice
 } from '../makerHelpers';
 
-import * as maths from './daiMath'
+import * as maths from './daiMath';
 
 const toBigNumber = num => {
   return new BigNumber(num);
@@ -17,7 +17,7 @@ const toBigNumber = num => {
 // Basically just to hold the various getters and static methods to somewhat de-clutter the implementation
 export default class MakerCdpBase {
   constructor(cdpId, web3, services, sysVars) {
-    if(cdpId === null){
+    if (cdpId === null) {
       this.cdpId = cdpId;
     } else {
       this.cdpId = typeof cdpId !== 'number' ? cdpId.id : cdpId;
@@ -30,7 +30,9 @@ export default class MakerCdpBase {
     this.cdps = [];
     this.noProxy = sysVars.noProxy || false;
     this.sysVars = sysVars; // todo make sure this doesn't bring in the issue with vue walking the tree and breaking things
-    this.cdpType = this.cdpId ? sysVars.cdpsWithType[this.cdpId] : getMakerCurrencies()['ETH'];
+    this.cdpType = this.cdpId
+      ? sysVars.cdpsWithType[this.cdpId]
+      : 'ETH';
     this.services = services || null;
     this.needsUpdate = false;
     this.closing = false;
@@ -38,7 +40,7 @@ export default class MakerCdpBase {
     this.migrated = false;
     this.migrateCdpActive = false;
     this.migrateCdpStage = 0;
-    this.cdpTypeObject = this.cdpId ? getMakerCurrencies()[this.cdpType] : getMakerCurrencies()['ETH'];
+    this.cdpTypeObject = this.services.mcdCurrencies[this.cdpCollateralType];
 
     this._liqPrice = toBigNumber(0);
     this.isSafe = false;
@@ -48,10 +50,11 @@ export default class MakerCdpBase {
     this.pethCollateral = toBigNumber(0);
     this._usdCollateral = toBigNumber(0);
     this._governanceFee = toBigNumber(12345);
-  }
+      }
 
   // Getters
   get cdpCollateralType() {
+    console.log(this.cdpType); // todo remove dev item
     return this.cdpType.replace(/-[A-Z]/, '');
   }
 
@@ -60,6 +63,8 @@ export default class MakerCdpBase {
   }
 
   get currentPrice() {
+    console.log(this.cdpType); // todo remove dev item
+    console.log('price', this.mcdCurrencies[this.cdpCollateralType].price._amount); // todo remove dev item
     return this.mcdCurrencies[this.cdpCollateralType].price._amount.toString();
   }
 
@@ -146,15 +151,13 @@ export default class MakerCdpBase {
   }
 
   get liquidationRatio() {
-    console.log('liquidationRatio this.cdp', this.cdp); // todo remove dev item
-    console.log('this.cdpTypeObject', this.cdpTypeObject.liquidationRatio); // todo remove dev item
     if (Object.keys(this.cdp).length > 0) {
       return toBigNumber(this.cdp.type.liquidationRatio._amount);
     }
-    console.log('this.cdpTypeObject.liquidationRatio._amount', this.cdpTypeObject.liquidationRatio._amount); // todo remove dev item
+    console.log('liquidationRatio', this.cdpTypeObject.liquidationRatio._amount); // todo remove dev item
     return toBigNumber(this.cdpTypeObject.liquidationRatio._amount);
-    return toBigNumber(0);
   }
+
 
   get liquidationPrice() {
     return calcLiquidationPrice(

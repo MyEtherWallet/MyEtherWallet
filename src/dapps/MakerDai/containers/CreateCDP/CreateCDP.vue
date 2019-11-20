@@ -51,7 +51,7 @@
             </p>
             <p>
               {{ $t('dappsMaker.minCollat') }}
-              <b>{{ displayFixedValue(minInSelectedCurrency, 6) }}</b>
+              <b>{{ displayFixedValue(minDeposit, 6) }}</b>
               {{ selectedCurrency.symbol }}
             </p>
           </div>
@@ -92,7 +92,7 @@
           <li>
             <p>{{ $t('dappsMaker.minEthReq') }}</p>
             <p>
-              {{ displayFixedValue(minInSelectedCurrency, 6) }}
+              {{ displayFixedValue(minDeposit, 6) }}
               {{ selectedCurrency.symbol }}
             </p>
           </li>
@@ -326,7 +326,7 @@ export default {
     },
 
     minInSelectedCurrency() {
-      return this.minEthDeposit;
+      return this.minDeposit;
     },
     atSetFloor() {
       if (this.priceFloor <= 0) return 0;
@@ -342,17 +342,13 @@ export default {
     },
     liquidationRatio(){
       if(this.emptyMakerCreated){
-        return this.makerCDP.mcdCurrencies[this.selectedCurrency].liquidationRatio._amount
+        return this.makerCDP.liquidationRatio
       }
     },
     maxDaiDraw() {
       if (this.ethQty <= 0) return 0;
       const bufferVal = this.calcDaiDraw(this.ethQty).times(0.01);
       return toBigNumber(this.calcDaiDraw(this.ethQty)).minus(bufferVal);
-    },
-    minEthDeposit() {
-      // if (this.daiQty <= 0) return 0;
-      return this.calcMinEthDeposit(20);
     },
     risky() {
       const collRatio = this.collatRatio;
@@ -385,13 +381,22 @@ export default {
       }
     },
     getCurrentPrice() {
-      return this.getCurrentPriceFor(this.selectedCurrency.symbol);
+      if(this.emptyMakerCreated){
+        return this.makerCDP.getCurrentPriceFor(this.selectedCurrency.symbol);
+      }
+      // return this.getCurrentPriceFor(this.selectedCurrency.symbol);
+    },
+    minDeposit() {
+      if(this.emptyMakerCreated){
+        return this.makerCDP.minDepositFor(this.selectedCurrency.symbol);
+      }
+      // return this.getCurrentPriceFor(this.selectedCurrency.symbol);
     }
   },
   watch: {
     selectedCurrency(val){
       if(this.emptyMakerCreated){
-        console.log(val); // todo remove dev item
+        console.log('selectedCurrency', val); // todo remove dev item
         this.makerCDP.setType(val)
       }
     }
@@ -431,28 +436,28 @@ export default {
       this.makerCDP = await this.buildEmpty();
       this.$forceUpdate();
       this.emptyMakerCreated = true;
-      console.log('mcdCurrencies val:', this.makerCDP.mcdCurrencies); // todo remove dev item
+      console.log("empty built"); // todo remove dev item
     },
     displayPercentValue,
     displayFixedValue,
     displayFixedPercent,
     async openCdp() {
-      // this.loading = true;
-      //
-      // if (this.ethQty <= 0) return 0;
-      // setTimeout(() => {
-      //   this.loading = false;
-      // }, 5000);
-      //
-      // // [Note from David to Steve] This should be implemented on TX core.
-      // // Close DAI confirmation modal
-      // this.$eventHub.$on('showTxConfirmModal', () => {
-      //   this.$emit('cdpOpened');
-      //   if (this.loading) {
-      //     this.$refs.daiconfirmation.$refs.modal.hide();
-      //     this.loading = false;
-      //   }
-      // });
+      this.loading = true;
+
+      if (this.ethQty <= 0) return 0;
+      setTimeout(() => {
+        this.loading = false;
+      }, 5000);
+
+      // [Note from David to Steve] This should be implemented on TX core.
+      // Close DAI confirmation modal
+      this.$eventHub.$on('showTxConfirmModal', () => {
+        this.$emit('cdpOpened');
+        if (this.loading) {
+          this.$refs.daiconfirmation.$refs.modal.hide();
+          this.loading = false;
+        }
+      });
 
       await this.makerCDP.openCdp(
         this.getValueOrFunction('mcdCurrencies')[this.selectedCurrency.symbol],
@@ -473,7 +478,6 @@ export default {
     },
     hasEnough() {
       // return true;
-      console.log(this.makerCDP); // todo remove dev item
       if (this.makerCDP) {
         return this.makerCDP.hasEnough(
           this.ethQty,
@@ -496,12 +500,6 @@ export default {
     },
     hasEnoughAllowance() {
       if (this.emptyMakerCreated) {
-        console.log(
-          this.makerCDP.hasEnoughAllowance(
-            this.ethQty,
-            this.selectedCurrency.symbol
-          )
-        ); // todo remove dev item
         return this.makerCDP.hasEnoughAllowance(
           this.ethQty,
           this.selectedCurrency.symbol
@@ -519,18 +517,14 @@ export default {
       if (ethQty <= 0) return 0;
       return bnOver(ethPrice, toBigNumber(ethQty), liquidationRatio);
     },
-
-    calcMinEthDeposit(
-      daiQty,
-      ethPrice = this.getCurrentPrice,
-      liquidationRatio = this.liquidationRatio
-    ) {
-      console.log('calcMinEthDeposit'); // todo remove dev item
-      if (daiQty <= 0) return 0;
-      console.log(bnOver(liquidationRatio, daiQty, ethPrice)); // todo remove dev item
-      return bnOver(liquidationRatio, daiQty, ethPrice);
-    },
-
+    // minDeposit() {
+    //   console.log('this.emptyMakerCreated', this.emptyMakerCreated); // todo remove dev item
+    //   if(this.emptyMakerCreated){
+    //     return this.makerCDP.calcMinDeposit(this.daiQty);
+    //   }
+    //   console.log('dfgdfgdgdfgdgdfgdfgdfgdfgdfgdfgf'); // todo remove dev item
+    //   return "--"
+    // },
     calcCollatRatio(ethQty, daiQty) {
       if (ethQty <= 0 || daiQty <= 0) return 0;
       return bnOver(this.getCurrentPrice, ethQty, daiQty);
