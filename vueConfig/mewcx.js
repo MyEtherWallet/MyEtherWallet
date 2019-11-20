@@ -22,11 +22,6 @@ const webpackConfig = {
   node: {
     process: true
   },
-  optimization: {
-    splitChunks: {
-      chunks: 'all'
-    }
-  },
   plugins: defaultConfig.plugins.concat([
     new CopyWebpackPlugin([
       {
@@ -44,7 +39,7 @@ const webpackConfig = {
             } else {
               json.version = version;
             }
-            json.browser_action.default_popup = `browserAction.html`;
+            json.browser_action.default_popup = `iframe-temp.html`;
             Object.keys(json).forEach(key => {
               if (hasJSFile.includes(key)) {
                 if (Array.isArray(json[key])) {
@@ -99,9 +94,10 @@ const exportObj = {
       entry: 'src/builds/mewcx/public/page.js',
       template: 'src/builds/mewcx/public/page.html',
       filename: 'page.html',
-      jsFolder: process.env.NODE_ENV === 'production'
-      ? 'js/background.js'
-      : 'background.js'
+      jsFolder:
+        process.env.NODE_ENV === 'production'
+          ? 'js/background.js'
+          : 'background.js'
     }
   },
   publicPath: './',
