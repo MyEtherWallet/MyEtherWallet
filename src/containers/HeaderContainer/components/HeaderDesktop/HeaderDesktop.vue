@@ -20,7 +20,7 @@
           <v-menu open-on-hover bottom offset-y transition="fade-transition">
             <template v-slot:activator="{ on }">
               <v-btn class="mx-3" text :ripple="false" v-on="on">
-                About<MenuOpenArrow
+                About us<MenuOpenArrow
               /></v-btn>
             </template>
             <v-list min-width="200px" class="pa-5">
