@@ -101,7 +101,8 @@
               >{{ $t('dappsAmbrpay.manage-subscriptions.title') }}
             </b-button>
             <b-button
-              :class="[isValidInput ? '' : 'disabled', 'mew-btn']"
+              :class="[isValidInput ? '' : 'disabled']"
+              class="mew-btn"
               @click="startSubscription"
               >{{ $t('dappsAmbrpay.start-recurring') }}</b-button
             >
