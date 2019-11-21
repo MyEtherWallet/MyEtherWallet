@@ -13,10 +13,10 @@ export default async ({ event, payload }, _, next) => {
     if (accounts.length > 0) {
       chrome.windows.create({
         url: chrome.runtime.getURL(
-          `popup.html#/account-access?connectionRequest=${payload.url}&${q}`
+          `popupLoading.html#?to=account-access&connectionRequest=${payload.url}&${q}`
         ),
         type: 'popup',
-        height: 460,
+        height: 475,
         width: 300,
         focused: true
       });
