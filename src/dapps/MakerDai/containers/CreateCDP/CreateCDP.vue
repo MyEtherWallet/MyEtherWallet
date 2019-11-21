@@ -381,12 +381,15 @@ export default {
       }
     },
     getCurrentPrice() {
+      console.log(this.selectedCurrency); // todo remove dev item
+
       if(this.emptyMakerCreated){
         return this.makerCDP.getCurrentPriceFor(this.selectedCurrency.symbol);
       }
       // return this.getCurrentPriceFor(this.selectedCurrency.symbol);
     },
     minDeposit() {
+      console.log(this.selectedCurrency); // todo remove dev item
       if(this.emptyMakerCreated){
         return this.makerCDP.minDepositFor(this.selectedCurrency.symbol);
       }
