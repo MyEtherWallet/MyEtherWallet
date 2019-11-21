@@ -2,8 +2,8 @@
   <v-sheet max-width="400px">
     <v-img
       src="@/assets/images/Common/Icons/Community.svg"
-      max-width="60px"
-      max-height="60px"
+      max-width="65px"
+      max-height="65px"
       aspect-ratio="1"
       class="mb-5"
     />
@@ -14,12 +14,13 @@
         icon
         :color="iconColor"
         :class="buttonClass"
-        href="https://github.com/myetherwallet"
+        href="https://t.me/myetherwallet"
         target="_blank"
       >
         <v-icon :class="iconClass">mdi-telegram</v-icon>
       </v-btn>
       <v-btn
+        v-if="false"
         text
         icon
         :color="iconColor"
@@ -34,7 +35,7 @@
         icon
         :color="iconColor"
         :class="buttonClass"
-        href="https://github.com/myetherwallet"
+        href="https://www.reddit.com/r/MyEtherWallet/"
         target="_blank"
       >
         <v-icon :class="iconClass">mdi-reddit</v-icon>

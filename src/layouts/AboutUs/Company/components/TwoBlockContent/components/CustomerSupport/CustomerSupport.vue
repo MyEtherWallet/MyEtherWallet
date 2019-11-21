@@ -2,8 +2,8 @@
   <v-sheet max-width="400px">
     <v-img
       src="@/assets/images/Common/Icons/CustomerSupport.svg"
-      max-width="60px"
-      max-height="60px"
+      max-width="65px"
+      max-height="65px"
       aspect-ratio="1"
       class="mb-5"
     />
