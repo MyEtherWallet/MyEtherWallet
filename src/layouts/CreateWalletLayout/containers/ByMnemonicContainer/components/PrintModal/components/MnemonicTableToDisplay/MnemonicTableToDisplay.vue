@@ -23,12 +23,14 @@
         {{ parent.$t('createWallet.mnemonic.table.safe-place') }}
       </h3>
       <i18n tag="p" path="createWallet.mnemonic.table.cannot-change-pw">
-        <span slot="cannot">{{ parent.$t('createWallet.table.cannot') }}</span>
-        <span slot="dont-forget"
-          >{{ parent.$t('createWallet.table.dont-forget') }}
+        <span slot="cannot">{{
+          parent.$t('createWallet.mnemonic.table.cannot')
+        }}</span>
+        <span slot="do-not-forget"
+          >{{ parent.$t('createWallet.mnemonic.table.dont-forget') }}
         </span>
         <span slot="password">{{
-          parent.$t('createWallet.table.requirements')
+          parent.$t('createWallet.mnemonic.table.requirements')
         }}</span>
       </i18n>
     </div>
