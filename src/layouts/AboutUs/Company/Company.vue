@@ -5,10 +5,13 @@
     <WhatIsMew />
     <div class="py-7" />
     <OurStory />
-    <div class="py-7" />
+    <div class="py-10" />
+    <TwoBlockContent />
+    <div class="py-10" />
     <Partners />
-    <div class="py-7" />
+    <div class="py-9" />
     <Ad2 />
+    <div class="py-1" />
   </div>
 </template>
 
@@ -18,9 +21,17 @@ import Partners from '@/layouts/HomeLayout/components/Partners';
 import Ad2 from '@/layouts/HomeLayout/components/Ad2';
 import WhatIsMew from './components/WhatIsMew';
 import OurStory from './components/OurStory';
+import TwoBlockContent from './components/TwoBlockContent';
 
 export default {
-  components: { PageTitle, Partners, Ad2, WhatIsMew, OurStory },
+  components: {
+    PageTitle,
+    Partners,
+    Ad2,
+    WhatIsMew,
+    OurStory,
+    TwoBlockContent
+  },
   data: () => ({})
 };
 </script>
