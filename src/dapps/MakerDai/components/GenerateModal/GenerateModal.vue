@@ -348,11 +348,6 @@ export default {
     },
     newCollateralRatio() {
       if (this.currentCdp && this.amount > 0) {
-        console.log(
-          this.currentCdp
-            .calcCollatRatioDaiChg(toBigNumber(this.amount), true)
-            .toString()
-        ); // todo remove dev item
         return this.currentCdp.calcCollatRatioDaiChg(
           toBigNumber(this.amount),
           true
@@ -384,12 +379,6 @@ export default {
     },
     newLiquidationPrice() {
       if (this.currentCdp && this.amount > 0) {
-        console.log(
-          'newLiquidationPrice',
-          this.currentCdp
-            .calcLiquidationPriceDaiChg(toBigNumber(this.amount), true)
-            .toString()
-        ); // todo remove dev item
         return this.currentCdp.calcLiquidationPriceDaiChg(
           toBigNumber(this.amount),
           true

@@ -215,11 +215,9 @@ export default {
     async checkBalance() {
       if (this.setupComplete) {
         const daiBalance = this.getValueOrFunction('balances')['MDAI'];
-        console.log(daiBalance); // todo remove dev item
         this.daiBalance = daiBalance.toString();
         if(this.proxyAddress){
           this.daiAllowance = await this.getAllowance();
-          console.log(this.daiAllowance); // todo remove dev item
         }
       }
       return toBigNumber(0);
@@ -232,7 +230,6 @@ export default {
           return null;
         }
         this.daiAllowance = await this.getAllowance();
-        console.log('daiAllowance', this.daiAllowance); // todo remove dev item
         return this.proxyAddress;
       }
       return null;

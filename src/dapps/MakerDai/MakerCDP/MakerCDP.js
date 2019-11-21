@@ -72,18 +72,6 @@ export default class MakerCDP extends MakerCdpBase {
 
         this.isSafe = this.cdp.isSafe;
 
-        // this._collatRatio = await this.cdp.getCollateralizationRatio();
-        // console.log(this._collatRatio); // todo remove dev item
-        // this.ethCollateral = (
-        //   await this.cdp.getCollateralValue()
-        // ).toBigNumber();
-        // this.pethCollateral = (
-        //   await this.cdp.getCollateralValue(Maker.PETH)
-        // ).toBigNumber();
-        // this._usdCollateral = (
-        //   await this.cdp.getCollateralValue(Maker.USD)
-        // ).toBigNumber();
-
         const val = await this.cdp.getGovernanceFee();
         console.log('govFee 2', val); // todo remove dev item
       } catch (e) {
@@ -193,11 +181,6 @@ export default class MakerCDP extends MakerCdpBase {
   }
 
   getBalanceOf(currency) {
-    console.log(
-      'getBalanceOf',
-      currency,
-      this.services.balances[currency].toString()
-    ); // todo remove dev item
     if (this.services.balances[currency]) {
       return this.services.balances[currency];
     }
@@ -205,18 +188,14 @@ export default class MakerCDP extends MakerCdpBase {
   }
 
   getProxyAllowancefor(currency) {
-    console.log('getProxyAllowanceFor', this.services.proxyAllowances[currency]); // todo remove dev item
     return this.services.proxyAllowances[currency];
   }
 
   async getRawProxyAllowanceforMkr() {
     const contract = new this.web3.eth.Contract(ERC20, addresses.MCD_GOV);
-    const result = await contract.methods
+    return await contract.methods
       .allowance(this.currentAddress, this.proxyAddress)
       .call();
-    console.log(result); // todo remove dev item
-    return result;
-    // return this.services.proxyAllowances[currency];
   }
 
   getTokenObjectFor(currency) {
@@ -274,11 +253,6 @@ export default class MakerCDP extends MakerCdpBase {
     liquidationRatio = this.liquidationRatio
   ) {
     if (daiQty <= 0) daiQty = this.minDai;
-    console.log(liquidationRatio, daiQty, ethPrice); // todo remove dev item
-    console.log(
-      'calcMinDeposit',
-      bnOver(liquidationRatio, daiQty, ethPrice).toString()
-    ); // todo remove dev item
     return bnOver(liquidationRatio, daiQty, ethPrice);
   }
 
@@ -343,11 +317,6 @@ export default class MakerCDP extends MakerCdpBase {
       }
       const owner = await this.mcdManager.getOwner(this.cdpId);
       this.needsUpdate = true;
-      console.log('this.cdpType', this.cdpType); // todo remove dev item
-      console.log('this.getProxyAllowancefor(this.cdpType)', this.getProxyAllowancefor(this.cdpType)); // todo remove dev item
-      console.log('this.cdpTypeObject', this.cdpTypeObject); // todo remove dev item
-      console.log(this.getProxyAllowancefor(this.cdpCollateralType).toString()); // todo remove dev item
-      console.log('this.mcdCurrencies', this.mcdCurrencies[this.cdpCollateralType].currency(20)); // todo remove dev item
       await this.mcdManager.lock(
         this.cdpId,
         this.cdpType,
@@ -361,13 +330,6 @@ export default class MakerCDP extends MakerCdpBase {
   }
 
   async drawDai(amount, acknowledgeBypass = false) {
-    console.log(
-      'draw dai',
-      amount.toString(),
-      toBigNumber(amount),
-      acknowledgeBypass
-    ); // todo remove dev item
-    console.log('this.debtValue', this.debtValue); // todo remove dev item
     if (
       this.calcCollatRatio(
         this.collateralAmount,
@@ -380,11 +342,7 @@ export default class MakerCDP extends MakerCdpBase {
           return;
         }
         this.needsUpdate = true;
-        console.log('_mcdManager', this.mcdManager.drawDai); // todo remove dev item
-        console.log('cdpService', this.cdpService.drawDaiProxy); // todo remove dev item
-        console.log('cdp.drawdai', this.cdp.drawDai); // todo remove dev item
         await this.cdp.drawDai(MDAI(amount));
-        // this.cdpService.drawDaiProxy(this._proxyAddress, this.cdpId, amount);
       } catch (e) {
         // eslint-disable-next-line
         console.error(e);
@@ -422,15 +380,7 @@ export default class MakerCDP extends MakerCdpBase {
         return;
       }
       this.needsUpdate = true;
-      // await this.cdp.wipeDai(amount);
-      console.log(amount); // todo remove dev item
-      console.log(MDAI(amount)); // todo remove dev item
       await this.cdp.wipeDai(amount);
-      // await this.cdpService.wipeDaiProxy(
-      //   this._proxyAddress,
-      //   this.cdpId,
-      //   amount
-      // );
     } catch (e) {
       // eslint-disable-next-line
       console.error(e);

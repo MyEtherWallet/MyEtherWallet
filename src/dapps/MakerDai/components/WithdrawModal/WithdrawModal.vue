@@ -324,7 +324,6 @@ export default {
       return true;
     },
     newLiquidationPrice() {
-      console.log('newLiquidationPrice', this.currentCdp); // todo remove dev item
       if (this.currentCdp && this.amount > 0) {
         return this.currentCdp.calcLiquidationPriceEthChg(
           toBigNumber(this.currentCdp.collateralAmount).minus(

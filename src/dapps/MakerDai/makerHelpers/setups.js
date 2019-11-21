@@ -130,7 +130,6 @@ export async function checkAllowances(self, address, proxyAddress) {
       }
     }
   }
-  console.log('self.proxyAllowances', self.proxyAllowances); // todo remove dev item
   return self.proxyAllowances;
 }
 
@@ -304,7 +303,6 @@ export async function buildCdpObject(cdpId, options = {}, useOld = false) {
     cdpsWithType: this.cdpsWithType
   };
 
-  console.log('this.mcdCurrencies', this.mcdCurrencies); // todo remove dev item
   const services = {
     address: this.account.address,
     _typeService: this._typeService,

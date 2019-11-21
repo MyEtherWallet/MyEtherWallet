@@ -105,14 +105,6 @@ export function maxEthDraw(
 }
 
 export function calcCollatRatio(ethPrice, ethQty, daiQty) {
-  console.log(
-    'ethQty',
-    ethQty.toString(),
-    'daiQty',
-    daiQty.toString(),
-    'ethPrice',
-    ethPrice.toString()
-  ); // todo remove dev item
   return bnOver(toBigNumber(ethPrice), ethQty, daiQty);
 }
 

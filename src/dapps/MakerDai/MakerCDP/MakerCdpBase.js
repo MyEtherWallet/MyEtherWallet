@@ -54,7 +54,6 @@ export default class MakerCdpBase {
 
   // Getters
   get cdpCollateralType() {
-    console.log(this.cdpType); // todo remove dev item
     return this.cdpType.replace(/-[A-Z]/, '');
   }
 
@@ -63,8 +62,6 @@ export default class MakerCdpBase {
   }
 
   get currentPrice() {
-    console.log(this.cdpType); // todo remove dev item
-    console.log('price', this.mcdCurrencies[this.cdpCollateralType].price._amount); // todo remove dev item
     return this.mcdCurrencies[this.cdpCollateralType].price._amount.toString();
   }
 
@@ -154,7 +151,6 @@ export default class MakerCdpBase {
     if (Object.keys(this.cdp).length > 0) {
       return toBigNumber(this.cdp.type.liquidationRatio._amount);
     }
-    console.log('liquidationRatio', this.cdpTypeObject.liquidationRatio._amount); // todo remove dev item
     return toBigNumber(this.cdpTypeObject.liquidationRatio._amount);
   }
 
@@ -264,24 +260,6 @@ export default class MakerCdpBase {
 
   get maxEthDraw() {
     return this.collateralAmount.minus(this.minSafeCollateralAmount);
-    // if (this.currentPrice && this.debtValue && this.liquidationRatio) {
-    //   if (this.zeroDebt) {
-    //     return maxEthDraw(
-    //       this.collateralAmount,
-    //       this.liquidationRatio,
-    //       this.debtValue,
-    //       this.currentPrice,
-    //       this.minEth.times(0)
-    //     );
-    //   }
-    //   return maxEthDraw(
-    //     this.collateralAmount,
-    //     this.liquidationRatio,
-    //     this.debtValue,
-    //     this.currentPrice
-    //   );
-    // }
-    // return toBigNumber(0);
   }
 
   get maxPethDraw() {
@@ -319,10 +297,6 @@ export default class MakerCdpBase {
     return this.toUSD(
       this.collateralAmount.minus(this.minSafeCollateralAmount)
     );
-    // if (this.pethPrice && this.collateralAmount && this.liquidationRatio) {
-    //   return this.toUSD(this.maxEthDraw);
-    // }
-    // return toBigNumber(0);
   }
 
   // Utility Helpers
