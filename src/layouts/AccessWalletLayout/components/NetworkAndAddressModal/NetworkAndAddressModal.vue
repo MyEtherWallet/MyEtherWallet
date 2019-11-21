@@ -226,13 +226,13 @@
         </b-collapse>
         <div class="accept-terms">
           <label class="checkbox-container">
-            <i18n tag="span" path="accessWallet.accept-terms">
+            <i18n path="accessWallet.accept-terms">
               <router-link slot="terms" to="/terms-and-conditions"
                 >{{ $t('common.terms') }}.</router-link
               >
-              <input v-model="acceptTerms" type="checkbox" />
-              <span class="checkmark" />
             </i18n>
+            <input v-model="acceptTerms" type="checkbox" />
+            <span class="checkmark" />
           </label>
         </div>
         <div class="button-container">
