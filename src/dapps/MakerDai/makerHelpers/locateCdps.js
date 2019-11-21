@@ -7,7 +7,6 @@ async function locateCdps(self, _cdpService) {
   const cdpsWithoutProxy = await locateCdpsWithoutProxy(self, _cdpService);
   self.cdps = [];
   const cdps = await locateCdpsProxy(self, _cdpService);
-  console.log('proxy CDPS', cdps); // todo remove dev item
   const cdpsDirect = await locateCdpsDirectly(self);
   self.allCdpIds = [...cdpsWithoutProxy, ...cdps, ...cdpsDirect].map(entry =>
     typeof entry !== 'number' ? entry.id : entry

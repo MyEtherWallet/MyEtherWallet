@@ -265,7 +265,6 @@ export default {
         this.proxyAddress
       );
       this.daiGenerated = (await details.getDebtValue()).toBigNumber();
-      console.log(cdpSelected); // todo remove dev item
     },
     async checkMigrateContractSaiBalance(cdpBalance = 0) {
       // 2nd layer check. if the user tries to beat the button change (valid to invalid)

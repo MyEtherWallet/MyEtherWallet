@@ -26,14 +26,12 @@ function toHex(str, { with0x = true, rightPadding = 64 } = {}) {
 export function getLiquidationRatioFor(web3, type) {}
 
 export async function getDustValue(web3, symbol){
-  console.log(symbol); // todo remove dev item
   const contract = new web3.eth.Contract(Vat, addresses.MCD_VAT)
 
   return await contract.methods.ilks(toHex(symbol)).call();
 }
 
 export async function getParValue(web3){
-  console.log(symbol); // todo remove dev item
   const contract = new web3.eth.Contract(Spotter, addresses.MCD_SPOT);
 
   return await contract.methods.par().call();

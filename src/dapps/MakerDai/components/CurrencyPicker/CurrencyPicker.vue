@@ -139,7 +139,6 @@ export default {
       this.$emit('selectedCurrency', newVal);
     },
     currencies(newVal) {
-      console.log(newVal); // todo remove dev item
       this.localCurrencies = [];
       newVal.forEach(curr => this.localCurrencies.push(curr));
     },

@@ -221,8 +221,6 @@ export default {
           );
         }
         return true;
-        // const asEth = ethUnit.fromWei(this.account.balance, 'ether');
-        // return toBigNumber(this.amount).lte(toBigNumber(asEth));
       }
       return true;
     },
@@ -299,7 +297,6 @@ export default {
       return true;
     },
     newLiquidationPrice() {
-      console.log('newLiquidationPrice', this.currentCdp); // todo remove dev item
       if (this.currentCdp && this.amount > 0) {
         return this.currentCdp.calcLiquidationPriceEthChg(
           toBigNumber(this.currentCdp.collateralAmount).plus(

@@ -396,16 +396,12 @@ export default {
     },
     needsMkrApprove() {
       if (this.currentCdp) {
-        console.log('needsMkrApprove'); // todo remove dev item
-        console.log('this.values.governanceFeeOwed', this.currentCdp.governanceFeeOwed); // todo remove dev item
-        console.log("this.currentCdp.hasEnoughAllowance(this.values.governanceFeeOwed, 'MKR');", this.currentCdp.hasEnoughAllowance(this.values.governanceFeeOwed, 'MKR')); // todo remove dev item
         return !this.currentCdp.hasEnoughAllowance(this.values.governanceFeeOwed, 'MKR');
       }
       return false;
     },
     getProxyAllowances() {
       const allowances = this.getValueOrFunction('proxyAllowances');
-      console.log(allowances); // todo remove dev item
       if (allowances) {
         return allowances;
       }
@@ -429,11 +425,6 @@ export default {
       );
     },
     currentDai() {
-      console.log(
-        toBigNumber(this.values.debtValue)
-          .toFixed(18)
-          .toString()
-      ); // todo remove dev item
       if (this.currentCdp.hasEnough(this.currentCdp.debtValue, 'MDAI')) {
         this.amount = this.currentCdp.debtValue;
       } else {

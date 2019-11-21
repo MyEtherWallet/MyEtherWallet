@@ -369,7 +369,6 @@ export default {
     },
     collateralOptions() {
       const mcdCollateralOptions = this.getValueOrFunction('mcdCurrencies');
-      console.log(mcdCollateralOptions); // todo remove dev item
       if (mcdCollateralOptions) {
         return Object.keys(mcdCollateralOptions).reduce((acc, entry) => {
           acc.push({
@@ -381,15 +380,12 @@ export default {
       }
     },
     getCurrentPrice() {
-      console.log(this.selectedCurrency); // todo remove dev item
-
       if(this.emptyMakerCreated){
         return this.makerCDP.getCurrentPriceFor(this.selectedCurrency.symbol);
       }
       // return this.getCurrentPriceFor(this.selectedCurrency.symbol);
     },
     minDeposit() {
-      console.log(this.selectedCurrency); // todo remove dev item
       if(this.emptyMakerCreated){
         return this.makerCDP.minDepositFor(this.selectedCurrency.symbol);
       }
@@ -399,7 +395,6 @@ export default {
   watch: {
     selectedCurrency(val){
       if(this.emptyMakerCreated){
-        console.log('selectedCurrency', val); // todo remove dev item
         this.makerCDP.setType(val)
       }
     }

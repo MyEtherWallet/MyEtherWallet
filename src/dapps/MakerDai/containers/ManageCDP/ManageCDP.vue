@@ -458,7 +458,6 @@ export default {
         this.$emit('activeCdpId', this.cdpId);
       }
     }
-    console.log(this.$route.params); // todo remove dev item
     if (this.cdpId && this.cdpId !== undefined) {
       this.getActiveCdp();
     }
