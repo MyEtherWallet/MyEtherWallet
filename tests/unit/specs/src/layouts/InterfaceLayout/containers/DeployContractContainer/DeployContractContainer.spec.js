@@ -98,6 +98,15 @@ describe('DeployContractContainer.vue', () => {
     ).toBeGreaterThan(-1);
   });
 
+  it('should clear the form', () => {
+    wrapper.setData({
+      bytecode: '0x0x0x',
+      abi: '0x0x0x',
+      contractName: 'Contract'
+    });
+    wrapper.find('.clear-all-btn').trigger('click');
+  });
+
   describe('DeployContractContainer.vue Methods', () => {
     it('should execute `copy` command when button is clicked', () => {
       wrapper
