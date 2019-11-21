@@ -9,6 +9,7 @@
     <verification-modal
       ref="verification"
       :mnemonic-values="mnemonicValues"
+      :password="password"
       @verifiedMnemonic="openFinish"
     />
     <div class="wrap">
@@ -53,6 +54,7 @@
       <div class="option-container-block">
         <expanding-option
           :title="$t('createWallet.mnemonic.extra-word')"
+          :popover="$t('createWallet.mnemonic.extra-word-popover')"
           :button-text="$t('common.optional')"
           @expanded="passwordInputViewChange"
         >
