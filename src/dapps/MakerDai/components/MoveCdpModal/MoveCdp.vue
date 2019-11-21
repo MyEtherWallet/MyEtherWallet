@@ -100,6 +100,18 @@ export default {
     destAddressProxy: {
       type: String,
       default: ''
+    },
+    activeCdpId: {
+      type: Number,
+      default: 0
+    },
+    makerActive: {
+      type: Boolean,
+      default: false
+    },
+    getValueOrFunction: {
+      type: Function,
+      default: function() {}
     }
   },
   data() {
@@ -140,10 +152,28 @@ export default {
   },
   mounted() {
     this.$refs.modal.$on('shown', () => {
+      this.cdpId = this.$route.params.cdpId;
+      this.isVisible = true;
       this.address = '';
+      this.getActiveCdp();
     });
+
+    this.$refs.modal.$on('hidden', () => {
+      this.isVisible = false;
+    });
+
+    if (this.makerActive) {
+      this.getActiveCdp();
+    }
   },
   methods: {
+    getActiveCdp() {
+      if (this.cdpId > 0) {
+        this.currentCdp = this.getValueOrFunction('getCdp')(this.cdpId);
+        this.currentCdpType = this.currentCdp.cdpCollateralType;
+        this.$forceUpdate();
+      }
+    },
     closeCdp() {
       this.activeCdp.closeCdp();
     },
@@ -159,9 +189,11 @@ export default {
       return raw.toFixed(decimals, BigNumber.ROUND_DOWN).toString();
     },
     async moveCdp() {
-      if (Misc.isValidETHAddress(this.address)) {
-        this.$emit('moveCdp', this.address);
-        this.closeModal();
+      if(this.currentCdp){
+        if (Misc.isValidETHAddress(this.address)) {
+          this.currentCdp.moveCdp(this.address);
+          this.closeModal();
+        }
       }
     },
     closeModal() {
