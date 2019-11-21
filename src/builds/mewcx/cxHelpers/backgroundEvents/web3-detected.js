@@ -7,7 +7,7 @@ export default async ({ event }, res, next) => {
       chrome.windows.create({
         url: chrome.runtime.getURL(`popup.html#/web3-detected`),
         type: 'popup',
-        height: 500,
+        height: 460,
         width: 300,
         focused: true
       });

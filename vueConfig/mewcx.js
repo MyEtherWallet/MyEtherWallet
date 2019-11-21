@@ -39,7 +39,7 @@ const webpackConfig = {
             } else {
               json.version = version;
             }
-            json.browser_action.default_popup = `iframe-temp.html`;
+            json.browser_action.default_popup = `browserActionLoading.html.html`;
             Object.keys(json).forEach(key => {
               if (hasJSFile.includes(key)) {
                 if (Array.isArray(json[key])) {
