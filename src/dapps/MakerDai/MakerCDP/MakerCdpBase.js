@@ -227,6 +227,10 @@ export default class MakerCdpBase {
     return toBigNumber(0);
   }
 
+  get vatValues(){
+    return this.services.vatValues;
+  }
+
   get wethToPethRatio() {
     return this.services.wethToPethRatio;
   }

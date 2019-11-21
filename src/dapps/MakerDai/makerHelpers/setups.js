@@ -14,6 +14,7 @@ import {
 import Maker from '@makerdao/dai';
 import { locateCdps } from './locateCdps';
 import MakerCDP from '../MakerCDP';
+import {getDustValue, getParValue} from '@/dapps/MakerDai/MakerCDP/chainCalls';
 const { DAI } = Maker;
 const toBigNumber = num => {
   return new BigNumber(num);
@@ -61,12 +62,14 @@ export async function setupPriceAndRatios(self, _priceService, _cdpService) {
   self.stabilityFee = toBigNumber(await _cdpService.getAnnualGovernanceFee());
 
   self.wethToPethRatio = toBigNumber(await _priceService.getWethToPethRatio());
+  // self.par = await getParValue(self.web3)
   return self;
 }
 
 export async function getDetailsForTokens(self, collateralTokens) {
   self.balances = {};
   self.tokens = {};
+  self.dustValues = {};
   self.daiToken = self._tokenService.getToken(DAI);
   self.daiBalance = (await self.daiToken.balance()).toBigNumber();
   self.mkrToken = self._tokenService.getToken(MKR);
@@ -79,6 +82,7 @@ export async function getDetailsForTokens(self, collateralTokens) {
     self.balances[
       collateralTokens[i].currency.symbol
     ] = (await token.balance()).toBigNumber();
+    self.dustValues[collateralTokens[i].currency.symbol] = await getDustValue(self.web3, collateralTokens[i].ilk);
   }
   const token = self._tokenService.getToken(MDAI);
   self.tokens[MdaiToken.symbol] = token;
@@ -88,6 +92,7 @@ export async function getDetailsForTokens(self, collateralTokens) {
   self.tokens['DAI'] = self.daiToken;
   self.balances['DAI'] = self.daiBalance;
   self.balances['MKR'] = self.mkrBalance;
+
 }
 
 export async function checkAllowances(self, address, proxyAddress) {
@@ -327,7 +332,9 @@ export async function buildCdpObject(cdpId, options = {}, useOld = false) {
     tokens: this.tokens,
     balances: this.balances,
     proxyAllowances: this.proxyAllowances,
-    mcdCurrencies: this.mcdCurrencies
+    mcdCurrencies: this.mcdCurrencies,
+    vatValues: this.dustValues,
+    // par: this.par
   };
   let makerCDP;
   try {

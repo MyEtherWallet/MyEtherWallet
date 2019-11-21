@@ -7,6 +7,7 @@ import CdpManager from '@/dapps/MakerDai/makerHelpers/ABIs/DssCdpManager';
 import TokenFaucet from '@/dapps/MakerDai/makerHelpers/ABIs/TokenFaucet';
 import MigrationProxyActions from '@/dapps/MakerDai/makerHelpers/ABIs/MigrationProxyActions';
 import Spotter from '@/dapps/MakerDai/makerHelpers/ABIs/Spotter';
+import Vat from '@/dapps/MakerDai/makerHelpers/ABIs/Vat';
 export {
   migrateABI,
   ERC20,
@@ -16,5 +17,6 @@ export {
   CdpManager,
   TokenFaucet,
   MigrationProxyActions,
-  Spotter
+  Spotter,
+  Vat
 };
