@@ -13,7 +13,7 @@ export default async ({ event, payload }, _, next) => {
           `popup.html#/sign-tx?url=${payload.url}&${q}`
         ),
         type: 'popup',
-        height: 500,
+        height: 460,
         width: 300,
         focused: true
       });

@@ -11,7 +11,7 @@ export default async ({ event, payload }, _, next) => {
           `popup.html#/sign-msg?url=${payload.url}&msgToSign=${payload.msgToSign}&address=${payload.address}`
         ),
         type: 'popup',
-        height: 500,
+        height: 460,
         width: 300,
         focused: true
       });
