@@ -27,7 +27,12 @@
               <v-list-item>
                 <v-list-item-content>
                   <v-list-item-title class="subtitle-2">
-                    Company
+                    <router-link
+                      class="text-decoration-none"
+                      to="/about-us/company"
+                    >
+                      Company
+                    </router-link>
                   </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
@@ -35,7 +40,12 @@
               <v-list-item>
                 <v-list-item-content>
                   <v-list-item-title class="subtitle-2">
-                    Team
+                    <router-link
+                      class="text-decoration-none"
+                      to="/about-us/team"
+                    >
+                      Team
+                    </router-link>
                   </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
@@ -43,7 +53,12 @@
               <v-list-item>
                 <v-list-item-content>
                   <v-list-item-title class="subtitle-2">
-                    Why MEW
+                    <router-link
+                      class="text-decoration-none"
+                      to="/about-us/why-mew"
+                    >
+                      Why MEW
+                    </router-link>
                   </v-list-item-title>
                   <v-list-item-subtitle class="caption"></v-list-item-subtitle>
                 </v-list-item-content>
@@ -52,7 +67,13 @@
               <v-list-item>
                 <v-list-item-content>
                   <v-list-item-title class="subtitle-2">
-                    MEWtopia
+                    <a
+                      class="text-decoration-none"
+                      href="https://www.mewtopia.com/"
+                      target="_blank"
+                    >
+                      MEWtopia
+                    </a>
                   </v-list-item-title>
                   <v-list-item-subtitle v-if="false" class="caption"
                     >Get help from our support team!</v-list-item-subtitle
