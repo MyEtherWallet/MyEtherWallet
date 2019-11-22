@@ -54,7 +54,7 @@
   "about-your-team": {
     "authors-title": "Authors",
     "authors": "Separate names or organizations with a comma",
-    "author-placeholder": "e.g. James Lee; Emilie Roy; Edward McCormick",
+    "author-placeholder": "e.g. James Lee, Emilie Roy, Edward McCormick",
     "full-name": "My full name",
     "software-license": "(e.g. MIT, GPL, Proprietary)",
     "email": "My email",
