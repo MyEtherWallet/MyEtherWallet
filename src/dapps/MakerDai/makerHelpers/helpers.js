@@ -23,11 +23,14 @@ export function displayFixedValue(
   raw,
   decimals = 3,
   finiteCheck = true,
-  round = true
+  round = true,
+  roundUp = false
 ) {
   if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);
   if ((!isFinite(raw) || isNaN(raw)) && finiteCheck) return '--';
-  if (round) return raw.toFixed(decimals, BigNumber.ROUND_DOWN).toString();
+  if (round && !roundUp) return raw.toFixed(decimals, BigNumber.ROUND_DOWN).toString();
+  if (round && roundUp) return raw.toFixed(decimals, BigNumber.ROUND_UP).toString();
+
   return raw.toFixed(decimals).toString();
 }
 

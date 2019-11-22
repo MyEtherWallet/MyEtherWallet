@@ -301,6 +301,12 @@ export default {
     },
     newCollateralRatioSafe() {
       if (this.currentCdp && this.amount > 0) {
+        if(this.currentCdp
+          .calcCollatRatioEthChg(
+            toBigNumber(this.currentCdp.collateralAmount).minus(this.amount)
+          ).eq(0)){
+          return true;
+        }
         return this.currentCdp
           .calcCollatRatioEthChg(
             toBigNumber(this.currentCdp.collateralAmount).minus(this.amount)
@@ -313,6 +319,12 @@ export default {
     },
     newCollateralRatioInvalid() {
       if (this.currentCdp && this.amount > 0) {
+        if(this.currentCdp
+          .calcCollatRatioEthChg(
+            toBigNumber(this.currentCdp.collateralAmount).minus(this.amount)
+          ).eq(0)){
+          return false;
+        }
         return this.currentCdp
           .calcCollatRatioEthChg(
             toBigNumber(this.currentCdp.collateralAmount).minus(this.amount)

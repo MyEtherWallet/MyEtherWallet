@@ -417,7 +417,7 @@ export default {
     },
     debtValue() {
       if (this.currentCdpLoaded && this.valuesUpdated > -1) {
-        return displayFixedValue(this.currentCdp.debtValue, 2);
+        return displayFixedValue(this.currentCdp.debtValue, 5, true, true, true);
       }
       return '--';
     },

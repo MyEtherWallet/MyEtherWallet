@@ -45,7 +45,7 @@
     "moment-timezone": "0.5.27",
     "platform": "1.3.5",
     "pocket-js-web3-provider": "0.0.3",
-    "print-js": "1.0.61",
+    "print-js": "1.0.63",
     "punycode": "2.1.1",
     "regenerator-runtime": "0.13.3",
     "register-service-worker": "1.6.2",

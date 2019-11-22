@@ -99,7 +99,6 @@
         </div>
       </div>
     </back-button>
-    <button @click="doThing">Do Thing</button>
     <div v-if="makerActive" class="buttons-container">
       <div v-if="showCreateProxy">
         <div class="dapps-button" @click="buildProxy">
@@ -427,9 +426,6 @@ export default {
     await this.setup();
   },
   methods: {
-    async doThing() {
-      await this.doUpdate();
-    },
     backPath() {
       switch (this.$route.name) {
         case 'Maker':
