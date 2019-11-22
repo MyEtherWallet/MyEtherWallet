@@ -82,7 +82,7 @@ export default class MakerCDP extends MakerCdpBase {
     }
   }
 
-  async getValuesFromChain() {
+  async getValuesFromChain(retrieve = []) {
     if(!this.afterInitialization){
       this.afterInitialization = !this.afterInitialization;
       return;
@@ -92,6 +92,12 @@ export default class MakerCDP extends MakerCdpBase {
     if (!this.cdp.collateralAmount.toBigNumber().eq(value.toBigNumber())) {
       this.override['collateralAmount'] = this.cdpTypeObject.currency
         .wei(urns.ink)
+    }
+    if(retrieve.includes('collateralValue')){
+      this.override['collateralValue'] = '';
+    }
+    if(retrieve.includes('collateralizationRatio')){
+      this.override['collateralizationRatio'] = '';
     }
     // todo: think about whether the type of update should be recorded and then used to determine which override to create
     // Mostly about reducing chain calls.  if the value doesn't need a particular call. it can be skipped.
@@ -261,7 +267,7 @@ export default class MakerCDP extends MakerCdpBase {
     if (currency === 'ETH') return true;
     // const _ethQty = toBigNumber(ethQty).toFixed(18);
     const currentAllowance = this.getProxyAllowancefor(currency);
-    console.log('currentAllowance', currentAllowance); // todo remove dev item
+    console.log('currentAllowance', currency, currentAllowance.toString()); // todo remove dev item
     // return toBigNumber(currentAllowance).gte(
     //   toBigNumber(ethUnit.toWei(_ethQty, 'ether').toString())
     // );
@@ -295,7 +301,8 @@ export default class MakerCDP extends MakerCdpBase {
 
   setType(type) {
     if (this.cdpId === null) {
-      this.cdpTypeObject = this.services.mcdCurrencies[type.symbol];
+      this.cdpTypeObject = this.mcdManager.get('mcd:cdpType').getCdpType(null, type.name);
+      // this.cdpTypeObject = this.services.mcdCurrencies[type.symbol];
     }
   }
 
@@ -386,7 +393,7 @@ export default class MakerCDP extends MakerCdpBase {
           return;
         }
         this.needsUpdate = true;
-        await this.cdp.freeCollateral(amount);
+        await this.cdp.freeCollateral(amount.toString());
       } catch (e) {
         // eslint-disable-next-line
         console.error(e);
@@ -400,7 +407,7 @@ export default class MakerCDP extends MakerCdpBase {
         return;
       }
       this.needsUpdate = true;
-      await this.cdp.wipeDai(amount);
+      await this.cdp.wipeDai(amount.toString());
     } catch (e) {
       // eslint-disable-next-line
       console.error(e);

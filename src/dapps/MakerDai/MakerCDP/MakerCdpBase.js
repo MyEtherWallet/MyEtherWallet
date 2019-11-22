@@ -30,9 +30,7 @@ export default class MakerCdpBase {
     this.cdps = [];
     this.noProxy = sysVars.noProxy || false;
     this.sysVars = sysVars; // todo make sure this doesn't bring in the issue with vue walking the tree and breaking things
-    this.cdpType = this.cdpId
-      ? sysVars.cdpsWithType[this.cdpId]
-      : 'ETH';
+    this.cdpType = this.cdpId ? sysVars.cdpsWithType[this.cdpId] : 'ETH';
     this.services = services || null;
     this.needsUpdate = false;
     this.closing = false;
@@ -40,20 +38,23 @@ export default class MakerCdpBase {
     this.migrated = false;
     this.migrateCdpActive = false;
     this.migrateCdpStage = 0;
-    this.cdpTypeObject = this.services.mcdCurrencies[this.cdpCollateralType];
+    this.cdpTypeObject = this.mcdManager
+      .get('mcd:cdpType')
+      .getCdpType(null, this.cdpType);
+    //this.cdpTypeObject = rawType; // this.services.mcdCurrencies[this.cdpCollateralType];
 
     this._liqPrice = toBigNumber(0);
     this.isSafe = false;
     // this.debtValue = toBigNumber(0);
     this._collatRatio = 0;
-    this.ethCollateral = toBigNumber(0);
+    // this.ethCollateral = toBigNumber(0);
     this.pethCollateral = toBigNumber(0);
     this._usdCollateral = toBigNumber(0);
     this._governanceFee = toBigNumber(12345);
 
     this.override = {};
     this.afterInitialization = false;
-      }
+  }
 
   // Getters
   get cdpCollateralType() {
@@ -73,13 +74,21 @@ export default class MakerCdpBase {
   }
 
   get collateralAmount() {
-    if(this.override['collateralAmount']){
-      return this.override['collateralAmount'].toBigNumber();
+    return this._collateralAmount.toBigNumber();
+  }
+
+  get _collateralAmount() {
+    if (this.override['collateralAmount']) {
+      return this.override['collateralAmount'];
     }
-    return this.cdp.collateralAmount.toBigNumber();
+    return this.cdp.collateralAmount;
   }
 
   get collateralAvailable() {
+    return this._collateralAvailable.toBigNumber();
+  }
+
+  get _collateralAvailable() {
     return this.cdp.collateralAvailable;
   }
 
@@ -96,17 +105,31 @@ export default class MakerCdpBase {
   }
 
   get collateralValue() {
-    if(this.override['collateralValue']){
-      return this.override['collateralValue'].toBigNumber();
+    return this._collateralValue.toBigNumber();
+  }
+
+  get _collateralValue() {
+    if (this.override['collateralValue']) {
+      return this.override['collateralValue'];
     }
-    return this.cdp.collateralValue.toBigNumber();
+    return daiMath.collateralValue(
+      this._collateralAmount,
+      this.cdpTypeObject.price
+    );
   }
 
   get collateralizationRatio() {
-    if(this.override['collateralizationRatio']){
-      return this.override['collateralizationRatio'].toBigNumber();
+    return this._collateralizationRatio.toBigNumber();
+  }
+
+  get _collateralizationRatio() {
+    if (this.override['collateralizationRatio']) {
+      return this.override['collateralizationRatio'];
     }
-    return this.cdp.collateralizationRatio.toBigNumber();
+    return daiMath.collateralizationRatio(
+      this._collateralValue,
+      this._debtValue
+    );
   }
 
   get cdpService() {
@@ -123,10 +146,22 @@ export default class MakerCdpBase {
 
   get debtValue() {
     if (this.cdp) {
-      if(this.override['debtValue']){
-        return this.override['debtValue'].toBigNumber();
+      if (this.override['debtValue']) {
+        return this._debtValue.toBigNumber();
       }
-      return toBigNumber(toBigNumber(this.cdp.debtValue._amount).toFixed(18));
+      return toBigNumber(
+        toBigNumber(this._debtValue.toBigNumber()).toFixed(18)
+      );
+    }
+    return toBigNumber(0);
+  }
+
+  get _debtValue() {
+    if (this.cdp) {
+      if (this.override['debtValue']) {
+        return this.override['debtValue'];
+      }
+      return this.cdp.debtValue;
     }
     return toBigNumber(0);
   }
@@ -135,8 +170,12 @@ export default class MakerCdpBase {
     return this.services.ethPrice;
   }
 
-  get ethCollateralNum() {
-    return this.ethCollateral.toNumber();
+  get ethCollateral() {
+    return this._ethCollateral.toBigNumber();
+  }
+
+  get _ethCollateral() {
+    return this._collateralAmount;
   }
 
   getCollateralIlk() {
@@ -159,108 +198,34 @@ export default class MakerCdpBase {
     if (this.cdp) {
       return toBigNumber(this.cdp.type.liquidationPenalty);
     }
-    return toBigNumber(0);
+    const rawType = this.mcdManager
+      .get('mcd:cdpType')
+      .getCdpType(null, this.cdpType);
+
+    return toBigNumber(rawType.liquidationPenalty._amount);
   }
 
   get liquidationRatio() {
-    if (Object.keys(this.cdp).length > 0) {
-      return toBigNumber(this.cdp.type.liquidationRatio._amount);
-    }
-    return toBigNumber(this.cdpTypeObject.liquidationRatio._amount);
+    return toBigNumber(this._liquidationRatio);
   }
 
+  get _liquidationRatio() {
+    if (Object.keys(this.cdp).length > 0) {
+      return this.cdp.type.liquidationRatio._amount
+    }
+    const rawType = this.mcdManager
+      .get('mcd:cdpType')
+      .getCdpType(null, this.cdpType);
+    return rawType.liquidationRatio._amount;
+  }
 
   get liquidationPrice() {
-    return calcLiquidationPrice(
-      this.collateralAmount,
-      this.debtValue,
-      this.currentPrice,
-      this.liquidationRatio
-    );
+    return this._liquidationPrice.toBigNumber()
   }
 
-  get mcdCurrencies() {
-    return this.services.mcdCurrencies;
+  get _liquidationPrice() {
+    return daiMath.liquidationPrice(this._collateralAmount, this._debtValue, this._liquidationRatio);
   }
-
-  get mkrToken() {
-    return this.services._mkrToken;
-  }
-
-  get mkrBalance() {
-    return this.services.mkrBalance;
-  }
-
-  get mcdManager() {
-    return this.services._mcdManager;
-  }
-
-  get minSafeCollateralAmount() {
-    const rawType = this.mcdManager.get('mcd:cdpType').getCdpType(null, this.cdpType);
-    console.log(this.debtValue); // todo remove dev item
-    console.log(rawType.price); // todo remove dev item
-    console.log(rawType.liquidationRatio); // todo remove dev item
-    console.log(daiMath.minSafeCollateralAmount(this.debtValue, rawType.liquidationRatio, rawType.price)); // todo remove dev item
-    // return daiMath.minSafeCollateralAmount(this.debtValue, rawType.liquidationRatio, rawType.price);
-    return this.cdp.minSafeCollateralAmount.toBigNumber();
-  }
-
-  get minEth() {
-    return this.services.minEth;
-  }
-
-  get needToFinishMigrating() {
-    return this._proxyAddress && this.noProxy;
-  }
-
-  get proxyService() {
-    return this.services._proxyService;
-  }
-
-  get proxyAddress() {
-    return this.services._proxyAddress;
-  }
-
-  get proxyAllowanceDai() {
-    return this.services.proxyAllowances['DAI'];
-  }
-
-  get proxyAllowanceMkr() {
-    return this.services.proxyAllowances['MKR'];
-  }
-
-  get pethMin() {
-    return this.services.pethMin;
-  }
-
-  get pethPrice() {
-    return this.services._pethPrice;
-  }
-
-  get stabilityFee() {
-    if (this.cdp) {
-      return toBigNumber(this.cdp.type.annualStabilityFee);
-    }
-    return toBigNumber(0);
-  }
-
-  get dustValues(){
-    return this.services.dustValues;
-  }
-
-  get wethToPethRatio() {
-    return this.services.wethToPethRatio;
-  }
-
-  get usdCollateral() {
-    return this.toUSD(this.ethCollateral);
-  }
-
-  get zeroDebt() {
-    return toBigNumber(this.debtValue).eq(0);
-  }
-
-  // Calculations
 
   get maxDai() {
     if (
@@ -318,6 +283,91 @@ export default class MakerCdpBase {
     return this.toUSD(
       this.collateralAmount.minus(this.minSafeCollateralAmount)
     );
+  }
+
+  get mcdCurrencies() {
+    return this.services.mcdCurrencies;
+  }
+
+  get mkrToken() {
+    return this.services._mkrToken;
+  }
+
+  get mkrBalance() {
+    return this.services.mkrBalance;
+  }
+
+  get mcdManager() {
+    return this.services._mcdManager;
+  }
+
+  get minSafeCollateralAmount() {
+    const rawType = this.mcdManager
+      .get('mcd:cdpType')
+      .getCdpType(null, this.cdpType);
+    return daiMath
+      .minSafeCollateralAmount(
+        this._debtValue,
+        rawType.liquidationRatio,
+        rawType.price
+      )
+      .toBigNumber();
+    // return this.cdp.minSafeCollateralAmount.toBigNumber();
+  }
+
+  get minEth() {
+    return this.services.minEth;
+  }
+
+  get needToFinishMigrating() {
+    return this._proxyAddress && this.noProxy;
+  }
+
+  get proxyService() {
+    return this.services._proxyService;
+  }
+
+  get proxyAddress() {
+    return this.services._proxyAddress;
+  }
+
+  get proxyAllowanceDai() {
+    return this.services.proxyAllowances['DAI'];
+  }
+
+  get proxyAllowanceMkr() {
+    return this.services.proxyAllowances['MKR'];
+  }
+
+  get pethMin() {
+    return this.services.pethMin;
+  }
+
+  get pethPrice() {
+    return this.services._pethPrice;
+  }
+
+  get stabilityFee() {
+    if (this.cdp) {
+      return toBigNumber(this.cdp.type.annualStabilityFee);
+    }
+    return toBigNumber(0);
+  }
+
+  get dustValues() {
+    return this.services.dustValues;
+  }
+
+  get wethToPethRatio() {
+    return this.services.wethToPethRatio;
+  }
+
+  get usdCollateral() {
+    return this.toUSD(this.ethCollateral);
+  }
+
+  get zeroDebt() {
+    return toBigNumber(this.debtValue).eq(0);
   }
 
   // Utility Helpers

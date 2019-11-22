@@ -192,7 +192,7 @@ export async function getValuesForManage(cdpId) {
     minEth: currentCdp.minEth,
     isSafe: false,
     governanceFeeOwed: currentCdp.governanceFeeOwed,
-    ethCollateralNum: currentCdp.ethCollateralNum,
+    ethCollateralNum: currentCdp.ethCollateral,
     zeroDebt: currentCdp.zeroDebt,
     cdpsWithType: this.cdpsWithType
   };
