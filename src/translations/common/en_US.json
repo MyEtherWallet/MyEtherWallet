@@ -84,7 +84,7 @@
   "read": "Read",
   "article": {
     "using-mew-offline": "Using MEW Offline",
-    "mnemonic-password": "Mnemonic Phrase: Should I Include a Password?"
+    "mnemonic-password": "Mnemonic Phrase: Should I Include an Extra Word?"
   },
   "password": {
     "string": "Password",
