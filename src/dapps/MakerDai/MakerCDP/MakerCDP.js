@@ -1,4 +1,5 @@
 import Maker from '@makerdao/dai';
+import * as makerCurrency from '@makerdao/currency';
 import BigNumber from 'bignumber.js';
 import {
   calcLiquidationPrice,
@@ -28,8 +29,8 @@ import {
 } from '@makerdao/dai-plugin-mcd';
 import ethUnit from 'ethjs-unit';
 import MakerCdpBase from './MakerCdpBase';
-import { getDustValue } from './chainCalls';
-import * as daiMath from './daiMath'
+import { getUrns } from './chainCalls';
+import * as daiMath from './daiMath';
 const { DAI } = Maker;
 
 export default class MakerCDP extends MakerCdpBase {
@@ -48,9 +49,7 @@ export default class MakerCDP extends MakerCdpBase {
       const val = await this.cdp.getGovernanceFee();
       console.log('govFee 1', val); // todo remove dev item
       // TODO why is this returning undefined
-      this._governanceFee = (
-        await this.cdp.getGovernanceFee()
-      ).toBigNumber();
+      this._governanceFee = (await this.cdp.getGovernanceFee()).toBigNumber();
     } catch (e) {
       this._governanceFee = false;
     }
@@ -69,8 +68,9 @@ export default class MakerCDP extends MakerCdpBase {
           this.cdp = await this.services.getMakerCdp(cdpId, false);
         }
         console.log('CDP', this.cdp); // todo remove dev item
-
         this.isSafe = this.cdp.isSafe;
+        await this.getValuesFromChain();
+        console.log(this.mcdManager.get('mcd:cdpType').getCdpType(null, this.cdpType)); // todo remove dev item
 
         const val = await this.cdp.getGovernanceFee();
         console.log('govFee 2', val); // todo remove dev item
@@ -80,6 +80,26 @@ export default class MakerCDP extends MakerCdpBase {
     } catch (e) {
       console.error(e);
     }
+  }
+
+  async getValuesFromChain() {
+    if(!this.afterInitialization){
+      this.afterInitialization = !this.afterInitialization;
+      return;
+    }
+    const urns = await getUrns(this.web3, this.cdpId, this.cdpType);
+    const value = this.cdpTypeObject.currency.wei(urns.ink);
+    if (!this.cdp.collateralAmount.toBigNumber().eq(value.toBigNumber())) {
+      this.override['collateralAmount'] = this.cdpTypeObject.currency
+        .wei(urns.ink)
+    }
+    // todo: think about whether the type of update should be recorded and then used to determine which override to create
+    // Mostly about reducing chain calls.  if the value doesn't need a particular call. it can be skipped.
+    console.log('this.dustValues.rate', this.dustValues[this.cdpCollateralType].rate); // todo remove dev item
+    const calculatedDebt = daiMath.debtValue(urns.art, this.dustValues[this.cdpCollateralType].rate);
+    console.log('calculatedDebt', calculatedDebt.toBigNumber().toString()); // todo remove dev item
+    this.override['debtValue'] = calculatedDebt;
+
   }
 
   async update() {
@@ -207,6 +227,10 @@ export default class MakerCDP extends MakerCdpBase {
     return this.getPriceOfCurrency(symbol);
   }
 
+  getEventHistory() {
+    return this.mcdManager.getEventHistory(this.cdp);
+  }
+
   getPriceOfCurrency(type) {
     const curr = this.mcdCurrencies[type];
     if (curr) {
@@ -242,9 +266,7 @@ export default class MakerCDP extends MakerCdpBase {
     //   toBigNumber(ethUnit.toWei(_ethQty, 'ether').toString())
     // );
     // todo This is a temp solution
-    return toBigNumber(currentAllowance).gte(
-      toBigNumber(10)
-    );
+    return toBigNumber(currentAllowance).gte(toBigNumber(10));
   }
 
   minDeposit(
@@ -261,7 +283,7 @@ export default class MakerCDP extends MakerCdpBase {
     //   ethUnit.fromWei(this.vatValues[symbol].dust).toString()
     // )
     // console.log('minDai', minDai.toString()); // todo remove dev item
-    return this.minDeposit(this.minDai, this.getCurrentPriceFor(symbol))
+    return this.minDeposit(this.minDai, this.getCurrentPriceFor(symbol));
   }
 
   minInSelectedCurrency(symbol) {
@@ -364,9 +386,7 @@ export default class MakerCDP extends MakerCdpBase {
           return;
         }
         this.needsUpdate = true;
-        await this.cdp.freeCollateral(
-          amount
-        );
+        await this.cdp.freeCollateral(amount);
       } catch (e) {
         // eslint-disable-next-line
         console.error(e);

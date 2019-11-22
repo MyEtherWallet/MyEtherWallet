@@ -427,8 +427,8 @@ export default {
     await this.setup();
   },
   methods: {
-    async doThing(){
-      await this.doUpdate()
+    async doThing() {
+      await this.doUpdate();
     },
     backPath() {
       switch (this.$route.name) {
@@ -664,13 +664,11 @@ export default {
         this.cdpsWithoutProxy
       ); // todo remove dev item
       await doUpdate(this, Toast);
+      console.log('override 4', this.activeCdps['211'].override); // todo remove dev item
 
     },
-    async generateProxyTx(address, abi){
-      new this.web3.eth.Contract(
-        ProxyContract,
-        this.proxyAddress
-      ).methods
+    async generateProxyTx(address, abi) {
+      new this.web3.eth.Contract(ProxyContract, this.proxyAddress).methods
         .execute(
           addresses.MIGRATION_PROXY_ACTIONS,
           this.fixImproperEncoding(
@@ -683,12 +681,12 @@ export default {
             cdpId
           )
         )
-        .encodeABI()
+        .encodeABI();
     },
     async checkAllowances() {
       await checkAllowances(this, this.account.address, this.proxyAddress);
     },
-    async checkBalances(){
+    async checkBalances() {
       await getDetailsForTokens(this, this._typeService.cdpTypes);
     },
     async setupCdpManageFunc(cdpId) {
