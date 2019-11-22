@@ -2,7 +2,7 @@
   <div class="dapp-container">
     <div>
       <router-link to="/dapps">
-        {{ $t('mewCx.dapps') }}
+        {{ $t('mewcx.dapps') }}
       </router-link>
       >
       <span>

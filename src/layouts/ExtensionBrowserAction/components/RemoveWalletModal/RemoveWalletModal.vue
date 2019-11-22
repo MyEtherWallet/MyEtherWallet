@@ -2,7 +2,7 @@
   <div>
     <b-modal
       ref="removeWalletModal"
-      :title="$t('mewCx.remove-wallet')"
+      :title="$t('mewcx.remove-wallet')"
       hide-footer
       hide-header
       centered
@@ -10,12 +10,12 @@
     >
       <div class="modal-contents">
         <div class="warning-text-container">
-          <h2>{{ $t('mewCx.remove-wallet') }}</h2>
+          <h2>{{ $t('mewcx.remove-wallet') }}</h2>
           <div v-show="walletType === 'wallet'" class="text-container">
-            {{ $t('mewCx.remove-wallet-desc') }}
+            {{ $t('mewcx.remove-wallet-desc') }}
           </div>
           <h3 v-show="walletType === 'watchOnly'">
-            {{ $t('mewCX.are-you-sure-delete') }} {{ `${nickname}` }}?
+            {{ $t('mewcx.are-you-sure-delete') }} {{ `${nickname}` }}?
           </h3>
         </div>
         <div class="remove-modal-buttons">
@@ -23,7 +23,7 @@
             {{ $t('common.cancel') }}
           </div>
           <div class="remove" @click="removeWallet">
-            {{ $t('mewCx.remove') }}
+            {{ $t('mewcx.remove') }}
           </div>
         </div>
       </div>
