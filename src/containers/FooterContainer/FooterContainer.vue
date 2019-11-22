@@ -186,6 +186,10 @@ export default {
             //   to: '/advanced-tools'
             // },
             {
+              text: this.$t('footer.mew-connect'),
+              href: 'https://mewconnect.myetherwallet.com/#/'
+            },
+            {
               text: this.$t('footer.extension'),
               href: 'https://www.mewcx.com'
             },
