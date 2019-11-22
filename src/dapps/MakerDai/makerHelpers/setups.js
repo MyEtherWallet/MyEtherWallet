@@ -198,6 +198,7 @@ export async function getValuesForManage(cdpId) {
   };
 }
 
+// todo: this is where things are getting erased (because new instances are being created)
 export async function loadCdpDetails(
   self,
   cdps = self.cdps,
@@ -331,7 +332,7 @@ export async function buildCdpObject(cdpId, options = {}, useOld = false) {
     balances: this.balances,
     proxyAllowances: this.proxyAllowances,
     mcdCurrencies: this.mcdCurrencies,
-    vatValues: this.dustValues,
+    dustValues: this.dustValues,
     // par: this.par
   };
   let makerCDP;

@@ -286,6 +286,10 @@ export default {
       default: function() {
         return {};
       }
+    },
+    updated: {
+      type: Number,
+      default: 0
     }
   },
   data() {
@@ -317,7 +321,7 @@ export default {
       }
     },
     collateralRatioColoring() {
-      if (this.currentCdpLoaded) {
+      if (this.currentCdpLoaded && this.valuesUpdated > -1) {
         return this.currentCdp.collateralStatus;
       }
       return '';
@@ -345,25 +349,26 @@ export default {
       return '--';
     },
     liquidationRatioDisplay() {
-      if (this.currentCdpLoaded) {
+      console.log('liquidityRatioDisplay'); // todo remove dev item
+      if (this.currentCdpLoaded && this.valuesUpdated > -1) {
         return displayFixedValue(displayPercentValue(this.currentCdp.liquidationRatio));
       }
       return '--';
     },
     liquidationPenaltyDisplay() {
-      if (this.currentCdpLoaded) {
+      if (this.currentCdpLoaded && this.valuesUpdated > -1) {
         return displayFixedValue(displayPercentValue(this.currentCdp.liquidationPenalty));
       }
       return '--';
     },
     stabilityFeeDisplay() {
-      if (this.currentCdpLoaded) {
+      if (this.currentCdpLoaded && this.valuesUpdated > -1) {
         return displayFixedValue(displayPercentValue(this.currentCdp.stabilityFee));
       }
       return '--';
     },
     ethPriceDisplay() {
-      if (this.currentCdpLoaded) {
+      if (this.currentCdpLoaded && this.valuesUpdated > -1) {
         return displayFixedValue(this.currentCdp.currentPrice, 2);
       }
       return '--';
@@ -372,7 +377,7 @@ export default {
       return toBigNumber(this.values.debtValue).eq(0);
     },
     maxEthDrawDisplay() {
-      if (this.currentCdpLoaded) {
+      if (this.currentCdpLoaded && this.valuesUpdated > -1) {
         return displayFixedValue(this.currentCdp.maxEthDraw, 5);
       }
       // if (this.values) {
@@ -387,43 +392,43 @@ export default {
       return '--';
     },
     ethCollateral() {
-      if (this.currentCdpLoaded) {
+      if (this.currentCdpLoaded && this.valuesUpdated > -1) {
         return displayFixedValue(this.getCollateralAmount(), 5);
       }
       return '--';
     },
     collateralType() {
-      if (this.currentCdpLoaded) {
+      if (this.currentCdpLoaded && this.valuesUpdated > -1) {
         return this.currentCdp.cdpCollateralType;
       }
       return 'ETH';
     },
     usdCollateral() {
-      if (this.currentCdpLoaded) {
+      if (this.currentCdpLoaded && this.valuesUpdated > -1) {
         return displayFixedValue(this.currentCdp.collateralValue, 2);
       }
       return '--';
     },
     debtValueDisplay() {
-      if (this.currentCdpLoaded) {
+      if (this.currentCdpLoaded && this.valuesUpdated > -1) {
         return displayFixedValue(this.currentCdp.debtValue, 2);
       }
       return '--';
     },
     debtValue() {
-      if (this.currentCdpLoaded) {
+      if (this.currentCdpLoaded && this.valuesUpdated > -1) {
         return displayFixedValue(this.currentCdp.debtValue, 2);
       }
       return '--';
     },
     maxDai() {
-      if (this.currentCdpLoaded) {
+      if (this.currentCdpLoaded && this.valuesUpdated > -1) {
         return displayFixedValue(this.currentCdp.maxDai, 5);
       }
       return '--';
     },
     maxUsd() {
-      if (this.currentCdpLoaded) {
+      if (this.currentCdpLoaded && this.valuesUpdated > -1) {
         return displayFixedValue(this.currentCdp.maxDai, 2);
       }
       return '--';
@@ -432,6 +437,9 @@ export default {
   watch: {
     ['activeCdp.ready']() {
       this.isReady();
+    },
+    valuesUpdated(){
+      this.getActiveCdp();
     },
     openCloseModal(val) {
       if (val) {

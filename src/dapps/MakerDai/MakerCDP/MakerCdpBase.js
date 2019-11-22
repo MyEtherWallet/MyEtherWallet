@@ -8,7 +8,7 @@ import {
   calcLiquidationPrice
 } from '../makerHelpers';
 
-import * as maths from './daiMath';
+import * as daiMath from './daiMath';
 
 const toBigNumber = num => {
   return new BigNumber(num);
@@ -50,6 +50,9 @@ export default class MakerCdpBase {
     this.pethCollateral = toBigNumber(0);
     this._usdCollateral = toBigNumber(0);
     this._governanceFee = toBigNumber(12345);
+
+    this.override = {};
+    this.afterInitialization = false;
       }
 
   // Getters
@@ -70,6 +73,9 @@ export default class MakerCdpBase {
   }
 
   get collateralAmount() {
+    if(this.override['collateralAmount']){
+      return this.override['collateralAmount'].toBigNumber();
+    }
     return this.cdp.collateralAmount.toBigNumber();
   }
 
@@ -90,10 +96,16 @@ export default class MakerCdpBase {
   }
 
   get collateralValue() {
+    if(this.override['collateralValue']){
+      return this.override['collateralValue'].toBigNumber();
+    }
     return this.cdp.collateralValue.toBigNumber();
   }
 
   get collateralizationRatio() {
+    if(this.override['collateralizationRatio']){
+      return this.override['collateralizationRatio'].toBigNumber();
+    }
     return this.cdp.collateralizationRatio.toBigNumber();
   }
 
@@ -111,6 +123,9 @@ export default class MakerCdpBase {
 
   get debtValue() {
     if (this.cdp) {
+      if(this.override['debtValue']){
+        return this.override['debtValue'].toBigNumber();
+      }
       return toBigNumber(toBigNumber(this.cdp.debtValue._amount).toFixed(18));
     }
     return toBigNumber(0);
@@ -181,6 +196,12 @@ export default class MakerCdpBase {
   }
 
   get minSafeCollateralAmount() {
+    const rawType = this.mcdManager.get('mcd:cdpType').getCdpType(null, this.cdpType);
+    console.log(this.debtValue); // todo remove dev item
+    console.log(rawType.price); // todo remove dev item
+    console.log(rawType.liquidationRatio); // todo remove dev item
+    console.log(daiMath.minSafeCollateralAmount(this.debtValue, rawType.liquidationRatio, rawType.price)); // todo remove dev item
+    // return daiMath.minSafeCollateralAmount(this.debtValue, rawType.liquidationRatio, rawType.price);
     return this.cdp.minSafeCollateralAmount.toBigNumber();
   }
 
@@ -223,8 +244,8 @@ export default class MakerCdpBase {
     return toBigNumber(0);
   }
 
-  get vatValues(){
-    return this.services.vatValues;
+  get dustValues(){
+    return this.services.dustValues;
   }
 
   get wethToPethRatio() {
