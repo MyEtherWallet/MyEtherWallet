@@ -1,11 +1,7 @@
 <template>
   <div class="home-partners">
     <v-container>
-      <BlockTitle
-        :centered="false"
-        toptitle="Partners"
-        title="Connect with the powerful crypto communities"
-      />
+      <BlockTitle :data="titleData" />
       <v-row class="mt-8 px-4">
         <v-col cols="3" md="3" lg="2">
           <a href="https://www.ledger.com/?r=fa4b" target="_blank">
@@ -69,7 +65,16 @@ export default {
   name: 'HomePartners',
   components: {
     BlockTitle
-  }
+  },
+  data: () => ({
+    titleData: {
+      textProps: '',
+      toptitle: 'Partners',
+      title: 'Connect with the powerful crypto communities',
+      description: '',
+      centered: false
+    }
+  })
 };
 </script>
 

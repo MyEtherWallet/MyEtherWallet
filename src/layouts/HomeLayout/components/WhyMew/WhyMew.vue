@@ -2,6 +2,7 @@
   <div>
     <v-container>
       <BlockTitle
+        :data="titleData"
         :centered="false"
         toptitle="Why Mew"
         title="Make Ethereum Blockchain easy and secure"
@@ -33,7 +34,16 @@ export default {
     Swap,
     HardwareWallet,
     SecureMyFunds
-  }
+  },
+  data: () => ({
+    titleData: {
+      textProps: '',
+      toptitle: 'Why Mew',
+      title: 'Make Ethereum Blockchain easy and secure',
+      description: '',
+      centered: false
+    }
+  })
 };
 </script>
 

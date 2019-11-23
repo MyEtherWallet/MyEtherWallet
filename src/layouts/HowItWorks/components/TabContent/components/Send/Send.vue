@@ -8,13 +8,8 @@
     </v-sheet>
     <div class="py-10" />
     <v-row>
-      <v-col cols="4" class="text-content">
-        <BlockTitle
-          title="Send"
-          description="MyEtherWallet - please, call us MEW - puts the ETH blockchain at your
-          fingertips."
-          class="mb-8 pl-12"
-        />
+      <v-col cols="6" class="text-content pr-12">
+        <BlockTitle :data="titleData" class="mb-8 pl-12" />
         <div class="mb-6 d-flex">
           <div class="mr-3">
             <v-img src="@/assets/images/Etc/AboutUs/Icons/Send.svg" />
@@ -74,7 +69,7 @@
           </div>
         </div>
       </v-col>
-      <v-col cols="8">
+      <v-col cols="6">
         <v-img
           src="@/assets/images/Etc/AboutUs/InterfaceSendTransaction.png"
           class="mt-n6"
@@ -89,7 +84,16 @@ import BlockTitle from '@/layouts/components/BlockTitle';
 
 export default {
   components: { BlockTitle },
-  data: () => ({})
+  data: () => ({
+    titleData: {
+      textProps: '',
+      toptitle: '',
+      title: 'Send',
+      description:
+        'MyEtherWallet - please, call us MEW - puts the ETH blockchain at your fingertips.',
+      centered: false
+    }
+  })
 };
 </script>
 

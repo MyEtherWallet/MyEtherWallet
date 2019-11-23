@@ -2,7 +2,7 @@
   <div class="block-title" :class="data.centered ? 'text-center' : ''">
     <div
       v-if="data.toptitle"
-      class="top-title text-uppercase font-weight-bold mb-2"
+      class="top-title text-uppercase font-weight-bold grey--text text--lighten-1 mb-2"
       :class="data.textProps"
     >
       {{ data.toptitle }}

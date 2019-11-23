@@ -1,11 +1,7 @@
 <template>
   <div>
     <v-container>
-      <BlockTitle
-        centered
-        toptitle="Features"
-        title="All-in-one gateway to your Ethereum Blockchain service"
-      />
+      <BlockTitle :data="titleData" />
     </v-container>
     <div class="pt-7">
       <Tabs>
@@ -52,20 +48,21 @@ export default {
   components: {
     Tabs,
     BlockTitle
-  }
+  },
+  data: () => ({
+    titleData: {
+      textProps: '',
+      toptitle: 'Features',
+      title: 'All-in-one gateway to your Ethereum Blockchain service',
+      description: '',
+      centered: true
+    }
+  })
 };
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/styles/GlobalVariables';
-
-.v-tab {
-  text-transform: initial;
-  font-weight: 700;
-  color: $disabled--2;
-  min-width: 120px;
-}
-
+//@import '@/assets/styles/GlobalVariables';
 .tab-image {
   padding-top: 50px;
   width: 100%;
