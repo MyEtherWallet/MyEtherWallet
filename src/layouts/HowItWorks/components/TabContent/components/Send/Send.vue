@@ -13,10 +13,12 @@
           title="Send"
           description="MyEtherWallet - please, call us MEW - puts the ETH blockchain at your
           fingertips."
-          class="mb-8"
+          class="mb-8 pl-12"
         />
         <div class="mb-6 d-flex">
-          <div>111</div>
+          <div class="mr-3">
+            <v-img src="@/assets/images/Etc/AboutUs/Icons/Send.svg" />
+          </div>
           <div>
             <div class="mb-1 font-weight-black subtitle-1">
               Send Transaction
@@ -29,7 +31,9 @@
         </div>
 
         <div class="mb-6 d-flex">
-          <div>111</div>
+          <div class="mr-3">
+            <v-img src="@/assets/images/Etc/AboutUs/Icons/Offline.svg" />
+          </div>
           <div>
             <div class="mb-1 font-weight-black subtitle-1">
               Send Offline Helper
@@ -42,7 +46,9 @@
         </div>
 
         <div class="d-flex">
-          <div>111</div>
+          <div class="mr-3">
+            <v-img src="@/assets/images/Etc/AboutUs/Icons/NFT.svg" />
+          </div>
           <div>
             <div class="mb-1 font-weight-black subtitle-1">
               NFT Manager
@@ -68,7 +74,9 @@
           </div>
         </div>
       </v-col>
-      <v-col>Send Transction</v-col>
+      <v-col>
+        <v-img src="@/assets/images/Etc/AboutUs/SendTransaction.png" />
+      </v-col>
     </v-row>
   </div>
 </template>
