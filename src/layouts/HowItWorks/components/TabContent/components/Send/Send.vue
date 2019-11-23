@@ -74,8 +74,11 @@
           </div>
         </div>
       </v-col>
-      <v-col>
-        <v-img src="@/assets/images/Etc/AboutUs/SendTransaction.png" />
+      <v-col cols="8">
+        <v-img
+          src="@/assets/images/Etc/AboutUs/InterfaceSendTransaction.png"
+          class="mt-n6"
+        />
       </v-col>
     </v-row>
   </div>

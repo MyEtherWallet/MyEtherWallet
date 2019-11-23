@@ -1,13 +1,18 @@
 <template>
-  <div class="block-title" :class="centered ? 'text-center' : ''">
+  <div class="block-title" :class="data.centered ? 'text-center' : ''">
     <div
-      v-if="toptitle"
-      class="top-title text-uppercase font-weight-bold grey--text text--lighten-1 mb-2"
+      v-if="data.toptitle"
+      class="top-title text-uppercase font-weight-bold mb-2"
+      :class="data.textProps"
     >
-      {{ toptitle }}
+      {{ data.toptitle }}
     </div>
-    <h2 v-if="title" class="top-description">{{ title }}</h2>
-    <div v-if="description" class="mt-3">{{ description }}</div>
+    <h2 v-if="data.title" class="top-description" :class="data.textProps">
+      {{ data.title }}
+    </h2>
+    <div v-if="data.description" class="mt-3" :class="data.textProps">
+      {{ data.description }}
+    </div>
   </div>
 </template>
 
@@ -15,10 +20,12 @@
 export default {
   name: 'BlockTitle',
   props: {
-    toptitle: { default: '', type: String },
-    title: { default: '', type: String },
-    description: { default: '', type: String },
-    centered: { default: false, type: Boolean }
+    data: {
+      default: function() {
+        return {};
+      },
+      type: Object
+    }
   },
   data: () => ({})
 };
