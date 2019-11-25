@@ -9,6 +9,7 @@
     <verification-modal
       ref="verification"
       :mnemonic-values="mnemonicValues"
+      :password="password"
       @verifiedMnemonic="openFinish"
     />
     <div class="wrap">
@@ -52,8 +53,9 @@
 
       <div class="option-container-block">
         <expanding-option
-          title="Password"
-          button-text="Optional"
+          :title="$t('createWallet.mnemonic.extra-word')"
+          :popover="$t('createWallet.mnemonic.extra-word-popover')"
+          :button-text="$t('common.optional')"
           @expanded="passwordInputViewChange"
         >
           <div class="option-container">
@@ -64,12 +66,12 @@
             />
             <div class="password-warning">
               <p>
-                {{ $t('createWallet.mnemonic.warning.password') }}
+                {{ $t('createWallet.mnemonic.warning.extra-word') }}
               </p>
               <div class="read">
                 > {{ $t('common.read') }}:
                 <a
-                  href="https://kb.myetherwallet.com/posts/security-and-privacy/mnemonic-phrase-password/"
+                  href="https://kb.myetherwallet.com/en/security-and-privacy/mnemonic-phrase-extra-word/"
                   target="_blank"
                   rel="noopener noreferrer"
                   >{{ $t('common.article.mnemonic-password') }}</a
@@ -91,7 +93,13 @@
           <img alt class="icon" src="~@/assets/images/icons/printer.svg" />
         </div>
       </div>
-      <input-footer />
+      <div class="footer-text">
+        <i18n tag="p" path="createWallet.mnemonic.do-not-forget-save-mnemonic">
+          <span slot="do-not-forget">{{
+            $t('createWallet.password.do-not-forget')
+          }}</span>
+        </i18n>
+      </div>
     </div>
   </div>
 </template>
