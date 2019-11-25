@@ -47,7 +47,7 @@ export default class MakerCDP extends MakerCdpBase {
     await this.updateValues(cdpId);
     try {
       const val = await this.cdp.getGovernanceFee();
-      console.log('govFee 1', val); // todo remove dev item
+      // console.log('govFee 1', val); // todo remove dev item
       // TODO why is this returning undefined
       this._governanceFee = (await this.cdp.getGovernanceFee()).toBigNumber();
     } catch (e) {
@@ -67,12 +67,12 @@ export default class MakerCDP extends MakerCdpBase {
         } else {
           this.cdp = await this.services.getMakerCdp(cdpId, false);
         }
-        console.log('CDP', this.cdp); // todo remove dev item
+        // console.log('CDP', this.cdp); // todo remove dev item
         this.isSafe = this.cdp.isSafe;
         await this.getValuesFromChain();
 
         const val = await this.cdp.getGovernanceFee();
-        console.log('govFee 2', val); // todo remove dev item
+        // console.log('govFee 2', val); // todo remove dev item
       } catch (e) {
         console.error(e);
       }
@@ -267,7 +267,7 @@ export default class MakerCDP extends MakerCdpBase {
     if (currency === 'ETH') return true;
     // const _ethQty = toBigNumber(ethQty).toFixed(18);
     const currentAllowance = this.getProxyAllowancefor(currency);
-    console.log('currentAllowance', currency, currentAllowance.toString()); // todo remove dev item
+    // console.log('currentAllowance', currency, currentAllowance.toString()); // todo remove dev item
     // return toBigNumber(currentAllowance).gte(
     //   toBigNumber(ethUnit.toWei(_ethQty, 'ether').toString())
     // );

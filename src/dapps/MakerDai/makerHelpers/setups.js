@@ -178,7 +178,7 @@ export async function setupCdpManage(self, cdpId) {
 }
 
 export async function getValuesForManage(cdpId) {
-  console.log(cdpId); // todo remove dev item
+  // console.log(cdpId); // todo remove dev item
   if (typeof cdpId !== 'number') cdpId = cdpId.id;
   const currentCdp = this.activeCdps[cdpId];
   this.currentCdp = currentCdp;
@@ -243,12 +243,12 @@ export async function updateActiveCdp(self) {
     self,
     self._mcdManager
   );
-  console.log(
-    'withType, withProxy, withoutProxy',
-    withType,
-    withProxy,
-    withoutProxy
-  ); // todo remove dev item
+  // console.log(
+  //   'withType, withProxy, withoutProxy',
+  //   withType,
+  //   withProxy,
+  //   withoutProxy
+  // ); // todo remove dev item
   self.cdpsWithType = withType;
   self.cdps = withProxy.map(removeObject);
   self.cdpsWithoutProxy = withoutProxy;
@@ -293,7 +293,7 @@ export async function updateActiveCdp(self) {
 
 export async function buildEmpty(self) {
   const result = await buildCdpObject.bind(self)(null);
-  console.log(result); // todo remove dev item
+  // console.log(result); // todo remove dev item
   return result;
   // return await buildCdpObject.bind(self)(null);
 }
@@ -351,7 +351,7 @@ export async function buildCdpObject(cdpId, options = {}, useOld = false) {
   };
   let makerCDP;
   try {
-    console.log(cdpId); // todo remove dev item
+    // console.log(cdpId); // todo remove dev item
     makerCDP = new MakerCDP(cdpId, this.web3, services, sysVars);
     if (cdpId) {
       if (useOld) {
@@ -361,6 +361,7 @@ export async function buildCdpObject(cdpId, options = {}, useOld = false) {
     }
     return makerCDP;
   } catch (e) {
+    // eslint-disable-next-line
     console.log(e); // todo remove dev item
     return makerCDP;
   }
@@ -372,9 +373,9 @@ export async function doUpdate(self, Toast) {
   const afterOpen = self.$route.name === 'create';
   await self.updateActiveCdp();
   for (const idProp in self.activeCdps) {
-    console.log('self.activeCdps[idProp] 1', self.activeCdps[idProp]); // todo remove dev item
+    // console.log('self.activeCdps[idProp] 1', self.activeCdps[idProp]); // todo remove dev item
     if (self.activeCdps[idProp].needsUpdate) {
-      console.log('self.activeCdps[idProp] 2', self.activeCdps[idProp]); // todo remove dev item
+      // console.log('self.activeCdps[idProp] 2', self.activeCdps[idProp]); // todo remove dev item
 
       if (self.activeCdps[idProp].closing) {
         afterClose = true;

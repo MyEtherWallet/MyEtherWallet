@@ -530,11 +530,11 @@ export default {
 
         await getDetailsForTokens(this, this._typeService.cdpTypes);
         await checkAllowances(this, this.account.address, this.proxyAddress);
-        console.log(
-          this._mcdManager._serviceManager
-            .dependency('smartContract')
-            .getContract('GET_CDPS')
-        ); // todo remove dev item
+        // console.log(
+        //   this._mcdManager._serviceManager
+        //     .dependency('smartContract')
+        //     .getContract('GET_CDPS')
+        // ); // todo remove dev item
 
         // TODO update usages to use the balances and tokens objects
         this.daiToken = this.tokens['DAI'];
@@ -560,7 +560,7 @@ export default {
         if (proxy === '0x0000000000000000000000000000000000000000') {
           proxy = null;
         }
-        console.log('proxy', proxy); // todo remove dev item
+        // console.log('proxy', proxy); // todo remove dev item
 
         this.curentlyLoading = 'Checking For CDPs';
         try {
@@ -666,7 +666,7 @@ export default {
     },
     async updateActiveCdp() {
       await updateActiveCdp(this);
-      console.log('updating'); // todo remove dev item
+      // console.log('updating'); // todo remove dev item
       if (this.cdps.length === 0 && this.cdpsWithoutProxy.length === 0) {
         this.gotoCreate();
       }

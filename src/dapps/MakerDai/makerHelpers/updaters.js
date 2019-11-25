@@ -15,7 +15,7 @@ export async function doUpdate(self, Toast) {
       } else if (self.activeCdps[idProp].opening) {
         await self.activeCdps[idProp].updateValues();
       } else {
-        console.log('regular value changed update'); // todo remove dev item
+        // console.log('regular value changed update'); // todo remove dev item
         self.activeCdps[idProp] = await self.activeCdps[idProp].update();
       }
     }
@@ -33,7 +33,7 @@ export async function doUpdate(self, Toast) {
   ) {
     await self.setupCdpManageFunc(self.currentCdpId);
   } else {
-    console.log('creating'); // todo remove dev item
+    // console.log('creating'); // todo remove dev item
     await self.loadCdpDetails(); //todo: see if disableing this breaks anything (likely would happen with creation)
     // todo: thie line above is where things were getting erased (new instances are being created)
     await self.setupCdpManageFunc(self.currentCdpId);
