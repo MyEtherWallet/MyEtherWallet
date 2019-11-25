@@ -1,23 +1,9 @@
 import BigNumber from 'bignumber.js';
-import { ERC20 } from './ABIs';
-import {
-  ETH,
-  REP,
-  ZRX,
-  OMG,
-  BAT,
-  GNT,
-  DGD,
-  MDAI,
-  MKR
-} from '@makerdao/dai-plugin-mcd';
+import { MDAI, MKR } from '@makerdao/dai-plugin-mcd';
 import Maker from '@makerdao/dai';
 import { locateCdps } from './locateCdps';
 import MakerCDP from '../MakerCDP';
-import {
-  getDustValue,
-  getParValue
-} from '@/dapps/MakerDai/MakerCDP/chainCalls';
+import { getDustValue } from '@/dapps/MakerDai/MakerCDP/chainCalls';
 const { DAI } = Maker;
 const toBigNumber = num => {
   return new BigNumber(num);

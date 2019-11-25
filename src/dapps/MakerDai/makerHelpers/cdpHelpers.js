@@ -1,3 +1,4 @@
+/*
 // import produce from 'immer';
 // import round from 'lodash/round';
 // import { multiply, divide, subtract } from 'utils/bignumber';
@@ -45,7 +46,7 @@ const defaultCdpState = {
   ilk: ''
 };
 
-export function getCdp(cdpId, { cdps /*, feeds */ }) {
+export function getCdp(cdpId, { cdps /!*, feeds *!/ }) {
   cdpId = cdpId.toString();
   if (!cdps[cdpId]) return defaultCdpState;
   // ,
@@ -180,7 +181,7 @@ export function getDaiAvailable(cdp, rounded = true, precision = 2) {
       );
 }
 
-export async function getEventHistory(/*maker, cdpId*/) {
+export async function getEventHistory(/!*maker, cdpId*!/) {
   // const cdp = await maker
   //   .service('mcd:cdpManager')
   //   .getCdp(cdpId, { prefetch: false });
@@ -259,3 +260,4 @@ function convert(valueType, value) {
 // }, initialState);
 
 export default reducer;
+*/

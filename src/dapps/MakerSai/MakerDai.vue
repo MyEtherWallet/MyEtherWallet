@@ -307,7 +307,9 @@ export default {
       return bnOver(this.liquidationRatio, this.daiQty, this.ethPrice);
     },
     showMoveOrClose() {
-      return this.$route.name === 'manage-sai' || this.$route.name === 'migrate-sai';
+      return (
+        this.$route.name === 'manage-sai' || this.$route.name === 'migrate-sai'
+      );
     },
     showManage() {
       return (

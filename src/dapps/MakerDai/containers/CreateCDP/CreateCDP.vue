@@ -175,7 +175,6 @@
 
 <script>
 import { mapState } from 'vuex';
-import ethUnit from 'ethjs-unit';
 import CurrencyPicker from '../../components/CurrencyPicker';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
@@ -398,7 +397,11 @@ export default {
     },
     minCreate() {
       if (this.emptyMakerCreated) {
-        return this.makerCDP.minDepositFor(this.selectedCurrency.symbol).times(this.makerCDP.getCurrentPriceFor(this.selectedCurrency.symbol));
+        return this.makerCDP
+          .minDepositFor(this.selectedCurrency.symbol)
+          .times(
+            this.makerCDP.getCurrentPriceFor(this.selectedCurrency.symbol)
+          );
       }
       // return this.getCurrentPriceFor(this.selectedCurrency.symbol);
     }

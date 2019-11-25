@@ -151,7 +151,7 @@ export default {
       }
     },
     async findCdps() {
-      const { withType, withProxy, withoutProxy } = await locateCdps(
+      const { withProxy, withoutProxy } = await locateCdps(
         this,
         this.getValueOrFunction('_cdpService')
       );

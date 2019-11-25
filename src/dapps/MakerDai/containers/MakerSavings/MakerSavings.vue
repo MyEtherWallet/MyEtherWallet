@@ -98,27 +98,8 @@ import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
 import BigNumber from 'bignumber.js';
 import SelectCdpEntry from '../../components/SelectCdpEntry';
-import {
-  addresses,
-  migrateABI,
-  ERC20,
-  ProxyContract,
-  toBigNumber
-} from '../../makerHelpers';
-import ethUnit from 'ethjs-unit';
-import { Toast } from '@/helpers';
-import {
-  ETH,
-  REP,
-  ZRX,
-  OMG,
-  BAT,
-  GNT,
-  DGD,
-  MDAI,
-  MKR
-} from '@makerdao/dai-plugin-mcd';
-// const KOVAN_SERVER_URL = 'https://sai-kovan.makerfoundation.com/v1';
+import { addresses, ERC20, toBigNumber } from '../../makerHelpers';
+import { MDAI } from '@makerdao/dai-plugin-mcd';
 
 export default {
   components: {

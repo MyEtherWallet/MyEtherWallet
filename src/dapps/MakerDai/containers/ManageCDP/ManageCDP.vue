@@ -483,7 +483,6 @@ export default {
   methods: {
     getActiveCdp() {
       const cdpId = typeof this.cdpId === 'number' ? this.cdpId : this.cdpId.id;
-      const val = this.getValueOrFunction('activeCdpId');
       this.currentCdp = this.getValueOrFunction('getCdp')(cdpId);
       if (this.currentCdp) {
         this.currentCdpLoaded = true;

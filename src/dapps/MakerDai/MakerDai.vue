@@ -211,22 +211,8 @@ import DepositModal from './components/DepositModal';
 import WithdrawModal from './components/WithdrawModal';
 import PaybackModal from './components/PaybackModal';
 import Maker from '@makerdao/dai';
-import McdPlugin, {
-  ETH,
-  REP,
-  ZRX,
-  OMG,
-  BAT,
-  GNT,
-  DGD,
-  MDAI,
-  MKR
-} from '@makerdao/dai-plugin-mcd';
-import configPlugin from '@makerdao/dai-plugin-config';
-import { getCdpIds } from './MakerCDP/chainCalls';
+import McdPlugin, { MKR } from '@makerdao/dai-plugin-mcd';
 import { Toast } from '@/helpers';
-import MakerCDP from './MakerCDP';
-import { toChecksumAddress } from '@/helpers/addressUtils';
 import {
   CdpNum,
   locateCdps,
@@ -234,7 +220,6 @@ import {
   setupServices,
   getDetailsForTokens,
   checkAllowances,
-  checkAllowanceFor,
   collateralOptions,
   setupCdpManage,
   updateActiveCdp,
@@ -242,12 +227,11 @@ import {
   buildEmpty,
   loadCdpDetail,
   doUpdate,
-  toBigNumber,
-  ProxyContract
+  toBigNumber
 } from './makerHelpers';
 
 import MewPlugin from 'mew-maker-plugin';
-import { GetCdps, ProxyRegistry, CdpManager } from './makerHelpers';
+import { ProxyRegistry } from './makerHelpers';
 import addresses from './makerHelpers/addresses';
 
 const { DAI } = Maker;
@@ -636,22 +620,6 @@ export default {
     },
     async doUpdate() {
       await doUpdate(this, Toast);
-    },
-    async generateProxyTx(address, abi) {
-      new this.web3.eth.Contract(ProxyContract, this.proxyAddress).methods
-        .execute(
-          addresses.MIGRATION_PROXY_ACTIONS,
-          this.fixImproperEncoding(
-            new this.web3.eth.Contract(MigrationProxyActions).methods
-              .migrate(
-                addresses.MIGRATION,
-                '0x' + toBigNumber(cdpId).toString(16)
-              )
-              .encodeABI(),
-            cdpId
-          )
-        )
-        .encodeABI();
     },
     async checkAllowances() {
       await checkAllowances(this, this.account.address, this.proxyAddress);

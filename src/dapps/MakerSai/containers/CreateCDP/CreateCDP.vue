@@ -17,7 +17,9 @@
       :loadingmessage="$t('dappsMaker.creating-message')"
     />
     <div class="manage-container">
-      Single collateral SAI (previously called DAI)  is being migrated to multi-collateral DAI (new DAI).  Therefore any new generation should use the new structure.
+      Single collateral SAI (previously called DAI) is being migrated to
+      multi-collateral DAI (new DAI). Therefore any new generation should use
+      the new structure.
       <p class="top-title">
         {{ $t('dappsMaker.maker_title') }}
       </p>
@@ -25,7 +27,7 @@
         {{ $t('dappsMaker.create-instruct') }}
       </p>
 
-<!--      <div class="currency-ops-new">
+      <!--      <div class="currency-ops-new">
         <div class="currency-picker-container">
           <div class="interface__block-title">
             {{ $t('dappsMaker.collateral') }}
