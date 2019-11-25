@@ -231,10 +231,6 @@ export default {
       type: BigNumber,
       default: toBigNumber(0)
     },
-    // liquidationRatio: {
-    //   type: BigNumber,
-    //   default: toBigNumber(0)
-    // },
     priceService: {
       type: Object,
       default: function() {
@@ -264,6 +260,10 @@ export default {
     getValueOrFunction: {
       type: Function,
       default: function() {}
+    },
+    makerActive: {
+      type: Boolean,
+      default: false
     },
     values: {
       type: Object,
@@ -296,7 +296,7 @@ export default {
       daiQty: 0,
       txInfo: {},
       loading: false,
-      selectedCurrency: { symbol: 'ETH', name: 'Ethereum' }
+      selectedCurrency: { symbol: 'ETH', name: 'ETH-A' }
     };
   },
   computed: {
@@ -342,6 +342,7 @@ export default {
     },
     liquidationRatio(){
       if(this.emptyMakerCreated){
+        console.log(this.makerCDP); // todo remove dev item
         return this.makerCDP.liquidationRatio
       }
     },
@@ -365,7 +366,9 @@ export default {
       return false;
     },
     minEth() {
-      return toBigNumber(this.getValueOrFunction('minEth'));
+      if(this.emptyMakerCreated){
+        return toBigNumber(this.getValueOrFunction('minEth'));
+      }
     },
     collateralOptions() {
       const mcdCollateralOptions = this.getValueOrFunction('mcdCurrencies');
@@ -397,10 +400,17 @@ export default {
       if(this.emptyMakerCreated){
         this.makerCDP.setType(val)
       }
+    },
+    makerActive(){
+      if(!this.emptyMakerCreated){
+        this.buildEmptyInstance();
+      }
     }
   },
   async mounted() {
-    this.buildEmptyInstance();
+    if (this.makerActive) {
+      this.buildEmptyInstance();
+    }
   },
   methods: {
     getCurrentPriceFor(symbol) {
@@ -434,6 +444,7 @@ export default {
       this.makerCDP = await this.buildEmpty();
       this.$forceUpdate();
       this.emptyMakerCreated = true;
+      console.log(this.makerCDP); // todo remove dev item
       console.log("empty built"); // todo remove dev item
     },
     displayPercentValue,

@@ -223,7 +223,7 @@ import McdPlugin, {
   MKR
 } from '@makerdao/dai-plugin-mcd';
 import configPlugin from '@makerdao/dai-plugin-config';
-// import McdMigration from '@m'
+import {getCdpIds} from './MakerCDP/chainCalls'
 import { Toast } from '@/helpers';
 import MakerCDP from './MakerCDP';
 import { toChecksumAddress } from '@/helpers/addressUtils';
@@ -411,6 +411,7 @@ export default {
     }
   },
   destroyed() {
+    this.maker = {};
     this.priceService = {};
     this.cdpService = {};
     this.proxyService = {};
@@ -455,30 +456,14 @@ export default {
         this.curentlyLoading = 'Loading: Multi Collateral Operations';
         await this.maker.service('proxy').ensureProxy();
         this._typeService = this.maker.service(ServiceRoles.CDP_TYPE);
-
-        const defaultCdpTypes = [
-          { currency: ETH, ilk: 'ETH-A' },
-          { currency: ETH, ilk: 'ETH-B' },
-          { currency: REP, ilk: 'REP-A' },
-          // { currency: REP, ilk: 'REP-B' },
-          { currency: ZRX, ilk: 'ZRX-A' },
-          { currency: OMG, ilk: 'OMG-A' },
-          { currency: BAT, ilk: 'BAT-A' },
-          { currency: DGD, ilk: 'DGD-A', decimals: 9 },
-          { currency: GNT, ilk: 'GNT-A' }
-        ];
         this.curentlyLoading = 'Loading: Multi Collateral Types';
         this.mcdCurrencies = this._typeService.cdpTypes.reduce((acc, entry) => {
-          // acc[entry.ilk] = entry;
           acc[entry.currency.symbol] = entry;
           acc[entry.currency.symbol].symbol = entry.currency.symbol;
           return acc;
         }, {});
 
         this.collateralList = collateralOptions(this.mcdCurrencies);
-        // setupService('mcd:queryApi');
-        // setupService('mcd:savings');
-        // setupService('mcd:auction');
       } catch (e) {
         console.error(e);
       }
@@ -493,7 +478,6 @@ export default {
       this.currentCdp = {};
       const web3 = this.web3;
       const _self = this;
-      // this.gotoLoading();
       if (!this.showLoading) {
         this.gotoHome();
       } else {
@@ -565,8 +549,6 @@ export default {
           liquidationRatio: this.liquidationRatio,
           liquidationPenalty: this.liquidationPenalty,
           targetPrice: this._targetPrice
-          // proxyAllowances: this.proxyAllowances,
-          // mcdCurrencies: this.mcdCurrencies
         };
 
         const proxyReg = new this.web3.eth.Contract(
@@ -585,7 +567,6 @@ export default {
           const { withType, withProxy, withoutProxy } = await locateCdps(
             this,
             this._mcdManager
-            // this._cdpService
           );
           this.cdpsWithType = withType;
           this.cdps = withProxy;
@@ -606,6 +587,7 @@ export default {
 
       if (this.showLoading) {
         if (this.afterLoadShow === 'CREATE') {
+          this.makerActive = true;
           this.gotoCreate();
         } else {
           if (this.cdps.length > 0 || this.cdpsWithoutProxy.length > 0) {
@@ -653,15 +635,7 @@ export default {
       await this.doUpdate();
     },
     async doUpdate() {
-      console.log(
-        'withType, withProxy, withoutProxy',
-        this.cdpsWithType,
-        this.cdps,
-        this.cdpsWithoutProxy
-      ); // todo remove dev item
       await doUpdate(this, Toast);
-      console.log('override 4', this.activeCdps['211'].override); // todo remove dev item
-
     },
     async generateProxyTx(address, abi) {
       new this.web3.eth.Contract(ProxyContract, this.proxyAddress).methods
