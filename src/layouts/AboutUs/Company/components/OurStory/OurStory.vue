@@ -27,7 +27,7 @@ export default {
       toptitle: '',
       title: 'Our story',
       description:
-        'Sea lorem ea justo amet dolor eirmod stet justo, tempor eos lorem tempor dolor elitr at amet voluptua stet. Et sea gubergren et ipsum, diam lorem tempor tempor labore, consetetur dolor sit no kasd dolore et takimata, sit clita consetetur justo tempor, stet sit ut consetetur ea diam sanctus dolores.',
+        'At dolor et sit erat lorem at, dolor magna sed eirmod eos magna takimata ipsum. Eos rebum nonumy ea sit, nonumy sed duo no gubergren sea rebum, stet ut aliquyam amet gubergren erat. Voluptua lorem diam et ea ut, et sanctus justo ea aliquyam vero ipsum est amet sed. Sanctus sanctus sadipscing ipsum invidunt dolor consetetur gubergren. Labore dolor diam diam ea et sit rebum. Invidunt lorem diam magna ipsum,.',
       centered: true
     }
   })

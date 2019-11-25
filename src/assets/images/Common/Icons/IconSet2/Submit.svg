@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="38px" height="38px" viewBox="0 0 38 38" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>Group 84</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Landing-page" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="how-it-works" transform="translate(-214.000000, -2221.000000)">
+            <g id="Group-71" transform="translate(214.000000, 1895.000000)">
+                <g id="Group-55" transform="translate(0.000000, 74.000000)">
+                    <g id="Group-84" transform="translate(0.000000, 252.000000)">
+                        <g id="Ssend-tx" transform="translate(0.000000, 1.000000)">
+                            <g id="Group-68">
+                                <circle id="Oval" stroke="#00C0A5" cx="18.855618" cy="18" r="18"></circle>
+                                <path d="M25.5916667,15.625 C24.9208333,12.4375 22.0458333,10 18.5,10 C15.7208333,10 13.325,11.5 12.175,13.75 C9.20416667,14.125 7,16.46875 7,19.375 C7,22.46875 9.5875,25 12.75,25 L25.2083333,25 C27.8916667,25 30,22.9375 30,20.3125 C30,17.875 27.9875,15.8125 25.5916667,15.625 Z M20.4166667,18.4375 L20.4166667,22.1875 L16.5833333,22.1875 L16.5833333,18.4375 L13.7083333,18.4375 L18.5,13.75 L23.2916667,18.4375 L20.4166667,18.4375 Z" id="Shape" fill="#00C0A5" fill-rule="nonzero"></path>
+                            </g>
+                            <g id="cloud-backup-up-arrow" transform="translate(7.000000, 10.000000)"></g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

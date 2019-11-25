@@ -1,15 +1,77 @@
 <template>
   <div class="component-container">
     <v-container>
-      Dapps
+      <v-row class="align-center">
+        <v-col cols="6" class="text-content pr-12">
+          <BlockTitle :data="titleData" class="mb-8 pl-12" />
+          <div class="mb-9 d-flex">
+            <div class="mr-3">
+              <v-img src="@/assets/images/Common/Icons/IconSet2/Dapps.svg" />
+            </div>
+            <div>
+              <div class="mb-1 font-weight-black subtitle-1">Dapps Center</div>
+              <div>
+                MEW has pasrtnered with Bity, Kyber Network, and Simplex to
+                allow users to swap fiat to crypto, ETH and BTC.
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex">
+            <div class="mr-3">
+              <v-img src="@/assets/images/Common/Icons/IconSet2/Submit.svg" />
+            </div>
+            <div>
+              <div class="mb-1 font-weight-black subtitle-1">Submit</div>
+              <div>
+                Dolor tempor ipsum lorem sadipscing, erat sadipscing et dolor
+                sed stet takimata ipsum invidunt, est ea no dolor.
+              </div>
+              <div class="d-flex align-center mt-7">
+                <a
+                  href="#"
+                  class="mr-5 teal--text text--lighten-2 font-weight-bold"
+                  >Try free demo</a
+                >
+                <a href="#" class="teal--text text--lighten-2 font-weight-bold"
+                  >Watch tutorial</a
+                >
+              </div>
+            </div>
+          </div>
+        </v-col>
+
+        <v-col cols="6">
+          <img
+            class="block-image mt-12"
+            src="@/assets/images/Etc/HowItWorks/ExploreNewDapps.png"
+          />
+        </v-col>
+      </v-row>
     </v-container>
   </div>
 </template>
 
 <script>
+import BlockTitle from '@/layouts/components/BlockTitle';
+
 export default {
-  components: {}
+  components: { BlockTitle },
+  data: () => ({
+    titleData: {
+      textProps: '',
+      toptitle: '',
+      title: 'Dapps',
+      description:
+        'At dolor et sit erat lorem at, dolor magna sed eirmod eos magna takimata ipsum.',
+      centered: false
+    }
+  })
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.block-image {
+  box-shadow: 0px 0px 20px #0000001c;
+}
+</style>
