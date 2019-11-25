@@ -26,12 +26,17 @@ import {
   solidum,
   metadium,
   dexon,
-  lightstreamsNetwork
+  lightstreamsNetwork,
+  ledgerEthereum
 } from './paths';
+const renamedLedger = Object.assign({}, ledgerEthereum);
+renamedLedger.label = 'Ledger';
+
 export default [
   ethereum,
   ethereumClassic,
   ropsten,
+  renamedLedger,
   singularDTV,
   expanse,
   ubiq,

@@ -12,7 +12,7 @@ const ethereumClassic = {
 };
 const ropsten = {
   path: "m/44'/1'/0'/0",
-  label: 'Ethereum Testnet (Ropsten)'
+  label: 'Ropsten Testnet'
 };
 const singularDTV = {
   path: "m/0'/0'/0'",
