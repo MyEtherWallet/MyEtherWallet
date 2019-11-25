@@ -349,7 +349,6 @@ export default {
       return '--';
     },
     liquidationRatioDisplay() {
-      console.log('liquidityRatioDisplay'); // todo remove dev item
       if (this.currentCdpLoaded && this.valuesUpdated > -1) {
         return displayFixedValue(displayPercentValue(this.currentCdp.liquidationRatio));
       }
@@ -380,9 +379,6 @@ export default {
       if (this.currentCdpLoaded && this.valuesUpdated > -1) {
         return displayFixedValue(this.currentCdp.maxEthDraw, 5);
       }
-      // if (this.values) {
-      //   return this.values.maxEthDraw;
-      // }
       return '--';
     },
     maxUsdDrawDisplay() {

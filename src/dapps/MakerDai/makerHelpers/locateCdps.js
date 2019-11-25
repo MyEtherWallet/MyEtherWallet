@@ -1,13 +1,17 @@
 import { toChecksumAddress } from '@/helpers/addressUtils';
-import { GetCdps } from './ABIs';
+import { getCdpIds } from './chainCalls';
+import {GetCdps} from './ABIs'
 import addresses from '@/dapps/MakerDai/makerHelpers/addresses';
 
 async function locateCdps(self, _cdpService) {
   self.cdpsWithoutProxy = [];
   const cdpsWithoutProxy = await locateCdpsWithoutProxy(self, _cdpService);
   self.cdps = [];
-  const cdps = await locateCdpsProxy(self, _cdpService);
+  // const cdps = await locateCdpsProxy(self, _cdpService);
   const cdpsDirect = await locateCdpsDirectly(self);
+
+  const cdps = await getCdpIds(self.web3, self.proxyAddress); //result.ids.map(item => parseInt(item));
+
   self.allCdpIds = [...cdpsWithoutProxy, ...cdps, ...cdpsDirect].map(entry =>
     typeof entry !== 'number' ? entry.id : entry
   );

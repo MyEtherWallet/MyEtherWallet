@@ -70,7 +70,6 @@ export default class MakerCDP extends MakerCdpBase {
         console.log('CDP', this.cdp); // todo remove dev item
         this.isSafe = this.cdp.isSafe;
         await this.getValuesFromChain();
-        console.log(this.mcdManager.get('mcd:cdpType').getCdpType(null, this.cdpType)); // todo remove dev item
 
         const val = await this.cdp.getGovernanceFee();
         console.log('govFee 2', val); // todo remove dev item
@@ -101,9 +100,7 @@ export default class MakerCDP extends MakerCdpBase {
     }
     // todo: think about whether the type of update should be recorded and then used to determine which override to create
     // Mostly about reducing chain calls.  if the value doesn't need a particular call. it can be skipped.
-    console.log('this.dustValues.rate', this.dustValues[this.cdpCollateralType].rate); // todo remove dev item
     const calculatedDebt = daiMath.debtValue(urns.art, this.dustValues[this.cdpCollateralType].rate);
-    console.log('calculatedDebt', calculatedDebt.toBigNumber().toString()); // todo remove dev item
     this.override['debtValue'] = calculatedDebt;
 
   }
@@ -302,7 +299,6 @@ export default class MakerCDP extends MakerCdpBase {
   setType(type) {
     if (this.cdpId === null) {
       this.cdpTypeObject = this.mcdManager.get('mcd:cdpType').getCdpType(null, type.name);
-      // this.cdpTypeObject = this.services.mcdCurrencies[type.symbol];
     }
   }
 

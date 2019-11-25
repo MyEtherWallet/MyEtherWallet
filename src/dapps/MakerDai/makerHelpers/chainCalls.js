@@ -13,7 +13,6 @@ import {
 } from '../makerHelpers';
 import assert from "assert";
 
-console.log(GetCdps); // todo remove dev item
 function padRight(string, chars, sign) {
   return string + new Array(chars - string.length + 1).join(sign ? sign : '0');
 }
@@ -45,10 +44,14 @@ export async function getCdpIds(web3, proxyAddress) {
   const ids = results.ids;
   const ilks = results.ilks;
   assert(ids.length === ilks.length, 'ids and ilks must be the same length');
-  return ids.map((id, index) => {
+  const collected = ids.map((id, index) => {
     console.log(id, index); // todo remove dev item
     return { id: parseInt(id), ilk: bytesToString(ilks[index]) };
   });
+  console.log(collected); // todo remove dev item
+  return collected;
+  // console.log(result); // todo remove dev item
+  // return result;
 }
 
 export function getLiquidationRatioFor(web3, type) {}

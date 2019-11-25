@@ -1,12 +1,10 @@
 import BigNumber from 'bignumber.js';
 import {
   maxPethDraw,
-  maxEthDraw,
   maxDai,
-  getMakerCurrencies,
-  displayFixedValue,
-  calcLiquidationPrice
+  displayFixedValue
 } from '../makerHelpers';
+import {defaultIlk} from './constants'
 
 import * as daiMath from './daiMath';
 
@@ -30,7 +28,7 @@ export default class MakerCdpBase {
     this.cdps = [];
     this.noProxy = sysVars.noProxy || false;
     this.sysVars = sysVars; // todo make sure this doesn't bring in the issue with vue walking the tree and breaking things
-    this.cdpType = this.cdpId ? sysVars.cdpsWithType[this.cdpId] : 'ETH';
+    this.cdpType = this.cdpId ? sysVars.cdpsWithType[this.cdpId] : defaultIlk;
     this.services = services || null;
     this.needsUpdate = false;
     this.closing = false;
@@ -38,16 +36,13 @@ export default class MakerCdpBase {
     this.migrated = false;
     this.migrateCdpActive = false;
     this.migrateCdpStage = 0;
-    this.cdpTypeObject = this.mcdManager
+    console.log('_mcdManager', services._mcdManager); // todo remove dev item
+    this.cdpTypeObject = services._mcdManager
       .get('mcd:cdpType')
       .getCdpType(null, this.cdpType);
-    //this.cdpTypeObject = rawType; // this.services.mcdCurrencies[this.cdpCollateralType];
-
     this._liqPrice = toBigNumber(0);
     this.isSafe = false;
-    // this.debtValue = toBigNumber(0);
     this._collatRatio = 0;
-    // this.ethCollateral = toBigNumber(0);
     this.pethCollateral = toBigNumber(0);
     this._usdCollateral = toBigNumber(0);
     this._governanceFee = toBigNumber(12345);
@@ -312,7 +307,6 @@ export default class MakerCdpBase {
         rawType.price
       )
       .toBigNumber();
-    // return this.cdp.minSafeCollateralAmount.toBigNumber();
   }
 
   get minEth() {

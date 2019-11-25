@@ -174,6 +174,7 @@ export async function setupCdpManage(self, cdpId) {
 }
 
 export async function getValuesForManage(cdpId) {
+  console.log(cdpId); // todo remove dev item
   if (typeof cdpId !== 'number') cdpId = cdpId.id;
   const currentCdp = this.activeCdps[cdpId];
   this.currentCdp = currentCdp;
@@ -238,6 +239,7 @@ export async function updateActiveCdp(self) {
     self,
     self._mcdManager
   );
+  console.log('withType, withProxy, withoutProxy', withType, withProxy, withoutProxy); // todo remove dev item
   self.cdpsWithType = withType;
   self.cdps = withProxy.map(removeObject);
   self.cdpsWithoutProxy = withoutProxy;
@@ -281,7 +283,10 @@ export async function updateActiveCdp(self) {
 }
 
 export async function buildEmpty(self) {
-  return await buildCdpObject.bind(self)(null);
+  const result = await buildCdpObject.bind(self)(null);
+  console.log(result); // todo remove dev item
+  return result;
+  // return await buildCdpObject.bind(self)(null);
 }
 
 export async function buildCdpObject(cdpId, options = {}, useOld = false) {
@@ -337,6 +342,7 @@ export async function buildCdpObject(cdpId, options = {}, useOld = false) {
   };
   let makerCDP;
   try {
+    console.log(cdpId); // todo remove dev item
     makerCDP = new MakerCDP(cdpId, this.web3, services, sysVars);
     if (cdpId) {
       if (useOld) {
