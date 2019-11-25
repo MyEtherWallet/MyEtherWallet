@@ -81,6 +81,11 @@ const SET_GAS_PRICE = function(state, val) {
   store.set('gasPrice', val);
 };
 
+const SET_ADDRESS_BOOK = function(state, val) {
+  state.addressBook = val;
+  store.set('addressBook', val);
+};
+
 const SET_LAST_PATH = function(state, val) {
   state.path = val;
 };
@@ -137,5 +142,6 @@ export default {
   TOGGLE_SIDEMENU,
   GETTING_STARTED_DONE,
   UPDATE_BLOCK_NUMBER,
-  SAVE_QUERY_VAL
+  SAVE_QUERY_VAL,
+  SET_ADDRESS_BOOK
 };
