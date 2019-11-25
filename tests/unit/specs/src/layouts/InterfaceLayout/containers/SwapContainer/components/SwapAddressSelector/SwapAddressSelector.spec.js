@@ -22,7 +22,7 @@ describe('SwapAddressSelector.vue', () => {
     });
   });
 
-  it('should render correct validAddress data', () => {
+  xit('should render correct validAddress data', () => {
     expect(wrapper.find('.blockie-place-holder-image').exists()).toBe(true);
     expect(wrapper.find('.selected-address-blockie').exists()).toBe(false);
     wrapper.setData({ validAddress: true });
@@ -30,7 +30,7 @@ describe('SwapAddressSelector.vue', () => {
     expect(wrapper.find('.selected-address-blockie').exists()).toBe(true);
   });
 
-  it('should render correct selectedAddress data', () => {
+  xit('should render correct selectedAddress data', () => {
     const selectedAddress = 'selectedAddress';
     wrapper.setData({ selectedAddress });
     expect(
