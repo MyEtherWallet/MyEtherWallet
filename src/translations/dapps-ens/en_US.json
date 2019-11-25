@@ -61,5 +61,10 @@
   "name-hash": "Namehash",
   "owner": "Owner",
   "multi-coin": "Multi-coin",
-  "txt-record": "Text Records"
+  "txt-record": "Text Records",
+  "ens-resolver": {
+    "address-reported-error": "Address has been reported. Please make sure you are sending funds to the correct address.",
+    "invalid-eth-addr": "Not a valid Ethereum address",
+    "addr-not-checksummed": "This address is not checksummed properly. Please copy the address exactly as shown."
+  }
 }
