@@ -10,8 +10,7 @@
 ### Feature
 
 - Address book [#1647](https://github.com/MyEtherWallet/MyEtherWallet/pull/1647)
-- Add MEWconnect footer link [#1675] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1675)
-
+- Add MEWconnect footer link [#1675](https://github.com/MyEtherWallet/MyEtherWallet/pull/1675)
 
 ### Release v5.2.4
 
