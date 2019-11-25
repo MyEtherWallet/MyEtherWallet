@@ -15,15 +15,6 @@
           <mnemonic-table-to-print
             :mnemonic="mnemonic"
             :is-twenty-four="isTwentyFour"
-            :title="$t('createWallet.mnemonic.table.title')"
-            :support-email="$t('common.support-email')"
-            :we-text="$t('createWallet.mnemonic.table.we')"
-            :can-not="$t('createWallet.mnemonic.table.can-not')"
-            :change-pw="$t('createWallet.mnemonic.table.change-pw')"
-            :dont-forget="$t('createWallet.mnemonic.table.dont-forget')"
-            :save-text="$t('createWallet.mnemonic.table.save')"
-            :requirements="$t('createWallet.mnemonic.table.requirements')"
-            :access-wallet="$t('createWallet.mnemonic.table.access-wallet')"
             :build-type="buildType"
           />
         </div>
@@ -31,16 +22,6 @@
           <mnemonic-table-to-display
             :mnemonic="mnemonic"
             :is-twenty-four="isTwentyFour"
-            :title="$t('createWallet.mnemonic.table.title')"
-            :support-email="$t('common.support-email')"
-            :safe-text="$t('createWallet.mnemonic.table.safe-place')"
-            :we-text="$t('createWallet.mnemonic.table.we')"
-            :can-not="$t('createWallet.mnemonic.table.can-not')"
-            :change-pw="$t('createWallet.mnemonic.table.change-pw')"
-            :dont-forget="$t('createWallet.mnemonic.table.dont-forget')"
-            :save-text="$t('createWallet.mnemonic.table.save')"
-            :requirements="$t('createWallet.mnemonic.table.requirements')"
-            :access-wallet="$t('createWallet.mnemonic.table.access-wallet')"
             :build-type="buildType"
           />
         </div>

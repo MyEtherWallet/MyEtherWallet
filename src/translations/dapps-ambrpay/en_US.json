@@ -38,7 +38,6 @@
     "subscription-fund": "Your subscription fund",
     "should-update": "should be updated within the next minute.",
     "in-wallet": "should be in your wallet within the next minute.",
-    "withdraw-fund": "Your withdraw fund",
-    "ok": "OK"
+    "withdraw-fund": "Your withdraw fund"
   }
 }
