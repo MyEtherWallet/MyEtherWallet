@@ -67,7 +67,7 @@
           </div>
           <div class="fee-value">
             <div class="gwei">
-              {{ gasPrice }} {{ $t('common.gas.uppercase-gwei') }}
+              {{ gasPrice }} {{ $t('common.gas.gwei') }}
               <!--(Economic)-->
             </div>
             <div v-show="network.type.name === 'ETH'" class="usd">
