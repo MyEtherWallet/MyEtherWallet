@@ -138,13 +138,10 @@
           <div class="provider-image">
             <img :src="providerLogo('mew')" alt />
           </div>
-          <div>
-            {{ $t('swap.providers.load-rate-error') }}
-            {{ noProvidersPair.fromCurrency }}
-            {{ $t('swap.providers.article-to') }}
-            {{ noProvidersPair.toCurrency }}
-            {{ $t('swap.warning.try-again') }}
-          </div>
+          <i18n tag="div" path="swap.providers.load-rate-error">
+            <span slot="from-currency">{{ noProvidersPair.fromCurrency }}</span>
+            <span slot="to-currency">{{ noProvidersPair.toCurrency }}</span>
+          </i18n>
         </li>
       </ul>
     </div>
