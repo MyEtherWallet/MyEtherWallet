@@ -5,13 +5,6 @@
   "add-funds": "Add Funds",
   "balance": "Subscriptions Balance",
   "my-subscriptions": "My Subscriptions",
-  "to-address": "To Address",
-  "type": "Type",
-  "eth": "ETH",
-  "usd": "USD",
-  "ethereum": "Ethereum",
-  "amount": "Amount",
-  "entire-balance": "Entire Balance",
   "automation-fee": "1% automation-fee will be added on top",
   "interval": "Interval",
   "in-every": "In every",
@@ -39,7 +32,6 @@
     "subscription-fund": "Your subscription fund",
     "should-update": "should be updated within the next minute.",
     "in-wallet": "should be in your wallet within the next minute.",
-    "withdraw-fund": "Your withdraw fund",
-    "ok": "OK"
+    "withdraw-fund": "Your withdraw fund"
   }
 }
