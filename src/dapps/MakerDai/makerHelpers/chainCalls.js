@@ -1,16 +1,4 @@
-import {
-  maxPethDraw,
-  maxEthDraw,
-  maxDai,
-  getMakerCurrencies,
-  displayFixedValue,
-  calcLiquidationPrice,
-  addresses,
-  Vat,
-  Spotter,
-  GetCdps,
-  CdpManager
-} from '../makerHelpers';
+import { addresses, Vat, Spotter, GetCdps, CdpManager } from '../makerHelpers';
 import assert from 'assert';
 
 function padRight(string, chars, sign) {
@@ -53,8 +41,6 @@ export async function getCdpIds(web3, proxyAddress) {
   // console.log(result); // todo remove dev item
   // return result;
 }
-
-export function getLiquidationRatioFor(web3, type) {}
 
 export async function getDustValue(web3, symbol) {
   const contract = new web3.eth.Contract(Vat, addresses.MCD_VAT);

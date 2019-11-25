@@ -1,32 +1,14 @@
 import Maker from '@makerdao/dai';
-import * as makerCurrency from '@makerdao/currency';
-import BigNumber from 'bignumber.js';
 import {
   calcLiquidationPrice,
   calcCollatRatio,
-  maxPethDraw,
-  maxEthDraw,
-  maxDai,
   getMakerCurrencies,
-  displayFixedValue,
   addresses,
   ERC20,
-  Spotter,
   toBigNumber,
   bnOver
 } from '../makerHelpers';
-import {
-  ETH,
-  REP,
-  ZRX,
-  OMG,
-  BAT,
-  GNT,
-  DGD,
-  MDAI,
-  MKR,
-  default as TKNS
-} from '@makerdao/dai-plugin-mcd';
+import { MDAI } from '@makerdao/dai-plugin-mcd';
 import ethUnit from 'ethjs-unit';
 import MakerCdpBase from './MakerCdpBase';
 import { getUrns } from './chainCalls';
@@ -46,7 +28,6 @@ export default class MakerCDP extends MakerCdpBase {
   async init(cdpId = this.cdpId) {
     await this.updateValues(cdpId);
     try {
-      const val = await this.cdp.getGovernanceFee();
       // console.log('govFee 1', val); // todo remove dev item
       // TODO why is this returning undefined
       this._governanceFee = (await this.cdp.getGovernanceFee()).toBigNumber();
@@ -71,7 +52,6 @@ export default class MakerCDP extends MakerCdpBase {
         this.isSafe = this.cdp.isSafe;
         await this.getValuesFromChain();
 
-        const val = await this.cdp.getGovernanceFee();
         // console.log('govFee 2', val); // todo remove dev item
       } catch (e) {
         console.error(e);

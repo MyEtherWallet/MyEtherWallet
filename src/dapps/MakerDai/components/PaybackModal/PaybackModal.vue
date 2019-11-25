@@ -114,7 +114,6 @@ import ethUnit from 'ethjs-unit';
 import ExpandingOption from '@/components/ExpandingOption';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
 import CheckBox from '../CheckBox';
-import BigNumber from 'bignumber.js/bignumber.js';
 import {
   displayFixedValue,
   displayPercentValue,
