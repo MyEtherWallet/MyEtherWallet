@@ -12,7 +12,7 @@
         <BlockTitle :data="titleData" class="mb-8 pl-12" />
         <div class="mb-6 d-flex">
           <div class="mr-3">
-            <v-img src="@/assets/images/Etc/AboutUs/Icons/Send.svg" />
+            <v-img src="@/assets/images/Common/Icons/IconSet2/Send.svg" />
           </div>
           <div>
             <div class="mb-1 font-weight-black subtitle-1">
@@ -27,7 +27,7 @@
 
         <div class="mb-6 d-flex">
           <div class="mr-3">
-            <v-img src="@/assets/images/Etc/AboutUs/Icons/Offline.svg" />
+            <v-img src="@/assets/images/Common/Icons/IconSet2/Offline.svg" />
           </div>
           <div>
             <div class="mb-1 font-weight-black subtitle-1">
@@ -42,12 +42,10 @@
 
         <div class="d-flex">
           <div class="mr-3">
-            <v-img src="@/assets/images/Etc/AboutUs/Icons/NFT.svg" />
+            <v-img src="@/assets/images/Common/Icons/IconSet2/NFT.svg" />
           </div>
           <div>
-            <div class="mb-1 font-weight-black subtitle-1">
-              NFT Manager
-            </div>
+            <div class="mb-1 font-weight-black subtitle-1">NFT Manager</div>
             <div>
               Dolor tempor ipsum lorem sadipscing, erat sadipscing et dolor sed
               stet takimata ipsum invidunt, est ea no dolor.
@@ -56,22 +54,20 @@
               <a
                 href="#"
                 class="mr-5 teal--text text--lighten-2 font-weight-bold"
+                >Try free demo</a
               >
-                Try free demo
-              </a>
               <a
                 href="#"
                 class="mr-5 teal--text text--lighten-2 font-weight-bold"
+                >Watch tutorial</a
               >
-                Watch tutorial
-              </a>
             </div>
           </div>
         </div>
       </v-col>
       <v-col cols="6">
         <v-img
-          src="@/assets/images/Etc/AboutUs/InterfaceSendTransaction.png"
+          src="@/assets/images/Etc/HowItWorks/InterfaceSendTransaction.png"
           class="mt-n6"
         />
       </v-col>

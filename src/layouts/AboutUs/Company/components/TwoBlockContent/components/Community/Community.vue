@@ -63,7 +63,7 @@ export default {
     descriptionText:
       'Et voluptua takimata sit clita amet, takimata dolor stet sit accusam tempor at est labore.',
     buttonClass: 'mr-4',
-    iconClass: 'display-1',
+    iconClass: 'community-button',
     iconColor: '#003945'
   })
 };
@@ -71,4 +71,10 @@ export default {
 
 <style lang="scss" scoped>
 //@import '@/assets/styles/GlobalVariables';
+
+.community-button {
+  i {
+    font-size: 37px !important;
+  }
+}
 </style>

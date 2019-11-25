@@ -1,18 +1,23 @@
 <template>
-  <div class="component-container">
+  <div class="component-container position--relative">
+    <v-img
+      src="@/assets/images/Etc/HowItWorks/Bubbles.svg"
+      max-width="100%"
+      class="block-background-pattern"
+    />
     <v-container>
       <v-row class="align-center">
         <v-col cols="6">
           <v-img
-            class="mt-5"
-            src="@/assets/images/Etc/AboutUs/InterfaceSwap.svg"
+            class="my-8"
+            src="@/assets/images/Etc/HowItWorks/InterfaceSwap.png"
           />
         </v-col>
         <v-col cols="6" class="text-content pl-12">
           <BlockTitle :data="titleData" class="mb-8 pl-12" />
           <div class="mb-9 d-flex">
             <div class="mr-3">
-              <v-img src="@/assets/images/Etc/AboutUs/Icons/WhiteBTC.svg" />
+              <v-img src="@/assets/images/Common/Icons/IconSet2/WhiteBTC.svg" />
             </div>
             <div>
               <div class="mb-1 font-weight-black subtitle-1 white--text">
@@ -27,7 +32,7 @@
 
           <div class="mb-9 d-flex">
             <div class="mr-3">
-              <v-img src="@/assets/images/Etc/AboutUs/Icons/WhiteETH.svg" />
+              <v-img src="@/assets/images/Common/Icons/IconSet2/WhiteETH.svg" />
             </div>
             <div>
               <div class="mb-1 font-weight-black subtitle-1 white--text">
@@ -42,7 +47,9 @@
 
           <div class="d-flex">
             <div class="mr-3">
-              <v-img src="@/assets/images/Etc/AboutUs/Icons/WhiteFIAT.svg" />
+              <v-img
+                src="@/assets/images/Common/Icons/IconSet2/WhiteFIAT.svg"
+              />
             </div>
             <div>
               <div class="mb-1 font-weight-black subtitle-1 white--text">
@@ -53,12 +60,12 @@
                 sed stet takimata ipsum invidunt, est ea no dolor.
               </div>
               <div class="d-flex align-center mt-7">
-                <a href="#" class="mr-5 white--text font-weight-bold">
-                  Try free demo
-                </a>
-                <a href="#" class="white--text font-weight-bold">
-                  Watch tutorial
-                </a>
+                <a href="#" class="mr-5 white--text font-weight-bold"
+                  >Try free demo</a
+                >
+                <a href="#" class="white--text font-weight-bold"
+                  >Watch tutorial</a
+                >
               </div>
             </div>
           </div>
@@ -89,5 +96,11 @@ export default {
 <style lang="scss" scoped>
 .component-container {
   background-image: linear-gradient(to right, #f09819, #f9723f);
+}
+
+.block-background-pattern {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 </style>
