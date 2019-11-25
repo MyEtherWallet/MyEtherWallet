@@ -1,8 +1,11 @@
+/*
 export async function doUpdate(self, Toast) {
   self.proxyAddress = await self.getProxy();
   let afterClose = false;
   const afterOpen = self.$route.name === 'create';
   await self.updateActiveCdp();
+  await self.checkBalances();
+  await self.checkAllowances();
   for (const idProp in self.activeCdps) {
     if (self.activeCdps[idProp].needsUpdate) {
       if (self.activeCdps[idProp].closing) {
@@ -14,9 +17,13 @@ export async function doUpdate(self, Toast) {
         );
       } else if (self.activeCdps[idProp].opening) {
         await self.activeCdps[idProp].updateValues();
+
       } else {
         // console.log('regular value changed update'); // todo remove dev item
         self.activeCdps[idProp] = await self.activeCdps[idProp].update();
+        self.activeCdps[idProp].updateSystemVariables({
+
+        })
       }
     }
     if (idProp === self.currentCdpId) {
@@ -25,8 +32,7 @@ export async function doUpdate(self, Toast) {
     }
   }
 
-  await self.checkBalances();
-  await self.checkAllowances();
+
   if (
     Object.keys(self.activeCdps).includes(self.currentCdpId.toString()) ||
     Object.keys(self.activeCdps).includes(self.currentCdpId)
@@ -63,3 +69,4 @@ export async function doUpdate(self, Toast) {
     Toast.responseHandler('CDP Updated', Toast.INFO);
   }
 }
+*/

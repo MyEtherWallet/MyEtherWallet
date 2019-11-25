@@ -227,12 +227,13 @@ import {
   buildEmpty,
   loadCdpDetail,
   doUpdate,
-  toBigNumber
+  toBigNumber,
+  getDustValues
 } from './makerHelpers';
 
 import MewPlugin from 'mew-maker-plugin';
 import { ProxyRegistry } from './makerHelpers';
-import addresses from './makerHelpers/addresses';
+import { addresses } from './makerHelpers';
 
 const { DAI } = Maker;
 
@@ -485,7 +486,7 @@ export default {
           [
             McdPlugin,
             {
-              network: 'kovan',
+              network: this.network.type.name === 'KOV' ? 'kovan' : 'mainnet',
               prefetch: true
             }
           ],
@@ -535,17 +536,9 @@ export default {
           targetPrice: this._targetPrice
         };
 
-        const proxyReg = new this.web3.eth.Contract(
-          ProxyRegistry,
-          addresses.PROXY_REGISTRY
-        );
+        this.currentProxy = await this.getProxy();
 
-        let proxy = await proxyReg.methods.proxies(this.account.address).call();
-        if (proxy === '0x0000000000000000000000000000000000000000') {
-          proxy = null;
-        }
-        // console.log('proxy', proxy); // todo remove dev item
-
+        // getDustValues(this, this._typeService.cdpTypes);
         this.curentlyLoading = 'Checking For CDPs';
         try {
           const { withType, withProxy, withoutProxy } = await locateCdps(
@@ -558,8 +551,6 @@ export default {
         } catch (e) {
           console.error(e);
         }
-
-        this.currentProxy = await this.getProxy();
 
         if (this.cdps.length > 0 || this.cdpsWithoutProxy.length > 0) {
           this.curentlyLoading = 'Loading: Current CDPs';
@@ -619,6 +610,7 @@ export default {
       await this.doUpdate();
     },
     async doUpdate() {
+      await getDustValues(this, this._typeService.cdpTypes);
       await doUpdate(this, Toast);
     },
     async checkAllowances() {
@@ -634,7 +626,7 @@ export default {
     },
     async updateActiveCdp() {
       await updateActiveCdp(this);
-      // console.log('updating'); // todo remove dev item
+      console.log('updating'); // todo remove dev item
       if (this.cdps.length === 0 && this.cdpsWithoutProxy.length === 0) {
         this.gotoCreate();
       }

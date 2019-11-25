@@ -13,6 +13,7 @@ import ethUnit from 'ethjs-unit';
 import MakerCdpBase from './MakerCdpBase';
 import { getUrns } from './chainCalls';
 import * as daiMath from './daiMath';
+import BigNumber from 'bignumber.js';
 const { DAI } = Maker;
 
 export default class MakerCDP extends MakerCdpBase {
@@ -36,6 +37,10 @@ export default class MakerCDP extends MakerCdpBase {
     }
     this.ready = true;
     return this;
+  }
+
+  async updateSystemVariables(toUpdate){
+    this.services = {...this.services, ...toUpdate}
   }
 
   async updateValues(cdpId = this.cdpId) {
@@ -66,6 +71,7 @@ export default class MakerCDP extends MakerCdpBase {
       this.afterInitialization = !this.afterInitialization;
       return;
     }
+
     const urns = await getUrns(this.web3, this.cdpId, this.cdpType);
     const value = this.cdpTypeObject.currency.wei(urns.ink);
     if (!this.cdp.collateralAmount.toBigNumber().eq(value.toBigNumber())) {
@@ -81,6 +87,7 @@ export default class MakerCDP extends MakerCdpBase {
     }
     // todo: think about whether the type of update should be recorded and then used to determine which override to create
     // Mostly about reducing chain calls.  if the value doesn't need a particular call. it can be skipped.
+    console.log(this.dustValues); // todo remove dev item
     const calculatedDebt = daiMath.debtValue(
       urns.art,
       this.dustValues[this.cdpCollateralType].rate
@@ -107,6 +114,10 @@ export default class MakerCDP extends MakerCdpBase {
   }
 
   // ====================== alphabetical (roughly) ============================
+
+  async approveProxyFor(symbol) {
+    await this.getTokens[symbol].approveUnlimited(this.proxyAddress);
+  }
 
   async approveDai() {
     await this.daiToken.approveUnlimited(this.proxyAddress);
@@ -174,6 +185,19 @@ export default class MakerCDP extends MakerCdpBase {
     }, []);
   }
 
+  convertToTokenWei(value, decimals) {
+    const denominator = new BigNumber(10).pow(decimals);
+    return new BigNumber(value)
+      .times(denominator)
+      .toFixed(0)
+      .toString(10);
+  }
+
+  convertToTokenBase(value, decimals) {
+    const denominator = new BigNumber(10).pow(decimals);
+    return new BigNumber(value).div(denominator).toString(10);
+  }
+
   enoughMkrToWipe(amount) {
     return this.cdpService.enoughMkrToWipe(amount, DAI.wei);
   }
@@ -209,6 +233,7 @@ export default class MakerCDP extends MakerCdpBase {
   }
 
   getCurrentPriceFor(symbol) {
+    console.log(symbol); // todo remove dev item
     if (!symbol) return 0;
     return this.getPriceOfCurrency(symbol);
   }
@@ -218,6 +243,7 @@ export default class MakerCDP extends MakerCdpBase {
   }
 
   getPriceOfCurrency(type) {
+    console.log(this.mcdCurrencies); // todo remove dev item
     const curr = this.mcdCurrencies[type];
     if (curr) {
       return curr.price._amount;
@@ -245,12 +271,16 @@ export default class MakerCDP extends MakerCdpBase {
   hasEnoughAllowance(ethQty, currency = 'ETH') {
     // if (toBigNumber(ethQty).isNaN()) return false;
     if (currency === 'ETH') return true;
-    // const _ethQty = toBigNumber(ethQty).toFixed(18);
     const currentAllowance = this.getProxyAllowancefor(currency);
-    // console.log('currentAllowance', currency, currentAllowance.toString()); // todo remove dev item
-    // return toBigNumber(currentAllowance).gte(
-    //   toBigNumber(ethUnit.toWei(_ethQty, 'ether').toString())
-    // );
+    try {
+      const _ethQty = toBigNumber(ethQty).toFixed(18);
+      console.log('currentAllowance', currency, currentAllowance.toString()); // todo remove dev item
+      return toBigNumber(currentAllowance.toString()).gte(
+        toBigNumber(this.convertToTokenWei(_ethQty, 18).toString())
+      );
+    } catch (e) {
+      console.error(e);
+    }
     // todo This is a temp solution
     return toBigNumber(currentAllowance).gte(toBigNumber(10));
   }
@@ -382,13 +412,17 @@ export default class MakerCDP extends MakerCdpBase {
     }
   }
 
-  async wipeDai(amount) {
+  async wipeDai(amount, max=false) {
     try {
       if (this.noProxy) {
         return;
       }
       this.needsUpdate = true;
-      await this.cdp.wipeDai(amount.toString());
+      if(max){
+        await this.cdp.wipeAll()
+      } else {
+        await this.cdp.wipeDai(amount.toString());
+      }
     } catch (e) {
       // eslint-disable-next-line
       console.error(e);

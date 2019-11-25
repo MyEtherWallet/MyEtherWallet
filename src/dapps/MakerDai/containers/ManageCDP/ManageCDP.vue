@@ -329,8 +329,8 @@ export default {
       return '';
     },
     liquidationPriceDisplay() {
-      if (this.values) {
-        const value = displayFixedValue(this.values.liquidationPrice, 2);
+      if (this.currentCdpLoaded && this.valuesUpdated > -1) {
+        const value = displayFixedValue(this.currentCdp.liquidationPrice, 2);
         if (new BigNumber(value).gt(0)) {
           return value;
         }
@@ -339,7 +339,7 @@ export default {
       return '--';
     },
     collaterlizationRatioDisplay() {
-      if (this.values) {
+      if (this.currentCdpLoaded && this.valuesUpdated > -1) {
         return displayFixedPercent(this.getCollateralizationRatio());
       }
       return '--';

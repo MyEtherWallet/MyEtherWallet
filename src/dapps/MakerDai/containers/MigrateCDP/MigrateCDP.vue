@@ -25,13 +25,14 @@
             </p>
           </div>
         </div>
-        {{ migrationPossible }}
         <div v-show="!migrationPossible" class="input-block-message">
           <p>
-            {{ $t('dappsMaker.migrationContractBalanceBelow') }}
+            {{ $t('dappsMaker.migration-contract-balance-below') }}
           </p>
         </div>
-
+<div v-show="noCdpsToMigrateFound">
+  {{ $t('dappsMaker.no-cdps-to-migrate-found') }}
+</div>
         <div class="buttons-container">
           <div
             :class="[
@@ -60,7 +61,7 @@ import {
   addresses,
   ERC20,
   ProxyContract,
-  locateCdps,
+  locateOldCdps,
   MigrationProxyActions
 } from '../../makerHelpers';
 import ethUnit from 'ethjs-unit';
@@ -127,6 +128,9 @@ export default {
     },
     validInputs() {
       return this.selectedCdp !== 0 && this.migrationPossible;
+    },
+    noCdpsToMigrateFound(){
+      return this.cdps.length === 0;
     }
   },
   watch: {
@@ -151,10 +155,11 @@ export default {
       }
     },
     async findCdps() {
-      const { withProxy, withoutProxy } = await locateCdps(
+      const { withProxy, withoutProxy } = await locateOldCdps(
         this,
         this.getValueOrFunction('_cdpService')
       );
+      console.log('withProxy, withoutProxy', withProxy, withoutProxy); // todo remove dev item
       this.cdps = withProxy.concat(withoutProxy);
     },
     //TODO use seth to get tokens (MCD_GOV is maker address for deployments)

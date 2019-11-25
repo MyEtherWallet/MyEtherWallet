@@ -13,7 +13,7 @@
         <p class="top-message">
           {{ $t('dappsMaker.payback-notice') }}
         </p>
-        <div v-if="!hasEnoughMkr">
+<!--        <div v-if="!hasEnoughMkr">
           <div class="value-block">
             <p>
               <b>{{ $t('dappsMaker.mkr-balance') }}</b>
@@ -22,10 +22,10 @@
               <b>{{ mkrBalance }} {{ $t('dappsMaker.mkr') }}</b>
             </p>
           </div>
-          <p class="get-mkr" @click="getMkr()">
+          <p class="get-mkr" @click="getDai()">
             {{ $t('dappsMaker.get-mkr') }}
           </p>
-        </div>
+        </div>-->
         <div class="input-container">
           <div class="top-buttons">
             <p @click="currentDai">{{ $t('dappsMaker.set-max') }}</p>
@@ -96,11 +96,20 @@
             :options="cancelButton"
             :click-function="closeModal"
           />
-          <standard-button
-            :options="submitButton"
-            :button-disabled="canProceed ? false : true"
-            :click-function="submitBtn"
-          />
+          <div>
+            <standard-button
+              v-if="max"
+              :options="submitMaxButton"
+              :button-disabled="canProceed ? false : true"
+              :click-function="submitBtn"
+            />
+            <standard-button
+              v-if="!max"
+              :options="submitButton"
+              :button-disabled="canProceed ? false : true"
+              :click-function="submitBtn"
+            />
+          </div>
         </div>
         <help-center-button />
       </div>
@@ -190,6 +199,7 @@ export default {
       amountDai: 0,
       mkrToken: {},
       daiToken: {},
+      max: false,
       riskyBypass: false,
       modalDetailInformation: false,
       textValues: {},
@@ -203,6 +213,12 @@ export default {
       },
       submitButton: {
         title: 'Submit',
+        buttonStyle: 'green',
+        noMinWidth: true,
+        fullWidth: true
+      },
+      submitMaxButton: {
+        title: 'Submit Max',
         buttonStyle: 'green',
         noMinWidth: true,
         fullWidth: true
@@ -240,7 +256,7 @@ export default {
       );
     },
     canCompute() {
-      return this.values && this.amountPresent;
+      return this.values && this.amountPresent && this.currentCdp;
     },
     allOk() {
       if (this.amountPresent) {
@@ -310,7 +326,14 @@ export default {
       return 0;
     }
   },
-  watch: {},
+  watch: {
+    amount() {
+      // hack
+      if (!toBigNumber(this.amount).gte(this.currentCdp.debtValue.minus(1))) {
+        this.max = false;
+      }
+    }
+  },
   mounted() {
     this.$refs.modal.$on('shown', () => {
       this.cdpId = this.$route.params.cdpId;
@@ -318,6 +341,7 @@ export default {
       this.amount = 0;
       this.getActiveCdp();
       this.getBalances();
+      this.max = false;
     });
 
     this.$refs.modal.$on('hidden', () => {
@@ -394,18 +418,20 @@ export default {
     needsDaiApprove() {
       if (this.currentCdp) {
         if (toBigNumber(this.amount).gt(0)) {
+          console.log(this.currentCdp.hasEnoughAllowance(this.amount, 'MDAI')); // todo remove dev item
           return !this.currentCdp.hasEnoughAllowance(this.amount, 'MDAI');
         }
       }
       return false;
     },
     needsMkrApprove() {
-      if (this.currentCdp) {
-        return !this.currentCdp.hasEnoughAllowance(
-          this.values.governanceFeeOwed,
-          'MKR'
-        );
-      }
+      // if (this.currentCdp) {
+      //   console.log(this.currentCdp.hasEnoughAllowance(this.amount, 'MKR')); // todo remove dev item
+      //   return !this.currentCdp.hasEnoughAllowance(
+      //     this.values.governanceFeeOwed,
+      //     'MKR'
+      //   );
+      // }
       return false;
     },
     getProxyAllowances() {
@@ -431,6 +457,7 @@ export default {
       this.amount = toBigNumber(this.values.maxDai).minus(
         toBigNumber(this.values.maxDai).times(0.01)
       );
+      this.max = true;
     },
     currentDai() {
       if (this.currentCdp.hasEnough(this.currentCdp.debtValue, 'MDAI')) {
@@ -438,15 +465,20 @@ export default {
       } else {
         this.amount = this.currentCdp.getBalanceOf('MDAI');
       }
+      this.max = true;
     },
     async wipeDai() {
       if (toBigNumber(this.amount).gte(0)) {
         this.delayCloseModal();
-        if (toBigNumber(this.amount).gt(this.values.debtValue)) {
-          this.$emit('wipeDai', this.values.debtValue);
-        } else {
-          this.$emit('wipeDai', this.amount);
-        }
+        this.currentCdp.wipeDai(this.amount, this.max);
+        // if (toBigNumber(this.amount).gte(this.values.debtValue)) {
+        //   console.log('max'); // todo remove dev item
+        //   this.currentCdp.wipeDai(this.values.debtValue, this.max);
+        //   // this.$emit('wipeDai', this.values.debtValue);
+        // } else {
+        //   this.currentCdp.wipeDai(this.values.debtValue);
+        //   // this.$emit('wipeDai', this.amount);
+        // }
       }
     },
     getBalances() {
@@ -493,10 +525,16 @@ export default {
       }, 200);
     },
     async approveDai() {
-      this.$emit('approveDai');
+      if (this.currentCdp) {
+        this.currentCdp.approveProxyFor('MDAI');
+        this.closeModal();
+      }
     },
     async approveMkr() {
-      this.$emit('approveMkr');
+      if (this.currentCdp) {
+        this.currentCdp.approveProxyFor('MKR');
+        this.closeModal();
+      }
     }
   }
 };
