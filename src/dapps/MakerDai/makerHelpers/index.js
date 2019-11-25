@@ -1,5 +1,6 @@
-import { locateCdps } from './locateCdps';
-import addresses from './addresses';
+import { locateCdps, locateOldCdps } from './locateCdps';
+import addresses from './addressesMAIN';
+import addressesKOV from './addressesKOV';
 import {
   setupPriceAndRatios,
   setupServices,
@@ -11,9 +12,11 @@ import {
   updateActiveCdp,
   loadCdpDetail,
   loadCdpDetails,
-  buildEmpty
+  buildEmpty,
+  getDustValues,
+  doUpdate
 } from './setups';
-import { doUpdate } from './updaters';
+// import { doUpdate } from './updaters';
 import { getMakerCurrencies } from './currencyHelper';
 import {
   calcLiquidationPrice,
@@ -46,6 +49,7 @@ import { createCurrencyDetails } from './dataContainers';
 export {
   loadCdpDetail,
   locateCdps,
+  locateOldCdps,
   setupPriceAndRatios,
   setupServices,
   getDetailsForTokens,
@@ -53,6 +57,7 @@ export {
   checkAllowanceFor,
   collateralOptions,
   setupCdpManage,
+  getDustValues,
   updateActiveCdp,
   loadCdpDetails,
   buildEmpty,
@@ -70,6 +75,7 @@ export {
   toBigNumber,
   bnOver,
   addresses,
+  addressesKOV,
   // ABIs
   migrateABI,
   ERC20,

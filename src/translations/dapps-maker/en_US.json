@@ -94,6 +94,7 @@
   "maker-dai": "Maker Dai",
   "cdp": "CDP",
   "migration-contract-balance-below": "Not enough Sai 'old DAI' in the Maker Migration Contract to complete this migration. Please try again later or contact the maker foundation at integrate@makerdao.com",
-  "min-generate": "Minimum generate to "
+  "min-generate": "Minimum generate to ",
+  "no-cdps-to-migrate-found": "No cdps found needing migration"
 
 }

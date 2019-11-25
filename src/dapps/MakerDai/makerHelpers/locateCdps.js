@@ -1,7 +1,7 @@
 import { toChecksumAddress } from '@/helpers/addressUtils';
 import { getCdpIds } from './chainCalls';
 import { GetCdps } from './ABIs';
-import addresses from '@/dapps/MakerDai/makerHelpers/addresses';
+import {addresses} from './index';
 
 async function locateCdps(self, _cdpService) {
   self.cdpsWithoutProxy = [];
@@ -36,7 +36,34 @@ async function locateCdps(self, _cdpService) {
   };
 }
 
-async function getMcdCdp() {}
+async function locateOldCdps(self, _cdpService) {
+  self.cdpsWithoutProxy = [];
+  const cdpsWithoutProxy = await locateCdpsWithoutProxy(self, _cdpService);
+  self.cdps = [];
+  const cdps = await locateCdpsProxy(self, _cdpService);
+
+  self.allCdpIds = [...cdpsWithoutProxy, ...cdps].map(entry =>
+    typeof entry !== 'number' ? entry.id : entry
+  );
+
+  const cdpIdToTypeMapping = [
+    ...cdpsWithoutProxy,
+    ...cdps
+  ].reduce((acc, cur) => {
+    acc[cur.id] = cur.ilk;
+    return acc;
+  }, {});
+  self.cdpsWithType = cdpIdToTypeMapping;
+  return {
+    withType: cdpIdToTypeMapping,
+    withProxy: cdps.map(entry =>
+      typeof entry !== 'number' ? entry.id : entry
+    ),
+    withoutProxy: cdpsWithoutProxy.map(entry =>
+      typeof entry !== 'number' ? entry.id : entry
+    )
+  };
+}
 
 async function locateCdpsWithoutProxy(self, _cdpService) {
   const directCdps = await _cdpService.getCdpIds(self.account.address);
@@ -60,4 +87,4 @@ async function locateCdpsDirectly(self) {
   return results.ids;
 }
 
-export { locateCdps, getMcdCdp, locateCdpsWithoutProxy, locateCdpsProxy };
+export { locateCdps, locateOldCdps, locateCdpsWithoutProxy, locateCdpsProxy };

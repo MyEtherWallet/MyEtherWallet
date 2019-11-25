@@ -1,4 +1,4 @@
-import { addresses, Vat, Spotter, GetCdps, CdpManager } from '../makerHelpers';
+import { addresses, Vat, Spotter, GetCdps, CdpManager, ProxyRegistry } from '../makerHelpers';
 import assert from 'assert';
 
 // console.log(GetCdps); // todo remove dev item
@@ -23,6 +23,21 @@ function bytesToString(hex) {
   return Buffer.from(hex.replace(/^0x/, ''), 'hex')
     .toString()
     .replace(/\x00/g, ''); // eslint-disable-line no-control-regex
+}
+
+
+export async function getProxy(){
+  const proxyReg = new this.web3.eth.Contract(
+    ProxyRegistry,
+    addresses.PROXY_REGISTRY
+  );
+
+  let proxy = await proxyReg.methods.proxies(this.account.address).call();
+  if (proxy === '0x0000000000000000000000000000000000000000') {
+    proxy = null;
+  }
+  console.log('proxy', proxy); // todo remove dev item
+  return proxy;
 }
 
 export async function getCdpIds(web3, proxyAddress) {

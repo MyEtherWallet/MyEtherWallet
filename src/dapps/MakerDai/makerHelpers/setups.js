@@ -58,12 +58,11 @@ export async function setupPriceAndRatios(self, _priceService, _cdpService) {
 export async function getDetailsForTokens(self, collateralTokens) {
   self.balances = {};
   self.tokens = {};
-  self.dustValues = {};
   self.daiToken = self._tokenService.getToken(DAI);
   self.daiBalance = (await self.daiToken.balance()).toBigNumber();
   self.mkrToken = self._tokenService.getToken(MKR);
   self.mkrBalance = (await self.mkrToken.balance()).toBigNumber();
-  const MdaiToken = self.maker.getToken(MDAI);
+  // const MdaiToken = self.maker.getToken(MDAI);
 
   for (let i = 0; i < collateralTokens.length; i++) {
     const token = self._tokenService.getToken(collateralTokens[i].currency);
@@ -71,19 +70,27 @@ export async function getDetailsForTokens(self, collateralTokens) {
     self.balances[collateralTokens[i].currency.symbol] = (
       await token.balance()
     ).toBigNumber();
-    self.dustValues[collateralTokens[i].currency.symbol] = await getDustValue(
-      self.web3,
-      collateralTokens[i].ilk
-    );
+    console.log(self.tokens); // todo remove dev item
   }
   const token = self._tokenService.getToken(MDAI);
-  self.tokens[MdaiToken.symbol] = token;
-  self.balances[MdaiToken.symbol] = (await token.balance()).toBigNumber();
+  console.log(token); // todo remove dev item
+  self.tokens[token.symbol] = token;
+  self.balances[token.symbol] = (await token.balance()).toBigNumber();
 
   self.tokens['MKR'] = self.mkrToken;
   self.tokens['DAI'] = self.daiToken;
   self.balances['DAI'] = self.daiBalance;
   self.balances['MKR'] = self.mkrBalance;
+}
+
+export async function getDustValues(self, collateralTokens){
+  self.dustValues = {};
+  for (let i = 0; i < collateralTokens.length; i++) {
+    self.dustValues[collateralTokens[i].currency.symbol] = await getDustValue(
+      self.web3,
+      collateralTokens[i].ilk
+    );
+  }
 }
 
 export async function checkAllowances(self, address, proxyAddress) {
@@ -107,6 +114,7 @@ export async function checkAllowances(self, address, proxyAddress) {
             ) // TODO likely not part of the public (stable) API
             // await self.tokens[keys[i]].allowance(address, proxyAddress) // TODO return to this to see if they fixed it
           );
+          console.log(keys[i], self.proxyAllowances[keys[i]].toString()); // todo remove dev item
         } else {
           self.proxyAllowances[keys[i]] = toBigNumber(0);
         }
@@ -164,7 +172,7 @@ export async function setupCdpManage(self, cdpId) {
 }
 
 export async function getValuesForManage(cdpId) {
-  // console.log(cdpId); // todo remove dev item
+  console.log(cdpId); // todo remove dev item
   if (typeof cdpId !== 'number') cdpId = cdpId.id;
   const currentCdp = this.activeCdps[cdpId];
   this.currentCdp = currentCdp;
@@ -261,13 +269,13 @@ export async function updateActiveCdp(self) {
 
   if (newCdps.length > 0) {
     for (let i = 0; i < newCdps.length; i++) {
-      this.activeCdps[newCdps[i]] = await buildCdpObject.bind(self)(newCdps[i]);
+      self.activeCdps[newCdps[i]] = await buildCdpObject.bind(self)(newCdps[i]);
     }
   }
 
   if (newCdpsWithoutProxy.length > 0) {
     for (let i = 0; i < newCdpsWithoutProxy.length; i++) {
-      this.activeCdps[newCdpsWithoutProxy[i]] = await buildCdpObject.bind(self)(
+      self.activeCdps[newCdpsWithoutProxy[i]] = await buildCdpObject.bind(self)(
         newCdpsWithoutProxy[i],
         {
           noProxy: true
@@ -279,7 +287,7 @@ export async function updateActiveCdp(self) {
 
 export async function buildEmpty(self) {
   const result = await buildCdpObject.bind(self)(null);
-  // console.log(result); // todo remove dev item
+  console.log(result); // todo remove dev item
   return result;
   // return await buildCdpObject.bind(self)(null);
 }
@@ -337,7 +345,6 @@ export async function buildCdpObject(cdpId, options = {}, useOld = false) {
   };
   let makerCDP;
   try {
-    // console.log(cdpId); // todo remove dev item
     makerCDP = new MakerCDP(cdpId, this.web3, services, sysVars);
     if (cdpId) {
       if (useOld) {
@@ -358,11 +365,10 @@ export async function doUpdate(self, Toast) {
   let afterClose = false;
   const afterOpen = self.$route.name === 'create';
   await self.updateActiveCdp();
+  await self.checkBalances();
+  await self.checkAllowances();
   for (const idProp in self.activeCdps) {
-    // console.log('self.activeCdps[idProp] 1', self.activeCdps[idProp]); // todo remove dev item
     if (self.activeCdps[idProp].needsUpdate) {
-      // console.log('self.activeCdps[idProp] 2', self.activeCdps[idProp]); // todo remove dev item
-
       if (self.activeCdps[idProp].closing) {
         afterClose = true;
         delete self.activeCdps[idProp];
@@ -374,6 +380,11 @@ export async function doUpdate(self, Toast) {
         await self.activeCdps[idProp].updateValues();
       } else {
         self.activeCdps[idProp] = await self.activeCdps[idProp].update();
+        self.activeCdps[idProp].updateSystemVariables({
+          tokens: self.tokens,
+          balances: self.balances,
+          proxyAllowances: self.proxyAllowances,
+        })
       }
     }
     if (idProp === self.currentCdpId) {
@@ -382,13 +393,15 @@ export async function doUpdate(self, Toast) {
     }
   }
 
-  await self.checkBalances();
-  await self.checkAllowances();
 
-  if (!Object.keys(self.activeCdps).includes(self.currentCdpId)) {
-    await self.loadCdpDetails();
+  if (
+    Object.keys(self.activeCdps).includes(self.currentCdpId.toString()) ||
+    Object.keys(self.activeCdps).includes(self.currentCdpId)
+  ) {
     await self.setupCdpManageFunc(self.currentCdpId);
   } else {
+    await self.loadCdpDetails(); //todo: see if disableing this breaks anything (likely would happen with creation)
+    // todo: thie line above is where things were getting erased (new instances are being created)
     await self.setupCdpManageFunc(self.currentCdpId);
   }
 
