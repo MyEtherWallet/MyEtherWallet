@@ -11,9 +11,9 @@
     >
       <div class="modal-contents">
         <div class="pin-input-block">
-          <p class="main-title">
-            {{ $t('accessWallet.pin.enter') }} {{ deviceInfo.name }}
-          </p>
+          <i18n path="accessWallet.pin.enter" tag="p" class="main-title"
+            ><span slot="device"> {{ deviceInfo.name }} </span></i18n
+          >
           <p class="sub-title">
             {{ $t('accessWallet.pin.layout') }}
           </p>

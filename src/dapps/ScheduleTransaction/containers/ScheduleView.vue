@@ -34,44 +34,10 @@
           </b-row>
 
           <div class="to-address">
-            <div class="title input-title">
-              <h4>
-                {{ $t('sendTx.to-addr') }}
-                <blockie
-                  v-show="isValidAddress"
-                  :address="hexAddress"
-                  :size="8"
-                  :scale="16"
-                  width="32px"
-                  height="32px"
-                  class="blockie-image"
-                />
-              </h4>
-
-              <p
-                class="copy-button prevent-user-select"
-                @click="copyToClipboard('address')"
-              >
-                {{ $t('common.copy') }}
-              </p>
-            </div>
-            <div class="the-form address-block">
-              <input
-                v-ens-resolver="'address'"
-                ref="address"
-                v-model="address"
-                type="text"
-                name="name"
-                autocomplete="off"
-              />
-              <i
-                :class="[
-                  isValidAddress && hexAddress.length !== 0 ? '' : 'not-good',
-                  'fa fa-check-circle good-button'
-                ]"
-                aria-hidden="true"
-              />
-            </div>
+            <dropdown-address-selector
+              title="To Address"
+              @toAddress="getToAddress($event)"
+            />
           </div>
 
           <hr />
@@ -331,7 +297,7 @@ import moment from 'moment';
 import 'moment-timezone';
 import * as unit from 'ethjs-unit';
 import { Toast } from '@/helpers';
-
+import DropDownAddressSelector from '@/components/DropDownAddressSelector';
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
 import CurrencyPicker from '../../../layouts/InterfaceLayout/components/CurrencyPicker';
 import StandardInput from '@/components/StandardInput';
@@ -353,7 +319,8 @@ export default {
     'standard-input': StandardInput,
     'standard-dropdown': StandardDropdown,
     'datetime-picker': Datetime,
-    blockie: Blockie
+    blockie: Blockie,
+    'dropdown-address-selector': DropDownAddressSelector
   },
   props: {
     tokensWithBalance: {
@@ -763,6 +730,11 @@ export default {
         .toISOString();
       this.clearTimezone = !this.clearTimezone;
       this.timeBounty = EAC_SCHEDULING_CONFIG.TIME_BOUNTY_DEFAULTS[0];
+    },
+    getToAddress(data) {
+      this.address = data.address;
+      this.hexAddress = data.address;
+      this.isValidAddress = data.valid;
     },
     async estimateGas() {
       const coinbase = await this.web3.eth.getCoinbase();

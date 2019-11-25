@@ -92,7 +92,7 @@
                 </div>
                 <div>
                   {{ pethCollateral }}
-                  <span>{{ $t('dappsMaker.peth') }}</span> /
+                  <span>{{ $t('common.currency.peth') }}</span> /
                   {{ usdCollateral }}
                   <span>{{ $t('common.currency.usd') }}</span>
                 </div>
@@ -110,7 +110,7 @@
                 </div>
                 <div>
                   {{ maxPethDrawDisplay }}
-                  <span>{{ $t('dappsMaker.peth') }}</span> /
+                  <span>{{ $t('common.currency.peth') }}</span> /
                   {{ maxUsdDrawDisplay }}
                   <span>{{ $t('common.currency.usd') }}</span>
                 </div>

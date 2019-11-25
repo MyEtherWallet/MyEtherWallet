@@ -53,44 +53,10 @@
           </div>
         </div>
         <div class="to-address">
-          <div class="title">
-            <h4>
-              {{ $t('sendTx.to-addr') }}
-              <blockie
-                v-show="isValidAddress"
-                :address="hexAddress"
-                :size="8"
-                :scale="16"
-                width="32px"
-                height="32px"
-                class="blockie-image"
-              />
-            </h4>
-
-            <p
-              class="copy-button prevent-user-select"
-              @click="copyToClipboard('address')"
-            >
-              {{ $t('common.copy') }}
-            </p>
-          </div>
-          <div class="the-form address-block">
-            <input
-              v-ens-resolver="'address'"
-              ref="address"
-              v-model="address"
-              type="text"
-              name="name"
-              autocomplete="off"
-            />
-            <i
-              :class="[
-                isValidAddress && hexAddress.length !== 0 ? '' : 'not-good',
-                'fa fa-check-circle good-button'
-              ]"
-              aria-hidden="true"
-            />
-          </div>
+          <dropdown-address-selector
+            title="To Address"
+            @toAddress="getToAddress($event)"
+          />
         </div>
         <div class="tx-fee">
           <div class="title">
@@ -101,7 +67,7 @@
           </div>
           <div class="fee-value">
             <div class="gwei">
-              {{ gasPrice }} {{ $t('common.gas.uppercase-gwei') }}
+              {{ gasPrice }} {{ $t('common.gas.gwei') }}
               <!--(Economic)-->
             </div>
             <div v-show="network.type.name === 'ETH'" class="usd">
@@ -203,12 +169,14 @@ import BigNumber from 'bignumber.js';
 import ethUnit from 'ethjs-unit';
 import utils from 'web3-utils';
 import fetch from 'node-fetch';
+import DropDownAddressSelector from '@/components/DropDownAddressSelector';
 
 export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
     blockie: Blockie,
-    'currency-picker': CurrencyPicker
+    'currency-picker': CurrencyPicker,
+    'dropdown-address-selector': DropDownAddressSelector
   },
   props: {
     checkPrefilled: {
@@ -450,6 +418,11 @@ export default {
         symbol: 'ETH'
       };
     },
+    getToAddress(data) {
+      this.address = data.address;
+      this.hexAddress = data.address;
+      this.isValidAddress = data.valid;
+    },
     prefillForm() {
       if (this.isPrefilled) {
         const foundToken = this.tokensymbol
@@ -575,10 +548,6 @@ export default {
         });
       this.ethPrice =
         typeof price === 'object' ? price.data.ETH.quotes.USD.price : 0;
-    },
-    copyToClipboard(ref) {
-      this.$refs[ref].select();
-      document.execCommand('copy');
     }
   }
 };
