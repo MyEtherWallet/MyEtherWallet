@@ -26,7 +26,7 @@
     </div>
     <div :class="[showDetails ? 'add-margin' : '', 'details-container']">
       <div class="details-header-container">
-        <p>{{ $t('mewCx.details') }}</p>
+        <p>{{ $t('mewcx.details') }}</p>
         <div class="sliding-switch-white">
           <label class="switch">
             <input
@@ -51,7 +51,7 @@
           </span>
         </div>
         <div class="detail-item">
-          <span class="title"> {{ $t('common.gas.uppercase-string') }} </span>
+          <span class="title"> {{ $t('common.gas.string') }} </span>
           <span class="content">
             {{ hexToNumString(txParams.gas) }}
           </span>

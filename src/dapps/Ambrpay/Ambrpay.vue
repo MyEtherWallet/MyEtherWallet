@@ -26,10 +26,10 @@
         <div class="balance-container">
           <i v-show="loadingBalance" class="fa fa-spinner fa-spin" />
           <span v-show="!loadingBalance" class="fund-text"
-            >{{ availableBalanceEth }} {{ $t('dappsAmbrpay.eth') }}
+            >{{ availableBalanceEth }} {{ $t('common.currency.eth') }}
           </span>
           <span v-show="!loadingBalance" class="usd-text"
-            >{{ availableBalanceUSD }} {{ $t('dappsAmbrpay.usd') }}</span
+            >{{ availableBalanceUSD }} {{ $t('common.currency.usd') }}</span
           >
         </div>
       </div>

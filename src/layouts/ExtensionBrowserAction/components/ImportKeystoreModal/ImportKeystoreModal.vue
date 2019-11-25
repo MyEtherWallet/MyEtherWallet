@@ -2,7 +2,7 @@
   <div>
     <b-modal
       ref="importKeystore"
-      :title="$t('mewCx.keystore-file')"
+      :title="$t('mewcx.keystore-file')"
       hide-footer
       centered
       class="bootstrap-modal"
@@ -10,7 +10,7 @@
       <form>
         <div class="modal-contents">
           <div class="input-container">
-            <label for="filePath"> {{ $t('mewCx.your-wallet-file') }} </label>
+            <label for="filePath"> {{ $t('mewcx.your-wallet-file') }} </label>
             <div class="keystore-filepath-input">
               <input
                 v-model="filepath"
@@ -25,17 +25,17 @@
                 @change="uploadFile"
               />
               <div class="mid-round-button-green-border" @click="clickUpload">
-                {{ $t('mewCx.upload-file') }}...
+                {{ $t('mewcx.upload-file') }}...
               </div>
             </div>
           </div>
           <div class="input-container">
-            <label for="keystorePassword"> {{ $t('mewCx.password') }} </label>
+            <label for="keystorePassword"> {{ $t('mewcx.password') }} </label>
             <div class="keystore-password-input">
               <input
                 v-model="locPassword"
                 :type="show ? 'text' : 'password'"
-                :placeholder="$t('mewCx.enter-pw')"
+                :placeholder="$t('mewcx.enter-pw')"
                 name="keystorePassword"
               />
               <img
@@ -53,7 +53,7 @@
             type="submit"
             @click.prevent="unlockJson"
           >
-            <span v-show="!loading"> {{ $t('mewCx.add-wallet') }} </span>
+            <span v-show="!loading"> {{ $t('mewcx.add-wallet') }} </span>
             <i v-show="loading" class="fa fa-spinner fa-spin" />
           </button>
         </div>
