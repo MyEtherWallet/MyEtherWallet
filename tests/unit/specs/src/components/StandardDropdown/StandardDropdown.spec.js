@@ -25,7 +25,7 @@ describe('StandardDropdown.vue', () => {
 
   it('should render correct placeholder props', () => {
     let inputPlaceholder;
-    const placeholder = 'placeholder';
+    const placeholder = undefined;
     wrapper.setProps({ inputPlaceholder: placeholder });
     expect(
       wrapper.vm.$el.querySelector('.placeholder').textContent.trim()
