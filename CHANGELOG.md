@@ -1,3 +1,5 @@
+### Release v5.2.5
+
 ### Bug
 
 - Fix MEWCX mobile ui [#1657](https://github.com/MyEtherWallet/MyEtherWallet/pull/1657)
