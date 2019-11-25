@@ -1,9 +1,9 @@
 <template lang="html">
   <div class="claim-dns-container">
     <div class="claim-dns-content">
-      <h3>Cheers!</h3>
-      <p>{{ fullDomainName }} is claimable!</p>
-      <p>Ownership will be set to: {{ dnsOwner }}</p>
+      <h3>{{ $t('ens.claim.cheers') }}</h3>
+      <p>{{ $t('ens.claim.domain-claimable', { domain: fullDomainName }) }}</p>
+      <p>{{ $t('ens.claim.owner-set', { owner: dnsOwner }) }}</p>
       <div class="claim-dns-button">
         <button
           :class="[
@@ -13,15 +13,15 @@
           @click="claimFunc"
         >
           <span v-show="!loading">
-            Claim
+            {{ $t('ens.claim.string') }}
           </span>
           <i v-show="loading" class="fa fa-spinner fa-spin" />
         </button>
       </div>
     </div>
     <interface-bottom-text
-      :link-text="$t('interface.helpCenter')"
-      :question="$t('interface.haveIssues')"
+      :link-text="$t('common.help-center')"
+      :question="$t('common.have-issues')"
       link="https://kb.myetherwallet.com"
     />
   </div>

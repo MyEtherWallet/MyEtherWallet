@@ -5,12 +5,19 @@ $dapp-button-mobile-width: 650px;
 .dapps-button {
   background: $light-green-4;
   border: 1px solid $light-green-4;
-  border-radius: 5px;
+  border-radius: 8px;
   color: $black;
   cursor: pointer;
   height: 100%;
   padding: 40px 20px;
+  position: relative;
   text-align: center;
+
+  .new-label {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+  }
 
   .ambrpay-icon {
     height: 68px;

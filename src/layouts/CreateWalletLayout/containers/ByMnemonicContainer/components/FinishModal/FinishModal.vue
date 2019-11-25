@@ -11,15 +11,15 @@
     <div class="modal-container-block">
       <div class="d-block text-center">
         <i class="check-icon fa fa-check" aria-hidden="true" />
-        <h2 class="title">{{ $t('createWallet.byMnemonicSuccess') }}</h2>
-        <p>{{ $t('createWallet.byMnemonicSuccessfullyCreated') }}</p>
+        <h2 class="title">{{ $t('createWallet.created.title') }}</h2>
+        <p>{{ $t('createWallet.created.text') }}</p>
       </div>
       <div class="button-container">
         <b-btn
           class="mid-round-button-green-filled close-button"
           @click="unlock"
         >
-          {{ $t('common.unlockWallet') }}
+          {{ $t('common.wallet.unlock') }}
         </b-btn>
       </div>
     </div>

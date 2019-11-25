@@ -98,7 +98,13 @@ import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
 import BigNumber from 'bignumber.js';
 import SelectCdpEntry from '../../components/SelectCdpEntry';
-import { addresses, migrateABI, ERC20, ProxyContract, toBigNumber } from '../../makerHelpers';
+import {
+  addresses,
+  migrateABI,
+  ERC20,
+  ProxyContract,
+  toBigNumber
+} from '../../makerHelpers';
 import ethUnit from 'ethjs-unit';
 import { Toast } from '@/helpers';
 import {
@@ -168,12 +174,14 @@ export default {
   computed: {
     ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
     validInputs() {
-      return toBigNumber(this.daiQty).gt(0) && this.hasEnough && this.proxyPresent;
+      return (
+        toBigNumber(this.daiQty).gt(0) && this.hasEnough && this.proxyPresent
+      );
     },
-    hasEnough(){
+    hasEnough() {
       return this.daiBalance >= this.daiQty;
     },
-    proxyPresent(){
+    proxyPresent() {
       return this.hasProxy() != null;
     }
   },
@@ -216,7 +224,7 @@ export default {
       if (this.setupComplete) {
         const daiBalance = this.getValueOrFunction('balances')['MDAI'];
         this.daiBalance = daiBalance.toString();
-        if(this.proxyAddress){
+        if (this.proxyAddress) {
           this.daiAllowance = await this.getAllowance();
         }
       }
@@ -255,15 +263,16 @@ export default {
       const contract = new this.web3.eth.Contract(ERC20, addresses.MCD_DAI);
 
       return await contract.methods
-        .allowance(this.getValueOrFunction('account').address, this.proxyAddress)
+        .allowance(
+          this.getValueOrFunction('account').address,
+          this.proxyAddress
+        )
         .call();
     },
     async approve(val) {
       const contract = new this.web3.eth.Contract(ERC20, addresses.MCD_DAI);
 
-      await contract.methods
-        .approve(this.proxyAddress, val)
-        .send();
+      await contract.methods.approve(this.proxyAddress, val).send();
 
       // return {
       //   from: this.account.address,

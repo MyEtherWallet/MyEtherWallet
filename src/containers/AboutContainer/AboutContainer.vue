@@ -9,8 +9,8 @@
           <div class="page-container">
             <div class="flex-col-1-1-vertical-center content">
               <div class="text-content">
-                <h2>{{ $t('home.aboutTitle') }}</h2>
-                <p class="color-white">{{ $t('home.aboutSubheading') }}</p>
+                <h2>{{ $t('home.about-mew.title') }}</h2>
+                <p class="color-white">{{ $t('home.about-mew.text') }}</p>
               </div>
               <div class="image-content">
                 <img
@@ -38,8 +38,8 @@
                 <img src="~@/assets/images/home/icon-wallet.svg" alt />
               </div>
               <div class="text">
-                <h3>{{ $t('home.aboutMewWallet') }}</h3>
-                <p>{{ $t('home.aboutMewWalletDesc') }}</p>
+                <h3>{{ $t('home.join-mew.title') }}</h3>
+                <p>{{ $t('home.join-mew.text') }}</p>
               </div>
             </dir>
             <dir class="content">
@@ -47,8 +47,8 @@
                 <img src="~@/assets/images/home/icon-hardware.svg" alt />
               </div>
               <div class="text">
-                <h3>{{ $t('home.aboutHardwareWallet') }}</h3>
-                <p>{{ $t('home.aboutHardwareWalletDesc') }}</p>
+                <h3>{{ $t('home.hardware-support.title') }}</h3>
+                <p>{{ $t('home.hardware-support.text') }}</p>
               </div>
             </dir>
             <dir class="content">
@@ -57,7 +57,7 @@
               </div>
               <div class="text">
                 <h3>{{ $t('common.swap') }}</h3>
-                <p>{{ $t('home.aboutSwapDesc') }}</p>
+                <p>{{ $t('home.swap.text') }}</p>
               </div>
             </dir>
             <dir class="content">
@@ -65,8 +65,8 @@
                 <img src="~@/assets/images/home/icon-mew-connect.svg" alt />
               </div>
               <div class="text">
-                <h3>{{ $t('common.mewConnect') }}</h3>
-                <p>{{ $t('home.aboutMewConnectDesc') }}</p>
+                <h3>{{ $t('common.mewconnect.string') }}</h3>
+                <p>{{ $t('common.mewconnect.desc') }}</p>
               </div>
             </dir>
           </div>

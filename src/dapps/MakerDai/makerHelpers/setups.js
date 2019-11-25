@@ -14,7 +14,10 @@ import {
 import Maker from '@makerdao/dai';
 import { locateCdps } from './locateCdps';
 import MakerCDP from '../MakerCDP';
-import {getDustValue, getParValue} from '@/dapps/MakerDai/MakerCDP/chainCalls';
+import {
+  getDustValue,
+  getParValue
+} from '@/dapps/MakerDai/MakerCDP/chainCalls';
 const { DAI } = Maker;
 const toBigNumber = num => {
   return new BigNumber(num);
@@ -79,10 +82,13 @@ export async function getDetailsForTokens(self, collateralTokens) {
   for (let i = 0; i < collateralTokens.length; i++) {
     const token = self._tokenService.getToken(collateralTokens[i].currency);
     self.tokens[collateralTokens[i].currency.symbol] = token;
-    self.balances[
-      collateralTokens[i].currency.symbol
-    ] = (await token.balance()).toBigNumber();
-    self.dustValues[collateralTokens[i].currency.symbol] = await getDustValue(self.web3, collateralTokens[i].ilk);
+    self.balances[collateralTokens[i].currency.symbol] = (
+      await token.balance()
+    ).toBigNumber();
+    self.dustValues[collateralTokens[i].currency.symbol] = await getDustValue(
+      self.web3,
+      collateralTokens[i].ilk
+    );
   }
   const token = self._tokenService.getToken(MDAI);
   self.tokens[MdaiToken.symbol] = token;
@@ -92,7 +98,6 @@ export async function getDetailsForTokens(self, collateralTokens) {
   self.tokens['DAI'] = self.daiToken;
   self.balances['DAI'] = self.daiBalance;
   self.balances['MKR'] = self.mkrBalance;
-
 }
 
 export async function checkAllowances(self, address, proxyAddress) {
@@ -109,7 +114,6 @@ export async function checkAllowances(self, address, proxyAddress) {
           typeof self.tokens[keys[i]]._contract !== 'undefined' &&
           typeof self.tokens[keys[i]]._contract.allowance === 'function'
         ) {
-
           self.proxyAllowances[keys[i]] = toBigNumber(
             await self.tokens[keys[i]]._contract.allowance(
               address,
@@ -239,7 +243,12 @@ export async function updateActiveCdp(self) {
     self,
     self._mcdManager
   );
-  console.log('withType, withProxy, withoutProxy', withType, withProxy, withoutProxy); // todo remove dev item
+  console.log(
+    'withType, withProxy, withoutProxy',
+    withType,
+    withProxy,
+    withoutProxy
+  ); // todo remove dev item
   self.cdpsWithType = withType;
   self.cdps = withProxy.map(removeObject);
   self.cdpsWithoutProxy = withoutProxy;
@@ -253,10 +262,10 @@ export async function updateActiveCdp(self) {
 
   const removedCdps = currentCdpIds.filter(item => {
     return !(
-      (self.cdps.includes(item.toString()) ||
-      self.cdps.includes(parseInt(item))) ||
-      (self.cdpsWithoutProxy.includes(item.toString()) ||
-        self.cdpsWithoutProxy.includes(parseInt(item)))
+      self.cdps.includes(item.toString()) ||
+      self.cdps.includes(parseInt(item)) ||
+      self.cdpsWithoutProxy.includes(item.toString()) ||
+      self.cdpsWithoutProxy.includes(parseInt(item))
     );
   });
 
@@ -337,7 +346,7 @@ export async function buildCdpObject(cdpId, options = {}, useOld = false) {
     balances: this.balances,
     proxyAllowances: this.proxyAllowances,
     mcdCurrencies: this.mcdCurrencies,
-    dustValues: this.dustValues,
+    dustValues: this.dustValues
     // par: this.par
   };
   let makerCDP;
@@ -356,7 +365,6 @@ export async function buildCdpObject(cdpId, options = {}, useOld = false) {
     return makerCDP;
   }
 }
-
 
 export async function doUpdate(self, Toast) {
   self.proxyAddress = await self.getProxy();
@@ -421,4 +429,3 @@ export async function doUpdate(self, Toast) {
     Toast.responseHandler('CDP Updated', Toast.INFO);
   }
 }
-

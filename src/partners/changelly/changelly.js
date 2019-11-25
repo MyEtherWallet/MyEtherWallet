@@ -17,6 +17,8 @@ import debug from 'debug';
 
 const errorLogger = debug('v5:partners-changelly');
 
+const disabled = ['USDT'];
+
 export default class Changelly {
   constructor(props = {}) {
     this.name = Changelly.getName();
@@ -80,6 +82,9 @@ export default class Changelly {
   }
 
   validSwap(fromCurrency, toCurrency) {
+    if (disabled.includes(fromCurrency) || disabled.includes(toCurrency)) {
+      return false;
+    }
     if (this.isValidNetwork) {
       return this.currencies[fromCurrency] && this.currencies[toCurrency];
     }

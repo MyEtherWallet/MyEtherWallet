@@ -26,13 +26,13 @@
           <div class="form-block amount-to-address">
             <div class="amount">
               <div class="title title-and-copy">
-                <h4>{{ $t('common.from') }}</h4>
+                <h4>{{ $t('swap.from') }}</h4>
                 <p
                   v-if="tokenBalances[fromCurrency] > 0"
                   class="all-button prevent-user-select"
                   @click="swapAll"
                 >
-                  {{ $t('common.totalBalance') }}
+                  {{ $t('common.balance.total') }}
                 </p>
               </div>
               <swap-currency-picker
@@ -45,18 +45,18 @@
               <div class="the-form amount-number">
                 <input
                   v-model="fromValue"
+                  :placeholder="$t('swap.deposit-amount')"
                   type="number"
                   name
                   value
                   step="any"
-                  placeholder="Deposit Amount"
                   @input="amountChanged('from')"
                 />
               </div>
               <div class="error-message-container">
                 <p v-if="fromBelowMinAllowed">{{ fromBelowMinAllowed }}</p>
                 <p v-if="!hasEnough && !fromBelowMinAllowed">
-                  {{ $t('common.dontHaveEnough') }}
+                  {{ $t('swap.warning.not-enough-funds') }}
                 </p>
                 <p v-if="fromAboveMaxAllowed">{{ fromAboveMaxAllowed }}</p>
               </div>
@@ -66,7 +66,7 @@
             </div>
             <div class="amount">
               <div class="title">
-                <h4>{{ $t('common.to') }}</h4>
+                <h4>{{ $t('swap.to') }}</h4>
               </div>
               <swap-currency-picker
                 :currencies="toArray"
@@ -78,11 +78,11 @@
               <div class="the-form amount-number">
                 <input
                   v-model="toValue"
+                  :placeholder="$t('swap.recieve-amount')"
                   type="number"
                   name
                   value
                   step="any"
-                  placeholder="Received Amount"
                   @input="amountChanged('to')"
                 />
               </div>
@@ -101,7 +101,7 @@
               :currency="toCurrency"
               :current-address="currentAddress"
               :copybutton="true"
-              :title="$t('common.toAddress')"
+              :title="$t('sendTx.to-addr')"
               @toAddress="setToAddress"
               @validAddress="validAddress = $event"
               @unableToValidate="unableToValidate = $event"
@@ -118,7 +118,7 @@
               :currency="fromCurrency"
               :current-address="currentAddress"
               :copybutton="true"
-              :title="$t('interface.fromAddr')"
+              :title="$t('sendTx.from-addr')"
               @toAddress="setExitFromAddress"
               @validAddress="validExitAddress = $event"
               @unableToValidate="unableToValidateExit = $event"
@@ -132,7 +132,7 @@
               :currency="fromCurrency"
               :current-address="currentAddress"
               :copybutton="true"
-              :title="$t('interface.refund', { currency: fromCurrency })"
+              :title="$t('swap.refund', { currency: fromCurrency })"
               @toAddress="setRefundAddress"
               @validAddress="validRefundAddress = $event"
               @unableToValidate="unableToValidateRefund = $event"
@@ -143,7 +143,7 @@
         <div class="send-form">
           <div class="title-container">
             <div class="title title-and-copy">
-              <h4>{{ $t('interface.providers') }}</h4>
+              <h4>{{ $tc('swap.providers.string', 2) }}</h4>
             </div>
           </div>
           <providers-radio-selector
@@ -169,7 +169,7 @@
             class="disabled submit-button large-round-button-green-filled clickable"
           >
             <i class="fa fa-spinner fa-spin" />
-            {{ $t('interface.swapButtonLoading') }}
+            {{ $t('swap.button-loading') }}
           </div>
           <div
             v-show="!finalizingSwap"
@@ -183,8 +183,8 @@
             <i class="fa fa-long-arrow-right" aria-hidden="true" />
           </div>
           <interface-bottom-text
-            :link-text="$t('interface.helpCenter')"
-            :question="$t('interface.haveIssues')"
+            :link-text="$t('common.help-center')"
+            :question="$t('common.have-issues')"
             link="https://kb.myetherwallet.com"
           />
         </div>
@@ -323,7 +323,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account', 'ens', 'gasPrice', 'web3', 'network']),
+    ...mapState(['account', 'ens', 'gasPrice', 'web3', 'network', 'online']),
     bestRate() {
       try {
         if (this.providerData.length > 0) {
@@ -341,13 +341,13 @@ export default {
     },
     fromBelowMinAllowed() {
       if (new BigNumber(MIN_SWAP_AMOUNT).gt(new BigNumber(this.fromValue)))
-        return `${this.$t('interface.belowMin')} ${MIN_SWAP_AMOUNT}`;
+        return `${this.$t('swap.value-below-min')} ${MIN_SWAP_AMOUNT}`;
       if (
         new BigNumber(this.selectedProvider.minValue).gt(
           new BigNumber(this.fromValue)
         )
       )
-        return this.$t('interface.belowMin', {
+        return this.$t('swap.value-below-min', {
           value: this.selectedProvider.maxValue,
           currency: this.fromCurrency
         });
@@ -356,7 +356,7 @@ export default {
     fromAboveMaxAllowed() {
       if (this.selectedProvider.provider === this.providerNames.bity) {
         if (this.checkBityMax) {
-          return this.$t('interface.aboveMax', {
+          return this.$t('swap.value-above-max', {
             value: this.selectedProvider.maxValue,
             currency: this.fromCurrency
           });
@@ -368,7 +368,7 @@ export default {
         ) &&
         new BigNumber(this.selectedProvider.maxValue).gt(new BigNumber(0))
       )
-        return this.$t('interface.aboveMaxSwap', {
+        return this.$t('swap.value-above-max', {
           value: this.selectedProvider.maxValue,
           currency: this.fromCurrency
         });
@@ -376,11 +376,11 @@ export default {
     },
     toBelowMinAllowed() {
       if (new BigNumber(0).gte(new BigNumber(this.toValue)))
-        return this.$t('interface.belowMinGeneral');
+        return this.$t('swap.below-min-swap');
       return false;
     },
     toAboveMaxAllowed() {
-      if (this.checkBityMax) return this.$t('interface.aboveMaxGeneral');
+      if (this.checkBityMax) return this.$t('swap.above-max-swap');
       return false;
     },
     providerList() {
@@ -471,7 +471,7 @@ export default {
   },
   watch: {
     ['this.network.type.name']() {
-      this.swap.updateNetwork(this.network.type.name);
+      this.swap.updateNetwork(this.network.type.name, this.web3);
     },
     ['swap.updateProviderRates']() {
       const { toArray, fromArray } = this.swap.initialCurrencyLists;
@@ -768,6 +768,21 @@ export default {
               } else if (entry.provider === this.providerNames.changelly) {
                 Toast.responseHandler(
                   `Failed to retrieve Changelly rate from ${fromCurrency} to ${toCurrency}`,
+                  3
+                );
+              } else if (entry.provider === this.providerNames.bity) {
+                Toast.responseHandler(
+                  `Failed to retrieve Bity rate from ${fromCurrency} to ${toCurrency}`,
+                  3
+                );
+              } else if (entry.provider === this.providerNames.kyber) {
+                Toast.responseHandler(
+                  `Failed to retrieve Kyber Network rate from ${fromCurrency} to ${toCurrency}`,
+                  3
+                );
+              } else if (entry.provider === this.providerNames.simplex) {
+                Toast.responseHandler(
+                  `Failed to retrieve Simplex rate from ${fromCurrency} to ${toCurrency}`,
                   3
                 );
               }

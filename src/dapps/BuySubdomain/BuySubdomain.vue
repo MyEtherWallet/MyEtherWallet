@@ -4,25 +4,27 @@
     <div class="buy-subdomain-content">
       <div class="buy-subdomain-form-container">
         <div class="title">
-          <h4>{{ $t('interface.nameYourWallet') }}</h4>
+          <h4>{{ $t('subDomain.title') }}</h4>
         </div>
         <div class="form">
           <div class="subdomain-input">
             <input
-              :placeholder="$t('dapps.subDomainPlaceholder')"
+              :placeholder="$t('subDomain.ph-enter-name')"
               :class="hasError ? 'errorInput' : ''"
               type="text"
               @input="debounceInput"
             />
-            <button type="button" @click="query">Check</button>
+            <button type="button" @click="query">
+              {{ $t('subDomain.check') }}
+            </button>
           </div>
           <p v-if="hasError" class="errorText">
-            <span>Invalid symbols</span>
+            <span>{{ $t('subDomain.invalid-symbol') }}</span>
           </p>
         </div>
         <div v-show="results.length > 0" class="result-section">
           <div class="title">
-            <h4>{{ $t('dapps.allSubDomains') }}</h4>
+            <h4>{{ $t('subDomain.all') }}</h4>
           </div>
           <div class="results-container">
             <div
@@ -35,10 +37,11 @@
               >
               <div class="buy-button-container">
                 <span class="amt"
-                  >{{ web3.utils.fromWei(item.price, 'ether') }} ETH</span
+                  >{{ web3.utils.fromWei(item.price, 'ether') }}
+                  {{ $t('common.currency.eth') }}</span
                 >
                 <button @click="buyDomain(item)">
-                  <span v-if="item.active">{{ $t('dapps.buy') }}</span>
+                  <span v-if="item.active">{{ $t('subDomain.buy') }}</span>
                   <span v-else>
                     <i class="fa fa-times" />
                   </span>
@@ -50,8 +53,8 @@
       </div>
       <div>
         <interface-bottom-text
-          :link-text="$t('interface.helpCenter')"
-          :question="$t('interface.haveIssues')"
+          :link-text="$t('common.help-center')"
+          :question="$t('common.have-issues')"
           link="https://kb.myetherwallet.com"
         />
       </div>

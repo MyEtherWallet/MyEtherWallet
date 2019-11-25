@@ -11,7 +11,7 @@ import {
   GetCdps,
   CdpManager
 } from '../makerHelpers';
-import assert from "assert";
+import assert from 'assert';
 
 function padRight(string, chars, sign) {
   return string + new Array(chars - string.length + 1).join(sign ? sign : '0');

@@ -2,7 +2,7 @@
   <div>
     <b-modal
       ref="networkAddress"
-      :title="$t('accessWallet.networkAndAddress')"
+      :title="$t('accessWallet.network-and-address')"
       hide-footer
       modal-class="modal-network-and-address nopadding"
       centered
@@ -41,8 +41,8 @@
                       :src="Networks[key][0].type.icon"
                     />
                     <div v-else class="no-icon">
-                      <p>No</p>
-                      <p>Icon</p>
+                      <p>{{ $t('common.no') }}</p>
+                      <p>{{ $t('common.uppercase-icon') }}</p>
                     </div>
                   </div>
                   <p>{{ key }}</p>
@@ -73,7 +73,7 @@
             class="collapse-open-button"
             variant="primary"
           >
-            <p>Address</p>
+            <p>{{ $t('common.addr') }}</p>
           </b-btn>
           <b-collapse
             id="collapse2"
@@ -84,7 +84,7 @@
               <!-- Derivation Path Drop down -->
               <div class="content-container-1">
                 <div class="hd-derivation">
-                  <h4>{{ $t('accessWallet.hdDerivationPath') }}</h4>
+                  <h4>{{ $t('accessWallet.hd-derivation-path') }}</h4>
                   <div class="dropdown-button-container">
                     <b-dropdown
                       id="hd-derivation-path"
@@ -101,7 +101,7 @@
                       >
                       <b-dropdown-divider />
                       <b-dropdown-item>
-                        {{ $t('accessWallet.customPaths') }}
+                        {{ $t('accessWallet.custom-paths') }}
                       </b-dropdown-item>
                       <b-dropdown-item
                         v-for="(val, key) in customPaths"
@@ -118,7 +118,7 @@
                         </span>
                       </b-dropdown-item>
                       <b-dropdown-item @click="showCustomPathInput">
-                        {{ $t('accessWallet.addCustomPath') }}
+                        {{ $t('accessWallet.add-custom-path') }}
                       </b-dropdown-item>
                     </b-dropdown>
                   </div>
@@ -128,7 +128,7 @@
                   class="error-message-container"
                 >
                   {{
-                    $t('accessWallet.invalidPathDesc', {
+                    $t('accessWallet.invalid-path-desc', {
                       path: invalidPath.path
                     })
                   }}
@@ -141,13 +141,13 @@
                 </p>
                 <div v-show="customPathInput" class="custom-path-container">
                   <!-- TODO: how to structure the path input? -->
-                  <label for="customPathLabel">Alias</label>
+                  <label for="customPathLabel">{{ $t('mewcx.alias') }}</label>
                   <input
                     id="customPathLabel"
                     v-model="customPath.label"
-                    placeholder="my custom path"
+                    :placeholder="$t('mewcx.custom-path')"
                   />
-                  <label for="customPathInput">Path</label>
+                  <label for="customPathInput">{{ $t('mewcx.path') }}</label>
                   <input
                     id="customPathInput"
                     v-model="customPath.path"
@@ -160,7 +160,7 @@
                     {{ $t('common.cancel') }}
                   </button>
                   <button class="submit-button submit" @click="addCustomPath">
-                    {{ $t('accessWallet.addCustomPath') }}
+                    {{ $t('accessWallet.add-custom-path') }}
                   </button>
                 </div>
               </div>
@@ -168,7 +168,7 @@
               <div class="content-container-2">
                 <div class="address-block-container">
                   <div class="block-title">
-                    <h4>{{ $t('accessWallet.interactAddr') }}</h4>
+                    <h4>{{ $t('accessWallet.interact-addr') }}</h4>
                   </div>
 
                   <ul class="address-block table-header fours">
@@ -236,7 +236,7 @@
                     <input
                       v-model="locPassword"
                       :type="show ? 'text' : 'password'"
-                      placeholder="Enter your password"
+                      :placeholder="$t('mewcx.enter-pw')"
                     />
                     <img
                       :src="show ? showIcon : hide"
@@ -254,7 +254,9 @@
                     type="submit"
                     @click.prevent="generateFromMnemonicPriv"
                   >
-                    <span v-show="!loading"> Add Wallet </span>
+                    <span v-show="!loading">
+                      {{ $t('mewcx.add-wallet') }}
+                    </span>
                     <i v-show="loading" class="fa fa-spinner fa-spin" />
                   </b-btn>
                 </div>

@@ -11,7 +11,7 @@ import {
   GetCdps,
   CdpManager
 } from '../makerHelpers';
-import assert from "assert";
+import assert from 'assert';
 
 console.log(GetCdps); // todo remove dev item
 function padRight(string, chars, sign) {
