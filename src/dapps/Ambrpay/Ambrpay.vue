@@ -34,18 +34,10 @@
         </div>
       </div>
       <subscription-form
+        :subscriptions="subscriptions"
         @startSubscription="startSubscription"
+        @openManageSubModal="openManageSubModal"
       ></subscription-form>
-      <div class="mb-4">
-        <b-button
-          class="mx-auto active-sub-btn my-subscriptions-container"
-          @click="openManageSubModal()"
-          >{{ $t('dappsAmbrpay.my-subscriptions') }}
-          <span v-if="subscriptions.length > 0" class="subscriptions-number">{{
-            subscriptions.length
-          }}</span>
-        </b-button>
-      </div>
     </b-container>
     <manage-funds-modal
       ref="manageFunds"
@@ -194,7 +186,10 @@ export default {
       this.ambrpay
         .getSubscriptions()
         .then(res => {
-          this.subscriptions = res;
+          this.subscriptions = res.map(subscription => ({
+            ...subscription,
+            moreInfo: false
+          }));
         })
         .catch(err => {
           Toast.responseHandler(err, Toast.ERROR);

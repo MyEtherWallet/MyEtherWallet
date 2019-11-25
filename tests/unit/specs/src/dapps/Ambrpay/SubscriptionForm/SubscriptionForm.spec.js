@@ -91,4 +91,24 @@ describe('SubscriptionForm.vue', () => {
 
     expect(wrapper.emitted().startSubscription).toBeTruthy();
   });
+
+  it('should clear the form', () => {
+    wrapper.setData({
+      address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
+      isValidAddress: true,
+      hexAddress: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
+      intervalDays: '5',
+      sendAmount: '1',
+      amountErrMsg: 'There is an error',
+      intervalErrMsg: 'There is an error'
+    });
+    wrapper.find('.clear-all-btn').trigger('click');
+    expect(wrapper.vm.$data.address).toEqual('');
+    expect(wrapper.vm.$data.isValidAddress).toEqual(false);
+    expect(wrapper.vm.$data.hexAddress).toEqual('');
+    expect(wrapper.vm.$data.intervalDays).toEqual('');
+    expect(wrapper.vm.$data.sendAmount).toEqual('');
+    expect(wrapper.vm.$data.amountErrMsg).toEqual('');
+    expect(wrapper.vm.$data.intervalErrMsg).toEqual('');
+  });
 });
