@@ -5,6 +5,7 @@
 ### Devop
 
 - Update translations[#1651](https://github.com/MyEtherWallet/MyEtherWallet/pull/1651)
+- Display token symbol [#1674](https://github.com/MyEtherWallet/MyEtherWallet/pull/1674)
 
 ### Feature
 
