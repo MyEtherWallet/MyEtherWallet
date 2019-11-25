@@ -15,6 +15,7 @@
   "enter-days": "Enter the number of day(s)",
   "exit-dapp": "Exit Dapp",
   "manage-subscriptions": {
+    "title": "Manage Subscriptions",
     "no-active": "You have no active subscriptions!",
     "active": "Active",
     "next-payment": "Next payment",
