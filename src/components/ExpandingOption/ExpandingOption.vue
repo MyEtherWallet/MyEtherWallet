@@ -5,7 +5,16 @@
   >
     <div class="title-bar-container">
       <div class="input-title">{{ title }}</div>
-      <div v-if="buttonText !== ''" class="button-text">{{ buttonText }}</div>
+      <popover v-if="popover" :popcontent="popover" />
+      <div v-if="buttonText !== '' && !showEnable" class="button-text">
+        {{ buttonText }}
+      </div>
+      <div v-if="showEnable && !expanded" class="button-text">
+        {{ buttonText }}
+      </div>
+      <div v-if="showEnable && expanded" class="button-text">
+        {{ $t('common.yes') }}
+      </div>
       <!-- Rounded switch -->
       <div class="switch sliding-switch-white">
         <label class="switch">
@@ -33,6 +42,14 @@ export default {
       default: ''
     },
     hidebottomborder: {
+      type: Boolean,
+      default: false
+    },
+    popover: {
+      type: String,
+      default: ''
+    },
+    showEnable: {
       type: Boolean,
       default: false
     }
