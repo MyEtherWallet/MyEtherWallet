@@ -174,11 +174,9 @@
           >
             {{ $t('sendTx.generate-tx') }}
           </div>
-          <interface-bottom-text
-            :question="$t('common.have-issues')"
-            :link-text="$t('common.help-center')"
-            link="https://kb.myetherwallet.com"
-          />
+          <div class="clear-all-btn" @click="clear()">
+            {{ $t('common.clear-all') }}
+          </div>
         </div>
       </div>
       <signed-tx-modal ref="signedTxModal" :signed-tx="signed" :raw-tx="raw" />
@@ -188,7 +186,6 @@
 
 <script>
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
-import InterfaceBottomText from '@/components/InterfaceBottomText';
 import CurrencyPicker from '@/layouts/InterfaceLayout/components/CurrencyPicker';
 import SignedTxModal from './components/SignedTxModal';
 import Blockie from '@/components/Blockie';
@@ -203,7 +200,6 @@ import DropDownAddressSelector from '@/components/DropDownAddressSelector';
 
 export default {
   components: {
-    'interface-bottom-text': InterfaceBottomText,
     blockie: Blockie,
     'signed-tx-modal': SignedTxModal,
     'currency-picker': CurrencyPicker,
@@ -348,6 +344,18 @@ export default {
     this.checkPrefilled();
   },
   methods: {
+    clear() {
+      this.toAmt = 0;
+      this.address = '';
+      this.toData = '0x';
+      this.gasLimit = 21000;
+      this.localNonce = this.nonce;
+      this.localGasPrice = this.highestGas;
+      this.selectedCoinType = {
+        name: 'Ethereum',
+        symbol: 'ETH'
+      };
+    },
     prefillForm() {
       if (this.tokens.length > 0 && this.isPrefilled) {
         const foundToken = this.tokensymbol
@@ -471,6 +479,7 @@ export default {
       this.signed = JSON.stringify(signed);
       this.$refs.signedTxModal.$refs.signedTx.show();
       window.scrollTo(0, 0);
+      this.clear();
     },
     setSelectedCurrency(e) {
       const symbol = this.network.type.currencyName;

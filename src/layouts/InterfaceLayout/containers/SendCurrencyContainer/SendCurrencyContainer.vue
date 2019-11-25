@@ -141,7 +141,6 @@
         </div>
       </div>
     </div>
-
     <div class="submit-button-container">
       <div
         :class="[
@@ -152,11 +151,9 @@
       >
         {{ $t('sendTx.send-tx') }}
       </div>
-      <interface-bottom-text
-        :link-text="$t('common.help-center')"
-        :question="$t('common.have-issues')"
-        link="https://kb.myetherwallet.com"
-      />
+      <div class="clear-all-btn" @click="clear()">
+        {{ $t('common.clear-all') }}
+      </div>
     </div>
   </div>
 </template>
@@ -165,7 +162,6 @@
 import { mapState } from 'vuex';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import CurrencyPicker from '../../components/CurrencyPicker';
-import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
 import { Transaction } from 'ethereumjs-tx';
 import { Misc, Toast } from '@/helpers';
@@ -178,7 +174,6 @@ import DropDownAddressSelector from '@/components/DropDownAddressSelector';
 export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
-    'interface-bottom-text': InterfaceBottomText,
     blockie: Blockie,
     'currency-picker': CurrencyPicker,
     'dropdown-address-selector': DropDownAddressSelector
@@ -410,6 +405,19 @@ export default {
     if (this.online && this.network.type.name === 'ETH') this.getEthPrice();
   },
   methods: {
+    clear() {
+      this.toData = '';
+      this.toValue = '0';
+      this.hexAddress = '';
+      this.address = '';
+      this.gasLimit = '21000';
+      this.isValidAddress = false;
+      this.advancedExpand = false;
+      this.selectedCurrency = {
+        name: 'Ethereum',
+        symbol: 'ETH'
+      };
+    },
     getToAddress(data) {
       this.address = data.address;
       this.hexAddress = data.address;
@@ -523,6 +531,7 @@ export default {
         this.web3.eth.sendTransaction(json).catch(err => {
           Toast.responseHandler(err, Toast.ERROR);
         });
+        this.clear();
       } catch (e) {
         Toast.responseHandler(e, Toast.ERROR);
       }

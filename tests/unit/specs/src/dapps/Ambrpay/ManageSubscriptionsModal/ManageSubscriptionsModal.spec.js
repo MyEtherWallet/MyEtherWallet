@@ -42,10 +42,6 @@ describe('ManageSubscriptionsModal.vue', () => {
     wrapper.destroy();
   });
 
-  it('should render the correct data', () => {
-    expect(wrapper.vm.$data.moreInfo).toEqual(false);
-  });
-
   it('should tell the client theres no subscriptions if theres no subscriptions', () => {
     expect(wrapper.find('.no-sub-container p').text()).toBe(
       'You have no active subscriptions!'
@@ -90,12 +86,6 @@ describe('ManageSubscriptionsModal.vue', () => {
       wrapper.find('i.fa-angle-down').trigger('click');
 
       expect(toggleMoreInfoStub.called).toBe(true);
-    });
-
-    it('should toggle more info on toggleMoreInfo()', () => {
-      wrapper.find('i.fa-angle-down').trigger('click');
-      expect(wrapper.find('i.fa-angle-up').exists()).toBe(true);
-      expect(wrapper.vm.$data.moreInfo).toBe(true);
     });
 
     it('should call unsubscribe() on btn click', () => {

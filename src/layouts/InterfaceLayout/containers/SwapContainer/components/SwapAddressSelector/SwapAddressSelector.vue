@@ -65,6 +65,10 @@ export default {
     preFillAddress: {
       type: String,
       default: ''
+    },
+    clearAddress: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -83,6 +87,9 @@ export default {
   watch: {
     currency() {
       this.validateAddress(this.selectedAddress);
+    },
+    clearAddress() {
+      this.selectedAddress = '';
     }
   },
   mounted() {

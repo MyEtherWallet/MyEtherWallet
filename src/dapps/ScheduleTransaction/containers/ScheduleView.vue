@@ -11,6 +11,7 @@
                 <div class="input-title">{{ $t('sendTx.type') }}</div>
                 <currency-picker
                   :currency="tokensWithBalance"
+                  :clear-currency="clearCurrency"
                   :page="'sendEgasAmountthAndTokens'"
                   :token="true"
                   @selectedCurrency="selectedCurrency = $event"
@@ -19,6 +20,7 @@
             </b-col>
             <b-col cols="12" md="8">
               <standard-input
+                :clear-input="clearInput"
                 :options="amountInputOptions()"
                 @changedValue="amount = $event"
               />
@@ -42,6 +44,7 @@
 
           <div v-show="selectedMode === supportedModes[1]">
             <standard-input
+              :clear-input="clearInput"
               :options="blockNumberInputOptions()"
               @changedValue="selectedBlockNumber = $event"
             />
@@ -82,6 +85,7 @@
                 <standard-dropdown
                   :options="timezoneOptions"
                   :placeholder="selectedTimeZone"
+                  :clear-timezone="clearTimezone"
                   @selection="selectedTimeZone = $event"
                 />
               </div>
@@ -122,6 +126,7 @@
               <div v-show="advancedExpand">
                 <standard-input
                   :options="customTimeBountyInputOptions()"
+                  :clear-input="clearInput"
                   @changedValue="timeBounty = $event"
                 />
                 <div v-show="!isValidTimeBounty" class="text-danger">
@@ -132,6 +137,7 @@
 
             <b-col cols="12" sm="6" md="3">
               <standard-input
+                :clear-input="clearInput"
                 :options="bountyUsdDisplayOptions()"
                 class="bounty-usd-display"
               />
@@ -177,6 +183,7 @@
 
               <b-col cols="12" md="6">
                 <standard-input
+                  :clear-input="clearInput"
                   :options="executionWindowInputOptions()"
                   @changedValue="windowSize = $event"
                 />
@@ -191,6 +198,7 @@
             </b-row>
 
             <standard-input
+              :clear-input="clearInput"
               :options="requireDepositInputOptions()"
               @changedValue="deposit = $event"
             />
@@ -201,6 +209,7 @@
             <b-row>
               <b-col cols="12" md="4">
                 <standard-input
+                  :clear-input="clearInput"
                   :options="futureGasPriceInputOptions()"
                   @changedValue="futureGasPrice = $event"
                 />
@@ -210,6 +219,7 @@
               </b-col>
               <b-col cols="12" md="4">
                 <standard-input
+                  :clear-input="clearInput"
                   :options="gasLimitInputOptions()"
                   @changedValue="gasLimit = $event"
                 />
@@ -219,6 +229,7 @@
               </b-col>
               <b-col cols="12" md="4">
                 <standard-input
+                  :clear-input="clearInput"
                   :options="futureGasLimitInputOptions()"
                   @changedValue="futureGasLimit = $event"
                 />
@@ -230,6 +241,7 @@
 
             <standard-input
               v-if="!isTokenTransfer"
+              :clear-input="clearInput"
               :options="dataInputOptions()"
               @changedValue="data = $event"
             />
@@ -260,6 +272,9 @@
           @click="scheduleTx"
         >
           {{ $t('scheduleTx.string') }}
+        </div>
+        <div class="clear-all-btn" @click="clear()">
+          {{ $t('common.clear-all') }}
         </div>
       </div>
     </div>
@@ -345,6 +360,9 @@ export default {
       selectedTimeZone: moment.tz.guess(),
       selectedCurrency: '',
       showTokenTransferNotification: true,
+      clearCurrency: false,
+      clearInput: false,
+      clearTimezone: false,
       amountInputOptions() {
         return {
           title: `${this.$t('sendTx.amount')}`,
@@ -702,6 +720,17 @@ export default {
     }
   },
   methods: {
+    clear() {
+      this.clearCurrency = !this.clearCurrency;
+      this.clearInput = !this.clearInput;
+      this.hexAddress = '';
+      this.address = '';
+      this.datetime = moment()
+        .add(1, 'days')
+        .toISOString();
+      this.clearTimezone = !this.clearTimezone;
+      this.timeBounty = EAC_SCHEDULING_CONFIG.TIME_BOUNTY_DEFAULTS[0];
+    },
     getToAddress(data) {
       this.address = data.address;
       this.hexAddress = data.address;
@@ -824,6 +853,7 @@ export default {
       }
 
       this.eac.schedule(schedulingOptions);
+      this.clear();
     },
     copyToClipboard(ref) {
       this.$refs[ref].select();

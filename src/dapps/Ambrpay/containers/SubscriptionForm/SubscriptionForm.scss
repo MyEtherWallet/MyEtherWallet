@@ -125,3 +125,15 @@
   top: 39px;
   width: 100%;
 }
+
+.active-sub-btn {
+  align-items: center;
+  background: none;
+  border: 1px solid $mew-green;
+  color: $mew-green;
+  margin-right: 10px;
+}
+
+.button-container {
+  justify-content: center;
+}

@@ -62,12 +62,23 @@
               {{ intervalErrMsg }}
             </p>
           </b-row>
-          <b-row class="mt-4">
+          <b-row class="mt-5 button-container">
             <b-button
-              :class="[isValidInput ? '' : 'disabled', 'mx-auto mew-btn']"
+              class="active-sub-btn my-subscriptions-container"
+              @click="openManageSubModal"
+              >{{ $t('dappsAmbrpay.manage-subscriptions.title') }}
+            </b-button>
+            <b-button
+              :class="[isValidInput ? '' : 'disabled']"
+              class="mew-btn"
               @click="startSubscription"
               >{{ $t('dappsAmbrpay.start-recurring') }}</b-button
             >
+          </b-row>
+          <b-row>
+            <div class="clear-all-btn mx-auto mt-3" @click="clear()">
+              {{ $t('common.clear-all') }}
+            </div>
           </b-row>
         </b-container>
       </div>
@@ -85,6 +96,14 @@ export default {
   components: {
     blockie: Blockie,
     'dropdown-address-selector': DropDownAddressSelector
+  },
+  props: {
+    subscriptions: {
+      type: Array,
+      default: function() {
+        return [];
+      }
+    }
   },
   data() {
     return {
@@ -143,6 +162,15 @@ export default {
     }
   },
   methods: {
+    clear() {
+      this.address = '';
+      this.isValidAddress = false;
+      this.hexAddress = '';
+      this.intervalDays = '';
+      this.sendAmount = '';
+      this.amountErrMsg = '';
+      this.intervalErrMsg = '';
+    },
     getToAddress(data) {
       this.address = data.address;
       this.hexAddress = data.address;
@@ -155,6 +183,9 @@ export default {
           'ether'
         );
       }
+    },
+    openManageSubModal() {
+      this.$emit('openManageSubModal');
     },
     startSubscription() {
       const data = {
