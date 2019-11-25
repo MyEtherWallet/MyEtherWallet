@@ -7,10 +7,10 @@
       aspect-ratio="1"
       class="mb-5"
     />
-    <BlockTitle title="Customer support" :description="descriptionText" />
-    <StdButton buttonclass="button--green-border" class="mt-5">
-      Contact Support
-    </StdButton>
+    <BlockTitle :data="titleData" />
+    <StdButton buttonclass="button--green-border" class="mt-5"
+      >Contact Support</StdButton
+    >
   </v-sheet>
 </template>
 
@@ -21,8 +21,14 @@ import StdButton from '@/components/StdButton';
 export default {
   components: { BlockTitle, StdButton },
   data: () => ({
-    descriptionText:
-      'Et voluptua takimata sit clita amet, takimata dolor stet sit accusam tempor at est labore.'
+    titleData: {
+      textProps: '',
+      toptitle: '',
+      title: 'Customer support',
+      description:
+        'MEW has partnered with Bity, Kyber Network, and Simplex to allow users to swap fiat to crypto, ETH and BTC.',
+      centered: false
+    }
   })
 };
 </script>

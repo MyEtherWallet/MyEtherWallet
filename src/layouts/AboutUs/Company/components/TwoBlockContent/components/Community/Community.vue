@@ -7,7 +7,7 @@
       aspect-ratio="1"
       class="mb-5"
     />
-    <BlockTitle title="Community" :description="descriptionText" />
+    <BlockTitle :data="titleData" />
     <div class="d-flex align-center mt-5">
       <v-btn
         text
@@ -60,8 +60,14 @@ import BlockTitle from '@/layouts/components/BlockTitle';
 export default {
   components: { BlockTitle },
   data: () => ({
-    descriptionText:
-      'Et voluptua takimata sit clita amet, takimata dolor stet sit accusam tempor at est labore.',
+    titleData: {
+      textProps: '',
+      toptitle: '',
+      title: 'Community',
+      description:
+        'MEW has partnered with Bity, Kyber Network, and Simplex to allow users to swap fiat to crypto, ETH and BTC.',
+      centered: false
+    },
     buttonClass: 'mr-4',
     iconClass: 'community-button',
     iconColor: '#003945'

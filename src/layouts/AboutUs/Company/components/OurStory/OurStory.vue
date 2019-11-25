@@ -3,7 +3,7 @@
     <div class="py-10" />
     <v-container class="pb-0">
       <v-sheet max-width="600px" color="transparent" class="mx-auto">
-        <BlockTitle title="Our story" :description="descriptionText" centered />
+        <BlockTitle :data="titleData" />
       </v-sheet>
       <div class="my-11" />
       <div class="line-height--0">
@@ -22,8 +22,14 @@ import BlockTitle from '@/layouts/components/BlockTitle';
 export default {
   components: { BlockTitle },
   data: () => ({
-    descriptionText:
-      'Dolor aliquyam sadipscing duo at nonumy consetetur. Ut clita et at et, ea at sadipscing accusam diam, lorem et at dolor clita lorem ipsum voluptua. Duo amet ipsum ut eirmod takimata dolor sadipscing dolore et, diam dolor est lorem et. Dolor aliquyam sadipscing duo at nonumy consetetur. Ut clita et at et, ea at sadipscing accusam diam, lorem et at dolor clita lorem ipsum voluptua. Duo amet ipsum ut eirmod takimata dolor sadipscing dolore et, diam dolor est lorem et. Duo amet ipsum ut eirmod takimata dolor sadipscing dolore et, diam dolor est lorem et.'
+    titleData: {
+      textProps: '',
+      toptitle: '',
+      title: 'Our story',
+      description:
+        'Sea lorem ea justo amet dolor eirmod stet justo, tempor eos lorem tempor dolor elitr at amet voluptua stet. Et sea gubergren et ipsum, diam lorem tempor tempor labore, consetetur dolor sit no kasd dolore et takimata, sit clita consetetur justo tempor, stet sit ut consetetur ea diam sanctus dolores.',
+      centered: true
+    }
   })
 };
 </script>
