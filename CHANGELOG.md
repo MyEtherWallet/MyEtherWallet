@@ -1,9 +1,12 @@
+### Release v5.2.5
+
 ### Bug
 
 - Fix MEWCX mobile ui [#1657](https://github.com/MyEtherWallet/MyEtherWallet/pull/1657)
 
 ### Devop
 
+- Update makerDAO dai branding [#1668](https://github.com/MyEtherWallet/MyEtherWallet/pull/1668)
 - Update translations[#1651](https://github.com/MyEtherWallet/MyEtherWallet/pull/1651)
 - Display token symbol [#1674](https://github.com/MyEtherWallet/MyEtherWallet/pull/1674)
 
