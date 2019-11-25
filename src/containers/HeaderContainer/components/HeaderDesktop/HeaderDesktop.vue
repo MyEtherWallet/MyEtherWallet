@@ -14,14 +14,14 @@
             text
             :ripple="false"
             to="/how-it-works"
+            >How it works</v-btn
           >
-            How it works
-          </v-btn>
           <v-menu open-on-hover bottom offset-y transition="fade-transition">
             <template v-slot:activator="{ on }">
               <v-btn class="mx-3" text :ripple="false" v-on="on">
-                About us<MenuOpenArrow
-              /></v-btn>
+                About us
+                <MenuOpenArrow />
+              </v-btn>
             </template>
             <v-list min-width="200px" class="pa-5">
               <v-list-item>
@@ -30,9 +30,8 @@
                     <router-link
                       class="text-decoration-none"
                       to="/about-us/company"
+                      >Company</router-link
                     >
-                      Company
-                    </router-link>
                   </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
@@ -43,24 +42,9 @@
                     <router-link
                       class="text-decoration-none"
                       to="/about-us/team"
+                      >Team</router-link
                     >
-                      Team
-                    </router-link>
                   </v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-
-              <v-list-item>
-                <v-list-item-content>
-                  <v-list-item-title class="subtitle-2">
-                    <router-link
-                      class="text-decoration-none"
-                      to="/about-us/why-mew"
-                    >
-                      Why MEW
-                    </router-link>
-                  </v-list-item-title>
-                  <v-list-item-subtitle class="caption"></v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
 
@@ -71,9 +55,8 @@
                       class="text-decoration-none"
                       href="https://www.mewtopia.com/"
                       target="_blank"
+                      >MEWtopia</a
                     >
-                      MEWtopia
-                    </a>
                   </v-list-item-title>
                   <v-list-item-subtitle v-if="false" class="caption"
                     >Get help from our support team!</v-list-item-subtitle
@@ -85,8 +68,9 @@
           <v-menu open-on-hover bottom offset-y transition="fade-transition">
             <template v-slot:activator="{ on }">
               <v-btn class="mx-3" text :ripple="false" v-on="on">
-                Tools<MenuOpenArrow
-              /></v-btn>
+                Tools
+                <MenuOpenArrow />
+              </v-btn>
             </template>
             <div class="white pa-5">
               <v-row>
@@ -177,9 +161,7 @@
               </v-row>
             </div>
           </v-menu>
-          <v-btn class="mx-3" text :ripple="false">
-            Support
-          </v-btn>
+          <v-btn class="mx-3" text :ripple="false">Support</v-btn>
         </div>
 
         <v-spacer></v-spacer>
@@ -188,8 +170,7 @@
           <v-img
             src="@/assets/images/Common/Icons/buy-eth.svg"
             class="mr-1 ml-n1"
-          />
-          Buy ETH
+          />Buy ETH
         </v-btn>
       </v-app-bar>
     </v-container>

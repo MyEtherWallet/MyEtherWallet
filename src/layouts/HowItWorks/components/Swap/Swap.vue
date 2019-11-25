@@ -1,8 +1,7 @@
 <template>
   <div class="component-container position--relative">
-    <v-img
-      src="@/assets/images/Etc/HowItWorks/Bubbles.svg"
-      max-width="100%"
+    <img
+      src="@/assets/images/Etc/HowItWorks/Bubbles.png"
       class="block-background-pattern"
     />
     <v-container>
@@ -100,7 +99,8 @@ export default {
 
 .block-background-pattern {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 80px;
+  left: 80px;
+  height: 95%;
 }
 </style>
