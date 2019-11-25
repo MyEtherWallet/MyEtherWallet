@@ -1,6 +1,8 @@
 {
   "maker_title": "MakerDAO",
+  "maker_title_old": "MakerDAO",
   "maker_desc": "Collateralize ETH for DAI",
+  "maker_desc_sai": "Single Collateral Sai",
   "cdp-portal": "CDP Portal",
   "position-label": "Collateralized debt position #{value}",
   "current-price": "Current price",
@@ -91,6 +93,7 @@
   "peth": "PETH",
   "maker-dai": "Maker Dai",
   "cdp": "CDP",
-  "migration-contract-balance-below": "Not enough Sai 'old DAI' in the Maker Migration Contract to complete this migration. Please try again later or contact the maker foundation at integrate@makerdao.com"
+  "migration-contract-balance-below": "Not enough Sai 'old DAI' in the Maker Migration Contract to complete this migration. Please try again later or contact the maker foundation at integrate@makerdao.com",
+  "min-generate": "Minimum generate to "
 
 }
