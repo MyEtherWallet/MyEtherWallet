@@ -9,14 +9,12 @@
     "warning": "MEWconnect is not compatible with iPads."
   },
   "finney": {
-    "scan-qr": "To connect, scan the QR code from",
+    "scan-info": "To connect, scan the QR code from {wallet} app on your {finney-bc}",
     "finney-wallet": "FinneyWallet",
-    "app-on": "app on your",
     "finney-bc": "FINNEY™ BLOCKCHAIN SMARTPHONE",
-    "get-your": "Get your",
-    "finney": "FINNEY™",
-    "now": "now",
-    "mobile": "moble",
+    "get-finney": "Get your {finney-title} now",
+    "finney-title": "FINNEY™",
+    "mobile": "mobile",
     "finney-connect": "FINNEY Connect"
   },
   "hardware": {
@@ -74,7 +72,7 @@
       "title": "Access by Private Key",
       "placeholder": "Enter Private Key"
     },
-    "do-not-share": "share your private key to anyone! You may lose your money if you share it"
+    "do-not-share": "Please {do-not} share your private key to anyone! You may lose your money if you share it"
   },
   "network-addr": {
     "string": "Network and Address",
@@ -93,7 +91,7 @@
   },
   "pin": {
     "string": "PIN",
-    "enter": "Enter PIN for your",
+    "enter": "Enter PIN for your {device}",
     "layout": "The PIN layout is displayed on your Hardware wallet",
     "access": "To access my wallet,",
     "accept": "I accept the",
