@@ -88,11 +88,11 @@
         <div v-if="showMoveOrClose" class="header-buttons-container">
           <div class="inner-container">
             <button class="move-btn" @click="showMove">
-              <h4>{{ $t('dappsMaker.moveTitle') }}</h4>
+              <h4>{{ $t('dappsMaker.move-title') }}</h4>
             </button>
             <div v-if="!((!hasProxy && !onCreate) || showCdpMigrateButtons)">
               <button class="close-btn" @click="showClose">
-                <h4>{{ $t('dappsMaker.closeTitle') }}</h4>
+                <h4>{{ $t('dappsMaker.close-title') }}</h4>
               </button>
             </div>
           </div>
@@ -102,25 +102,25 @@
     <div v-if="makerActive" class="buttons-container">
       <div v-if="showCreateProxy">
         <div class="dapps-button" @click="buildProxy">
-          <h4>{{ $t('dappsMaker.createProxy') }}</h4>
+          <h4>{{ $t('dappsMaker.create-proxy') }}</h4>
         </div>
       </div>
       <div v-if="showCreateProxy" class="proxy-container">
-        {{ $t('dappsMaker.proxyInstructions') }}
+        {{ $t('dappsMaker.proxy-instructions') }}
       </div>
       <div v-if="showCdpMigrateButtons">
         <div v-for="(value, idx) in cdpsWithoutProxy" :key="idx + value">
           <div class="dapps-button">
             <div @click="migrateCdpExternal(value)">
               <h4>
-                {{ $t('dappsMaker.migrateCdp', { value: value }) }}
+                {{ $t('dappsMaker.migrate-cdp', { value: value }) }}
               </h4>
             </div>
           </div>
         </div>
       </div>
       <div v-if="showCdpMigrateButtons" class="proxy-container">
-        {{ $t('dappsMaker.migrateInstructions') }}
+        {{ $t('dappsMaker.migrate-instructions') }}
       </div>
     </div>
     <div v-show="makerActive" class="buttons-container">
@@ -133,7 +133,7 @@
             ]"
           >
             <div @click="openMigrate(value)">
-              <h4>CDP #{{ value }}</h4>
+              <h4>{{ $t('dappsMaker.cdp') }} #{{ value }}</h4>
             </div>
           </div>
         </div>
@@ -148,7 +148,7 @@
           ]"
         >
           <div @click="openManage(value)">
-            <h4>CDP #{{ value }}</h4>
+            <h4>{{ $t('dappsMaker.cdp') }} #{{ value }}</h4>
           </div>
         </div>
       </div>
@@ -223,7 +223,7 @@ import McdPlugin, {
   MKR
 } from '@makerdao/dai-plugin-mcd';
 import configPlugin from '@makerdao/dai-plugin-config';
-import {getCdpIds} from './MakerCDP/chainCalls'
+import { getCdpIds } from './MakerCDP/chainCalls';
 import { Toast } from '@/helpers';
 import MakerCDP from './MakerCDP';
 import { toChecksumAddress } from '@/helpers/addressUtils';
@@ -618,7 +618,7 @@ export default {
     removeCdp(vals) {
       try {
         delete this.availableCdps[vals.id];
-        Toast.responseHandler('CDP Closed', Toast.INFO);
+        Toast.responseHandler(this.$t('dapps-maker.cdp-closed'), Toast.INFO);
       } catch (e) {
         // eslint-disable-next-line
         console.error(e);

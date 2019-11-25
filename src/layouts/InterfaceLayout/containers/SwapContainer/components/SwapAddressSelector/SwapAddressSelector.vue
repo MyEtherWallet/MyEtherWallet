@@ -17,8 +17,8 @@
         <input
           ref="addressInput"
           v-model="selectedAddress"
+          :placeholder="$t('common.enter-addr')"
           type="text"
-          placeholder="Please enter the address"
           @focus="dropdownOpen = false"
         />
         <div v-if="!validAddress" class="blockie-place-holder-image" />
@@ -73,7 +73,7 @@
               </p>
             </div>
             <p v-if="addr.address === currentAddress" class="address-note">
-              {{ $t('interface.myAddr') }}
+              {{ $t('common.my-addr') }}
             </p>
             <i
               v-if="toAddressCheckMark"
@@ -86,12 +86,12 @@
     </div>
     <!-- .dropdown--content -->
     <div v-show="validityState === 2" class="error-message-container">
-      <p>{{ $t('interface.notValidAddr', { currency: currency }) }}</p>
+      <p>{{ $t('swap.warning.not-valid-addr-src', { currency: currency }) }}</p>
     </div>
     <div v-show="validityState === 3" class="warn-message-container">
       <p>
         {{
-          $t('interface.unableToValidateAddress', {
+          $t('swap.warning.unable-validate-addr', {
             currency: currency
           })
         }}

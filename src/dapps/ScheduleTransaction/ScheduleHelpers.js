@@ -13,7 +13,7 @@ const EAC_SCHEDULING_CONFIG = {
   BOUNTY_TO_DEPOSIT_MULTIPLIER: 2,
   SUPPORTED_MODES: [
     {
-      name: 'Date & Time',
+      name: 'scheduleTx.date-time',
       executionWindow: {
         min: 5,
         default: 10
@@ -21,7 +21,7 @@ const EAC_SCHEDULING_CONFIG = {
       unit: 'Minutes'
     },
     {
-      name: 'Block Number',
+      name: 'scheduleTx.block-num',
       executionWindow: {
         min: 20,
         default: 90

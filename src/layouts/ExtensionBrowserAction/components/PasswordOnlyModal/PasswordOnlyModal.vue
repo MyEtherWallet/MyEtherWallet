@@ -2,21 +2,21 @@
   <div>
     <b-modal
       ref="passwordOnlyModal"
+      :title="$t('mewcx.wallet-password')"
       hide-footer
       centered
       class="bootstrap-modal"
-      title="Wallet Password"
     >
       <div class="modal-contents">
-        <p>Your wallet is encrypted. Please enter the password</p>
+        <p>{{ $t('mewcx.wallet-encrypted') }}</p>
         <form>
           <div class="input-container">
-            <label for="walletPassword"> Password </label>
+            <label for="walletPassword"> {{ $t('mewcx.password') }} </label>
             <div class="password-input">
               <input
                 v-model="locPassword"
                 :type="show ? 'text' : 'password'"
-                placeholder="Create your password here"
+                :placeholder="$t('mewcx.create-pw')"
                 name="walletPassword"
               />
               <img

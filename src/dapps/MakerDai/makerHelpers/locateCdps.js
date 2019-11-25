@@ -1,6 +1,6 @@
 import { toChecksumAddress } from '@/helpers/addressUtils';
 import { getCdpIds } from './chainCalls';
-import {GetCdps} from './ABIs'
+import { GetCdps } from './ABIs';
 import addresses from '@/dapps/MakerDai/makerHelpers/addresses';
 
 async function locateCdps(self, _cdpService) {

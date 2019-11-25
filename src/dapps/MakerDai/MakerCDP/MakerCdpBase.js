@@ -1,10 +1,6 @@
 import BigNumber from 'bignumber.js';
-import {
-  maxPethDraw,
-  maxDai,
-  displayFixedValue
-} from '../makerHelpers';
-import {defaultIlk} from './constants'
+import { maxPethDraw, maxDai, displayFixedValue } from '../makerHelpers';
+import { defaultIlk } from './constants';
 
 import * as daiMath from './daiMath';
 
@@ -206,7 +202,7 @@ export default class MakerCdpBase {
 
   get _liquidationRatio() {
     if (Object.keys(this.cdp).length > 0) {
-      return this.cdp.type.liquidationRatio._amount
+      return this.cdp.type.liquidationRatio._amount;
     }
     const rawType = this.mcdManager
       .get('mcd:cdpType')
@@ -215,11 +211,15 @@ export default class MakerCdpBase {
   }
 
   get liquidationPrice() {
-    return this._liquidationPrice.toBigNumber()
+    return this._liquidationPrice.toBigNumber();
   }
 
   get _liquidationPrice() {
-    return daiMath.liquidationPrice(this._collateralAmount, this._debtValue, this._liquidationRatio);
+    return daiMath.liquidationPrice(
+      this._collateralAmount,
+      this._debtValue,
+      this._liquidationRatio
+    );
   }
 
   get maxDai() {

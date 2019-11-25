@@ -13,7 +13,7 @@ import {
   loadCdpDetails,
   buildEmpty
 } from './setups';
-import {doUpdate} from './updaters'
+import { doUpdate } from './updaters';
 import { getMakerCurrencies } from './currencyHelper';
 import {
   calcLiquidationPrice,

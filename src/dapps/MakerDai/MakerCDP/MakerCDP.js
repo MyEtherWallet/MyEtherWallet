@@ -82,27 +82,30 @@ export default class MakerCDP extends MakerCdpBase {
   }
 
   async getValuesFromChain(retrieve = []) {
-    if(!this.afterInitialization){
+    if (!this.afterInitialization) {
       this.afterInitialization = !this.afterInitialization;
       return;
     }
     const urns = await getUrns(this.web3, this.cdpId, this.cdpType);
     const value = this.cdpTypeObject.currency.wei(urns.ink);
     if (!this.cdp.collateralAmount.toBigNumber().eq(value.toBigNumber())) {
-      this.override['collateralAmount'] = this.cdpTypeObject.currency
-        .wei(urns.ink)
+      this.override['collateralAmount'] = this.cdpTypeObject.currency.wei(
+        urns.ink
+      );
     }
-    if(retrieve.includes('collateralValue')){
+    if (retrieve.includes('collateralValue')) {
       this.override['collateralValue'] = '';
     }
-    if(retrieve.includes('collateralizationRatio')){
+    if (retrieve.includes('collateralizationRatio')) {
       this.override['collateralizationRatio'] = '';
     }
     // todo: think about whether the type of update should be recorded and then used to determine which override to create
     // Mostly about reducing chain calls.  if the value doesn't need a particular call. it can be skipped.
-    const calculatedDebt = daiMath.debtValue(urns.art, this.dustValues[this.cdpCollateralType].rate);
+    const calculatedDebt = daiMath.debtValue(
+      urns.art,
+      this.dustValues[this.cdpCollateralType].rate
+    );
     this.override['debtValue'] = calculatedDebt;
-
   }
 
   async update() {
@@ -298,7 +301,9 @@ export default class MakerCDP extends MakerCdpBase {
 
   setType(type) {
     if (this.cdpId === null) {
-      this.cdpTypeObject = this.mcdManager.get('mcd:cdpType').getCdpType(null, type.name);
+      this.cdpTypeObject = this.mcdManager
+        .get('mcd:cdpType')
+        .getCdpType(null, type.name);
     }
   }
 

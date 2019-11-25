@@ -188,7 +188,6 @@ import {
 import BigNumber from 'bignumber.js';
 import Arrow from '@/assets/images/etc/single-arrow.svg';
 
-
 const bnOver = (one, two, three) => {
   return toBigNumber(one)
     .times(toBigNumber(two))
@@ -340,10 +339,10 @@ export default {
       if (this.daiQty <= 0 || this.ethQty <= 0) return 0;
       return this.calcLiquidationPrice(this.ethQty, this.daiQty);
     },
-    liquidationRatio(){
-      if(this.emptyMakerCreated){
+    liquidationRatio() {
+      if (this.emptyMakerCreated) {
         console.log(this.makerCDP); // todo remove dev item
-        return this.makerCDP.liquidationRatio
+        return this.makerCDP.liquidationRatio;
       }
     },
     maxDaiDraw() {
@@ -366,7 +365,7 @@ export default {
       return false;
     },
     minEth() {
-      if(this.emptyMakerCreated){
+      if (this.emptyMakerCreated) {
         return toBigNumber(this.getValueOrFunction('minEth'));
       }
     },
@@ -383,26 +382,26 @@ export default {
       }
     },
     getCurrentPrice() {
-      if(this.emptyMakerCreated){
+      if (this.emptyMakerCreated) {
         return this.makerCDP.getCurrentPriceFor(this.selectedCurrency.symbol);
       }
       // return this.getCurrentPriceFor(this.selectedCurrency.symbol);
     },
     minDeposit() {
-      if(this.emptyMakerCreated){
+      if (this.emptyMakerCreated) {
         return this.makerCDP.minDepositFor(this.selectedCurrency.symbol);
       }
       // return this.getCurrentPriceFor(this.selectedCurrency.symbol);
     }
   },
   watch: {
-    selectedCurrency(val){
-      if(this.emptyMakerCreated){
-        this.makerCDP.setType(val)
+    selectedCurrency(val) {
+      if (this.emptyMakerCreated) {
+        this.makerCDP.setType(val);
       }
     },
-    makerActive(){
-      if(!this.emptyMakerCreated){
+    makerActive() {
+      if (!this.emptyMakerCreated) {
         this.buildEmptyInstance();
       }
     }
@@ -445,7 +444,7 @@ export default {
       this.$forceUpdate();
       this.emptyMakerCreated = true;
       console.log(this.makerCDP); // todo remove dev item
-      console.log("empty built"); // todo remove dev item
+      console.log('empty built'); // todo remove dev item
     },
     displayPercentValue,
     displayFixedValue,

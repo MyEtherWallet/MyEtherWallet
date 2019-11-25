@@ -70,12 +70,9 @@
           />
         </div>
       </div>
-
-
     </div>
 
     <div class="grid-col-2 promo-cards">
-
       <div class="card-block unlock-wallet" @click="goToSave">
         <div class="flex-col-vertical-center">
           <div class="card-content">
@@ -195,7 +192,7 @@ export default {
         this.goToManage();
       }
     },
-    goToSave(){
+    goToSave() {
       if (this.$route.path.includes('maker-dai')) {
         this.$router.push({
           name: 'save'

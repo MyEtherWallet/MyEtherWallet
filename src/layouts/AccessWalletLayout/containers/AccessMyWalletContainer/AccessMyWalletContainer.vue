@@ -15,6 +15,7 @@
       :ledger-app-open="ledgerAppModalOpen"
       :network-and-address-open="networkAndAddressOpen"
       :open-finney="finneyModalOpen"
+      :open-xwallet="xwalletModalOpen"
       @hardwareRequiresPassword="hardwarePasswordModalOpen"
       @hardwareWalletOpen="hardwareWalletOpen"
     />
@@ -56,16 +57,17 @@
 
     <wallet-password-modal />
     <finney-modal ref="finney" />
+    <xwallet-modal ref="xwallet" />
     <enter-pin-number-modal />
 
     <div class="wrap">
       <div class="page-container">
         <div class="title">
-          <h2>{{ $t('common.accessMyWallet') }}</h2>
+          <h2>{{ $t('common.wallet.access-my') }}</h2>
           <h5>
-            {{ $t('common.noWallet') }}
+            {{ $t('common.wallet.do-not-have') }}
             <router-link :to="'/create-wallet'" class="nounderline">
-              {{ $t('common.createANewWallet') }}
+              {{ $t('common.wallet.create-new') }}
             </router-link>
           </h5>
         </div>
@@ -105,6 +107,7 @@ import MnemonicModal from '../../components/MnemonicModal';
 import LedgerAppModal from '../../components/LedgerAppModal';
 import WalletPasswordModal from '@/components/WalletPasswordModal';
 import EnterPinNumberModal from '@/components/EnterPinNumberModal';
+import XwalletModal from '../../components/XwalletModal';
 
 import mewConnectImg from '@/assets/images/icons/button-mewconnect.svg';
 import hardwareImg from '@/assets/images/icons/button-hardware.svg';
@@ -137,7 +140,8 @@ export default {
     'wallet-password-modal': WalletPasswordModal,
     'enter-pin-number-modal': EnterPinNumberModal,
     'ledger-app-modal': LedgerAppModal,
-    'finney-modal': FinneyModal
+    'finney-modal': FinneyModal,
+    'xwallet-modal': XwalletModal
   },
   data() {
     return {
@@ -150,8 +154,8 @@ export default {
       buttons: [
         {
           func: this.mewConnectModalOpen,
-          title: this.$t('common.mewConnect'),
-          desc: this.$t('accessWallet.mewConnectDesc'),
+          title: this.$t('common.mewconnect.string'),
+          desc: this.$t('accessWallet.mewconnect.option-text'),
           recommend: '',
           tooltip: '',
           img: mewConnectImg,
@@ -161,8 +165,9 @@ export default {
         },
         {
           func: this.hardwareModalOpen,
-          title: this.$t('common.hardware'),
-          desc: 'Ledger wallet, FINNEY, Trezor, BitBox, Secalot, KeepKey',
+          title: this.$t('accessWallet.hardware.option-title'),
+          desc:
+            'Ledger wallet, FINNEY, Trezor, BitBox, Secalot, KeepKey, XWallet',
           recommend: '',
           tooltip: '',
           img: hardwareImg,
@@ -172,8 +177,8 @@ export default {
         },
         {
           func: this.web3WalletModal,
-          title: 'Web3 Wallet',
-          desc: this.$t('accessWallet.web3WalletDesc'),
+          title: this.$t('accessWallet.web3-wallet'),
+          desc: this.$t('accessWallet.web3-wallet-desc'),
           recommend: '',
           tooltip: '',
           img: web3Img,
@@ -183,9 +188,9 @@ export default {
         },
         {
           func: this.softwareModalOpen,
-          title: this.$t('accessWallet.software'),
-          desc: this.$t('accessWallet.softwareDesc'),
-          recommend: this.$t('accessWallet.notRecommended'),
+          title: this.$t('accessWallet.software.option-title'),
+          desc: this.$t('accessWallet.software.option-text'),
+          recommend: this.$t('common.not-recommended.string'),
           tooltip: '',
           img: softwareImg,
           imgDisabled: softwareImgDisabled,
@@ -281,6 +286,9 @@ export default {
     },
     finneyModalOpen() {
       this.$refs.finney.$refs.finneyModal.show();
+    },
+    xwalletModalOpen() {
+      this.$refs.xwallet.$refs.xwalletModal.show();
     },
     hardwareWalletOpen(wallet) {
       // if (this.$refs.mnemonicPhrasePassword.$refs.password.visible) {

@@ -1,4 +1,3 @@
-
 export async function doUpdate(self, Toast) {
   self.proxyAddress = await self.getProxy();
   let afterClose = false;
@@ -6,7 +5,6 @@ export async function doUpdate(self, Toast) {
   await self.updateActiveCdp();
   for (const idProp in self.activeCdps) {
     if (self.activeCdps[idProp].needsUpdate) {
-
       if (self.activeCdps[idProp].closing) {
         afterClose = true;
         delete self.activeCdps[idProp];
@@ -19,7 +17,6 @@ export async function doUpdate(self, Toast) {
       } else {
         console.log('regular value changed update'); // todo remove dev item
         self.activeCdps[idProp] = await self.activeCdps[idProp].update();
-
       }
     }
     if (idProp === self.currentCdpId) {
@@ -30,7 +27,10 @@ export async function doUpdate(self, Toast) {
 
   await self.checkBalances();
   await self.checkAllowances();
-  if (Object.keys(self.activeCdps).includes(self.currentCdpId.toString()) || Object.keys(self.activeCdps).includes(self.currentCdpId)) {
+  if (
+    Object.keys(self.activeCdps).includes(self.currentCdpId.toString()) ||
+    Object.keys(self.activeCdps).includes(self.currentCdpId)
+  ) {
     await self.setupCdpManageFunc(self.currentCdpId);
   } else {
     console.log('creating'); // todo remove dev item

@@ -7,8 +7,8 @@
         <img class="site-logo" src="~@/assets/images/mew-cx-logo.png" />
       </div>
       <p>
-        {{ request.connectionRequest.toLowerCase() }} is trying to access MEW
-        CX. Please choose a wallet that you want to connect.
+        {{ request.connectionRequest.toLowerCase() }}
+        {{ $t('mewcx.trying-to-access-mew') }}
       </p>
     </div>
     <div class="accounts-container">

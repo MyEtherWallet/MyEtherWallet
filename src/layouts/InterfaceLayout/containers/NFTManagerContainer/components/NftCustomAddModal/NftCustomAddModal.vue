@@ -2,7 +2,7 @@
   <div>
     <b-modal
       ref="modal"
-      :title="$t('dapps.addCustomNFT')"
+      :title="$t('nftManager.add-custom')"
       hide-footer
       class="bootstrap-modal nopadding max-height-1"
       centered
@@ -17,26 +17,25 @@
               'custom-input-text-1',
               contractAddress !== '' && !validAddress ? 'invalid-address' : ''
             ]"
+            :placeholder="$t('nftManager.ph-token-addr')"
             name="Address"
             type="text"
-            placeholder="Token Contract Address"
           />
           <span
             v-show="contractAddress !== '' && !validAddress"
             class="error-message"
           >
-            Invalid address given.
+            {{ $t('nftManager.invalid-addr') }}
           </span>
           <span v-show="nonStandardMessage">
-            NFT token contract doesn't include a required method to add as a
-            custom NFT or you do not have
+            {{ $t('nftManager.no-method-no-token', { token: tokenSymbol }) }}
           </span>
           <input
             v-validate="'required'"
             v-model="tokenSymbol"
+            :placeholder="$t('nftManager.name')"
             name="Symbol"
             type="text"
-            placeholder="NFT name"
             class="custom-input-text-1"
           />
         </div>
@@ -48,11 +47,11 @@
             ]"
             @click.prevent="addCustom(contractAddress, tokenSymbol)"
           >
-            {{ $t('interface.save') }}
+            {{ $t('common.save') }}
           </button>
           <interface-bottom-text
-            :link-text="$t('interface.helpCenter')"
-            :question="$t('interface.dontKnow')"
+            :link-text="$t('common.help-center')"
+            :question="$t('common.dont-know')"
             link="https://kb.myetherwallet.com"
           />
         </div>

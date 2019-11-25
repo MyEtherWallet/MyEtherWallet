@@ -2,10 +2,10 @@
   <div class="modal-container">
     <b-modal
       ref="socialAcctModal"
+      :title="$t('dappsSubmission.add-social')"
       class="bootstrap-modal social-acct-modal"
       centered
       hide-footer
-      title="Add a social account"
       static
       lazy
     >
@@ -41,7 +41,7 @@
           ]"
           @click="onSubmit"
         >
-          Submit
+          {{ $t('dappsSubmission.submit') }}
         </button>
       </div>
     </b-modal>

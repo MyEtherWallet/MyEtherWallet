@@ -1,7 +1,11 @@
 <template lang="html">
   <div class="notification-container">
     <div class="notification-logo" @click="showNotifications">
-      <img class="logo-large" src="~@/assets/images/icons/notification.svg" />
+      <img
+        class="logo-large"
+        src="~@/assets/images/icons/notification.svg"
+        height="35"
+      />
       <div v-show="unreadCount > 0" class="notification-dot">
         <div class="parent">
           <div class="heart"></div>
@@ -22,7 +26,11 @@
       <template slot="modal-title">
         <div>
           <div v-if="!detailsShown" class="modal-title">
-            {{ unreadCount > 1 ? 'Notifications' : 'Notification' }}
+            {{
+              unreadCount > 1
+                ? $t('common.notifications.string')
+                : $t('common.notifications.notification-singular')
+            }}
             <div v-show="unreadCount >= 0" class="notification-count">
               <span>{{ unreadCount }}</span>
             </div>
@@ -92,11 +100,13 @@
               </li>
             </ul>
             <div v-else class="notification-no-item">
-              No notifications found :(
+              {{ $t('common.no-notifications') }}
             </div>
           </li>
         </ul>
-        <div v-else class="notification-no-item">No notifications found :(</div>
+        <div v-else class="notification-no-item">
+          {{ $t('common.no-notifications') }}
+        </div>
       </div>
       <div v-if="detailsShown" class="notification-item-container">
         <component
