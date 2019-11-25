@@ -19,14 +19,12 @@
     "string": "Provider | Providers",
     "no-provider-found": "No providers found :(",
     "loading-rates": "Please wait while we load provider rates...",
-    "load-rate-error": "An Error occurred while retrieving the rates for {currency}",
-    "article-to": "to"
+    "load-rate-error": "An Error occurred while retrieving the rates for {from-currency} to {to-currency}. Please wait a moment and try again"
   },
   "warning": {
     "unable-validate-addr": "Currently unable to validate addresses for {currency}. It is likely correct, but Please double check it is correct before sending.",
     "not-valid-addr-src": "Not a valid {currency} address",
     "supply-valid-addr": "Please supply a valid {currency} address",
-    "try-again": "please wait a moment and try again",
     "not-enough-funds": "You don't have enough funds",
     "no-swap-offline": "swap is not available offline",
     "swap-only-mainnet": "Swap is only available on mainnet"
