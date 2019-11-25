@@ -29,7 +29,6 @@
 
 - Use ens register with config to optimize ens registration [#1646](https://github.com/MyEtherWallet/MyEtherWallet/pull/1646)
 
-
 ### Bug
 
 - Fix toBuffer [#1658](https://github.com/MyEtherWallet/MyEtherWallet/pull/1658)
