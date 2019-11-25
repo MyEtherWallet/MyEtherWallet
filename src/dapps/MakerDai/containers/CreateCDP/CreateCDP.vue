@@ -341,7 +341,6 @@ export default {
     },
     liquidationRatio() {
       if (this.emptyMakerCreated) {
-        console.log(this.makerCDP); // todo remove dev item
         return this.makerCDP.liquidationRatio;
       }
     },
@@ -443,8 +442,8 @@ export default {
       this.makerCDP = await this.buildEmpty();
       this.$forceUpdate();
       this.emptyMakerCreated = true;
-      console.log(this.makerCDP); // todo remove dev item
-      console.log('empty built'); // todo remove dev item
+      // console.log(this.makerCDP); // todo remove dev item
+      // console.log('empty built'); // todo remove dev item
     },
     displayPercentValue,
     displayFixedValue,

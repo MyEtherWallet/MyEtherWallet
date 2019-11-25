@@ -32,7 +32,7 @@ export default class MakerCdpBase {
     this.migrated = false;
     this.migrateCdpActive = false;
     this.migrateCdpStage = 0;
-    console.log('_mcdManager', services._mcdManager); // todo remove dev item
+    // console.log('_mcdManager', services._mcdManager); // todo remove dev item
     this.cdpTypeObject = services._mcdManager
       .get('mcd:cdpType')
       .getCdpType(null, this.cdpType);
