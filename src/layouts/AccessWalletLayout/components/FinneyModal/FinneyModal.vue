@@ -10,12 +10,10 @@
   >
     <div class="finney-desktop">
       <div class="modal-content-right">
-        <p>
-          {{ $t('accessWallet.finney.scan-qr') }}
-          <b>{{ $t('accessWallet.finney.finney-wallet') }}</b>
-          {{ $t('accessWallet.finney.app-on') }}
-          <b>{{ $t('accessWallet.finney.finney-bc') }}</b>
-        </p>
+        <i18n path="accessWallet.finney.scan-info" tag="p">
+          <b slot="wallet">{{ $t('accessWallet.finney.finney-wallet') }}</b>
+          <b slot="finney-bc">{{ $t('accessWallet.finney.finney-bc') }}</b>
+        </i18n>
         <qrcode
           :value="qrcode"
           :options="{ size: 186 }"
@@ -27,15 +25,11 @@
             target="blank"
             rel="noopener noreferrer"
           >
-            <p>
-              {{ $t('accessWallet.finney.get-your') }}
-            </p>
-            <h3>
-              {{ $t('accessWallet.finney.finney') }}
-            </h3>
-            <p>
-              {{ $t('accessWallet.finney.now') }}
-            </p>
+            <i18n path="accessWallet.finney.get-finney" tag="p">
+              <h3 slot="finney-title">
+                {{ $t('accessWallet.finney.finney-title') }}
+              </h3>
+            </i18n>
           </a>
         </div>
       </div>

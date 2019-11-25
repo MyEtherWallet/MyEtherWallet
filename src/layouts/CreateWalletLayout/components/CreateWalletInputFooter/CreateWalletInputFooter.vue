@@ -1,11 +1,13 @@
 <template functional>
   <div class="footer-text">
-    <p>
-      <span>{{ parent.$t('createWallet.password.do-not-forget') }}</span>
-      {{ parent.$t('createWallet.password.do-not-forget-desc')
-      }}<span> {{ parent.$t('createWallet.password.key-pass') }}</span>
-      {{ parent.$t('createWallet.password.key-pass-desc') }}
-    </p>
+    <i18n tag="p" path="createWallet.password.do-not-forget-save-pw">
+      <span slot="do-not-forget">{{
+        parent.$t('createWallet.password.do-not-forget')
+      }}</span>
+      <span slot="key-pass">{{
+        parent.$t('createWallet.password.key-pass')
+      }}</span>
+    </i18n>
   </div>
 </template>
 

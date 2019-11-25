@@ -9,14 +9,14 @@
         />
       </div>
       <div class="info-box">
-        <p>
-          {{ parent.$t('dappsSubmission.sotd.info') }}
+        <i18n tag="p" path="dappsSubmission.sotd.info">
           <a
+            slot="url"
             rel="noopener noreferrer"
             href="https://www.stateofthedapps.com/"
             >{{ parent.$t('dappsSubmission.sotd.url') }}</a
           >.
-        </p>
+        </i18n>
       </div>
     </div>
   </div>

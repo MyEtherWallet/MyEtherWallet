@@ -42,7 +42,7 @@
                     </div>
                     <div>
                       {{ displayFixedValue(aCdp.pethCollateral, 5, true) }}
-                      <span>{{ $t('dappsMaker.peth') }}</span>
+                      <span>{{ $t('common.currency.peth') }}</span>
                       {{ displayFixedValue(aCdp.usdCollateral, 2) }}
                       <span>{{ $t('common.currency.usd') }}</span>
                     </div>

@@ -99,7 +99,7 @@ describe('ConfirmationContainer.vue', () => {
         .querySelectorAll('.grid-block')[1]
         .querySelectorAll('p')[1]
         .textContent.trim()
-    ).toEqual(wrapper.vm.$data.gasLimit + ' wei');
+    ).toEqual(wrapper.vm.$data.gasLimit + ' Wei');
   });
 
   it('should render correct gasPrice data', () => {
@@ -110,7 +110,7 @@ describe('ConfirmationContainer.vue', () => {
         .querySelectorAll('.grid-block')[2]
         .querySelectorAll('p')[1]
         .textContent.trim()
-    ).toEqual(wrapper.vm.gasPrice + ' gwei');
+    ).toEqual(wrapper.vm.gasPrice + ' Gwei');
   });
 
   it('should render correct nonce data', () => {
