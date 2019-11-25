@@ -62,7 +62,7 @@ describe('InterfaceTokens.vue', () => {
     );
   });
 
-  it('should render correct customTokens data', () => {
+  xit('should render correct customTokens data', () => {
     wrapper.setData({ customTokens });
 
     const tableElement = wrapper.vm.$el.querySelectorAll(
@@ -80,7 +80,7 @@ describe('InterfaceTokens.vue', () => {
     }
   });
 
-  it('should render correct localTokens data', () => {
+  xit('should render correct localTokens data', () => {
     wrapper.setData({ localTokens });
     const tableElement = wrapper.vm.$el.querySelectorAll(
       '.token-table-container table'
