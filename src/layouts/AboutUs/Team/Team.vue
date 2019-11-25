@@ -1,6 +1,6 @@
 <template>
   <div>
-    <PageTitle title="About us" />
+    <PageTitle title="About us - Team" />
     <div class="py-7" />
     <BlockTitle />
   </div>
