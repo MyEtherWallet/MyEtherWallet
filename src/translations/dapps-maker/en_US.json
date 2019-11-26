@@ -98,5 +98,7 @@
   "sai-to-dai": "Convert",
   "migrate": "Migrate",
   "create": "Create",
-  "save": "Save"
+  "save": "Save",
+  "loading-your-cdps": "Loading your CDPs",
+  "migrate-single-collateral-to-multi-collateral": "Migrate Single Collateral CDP to Multi-Collateral"
 }

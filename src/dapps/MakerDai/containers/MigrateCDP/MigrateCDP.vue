@@ -3,10 +3,10 @@
     <div class="currency-ops-new">
       <div class="currency-picker-container">
         <div class="interface__block-title">
-          Migrate Single Collateral CDP to Multi-Collateral
+          {{$t('dappsMaker.migrate-single-collateral-to-multi-collateral')}}
         </div>
-        <h4 v-show="cdpDetailsLoaded">
-          Loading your CDPs
+        <h4 v-show="!cdpDetailsLoaded">
+          {{$t('dapsMaker.loading-your-cdps')}}
         </h4>
         <div v-for="cdpId in cdps" :key="cdpId">
           <div
@@ -95,10 +95,6 @@ export default {
         return {};
       }
     },
-    cdpDetailsLoaded: {
-      type: Boolean,
-      default: false
-    },
     getCdp: {
       type: Function,
       default: function() {}
@@ -116,6 +112,7 @@ export default {
       selectedCdp: 0,
       proxyAddress: '',
       migrationNotPossible: false,
+      cdpDetailsLoaded: false,
       daiAddress: '0xc4375b7de8af5a38a93548eb8453a498222c4ff2'
     };
   },
@@ -159,6 +156,7 @@ export default {
         this,
         this.getValueOrFunction('_cdpService')
       );
+      this.cdpDetailsLoaded = true;
       this.cdps = withProxy.concat(withoutProxy);
     },
     //TODO use seth to get tokens (MCD_GOV is maker address for deployments)
@@ -278,7 +276,7 @@ export default {
       ) {
         return true;
       }
-      return true; // the contract is reporting a 0 balance?
+      return false; // the contract is reporting a 0 balance?
     },
     async getMigrationContractBalance() {
       // return 2;
