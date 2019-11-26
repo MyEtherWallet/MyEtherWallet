@@ -14,16 +14,16 @@
               </div>
               <div class="image-content">
                 <img
-                  alt="mew-icon"
+                  :alt="$t('common.mew-icon')"
                   class="mew-icon"
                   src="~@/assets/images/home/mew-icon.png"
                 />
               </div>
               <div class="animation-content">
                 <img
+                  :alt="$t('common.spaceman')"
                   class="spaceman"
                   src="~@/assets/images/home/spaceman.png"
-                  alt="Spaceman"
                 />
               </div>
             </div>
