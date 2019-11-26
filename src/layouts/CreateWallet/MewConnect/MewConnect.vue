@@ -2,6 +2,9 @@
   <div class="light-blue darken-4">
     <div class="py-8" />
     <v-container>
+      <v-btn small @click="tab = 'tab-1'">1</v-btn>
+      <v-btn small @click="tab = 'tab-2'">2</v-btn>
+      <v-btn small @click="tab = 'tab-3'">3</v-btn>
       <BlockTitle :data="titleData" class="mb-10" />
       <v-sheet max-width="800px" class="mx-auto" color="white">
         <div class="pa-6">
@@ -13,11 +16,9 @@
 
           <div>
             <v-tabs-items v-model="tab">
-              <v-tab-item v-for="i in 3" :key="i" :value="'tab-' + i">
-                <v-card flat>
-                  <v-card-text>{{ tab }}{{ text }}</v-card-text>
-                </v-card>
-              </v-tab-item>
+              <v-tab-item :value="'tab-1'">1</v-tab-item>
+              <v-tab-item :value="'tab-2'">2</v-tab-item>
+              <v-tab-item :value="'tab-3'">3</v-tab-item>
             </v-tabs-items>
           </div>
         </div>
@@ -43,9 +44,7 @@ export default {
         'An official, free companion App for MyEtherWallet that helps you secure your funds as never before.',
       centered: true
     },
-    tab: 'tab-1',
-    text:
-      'An official, free companion App for MyEtherWallet that helps you secure your funds as never before.'
+    tab: 'tab-1'
   })
 };
 </script>
