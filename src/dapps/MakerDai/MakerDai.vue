@@ -448,6 +448,7 @@ export default {
 
         this.collateralList = collateralOptions(this.mcdCurrencies);
       } catch (e) {
+        // eslint-disable-next-line
         console.error(e);
       }
     },
@@ -513,11 +514,6 @@ export default {
 
         await getDetailsForTokens(this, this._typeService.cdpTypes);
         await checkAllowances(this, this.account.address, this.proxyAddress);
-        // console.log(
-        //   this._mcdManager._serviceManager
-        //     .dependency('smartContract')
-        //     .getContract('GET_CDPS')
-        // ); // todo remove dev item
 
         // TODO update usages to use the balances and tokens objects
         this.daiToken = this.tokens['DAI'];
@@ -536,7 +532,6 @@ export default {
 
         this.currentProxy = await this.getProxy();
 
-        // getDustValues(this, this._typeService.cdpTypes);
         this.curentlyLoading = 'Checking For CDPs';
         try {
           const { withType, withProxy, withoutProxy } = await locateCdps(
@@ -547,6 +542,7 @@ export default {
           this.cdps = withProxy;
           this.cdpsWithoutProxy = withoutProxy;
         } catch (e) {
+          // eslint-disable-next-line
           console.error(e);
         }
 
@@ -555,6 +551,7 @@ export default {
           await this.loadCdpDetails(this.cdps, this.cdpsWithoutProxy);
         }
       } catch (e) {
+        // eslint-disable-next-line
         console.error(e);
       }
 
