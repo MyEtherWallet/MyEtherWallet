@@ -126,8 +126,7 @@ export default {
       migrationNotPossible: false,
       cdpDetailsLoaded: false,
       noSaiAvailable: false,
-      needsAtLeast20: false,
-      daiAddress: '0xc4375b7de8af5a38a93548eb8453a498222c4ff2'
+      needsAtLeast20: false
     };
   },
   computed: {
@@ -136,7 +135,9 @@ export default {
       return (
         toBigNumber(this.daiGenerated).lt(
           toBigNumber(this.migrateContractBalance)
-        ) && this.cdpDetailsLoaded
+        ) &&
+        this.cdpDetailsLoaded &&
+        toBigNumber(this.daiGenerated).gte(20)
       );
     },
     validInputs() {

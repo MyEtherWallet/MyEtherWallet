@@ -431,7 +431,6 @@ export default {
     async setupMCD() {
       try {
         this.curentlyLoading = 'Loading: Multi Collateral Operations';
-        await this.maker.service('proxy').ensureProxy();
         this._typeService = this.maker.service(ServiceRoles.CDP_TYPE);
         this.curentlyLoading = 'Loading: Multi Collateral Types';
         this.mcdCurrencies = this._typeService.cdpTypes.reduce((acc, entry) => {
@@ -506,6 +505,7 @@ export default {
       try {
         await this.maker.authenticate();
         this.curentlyLoading = 'Loading: System Values';
+
         await setupServices(this, this.maker);
 
         await setupPriceAndRatios(this, this._priceService, this._cdpService);
@@ -513,6 +513,7 @@ export default {
         this.proxyAddress = await this._proxyService.currentProxy();
 
         await getDetailsForTokens(this, this._typeService.cdpTypes);
+
         await checkAllowances(this, this.account.address, this.proxyAddress);
 
         // TODO update usages to use the balances and tokens objects
