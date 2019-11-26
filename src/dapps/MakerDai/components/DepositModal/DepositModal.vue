@@ -316,7 +316,6 @@ export default {
       }
     },
     hasEnough() {
-      // return true;
       if (this.currentCdp) {
         return this.currentCdp.hasEnough(
           this.amount,
@@ -325,17 +324,6 @@ export default {
         );
       }
       return true;
-
-      // console.log(this.getBalanceFor('ETH').toString()); // todo remove dev item
-      // if (toBigNumber(this.ethQty).isNaN()) return false;
-      // if (this.selectedCurrency.symbol === 'ETH') {
-      //   return toBigNumber(ethUnit.toWei(this.ethQty, 'ether').toString()).lte(
-      //     this.account.balance
-      //   );
-      // }
-      // return toBigNumber(ethUnit.toWei(this.ethQty, 'ether').toString()).lte(
-      //   ethUnit.toWei(this.getBalanceFor(this.selectedCurrency.symbol), 'ether')
-      // );
     },
     getProxyAllowances() {
       const allowances = this.getValueOrFunction('proxyAllowances');

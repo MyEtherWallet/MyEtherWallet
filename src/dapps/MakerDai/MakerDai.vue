@@ -52,21 +52,6 @@
       @approveMkr="approveMkr"
       @wipeDai="wipeDai"
     ></payback-modal>
-    <close-cdp-modal
-      ref="closeCdp"
-      :values="activeValues"
-      :calc-collat-ratio-dai-chg="calcCollatRatioDaiChg"
-      :calc-collat-ratio-eth-chg="calcCollatRatioEthChg"
-      :calc-liquidation-price-eth-chg="calcLiquidationPriceEthChg"
-      :calc-liquidation-price-dai-chg="calcLiquidationPriceDaiChg"
-      :get-value-or-function="getValueOrFunction"
-      :active-cdp-id="activeCdpId"
-      :tokens-with-balance="tokensWithBalance"
-      @approveDai="approveDai"
-      @approveMkr="approveMkr"
-      @closeCdp="closeCdp"
-    >
-    </close-cdp-modal>
     <move-cdp-modal
       ref="moveCdp"
       :values="activeValues"
@@ -90,11 +75,6 @@
             <button class="move-btn" @click="showMove">
               <h4>{{ $t('dappsMaker.move-title') }}</h4>
             </button>
-            <div v-if="!((!hasProxy && !onCreate) || showCdpMigrateButtons)">
-              <button class="close-btn" @click="showClose">
-                <h4>{{ $t('dappsMaker.close-title') }}</h4>
-              </button>
-            </div>
           </div>
         </div>
       </div>
@@ -393,6 +373,19 @@ export default {
       this.currentPath = to.name;
     }
   },
+  beforeDestroy() {
+    this.maker = {};
+    this.priceService = {};
+    this.cdpService = {};
+    this.proxyService = {};
+    this.availableCdps = {};
+    this.activeCdp = {};
+    this.makerCdp = {};
+    this.sysVars = {};
+    this.sysServices = {};
+    this.activeCdps = {};
+    this.currentCdp = {};
+  },
   destroyed() {
     this.maker = {};
     this.priceService = {};
@@ -468,38 +461,43 @@ export default {
         this.gotoLoading();
       }
 
-      this.curentlyLoading = 'Loading: wallet details';
-      const MewMakerPlugin = MewPlugin(
-        web3,
-        _self.account.address,
-        async () => {
-          if (_self.$route.path.includes('maker-dai')) {
-            await _self.doUpdate();
-          }
-        }
-      );
-
-      this.maker = await Maker.create('inject', {
-        provider: { inject: web3.currentProvider },
-        plugins: [
-          [
-            McdPlugin,
-            {
-              network: this.network.type.name === 'KOV' ? 'kovan' : 'mainnet',
-              prefetch: true
+      try {
+        this.curentlyLoading = 'Loading: wallet details';
+        const MewMakerPlugin = MewPlugin(
+          web3,
+          _self.account.address,
+          async () => {
+            if (_self.$route.path.includes('maker-dai')) {
+              await _self.doUpdate();
             }
+          }
+        );
+
+        this.maker = await Maker.create('inject', {
+          provider: { inject: web3.currentProvider },
+          plugins: [
+            [
+              McdPlugin,
+              {
+                network: this.network.type.name === 'KOV' ? 'kovan' : 'mainnet',
+                prefetch: true
+              }
+            ],
+            MewMakerPlugin
           ],
-          MewMakerPlugin
-        ],
-        log: false,
-        web3: {
-          pollingInterval: null
-        },
-        accounts: {
-          myLedger1: { type: 'mew' }
-        }
-      });
-      await this.maker.service('proxy').ensureProxy();
+          log: false,
+          web3: {
+            pollingInterval: null
+          },
+          accounts: {
+            myLedger1: { type: 'mew' }
+          }
+        });
+        await this.maker.service('proxy').ensureProxy();
+      } catch (e) {
+        // eslint-disable-next-line
+        console.error(e);
+      }
 
       this.setupMCD();
       // -------------------------------------------------

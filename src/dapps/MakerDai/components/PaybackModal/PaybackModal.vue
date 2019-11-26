@@ -450,14 +450,6 @@ export default {
       if (toBigNumber(this.amount).gte(0)) {
         this.delayCloseModal();
         this.currentCdp.wipeDai(this.amount, this.max);
-        // if (toBigNumber(this.amount).gte(this.values.debtValue)) {
-        //   console.log('max'); // todo remove dev item
-        //   this.currentCdp.wipeDai(this.values.debtValue, this.max);
-        //   // this.$emit('wipeDai', this.values.debtValue);
-        // } else {
-        //   this.currentCdp.wipeDai(this.values.debtValue);
-        //   // this.$emit('wipeDai', this.amount);
-        // }
       }
     },
     getBalances() {

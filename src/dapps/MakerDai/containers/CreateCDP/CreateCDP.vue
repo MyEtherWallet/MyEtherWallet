@@ -94,7 +94,13 @@
       <div class="cdp-info-block cdp-info-entry">
         <ul>
           <li>
-            <p>{{ $t('dappsMaker.min-eth-req') }}</p>
+            <p>
+              {{
+                $t('dappsMaker.min-required', {
+                  value: selectedCurrency ? selectedCurrency.symbol : 'ETH'
+                })
+              }}
+            </p>
             <p>
               {{ displayFixedValue(minDeposit, 6) }}
               {{ selectedCurrency.symbol }}
@@ -454,8 +460,6 @@ export default {
       this.makerCDP = await this.buildEmpty();
       this.$forceUpdate();
       this.emptyMakerCreated = true;
-      // console.log(this.makerCDP); // todo remove dev item
-      // console.log('empty built'); // todo remove dev item
     },
     displayPercentValue,
     displayFixedValue,
@@ -505,17 +509,6 @@ export default {
         );
       }
       return true;
-
-      // console.log(this.getBalanceFor('ETH').toString()); // todo remove dev item
-      // if (toBigNumber(this.ethQty).isNaN()) return false;
-      // if (this.selectedCurrency.symbol === 'ETH') {
-      //   return toBigNumber(ethUnit.toWei(this.ethQty, 'ether').toString()).lte(
-      //     this.account.balance
-      //   );
-      // }
-      // return toBigNumber(ethUnit.toWei(this.ethQty, 'ether').toString()).lte(
-      //   ethUnit.toWei(this.getBalanceFor(this.selectedCurrency.symbol), 'ether')
-      // );
     },
     hasEnoughAllowance() {
       if (this.emptyMakerCreated) {
@@ -536,14 +529,6 @@ export default {
       if (ethQty <= 0) return 0;
       return bnOver(ethPrice, toBigNumber(ethQty), liquidationRatio);
     },
-    // minDeposit() {
-    //   console.log('this.emptyMakerCreated', this.emptyMakerCreated); // todo remove dev item
-    //   if(this.emptyMakerCreated){
-    //     return this.makerCDP.calcMinDeposit(this.daiQty);
-    //   }
-    //   console.log('dfgdfgdgdfgdgdfgdfgdfgdfgdfgdfgf'); // todo remove dev item
-    //   return "--"
-    // },
     calcCollatRatio(ethQty, daiQty) {
       if (ethQty <= 0 || daiQty <= 0) return 0;
       return bnOver(this.getCurrentPrice, ethQty, daiQty);
