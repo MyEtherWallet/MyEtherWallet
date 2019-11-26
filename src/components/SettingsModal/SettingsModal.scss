@@ -134,3 +134,131 @@ $mobile-width: 530px;
     margin-top: 40px;
   }
 }
+
+//***************************************************
+// Address Book
+//***************************************************
+.address-book {
+  .table-container {
+    margin-top: 10px;
+    max-height: 300px;
+    overflow: auto;
+
+    .contact-container {
+      background-color: $light-grey-2;
+      border-radius: 4px;
+      display: table;
+      overflow-y: auto;
+      table-layout: fixed;
+      width: 100%;
+
+      .header {
+        th {
+          text-transform: uppercase;
+        }
+      }
+
+      thead tr th {
+        background-color: $light-blue-11;
+        position: sticky;
+        top: 0;
+      }
+
+      tbody {
+        tr {
+          border-bottom: 1px solid $light-blue-11;
+        }
+      }
+
+      th {
+        color: #476081;
+        font-weight: 400;
+        font-size: 13px;
+      }
+
+      th,
+      td {
+        padding: 10px;
+      }
+
+      .blockie-image {
+        margin-right: 5px;
+        min-width: 25px;
+      }
+
+      .numbered {
+        color: $dark-grey-7;
+      }
+
+      .addr-container {
+        align-items: center;
+        display: flex;
+      }
+
+      .contact-addr {
+        color: $light-blue-8;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 100%;
+      }
+
+      .remove-txt {
+        color: $red-2;
+        cursor: pointer;
+        font-weight: 500;
+      }
+    }
+  }
+  .address-inputs {
+    align-items: center;
+    display: flex;
+    margin-bottom: 10px;
+    margin-top: 15px;
+
+    .nickname-input {
+      margin-left: 10px;
+      width: 30%;
+    }
+
+    .blockie-image {
+      position: absolute;
+      margin-left: 10px;
+    }
+
+    .blockie-input {
+      padding-left: 50px;
+    }
+  }
+
+  input {
+    background-color: $light-grey-1;
+    border: 0;
+    border-radius: 4px 0 0 4px;
+    height: 52px;
+    padding-left: 20px;
+    padding-right: 20px;
+    width: 100%;
+  }
+
+  .disabled {
+    background-color: $dark-grey-11;
+    pointer-events: none;
+  }
+
+  .addr-btn-container {
+    display: flex;
+
+    input {
+      margin-right: 5px;
+    }
+  }
+
+  .err {
+    color: $red-1;
+  }
+
+  .numbered-col {
+    width: 20px;
+  }
+}

@@ -39,37 +39,10 @@
               </li>
             </ul>
             <div class="to-address">
-              <div class="title">
-                <h4>{{ $t('sendTx.to-addr') }} &nbsp;</h4>
-                <blockie
-                  v-show="address !== '' && validAddress"
-                  :address="address"
-                  class="blockie-image-icon"
-                  width="32px"
-                  height="32px"
-                />
-                <button
-                  class="title-button copy-button prevent-user-select"
-                  @click="copyToAddress"
-                >
-                  {{ $t('common.copy') }}
-                </button>
-              </div>
-              <div class="the-form address-block">
-                <textarea
-                  ref="toaddress"
-                  v-model="address"
-                  :placeholder="$t('common.enter-addr')"
-                  name="name"
-                />
-                <i
-                  :class="[
-                    validAddress ? '' : 'not-good',
-                    'fa fa-check-circle good-button'
-                  ]"
-                  aria-hidden="true"
-                />
-              </div>
+              <dropdown-address-selector
+                title="To Address"
+                @toAddress="getToAddress($event)"
+              />
             </div>
           </div>
         </div>
@@ -201,11 +174,9 @@
           >
             {{ $t('sendTx.generate-tx') }}
           </div>
-          <interface-bottom-text
-            :question="$t('common.have-issues')"
-            :link-text="$t('common.help-center')"
-            link="https://kb.myetherwallet.com"
-          />
+          <div class="clear-all-btn" @click="clear()">
+            {{ $t('common.clear-all') }}
+          </div>
         </div>
       </div>
       <signed-tx-modal ref="signedTxModal" :signed-tx="signed" :raw-tx="raw" />
@@ -215,7 +186,6 @@
 
 <script>
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
-import InterfaceBottomText from '@/components/InterfaceBottomText';
 import CurrencyPicker from '@/layouts/InterfaceLayout/components/CurrencyPicker';
 import SignedTxModal from './components/SignedTxModal';
 import Blockie from '@/components/Blockie';
@@ -226,14 +196,15 @@ import { isAddress } from '@/helpers/addressUtils';
 import store from 'store';
 import { Misc, Toast } from '@/helpers';
 import utils from 'web3-utils';
+import DropDownAddressSelector from '@/components/DropDownAddressSelector';
 
 export default {
   components: {
-    'interface-bottom-text': InterfaceBottomText,
     blockie: Blockie,
     'signed-tx-modal': SignedTxModal,
     'currency-picker': CurrencyPicker,
-    'interface-container-title': InterfaceContainerTitle
+    'interface-container-title': InterfaceContainerTitle,
+    'dropdown-address-selector': DropDownAddressSelector
   },
   props: {
     checkPrefilled: {
@@ -373,6 +344,18 @@ export default {
     this.checkPrefilled();
   },
   methods: {
+    clear() {
+      this.toAmt = 0;
+      this.address = '';
+      this.toData = '0x';
+      this.gasLimit = 21000;
+      this.localNonce = this.nonce;
+      this.localGasPrice = this.highestGas;
+      this.selectedCoinType = {
+        name: 'Ethereum',
+        symbol: 'ETH'
+      };
+    },
     prefillForm() {
       if (this.tokens.length > 0 && this.isPrefilled) {
         const foundToken = this.tokensymbol
@@ -451,11 +434,9 @@ export default {
           .encodeABI();
       }
     },
-    copyToAddress() {
-      const el = this.$refs.toaddress;
-      el.select();
-      document.execCommand('copy');
-      window.getSelection().removeAllRanges();
+    getToAddress(data) {
+      this.address = data.address;
+      this.validAddress = data.valid;
     },
     uploadClick() {
       const jsonInput = this.$refs.jsonInput;
@@ -498,6 +479,7 @@ export default {
       this.signed = JSON.stringify(signed);
       this.$refs.signedTxModal.$refs.signedTx.show();
       window.scrollTo(0, 0);
+      this.clear();
     },
     setSelectedCurrency(e) {
       const symbol = this.network.type.currencyName;

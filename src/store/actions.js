@@ -124,6 +124,10 @@ const setGasPrice = function({ commit }, gasPrice) {
   commit('SET_GAS_PRICE', gasPrice);
 };
 
+const setAddressBook = function({ commit }, addressBook) {
+  commit('SET_ADDRESS_BOOK', addressBook);
+};
+
 const setState = function({ commit }, stateObj) {
   commit('INIT_STATES', stateObj);
 };
@@ -274,5 +278,6 @@ export default {
   updateTransaction,
   gettingStartedDone,
   updateBlockNumber,
-  saveQueryVal
+  saveQueryVal,
+  setAddressBook
 };

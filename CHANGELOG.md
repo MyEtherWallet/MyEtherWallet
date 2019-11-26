@@ -1,6 +1,22 @@
+### Release v5.2.5
+
+### Bug
+
+- Fix MEWCX mobile ui [#1657](https://github.com/MyEtherWallet/MyEtherWallet/pull/1657)
+
+### Devop
+
+- Update makerDAO dai branding [#1668](https://github.com/MyEtherWallet/MyEtherWallet/pull/1668)
+- Update translations[#1651](https://github.com/MyEtherWallet/MyEtherWallet/pull/1651)
+- Display token symbol [#1674](https://github.com/MyEtherWallet/MyEtherWallet/pull/1674)
+
 ### Feature
 
 - Add MEWconnect footer link [#1675](https://github.com/MyEtherWallet/MyEtherWallet/pull/1675)
+- Display label paths [#1681](https://github.com/MyEtherWallet/MyEtherWallet/pull/1681)
+- Address book [#1647](https://github.com/MyEtherWallet/MyEtherWallet/pull/1647)
+- Add MEWconnect footer link [#1675](https://github.com/MyEtherWallet/MyEtherWallet/pull/1675)
+- Add clear btn to forms [#1673](https://github.com/MyEtherWallet/MyEtherWallet/pull/1673)
 
 ### Release v5.2.4
 
@@ -21,7 +37,6 @@
 - Fix toBuffer [#1658](https://github.com/MyEtherWallet/MyEtherWallet/pull/1658)
 - Fix dashboard dapps [#1650](https://github.com/MyEtherWallet/MyEtherWallet/pull/1650)
 - Fix MEWCX PromiEvent [#1646](https://github.com/MyEtherWallet/MyEtherWallet/pull/1646)
-- Fix MEWCX mobile ui [#1657](https://github.com/MyEtherWallet/MyEtherWallet/pull/1657)
 
 ### Release v5.2.3-hotfix.1
 

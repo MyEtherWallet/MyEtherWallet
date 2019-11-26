@@ -58,7 +58,7 @@
             </p>
             <p>
               {{ displayFixedValue(depositInPeth, 6) }}
-              {{ $t('dappsMaker.peth') }}
+              {{ $t('common.currency.peth') }}
             </p>
           </div>
         </div>

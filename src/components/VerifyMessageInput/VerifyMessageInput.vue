@@ -124,6 +124,7 @@ export default {
         } else {
           this.showMessage = true;
         }
+        this.deleteInput();
       } catch (e) {
         Toast.responseHandler(e, Toast.ERROR);
       }

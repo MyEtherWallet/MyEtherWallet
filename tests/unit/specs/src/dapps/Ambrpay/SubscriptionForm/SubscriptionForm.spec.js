@@ -2,7 +2,6 @@ import SubscriptionForm from '@/dapps/Ambrpay/containers/SubscriptionForm/Subscr
 import { shallowMount } from '@vue/test-utils';
 import Blockie from '@/components/Blockie';
 import Vue from 'vue';
-import { Toast } from '@/helpers';
 import { Tooling } from '@@/helpers';
 
 describe('SubscriptionForm.vue', () => {
@@ -53,33 +52,6 @@ describe('SubscriptionForm.vue', () => {
     expect(wrapper.vm.$data.intervalErrMsg).toEqual('');
   });
 
-  it('should render the correct address', () => {
-    const address = '0x29D7d1dd5B6f9C864d9db560D72a247c178aE86B';
-    wrapper.setData({ address });
-    const inputAddress = wrapper.vm.$el.querySelectorAll(
-      '.address-block .row-style input'
-    )[0];
-
-    expect(inputAddress.value).toEqual(address);
-  });
-
-  it('should render the correct address', () => {
-    const address = '0x29D7d1dd5B6f9C864d9db560D72a247c178aE86B';
-    wrapper.setData({ address });
-    const inputAddress = wrapper.vm.$el.querySelectorAll(
-      '.address-block .row-style input'
-    )[0];
-
-    expect(inputAddress.value).toEqual(address);
-  });
-
-  it('should render the correct address', () => {
-    const address = '0x29D7d1dd5B6f9C864d9db560D72a247c178aE86B';
-    wrapper.setData({ address });
-
-    expect(wrapper.vm.$data.isValidAddress).toEqual(true);
-  });
-
   it('should set an amount error message if sendAmount < 0.01', () => {
     const sendAmount = 0.001;
     wrapper.setData({ sendAmount });
@@ -107,15 +79,6 @@ describe('SubscriptionForm.vue', () => {
     );
   });
 
-  it('should call copyToClipboard on click to copy', () => {
-    jest.spyOn(Toast, 'responseHandler').mockReturnValue('true');
-
-    wrapper.find('p.copy-text').trigger('click');
-
-    expect(document.execCommand).toHaveBeenCalledWith('copy');
-    expect(Toast.responseHandler).toHaveBeenCalled();
-  });
-
   it('should call sendEntireBalance on click to entire balance', () => {
     wrapper.setData({ sendAmount: '3' });
     wrapper.find('.entire-balance').trigger('click');
@@ -127,5 +90,25 @@ describe('SubscriptionForm.vue', () => {
     wrapper.vm.$emit('startSubscription');
 
     expect(wrapper.emitted().startSubscription).toBeTruthy();
+  });
+
+  it('should clear the form', () => {
+    wrapper.setData({
+      address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
+      isValidAddress: true,
+      hexAddress: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
+      intervalDays: '5',
+      sendAmount: '1',
+      amountErrMsg: 'There is an error',
+      intervalErrMsg: 'There is an error'
+    });
+    wrapper.find('.clear-all-btn').trigger('click');
+    expect(wrapper.vm.$data.address).toEqual('');
+    expect(wrapper.vm.$data.isValidAddress).toEqual(false);
+    expect(wrapper.vm.$data.hexAddress).toEqual('');
+    expect(wrapper.vm.$data.intervalDays).toEqual('');
+    expect(wrapper.vm.$data.sendAmount).toEqual('');
+    expect(wrapper.vm.$data.amountErrMsg).toEqual('');
+    expect(wrapper.vm.$data.intervalErrMsg).toEqual('');
   });
 });
