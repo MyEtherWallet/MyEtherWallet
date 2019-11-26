@@ -3,9 +3,6 @@
     <div class="page-container">
       <div class="title-block">
         <h2>{{ parent.$t('verifyMessage.title') }}</h2>
-        <p>
-          {{ parent.$t('verifyMessage.page-desc') }}
-        </p>
       </div>
       <component :is="injections.components.VerifyMessageInput" />
     </div>
