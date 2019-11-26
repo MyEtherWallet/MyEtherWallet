@@ -16,7 +16,6 @@ import {
   getDustValues,
   doUpdate
 } from './setups';
-// import { doUpdate } from './updaters';
 import { getMakerCurrencies } from './currencyHelper';
 import {
   calcLiquidationPrice,
@@ -44,7 +43,6 @@ import {
   Spotter
 } from './ABIs';
 
-import { createCurrencyDetails } from './dataContainers';
 
 export {
   loadCdpDetail,
@@ -88,5 +86,4 @@ export {
   Vat,
   Spotter,
   // classes/containers
-  createCurrencyDetails
 };

@@ -7,7 +7,6 @@ async function locateCdps(self, _cdpService) {
   self.cdpsWithoutProxy = [];
   const cdpsWithoutProxy = await locateCdpsWithoutProxy(self, _cdpService);
   self.cdps = [];
-  // const cdps = await locateCdpsProxy(self, _cdpService);
   const cdpsDirect = await locateCdpsDirectly(self);
 
   const cdps = await getCdpIds(self.web3, self.proxyAddress); //result.ids.map(item => parseInt(item));

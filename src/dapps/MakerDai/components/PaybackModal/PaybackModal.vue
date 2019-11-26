@@ -13,19 +13,6 @@
         <p class="top-message">
           {{ $t('dappsMaker.payback-notice') }}
         </p>
-<!--        <div v-if="!hasEnoughMkr">
-          <div class="value-block">
-            <p>
-              <b>{{ $t('dappsMaker.mkr-balance') }}</b>
-            </p>
-            <p>
-              <b>{{ mkrBalance }} {{ $t('dappsMaker.mkr') }}</b>
-            </p>
-          </div>
-          <p class="get-mkr" @click="getDai()">
-            {{ $t('dappsMaker.get-mkr') }}
-          </p>
-        </div>-->
         <div class="input-container">
           <div class="top-buttons">
             <p @click="currentDai">{{ $t('dappsMaker.set-max') }}</p>
@@ -47,14 +34,14 @@
                 {{ $t('dappsMaker.dai') }}
               </p>
             </li>
-            <li>
+<!--            <li>
               <p>{{ $t('dappsMaker.stability-fee-owed') }}</p>
               <p>
                 <b>{{ values.governanceFeeOwed }}</b>
                 {{ $t('dappsMaker.mkr') }}
-                <b><!--{{ governanceFeeOwed() }}-->-- </b> MKR
+                <b>&lt;!&ndash;{{ governanceFeeOwed() }}&ndash;&gt;&#45;&#45; </b> MKR
               </p>
-            </li>
+            </li>-->
             <li>
               <p>{{ $t('dappsMaker.projected-liquidation') }}</p>
               <p>
@@ -425,13 +412,6 @@ export default {
       return false;
     },
     needsMkrApprove() {
-      // if (this.currentCdp) {
-      //   console.log(this.currentCdp.hasEnoughAllowance(this.amount, 'MKR')); // todo remove dev item
-      //   return !this.currentCdp.hasEnoughAllowance(
-      //     this.values.governanceFeeOwed,
-      //     'MKR'
-      //   );
-      // }
       return false;
     },
     getProxyAllowances() {
