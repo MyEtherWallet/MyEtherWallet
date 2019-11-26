@@ -54,8 +54,12 @@
         </div>
         <div class="option-container-block">
           <expanding-option
-            :title="$t('common.password.string')"
-            :button-text="$t('common.optional')"
+            :title="$t('createWallet.mnemonic.do-you-extra-word')"
+            :popover="
+              $t('createWallet.mnemonic.access-wallet-extra-word-popover')
+            "
+            :button-text="$t('common.no')"
+            :show-enable="true"
             @expanded="passwordInputViewChange"
           >
             <div class="option-container">
@@ -63,6 +67,7 @@
                 v-model="password"
                 :show-button="false"
                 :full-width="true"
+                :placeholder-text="$t('createWallet.mnemonic.type-in')"
               />
             </div>
           </expanding-option>

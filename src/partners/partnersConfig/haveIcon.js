@@ -129,7 +129,6 @@ const haveIcon = [
   'CTXC',
   'CVC-alt',
   'CVC',
-  'DAI',
   'DAO-alt',
   'DAO',
   'DAR',

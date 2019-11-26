@@ -51,7 +51,7 @@
           </span>
         </div>
         <div class="detail-item">
-          <span class="title"> {{ $t('common.gas.uppercase-string') }} </span>
+          <span class="title"> {{ $t('common.gas.string') }} </span>
           <span class="content">
             {{ hexToNumString(txParams.gas) }}
           </span>

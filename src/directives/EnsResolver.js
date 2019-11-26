@@ -18,7 +18,7 @@ const EnsResolver = {
           errorPar.innerText =
             isDarklisted.msg.length > 0
               ? isDarklisted.msg
-              : 'Address has been reported. Please make sure you are sending funds to the correct address.';
+              : this.$t('ens.ens-resolver.address-reported-error');
           el.parentNode.parentNode.appendChild(errorPar);
           return true;
         }
@@ -84,10 +84,11 @@ const EnsResolver = {
         removeElements();
         if (e.length > 0) {
           if (e.length !== 42 || !utils.isHexStrict(e)) {
-            errorPar.innerText = 'Not a valid Ethereum address';
+            errorPar.innerText = this.$t('ens.ens-resolver.invalid-eth-addr');
           } else if (!utils.checkAddressChecksum(e)) {
-            errorPar.innerText =
-              'This address is not checksummed properly. Please copy the address exactly as shown.';
+            errorPar.innerText = this.$t(
+              'ens.ens-resolver.addr-not-checksummed'
+            );
             // 'Incorrect checksum: check address format on EthVM';
           }
         } else {
