@@ -33,13 +33,32 @@
     <div class="about-aave-container">
       <div class="row">
         <img src="@/assets/images/icons/dapps/aave_logo.svg" alt="Aave Logo" />
-        <button>{{ depositActiveTab ? $tc('dappsAave.deposit', 1) : $t('dappsAave.borrow') }}</button>
+        <button>
+          {{
+            depositActiveTab
+              ? $tc('dappsAave.deposit', 1)
+              : $t('dappsAave.borrow')
+          }}
+        </button>
       </div>
       <p>{{ $t('dappsAave.about-aave') }}</p>
     </div>
     <div class="balance-row">
-      <balance-display :title="depositActiveTab ? $t('dappsAave.aggregated-balance') : $t('dappsAave.you-borrowed')"/>
-      <balance-display class="ml-3" :title="depositActiveTab ? $t('dappsAave.earnings') : $t('dappsAave.your-collateral')"/>
+      <balance-display
+        :title="
+          depositActiveTab
+            ? $t('dappsAave.aggregated-balance')
+            : $t('dappsAave.you-borrowed')
+        "
+      />
+      <balance-display
+        :title="
+          depositActiveTab
+            ? $t('dappsAave.earnings')
+            : $t('dappsAave.your-collateral')
+        "
+        class="ml-3"
+      />
     </div>
   </div>
 </template>

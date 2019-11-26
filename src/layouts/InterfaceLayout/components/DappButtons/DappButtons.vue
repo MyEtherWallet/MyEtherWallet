@@ -1,6 +1,10 @@
 <template>
   <div
-    :class="['dapps-button', supported ? '' : 'disabled', title === 'Aave' ? 'aave-icon': '']"
+    :class="[
+      'dapps-button',
+      supported ? '' : 'disabled',
+      title === 'Aave' ? 'aave-icon' : ''
+    ]"
     @click="navigateTo"
   >
     <img
