@@ -1,14 +1,17 @@
 <template>
   <div>
     <div class="currency-ops-new">
+      <div style="padding: 10px;">
+        {{ $t('dappsMaker.dai-savings-rate') }} {{ yearlyRate }}
+        <p>{{ daiBalance }}</p>
+      </div>
       <div class="currency-picker-container">
-        <p><b>DAI saving - Coming 27/11/2019</b></p>
+        <!--        <p><b>DAI saving - Coming 27/11/2019</b></p>-->
         <!-- start -->
-                <div class="interface__block-title">
+        <div class="interface__block-title">
           dai savings rate
         </div>
-        {{ yearlyRate }}
-        <p>{{ daiBalance }}</p>
+
         <p>
           <button @click="showDeposit(true)">Deposit</button>
           <button @click="showDeposit(false)">Withdraw</button>
