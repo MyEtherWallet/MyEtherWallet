@@ -55,9 +55,11 @@ export default class MakerCDP extends MakerCdpBase {
         this.isSafe = this.cdp.isSafe;
         await this.getValuesFromChain();
       } catch (e) {
+        // eslint-disable-next-line
         console.error(e);
       }
     } catch (e) {
+      // eslint-disable-next-line
       console.error(e);
     }
   }
@@ -270,6 +272,7 @@ export default class MakerCDP extends MakerCdpBase {
         toBigNumber(this.convertToTokenWei(_ethQty, 18).toString())
       );
     } catch (e) {
+      // eslint-disable-next-line
       console.error(e);
     }
     // todo This is a temp solution
@@ -282,7 +285,6 @@ export default class MakerCDP extends MakerCdpBase {
     liquidationRatio = this.liquidationRatio
   ) {
     if (daiQty <= 0) daiQty = this.minDai;
-    console.log(bnOver(liquidationRatio, daiQty, ethPrice)); // todo remove dev item
     return bnOver(liquidationRatio, daiQty, ethPrice);
   }
 
