@@ -24,9 +24,14 @@ const ServiceRoles = {
 
 export async function setupServices(self, maker) {
   self._priceService = maker.service(ServiceRoles.PRICE);
-  self._cdpService = await maker.service(ServiceRoles.CDP);
-  self._proxyService = await maker.service(ServiceRoles.PROXY);
-  self._tokenService = await maker.service(ServiceRoles.TOKEN);
+  const result = await Promise.all([
+    maker.service(ServiceRoles.CDP),
+    maker.service(ServiceRoles.PROXY),
+    maker.service(ServiceRoles.TOKEN)
+  ]);
+  self._cdpService = result[0];
+  self._proxyService = result[1];
+  self._tokenService = result[2];
   self._mcdManager = maker.service(ServiceRoles.CDP_MANAGER);
   self._mcdSaving = maker.service(ServiceRoles.SAVINGS);
   self._typeService = maker.service(ServiceRoles.CDP_TYPE);
@@ -65,9 +70,9 @@ export async function getDetailsForTokens(self, collateralTokens) {
   for (let i = 0; i < collateralTokens.length; i++) {
     const token = self._tokenService.getToken(collateralTokens[i].currency);
     self.tokens[collateralTokens[i].currency.symbol] = token;
-    self.balances[collateralTokens[i].currency.symbol] = (
-      await token.balance()
-    ).toBigNumber();
+    token.balance().then(res => {
+      self.balances[collateralTokens[i].currency.symbol] = res.toBigNumber();
+    });
   }
   const token = self._tokenService.getToken(MDAI);
   self.tokens[token.symbol] = token;
@@ -83,10 +88,9 @@ export async function getDetailsForTokens(self, collateralTokens) {
 export async function getDustValues(self, collateralTokens) {
   self.dustValues = {};
   for (let i = 0; i < collateralTokens.length; i++) {
-    self.dustValues[collateralTokens[i].currency.symbol] = await getDustValue(
-      self.web3,
-      collateralTokens[i].ilk
-    );
+    getDustValue(self.web3, collateralTokens[i].ilk).then(res => {
+      self.dustValues[collateralTokens[i].currency.symbol] = res;
+    });
   }
 }
 
@@ -104,12 +108,11 @@ export async function checkAllowances(self, address, proxyAddress) {
           typeof self.tokens[keys[i]]._contract !== 'undefined' &&
           typeof self.tokens[keys[i]]._contract.allowance === 'function'
         ) {
-          self.proxyAllowances[keys[i]] = toBigNumber(
-            await self.tokens[keys[i]]._contract.allowance(
-              address,
-              proxyAddress
-            ) // TODO likely not part of the public (stable) API
-          );
+          self.tokens[keys[i]]._contract
+            .allowance(address, proxyAddress)
+            .then(res => {
+              self.proxyAllowances[keys[i]] = toBigNumber(res);
+            });
         } else {
           self.proxyAllowances[keys[i]] = toBigNumber(0);
         }
@@ -348,9 +351,11 @@ export async function doUpdate(self, Toast) {
   self.proxyAddress = await self.getProxy();
   let afterClose = false;
   const afterOpen = self.$route.name === 'create';
-  await self.updateActiveCdp();
-  await self.checkBalances();
-  await self.checkAllowances();
+  await Promise.all([
+    self.updateActiveCdp(),
+    self.checkBalances(),
+    self.checkAllowances()
+  ]);
   for (const idProp in self.activeCdps) {
     if (self.activeCdps[idProp].needsUpdate) {
       if (self.activeCdps[idProp].closing) {
