@@ -27,9 +27,9 @@
           <table v-show="customTokens.length > 0 && receivedTokens">
             <tr
               v-for="(token, index) in customTokens"
-              :key="token.name + index"
+              :key="token.symbol + index"
             >
-              <td>{{ token.name }}</td>
+              <td>{{ token.symbol }}</td>
               <td>
                 {{ token.balance }}
                 <i
@@ -41,8 +41,11 @@
           </table>
 
           <table v-show="localTokens.length > 0 && receivedTokens">
-            <tr v-for="(token, index) in localTokens" :key="token.name + index">
-              <td>{{ token.name }}</td>
+            <tr
+              v-for="(token, index) in localTokens"
+              :key="token.symbol + index"
+            >
+              <td>{{ token.symbol }}</td>
               <td
                 v-if="token.balance === 'Load' && online"
                 class="load-token"

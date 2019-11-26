@@ -50,7 +50,7 @@
           <p>{{ $t('common.gas.price') }}:</p>
           <p>
             {{ convertToGwei(details.gasPrice) }}
-            {{ $t('common.gas.uppercase-gwei') }}
+            {{ $t('common.gas.gwei') }}
           </p>
         </li>
         <li>
