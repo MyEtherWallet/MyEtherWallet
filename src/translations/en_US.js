@@ -77,7 +77,7 @@ const en_US = {
   notifications: notifications,
   mewcx: mewcx,
   dappsAmbrpay: dappsAmbrpay,
-  phising: phishing,
+  phishing: phishing,
   header: header
 };
 export default en_US;
