@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="['dapps-button', supported ? '' : 'disabled']"
+    :class="['dapps-button', supported ? '' : 'disabled', title === 'Aave' ? 'aave-icon': '']"
     @click="navigateTo"
   >
     <img
@@ -11,10 +11,10 @@
     />
     <img
       :src="supported ? icon : iconDisabled"
-      :class="title === 'Ambrpay' ? 'ambrpay-icon' : ''"
+      :class="['dapps-icon', title === 'Ambrpay' ? 'ambrpay-icon' : '']"
       alt
     />
-    <div>
+    <div class="title-container">
       <h4>{{ title }}</h4>
       <p>{{ desc }}</p>
     </div>

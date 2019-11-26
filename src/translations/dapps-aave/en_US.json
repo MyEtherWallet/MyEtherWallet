@@ -1,0 +1,18 @@
+{
+  "title": "Aave",
+  "popover": "Earn daily on your stablecoins.",
+  "deposit": "Deposit | Deposits",
+  "borrowings": "Borrowings",
+  "health-factor": "Health Factor",
+  "about-aave": "Aave is an Open Source Money Market Protocol, allowing you to earn daily on your stablecoins. Borrow against various assets and switch interest between variable and stable rate.",
+  "aggregated-balance": "Aggregated Balance",
+  "earnings": "Earnings",
+  "borrow": "Borrow",
+  "you-borrowed": "You Borrowed",
+  "your-collateral": "Your Collateral",
+  "composition": "Composition",
+  "available": "Available",
+  "no-data": "No data to show yet",
+  "apr": "APR",
+  "total": "Total"
+}
