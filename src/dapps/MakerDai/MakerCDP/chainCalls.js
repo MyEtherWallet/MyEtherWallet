@@ -1,4 +1,11 @@
-import { addresses, Vat, Spotter, GetCdps, CdpManager, ProxyRegistry } from '../makerHelpers';
+import {
+  addresses,
+  Vat,
+  Spotter,
+  GetCdps,
+  CdpManager,
+  ProxyRegistry
+} from '../makerHelpers';
 import assert from 'assert';
 
 function padRight(string, chars, sign) {
@@ -24,8 +31,7 @@ function bytesToString(hex) {
     .replace(/\x00/g, ''); // eslint-disable-line no-control-regex
 }
 
-
-export async function getProxy(){
+export async function getProxy() {
   const proxyReg = new this.web3.eth.Contract(
     ProxyRegistry,
     addresses.PROXY_REGISTRY

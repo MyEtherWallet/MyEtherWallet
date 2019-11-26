@@ -43,7 +43,6 @@ import {
   Spotter
 } from './ABIs';
 
-
 export {
   loadCdpDetail,
   locateCdps,
@@ -84,6 +83,6 @@ export {
   TokenFaucet,
   MigrationProxyActions,
   Vat,
-  Spotter,
+  Spotter
   // classes/containers
 };

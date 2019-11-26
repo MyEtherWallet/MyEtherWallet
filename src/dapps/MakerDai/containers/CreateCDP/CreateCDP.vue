@@ -326,7 +326,6 @@ export default {
       }
       return true;
     },
-
     minInSelectedCurrency() {
       return this.minDeposit;
     },

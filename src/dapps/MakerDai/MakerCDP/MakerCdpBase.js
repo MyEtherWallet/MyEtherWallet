@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { maxPethDraw, maxDai, displayFixedValue, calcLiquidationPrice } from '../makerHelpers';
+import { maxPethDraw, maxDai, displayFixedValue } from '../makerHelpers';
 import { defaultIlk } from './constants';
 
 import * as daiMath from './daiMath';

@@ -30,9 +30,9 @@
             {{ $t('dappsMaker.migration-contract-balance-below') }}
           </p>
         </div>
-<div v-show="noCdpsToMigrateFound">
-  {{ $t('dappsMaker.no-cdps-to-migrate-found') }}
-</div>
+        <div v-show="noCdpsToMigrateFound">
+          {{ $t('dappsMaker.no-cdps-to-migrate-found') }}
+        </div>
         <div class="buttons-container">
           <div
             :class="[
@@ -129,7 +129,7 @@ export default {
     validInputs() {
       return this.selectedCdp !== 0 && this.migrationPossible;
     },
-    noCdpsToMigrateFound(){
+    noCdpsToMigrateFound() {
       return this.cdps.length === 0;
     }
   },

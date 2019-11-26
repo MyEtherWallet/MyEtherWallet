@@ -34,7 +34,7 @@
                 {{ $t('dappsMaker.dai') }}
               </p>
             </li>
-<!--            <li>
+            <!--            <li>
               <p>{{ $t('dappsMaker.stability-fee-owed') }}</p>
               <p>
                 <b>{{ values.governanceFeeOwed }}</b>

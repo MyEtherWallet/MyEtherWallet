@@ -38,8 +38,8 @@ export default class MakerCDP extends MakerCdpBase {
     return this;
   }
 
-  async updateSystemVariables(toUpdate){
-    this.services = {...this.services, ...toUpdate}
+  async updateSystemVariables(toUpdate) {
+    this.services = { ...this.services, ...toUpdate };
   }
 
   async updateValues(cdpId = this.cdpId) {
@@ -400,14 +400,14 @@ export default class MakerCDP extends MakerCdpBase {
     }
   }
 
-  async wipeDai(amount, max=false) {
+  async wipeDai(amount, max = false) {
     try {
       if (this.noProxy) {
         return;
       }
       this.needsUpdate = true;
-      if(max){
-        await this.cdp.wipeAll()
+      if (max) {
+        await this.cdp.wipeAll();
       } else {
         await this.cdp.wipeDai(amount.toString());
       }

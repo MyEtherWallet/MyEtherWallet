@@ -232,8 +232,6 @@ import {
 } from './makerHelpers';
 
 import MewPlugin from 'mew-maker-plugin';
-import { ProxyRegistry } from './makerHelpers';
-import { addresses } from './makerHelpers';
 
 const { DAI } = Maker;
 
