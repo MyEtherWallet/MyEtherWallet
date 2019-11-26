@@ -78,12 +78,6 @@ export function liquidationPrice(
     const ratio = createCurrencyRatio(USD, collateralAmount.type);
     return ratio(Infinity);
   }
-  console.log(
-    debtValue
-      .times(liquidationRatio)
-      .div(collateralAmount)
-      ._amount.toString()
-  ); // todo remove dev item
   return debtValue.times(liquidationRatio).div(collateralAmount);
 }
 

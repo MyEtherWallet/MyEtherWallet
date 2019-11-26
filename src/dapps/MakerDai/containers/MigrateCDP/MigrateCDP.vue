@@ -159,7 +159,6 @@ export default {
         this,
         this.getValueOrFunction('_cdpService')
       );
-      console.log('withProxy, withoutProxy', withProxy, withoutProxy); // todo remove dev item
       this.cdps = withProxy.concat(withoutProxy);
     },
     //TODO use seth to get tokens (MCD_GOV is maker address for deployments)
@@ -282,7 +281,9 @@ export default {
       return true; // the contract is reporting a 0 balance?
     },
     async getMigrationContractBalance() {
-      return 2;
+      // return 2;
+      const val = await this.web3.eth.getBalance('0xad37fd42185Ba63009177058208dd1be4b136e6b');
+      return val;
       // return await new this.web3.eth.Contract(ERC20, this.daiAddress).methods
       //   .balanceOf(addresses.MIGRATION)
       //   .call();
