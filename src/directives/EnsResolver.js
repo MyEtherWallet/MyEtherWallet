@@ -9,6 +9,7 @@ const EnsResolver = {
       const errorPar = document.createElement('p');
       errorPar.classList.add('resolver-error');
       const ens = _this.$store.state.ens;
+      const network = _this.$store.state.network;
       const checkDarklist = function(addr) {
         const isDarklisted = Misc.isDarklisted(addr);
         if (isDarklisted.error) {
@@ -40,17 +41,13 @@ const EnsResolver = {
             removeElements();
           }
         } else {
-          if (
-            _this.network.type.ens === '' ||
-            ens === null ||
-            ens === undefined
-          ) {
+          if (network.type.ens === '' || ens === null || ens === undefined) {
             removeElements();
             _this.isValidAddress = false;
             _this.hexAddress = '';
             // eslint-disable-next-line
             errorPar.innerText = `No ${
-              _this.network.type.name[0]
+              network.type.name[0]
             }NS resolver in this node`;
             el.parentNode.parentNode.appendChild(errorPar);
           } else {
@@ -70,7 +67,7 @@ const EnsResolver = {
                 removeElements();
                 // eslint-disable-next-line
                 errorPar.innerText = `${
-                  _this.network.type.name[0]
+                  network.type.name[0]
                 }NS name is invalid or not found`;
                 _this.isValidAddress = false;
                 _this.hexAddress = '';

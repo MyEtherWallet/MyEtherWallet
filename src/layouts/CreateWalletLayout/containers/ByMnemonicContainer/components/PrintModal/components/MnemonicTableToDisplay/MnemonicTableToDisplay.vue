@@ -27,9 +27,9 @@
           parent.$t('createWallet.mnemonic.table.cannot')
         }}</span>
         <span slot="do-not-forget"
-          >{{ parent.$t('createWallet.mnemonic.table.dont-forget') }}
+          >{{ parent.$t('createWallet.mnemonic.table.do-not-forget') }}
         </span>
-        <span slot="password">{{
+        <span slot="requirements">{{
           parent.$t('createWallet.mnemonic.table.requirements')
         }}</span>
       </i18n>

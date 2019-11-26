@@ -35,7 +35,7 @@
 
           <div class="to-address">
             <dropdown-address-selector
-              title="To Address"
+              :title="$t('sendTx.to-addr')"
               @toAddress="getToAddress($event)"
             />
           </div>
