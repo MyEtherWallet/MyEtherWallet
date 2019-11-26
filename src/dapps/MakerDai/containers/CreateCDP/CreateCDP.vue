@@ -45,9 +45,7 @@
           />
           <div class="input-block-message">
             <p v-if="!hasEnoughEth" class="red-text">
-              {{
-                $t('dappsMaker.not-enough', { symbol: selectedCurrency.symbol })
-              }}
+              {{ $t('dappsMaker.not-enough-funds') }}
             </p>
             <p>
               {{ $t('dappsMaker.min-collat') }}
@@ -314,9 +312,20 @@ export default {
         return false;
       if (toBigNumber(this.ethQty).gt(0)) {
         if (toBigNumber(this.ethQty).lte(this.values.minEth)) return false;
+        if (this.emptyMakerCreated) {
+          if (toBigNumber(this.makerCDP.minDai).lt(this.daiQty)) return false;
+        } else if (toBigNumber(20).lt(this.daiQty)) return false;
         if (toBigNumber(this.maxDaiDraw).lte(toBigNumber(this.daiQty)))
           return false;
-        if (toBigNumber(this.collatRatio).lte(1.501)) return false;
+
+        if (this.emptyMakerCreated) {
+          if (
+            toBigNumber(this.collatRatio).lte(
+              this.makerCDP.liquidationRatio.plus(0.01)
+            )
+          )
+            return false;
+        } else if (toBigNumber(this.collatRatio).lte(1.501)) return false;
         return this.hasEnoughEth;
         // return toBigNumber(ethUnit.toWei(this.ethQty, 'ether').toString()).lte(
         //   this.account.balance
@@ -326,7 +335,6 @@ export default {
       // return true;
     },
     hasEnoughEth() {
-      // return true;
       if (this.emptyMakerCreated) {
         return this.hasEnough();
       }
@@ -402,11 +410,14 @@ export default {
     },
     minCreate() {
       if (this.emptyMakerCreated) {
-        return this.makerCDP
-          .minDepositFor(this.selectedCurrency.symbol)
-          .times(
-            this.makerCDP.getCurrentPriceFor(this.selectedCurrency.symbol)
-          );
+        const bufferVal = this.calcDaiDraw(
+          this.makerCDP.minDepositFor(this.selectedCurrency.symbol)
+        ).times(0.01);
+        return toBigNumber(
+          this.calcDaiDraw(
+            this.makerCDP.minDepositFor(this.selectedCurrency.symbol)
+          )
+        ).minus(bufferVal);
       }
       // return this.getCurrentPriceFor(this.selectedCurrency.symbol);
     }

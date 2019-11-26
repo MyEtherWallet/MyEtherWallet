@@ -192,6 +192,7 @@ import WithdrawModal from './components/WithdrawModal';
 import PaybackModal from './components/PaybackModal';
 import Maker from '@makerdao/dai';
 import McdPlugin, { MKR } from '@makerdao/dai-plugin-mcd';
+import MigrationPlugin from '@makerdao/dai-plugin-migrations';
 import { Toast } from '@/helpers';
 import {
   CdpNum,
@@ -483,7 +484,8 @@ export default {
                 prefetch: true
               }
             ],
-            MewMakerPlugin
+            MewMakerPlugin,
+            MigrationPlugin
           ],
           log: false,
           web3: {

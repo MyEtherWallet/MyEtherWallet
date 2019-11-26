@@ -2,7 +2,8 @@
   <div>
     <div class="currency-ops-new">
       <div class="currency-picker-container">
-        <div class="interface__block-title">
+        <p><b>DAI saving - Coming 27/11/2019</b></p>
+        <!--        <div class="interface__block-title">
           dai savings rate
         </div>
         {{ yearlyRate }}
@@ -84,7 +85,7 @@
               Withdraw
             </div>
           </div>
-        </div>
+        </div>-->
       </div>
       <div></div>
     </div>

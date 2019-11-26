@@ -74,13 +74,7 @@ import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
 import BigNumber from 'bignumber.js';
 import SelectCdpEntry from '../../components/SelectCdpEntry';
-import {
-  addresses,
-  ERC20,
-  ProxyContract,
-  locateOldCdps,
-  MigrationProxyActions
-} from '../../makerHelpers';
+import { addresses, ERC20, locateOldCdps } from '../../makerHelpers';
 import ethUnit from 'ethjs-unit';
 import { Toast } from '@/helpers';
 
@@ -142,7 +136,7 @@ export default {
       return (
         toBigNumber(this.daiGenerated).lt(
           toBigNumber(this.migrateContractBalance)
-        ) && !this.cdpDetailsLoaded
+        ) && this.cdpDetailsLoaded
       );
     },
     validInputs() {
@@ -163,6 +157,8 @@ export default {
     setup() {
       if (this.makerActive) {
         this.migrateContractBalance = 0;
+        this.maker = this.getValueOrFunction('maker');
+        this._mcdManager = this.getValueOrFunction('_mcdManager');
         this.getProxy = this.getValueOrFunction('getProxy');
         this.proxyAllowances = this.getValueOrFunction('proxyAllowances');
         this.proxyAddress = this.getValueOrFunction('proxyAddress');
@@ -202,58 +198,27 @@ export default {
         if (contractHasEnough) {
           const needsApproval = await this.needsApproval(_governanceFee);
           if (needsApproval) {
-            const txs = [];
             const approve = await this.approveMkr(_governanceFee);
-            txs.push(approve);
-            const migrate = await this.migrate(this.selectedCdp, cdpDaiBalance);
-            txs.push(migrate);
-            this.web3.mew.sendBatchTransactions(txs).catch(err => {
+            this.web3.eth.sendTransaction(approve).catch(err => {
               Toast.responseHandler(err, Toast.ERROR);
             });
           } else {
-            const migrate = await this.migrate(this.selectedCdp);
-            this.web3.eth.sendTransaction(migrate).catch(err => {
-              Toast.responseHandler(err, Toast.ERROR);
-            });
+            try {
+              await this.migrate(this.selectedCdp);
+            } catch (e) {
+              Toast.responseHandler(e, Toast.ERROR);
+            }
           }
         }
       }
     },
 
-    // MIGRATION CONTRACT
-    // https://github.com/makerdao/scd-mcd-migration/blob/master/src/ScdMcdMigration.sol#L59
+    // MIGRATION
     async migrate(cdpId) {
-      return {
-        from: this.account.address,
-        to: this.proxyAddress,
-        value: 0,
-        gas: 5000000,
-        data: new this.web3.eth.Contract(
-          ProxyContract,
-          this.proxyAddress
-        ).methods
-          .execute(
-            addresses.MIGRATION_PROXY_ACTIONS,
-            this.fixImproperEncoding(
-              new this.web3.eth.Contract(MigrationProxyActions).methods
-                .migrate(
-                  addresses.MIGRATION,
-                  '0x' + toBigNumber(cdpId).toString(16)
-                )
-                .encodeABI(),
-              cdpId
-            )
-          )
-          .encodeABI()
-      };
-    },
-    fixImproperEncoding(calldata, cdpId) {
-      const parts = calldata.slice(0, calldata.length - 64);
-      let cdpIdData = toBigNumber(cdpId).toString(16);
-      for (let i = 0; cdpIdData.length < 64; i++) {
-        cdpIdData = '0' + cdpIdData;
-      }
-      return parts + cdpIdData;
+      const mig = this.maker
+        .service('migration')
+        .getMigration('single-to-multi-cdp');
+      return await mig.execute(cdpId);
     },
     async needsApproval(requiredApproval) {
       const contract = new this.web3.eth.Contract(ERC20, addresses.MCD_GOV);
@@ -292,7 +257,12 @@ export default {
         this.checkMigrateContractSaiBalance(
           this.cdpBalances[this.selectedCdp].balance
         );
-        if (toBigNumber(this.cdpBalances[this.selectedCdp]).lt(20)) {
+        console.log(
+          'balance 2:',
+          this.cdpBalances[this.selectedCdp].balance.toString()
+        ); // todo remove dev item
+
+        if (toBigNumber(this.cdpBalances[this.selectedCdp].balance).lt(20)) {
           this.needsAtLeast20 = true;
         } else {
           this.needsAtLeast20 = false;
@@ -306,13 +276,13 @@ export default {
         const _governanceFee = (await details.getGovernanceFee()).toBigNumber();
         const cdpDaiBalance = (await details.getDebtValue()).toBigNumber();
         this.checkMigrateContractSaiBalance(cdpDaiBalance);
-
+        console.log('balance 1:', cdpDaiBalance.toString()); // todo remove dev item
         if (cdpDaiBalance.lt(20)) {
           this.needsAtLeast20 = true;
         } else {
           this.needsAtLeast20 = false;
         }
-        this.daiGenerated = cdpDaiBalance;
+        this.daiGenerated = cdpDaiBalance.toString();
         this.cdpBalances[this.selectedCdp] = {
           balance: cdpDaiBalance,
           fee: _governanceFee
@@ -322,7 +292,7 @@ export default {
     async checkMigrateContractSaiBalance(cdpBalance = 0) {
       // 2nd layer check. if the user tries to beat the button change (valid to invalid)
       this.migrateContractBalance = await this.getMigrationContractBalance();
-      if (this.migrateContractBalance < 1) {
+      if (toBigNumber(this.migrateContractBalance).lt(20)) {
         this.noSaiAvailable = true;
         return false;
       }
