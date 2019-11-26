@@ -15,6 +15,7 @@
           v-validate="'required'"
           ref="signature"
           v-model="message"
+          :placeholder="verifyMessageLabel"
           name="signature"
           class="custom-textarea-1"
         />
@@ -66,7 +67,20 @@ export default {
   data() {
     return {
       message: this.signature,
-      showMessage: false
+      showMessage: false,
+      verifyMessageLabel: `
+      {
+        "address": "0xdecaf9cd2367cdbb726e904cd6397edfcae6068d",
+        "msg": "no one is giving away free ETH",
+        "sig":
+          "0xfd53681a1bbbdbd6074a884e628540f129c57
+          634c055f91d45615c943db446fb0acc35ef34bf9
+          05a78b634d4a88769b80432b4714ba2b19e2fda9
+          814a95a1dbb1b",
+        "version": "3",
+        "signer": "MEW"
+      }
+    `
     };
   },
   computed: {

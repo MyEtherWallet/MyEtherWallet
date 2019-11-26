@@ -5,11 +5,9 @@
         <div class="page-title">
           <page-title
             :options="{
-              title: 'Send Offline Helper',
+              title: $t('withoutWallet.offline-helper'),
               boldSubTitle: '',
-              textContent: [
-                'Customize actions, debug reveals, and more with this set of advance tools. Please be mindful of the capabilities and limitations of these tools before using.'
-              ]
+              textContent: []
             }"
           />
         </div>
