@@ -346,7 +346,7 @@ export default {
           };
           chrome.storage.sync.set(eventObj, function() {});
           chrome.tabs.sendMessage(tab[0].id, obj);
-          window.close();
+          window.parent.close();
         });
       } else {
         ExtensionHelpers.addWalletToStore(

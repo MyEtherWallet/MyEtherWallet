@@ -216,7 +216,7 @@ export default {
             event: REJECT_MEW_TX_SIGN
           };
           window.chrome.tabs.sendMessage(tab[0].id, obj);
-          window.close();
+          window.parent.close();
         }
       );
     },
@@ -242,7 +242,7 @@ export default {
                   payload: res.message
                 };
                 window.chrome.tabs.sendMessage(tab[0].id, obj);
-                window.close();
+                window.parent.close();
               }
             );
             return;
@@ -255,7 +255,7 @@ export default {
                 payload: res
               };
               window.chrome.tabs.sendMessage(tab[0].id, obj);
-              window.close();
+              window.parent.close();
             }
           );
         }
