@@ -2,7 +2,16 @@
   <div>
     <PageTitle title="About us - Team" />
     <div class="py-7" />
-    <BlockTitle />
+    <v-sheet max-width="700px" class="mx-auto">
+      <BlockTitle :data="titleData" />
+    </v-sheet>
+    <div class="py-9" />
+    <v-container>
+      <v-row>
+        <v-col v-for="t in team" :key="t.key" cols="4">
+          <v-img :src="t.img" /> </v-col
+      ></v-row>
+    </v-container>
   </div>
 </template>
 
@@ -10,9 +19,57 @@
 import PageTitle from '@/layouts/components/PageTitle';
 import BlockTitle from '@/layouts/components/BlockTitle';
 
+import Kosala from '@/assets/images/Team/Kosala.jpg';
+import Brian from '@/assets/images/Team/Brian.jpg';
+import Olga from '@/assets/images/Team/Olga.jpg';
+import Alex from '@/assets/images/Team/Alex.jpg';
+import Misha from '@/assets/images/Team/Misha.jpg';
+import Yel from '@/assets/images/Team/Gamaliel.jpg';
+import Steve from '@/assets/images/Team/Steve.jpg';
+import Gage from '@/assets/images/Team/Gage.jpg';
+import David from '@/assets/images/Team/David.jpg';
+import Jack from '@/assets/images/Team/Jack.jpg';
+import Stephen from '@/assets/images/Team/Stephen.jpg';
+import Brittany from '@/assets/images/Team/Brittany.jpg';
+import Richie from '@/assets/images/Team/Richie.jpg';
+import Semaja from '@/assets/images/Team/Semaja.jpg';
+import Katya from '@/assets/images/Team/Katya.jpg';
+import Samantha from '@/assets/images/Team/Samantha.jpg';
+
 export default {
   components: { PageTitle, BlockTitle },
-  data: () => ({})
+  data: () => ({
+    titleData: {
+      textProps: '',
+      toptitle: '',
+      title: 'Meet the #MEWteam',
+      description:
+        'At dolor et sit erat lorem at, dolor magna sed eirmod eos magna takimata ipsum. Eos rebum nonumy ea sit, nonumy sed duo no gubergren sea rebum, stet ut aliquyam amet gubergren erat. Voluptua lorem diam et ea ut, et sanctus justo ea aliquyam vero ipsum est amet sed.',
+      centered: true
+    },
+    team: [
+      { img: Kosala, name: 'Kosala', title: 'Founder/CEO' },
+      { img: Brian, name: 'Brian', title: 'COO' },
+      { img: Olga, name: 'Olga', title: 'VP' },
+      { img: Alex, name: 'Alex', title: 'Director of Mobile' },
+      { img: Misha, name: 'Misha', title: 'Lead Mobile Developer' },
+      { img: Yel, name: 'Yel', title: 'Full-Stack Developer' },
+      { img: Steve, name: 'Steve', title: 'Full-Stack Developer' },
+      { img: Gage, name: 'Gage', title: 'Full-Stack Developer' },
+      { img: David, name: 'David', title: 'Front-End Developer' },
+      { img: Jack, name: 'Jack', title: 'Head of UI/UX Design' },
+      { img: Stephen, name: 'Stephen', title: 'Educational Project Lead' },
+      { img: Brittany, name: 'Brittany', title: 'Operations Coordinator' },
+      {
+        img: Richie,
+        name: 'Duke & Richie Wolf',
+        title: 'Blockchain Community Specialist'
+      },
+      { img: Semaja, name: 'Semaja', title: 'Blockchain Community Specialist' },
+      { img: Katya, name: 'Katya', title: 'Community Advocate' },
+      { img: Samantha, name: 'Samantha', title: 'Communications and Media' }
+    ]
+  })
 };
 </script>
 
