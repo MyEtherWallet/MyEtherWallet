@@ -74,7 +74,7 @@
     "@makerdao/dai": "0.22.0",
     "@makerdao/dai-plugin-config": "0.2.14-rc.1",
     "@makerdao/dai-plugin-mcd": "1.0.1",
-    "@makerdao/dai-plugin-migrations": "0.2.3",
+    "@makerdao/dai-plugin-migrations": "1.0.1",
     "@myetherwallet/eth-token-balance": "0.1.6",
     "@myetherwallet/mewconnect-web-client": "1.0.14",
     "@vue/cli-plugin-babel": "3.12.0",
