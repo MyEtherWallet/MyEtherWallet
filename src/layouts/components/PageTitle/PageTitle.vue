@@ -5,9 +5,7 @@
     color="light-blue darken-4"
   >
     <v-container class="text-center">
-      <div class="white--text display-1 font-weight-black">
-        {{ title }}
-      </div>
+      <div class="white--text display-1 font-weight-black">{{ title }}</div>
     </v-container>
   </v-sheet>
 </template>

@@ -11,7 +11,7 @@
         <v-col v-for="t in team" :key="t.key" cols="4" class="px-0 text-center">
           <v-img :src="t.img" />
           <div class="mt-6 title font-weight--500">{{ t.name }}</div>
-          <div class="grey--text mt-1">{{ t.title }}</div>
+          <div class="grey--text text--lighten-1 mt-1">{{ t.title }}</div>
           <div class="py-6" />
         </v-col>
       </v-row>
@@ -31,6 +31,7 @@ import Misha from '@/assets/images/Team/Misha.jpg';
 import Yel from '@/assets/images/Team/Gamaliel.jpg';
 import Steve from '@/assets/images/Team/Steve.jpg';
 import Gage from '@/assets/images/Team/Gage.jpg';
+import Jessica from '@/assets/images/Team/Jessica.jpg';
 import David from '@/assets/images/Team/David.jpg';
 import Jack from '@/assets/images/Team/Jack.jpg';
 import Stephen from '@/assets/images/Team/Stephen.jpg';
@@ -60,7 +61,7 @@ export default {
       { img: Yel, name: 'Yel', title: 'Full-Stack Developer' },
       { img: Steve, name: 'Steve', title: 'Full-Stack Developer' },
       { img: Gage, name: 'Gage', title: 'Full-Stack Developer' },
-      { img: Samantha, name: 'Jessica', title: 'Full-Stack Developer' },
+      { img: Jessica, name: 'Jessica', title: 'Full-Stack Developer' },
       { img: David, name: 'David', title: 'Front-End Developer' },
       { img: Jack, name: 'Jack', title: 'Head of UI/UX Design' },
       { img: Stephen, name: 'Stephen', title: 'Educational Project Lead' },
