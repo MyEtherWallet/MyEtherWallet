@@ -95,6 +95,16 @@
     "successfully-added": "Successfully added to the address book",
     "already-exists": "This address already exists in the contact book"
   },
-  "import-error": "Something went wrong while importing file, please make sure it is a valid file"
+  "import-error": "Something went wrong while importing file, please make sure it is a valid file",
+  "account-content": {
+    "header": "MY ADDRESS ICON",
+    "subheader": "Always look for this icon when sending to this wallet",
+    "paper": "Paper Wallet",
+    "link2": "https://www.myetherwallet.com",
+    "my-priv": "MY PRIVATE KEY",
+    "warning": "Please Keep Your Paper Wallet at a {safe} Place! Please {do-not} Share Your Private Key With Anyone!",
+    "safe": "SAFE",
+    "do-not": "DO NOT"
+  }
 }
 
