@@ -257,10 +257,6 @@ export default {
         this.checkMigrateContractSaiBalance(
           this.cdpBalances[this.selectedCdp].balance
         );
-        console.log(
-          'balance 2:',
-          this.cdpBalances[this.selectedCdp].balance.toString()
-        ); // todo remove dev item
 
         if (toBigNumber(this.cdpBalances[this.selectedCdp].balance).lt(20)) {
           this.needsAtLeast20 = true;
@@ -276,7 +272,6 @@ export default {
         const _governanceFee = (await details.getGovernanceFee()).toBigNumber();
         const cdpDaiBalance = (await details.getDebtValue()).toBigNumber();
         this.checkMigrateContractSaiBalance(cdpDaiBalance);
-        console.log('balance 1:', cdpDaiBalance.toString()); // todo remove dev item
         if (cdpDaiBalance.lt(20)) {
           this.needsAtLeast20 = true;
         } else {

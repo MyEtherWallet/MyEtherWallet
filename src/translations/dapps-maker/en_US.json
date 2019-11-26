@@ -106,5 +106,6 @@
   "current-sai-balance": "Current amount: {value}",
   "upgrade-sai-to-dai": "Upgrade your SAI to DAI ",
   "min-required": "Min {value} required",
-  "not-enough-funds": "You have insufficient funds."
+  "not-enough-funds": "You have insufficient funds.",
+  "dai-savings-rate": "Dai Savings rate: {value}%"
 }
