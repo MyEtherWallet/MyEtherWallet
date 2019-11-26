@@ -19,6 +19,9 @@ if (BUILD_TYPE !== MEW_CX && storedNetwork !== undefined) {
     });
   }
 }
+
+const addressBook =
+  store.get('addressBook') !== undefined ? store.get('addressBook') : [];
 const notifications =
   store.get('notifications') !== undefined ? store.get('notifications') : {};
 const gasPrice =
@@ -50,7 +53,8 @@ const state = {
   darklist: darklist,
   gettingStartedDone: gettingStartedDone,
   blockNumber: 0,
-  linkQuery: {}
+  linkQuery: {},
+  addressBook: addressBook
 };
 
 export default state;

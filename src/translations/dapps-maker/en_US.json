@@ -90,7 +90,6 @@
   "what-is-dashes": "A value of -- indicates this CDP has no DAI so these calculations are only meaningful if this CDP has created DAI",
   "mkr": "MKR",
   "dai": "DAI",
-  "peth": "PETH",
   "maker-dai": "Maker Dai",
   "cdp": "CDP",
   "migration-contract-balance-below": "Not enough Sai 'old DAI' in the Maker Migration Contract to complete this migration. Please try again later or contact the maker foundation at integrate@makerdao.com",
