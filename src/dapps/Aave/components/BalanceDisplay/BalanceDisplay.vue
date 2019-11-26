@@ -1,6 +1,6 @@
 <template>
   <div class="balance-wrapper">
-    <div :class="['balance-container', title !== 'Earnings' ? 'border-bottom' : '']">
+    <div :class="['balance-container', title === 'Earnings' ? 'earnings-container-height' : 'border-bottom']">
       <div class="title-container">
         <p class="title">{{ title }}</p>
         <span class="key-container" v-if="title === 'Earnings'">
@@ -25,6 +25,7 @@
           <span class="percentage">{{compositionPercentage}}</span>
           <span class="available">{{ $t('dappsAave.available') }}</span>
         </div>
+        <div class="composition-bar"></div>
       </div>
     </div>
   </div>
