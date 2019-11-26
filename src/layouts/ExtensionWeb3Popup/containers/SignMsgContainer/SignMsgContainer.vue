@@ -122,7 +122,7 @@ export default {
             payload: '0x' + signedMsg.toString('hex')
           };
           window.chrome.tabs.sendMessage(tab[0].id, obj);
-          window.close();
+          window.parent.close();
         }
       );
     },
@@ -139,7 +139,7 @@ export default {
             payload: 'User rejected action!'
           };
           window.chrome.tabs.sendMessage(tab[0].id, obj);
-          window.close();
+          window.parent.close();
         }
       );
     }
