@@ -8,7 +8,7 @@
     </v-sheet>
     <div class="py-10" />
     <v-row>
-      <v-col cols="6" class="text-content pr-12">
+      <v-col cols="5" class="text-content pr-12">
         <BlockTitle :data="titleData" class="mb-8 pl-12" />
         <div class="mb-6 d-flex">
           <div class="mr-3">
@@ -65,7 +65,7 @@
           </div>
         </div>
       </v-col>
-      <v-col cols="6">
+      <v-col cols="7">
         <v-img
           src="@/assets/images/Etc/HowItWorks/InterfaceSendTransaction.png"
           class="mt-n6"

@@ -8,7 +8,7 @@
       <v-row class="align-center">
         <v-col cols="6">
           <v-img
-            class="my-8"
+            class="my-8 block-image"
             src="@/assets/images/Etc/HowItWorks/InterfaceSwap.png"
           />
         </v-col>
@@ -102,5 +102,9 @@ export default {
   top: 80px;
   left: 80px;
   height: 95%;
+}
+
+.block-image {
+  box-shadow: 0px 0px 20px #0000001c;
 }
 </style>
