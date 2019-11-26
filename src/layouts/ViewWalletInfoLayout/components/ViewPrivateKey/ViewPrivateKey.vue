@@ -2,11 +2,11 @@
   <div>
     <b-modal
       ref="viewPriv"
+      :title="$t('accessWallet.private-key.string')"
       hide-footer
       centered
       no-padding
       class="bootstrap-modal"
-      title="Private Key"
     >
       <div class="modal-contents">
         <qrcode :value="privKey" :options="{ size: 200 }" />

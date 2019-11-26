@@ -29,9 +29,7 @@
         <i
           :class="[
             isValidAddress && hexAddress.length !== 0 ? '' : 'not-good',
-            !isValidAddress && selectedAddress.length > 0
-              ? 'resolver-err-icon'
-              : '',
+            hasMessage ? 'resolver-err-icon' : '',
             'fa fa-check-circle good-button address-check'
           ]"
           aria-hidden="true"
@@ -41,7 +39,7 @@
           <blockie :address="selectedAddress" width="30px" height="30px" />
           <div v-if="isToken(currency)">
             <img
-              alt="Ethereum"
+              :alt="$t('common.currency.ethereum')"
               class="currency-icon"
               src="@/assets/images/currency/eth.svg"
             />
@@ -71,7 +69,7 @@
             <div class="list-blockie">
               <blockie :address="addr.address" width="30px" height="30px" />
               <img
-                alt="Ethereum"
+                :alt="$t('common.currency.ethereum')"
                 class="currency-icon"
                 src="@/assets/images/currency/eth.svg"
               />
@@ -124,6 +122,7 @@ import Blockie from '@/components/Blockie';
 import { EthereumTokens, BASE_CURRENCY } from '@/partners';
 import { mapState } from 'vuex';
 import { Toast } from '@/helpers';
+import { isAddress } from '@/helpers/addressUtils';
 const errorLogger = debugLogger('v5:error');
 
 export default {
@@ -152,7 +151,13 @@ export default {
     };
   },
   computed: {
-    ...mapState(['addressBook', 'account'])
+    ...mapState(['addressBook', 'account']),
+    hasMessage() {
+      return (
+        (!this.isValidAddress && this.selectedAddress.length > 0) ||
+        (!isAddress(this.selectedAddress) && this.isValidAddress)
+      );
+    }
   },
   watch: {
     currentAddress(address) {
