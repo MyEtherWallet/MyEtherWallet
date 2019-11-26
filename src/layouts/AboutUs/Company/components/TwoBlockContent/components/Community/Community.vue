@@ -17,18 +17,23 @@
         href="https://t.me/myetherwallet"
         target="_blank"
       >
-        <v-icon :class="iconClass">mdi-telegram</v-icon>
+        <img
+          src="@/assets/images/Common/Icons/IconSet4/Telegram.svg"
+          :height="iconSize"
+        />
       </v-btn>
       <v-btn
-        v-if="false"
         text
         icon
         :color="iconColor"
         :class="buttonClass"
-        href="https://github.com/myetherwallet"
+        href="#"
         target="_blank"
       >
-        <v-icon :class="iconClass">mdi-slack</v-icon>
+        <img
+          src="@/assets/images/Common/Icons/IconSet4/Slack.svg"
+          :height="iconSize"
+        />
       </v-btn>
       <v-btn
         text
@@ -38,7 +43,10 @@
         href="https://www.reddit.com/r/MyEtherWallet/"
         target="_blank"
       >
-        <v-icon :class="iconClass">mdi-reddit</v-icon>
+        <img
+          src="@/assets/images/Common/Icons/IconSet4/Reddit.svg"
+          :height="iconSize"
+        />
       </v-btn>
       <v-btn
         text
@@ -48,7 +56,10 @@
         href="https://github.com/myetherwallet"
         target="_blank"
       >
-        <v-icon :class="iconClass">mdi-github-face</v-icon>
+        <img
+          src="@/assets/images/Common/Icons/IconSet4/Github.svg"
+          :height="iconSize"
+        />
       </v-btn>
     </div>
   </v-sheet>
@@ -69,18 +80,11 @@ export default {
       centered: false
     },
     buttonClass: 'mr-4',
-    iconClass: 'community-button',
-    iconColor: '#003945'
+    iconSize: '27px'
   })
 };
 </script>
 
 <style lang="scss" scoped>
 //@import '@/assets/styles/GlobalVariables';
-
-.community-button {
-  i {
-    font-size: 37px !important;
-  }
-}
 </style>

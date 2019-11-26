@@ -5,9 +5,7 @@
     <TabContent />
     <div class="py-3" />
     <Swap />
-    <div class="py-3" />
     <Dapps />
-    <div class="py-3" />
     <Tokens />
     <div class="py-3" />
     <MoreTools />

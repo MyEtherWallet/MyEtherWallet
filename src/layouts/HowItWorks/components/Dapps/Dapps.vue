@@ -1,8 +1,9 @@
 <template>
   <div class="component-container">
+    <div class="py-9" />
     <v-container>
       <v-row class="align-center">
-        <v-col cols="6" class="text-content pr-12">
+        <v-col cols="5" class="text-content pr-12">
           <BlockTitle :data="titleData" class="mb-8 pl-12" />
           <div class="mb-9 d-flex">
             <div class="mr-3">
@@ -41,9 +42,9 @@
           </div>
         </v-col>
 
-        <v-col cols="6">
-          <img
-            class="block-image mt-12"
+        <v-col cols="7">
+          <v-img
+            class="block-image"
             src="@/assets/images/Etc/HowItWorks/ExploreNewDapps.png"
           />
         </v-col>
@@ -73,5 +74,6 @@ export default {
 <style lang="scss" scoped>
 .block-image {
   box-shadow: 0px 0px 20px #0000001c;
+  margin-bottom: -23px;
 }
 </style>
