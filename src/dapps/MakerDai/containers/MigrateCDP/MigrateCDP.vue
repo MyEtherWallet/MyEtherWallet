@@ -3,10 +3,10 @@
     <div class="currency-ops-new">
       <div class="currency-picker-container">
         <div class="interface__block-title">
-          {{$t('dappsMaker.migrate-single-collateral-to-multi-collateral')}}
+          {{ $t('dappsMaker.migrate-single-collateral-to-multi-collateral') }}
         </div>
         <h4 v-show="!cdpDetailsLoaded">
-          {{$t('dapsMaker.loading-your-cdps')}}
+          {{ $t('dapsMaker.loading-your-cdps') }}
         </h4>
         <div v-for="cdpId in cdps" :key="cdpId">
           <div
@@ -29,6 +29,9 @@
           <p>
             {{ $t('dappsMaker.migration-contract-balance-below') }}
           </p>
+          <p>
+            <b>Current amount: {{ migrateContractBalance }}</b>
+          </p>
         </div>
         <div v-show="noCdpsToMigrateFound">
           {{ $t('dappsMaker.no-cdps-to-migrate-found') }}
@@ -41,7 +44,7 @@
             ]"
             @click="beginMigration"
           >
-            migrate
+            {{ $t('dappsMaker.migrate') }}
           </div>
         </div>
       </div>
@@ -279,11 +282,9 @@ export default {
       return false; // the contract is reporting a 0 balance?
     },
     async getMigrationContractBalance() {
-      // return 2;
-      return new this.web3.eth.Contract(ERC20, addresses.MCD_DAI).methods
+      return new this.web3.eth.Contract(ERC20, addresses.SAI).methods
         .balanceOf(addresses.MCD_JOIN_SAI)
         .call();
-      // the contract is reporting a 0 balance?
     },
     async submitTransaction() {
       window.scrollTo(0, 0);
