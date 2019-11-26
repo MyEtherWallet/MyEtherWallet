@@ -1,7 +1,7 @@
 import { toChecksumAddress } from '@/helpers/addressUtils';
 import { getCdpIds } from './chainCalls';
 import { GetCdps } from './ABIs';
-import {addresses} from './index';
+import { addresses } from './index';
 
 async function locateCdps(self, _cdpService) {
   self.cdpsWithoutProxy = [];
@@ -45,13 +45,13 @@ async function locateOldCdps(self, _cdpService) {
     typeof entry !== 'number' ? entry.id : entry
   );
 
-  const cdpIdToTypeMapping = [
-    ...cdpsWithoutProxy,
-    ...cdps
-  ].reduce((acc, cur) => {
-    acc[cur.id] = cur.ilk;
-    return acc;
-  }, {});
+  const cdpIdToTypeMapping = [...cdpsWithoutProxy, ...cdps].reduce(
+    (acc, cur) => {
+      acc[cur.id] = cur.ilk;
+      return acc;
+    },
+    {}
+  );
   self.cdpsWithType = cdpIdToTypeMapping;
   return {
     withType: cdpIdToTypeMapping,

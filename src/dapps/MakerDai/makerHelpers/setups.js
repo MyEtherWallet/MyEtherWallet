@@ -79,7 +79,7 @@ export async function getDetailsForTokens(self, collateralTokens) {
   self.balances['MKR'] = self.mkrBalance;
 }
 
-export async function getDustValues(self, collateralTokens){
+export async function getDustValues(self, collateralTokens) {
   self.dustValues = {};
   for (let i = 0; i < collateralTokens.length; i++) {
     self.dustValues[collateralTokens[i].currency.symbol] = await getDustValue(
@@ -366,8 +366,8 @@ export async function doUpdate(self, Toast) {
         self.activeCdps[idProp].updateSystemVariables({
           tokens: self.tokens,
           balances: self.balances,
-          proxyAllowances: self.proxyAllowances,
-        })
+          proxyAllowances: self.proxyAllowances
+        });
       }
     }
     if (idProp === self.currentCdpId) {
@@ -375,7 +375,6 @@ export async function doUpdate(self, Toast) {
       await self.setupCdpManage(self.currentCdpId);
     }
   }
-
 
   if (
     Object.keys(self.activeCdps).includes(self.currentCdpId.toString()) ||
