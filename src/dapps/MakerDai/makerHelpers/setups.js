@@ -77,6 +77,7 @@ export async function getDetailsForTokens(self, collateralTokens) {
   self.tokens['DAI'] = self.daiToken;
   self.balances['DAI'] = self.daiBalance;
   self.balances['MKR'] = self.mkrBalance;
+  await getDustValues(self, collateralTokens)
 }
 
 export async function getDustValues(self, collateralTokens) {

@@ -624,7 +624,6 @@ export default {
     },
     async updateActiveCdp() {
       await updateActiveCdp(this);
-      console.log('updating'); // todo remove dev item
       if (this.cdps.length === 0 && this.cdpsWithoutProxy.length === 0) {
         this.gotoCreate();
       }

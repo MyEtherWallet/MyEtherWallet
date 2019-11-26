@@ -405,7 +405,6 @@ export default {
     needsDaiApprove() {
       if (this.currentCdp) {
         if (toBigNumber(this.amount).gt(0)) {
-          console.log(this.currentCdp.hasEnoughAllowance(this.amount, 'MDAI')); // todo remove dev item
           return !this.currentCdp.hasEnoughAllowance(this.amount, 'MDAI');
         }
       }
