@@ -102,6 +102,7 @@
               :current-address="currentAddress"
               :copybutton="true"
               :title="$t('sendTx.to-addr')"
+              :clear-address="overrideAddress"
               @toAddress="setToAddress"
               @validAddress="validAddress = $event"
               @unableToValidate="unableToValidate = $event"
@@ -118,6 +119,7 @@
               :currency="fromCurrency"
               :current-address="currentAddress"
               :copybutton="true"
+              :clear-address="overrideAddress"
               :title="$t('sendTx.from-addr')"
               @toAddress="setExitFromAddress"
               @validAddress="validExitAddress = $event"
@@ -132,6 +134,7 @@
               :currency="fromCurrency"
               :current-address="currentAddress"
               :copybutton="true"
+              :clear-address="overrideAddress"
               :title="$t('swap.refund', { currency: fromCurrency })"
               @toAddress="setRefundAddress"
               @validAddress="validRefundAddress = $event"
@@ -182,11 +185,9 @@
             {{ $t('common.continue') }}
             <i class="fa fa-long-arrow-right" aria-hidden="true" />
           </div>
-          <interface-bottom-text
-            :link-text="$t('common.help-center')"
-            :question="$t('common.have-issues')"
-            link="https://kb.myetherwallet.com"
-          />
+          <div class="clear-all-btn" @click="reset()">
+            {{ $t('common.clear-all') }}
+          </div>
         </div>
       </div>
     </div>
@@ -319,7 +320,8 @@ export default {
       debounceDoThing: {},
       unableToValidate: false,
       unableToValidateExit: false,
-      unableToValidateRefund: false
+      unableToValidateRefund: false,
+      overrideAddress: false
     };
   },
   computed: {
@@ -520,6 +522,16 @@ export default {
   },
   methods: {
     reset() {
+      this.fromCurrency = 'ETH';
+      this.toCurrency = 'BTC';
+      this.overrideFrom = { name: 'Ether', symbol: 'ETH' };
+      this.overrideTo = { name: 'Bitcoin', symbol: 'BTC' };
+      this.fromValue = 1;
+      this.overrideAddress = !this.overrideAddress;
+      this.providerSelectedName = '';
+      this.toAddress = '';
+      this.refundAddress = '';
+      this.exitFromAddress = '';
       this.updateRateEstimate(
         this.fromCurrency,
         this.toCurrency,

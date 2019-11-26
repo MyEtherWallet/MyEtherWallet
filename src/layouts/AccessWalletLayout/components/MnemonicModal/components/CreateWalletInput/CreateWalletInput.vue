@@ -10,7 +10,9 @@
           v-validate="param === 'Json' ? 'required|min:9' : ''"
           :type="password.showPassword ? 'text' : 'password'"
           :value="value"
-          :placeholder="$t('common.password.enter')"
+          :placeholder="
+            !placeholderText ? $t('common.password.enter') : placeholderText
+          "
           name="password"
           autocomplete="off"
           @input="updateValue($event.target.value)"
@@ -76,6 +78,10 @@ export default {
     fullWidth: {
       type: Boolean,
       default: false
+    },
+    placeholderText: {
+      type: String,
+      default: ''
     }
   },
   data() {
