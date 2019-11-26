@@ -1,12 +1,34 @@
 <template>
   <div>
     <div class="currency-ops-new">
+      <div style="padding: 10px">
+        <p @click="checkMigrateContractSaiBalance">
+          <b>
+            {{
+              $t('dappsMaker.current-sai-balance', {
+                value: migrateContractBalance
+              })
+            }}</b
+          >
+        </p>
+        <div v-show="noSaiAvailable && !needsAtLeast20">
+          {{ $t('dappsMaker.not-enough-sai') }}
+        </div>
+        <div v-show="needsAtLeast20" style="padding: 10px">
+          {{
+            $t('dappsMaker.needs-at-least-20', {
+              value: migrateContractBalance
+            })
+          }}
+        </div>
+      </div>
+
       <div class="currency-picker-container">
         <div class="interface__block-title">
           {{ $t('dappsMaker.migrate-single-collateral-to-multi-collateral') }}
         </div>
         <h4 v-show="!cdpDetailsLoaded">
-          {{ $t('dapsMaker.loading-your-cdps') }}
+          {{ $t('dappsMaker.loading-your-cdps') }}
         </h4>
         <div v-for="cdpId in cdps" :key="cdpId">
           <div
@@ -24,14 +46,6 @@
               <span class="subname">- CDP </span>
             </p>
           </div>
-        </div>
-        <div v-show="!migrationPossible" class="input-block-message">
-          <p>
-            {{ $t('dappsMaker.migration-contract-balance-below') }}
-          </p>
-          <p>
-            <b>Current amount: {{ migrateContractBalance }}</b>
-          </p>
         </div>
         <div v-show="noCdpsToMigrateFound">
           {{ $t('dappsMaker.no-cdps-to-migrate-found') }}
@@ -114,23 +128,28 @@ export default {
       migrateContractBalance: 0,
       selectedCdp: 0,
       proxyAddress: '',
+      cdpBalances: {},
       migrationNotPossible: false,
       cdpDetailsLoaded: false,
+      noSaiAvailable: false,
+      needsAtLeast20: false,
       daiAddress: '0xc4375b7de8af5a38a93548eb8453a498222c4ff2'
     };
   },
   computed: {
     ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
     migrationPossible() {
-      return toBigNumber(this.daiGenerated).lt(
-        toBigNumber(this.migrateContractBalance)
+      return (
+        toBigNumber(this.daiGenerated).lt(
+          toBigNumber(this.migrateContractBalance)
+        ) && !this.cdpDetailsLoaded
       );
     },
     validInputs() {
       return this.selectedCdp !== 0 && this.migrationPossible;
     },
     noCdpsToMigrateFound() {
-      return this.cdps.length === 0;
+      return this.cdps.length === 0 && this.cdpDetailsLoaded;
     }
   },
   watch: {
@@ -173,9 +192,13 @@ export default {
         );
         const _governanceFee = (await details.getGovernanceFee()).toBigNumber();
         const cdpDaiBalance = (await details.getDebtValue()).toBigNumber();
+        this.cdpBalances[this.selectedCdp] = { balance: cdpDaiBalance };
         const contractHasEnough = await this.checkMigrateContractSaiBalance(
           cdpDaiBalance
         );
+        if (cdpDaiBalance.lt(20)) {
+          this.needsAtLeast20 = true;
+        }
         if (contractHasEnough) {
           const needsApproval = await this.needsApproval(_governanceFee);
           if (needsApproval) {
@@ -265,15 +288,44 @@ export default {
     },
     async selectCDP(cdpSelected) {
       this.selectedCdp = cdpSelected;
-      const details = await this.getValueOrFunction('_cdpService').getCdp(
-        cdpSelected,
-        this.proxyAddress
-      );
-      this.daiGenerated = (await details.getDebtValue()).toBigNumber();
+      if (this.cdpBalances[this.selectedCdp]) {
+        this.checkMigrateContractSaiBalance(
+          this.cdpBalances[this.selectedCdp].balance
+        );
+        if (toBigNumber(this.cdpBalances[this.selectedCdp]).lt(20)) {
+          this.needsAtLeast20 = true;
+        } else {
+          this.needsAtLeast20 = false;
+        }
+        this.daiGenerated = this.cdpBalances[this.selectedCdp];
+      } else {
+        const details = await this.getValueOrFunction('_cdpService').getCdp(
+          cdpSelected,
+          this.proxyAddress
+        );
+        const _governanceFee = (await details.getGovernanceFee()).toBigNumber();
+        const cdpDaiBalance = (await details.getDebtValue()).toBigNumber();
+        this.checkMigrateContractSaiBalance(cdpDaiBalance);
+
+        if (cdpDaiBalance.lt(20)) {
+          this.needsAtLeast20 = true;
+        } else {
+          this.needsAtLeast20 = false;
+        }
+        this.daiGenerated = cdpDaiBalance;
+        this.cdpBalances[this.selectedCdp] = {
+          balance: cdpDaiBalance,
+          fee: _governanceFee
+        };
+      }
     },
     async checkMigrateContractSaiBalance(cdpBalance = 0) {
       // 2nd layer check. if the user tries to beat the button change (valid to invalid)
       this.migrateContractBalance = await this.getMigrationContractBalance();
+      if (this.migrateContractBalance < 1) {
+        this.noSaiAvailable = true;
+        return false;
+      }
       if (
         toBigNumber(cdpBalance).lt(toBigNumber(this.migrateContractBalance))
       ) {
@@ -282,9 +334,10 @@ export default {
       return false; // the contract is reporting a 0 balance?
     },
     async getMigrationContractBalance() {
-      return new this.web3.eth.Contract(ERC20, addresses.SAI).methods
+      const val = await new this.web3.eth.Contract(ERC20, addresses.SAI).methods
         .balanceOf(addresses.MCD_JOIN_SAI)
         .call();
+      return ethUnit.fromWei(val, 'ether').toString();
     },
     async submitTransaction() {
       window.scrollTo(0, 0);

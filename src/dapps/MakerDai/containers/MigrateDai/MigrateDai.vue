@@ -3,13 +3,16 @@
     <div class="currency-ops-new">
       <div class="currency-picker-container">
         <div class="interface__block-title">
-          Migrate to 'new' DAI
+          {{ $t('dappsMaker.upgrade-sai-to-dai') }}
+          <img :src="DaiIcon" class="icon-size" />
+        </div>
+        <div class="top-buttons">
+          <p @click="setMax">{{ $t('dappsMaker.set-max') }}</p>
         </div>
         <div class="dropdown-text-container dropdown-container no-point">
           <p>
             <span class="cc DAI cc-icon cc-icon-dai currency-symbol" />
-            DAI
-            <span class="subname">- Maker DAI </span>
+            SAI
           </p>
         </div>
         <input
@@ -20,12 +23,6 @@
             'dropdown-container'
           ]"
         />
-        <div class="input-block-message">
-          <p>
-            Some Error, info, or instructions
-          </p>
-        </div>
-
         <div class="buttons-container">
           <div
             :class="[
@@ -48,6 +45,7 @@ import { mapState } from 'vuex';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
+import DaiIcon from '@/assets/images/currency/coins/AllImages/DAI.svg';
 import BigNumber from 'bignumber.js';
 import SelectCdpEntry from '../../components/SelectCdpEntry';
 import { addresses, migrateABI, ERC20 } from '../../makerHelpers';
@@ -68,6 +66,12 @@ export default {
     'select-cdp-entry': SelectCdpEntry
   },
   props: {
+    tokensWithBalance: {
+      type: Array,
+      default: function() {
+        return [];
+      }
+    },
     ethPrice: {
       type: BigNumber,
       default: function() {
@@ -98,7 +102,8 @@ export default {
   data() {
     return {
       daiQty: 0,
-      gasLimit: -1
+      gasLimit: -1,
+      DaiIcon: DaiIcon
     };
   },
   computed: {
@@ -126,10 +131,14 @@ export default {
         data: data
       };
     },
+    setMax() {
+      const saiEntry = this.tokensWithBalance.find(entry => {
+        return entry.symbol === 'SAI';
+      });
+      this.daiQty = saiEntry.balance;
+    },
     async approve(val) {
-      const tokenAddress = '0xc4375b7de8af5a38a93548eb8453a498222c4ff2';
-
-      const contract = new this.web3.eth.Contract(ERC20, tokenAddress);
+      const contract = new this.web3.eth.Contract(ERC20, addresses.SAI);
 
       const data = contract.methods
         .approve(addresses.MIGRATION, val)
@@ -137,7 +146,7 @@ export default {
 
       return {
         from: this.account.address,
-        to: tokenAddress,
+        to: addresses.SAI,
         value: 0,
         data: data
       };

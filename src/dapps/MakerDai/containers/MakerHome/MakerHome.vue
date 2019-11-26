@@ -144,9 +144,6 @@ export default {
   },
   mounted() {},
   methods: {
-    clicked() {
-      // console.log('clicked'); // todo remove dev item
-    },
     gotoCreate() {
       if (this.$route.path.includes('maker-dai')) {
         if (this.makerActive) {

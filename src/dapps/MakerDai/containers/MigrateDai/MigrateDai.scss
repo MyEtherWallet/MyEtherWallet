@@ -41,6 +41,19 @@ $this-page-mobile-width: 700px;
   color: $light-blue-6;
 }
 
+.top-buttons {
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+
+  p {
+    margin-left: auto;
+    font-weight: 500;
+    color: $mew-green;
+    cursor: pointer;
+  }
+}
+
 .dropdown-container {
   border-radius: 4px;
   display: flex;
@@ -97,6 +110,12 @@ $this-page-mobile-width: 700px;
 
 .cc-icon {
   font-size: 26px;
+}
+
+.icon-size {
+  height: 26px;
+  width: 26px;
+  padding-right: 5px;
 }
 
 .container-maker {

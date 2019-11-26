@@ -100,5 +100,10 @@
   "create": "Create",
   "save": "Save",
   "loading-your-cdps": "Loading your CDPs",
-  "migrate-single-collateral-to-multi-collateral": "Migrate Single Collateral CDP to Multi-Collateral"
+  "migrate-single-collateral-to-multi-collateral": "Migrate Single Collateral CDP to Multi-Collateral",
+  "not-enough-sai": "There is not enough Sai available to migrate CDPs at this time. Please try again later.",
+  "needs-at-least-20": "Only CDPs with more than 20 and less than {value} SAI can be upgraded at them moment.",
+  "current-sai-balance": "Current amount: {value}",
+  "upgrade-sai-to-dai": "Upgrade your SAI to DAI ",
+  "min-required": "Min {value} required"
 }
