@@ -339,7 +339,7 @@ export async function buildCdpObject(cdpId, options = {}, useOld = false) {
     return makerCDP;
   } catch (e) {
     // eslint-disable-next-line
-    console.log(e); // todo remove dev item
+    console.log(e);
     return makerCDP;
   }
 }

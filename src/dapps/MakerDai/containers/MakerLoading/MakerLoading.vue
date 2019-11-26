@@ -2,7 +2,7 @@
   <div>
     <loading-sign
       :loadingmessage1="loadingMessage"
-      :loadingmessage2="$t('dappsMaker.initialLoadingTwo')"
+      :loadingmessage2="$t('dappsMaker.initial-loading-two')"
     />
   </div>
 </template>
@@ -26,7 +26,6 @@ export default {
   computed: {
     loadingMessage() {
       return this.loadingState;
-      // return `Loading: ${this.loadingState}`
     }
   },
   mounted() {},

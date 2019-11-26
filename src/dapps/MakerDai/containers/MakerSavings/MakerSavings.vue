@@ -3,8 +3,14 @@
     <div class="currency-ops-new">
       <div style="padding: 10px;">
         <p></p>
-        {{ $t('dappsMaker.dai-savings-rate') }}
-        {{ displayPercentValue(yearlyRate) }}
+        <p>
+          {{
+            $t('dappsMaker.dai-savings-rate', {
+              value: displayPercentValue(yearlyRate)
+            })
+          }}
+        </p>
+        <p>{{ deposited }}</p>
         <!--        <p>{{ daiBalance }}</p>-->
       </div>
       <div class="currency-picker-container">
@@ -212,7 +218,7 @@ export default {
       await this.makerSaver.exit(MDAI(this.daiQty));
     },
     async depositBalance() {
-      this.deposited = this.makerSaver.balance();
+      this.deposited = await this.makerSaver.balance();
     },
     async checkBalance() {
       if (this.setupComplete) {
