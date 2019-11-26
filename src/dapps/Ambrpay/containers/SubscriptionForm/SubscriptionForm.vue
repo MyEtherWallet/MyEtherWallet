@@ -5,7 +5,7 @@
         <b-container>
           <b-row class="address-block">
             <dropdown-address-selector
-              title="To Address"
+              :title="$t('sendTx.to-addr')"
               @toAddress="getToAddress($event)"
             />
           </b-row>
