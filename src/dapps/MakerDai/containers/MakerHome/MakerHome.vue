@@ -68,7 +68,7 @@
       </div>
     </div>
 
-<!--    <div class="grid-col-2 promo-cards">
+    <!--    <div class="grid-col-2 promo-cards">
       <div class="card-block unlock-wallet" @click="goToSave">
         <div class="flex-col-vertical-center">
           <div class="card-content">

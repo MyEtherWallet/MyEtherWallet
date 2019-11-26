@@ -2,8 +2,10 @@
   <div>
     <div class="currency-ops-new">
       <div style="padding: 10px;">
-        {{ $t('dappsMaker.dai-savings-rate') }} {{ yearlyRate }}
-        <p>{{ daiBalance }}</p>
+        <p></p>
+        {{ $t('dappsMaker.dai-savings-rate') }}
+        {{ displayPercentValue(yearlyRate) }}
+        <!--        <p>{{ daiBalance }}</p>-->
       </div>
       <div class="currency-picker-container">
         <!--        <p><b>DAI saving - Coming 27/11/2019</b></p>-->
@@ -155,7 +157,8 @@ export default {
       daiQty: 0,
       gasLimit: -1,
       yearlyRate: 0,
-      daiBalance: 0
+      daiBalance: 0,
+      deposited: 0
     };
   },
   computed: {
@@ -190,11 +193,12 @@ export default {
     },
     async getValues() {
       if (this.setupComplete) {
-        this.yearlyRate = toBigNumber(
-          await this.makerSaver.getYearlyRate()
-        ).toFixed(10);
+        this.yearlyRate = toBigNumber(await this.makerSaver.getYearlyRate())
+          .minus(1)
+          .toFixed(10);
         this.hasProxy();
         this.checkBalance();
+        await this.depositBalance();
       }
       return 0;
     },
@@ -206,6 +210,9 @@ export default {
     },
     async withdraw() {
       await this.makerSaver.exit(MDAI(this.daiQty));
+    },
+    async depositBalance() {
+      this.deposited = this.makerSaver.balance();
     },
     async checkBalance() {
       if (this.setupComplete) {
