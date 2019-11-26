@@ -42,8 +42,7 @@
                     alt
                   />
                   <div v-else class="no-icon">
-                    <p>{{ $t('common.no') }}</p>
-                    <p>{{ $t('accessWallet.network-addr.icon') }}</p>
+                    <p>{{ $t('common.no-icon') }}</p>
                   </div>
                 </div>
                 <p>{{ key }}</p>
@@ -93,17 +92,22 @@
               <div class="dropdown-button-container">
                 <b-dropdown
                   id="hd-derivation-path"
-                  :text="getPathLabel(selectedPath)"
+                  :text="`${getPathLabel(selectedPath)} (${selectedPath}`"
                   right
                   class="dropdown-button-2"
                 >
                   <b-dropdown-item
                     v-for="(val, key) in availablePaths"
-                    :class="selectedPath === val.path ? 'active' : ''"
+                    :class="[
+                      selectedPath === val.path ? 'active' : '',
+                      'dropdown-paths'
+                    ]"
                     :key="'base' + key"
                     @click="changePath(key)"
-                    >{{ val.label }}</b-dropdown-item
                   >
+                    {{ val.label }}
+                    <span>({{ val.path }})</span>
+                  </b-dropdown-item>
                   <b-dropdown-divider />
                   <b-dropdown-item>{{
                     $t('accessWallet.path.custom')
@@ -114,7 +118,9 @@
                     :key="key"
                   >
                     <div class="custom-networks">
-                      <div @click="changePath(key)">{{ val.label }}</div>
+                      <div @click="changePath(key)">
+                        {{ val.label }} <span>({{ val.path }})</span>
+                      </div>
                       <span>
                         <i
                           class="fa fa-times-circle"
@@ -227,10 +233,11 @@
         </b-collapse>
         <div class="accept-terms">
           <label class="checkbox-container">
-            {{ $t('accessWallet.accept-terms') }}
-            <router-link to="/terms-and-conditions"
-              >{{ $t('common.terms') }}.</router-link
-            >
+            <i18n path="accessWallet.accept-terms">
+              <router-link slot="terms" to="/terms-and-conditions"
+                >{{ $t('common.terms') }}.</router-link
+              >
+            </i18n>
             <input v-model="acceptTerms" type="checkbox" />
             <span class="checkmark" />
           </label>
@@ -240,7 +247,7 @@
             :disabled="!isDisabled"
             class="mid-round-button-green-filled close-button"
             @click.prevent="unlockWallet"
-            >{{ $t('common.accessMyWallet') }}</b-btn
+            >{{ $t('common.wallet.access-my') }}</b-btn
           >
         </div>
         <customer-support />
@@ -498,5 +505,15 @@ export default {
 
 .activeConn {
   color: gray;
+}
+</style>
+
+<style lang="scss">
+.dropdown-paths {
+  .dropdown-item {
+    align-items: center;
+    display: flex !important;
+    justify-content: space-between;
+  }
 }
 </style>

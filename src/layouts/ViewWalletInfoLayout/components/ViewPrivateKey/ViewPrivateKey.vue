@@ -17,10 +17,13 @@
           {{ $t('common.copy') }}
           <input ref="privKey" :value="privKey" />
         </div>
-        <p class="red-warning">
-          {{ $t('common.please') }} <b>{{ $t('common.do-not') }}</b>
-          {{ $t('accessWallet.private-key.do-not-share') }}!
-        </p>
+        <i18n
+          path="accessWallet.private-key.do-not-share"
+          tag="p"
+          class="red-warning"
+        >
+          <b slot="do-not">{{ $t('common.do-not') }}</b>
+        </i18n>
       </div>
     </b-modal>
   </div>

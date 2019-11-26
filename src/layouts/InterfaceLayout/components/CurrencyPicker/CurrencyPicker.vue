@@ -71,6 +71,10 @@ export default {
       type: Boolean,
       default: true
     },
+    clearCurrency: {
+      type: Boolean,
+      default: false
+    },
     default: {
       type: Object,
       default: () => {
@@ -113,6 +117,9 @@ export default {
     }
   },
   watch: {
+    clearCurrency() {
+      this.resetPicker();
+    },
     networkToken() {
       if (this.token) this.selectedCurrency = this.networkToken;
     },
@@ -124,12 +131,15 @@ export default {
     }
   },
   mounted() {
-    this.selectedCurrency =
-      this.token === true
-        ? this.networkToken
-        : { name: 'Select an item', abi: '', address: '' };
+    this.resetPicker();
   },
   methods: {
+    resetPicker() {
+      this.selectedCurrency =
+        this.token === true
+          ? this.networkToken
+          : { name: 'Select an item', abi: '', address: '' };
+    },
     openDropdown() {
       this.open = !this.open;
     },

@@ -143,7 +143,7 @@
           <div class="detail-data">
             <p>
               {{ convertToGwei(details.gasPrice) }}
-              {{ $t('common.gas.uppercase-gwei') }}
+              {{ $t('common.gas.gwei') }}
             </p>
           </div>
         </li>

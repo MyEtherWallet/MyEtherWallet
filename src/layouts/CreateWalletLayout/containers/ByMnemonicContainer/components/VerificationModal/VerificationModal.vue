@@ -29,13 +29,27 @@
           </li>
         </ul>
       </div>
+      <div v-if="password.length > 0" class="mt-5 extra-word-container">
+        <form>
+          <label for="extraWordInput">{{
+            $t('createWallet.mnemonic.extra-word')
+          }}</label>
+          <input
+            :placeholder="$t('createWallet.mnemonic.type-in')"
+            v-model="inputPassword"
+            type="password"
+            name="extraWordInput"
+            autocomplete="off"
+          />
+        </form>
+      </div>
       <div v-show="errorMsg.length > 0" class="error-msg-container">
         {{ errorMsg }}
       </div>
       <div class="button-container">
         <div
           :class="[
-            loading ? 'disabled' : '',
+            loading || disableBtn ? 'disabled' : '',
             'verify-button large-round-button-green-filled'
           ]"
           @click="verifyMnemonic"
@@ -56,17 +70,29 @@ export default {
       default: function() {
         return [];
       }
+    },
+    password: {
+      type: String,
+      default: ''
     }
   },
   data() {
     return {
       inputs: {},
       loading: false,
-      errorMsg: ''
+      errorMsg: '',
+      inputPassword: '',
+      disableBtn: false
     };
+  },
+  watch: {
+    inputPassword(newVal) {
+      this.disableBtn = newVal.length > 0 ? false : true;
+    }
   },
   mounted() {
     this.$refs.verification.$on('shown', () => {
+      this.disableBtn = this.password.length > 0 ? true : false;
       // Generate random numbers to choose which blocks to hide
       const newArr = [...this.mnemonicValues.keys()];
       const ranNums = this.shuffle(newArr);
@@ -126,6 +152,11 @@ export default {
       });
       if (!this.hasEmpty()) {
         this.errorMsg = `Some fields are still missing!`;
+      } else if (
+        this.password.length > 0 &&
+        this.password !== this.inputPassword
+      ) {
+        this.errorMsg = `Mnemonic and extra word doesn't match! Please check your input!`;
       } else if (updatedArray.join() === this.mnemonicValues.join()) {
         this.$emit('verifiedMnemonic');
       } else {

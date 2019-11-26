@@ -5,11 +5,9 @@
         <div class="page-title">
           <page-title
             :options="{
-              title: 'Send Offline Helper',
+              title: $t('withoutWallet.offline-helper'),
               boldSubTitle: '',
-              textContent: [
-                'Customize actions, debug reveals, and more with this set of advance tools. Please be mindful of the capabilities and limitations of these tools before using.'
-              ]
+              textContent: []
             }"
           />
         </div>
@@ -46,8 +44,7 @@
                         "
                         class="no-icon"
                       >
-                        <p>{{ $t('common.no') }}</p>
-                        <p>{{ $t('common.uppercase-icon') }}</p>
+                        <p>{{ $t('common.no-icon') }}</p>
                       </div>
                     </div>
                     <p>{{ key }}</p>
@@ -80,6 +77,7 @@
             :isopen="stage2"
             :title="$t('withoutWallet.generate-info')"
             number="2"
+            class="address-selector"
             @titleClicked="stage2 = !stage2"
           >
             <dropdown-address-selector
@@ -108,7 +106,7 @@
                   >
                   <span class="detail-text"
                     >{{ toGwei(genInfo.gasPrice) }}
-                    {{ $t('common.gas.uppercase-gwei') }}</span
+                    {{ $t('common.gas.gwei') }}</span
                   >
                 </li>
                 <li class="detail-container">
@@ -162,14 +160,19 @@
           >
             <textarea v-model="rawSigned" class="no-margin raw-tx-input" />
             <p v-if="invalidSignature">{{ $t('sendTx.invalid-signature') }}</p>
-            <p v-if="wrongNetwork && correctNetwork === ''">
-              {{ $t('sendTx.signed-chain-id') }}
-              {{ $t('sendTx.chain-no-match') }}
-            </p>
-            <p v-if="wrongNetwork && correctNetwork !== ''">
-              {{ $t('sendTx.signed-chain-id') }} ({{ correctNetwork }})
-              {{ $t('sendTx.chain-no-match') }}
-            </p>
+            <i18n
+              v-if="wrongNetwork && correctNetwork === ''"
+              tag="p"
+              path="sendTx.signed-chain-id"
+            >
+            </i18n>
+            <i18n
+              v-if="wrongNetwork && correctNetwork !== ''"
+              tag="p"
+              path="sendTx.signed-chain-id"
+            >
+              <span slot="network">({{ correctNetwork }})</span>
+            </i18n>
             <expanding-option title="Raw Transaction">
               <textarea
                 :value="JSON.stringify(rawTx)"
@@ -261,8 +264,7 @@
               <li class="detail-container">
                 <span class="detail-name">{{ $t('common.gas.price') }}:</span>
                 <span class="detail-text"
-                  >{{ toGwei(gasPrice) }}
-                  {{ $t('common.gas.uppercase-gwei') }}</span
+                  >{{ toGwei(gasPrice) }} {{ $t('common.gas.gwei') }}</span
                 >
               </li>
               <li class="detail-container">
@@ -605,11 +607,13 @@ export default {
         .precision(2, BigNumber.ROUND_UP)
         .toNumber();
     },
-    async generateInformation(address) {
-      if (address === '') return;
-      this.genInfo['address'] = address;
+    async generateInformation(data) {
+      if (data.address === '') return;
+      this.genInfo['address'] = data.address;
       this.genInfo['gasPrice'] = await this.web3.eth.getGasPrice();
-      this.genInfo['nonce'] = await this.web3.eth.getTransactionCount(address);
+      this.genInfo['nonce'] = await this.web3.eth.getTransactionCount(
+        data.address
+      );
       this.genInfo['blockNumber'] = await this.web3.eth.getBlockNumber();
       this.genInfo['chainID'] = this.selectedNetwork.type.chainID;
       this.genInfo['timestamp'] = Date.now(); //;
