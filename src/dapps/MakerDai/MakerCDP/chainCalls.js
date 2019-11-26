@@ -1,7 +1,6 @@
 import { addresses, Vat, Spotter, GetCdps, CdpManager, ProxyRegistry } from '../makerHelpers';
 import assert from 'assert';
 
-// console.log(GetCdps); // todo remove dev item
 function padRight(string, chars, sign) {
   return string + new Array(chars - string.length + 1).join(sign ? sign : '0');
 }
@@ -36,7 +35,6 @@ export async function getProxy(){
   if (proxy === '0x0000000000000000000000000000000000000000') {
     proxy = null;
   }
-  console.log('proxy', proxy); // todo remove dev item
   return proxy;
 }
 
@@ -49,7 +47,6 @@ export async function getCdpIds(web3, proxyAddress) {
   const ilks = results.ilks;
   assert(ids.length === ilks.length, 'ids and ilks must be the same length');
   return ids.map((id, index) => {
-    // console.log(id, index); // todo remove dev item
     return { id: parseInt(id), ilk: bytesToString(ilks[index]) };
   });
 }
@@ -71,9 +68,7 @@ export async function getUrns(web3, id, name) {
     const contract = new web3.eth.Contract(CdpManager, addresses.CDP_MANAGER);
     const vat = new web3.eth.Contract(Vat, addresses.MCD_VAT);
     const urn = await contract.methods.urns(id).call();
-    // console.log(urn); // todo remove dev item
     const result = await vat.methods.urns(stringToBytes(name), urn).call();
-    // console.log('result', result); // todo remove dev item
     return result;
   } catch (e) {
     // eslint-disable-next-line

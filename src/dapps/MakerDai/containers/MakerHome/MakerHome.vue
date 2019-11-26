@@ -7,9 +7,8 @@
             <h2 class="color-white">
               {{ migrateOldDai }}
             </h2>
-            <p class="color-white">{{ $t('home.obtainAddress') }}</p>
             <p class="button">
-              {{ $t('home.getStarted') }}
+              {{ $t('dappMaker.sai-to-dai') }}
               <img src="~@/assets/images/icons/right-arrow.png" />
             </p>
           </div>
@@ -20,9 +19,8 @@
         <div class="flex-col-vertical-center">
           <div class="card-content">
             <h2 class="color-white">{{ migrateOldCDP }}</h2>
-            <p class="color-white">{{ $t('home.accessMyWalletDesc') }}</p>
             <p class="button">
-              {{ $t('home.accessNow') }}
+              {{ $t('dappMaker.migrate') }}
               <img src="~@/assets/images/icons/right-arrow.png" />
             </p>
           </div>
@@ -37,9 +35,8 @@
             <h2 class="color-white">
               {{ manage }}
             </h2>
-            <p class="color-white">{{ $t('home.obtainAddress') }}</p>
             <p class="button">
-              {{ $t('home.getStarted') }}
+              {{ $t('dappMaker.manage') }}
               <img src="~@/assets/images/icons/right-arrow.png" />
             </p>
           </div>
@@ -47,7 +44,7 @@
         <div v-show="!makerActive" class="flex-col-vertical-center">
           <loading-sign
             :loadingmessage1="loadingMessage"
-            :loadingmessage2="$t('dappsMaker.initialLoadingTwo')"
+            :loadingmessage2="$t('dappsMaker.initial-loading-two')"
           />
         </div>
       </div>
@@ -56,9 +53,8 @@
         <div v-show="makerActive" class="flex-col-vertical-center">
           <div class="card-content">
             <h2 class="color-white">{{ create }}</h2>
-            <p class="color-white">{{ $t('home.accessMyWalletDesc') }}</p>
             <p class="button">
-              {{ $t('home.getStarted') }}
+              {{ $t('dappMaker.create') }}
               <img src="~@/assets/images/icons/right-arrow.png" />
             </p>
           </div>
@@ -66,7 +62,7 @@
         <div v-show="!makerActive" class="flex-col-vertical-center">
           <loading-sign
             :loadingmessage1="loadingMessage"
-            :loadingmessage2="$t('dappsMaker.initialLoadingTwo')"
+            :loadingmessage2="$t('dappsMaker.initial-loading-two')"
           />
         </div>
       </div>
@@ -79,9 +75,8 @@
             <h2 class="color-white">
               {{ save }}
             </h2>
-            <p class="color-white">{{ $t('home.obtainAddress') }}</p>
             <p class="button">
-              {{ $t('home.getStarted') }}
+              {{ $t('dappMaker.save') }}
               <img src="~@/assets/images/icons/right-arrow.png" />
             </p>
           </div>

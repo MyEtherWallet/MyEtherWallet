@@ -29,7 +29,6 @@ export default class MakerCDP extends MakerCdpBase {
   async init(cdpId = this.cdpId) {
     await this.updateValues(cdpId);
     try {
-      // console.log('govFee 1', val); // todo remove dev item
       // TODO why is this returning undefined
       this._governanceFee = (await this.cdp.getGovernanceFee()).toBigNumber();
     } catch (e) {
@@ -53,11 +52,8 @@ export default class MakerCDP extends MakerCdpBase {
         } else {
           this.cdp = await this.services.getMakerCdp(cdpId, false);
         }
-        // console.log('CDP', this.cdp); // todo remove dev item
         this.isSafe = this.cdp.isSafe;
         await this.getValuesFromChain();
-
-        // console.log('govFee 2', val); // todo remove dev item
       } catch (e) {
         console.error(e);
       }
@@ -87,7 +83,6 @@ export default class MakerCDP extends MakerCdpBase {
     }
     // todo: think about whether the type of update should be recorded and then used to determine which override to create
     // Mostly about reducing chain calls.  if the value doesn't need a particular call. it can be skipped.
-    console.log(this.dustValues); // todo remove dev item
     const calculatedDebt = daiMath.debtValue(
       urns.art,
       this.dustValues[this.cdpCollateralType].rate
@@ -233,7 +228,6 @@ export default class MakerCDP extends MakerCdpBase {
   }
 
   getCurrentPriceFor(symbol) {
-    console.log(symbol); // todo remove dev item
     if (!symbol) return 0;
     return this.getPriceOfCurrency(symbol);
   }
@@ -243,7 +237,6 @@ export default class MakerCDP extends MakerCdpBase {
   }
 
   getPriceOfCurrency(type) {
-    console.log(this.mcdCurrencies); // todo remove dev item
     const curr = this.mcdCurrencies[type];
     if (curr) {
       return curr.price._amount;
@@ -269,12 +262,10 @@ export default class MakerCDP extends MakerCdpBase {
   }
 
   hasEnoughAllowance(ethQty, currency = 'ETH') {
-    // if (toBigNumber(ethQty).isNaN()) return false;
     if (currency === 'ETH') return true;
     const currentAllowance = this.getProxyAllowancefor(currency);
     try {
       const _ethQty = toBigNumber(ethQty).toFixed(18);
-      console.log('currentAllowance', currency, currentAllowance.toString()); // todo remove dev item
       return toBigNumber(currentAllowance.toString()).gte(
         toBigNumber(this.convertToTokenWei(_ethQty, 18).toString())
       );
@@ -291,14 +282,11 @@ export default class MakerCDP extends MakerCdpBase {
     liquidationRatio = this.liquidationRatio
   ) {
     if (daiQty <= 0) daiQty = this.minDai;
+    console.log(bnOver(liquidationRatio, daiQty, ethPrice)); // todo remove dev item
     return bnOver(liquidationRatio, daiQty, ethPrice);
   }
 
   minDepositFor(symbol) {
-    // const minDai = toBigNumber(
-    //   ethUnit.fromWei(this.vatValues[symbol].dust).toString()
-    // )
-    // console.log('minDai', minDai.toString()); // todo remove dev item
     return this.minDeposit(this.minDai, this.getCurrentPriceFor(symbol));
   }
 

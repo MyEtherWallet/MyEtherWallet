@@ -6,6 +6,5 @@ const { DAI } = Maker;
 
 export function getMakerCurrencies() {
   const vals = { DAI, ...TKNS };
-  // console.log('getMakerCurrencies', vals); // todo remove dev item
   return vals;
 }

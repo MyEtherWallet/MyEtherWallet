@@ -16,7 +16,7 @@
           <div class="block-title">
             <div class="for-pop">
               <p>
-                {{ $t('dappsMaker.liquidPrice') }} ({{ collateralType }}/USD)
+                {{ $t('dappsMaker.liquid-price') }} ({{ collateralType }}/USD)
               </p>
               <p v-if="liquidationPriceDisplay === '--'" class="pop-icon">
                 <popover :popcontent="$t('dappsMaker.what-is-dashes')" />
@@ -31,7 +31,7 @@
           <div class="block-content">
             <div class="item">
               <p>
-                {{ $t('dappsMaker.currentPrice') }}({{ collateralType }}/USD)
+                {{ $t('dappsMaker.current-price') }}({{ collateralType }}/USD)
               </p>
               <div>{{ ethPriceDisplay }} <span>USD</span></div>
             </div>

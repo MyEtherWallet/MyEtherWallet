@@ -32,7 +32,6 @@ export default class MakerCdpBase {
     this.migrated = false;
     this.migrateCdpActive = false;
     this.migrateCdpStage = 0;
-    // console.log('_mcdManager', services._mcdManager); // todo remove dev item
     this.cdpTypeObject = services._mcdManager
       .get('mcd:cdpType')
       .getCdpType(null, this.cdpType);
@@ -211,13 +210,6 @@ export default class MakerCdpBase {
   }
 
   get liquidationPrice() {
-    // console.log(this._liquidationPrice.toBigNumber().toString()); // todo remove dev item
-    // return calcLiquidationPrice(
-    //   this.collateralAmount,
-    //   this.debtValue,
-    //   this.currentPrice,
-    //   this.liquidationRatio
-    // );
     return this._liquidationPrice.toBigNumber();
   }
 
