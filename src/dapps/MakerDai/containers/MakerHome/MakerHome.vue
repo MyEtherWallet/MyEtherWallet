@@ -8,7 +8,7 @@
               {{ migrateOldDai }}
             </h2>
             <p class="button">
-              {{ $t('dappMaker.sai-to-dai') }}
+              {{ $t('dappsMaker.sai-to-dai') }}
               <img src="~@/assets/images/icons/right-arrow.png" />
             </p>
           </div>
@@ -20,7 +20,7 @@
           <div class="card-content">
             <h2 class="color-white">{{ migrateOldCDP }}</h2>
             <p class="button">
-              {{ $t('dappMaker.migrate') }}
+              {{ $t('dappsMaker.migrate') }}
               <img src="~@/assets/images/icons/right-arrow.png" />
             </p>
           </div>
@@ -36,7 +36,7 @@
               {{ manage }}
             </h2>
             <p class="button">
-              {{ $t('dappMaker.manage') }}
+              {{ $t('dappsMaker.manage') }}
               <img src="~@/assets/images/icons/right-arrow.png" />
             </p>
           </div>
@@ -54,7 +54,7 @@
           <div class="card-content">
             <h2 class="color-white">{{ create }}</h2>
             <p class="button">
-              {{ $t('dappMaker.create') }}
+              {{ $t('dappsMaker.create') }}
               <img src="~@/assets/images/icons/right-arrow.png" />
             </p>
           </div>
@@ -76,7 +76,7 @@
               {{ save }}
             </h2>
             <p class="button">
-              {{ $t('dappMaker.save') }}
+              {{ $t('dappsMaker.save') }}
               <img src="~@/assets/images/icons/right-arrow.png" />
             </p>
           </div>
