@@ -54,6 +54,7 @@
         </div>
         <div class="to-address">
           <dropdown-address-selector
+            :clear-address="clearAddress"
             :title="$t('sendTx.to-addr')"
             @toAddress="getToAddress($event)"
           />
@@ -240,7 +241,8 @@ export default {
       gasLimit: '21000',
       toData: '',
       selectedCurrency: '',
-      ethPrice: 0
+      ethPrice: 0,
+      clearAddress: false
     };
   },
 
@@ -413,6 +415,7 @@ export default {
       this.gasLimit = '21000';
       this.isValidAddress = false;
       this.advancedExpand = false;
+      this.clearAddress = !this.clearAddress;
       this.selectedCurrency = {
         name: 'Ethereum',
         symbol: 'ETH'
