@@ -36,7 +36,7 @@
         />
         <div v-if="!isValidAddress" class="blockie-place-holder-image" />
         <div v-if="isValidAddress" class="selected-address-blockie">
-          <blockie :address="selectedAddress" width="30px" height="30px" />
+          <blockie :address="hexAddress" width="30px" height="30px" />
           <div v-if="isToken(currency)">
             <img
               :alt="$t('common.currency.ethereum')"
@@ -116,14 +116,11 @@
 <script>
 import '@/assets/images/currency/coins/asFont/cryptocoins.css';
 import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
-import debugLogger from 'debug';
-import WAValidator from 'wallet-address-validator';
 import Blockie from '@/components/Blockie';
 import { EthereumTokens, BASE_CURRENCY } from '@/partners';
 import { mapState } from 'vuex';
 import { Toast } from '@/helpers';
 import { isAddress } from '@/helpers/addressUtils';
-const errorLogger = debugLogger('v5:error');
 
 export default {
   components: {
@@ -137,6 +134,10 @@ export default {
     currency: {
       type: String,
       default: 'ETH'
+    },
+    clearAddress: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -160,6 +161,11 @@ export default {
     }
   },
   watch: {
+    clearAddress() {
+      this.selectedAddress = '';
+      this.isValidAddress = false;
+      this.hexAddress = '';
+    },
     currentAddress(address) {
       if (this.addresses.findIndex(addr => addr.address === address) === -1) {
         this.updateAddresses(address);
@@ -168,8 +174,8 @@ export default {
     addressBook() {
       this.updateAddresses(this.currentAddress);
     },
-    selectedAddress(address) {
-      this.validateAddress(address);
+    hexAddress() {
+      this.validateAddress();
     },
     currency() {
       this.validateAddress(this.selectedAddress);
@@ -241,30 +247,13 @@ export default {
       this.dropdownOpen = !this.dropdownOpen;
       this.selectedAddress = address;
     },
-    validateAddress(addr) {
-      if (this.selectedAddress !== '') {
-        const checkAddress = addr.address ? addr.address : addr;
-        if (EthereumTokens[this.currency]) {
-          this.isValidAddress = WAValidator.validate(checkAddress, 'ETH');
-        } else {
-          try {
-            this.isValidAddress = WAValidator.validate(
-              checkAddress,
-              this.currency
-            );
-          } catch (e) {
-            errorLogger(e);
-            this.isValidAddress = false;
-          }
-        }
-
-        if (this.isValidAddress) {
-          this.$emit('toAddress', { address: checkAddress, valid: true });
-          this.$emit('validAddress', true);
-        } else {
-          this.$emit('toAddress', { address: '', valid: false });
-          this.$emit('validAddress', false);
-        }
+    validateAddress() {
+      if (this.isValidAddress) {
+        this.$emit('toAddress', { address: this.hexAddress, valid: true });
+        this.$emit('validAddress', true);
+      } else {
+        this.$emit('toAddress', { address: '', valid: false });
+        this.$emit('validAddress', false);
       }
     }
   }
