@@ -72,7 +72,11 @@ export default class MakerCdpBase {
   }
 
   get collateralAmount() {
-    return this._collateralAmount.toBigNumber();
+    try {
+      return this._collateralAmount.toBigNumber();
+    } catch (e) {
+      return '--';
+    }
   }
 
   get _collateralAmount() {
@@ -83,7 +87,11 @@ export default class MakerCdpBase {
   }
 
   get collateralAvailable() {
-    return this._collateralAvailable.toBigNumber();
+    try {
+      return this._collateralAvailable.toBigNumber();
+    } catch (e) {
+      return '--';
+    }
   }
 
   get _collateralAvailable() {
@@ -103,13 +111,14 @@ export default class MakerCdpBase {
   }
 
   get collateralValue() {
-    return this._collateralValue.toBigNumber();
+    try {
+      return this._collateralValue.toBigNumber();
+    } catch (e) {
+      return '--';
+    }
   }
 
   get _collateralValue() {
-    if (this.override['collateralValue']) {
-      return this.override['collateralValue'];
-    }
     return daiMath.collateralValue(
       this._collateralAmount,
       this.cdpTypeObject.price
@@ -117,13 +126,14 @@ export default class MakerCdpBase {
   }
 
   get collateralizationRatio() {
-    return this._collateralizationRatio.toBigNumber();
+    try {
+      return this._collateralizationRatio.toBigNumber();
+    } catch (e) {
+      return '--';
+    }
   }
 
   get _collateralizationRatio() {
-    if (this.override['collateralizationRatio']) {
-      return this.override['collateralizationRatio'];
-    }
     return daiMath.collateralizationRatio(
       this._collateralValue,
       this._debtValue
@@ -144,12 +154,16 @@ export default class MakerCdpBase {
 
   get debtValue() {
     if (this.cdp) {
-      if (this.override['debtValue']) {
-        return this._debtValue.toBigNumber();
+      try {
+        if (this.override['debtValue']) {
+          return this._debtValue.toBigNumber();
+        }
+        return toBigNumber(
+          toBigNumber(this._debtValue.toBigNumber()).toFixed(18)
+        );
+      } catch (e) {
+        return '--';
       }
-      return toBigNumber(
-        toBigNumber(this._debtValue.toBigNumber()).toFixed(18)
-      );
     }
     return toBigNumber(0);
   }
@@ -173,7 +187,11 @@ export default class MakerCdpBase {
   }
 
   get ethCollateral() {
-    return this._ethCollateral.toBigNumber();
+    try {
+      return this._ethCollateral.toBigNumber();
+    } catch (e) {
+      return '--';
+    }
   }
 
   get _ethCollateral() {
@@ -198,7 +216,9 @@ export default class MakerCdpBase {
 
   get liquidationPenalty() {
     if (this.cdp) {
-      return toBigNumber(this.cdp.type.liquidationPenalty);
+      if (this.cdp.type) {
+        return toBigNumber(this.cdp.type.liquidationPenalty);
+      }
     }
     const rawType = this.mcdManager
       .get('mcd:cdpType')
@@ -222,7 +242,11 @@ export default class MakerCdpBase {
   }
 
   get liquidationPrice() {
-    return this._liquidationPrice.toBigNumber();
+    try {
+      return this._liquidationPrice.toBigNumber();
+    } catch (e) {
+      return '--';
+    }
   }
 
   get _liquidationPrice() {

@@ -65,7 +65,7 @@ export default class MakerCDP extends MakerCdpBase {
     }
   }
 
-  async getValuesFromChain(retrieve = []) {
+  async getValuesFromChain() {
     if (!this.afterInitialization) {
       this.afterInitialization = !this.afterInitialization;
       return;
@@ -78,19 +78,13 @@ export default class MakerCDP extends MakerCdpBase {
         urns.ink
       );
     }
-    if (retrieve.includes('collateralValue')) {
-      this.override['collateralValue'] = '';
-    }
-    if (retrieve.includes('collateralizationRatio')) {
-      this.override['collateralizationRatio'] = '';
-    }
+
     // todo: think about whether the type of update should be recorded and then used to determine which override to create
     // Mostly about reducing chain calls.  if the value doesn't need a particular call. it can be skipped.
-    const calculatedDebt = daiMath.debtValue(
+    this.override['debtValue'] = daiMath.debtValue(
       urns.art,
       this.dustValues[this.cdpCollateralType].rate
     );
-    this.override['debtValue'] = calculatedDebt;
   }
 
   async update() {
@@ -170,8 +164,7 @@ export default class MakerCDP extends MakerCdpBase {
 
   async checkIfDestAddressHasProxy(address) {
     await this.getProxy();
-    const proxy = await this.proxyService.getProxyAddress(address);
-    return proxy;
+    return await this.proxyService.getProxyAddress(address);
   }
 
   collateralOptions() {
@@ -329,7 +322,6 @@ export default class MakerCDP extends MakerCdpBase {
 
   async openCdp(type, ethQty, daiQty) {
     if (ethQty <= 0) return 0;
-    // --------------------------
     this.opening = true;
     this.needsUpdate = true;
     // TODO structure to accept multiple currencies
