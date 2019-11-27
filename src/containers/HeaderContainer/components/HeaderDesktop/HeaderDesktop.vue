@@ -28,7 +28,7 @@
                 <v-list-item-content>
                   <v-list-item-title class="subtitle-2">
                     <router-link
-                      class="text-decoration-none"
+                      class="text-decoration--none"
                       to="/about-us/company"
                       >Company</router-link
                     >
@@ -40,7 +40,7 @@
                 <v-list-item-content>
                   <v-list-item-title class="subtitle-2">
                     <router-link
-                      class="text-decoration-none"
+                      class="text-decoration--none"
                       to="/about-us/team"
                       >Team</router-link
                     >
@@ -52,7 +52,7 @@
                 <v-list-item-content>
                   <v-list-item-title class="subtitle-2">
                     <a
-                      class="text-decoration-none"
+                      class="text-decoration--none"
                       href="https://www.mewtopia.com/"
                       target="_blank"
                       >MEWtopia</a

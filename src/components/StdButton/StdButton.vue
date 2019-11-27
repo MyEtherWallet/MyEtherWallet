@@ -4,7 +4,7 @@
     dark
     depressed
     class="std-button"
-    :class="buttonclass"
+    :class="[buttonclass, minwidth == true ? 'btn-min-width' : '']"
     :disabled="disabled"
   >
     <slot class="d-flex align-center" />
@@ -15,7 +15,8 @@
 export default {
   props: {
     buttonclass: { default: 'button--green', type: String },
-    disabled: { default: false, type: Boolean }
+    disabled: { default: false, type: Boolean },
+    minwidth: { default: true, type: Boolean }
   },
   data: () => ({})
 };
@@ -24,11 +25,13 @@ export default {
 <style lang="scss" scoped>
 @import '@/assets/styles/GlobalVariables.scss';
 
+.btn-min-width {
+  min-width: 180px !important;
+}
+
 .std-button {
   height: 60px !important;
-  min-width: 180px !important;
   text-transform: none;
-  //letter-spacing: -0.1px;
   letter-spacing: 0px;
   font-size: 14px !important;
   font-weight: 600;

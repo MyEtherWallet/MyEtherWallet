@@ -16,7 +16,7 @@ a {
 }
 
 i {
-  font-family: 'Material Icons' !important;
+  font-family: "Material Icons" !important;
 }
 
 div,
@@ -91,8 +91,12 @@ h5 {
   text-transform: initial;
 }
 
-.text-decoration-none {
-  text-decoration: none;
+.text-decoration--none {
+  text-decoration: none !important;
+}
+
+.text-color--mew-green {
+  color: $emerald !important;
 }
 
 .font-weight--600 {
@@ -101,4 +105,20 @@ h5 {
 
 .font-weight--500 {
   font-weight: 500 !important;
+}
+
+.border-radius--5px {
+  border-radius: 5px !important;
+}
+
+.border-radius--10px {
+  border-radius: 10px !important;
+}
+
+.overflow--hidden {
+  overflow: hidden !important;
+}
+
+.user-select--none {
+  user-select: none;
 }
