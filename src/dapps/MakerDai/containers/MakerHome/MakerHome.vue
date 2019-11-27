@@ -125,7 +125,6 @@ export default {
   computed: {
     loadingMessage() {
       return this.loadingState;
-      // return `Loading: ${this.loadingState}`
     },
     hasCdps() {
       return this.cdps.length > 0;
@@ -207,7 +206,6 @@ export default {
               }
             });
           } else if (this.showManage) {
-            // The listing screen may not work and can be removed
             this.$router.push({
               name: 'select'
             });

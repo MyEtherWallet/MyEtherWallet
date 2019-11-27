@@ -55,8 +55,6 @@ import { addresses, migrateABI, ERC20 } from '../../makerHelpers';
 import ethUnit from 'ethjs-unit';
 import { Toast } from '@/helpers';
 
-// const KOVAN_SERVER_URL = 'https://sai-kovan.makerfoundation.com/v1';
-
 const toBigNumber = num => {
   return new BigNumber(num);
 };

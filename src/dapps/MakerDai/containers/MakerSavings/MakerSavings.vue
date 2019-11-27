@@ -377,9 +377,7 @@ export default {
             .then(res => {
               this.proxyAddress = res;
             });
-          // return this.proxyAddress;
         }
-        // return this.proxyAddress;
       }
     },
     adapterAddress(ilk) {
@@ -418,31 +416,6 @@ export default {
           this.proxyAddress
         );
       }
-      // this.getValueOrFunction('tokens')['DAI'].approveUnlimited(this.proxyAddress);
-
-      // const contract = new this.web3.eth.Contract(ERC20, addresses.MCD_DAI);
-      //
-      // await contract.methods.approve(this.proxyAddress, val).send();
-
-      // return {
-      //   from: this.account.address,
-      //   to: addresses.MCD_DAI,
-      //   value: 0,
-      //   data: data
-      // };
-    },
-    async submitTransaction() {
-      // window.scrollTo(0, 0);
-      // try {
-      //   const val = ethUnit.toWei(this.daiQty, 'ether').toString();
-      //   const txs = await Promise.all([this.approve(val), this.migrate(val)]);
-      //
-      //   this.web3.mew.sendBatchTransactions(txs).catch(err => {
-      //     Toast.responseHandler(err, Toast.ERROR);
-      //   });
-      // } catch (e) {
-      //   Toast.responseHandler(e, Toast.ERROR);
-      // }
     },
     displayPercentValue(raw) {
       if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);

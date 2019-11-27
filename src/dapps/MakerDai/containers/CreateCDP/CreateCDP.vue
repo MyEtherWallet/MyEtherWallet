@@ -325,12 +325,8 @@ export default {
             return false;
         } else if (toBigNumber(this.collatRatio).lte(1.501)) return false;
         return this.hasEnoughEth;
-        // return toBigNumber(ethUnit.toWei(this.ethQty, 'ether').toString()).lte(
-        //   this.account.balance
-        // );
       }
       return false;
-      // return true;
     },
     hasEnoughEth() {
       if (this.emptyMakerCreated) {
@@ -505,7 +501,6 @@ export default {
       return toUsd;
     },
     hasEnough() {
-      // return true;
       if (this.makerCDP) {
         return this.makerCDP.hasEnough(
           this.ethQty,
