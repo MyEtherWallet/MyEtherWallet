@@ -47,7 +47,7 @@
         <p class="terms">
           {{ $t('mewcx.by-entering-pw') }}
           <a
-            href="https://www.myetherwallet.com/terms-and-conditions"
+            href="https://www.myetherwallet.com/terms-of-service"
             target="_blank"
             rel="noopener noreferrer"
           >

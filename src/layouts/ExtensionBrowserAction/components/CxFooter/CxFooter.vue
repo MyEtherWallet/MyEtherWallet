@@ -170,7 +170,7 @@ export default {
         },
         {
           title: this.$t('common.terms'),
-          to: '/terms-and-conditions'
+          to: '/terms-of-service'
         },
         {
           title: `v${version}`,
