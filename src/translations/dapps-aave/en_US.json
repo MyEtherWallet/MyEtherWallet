@@ -14,5 +14,16 @@
   "available": "Available",
   "no-data": "No data to show yet",
   "apr": "APR",
-  "total": "Total"
+  "total": "Total",
+  "loan-value": "Loan to value",
+  "search-tokens": "Search token",
+  "type-token": "Type of token",
+  "all": "All",
+  "stable": "Stable",
+  "token": "Token",
+  "avail-balance": "Available Balance",
+  "deposited": "Deposited",
+  "avail-for-you": "Available for you",
+  "stable-apr": "Stable APR",
+  "variable-apr": "Variable APR"
 }

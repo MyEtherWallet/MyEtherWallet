@@ -93,3 +93,27 @@
     margin-top: 15px;
   }
 }
+
+.loan-container {
+  align-items: center;
+  background-color: $light-green-1;
+  border-radius: 7px;
+  display: flex;
+  height: 45px;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding: 0 25px;
+  width: 100%;
+
+  .loan-value {
+    font-size: 16px;
+    font-weight: 600;
+    color: $light-grey-18;
+  }
+
+  .loan-percent {
+    font-size: 14px;
+    color: $dark-blue-6;
+    font-weight: 600;
+  }
+}
