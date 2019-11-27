@@ -111,6 +111,8 @@
   "not-enough-funds": "You have insufficient funds.",
   "dai-savings-rate": "Dai Savings rate: {value}%",
   "entire-sai-balance": "Entire SAI Balance",
+  "entire-dai-balance": "Entire DAI Balance",
+  "entire-deposit-balance": "Entire Deposit Balance",
   "create-a-vault": "Create a Vault",
   "manage-your-vault": "Manage Your Vault",
   "vault-id": "VAULT ID",
@@ -135,7 +137,17 @@
   "vault-closed": "Vault Closed",
   "withdraw-question-mcd": "How much {symbol} would you like to withdraw?",
   "deposit-question-mcd": "How much {symbol} would you like to deposit?",
-  "migrate-old-dai-to-new-dai": "Migrate 'old' DAI to 'new' DAI",
+  "migrate-old-dai-to-new-dai": "Upgrade 'old' DAI to 'new' DAI",
   "dai-savings": "Dai Savings",
-  "not-enough-token": "Not enough {symbol}"
+  "not-enough-token": "Not enough {symbol}",
+  "deposited-amount": "Deposited: {value}",
+  "create-vault-proxy": "Deploy Proxy",
+  "create-proxy-info-message": "Setting up your proxy will bundle multiple transactions into one, saving transaction time and gas costs. This only has to be done once.",
+  "savings-set-allowance": "Set Allowance",
+  "savings-set-allowance-info": "This permission allows Maker to interact with your DAI. This has to be done once for each new collateral type.",
+  "setup": "Setup",
+  "set": "Set",
+  "earn-with-dai": "Earn savings on your Dai",
+  "dai-stable-coin": "DAI Stablecoin",
+  "what-is-dashes-vault": "A value of -- indicates this Vault has no DAI so these calculations are only meaningful if this Vault has created DAI"
 }

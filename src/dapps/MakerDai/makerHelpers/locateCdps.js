@@ -4,7 +4,10 @@ import { getCdpIds } from './chainCalls';
 async function locateCdps(self) {
   self.cdpsWithoutProxy = [];
   self.cdps = [];
-  const cdps = await getCdpIds(self.web3, self.proxyAddress);
+  let cdps = [];
+  if (self.proxyAddress) {
+    cdps = await getCdpIds(self.web3, self.proxyAddress);
+  }
 
   self.allCdpIds = [...cdps].map(entry =>
     typeof entry !== 'number' ? entry.id : entry
@@ -28,7 +31,10 @@ async function locateOldCdps(self, _cdpService) {
   self.cdpsWithoutProxy = [];
   const cdpsWithoutProxy = await locateCdpsWithoutProxy(self, _cdpService);
   self.cdps = [];
-  const cdps = await locateCdpsProxy(self, _cdpService);
+  let cdps = [];
+  if (self.proxyAddress) {
+    cdps = await locateCdpsProxy(self, _cdpService);
+  }
 
   self.allCdpIds = [...cdpsWithoutProxy, ...cdps].map(entry =>
     typeof entry !== 'number' ? entry.id : entry

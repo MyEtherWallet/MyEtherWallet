@@ -15,7 +15,7 @@
         <div class="dropdown-text-container dropdown-container no-point">
           <p>
             <span class="cc DAI cc-icon cc-icon-dai currency-symbol" />
-            {{ $t('dappsMaker.SAI') }}
+            {{ $t('dappsMaker.sai') }}
           </p>
         </div>
         <input
