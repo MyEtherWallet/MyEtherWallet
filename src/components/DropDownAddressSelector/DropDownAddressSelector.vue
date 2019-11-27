@@ -252,7 +252,6 @@ export default {
         this.$emit('toAddress', { address: this.hexAddress, valid: true });
         this.$emit('validAddress', true);
       } else {
-        console.error('hello');
         this.$emit('toAddress', { address: '', valid: false });
         this.$emit('validAddress', false);
       }
