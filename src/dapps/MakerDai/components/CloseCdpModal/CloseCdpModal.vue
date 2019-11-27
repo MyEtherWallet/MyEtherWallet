@@ -352,8 +352,6 @@ export default {
       if (this.currentCdp) {
         this.delayCloseModal();
       }
-
-      // this.$emit('closeCdp');
     },
     displayPercentValue(raw) {
       if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);

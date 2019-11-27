@@ -10,8 +10,6 @@ import Blockie from '@/components/Blockie';
 import BigNumber from 'bignumber.js';
 import SelectCdpEntry from '../../components/SelectCdpEntry';
 
-const KOVAN_SERVER_URL = 'https://sai-kovan.makerfoundation.com/v1';
-
 const toBigNumber = num => {
   return new BigNumber(num);
 };
@@ -54,7 +52,6 @@ export default {
   data() {
     return {
       loaded: false,
-      serverUrl: KOVAN_SERVER_URL,
       wethToPethRatio: 0,
       daiPrice: 0,
       priceFloor: 0,

@@ -281,7 +281,6 @@ export default {
       valuesUpdated: 0,
       currentPath: '/interface/dapps/',
       afterLoadShow: 'HOME'
-      // MCD
     };
   },
   computed: {
@@ -540,7 +539,6 @@ export default {
     async loadCdpDetail(cdpId) {
       return loadCdpDetail(this, cdpId);
     },
-    // TODO doulble check the vue object observer bug isn't back
     async loadCdpDetails(
       cdps = this.cdps,
       cdpsWithoutProxy = this.cdpsWithoutProxy
@@ -664,7 +662,6 @@ export default {
       }
 
       this.setupMCD();
-      // -------------------------------------------------
       try {
         await this.maker.authenticate();
         this.curentlyLoading = this.$t('dappsMaker.loading-system');
@@ -679,7 +676,6 @@ export default {
 
         await checkAllowances(this, this.account.address, this.proxyAddress);
 
-        // TODO update usages to use the balances and tokens objects
         this.daiToken = this.tokens['DAI'];
         this.daiBalance = this.balances['DAI'];
         this.mkrToken = this.tokens['MKR'];

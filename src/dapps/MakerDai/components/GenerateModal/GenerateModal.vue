@@ -323,12 +323,9 @@ export default {
       if (toBigNumber(this.amount).gte(0)) {
         this.delayCloseModal();
         if (this.newCollateralRatioSafe) {
-          // this.currentCdp.drawDai(this.amount, true)
           this.currentCdp.drawDai(this.amount, this.riskyBypass);
-          // this.$emit('drawDai', [this.amount, null]);
         } else {
           this.currentCdp.drawDai(this.amount, this.riskyBypass);
-          // this.$emit('drawDai', [this.amount, this.currentCdp.drawDai(this.amount)]);
         }
       }
     },
@@ -340,7 +337,6 @@ export default {
         this.closeModal();
       }, 200);
     },
-    //---------------
     collateralAmount() {
       if (this.currentCdp) {
         return this.currentCdp.collateralAmount;

@@ -228,7 +228,6 @@ export default {
   },
   computed: {
     ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
-    // ===========================================================================================================
     amountPresent() {
       return (
         (this.amount || this.amount !== '') && !toBigNumber(this.amount).lte(0)
@@ -307,7 +306,6 @@ export default {
   },
   watch: {
     amount() {
-      // hack
       if (!toBigNumber(this.amount).gte(this.currentCdp.debtValue.minus(1))) {
         this.max = false;
       }
@@ -387,7 +385,6 @@ export default {
       }
       return 0;
     },
-    // =========================================
     daiBalance() {
       if (this.currentCdp) {
         return this.currentCdp.getBalanceOf('MDAI');

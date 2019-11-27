@@ -468,7 +468,6 @@ export default {
     },
     valuesUpdated() {
       this.updatedValue++;
-      // this.getActiveCdp();
     },
     openCloseModal(val) {
       if (val) {
@@ -487,7 +486,6 @@ export default {
     },
     ['$route.params']() {
       this.updatedValue++;
-      // this.$emit('activeCdpId', this.cdpId);
       this.getActiveCdp();
     }
   },

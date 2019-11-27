@@ -178,8 +178,6 @@ export default {
       this.cdpDetailsLoaded = true;
       this.cdps = withProxy.concat(withoutProxy);
     },
-    //TODO use seth to get tokens (MCD_GOV is maker address for deployments)
-    // TODO: look at and follow: https://github.com/makerdao/developerguides/blob/master/mcd/upgrading-to-multi-collateral-dai/cli-mcd-migration.md#migrating-cdps
     async beginMigration() {
       if (this.selectedCdp !== 0) {
         this.proxyAddress = this.getValueOrFunction('proxyAddress');

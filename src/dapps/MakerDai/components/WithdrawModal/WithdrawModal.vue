@@ -292,7 +292,6 @@ export default {
         this.$forceUpdate();
       }
     },
-    // --------------------------------------------
     collateralAmount() {
       if (this.currentCdp) {
         return this.currentCdp.collateralAmount;
@@ -362,7 +361,6 @@ export default {
       }
       return 0;
     },
-    // ------------------------------------------
     getProxyAllowances() {
       const allowances = this.getValueOrFunction('proxyAllowances');
       if (allowances) {
