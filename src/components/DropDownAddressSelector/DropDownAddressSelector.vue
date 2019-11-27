@@ -36,7 +36,7 @@
         />
         <div v-if="!isValidAddress" class="blockie-place-holder-image" />
         <div v-if="isValidAddress" class="selected-address-blockie">
-          <blockie :address="selectedAddress" width="30px" height="30px" />
+          <blockie :address="hexAddress" width="30px" height="30px" />
           <div v-if="isToken(currency)">
             <img
               :alt="$t('common.currency.ethereum')"
