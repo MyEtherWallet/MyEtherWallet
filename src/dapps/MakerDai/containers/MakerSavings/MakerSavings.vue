@@ -405,6 +405,7 @@ export default {
         this.allowanceChecked = true;
         return val;
       }
+      this.allowanceChecked = true;
       return 0;
     },
     async setAllowance() {
