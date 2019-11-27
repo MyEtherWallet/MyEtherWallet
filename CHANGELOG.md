@@ -17,6 +17,7 @@
 - Address book [#1647](https://github.com/MyEtherWallet/MyEtherWallet/pull/1647)
 - Add MEWconnect footer link [#1675](https://github.com/MyEtherWallet/MyEtherWallet/pull/1675)
 - Add clear btn to forms [#1673](https://github.com/MyEtherWallet/MyEtherWallet/pull/1673)
+- Update TOS [[#1685](https://github.com/MyEtherWallet/MyEtherWallet/pull/1685)
 
 ### Release v5.2.4
 
