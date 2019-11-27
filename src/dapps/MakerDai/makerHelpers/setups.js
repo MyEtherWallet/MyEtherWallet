@@ -41,21 +41,22 @@ export async function setupServices(self, maker) {
 export async function setupPriceAndRatios(self, _priceService, _cdpService) {
   self.pethMin = toBigNumber(0.005);
 
-  self.ethPrice = toBigNumber((await _priceService.getEthPrice()).toNumber());
-
-  self.pethPrice = toBigNumber((await _priceService.getPethPrice()).toNumber());
-
-  self._targetPrice = toBigNumber(
-    (await _priceService.getPethPrice()).toNumber()
-  );
-
-  self.liquidationRatio = toBigNumber(await _cdpService.getLiquidationRatio());
-  self.liquidationPenalty = toBigNumber(
-    await _cdpService.getLiquidationPenalty()
-  );
-  self.stabilityFee = toBigNumber(await _cdpService.getAnnualGovernanceFee());
-
-  self.wethToPethRatio = toBigNumber(await _priceService.getWethToPethRatio());
+  const result = await Promise.all([
+    _priceService.getEthPrice(),
+    _priceService.getPethPrice(),
+    _priceService.getPethPrice(),
+    _cdpService.getLiquidationRatio(),
+    _cdpService.getLiquidationPenalty(),
+    _cdpService.getAnnualGovernanceFee(),
+    _priceService.getWethToPethRatio()
+  ]);
+  self.ethPrice = toBigNumber(result[0].toNumber());
+  self.pethPrice = toBigNumber(result[1].toNumber());
+  self._targetPrice = toBigNumber(result[2].toNumber());
+  self.liquidationRatio = toBigNumber(result[3]);
+  self.liquidationPenalty = toBigNumber(result[4]);
+  self.stabilityFee = toBigNumber(result[5]);
+  self.wethToPethRatio = toBigNumber(result[6]);
   return self;
 }
 
@@ -63,9 +64,14 @@ export async function getDetailsForTokens(self, collateralTokens) {
   self.balances = {};
   self.tokens = {};
   self.daiToken = self._tokenService.getToken(DAI);
-  self.daiBalance = (await self.daiToken.balance()).toBigNumber();
+  self.daiToken.balance().then(res => {
+    self.daiBalance = res.toBigNumber();
+  });
+
   self.mkrToken = self._tokenService.getToken(MKR);
-  self.mkrBalance = (await self.mkrToken.balance()).toBigNumber();
+  self.mkrToken.balance().then(res => {
+    self.mkrBalance = res.toBigNumber();
+  });
 
   for (let i = 0; i < collateralTokens.length; i++) {
     const token = self._tokenService.getToken(collateralTokens[i].currency);
