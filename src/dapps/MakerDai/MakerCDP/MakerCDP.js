@@ -313,8 +313,6 @@ export default class MakerCDP extends MakerCdpBase {
     return this.services.toPeth(eth);
   }
 
-  updateBalanceFor(token) {}
-
   // ***********************************************************************************************
   // Interaction / Operation methods
   // ***********************************************************************************************
