@@ -1,6 +1,7 @@
 <template>
   <div>
     <dropdown-address-selector
+      :clear-address="clearAddress"
       :title="$t('sendTx.to-addr')"
       @toAddress="getToAddress($event)"
     />
