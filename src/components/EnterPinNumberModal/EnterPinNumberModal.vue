@@ -45,7 +45,7 @@
               }}
               <br />
               {{ $t('accessWallet.pin.accept') }}
-              <router-link to="/terms-and-conditions">
+              <router-link to="/terms-of-service">
                 {{ $t('accessWallet.pin.terms') }}
               </router-link>
             </label>
