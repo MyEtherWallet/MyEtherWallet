@@ -17,21 +17,15 @@
             </div>
 
             <div class="amount-block">
-              <!--              <div class="icon">-->
-              <!--                <img src="~@/assets/images/currency/eth.svg" />-->
-              <!--              </div>-->
-              <i
-                v-if="getIcon(currency) !== ''"
-                :class="['icon', 'cc', getIcon(currency), 'cc-icon']"
-              />
-              <div v-if="getIcon(currency) === ''" class="icon">
-                <img :src="iconFetcher(currency)" />
+              <div class="icon">
+                <i
+                  v-if="getIcon(currency) !== ''"
+                  :class="['icon', 'cc', getIcon(currency), 'cc-icon']"
+                />
               </div>
+
               <div class="amount">
                 {{ collateral }}<span>{{ currency }}</span>
-              </div>
-              <div class="amount">
-                {{ collateral }}<span>{{ $t('common.currency.eth') }}</span>
               </div>
             </div>
           </div>
@@ -56,11 +50,11 @@
           <expanding-option :title="$t('dappsMaker.details')">
             <ul>
               <li>
-                <p>{{ $t('dappsMaker.liquidPrice') }} ({{ currency }}/USD)</p>
+                <p>{{ $t('dappsMaker.liquid-price') }} ({{ currency }}/USD)</p>
                 <p class="bold">{{ liquidationPrice }} USD</p>
               </li>
               <li>
-                <p>{{ $t('dappsMaker.currentPrice') }} ({{ currency }}/USD)</p>
+                <p>{{ $t('dappsMaker.current-price') }} ({{ currency }}/USD)</p>
                 <p>{{ currentPrice }} USD</p>
               </li>
               <li>
@@ -140,7 +134,7 @@ export default {
   data() {
     return {
       confirmButton: {
-        title: this.$t('dappsMaker.confirm-and-create'),
+        title: this.$t('dappsMaker.confirm-and-create-vault'),
         buttonStyle: 'green',
         helpCenter: true
       }

@@ -34,14 +34,6 @@
                 {{ $t('dappsMaker.dai') }}
               </p>
             </li>
-            <!--            <li>
-              <p>{{ $t('dappsMaker.stability-fee-owed') }}</p>
-              <p>
-                <b>{{ values.governanceFeeOwed }}</b>
-                {{ $t('dappsMaker.mkr') }}
-                <b>&lt;!&ndash;{{ governanceFeeOwed() }}&ndash;&gt;&#45;&#45; </b> MKR
-              </p>
-            </li>-->
             <li>
               <p>{{ $t('dappsMaker.projected-liquidation') }}</p>
               <p>

@@ -3,9 +3,9 @@
     <div v-show="!finishMigration" class="manage-container">
       <!-- ==================================================== -->
       <div class="title-content-container">
-        <p class="cpd-title">{{ $t('dappsMaker.cdp-portal') }}</p>
+        <p class="cpd-title">{{ $t('dappsMaker.vault-portal') }}</p>
         <p class="cdp-id">
-          {{ $t('dappsMaker.position-label', { value: cdpIdDisplay }) }}
+          {{ $t('dappsMaker.vault-position-label', { value: cdpIdDisplay, symbol: vaultType }) }}
         </p>
       </div>
       <!-- ==================================================== -->
@@ -307,7 +307,8 @@ export default {
       maxDaiDraw: toBigNumber(0),
       maxWithDraw: toBigNumber(0),
       maxWithDrawUSD: toBigNumber(0),
-      maxEthDraw: toBigNumber(0)
+      maxEthDraw: toBigNumber(0),
+      vaultType: 'ETH-A'
     };
   },
   computed: {
@@ -487,6 +488,7 @@ export default {
       if (this.currentCdp) {
         this.currentCdpLoaded = true;
         this.$forceUpdate();
+        this.vaultType = this.currentCdp.cdpType;
       }
       this.getTotalDebt();
     },

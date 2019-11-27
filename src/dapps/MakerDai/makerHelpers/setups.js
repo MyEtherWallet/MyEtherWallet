@@ -308,6 +308,7 @@ export async function buildCdpObject(cdpId, options = {}, useOld = false) {
     _proxyService: this._proxyService,
     priceService: this.priceService,
     _cdpService: this._cdpService,
+    _tokenService: this._tokenService,
     doUpdate: this.doUpdate,
     getProxy: this.getProxy,
     hasProxy: this.hasProxy,

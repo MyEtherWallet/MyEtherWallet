@@ -62,7 +62,7 @@
           <div class="dropdown-text-container dropdown-container">
             <p>
               <span class="cc DAI cc-icon cc-icon-dai currency-symbol" />
-              DAI
+              {{$t('dappsMaker.DAI')}}
               <span class="subname">- Maker DAI </span>
             </p>
           </div>
@@ -79,11 +79,11 @@
           <div class="input-block-message">
             <p>
               {{ $t('dappsMaker.min-generate') }}
-              <b>{{ displayFixedValue(minCreate, 6) }}</b> DAI
+              <b>{{ displayFixedValue(minCreate, 6) }}</b> {{$t('dappsMaker.DAI')}}
             </p>
             <p>
               {{ $t('dappsMaker.max-generate') }}
-              <b>{{ displayFixedValue(maxDaiDraw, 6) }}</b> DAI
+              <b>{{ displayFixedValue(maxDaiDraw, 6) }}</b> {{$t('dappsMaker.DAI')}}
             </p>
           </div>
         </div>
@@ -107,14 +107,14 @@
           <li>
             <p>{{ $t('dappsMaker.liquid-price') }}</p>
             <p>
-              <b>{{ liquidationPrice }}</b> USD
+              <b>{{ liquidationPrice }}</b> {{$t('common.currency.USD')}}
             </p>
           </li>
           <li>
             <p>{{ $t('dappsMaker.current-price-info') }}</p>
             <p>
               {{ displayFixedValue(getCurrentPrice, 2) }}
-              USD
+              {{$t('common.currency.USD')}}
             </p>
           </li>
           <li>
@@ -170,7 +170,7 @@
           ]"
           @click="openDaiConfirmation"
         >
-          {{ $t('dappsMaker.collat-and-generate') }}
+          {{ $t('dappsMaker.collat-and-generate-vault') }}
         </div>
       </div>
     </div>
@@ -321,7 +321,7 @@ export default {
         if (this.emptyMakerCreated) {
           if (
             toBigNumber(this.collatRatio).lte(
-              this.makerCDP.liquidationRatio.plus(0.01)
+              this.makerCDP.liquidationRatio
             )
           )
             return false;
@@ -553,7 +553,9 @@ export default {
       );
     },
     approveCurrency() {
-      this.$emit('approveCurrency', this.selectedCurrency.symbol);
+      return this.makerCDP.approveProxyFor(
+        this.selectedCurrency.symbol
+      );
     }
   }
 };
