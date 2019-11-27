@@ -40,6 +40,7 @@
             </ul>
             <div class="to-address">
               <dropdown-address-selector
+                :clear-address="clearAddress"
                 :title="$t('sendTx.to-addr')"
                 @toAddress="getToAddress($event)"
               />
@@ -269,7 +270,8 @@ export default {
       signed: '{}',
       localNonce: this.nonce,
       file: '',
-      localGasPrice: this.highestGas
+      localGasPrice: this.highestGas,
+      clearAddress: false
     };
   },
   computed: {
@@ -351,6 +353,7 @@ export default {
       this.gasLimit = 21000;
       this.localNonce = this.nonce;
       this.localGasPrice = this.highestGas;
+      this.clearAddress = !this.clearAddress;
       this.selectedCoinType = {
         name: 'Ethereum',
         symbol: 'ETH'
