@@ -21,14 +21,13 @@
               <StdButton
                 buttonclass="button--green"
                 class="mr-4"
-                to="/create-wallet/mewconnect"
+                @click.native="linkToCreateWallet"
+                >Get a new wallet</StdButton
               >
-                Get a new wallet
-              </StdButton>
 
-              <StdButton buttonclass="button--green-border">
-                Access my wallet
-              </StdButton>
+              <StdButton buttonclass="button--green-border"
+                >Access my wallet</StdButton
+              >
             </div>
           </v-card>
         </v-col>
@@ -44,6 +43,14 @@ export default {
   name: 'HomeContainer',
   components: {
     StdButton
+  },
+  methods: {
+    linkToCreateWallet() {
+      this.$router.push({
+        path: '/create-wallet/mewconnect',
+        query: { step: '1' }
+      });
+    }
   }
 };
 </script>
