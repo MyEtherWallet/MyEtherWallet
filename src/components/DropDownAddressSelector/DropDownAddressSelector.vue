@@ -248,14 +248,13 @@ export default {
       this.selectedAddress = address;
     },
     validateAddress() {
-      if (this.hexAddress !== '') {
-        if (this.isValidAddress) {
-          this.$emit('toAddress', { address: this.hexAddress, valid: true });
-          this.$emit('validAddress', true);
-        } else {
-          this.$emit('toAddress', { address: '', valid: false });
-          this.$emit('validAddress', false);
-        }
+      if (this.isValidAddress) {
+        this.$emit('toAddress', { address: this.hexAddress, valid: true });
+        this.$emit('validAddress', true);
+      } else {
+        console.error('hello');
+        this.$emit('toAddress', { address: '', valid: false });
+        this.$emit('validAddress', false);
       }
     }
   }
