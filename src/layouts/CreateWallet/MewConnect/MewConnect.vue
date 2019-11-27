@@ -115,9 +115,9 @@ export default {
 
 .right-arrow {
   position: absolute;
-  top: -25px;
-  right: -10px;
-  width: 43px;
+  top: -36px;
+  right: -8px;
+  height: 117px;
   z-index: 1;
 }
 </style>
