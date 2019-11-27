@@ -32,9 +32,9 @@ export default class MakerCdpBase {
     this.migrated = false;
     this.migrateCdpActive = false;
     this.migrateCdpStage = 0;
-    this.cdpTypeObject = services._mcdManager
+    this.cdpTypeObject = services._mcdManager ? services._mcdManager
       .get('mcd:cdpType')
-      .getCdpType(null, this.cdpType);
+      .getCdpType(null, this.cdpType) : services.mcdCurrencies['ETH'];
     this._liqPrice = toBigNumber(0);
     this.isSafe = false;
     this._collatRatio = 0;

@@ -1,18 +1,21 @@
 <template>
   <div>
     <div class="currency-ops-new">
+      <div class="info-box">
+        {{$t('dappsMaker.upgrade-informational')}}
+      </div>
       <div class="currency-picker-container">
         <div class="interface__block-title">
           {{ $t('dappsMaker.upgrade-sai-to-dai') }}
           <img :src="DaiIcon" class="icon-size" />
         </div>
         <div class="top-buttons">
-          <p @click="setMax">{{ $t('dappsMaker.set-max') }}</p>
+          <p @click="setMax">{{ $t('dappsMaker.entire-sai-balance') }}</p>
         </div>
         <div class="dropdown-text-container dropdown-container no-point">
           <p>
             <span class="cc DAI cc-icon cc-icon-dai currency-symbol" />
-            SAI
+            {{$t('dappsMaker.SAI')}}
           </p>
         </div>
         <input
@@ -31,7 +34,7 @@
             ]"
             @click="submitTransaction"
           >
-            migrate
+            {{$t('dappsMaker.upgrade')}}
           </div>
         </div>
       </div>
@@ -135,7 +138,11 @@ export default {
       const saiEntry = this.tokensWithBalance.find(entry => {
         return entry.symbol === 'SAI';
       });
-      this.daiQty = saiEntry.balance;
+      if(!saiEntry){
+        this.daiQty = 0;
+      } else {
+        this.daiQty = saiEntry.balance;
+      }
     },
     async approve(val) {
       const contract = new this.web3.eth.Contract(ERC20, addresses.SAI);

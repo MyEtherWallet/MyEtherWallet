@@ -18,7 +18,7 @@
       <div class="card-block unlock-wallet" @click="migrateCDP">
         <div class="flex-col-vertical-center">
           <div class="card-content">
-            <h2 class="color-white">{{ migrateOldCDP }}</h2>
+            <h2 class="color-white">{{ $t('dappsMaker.migrate-single-collateral-to-multi-collateral') }}</h2>
             <p class="button">
               {{ $t('dappsMaker.migrate') }}
               <img src="~@/assets/images/icons/right-arrow.png" />
@@ -33,7 +33,7 @@
         <div v-show="makerActive" class="flex-col-vertical-center">
           <div class="card-content">
             <h2 class="color-white">
-              {{ manage }}
+              {{ $t('dappsMaker.manage-your-vault') }}
             </h2>
             <p class="button">
               {{ $t('dappsMaker.manage') }}
@@ -52,7 +52,7 @@
       <div class="card-block unlock-wallet" @click="gotoCreate">
         <div v-show="makerActive" class="flex-col-vertical-center">
           <div class="card-content">
-            <h2 class="color-white">{{ create }}</h2>
+            <h2 class="color-white">{{ $t('dappsMaker.create-a-vault') }}</h2>
             <p class="button">
               {{ $t('dappsMaker.create') }}
               <img src="~@/assets/images/icons/right-arrow.png" />

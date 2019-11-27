@@ -73,53 +73,53 @@
         <div v-if="showMoveOrClose" class="header-buttons-container">
           <div class="inner-container">
             <button class="move-btn" @click="showMove">
-              <h4>{{ $t('dappsMaker.move-title') }}</h4>
+              <h4>{{ $t('dappsMaker.move-vault') }}</h4>
             </button>
           </div>
         </div>
       </div>
     </back-button>
-    <div v-if="makerActive" class="buttons-container">
-      <div v-if="showCreateProxy">
-        <div class="dapps-button" @click="buildProxy">
-          <h4>{{ $t('dappsMaker.create-proxy') }}</h4>
-        </div>
-      </div>
-      <div v-if="showCreateProxy" class="proxy-container">
-        {{ $t('dappsMaker.proxy-instructions') }}
-      </div>
-      <div v-if="showCdpMigrateButtons">
-        <div v-for="(value, idx) in cdpsWithoutProxy" :key="idx + value">
-          <div class="dapps-button">
-            <div @click="migrateCdpExternal(value)">
-              <h4>
-                {{ $t('dappsMaker.migrate-cdp', { value: value }) }}
-              </h4>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div v-if="showCdpMigrateButtons" class="proxy-container">
-        {{ $t('dappsMaker.migrate-instructions') }}
-      </div>
-    </div>
-    <div v-show="makerActive" class="buttons-container">
-      <div v-if="showCreateProxy && cdpsWithoutProxy.length > 1">
-        <div v-for="(value, idx) in cdpsWithoutProxy" :key="idx + value">
-          <div
-            :class="[
-              'dapps-button',
-              activeValues.cdpId === value ? 'active' : ''
-            ]"
-          >
-            <div @click="openMigrate(value)">
-              <h4>{{ $t('dappsMaker.cdp') }} #{{ value }}</h4>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div v-show="makerActive && listCdps" class="buttons-container">
+<!--    <div v-if="makerActive" class="buttons-container">-->
+<!--      <div v-if="showCreateProxy">-->
+<!--        <div class="dapps-button" @click="buildProxy">-->
+<!--          <h4>{{ $t('dappsMaker.create-proxy') }}</h4>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div v-if="showCreateProxy" class="proxy-container">-->
+<!--        {{ $t('dappsMaker.proxy-instructions') }}-->
+<!--      </div>-->
+<!--      <div v-if="showCdpMigrateButtons">-->
+<!--        <div v-for="(value, idx) in cdpsWithoutProxy" :key="idx + value">-->
+<!--          <div class="dapps-button">-->
+<!--            <div @click="migrateCdpExternal(value)">-->
+<!--              <h4>-->
+<!--                {{ $t('dappsMaker.migrate-cdp', { value: value }) }}-->
+<!--              </h4>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div v-if="showCdpMigrateButtons" class="proxy-container">-->
+<!--        {{ $t('dappsMaker.migrate-instructions') }}-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div v-show="makerActive" class="buttons-container">-->
+<!--      <div v-if="showCreateProxy && cdpsWithoutProxy.length > 1">-->
+<!--        <div v-for="(value, idx) in cdpsWithoutProxy" :key="idx + value">-->
+<!--          <div-->
+<!--            :class="[-->
+<!--              'dapps-button',-->
+<!--              activeValues.cdpId === value ? 'active' : ''-->
+<!--            ]"-->
+<!--          >-->
+<!--            <div @click="openMigrate(value)">-->
+<!--              <h4>{{ $t('dappsMaker.vault-id') }} #{{ value }}</h4>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+    <div v-show="makerActive && listCdps && notMigrateCDP" class="buttons-container">
       <div v-for="(value, idx) in cdps" :key="idx + value">
         <div
           :class="[
@@ -128,7 +128,7 @@
           ]"
         >
           <div @click="openManage(value)">
-            <h4>{{ $t('dappsMaker.cdp') }} #{{ value }}</h4>
+            <h4>{{ $t('dappsMaker.vault-id') }} #{{ value }}</h4>
           </div>
         </div>
       </div>
@@ -323,6 +323,9 @@ export default {
   },
   computed: {
     ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
+    notMigrateCDP(){
+      return this.$route.name !== 'migrateCDP' && this.$route.name !== 'migrateDAI'
+    },
     maxDaiDraw() {
       if (this.ethQty <= 0) return 0;
       return bnOver(this.ethPrice, this.ethQty, this.liquidationRatio);
