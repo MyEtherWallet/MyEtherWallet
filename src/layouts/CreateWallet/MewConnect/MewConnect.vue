@@ -8,12 +8,19 @@
         class="mx-auto border-radius--10px"
         color="white"
       >
-        <div class="pa-6">
+        <div class="pt-6 pr-6 pl-6">
           <div
             class="step-progress-bar d-flex align-center text-center border-radius--5px overflow--hidden user-select--none"
           >
-            <div :class="tab == 'tab-1' ? stepActive : stepDone">
+            <div
+              :class="tab == 'tab-1' ? stepActive : stepDone"
+              class="position--relative"
+            >
               STEP 1. Download &amp; Install
+              <img
+                class="right-arrow"
+                src="@/assets/images/Etc/CreateWallet/RightArrow.svg"
+              />
             </div>
             <div
               :class="[
@@ -21,8 +28,13 @@
                 tab == 'tab-2' ? stepActive : '',
                 tab == 'tab-3' ? stepDone : ''
               ]"
+              class="position--relative"
             >
               STEP 2. Create a new wallet
+              <img
+                class="right-arrow"
+                src="@/assets/images/Etc/CreateWallet/RightArrow.svg"
+              />
             </div>
             <div :class="tab == 'tab-3' ? stepActive : stepUndone">
               STEP 3. Well done
@@ -46,7 +58,7 @@
       </v-sheet>
     </v-container>
     <div class="py-12" />
-    <div class="py-2" />
+    <div class="py-3" />
   </div>
 </template>
 
@@ -72,7 +84,25 @@ export default {
       centered: true
     },
     tab: 'tab-1'
-  })
+  }),
+  watch: {
+    $route() {
+      this.checkQueryStep();
+    }
+  },
+  mounted() {
+    this.checkQueryStep();
+  },
+  methods: {
+    checkQueryStep() {
+      const currentStep = this.$route.query.step;
+      if (currentStep) {
+        this.tab = 'tab-' + currentStep;
+      } else {
+        this.tab = 'tab-1';
+      }
+    }
+  }
 };
 </script>
 
@@ -81,5 +111,13 @@ export default {
   > div {
     width: 100%;
   }
+}
+
+.right-arrow {
+  position: absolute;
+  top: -25px;
+  right: -10px;
+  width: 43px;
+  z-index: 1;
 }
 </style>

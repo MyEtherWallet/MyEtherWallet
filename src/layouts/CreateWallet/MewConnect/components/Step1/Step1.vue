@@ -1,12 +1,8 @@
 <template>
-  <v-sheet class="d-flex align-end" min-height="350px">
-    <v-col cols="6">
-      <div class="subtitle-1 font-weight-bold grey--text">
-        STEP 1.
-      </div>
-      <div class="headline font-weight-bold mb-3">
-        Download &amp; Install
-      </div>
+  <v-sheet class="d-flex align-end" min-height="360px">
+    <v-col cols="6" class="pb-6">
+      <div class="subtitle-1 font-weight-bold grey--text">STEP 1.</div>
+      <div class="headline font-weight-bold mb-3">Download &amp; Install</div>
       <div class="mb-6">
         Please scan the
         <span class="text-color--mew-green">QR Code</span>, or search
@@ -26,7 +22,9 @@
         >. Continue if you have already installed the App.
       </div>
       <div class="d-flex align-center">
-        <StdButton buttonclass="button--green">Continue</StdButton>
+        <StdButton buttonclass="button--green" @click.native="linkToStep(2)"
+          >Continue</StdButton
+        >
       </div>
       <div class="mt-4">
         Already knew how to do it?
@@ -37,9 +35,9 @@
         >
       </div>
     </v-col>
-    <v-col cols="6">
+    <v-col cols="6" class="pb-0">
       <v-img
-        class="mb-n9 mx-auto"
+        class="mx-auto"
         max-height="330px"
         max-width="290px"
         src="@/assets/images/Etc/CreateWallet/DownloadAndInstall.png"
@@ -53,7 +51,15 @@ import StdButton from '@/components/StdButton';
 
 export default {
   components: { StdButton },
-  data: () => ({})
+  data: () => ({}),
+  methods: {
+    linkToStep(step) {
+      this.$router.push({
+        path: '/create-wallet/mewconnect',
+        query: { step: step }
+      });
+    }
+  }
 };
 </script>
 
