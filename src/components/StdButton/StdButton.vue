@@ -6,6 +6,7 @@
     class="std-button"
     :class="[buttonclass, minwidth == true ? 'btn-min-width' : '']"
     :disabled="disabled"
+    :to="to"
   >
     <slot class="d-flex align-center" />
   </v-btn>
@@ -15,6 +16,7 @@
 export default {
   props: {
     buttonclass: { default: 'button--green', type: String },
+    to: { default: '', type: String },
     disabled: { default: false, type: Boolean },
     minwidth: { default: true, type: Boolean }
   },
@@ -39,6 +41,7 @@ export default {
 
 .button--green {
   background-color: $emerald !important;
+  color: white !important;
 }
 
 .button--green-border {

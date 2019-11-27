@@ -18,7 +18,11 @@
               blockchain easily and securely.
             </div>
             <div class="mt-7">
-              <StdButton buttonclass="button--green" class="mr-4">
+              <StdButton
+                buttonclass="button--green"
+                class="mr-4"
+                to="/create-wallet/mewconnect"
+              >
                 Get a new wallet
               </StdButton>
 
