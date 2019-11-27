@@ -81,7 +81,7 @@
             @titleClicked="stage2 = !stage2"
           >
             <dropdown-address-selector
-              title="From Address"
+              :title="$t('sendTx.from-addr')"
               @toAddress="generateInformation($event)"
             />
             <div v-if="informationGenerated">

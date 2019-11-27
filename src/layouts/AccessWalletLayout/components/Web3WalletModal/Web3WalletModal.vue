@@ -68,7 +68,7 @@
         <div class="accept-terms">
           <label class="checkbox-container">
             <i18n path="accessWallet.metamask.modal.terms" tag="label">
-              <router-link slot="terms" to="/terms-and-conditions">
+              <router-link slot="terms" to="/terms-of-service">
                 {{ $t('common.terms') }} </router-link
               >.
             </i18n>
@@ -105,7 +105,7 @@
         <div class="accept-terms hidden">
           <label class="checkbox-container">
             <i18n path="accessWallet.metamask.modal.terms" tag="label">
-              <router-link slot="terms" to="/terms-and-conditions">
+              <router-link slot="terms" to="/terms-of-service">
                 {{ $t('common.terms') }} </router-link
               >.
             </i18n>

@@ -1,8 +1,7 @@
 const ConvertUnits = () => import('@/layouts/ConvertUnits');
 const TeamLayout = () => import('@/layouts/TeamLayout');
 const PrivacyPolicyLayout = () => import('@/layouts/PrivacyPolicyLayout');
-const TermsAndConditionsLayout = () =>
-  import('@/layouts/TermsAndConditionsLayout');
+const TermsOfService = () => import('@/layouts/TermsOfService');
 const InterfaceLayout = () => import('@/layouts/InterfaceLayout');
 const NotFoundLayout = () => import('@/layouts/NotFoundLayout');
 const GettingStarted = () => import('@/layouts/GettingStarted');
@@ -55,9 +54,9 @@ const router = [
     meta: { requiresAuth: false }
   },
   {
-    path: '/terms-and-conditions',
-    name: 'TermsAndConditionsLayout',
-    component: TermsAndConditionsLayout,
+    path: '/terms-of-service',
+    name: 'TermsOfService',
+    component: TermsOfService,
     meta: { requiresAuth: false }
   },
   {

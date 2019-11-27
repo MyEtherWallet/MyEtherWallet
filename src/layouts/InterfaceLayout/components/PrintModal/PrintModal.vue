@@ -2,7 +2,7 @@
   <div class="modal-container">
     <b-modal
       ref="print"
-      :title="$t('createWallet.print.print-title')"
+      :title="$t('createWallet.mnemonic.print.print-title')"
       hide-footer
       centered
       class="nopadding print-mod"
