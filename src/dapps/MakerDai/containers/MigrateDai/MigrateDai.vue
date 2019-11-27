@@ -2,7 +2,7 @@
   <div>
     <div class="currency-ops-new">
       <div class="info-box">
-        {{$t('dappsMaker.upgrade-informational')}}
+        {{ $t('dappsMaker.upgrade-informational') }}
       </div>
       <div class="currency-picker-container">
         <div class="interface__block-title">
@@ -15,7 +15,7 @@
         <div class="dropdown-text-container dropdown-container no-point">
           <p>
             <span class="cc DAI cc-icon cc-icon-dai currency-symbol" />
-            {{$t('dappsMaker.SAI')}}
+            {{ $t('dappsMaker.SAI') }}
           </p>
         </div>
         <input
@@ -34,7 +34,7 @@
             ]"
             @click="submitTransaction"
           >
-            {{$t('dappsMaker.upgrade')}}
+            {{ $t('dappsMaker.upgrade') }}
           </div>
         </div>
       </div>
@@ -138,7 +138,7 @@ export default {
       const saiEntry = this.tokensWithBalance.find(entry => {
         return entry.symbol === 'SAI';
       });
-      if(!saiEntry){
+      if (!saiEntry) {
         this.daiQty = 0;
       } else {
         this.daiQty = saiEntry.balance;

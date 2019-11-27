@@ -54,7 +54,6 @@ export default class MakerCDP extends MakerCdpBase {
         }
         this.isSafe = this.cdp.isSafe;
         await this.getValuesFromChain();
-        console.log(this.cdp); // todo remove dev item
       } catch (e) {
         // eslint-disable-next-line
         console.error(e);
@@ -312,9 +311,7 @@ export default class MakerCDP extends MakerCdpBase {
     return this.services.toPeth(eth);
   }
 
-  updateBalanceFor(token){
-
-  }
+  updateBalanceFor(token) {}
 
   // ***********************************************************************************************
   // Interaction / Operation methods

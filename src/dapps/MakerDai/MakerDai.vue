@@ -286,10 +286,17 @@ export default {
   },
   computed: {
     ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
-    showManageable() {
-      return (
-        this.$route.name === 'manage' || this.$route.name === 'select'
-      );
+    currentProxyAddress() {
+      return this.proxyAddress;
+    },
+    hasProxy() {
+      return this.proxyAddress !== null;
+    },
+    listCdps() {
+      return this.cdps.length > 1 || this.cdpsWithoutProxy.length > 1;
+    },
+    onCreate() {
+      return this.$route.name === 'create';
     },
     maxDaiDraw() {
       if (this.ethQty <= 0) return 0;
@@ -298,6 +305,9 @@ export default {
     minEthDeposit() {
       if (this.daiQty <= 0) return 0;
       return bnOver(this.liquidationRatio, this.daiQty, this.ethPrice);
+    },
+    showManageable() {
+      return this.$route.name === 'manage' || this.$route.name === 'select';
     },
     showMoveOrClose() {
       return this.$route.name === 'manage' || this.$route.name === 'migrate';
@@ -311,9 +321,6 @@ export default {
     showRefresh() {
       return this.cdps.length > 0 || this.cdpsWithoutProxy.length > 0;
     },
-    onCreate() {
-      return this.$route.name === 'create';
-    },
     showCreateProxy() {
       if (this.showCdpMigrateButtons) {
         return false;
@@ -322,15 +329,6 @@ export default {
     },
     showCdpMigrateButtons() {
       return this.hasProxy && this.cdpsWithoutProxy.length >= 1;
-    },
-    listCdps() {
-      return this.cdps.length > 1 || this.cdpsWithoutProxy.length > 1;
-    },
-    hasProxy() {
-      return this.proxyAddress !== null;
-    },
-    currentProxyAddress() {
-      return this.proxyAddress;
     }
   },
   watch: {
@@ -372,6 +370,25 @@ export default {
     await this.setup();
   },
   methods: {
+    addCdp() {
+      this.creatingCdp = true;
+    },
+    async approveCurrency(currency) {
+      await this._tokenService
+        .getToken(this.mcdCurrencies[currency])
+        .approveUnlimited(this.proxyAddress);
+    },
+    async approveDai() {
+      await this._tokenService
+        .getToken(DAI)
+        .approveUnlimited(this.proxyAddress);
+    },
+    async approveMkr() {
+      this._tokenService.getToken(MKR).approveUnlimited(this.proxyAddress);
+    },
+    async buildEmpty() {
+      return await buildEmpty(this);
+    },
     backPath() {
       switch (this.$route.name) {
         case 'Maker':
@@ -381,6 +398,81 @@ export default {
           return '/interface/dapps/maker-dai';
       }
     },
+    async buildProxy() {
+      this.proxyAddress = await this.getProxy();
+      if (!this.proxyAddress) {
+        await this._proxyService.build();
+        this.proxyAddress = await this._proxyService.currentProxy();
+        return this.proxyAddress;
+      }
+      this.proxyAddress = await this._proxyService.currentProxy();
+      return this.proxyAddress;
+    },
+    calcLiquidationPriceEthChg(ethQty) {
+      return toBigNumber(
+        this.currentCdp.calcLiquidationPrice(ethQty, this.currentCdp.debtValue)
+      );
+    },
+
+    closeCdp() {
+      this.currentCdp.closeCdp();
+    },
+    checkIfDestAddressHasProxy(val) {
+      this.currentCdp
+        .checkIfDestAddressHasProxy(val)
+        .then(result => {
+          this.destAddressProxy = result;
+          this.destAddressHasProxy = result !== null;
+        })
+        .catch(err => {
+          throw err;
+        });
+    },
+    calcCollatRatioDaiChg(daiQty) {
+      return toBigNumber(
+        this.currentCdp.calcCollatRatio(this.currentCdp.ethCollateral, daiQty)
+      );
+    },
+
+    calcCollatRatioEthChg(ethQty) {
+      return toBigNumber(
+        this.currentCdp.calcCollatRatio(ethQty, this.currentCdp.debtValue)
+      );
+    },
+
+    calcLiquidationPriceDaiChg(daiQty) {
+      return toBigNumber(
+        this.currentCdp.calcLiquidationPrice(
+          this.currentCdp.ethCollateral,
+          daiQty
+        )
+      );
+    },
+    async checkAllowances() {
+      await checkAllowances(this, this.account.address, this.proxyAddress);
+    },
+    async checkBalances() {
+      await getDetailsForTokens(this, this._typeService.cdpTypes);
+    },
+    async doUpdate() {
+      await getDustValues(this, this._typeService.cdpTypes);
+      await doUpdate(this, Toast);
+    },
+    drawDai(val) {
+      if (val[1] === null) {
+        this.currentCdp.drawDai(val[0]);
+      } else {
+        this.currentCdp.drawDai(val[0], val[1]);
+      }
+    },
+    freeEth(val) {
+      if (val[1] === null) {
+        this.currentCdp.freeEth(val[0]);
+      } else {
+        this.currentCdp.freeEth(val[0], val[1]);
+      }
+    },
+
     getValueOrFunction(base, prop) {
       if (this[base]) {
         if (this[base][prop]) {
@@ -392,6 +484,90 @@ export default {
     },
     getCollateralOptions() {
       return this.mcdCurrencies;
+    },
+    async getProxy() {
+      this.proxyAddress = await this._proxyService.currentProxy();
+      if (!this.proxyAddress) {
+        this.proxyAddress = await this._proxyService.getProxyAddress(
+          this.account.address
+        );
+        if (this.proxyAddress) this.noProxy = false;
+      }
+      return this.proxyAddress;
+    },
+    getType(baseCurrency, ilk) {
+      return this._typeService.cdpTypes.find(
+        entry => entry.currency.symbol === baseCurrency && entry.ilk === ilk
+      );
+    },
+    getCdp(cdpId) {
+      // could be a string.  use type cohesion to convert to number
+      if (!this.activeCdps) return false;
+      return this.activeCdps[cdpId];
+    },
+    async getMakerCdp(cdpId) {
+      cdpId = CdpNum(cdpId);
+      if (cdpId === null) return;
+      if (this.cdpsWithoutProxy.includes(cdpId)) {
+        return await this._mcdManager.getCdp(cdpId, false);
+      } else if (this.cdps.includes(cdpId) && this.proxyAddress) {
+        return await this._mcdManager.getCdp(cdpId, this.proxyAddress);
+      } else if (this.proxyAddress) {
+        return await this._mcdManager.getCdp(cdpId, this.proxyAddress);
+      }
+      return await this._mcdManager.getCdp(cdpId, false);
+    },
+    hasCdp(cdpId) {
+      return Object.keys(this.activeCdps).includes(
+        toBigNumber(CdpNum(cdpId)).toString()
+      );
+    },
+    lockEth(val) {
+      this.currentCdp.lockEth(...val);
+    },
+    async loadCdpDetail(cdpId) {
+      return loadCdpDetail(this, cdpId);
+    },
+    // TODO doulble check the vue object observer bug isn't back
+    async loadCdpDetails(
+      cdps = this.cdps,
+      cdpsWithoutProxy = this.cdpsWithoutProxy
+    ) {
+      return await loadCdpDetails(this, cdps, cdpsWithoutProxy);
+    },
+    async migrateCdpExternal(cdpId) {
+      this.afterUpdate.push(this.goToManage);
+      await this.migrateCdp(cdpId);
+    },
+    moveCdp(val) {
+      this.currentCdp.moveCdp(val);
+    },
+    modalHidden() {
+      this.openCloseModal = false;
+      this.openMoveModal = false;
+    },
+
+    async migrateCdp(cdpId) {
+      const currentProxy = await this.getProxy();
+      if (currentProxy) {
+        await this._cdpService.give(cdpId, currentProxy);
+      }
+    },
+    removeCdp(vals) {
+      try {
+        delete this.availableCdps[vals.id];
+        Toast.responseHandler(this.$t('dapps-maker.vault-closed'), Toast.INFO);
+      } catch (e) {
+        // eslint-disable-next-line
+        console.error(e);
+      }
+    },
+
+    async refreshExternal() {
+      await this.doUpdate();
+    },
+    async refresh() {
+      await this.doUpdate();
     },
     setAfterLoadPage(page) {
       this.afterLoadShow = afterLoadShow[page];
@@ -412,11 +588,6 @@ export default {
         // eslint-disable-next-line
         console.error(e);
       }
-    },
-    getType(baseCurrency, ilk) {
-      return this._typeService.cdpTypes.find(
-        entry => entry.currency.symbol === baseCurrency && entry.ilk === ilk
-      );
     },
     async setup() {
       this.activeCdps = {};
@@ -547,47 +718,44 @@ export default {
         this.makerActive = true;
       }
     },
-
-    async buildEmpty() {
-      return await buildEmpty(this);
-    },
-    addCdp() {
-      this.creatingCdp = true;
-    },
-    removeCdp(vals) {
-      try {
-        delete this.availableCdps[vals.id];
-        Toast.responseHandler(this.$t('dapps-maker.vault-closed'), Toast.INFO);
-      } catch (e) {
-        // eslint-disable-next-line
-        console.error(e);
-      }
-    },
-    async migrateCdpExternal(cdpId) {
-      this.afterUpdate.push(this.goToManage);
-      await this.migrateCdp(cdpId);
-    },
-    async refreshExternal() {
-      await this.doUpdate();
-    },
-    async refresh() {
-      await this.doUpdate();
-    },
-    async doUpdate() {
-      await getDustValues(this, this._typeService.cdpTypes);
-      await doUpdate(this, Toast);
-    },
-    async checkAllowances() {
-      await checkAllowances(this, this.account.address, this.proxyAddress);
-    },
-    async checkBalances() {
-      await getDetailsForTokens(this, this._typeService.cdpTypes);
-    },
     async setupCdpManageFunc(cdpId) {
       cdpId = CdpNum(cdpId);
       await setupCdpManage(this, cdpId);
       this.setActiveCdpId(cdpId);
-      return this.getCdp(cdpId);
+    },
+
+    setActiveCdpId(id) {
+      this.activeCdpId = id;
+      this.activeValues.cdpId = id;
+    },
+    showDeposit() {
+      this.$refs.deposit.$refs.modal.show();
+    },
+    showWithdraw() {
+      this.$refs.withdraw.$refs.modal.show();
+    },
+    showPayback() {
+      this.$refs.payback.$refs.modal.show();
+    },
+    showGenerate() {
+      this.$refs.generate.$refs.modal.show();
+    },
+    showClose() {
+      this.$refs.closeCdp.$refs.modal.$on('hidden', () => {
+        this.$emit('modalHidden');
+      });
+      this.$refs.closeCdp.$refs.modal.show();
+    },
+    showMove() {
+      this.$refs.moveCdp.$refs.modal.$on('hidden', () => {
+        this.$emit('modalHidden');
+      });
+      this.destAddressHasProxy = false;
+      this.$refs.moveCdp.$refs.modal.show();
+    },
+    toUSD(eth) {
+      if (eth === undefined || eth === null) return toBigNumber(0);
+      return this.ethPrice.times(toBigNumber(eth));
     },
     async updateActiveCdp() {
       await updateActiveCdp(this);
@@ -595,159 +763,11 @@ export default {
         this.gotoCreate();
       }
     },
-    async loadCdpDetail(cdpId) {
-      return loadCdpDetail(this, cdpId);
-    },
-    // TODO doulble check the vue object observer bug isn't back
-    async loadCdpDetails(
-      cdps = this.cdps,
-      cdpsWithoutProxy = this.cdpsWithoutProxy
-    ) {
-      return await loadCdpDetails(this, cdps, cdpsWithoutProxy);
-    },
-    async getProxy() {
-      this.proxyAddress = await this._proxyService.currentProxy();
-      if (!this.proxyAddress) {
-        this.proxyAddress = await this._proxyService.getProxyAddress(
-          this.account.address
-        );
-        if (this.proxyAddress) this.noProxy = false;
-      }
-      return this.proxyAddress;
-    },
-
-    lockEth(val) {
-      this.currentCdp.lockEth(...val);
-    },
     wipeDai(val) {
       this.currentCdp.wipeDai(val);
     },
-    freeEth(val) {
-      if (val[1] === null) {
-        this.currentCdp.freeEth(val[0]);
-      } else {
-        this.currentCdp.freeEth(val[0], val[1]);
-      }
-    },
-    drawDai(val) {
-      if (val[1] === null) {
-        this.currentCdp.drawDai(val[0]);
-      } else {
-        this.currentCdp.drawDai(val[0], val[1]);
-      }
-    },
-    closeCdp() {
-      this.currentCdp.closeCdp();
-    },
-    checkIfDestAddressHasProxy(val) {
-      this.currentCdp
-        .checkIfDestAddressHasProxy(val)
-        .then(result => {
-          this.destAddressProxy = result;
-          this.destAddressHasProxy = result !== null;
-        })
-        .catch(err => {
-          throw err;
-        });
-    },
-    moveCdp(val) {
-      this.currentCdp.moveCdp(val);
-    },
 
-    calcCollatRatioDaiChg(daiQty) {
-      return toBigNumber(
-        this.currentCdp.calcCollatRatio(this.currentCdp.ethCollateral, daiQty)
-      );
-    },
-
-    calcCollatRatioEthChg(ethQty) {
-      return toBigNumber(
-        this.currentCdp.calcCollatRatio(ethQty, this.currentCdp.debtValue)
-      );
-    },
-
-    calcLiquidationPriceDaiChg(daiQty) {
-      return toBigNumber(
-        this.currentCdp.calcLiquidationPrice(
-          this.currentCdp.ethCollateral,
-          daiQty
-        )
-      );
-    },
-
-    calcLiquidationPriceEthChg(ethQty) {
-      return toBigNumber(
-        this.currentCdp.calcLiquidationPrice(ethQty, this.currentCdp.debtValue)
-      );
-    },
-    async approveCurrency(currency) {
-      await this._tokenService
-        .getToken(this.mcdCurrencies[currency])
-        .approveUnlimited(this.proxyAddress);
-    },
-    async approveDai() {
-      await this._tokenService
-        .getToken(DAI)
-        .approveUnlimited(this.proxyAddress);
-    },
-    async approveMkr() {
-      this._tokenService.getToken(MKR).approveUnlimited(this.proxyAddress);
-    },
-    hasCdp(cdpId) {
-      return Object.keys(this.activeCdps).includes(
-        toBigNumber(CdpNum(cdpId)).toString()
-      );
-    },
-
-    getCdp(cdpId) {
-      // could be a string.  use type cohesion to convert to number
-      if (!this.activeCdps) return false;
-      return this.activeCdps[cdpId];
-    },
-
-    async getMakerCdp(cdpId) {
-      cdpId = CdpNum(cdpId);
-      if (cdpId === null) return;
-      if (this.cdpsWithoutProxy.includes(cdpId)) {
-        return await this._mcdManager.getCdp(cdpId, false);
-      } else if (this.cdps.includes(cdpId) && this.proxyAddress) {
-        return await this._mcdManager.getCdp(cdpId, this.proxyAddress);
-      } else if (this.proxyAddress) {
-        return await this._mcdManager.getCdp(cdpId, this.proxyAddress);
-      }
-      return await this._mcdManager.getCdp(cdpId, false);
-    },
-
-    async buildProxy() {
-      this.proxyAddress = await this.getProxy();
-      if (!this.proxyAddress) {
-        await this._proxyService.build();
-        this.proxyAddress = await this._proxyService.currentProxy();
-        return this.proxyAddress;
-      }
-      this.proxyAddress = await this._proxyService.currentProxy();
-      return this.proxyAddress;
-    },
-
-    async migrateCdp(cdpId) {
-      const currentProxy = await this.getProxy();
-      if (currentProxy) {
-        await this._cdpService.give(cdpId, currentProxy);
-      }
-    },
-
-    // Calculations
-    toUSD(eth) {
-      if (eth === undefined || eth === null) return toBigNumber(0);
-      return this.ethPrice.times(toBigNumber(eth));
-    },
-    modalHidden() {
-      this.openCloseModal = false;
-      this.openMoveModal = false;
-    },
-    setActiveCdpId(id) {
-      this.activeCdpId = id;
-    },
+    // Navigation =============================================================
     gotoHome() {
       this.$router.push({
         name: 'Maker'
@@ -825,31 +845,6 @@ export default {
           }
         });
       }
-    },
-    showDeposit() {
-      this.$refs.deposit.$refs.modal.show();
-    },
-    showWithdraw() {
-      this.$refs.withdraw.$refs.modal.show();
-    },
-    showPayback() {
-      this.$refs.payback.$refs.modal.show();
-    },
-    showGenerate() {
-      this.$refs.generate.$refs.modal.show();
-    },
-    showClose() {
-      this.$refs.closeCdp.$refs.modal.$on('hidden', () => {
-        this.$emit('modalHidden');
-      });
-      this.$refs.closeCdp.$refs.modal.show();
-    },
-    showMove() {
-      this.$refs.moveCdp.$refs.modal.$on('hidden', () => {
-        this.$emit('modalHidden');
-      });
-      this.destAddressHasProxy = false;
-      this.$refs.moveCdp.$refs.modal.show();
     },
     proceedtoCreateOrManage() {
       this.showLoading = true;

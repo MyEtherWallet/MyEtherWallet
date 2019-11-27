@@ -36,7 +36,7 @@ export function displayFixedValue(
 
     return raw.toFixed(decimals).toString();
   } catch (e) {
-    return '--'
+    return '--';
   }
 }
 
@@ -48,7 +48,7 @@ export function displayFixedPercent(raw, decimals = 3, round = true) {
     }
     return '--';
   } catch (e) {
-    return '--'
+    return '--';
   }
 }
 

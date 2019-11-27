@@ -171,7 +171,6 @@ export async function setupCdpManage(self, cdpId) {
 export async function getValuesForManage(cdpId) {
   if (typeof cdpId !== 'number') cdpId = cdpId.id;
   const currentCdp = this.activeCdps[cdpId];
-  console.log(currentCdp); // todo remove dev item
   this.currentCdp = currentCdp;
   const systemValues = this.systemValues;
   return {

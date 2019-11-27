@@ -18,7 +18,11 @@
       <div class="card-block unlock-wallet" @click="migrateCDP">
         <div class="flex-col-vertical-center">
           <div class="card-content">
-            <h2 class="color-white">{{ $t('dappsMaker.migrate-single-collateral-to-multi-collateral') }}</h2>
+            <h2 class="color-white">
+              {{
+                $t('dappsMaker.migrate-single-collateral-to-multi-collateral')
+              }}
+            </h2>
             <p class="button">
               {{ $t('dappsMaker.migrate') }}
               <img src="~@/assets/images/icons/right-arrow.png" />
@@ -68,7 +72,7 @@
       </div>
     </div>
 
-        <div class="grid-col-2 promo-cards">
+    <div class="grid-col-2 promo-cards">
       <div class="card-block unlock-wallet" @click="goToSave">
         <div class="flex-col-vertical-center">
           <div class="card-content">
@@ -116,8 +120,7 @@ export default {
     }
   },
   data() {
-    return {
-    };
+    return {};
   },
   computed: {
     loadingMessage() {
