@@ -338,31 +338,20 @@ export default {
     },
     $route(to) {
       this.currentPath = to.name;
+    },
+    network(val) {
+      if (val.type.name !== 'ETH') {
+        this.$router.push({
+          name: 'Dapps'
+        });
+      }
     }
   },
   beforeDestroy() {
-    this.maker = {};
-    this.priceService = {};
-    this.cdpService = {};
-    this.proxyService = {};
-    this.availableCdps = {};
-    this.activeCdp = {};
-    this.makerCdp = {};
-    this.sysVars = {};
-    this.sysServices = {};
-    this.activeCdps = {};
-    this.currentCdp = {};
+    this.clearComponent();
   },
   destroyed() {
-    this.maker = {};
-    this.priceService = {};
-    this.cdpService = {};
-    this.proxyService = {};
-    this.availableCdps = {};
-    this.activeCdp = {};
-    this.makerCdp = {};
-    this.sysVars = {};
-    this.sysServices = {};
+    this.clearComponent();
   },
   async mounted() {
     this.container = {};
@@ -413,7 +402,19 @@ export default {
         this.currentCdp.calcLiquidationPrice(ethQty, this.currentCdp.debtValue)
       );
     },
-
+    clearComponent() {
+      this.maker = {};
+      this.priceService = {};
+      this.cdpService = {};
+      this.proxyService = {};
+      this.availableCdps = {};
+      this.activeCdp = {};
+      this.makerCdp = {};
+      this.sysVars = {};
+      this.sysServices = {};
+      this.activeCdps = {};
+      this.currentCdp = {};
+    },
     closeCdp() {
       this.currentCdp.closeCdp();
     },
@@ -569,6 +570,19 @@ export default {
     async refresh() {
       await this.doUpdate();
     },
+    reset() {
+      this.maker = {};
+      this.priceService = {};
+      this.cdpService = {};
+      this.proxyService = {};
+      this.availableCdps = {};
+      this.activeCdp = {};
+      this.makerCdp = {};
+      this.sysVars = {};
+      this.sysServices = {};
+      this.activeCdps = {};
+      this.currentCdp = {};
+    },
     setAfterLoadPage(page) {
       this.afterLoadShow = afterLoadShow[page];
     },
@@ -633,7 +647,7 @@ export default {
             myLedger1: { type: 'mew' }
           }
         });
-        await this.maker.service('proxy').ensureProxy();
+        // await this.maker.service('proxy').ensureProxy();
       } catch (e) {
         // eslint-disable-next-line
         console.error(e);
@@ -783,6 +797,13 @@ export default {
         this.activeValues = this.systemValues;
         this.$router.push({
           name: 'create'
+        });
+      }
+    },
+    goToSave() {
+      if (this.$route.path.includes('maker-dai')) {
+        this.$router.push({
+          name: 'save'
         });
       }
     },

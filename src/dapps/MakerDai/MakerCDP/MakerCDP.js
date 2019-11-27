@@ -20,6 +20,7 @@ export default class MakerCDP extends MakerCdpBase {
   constructor(cdpId, web3, services, sysVars) {
     super(cdpId, web3, services, sysVars);
     this.minDai = 20.5;
+    this.DAI_NAME = 'MDAI';
   }
 
   // Getters
@@ -121,6 +122,7 @@ export default class MakerCDP extends MakerCdpBase {
   }
 
   async approveMkr() {
+    if (!this.proxyAddress) return;
     await this.mkrToken.approveUnlimited(this.proxyAddress);
   }
 
@@ -247,7 +249,7 @@ export default class MakerCDP extends MakerCdpBase {
   }
 
   async getDaiBalances() {
-    return await this.getTokens['DAI'].balance();
+    return await this.getTokens[this.DAI_NAME].balance();
   }
 
   hasEnough(ethQty, currency = 'ETH', balance = null) {

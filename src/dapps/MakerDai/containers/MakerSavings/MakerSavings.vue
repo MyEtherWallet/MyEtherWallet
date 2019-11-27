@@ -1,8 +1,10 @@
 <template>
   <div>
-    <div class="currency-ops-new">
+    <div v-if="!ready">
+      <loading-sign />
+    </div>
+    <div v-if="ready" class="currency-ops-new">
       <div style="padding: 10px;">
-        <p></p>
         <p>
           {{
             $t('dappsMaker.dai-savings-rate', {
@@ -10,97 +12,143 @@
             })
           }}
         </p>
-        <p>{{ deposited }}</p>
-        <!--        <p>{{ daiBalance }}</p>-->
+        <p>{{ $t('dappsMaker.deposited-amount', { value: deposited }) }}</p>
       </div>
       <div class="currency-picker-container">
-        <!--        <p><b>DAI saving - Coming 27/11/2019</b></p>-->
-        <!-- start -->
         <div class="interface__block-title">
-          dai savings rate
+          {{ $t('dappsMaker.earn-with-dai') }}
         </div>
-
-        <p>
-          <button @click="showDeposit(true)">Deposit</button>
-          <button @click="showDeposit(false)">Withdraw</button>
-        </p>
-        <div v-if="showDepositDisplay">
-          <div class="interface__block-title">
-            Deposit
-          </div>
-          <div class="dropdown-text-container dropdown-container no-point">
+        <div v-if="showSetupScreen">
+          <div>
             <p>
-              <span class="cc DAI cc-icon cc-icon-dai currency-symbol" />
-              DAI
-              <span class="subname">- Maker DAI </span>
+              <b> {{ $t('dappsMaker.create-vault-proxy') }}</b>
             </p>
+            <p>{{ $t('dappsMaker.create-proxy-info-message') }}</p>
+            <div class="buttons-container">
+              <div
+                :class="[
+                  !proxyPresent ? '' : 'disabled',
+                  'submit-button large-round-button-green-filled'
+                ]"
+                @click="BuildProxy"
+              >
+                {{ $t('dappsMaker.setup') }}
+              </div>
+            </div>
           </div>
-          <input
-            v-model="daiQty"
-            :class="[
-              'currency-picker-container',
-              'dropdown-text-container',
-              'dropdown-container'
-            ]"
-          />
-          <div class="input-block-message">
-            <p>
-              Some Error, info, or instructions
-            </p>
-          </div>
-
+          <p>
+            <b> {{ $t('dappsMaker.savings-set-allowance') }}</b>
+          </p>
+          <p>{{ $t('dappsMaker.savings-set-allowance-info') }}</p>
           <div class="buttons-container">
             <div
               :class="[
-                validInputs ? '' : 'disabled',
+                !hasAllowance && proxyPresent ? '' : 'disabled',
                 'submit-button large-round-button-green-filled'
               ]"
-              @click="deposit"
+              @click="setAllowance"
             >
-              Deposit
+              {{ $t('dappsMaker.set') }}
             </div>
           </div>
         </div>
-        <div v-if="!showDepositDisplay">
-          <div class="interface__block-title">
-            Withdraw
+        <div v-if="!showSetupScreen">
+          <div class="buttons-container-alt">
+            <div>
+              <button
+                :class="['submit-btn', showDepositDisplay ? 'active' : '']"
+                @click="showDeposit(true)"
+              >
+                <h4>{{ $t('dappsMaker.deposit') }}</h4>
+              </button>
+              <button
+                :class="['submit-btn', !showDepositDisplay ? 'active' : '']"
+                @click="showDeposit(false)"
+              >
+                <h4>{{ $t('dappsMaker.withdraw') }}</h4>
+              </button>
+            </div>
           </div>
-          <div class="dropdown-text-container dropdown-container no-point">
-            <p>
-              <span class="cc DAI cc-icon cc-icon-dai currency-symbol" />
-              DAI
-              <span class="subname">- Maker DAI </span>
-            </p>
-          </div>
-          <input
-            v-model="daiQty"
-            :class="[
-              'currency-picker-container',
-              'dropdown-text-container',
-              'dropdown-container'
-            ]"
-          />
-          <!--          <div class="input-block-message">-->
-          <!--            <p>-->
-          <!--              Some Error, info, or instructions-->
-          <!--            </p>-->
-          <!--          </div>-->
-
-          <div class="buttons-container">
-            <div
+          <div v-if="showDepositDisplay">
+            <div class="interface__block-title">
+              <span> {{ $t('dappsMaker.deposit') }}</span>
+              <div class="top-buttons" @click="setMaxDeposit">
+                <p>{{ $t('dappsMaker.entire-dai-balance') }}</p>
+              </div>
+            </div>
+            <div class="dropdown-text-container dropdown-container no-point">
+              <p>
+                <img :src="DaiIcon" class="icon-size" />
+                {{ $t('dappsMaker.dai') }}
+                <span class="subname"
+                  >- {{ $t('dappsMaker.dai-stable-coin') }}
+                </span>
+              </p>
+            </div>
+            <input
+              v-model="daiQty"
               :class="[
-                validInputs ? '' : 'disabled',
-                'submit-button large-round-button-green-filled'
+                'currency-picker-container',
+                'dropdown-text-container',
+                'dropdown-container'
               ]"
-              @click="withdraw"
-            >
-              Withdraw
+            />
+            <div v-if="showErrorInfoOrOther" class="input-block-message">
+              <p>
+                Some Error, info, or instructions
+              </p>
+            </div>
+
+            <div class="buttons-container">
+              <div
+                :class="[
+                  validInputs && canDeposit ? '' : 'disabled',
+                  'submit-button large-round-button-green-filled'
+                ]"
+                @click="deposit"
+              >
+                {{ $t('dappsMaker.deposit') }}
+              </div>
+            </div>
+          </div>
+          <div v-if="!showDepositDisplay">
+            <div class="interface__block-title">
+              <span> {{ $t('dappsMaker.withdraw') }}</span>
+              <div class="top-buttons" @click="setMaxWithdraw">
+                <p>{{ $t('dappsMaker.entire-deposit-balance') }}</p>
+              </div>
+            </div>
+            <div class="dropdown-text-container dropdown-container no-point">
+              <p>
+                <img :src="DaiIcon" class="icon-size" />
+                {{ $t('dappsMaker.dai') }}
+                <span class="subname"
+                  >- {{ $t('dappsMaker.dai-stable-coin') }}
+                </span>
+              </p>
+            </div>
+            <input
+              v-model="daiQty"
+              :class="[
+                'currency-picker-container',
+                'dropdown-text-container',
+                'dropdown-container'
+              ]"
+            />
+            <div class="buttons-container">
+              <div
+                :class="[
+                  validInputs && canWithdraw ? '' : 'disabled',
+                  'submit-button large-round-button-green-filled'
+                ]"
+                @click="withdraw"
+              >
+                {{ $t('dappsMaker.withdraw') }}
+              </div>
             </div>
           </div>
         </div>
-        <!--end -->
       </div>
-      <div></div>
     </div>
   </div>
 </template>
@@ -112,7 +160,15 @@ import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
 import BigNumber from 'bignumber.js';
 import SelectCdpEntry from '../../components/SelectCdpEntry';
-import { addresses, ERC20, toBigNumber } from '../../makerHelpers';
+import {
+  addresses,
+  ERC20,
+  ProxyRegistry,
+  toBigNumber
+} from '../../makerHelpers';
+import LoadingSign from '@/components/LoadingSign';
+import DaiIcon from '@/assets/images/currency/coins/AllImages/DAI.svg';
+
 import { MDAI } from '@makerdao/dai-plugin-mcd';
 
 export default {
@@ -120,7 +176,8 @@ export default {
     'interface-container-title': InterfaceContainerTitle,
     'interface-bottom-text': InterfaceBottomText,
     blockie: Blockie,
-    'select-cdp-entry': SelectCdpEntry
+    'select-cdp-entry': SelectCdpEntry,
+    'loading-sign': LoadingSign
   },
   props: {
     ethPrice: {
@@ -156,19 +213,28 @@ export default {
   },
   data() {
     return {
+      DaiIcon: DaiIcon,
       showDepositDisplay: true,
       setupComplete: false,
       userHasProxy: false,
+      showErrorInfoOrOther: false,
       proxyAddress: null,
       daiQty: 0,
       gasLimit: -1,
       yearlyRate: 0,
       daiBalance: 0,
-      deposited: 0
+      deposited: 0,
+      allowance: 0,
+      daiAllowance: 0,
+      proxyChecked: false,
+      allowanceChecked: false
     };
   },
   computed: {
     ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
+    showSetupScreen() {
+      return !this.hasAllowance || !this.proxyPresent;
+    },
     validInputs() {
       return (
         toBigNumber(this.daiQty).gt(0) && this.hasEnough && this.proxyPresent
@@ -178,7 +244,24 @@ export default {
       return this.daiBalance >= this.daiQty;
     },
     proxyPresent() {
-      return this.hasProxy() != null;
+      return this.proxyAddress != null;
+    },
+    proxyAllowance() {
+      return this.proxyAddress != null;
+    },
+    hasAllowance() {
+      return toBigNumber(this.daiAllowance).gt(0);
+    },
+    canWithdraw() {
+      if (this.deposited) {
+        return toBigNumber(this.deposited.toBigNumber()).gte(this.daiQty);
+      }
+    },
+    canDeposit() {
+      return toBigNumber(this.daiBalance).gte(this.daiQty);
+    },
+    ready() {
+      return this.proxyChecked && this.allowanceChecked; //this.setupComplete;
     }
   },
   watch: {
@@ -188,7 +271,22 @@ export default {
       }
     }
   },
+  beforeDestroy() {
+    this.makerSaver = {};
+  },
   async mounted() {
+    const proxyReg = new this.web3.eth.Contract(
+      ProxyRegistry,
+      addresses.PROXY_REGISTRY
+    );
+
+    this.proxyAddress = await proxyReg.methods
+      .proxies(this.account.address)
+      .call();
+    if (this.proxyAddress === '0x0000000000000000000000000000000000000000') {
+      this.proxyAddress = null;
+    }
+    this.proxyChecked = true;
     this.setup();
   },
   methods: {
@@ -197,6 +295,7 @@ export default {
       this.setupComplete = this.makerSaver !== undefined;
       await this.getValues();
     },
+
     async getValues() {
       if (this.setupComplete) {
         this.yearlyRate = toBigNumber(await this.makerSaver.getYearlyRate())
@@ -208,24 +307,44 @@ export default {
       }
       return 0;
     },
+    setMaxDeposit() {
+      this.daiQty = this.daiBalance;
+    },
+    setMaxWithdraw() {
+      if (this.deposited) {
+        this.daiQty = this.deposited.toBigNumber();
+      }
+      this.daiQty = this.deposited;
+    },
     showDeposit(val) {
       this.showDepositDisplay = val;
+      this.daiQty = 0;
     },
     async deposit() {
-      await this.makerSaver.join(MDAI(this.daiQty));
+      if (this.setupComplete) {
+        await this.makerSaver.join(MDAI(this.daiQty));
+      }
     },
     async withdraw() {
-      await this.makerSaver.exit(MDAI(this.daiQty));
+      if (this.setupComplete) {
+        await this.makerSaver.exit(MDAI(this.daiQty));
+      }
     },
     async depositBalance() {
-      this.deposited = await this.makerSaver.balance();
+      if (this.setupComplete) {
+        this.deposited = await this.makerSaver.balance();
+      }
     },
     async checkBalance() {
       if (this.setupComplete) {
-        const daiBalance = this.getValueOrFunction('balances')['MDAI'];
-        this.daiBalance = daiBalance.toString();
-        if (this.proxyAddress) {
-          this.daiAllowance = await this.getAllowance();
+        const balance = this.getValueOrFunction('balances');
+        if (balance) {
+          const daiBalance = balance['MDAI'];
+          if (!daiBalance) return toBigNumber(0);
+          this.daiBalance = daiBalance.toString();
+          if (this.proxyAddress) {
+            this.daiAllowance = await this.getAllowance();
+          }
         }
       }
       return toBigNumber(0);
@@ -246,13 +365,17 @@ export default {
       if (this.setupComplete) {
         this.proxyAddress = await this.getValueOrFunction('getProxy')();
         if (!this.proxyAddress) {
-          await this.getValueOrFunction('_proxyService').build();
-          this.proxyAddress = await this.getValueOrFunction(
-            '_proxyService'
-          ).currentProxy();
-          return this.proxyAddress;
+          this.getValueOrFunction('_proxyService')
+            .build()
+            .then(() => {
+              return this.getValueOrFunction('_proxyService').currentProxy();
+            })
+            .then(res => {
+              this.proxyAddress = res;
+            });
+          // return this.proxyAddress;
         }
-        return this.proxyAddress;
+        // return this.proxyAddress;
       }
     },
     adapterAddress(ilk) {
@@ -260,19 +383,41 @@ export default {
       return this.get('smartContract').getContractAddress(key);
     },
     async getAllowance() {
-      const contract = new this.web3.eth.Contract(ERC20, addresses.MCD_DAI);
+      if (this.proxyAddress) {
+        if (this.setupComplete && this.getValueOrFunction('tokens')) {
+          const val = await this.getValueOrFunction('tokens')[
+            'MDAI'
+          ]._contract.allowance(
+            this.getValueOrFunction('account').address,
+            this.proxyAddress
+          );
+          this.allowanceChecked = true;
+          return val;
+        }
+        const contract = new this.web3.eth.Contract(ERC20, addresses.MCD_DAI);
 
-      return await contract.methods
-        .allowance(
-          this.getValueOrFunction('account').address,
-          this.proxyAddress
-        )
-        .call();
+        const val = await contract.methods
+          .allowance(
+            this.getValueOrFunction('account').address,
+            this.proxyAddress
+          )
+          .call();
+        this.allowanceChecked = true;
+        return val;
+      }
+      return 0;
     },
-    async approve(val) {
-      const contract = new this.web3.eth.Contract(ERC20, addresses.MCD_DAI);
+    async setAllowance() {
+      if (this.setupComplete && this.getValueOrFunction('tokens')) {
+        this.getValueOrFunction('tokens')['MDAI'].approveUnlimited(
+          this.proxyAddress
+        );
+      }
+      // this.getValueOrFunction('tokens')['DAI'].approveUnlimited(this.proxyAddress);
 
-      await contract.methods.approve(this.proxyAddress, val).send();
+      // const contract = new this.web3.eth.Contract(ERC20, addresses.MCD_DAI);
+      //
+      // await contract.methods.approve(this.proxyAddress, val).send();
 
       // return {
       //   from: this.account.address,

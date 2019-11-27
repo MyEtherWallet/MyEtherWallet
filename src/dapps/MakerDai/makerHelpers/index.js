@@ -1,6 +1,6 @@
 import { locateCdps, locateOldCdps } from './locateCdps';
 import addresses from './addressesMAIN';
-import addressesKOV from './addressesKOV';
+// import addresses from './addressesKOV';
 import {
   setupPriceAndRatios,
   setupServices,
@@ -72,7 +72,6 @@ export {
   toBigNumber,
   bnOver,
   addresses,
-  addressesKOV,
   // ABIs
   migrateABI,
   ERC20,

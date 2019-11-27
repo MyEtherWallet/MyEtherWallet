@@ -422,6 +422,12 @@ export default {
       }
     }
   },
+  beforeDestroy() {
+    this.makerCDP = {};
+  },
+  destroyed() {
+    this.makerCDP = {};
+  },
   async mounted() {
     if (this.makerActive) {
       this.buildEmptyInstance();

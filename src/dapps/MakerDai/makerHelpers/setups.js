@@ -406,6 +406,8 @@ export async function doUpdate(self, Toast) {
   if (afterClose || afterOpen || self.creatingCdp) {
     if (self.cdps.length > 0 || self.cdpsWithoutProxy.length > 0) {
       self.goToManage();
+    } else if (self.$route.name === 'save') {
+      self.goToSave();
     } else {
       self.gotoCreate();
     }

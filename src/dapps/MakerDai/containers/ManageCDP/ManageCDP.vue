@@ -26,7 +26,7 @@
                 }})
               </p>
               <p v-if="liquidationPriceDisplay === '--'" class="pop-icon">
-                <popover :popcontent="$t('dappsMaker.what-is-dashes')" />
+                <popover :popcontent="$t('dappsMaker.what-is-dashes-vault')" />
               </p>
             </div>
 
@@ -58,7 +58,7 @@
             <div class="for-pop">
               <p>{{ $t('dappsMaker.collateral-ratio') }}</p>
               <p v-if="liquidationPriceDisplay === '--'" class="pop-icon">
-                <popover :popcontent="$t('dappsMaker.what-is-dashes')" />
+                <popover :popcontent="$t('dappsMaker.what-is-dashes-vault')" />
               </p>
             </div>
 
@@ -485,11 +485,14 @@ export default {
         this.getActiveCdp();
       }
     },
-    ['$route.params'](val) {
+    ['$route.params']() {
       this.updatedValue++;
       // this.$emit('activeCdpId', this.cdpId);
       this.getActiveCdp();
     }
+  },
+  beforeDestroy() {
+    this.makerCDP = {};
   },
   async mounted() {
     this.activeCdp = {};
