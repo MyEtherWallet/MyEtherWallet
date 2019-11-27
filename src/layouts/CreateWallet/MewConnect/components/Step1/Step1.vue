@@ -1,6 +1,6 @@
 <template>
-  <v-sheet class="d-flex align-end" min-height="360px">
-    <v-col cols="6" class="pb-6">
+  <v-sheet class="d-flex align-end" min-height="370px">
+    <v-col cols="6" class="pb-10">
       <div class="subtitle-1 font-weight-bold grey--text">STEP 1.</div>
       <div class="headline font-weight-bold mb-3">Download &amp; Install</div>
       <div class="mb-6">
