@@ -16,7 +16,7 @@
           <div class="block-title">
             <div class="for-pop">
               <p>
-                {{ $t('dappsMaker.liquid-price') }} ({{ collateralType }}/USD)
+                {{ $t('dappsMaker.liquid-price') }} ({{ collateralType }}/{{$t('common.currency.usd')}})
               </p>
               <p v-if="liquidationPriceDisplay === '--'" class="pop-icon">
                 <popover :popcontent="$t('dappsMaker.what-is-dashes')" />
@@ -31,9 +31,9 @@
           <div class="block-content">
             <div class="item">
               <p>
-                {{ $t('dappsMaker.current-price') }}({{ collateralType }}/USD)
+                {{ $t('dappsMaker.current-price') }}({{ collateralType }}/{{$t('common.currency.usd')}})
               </p>
-              <div>{{ ethPriceDisplay }} <span>USD</span></div>
+              <div>{{ ethPriceDisplay }} <span>{{$t('common.currency.usd')}}</span></div>
             </div>
             <div class="item">
               <p>{{ $t('dappsMaker.liquidation-penalty') }}</p>
@@ -72,7 +72,7 @@
       <div class="information-single-block">
         <div class="block-item">
           <div class="block-title">
-            <p>{{ $t('dappsMaker.eth-collateral') }}</p>
+            <p>{{ $t('dappsMaker.collateral-label', {symbol: collateralType}) }}</p>
           </div>
 
           <div class="block-content-container">
@@ -308,7 +308,8 @@ export default {
       maxWithDraw: toBigNumber(0),
       maxWithDrawUSD: toBigNumber(0),
       maxEthDraw: toBigNumber(0),
-      vaultType: 'ETH-A'
+      vaultType: 'ETH-A',
+      updatedValue: 0
     };
   },
   computed: {
@@ -324,13 +325,13 @@ export default {
       }
     },
     collateralRatioColoring() {
-      if (this.currentCdpLoaded && this.valuesUpdated > -1) {
+      if (this.currentCdpLoaded && this.updatedValue > -1) {
         return this.currentCdp.collateralStatus;
       }
       return '';
     },
     liquidationPriceDisplay() {
-      if (this.currentCdpLoaded && this.valuesUpdated > -1) {
+      if (this.currentCdpLoaded && this.updatedValue > -1) {
         const value = displayFixedValue(this.currentCdp.liquidationPrice, 2);
         if (new BigNumber(value).gt(0)) {
           return value;
@@ -340,7 +341,7 @@ export default {
       return '--';
     },
     collaterlizationRatioDisplay() {
-      if (this.currentCdpLoaded && this.valuesUpdated > -1) {
+      if (this.currentCdpLoaded && this.updatedValue > -1) {
         return displayFixedPercent(this.getCollateralizationRatio());
       }
       return '--';
@@ -352,7 +353,7 @@ export default {
       return '--';
     },
     liquidationRatioDisplay() {
-      if (this.currentCdpLoaded && this.valuesUpdated > -1) {
+      if (this.currentCdpLoaded && this.updatedValue > -1) {
         return displayFixedValue(
           displayPercentValue(this.currentCdp.liquidationRatio)
         );
@@ -360,7 +361,7 @@ export default {
       return '--';
     },
     liquidationPenaltyDisplay() {
-      if (this.currentCdpLoaded && this.valuesUpdated > -1) {
+      if (this.currentCdpLoaded && this.updatedValue > -1) {
         return displayFixedValue(
           displayPercentValue(this.currentCdp.liquidationPenalty)
         );
@@ -368,7 +369,7 @@ export default {
       return '--';
     },
     stabilityFeeDisplay() {
-      if (this.currentCdpLoaded && this.valuesUpdated > -1) {
+      if (this.currentCdpLoaded && this.updatedValue > -1) {
         return displayFixedValue(
           displayPercentValue(this.currentCdp.stabilityFee)
         );
@@ -376,7 +377,7 @@ export default {
       return '--';
     },
     ethPriceDisplay() {
-      if (this.currentCdpLoaded && this.valuesUpdated > -1) {
+      if (this.currentCdpLoaded && this.updatedValue > -1) {
         return displayFixedValue(this.currentCdp.currentPrice, 2);
       }
       return '--';
@@ -385,7 +386,7 @@ export default {
       return toBigNumber(this.values.debtValue).eq(0);
     },
     maxEthDrawDisplay() {
-      if (this.currentCdpLoaded && this.valuesUpdated > -1) {
+      if (this.currentCdpLoaded && this.updatedValue > -1) {
         return displayFixedValue(this.currentCdp.maxEthDraw, 5);
       }
       return '--';
@@ -397,31 +398,31 @@ export default {
       return '--';
     },
     ethCollateral() {
-      if (this.currentCdpLoaded && this.valuesUpdated > -1) {
+      if (this.currentCdpLoaded && this.updatedValue > -1) {
         return displayFixedValue(this.getCollateralAmount(), 5);
       }
       return '--';
     },
     collateralType() {
-      if (this.currentCdpLoaded && this.valuesUpdated > -1) {
+      if (this.currentCdpLoaded && this.updatedValue > -1) {
         return this.currentCdp.cdpCollateralType;
       }
       return 'ETH';
     },
     usdCollateral() {
-      if (this.currentCdpLoaded && this.valuesUpdated > -1) {
+      if (this.currentCdpLoaded && this.updatedValue > -1) {
         return displayFixedValue(this.currentCdp.collateralValue, 2);
       }
       return '--';
     },
     debtValueDisplay() {
-      if (this.currentCdpLoaded && this.valuesUpdated > -1) {
+      if (this.currentCdpLoaded && this.updatedValue > -1) {
         return displayFixedValue(this.currentCdp.debtValue, 2);
       }
       return '--';
     },
     debtValue() {
-      if (this.currentCdpLoaded && this.valuesUpdated > -1) {
+      if (this.currentCdpLoaded && this.updatedValue > -1) {
         return displayFixedValue(
           this.currentCdp.debtValue,
           5,
@@ -433,13 +434,13 @@ export default {
       return '--';
     },
     maxDai() {
-      if (this.currentCdpLoaded && this.valuesUpdated > -1) {
+      if (this.currentCdpLoaded && this.updatedValue > -1) {
         return displayFixedValue(this.currentCdp.maxDai, 5);
       }
       return '--';
     },
     maxUsd() {
-      if (this.currentCdpLoaded && this.valuesUpdated > -1) {
+      if (this.currentCdpLoaded && this.updatedValue > -1) {
         return displayFixedValue(this.currentCdp.maxDai, 2);
       }
       return '--';
@@ -450,7 +451,8 @@ export default {
       this.isReady();
     },
     valuesUpdated() {
-      this.getActiveCdp();
+      this.updatedValue++;
+      // this.getActiveCdp();
     },
     openCloseModal(val) {
       if (val) {
@@ -466,6 +468,11 @@ export default {
       if (newVal) {
         this.getActiveCdp();
       }
+    },
+    ['$route.params'](val){
+      this.updatedValue++;
+      this.$emit('activeCdpId', this.cdpId);
+      this.getActiveCdp();
     }
   },
   async mounted() {
@@ -483,6 +490,7 @@ export default {
   },
   methods: {
     getActiveCdp() {
+      this.cdpId = this.$route.params.cdpId;
       const cdpId = typeof this.cdpId === 'number' ? this.cdpId : this.cdpId.id;
       this.currentCdp = this.getValueOrFunction('getCdp')(cdpId);
       if (this.currentCdp) {

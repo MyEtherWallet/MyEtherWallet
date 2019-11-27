@@ -171,6 +171,7 @@ export async function setupCdpManage(self, cdpId) {
 export async function getValuesForManage(cdpId) {
   if (typeof cdpId !== 'number') cdpId = cdpId.id;
   const currentCdp = this.activeCdps[cdpId];
+  console.log(currentCdp); // todo remove dev item
   this.currentCdp = currentCdp;
   const systemValues = this.systemValues;
   return {
@@ -373,7 +374,8 @@ export async function doUpdate(self, Toast) {
         self.activeCdps[idProp].updateSystemVariables({
           tokens: self.tokens,
           balances: self.balances,
-          proxyAllowances: self.proxyAllowances
+          proxyAllowances: self.proxyAllowances,
+          dustValues: self.dustValues
         });
       }
     }
@@ -412,9 +414,9 @@ export async function doUpdate(self, Toast) {
   if (self.creatingCdp) {
     self.creatingCdp = false;
     await self.updateActiveCdp();
-    Toast.responseHandler('CDP Created', Toast.INFO);
+    Toast.responseHandler(self.$t('dappsMaker.vault-created'), Toast.INFO);
   } else {
     self.valuesUpdated++;
-    Toast.responseHandler('CDP Updated', Toast.INFO);
+    Toast.responseHandler(self.$t('dappsMaker.vault-updated'), Toast.INFO);
   }
 }

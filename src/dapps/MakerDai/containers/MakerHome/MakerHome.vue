@@ -5,7 +5,7 @@
         <div class="flex-col-vertical-center">
           <div class="card-content">
             <h2 class="color-white">
-              {{ migrateOldDai }}
+              {{ $t('dappsMaker.migrate-old-dai-to-new-dai') }}
             </h2>
             <p class="button">
               {{ $t('dappsMaker.sai-to-dai') }}
@@ -68,12 +68,12 @@
       </div>
     </div>
 
-    <!--    <div class="grid-col-2 promo-cards">
+        <div class="grid-col-2 promo-cards">
       <div class="card-block unlock-wallet" @click="goToSave">
         <div class="flex-col-vertical-center">
           <div class="card-content">
             <h2 class="color-white">
-              {{ save }}
+              {{ $t('dappsMaker.dai-savings') }}
             </h2>
             <p class="button">
               {{ $t('dappsMaker.save') }}
@@ -82,7 +82,7 @@
           </div>
         </div>
       </div>
-    </div>-->
+    </div>
   </div>
 </template>
 
@@ -117,11 +117,6 @@ export default {
   },
   data() {
     return {
-      migrateOldDai: "Migrate 'old' DAI to 'new' DAI",
-      migrateOldCDP: 'Migrate Single Collateral CDP to Multi-Collateral',
-      manage: 'Manage Your CDP',
-      create: 'Create a CDP',
-      save: 'Save'
     };
   },
   computed: {

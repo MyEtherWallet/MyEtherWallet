@@ -32,15 +32,23 @@ export default class MakerCdpBase {
     this.migrated = false;
     this.migrateCdpActive = false;
     this.migrateCdpStage = 0;
-    this.cdpTypeObject = services._mcdManager ? services._mcdManager
-      .get('mcd:cdpType')
-      .getCdpType(null, this.cdpType) : services.mcdCurrencies['ETH'];
+    this.cdpTypeObject = services._mcdManager
+      ? services._mcdManager.get('mcd:cdpType').getCdpType(null, this.cdpType)
+      : services.mcdCurrencies['ETH'];
     this._liqPrice = toBigNumber(0);
     this.isSafe = false;
     this._collatRatio = 0;
     this.pethCollateral = toBigNumber(0);
     this._usdCollateral = toBigNumber(0);
     this._governanceFee = toBigNumber(12345);
+
+    this.tokenMapping = {};
+    for (let i = 0; i < services._typeService.cdpTypes.length; i++) {
+      this.tokenMapping[services._typeService.cdpTypes[i].currency.symbol] =
+        services._typeService.cdpTypes[i];
+      this.tokenMapping[services._typeService.cdpTypes[i].currency.name] =
+        services._typeService.cdpTypes[i];
+    }
 
     this.override = {};
     this.afterInitialization = false;
@@ -127,7 +135,7 @@ export default class MakerCdpBase {
   }
 
   get daiToken() {
-    return this.services._daiToken;
+    return this.getTokens['DAI'];
   }
 
   get daiBalance() {
@@ -154,6 +162,10 @@ export default class MakerCdpBase {
       return this.cdp.debtValue;
     }
     return toBigNumber(0);
+  }
+
+  get dustValues() {
+    return this.services.dustValues;
   }
 
   get ethPrice() {
@@ -347,8 +359,8 @@ export default class MakerCdpBase {
     return toBigNumber(0);
   }
 
-  get dustValues() {
-    return this.services.dustValues;
+  get tokenService() {
+    return this.services._tokenService;
   }
 
   get wethToPethRatio() {
