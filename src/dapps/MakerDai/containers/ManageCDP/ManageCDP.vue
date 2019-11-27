@@ -5,7 +5,12 @@
       <div class="title-content-container">
         <p class="cpd-title">{{ $t('dappsMaker.vault-portal') }}</p>
         <p class="cdp-id">
-          {{ $t('dappsMaker.vault-position-label', { value: cdpIdDisplay, symbol: vaultType }) }}
+          {{
+            $t('dappsMaker.vault-position-label', {
+              value: cdpIdDisplay,
+              symbol: vaultType
+            })
+          }}
         </p>
       </div>
       <!-- ==================================================== -->
@@ -16,7 +21,9 @@
           <div class="block-title">
             <div class="for-pop">
               <p>
-                {{ $t('dappsMaker.liquid-price') }} ({{ collateralType }}/{{$t('common.currency.usd')}})
+                {{ $t('dappsMaker.liquid-price') }} ({{ collateralType }}/{{
+                  $t('common.currency.usd')
+                }})
               </p>
               <p v-if="liquidationPriceDisplay === '--'" class="pop-icon">
                 <popover :popcontent="$t('dappsMaker.what-is-dashes')" />
@@ -31,9 +38,14 @@
           <div class="block-content">
             <div class="item">
               <p>
-                {{ $t('dappsMaker.current-price') }}({{ collateralType }}/{{$t('common.currency.usd')}})
+                {{ $t('dappsMaker.current-price') }}({{ collateralType }}/{{
+                  $t('common.currency.usd')
+                }})
               </p>
-              <div>{{ ethPriceDisplay }} <span>{{$t('common.currency.usd')}}</span></div>
+              <div>
+                {{ ethPriceDisplay }}
+                <span>{{ $t('common.currency.usd') }}</span>
+              </div>
             </div>
             <div class="item">
               <p>{{ $t('dappsMaker.liquidation-penalty') }}</p>
@@ -72,7 +84,11 @@
       <div class="information-single-block">
         <div class="block-item">
           <div class="block-title">
-            <p>{{ $t('dappsMaker.collateral-label', {symbol: collateralType}) }}</p>
+            <p>
+              {{
+                $t('dappsMaker.collateral-label', { symbol: collateralType })
+              }}
+            </p>
           </div>
 
           <div class="block-content-container">
@@ -469,9 +485,9 @@ export default {
         this.getActiveCdp();
       }
     },
-    ['$route.params'](val){
+    ['$route.params'](val) {
       this.updatedValue++;
-      this.$emit('activeCdpId', this.cdpId);
+      // this.$emit('activeCdpId', this.cdpId);
       this.getActiveCdp();
     }
   },

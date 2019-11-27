@@ -14,7 +14,9 @@
           <div class="input-container">
             <div class="interface__block-title">
               {{
-                $t('dappsMaker.deposit-question-mcd', { currency: currentCdpType })
+                $t('dappsMaker.deposit-question-mcd', {
+                  currency: currentCdpType
+                })
               }}
             </div>
             <div :class="['input-box', hasEnoughEth ? '' : 'danger']">
@@ -23,7 +25,9 @@
             </div>
             <div class="sub-text">
               <p v-if="!hasEnoughEth" class="above-max">
-                {{ $t('dappsMaker.notEnoughEth') }}
+                {{
+                  $t('dappsMaker.not-enough-token', { symbol: currentCdpType })
+                }}
               </p>
             </div>
           </div>
@@ -55,10 +59,9 @@
                 </p>
               </div>
               <div class="grid-block">
-                <p>{{ $t('dappsMaker.projected-liquidation') }}</p>
                 <p>
                   {{
-                    $t('dappsMaker.projectedLiquidation', {
+                    $t('dappsMaker.projected-liquidation', {
                       currency: currentCdpType
                     })
                   }}

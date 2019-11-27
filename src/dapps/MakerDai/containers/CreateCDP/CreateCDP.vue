@@ -62,7 +62,7 @@
           <div class="dropdown-text-container dropdown-container">
             <p>
               <span class="cc DAI cc-icon cc-icon-dai currency-symbol" />
-              {{$t('dappsMaker.DAI')}}
+              {{ $t('dappsMaker.dai') }}
               <span class="subname">- Maker DAI </span>
             </p>
           </div>
@@ -79,11 +79,13 @@
           <div class="input-block-message">
             <p>
               {{ $t('dappsMaker.min-generate') }}
-              <b>{{ displayFixedValue(minCreate, 6) }}</b> {{$t('dappsMaker.DAI')}}
+              <b>{{ displayFixedValue(minCreate, 6) }}</b>
+              {{ $t('dappsMaker.dai') }}
             </p>
             <p>
               {{ $t('dappsMaker.max-generate') }}
-              <b>{{ displayFixedValue(maxDaiDraw, 6) }}</b> {{$t('dappsMaker.DAI')}}
+              <b>{{ displayFixedValue(maxDaiDraw, 6) }}</b>
+              {{ $t('dappsMaker.dai') }}
             </p>
           </div>
         </div>
@@ -107,14 +109,14 @@
           <li>
             <p>{{ $t('dappsMaker.liquid-price') }}</p>
             <p>
-              <b>{{ liquidationPrice }}</b> {{$t('common.currency.usd')}}
+              <b>{{ liquidationPrice }}</b> {{ $t('common.currency.usd') }}
             </p>
           </li>
           <li>
             <p>{{ $t('dappsMaker.current-price-info') }}</p>
             <p>
               {{ displayFixedValue(getCurrentPrice, 2) }}
-              {{$t('common.currency.usd')}}
+              {{ $t('common.currency.usd') }}
             </p>
           </li>
           <li>
@@ -319,11 +321,7 @@ export default {
           return false;
 
         if (this.emptyMakerCreated) {
-          if (
-            toBigNumber(this.collatRatio).lte(
-              this.makerCDP.liquidationRatio
-            )
-          )
+          if (toBigNumber(this.collatRatio).lte(this.makerCDP.liquidationRatio))
             return false;
         } else if (toBigNumber(this.collatRatio).lte(1.501)) return false;
         return this.hasEnoughEth;
@@ -395,32 +393,21 @@ export default {
           return acc;
         }, []);
       }
-      return [{ symbol: 'ETH', name: 'ETH-A' }]
+      return [{ symbol: 'ETH', name: 'ETH-A' }];
     },
     getCurrentPrice() {
       if (this.emptyMakerCreated) {
         return this.makerCDP.getCurrentPriceFor(this.selectedCurrency.symbol);
       }
-       return NaN;
+      return NaN;
     },
     minDeposit() {
       if (this.emptyMakerCreated) {
         return this.makerCDP.minDepositFor(this.selectedCurrency.symbol);
       }
-      // return this.getCurrentPriceFor(this.selectedCurrency.symbol);
     },
     minCreate() {
-      if (this.emptyMakerCreated) {
-        const bufferVal = this.calcDaiDraw(
-          this.makerCDP.minDepositFor(this.selectedCurrency.symbol)
-        ).times(0.01);
-        return toBigNumber(
-          this.calcDaiDraw(
-            this.makerCDP.minDepositFor(this.selectedCurrency.symbol)
-          )
-        ).minus(bufferVal);
-      }
-      // return this.getCurrentPriceFor(this.selectedCurrency.symbol);
+      return 20;
     }
   },
   watch: {
@@ -554,9 +541,7 @@ export default {
       );
     },
     approveCurrency() {
-      return this.makerCDP.approveProxyFor(
-        this.selectedCurrency.symbol
-      );
+      return this.makerCDP.approveProxyFor(this.selectedCurrency.symbol);
     }
   }
 };

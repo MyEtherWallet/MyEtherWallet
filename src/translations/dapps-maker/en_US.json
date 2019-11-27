@@ -136,5 +136,6 @@
   "withdraw-question-mcd": "How much {symbol} would you like to withdraw?",
   "deposit-question-mcd": "How much {symbol} would you like to deposit?",
   "migrate-old-dai-to-new-dai": "Migrate 'old' DAI to 'new' DAI",
-  "dai-savings": "Dai Savings"
+  "dai-savings": "Dai Savings",
+  "not-enough-token": "Not enough {symbol}"
 }
