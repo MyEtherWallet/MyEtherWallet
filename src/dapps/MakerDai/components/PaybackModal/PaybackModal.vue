@@ -390,6 +390,7 @@ export default {
     // =========================================
     daiBalance() {
       if (this.currentCdp) {
+        console.log(this.currentCdp.getTokens); // todo remove dev item
         return this.currentCdp.getBalanceOf('MDAI');
       }
       return 0;

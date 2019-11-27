@@ -14,7 +14,7 @@
           <div class="input-container">
             <div class="interface__block-title">
               {{
-                $t('dappsMaker.deposit-question', { currency: currentCdpType })
+                $t('dappsMaker.deposit-question-mcd', { currency: currentCdpType })
               }}
             </div>
             <div :class="['input-box', hasEnoughEth ? '' : 'danger']">

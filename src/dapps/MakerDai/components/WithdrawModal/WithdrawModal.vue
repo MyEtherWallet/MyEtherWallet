@@ -15,7 +15,7 @@
             <p class="message">
               {{ $t('dappsMaker.withdraw-notice') }}
             </p>
-            <label> {{ $t('dappsMaker.withdraw-question') }}</label>
+            <label> {{ $t('dappsMaker.withdraw-question-mcd', { currency: currentCdpType }) }}</label>
             <div class="top-buttons">
               <p class="max-withdraw" @click="maxWithdraw">
                 {{ $t('dappsMaker.max-withdraw') }}
@@ -201,6 +201,7 @@ export default {
       textValues: {},
       fiatCurrency: 'USD',
       digitalCurrency: 'ETH',
+      currentCdpType: 'ETH',
       cancelButton: {
         title: 'Cancel',
         buttonStyle: 'green-border',

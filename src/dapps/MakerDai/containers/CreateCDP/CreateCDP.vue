@@ -107,14 +107,14 @@
           <li>
             <p>{{ $t('dappsMaker.liquid-price') }}</p>
             <p>
-              <b>{{ liquidationPrice }}</b> {{$t('common.currency.USD')}}
+              <b>{{ liquidationPrice }}</b> {{$t('common.currency.usd')}}
             </p>
           </li>
           <li>
             <p>{{ $t('dappsMaker.current-price-info') }}</p>
             <p>
               {{ displayFixedValue(getCurrentPrice, 2) }}
-              {{$t('common.currency.USD')}}
+              {{$t('common.currency.usd')}}
             </p>
           </li>
           <li>
@@ -395,12 +395,13 @@ export default {
           return acc;
         }, []);
       }
+      return [{ symbol: 'ETH', name: 'ETH-A' }]
     },
     getCurrentPrice() {
       if (this.emptyMakerCreated) {
         return this.makerCDP.getCurrentPriceFor(this.selectedCurrency.symbol);
       }
-      // return this.getCurrentPriceFor(this.selectedCurrency.symbol);
+       return NaN;
     },
     minDeposit() {
       if (this.emptyMakerCreated) {

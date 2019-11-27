@@ -79,47 +79,10 @@
         </div>
       </div>
     </back-button>
-<!--    <div v-if="makerActive" class="buttons-container">-->
-<!--      <div v-if="showCreateProxy">-->
-<!--        <div class="dapps-button" @click="buildProxy">-->
-<!--          <h4>{{ $t('dappsMaker.create-proxy') }}</h4>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--      <div v-if="showCreateProxy" class="proxy-container">-->
-<!--        {{ $t('dappsMaker.proxy-instructions') }}-->
-<!--      </div>-->
-<!--      <div v-if="showCdpMigrateButtons">-->
-<!--        <div v-for="(value, idx) in cdpsWithoutProxy" :key="idx + value">-->
-<!--          <div class="dapps-button">-->
-<!--            <div @click="migrateCdpExternal(value)">-->
-<!--              <h4>-->
-<!--                {{ $t('dappsMaker.migrate-cdp', { value: value }) }}-->
-<!--              </h4>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--      <div v-if="showCdpMigrateButtons" class="proxy-container">-->
-<!--        {{ $t('dappsMaker.migrate-instructions') }}-->
-<!--      </div>-->
-<!--    </div>-->
-<!--    <div v-show="makerActive" class="buttons-container">-->
-<!--      <div v-if="showCreateProxy && cdpsWithoutProxy.length > 1">-->
-<!--        <div v-for="(value, idx) in cdpsWithoutProxy" :key="idx + value">-->
-<!--          <div-->
-<!--            :class="[-->
-<!--              'dapps-button',-->
-<!--              activeValues.cdpId === value ? 'active' : ''-->
-<!--            ]"-->
-<!--          >-->
-<!--            <div @click="openMigrate(value)">-->
-<!--              <h4>{{ $t('dappsMaker.vault-id') }} #{{ value }}</h4>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    </div>-->
-    <div v-show="makerActive && listCdps && notMigrateCDP" class="buttons-container">
+    <div
+      v-show="makerActive && listCdps && showManageable"
+      class="buttons-container"
+    >
       <div v-for="(value, idx) in cdps" :key="idx + value">
         <div
           :class="[
@@ -323,8 +286,10 @@ export default {
   },
   computed: {
     ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
-    notMigrateCDP(){
-      return this.$route.name !== 'migrateCDP' && this.$route.name !== 'migrateDAI'
+    showManageable() {
+      return (
+        this.$route.name === 'manage' || this.$route.name === 'select'
+      );
     },
     maxDaiDraw() {
       if (this.ethQty <= 0) return 0;
@@ -465,7 +430,7 @@ export default {
       }
 
       try {
-        this.curentlyLoading = 'Loading: wallet details';
+        this.curentlyLoading = this.$t('dappsMaker.loading-wallet');
         const MewMakerPlugin = MewPlugin(
           web3,
           _self.account.address,
@@ -507,7 +472,7 @@ export default {
       // -------------------------------------------------
       try {
         await this.maker.authenticate();
-        this.curentlyLoading = 'Loading: System Values';
+        this.curentlyLoading = this.$t('dappsMaker.loading-system');
 
         await setupServices(this, this.maker);
 
@@ -536,7 +501,7 @@ export default {
 
         this.currentProxy = await this.getProxy();
 
-        this.curentlyLoading = 'Checking For CDPs';
+        this.curentlyLoading = this.$t('dappsMaker.loading-locating-vaults');
         try {
           const { withType, withProxy, withoutProxy } = await locateCdps(
             this,
@@ -551,7 +516,7 @@ export default {
         }
 
         if (this.cdps.length > 0 || this.cdpsWithoutProxy.length > 0) {
-          this.curentlyLoading = 'Loading: Current CDPs';
+          this.curentlyLoading = this.$t('dappsMaker.loading-vaults');
           await this.loadCdpDetails(this.cdps, this.cdpsWithoutProxy);
         }
       } catch (e) {
@@ -592,7 +557,7 @@ export default {
     removeCdp(vals) {
       try {
         delete this.availableCdps[vals.id];
-        Toast.responseHandler(this.$t('dapps-maker.cdp-closed'), Toast.INFO);
+        Toast.responseHandler(this.$t('dapps-maker.vault-closed'), Toast.INFO);
       } catch (e) {
         // eslint-disable-next-line
         console.error(e);
@@ -622,6 +587,7 @@ export default {
       cdpId = CdpNum(cdpId);
       await setupCdpManage(this, cdpId);
       this.setActiveCdpId(cdpId);
+      return this.getCdp(cdpId);
     },
     async updateActiveCdp() {
       await updateActiveCdp(this);
