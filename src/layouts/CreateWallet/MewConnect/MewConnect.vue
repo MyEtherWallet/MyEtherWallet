@@ -2,9 +2,6 @@
   <div class="light-blue darken-4">
     <div class="py-8" />
     <v-container>
-      <v-btn small @click="tab = 'tab-1'">1</v-btn>
-      <v-btn small @click="tab = 'tab-2'">2</v-btn>
-      <v-btn small @click="tab = 'tab-3'">3</v-btn>
       <BlockTitle :data="titleData" class="mb-10" />
       <v-sheet
         max-width="800px"
