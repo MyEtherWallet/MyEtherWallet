@@ -414,6 +414,17 @@ export default {
       this.sysServices = {};
       this.activeCdps = {};
       this.currentCdp = {};
+      this.daiToken = {};
+      this.mkrToken = {};
+      this.tokens = {};
+      this.mcdCurrencies = {};
+      this._cdpService = {};
+      this._mcdManager = {};
+      this._mcdSaving = {};
+      this._proxyService = {};
+      this._priceService = {};
+      this._tokenService = {};
+      this._typeService = {};
     },
     closeCdp() {
       this.currentCdp.closeCdp();
@@ -647,7 +658,6 @@ export default {
             myLedger1: { type: 'mew' }
           }
         });
-        // await this.maker.service('proxy').ensureProxy();
       } catch (e) {
         // eslint-disable-next-line
         console.error(e);

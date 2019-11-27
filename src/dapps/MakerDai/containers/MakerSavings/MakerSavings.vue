@@ -261,7 +261,7 @@ export default {
       return toBigNumber(this.daiBalance).gte(this.daiQty);
     },
     ready() {
-      return this.proxyChecked && this.allowanceChecked; //this.setupComplete;
+      return this.proxyChecked && this.allowanceChecked;
     }
   },
   watch: {
@@ -304,6 +304,7 @@ export default {
         this.hasProxy();
         this.checkBalance();
         await this.depositBalance();
+        this.getAllowance();
       }
       return 0;
     },
@@ -353,12 +354,15 @@ export default {
       if (this.setupComplete) {
         this.proxyAddress = await this.getValueOrFunction('getProxy')();
         if (!this.proxyAddress) {
+          this.proxyChecked = true;
           this.proxyAddress = null;
           return null;
         }
         this.daiAllowance = await this.getAllowance();
+        this.proxyChecked = true;
         return this.proxyAddress;
       }
+      this.proxyChecked = true;
       return null;
     },
     async BuildProxy() {
