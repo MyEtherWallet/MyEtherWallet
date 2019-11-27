@@ -46,8 +46,10 @@
     "ethereum": "Ethereum",
     "etc": "ETC"
   },
+  "mew": "MyEtherWallet",
   "support-email": "support@myetherwallet.com",
   "support": {
+    "string": "Support",
     "browser": "Browser",
     "os": "Operating System",
     "device": "Device/Wallet type (If any)",
@@ -150,5 +152,11 @@
   "print-modal": {
     "cut": "Cut Here"
   },
-  "clear-all": "Clear All"
+  "clear-all": "Clear All",
+  "right-arrow": "Right arrow",
+  "left-arrow": "Left arrow",
+  "spaceman": "Spaceman",
+  "disconnected": "Disconnected",
+  "mew-icon": "Mew Icon",
+  "kitties": "kitties"
 }

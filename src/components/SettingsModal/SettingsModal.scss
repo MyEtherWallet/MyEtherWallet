@@ -101,6 +101,11 @@ $mobile-width: 530px;
       display: none !important;
     }
 
+    .filename {
+      background-color: $light-grey-1;
+      height: 100%;
+    }
+
     @media all and (max-width: $mobile-width) {
       margin-top: 10px;
       display: block;

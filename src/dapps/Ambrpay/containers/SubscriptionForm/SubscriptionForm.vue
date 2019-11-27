@@ -5,7 +5,8 @@
         <b-container>
           <b-row class="address-block">
             <dropdown-address-selector
-              title="To Address"
+              :clear-address="clearAddress"
+              :title="$t('sendTx.to-addr')"
               @toAddress="getToAddress($event)"
             />
           </b-row>
@@ -113,7 +114,8 @@ export default {
       intervalDays: '',
       sendAmount: '',
       amountErrMsg: '',
-      intervalErrMsg: ''
+      intervalErrMsg: '',
+      clearAddress: false
     };
   },
   computed: {
@@ -170,6 +172,7 @@ export default {
       this.sendAmount = '';
       this.amountErrMsg = '';
       this.intervalErrMsg = '';
+      this.clearAddress = !this.clearAddress;
     },
     getToAddress(data) {
       this.address = data.address;
@@ -200,6 +203,7 @@ export default {
       this.$emit('startSubscription', data);
 
       this.$nextTick(() => {
+        this.clear();
         this.sendAmount = '';
         this.address = '';
         this.intervalDays = '';
