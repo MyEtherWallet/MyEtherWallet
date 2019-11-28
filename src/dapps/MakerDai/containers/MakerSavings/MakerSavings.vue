@@ -224,6 +224,7 @@ export default {
       yearlyRate: 0,
       daiBalance: 0,
       deposited: 0,
+      maxWithdrawable: 0,
       allowance: 0,
       daiAllowance: 0,
       proxyChecked: false,
@@ -312,10 +313,9 @@ export default {
       this.daiQty = this.daiBalance;
     },
     setMaxWithdraw() {
-      if (this.deposited) {
-        this.daiQty = this.deposited.toBigNumber();
+      if (this.maxWithdrawable) {
+        this.daiQty = this.maxWithdrawable;
       }
-      this.daiQty = this.deposited;
     },
     showDeposit(val) {
       this.showDepositDisplay = val;
@@ -334,6 +334,9 @@ export default {
     async depositBalance() {
       if (this.setupComplete) {
         this.deposited = await this.makerSaver.balance();
+        if (this.deposited) {
+          this.maxWithdrawable = this.deposited.toBigNumber().toString();
+        }
       }
     },
     async checkBalance() {
