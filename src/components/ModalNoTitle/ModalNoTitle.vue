@@ -1,17 +1,7 @@
 <template>
   <div>
     <v-dialog v-model="dialog" width="500">
-      <template v-slot:activator="{ on }">
-        <v-btn color="red lighten-2" dark v-on="on">
-          Click Me
-        </v-btn>
-      </template>
-
       <v-card>
-        <v-card-title class="headline grey lighten-2" primary-title>
-          Privacy Policy
-        </v-card-title>
-
         <v-card-text>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
@@ -38,6 +28,9 @@
 <script>
 export default {
   components: {},
+  props: {
+    width: { default: '', type: String }
+  },
   data: () => ({
     dialog: true
   })
