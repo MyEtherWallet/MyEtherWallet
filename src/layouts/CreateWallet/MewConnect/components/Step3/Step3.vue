@@ -2,7 +2,7 @@
   <v-sheet class="d-flex align-end" min-height="370px">
     <v-col cols="6" class="pb-10">
       <div class="subtitle-1 font-weight-bold grey--text">STEP 3.</div>
-      <div class="headline font-weight-bold mb-3">Well done!</div>
+      <div class="headline font-weight-bold mb-3">You are done!</div>
       <div class="mb-6">
         Congratulation! Please use the MEWconnect App to scan this QR code in
         order to access your new wallet. And you are done!
