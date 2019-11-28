@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    <ModalContainer />
     <HeaderContainer />
     <v-content>
       <router-view />
@@ -10,13 +11,19 @@
 </template>
 
 <script>
+import ModalContainer from '@/containers/ModalContainer';
 import HeaderContainer from '@/containers/HeaderContainer';
 import FooterContainer from '@/containers/FooterContainer';
 import GlobalElementsContainer from '@/containers/GlobalElementsContainer';
 
 export default {
   name: 'App',
-  components: { HeaderContainer, FooterContainer, GlobalElementsContainer },
+  components: {
+    ModalContainer,
+    HeaderContainer,
+    FooterContainer,
+    GlobalElementsContainer
+  },
   data: () => ({})
 };
 </script>
