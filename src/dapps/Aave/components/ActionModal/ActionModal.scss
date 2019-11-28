@@ -1,13 +1,10 @@
 @import '~@/scss/GlobalVariables';
 
-body {
-  height: 100%;
-}
-
 .header-container {
   align-items: center;
   display: flex;
   justify-content: space-between;
+  padding: 10px;
 
   .search-container {
     i {
@@ -70,19 +67,81 @@ body {
 .table-container {
   margin-top: 10px;
   table {
+    // display: table;
+    // table-layout: fixed;
     width: 100%;
   }
 
   table thead {
     background-color: $light-blue-12;
     width: 100%;
+
+    .number-header {
+      padding-left: 20px;
+    }
   }
 
-  table thead th {
+  thead th, tbody td {
+    padding: 10px;
+  }
+
+  table thead th, table thead th div {
     color: $light-blue-2;
     font-size: 11px;
     font-weight: 600;
-    padding: 6px;
     text-transform: uppercase;
+  }
+
+  .sort-enabled-container {
+    align-items: center;
+    display: flex;
+
+    span {
+      flex-direction: column;
+      display: flex;
+      margin-bottom: 4px;
+      margin-left: 5px;
+    }
+  
+    i {
+      color: $light-grey-18;
+      font-size: 10px;
+      height: 6px;
+    }
+  }
+  
+  tbody {
+    tr {
+      border-bottom: 1px solid $light-grey-6;
+    }
+
+    tr td {
+      color: $dark-blue-6;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .action-btn {
+      color: $white;
+      background-color: $mew-green;
+      border-radius: 4px;
+      border: none;
+      padding: 10px 20px;
+    }
+
+    .number {
+      color: $light-grey-18;
+      font-size: 11px;
+      font-weight: 500;
+      padding-left: 20px;
+    }
+
+    .stable-apr {
+      color: $light-blue-1;
+    }
+
+    .var-apr {
+      color: $light-yellow-4;
+    }
   }
 }

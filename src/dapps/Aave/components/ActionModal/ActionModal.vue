@@ -42,30 +42,59 @@
         <div class="table-container">
           <table>
             <thead>
-              <th>#</th>
+              <th class="number-header">#</th>
               <th>{{ $t('dappsAave.token') }}</th>
               <th>
-                {{
-                  depositModal
-                    ? $t('dappsAave.avail-balance')
-                    : $t('dappsAave.avail-for-you')
-                }}
+                <div class="sort-enabled-container">
+                  {{
+                    depositModal
+                      ? $t('dappsAave.avail-balance')
+                      : $t('dappsAave.avail-for-you')
+                  }}
+                  <span> 
+                    <i class="fa fa-caret-up" />
+                    <i class="fa fa-caret-down" />
+                  </span>
+                </div>
               </th>
               <th>
-                {{
-                  depositModal
-                    ? $t('dappsAave.deposited')
-                    : $t('dappsAave.stable-apr')
-                }}
+                <div class="sort-enabled-container">
+                  {{
+                    depositModal
+                      ? $t('dappsAave.deposited')
+                      : $t('dappsAave.stable-apr')
+                  }}
+                  <span>
+                    <i class="fa fa-caret-up" />
+                    <i class="fa fa-caret-down" />
+                  </span>
+                </div>
               </th>
               <th>
-                {{
-                  depositModal
-                    ? $t('dappsAave.apr')
-                    : $t('dappsAave.variable-apr')
-                }}
+                <div class="sort-enabled-container">
+                  {{
+                    depositModal
+                      ? $t('dappsAave.apr')
+                      : $t('dappsAave.variable-apr')
+                  }}
+                  <span>
+                    <i class="fa fa-caret-up" />
+                    <i class="fa fa-caret-down" />
+                  </span>
+                </div>
               </th>
+              <th></th>
             </thead>
+            <tbody>
+              <tr v-for="(token, index) in fakeObj" :key="token.key">
+                <td class="number">{{index + 1 }}.</td>
+                <td>{{token.token}}</td>
+                <td>{{token.avail-balance}}</td>
+                <td :class="depositModal ? '' : 'stable-apr'">{{token.deposited}}</td>
+                <td :class="depositModal ? '' : 'var-apr'"> {{token.apr}}</td>
+                <td><button @click="takeAction()" class="action-btn">{{ depositModal ? $tc('dappsAave.deposit',1) : $t('dappsAave.borrow') }}</button></td>
+              </tr>
+            </tbody>
           </table>
         </div>
       </div>
@@ -89,10 +118,16 @@ export default {
       fakeObj: [
         {
           "token": "DAI",
-          "avail-balanc": "15.42323 DAI",
+          "avail-balance": "15.42323 DAI",
           "deposited": "2.47 DAI",
           "apr": "9.72%"
-        }
+        },
+        {
+          "token": "DAI",
+          "avail-balance": "15.42323 DAI",
+          "deposited": "2.47 DAI",
+          "apr": "9.72%"
+        }       
       ]
     };
   },
@@ -105,6 +140,10 @@ export default {
     toggleTabs() {
       this.allTabActive = !this.allTabActive;
       this.stableTabActive = !this.stableTabActive;
+    },
+    takeAction() {
+      this.$refs['actionModal'].hide();
+      this.$router.push('/interface/dapps/aave/action');
     }
   }
 };
@@ -112,4 +151,14 @@ export default {
 
 <style lang="scss" scoped>
 @import 'ActionModal.scss';
+</style>
+
+<style lang="scss">
+.modal-dialog {
+  max-width: 600px !important;
+}
+
+.modal-body {
+  padding: 0;
+}
 </style>
