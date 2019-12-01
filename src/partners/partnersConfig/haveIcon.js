@@ -252,6 +252,7 @@ const haveIcon = [
   'GZR',
   'HEAT-alt',
   'HEAT',
+  'HEX',
   'HIGHT',
   'HMQ',
   'HODL',
