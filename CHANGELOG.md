@@ -12,7 +12,7 @@
 - Update translations[#1651](https://github.com/MyEtherWallet/MyEtherWallet/pull/1651)
 - Display token symbol [#1674](https://github.com/MyEtherWallet/MyEtherWallet/pull/1674)
 - Refactor translations [#1682](https://github.com/MyEtherWallet/MyEtherWallet/pull/1682)
-
+- Add support for MEWconnect api v2 [#1288](https://github.com/MyEtherWallet/MyEtherWallet/pull/1288)
 ### Feature
 
 - Display label paths [#1681](https://github.com/MyEtherWallet/MyEtherWallet/pull/1681)
