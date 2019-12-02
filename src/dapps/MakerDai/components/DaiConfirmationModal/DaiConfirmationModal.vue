@@ -18,10 +18,14 @@
 
             <div class="amount-block">
               <div class="icon">
-                <img src="~@/assets/images/currency/eth.svg" />
+                <i
+                  v-if="getIcon(currency) !== ''"
+                  :class="['icon', 'cc', getIcon(currency), 'cc-icon']"
+                />
               </div>
+
               <div class="amount">
-                {{ collateral }}<span>{{ $t('common.currency.eth') }}</span>
+                {{ collateral }}<span>{{ currency }}</span>
               </div>
             </div>
           </div>
@@ -46,22 +50,12 @@
           <expanding-option :title="$t('dappsMaker.details')">
             <ul>
               <li>
-                <p>
-                  {{ $t('dappsMaker.liquid-price') }} ({{
-                    $t('common.currency.eth')
-                  }}/{{ $t('common.currency.usd') }})
-                </p>
-                <p class="bold">
-                  {{ liquidationPrice }} {{ $t('common.currency.usd') }}
-                </p>
+                <p>{{ $t('dappsMaker.liquid-price') }} ({{ currency }}/USD)</p>
+                <p class="bold">{{ liquidationPrice }} USD</p>
               </li>
               <li>
-                <p>
-                  {{ $t('dappsMaker.current-price') }} ({{
-                    $t('common.currency.eth')
-                  }}/{{ $t('common.currency.usd') }})
-                </p>
-                <p>{{ currentPrice }} {{ $t('common.currency.usd') }}</p>
+                <p>{{ $t('dappsMaker.current-price') }} ({{ currency }}/USD)</p>
+                <p>{{ currentPrice }} USD</p>
               </li>
               <li>
                 <p>{{ $t('dappsMaker.liquidation-penalty') }}</p>
@@ -92,6 +86,7 @@
 <script>
 import ExpandingOption from '@/components/ExpandingOption';
 import StandardButton from '@/components/Buttons/StandardButton';
+import { hasIcon } from '@/partners';
 
 export default {
   components: {
@@ -130,12 +125,16 @@ export default {
     generate: {
       type: String,
       default: 'Error'
+    },
+    currency: {
+      type: String,
+      default: 'Error'
     }
   },
   data() {
     return {
       confirmButton: {
-        title: this.$t('dappsMaker.confirm-and-create'),
+        title: this.$t('dappsMaker.confirm-and-create-vault'),
         buttonStyle: 'green',
         helpCenter: true
       }
@@ -145,6 +144,20 @@ export default {
   watch: {},
   mounted() {},
   methods: {
+    iconFetcher(currency) {
+      let icon;
+      try {
+        // eslint-disable-next-line
+        icon = require(`@/assets/images/currency/coins/AllImages/${currency}.svg`);
+      } catch (e) {
+        // eslint-disable-next-line
+        return require(`@/assets/images/icons/web-solution.svg`);
+      }
+      return icon;
+    },
+    getIcon(currency) {
+      return hasIcon(currency);
+    },
     confirmClicked() {
       this.opencdp();
     }
