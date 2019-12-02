@@ -3,6 +3,7 @@
 ### Bug
 
 - Fix MEWCX mobile ui [#1657](https://github.com/MyEtherWallet/MyEtherWallet/pull/1657)
+- Redirect MEWconnect link [#1687](https://github.com/MyEtherWallet/MyEtherWallet/pull/1687)
 - ENS name, translations, styles [#1684](https://github.com/MyEtherWallet/MyEtherWallet/pull/1684)
 
 ### Devop
@@ -18,6 +19,7 @@
 - Address book [#1647](https://github.com/MyEtherWallet/MyEtherWallet/pull/1647)
 - Add MEWconnect footer link [#1675](https://github.com/MyEtherWallet/MyEtherWallet/pull/1675)
 - Add clear btn to forms [#1673](https://github.com/MyEtherWallet/MyEtherWallet/pull/1673)
+- Add Mult-Collateral Dai support [#1575](https://github.com/MyEtherWallet/MyEtherWallet/pull/1575)
 - Update TOS [[#1685](https://github.com/MyEtherWallet/MyEtherWallet/pull/1685)
 
 ### Release v5.2.4

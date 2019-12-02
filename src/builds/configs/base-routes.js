@@ -54,6 +54,13 @@ const router = [
     meta: { requiresAuth: false }
   },
   {
+    // temporary until mewconnect fixes the path
+    path: '/privacy-policy.html',
+    name: 'PrivacyPolicyLayout',
+    component: PrivacyPolicyLayout,
+    meta: { requiresAuth: false }
+  },
+  {
     path: '/terms-of-service',
     name: 'TermsOfService',
     component: TermsOfService,
