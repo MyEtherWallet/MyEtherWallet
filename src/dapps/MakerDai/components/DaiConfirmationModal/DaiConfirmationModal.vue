@@ -2,7 +2,7 @@
   <div class="modal-container">
     <b-modal
       ref="modal"
-      :title="$t('dappsMaker.DAIConfirmation')"
+      :title="$t('dappsMaker.dai-confirmation')"
       centered
       class="bootstrap-modal bootstrap-modal-wide padding-40-20"
       hide-footer
@@ -20,7 +20,9 @@
               <div class="icon">
                 <img src="~@/assets/images/currency/eth.svg" />
               </div>
-              <div class="amount">{{ collateral }}<span>ETH</span></div>
+              <div class="amount">
+                {{ collateral }}<span>{{ $t('common.currency.eth') }}</span>
+              </div>
             </div>
           </div>
           <div class="arrow">
@@ -34,35 +36,47 @@
               <div class="icon">
                 <img src="~@/assets/images/currency/coins/AllImages/DAI.svg" />
               </div>
-              <div class="amount">{{ generate }}<span>DAI</span></div>
+              <div class="amount">
+                {{ generate }}<span>{{ $t('dappsMaker.dai') }}</span>
+              </div>
             </div>
           </div>
         </div>
         <div class="detail-info">
-          <expending-option :title="$t('dappsMaker.details')">
+          <expanding-option :title="$t('dappsMaker.details')">
             <ul>
               <li>
-                <p>{{ $t('dappsMaker.liquidPrice') }} (ETH/USD)</p>
-                <p class="bold">{{ liquidationPrice }} USD</p>
+                <p>
+                  {{ $t('dappsMaker.liquid-price') }} ({{
+                    $t('common.currency.eth')
+                  }}/{{ $t('common.currency.usd') }})
+                </p>
+                <p class="bold">
+                  {{ liquidationPrice }} {{ $t('common.currency.usd') }}
+                </p>
               </li>
               <li>
-                <p>{{ $t('dappsMaker.currentPrice') }} (ETH/USD)</p>
-                <p>{{ currentPrice }} USD</p>
+                <p>
+                  {{ $t('dappsMaker.current-price') }} ({{
+                    $t('common.currency.eth')
+                  }}/{{ $t('common.currency.usd') }})
+                </p>
+                <p>{{ currentPrice }} {{ $t('common.currency.usd') }}</p>
               </li>
               <li>
-                <p>{{ $t('dappsMaker.liquidationPenalty') }}</p>
+                <p>{{ $t('dappsMaker.liquidation-penalty') }}</p>
                 <p>{{ liquidationPenalty }}%</p>
               </li>
               <li>
-                <p>{{ $t('dappsMaker.collateralRatio') }}</p>
+                <p>{{ $t('dappsMaker.collateral-ratio') }}</p>
                 <p class="bold">{{ collatRatio }} %</p>
               </li>
               <li>
-                <p>{{ $t('dappsMaker.minimumRatio') }}</p>
+                <p>{{ $t('dappsMaker.minimum-ratio') }}</p>
                 <p>{{ minRatio }}%</p>
               </li>
             </ul>
-          </expending-option>
+          </expanding-option>
         </div>
         <div class="button-container">
           <standard-button
@@ -76,12 +90,12 @@
 </template>
 
 <script>
-import ExpendingOption from '@/components/ExpendingOption';
+import ExpandingOption from '@/components/ExpandingOption';
 import StandardButton from '@/components/Buttons/StandardButton';
 
 export default {
   components: {
-    'expending-option': ExpendingOption,
+    'expanding-option': ExpandingOption,
     'standard-button': StandardButton
   },
   props: {
@@ -121,7 +135,7 @@ export default {
   data() {
     return {
       confirmButton: {
-        title: this.$t('dappsMaker.confirmAndCreate'),
+        title: this.$t('dappsMaker.confirm-and-create'),
         buttonStyle: 'green',
         helpCenter: true
       }

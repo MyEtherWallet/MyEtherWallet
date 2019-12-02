@@ -19,7 +19,7 @@
         </li>
         <li>
           <span class="add-custom" @click="openCustomModal"
-            >+{{ $t('dapps.customNFT') }}</span
+            >+{{ $t('nftManager.custom') }}</span
           >
         </li>
       </ul>
@@ -35,12 +35,7 @@
 </template>
 
 <script>
-import InputSearch from '@/components/Inputs/InputSearch';
-
 export default {
-  components: {
-    'input-search': InputSearch
-  },
   props: {
     supportedNftObj: {
       type: Object,

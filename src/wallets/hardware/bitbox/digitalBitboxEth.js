@@ -14,7 +14,8 @@ import * as Crypto from 'crypto';
 import * as HDKey from 'hdkey';
 import * as semver from 'semver';
 
-const BitBoxSupportedVersion = '7.0.1';
+const BitBoxLowestSupportedVersion = '7.0.1';
+const BitBoxNonSupportedVersion = '8.0.0';
 const hijackState = {
   // Order must match that in the firmware code
   responseReady: 0,
@@ -168,11 +169,13 @@ class DigitalBitboxEth {
             callback(undefined, 'errorUpgradeFirmware');
             return;
           }
-          if (semver.lt(response.device.version, BitBoxSupportedVersion)) {
+          if (
+            semver.lt(response.device.version, BitBoxLowestSupportedVersion)
+          ) {
             callback(undefined, 'errorUpgradeFirmware');
             return;
           }
-          if (semver.gt(response.device.version, BitBoxSupportedVersion)) {
+          if (semver.gte(response.device.version, BitBoxNonSupportedVersion)) {
             callback(undefined, 'errorUnsupportedFirmware');
             return;
           }

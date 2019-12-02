@@ -7,7 +7,14 @@
   flex-direction: column;
 
   h3 {
+    border-bottom: 1px solid $dark-blue-6;
     color: $dark-blue-6;
+    margin-bottom: 15px !important;
+    padding-bottom: 15px !important;
+  }
+
+  .form-container {
+    padding: 20px 30px 30px;
   }
 }
 
@@ -23,37 +30,113 @@
 
   .input-container {
     flex: auto;
+  }
+}
 
-    label {
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
+input {
+  background-color: $light-grey-1;
+  border: 0;
+  border-radius: 4px;
+  padding: 13px 15px;
+  width: 100%;
+}
 
-    input {
-      background-color: $light-grey-1;
-      border: 0;
-      border-radius: 4px;
-      padding: 13px 15px;
-      width: 100%;
-    }
+label {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.multi-coin-input-container {
+  align-items: center;
+  display: flex;
+  padding: 5px 0;
+  position: relative;
+
+  h4 {
+    padding-bottom: 10px;
   }
 
-  .submit-container {
-    text-align: center;
-    button {
-      background-color: $mew-green;
-      border: 0;
-      border-radius: 4px;
-      color: $white;
-      cursor: pointer;
-      margin: 30px 0 0 10px;
-      padding: 13px 15px;
-      width: 150px;
-    }
+  label {
+    margin: 0 !important;
+    padding-right: 15px;
+  }
 
-    .disabled {
-      background-color: $dark-grey-11 !important;
-      pointer-events: none;
-    }
+  i {
+    cursor: pointer;
+    padding-left: 10px;
+  }
+
+  .disabled-icon {
+    color: $dark-grey-11 !important;
+    pointer-events: none;
+  }
+
+  .validity-indication {
+    cursor: initial;
+    position: absolute !important;
+    right: 35px;
+  }
+
+  .valid {
+    color: $mew-green;
+  }
+
+  .error {
+    color: $red-1;
+  }
+}
+
+.submit-container {
+  text-align: center;
+  button {
+    background-color: $mew-green;
+    border: 1px solid $mew-green;
+    border: 0;
+    border-radius: 4px;
+    color: $white;
+    cursor: pointer;
+    margin: 30px 0 0 10px;
+    padding: 13px 15px;
+    width: 150px;
+  }
+
+  .disabled {
+    background-color: $dark-grey-11 !important;
+    border: 1px solid $dark-grey-11 !important;
+    color: $white !important;
+    pointer-events: none;
+  }
+}
+
+.multi-coin-submit-container {
+  @extend .submit-container;
+
+  align-items: center;
+  display: flex;
+  justify-content: center;
+
+  .add {
+    background-color: $white;
+    border: 1px solid $mew-green;
+    color: $mew-green;
+  }
+}
+
+.title-and-dropdown-container {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.collapse-open-button {
+  width: 100%;
+  background-color: $dark-blue-12 !important;
+  border-color: $dark-blue-12 !important;
+  display: flex;
+  align-items: center;
+  margin: 5px 0;
+
+  p {
+    color: $white !important;
   }
 }

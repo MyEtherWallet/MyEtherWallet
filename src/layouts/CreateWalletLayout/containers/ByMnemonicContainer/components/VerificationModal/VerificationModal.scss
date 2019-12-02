@@ -96,3 +96,32 @@
     }
   }
 }
+
+.error-msg-container {
+  color: $red-1;
+  padding-top: 30px;
+  text-align: center;
+}
+
+.disabled {
+  background-color: $dark-grey-11 !important;
+  pointer-events: none !important;
+}
+
+.extra-word-container {
+  label {
+    font-weight: 600;
+    font-size: 16px;
+    line-height: initial;
+    margin-right: 8px;
+    color: #212529;
+  }
+
+  input {
+    background-color: #f9f9f9;
+    border: 0;
+    margin-top: 5px;
+    padding: 13px 15px;
+    width: 100%;
+  }
+}

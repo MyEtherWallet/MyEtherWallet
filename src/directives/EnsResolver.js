@@ -9,6 +9,7 @@ const EnsResolver = {
       const errorPar = document.createElement('p');
       errorPar.classList.add('resolver-error');
       const ens = _this.$store.state.ens;
+      const network = _this.$store.state.network;
       const checkDarklist = function(addr) {
         const isDarklisted = Misc.isDarklisted(addr);
         if (isDarklisted.error) {
@@ -18,7 +19,7 @@ const EnsResolver = {
           errorPar.innerText =
             isDarklisted.msg.length > 0
               ? isDarklisted.msg
-              : 'Address has been reported. Please make sure you are sending funds to the correct address.';
+              : this.$t('ens.ens-resolver.address-reported-error');
           el.parentNode.parentNode.appendChild(errorPar);
           return true;
         }
@@ -40,17 +41,13 @@ const EnsResolver = {
             removeElements();
           }
         } else {
-          if (
-            _this.network.type.ens === '' ||
-            ens === null ||
-            ens === undefined
-          ) {
+          if (network.type.ens === '' || ens === null || ens === undefined) {
             removeElements();
             _this.isValidAddress = false;
             _this.hexAddress = '';
             // eslint-disable-next-line
             errorPar.innerText = `No ${
-              _this.network.type.name[0]
+              network.type.name[0]
             }NS resolver in this node`;
             el.parentNode.parentNode.appendChild(errorPar);
           } else {
@@ -70,7 +67,7 @@ const EnsResolver = {
                 removeElements();
                 // eslint-disable-next-line
                 errorPar.innerText = `${
-                  _this.network.type.name[0]
+                  network.type.name[0]
                 }NS name is invalid or not found`;
                 _this.isValidAddress = false;
                 _this.hexAddress = '';
@@ -84,10 +81,11 @@ const EnsResolver = {
         removeElements();
         if (e.length > 0) {
           if (e.length !== 42 || !utils.isHexStrict(e)) {
-            errorPar.innerText = 'Not a valid Ethereum address';
+            errorPar.innerText = this.$t('ens.ens-resolver.invalid-eth-addr');
           } else if (!utils.checkAddressChecksum(e)) {
-            errorPar.innerText =
-              'This address is not checksummed properly. Please copy the address exactly as shown.';
+            errorPar.innerText = this.$t(
+              'ens.ens-resolver.addr-not-checksummed'
+            );
             // 'Incorrect checksum: check address format on EthVM';
           }
         } else {

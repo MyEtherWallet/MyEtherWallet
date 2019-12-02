@@ -1,4 +1,6 @@
-export default {
+import { Misc } from '@/helpers';
+
+const config = {
   tabs: [
     {
       name: 'dashboard',
@@ -8,7 +10,7 @@ export default {
         active: require('@/assets/images/sidemenu/dashboard-active.svg'),
         inactive: require('@/assets/images/sidemenu/dashboard.svg')
       },
-      titleKey: 'interface.dashboard',
+      titleKey: 'interface.menu.dashboard',
       children: []
     },
     {
@@ -26,7 +28,7 @@ export default {
         active: require('@/assets/images/sidemenu/send-active.svg'),
         inactive: require('@/assets/images/sidemenu/send.svg')
       },
-      titleKey: 'interface.txSideMenuTitle',
+      titleKey: 'interface.menu.send',
       children: [
         {
           name: 'send-transaction',
@@ -35,7 +37,7 @@ export default {
             active: '',
             inactive: ''
           },
-          titleKey: 'common.sendTx'
+          titleKey: 'sendTx.send-tx'
         },
         {
           name: 'send-offline',
@@ -49,7 +51,7 @@ export default {
             active: '',
             inactive: ''
           },
-          titleKey: 'common.offline'
+          titleKey: 'sendTx.send-offline'
         },
         {
           name: 'nft-manager',
@@ -59,7 +61,7 @@ export default {
             active: '',
             inactive: ''
           },
-          titleKey: 'common.ntfManager'
+          titleKey: 'interface.menu.ntf'
         }
       ]
     },
@@ -112,7 +114,7 @@ export default {
         active: require('@/assets/images/sidemenu/contract-active.svg'),
         inactive: require('@/assets/images/sidemenu/contract.svg')
       },
-      titleKey: 'interface.txSideMenuContract',
+      titleKey: 'interface.menu.contract',
       children: [
         {
           name: 'interact-with-contract',
@@ -121,7 +123,7 @@ export default {
             active: '',
             inactive: ''
           },
-          titleKey: 'common.interactWcontract'
+          titleKey: 'interface.menu.interact-contract'
         },
         {
           name: 'deploy-contract',
@@ -130,7 +132,7 @@ export default {
             active: '',
             inactive: ''
           },
-          titleKey: 'common.depContract'
+          titleKey: 'interface.menu.deploy'
         }
       ]
     },
@@ -142,7 +144,7 @@ export default {
         active: require('@/assets/images/sidemenu/message-active.svg'),
         inactive: require('@/assets/images/sidemenu/message.svg')
       },
-      titleKey: 'interface.txSideMenuMessage',
+      titleKey: 'interface.menu.message',
       children: [
         {
           name: 'sign-message',
@@ -151,7 +153,7 @@ export default {
             active: '',
             inactive: ''
           },
-          titleKey: 'common.signMessage'
+          titleKey: 'interface.menu.sign-message'
         },
         {
           name: 'verify-message',
@@ -160,9 +162,23 @@ export default {
             active: '',
             inactive: ''
           },
-          titleKey: 'common.verifyMessage'
+          titleKey: 'verifyMessage.title'
         }
       ]
     }
   ]
 };
+if (Misc.isMewCx()) {
+  const tabIdx = config.tabs.findIndex(item => {
+    return item.name === 'send-transaction';
+  });
+  const newArr = [];
+  config.tabs[tabIdx].children.forEach(item => {
+    if (item.name !== 'send-offline') {
+      newArr.push(item);
+    }
+  });
+
+  config.tabs[tabIdx].children = newArr;
+}
+export default config;

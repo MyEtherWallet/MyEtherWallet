@@ -17,6 +17,8 @@ import debug from 'debug';
 
 const errorLogger = debug('v5:partners-changelly');
 
+const disabled = ['USDT'];
+
 export default class Changelly {
   constructor(props = {}) {
     this.name = Changelly.getName();
@@ -80,6 +82,9 @@ export default class Changelly {
   }
 
   validSwap(fromCurrency, toCurrency) {
+    if (disabled.includes(fromCurrency) || disabled.includes(toCurrency)) {
+      return false;
+    }
     if (this.isValidNetwork) {
       return this.currencies[fromCurrency] && this.currencies[toCurrency];
     }
@@ -107,29 +112,44 @@ export default class Changelly {
     return this.getRate(fromCurrency, toCurrency, fromValue, toValue, isFiat);
   }
 
-  async getFixedRate(fromCurrency, toCurrency, fromValue) {
-    const changellyDetails = await changellyCalls.getFixRate(
-      fromCurrency,
-      toCurrency,
-      fromValue,
-      this.network
-    );
+  getFixedRate(fromCurrency, toCurrency, fromValue) {
+    return new Promise(async resolve => {
+      const timeout = setTimeout(() => {
+        resolve({
+          fromCurrency,
+          toCurrency,
+          provider: this.name,
+          rate: 0
+        });
+      }, 20000);
 
-    if (!Array.isArray(changellyDetails)) {
-      throw Error(
-        `Failed to retrieve changelly rate from ${fromCurrency} to ${toCurrency}`
+      const changellyDetails = await changellyCalls.getFixRate(
+        fromCurrency,
+        toCurrency,
+        fromValue,
+        this.network
       );
-    }
+      clearTimeout(timeout);
 
-    return {
-      fromCurrency,
-      toCurrency,
-      provider: this.name,
-      minValue: changellyDetails[0].min,
-      maxValue: changellyDetails[0].max,
-      rate: changellyDetails[0].result,
-      rateId: changellyDetails[0].id
-    };
+      if (!Array.isArray(changellyDetails)) {
+        return {
+          fromCurrency,
+          toCurrency,
+          provider: this.name,
+          rate: 0
+        };
+      }
+
+      resolve({
+        fromCurrency,
+        toCurrency,
+        provider: this.name,
+        minValue: changellyDetails[0].min,
+        maxValue: changellyDetails[0].max,
+        rate: changellyDetails[0].result,
+        rateId: changellyDetails[0].id
+      });
+    });
   }
 
   calculateRate(inVal, outVal) {
@@ -137,25 +157,44 @@ export default class Changelly {
   }
 
   async getMarketRate(fromCurrency, toCurrency, fromValue) {
-    const changellyDetails = await Promise.all([
-      changellyCalls.getMin(fromCurrency, toCurrency, fromValue, this.network),
-      changellyCalls.getRate(fromCurrency, toCurrency, fromValue, this.network)
-    ]);
+    try {
+      const changellyDetails = await Promise.all([
+        changellyCalls.getMin(
+          fromCurrency,
+          toCurrency,
+          fromValue,
+          this.network
+        ),
+        changellyCalls.getRate(
+          fromCurrency,
+          toCurrency,
+          fromValue,
+          this.network
+        )
+      ]);
 
-    const minAmount = new BigNumber(changellyDetails[0])
-      .times(0.001)
-      .plus(new BigNumber(changellyDetails[0]))
-      .toFixed();
+      const minAmount = new BigNumber(changellyDetails[0])
+        .times(0.001)
+        .plus(new BigNumber(changellyDetails[0]))
+        .toFixed();
 
-    const estValueResponse = changellyDetails[1][0];
+      const estValueResponse = changellyDetails[1][0];
 
-    return {
-      fromCurrency,
-      toCurrency,
-      provider: this.name,
-      minValue: minAmount,
-      rate: estValueResponse.rate
-    };
+      return {
+        fromCurrency,
+        toCurrency,
+        provider: this.name,
+        minValue: minAmount,
+        rate: estValueResponse.rate
+      };
+    } catch (e) {
+      return {
+        fromCurrency,
+        toCurrency,
+        provider: this.name,
+        rate: 0
+      };
+    }
   }
 
   getInitialCurrencyEntries(collectMapFrom, collectMapTo) {
@@ -213,7 +252,7 @@ export default class Changelly {
       swapDetails.validFor = swapDetails.parsed.validFor;
       return swapDetails;
     }
-    return Error('From amount below changelly minimun for currency pair');
+    return Error('From amount below changelly minimum for currency pair');
   }
 
   async createTransaction({

@@ -7,7 +7,7 @@
             <div class="block-item">
               <div class="block-title">
                 <div class="select-label">
-                  <p>{{ $t('dappsMaker.positionLabel', { value: cdpId }) }}</p>
+                  <p>{{ $t('dappsMaker.position-label', { value: cdpId }) }}</p>
 
                   <p>
                     <span class="standard-button__green-border">
@@ -38,21 +38,27 @@
                     </div>
                     <div>
                       {{ displayFixedValue(aCdp.ethCollateral, 5, false) }}
-                      <span>ETH</span>
+                      <span>{{ $t('common.currency.eth') }}</span>
                     </div>
                     <div>
                       {{ displayFixedValue(aCdp.pethCollateral, 5, true) }}
-                      <span>PETH</span> /
+                      <span>{{ $t('common.currency.peth') }}</span>
                       {{ displayFixedValue(aCdp.usdCollateral, 2) }}
-                      <span>USD</span>
+                      <span>{{ $t('common.currency.usd') }}</span>
                     </div>
                     <div>
                       <br />
-                      <div>{{ $t('dappsMaker.liquidPrice') }} (ETH/USD)</div>
+                      <div>
+                        {{ $t('dappsMaker.liquid-price') }} ({{
+                          $t('common.currency.eth')
+                        }}/{{ $t('common.currency.usd') }})
+                      </div>
                       <span :class="safeRank(aCdp.collatRatio)">{{
                         aCdp ? displayFixedValue(aCdp.liquidationPrice, 2) : 0
                       }}</span>
-                      <span class="liq-usd"> USD</span>
+                      <span class="liq-usd">
+                        {{ $t('common.currency.usd') }}</span
+                      >
                     </div>
                   </div>
                 </div>
@@ -61,14 +67,17 @@
                     <div>
                       <p>{{ $t('dappsMaker.generated') }}</p>
                     </div>
-                    <div>{{ aCdp.debtValue }} <span>DAI</span></div>
+                    <div>
+                      {{ aCdp.debtValue }}
+                      <span>{{ $t('dappsMaker.dai') }}</span>
+                    </div>
                     <div>
                       {{ displayFixedValue(aCdp.debtValue, 2) }}
-                      <span>USD</span>
+                      <span>{{ $t('common.currency.usd') }}</span>
                     </div>
                     <div>
                       <br />
-                      <div>{{ $t('dappsMaker.collateralRatio') }}</div>
+                      <div>{{ $t('dappsMaker.collateral-ratio') }}</div>
                       <span :class="safeRank(aCdp.collatRatio)">
                         {{
                           aCdp

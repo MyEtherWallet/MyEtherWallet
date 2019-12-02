@@ -51,12 +51,15 @@ const CLEAR_WALLET = function(state) {
   };
 };
 
-//
 const DECRYPT_WALLET = function(state, wallet) {
   state.wallet = wallet;
   state.account['address'] = wallet.getAddressString();
   state.account['isHardware'] = wallet.isHardware;
   state.account['identifier'] = wallet.identifier;
+  if (!wallet.hasOwnProperty('isHardWare')) {
+    state.account['nickname'] = wallet.getNickname();
+    state.account['keystore'] = wallet.getKeystore();
+  }
 };
 
 const INIT_STATES = function(state, stateObj) {
@@ -76,6 +79,11 @@ const SET_ENS = function(state, ens) {
 const SET_GAS_PRICE = function(state, val) {
   state.gasPrice = val;
   store.set('gasPrice', val);
+};
+
+const SET_ADDRESS_BOOK = function(state, val) {
+  state.addressBook = val;
+  store.set('addressBook', val);
 };
 
 const SET_LAST_PATH = function(state, val) {
@@ -134,5 +142,6 @@ export default {
   TOGGLE_SIDEMENU,
   GETTING_STARTED_DONE,
   UPDATE_BLOCK_NUMBER,
-  SAVE_QUERY_VAL
+  SAVE_QUERY_VAL,
+  SET_ADDRESS_BOOK
 };

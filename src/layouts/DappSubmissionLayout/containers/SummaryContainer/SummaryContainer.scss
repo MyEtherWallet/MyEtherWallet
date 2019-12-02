@@ -1,0 +1,60 @@
+@import '~@/scss/GlobalVariables';
+
+.error {
+  color: $text-color-red;
+  margin-bottom: 2px;
+}
+
+.dapp-info-container,
+.dapp-team-container {
+  background: rgb(242, 250, 250);
+  border-radius: 12px;
+  text-align: left;
+}
+
+.summary-header {
+  color: rgb(11, 40, 64);
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.left-column,
+.right-column {
+  display: inline-block;
+}
+
+.summary-title {
+  color: $dark-blue-2;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.summary-content {
+  color: $light-blue-3;
+  font-size: 14px;
+  font-weight: normal;
+}
+
+.summary-tag-content {
+  background: $light-blue-7;
+  border-radius: 4px;
+  color: white;
+  display: inline-block;
+  padding: 5px;
+}
+
+.summary-img {
+  height: 15px;
+  width: 19px;
+}
+
+.social-img {
+  border-radius: 10px;
+  height: 22px;
+  width: 22px;
+}
+
+.social-links {
+  border-radius: 20px;
+  display: inline-block;
+}

@@ -1,26 +1,18 @@
-<template>
+<template functional>
   <div class="footer-text">
-    <p>
-      <span>{{ $t('createWallet.doNotForget') }}</span>
-      {{ $t('createWallet.doNotForgetDesc') }}<span> {{ combo }}</span>
-      {{ desc }}
-    </p>
+    <i18n tag="p" path="createWallet.password.do-not-forget-save-pw">
+      <span slot="do-not-forget">{{
+        parent.$t('createWallet.password.do-not-forget')
+      }}</span>
+      <span slot="key-pass">{{
+        parent.$t('createWallet.password.key-pass')
+      }}</span>
+    </i18n>
   </div>
 </template>
 
 <script>
-export default {
-  props: {
-    combo: {
-      type: String,
-      default: ''
-    },
-    desc: {
-      type: String,
-      default: ''
-    }
-  }
-};
+export default {};
 </script>
 
 <style lang="scss" scoped>

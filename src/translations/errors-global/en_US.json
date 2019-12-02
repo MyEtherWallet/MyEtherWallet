@@ -1,10 +1,11 @@
 {
-  "notAValidAmountTotal": "Not enough ",
-  "toSend": "to send.",
-  "invalidValue": "Invalid value",
-  "wrongPassPhrase": "Passphrase given is incorrect!",
-  "browserNonU2f": "Browser not u2f compliant. Try using Chrome or Opera!",
-  "browserNonWebUsb": "Browser does not support WebUSB. Try using Chrome or Opera!",
-  "noMobileSupport": "Hardware wallet not supported by mobile browser!",
-  "failedToFetch": "Failed to fetch"
+  "not-valid-amount-total": "Not enough ",
+  "to-send": "to send.",
+  "invalid-value": "Invalid value",
+  "wrong-passphrase": "Passphrase given is incorrect!",
+  "browser-non-u2f": "Browser not u2f compliant. Try using Chrome or Opera!",
+  "browser-non-web-usb": "Browser does not support WebUSB. Try using Chrome or Opera!",
+  "no-mobile-support": "Hardware wallet not supported by mobile browser!",
+  "something-went-wrong": "Something went wrong!",
+  "signer-address-different": "Signer address is different from the derived address!"
 }

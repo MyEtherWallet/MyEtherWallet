@@ -1,35 +1,48 @@
-<template>
+<template functional>
   <div class="mnemonic-table-container">
     <div class="header">
       <div class="block-title">
-        <img alt src="~@/assets/images/short-hand-logo.png" height="30px" />
-        <span>Mnemonic Phrase</span>
+        <img
+          :src="
+            require(`@/assets/images/short-hand-logo-${
+              buildType ? buildType : 'web'
+            }.png`)
+          "
+          height="30px"
+          alt
+        />
+        <span>{{ parent.$t('createWallet.mnemonic.table.title') }}</span>
       </div>
       <div class="support">
         <img alt src="~@/assets/images/icons/support.svg" />
-        <p>support@myetherwallet.com</p>
+        <p>{{ parent.$t('common.support-email') }}</p>
       </div>
     </div>
     <div class="warnings">
       <h3>
-        Please Keep This Sheet at a Very Safe Place. It is your property!
+        {{ parent.$t('createWallet.mnemonic.table.safe-place') }}
       </h3>
-      <p>
-        We <span>CAN NOT</span> change your password. Please
-        <span>DO NOT FORGET</span> to save your password, and it is your private
-        key. You will need this <span>Password + Mnemonic Phrase</span> to
-        access your wallet.
-      </p>
+      <i18n tag="p" path="createWallet.mnemonic.table.cannot-change-pw">
+        <span slot="cannot">{{
+          parent.$t('createWallet.mnemonic.table.cannot')
+        }}</span>
+        <span slot="do-not-forget"
+          >{{ parent.$t('createWallet.mnemonic.table.do-not-forget') }}
+        </span>
+        <span slot="requirements">{{
+          parent.$t('createWallet.mnemonic.table.requirements')
+        }}</span>
+      </i18n>
     </div>
     <div class="content">
-      <div v-show="isTwentyFour" class="mnemonic full-mnemonic">
-        <div v-for="(item, idx) in mnemonic" :key="item" class="item">
+      <div v-show="props.isTwentyFour" class="mnemonic full-mnemonic">
+        <div v-for="(item, idx) in props.mnemonic" :key="item" class="item">
           <span>{{ idx + 1 }}. </span>{{ item }}
         </div>
       </div>
-      <div v-show="!isTwentyFour" class="mnemonic half-mnemonic">
+      <div v-show="!props.isTwentyFour" class="mnemonic half-mnemonic">
         <div
-          v-for="(item, idx) in mnemonic.slice(0, 12)"
+          v-for="(item, idx) in props.mnemonic.slice(0, 12)"
           :key="item"
           class="item"
         >
@@ -49,6 +62,10 @@ export default {
     isTwentyFour: {
       type: Boolean,
       default: false
+    },
+    buildType: {
+      type: String,
+      default: 'web'
     }
   }
 };

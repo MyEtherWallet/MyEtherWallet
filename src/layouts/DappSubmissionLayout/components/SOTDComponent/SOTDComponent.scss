@@ -1,0 +1,53 @@
+@import '~@/scss/GlobalVariables';
+
+.sotd-wrapper {
+  .sotd-container {
+    background: $light-green-1;
+    border-radius: 6px;
+    padding: 30px;
+    width: 400px;
+
+    @media all and (max-width: 742px) {
+      width: 80%;
+    }
+
+    .text-container {
+      align-items: flex-start;
+      display: flex;
+      justify-content: center;
+
+      @media all and (max-width: 742px) {
+        justify-content: space-between;
+      }
+
+      .header {
+        color: $dark-blue-2;
+        font-size: 20px;
+        font-weight: bold;
+        height: 24px;
+        text-align: left;
+      }
+    }
+
+    .info-box {
+      margin-top: 20px;
+    }
+
+    img {
+      height: 40px;
+    }
+
+    p {
+      text-align: left;
+    }
+
+    a {
+      text-decoration: underline;
+    }
+
+    .fa-times {
+      color: $dark-blue-2;
+      cursor: pointer;
+    }
+  }
+}
