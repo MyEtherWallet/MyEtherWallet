@@ -12,13 +12,14 @@
 - Update translations[#1651](https://github.com/MyEtherWallet/MyEtherWallet/pull/1651)
 - Display token symbol [#1674](https://github.com/MyEtherWallet/MyEtherWallet/pull/1674)
 - Refactor translations [#1682](https://github.com/MyEtherWallet/MyEtherWallet/pull/1682)
-
+- Add support for MEWconnect api v2 [#1288](https://github.com/MyEtherWallet/MyEtherWallet/pull/1288)
 ### Feature
 
 - Display label paths [#1681](https://github.com/MyEtherWallet/MyEtherWallet/pull/1681)
 - Address book [#1647](https://github.com/MyEtherWallet/MyEtherWallet/pull/1647)
 - Add MEWconnect footer link [#1675](https://github.com/MyEtherWallet/MyEtherWallet/pull/1675)
 - Add clear btn to forms [#1673](https://github.com/MyEtherWallet/MyEtherWallet/pull/1673)
+- Add Mult-Collateral Dai support [#1575](https://github.com/MyEtherWallet/MyEtherWallet/pull/1575)
 - Update TOS [[#1685](https://github.com/MyEtherWallet/MyEtherWallet/pull/1685)
 
 ### Release v5.2.4
