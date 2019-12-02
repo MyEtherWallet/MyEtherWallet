@@ -74,7 +74,7 @@
       class="collapse-open-button"
       variant="primary"
     >
-      <p>{{ $t('ens.txt-record') }}s</p>
+      <p>{{ $t('ens.txt-record') }}</p>
     </b-btn>
     <b-collapse
       id="textrecords"

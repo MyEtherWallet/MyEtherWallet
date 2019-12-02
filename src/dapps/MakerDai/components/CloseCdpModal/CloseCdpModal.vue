@@ -130,11 +130,9 @@ export default {
       type: Object,
       default: function() {
         return {
-          maxPethDraw: '',
           maxEthDraw: '',
           maxUsdDraw: '',
           ethCollateral: '',
-          pethCollateral: '',
           usdCollateral: '',
           debtValue: '',
           maxDai: '',
@@ -148,6 +146,18 @@ export default {
       default: function() {
         return {};
       }
+    },
+    activeCdpId: {
+      type: Number,
+      default: 0
+    },
+    makerActive: {
+      type: Boolean,
+      default: false
+    },
+    getValueOrFunction: {
+      type: Function,
+      default: function() {}
     }
   },
   data() {
@@ -253,26 +263,28 @@ export default {
       return false;
     },
     needsDaiApprove() {
-      if (toBigNumber(this.values.proxyAllowanceDai).gt(0)) {
+      if (toBigNumber(this.getProxyAllowances()['DAI']).gt(0)) {
         if (
-          toBigNumber(this.values.proxyAllowanceDai).lte(this.values.debtValue)
+          toBigNumber(this.getProxyAllowances()['DAI']).lte(
+            this.values.debtValue
+          )
         ) {
           return true;
         }
       }
-      return toBigNumber(this.values.proxyAllowanceDai).eq(0);
+      return toBigNumber(this.getProxyAllowances()['DAI']).eq(0);
     },
     needsMkrApprove() {
-      if (toBigNumber(this.values.proxyAllowanceMkr).gt(0)) {
+      if (toBigNumber(this.getProxyAllowances()['MKR']).gt(0)) {
         if (
-          toBigNumber(this.values.proxyAllowanceMkr).lt(
+          toBigNumber(this.getProxyAllowances()['MKR']).lt(
             this.values.governanceFeeOwed
           )
         ) {
           return true;
         }
       }
-      return toBigNumber(this.values.proxyAllowanceMkr).eq(0);
+      return toBigNumber(this.getProxyAllowances()['MKR']).eq(0);
     },
     canClose() {
       return (
@@ -291,11 +303,43 @@ export default {
   async mounted() {
     this.destAddress = this.account.address;
     this.getBalances();
-    this.$refs.modal.$on('shown', async () => {
+    this.$refs.modal.$on('shown', () => {
+      this.cdpId = this.$route.params.cdpId;
+      this.isVisible = true;
+      this.amount = 0;
+      this.getActiveCdp();
       this.getBalances();
     });
+
+    this.$refs.modal.$on('hidden', () => {
+      this.isVisible = false;
+    });
+
+    if (this.makerActive) {
+      this.getActiveCdp();
+    }
   },
   methods: {
+    getActiveCdp() {
+      if (this.cdpId > 0) {
+        this.currentCdp = this.getValueOrFunction('getCdp')(this.cdpId);
+        this.currentCdpType = this.currentCdp.cdpCollateralType;
+        this.$forceUpdate();
+      }
+    },
+    getProxyAllowances() {
+      const allowances = this.getValueOrFunction('proxyAllowances');
+      if (allowances) {
+        return allowances;
+      }
+      return {};
+    },
+    getSystemValues(name) {
+      const vals = this.getValueOrFunction('systemValues');
+      if (vals) {
+        return vals[name];
+      }
+    },
     closeModal() {
       this.$refs.modal.hide();
     },
@@ -305,8 +349,9 @@ export default {
       }, 200);
     },
     async closeCdp() {
-      this.delayCloseModal();
-      this.$emit('closeCdp');
+      if (this.currentCdp) {
+        this.delayCloseModal();
+      }
     },
     displayPercentValue(raw) {
       if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);
