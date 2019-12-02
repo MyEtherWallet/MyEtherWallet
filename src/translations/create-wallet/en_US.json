@@ -69,11 +69,11 @@
     "table": {
       "title": "Mnemonic Phrase",
       "safe-place": "Please Keep This Sheet at a Very Safe Place. It is your property!",
-      "cannot-change-pw": "We {cannot} change your password. Please {do-not-forget} to save your password, and it is your private key. You will need this {password} to access your wallet",
+      "cannot-change-pw": "We {cannot} change your mnemonic phrase or extra word. This is your wallet key. Please {do-not-forget} to save it. You will need {requirements} to access your wallet.",
       "cannot": "CAN NOT",
       "change-pw": "change your password. Please",
-      "dont-forget": "DO NOT FORGET",
-      "requirements": "Password + Mnemonic Phrase"
+      "do-not-forget": "DO NOT FORGET",
+      "requirements": "this PHRASE and EXTRA WORD (if used)"
     }
   },
   "created": {

@@ -18,7 +18,7 @@
       </div>
       <div :class="[open ? 'open' : 'hide', 'dropdown-item-container']">
         <div class="dropdown-search-container">
-          <input v-model="search" placeholder="Search" />
+          <input v-model="search" :placeholder="$t('common.search')" />
           <i class="fa fa-search" />
         </div>
         <div class="item-container">

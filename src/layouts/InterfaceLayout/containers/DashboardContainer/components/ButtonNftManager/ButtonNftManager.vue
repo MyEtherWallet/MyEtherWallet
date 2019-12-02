@@ -8,9 +8,9 @@
       class="content-container"
     >
       <img
+        :alt="parent.$t('common.kitties')"
         src="~@/assets/images/buttons/nft-manager/crypto-kitties.png"
         class="kitties"
-        alt="kitties"
       />
       <div class="text-content">
         <p class="title">
