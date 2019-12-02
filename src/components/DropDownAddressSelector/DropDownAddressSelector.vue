@@ -29,19 +29,17 @@
         <i
           :class="[
             isValidAddress && hexAddress.length !== 0 ? '' : 'not-good',
-            !isValidAddress && selectedAddress.length > 0
-              ? 'resolver-err-icon'
-              : '',
+            hasMessage ? 'resolver-err-icon' : '',
             'fa fa-check-circle good-button address-check'
           ]"
           aria-hidden="true"
         />
         <div v-if="!isValidAddress" class="blockie-place-holder-image" />
         <div v-if="isValidAddress" class="selected-address-blockie">
-          <blockie :address="selectedAddress" width="30px" height="30px" />
+          <blockie :address="hexAddress" width="30px" height="30px" />
           <div v-if="isToken(currency)">
             <img
-              alt="Ethereum"
+              :alt="$t('common.currency.ethereum')"
               class="currency-icon"
               src="@/assets/images/currency/eth.svg"
             />
@@ -71,7 +69,7 @@
             <div class="list-blockie">
               <blockie :address="addr.address" width="30px" height="30px" />
               <img
-                alt="Ethereum"
+                :alt="$t('common.currency.ethereum')"
                 class="currency-icon"
                 src="@/assets/images/currency/eth.svg"
               />
@@ -118,13 +116,11 @@
 <script>
 import '@/assets/images/currency/coins/asFont/cryptocoins.css';
 import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
-import debugLogger from 'debug';
-import WAValidator from 'wallet-address-validator';
 import Blockie from '@/components/Blockie';
 import { EthereumTokens, BASE_CURRENCY } from '@/partners';
 import { mapState } from 'vuex';
 import { Toast } from '@/helpers';
-const errorLogger = debugLogger('v5:error');
+import { isAddress } from '@/helpers/addressUtils';
 
 export default {
   components: {
@@ -138,6 +134,10 @@ export default {
     currency: {
       type: String,
       default: 'ETH'
+    },
+    clearAddress: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -152,9 +152,20 @@ export default {
     };
   },
   computed: {
-    ...mapState(['addressBook', 'account'])
+    ...mapState(['addressBook', 'account']),
+    hasMessage() {
+      return (
+        (!this.isValidAddress && this.selectedAddress.length > 0) ||
+        (!isAddress(this.selectedAddress) && this.isValidAddress)
+      );
+    }
   },
   watch: {
+    clearAddress() {
+      this.selectedAddress = '';
+      this.isValidAddress = false;
+      this.hexAddress = '';
+    },
     currentAddress(address) {
       if (this.addresses.findIndex(addr => addr.address === address) === -1) {
         this.updateAddresses(address);
@@ -163,8 +174,8 @@ export default {
     addressBook() {
       this.updateAddresses(this.currentAddress);
     },
-    selectedAddress(address) {
-      this.validateAddress(address);
+    hexAddress() {
+      this.validateAddress();
     },
     currency() {
       this.validateAddress(this.selectedAddress);
@@ -236,30 +247,13 @@ export default {
       this.dropdownOpen = !this.dropdownOpen;
       this.selectedAddress = address;
     },
-    validateAddress(addr) {
-      if (this.selectedAddress !== '') {
-        const checkAddress = addr.address ? addr.address : addr;
-        if (EthereumTokens[this.currency]) {
-          this.isValidAddress = WAValidator.validate(checkAddress, 'ETH');
-        } else {
-          try {
-            this.isValidAddress = WAValidator.validate(
-              checkAddress,
-              this.currency
-            );
-          } catch (e) {
-            errorLogger(e);
-            this.isValidAddress = false;
-          }
-        }
-
-        if (this.isValidAddress) {
-          this.$emit('toAddress', { address: checkAddress, valid: true });
-          this.$emit('validAddress', true);
-        } else {
-          this.$emit('toAddress', { address: '', valid: false });
-          this.$emit('validAddress', false);
-        }
+    validateAddress() {
+      if (this.isValidAddress) {
+        this.$emit('toAddress', { address: this.hexAddress, valid: true });
+        this.$emit('validAddress', true);
+      } else {
+        this.$emit('toAddress', { address: '', valid: false });
+        this.$emit('validAddress', false);
       }
     }
   }

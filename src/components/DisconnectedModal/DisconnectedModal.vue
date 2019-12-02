@@ -12,7 +12,7 @@
       <div class="modal-contents">
         <div class="icon">
           <img
-            alt="Disconnected"
+            :alt="$t('common.disconnected')"
             src="@/assets/images/icons/disconnected.png"
           />
         </div>
