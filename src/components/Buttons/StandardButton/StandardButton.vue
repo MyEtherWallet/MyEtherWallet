@@ -45,36 +45,36 @@
         <i v-show="spinner" class="fa fa-spin fa-spinner fa-lg" />
         <img
           v-if="options.loadingIcon"
+          :alt="$t('common.loading')"
           class="loading-left"
-          alt="Loading"
           src="@/assets/images/icons/loading.png"
         />
 
         <img
           v-if="options.rightArrow && options.buttonStyle == 'green'"
+          :alt="$t('common.right-arrow')"
           class="arrow-right"
-          alt="Right arrow"
           src="@/assets/images/icons/arrow-right.svg"
         />
 
         <img
           v-if="options.rightArrow && options.buttonStyle == 'green-border'"
+          :alt="$t('common.right-arrow')"
           class="arrow-right"
-          alt="Right arrow"
           src="@/assets/images/icons/arrow-right.svg"
         />
 
         <img
           v-if="options.leftArrow && options.buttonStyle == 'green'"
+          :alt="$t('common.left-arrow')"
           class="arrow-left"
-          alt="Left arrow"
           src="@/assets/images/icons/arrow-left.svg"
         />
 
         <img
           v-if="options.leftArrow && options.buttonStyle == 'green-border'"
+          :alt="$t('common.left-arrow')"
           class="arrow-left"
-          alt="Left arrow"
           src="@/assets/images/icons/arrow-green-left.svg"
         />
       </button>
@@ -84,12 +84,12 @@
     </div>
     <div v-if="options.helpCenter" class="help-center-block">
       <p>
-        Having issues?
+        {{ $t('common.having-issues') }}
         <a
           href="https://kb.myetherwallet.com/"
           rel="noopener noreferrer"
           target="_blank"
-          >Help Center</a
+          >{{ $t('common.help-center') }}</a
         >
       </p>
     </div>

@@ -1,11 +1,11 @@
 import { Toast } from '@/helpers';
 import Vue from 'vue';
 const ERRORS = {
-  'No device selected.': 'keepkeyError.noDeviceSelected',
-  'Invalid PIN': 'keepkeyError.invalidPin',
-  'Unable to claim interface.': 'keepKey.cantClaim',
+  'No device selected.': 'keepkeyError.no-device-selected',
+  'Invalid PIN': 'keepkeyError.invalid-pin',
+  'Unable to claim interface.': 'keepKey.cant-claim',
   'WebUSB is not available in this browser. We recommend trying Chrome.':
-    'keepKey.browserNotSupported'
+    'keepKey.browser-not-supported'
 };
 const WARNING = {};
 export default err => {

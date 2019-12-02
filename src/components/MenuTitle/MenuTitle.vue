@@ -16,8 +16,7 @@ export default {
     return {
       dropdownOpen: false
     };
-  },
-  methods: {}
+  }
 };
 </script>
 

@@ -1,9 +1,9 @@
-<template>
+<template functional>
   <div class="bottom-text">
     <p>
-      {{ question }}
-      <a :href="link" target="_blank" rel="noopener noreferrer">{{
-        linkText
+      {{ props.question }}
+      <a :href="props.link" target="_blank" rel="noopener noreferrer">{{
+        props.linkText
       }}</a>
     </p>
   </div>
@@ -24,9 +24,6 @@ export default {
       type: String,
       default: ''
     }
-  },
-  data() {
-    return {};
   }
 };
 </script>

@@ -1,10 +1,10 @@
-<template>
+<template functional>
   <div class="not-found">
     <div class="wrap">
       <div class="page-container">
         <div class="content-block">
           <div class="block-title">404</div>
-          <div class="block-text">{{ $t('home.lostTitle') }}</div>
+          <div class="block-text">{{ parent.$t('home.lost-title') }}</div>
           <div class="ailien-spaceship">
             <img src="~@/assets/images/icons/alien-spaceship.svg" alt />
           </div>
@@ -15,11 +15,7 @@
 </template>
 
 <script>
-export default {
-  data() {
-    return {};
-  }
-};
+export default {};
 </script>
 
 <style lang="scss" scoped>

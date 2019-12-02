@@ -10,11 +10,11 @@
       lazy
     >
       <div class="modal-contents">
-        <h2>Are you sure you want to logout of your wallet?</h2>
+        <h2>{{ $t('common.confirm-logout') }}</h2>
 
         <div class="buttons">
-          <button class="no" @click="cancel">No</button>
-          <button class="yes" @click="logout">Yes</button>
+          <button class="no" @click="cancel">{{ $t('common.no') }}</button>
+          <button class="yes" @click="logout">{{ $t('common.yes') }}</button>
         </div>
       </div>
     </b-modal>

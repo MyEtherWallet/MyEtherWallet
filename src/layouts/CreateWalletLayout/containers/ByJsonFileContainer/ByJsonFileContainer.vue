@@ -2,18 +2,18 @@
   <div class="create-wallet-by-json-file">
     <success-modal
       ref="successModal"
-      message="You have created a wallet successfully"
+      :message="$t('createWallet.created.text')"
+      :link-message="$t('common.wallet.access-my')"
       link-to="/access-my-wallet"
-      link-message="Access My Wallet"
     />
     <div class="wrap">
       <div class="nav-tab-user-input-box">
         <b-tabs>
           <div class="progress-bar" />
-          <b-tab :title="$t('createWallet.byJsonFile')" active>
+          <b-tab :title="$t('createWallet.keystore.title-tab')" active>
             <div class="title-block">
               <div class="title-popover">
-                <h3>{{ $t('createWallet.byJsonFileSaveKeystore') }}</h3>
+                <h3>{{ $t('createWallet.keystore.title-save') }}</h3>
               </div>
             </div>
             <div class="contents">
@@ -37,14 +37,15 @@
                       'nopadding'
                     ]"
                     :download="name"
+                    rel="noopener noreferrer"
                     @click="downloadDone()"
                   >
                     <span v-if="downloadable">{{
-                      $t('createWallet.byJsonFileDownloadKeyFile')
+                      $t('createWallet.keystore.button-download')
                     }}</span>
                     <div v-if="!downloadable" class="generating">
                       <i class="fa fa-spinner fa-lg fa-spin" />
-                      <p>Please wait while we generate your keystore file...</p>
+                      <p>{{ $t('createWallet.keystore.message-wait') }}</p>
                     </div>
                   </a>
                 </div>
@@ -67,6 +68,7 @@ import makeBackup from '@/assets/images/icons/make-a-backup.svg';
 import walletWorker from 'worker-loader!@/workers/wallet.worker.js';
 import { Toast, Wallet, Configs } from '@/helpers';
 import { mapState } from 'vuex';
+import createBlob from '@/helpers/createBlob.js';
 
 export default {
   components: {
@@ -83,18 +85,18 @@ export default {
     return {
       contents: [
         {
-          title: this.$t('createWallet.byJsonFileDontLoseTitle'),
-          desc: this.$t('createWallet.byJsonFileDontLoseDesc'),
+          title: this.$t('createWallet.keystore.loose.title'),
+          desc: this.$t('createWallet.keystore.loose.desc'),
           img: noLose
         },
         {
-          title: this.$t('createWallet.byJsonFileDontShareTitle'),
-          desc: this.$t('createWallet.byJsonFileDontShareDesc'),
+          title: this.$t('createWallet.keystore.share.title'),
+          desc: this.$t('createWallet.keystore.share.desc'),
           img: noShare
         },
         {
-          title: this.$t('createWallet.byJsonFileMakeBackupTitle'),
-          desc: this.$t('createWallet.byJsonFileMakeBackupDesc'),
+          title: this.$t('createWallet.keystore.backup.title'),
+          desc: this.$t('createWallet.keystore.backup.desc'),
           img: makeBackup
         }
       ],
@@ -111,7 +113,7 @@ export default {
       const worker = new walletWorker();
       worker.postMessage({ type: 'createWallet', data: [this.password] });
       worker.onmessage = e => {
-        this.walletJson = this.createBlob('mime', e.data.walletJson);
+        this.walletJson = createBlob(e.data.walletJson, 'mime');
         this.downloadable = true;
         this.name = e.data.name.toString();
       };
@@ -120,7 +122,7 @@ export default {
       };
     } else {
       const _wallet = this.createWallet(this.password);
-      this.walletJson = this.createBlob('mime', _wallet.walletJson);
+      this.walletJson = createBlob(_wallet.walletJson, 'mime');
       this.downloadable = true;
       this.name = _wallet.name.toString();
     }
@@ -138,14 +140,6 @@ export default {
       });
       createdWallet.name = wallet.getV3Filename();
       return createdWallet;
-    },
-    createBlob(mime, str) {
-      const string = typeof str === 'object' ? JSON.stringify(str) : str;
-      if (string === null) return '';
-      const blob = new Blob([string], {
-        type: mime
-      });
-      return window.URL.createObjectURL(blob);
     }
   }
 };

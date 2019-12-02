@@ -1,0 +1,43 @@
+@import '~@/scss/GlobalVariables';
+
+.dapp-item-container {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.dapp-item {
+  align-items: center;
+  background-color: $white;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-around;
+  margin: 0 0 5px 0;
+  padding: 40px 15px;
+  width: 100%;
+
+  img {
+    width: 32px;
+  }
+
+  .dapp-text {
+    width: 360px;
+  }
+
+  .view-button {
+    background-color: $white;
+    border: 1px solid $mew-green;
+    border-radius: 5px;
+    color: $mew-green;
+    cursor: pointer;
+    padding: 15px;
+    text-align: center;
+    width: 200px;
+
+    &:hover {
+      background-color: $mew-green;
+      color: $white;
+    }
+  }
+}

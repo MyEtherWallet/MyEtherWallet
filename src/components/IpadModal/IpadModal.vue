@@ -2,15 +2,15 @@
   <div class="address-qrcode-modal">
     <b-modal
       ref="ipadModal"
+      :title="$t('common.addr')"
       hide-footer
       centered
       class="bootstrap-modal nopadding"
-      title="Address"
       static
       lazy
     >
       <div class="modal-contents">
-        MEWconnect is not compatible with iPads.
+        {{ this.$t('accessWallet.mewconnect.warning') }}
       </div>
     </b-modal>
   </div>

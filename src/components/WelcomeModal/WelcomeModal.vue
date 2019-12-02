@@ -14,27 +14,20 @@
       <img src="@/assets/images/modal/garlands.png" alt />
       <div class="welcome-modal-container">
         <div class="welcome-modal-text">
-          <h3>{{ $t('home.welcomeTov5') }}</h3>
-          <i18n path="home.welcomeToV5Desc1" tag="p" for="home.welcomeToLink1">
+          <h3>{{ $t('welcomeMessage.title') }}</h3>
+          <i18n path="welcomeMessage.desc1" tag="p" for="welcomeMessage.link1">
             <a
               href="https://medium.com/@myetherwallet/lets-make-it-official-mew5-myetherwallet-s-all-new-interface-is-here-2063117180a4"
               target="_blank"
               rel="noopener noreferrer"
-              >{{ $t('home.welcomeToLink1') }}</a
-            >
-          </i18n>
-          <i18n path="home.welcomeToV5Desc2" tag="p" for="home.welcomeToLink2">
-            <a
-              aria-label="Vintage MyEtherWallet"
-              href="https://vintage.myetherwallet.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              >{{ $t('home.welcomeToLink2') }}</a
+              >{{ $t('welcomeMessage.link1') }}</a
             >
           </i18n>
         </div>
         <div class="welcome-modal-button">
-          <button @click="closeModal">{{ $t('home.onwards') }}!</button>
+          <button @click="closeModal">
+            {{ $t('welcomeMessage.button-onwards') }}!
+          </button>
         </div>
       </div>
     </div>

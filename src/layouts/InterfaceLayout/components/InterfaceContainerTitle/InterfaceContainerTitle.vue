@@ -5,7 +5,7 @@
       <slot name="right"></slot>
       <div class="side-menu-button">
         <round-button
-          :title="$t('common.menu')"
+          :title="$t('interface.menu.string')"
           @click.native="toggleSideMenu"
         />
       </div>

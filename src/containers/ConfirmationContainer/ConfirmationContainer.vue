@@ -1,6 +1,7 @@
 <template>
   <div>
     <confirm-modal
+      v-if="wallet !== null"
       ref="confirmModal"
       :confirm-send-tx="sendTx"
       :signed-tx="signedTx"
@@ -15,6 +16,7 @@
       :nonce="nonce"
     />
     <confirm-collection-modal
+      v-if="wallet !== null"
       ref="confirmCollectionModal"
       :send-batch-transactions="sendBatchTransactions"
       :is-hardware-wallet="isHardwareWallet"
@@ -23,6 +25,7 @@
       :sending="sending"
     />
     <confirm-modal
+      v-if="wallet !== null"
       ref="offlineGenerateConfirmModal"
       :confirm-send-tx="generateTx"
       :signed-tx="signedTx"
@@ -37,6 +40,7 @@
       :nonce="nonce"
     />
     <confirm-sign-modal
+      v-if="wallet !== null"
       ref="signConfirmModal"
       :confirm-sign-message="messageReturn"
       :show-success="showSuccessModal"
@@ -58,6 +62,7 @@
       :link-message="linkMessage"
     />
     <swap-widget
+      v-if="wallet !== null"
       ref="swapWidget"
       :supplied-from="swapWigetData['fromCurrency']"
       :supplied-to="swapWigetData['toCurrency']"
@@ -169,6 +174,27 @@ export default {
     fromAddress() {
       if (this.account) {
         return this.account.address;
+      }
+    }
+  },
+  watch: {
+    wallet(newVal) {
+      if (newVal !== null) {
+        if (this.$refs.hasOwnProperty('confirmModal')) {
+          this.$refs.confirmModal.$refs.confirmation.$on('hidden', () => {
+            if (this.dismissed) {
+              this.reset();
+            }
+          });
+        }
+        if (this.$refs.hasOwnProperty('signConfirmModal')) {
+          this.$refs.signConfirmModal.$refs.signConfirmation.$on(
+            'hidden',
+            () => {
+              this.signedMessage = '';
+            }
+          );
+        }
       }
     }
   },
@@ -319,12 +345,6 @@ export default {
     );
   },
   mounted() {
-    this.$refs.confirmModal.$refs.confirmation.$on('hidden', () => {
-      if (this.dismissed) {
-        this.reset();
-      }
-    });
-
     this.$refs.successModal.$refs.success.$on('hide', () => {
       this.successMessage = '';
       this.linkMessage = 'OK';
@@ -488,7 +508,7 @@ export default {
         promiEvent.on('error', onError);
         promiEvent.once('transactionHash', hash => {
           this.showSuccessModal(
-            'Transaction sent!',
+            `${this.$t('sendTx.success.sub-title')}`,
             'Okay',
             this.network.type.blockExplorerTX.replace('[[txHash]]', hash)
           );
@@ -536,7 +556,7 @@ export default {
 
       if (this.raw.generateOnly) return;
       this.showSuccessModal(
-        'Transaction sent!',
+        `${this.$t('sendTx.success.sub-title')}`,
         'Okay',
         this.network.type.blockExplorerTX.replace(
           '[[txHash]]',

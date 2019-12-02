@@ -2,7 +2,7 @@
   <div class="modal-container">
     <b-modal
       ref="modal"
-      :title="$t('dappsMaker.paybackTitle')"
+      :title="$t('dappsMaker.payback-title')"
       centered
       class="bootstrap-modal nopadding"
       hide-footer
@@ -11,57 +11,57 @@
     >
       <div class="contents">
         <p class="top-message">
-          {{ $t('dappsMaker.paybackNotice') }}
+          {{ $t('dappsMaker.payback-notice') }}
         </p>
         <div v-if="!hasEnoughMkr">
           <div class="value-block">
             <p>
-              <b>{{ $t('dappsMaker.mkrBalance') }}</b>
+              <b>{{ $t('dappsMaker.mkr-balance') }}</b>
             </p>
             <p>
-              <b>{{ mkrBalance }} MKR</b>
+              <b>{{ mkrBalance }} {{ $t('dappsMaker.mkr') }}</b>
             </p>
           </div>
           <p class="get-mkr" @click="getMkr()">
-            {{ $t('dappsMaker.getMkr') }}
+            {{ $t('dappsMaker.get-mkr') }}
           </p>
         </div>
         <div class="input-container">
           <div class="top-buttons">
-            <p @click="currentDai">{{ $t('dappsMaker.setMax') }}</p>
+            <p @click="currentDai">{{ $t('dappsMaker.set-max') }}</p>
           </div>
           <div :class="['dai-amount', hasEnoughDai ? '' : 'danger']">
             <input v-model="amount" />
-            <p class="floating-text">DAI</p>
+            <p class="floating-text">{{ $t('dappsMaker.dai') }}</p>
           </div>
         </div>
 
-        <expending-option title="Detail Information">
+        <expanding-option title="Detail Information">
           <ul class="details">
             <li>
-              <p>{{ $t('dappsMaker.outstandingDai') }}</p>
+              <p>{{ $t('dappsMaker.outstanding-dai') }}</p>
               <p>
                 <b>{{
                   values.debtValue ? displayFixedValue(values.debtValue, 3) : 0
                 }}</b>
-                DAI
+                {{ $t('dappsMaker.dai') }}
               </p>
             </li>
             <li>
-              <p>{{ $t('dappsMaker.stabilityFeeOwed') }}</p>
+              <p>{{ $t('dappsMaker.stability-fee-owed') }}</p>
               <p>
-                <b>{{ values.governanceFeeOwed }}</b> MKR
+                <b>{{ values.governanceFeeOwed }}</b> {{ $t('dappsMaker.mkr') }}
               </p>
             </li>
             <li>
-              <p>{{ $t('dappsMaker.projectedLiquidation') }}</p>
+              <p>{{ $t('dappsMaker.projected-liquidation') }}</p>
               <p>
                 <b>{{ displayFixedValue(newLiquidationPrice, 2) }}</b>
                 {{ fiatCurrency }}
               </p>
             </li>
             <li>
-              <p>{{ $t('dappsMaker.projectedCollatRatio') }}</p>
+              <p>{{ $t('dappsMaker.projected-collat-ratio') }}</p>
               <p>
                 <b
                   >{{
@@ -74,7 +74,7 @@
               </p>
             </li>
           </ul>
-        </expending-option>
+        </expanding-option>
         <div class="buttons">
           <div v-if="needsDaiApprove">
             <standard-button
@@ -109,7 +109,7 @@
 <script>
 import { mapState } from 'vuex';
 import ethUnit from 'ethjs-unit';
-import ExpendingOption from '@/components/ExpendingOption';
+import ExpandingOption from '@/components/ExpandingOption';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
 import CheckBox from '../CheckBox';
 import BigNumber from 'bignumber.js/bignumber.js';
@@ -124,7 +124,7 @@ export default {
   components: {
     'help-center-button': HelpCenterButton,
     'check-box': CheckBox,
-    'expending-option': ExpendingOption,
+    'expanding-option': ExpandingOption,
     'standard-button': StandardButton
   },
   props: {

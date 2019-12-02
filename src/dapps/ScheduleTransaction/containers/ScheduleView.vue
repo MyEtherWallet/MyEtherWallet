@@ -1,6 +1,6 @@
 <template>
   <div class="schedule-view-container">
-    <h3 class="page-title">Schedule a transaction</h3>
+    <h3 class="page-title">{{ $t('scheduleTx.title') }}</h3>
 
     <div class="schedule-view-content">
       <div class="schedule-view-form-container">
@@ -8,9 +8,10 @@
           <b-row>
             <b-col cols="12" md="4">
               <div class="scheduling-currency-picker">
-                <div class="input-title">{{ $t('interface.sendTxType') }}</div>
+                <div class="input-title">{{ $t('sendTx.type') }}</div>
                 <currency-picker
                   :currency="tokensWithBalance"
+                  :clear-currency="clearCurrency"
                   :page="'sendEgasAmountthAndTokens'"
                   :token="true"
                   @selectedCurrency="selectedCurrency = $event"
@@ -19,76 +20,48 @@
             </b-col>
             <b-col cols="12" md="8">
               <standard-input
+                :clear-input="clearInput"
                 :options="amountInputOptions()"
                 @changedValue="amount = $event"
               />
               <div v-show="!isValidAmount" class="text-danger">
-                Amount higher than balance
+                {{ $t('scheduleTx.warning.amount-higher-balance') }}
               </div>
               <div v-show="!hasEnoughEthToSchedule" class="text-danger">
-                Not enough ETH on account to schedule
+                {{ $t('scheduleTx.warning.not-enough-eth') }}
               </div>
             </b-col>
           </b-row>
 
           <div class="to-address">
-            <div class="title input-title">
-              <h4>
-                To Address
-                <blockie
-                  v-show="isValidAddress"
-                  :address="hexAddress"
-                  :size="8"
-                  :scale="16"
-                  width="32px"
-                  height="32px"
-                  class="blockie-image"
-                />
-              </h4>
-
-              <p
-                class="copy-button prevent-user-select"
-                @click="copyToClipboard('address')"
-              >
-                {{ $t('common.copy') }}
-              </p>
-            </div>
-            <div class="the-form address-block">
-              <input
-                v-ens-resolver="'address'"
-                ref="address"
-                v-model="address"
-                type="text"
-                name="name"
-                autocomplete="off"
-              />
-              <i
-                :class="[
-                  isValidAddress && hexAddress.length !== 0 ? '' : 'not-good',
-                  'fa fa-check-circle good-button'
-                ]"
-                aria-hidden="true"
-              />
-            </div>
+            <dropdown-address-selector
+              :clear-address="clearAddress"
+              :title="$t('sendTx.to-addr')"
+              @toAddress="getToAddress($event)"
+            />
           </div>
 
           <hr />
 
           <div v-show="selectedMode === supportedModes[1]">
             <standard-input
+              :clear-input="clearInput"
               :options="blockNumberInputOptions()"
               @changedValue="selectedBlockNumber = $event"
             />
             <div v-show="!isValidBlockNumber" class="text-danger">
-              Should be at least
-              {{ supportedModes[1].executionWindow.min }} blocks in the future
+              {{
+                $t('scheduleTx.at-least-blocks', {
+                  number: supportedModes[1].executionWindow.min
+                })
+              }}
             </div>
           </div>
 
           <b-row v-show="selectedMode === supportedModes[0]">
             <b-col cols="12" md="6">
               <div class="datetime-picker-container">
-                <div class="input-title">Date & Time</div>
+                <div class="input-title">{{ $t('scheduleTx.date-time') }}</div>
                 <datetime-picker
                   v-model="datetime"
                   :min-datetime="now.toISOString()"
@@ -98,19 +71,22 @@
                   type="datetime"
                 />
                 <div v-show="!isValidDateTime" class="text-danger">
-                  Make sure that the time is at least
-                  {{ supportedModes[0].executionWindow.min }} minutes in the
-                  future
+                  {{
+                    $t('scheduleTx.at-least-minutes', {
+                      min: supportedModes[0].executionWindow.min
+                    })
+                  }}
                 </div>
               </div>
             </b-col>
 
             <b-col cols="12" md="6">
               <div class="timezone-selector">
-                <div class="input-title">Timezone</div>
+                <div class="input-title">{{ $t('scheduleTx.timezone') }}</div>
                 <standard-dropdown
                   :options="timezoneOptions"
                   :placeholder="selectedTimeZone"
+                  :clear-timezone="clearTimezone"
                   @selection="selectedTimeZone = $event"
                 />
               </div>
@@ -124,10 +100,10 @@
               <div v-show="!advancedExpand" class="time-bounty-selector">
                 <div
                   v-b-tooltip.hover
-                  title="The amount of ETH you wish to offer to TimeNodes in exchange for execution. The higher the Time Bounty, the likelier your transaction will get executed."
+                  :title="$t('scheduleTx.time-bounty.desc')"
                   class="input-title"
                 >
-                  Time Bounty
+                  {{ $t('scheduleTx.time-bounty.title') }}
                 </div>
                 <b-button-group>
                   <b-button
@@ -140,25 +116,29 @@
                   </b-button>
                 </b-button-group>
                 <div class="timebounty-gasprice-coverage">
-                  Covers up to
-                  <span>{{ estimatedMaximumExecutionGasPrice }}</span> gwei gas
-                  price on future execution
+                  {{
+                    $t('scheduleTx.time-bounty.caption', {
+                      gas: estimatedMaximumExecutionGasPrice
+                    })
+                  }}
                 </div>
               </div>
 
               <div v-show="advancedExpand">
                 <standard-input
                   :options="customTimeBountyInputOptions()"
+                  :clear-input="clearInput"
                   @changedValue="timeBounty = $event"
                 />
                 <div v-show="!isValidTimeBounty" class="text-danger">
-                  Please set a bounty of {{ minBounty }} or higher
+                  {{ $t('scheduleTx.warning.min-bounty', { min: minBounty }) }}
                 </div>
               </div>
             </b-col>
 
             <b-col cols="12" sm="6" md="3">
               <standard-input
+                :clear-input="clearInput"
                 :options="bountyUsdDisplayOptions()"
                 class="bounty-usd-display"
               />
@@ -167,7 +147,7 @@
             <b-col cols="12" sm="12" md="3" class="toggle-button-col">
               <hr class="d-block d-md-none" />
               <div class="toggle-button-container float-md-right">
-                <h4>Advanced</h4>
+                <h4>{{ $t('common.advanced') }}</h4>
                 <div class="toggle-button">
                   <!-- Rounded switch -->
                   <div class="sliding-switch-white">
@@ -188,7 +168,7 @@
             <b-row>
               <b-col cols="12" md="6">
                 <div class="mode-container">
-                  <div class="input-title">Scheduling mode</div>
+                  <div class="input-title">{{ $t('scheduleTx.mode') }}</div>
                   <b-button-group>
                     <b-button
                       v-for="(mode, index) in supportedModes"
@@ -196,7 +176,7 @@
                       :class="['mode-btn', mode === selectedMode && 'selected']"
                       @click="selectedMode = mode"
                     >
-                      {{ mode.name }}
+                      {{ $t(mode.name) }}
                     </b-button>
                   </b-button-group>
                 </div>
@@ -204,61 +184,70 @@
 
               <b-col cols="12" md="6">
                 <standard-input
+                  :clear-input="clearInput"
                   :options="executionWindowInputOptions()"
                   @changedValue="windowSize = $event"
                 />
                 <div v-show="!isValidExecutionWindow" class="text-danger">
-                  Please set an execution window of
-                  {{ selectedMode.executionWindow.min }} or higher
+                  {{
+                    $t('scheduleTx.set.exec-window', {
+                      min: selectedMode.executionWindow.min
+                    })
+                  }}
                 </div>
               </b-col>
             </b-row>
 
             <standard-input
+              :clear-input="clearInput"
               :options="requireDepositInputOptions()"
               @changedValue="deposit = $event"
             />
             <div v-show="!isValidDeposit" class="text-danger">
-              Invalid deposit number
+              {{ $t('scheduleTx.invalid-number') }}
             </div>
 
             <b-row>
               <b-col cols="12" md="4">
                 <standard-input
+                  :clear-input="clearInput"
                   :options="futureGasPriceInputOptions()"
                   @changedValue="futureGasPrice = $event"
                 />
                 <div v-show="!isValidFutureGasPrice" class="text-danger">
-                  Please set a gas price of {{ minGasPrice }} or higher
+                  {{ $t('scheduleTx.set.gas-price', { min: minGasPrice }) }}
                 </div>
               </b-col>
               <b-col cols="12" md="4">
                 <standard-input
+                  :clear-input="clearInput"
                   :options="gasLimitInputOptions()"
                   @changedValue="gasLimit = $event"
                 />
                 <div v-show="!isValidGasLimit" class="text-danger">
-                  Please set a gas limit of 0 or higher
+                  {{ $t('scheduleTx.set.gas-limit') }}
                 </div>
               </b-col>
               <b-col cols="12" md="4">
                 <standard-input
+                  :clear-input="clearInput"
                   :options="futureGasLimitInputOptions()"
                   @changedValue="futureGasLimit = $event"
                 />
                 <div v-show="!isValidFutureGasLimit" class="text-danger">
-                  Please set a future gas limit of 0 or higher
+                  {{ $t('scheduleTx.set.future-gas-limit') }}
                 </div>
               </b-col>
             </b-row>
 
             <standard-input
               v-if="!isTokenTransfer"
+              :clear-input="clearInput"
               :options="dataInputOptions()"
               @changedValue="data = $event"
             />
             <div v-show="!isValidData" class="text-danger">
-              Please provide the data in a hexadecimal format.
+              {{ $t('scheduleTx.provide-data-in-hex') }}
             </div>
           </div>
         </b-container>
@@ -272,9 +261,8 @@
           class="mx-5"
           @dismissed="showTokenTransferNotification = false"
         >
-          <strong>Note:</strong> You are scheduling a token transfer. Token
-          transfers require 2 separate transactions. One for token scheduling
-          and another one for token transfer approval.
+          <strong>{{ $t('scheduleTx.note.string') }}</strong>
+          {{ $t('scheduleTx.note.token-transfer') }}
         </b-alert>
 
         <div
@@ -284,7 +272,10 @@
           ]"
           @click="scheduleTx"
         >
-          Schedule Transaction
+          {{ $t('scheduleTx.string') }}
+        </div>
+        <div class="clear-all-btn" @click="clear()">
+          {{ $t('common.clear-all') }}
         </div>
       </div>
     </div>
@@ -307,7 +298,7 @@ import moment from 'moment';
 import 'moment-timezone';
 import * as unit from 'ethjs-unit';
 import { Toast } from '@/helpers';
-
+import DropDownAddressSelector from '@/components/DropDownAddressSelector';
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
 import CurrencyPicker from '../../../layouts/InterfaceLayout/components/CurrencyPicker';
 import StandardInput from '@/components/StandardInput';
@@ -329,7 +320,8 @@ export default {
     'standard-input': StandardInput,
     'standard-dropdown': StandardDropdown,
     'datetime-picker': Datetime,
-    blockie: Blockie
+    blockie: Blockie,
+    'dropdown-address-selector': DropDownAddressSelector
   },
   props: {
     tokensWithBalance: {
@@ -369,16 +361,20 @@ export default {
       selectedTimeZone: moment.tz.guess(),
       selectedCurrency: '',
       showTokenTransferNotification: true,
+      clearCurrency: false,
+      clearInput: false,
+      clearTimezone: false,
+      clearAddress: false,
       amountInputOptions() {
         return {
-          title: 'Amount',
+          title: `${this.$t('sendTx.amount')}`,
           value: this.amount,
           type: 'number'
         };
       },
       customTimeBountyInputOptions() {
         return {
-          title: 'Time Bounty',
+          title: `${this.$t('scheduleTx.time-bounty.title')}`,
           placeHolder: 'ETH',
           value: this.timeBounty,
           type: 'number'
@@ -392,43 +388,47 @@ export default {
       },
       blockNumberInputOptions() {
         return {
-          title: 'Block Number',
+          title: `${this.$t('scheduleTx.block-num')}`,
           value: this.selectedBlockNumber,
-          placeHolder: `Current block number: ${this.currentBlockNumber}`,
+          placeHolder: `${this.$t('scheduleTx.curr-block')} ${
+            this.currentBlockNumber
+          }`,
           type: 'number'
         };
       },
       dataInputOptions() {
         return {
-          title: 'Add Data',
-          placeHolder: 'Add Data (e.g. 0x7834f874g298hf298h234f)',
+          title: `${this.$t('scheduleTx.add-data')}`,
+          placeHolder: `${this.$t(
+            'scheduleTx.add-data'
+          )} (e.g. 0x7834f874g298hf298h234f)`,
           value: this.data
         };
       },
       gasLimitInputOptions() {
         return {
-          title: 'Gas Limit',
+          title: `${this.$t('common.gas.limit')}`,
           value: this.gasLimit,
           type: 'number'
         };
       },
       futureGasPriceInputOptions() {
         return {
-          title: 'Future Gas Price (gwei)',
+          title: `${this.$t('scheduleTx.future-gas-price')}`,
           value: this.futureGasPrice,
           type: 'number'
         };
       },
       futureGasLimitInputOptions() {
         return {
-          title: 'Future Gas Limit',
+          title: `${this.$t('scheduleTx.future-gas-limit')}`,
           value: this.futureGasLimit,
           type: 'number'
         };
       },
       requireDepositInputOptions() {
         return {
-          title: 'Require a deposit',
+          title: `${this.$t('scheduleTx.req-deposit')}`,
           value: this.deposit,
           placeHolder: 'ETH',
           type: 'number'
@@ -436,7 +436,7 @@ export default {
       },
       executionWindowInputOptions() {
         return {
-          title: 'Execution Window',
+          title: `${this.$t('scheduleTx.exec-window')}`,
           value: this.windowSize,
           placeHolder: this.selectedMode.unit,
           type: 'number'
@@ -636,10 +636,8 @@ export default {
 
           try {
             if (transaction === null) {
-              Toast.responseHandler(
-                new Error('Non-existing transaction detected'),
-                Toast.ERROR
-              );
+              const toastText = this.$t('scheduleTx.non-exist-tx');
+              Toast.responseHandler(new Error(toastText), Toast.ERROR);
               return;
             }
 
@@ -716,18 +714,31 @@ export default {
       const values = await fetchValues.json();
 
       if (!values['USDT']) {
-        Toast.responseHandler(
-          new Error(
-            'USDT conversion no longer available. Please provide an alternative USD conversion method'
-          ),
-          Toast.ERROR
-        );
+        const toastText = this.$t('scheduleTx.usdt-not-available');
+        Toast.responseHandler(new Error(toastText), Toast.ERROR);
         return;
       }
       this.ethPrice = new BigNumber(values['USDT']);
     }
   },
   methods: {
+    clear() {
+      this.clearCurrency = !this.clearCurrency;
+      this.clearInput = !this.clearInput;
+      this.hexAddress = '';
+      this.address = '';
+      this.datetime = moment()
+        .add(1, 'days')
+        .toISOString();
+      this.clearTimezone = !this.clearTimezone;
+      this.clearAddress = !this.clearAddress;
+      this.timeBounty = EAC_SCHEDULING_CONFIG.TIME_BOUNTY_DEFAULTS[0];
+    },
+    getToAddress(data) {
+      this.address = data.address;
+      this.hexAddress = data.address;
+      this.isValidAddress = data.valid;
+    },
     async estimateGas() {
       const coinbase = await this.web3.eth.getCoinbase();
 
@@ -845,6 +856,7 @@ export default {
       }
 
       this.eac.schedule(schedulingOptions);
+      this.clear();
     },
     copyToClipboard(ref) {
       this.$refs[ref].select();
