@@ -4,19 +4,19 @@
       <div class="text-container">
         <p class="header">{{ parent.$t('dappsSubmission.sotd.title') }}</p>
         <img
+          :alt="parent.$t('footer.sotd')"
           src="~@/assets/images/icons/dapps/sotd.png"
-          alt="State of the Dapps"
         />
       </div>
       <div class="info-box">
-        <p>
-          {{ parent.$t('dappsSubmission.sotd.info') }}
+        <i18n tag="p" path="dappsSubmission.sotd.info">
           <a
+            slot="url"
             rel="noopener noreferrer"
             href="https://www.stateofthedapps.com/"
             >{{ parent.$t('dappsSubmission.sotd.url') }}</a
           >.
-        </p>
+        </i18n>
       </div>
     </div>
   </div>

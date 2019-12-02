@@ -11,6 +11,7 @@
                 <div class="input-title">{{ $t('sendTx.type') }}</div>
                 <currency-picker
                   :currency="tokensWithBalance"
+                  :clear-currency="clearCurrency"
                   :page="'sendEgasAmountthAndTokens'"
                   :token="true"
                   @selectedCurrency="selectedCurrency = $event"
@@ -19,6 +20,7 @@
             </b-col>
             <b-col cols="12" md="8">
               <standard-input
+                :clear-input="clearInput"
                 :options="amountInputOptions()"
                 @changedValue="amount = $event"
               />
@@ -32,50 +34,18 @@
           </b-row>
 
           <div class="to-address">
-            <div class="title input-title">
-              <h4>
-                {{ $t('sendTx.to-addr') }}
-                <blockie
-                  v-show="isValidAddress"
-                  :address="hexAddress"
-                  :size="8"
-                  :scale="16"
-                  width="32px"
-                  height="32px"
-                  class="blockie-image"
-                />
-              </h4>
-
-              <p
-                class="copy-button prevent-user-select"
-                @click="copyToClipboard('address')"
-              >
-                {{ $t('common.copy') }}
-              </p>
-            </div>
-            <div class="the-form address-block">
-              <input
-                v-ens-resolver="'address'"
-                ref="address"
-                v-model="address"
-                type="text"
-                name="name"
-                autocomplete="off"
-              />
-              <i
-                :class="[
-                  isValidAddress && hexAddress.length !== 0 ? '' : 'not-good',
-                  'fa fa-check-circle good-button'
-                ]"
-                aria-hidden="true"
-              />
-            </div>
+            <dropdown-address-selector
+              :clear-address="clearAddress"
+              :title="$t('sendTx.to-addr')"
+              @toAddress="getToAddress($event)"
+            />
           </div>
 
           <hr />
 
           <div v-show="selectedMode === supportedModes[1]">
             <standard-input
+              :clear-input="clearInput"
               :options="blockNumberInputOptions()"
               @changedValue="selectedBlockNumber = $event"
             />
@@ -116,6 +86,7 @@
                 <standard-dropdown
                   :options="timezoneOptions"
                   :placeholder="selectedTimeZone"
+                  :clear-timezone="clearTimezone"
                   @selection="selectedTimeZone = $event"
                 />
               </div>
@@ -156,6 +127,7 @@
               <div v-show="advancedExpand">
                 <standard-input
                   :options="customTimeBountyInputOptions()"
+                  :clear-input="clearInput"
                   @changedValue="timeBounty = $event"
                 />
                 <div v-show="!isValidTimeBounty" class="text-danger">
@@ -166,6 +138,7 @@
 
             <b-col cols="12" sm="6" md="3">
               <standard-input
+                :clear-input="clearInput"
                 :options="bountyUsdDisplayOptions()"
                 class="bounty-usd-display"
               />
@@ -211,6 +184,7 @@
 
               <b-col cols="12" md="6">
                 <standard-input
+                  :clear-input="clearInput"
                   :options="executionWindowInputOptions()"
                   @changedValue="windowSize = $event"
                 />
@@ -225,6 +199,7 @@
             </b-row>
 
             <standard-input
+              :clear-input="clearInput"
               :options="requireDepositInputOptions()"
               @changedValue="deposit = $event"
             />
@@ -235,6 +210,7 @@
             <b-row>
               <b-col cols="12" md="4">
                 <standard-input
+                  :clear-input="clearInput"
                   :options="futureGasPriceInputOptions()"
                   @changedValue="futureGasPrice = $event"
                 />
@@ -244,6 +220,7 @@
               </b-col>
               <b-col cols="12" md="4">
                 <standard-input
+                  :clear-input="clearInput"
                   :options="gasLimitInputOptions()"
                   @changedValue="gasLimit = $event"
                 />
@@ -253,6 +230,7 @@
               </b-col>
               <b-col cols="12" md="4">
                 <standard-input
+                  :clear-input="clearInput"
                   :options="futureGasLimitInputOptions()"
                   @changedValue="futureGasLimit = $event"
                 />
@@ -264,6 +242,7 @@
 
             <standard-input
               v-if="!isTokenTransfer"
+              :clear-input="clearInput"
               :options="dataInputOptions()"
               @changedValue="data = $event"
             />
@@ -295,6 +274,9 @@
         >
           {{ $t('scheduleTx.string') }}
         </div>
+        <div class="clear-all-btn" @click="clear()">
+          {{ $t('common.clear-all') }}
+        </div>
       </div>
     </div>
     <a
@@ -316,7 +298,7 @@ import moment from 'moment';
 import 'moment-timezone';
 import * as unit from 'ethjs-unit';
 import { Toast } from '@/helpers';
-
+import DropDownAddressSelector from '@/components/DropDownAddressSelector';
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
 import CurrencyPicker from '../../../layouts/InterfaceLayout/components/CurrencyPicker';
 import StandardInput from '@/components/StandardInput';
@@ -338,7 +320,8 @@ export default {
     'standard-input': StandardInput,
     'standard-dropdown': StandardDropdown,
     'datetime-picker': Datetime,
-    blockie: Blockie
+    blockie: Blockie,
+    'dropdown-address-selector': DropDownAddressSelector
   },
   props: {
     tokensWithBalance: {
@@ -378,6 +361,10 @@ export default {
       selectedTimeZone: moment.tz.guess(),
       selectedCurrency: '',
       showTokenTransferNotification: true,
+      clearCurrency: false,
+      clearInput: false,
+      clearTimezone: false,
+      clearAddress: false,
       amountInputOptions() {
         return {
           title: `${this.$t('sendTx.amount')}`,
@@ -735,6 +722,23 @@ export default {
     }
   },
   methods: {
+    clear() {
+      this.clearCurrency = !this.clearCurrency;
+      this.clearInput = !this.clearInput;
+      this.hexAddress = '';
+      this.address = '';
+      this.datetime = moment()
+        .add(1, 'days')
+        .toISOString();
+      this.clearTimezone = !this.clearTimezone;
+      this.clearAddress = !this.clearAddress;
+      this.timeBounty = EAC_SCHEDULING_CONFIG.TIME_BOUNTY_DEFAULTS[0];
+    },
+    getToAddress(data) {
+      this.address = data.address;
+      this.hexAddress = data.address;
+      this.isValidAddress = data.valid;
+    },
     async estimateGas() {
       const coinbase = await this.web3.eth.getCoinbase();
 
@@ -852,6 +856,7 @@ export default {
       }
 
       this.eac.schedule(schedulingOptions);
+      this.clear();
     },
     copyToClipboard(ref) {
       this.$refs[ref].select();

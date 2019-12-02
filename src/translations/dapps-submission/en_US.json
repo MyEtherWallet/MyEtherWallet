@@ -10,7 +10,7 @@
   },
   "sotd": {
     "title": "A Joint Effort With State of The Dapps",
-    "info": "By submitting your Dapp information, you acknowledge that your Dapp will be listed on",
+    "info": "By submitting your Dapp information, you acknowledge that your Dapp will be listed on {url}",
     "url": "stateofthedapps.com"
   },
   "about-your-dapp": {
@@ -54,7 +54,7 @@
   "about-your-team": {
     "authors-title": "Authors",
     "authors": "Separate names or organizations with a comma",
-    "author-placeholder": "e.g. James Lee; Emilie Roy; Edward McCormick",
+    "author-placeholder": "e.g. James Lee, Emilie Roy, Edward McCormick",
     "full-name": "My full name",
     "software-license": "(e.g. MIT, GPL, Proprietary)",
     "email": "My email",

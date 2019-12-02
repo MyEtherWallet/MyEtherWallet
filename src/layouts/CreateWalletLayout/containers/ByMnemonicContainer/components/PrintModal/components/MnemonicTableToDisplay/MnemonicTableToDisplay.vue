@@ -11,23 +11,28 @@
           height="30px"
           alt
         />
-        <span>{{ props.title }}</span>
+        <span>{{ parent.$t('createWallet.mnemonic.table.title') }}</span>
       </div>
       <div class="support">
         <img alt src="~@/assets/images/icons/support.svg" />
-        <p>{{ props.supportEmail }}</p>
+        <p>{{ parent.$t('common.support-email') }}</p>
       </div>
     </div>
     <div class="warnings">
       <h3>
-        {{ props.safeText }}
+        {{ parent.$t('createWallet.mnemonic.table.safe-place') }}
       </h3>
-      <p>
-        {{ props.weText }}
-        <span>{{ props.canNot }}</span> {{ props.changePw }}
-        <span>{{ props.dontForget }}</span> {{ props.saveText }}
-        <span>{{ props.requirements }}</span> {{ props.accessWallet }}.
-      </p>
+      <i18n tag="p" path="createWallet.mnemonic.table.cannot-change-pw">
+        <span slot="cannot">{{
+          parent.$t('createWallet.mnemonic.table.cannot')
+        }}</span>
+        <span slot="do-not-forget"
+          >{{ parent.$t('createWallet.mnemonic.table.do-not-forget') }}
+        </span>
+        <span slot="requirements">{{
+          parent.$t('createWallet.mnemonic.table.requirements')
+        }}</span>
+      </i18n>
     </div>
     <div class="content">
       <div v-show="props.isTwentyFour" class="mnemonic full-mnemonic">
@@ -57,46 +62,6 @@ export default {
     isTwentyFour: {
       type: Boolean,
       default: false
-    },
-    title: {
-      type: String,
-      default: ''
-    },
-    supportEmail: {
-      type: String,
-      default: ''
-    },
-    safeText: {
-      type: String,
-      default: ''
-    },
-    weText: {
-      type: String,
-      default: ''
-    },
-    canNot: {
-      type: String,
-      default: ''
-    },
-    changePw: {
-      type: String,
-      default: ''
-    },
-    dontForget: {
-      type: String,
-      default: ''
-    },
-    saveText: {
-      type: String,
-      default: ''
-    },
-    requirements: {
-      type: String,
-      default: ''
-    },
-    accessWallet: {
-      type: String,
-      default: ''
     },
     buildType: {
       type: String,

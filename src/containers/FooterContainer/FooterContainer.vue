@@ -1,5 +1,5 @@
 <template>
-  <div class="footer">
+  <div v-if="!isMewCx" class="footer">
     <!-- Modal -->
     <feedback-modal />
     <div class="wrap">
@@ -150,7 +150,9 @@ export default {
     'customer-support': CustomerSupport
   },
   data() {
+    const isMewCx = Misc.isMewCx();
     return {
+      isMewCx: isMewCx,
       version: version,
       lowerLinks: [
         {
@@ -163,7 +165,7 @@ export default {
         },
         {
           title: this.$t('common.terms'),
-          to: '/terms-and-conditions'
+          to: '/terms-of-service'
         },
         {
           title: `v${version}`,
@@ -183,6 +185,10 @@ export default {
             //   text: this.$t('footer.advanced'),
             //   to: '/advanced-tools'
             // },
+            {
+              text: this.$t('footer.mew-connect'),
+              href: 'https://mewconnect.myetherwallet.com/#/'
+            },
             {
               text: this.$t('footer.extension'),
               href: 'https://www.mewcx.com'

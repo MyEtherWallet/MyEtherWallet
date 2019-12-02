@@ -1,5 +1,5 @@
 <template>
-  <div class="header">
+  <div v-if="!isMewCx" class="header">
     <decision-tree />
     <router-link
       v-show="
@@ -107,7 +107,7 @@
                     :href="'https://ethplorer.io/address/' + address"
                     target="_blank"
                     rel="noopener noreferrer"
-                    >{{ $t('common.header.ethplorer') }} ({{
+                    >{{ $t('header.ethplorer') }} ({{
                       $tc('common.token', 2)
                     }})</b-dropdown-item
                   >
@@ -140,8 +140,8 @@
                     </template>
                     <b-dropdown-item
                       v-for="language in supportedLanguages"
-                      :active="$root._i18n.locale === language.langCode"
                       :key="language.key"
+                      :active="$root._i18n.locale === language.langCode"
                       :data-language-code="language.langCode"
                       :data-flag-name="language.flag"
                       @click="languageItemClicked"
@@ -175,7 +175,7 @@
                   to="/create-wallet"
                 >
                   <div class="get-free-wallet-button">
-                    {{ $t('common.header.new-wallet') }}
+                    {{ $t('header.new-wallet') }}
                   </div>
                 </b-nav-item>
                 <b-nav-item
@@ -187,7 +187,7 @@
                   to="/access-my-wallet"
                 >
                   <div class="access-button">
-                    {{ $t('common.header.access') }}
+                    {{ $t('header.access') }}
                   </div>
                 </b-nav-item>
                 <b-nav-item-dropdown
@@ -377,6 +377,8 @@ export default {
     };
 
     this.$eventHub.$on('issueModal', (error, resolve) => {
+      // eslint-disable-next-line
+      console.log(error);
       let errorPop = store.get('errorPop') || 0;
       errorPop += 1;
       store.set('errorPop', errorPop);
