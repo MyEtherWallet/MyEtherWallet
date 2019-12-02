@@ -51,6 +51,16 @@ const dapps = {
     lastUpdated: '08/14/2019',
     releaseDate: '06/14/2019'
   },
+  makerOld: {
+    route: '/interface/dapps/maker-sai',
+    icon: makerdai,
+    iconDisabled: makerdaiDisabled,
+    title: 'dappsMaker.maker_title_old',
+    desc: 'dappsMaker.maker_desc_sai',
+    supportedNetworks: [ETH.name, KOV.name],
+    lastUpdated: '08/14/2019',
+    releaseDate: '06/14/2019'
+  },
   ambrpay: {
     route: '/interface/dapps/ambrpay',
     icon: ambrpay,
