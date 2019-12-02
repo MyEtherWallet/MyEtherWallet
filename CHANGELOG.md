@@ -3,6 +3,7 @@
 ### Bug
 
 - Fix MEWCX mobile ui [#1657](https://github.com/MyEtherWallet/MyEtherWallet/pull/1657)
+- Redirect MEWconnect link [#1687](https://github.com/MyEtherWallet/MyEtherWallet/pull/1687)
 - ENS name, translations, styles [#1684](https://github.com/MyEtherWallet/MyEtherWallet/pull/1684)
 
 ### Devop
