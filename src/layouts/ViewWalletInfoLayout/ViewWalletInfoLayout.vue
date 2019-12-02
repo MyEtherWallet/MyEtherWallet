@@ -42,9 +42,9 @@
         <div class="account-details">
           <div class="blockie-container">
             <blockie :address="account.address" width="80px" height="80px" />
-            <h3 v-show="hasNickname">
-              {{ account.nickname }}'{{ $t('common.wallet.s-wallet') }}
-            </h3>
+            <i18n tag="h3" path="common.wallet.own">
+              <span slot="nickname">{{ account.nickname }}</span>
+            </i18n>
             <div class="address-copy-container">
               <input ref="copyAddress" :value="account.address" />
               <p>{{ account.address | concatAddr }}</p>

@@ -2,7 +2,7 @@
   <div class="notification-container">
     <div class="notification-logo" @click="showNotifications">
       <img
-        alt="Notifications"
+        :alt="$tc('common.notifications.title', 1)"
         class="logo-large"
         src="~@/assets/images/icons/notification.svg"
       />

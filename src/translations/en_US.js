@@ -7,7 +7,7 @@ import home from './home/en_US';
 import footer from './footer/en_US';
 import gettingStarted from './getting-started/en_US';
 import privacyPolicy from './privacy-policy/en_US';
-import termsAndConditions from './terms-of-conditions/en_US';
+import termsOfService from './terms-of-conditions/en_US';
 import createWallet from './create-wallet/en_US';
 import accessWallet from './access-wallet/en_US';
 import interfaceTranslations from './interface/en_US';
@@ -34,9 +34,10 @@ import nftManager from './nft-manager/en_US';
 import signMessage from './sign-message/en_US';
 import helpCenter from './help-center/en_US';
 import notifications from './notifications/en_US';
-import mewCX from './mew-cx/en_US';
+import mewcx from './mew-cx/en_US';
 import dappsAmbrpay from './dapps-ambrpay/en_US';
 import phishing from './other/phishing/en_US';
+import header from './header/en_US';
 
 const en_US = {
   common: common,
@@ -45,7 +46,7 @@ const en_US = {
   footer: footer,
   gettingStarted: gettingStarted,
   privacyPol: privacyPolicy,
-  termsOfConditions: termsAndConditions,
+  termsOfService: termsOfService,
   team: team,
   accessWallet: accessWallet,
   createWallet: createWallet,
@@ -74,8 +75,9 @@ const en_US = {
   dappsSubmission: dappsSubmission,
   helpCenter: helpCenter,
   notifications: notifications,
-  mewCX: mewCX,
+  mewcx: mewcx,
   dappsAmbrpay: dappsAmbrpay,
-  phising: phishing
+  phishing: phishing,
+  header: header
 };
 export default en_US;

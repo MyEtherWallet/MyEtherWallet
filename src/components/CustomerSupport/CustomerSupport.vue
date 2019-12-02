@@ -5,7 +5,10 @@
       @click="showModal"
     >
       <div v-if="!noIcon" class="support-icon">
-        <img alt="Help center" src="~@/assets/images/icons/help-center.svg" />
+        <img
+          :alt="$t('common.help-center')"
+          src="~@/assets/images/icons/help-center.svg"
+        />
       </div>
       <div v-if="!noIcon" class="support-label">
         <h5>{{ $t('common.cstm-support') }}</h5>

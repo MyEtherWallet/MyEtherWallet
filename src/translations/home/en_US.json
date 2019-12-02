@@ -51,9 +51,7 @@
     }
   },
   "social": {
-    "title": "Join MEW Community",
-    "text": "Get in the know and see your balance grow (we hope)!"
+    "title": "Join MEW Community"
   },
-  "message-lost": "Oops! Looks like you're lost.",
   "lost-title": "Oops! Looks like you're lost."
 }

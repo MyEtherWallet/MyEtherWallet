@@ -36,7 +36,8 @@
     "send-us-feedback": "If you want to send us your feedback, please use",
     "feedback-title": "Feedback / Customer Support"
   },
-  "uppercase-icon": "Icon",
+  "icon": "Icon",
+  "no-icon": "No Icon",
   "currency": {
     "eth": "ETH",
     "btc": "BTC",
@@ -45,8 +46,10 @@
     "ethereum": "Ethereum",
     "etc": "ETC"
   },
+  "mew": "MyEtherWallet",
   "support-email": "support@myetherwallet.com",
   "support": {
+    "string": "Support",
     "browser": "Browser",
     "os": "Operating System",
     "device": "Device/Wallet type (If any)",
@@ -67,7 +70,7 @@
     "unlock": "Unlock Wallet",
     "do-not-have": "Do not have a wallet?",
     "passphrase": "Passphrase",
-    "s-wallet": "s wallet"
+    "own": "{nickname}'s wallet"
   },
   "mewconnect": {
     "string": "MEWconnect",
@@ -83,7 +86,7 @@
   "read": "Read",
   "article": {
     "using-mew-offline": "Using MEW Offline",
-    "mnemonic-password": "Mnemonic Phrase: Should I Include a Password?"
+    "mnemonic-password": "Mnemonic Phrase: Should I Include an Extra Word?"
   },
   "password": {
     "string": "Password",
@@ -113,9 +116,8 @@
     "total": "Total Balance"
   },
   "notifications": {
-    "no-notifications": ">No notifications found :(",
-    "notification-singular": "Notification",
-    "string": "Notifications"
+    "no-notifications": "No notifications found :(",
+    "title": "Notification | Notifications"
   },
   "advanced": "Advanced",
   "chain-id": "Chain ID",
@@ -130,11 +132,10 @@
     "current-gas": "Current Gas Price",
     "limit": "Gas Limit",
     "price": "Gas Price",
-    "gwei": "gwei",
-    "uppercase-gwei": "Gwei",
-    "wei": "wei",
+    "gwei": "Gwei",
+    "wei": "Wei",
     "fee": "Fee",
-    "uppercase-string": "Gas"
+    "string": "Gas"
   },
   "search": "Search",
   "loading": "Loading",
@@ -143,11 +144,6 @@
   "to": "To",
   "ok": "OK",
   "buy-eth": "Buy ETH",
-  "header": {
-    "new-wallet": "New Wallet",
-    "access": "Access",
-    "ethplorer": "Ethplorer"
-  },
   "security": "Security",
   "status": "Status",
   "time": "Time",
@@ -155,5 +151,12 @@
   "error-message": "Error Message",
   "print-modal": {
     "cut": "Cut Here"
-  }
+  },
+  "clear-all": "Clear All",
+  "right-arrow": "Right arrow",
+  "left-arrow": "Left arrow",
+  "spaceman": "Spaceman",
+  "disconnected": "Disconnected",
+  "mew-icon": "Mew Icon",
+  "kitties": "kitties"
 }

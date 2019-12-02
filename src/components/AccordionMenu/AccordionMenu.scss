@@ -92,3 +92,11 @@
 .opened .menu-content-container {
   max-height: 800px;
 }
+
+.address-selector {
+  .opened {
+    .menu-content-container {
+      overflow: visible;
+    }
+  }
+}

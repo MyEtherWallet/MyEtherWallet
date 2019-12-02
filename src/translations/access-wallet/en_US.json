@@ -9,14 +9,12 @@
     "warning": "MEWconnect is not compatible with iPads."
   },
   "finney": {
-    "scan-qr": "To connect, scan the QR code from",
+    "scan-info": "To connect, scan the QR code from {wallet} app on your {finney-bc}",
     "finney-wallet": "FinneyWallet",
-    "app-on": "app on your",
     "finney-bc": "FINNEY™ BLOCKCHAIN SMARTPHONE",
-    "get-your": "Get your",
-    "finney": "FINNEY™",
-    "now": "now",
-    "mobile": "moble",
+    "get-finney": "Get your {finney-title} now",
+    "finney-title": "FINNEY™",
+    "mobile": "mobile",
     "finney-connect": "FINNEY Connect"
   },
   "hardware": {
@@ -27,7 +25,7 @@
     "modal": {
       "title": "Access by Hardware",
       "button-buy": "Buy Now",
-      "button-choose": "Choose a Hardware"
+      "button-choose": "Continue"
     }
   },
   "software": {
@@ -74,7 +72,7 @@
       "title": "Access by Private Key",
       "placeholder": "Enter Private Key"
     },
-    "do-not-share": "share your private key to anyone! You may lose your money if you share it"
+    "do-not-share": "Please {do-not} share your private key to anyone! You may lose your money if you share it"
   },
   "network-addr":{
     "string": "Network and Address",
@@ -93,7 +91,7 @@
   },
   "pin": {
     "string": "PIN",
-    "enter": "Enter PIN for your",
+    "enter": "Enter PIN for your {device}",
     "layout": "The PIN layout is displayed on your Hardware wallet",
     "access": "To access my wallet,",
     "accept": "I accept the",
@@ -117,7 +115,7 @@
   "invalid-path-desc": "The path: {path} is not valid for this device",
   "wallet-info": "Wallet Information",
   "wallet-options": "Check your transaction history, download a new keystore file, print a paper wallet, and more!",
-  "xwallet-desc": "Please use XWallet App MEW DApp  to scan the QR code above",
+  "xwallet-desc": "Use Pundi X Savings account by MEW to scan the QR code above",
   "xwallet-title": "Access by XWallet",
   "get-it-now": "Get It Now"
 }

@@ -3,65 +3,34 @@
     <div class="subscription-content">
       <div class="subscription-form-container">
         <b-container>
-          <b-row>
-            <span class="label-text">{{ $t('dappsAmbrpay.to-address') }}</span>
-            <p
-              class="action-text prevent-user-select copy-text"
-              @click="copyToClipboard"
-            >
-              {{ $t('common.copy') }}
-            </p>
-          </b-row>
           <b-row class="address-block">
-            <span class="row-style">
-              <blockie
-                v-show="isValidAddress"
-                :address="hexAddress"
-                :size="6"
-                :scale="16"
-                width="32px"
-                height="32px"
-                class="blockie-image"
-              />
-              <input
-                v-ens-resolver="'address'"
-                ref="address"
-                v-model="address"
-                :class="isValidAddress ? 'input-address' : ''"
-                name="name"
-                autocomplete="off"
-                type="text"
-              />
-              <i
-                :class="[
-                  isValidAddress && hexAddress.length !== 0 ? '' : 'not-good',
-                  'fa fa-check-circle good-button'
-                ]"
-                aria-hidden="true"
-              />
-            </span>
+            <dropdown-address-selector
+              :clear-address="clearAddress"
+              :title="$t('sendTx.to-addr')"
+              @toAddress="getToAddress($event)"
+            />
           </b-row>
           <b-row>
             <b-col class="mt-3" cols="12" md="5">
-              <span class="label-text">{{ $t('dappsAmbrpay.type') }}</span>
+              <span class="label-text">{{ $t('sendTx.type') }}</span>
               <div class="fake-input">
                 <p>
                   <img
                     class="currency-icon"
                     src="@/assets/images/currency/eth.svg"
                   />
-                  <span class="token-txt">{{ $t('dappsAmbrpay.eth') }}</span
-                  >-{{ $t('dappsAmbrpay.ethereum') }}
+                  <span class="token-txt">{{ $t('common.currency.eth') }}</span
+                  >-{{ $t('common.currency.ethereum') }}
                 </p>
               </div>
             </b-col>
             <b-col class="amount-container mt-3" cols="12" md="7">
               <div class="amount-text">
-                <span class="label-text">{{ $t('dappsAmbrpay.amount') }}</span>
+                <span class="label-text">{{ $t('sendTx.amount') }}</span>
                 <span
                   class="action-text entire-balance"
                   @click="sendEntireBalance"
-                  >{{ $t('dappsAmbrpay.entire-balance') }}</span
+                  >{{ $t('sendTx.button-entire') }}</span
                 >
               </div>
               <input
@@ -94,12 +63,23 @@
               {{ intervalErrMsg }}
             </p>
           </b-row>
-          <b-row class="mt-4">
+          <b-row class="mt-5 button-container">
             <b-button
-              :class="[isValidInput ? '' : 'disabled', 'mx-auto mew-btn']"
+              class="active-sub-btn my-subscriptions-container"
+              @click="openManageSubModal"
+              >{{ $t('dappsAmbrpay.manage-subscriptions.title') }}
+            </b-button>
+            <b-button
+              :class="[isValidInput ? '' : 'disabled']"
+              class="mew-btn"
               @click="startSubscription"
               >{{ $t('dappsAmbrpay.start-recurring') }}</b-button
             >
+          </b-row>
+          <b-row>
+            <div class="clear-all-btn mx-auto mt-3" @click="clear()">
+              {{ $t('common.clear-all') }}
+            </div>
           </b-row>
         </b-container>
       </div>
@@ -110,12 +90,21 @@
 <script>
 import Blockie from '@/components/Blockie';
 import { mapState } from 'vuex';
-import { Toast } from '@/helpers';
 import BigNumber from 'bignumber.js';
+import DropDownAddressSelector from '@/components/DropDownAddressSelector';
 
 export default {
   components: {
-    blockie: Blockie
+    blockie: Blockie,
+    'dropdown-address-selector': DropDownAddressSelector
+  },
+  props: {
+    subscriptions: {
+      type: Array,
+      default: function() {
+        return [];
+      }
+    }
   },
   data() {
     return {
@@ -125,7 +114,8 @@ export default {
       intervalDays: '',
       sendAmount: '',
       amountErrMsg: '',
-      intervalErrMsg: ''
+      intervalErrMsg: '',
+      clearAddress: false
     };
   },
   computed: {
@@ -174,10 +164,20 @@ export default {
     }
   },
   methods: {
-    copyToClipboard() {
-      this.$refs.address.select();
-      document.execCommand('copy');
-      Toast.responseHandler(this.$t('common.copied'), Toast.INFO);
+    clear() {
+      this.address = '';
+      this.isValidAddress = false;
+      this.hexAddress = '';
+      this.intervalDays = '';
+      this.sendAmount = '';
+      this.amountErrMsg = '';
+      this.intervalErrMsg = '';
+      this.clearAddress = !this.clearAddress;
+    },
+    getToAddress(data) {
+      this.address = data.address;
+      this.hexAddress = data.address;
+      this.isValidAddress = data.valid;
     },
     sendEntireBalance() {
       if (this.account) {
@@ -186,6 +186,9 @@ export default {
           'ether'
         );
       }
+    },
+    openManageSubModal() {
+      this.$emit('openManageSubModal');
     },
     startSubscription() {
       const data = {
@@ -200,6 +203,7 @@ export default {
       this.$emit('startSubscription', data);
 
       this.$nextTick(() => {
+        this.clear();
         this.sendAmount = '';
         this.address = '';
         this.intervalDays = '';

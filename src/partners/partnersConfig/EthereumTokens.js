@@ -52,25 +52,6 @@ export default {
     decimals: 18,
     fixRateEnabled: true
   },
-  CVC: {
-    symbol: 'CVC',
-    name: 'Civic',
-    decimals: 8,
-    contractAddress: '0x41e5560054824ea6b0732e656e3ad64e20e94e45'
-  },
-  DAI: {
-    symbol: 'DAI',
-    name: 'Dai Stablecoin',
-    decimals: 18,
-    contractAddress: '0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359'
-  },
-  DCN: {
-    name: 'Dentacoin',
-    symbol: 'DCN',
-    contractAddress: '0x08d32b0da63e2C3bcF8019c9c5d849d7a9d791e6',
-    decimals: 0,
-    fixRateEnabled: false
-  },
   DENT: {
     name: 'Dent',
     symbol: 'DENT',
@@ -91,13 +72,6 @@ export default {
     contractAddress: '0x1C83501478f1320977047008496DACBD60Bb15ef',
     decimals: 18,
     fixRateEnabled: false
-  },
-  DNT: {
-    name: 'district0x',
-    symbol: 'DNT',
-    contractAddress: '0x0abdace70d3790235af448c88547603b945604ea',
-    decimals: 18,
-    fixRateEnabled: true
   },
   EDG: {
     name: 'Edgeless',
@@ -180,6 +154,13 @@ export default {
     decimals: 18,
     fixRateEnabled: false
   },
+  IOTX: {
+    name: 'IoTeX (IOTX)',
+    symbol: 'IOTX',
+    contractAddress: '0x6fb3e0a217407efff7ca062d46c26e5d60a14d69',
+    decimals: 18,
+    fixRateEnabled: false
+  },
   KNC: {
     symbol: 'KNC',
     name: 'Kyber Network',
@@ -194,7 +175,7 @@ export default {
   },
   LRC: {
     symbol: 'LRC',
-    name: 'Loopring',
+    name: 'LoopringCoin',
     decimals: 18,
     contractAddress: '0xbbbbca6a901c926f240b89eacb641d8aec7aeafd'
   },
@@ -244,13 +225,6 @@ export default {
     decimals: 18,
     fixRateEnabled: false
   },
-  NOAH: {
-    name: 'Noah',
-    symbol: 'NOAH',
-    contractAddress: '0x58a4884182d9E835597f405e5F258290E46ae7C2',
-    decimals: 18,
-    fixRateEnabled: true
-  },
   OMG: {
     symbol: 'OMG',
     name: 'OmiseGO',
@@ -281,7 +255,7 @@ export default {
     symbol: 'PMA',
     contractAddress: '0x846c66cf71c43f80403b51fe3906b3599d63336f',
     decimals: 18,
-    fixRateEnabled: true
+    fixRateEnabled: false
   },
   POLY: {
     symbol: 'POLY',
@@ -341,13 +315,6 @@ export default {
     contractAddress: '0x4156D3342D5c385a87D264F90653733592000581',
     decimals: 8,
     fixRateEnabled: false
-  },
-  SNM: {
-    name: 'SONM',
-    symbol: 'SNM',
-    contractAddress: '0x983f6d60db79ea8ca4eb9968c6aff8cfa04b3c63',
-    decimals: 18,
-    fixRateEnabled: true
   },
   STORJ: {
     name: 'Storj',
@@ -417,12 +384,6 @@ export default {
     decimals: 18,
     fixRateEnabled: true
   },
-  WAX: {
-    symbol: 'WAX',
-    name: 'Wax',
-    decimals: 8,
-    contractAddress: '0x39bb259f66e1c59d5abef88375979b4d20d98022'
-  },
   WINGS: {
     name: 'Wings DAO',
     symbol: 'WINGS',
@@ -461,6 +422,18 @@ export default {
     name: 'Wrapped Ether',
     decimals: 18,
     contractAddress: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2'
+  },
+  SAI: {
+    symbol: 'SAI',
+    name: 'SAI Stablecoin',
+    decimals: 18,
+    contractAddress: '0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359'
+  },
+  DAI: {
+    symbol: 'DAI',
+    name: 'DAI Stablecoin',
+    decimals: 18,
+    contractAddress: '0x6b175474e89094c44da98b954eedeac495271d0f'
   },
   SNT: {
     symbol: 'SNT',
@@ -528,12 +501,6 @@ export default {
     decimals: 18,
     contractAddress: '0xfa1a856cfa3409cfa145fa4e20eb270df3eb21ab'
   },
-  MOT: {
-    symbol: 'MOT',
-    name: 'Olympus Labs',
-    decimals: 18,
-    contractAddress: '0x263c618480dbe35c300d8d5ecda19bbb986acaed'
-  },
   ABT: {
     symbol: 'ABT',
     name: 'ArcBlock',
@@ -546,23 +513,11 @@ export default {
     decimals: 18,
     contractAddress: '0x5732046a883704404f284ce41ffadd5b007fd668'
   },
-  ELEC: {
-    symbol: 'ELEC',
-    name: 'ElectrifyAsia',
-    decimals: 18,
-    contractAddress: '0xd49ff13661451313ca1553fd6954bd1d9b6e02b9'
-  },
-  BBO: {
-    symbol: 'BBO',
-    name: 'Bigbom',
-    decimals: 18,
-    contractAddress: '0x84f7c44b6fed1080f647e354d552595be2cc602f'
-  },
-  LBA: {
-    symbol: 'LBA',
-    name: 'Cred',
-    decimals: 18,
-    contractAddress: '0xfe5f141bf94fe84bc28ded0ab966c16b17490657'
+  CVC: {
+    symbol: 'CVC',
+    name: 'Civic',
+    decimals: 8,
+    contractAddress: '0x41e5560054824ea6b0732e656e3ad64e20e94e45'
   },
   POE: {
     symbol: 'POE',
@@ -588,23 +543,11 @@ export default {
     decimals: 8,
     contractAddress: '0xf433089366899d83a9f26a773d59ec7ecf30355e'
   },
-  COFI: {
-    symbol: 'COFI',
-    name: 'CoinFi',
-    decimals: 18,
-    contractAddress: '0x3136ef851592acf49ca4c825131e364170fa32b3'
-  },
   MOC: {
     symbol: 'MOC',
     name: 'Moss Land',
     decimals: 18,
     contractAddress: '0x865ec58b06bf6305b886793aa20a2da31d034e68'
-  },
-  MAS: {
-    symbol: 'MAS',
-    name: 'MidasProtocol',
-    decimals: 18,
-    contractAddress: '0x23ccc43365d9dd3882eab88f43d515208f832430'
   },
   DAT: {
     symbol: 'DAT',
@@ -624,12 +567,6 @@ export default {
     decimals: 18,
     contractAddress: '0xea26c4ac16d4a5a106820bc8aee85fd0b7b2b664'
   },
-  DCC: {
-    symbol: 'DCC',
-    name: 'Distributed Credit Chain',
-    decimals: 18,
-    contractAddress: '0xffa93aacf49297d51e211817452839052fdfb961'
-  },
   EKO: {
     symbol: 'EKO',
     name: 'EchoLink',
@@ -642,29 +579,11 @@ export default {
     decimals: 18,
     contractAddress: '0x2c4e8f2d746113d0696ce89b35f0d8bf88e0aeca'
   },
-  DTH: {
-    symbol: 'DTH',
-    name: 'Dether',
-    decimals: 18,
-    contractAddress: '0x5adc961d6ac3f7062d2ea45fefb8d8167d44b190'
-  },
   PT: {
     symbol: 'PT',
     name: 'Promotion Token',
     decimals: 18,
     contractAddress: '0x094c875704c14783049ddf8136e298b3a099c446'
-  },
-  INF: {
-    symbol: 'INF',
-    name: 'InfinitusTokens',
-    decimals: 18,
-    contractAddress: '0x00e150d741eda1d49d341189cae4c08a73a49c95'
-  },
-  TTC: {
-    symbol: 'TTC',
-    name: 'TTC Protocol',
-    decimals: 18,
-    contractAddress: '0x9389434852b94bbad4c8afed5b7bdbc5ff0c2275'
   },
   WBTC: {
     symbol: 'WBTC',
@@ -689,12 +608,6 @@ export default {
     name: 'DAOStack',
     decimals: 18,
     contractAddress: '0x543ff227f64aa17ea132bf9886cab5db55dcaddf'
-  },
-  NPXS: {
-    symbol: 'NPXS',
-    name: 'Pundi X',
-    decimals: 18,
-    contractAddress: '0xa15c7ebe1f07caf6bff097d8a589fb8ac49ae5b3'
   },
   MYB: {
     symbol: 'MYB',
@@ -743,5 +656,23 @@ export default {
     name: 'Synthetix Network Token',
     decimals: 18,
     contractAddress: '0xc011a73ee8576fb46f5e1c5751ca3b9fe0af2a6f'
+  },
+  BTU: {
+    symbol: 'BTU',
+    name: 'BTU Protocol',
+    decimals: 18,
+    contractAddress: '0xb683d83a532e2cb7dfa5275eed3698436371cc9f'
+  },
+  TKN: {
+    symbol: 'TKN',
+    name: 'Monolith',
+    decimals: 8,
+    contractAddress: '0xaaaf91d9b90df800df4f55c205fd6989c977e73a'
+  },
+  RAE: {
+    symbol: 'RAE',
+    name: 'Receive Access Ecosystem',
+    decimals: 18,
+    contractAddress: '0xe5a3229ccb22b6484594973a03a3851dcd948756'
   }
 };
