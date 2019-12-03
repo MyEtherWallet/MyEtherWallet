@@ -89,7 +89,7 @@
               <tr v-for="(token, index) in fakeObj" :key="token.key">
                 <td class="number">{{ index + 1 }}.</td>
                 <td>{{ token.token }}</td>
-                <td>{{ token.avail - balance }}</td>
+                <td>{{ token.availBalance }}</td>
                 <td :class="depositModal ? '' : 'stable-apr'">
                   {{ token.deposited }}
                 </td>
@@ -128,13 +128,13 @@ export default {
       fakeObj: [
         {
           token: 'DAI',
-          'avail-balance': '15.42323 DAI',
+          availBalance: '15.42323 DAI',
           deposited: '2.47 DAI',
           apr: '9.72%'
         },
         {
           token: 'DAI',
-          'avail-balance': '15.42323 DAI',
+          availBalance: '15.42323 DAI',
           deposited: '2.47 DAI',
           apr: '9.72%'
         }
@@ -169,6 +169,6 @@ export default {
 }
 
 .modal-body {
-  padding: 0;
+  padding: 0 !important;
 }
 </style>
