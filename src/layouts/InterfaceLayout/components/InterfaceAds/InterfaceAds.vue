@@ -10,13 +10,9 @@
         <div
           class="global__interface-block flex--row--align-center twitter-ad-block"
         >
-<<<<<<< HEAD
-          <p class="block-title">{{ $t('common.twitterFollow') }}</p>
-=======
           <p class="block-title">
             {{ $t('interface.ads.twitter') }}
           </p>
->>>>>>> develop
           <div class="margin--left--auto block-twitter">
             <i class="fa fa-twitter"></i>
           </div>
@@ -96,8 +92,6 @@ export default {
   bottom: initial;
   left: initial;
   z-index: initial;
-  padding-top: 0px;
-  padding-bottom: 0px;
   color: initial;
   text-align: initial;
 

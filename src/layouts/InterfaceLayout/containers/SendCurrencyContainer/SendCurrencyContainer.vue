@@ -29,11 +29,7 @@
             <div class="the-form amount-number">
               <input
                 v-model="toValue"
-<<<<<<< HEAD
-                v-validate="'min_value:0'"
-=======
                 :placeholder="$t('sendTx.amount')"
->>>>>>> develop
                 type="number"
                 min="0"
                 name="value"
@@ -56,52 +52,11 @@
           </div>
         </div>
         <div class="to-address">
-<<<<<<< HEAD
-          <div class="title">
-            <h4>
-              {{ $t('interface.sendTxToAddr') }}
-              <blockie
-                v-show="isValidAddress"
-                :address="hexAddress"
-                :size="8"
-                :scale="16"
-                width="32px"
-                height="32px"
-                class="blockie-image"
-              />
-            </h4>
-
-            <p
-              class="copy-button prevent-user-select"
-              @click="copyToClipboard('address')"
-            >
-              {{ $t('common.copy') }}
-            </p>
-          </div>
-          <div class="the-form address-block">
-            <input
-              ref="address"
-              v-model="address"
-              v-ens-resolver="'address'"
-              type="text"
-              name="name"
-              autocomplete="off"
-            />
-            <i
-              :class="[
-                isValidAddress && hexAddress.length !== 0 ? '' : 'not-good',
-                'fa fa-check-circle good-button'
-              ]"
-              aria-hidden="true"
-            />
-          </div>
-=======
           <dropdown-address-selector
             :clear-address="clearAddress"
             :title="$t('sendTx.to-addr')"
             @toAddress="getToAddress($event)"
           />
->>>>>>> develop
         </div>
         <div class="tx-fee">
           <div class="title">
@@ -207,7 +162,6 @@
 import { mapState } from 'vuex';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import CurrencyPicker from '../../components/CurrencyPicker';
-import Blockie from '@/components/Blockie';
 import { Transaction } from 'ethereumjs-tx';
 import { Misc, Toast } from '@/helpers';
 import BigNumber from 'bignumber.js';
@@ -219,7 +173,6 @@ import DropDownAddressSelector from '@/components/DropDownAddressSelector';
 export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
-    blockie: Blockie,
     'currency-picker': CurrencyPicker,
     'dropdown-address-selector': DropDownAddressSelector
   },

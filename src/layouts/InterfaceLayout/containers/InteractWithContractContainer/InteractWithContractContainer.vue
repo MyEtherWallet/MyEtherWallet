@@ -22,11 +22,7 @@
         <div class="the-form domain-name">
           <input
             v-model="address"
-<<<<<<< HEAD
-            v-validate="'required'"
-=======
             :placeholder="$t('contract.enter-addr')"
->>>>>>> develop
             type="text"
             name="nameAddr"
           />

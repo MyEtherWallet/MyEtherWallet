@@ -14,13 +14,9 @@
           <b-form-input
             id="authors"
             v-model="form.authors"
-<<<<<<< HEAD
-            v-validate="'required'"
-=======
             :placeholder="
               $t('dappsSubmission.about-your-team.author-placeholder')
             "
->>>>>>> develop
             name="authors"
             type="text"
             @update="updateAuthors"
@@ -117,11 +113,7 @@
           <b-form-input
             id="companyWebsite"
             v-model="form.companyWebsite"
-<<<<<<< HEAD
-            v-validate="'url:require_protocol'"
-=======
             :placeholder="$t('dappsSubmission.url-placeholder')"
->>>>>>> develop
             type="text"
             name="website"
             @change="updateDisableBtn(errors)"
@@ -159,13 +151,9 @@
         <div class="dapp-input">
           <b-form-textarea
             v-model="form.additionalNotes"
-<<<<<<< HEAD
-            v-validate="'max:300'"
-=======
             :placeholder="
               $t('dappsSubmission.about-your-team.notes-placeholder')
             "
->>>>>>> develop
             size="lg"
             rows="5"
             name="notes"

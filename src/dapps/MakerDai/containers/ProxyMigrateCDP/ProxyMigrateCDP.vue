@@ -26,12 +26,6 @@
           </div>
           <div class="block-content">
             <div class="item">
-<<<<<<< HEAD
-              <p>{{ $t('dappsMaker.currentPrice') }}(ETH/USD)</p>
-              <div>
-                {{ ethPriceDisplay }}
-                <span>USD</span>
-=======
               <p>
                 {{ $t('dappsMaker.current-price') }}({{
                   $t('common.currency.eth')
@@ -40,7 +34,6 @@
               <div>
                 {{ ethPriceDisplay }}
                 <span>{{ $t('common.currency.usd') }}</span>
->>>>>>> develop
               </div>
             </div>
             <div class="item">
@@ -87,12 +80,7 @@
                 </div>
                 <div>
                   {{ pethCollateral }}
-<<<<<<< HEAD
-                  <span>PETH</span>
-                  /
-=======
                   <span>{{ $t('common.currency.peth') }}</span> /
->>>>>>> develop
                   {{ usdCollateral }}
                   <span>{{ $t('common.currency.usd') }}</span>
                 </div>
@@ -107,12 +95,7 @@
                 </div>
                 <div>
                   {{ maxPethDrawDisplay }}
-<<<<<<< HEAD
-                  <span>PETH</span>
-                  /
-=======
                   <span>{{ $t('common.currency.peth') }}</span> /
->>>>>>> develop
                   {{ maxUsdDrawDisplay }}
                   <span>{{ $t('common.currency.usd') }}</span>
                 </div>
@@ -136,12 +119,7 @@
               <div class="item">
                 <p>{{ $t('dappsMaker.generated') }}</p>
                 <div>
-<<<<<<< HEAD
-                  {{ debtValue }}
-                  <span>DAI</span>
-=======
                   {{ debtValue }} <span>{{ $t('dappsMaker.dai') }}</span>
->>>>>>> develop
                 </div>
                 <div>
                   {{ debtValueDisplay }}

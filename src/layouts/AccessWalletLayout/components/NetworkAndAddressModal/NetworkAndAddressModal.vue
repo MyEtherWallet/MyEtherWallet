@@ -98,15 +98,11 @@
                 >
                   <b-dropdown-item
                     v-for="(val, key) in availablePaths"
-<<<<<<< HEAD
-=======
+                    :key="'base' + key"
                     :class="[
                       selectedPath === val.path ? 'active' : '',
                       'dropdown-paths'
                     ]"
->>>>>>> develop
-                    :key="'base' + key"
-                    :class="selectedPath === val.path ? 'active' : ''"
                     @click="changePath(key)"
                   >
                     {{ val.label }}

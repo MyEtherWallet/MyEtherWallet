@@ -31,22 +31,14 @@
           </span>
           <input
             v-model="tokenSymbol"
-<<<<<<< HEAD
-            v-validate="'required'"
-=======
             :placeholder="$t('interface.tokens.modal.ph-symbol')"
->>>>>>> develop
             name="Symbol"
             type="text"
             class="custom-input-text-1"
           />
           <input
             v-model="tokenDecimal"
-<<<<<<< HEAD
-            v-validate="'required|numeric'"
-=======
             :placeholder="$t('interface.tokens.modal.ph-decimals')"
->>>>>>> develop
             name="Decimal"
             type="number"
             min="0"

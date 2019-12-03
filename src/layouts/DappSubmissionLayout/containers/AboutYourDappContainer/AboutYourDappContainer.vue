@@ -42,13 +42,8 @@
         </p>
       </b-form-group>
       <b-form-group class="input-tags-group tags-form-group">
-<<<<<<< HEAD
-        <label class="dapp-label">
-          Tags
-=======
         <label class="dapp-label"
           >{{ $t('dappsSubmission.about-your-dapp.tags-title') }}
->>>>>>> develop
           <popover
             :popcontent="$t('dappsSubmission.about-your-dapp.tags')"
             class="dapp-popover"
@@ -79,13 +74,9 @@
           </div>
           <span>*</span>
         </div>
-<<<<<<< HEAD
-        <p v-if="dappTagsError" class="error">The tags field is required</p>
-=======
         <p v-if="dappTagsError" class="error">
           {{ $t('dappsSubmission.about-your-dapp.tags-required') }}
         </p>
->>>>>>> develop
       </b-form-group>
       <div class="suggested-tags-container mb-3">
         <p class="title">
@@ -110,29 +101,18 @@
         </p>
       </div>
       <b-form-group id="form-group-description">
-<<<<<<< HEAD
-        <label class="dapp-label">Description</label>
-        <b-form-invalid-feedback id="form-group-description"
-          >This is a required field.</b-form-invalid-feedback
-        >
-=======
         <label class="dapp-label">{{
           $t('dappsSubmission.about-your-dapp.description')
         }}</label>
         <b-form-invalid-feedback id="form-group-description">
           {{ $t('dappsSubmission.about-your-dapp.required-field') }}.
         </b-form-invalid-feedback>
->>>>>>> develop
         <div class="dapp-input">
           <b-form-textarea
             v-model="form.description"
-<<<<<<< HEAD
-            v-validate="'max:800|required'"
-=======
             :placeholder="
               $t('dappsSubmission.about-your-dapp.description-placeholder')
             "
->>>>>>> develop
             name="description"
             rows="7"
             size="lg"
@@ -188,13 +168,8 @@
         </p>
       </b-form-group>
       <b-form-group>
-<<<<<<< HEAD
-        <label class="dapp-label">
-          Mock user flow
-=======
         <label class="dapp-label"
           >{{ $t('dappsSubmission.about-your-dapp.mock-flow-title') }}
->>>>>>> develop
           <popover
             :popcontent="$t('dappsSubmission.about-your-dapp.mock-user-flow')"
             class="dapp-popover"
@@ -224,13 +199,8 @@
         <p v-show="mockFileError" class="error">{{ mockFileError }}</p>
       </b-form-group>
       <b-form-group>
-<<<<<<< HEAD
-        <label class="dapp-label">
-          Contract address
-=======
         <label class="dapp-label"
           >{{ $t('dappsSubmission.about-your-dapp.contract-address-title') }}
->>>>>>> develop
           <popover
             :popcontent="$t('dappsSubmission.about-your-dapp.contract-address')"
             class="dapp-popover"
@@ -243,14 +213,9 @@
             v-validate="'required'"
             name="address"
             type="text"
-<<<<<<< HEAD
-            @update="updateContractAddress"
-          ></b-form-input>
-=======
             @update="onContractAddressChange"
           >
           </b-form-input>
->>>>>>> develop
           <span>*</span>
         </div>
         <p v-if="errors.has('address')" class="error">
@@ -262,13 +227,9 @@
       </b-form-group>
       <b-form-group>
         <label class="dapp-label">
-<<<<<<< HEAD
-          <span class="dapp-icon-label">Dapp icon</span>
-=======
           <span class="dapp-icon-label">
             {{ $t('dappsSubmission.about-your-dapp.dapp-icon-title') }}
           </span>
->>>>>>> develop
           <popover
             :popcontent="$t('dappsSubmission.about-your-dapp.dapp-icon')"
             class="dapp-popover"
@@ -316,13 +277,8 @@
         <p v-show="dappIconError" class="error">{{ dappIconError }}</p>
       </b-form-group>
       <b-form-group>
-<<<<<<< HEAD
-        <label class="dapp-label">
-          Banner
-=======
         <label class="dapp-label"
           >{{ $t('dappsSubmission.about-your-dapp.banner-title') }}
->>>>>>> develop
           <popover
             :popcontent="$t('dappsSubmission.about-your-dapp.banner')"
             class="dapp-popover"
@@ -382,11 +338,7 @@
         <b-form-input
           id="dappWebsite"
           v-model="form.dappWebsite"
-<<<<<<< HEAD
-          v-validate="'url:require_protocol'"
-=======
           :placeholder="$t('dappsSubmission.url-placeholder')"
->>>>>>> develop
           name="website"
           type="text"
           @change="updateDisableBtn(errors)"
@@ -396,13 +348,8 @@
         </p>
       </b-form-group>
       <b-form-group>
-<<<<<<< HEAD
-        <label class="dapp-label">
-          Dapp contract audit
-=======
         <label class="dapp-label"
           >{{ $t('dappsSubmission.about-your-dapp.contract-audit-title') }}
->>>>>>> develop
           <popover
             :popcontent="$t('dappsSubmission.about-your-dapp.contract-audit')"
             class="dapp-popover"

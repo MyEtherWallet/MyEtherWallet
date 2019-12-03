@@ -25,13 +25,9 @@
             {{ $t('common.more') }}
           </button>
         </div>
-<<<<<<< HEAD
-        <p class="section-description">{{ $t('interface.dashboardSwap') }}</p>
-=======
         <p class="section-description">
           {{ $t('interface.dashboard-swap') }}
         </p>
->>>>>>> develop
         <div class="swap-info">
           <div v-for="pair in swapPairs" :key="pair.from + pair.to">
             <div

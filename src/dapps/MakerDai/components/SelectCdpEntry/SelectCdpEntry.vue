@@ -42,26 +42,12 @@
                     </div>
                     <div>
                       {{ displayFixedValue(aCdp.pethCollateral, 5, true) }}
-<<<<<<< HEAD
-                      <span>PETH</span>
-                      /
-=======
                       <span>{{ $t('common.currency.peth') }}</span>
->>>>>>> develop
                       {{ displayFixedValue(aCdp.usdCollateral, 2) }}
                       <span>{{ $t('common.currency.usd') }}</span>
                     </div>
                     <div>
                       <br />
-<<<<<<< HEAD
-                      <div>{{ $t('dappsMaker.liquidPrice') }} (ETH/USD)</div>
-                      <span :class="safeRank(aCdp.collatRatio)">
-                        {{
-                          aCdp ? displayFixedValue(aCdp.liquidationPrice, 2) : 0
-                        }}
-                      </span>
-                      <span class="liq-usd">USD</span>
-=======
                       <div>
                         {{ $t('dappsMaker.liquid-price') }} ({{
                           $t('common.currency.eth')
@@ -73,7 +59,6 @@
                       <span class="liq-usd">
                         {{ $t('common.currency.usd') }}</span
                       >
->>>>>>> develop
                     </div>
                   </div>
                 </div>
@@ -84,11 +69,7 @@
                     </div>
                     <div>
                       {{ aCdp.debtValue }}
-<<<<<<< HEAD
-                      <span>DAI</span>
-=======
                       <span>{{ $t('dappsMaker.dai') }}</span>
->>>>>>> develop
                     </div>
                     <div>
                       {{ displayFixedValue(aCdp.debtValue, 2) }}
