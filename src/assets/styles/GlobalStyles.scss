@@ -79,12 +79,20 @@ h5 {
   position: relative;
 }
 
+.overflow--initial {
+  overflow: initial;
+}
+
 .user-select--none {
   user-select: none;
 }
 
+.width--initial {
+  width: initial;
+}
+
 .line-height--0 {
-  line-height: 0;
+  line-height: 0 !important;
 }
 
 .text-transform--initial {
