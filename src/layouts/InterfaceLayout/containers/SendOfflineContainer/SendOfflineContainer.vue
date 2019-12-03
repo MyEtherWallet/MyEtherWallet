@@ -1,6 +1,6 @@
 <template>
   <div class="send-offline-container">
-    <interface-container-title :title="$t('common.offline')" />
+    <interface-container-title :title="$t('sendTx.send-offline')" />
     <div class="generate-tx">
       <div class="wrap">
         <div class="send-form">
@@ -8,7 +8,7 @@
             <ul class="type-amount">
               <li class="type">
                 <div class="title">
-                  <h4>{{ $t('interface.sendTxType') }}</h4>
+                  <h4>{{ $t('sendTx.type') }}</h4>
                 </div>
                 <currency-picker
                   :currency="allTokens"
@@ -24,12 +24,12 @@
               </li>
               <li class="amount">
                 <div class="title">
-                  <h4>{{ $t('interface.sendTxAmount') }}</h4>
+                  <h4>{{ $t('sendTx.amount') }}</h4>
                 </div>
                 <div class="the-form amount-number">
                   <input
                     :value="toAmt"
-                    :placeholder="$t('interface.depAmount')"
+                    :placeholder="$t('sendTx.dep-amount')"
                     type="number"
                     step="any"
                     name
@@ -39,37 +39,11 @@
               </li>
             </ul>
             <div class="to-address">
-              <div class="title">
-                <h4>{{ $t('interface.sendTxToAddr') }} &nbsp;</h4>
-                <blockie
-                  v-show="address !== '' && validAddress"
-                  :address="address"
-                  class="blockie-image-icon"
-                  width="32px"
-                  height="32px"
-                />
-                <button
-                  class="title-button copy-button prevent-user-select"
-                  @click="copyToAddress"
-                >
-                  {{ $t('common.copy') }}
-                </button>
-              </div>
-              <div class="the-form address-block">
-                <textarea
-                  ref="toaddress"
-                  v-model="address"
-                  name="name"
-                  placeholder="Please Enter The Address"
-                />
-                <i
-                  :class="[
-                    validAddress ? '' : 'not-good',
-                    'fa fa-check-circle good-button'
-                  ]"
-                  aria-hidden="true"
-                />
-              </div>
+              <dropdown-address-selector
+                :clear-address="clearAddress"
+                :title="$t('sendTx.to-addr')"
+                @toAddress="getToAddress($event)"
+              />
             </div>
           </div>
         </div>
@@ -78,7 +52,7 @@
           <div class="title-container">
             <div class="title">
               <div class="title-helper">
-                <h4>{{ $t('common.data') }}</h4>
+                <h4>{{ $t('sendTx.data') }}</h4>
               </div>
             </div>
           </div>
@@ -104,15 +78,15 @@
           <div class="title-container">
             <div class="title">
               <div class="title-helper">
-                <h4>{{ $t('common.gasLimit') }}</h4>
-                <popover :popcontent="$t('popover.gasLimit')" />
+                <h4>{{ $t('common.gas.limit') }}</h4>
+                <popover :popcontent="$t('popover.gas-limit')" />
               </div>
             </div>
           </div>
           <div class="the-form gas-amount">
             <input
               v-model="gasLimit"
-              :placeholder="$t('common.gasLimit')"
+              :placeholder="$t('common.gas.limit')"
               type="number"
             />
             <div class="good-button-container">
@@ -130,7 +104,7 @@
           <div class="title-container">
             <div class="title">
               <div class="title-helper">
-                <h4>{{ $t('common.nonce') }}</h4>
+                <h4>{{ $t('sendTx.nonce') }}</h4>
                 <popover :popcontent="$t('popover.nonce')" />
               </div>
             </div>
@@ -138,7 +112,7 @@
           <div class="the-form gas-amount">
             <input
               v-model="localNonce"
-              :placeholder="$t('common.nonce')"
+              :placeholder="$t('sendTx.nonce')"
               type="number"
             />
             <div class="good-button-container">
@@ -156,7 +130,7 @@
           <div class="title-container">
             <div class="title">
               <div class="title-helper">
-                <h4>{{ $t('common.gasPrice') }}</h4>
+                <h4>{{ $t('common.gas.price') }}</h4>
                 <popover :popcontent="txSpeedMsg" />
               </div>
             </div>
@@ -164,7 +138,7 @@
           <div class="the-form gas-amount">
             <input
               v-model="localGasPrice"
-              :placeholder="$t('common.gasPrice')"
+              :placeholder="$t('common.gas.price')"
               type="number"
             />
             <div class="good-button-container">
@@ -190,7 +164,7 @@
             class="submit-button large-round-button-green-border"
             @click="uploadClick"
           >
-            Import JSON
+            {{ $t('sendTx.import-json') }}
           </div>
           <div
             :class="[
@@ -199,13 +173,11 @@
             ]"
             @click="generateTx"
           >
-            {{ $t('interface.generateTx') }}
+            {{ $t('sendTx.generate-tx') }}
           </div>
-          <interface-bottom-text
-            link="https://kb.myetherwallet.com"
-            question="Have issues?"
-            link-text="Help Center"
-          />
+          <div class="clear-all-btn" @click="clear()">
+            {{ $t('common.clear-all') }}
+          </div>
         </div>
       </div>
       <signed-tx-modal ref="signedTxModal" :signed-tx="signed" :raw-tx="raw" />
@@ -215,7 +187,6 @@
 
 <script>
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
-import InterfaceBottomText from '@/components/InterfaceBottomText';
 import CurrencyPicker from '@/layouts/InterfaceLayout/components/CurrencyPicker';
 import SignedTxModal from './components/SignedTxModal';
 import Blockie from '@/components/Blockie';
@@ -226,14 +197,15 @@ import { isAddress } from '@/helpers/addressUtils';
 import store from 'store';
 import { Misc, Toast } from '@/helpers';
 import utils from 'web3-utils';
+import DropDownAddressSelector from '@/components/DropDownAddressSelector';
 
 export default {
   components: {
-    'interface-bottom-text': InterfaceBottomText,
     blockie: Blockie,
     'signed-tx-modal': SignedTxModal,
     'currency-picker': CurrencyPicker,
-    'interface-container-title': InterfaceContainerTitle
+    'interface-container-title': InterfaceContainerTitle,
+    'dropdown-address-selector': DropDownAddressSelector
   },
   props: {
     checkPrefilled: {
@@ -298,7 +270,8 @@ export default {
       signed: '{}',
       localNonce: this.nonce,
       file: '',
-      localGasPrice: this.highestGas
+      localGasPrice: this.highestGas,
+      clearAddress: false
     };
   },
   computed: {
@@ -306,10 +279,10 @@ export default {
     txSpeedMsg() {
       const net = this.network.type.name;
       // eslint-disable-next-line
-      const msg = `${this.$t('popover.txSpeedPt1').replace(
+      const msg = `${this.$t('popover.tx-speed-pt-1').replace(
         '{0}',
         net
-      )} ${this.$t('popover.txSpeedPt2').replace('{0}', net)}`;
+      )} ${this.$t('popover.tx-speed-pt-2').replace('{0}', net)}`;
       return msg;
     },
     validAddress() {
@@ -373,6 +346,19 @@ export default {
     this.checkPrefilled();
   },
   methods: {
+    clear() {
+      this.toAmt = 0;
+      this.address = '';
+      this.toData = '0x';
+      this.gasLimit = 21000;
+      this.localNonce = this.nonce;
+      this.localGasPrice = this.highestGas;
+      this.clearAddress = !this.clearAddress;
+      this.selectedCoinType = {
+        name: 'Ethereum',
+        symbol: 'ETH'
+      };
+    },
     prefillForm() {
       if (this.tokens.length > 0 && this.isPrefilled) {
         const foundToken = this.tokensymbol
@@ -451,11 +437,9 @@ export default {
           .encodeABI();
       }
     },
-    copyToAddress() {
-      const el = this.$refs.toaddress;
-      el.select();
-      document.execCommand('copy');
-      window.getSelection().removeAllRanges();
+    getToAddress(data) {
+      this.address = data.address;
+      this.validAddress = data.valid;
     },
     uploadClick() {
       const jsonInput = this.$refs.jsonInput;
@@ -498,6 +482,7 @@ export default {
       this.signed = JSON.stringify(signed);
       this.$refs.signedTxModal.$refs.signedTx.show();
       window.scrollTo(0, 0);
+      this.clear();
     },
     setSelectedCurrency(e) {
       const symbol = this.network.type.currencyName;

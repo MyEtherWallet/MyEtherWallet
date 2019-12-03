@@ -13,7 +13,7 @@
   border-radius: 5px;
   display: flex;
   justify-content: space-around;
-  margin: 5px 0;
+  margin: 0 0 5px 0;
   padding: 40px 15px;
   width: 100%;
 
@@ -26,12 +26,18 @@
   }
 
   .view-button {
-    background-color: $dark-blue-2;
+    background-color: $white;
+    border: 1px solid $mew-green;
     border-radius: 5px;
-    color: $white;
+    color: $mew-green;
     cursor: pointer;
     padding: 15px;
     text-align: center;
     width: 200px;
+
+    &:hover {
+      background-color: $mew-green;
+      color: $white;
+    }
   }
 }

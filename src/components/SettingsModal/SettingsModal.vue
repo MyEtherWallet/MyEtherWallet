@@ -3,7 +3,7 @@
     <div class="modal-container">
       <b-modal
         ref="settings"
-        title="Settings"
+        :title="$t('interface.settings')"
         hide-footer
         centered
         class="bootstrap-modal nopadding"
@@ -13,7 +13,7 @@
         <div class="modal-contents">
           <full-width-dropdown
             ref="gasDropdown"
-            title="Transaction Speed"
+            :title="$t('interface.config.tx-speed')"
             class="tx-speed"
           >
             <div class="radio-buttons">
@@ -34,7 +34,7 @@
                     />
                     <label :for="key">
                       {{ key | capitalize }} ({{ gasPriceInputs[key].gwei }}
-                      Gwei)
+                      {{ $t('common.gas.gwei') }})
                     </label>
                   </div>
                   <p class="hidden">
@@ -61,7 +61,7 @@
                       type="number"
                       @focus="selectedGasType = 'other'"
                     />
-                    <p class="gwei">Gwei</p>
+                    <p class="gwei">{{ $t('common.gas.gwei') }}</p>
                   </div>
                   <p class="hidden">
                     {{ customGasEth }}
@@ -88,15 +88,14 @@
           </full-width-dropdown>
 
           <full-width-dropdown
-            title="Import Configurations"
+            :title="$t('interface.config.import')"
             class="import-config"
           >
-            <b-alert :show="popup" fade variant="info"
-              >Imported file successfully!</b-alert
-            >
+            <b-alert :show="popup" fade variant="info">{{
+              $t('interface.config.import-success')
+            }}</b-alert>
             <p>
-              Please click the button below to open and import you configuration
-              file from your local computer.
+              {{ $t('interface.config.import-desc') }}
             </p>
             <div class="import-button-block">
               <div class="filename">
@@ -123,17 +122,115 @@
           </full-width-dropdown>
 
           <full-width-dropdown
-            title="Export Configurations"
+            :title="$t('interface.config.export')"
             class="export-config"
           >
             <p>
-              Please click the button below to download your configuration file
-              into your local computer.
+              {{ $t('interface.config.export-desc') }}
             </p>
             <div class="button-block">
-              <a :href="file" :download="fileName" class="export-button">
+              <a
+                :href="file"
+                :download="fileName"
+                rel="noopener noreferrer"
+                class="export-button"
+              >
                 <standard-button :options="buttonExport" />
               </a>
+            </div>
+          </full-width-dropdown>
+
+          <full-width-dropdown
+            :title="$t('interface.address-book.title')"
+            class="address-book"
+          >
+            <p>
+              {{ $t('interface.address-book.add-up-to') }}
+            </p>
+            <div class="table-container">
+              <table v-if="addressBook.length > 0" class="contact-container">
+                <colgroup>
+                  <col width="5%" />
+                  <col width="55%" />
+                  <col width="20%" />
+                  <col width="20%" />
+                </colgroup>
+                <thead>
+                  <tr class="header">
+                    <th>#</th>
+                    <th>{{ $t('common.addr') }}</th>
+                    <th>{{ $t('interface.address-book.nickname') }}</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    v-for="(contact, index) in addressBook"
+                    :key="contact.key"
+                  >
+                    <td class="numbered">{{ index + 1 }}.</td>
+                    <td class="addr-container">
+                      <blockie
+                        :address="contact.address"
+                        width="25px"
+                        height="25px"
+                        class="blockie-image"
+                      />
+                      <a
+                        :href="
+                          'https://etherscan.io/address/' + contact.address
+                        "
+                        rel="noopener noreferrer"
+                        class="contact-addr"
+                        target="_blank"
+                        >{{ contact.address }}</a
+                      >
+                    </td>
+                    <td>
+                      {{ contact.nickname }}
+                    </td>
+                    <td>
+                      <span class="remove-txt" @click="removeContact(index)">
+                        {{ $t('interface.address-book.remove') }}
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <span v-if="addrBookErrMsg" class="err">{{ addrBookErrMsg }}</span>
+
+            <div class="address-inputs">
+              <blockie
+                v-show="isValidAddress"
+                :address="contactAddress"
+                width="32px"
+                height="32px"
+                class="blockie-image"
+              />
+              <input
+                v-ens-resolver="'contactAddress'"
+                :class="isValidAddress ? 'blockie-input' : ''"
+                v-model="contactAddress"
+                :placeholder="$t('common.addr')"
+                type="text"
+              />
+            </div>
+            <div class="addr-btn-container">
+              <input
+                v-model="contactNickname"
+                :placeholder="$t('interface.address-book.nickname')"
+                class="nickname-input"
+                type="text"
+              />
+              <standard-button
+                :options="buttonAddress"
+                :button-disabled="
+                  !contactAddress || !isValidAddress || addrBookErrMsg !== null
+                "
+                @click.native="addContact"
+              />
             </div>
           </full-width-dropdown>
         </div>
@@ -149,11 +246,13 @@ import utils from 'web3-utils';
 import store from 'store';
 import { Toast } from '@/helpers';
 import { mapState } from 'vuex';
+import Blockie from '@/components/Blockie';
 
 export default {
   name: 'Settings',
   components: {
-    'full-width-dropdown': FullWidthDropdownMenu
+    'full-width-dropdown': FullWidthDropdownMenu,
+    blockie: Blockie
   },
   props: {
     gasPrice: {
@@ -197,6 +296,14 @@ export default {
         fullWidth: true,
         noMinWidth: false
       },
+      buttonAddress: {
+        title: 'Add Contact',
+        buttonStyle: 'green',
+        rightArrow: false,
+        leftArrow: false,
+        fullWidth: true,
+        noMinWidth: false
+      },
       inputFileName: '',
       selectedGasType: 'regular',
       customGas: 0,
@@ -205,11 +312,15 @@ export default {
       fileName: '',
       file: '',
       importedFile: '',
-      popup: false
+      popup: false,
+      isValidAddress: false,
+      contactAddress: '',
+      contactNickname: '',
+      addrBookErrMsg: null
     };
   },
   computed: {
-    ...mapState(['network', 'online']),
+    ...mapState(['network', 'online', 'addressBook']),
     gasPriceInputs() {
       return {
         economy: {
@@ -311,9 +422,7 @@ export default {
           }, 1500);
         } catch (e) {
           Toast.responseHandler(
-            new Error(
-              'Something went wrong while importing file, please make sure it is a valid file'
-            ),
+            new Error(this.$t('interface.import-error')),
             Toast.ERROR
           );
         }
@@ -437,6 +546,44 @@ export default {
         });
 
       this.ethPrice = price.data.ETH.quotes.USD.price;
+    },
+    removeContact(idx) {
+      this.addressBook.splice(idx, 1);
+      this.$store.dispatch('setAddressBook', this.addressBook);
+      this.addrBookErrMsg = null;
+    },
+    addContact() {
+      const alreadyExists = Object.keys(this.addressBook).some(key => {
+        return this.addressBook[key].address === this.contactAddress;
+      });
+
+      if (this.addressBook.length > 9) {
+        this.addrBookErrMsg = this.$t('interface.address-book.add-up-to');
+        this.contactAddress = '';
+        this.contactNickname = '';
+        return;
+      } else if (alreadyExists) {
+        Toast.responseHandler(
+          new Error(this.$t('interface.address-book.already-exists')),
+          Toast.ERROR
+        );
+        this.contactAddress = '';
+        this.contactNickname = '';
+        return;
+      }
+
+      this.addrBookErrMsg = null;
+
+      this.addressBook.push({
+        address: this.contactAddress,
+        currency: 'ETH',
+        nickname: this.contactNickname || this.addressBook.length + 1
+      });
+
+      this.$store.dispatch('setAddressBook', this.addressBook);
+
+      this.contactAddress = '';
+      this.contactNickname = '';
     }
   }
 };

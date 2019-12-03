@@ -17,13 +17,22 @@
         <div class="title-link-container">
           <span>{{ text }}</span>
           <a
-            v-show="link !== ''"
+            v-show="name === xwalletType"
+            class="no-link"
+            href="https://xwallet.pundix.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {{ $t('accessWallet.get-it-now') }} >
+          </a>
+          <a
+            v-show="link !== '' && name !== xwalletType"
             :href="link"
             target="_blank"
             rel="noopener noreferrer"
             @click.stop
           >
-            {{ $t('accessWallet.buy') }} >
+            {{ $t('accessWallet.hardware.modal.button-buy') }} >
           </a>
         </div>
       </div>
@@ -36,6 +45,7 @@
   </div>
 </template>
 <script>
+import { XWALLET as XWALLET_TYPE } from '@/wallets/bip44/walletTypes';
 export default {
   props: {
     selected: {
@@ -69,6 +79,10 @@ export default {
     regularIcon: {
       type: String,
       default: ''
+    },
+    xwalletType: {
+      type: String,
+      default: XWALLET_TYPE
     }
   },
   data() {

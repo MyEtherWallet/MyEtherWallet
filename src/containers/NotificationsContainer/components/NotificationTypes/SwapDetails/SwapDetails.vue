@@ -1,11 +1,11 @@
 <template lang="html">
   <div>
-    <div class="notification-header">{{ $t('header.swapDetail') }}</div>
+    <div class="notification-header">{{ $t('swap.detail') }}</div>
     <div class="notification-content">
       <ul>
         <li>
           <!-- Change to use provider logo-->
-          <p>{{ $t('header.provider') }}:</p>
+          <p>{{ $tc('swap.providers.string', 1) }}:</p>
           <div class="detail-data">
             <p>
               {{ details.provider }}
@@ -44,7 +44,7 @@
           </ul>
         </li>
         <li>
-          <p>{{ $t('header.time') }}:</p>
+          <p>{{ $t('common.time') }}:</p>
           <div class="time-date">
             <p>{{ timeString(notice) }}</p>
             <p>{{ dateString(notice) }}</p>
@@ -55,19 +55,19 @@
             notice.type === notificationType.SWAP_ORDER && timeRemaining > 0
           "
         >
-          <p>{{ $t('header.timeRemaining') }}:</p>
+          <p>{{ $t('common.time-remain') }}:</p>
           <div class="detail-data">
             <p>{{ parseTimeRemaining }}</p>
           </div>
         </li>
         <li class="notification-type-status">
-          <p>{{ $t('header.status') }}:</p>
+          <p>{{ $t('common.status') }}:</p>
           <div class="detail-data">
             <p :class="['status', txStatus.class]">({{ txStatus.text }})</p>
           </div>
         </li>
         <li v-if="isEthereum">
-          <p>{{ $t('common.toAddress') }}:</p>
+          <p>{{ $t('sendTx.to-addr') }}:</p>
           <div class="detail-data">
             <p>
               <a
@@ -83,7 +83,7 @@
         <li v-if="isFromOtherChain">
           <p>
             {{
-              $t('header.providerDepositAddress', {
+              $t('swap.deposit-addr', {
                 provider: notice.body.provider
               })
             }}:
@@ -105,7 +105,7 @@
         <li v-if="showId && details.orderId">
           <p>
             {{
-              $t('header.orderID', {
+              $t('swap.order-id', {
                 provider: notice.body.provider
               })
             }}:
@@ -117,39 +117,43 @@
           </div>
         </li>
         <li v-if="notice.body.gasUsed && isEthereum">
-          <p>{{ $t('common.txFee') }}:</p>
+          <p>{{ $t('sendTx.tx-fee') }}:</p>
           <div class="detail-data">
             <p>
-              {{ convertToEth(details.gasPrice * details.gasUsed) }} ETH (${{
+              {{ convertToEth(details.gasPrice * details.gasUsed) }}
+              {{ $t('common.currency.eth') }} (${{
                 getFiatValue(details.gasPrice * details.gasUsed)
               }})
             </p>
           </div>
         </li>
         <li v-if="isEthereum">
-          <p>{{ $t('header.maxTxFee') }}:</p>
+          <p>{{ $t('sendTx.max-tx-fee') }}:</p>
           <div class="detail-data">
             <p>
-              {{ convertToEth(details.gasPrice * details.gasLimit) }} ETH (${{
+              {{ convertToEth(details.gasPrice * details.gasLimit) }}
+              {{ $t('common.currency.eth') }} (${{
                 getFiatValue(details.gasPrice * details.gasLimit)
               }})
             </p>
           </div>
         </li>
         <li v-if="isEthereum">
-          <p>{{ $t('common.gasPrice') }}:</p>
+          <p>{{ $t('common.gas.price') }}:</p>
           <div class="detail-data">
-            <p>{{ convertToGwei(details.gasPrice) }} Gwei</p>
+            <p>
+              {{ convertToGwei(details.gasPrice) }} {{ $t('common.gas.gwei') }}
+            </p>
           </div>
         </li>
         <li v-if="isEthereum">
-          <p>{{ $t('common.gasLimit') }}:</p>
+          <p>{{ $t('common.gas.limit') }}:</p>
           <div class="detail-data">
             <p>{{ details.gasLimit }}</p>
           </div>
         </li>
         <li v-if="notice.hash">
-          <p>{{ $t('header.transactionHash') }}:</p>
+          <p>{{ $t('sendTx.tx-hash') }}:</p>
           <div class="detail-data">
             <p>
               <a
@@ -163,7 +167,7 @@
           </div>
         </li>
         <li v-if="isError">
-          <p>{{ $t('header.errorMessage') }}:</p>
+          <p>{{ $t('common.error-message') }}:</p>
           <div class="detail-data">
             <p>{{ errorMessage }}</p>
           </div>

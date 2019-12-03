@@ -86,7 +86,7 @@ export default {
       );
     },
     getTagLine(name) {
-      return this.$t(`interface.${name}TagLine`);
+      return this.$t(`swap.tag-line.${name}`);
     }
   }
 };

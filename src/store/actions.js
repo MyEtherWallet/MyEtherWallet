@@ -5,6 +5,7 @@ import MEWProvider from '@/wallets/web3-provider';
 import { MEW_CONNECT } from '@/wallets/bip44/walletTypes';
 import * as unit from 'ethjs-unit';
 import { formatters } from 'web3-core-helpers';
+import { MEW_CX } from '@/builds/configs/types';
 import {
   txIndexes,
   swapIndexes,
@@ -123,6 +124,10 @@ const setGasPrice = function({ commit }, gasPrice) {
   commit('SET_GAS_PRICE', gasPrice);
 };
 
+const setAddressBook = function({ commit }, addressBook) {
+  commit('SET_ADDRESS_BOOK', addressBook);
+};
+
 const setState = function({ commit }, stateObj) {
   commit('INIT_STATES', stateObj);
 };
@@ -130,7 +135,7 @@ const setState = function({ commit }, stateObj) {
 const setWeb3Instance = function({ dispatch, commit, state }, provider) {
   const hostUrl = state.network.url
     ? url.parse(state.network.url)
-    : state.Network['ETH'][0];
+    : state.Networks['ETH'][0];
   const options = {};
   // eslint-disable-next-line
   const parsedUrl = `${hostUrl.protocol}//${hostUrl.host}${
@@ -155,7 +160,7 @@ const setWeb3Instance = function({ dispatch, commit, state }, provider) {
     )
   );
   web3Instance.currentProvider.sendAsync = web3Instance.currentProvider.send;
-  if (BUILD_TYPE !== 'mewcx') {
+  if (BUILD_TYPE !== MEW_CX) {
     web3Instance['mew'] = {};
     web3Instance['mew'].sendBatchTransactions = arr => {
       return new Promise(async resolve => {
@@ -273,5 +278,6 @@ export default {
   updateTransaction,
   gettingStartedDone,
   updateBlockNumber,
-  saveQueryVal
+  saveQueryVal,
+  setAddressBook
 };

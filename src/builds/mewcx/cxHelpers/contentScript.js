@@ -26,7 +26,8 @@ import {
   CX_GET_TX_COUNT,
   WEB3_GET_GAS,
   WEB3_RECEIVE_GAS,
-  CX_GET_GAS
+  CX_GET_GAS,
+  REJECT_MEW_CX_ACC
 } from './cxEvents';
 
 import xss from 'xss';
@@ -127,7 +128,10 @@ chrome.storage.onChanged.addListener(function(res) {
 });
 
 chrome.runtime.onMessage.addListener(function(request, _, callback) {
-  if (request.event === SELECTED_MEW_CX_ACC) {
+  if (
+    request.event === SELECTED_MEW_CX_ACC ||
+    request.event === REJECT_MEW_CX_ACC
+  ) {
     getAccountModalIsOPen = false;
   }
   const obj = {
