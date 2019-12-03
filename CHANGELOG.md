@@ -3,6 +3,7 @@
 ### Bug
 
 - Fix resolver to include BTC and other currencies [#1706](https://github.com/MyEtherWallet/MyEtherWallet/pull/1706)
+- Add link terms of service link. [#1704](https://github.com/MyEtherWallet/MyEtherWallet/pull/1704)
 
 ### Release v5.2.5
 
@@ -27,7 +28,7 @@
 - Add MEWconnect footer link [#1675](https://github.com/MyEtherWallet/MyEtherWallet/pull/1675)
 - Add clear btn to forms [#1673](https://github.com/MyEtherWallet/MyEtherWallet/pull/1673)
 - Add Mult-Collateral Dai support [#1575](https://github.com/MyEtherWallet/MyEtherWallet/pull/1575)
-- Update TOS [[#1685](https://github.com/MyEtherWallet/MyEtherWallet/pull/1685)
+- Update TOS \[[#1685](https://github.com/MyEtherWallet/MyEtherWallet/pull/1685)
 
 ### Release v5.2.4
 
