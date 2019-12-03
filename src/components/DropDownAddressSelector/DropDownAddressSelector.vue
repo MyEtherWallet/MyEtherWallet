@@ -18,11 +18,11 @@
           <input
             v-addr-resolver="'selectedAddress'"
             ref="addressInput"
-            v-model="selectedAddress"
             :placeholder="$t('common.enter-addr')"
             type="text"
             autocomplete="off"
             @focus="dropdownOpen = false"
+            @input="debouncedInput"
           />
         </div>
 
@@ -120,6 +120,7 @@ import Blockie from '@/components/Blockie';
 import { EthereumTokens, BASE_CURRENCY } from '@/partners';
 import { mapState } from 'vuex';
 import { Toast } from '@/helpers';
+import utils from 'web3-utils';
 
 export default {
   components: {
@@ -184,6 +185,9 @@ export default {
     this.currentAddress = this.account.address;
   },
   methods: {
+    debouncedInput: utils._.debounce(function(e) {
+      this.selectedAddress = e.target.value;
+    }, 300),
     addAddress() {
       const alreadyExists = Object.keys(this.addressBook).some(key => {
         return this.addressBook[key].address === this.selectedAddress;
