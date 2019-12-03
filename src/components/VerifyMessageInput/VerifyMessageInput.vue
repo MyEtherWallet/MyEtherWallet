@@ -14,11 +14,7 @@
         <textarea
           ref="signature"
           v-model="message"
-<<<<<<< HEAD
-          v-validate="'required'"
-=======
           :placeholder="verifyMessageLabel"
->>>>>>> develop
           name="signature"
           class="custom-textarea-1"
         />

@@ -40,13 +40,6 @@
               >
                 <i v-if="acknowledgedTerms" class="fa fa-check" />
               </span>
-<<<<<<< HEAD
-              <input name="terms" type="checkbox" /> To access my wallet,
-              <br />I accept the
-              <router-link to="/terms-and-conditions"
-                >Terms and Conditions</router-link
-              >
-=======
               <input name="terms" type="checkbox" />{{
                 $t('accessWallet.pin.access')
               }}
@@ -55,7 +48,6 @@
               <router-link to="/terms-of-service">
                 {{ $t('accessWallet.pin.terms') }}
               </router-link>
->>>>>>> develop
             </label>
           </div>
           <button :disabled="!acknowledgedTerms" @click="actualClick">

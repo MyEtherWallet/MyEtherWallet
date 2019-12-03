@@ -89,11 +89,7 @@
           <div class="input-block-container">
             <input
               v-model="name"
-<<<<<<< HEAD
-              v-validate="'required'"
-=======
               :placeholder="$t('interface.network-modal.eth-node')"
->>>>>>> develop
               class="custom-input-text-1"
               type="text"
               name="nodeName"
@@ -137,11 +133,7 @@
             <input
               v-show="selectedNetworkName === 'CUS'"
               v-model="blockExplorerTX"
-<<<<<<< HEAD
-              v-validate="'required|url:require_protocol'"
-=======
               :placeholder="$t('interface.etherscan-tx-url')"
->>>>>>> develop
               class="custom-input-text-1"
               type="text"
               name="customExplorerTx"
@@ -150,11 +142,7 @@
             <input
               v-show="selectedNetworkName === 'CUS'"
               v-model="chainID"
-<<<<<<< HEAD
-              v-validate="'required|numeric'"
-=======
               :placeholder="$t('common.chain-id')"
->>>>>>> develop
               class="custom-input-text-1"
               type="number"
               name="customChain"
@@ -163,11 +151,7 @@
             <input
               v-show="selectedNetworkName === 'CUS'"
               v-model="blockExplorerAddr"
-<<<<<<< HEAD
-              v-validate="'required|url:require_protocol'"
-=======
               :placeholder="$t('interface.etherscan-address-url')"
->>>>>>> develop
               class="custom-input-text-1"
               type="text"
               name="customExplorerAddr"

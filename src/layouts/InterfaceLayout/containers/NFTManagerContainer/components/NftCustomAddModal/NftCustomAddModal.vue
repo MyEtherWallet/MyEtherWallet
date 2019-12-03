@@ -32,11 +32,7 @@
           </span>
           <input
             v-model="tokenSymbol"
-<<<<<<< HEAD
-            v-validate="'required'"
-=======
             :placeholder="$t('nftManager.name')"
->>>>>>> develop
             name="Symbol"
             type="text"
             class="custom-input-text-1"

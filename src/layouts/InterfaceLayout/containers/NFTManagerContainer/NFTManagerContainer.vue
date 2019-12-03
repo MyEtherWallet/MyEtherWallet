@@ -54,18 +54,6 @@
             >
               <i class="fa fa-chevron-left"></i>
             </span>
-<<<<<<< HEAD
-            <span v-show="!collectionLoading">
-              {{
-                $t('dapps.showingRange', { first: startIndex, last: endIndex })
-              }}
-            </span>
-            <span v-show="collectionLoading">
-              {{
-                $t('dapps.loadingRange', { first: startIndex, last: endIndex })
-              }}
-            </span>
-=======
             <span v-show="!collectionLoading">{{
               $t('nftManager.showing-range', {
                 first: startIndex,
@@ -78,7 +66,6 @@
                 last: endIndex
               })
             }}</span>
->>>>>>> develop
             <span
               v-show="showNextButton"
               class="internal-nav next"
@@ -102,13 +89,9 @@
     </div>
 
     <div v-if="!isOnlineAndEth">
-<<<<<<< HEAD
-      <div v-show="!online">NFTs are</div>
-=======
       <div v-show="!online">
         {{ $t('nftManager.nft-are') }}
       </div>
->>>>>>> develop
       <div v-show="online">
         {{ $t('nftManager.not-supported', { value: network.type.name_long }) }}
       </div>

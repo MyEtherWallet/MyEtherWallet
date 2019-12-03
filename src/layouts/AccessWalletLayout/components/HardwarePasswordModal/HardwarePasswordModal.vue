@@ -14,12 +14,7 @@
         <input
           ref="passwordInput"
           v-model="password"
-<<<<<<< HEAD
-          v-validate="'required'"
-          :type="show ? 'text' : 'password'"
-=======
           :placeholder="$t('common.password.enter')"
->>>>>>> develop
           name="Password"
           autocomplete="off"
         />

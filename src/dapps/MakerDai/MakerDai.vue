@@ -52,21 +52,6 @@
       @approveMkr="approveMkr"
       @wipeDai="wipeDai"
     ></payback-modal>
-<<<<<<< HEAD
-    <close-cdp-modal
-      ref="closeCdp"
-      :values="activeValues"
-      :calc-collat-ratio-dai-chg="calcCollatRatioDaiChg"
-      :calc-collat-ratio-eth-chg="calcCollatRatioEthChg"
-      :calc-liquidation-price-eth-chg="calcLiquidationPriceEthChg"
-      :calc-liquidation-price-dai-chg="calcLiquidationPriceDaiChg"
-      :tokens-with-balance="tokensWithBalance"
-      @approveDai="approveDai"
-      @approveMkr="approveMkr"
-      @closeCdp="closeCdp"
-    ></close-cdp-modal>
-=======
->>>>>>> develop
     <move-cdp-modal
       ref="moveCdp"
       :values="activeValues"
@@ -81,14 +66,9 @@
       :tokens-with-balance="tokensWithBalance"
       @moveCdp="moveCdp"
       @checkForProxy="checkIfDestAddressHasProxy"
-<<<<<<< HEAD
-    ></move-cdp-modal>
-    <back-button :path="'/interface/dapps/'">
-=======
     >
     </move-cdp-modal>
     <back-button :path="backPath()">
->>>>>>> develop
       <div class="back-bar-container">
         <div v-if="showMoveOrClose" class="header-buttons-container">
           <div class="inner-container">
@@ -99,52 +79,10 @@
         </div>
       </div>
     </back-button>
-<<<<<<< HEAD
-    <div v-if="makerActive" class="buttons-container">
-      <div v-if="showCreateProxy">
-        <div class="dapps-button" @click="buildProxy">
-          <h4>{{ $t('dappsMaker.createProxy') }}</h4>
-        </div>
-      </div>
-      <div v-if="showCreateProxy" class="proxy-container">
-        {{ $t('dappsMaker.proxyInstructions') }}
-      </div>
-      <div v-if="showCdpMigrateButtons">
-        <div v-for="(value, idx) in cdpsWithoutProxy" :key="idx + value">
-          <div class="dapps-button">
-            <div @click="migrateCdpExternal(value)">
-              <h4>{{ $t('dappsMaker.migrateCdp', { value: value }) }}</h4>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div v-if="showCdpMigrateButtons" class="proxy-container">
-        {{ $t('dappsMaker.migrateInstructions') }}
-      </div>
-    </div>
-    <div v-show="makerActive" class="buttons-container">
-      <div v-if="showCreateProxy && cdpsWithoutProxy.length > 1">
-        <div v-for="(value, idx) in cdpsWithoutProxy" :key="idx + value">
-          <div
-            :class="[
-              'dapps-button',
-              activeValues.cdpId === value ? 'active' : ''
-            ]"
-          >
-            <div @click="openMigrate(value)">
-              <h4>CDP #{{ value }}</h4>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div v-show="makerActive && listCdps" class="buttons-container">
-=======
     <div
       v-show="makerActive && listCdps && showManageable"
       class="buttons-container"
     >
->>>>>>> develop
       <div v-for="(value, idx) in cdps" :key="idx + value">
         <div
           :class="[
@@ -194,23 +132,18 @@
       @showGenerate="showGenerate"
       @showDeposit="showDeposit"
       @migrateCdp="migrateCdpExternal"
-<<<<<<< HEAD
-    ></router-view>
-=======
       @proceedtoCreateOrManage="proceedtoCreateOrManage"
       @approveCurrency="approveCurrency"
       @setActiveCdpId="setActiveCdpId"
       @setAfterLoadPage="setAfterLoadPage"
     >
     </router-view>
->>>>>>> develop
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
-import CloseCdpModal from './components/CloseCdpModal';
 import MoveCdpModal from './components/MoveCdpModal';
 import GenerateModal from './components/GenerateModal';
 import DepositModal from './components/DepositModal';
@@ -269,7 +202,6 @@ export default {
     'withdraw-modal': WithdrawModal,
     'payback-modal': PaybackModal,
     'back-button': BackButton,
-    'close-cdp-modal': CloseCdpModal,
     'move-cdp-modal': MoveCdpModal
   },
   props: {

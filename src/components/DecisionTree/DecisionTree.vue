@@ -46,17 +46,10 @@
             label="name"
             track-by="name"
           >
-<<<<<<< HEAD
-            <span slot="noResult" class="no-result">
-              <i class="fa fa-meh-o" aria-hidden="true"></i> Oops! No search
-              results found.
-            </span>
-=======
             <span slot="noResult" class="no-result"
               ><i class="fa fa-meh-o" aria-hidden="true"></i
               >{{ $t('common.decision-tree.no-results') }}</span
             >
->>>>>>> develop
           </multiselect>
           <img class="magnifier" src="@/assets/images/icons/magnifier.svg" />
           <p class="clear">
@@ -65,15 +58,10 @@
         </div>
 
         <div class="breadcrumb-container">
-<<<<<<< HEAD
-          <i class="fa fa-home" aria-hidden="true"></i>&nbsp;Home
-          <span v-for="h in historyStackFiltered" :key="h.key">
-=======
           <i class="fa fa-home" aria-hidden="true"></i>&nbsp;{{
             $t('common.home')
           }}
-          <span v-for="h in historyStack" v-if="h.breadcrumb" :key="h.key">
->>>>>>> develop
+          <span v-for="h in historyStackFiltered" :key="h.key">
             <i class="fa fa-angle-right" aria-hidden="true"></i>
             {{ h.breadcrumb }}
           </span>
@@ -285,9 +273,7 @@ export default {
 
     .multiselect__element {
       border-bottom: 1px solid #e0e0e0;
-
       cursor: pointer;
-
       span {
         display: block;
       }
@@ -317,7 +303,6 @@ export default {
     }
     .no-result {
       padding: 10px 20px;
-      display: block;
       font-size: 14px;
       font-weight: 600;
       text-align: center;

@@ -65,17 +65,10 @@
         <div class="title">
           <h2>{{ $t('common.wallet.access-my') }}</h2>
           <h5>
-<<<<<<< HEAD
-            {{ $t('common.noWallet') }}
-            <router-link :to="'/create-wallet'" class="nounderline">{{
-              $t('common.createANewWallet')
-            }}</router-link>
-=======
             {{ $t('common.wallet.do-not-have') }}
             <router-link :to="'/create-wallet'" class="nounderline">
               {{ $t('common.wallet.create-new') }}
             </router-link>
->>>>>>> develop
           </h5>
         </div>
         <div class="buttons-container">
