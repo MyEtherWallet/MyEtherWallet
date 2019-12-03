@@ -1,37 +1,40 @@
 <template>
   <div>
-    <v-dialog v-model="dialog" width="500">
-      <v-card>
-        <v-card-title class="headline grey lighten-2" primary-title>
-          Privacy Policy
-        </v-card-title>
+    <v-btn color="red lighten-2" @click="dialog = true">
+      QRCode
+    </v-btn>
 
-        <v-card-text>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-          culpa qui officia deserunt mollit anim id est laborum.
-        </v-card-text>
+    <v-dialog v-model="dialog" :width="width">
+      <div class="white">
+        <div class="d-flex align-center py-3">
+          <div class="pl-6 title font-weight-black">
+            {{ title }}
+          </div>
+
+          <v-spacer />
+
+          <div class="pr-3">
+            <v-btn icon @click="dialog = false">
+              <ModalCloseButton />
+            </v-btn>
+          </div>
+        </div>
 
         <v-divider></v-divider>
 
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="dialog = false">
-            I accept
-          </v-btn>
-        </v-card-actions>
-      </v-card>
+        <div class="pa-7">
+          <slot />
+        </div>
+      </div>
     </v-dialog>
   </div>
 </template>
 
 <script>
+import ModalCloseButton from '@/components/Common/ModalCloseButton';
+
 export default {
-  components: {},
+  components: { ModalCloseButton },
   props: {
     width: { default: '', type: String },
     title: { default: '', type: String }

@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import QRcode from '@/containers/ModalContainer/components/CreateWallet/MewConnect/QRcode';
+import QRcode from './components/CreateWallet/MewConnect/QRcode';
 
 export default {
   name: 'ModalContainer',
