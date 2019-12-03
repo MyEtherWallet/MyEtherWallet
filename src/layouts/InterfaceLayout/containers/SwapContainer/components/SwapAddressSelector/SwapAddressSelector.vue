@@ -78,7 +78,7 @@ export default {
       EnsAddress: '',
       EthereumTokens: EthereumTokens,
       selectedAddress: '',
-      validAddress: false,
+      isValidAddress: false,
       unableToValidate: false
     };
   },
@@ -105,7 +105,7 @@ export default {
     },
     async getToAddress(data) {
       this.selectedAddress = data.address;
-      this.validAddress = data.valid;
+      this.isValidAddress = data.valid;
 
       this.validateAddress(data.address);
     },
@@ -160,36 +160,36 @@ export default {
     },
     async validateAddress(addr) {
       if (this.selectedAddress !== '') {
-        this.validAddress = false;
+        this.isValidAddress = false;
         this.unableToValidate = false;
         let checkAddress = addr.address ? addr.address : addr;
         checkAddress = await this.checkForEns(checkAddress);
         if (EthereumTokens[this.currency]) {
-          this.validAddress = WAValidator.validate(checkAddress, 'ETH');
-          this.validityResult(this.validAddress);
+          this.isValidAddress = WAValidator.validate(checkAddress, 'ETH');
+          this.validityResult(this.isValidAddress);
         } else {
           try {
-            this.validAddress = WAValidator.validate(
+            this.isValidAddress = WAValidator.validate(
               checkAddress,
               this.currency
             );
-            this.validityResult(this.validAddress);
+            this.validityResult(this.isValidAddress);
           } catch (e) {
             if (canValidate(this.currency)) {
               try {
-                this.validAddress = MAValidator.validate(
+                this.isValidAddress = MAValidator.validate(
                   checkAddress,
                   this.currency
                 );
-                this.validityResult(this.validAddress);
+                this.validityResult(this.isValidAddress);
               } catch (e) {
                 errorLogger(e);
                 this.validityResult('INVALID');
-                this.validAddress = false;
+                this.isValidAddress = false;
               }
             } else {
               this.validityResult('MAYBE_VALID');
-              this.validAddress = true;
+              this.isValidAddress = true;
               this.unableToValidate = true;
             }
           }

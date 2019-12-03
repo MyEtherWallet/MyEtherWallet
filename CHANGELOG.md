@@ -1,3 +1,9 @@
+### Release v5.2.5-hotfix.1
+
+### Bug
+
+- Fix resolver to include BTC and other currencies []()
+
 ### Release v5.2.5
 
 ### Bug
@@ -13,6 +19,7 @@
 - Display token symbol [#1674](https://github.com/MyEtherWallet/MyEtherWallet/pull/1674)
 - Refactor translations [#1682](https://github.com/MyEtherWallet/MyEtherWallet/pull/1682)
 - Add support for MEWconnect api v2 [#1288](https://github.com/MyEtherWallet/MyEtherWallet/pull/1288)
+
 ### Feature
 
 - Display label paths [#1681](https://github.com/MyEtherWallet/MyEtherWallet/pull/1681)
