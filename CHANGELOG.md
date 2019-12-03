@@ -2,7 +2,7 @@
 
 ### Bug
 
-- Fix resolver to include BTC and other currencies []()
+- Fix resolver to include BTC and other currencies [#1706](https://github.com/MyEtherWallet/MyEtherWallet/pull/1706)
 
 ### Release v5.2.5
 
