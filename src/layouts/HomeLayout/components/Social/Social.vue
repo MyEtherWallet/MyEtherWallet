@@ -5,7 +5,6 @@
         <div class="flex-col-vertical-center content">
           <div class="title">
             <h2>{{ $t('home.social.title') }}</h2>
-            <h5>{{ $t('home.social.text') }}</h5>
           </div>
           <div class="icons">
             <a

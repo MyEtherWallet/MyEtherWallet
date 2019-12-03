@@ -1,0 +1,238 @@
+@import '~@/scss/GlobalVariables';
+
+$this-page-mobile-width: 700px;
+
+.currency-picker-container {
+  margin-bottom: 5px;
+  min-width: 150px;
+  position: relative;
+}
+
+.top-title {
+  padding-left: 0;
+  padding-bottom: 0;
+  font-size: 20px;
+  line-height: 30px;
+}
+
+.top-title-sub {
+  margin-bottom: 20px;
+  line-height: 17px;
+}
+
+.orange-border {
+  border: orange 1px solid !important;
+}
+
+.orange-text {
+  color: orange;
+}
+
+.red-border {
+  border: red 1px solid !important;
+}
+
+.red-text {
+  color: red;
+}
+
+.subname {
+  color: $light-blue-6;
+}
+
+.dropdown-container {
+  border-radius: 4px;
+  display: flex;
+  position: relative;
+
+  .currency-symbol {
+    width: 40px;
+    margin-right: 0;
+
+    &.cc-icon-dai::before {
+      background-color: $white;
+      border-radius: 100%;
+    }
+  }
+
+  p {
+    display: flex;
+    align-items: center;
+  }
+}
+
+%dropdown-text-container-base {
+  margin-bottom: 5px;
+  border: 1px solid $white;
+  border-bottom: 0;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 13px 15px;
+  user-select: none;
+  width: 100%;
+
+  i {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+  }
+
+  p {
+    padding-right: 15px;
+  }
+}
+
+.dropdown-text-container {
+  @extend %dropdown-text-container-base;
+
+  background-color: $background-color-1;
+}
+
+.dropdown-text-container-white {
+  @extend %dropdown-text-container-base;
+
+  background-color: $white;
+}
+
+.cc-icon {
+  font-size: 26px;
+}
+
+.container-maker {
+  border-radius: 5px;
+  //grid-area: main;
+  overflow: hidden;
+
+  .manage-container {
+    padding: 40px;
+    @media all and (max-width: $this-page-mobile-width) {
+      padding: 20px;
+    }
+
+    .currency-label {
+      margin-bottom: 15px;
+    }
+
+    .cdp-info-block {
+      padding-top: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+    .cdp-info-entry {
+      justify-content: space-between;
+      position: relative;
+      padding: 17px;
+
+      &::before {
+        margin: auto;
+        box-sizing: initial;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        content: '';
+        width: 100%;
+        border-top: 1px solid $light-grey-3;
+      }
+
+      display: flex;
+      align-items: center;
+      padding-left: 10px;
+      padding-right: 10px;
+      //padding: 10px 30px;
+
+      > ul {
+        display: block;
+        width: 100%;
+        > li {
+          display: flex;
+          align-items: center;
+          padding: 5px 0;
+
+          p:nth-child(1) {
+            min-width: 100px;
+          }
+
+          p:nth-child(2) {
+            margin-left: auto;
+            word-break: break-all;
+
+            a {
+              color: $light-blue-1;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .buttons-container {
+    margin-top: 60px;
+    margin-bottom: 60px;
+    display: flex;
+    flex-direction: row;
+    align-content: space-between;
+    justify-content: center;
+
+    // Mobile
+    @media all and (max-width: $mobile-width) {
+      margin-top: 30px;
+    }
+
+    button {
+      margin: auto;
+      text-align: center;
+      border-radius: 5px;
+      cursor: pointer;
+      padding: 20px;
+      width: 260px;
+
+      // Mobile
+      @media all and (max-width: $mobile-width) {
+        width: 100%;
+      }
+    }
+
+    .submit-btn {
+      width: 260px;
+      height: 62px;
+      border-radius: 4px;
+      background-color: #05c0a5;
+      color: $white;
+    }
+
+    .cancel-btn {
+      background-color: $white;
+      width: 189px;
+      height: 62px;
+      border-radius: 4px;
+      border: solid 1px #506175;
+      color: #506175;
+    }
+  }
+}
+
+.currency-ops-new {
+  display: grid;
+  grid-template-columns: 1fr 100px 1fr;
+  margin-bottom: 20px;
+  @media all and (max-width: $this-page-mobile-width) {
+    display: block;
+  }
+}
+
+.arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  @media all and (max-width: $this-page-mobile-width) {
+    margin: 30px 0;
+  }
+  img {
+    height: 20px;
+    margin-top: -10px;
+    @media all and (max-width: $this-page-mobile-width) {
+      transform: rotate(90deg);
+    }
+  }
+}
