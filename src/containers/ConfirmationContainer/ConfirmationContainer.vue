@@ -295,6 +295,7 @@ export default {
             const _signedTx = await this.wallet.signTransaction(tx[i]);
             signed.push(_signedTx);
           }
+          console.log(signed); // todo remove dev item
           this.signedArray = signed;
         } else {
           this.signedArray = this.unSignedArray.map(_tx => {
