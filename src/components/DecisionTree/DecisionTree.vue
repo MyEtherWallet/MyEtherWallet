@@ -2,7 +2,7 @@
   <div class="decision-tree-container">
     <button :class="button ? 'active' : ''" class="show-button" @click="toggle">
       <img src="@/assets/images/icons/DecisionTree/need-help.svg" />
-      <p>Help</p>
+      <p>{{ $t('common.help') }}</p>
     </button>
 
     <customer-support :no-icon="true" :show="showCustomerSupport" />
@@ -42,14 +42,21 @@
           <multiselect
             v-model="searchSelect"
             :options="searchOptions"
-            placeholder="Search"
+            :placeholder="$t('common.search')"
             label="name"
             track-by="name"
           >
+<<<<<<< HEAD
             <span slot="noResult" class="no-result">
               <i class="fa fa-meh-o" aria-hidden="true"></i> Oops! No search
               results found.
             </span>
+=======
+            <span slot="noResult" class="no-result"
+              ><i class="fa fa-meh-o" aria-hidden="true"></i
+              >{{ $t('common.decision-tree.no-results') }}</span
+            >
+>>>>>>> develop
           </multiselect>
           <img class="magnifier" src="@/assets/images/icons/magnifier.svg" />
           <p class="clear">
@@ -58,8 +65,15 @@
         </div>
 
         <div class="breadcrumb-container">
+<<<<<<< HEAD
           <i class="fa fa-home" aria-hidden="true"></i>&nbsp;Home
           <span v-for="h in historyStackFiltered" :key="h.key">
+=======
+          <i class="fa fa-home" aria-hidden="true"></i>&nbsp;{{
+            $t('common.home')
+          }}
+          <span v-for="h in historyStack" v-if="h.breadcrumb" :key="h.key">
+>>>>>>> develop
             <i class="fa fa-angle-right" aria-hidden="true"></i>
             {{ h.breadcrumb }}
           </span>
@@ -80,11 +94,11 @@
               <div class="qa-title-container">
                 <p v-if="!index[qa].md" class="sub-categories">
                   <i class="fa fa-align-left" aria-hidden="true"></i>
-                  Subcategories
+                  {{ $t('common.decision-tree.subcategories') }}
                 </p>
                 <p v-if="index[qa].md" class="sub-categories">
                   <i class="fa fa-book" aria-hidden="true"></i>
-                  Read
+                  {{ $t('common.read') }}
                 </p>
                 <p class="qa-title">{{ index[qa].title }}</p>
                 <p v-if="index[qa].subtitle" class="qa-subtitle">
@@ -103,11 +117,15 @@
               class="cursor-pointer"
               @click="showCustomerSupport = !showCustomerSupport"
             >
-              Contact support
+              {{ $t('common.contact-support') }}
             </p>
             <p class="ml-2 mr-2">|</p>
-            <a href="https://kb.myetherwallet.com/" target="_blank">
-              <p>Help center</p>
+            <a
+              href="https://kb.myetherwallet.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <p>{{ $t('common.help-center') }}</p>
             </a>
           </div>
           <button v-if="historyStack.length > 0" class="ml-auto" @click="top()">

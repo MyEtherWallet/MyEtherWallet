@@ -1,0 +1,77 @@
+@import '~@/scss/GlobalVariables';
+
+.dapp-info-container {
+  background-color: $white;
+  border-radius: 5px;
+  height: 100%;
+
+  .dapp-info-header {
+    align-items: center;
+    border-bottom: 2px solid $dark-grey-7;
+    display: flex;
+    padding: 15px;
+
+    .header-img {
+      background-color: $white;
+      border-radius: 5px;
+      margin-right: 10px;
+
+      img {
+        height: 32px !important;
+        width: 32px !important;
+      }
+    }
+  }
+
+  .dapp-info-body {
+    display: flex;
+    padding: 30px;
+
+    .description {
+      width: 70%;
+    }
+
+    .more-info {
+      align-items: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      padding-left: 10px;
+      width: 30%;
+
+      img {
+        height: 150px;
+        width: 150px;
+      }
+
+      .website-button {
+        background-color: $white;
+        border: 1px solid $mew-green;
+        border-radius: 5px;
+        color: $mew-green !important;
+        margin: 5px 0;
+        padding: 10px;
+
+        &:hover {
+          background-color: $mew-green;
+          color: $white !important;
+        }
+      }
+
+      .dapp-links {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .dapp-socials {
+        align-items: center;
+        display: flex;
+        justify-content: space-around;
+
+        a {
+          padding: 5px !important;
+        }
+      }
+    }
+  }
+}

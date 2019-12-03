@@ -3,7 +3,7 @@
     <div class="send-form">
       <div class="title-container">
         <div class="title">
-          <h4>Signature:</h4>
+          <h4>{{ $t('common.signature') }}:</h4>
           <div class="copy-buttons">
             <span @click="deleteInput">{{ $t('common.clear') }}</span>
             <span @click="copyToClipboard">{{ $t('common.copy') }}</span>
@@ -14,7 +14,11 @@
         <textarea
           ref="signature"
           v-model="message"
+<<<<<<< HEAD
           v-validate="'required'"
+=======
+          :placeholder="verifyMessageLabel"
+>>>>>>> develop
           name="signature"
           class="custom-textarea-1"
         />
@@ -25,11 +29,13 @@
           class="success-message"
         >
           {{ JSON.parse(message).address }}
-          {{ $t('interface.verifiedMessage') }}:
+          {{ $t('verifyMessage.message.address-signed') }}:
           <br v-if="JSON.parse(message).msg.length > 20" />
           <b>{{ JSON.parse(message).msg }}</b>
         </p>
-        <p v-if="errors.has('signature')">{{ errors.first('signature') }}</p>
+        <p v-if="errors.has('signature')">
+          {{ $t('verifyMessage.message.validation-fail') }}
+        </p>
       </div>
     </div>
 
@@ -42,7 +48,7 @@
           ]"
           @click="verifyMessage"
         >
-          {{ $t('common.verifyMessage') }}
+          {{ $t('verifyMessage.title') }}
         </button>
       </div>
     </div>
@@ -50,14 +56,9 @@
 </template>
 
 <script>
-import { Toast } from '@/helpers';
+import { Toast, Misc } from '@/helpers';
 import { mapState } from 'vuex';
-import {
-  toBuffer,
-  hashPersonalMessage,
-  ecrecover,
-  pubToAddress
-} from 'ethereumjs-util';
+import { hashPersonalMessage, ecrecover, pubToAddress } from 'ethereumjs-util';
 
 export default {
   props: {
@@ -69,7 +70,20 @@ export default {
   data() {
     return {
       message: this.signature,
-      showMessage: false
+      showMessage: false,
+      verifyMessageLabel: `
+      {
+        "address": "0xdecaf9cd2367cdbb726e904cd6397edfcae6068d",
+        "msg": "no one is giving away free ETH",
+        "sig":
+          "0xfd53681a1bbbdbd6074a884e628540f129c57
+          634c055f91d45615c943db446fb0acc35ef34bf9
+          05a78b634d4a88769b80432b4714ba2b19e2fda9
+          814a95a1dbb1b",
+        "version": "3",
+        "signer": "MEW"
+      }
+    `
     };
   },
   computed: {
@@ -96,10 +110,13 @@ export default {
     verifyMessage() {
       try {
         const json = JSON.parse(this.message);
-        let hash = hashPersonalMessage(toBuffer(json.msg));
+        let hash = hashPersonalMessage(Misc.toBuffer(json.msg));
         const sig = Buffer.from(json.sig.replace('0x', ''), 'hex');
         if (sig.length !== 65) {
-          Toast.responseHandler('Something went wrong!', Toast.ERROR);
+          Toast.responseHandler(
+            `${this.$t('errorsGlobal.something-went-wrong')}`,
+            Toast.ERROR
+          );
           return;
         }
         sig[64] = sig[64] === 0 || sig[64] === 1 ? sig[64] + 27 : sig[64];
@@ -118,12 +135,13 @@ export default {
         ) {
           this.showMessage = false;
           Toast.responseHandler(
-            'Signer address is different from the derived address!',
+            `${this.$t('errorsGlobal.signer-address-different')}`,
             Toast.ERROR
           );
         } else {
           this.showMessage = true;
         }
+        this.deleteInput();
       } catch (e) {
         Toast.responseHandler(e, Toast.ERROR);
       }

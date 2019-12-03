@@ -1,6 +1,6 @@
 <template>
   <div class="crypto-kitties-manager">
-    <interface-container-title :title="$t('common.ntfManager')" />
+    <interface-container-title :title="$t('nftManager.title')" />
     <div
       v-if="!isReady && isOnlineAndEth"
       class="inner-side-menu content-container"
@@ -26,7 +26,8 @@
         <nft-details
           :nft="detailsFor"
           :selected-title="nftTitle"
-          @nftTransfered="removeSentNft"
+          @nftTransferred="removeSentNft"
+          @resetNFT="resetNFT"
           @back="comeBack"
         ></nft-details>
       </div>
@@ -53,6 +54,7 @@
             >
               <i class="fa fa-chevron-left"></i>
             </span>
+<<<<<<< HEAD
             <span v-show="!collectionLoading">
               {{
                 $t('dapps.showingRange', { first: startIndex, last: endIndex })
@@ -63,6 +65,20 @@
                 $t('dapps.loadingRange', { first: startIndex, last: endIndex })
               }}
             </span>
+=======
+            <span v-show="!collectionLoading">{{
+              $t('nftManager.showing-range', {
+                first: startIndex,
+                last: endIndex
+              })
+            }}</span>
+            <span v-show="collectionLoading">{{
+              $t('nftManager.loading-range', {
+                first: startIndex,
+                last: endIndex
+              })
+            }}</span>
+>>>>>>> develop
             <span
               v-show="showNextButton"
               class="internal-nav next"
@@ -76,19 +92,25 @@
     </div>
     <div v-if="isReady && !hasNfts" class="inner-side-menu content-container">
       <div v-show="!reLoading">
-        <h3 class="no-nft-notice">{{ $t('dapps.noNFTs') }}</h3>
+        <h3 class="no-nft-notice">{{ $t('nftManager.no-nft') }}</h3>
         <standard-button
           :options="onlyCustom"
           @click.native="openCustomModal"
         />
       </div>
-      <span v-show="reLoading">{{ $t('dapps.reloading') }}</span>
+      <span v-show="reLoading">{{ $t('nftManager.reloading') }}</span>
     </div>
 
     <div v-if="!isOnlineAndEth">
+<<<<<<< HEAD
       <div v-show="!online">NFTs are</div>
+=======
+      <div v-show="!online">
+        {{ $t('nftManager.nft-are') }}
+      </div>
+>>>>>>> develop
       <div v-show="online">
-        {{ $t('dapps.removeCustomNFT', { value: network.type.name_long }) }}
+        {{ $t('nftManager.not-supported', { value: network.type.name_long }) }}
       </div>
     </div>
     <div class="flex--row--align-start mft-manager-content-container"></div>
@@ -119,6 +141,7 @@ import hexDecoder from './binaryDecoderNFT';
 import { nftABI } from './abis';
 import StandardButton from '@/components/Buttons/StandardButton';
 import placeholderImage from '@/assets/images/icons/defaultToken.png';
+import utils from 'web3-utils';
 
 const URL_BASE = 'https://nft.mewapi.io/nft';
 
@@ -162,12 +185,13 @@ export default {
       forRemoval: {},
       collectionLoading: false,
       onlyCustom: {
-        title: this.$t('dapps.addCustomNFT'),
+        title: this.$t('nftManager.add-custom'),
         buttonStyle: 'green',
         helpCenter: false,
         noMinWidth: true,
         fullWidth: false
-      }
+      },
+      nftObjectClone: {}
     };
   },
   computed: {
@@ -187,7 +211,7 @@ export default {
       if (this.nftData[this.selectedContract]) {
         return this.nftData[this.selectedContract].title;
       }
-      return 'Loading';
+      return `${this.$t('common.loading')}`;
     },
     nftToShow() {
       if (this.nftData[this.selectedContract]) {
@@ -205,13 +229,13 @@ export default {
     },
     ntfCount() {
       if (this.nftData[this.selectedContract]) {
-        return this.$t('dapps.nftOwnCount', {
+        return this.$t('nftManager.per-page-count', {
           perPage: this.countPerPage,
           count: this.nftData[this.selectedContract].count
         });
       }
 
-      return this.$t('dapps.noneOwned');
+      return this.$t('nftManager.none-owned');
     },
     selectedNtf() {
       if (this.nftData[this.selectedContract]) {
@@ -300,6 +324,7 @@ export default {
       }
     },
     removeSentNft(nft) {
+      this.nftObjectClone = utils._.clone(this.nftData[nft.contract]);
       const afterSent = this.nftData[nft.contract].details.filter(entry => {
         return entry.token !== nft.token;
       });
@@ -307,6 +332,9 @@ export default {
       this.nftData[nft.contract].count -= 1;
       if (this.nftData[nft.contract].count === 0) this.sentUpdate += 1;
       this.showDetails = false;
+    },
+    resetNFT(nft) {
+      this.nftData[nft.contract] = this.nftObjectClone;
     },
     changeSelectedContract(selectedContract) {
       this.selectedContract = selectedContract;

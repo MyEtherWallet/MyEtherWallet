@@ -1,0 +1,62 @@
+@import '~@/scss/GlobalVariables';
+.wallet-view-container {
+  background-color: $light-green-1;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+  padding: 0 15px 15px;
+  word-break: break-word;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  .wallet-view-info {
+    border-bottom: 1px solid $light-grey-10;
+    display: flex;
+    padding: 10px;
+    position: relative;
+
+    .name-address {
+      padding-left: 15px;
+      margin: 0 !important;
+
+      .name {
+        font-weight: bold;
+      }
+
+      .address {
+        cursor: pointer;
+      }
+    }
+
+    i {
+      color: $dark-grey-2;
+      cursor: pointer;
+      position: absolute;
+      right: 5px;
+      top: 20px;
+    }
+  }
+
+  .wallet-view-balance {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px;
+
+    p {
+      font-weight: 600 !important;
+      margin: 0 !important;
+    }
+
+    .balance {
+      color: $light-blue-1;
+    }
+
+    .converted-balance {
+      font-weight: normal !important;
+      opacity: 0.8;
+    }
+  }
+}

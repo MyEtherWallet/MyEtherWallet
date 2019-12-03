@@ -3,8 +3,8 @@
     <div class="page-container">
       <div class="hardware-container">
         <div class="hardware-text">
-          <h2>{{ $t('buyHardwareWallet.pageTitle') }}</h2>
-          <p>{{ $t('buyHardwareWallet.pageSubTtile') }}</p>
+          <h2>{{ $t('buyHardwareWallet.page.title') }}</h2>
+          <p>{{ $t('buyHardwareWallet.page.title') }}</p>
         </div>
         <div class="hardware-items-container">
           <div
@@ -14,13 +14,15 @@
           >
             <div class="hardware-item-text">
               <p class="starting-from">
-                {{ $t('buyHardwareWallet.priceStartingFrom') }}
+                {{ $t('buyHardwareWallet.caption-starting-from') }}
               </p>
               <div class="price-container">
                 <span>{{ item.currency }}</span>
                 <p>{{ item.price }}</p>
               </div>
-              <p class="item-description">{{ item.description }}</p>
+              <p class="item-description">
+                {{ getItemDesc(item.description) }}
+              </p>
               <a
                 :href="item.href"
                 class="more-info"
@@ -28,6 +30,7 @@
                 rel="noopener noreferrer"
                 >{{ $t('buyHardwareWallet.moreInfo') }} ></a
               >
+              {{ $t('buyHardwareWallet.button-more-info') }} >
             </div>
             <div class="hardware-item-logo">
               <img
@@ -51,13 +54,9 @@ export default {
       items: affiliates
     };
   },
-  computed: {
-    filteredItems() {
-      const filtered = {};
-      for (const type in this.items) {
-        if (this.items[type].logo !== '') filtered[type] = this.items[type];
-      }
-      return filtered;
+  methods: {
+    getItemDesc(desc) {
+      return `${this.$t(desc)}`;
     }
   }
 };

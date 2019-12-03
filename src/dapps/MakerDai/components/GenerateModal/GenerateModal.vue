@@ -2,7 +2,7 @@
   <div class="modal-container">
     <b-modal
       ref="modal"
-      :title="$t('dappsMaker.generateTitle')"
+      :title="$t('dappsMaker.generate-title')"
       centered
       class="bootstrap-modal nopadding"
       hide-footer
@@ -12,62 +12,71 @@
       <div class="contents">
         <div class="inputs">
           <div class="interface__block-title">
-            {{ $t('dappsMaker.generateQuestion') }}
+            {{ $t('dappsMaker.generate-question') }}
           </div>
           <div class="top-buttons">
             <p class="total">
               <span>{{ $t('dappsMaker.total') }}</span>
-              {{ newTotal }}
+              {{ displayFixedValue(newTotal, 10) }}
+              <!--              {{ newTotal }}-->
               DAI
             </p>
-            <p class="max" @click="maxDai">{{ $t('dappsMaker.maxBalance') }}</p>
+            <p class="max" @click="maxDai">
+              {{ $t('dappsMaker.max-balance') }}
+            </p>
           </div>
           <div :class="['input-box', allOk ? '' : 'danger']">
             <input v-model="amount" />
-            <p class="input-unit">DAI</p>
+            <p class="input-unit">{{ $t('dappsMaker.dai') }}</p>
           </div>
           <div class="sub-text">
             <p v-if="!canGenerateDaiAmount" class="above-max">
-              {{ $t('dappsMaker.aboveMaxDai') }}
+              {{ $t('dappsMaker.above-max-dai') }}
             </p>
             <p>
               {{
-                $t('dappsMaker.collateralRatioVal', {
-                  value: newCollateralRatio
+                $t('dappsMaker.collateral-ratio-val', {
+                  value: displayFixedPercent(newCollateralRatio())
                 })
               }}
             </p>
           </div>
         </div>
-        <expending-option title="Details">
+        <expanding-option title="Details">
           <div class="detail-container">
             <div class="grid-block">
-              <p>{{ $t('dappsMaker.maxGenerateAvailable') }}</p>
+              <p>{{ $t('dappsMaker.max-generate-available') }}</p>
               <p>
                 <b>{{
                   values.maxDai ? displayFixedValue(values.maxDai) : 0
                 }}</b>
-                DAI
+                {{ $t('dappsMaker.dai') }}
               </p>
             </div>
             <div class="grid-block">
-              <p>{{ $t('dappsMaker.projectedLiquidation') }}</p>
               <p>
-                <b>{{ displayFixedValue(newLiquidationPrice, 2) }}</b>
+                {{
+                  $t('dappsMaker.projectedLiquidation', {
+                    currency: currentCdpType
+                  })
+                }}
+              </p>
+              <p>
+                <b>{{ displayFixedValue(newLiquidationPrice(), 2) }}</b>
                 {{ fiatCurrency }}
               </p>
             </div>
             <div class="grid-block">
-              <p>{{ $t('dappsMaker.projectedCollatRatio') }}</p>
+              <p>{{ $t('dappsMaker.projected-collat-ratio') }}</p>
               <p>
-                <b>{{ newCollateralRatio }}%</b>
+                <b>{{ displayFixedPercent(newCollateralRatio()) }}%</b>
               </p>
             </div>
           </div>
-        </expending-option>
+        </expanding-option>
 
         <div
-          v-if="!newCollateralRatioSafe && notZero(amount)"
+          v-if="!newCollateralRatioSafe() && notZero(amount)"
           class="warning-confirmation"
         >
           <div class="grid-block">
@@ -76,15 +85,15 @@
               <p class="title">{{ $t('dappsMaker.caution') }}</p>
               <p class="warning-details">
                 {{
-                  $t('dappsMaker.liquidationRisk', {
-                    value: newCollateralRatio
+                  $t('dappsMaker.liquidation-risk', {
+                    value: displayFixedPercent(newCollateralRatio())
                   })
                 }}
               </p>
               <check-box @changeStatus="checkBoxClicked">
                 <template v-slot:terms>
                   <p class="checkbox-label">
-                    {{ $t('dappsMaker.understandAndAgree') }}
+                    {{ $t('dappsMaker.understand-and-agree') }}
                   </p>
                 </template>
               </check-box>
@@ -112,7 +121,7 @@
 <script>
 import { mapState } from 'vuex';
 import ethUnit from 'ethjs-unit';
-import ExpendingOption from '@/components/ExpendingOption';
+import ExpandingOption from '@/components/ExpandingOption';
 import StandardButton from '@/components/Buttons/StandardButton';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
 import CheckBox from '../CheckBox';
@@ -131,7 +140,7 @@ export default {
   components: {
     'help-center-button': HelpCenterButton,
     'check-box': CheckBox,
-    'expending-option': ExpendingOption,
+    'expanding-option': ExpandingOption,
     'standard-button': StandardButton
   },
   props: {
@@ -149,11 +158,9 @@ export default {
       type: Object,
       default: function() {
         return {
-          maxPethDraw: '',
           maxEthDraw: '',
           maxUsdDraw: '',
           ethCollateral: '',
-          pethCollateral: '',
           usdCollateral: '',
           debtValue: '',
           maxDai: '',
@@ -177,6 +184,18 @@ export default {
     calcLiquidationPriceDaiChg: {
       type: Function,
       default: function() {}
+    },
+    activeCdpId: {
+      type: Number,
+      default: 0
+    },
+    makerActive: {
+      type: Boolean,
+      default: false
+    },
+    getValueOrFunction: {
+      type: Function,
+      default: function() {}
     }
   },
   data() {
@@ -189,6 +208,7 @@ export default {
       textValues: {},
       fiatCurrency: 'USD',
       digitalCurrency: 'ETH',
+      currentCdpType: 'ETH',
       cancelButton: {
         title: 'Cancel',
         buttonStyle: 'green-border',
@@ -251,48 +271,32 @@ export default {
         );
       }
       return false;
-    },
-    calcCollateralRatio() {
-      if (this.canCompute) {
-        return this.calcCollatRatioDaiChg(
-          toBigNumber(this.values.debtValue).plus(this.amount)
-        );
-      }
-      if (this.values) {
-        return this.values.collateralRatio;
-      }
-      return null;
-    },
-    newCollateralRatio() {
-      if (this.canCompute || this.values) {
-        return this.displayFixedPercent(this.calcCollateralRatio);
-      }
-      return '--';
-    },
-    newCollateralRatioSafe() {
-      if (this.canCompute) {
-        return this.calcCollateralRatio.gte(2);
-      }
-      return true;
-    },
-    newCollateralRatioInvalid() {
-      if (this.canCompute) {
-        return this.calcCollateralRatio.lte(1.5);
-      }
-      return true;
-    },
-    newLiquidationPrice() {
-      if (this.canCompute) {
-        return this.calcLiquidationPriceDaiChg(
-          toBigNumber(this.values.debtValue).plus(this.amount)
-        );
-      } else if (this.values) {
-        return this.values.liquidationPrice;
-      }
-      return 0;
+    }
+  },
+  mounted() {
+    this.$refs.modal.$on('shown', () => {
+      this.cdpId = this.$route.params.cdpId;
+      this.isVisible = true;
+      this.amount = 0;
+      this.getActiveCdp();
+    });
+
+    this.$refs.modal.$on('hidden', () => {
+      this.isVisible = false;
+    });
+
+    if (this.makerActive) {
+      this.getActiveCdp();
     }
   },
   methods: {
+    getActiveCdp() {
+      if (this.cdpId > 0) {
+        this.currentCdp = this.getValueOrFunction('getCdp')(this.cdpId);
+        this.currentCdpType = this.currentCdp.cdpCollateralType;
+        this.$forceUpdate();
+      }
+    },
     submitBtn() {
       if (!this.canProceed) return;
       this.drawDai();
@@ -319,9 +323,9 @@ export default {
       if (toBigNumber(this.amount).gte(0)) {
         this.delayCloseModal();
         if (this.newCollateralRatioSafe) {
-          this.$emit('drawDai', [this.amount, null]);
+          this.currentCdp.drawDai(this.amount, this.riskyBypass);
         } else {
-          this.$emit('drawDai', [this.amount, this.riskyBypass]);
+          this.currentCdp.drawDai(this.amount, this.riskyBypass);
         }
       }
     },
@@ -332,6 +336,53 @@ export default {
       setTimeout(() => {
         this.closeModal();
       }, 200);
+    },
+    collateralAmount() {
+      if (this.currentCdp) {
+        return this.currentCdp.collateralAmount;
+      }
+    },
+    newCollateralRatio() {
+      if (this.currentCdp && this.amount > 0) {
+        return this.currentCdp.calcCollatRatioDaiChg(
+          toBigNumber(this.amount),
+          true
+        );
+      } else if (this.currentCdp) {
+        return this.currentCdp.collateralizationRatio;
+      }
+      return 0;
+    },
+    newCollateralRatioSafe() {
+      if (this.currentCdp && this.amount > 0) {
+        return this.currentCdp
+          .calcCollatRatioDaiChg(toBigNumber(this.amount), true)
+          .gte(2);
+      } else if (this.currentCdp) {
+        return toBigNumber(this.currentCdp.collateralizationRatio).gte(2);
+      }
+      return true;
+    },
+    newCollateralRatioInvalid() {
+      if (this.currentCdp && this.amount > 0) {
+        return this.currentCdp
+          .calcCollatRatioDaiChg(toBigNumber(this.amount), true)
+          .lte(1.5);
+      } else if (this.currentCdp) {
+        return toBigNumber(this.currentCdp.collateralizationRatio).lte(1.5);
+      }
+      return true;
+    },
+    newLiquidationPrice() {
+      if (this.currentCdp && this.amount > 0) {
+        return this.currentCdp.calcLiquidationPriceDaiChg(
+          toBigNumber(this.amount),
+          true
+        );
+      } else if (this.currentCdp) {
+        return this.currentCdp.liquidationPrice;
+      }
+      return 0;
     }
   }
 };

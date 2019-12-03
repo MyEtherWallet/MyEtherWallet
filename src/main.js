@@ -105,7 +105,7 @@ Object.keys(toastConfig).forEach(item => {
   );
 });
 
-/* eslint-disable no-new */
+/* eslint-disable-next-line */
 const vue = new Vue({
   el: '#app',
   i18n,

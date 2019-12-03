@@ -347,6 +347,21 @@ export default class SwapProviders {
     }
   }
 
+  // Helper Methods
+  hasEnough(fromCurrency, fromValue, baseCurrency, tokenBalances, balance) {
+    if (SwapProviders.isToken(fromCurrency) && fromCurrency !== baseCurrency) {
+      const enteredVal = this.convertToTokenWei(fromCurrency, fromValue);
+
+      return new BigNumber(tokenBalances[fromCurrency]).gte(
+        new BigNumber(enteredVal)
+      );
+    } else if (fromCurrency === baseCurrency) {
+      const enteredVal = this.convertToTokenWei(fromCurrency, fromValue);
+      return new BigNumber(balance).gt(new BigNumber(enteredVal));
+    }
+    return true;
+  }
+
   // Static Methods
 
   static isToken(currency) {

@@ -4,6 +4,12 @@ $confirmation-modal-mobile-width: 500px;
 
 .modal-content-container {
   padding: 30px 30px;
+
+  .currency-picker-container {
+    margin-bottom: 5px;
+    min-width: 150px;
+    position: relative;
+  }
 }
 
 .cc-icon {

@@ -2,7 +2,7 @@
   <div>
     <b-modal
       ref="modal"
-      :title="$t('dapps.removeCustomNFT')"
+      :title="$t('nftManager.remove-custom')"
       hide-footer
       class="bootstrap-modal nopadding max-height-1"
       centered
@@ -36,14 +36,14 @@ export default {
   data() {
     return {
       removeButton: {
-        title: 'Remove',
+        title: `${this.$t('nftManager.remove')}`,
         buttonStyle: 'red',
         helpCenter: false,
         noMinWidth: true,
         fullWidth: false
       },
       cancelButton: {
-        title: 'Cancel',
+        title: `${this.$t('common.cancel')}`,
         buttonStyle: 'grey-border',
         helpCenter: false,
         noMinWidth: true,

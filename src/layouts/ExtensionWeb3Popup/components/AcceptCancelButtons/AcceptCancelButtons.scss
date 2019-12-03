@@ -1,0 +1,29 @@
+@import '~@/scss/GlobalVariables';
+
+.buttons-container {
+  align-items: center;
+  display: flex;
+  justify-content: space-around;
+  padding: 20px 0;
+
+  button {
+    border: none;
+    border-radius: 5px;
+    color: $white;
+    min-width: 120px;
+    padding: 10px;
+    text-align: center;
+
+    &.sign {
+      background-color: $mew-green;
+
+      &:disabled {
+        background-color: $dark-grey-11;
+      }
+    }
+
+    &.reject {
+      background-color: $red-5;
+    }
+  }
+}

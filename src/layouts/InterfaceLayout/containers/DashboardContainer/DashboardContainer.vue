@@ -3,17 +3,14 @@
     <div class="container--flex container--top">
       <div class="container--card block--actions">
         <div class="title">
-          <h4>{{ $t('common.actions') }}</h4>
+          <h4>{{ $t('interface.actions') }}</h4>
         </div>
         <div class="buttons">
-          <button-send-tx
-            class="clickable"
-            @click.native="goTo('send-transaction')"
-          />
+          <button-send-tx :go-to="goTo" class="clickable" />
           <button-nft-manager
             :disabled="!isOnlineAndEth"
+            :go-to="goTo"
             class="clickable"
-            @click.native="goTo('nft-manager', !isOnlineAndEth)"
           />
         </div>
       </div>
@@ -28,7 +25,13 @@
             {{ $t('common.more') }}
           </button>
         </div>
+<<<<<<< HEAD
         <p class="section-description">{{ $t('interface.dashboardSwap') }}</p>
+=======
+        <p class="section-description">
+          {{ $t('interface.dashboard-swap') }}
+        </p>
+>>>>>>> develop
         <div class="swap-info">
           <div v-for="pair in swapPairs" :key="pair.from + pair.to">
             <div
@@ -43,7 +46,7 @@
                 <span
                   :class="['currency-symbol', 'cc', pair.from, 'cc-icon']"
                 ></span>
-                <img src="@/assets/images/icons/swap.svg" alt />
+                <img src="@/assets/images/icons/swap-widget.svg" alt />
                 <span
                   :class="['currency-symbol', 'cc', pair.to, 'cc-icon']"
                 ></span>
@@ -62,7 +65,7 @@
             class="title-button prevent-user-select"
             @click="goTo('dapps')"
           >
-            {{ $t('common.viewAll') }}
+            {{ $t('interface.view-all') }}
           </button>
         </div>
         <div class="block--container">
@@ -74,6 +77,7 @@
             :icon-disabled="dapp.iconDisabled"
             :desc="$t(dapp.desc)"
             :param="dapp.route"
+            :release-date="dapp.releaseDate"
             :supported-networks="dapp.supportedNetworks"
             class="dapp"
           />
@@ -170,20 +174,17 @@ export default {
     ...mapState(['account', 'web3', 'network', 'online']),
     sortedObject() {
       const arrayedDapp = [];
+      const actualReturnedDapp = [];
       Object.keys(dapps).forEach(dapp => {
-        if (this.dappsToShow.includes(dapp)) {
-          arrayedDapp.push(dapps[dapp]);
-        }
+        if (dapp === 'manageEns' || dapp === 'maker')
+          actualReturnedDapp.push(dapps[dapp]);
+        arrayedDapp.push(dapps[dapp]);
       });
-
-      return arrayedDapp.sort((a, b) => {
-        if (
-          a.supportedNetworks.includes(this.network.type.name) ||
-          b.supportedNetworks.includes(this.network.type.name)
-        )
-          return 1;
-        return 0;
-      });
+      const newestDapp = arrayedDapp.sort((a, b) => {
+        return new Date(b.releaseDate) - new Date(a.releaseDate);
+      })[0];
+      actualReturnedDapp.push(newestDapp);
+      return actualReturnedDapp;
     },
     isOnlineAndEth() {
       return this.online && this.network.type.name === 'ETH';

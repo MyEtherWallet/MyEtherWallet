@@ -2,14 +2,21 @@
   <div class="interface-ads">
     <div class="global__interface-block__margin-top">
       <a
-        :title="$t('common.twitterFollow')"
+        :title="$t('interface.ads.twitter')"
         href="https://twitter.com/intent/follow?screen_name=myetherwallet"
         onclick="window.open(this.href, 'twitter-share', 'width=580,height=296');return false;"
+        rel="noopener noreferrer"
       >
         <div
           class="global__interface-block flex--row--align-center twitter-ad-block"
         >
+<<<<<<< HEAD
           <p class="block-title">{{ $t('common.twitterFollow') }}</p>
+=======
+          <p class="block-title">
+            {{ $t('interface.ads.twitter') }}
+          </p>
+>>>>>>> develop
           <div class="margin--left--auto block-twitter">
             <i class="fa fa-twitter"></i>
           </div>

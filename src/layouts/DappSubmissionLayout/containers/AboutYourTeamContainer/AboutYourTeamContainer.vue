@@ -1,12 +1,12 @@
 <template>
-  <div class="about-your-dapp w-50 mb-5 mt-5">
+  <div class="about-your-dapp mb-5 mt-5">
     <social-acct-modal ref="socialacct" @addSocialAccount="addSocialAccount" />
     <b-form onsubmit="return false;">
       <b-form-group>
         <label class="dapp-label"
-          >Authors
+          >{{ $t('dappsSubmission.about-your-team.authors-title') }}
           <popover
-            :popcontent="$t('dappsSubmission.authors')"
+            :popcontent="$t('dappsSubmission.about-your-team.authors')"
             class="dapp-popover"
           ></popover>
         </label>
@@ -14,9 +14,14 @@
           <b-form-input
             id="authors"
             v-model="form.authors"
+<<<<<<< HEAD
             v-validate="'required'"
+=======
+            :placeholder="
+              $t('dappsSubmission.about-your-team.author-placeholder')
+            "
+>>>>>>> develop
             name="authors"
-            placeholder="e.g. James Lee; Emilie Roy; Edward McCormick"
             type="text"
             @update="updateAuthors"
           >
@@ -28,7 +33,9 @@
         </p>
       </b-form-group>
       <b-form-group>
-        <label class="dapp-label">My full name </label>
+        <label class="dapp-label">{{
+          $t('dappsSubmission.about-your-team.full-name')
+        }}</label>
         <div class="dapp-input">
           <b-form-input
             id="fullName"
@@ -46,7 +53,9 @@
         </p>
       </b-form-group>
       <b-form-group>
-        <label class="dapp-label">My email </label>
+        <label class="dapp-label">{{
+          $t('dappsSubmission.about-your-team.email')
+        }}</label>
         <div class="dapp-input">
           <b-form-input
             id="emailAddress"
@@ -68,12 +77,14 @@
         <div class="social-links-container">
           <div class="social-links-header-wrapper">
             <div class="social-links-header">
-              <label class="dapp-social-label"> Company social links</label>
+              <label class="dapp-social-label">{{
+                $t('dappsSubmission.about-your-team.social-links')
+              }}</label>
               <button class="add-btn pull-right" @click="openSocialAcctModal">
-                Add +
+                {{ $t('dappsSubmission.about-your-team.add') }} +
               </button>
             </div>
-            <span class="requiredIcon">*</span>
+            <span class="required-icon">*</span>
           </div>
           <div v-if="socialAccts.length > 0" class="social-links-content">
             <div
@@ -95,19 +106,24 @@
           </div>
         </div>
         <p v-if="socialLinksError" class="error">
-          The company social links field is required
+          {{ $t('dappsSubmission.about-your-team.links-required') }}
         </p>
       </b-form-group>
       <b-form-group>
-        <label class="dapp-label">Company website </label>
+        <label class="dapp-label">{{
+          $t('dappsSubmission.about-your-team.company-website')
+        }}</label>
         <div class="dapp-input">
           <b-form-input
             id="companyWebsite"
             v-model="form.companyWebsite"
+<<<<<<< HEAD
             v-validate="'url:require_protocol'"
+=======
+            :placeholder="$t('dappsSubmission.url-placeholder')"
+>>>>>>> develop
             type="text"
             name="website"
-            placeholder="URL link"
             @change="updateDisableBtn(errors)"
           >
           </b-form-input>
@@ -118,9 +134,9 @@
       </b-form-group>
       <b-form-group>
         <label class="dapp-label"
-          >Software license
+          >{{ $t('dappsSubmission.about-your-team.license') }}
           <popover
-            :popcontent="$t('dappsSubmission.softwareLicense')"
+            :popcontent="$t('dappsSubmission.about-your-team.software-license')"
             class="dapp-popover"
           ></popover>
         </label>
@@ -128,22 +144,31 @@
           <b-form-input
             id="softwareLicense"
             v-model="form.license"
+            :placeholder="
+              $t('dappsSubmission.about-your-team.license-placeholder')
+            "
             type="text"
-            placeholder="(e.g. MIT, GPL, Proprietary)"
           >
           </b-form-input>
         </div>
       </b-form-group>
       <b-form-group>
-        <label class="dapp-label">Additional notes</label>
+        <label class="dapp-label">{{
+          $t('dappsSubmission.about-your-team.additional-notes')
+        }}</label>
         <div class="dapp-input">
           <b-form-textarea
             v-model="form.additionalNotes"
+<<<<<<< HEAD
             v-validate="'max:300'"
+=======
+            :placeholder="
+              $t('dappsSubmission.about-your-team.notes-placeholder')
+            "
+>>>>>>> develop
             size="lg"
             rows="5"
             name="notes"
-            placeholder="300 characters"
             @change="updateDisableBtn(errors)"
           ></b-form-textarea>
         </div>

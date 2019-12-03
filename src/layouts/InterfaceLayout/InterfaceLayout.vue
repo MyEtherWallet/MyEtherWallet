@@ -32,7 +32,7 @@
     />
     <print-modal
       ref="printModal"
-      :priv-key="!wallet.isPubOnly"
+      :priv-key="!wallet"
       :address="account.address"
     />
     <address-qrcode-modal ref="addressQrcodeModal" :address="account.address" />
@@ -62,6 +62,7 @@
         <div class="tx-contents">
           <div class="content-container mobile-hide">
             <interface-address
+              v-if="Object.keys(wallet).length > 1"
               :address="address"
               :print="print"
               :switch-addr="switchAddress"
@@ -356,7 +357,14 @@ export default {
       if (this.network.type.chainID === 1 || this.network.type.chainID === 3) {
         const tb = new TokenBalance(this.web3.currentProvider);
         try {
-          tokens = await tb.getBalance(this.account.address);
+          tokens = await tb.getBalance(
+            this.account.address,
+            true,
+            true,
+            true,
+            0,
+            { gas: '0x11e1a300' }
+          );
           tokens = tokens.map(token => {
             token.address = token.addr;
             delete token.addr;
@@ -527,7 +535,7 @@ export default {
           Toast.responseHandler(e, Toast.ERROR);
         });
     },
-    checkMetamaskAddrChange() {
+    checkWeb3WalletAddrChange() {
       const web3 = this.web3;
       window.ethereum.on('accountsChanged', account => {
         if (account.length > 1) {
@@ -549,11 +557,12 @@ export default {
         });
       }
     },
-    matchMetamaskNetwork() {
+    matchWeb3WalletNetwork() {
       this.web3.eth.net.getId().then(id => {
         this.checkAndSetNetwork(id);
       });
       window.ethereum.on('networkChanged', netId => {
+        this.setupOnlineEnvironment();
         this.checkAndSetNetwork(netId);
       });
     },
@@ -568,12 +577,9 @@ export default {
       if (this.online) {
         if (this.account.address !== null) {
           if (this.account.identifier === WEB3_TYPE) {
-            if (
-              window.web3.currentProvider.isMetaMask ||
-              window.web3.currentProvider.isMew
-            ) {
-              this.checkMetamaskAddrChange();
-              this.matchMetamaskNetwork();
+            if (window.ethereum.isMetaMask || window.ethereum.isMew) {
+              this.checkWeb3WalletAddrChange();
+              this.matchWeb3WalletNetwork();
             } else {
               this.web3WalletPollNetwork();
               this.web3WalletPollAddress();

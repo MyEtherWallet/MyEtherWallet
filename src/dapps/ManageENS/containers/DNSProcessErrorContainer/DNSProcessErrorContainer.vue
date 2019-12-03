@@ -1,12 +1,12 @@
 <template lang="html">
   <div class="dns-process-error">
     <div class="dns-process-content">
-      <h3>DNSSEC NOT FOUND!</h3>
-      <p>Please enable DNSSEC for domain: {{ domainName }}</p>
+      <h3>{{ $t('ens.error.dns-sec-not-found') }}</h3>
+      <p>{{ $t('ens.enable-dns-sec', { domain: domainName }) }}</p>
     </div>
     <interface-bottom-text
-      :link-text="$t('interface.helpCenter')"
-      :question="$t('interface.haveIssues')"
+      :link-text="$t('common.help-center')"
+      :question="$t('common.have-issues')"
       link="https://kb.myetherwallet.com"
     />
   </div>

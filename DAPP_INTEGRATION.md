@@ -10,7 +10,7 @@ The best way to start an integration is by creating a fork of MyEtherWallet, and
 
 - This sub-folder should contain at least one .vue file, routes.js file, and .scss style file for the dapp.  It may also contain any additional files/helpers for the dapp or the dapps ui.
 
-- The UI of the dapp must follow MEW design guidlines located [here](https://github.com/MyEtherWallet/MyEtherWallet-V5-Design-Resources/tree/master/style%20guideline)
+- The UI of the dapp must follow MEW design guidelines located [here](https://github.com/MyEtherWallet/MyEtherWallet-V5-Design-Resources/tree/master/style%20guideline)
 
 - Inclusion of the dapp on the dapp page is through an entry in the `src/dapps/index.js` file.
   - The entry is added to the dapps object in the file and includes the icon as well as title and description displayed to users.
@@ -21,6 +21,8 @@ The best way to start an integration is by creating a fork of MyEtherWallet, and
     - desc: brief description of the dapp to display in the dapp page entry. (limited to two lines, about 60 characters)
 
 - To properly route to the dapp the dapps routes must be added to the router.  This is done by importing the routing.js file from the dapp sub-directory and adding it to the routes object in `src/dapps/routes.js`
+
+- Make sure all hard-coded strings are translated: Create a new folder under translations with the correct dapp name. Add an en_US.json file under it. Then add the correct route under translations/en_US.js. Add the right translations to the dapp_name/en_US.json file and make sure all translated attributes are using kebab case. 
 
 - Beyond the above stated criteria a dapp is free to implement its functionality as it desires.  Yet all dapps will be reviewed and must be approved by MEW prior to inclusion.  This may include requiring changes to how a dapp is implemented.
 
