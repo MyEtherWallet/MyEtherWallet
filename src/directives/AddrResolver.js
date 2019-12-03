@@ -14,7 +14,7 @@ const AddrResolver = {
     let parentCurrency = vnode.context.$parent.currency
       ? vnode.context.$parent.currency
       : network.type.name;
-    let address;
+    let address = '';
 
     vnode.context.$parent.$watch('$store.state.network', function(e) {
       network = e;
@@ -182,7 +182,7 @@ const AddrResolver = {
         errorPar.innerText = '';
         el.parentNode.parentNode.appendChild(errorPar);
       }
-    }
+    };
   }
 };
 

@@ -155,7 +155,8 @@ export default {
     ...mapState(['addressBook', 'account']),
     hasMessage() {
       return (
-        (!this.isValidAddress && this.selectedAddress.length > 0)       
+        (!this.isValidAddress && this.selectedAddress.length > 0) ||
+        (this.isValidAddress && this.selectedAddress !== this.hexAddress)
       );
     }
   },
