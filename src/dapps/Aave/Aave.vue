@@ -83,11 +83,18 @@ export default {
 
   },
   mounted() {
-    this.contractAddress = '0x9C6C63aA0cD4557d7aE6D9306C06C093A2e35408';
+    this.lendingPoolContractAddress = '0x9C6C63aA0cD4557d7aE6D9306C06C093A2e35408';
     this.lendingPoolAddressesProviderContract = new this.web3.eth.Contract(
       LendingPoolAddressesProviderAbi,
-      this.contractAddress
+      this.lendingPoolContractAddress
     );
+
+    this.lendingPool = this.lendingPoolAddressesProviderContract.methods.getLendingPool();
+    this.lendingPoolContract = new this.web3.eth.Contract(
+      LendingPoolAbi,
+      this.lendingPool
+    );
+    console.error('lendingPoolAddressesProviderContract', this.lendingPoolContract)
   },
   methods: {
     toggleTabs(action) {
