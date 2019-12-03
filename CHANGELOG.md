@@ -1,3 +1,6 @@
+### Devop
+ - Add gasLimit field to batch transactions[#1702](https://github.com/MyEtherWallet/MyEtherWallet/pull/1702)
+
 ### Release v5.2.5
 
 ### Bug
