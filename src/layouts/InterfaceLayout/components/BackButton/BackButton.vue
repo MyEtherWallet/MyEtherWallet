@@ -4,7 +4,8 @@
       <div class="back-icon-container">
         <i class="fa fa-arrow-left" aria-hidden="true" />
       </div>
-      <p>{{ $t('common.back') }}</p>
+      <p v-if="!title">{{ $t('common.back') }}</p>
+      <p v-if="title">{{ title }}</p>
     </div>
     <div class="right-slot"><slot /></div>
   </div>
@@ -14,6 +15,10 @@
 export default {
   props: {
     path: {
+      type: String,
+      default: ''
+    },
+    title: {
       type: String,
       default: ''
     }

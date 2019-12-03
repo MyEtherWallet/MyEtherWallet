@@ -2,7 +2,7 @@
   <div class="modal-container">
     <b-modal
       ref="notifications"
-      title="Notifications"
+      :title="$tc('common.notifications.title', 2)"
       hide-footer
       centered
       class="bootstrap-modal nopadding"
@@ -13,23 +13,25 @@
 
       <div class="modal-contents">
         <full-width-dropdown
-          title="Transaction Speed"
+          :title="$t('interface.config.tx-speed')"
           popup="What is TX speed"
           class="tx-speed"
         >
           <div class="tx-success">
-            Your transaction amount <span>2.100000 ETH</span> to address
+            {{ $t('notifications.your-transaction-amount') }}
+            <span>2.100000 {{ $t('common.currency.eth') }}</span>
+            {{ $t('notifications.to-address') }}
             <p>0x1d3649b580f77f8fd81a6546398d1926c49eb336</p>
-            has been successfully transferred.
+            {{ $t('notifications.successfully-transferred') }}
           </div>
         </full-width-dropdown>
         <full-width-dropdown
-          title="Import Configurations"
+          :title="$t('interface.config.import')"
           class="import-config"
         >
         </full-width-dropdown>
         <full-width-dropdown
-          title="Export Configurations"
+          :title="$t('interface.config.export')"
           class="export-config"
         >
         </full-width-dropdown>

@@ -1,7 +1,7 @@
 <template>
   <b-modal
     ref="password"
-    :title="$t('accessWallet.password')"
+    :title="$t('common.password.string')"
     hide-footer
     class="bootstrap-modal modal-software nopadding"
     centered
@@ -18,10 +18,13 @@
           <input
             ref="passwordInput"
             v-model="password"
+<<<<<<< HEAD
             :type="show ? 'text' : 'password'"
+=======
+            :placeholder="$t('common.password.enter')"
+>>>>>>> develop
             name="Password"
             autocomplete="off"
-            placeholder="Enter password"
           />
           <img
             v-if="show"
@@ -42,7 +45,7 @@
           type="submit"
           @click.prevent="unlockWallet"
         >
-          <span v-show="!spinner">{{ $t('common.accessWallet') }}</span>
+          <span v-show="!spinner">{{ $t('common.wallet.access') }}</span>
           <i v-show="spinner" class="fa fa-spin fa-spinner fa-lg" />
         </button>
       </form>
@@ -112,11 +115,17 @@ export default {
           data: [this.file, this.password]
         });
         worker.onmessage = function(e) {
+          const obj = {
+            file: this.file,
+            name: e.data.filename
+          };
           self.setUnlockedWallet(
             new WalletInterface(
               Buffer.from(e.data._privKey),
               false,
-              keyStoreType
+              keyStoreType,
+              '',
+              JSON.stringify(obj)
             )
           );
         };

@@ -47,7 +47,10 @@
       />
     </form>
     <div class="confirm-send-button" @click="submit()">
-      <button-with-qrcode :qrcode="qrcode" buttonname="Confirm and Send" />
+      <button-with-qrcode
+        :qrcode="qrcode"
+        :buttonname="$t('sendTx.confirmation.button')"
+      />
     </div>
   </div>
 </template>

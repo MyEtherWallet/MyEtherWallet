@@ -1,16 +1,20 @@
 <template>
-  <div class="header">
+  <div v-if="!isMewCx" class="header">
     <decision-tree />
     <router-link
       v-show="
         $route.fullPath === '/create-wallet' ||
-          $route.fullPath === '/access-my-wallet'
+          ($route.fullPath === '/access-my-wallet' && !isMewCx)
       "
       to="/getting-started"
     >
       <user-reminder-button />
     </router-link>
-    <mobile-menu :opensettings="openSettings" :logout="logout" />
+    <mobile-menu
+      :opensettings="openSettings"
+      :logout="logout"
+      :build-type="buildType"
+    />
 
     <!-- Modals ***************************************** -->
     <disconnected-modal ref="mewConnectDisconnected" />
@@ -20,7 +24,6 @@
       :gas-price="gasPrice"
       :address="address"
     />
-    <notifications-modal ref="notifications" />
     <logout-modal ref="logout" />
     <issue-log-modal
       v-if="Object.keys.length > 0"
@@ -49,17 +52,20 @@
             <router-link
               aria-label="Home"
               to="/"
-              @click.native="
-                scrollTop();
-                isMobileMenuOpen = false;
-              "
+              @click.native="isMobileMenuOpen = false"
             >
               <div class="top-logo">
                 <img
-                  :class="!isPageOnTop && !isMobileMenuOpen ? 'logo-small' : ''"
+                  :class="[
+                    !isPageOnTop && !isMobileMenuOpen
+                      ? `logo-small${!isMewCx ? '' : '-' + buildType}`
+                      : '',
+                    `logo-large${!isMewCx ? '' : '-' + buildType}`
+                  ]"
+                  :src="
+                    require(`@/assets/images/short-hand-logo-${buildType}.png`)
+                  "
                   alt
-                  class="logo-large"
-                  src="~@/assets/images/short-hand-logo.png"
                 />
               </div>
             </router-link>
@@ -76,17 +82,13 @@
                     class="buy-eth-icon"
                     src="@/assets/images/icons/buy-eth.svg"
                   />
-                  Buy ETH
+                  {{ $t('common.buy-eth') }}
                 </b-nav-item>
-                <b-nav-item
-                  v-if="isHomePage"
-                  to="/"
-                  exact
-                  @click="scrollTop()"
-                  >{{ $t('header.home') }}</b-nav-item
-                >
-                <b-nav-item v-if="isHomePage" to="/#about-mew">
-                  {{ $t('header.about') }}
+                <b-nav-item v-if="isHomePage" to="/" exact>{{
+                  $t('common.home')
+                }}</b-nav-item>
+                <b-nav-item v-if="isHomePage && !isMewCx" to="/#about-mew">
+                  {{ $t('common.about') }}
                 </b-nav-item>
                 <b-nav-item-dropdown
                   v-if="address !== null"
@@ -95,7 +97,7 @@
                   class="tx-history-menu"
                 >
                   <template slot="button-content">
-                    <p>Transaction History</p>
+                    <p>{{ $t('interface.tx-history') }}</p>
                   </template>
                   <b-dropdown-item :href="explorerUrl" target="_blank">
                     <p>{{ serviceUrl }} ({{ network.type.name }})</p>
@@ -105,11 +107,16 @@
                     :href="'https://ethplorer.io/address/' + address"
                     target="_blank"
                     rel="noopener noreferrer"
-                    >Ethplorer (Tokens)</b-dropdown-item
+                    >{{ $t('header.ethplorer') }} ({{
+                      $tc('common.token', 2)
+                    }})</b-dropdown-item
                   >
                 </b-nav-item-dropdown>
-                <b-nav-item to="/#faqs">{{ $t('common.faqs') }}</b-nav-item>
-                <div class="language-menu-container">
+                <b-nav-item v-if="!isMewCx" to="/#faqs">{{
+                  $t('common.faqs')
+                }}</b-nav-item>
+                <!-- Commented for now waiting for all Translations to be done -->
+                <!-- <div v-show="!isMewCx" class="language-menu-container">
                   <div class="arrows">
                     <i class="fa fa-angle-down" aria-hidden="true" />
                   </div>
@@ -141,32 +148,47 @@
                       >{{ language.name }}</b-dropdown-item
                     >
                   </b-nav-item-dropdown>
-                </div>
-                <div
-                  v-if="address !== null"
-                  class="notification-menu-container"
-                >
-                  <notification ref="notification" />
+                </div> -->
+                <div class="notification-menu-container">
+                  <notification
+                    v-if="
+                      $route.fullPath.includes('view-wallet-info') ||
+                        $route.fullPath.includes('interface')
+                    "
+                    ref="notification"
+                  />
+                  <extension-notification
+                    v-if="
+                      isMewCx &&
+                        !$route.fullPath.includes('view-wallet-info') &&
+                        !$route.fullPath.includes('interface')
+                    "
+                    ref="extensionNotification"
+                  />
                 </div>
                 <b-nav-item
-                  v-if="showButtons && !isPageOnTop"
+                  v-if="showButtons && !isPageOnTop && !isMewCx"
                   :class="[
                     showGetFreeWallet ? 'show' : 'hide',
                     'get-free-wallet first-button nopadding'
                   ]"
                   to="/create-wallet"
                 >
-                  <div class="get-free-wallet-button">New Wallet</div>
+                  <div class="get-free-wallet-button">
+                    {{ $t('header.new-wallet') }}
+                  </div>
                 </b-nav-item>
                 <b-nav-item
-                  v-if="showButtons && !isPageOnTop"
+                  v-if="showButtons && !isPageOnTop && !isMewCx"
                   :class="[
                     showGetFreeWallet ? 'show' : 'hide',
                     'get-free-wallet nopadding'
                   ]"
                   to="/access-my-wallet"
                 >
-                  <div class="access-button">Access</div>
+                  <div class="access-button">
+                    {{ $t('header.access') }}
+                  </div>
                 </b-nav-item>
                 <b-nav-item-dropdown
                   v-if="address !== null"
@@ -186,10 +208,12 @@
                       <i class="fa fa-angle-down" aria-hidden="true" />
                     </div>
                   </template>
-                  <b-dropdown-item @click="openSettings"
-                    >Settings</b-dropdown-item
-                  >
-                  <b-dropdown-item @click="logout">Log out</b-dropdown-item>
+                  <b-dropdown-item @click="openSettings">{{
+                    $t('interface.settings')
+                  }}</b-dropdown-item>
+                  <b-dropdown-item @click="logout">{{
+                    $t('interface.logout')
+                  }}</b-dropdown-item>
                 </b-nav-item-dropdown>
               </b-nav>
             </div>
@@ -213,12 +237,12 @@ import Blockie from '@/components/Blockie';
 import NotificationsContainer from '@/containers/NotificationsContainer';
 import UserReminderButton from '@/components/UserReminderButton';
 import SettingsModal from '@/components/SettingsModal';
-import NotificationsModal from '@/components/NotificationsModal';
 import LogoutModal from '@/components/LogoutModal';
 import IssueLogModal from '@/components/IssueLogModal';
 import BigNumber from 'bignumber.js';
 import MobileMenu from './components/MobileMenu';
 import DisconnectedModal from '@/components/DisconnectedModal';
+import ExtensionNotification from '@/layouts/ExtensionBrowserAction/containers/ExtensionNotification';
 import DecisionTree from '@/components/DecisionTree';
 
 const events = {
@@ -231,15 +255,16 @@ export default {
     blockie: Blockie,
     notification: NotificationsContainer,
     'settings-modal': SettingsModal,
-    'notifications-modal': NotificationsModal,
     'logout-modal': LogoutModal,
     'issue-log-modal': IssueLogModal,
     'user-reminder-button': UserReminderButton,
     'mobile-menu': MobileMenu,
     'disconnected-modal': DisconnectedModal,
+    'extension-notification': ExtensionNotification,
     'decision-tree': DecisionTree
   },
   data() {
+    const isMewCx = Misc.isMewCx();
     return {
       supportedLanguages: [
         // { name: 'Deutsch', flag: 'de', langCode: 'de_DL' },
@@ -273,7 +298,9 @@ export default {
       showGetFreeWallet: false,
       gasPrice: '0',
       error: {},
-      resolver: () => {}
+      resolver: () => {},
+      isMewCx: isMewCx,
+      buildType: BUILD_TYPE
     };
   },
   computed: {
@@ -350,6 +377,8 @@ export default {
     };
 
     this.$eventHub.$on('issueModal', (error, resolve) => {
+      // eslint-disable-next-line
+      console.log(error);
       let errorPop = store.get('errorPop') || 0;
       errorPop += 1;
       store.set('errorPop', errorPop);

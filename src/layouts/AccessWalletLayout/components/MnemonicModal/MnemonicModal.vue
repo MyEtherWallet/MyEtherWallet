@@ -1,7 +1,7 @@
 <template>
   <b-modal
     ref="mnemonicPhrase"
-    :title="$t('accessWallet.accessByMnemonicPhrase')"
+    :title="$t('accessWallet.mnemonic.modal.title')"
     hide-footer
     class="bootstrap-modal modal-metamask nopadding"
     centered
@@ -15,7 +15,7 @@
     </div>
     <div class="contents">
       <p class="instruction">
-        {{ $t('accessWallet.pleaseTypeInMnemonicPhrase') }}
+        {{ $t('accessWallet.mnemonic.modal.text') }}
       </p>
       <div class="tools">
         <div class="value-switch noselect">
@@ -34,7 +34,7 @@
             </div>
           </div>
           <span class="text__base link switch-label">{{
-            $t('createWallet.byMnemonicValue')
+            $t('common.value')
           }}</span>
         </div>
       </div>
@@ -53,9 +53,13 @@
           </ul>
         </div>
         <div class="option-container-block">
-          <expending-option
-            title="Password"
-            button-text="Optional"
+          <expanding-option
+            :title="$t('createWallet.mnemonic.do-you-extra-word')"
+            :popover="
+              $t('createWallet.mnemonic.access-wallet-extra-word-popover')
+            "
+            :button-text="$t('common.no')"
+            :show-enable="true"
             @expanded="passwordInputViewChange"
           >
             <div class="option-container">
@@ -63,9 +67,10 @@
                 v-model="password"
                 :show-button="false"
                 :full-width="true"
+                :placeholder-text="$t('createWallet.mnemonic.type-in')"
               />
             </div>
-          </expending-option>
+          </expanding-option>
         </div>
         <p v-show="error !== ''" class="error">{{ error }}</p>
         <div class="button-container-block">
@@ -86,7 +91,7 @@ import CustomerSupport from '@/components/CustomerSupport';
 import WarningMessage from '@/components/WarningMessage';
 import StandardButton from '@/components/Buttons/StandardButton';
 import CreateWalletInput from './components/CreateWalletInput';
-import ExpendingOption from '@/components/ExpendingOption';
+import ExpandingOption from '@/components/ExpandingOption';
 import { MnemonicWallet } from '@/wallets';
 import { Toast } from '@/helpers';
 
@@ -96,7 +101,7 @@ export default {
     'warning-message': WarningMessage,
     'standard-button': StandardButton,
     'create-wallet-input': CreateWalletInput,
-    'expending-option': ExpendingOption
+    'expanding-option': ExpandingOption
   },
   props: {
     hardwareWalletOpen: {

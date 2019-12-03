@@ -233,6 +233,7 @@
   p {
     color: $text-base-color;
     line-height: 21px;
+    margin-bottom: 0 !important;
   }
 
   h1 {
@@ -1250,6 +1251,14 @@
     &.not-good {
       color: $text-good-button-not-good;
     }
+  }
+
+  .clear-all-btn {
+    color: $mew-green;
+    cursor: pointer;
+    margin-top: 5px;
+    padding: 5px 8px;
+    text-align: center;
   }
 
   // *********************************************************************

@@ -1,23 +1,32 @@
 <template lang="html">
   <div class="already-owned-container">
-    <h3>{{ fullDomainName }} {{ $t('dapps.alreadyOwned') }}.</h3>
+    <h3>{{ $t('ens.already-owned', { domain: fullDomainName }) }}</h3>
     <div class="content-container">
-      <p class="label">{{ $t('dapps.labelHash') }}({{ hostName }}):</p>
+      <p class="label">{{ $t('ens.label-hash') }}({{ hostName }}):</p>
       <p class="content">{{ labelHash }}</p>
     </div>
     <div class="content-container">
-      <p class="label">{{ $t('dapps.nameHash') }}({{ fullDomainName }}):</p>
+      <p class="label">{{ $t('ens.name-hash') }}({{ fullDomainName }}):</p>
       <p class="content">{{ nameHash }}</p>
     </div>
     <div class="content-container">
-      <p class="label">{{ $t('dapps.owner') }}:</p>
+      <p class="label">{{ $t('ens.owner') }}:</p>
       <p class="content">{{ owner }}</p>
     </div>
     <div v-show="resolverMultiCoinSupport" class="content-container">
-      <h4>{{ $t('dapps.multiCoin') }}:</h4>
+      <h4>{{ $t('ens.multi-coin') }}:</h4>
       <div v-for="(v, k) in supportedCoinsWithValue" :key="k.id">
-        <span class="currency">{{ v.symbol }} address: </span>
+        <span class="currency"
+          >{{ v.symbol }} {{ $t('common.lowercase-addr') }}:
+        </span>
         <span class="content">{{ v.value }}</span>
+      </div>
+    </div>
+    <div v-show="hasAnyTxt" class="content-container">
+      <h4>{{ $t('ens.txt-record') }}:</h4>
+      <div v-for="(value, key) in txtRecordsWithValue" :key="key">
+        <span class="currency">{{ key }}: </span>
+        <span class="content">{{ value }}</span>
       </div>
     </div>
     <div class="owner-options">
@@ -26,12 +35,12 @@
         class="manage-button"
         @click="manageEns"
       >
-        {{ $t('dapps.manage') }}
+        {{ $t('ens.manage') }}
       </button>
     </div>
     <interface-bottom-text
-      :link-text="$t('interface.helpCenter')"
-      :question="$t('interface.haveIssues')"
+      :link-text="$t('common.help-center')"
+      :question="$t('common.have-issues')"
       link="https://kb.myetherwallet.com"
     />
   </div>
@@ -73,10 +82,11 @@ export default {
     resolverMultiCoinSupport: {
       type: Boolean,
       default: false
+    },
+    txtRecords: {
+      type: Object,
+      default: function() {}
     }
-  },
-  data() {
-    return {};
   },
   computed: {
     ...mapState(['account']),
@@ -84,12 +94,24 @@ export default {
       return `${this.hostName}.${this.tld}`;
     },
     supportedCoinsWithValue() {
-      const valueCoins = {};
-      for (const type in this.supportedCoins) {
-        if (this.supportedCoins[type].value)
-          valueCoins[type] = this.supportedCoins[type];
+      const coins = {};
+      for (const k in this.supportedCoins)
+        if (this.supportedCoins[k].value) coins[k] = this.supportedCoins[k];
+      return coins;
+    },
+    txtRecordsWithValue() {
+      const txtRecords = {};
+      for (const k in this.txtRecords)
+        if (this.txtRecords[k]) txtRecords[k] = this.txtRecords[k];
+      return txtRecords;
+    },
+    hasAnyTxt() {
+      for (const i in this.txtRecords) {
+        if (this.txtRecords[i] !== '') {
+          return true;
+        }
       }
-      return valueCoins;
+      return false;
     }
   },
   mounted() {

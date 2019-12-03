@@ -1,12 +1,12 @@
 <template>
   <div class="send-currency-container">
-    <interface-container-title :title="$t('common.sendTx')" />
+    <interface-container-title :title="$t('sendTx.send-tx')" />
     <div class="send-form">
       <div class="form-block amount-to-address">
         <div class="amount">
           <div class="single-input-block">
             <div class="title">
-              <h4>{{ $t('interface.sendTxType') }}</h4>
+              <h4>{{ $t('sendTx.type') }}</h4>
             </div>
             <currency-picker
               :currency="tokensWithBalance"
@@ -18,20 +18,23 @@
           </div>
           <div class="single-input-block">
             <div class="title">
-              <h4>{{ $t('interface.sendTxAmount') }}</h4>
+              <h4>{{ $t('sendTx.amount') }}</h4>
               <p
                 class="title-button prevent-user-select"
                 @click="sendEntireBalance"
               >
-                Entire Balance
+                {{ $t('sendTx.button-entire') }}
               </p>
             </div>
             <div class="the-form amount-number">
               <input
                 v-model="toValue"
+<<<<<<< HEAD
                 v-validate="'min_value:0'"
+=======
+                :placeholder="$t('sendTx.amount')"
+>>>>>>> develop
                 type="number"
-                placeholder="Amount"
                 min="0"
                 name="value"
                 step="any"
@@ -53,6 +56,7 @@
           </div>
         </div>
         <div class="to-address">
+<<<<<<< HEAD
           <div class="title">
             <h4>
               {{ $t('interface.sendTxToAddr') }}
@@ -91,23 +95,31 @@
               aria-hidden="true"
             />
           </div>
+=======
+          <dropdown-address-selector
+            :clear-address="clearAddress"
+            :title="$t('sendTx.to-addr')"
+            @toAddress="getToAddress($event)"
+          />
+>>>>>>> develop
         </div>
         <div class="tx-fee">
           <div class="title">
-            <h4>
-              {{ $t('common.txFee') }}
-            </h4>
+            <h4>{{ $t('sendTx.tx-fee') }}</h4>
             <p class="copy-button prevent-user-select" @click="openSettings">
               {{ $t('common.edit') }}
             </p>
           </div>
           <div class="fee-value">
             <div class="gwei">
-              {{ gasPrice }} Gwei
+              {{ gasPrice }} {{ $t('common.gas.gwei') }}
               <!--(Economic)-->
             </div>
             <div v-show="network.type.name === 'ETH'" class="usd">
-              Cost {{ txFeeEth }} ETH = ${{ convert }}
+              <i18n path="sendTx.cost-eth-convert" tag="div">
+                <span slot="txFeeEth">{{ txFeeEth }}</span>
+                <span slot="convert">{{ convert }}</span>
+              </i18n>
             </div>
           </div>
         </div>
@@ -119,7 +131,7 @@
         <div class="toggle-button-container">
           <h4>{{ $t('common.advanced') }}</h4>
           <div class="toggle-button">
-            <span>{{ $t('interface.dataGas') }}</span>
+            <span>{{ $t('sendTx.data-gas') }}</span>
             <!-- Rounded switch -->
             <div class="sliding-switch-white">
               <label class="switch">
@@ -138,11 +150,11 @@
         >
           <div class="margin-container">
             <div v-show="!isToken" class="the-form user-input">
-              <p>Add Data</p>
+              <p>{{ $t('sendTx.add-data') }}</p>
               <input
                 v-model="toData"
+                :placeholder="$t('sendTx.ph-add-data')"
                 type="text"
-                placeholder="Add Data (e.g. 0x7834f874g298hf298h234f)"
                 autocomplete="off"
               />
               <i
@@ -154,10 +166,10 @@
               />
             </div>
             <div class="the-form user-input">
-              <p>{{ $t('common.gasLimit') | capitalize }}</p>
+              <p>{{ $t('common.gas.limit') | capitalize }}</p>
               <input
                 v-model="gasLimit"
-                :placeholder="$t('common.gasLimit')"
+                :placeholder="$t('common.gas.limit')"
                 type="number"
                 min="0"
                 name
@@ -174,7 +186,6 @@
         </div>
       </div>
     </div>
-
     <div class="submit-button-container">
       <div
         :class="[
@@ -183,13 +194,11 @@
         ]"
         @click="submitTransaction"
       >
-        {{ $t('interface.sendTx') }}
+        {{ $t('sendTx.send-tx') }}
       </div>
-      <interface-bottom-text
-        :link-text="$t('interface.helpCenter')"
-        :question="$t('interface.haveIssues')"
-        link="https://kb.myetherwallet.com"
-      />
+      <div class="clear-all-btn" @click="clear()">
+        {{ $t('common.clear-all') }}
+      </div>
     </div>
   </div>
 </template>
@@ -198,7 +207,6 @@
 import { mapState } from 'vuex';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import CurrencyPicker from '../../components/CurrencyPicker';
-import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
 import { Transaction } from 'ethereumjs-tx';
 import { Misc, Toast } from '@/helpers';
@@ -206,13 +214,14 @@ import BigNumber from 'bignumber.js';
 import ethUnit from 'ethjs-unit';
 import utils from 'web3-utils';
 import fetch from 'node-fetch';
+import DropDownAddressSelector from '@/components/DropDownAddressSelector';
 
 export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
-    'interface-bottom-text': InterfaceBottomText,
     blockie: Blockie,
-    'currency-picker': CurrencyPicker
+    'currency-picker': CurrencyPicker,
+    'dropdown-address-selector': DropDownAddressSelector
   },
   props: {
     checkPrefilled: {
@@ -276,7 +285,8 @@ export default {
       gasLimit: '21000',
       toData: '',
       selectedCurrency: '',
-      ethPrice: 0
+      ethPrice: 0,
+      clearAddress: false
     };
   },
 
@@ -302,22 +312,22 @@ export default {
     },
     isValidAmount() {
       const notEnoughGasMsg =
-        this.$t('errorsGlobal.notAValidAmountTotal') +
+        this.$t('errorsGlobal.not-valid-amount-total') +
         ' Gas ' +
-        this.$t('errorsGlobal.toSend');
+        this.$t('errorsGlobal.to-send');
       const notEnoughTokenMsg =
-        this.$t('errorsGlobal.notAValidAmountTotal') +
+        this.$t('errorsGlobal.not-valid-amount-total') +
         ' ' +
         this.selectedCurrency.symbol +
         ' ' +
-        this.$t('errorsGlobal.toSend');
+        this.$t('errorsGlobal.to-send');
       const notEnoughCurrencyMsg =
-        this.$t('errorsGlobal.notAValidAmountTotal') +
+        this.$t('errorsGlobal.not-valid-amount-total') +
         ' ' +
         this.network.type.currencyName +
         ' ' +
-        this.$t('errorsGlobal.toSend');
-      const invalidValueMsg = this.$t('errorsGlobal.invalidValue');
+        this.$t('errorsGlobal.to-send');
+      const invalidValueMsg = this.$t('errorsGlobal.invalid-value');
       const enoughTokenBalance = new BigNumber(this.toValue).lte(
         this.selectedCurrency.balance
       );
@@ -441,6 +451,25 @@ export default {
     if (this.online && this.network.type.name === 'ETH') this.getEthPrice();
   },
   methods: {
+    clear() {
+      this.toData = '';
+      this.toValue = '0';
+      this.hexAddress = '';
+      this.address = '';
+      this.gasLimit = '21000';
+      this.isValidAddress = false;
+      this.advancedExpand = false;
+      this.clearAddress = !this.clearAddress;
+      this.selectedCurrency = {
+        name: 'Ethereum',
+        symbol: 'ETH'
+      };
+    },
+    getToAddress(data) {
+      this.address = data.address;
+      this.hexAddress = data.address;
+      this.isValidAddress = data.valid;
+    },
     prefillForm() {
       if (this.isPrefilled) {
         const foundToken = this.tokensymbol
@@ -549,6 +578,7 @@ export default {
         this.web3.eth.sendTransaction(json).catch(err => {
           Toast.responseHandler(err, Toast.ERROR);
         });
+        this.clear();
       } catch (e) {
         Toast.responseHandler(e, Toast.ERROR);
       }
@@ -565,10 +595,6 @@ export default {
         });
       this.ethPrice =
         typeof price === 'object' ? price.data.ETH.quotes.USD.price : 0;
-    },
-    copyToClipboard(ref) {
-      this.$refs[ref].select();
-      document.execCommand('copy');
     }
   }
 };

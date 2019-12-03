@@ -1,0 +1,35 @@
+@import '~@/scss/GlobalVariables';
+
+.err-msg {
+  color: $red-1 !important;
+}
+
+.mew-btn {
+  background-color: $mew-green;
+  border-radius: 4px;
+  border: none;
+  color: $white;
+  cursor: pointer;
+  padding: 21px 55px;
+}
+
+input,
+.fake-input {
+  background: $light-grey-1;
+  border: none;
+  border-radius: 4px;
+  color: $dark-blue-12;
+  height: 52px;
+  padding-left: 15px;
+  width: 100%;
+}
+
+input::placeholder {
+  color: $dark-blue-12;
+  padding-right: 10px;
+}
+
+.disabled {
+  background-color: $dark-grey-11;
+  pointer-events: none;
+}

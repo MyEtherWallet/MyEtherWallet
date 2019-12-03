@@ -13,11 +13,13 @@
 
       <div class="the-button-container">
         <div v-if="options.buttonRandom == true" class="the-button random">
-          <i class="fa fa-refresh" aria-hidden="true" />Random
+          <i class="fa fa-refresh" aria-hidden="true" />{{
+            $t('common.random')
+          }}
         </div>
 
         <div v-if="options.buttonClear == true" class="the-button clean">
-          Clear
+          {{ $t('common.clear') }}
         </div>
 
         <div
@@ -25,7 +27,7 @@
           class="the-button copy"
           @click="copyToClipboard"
         >
-          Copy
+          {{ $t('common.copy') }}
         </div>
 
         <div v-if="options.buttonCustom" class="the-button clean">
@@ -75,18 +77,18 @@
 
     <div class="password-strength-indicator">
       <div v-if="options.passwordStrength === '1'">
-        <p class="strength weak">Weak strength password</p>
+        <p class="strength weak">{{ $t('common.password.weak') }}</p>
         <p class="note">
-          Your password needs to be minimum 10 charactors long.
+          {{ $t('common.password.weak-note') }}
         </p>
       </div>
       <div v-if="options.passwordStrength === '2'">
-        <p class="strength medium">Medium strength password</p>
-        <p class="note">Add numbers to make your password stronger.</p>
+        <p class="strength medium">{{ $t('common.password.medium') }}</p>
+        <p class="note">{{ $t('common.password.medium-note') }}</p>
       </div>
       <div v-if="options.passwordStrength === '3'">
-        <p class="strength strong">Strong strength password</p>
-        <p class="note">Good! Your password is very strong.</p>
+        <p class="strength strong">{{ $t('common.password.strong') }}</p>
+        <p class="note">{{ $t('common.password.strong-note') }}</p>
       </div>
     </div>
   </div>

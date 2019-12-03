@@ -306,3 +306,14 @@ $red-filled-button-background--click: #ff5a7f;
     grid-template-columns: 1fr 1fr;
   }
 } // @media all and (min-width: calc(#{$tablet-width} + 1px))
+
+.accept-terms {
+  padding-top: 20px;
+}
+
+.dropdown-paths {
+  span {
+    font-size: 6px;
+    font-weight: bold;
+  }
+}

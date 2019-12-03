@@ -46,7 +46,6 @@
   font-size: 13px;
   font-weight: 400;
   text-shadow: 2px 2px 0 $black;
-  //margin-top: 5px;
 }
 
 .text-content {
@@ -60,4 +59,8 @@
   left: 0;
   top: 0;
   z-index: 2;
+}
+
+.button-send-tx {
+  margin-bottom: 15px;
 }
