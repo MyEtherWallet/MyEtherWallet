@@ -36,7 +36,7 @@ const AddrResolver = {
           errorPar.innerText =
             isDarklisted.msg.length > 0
               ? isDarklisted.msg
-              : this.$t('ens.ens-resolver.address-reported-error');
+              : _this.$t('ens.ens-resolver.address-reported-error');
           el.parentNode.parentNode.appendChild(errorPar);
           return true;
         }
@@ -71,9 +71,7 @@ const AddrResolver = {
             _this.isValidAddress = false;
             _this.hexAddress = '';
             // eslint-disable-next-line
-            errorPar.innerText = `No ${
-              network.type.name[0]
-            }NS resolver in this node`;
+            errorPar.innerText = _this.$t('ens.ens-resolver.no-resolver', { network: network.type.name[0]});
             el.parentNode.parentNode.appendChild(errorPar);
           } else {
             getMultiCoinAddress(ens, normalise(e), parentCurrency)
@@ -90,55 +88,76 @@ const AddrResolver = {
                 }
               })
               .catch(() => {
-                ens
-                  .resolver(normalise(e))
-                  .addr()
-                  .then(address => {
-                    if (!checkDarklist(address)) {
+                if (parentCurrency === 'ETH') {
+                  ens
+                    .resolver(normalise(e))
+                    .addr()
+                    .then(address => {
+                      if (!checkDarklist(address)) {
+                        removeElements();
+                        _this.hexAddress = toChecksumAddress(address);
+                        _this.isValidAddress = true;
+                        errorPar.innerText = address;
+                        vnode.elm.parentNode.parentNode.appendChild(errorPar);
+                      }
+                    })
+                    .catch(() => {
                       removeElements();
-                      _this.hexAddress = toChecksumAddress(address);
-                      _this.isValidAddress = true;
-                      errorPar.innerText = address;
+                      // eslint-disable-next-line
+                    errorPar.innerText = _this.$t('ens.ens-resolver.network-not-found', { network: network.type.name[0]});
+                      _this.isValidAddress = false;
+                      _this.hexAddress = '';
                       vnode.elm.parentNode.parentNode.appendChild(errorPar);
-                    }
-                  })
-                  .catch(() => {
-                    removeElements();
-                    // eslint-disable-next-line
-                  errorPar.innerText = `${
-                    network.type.name[0]
-                  }NS name is invalid or not found`;
-                    _this.isValidAddress = false;
-                    _this.hexAddress = '';
-                    vnode.elm.parentNode.parentNode.appendChild(errorPar);
-                  });
+                    });
+                } else {
+                  removeElements();
+                  // eslint-disable-next-line
+                    errorPar.innerText = _this.$t('ens.ens-resolver.network-not-found', { network: network.type.name[0]});
+                  _this.isValidAddress = false;
+                  _this.hexAddress = '';
+                  vnode.elm.parentNode.parentNode.appendChild(errorPar);
+                }
               });
           }
         }
       } else if (e !== '') {
-        try {
-          _this.isValidAddress = WAValidator.validate(e, parentCurrency);
+        const isValid = WAValidator.validate(e, parentCurrency);
+        if (isValid) {
+          _this.isValidAddress = isValid;
           _this.hexAddress =
             parentCurrency === 'ETH' ? toChecksumAddress(e) : e;
-        } catch (err) {
+        } else {
           if (canValidate(parentCurrency)) {
-            try {
-              _this.isValidAddress = MAValidator.validate(e, parentCurrency);
+            const isValid = MAValidator.validate(e, parentCurrency);
+            if (isValid) {
+              _this.isValidAddress = isValid;
               _this.hexAddress = e;
-            } catch (error) {
+            } else {
               _this.isValidAddress = false;
               _this.hexAddress = '';
               removeElements();
+
               if (e.length > 0) {
-                if (e.length !== 42 || !utils.isHexStrict(e)) {
-                  errorPar.innerText = this.$t(
+                if (
+                  parentCurrency === 'ETH' &&
+                  (e.length !== 42 || !utils.isHexStrict(e))
+                ) {
+                  errorPar.innerText = _this.$t(
                     'ens.ens-resolver.invalid-eth-addr'
                   );
-                } else if (!utils.checkAddressChecksum(e)) {
-                  errorPar.innerText = this.$t(
+                } else if (
+                  parentCurrency === 'ETH' &&
+                  !utils.checkAddressChecksum(e)
+                ) {
+                  errorPar.innerText = _this.$t(
                     'ens.ens-resolver.addr-not-checksummed'
                   );
                   // 'Incorrect checksum: check address format on EthVM';
+                } else {
+                  errorPar.innerText = _this.$t(
+                    'ens.ens-resolver.invalid-addr',
+                    { coin: parentCurrency }
+                  );
                 }
               } else {
                 errorPar.innerText = '';
