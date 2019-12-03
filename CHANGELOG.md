@@ -1,3 +1,6 @@
+### Bug
+- Add link terms of service link. [#1704] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1704)
+
 ### Release v5.2.5
 
 ### Bug
