@@ -15,17 +15,18 @@
           @click.native="linkToStep(1)"
           >Back</StdButton
         >
-        <StdButton buttonclass="button--green" @click.native="linkToStep(3)"
-          >Continue</StdButton
-        >
+        <StdButton buttonclass="button--green" @click.native="linkToStep(3)">
+          Continue
+        </StdButton>
       </div>
       <div class="mt-4">
         Need more help?
         <router-link
           class="text-decoration--none text-color--mew-green font-weight-bold"
           to="/"
-          >Watch tutorial</router-link
         >
+          Watch tutorial
+        </router-link>
       </div>
     </v-col>
     <v-col cols="6" class="pb-0">

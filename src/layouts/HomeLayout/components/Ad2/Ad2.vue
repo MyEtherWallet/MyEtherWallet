@@ -14,7 +14,7 @@
           </p>
         </div>
         <v-spacer />
-        <a href="/" class="text-decoration-none">
+        <a href="/" class="text-decoration--none">
           <StdButton class="standard-button" buttonclass="button--white">
             <img
               width="60"
