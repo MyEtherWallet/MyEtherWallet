@@ -3,6 +3,7 @@ import HowItWorks from '@/layouts/HowItWorks';
 import AboutUsCompany from '@/layouts/AboutUs/Company';
 import AboutUsTeam from '@/layouts/AboutUs/Team';
 import AboutUsWhyMEW from '@/layouts/AboutUs/WhyMEW';
+import CreateNewWallet from '@/layouts/CreateWallet/CreateNewWallet';
 import CreateWalletMewConnect from '@/layouts/CreateWallet/MewConnect';
 
 import app from './app';
@@ -43,6 +44,14 @@ const webRoutes = [
     path: '/about-us/why-mew',
     name: 'AboutUsWhyMEW',
     component: AboutUsWhyMEW,
+    meta: {
+      requiresAuth: false
+    }
+  },
+  {
+    path: '/create-wallet',
+    name: 'CreateWallet',
+    component: CreateNewWallet,
     meta: {
       requiresAuth: false
     }

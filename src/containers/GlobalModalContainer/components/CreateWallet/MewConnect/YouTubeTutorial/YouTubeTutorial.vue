@@ -2,7 +2,7 @@
   <div>
     <v-dialog
       v-model="dialog"
-      width="600px"
+      width="650px"
       content-class="position--relative line-height--0 overflow--initial"
     >
       <ModalCloseButton
@@ -13,8 +13,8 @@
       />
 
       <iframe
-        width="560"
-        height="315"
+        width="650"
+        height="366"
         src="https://www.youtube.com/embed/p2q6qrcKtj8"
         frameborder="0"
         allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
