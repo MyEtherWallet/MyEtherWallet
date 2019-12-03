@@ -1,0 +1,147 @@
+@import '~@/scss/GlobalVariables';
+
+$confirmation-modal-mobile-width: 500px;
+
+.contents {
+  padding: 30px;
+}
+
+.top-buttons {
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  .total {
+    span {
+      font-weight: 500;
+    }
+  }
+  .max {
+    margin-left: auto;
+    color: $mew-green;
+    margin-bottom: 2px;
+    font-weight: 500;
+    cursor: pointer;
+    span {
+      color: initial;
+      font-weight: 400;
+    }
+  }
+}
+
+.input-box {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  margin-bottom: 15px;
+  position: relative;
+
+  &.danger {
+    border: 1px solid red;
+    border-radius: 4px;
+  }
+
+  input {
+    border-radius: 4px;
+    background-color: $background-color-1;
+    border: 0;
+    font-size: 14px;
+    padding: 20px;
+    padding-right: 70px;
+    width: 100%;
+  }
+  // needs to be fixed to smoothly match against the input
+  .input-unit {
+    position: absolute;
+    top: 3px;
+    right: 20px;
+    background-color: $background-color-1;
+    border: 0;
+    font-size: 14px;
+    height: 52px;
+    padding: 17px 22px 20px;
+    width: 10%;
+    color: #999;
+    font-weight: 500;
+  }
+}
+
+.sub-text {
+  margin-bottom: 20px;
+  padding: 0 0 0 10px;
+
+  .above-max {
+    margin-bottom: 2px;
+    color: $red-1;
+    font-weight: 600;
+  }
+}
+
+.detail-container {
+  padding: 0 10px;
+
+  .grid-block {
+    display: flex;
+    align-items: flex-start;
+    padding: 10px 0;
+    p {
+      line-height: 20px;
+    }
+    p:last-child {
+      margin-left: auto;
+      min-width: 100px;
+      text-align: right;
+    }
+  }
+}
+
+.buttons {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  > * {
+    width: 100%;
+
+    &:first-child {
+      margin-right: 10px;
+    }
+  }
+}
+
+.cc-icon {
+  font-size: 36px;
+}
+
+.warning-confirmation {
+  margin-top: 20px;
+  border: 1px solid $light-orange-1;
+  background-color: $light-orange-3;
+  padding: 20px;
+  border-radius: 4px;
+
+  .grid-block {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    .sign {
+      font-size: 30px;
+    }
+    .text-content {
+      .title {
+        font-size: 18px;
+        font-weight: 600;
+        margin: 0;
+        padding: 0;
+      }
+      .warning-details {
+        margin-top: 5px;
+        color: $dark-blue-2;
+        margin-bottom: 10px;
+        font-size: 14px;
+      }
+      .checkbox-label {
+        color: $mew-green;
+        font-weight: 500;
+      }
+    }
+  }
+}

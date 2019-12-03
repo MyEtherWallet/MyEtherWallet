@@ -20,7 +20,7 @@
       </div>
     </div>
     <div class="wallet-view-balance">
-      <p>Balance:</p>
+      <p>{{ $t('common.balance.string') }}:</p>
       <p v-if="network.type.name === 'ETH'" class="converted-balance">
         $ {{ convertedBalance }}
       </p>

@@ -7,10 +7,10 @@
       />
     </router-link>
     <span class="submit-text">
-      Submit Dapp
+      {{ parent.$t('dappsSubmission.banner-submit.submit-dapp') }}
     </span>
     <button v-if="props.showBack" class="back-btn mr-3" @click="props.back">
-      Back
+      {{ parent.$t('dappsSubmission.banner-submit.back') }}
     </button>
     <button
       :class="[

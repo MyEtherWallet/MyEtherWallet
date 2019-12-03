@@ -3,9 +3,14 @@
     <div v-show="!finishMigration" class="manage-container">
       <!-- ==================================================== -->
       <div class="title-content-container">
-        <p class="cpd-title">{{ $t('dappsMaker.cdpPortal') }}</p>
+        <p class="cpd-title">{{ $t('dappsMaker.vault-portal') }}</p>
         <p class="cdp-id">
-          {{ $t('dappsMaker.positionLabel', { value: cdpIdDisplay }) }}
+          {{
+            $t('dappsMaker.vault-position-label', {
+              value: cdpIdDisplay,
+              symbol: vaultType
+            })
+          }}
         </p>
       </div>
       <!-- ==================================================== -->
@@ -15,24 +20,35 @@
         <div class="block-item">
           <div class="block-title">
             <div class="for-pop">
-              <p>{{ $t('dappsMaker.liquidPrice') }} (ETH/USD)</p>
+              <p>
+                {{ $t('dappsMaker.liquid-price') }} ({{ collateralType }}/{{
+                  $t('common.currency.usd')
+                }})
+              </p>
               <p v-if="liquidationPriceDisplay === '--'" class="pop-icon">
-                <popover :popcontent="$t('dappsMaker.whatIsDashes')" />
+                <popover :popcontent="$t('dappsMaker.what-is-dashes-vault')" />
               </p>
             </div>
 
             <div class="blue">
               <span class="blue-bold">{{ liquidationPriceDisplay }}</span>
-              USD
+              {{ $t('common.currency.usd') }}
             </div>
           </div>
           <div class="block-content">
             <div class="item">
-              <p>{{ $t('dappsMaker.currentPrice') }}(ETH/USD)</p>
-              <div>{{ ethPriceDisplay }} <span>USD</span></div>
+              <p>
+                {{ $t('dappsMaker.current-price') }}({{ collateralType }}/{{
+                  $t('common.currency.usd')
+                }})
+              </p>
+              <div>
+                {{ ethPriceDisplay }}
+                <span>{{ $t('common.currency.usd') }}</span>
+              </div>
             </div>
             <div class="item">
-              <p>{{ $t('dappsMaker.liquidationPenalty') }}</p>
+              <p>{{ $t('dappsMaker.liquidation-penalty') }}</p>
               <div>{{ liquidationPenaltyDisplay }}%</div>
             </div>
           </div>
@@ -40,9 +56,9 @@
         <div class="block-item">
           <div class="block-title">
             <div class="for-pop">
-              <p>{{ $t('dappsMaker.collateralRatio') }}</p>
+              <p>{{ $t('dappsMaker.collateral-ratio') }}</p>
               <p v-if="liquidationPriceDisplay === '--'" class="pop-icon">
-                <popover :popcontent="$t('dappsMaker.whatIsDashes')" />
+                <popover :popcontent="$t('dappsMaker.what-is-dashes-vault')" />
               </p>
             </div>
 
@@ -52,11 +68,11 @@
           </div>
           <div class="block-content">
             <div class="item">
-              <p>{{ $t('dappsMaker.minimumRatio') }}</p>
+              <p>{{ $t('dappsMaker.minimum-ratio') }}</p>
               <div>{{ liquidationRatioDisplay }}%</div>
             </div>
             <div class="item">
-              <p>{{ $t('dappsMaker.stabilityFee') }}</p>
+              <p>{{ $t('dappsMaker.stability-fee') }}</p>
               <div>{{ stabilityFeeDisplay }}%</div>
             </div>
           </div>
@@ -68,7 +84,11 @@
       <div class="information-single-block">
         <div class="block-item">
           <div class="block-title">
-            <p>{{ $t('dappsMaker.ethCollateral') }}</p>
+            <p>
+              {{
+                $t('dappsMaker.collateral-label', { symbol: collateralType })
+              }}
+            </p>
           </div>
 
           <div class="block-content-container">
@@ -77,13 +97,11 @@
                 <p>{{ $t('dappsMaker.deposited') }}</p>
                 <div>
                   {{ ethCollateral }}
-                  <span>ETH</span>
+                  <span>{{ collateralType }}</span>
                 </div>
                 <div>
-                  {{ pethCollateral }}
-                  <span>PETH</span> /
                   {{ usdCollateral }}
-                  <span>USD</span>
+                  <span>{{ $t('common.currency.usd') }}</span>
                 </div>
                 <button @click="showDeposit">
                   {{ $t('dappsMaker.deposit') }} >
@@ -92,16 +110,14 @@
             </div>
             <div class="block-content">
               <div class="item">
-                <p>{{ $t('dappsMaker.maxWithDraw') }}</p>
+                <p>{{ $t('dappsMaker.max-withdraw') }}</p>
                 <div>
                   {{ maxEthDrawDisplay }}
-                  <span>ETH</span>
+                  <span>{{ collateralType }}</span>
                 </div>
                 <div>
-                  {{ maxPethDrawDisplay }}
-                  <span>PETH</span> /
                   {{ maxUsdDrawDisplay }}
-                  <span>USD</span>
+                  <span>{{ $t('common.currency.usd') }}</span>
                 </div>
                 <button @click="showWithdraw">
                   {{ $t('dappsMaker.withdraw') }} >
@@ -118,33 +134,35 @@
       <div class="information-single-block">
         <div class="block-item">
           <div class="block-title">
-            <p>{{ $t('dappsMaker.daiPosition') }}</p>
+            <p>{{ $t('dappsMaker.dai-position') }}</p>
           </div>
 
           <div class="block-content-container">
             <div class="block-content">
               <div class="item">
                 <p>{{ $t('dappsMaker.generated') }}</p>
-                <div>{{ debtValue }} <span>DAI</span></div>
+                <div>
+                  {{ debtValue }} <span>{{ $t('dappsMaker.dai') }}</span>
+                </div>
                 <div>
                   {{ debtValueDisplay }}
-                  <span>USD</span>
+                  <span>{{ $t('common.currency.usd') }}</span>
                 </div>
                 <button @click="showPayback">
-                  {{ $t('dappsMaker.payBack') }} >
+                  {{ $t('dappsMaker.payback') }} >
                 </button>
               </div>
             </div>
             <div class="block-content">
               <div class="item">
-                <p>{{ $t('dappsMaker.maxAvailable') }}</p>
+                <p>{{ $t('dappsMaker.max-available') }}</p>
                 <div>
                   {{ maxDai }}
-                  <span>DAI</span>
+                  <span>{{ $t('dappsMaker.dai') }}</span>
                 </div>
                 <div>
                   {{ maxUsd }}
-                  <span>USD</span>
+                  <span>{{ $t('common.currency.usd') }}</span>
                 </div>
                 <button @click="showGenerate">
                   {{ $t('dappsMaker.generate') }} >
@@ -166,17 +184,14 @@ import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/Interf
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import BottomHelpLink from '@/components/BottomHelpLink';
 import Blockie from '@/components/Blockie';
+import BigNumber from 'bignumber.js';
+
 import {
   displayFixedPercent,
   displayFixedValue,
-  displayPercentValue
-} from '../../helpers';
-
-import BigNumber from 'bignumber.js';
-
-const toBigNumber = num => {
-  return new BigNumber(num);
-};
+  displayPercentValue,
+  toBigNumber
+} from '../../makerHelpers';
 
 export default {
   components: {
@@ -232,15 +247,17 @@ export default {
       type: Function,
       default: function() {}
     },
+    getValueOrFunction: {
+      type: Function,
+      default: function() {}
+    },
     values: {
       type: Object,
       default: function() {
         return {
-          maxPethDraw: '',
           maxEthDraw: '',
           maxUsdDraw: '',
           ethCollateral: '',
-          pethCollateral: '',
           usdCollateral: '',
           debtValue: '',
           maxDai: '',
@@ -249,18 +266,12 @@ export default {
           stabilityFee: '',
           minEth: '',
           liquidationRatio: '',
-          wethToPethRatio: '',
           liquidationPenalty: '',
-          targetPrice: '',
-          pethPrice: ''
+          targetPrice: ''
         };
       }
     },
     ethPrice: {
-      type: BigNumber,
-      default: toBigNumber(0)
-    },
-    pethPrice: {
       type: BigNumber,
       default: toBigNumber(0)
     },
@@ -273,14 +284,6 @@ export default {
       default: toBigNumber(0)
     },
     liquidationRatio: {
-      type: BigNumber,
-      default: toBigNumber(0)
-    },
-    wethToPethRatio: {
-      type: BigNumber,
-      default: toBigNumber(0)
-    },
-    pethMin: {
       type: BigNumber,
       default: toBigNumber(0)
     },
@@ -301,10 +304,15 @@ export default {
       default: function() {
         return {};
       }
+    },
+    updated: {
+      type: Number,
+      default: 0
     }
   },
   data() {
     return {
+      currentCdpLoaded: false,
       activeCdp: {},
       loaded: false,
       ethQty: 0,
@@ -315,8 +323,9 @@ export default {
       maxDaiDraw: toBigNumber(0),
       maxWithDraw: toBigNumber(0),
       maxWithDrawUSD: toBigNumber(0),
-      maxPethDraw: toBigNumber(0),
-      maxEthDraw: toBigNumber(0)
+      maxEthDraw: toBigNumber(0),
+      vaultType: 'ETH-A',
+      updatedValue: 0
     };
   },
   computed: {
@@ -332,22 +341,14 @@ export default {
       }
     },
     collateralRatioColoring() {
-      if (this.values) {
-        if (this.values.collateralRatio >= 2) {
-          return 'green';
-        } else if (
-          this.values.collateralRatio >= 1.75 &&
-          this.values.collateralRatio < 2
-        ) {
-          return 'orange';
-        }
-        return 'red';
+      if (this.currentCdpLoaded && this.updatedValue > -1) {
+        return this.currentCdp.collateralStatus;
       }
       return '';
     },
     liquidationPriceDisplay() {
-      if (this.values) {
-        const value = displayFixedValue(this.values.liquidationPrice, 2);
+      if (this.currentCdpLoaded && this.updatedValue > -1) {
+        const value = displayFixedValue(this.currentCdp.liquidationPrice, 2);
         if (new BigNumber(value).gt(0)) {
           return value;
         }
@@ -356,8 +357,8 @@ export default {
       return '--';
     },
     collaterlizationRatioDisplay() {
-      if (this.values) {
-        return displayFixedPercent(this.values.collateralRatio);
+      if (this.currentCdpLoaded && this.updatedValue > -1) {
+        return displayFixedPercent(this.getCollateralizationRatio());
       }
       return '--';
     },
@@ -368,32 +369,32 @@ export default {
       return '--';
     },
     liquidationRatioDisplay() {
-      if (this.values) {
-        return displayFixedValue(displayPercentValue(this.liquidationRatio));
+      if (this.currentCdpLoaded && this.updatedValue > -1) {
+        return displayFixedValue(
+          displayPercentValue(this.currentCdp.liquidationRatio)
+        );
       }
       return '--';
     },
     liquidationPenaltyDisplay() {
-      if (this.values) {
-        return displayFixedValue(displayPercentValue(this.liquidationPenalty));
+      if (this.currentCdpLoaded && this.updatedValue > -1) {
+        return displayFixedValue(
+          displayPercentValue(this.currentCdp.liquidationPenalty)
+        );
       }
       return '--';
     },
     stabilityFeeDisplay() {
-      if (this.values) {
-        return displayFixedValue(displayPercentValue(this.stabilityFee));
+      if (this.currentCdpLoaded && this.updatedValue > -1) {
+        return displayFixedValue(
+          displayPercentValue(this.currentCdp.stabilityFee)
+        );
       }
       return '--';
     },
     ethPriceDisplay() {
-      if (this.values) {
-        return displayFixedValue(this.ethPrice, 2);
-      }
-      return '--';
-    },
-    maxPethDrawDisplay() {
-      if (this.values) {
-        return displayFixedValue(this.values.maxPethDraw, 5);
+      if (this.currentCdpLoaded && this.updatedValue > -1) {
+        return displayFixedValue(this.currentCdp.currentPrice, 2);
       }
       return '--';
     },
@@ -401,8 +402,8 @@ export default {
       return toBigNumber(this.values.debtValue).eq(0);
     },
     maxEthDrawDisplay() {
-      if (this.values) {
-        return this.values.maxEthDraw;
+      if (this.currentCdpLoaded && this.updatedValue > -1) {
+        return displayFixedValue(this.currentCdp.maxEthDraw, 5);
       }
       return '--';
     },
@@ -413,44 +414,50 @@ export default {
       return '--';
     },
     ethCollateral() {
-      if (this.values) {
-        return displayFixedValue(this.values.ethCollateral, 5, true);
+      if (this.currentCdpLoaded && this.updatedValue > -1) {
+        return displayFixedValue(this.getCollateralAmount(), 5);
       }
       return '--';
     },
-    pethCollateral() {
-      if (this.values) {
-        return displayFixedValue(this.values.pethCollateral, 5, true);
+    collateralType() {
+      if (this.currentCdpLoaded && this.updatedValue > -1) {
+        return this.currentCdp.cdpCollateralType;
       }
-      return '--';
+      return 'ETH';
     },
     usdCollateral() {
-      if (this.values) {
-        return displayFixedValue(this.values.usdCollateral, 2);
+      if (this.currentCdpLoaded && this.updatedValue > -1) {
+        return displayFixedValue(this.currentCdp.collateralValue, 2);
       }
       return '--';
     },
     debtValueDisplay() {
-      if (this.values) {
-        return displayFixedValue(this.values.debtValue, 2);
+      if (this.currentCdpLoaded && this.updatedValue > -1) {
+        return displayFixedValue(this.currentCdp.debtValue, 2);
       }
       return '--';
     },
     debtValue() {
-      if (this.values) {
-        return this.values.debtValue;
+      if (this.currentCdpLoaded && this.updatedValue > -1) {
+        return displayFixedValue(
+          this.currentCdp.debtValue,
+          5,
+          true,
+          true,
+          true
+        );
       }
       return '--';
     },
     maxDai() {
-      if (this.values) {
-        return this.values.maxDai;
+      if (this.currentCdpLoaded && this.updatedValue > -1) {
+        return displayFixedValue(this.currentCdp.maxDai, 5);
       }
       return '--';
     },
     maxUsd() {
-      if (this.values) {
-        return displayFixedValue(this.values.maxDai, 2);
+      if (this.currentCdpLoaded && this.updatedValue > -1) {
+        return displayFixedValue(this.currentCdp.maxDai, 2);
       }
       return '--';
     }
@@ -458,6 +465,9 @@ export default {
   watch: {
     ['activeCdp.ready']() {
       this.isReady();
+    },
+    valuesUpdated() {
+      this.updatedValue++;
     },
     openCloseModal(val) {
       if (val) {
@@ -468,7 +478,19 @@ export default {
       if (val) {
         this.showMove();
       }
+    },
+    makerActive(newVal) {
+      if (newVal) {
+        this.getActiveCdp();
+      }
+    },
+    ['$route.params']() {
+      this.updatedValue++;
+      this.getActiveCdp();
     }
+  },
+  beforeDestroy() {
+    this.makerCDP = {};
   },
   async mounted() {
     this.activeCdp = {};
@@ -479,8 +501,42 @@ export default {
         this.$emit('activeCdpId', this.cdpId);
       }
     }
+    if (this.cdpId && this.cdpId !== undefined) {
+      this.getActiveCdp();
+    }
   },
   methods: {
+    getActiveCdp() {
+      this.cdpId = this.$route.params.cdpId;
+      const cdpId = typeof this.cdpId === 'number' ? this.cdpId : this.cdpId.id;
+      this.currentCdp = this.getValueOrFunction('getCdp')(cdpId);
+      if (this.currentCdp) {
+        this.currentCdpLoaded = true;
+        this.$forceUpdate();
+        this.vaultType = this.currentCdp.cdpType;
+      }
+      this.getTotalDebt();
+    },
+    async getTotalDebt() {
+      if (this.currentCdp) this.currentCdpLoaded = true;
+      if (!this.currentCdp) return toBigNumber(0);
+      return await this.currentCdp.getCombinedDebtValue();
+    },
+    getCollateralAmount() {
+      if (this.currentCdp) this.currentCdpLoaded = true;
+      if (!this.currentCdp) return 0;
+      return this.currentCdp.collateralAmount;
+    },
+    getCollateralValue() {
+      if (this.currentCdp) this.currentCdpLoaded = true;
+      if (!this.currentCdp) return toBigNumber(0);
+      return this.currentCdp.getCollateralValue;
+    },
+    getCollateralizationRatio() {
+      if (this.currentCdp) this.currentCdpLoaded = true;
+      if (!this.currentCdp) return toBigNumber(0);
+      return this.currentCdp.collateralizationRatio;
+    },
     showDeposit() {
       this.$emit('showDeposit');
     },

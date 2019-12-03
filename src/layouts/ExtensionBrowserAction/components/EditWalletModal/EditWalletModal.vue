@@ -2,18 +2,18 @@
   <div>
     <b-modal
       ref="editModal"
+      :title="$t('mewcx.edit-modal')"
       hide-footer
       class="bootstrap-modal"
-      title="Edit Modal"
       centered
     >
       <div class="modal-contents">
         <form>
           <div class="input-container">
-            <label for="walletName"> Wallet Name </label>
+            <label for="walletName"> {{ $t('mewcx.wallet-name') }} </label>
             <input
               v-model="locName"
-              placeholder="Please add a wallet nickname"
+              :placeholder="$t('mewcx.add-wallet-nickname')"
               name="walletName"
             />
           </div>
@@ -22,13 +22,13 @@
             type="submit"
             @click.prevent="saveWallet"
           >
-            Submit
+            {{ $t('mewcx.submit') }}
           </button>
           <button
             class="remove-button large-round-button-white-filled"
             @click.stop.prevent="removeWallet"
           >
-            Remove Wallet
+            {{ $t('mewcx.remove-wallet') }}
           </button>
         </form>
       </div>
@@ -78,7 +78,10 @@ export default {
     },
     saveWalletCb() {
       this.$refs.editModal.hide();
-      Toast.responseHandler('Wallet successfully updated!', Toast.SUCCESS);
+      Toast.responseHandler(
+        this.$t('mew-cx.wallet-update-success'),
+        Toast.SUCCESS
+      );
     }
   }
 };

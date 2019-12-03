@@ -1,14 +1,21 @@
 @import '~@/scss/GlobalVariables';
 
 .extension-wallets-container {
-  display: grid;
-  grid-template-columns: 250px 1fr;
-  grid-template-rows: 1fr;
-  min-height: 500px;
+  align-items: center;
+  background-color: $light-grey-2;
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+.wallet-side-menu-container {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
 }
 
 .wallets-container {
-  background-color: $light-grey-2;
   height: 100%;
   padding: 50px;
 }
@@ -16,8 +23,8 @@
 .my-wallets-container,
 .dapps-container,
 .watch-only-container {
-  display: grid;
-  grid-template-columns: 85% 1fr;
+  max-width: 1024px;
+  min-width: 800px;
 
   .wallets-container-header,
   .total-balance-container {
@@ -31,21 +38,21 @@
 }
 
 .wallets-container-header {
+  margin-bottom: 20px;
   align-items: center;
   display: flex;
   justify-content: space-between;
 
   h2 {
-    margin: 0 15px 0 0 !important;
+    margin: 0 !important;
+    font-size: 26px;
+    font-weight: 700;
   }
 
   .add-button {
     color: $mew-green;
     cursor: pointer;
-  }
-
-  .header-title-container {
-    align-items: center;
-    display: flex;
+    font-weight: 600;
+    font-size: 13px;
   }
 }

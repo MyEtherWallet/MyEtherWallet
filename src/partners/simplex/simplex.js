@@ -92,21 +92,37 @@ export default class Simplex {
   }
 
   async getRate(fromCurrency, toCurrency, fromValue, toValue, isFiat) {
-    let simplexRateDetails, updateType;
+    try {
+      let simplexRateDetails, updateType;
 
-    if (this.canQuote(fromValue, toValue)) {
-      if (this.isFiat(fromCurrency) && isFiat) {
-        updateType = 'updateFiat';
-      } else {
-        updateType = 'updateDigital';
+      if (this.canQuote(fromValue, toValue)) {
+        if (this.isFiat(fromCurrency) && isFiat) {
+          updateType = 'updateFiat';
+        } else {
+          updateType = 'updateDigital';
+        }
+
+        simplexRateDetails = await this[updateType](
+          fromCurrency,
+          toCurrency,
+          fromValue,
+          toValue
+        );
+
+        this.internalEstimateRate = simplexRateDetails.rate;
+
+        return {
+          fromCurrency: fromCurrency,
+          toCurrency: toCurrency,
+          provider: this.name,
+          rate: simplexRateDetails.rate,
+          minValue: this.minFiat,
+          maxValue: this.maxFiat
+        };
       }
 
-      simplexRateDetails = await this[updateType](
-        fromCurrency,
-        toCurrency,
-        fromValue,
-        toValue
-      );
+      this.invalidFrom = 'simplexMin';
+      simplexRateDetails = await this.updateFiat(fromCurrency, toCurrency, 51);
 
       this.internalEstimateRate = simplexRateDetails.rate;
 
@@ -118,21 +134,14 @@ export default class Simplex {
         minValue: this.minFiat,
         maxValue: this.maxFiat
       };
+    } catch (e) {
+      return {
+        fromCurrency: fromCurrency,
+        toCurrency: toCurrency,
+        provider: this.name,
+        rate: 0
+      };
     }
-
-    this.invalidFrom = 'simplexMin';
-    simplexRateDetails = await this.updateFiat(fromCurrency, toCurrency, 51);
-
-    this.internalEstimateRate = simplexRateDetails.rate;
-
-    return {
-      fromCurrency: fromCurrency,
-      toCurrency: toCurrency,
-      provider: this.name,
-      rate: simplexRateDetails.rate,
-      minValue: this.minFiat,
-      maxValue: this.maxFiat
-    };
   }
 
   async getRateUpdate(fromCurrency, toCurrency, fromValue, toValue, isFiat) {

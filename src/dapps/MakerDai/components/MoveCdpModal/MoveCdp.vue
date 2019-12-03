@@ -2,7 +2,7 @@
   <div class="modal-container">
     <b-modal
       ref="modal"
-      :title="$t('dappsMaker.moveTitle')"
+      :title="$t('dappsMaker.move-title')"
       hide-footer
       centered
       class="bootstrap-modal nopadding"
@@ -11,18 +11,18 @@
     >
       <div class="modal-content">
         <p class="top-text">
-          {{ $t('dappsMaker.moveNotice') }}
+          {{ $t('dappsMaker.move-notice') }}
         </p>
         <check-box @changeStatus="checkBoxClicked">
           <template v-slot:terms
             ><p class="checkbox-label">
-              {{ $t('dappsMaker.understandAndAgree') }}
+              {{ $t('dappsMaker.understand-and-agree') }}
             </p></template
           >
         </check-box>
 
         <div class="input-container">
-          <label>{{ $t('dappsMaker.moveQuestion') }}</label>
+          <label>{{ $t('dappsMaker.move-question') }}</label>
           <div class="input-box">
             <input v-model="address" />
           </div>
@@ -30,12 +30,12 @@
         <div>
           <div v-if="destAddressHasProxy">
             <p>
-              {{ $t('dappsMaker.proxyAddress', { value: destAddressProxy }) }}
+              {{ $t('dappsMaker.proxy-address', { value: destAddressProxy }) }}
             </p>
-            {{ $t('dappsMaker.moveWithProxy') }}
+            {{ $t('dappsMaker.move-with-proxy') }}
           </div>
           <div v-if="!destAddressHasProxy">
-            {{ $t('dappsMaker.moveWithoutProxy') }}
+            {{ $t('dappsMaker.move-without-proxy') }}
           </div>
         </div>
         <div class="buttons">
@@ -82,11 +82,9 @@ export default {
       type: Object,
       default: function() {
         return {
-          maxPethDraw: '',
           maxEthDraw: '',
           maxUsdDraw: '',
           ethCollateral: '',
-          pethCollateral: '',
           usdCollateral: '',
           debtValue: '',
           maxDai: '',
@@ -102,6 +100,18 @@ export default {
     destAddressProxy: {
       type: String,
       default: ''
+    },
+    activeCdpId: {
+      type: Number,
+      default: 0
+    },
+    makerActive: {
+      type: Boolean,
+      default: false
+    },
+    getValueOrFunction: {
+      type: Function,
+      default: function() {}
     }
   },
   data() {
@@ -142,10 +152,28 @@ export default {
   },
   mounted() {
     this.$refs.modal.$on('shown', () => {
+      this.cdpId = this.$route.params.cdpId;
+      this.isVisible = true;
       this.address = '';
+      this.getActiveCdp();
     });
+
+    this.$refs.modal.$on('hidden', () => {
+      this.isVisible = false;
+    });
+
+    if (this.makerActive) {
+      this.getActiveCdp();
+    }
   },
   methods: {
+    getActiveCdp() {
+      if (this.cdpId > 0) {
+        this.currentCdp = this.getValueOrFunction('getCdp')(this.cdpId);
+        this.currentCdpType = this.currentCdp.cdpCollateralType;
+        this.$forceUpdate();
+      }
+    },
     closeCdp() {
       this.activeCdp.closeCdp();
     },
@@ -161,9 +189,11 @@ export default {
       return raw.toFixed(decimals, BigNumber.ROUND_DOWN).toString();
     },
     async moveCdp() {
-      if (Misc.isValidETHAddress(this.address)) {
-        this.$emit('moveCdp', this.address);
-        this.closeModal();
+      if (this.currentCdp) {
+        if (Misc.isValidETHAddress(this.address)) {
+          this.currentCdp.moveCdp(this.address);
+          this.closeModal();
+        }
       }
     },
     closeModal() {

@@ -1,97 +1,18 @@
 <template>
-  <div class="drop-down-address-selector">
-    <div class="dropdown--title">
-      <h4>{{ title }}</h4>
-      <button
-        class="title-button prevent-user-select"
-        @click="copyToClipboard($refs.addressInput)"
-      >
-        {{ $t('common.copy') }}
-      </button>
-    </div>
-    <div class="dropdown--content">
-      <div
-        :class="dropdownOpen ? 'dropdown-open' : ''"
-        class="dropdown-input-box"
-      >
-        <input
-          ref="addressInput"
-          v-model="selectedAddress"
-          type="text"
-          placeholder="Please enter the address"
-          @focus="dropdownOpen = false"
-        />
-        <div v-if="!validAddress" class="blockie-place-holder-image" />
-        <div v-if="validAddress" class="selected-address-blockie">
-          <blockie :address="selectedAddress" width="30px" height="30px" />
-          <div v-if="isToken(currency)">
-            <img
-              class="currency-icon"
-              src="@/assets/images/currency/eth.svg"
-              alt
-            />
-          </div>
-          <div v-else>
-            <i
-              :class="[
-                'currency-icon',
-                'as-font',
-                'cc',
-                getIcon(currency),
-                'cc-icon'
-              ]"
-            />
-          </div>
-        </div>
-        <div class="dropdown-open-button" @click="dropdownOpen = !dropdownOpen">
-          <i
-            v-if="!dropdownOpen"
-            class="fa fa-chevron-down"
-            aria-hidden="true"
-          />
-          <i v-if="dropdownOpen" class="fa fa-chevron-up" aria-hidden="true" />
-        </div>
-      </div>
-      <div v-if="dropdownOpen" class="dropdown-list-box">
-        <ul>
-          <li
-            v-for="addr in addresses"
-            :key="addr.key"
-            @click="listedAddressClick(addr.address)"
-          >
-            <div class="list-blockie">
-              <blockie :address="addr.address" width="30px" height="30px" />
-              <img
-                class="currency-icon"
-                src="@/assets/images/currency/eth.svg"
-                alt
-              />
-            </div>
-            <div class="address-block">
-              <p class="listed-address">
-                {{ addr.address }}
-              </p>
-            </div>
-            <p v-if="addr.address === currentAddress" class="address-note">
-              {{ $t('interface.myAddr') }}
-            </p>
-            <i
-              v-if="toAddressCheckMark"
-              aria-hidden="true"
-              class="fa fa-check-circle good-button"
-            />
-          </li>
-        </ul>
-      </div>
-    </div>
+  <div>
+    <dropdown-address-selector
+      :clear-address="clearAddress"
+      :title="$t('sendTx.to-addr')"
+      @toAddress="getToAddress($event)"
+    />
     <!-- .dropdown--content -->
     <div v-show="validityState === 2" class="error-message-container">
-      <p>{{ $t('interface.notValidAddr', { currency: currency }) }}</p>
+      <p>{{ $t('swap.warning.not-valid-addr-src', { currency: currency }) }}</p>
     </div>
     <div v-show="validityState === 3" class="warn-message-container">
       <p>
         {{
-          $t('interface.unableToValidateAddress', {
+          $t('swap.warning.unable-validate-addr', {
             currency: currency
           })
         }}
@@ -113,15 +34,17 @@ import debugLogger from 'debug';
 import WAValidator from 'wallet-address-validator';
 import MAValidator from 'multicoin-address-validator';
 import Blockie from '@/components/Blockie';
-import { EthereumTokens, BASE_CURRENCY, hasIcon } from '@/partners';
+import { EthereumTokens, hasIcon } from '@/partners';
 import { canValidate } from '@/partners/helpers';
 import getMultiCoinAddress from '@/helpers/ENSMultiCoin.js';
+import DropDownAddressSelector from '@/components/DropDownAddressSelector';
 
 const errorLogger = debugLogger('v5:error');
 
 export default {
   components: {
-    blockie: Blockie
+    blockie: Blockie,
+    'dropdown-address-selector': DropDownAddressSelector
   },
   props: {
     title: {
@@ -143,42 +66,31 @@ export default {
     preFillAddress: {
       type: String,
       default: ''
+    },
+    clearAddress: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
     return {
       validityState: 0,
       EnsAddress: '',
-      validEnsAddress: false,
       EthereumTokens: EthereumTokens,
       selectedAddress: '',
       validAddress: false,
-      dropdownOpen: false,
-      unableToValidate: false,
-      addresses: [],
-      toAddressCheckMark: false
+      unableToValidate: false
     };
   },
   computed: {
     ...mapState(['ens'])
   },
   watch: {
-    currentAddress(address) {
-      if (this.addresses.findIndex(addr => addr.address === address) === -1) {
-        this.addresses = [
-          {
-            address: address,
-            currency: BASE_CURRENCY
-          },
-          ...this.addresses
-        ];
-      }
-    },
-    selectedAddress(address) {
-      this.validateAddress(address);
-    },
     currency() {
       this.validateAddress(this.selectedAddress);
+    },
+    clearAddress() {
+      this.selectedAddress = '';
     }
   },
   mounted() {
@@ -191,17 +103,11 @@ export default {
     getIcon(currency) {
       return hasIcon(currency);
     },
-    copyToClipboard(ref) {
-      ref.select();
-      document.execCommand('copy');
-    },
-    isToken(symbol) {
-      return typeof EthereumTokens[symbol] !== 'undefined';
-    },
-    listedAddressClick(address) {
-      this.toAddressCheckMark = true;
-      this.dropdownOpen = !this.dropdownOpen;
-      this.selectedAddress = address;
+    async getToAddress(data) {
+      this.selectedAddress = data.address;
+      this.validAddress = data.valid;
+
+      this.validateAddress(data.address);
     },
     async checkForEns(address) {
       if (address.includes('.')) {

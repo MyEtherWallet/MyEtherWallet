@@ -1,5 +1,5 @@
 <template>
-  <div class="header">
+  <div v-if="!isMewCx" class="header">
     <decision-tree />
     <router-link
       v-show="
@@ -82,13 +82,13 @@
                     class="buy-eth-icon"
                     src="@/assets/images/icons/buy-eth.svg"
                   />
-                  Buy ETH
+                  {{ $t('common.buy-eth') }}
                 </b-nav-item>
                 <b-nav-item v-if="isHomePage" to="/" exact>{{
-                  $t('header.home')
+                  $t('common.home')
                 }}</b-nav-item>
                 <b-nav-item v-if="isHomePage && !isMewCx" to="/#about-mew">
-                  {{ $t('header.about') }}
+                  {{ $t('common.about') }}
                 </b-nav-item>
                 <b-nav-item-dropdown
                   v-if="address !== null"
@@ -97,7 +97,7 @@
                   class="tx-history-menu"
                 >
                   <template slot="button-content">
-                    <p>Transaction History</p>
+                    <p>{{ $t('interface.tx-history') }}</p>
                   </template>
                   <b-dropdown-item :href="explorerUrl" target="_blank">
                     <p>{{ serviceUrl }} ({{ network.type.name }})</p>
@@ -107,13 +107,16 @@
                     :href="'https://ethplorer.io/address/' + address"
                     target="_blank"
                     rel="noopener noreferrer"
-                    >Ethplorer (Tokens)</b-dropdown-item
+                    >{{ $t('header.ethplorer') }} ({{
+                      $tc('common.token', 2)
+                    }})</b-dropdown-item
                   >
                 </b-nav-item-dropdown>
                 <b-nav-item v-if="!isMewCx" to="/#faqs">{{
                   $t('common.faqs')
                 }}</b-nav-item>
-                <div v-show="!isMewCx" class="language-menu-container">
+                <!-- Commented for now waiting for all Translations to be done -->
+                <!-- <div v-show="!isMewCx" class="language-menu-container">
                   <div class="arrows">
                     <i class="fa fa-angle-down" aria-hidden="true" />
                   </div>
@@ -137,15 +140,15 @@
                     </template>
                     <b-dropdown-item
                       v-for="language in supportedLanguages"
-                      :active="$root._i18n.locale === language.langCode"
                       :key="language.key"
+                      :active="$root._i18n.locale === language.langCode"
                       :data-language-code="language.langCode"
                       :data-flag-name="language.flag"
                       @click="languageItemClicked"
                       >{{ language.name }}</b-dropdown-item
                     >
                   </b-nav-item-dropdown>
-                </div>
+                </div> -->
                 <div class="notification-menu-container">
                   <notification
                     v-if="
@@ -171,7 +174,9 @@
                   ]"
                   to="/create-wallet"
                 >
-                  <div class="get-free-wallet-button">New Wallet</div>
+                  <div class="get-free-wallet-button">
+                    {{ $t('header.new-wallet') }}
+                  </div>
                 </b-nav-item>
                 <b-nav-item
                   v-if="showButtons && !isPageOnTop && !isMewCx"
@@ -181,7 +186,9 @@
                   ]"
                   to="/access-my-wallet"
                 >
-                  <div class="access-button">Access</div>
+                  <div class="access-button">
+                    {{ $t('header.access') }}
+                  </div>
                 </b-nav-item>
                 <b-nav-item-dropdown
                   v-if="address !== null"
@@ -201,10 +208,12 @@
                       <i class="fa fa-angle-down" aria-hidden="true" />
                     </div>
                   </template>
-                  <b-dropdown-item @click="openSettings"
-                    >Settings</b-dropdown-item
-                  >
-                  <b-dropdown-item @click="logout">Log out</b-dropdown-item>
+                  <b-dropdown-item @click="openSettings">{{
+                    $t('interface.settings')
+                  }}</b-dropdown-item>
+                  <b-dropdown-item @click="logout">{{
+                    $t('interface.logout')
+                  }}</b-dropdown-item>
                 </b-nav-item-dropdown>
               </b-nav>
             </div>
@@ -368,6 +377,8 @@ export default {
     };
 
     this.$eventHub.$on('issueModal', (error, resolve) => {
+      // eslint-disable-next-line
+      console.log(error);
       let errorPop = store.get('errorPop') || 0;
       errorPop += 1;
       store.set('errorPop', errorPop);
