@@ -10,9 +10,11 @@
     <h2 v-if="data.title" class="top-description" :class="data.textProps">
       {{ data.title }}
     </h2>
-    <div v-if="data.description" class="mt-3" :class="data.textProps">
+    <div class="mt-3" />
+    <div v-if="data.description" :class="data.textProps">
       {{ data.description }}
     </div>
+    <div><slot /></div>
   </div>
 </template>
 

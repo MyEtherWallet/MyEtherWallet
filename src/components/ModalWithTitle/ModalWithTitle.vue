@@ -2,7 +2,7 @@
   <div>
     <v-dialog v-model="dialog" :width="width">
       <div class="white">
-        <div class="d-flex align-center py-3">
+        <div class="d-flex align-center py-3 user-select--none">
           <div class="pl-6 title font-weight-black">
             {{ title }}
           </div>
