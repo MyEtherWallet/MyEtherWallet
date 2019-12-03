@@ -188,7 +188,7 @@
               <br />
               <i18n path="termsOfService.privacy-title-p" tag="p">
                 <template v-slot:link>
-                  <a
+                  <a 
                     href="https://kb.myetherwallet.com/en/getting-started/myetherwallet-an-introduction/"
                     target="_blank"
                     rel="noopener noreferrer"
