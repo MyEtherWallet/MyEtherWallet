@@ -15,7 +15,7 @@
 .loading::after {
   content: "";
   display: block;
-  background-color: #dddfe2;
+  background: rgba(177, 177, 177, 0.6);
   position: absolute;
   top: 0;
   bottom: 0;
