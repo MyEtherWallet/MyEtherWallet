@@ -64,6 +64,9 @@
 
 <script>
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
+import LendingPoolAbi from './abi/LendingPoolAbi.js';
+import LendingPoolAddressesProviderAbi from './abi/LendingPoolAddressesProviderAbi.js';
+import { mapState } from 'vuex';
 
 export default {
   components: {
@@ -74,6 +77,17 @@ export default {
       activeDepositTab: true,
       activeBorrowTab: false
     };
+  },
+  computed: {
+    ...mapState(['web3']),
+
+  },
+  mounted() {
+    this.contractAddress = '0x9C6C63aA0cD4557d7aE6D9306C06C093A2e35408';
+    this.lendingPoolAddressesProviderContract = new this.web3.eth.Contract(
+      LendingPoolAddressesProviderAbi,
+      this.contractAddress
+    );
   },
   methods: {
     toggleTabs(action) {
