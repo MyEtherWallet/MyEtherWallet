@@ -491,6 +491,9 @@ export default {
       const promises = _arr.map(tx => {
         const _tx = tx.tx;
         _tx.from = this.account.address;
+        if(!_tx.gasLimit){
+          _tx.gasLimit = _tx.gas;
+        }
         const _rawTx = tx.rawTransaction;
         const onError = err => {
           this.$store.dispatch('addNotification', [
