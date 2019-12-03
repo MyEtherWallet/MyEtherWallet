@@ -1,45 +1,37 @@
 <template>
   <div>
-    <ModalWithTitle width="350px" title="Scan to Download" :active="active">
+    <v-dialog v-model="dialog" width="400px">
       <div>
-        <v-img
-          max-width="150px"
-          class="mx-auto"
-          src="@/assets/images/Etc/CreateWallet/QrMewConnect.png"
-        />
-        <div class="mt-3 mb-6 text-center grey--text">
-          iOS 9.0 or up
-        </div>
-        <v-btn-toggle class="d-flex">
-          <v-btn class="d-flex align-center flex-grow-1" color="#001425">
-            <img
-              class="mt-n1"
-              src="@/assets/images/Etc/CreateWallet/Apple.svg"
-            />
-            <div class="white--text ml-1">iPhone</div>
-          </v-btn>
-          <v-btn class="d-flex align-center flex-grow-1">
-            <img
-              class="mt-n1"
-              src="@/assets/images/Etc/CreateWallet/Android.svg"
-            />
-            <div class="grey--text text--darken-1 ml-1">Android</div>
-          </v-btn>
-        </v-btn-toggle>
+        <v-btn icon @click="dialog = false">
+          <ModalCloseButton />
+        </v-btn>
       </div>
-    </ModalWithTitle>
+      <iframe
+        width="560"
+        height="315"
+        src="https://www.youtube.com/embed/p2q6qrcKtj8"
+        frameborder="0"
+        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+      ></iframe>
+    </v-dialog>
   </div>
 </template>
 
 <script>
-import ModalWithTitle from '@/components/ModalWithTitle';
+import ModalCloseButton from '@/components/Common/ModalCloseButton';
 
 export default {
-  components: { ModalWithTitle },
+  components: { ModalCloseButton },
   props: {
     active: { default: false, type: Boolean }
   },
-  data: () => ({})
+  data: () => ({
+    dialog: false
+  }),
+  mounted() {
+    this.dialog = this.active;
+  }
 };
 </script>
 
