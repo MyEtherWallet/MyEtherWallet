@@ -1,9 +1,5 @@
 <template>
   <div>
-    <v-btn color="red lighten-2" @click="dialog = true">
-      QRCode
-    </v-btn>
-
     <v-dialog v-model="dialog" :width="width">
       <div class="white">
         <div class="d-flex align-center py-3">
@@ -37,11 +33,15 @@ export default {
   components: { ModalCloseButton },
   props: {
     width: { default: '', type: String },
-    title: { default: '', type: String }
+    title: { default: '', type: String },
+    active: { default: false, type: Boolean }
   },
   data: () => ({
-    dialog: true
-  })
+    dialog: false
+  }),
+  mounted() {
+    this.dialog = this.active;
+  }
 };
 </script>
 

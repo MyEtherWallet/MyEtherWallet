@@ -1,14 +1,16 @@
 <template>
   <div>
-    <QRcode />
+    <MewConnectQRcode />
+    <MewConnectYouTubeTutorial active />
   </div>
 </template>
 
 <script>
-import QRcode from './components/CreateWallet/MewConnect/QRcode';
+import MewConnectQRcode from './components/CreateWallet/MewConnect/QRcode';
+import MewConnectYouTubeTutorial from './components/CreateWallet/MewConnect/YouTubeTutorial';
 
 export default {
   name: 'ModalContainer',
-  components: { QRcode }
+  components: { MewConnectQRcode, MewConnectYouTubeTutorial }
 };
 </script>
