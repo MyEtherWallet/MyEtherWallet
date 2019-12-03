@@ -46,12 +46,12 @@ export default {
       default: ''
     },
     balance: {
-      type: String,
+      type: Number,
       default: '0.00'
     },
     compositionPercentage: {
-      type: String,
-      default: '100%'
+      type: Number,
+      default: '100'
     },
     earningsBalance: {
       type: Number,

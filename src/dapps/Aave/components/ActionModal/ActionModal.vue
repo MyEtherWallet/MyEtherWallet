@@ -51,7 +51,7 @@
                       ? $t('dappsAave.avail-balance')
                       : $t('dappsAave.avail-for-you')
                   }}
-                  <span> 
+                  <span>
                     <i class="fa fa-caret-up" />
                     <i class="fa fa-caret-down" />
                   </span>
@@ -87,12 +87,22 @@
             </thead>
             <tbody>
               <tr v-for="(token, index) in fakeObj" :key="token.key">
-                <td class="number">{{index + 1 }}.</td>
-                <td>{{token.token}}</td>
-                <td>{{token.avail-balance}}</td>
-                <td :class="depositModal ? '' : 'stable-apr'">{{token.deposited}}</td>
-                <td :class="depositModal ? '' : 'var-apr'"> {{token.apr}}</td>
-                <td><button @click="takeAction()" class="action-btn">{{ depositModal ? $tc('dappsAave.deposit',1) : $t('dappsAave.borrow') }}</button></td>
+                <td class="number">{{ index + 1 }}.</td>
+                <td>{{ token.token }}</td>
+                <td>{{ token.avail - balance }}</td>
+                <td :class="depositModal ? '' : 'stable-apr'">
+                  {{ token.deposited }}
+                </td>
+                <td :class="depositModal ? '' : 'var-apr'">{{ token.apr }}</td>
+                <td>
+                  <button class="action-btn" @click="takeAction()">
+                    {{
+                      depositModal
+                        ? $tc('dappsAave.deposit', 1)
+                        : $t('dappsAave.borrow')
+                    }}
+                  </button>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -117,17 +127,17 @@ export default {
       stableTabActive: false,
       fakeObj: [
         {
-          "token": "DAI",
-          "avail-balance": "15.42323 DAI",
-          "deposited": "2.47 DAI",
-          "apr": "9.72%"
+          token: 'DAI',
+          'avail-balance': '15.42323 DAI',
+          deposited: '2.47 DAI',
+          apr: '9.72%'
         },
         {
-          "token": "DAI",
-          "avail-balance": "15.42323 DAI",
-          "deposited": "2.47 DAI",
-          "apr": "9.72%"
-        }       
+          token: 'DAI',
+          'avail-balance': '15.42323 DAI',
+          deposited: '2.47 DAI',
+          apr: '9.72%'
+        }
       ]
     };
   },

@@ -1,0 +1,25 @@
+@import '~@/scss/GlobalVariables';
+
+.overview-container {
+  background-color: $white;
+  padding: 20px;
+
+  .title {
+    color: $light-grey-18;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .header {
+    align-items: center;
+    border-bottom: 1px solid $light-grey-21;
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 10px;
+  }
+
+  .icon {
+    height: 36px;
+    width: 33px;
+  }
+}
