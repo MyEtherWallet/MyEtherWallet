@@ -1,12 +1,7 @@
 @import '~@/scss/GlobalVariables';
 
-.aave-container {
-  background-color: $white;
-  border-radius: 4px;
-  grid-area: main;
-  overflow: hidden;
-  margin-bottom: 10px;
-
+.aave-wrapper {
+  margin: 10px;
   .header-container {
     align-items: center;
     background-color: $white;

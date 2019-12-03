@@ -81,11 +81,13 @@
     }
   }
 
-  thead th, tbody td {
+  thead th,
+  tbody td {
     padding: 10px;
   }
 
-  table thead th, table thead th div {
+  table thead th,
+  table thead th div {
     color: $light-blue-2;
     font-size: 11px;
     font-weight: 600;
@@ -102,14 +104,14 @@
       margin-bottom: 4px;
       margin-left: 5px;
     }
-  
+
     i {
       color: $light-grey-18;
       font-size: 10px;
       height: 6px;
     }
   }
-  
+
   tbody {
     tr {
       border-bottom: 1px solid $light-grey-6;

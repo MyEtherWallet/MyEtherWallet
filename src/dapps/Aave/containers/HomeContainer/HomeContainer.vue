@@ -1,35 +1,5 @@
 <template>
-  <div class="aave-container">
-    <div class="header-container">
-      <back-button :title="$t('dappsAmbrpay.exit-dapp')" :hide-border="true" />
-      <div class="tab-container">
-        <div
-          :class="['action-btn', activeDepositTab ? 'active-tab' : '']"
-          @click="toggleTabs('deposit')"
-        >
-          {{ $tc('dappsAave.deposit', 2) }}
-        </div>
-        <div
-          :class="[
-            'action-btn',
-            'borrow-btn',
-            activeBorrowTab ? 'active-tab' : ''
-          ]"
-          @click="toggleTabs('borrow')"
-        >
-          {{ $t('dappsAave.borrowings') }}
-        </div>
-      </div>
-      <div class="health-container">
-        <span>{{ $t('dappsAave.health-factor') }}</span>
-        <!-- placeholder -->
-        <span class="health-score">2.4725</span>
-        <popover
-          :popcontent="$t('dappsAmbrpay.ambrpay-popover')"
-          class="dapp-popover"
-        ></popover>
-      </div>
-    </div>
+  <div class="aave-wrapper">
     <div class="about-aave-container">
       <div class="row">
         <img src="@/assets/images/icons/dapps/aave_logo.svg" alt="Aave Logo" />
@@ -45,6 +15,8 @@
     </div>
     <div class="balance-row">
       <balance-display
+        :balance="0"
+        :composition-percentage="100"
         :title="
           activeDepositTab
             ? $t('dappsAave.aggregated-balance')
@@ -52,6 +24,9 @@
         "
       />
       <balance-display
+        :balance="0"
+        :composition-percentage="100"
+        :earnings-balance="0"
         :title="
           activeDepositTab
             ? $t('dappsAave.earnings')
@@ -70,37 +45,29 @@
 </template>
 
 <script>
-import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
 import BalanceDisplay from '@/dapps/Aave/components/BalanceDisplay';
 import ActionModal from '@/dapps/Aave/components/ActionModal';
 import LendingPoolAbi from '@/dapps/Aave/abi/LendingPoolAbi.js';
-import ActionContainer from '@/dapps/Aave/containers/ActionContainer'
+import ActionContainer from '@/dapps/Aave/containers/ActionContainer';
 
 export default {
   components: {
-    'back-button': BackButton,
     'balance-display': BalanceDisplay,
     'lending-pool-abi': LendingPoolAbi,
     'action-modal': ActionModal,
     'action-container': ActionContainer
   },
-  data() {
-    return {
-      activeDepositTab: true,
-      activeBorrowTab: false
-    };
+  props: {
+    activeBorrowTab: {
+      type: Boolean,
+      default: false
+    },
+    activeDepositTab: {
+      type: Boolean,
+      default: true
+    }
   },
   methods: {
-    toggleTabs(action) {
-      if (
-        (action === 'borrow' && this.activeBorrowTab === true) ||
-        (action === 'deposit' && this.activeDepositTab === true)
-      ) {
-        return;
-      }
-      this.activeDepositTab = !this.activeDepositTab;
-      this.activeBorrowTab = !this.activeBorrowTab;
-    },
     openActionModal() {
       this.$refs.actionModal.$refs.actionModal.show();
     }
