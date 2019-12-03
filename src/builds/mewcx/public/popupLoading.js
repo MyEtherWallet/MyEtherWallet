@@ -8,8 +8,8 @@ queryString.forEach(item => {
   objParams[newItem[0]] = newItem[1];
 });
 
-const to = objParams.to;
-delete objParams['to'];
+const to = objParams['navigate-to'];
+delete objParams['navigate-to'];
 const newQuery = Object.keys(objParams)
   .map(k => k + '=' + objParams[k])
   .join('&');

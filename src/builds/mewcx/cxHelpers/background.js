@@ -122,6 +122,10 @@ const eventsListeners = (request, _, callback) => {
     payload: payload
   };
 
+  if (obj.event === 'HELLO_THERE') {
+    console.log('yo wut');
+  }
+
   const middleware = new MiddleWare();
   middleware.use(mewCxFetchAccounts);
   middleware.use(mewCxSignTx);

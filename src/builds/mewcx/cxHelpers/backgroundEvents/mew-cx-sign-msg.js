@@ -8,10 +8,10 @@ export default async ({ event, payload }, _, next) => {
     if (res[payload.address]) {
       chrome.windows.create({
         url: chrome.runtime.getURL(
-          `popupLoading.html#?to=sign-msg&url=${payload.url}&msgToSign=${payload.msgToSign}&address=${payload.address}`
+          `popupLoading.html#?navigate-to=sign-msg&url=${payload.url}&msgToSign=${payload.msgToSign}&address=${payload.address}`
         ),
         type: 'popup',
-        height: 475,
+        height: 500,
         width: 300,
         focused: true
       });
