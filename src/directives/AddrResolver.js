@@ -14,15 +14,23 @@ const AddrResolver = {
     let parentCurrency = vnode.context.$parent.currency
       ? vnode.context.$parent.currency
       : network.type.name;
+    let address;
 
     vnode.context.$parent.$watch('$store.state.network', function(e) {
       network = e;
       parentCurrency = e.type.name;
+      actualProcess(address);
     });
     vnode.context.$parent.$watch('currency', function(e) {
       parentCurrency = e;
+      actualProcess(address);
     });
     vnode.context.$watch(binding.value, function(e) {
+      address = e;
+      actualProcess(e);
+    });
+
+    const actualProcess = function(e) {
       const _this = vnode.context;
       const ens = _this.$store.state.ens;
       const errorPar = document.createElement('p');
@@ -174,7 +182,7 @@ const AddrResolver = {
         errorPar.innerText = '';
         el.parentNode.parentNode.appendChild(errorPar);
       }
-    });
+    }
   }
 };
 
