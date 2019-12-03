@@ -12,9 +12,9 @@
             <div v-for="item in items" :key="item">
               <p
                 v-if="
-                  item.includes('Paragraph') ||
-                    item.includes('Sentence') ||
-                    item.includes('Footer')
+                  item.includes('paragraph') ||
+                    item.includes('sentence') ||
+                    item.includes('footer')
                 "
               >
                 {{ $t(`privacyPol.${item}`) }}
@@ -29,10 +29,10 @@
                   {{ $t('common.support-email') }}
                 </a>
               </p>
-              <p v-else-if="item.includes('Item')">
+              <p v-else-if="item.includes('item')">
                 {{ item[item.length - 1] }}. {{ $t(`privacyPol.${item}`) }}
               </p>
-              <h4 v-else-if="item.includes('Subtitle')">
+              <h4 v-else-if="item.includes('subtitle')">
                 {{ $t(`privacyPol.${item}`) }}
               </h4>
               <h3 v-else>

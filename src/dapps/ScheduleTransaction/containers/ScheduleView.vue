@@ -35,7 +35,8 @@
 
           <div class="to-address">
             <dropdown-address-selector
-              title="To Address"
+              :clear-address="clearAddress"
+              :title="$t('sendTx.to-addr')"
               @toAddress="getToAddress($event)"
             />
           </div>
@@ -363,6 +364,7 @@ export default {
       clearCurrency: false,
       clearInput: false,
       clearTimezone: false,
+      clearAddress: false,
       amountInputOptions() {
         return {
           title: `${this.$t('sendTx.amount')}`,
@@ -729,6 +731,7 @@ export default {
         .add(1, 'days')
         .toISOString();
       this.clearTimezone = !this.clearTimezone;
+      this.clearAddress = !this.clearAddress;
       this.timeBounty = EAC_SCHEDULING_CONFIG.TIME_BOUNTY_DEFAULTS[0];
     },
     getToAddress(data) {

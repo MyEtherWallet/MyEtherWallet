@@ -9,10 +9,7 @@
     "random-private-keys": "Couldn't everybody put in random private keys, look for a balance, and send to their own address?",
     "mew-goes-down": "What happens if MyEtherWallet goes down?",
     "multisig-contract": "How do I interact with a Multisig Contract?",
-    "current-block-number": "Check the current block number on MyEtherWallet",
-    "unlock-keystore": "When I unlock via keystore file, it freezes my browser",
-    "withdraw-dao": "Withdrawing DAO tokens",
-    "mouse-generate-seed": "Why don't you make me move my mouse to generate a seed?"
+    "current-block-number": "Check the current block number on MyEtherWallet"
   },
   "keyword-search": {
     "lost": "Got lost? Let me help you.",
