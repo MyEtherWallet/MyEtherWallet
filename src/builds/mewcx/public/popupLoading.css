@@ -26,20 +26,40 @@ body {
 }
 
 .text-container .icons-container .icons {
-  background-color: #0b2840;
   height: 50px;
   width: 50px;
 }
 
+.text-container .icons-container .icon {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  height: 50px;
+  width: 50px;
+}
+
+.actual-text-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 .text-container .icons-container .icons.circle {
-  background-color: #0b2840;
+  background-color: rgba(177, 177, 177, 0.4);
   border-radius: 50%;
 }
 
 .text-container .text {
-  background-color: #0b2840;
-  height: 63px;
+  background-color: rgba(177, 177, 177, 0.4);
+  border-radius: 12px;
+  height: 15px;
+  margin: 2.5px 0;
   width: 260px;
+}
+
+.text.middle {
+  width: 130px;
 }
 
 .wallets-container {
@@ -66,6 +86,7 @@ body {
 
 .wallet .actual-wallet {
   background-color: #f2fafa;
+  border-radius: 12px;
   width: 250px;
   height: 85px;
   margin-left: 10px;
@@ -122,13 +143,22 @@ body {
 
 .deny {
   align-items: center;
-  background-color: #ff122f;
+  border: 1px solid #ff122f;
+  color: #ff122f;
   display: flex;
   justify-content: center;
 }
 
-.buttons-container * .button-text {
+.deny .button-text {
+  background-color: #ff122f;
+}
+
+.access .button-text {
   background-color: #fff;
+}
+
+.buttons-container * .button-text {
+  text-align: center;
   height: 15px;
   width: 80px;
 }
