@@ -66,7 +66,7 @@ class MEWconnectWallet {
       }
       const networkId = tx.chainId;
       return new Promise(resolve => {
-        if(!tx.gasLimit){
+        if (!tx.gasLimit) {
           tx.gasLimit = tx.gas;
         }
         this.mewConnect.sendRtcMessage('signTx', JSON.stringify(tx));
