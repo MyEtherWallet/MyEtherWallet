@@ -86,16 +86,32 @@
               <th></th>
             </thead>
             <tbody>
-              <tr v-for="(token, index) in fakeObj" :key="token.key">
+              <tr v-for="(token, index) in reserves" :key="token.key">
                 <td class="number">{{ index + 1 }}.</td>
-                <td>{{ token.token }}</td>
-                <td>{{ token.availBalance }}</td>
-                <td :class="depositModal ? '' : 'stable-apr'">
-                  {{ token.deposited }}
-                </td>
-                <td :class="depositModal ? '' : 'var-apr'">{{ token.apr }}</td>
+                <td>{{ token.name }}</td>
                 <td>
-                  <button class="action-btn" @click="takeAction()">
+                  {{
+                    depositModal
+                      ? convertToEther(token.currentATokenBalance)
+                      : convertToEther(token.availableLiquidity)
+                  }}
+                </td>
+                <td :class="depositModal ? '' : 'stable-apr'">
+                  {{
+                    depositModal
+                      ? convertToEther(token.currentUnderlyingBalance)
+                      : convertToEther(token.fixedBorrowRate)
+                  }}
+                </td>
+                <td :class="depositModal ? '' : 'var-apr'">
+                  {{
+                    depositModal
+                      ? convertToEther(token.borrowRate)
+                      : convertToEther(token.variableBorrowRate)
+                  }}
+                </td>
+                <td>
+                  <button class="action-btn" @click="takeAction(index)">
                     {{
                       depositModal
                         ? $tc('dappsAave.deposit', 1)
@@ -113,11 +129,20 @@
 </template>
 
 <script>
+import BigNumber from 'bignumber.js';
+import * as unit from 'ethjs-unit';
+
 export default {
   props: {
     depositModal: {
       type: Boolean,
       default: true
+    },
+    reserves: {
+      type: Array,
+      default: function() {
+        return [];
+      }
     }
   },
   data() {
@@ -151,9 +176,15 @@ export default {
       this.allTabActive = !this.allTabActive;
       this.stableTabActive = !this.stableTabActive;
     },
-    takeAction() {
+    takeAction(idx) {
       this.$refs['actionModal'].hide();
-      this.$router.push('/interface/dapps/aave/action');
+      this.$router.push({name: 'Action', params: {id: idx}});
+    },
+    convertToEther(wei) {
+      if (!wei) {
+        return '0';
+      }
+      return new BigNumber(unit.fromWei(wei, 'ether')).toFixed(2).toString();
     }
   }
 };

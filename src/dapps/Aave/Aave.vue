@@ -63,6 +63,7 @@
       :collateral-balance="collateralBalance"
       :ltv="ltv"
       :loading="loading"
+      :reserves="activeDepositTab ? userReserves : reservesData"
     />
   </div>
 </template>
@@ -71,7 +72,6 @@
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
 import LendingPoolAbi from './abi/LendingPoolAbi.js';
 import LendingPoolAddressesProviderAbi from './abi/LendingPoolAddressesProviderAbi.js';
-import { post, get } from '@/helpers/httpRequests';
 import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
@@ -93,41 +93,57 @@ export default {
       ltv: '',
       loading: true,
       reservesAddr: [],
-      reserves: []
+      reservesData: [],
+      userReserves: []
     };
   },
   computed: {
-    ...mapState(['web3', 'account']),
-
+    ...mapState(['web3', 'account'])
   },
   async mounted() {
-    this.lendingPoolContractAddress = '0x9C6C63aA0cD4557d7aE6D9306C06C093A2e35408';
+    this.lendingPoolContractAddress =
+      '0x9C6C63aA0cD4557d7aE6D9306C06C093A2e35408';
     this.lendingPoolAddressesProviderContract = new this.web3.eth.Contract(
       LendingPoolAddressesProviderAbi,
       this.lendingPoolContractAddress
     );
-    this.lendingPool = await this.lendingPoolAddressesProviderContract.methods.getLendingPool().call();
+    this.lendingPool = await this.lendingPoolAddressesProviderContract.methods
+      .getLendingPool()
+      .call();
     this.lendingPoolContract = new this.web3.eth.Contract(
       LendingPoolAbi,
       this.lendingPool
     );
-    console.error('lendingPool', this.lendingPool)
     this.getUserInfo();
     this.getReserves();
   },
   methods: {
     async getUserInfo() {
       try {
-        let info = await this.lendingPoolContract.methods
+        const info = await this.lendingPoolContract.methods
           .getUserAccountData(this.account.address)
           .call();
-        this.healthFactor = new BigNumber(unit.fromWei(info.healthFactor, 'ether')).toFixed(2);
-        this.aggregatedEthBalance = new BigNumber(unit.fromWei(info.totalLiquidityETH, 'ether')).toFixed(2).toString();
-        this.borrowedBalance = new BigNumber(unit.fromWei(info.totalBorrowsETH, 'ether')).toFixed(2).toString();
-        this.collateralBalance = new BigNumber(unit.fromWei(info.totalCollateralETH, 'ether')).toFixed(2).toString();
+        this.healthFactor = new BigNumber(
+          unit.fromWei(info.healthFactor, 'ether')
+        ).toFixed(2);
+        this.aggregatedEthBalance = new BigNumber(
+          unit.fromWei(info.totalLiquidityETH, 'ether')
+        )
+          .toFixed(2)
+          .toString();
+        this.borrowedBalance = new BigNumber(
+          unit.fromWei(info.totalBorrowsETH, 'ether')
+        )
+          .toFixed(2)
+          .toString();
+        this.collateralBalance = new BigNumber(
+          unit.fromWei(info.totalCollateralETH, 'ether')
+        )
+          .toFixed(2)
+          .toString();
         this.ltv = info.ltv;
         this.loading = false;
-      } catch(err) {
+      } catch (err) {
         Toast.responseHandler(err, Toast.ERROR);
       }
     },
@@ -136,32 +152,40 @@ export default {
         this.reservesAddr = await this.lendingPoolContract.methods
           .getReserves()
           .call();
-        
+
         this.getReserveData();
-      } catch(err) {
+        this.getUserReserveData();
+      } catch (err) {
         Toast.responseHandler(err, Toast.ERROR);
       }
     },
-    async getReserveData() {
-      try {
-        this.reserves = await this.lendingPoolContract.methods
-          .getReserveData(this.reservesAddr[0])
+    async getUserReserveData() {
+      for (let i = 0; i < this.reservesAddr.length; i++) {
+        const reserveInfo = await this.lendingPoolContract.methods
+          .getUserReserveData(this.reservesAddr[i], this.account.address)
           .call();
 
-        console.error('this', this.reserves)
-      } catch(err) {
-        console.error('err', err)
+        reserveInfo.name = 'DAI';
+        reserveInfo.address = this.reservesAddr[i];
+
+        this.userReserves.push(reserveInfo);
       }
+      return this.userReserves;
     },
-    // getUserInfo() {
-    //   get('https://dlp-api-dev.testing.aave.com/data/user/' + this.account.address)
-    //     .then(function(resp){
-    //       console.error('resp', resp)
-    //     })
-    //     .catch(function(err){
-    //       console.error('eerr', err)
-    //     })
-    // },
+    async getReserveData() {
+      for (let i = 0; i < this.reservesAddr.length; i++) {
+        const reserveInfo = await this.lendingPoolContract.methods
+          .getReserveData(this.reservesAddr[i])
+          .call();
+
+        reserveInfo.name = 'ETH';
+        reserveInfo.address = this.reservesAddr[i];
+
+        this.reservesData.push(reserveInfo);
+      }
+
+      return this.reservesData;
+    },
     toggleTabs(action) {
       if (
         (action === 'borrow' && this.activeBorrowTab === true) ||
