@@ -19,7 +19,7 @@
               <v-img src="@/assets/images/Common/Icons/IconSet2/WhiteBTC.svg" />
             </div>
             <div>
-              <div class="mb-1 font-weight-black subtitle-1 white--text">
+              <div class="mb-1 font-weight-bold subtitle-1 white--text">
                 Bitcoin
               </div>
               <div class="white--text">
@@ -34,7 +34,7 @@
               <v-img src="@/assets/images/Common/Icons/IconSet2/WhiteETH.svg" />
             </div>
             <div>
-              <div class="mb-1 font-weight-black subtitle-1 white--text">
+              <div class="mb-1 font-weight-bold subtitle-1 white--text">
                 Tokens
               </div>
               <div class="white--text">
@@ -51,7 +51,7 @@
               />
             </div>
             <div>
-              <div class="mb-1 font-weight-black subtitle-1 white--text">
+              <div class="mb-1 font-weight-bold subtitle-1 white--text">
                 Fiats
               </div>
               <div class="white--text">

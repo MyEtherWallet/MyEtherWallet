@@ -2,7 +2,7 @@
   <div>
     <div class="py-7" />
     <v-sheet max-width="600px" class="mx-auto">
-      <div class="display-1 font-weight-black text-center">
+      <div class="display-1 font-weight-bold text-center">
         All-in-one gateway to your Ethereum Blockchain service
       </div>
     </v-sheet>
@@ -15,7 +15,7 @@
             <v-img src="@/assets/images/Common/Icons/IconSet2/Send.svg" />
           </div>
           <div>
-            <div class="mb-1 font-weight-black subtitle-1">
+            <div class="mb-1 font-weight-bold subtitle-1">
               Send Transaction
             </div>
             <div>
@@ -30,7 +30,7 @@
             <v-img src="@/assets/images/Common/Icons/IconSet2/Offline.svg" />
           </div>
           <div>
-            <div class="mb-1 font-weight-black subtitle-1">
+            <div class="mb-1 font-weight-bold subtitle-1">
               Send Offline Helper
             </div>
             <div>
@@ -45,7 +45,7 @@
             <v-img src="@/assets/images/Common/Icons/IconSet2/NFT.svg" />
           </div>
           <div>
-            <div class="mb-1 font-weight-black subtitle-1">NFT Manager</div>
+            <div class="mb-1 font-weight-bold subtitle-1">NFT Manager</div>
             <div>
               Dolor tempor ipsum lorem sadipscing, erat sadipscing et dolor sed
               stet takimata ipsum invidunt, est ea no dolor.
