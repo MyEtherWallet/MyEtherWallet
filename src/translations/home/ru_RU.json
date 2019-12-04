@@ -1,56 +1,56 @@
 {
   "tagline1": "Ethereum's",
   "tagline2": "Original Wallet",
-  "subheading": "MyEtherWallet (our friends call us MEW) is a free, client-side interface helping you interact with the Ethereum blockchain. Our easy-to-use, open-source platform allows you to generate wallets, interact with smart contracts, and so much more.",
+  "subheading": "MyEtherWallet (наши друзья называют нас MEW) - это бесплатный клиентский интерфейс, помогающий вам взаимодействовать с блокчейном эфириума. Наша легкая в пользовании платформа с открытым исходным кодом позволяет вам создавать кошельки, взаимодействовать со смарт-контрактами и многое другое.",
   "create-new-wallet": {
-    "text": "Obtain an ETH address and generate your private key. Saving and safekeeping the key will be your responsibility."
+    "text": "Получите адрес эфириума и сформируйте ваш закрытый ключ. За хранение и безопасность ключа ответственность несете вы."
   },
   "access-my-wallet": {
-    "text": "Send or swap your ETH and tokens, purchase ENS domains, interact with smart contracts, and more! This is where the magic happens.",
-    "button": "Access Now"
+    "text": "Отправляйте или обменивайте ваш эфириум и токены, покупайте домены ENS, взаимодействуйте со смарт-контрактами и многое другое! Вот где происходит волшебство.",
+    "button": "Получить доступ"
   },
   "about-mew": {
-    "title": "About MEW",
-    "text": "MyEtherWallet - please, call us MEW - puts the Ethereum blockchain at your fingertips. We are a team of crypto-enthusiasts dedicated to bring you the most secure, most intuitive, and dare we say prettiest way to manage your ETH and ERC-20 tokens. We're always here to help, and we're never giving away ETH. Cheers!"
+    "title": "О MEW",
+    "text": "MyEtherWallet - называйте нас MEW - предоставляет блокчейн эфириума в ваше распоряжение. Мы являемся командой криптоэнтузиастов, специализирующихся на обеспечении для вас наиболее безопасного, наиболее интуитивного и, можно смело сказать, самого приятного способа управления вашими токенами эфириума и ERC-20. Мы всегда готовы помочь и мы никогда не раздаем эфириум. Спасибо!"
   },
   "join-mew": {
-    "title": "Join MEW",
-    "text": "Access the Ethereum blockchain's original and most-trusted wallet client, now with a host of new features all contained in an elegant, easy-to-use interface."
+    "title": "Присоединиться к MEW",
+    "text": "Получите доступ к оригинальному и пользующемуся наибольшим доверием клиенту кошелька блокчейна Эфириума, теперь с множеством новых функций, которые содержатся в элегантном, простом в использовании интерфейсе."
   },
   "hardware-support": {
-    "title": "Hardware Wallet Support",
-    "text": "MEW offers support for all major hardware wallets including Ledger, Trezor, and many more."
+    "title": "Поддержка аппаратных кошельков",
+    "text": "MEW предлагает поддержку для всех основных аппаратных кошельков, включая Ledger, Trezor и многие другие."
   },
   "swap": {
-    "text": "MEW has partnered with Bity, Kyber Network, Changelly, and Simplex to allow users to swap fiat to crypto, ETH and BTC, ETH and ERC-20."
+    "text": "MEW является партнером Bity, Kyber Network, Changelly и Simplex, чтобы позволить пользователям обменивать фиатные деньги на криптовалюту, эфириум и биткоины, эфириум и ERC-20."
   },
   "faqs": {
-    "subtitle": "Have not found the question that you are looking for?",
-    "button-see-more": "See More...",
-    "button-here": "here.",
+    "subtitle": "Не нашли вопрос, который искали?",
+    "button-see-more": "Подробнее...",
+    "button-here": "здесь.",
     "create-wallet": {
-      "title": "How do I create a new wallet?",
-      "text": "MyEtherWallet (MEW) offers three ways to create a new ETH wallet. These are via MEWconnect, Keystore file, or Mnemonic phrase. For more information, click"
+      "title": "Как мне создать новый кошелек?",
+      "text": "MyEtherWallet (MEW) предлагает три способа создания нового кошелька эфириума. То есть посредством MEWconnect, файла-хранилища ключа или мнемонической фразы. Для дополнительной информации нажмите"
     },
     "mewconnect": {
-      "title": "What is MEWconnect?",
-      "text": "MEWconnect is our companion mobile app for MyEtherWallet. We call it a hardware wallet without all the hardware. Now available for all Android and iOS smartphones! Read more"
+      "title": "Что такое MEWconnect?",
+      "text": "MEWconnect является нашим партнерским мобильным приложением для MyEtherWallet. Мы называем его аппаратным кошельком без всякого аппаратного оснащения. Теперь доступно для всех устройств Android и iOS! Подробнее"
     },
     "other-wallets": {
-      "title": "Can MEW work with other wallets?",
-      "text": "MEW supports many different wallet types including hardware wallets, such as the Ledger Nano S or Trezor, and third-party wallets like MetaMask. We are also open for anyone to use their Ethereum wallets with the appropriate information. Read more"
+      "title": "Может ли MEW работать с другими кошельками?",
+      "text": "MEW поддерживает много различных типов кошельков, включая аппаратные кошельки, такие как Ledger Nano S или Trezor, а также кошельки третьей стороны, такие как MetaMask. Также мы открыты всем для использования своих кошельков эфириума с соответствующей информацией. Подробнее"
     },
     "send-txs": {
-      "title": "How can I send a transaction?",
-      "text": "MEW lets anyone with a balance of ETH or ERC20 tokens send a transaction, without additional charges. Using the Ethereum blockchain takes gas, which is paid for in ETH, so we recommend having at least .01 ETH to cover around 2 - 3 transactions. Read more"
+      "title": "Как я могу отправить транзакцию?",
+      "text": "MEW позволяет любому, у кого есть баланс токенов эфириума или ERC20, отправить транзакцию без дополнительных расходов. Для использования блокчейна эфириума требуется газ, который оплачивается эфириумом, поэтому мы рекомендуем иметь не менее .01 ETH для оплаты около 2 - 3 транзакций. Подробнее"
     },
     "forgot-pwd": {
-      "title": "I forgot my password/private key! What can I do?",
-      "text": "MEW does not offer support to recover or reset passwords/private keys. We always suggest writing down private keys and passwords on physical paper/notebooks for safekeeping. Maybe you saved it on your computer! For ideas on what to look for, read more"
+      "title": "Я забыл(а) свой пароль/закрытый ключ! Что я могу сделать?",
+      "text": "MEW не предлагает поддержку для восстановления или смены паролей/закрытых ключей. Мы всегда рекомендуем записывать закрытые ключи и пароли на физической бумаге/в записных книжках для надежного хранения. Возможно, вы сохранили его на вашем компьютере! Чтобы узнать, чего ожидать, читать подробнее"
     }
   },
   "social": {
-    "title": "Join MEW Community"
+    "title": "Присоединитесь к сообществу MEW"
   },
-  "lost-title": "Oops! Looks like you're lost."
+  "lost-title": "Ой! Похоже, вы потерялись."
 }
