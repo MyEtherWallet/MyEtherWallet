@@ -57,6 +57,27 @@
         background-color: $unlock-wallet-background-color;
       }
 
+      .content-text,
+      .get-started {
+        padding-top: 15px;
+      }
+
+      .title {
+        align-items: center;
+        display: flex;
+
+        img {
+          height: 30px;
+          width: 30px;
+        }
+
+        h3 {
+          font-size: 25px;
+          font-weight: bold;
+          margin-left: 20px;
+        }
+      }
+
       .card-image {
         padding-right: 40px;
         display: none;
