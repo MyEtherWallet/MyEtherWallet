@@ -10,7 +10,7 @@
               <v-img src="@/assets/images/Common/Icons/IconSet2/Dapps.svg" />
             </div>
             <div>
-              <div class="mb-1 font-weight-black subtitle-1">Dapps Center</div>
+              <div class="mb-1 font-weight-bold subtitle-1">Dapps Center</div>
               <div>
                 MEW has pasrtnered with Bity, Kyber Network, and Simplex to
                 allow users to swap fiat to crypto, ETH and BTC.
@@ -23,7 +23,7 @@
               <v-img src="@/assets/images/Common/Icons/IconSet2/Submit.svg" />
             </div>
             <div>
-              <div class="mb-1 font-weight-black subtitle-1">Submit</div>
+              <div class="mb-1 font-weight-bold subtitle-1">Submit</div>
               <div>
                 Dolor tempor ipsum lorem sadipscing, erat sadipscing et dolor
                 sed stet takimata ipsum invidunt, est ea no dolor.

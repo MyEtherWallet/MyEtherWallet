@@ -22,7 +22,7 @@
               />
             </div>
             <div>
-              <div class="mb-1 font-weight-black subtitle-1 white--text">
+              <div class="mb-1 font-weight-bold subtitle-1 white--text">
                 Buy Tokens
               </div>
               <div class="white--text">
@@ -37,7 +37,7 @@
               <v-img src="@/assets/images/Common/Icons/IconSet2/WhiteETH.svg" />
             </div>
             <div>
-              <div class="mb-1 font-weight-black subtitle-1 white--text">
+              <div class="mb-1 font-weight-bold subtitle-1 white--text">
                 Add My Tokens
               </div>
               <div class="white--text">
