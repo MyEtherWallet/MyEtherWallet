@@ -16,13 +16,13 @@
       >
         <div>
           <input
-            v-ens-resolver="'selectedAddress'"
+            v-addr-resolver="'selectedAddress'"
             ref="addressInput"
-            v-model="selectedAddress"
             :placeholder="$t('common.enter-addr')"
             type="text"
             autocomplete="off"
             @focus="dropdownOpen = false"
+            @input="debouncedInput"
           />
         </div>
 
@@ -120,7 +120,7 @@ import Blockie from '@/components/Blockie';
 import { EthereumTokens, BASE_CURRENCY } from '@/partners';
 import { mapState } from 'vuex';
 import { Toast } from '@/helpers';
-import { isAddress } from '@/helpers/addressUtils';
+import utils from 'web3-utils';
 
 export default {
   components: {
@@ -156,7 +156,7 @@ export default {
     hasMessage() {
       return (
         (!this.isValidAddress && this.selectedAddress.length > 0) ||
-        (!isAddress(this.selectedAddress) && this.isValidAddress)
+        (this.isValidAddress && this.selectedAddress !== this.hexAddress)
       );
     }
   },
@@ -185,6 +185,9 @@ export default {
     this.currentAddress = this.account.address;
   },
   methods: {
+    debouncedInput: utils._.debounce(function(e) {
+      this.selectedAddress = e.target.value;
+    }, 300),
     addAddress() {
       const alreadyExists = Object.keys(this.addressBook).some(key => {
         return this.addressBook[key].address === this.selectedAddress;
@@ -198,7 +201,7 @@ export default {
         return;
       } else if (!this.isValidAddress) {
         Toast.responseHandler(
-          this.$t('ens.ens-resolver.invalid-eth-addr'),
+          this.$t('ens.addr-resolver.invalid-eth-addr'),
           Toast.ERROR
         );
         return;
