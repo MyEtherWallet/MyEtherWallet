@@ -13,10 +13,10 @@
             <div class="white--text display-2 font-weight-bold">
               The most popular free Ethereum wallet
             </div>
-            <div class="white--text mt-3">
+            <p class="white--text mt-3">
               Generate the free Ethereum wallet, and interact with the Ethereum
               blockchain easily and securely.
-            </div>
+            </p>
             <div class="mt-7">
               <StdButton
                 buttonclass="button--green"

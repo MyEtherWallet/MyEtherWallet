@@ -11,10 +11,10 @@
             </div>
             <div>
               <div class="mb-1 font-weight-bold subtitle-1">Dapps Center</div>
-              <div>
+              <p>
                 MEW has pasrtnered with Bity, Kyber Network, and Simplex to
                 allow users to swap fiat to crypto, ETH and BTC.
-              </div>
+              </p>
             </div>
           </div>
 
@@ -24,10 +24,10 @@
             </div>
             <div>
               <div class="mb-1 font-weight-bold subtitle-1">Submit</div>
-              <div>
+              <p>
                 Dolor tempor ipsum lorem sadipscing, erat sadipscing et dolor
                 sed stet takimata ipsum invidunt, est ea no dolor.
-              </div>
+              </p>
               <div class="d-flex align-center mt-7">
                 <a
                   href="#"

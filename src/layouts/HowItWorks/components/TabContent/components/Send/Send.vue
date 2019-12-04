@@ -18,10 +18,10 @@
             <div class="mb-1 font-weight-bold subtitle-1">
               Send Transaction
             </div>
-            <div>
+            <p>
               Dolor tempor ipsum lorem sadipscing, erat sadipscing et dolor sed
               stet takimata ipsum invidunt, est ea no dolor.
-            </div>
+            </p>
           </div>
         </div>
 
@@ -33,10 +33,10 @@
             <div class="mb-1 font-weight-bold subtitle-1">
               Send Offline Helper
             </div>
-            <div>
+            <p>
               Dolor tempor ipsum lorem sadipscing, erat sadipscing et dolor sed
               stet takimata ipsum invidunt, est ea no dolor.
-            </div>
+            </p>
           </div>
         </div>
 
@@ -46,10 +46,10 @@
           </div>
           <div>
             <div class="mb-1 font-weight-bold subtitle-1">NFT Manager</div>
-            <div>
+            <p>
               Dolor tempor ipsum lorem sadipscing, erat sadipscing et dolor sed
               stet takimata ipsum invidunt, est ea no dolor.
-            </div>
+            </p>
             <div class="d-flex align-center mt-4">
               <a
                 href="#"

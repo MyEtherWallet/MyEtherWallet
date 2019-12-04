@@ -36,7 +36,7 @@ export default {
   text-transform: none;
   letter-spacing: 0px;
   font-size: 14px !important;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .button--green {

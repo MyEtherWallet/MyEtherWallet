@@ -2,12 +2,12 @@
   <div class="foot-note py-3">
     <v-container>
       <div class="d-flex align-center">
-        <div class="cyan--text text--lighten-3">V6.0.0-beta.3</div>
+        <p class="cyan--text text--lighten-3 ma-0">V6.0.0-beta.3</p>
         <v-spacer />
-        <div class="teal--text text--lighten-1">
+        <p class="teal--text text--lighten-1 ma-0">
           ©2019 MyEtherWallet. All rights reserved. Pricing taken from
           <a class="cyan--text text--lighten-3" href="/">CoinMarketCap</a>.
-        </div>
+        </p>
         <v-spacer />
         <v-sheet width="150" color="transparent">
           <v-select

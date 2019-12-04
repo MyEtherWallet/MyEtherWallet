@@ -11,11 +11,11 @@
     <h4 class="link-box-title font-weight-bold mb-4">
       Friendly user interface
     </h4>
-    <div>
+    <p>
       Access the Ethereum blockchain's original and most-trusted wallet client,
       now with a host of new features all contained in an elegant, easy and
       friendly interface.
-    </div>
+    </p>
 
     <div class="action-block mt-2 ml-n4">
       <v-btn color="teal lighten-3" class="font-weight-bold" text>

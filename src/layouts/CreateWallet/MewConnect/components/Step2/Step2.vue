@@ -3,10 +3,10 @@
     <v-col cols="6" class="pb-10">
       <div class="subtitle-1 font-weight-bold grey--text">STEP 2.</div>
       <div class="headline font-weight-bold mb-3">Create a new wallet</div>
-      <div class="mb-6">
+      <p class="mb-6">
         Please follow the prompts in MEWconnect App and create a new wallet.
         Continue if you have already created a new wallet in the App.
-      </div>
+      </p>
       <div class="d-flex align-center">
         <StdButton
           buttonclass="button--green-border"
@@ -19,7 +19,7 @@
           Continue
         </StdButton>
       </div>
-      <div class="mt-4">
+      <p class="mt-4 mb-0">
         Need more help?
         <router-link
           class="text-decoration--none text-color--mew-green font-weight-bold"
@@ -27,7 +27,7 @@
         >
           Watch tutorial
         </router-link>
-      </div>
+      </p>
     </v-col>
     <v-col cols="6" class="pb-0">
       <v-img

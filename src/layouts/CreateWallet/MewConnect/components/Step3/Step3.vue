@@ -3,10 +3,10 @@
     <v-col cols="6" class="pb-10">
       <div class="subtitle-1 font-weight-bold grey--text">STEP 3.</div>
       <div class="headline font-weight-bold mb-3">You are done!</div>
-      <div class="mb-6">
+      <p class="mb-6">
         Congratulation! Please use the MEWconnect App to scan this QR code in
         order to access your new wallet. And you are done!
-      </div>
+      </p>
       <div class="d-flex align-center">
         <StdButton
           buttonclass="button--green-border"
@@ -17,14 +17,14 @@
         >
         <StdButton buttonclass="button--green">Scan &amp; Access</StdButton>
       </div>
-      <div class="mt-4">
+      <p class="mt-4 mb-0">
         Need more help?
         <router-link
           class="text-decoration--none text-color--mew-green font-weight-bold"
           to="/"
           >Watch tutorial</router-link
         >
-      </div>
+      </p>
     </v-col>
     <v-col cols="6" class="pb-0">
       <v-img

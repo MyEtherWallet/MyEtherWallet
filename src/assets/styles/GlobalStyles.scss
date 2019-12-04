@@ -7,7 +7,6 @@
 // Style reset ======================================================
 * {
   font-family: "Roboto";
-  //letter-spacing: -0.1px;
   color: $dark-sacramento;
 }
 
@@ -28,6 +27,10 @@ p {
   font-weight: 400;
 }
 
+p {
+  letter-spacing: 0.3px;
+}
+
 h1 {
   font-size: 42px;
   font-weight: 500;
@@ -36,7 +39,6 @@ h1 {
 h2 {
   font-size: 30px;
   font-weight: 700;
-  letter-spacing: -0.2px;
   line-height: 36px;
 }
 

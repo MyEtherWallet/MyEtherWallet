@@ -3,10 +3,10 @@
     <h4 class="link-box-title font-weight-bold mb-4">
       Secure my funds
     </h4>
-    <div>
+    <p>
       MEWconnect, an official, free companion app for MEW that helps you secure
       your funds as never before.
-    </div>
+    </p>
     <div class="action-block mt-2 ml-n4">
       <v-btn color="teal lighten-3" class="font-weight-bold" text>
         Learn more<v-icon class="ml-1 title">mdi-arrow-right</v-icon>
