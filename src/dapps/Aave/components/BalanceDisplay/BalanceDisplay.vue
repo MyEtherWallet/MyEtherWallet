@@ -16,8 +16,8 @@
         </span>
       </div>
       <span v-if="title !== 'Earnings'">
-        <p class="balance">$ {{ balance }}</p>
-        <p class="eth-balance">0 {{ $t('common.currency.eth') }}</p>
+        <p class="balance">${{getUSDBalance()}}</p>
+        <p class="eth-balance"> {{ balance }} {{ $t('common.currency.eth') }}</p>
       </span>
       <div v-if="title === 'Earnings'" class="earnings-container">
         <p v-if="earningsBalance === 0" class="no-data">
@@ -39,6 +39,9 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+import BigNumber from 'bignumber.js';
+
 export default {
   props: {
     title: {
@@ -46,16 +49,49 @@ export default {
       default: ''
     },
     balance: {
-      type: Number,
-      default: '0.00'
+      type: String,
+      default: ''
     },
     compositionPercentage: {
       type: Number,
-      default: '100'
+      default: 100
     },
     earningsBalance: {
       type: Number,
       default: 0
+    }
+  },
+  computed: {
+    ...mapState(['online'])
+  },
+  mounted() {
+    console.error('hello', this.balance, typeof this.balance)
+    if (this.online) this.getEthPrice();
+  },
+  methods: {
+    getUSDBalance() {
+      let usdBalance = 0;
+      if (this.balance) {
+        usdBalance = new BigNumber(
+          new BigNumber(this.balance).times(
+            new BigNumber(this.ethPrice)
+          )
+        ).toFixed(2);
+      }
+      return usdBalance;
+    },
+    async getEthPrice() {
+      const price = await fetch(
+        'https://cryptorates.mewapi.io/ticker?filter=ETH'
+      )
+        .then(res => {
+          return res.json();
+        })
+        .catch(e => {
+          Toast.responseHandler(e, Toast.ERROR);
+        });
+      this.ethPrice =
+        typeof price === 'object' ? price.data.ETH.quotes.USD.price : 0;
     }
   }
 };

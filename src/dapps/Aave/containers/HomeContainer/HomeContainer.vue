@@ -15,7 +15,7 @@
     </div>
     <div class="balance-row">
       <balance-display
-        :balance="0"
+        :balance="activeDepositTab ? aggregatedEthBalance : borrowedBalance"
         :composition-percentage="100"
         :title="
           activeDepositTab
@@ -24,9 +24,8 @@
         "
       />
       <balance-display
-        :balance="0"
         :composition-percentage="100"
-        :earnings-balance="0"
+        :balance="activeDepositTab ?  '0' : collateralBalance"
         :title="
           activeDepositTab
             ? $t('dappsAave.earnings')
@@ -38,7 +37,7 @@
     <div v-if="activeBorrowTab" class="loan-container">
       <span class="loan-value">{{ $t('dappsAave.loan-value') }}</span>
       <!-- placeholder -->
-      <span class="loan-percent">65.04%</span>
+      <span class="loan-percent">{{ltv}}%</span>
     </div>
     <action-modal ref="actionModal" :deposit-modal="activeDepositTab" />
   </div>
@@ -63,6 +62,26 @@ export default {
       default: false
     },
     activeDepositTab: {
+      type: Boolean,
+      default: true
+    },
+    aggregatedEthBalance: {
+      type: String,
+      default: ''
+    },
+    borrowedBalance: {
+      type: String,
+      default: ''
+    },
+    collateralBalance: {
+      type: String,
+      default: ''
+    },
+    ltv: {
+      type: String,
+      default: ''
+    },
+    loading: {
       type: Boolean,
       default: true
     }
