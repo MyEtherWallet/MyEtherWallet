@@ -107,7 +107,8 @@ import { Misc } from '@/helpers';
 import {
   REJECT_MEW_TX_SIGN,
   MEW_TX_HASH,
-  CX_SEND_SIGNED_TX
+  CX_SEND_SIGNED_TX,
+  WEB3_SIGN_TX
 } from '@/builds/mewcx/cxHelpers/cxEvents';
 export default {
   components: {
@@ -156,12 +157,6 @@ export default {
       return obj;
     }
   },
-  mounted() {
-    const _self = this;
-    window.chrome.storage.sync.get(_self.linkQuery.from, function(res) {
-      _self.signingKeystore = JSON.parse(res[_self.linkQuery.from]).priv;
-    });
-  },
   methods: {
     toggleDetails() {
       this.showDetails = !this.showDetails;
@@ -183,29 +178,40 @@ export default {
       return new BigNumber(hex).toString();
     },
     unlockWallet() {
-      this.loading = true;
-      const worker = new walletWorker();
       const _self = this;
-      worker.postMessage({
-        type: 'unlockWallet',
-        data: [JSON.parse(this.signingKeystore), this.password]
-      });
-      worker.onmessage = function(e) {
-        _self.loading = false;
-        _self.$refs.passwordModal.$refs.passwordModal.hide();
-        _self.signAndSend(
-          new WalletInterface(Buffer.from(e.data._privKey), false, keyStoreType)
-        );
+      this.loading = true;
+      const payload = {
+        signer: _self.txParams.from,
+        params: _self.txParams
       };
+      window.chrome.runtime.sendMessage({
+        event: WEB3_SIGN_TX,
+        payload: payload
+      }, {}, (res) => {
 
-      worker.onerror = function(e) {
-        e.preventDefault();
-        _self.loading = false;
-        _self.error = {
-          msg: 'Unlock failed: Wrong password!',
-          errored: true
-        };
-      };
+      })
+      // const worker = new walletWorker();
+      // const _self = this;
+      // worker.postMessage({
+      //   type: 'unlockWallet',
+      //   data: [JSON.parse(this.signingKeystore), this.password]
+      // });
+      // worker.onmessage = function(e) {
+      //   _self.loading = false;
+      //   _self.$refs.passwordModal.$refs.passwordModal.hide();
+      //   _self.signAndSend(
+      //     new WalletInterface(Buffer.from(e.data._privKey), false, keyStoreType)
+      //   );
+      // };
+
+      // worker.onerror = function(e) {
+      //   e.preventDefault();
+      //   _self.loading = false;
+      //   _self.error = {
+      //     msg: 'Unlock failed: Wrong password!',
+      //     errored: true
+      //   };
+      // };
     },
     rejectAction() {
       const _self = this;

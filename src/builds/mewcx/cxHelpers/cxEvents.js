@@ -43,6 +43,7 @@ const WEB3_RECEIVE_TX_COUNT = 'web3{{id}}ReceiveTxCount';
 const WEB3_GET_GAS = 'web3{{id}}GetGas';
 const WEB3_RECEIVE_GAS = 'web3{{id}}ReceiveGas';
 const CX_GET_GAS = 'cxGetGas';
+const WEB3_SIGN_TX = 'web3CxSignTx';
 
 export {
   WEB3_DETECTED,
@@ -89,5 +90,6 @@ export {
   WEB3_RECEIVE_TX_COUNT,
   WEB3_GET_GAS,
   WEB3_RECEIVE_GAS,
-  CX_GET_GAS
+  CX_GET_GAS,
+  WEB3_SIGN_TX
 };
