@@ -14,10 +14,12 @@
         </div>
       </BlockTitle>
       <v-sheet
-        max-width="800px"
+        color="transparent"
+        max-width="600px"
         class="mx-auto border-radius--10px"
-        color="white"
       >
+        <MEWconnect />
+        <Software />
       </v-sheet>
     </v-container>
   </div>
@@ -25,10 +27,12 @@
 
 <script>
 import BlockTitle from '@/layouts/components/BlockTitle';
+import MEWconnect from './components/MEWconnect';
+import Software from './components/Software';
 
 export default {
   name: 'CreateNewWallet',
-  components: { BlockTitle },
+  components: { BlockTitle, MEWconnect, Software },
   data: () => ({
     titleData: {
       textProps: 'white--text',
