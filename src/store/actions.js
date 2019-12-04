@@ -180,7 +180,6 @@ const setWeb3Instance = function({ dispatch, commit, state }, provider) {
             : arr[i].nonce);
           arr[i].nonce = new BigNumber(nonce + i).toFixed();
           arr[i].gas = gas;
-          arr[i].gasLimit = gas;
           arr[i].chainId = !arr[i].chainId
             ? state.network.type.chainID
             : arr[i].chainId;

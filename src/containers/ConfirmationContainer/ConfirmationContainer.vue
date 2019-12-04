@@ -295,7 +295,6 @@ export default {
             const _signedTx = await this.wallet.signTransaction(tx[i]);
             signed.push(_signedTx);
           }
-          console.log(signed); // todo remove dev item
           this.signedArray = signed;
         } else {
           this.signedArray = this.unSignedArray.map(_tx => {
@@ -492,9 +491,6 @@ export default {
       const promises = _arr.map(tx => {
         const _tx = tx.tx;
         _tx.from = this.account.address;
-        if (!_tx.gasLimit) {
-          _tx.gasLimit = _tx.gas;
-        }
         const _rawTx = tx.rawTransaction;
         const onError = err => {
           this.$store.dispatch('addNotification', [
