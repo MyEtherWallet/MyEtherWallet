@@ -3,25 +3,24 @@
     <div class="py-8" />
     <v-container>
       <BlockTitle :data="titleData" class="mb-10">
-        <div class="white--text">
+        <p class="white--text ma-0">
           Please select a method to create a new wallet.
-        </div>
-        <div class="white--text">
+        </p>
+        <p class="white--text ma-0">
           Already have a wallet?
           <router-link to="/" class="text-color--mew-green"
             >Access my wallet</router-link
           >
-        </div>
+        </p>
       </BlockTitle>
-      <v-sheet
-        color="transparent"
-        max-width="600px"
-        class="mx-auto border-radius--10px"
-      >
+      <v-sheet color="transparent" max-width="600px" class="mx-auto">
         <MEWconnect />
+        <div class="my-4" />
         <Software />
       </v-sheet>
     </v-container>
+    <div class="py-12" />
+    <div class="py-12" />
   </div>
 </template>
 
