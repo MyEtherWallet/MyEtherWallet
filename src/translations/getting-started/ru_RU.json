@@ -53,13 +53,13 @@
   },
   "title-upside": "В чем выгода?",
   "upside": {
-    "title": "All this sounds hard. What's the upside?",
-    "desc1": "The purpose of cryptocurrency is to allow people to manage their funds in a anonymous and secure way, from any location, without relying on third parties.",
-    "desc2": "On the blockchain, your digital assets are not controlled by any bank or government. You are the only one who has access to your funds and you can instantly transfer them to any other address on the blockchain without depending on authorizations, permissions, or limits.",
-    "desc3": "Your public address and your private key are the only pieces of information you need to hold and manage your funds from anywhere in the world."
+    "title": "Все это звучит сложно. В чем выгода?",
+    "desc1": "Цель криптовалюты состоит в том, чтобы позволить людям управлять своими средствами анонимно и безопасно, из любого места, без зависимости от третьих лиц.",
+    "desc2": "На блокчейне ваши цифровые активы не контролируются банком или государством. Вы единственный, кто имеет доступ к вашим средствам, и вы можете мгновенно переводить их на любой другой адрес на блокчейне без зависимости от авторизации, разрешения или ограничения.",
+    "desc3": "Ваш публичный адрес и ваш закрытый ключ являются единственной информацией, которая вам нужна для хранения и управления своими средствами из любой точки мира."
   },
-  "title-congrats": "Congratulations!",
+  "title-congrats": "Поздравляем!",
   "congratulations": {
-    "desc": "Thanks for reading through our introduction! Now you're ready to dive in. If you want to know more, please head to our {helpCenter}. We are here to help you have the most secure and most convenient experience possible!"
+    "desc": "Спасибо что прочитали наше введение! Теперь вы готовы нырнуть глубже. Если вы хотите узнать больше, пожалуйста, перейдите на наш {helpCenter}. Мы хотим помочь Вам получить самый безопасный и комфортный опыт!"
   }
 }
