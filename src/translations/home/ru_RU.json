@@ -3,10 +3,13 @@
   "tagline2": "Original Wallet",
   "subheading": "MyEtherWallet (наши друзья называют нас MEW) - это бесплатный клиентский интерфейс, помогающий вам взаимодействовать с блокчейном эфириума. Наша легкая в пользовании платформа с открытым исходным кодом позволяет вам создавать кошельки, взаимодействовать со смарт-контрактами и многое другое.",
   "create-new-wallet": {
-    "text": "Получите адрес эфириума и сформируйте ваш закрытый ключ. За хранение и безопасность ключа ответственность несете вы."
+    "text": "Generate your own unique Ethereum wallet. Receive a public address (0x...) and choose a method for access and recovery."
   },
   "access-my-wallet": {
-    "text": "Отправляйте или обменивайте ваш эфириум и токены, покупайте домены ENS, взаимодействуйте со смарт-контрактами и многое другое! Вот где происходит волшебство.",
+    "text": "Connect to the blockchain using the wallet of your choice.",
+    "opt-1": "* Send and Swap ETH & Tokens",
+    "opt-2": "* Sign & Verify Messages",
+    "opt-3": "* Interact with Contracts, ENS, Dapps, and more!",
     "button": "Получить доступ"
   },
   "about-mew": {
