@@ -48,7 +48,7 @@
       <div class="health-container">
         <span>{{ $t('dappsAave.health-factor') }}</span>
         <!-- placeholder -->
-        <span class="health-score">2.4725</span>
+        <span class="health-score">{{ healthFactor }}</span>
         <popover
           :popcontent="$t('dappsAmbrpay.ambrpay-popover')"
           class="dapp-popover"
@@ -56,8 +56,13 @@
       </div>
     </div>
     <router-view
+      :aggregated-eth-balance="aggregatedEthBalance"
       :active-deposit-tab="activeDepositTab"
       :active-borrow-tab="activeBorrowTab"
+      :borrowed-balance="borrowedBalance"
+      :collateral-balance="collateralBalance"
+      :ltv="ltv"
+      :loading="loading"
     />
   </div>
 </template>
@@ -66,7 +71,11 @@
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
 import LendingPoolAbi from './abi/LendingPoolAbi.js';
 import LendingPoolAddressesProviderAbi from './abi/LendingPoolAddressesProviderAbi.js';
+import { post, get } from '@/helpers/httpRequests';
 import { mapState } from 'vuex';
+import BigNumber from 'bignumber.js';
+import * as unit from 'ethjs-unit';
+import { Toast } from '@/helpers';
 
 export default {
   components: {
@@ -75,28 +84,84 @@ export default {
   data() {
     return {
       activeDepositTab: true,
-      activeBorrowTab: false
+      activeBorrowTab: false,
+      lendingPoolContract: {},
+      healthFactor: 0,
+      aggregatedEthBalance: '',
+      borrowedBalance: '',
+      collateralBalance: '',
+      ltv: '',
+      loading: true,
+      reservesAddr: [],
+      reserves: []
     };
   },
   computed: {
-    ...mapState(['web3']),
+    ...mapState(['web3', 'account']),
 
   },
-  mounted() {
+  async mounted() {
     this.lendingPoolContractAddress = '0x9C6C63aA0cD4557d7aE6D9306C06C093A2e35408';
     this.lendingPoolAddressesProviderContract = new this.web3.eth.Contract(
       LendingPoolAddressesProviderAbi,
       this.lendingPoolContractAddress
     );
-
-    this.lendingPool = this.lendingPoolAddressesProviderContract.methods.getLendingPool();
+    this.lendingPool = await this.lendingPoolAddressesProviderContract.methods.getLendingPool().call();
     this.lendingPoolContract = new this.web3.eth.Contract(
       LendingPoolAbi,
       this.lendingPool
     );
-    console.error('lendingPoolAddressesProviderContract', this.lendingPoolContract)
+    console.error('lendingPool', this.lendingPool)
+    this.getUserInfo();
+    this.getReserves();
   },
   methods: {
+    async getUserInfo() {
+      try {
+        let info = await this.lendingPoolContract.methods
+          .getUserAccountData(this.account.address)
+          .call();
+        this.healthFactor = new BigNumber(unit.fromWei(info.healthFactor, 'ether')).toFixed(2);
+        this.aggregatedEthBalance = new BigNumber(unit.fromWei(info.totalLiquidityETH, 'ether')).toFixed(2).toString();
+        this.borrowedBalance = new BigNumber(unit.fromWei(info.totalBorrowsETH, 'ether')).toFixed(2).toString();
+        this.collateralBalance = new BigNumber(unit.fromWei(info.totalCollateralETH, 'ether')).toFixed(2).toString();
+        this.ltv = info.ltv;
+        this.loading = false;
+      } catch(err) {
+        Toast.responseHandler(err, Toast.ERROR);
+      }
+    },
+    async getReserves() {
+      try {
+        this.reservesAddr = await this.lendingPoolContract.methods
+          .getReserves()
+          .call();
+        
+        this.getReserveData();
+      } catch(err) {
+        Toast.responseHandler(err, Toast.ERROR);
+      }
+    },
+    async getReserveData() {
+      try {
+        this.reserves = await this.lendingPoolContract.methods
+          .getReserveData(this.reservesAddr[0])
+          .call();
+
+        console.error('this', this.reserves)
+      } catch(err) {
+        console.error('err', err)
+      }
+    },
+    // getUserInfo() {
+    //   get('https://dlp-api-dev.testing.aave.com/data/user/' + this.account.address)
+    //     .then(function(resp){
+    //       console.error('resp', resp)
+    //     })
+    //     .catch(function(err){
+    //       console.error('eerr', err)
+    //     })
+    // },
     toggleTabs(action) {
       if (
         (action === 'borrow' && this.activeBorrowTab === true) ||
