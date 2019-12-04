@@ -13,12 +13,9 @@
 import '@/assets/images/currency/coins/asFont/cryptocoins.css';
 import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
 import { mapState } from 'vuex';
-import debugLogger from 'debug';
 import Blockie from '@/components/Blockie';
 import { EthereumTokens, hasIcon } from '@/partners';
 import DropDownAddressSelector from '@/components/DropDownAddressSelector';
-
-const errorLogger = debugLogger('v5:error');
 
 export default {
   components: {
@@ -83,7 +80,7 @@ export default {
       this.selectedAddress = data.address;
       this.isValidAddress = data.valid;
       this.$emit('toAddress', data.address);
-    },
+    }
   }
 };
 </script>
