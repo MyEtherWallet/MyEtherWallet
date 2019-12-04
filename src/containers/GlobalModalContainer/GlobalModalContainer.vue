@@ -1,7 +1,7 @@
 <template>
   <div>
     <MewConnectQRcode />
-    <MewConnectYouTubeTutorial active />
+    <MewConnectYouTubeTutorial />
   </div>
 </template>
 
