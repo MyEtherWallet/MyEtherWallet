@@ -8,15 +8,18 @@
         </p>
         <p class="white--text ma-0">
           Already have a wallet?
-          <router-link to="/" class="text-color--mew-green"
-            >Access my wallet</router-link
-          >
+          <router-link to="/" class="text-color--mew-green">
+            Access my wallet
+          </router-link>
         </p>
       </BlockTitle>
       <v-sheet color="transparent" max-width="600px" class="mx-auto">
-        <MEWconnect class="cursor--pointer user-select--none" />
+        <MEWconnect
+          class="cursor--pointer user-select--none new-wallet-button"
+          @click.native="linkToMEWconnect"
+        />
         <div class="my-4" />
-        <Software class="cursor--pointer user-select--none" />
+        <Software class="cursor--pointer user-select--none new-wallet-button" />
       </v-sheet>
     </v-container>
     <div class="py-12" />
@@ -40,8 +43,26 @@ export default {
       description: '',
       centered: true
     }
-  })
+  }),
+  methods: {
+    linkToMEWconnect() {
+      this.$router.push({
+        path: '/create-wallet/mewconnect',
+        query: { step: '1' }
+      });
+    }
+  }
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+@import '@/assets/styles/GlobalVariables';
+
+.new-wallet-button {
+  //transition: all 0.1s ease;
+  &:hover {
+    //box-shadow: 0 0 50px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 50px $police-strobe;
+  }
+}
+</style>
