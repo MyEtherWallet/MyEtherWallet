@@ -6,7 +6,7 @@
     "text": "Generate your own unique Ethereum wallet. Receive a public address (0x...) and choose a method for access and recovery."
   },
   "access-my-wallet": {
-    "text": "Connect with the blockchain using the wallet of your choice.",
+    "text": "Connect to the blockchain using the wallet of your choice.",
     "opt-1": "* Send and Swap ETH & Tokens",
     "opt-2": "* Sign & Verify Messages",
     "opt-3": "* Interact with Contracts, ENS, Dapps, and more!",
