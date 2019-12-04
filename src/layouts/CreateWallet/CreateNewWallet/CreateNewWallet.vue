@@ -14,13 +14,13 @@
         </p>
       </BlockTitle>
       <v-sheet color="transparent" max-width="600px" class="mx-auto">
-        <MEWconnect />
+        <MEWconnect class="cursor--pointer user-select--none" />
         <div class="my-4" />
-        <Software />
+        <Software class="cursor--pointer user-select--none" />
       </v-sheet>
     </v-container>
     <div class="py-12" />
-    <div class="py-12" />
+    <div class="py-8" />
   </div>
 </template>
 
