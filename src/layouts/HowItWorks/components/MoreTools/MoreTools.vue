@@ -14,9 +14,9 @@
         >
           <img :src="content.img" height="60" />
           <div class="mt-3">{{ content.title }}</div>
-          <v-sheet max-width="300px" class="mt-3">{{
-            content.description
-          }}</v-sheet>
+          <v-sheet max-width="300px" class="mt-3">
+            <p class="ma-0">{{ content.description }}</p>
+          </v-sheet>
         </v-col>
       </v-row>
     </v-container>

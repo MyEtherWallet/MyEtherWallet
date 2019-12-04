@@ -3,13 +3,13 @@
     <h4 class="link-box-title font-weight-bold mb-4">
       Swap easily
     </h4>
-    <div>
+    <p>
       Partnered with
       <span class="font-italic">
         Bity, Kyber Network, Changelly, and Simplex
       </span>
       to allow users to swap fiat to crypto, ETH to BTC, ETH to ERC-20.
-    </div>
+    </p>
 
     <div class="action-block mt-2 ml-n4">
       <v-btn color="teal lighten-3" class="font-weight-bold" text>

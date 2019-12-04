@@ -25,10 +25,10 @@
               <div class="mb-1 font-weight-bold subtitle-1 white--text">
                 Buy Tokens
               </div>
-              <div class="white--text">
+              <p class="white--text">
                 Dolor tempor ipsum lorem sadipscing, erat sadipscing et dolor
                 sed stet takimata ipsum invidunt, est ea no dolor.
-              </div>
+              </p>
             </div>
           </div>
 
@@ -40,10 +40,10 @@
               <div class="mb-1 font-weight-bold subtitle-1 white--text">
                 Add My Tokens
               </div>
-              <div class="white--text">
+              <p class="white--text">
                 Dolor tempor ipsum lorem sadipscing, erat sadipscing et dolor
                 sed stet takimata ipsum invidunt, est ea no dolor.
-              </div>
+              </p>
               <div class="d-flex align-center mt-7">
                 <a href="#" class="mr-5 white--text font-weight-bold"
                   >Try free demo</a

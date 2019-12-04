@@ -11,9 +11,9 @@
       {{ data.title }}
     </h2>
     <div class="mt-3" />
-    <div v-if="data.description" :class="data.textProps">
+    <p v-if="data.description" :class="data.textProps" class="ma-0">
       {{ data.description }}
-    </div>
+    </p>
     <div><slot /></div>
   </div>
 </template>

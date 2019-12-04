@@ -3,7 +3,7 @@
     <v-col cols="6" class="pb-10">
       <div class="subtitle-1 font-weight-bold grey--text">STEP 1.</div>
       <div class="headline font-weight-bold mb-3">Download &amp; Install</div>
-      <div class="mb-6">
+      <p class="mb-6">
         Please scan the
         <span class="text-color--mew-green">QR Code</span>, or search
         "MEWconnect" in
@@ -20,20 +20,20 @@
           target="_blank"
           >Google Play Store</a
         >. Continue if you have already installed the App.
-      </div>
+      </p>
       <div class="d-flex align-center">
         <StdButton buttonclass="button--green" @click.native="linkToStep(2)"
           >Continue</StdButton
         >
       </div>
-      <div class="mt-4">
+      <p class="mt-4 mb-0">
         Already knew how to do it?
         <router-link
           class="text-decoration--none orange--text font-weight-bold"
           to="/"
           >Skip</router-link
         >
-      </div>
+      </p>
     </v-col>
     <v-col cols="6" class="pb-0">
       <v-img

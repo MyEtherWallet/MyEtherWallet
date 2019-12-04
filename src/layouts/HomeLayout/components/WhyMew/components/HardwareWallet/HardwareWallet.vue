@@ -3,10 +3,10 @@
     <h4 class="link-box-title font-weight-bold mb-4">
       Hardware wallet support
     </h4>
-    <div>
+    <p>
       MEW offers support for all major hardware wallets including Leder, Trezor,
       and many more.
-    </div>
+    </p>
 
     <div class="action-block mt-2 ml-n4">
       <v-btn color="teal lighten-3" class="font-weight-bold" text>

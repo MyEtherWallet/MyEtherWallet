@@ -27,7 +27,7 @@ export default {
       toptitle: '',
       title: 'What is MEW?',
       description:
-        'Et voluptua takimata sit clita amet, takimata dolor stet sit accusam tempor at est labore, lorem nonumy lorem vero sadipscing aliquyam invidunt amet, amet lorem sea dolor voluptua diam. Dolor labore ipsum gubergren ea, et sea tempor tempor et est et stet no. Ea accusam ipsum et amet invidunt ea, erat at dolor at no invidunt accusam sadipscing stet. Et amet elitr sea et ipsum ea sea sea. Et sea et et lorem et ut est, et vero no diam sit, et elitr gubergren ea erat, ut amet et no vero et nonumy dolor ipsum magna. Voluptua est duo ipsum rebum, takimata elitr est sadipscing voluptua, sea labore et duo lorem rebum, consetetur sed sadipscing et dolore duo dolor. Amet.',
+        'Still though still lost followed and by angels december in flown. Ungainly angels so what the, so much the morrow opened my heart or, gloating with on nevermore wondering moment chamber weary, till we liftednevermore usby feather eagerly before stillness, spoken borrow my opened before ah upon bust chamber. Rapping or parting angels lattice still ah, i still till a discourse nevermore spoken soul. I for my the on you, of my my angels more lamplight me lenore the, there all in implore above blessed the sitting raven my. This angels gileadtell straight with distinctly meant the discourse, mystery whose.',
       centered: false
     }
   })
