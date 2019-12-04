@@ -11,7 +11,7 @@
         </p>
         <!-- placeholders -->
         <p class="token-balance">
-          59.34234 <span class="token-name"> {{ $t('dappsAave.dai') }} </span>
+          59.34234 <span class="token-name"> {{ reserves[indexOfReserve].name }} </span>
         </p>
         <p class="usd-amt">$60.12</p>
       </div>
@@ -45,7 +45,7 @@
             : $t('dappsAave.borrow-info')
         }}
       </p>
-      <input type="text" />
+      <input type="number" />
       <div class="percentage-container">
         <div
           :class="percentBtns.twentyFivePercentEnabled ? 'active' : ''"
@@ -100,10 +100,17 @@ export default {
     activeDepositTab: {
       type: Boolean,
       default: true
+    },
+    reserves: {
+      type: Array,
+      default: function() {
+        return [];
+      }
     }
   },
   data() {
     return {
+      indexOfReserve: this.$route.params.id,
       percentBtns: {
         twentyFivePercentEnabled: true,
         fiftyPercentEnabled: false,

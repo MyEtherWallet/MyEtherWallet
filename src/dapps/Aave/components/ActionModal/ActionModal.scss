@@ -65,7 +65,9 @@
 }
 
 .table-container {
+  max-height: 400px;
   margin-top: 10px;
+  overflow: scroll;
   table {
     // display: table;
     // table-layout: fixed;
