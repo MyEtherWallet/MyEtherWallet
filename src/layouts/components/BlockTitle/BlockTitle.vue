@@ -7,14 +7,22 @@
     >
       {{ data.toptitle }}
     </div>
-    <h2 v-if="data.title" class="top-description" :class="data.textProps">
-      {{ data.title }}
-    </h2>
+    <v-sheet :max-width="data.titleMaxWidth" color="transparent">
+      <h2 v-if="data.title" :class="data.textProps">
+        {{ data.title }}
+      </h2>
+    </v-sheet>
     <div class="mt-3" />
-    <p v-if="data.description" :class="data.textProps" class="ma-0">
-      {{ data.description }}
-    </p>
-    <div><slot /></div>
+    <v-sheet
+      :max-width="data.descriptionMaxWidth"
+      color="transparent"
+      :class="data.centered ? 'mx-auto' : ''"
+    >
+      <p v-if="data.description" :class="data.textProps" class="ma-0">
+        {{ data.description }}
+      </p>
+      <div><slot /></div>
+    </v-sheet>
   </div>
 </template>
 
@@ -39,9 +47,5 @@ export default {
 .top-title {
   letter-spacing: -0.3px;
   font-size: 16px;
-}
-.top-description {
-  max-width: 450px;
-  display: inline-block;
 }
 </style>

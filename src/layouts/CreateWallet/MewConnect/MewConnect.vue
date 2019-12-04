@@ -79,8 +79,10 @@ export default {
       textProps: 'white--text',
       toptitle: '',
       title: 'MEWconnect',
+      titleMaxWidth: '',
       description:
         'An official, free companion App for MyEtherWallet that helps you secure your funds as never before.',
+      descriptionMaxWidth: '400px',
       centered: true
     },
     tab: 'tab-1'
