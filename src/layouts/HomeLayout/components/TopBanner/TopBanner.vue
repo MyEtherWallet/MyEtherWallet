@@ -10,7 +10,9 @@
       <v-row no-gutters>
         <v-col>
           <v-card color="transparent" flat tile max-width="510">
-            <div class="white--text display-2 font-weight-bold">
+            <div
+              class="white--text display-2 font-weight-bold banner-line-height"
+            >
               The most popular free Ethereum wallet
             </div>
             <p class="white--text mt-3">
@@ -21,7 +23,7 @@
               <StdButton
                 buttonclass="button--green"
                 class="mr-4"
-                @click.native="linkToCreateWallet"
+                to="/create-wallet"
                 >Get a new wallet</StdButton
               >
 
@@ -44,14 +46,7 @@ export default {
   components: {
     StdButton
   },
-  methods: {
-    linkToCreateWallet() {
-      this.$router.push({
-        path: '/create-wallet/mewconnect',
-        query: { step: '1' }
-      });
-    }
-  }
+  methods: {}
 };
 </script>
 
@@ -68,5 +63,8 @@ export default {
   left: 0;
   right: 0;
   margin: 0 auto;
+}
+.banner-line-height {
+  line-height: 55px;
 }
 </style>

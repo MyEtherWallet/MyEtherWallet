@@ -1,5 +1,5 @@
 <template>
-  <v-sheet color="transparent" tile>
+  <v-sheet color="transparent" class="border-radius--10px" tile>
     <div class="border--white border-radius--10px py-8 px-10">
       <div class="d-flex align-center">
         <div class="white--text headline font-weight-bold mb-2 mr-2">
