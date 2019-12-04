@@ -8,7 +8,7 @@
           tag="div"
           path="dappsAave.deposit-token"
         >
-          <span slot="token" class="token">{{ $t('dappsAave.dai') }}</span>
+          <span slot="token" class="token">{{ userReserves.length > 0 ? userReserves[indexOfReserve].name : ''}}</span>
         </i18n>
         <i18n
           v-if="activeBorrowTab"
@@ -16,7 +16,7 @@
           tag="div"
           path="dappsAave.borrow-token"
         >
-          <span slot="token" class="token">{{ $t('dappsAave.dai') }}</span>
+          <span slot="token" class="token">{{ reservesData.length > 0 ? reservesData[indexOfReserve].name : ''}}</span>
         </i18n>
       </div>
       <back-button
@@ -94,7 +94,8 @@ export default {
       loading: true,
       reservesAddr: [],
       reservesData: [],
-      userReserves: []
+      userReserves: [],
+      indexOfReserve: 0
     };
   },
   computed: {
@@ -116,6 +117,11 @@ export default {
     );
     this.getUserInfo();
     this.getReserves();
+  },
+  watch: { 
+     '$route.params.id'(newVal, oldVal) {
+       this.indexOfReserve = newVal;
+     }
   },
   methods: {
     async getUserInfo() {

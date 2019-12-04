@@ -11,9 +11,9 @@
         </p>
         <!-- placeholders -->
         <p class="token-balance">
-          59.34234 <span class="token-name"> {{ reserves[indexOfReserve].name }} </span>
+          {{ activeDepositTab ? convertToEther(reserves[indexOfReserve].currentUnderlyingBalance) : borrowedBalance}} <span class="token-name"> {{ reserves[indexOfReserve].name }} </span>
         </p>
-        <p class="usd-amt">$60.12</p>
+        <p class="usd-amt">${{ activeDepositTab ?  getUSDBalance(convertToEther(reserves[indexOfReserve].currentUnderlyingBalance)) : getUSDBalance(borrowedBalance)}}</p>
       </div>
       <div class="balance-container">
         <p class="title">
@@ -25,9 +25,9 @@
         </p>
         <!-- placeholders -->
         <p class="token-balance">
-          28.123 <span class="token-name">{{ $t('dappsAave.dai') }}</span>
+          {{ activeDepositTab ? convertToEther(reserves[indexOfReserve].currentATokenBalance) : collateralBalance}} <span class="token-name">{{ reserves[indexOfReserve].name }}</span>
         </p>
-        <p class="usd-amt">$29.52</p>
+        <p class="usd-amt">${{ activeDepositTab ? getUSDBalance(convertToEther(reserves[indexOfReserve].currentATokenBalance)) : getUSDBalance(collateralBalance)}}</p>
       </div>
     </div>
     <div class="action-container mt-5">
@@ -91,6 +91,10 @@
 </template>
 
 <script>
+import BigNumber from 'bignumber.js';
+import * as unit from 'ethjs-unit';
+import { Toast } from '@/helpers';
+
 export default {
   props: {
     activeBorrowTab: {
@@ -106,10 +110,19 @@ export default {
       default: function() {
         return [];
       }
+    },
+    borrowedBalance: {
+      type: String,
+      default: ''
+    },
+    collateralBalance: {
+      type: String,
+      default: ''
     }
   },
   data() {
     return {
+      ethPrice: '',
       indexOfReserve: this.$route.params.id,
       percentBtns: {
         twentyFivePercentEnabled: true,
@@ -118,6 +131,9 @@ export default {
         maxEnabled: false
       }
     };
+  },
+  mounted() {
+    this.getEthPrice();
   },
   methods: {
     setPercentAmount(selectedBtn) {
@@ -131,6 +147,34 @@ export default {
     },
     goToHome() {
       this.$router.push('/interface/dapps/aave');
+    },
+    convertToEther(wei) {
+      if (!wei) {
+        return '0';
+      }
+      return new BigNumber(unit.fromWei(wei, 'ether')).toFixed(2).toString();
+    },
+    getUSDBalance(int) {
+      let usdBalance = 0;
+      if (this.balance) {
+        usdBalance = new BigNumber(
+          new BigNumber(int).times(new BigNumber(this.ethPrice))
+        ).toFixed(2);
+      }
+      return usdBalance;
+    },
+    async getEthPrice() {
+      const price = await fetch(
+        'https://cryptorates.mewapi.io/ticker?filter=ETH'
+      )
+        .then(res => {
+          return res.json();
+        })
+        .catch(e => {
+          Toast.responseHandler(e, Toast.ERROR);
+        });
+      this.ethPrice =
+        typeof price === 'object' ? price.data.ETH.quotes.USD.price : 0;
     }
   }
 };
