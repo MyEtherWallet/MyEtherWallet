@@ -36,7 +36,7 @@ import StandardInput from '@/components/StandardInput';
 
 // Import Directives
 import ClickOutside from '@/directives/ClickOutside';
-import EnsResolver from '@/directives/EnsResolver';
+import AddrResolver from '@/directives/AddrResolver';
 
 // Import Filters
 import Capitalize from '@/filters/Capitalize';
@@ -68,7 +68,7 @@ Vue.use(Router);
 Vue.router = router;
 // Directives!!!
 Vue.directive('click-outside', ClickOutside);
-Vue.directive('ens-resolver', EnsResolver);
+Vue.directive('addr-resolver', AddrResolver);
 
 // Filters!!!
 Vue.filter('capitalize', Capitalize);
