@@ -15,26 +15,35 @@ const AddrResolver = {
       ? vnode.context.$parent.currency
       : network.type.name;
     let address = '';
-
     vnode.context.$parent.$watch('$store.state.network', function(e) {
       network = e;
       parentCurrency = e.type.name;
+      removeElements();
       actualProcess(address);
     });
     vnode.context.$parent.$watch('currency', function(e) {
       parentCurrency = e;
+      removeElements();
       actualProcess(address);
     });
     vnode.context.$watch(binding.value, function(e) {
       address = e;
+      removeElements();
       actualProcess(e);
     });
-
+    const removeElements = function() {
+      const child = el.parentNode.parentNode.lastChild;
+      Object.keys(child.classList).forEach(item => {
+        if (child.classList[item] === 'resolver-error') {
+          vnode.elm.parentNode.parentNode.removeChild(child);
+        }
+      });
+    };
     const actualProcess = function(e) {
-      const _this = vnode.context;
-      const ens = _this.$store.state.ens;
       const errorPar = document.createElement('p');
       errorPar.classList.add('resolver-error');
+      const _this = vnode.context;
+      const ens = _this.$store.state.ens;
       const checkDarklist = function(addr) {
         const isDarklisted = Misc.isDarklisted(addr);
         if (isDarklisted.error) {
@@ -49,14 +58,6 @@ const AddrResolver = {
           return true;
         }
         return false;
-      };
-      const removeElements = function() {
-        const child = el.parentNode.parentNode.lastChild;
-        Object.keys(child.classList).forEach(item => {
-          if (child.classList[item] === 'resolver-error') {
-            vnode.elm.parentNode.parentNode.removeChild(child);
-          }
-        });
       };
 
       if (EthereumTokens[parentCurrency] && parentCurrency !== 'ETH') {
