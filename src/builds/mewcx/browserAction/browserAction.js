@@ -28,7 +28,7 @@ Router.prototype.originalReplace = originalReplace; // Incase we do want to hand
 import store from '@/store';
 import Vuex from 'vuex';
 
-import EnsResolver from '@/directives/EnsResolver';
+import AddrResolver from '@/directives/AddrResolver';
 import ConcatAddr from '@/filters/ConcatAddr';
 
 // etc
@@ -58,7 +58,7 @@ const router = new Router({
 });
 Vue.router = router;
 
-Vue.directive('ens-resolver', EnsResolver);
+Vue.directive('ens-resolver', AddrResolver);
 Vue.filter('concatAddr', ConcatAddr);
 
 Vue.config.productionTip = false;
