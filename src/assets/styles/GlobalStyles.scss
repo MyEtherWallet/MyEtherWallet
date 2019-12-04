@@ -6,7 +6,7 @@
 
 // Style reset ======================================================
 * {
-  font-family: 'Roboto';
+  font-family: "Roboto";
   //letter-spacing: -0.1px;
   color: $dark-sacramento;
 }
@@ -16,7 +16,7 @@ a {
 }
 
 i {
-  font-family: 'Material Icons' !important;
+  font-family: "Material Icons" !important;
 }
 
 div,
@@ -65,6 +65,7 @@ h5 {
 // Remove uppercase style for all buttons
 .v-btn {
   text-transform: initial;
+  font-weight: 400;
 }
 
 .v-toolbar__content {

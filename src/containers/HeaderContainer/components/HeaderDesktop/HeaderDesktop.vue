@@ -26,7 +26,7 @@
             <v-list min-width="200px" class="pa-5">
               <v-list-item>
                 <v-list-item-content>
-                  <v-list-item-title class="subtitle-2">
+                  <v-list-item-title class="subtitle-2 font-weight-regular">
                     <router-link
                       class="text-decoration--none"
                       to="/about-us/company"
@@ -38,7 +38,7 @@
 
               <v-list-item>
                 <v-list-item-content>
-                  <v-list-item-title class="subtitle-2">
+                  <v-list-item-title class="subtitle-2 font-weight-regular">
                     <router-link
                       class="text-decoration--none"
                       to="/about-us/team"
@@ -50,7 +50,7 @@
 
               <v-list-item>
                 <v-list-item-content>
-                  <v-list-item-title class="subtitle-2">
+                  <v-list-item-title class="subtitle-2 font-weight-regular">
                     <a
                       class="text-decoration--none"
                       href="https://www.mewtopia.com/"
