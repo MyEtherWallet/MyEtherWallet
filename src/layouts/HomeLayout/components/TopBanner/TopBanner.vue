@@ -17,10 +17,12 @@
             <div class="card-block create-wallet">
               <div class="title">
                 <img alt src="~@/assets/images/home/create-wallet.png" />
-                <h3> {{ $t('common.wallet.create-new') }} </h3>
+                <h3>{{ $t('common.wallet.create-new') }}</h3>
               </div>
               <div class="card-content">
-                <p class="color-white content-text"> {{ $t('home.create-new-wallet.text') }} </p>
+                <p class="color-white content-text">
+                  {{ $t('home.create-new-wallet.text') }}
+                </p>
                 <p class="get-started button">
                   {{ $t('common.get-started') }}
                   <img alt src="~@/assets/images/icons/right-arrow.png" />
@@ -39,7 +41,7 @@
             <div class="card-block unlock-wallet">
               <div class="title">
                 <img alt src="~@/assets/images/home/unlock-wallet.png" />
-                <h3> {{ $t('common.wallet.access-my') }} </h3>
+                <h3>{{ $t('common.wallet.access-my') }}</h3>
               </div>
               <div class="card-content">
                 <p class="color-white content-text">
