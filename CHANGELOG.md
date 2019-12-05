@@ -2,6 +2,7 @@
 
 ### Bug
 
+- Fix top banner buttons [#1715](https://github.com/MyEtherWallet/MyEtherWallet/pull/1715)
 - Fix resolver to include BTC and other currencies [#1706](https://github.com/MyEtherWallet/MyEtherWallet/pull/1706)
 - Add link terms of service link. [#1704](https://github.com/MyEtherWallet/MyEtherWallet/pull/1704)
 
