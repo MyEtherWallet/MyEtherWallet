@@ -13,7 +13,7 @@
 }
 
 .loading::after {
-  content: "";
+  content: '';
   display: block;
   background: rgba(177, 177, 177, 0.6);
   position: absolute;
