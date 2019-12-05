@@ -1,3 +1,7 @@
+### Bug
+
+- Fix ens on custom networks [#1714](https://github.com/MyEtherWallet/MyEtherWallet/pull/1714)
+
 ### Release v5.2.5-hotfix.1
 
 ### Bug
