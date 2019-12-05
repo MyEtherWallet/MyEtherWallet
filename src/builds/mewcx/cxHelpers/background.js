@@ -14,7 +14,8 @@ import {
   web3Unsubscribe,
   web3QueryGasPrice,
   web3GetTxCount,
-  web3GetGas
+  web3GetGas,
+  web3SignTx
 } from './backgroundEvents';
 import store from '@/store';
 import {
@@ -122,9 +123,7 @@ const eventsListeners = (request, _, callback) => {
     payload: payload
   };
 
-  if (obj.event === 'HELLO_THERE') {
-    console.log('yo wut');
-  }
+  console.log(obj);
 
   const middleware = new MiddleWare();
   middleware.use(mewCxFetchAccounts);
@@ -138,6 +137,7 @@ const eventsListeners = (request, _, callback) => {
   middleware.use(web3QueryGasPrice);
   middleware.use(web3GetTxCount);
   middleware.use(web3GetGas);
+  middleware.use(web3SignTx);
   middleware.run(obj, callback);
   return true;
 };
@@ -229,7 +229,6 @@ function querycB(tab) {
       } else {
         // Injects web3
         // eslint-disable-next-line
-        console.log('attempts to inject web3')
         chrome.tabs.sendMessage(tab.id, { event: CX_INJECT_WEB3 }, function() {
           store.state.web3.eth.net.getId().then(() => {
             chrome.tabs.sendMessage(tab.id, {
@@ -241,7 +240,6 @@ function querycB(tab) {
     } else {
       // Injects web3
       // eslint-disable-next-line
-      console.log('attempts to inject web3')
       chrome.tabs.sendMessage(tab.id, { event: CX_INJECT_WEB3 }, function() {
         store.state.web3.eth.net.getId().then(() => {
           chrome.tabs.sendMessage(tab.id, {
