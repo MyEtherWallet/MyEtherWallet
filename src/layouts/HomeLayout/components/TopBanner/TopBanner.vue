@@ -66,12 +66,12 @@
                       <li>{{ $t('home.access-my-wallet.opt-3') }}</li>
                     </ul>
                   </div>
-                  <div class="card-content">
-                    <p class="get-started button">
-                      {{ $t('home.access-my-wallet.button') }}
-                      <img alt src="~@/assets/images/icons/right-arrow.png" />
-                    </p>
-                  </div>
+                </div>
+                <div class="card-content">
+                  <p class="get-started button">
+                    {{ $t('home.access-my-wallet.button') }}
+                    <img alt src="~@/assets/images/icons/right-arrow.png" />
+                  </p>
                 </div>
               </div>
             </div>
