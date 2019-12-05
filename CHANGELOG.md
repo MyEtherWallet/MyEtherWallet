@@ -1,6 +1,7 @@
 ### Bug
 
 - Fix clear, dropdown, change ENS char translations [#1713](https://github.com/MyEtherWallet/MyEtherWallet/pull/1713)
+- Fix message signature not showing up [#1719](https://github.com/MyEtherWallet/MyEtherWallet/pull/1719)
 
 ### Release v5.2.5-hotfix.1
 
