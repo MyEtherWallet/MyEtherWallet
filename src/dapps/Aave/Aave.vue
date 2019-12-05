@@ -8,7 +8,9 @@
           tag="div"
           path="dappsAave.deposit-token"
         >
-          <span slot="token" class="token">{{ userReserves.length > 0 ? userReserves[indexOfReserve].name : ''}}</span>
+          <span slot="token" class="token">{{
+            userReserves.length > 0 ? userReserves[indexOfReserve].name : ''
+          }}</span>
         </i18n>
         <i18n
           v-if="activeBorrowTab"
@@ -16,7 +18,9 @@
           tag="div"
           path="dappsAave.borrow-token"
         >
-          <span slot="token" class="token">{{ reservesData.length > 0 ? reservesData[indexOfReserve].name : ''}}</span>
+          <span slot="token" class="token">{{
+            reservesData.length > 0 ? reservesData[indexOfReserve].name : ''
+          }}</span>
         </i18n>
       </div>
       <back-button
@@ -62,7 +66,8 @@
       :borrowed-balance="borrowedBalance"
       :collateral-balance="collateralBalance"
       :ltv="ltv"
-      :loading="loading"
+      :loading-home="loadingHome"
+      :loading-reserves="loadingReserves"
       :reserves="activeDepositTab ? userReserves : reservesData"
     />
   </div>
@@ -91,7 +96,8 @@ export default {
       borrowedBalance: '',
       collateralBalance: '',
       ltv: '',
-      loading: true,
+      loadingHome: true,
+      loadingReserves: true,
       reservesAddr: [],
       reservesData: [],
       userReserves: [],
@@ -100,6 +106,11 @@ export default {
   },
   computed: {
     ...mapState(['web3', 'account'])
+  },
+  watch: {
+    '$route.params.id'(newVal) {
+      this.indexOfReserve = newVal;
+    }
   },
   async mounted() {
     this.lendingPoolContractAddress =
@@ -117,11 +128,6 @@ export default {
     );
     this.getUserInfo();
     this.getReserves();
-  },
-  watch: { 
-     '$route.params.id'(newVal, oldVal) {
-       this.indexOfReserve = newVal;
-     }
   },
   methods: {
     async getUserInfo() {
@@ -148,7 +154,7 @@ export default {
           .toFixed(2)
           .toString();
         this.ltv = info.ltv;
-        this.loading = false;
+        this.loadingHome = false;
       } catch (err) {
         Toast.responseHandler(err, Toast.ERROR);
       }
@@ -176,6 +182,7 @@ export default {
 
         this.userReserves.push(reserveInfo);
       }
+      this.loadingReserves = false;
       return this.userReserves;
     },
     async getReserveData() {
@@ -189,7 +196,7 @@ export default {
 
         this.reservesData.push(reserveInfo);
       }
-
+      this.loadingReserves = false;
       return this.reservesData;
     },
     toggleTabs(action) {

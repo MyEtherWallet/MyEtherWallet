@@ -9,11 +9,27 @@
               : $t('dappsAave.you-borrowed')
           }}
         </p>
-        <!-- placeholders -->
         <p class="token-balance">
-          {{ activeDepositTab ? convertToEther(reserves[indexOfReserve].currentUnderlyingBalance) : borrowedBalance}} <span class="token-name"> {{ reserves[indexOfReserve].name }} </span>
+          {{
+            activeDepositTab
+              ? convertToEther(
+                  reserves[indexOfReserve].currentUnderlyingBalance
+                )
+              : borrowedBalance
+          }}
+          <span class="token-name"> {{ reserves[indexOfReserve].name }} </span>
         </p>
-        <p class="usd-amt">${{ activeDepositTab ?  getUSDBalance(convertToEther(reserves[indexOfReserve].currentUnderlyingBalance)) : getUSDBalance(borrowedBalance)}}</p>
+        <p class="usd-amt">
+          ${{
+            activeDepositTab
+              ? getUSDBalance(
+                  convertToEther(
+                    reserves[indexOfReserve].currentUnderlyingBalance
+                  )
+                )
+              : getUSDBalance(borrowedBalance)
+          }}
+        </p>
       </div>
       <div class="balance-container">
         <p class="title">
@@ -23,11 +39,23 @@
               : $t('dappsAave.total-collateral')
           }}
         </p>
-        <!-- placeholders -->
         <p class="token-balance">
-          {{ activeDepositTab ? convertToEther(reserves[indexOfReserve].currentATokenBalance) : collateralBalance}} <span class="token-name">{{ reserves[indexOfReserve].name }}</span>
+          {{
+            activeDepositTab
+              ? convertToEther(reserves[indexOfReserve].currentATokenBalance)
+              : collateralBalance
+          }}
+          <span class="token-name">{{ reserves[indexOfReserve].name }}</span>
         </p>
-        <p class="usd-amt">${{ activeDepositTab ? getUSDBalance(convertToEther(reserves[indexOfReserve].currentATokenBalance)) : getUSDBalance(collateralBalance)}}</p>
+        <p class="usd-amt">
+          ${{
+            activeDepositTab
+              ? getUSDBalance(
+                  convertToEther(reserves[indexOfReserve].currentATokenBalance)
+                )
+              : getUSDBalance(collateralBalance)
+          }}
+        </p>
       </div>
     </div>
     <div class="action-container mt-5">
@@ -156,7 +184,7 @@ export default {
     },
     getUSDBalance(int) {
       let usdBalance = 0;
-      if (this.balance) {
+      if (int) {
         usdBalance = new BigNumber(
           new BigNumber(int).times(new BigNumber(this.ethPrice))
         ).toFixed(2);

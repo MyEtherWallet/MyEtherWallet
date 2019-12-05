@@ -64,10 +64,15 @@
   }
 }
 
+.token-icon {
+  margin-right: 5px;
+  width: 20px;
+}
+
 .table-container {
   max-height: 400px;
   margin-top: 10px;
-  overflow: scroll;
+  overflow-y: scroll;
   table {
     // display: table;
     // table-layout: fixed;
@@ -103,15 +108,22 @@
     span {
       flex-direction: column;
       display: flex;
-      margin-bottom: 4px;
+      margin-bottom: 3px;
       margin-left: 5px;
     }
 
     i {
       color: $light-grey-18;
+      cursor: pointer;
       font-size: 10px;
-      height: 6px;
+      height: 8px;
     }
+  }
+
+  .table-msg {
+    padding: 20px 0;
+    text-align: center;
+    width: 100%;
   }
 
   tbody {

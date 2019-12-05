@@ -46,5 +46,6 @@
   "avail-liquidity": "Available liquidity",
   "stable-rate": "Stable rate",
   "variable-rate": "Variable rate",
-  "historical-rate": "Historical Rates"
+  "historical-rate": "Historical Rates",
+  "no-tokens": "There are no search results :("
 }

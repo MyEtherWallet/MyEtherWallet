@@ -15,7 +15,7 @@
     </div>
     <div class="balance-row">
       <balance-display
-        :loading="loading"
+        :loading-home="loadingHome"
         :balance="activeDepositTab ? aggregatedEthBalance : borrowedBalance"
         :composition-percentage="100"
         :title="
@@ -25,7 +25,7 @@
         "
       />
       <balance-display
-        :loading="loading"
+        :loading-home="loadingHome"
         :composition-percentage="100"
         :balance="activeDepositTab ? '0' : collateralBalance"
         :title="
@@ -45,6 +45,7 @@
       ref="actionModal"
       :reserves="reserves"
       :deposit-modal="activeDepositTab"
+      :loading-reserves="loadingReserves"
     />
   </div>
 </template>
@@ -87,7 +88,11 @@ export default {
       type: String,
       default: ''
     },
-    loading: {
+    loadingHome: {
+      type: Boolean,
+      default: true
+    },
+    loadingReserves: {
       type: Boolean,
       default: true
     },

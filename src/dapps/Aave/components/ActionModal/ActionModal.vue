@@ -52,8 +52,11 @@
                       : $t('dappsAave.avail-for-you')
                   }}
                   <span>
-                    <i class="fa fa-caret-up" />
-                    <i class="fa fa-caret-down" />
+                    <i class="fa fa-caret-up" @click="sort('ascending', 0)" />
+                    <i
+                      class="fa fa-caret-down"
+                      @click="sort('descending', 0)"
+                    />
                   </span>
                 </div>
               </th>
@@ -65,8 +68,11 @@
                       : $t('dappsAave.stable-apr')
                   }}
                   <span>
-                    <i class="fa fa-caret-up" />
-                    <i class="fa fa-caret-down" />
+                    <i class="fa fa-caret-up" @click="sort('ascending', 1)" />
+                    <i
+                      class="fa fa-caret-down"
+                      @click="sort('descending', 1)"
+                    />
                   </span>
                 </div>
               </th>
@@ -78,23 +84,33 @@
                       : $t('dappsAave.variable-apr')
                   }}
                   <span>
-                    <i class="fa fa-caret-up" />
-                    <i class="fa fa-caret-down" />
+                    <i class="fa fa-caret-up" @click="sort('ascending', 2)" />
+                    <i
+                      class="fa fa-caret-down"
+                      @click="sort('descending', 2)"
+                    />
                   </span>
                 </div>
               </th>
               <th></th>
             </thead>
-            <tbody>
-              <tr v-for="(token, index) in reserves" :key="token.key">
+            <tbody v-if="!loadingReserves && localReserves.length > 0">
+              <tr v-for="(token, index) in localReserves" :key="token.key">
                 <td class="number">{{ index + 1 }}.</td>
-                <td>{{ token.name }}</td>
+                <!-- need to change icon -->
+                <td>
+                  <img
+                    class="token-icon"
+                    src="@/assets/images/currency/eth.svg"
+                  />{{ token.name }}
+                </td>
                 <td>
                   {{
                     depositModal
                       ? convertToEther(token.currentATokenBalance)
                       : convertToEther(token.availableLiquidity)
                   }}
+                  {{ token.name }}
                 </td>
                 <td :class="depositModal ? '' : 'stable-apr'">
                   {{
@@ -122,6 +138,13 @@
               </tr>
             </tbody>
           </table>
+          <i v-show="loadingReserves" class="fa fa-spinner fa-spin table-msg" />
+          <p
+            v-if="localReserves.length === 0 && !loadingReserves"
+            class="table-msg"
+          >
+            {{ $t('dappsAave.no-tokens') }}
+          </p>
         </div>
       </div>
     </b-modal>
@@ -143,6 +166,10 @@ export default {
       default: function() {
         return [];
       }
+    },
+    loadingReserves: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
@@ -150,20 +177,7 @@ export default {
       search: '',
       allTabActive: true,
       stableTabActive: false,
-      fakeObj: [
-        {
-          token: 'DAI',
-          availBalance: '15.42323 DAI',
-          deposited: '2.47 DAI',
-          apr: '9.72%'
-        },
-        {
-          token: 'DAI',
-          availBalance: '15.42323 DAI',
-          deposited: '2.47 DAI',
-          apr: '9.72%'
-        }
-      ]
+      localReserves: []
     };
   },
   computed: {
@@ -171,14 +185,69 @@ export default {
       return this.depositModal ? 'Deposit' : 'Borrow';
     }
   },
+  watch: {
+    depositModal() {
+      this.search = '';
+    },
+    reserves(newVal) {
+      this.localReserves = [];
+      newVal.forEach(reserve => this.localReserves.push(reserve));
+    },
+    search(newVal) {
+      this.localReserves = [];
+      if (newVal !== '') {
+        this.reserves.filter(reserve => {
+          if (reserve.name) {
+            if (reserve.name.toLowerCase().includes(newVal.toLowerCase())) {
+              this.localReserves.push(reserve);
+            }
+          }
+        });
+      } else {
+        this.reserves.forEach(reserve => this.localReserves.push(reserve));
+      }
+    }
+  },
+  mounted() {
+    if (this.reserves) {
+      this.reserves.forEach(reserve => this.localReserves.push(reserve));
+    }
+  },
   methods: {
+    sort(direction, colIdx) {
+      const borrowColumnNames = [
+        'availableLiquidity',
+        'fixedBorrowRate',
+        'variableBorrowRate'
+      ];
+
+      const depositColumnNames = [
+        'currentATokenBalance',
+        'currentUnderlyingBalance',
+        'borrowRate'
+      ];
+
+      const columnNames = this.depositModal
+        ? depositColumnNames
+        : borrowColumnNames;
+
+      if (direction === 'ascending') {
+        this.localReserves.sort((a, b) => {
+          return a[columnNames[colIdx]] - b[columnNames[colIdx]];
+        });
+      } else {
+        this.localReserves.sort((a, b) => {
+          return b[columnNames[colIdx]] - a[columnNames[colIdx]];
+        });
+      }
+    },
     toggleTabs() {
       this.allTabActive = !this.allTabActive;
       this.stableTabActive = !this.stableTabActive;
     },
     takeAction(idx) {
       this.$refs['actionModal'].hide();
-      this.$router.push({name: 'Action', params: {id: idx}});
+      this.$router.push({ name: 'Action', params: { id: idx } });
     },
     convertToEther(wei) {
       if (!wei) {
@@ -196,7 +265,7 @@ export default {
 
 <style lang="scss">
 .modal-dialog {
-  max-width: 600px !important;
+  max-width: 700px !important;
 }
 
 .modal-body {
