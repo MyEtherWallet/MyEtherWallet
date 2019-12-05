@@ -59,7 +59,7 @@
       display: flex;
       //flex-direction: column;
       margin-bottom: 0;
-      padding: 30px 40px;
+      padding: 35px 40px;
       position: relative;
 
       &.create-wallet {
@@ -106,7 +106,7 @@
       }
 
       .card-image {
-        padding-right: 40px;
+        padding-right: 35px;
 
         @media all and (max-width: $mobile-width) {
           display: none;
@@ -118,16 +118,13 @@
       }
 
       .card-content {
-        display: flex;
-        justify-content: space-between;
-        flex-direction: column;
-        flex: 1;
-
         ul {
           margin-top: 10px;
           padding-left: 20px;
           li {
             list-style-type: disc;
+            font-size: 12px;
+            font-weight: 600;
           }
         }
 

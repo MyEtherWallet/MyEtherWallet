@@ -18,14 +18,18 @@
               <div class="card-image flex-col-1-1-vertical-center">
                 <img alt src="~@/assets/images/home/create-wallet.png" />
               </div>
-              <div>
-                <div class="title">
-                  <h3>{{ $t('common.wallet.create-new') }}</h3>
+              <div class="flex--column--space-between">
+                <div>
+                  <div class="title">
+                    <h3>{{ $t('common.wallet.create-new') }}</h3>
+                  </div>
+                  <div class="card-content">
+                    <p class="color-white content-text">
+                      {{ $t('home.create-new-wallet.text') }}
+                    </p>
+                  </div>
                 </div>
                 <div class="card-content">
-                  <p class="color-white content-text">
-                    {{ $t('home.create-new-wallet.text') }}
-                  </p>
                   <p class="get-started button">
                     {{ $t('common.get-started') }}
                     <img alt src="~@/assets/images/icons/right-arrow.png" />
@@ -46,25 +50,28 @@
               <div class="card-image flex-col-1-1-vertical-center">
                 <img alt src="~@/assets/images/home/unlock-wallet.png" />
               </div>
-              <div>
-                <div class="title">
-                  <h3>{{ $t('common.wallet.access-my') }}</h3>
-                </div>
-                <div class="card-content">
-                  <p class="color-white content-text">
-                    {{ $t('home.access-my-wallet.text') }}
-                  </p>
+              <div class="flex--column--space-between">
+                <div>
+                  <div class="title">
+                    <h3>{{ $t('common.wallet.access-my') }}</h3>
+                  </div>
+                  <div class="card-content">
+                    <p class="color-white content-text">
+                      {{ $t('home.access-my-wallet.text') }}
+                    </p>
 
-                  <ul>
-                    <li>{{ $t('home.access-my-wallet.opt-1') }}</li>
-                    <li>{{ $t('home.access-my-wallet.opt-2') }}</li>
-                    <li>{{ $t('home.access-my-wallet.opt-3') }}</li>
-                  </ul>
-
-                  <p class="get-started button">
-                    {{ $t('home.access-my-wallet.button') }}
-                    <img alt src="~@/assets/images/icons/right-arrow.png" />
-                  </p>
+                    <ul>
+                      <li>{{ $t('home.access-my-wallet.opt-1') }}</li>
+                      <li>{{ $t('home.access-my-wallet.opt-2') }}</li>
+                      <li>{{ $t('home.access-my-wallet.opt-3') }}</li>
+                    </ul>
+                  </div>
+                  <div class="card-content">
+                    <p class="get-started button">
+                      {{ $t('home.access-my-wallet.button') }}
+                      <img alt src="~@/assets/images/icons/right-arrow.png" />
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
