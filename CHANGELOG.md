@@ -1,3 +1,7 @@
+### Bug
+
+- Fix clear, change ENS char translations 
+
 ### Release v5.2.5-hotfix.1
 
 ### Bug

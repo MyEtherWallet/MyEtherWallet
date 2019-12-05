@@ -165,6 +165,7 @@ export default {
       this.selectedAddress = '';
       this.isValidAddress = false;
       this.hexAddress = '';
+      this.$refs.addressInput.value = '';
     },
     currentAddress(address) {
       if (this.addresses.findIndex(addr => addr.address === address) === -1) {
