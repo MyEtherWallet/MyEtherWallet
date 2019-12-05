@@ -7,7 +7,11 @@
     >
       {{ data.toptitle }}
     </div>
-    <v-sheet :max-width="data.titleMaxWidth" color="transparent">
+    <v-sheet
+      :max-width="data.titleMaxWidth ? data.titleMaxWidth : '450px'"
+      color="transparent"
+      :class="data.centered ? 'mx-auto' : ''"
+    >
       <h2 v-if="data.title" :class="data.textProps">
         {{ data.title }}
       </h2>
