@@ -65,6 +65,6 @@ export default {
   margin: 0 auto;
 }
 .banner-line-height {
-  line-height: 55px;
+  line-height: 55px !important;
 }
 </style>
