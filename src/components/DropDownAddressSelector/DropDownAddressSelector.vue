@@ -156,7 +156,8 @@ export default {
     hasMessage() {
       return (
         (!this.isValidAddress && this.selectedAddress.length > 0) ||
-        (this.isValidAddress && this.selectedAddress !== this.hexAddress)
+        (this.isValidAddress &&
+          this.selectedAddress.toLowerCase() !== this.hexAddress.toLowerCase())
       );
     }
   },
@@ -250,6 +251,7 @@ export default {
       this.toAddressCheckMark = true;
       this.dropdownOpen = !this.dropdownOpen;
       this.selectedAddress = address;
+      this.$refs.addressInput.value = address;
     },
     validateAddress() {
       if (this.isValidAddress) {
