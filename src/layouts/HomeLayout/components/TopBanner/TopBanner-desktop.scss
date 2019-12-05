@@ -56,6 +56,8 @@
       height: 100%;
       border-radius: 4px;
       color: $text-color-1;
+      display: flex;
+      flex-direction: column;
       margin-bottom: 0;
       padding: 30px 40px;
       position: relative;
@@ -78,6 +80,27 @@
         }
       }
 
+      .content-text,
+      .get-started {
+        padding-top: 15px;
+      }
+
+      .title {
+        align-items: center;
+        display: flex;
+
+        img {
+          height: 30px;
+          width: 30px;
+        }
+
+        h3 {
+          font-size: 25px;
+          font-weight: bold;
+          margin-left: 20px;
+        }
+      }
+
       @media all and (max-width: $mobile-width) {
         padding: 30px;
       }
@@ -95,6 +118,11 @@
       }
 
       .card-content {
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+        flex: 1;
+
         h2 {
           font-size: 24px;
           font-weight: 500;
