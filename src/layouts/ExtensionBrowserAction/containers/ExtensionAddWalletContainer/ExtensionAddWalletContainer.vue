@@ -85,7 +85,7 @@ import walletWorker from 'worker-loader!@/workers/wallet.worker.js';
 import { SELECTED_MEW_CX_ACC } from '@/builds/mewcx/cxHelpers/cxEvents.js';
 import { Toast, ExtensionHelpers, Wallet, Misc } from '@/helpers';
 
-import byJsonImgHov from '@/assets/images/icons/button-json-hover.svg';
+import byJsonImgHov from '@/assets/images/icons/button-software.svg';
 import byMnemImgHov from '@/assets/images/icons/button-mnemonic-hover.svg';
 import privateKeyImgHov from '@/assets/images/icons/button-key-hover.svg';
 import generateImgHov from '@/assets/images/home/icon-wallet.svg';
@@ -119,7 +119,7 @@ export default {
           desc:
             'Mnemonic phrase are a secret group of words that represent a wallet.',
           warning: '',
-          imgPadding: '5px',
+          imgPadding: '6px',
           func: () => {
             this.toggleGenerateWallet(true);
           }
@@ -150,6 +150,7 @@ export default {
           key: keyStoreType,
           icon: byJsonImgHov,
           title: 'Keystore File',
+          imgPadding: '0',
           desc:
             'You can save your encryped key information in UTC or JSON file.',
           warning: '',
