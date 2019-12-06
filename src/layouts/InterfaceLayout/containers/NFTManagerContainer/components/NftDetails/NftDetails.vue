@@ -79,18 +79,13 @@ export default {
         helpCenter: true,
         noMinWidth: true,
         fullWidth: true
-      }
-    };
+      },
+      isValidAddress: false
+    },
   },
 
   computed: {
-    ...mapState(['account', 'web3']),
-    isValidAddress() {
-      if (this.toAddress !== '') {
-        return Misc.isValidENSorEtherAddress(this.toAddress);
-      }
-      return false;
-    }
+    ...mapState(['account', 'web3'])
   },
   watch: {},
   mounted() {
@@ -121,7 +116,8 @@ export default {
       return nft.image;
     },
     prepareTransfer(toAddress) {
-      this.toAddress = toAddress;
+      this.toAddress = toAddress.address;
+      this.isValidAddress = toAddress.valid;
       this.ERC721tokenContract.options.address = this.nft.contract;
     },
     buildData() {
