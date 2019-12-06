@@ -10,12 +10,12 @@ import getMultiCoinAddress from '@/helpers/ENSMultiCoin.js';
 
 const AddrResolver = {
   bind: function(el, binding, vnode) {
-    let network = vnode.context.$store.state.network;
+    let network = vnode.context.$store.state.main.network;
     let parentCurrency = vnode.context.$parent.currency
       ? vnode.context.$parent.currency
       : network.type.name;
     let address = '';
-    vnode.context.$parent.$watch('$store.state.network', function(e) {
+    vnode.context.$parent.$watch('$store.state.main.network', function(e) {
       network = e;
       parentCurrency = e.type.name;
       removeElements();
@@ -43,7 +43,7 @@ const AddrResolver = {
       const errorPar = document.createElement('p');
       errorPar.classList.add('resolver-error');
       const _this = vnode.context;
-      const ens = _this.$store.state.ens;
+      const ens = _this.$store.state.main.ens;
       const checkDarklist = function(addr) {
         const isDarklisted = Misc.isDarklisted(addr);
         if (isDarklisted.error) {

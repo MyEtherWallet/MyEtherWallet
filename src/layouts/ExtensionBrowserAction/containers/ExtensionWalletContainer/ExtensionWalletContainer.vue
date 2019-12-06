@@ -142,7 +142,7 @@ export default {
     getAccounts(changed) {
       if (changed && changed.hasOwnProperty('defNetwork')) {
         const networkProps = JSON.parse(changed['defNetwork'].newValue);
-        const network = this.$store.state.Networks[networkProps.key].find(
+        const network = this.$store.state.main.Networks[networkProps.key].find(
           actualNetwork => {
             return actualNetwork.url === networkProps.url;
           }
