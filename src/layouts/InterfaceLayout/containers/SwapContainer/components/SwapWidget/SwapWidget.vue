@@ -340,14 +340,14 @@ export default {
       swap: new SwapProviders(
         providers,
         {
-          network: this.$store.state.network.type.name,
-          web3: this.$store.state.web3,
+          network: this.$store.state.main.network.type.name,
+          web3: this.$store.state.main.web3,
           getRateForUnit: false
         },
         {
           tokensWithBalance: this.tokensWithBalance,
           overrideDecimals: true,
-          online: this.$store.state.online
+          online: this.$store.state.main.online
         }
       ),
       images: {

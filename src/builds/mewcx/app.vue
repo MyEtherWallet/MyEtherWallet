@@ -53,7 +53,7 @@ export default {
     window.chrome.storage.sync.get(null, item => {
       if (item.hasOwnProperty('defNetwork')) {
         const networkProps = JSON.parse(item['defNetwork']);
-        const network = _self.$store.state.Networks[networkProps.key].find(
+        const network = _self.$store.state.main.Networks[networkProps.key].find(
           actualNetwork => {
             return actualNetwork.url === networkProps.url;
           }

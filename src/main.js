@@ -36,7 +36,7 @@ import StandardInput from '@/components/StandardInput';
 
 // Import Directives
 import ClickOutside from '@/directives/ClickOutside';
-import EnsResolver from '@/directives/EnsResolver';
+import AddrResolver from '@/directives/AddrResolver';
 
 // Import Filters
 import Capitalize from '@/filters/Capitalize';
@@ -68,7 +68,7 @@ Vue.use(Router);
 Vue.router = router;
 // Directives!!!
 Vue.directive('click-outside', ClickOutside);
-Vue.directive('ens-resolver', EnsResolver);
+Vue.directive('addr-resolver', AddrResolver);
 
 // Filters!!!
 Vue.filter('capitalize', Capitalize);
@@ -125,16 +125,16 @@ Sentry.init({
   release: NODE_ENV === 'production' ? VERSION : 'develop',
   beforeSend(event) {
     const network =
-      !store && !store.state && !store.state.network
-        ? store.state.network.type.name
+      !store && !store.state.main && !store.state.main.network
+        ? store.state.main.network.type.name
         : '';
     const service =
-      !store && !store.state && !store.state.network
-        ? store.state.network.service
+      !store && !store.state.main && !store.state.main.network
+        ? store.state.main.network.service
         : '';
     const identifier =
-      !store && !store.state && !store.state.account
-        ? store.state.account.identifier
+      !store && !store.state.main && !store.state.main.account
+        ? store.state.main.account.identifier
         : '';
     event.tags = {
       network: network,

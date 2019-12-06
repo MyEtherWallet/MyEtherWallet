@@ -12,14 +12,14 @@ export default async ({ event, payload }, callback, next) => {
       });
     } else {
       chrome.tabs.create({
-        url: store.state.network.type.blockExplorerTX.replace(
+        url: store.state.main.network.type.blockExplorerTX.replace(
           '[[txHash]]',
           funcHash
         )
       });
     }
   };
-  store.state.web3.eth
+  store.state.main.web3.eth
     .sendSignedTransaction(payload.signedTx)
     .once('transactionHash', hash => {
       funcHash = hash;

@@ -36,7 +36,7 @@ router.beforeResolve((to, from, next) => {
   if (to.meta.hasOwnProperty('requiresAuth')) {
     next();
   } else {
-    if (store.state.wallet === null) {
+    if (store.state.main.wallet === null) {
       if (BUILD_TYPE === MEW_CX) {
         ExtensionHelpers.getAccounts(item => {
           const hasStoredWallet = Object.keys(item).filter(key => {
@@ -56,8 +56,8 @@ router.beforeResolve((to, from, next) => {
         next({ name: 'AccessWalletLayout' });
       }
     } else {
-      if (store.state.path !== '') {
-        const localPath = store.state.path;
+      if (store.state.main.path !== '') {
+        const localPath = store.state.main.path;
         store.dispatch('setLastPath', '');
         next({ path: localPath });
       } else {

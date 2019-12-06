@@ -12,6 +12,6 @@ export default async ({ event, payload }, res, next) => {
   delete newTx.r;
   delete newTx.s;
   delete newTx.v;
-  const gas = await store.state.web3.eth.estimateGas(newTx);
+  const gas = await store.state.main.web3.eth.estimateGas(newTx);
   res(gas);
 };

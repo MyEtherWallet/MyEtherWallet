@@ -11,12 +11,12 @@
       <p class="address-text">
         {{ $t('common.addr') }}:
         {{
-          currency !== $store.state.network.type.name
+          currency !== $store.state.main.network.type.name
             ? concat(receiver)
             : concat(address)
         }}
       </p>
-      <p v-if="currency !== $store.state.network.type.name">
+      <p v-if="currency !== $store.state.main.network.type.name">
         {{ $t('common.via-contract-address') }} {{ concat(address) }}
       </p>
     </div>

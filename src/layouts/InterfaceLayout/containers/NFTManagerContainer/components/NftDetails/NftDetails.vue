@@ -84,13 +84,7 @@ export default {
   },
 
   computed: {
-    ...mapState(['account', 'web3']),
-    isValidAddress() {
-      if (this.toAddress !== '') {
-        return Misc.isValidENSorEtherAddress(this.toAddress);
-      }
-      return false;
-    }
+    ...mapState(['account', 'web3'])
   },
   watch: {},
   mounted() {

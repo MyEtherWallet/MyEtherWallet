@@ -95,9 +95,9 @@
           <!-- form-block amount-to-address -->
         </div>
 
-        <div v-show="!isExitToFiat" class="send-form">
+        <div v-if="!isExitToFiat" class="send-form">
           <div class="the-form gas-amount">
-            <drop-down-address-selector
+            <swap-address-selector
               :currency="toCurrency"
               :current-address="currentAddress"
               :copybutton="true"
@@ -111,11 +111,11 @@
         </div>
 
         <div
-          v-show="isExitToFiat && fromCurrency !== baseCurrency"
+          v-if="isExitToFiat && fromCurrency !== baseCurrency"
           class="send-form"
         >
           <div class="the-form gas-amount">
-            <drop-down-address-selector
+            <swap-address-selector
               :currency="fromCurrency"
               :current-address="currentAddress"
               :copybutton="true"
@@ -128,9 +128,9 @@
           </div>
         </div>
 
-        <div v-show="showRefundAddress" class="send-form">
+        <div v-if="showRefundAddress" class="send-form">
           <div class="the-form gas-amount">
-            <drop-down-address-selector
+            <swap-address-selector
               :currency="fromCurrency"
               :current-address="currentAddress"
               :copybutton="true"
@@ -207,7 +207,7 @@ import { mapState } from 'vuex';
 
 import { Toast } from '@/helpers';
 import ProvidersRadioSelector from './components/ProvidersRadioSelector';
-import DropDownAddressSelector from './components/SwapAddressSelector';
+import SwapAddressSelector from './components/SwapAddressSelector';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import swapIcon from '@/assets/images/icons/swap-widget.svg';
@@ -242,7 +242,7 @@ export default {
     'interface-bottom-text': InterfaceBottomText,
     'interface-container-title': InterfaceContainerTitle,
     'swap-currency-picker': SwapCurrencyPicker,
-    'drop-down-address-selector': DropDownAddressSelector,
+    'swap-address-selector': SwapAddressSelector,
     'providers-radio-selector': ProvidersRadioSelector,
     'swap-confirmation-modal': SwapConfirmationModal,
     'swap-exit-to-fiat': SwapExitToFiat,
@@ -279,8 +279,8 @@ export default {
       swap: new SwapProviders(
         providers,
         {
-          network: this.$store.state.network.type.name,
-          web3: this.$store.state.web3,
+          network: this.$store.state.main.network.type.name,
+          web3: this.$store.state.main.web3,
           getRateForUnit: false
         },
         { tokensWithBalance: this.tokensWithBalance }

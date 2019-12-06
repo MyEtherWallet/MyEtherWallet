@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "5.2.5",
+  "version": "5.2.6",
   "description": "Client side ethereum wallet",
   "license": "MIT",
   "repository": "https://github.com/myetherwallet/myetherwallet",
@@ -132,7 +132,7 @@
     "store": "2.0.12",
     "string-replace-loader": "2.2.0",
     "stylelint": "12.0.0",
-    "stylelint-config-prettier": "6.0.0",
+    "stylelint-config-prettier": "7.0.0",
     "stylelint-config-standard": "19.0.0",
     "trezor-connect": "7.0.5",
     "u2f-api": "1.1.1",
