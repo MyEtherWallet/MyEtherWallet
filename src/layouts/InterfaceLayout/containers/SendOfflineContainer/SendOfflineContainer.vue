@@ -193,7 +193,6 @@ import Blockie from '@/components/Blockie';
 import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
 import { mapState } from 'vuex';
-import { isAddress } from '@/helpers/addressUtils';
 import store from 'store';
 import { Misc, Toast } from '@/helpers';
 import utils from 'web3-utils';
