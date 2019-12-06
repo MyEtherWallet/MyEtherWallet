@@ -67,13 +67,21 @@
   }
 
   .take-action-btn {
-    background: $mew-green;
     color: $white;
     border: none;
     border-radius: 4px;
     height: 62px;
     margin-top: 10px;
     width: 260px;
+
+    &.enabled {
+      background: $mew-green;
+    }
+
+    & .disabled {
+      background: $dark-grey-11;
+      pointer-events: none;
+    }
   }
 
   .cancel-btn {
@@ -105,4 +113,8 @@
       width: 49px;
     }
   }
+}
+
+.error {
+  color: $red-1;
 }

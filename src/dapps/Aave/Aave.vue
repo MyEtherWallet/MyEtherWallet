@@ -9,7 +9,7 @@
           path="dappsAave.deposit-token"
         >
           <span slot="token" class="token">{{
-            userReserves.length > 0 ? userReserves[indexOfReserve].name : ''
+            userReserves.length > 0 ? token.name : ''
           }}</span>
         </i18n>
         <i18n
@@ -19,7 +19,7 @@
           path="dappsAave.borrow-token"
         >
           <span slot="token" class="token">{{
-            reservesData.length > 0 ? reservesData[indexOfReserve].name : ''
+            reservesData.length > 0 ? token.name : ''
           }}</span>
         </i18n>
       </div>
@@ -69,6 +69,7 @@
       :loading-home="loadingHome"
       :loading-reserves="loadingReserves"
       :reserves="activeDepositTab ? userReserves : reservesData"
+      @takeAction="takeAction"
     />
   </div>
 </template>
@@ -101,15 +102,15 @@ export default {
       reservesAddr: [],
       reservesData: [],
       userReserves: [],
-      indexOfReserve: 0
+      reserveAddr: 0
     };
   },
   computed: {
     ...mapState(['web3', 'account'])
   },
   watch: {
-    '$route.params.id'(newVal) {
-      this.indexOfReserve = newVal;
+    '$route.params.token'(newVal) {
+      this.token = newVal;
     }
   },
   async mounted() {
@@ -198,6 +199,30 @@ export default {
       }
       this.loadingReserves = false;
       return this.reservesData;
+    },
+    takeAction(param) {
+      console.error('param', param);
+      // activeDepositTab ? this.deposit(param) : this.borrow(param);
+    },
+    async deposit(param) {
+      try {
+        const depositInfo = await this.lendingPoolContract.methods
+          .deposit(param)
+          .call();
+        console.error('deposit', depositInfo);
+      } catch (err) {
+        console.error('err', err);
+      }
+    },
+    async borrow(param) {
+      try {
+        const borrowInfo = await this.lendingPoolContract.methods
+          .borrow(param)
+          .call();
+        console.error('borrow', borrowInfo);
+      } catch (err) {
+        console.error('err', err);
+      }
     },
     toggleTabs(action) {
       if (

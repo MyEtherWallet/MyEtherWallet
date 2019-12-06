@@ -12,22 +12,16 @@
         <p class="token-balance">
           {{
             activeDepositTab
-              ? convertToEther(
-                  reserves[indexOfReserve].currentUnderlyingBalance
-                )
+              ? convertToEther(token.currentUnderlyingBalance)
               : borrowedBalance
           }}
-          <span class="token-name"> {{ reserves[indexOfReserve].name }} </span>
+          <span class="token-name"> {{ token.name }} </span>
         </p>
         <p class="usd-amt">
           ${{
             activeDepositTab
-              ? getUSDBalance(
-                  convertToEther(
-                    reserves[indexOfReserve].currentUnderlyingBalance
-                  )
-                )
-              : getUSDBalance(borrowedBalance)
+              ? getUSDBalance(convertToEther(token.currentUnderlyingBalance))
+              : getUSDBalance(token.currentBorrowBalance)
           }}
         </p>
       </div>
@@ -42,17 +36,15 @@
         <p class="token-balance">
           {{
             activeDepositTab
-              ? convertToEther(reserves[indexOfReserve].currentATokenBalance)
+              ? convertToEther(token.currentATokenBalance)
               : collateralBalance
           }}
-          <span class="token-name">{{ reserves[indexOfReserve].name }}</span>
+          <span class="token-name">{{ token.name }}</span>
         </p>
         <p class="usd-amt">
           ${{
             activeDepositTab
-              ? getUSDBalance(
-                  convertToEther(reserves[indexOfReserve].currentATokenBalance)
-                )
+              ? getUSDBalance(convertToEther(token.currentATokenBalance))
               : getUSDBalance(collateralBalance)
           }}
         </p>
@@ -73,34 +65,38 @@
             : $t('dappsAave.borrow-info')
         }}
       </p>
-      <input type="number" />
+      <input v-model="amount" type="number" />
       <div class="percentage-container">
         <div
           :class="percentBtns.twentyFivePercentEnabled ? 'active' : ''"
-          @click="setPercentAmount('twentyFivePercentEnabled')"
+          @click="setPercentAmount('twentyFivePercentEnabled', 0.25)"
         >
           25%
         </div>
         <div
           :class="percentBtns.fiftyPercentEnabled ? 'active' : ''"
-          @click="setPercentAmount('fiftyPercentEnabled')"
+          @click="setPercentAmount('fiftyPercentEnabled', 0.5)"
         >
           50%
         </div>
         <div
           :class="percentBtns.seventyFivePercentEnabled ? 'active' : ''"
-          @click="setPercentAmount('seventyFivePercentEnabled')"
+          @click="setPercentAmount('seventyFivePercentEnabled', 0.75)"
         >
           75%
         </div>
         <div
           :class="percentBtns.maxEnabled ? 'active' : ''"
-          @click="setPercentAmount('maxEnabled')"
+          @click="setPercentAmount('maxEnabled', 1)"
         >
           {{ $t('dappsAave.max') }}
         </div>
       </div>
-      <button class="take-action-btn">
+      <p v-if="errorMsg" class="error">{{ errorMsg }}</p>
+      <button
+        :class="['take-action-btn', errorMsg ? 'disabled' : 'enabled']"
+        @click="takeAction()"
+      >
         {{
           activeDepositTab
             ? $tc('dappsAave.deposit', 1)
@@ -122,6 +118,7 @@
 import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
 import { Toast } from '@/helpers';
+import { mapState } from 'vuex';
 
 export default {
   props: {
@@ -139,10 +136,6 @@ export default {
         return [];
       }
     },
-    borrowedBalance: {
-      type: String,
-      default: ''
-    },
     collateralBalance: {
       type: String,
       default: ''
@@ -150,24 +143,70 @@ export default {
   },
   data() {
     return {
-      ethPrice: '',
-      indexOfReserve: this.$route.params.id,
+      errorMsg: '',
+      amount: 0,
+      ethPrice: 0,
+      token: this.$route.params.token,
       percentBtns: {
-        twentyFivePercentEnabled: true,
+        twentyFivePercentEnabled: false,
         fiftyPercentEnabled: false,
         seventyFivePercentEnabled: false,
         maxEnabled: false
       }
     };
   },
+  computed: {
+    ...mapState(['online'])
+  },
+  watch: {
+    amount() {
+      if (
+        this.activeDepositTab &&
+        new BigNumber(this.amount).gt(
+          new BigNumber(this.convertToEther(this.token.currentATokenBalance))
+        )
+      ) {
+        this.errorMsg = 'Cannot exceed wallet balance';
+      } else {
+        this.errorMsg = '';
+      }
+    }
+  },
   mounted() {
-    this.getEthPrice();
+    if (this.online) {
+      this.getEthPrice();
+    }
   },
   methods: {
-    setPercentAmount(selectedBtn) {
+    takeAction() {
+      const param = {
+        reserveAddr: this.token.address,
+        amount:
+          this.percentageAmount ||
+          new BigNumber(unit.toWei(this.amount, 'ether')).toString()
+      };
+
+      if (this.activeBorrowTab) {
+        param['interestRate'] === 0; //variable or stable rate?
+      }
+
+      this.$emit('takeAction', param);
+    },
+    setPercentAmount(selectedBtn, percentage) {
+      this.amount = new BigNumber(
+        this.convertToEther(this.token.currentATokenBalance)
+      )
+        .times(percentage)
+        .toFixed();
+
       Object.keys(this.percentBtns).forEach(btn => {
         if (selectedBtn === btn) {
-          this.percentBtns[btn] = true;
+          if (this.percentBtns[btn] === true) {
+            this.percentBtns[btn] = false;
+            this.amount = 0;
+          } else {
+            this.percentBtns[btn] = true;
+          }
         } else {
           this.percentBtns[btn] = false;
         }
@@ -186,7 +225,7 @@ export default {
       let usdBalance = 0;
       if (int) {
         usdBalance = new BigNumber(
-          new BigNumber(int).times(new BigNumber(this.ethPrice))
+          new BigNumber(int).times(new BigNumber(this.ethPrice)) //need to add in all the token prices (not just ether)
         ).toFixed(2);
       }
       return usdBalance;

@@ -116,18 +116,18 @@
                   {{
                     depositModal
                       ? convertToEther(token.currentUnderlyingBalance)
-                      : convertToEther(token.fixedBorrowRate)
+                      : convertFromRay(token.fixedBorrowRate) + '%'
                   }}
                 </td>
                 <td :class="depositModal ? '' : 'var-apr'">
                   {{
                     depositModal
-                      ? convertToEther(token.borrowRate)
-                      : convertToEther(token.variableBorrowRate)
-                  }}
+                      ? convertFromRay(token.borrowRate)
+                      : convertFromRay(token.variableBorrowRate)
+                  }}%
                 </td>
                 <td>
-                  <button class="action-btn" @click="takeAction(index)">
+                  <button class="action-btn" @click="takeAction(token)">
                     {{
                       depositModal
                         ? $tc('dappsAave.deposit', 1)
@@ -214,6 +214,11 @@ export default {
     }
   },
   methods: {
+    convertFromRay(int) {
+      const rayUnit = new BigNumber(10).pow(27);
+      const convertedInt = new BigNumber(int).div(rayUnit);
+      return new BigNumber(convertedInt).times(100).toFixed(2);
+    },
     sort(direction, colIdx) {
       const borrowColumnNames = [
         'availableLiquidity',
@@ -245,9 +250,9 @@ export default {
       this.allTabActive = !this.allTabActive;
       this.stableTabActive = !this.stableTabActive;
     },
-    takeAction(idx) {
+    takeAction(token) {
       this.$refs['actionModal'].hide();
-      this.$router.push({ name: 'Action', params: { id: idx } });
+      this.$router.push({ name: 'Action', params: { token: token } });
     },
     convertToEther(wei) {
       if (!wei) {
