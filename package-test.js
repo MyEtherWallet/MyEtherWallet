@@ -23,6 +23,7 @@ const EXCEPTIONS = [
   "@vue/cli-plugin-pwa",
   "@vue/cli-plugin-unit-jest",
   "@vue/cli-service",
+  "@vue/test-utils": "1.0.0-beta.29",
   'web3',
   'web3-core-helpers',
   'web3-core-method',
