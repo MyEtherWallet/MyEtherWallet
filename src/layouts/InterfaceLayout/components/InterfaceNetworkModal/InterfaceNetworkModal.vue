@@ -51,7 +51,7 @@
                   : ''
               "
               class="switch-network"
-              @click="switchNetwork(net, key)"
+              @click="switchNetwork(net)"
             >
               {{ net.service }}
             </p>
@@ -277,6 +277,7 @@ import store from 'store';
 
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import * as networkTypes from '@/networks/types';
+import nodeList from '@/networks';
 import Misc from '@/helpers/misc';
 
 import { mapState } from 'vuex';
@@ -320,6 +321,16 @@ export default {
   mounted() {
     if (store.get('customNetworks') !== undefined) {
       this.customNetworks = store.get('customNetworks');
+      if (this.customNetworks.length) {
+        this.customNetworks.forEach(network => {
+          if (network.type.name !== 'CUS') {
+            network.type.contracts =
+              nodeList[network.type.name][0].type.contracts;
+            network.type.tokens = nodeList[network.type.name][0].type.tokens;
+            network.type.ens = nodeList[network.type.name][0].type.ens;
+          }
+        });
+      }
     }
     this.types['CUS'] = {
       name: 'CUS',
@@ -369,6 +380,8 @@ export default {
         password: this.password,
         port: parseInt(this.port),
         service: this.name,
+        url: this.url,
+        username: this.username,
         type: {
           blockExplorerAddr:
             this.selectedNetwork.blockExplorerAddr ||
@@ -383,13 +396,17 @@ export default {
           name_long: this.selectedNetwork.name_long,
           tokens: [],
           currencyName: this.selectedNetwork.currencyName
-        },
-        url: this.url,
-        username: this.username
+        }
       };
-
+      const cloneCustomNetworks = [...this.customNetworks];
+      cloneCustomNetworks.push(customNetwork);
+      store.set('customNetworks', cloneCustomNetworks);
+      if (this.selectedNetwork.name !== 'CUS') {
+        customNetwork.type.contracts = this.selectedNetwork.contracts;
+        customNetwork.type.tokens = this.selectedNetwork.tokens;
+        customNetwork.type.ens = this.selectedNetwork.ens;
+      }
       this.customNetworks.push(customNetwork);
-      store.set('customNetworks', this.customNetworks);
       this.resetCompState();
       this.$refs.addCustomToggle.click();
     },

@@ -155,11 +155,7 @@
 
 <script>
 import { mapState } from 'vuex';
-import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
-import InterfaceBottomText from '@/components/InterfaceBottomText';
-import Blockie from '@/components/Blockie';
 import BigNumber from 'bignumber.js';
-import SelectCdpEntry from '../../components/SelectCdpEntry';
 import {
   addresses,
   ERC20,
@@ -173,10 +169,6 @@ import { MDAI } from '@makerdao/dai-plugin-mcd';
 
 export default {
   components: {
-    'interface-container-title': InterfaceContainerTitle,
-    'interface-bottom-text': InterfaceBottomText,
-    blockie: Blockie,
-    'select-cdp-entry': SelectCdpEntry,
     'loading-sign': LoadingSign
   },
   props: {
@@ -257,6 +249,7 @@ export default {
       if (this.deposited) {
         return toBigNumber(this.deposited.toBigNumber()).gte(this.daiQty);
       }
+      return false;
     },
     canDeposit() {
       return toBigNumber(this.daiBalance).gte(this.daiQty);

@@ -189,7 +189,6 @@
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import CurrencyPicker from '@/layouts/InterfaceLayout/components/CurrencyPicker';
 import SignedTxModal from './components/SignedTxModal';
-import Blockie from '@/components/Blockie';
 import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
 import { mapState } from 'vuex';
@@ -201,7 +200,6 @@ import DropDownAddressSelector from '@/components/DropDownAddressSelector';
 
 export default {
   components: {
-    blockie: Blockie,
     'signed-tx-modal': SignedTxModal,
     'currency-picker': CurrencyPicker,
     'interface-container-title': InterfaceContainerTitle,
