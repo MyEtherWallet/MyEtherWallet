@@ -24,7 +24,7 @@ a:active {
 }
 
 .footer-contents {
-  > div {
+  >div {
     display: flex;
     flex-direction: column;
 
@@ -50,6 +50,7 @@ a:active {
 
       .content {
         margin-bottom: 5px;
+
         &:last-child {
           margin-bottom: 0;
         }
@@ -99,7 +100,9 @@ a:active {
       border-radius: 100px;
     }
   }
-} // .footer-contents
+}
+
+// .footer-contents
 
 .foot-note {
   align-items: center;
