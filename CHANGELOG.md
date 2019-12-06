@@ -1,3 +1,8 @@
+
+### BUG
+
+- Fix clear on send that switches to always eth instead of network currency [#1723](https://github.com/MyEtherWallet/MyEtherWallet/pull/1723)
+
 ### Release v5.2.6
 
 ### Bug
