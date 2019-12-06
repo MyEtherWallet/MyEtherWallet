@@ -8,6 +8,7 @@ const SAFE_TIME = 1000 * 1 * 60 * 60 * 24 * 7; //7days
 // waiting for vee-validate 3.0 to be more stable (https://github.com/baianat/vee-validate/issues/2248)
 // Matching exceptions with package.json
 // Lock @vue packages due to complications on updating
+// @vue/test-utils - breaking tests beginning at 5.2.5-hotfix-2 (with version 1.0.0-beta.30)
 const EXCEPTIONS = [
   '@myetherwallet/mewconnect-web-client',
   'canvas',
@@ -23,7 +24,7 @@ const EXCEPTIONS = [
   "@vue/cli-plugin-pwa",
   "@vue/cli-plugin-unit-jest",
   "@vue/cli-service",
-  "@vue/test-utils": "1.0.0-beta.29",
+  '@vue/test-utils',
   'web3',
   'web3-core-helpers',
   'web3-core-method',
