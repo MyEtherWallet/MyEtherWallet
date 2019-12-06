@@ -1,3 +1,6 @@
+### Devop
+- Modularize store state [#1722] [https://github.com/MyEtherWallet/MyEtherWallet/pull/1722]
+
 ### Bug
 
 - Fix clear, dropdown, change ENS char translations [#1713](https://github.com/MyEtherWallet/MyEtherWallet/pull/1713)
