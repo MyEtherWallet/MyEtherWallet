@@ -285,9 +285,6 @@ export default {
       )} ${this.$t('popover.tx-speed-pt-2').replace('{0}', net)}`;
       return msg;
     },
-    validAddress() {
-      return isAddress(this.address);
-    },
     allTokens() {
       const customToken = store.get('customTokens');
       const allTokens = this.tokens.concat(customToken[this.network.type.name]);
@@ -355,8 +352,8 @@ export default {
       this.localGasPrice = this.highestGas;
       this.clearAddress = !this.clearAddress;
       this.selectedCoinType = {
-        name: 'Ethereum',
-        symbol: 'ETH'
+        name: this.network.type.name_long,
+        symbol: this.network.type.currencyName
       };
     },
     prefillForm() {
