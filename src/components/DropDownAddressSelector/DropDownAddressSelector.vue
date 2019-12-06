@@ -156,7 +156,8 @@ export default {
     hasMessage() {
       return (
         (!this.isValidAddress && this.selectedAddress.length > 0) ||
-        (this.isValidAddress && this.selectedAddress !== this.hexAddress)
+        (this.isValidAddress &&
+          this.selectedAddress.toLowerCase() !== this.hexAddress.toLowerCase())
       );
     }
   },
@@ -165,6 +166,7 @@ export default {
       this.selectedAddress = '';
       this.isValidAddress = false;
       this.hexAddress = '';
+      this.$refs.addressInput.value = '';
     },
     currentAddress(address) {
       if (this.addresses.findIndex(addr => addr.address === address) === -1) {
@@ -249,6 +251,7 @@ export default {
       this.toAddressCheckMark = true;
       this.dropdownOpen = !this.dropdownOpen;
       this.selectedAddress = address;
+      this.$refs.addressInput.value = address;
     },
     validateAddress() {
       if (this.isValidAddress) {
