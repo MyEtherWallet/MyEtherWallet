@@ -24,8 +24,8 @@
         <h3>{{ title }}</h3>
         <div class="node-container">
           <div
-            v-for="(node, idx) in Networks[title]"
-            :key="node.service + idx"
+            v-for="(node, index) in Networks[title]"
+            :key="node.service + index"
             class="node"
             @click="selectNetwork(node)"
           >

@@ -414,8 +414,8 @@ export default {
       this.advancedExpand = false;
       this.clearAddress = !this.clearAddress;
       this.selectedCurrency = {
-        name: 'Ethereum',
-        symbol: 'ETH'
+        name: this.network.type.name_long,
+        symbol: this.network.type.currencyName
       };
     },
     getToAddress(data) {
