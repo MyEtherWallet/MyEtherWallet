@@ -6,6 +6,7 @@
 - Fix clear, dropdown, change ENS char translations [#1713](https://github.com/MyEtherWallet/MyEtherWallet/pull/1713)
 - Fix message signature not showing up [#1719](https://github.com/MyEtherWallet/MyEtherWallet/pull/1719)
 - Fix nft send [#1724](https://github.com/MyEtherWallet/MyEtherWallet/pull/1724)
+- Fix clear on send that switches to always eth instead of network currency [#1723](https://github.com/MyEtherWallet/MyEtherWallet/pull/1723)
 
 ### Release v5.2.5-hotfix.1
 
