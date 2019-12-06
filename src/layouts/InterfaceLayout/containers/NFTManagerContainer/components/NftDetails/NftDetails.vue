@@ -10,7 +10,7 @@
           <h3>{{ $t('nftManager.send-my', { value: selectedTitle }) }}</h3>
           <p>#{{ nft.token }}</p>
           <div class="address-input-container">
-            <address-selector
+            <dropdown-address-selector
               :title="$t('sendTx.to-addr')"
               @toAddress="prepareTransfer"
             />
@@ -41,7 +41,7 @@ export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
     'back-button': SmallBackButton,
-    'address-selector': DropDownAddressSelector,
+    'dropdown-address-selector': DropDownAddressSelector,
     'standard-button': StandardButton
   },
   props: {
