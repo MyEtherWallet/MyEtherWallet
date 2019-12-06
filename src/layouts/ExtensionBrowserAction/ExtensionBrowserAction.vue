@@ -1,8 +1,10 @@
 <template>
-  <div>
+  <div class="cx-container">
     <cx-header />
     <keep-alive>
-      <router-view />
+      <div class="max-width-limit">
+        <router-view />
+      </div>
     </keep-alive>
     <cx-footer />
   </div>
@@ -25,12 +27,13 @@ export default {
 
 <style lang="scss" scoped>
 .cx-container {
-  background-color: #cacaca;
+  background-color: #f2f4fa;
   min-width: 960px;
 }
 
 .max-width-limit {
   max-width: 1024px;
   margin: 0 auto;
+  padding: 0 20px;
 }
 </style>
