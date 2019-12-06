@@ -85,7 +85,7 @@ import walletWorker from 'worker-loader!@/workers/wallet.worker.js';
 import { SELECTED_MEW_CX_ACC } from '@/builds/mewcx/cxHelpers/cxEvents.js';
 import { Toast, ExtensionHelpers, Wallet, Misc } from '@/helpers';
 
-import byJsonImgHov from '@/assets/images/icons/button-software.svg';
+import byJsonImgHov from '@/assets/images/icons/button-software-no-padding.svg';
 import byMnemImgHov from '@/assets/images/icons/button-mnemonic-hover.svg';
 import privateKeyImgHov from '@/assets/images/icons/button-key-hover.svg';
 import generateImgHov from '@/assets/images/home/icon-wallet.svg';
@@ -115,9 +115,9 @@ export default {
         {
           key: 'GEN',
           icon: generateImgHov,
-          title: 'Generate a New Wallet',
+          title: 'Create a New Wallet',
           desc:
-            'Mnemonic phrase are a secret group of words that represent a wallet.',
+            'Generate your own unique Ethereum wallet. Receive a public address (0x...) and encrypt it with a password.',
           warning: '',
           imgPadding: '6px',
           func: () => {
@@ -127,9 +127,9 @@ export default {
         {
           key: mnemonicType,
           icon: byMnemImgHov,
-          title: 'Mnemonic Phrase11',
+          title: 'Mnemonic Phrase',
           desc:
-            'Mnemonic phrase are a secret group of words that represent a wallet.',
+            'Add your wallet using a mnemonic phrase. Mnemonic phrases are 12-24 words in length, but sometimes they contain an extra word for added security.',
           warning: '',
           func: () => {
             this.toggleImportMnemonicPhrase(true);
@@ -138,9 +138,9 @@ export default {
         {
           key: privateKeyType,
           icon: privateKeyImgHov,
-          title: `Private \n Key`,
+          title: `Private Key`,
           desc:
-            'Mnemonic phrase are a secret group of words that represent a wallet.',
+            'Add your wallet using a private key. Private keys are 64 hexadecimal characters. ',
           warning: '',
           func: () => {
             this.toggleImportPrivateKey(true);
@@ -152,7 +152,7 @@ export default {
           title: 'Keystore File',
           imgPadding: '0',
           desc:
-            'You can save your encryped key information in UTC or JSON file.',
+            'Add your wallet using a keystore file. A keystore file is your private key encrypted into a JSON file format.',
           warning: '',
           func: () => {
             this.toggleImportKeystoreFile(true);
