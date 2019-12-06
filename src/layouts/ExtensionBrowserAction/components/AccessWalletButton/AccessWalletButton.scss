@@ -1,18 +1,19 @@
-@import "~@/scss/GlobalVariables";
+@import '~@/scss/GlobalVariables';
 
 .button-block {
   user-select: none;
   background-color: $background-color-white;
   border-radius: 5px;
   cursor: pointer;
-  padding: 10px 15px 25px;
+  padding: 10px 25px 25px;
   position: relative;
   top: 0;
   transition: all 0.3s ease;
   border: 0;
 
   p {
-    line-height: 20px;
+    font-size: 13px;
+    line-height: 18px;
   }
 
   .small-note {
@@ -23,8 +24,8 @@
 
   h3 {
     margin-bottom: 10px;
-    font-size: 16px;
-    line-height: 23px;
+    font-size: 18px;
+    line-height: 25px;
     font-weight: 500;
   }
 

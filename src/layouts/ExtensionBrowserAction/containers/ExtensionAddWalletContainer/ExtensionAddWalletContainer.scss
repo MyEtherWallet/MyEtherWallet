@@ -1,15 +1,15 @@
-@import "~@/scss/GlobalVariables";
+@import '~@/scss/GlobalVariables';
 
 .add-wallet-container {
   align-items: center;
-  //background-color: $light-grey-2;
-  background-color: #989898;
+  background-color: $light-grey-2;
+  //background-color: #989898;
   display: flex;
   flex-flow: column;
   padding: 150px 0;
 
   h2 {
-    margin: 0;
+    margin: 0 0 10px 0;
   }
 }
 
@@ -18,8 +18,8 @@
   grid-column-gap: 20px;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   margin: 0 auto;
-  max-width: 900px;
-  padding-top: 40px;
+  max-width: 1000px;
+  margin-top: 50px;
   position: relative;
   text-align: center;
 }
