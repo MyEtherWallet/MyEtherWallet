@@ -150,7 +150,7 @@ export default {
           key: keyStoreType,
           icon: byJsonImgHov,
           title: 'Keystore File',
-          imgPadding: '0',
+          imgPadding: '10px',
           desc:
             'Add your wallet using a keystore file. A keystore file is your private key encrypted into a JSON file format.',
           warning: '',
