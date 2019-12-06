@@ -81,9 +81,8 @@ export default {
         fullWidth: true
       },
       isValidAddress: false
-    },
+    };
   },
-
   computed: {
     ...mapState(['account', 'web3'])
   },
