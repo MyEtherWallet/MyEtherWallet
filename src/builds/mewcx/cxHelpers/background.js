@@ -28,7 +28,7 @@ const chrome = window.chrome;
 const networkChanger = items => {
   if (items.hasOwnProperty('defNetwork')) {
     const networkProps = JSON.parse(items['defNetwork']);
-    const network = store.state.Networks[networkProps.key].find(
+    const network = store.state.main.Networks[networkProps.key].find(
       actualNetwork => {
         return actualNetwork.url === networkProps.url;
       }
@@ -37,9 +37,9 @@ const networkChanger = items => {
     if (!!network) {
       store.dispatch('switchNetwork', network).then(() => {
         store.dispatch('setWeb3Instance', network.url).then(() => {
-          store.state.web3.eth.net.getId().then(res => {
+          store.state.main.web3.eth.net.getId().then(res => {
             chrome.storage.sync.set({
-              defChainID: store.state.network.type.chainID,
+              defChainID: store.state.main.network.type.chainID,
               defNetVersion: res
             });
           });
@@ -48,13 +48,13 @@ const networkChanger = items => {
     }
   } else {
     store.dispatch('setWeb3Instance');
-    store.state.web3.eth.net.getId().then(res => {
+    store.state.main.web3.eth.net.getId().then(res => {
       chrome.storage.sync.set({
-        defChainID: store.state.network.type.chainID,
+        defChainID: store.state.main.network.type.chainID,
         defNetVersion: res,
         defNetwork: JSON.stringify({
-          url: store.state.network.url,
-          key: store.state.network.type.name
+          url: store.state.main.network.url,
+          key: store.state.main.network.type.name
         })
       });
     });
@@ -80,16 +80,16 @@ chrome.storage.onChanged.addListener(items => {
       const networkProps = JSON.parse(
         Misc.stripTags(items['defNetwork'].newValue)
       );
-      const network = store.state.Networks[networkProps.key].find(
+      const network = store.state.main.Networks[networkProps.key].find(
         actualNetwork => {
           return actualNetwork.url === networkProps.url;
         }
       );
       store.dispatch('switchNetwork', network).then(() => {
         store.dispatch('setWeb3Instance', network.url).then(() => {
-          store.state.web3.eth.net.getId().then(res => {
+          store.state.main.web3.eth.net.getId().then(res => {
             chrome.storage.sync.set({
-              defChainID: store.state.network.type.chainID,
+              defChainID: store.state.main.network.type.chainID,
               defNetVersion: res
             });
           });
@@ -225,7 +225,7 @@ function querycB(tab) {
       } else {
         // Injects web3
         chrome.tabs.sendMessage(tab.id, { event: CX_INJECT_WEB3 }, function() {
-          store.state.web3.eth.net.getId().then(() => {
+          store.state.main.web3.eth.net.getId().then(() => {
             chrome.tabs.sendMessage(tab.id, {
               event: WEB3_INJECT_SUCCESS.replace('{{id}}', 'internal') // triggers connect call
             });
@@ -235,7 +235,7 @@ function querycB(tab) {
     } else {
       // Injects web3
       chrome.tabs.sendMessage(tab.id, { event: CX_INJECT_WEB3 }, function() {
-        store.state.web3.eth.net.getId().then(() => {
+        store.state.main.web3.eth.net.getId().then(() => {
           chrome.tabs.sendMessage(tab.id, {
             event: WEB3_INJECT_SUCCESS.replace('{{id}}', 'internal') // triggers connect call
           });

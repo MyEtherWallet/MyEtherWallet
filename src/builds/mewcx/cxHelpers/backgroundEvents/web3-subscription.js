@@ -18,7 +18,7 @@ export default async ({ event, payload }, res, next) => {
   const options = payload.params.length > 1 ? payload.params[1] : null;
 
   const chrome = window.chrome;
-  const web3 = store.state.web3;
+  const web3 = store.state.main.web3;
   let subscription = null;
   let timer = null;
   const cb = (e, response) => {

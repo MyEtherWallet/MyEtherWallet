@@ -386,7 +386,7 @@ export default {
   data() {
     return {
       networkTypes: Object.values(networkTypes),
-      selectedNetwork: this.$store.state.network,
+      selectedNetwork: this.$store.state.main.network,
       stage1: false, // Select Network
       stage2: true, // Generate Information
       stage3: false, // Enter/Upload Signed Transaction
@@ -411,8 +411,8 @@ export default {
         address: '0x',
         gasPrice: 0,
         nonce: 0,
-        chainID: this.$store.state.network.type.chainID,
-        networkName: this.$store.state.network.type.name_long
+        chainID: this.$store.state.main.network.type.chainID,
+        networkName: this.$store.state.main.network.type.name_long
       },
       generatedJson: {},
       file: '',
@@ -476,7 +476,7 @@ export default {
     }
   },
   mounted() {
-    this.switchNetwork(this.$store.state.network);
+    this.switchNetwork(this.$store.state.main.network);
     if (this.online) {
       this.fetchBalanceData();
     }

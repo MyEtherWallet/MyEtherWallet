@@ -16,13 +16,17 @@ const isAddress = address => {
   ) {
     return true;
   }
-  const chainID = store.state.network ? store.state.network.type.chainID : 1;
+  const chainID = store.state.main.network
+    ? store.state.main.network.type.chainID
+    : 1;
   if (chainID === RSK.chainID || chainID === RSKTEST.chainID)
     return isValidRSKChecksumAddress(address, chainID);
   return web3.utils.checkAddressChecksum(address);
 };
 const toChecksumAddress = address => {
-  const chainID = store.state.network ? store.state.network.type.chainID : 1;
+  const chainID = store.state.main.network
+    ? store.state.main.network.type.chainID
+    : 1;
   if (chainID === RSK.chainID || chainID === RSKTEST.chainID)
     return toRSKChecksumAddress(address, chainID);
   return web3.utils.toChecksumAddress(address);
