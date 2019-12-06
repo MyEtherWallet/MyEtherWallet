@@ -1,4 +1,4 @@
-### Release v5.2.5-hotfix.2
+### Release v5.2.6
 
 ### Bug
 
