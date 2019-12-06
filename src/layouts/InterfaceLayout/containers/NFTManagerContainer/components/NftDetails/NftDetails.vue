@@ -30,7 +30,7 @@
 
 <script>
 import { mapState } from 'vuex';
-import { Misc, Toast } from '@/helpers';
+import { Toast } from '@/helpers';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
 import SmallBackButton from '@/layouts/InterfaceLayout/components/SmallBackButton';
 import DropDownAddressSelector from '@/components/DropDownAddressSelector';
