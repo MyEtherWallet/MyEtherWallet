@@ -11,15 +11,6 @@
   transition: all 0.3s ease;
   border: 0;
 
-  .button-image {
-    font-size: 90px;
-    margin-bottom: 5px;
-
-    img {
-      min-width: 70px;
-    }
-  }
-
   p {
     line-height: 20px;
   }
@@ -32,6 +23,9 @@
 
   h3 {
     margin-bottom: 10px;
+    font-size: 16px;
+    line-height: 23px;
+    font-weight: 500;
   }
 
   .tooltip-box {
@@ -86,6 +80,17 @@
   p {
     color: $light-grey-10;
   }
+}
+
+.button-image-block {
+  width: 95px;
+  height: 95px;
+  margin: 25px auto 15px auto;
+}
+
+.button-image {
+  width: 100%;
+  height: 100%;
 }
 
 @media all and (max-width: $tablet-width) {
