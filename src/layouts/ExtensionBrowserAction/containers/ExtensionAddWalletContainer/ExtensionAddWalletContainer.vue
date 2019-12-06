@@ -66,6 +66,8 @@
         :recommend="button.warning"
         :disabled="false"
         :classname="'extension-selection'"
+        :img-padding="button.imgPadding"
+        :desc="button.desc"
       />
     </div>
   </div>
@@ -86,8 +88,9 @@ import { Toast, ExtensionHelpers, Wallet, Misc } from '@/helpers';
 import byJsonImgHov from '@/assets/images/icons/button-json-hover.svg';
 import byMnemImgHov from '@/assets/images/icons/button-mnemonic-hover.svg';
 import privateKeyImgHov from '@/assets/images/icons/button-key-hover.svg';
-import generateImgHov from '@/assets/images/icons/button-generate-hover.svg';
-import AccessWalletButton from '@/layouts/AccessWalletLayout/components/AccessWalletButton';
+import generateImgHov from '@/assets/images/home/icon-wallet.svg';
+//import AccessWalletButton from '@/layouts/AccessWalletLayout/components/AccessWalletButton';
+import AccessWalletButton from '../../components/AccessWalletButton';
 import ImportKeystoreModal from '../../components/ImportKeystoreModal';
 import ImportPrivateKeyModal from '../../components/ImportPrivateKeyModal';
 import VerifyDetailsModal from '../../components/VerifyDetailsModal';
@@ -113,7 +116,10 @@ export default {
           key: 'GEN',
           icon: generateImgHov,
           title: 'Generate a New Wallet',
+          desc:
+            'Mnemonic phrase are a secret group of words that represent a wallet.',
           warning: '',
+          imgPadding: '5px',
           func: () => {
             this.toggleGenerateWallet(true);
           }
@@ -121,7 +127,9 @@ export default {
         {
           key: mnemonicType,
           icon: byMnemImgHov,
-          title: 'Mnemonic Phrase',
+          title: 'Mnemonic Phrase11',
+          desc:
+            'Mnemonic phrase are a secret group of words that represent a wallet.',
           warning: '',
           func: () => {
             this.toggleImportMnemonicPhrase(true);
@@ -131,6 +139,8 @@ export default {
           key: privateKeyType,
           icon: privateKeyImgHov,
           title: `Private \n Key`,
+          desc:
+            'Mnemonic phrase are a secret group of words that represent a wallet.',
           warning: '',
           func: () => {
             this.toggleImportPrivateKey(true);
@@ -139,7 +149,9 @@ export default {
         {
           key: keyStoreType,
           icon: byJsonImgHov,
-          title: 'Keystore File (UTC/JSON)',
+          title: 'Keystore File',
+          desc:
+            'You can save your encryped key information in UTC or JSON file.',
           warning: '',
           func: () => {
             this.toggleImportKeystoreFile(true);

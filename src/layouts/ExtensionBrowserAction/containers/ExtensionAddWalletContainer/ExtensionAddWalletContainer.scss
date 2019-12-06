@@ -1,8 +1,9 @@
-@import '~@/scss/GlobalVariables';
+@import "~@/scss/GlobalVariables";
 
 .add-wallet-container {
   align-items: center;
-  background-color: $light-grey-2;
+  //background-color: $light-grey-2;
+  background-color: #989898;
   display: flex;
   flex-flow: column;
   padding: 150px 0;
@@ -14,7 +15,7 @@
 
 .add-wallet-options {
   display: grid;
-  grid-column-gap: 50px;
+  grid-column-gap: 20px;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   margin: 0 auto;
   max-width: 900px;
