@@ -65,9 +65,10 @@
   "done": "Done",
   "confirm-send": "Confirm & Send",
   "your-tx-hash": "Your TxHash",
-  "welcome-header": "MEWCX | Chrome Extension",
+  "mewcx": "MEWcx",
+  "welcome-header": "MyEtherWallet Chrome Extension",
   "mew-cx-official": "MyEtherWallet's Official Chrome Extension",
-  "no-wallet-add": "You don't have any wallet saved. Click Add Wallet to get started",
+  "no-wallet-add": "You don't have any wallet saved. Click and add Wallet to get started",
   "use-burner": "Use a burner account",
   "by-entering-pw": "By entering your password, you accept our",
   "trying-to-access-mew": "is trying to access MEW CX. Please choose a wallet that you want to connect.",
@@ -80,5 +81,4 @@
   "token-added-success": "Successfully added token!",
   "copy-success": "Successfully Copied",
   "invalid-mnemonic": "Invalid Mnemonic"
-
 }
