@@ -80,5 +80,6 @@
   "wallet-remove-success": "Wallet successfully removed!",
   "token-added-success": "Successfully added token!",
   "copy-success": "Successfully Copied",
-  "invalid-mnemonic": "Invalid Mnemonic"
+  "invalid-mnemonic": "Invalid Mnemonic",
+  "generateWallet": "Create a new wallet"
 }
