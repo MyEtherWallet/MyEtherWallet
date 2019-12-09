@@ -1,3 +1,7 @@
+### Feature
+
+- SotD on the v5 dapps interface []()
+
 ### Release v5.2.8
 
 ### Bug
