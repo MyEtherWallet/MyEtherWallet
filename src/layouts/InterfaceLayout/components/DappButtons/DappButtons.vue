@@ -13,6 +13,8 @@
       :src="supported ? icon : iconDisabled"
       :class="title === 'Ambrpay' ? 'ambrpay-icon' : ''"
       alt
+      width="100px"
+      height="100px"
     />
     <div>
       <h4>{{ title }}</h4>
