@@ -32,8 +32,8 @@ export default {
 }
 
 .max-width-limit {
-  max-width: 1024px;
+  max-width: 1100px;
   margin: 0 auto;
-  padding: 0 20px;
+  //padding: 0 20px;
 }
 </style>
