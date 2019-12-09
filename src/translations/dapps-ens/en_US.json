@@ -10,7 +10,7 @@
   },
   "warning": {
     "contract-not-ready": "Contract is not ready yet, transaction might fail.",
-    "not-enough-char": "Domain name is less than 7 characters.",
+    "not-enough-char": "Domain name is less than 3 characters.",
     "invalid-symbol": "Invalid symbols on domain"
   },
   "toast": {
@@ -20,7 +20,7 @@
   "check-domain": "Check Domain",
   "update": "Update",
   "ph": {
-    "seven-char": "Please enter at least 7 Characters"
+    "three-char": "Please enter at least 3 Characters"
   },
   "is-available": "Cheers! This domain is available.",
   "not-available": "{domain} is not available yet!",
