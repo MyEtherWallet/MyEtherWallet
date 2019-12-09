@@ -10,7 +10,7 @@
           <h3>{{ $t('nftManager.send-my', { value: selectedTitle }) }}</h3>
           <p>#{{ nft.token }}</p>
           <div class="address-input-container">
-            <address-selector
+            <dropdown-address-selector
               :title="$t('sendTx.to-addr')"
               @toAddress="prepareTransfer"
             />
@@ -30,7 +30,7 @@
 
 <script>
 import { mapState } from 'vuex';
-import { Misc, Toast } from '@/helpers';
+import { Toast } from '@/helpers';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
 import SmallBackButton from '@/layouts/InterfaceLayout/components/SmallBackButton';
 import DropDownAddressSelector from '@/components/DropDownAddressSelector';
@@ -41,7 +41,7 @@ export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
     'back-button': SmallBackButton,
-    'address-selector': DropDownAddressSelector,
+    'dropdown-address-selector': DropDownAddressSelector,
     'standard-button': StandardButton
   },
   props: {
@@ -79,10 +79,10 @@ export default {
         helpCenter: true,
         noMinWidth: true,
         fullWidth: true
-      }
+      },
+      isValidAddress: false
     };
   },
-
   computed: {
     ...mapState(['account', 'web3'])
   },
@@ -115,7 +115,8 @@ export default {
       return nft.image;
     },
     prepareTransfer(toAddress) {
-      this.toAddress = toAddress;
+      this.toAddress = toAddress.address;
+      this.isValidAddress = toAddress.valid;
       this.ERC721tokenContract.options.address = this.nft.contract;
     },
     buildData() {
