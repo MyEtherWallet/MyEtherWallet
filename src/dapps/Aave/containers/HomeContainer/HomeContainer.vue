@@ -15,7 +15,7 @@
     </div>
     <div class="balance-row">
       <balance-display
-        :loading="loading"
+        :loading-home="loadingHome"
         :balance="activeDepositTab ? aggregatedEthBalance : borrowedBalance"
         :composition-percentage="100"
         :title="
@@ -25,7 +25,7 @@
         "
       />
       <balance-display
-        :loading="loading"
+        :loading-home="loadingHome"
         :composition-percentage="100"
         :balance="activeDepositTab ? '0' : collateralBalance"
         :title="
@@ -45,6 +45,7 @@
       ref="actionModal"
       :reserves="reserves"
       :deposit-modal="activeDepositTab"
+      :loading-reserves="loadingReserves"
     />
   </div>
 </template>
@@ -54,7 +55,6 @@ import BalanceDisplay from '@/dapps/Aave/components/BalanceDisplay';
 import ActionModal from '@/dapps/Aave/components/ActionModal';
 import LendingPoolAbi from '@/dapps/Aave/abi/LendingPoolAbi.js';
 import ActionContainer from '@/dapps/Aave/containers/ActionContainer';
-
 export default {
   components: {
     'balance-display': BalanceDisplay,
@@ -87,7 +87,11 @@ export default {
       type: String,
       default: ''
     },
-    loading: {
+    loadingHome: {
+      type: Boolean,
+      default: true
+    },
+    loadingReserves: {
       type: Boolean,
       default: true
     },
