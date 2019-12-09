@@ -1,4 +1,4 @@
-@import '~@/scss/GlobalVariables';
+@import "~@/scss/GlobalVariables";
 
 .extension-wallets-container {
   align-items: center;
@@ -17,7 +17,8 @@
 
 .wallets-container {
   height: 100%;
-  padding: 50px;
+  width: 100%;
+  padding: 50px 20px 50px 90px;
 }
 
 .my-wallets-container,
