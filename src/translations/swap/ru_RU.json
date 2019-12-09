@@ -13,7 +13,7 @@
   "value-above-max": "Value is above the maximum for selected provider",
   "above-max-swap": "Above maximum swap value for selected provider",
   "time-remain": "Time Remaining",
-  "refund": "{currency} address for refund (if needed) from Changelly",
+  "refund": "{currency} адрес для возмещения (при необходимости) от Changelly",
   "button-loading": "Finalizing Swap Details",
   "providers": {
     "string": "Provider | Providers",
