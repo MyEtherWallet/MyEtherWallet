@@ -1,7 +1,6 @@
 ### Bug
 
-- Fix verify signature []()
-
+- Fix verify signature [#1729](https://github.com/MyEtherWallet/MyEtherWallet/pull/1729)
 
 ### Release v5.2.6
 

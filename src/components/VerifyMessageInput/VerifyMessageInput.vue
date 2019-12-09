@@ -130,7 +130,7 @@ export default {
           json.address.replace('0x', '') !==
           pubToAddress(pubKey).toString('hex')
         ) {
-          this.deleteInput()
+          this.deleteInput();
           this.showMessage = false;
           Toast.responseHandler(
             `${this.$t('errorsGlobal.signer-address-different')}`,
