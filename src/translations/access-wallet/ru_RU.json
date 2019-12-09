@@ -1,39 +1,39 @@
 {
   "mewconnect": {
-    "option-text": "Use MEWconnect to access my wallet",
+    "option-text": "Использовать MEWconnect для получения доступа к моему кошельку",
     "modal": {
-      "title": "Access by MEWconnect",
-      "text1": "Please use MEWconnect App to scan the QR code above",
-      "text2": "Don't have the App? Download now."
+      "title": "Доступ с помощью MEWconnect",
+      "text1": "Используйте приложение MEWconnect для сканирования указанного выше QR-кода",
+      "text2": "Нет приложения? Загрузите сейчас."
     },
-    "warning": "MEWconnect is not compatible with iPads."
+    "warning": "MEWconnect несовместим с iPads."
   },
   "finney": {
-    "scan-info": "To connect, scan the QR code from {wallet} app on your {finney-bc}",
+    "scan-info": "Чтобы подключиться, отсканируйте QR-код из приложения {wallet} на вашем {finney-bc}",
     "finney-wallet": "FinneyWallet",
     "finney-bc": "FINNEY™ BLOCKCHAIN SMARTPHONE",
-    "get-finney": "Get your {finney-title} now",
+    "get-finney": "Купите {finney-title} сейчас",
     "finney-title": "FINNEY™",
-    "mobile": "mobile",
+    "mobile": "мобильный",
     "finney-connect": "FINNEY Connect"
   },
   "hardware": {
-    "option-title": "Hardware",
+    "option-title": "Аппаратный доступ",
     "warning": {
-      "not-connected": "Please make sure your device is connected."
+      "not-connected": "Пожалуйста, убедитесь, что устройство подключено."
     },
     "modal": {
-      "title": "Access by Hardware",
-      "button-buy": "Buy Now",
-      "button-choose": "Continue"
+      "title": "Аппаратный доступ",
+      "button-buy": "Купить",
+      "button-choose": "Продолжить"
     }
   },
   "software": {
-    "option-title": "Software",
-    "option-text": "Keystore file, Private key, Mnemonic phrase",
+    "option-title": "Программный доступ",
+    "option-text": "Файл хранения ключей, приватный ключ, мнемоническая фраза",
     "modal": {
-      "title": "Access by Software",
-      "purchase-text": "Purchase a hardware wallet for the highest security when accessing your crypto.",
+      "title": "Программный доступ",
+      "purchase-text": "Приобретите аппаратный кошелек для максимальной безопасности при доступе к средствам.",
       "purchase-link": "Purchase a hardware wallet...."
     }
   },
