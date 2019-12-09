@@ -8,7 +8,9 @@
           tag="div"
           path="dappsAave.deposit-token"
         >
-          <span slot="token" class="token">{{ $t('dappsAave.dai') }}</span>
+          <span slot="token" class="token">{{
+            userReserves.length > 0 ? token.name : ''
+          }}</span>
         </i18n>
         <i18n
           v-if="activeBorrowTab"
@@ -16,7 +18,9 @@
           tag="div"
           path="dappsAave.borrow-token"
         >
-          <span slot="token" class="token">{{ $t('dappsAave.dai') }}</span>
+          <span slot="token" class="token">{{
+            reservesData.length > 0 ? token.name : ''
+          }}</span>
         </i18n>
       </div>
       <back-button
@@ -47,8 +51,8 @@
       </div>
       <div class="health-container">
         <span>{{ $t('dappsAave.health-factor') }}</span>
-        <!-- placeholder -->
-        <span class="health-score">{{ healthFactor }}</span>
+        <i v-show="loadingHome" class="fa fa-spinner fa-spin health-score" />
+        <span v-if="!loadingHome" class="health-score">{{ healthFactor }}</span>
         <popover
           :popcontent="$t('dappsAmbrpay.ambrpay-popover')"
           class="dapp-popover"
@@ -62,8 +66,11 @@
       :borrowed-balance="borrowedBalance"
       :collateral-balance="collateralBalance"
       :ltv="ltv"
-      :loading="loading"
+      :loading-home="loadingHome"
+      :loading-reserves="loadingReserves"
       :reserves="activeDepositTab ? userReserves : reservesData"
+      :current-reserve-balance="currentReserveBalance"
+      @takeAction="takeAction"
     />
   </div>
 </template>
@@ -76,7 +83,6 @@ import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
 import { Toast } from '@/helpers';
-
 export default {
   components: {
     'back-button': BackButton
@@ -91,14 +97,26 @@ export default {
       borrowedBalance: '',
       collateralBalance: '',
       ltv: '',
-      loading: true,
+      loadingHome: true,
+      loadingReserves: true,
       reservesAddr: [],
       reservesData: [],
-      userReserves: []
+      userReserves: [],
+      reserveAddr: 0,
+      currentReserveBalance: 0
     };
   },
   computed: {
     ...mapState(['web3', 'account'])
+  },
+  watch: {
+    '$route.params.token'(newVal) {
+      this.token = newVal;
+      const userReserve = this.userReserves.find(reserve => {
+        return reserve.address === token.address;
+      })
+      console.error('this', this.token, this.userReserves, userReserve)
+    }
   },
   async mounted() {
     this.lendingPoolContractAddress =
@@ -142,7 +160,7 @@ export default {
           .toFixed(2)
           .toString();
         this.ltv = info.ltv;
-        this.loading = false;
+        this.loadingHome = false;
       } catch (err) {
         Toast.responseHandler(err, Toast.ERROR);
       }
@@ -152,7 +170,6 @@ export default {
         this.reservesAddr = await this.lendingPoolContract.methods
           .getReserves()
           .call();
-
         this.getReserveData();
         this.getUserReserveData();
       } catch (err) {
@@ -164,12 +181,12 @@ export default {
         const reserveInfo = await this.lendingPoolContract.methods
           .getUserReserveData(this.reservesAddr[i], this.account.address)
           .call();
-
         reserveInfo.name = 'DAI';
         reserveInfo.address = this.reservesAddr[i];
-
         this.userReserves.push(reserveInfo);
       }
+      console.error('reserves', this.userReserves)
+      this.loadingReserves = false;
       return this.userReserves;
     },
     async getReserveData() {
@@ -177,14 +194,35 @@ export default {
         const reserveInfo = await this.lendingPoolContract.methods
           .getReserveData(this.reservesAddr[i])
           .call();
-
         reserveInfo.name = 'ETH';
         reserveInfo.address = this.reservesAddr[i];
-
         this.reservesData.push(reserveInfo);
       }
-
+      this.loadingReserves = false;
       return this.reservesData;
+    },
+    takeAction(param) {
+      console.error('param', param);
+      this.activeDepositTab ? this.deposit(param) : this.borrow(param);
+    },
+    async deposit(param) {
+      try {
+        const depositInfo = await this.lendingPoolContract.methods
+          .deposit(param.reserveAddr, param.amount, 0)
+          .encodeABI();
+      } catch (err) {
+        Toast.responseHandler(err, Toast.ERROR);
+      }
+    },
+    async borrow(param) {
+      try {
+        const borrowInfo = await this.lendingPoolContract.methods
+          .borrow(param)
+          .call();
+        console.error('borrow', borrowInfo);
+      } catch (err) {
+        console.error('err', err);
+      }
     },
     toggleTabs(action) {
       if (

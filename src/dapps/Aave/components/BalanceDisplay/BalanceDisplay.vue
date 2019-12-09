@@ -15,9 +15,9 @@
           <span>{{ $t('dappsAave.total') }}</span>
         </span>
       </div>
-      <i v-show="loading" class="fa fa-spinner fa-spin" />
-      <span v-if="title !== 'Earnings' && !loading">
-        <p class="balance">${{ getUSDBalance() }}</p>
+      <i v-show="loadingHome" class="fa fa-spinner fa-spin" />
+      <span v-if="title !== 'Earnings' && !loadingHome">
+        <p class="balance">${{ getUSDBalance(balance) }}</p>
         <p class="eth-balance">{{ balance }} {{ $t('common.currency.eth') }}</p>
       </span>
       <div v-if="title === 'Earnings'" class="earnings-container">
@@ -43,7 +43,6 @@
 import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import { Toast } from '@/helpers';
-
 export default {
   props: {
     title: {
@@ -62,10 +61,15 @@ export default {
       type: Number,
       default: 0
     },
-    loading: {
+    loadingHome: {
       type: Boolean,
       default: true
     }
+  },
+  data() {
+    return {
+      ethPrice: 0
+    };
   },
   computed: {
     ...mapState(['online'])
@@ -74,11 +78,11 @@ export default {
     if (this.online) this.getEthPrice();
   },
   methods: {
-    getUSDBalance() {
+    getUSDBalance(balance) {
       let usdBalance = 0;
-      if (this.balance) {
+      if (balance) {
         usdBalance = new BigNumber(
-          new BigNumber(this.balance).times(new BigNumber(this.ethPrice))
+          new BigNumber(balance).times(new BigNumber(this.ethPrice))
         ).toFixed(2);
       }
       return usdBalance;
