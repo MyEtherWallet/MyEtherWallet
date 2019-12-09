@@ -1,4 +1,4 @@
-@import '~@/scss/GlobalVariables';
+@import "~@/scss/GlobalVariables";
 .wallet-side-menu {
   background-color: $white;
   height: 100%;
@@ -7,6 +7,7 @@
   padding: 20px 0;
   padding-right: 50px;
   transition: all 0.3s ease;
+  max-width: 65px;
 
   .wallet-menu {
     align-items: center;
