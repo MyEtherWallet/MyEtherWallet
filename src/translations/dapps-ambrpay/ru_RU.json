@@ -1,9 +1,9 @@
 {
-  "ambrpay-popover": "With Ambrpay you can create and manage recurring payments.",
+  "ambrpay-popover": "С помощью Ambrpay вы можете создавать и управлять периодическими платежами.",
   "title": "Ambrpay",
   "withdraw-funds": "Withdraw Funds",
   "add-funds": "Add Funds",
-  "balance": "Subscriptions Balance",
+  "balance": "Баланс подписок",
   "my-subscriptions": "My Subscriptions",
   "automation-fee": "1% automation-fee will be added on top",
   "interval": "Interval",
@@ -13,7 +13,7 @@
   "days-lowercase": "day(s)",
   "start-recurring": "Start Recurring",
   "enter-days": "Enter the number of day(s)",
-  "exit-dapp": "Exit Dapp",
+  "exit-dapp": "Выйти из Dapp",
   "manage-subscriptions": {
     "title": "Manage Subscriptions",
     "no-active": "You have no active subscriptions!",

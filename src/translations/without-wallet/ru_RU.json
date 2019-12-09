@@ -1,9 +1,9 @@
 {
-  "generate-info": "Generate Information",
-  "signed-tx": "Signed Transaction",
-  "nonce": "Nonce",
-  "select-network": "Select Network",
-  "tx-details": "Transaction Details",
-  "tx-status": "Transaction Status",
-  "offline-helper": "Send Offline Helper"
+  "generate-info": "Сгенерировать информацию",
+  "signed-tx": "Подписанная транзакция",
+  "nonce": "Nonce-Число",
+  "select-network": "Выберите Сеть",
+  "tx-details": "Детали Транзакции",
+  "tx-status": "Статус Транзакции",
+  "offline-helper": "Помощник для оффлайн транзакций"
 }
