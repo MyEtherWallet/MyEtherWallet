@@ -19,7 +19,8 @@ const EXCEPTIONS = [
   'web3',
   'web3-core-helpers',
   'web3-core-method',
-  'web3-utils'
+  'web3-utils',
+  '@vue/test-utils'
 ];
 const CUSTOM_DIST = {
   ['babel-core']: 'bridge'
