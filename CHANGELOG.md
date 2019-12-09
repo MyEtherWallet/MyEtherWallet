@@ -1,5 +1,6 @@
 ### Bug
 
+- Fix Chrome ex medium size layout for every components [#1730](https://github.com/MyEtherWallet/MyEtherWallet/pull/1730)
 - Fix clear, dropdown, change ENS char translations [#1713](https://github.com/MyEtherWallet/MyEtherWallet/pull/1713)
 
 ### Release v5.2.5-hotfix.1
