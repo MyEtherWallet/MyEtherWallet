@@ -1,3 +1,8 @@
+### Bug
+
+- Fix verify signature []()
+
+
 ### Release v5.2.6
 
 ### Bug
