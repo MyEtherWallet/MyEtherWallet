@@ -1,3 +1,14 @@
+### Release v5.2.7
+
+### Bug
+
+- Fix top banner buttons [#1715](https://github.com/MyEtherWallet/MyEtherWallet/pull/1715)
+- Fix text align and font sizes for Policy and Terms of Service [#1734](https://github.com/MyEtherWallet/MyEtherWallet/pull/1734)
+
+### Devop
+
+- Refactor translations [#1732](https://github.com/MyEtherWallet/MyEtherWallet/pull/1732)
+
 ### Release v5.2.6
 
 ### Bug
