@@ -15,7 +15,7 @@
   },
   "toast": {
     "success-transfer": "Перевод выполнен успешнo!",
-    "success-register": "Регистрация завершена!"
+    "success-register": "Successfully Registered!"
   },
   "check-domain": "Проверить домен",
   "update": "Обновление",
