@@ -34,7 +34,7 @@
             </div>
           </div>
           <span class="text__base link switch-label">{{
-            $t('common.value')
+            $t('accessWallet.mnemonic.value')
           }}</span>
         </div>
       </div>
