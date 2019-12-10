@@ -2,6 +2,7 @@
 
 ### Bug
 
+- Fix verify signature [#1729](https://github.com/MyEtherWallet/MyEtherWallet/pull/1729)
 - Fix top banner buttons [#1715](https://github.com/MyEtherWallet/MyEtherWallet/pull/1715)
 - MEW CX memory leak on access wallet + fix mnemonic [#1733](https://github.com/MyEtherWallet/MyEtherWallet/pull/1733)
 - Fix text align and font sizes for Policy and Terms of Service [#1734](https://github.com/MyEtherWallet/MyEtherWallet/pull/1734)
