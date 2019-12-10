@@ -1,5 +1,5 @@
 <template>
-  <div class="modal-container">
+  <div class="modal-container action-modal">
     <b-modal
       ref="actionModal"
       :title="depositModal ? 'Deposit' : 'Borrow'"
@@ -265,9 +265,12 @@ export default {
 </style>
 
 <style lang="scss">
-.modal-dialog {
-  max-width: 700px !important;
+.action-modal {
+  .modal-dialog {
+    max-width: 700px !important;
+  }
 }
+
 .modal-body {
   padding: 0 !important;
 }

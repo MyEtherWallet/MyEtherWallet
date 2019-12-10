@@ -70,6 +70,7 @@
       :loading-reserves="loadingReserves"
       :reserves="activeDepositTab ? userReserves : reservesData"
       :current-reserve-balance="currentReserveBalance"
+      :health-factor="healthFactor"
       @takeAction="takeAction"
     />
   </div>
@@ -79,6 +80,7 @@
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
 import LendingPoolAbi from './abi/LendingPoolAbi.js';
 import LendingPoolAddressesProviderAbi from './abi/LendingPoolAddressesProviderAbi.js';
+import ATokenAbi from './abi/AToken.js';
 import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
@@ -103,7 +105,7 @@ export default {
       reservesData: [],
       userReserves: [],
       reserveAddr: 0,
-      currentReserveBalance: 0
+      currentReserveBalance: '0'
     };
   },
   computed: {
@@ -182,12 +184,14 @@ export default {
       for (let i = 0; i < this.reservesAddr.length; i++) {
         const reserveInfo = await this.lendingPoolContract.methods
           .getUserReserveData(this.reservesAddr[i], this.account.address)
-          .call();
+          .call()
+          .catch((err) => {
+            Toast.responseHandler(err, Toast.ERROR);
+          });
         reserveInfo.name = 'DAI';
         reserveInfo.address = this.reservesAddr[i];
         this.userReserves.push(reserveInfo);
       }
-      console.error('reserves', this.userReserves);
       this.loadingReserves = false;
       return this.userReserves;
     },
@@ -195,22 +199,33 @@ export default {
       for (let i = 0; i < this.reservesAddr.length; i++) {
         const reserveInfo = await this.lendingPoolContract.methods
           .getReserveData(this.reservesAddr[i])
-          .call();
+          .call()
+          .catch((err) => {
+            Toast.responseHandler(err, Toast.ERROR);
+          });
         reserveInfo.name = 'ETH';
         reserveInfo.address = this.reservesAddr[i];
         this.reservesData.push(reserveInfo);
       }
       this.loadingReserves = false;
+      // console.error('hello')
+      // console.error('hellooooo', this.reservesData[0])
+      // this.aTokenContract = new this.web3.eth.Contract(
+      //   ATokenAbi,
+      //   this.reservesData[0]
+      // );
+
+      // const info = await this.aTokenContract.methods.name().call();
+      // console.error('info', this.aTokenContract)
       return this.reservesData;
     },
     takeAction(param) {
-      console.error('param', param);
       this.activeDepositTab ? this.deposit(param) : this.borrow(param);
     },
     async deposit(param) {
       try {
         const depositInfo = await this.lendingPoolContract.methods
-          .deposit(param.reserveAddr, param.amount, 0)
+          .deposit(param[0], param[1], param[2])
           .encodeABI();
       } catch (err) {
         Toast.responseHandler(err, Toast.ERROR);
@@ -219,11 +234,10 @@ export default {
     async borrow(param) {
       try {
         const borrowInfo = await this.lendingPoolContract.methods
-          .borrow(param)
-          .call();
-        console.error('borrow', borrowInfo);
+          .borrow(param[0], param[1], param[2], param[3])
+          .encodeABI();
       } catch (err) {
-        console.error('err', err);
+        Toast.responseHandler(err, Toast.ERROR);
       }
     },
     toggleTabs(action) {

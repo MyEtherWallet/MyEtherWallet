@@ -1,1 +1,42 @@
 @import '~@/scss/GlobalVariables';
+
+.header-container {
+  background-color: $light-green-1;
+  display: flex;
+  height: 102px;
+  justify-content: space-between;
+  padding: 20px;
+  width: 498px;
+
+  div > img {
+    height: 59px;
+    width: 59px;
+  }
+
+  .title {
+    color: $light-grey-18;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .amount {
+    color: $dark-blue-6;
+    font-size: 24px;
+    font-weight: 600;
+  }
+
+  .token-name {
+    font-size: 24px;
+    font-weight: normal;
+  }
+
+  .usd-amount {
+    color: $light-grey-18;
+    font-size: 14px;
+  }
+}
+
+.health-container, .tx-container {
+  display: flex;
+  justify-content: space-between;
+}

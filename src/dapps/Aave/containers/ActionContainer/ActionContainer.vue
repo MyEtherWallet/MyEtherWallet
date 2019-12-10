@@ -65,7 +65,7 @@
             : $t('dappsAave.borrow-info')
         }}
       </p>
-      <input v-model="amount" type="number" />
+      <input v-model="amount" type="number" placeholder="0" />
       <div class="percentage-container">
         <div
           :class="percentBtns.twentyFivePercentEnabled ? 'active' : ''"
@@ -94,7 +94,10 @@
       </div>
       <p v-if="errorMsg" class="error">{{ errorMsg }}</p>
       <button
-        :class="['take-action-btn', errorMsg || this.amount === 0 ? 'disabled' : 'enabled']"
+        :class="[
+          'take-action-btn',
+          errorMsg || !amount ? 'disabled' : 'enabled'
+        ]"
         @click="takeAction()"
       >
         {{
@@ -115,6 +118,15 @@
       ref="rateModal"
       :stable-rate="token.fixedBorrowRate"
       :variable-rate="token.variableBorrowRate"
+      @takeBorrowAction="takeBorrowAction"
+    />
+    <confirmation-modal
+      ref="confirmationModal"
+      :active-deposit-amount="activeDepositTab"
+      :amount="amount"
+      :usd-amount="getUSDBalance(amount)"
+      :health-factor="healthFactor"
+      :token-name="token.name"
     />
   </div>
 </template>
@@ -125,10 +137,12 @@ import * as unit from 'ethjs-unit';
 import { Toast } from '@/helpers';
 import { mapState } from 'vuex';
 import RateModal from '@/dapps/Aave/components/RateModal';
+import ConfirmationModal from '@/dapps/Aave/components/ConfirmationModal';
 
 export default {
   components: {
-    'rate-modal': RateModal
+    'rate-modal': RateModal,
+    'confirmation-modal': ConfirmationModal
   },
   props: {
     activeBorrowTab: {
@@ -150,16 +164,21 @@ export default {
       default: ''
     },
     currentReserveBalance: {
-      type: Number,
-      default: 0
+      type: String,
+      default: ''
+    },
+    healthFactor: {
+      type: String,
+      default: ''
     }
   },
   data() {
     return {
       errorMsg: '',
-      amount: 0,
+      amount: null,
       ethPrice: 0,
-      token: this.$route.params.token,
+      disableBtn: false,
+      token: this.$route.params.token || {},
       percentBtns: {
         twentyFivePercentEnabled: false,
         fiftyPercentEnabled: false,
@@ -183,6 +202,13 @@ export default {
         )
       ) {
         this.errorMsg = 'Cannot exceed wallet balance';
+      } else if (
+        this.activeBorrowTab &&
+        new BigNumber(this.amount).gt(
+          new BigNumber(this.convertToEther(this.token.availableLiquidity))
+        )
+      ) {
+        this.errorMsg = 'Cannot exceed available balance';
       } else {
         this.errorMsg = '';
       }
@@ -195,16 +221,25 @@ export default {
   },
   methods: {
     takeAction() {
-      const param = {
-        reserveAddr: this.token.address,
-        amount: new BigNumber(unit.toWei(this.amount, 'ether')).toString()
-      };
       if (this.activeBorrowTab) {
         this.$refs.rateModal.$refs.rateModal.show();
       } else {
-        this.goToHome();
-        this.$emit('takeAction', param);
+        this.$refs.confirmationModal.$refs.confirmationModal.show();
+        this.$emit('takeAction', [
+          this.token.address,
+          new BigNumber(unit.toWei(this.amount, 'ether')).toString(),
+          0
+        ]); // do  i need to put referral code? is 0 mean no referral?
       }
+    },
+    takeBorrowAction(interestRate) {
+      this.goToHome();
+      this.$emit('takeAction', [
+        this.token.address,
+        new BigNumber(unit.toWei(this.amount, 'ether')).toString(),
+        interestRate,
+        0
+      ]);
     },
     setPercentAmount(selectedBtn, percentage) {
       this.amount = new BigNumber(
@@ -216,7 +251,7 @@ export default {
         if (selectedBtn === btn) {
           if (this.percentBtns[btn] === true) {
             this.percentBtns[btn] = false;
-            this.amount = 0;
+            this.amount = null;
           } else {
             this.percentBtns[btn] = true;
           }
