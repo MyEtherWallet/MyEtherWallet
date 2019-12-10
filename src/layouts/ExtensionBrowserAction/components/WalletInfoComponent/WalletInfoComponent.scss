@@ -40,6 +40,7 @@
   .wallet-content {
     display: -webkit-box;
     background-color: $white;
+    display: flex;
 
     .address-and-balance-container {
       border-bottom-left-radius: 5px;
@@ -48,8 +49,10 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      flex-grow: 1;
 
       .address-content-container {
+
         display: flex;
         justify-content: space-between;
         padding: 20px;
