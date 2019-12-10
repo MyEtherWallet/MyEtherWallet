@@ -9,7 +9,7 @@ export default async ({ event }, res, next) => {
           `popupLoading.html#?navigate-to=web3-detected`
         ),
         type: 'popup',
-        height: 500,
+        height: 487,
         width: 300,
         focused: true
       });

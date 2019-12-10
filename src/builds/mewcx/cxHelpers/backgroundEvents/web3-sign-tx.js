@@ -33,32 +33,33 @@ export default async ({ event, payload }, res, next) => {
       res({ error: e });
     };
 
-    const signTransaction = function(wallet) {
+    const signTransaction = async function(wallet) {
+      console.log(signer, password, txParams)
       const newTx = new Transaction(txParams);
-      wallet
-        .signTransaction(newTx)
-        .then(signedTx => {
-          const newPayload = {
-            signedTx: signedTx.rawTransaction,
-            raw: txParams
-          };
-          console.log(newPayload, globChrome);
-          globChrome.runtime.sendMessage(
-            globChrome.runtime.id,
-            { event: CX_SEND_SIGNED_TX, payload: newPayload },
-            {},
-            signResponse => {
-              console.log(signResponse);
-              if (signResponse.hasOwnProperty('message')) {
-                res({ message: signResponse.message });
-              }
-              res({ signResponse });
+      try {
+        const signedTx =  await wallet.signTransaction(newTx);
+        const newPayload = {
+          signedTx: signedTx.rawTransaction,
+          raw: txParams
+        };
+        console.log(globChrome.runtime.id, 'what')
+        console.log(newPayload, 'the heck')
+        globChrome.runtime.sendMessage(
+          globChrome.runtime.id,
+          { event: CX_SEND_SIGNED_TX, payload: newPayload },
+          {},
+          signResponse => {
+            console.log(signResponse, 'for some reason you get here??');
+            if (signResponse.hasOwnProperty('message')) {
+              res({ message: signResponse.message });
             }
-          );
-        })
-        .catch(e => {
-          res({ message: e });
-        });
+            res({ signResponse });
+          }
+        );
+      } catch (error) {
+        res({ message: error });
+      }
+      console.log('gets here tho?')
     };
   });
 };
