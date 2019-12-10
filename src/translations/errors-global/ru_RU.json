@@ -1,11 +1,11 @@
 {
-  "not-valid-amount-total": "Not enough ",
-  "to-send": "to send.",
-  "invalid-value": "Invalid value",
-  "wrong-passphrase": "Passphrase given is incorrect!",
-  "browser-non-u2f": "Browser not u2f compliant. Try using Chrome or Opera!",
-  "browser-non-web-usb": "Browser does not support WebUSB. Try using Chrome or Opera!",
-  "no-mobile-support": "Hardware wallet not supported by mobile browser!",
-  "something-went-wrong": "Something went wrong!",
-  "signer-address-different": "Signer address is different from the derived address!"
+  "not-valid-amount-total": "Недостаточно ",
+  "to-send": "для отправки.",
+  "invalid-value": "Неверное значение",
+  "wrong-passphrase": "Парольная фраза введена неверно!",
+  "browser-non-u2f": "Браузер не совместим с u2f. Попробуйте использовать Chrome или Opera!",
+  "browser-non-web-usb": "Браузер не поддерживает WebUSB. Попробуйте использовать Chrome или Opera!",
+  "no-mobile-support": "Аппаратный кошелек не поддерживается мобильным браузером!",
+  "something-went-wrong": "Что-то пошло не так!",
+  "signer-address-different": "Адрес подписчика отличается от полученного адреса!"
 }
