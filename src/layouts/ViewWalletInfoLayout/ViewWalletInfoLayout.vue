@@ -1,6 +1,9 @@
 <template>
   <div class="page-container-block">
     <div class="view-wallet-info-layout-container">
+      <interface-balance-modal ref="balance" :balance="balance" />
+      <view-private-key-modal ref="viewPriv" />
+      <print-modal ref="printModal" :address="account.address" />
       <div class="page-title-block">
         <h2>{{ $t('footer.view-wallet-info') }}</h2>
         <p>
@@ -25,7 +28,7 @@
                     v-show="fetchingBalance"
                     class="fa fa-spinner fa-lg fa-spin"
                   />
-                  {{ $t('common.currency.eth') }}
+                  {{ network.type.currencyName }}
                 </p>
                 <div class="balance-button-container">
                   <i class="fa fa-refresh fa-lg" @click="fetchBalance" />
