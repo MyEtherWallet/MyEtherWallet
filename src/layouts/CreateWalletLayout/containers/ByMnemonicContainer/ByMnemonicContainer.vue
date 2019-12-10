@@ -30,7 +30,7 @@
               </div>
             </div>
             <span class="text__base link switch-label">{{
-              $t('common.value')
+              $t('createWallet.mnemonic.value')
             }}</span>
           </div>
 
