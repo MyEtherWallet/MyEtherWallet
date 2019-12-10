@@ -7,9 +7,9 @@
   },
   "access-my-wallet": {
     "text": "Подключитесь к блокчейну используя выбранный вами кошелек.",
-    "opt-1": "* Отправка и обмен ETH и Токенов",
-    "opt-2": "* Подписание и подтверждение сообщений",
-    "opt-3": "* Взаимодействие с контрактами, ENS, Dapps, и многое другое!",
+    "opt-1": "Send and Swap ETH & Tokens",
+    "opt-2": "Sign & Verify Messages",
+    "opt-3": "Interact with Contracts, ENS, Dapps, and more!",
     "button": "Получить доступ"
   },
   "about-mew": {
