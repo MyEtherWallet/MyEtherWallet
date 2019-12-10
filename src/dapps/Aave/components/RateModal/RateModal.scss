@@ -17,7 +17,8 @@
 
     div {
       border-radius: 4px;
-      box-shadow: 0 0 5px $light-grey-3;
+      box-shadow: 0 0 5px $light-grey-13;
+      cursor: pointer;
       height: 150px;
       padding: 25px;
       width: 130px;
@@ -31,6 +32,10 @@
     .variable {
       color: $light-yellow-4;
       font-weight: 500;
+    }
+
+    .selected-btn {
+      background-color: $light-grey-13;
     }
   }
 
