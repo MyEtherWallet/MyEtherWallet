@@ -101,7 +101,7 @@
   "create": "Создать",
   "save": "Сохранить",
   "upgrade": "Upgrade",
-  "loading-your-cdps": "Loading your CDPs",
+  "loading-your-cdps": "Загрузка CDP",
   "migrate-single-collateral-to-multi-collateral": "Migrate Single Collateral CDP to Multi-Collateral Vault",
   "not-enough-sai": "There is not enough Sai available to migrate CDPs at this time. Please try again later.",
   "needs-at-least-20": "Only CDPs with more than 20 and less than {value} SAI can be upgraded at the moment.",
