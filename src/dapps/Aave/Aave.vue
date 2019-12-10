@@ -112,10 +112,12 @@ export default {
   watch: {
     '$route.params.token'(newVal) {
       this.token = newVal;
-      const userReserve = this.userReserves.find(reserve => {
-        return reserve.address === token.address;
-      })
-      console.error('this', this.token, this.userReserves, userReserve)
+      if (this.token && this.activeBorrowTab) {
+        const userReserve = this.userReserves.find(reserve => {
+          return reserve.address === this.token.address;
+        });
+        this.currentReserveBalance = userReserve.currentBorrowBalance;
+      }
     }
   },
   async mounted() {
@@ -185,7 +187,7 @@ export default {
         reserveInfo.address = this.reservesAddr[i];
         this.userReserves.push(reserveInfo);
       }
-      console.error('reserves', this.userReserves)
+      console.error('reserves', this.userReserves);
       this.loadingReserves = false;
       return this.userReserves;
     },

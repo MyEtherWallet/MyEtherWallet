@@ -20,6 +20,7 @@
   "type-token": "Type of token",
   "all": "All",
   "stable": "Stable",
+  "variable": "Variable",
   "token": "Token",
   "avail-balance": "Available Balance",
   "deposited": "Deposited",
@@ -46,5 +47,8 @@
   "avail-liquidity": "Available liquidity",
   "stable-rate": "Stable rate",
   "variable-rate": "Variable rate",
-  "historical-rate": "Historical Rates"
+  "historical-rate": "Historical Rates",
+  "select-rate": "Select your interest rate",
+  "select-rate-info": "Select the type of rate for your loan. Please click on the desired rate type and read the info box for more information.",
+  "continue": "Continue"
 }

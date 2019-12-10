@@ -13,7 +13,7 @@
           {{
             activeDepositTab
               ? convertToEther(token.currentUnderlyingBalance)
-              : convertToEther(token.currentBorrowBalance)
+              : convertToEther(currentReserveBalance)
           }}
           <span class="token-name"> {{ token.name }} </span>
         </p>
@@ -21,7 +21,7 @@
           ${{
             activeDepositTab
               ? getUSDBalance(convertToEther(token.currentUnderlyingBalance))
-              : getUSDBalance(token.currentBorrowBalance)
+              : getUSDBalance(convertToEther(currentReserveBalance))
           }}
         </p>
       </div>
@@ -111,6 +111,11 @@
         }}
       </button>
     </div>
+    <rate-modal
+      ref="rateModal"
+      :stable-rate="token.fixedBorrowRate"
+      :variable-rate="token.variableBorrowRate"
+    />
   </div>
 </template>
 
@@ -119,7 +124,12 @@ import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
 import { Toast } from '@/helpers';
 import { mapState } from 'vuex';
+import RateModal from '@/dapps/Aave/components/RateModal';
+
 export default {
+  components: {
+    'rate-modal': RateModal
+  },
   props: {
     activeBorrowTab: {
       type: Boolean,
@@ -138,6 +148,10 @@ export default {
     collateralBalance: {
       type: String,
       default: ''
+    },
+    currentReserveBalance: {
+      type: Number,
+      default: 0
     }
   },
   data() {
@@ -158,6 +172,9 @@ export default {
     ...mapState(['online'])
   },
   watch: {
+    currentReserveBalance(newVal) {
+      this.currentReserveBalance = newVal;
+    },
     amount() {
       if (
         this.activeDepositTab &&
@@ -172,7 +189,6 @@ export default {
     }
   },
   mounted() {
-    console.error('this', this.token.currentBorrowBalance)
     if (this.online) {
       this.getEthPrice();
     }
@@ -186,10 +202,11 @@ export default {
           new BigNumber(unit.toWei(this.amount, 'ether')).toString()
       };
       if (this.activeBorrowTab) {
-        param['interestRate'] === 0; //variable or stable rate?
+        this.$refs.rateModal.$refs.rateModal.show();
+      } else {
+        this.goToHome();
+        this.$emit('takeAction', param);
       }
-      this.goToHome();
-      this.$emit('takeAction', param);
     },
     setPercentAmount(selectedBtn, percentage) {
       this.amount = new BigNumber(
