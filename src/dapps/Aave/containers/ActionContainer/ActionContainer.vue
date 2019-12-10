@@ -94,7 +94,7 @@
       </div>
       <p v-if="errorMsg" class="error">{{ errorMsg }}</p>
       <button
-        :class="['take-action-btn', errorMsg ? 'disabled' : 'enabled']"
+        :class="['take-action-btn', errorMsg || this.amount === 0 ? 'disabled' : 'enabled']"
         @click="takeAction()"
       >
         {{
@@ -197,9 +197,7 @@ export default {
     takeAction() {
       const param = {
         reserveAddr: this.token.address,
-        amount:
-          this.percentageAmount ||
-          new BigNumber(unit.toWei(this.amount, 'ether')).toString()
+        amount: new BigNumber(unit.toWei(this.amount, 'ether')).toString()
       };
       if (this.activeBorrowTab) {
         this.$refs.rateModal.$refs.rateModal.show();
