@@ -2,7 +2,6 @@
 
 .page-container-block {
   background-color: $light-grey-2;
-  height: 100%;
 }
 
 .view-wallet-info-layout-container {
@@ -11,6 +10,7 @@
   max-width: 1055px;
   min-width: 960px;
   margin: 0 auto;
+  min-height: 100vh;
 }
 
 .page-title-block {
