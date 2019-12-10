@@ -42,5 +42,5 @@ module.exports = {
   ],
   testEnvironmentOptions: {},
   testURL: 'http://localhost/',
-  setupTestFrameworkScriptFile: '<rootDir>/tests/unit/__mocks__/mocks.js'
+  setupFilesAfterEnv: ['<rootDir>/tests/unit/__mocks__/mocks.js']
 };
