@@ -46,6 +46,8 @@
     "title": "Your Mnemonic Phrase",
     "title-tab": "By Mnemonic Phrase",
     "extra-word": "Extra Word",
+    "value": "Value",
+    "invalid-mnemonic": "Invalid Mnemonic",
     "do-you-extra-word": "Do you have an Extra Word?",
     "access-wallet-extra-word-popover": "Some mnemonic phrases are generated with an extra word chosen by the user for added security. It acts as a 13th or 25th word to your phrase, sometimes referred to as a 'password'. If you did not create an extra word when you made your phrase, you should leave this field blank.",
     "extra-word-popover": "You can add an extra word to your phrase for added security. However, you will need this word everytime you wish to access your phrase. Some wallets may not support adding an extra word when using mnemonic phrases.",

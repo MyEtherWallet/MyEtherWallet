@@ -1,7 +1,7 @@
 <template>
   <b-modal
     ref="mnemonicPhrase"
-    :title="$t('accessWallet.access-by-mnemonic-phrase')"
+    :title="$t('accessWallet.mnemonic.modal.title')"
     hide-footer
     class="bootstrap-modal padding-20"
     centered
