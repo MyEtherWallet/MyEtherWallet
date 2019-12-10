@@ -1,3 +1,7 @@
+### Bug
+
+- MEW CX memory leak on access wallet + fix mnemonic [#1733](https://github.com/MyEtherWallet/MyEtherWallet/pull/1733)
+
 ### Release v5.2.6
 
 ### Bug
