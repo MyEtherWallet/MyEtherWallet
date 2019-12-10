@@ -50,6 +50,11 @@
       height: 62px;
       margin-top: 15px;
       width: 260px;
+
+      & .disabled {
+        background: $dark-grey-11;
+        pointer-events: none;
+      }
     }
   }
 }

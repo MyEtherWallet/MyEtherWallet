@@ -50,5 +50,11 @@
   "historical-rate": "Historical Rates",
   "select-rate": "Select your interest rate",
   "select-rate-info": "Select the type of rate for your loan. Please click on the desired rate type and read the info box for more information.",
-  "continue": "Continue"
+  "continue": "Continue",
+  "confirmation": "Confirmation",
+  "amount-to-deposit": "Amount to Deposit",
+  "current-health": "Current Health Factor",
+  "next-health": "Next Health Factor",
+  "gas-fee": "Gas Fee",
+  "total-pay": "Total Pay"
 }

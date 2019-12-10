@@ -11,19 +11,25 @@
       <div class="modal-contents">
         <p>{{ $t('dappsAave.select-rate-info') }}</p>
         <div class="button-container">
-          <div @click="toggleBtns('stable')" :class="['mr-3', selectStable ? 'selected-btn' : '']">
+          <div
+            :class="['mr-3', selectStable ? 'selected-btn' : '']"
+            @click="toggleBtns('stable')"
+          >
             <img src="@/assets/images/icons/stable.svg" alt="" />
             <p>{{ $t('dappsAave.stable') }}</p>
             <p class="stable">{{ convertFromRay(stableRate) }}%</p>
           </div>
-          <div @click="toggleBtns('variable')" :class="selectVariable ? 'selected-btn' : ''">
+          <div
+            :class="selectVariable ? 'selected-btn' : ''"
+            @click="toggleBtns('variable')"
+          >
             <img src="@/assets/images/icons/variable.svg" alt="" />
             <p>{{ $t('dappsAave.variable') }}</p>
             <p class="variable">{{ convertFromRay(variableRate) }}%</p>
           </div>
         </div>
         <div class="continue-btn-container">
-          <button>{{ $t('dappsAave.continue') }}</button>
+          <button @click="takeAction()">{{ $t('dappsAave.continue') }}</button>
         </div>
       </div>
     </b-modal>
@@ -34,12 +40,6 @@
 import BigNumber from 'bignumber.js';
 
 export default {
-  data() {
-    return {
-      selectStable: false,
-      selectVariable: false
-    }
-  },
   props: {
     stableRate: {
       type: String,
@@ -49,6 +49,12 @@ export default {
       type: String,
       default: ''
     }
+  },
+  data() {
+    return {
+      selectStable: false,
+      selectVariable: false
+    };
   },
   methods: {
     convertFromRay(int) {
@@ -64,6 +70,11 @@ export default {
         this.selectStable = false;
         this.selectVariable = true;
       }
+    },
+    takeAction() {
+      this.$refs['rateModal'].hide();
+      this.selectedRate = this.selectStable ? 0 : 1;
+      this.$emit('takeBorrowAction', this.selectedRate);
     }
   }
 };
