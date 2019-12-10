@@ -7,7 +7,7 @@
             <div class="page-header">
               <h1>{{ parent.$t('termsOfService.title') }}</h1>
               <h6>{{ parent.$t('termsOfService.date') }}</h6>
-              <br />
+              <br /><br /><br /><br />
               <i18n path="termsOfService.welcome" tag="p">
                 <template v-slot:tos>
                   <b>"{{ parent.$t('termsOfService.tos') }}"</b>
@@ -24,9 +24,9 @@
               </i18n>
             </div>
             <div class="content">
-              <p>
-                <b>{{ parent.$t('termsOfService.intro') }}</b>
-              </p>
+              <h3>
+                {{ parent.$t('termsOfService.intro') }}
+              </h3>
               <br />
               <i18n path="termsOfService.intro-p1" tag="p">
                 <template v-slot:privPol>
@@ -50,13 +50,11 @@
                 {{ parent.$t('termsOfService.intro-p3') }}
               </p>
             </div>
-            <br />
+            <br /><br />
             <div class="content">
-              <p>
-                <b>{{
-                  parent.$t('termsOfService.services-eligibility-title')
-                }}</b>
-              </p>
+              <h3>
+                {{ parent.$t('termsOfService.services-eligibility-title') }}
+              </h3>
               <br />
               <p>
                 {{ parent.$t('termsOfService.services-eligibility-title-1') }}
@@ -104,13 +102,11 @@
                 </template>
               </i18n>
             </div>
-            <br />
+            <br /><br />
             <div class="content">
-              <p>
-                <b>{{
-                  parent.$t('termsOfService.rights-and-restrictions-title')
-                }}</b>
-              </p>
+              <h3>
+                {{ parent.$t('termsOfService.rights-and-restrictions-title') }}
+              </h3>
               <br />
               <p>
                 {{
@@ -180,11 +176,9 @@
                 }}
               </p>
             </div>
-            <br />
+            <br /><br />
             <div class="content">
-              <p>
-                <b>{{ parent.$t('termsOfService.privacy-title') }}</b>
-              </p>
+              <h3>{{ parent.$t('termsOfService.privacy-title') }}</h3>
               <br />
               <i18n path="termsOfService.privacy-title-p" tag="p">
                 <template v-slot:link>
@@ -197,21 +191,17 @@
                 </template>
               </i18n>
             </div>
-            <br />
+            <br /><br />
             <div class="content">
-              <p>
-                <b>{{ parent.$t('termsOfService.third-party-title') }}</b>
-              </p>
+              <h3>{{ parent.$t('termsOfService.third-party-title') }}</h3>
               <br />
               <p>
                 {{ parent.$t('termsOfService.third-party-title-p') }}
               </p>
             </div>
-            <br />
+            <br /><br />
             <div class="content">
-              <p>
-                <b>{{ parent.$t('termsOfService.disclaimer-title') }}</b>
-              </p>
+              <h3>{{ parent.$t('termsOfService.disclaimer-title') }}</h3>
               <br />
               <p>
                 {{ parent.$t('termsOfService.disclaimer-titlep-1') }}
@@ -233,31 +223,25 @@
                 {{ parent.$t('termsOfService.disclaimer-titlep-5') }}
               </p>
             </div>
-            <br />
+            <br /><br />
             <div class="content">
-              <p>
-                <b>{{ parent.$t('termsOfService.indemnity-title') }}</b>
-              </p>
+              <h3>{{ parent.$t('termsOfService.indemnity-title') }}</h3>
               <br />
               <p>
                 {{ parent.$t('termsOfService.indemnity-title-p') }}
               </p>
             </div>
-            <br />
+            <br /><br />
             <div class="content">
-              <p>
-                <b>{{ parent.$t('termsOfService.assignment-title') }}</b>
-              </p>
+              <h3>{{ parent.$t('termsOfService.assignment-title') }}</h3>
               <br />
               <p>
                 {{ parent.$t('termsOfService.assignment-title-p') }}
               </p>
             </div>
-            <br />
+            <br /><br />
             <div class="content">
-              <p>
-                <b>{{ parent.$t('termsOfService.agreement-waiver-title') }}</b>
-              </p>
+              <h3>{{ parent.$t('termsOfService.agreement-waiver-title') }}</h3>
               <br />
               <p>
                 {{ parent.$t('termsOfService.agreement-waiver-title-p-0') }}
@@ -311,11 +295,9 @@
                 {{ parent.$t('termsOfService.agreement-waiver-title-p-12') }}
               </p>
             </div>
-            <br />
+            <br /><br />
             <div class="content">
-              <p>
-                <b>{{ parent.$t('termsOfService.governing-law-title') }}</b>
-              </p>
+              <h3>{{ parent.$t('termsOfService.governing-law-title') }}</h3>
               <br />
               <p>
                 {{ parent.$t('termsOfService.governing-law-title-p-1') }}
@@ -325,21 +307,17 @@
                 {{ parent.$t('termsOfService.governing-law-title-p-2') }}
               </p>
             </div>
-            <br />
+            <br /><br />
             <div class="content">
-              <p>
-                <b>{{ parent.$t('termsOfService.entire-agreement-title') }}</b>
-              </p>
+              <h3>{{ parent.$t('termsOfService.entire-agreement-title') }}</h3>
               <br />
               <p>
                 {{ parent.$t('termsOfService.entire-agreement-title-p') }}
               </p>
             </div>
-            <br />
+            <br /><br />
             <div class="content">
-              <p>
-                <b>{{ parent.$t('termsOfService.contact-info-title') }}</b>
-              </p>
+              <h3>{{ parent.$t('termsOfService.contact-info-title') }}</h3>
               <br />
               <i18n path="termsOfService.contact-info-title-p" tag="p">
                 <template v-slot:suppEmail>
