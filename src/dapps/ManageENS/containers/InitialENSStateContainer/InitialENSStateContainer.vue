@@ -13,7 +13,7 @@
         <input
           v-model="localDomainName"
           :class="[domainNameErr ? 'errored' : '']"
-          :placeholder="$t('ens.ph.seven-char')"
+          :placeholder="$t('ens.ph.three-char')"
           type="text"
           name=""
         />
