@@ -12,6 +12,7 @@
 - Fix leftover issue with token search [#1749](https://github.com/MyEtherWallet/MyEtherWallet/pull/1749)
 - Check correct balance when determining ability to withdraw[#1754](https://github.com/MyEtherWallet/MyEtherWallet/pull/1754)
 - Fix offline send helper & out of memory error on local build [#1741](https://github.com/MyEtherWallet/MyEtherWallet/pull/1741)
+- Fix Chrome ex medium size layout for every components [#1730](https://github.com/MyEtherWallet/MyEtherWallet/pull/1730)
 
 ### Devop
 
@@ -26,7 +27,6 @@
 - Fix top banner buttons [#1715](https://github.com/MyEtherWallet/MyEtherWallet/pull/1715)
 - MEW CX memory leak on access wallet + fix mnemonic [#1733](https://github.com/MyEtherWallet/MyEtherWallet/pull/1733)
 - Fix text align and font sizes for Policy and Terms of Service [#1734](https://github.com/MyEtherWallet/MyEtherWallet/pull/1734)
-- Fix Chrome ex medium size layout for every components [#1730](https://github.com/MyEtherWallet/MyEtherWallet/pull/1730)
 
 ### Devop
 
