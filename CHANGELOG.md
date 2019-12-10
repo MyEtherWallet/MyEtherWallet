@@ -1,3 +1,7 @@
+### Devop
+
+- Refactor translations [#1732](https://github.com/MyEtherWallet/MyEtherWallet/pull/1732)
+
 ### Release v5.2.6
 
 ### Bug
