@@ -1,3 +1,10 @@
+### Release v5.2.7
+
+### Bug
+
+- Fix top banner buttons [#1715](https://github.com/MyEtherWallet/MyEtherWallet/pull/1715)
+- Fix text align and font sizes for Policy and Terms of Service [#1734](https://github.com/MyEtherWallet/MyEtherWallet/pull/1734)
+
 ### Devop
 
 - Refactor translations [#1732](https://github.com/MyEtherWallet/MyEtherWallet/pull/1732)
@@ -6,7 +13,6 @@
 
 ### Bug
 
-- Fix text align and font sizes for Policy and Terms of Service [#1734](https://github.com/MyEtherWallet/MyEtherWallet/pull/1734)
 - Fix ens on custom networks [#1714](https://github.com/MyEtherWallet/MyEtherWallet/pull/1714)
 - Fix clear, dropdown, change ENS char translations [#1713](https://github.com/MyEtherWallet/MyEtherWallet/pull/1713)
 - Fix message signature not showing up [#1719](https://github.com/MyEtherWallet/MyEtherWallet/pull/1719)
