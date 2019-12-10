@@ -34,7 +34,7 @@
   "block-num": "Номер блока",
   "curr-block": "Текущий номер блока:",
   "add-data": "Добавить данные",
-  "future-gas-price": "Future Gas Price (Gwei)",
+  "future-gas-price": "Будущая цена на газ (Gwei)",
   "future-gas-limit": "Будущий лимит газа",
   "req-deposit": "Требуется депозит",
   "exec-window": "Окно выполнения",
