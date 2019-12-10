@@ -55,6 +55,7 @@
   },
   "mnemonic": {
     "string": "Mnemonic Phrase",
+    "value": "Value",
     "modal": {
       "title": "Access by Mnemonic Phrase",
       "text": "Please type in your mnemonic phrase."
