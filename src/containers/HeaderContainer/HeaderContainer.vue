@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!isMewCx" class="header">
+  <div class="header">
     <decision-tree />
     <router-link
       v-show="
@@ -385,9 +385,9 @@ export default {
       if (store.get('neverReport')) {
         resolve(false);
       } else {
-        this.$refs.issuelog.$refs.issuelog.show();
         this.error = error;
         this.resolver = resolve;
+        this.$refs.issuelog.$refs.issuelog.show();
       }
     });
 
