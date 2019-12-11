@@ -53,8 +53,12 @@
   "continue": "Continue",
   "confirmation": "Confirmation",
   "amount-to-deposit": "Amount to Deposit",
+  "amount-to-borrow": "Amount to Borrow",
   "current-health": "Current Health Factor",
   "next-health": "Next Health Factor",
   "gas-fee": "Gas Fee",
-  "total-pay": "Total Pay"
+  "total-pay": "Total Pay",
+  "confirm": "Confirm",
+  "interest-apr": "Interest APR",
+  "interest-rate-type": "Interest Rate Type"
 }

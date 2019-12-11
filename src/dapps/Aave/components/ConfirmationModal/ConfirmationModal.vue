@@ -2,7 +2,7 @@
   <div class="modal-container">
     <b-modal
       ref="confirmationModal" 
-      :title="$t('dappsAave.confirmation-modal')"
+      :title="$t('dappsAave.confirmation')"
       centered
       hide-footer
       static
@@ -11,9 +11,9 @@
       <div class="modal-contents">
         <div class="header-container">
           <div class="left-container">
-            <p class="title">{{$t('dappsAave.amount-to-deposit')}}</p>
-            <p class="amount mt-1">{{amount}} <span class="token-name"> {{tokenName}} </span></p>
-            <p class="usd-amount mt-1">${{usdAmount}}</p>
+            <p class="title">{{ activeDepositTab ? $t('dappsAave.amount-to-deposit') : $t('dappsAave.amount-to-borrow')}}</p>
+            <p class="amount mt-2">{{amount}} <span class="token-name"> {{token.name}} </span></p>
+            <p class="usd-amount mt-2">${{convertToUSD(amount)}}</p>
           </div>
           <div class="right-container">
             <img
@@ -23,31 +23,32 @@
           </div>
         </div>
         <div class="body-container">
-          <div class="health-container">
+          <div class="health-container" v-if="activeDepositTab">
             <div class="left-container">
-              <p>{{$t('dappsAave.current-health')}}</p>
-              <p>{{$t('dappsAave.next-health')}}</p>
+              <p>{{$t('dappsAave.current-health')}} <popover class="ml-1" popcontent="CHANGE THIS" /></p>
+              <p class="mt-4">{{$t('dappsAave.next-health')}} <popover class="ml-1" popcontent="CHANGE THIS" /></p>
             </div>
             <div class="right-container">
-              <p>{{healthFactor}}</p>
+              <p>{{healthFactor}}</p> 
               <!-- placeholder -->
-              <p>22323</p>
+              <p class="mt-4">22323</p>
             </div>
           </div>
-          <hr>
-          <div class="tx-container">
+          <div class="rate-container" v-if="!activeDepositTab">
             <div class="left-container">
-              <p>{{$t('dappsAave.gas-fee')}}</p>
-              <p>{{$t('dappsAave.total-pay')}}</p>
+              <p>{{$t('dappsAave.interest-apr')}}</p>
+              <p class="mt-4">{{$t('dappsAave.interest-rate-type')}}</p>
             </div>
             <div class="right-container">
+              <p>{{healthFactor}}</p> 
               <!-- placeholder -->
-              <p>0.02222</p>
-              <!-- placeholder -->
-              <p>0.2222</p>
+              <p class="mt-4">22323</p>
             </div>
           </div>
-          <hr>
+          <hr class="mt-4 mb-4">
+          <div class="btn-container">
+            <button @click="takeAction()">{{$t('dappsAave.confirm')}}</button>
+          </div>
         </div>
       </div>
 
@@ -56,6 +57,10 @@
 </template>
 
 <script>
+import PopOver from '@/components/PopOver';
+import BigNumber from 'bignumber.js';
+import * as unit from 'ethjs-unit';
+
 export default {
   props: {
     activeDepositTab: {
@@ -66,17 +71,53 @@ export default {
       type: String,
       default: ''
     },
-    usdAmount: {
-      type: String,
-      default: ''
-    },
     healthFactor: {
       type: String,
       default: ''
     },
-    tokenName: {
+    token: {
+      type: Object,
+      default: () => {
+        return {};
+      }
+    },
+    apr: {
       type: String,
       default: ''
+    },
+    rateType: {
+      type: String,
+      default: ''
+    }
+  },
+  components: {
+    'popover': PopOver
+  },
+  methods: {
+    takeAction() {
+      const param = {
+        address: this.token.address,
+        amount: new BigNumber(unit.toWei(this.amount, 'ether')).toString(),
+      }
+
+      if (!this.activeDepositTab) {
+        param['rate'] = this.selectStable ? 0 : 1;
+      }
+
+      param['referral'] = 0;// do  i need to put referral code? is 0 mean no referral?
+
+      console.error('param', param)
+      this.$emit('takeAction', param); 
+    },
+    convertToUSD(balance) {
+      let usdBalance = 0;
+  
+      if (balance) {
+        usdBalance = new BigNumber(
+          new BigNumber(balance).times(new BigNumber(this.ethPrice))
+        ).toFixed(2);
+      }
+      return usdBalance;
     }
   }
 };
