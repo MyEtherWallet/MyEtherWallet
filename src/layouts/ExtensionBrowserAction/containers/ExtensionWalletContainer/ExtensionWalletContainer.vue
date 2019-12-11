@@ -1,8 +1,5 @@
 <template>
   <div class="extension-wallets-container">
-    <div class="wallet-side-menu-container">
-      <wallet-side-menu />
-    </div>
     <div class="wallets-container">
       <interface-network-modal ref="network" />
       <watch-only-modal
