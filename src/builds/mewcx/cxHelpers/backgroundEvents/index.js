@@ -10,6 +10,7 @@ import web3QueryGasPrice from './web3-query-gasprice';
 import web3GetTxCount from './web3-get-tx-count';
 import web3GetGas from './web3-get-gas';
 import web3SignTx from './web3-sign-tx';
+import web3SignMsg from './web3-sign-msg';
 
 export {
   mewCxFetchAccounts,
@@ -23,5 +24,6 @@ export {
   web3QueryGasPrice,
   web3GetTxCount,
   web3GetGas,
-  web3SignTx
+  web3SignTx,
+  web3SignMsg
 };

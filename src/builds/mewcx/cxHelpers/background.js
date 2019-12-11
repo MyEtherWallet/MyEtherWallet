@@ -15,7 +15,8 @@ import {
   web3QueryGasPrice,
   web3GetTxCount,
   web3GetGas,
-  web3SignTx
+  web3SignTx,
+  web3SignMsg
 } from './backgroundEvents';
 import store from '@/store';
 import {
@@ -138,6 +139,7 @@ const eventsListeners = (request, _, callback) => {
   middleware.use(web3GetTxCount);
   middleware.use(web3GetGas);
   middleware.use(web3SignTx);
+  middleware.use(web3SignMsg);
   middleware.run(obj, callback);
   return true;
 };
