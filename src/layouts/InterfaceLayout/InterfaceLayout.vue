@@ -577,28 +577,28 @@ export default {
         if (this.account.address !== null) {
           if (this.account.identifier === WEB3_TYPE) {
             if (window.ethereum.isMetaMask || window.ethereum.isMew) {
-              console.log('or is it here???')
+              console.log('or is it here???');
               this.checkWeb3WalletAddrChange();
               this.matchWeb3WalletNetwork();
             } else {
-              console.log('or here???')
+              console.log('or here???');
               this.web3WalletPollNetwork();
               this.web3WalletPollAddress();
             }
           }
-          console.log('set ens')
+          console.log('set ens');
           this.setENS();
-          console.log('set blocks')
+          console.log('set blocks');
           this.getBlock();
-          console.log('set balance')
+          console.log('set balance');
           this.getBalance();
-          console.log('set tokens')
+          console.log('set tokens');
           this.setTokens();
-          console.log('set nonce')
+          console.log('set nonce');
           this.setNonce();
-          console.log('set gas')
+          console.log('set gas');
           this.getHighestGas();
-          console.log('set blockupdater')
+          console.log('set blockupdater');
           this.getBlockUpdater().then(_sub => {
             this.pollBlock = _sub;
           });
