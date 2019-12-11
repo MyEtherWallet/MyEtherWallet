@@ -116,9 +116,10 @@ export default {
               };
               window.chrome.tabs.sendMessage(tab[0].id, obj);
               window.parent.close();
-          });
+            }
+          );
         }
-      )
+      );
     },
     openPasswordModal() {
       this.$refs.passwordModal.$refs.passwordModal.show();

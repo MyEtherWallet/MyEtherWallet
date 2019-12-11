@@ -1,4 +1,4 @@
-@import "~@/scss/GlobalVariables";
+@import '~@/scss/GlobalVariables';
 @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
   .wrap {
     margin-bottom: 50px;

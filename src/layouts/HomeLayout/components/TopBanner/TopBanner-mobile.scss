@@ -1,4 +1,4 @@
-@import "~@/scss/GlobalVariables";
+@import '~@/scss/GlobalVariables';
 @media all and (max-width: $mobile-width) {
   .wrap {
     margin-bottom: 50px;
@@ -88,7 +88,6 @@
       }
 
       .card-content {
-        display: inline;
         text-align: center;
         display: none;
 
