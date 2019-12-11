@@ -20,11 +20,8 @@
                 src="@/assets/images/icons/buy-eth.svg"
                 height="24"
               />
-              <p>Buy ETH</p>
+              <p>{{ $t('mewcx.buy-eth') }}</p>
             </div>
-          </a>
-          <a data-v-2fc56d39="" href="#/" class="nav-link" target="_self">
-            <p>Home</p>
           </a>
           <extension-notification
             v-if="
