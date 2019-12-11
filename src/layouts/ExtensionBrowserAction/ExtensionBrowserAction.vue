@@ -1,10 +1,10 @@
 <template>
   <div>
-    <cx-header />
+    <!-- <cx-header /> -->
     <keep-alive>
       <router-view />
     </keep-alive>
-    <cx-footer />
+    <!-- <cx-footer /> -->
   </div>
 </template>
 

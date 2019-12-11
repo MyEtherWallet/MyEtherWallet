@@ -1,7 +1,7 @@
 <template>
   <div>
     <confirm-modal
-      v-if="wallet !== null"
+      v-if="hasWallet"
       ref="confirmModal"
       :confirm-send-tx="sendTx"
       :signed-tx="signedTx"
@@ -16,7 +16,7 @@
       :nonce="nonce"
     />
     <confirm-collection-modal
-      v-if="wallet !== null"
+      v-if="hasWallet"
       ref="confirmCollectionModal"
       :send-batch-transactions="sendBatchTransactions"
       :is-hardware-wallet="isHardwareWallet"
@@ -25,7 +25,7 @@
       :sending="sending"
     />
     <confirm-modal
-      v-if="wallet !== null"
+      v-if="hasWallet"
       ref="offlineGenerateConfirmModal"
       :confirm-send-tx="generateTx"
       :signed-tx="signedTx"
@@ -40,7 +40,7 @@
       :nonce="nonce"
     />
     <confirm-sign-modal
-      v-if="wallet !== null"
+      v-if="hasWallet"
       ref="signConfirmModal"
       :confirm-sign-message="messageReturn"
       :show-success="showSuccessModal"
@@ -62,7 +62,7 @@
       :link-message="linkMessage"
     />
     <swap-widget
-      v-if="wallet !== null"
+      v-if="hasWallet"
       ref="swapWidget"
       :supplied-from="swapWigetData['fromCurrency']"
       :supplied-to="swapWigetData['toCurrency']"
@@ -166,7 +166,8 @@ export default {
         },
         fromValue: undefined,
         toValue: undefined
-      }
+      },
+      hasWallet: false
     };
   },
   computed: {
@@ -180,6 +181,7 @@ export default {
   watch: {
     wallet(newVal) {
       if (newVal !== null) {
+        this.hasWallet = true;
         if (this.$refs.hasOwnProperty('confirmModal')) {
           this.$refs.confirmModal.$refs.confirmation.$on('hidden', () => {
             if (this.dismissed) {
@@ -195,6 +197,8 @@ export default {
             }
           );
         }
+      } else {
+        this.hasWallet = false;
       }
     }
   },

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!isMewCx" class="footer">
+  <div class="footer">
     <!-- Modal -->
     <feedback-modal />
     <div class="wrap">
