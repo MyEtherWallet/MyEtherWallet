@@ -134,13 +134,10 @@ export default {
       );
     },
     sendAccount() {
-      console.log('gets here?');
       const generatedAccount = new Wallet.generate();
-      console.log('gets here? 1');
       const account = isAddress(this.selectedAccount)
         ? this.selectedAccount
         : generatedAccount.getAddressString();
-      console.log('gets here? 2');
       const chrome = window.chrome;
       const eventObj = {};
       eventObj[`${this.request.connectionRequest.toLowerCase()}`] = account;
