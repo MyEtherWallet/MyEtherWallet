@@ -1,5 +1,5 @@
 {
-  "your-transaction-amount": "Your transaction amount",
-  "to-address": "to address",
-  "successfully-transferred": "has been successfully transferred."
+  "your-transaction-amount": "Сумма транзакции",
+  "to-address": "на адрес",
+  "successfully-transferred": "успешно передана"
 }
