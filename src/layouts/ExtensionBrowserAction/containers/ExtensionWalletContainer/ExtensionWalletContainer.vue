@@ -35,7 +35,6 @@
 
 <script>
 import { KEYSTORE as keyStoreType } from '@/wallets/bip44/walletTypes';
-import WalletSideMenu from '../../components/WalletSideMenu';
 import WatchOnlyModal from '../../components/WatchOnlyModal';
 import PasswordOnlyModal from '../../components/PasswordOnlyModal';
 import { WATCH_ONLY } from '@/wallets/bip44/walletTypes';
@@ -49,7 +48,6 @@ import { isAddress, toChecksumAddress } from '@/helpers/addressUtils';
 import InterfaceNetworkModal from '@/layouts/InterfaceLayout/components/InterfaceNetworkModal';
 export default {
   components: {
-    'wallet-side-menu': WalletSideMenu,
     'watch-only-modal': WatchOnlyModal,
     'password-only-modal': PasswordOnlyModal,
     'interface-network-modal': InterfaceNetworkModal
