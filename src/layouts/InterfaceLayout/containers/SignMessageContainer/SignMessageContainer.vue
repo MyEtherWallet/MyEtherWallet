@@ -72,24 +72,27 @@ export default {
   },
   methods: {
     signMessage() {
+      const _this = this;
       try {
         this.web3.eth
           .sign(this.message, this.account.address)
           .then(_signedMessage => {
-            this.signature = JSON.stringify(
+            _this.signature = JSON.stringify(
               {
-                address: this.account.address,
-                msg: this.message,
+                address: _this.account.address,
+                msg: _this.message,
                 sig: _signedMessage,
                 version: '3',
-                signer: this.account.isHardware
-                  ? this.account.identifier
+                signer: _this.account.isHardware
+                  ? _this.account.identifier
                   : 'MEW'
               },
               null,
               2
             );
-            this.$refs.signatureModal.$refs.signatureModal.show();
+            console.log(_this, this, 'yeeee');
+            _this.$refs.signatureModal.$refs.signatureModal.show();
+            console.log(_this, this);
           })
           .catch(e => {
             Toast.responseHandler(e, Toast.ERROR);

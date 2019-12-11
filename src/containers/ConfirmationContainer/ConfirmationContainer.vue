@@ -1,7 +1,7 @@
 <template>
   <div>
     <confirm-modal
-      v-if="hasWallet"
+      v-if="fromAddress !== null"
       ref="confirmModal"
       :confirm-send-tx="sendTx"
       :signed-tx="signedTx"
@@ -16,7 +16,7 @@
       :nonce="nonce"
     />
     <confirm-collection-modal
-      v-if="hasWallet"
+      v-if="fromAddress !== null"
       ref="confirmCollectionModal"
       :send-batch-transactions="sendBatchTransactions"
       :is-hardware-wallet="isHardwareWallet"
@@ -25,7 +25,7 @@
       :sending="sending"
     />
     <confirm-modal
-      v-if="hasWallet"
+      v-if="fromAddress !== null"
       ref="offlineGenerateConfirmModal"
       :confirm-send-tx="generateTx"
       :signed-tx="signedTx"
@@ -40,7 +40,7 @@
       :nonce="nonce"
     />
     <confirm-sign-modal
-      v-if="hasWallet"
+      v-if="fromAddress !== null"
       ref="signConfirmModal"
       :confirm-sign-message="messageReturn"
       :show-success="showSuccessModal"
@@ -62,7 +62,7 @@
       :link-message="linkMessage"
     />
     <swap-widget
-      v-if="hasWallet"
+      v-if="fromAddress !== null"
       ref="swapWidget"
       :supplied-from="swapWigetData['fromCurrency']"
       :supplied-to="swapWigetData['toCurrency']"
@@ -166,40 +166,20 @@ export default {
         },
         fromValue: undefined,
         toValue: undefined
-      },
-      hasWallet: false
+      }
     };
   },
   computed: {
     ...mapState(['wallet', 'web3', 'account', 'network']),
     fromAddress() {
       if (this.account) {
+        if (this.account.address !== null) {
+          this.addListenersAfterWallet();
+        }
         return this.account.address;
       }
-    }
-  },
-  watch: {
-    wallet(newVal) {
-      if (newVal !== null) {
-        this.hasWallet = true;
-        if (this.$refs.hasOwnProperty('confirmModal')) {
-          this.$refs.confirmModal.$refs.confirmation.$on('hidden', () => {
-            if (this.dismissed) {
-              this.reset();
-            }
-          });
-        }
-        if (this.$refs.hasOwnProperty('signConfirmModal')) {
-          this.$refs.signConfirmModal.$refs.signConfirmation.$on(
-            'hidden',
-            () => {
-              this.signedMessage = '';
-            }
-          );
-        }
-      } else {
-        this.hasWallet = false;
-      }
+
+      return null;
     }
   },
   beforeDestroy() {
@@ -356,6 +336,23 @@ export default {
     });
   },
   methods: {
+    addListenersAfterWallet() {
+      if (this.$refs.hasOwnProperty('confirmModal')) {
+        this.$refs.confirmModal.$refs.confirmation.$on('hidden', () => {
+          if (this.dismissed) {
+            this.reset();
+          }
+        });
+      }
+      if (this.$refs.hasOwnProperty('signConfirmModal')) {
+        this.$refs.signConfirmModal.$refs.signConfirmation.$on(
+          'hidden',
+          () => {
+            this.signedMessage = '';
+          }
+        );
+      }
+    },
     swapWidgetModalOpen(
       destAddress,
       fromCurrency,
