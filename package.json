@@ -11,7 +11,7 @@
     "build:mewcx": "ROUTER_MODE=hash BUILD_TYPE=mewcx npm run build",
     "start:mewcx": "ROUTER_MODE=hash BUILD_TYPE=mewcx npm run buildwatch",
     "buildwatch": "npm run update && vue-cli-service build --watch",
-    "build": "npm run update && vue-cli-service build",
+    "build": "npm run update && NODE_OPTIONS='--max-old-space-size=4092' vue-cli-service build",
     "test": "npm run update:lists && jest --clearCache && npm run test:unit",
     "lint": "npm run lint:styles && npm run lint:code && npm run lint:md",
     "codecov": "npm run test && codecov",
