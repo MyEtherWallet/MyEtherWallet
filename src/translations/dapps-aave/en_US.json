@@ -58,7 +58,7 @@
   "next-health": "Next Health Factor",
   "gas-fee": "Gas Fee",
   "total-pay": "Total Pay",
-  "confirm": "Confirm",
   "interest-apr": "Interest APR",
-  "interest-rate-type": "Interest Rate Type"
+  "interest-rate-type": "Interest Rate Type",
+  "confirm-to": "Confirm to {action}"
 }

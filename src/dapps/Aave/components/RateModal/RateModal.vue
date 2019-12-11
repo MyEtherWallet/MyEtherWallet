@@ -38,7 +38,7 @@
       :active-deposit-tab="false"
       :amount="amount"
       :token="token"
-      :apr="selectStable ? stableRate : variableRate"
+      :apr="selectStable ? convertFromRay(stableRate) : convertFromRay(variableRate)"
       :rate-type="selectStable ? 'Stable' : 'Variable'"
       @takeAction="emitTakeAction"
     />

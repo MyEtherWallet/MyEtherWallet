@@ -40,14 +40,15 @@
               <p class="mt-4">{{$t('dappsAave.interest-rate-type')}}</p>
             </div>
             <div class="right-container">
-              <p>{{healthFactor}}</p> 
-              <!-- placeholder -->
-              <p class="mt-4">22323</p>
+              <p>{{apr}}%</p> 
+              <p class="mt-4">{{rateType}}</p>
             </div>
           </div>
           <hr class="mt-4 mb-4">
           <div class="btn-container">
-            <button @click="takeAction()">{{$t('dappsAave.confirm')}}</button>
+            <i18n @click="takeAction()" tag="button" path="dappsAave.confirm-to">
+              <span slot="action"> {{activeDepositTab ? $tc('dappsAave.deposit', 1) : $t('dappsAave.borrow')}} </span>
+            </i18n>
           </div>
         </div>
       </div>
@@ -106,7 +107,6 @@ export default {
 
       param['referral'] = 0;// do  i need to put referral code? is 0 mean no referral?
 
-      console.error('param', param)
       this.$emit('takeAction', param); 
     },
     convertToUSD(balance) {
