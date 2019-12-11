@@ -136,6 +136,7 @@ export default {
       LendingPoolAbi,
       this.lendingPool
     );
+
     this.getUserInfo();
     this.getReserves();
   },
@@ -225,8 +226,23 @@ export default {
     async deposit(param) {
       try {
         const depositInfo = await this.lendingPoolContract.methods
-          .deposit(param[0], param[1], param[2])
+          .deposit(param.address, param.amount, param.referral)
           .encodeABI();
+
+        const data = {
+          from: this.account.address,
+          to: this.lendingPoolContract._address,
+          data: depositInfo
+        }
+
+        this.web3.eth.sendTransaction(data)
+          .then((resp) => {
+            console.error('resp', resp)
+          })
+          .catch((err) => {
+            console.error('err', err)
+          })
+
       } catch (err) {
         Toast.responseHandler(err, Toast.ERROR);
       }
@@ -234,7 +250,7 @@ export default {
     async borrow(param) {
       try {
         const borrowInfo = await this.lendingPoolContract.methods
-          .borrow(param[0], param[1], param[2], param[3])
+          .borrow(param.address, param.amount, param.rate, param.referral)
           .encodeABI();
       } catch (err) {
         Toast.responseHandler(err, Toast.ERROR);

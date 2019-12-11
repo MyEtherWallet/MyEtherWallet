@@ -118,15 +118,17 @@
       ref="rateModal"
       :stable-rate="token.fixedBorrowRate"
       :variable-rate="token.variableBorrowRate"
-      @takeBorrowAction="takeBorrowAction"
+      :amount="amount"
+      :token="token"
+      @takeAction="emitTakeAction"
     />
     <confirmation-modal
       ref="confirmationModal"
-      :active-deposit-amount="activeDepositTab"
+      :active-deposit-tab="activeDepositTab"
       :amount="amount"
-      :usd-amount="getUSDBalance(amount)"
       :health-factor="healthFactor"
-      :token-name="token.name"
+      :token="token"
+      @takeAction="emitTakeAction"
     />
   </div>
 </template>
@@ -221,25 +223,12 @@ export default {
   },
   methods: {
     takeAction() {
-      if (this.activeBorrowTab) {
-        this.$refs.rateModal.$refs.rateModal.show();
-      } else {
-        this.$refs.confirmationModal.$refs.confirmationModal.show();
-        this.$emit('takeAction', [
-          this.token.address,
-          new BigNumber(unit.toWei(this.amount, 'ether')).toString(),
-          0
-        ]); // do  i need to put referral code? is 0 mean no referral?
-      }
+      this.activeBorrowTab ? this.$refs.rateModal.$refs.rateModal.show() : this.$refs.confirmationModal.$refs.confirmationModal.show();
     },
-    takeBorrowAction(interestRate) {
+    emitTakeAction(param) {
+      console.error('container', param)
       this.goToHome();
-      this.$emit('takeAction', [
-        this.token.address,
-        new BigNumber(unit.toWei(this.amount, 'ether')).toString(),
-        interestRate,
-        0
-      ]);
+      this.$emit('takeAction', param); 
     },
     setPercentAmount(selectedBtn, percentage) {
       this.amount = new BigNumber(
@@ -267,14 +256,14 @@ export default {
       if (!wei) {
         return '0';
       }
-      return new BigNumber(unit.fromWei(wei, 'ether')).toFixed(2).toString();
+      return new BigNumber(unit.fromWei(wei, 'ether')).toFixed(2);
     },
     getUSDBalance(int) {
       let usdBalance = 0;
       if (int) {
         usdBalance = new BigNumber(
           new BigNumber(int).times(new BigNumber(this.ethPrice)) //need to add in all the token prices (not just ether)
-        ).toFixed(2);
+        ).toFixed(2).toString();
       }
       return usdBalance;
     },

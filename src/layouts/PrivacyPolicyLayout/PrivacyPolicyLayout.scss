@@ -26,22 +26,24 @@
       }
     }
   }
-} // .wrap
+}
+
+// .wrap
 
 .content {
-  text-align: center;
   p {
     font-size: 14px;
     font-weight: 400;
-    padding: 10px;
+    padding: 10px 0;
   }
 
   h3 {
     padding-top: 30px;
-    text-align: center;
   }
 
   h4 {
-    padding: 10px;
+    padding: 20px 0 0 0;
+    font-weight: 400;
+    font-style: italic;
   }
 }

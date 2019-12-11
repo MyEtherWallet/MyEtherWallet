@@ -29,23 +29,46 @@
           </div>
         </div>
         <div class="continue-btn-container">
-          <button @click="takeAction()">{{ $t('dappsAave.continue') }}</button>
+          <button :class="(!selectStable && !selectVariable)? 'disabled' : ''" @click="takeAction()">{{ $t('dappsAave.continue') }}</button>
         </div>
       </div>
     </b-modal>
+    <confirmation-modal
+      ref="confirmationModal"
+      :active-deposit-tab="false"
+      :amount="amount"
+      :token="token"
+      :apr="selectStable ? stableRate : variableRate"
+      :rate-type="selectStable ? 'Stable' : 'Variable'"
+      @takeAction="emitTakeAction"
+    />
   </div>
 </template>
 
 <script>
 import BigNumber from 'bignumber.js';
+import ConfirmationModal from '@/dapps/Aave/components/ConfirmationModal';
 
 export default {
+  components: {
+    'confirmation-modal': ConfirmationModal
+  },
   props: {
     stableRate: {
       type: String,
       default: ''
     },
     variableRate: {
+      type: String,
+      default: ''
+    },
+    token: {
+      type: Object,
+      default: () => {
+        return {};
+      }
+    },
+    amount: {
       type: String,
       default: ''
     }
@@ -73,8 +96,11 @@ export default {
     },
     takeAction() {
       this.$refs['rateModal'].hide();
-      this.selectedRate = this.selectStable ? 0 : 1;
-      this.$emit('takeBorrowAction', this.selectedRate);
+      this.$refs.confirmationModal.$refs.confirmationModal.show();
+    },
+    emitTakeAction(param) {
+      console.error('in rate modal', param)
+      this.$emit('takeAction', param);
     }
   }
 };
