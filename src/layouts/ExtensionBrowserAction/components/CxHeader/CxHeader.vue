@@ -1,14 +1,16 @@
 <template>
   <div class="cx-menu-container">
     <div class="cx-menu d-flex">
-      <div class="d-flex logo-block">
-        <img
-          :src="require(`@/assets/images/short-hand-logo-mewcx.png`)"
-          alt
-          height="50"
-        />
-        <p>Chrome Extension</p>
-      </div>
+      <router-link to="/">
+        <div class="d-flex logo-block">
+          <img
+            :src="require(`@/assets/images/short-hand-logo-mewcx.png`)"
+            alt
+            height="50"
+          />
+          <p>Chrome Extension</p>
+        </div>
+      </router-link>
       <div class="spacer"></div>
       <div class="d-flex">
         <div class="d-flex menu-items">
