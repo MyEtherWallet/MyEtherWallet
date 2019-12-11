@@ -1,3 +1,6 @@
+### Devop
+- Refactor maker translations 
+
 ### Release v5.2.7
 
 ### Bug
