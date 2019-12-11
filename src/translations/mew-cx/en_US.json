@@ -82,5 +82,6 @@
   "token-added-success": "Successfully added token!",
   "copy-success": "Successfully Copied",
   "invalid-mnemonic": "Invalid Mnemonic",
-  "generateWallet": "Create a new wallet"
+  "generateWallet": "Create a new wallet",
+  "buy-eth": "Buy ETH"
 }
