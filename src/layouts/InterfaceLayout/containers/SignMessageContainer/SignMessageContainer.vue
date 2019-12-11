@@ -90,9 +90,7 @@ export default {
               null,
               2
             );
-            console.log(_this, this, 'yeeee');
             _this.$refs.signatureModal.$refs.signatureModal.show();
-            console.log(_this, this);
           })
           .catch(e => {
             Toast.responseHandler(e, Toast.ERROR);
