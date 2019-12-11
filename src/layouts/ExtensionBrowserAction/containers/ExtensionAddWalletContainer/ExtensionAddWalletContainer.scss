@@ -1,4 +1,4 @@
-@import '~@/scss/GlobalVariables';
+@import "~@/scss/GlobalVariables";
 
 .add-wallet-container {
   align-items: center;
@@ -15,13 +15,18 @@
 
 .add-wallet-options {
   display: grid;
-  grid-column-gap: 20px;
+  grid-gap: 20px;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   margin: 0 auto;
   max-width: 1000px;
   margin-top: 50px;
   position: relative;
   text-align: center;
+
+  @media only screen and (max-width: 1500px) {
+    grid-template-columns: 1fr 1fr;
+    max-width: 700px;
+  }
 }
 
 .extension-selection {
