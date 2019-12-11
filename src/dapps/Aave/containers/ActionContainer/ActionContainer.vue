@@ -226,7 +226,6 @@ export default {
       this.activeBorrowTab ? this.$refs.rateModal.$refs.rateModal.show() : this.$refs.confirmationModal.$refs.confirmationModal.show();
     },
     emitTakeAction(param) {
-      console.error('container', param)
       this.goToHome();
       this.$emit('takeAction', param); 
     },
