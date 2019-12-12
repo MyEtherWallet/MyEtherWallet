@@ -1,6 +1,7 @@
 <template>
   <v-sheet class="d-flex align-start" width="100%">
     <v-text-field
+      color="green"
       :append-icon="showPasswd ? 'mdi-eye' : 'mdi-eye-off'"
       :type="showPasswd ? 'text' : 'password'"
       :label="fldlabel"
