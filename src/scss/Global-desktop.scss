@@ -1,7 +1,6 @@
 @import '~@/scss/GlobalVariables';
 
 @media all and (min-width: calc(#{$tablet-width} + 1px)) {
-
   // *********************************************************************
   // CSS reset
   // *********************************************************************
@@ -85,7 +84,7 @@
   mark,
   audio,
   video {
-    font-family: "Montserrat", sans-serif;
+    font-family: 'Montserrat', sans-serif;
     font-display: block;
     font-size: 14px;
     margin: 0;
@@ -125,8 +124,8 @@
   // *********************************************************************
   // Disable WebKit Spinners
   // *********************************************************************
-  input[type="number"]::-webkit-inner-spin-button,
-  input[type="number"]::-webkit-outer-spin-button {
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
   }
@@ -318,7 +317,7 @@
     align-items: center;
     display: flex;
 
-    >* {
+    > * {
       flex: 1;
     }
   }
@@ -675,7 +674,7 @@
       width: 15px;
 
       &::after {
-        content: "!";
+        content: '!';
         font-size: 13px;
         font-weight: 600;
         padding: 0;
@@ -907,7 +906,7 @@
       &::before {
         background-color: $css-toggle-button--button-background-color;
         bottom: 3px;
-        content: "";
+        content: '';
         height: 22px;
         left: 4px;
         padding: 1px 7px;
@@ -926,15 +925,15 @@
       }
     }
 
-    input:checked+.slider {
+    input:checked + .slider {
       // background-color: $css-toggle-button--slider--active--background-color;
     }
 
-    input:focus+.slider {
+    input:focus + .slider {
       box-shadow: 0 0 1px $css-toggle-button--slider--active--background-color;
     }
 
-    input:checked+.slider::before {
+    input:checked + .slider::before {
       transform: translateX(26px);
     }
   }
@@ -969,7 +968,7 @@
       &::before {
         background-color: $text-white;
         bottom: 3px;
-        content: "";
+        content: '';
         height: 22px;
         left: 3px;
         padding: 1px 7px;
@@ -988,15 +987,15 @@
       }
     }
 
-    input:checked+.slider {
+    input:checked + .slider {
       background-color: $css-toggle-button--slider--active--background-color;
     }
 
-    input:focus+.slider {
+    input:focus + .slider {
       box-shadow: 0 0 1px $css-toggle-button--slider--active--background-color;
     }
 
-    input:checked+.slider::before {
+    input:checked + .slider::before {
       transform: translateX(23px);
     }
   }
@@ -1027,19 +1026,19 @@
     }
 
     // On mouse-over, add a grey background color
-    &:hover input~.checkmark {
+    &:hover input ~ .checkmark {
       $check-box-hover-color: $dark-grey-11;
 
       background-color: $check-box-hover-color;
     }
 
     // When the checkbox is checked, add a blue background
-    input:checked~.checkmark {
+    input:checked ~ .checkmark {
       background-color: $background-color-2;
     }
 
     // Show the checkmark when checked
-    input:checked~.checkmark::after {
+    input:checked ~ .checkmark::after {
       display: block;
     }
 
@@ -1060,7 +1059,7 @@
       &::after {
         border: solid $border-color-2;
         border-width: 0 3px 3px 0;
-        content: "";
+        content: '';
         // display: none;
         height: 10px;
         left: 9px;
@@ -1087,7 +1086,7 @@
       &::after {
         border: solid $border-color-2;
         border-width: 0 3px 3px 0;
-        content: "";
+        content: '';
         // display: none;
         height: 9px;
         left: 7px;
@@ -1103,7 +1102,7 @@
   // Dropdown Buttons
   // *********************************************************************
   .dropdown-button-1 {
-    >button {
+    > button {
       background-color: $background-color-white;
       border: solid 1px $button--border-color-2;
       color: $text-color-6;
@@ -1132,7 +1131,7 @@
       padding: 0;
     }
 
-    >button {
+    > button {
       background-color: $background-color-white;
       border: solid 1px $button--border-color-2;
       color: $text-color-6;
@@ -1201,7 +1200,7 @@
       background-color: $text-color-3;
       border-radius: 100px;
       color: $text-white;
-      content: "!";
+      content: '!';
       display: inline-block;
       font-size: 12px;
       line-height: 17px;
@@ -1363,7 +1362,6 @@
   font-weight: 400;
 
   &:hover {
-
     // Desktop
     @media all and (min-width: calc(#{$tablet-width} + 1px)) {
       color: $text--link-color;
@@ -1454,7 +1452,7 @@
 // Monospace font
 // *********************************************************************
 .monospace {
-  font-family: "Inconsolata", monospace;
+  font-family: 'Inconsolata', monospace;
   font-display: block;
 }
 
@@ -1475,7 +1473,7 @@
 }
 
 .dropdown-button-3 {
-  >button {
+  > button {
     background-color: $background-color-white;
     border: solid 1px $light-grey-3;
     color: $text-color-6;
@@ -1571,7 +1569,6 @@
     justify-content: center;
   }
 }
-
 
 .flex--row--align-stretch {
   display: flex;

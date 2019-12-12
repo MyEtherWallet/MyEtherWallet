@@ -1,4 +1,4 @@
-@import "~@/scss/GlobalVariables";
+@import '~@/scss/GlobalVariables';
 
 .wallet-side-menu {
   background-color: $white;
@@ -10,7 +10,7 @@
   //transition: all 0.05s ease;
   //max-width: 65px;
   max-width: 100%;
-  box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
 
   &:hover {
     max-width: 100%;
