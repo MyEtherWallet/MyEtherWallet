@@ -1,7 +1,8 @@
 <template>
-  <v-sheet class="border-radius--10px py-8 px-10">
+  <v-sheet class="border-radius--10px py-8 px-10 position--relative">
+    <img class="mew-bear" src="@/assets/images/Etc/CreateWallet/MewBear.png" />
     <div class="headline font-weight-bold mb-2">MEWconnect</div>
-    <p class="mb-4">
+    <p class="mb-4 button-description">
       Ipsum consetetur sit dolores ipsum consetetur diam et. Elitr magna ipsum
       aliquyam magna at. Consetetur sit dolor eos eirmod amet.
     </p>
@@ -21,4 +22,15 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.mew-bear {
+  position: absolute;
+  top: 35px;
+  right: 0px;
+  height: 120px;
+}
+
+.button-description {
+  width: calc(100% - 60px);
+}
+</style>

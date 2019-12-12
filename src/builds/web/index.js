@@ -5,6 +5,7 @@ import AboutUsTeam from '@/layouts/AboutUs/Team';
 import AboutUsWhyMEW from '@/layouts/AboutUs/WhyMEW';
 import CreateNewWallet from '@/layouts/CreateWallet/CreateNewWallet';
 import CreateWalletMewConnect from '@/layouts/CreateWallet/MewConnect';
+import CreateWalletKeystore from '@/layouts/CreateWallet/KeystoreFile';
 
 import app from './app';
 const webRoutes = [
@@ -60,6 +61,14 @@ const webRoutes = [
     path: '/create-wallet/mewconnect',
     name: 'CreateWalletMewConnect',
     component: CreateWalletMewConnect,
+    meta: {
+      requiresAuth: false
+    }
+  },
+  {
+    path: '/create-wallet/keystore',
+    name: 'CreateWalletKeystore',
+    component: CreateWalletKeystore,
     meta: {
       requiresAuth: false
     }
