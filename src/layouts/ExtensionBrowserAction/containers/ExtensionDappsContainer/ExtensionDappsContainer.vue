@@ -72,7 +72,7 @@ export default {
           // eslint-disable-next-line
         console.error(e);
         });
-      this.dapps = JSON.parse(dapps).items.map(item => item);
+      this.dapps = dapps.items.map(item => item);
     }
   }
 };
