@@ -46,7 +46,7 @@
       border-radius: 4px;
       color: $text-color-1;
       margin-bottom: 15px;
-      padding: 11px;
+      padding: 25px 0;
       position: relative;
 
       &.create-wallet {
@@ -63,8 +63,8 @@
       }
 
       .title {
-        align-items: center;
-        display: flex;
+        text-align: center;
+        display: block;
 
         img {
           height: 30px;
@@ -72,9 +72,9 @@
         }
 
         h3 {
-          font-size: 25px;
-          font-weight: bold;
-          margin-left: 20px;
+          font-size: 15px;
+          //font-weight: bold;
+          //margin-left: 20px;
         }
       }
 
@@ -88,9 +88,8 @@
       }
 
       .card-content {
-        display: inline;
         text-align: center;
-        width: 100%;
+        display: none;
 
         h2 {
           font-size: 14px;

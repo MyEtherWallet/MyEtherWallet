@@ -1,6 +1,19 @@
 ### Feature
 
-- SotD on the v5 dapps interface []()
+- SotD on the v5 dapps interface [#1731](https://github.com/MyEtherWallet/MyEtherWallet/pull/1731)
+
+### Release v5.2.7
+
+### Bug
+
+- Fix verify signature [#1729](https://github.com/MyEtherWallet/MyEtherWallet/pull/1729)
+- Fix top banner buttons [#1715](https://github.com/MyEtherWallet/MyEtherWallet/pull/1715)
+- MEW CX memory leak on access wallet + fix mnemonic [#1733](https://github.com/MyEtherWallet/MyEtherWallet/pull/1733)
+- Fix text align and font sizes for Policy and Terms of Service [#1734](https://github.com/MyEtherWallet/MyEtherWallet/pull/1734)
+
+### Devop
+
+- Refactor translations [#1732](https://github.com/MyEtherWallet/MyEtherWallet/pull/1732)
 
 ### Release v5.2.6
 
@@ -42,7 +55,7 @@
 - Add MEWconnect footer link [#1675](https://github.com/MyEtherWallet/MyEtherWallet/pull/1675)
 - Add clear btn to forms [#1673](https://github.com/MyEtherWallet/MyEtherWallet/pull/1673)
 - Add Mult-Collateral Dai support [#1575](https://github.com/MyEtherWallet/MyEtherWallet/pull/1575)
-- Update TOS \[[#1685](https://github.com/MyEtherWallet/MyEtherWallet/pull/1685)
+- Update TOS [#1685](https://github.com/MyEtherWallet/MyEtherWallet/pull/1685)
 
 ### Release v5.2.4
 
