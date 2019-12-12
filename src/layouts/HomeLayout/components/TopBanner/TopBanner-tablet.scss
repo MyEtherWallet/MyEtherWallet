@@ -65,6 +65,7 @@
       margin-bottom: 10px;
       padding: 30px 40px;
       position: relative;
+      display: flex;
 
       &.create-wallet {
         background-color: $create-wallet-background-color;
@@ -100,8 +101,6 @@
 
         h3 {
           font-size: 25px;
-          font-weight: bold;
-          margin-left: 20px;
         }
       }
 
@@ -122,6 +121,16 @@
       }
 
       .card-content {
+        ul {
+          margin-top: 10px;
+          padding-left: 20px;
+          li {
+            list-style-type: disc;
+            font-size: 12px;
+            font-weight: 600;
+          }
+        }
+
         h2 {
           font-size: 24px;
           font-weight: 500;

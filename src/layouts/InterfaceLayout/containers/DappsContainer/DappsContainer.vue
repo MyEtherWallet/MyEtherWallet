@@ -95,7 +95,7 @@ export default {
   methods: {
     async fetchDapps() {
       const dapps = await fetch(
-        'https://api.stateofthedapps.com/dapps?tags=mew'
+        'https://swap.mewapi.io/proxy?url=https://api.stateofthedapps.com/dapps?tags=mew'
       )
         .then(res => {
           return res.json();
@@ -104,7 +104,7 @@ export default {
           // eslint-disable-next-line
         console.error(e);
         });
-      this.soDapps = dapps.items.map(item => item);
+      this.soDapps = JSON.parse(dapps).items.map(item => item);
     }
   }
 };
