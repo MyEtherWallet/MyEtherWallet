@@ -1,6 +1,11 @@
+### Release v5.2.8
+
 ### Feature
 
 - SotD on the v5 dapps interface [#1731](https://github.com/MyEtherWallet/MyEtherWallet/pull/1731)
+
+### Devop
+- Refactor maker translations[#1737] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1737)
 
 ### Release v5.2.7
 
