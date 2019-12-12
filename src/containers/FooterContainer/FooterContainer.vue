@@ -1,134 +1,144 @@
 <template>
-  <div v-if="!isMewCx" class="footer">
-    <!-- Modal -->
-    <feedback-modal />
-    <div class="wrap">
-      <div class="page-container">
-        <div class="grid-col-1-1-1-2 footer-contents">
-          <div
-            v-for="(item, index) in footerContent"
-            :ref="item.class"
-            :class="item.class"
-            :key="item.title + index"
-          >
-            <div class="content-title" @click="toggler(item.class)">
-              <h3 class="lite">{{ item.title }}</h3>
-              <p class="open" @click="openContent(item.class)">
-                <i class="fa fa-plus" aria-hidden="true" />
-              </p>
-              <p class="close" @click="closeContent(item.class)">
-                <i class="fa fa-minus" aria-hidden="true" />
-              </p>
-            </div>
-            <div class="content-links">
-              <div class="content-links-animation-block">
-                <div
-                  v-for="(content, index) in item.contents"
-                  :key="content.text + index"
-                  class="content"
-                >
-                  <div v-if="content.text === $t('common.cstm-support')">
-                    <customer-support :no-icon="true" />
+  <div>
+    <cx-footer v-if="isMewCx" />
+    <div v-if="!isMewCx" class="footer">
+      <!-- Modal -->
+      <feedback-modal />
+      <div class="wrap">
+        <div class="page-container">
+          <div class="grid-col-1-1-1-2 footer-contents">
+            <div
+              v-for="(item, index) in footerContent"
+              :ref="item.class"
+              :class="item.class"
+              :key="item.title + index"
+            >
+              <div class="content-title" @click="toggler(item.class)">
+                <h3 class="lite">{{ item.title }}</h3>
+                <p class="open" @click="openContent(item.class)">
+                  <i class="fa fa-plus" aria-hidden="true" />
+                </p>
+                <p class="close" @click="closeContent(item.class)">
+                  <i class="fa fa-minus" aria-hidden="true" />
+                </p>
+              </div>
+              <div class="content-links">
+                <div class="content-links-animation-block">
+                  <div
+                    v-for="(content, index) in item.contents"
+                    :key="content.text + index"
+                    class="content"
+                  >
+                    <div v-if="content.text === $t('common.cstm-support')">
+                      <customer-support :no-icon="true" />
+                    </div>
+                    <router-link
+                      v-else-if="content.to !== undefined"
+                      :to="content.to"
+                    >
+                      <p>{{ content.text }}</p>
+                    </router-link>
+                    <a
+                      v-else-if="content.to === undefined"
+                      :href="content.href"
+                      :aria-label="content.text"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <p v-if="item.class === 'e2'">
+                        {{ $t(`${content.text}`) }}
+                      </p>
+                      <p v-else>{{ content.text }}</p>
+                    </a>
                   </div>
-                  <router-link
-                    v-else-if="content.to !== undefined"
-                    :to="content.to"
-                  >
-                    <p>{{ content.text }}</p>
-                  </router-link>
-                  <a
-                    v-else-if="content.to === undefined"
-                    :href="content.href"
-                    :aria-label="content.text"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <p v-if="item.class === 'e2'">
-                      {{ $t(`${content.text}`) }}
-                    </p>
-                    <p v-else>{{ content.text }}</p>
-                  </a>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="donate-us">
-            <div class="content-title">
-              <i18n path="footer.title.love" tag="h3">
-                <img slot="heart" src="~@/assets/images/icons/heart.svg" alt />
-              </i18n>
-            </div>
-            <div class="links">
-              <p>{{ $t('footer.donation.desc') }}</p>
+            <div class="donate-us">
+              <div class="content-title">
+                <i18n path="footer.title.love" tag="h3">
+                  <img
+                    slot="heart"
+                    src="~@/assets/images/icons/heart.svg"
+                    alt
+                  />
+                </i18n>
+              </div>
+              <div class="links">
+                <p>{{ $t('footer.donation.desc') }}</p>
 
-              <a
-                :href="'https://etherscan.io/address/' + ethDonationAddress"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <p :data-eth="ethDonationAddress" class="crypto-link">
-                  <img src="~@/assets/images/currency/eth.svg" alt />
-                  &nbsp;{{ $t('footer.donation.ether') }}
-                </p>
-              </a>
-
-              <a
-                href="https://blockchain.info/address/1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <p
-                  class="crypto-link no-padding"
-                  data-btc="1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9"
+                <a
+                  :href="'https://etherscan.io/address/' + ethDonationAddress"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
-                  <img src="~@/assets/images/currency/btc.svg" alt /> &nbsp;{{
-                    $t('footer.donation.bitcoin')
-                  }}
-                </p>
-              </a>
+                  <p :data-eth="ethDonationAddress" class="crypto-link">
+                    <img src="~@/assets/images/currency/eth.svg" alt />
+                    &nbsp;{{ $t('footer.donation.ether') }}
+                  </p>
+                </a>
+
+                <a
+                  href="https://blockchain.info/address/1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <p
+                    class="crypto-link no-padding"
+                    data-btc="1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9"
+                  >
+                    <img src="~@/assets/images/currency/btc.svg" alt /> &nbsp;{{
+                      $t('footer.donation.bitcoin')
+                    }}
+                  </p>
+                </a>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="flex-space-between foot-note">
-          <div class="links">
-            <div v-for="(link, index) in lowerLinks" :key="link.title + index">
-              <router-link v-if="link.hasOwnProperty('to')" :to="link.to">
-                <span>{{ link.title }}</span>
-              </router-link>
-              <a
-                v-else
-                :href="link.href"
-                target="_blank"
-                rel="noopener noreferrer"
+          <div class="flex-space-between foot-note">
+            <div class="links">
+              <div
+                v-for="(link, index) in lowerLinks"
+                :key="link.title + index"
               >
-                <span>{{ link.title }}</span>
+                <router-link v-if="link.hasOwnProperty('to')" :to="link.to">
+                  <span>{{ link.title }}</span>
+                </router-link>
+                <a
+                  v-else
+                  :href="link.href"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span>{{ link.title }}</span>
+                </a>
+              </div>
+            </div>
+            <div class="copyright">
+              <p>
+                {{ $t('footer.pricing-p') }}
+                <a
+                  href="https://coingecko.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >{{ $t('footer.coingecko') }}</a
+                >
+                <br />
+                {{ $t('footer.copyright') }}
+              </p>
+            </div>
+            <div class="social">
+              <a
+                v-for="link in links"
+                :href="link.to"
+                :key="link.class"
+                :aria-label="link.to"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                <i :class="'fa ' + link.class" />
               </a>
             </div>
-          </div>
-          <div class="copyright">
-            <p>
-              {{ $t('footer.pricing-p') }}
-              <a
-                href="https://coingecko.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                >{{ $t('footer.coingecko') }}</a
-              >
-              <br />
-              {{ $t('footer.copyright') }}
-            </p>
-          </div>
-          <div class="social">
-            <a
-              v-for="link in links"
-              :href="link.to"
-              :key="link.class"
-              :aria-label="link.to"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              <i :class="'fa ' + link.class" />
-            </a>
           </div>
         </div>
       </div>
@@ -143,11 +153,13 @@ import CustomerSupport from '@/components/CustomerSupport';
 import affiliates from './affiliates.js';
 const version = VERSION;
 import { Misc } from '@/helpers';
+import CxFooter from '@/layouts/ExtensionBrowserAction/components/CxFooter';
 
 export default {
   components: {
     'feedback-modal': FeedbackModal,
-    'customer-support': CustomerSupport
+    'customer-support': CustomerSupport,
+    'cx-footer': CxFooter
   },
   data() {
     const isMewCx = Misc.isMewCx();
