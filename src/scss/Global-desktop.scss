@@ -1,7 +1,6 @@
 @import '~@/scss/GlobalVariables';
 
 @media all and (min-width: calc(#{$tablet-width} + 1px)) {
-
   // *********************************************************************
   // CSS reset
   // *********************************************************************
@@ -318,7 +317,7 @@
     align-items: center;
     display: flex;
 
-    >* {
+    > * {
       flex: 1;
     }
   }
@@ -926,15 +925,15 @@
       }
     }
 
-    input:checked+.slider {
+    input:checked + .slider {
       // background-color: $css-toggle-button--slider--active--background-color;
     }
 
-    input:focus+.slider {
+    input:focus + .slider {
       box-shadow: 0 0 1px $css-toggle-button--slider--active--background-color;
     }
 
-    input:checked+.slider::before {
+    input:checked + .slider::before {
       transform: translateX(26px);
     }
   }
@@ -988,15 +987,15 @@
       }
     }
 
-    input:checked+.slider {
+    input:checked + .slider {
       background-color: $css-toggle-button--slider--active--background-color;
     }
 
-    input:focus+.slider {
+    input:focus + .slider {
       box-shadow: 0 0 1px $css-toggle-button--slider--active--background-color;
     }
 
-    input:checked+.slider::before {
+    input:checked + .slider::before {
       transform: translateX(23px);
     }
   }
@@ -1027,19 +1026,19 @@
     }
 
     // On mouse-over, add a grey background color
-    &:hover input~.checkmark {
+    &:hover input ~ .checkmark {
       $check-box-hover-color: $dark-grey-11;
 
       background-color: $check-box-hover-color;
     }
 
     // When the checkbox is checked, add a blue background
-    input:checked~.checkmark {
+    input:checked ~ .checkmark {
       background-color: $background-color-2;
     }
 
     // Show the checkmark when checked
-    input:checked~.checkmark::after {
+    input:checked ~ .checkmark::after {
       display: block;
     }
 
@@ -1103,7 +1102,7 @@
   // Dropdown Buttons
   // *********************************************************************
   .dropdown-button-1 {
-    >button {
+    > button {
       background-color: $background-color-white;
       border: solid 1px $button--border-color-2;
       color: $text-color-6;
@@ -1132,7 +1131,7 @@
       padding: 0;
     }
 
-    >button {
+    > button {
       background-color: $background-color-white;
       border: solid 1px $button--border-color-2;
       color: $text-color-6;
@@ -1363,7 +1362,6 @@
   font-weight: 400;
 
   &:hover {
-
     // Desktop
     @media all and (min-width: calc(#{$tablet-width} + 1px)) {
       color: $text--link-color;
@@ -1475,7 +1473,7 @@
 }
 
 .dropdown-button-3 {
-  >button {
+  > button {
     background-color: $background-color-white;
     border: solid 1px $light-grey-3;
     color: $text-color-6;
@@ -1571,7 +1569,6 @@
     justify-content: center;
   }
 }
-
 
 .flex--row--align-stretch {
   display: flex;

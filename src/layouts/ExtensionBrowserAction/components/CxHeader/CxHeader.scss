@@ -6,6 +6,10 @@
   margin: 0 auto;
 }
 
+.cx-header {
+  width: 100%;
+}
+
 .cx-menu-container {
   /*
   position: fixed;
@@ -42,7 +46,7 @@ a {
     font-size: 13px;
   }
 
-  >* {
+  > * {
     margin-left: 30px;
   }
 }
@@ -55,4 +59,23 @@ a {
 
 .spacer {
   margin: 0 auto;
+}
+
+.settings-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding-left: 20px;
+
+  .blockie-image {
+    position: absolute;
+    top: -9px;
+    right: 20px;
+  }
+
+  i {
+    color: $dark-blue-1;
+    font-size: 18px;
+    margin-left: 7px;
+  }
 }

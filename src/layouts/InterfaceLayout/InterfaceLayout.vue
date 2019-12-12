@@ -40,7 +40,6 @@
     <!-- Modals ******************************************************** -->
     <!-- Modals ******************************************************** -->
 
-    <cxheader />
     <div class="mobile-interface-address-block">
       <mobile-interface-address
         :address="address"
@@ -106,7 +105,6 @@
         </div>
       </div>
     </div>
-    <cxfooter />
   </div>
 </template>
 
@@ -154,8 +152,6 @@ import {
   KEEPKEY as KEEPKEY_TYPE,
   MNEMONIC as MNEMONIC_TYPE
 } from '@/wallets/bip44/walletTypes';
-import CxHeader from '@/layouts/ExtensionBrowserAction/components/CxHeader';
-import CxFooter from '@/layouts/ExtensionBrowserAction/components/CxFooter';
 export default {
   name: 'Interface',
   components: {
@@ -173,9 +169,7 @@ export default {
     'enter-pin-number-modal': EnterPinNumberModal,
     'mobile-interface-address': MobileInterfaceAddress,
     'address-qrcode-modal': AddressQrcodeModal,
-    'ledger-app-modal': LedgerAppModal,
-    cxheader: CxHeader,
-    cxfooter: CxFooter
+    'ledger-app-modal': LedgerAppModal
   },
   data() {
     return {
