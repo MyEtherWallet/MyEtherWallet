@@ -29,9 +29,9 @@
                 <span class="label-right">24</span>
               </div>
             </div>
-            <span class="text__base link switch-label">
-              {{ $t('common.value') }}
-            </span>
+            <span class="text__base link switch-label">{{
+              $t('createWallet.mnemonic.value')
+            }}</span>
           </div>
 
           <div
