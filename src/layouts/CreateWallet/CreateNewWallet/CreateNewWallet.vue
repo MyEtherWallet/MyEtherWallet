@@ -14,12 +14,20 @@
         </p>
       </BlockTitle>
       <v-sheet color="transparent" max-width="600px" class="mx-auto">
-        <MEWconnect
-          class="cursor--pointer user-select--none new-wallet-button"
-          @click.native="linkToMEWconnect"
-        />
+        <router-link
+          to="/create-wallet/mewconnect"
+          class="text-decoration--none"
+        >
+          <MEWconnect
+            class="cursor--pointer user-select--none new-wallet-button"
+          />
+        </router-link>
         <div class="my-4" />
-        <Software class="cursor--pointer user-select--none new-wallet-button" />
+        <router-link to="/create-wallet/keystore" class="text-decoration--none">
+          <Software
+            class="cursor--pointer user-select--none new-wallet-button"
+          />
+        </router-link>
       </v-sheet>
     </v-container>
     <div class="py-12" />
@@ -44,14 +52,7 @@ export default {
       centered: true
     }
   }),
-  methods: {
-    linkToMEWconnect() {
-      this.$router.push({
-        path: '/create-wallet/mewconnect',
-        query: { step: '1' }
-      });
-    }
-  }
+  methods: {}
 };
 </script>
 
