@@ -32,7 +32,7 @@ export default {
 }
 
 .std-button {
-  height: 60px !important;
+  height: 56px !important;
   text-transform: none;
   letter-spacing: 0px;
   font-size: 14px !important;
