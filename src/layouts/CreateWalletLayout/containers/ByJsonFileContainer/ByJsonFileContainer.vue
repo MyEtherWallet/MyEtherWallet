@@ -20,8 +20,8 @@
               <by-json-block
                 v-for="content in contents"
                 :img="content.img"
-                :title="content.title"
-                :desc="content.desc"
+                :title="$t(content.title)"
+                :desc="$t(content.desc)"
                 :key="content.title"
               />
             </div>
@@ -85,18 +85,18 @@ export default {
     return {
       contents: [
         {
-          title: this.$t('createWallet.keystore.loose.title'),
-          desc: this.$t('createWallet.keystore.loose.desc'),
+          title: 'createWallet.keystore.loose.title',
+          desc: 'createWallet.keystore.loose.desc',
           img: noLose
         },
         {
-          title: this.$t('createWallet.keystore.share.title'),
-          desc: this.$t('createWallet.keystore.share.desc'),
+          title: 'createWallet.keystore.share.title',
+          desc: 'createWallet.keystore.share.desc',
           img: noShare
         },
         {
-          title: this.$t('createWallet.keystore.backup.title'),
-          desc: this.$t('createWallet.keystore.backup.desc'),
+          title: 'createWallet.keystore.backup.title',
+          desc: 'createWallet.keystore.backup.desc',
           img: makeBackup
         }
       ],

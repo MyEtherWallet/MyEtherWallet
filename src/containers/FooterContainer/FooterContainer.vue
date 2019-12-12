@@ -12,7 +12,7 @@
             :key="item.title + index"
           >
             <div class="content-title" @click="toggler(item.class)">
-              <h3 class="lite">{{ item.title }}</h3>
+              <h3 class="lite">{{ $t(item.title) }}</h3>
               <p class="open" @click="openContent(item.class)">
                 <i class="fa fa-plus" aria-hidden="true" />
               </p>
@@ -27,26 +27,26 @@
                   :key="content.text + index"
                   class="content"
                 >
-                  <div v-if="content.text === $t('common.cstm-support')">
+                  <div v-if="$t(content.text) === $t('common.cstm-support')">
                     <customer-support :no-icon="true" />
                   </div>
                   <router-link
                     v-else-if="content.to !== undefined"
                     :to="content.to"
                   >
-                    <p>{{ content.text }}</p>
+                    <p>{{ $t(content.text) }}</p>
                   </router-link>
                   <a
                     v-else-if="content.to === undefined"
                     :href="content.href"
-                    :aria-label="content.text"
+                    :aria-label="$t(content.text)"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
                     <p v-if="item.class === 'e2'">
                       {{ $t(`${content.text}`) }}
                     </p>
-                    <p v-else>{{ content.text }}</p>
+                    <p v-else>{{ $t(content.text) }}</p>
                   </a>
                 </div>
               </div>
@@ -93,7 +93,7 @@
           <div class="links">
             <div v-for="(link, index) in lowerLinks" :key="link.title + index">
               <router-link v-if="link.hasOwnProperty('to')" :to="link.to">
-                <span>{{ link.title }}</span>
+                <span>{{ $t(link.title) }}</span>
               </router-link>
               <a
                 v-else
@@ -101,7 +101,7 @@
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <span>{{ link.title }}</span>
+                <span>{{ $t(link.title) }}</span>
               </a>
             </div>
           </div>
@@ -156,15 +156,15 @@ export default {
       version: version,
       lowerLinks: [
         {
-          title: this.$t('footer.feedback'),
+          title: 'footer.feedback',
           href: 'mailto:support@myetherwallet.com'
         },
         {
-          title: this.$t('footer.privacy'),
+          title: 'footer.privacy',
           to: '/privacy-policy'
         },
         {
-          title: this.$t('common.terms'),
+          title: 'common.terms',
           to: '/terms-of-service'
         },
         {
@@ -175,77 +175,77 @@ export default {
       footerContent: [
         {
           class: 'e1',
-          title: this.$t('footer.title.discover'),
+          title: 'footer.title.discover',
           contents: [
             {
-              text: this.$t('convertUnits.page.title'),
+              text: 'convertUnits.page.title',
               to: '/convert-units'
             },
             // {
-            //   text: this.$t('footer.advanced'),
+            //   text:'footer.advanced'),
             //   to: '/advanced-tools'
             // },
             {
-              text: this.$t('footer.mew-connect'),
+              text: 'footer.mew-connect',
               href: 'https://mewconnect.myetherwallet.com/#/'
             },
             {
-              text: this.$t('footer.extension'),
+              text: 'footer.extension',
               href: 'https://www.mewcx.com'
             },
             {
-              text: this.$t('buyHardwareWallet.page.title'),
+              text: 'buyHardwareWallet.page.title',
               to: '/hardware-wallet-affiliates'
             },
             {
-              text: this.$t('footer.send-offline'),
+              text: 'footer.send-offline',
               to: '/send-offline-helper'
             },
             {
-              text: this.$t('verifyMessage.title'),
+              text: 'verifyMessage.title',
               to: '/verify-message'
             },
             {
-              text: this.$t('footer.view-wallet-info'),
+              text: 'footer.view-wallet-info',
               to: '/view-wallet-info'
             },
             {
-              text: this.$t('dappsSubmission.banner-submit.submit-dapp'),
+              text: 'dappsSubmission.banner-submit.submit-dapp',
               to: '/dapp-submission'
             }
           ]
         },
         {
           class: 'e2',
-          title: this.$t('footer.title.affiliates'),
+          title: 'footer.title.affiliates',
           contents: affiliates
         },
         {
           class: 'e3',
-          title: this.$t('footer.title.mew'),
+          title: 'footer.title.mew',
           contents: [
             {
-              text: this.$t('footer.about'),
+              text: 'footer.about',
               to: '/#about-mew'
             },
             {
-              text: this.$t('footer.team'),
+              text: 'footer.team',
               to: '/team'
             },
             {
-              text: this.$t('common.faqs'),
+              text: 'common.faqs',
               to: '/#faqs'
             },
             {
-              text: 'MEWtopia',
+              text: 'common.mewtopia',
               href: 'https://www.mewtopia.com'
             },
             {
-              text: this.$t('common.cstm-support'),
+              text: 'common.cstm-support',
               href: 'mailto:support@myetherwallet.com'
             },
             {
-              text: 'Help Center',
+              text: 'common.help-center',
               href: 'https://kb.myetherwallet.com'
             }
           ]

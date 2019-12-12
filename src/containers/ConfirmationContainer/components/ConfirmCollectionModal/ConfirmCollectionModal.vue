@@ -108,7 +108,7 @@
               ]"
               @click="sendBatchTransactions"
             >
-              {{ buttonText }}
+              {{ $t(buttonText) }}
             </div>
             <div
               v-show="sending"
@@ -175,9 +175,9 @@ export default {
     ...mapState(['web3', 'network', 'account']),
     buttonText() {
       if (!this.allSigned && this.isHardwareWallet) {
-        return this.$t('confirmation.approve-on-device');
+        return 'confirmation.approve-on-device';
       }
-      return this.$t('sendTx.confirmation.button');
+      return 'sendTx.confirmation.button';
     },
     allSigned() {
       if (this.signedArray.length === 0) return false;

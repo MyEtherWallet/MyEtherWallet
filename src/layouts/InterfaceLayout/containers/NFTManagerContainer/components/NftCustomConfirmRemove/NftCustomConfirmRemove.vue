@@ -9,10 +9,25 @@
     >
       <div class="button-container">
         <standard-button
-          :options="removeButton"
+          :options="{
+            title: $t('nftManager.remove'),
+            buttonStyle: 'red',
+            helpCenter: false,
+            noMinWidth: true,
+            fullWidth: false
+          }"
           @click.native="continueRemove"
         />
-        <standard-button :options="cancelButton" @click.native="cancelRemove" />
+        <standard-button
+          :options="{
+            title: $t('common.cancel'),
+            buttonStyle: 'grey-border',
+            helpCenter: false,
+            noMinWidth: true,
+            fullWidth: false
+          }"
+          @click.native="cancelRemove"
+        />
       </div>
     </b-modal>
   </div>
@@ -34,24 +49,6 @@ export default {
         return {};
       }
     }
-  },
-  data() {
-    return {
-      removeButton: {
-        title: `${this.$t('nftManager.remove')}`,
-        buttonStyle: 'red',
-        helpCenter: false,
-        noMinWidth: true,
-        fullWidth: false
-      },
-      cancelButton: {
-        title: `${this.$t('common.cancel')}`,
-        buttonStyle: 'grey-border',
-        helpCenter: false,
-        noMinWidth: true,
-        fullWidth: false
-      }
-    };
   },
   methods: {
     continueRemove() {

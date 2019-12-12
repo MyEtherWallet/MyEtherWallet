@@ -2,7 +2,13 @@
   <div>
     <div>
       <div class="page-container">
-        <page-title :options="titleAndTextContents" />
+        <page-title
+          :options="{
+            title: $t('team.title'),
+            boldSubTitle: '',
+            textContent: [$t('team.desc')]
+          }"
+        />
 
         <div class="team-info">
           <div v-for="member in members" :key="member.name" class="member">
@@ -44,11 +50,6 @@ export default {
   },
   data() {
     return {
-      titleAndTextContents: {
-        title: this.$t('team.title'),
-        boldSubTitle: '',
-        textContent: [this.$t('team.desc')]
-      },
       members: [
         {
           name: 'Kosala',
