@@ -1,4 +1,4 @@
-### Bug 
+### Bug
 
 - Fix offline send helper & out of memory error on local build [#1741](https://github.com/MyEtherWallet/MyEtherWallet/pull/1741)
 
