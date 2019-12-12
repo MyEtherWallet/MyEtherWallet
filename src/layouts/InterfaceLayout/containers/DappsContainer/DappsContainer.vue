@@ -104,7 +104,7 @@ export default {
           // eslint-disable-next-line
         console.error(e);
         });
-      this.soDapps = JSON.parse(dapps).items.map(item => item);
+      this.soDapps = dapps.items.map(item => item);
     }
   }
 };
