@@ -1,26 +1,9 @@
 <template>
-  <v-sheet class="d-flex align-end" min-height="370px">
-    <v-col cols="6" class="pb-10">
+  <v-sheet class="d-flex align-start" min-height="370px">
+    <div class="pt-8 px-3">
       <div class="subtitle-1 font-weight-bold grey--text">STEP 1.</div>
-      <div class="headline font-weight-bold mb-3">Download &amp; Install</div>
-      <p class="mb-6">
-        Please scan the
-        <span class="text-color--mew-green">QR Code</span>, or search
-        "MEWconnect" in
-        <a
-          href="https://www.apple.com/lae/ios/app-store/"
-          class="text-decoration--none text-color--mew-green"
-          target="_blank"
-          >Apple App Store</a
-        >
-        or
-        <a
-          href="https://play.google.com/store"
-          class="text-decoration--none text-color--mew-green"
-          target="_blank"
-          >Google Play Store</a
-        >. Continue if you have already installed the App.
-      </p>
+      <div class="headline font-weight-bold mb-3">Create password</div>
+
       <div class="d-flex align-center">
         <StdButton buttonclass="button--green" @click.native="linkToStep(2)"
           >Continue</StdButton
@@ -34,15 +17,7 @@
           >Skip</router-link
         >
       </p>
-    </v-col>
-    <v-col cols="6" class="pb-0">
-      <v-img
-        class="mx-auto"
-        max-height="330px"
-        max-width="290px"
-        src="@/assets/images/Etc/CreateWallet/DownloadAndInstall.png"
-      />
-    </v-col>
+    </div>
   </v-sheet>
 </template>
 
