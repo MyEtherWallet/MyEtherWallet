@@ -74,7 +74,11 @@
         </div>
         <div class="button-container">
           <standard-button
-            :options="confirmButton"
+            :options="{
+              title: $t('dappsMaker.confirm-and-create-vault'),
+              buttonStyle: 'green',
+              helpCenter: true
+            }"
             @click.native="confirmClicked"
           />
         </div>
@@ -130,15 +134,6 @@ export default {
       type: String,
       default: 'Error'
     }
-  },
-  data() {
-    return {
-      confirmButton: {
-        title: this.$t('dappsMaker.confirm-and-create-vault'),
-        buttonStyle: 'green',
-        helpCenter: true
-      }
-    };
   },
   computed: {},
   watch: {},

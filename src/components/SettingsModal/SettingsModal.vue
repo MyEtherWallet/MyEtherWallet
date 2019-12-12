@@ -199,7 +199,9 @@
               </table>
             </div>
 
-            <span v-if="addrBookErrMsg" class="err">{{ addrBookErrMsg }}</span>
+            <span v-if="addrBookErrMsg" class="err">{{
+              $t(addrBookErrMsg)
+            }}</span>
 
             <div class="address-inputs">
               <blockie
@@ -558,7 +560,7 @@ export default {
       });
 
       if (this.addressBook.length > 9) {
-        this.addrBookErrMsg = this.$t('interface.address-book.add-up-to');
+        this.addrBookErrMsg = 'interface.address-book.add-up-to';
         this.contactAddress = '';
         this.contactNickname = '';
         return;

@@ -27,7 +27,11 @@
         </div>
         <standard-button
           :button-disabled="notValid"
-          :options="accessWalletButtonOptions"
+          :options="{
+            title: $t('common.wallet.access'),
+            buttonStyle: 'green',
+            noMinWidth: true
+          }"
           class="submit-button"
           @click.native.prevent="unlockWallet"
         />
@@ -55,11 +59,6 @@ export default {
   },
   data() {
     return {
-      accessWalletButtonOptions: {
-        title: this.$t('common.wallet.access'),
-        buttonStyle: 'green',
-        noMinWidth: true
-      },
       privateKey: '',
       spinner: false
     };

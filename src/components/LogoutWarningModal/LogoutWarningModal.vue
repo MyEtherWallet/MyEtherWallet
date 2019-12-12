@@ -13,8 +13,28 @@
         <h2>{{ $t('interface.oops') }}</h2>
         <p>{{ $t('interface.logout-warning') }}</p>
         <div class="buttons">
-          <standard-button :options="buttonNo" @click.native="cancel" />
-          <standard-button :options="buttonYes" @click.native="logout" />
+          <standard-button
+            :options="{
+              title: $t('interface.go-back'),
+              buttonStyle: 'green-border',
+              rightArrow: false,
+              leftArrow: false,
+              fullWidth: true,
+              noMinWidth: true
+            }"
+            @click.native="cancel"
+          />
+          <standard-button
+            :options="{
+              title: $t('interface.logout-wallet'),
+              buttonStyle: 'red',
+              rightArrow: false,
+              leftArrow: false,
+              fullWidth: true,
+              noMinWidth: true
+            }"
+            @click.native="logout"
+          />
         </div>
       </div>
     </b-modal>
@@ -24,26 +44,6 @@
 <script>
 export default {
   name: 'LogoutWarning',
-  data() {
-    return {
-      buttonNo: {
-        title: this.$t('interface.go-back'),
-        buttonStyle: 'green-border',
-        rightArrow: false,
-        leftArrow: false,
-        fullWidth: true,
-        noMinWidth: true
-      },
-      buttonYes: {
-        title: this.$t('interface.logout-wallet'),
-        buttonStyle: 'red',
-        rightArrow: false,
-        leftArrow: false,
-        fullWidth: true,
-        noMinWidth: true
-      }
-    };
-  },
   methods: {
     logout() {
       const path = this.$route.fullPath;
