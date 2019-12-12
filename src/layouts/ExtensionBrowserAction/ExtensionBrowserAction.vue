@@ -1,6 +1,5 @@
 <template>
   <div class="cx-container">
-    <cx-header />
     <keep-alive>
       <div class="cx-content-wrap">
         <wallet-side-menu class="side-menu" />
@@ -9,20 +8,15 @@
         </div>
       </div>
     </keep-alive>
-    <cx-footer />
   </div>
 </template>
 
 <script>
-import CxHeader from '@/layouts/ExtensionBrowserAction/components/CxHeader';
-import CxFooter from '@/layouts/ExtensionBrowserAction/components/CxFooter';
 import WalletSideMenu from './components/WalletSideMenu';
 
 export default {
   components: {
-    'wallet-side-menu': WalletSideMenu,
-    'cx-header': CxHeader,
-    'cx-footer': CxFooter
+    'wallet-side-menu': WalletSideMenu
   },
   data() {
     return {};

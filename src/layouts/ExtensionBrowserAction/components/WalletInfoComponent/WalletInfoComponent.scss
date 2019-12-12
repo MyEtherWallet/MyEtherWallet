@@ -39,7 +39,6 @@
   }
 
   .wallet-content {
-    display: -webkit-box;
     background-color: $white;
     display: flex;
 
@@ -53,7 +52,6 @@
       flex-grow: 1;
 
       .address-content-container {
-
         display: flex;
         justify-content: space-between;
         padding: 20px;
