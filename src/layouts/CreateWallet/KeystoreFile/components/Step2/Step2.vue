@@ -1,50 +1,31 @@
 <template>
-  <v-sheet class="d-flex align-end" min-height="370px">
-    <v-col cols="6" class="pb-10">
-      <div class="subtitle-1 font-weight-bold grey--text">STEP 2.</div>
-      <div class="headline font-weight-bold mb-3">Create a new wallet</div>
-      <p class="mb-6">
-        Please follow the prompts in MEWconnect App and create a new wallet.
-        Continue if you have already created a new wallet in the App.
-      </p>
-      <div class="d-flex align-center">
-        <StdButton
-          buttonclass="button--green-border"
-          class="mr-3"
-          :minwidth="false"
-          @click.native="linkToStep(1)"
-          >Back</StdButton
-        >
-        <StdButton buttonclass="button--green" @click.native="linkToStep(3)">
-          Continue
-        </StdButton>
-      </div>
-      <p class="mt-4 mb-0">
-        Need more help?
-        <router-link
-          class="text-decoration--none text-color--mew-green font-weight-bold"
-          to="/"
-        >
-          Watch tutorial
-        </router-link>
-      </p>
-    </v-col>
-    <v-col cols="6" class="pb-0">
-      <v-img
-        class="mx-auto"
-        max-height="320px"
-        max-width="240px"
-        src="@/assets/images/Etc/CreateWallet/CreateNewWallet.png"
-      />
-    </v-col>
+  <v-sheet min-height="500px" class="d-flex flex-column">
+    <div>
+      <v-sheet class="pt-8 px-3" width="100%">
+        <div class="subtitle-1 font-weight-bold grey--text">STEP 2.</div>
+        <div class="headline font-weight-bold mb-3">Download keystore file</div>
+        <div class="my-5" />
+        <div class="d-flex"></div>
+      </v-sheet>
+
+      <StdButton
+        buttonclass="button--green"
+        class="mx-auto display--block"
+        @click.native="linkToStep(2)"
+        >Acknowledge &amp; Download</StdButton
+      >
+    </div>
+    <v-spacer />
+    <NotRecommended class="mx-n6 border-radius-bottom" />
   </v-sheet>
 </template>
 
 <script>
 import StdButton from '@/components/StdButton';
+import NotRecommended from '@/components/NotRecommended';
 
 export default {
-  components: { StdButton },
+  components: { StdButton, NotRecommended },
   data: () => ({}),
   methods: {
     linkToStep(step) {
@@ -57,4 +38,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.border-radius-bottom {
+  border-radius: 0 0 10px 10px;
+}
+</style>
