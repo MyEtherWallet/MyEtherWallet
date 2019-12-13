@@ -1,7 +1,7 @@
 <template>
   <v-sheet class="d-flex align-start" width="100%">
     <v-text-field
-      color="green"
+      color="teal lighten-1"
       :append-icon="showPasswd ? 'mdi-eye' : 'mdi-eye-off'"
       :type="showPasswd ? 'text' : 'password'"
       :label="fldlabel"
@@ -23,7 +23,10 @@ export default {
   props: {
     btnlabel: { default: '', type: String },
     fldlabel: { default: '', type: String },
-    hint: { default: 'At least 8 characters', type: String }
+    hint: {
+      default: 'Passwords require at least 8 alphanumeric characters',
+      type: String
+    }
   },
   data: () => ({
     showPasswd: false,
