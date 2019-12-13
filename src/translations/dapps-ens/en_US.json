@@ -10,17 +10,17 @@
   },
   "warning": {
     "contract-not-ready": "Contract is not ready yet, transaction might fail.",
-    "not-enough-char": "Domain name is less than 7 characters.",
+    "not-enough-char": "Domain name is less than 3 characters.",
     "invalid-symbol": "Invalid symbols on domain"
   },
   "toast": {
     "success-transfer": "Successfully Transferred!",
-    "success-register": "Successfully Registered!'"
+    "success-register": "Successfully Registered!"
   },
   "check-domain": "Check Domain",
   "update": "Update",
   "ph": {
-    "seven-char": "Please enter at least 7 Characters"
+    "three-char": "Please enter at least 3 Characters"
   },
   "is-available": "Cheers! This domain is available.",
   "not-available": "{domain} is not available yet!",
@@ -65,6 +65,9 @@
   "ens-resolver": {
     "address-reported-error": "Address has been reported. Please make sure you are sending funds to the correct address.",
     "invalid-eth-addr": "Not a valid Ethereum address",
-    "addr-not-checksummed": "This address is not checksummed properly. Please copy the address exactly as shown."
+    "addr-not-checksummed": "This address is not checksummed properly. Please copy the address exactly as shown.",
+    "invalid-addr": "Invalid {coin} address",
+    "network-not-found": "{network}NS name is invalid or not found",
+    "no-resolver": "No {network}NS resolver in this node"
   }
 }
