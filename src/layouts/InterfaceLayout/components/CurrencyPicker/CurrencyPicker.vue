@@ -24,6 +24,7 @@
         <div class="item-container">
           <div
             v-for="(curr, idx) in localCurrency"
+            v-show="localCurrency.length > 0"
             :class="[
               token
                 ? selectedCurrency.symbol === curr.symbol
@@ -44,8 +45,12 @@
             <p v-show="token">
               {{ curr.symbol }}<span class="subname"> - {{ curr.name }}</span>
             </p>
-            <p />
             <p v-show="!token">{{ curr.name }}</p>
+          </div>
+          <div class="item">
+            <p v-show="localCurrency.length === 0">
+              {{ $t('interface.tokens.no-tokens') }}
+            </p>
           </div>
         </div>
       </div>
