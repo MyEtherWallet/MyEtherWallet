@@ -1,3 +1,7 @@
+### Bug
+
+- Fix leftover issue with token search []()
+
 ### Release v5.2.7
 
 ### Bug
