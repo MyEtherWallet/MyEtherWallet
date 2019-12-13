@@ -1,10 +1,12 @@
 ### Devop
-- Refactor maker translations[#1737] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1737)
+
+- Refactor maker translations[#1737](https://github.com/MyEtherWallet/MyEtherWallet/pull/1737)
 
 ### Release v5.2.7
 
 ### Bug
 
+- Fix Schedule Transaction, Drop Down Bug [#1747](https://github.com/MyEtherWallet/MyEtherWallet/pull/1747)
 - Fix verify signature [#1729](https://github.com/MyEtherWallet/MyEtherWallet/pull/1729)
 - Fix top banner buttons [#1715](https://github.com/MyEtherWallet/MyEtherWallet/pull/1715)
 - MEW CX memory leak on access wallet + fix mnemonic [#1733](https://github.com/MyEtherWallet/MyEtherWallet/pull/1733)
