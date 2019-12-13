@@ -1,5 +1,5 @@
 <template>
-  <v-sheet color="yellow lighten-5" class="py-7 px-10">
+  <v-sheet color="yellow lighten-5" class="py-7 px-11">
     <div class="d-flex align-center mb-1">
       <v-icon color="orange" size="27px" class="mr-2">mdi-alert</v-icon>
       <div class="text-uppercase font-weight-medium subtitle-1">
