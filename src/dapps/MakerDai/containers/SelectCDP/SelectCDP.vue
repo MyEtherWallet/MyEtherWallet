@@ -1,32 +1,5 @@
 <template>
-  <div>
-    <!--    <div class="container-maker">
-      <div class="manage-container">
-        <div class="content-container">
-          <p class="cpd-title">{{ $t('dappsMaker.cdpPortal') }}</p>
-          <div class="cdp-id">
-            <p>
-              {{ $t('dappsMaker.currentPrice') }}: <b>{{ ethPrice }}</b> USD
-            </p>
-          </div>
-        </div>
-        <div v-if="!cdpDetailsLoaded">
-          {{ $t('dappsMaker.loadingMessage') }}
-        </div>
-        <div v-if="cdpDetailsLoaded">
-          <div
-            v-for="(cdp, idx) in Object.keys(availableCdps)"
-            :key="cdp + idx"
-          >
-            <select-cdp-entry
-              :a-cdp="cdpOptions[cdp]"
-              :cdp-id="cdp"
-            ></select-cdp-entry>
-          </div>
-        </div>
-      </div>
-    </div>-->
-  </div>
+  <div></div>
 </template>
 
 <script>
@@ -36,8 +9,6 @@ import InterfaceBottomText from '@/components/InterfaceBottomText';
 import Blockie from '@/components/Blockie';
 import BigNumber from 'bignumber.js';
 import SelectCdpEntry from '../../components/SelectCdpEntry';
-
-const KOVAN_SERVER_URL = 'https://sai-kovan.makerfoundation.com/v1';
 
 const toBigNumber = num => {
   return new BigNumber(num);
@@ -81,7 +52,6 @@ export default {
   data() {
     return {
       loaded: false,
-      serverUrl: KOVAN_SERVER_URL,
       wethToPethRatio: 0,
       daiPrice: 0,
       priceFloor: 0,

@@ -261,7 +261,7 @@ const registrarController = [
       }
     ],
     payable: false,
-    stateMutability: 'view',
+    stateMutability: 'pure',
     type: 'function'
   },
   {
@@ -300,6 +300,41 @@ const registrarController = [
       }
     ],
     name: 'makeCommitment',
+    outputs: [
+      {
+        name: '',
+        type: 'bytes32'
+      }
+    ],
+    payable: false,
+    stateMutability: 'pure',
+    type: 'function'
+  },
+  {
+    constant: true,
+    inputs: [
+      {
+        name: 'name',
+        type: 'string'
+      },
+      {
+        name: 'owner',
+        type: 'address'
+      },
+      {
+        name: 'secret',
+        type: 'bytes32'
+      },
+      {
+        name: 'resolver',
+        type: 'address'
+      },
+      {
+        name: 'addr',
+        type: 'address'
+      }
+    ],
+    name: 'makeCommitmentWithConfig',
     outputs: [
       {
         name: '',
@@ -358,6 +393,40 @@ const registrarController = [
         type: 'string'
       },
       {
+        name: 'owner',
+        type: 'address'
+      },
+      {
+        name: 'duration',
+        type: 'uint256'
+      },
+      {
+        name: 'secret',
+        type: 'bytes32'
+      },
+      {
+        name: 'resolver',
+        type: 'address'
+      },
+      {
+        name: 'addr',
+        type: 'address'
+      }
+    ],
+    name: 'registerWithConfig',
+    outputs: [],
+    payable: true,
+    stateMutability: 'payable',
+    type: 'function'
+  },
+  {
+    constant: false,
+    inputs: [
+      {
+        name: 'name',
+        type: 'string'
+      },
+      {
         name: 'duration',
         type: 'uint256'
       }
@@ -395,7 +464,12 @@ const registrarController = [
       }
     ],
     name: 'setCommitmentAges',
-    outputs: [],
+    outputs: [
+      {
+        name: '',
+        type: 'bool'
+      }
+    ],
     payable: false,
     stateMutability: 'nonpayable',
     type: 'function'

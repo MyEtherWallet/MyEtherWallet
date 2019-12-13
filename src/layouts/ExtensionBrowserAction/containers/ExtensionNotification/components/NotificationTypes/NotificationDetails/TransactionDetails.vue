@@ -35,7 +35,7 @@
           </p>
         </li>
         <li v-if="isTokenTransfer">
-          <p>Via contract:</p>
+          <p>{{ $t('mewcx.via-contract') }}:</p>
           <p>
             <a
               :href="addressLink(details.to)"
@@ -48,7 +48,10 @@
         </li>
         <li>
           <p>{{ $t('common.gasPrice') }}:</p>
-          <p>{{ convertToGwei(details.gasPrice) }} Gwei</p>
+          <p>
+            {{ convertToGwei(details.gasPrice) }}
+            {{ $t('common.gas.gwei') }}
+          </p>
         </li>
         <li>
           <p>{{ $t('common.gasLimit') }}:</p>

@@ -2,7 +2,7 @@
   <div>
     <b-modal
       ref="print"
-      title="Print Preview"
+      :title="$t('createWallet.mnemonic.print.print-title')"
       hide-footer
       centered
       class="nopadding print-mod"
@@ -15,12 +15,14 @@
           <mnemonic-table-to-print
             :mnemonic="mnemonic"
             :is-twenty-four="isTwentyFour"
+            :build-type="buildType"
           />
         </div>
         <div class="mnemonic-to-display">
           <mnemonic-table-to-display
             :mnemonic="mnemonic"
             :is-twenty-four="isTwentyFour"
+            :build-type="buildType"
           />
         </div>
         <div class="button-container">
@@ -64,7 +66,8 @@ export default {
         buttonStyle: 'green-border',
         noMinWidth: true,
         fullWidth: true
-      }
+      },
+      buildType: BUILD_TYPE
     };
   },
   methods: {

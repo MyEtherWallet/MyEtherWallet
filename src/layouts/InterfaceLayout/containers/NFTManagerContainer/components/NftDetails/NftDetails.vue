@@ -7,11 +7,11 @@
           <img :src="getImage(nft)" alt />
         </div>
         <div class="kitty-text">
-          <h3>{{ $t('dapps.sendMy', { value: selectedTitle }) }}</h3>
+          <h3>{{ $t('nftManager.send-my', { value: selectedTitle }) }}</h3>
           <p>#{{ nft.token }}</p>
           <div class="address-input-container">
-            <address-selector
-              :title="$t('interface.sendTxToAddr')"
+            <dropdown-address-selector
+              :title="$t('sendTx.to-addr')"
               @toAddress="prepareTransfer"
             />
             <div class="send-button-container">
@@ -30,7 +30,7 @@
 
 <script>
 import { mapState } from 'vuex';
-import { Misc, Toast } from '@/helpers';
+import { Toast } from '@/helpers';
 import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
 import SmallBackButton from '@/layouts/InterfaceLayout/components/SmallBackButton';
 import DropDownAddressSelector from '@/components/DropDownAddressSelector';
@@ -41,7 +41,7 @@ export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
     'back-button': SmallBackButton,
-    'address-selector': DropDownAddressSelector,
+    'dropdown-address-selector': DropDownAddressSelector,
     'standard-button': StandardButton
   },
   props: {
@@ -74,23 +74,17 @@ export default {
       cryptoKittiesContract: {},
       cryptoKittiesConfig: '0x06012c8cf97bead5deae237070f9587f8e7a266d',
       sendButton: {
-        title: this.$t('interface.send'),
+        title: this.$t('sendTx.send'),
         buttonStyle: 'green',
         helpCenter: true,
         noMinWidth: true,
         fullWidth: true
-      }
+      },
+      isValidAddress: false
     };
   },
-
   computed: {
-    ...mapState(['account', 'web3']),
-    isValidAddress() {
-      if (this.toAddress !== '') {
-        return Misc.isValidENSorEtherAddress(this.toAddress);
-      }
-      return false;
-    }
+    ...mapState(['account', 'web3'])
   },
   watch: {},
   mounted() {
@@ -121,7 +115,8 @@ export default {
       return nft.image;
     },
     prepareTransfer(toAddress) {
-      this.toAddress = toAddress;
+      this.toAddress = toAddress.address;
+      this.isValidAddress = toAddress.valid;
       this.ERC721tokenContract.options.address = this.nft.contract;
     },
     buildData() {

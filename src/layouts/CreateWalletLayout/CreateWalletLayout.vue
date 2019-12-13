@@ -10,18 +10,18 @@
           <b-tabs class="x100">
             <div v-if="showProgressBar && false" class="progress-bar" />
             <b-tab
+              :title="this.$t('common.mewconnect.string')"
               class="mew-connect-block"
-              title="MEWconnect"
               active
               @click="showProgressBar = false"
             >
               <div class="tab-content-block">
                 <div class="title-block">
                   <div class="title-popover">
-                    <h3>{{ $t('createWallet.titleMEWConnect') }}</h3>
-                    <popover :popcontent="$t('home.aboutMewConnectDesc')" />
+                    <h3>{{ $t('createWallet.mewconnect.title') }}</h3>
+                    <popover :popcontent="$t('common.mewconnect.desc')" />
                   </div>
-                  <p>{{ $t('createWallet.mewConnectDesc') }}</p>
+                  <p>{{ $t('createWallet.mewconnect.desc') }}</p>
                 </div>
                 <div class="appstores">
                   <div class="icons">
@@ -58,7 +58,7 @@
                   </div>
                   <div class="download">
                     <p @click="scanToDownloadModalOpen">
-                      {{ $t('createWallet.scanToDownload') }}
+                      {{ $t('createWallet.mewconnect.scan') }}
                     </p>
                   </div>
                 </div>
@@ -68,16 +68,16 @@
               </div>
             </b-tab>
             <b-tab
-              :title="$t('createWallet.byJsonFile')"
+              :title="$t('createWallet.keystore.title-tab')"
               @click="showProgressBar = true"
             >
               <div class="warning">
-                <warning-message />
+                <warning-message warning-type="create" />
               </div>
               <div class="tab-content-block">
                 <div class="title-block">
                   <div class="title-popover">
-                    <h3>{{ $t('createWallet.yourPw') }}</h3>
+                    <h3>{{ $t('common.password.your') }}</h3>
                     <popover :popcontent="$t('popover.password')" />
                   </div>
                 </div>
@@ -86,26 +86,23 @@
                   :switcher="switcher"
                   :param="'Json'"
                 />
-                <create-wallet-input-footer
-                  :combo="$t('createWallet.keyPass')"
-                  :desc="$t('createWallet.keyPassDesc')"
-                  :do-not-forget="$t('createWallet.doNotForget')"
-                  :do-not-forget-desc="$t('createWallet.doNotForgetDesc')"
-                />
+                <create-wallet-input-footer />
               </div>
             </b-tab>
             <b-tab
-              :title="$t('createWallet.byMnemonic')"
+              :title="$t('createWallet.mnemonic.title-tab')"
               @click="showProgressBar = true"
             >
               <div class="warning">
-                <warning-message />
+                <warning-message warning-type="create" />
               </div>
               <div class="tab-content-block">
                 <div class="title-block">
                   <div class="title-popover">
-                    <h3>{{ $t('createWallet.yourPw') }}</h3>
-                    <popover :popcontent="$t('popover.password')" />
+                    <h3>{{ $t('createWallet.mnemonic.title') }}</h3>
+                    <popover
+                      :popcontent="$t('createWallet.mnemonic.popover')"
+                    />
                   </div>
                 </div>
                 <by-mnemonic-container />

@@ -9,6 +9,7 @@
     <verification-modal
       ref="verification"
       :mnemonic-values="mnemonicValues"
+      :password="password"
       @verifiedMnemonic="openFinish"
     />
     <div class="wrap">
@@ -29,7 +30,7 @@
               </div>
             </div>
             <span class="text__base link switch-label">{{
-              $t('createWallet.byMnemonicValue')
+              $t('createWallet.mnemonic.value')
             }}</span>
           </div>
 
@@ -38,7 +39,7 @@
             @click="mnemonicValueRefresh"
           >
             <i class="fa fa-refresh" aria-hidden="true" />
-            <span>{{ $t('createWallet.byMnemonicRandom') }}</span>
+            <span>{{ $t('createWallet.mnemonic.random') }}</span>
           </div>
         </div>
         <div class="phrases">
@@ -52,8 +53,9 @@
 
       <div class="option-container-block">
         <expanding-option
-          title="Password"
-          button-text="Optional"
+          :title="$t('createWallet.mnemonic.extra-word')"
+          :popover="$t('createWallet.mnemonic.extra-word-popover')"
+          :button-text="$t('common.optional')"
           @expanded="passwordInputViewChange"
         >
           <div class="option-container">
@@ -64,14 +66,15 @@
             />
             <div class="password-warning">
               <p>
-                {{ $t('createWallet.mnemonicPasswordWarning') }}
+                {{ $t('createWallet.mnemonic.warning.extra-word') }}
               </p>
               <div class="read">
                 > {{ $t('common.read') }}:
                 <a
-                  href="https://kb.myetherwallet.com/posts/security-and-privacy/mnemonic-phrase-password/"
+                  href="https://kb.myetherwallet.com/en/security-and-privacy/mnemonic-phrase-extra-word/"
                   target="_blank"
-                  >Mnemonic Phrase: Should I Include a Password?</a
+                  rel="noopener noreferrer"
+                  >{{ $t('common.article.mnemonic-password') }}</a
                 >
               </div>
             </div>
@@ -84,13 +87,19 @@
           class="next-button large-round-button-green-filled clickable"
           @click="mnemonicVerificationModalOpen"
         >
-          {{ $t('createWallet.byMnemonicAlreadyWritten') }}
+          {{ $t('createWallet.mnemonic.button-wrote-it-down') }}
         </div>
         <div @click="openPrintModal">
           <img alt class="icon" src="~@/assets/images/icons/printer.svg" />
         </div>
       </div>
-      <input-footer />
+      <div class="footer-text">
+        <i18n tag="p" path="createWallet.mnemonic.do-not-forget-save-mnemonic">
+          <span slot="do-not-forget">{{
+            $t('createWallet.password.do-not-forget')
+          }}</span>
+        </i18n>
+      </div>
     </div>
   </div>
 </template>

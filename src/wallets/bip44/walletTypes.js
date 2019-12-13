@@ -11,6 +11,7 @@ const WEB3_WALLET = 'web3_wallet';
 const PRIV_KEY = 'priv_key';
 const FINNEY = 'finney';
 const WATCH_ONLY = 'watchOnly';
+const XWALLET = 'xwallet';
 export {
   LEDGER,
   TREZOR,
@@ -24,5 +25,6 @@ export {
   WEB3_WALLET,
   PRIV_KEY,
   FINNEY,
-  WATCH_ONLY
+  WATCH_ONLY,
+  XWALLET
 };

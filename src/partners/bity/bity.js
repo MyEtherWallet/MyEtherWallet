@@ -156,30 +156,42 @@ export default class BitySwap {
   }
 
   async getRate(fromCurrency, toCurrency, fromValue) {
-    const expRate = await this._getRateEstimate(
-      fromCurrency,
-      toCurrency,
-      fromValue
-    );
+    try {
+      const expRate = await this._getRateEstimate(
+        fromCurrency,
+        toCurrency,
+        fromValue
+      );
 
-    const rate = this.calculateRate(
-      expRate.input.amount,
-      expRate.output.amount
-    );
-    this.rates.set(`${fromCurrency}/${toCurrency}`, rate);
-    return {
-      fromCurrency,
-      toCurrency,
-      provider: this.name,
-      rate: rate,
-      toValue: expRate.output.amount,
-      minValue: new BigNumber(expRate.input.minimum_amount).plus(
-        new BigNumber(expRate.input.minimum_amount).times(0.000001)
-      ), // because we truncate the number at 6 decimal places
-      maxValue: this.fiatCurrencies.includes(toCurrency)
-        ? this.getChfEquivalentMaxMin(fromCurrency, true)
-        : this.getBtcEquivalentMaxMin(fromCurrency, true)
-    };
+      const rate = this.calculateRate(
+        expRate.input.amount,
+        expRate.output.amount
+      );
+      this.rates.set(`${fromCurrency}/${toCurrency}`, rate);
+      return {
+        fromCurrency,
+        toCurrency,
+        provider: this.name,
+        rate: rate,
+        toValue: expRate.output.amount,
+        minValue: new BigNumber(expRate.input.minimum_amount).plus(
+          new BigNumber(expRate.input.minimum_amount).toFixed(
+            6,
+            BigNumber.ROUND_UP
+          )
+        ), // because we truncate the number at 6 decimal places
+        maxValue: this.fiatCurrencies.includes(toCurrency)
+          ? this.getChfEquivalentMaxMin(fromCurrency, true)
+          : this.getBtcEquivalentMaxMin(fromCurrency, true)
+      };
+    } catch (e) {
+      return {
+        fromCurrency,
+        toCurrency,
+        provider: this.name,
+        rate: -1
+      };
+    }
   }
 
   async getRateUpdate(fromCurrency, toCurrency, fromValue) {
@@ -201,7 +213,10 @@ export default class BitySwap {
       provider: this.name,
       rate: rate,
       minValue: new BigNumber(expRate.input.minimum_amount).plus(
-        new BigNumber(expRate.input.minimum_amount).times(0.000001)
+        new BigNumber(expRate.input.minimum_amount).toFixed(
+          6,
+          BigNumber.ROUND_UP
+        )
       ), // because we truncate the number at 6 decimal places
       maxValue: this.fiatCurrencies.includes(toCurrency)
         ? this.getChfEquivalentMaxMin(fromCurrency, true)

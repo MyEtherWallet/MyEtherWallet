@@ -2,11 +2,11 @@
   <div>
     <b-modal
       ref="viewPriv"
+      :title="$t('accessWallet.private-key.string')"
       hide-footer
       centered
       no-padding
       class="bootstrap-modal"
-      title="Private Key"
     >
       <div class="modal-contents">
         <qrcode :value="privKey" :options="{ size: 200 }" />
@@ -14,13 +14,16 @@
           {{ privKey }}
         </p>
         <div class="copy-button" @click="copy">
-          Copy
+          {{ $t('common.copy') }}
           <input ref="privKey" :value="privKey" />
         </div>
-        <p class="red-warning">
-          Please <b>DO NOT</b> share your private key to anyone! You may lose
-          your money if you share it!
-        </p>
+        <i18n
+          path="accessWallet.private-key.do-not-share"
+          tag="p"
+          class="red-warning"
+        >
+          <b slot="do-not">{{ $t('common.do-not') }}</b>
+        </i18n>
       </div>
     </b-modal>
   </div>
@@ -40,7 +43,10 @@ export default {
     copy() {
       this.$refs.privKey.select();
       document.execCommand('copy');
-      Toast.responseHandler('Successfully copied Private Key!', Toast.SUCCESS);
+      Toast.responseHandler(
+        this.$t('interface.addr.copied-private-key'),
+        Toast.SUCCESS
+      );
     }
   }
 };

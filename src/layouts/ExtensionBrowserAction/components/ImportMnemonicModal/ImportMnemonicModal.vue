@@ -1,7 +1,7 @@
 <template>
   <b-modal
     ref="mnemonicPhrase"
-    :title="$t('accessWallet.accessByMnemonicPhrase')"
+    :title="$t('accessWallet.mnemonic.modal.title')"
     hide-footer
     class="bootstrap-modal padding-20"
     centered
@@ -9,7 +9,7 @@
   >
     <div class="contents">
       <p class="instruction">
-        {{ $t('accessWallet.pleaseTypeInMnemonicPhrase') }}
+        {{ $t('accessWallet.please-type-in-mnemonic-phrase') }}
       </p>
       <div class="tools">
         <div class="value-switch noselect">
@@ -36,7 +36,7 @@
             </div>
           </div>
           <span class="text__base link switch-label">{{
-            $t('createWallet.byMnemonicValue')
+            $t('mewcx.value')
           }}</span>
         </div>
       </div>
@@ -55,13 +55,13 @@
           </ul>
         </div>
         <div class="button-container">
-          <expanding-option title="Password">
+          <expanding-option :title="$t('mewcx.password')">
             <div class="input-container">
               <div class="mnemonic-password-input">
                 <input
                   v-model="locPassword"
                   :type="show ? 'text' : 'password'"
-                  placeholder="Enter your password"
+                  :placeholder="$t('mewcx.enter-pw')"
                 />
                 <img
                   :src="show ? showIcon : hide"

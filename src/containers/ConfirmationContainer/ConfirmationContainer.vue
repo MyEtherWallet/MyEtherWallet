@@ -177,6 +177,27 @@ export default {
       }
     }
   },
+  watch: {
+    wallet(newVal) {
+      if (newVal !== null) {
+        if (this.$refs.hasOwnProperty('confirmModal')) {
+          this.$refs.confirmModal.$refs.confirmation.$on('hidden', () => {
+            if (this.dismissed) {
+              this.reset();
+            }
+          });
+        }
+        if (this.$refs.hasOwnProperty('signConfirmModal')) {
+          this.$refs.signConfirmModal.$refs.signConfirmation.$on(
+            'hidden',
+            () => {
+              this.signedMessage = '';
+            }
+          );
+        }
+      }
+    }
+  },
   beforeDestroy() {
     Object.values(events).forEach(evt => {
       this.$eventHub.$off(evt);
@@ -286,6 +307,7 @@ export default {
     this.$eventHub.$on('showMessageConfirmModal', (data, resolve) => {
       this.responseFunction = resolve;
       this.messageToSign = data;
+      this.signedMessage = '';
       const signPromise = this.wallet.signMessage(data).then(_response => {
         this.signedMessage = '0x' + _response.toString('hex');
       });
@@ -324,14 +346,6 @@ export default {
     );
   },
   mounted() {
-    if (this.wallet !== null) {
-      this.$refs.confirmModal.$refs.confirmation.$on('hidden', () => {
-        if (this.dismissed) {
-          this.reset();
-        }
-      });
-    }
-
     this.$refs.successModal.$refs.success.$on('hide', () => {
       this.successMessage = '';
       this.linkMessage = 'OK';
@@ -495,7 +509,7 @@ export default {
         promiEvent.on('error', onError);
         promiEvent.once('transactionHash', hash => {
           this.showSuccessModal(
-            'Transaction sent!',
+            `${this.$t('sendTx.success.sub-title')}`,
             'Okay',
             this.network.type.blockExplorerTX.replace('[[txHash]]', hash)
           );
@@ -543,7 +557,7 @@ export default {
 
       if (this.raw.generateOnly) return;
       this.showSuccessModal(
-        'Transaction sent!',
+        `${this.$t('sendTx.success.sub-title')}`,
         'Okay',
         this.network.type.blockExplorerTX.replace(
           '[[txHash]]',

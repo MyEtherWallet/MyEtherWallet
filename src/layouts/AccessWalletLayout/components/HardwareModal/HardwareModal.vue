@@ -1,7 +1,7 @@
 <template>
   <b-modal
     ref="hardware"
-    :title="$t('accessWallet.accessByHardware')"
+    :title="$t('accessWallet.hardware.modal.title')"
     hide-footer
     class="bootstrap-modal modal-hardware nopadding"
     centered
@@ -11,7 +11,7 @@
     <div class="modal-content-container">
       <div class="d-block text-center">
         <b-alert :show="mayNotBeAttached" fade variant="warning">
-          {{ $t('accessWallet.connectDevice') }}
+          {{ $t('accessWallet.hardware.warning.not-connected') }}
         </b-alert>
         <div class="button-options hardware-button-options">
           <wallet-option
@@ -36,7 +36,7 @@
           ]"
           @click="continueAccess"
         >
-          {{ $t('accessWallet.accessDeviceAddresses') }}
+          {{ $t('accessWallet.hardware.modal.button-choose') }}
         </div>
       </div>
       <customer-support />
@@ -52,6 +52,7 @@ import secalot from '@/assets/images/icons/HardwareWallet/secalot.svg';
 import trezor from '@/assets/images/icons/HardwareWallet/trezor.svg';
 import keepkey from '@/assets/images/icons/HardwareWallet/keepkey.svg';
 import finney from '@/assets/images/icons/button-finney-hover.png';
+import xwallet from '@/assets/images/icons/HardwareWallet/xwallet.svg';
 import WalletOption from '../WalletOption';
 import { Toast } from '@/helpers';
 import { isSupported } from 'u2f-api';
@@ -70,7 +71,8 @@ import {
   SECALOT as SECALOT_TYPE,
   KEEPKEY as KEEPKEY_TYPE,
   FINNEY as FINNEY_TYPE,
-  WALLET_CONNECT as WALLETCONNECT_TYPE
+  WALLET_CONNECT as WALLETCONNECT_TYPE,
+  XWALLET as XWALLET_TYPE
 } from '@/wallets/bip44/walletTypes';
 export default {
   components: {
@@ -91,6 +93,10 @@ export default {
       default: function() {}
     },
     openFinney: {
+      type: Function,
+      default: function() {}
+    },
+    openXwallet: {
       type: Function,
       default: function() {}
     }
@@ -133,6 +139,14 @@ export default {
           disabled: false,
           msg: '',
           link: 'https://shiftcrypto.ch/?ref=mew'
+        },
+        {
+          name: XWALLET_TYPE,
+          imgPath: xwallet,
+          text: 'XWallet',
+          disabled: false,
+          msg: '',
+          link: 'https://xwallet.pundix.com'
         },
         {
           name: TREZOR_TYPE,
@@ -181,16 +195,16 @@ export default {
             !window.navigator ||
             !window.navigator.usb;
           item.disabled = disable;
-          item.msg = disable ? this.$t('errorsGlobal.browserNonWebUsb') : '';
+          item.msg = disable ? this.$t('errorsGlobal.browser-non-web-usb') : '';
         }
         if (u2fhw.includes(item.name)) {
           item.disabled = !res;
-          item.msg = !res ? this.$t('errorsGlobal.browserNonU2f') : '';
+          item.msg = !res ? this.$t('errorsGlobal.browser-non-u2f') : '';
         }
         if (this.isMobile()) {
           const disable = !inMobile.includes(item.name);
           item.disabled = disable;
-          item.msg = disable ? this.$t('errorsGlobal.noMobileSupport') : '';
+          item.msg = disable ? this.$t('errorsGlobal.no-mobile-support') : '';
         }
       });
     });
@@ -262,6 +276,10 @@ export default {
           break;
         case FINNEY_TYPE:
           this.openFinney();
+          this.$refs.hardware.hide();
+          break;
+        case XWALLET_TYPE:
+          this.openXwallet();
           this.$refs.hardware.hide();
           break;
         default:

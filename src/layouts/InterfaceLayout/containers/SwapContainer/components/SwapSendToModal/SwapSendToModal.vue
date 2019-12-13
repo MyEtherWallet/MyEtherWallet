@@ -2,7 +2,7 @@
   <div class="modal-container">
     <b-modal
       ref="swapconfirmation"
-      :title="$t('interface.reviewSwap')"
+      :title="$t('swap.review')"
       hide-footer
       centered
       class="bootstrap-modal bootstrap-modal-wide padding-40-20"
@@ -11,7 +11,7 @@
     >
       <div class="time-remaining">
         <h1>{{ timeRemaining }}</h1>
-        <p>{{ $t('interface.timeRemaining') }}</p>
+        <p>{{ $t('swap.time-remain') }}</p>
       </div>
       <div>
         <div class="swap-detail">
@@ -26,7 +26,7 @@
               v-show="fromAddress.address !== '' && !isFromFiat"
               class="block-title"
             >
-              {{ $t('interface.fromAddr') }}
+              {{ $t('sendTx.from-addr') }}
             </p>
             <p
               v-show="fromAddress.address !== '' && !isFromFiat"
@@ -45,7 +45,7 @@
               {{ toAddress.value }} <span>{{ toAddress.name }}</span>
             </p>
             <p v-show="toAddress.address !== ''" class="block-title">
-              {{ $t('interface.sendTxToAddr') }}
+              {{ $t('sendTx.to-addr') }}
             </p>
             <p v-show="toAddress.address !== ''" class="address">
               {{ toAddress.address }}
@@ -69,7 +69,7 @@
             <div class="provider-address-details">
               <h4>
                 {{
-                  $t('interface.notFromEthSwap', {
+                  $t('swap.send-value-curr', {
                     value: fromAddress.value,
                     currency: fromAddress.name
                   })
@@ -89,7 +89,7 @@
               <button-with-qrcode
                 :qrcode="qrcode"
                 :buttonname="
-                  $t('interface.sentCoins', { currency: fromAddress.name })
+                  $t('swap.sent-my-coins', { currency: fromAddress.name })
                 "
               />
             </div>
@@ -192,7 +192,11 @@ export default {
         this.fromAddress = {
           value: newValue.fromValue,
           name: newValue.fromCurrency,
-          address: newValue.fromAddress ? newValue.fromAddress : ''
+          address: newValue.fromAddress
+            ? newValue.refundAddress
+              ? newValue.refundAddress
+              : newValue.fromAddress
+            : ''
         };
         this.toAddress = {
           value: newValue.toValue,
