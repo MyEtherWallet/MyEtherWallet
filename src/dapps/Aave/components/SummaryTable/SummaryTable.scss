@@ -1,0 +1,82 @@
+@import '~@/scss/GlobalVariables';
+
+.summary-table-container {
+  table {
+    border: 1px solid $light-blue-12;
+    border-radius: 4px;
+    // table-layout: fixed;
+    width: 100%;
+
+    thead {
+      background-color: $light-blue-12;
+      th {
+        color: $light-blue-2;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 10px 0;
+        padding-left: 40px;
+        text-transform: uppercase;
+      }
+      .token-header {
+        padding-left: 45px;
+      }
+    }
+
+    tbody {
+      tr {
+        td {
+          // padding: 10px 40px;
+          color: rgb(11, 40, 64);
+          font-size: 12px;
+          font-weight: 600;
+          padding-left: 40px;
+
+          &.button-container {
+            display: flex;
+            padding-left: 0;
+            padding-top: 15px;
+            button {
+              background: none;
+              border: none;
+              color: $mew-green;
+              font-size: 14px;
+              font-weight: 500;              
+            }
+          }
+        }
+
+        .slider-container {
+          display: flex;
+        }
+
+        .token-name {
+          color: $dark-blue-2;
+          font-size: 14px;
+          font-weight: 600;
+        }
+
+        .eth-amt {
+          display: block;
+          color: $dark-blue-1;
+          font-size: 12px;
+          font-weight: normal;
+        }
+      }
+
+      .sliding-switch-white {
+        .borrow-slider {
+          background-color: $light-yellow-4;
+        }
+
+        input:checked + .borrow-slider {
+          background-color: $light-blue-1;
+        }
+
+        .input:focus + .borrow-slider {
+          box-shadow: 0 0 1px $mew-green;
+        }
+      }
+    }
+
+  }
+}

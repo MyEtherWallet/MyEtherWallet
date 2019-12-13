@@ -38,9 +38,11 @@
     </div>
     <div v-if="activeBorrowTab" class="loan-container">
       <span class="loan-value">{{ $t('dappsAave.loan-value') }}</span>
-      <!-- placeholder -->
-      <span class="loan-percent">{{ ltv }}%</span>
+      <i v-show="loadingHome" class="fa fa-spinner fa-spin" />
+      <span v-if="!loadingHome" class="loan-percent">{{ ltv }}%</span>
     </div>
+    <!-- have to change the value once we get real data -->
+    <summary-table :reserves="reserves" :activeDepositTab="activeDepositTab"/>
     <action-modal
       ref="actionModal"
       :reserves="reserves"
@@ -51,6 +53,7 @@
 </template>
 
 <script>
+import SummaryTable from '@/dapps/Aave/components/SummaryTable';
 import BalanceDisplay from '@/dapps/Aave/components/BalanceDisplay';
 import ActionModal from '@/dapps/Aave/components/ActionModal';
 import LendingPoolAbi from '@/dapps/Aave/abi/LendingPoolAbi.js';
@@ -60,7 +63,8 @@ export default {
     'balance-display': BalanceDisplay,
     'lending-pool-abi': LendingPoolAbi,
     'action-modal': ActionModal,
-    'action-container': ActionContainer
+    'action-container': ActionContainer,
+    'summary-table': SummaryTable
   },
   props: {
     activeBorrowTab: {
