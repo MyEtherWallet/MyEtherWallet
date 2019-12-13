@@ -191,6 +191,8 @@ export default {
           });
         reserveInfo.name = 'DAI';
         reserveInfo.address = this.reservesAddr[i];
+        // change this when I get real information
+        reserveInfo.isCollateral = false;
         this.userReserves.push(reserveInfo);
       }
       this.loadingReserves = false;
@@ -206,8 +208,11 @@ export default {
           });
         reserveInfo.name = 'ETH';
         reserveInfo.address = this.reservesAddr[i];
+        reserveInfo.isStable = true;
         this.reservesData.push(reserveInfo);
       }
+      // change this when I get real information
+      console.error('this', this.reservesData)
       this.loadingReserves = false;
       // console.error('hello')
       // console.error('hellooooo', this.reservesData[0])
