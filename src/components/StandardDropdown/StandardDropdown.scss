@@ -1,4 +1,4 @@
-@import '~@/scss/GlobalVariables';
+@import "~@/scss/GlobalVariables";
 
 %open {
   background-color: $background-color-1;
@@ -169,10 +169,10 @@
   z-index: 1;
   border-radius: 4px;
   width: 100%;
-  max-height: 100px;
-  overflow: auto;
   background-color: $light-grey-1;
   ul {
+    max-height: 150px;
+    overflow: auto;
     li {
       padding: 10px 20px;
       cursor: pointer;
