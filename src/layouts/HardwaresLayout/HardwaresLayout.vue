@@ -4,9 +4,6 @@
       <div class="hardware-container">
         <div class="hardware-text">
           <h2>{{ $t('buyHardwareWallet.page.title') }}</h2>
-          <p>
-            {{ $t('buyHardwareWallet.page.title') }}
-          </p>
         </div>
         <div class="hardware-items-container">
           <div

@@ -3,10 +3,13 @@
   "tagline2": "Original Wallet",
   "subheading": "MyEtherWallet (our friends call us MEW) is a free, client-side interface helping you interact with the Ethereum blockchain. Our easy-to-use, open-source platform allows you to generate wallets, interact with smart contracts, and so much more.",
   "create-new-wallet": {
-    "text": "Obtain an ETH address and generate your private key. Saving and safekeeping the key will be your responsibility."
+    "text": "Generate your own unique Ethereum wallet. Receive a public address (0x...) and choose a method for access and recovery."
   },
   "access-my-wallet": {
-    "text": "Send or swap your ETH and tokens, purchase ENS domains, interact with smart contracts, and more! This is where the magic happens.",
+    "text": "Connect to the blockchain using the wallet of your choice.",
+    "opt-1": "Send and Swap ETH & Tokens",
+    "opt-2": "Sign & Verify Messages",
+    "opt-3": "Interact with Contracts, ENS, Dapps, and more!",
     "button": "Access Now"
   },
   "about-mew": {
@@ -24,7 +27,6 @@
   "swap": {
     "text": "MEW has partnered with Bity, Kyber Network, Changelly, and Simplex to allow users to swap fiat to crypto, ETH and BTC, ETH and ERC-20."
   },
-
   "faqs": {
     "subtitle": "Have not found the question that you are looking for?",
     "button-see-more": "See More...",

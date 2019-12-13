@@ -68,5 +68,6 @@
   "entire-agreement-title-p": "The Terms of Service, Privacy Policy, any other legal notices published by MyEtherWallet on the Site shall constitute the entire agreement between you and MyEtherWallet concerning the Services. If any provision of these Terms of Service is deemed invalid by a court of competent jurisdiction, the invalidity of such provision shall not affect the validity of the remaining provisions of these Terms of Service, which shall remain in full force and effect. No waiver of any term of these Terms of Service shall be deemed a further or continuing waiver of such term or any other term, and MyEtherWallet’s failure to assert any right or provision under these Terms of Service shall not constitute a waiver of such right or provision.",
   "contact-info-title": "Contact information",
   "contact-info-title-p": "We welcome your comments or questions about these Terms of Service. You may contact us at {suppEmail}",
-  "suppEmail": "support@myetherwallet.com"
+  "suppEmail": "support@myetherwallet.com",
+  "link": "https://www.myetherwallet.com/privacy-policy"
 }

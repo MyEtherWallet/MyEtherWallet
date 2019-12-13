@@ -2,7 +2,6 @@ const exec = require('child_process').exec;
 
 // tar package is not applicable to web and waiting for other packages to update
 // remove handlebars once keepkey updates their dev dependencies
-// codecov included package
 const AUDIT_EXCEPTIONS = ['tar', 'js-yaml', 'handlebars', 'https-proxy-agent'];
 
 const execute = (command, callback) => {
