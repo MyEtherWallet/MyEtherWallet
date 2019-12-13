@@ -102,7 +102,7 @@ export default {
     localCurrency() {
       if (this.search !== '') {
         return this.currency.filter(curr => {
-          if (curr.name.toLowerCase().includes(this.search.toLowerCase())) {
+          if (curr.symbol.toLowerCase().includes(this.search.toLowerCase())) {
             return curr;
           }
         });
