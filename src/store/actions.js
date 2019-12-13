@@ -116,6 +116,47 @@ const decryptWallet = function({ commit, dispatch }, params) {
   }
 };
 
+// const pruneNotifications = function({ commit, dispatch,  state }, val){
+//   if (!state.notifications[state.account.address]) return [];
+//   const check = this.notifications[state.account.address]
+//     .slice(25)
+//     .filter(entry => entry.network === state.network.type.name)
+//     .filter(entry => {
+//       return (new Date().getTime() - new Date(entry.timestamp).getTime()) /
+//         86400000 >
+//         5;
+//     });
+//   console.log('check.length', check.length); // todo remove dev item
+//
+//   for(let i=0 ; i<check.length; i++){
+//     dispatch('removeNotification', [
+//       state.account.address,
+//       check[i]
+//     ]);
+//   }
+// }
+
+const removeNotification = function({ commit, state }, val) {
+  // address, index, object
+  const address = val[0].toLowerCase();
+  const newNotif = {};
+  console.log('state.notifications.length', state.notifications[val[0]].length); // todo remove dev item
+  Object.keys(state.notifications).forEach(item => {
+    newNotif[item] = state.notifications[item];
+  });
+
+  console.log(val[1].id); // todo remove dev item
+
+  const idIndex = newNotif[address].findIndex(entry => entry.id === val[1].id);
+  console.log('idIndex', idIndex); // todo remove dev item
+  if (idIndex > -1) {
+    // console.log(newNotif[address].splice(idIndex, 1)); // todo remove dev item
+    newNotif[address].splice(idIndex, 1)
+  }
+
+  commit('UPDATE_NOTIFICATION', newNotif);
+};
+
 const setAccountBalance = function({ commit }, balance) {
   commit('SET_ACCOUNT_BALANCE', balance);
 };
@@ -216,6 +257,7 @@ const updateNotification = function({ commit, state }, val) {
   // address, index, object
   const address = val[0].toLowerCase();
   const newNotif = {};
+  console.log(state.notifications); // todo remove dev item
   Object.keys(state.notifications).forEach(item => {
     newNotif[item] = state.notifications[item];
   });
@@ -229,6 +271,8 @@ const updateNotification = function({ commit, state }, val) {
 
   commit('UPDATE_NOTIFICATION', newNotif);
 };
+
+
 
 const updateTransaction = function({ commit, state }, val) {
   // address, index, object
@@ -267,6 +311,7 @@ export default {
   createAndSignTx,
   decryptWallet,
   removeCustomPath,
+  removeNotification,
   setAccountBalance,
   setGasPrice,
   setState,
