@@ -9,11 +9,13 @@ import {
   getBufferFromHex,
   calculateChainIdFromV
 } from '../../utils';
-import { hashPersonalMessage, toBuffer } from 'ethereumjs-util';
+import { hashPersonalMessage } from 'ethereumjs-util';
 import errorHandler from './errorHandler';
 import commonGenerator from '@/helpers/commonGenerator';
+import { Misc } from '@/helpers';
 
-const SIGNALER_URL = 'https://connect.mewapi.io';
+const V1_SIGNAL_URL = 'https://connect.mewapi.io';
+const V2_SIGNAL_URL = 'wss://connect2.mewapi.io/staging';
 const IS_HARDWARE = true;
 
 // TODO: add listener and ui notification on RtcConnectedEvent and RtcClosedEvent
@@ -41,7 +43,10 @@ class MEWconnectWallet {
   constructor() {
     this.identifier = mewConnectType;
     this.isHardware = IS_HARDWARE;
-    this.mewConnect = new MEWconnect.Initiator();
+    this.mewConnect = new MEWconnect.Initiator({
+      v1Url: V1_SIGNAL_URL,
+      v2Url: V2_SIGNAL_URL
+    });
   }
   async init(qrcode) {
     this.mewConnect.on('codeDisplay', qrcode);
@@ -81,7 +86,7 @@ class MEWconnectWallet {
     };
     const msgSigner = async msg => {
       return new Promise(resolve => {
-        const msgHash = hashPersonalMessage(toBuffer(msg));
+        const msgHash = hashPersonalMessage(Misc.toBuffer(msg));
         this.mewConnect.sendRtcMessage('signMessage', {
           hash: msgHash.toString('hex'),
           text: msg
@@ -95,7 +100,7 @@ class MEWconnectWallet {
     const mewConnect = () => {
       return this.mewConnect;
     };
-    const address = await signalerConnect(SIGNALER_URL, this.mewConnect);
+    const address = await signalerConnect(V1_SIGNAL_URL, this.mewConnect);
 
     return new MEWconnectWalletInterface(
       sanitizeHex(address),

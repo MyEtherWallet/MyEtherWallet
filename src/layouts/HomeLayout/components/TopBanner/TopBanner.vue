@@ -4,8 +4,8 @@
       <div class="page-container">
         <div class="flex-col-vertical-center banner">
           <div class="banner-text">
-            <h1>{{ $t('home.title1') }}</h1>
-            <h1>{{ $t('home.title2') }}</h1>
+            <h1>{{ $t('home.tagline1') }}</h1>
+            <h1>{{ $t('home.tagline2') }}</h1>
             <p>{{ $t('home.subheading') }}</p>
           </div>
           <div class="banner-image">
@@ -15,17 +15,23 @@
         <div class="grid-col-2 promo-cards">
           <router-link to="/create-wallet" class="nounderline">
             <div class="card-block create-wallet">
-              <div class="flex-col-vertical-center">
-                <div class="card-image">
-                  <img alt src="~@/assets/images/home/create-wallet.png" />
+              <div class="card-image flex-col-1-1-vertical-center">
+                <img alt src="~@/assets/images/home/create-wallet.png" />
+              </div>
+              <div class="flex--column--space-between">
+                <div>
+                  <div class="title">
+                    <h3>{{ $t('common.wallet.create-new') }}</h3>
+                  </div>
+                  <div class="card-content">
+                    <p class="color-white content-text">
+                      {{ $t('home.create-new-wallet.text') }}
+                    </p>
+                  </div>
                 </div>
                 <div class="card-content">
-                  <h2 class="color-white">
-                    {{ $t('common.createANewWallet') }}
-                  </h2>
-                  <p class="color-white">{{ $t('home.obtainAddress') }}</p>
-                  <p class="button">
-                    {{ $t('home.getStarted') }}
+                  <p class="get-started button">
+                    {{ $t('common.get-started') }}
                     <img alt src="~@/assets/images/icons/right-arrow.png" />
                   </p>
                 </div>
@@ -41,15 +47,29 @@
             class="nounderline"
           >
             <div class="card-block unlock-wallet">
-              <div class="flex-col-vertical-center">
-                <div class="card-image">
-                  <img alt src="~@/assets/images/home/unlock-wallet.png" />
+              <div class="card-image flex-col-1-1-vertical-center">
+                <img alt src="~@/assets/images/home/unlock-wallet.png" />
+              </div>
+              <div class="flex--column--space-between">
+                <div>
+                  <div class="title">
+                    <h3>{{ $t('common.wallet.access-my') }}</h3>
+                  </div>
+                  <div class="card-content">
+                    <p class="color-white content-text">
+                      {{ $t('home.access-my-wallet.text') }}
+                    </p>
+
+                    <ul>
+                      <li>{{ $t('home.access-my-wallet.opt-1') }}</li>
+                      <li>{{ $t('home.access-my-wallet.opt-2') }}</li>
+                      <li>{{ $t('home.access-my-wallet.opt-3') }}</li>
+                    </ul>
+                  </div>
                 </div>
                 <div class="card-content">
-                  <h2 class="color-white">{{ $t('common.accessMyWallet') }}</h2>
-                  <p class="color-white">{{ $t('home.accessMyWalletDesc') }}</p>
-                  <p class="button">
-                    {{ $t('home.accessNow') }}
+                  <p class="get-started button">
+                    {{ $t('home.access-my-wallet.button') }}
                     <img alt src="~@/assets/images/icons/right-arrow.png" />
                   </p>
                 </div>

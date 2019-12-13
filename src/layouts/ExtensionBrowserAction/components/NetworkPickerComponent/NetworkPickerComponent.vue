@@ -1,9 +1,11 @@
 <template functional>
-  <div class="dropdown-container">
-    <span class="network-text">NETWORK</span>
+  <div class="dropdown-container network-picker">
+    <span class="network-text">{{ parent.$t('mewcx.network') }}</span>
     <span class="current-network" @click="props.openNetworkModal">
       {{
-        props.network.hasOwnProperty('type') ? props.network.type.name : 'ETH'
+        props.network.hasOwnProperty('type')
+          ? props.network.type.name
+          : parent.$t('common.currency.eth')
       }}
       -
       {{

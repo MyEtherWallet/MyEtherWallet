@@ -10,7 +10,7 @@
           <network-component />
           <div class="wallet-component-container">
             <div class="total-balance-container">
-              <p>Total Balance:</p>
+              <p>{{ $t('common.balance.total') }}:</p>
               <div>
                 <p>
                   {{ concatBalance }} <b>{{ network.type.name }}</b>
@@ -31,7 +31,7 @@
             />
             <div v-if="myWallets.length === 0" class="no-wallet-container">
               <h3>
-                No wallets found 😢
+                {{ $t('mewcx.no-wallets-found') }}
               </h3>
             </div>
           </div>
@@ -57,7 +57,7 @@
               class="no-wallet-container"
             >
               <h3>
-                No wallets found 😢
+                {{ $t('mewcx.no-wallets-found') }}
               </h3>
             </div>
           </div>
@@ -65,10 +65,10 @@
       </b-tabs>
       <div class="popup-button-options">
         <div class="button-option" @click="addWallet">
-          My Wallet
+          {{ $t('mewcx.my-wallet') }}
         </div>
         <div class="button-option" @click="moveToQuicksend">
-          Quick Send
+          {{ $t('mewcx.quick-send') }}
         </div>
       </div>
     </div>
@@ -90,7 +90,7 @@
     >
       <div class="quick-send-from-content">
         <div class="quick-send-from-header">
-          <h3>From</h3>
+          <h3>{{ $t('mewcx.from') }}</h3>
           <i class="fa fa-times fa-lg" @click="closeFromModal" />
         </div>
         <div class="from-address-container">

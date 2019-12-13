@@ -1,0 +1,241 @@
+@import '~@/scss/GlobalVariables';
+
+$mobile-width: 700px;
+
+.migrate-cdp-container {
+  position: relative;
+  text-align: right;
+  padding-right: 20px;
+  width: 100%;
+  .migrate-cdp {
+    position: relative;
+    right: 0;
+    p {
+      background-color: aqua;
+      //width: fit-content;
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.step-indicator {
+  display: inline-block;
+  padding: 5px;
+  margin-right: 10px;
+  margin-left: 10px;
+  &.complete {
+    background-color: #0e97c0;
+  }
+  &.incomplete {
+    border: black solid 2px;
+  }
+}
+
+.manage-cdp {
+  padding-bottom: 30px;
+
+  @media all and (max-width: $mobile-width) {
+    padding-bottom: 10px;
+  }
+}
+
+.manage-container {
+  padding: 40px;
+
+  @media all and (max-width: $mobile-width) {
+    padding: 40px 20px 10px 20px;
+  }
+}
+
+.title-content-container {
+  display: flex;
+  align-items: flex-start;
+  padding-bottom: 20px;
+
+  @media all and (max-width: $mobile-width) {
+    display: block;
+  }
+
+  .cpd-title {
+    font-size: 16px;
+    color: $dark-blue-2;
+    font-weight: 600;
+  }
+
+  .cdp-id {
+    margin-left: auto;
+    font-size: 16px;
+    color: $dark-blue-2;
+    font-weight: 600;
+    text-align: right;
+    @media all and (max-width: $mobile-width) {
+      text-align: left;
+    }
+  }
+}
+
+.information-blocks {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 15px;
+
+  @media all and (max-width: $mobile-width) {
+    display: block;
+  }
+
+  .block-item {
+    @media all and (max-width: $mobile-width) {
+      margin-bottom: 30px;
+    }
+
+    .block-title {
+      padding: 0 20px;
+      margin-bottom: 5px;
+      p {
+        font-size: 14px;
+        font-weight: 600;
+        color: $dark-blue-2;
+      }
+      .blue {
+        font-size: 16px;
+        span {
+          font-size: 16px;
+          color: #5a78f0;
+          font-weight: 600;
+        }
+      }
+      .orange {
+        font-size: 16px;
+        span {
+          font-size: 16px;
+          color: orange;
+          font-weight: 600;
+        }
+      }
+      .green {
+        font-size: 16px;
+        span {
+          font-size: 16px;
+          color: $mew-green;
+          font-weight: 600;
+        }
+      }
+      .red {
+        font-size: 16px;
+        span {
+          font-size: 16px;
+          color: red;
+          font-weight: 600;
+        }
+      }
+    } // .block-title
+
+    .block-content {
+      background-color: $light-green-1;
+      padding: 20px;
+
+      .item {
+        margin-bottom: 10px;
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        div {
+          font-weight: 600;
+          span {
+            font-weight: 400;
+          }
+        }
+      }
+    } // .block-content
+  } // .block-item
+} // .information-blocks
+
+.information-single-block {
+  margin-top: 30px;
+
+  .block-item {
+    .block-title {
+      padding: 0 20px;
+      margin-bottom: 10px;
+      p {
+        font-size: 14px;
+        font-weight: 600;
+        color: $dark-blue-2;
+      }
+      .blue {
+        font-size: 16px;
+        span {
+          font-size: 16px;
+          color: #5a78f0;
+          font-weight: 600;
+        }
+      }
+      .orange {
+        font-size: 16px;
+        span {
+          font-size: 16px;
+          color: orange;
+          font-weight: 600;
+        }
+      }
+    } // .block-title
+
+    .block-content-container {
+      padding: 20px 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background-color: $light-green-1;
+
+      @media all and (max-width: $mobile-width) {
+        display: block;
+        padding: 0 20px;
+      }
+    }
+
+    .block-content {
+      padding: 0 20px;
+      @media all and (max-width: $mobile-width) {
+        padding: 20px 0;
+      }
+
+      &:nth-child(odd) {
+        border-right: 1px solid $light-green-6;
+
+        @media all and (max-width: $mobile-width) {
+          border-right: 0;
+          border-bottom: 1px solid $light-green-6;
+        }
+      }
+
+      .item {
+        margin-bottom: 10px;
+        &:last-child {
+          margin-bottom: 0;
+        }
+        p {
+          margin-bottom: 10px;
+        }
+
+        div {
+          font-weight: 600;
+          span {
+            font-weight: 400;
+          }
+        }
+
+        button {
+          background: none;
+          border: 0;
+          padding: 0;
+          margin: 10px 0 0 0;
+          color: $mew-green;
+          font-weight: 600;
+        }
+      }
+    } // .block-content
+  } // .block-item
+} // .information-blocks

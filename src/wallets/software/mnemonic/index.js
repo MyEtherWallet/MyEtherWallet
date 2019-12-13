@@ -1,6 +1,6 @@
 import * as HDKey from 'hdkey';
 import { Transaction } from 'ethereumjs-tx';
-import { hashPersonalMessage, toBuffer, ecsign } from 'ethereumjs-util';
+import { hashPersonalMessage, ecsign } from 'ethereumjs-util';
 import { MNEMONIC as mnemonicType } from '../../bip44/walletTypes';
 import bip44Paths from '../../bip44';
 import HDWalletInterface from '@/wallets/HDWalletInterface';
@@ -8,6 +8,8 @@ import { getSignTransactionObject, calculateChainIdFromV } from '../../utils';
 import errorHandler from './errorHandler';
 import store from '@/store';
 import commonGenerator from '@/helpers/commonGenerator';
+import { Misc } from '@/helpers';
+import Vue from 'vue';
 
 const bip39 = require('bip39');
 const NEED_PASSWORD = true;
@@ -15,7 +17,8 @@ const IS_HARDWARE = false;
 
 class MnemonicWallet {
   constructor(mnemonic, password) {
-    if (!bip39.validateMnemonic(mnemonic)) throw new Error('Invalid Mnemonic');
+    if (!bip39.validateMnemonic(mnemonic))
+      throw new Error(Vue.$i18n.t('createWallet.mnemonic.invalid-mnemonic'));
     this.identifier = mnemonicType;
     this.isHardware = IS_HARDWARE;
     this.needPassword = NEED_PASSWORD;
@@ -49,7 +52,7 @@ class MnemonicWallet {
       return getSignTransactionObject(tx);
     };
     const msgSigner = async msg => {
-      const msgHash = hashPersonalMessage(toBuffer(msg));
+      const msgHash = hashPersonalMessage(Misc.toBuffer(msg));
       const signed = ecsign(msgHash, derivedKey.privateKey);
       return Buffer.concat([
         Buffer.from(signed.r),

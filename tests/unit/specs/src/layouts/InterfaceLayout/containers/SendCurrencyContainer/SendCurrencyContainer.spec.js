@@ -94,4 +94,32 @@ describe('SendCurrencyContainer.vue', () => {
       expect(window.pageYOffset).toBe(0);
     });
   });
+
+  it('should clear the form', () => {
+    wrapper.setData({
+      toData: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
+      toValue: '5',
+      hexAddress: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
+      address: '0xDECAF9CD2367cdbb726E904cD6397eDFcAe6068D',
+      isValidAddress: true,
+      gasLimit: '3000',
+      advancedExpand: true,
+      selectedCurrency: {
+        name: 'Bitcoin',
+        symobl: 'ETH'
+      }
+    });
+    wrapper.find('.clear-all-btn').trigger('click');
+    expect(wrapper.vm.$data.toData).toEqual('');
+    expect(wrapper.vm.$data.toValue).toEqual('0');
+    expect(wrapper.vm.$data.hexAddress).toEqual('');
+    expect(wrapper.vm.$data.address).toEqual('');
+    expect(wrapper.vm.$data.gasLimit).toEqual('21000');
+    expect(wrapper.vm.$data.isValidAddress).toEqual(false);
+    expect(wrapper.vm.$data.advancedExpand).toEqual(false);
+    expect(wrapper.vm.$data.selectedCurrency).toEqual({
+      name: 'Ethereum',
+      symbol: 'ETH'
+    });
+  });
 });

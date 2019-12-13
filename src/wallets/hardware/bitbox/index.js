@@ -1,11 +1,11 @@
 import { Transaction } from 'ethereumjs-tx';
-import { hashPersonalMessage, toBuffer } from 'ethereumjs-util';
+import { hashPersonalMessage } from 'ethereumjs-util';
 import DigitalBitboxUsb from './digitalBitboxUsb';
 import DigitalBitboxEth from './digitalBitboxEth';
 import { BITBOX as bitboxType } from '../../bip44/walletTypes';
 import bip44Paths from '../../bip44';
 import HDWalletInterface from '@/wallets/HDWalletInterface';
-import { Toast } from '@/helpers';
+import { Toast, Misc } from '@/helpers';
 import errorHandler from './errorHandler';
 import * as HDKey from 'hdkey';
 import store from '@/store';
@@ -65,7 +65,7 @@ class BitBoxWallet {
       return getSignTransactionObject(tx);
     };
     const msgSigner = async msg => {
-      const msgHash = hashPersonalMessage(toBuffer(msg));
+      const msgHash = hashPersonalMessage(Misc.toBuffer(msg));
       const result = await this.bitbox.signMessage(
         this.basePath + '/' + idx,
         msgHash

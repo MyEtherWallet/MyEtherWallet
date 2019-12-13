@@ -6,14 +6,14 @@
         <div class="token-search">
           <div class="block-title">
             <div class="title-container">
-              <h4>{{ $t('interface.tokens') }}</h4>
+              <h4>{{ $tc('common.token', 2) }}</h4>
               <img
                 alt
                 src="~@/assets/images/icons/change.svg"
                 @click="fetchTokens"
               />
             </div>
-            <p @click="addTokenModal">+ {{ $t('interface.customToken') }}</p>
+            <p @click="addTokenModal">+ {{ $t('interface.tokens.custom') }}</p>
           </div>
           <div class="search-block">
             <input v-model="search" placeholder="Search" autocomplete="off" />
@@ -21,15 +21,15 @@
           </div>
         </div>
         <div v-show="!online" class="cant-load">
-          Can't load balances on offline mode
+          {{ $t('interface.tokens.warning-offline') }}
         </div>
         <div ref="tokenTableContainer" class="token-table-container">
           <table v-show="customTokens.length > 0 && receivedTokens">
             <tr
               v-for="(token, index) in customTokens"
-              :key="token.name + index"
+              :key="token.symbol + index"
             >
-              <td>{{ token.name }}</td>
+              <td>{{ token.symbol }}</td>
               <td>
                 {{ token.balance }}
                 <i
@@ -41,8 +41,11 @@
           </table>
 
           <table v-show="localTokens.length > 0 && receivedTokens">
-            <tr v-for="(token, index) in localTokens" :key="token.name + index">
-              <td>{{ token.name }}</td>
+            <tr
+              v-for="(token, index) in localTokens"
+              :key="token.symbol + index"
+            >
+              <td>{{ token.symbol }}</td>
               <td
                 v-if="token.balance === 'Load' && online"
                 class="load-token"
@@ -70,7 +73,7 @@
             "
             class="spinner-container"
           >
-            No tokens found :(
+            {{ $t('interface.tokens.no-tokens') }}
           </div>
         </div>
         <div
@@ -305,7 +308,10 @@ export default {
         store.set('customTokens', currentCustomToken);
         this.$refs.tokenModal.$refs.tokenModal.hide();
         await this.fetchTokens();
-        Toast.responseHandler('Successfully added token!', Toast.SUCCESS);
+        Toast.responseHandler(
+          this.$t('interface.tokens.token-added-success'),
+          Toast.SUCCESS
+        );
       }
     },
     tokenListExpend() {

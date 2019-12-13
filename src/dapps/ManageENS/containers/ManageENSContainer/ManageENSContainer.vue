@@ -1,13 +1,13 @@
 <template>
   <div class="manage-ens-container">
-    <h3>{{ $t('dapps.manage') }} {{ domainName }}</h3>
+    <h3>{{ $t('ens.manage') }} {{ domainName }}</h3>
     <b-btn
       v-b-toggle.multicoinsec
       v-show="resolverMultiCoinSupport"
       class="collapse-open-button"
       variant="primary"
     >
-      <p>Multi coin</p>
+      <p>{{ $t('ens.multi-coin') }}</p>
     </b-btn>
     <b-collapse
       id="multicoinsec"
@@ -18,7 +18,7 @@
       <div class="form-container">
         <form class="manage-multi-coin-form">
           <div class="title-and-dropdown-container">
-            <h4>Multi-Coin:</h4>
+            <h4>{{ $t('ens.multi-coin') }}:</h4>
             <b-dd :text="selectedCurrency" class="dropdown-button-2">
               <b-dd-item
                 v-for="(item, idx) in Object.keys(supportedCoins)"
@@ -62,7 +62,7 @@
               :class="isValidAddresses ? '' : 'disabled'"
               @click.prevent="checkAndSendCurrency"
             >
-              Save
+              {{ $t('common.save') }}
             </button>
           </div>
         </form>
@@ -74,7 +74,7 @@
       class="collapse-open-button"
       variant="primary"
     >
-      <p>Text Records</p>
+      <p>{{ $t('ens.txt-record') }}</p>
     </b-btn>
     <b-collapse
       id="textrecords"
@@ -85,7 +85,7 @@
       <div class="form-container">
         <form class="manage-multi-coin-form">
           <div class="title-and-dropdown-container">
-            <h4>Text Records:</h4>
+            <h4>{{ $t('ens.txt-record') }}:</h4>
             <b-dd :text="selectedText | capitalize" class="dropdown-button-2">
               <b-dd-item
                 v-for="(item, idx) in Object.keys(txtRecords)"
@@ -132,7 +132,7 @@
               :class="validTextRecords ? 'disabled' : ''"
               @click.prevent="checkAndSendTxtRecs"
             >
-              Save
+              {{ $t('common.save') }}
             </button>
           </div>
         </form>
@@ -143,7 +143,7 @@
       class="collapse-open-button"
       variant="primary"
     >
-      <p>Transfer Domain</p>
+      <p>{{ $t('ens.transfer-domain') }}</p>
     </b-btn>
     <b-collapse
       id="transferens"
@@ -154,7 +154,7 @@
       <div class="form-container">
         <form class="manage-form">
           <div class="input-container">
-            <label for="transferEns">{{ $t('dapps.transferEnsTo') }}:</label>
+            <label for="transferEns">{{ $t('ens.transfer-to') }}:</label>
             <input
               v-model="transferTo"
               type="text"
@@ -168,15 +168,15 @@
               type="submit"
               @click.prevent="transferDomain(transferTo)"
             >
-              Transfer
+              {{ $t('ens.transfer') }}
             </button>
           </div>
         </form>
       </div>
     </b-collapse>
     <interface-bottom-text
-      :link-text="$t('interface.helpCenter')"
-      :question="$t('interface.haveIssues')"
+      :link-text="$t('common.help-center')"
+      :question="$t('common.have-issues')"
       link="https://kb.myetherwallet.com"
     />
   </div>

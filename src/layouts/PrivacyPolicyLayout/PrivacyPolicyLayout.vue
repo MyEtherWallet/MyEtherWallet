@@ -12,9 +12,9 @@
             <div v-for="item in items" :key="item">
               <p
                 v-if="
-                  item.includes('Paragraph') ||
-                    item.includes('Sentence') ||
-                    item.includes('Footer')
+                  item.includes('paragraph') ||
+                    item.includes('sentence') ||
+                    item.includes('footer')
                 "
               >
                 {{ $t(`privacyPol.${item}`) }}
@@ -26,13 +26,13 @@
                   href="mailto:support@myetherwallet.com"
                   rel="noopener noreferrer"
                 >
-                  support@myetherwallet.com
+                  {{ $t('common.support-email') }}
                 </a>
               </p>
-              <p v-else-if="item.includes('Item')">
+              <p v-else-if="item.includes('item')">
                 {{ item[item.length - 1] }}. {{ $t(`privacyPol.${item}`) }}
               </p>
-              <h4 v-else-if="item.includes('Subtitle')">
+              <h4 v-else-if="item.includes('subtitle')">
                 {{ $t(`privacyPol.${item}`) }}
               </h4>
               <h3 v-else>
@@ -52,50 +52,50 @@ export default {
     return {
       items: [
         'introduction',
-        'introductionParagraph1',
-        'introductionParagraph2',
-        'introductionParagraph3',
-        'introductionParagraph4',
-        'theBlockchain',
-        'theBlockchainParagraph',
-        'whatWeCollect',
-        'whatWeCollectParagraph1',
-        'whatWeCollectSubtitle1',
-        'whatWeCollectParagraph2',
-        'whatWeCollectSubtitle2',
-        'whatWeCollectParagraph3',
-        'useOfInformation',
-        'useOfInformationParagraph1',
-        'useOfInformationParagraph2',
-        'sharingPersonalInfo',
-        'sharingPersonalInfoParagraph1',
-        'sharingPersonalInfoParagraph2',
-        'sharingPersonalInfoSubtitle',
-        'sharingPersonalInfoParagraph3',
-        'linksToOtherSites',
-        'linksToOtherSitesParagraph',
-        'mewCommitment',
-        'mewCommitmentParagraph',
-        'personalInfoSecurity',
-        'personalInfoSecurityParagraph',
-        'personalInfoSecuritySentence1',
-        'personalInfoSecurityItem1',
-        'personalInfoSecurityItem2',
-        'personalInfoSecurityItem3',
-        'personalInfoSecurityItem4',
-        'personalInfoSecurityItem5',
-        'personalInfoSecurityItem6',
-        'personalInfoSecurityFooter',
-        'legalBasis',
-        'legalBasisParagraph',
-        'legalBasisItem1',
-        'legalBasisItem2',
+        'introduction-paragraph-1',
+        'introduction-paragraph-2',
+        'introduction-paragraph-3',
+        'introduction-paragraph-4',
+        'the-blockchain',
+        'the-blockchain-paragraph',
+        'what-we-collect',
+        'what-we-collect-paragraph-1',
+        'what-we-collect-subtitle-1',
+        'what-we-collect-paragraph-2',
+        'what-we-collect-subtitle-2',
+        'what-we-collect-paragraph-3',
+        'use-of-information',
+        'use-of-information-paragraph-1',
+        'use-of-information-paragraph-2',
+        'sharing-personal-info',
+        'sharing-personal-info-paragraph-1',
+        'sharing-personal-info-paragraph-2',
+        'sharing-personal-info-subtitle',
+        'sharing-personal-info-paragraph-3',
+        'links-to-other-sites',
+        'links-to-other-sites-paragraph',
+        'mew-commitment',
+        'mew-commitment-paragraph',
+        'personal-info-security',
+        'personal-info-security-paragraph',
+        'personal-info-security-sentence-1',
+        'personal-info-security-item1',
+        'personal-info-security-item2',
+        'personal-info-security-item3',
+        'personal-info-security-item4',
+        'personal-info-security-item5',
+        'personal-info-security-item6',
+        'personal-info-security-footer',
+        'legal-basis',
+        'legal-basis-paragraph',
+        'legal-basis-item1',
+        'legal-basis-item2',
         'retention',
-        'retentionParagraph',
-        'contactInfo',
-        'contactInfoParagraph',
-        'changesToPrivacyPolicy',
-        'changesToPrivacyPolicyParagraph'
+        'retention-paragraph',
+        'contact-info',
+        'contact-info-paragraph',
+        'changes-to-privacy-policy',
+        'changes-to-privacy-policy-paragraph'
       ]
     };
   }

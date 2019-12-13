@@ -2,7 +2,7 @@
   <div class="modal-container">
     <b-modal
       ref="modal"
-      :title="$t('dappsMaker.depositTitle')"
+      :title="$t('dappsMaker.deposit-title')"
       centered
       class="bootstrap-modal nopadding"
       hide-footer
@@ -13,34 +13,29 @@
         <div class="inputs-container">
           <div class="input-container">
             <div class="interface__block-title">
-              {{ $t('dappsMaker.depositQuestion') }}
+              {{
+                $t('dappsMaker.deposit-question-mcd', {
+                  currency: currentCdpType
+                })
+              }}
             </div>
             <div :class="['input-box', hasEnoughEth ? '' : 'danger']">
               <input v-model="amount" />
-              <span class="input-unit">{{ digitalCurrency }}</span>
+              <span class="input-unit">{{ currentCdpType }}</span>
             </div>
             <div class="sub-text">
               <p v-if="!hasEnoughEth" class="above-max">
-                {{ $t('dappsMaker.notEnoughEth') }}
+                {{
+                  $t('dappsMaker.not-enough-token', { symbol: currentCdpType })
+                }}
               </p>
-              <div class="peth">
-                <p>
-                  {{
-                    values.toPeth
-                      ? displayFixedValue(values.toPeth(amount), 5, false)
-                      : 0
-                  }}
-                  PETH
-                </p>
-                <popover :popcontent="$t('dappsMaker.pethPopover')" />
-              </div>
             </div>
           </div>
         </div>
 
         <div class="detail-info">
           <div class="info">
-            <h4>{{ $t('dappsMaker.DetailInfo') }}</h4>
+            <h4>{{ $t('dappsMaker.detail-info') }}</h4>
             <div class="sliding-switch-white">
               <label class="switch">
                 <input
@@ -57,26 +52,32 @@
           >
             <div class="padding-container">
               <div class="grid-block">
-                <p>{{ $t('dappsMaker.currentlyDeposited') }}</p>
+                <p>{{ $t('dappsMaker.currently-deposited') }}</p>
                 <p>
-                  <b>{{ displayFixedValue(values.ethCollateral, 5) }}</b>
-                  {{ digitalCurrency }}
+                  <b>{{ displayFixedValue(collateralAmount(), 5) }}</b>
+                  {{ currentCdpType }}
                 </p>
               </div>
               <div class="grid-block">
-                <p>{{ $t('dappsMaker.projectedLiquidation') }}</p>
                 <p>
-                  <b>{{ displayFixedValue(newLiquidationPrice, 2) }}</b>
+                  {{
+                    $t('dappsMaker.projected-liquidation', {
+                      currency: currentCdpType
+                    })
+                  }}
+                </p>
+                <p>
+                  <b>{{ displayFixedValue(newLiquidationPrice(), 2) }}</b>
                   {{ fiatCurrency }}
                 </p>
               </div>
               <div class="grid-block">
-                <p>{{ $t('dappsMaker.projectedCollatRatio') }}</p>
+                <p>{{ $t('dappsMaker.projected-collat-ratio') }}</p>
                 <p>
                   <b
                     >{{
                       displayFixedValue(
-                        displayPercentValue(newCollateralRatio),
+                        displayPercentValue(newCollateralRatio()),
                         3
                       )
                     }}%</b
@@ -106,11 +107,12 @@
 
 <script>
 import { mapState } from 'vuex';
-import ethUnit from 'ethjs-unit';
 import StandardButton from '@/components/Buttons/StandardButton';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
 import CheckBox from '../CheckBox';
 import BigNumber from 'bignumber.js/bignumber.js';
+import CurrencyPicker from '../../components/CurrencyPicker';
+
 import { displayFixedValue, displayPercentValue } from '../../helpers';
 
 const toBigNumber = num => {
@@ -121,7 +123,8 @@ export default {
   components: {
     'help-center-button': HelpCenterButton,
     'check-box': CheckBox,
-    'standard-button': StandardButton
+    'standard-button': StandardButton,
+    'currency-picker': CurrencyPicker
   },
   props: {
     tokensWithBalance: {
@@ -138,11 +141,9 @@ export default {
       type: Object,
       default: function() {
         return {
-          maxPethDraw: '',
           maxEthDraw: '',
           maxUsdDraw: '',
           ethCollateral: '',
-          pethCollateral: '',
           usdCollateral: '',
           debtValue: '',
           maxDai: '',
@@ -166,10 +167,24 @@ export default {
     calcLiquidationPriceDaiChg: {
       type: Function,
       default: function() {}
+    },
+    activeCdpId: {
+      type: Number,
+      default: 0
+    },
+    makerActive: {
+      type: Boolean,
+      default: false
+    },
+    getValueOrFunction: {
+      type: Function,
+      default: function() {}
     }
   },
   data() {
     return {
+      cdpId: 0,
+      isVisible: false,
       amount: 0,
       amountEth: 0,
       amountDai: 0,
@@ -187,7 +202,9 @@ export default {
         title: 'Submit',
         buttonStyle: 'green',
         noMinWidth: true
-      }
+      },
+      selectedCurrency: { symbol: 'ETH', name: 'Ethereum' },
+      currentCdpType: 'ETH'
     };
   },
   computed: {
@@ -199,8 +216,14 @@ export default {
     },
     hasEnoughEth() {
       if (this.amount || this.amount !== '') {
-        const asEth = ethUnit.fromWei(this.account.balance, 'ether');
-        return toBigNumber(this.amount).lte(toBigNumber(asEth));
+        if (this.currentCdp) {
+          return this.currentCdp.hasEnough(
+            this.amount,
+            this.currentCdp.cdpCollateralType,
+            this.account.balance
+          );
+        }
+        return true;
       }
       return true;
     },
@@ -214,58 +237,104 @@ export default {
     },
     canProceed() {
       if (toBigNumber(this.amount).lte(0)) return false;
-      const ratio = toBigNumber(this.newCollateralRatio);
+      const ratio = toBigNumber(this.newCollateralRatio());
       const ratioOk = ratio.gt(1.5) || ratio.eq(0);
       return this.hasEnoughEth && (ratioOk || this.riskyBypass);
-    },
-    newCollateralRatio() {
-      if (this.values && this.amount > 0) {
-        return this.calcCollatRatioEthChg(
-          toBigNumber(this.values.ethCollateral).plus(this.amount)
-        );
-      } else if (this.values) {
-        return this.values.collatRatio;
-      }
-      return 0;
-    },
-    newCollateralRatioSafe() {
-      if (this.values && this.amount > 0) {
-        return this.calcCollatRatioEthChg(
-          toBigNumber(this.values.ethCollateral).plus(this.amount)
-        ).gte(2);
-      } else if (this.values) {
-        return toBigNumber(this.values.collatRatio).gte(2);
-      }
-      return true;
-    },
-    newCollateralRatioInvalid() {
-      if (this.values && this.amount > 0) {
-        return this.calcCollatRatioEthChg(
-          toBigNumber(this.values.ethCollateral).plus(this.amount)
-        ).lte(1.5);
-      } else if (this.values) {
-        return toBigNumber(this.values.collatRatio).lte(1.5);
-      }
-      return true;
-    },
-    newLiquidationPrice() {
-      if (this.values && this.amount > 0) {
-        return this.calcLiquidationPriceEthChg(
-          toBigNumber(this.values.ethCollateral).plus(toBigNumber(this.amount))
-        );
-      } else if (this.values) {
-        return this.values.liquidationPrice;
-      }
-      return 0;
     }
   },
   watch: {},
   mounted() {
     this.$refs.modal.$on('shown', () => {
+      this.cdpId = this.$route.params.cdpId;
+      this.isVisible = true;
       this.amount = 0;
+      this.getActiveCdp();
     });
+
+    this.$refs.modal.$on('hidden', () => {
+      this.isVisible = false;
+    });
+
+    if (this.makerActive) {
+      this.getActiveCdp();
+    }
   },
   methods: {
+    collateralAmount() {
+      if (this.currentCdp) {
+        return this.currentCdp.collateralAmount;
+      }
+    },
+    newCollateralRatio() {
+      if (this.currentCdp && this.amount > 0) {
+        return this.currentCdp.calcCollatRatioEthChg(
+          toBigNumber(this.currentCdp.collateralAmount).plus(this.amount)
+        );
+      } else if (this.currentCdp) {
+        return this.currentCdp.collateralizationRatio;
+      }
+      return 0;
+    },
+    newCollateralRatioSafe() {
+      if (this.currentCdp && this.amount > 0) {
+        return this.currentCdp
+          .calcCollatRatioEthChg(
+            toBigNumber(this.currentCdp.collateralAmount).plus(this.amount)
+          )
+          .gte(2);
+      } else if (this.currentCdp) {
+        return toBigNumber(this.currentCdp.collateralizationRatio).gte(2);
+      }
+      return true;
+    },
+    newCollateralRatioInvalid() {
+      if (this.currentCdp && this.amount > 0) {
+        return this.currentCdp
+          .calcCollatRatioEthChg(
+            toBigNumber(this.currentCdp.collateralAmount).plus(this.amount)
+          )
+          .lte(1.5);
+      } else if (this.currentCdp) {
+        return toBigNumber(this.currentCdp.collateralizationRatio).lte(1.5);
+      }
+      return true;
+    },
+    newLiquidationPrice() {
+      if (this.currentCdp && this.amount > 0) {
+        return this.currentCdp.calcLiquidationPriceEthChg(
+          toBigNumber(this.currentCdp.collateralAmount).plus(
+            toBigNumber(this.amount)
+          )
+        );
+      } else if (this.currentCdp) {
+        return this.currentCdp.liquidationPrice;
+      }
+      return 0;
+    },
+    getActiveCdp() {
+      if (this.cdpId > 0) {
+        this.currentCdp = this.getValueOrFunction('getCdp')(this.cdpId);
+        this.currentCdpType = this.currentCdp.cdpCollateralType;
+        this.$forceUpdate();
+      }
+    },
+    hasEnough() {
+      if (this.currentCdp) {
+        return this.currentCdp.hasEnough(
+          this.amount,
+          this.currentCdpType,
+          this.account.balance
+        );
+      }
+      return true;
+    },
+    getProxyAllowances() {
+      const allowances = this.getValueOrFunction('proxyAllowances');
+      if (allowances) {
+        return allowances;
+      }
+      return {};
+    },
     submitBtn() {
       if (!this.canProceed) return;
       this.lockEth();
@@ -284,7 +353,11 @@ export default {
     async lockEth() {
       if (toBigNumber(this.amount).gte(0)) {
         this.delayCloseModal();
-        this.$emit('lockEth', this.amount);
+        if (this.currentCdp) {
+          this.currentCdp.lockEth(this.amount);
+        } else {
+          this.$emit('lockEth', this.amount);
+        }
       }
     },
     closeModal() {

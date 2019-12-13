@@ -1,0 +1,56 @@
+@import '~@/scss/GlobalVariables';
+
+.cx-menu {
+  padding: 10px 20px 10px 10px;
+}
+
+.cx-menu-container {
+  /*
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 100%;
+  */
+  //box-shadow: 0 2px 13px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+a {
+  text-decoration: none;
+}
+
+.d-flex {
+  display: flex;
+  align-items: center;
+}
+
+.logo-block {
+  p {
+    color: $mew-green;
+    margin-left: 10px;
+    padding-left: 15px;
+    border-left: 1px solid $mew-green;
+  }
+}
+
+.menu-items {
+  p {
+    font-size: 13px;
+  }
+
+  > * {
+    margin-left: 30px;
+  }
+}
+
+.buy-eth {
+  p {
+    margin-left: 2px;
+  }
+}
+
+.spacer {
+  margin: 0 auto;
+}

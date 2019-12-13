@@ -120,7 +120,8 @@
           <p>{{ $t('common.txFee') }}:</p>
           <div class="detail-data">
             <p>
-              {{ convertToEth(details.gasPrice * details.gasUsed) }} ETH (${{
+              {{ convertToEth(details.gasPrice * details.gasUsed) }}
+              {{ $t('common.currency.eth') }} (${{
                 getFiatValue(details.gasPrice * details.gasUsed)
               }})
             </p>
@@ -130,7 +131,8 @@
           <p>{{ $t('header.maxTxFee') }}:</p>
           <div class="detail-data">
             <p>
-              {{ convertToEth(details.gasPrice * details.gasLimit) }} ETH (${{
+              {{ convertToEth(details.gasPrice * details.gasLimit) }}
+              {{ $t('common.currency.eth') }} (${{
                 getFiatValue(details.gasPrice * details.gasLimit)
               }})
             </p>
@@ -139,7 +141,10 @@
         <li v-if="isEthereum">
           <p>{{ $t('common.gasPrice') }}:</p>
           <div class="detail-data">
-            <p>{{ convertToGwei(details.gasPrice) }} Gwei</p>
+            <p>
+              {{ convertToGwei(details.gasPrice) }}
+              {{ $t('common.gas.gwei') }}
+            </p>
           </div>
         </li>
         <li v-if="isEthereum">
