@@ -1,6 +1,9 @@
 ### Bug
 
-- Fix leftover issue with token search []()
+- Fix leftover issue with token search [#1749] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1749)
+
+### Devop
+- Refactor maker translations [#1737](https://github.com/MyEtherWallet/MyEtherWallet/pull/1737)
 
 ### Release v5.2.7
 
