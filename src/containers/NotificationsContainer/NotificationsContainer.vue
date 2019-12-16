@@ -171,6 +171,12 @@ export default {
   watch: {
     notifications() {
       this.countUnread();
+    },
+    network(){
+      this.pruneNotifications();
+    },
+    ['account.address'](){
+      this.pruneNotifications();
     }
   },
   mounted() {
@@ -190,19 +196,18 @@ export default {
       this.shown = false;
       this.hideDetails();
     },
-    pruneNotifications(){
-      const removeEntrys = async (entries) => {
+    pruneNotifications() {
+      const removeEntries = entries => {
         const entry = entries.pop();
-        if(entry){
-          this.$store.dispatch('removeNotification', [
-            this.account.address,
-            entry
-          ]).then(() =>{
-            removeEntrys(entries)
-          })
+        if (entry) {
+          this.$store
+            .dispatch('removeNotification', [this.account.address, entry])
+            .then(() => {
+              removeEntries(entries);
+            });
         }
       };
-      if (!this.notifications[this.account.address]) return [];
+      if (!this.notifications[this.account.address]) return;
       const check = this.notifications[this.account.address]
         .filter(entry => entry.network === this.network.type.name)
         .sort((a, b) => {
@@ -213,27 +218,15 @@ export default {
         })
         .slice(25)
         .filter(entry => {
-          return (new Date().getTime() - new Date(entry.timestamp).getTime()) /
-            86400000 >
-            5;
+          return (
+            (new Date().getTime() - new Date(entry.timestamp).getTime()) /
+              86400000 >
+            5
+          );
         });
-      console.log('check.length', check.length); // todo remove dev item
-
-      removeEntrys(check);
-      // this.$store.dispatch('removeNotification', [
-      //   this.account.address,
-      //   check[i]
-      // ]);
-      //
-      // for(let i=0 ; i<check.length; i++){
-      //   this.$store.dispatch('removeNotification', [
-      //     this.account.address,
-      //     check[i]
-      //   ]);
-      // }
-
-
-
+      if (check.length > 0) {
+        removeEntries(check);
+      }
     },
     checkForUnResolvedTxNotifications() {
       if (!this.notifications[this.account.address]) return [];
