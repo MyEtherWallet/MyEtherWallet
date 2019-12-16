@@ -233,7 +233,6 @@ const updateNotification = function({ commit, state }, val) {
   // address, index, object
   const address = val[0].toLowerCase();
   const newNotif = {};
-  console.log(state.notifications); // todo remove dev item
   Object.keys(state.notifications).forEach(item => {
     newNotif[item] = state.notifications[item];
   });
