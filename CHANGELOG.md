@@ -2,6 +2,10 @@
 
 - Fix offline send helper & out of memory error on local build [#1741](https://github.com/MyEtherWallet/MyEtherWallet/pull/1741)
 
+### Devop
+
+- Refactor maker translations[#1737] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1737)
+
 ### Release v5.2.7
 
 ### Bug
