@@ -242,12 +242,10 @@ export default {
       );
     },
     hasEnough() {
-      if(this.showDepositDisplay){
+      if (this.showDepositDisplay) {
         return toBigNumber(this.daiBalance).gte(this.daiQty);
-      } else {
-        return toBigNumber(this.maxWithdrawable).gte(this.daiQty);
       }
-
+      return toBigNumber(this.maxWithdrawable).gte(this.daiQty);
     },
     proxyPresent() {
       return this.proxyAddress != null;

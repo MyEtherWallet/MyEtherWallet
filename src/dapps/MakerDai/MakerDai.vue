@@ -779,9 +779,13 @@ export default {
     },
     async updateActiveCdp() {
       await updateActiveCdp(this);
-      if (this.cdps.length === 0 && this.cdpsWithoutProxy.length === 0 && !(this.$route.name === 'save')) {
+      if (
+        this.cdps.length === 0 &&
+        this.cdpsWithoutProxy.length === 0 &&
+        !(this.$route.name === 'save')
+      ) {
         this.gotoCreate();
-      } else if(this.$route.name === 'save'){
+      } else if (this.$route.name === 'save') {
         this.goToSave();
       }
     },
@@ -802,7 +806,7 @@ export default {
     },
     gotoCreate() {
       if (this.$route.path.includes('maker-dai')) {
-        if(this.$route.name === 'save'){
+        if (this.$route.name === 'save') {
           this.goToSave();
         } else {
           this.activeValues = this.systemValues;
@@ -810,7 +814,6 @@ export default {
             name: 'create'
           });
         }
-
       }
     },
     goToSave() {
