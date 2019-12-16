@@ -2,11 +2,10 @@
 
 .summary-table-container {
   table {
-    border: 1px solid $light-blue-12;
     border-radius: 4px;
+    box-shadow: 0 0 0 1px $light-blue-12;
     table-layout: fixed;
     width: 100%;
-
     thead {
       background-color: $light-blue-12;
       th {
