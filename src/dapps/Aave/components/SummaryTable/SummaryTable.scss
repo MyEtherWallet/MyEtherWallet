@@ -4,7 +4,7 @@
   table {
     border: 1px solid $light-blue-12;
     border-radius: 4px;
-    // table-layout: fixed;
+    table-layout: fixed;
     width: 100%;
 
     thead {
@@ -20,6 +20,16 @@
       .token-header {
         padding-left: 45px;
       }
+      .th-container {
+        color: $light-blue-2;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 10px 0;
+        text-transform: uppercase;
+      }
+      .apr-borrow-header {
+        display: flex;
+      }
     }
 
     tbody {
@@ -32,7 +42,7 @@
           padding-left: 40px;
 
           &.button-container {
-            display: flex;
+            display: inline-block;
             padding-left: 0;
             padding-top: 15px;
             button {
@@ -40,13 +50,25 @@
               border: none;
               color: $mew-green;
               font-size: 14px;
-              font-weight: 500;              
+              font-weight: 500;
             }
           }
         }
 
         .slider-container {
-          display: flex;
+          span {
+            font-size: 12px;
+            font-weight: normal;
+            padding-left: 5px;
+          }
+
+          .stable-txt {
+            color: $light-blue-1;
+          }
+
+          .variable-txt {
+            color: $light-yellow-4;
+          }
         }
 
         .token-name {
@@ -64,6 +86,8 @@
       }
 
       .sliding-switch-white {
+        display: inline-block;
+        vertical-align: middle;
         .borrow-slider {
           background-color: $light-yellow-4;
         }
@@ -77,6 +101,5 @@
         }
       }
     }
-
   }
 }

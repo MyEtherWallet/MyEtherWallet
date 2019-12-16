@@ -2,7 +2,9 @@
   <div class="modal-container action-modal">
     <b-modal
       ref="actionModal"
-      :title="depositModal ? 'Deposit' : 'Borrow'"
+      :title="
+        depositModal ? $tc('dappsAave.deposit', 1) : $t('dappsAave.borrow')
+      "
       centered
       hide-footer
       static
@@ -178,11 +180,6 @@ export default {
       stableTabActive: false,
       localReserves: []
     };
-  },
-  computed: {
-    title: function() {
-      return this.depositModal ? 'Deposit' : 'Borrow';
-    }
   },
   watch: {
     depositModal() {

@@ -29,7 +29,12 @@
           </div>
         </div>
         <div class="continue-btn-container">
-          <button :class="(!selectStable && !selectVariable)? 'disabled' : ''" @click="takeAction()">{{ $t('dappsAave.continue') }}</button>
+          <button
+            :class="!selectStable && !selectVariable ? 'disabled' : ''"
+            @click="takeAction()"
+          >
+            {{ $t('dappsAave.continue') }}
+          </button>
         </div>
       </div>
     </b-modal>
@@ -38,9 +43,11 @@
       :active-deposit-tab="false"
       :amount="amount"
       :token="token"
-      :apr="selectStable ? convertFromRay(stableRate) : convertFromRay(variableRate)"
+      :apr="
+        selectStable ? convertFromRay(stableRate) : convertFromRay(variableRate)
+      "
       :rate-type="selectStable ? 'Stable' : 'Variable'"
-      @takeAction="emitTakeAction"
+      @emitTakeAction="emitTakeAction"
     />
   </div>
 </template>
@@ -99,8 +106,8 @@ export default {
       this.$refs.confirmationModal.$refs.confirmationModal.show();
     },
     emitTakeAction(param) {
-      console.error('in rate modal', param)
-      this.$emit('takeAction', param);
+      console.error('in rate modal', param);
+      this.$emit('emitTakeAction', param);
     }
   }
 };

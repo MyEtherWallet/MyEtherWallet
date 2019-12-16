@@ -51,20 +51,12 @@
       </div>
     </div>
     <div class="action-container mt-5">
-      <p class="action-question">
-        {{
-          activeDepositTab
-            ? $t('dappsAave.how-much-deposit')
-            : $t('dappsAave.how-much-borrow')
-        }}
-      </p>
-      <p class="action-info">
-        {{
-          activeDepositTab
-            ? $t('dappsAave.deposit-info')
-            : $t('dappsAave.borrow-info')
-        }}
-      </p>
+      <i18n class="action-question" tag="p" path="dappsAave.how-much-action">
+        <span slot="action" class="action-title">{{ actionTitle }}</span>
+      </i18n>
+      <i18n class="action-info" tag="p" path="dappsAave.action-info">
+        <span slot="action" class="action-title">{{ actionTitle }}</span>
+      </i18n>
       <input v-model="amount" type="number" placeholder="0" />
       <div class="percentage-container">
         <div
@@ -100,19 +92,16 @@
         ]"
         @click="takeAction()"
       >
-        {{
-          activeDepositTab
-            ? $tc('dappsAave.deposit', 1)
-            : $t('dappsAave.borrow')
-        }}
+        {{ actionTitle }}
       </button>
-      <button class="cancel-btn" @click="goToHome()">
-        {{
-          activeDepositTab
-            ? $t('dappsAave.cancel-deposit')
-            : $t('dappsAave.cancel-borrow')
-        }}
-      </button>
+      <i18n
+        path="dappsAave.cancel-action"
+        tag="button"
+        class="cancel-btn"
+        @click="goToHome()"
+      >
+        <span slot="action">{{ actionTitle }}</span>
+      </i18n>
     </div>
     <rate-modal
       ref="rateModal"
@@ -120,7 +109,7 @@
       :variable-rate="token.variableBorrowRate"
       :amount="amount"
       :token="token"
-      @takeAction="emitTakeAction"
+      @emitTakeAction="emitTakeAction"
     />
     <confirmation-modal
       ref="confirmationModal"
@@ -128,7 +117,7 @@
       :amount="amount"
       :health-factor="healthFactor"
       :token="token"
-      @takeAction="emitTakeAction"
+      @emitTakeAction="emitTakeAction"
     />
   </div>
 </template>
@@ -181,6 +170,7 @@ export default {
       ethPrice: 0,
       disableBtn: false,
       token: this.$route.params.token || {},
+      actionType: this.$route.params.actionType || '',
       percentBtns: {
         twentyFivePercentEnabled: false,
         fiftyPercentEnabled: false,
@@ -190,7 +180,17 @@ export default {
     };
   },
   computed: {
-    ...mapState(['online'])
+    ...mapState(['online']),
+    actionTitle() {
+      if (!this.actionType) {
+        return this.activeDepositTab
+          ? this.$tc('dappsAave.deposit', 1)
+          : this.$t('dappsAave.borrow');
+      }
+      return this.actionType === 'Withdraw'
+        ? this.$t('dappsAave.withdraw')
+        : this.$t('dappsAave.repay');
+    }
   },
   watch: {
     currentReserveBalance(newVal) {
@@ -223,11 +223,13 @@ export default {
   },
   methods: {
     takeAction() {
-      this.activeBorrowTab ? this.$refs.rateModal.$refs.rateModal.show() : this.$refs.confirmationModal.$refs.confirmationModal.show();
+      this.activeBorrowTab
+        ? this.$refs.rateModal.$refs.rateModal.show()
+        : this.$refs.confirmationModal.$refs.confirmationModal.show();
     },
     emitTakeAction(param) {
       this.goToHome();
-      this.$emit('takeAction', param); 
+      this.$emit('emitTakeAction', param);
     },
     setPercentAmount(selectedBtn, percentage) {
       this.amount = new BigNumber(
@@ -262,7 +264,9 @@ export default {
       if (int) {
         usdBalance = new BigNumber(
           new BigNumber(int).times(new BigNumber(this.ethPrice)) //need to add in all the token prices (not just ether)
-        ).toFixed(2).toString();
+        )
+          .toFixed(2)
+          .toString();
       }
       return usdBalance;
     },

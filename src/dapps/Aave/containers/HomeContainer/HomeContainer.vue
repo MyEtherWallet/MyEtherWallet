@@ -42,7 +42,11 @@
       <span v-if="!loadingHome" class="loan-percent">{{ ltv }}%</span>
     </div>
     <!-- have to change the value once we get real data -->
-    <summary-table :reserves="reserves" :activeDepositTab="activeDepositTab"/>
+    <summary-table
+      :reserves="reserves"
+      :health-factor="healthFactor"
+      :active-deposit-tab="activeDepositTab"
+    />
     <action-modal
       ref="actionModal"
       :reserves="reserves"
@@ -58,6 +62,7 @@ import BalanceDisplay from '@/dapps/Aave/components/BalanceDisplay';
 import ActionModal from '@/dapps/Aave/components/ActionModal';
 import LendingPoolAbi from '@/dapps/Aave/abi/LendingPoolAbi.js';
 import ActionContainer from '@/dapps/Aave/containers/ActionContainer';
+
 export default {
   components: {
     'balance-display': BalanceDisplay,
@@ -67,6 +72,10 @@ export default {
     'summary-table': SummaryTable
   },
   props: {
+    healthFactor: {
+      type: String,
+      default: ''
+    },
     activeBorrowTab: {
       type: Boolean,
       default: false
