@@ -115,9 +115,8 @@ export default {
         {
           key: 'GEN',
           icon: generateImgHov,
-          title: 'Create a New Wallet',
-          desc:
-            'Generate your own unique Ethereum wallet. Receive a public address (0x...) and encrypt it with a password.',
+          title: this.$t('mewcx.generate-wallet'),
+          desc: this.$t('mewcx.generate-wallet-description'),
           warning: '',
           imgPadding: '6px',
           func: () => {
@@ -127,9 +126,8 @@ export default {
         {
           key: mnemonicType,
           icon: byMnemImgHov,
-          title: 'Mnemonic Phrase',
-          desc:
-            'Add your wallet using a mnemonic phrase. Mnemonic phrases are 12-24 words in length, but sometimes they contain an extra word for added security.',
+          title: this.$t('mewcx.mnemonic-phrase'),
+          desc: this.$t('mewcx.mnemonic-phrase-description'),
           warning: '',
           func: () => {
             this.toggleImportMnemonicPhrase(true);
@@ -138,9 +136,8 @@ export default {
         {
           key: privateKeyType,
           icon: privateKeyImgHov,
-          title: `Private Key`,
-          desc:
-            'Add your wallet using a private key. Private keys are 64 hexadecimal characters. ',
+          title: this.$t('mewcx.private-key'),
+          desc: this.$t('mewcx.private-key-description'),
           warning: '',
           func: () => {
             this.toggleImportPrivateKey(true);
@@ -149,10 +146,9 @@ export default {
         {
           key: keyStoreType,
           icon: byJsonImgHov,
-          title: 'Keystore File',
+          title: this.$t('mewcx.keystore-file'),
           imgPadding: '15px',
-          desc:
-            'Add your wallet using a keystore file. A keystore file is your private key encrypted into a JSON file format.',
+          desc: this.$t('mewcx.keystore-file-description'),
           warning: '',
           func: () => {
             this.toggleImportKeystoreFile(true);
