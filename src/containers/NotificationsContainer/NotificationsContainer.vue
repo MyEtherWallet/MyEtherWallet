@@ -172,10 +172,10 @@ export default {
     notifications() {
       this.countUnread();
     },
-    network(){
+    network() {
       this.pruneNotifications();
     },
-    ['account.address'](){
+    ['account.address']() {
       this.pruneNotifications();
     }
   },
