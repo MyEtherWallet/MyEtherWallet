@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "5.2.7",
+  "version": "5.2.8",
   "description": "Client side ethereum wallet",
   "license": "MIT",
   "repository": "https://github.com/myetherwallet/myetherwallet",
@@ -71,7 +71,7 @@
     "@ledgerhq/hw-transport-u2f": "4.78.0",
     "@ledgerhq/hw-transport-webusb": "4.78.0",
     "@makerdao/currency": "0.9.6",
-    "@makerdao/dai": "0.23.0-rc.3",
+    "@makerdao/dai": "0.23.0-rc.4",
     "@makerdao/dai-plugin-config": "0.2.14-rc.1",
     "@makerdao/dai-plugin-mcd": "1.0.4",
     "@makerdao/dai-plugin-migrations": "1.0.7",
