@@ -1,20 +1,50 @@
 <template>
   <div class="summary-table-container">
     <table>
-      <!-- <colgroup>
-        <col width="15%" />
-        <col width="15%" />
-        <col width="15%" />
-        <col width="10%" />
+      <colgroup>
         <col width="25%" />
         <col width="20%" />
-      </colgroup> -->
+        <col width="20%" />
+        <col width="15%" />
+        <col width="25%" />
+        <col width="25%" />
+      </colgroup>
       <thead>
         <th class="token-header">{{ $t('dappsAave.token') }}</th>
-        <th>{{ activeDepositTab ? $t('dappsAave.deposited') : $t('dappsAave.amount-borrowed') }}</th>
-        <th>{{ activeDepositTab ? $t('dappsAave.earned') : $t('dappsAave.acc-interest')}}</th>
+        <th>
+          {{
+            activeDepositTab
+              ? $t('dappsAave.deposited')
+              : $t('dappsAave.amount-borrowed')
+          }}
+        </th>
+        <th>
+          {{
+            activeDepositTab
+              ? $t('dappsAave.earned')
+              : $t('dappsAave.acc-interest')
+          }}
+        </th>
         <th>{{ $t('dappsAave.apr') }}</th>
-        <th>{{ activeDepositTab ? $t('dappsAave.use-collateral') : $t('dappsAave.apr-type')}}</th>
+        <th>
+          <div
+            :class="[
+              'th-container',
+              activeDepositTab ? '' : 'apr-borrow-header'
+            ]"
+          >
+            {{
+              activeDepositTab
+                ? $t('dappsAave.use-collateral')
+                : $t('dappsAave.apr-type')
+            }}
+            <popover
+              v-if="!activeDepositTab"
+              :popcontent="'CHANGE THIS'"
+              class="ml-2"
+            />
+          </div>
+        </th>
         <th></th>
       </thead>
       <tbody>
@@ -40,7 +70,7 @@
             <!-- placeholder -->
             8.91 %
           </td>
-          <td class="slider-container" v-if="activeDepositTab">
+          <td v-if="activeDepositTab">
             <div class="sliding-switch-white">
               <label class="switch">
                 <input type="checkbox" @click="useAsCollateral(index)" />
@@ -48,53 +78,114 @@
               </label>
             </div>
           </td>
-          <td class="slider-container" v-if="!activeDepositTab">
-            <div class="sliding-switch-white">
-              <label class="switch">
-                <input type="checkbox" :checked="token.isStable" @click="changeType(index)" />
-                <span class="slider borrow-slider round" />
-              </label>
+          <td v-if="!activeDepositTab">
+            <div class="slider-container">
+              <div class="sliding-switch-white">
+                <label class="switch">
+                  <input
+                    :checked="token.isStable"
+                    type="checkbox"
+                    @click="changeType(index)"
+                  />
+                  <span class="slider borrow-slider round" />
+                </label>
+              </div>
+              <span :class="token.isStable ? 'stable-txt' : 'variable-txt'">{{
+                token.isStable
+                  ? $t('dappsAave.stable')
+                  : $t('dappsAave.variable')
+              }}</span>
             </div>
-            <span>{{ token.isStable ? $t('dappsAave.stable') : $t('dappsAave.variable') }}</span>
           </td>
           <td class="button-container">
-            <button>{{ activeDepositTab ? $tc('dappsAave.deposit', 1) : $t('dappsAave.borrow') }}</button>
-            <button>{{ activeDepositTab ? $t('dappsAave.withdraw') : $t('dappsAave.repay') }}</button>
+            <button @click="goToPage(index)">
+              {{
+                activeDepositTab
+                  ? $tc('dappsAave.deposit', 1)
+                  : $t('dappsAave.borrow')
+              }}
+            </button>
+            <button
+              @click="goToPage(index, activeDepositTab ? 'Withdraw' : 'Repay')"
+            >
+              {{
+                activeDepositTab
+                  ? $t('dappsAave.withdraw')
+                  : $t('dappsAave.repay')
+              }}
+            </button>
           </td>
         </tr>
       </tbody>
     </table>
+    <confirmation-modal
+      ref="confirmationModal"
+      :active-deposit-tab="activeDepositTab"
+      :health-factor="healthFactor"
+      :token="token"
+      :is-collateral-modal="true"
+    />
+    <switch-interest-modal ref="switchInterest" :token="token" />
   </div>
 </template>
 
 <script>
+import ConfirmationModal from '@/dapps/Aave/components/ConfirmationModal';
+import SwitchInterestModal from '@/dapps/Aave/components/SwitchInterestModal';
+
 export default {
+  components: {
+    'confirmation-modal': ConfirmationModal,
+    'switch-interest-modal': SwitchInterestModal
+  },
   props: {
     reserves: {
       type: Array,
-       default: function() {
+      default: function() {
         return [];
       }
     },
     activeDepositTab: {
       type: Boolean,
       default: true
+    },
+    healthFactor: {
+      type: String,
+      default: ''
     }
+  },
+  data() {
+    return {
+      token: {}
+    };
   },
   mounted() {
     // console.error('reerve', this.reserves[0].isStable)
   },
   methods: {
     useAsCollateral(idx) {
-      console.error("idx", idx)
       this.reserves[idx].isCollateral = !this.reserves[idx].isCollateral;
+      this.token = this.reserves[idx];
+      this.$refs.confirmationModal.$refs.confirmationModal.show();
     },
     changeType(idx) {
-      console.error("idx", idx)
-      // this.reserves[idx].isCollateral = !this.reserves[idx].isCollateral;
+      this.token = this.reserves[idx];
+      this.$refs.switchInterest.$refs.switchInterest.show();
+      // this.reserves[idx].isStable = !this.reserves[idx].isStable;
+    },
+    goToPage(idx, actionType) {
+      const params = {
+        token: this.reserves[idx]
+      };
+
+      if (actionType) {
+        params['actionType'] = actionType;
+      }
+
+      this.$router.push({ name: 'Action', params: params });
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

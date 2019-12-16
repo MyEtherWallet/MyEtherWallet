@@ -37,7 +37,9 @@
 .body-container {
   padding: 20px 30px;
 
-  .health-container, .tx-container, .rate-container {
+  .health-container,
+  .tx-container,
+  .rate-container {
     display: flex;
     justify-content: space-between;
   }
@@ -49,12 +51,17 @@
   .health-container {
     .left-container {
       p {
-        align-items: center; 
+        align-items: center;
         display: flex;
       }
     }
 
     .right-container {
+      .currency-title {
+        color: $dark-blue-6;
+        font-size: 14px;
+        font-weight: 600;
+      }
       p {
         color: $dark-green-4;
         font-size: 14px;
@@ -62,7 +69,6 @@
       }
     }
   }
-
   .tx-container {
     .right-container {
       p {
