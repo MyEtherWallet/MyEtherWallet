@@ -55,13 +55,13 @@
           </ul>
         </div>
         <div class="button-container">
-          <expanding-option :title="$t('mewcx.password')">
+          <expanding-option :title="$t('mewcx.extra-word')" :button-text="$t('common.optional')">
             <div class="input-container">
               <div class="mnemonic-password-input">
                 <input
                   v-model="locPassword"
                   :type="show ? 'text' : 'password'"
-                  :placeholder="$t('mewcx.enter-pw')"
+                  :placeholder="$t('mewcx.enter-extra-word')"
                 />
                 <img
                   :src="show ? showIcon : hide"
