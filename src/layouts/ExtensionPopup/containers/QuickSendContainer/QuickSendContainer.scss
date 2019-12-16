@@ -20,11 +20,18 @@
   }
 
   .quick-send-step-contents {
-    padding: 20px 10px 10px;
+    padding: 13px 10px 10px;
 
     .title {
       color: $light-blue-1;
       font-weight: bold;
+    }
+
+    .send-to-container {
+      display: flex;
+      flex-direction: column;
+      height: 230px;
+      justify-content: space-around;
     }
 
     .from-text {
@@ -121,8 +128,7 @@
           border-radius: 5px;
           max-height: 72px;
           min-height: 52px;
-          padding: 5px 45px;
-          // padding-left: 45px;
+          padding: 5px 45px 5px 50px;
           resize: none;
           width: 100%;
         }
@@ -132,12 +138,6 @@
           position: absolute;
           top: 10px;
         }
-
-        // .dropdown-container {
-        //   position: absolute;
-        //   top: 0px;
-        //   right: 0px;
-        // }
 
         .blockie-temp {
           background-color: $light-grey-4;
@@ -218,8 +218,8 @@
     cursor: pointer;
     display: flex;
     justify-content: center;
-    padding: 20px;
-    width: 100%;
+    padding: 15px 0;
+    width: 350px;
 
     p {
       color: $white;
