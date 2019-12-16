@@ -1,5 +1,5 @@
 <template>
-  <v-sheet class="d-flex align-end" min-height="370px">
+  <v-sheet class="d-flex align-end px-3" min-height="370px">
     <v-col cols="6" class="pb-10">
       <div class="subtitle-1 font-weight-bold grey--text">STEP 3.</div>
       <div class="headline font-weight-bold mb-3">You are done!</div>

@@ -85,11 +85,7 @@
         <v-col>
           <div class="subtitle-1 font-weight-bold mb-5 d-flex align-center">
             Love
-            <img
-              class="ml-n1"
-              height="27"
-              src="@/assets/images/Common/Icons/heart.svg"
-            />
+            <img height="27" src="@/assets/images/Common/Icons/heart.svg" />
             MEW? Donate!
           </div>
           <p>

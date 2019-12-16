@@ -1,6 +1,6 @@
 <template>
-  <v-sheet class="d-flex px-5 py-8">
-    <v-col cols="6" class="pl-0 pt-0">
+  <v-sheet class="d-flex px-3 py-8">
+    <v-col cols="6" class="pt-0">
       <div class="subtitle-1 font-weight-bold grey--text">STEP 3.</div>
       <div class="headline font-weight-bold mb-3">You are done!</div>
       <p class="mb-6">
@@ -19,7 +19,7 @@
         >
       </p>
     </v-col>
-    <v-col cols="6" class="pr-0 pt-10">
+    <v-col cols="6" class="pt-10">
       <v-img
         class="mx-auto"
         max-width="280px"
