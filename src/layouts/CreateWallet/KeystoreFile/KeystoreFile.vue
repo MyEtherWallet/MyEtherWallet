@@ -45,7 +45,6 @@
             <v-tabs-items v-model="tab">
               <v-tab-item :value="'tab-1'">
                 <Step1 />
-                <NotRecommended class="border-radius-bottom" />
               </v-tab-item>
               <v-tab-item :value="'tab-2'">
                 <Step2 />
@@ -68,11 +67,10 @@ import BlockTitle from '@/layouts/components/BlockTitle';
 import Step1 from './components/Step1';
 import Step2 from './components/Step2';
 import Step3 from './components/Step3';
-import NotRecommended from '@/components/NotRecommended';
 
 export default {
   name: 'MewConnect',
-  components: { BlockTitle, Step1, Step2, Step3, NotRecommended },
+  components: { BlockTitle, Step1, Step2, Step3 },
   data: () => ({
     stepActive: 'light-blue darken-4 white--text pa-3 caption',
     stepDone: 'grey white--text pa-3 caption',

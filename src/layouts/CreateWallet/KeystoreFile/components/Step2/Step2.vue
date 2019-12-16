@@ -1,37 +1,31 @@
 <template>
-  <v-sheet class="d-flex flex-column">
-    <div>
-      <v-sheet class="pt-8 px-3" width="100%">
-        <div class="subtitle-1 font-weight-bold grey--text">STEP 2.</div>
-        <div class="headline font-weight-bold mb-3">Download keystore file</div>
-        <div class="my-2" />
-        <v-row class="align-stretch">
-          <v-col v-for="d in warningData" :key="d.key">
-            <div class="warning-box pa-6">
-              <v-img
-                :src="d.img"
-                max-width="63px"
-                max-height="76px"
-                class="mx-auto mb-4"
-              />
-              <div class="subtitle-1 font-weight-medium mb-1">
-                {{ d.title }}
-              </div>
-              <div>{{ d.description }}</div>
+  <v-sheet>
+    <v-sheet class="px-5 mt-8 mb-4" width="100%">
+      <div class="subtitle-1 font-weight-bold grey--text">STEP 2.</div>
+      <div class="headline font-weight-bold mb-5">Download keystore file</div>
+      <v-row class="align-stretch">
+        <v-col v-for="d in warningData" :key="d.key">
+          <div class="warning-box pa-6">
+            <v-img
+              :src="d.img"
+              max-width="63px"
+              max-height="76px"
+              class="mx-auto mb-4"
+            />
+            <div class="subtitle-1 font-weight-medium mb-1">
+              {{ d.title }}
             </div>
-          </v-col>
-        </v-row>
-      </v-sheet>
-      <div class="my-5" />
-      <StdButton
-        buttonclass="button--green"
-        class="mx-auto display--block"
-        @click.native="linkToStep(2)"
-        >Acknowledge &amp; Download</StdButton
-      >
-    </div>
-    <div class="my-4" />
-    <v-spacer />
+            <div>{{ d.description }}</div>
+          </div>
+        </v-col>
+      </v-row>
+    </v-sheet>
+    <StdButton
+      buttonclass="button--green"
+      class="mx-auto display--block mb-7"
+      @click.native="linkToStep(2)"
+      >Acknowledge &amp; Download</StdButton
+    >
     <NotRecommended class="mx-n6 border-radius-bottom" />
   </v-sheet>
 </template>
