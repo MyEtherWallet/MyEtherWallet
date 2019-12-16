@@ -6,7 +6,7 @@
     "build": "npm run update && vue-cli-service build",
     "test:unit": "vue-cli-service test:unit --logHeapUsage",
     "lint": "npm run lint:styles && npm run lint:code && npm run lint:md",
-    "build:hash": "NODE_OPTIONS=--max_old_space_size=4096 ROUTER_MODE=hash npm run build",
+    "build:hash": "ROUTER_MODE=hash npm run build",
     "build:history": "ROUTER_MODE=history npm run build",
     "build:mewcx": "ROUTER_MODE=hash BUILD_TYPE=mewcx npm run build",
     "start:mewcx": "ROUTER_MODE=hash BUILD_TYPE=mewcx npm run start",
