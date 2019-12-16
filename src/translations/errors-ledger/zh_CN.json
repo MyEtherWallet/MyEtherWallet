@@ -1,0 +1,22 @@
+{
+  "failed-to-sign": "Failed to sign, Ledger device timedout.",
+  "no-device": "No Ledger device found!",
+  "device-busy-1": "Ledger Device is busy",
+  "device-busy-2": "Device is locked. Please unlock device and try again.",
+  "unknown-0x6804": "Ledger device: UNKNOWN_ERROR (0x6804)",
+  "failed-to-sign-other": "Ledger failed to sign! U2F OTHER_ERROR",
+  "failed-sign-ineligible": "Ledger failed to sign! U2F DEVICE_INELIGIBLE",
+  "unknown-0x6801": "Ledger device: UNKNOWN_ERROR (0x6801)",
+  "invalid-data-0x6a80": "Ledger received invalid data. (0x6a80)",
+  "denied-by-user-0x6985": "User denied action. (0x6985)",
+  "cla-not-support-0x6e00": "Please make sure you're using the correct application",
+  "unsupported-browser-u2f": "Browser does not support U2F or connection is not secured. Please try using Chrome.",
+  "invalid-network-id": "Invalid network ID!",
+  "enable-contract-data": "Please enable contract data on your ledger app",
+  "no-device-selected": "No device selected or user closed the selection modal.",
+  "app-and-network-mismatch": "The app does not support selected network",
+  "transport-interface": "The interface number provided is not supported by the device in its current configuration.",
+  "wrong-wallet": "You selected the wrong wallet on your device",
+  "device-disconnected": "Ledger device disconnected during operation.",
+  "denied-by-user": "User denied action."
+}

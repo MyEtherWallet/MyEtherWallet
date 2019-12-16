@@ -1,9 +1,29 @@
 ### Devop
 - Modularize store state [#1722] [https://github.com/MyEtherWallet/MyEtherWallet/pull/1722]
+- Refactor maker translations[#1737] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1737)
+
+### Release v5.2.7
 
 ### Bug
 
+- Fix verify signature [#1729](https://github.com/MyEtherWallet/MyEtherWallet/pull/1729)
+- Fix top banner buttons [#1715](https://github.com/MyEtherWallet/MyEtherWallet/pull/1715)
+- MEW CX memory leak on access wallet + fix mnemonic [#1733](https://github.com/MyEtherWallet/MyEtherWallet/pull/1733)
+- Fix text align and font sizes for Policy and Terms of Service [#1734](https://github.com/MyEtherWallet/MyEtherWallet/pull/1734)
+
+### Devop
+
+- Refactor translations [#1732](https://github.com/MyEtherWallet/MyEtherWallet/pull/1732)
+
+### Release v5.2.6
+
+### Bug
+
+- Fix ens on custom networks [#1714](https://github.com/MyEtherWallet/MyEtherWallet/pull/1714)
 - Fix clear, dropdown, change ENS char translations [#1713](https://github.com/MyEtherWallet/MyEtherWallet/pull/1713)
+- Fix message signature not showing up [#1719](https://github.com/MyEtherWallet/MyEtherWallet/pull/1719)
+- Fix nft send [#1724](https://github.com/MyEtherWallet/MyEtherWallet/pull/1724)
+- Fix clear on send that switches to always eth instead of network currency [#1723](https://github.com/MyEtherWallet/MyEtherWallet/pull/1723)
 
 ### Release v5.2.5-hotfix.1
 
@@ -35,7 +55,7 @@
 - Add MEWconnect footer link [#1675](https://github.com/MyEtherWallet/MyEtherWallet/pull/1675)
 - Add clear btn to forms [#1673](https://github.com/MyEtherWallet/MyEtherWallet/pull/1673)
 - Add Mult-Collateral Dai support [#1575](https://github.com/MyEtherWallet/MyEtherWallet/pull/1575)
-- Update TOS \[[#1685](https://github.com/MyEtherWallet/MyEtherWallet/pull/1685)
+- Update TOS [#1685](https://github.com/MyEtherWallet/MyEtherWallet/pull/1685)
 
 ### Release v5.2.4
 
