@@ -1,3 +1,7 @@
+### Bug
+
+- Unable to unzip message on Windows and Mac OSX because of two files with same name but different case [#1757](https://github.com/MyEtherWallet/MyEtherWallet/pull/1757)
+
 ### Release v5.2.8
 
 ### Devop
