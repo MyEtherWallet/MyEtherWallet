@@ -18,7 +18,7 @@
               <standard-button
                 :button-disabled="!isValidAddress"
                 :options="sendButton"
-                @click.native="transfer"
+                :click-function="transfer"
               />
             </div>
           </div>

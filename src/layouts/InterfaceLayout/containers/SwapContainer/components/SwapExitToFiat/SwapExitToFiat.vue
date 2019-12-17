@@ -107,10 +107,12 @@
             v-show="!finalizingSwap"
             :options="button3"
             :button-disabled="!canSwap"
-            @click.native="
-              updateStep('');
-              stageComplete('step2');
-              createExitOrder();
+            :click-function="
+              () => {
+                updateStep('');
+                stageComplete('step2');
+                createExitOrder();
+              }
             "
           />
           <div

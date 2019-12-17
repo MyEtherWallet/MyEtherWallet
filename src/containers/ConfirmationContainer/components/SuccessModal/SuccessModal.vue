@@ -27,7 +27,7 @@
         >
           <standard-button :options="buttonCheckEtherscan" />
         </a>
-        <standard-button :options="buttonOk" @click.native="hideModal" />
+        <standard-button :options="buttonOk" :click-function="hideModal" />
       </div>
     </div>
     <!-- .modal-content-block -->

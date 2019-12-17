@@ -145,7 +145,7 @@
                   noWalletTerms: true,
                   rightArrow: true
                 }"
-                @click.native="stage2Btn"
+                :click-function="stage2Btn"
               />
             </div>
           </accordion-menu>
@@ -195,7 +195,7 @@
                   noWalletTerms: true,
                   noMinWidth: true
                 }"
-                @click.native="uploadClick()"
+                :click-function="uploadClick()"
               />
               <standard-button
                 :options="{
@@ -203,7 +203,7 @@
                   buttonStyle: 'green',
                   noWalletTerms: true
                 }"
-                @click.native="stage3Btn"
+                :click-function="stage3Btn"
               />
             </div>
           </accordion-menu>
@@ -284,7 +284,7 @@
                   noWalletTerms: true,
                   rightArrow: true
                 }"
-                @click.native="stage4Btn"
+                :click-function="stage4Btn"
               />
             </div>
           </accordion-menu>

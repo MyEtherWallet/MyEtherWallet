@@ -44,7 +44,7 @@
         <standard-button
           :button-disabled="selected !== '' ? false : true"
           :options="continueButtonOptions"
-          @click.native="continueAccess"
+          :click-function="continueAccess"
         />
       </div>
       <customer-support />

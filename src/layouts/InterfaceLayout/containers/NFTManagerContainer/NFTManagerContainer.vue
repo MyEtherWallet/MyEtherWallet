@@ -81,7 +81,7 @@
         <h3 class="no-nft-notice">{{ $t('nftManager.no-nft') }}</h3>
         <standard-button
           :options="onlyCustom"
-          @click.native="openCustomModal"
+          :click-function="openCustomModal"
         />
       </div>
       <span v-show="reLoading">{{ $t('nftManager.reloading') }}</span>

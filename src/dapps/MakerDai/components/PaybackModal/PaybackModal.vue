@@ -60,13 +60,13 @@
           <div v-if="needsDaiApprove()">
             <standard-button
               :options="approveDaiButton"
-              @click.native="approveDai"
+              :click-function="approveDai"
             />
           </div>
           <div v-if="needsMkrApprove()">
             <standard-button
               :options="approveMkrButton"
-              @click.native="approveMkr"
+              :click-function="approveMkr"
             />
           </div>
         </div>
