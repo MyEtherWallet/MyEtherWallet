@@ -42,13 +42,10 @@ class MnemonicWallet {
       tx.sign(derivedKey.privateKey);
       const signedChainId = calculateChainIdFromV(tx.v);
       if (signedChainId !== networkId)
-        throw new Error(
-          'Invalid networkId signature returned. Expected: ' +
-            networkId +
-            ', Got: ' +
-            signedChainId,
-          'InvalidNetworkId'
-        );
+        throw Vue.$i18n.t('createWallet.mnemonic.invalid-network-id', {
+          networkId: networkId,
+          signedChainId: signedChainId
+        });
       return getSignTransactionObject(tx);
     };
     const msgSigner = async msg => {
