@@ -5,5 +5,7 @@
   "select-network": "Select Network",
   "tx-details": "Transaction Details",
   "tx-status": "Transaction Status",
-  "offline-helper": "Send Offline Helper"
+  "offline-helper": "Send Offline Helper",
+  "export-json": "Export JSON File",
+  "upload-json": "Upload JSON File"
 }

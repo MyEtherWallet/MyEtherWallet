@@ -130,7 +130,7 @@
               >
                 <standard-button
                   :options="{
-                    title: 'Export JSON File',
+                    title: $t('withoutWallet.export-json'),
                     buttonStyle: 'green-border',
                     noWalletTerms: true,
                     noMinWidth: true
@@ -140,7 +140,7 @@
 
               <standard-button
                 :options="{
-                  title: 'Continue',
+                  title: $t('common.continue'),
                   buttonStyle: 'green',
                   noWalletTerms: true,
                   rightArrow: true
@@ -173,7 +173,7 @@
             >
               <span slot="network">({{ correctNetwork }})</span>
             </i18n>
-            <expanding-option title="Raw Transaction">
+            <expanding-option :title="$t('sendTx.raw-tx')">
               <textarea
                 :value="JSON.stringify(rawTx)"
                 class="no-margin raw-tx-input"
@@ -190,7 +190,7 @@
               />
               <standard-button
                 :options="{
-                  title: 'Upload JSON File',
+                  title: $t('withoutWallet.upload-json'),
                   buttonStyle: 'green-border',
                   noWalletTerms: true,
                   noMinWidth: true
@@ -199,7 +199,7 @@
               />
               <standard-button
                 :options="{
-                  title: 'Continue',
+                  title: $t('common.continue'),
                   buttonStyle: 'green',
                   noWalletTerms: true
                 }"
@@ -279,7 +279,7 @@
             <div class="button-container">
               <standard-button
                 :options="{
-                  title: 'Send',
+                  title: $t('common.send'),
                   buttonStyle: 'green',
                   noWalletTerms: true,
                   rightArrow: true
