@@ -1,3 +1,5 @@
+### Release v5.2.8
+
 ### Bug
 
 - Fix leftover issue with token search [#1749] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1749)
