@@ -26,6 +26,15 @@ import {
 } from './cxEvents';
 import utils from 'web3-utils';
 const chrome = window.chrome;
+chrome.runtime.onInstalled.addListener(function() {
+  chrome.runtime.onMessage.addListener(eventsListeners);
+});
+chrome.runtime.onStartup.addListener(function() {
+  chrome.runtime.onMessage.addListener(eventsListeners);
+});
+chrome.runtime.onStartup.addListener(function() {
+  chrome.runtime.onMessage.addListener(eventsListeners);
+});
 // Set default values on init
 const networkChanger = items => {
   if (items.hasOwnProperty('defNetwork')) {
@@ -123,8 +132,6 @@ const eventsListeners = (request, _, callback) => {
     event: request.event,
     payload: payload
   };
-
-  console.log(obj);
 
   const middleware = new MiddleWare();
   middleware.use(mewCxFetchAccounts);

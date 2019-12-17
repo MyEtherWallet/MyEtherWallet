@@ -44,7 +44,7 @@
             <img :src="show ? showIcon : hide" @click.prevent="show = !show" />
           </div>
           <span class="error">
-            {{ error }}
+            {{ error.hasOwnProperty('msg') ? error.msg : '' }}
           </span>
         </div>
       </form>
@@ -148,15 +148,12 @@ import hide from '@/assets/images/icons/hide-password.svg';
 import showIcon from '@/assets/images/icons/show-password.svg';
 import BigNumber from 'bignumber.js';
 import { isAddress } from '@/helpers/addressUtils';
-import walletWorker from 'worker-loader!@/workers/wallet.worker.js';
-import { WalletInterface } from '@/wallets';
-import { KEYSTORE as keyStoreType } from '@/wallets/bip44/walletTypes';
 import Blockie from '@/components/Blockie';
 import { Misc } from '@/helpers';
 import { mapState } from 'vuex';
 import { ETH } from '@/networks/types';
 import ethUnit from 'ethjs-unit';
-import { CX_SEND_SIGNED_TX } from '@/builds/mewcx/cxHelpers/cxEvents';
+import { WEB3_SIGN_TX } from '@/builds/mewcx/cxHelpers/cxEvents';
 
 export default {
   components: {
@@ -198,13 +195,11 @@ export default {
       toAddress: '',
       value: 0,
       txHash: '',
-      unlockedAccount: {},
-      error: '',
+      error: {},
       loading: false,
       rawTx: {},
       gasPrice: 0,
       gasLimit: 0,
-      signedTx: {},
       txLink: ETH.blockExplorerTX
     };
   },
@@ -231,10 +226,10 @@ export default {
     toAddress() {
       this.getGasPrice();
       this.estimateGas();
-      this.error = '';
+      this.error = {};
     },
     password() {
-      this.error = '';
+      this.error = {};
     }
   },
   methods: {
@@ -266,7 +261,6 @@ export default {
     },
     clearWallet() {
       this.loading = false;
-      this.unlockedAccount = {};
       this.password = '';
       this.show = false;
       this.step -= 1;
@@ -278,30 +272,12 @@ export default {
       this.rawTx = {};
       this.gasPrice = 0;
       this.gasLimit = 0;
-      this.signedTx = {};
       this.step -= 1;
     },
     unlockWallet() {
       this.loading = true;
-      const worker = new walletWorker();
-      const file = JSON.parse(this.selectedWallet.priv);
-      worker.postMessage({
-        type: 'unlockWallet',
-        data: [file, this.password]
-      });
-      worker.onmessage = e => {
-        this.unlockedAccount = new WalletInterface(
-          Buffer.from(e.data._privKey),
-          false,
-          keyStoreType
-        );
-        this.loading = false;
-        this.step += 1;
-      };
-      worker.onerror = e => {
-        this.loading = false;
-        this.error = e.message;
-      };
+      this.step += 1;
+      this.loading = false;
     },
     async getGasPrice() {
       this.web3.eth.getGasPrice().then(res => {
@@ -341,6 +317,7 @@ export default {
       this.value = walletBalance.minus(convertedLimitAndPrice).toString();
     },
     async createTransaction() {
+      this.loading = true;
       const nonce = await this.web3.eth.getTransactionCount(
         this.selectedWallet.address
       );
@@ -358,12 +335,20 @@ export default {
         data: '0x'
       };
 
-      this.signedTx = await this.unlockedAccount.signTransaction(this.raw);
       this.step += 1;
+      this.loading = false;
     },
-    async sendTransaction() {
-      this.loading = true;
+    sendTransaction() {
+      const _self = this;
+      _self.loading = true;
       const chrome = window.chrome;
+      const payload = {
+        params: _self.raw,
+        password: _self.password,
+        signer: _self.raw.from
+      };
+
+      const id = chrome.runtime.id;
       chrome.storage.sync.get(null, res => {
         if (res.hasOwnProperty('knownAddresses')) {
           const arr = JSON.parse(res['knownAddresses']);
@@ -379,17 +364,34 @@ export default {
           });
         }
       });
-      const payload = {
-        signedTx: this.signedTx.rawTransaction,
-        raw: this.raw
-      };
-      window.chrome.runtime.sendMessage(
-        window.chrome.runtime.id,
-        { event: CX_SEND_SIGNED_TX, payload: payload },
+      chrome.runtime.sendMessage(
+        id,
+        {
+          event: WEB3_SIGN_TX,
+          payload: payload
+        },
         {},
         res => {
+          _self.loading = false;
+          if (res.hasOwnProperty('error')) {
+            _self.error = {
+              msg: res.error,
+              errored: true
+            };
+
+            return;
+          }
+          if (res.hasOwnProperty('message')) {
+            _self.error = {
+              msg: res.message,
+              errored: true
+            };
+
+            return;
+          }
+
           // eslint-disable-next-line
-          if (!!res && !res.hasOwnProperty('message')) {
+          if (!!res && (!res.hasOwnProperty('message') || !res.hasOwnProperty('error'))) {
             this.txHash = res;
             this.step += 1;
           }
@@ -404,10 +406,8 @@ export default {
       this.toAddress = '';
       this.value = 0;
       this.txHash = '';
-      this.unlockedAccount = {};
-      this.error = '';
+      this.error = {};
       this.rawTx = {};
-      this.signedTx = {};
       this.cancel();
     }
   }
