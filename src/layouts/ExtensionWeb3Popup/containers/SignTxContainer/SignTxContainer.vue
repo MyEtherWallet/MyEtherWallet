@@ -181,6 +181,7 @@ export default {
         password: this.password
       };
       window.chrome.runtime.sendMessage(
+        window.chrome.runtime.id,
         {
           event: WEB3_SIGN_TX,
           payload: payload
