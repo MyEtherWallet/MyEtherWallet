@@ -500,6 +500,7 @@ export default {
         ),
         data: this.txData
       };
+
       this.web3.eth
         .estimateGas(params)
         .then(gasLimit => {
