@@ -177,7 +177,12 @@ export default {
   },
 
   computed: {
-    ...mapState(['account', 'web3', 'network', 'online']),
+    ...mapState({
+      account: 'main/account',
+      web3: 'main/web3',
+      network: 'main/network',
+      online: 'main/online'
+    }),
     sortedObject() {
       const arrayedDapp = [];
       const actualReturnedDapp = [];

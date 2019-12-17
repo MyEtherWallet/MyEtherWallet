@@ -84,7 +84,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account', 'web3'])
+    ...mapState({ account: 'main/account', web3: 'main/web3' })
   },
   watch: {},
   mounted() {

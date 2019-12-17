@@ -34,7 +34,10 @@ export default {
     'welcome-modal': WelcomeModal
   },
   computed: {
-    ...mapState(['wallet', 'online'])
+    ...mapState({
+      wallet: 'main/wallet',
+      online: 'main/online'
+    })
   },
   watch: {
     $route(to, from) {

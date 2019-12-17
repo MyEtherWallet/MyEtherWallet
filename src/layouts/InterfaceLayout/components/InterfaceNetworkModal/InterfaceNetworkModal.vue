@@ -306,7 +306,11 @@ export default {
     };
   },
   computed: {
-    ...mapState(['network', 'Networks', 'web3']),
+    ...mapState({
+      network: 'main/network',
+      Networks: 'main/Networks',
+      web3: 'main/web3'
+    }),
     reorderedNetworks() {
       const networks = Misc.reorderNetworks();
       return networks;

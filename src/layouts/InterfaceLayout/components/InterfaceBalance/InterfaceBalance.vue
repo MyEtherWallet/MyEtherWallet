@@ -87,7 +87,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['network'])
+    ...mapState({ network: 'main/network' })
   },
   watch: {
     balance() {

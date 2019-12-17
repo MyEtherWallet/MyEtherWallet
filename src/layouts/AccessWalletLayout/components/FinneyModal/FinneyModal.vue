@@ -52,7 +52,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['web3'])
+    ...mapState({ web3: 'main/web3' })
   },
   mounted() {
     this.$refs.finneyModal.$on('show', () => {

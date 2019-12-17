@@ -218,7 +218,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['path'])
+    ...mapState({ path: 'main/path' })
   },
   mounted() {
     this.$refs.metamask.$on('hidden', () => {

@@ -27,7 +27,11 @@ export default {
     return {};
   },
   computed: {
-    ...mapState(['network', 'web3', 'online'])
+    ...mapState({
+      network: 'main/network',
+      web3: 'main/web3',
+      online: 'main/online'
+    })
   },
   watch: {},
   methods: {

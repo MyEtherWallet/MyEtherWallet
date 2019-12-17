@@ -1,6 +1,7 @@
 ### Devop
-- Modularize store state [#1722] [https://github.com/MyEtherWallet/MyEtherWallet/pull/1722]
-- Refactor maker translations[#1737] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1737)
+
+- Modularize store state [#1722][https://github.com/MyEtherWallet/MyEtherWallet/pull/1722]
+- Refactor maker translations[#1737](https://github.com/MyEtherWallet/MyEtherWallet/pull/1737)
 
 ### Release v5.2.7
 

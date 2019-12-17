@@ -106,7 +106,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['online'])
+    ...mapState({ online: 'main/online' })
   },
   mounted() {
     if (this.online && window.Worker && window.origin !== 'null') {

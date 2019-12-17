@@ -304,7 +304,12 @@ export default {
     };
   },
   computed: {
-    ...mapState(['network', 'web3', 'account', 'gettingStartedDone']),
+    ...mapState({
+      network: 'main/network',
+      web3: 'main/web3',
+      account: 'main/account',
+      gettingStartedDone: 'main/gettingStartedDone'
+    }),
     showButtons() {
       if (
         this.address === null &&

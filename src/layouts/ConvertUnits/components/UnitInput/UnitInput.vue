@@ -75,7 +75,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['web3'])
+    ...mapState({ web3: 'main/web3' })
   },
   watch: {
     valueLeft(newVal) {

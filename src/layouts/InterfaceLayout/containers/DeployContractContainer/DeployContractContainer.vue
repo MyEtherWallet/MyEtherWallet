@@ -202,7 +202,11 @@ export default {
     };
   },
   computed: {
-    ...mapState(['gasPrice', 'web3', 'network']),
+    ...mapState({
+      gasPrice: 'main/gasPrice',
+      web3: 'main/web3',
+      network: 'main/network'
+    }),
     isValidAbi() {
       return Misc.isJson(this.abi) && Array.isArray(JSON.parse(this.abi));
     },

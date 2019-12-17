@@ -178,7 +178,11 @@ export default {
     };
   },
   computed: {
-    ...mapState(['web3', 'network', 'notifications']),
+    ...mapState({
+      web3: 'main/web3',
+      network: 'main/network',
+      notifications: 'main/notifications'
+    }),
     sortedNotifications() {
       const notificationCopy = {};
 

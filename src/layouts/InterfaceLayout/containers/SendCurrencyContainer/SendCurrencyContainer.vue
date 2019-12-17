@@ -247,14 +247,14 @@ export default {
   },
 
   computed: {
-    ...mapState([
-      'account',
-      'gasPrice',
-      'web3',
-      'network',
-      'linkQuery',
-      'online'
-    ]),
+    ...mapState({
+      account: 'main/account',
+      gasPrice: 'main/gasPrice',
+      web3: 'main/web3',
+      network: 'main/network',
+      linkQuery: 'main/linkQuery',
+      online: 'main/online'
+    }),
     txFee() {
       return new BigNumber(ethUnit.toWei(this.gasPrice, 'gwei')).times(
         this.gasLimit || 0

@@ -308,7 +308,13 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
+    ...mapState({
+      account: 'main/account',
+      gasPrice: 'main/gasPrice',
+      web3: 'main/web3',
+      network: 'main/network',
+      ens: 'main/ens'
+    }),
     validInputs() {
       if (toBigNumber(this.ethQty).isNaN() || toBigNumber(this.daiQty).isNaN())
         return false;

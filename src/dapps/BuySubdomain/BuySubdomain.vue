@@ -90,7 +90,12 @@ export default {
     };
   },
   computed: {
-    ...mapState(['ethDonationAddress', 'ens', 'account', 'web3']),
+    ...mapState({
+      ethDonationAddress: 'main/ethDonationAddress',
+      ens: 'main/ens',
+      account: 'main/account',
+      web3: 'main/web3'
+    }),
     sortedResults() {
       const newArr = this.results;
       newArr.sort((a, b) => {

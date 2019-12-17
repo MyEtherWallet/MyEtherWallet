@@ -170,7 +170,12 @@ export default {
     };
   },
   computed: {
-    ...mapState(['wallet', 'web3', 'account', 'network']),
+    ...mapState({
+      wallet: 'main/wallet',
+      web3: 'main/web3',
+      account: 'main/account',
+      network: 'main/network'
+    }),
     fromAddress() {
       if (this.account) {
         return this.account.address;

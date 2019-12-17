@@ -178,7 +178,12 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account', 'web3', 'online', 'network']),
+    ...mapState({
+      account: 'main/account',
+      web3: 'main/web3',
+      online: 'main/online',
+      network: 'main/network'
+    }),
     endIndex() {
       if (this.nftData[this.selectedContract]) {
         if (!this.nftData[this.selectedContract].details) return 0;
