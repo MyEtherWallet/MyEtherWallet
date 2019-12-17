@@ -329,14 +329,14 @@ export default {
       if (query !== '') {
         this.customTokens = localCustomTok
           .filter(token => {
-            if (token.name.toLowerCase().includes(query.toLowerCase())) {
+            if (token.symbol.toLowerCase().includes(query.toLowerCase())) {
               return token;
             }
           })
           .sort(sortByBalance);
         this.localTokens = this.tokens
           .filter(token => {
-            if (token.name.toLowerCase().includes(query.toLowerCase())) {
+            if (token.symbol.toLowerCase().includes(query.toLowerCase())) {
               return token;
             }
           })
