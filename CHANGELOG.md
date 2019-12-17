@@ -4,7 +4,7 @@
 
 - Fix Schedule Transaction, Drop Down Bug [#1747](https://github.com/MyEtherWallet/MyEtherWallet/pull/1747)
 - Unable to unzip message on Windows and Mac OSX because of two files with same name but different case [#1757](https://github.com/MyEtherWallet/MyEtherWallet/pull/1757)
-- Fix leftover issue with token search [#1749] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1749)
+- Fix leftover issue with token search [#1749](https://github.com/MyEtherWallet/MyEtherWallet/pull/1749)
 - Check correct balance when determining ability to withdraw[#1754](https://github.com/MyEtherWallet/MyEtherWallet/pull/1754)
 
 ### Devop

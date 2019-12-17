@@ -177,9 +177,6 @@ export default {
     isError() {
       return this.notice.body.error;
     },
-    txStatus() {
-      return this.processStatus(this.notice.swapStatus);
-    },
     parseTimeRemaining() {
       const seconds = Math.floor(this.timeRemaining % 60);
       const minutes = Math.floor((this.timeRemaining / 60) % 60);
