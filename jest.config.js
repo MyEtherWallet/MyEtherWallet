@@ -42,5 +42,6 @@ module.exports = {
   ],
   testEnvironmentOptions: {},
   testURL: 'http://localhost/',
+  setupFiles: ['jest-canvas-mock'],
   setupFilesAfterEnv: ['<rootDir>/tests/unit/__mocks__/mocks.js']
 };
