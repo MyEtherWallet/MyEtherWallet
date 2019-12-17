@@ -4,6 +4,10 @@
 
 ### Release v5.2.8
 
+### Bug
+
+- Check correct balance when determining ability to withdraw[#1754](https://github.com/MyEtherWallet/MyEtherWallet/pull/1754)
+
 ### Devop
 
 - Refactor maker translations[#1737](https://github.com/MyEtherWallet/MyEtherWallet/pull/1737)
