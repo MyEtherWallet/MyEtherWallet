@@ -56,7 +56,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['online'])
+    ...mapState({ online: 'main/online' })
   },
   methods: {
     isTabActive(routes) {

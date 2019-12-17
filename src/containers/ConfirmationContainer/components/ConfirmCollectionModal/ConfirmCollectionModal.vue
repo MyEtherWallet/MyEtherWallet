@@ -172,7 +172,11 @@ export default {
     }
   },
   computed: {
-    ...mapState(['web3', 'network', 'account']),
+    ...mapState({
+      web3: 'main/web3',
+      network: 'main/network',
+      account: 'main/account'
+    }),
     buttonText() {
       if (!this.allSigned && this.isHardwareWallet) {
         return this.$t('confirmation.approve-on-device');

@@ -123,7 +123,11 @@ export default {
     };
   },
   computed: {
-    ...mapState(['linkQuery', 'network', 'web3']),
+    ...mapState({
+      linkQuery: 'main/linkQuery',
+      network: 'main/network',
+      web3: 'main/web3'
+    }),
     txParams() {
       const {
         nonce,

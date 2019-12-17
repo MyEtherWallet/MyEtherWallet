@@ -320,7 +320,11 @@ export default {
     };
   },
   computed: {
-    ...mapState(['network', 'online', 'addressBook']),
+    ...mapState({
+      network: 'main/network',
+      online: 'main/online',
+      addressBook: 'main/addressBook'
+    }),
     gasPriceInputs() {
       return {
         economy: {

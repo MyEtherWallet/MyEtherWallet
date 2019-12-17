@@ -274,7 +274,12 @@ export default {
     };
   },
   computed: {
-    ...mapState(['wallet', 'network', 'web3', 'linkQuery']),
+    ...mapState({
+      wallet: 'main/wallet',
+      network: 'main/network',
+      web3: 'main/web3',
+      linkQuery: 'main/linkQuery'
+    }),
     txSpeedMsg() {
       const net = this.network.type.name;
       // eslint-disable-next-line

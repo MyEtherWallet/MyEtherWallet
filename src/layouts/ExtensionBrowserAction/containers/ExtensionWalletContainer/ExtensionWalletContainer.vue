@@ -73,7 +73,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['web3', 'network']),
+    ...mapState({ web3: 'main/web3', network: 'main/network' }),
     validInput() {
       return (
         (this.password !== '' || this.password.length > 0) &&

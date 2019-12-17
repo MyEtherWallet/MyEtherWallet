@@ -152,7 +152,10 @@ export default {
     };
   },
   computed: {
-    ...mapState(['addressBook', 'account']),
+    ...mapState({
+      addressBook: 'main/addressBook',
+      account: 'main/account'
+    }),
     hasMessage() {
       return (
         (!this.isValidAddress && this.selectedAddress.length > 0) ||

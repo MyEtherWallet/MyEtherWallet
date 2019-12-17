@@ -325,7 +325,14 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account', 'ens', 'gasPrice', 'web3', 'network', 'online']),
+    ...mapState({
+      account: 'main/account',
+      ens: 'main/ens',
+      gasPrice: 'main/gasPrice',
+      web3: 'main/web3',
+      network: 'main/network',
+      online: 'main/online'
+    }),
     bestRate() {
       try {
         if (this.providerData.length > 0) {

@@ -47,7 +47,12 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account', 'network', 'web3', 'online'])
+    ...mapState({
+      account: 'main/account',
+      network: 'main/network',
+      web3: 'main/web3',
+      online: 'main/online'
+    })
   },
   watch: {},
   mounted() {},

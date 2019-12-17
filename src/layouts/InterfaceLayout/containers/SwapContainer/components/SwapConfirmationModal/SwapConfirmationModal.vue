@@ -122,7 +122,14 @@ export default {
     };
   },
   computed: {
-    ...mapState(['ens', 'gasPrice', 'web3', 'account', 'wallet', 'network']),
+    ...mapState({
+      ens: 'main/ens',
+      gasPrice: 'main/gasPrice',
+      web3: 'main/web3',
+      account: 'main/account',
+      wallet: 'main/wallet',
+      network: 'main/network'
+    }),
     toFiat() {
       return this.fiatCurrenciesArray.includes(this.toAddress.name);
     },

@@ -65,7 +65,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['path']),
+    ...mapState({ path: 'main/path' }),
     notValid() {
       const _priv = this.privateKey.replace('0x', '');
       return !isHexString('0x' + _priv, 32);

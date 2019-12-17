@@ -165,7 +165,12 @@ export default {
     };
   },
   computed: {
-    ...mapState(['web3', 'network', 'notifications', 'wallet']),
+    ...mapState({
+      web3: 'main/web3',
+      network: 'main/network',
+      notifications: 'main/notifications',
+      wallet: 'main/wallet'
+    }),
     errorMessage() {
       return this.errorMessageString(this.notice);
     },

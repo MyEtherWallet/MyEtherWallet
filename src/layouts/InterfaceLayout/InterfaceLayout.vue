@@ -214,16 +214,16 @@ export default {
         return toChecksumAddress(this.account.address);
       }
     },
-    ...mapState([
-      'network',
-      'account',
-      'online',
-      'web3',
-      'Networks',
-      'sidemenuOpen',
-      'wallet',
-      'linkQuery'
-    ])
+    ...mapState({
+      network: 'main/network',
+      account: 'main/account',
+      online: 'main/online',
+      web3: 'main/web3',
+      Networks: 'main/Networks',
+      sidemenuOpen: 'main/sidemenuOpen',
+      wallet: 'main/wallet',
+      linkQuery: 'main/linkQuery'
+    })
   },
   watch: {
     web3() {

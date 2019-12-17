@@ -227,7 +227,13 @@ export default {
     };
   },
   computed: {
-    ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
+    ...mapState({
+      account: 'main/account',
+      gasPrice: 'main/gasPrice',
+      web3: 'main/web3',
+      network: 'main/network',
+      ens: 'main/ens'
+    }),
     amountPresent() {
       return (
         (this.amount || this.amount !== '') && !toBigNumber(this.amount).lte(0)

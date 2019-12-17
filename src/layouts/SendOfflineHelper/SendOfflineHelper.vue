@@ -427,15 +427,15 @@ export default {
     };
   },
   computed: {
-    ...mapState([
-      'network',
-      'Networks',
-      'customPaths',
-      'path',
-      'web3',
-      'wallet',
-      'online'
-    ]),
+    ...mapState({
+      networK: 'main/network',
+      Network: 'main/Networks',
+      customPaths: 'main/customPaths',
+      path: 'main/path',
+      web3: 'main/web3',
+      wallet: 'main/wallet',
+      online: 'main/online'
+    }),
     reorderNetworkList() {
       const customNetworks =
         store.get('customNetworks') !== undefined

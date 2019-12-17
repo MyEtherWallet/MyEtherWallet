@@ -35,7 +35,9 @@ export default {
     'logout-warning-modal': LogoutWarningModal
   },
   computed: {
-    ...mapState(['wallet'])
+    ...mapState({
+      wallet: 'main/wallet'
+    })
   },
   watch: {
     $route(to, from) {

@@ -99,7 +99,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['web3']),
+    ...mapState({ web3: 'main/web3' }),
     allFieldsValid() {
       if (!this.validAddress) return false;
       if (this.tokenSymbol === '') return false;

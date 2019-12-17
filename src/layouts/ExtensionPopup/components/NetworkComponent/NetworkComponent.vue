@@ -51,7 +51,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['network', 'Networks']),
+    ...mapState({ network: 'main/network', Networks: 'main/Networks' }),
     titles() {
       return Object.keys(this.Networks);
     }

@@ -296,7 +296,12 @@ export default {
     };
   },
   computed: {
-    ...mapState(['network', 'gasPrice', 'account', 'web3']),
+    ...mapState({
+      network: 'main/network',
+      gasPrice: 'main/gasPrice',
+      account: 'main/account',
+      web3: 'main/web3'
+    }),
     mergedContracts() {
       const customContracts = store.get('customContracts') || [];
       const concatContracts = this.network.type.contracts.concat(

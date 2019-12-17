@@ -29,7 +29,11 @@ export default {
     'interface-balance-modal': InterfaceBalanceModal
   },
   computed: {
-    ...mapState(['network', 'web3', 'account']),
+    ...mapState({
+      network: 'main/network',
+      web3: 'main/web3',
+      account: 'main/account'
+    }),
     accountBalance() {
       return this.web3.utils.fromWei(
         new BigNumber(this.account.balance).toFixed(),

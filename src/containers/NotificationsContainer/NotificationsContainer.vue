@@ -154,7 +154,13 @@ export default {
     };
   },
   computed: {
-    ...mapState(['web3', 'network', 'notifications', 'account', 'online']),
+    ...mapState({
+      web3: 'main/web3',
+      network: 'main/network',
+      notifications: 'main/notifications',
+      account: 'main/account',
+      online: 'main/online'
+    }),
     sortedNotifications() {
       if (!this.notifications[this.account.address]) return [];
       const notifications = this.notifications[this.account.address];

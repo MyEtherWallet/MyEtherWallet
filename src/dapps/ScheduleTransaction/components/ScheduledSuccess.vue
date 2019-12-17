@@ -103,7 +103,13 @@ export default {
     };
   },
   computed: {
-    ...mapState(['notifications', 'web3', 'account', 'gasPrice', 'network']),
+    ...mapState({
+      notifications: 'main/notifications',
+      web3: 'main/web3',
+      account: 'main/account',
+      gasPrice: 'main/gasPrice',
+      network: 'main/network'
+    }),
 
     getPathMined() {
       return !this.mined

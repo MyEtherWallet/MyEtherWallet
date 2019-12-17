@@ -326,14 +326,14 @@ export default {
     };
   },
   computed: {
-    ...mapState([
-      'network',
-      'Networks',
-      'customPaths',
-      'path',
-      'web3',
-      'wallet'
-    ]),
+    ...mapState({
+      network: 'main/network',
+      Networks: 'main/Networks',
+      customPaths: 'main/customPaths',
+      path: 'main/path',
+      web3: 'main/web3',
+      wallet: 'main/wallet'
+    }),
     selectedNetwork() {
       return this.network;
     },

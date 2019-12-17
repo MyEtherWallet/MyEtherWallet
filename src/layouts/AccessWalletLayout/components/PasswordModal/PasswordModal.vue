@@ -78,7 +78,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(['path', 'online']),
+    ...mapState({ path: 'main/path', online: 'main/online' }),
     inputValid() {
       return (
         this.walletRequirePass(this.file) &&
