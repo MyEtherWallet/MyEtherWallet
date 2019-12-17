@@ -12,7 +12,7 @@
         </li>
         <li class="notification-type-status">
           <p>{{ $t('header.status') }}:</p>
-          <p :class="['status', txStatus.class]">({{ txStatus.text }})</p>
+          <p :class="['status', txStatus.class]">({{ $t(txStatus.text) }})</p>
         </li>
         <li v-if="isTokenTransfer">
           <p>{{ $t('header.amount') }}:</p>

@@ -183,9 +183,6 @@ export default {
     },
     details() {
       return this.notice.body;
-    },
-    txStatus() {
-      return this.processStatus(this.notice.status);
     }
   },
   methods: {

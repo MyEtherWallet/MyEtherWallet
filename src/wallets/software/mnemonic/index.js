@@ -18,7 +18,7 @@ const IS_HARDWARE = false;
 class MnemonicWallet {
   constructor(mnemonic, password) {
     if (!bip39.validateMnemonic(mnemonic))
-      throw new Error(Vue.$i18n.t('createWallet.mnemonic.invalid-mnemonic'));
+      throw Vue.$i18n.t('createWallet.mnemonic.invalid-mnemonic');
     this.identifier = mnemonicType;
     this.isHardware = IS_HARDWARE;
     this.needPassword = NEED_PASSWORD;

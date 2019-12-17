@@ -33,7 +33,8 @@
                       @change="selectGasType(key)"
                     />
                     <label :for="key">
-                      {{ key | capitalize }} ({{ gasPriceInputs[key].gwei }}
+                      {{ $t('interface.' + key) }}
+                      ({{ gasPriceInputs[key].gwei }}
                       {{ $t('common.gas.gwei') }})
                     </label>
                   </div>
