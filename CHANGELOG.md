@@ -1,11 +1,10 @@
-### Bug
-
-- Unable to unzip message on Windows and Mac OSX because of two files with same name but different case [#1757](https://github.com/MyEtherWallet/MyEtherWallet/pull/1757)
-
 ### Release v5.2.8
 
 ### Bug
 
+- Fix Schedule Transaction, Drop Down Bug [#1747](https://github.com/MyEtherWallet/MyEtherWallet/pull/1747)
+- Unable to unzip message on Windows and Mac OSX because of two files with same name but different case [#1757](https://github.com/MyEtherWallet/MyEtherWallet/pull/1757)
+- Fix leftover issue with token search [#1749] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1749)
 - Check correct balance when determining ability to withdraw[#1754](https://github.com/MyEtherWallet/MyEtherWallet/pull/1754)
 
 ### Devop
@@ -16,7 +15,6 @@
 
 ### Bug
 
-- Fix Schedule Transaction, Drop Down Bug [#1747](https://github.com/MyEtherWallet/MyEtherWallet/pull/1747)
 - Fix verify signature [#1729](https://github.com/MyEtherWallet/MyEtherWallet/pull/1729)
 - Fix top banner buttons [#1715](https://github.com/MyEtherWallet/MyEtherWallet/pull/1715)
 - MEW CX memory leak on access wallet + fix mnemonic [#1733](https://github.com/MyEtherWallet/MyEtherWallet/pull/1733)
