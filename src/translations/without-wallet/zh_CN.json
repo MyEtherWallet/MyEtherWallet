@@ -1,0 +1,9 @@
+{
+  "generate-info": "Generate Information",
+  "signed-tx": "Signed Transaction",
+  "nonce": "Nonce",
+  "select-network": "Select Network",
+  "tx-details": "Transaction Details",
+  "tx-status": "Transaction Status",
+  "offline-helper": "Send Offline Helper"
+}
