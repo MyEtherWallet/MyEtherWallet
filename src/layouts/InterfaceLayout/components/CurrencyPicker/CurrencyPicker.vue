@@ -24,6 +24,7 @@
         <div class="item-container">
           <div
             v-for="(curr, idx) in localCurrency"
+            v-show="localCurrency.length > 0"
             :key="
               token
                 ? curr.name + idx + curr.symbol + page
@@ -44,8 +45,12 @@
             <p v-show="token">
               {{ curr.symbol }}<span class="subname"> - {{ curr.name }}</span>
             </p>
-            <p />
             <p v-show="!token">{{ curr.name }}</p>
+          </div>
+          <div v-show="localCurrency.length === 0" class="item">
+            <p>
+              {{ $t('interface.tokens.no-tokens') }}
+            </p>
           </div>
         </div>
       </div>
@@ -102,7 +107,7 @@ export default {
     localCurrency() {
       if (this.search !== '') {
         return this.currency.filter(curr => {
-          if (curr.name.toLowerCase().includes(this.search.toLowerCase())) {
+          if (curr.symbol.toLowerCase().includes(this.search.toLowerCase())) {
             return curr;
           }
         });

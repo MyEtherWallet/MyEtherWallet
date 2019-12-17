@@ -234,7 +234,10 @@ export default {
       );
     },
     hasEnough() {
-      return this.daiBalance >= this.daiQty;
+      if (this.showDepositDisplay) {
+        return toBigNumber(this.daiBalance).gte(this.daiQty);
+      }
+      return toBigNumber(this.maxWithdrawable).gte(this.daiQty);
     },
     proxyPresent() {
       return this.proxyAddress != null;

@@ -771,8 +771,14 @@ export default {
     },
     async updateActiveCdp() {
       await updateActiveCdp(this);
-      if (this.cdps.length === 0 && this.cdpsWithoutProxy.length === 0) {
+      if (
+        this.cdps.length === 0 &&
+        this.cdpsWithoutProxy.length === 0 &&
+        !(this.$route.name === 'save')
+      ) {
         this.gotoCreate();
+      } else if (this.$route.name === 'save') {
+        this.goToSave();
       }
     },
     wipeDai(val) {
@@ -792,10 +798,14 @@ export default {
     },
     gotoCreate() {
       if (this.$route.path.includes('maker-dai')) {
-        this.activeValues = this.systemValues;
-        this.$router.push({
-          name: 'create'
-        });
+        if (this.$route.name === 'save') {
+          this.goToSave();
+        } else {
+          this.activeValues = this.systemValues;
+          this.$router.push({
+            name: 'create'
+          });
+        }
       }
     },
     goToSave() {
