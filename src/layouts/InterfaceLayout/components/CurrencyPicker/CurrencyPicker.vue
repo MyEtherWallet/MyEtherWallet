@@ -47,8 +47,8 @@
             </p>
             <p v-show="!token">{{ curr.name }}</p>
           </div>
-          <div class="item">
-            <p v-show="localCurrency.length === 0">
+          <div v-show="localCurrency.length === 0" class="item">
+            <p>
               {{ $t('interface.tokens.no-tokens') }}
             </p>
           </div>
