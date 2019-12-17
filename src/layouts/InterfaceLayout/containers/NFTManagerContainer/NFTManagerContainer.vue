@@ -179,10 +179,10 @@ export default {
   },
   computed: {
     ...mapState({
-      account: 'main/account',
-      web3: 'main/web3',
-      online: 'main/online',
-      network: 'main/network'
+      account: state => state.main.account,
+      web3: state => state.main.web3,
+      online: state => state.main.online,
+      network: state => state.main.network
     }),
     endIndex() {
       if (this.nftData[this.selectedContract]) {

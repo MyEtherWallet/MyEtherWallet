@@ -307,9 +307,9 @@ export default {
   },
   computed: {
     ...mapState({
-      network: 'main/network',
-      Networks: 'main/Networks',
-      web3: 'main/web3'
+      network: state => state.main.network,
+      Networks: state => state.main.Networks,
+      web3: state => state.main.web3
     }),
     reorderedNetworks() {
       const networks = Misc.reorderNetworks();

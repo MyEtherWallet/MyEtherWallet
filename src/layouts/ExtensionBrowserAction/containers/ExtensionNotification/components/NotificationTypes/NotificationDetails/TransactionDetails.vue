@@ -157,10 +157,10 @@ export default {
   },
   computed: {
     ...mapState({
-      web3: 'main/web3',
-      network: 'main/network',
-      notifications: 'main/notifications',
-      wallet: 'main/wallet'
+      web3: state => state.main.web3,
+      network: state => state.main.network,
+      notifications: state => state.main.notifications,
+      wallet: state => state.main.wallet
     }),
     errorMessage() {
       return this.errorMessageString(this.notice);

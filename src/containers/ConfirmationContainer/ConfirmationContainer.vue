@@ -171,10 +171,10 @@ export default {
   },
   computed: {
     ...mapState({
-      wallet: 'main/wallet',
-      web3: 'main/web3',
-      account: 'main/account',
-      network: 'main/network'
+      wallet: state => state.main.wallet,
+      web3: state => state.main.web3,
+      account: state => state.main.account,
+      network: state => state.main.network
     }),
     fromAddress() {
       if (this.account) {

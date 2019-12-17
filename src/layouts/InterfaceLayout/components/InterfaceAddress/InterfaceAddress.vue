@@ -142,7 +142,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({ account: 'main/account' })
+    ...mapState({ account: state => state.main.account })
   },
   mounted() {
     if (this.account.address !== null) {

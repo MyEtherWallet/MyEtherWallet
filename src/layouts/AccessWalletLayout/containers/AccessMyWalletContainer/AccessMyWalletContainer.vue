@@ -203,7 +203,10 @@ export default {
     };
   },
   computed: {
-    ...mapState({ online: 'main/online', Networks: 'main/Networks' })
+    ...mapState({
+      online: state => state.main.online,
+      Networks: state => state.main.Networks
+    })
   },
   mounted() {
     this.$nextTick(() => {

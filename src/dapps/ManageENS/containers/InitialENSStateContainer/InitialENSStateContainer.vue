@@ -98,7 +98,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({ network: 'main/network' }),
+    ...mapState({ network: state => state.main.network }),
     isValidLength() {
       return (
         this.localDomainName.replace(

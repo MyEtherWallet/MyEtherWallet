@@ -91,10 +91,10 @@ export default {
   },
   computed: {
     ...mapState({
-      ethDonationAddress: 'main/ethDonationAddress',
-      ens: 'main/ens',
-      account: 'main/account',
-      web3: 'main/web3'
+      ethDonationAddress: state => state.main.ethDonationAddress,
+      ens: state => state.main.ens,
+      account: state => state.main.account,
+      web3: state => state.main.web3
     }),
     sortedResults() {
       const newArr = this.results;

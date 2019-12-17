@@ -284,7 +284,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({ ethDonationAddress: 'main/ethDonationAddress' })
+    ...mapState({ ethDonationAddress: state => state.main.ethDonationAddress })
   },
   mounted() {
     if (Misc.isMewCx()) {

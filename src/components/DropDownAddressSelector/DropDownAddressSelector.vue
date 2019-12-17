@@ -153,8 +153,8 @@ export default {
   },
   computed: {
     ...mapState({
-      addressBook: 'main/addressBook',
-      account: 'main/account'
+      addressBook: state => state.main.addressBook,
+      account: state => state.main.account
     }),
     hasMessage() {
       return (

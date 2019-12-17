@@ -164,7 +164,10 @@ export default {
     };
   },
   computed: {
-    ...mapState({ path: 'main/path', linkQuery: 'main/linkQuery' })
+    ...mapState({
+      path: state => state.main.path,
+      linkQuery: state => state.main.linkQuery
+    })
   },
   mounted() {
     this.$refs.mnemonicPhrase.$refs.mnemonicPhrase.$on('hidden', () => {

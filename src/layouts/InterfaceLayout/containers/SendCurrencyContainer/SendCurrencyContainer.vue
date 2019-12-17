@@ -248,12 +248,12 @@ export default {
 
   computed: {
     ...mapState({
-      account: 'main/account',
-      gasPrice: 'main/gasPrice',
-      web3: 'main/web3',
-      network: 'main/network',
-      linkQuery: 'main/linkQuery',
-      online: 'main/online'
+      account: state => state.main.account,
+      gasPrice: state => state.main.gasPrice,
+      web3: state => state.main.web3,
+      network: state => state.main.network,
+      linkQuery: state => state.main.linkQuery,
+      online: state => state.main.online
     }),
     txFee() {
       return new BigNumber(ethUnit.toWei(this.gasPrice, 'gwei')).times(

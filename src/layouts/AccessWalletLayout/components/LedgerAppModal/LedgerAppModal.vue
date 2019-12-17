@@ -166,7 +166,7 @@ export default {
     dropDownDefaultText() {
       return `${this.selectedPath.label} - ${this.selectedPath.path}`;
     },
-    ...mapState({ customPaths: 'main/customPaths' })
+    ...mapState({ customPaths: state => state.main.customPaths })
   },
   watch: {
     selectedApp: {

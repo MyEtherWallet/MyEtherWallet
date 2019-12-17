@@ -203,9 +203,9 @@ export default {
   },
   computed: {
     ...mapState({
-      gasPrice: 'main/gasPrice',
-      web3: 'main/web3',
-      network: 'main/network'
+      gasPrice: state => state.main.gasPrice,
+      web3: state => state.main.web3,
+      network: state => state.main.network
     }),
     isValidAbi() {
       return Misc.isJson(this.abi) && Array.isArray(JSON.parse(this.abi));

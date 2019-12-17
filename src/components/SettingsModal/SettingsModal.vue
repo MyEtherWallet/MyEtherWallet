@@ -321,9 +321,9 @@ export default {
   },
   computed: {
     ...mapState({
-      network: 'main/network',
-      online: 'main/online',
-      addressBook: 'main/addressBook'
+      network: state => state.main.network,
+      online: state => state.main.online,
+      addressBook: state => state.main.addressBook
     }),
     gasPriceInputs() {
       return {

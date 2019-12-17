@@ -305,10 +305,10 @@ export default {
   },
   computed: {
     ...mapState({
-      network: 'main/network',
-      web3: 'main/web3',
-      account: 'main/account',
-      gettingStartedDone: 'main/gettingStartedDone'
+      network: state => state.main.network,
+      web3: state => state.main.web3,
+      account: state => state.main.account,
+      gettingStartedDone: state => state.main.gettingStartedDone
     }),
     showButtons() {
       if (

@@ -123,12 +123,12 @@ export default {
   },
   computed: {
     ...mapState({
-      ens: 'main/ens',
-      gasPrice: 'main/gasPrice',
-      web3: 'main/web3',
-      account: 'main/account',
-      wallet: 'main/wallet',
-      network: 'main/network'
+      ens: state => state.main.ens,
+      gasPrice: state => state.main.gasPrice,
+      web3: state => state.main.web3,
+      account: state => state.main.account,
+      wallet: state => state.main.wallet,
+      network: state => state.main.network
     }),
     toFiat() {
       return this.fiatCurrenciesArray.includes(this.toAddress.name);

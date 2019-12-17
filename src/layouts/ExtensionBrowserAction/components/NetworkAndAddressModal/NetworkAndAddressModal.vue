@@ -327,12 +327,12 @@ export default {
   },
   computed: {
     ...mapState({
-      network: 'main/network',
-      Networks: 'main/Networks',
-      customPaths: 'main/customPaths',
-      path: 'main/path',
-      web3: 'main/web3',
-      wallet: 'main/wallet'
+      network: state => state.main.network,
+      Networks: state => state.main.Networks,
+      customPaths: state => state.main.customPaths,
+      path: state => state.main.path,
+      web3: state => state.main.web3,
+      wallet: state => state.main.wallet
     }),
     selectedNetwork() {
       return this.network;

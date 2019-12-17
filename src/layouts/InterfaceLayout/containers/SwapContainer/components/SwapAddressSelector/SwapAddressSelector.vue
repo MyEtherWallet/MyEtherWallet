@@ -59,7 +59,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({ ens: 'main/ens' })
+    ...mapState({ ens: state => state.main.ens })
   },
   watch: {
     clearAddress() {

@@ -275,10 +275,10 @@ export default {
   },
   computed: {
     ...mapState({
-      wallet: 'main/wallet',
-      network: 'main/network',
-      web3: 'main/web3',
-      linkQuery: 'main/linkQuery'
+      wallet: state => state.main.wallet,
+      network: state => state.main.network,
+      web3: state => state.main.web3,
+      linkQuery: state => state.main.linkQuery
     }),
     txSpeedMsg() {
       const net = this.network.type.name;

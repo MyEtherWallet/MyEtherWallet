@@ -215,14 +215,14 @@ export default {
       }
     },
     ...mapState({
-      network: 'main/network',
-      account: 'main/account',
-      online: 'main/online',
-      web3: 'main/web3',
-      Networks: 'main/Networks',
-      sidemenuOpen: 'main/sidemenuOpen',
-      wallet: 'main/wallet',
-      linkQuery: 'main/linkQuery'
+      network: state => state.main.network,
+      account: state => state.main.account,
+      online: state => state.main.online,
+      web3: state => state.main.web3,
+      Networks: state => state.main.Networks,
+      sidemenuOpen: state => state.main.sidemenuOpen,
+      wallet: state => state.main.wallet,
+      linkQuery: state => state.main.linkQuery
     })
   },
   watch: {
