@@ -27,12 +27,15 @@ import {
 import utils from 'web3-utils';
 const chrome = window.chrome;
 chrome.runtime.onInstalled.addListener(function() {
+  chrome.runtime.onMessage.removeListener(eventsListeners);
   chrome.runtime.onMessage.addListener(eventsListeners);
 });
 chrome.runtime.onStartup.addListener(function() {
+  chrome.runtime.onMessage.removeListener(eventsListeners);
   chrome.runtime.onMessage.addListener(eventsListeners);
 });
 chrome.runtime.onStartup.addListener(function() {
+  chrome.runtime.onMessage.removeListener(eventsListeners);
   chrome.runtime.onMessage.addListener(eventsListeners);
 });
 // Set default values on init
