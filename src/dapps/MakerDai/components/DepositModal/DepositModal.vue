@@ -209,11 +209,11 @@ export default {
   },
   computed: {
     ...mapState({
-      account: 'main/account',
-      gasPrice: 'main/gasPrice',
-      web3: 'main/web3',
-      network: 'main/network',
-      ens: 'main/ens'
+      account: state => state.main.account,
+      gasPrice: state => state.main.gasPrice,
+      web3: state => state.main.web3,
+      network: state => state.main.network,
+      ens: state => state.main.ens
     }),
     amountPresent() {
       return (

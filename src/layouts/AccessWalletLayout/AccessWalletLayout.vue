@@ -26,7 +26,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({ online: 'main/online' })
+    ...mapState({ online: state => state.main.online })
   },
   async mounted() {
     if (this.online) {

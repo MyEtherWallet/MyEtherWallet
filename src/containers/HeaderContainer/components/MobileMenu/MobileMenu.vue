@@ -176,8 +176,8 @@ export default {
   },
   computed: {
     ...mapState({
-      account: 'main/account',
-      blockNumber: 'main/blockNumber'
+      account: state => state.main.account,
+      blockNumber: state => state.main.blockNumber
     })
   },
   watch: {

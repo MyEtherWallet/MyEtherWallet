@@ -173,9 +173,9 @@ export default {
   },
   computed: {
     ...mapState({
-      account: 'main/account',
-      network: 'main/network',
-      web3: 'main/web3'
+      account: state => state.main.account,
+      network: state => state.main.network,
+      web3: state => state.main.web3
     }),
     hasNickname() {
       return this.account.nickname !== '';

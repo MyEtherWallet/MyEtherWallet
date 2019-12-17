@@ -104,11 +104,11 @@ export default {
   },
   computed: {
     ...mapState({
-      notifications: 'main/notifications',
-      web3: 'main/web3',
-      account: 'main/account',
-      gasPrice: 'main/gasPrice',
-      network: 'main/network'
+      notifications: state => state.main.notifications,
+      web3: state => state.main.web3,
+      account: state => state.main.account,
+      gasPrice: state => state.main.gasPrice,
+      network: state => state.main.network
     }),
 
     getPathMined() {

@@ -112,7 +112,7 @@ export default {
   },
   computed: {
     ...mapState({
-      account: 'main/account'
+      account: state => state.main.account
     }),
     signedMessageSignature() {
       if (this.signedMessage) {

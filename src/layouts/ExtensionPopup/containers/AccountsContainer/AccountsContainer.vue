@@ -173,7 +173,10 @@ export default {
     };
   },
   computed: {
-    ...mapState({ web3: 'main/web3', network: 'main/network' }),
+    ...mapState({
+      web3: state => state.main.web3,
+      network: state => state.main.network
+    }),
     concatBalance() {
       const balance = new BigNumber(this.totalBalance).toFixed(5);
       return this.totalBalance > 0 ? balance : this.totalBalance;

@@ -294,7 +294,10 @@ export default {
     };
   },
   computed: {
-    ...mapState({ online: 'main/online', network: 'main/network' }),
+    ...mapState({
+      online: state => state.main.online,
+      network: state => state.main.network
+    }),
     displayToShow() {
       if (!this.online) {
         return 'offline';

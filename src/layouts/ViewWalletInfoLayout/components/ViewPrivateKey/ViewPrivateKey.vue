@@ -34,7 +34,7 @@ import { mapState } from 'vuex';
 import { Toast } from '@/helpers';
 export default {
   computed: {
-    ...mapState({ wallet: 'main/wallet' }),
+    ...mapState({ wallet: state => state.main.wallet }),
     privKey() {
       return this.wallet.getPrivateKeyString();
     }

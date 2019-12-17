@@ -446,12 +446,12 @@ export default {
   },
   computed: {
     ...mapState({
-      web3: 'main/web3',
-      networK: 'main/network',
-      gasPrice: 'main/gasPrice',
-      notifications: 'main/notifications',
-      account: 'main/account',
-      online: 'main/online'
+      web3: state => state.main.web3,
+      networK: state => state.main.network,
+      gasPrice: state => state.main.gasPrice,
+      notifications: state => state.main.notifications,
+      account: state => state.main.account,
+      online: state => state.main.online
     }),
     isTokenTransfer() {
       return this.selectedCurrency.symbol !== this.network.type.name;

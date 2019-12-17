@@ -35,8 +35,8 @@ export default {
   },
   computed: {
     ...mapState({
-      wallet: 'main/wallet',
-      online: 'main/online'
+      wallet: state => state.main.wallet,
+      online: state => state.main.online
     })
   },
   watch: {

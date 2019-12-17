@@ -173,9 +173,9 @@ export default {
   },
   computed: {
     ...mapState({
-      web3: 'main/web3',
-      network: 'main/network',
-      account: 'main/account'
+      web3: state => state.main.web3,
+      network: state => state.main.network,
+      account: state => state.main.account
     }),
     buttonText() {
       if (!this.allSigned && this.isHardwareWallet) {

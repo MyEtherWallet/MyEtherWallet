@@ -37,7 +37,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({ network: 'main/network' }),
+    ...mapState({ network: state => state.main.network }),
     sortedObject() {
       const arrayedDapp = [];
       Object.keys(this.dapps).forEach(dapp => {

@@ -428,13 +428,13 @@ export default {
   },
   computed: {
     ...mapState({
-      networK: 'main/network',
-      Network: 'main/Networks',
-      customPaths: 'main/customPaths',
-      path: 'main/path',
-      web3: 'main/web3',
-      wallet: 'main/wallet',
-      online: 'main/online'
+      networK: state => state.main.network,
+      Network: state => state.main.Networks,
+      customPaths: state => state.main.customPaths,
+      path: state => state.main.path,
+      web3: state => state.main.web3,
+      wallet: state => state.main.wallet,
+      online: state => state.main.online
     }),
     reorderNetworkList() {
       const customNetworks =

@@ -67,7 +67,7 @@ export default {
   },
   computed: {
     ...mapState({
-      network: 'main/network'
+      network: state => state.main.network
     }),
     buttonCheckEtherscan() {
       return {

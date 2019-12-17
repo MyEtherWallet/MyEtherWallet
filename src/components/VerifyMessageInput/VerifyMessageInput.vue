@@ -85,7 +85,7 @@ export default {
   },
   computed: {
     ...mapState({
-      web3: 'main/web3'
+      web3: state => state.main.web3
     })
   },
   watch: {

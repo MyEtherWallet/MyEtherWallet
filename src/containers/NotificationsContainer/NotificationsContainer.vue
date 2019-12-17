@@ -155,11 +155,11 @@ export default {
   },
   computed: {
     ...mapState({
-      web3: 'main/web3',
-      network: 'main/network',
-      notifications: 'main/notifications',
-      account: 'main/account',
-      online: 'main/online'
+      web3: state => state.main.web3,
+      network: state => state.main.network,
+      notifications: state => state.main.notifications,
+      account: state => state.main.account,
+      online: state => state.main.online
     }),
     sortedNotifications() {
       if (!this.notifications[this.account.address]) return [];

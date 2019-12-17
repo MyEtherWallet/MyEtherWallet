@@ -36,7 +36,7 @@ export default {
   },
   computed: {
     ...mapState({
-      wallet: 'main/wallet'
+      wallet: state => state.main.wallet
     })
   },
   watch: {

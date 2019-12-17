@@ -297,7 +297,10 @@ export default {
     };
   },
   computed: {
-    ...mapState({ web3: 'main/web3', network: 'main/network' }),
+    ...mapState({
+      web3: state => state.main.web3,
+      network: state => state.main.network
+    }),
     parsedWallet() {
       return JSON.parse(this.wallet);
     },

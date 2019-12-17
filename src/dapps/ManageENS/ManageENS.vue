@@ -111,11 +111,11 @@ export default {
   },
   computed: {
     ...mapState({
-      web3: 'main/web3',
-      network: 'main/network',
-      account: 'main/account',
-      gasPrice: 'main/gasPrice',
-      ens: 'main/ens'
+      web3: state => state.main.web3,
+      network: state => state.main.network,
+      account: state => state.main.account,
+      gasPrice: state => state.main.gasPrice,
+      ens: state => state.main.ens
     }),
     registrarTLD() {
       return this.network.type.ens.registrarTLD;

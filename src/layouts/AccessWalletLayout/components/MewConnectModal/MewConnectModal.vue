@@ -69,7 +69,10 @@ export default {
     };
   },
   computed: {
-    ...mapState({ path: 'main/path', web3: 'main/web3' })
+    ...mapState({
+      path: state => state.main.path,
+      web3: state => state.main.web3
+    })
   },
   mounted() {
     this.canDownloadApple =

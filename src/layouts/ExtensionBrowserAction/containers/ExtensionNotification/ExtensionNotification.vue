@@ -179,9 +179,9 @@ export default {
   },
   computed: {
     ...mapState({
-      web3: 'main/web3',
-      network: 'main/network',
-      notifications: 'main/notifications'
+      web3: state => state.main.web3,
+      network: state => state.main.network,
+      notifications: state => state.main.notifications
     }),
     sortedNotifications() {
       const notificationCopy = {};

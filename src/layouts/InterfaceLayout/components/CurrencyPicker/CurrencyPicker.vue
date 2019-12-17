@@ -92,7 +92,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({ network: 'main/network' }),
+    ...mapState({ network: state => state.main.network }),
     networkToken() {
       return {
         name: this.network.type.name_long,
