@@ -67,5 +67,9 @@ To find out how to disclose a vulnerability visit [hackerone.com/myetherwallet](
 6. start `npm run dev`
 7. App should be running in `https://localhost:8080`
 
+Can't start due to an update found:  
+Update the package in the `package.json` as told by the terminal error you see.  
+Example error: `new update found print-js 1.0.60 1.0.63 2019-11-15T05:05:52.202Z`
+
 EACCESS issue can be resolved by running: `sudo chown -R $(whoami) ~/.npm`
 For other issues, try the steps shown here: <https://github.com/MyEtherWallet/MyEtherWallet/issues/1182#issuecomment-506342875> by @tomwalton78
