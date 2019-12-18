@@ -3,9 +3,12 @@ import HowItWorks from '@/layouts/HowItWorks';
 import AboutUsCompany from '@/layouts/AboutUs/Company';
 import AboutUsTeam from '@/layouts/AboutUs/Team';
 import AboutUsWhyMEW from '@/layouts/AboutUs/WhyMEW';
-import CreateNewWallet from '@/layouts/CreateWallet/CreateNewWallet';
+
+import CreateWalletDashboard from '@/layouts/CreateWallet/CreateWalletDashboard';
 import CreateWalletMewConnect from '@/layouts/CreateWallet/MewConnect';
 import CreateWalletKeystore from '@/layouts/CreateWallet/KeystoreFile';
+
+import AccessWalletDashboard from '@/layouts/AccessWallet/AccessWalletDashboard';
 
 import app from './app';
 const webRoutes = [
@@ -52,7 +55,7 @@ const webRoutes = [
   {
     path: '/create-wallet',
     name: 'CreateWallet',
-    component: CreateNewWallet,
+    component: CreateWalletDashboard,
     meta: {
       requiresAuth: false
     }
@@ -69,6 +72,14 @@ const webRoutes = [
     path: '/create-wallet/keystore',
     name: 'CreateWalletKeystore',
     component: CreateWalletKeystore,
+    meta: {
+      requiresAuth: false
+    }
+  },
+  {
+    path: '/access-wallet',
+    name: 'AccessWallet',
+    component: AccessWalletDashboard,
     meta: {
       requiresAuth: false
     }
