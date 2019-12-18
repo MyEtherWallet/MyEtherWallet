@@ -211,6 +211,7 @@
               />
               <input
                 v-addr-resolver="'contactAddress'"
+                v-model="contactAddress"
                 :class="isValidAddress ? 'blockie-input' : ''"
                 v-model="contactAddress"
                 :placeholder="$t('common.addr')"
