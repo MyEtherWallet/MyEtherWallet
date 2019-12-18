@@ -319,7 +319,7 @@
                     v-for="(item, idx) in Object.keys(txReceipt)"
                     :key="item + idx"
                   >
-                    <span>{{ item }}</span>
+                    <span>{{ getTranslatedItem(item) }}</span>
                     <a
                       v-if="item === 'transactionHash'"
                       :href="replaceUrl('', txReceipt[item])"
@@ -482,6 +482,10 @@ export default {
     }
   },
   methods: {
+    getTranslatedItem(item) {
+      const kebabItem = item.replace(/([A-Z])/g, '-$1').toLowerCase();
+      return this.$t('withoutWallet.' + kebabItem);
+    },
     replaceUrl(type, hash) {
       if (type === 'address') {
         return this.network.type.blockExplorerAddr.replace('[[address]]', hash);
