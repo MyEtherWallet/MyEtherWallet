@@ -15,5 +15,9 @@
   "from": "from",
   "gas-used": "Gas Used",
   "logs": "logs",
-  "logs-bloom": "Logs Bloom"
+  "logs-bloom": "Logs Bloom",
+  "status": "Status",
+  "to": "To",
+  "transaction-hash": "Transaction Hash",
+  "transaction-index": "Transaction Index"
 }
