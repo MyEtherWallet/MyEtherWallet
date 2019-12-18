@@ -1,5 +1,9 @@
 ### Release v5.2.8
 
+### Feature
+
+- SotD on the v5 dapps interface [#1731](https://github.com/MyEtherWallet/MyEtherWallet/pull/1731)
+
 ### Bug
 
 - Fix offline send helper & out of memory error on local build [#1741](https://github.com/MyEtherWallet/MyEtherWallet/pull/1741)

@@ -11,7 +11,7 @@
     />
     <img
       :src="supported ? icon : iconDisabled"
-      :class="title === 'Ambrpay' ? 'ambrpay-icon' : ''"
+      :class="[title === 'Ambrpay' ? 'ambrpay-icon' : '', 'dapp-logo']"
       alt
     />
     <div>
