@@ -7,9 +7,9 @@
         }}</label>
         <div class="dapp-input">
           <b-form-input
-            v-validate="'required'"
             id="dappName"
             v-model="form.dappName"
+            v-validate="'required'"
             name="name"
             type="text"
             @update="updateName"
@@ -27,9 +27,9 @@
         <div class="dapp-input">
           <label class="dapp-select-label">
             <b-form-select
-              v-validate="'required'"
               id="dappCategory"
               v-model="form.category"
+              v-validate="'required'"
               :options="dappCategories"
               name="category"
               @change="updateCategory"
@@ -132,9 +132,9 @@
         <div class="dapp-input">
           <label class="dapp-select-label">
             <b-form-select
-              v-validate="'required'"
               id="dappUsMarket"
               v-model="form.usMarket"
+              v-validate="'required'"
               :options="dappUsMarketOptions"
               name="field"
               @change="updateUsMarket"
@@ -153,9 +153,9 @@
         <div class="dapp-input">
           <label class="dapp-select-label">
             <b-form-select
-              v-validate="'required'"
               id="dappStatus"
               v-model="form.dappStatus"
+              v-validate="'required'"
               :options="dappStatusOptions"
               name="status"
               @change="updateDappStatus"
@@ -208,9 +208,9 @@
         </label>
         <div class="dapp-input">
           <b-form-input
-            v-validate="'required'"
             id="contractAddress"
             v-model="form.contractAddress"
+            v-validate="'required'"
             name="address"
             type="text"
             @update="onContractAddressChange"
