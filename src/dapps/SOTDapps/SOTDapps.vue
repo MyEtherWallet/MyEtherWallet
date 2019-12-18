@@ -1,53 +1,37 @@
 <template>
-  <div class="dapp-container">
-    <div>
-      <router-link to="/dapps">
-        {{ $t('mewcx.dapps') }}
-      </router-link>
-      >
-      <span>
-        {{ dapp.name }}
-      </span>
-    </div>
-
+  <div class="sodapp-container">
+    <back-button />
     <div class="dapp-info-container">
-      <div class="dapp-info-header">
-        <div class="header-img">
-          <img :src="dapp.iconSmallUrl" />
-        </div>
-        {{ dapp.name }} - {{ dapp.teaser }}
+      <div class="dapp-description">
+        <h2><img :src="dapp.iconUrl" width="50px" /> {{ dapp.name }}</h2>
+        <p>{{ dapp.description }}</p>
       </div>
-      <div class="dapp-info-body">
-        <div class="description">
-          {{ dapp.description }}
+      <div class="more-info">
+        <img :src="dapp.logoUrl" />
+        <div class="dapp-links">
+          <a
+            v-for="(item, idx) in siteKeys"
+            v-show="dapp.sites[item] !== ''"
+            :key="idx"
+            :href="dapp.sites[item]"
+            class="website-button"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {{ getText(item) }}
+          </a>
         </div>
-        <div class="more-info">
-          <img :src="dapp.logoUrl" />
-          <div class="dapp-links">
-            <a
-              v-for="(item, idx) in siteKeys"
-              v-show="dapp.sites[item] !== ''"
-              :key="idx"
-              :href="dapp.sites[item]"
-              class="website-button"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {{ getText(item) }}
-            </a>
-          </div>
-          <div class="dapp-socials">
-            <a
-              v-for="(item, idx) in socials"
-              v-show="item.url !== ''"
-              :key="idx"
-              :href="item.url"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <i :class="[getFontIcon(item.platform), 'fa fa-lg']" />
-            </a>
-          </div>
+        <div class="dapp-socials">
+          <a
+            v-for="(item, idx) in socials"
+            v-show="item.url !== ''"
+            :key="idx"
+            :href="item.url"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <i :class="[getFontIcon(item.platform), 'fa fa-lg']" />
+          </a>
         </div>
       </div>
     </div>
@@ -55,7 +39,11 @@
 </template>
 
 <script>
+import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
 export default {
+  components: {
+    'back-button': BackButton
+  },
   data() {
     return {
       dapp: {},
@@ -110,5 +98,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import 'ExtensionDappContainer.scss';
+@import 'SOTDapps.scss';
 </style>

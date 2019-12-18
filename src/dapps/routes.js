@@ -4,6 +4,7 @@ import scheduleTransactionRoutes from './ScheduleTransaction/routes';
 import makerDaiRoutes from './MakerDai/routes';
 import makerSaiRoutes from './MakerSai/routes';
 import ambrpayRoutes from './Ambrpay/routes';
+import soDapp from './SOTDapps/routes';
 
 const routes = {
   manageENS: manageENSRoutes,
@@ -11,7 +12,8 @@ const routes = {
   scheduleTransaction: scheduleTransactionRoutes,
   makerDaiRoutes: makerDaiRoutes,
   makerSaiRoutes: makerSaiRoutes,
-  amberpay: ambrpayRoutes
+  amberpay: ambrpayRoutes,
+  soDapp: soDapp
 };
 
 export default routes;
