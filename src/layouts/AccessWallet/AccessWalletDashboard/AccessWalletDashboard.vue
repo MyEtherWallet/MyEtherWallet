@@ -23,6 +23,22 @@
           />
         </router-link>
         <div class="my-4" />
+        <router-link
+          to="/create-wallet/mewconnect"
+          class="text-decoration--none"
+        >
+          <Hardware
+            class="cursor--pointer user-select--none new-wallet-button"
+          />
+        </router-link>
+        <div class="my-4" />
+        <router-link
+          to="/create-wallet/mewconnect"
+          class="text-decoration--none"
+        >
+          <CX class="cursor--pointer user-select--none new-wallet-button" />
+        </router-link>
+        <div class="my-4" />
         <router-link to="/create-wallet/keystore" class="text-decoration--none">
           <Software
             class="cursor--pointer user-select--none new-wallet-button"
@@ -38,11 +54,13 @@
 <script>
 import BlockTitle from '@/layouts/components/BlockTitle';
 import MEWconnect from './components/MEWconnect';
+import Hardware from './components/Hardware';
+import CX from './components/CX';
 import Software from './components/Software';
 
 export default {
   name: 'CreateNewWallet',
-  components: { BlockTitle, MEWconnect, Software },
+  components: { BlockTitle, MEWconnect, Hardware, CX, Software },
   data: () => ({
     titleData: {
       textProps: 'white--text',

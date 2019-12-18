@@ -4,7 +4,7 @@
       class="button-right-image"
       src="@/assets/images/Etc/CreateWallet/MewBear.png"
     />
-    <div class="headline font-weight-bold mb-2">MEWconnect</div>
+    <div class="headline font-weight-bold mb-2">Hardware</div>
     <p class="mb-4 button-description-size-limit">
       Ipsum consetetur sit dolores ipsum consetetur diam et. Ipsum consetetur
       sit dolores ipsum consetetur diam et.
