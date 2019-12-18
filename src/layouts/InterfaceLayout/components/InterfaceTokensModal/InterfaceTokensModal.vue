@@ -30,7 +30,6 @@
             {{ $t('interface.tokens.modal.error.addr') }}
           </span>
           <input
-            v-validate="'required'"
             v-model="tokenSymbol"
             :placeholder="$t('interface.tokens.modal.ph-symbol')"
             name="Symbol"
@@ -38,7 +37,6 @@
             class="custom-input-text-1"
           />
           <input
-            v-validate="'required|numeric'"
             v-model="tokenDecimal"
             :placeholder="$t('interface.tokens.modal.ph-decimals')"
             name="Decimal"

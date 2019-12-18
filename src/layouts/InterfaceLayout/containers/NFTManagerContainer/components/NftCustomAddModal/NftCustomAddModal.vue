@@ -31,7 +31,6 @@
             {{ $t('nftManager.no-method-no-token', { token: tokenSymbol }) }}
           </span>
           <input
-            v-validate="'required'"
             v-model="tokenSymbol"
             :placeholder="$t('nftManager.name')"
             name="Symbol"

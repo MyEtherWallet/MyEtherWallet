@@ -18,12 +18,8 @@
       :loadingmessage="$t('dappsMaker.creating-message')"
     />
     <div class="manage-container">
-      <p class="top-title">
-        {{ $t('dappsMaker.maker_title') }}
-      </p>
-      <p class="top-title-sub">
-        {{ $t('dappsMaker.create-instruct') }}
-      </p>
+      <p class="top-title">{{ $t('dappsMaker.maker_title') }}</p>
+      <p class="top-title-sub">{{ $t('dappsMaker.create-instruct') }}</p>
 
       <div class="currency-ops-new">
         <div class="currency-picker-container">
@@ -54,7 +50,9 @@
             </p>
           </div>
         </div>
-        <div class="arrow"><img :src="arrowImage" /></div>
+        <div class="arrow">
+          <img :src="arrowImage" />
+        </div>
         <div>
           <div class="interface__block-title">
             {{ $t('dappsMaker.generate') }}
@@ -63,7 +61,7 @@
             <p>
               <span class="cc DAI cc-icon cc-icon-dai currency-symbol" />
               {{ $t('dappsMaker.dai') }}
-              <span class="subname">- Maker DAI </span>
+              <span class="subname">- Maker DAI</span>
             </p>
           </div>
           <input
@@ -109,7 +107,8 @@
           <li>
             <p>{{ $t('dappsMaker.liquid-price') }}</p>
             <p>
-              <b>{{ liquidationPrice }}</b> {{ $t('common.currency.usd') }}
+              <b>{{ liquidationPrice }}</b>
+              {{ $t('common.currency.usd') }}
             </p>
           </li>
           <li>
@@ -182,9 +181,6 @@
 <script>
 import { mapState } from 'vuex';
 import CurrencyPicker from '../../components/CurrencyPicker';
-import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
-import InterfaceBottomText from '@/components/InterfaceBottomText';
-import Blockie from '@/components/Blockie';
 import DaiConfirmationModal from '../../components/DaiConfirmationModal';
 import LoadingOverlay from '@/components/LoadingOverlay';
 import {
@@ -205,9 +201,6 @@ const bnOver = (one, two, three) => {
 
 export default {
   components: {
-    'interface-container-title': InterfaceContainerTitle,
-    'interface-bottom-text': InterfaceBottomText,
-    blockie: Blockie,
     'dai-confirmation-modal': DaiConfirmationModal,
     'loading-overlay': LoadingOverlay,
     'currency-picker': CurrencyPicker
@@ -353,6 +346,7 @@ export default {
       if (this.emptyMakerCreated) {
         return this.makerCDP.liquidationRatio;
       }
+      return null;
     },
     maxDaiDraw() {
       if (this.ethQty <= 0) return 0;
@@ -377,6 +371,7 @@ export default {
       if (this.emptyMakerCreated) {
         return toBigNumber(this.getValueOrFunction('minEth'));
       }
+      return null;
     },
     collateralOptions() {
       const mcdCollateralOptions = this.getValueOrFunction('mcdCurrencies');
@@ -401,6 +396,7 @@ export default {
       if (this.emptyMakerCreated) {
         return this.makerCDP.minDepositFor(this.selectedCurrency.symbol);
       }
+      return null;
     },
     minCreate() {
       return 20;

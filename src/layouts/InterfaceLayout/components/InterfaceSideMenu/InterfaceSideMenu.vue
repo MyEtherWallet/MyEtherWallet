@@ -10,8 +10,8 @@
       <ul>
         <li
           v-for="(tab, idx) in tabData"
-          :class="tab.onlineOnly && !online ? 'disabled-item' : ''"
           :key="tab.name + idx"
+          :class="tab.onlineOnly && !online ? 'disabled-item' : ''"
         >
           <div v-if="tab.onlineOnly && !online" class="dash" />
           <div

@@ -88,14 +88,12 @@
 </template>
 
 <script>
-import Blockie from '@/components/Blockie';
 import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import DropDownAddressSelector from '@/components/DropDownAddressSelector';
 
 export default {
   components: {
-    blockie: Blockie,
     'dropdown-address-selector': DropDownAddressSelector
   },
   props: {
