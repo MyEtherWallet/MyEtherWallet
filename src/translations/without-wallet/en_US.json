@@ -7,5 +7,13 @@
   "tx-status": "Transaction Status",
   "offline-helper": "Send Offline Helper",
   "export-json": "Export JSON File",
-  "upload-json": "Upload JSON File"
+  "upload-json": "Upload JSON File",
+  "block-hash": "Block Hash",
+  "block-number": "Block Number",
+  "contract-address": "Contract Address",
+  "cumulative-gas-used": "Cumulative Gas Used",
+  "from": "from",
+  "gas-used": "Gas Used",
+  "logs": "logs",
+  "logs-bloom": "Logs Bloom"
 }
