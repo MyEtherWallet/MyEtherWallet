@@ -233,7 +233,6 @@ import { Toast } from '@/helpers';
 import ProvidersRadioSelector from '../ProvidersRadioSelector';
 import DropDownAddressSelector from '../SwapAddressSelector';
 import InterfaceBottomText from '@/components/InterfaceBottomText';
-import InterfaceContainerTitle from '../../../../components/InterfaceContainerTitle';
 import swapIcon from '@/assets/images/icons/swap-widget.svg';
 import ImageKybernetowrk from '@/assets/images/etc/kybernetwork.png';
 import ImageBity from '@/assets/images/etc/bity.png';
@@ -259,7 +258,6 @@ import {
 } from '@/partners';
 
 const errorLogger = debug('v5:swapContainer');
-import SwapSendForm from '../SwapExitToFiat';
 
 const toBigNumber = num => {
   return new BigNumber(num);
@@ -268,13 +266,11 @@ const toBigNumber = num => {
 export default {
   components: {
     'interface-bottom-text': InterfaceBottomText,
-    'interface-container-title': InterfaceContainerTitle,
     'swap-currency-picker': SwapCurrencyPicker,
     'drop-down-address-selector': DropDownAddressSelector,
     'providers-radio-selector': ProvidersRadioSelector,
     'swap-confirmation-modal': SwapConfirmationModal,
     'swap-exit-to-fiat': SwapExitToFiat,
-    'swap-send-form': SwapSendForm,
     'swap-send-to-modal': SwapSendToModal
   },
   props: {
@@ -403,6 +399,7 @@ export default {
       } catch (e) {
         errorLogger(e);
       }
+      return null;
     },
     fromBelowMinAllowed() {
       if (new BigNumber(MIN_SWAP_AMOUNT).gt(new BigNumber(this.fromValue)))
