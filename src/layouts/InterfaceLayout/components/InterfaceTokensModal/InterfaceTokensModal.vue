@@ -13,8 +13,8 @@
       <form class="tokens-modal-body" @keydown.enter.prevent>
         <div>
           <input
-            v-model="tokenAddress"
             v-validate="'required'"
+            v-model="tokenAddress"
             :class="[
               'custom-input-text-1',
               tokenAddress !== '' && !validAddress ? 'invalid-address' : ''

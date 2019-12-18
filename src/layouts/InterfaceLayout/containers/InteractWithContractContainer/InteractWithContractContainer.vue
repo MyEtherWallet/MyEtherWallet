@@ -52,9 +52,9 @@
         </div>
         <div class="the-form domain-name">
           <textarea
+            v-validate="'required'"
             ref="abi"
             v-model="abi"
-            v-validate="'required'"
             class="custom-textarea-1"
             name="abiField"
           />
