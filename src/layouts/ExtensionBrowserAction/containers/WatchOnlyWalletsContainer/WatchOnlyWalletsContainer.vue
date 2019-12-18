@@ -20,8 +20,8 @@
       class="wallets"
     >
       <component
-        :is="injections.components.WalletInfoComponent"
         v-for="wallet in props.watchOnlyAddresses"
+        :is="injections.components.WalletInfoComponent"
         :key="wallet.address"
         :usd="props.ethPrice"
         :address="wallet.address"

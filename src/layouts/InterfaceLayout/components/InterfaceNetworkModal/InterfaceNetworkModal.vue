@@ -107,7 +107,6 @@
               </option>
             </select>
             <input
-              v-model="url"
               v-validate="{
                 required: true,
                 url: {
@@ -116,6 +115,7 @@
                   require_tld: false
                 }
               }"
+              v-model="url"
               class="custom-input-text-1"
               type="text"
               name="nodeUrl"

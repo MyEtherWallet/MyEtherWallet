@@ -23,8 +23,8 @@
     />
     <div v-show="props.myWallets.length > 0 || props.loading" class="wallets">
       <component
-        :is="injections.components.WalletInfoComponent"
         v-for="wallet in props.myWallets"
+        :is="injections.components.WalletInfoComponent"
         :key="wallet.address"
         :usd="props.ethPrice"
         :address="wallet.address"

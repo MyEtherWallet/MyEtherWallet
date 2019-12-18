@@ -11,8 +11,8 @@
       <form class="tokens-modal-body" @keydown.enter.prevent>
         <div>
           <input
-            v-model="contractAddress"
             v-validate="'required'"
+            v-model="contractAddress"
             :class="[
               'custom-input-text-1',
               contractAddress !== '' && !validAddress ? 'invalid-address' : ''

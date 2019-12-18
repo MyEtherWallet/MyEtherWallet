@@ -34,9 +34,9 @@
         }}</label>
         <div class="dapp-input">
           <b-form-input
+            v-validate="'required'"
             id="fullName"
             v-model="form.fullName"
-            v-validate="'required'"
             name="name"
             type="text"
             @update="updateFullName"
@@ -54,9 +54,9 @@
         }}</label>
         <div class="dapp-input">
           <b-form-input
+            v-validate="'email|required'"
             id="emailAddress"
             v-model="form.email"
-            v-validate="'email|required'"
             name="email"
             type="text"
             @update="updateEmail"
