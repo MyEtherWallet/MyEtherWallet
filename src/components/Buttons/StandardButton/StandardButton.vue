@@ -39,7 +39,7 @@
           options.paddingSmall ? 'padding-small' : ''
         ]"
         class="the-button-box"
-        @click.native="clickFunction"
+        @click.prevent="clickFunction"
       >
         {{ options.title }}
         <i v-show="spinner" class="fa fa-spin fa-spinner fa-lg" />
