@@ -68,5 +68,7 @@
     "email-placeholder": "user@example.com"
   },
   "order-id": "{provider} order ID",
-  "swap-widget": "Swap Widget"
+  "swap-widget": "Swap Widget",
+  "from-min": "From Min",
+  "max": "Max"
 }
