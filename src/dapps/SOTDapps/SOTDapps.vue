@@ -3,7 +3,8 @@
     <back-button />
     <div class="dapp-info-container">
       <div class="dapp-description">
-        {{ dapp.description }}
+        <h2><img :src="dapp.iconUrl" width="50px" /> {{ dapp.name }}</h2>
+        <p>{{ dapp.description }}</p>
       </div>
       <div class="more-info">
         <img :src="dapp.logoUrl" />
@@ -66,6 +67,7 @@ export default {
           // eslint-disable-next-line
         console.error(e);
         });
+      console.log(dapp.item);
       this.dapp = Object.assign({}, dapp.item);
       this.siteKeys = Object.keys(dapp.item.sites);
       this.socials = dapp.item.socials.map(item => item);
