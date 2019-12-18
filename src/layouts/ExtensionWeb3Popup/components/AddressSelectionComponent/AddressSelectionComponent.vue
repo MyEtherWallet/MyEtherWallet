@@ -26,8 +26,8 @@
       ]"
     >
       <component
-        v-if="props.walletType === 'wallet'"
         :is="injections.components.Blockie"
+        v-if="props.walletType === 'wallet'"
         :address="props.address"
         width="30px"
         height="30px"
