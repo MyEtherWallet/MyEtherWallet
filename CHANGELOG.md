@@ -1,8 +1,8 @@
+### Release v5.2.8
+
 ### Feature
 
-- SotD on the v5 dapps interface []()
-
-### Release v5.2.8
+- SotD on the v5 dapps interface [#1731](https://github.com/MyEtherWallet/MyEtherWallet/pull/1731)
 
 ### Bug
 
