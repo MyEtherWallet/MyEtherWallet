@@ -1,12 +1,17 @@
-import normalise from '@/helpers/normalise';
-import { Misc } from '@/helpers';
+// import normalise from '@/helpers/normalise';
+// import { Misc } from '@/helpers';
 import { toChecksumAddress } from '@/helpers/addressUtils';
-import utils from 'web3-utils';
-import WAValidator from 'wallet-address-validator';
-import { EthereumTokens } from '@/partners';
-import { canValidate } from '@/partners/helpers';
-import MAValidator from 'multicoin-address-validator';
-import getMultiCoinAddress from '@/helpers/ENSMultiCoin.js';
+// import utils from 'web3-utils';
+// import WAValidator from 'wallet-address-validator';
+// import { EthereumTokens } from '@/partners';
+// import { canValidate } from '@/partners/helpers';
+// import MAValidator from 'multicoin-address-validator';
+// import getMultiCoinAddress from '@/helpers/ENSMultiCoin.js';
+import Resolution, {
+  ResolutionError
+  // ResolutionErrorCode
+} from '@unstoppabledomains/resolution';
+const resolution = new Resolution();
 
 const AddrResolver = {
   bind: function(el, binding, vnode) {
@@ -34,15 +39,19 @@ const AddrResolver = {
     const removeElements = function() {
       const child = el.parentNode.parentNode.lastChild;
       Object.keys(child.classList).forEach(item => {
-        if (child.classList[item] === 'resolver-error') {
+        if (
+          child.classList[item] === 'resolver-error' ||
+          child.classList[item] === 'resolver-addr'
+        ) {
           vnode.elm.parentNode.parentNode.removeChild(child);
         }
       });
     };
-    const actualProcess = function(e) {
-      const errorPar = document.createElement('p');
-      errorPar.classList.add('resolver-error');
+    const actualProcess = async function(e) {
+      const domain = e;
+      const messagePar = document.createElement('p');
       const _this = vnode.context;
+<<<<<<< HEAD
       const ens = _this.$store.state.ens;
       const checkDarklist = function(addr) {
         const isDarklisted = Misc.isDarklisted(addr);
@@ -122,64 +131,38 @@ const AddrResolver = {
                   vnode.elm.parentNode.parentNode.appendChild(errorPar);
                 }
               });
+=======
+      if (resolution.isSupportedDomain(domain)) {
+        try {
+          const address = await resolution.addressOrThrow(
+            domain,
+            parentCurrency
+          );
+          if (address) {
+            messagePar.classList.add('resolver-addr');
+            _this.isValidAddress = true;
+            _this.hexAddress = toChecksumAddress(address);
+            messagePar.innerText = _this.hexAddress;
+            el.parentNode.parentNode.appendChild(messagePar);
+>>>>>>> Replaced ens main functionality with unstoppableresolution:
           }
-        }
-      } else if (e !== '') {
-        const isValid = WAValidator.validate(e, parentCurrency);
-        if (isValid) {
-          _this.isValidAddress = isValid;
-          _this.hexAddress =
-            parentCurrency === 'ETH' ? toChecksumAddress(e) : e;
-        } else {
-          if (canValidate(parentCurrency)) {
-            const isValid = MAValidator.validate(e, parentCurrency);
-            if (isValid) {
-              _this.isValidAddress = isValid;
-              _this.hexAddress = e;
-            } else {
-              _this.isValidAddress = false;
-              _this.hexAddress = '';
-              removeElements();
-
-              if (e.length > 0) {
-                if (
-                  parentCurrency === 'ETH' &&
-                  (e.length !== 42 || !utils.isHexStrict(e))
-                ) {
-                  errorPar.innerText = _this.$t(
-                    'ens.ens-resolver.invalid-eth-addr'
-                  );
-                } else if (
-                  parentCurrency === 'ETH' &&
-                  !utils.checkAddressChecksum(e)
-                ) {
-                  errorPar.innerText = _this.$t(
-                    'ens.ens-resolver.addr-not-checksummed'
-                  );
-                  // 'Incorrect checksum: check address format on EthVM';
-                } else {
-                  errorPar.innerText = _this.$t(
-                    'ens.ens-resolver.invalid-addr',
-                    { coin: parentCurrency }
-                  );
-                }
-              } else {
-                errorPar.innerText = '';
+        } catch (err) {
+          messagePar.classList.add('resolver-error');
+          console.log('err.code = ', err.code);
+          if (err instanceof ResolutionError) {
+            messagePar.innerText = _this.$t(
+              `ens.unstoppableResolution.${err.code}`,
+              {
+                domain,
+                method: resolution.serviceName(domain),
+                currencyticker: parentCurrency
               }
-
-              el.parentNode.parentNode.appendChild(errorPar);
-            }
+            );
+            el.parentNode.parentNode.appendChild(messagePar);
           }
         }
-      } else {
-        removeElements();
-        _this.isValidAddress = false;
-        _this.hexAddress = '';
-        errorPar.innerText = '';
-        el.parentNode.parentNode.appendChild(errorPar);
       }
     };
   }
 };
-
 export default AddrResolver;
