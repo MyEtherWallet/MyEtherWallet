@@ -210,8 +210,8 @@
                 class="blockie-image"
               />
               <input
-                v-addr-resolver="'contactAddress'"
                 v-model="contactAddress"
+                v-addr-resolver="'contactAddress'"
                 :class="isValidAddress ? 'blockie-input' : ''"
                 v-model="contactAddress"
                 :placeholder="$t('common.addr')"
