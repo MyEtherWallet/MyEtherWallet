@@ -1,7 +1,7 @@
 <template>
   <b-modal
     ref="mnemonicPhrase"
-    :title="$t('accessWallet.access-by-mnemonic-phrase')"
+    :title="$t('accessWallet.mnemonic.modal.title')"
     hide-footer
     class="bootstrap-modal padding-20"
     centered
@@ -46,8 +46,8 @@
             <li v-for="index in mnemonicSize" :key="index">
               <span>{{ index }}.</span>
               <input
-                v-model="locMnemonicPhrase[index - 1]"
                 :ref="`mnemonicInput${index - 1}`"
+                v-model="locMnemonicPhrase[index - 1]"
                 type="text"
                 name=""
               />
@@ -55,7 +55,7 @@
           </ul>
         </div>
         <div class="button-container">
-          <expanding-option :title="$t(mewcx.password)">
+          <expanding-option :title="$t('mewcx.password')">
             <div class="input-container">
               <div class="mnemonic-password-input">
                 <input

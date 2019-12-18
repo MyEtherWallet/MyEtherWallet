@@ -104,16 +104,16 @@
                   <span class="detail-name"
                     >{{ $t('common.gas.current-gas') }}:</span
                   >
-                  <span class="detail-text"
-                    >{{ toGwei(genInfo.gasPrice) }}
-                    {{ $t('common.gas.gwei') }}</span
-                  >
+                  <span class="detail-text">
+                    {{ toGwei(genInfo.gasPrice) }}
+                    {{ $t('common.gas.gwei') }}
+                  </span>
                 </li>
                 <li class="detail-container">
                   <span class="detail-name">{{ $t('sendTx.retrieved') }}:</span>
-                  <span class="detail-text">
-                    {{ dateTimeDisplay(genInfo.timestamp) }}
-                  </span>
+                  <span class="detail-text">{{
+                    dateTimeDisplay(genInfo.timestamp)
+                  }}</span>
                 </li>
                 <li class="detail-container">
                   <span class="detail-name">{{ $t('sendTx.at-block') }}:</span>
@@ -164,8 +164,7 @@
               v-if="wrongNetwork && correctNetwork === ''"
               tag="p"
               path="sendTx.signed-chain-id"
-            >
-            </i18n>
+            ></i18n>
             <i18n
               v-if="wrongNetwork && correctNetwork !== ''"
               tag="p"
@@ -369,7 +368,6 @@ import PageTitleComponent from '@/components/PageTitleComponent';
 import AccordionMenu from '@/components/AccordionMenu';
 import DropDownAddressSelector from '@/components/DropDownAddressSelector';
 import StandardButton from '@/components/Buttons/StandardButton';
-import StandardInput from '@/components/StandardInput';
 import ExpandingOption from '@/components/ExpandingOption';
 import ConfirmationModal from './components/ConfirmationModal';
 
@@ -379,7 +377,6 @@ export default {
     'accordion-menu': AccordionMenu,
     'dropdown-address-selector': DropDownAddressSelector,
     'standard-button': StandardButton,
-    'standard-input': StandardInput,
     'expanding-option': ExpandingOption,
     'confirmation-modal': ConfirmationModal
   },
@@ -546,7 +543,9 @@ export default {
       if (rawSigned) this.rawSigned = rawSigned;
       if (this.rawSigned !== '') {
         const sanitizedRawSigned = Misc.sanitizeHex(this.rawSigned);
-        const tx = new Transaction(sanitizedRawSigned);
+        const tx = new Transaction(sanitizedRawSigned, {
+          chain: this.genInfo['chainID']
+        });
         this.invalidSignature = !tx.verifySignature();
         this.chainID = tx.getChainId();
         this.wrongNetwork = !new BigNumber(

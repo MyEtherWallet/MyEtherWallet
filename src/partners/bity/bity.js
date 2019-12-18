@@ -89,49 +89,45 @@ export default class BitySwap {
   }
 
   async retrieveRates() {
-    try {
-      if (!this.isValidNetwork) return;
-      const exitRates = await getExitRates();
-      const exitData = exitRates.pairs;
-      const rates = await getRates();
-      const data = rates.objects;
+    if (!this.isValidNetwork) return;
+    const exitRates = await getExitRates();
+    const exitData = exitRates.pairs;
+    const rates = await getRates();
+    const data = rates.objects;
 
-      exitData.forEach(entry => {
-        if (entry.enabled) {
-          data.forEach(rateEntry => {
-            if (
-              rateEntry.pair === entry.input + entry.output &&
-              !this.fiatCurrencies.includes(entry.input)
-            ) {
-              this.rates.set(
-                `${entry.input}/${entry.output}`,
-                parseFloat(rateEntry.rate_we_buy)
-              );
-            }
-          });
-        }
-      });
-      data.forEach(pair => {
-        if (~this.mainPairs.indexOf(pair.pair.substring(3))) {
-          if (pair.is_enabled && !this.fiatCurrencies.includes(pair.source)) {
+    exitData.forEach(entry => {
+      if (entry.enabled) {
+        data.forEach(rateEntry => {
+          if (
+            rateEntry.pair === entry.input + entry.output &&
+            !this.fiatCurrencies.includes(entry.input)
+          ) {
             this.rates.set(
-              `${pair.source}/${pair.target}`,
-              parseFloat(pair.rate_we_sell)
+              `${entry.input}/${entry.output}`,
+              parseFloat(rateEntry.rate_we_buy)
             );
           }
-        } else if (~this.mainPairs.indexOf(pair.pair.substring(0, 3))) {
-          if (pair.is_enabled && !this.fiatCurrencies.includes(pair.source)) {
-            this.rates.set(
-              `${pair.source}/${pair.target}`,
-              parseFloat(pair.rate_we_buy)
-            );
-          }
+        });
+      }
+    });
+    data.forEach(pair => {
+      if (~this.mainPairs.indexOf(pair.pair.substring(3))) {
+        if (pair.is_enabled && !this.fiatCurrencies.includes(pair.source)) {
+          this.rates.set(
+            `${pair.source}/${pair.target}`,
+            parseFloat(pair.rate_we_sell)
+          );
         }
-      });
-      this.hasRates = data.length > 0 ? this.hasRates + 1 : 0;
-    } catch (e) {
-      throw e;
-    }
+      } else if (~this.mainPairs.indexOf(pair.pair.substring(0, 3))) {
+        if (pair.is_enabled && !this.fiatCurrencies.includes(pair.source)) {
+          this.rates.set(
+            `${pair.source}/${pair.target}`,
+            parseFloat(pair.rate_we_buy)
+          );
+        }
+      }
+    });
+    this.hasRates = data.length > 0 ? this.hasRates + 1 : 0;
   }
 
   _getRate(fromToken, toToken) {
@@ -175,7 +171,10 @@ export default class BitySwap {
         rate: rate,
         toValue: expRate.output.amount,
         minValue: new BigNumber(expRate.input.minimum_amount).plus(
-          new BigNumber(expRate.input.minimum_amount).times(0.000001)
+          new BigNumber(expRate.input.minimum_amount).toFixed(
+            6,
+            BigNumber.ROUND_UP
+          )
         ), // because we truncate the number at 6 decimal places
         maxValue: this.fiatCurrencies.includes(toCurrency)
           ? this.getChfEquivalentMaxMin(fromCurrency, true)
@@ -210,7 +209,10 @@ export default class BitySwap {
       provider: this.name,
       rate: rate,
       minValue: new BigNumber(expRate.input.minimum_amount).plus(
-        new BigNumber(expRate.input.minimum_amount).times(0.000001)
+        new BigNumber(expRate.input.minimum_amount).toFixed(
+          6,
+          BigNumber.ROUND_UP
+        )
       ), // because we truncate the number at 6 decimal places
       maxValue: this.fiatCurrencies.includes(toCurrency)
         ? this.getChfEquivalentMaxMin(fromCurrency, true)

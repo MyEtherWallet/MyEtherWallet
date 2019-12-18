@@ -19,12 +19,10 @@
 </template>
 
 <script>
-import InterfaceBottomText from '@/components/InterfaceBottomText';
 import StandardButton from '@/components/Buttons/StandardButton';
 
 export default {
   components: {
-    'interface-bottom-text': InterfaceBottomText,
     'standard-button': StandardButton
   },
   props: {

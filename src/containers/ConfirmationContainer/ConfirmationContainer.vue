@@ -175,6 +175,7 @@ export default {
       if (this.account) {
         return this.account.address;
       }
+      return null;
     }
   },
   watch: {
@@ -307,6 +308,7 @@ export default {
     this.$eventHub.$on('showMessageConfirmModal', (data, resolve) => {
       this.responseFunction = resolve;
       this.messageToSign = data;
+      this.signedMessage = '';
       const signPromise = this.wallet.signMessage(data).then(_response => {
         this.signedMessage = '0x' + _response.toString('hex');
       });

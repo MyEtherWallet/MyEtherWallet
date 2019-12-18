@@ -14,7 +14,7 @@
   "time-bounty": {
     "title": "Time Bounty",
     "desc": "The amount of ETH you wish to offer to TimeNodes in exchange for execution. The higher the Time Bounty, the likelier your transaction will get executed.",
-    "caption": "Covers up to {gas} gwei gas price on future execution"
+    "caption": "Covers up to {gas} Gwei gas price on future execution"
   },
   "mode": "Scheduling mode",
   "set": {
@@ -34,7 +34,7 @@
   "block-num": "Block Number",
   "curr-block": "Current block number:",
   "add-data": "Add Data",
-  "future-gas-price": "Future Gas Price (gwei)",
+  "future-gas-price": "Future Gas Price (Gwei)",
   "future-gas-limit": "Future Gas Limit",
   "req-deposit": "Require a deposit",
   "exec-window": "Execution Window",

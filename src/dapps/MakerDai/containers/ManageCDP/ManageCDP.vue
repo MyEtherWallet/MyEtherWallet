@@ -142,7 +142,8 @@
               <div class="item">
                 <p>{{ $t('dappsMaker.generated') }}</p>
                 <div>
-                  {{ debtValue }} <span>{{ $t('dappsMaker.dai') }}</span>
+                  {{ debtValue }}
+                  <span>{{ $t('dappsMaker.dai') }}</span>
                 </div>
                 <div>
                   {{ debtValueDisplay }}
@@ -180,10 +181,7 @@
 
 <script>
 import { mapState } from 'vuex';
-import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
-import InterfaceBottomText from '@/components/InterfaceBottomText';
 import BottomHelpLink from '@/components/BottomHelpLink';
-import Blockie from '@/components/Blockie';
 import BigNumber from 'bignumber.js';
 
 import {
@@ -195,9 +193,6 @@ import {
 
 export default {
   components: {
-    'interface-container-title': InterfaceContainerTitle,
-    'interface-bottom-text': InterfaceBottomText,
-    blockie: Blockie,
     'help-link': BottomHelpLink
   },
   props: {
@@ -334,11 +329,13 @@ export default {
       if (this.activeCdp) {
         return this.activeCdp.noProxy;
       }
+      return null;
     },
     finishMigration() {
       if (this.activeCdp) {
         return this.activeCdp.needToFinishMigrating;
       }
+      return null;
     },
     collateralRatioColoring() {
       if (this.currentCdpLoaded && this.updatedValue > -1) {

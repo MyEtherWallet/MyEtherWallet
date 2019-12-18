@@ -12,7 +12,6 @@
       </div>
       <div class="the-form signature">
         <textarea
-          v-validate="'required'"
           ref="signature"
           v-model="message"
           :placeholder="verifyMessageLabel"
@@ -130,6 +129,7 @@ export default {
           json.address.replace('0x', '') !==
           pubToAddress(pubKey).toString('hex')
         ) {
+          this.deleteInput();
           this.showMessage = false;
           Toast.responseHandler(
             `${this.$t('errorsGlobal.signer-address-different')}`,
@@ -138,8 +138,8 @@ export default {
         } else {
           this.showMessage = true;
         }
-        this.deleteInput();
       } catch (e) {
+        this.deleteInput();
         Toast.responseHandler(e, Toast.ERROR);
       }
     }
