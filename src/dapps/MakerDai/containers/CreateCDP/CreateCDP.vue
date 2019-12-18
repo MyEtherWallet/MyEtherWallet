@@ -154,6 +154,17 @@
         </ul>
       </div>
       <div
+        v-if="!hasProxy"
+        class="buttons-container"
+      >
+        <div
+          class="submit-button large-round-button-green-filled"
+          @click="BuildProxy()"
+        >
+          Create Proxy
+        </div>
+      </div>
+      <div
         v-if="selectedCurrency.symbol !== 'ETH' && !hasEnoughAllowance()"
         class="buttons-container"
       >
@@ -310,6 +321,7 @@ export default {
   computed: {
     ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
     validInputs() {
+      if(!this.hasProxy) return false;
       if (toBigNumber(this.ethQty).isNaN() || toBigNumber(this.daiQty).isNaN())
         return false;
       if (toBigNumber(this.ethQty).gt(0)) {
@@ -327,6 +339,9 @@ export default {
         return this.hasEnoughEth;
       }
       return false;
+    },
+    hasProxy(){
+      return this.getValueOrFunction('proxyAddress');
     },
     hasEnoughEth() {
       if (this.emptyMakerCreated) {
@@ -461,6 +476,21 @@ export default {
       this.makerCDP = await this.buildEmpty();
       this.$forceUpdate();
       this.emptyMakerCreated = true;
+    },
+    async BuildProxy() {
+      if (this.setupComplete) {
+        this.proxyAddress = await this.getValueOrFunction('getProxy')();
+        if (!this.proxyAddress) {
+          this.getValueOrFunction('_proxyService')
+            .build()
+            .then(() => {
+              return this.getValueOrFunction('_proxyService').currentProxy();
+            })
+            .then(res => {
+              this.proxyAddress = res;
+            });
+        }
+      }
     },
     displayPercentValue,
     displayFixedValue,
