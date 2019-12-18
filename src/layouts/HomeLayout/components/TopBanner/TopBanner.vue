@@ -27,7 +27,7 @@
                 >Get a new wallet</StdButton
               >
 
-              <StdButton buttonclass="button--green-border"
+              <StdButton buttonclass="button--green-border" to="/access-wallet"
                 >Access my wallet</StdButton
               >
             </div>
