@@ -59,7 +59,7 @@
   "quick-send": "Быстрая отправка",
   "from": "Отправитель",
   "success": "Готово",
-  "access": "Access",
+  "access": "Доступ к кошельку",
   "step": "ШАГ",
   "change": "Поменять",
   "amount-to-send": "Сумма перевода",
@@ -67,7 +67,7 @@
   "confirm-send": "Подтвердить и отправить",
   "your-tx-hash": "Ваш TxHash",
   "mewcx": "MEWcx",
-  "welcome-header": "MyEtherWallet Chrome Extension",
+  "welcome-header": "Расширение MyEtherWallet для Chrome",
   "mew-cx-official": "Официальное расширение MyEtherWallet для Chrome",
   "no-wallet-add": "You don't have any wallet saved. Click and add Wallet to get started",
   "use-burner": "Использовать разовый аккаунт",
@@ -85,8 +85,8 @@
   "buy-eth": "Купить ETH",
   "generate-wallet-description": "Generate your own unique Ethereum wallet. Receive a public address (0x...) and encrypt it with a password.",
   "mnemonic-phrase": "Мнемоническая фраза",
-  "mnemonic-phrase-description": "Add your wallet using a mnemonic phrase. Mnemonic phrases are 12-24 words in length, but sometimes they contain an extra word for added security.",
-  "private-key-description": "Add your wallet using a private key. Private keys are 64 hexadecimal characters.",
-  "keystore-file-description": "Add your wallet using a keystore file. A keystore file is your private key encrypted into a JSON file format.",
-  "chrome-cx": "Chrome Extension"
+  "mnemonic-phrase-description": "Добавьте ваш кошелек с помощью мнемонической фразы. Мнемонические фразы состоят из 12-24 слов, но иногда содержат дополнительное слово для большей безопасности.",
+  "private-key-description": "Добавьте ваш кошелек с помощью закрытого ключа. Закрытые ключи имеют 64 шестнадцатеричных символа.",
+  "keystore-file-description": "Добавьте ваш кошелек с помощью файла-хранилищa ключей. Файл-хранилищe ключей содержит ваш закрытый ключ, зашифрованный в формат файла JSON.",
+  "chrome-cx": "Расширение для Chrome"
 }
