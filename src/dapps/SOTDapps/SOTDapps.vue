@@ -65,7 +65,6 @@ export default {
           // eslint-disable-next-line
         console.error(e);
         });
-      console.log(dapp.item);
       this.dapp = Object.assign({}, dapp.item);
       this.siteKeys = Object.keys(dapp.item.sites);
       this.socials = dapp.item.socials.map(item => item);
