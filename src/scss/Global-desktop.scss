@@ -1,4 +1,5 @@
 @import '~@/scss/GlobalVariables';
+
 @media all and (min-width: calc(#{$tablet-width} + 1px)) {
   // *********************************************************************
   // CSS reset
@@ -1274,7 +1275,9 @@
     background-color: $dark-grey-11;
     pointer-events: none;
   }
-} //@media all and ( min-width: calc(#{$tablet-width} + 1px) )
+}
+
+//@media all and ( min-width: calc(#{$tablet-width} + 1px) )
 
 // **********************************************************************************************************
 // Global elements for all sizes (Desktop, Tablet, Mobile)
@@ -1533,12 +1536,15 @@
 .margin--top--auto {
   margin-top: auto;
 }
+
 .margin--right--auto {
   margin-right: auto;
 }
+
 .margin--bottom--auto {
   margin-bottom: auto;
 }
+
 .margin--left--auto {
   margin-left: auto;
 }
@@ -1548,6 +1554,7 @@
   flex-direction: row;
   flex-grow: initial;
   align-items: center;
+
   &.justify--center {
     justify-content: center;
   }
@@ -1557,9 +1564,16 @@
   display: flex;
   flex-direction: row;
   align-items: flex-start;
+
   &.justify--center {
     justify-content: center;
   }
+}
+
+.flex--row--align-stretch {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
 }
 
 .flex--grow-1 {
@@ -1574,6 +1588,10 @@
 
 .cursor-pointer {
   cursor: pointer;
+}
+
+.user-select--none {
+  user-select: none;
 }
 
 //*********************************************************************
