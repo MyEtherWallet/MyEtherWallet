@@ -25,11 +25,11 @@
           <div class="modal-button-block">
             <standard-button
               :options="cancelButtonOptions"
-              :click-function="sendError(false)"
+              :click-function="() => sendError(false)"
             />
             <standard-button
               :options="sendButtonOptions"
-              :click-function="sendError(true)"
+              :click-function="() => sendError(true)"
             />
           </div>
           <div v-if="showSkipper" class="button-block">
