@@ -2,7 +2,7 @@
 
 ### Feature
 
-- SotD on the v5 dapps interface []()
+- SotD on the v5 dapps interface [#1731](https://github.com/MyEtherWallet/MyEtherWallet/pull/1731)
 
 ### Bug
 
