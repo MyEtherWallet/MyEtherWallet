@@ -11,8 +11,8 @@
       <form class="tokens-modal-body" @keydown.enter.prevent>
         <div>
           <input
-            v-validate="'required'"
             v-model="contractAddress"
+            v-validate="'required'"
             :class="[
               'custom-input-text-1',
               contractAddress !== '' && !validAddress ? 'invalid-address' : ''
@@ -31,7 +31,6 @@
             {{ $t('nftManager.no-method-no-token', { token: tokenSymbol }) }}
           </span>
           <input
-            v-validate="'required'"
             v-model="tokenSymbol"
             :placeholder="$t('nftManager.name')"
             name="Symbol"

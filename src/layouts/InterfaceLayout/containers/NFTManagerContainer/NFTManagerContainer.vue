@@ -5,8 +5,10 @@
       v-if="!isReady && isOnlineAndEth"
       class="inner-side-menu content-container"
     >
-      <nft-side-menu :supported-nft-obj="sideMenuData" :nft-config="nftConfig">
-      </nft-side-menu>
+      <nft-side-menu
+        :supported-nft-obj="sideMenuData"
+        :nft-config="nftConfig"
+      ></nft-side-menu>
       <loading-sign :loadingmessage1="$t('common.loading')" />
     </div>
     <div v-if="isReady && hasNfts" class="inner-side-menu content-container">
@@ -19,8 +21,7 @@
         @selected="changeSelectedContract"
         @openCustomModal="openCustomModal"
         @removeCustomNft="openRemovalConfirmModal"
-      >
-      </nft-side-menu>
+      ></nft-side-menu>
       <div v-if="showDetails">
         <nft-details
           :nft="detailsFor"
@@ -105,8 +106,7 @@
       ref="customRemoveModal"
       :for-removal="forRemoval"
       @remove="removeCustomNft"
-    >
-    </nft-custom-confirm-remove-modal>
+    ></nft-custom-confirm-remove-modal>
   </div>
 </template>
 
@@ -188,6 +188,7 @@ export default {
           ids_retrieved > this.countPerPage ? this.countPerPage : ids_retrieved;
         return this.nftData[this.selectedContract].currentIndex + increment;
       }
+      return null;
     },
     nftTitle() {
       if (this.nftData[this.selectedContract]) {
@@ -232,6 +233,7 @@ export default {
           this.endIndex !== ids_retrieved && this.endIndex <= ids_retrieved
         );
       }
+      return null;
     },
     sideMenuData() {
       return this.nftData;
