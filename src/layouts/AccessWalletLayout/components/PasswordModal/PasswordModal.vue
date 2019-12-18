@@ -17,8 +17,8 @@
         <div class="input-container">
           <input
             ref="passwordInput"
-            :type="show ? 'text' : 'password'"
             v-model="password"
+            :type="show ? 'text' : 'password'"
             :placeholder="$t('common.password.enter')"
             name="Password"
             autocomplete="off"
