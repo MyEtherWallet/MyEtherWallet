@@ -213,6 +213,7 @@ export default {
       if (this.wallet !== null) {
         return toChecksumAddress(this.account.address);
       }
+      return null;
     },
     ...mapState([
       'network',

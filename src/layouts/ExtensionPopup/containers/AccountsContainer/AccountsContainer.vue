@@ -23,9 +23,9 @@
             <wallet-view-component
               v-for="item in myWallets"
               v-show="myWallets.length > 0"
+              :key="item.address"
               :address="item.address"
               :name="item.nick"
-              :key="item.address"
               :balance="item.balance"
               :usd="usd"
             />
@@ -46,9 +46,9 @@
             <wallet-view-component
               v-for="item in watchOnlyWallets"
               v-show="watchOnlyWallets.length > 0"
+              :key="item.address"
               :address="item.address"
               :name="item.nick"
-              :key="item.address"
               :balance="item.balance"
               :usd="usd"
             />

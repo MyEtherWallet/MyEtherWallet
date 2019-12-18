@@ -12,7 +12,6 @@
         </label>
         <div class="dapp-input">
           <b-form-input
-            v-validate="'required'"
             id="authors"
             v-model="form.authors"
             :placeholder="
@@ -35,9 +34,9 @@
         }}</label>
         <div class="dapp-input">
           <b-form-input
-            v-validate="'required'"
             id="fullName"
             v-model="form.fullName"
+            v-validate="'required'"
             name="name"
             type="text"
             @update="updateFullName"
@@ -55,9 +54,9 @@
         }}</label>
         <div class="dapp-input">
           <b-form-input
-            v-validate="'email|required'"
             id="emailAddress"
             v-model="form.email"
+            v-validate="'email|required'"
             name="email"
             type="text"
             @update="updateEmail"
@@ -86,8 +85,8 @@
           <div v-if="socialAccts.length > 0" class="social-links-content">
             <div
               v-for="(acct, idx) in socialAccts"
-              :idx="idx"
               :key="acct + idx"
+              :idx="idx"
               class="social-account"
             >
               <div class="fake-input mt-2">
@@ -112,7 +111,6 @@
         }}</label>
         <div class="dapp-input">
           <b-form-input
-            v-validate="'url:require_protocol'"
             id="companyWebsite"
             v-model="form.companyWebsite"
             :placeholder="$t('dappsSubmission.url-placeholder')"
@@ -152,7 +150,6 @@
         }}</label>
         <div class="dapp-input">
           <b-form-textarea
-            v-validate="'max:300'"
             v-model="form.additionalNotes"
             :placeholder="
               $t('dappsSubmission.about-your-team.notes-placeholder')

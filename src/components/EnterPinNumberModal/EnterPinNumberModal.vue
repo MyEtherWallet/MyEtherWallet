@@ -60,13 +60,8 @@
 </template>
 
 <script>
-import Standardbutton from '@/components/Buttons/StandardButton';
-
 export default {
   name: 'WalletPassword',
-  components: {
-    'standard-button': Standardbutton
-  },
   data() {
     return {
       deviceInfo: {},
