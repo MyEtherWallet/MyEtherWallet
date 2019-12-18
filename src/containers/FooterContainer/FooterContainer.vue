@@ -25,8 +25,8 @@
               <div class="content-links">
                 <div class="content-links-animation-block">
                   <div
-                    v-for="(content, index) in item.contents"
-                    :key="content.text + index"
+                    v-for="(content, idx) in item.contents"
+                    :key="content.text + idx"
                     class="content"
                   >
                     <div v-if="content.text === $t('common.cstm-support')">
