@@ -37,7 +37,6 @@
 <script>
 import { mapState } from 'vuex';
 import { Toast } from '@/helpers';
-import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
 import SmallBackButton from '@/layouts/InterfaceLayout/components/SmallBackButton';
 import DropDownAddressSelector from '@/components/DropDownAddressSelector';
 import StandardButton from '@/components/Buttons/StandardButton';
@@ -45,7 +44,6 @@ import placeholderImage from '@/assets/images/icons/defaultToken.png';
 
 export default {
   components: {
-    'interface-container-title': InterfaceContainerTitle,
     'back-button': SmallBackButton,
     'dropdown-address-selector': DropDownAddressSelector,
     'standard-button': StandardButton

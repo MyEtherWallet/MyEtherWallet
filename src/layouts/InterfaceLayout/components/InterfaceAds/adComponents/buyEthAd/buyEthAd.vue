@@ -24,12 +24,8 @@
 
 <script>
 import { mapState } from 'vuex';
-import SwapWidget from '@/components/SwapWidget';
 
 export default {
-  components: {
-    'swap-widget': SwapWidget
-  },
   props: {},
   data() {
     return {
