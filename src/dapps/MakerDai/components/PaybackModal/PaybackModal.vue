@@ -10,9 +10,7 @@
       lazy
     >
       <div class="contents">
-        <p class="top-message">
-          {{ $t('dappsMaker.payback-notice') }}
-        </p>
+        <p class="top-message">{{ $t('dappsMaker.payback-notice') }}</p>
         <div class="input-container">
           <div class="top-buttons">
             <p @click="currentDai">{{ $t('dappsMaker.set-max') }}</p>
@@ -28,9 +26,13 @@
             <li>
               <p>{{ $t('dappsMaker.outstanding-dai') }}</p>
               <p>
-                <b>{{
-                  values.debtValue ? displayFixedValue(values.debtValue, 3) : 0
-                }}</b>
+                <b>
+                  {{
+                    values.debtValue
+                      ? displayFixedValue(values.debtValue, 3)
+                      : 0
+                  }}
+                </b>
                 {{ $t('dappsMaker.dai') }}
               </p>
             </li>
@@ -44,14 +46,14 @@
             <li>
               <p>{{ $t('dappsMaker.projected-collat-ratio') }}</p>
               <p>
-                <b
-                  >{{
+                <b>
+                  {{
                     displayFixedValue(
                       displayPercentValue(newCollateralRatio()),
                       3
                     )
-                  }}%</b
-                >
+                  }}%
+                </b>
               </p>
             </li>
           </ul>
@@ -101,7 +103,6 @@ import { mapState } from 'vuex';
 import ethUnit from 'ethjs-unit';
 import ExpandingOption from '@/components/ExpandingOption';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
-import CheckBox from '../CheckBox';
 import {
   displayFixedValue,
   displayPercentValue,
@@ -112,7 +113,6 @@ import StandardButton from '@/components/Buttons/StandardButton';
 export default {
   components: {
     'help-center-button': HelpCenterButton,
-    'check-box': CheckBox,
     'expanding-option': ExpandingOption,
     'standard-button': StandardButton
   },

@@ -21,8 +21,9 @@
     >
       <component
         :is="injections.components.WalletInfoComponent"
-        :usd="props.ethPrice"
+        v-for="wallet in props.watchOnlyAddresses"
         :key="wallet.address"
+        :usd="props.ethPrice"
         :address="wallet.address"
         :balance="wallet.balance"
         :wallet="wallet.wallet"

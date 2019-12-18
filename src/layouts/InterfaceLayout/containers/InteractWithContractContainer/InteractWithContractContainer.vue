@@ -21,7 +21,6 @@
         </div>
         <div class="the-form domain-name">
           <input
-            v-validate="'required'"
             v-model="address"
             :placeholder="$t('contract.enter-addr')"
             type="text"
@@ -123,9 +122,9 @@
           <div class="input-container">
             <input
               v-if="getType(input.type).type !== 'radio'"
+              v-model="inputs[input.name]"
               :disabled="noInput"
               :type="getType(input.type).type"
-              v-model="inputs[input.name]"
               class="non-bool-input"
             />
             <div

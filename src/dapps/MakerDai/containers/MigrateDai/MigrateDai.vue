@@ -45,12 +45,8 @@
 
 <script>
 import { mapState } from 'vuex';
-import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
-import InterfaceBottomText from '@/components/InterfaceBottomText';
-import Blockie from '@/components/Blockie';
 import DaiIcon from '@/assets/images/currency/coins/AllImages/DAI.svg';
 import BigNumber from 'bignumber.js';
-import SelectCdpEntry from '../../components/SelectCdpEntry';
 import { addresses, migrateABI, ERC20 } from '../../makerHelpers';
 import ethUnit from 'ethjs-unit';
 import { Toast } from '@/helpers';
@@ -60,12 +56,6 @@ const toBigNumber = num => {
 };
 
 export default {
-  components: {
-    'interface-container-title': InterfaceContainerTitle,
-    'interface-bottom-text': InterfaceBottomText,
-    blockie: Blockie,
-    'select-cdp-entry': SelectCdpEntry
-  },
   props: {
     tokensWithBalance: {
       type: Array,

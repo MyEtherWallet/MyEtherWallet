@@ -88,7 +88,6 @@
         <div class="content-block">
           <div class="input-block-container">
             <input
-              v-validate="'required'"
               v-model="name"
               :placeholder="$t('interface.network-modal.eth-node')"
               class="custom-input-text-1"
@@ -99,8 +98,8 @@
             <select v-model="selectedNetworkName" class="custom-select-1">
               <option
                 v-for="type in types"
-                :value="type.name"
                 :key="type.name + type.name_long"
+                :value="type.name"
                 :selected="selectedNetworkName === type.name"
               >
                 {{ type.name | capitalize }} -
@@ -132,7 +131,6 @@
               autocomplete="off"
             />
             <input
-              v-validate="'required|url:require_protocol'"
               v-show="selectedNetworkName === 'CUS'"
               v-model="blockExplorerTX"
               :placeholder="$t('interface.etherscan-tx-url')"
@@ -142,7 +140,6 @@
               autocomplete="off"
             />
             <input
-              v-validate="'required|numeric'"
               v-show="selectedNetworkName === 'CUS'"
               v-model="chainID"
               :placeholder="$t('common.chain-id')"
@@ -152,7 +149,6 @@
               autocomplete="off"
             />
             <input
-              v-validate="'required|url:require_protocol'"
               v-show="selectedNetworkName === 'CUS'"
               v-model="blockExplorerAddr"
               :placeholder="$t('interface.etherscan-address-url')"

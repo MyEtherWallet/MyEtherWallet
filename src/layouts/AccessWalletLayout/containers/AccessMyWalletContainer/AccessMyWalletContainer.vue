@@ -102,7 +102,6 @@ import NetworkAndAddressModal from '../../components/NetworkAndAddressModal';
 import PasswordModal from '../../components/PasswordModal';
 import PrivateKeyModal from '../../components/PrivateKeyModal';
 import SoftwareModal from '../../components/SoftwareModal';
-import MnemonicPasswordModal from '../../components/MnemonicPasswordModal';
 import MnemonicModal from '../../components/MnemonicModal';
 import LedgerAppModal from '../../components/LedgerAppModal';
 import WalletPasswordModal from '@/components/WalletPasswordModal';
@@ -135,7 +134,6 @@ export default {
     'password-modal': PasswordModal,
     'private-key-modal': PrivateKeyModal,
     'mnemonic-modal': MnemonicModal,
-    'mnemonic-password-modal': MnemonicPasswordModal,
     'access-wallet-button': AccessWalletButton,
     'wallet-password-modal': WalletPasswordModal,
     'enter-pin-number-modal': EnterPinNumberModal,

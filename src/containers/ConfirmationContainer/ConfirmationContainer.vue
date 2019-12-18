@@ -175,6 +175,7 @@ export default {
       if (this.account) {
         return this.account.address;
       }
+      return null;
     }
   },
   watch: {
