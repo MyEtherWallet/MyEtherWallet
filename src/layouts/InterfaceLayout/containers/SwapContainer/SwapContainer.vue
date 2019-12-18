@@ -95,9 +95,9 @@
           <!-- form-block amount-to-address -->
         </div>
 
-        <div v-show="!isExitToFiat" class="send-form">
+        <div v-if="!isExitToFiat" class="send-form">
           <div class="the-form gas-amount">
-            <drop-down-address-selector
+            <swap-address-selector
               :currency="toCurrency"
               :current-address="currentAddress"
               :copybutton="true"
@@ -111,11 +111,11 @@
         </div>
 
         <div
-          v-show="isExitToFiat && fromCurrency !== baseCurrency"
+          v-if="isExitToFiat && fromCurrency !== baseCurrency"
           class="send-form"
         >
           <div class="the-form gas-amount">
-            <drop-down-address-selector
+            <swap-address-selector
               :currency="fromCurrency"
               :current-address="currentAddress"
               :copybutton="true"
@@ -128,9 +128,9 @@
           </div>
         </div>
 
-        <div v-show="showRefundAddress" class="send-form">
+        <div v-if="showRefundAddress" class="send-form">
           <div class="the-form gas-amount">
-            <drop-down-address-selector
+            <swap-address-selector
               :currency="fromCurrency"
               :current-address="currentAddress"
               :copybutton="true"
@@ -207,8 +207,7 @@ import { mapState } from 'vuex';
 
 import { Toast } from '@/helpers';
 import ProvidersRadioSelector from './components/ProvidersRadioSelector';
-import DropDownAddressSelector from './components/SwapAddressSelector';
-import InterfaceBottomText from '@/components/InterfaceBottomText';
+import SwapAddressSelector from './components/SwapAddressSelector';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import swapIcon from '@/assets/images/icons/swap-widget.svg';
 import ImageKybernetowrk from '@/assets/images/etc/kybernetwork.png';
@@ -235,18 +234,15 @@ import {
 } from '@/partners';
 
 const errorLogger = debug('v5:swapContainer');
-import SwapSendForm from './components/SwapExitToFiat';
 
 export default {
   components: {
-    'interface-bottom-text': InterfaceBottomText,
     'interface-container-title': InterfaceContainerTitle,
     'swap-currency-picker': SwapCurrencyPicker,
-    'drop-down-address-selector': DropDownAddressSelector,
+    'swap-address-selector': SwapAddressSelector,
     'providers-radio-selector': ProvidersRadioSelector,
     'swap-confirmation-modal': SwapConfirmationModal,
     'swap-exit-to-fiat': SwapExitToFiat,
-    'swap-send-form': SwapSendForm,
     'swap-send-to-modal': SwapSendToModal
   },
   props: {
@@ -340,6 +336,7 @@ export default {
       } catch (e) {
         errorLogger(e);
       }
+      return null;
     },
     fromBelowMinAllowed() {
       if (new BigNumber(MIN_SWAP_AMOUNT).gt(new BigNumber(this.fromValue)))

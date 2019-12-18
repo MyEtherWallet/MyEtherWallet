@@ -46,7 +46,7 @@
       border-radius: 4px;
       color: $text-color-1;
       margin-bottom: 15px;
-      padding: 11px;
+      padding: 25px 0;
       position: relative;
 
       &.create-wallet {
@@ -55,6 +55,27 @@
 
       &.unlock-wallet {
         background-color: $unlock-wallet-background-color;
+      }
+
+      .content-text,
+      .get-started {
+        padding-top: 15px;
+      }
+
+      .title {
+        text-align: center;
+        display: block;
+
+        img {
+          height: 30px;
+          width: 30px;
+        }
+
+        h3 {
+          font-size: 15px;
+          //font-weight: bold;
+          //margin-left: 20px;
+        }
       }
 
       .card-image {
@@ -67,9 +88,8 @@
       }
 
       .card-content {
-        display: inline;
         text-align: center;
-        width: 100%;
+        display: none;
 
         h2 {
           font-size: 14px;

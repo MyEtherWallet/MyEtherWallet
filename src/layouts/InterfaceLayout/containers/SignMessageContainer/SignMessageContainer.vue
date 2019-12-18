@@ -13,8 +13,8 @@
 
         <div class="the-form">
           <textarea
-            v-validate="'required'"
             v-model="message"
+            v-validate="'required'"
             name="message"
             class="custom-textarea-1"
           />
@@ -67,7 +67,7 @@ export default {
   },
   mounted() {
     this.$refs.signatureModal.$refs.signatureModal.$on('hidden', () => {
-      this.signature = '';
+      this.deleteInputText();
     });
   },
   methods: {
@@ -90,7 +90,6 @@ export default {
               2
             );
             this.$refs.signatureModal.$refs.signatureModal.show();
-            this.deleteInputText();
           })
           .catch(e => {
             Toast.responseHandler(e, Toast.ERROR);

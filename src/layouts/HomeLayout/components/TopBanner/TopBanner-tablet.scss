@@ -65,6 +65,7 @@
       margin-bottom: 10px;
       padding: 30px 40px;
       position: relative;
+      display: flex;
 
       &.create-wallet {
         background-color: $create-wallet-background-color;
@@ -81,6 +82,25 @@
         &:hover {
           box-shadow: 0 5px 24px $topbanner-block-box-shadow-color;
           top: -10px;
+        }
+      }
+
+      .content-text,
+      .get-started {
+        padding-top: 15px;
+      }
+
+      .title {
+        align-items: center;
+        display: flex;
+
+        img {
+          height: 30px;
+          width: 30px;
+        }
+
+        h3 {
+          font-size: 25px;
         }
       }
 
@@ -101,6 +121,16 @@
       }
 
       .card-content {
+        ul {
+          margin-top: 10px;
+          padding-left: 20px;
+          li {
+            list-style-type: disc;
+            font-size: 12px;
+            font-weight: 600;
+          }
+        }
+
         h2 {
           font-size: 24px;
           font-weight: 500;

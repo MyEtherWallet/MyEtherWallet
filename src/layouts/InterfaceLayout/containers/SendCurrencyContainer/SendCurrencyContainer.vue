@@ -28,7 +28,6 @@
             </div>
             <div class="the-form amount-number">
               <input
-                v-validate="'min_value:0'"
                 v-model="toValue"
                 :placeholder="$t('sendTx.amount')"
                 type="number"
@@ -163,7 +162,6 @@
 import { mapState } from 'vuex';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import CurrencyPicker from '../../components/CurrencyPicker';
-import Blockie from '@/components/Blockie';
 import { Transaction } from 'ethereumjs-tx';
 import { Misc, Toast } from '@/helpers';
 import BigNumber from 'bignumber.js';
@@ -175,7 +173,6 @@ import DropDownAddressSelector from '@/components/DropDownAddressSelector';
 export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
-    blockie: Blockie,
     'currency-picker': CurrencyPicker,
     'dropdown-address-selector': DropDownAddressSelector
   },
@@ -417,8 +414,8 @@ export default {
       this.advancedExpand = false;
       this.clearAddress = !this.clearAddress;
       this.selectedCurrency = {
-        name: 'Ethereum',
-        symbol: 'ETH'
+        name: this.network.type.name_long,
+        symbol: this.network.type.currencyName
       };
     },
     getToAddress(data) {
@@ -503,6 +500,7 @@ export default {
         ),
         data: this.txData
       };
+
       this.web3.eth
         .estimateGas(params)
         .then(gasLimit => {

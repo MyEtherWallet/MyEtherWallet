@@ -51,7 +51,7 @@
                   : ''
               "
               class="switch-network"
-              @click="switchNetwork(net, key)"
+              @click="switchNetwork(net)"
             >
               {{ net.service }}
             </p>
@@ -88,7 +88,6 @@
         <div class="content-block">
           <div class="input-block-container">
             <input
-              v-validate="'required'"
               v-model="name"
               :placeholder="$t('interface.network-modal.eth-node')"
               class="custom-input-text-1"
@@ -99,8 +98,8 @@
             <select v-model="selectedNetworkName" class="custom-select-1">
               <option
                 v-for="type in types"
-                :value="type.name"
                 :key="type.name + type.name_long"
+                :value="type.name"
                 :selected="selectedNetworkName === type.name"
               >
                 {{ type.name | capitalize }} -
@@ -108,6 +107,7 @@
               </option>
             </select>
             <input
+              v-model="url"
               v-validate="{
                 required: true,
                 url: {
@@ -116,7 +116,6 @@
                   require_tld: false
                 }
               }"
-              v-model="url"
               class="custom-input-text-1"
               type="text"
               name="nodeUrl"
@@ -132,7 +131,6 @@
               autocomplete="off"
             />
             <input
-              v-validate="'required|url:require_protocol'"
               v-show="selectedNetworkName === 'CUS'"
               v-model="blockExplorerTX"
               :placeholder="$t('interface.etherscan-tx-url')"
@@ -142,7 +140,6 @@
               autocomplete="off"
             />
             <input
-              v-validate="'required|numeric'"
               v-show="selectedNetworkName === 'CUS'"
               v-model="chainID"
               :placeholder="$t('common.chain-id')"
@@ -152,7 +149,6 @@
               autocomplete="off"
             />
             <input
-              v-validate="'required|url:require_protocol'"
               v-show="selectedNetworkName === 'CUS'"
               v-model="blockExplorerAddr"
               :placeholder="$t('interface.etherscan-address-url')"
@@ -281,6 +277,7 @@ import store from 'store';
 
 import InterfaceBottomText from '@/components/InterfaceBottomText';
 import * as networkTypes from '@/networks/types';
+import nodeList from '@/networks';
 import Misc from '@/helpers/misc';
 
 import { mapState } from 'vuex';
@@ -324,6 +321,16 @@ export default {
   mounted() {
     if (store.get('customNetworks') !== undefined) {
       this.customNetworks = store.get('customNetworks');
+      if (this.customNetworks.length) {
+        this.customNetworks.forEach(network => {
+          if (network.type.name !== 'CUS') {
+            network.type.contracts =
+              nodeList[network.type.name][0].type.contracts;
+            network.type.tokens = nodeList[network.type.name][0].type.tokens;
+            network.type.ens = nodeList[network.type.name][0].type.ens;
+          }
+        });
+      }
     }
     this.types['CUS'] = {
       name: 'CUS',
@@ -373,6 +380,8 @@ export default {
         password: this.password,
         port: parseInt(this.port),
         service: this.name,
+        url: this.url,
+        username: this.username,
         type: {
           blockExplorerAddr:
             this.selectedNetwork.blockExplorerAddr ||
@@ -387,13 +396,17 @@ export default {
           name_long: this.selectedNetwork.name_long,
           tokens: [],
           currencyName: this.selectedNetwork.currencyName
-        },
-        url: this.url,
-        username: this.username
+        }
       };
-
+      const cloneCustomNetworks = [...this.customNetworks];
+      cloneCustomNetworks.push(customNetwork);
+      store.set('customNetworks', cloneCustomNetworks);
+      if (this.selectedNetwork.name !== 'CUS') {
+        customNetwork.type.contracts = this.selectedNetwork.contracts;
+        customNetwork.type.tokens = this.selectedNetwork.tokens;
+        customNetwork.type.ens = this.selectedNetwork.ens;
+      }
       this.customNetworks.push(customNetwork);
-      store.set('customNetworks', this.customNetworks);
       this.resetCompState();
       this.$refs.addCustomToggle.click();
     },

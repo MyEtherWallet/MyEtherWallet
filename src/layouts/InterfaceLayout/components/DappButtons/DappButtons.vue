@@ -63,6 +63,7 @@ export default {
       if (this.online) {
         return this.supportedNetworks.includes(this.network.type.name);
       }
+      return null;
     },
     isBeenTwoWeeks() {
       const today = new Date();
