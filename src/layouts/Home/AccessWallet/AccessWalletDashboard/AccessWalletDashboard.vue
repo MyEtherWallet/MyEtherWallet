@@ -4,18 +4,21 @@
     <v-container>
       <BlockTitle :data="titleData" class="mb-10">
         <p class="white--text ma-0">
-          Please select a method to create a new wallet.
+          Please select a method to access your wallet.
         </p>
         <p class="white--text ma-0">
-          Already have a wallet?
-          <router-link to="/" class="text-color--mew-green">
-            Access my wallet
+          Don't have a wallet?
+          <router-link
+            :to="{ name: 'HomeCreateWallet' }"
+            class="text-color--mew-green"
+          >
+            Get a new wallet
           </router-link>
         </p>
       </BlockTitle>
       <v-sheet color="transparent" max-width="600px" class="mx-auto">
         <router-link
-          to="/create-wallet/mewconnect"
+          :to="{ name: 'HomeCreateWalletMewConnect', query: { step: '1' } }"
           class="text-decoration--none"
         >
           <MEWconnect
@@ -23,7 +26,26 @@
           />
         </router-link>
         <div class="my-4" />
-        <router-link to="/create-wallet/keystore" class="text-decoration--none">
+        <router-link
+          :to="{ name: 'HomeCreateWalletMewConnect', query: { step: '1' } }"
+          class="text-decoration--none"
+        >
+          <Hardware
+            class="cursor--pointer user-select--none new-wallet-button"
+          />
+        </router-link>
+        <div class="my-4" />
+        <router-link
+          :to="{ name: 'HomeCreateWalletMewConnect', query: { step: '1' } }"
+          class="text-decoration--none"
+        >
+          <CX class="cursor--pointer user-select--none new-wallet-button" />
+        </router-link>
+        <div class="my-4" />
+        <router-link
+          :to="{ name: 'HomeCreateWalletMewConnect', query: { step: '1' } }"
+          class="text-decoration--none"
+        >
           <Software
             class="cursor--pointer user-select--none new-wallet-button"
           />
@@ -38,16 +60,18 @@
 <script>
 import BlockTitle from '@/layouts/components/BlockTitle';
 import MEWconnect from './components/MEWconnect';
+import Hardware from './components/Hardware';
+import CX from './components/CX';
 import Software from './components/Software';
 
 export default {
   name: 'CreateNewWallet',
-  components: { BlockTitle, MEWconnect, Software },
+  components: { BlockTitle, MEWconnect, Hardware, CX, Software },
   data: () => ({
     titleData: {
       textProps: 'white--text',
       toptitle: '',
-      title: 'Get a New Wallet',
+      title: 'Access My Wallet',
       description: '',
       centered: true
     }
