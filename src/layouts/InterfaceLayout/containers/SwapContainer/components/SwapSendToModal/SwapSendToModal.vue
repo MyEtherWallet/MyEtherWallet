@@ -20,7 +20,8 @@
               <i :class="['cc', fromAddress.name, 'cc-icon']" />
             </div>
             <p class="value">
-              {{ fromAddress.value }} <span>{{ fromAddress.name }}</span>
+              {{ fromAddress.value }}
+              <span>{{ fromAddress.name }}</span>
             </p>
             <p
               v-show="fromAddress.address !== '' && !isFromFiat"
@@ -35,14 +36,17 @@
               {{ fromAddress.address }}
             </p>
           </div>
-          <div class="right-arrow"><img :src="arrowImage" alt /></div>
+          <div class="right-arrow">
+            <img :src="arrowImage" alt />
+          </div>
           <!-- Fiat to Crypto-->
           <div v-if="!toFiat" class="to-address">
             <div class="icon">
               <i :class="['cc', toAddress.name, 'cc-icon']" />
             </div>
             <p class="value">
-              {{ toAddress.value }} <span>{{ toAddress.name }}</span>
+              {{ toAddress.value }}
+              <span>{{ toAddress.name }}</span>
             </p>
             <p v-show="toAddress.address !== ''" class="block-title">
               {{ $t('sendTx.to-addr') }}
@@ -57,7 +61,8 @@
               <i :class="['cc', toAddress.name, 'cc-icon']" />
             </div>
             <p class="value">
-              {{ toAddress.value }} <span>{{ toAddress.name }}</span>
+              {{ toAddress.value }}
+              <span>{{ toAddress.name }}</span>
             </p>
             <p class="block-title">{{ $t('common.to') }}</p>
             <p class="address">{{ fiatDest }}</p>
@@ -168,6 +173,7 @@ export default {
           this.swapDetails.fromCurrency
         );
       }
+      return null;
     }
   },
   watch: {

@@ -46,8 +46,8 @@
             <li v-for="index in mnemonicSize" :key="index">
               <span>{{ index }}.</span>
               <input
-                v-model="locMnemonicPhrase[index - 1]"
                 :ref="`mnemonicInput${index - 1}`"
+                v-model="locMnemonicPhrase[index - 1]"
                 type="text"
                 name=""
               />
@@ -55,7 +55,10 @@
           </ul>
         </div>
         <div class="button-container">
-          <expanding-option :title="$t('mewcx.extra-word')" :button-text="$t('common.optional')">
+          <expanding-option
+            :title="$t('mewcx.extra-word')"
+            :button-text="$t('common.optional')"
+          >
             <div class="input-container">
               <div class="mnemonic-password-input">
                 <input

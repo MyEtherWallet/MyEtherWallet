@@ -1,232 +1,234 @@
 <template>
-  <div class="header">
-    <decision-tree />
-    <router-link
-      v-show="
-        $route.fullPath === '/create-wallet' ||
-          ($route.fullPath === '/access-my-wallet' && !isMewCx)
-      "
-      to="/getting-started"
-    >
-      <user-reminder-button />
-    </router-link>
-    <mobile-menu
-      :opensettings="openSettings"
-      :logout="logout"
-      :build-type="buildType"
-    />
-
-    <!-- Modals ***************************************** -->
-    <disconnected-modal ref="mewConnectDisconnected" />
-    <settings-modal
-      v-if="address !== null"
-      ref="settings"
-      :gas-price="gasPrice"
-      :address="address"
-    />
-    <logout-modal ref="logout" />
-    <issue-log-modal
-      v-if="Object.keys.length > 0"
-      ref="issuelog"
-      :error="error"
-      :resolver="resolver"
-    />
-
-    <!-- Desktop menu *********************************** -->
-    <div class="fixed-header-wrap">
-      <div
-        ref="fixedHeader"
-        :class="[
-          !isPageOnTop && !isMobileMenuOpen && 'tiny-header',
-          isMobileMenuOpen && 'fixed-header-border-bottom'
-        ]"
-        class="fixed-header"
+  <div>
+    <cx-header v-if="isMewCx" />
+    <div v-if="!isMewCx" class="header">
+      <decision-tree />
+      <router-link
+        v-show="
+          $route.fullPath === '/create-wallet' ||
+            ($route.fullPath === '/access-my-wallet' && !isMewCx)
+        "
+        to="/getting-started"
       >
+        <user-reminder-button />
+      </router-link>
+      <mobile-menu
+        :opensettings="openSettings"
+        :logout="logout"
+        :build-type="buildType"
+      />
+
+      <!-- Modals ***************************************** -->
+      <disconnected-modal ref="mewConnectDisconnected" />
+      <settings-modal
+        v-if="address !== null"
+        ref="settings"
+        :gas-price="gasPrice"
+        :address="address"
+      />
+      <logout-modal ref="logout" />
+      <issue-log-modal
+        v-if="Object.keys.length > 0"
+        ref="issuelog"
+        :error="error"
+        :resolver="resolver"
+      />
+
+      <!-- Desktop menu *********************************** -->
+      <div class="fixed-header-wrap">
         <div
+          ref="fixedHeader"
           :class="[
-            (isMobileMenuOpen || !isPageOnTop) && 'mobile-menu-boxshadow',
-            address !== null ? '' : 'page-container'
+            !isPageOnTop && !isMobileMenuOpen && 'tiny-header',
+            isMobileMenuOpen && 'fixed-header-border-bottom'
           ]"
+          class="fixed-header"
         >
-          <div class="header-container">
-            <router-link
-              aria-label="Home"
-              to="/"
-              @click.native="isMobileMenuOpen = false"
-            >
-              <div class="top-logo">
-                <img
-                  :class="[
-                    !isPageOnTop && !isMobileMenuOpen
-                      ? `logo-small${!isMewCx ? '' : '-' + buildType}`
-                      : '',
-                    `logo-large${!isMewCx ? '' : '-' + buildType}`
-                  ]"
-                  :src="
-                    require(`@/assets/images/short-hand-logo-${buildType}.png`)
-                  "
-                  alt
-                />
-              </div>
-            </router-link>
-            <div class="top-menu">
-              <b-nav>
-                <b-nav-item
-                  href="https://ccswap.myetherwallet.com/#/"
-                  target="_blank"
-                  class="buy-eth"
-                  rel="noopener noreferrer"
-                >
+          <div
+            :class="[
+              (isMobileMenuOpen || !isPageOnTop) && 'mobile-menu-boxshadow',
+              address !== null ? '' : 'page-container'
+            ]"
+          >
+            <div class="header-container">
+              <router-link
+                aria-label="Home"
+                to="/"
+                @click.native="isMobileMenuOpen = false"
+              >
+                <div class="top-logo">
                   <img
+                    :class="[
+                      !isPageOnTop && !isMobileMenuOpen
+                        ? `logo-small${!isMewCx ? '' : '-' + buildType}`
+                        : '',
+                      `logo-large${!isMewCx ? '' : '-' + buildType}`
+                    ]"
+                    :src="
+                      require(`@/assets/images/short-hand-logo-${buildType}.png`)
+                    "
                     alt
-                    class="buy-eth-icon"
-                    src="@/assets/images/icons/buy-eth.svg"
-                  />
-                  {{ $t('common.buy-eth') }}
-                </b-nav-item>
-                <b-nav-item v-if="isHomePage" to="/" exact>{{
-                  $t('common.home')
-                }}</b-nav-item>
-                <b-nav-item v-if="isHomePage && !isMewCx" to="/#about-mew">
-                  {{ $t('common.about') }}
-                </b-nav-item>
-                <b-nav-item-dropdown
-                  v-if="address !== null"
-                  right
-                  no-caret
-                  class="tx-history-menu"
-                >
-                  <template slot="button-content">
-                    <p>{{ $t('interface.tx-history') }}</p>
-                  </template>
-                  <b-dropdown-item :href="explorerUrl" target="_blank">
-                    <p>{{ serviceUrl }} ({{ network.type.name }})</p>
-                  </b-dropdown-item>
-                  <b-dropdown-item
-                    v-show="network.type.name === 'ETH'"
-                    :href="'https://ethplorer.io/address/' + address"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    >{{ $t('header.ethplorer') }} ({{
-                      $tc('common.token', 2)
-                    }})</b-dropdown-item
-                  >
-                </b-nav-item-dropdown>
-                <b-nav-item v-if="!isMewCx" to="/#faqs">{{
-                  $t('common.faqs')
-                }}</b-nav-item>
-                <!-- Commented for now waiting for all Translations to be done -->
-                <!-- <div v-show="!isMewCx" class="language-menu-container">
-                  <div class="arrows">
-                    <i class="fa fa-angle-down" aria-hidden="true" />
-                  </div>
-                  <b-nav-item-dropdown
-                    class="language-menu"
-                    extra-toggle-classes="nav-link-custom"
-                    right
-                  >
-                    <template slot="button-content">
-                      <div class="current-language-flag">
-                        <img
-                          v-if="currentFlag !== null"
-                          :src="
-                            require(`@/assets/images/flags/${currentFlag}.svg`)
-                          "
-                          alt
-                          class="show"
-                        />
-                        <p>{{ currentName }}</p>
-                      </div>
-                    </template>
-                    <b-dropdown-item
-                      v-for="language in supportedLanguages"
-                      :key="language.key"
-                      :active="$root._i18n.locale === language.langCode"
-                      :data-language-code="language.langCode"
-                      :data-flag-name="language.flag"
-                      @click="languageItemClicked"
-                      >{{ language.name }}</b-dropdown-item
-                    >
-                  </b-nav-item-dropdown>
-                </div> -->
-                <div class="notification-menu-container">
-                  <notification
-                    v-if="
-                      $route.fullPath.includes('view-wallet-info') ||
-                        $route.fullPath.includes('interface')
-                    "
-                    ref="notification"
-                  />
-                  <extension-notification
-                    v-if="
-                      isMewCx &&
-                        !$route.fullPath.includes('view-wallet-info') &&
-                        !$route.fullPath.includes('interface')
-                    "
-                    ref="extensionNotification"
                   />
                 </div>
-                <b-nav-item
-                  v-if="showButtons && !isPageOnTop && !isMewCx"
-                  :class="[
-                    showGetFreeWallet ? 'show' : 'hide',
-                    'get-free-wallet first-button nopadding'
-                  ]"
-                  to="/create-wallet"
-                >
-                  <div class="get-free-wallet-button">
-                    {{ $t('header.new-wallet') }}
-                  </div>
-                </b-nav-item>
-                <b-nav-item
-                  v-if="showButtons && !isPageOnTop && !isMewCx"
-                  :class="[
-                    showGetFreeWallet ? 'show' : 'hide',
-                    'get-free-wallet nopadding'
-                  ]"
-                  to="/access-my-wallet"
-                >
-                  <div class="access-button">
-                    {{ $t('header.access') }}
-                  </div>
-                </b-nav-item>
-                <b-nav-item-dropdown
-                  v-if="address !== null"
-                  right
-                  no-caret
-                  extra-toggle-classes="identicon-dropdown"
-                  class="settings-menu"
-                >
-                  <template slot="button-content">
-                    <div class="settings-container">
-                      <blockie
-                        :address="address"
-                        width="35px"
-                        height="35px"
-                        class="blockie-image"
-                      />
+              </router-link>
+              <div class="top-menu">
+                <b-nav>
+                  <b-nav-item
+                    href="https://ccswap.myetherwallet.com/#/"
+                    target="_blank"
+                    class="buy-eth"
+                    rel="noopener noreferrer"
+                  >
+                    <img
+                      alt
+                      class="buy-eth-icon"
+                      src="@/assets/images/icons/buy-eth.svg"
+                    />
+                    {{ $t('common.buy-eth') }}
+                  </b-nav-item>
+                  <b-nav-item v-if="isHomePage" to="/" exact>{{
+                    $t('common.home')
+                  }}</b-nav-item>
+                  <b-nav-item v-if="isHomePage && !isMewCx" to="/#about-mew">
+                    {{ $t('common.about') }}
+                  </b-nav-item>
+                  <b-nav-item-dropdown
+                    v-if="address !== null"
+                    right
+                    no-caret
+                    class="tx-history-menu"
+                  >
+                    <template slot="button-content">
+                      <p>{{ $t('interface.tx-history') }}</p>
+                    </template>
+                    <b-dropdown-item :href="explorerUrl" target="_blank">
+                      <p>{{ serviceUrl }} ({{ network.type.name }})</p>
+                    </b-dropdown-item>
+                    <b-dropdown-item
+                      v-show="network.type.name === 'ETH'"
+                      :href="'https://ethplorer.io/address/' + address"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      >{{ $t('header.ethplorer') }} ({{
+                        $tc('common.token', 2)
+                      }})</b-dropdown-item
+                    >
+                  </b-nav-item-dropdown>
+                  <b-nav-item v-if="!isMewCx" to="/#faqs">{{
+                    $t('common.faqs')
+                  }}</b-nav-item>
+                  <!-- Commented for now waiting for all Translations to be done -->
+                  <!-- <div v-show="!isMewCx" class="language-menu-container">
+                    <div class="arrows">
                       <i class="fa fa-angle-down" aria-hidden="true" />
                     </div>
-                  </template>
-                  <b-dropdown-item @click="openSettings">{{
-                    $t('interface.settings')
-                  }}</b-dropdown-item>
-                  <b-dropdown-item @click="logout">{{
-                    $t('interface.logout')
-                  }}</b-dropdown-item>
-                </b-nav-item-dropdown>
-              </b-nav>
+                    <b-nav-item-dropdown
+                      class="language-menu"
+                      extra-toggle-classes="nav-link-custom"
+                      right
+                    >
+                      <template slot="button-content">
+                        <div class="current-language-flag">
+                          <img
+                            v-if="currentFlag !== null"
+                            :src="
+                              require(`@/assets/images/flags/${currentFlag}.svg`)
+                            "
+                            alt
+                            class="show"
+                          />
+                          <p>{{ currentName }}</p>
+                        </div>
+                      </template>
+                      <b-dropdown-item
+                        v-for="language in supportedLanguages"
+                        :key="language.key"
+                        :active="$root._i18n.locale === language.langCode"
+                        :data-language-code="language.langCode"
+                        :data-flag-name="language.flag"
+                        @click="languageItemClicked"
+                        >{{ language.name }}</b-dropdown-item
+                      >
+                    </b-nav-item-dropdown>
+                  </div> -->
+                  <div class="notification-menu-container">
+                    <notification
+                      v-if="
+                        $route.fullPath.includes('view-wallet-info') ||
+                          $route.fullPath.includes('interface')
+                      "
+                      ref="notification"
+                    />
+                    <extension-notification
+                      v-if="
+                        isMewCx &&
+                          !$route.fullPath.includes('view-wallet-info') &&
+                          !$route.fullPath.includes('interface')
+                      "
+                      ref="extensionNotification"
+                    />
+                  </div>
+                  <b-nav-item
+                    v-if="showButtons && !isPageOnTop && !isMewCx"
+                    :class="[
+                      showGetFreeWallet ? 'show' : 'hide',
+                      'get-free-wallet first-button nopadding'
+                    ]"
+                    to="/create-wallet"
+                  >
+                    <div class="get-free-wallet-button">
+                      {{ $t('header.new-wallet') }}
+                    </div>
+                  </b-nav-item>
+                  <b-nav-item
+                    v-if="showButtons && !isPageOnTop && !isMewCx"
+                    :class="[
+                      showGetFreeWallet ? 'show' : 'hide',
+                      'get-free-wallet nopadding'
+                    ]"
+                    to="/access-my-wallet"
+                  >
+                    <div class="access-button">
+                      {{ $t('header.access') }}
+                    </div>
+                  </b-nav-item>
+                  <b-nav-item-dropdown
+                    v-if="address !== null"
+                    right
+                    no-caret
+                    extra-toggle-classes="identicon-dropdown"
+                    class="settings-menu"
+                  >
+                    <template slot="button-content">
+                      <div class="settings-container">
+                        <blockie
+                          :address="address"
+                          width="35px"
+                          height="35px"
+                          class="blockie-image"
+                        />
+                        <i class="fa fa-angle-down" aria-hidden="true" />
+                      </div>
+                    </template>
+                    <b-dropdown-item @click="openSettings">{{
+                      $t('interface.settings')
+                    }}</b-dropdown-item>
+                    <b-dropdown-item @click="logout">{{
+                      $t('interface.logout')
+                    }}</b-dropdown-item>
+                  </b-nav-item-dropdown>
+                </b-nav>
+              </div>
+              <!-- .top-menu -->
             </div>
-            <!-- .top-menu -->
+            <!-- .header-container -->
           </div>
-          <!-- .header-container -->
+          <!-- .page-container -->
         </div>
-        <!-- .page-container -->
       </div>
+      <!-- Desktop menu *********************************** -->
     </div>
-    <!-- Desktop menu *********************************** -->
   </div>
-  <!-- .header -->
 </template>
 
 <script>
@@ -244,6 +246,7 @@ import MobileMenu from './components/MobileMenu';
 import DisconnectedModal from '@/components/DisconnectedModal';
 import ExtensionNotification from '@/layouts/ExtensionBrowserAction/containers/ExtensionNotification';
 import DecisionTree from '@/components/DecisionTree';
+import CxHeader from '@/layouts/ExtensionBrowserAction/components/CxHeader';
 
 const events = {
   issueModal: 'issueModal',
@@ -261,7 +264,8 @@ export default {
     'mobile-menu': MobileMenu,
     'disconnected-modal': DisconnectedModal,
     'extension-notification': ExtensionNotification,
-    'decision-tree': DecisionTree
+    'decision-tree': DecisionTree,
+    'cx-header': CxHeader
   },
   data() {
     const isMewCx = Misc.isMewCx();

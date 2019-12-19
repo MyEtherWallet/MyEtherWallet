@@ -54,7 +54,7 @@
       :message="successMessage"
       :link-message="linkMessage"
       :link-to="linkTo"
-      :etherscan-link="etherscanLink"
+      :tx-hash-exlporrer="txHashExlporrer"
     />
     <error-modal
       ref="errorModal"
@@ -147,7 +147,7 @@ export default {
       successMessage: 'Success',
       linkMessage: 'OK',
       linkTo: '/',
-      etherscanLink: null,
+      txHashExlporrer: '',
       dismissed: true,
       signedArray: [],
       txBatch: null,
@@ -173,8 +173,28 @@ export default {
     ...mapState(['wallet', 'web3', 'account', 'network']),
     fromAddress() {
       if (this.account) {
-        if (this.account.address !== null) {
-          this.addListenersAfterWallet();
+        return this.account.address;
+      }
+      return null;
+    }
+  },
+  watch: {
+    wallet(newVal) {
+      if (newVal !== null) {
+        if (this.$refs.hasOwnProperty('confirmModal')) {
+          this.$refs.confirmModal.$refs.confirmation.$on('hidden', () => {
+            if (this.dismissed) {
+              this.reset();
+            }
+          });
+        }
+        if (this.$refs.hasOwnProperty('signConfirmModal')) {
+          this.$refs.signConfirmModal.$refs.signConfirmation.$on(
+            'hidden',
+            () => {
+              this.signedMessage = '';
+            }
+          );
         }
         return this.account.address;
       }
@@ -190,9 +210,9 @@ export default {
   created() {
     this.$eventHub.$on(
       'showSuccessModal',
-      (message, linkMessage, etherscanLink) => {
+      (message, linkMessage, txHashExlporrer) => {
         if (!message) message = null;
-        this.showSuccessModal(message, linkMessage, etherscanLink);
+        this.showSuccessModal(message, linkMessage, txHashExlporrer);
       }
     );
 
@@ -421,11 +441,11 @@ export default {
       window.scrollTo(0, 0);
       this.$refs.signConfirmModal.$refs.signConfirmation.show();
     },
-    showSuccessModal(message, linkMessage, etherscanLink) {
+    showSuccessModal(message, linkMessage, txHashExlporrer) {
       this.reset();
       if (message !== null) this.successMessage = message;
       if (linkMessage !== null) this.linkMessage = linkMessage;
-      if (etherscanLink !== null) this.etherscanLink = etherscanLink;
+      if (txHashExlporrer !== null) this.txHashExlporrer = txHashExlporrer;
       this.$refs.successModal.$refs.success.show();
     },
     showErrorModal(message, linkMessage) {
