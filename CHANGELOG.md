@@ -1,3 +1,7 @@
+### Bug
+
+- Catch error when cryptokitties api 500s [#1775](https://github.com/MyEtherWallet/MyEtherWallet/pull/1775)
+
 ### Release v5.2.8
 
 ### Bug
