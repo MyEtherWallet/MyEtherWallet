@@ -3,6 +3,7 @@
   "version": "5.2.8",
   "description": "Client side ethereum wallet",
   "scripts": {
+    "build:offline": "WEBPACK_INTEGRITY=false npm run build:hash",
     "build": "npm run update && vue-cli-service build",
     "test:unit": "vue-cli-service test:unit --logHeapUsage",
     "lint": "npm run lint:styles && npm run lint:code && npm run lint:md",
@@ -130,7 +131,7 @@
     "stylelint": "12.0.0",
     "stylelint-config-prettier": "8.0.0",
     "stylelint-config-standard": "19.0.0",
-    "trezor-connect": "8.0.12",
+    "trezor-connect": "7.0.5",
     "u2f-api": "1.1.1",
     "uglify-es": "3.3.9",
     "uuid": "3.3.3",
@@ -143,7 +144,7 @@
     "web3-core-method": "1.2.4",
     "web3-core-requestmanager": "1.2.4",
     "web3-utils": "1.2.4",
-    "webpack": "4.41.2",
+    "webpack": "4.41.3",
     "worker-loader": "2.0.0",
     "zxcvbn": "4.4.2"
   },
