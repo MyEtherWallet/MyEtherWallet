@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
   <div v-if="!isMewCx" class="footer">
     <!-- Modal -->
     <feedback-modal />
@@ -19,14 +20,82 @@
               <p class="close" @click="closeContent(item.class)">
                 <i class="fa fa-minus" aria-hidden="true" />
               </p>
+=======
+  <div>
+    <cx-footer v-if="isMewCx" />
+    <div v-if="!isMewCx" class="footer">
+      <!-- Modal -->
+      <feedback-modal />
+      <div class="wrap">
+        <div class="page-container">
+          <div class="grid-col-1-1-1-2 footer-contents">
+            <div
+              v-for="(item, index) in footerContent"
+              :ref="item.class"
+              :key="item.title + index"
+              :class="item.class"
+            >
+              <div class="content-title" @click="toggler(item.class)">
+                <h3 class="lite">{{ item.title }}</h3>
+                <p class="open" @click="openContent(item.class)">
+                  <i class="fa fa-plus" aria-hidden="true" />
+                </p>
+                <p class="close" @click="closeContent(item.class)">
+                  <i class="fa fa-minus" aria-hidden="true" />
+                </p>
+              </div>
+              <div class="content-links">
+                <div class="content-links-animation-block">
+                  <div
+                    v-for="(content, idx) in item.contents"
+                    :key="content.text + idx"
+                    class="content"
+                  >
+                    <div v-if="content.text === $t('common.cstm-support')">
+                      <customer-support :no-icon="true" />
+                    </div>
+                    <router-link
+                      v-else-if="content.to !== undefined"
+                      :to="content.to"
+                    >
+                      <p>{{ content.text }}</p>
+                    </router-link>
+                    <a
+                      v-else-if="content.to === undefined"
+                      :href="content.href"
+                      :aria-label="content.text"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <p v-if="item.class === 'e2'">
+                        {{ $t(`${content.text}`) }}
+                      </p>
+                      <p v-else>{{ content.text }}</p>
+                    </a>
+                  </div>
+                </div>
+              </div>
+>>>>>>> 0e3dd685e42d064211bbf3b146389d68807fd6cf
             </div>
-            <div class="content-links">
-              <div class="content-links-animation-block">
-                <div
-                  v-for="(content, _index) in item.contents"
-                  :key="content.text + _index"
-                  class="content"
+            <div class="donate-us">
+              <div class="content-title">
+                <i18n path="footer.title.love" tag="h3">
+                  <img
+                    slot="heart"
+                    src="~@/assets/images/icons/heart.svg"
+                    alt
+                  />
+                </i18n>
+              </div>
+              <div class="links">
+                <p>{{ $t('footer.donation.desc') }}</p>
+
+                <a
+                  :href="'https://etherscan.io/address/' + ethDonationAddress"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
+<<<<<<< HEAD
                   <div v-if="$t(content.text) === $t('common.cstm-support')">
                     <customer-support :no-icon="true" />
                   </div>
@@ -49,44 +118,51 @@
                     <p v-else>{{ $t(content.text) }}</p>
                   </a>
                 </div>
+=======
+                  <p :data-eth="ethDonationAddress" class="crypto-link">
+                    <img src="~@/assets/images/currency/eth.svg" alt />
+                    &nbsp;{{ $t('footer.donation.ether') }}
+                  </p>
+                </a>
+
+                <a
+                  href="https://blockchain.info/address/1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <p
+                    class="crypto-link no-padding"
+                    data-btc="1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9"
+                  >
+                    <img src="~@/assets/images/currency/btc.svg" alt /> &nbsp;{{
+                      $t('footer.donation.bitcoin')
+                    }}
+                  </p>
+                </a>
+>>>>>>> 0e3dd685e42d064211bbf3b146389d68807fd6cf
               </div>
             </div>
           </div>
-          <div class="donate-us">
-            <div class="content-title">
-              <i18n path="footer.title.love" tag="h3">
-                <img slot="heart" src="~@/assets/images/icons/heart.svg" alt />
-              </i18n>
-            </div>
+          <div class="flex-space-between foot-note">
             <div class="links">
-              <p>{{ $t('footer.donation.desc') }}</p>
-
-              <a
-                :href="'https://etherscan.io/address/' + ethDonationAddress"
-                target="_blank"
-                rel="noopener noreferrer"
+              <div
+                v-for="(link, index) in lowerLinks"
+                :key="link.title + index"
               >
-                <p :data-eth="ethDonationAddress" class="crypto-link">
-                  <img src="~@/assets/images/currency/eth.svg" alt />
-                  &nbsp;{{ $t('footer.donation.ether') }}
-                </p>
-              </a>
-
-              <a
-                href="https://blockchain.info/address/1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <p
-                  class="crypto-link no-padding"
-                  data-btc="1DECAF2uSpFTP4L1fAHR8GCLrPqdwdLse9"
+                <router-link v-if="link.hasOwnProperty('to')" :to="link.to">
+                  <span>{{ link.title }}</span>
+                </router-link>
+                <a
+                  v-else
+                  :href="link.href"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
-                  <img src="~@/assets/images/currency/btc.svg" alt /> &nbsp;{{
-                    $t('footer.donation.bitcoin')
-                  }}
-                </p>
-              </a>
+                  <span>{{ link.title }}</span>
+                </a>
+              </div>
             </div>
+<<<<<<< HEAD
           </div>
         </div>
         <div class="flex-space-between foot-note">
@@ -95,13 +171,35 @@
               <router-link v-if="link.hasOwnProperty('to')" :to="link.to">
                 <span>{{ $t(link.title) }}</span>
               </router-link>
+=======
+            <div class="copyright">
+              <p>
+                {{ $t('footer.pricing-p') }}
+                <a
+                  href="https://coingecko.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >{{ $t('footer.coingecko') }}</a
+                >
+                <br />
+                {{ $t('footer.copyright') }}
+              </p>
+            </div>
+            <div class="social">
+>>>>>>> 0e3dd685e42d064211bbf3b146389d68807fd6cf
               <a
-                v-else
-                :href="link.href"
-                target="_blank"
+                v-for="link in links"
+                :key="link.class"
+                :href="link.to"
+                :aria-label="link.to"
                 rel="noopener noreferrer"
+                target="_blank"
               >
+<<<<<<< HEAD
                 <span>{{ $t(link.title) }}</span>
+=======
+                <i :class="'fa ' + link.class" />
+>>>>>>> 0e3dd685e42d064211bbf3b146389d68807fd6cf
               </a>
             </div>
           </div>
@@ -143,11 +241,13 @@ import CustomerSupport from '@/components/CustomerSupport';
 import affiliates from './affiliates.js';
 const version = VERSION;
 import { Misc } from '@/helpers';
+import CxFooter from '@/layouts/ExtensionBrowserAction/components/CxFooter';
 
 export default {
   components: {
     'feedback-modal': FeedbackModal,
-    'customer-support': CustomerSupport
+    'customer-support': CustomerSupport,
+    'cx-footer': CxFooter
   },
   data() {
     const isMewCx = Misc.isMewCx();
