@@ -415,7 +415,6 @@ export default {
       });
     },
     languageItemClicked(obj) {
-      console.log(obj)
       this.$i18n.locale = obj.langCode;
       this.currentName = obj.name;
       this.currentFlag = obj.flag;
