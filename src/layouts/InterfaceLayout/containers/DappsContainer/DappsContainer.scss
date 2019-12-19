@@ -13,7 +13,7 @@ $dapps-container-mobile-width: 650px;
   grid-column-gap: 20px;
   grid-row-gap: 20px;
   grid-template-columns: 1fr 1fr 1fr;
-  padding: 40px;
+  padding: 40px 40px 20px;
 
   @media all and (max-width: $dapps-container-mobile-width) {
     > * {
@@ -32,6 +32,34 @@ $dapps-container-mobile-width: 650px;
 
   @media all and (max-width: $dapps-container-mobile-width) {
     display: block;
+    padding: 10px;
+  }
+}
+
+.line-container {
+  align-items: center;
+  display: flex;
+  padding: 10px 40px;
+
+  .line {
+    flex: 1;
+    width: 50%;
+    border-bottom: 1px solid $dark-grey-1;
+  }
+
+  a {
+    padding: 0 10px;
+
+    img {
+      width: 30px;
+    }
+  }
+
+  @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
+    padding: 20px;
+  }
+
+  @media all and (max-width: $dapps-container-mobile-width) {
     padding: 10px;
   }
 }

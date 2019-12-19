@@ -171,9 +171,6 @@
 <script>
 import { mapState } from 'vuex';
 import ethUnit from 'ethjs-unit';
-import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
-import InterfaceBottomText from '@/components/InterfaceBottomText';
-import Blockie from '@/components/Blockie';
 import DaiConfirmationModal from '../../components/DaiConfirmationModal';
 import LoadingOverlay from '@/components/LoadingOverlay';
 import {
@@ -197,9 +194,6 @@ const bnOver = (one, two, three) => {
 
 export default {
   components: {
-    'interface-container-title': InterfaceContainerTitle,
-    'interface-bottom-text': InterfaceBottomText,
-    blockie: Blockie,
     'dai-confirmation-modal': DaiConfirmationModal,
     'loading-overlay': LoadingOverlay
   },
