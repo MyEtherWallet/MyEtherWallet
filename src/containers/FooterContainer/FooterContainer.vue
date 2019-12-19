@@ -14,7 +14,7 @@
               :class="item.class"
             >
               <div class="content-title" @click="toggler(item.class)">
-                <h3 class="lite">{{ item.title }}</h3>
+                <h3 class="lite">{{ $t(item.title) }}</h3>
                 <p class="open" @click="openContent(item.class)">
                   <i class="fa fa-plus" aria-hidden="true" />
                 </p>
@@ -29,14 +29,14 @@
                     :key="content.text + idx"
                     class="content"
                   >
-                    <div v-if="content.text === $t('common.cstm-support')">
+                    <div v-if="content.text === 'common.cstm-support'">
                       <customer-support :no-icon="true" />
                     </div>
                     <router-link
                       v-else-if="content.to !== undefined"
                       :to="content.to"
                     >
-                      <p>{{ content.text }}</p>
+                      <p>{{ $t(content.text) }}</p>
                     </router-link>
                     <a
                       v-else-if="content.to === undefined"
@@ -48,7 +48,7 @@
                       <p v-if="item.class === 'e2'">
                         {{ $t(`${content.text}`) }}
                       </p>
-                      <p v-else>{{ content.text }}</p>
+                      <p v-else>{{ $t(content.text) }}</p>
                     </a>
                   </div>
                 </div>
@@ -102,7 +102,7 @@
                 :key="link.title + index"
               >
                 <router-link v-if="link.hasOwnProperty('to')" :to="link.to">
-                  <span>{{ link.title }}</span>
+                  <span>{{ $t(link.title) }}</span>
                 </router-link>
                 <a
                   v-else
@@ -110,7 +110,7 @@
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <span>{{ link.title }}</span>
+                  <span>{{ $t(link.title) }}</span>
                 </a>
               </div>
             </div>
