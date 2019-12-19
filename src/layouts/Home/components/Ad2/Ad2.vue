@@ -15,7 +15,11 @@
         </div>
         <v-spacer />
         <a href="/" class="text-decoration--none">
-          <StdButton class="standard-button" buttonclass="button--white">
+          <StdButton
+            class="standard-button"
+            buttonclass="button--white"
+            :to="{ name: 'HomeCreateWallet', query: {} }"
+          >
             <img
               width="60"
               height="60"

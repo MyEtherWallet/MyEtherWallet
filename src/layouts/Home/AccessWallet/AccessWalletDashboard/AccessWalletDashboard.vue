@@ -9,7 +9,7 @@
         <p class="white--text ma-0">
           Don't have a wallet?
           <router-link
-            :to="{ name: 'HomeCreateWallet' }"
+            :to="{ name: 'HomeCreateWallet', query: {} }"
             class="text-color--mew-green"
           >
             Get a new wallet

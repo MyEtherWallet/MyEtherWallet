@@ -24,12 +24,13 @@
       </div>
       <p class="mt-4 mb-0">
         Need more help?
-        <router-link
+        <a
           class="text-decoration--none text-color--mew-green font-weight-bold"
-          to="/"
+          href="https://www.mewtopia.com/"
+          target="_blank"
         >
           Watch tutorial
-        </router-link>
+        </a>
       </p>
     </v-col>
     <v-col cols="6" class="pb-0">

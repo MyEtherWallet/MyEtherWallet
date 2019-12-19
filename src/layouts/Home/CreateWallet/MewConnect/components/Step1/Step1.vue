@@ -32,7 +32,7 @@
         Already knew how to do it?
         <router-link
           class="text-decoration--none orange--text font-weight-bold"
-          to="/"
+          :to="{ name: 'HomeCreateWalletMewConnect', query: { step: '3' } }"
           >Skip</router-link
         >
       </p>

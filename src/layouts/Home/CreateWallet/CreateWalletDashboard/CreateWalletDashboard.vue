@@ -9,7 +9,7 @@
         <p class="white--text ma-0">
           Already have a wallet?
           <router-link
-            :to="{ name: 'HomeAccessWallet' }"
+            :to="{ name: 'HomeAccessWallet', query: {} }"
             class="text-color--mew-green"
           >
             Access my wallet
