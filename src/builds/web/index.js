@@ -1,21 +1,21 @@
-import HomeLayout from '@/layouts/HomeLayout';
+import Home from '@/layouts/Home';
 import HowItWorks from '@/layouts/HowItWorks';
 import AboutUsCompany from '@/layouts/AboutUs/Company';
 import AboutUsTeam from '@/layouts/AboutUs/Team';
 import AboutUsWhyMEW from '@/layouts/AboutUs/WhyMEW';
 
-import CreateWalletDashboard from '@/layouts/CreateWallet/CreateWalletDashboard';
-import CreateWalletMewConnect from '@/layouts/CreateWallet/MewConnect';
-import CreateWalletKeystore from '@/layouts/CreateWallet/KeystoreFile';
+import CreateWalletDashboard from '@/layouts/Home/CreateWallet/CreateWalletDashboard';
+import CreateWalletMewConnect from '@/layouts/Home/CreateWallet/MewConnect';
+import CreateWalletKeystore from '@/layouts/Home/CreateWallet/KeystoreFile';
 
-import AccessWalletDashboard from '@/layouts/AccessWallet/AccessWalletDashboard';
+import AccessWalletDashboard from '@/layouts/Home/AccessWallet/AccessWalletDashboard';
 
 import app from './app';
 const webRoutes = [
   {
     path: '/',
     name: 'Home',
-    component: HomeLayout,
+    component: Home,
     meta: {
       requiresAuth: false
     }
@@ -53,32 +53,32 @@ const webRoutes = [
     }
   },
   {
-    path: '/create-wallet',
-    name: 'CreateWallet',
+    path: '/home/create-wallet',
+    name: 'HomeCreateWallet',
     component: CreateWalletDashboard,
     meta: {
       requiresAuth: false
     }
   },
   {
-    path: '/create-wallet/mewconnect',
-    name: 'CreateWalletMewConnect',
+    path: '/home/create-wallet/mewconnect',
+    name: 'HomeCreateWalletMewConnect',
     component: CreateWalletMewConnect,
     meta: {
       requiresAuth: false
     }
   },
   {
-    path: '/create-wallet/keystore',
-    name: 'CreateWalletKeystore',
+    path: '/home/create-wallet/keystore',
+    name: 'HomeCreateWalletKeystore',
     component: CreateWalletKeystore,
     meta: {
       requiresAuth: false
     }
   },
   {
-    path: '/access-wallet',
-    name: 'AccessWallet',
+    path: '/home/access-wallet',
+    name: 'HomeAccessWallet',
     component: AccessWalletDashboard,
     meta: {
       requiresAuth: false

@@ -23,11 +23,12 @@
               <StdButton
                 buttonclass="button--green"
                 class="mr-4"
-                to="/create-wallet"
+                :to="{ name: 'HomeCreateWallet' }"
                 >Get a new wallet</StdButton
               >
-
-              <StdButton buttonclass="button--green-border" to="/access-wallet"
+              <StdButton
+                buttonclass="button--green-border"
+                :to="{ name: 'HomeAccessWallet' }"
                 >Access my wallet</StdButton
               >
             </div>

@@ -22,7 +22,9 @@
         >. Continue if you have already installed the App.
       </p>
       <div class="d-flex align-center">
-        <StdButton buttonclass="button--green" @click.native="linkToStep(2)"
+        <StdButton
+          buttonclass="button--green"
+          :to="{ name: 'HomeCreateWalletMewConnect', query: { step: '2' } }"
           >Continue</StdButton
         >
       </div>
@@ -52,14 +54,7 @@ import StdButton from '@/components/StdButton';
 export default {
   components: { StdButton },
   data: () => ({}),
-  methods: {
-    linkToStep(step) {
-      this.$router.push({
-        path: '/create-wallet/mewconnect',
-        query: { step: step }
-      });
-    }
-  }
+  methods: {}
 };
 </script>
 

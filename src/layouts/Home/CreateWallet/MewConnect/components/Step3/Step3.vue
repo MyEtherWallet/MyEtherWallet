@@ -12,7 +12,7 @@
           buttonclass="button--green-border"
           class="mr-3"
           :minwidth="false"
-          @click.native="linkToStep(2)"
+          :to="{ name: 'HomeCreateWalletMewConnect', query: { step: '2' } }"
           >Back</StdButton
         >
         <StdButton buttonclass="button--green">Scan &amp; Access</StdButton>
@@ -43,14 +43,7 @@ import StdButton from '@/components/StdButton';
 export default {
   components: { StdButton },
   data: () => ({}),
-  methods: {
-    linkToStep(step) {
-      this.$router.push({
-        path: '/create-wallet/mewconnect',
-        query: { step: step }
-      });
-    }
-  }
+  methods: {}
 };
 </script>
 

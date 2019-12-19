@@ -21,7 +21,7 @@ import Swap from './components/Swap';
 import Dapps from './components/Dapps';
 import Tokens from './components/Tokens';
 import MoreTools from './components/MoreTools';
-import Ad2 from '@/layouts/HomeLayout/components/Ad2';
+import Ad2 from '@/layouts/Home/components/Ad2';
 
 export default {
   name: 'HowItWorks',

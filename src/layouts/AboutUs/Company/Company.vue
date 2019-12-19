@@ -17,8 +17,8 @@
 
 <script>
 import PageTitle from '@/layouts/components/PageTitle';
-import Partners from '@/layouts/HomeLayout/components/Partners';
-import Ad2 from '@/layouts/HomeLayout/components/Ad2';
+import Partners from '@/layouts/Home/components/Partners';
+import Ad2 from '@/layouts/Home/components/Ad2';
 import WhatIsMew from './components/WhatIsMew';
 import OurStory from './components/OurStory';
 import TwoBlockContent from './components/TwoBlockContent';

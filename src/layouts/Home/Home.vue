@@ -24,7 +24,7 @@ import Ad2 from './components/Ad2';
 import Partners from './components/Partners';
 
 export default {
-  name: 'HomeLayout',
+  name: 'Home',
   components: {
     TopBanner,
     Features,

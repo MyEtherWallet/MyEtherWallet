@@ -4,18 +4,21 @@
     <v-container>
       <BlockTitle :data="titleData" class="mb-10">
         <p class="white--text ma-0">
-          Please select a method to access your wallet.
+          Please select a method to create a new wallet.
         </p>
         <p class="white--text ma-0">
-          Don't have a wallet?
-          <router-link to="/" class="text-color--mew-green">
-            Get a new wallet
+          Already have a wallet?
+          <router-link
+            :to="{ name: 'HomeAccessWallet' }"
+            class="text-color--mew-green"
+          >
+            Access my wallet
           </router-link>
         </p>
       </BlockTitle>
       <v-sheet color="transparent" max-width="600px" class="mx-auto">
         <router-link
-          to="/create-wallet/mewconnect"
+          :to="{ name: 'HomeCreateWalletMewConnect', query: { step: '1' } }"
           class="text-decoration--none"
         >
           <MEWconnect
@@ -24,22 +27,9 @@
         </router-link>
         <div class="my-4" />
         <router-link
-          to="/create-wallet/mewconnect"
+          :to="{ name: 'HomeCreateWalletKeystore', query: { step: '1' } }"
           class="text-decoration--none"
         >
-          <Hardware
-            class="cursor--pointer user-select--none new-wallet-button"
-          />
-        </router-link>
-        <div class="my-4" />
-        <router-link
-          to="/create-wallet/mewconnect"
-          class="text-decoration--none"
-        >
-          <CX class="cursor--pointer user-select--none new-wallet-button" />
-        </router-link>
-        <div class="my-4" />
-        <router-link to="/create-wallet/keystore" class="text-decoration--none">
           <Software
             class="cursor--pointer user-select--none new-wallet-button"
           />
@@ -54,18 +44,16 @@
 <script>
 import BlockTitle from '@/layouts/components/BlockTitle';
 import MEWconnect from './components/MEWconnect';
-import Hardware from './components/Hardware';
-import CX from './components/CX';
 import Software from './components/Software';
 
 export default {
   name: 'CreateNewWallet',
-  components: { BlockTitle, MEWconnect, Hardware, CX, Software },
+  components: { BlockTitle, MEWconnect, Software },
   data: () => ({
     titleData: {
       textProps: 'white--text',
       toptitle: '',
-      title: 'Access My Wallet',
+      title: 'Get a New Wallet',
       description: '',
       centered: true
     }
