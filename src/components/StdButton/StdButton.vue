@@ -7,6 +7,7 @@
     :class="[buttonclass, minwidth == true ? 'btn-min-width' : '']"
     :disabled="disabled"
     :to="to"
+    :href="href"
   >
     <slot class="d-flex align-center" />
   </v-btn>
@@ -17,6 +18,7 @@ export default {
   props: {
     buttonclass: { default: 'button--green', type: String },
     to: { default: '', type: String },
+    href: { default: '', type: String },
     disabled: { default: false, type: Boolean },
     minwidth: { default: true, type: Boolean }
   },

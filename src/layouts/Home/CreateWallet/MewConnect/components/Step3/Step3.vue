@@ -19,10 +19,11 @@
       </div>
       <p class="mt-4 mb-0">
         Need more help?
-        <router-link
+        <a
           class="text-decoration--none text-color--mew-green font-weight-bold"
-          to="/"
-          >Watch tutorial</router-link
+          href="https://www.mewtopia.com/"
+          target="_blank"
+          >Watch tutorial</a
         >
       </p>
     </v-col>

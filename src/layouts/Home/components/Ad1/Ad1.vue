@@ -10,7 +10,12 @@
         </h2>
       </div>
       <v-spacer />
-      <StdButton buttonclass="button--white-border">Get Started</StdButton>
+      <StdButton
+        buttonclass="button--white-border"
+        href="https://www.mewtopia.com/"
+        target="_blank"
+        >Get Started</StdButton
+      >
     </v-card>
   </v-container>
 </template>
