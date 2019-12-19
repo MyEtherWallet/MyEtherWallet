@@ -203,31 +203,6 @@
               </a>
             </div>
           </div>
-          <div class="copyright">
-            <p>
-              {{ $t('footer.pricing-p') }}
-              <a
-                href="https://coingecko.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                >{{ $t('footer.coingecko') }}</a
-              >
-              <br />
-              {{ $t('footer.copyright') }}
-            </p>
-          </div>
-          <div class="social">
-            <a
-              v-for="link in links"
-              :key="link.class"
-              :href="link.to"
-              :aria-label="link.to"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              <i :class="'fa ' + link.class" />
-            </a>
-          </div>
         </div>
       </div>
     </div>
