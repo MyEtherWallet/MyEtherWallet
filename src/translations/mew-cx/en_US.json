@@ -82,9 +82,7 @@
   "token-added-success": "Successfully added token!",
   "copy-success": "Successfully Copied",
   "invalid-mnemonic": "Invalid Mnemonic",
-<<<<<<< HEAD
-  "coingecko": "CoinGecko"
-=======
+  "coingecko": "CoinGecko",
   "buy-eth": "Buy ETH",
   "generate-wallet-description": "Generate your own unique Ethereum wallet. Receive a public address (0x...) and encrypt it with a password.",
   "mnemonic-phrase": "Mnemonic Phrase",
@@ -92,5 +90,4 @@
   "private-key-description": "Add your wallet using a private key. Private keys are 64 hexadecimal characters.",
   "keystore-file-description": "Add your wallet using a keystore file. A keystore file is your private key encrypted into a JSON file format.",
   "chrome-cx": "Chrome Extension"
->>>>>>> 0e3dd685e42d064211bbf3b146389d68807fd6cf
 }
