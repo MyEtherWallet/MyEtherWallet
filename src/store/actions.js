@@ -68,22 +68,19 @@ const pruneNotifications = ({ commit, state }) => {
   const removeEntries = async entries => {
     const entry = entries.pop();
     if (entry) {
-      const address = val[0].toLowerCase();
+      const address = state.account.address.toLowerCase();
 
-
-      const idIndex = newNotif[address].findIndex(entry => entry.id === val[1].id);
+      const idIndex = newNotif[address].findIndex(item => item.id === entry.id);
       if (idIndex > -1) {
         newNotif[address].splice(idIndex, 1);
       }
-      removeEntries(entries);
-    } else {
-      return newNotif;
+      return removeEntries(entries);
     }
+    return newNotif;
   };
-
-  if (!state.notifications[state.account.address]) return;
-  const check = state.notifications[state.account.address]
-    .filter(entry => entry.network === state.network.type.name)
+  if (!newNotif[state.account.address]) return;
+  const check = newNotif[state.account.address]
+    .filter(item => item.network === state.network.type.name)
     .sort((a, b) => {
       a = a.timestamp;
       b = b.timestamp;
@@ -91,15 +88,17 @@ const pruneNotifications = ({ commit, state }) => {
       return a > b ? -1 : a < b ? 1 : 0;
     })
     .slice(25)
-    .filter(entry => {
+    .filter(item => {
       return (
-        (new Date().getTime() - new Date(entry.timestamp).getTime()) /
-          86400000 >
+        (new Date().getTime() - new Date(item.timestamp).getTime()) / 86400000 >
         5
       );
     });
+
   if (check.length > 0) {
-    removeEntries(check);
+    removeEntries(check).then(result => {
+      commit('UPDATE_NOTIFICATION', result);
+    });
   }
 };
 
