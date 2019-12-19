@@ -38,6 +38,7 @@ import mewcx from './mew-cx/ru_RU';
 import dappsAmbrpay from './dapps-ambrpay/ru_RU';
 import phishing from './other/phishing/ru_RU';
 import header from './header/ru_RU';
+import dappsMCDMaker from './dapps-mcd-maker/ru_RU';
 
 const ru_RU = {
   common: common,
@@ -78,6 +79,7 @@ const ru_RU = {
   mewcx: mewcx,
   dappsAmbrpay: dappsAmbrpay,
   phishing: phishing,
-  header: header
+  header: header,
+  dappsMCDMaker: dappsMCDMaker
 };
 export default ru_RU;

@@ -2,7 +2,7 @@
   <div class="modal-container">
     <b-modal
       ref="modal"
-      :title="$t('dappsMaker.deposit-title')"
+      :title="$t('dappsMCDMaker.deposit-title')"
       centered
       class="bootstrap-modal nopadding"
       hide-footer
@@ -14,7 +14,7 @@
           <div class="input-container">
             <div class="interface__block-title">
               {{
-                $t('dappsMaker.deposit-question-mcd', {
+                $t('dappsMCDMaker.deposit-question-mcd', {
                   currency: currentCdpType
                 })
               }}
@@ -26,7 +26,9 @@
             <div class="sub-text">
               <p v-if="!hasEnoughEth" class="above-max">
                 {{
-                  $t('dappsMaker.not-enough-token', { symbol: currentCdpType })
+                  $t('dappsMCDMaker.not-enough-token', {
+                    symbol: currentCdpType
+                  })
                 }}
               </p>
             </div>
@@ -35,7 +37,7 @@
 
         <div class="detail-info">
           <div class="info">
-            <h4>{{ $t('dappsMaker.detail-info') }}</h4>
+            <h4>{{ $t('dappsMCDMaker.detail-info') }}</h4>
             <div class="sliding-switch-white">
               <label class="switch">
                 <input
@@ -52,7 +54,7 @@
           >
             <div class="padding-container">
               <div class="grid-block">
-                <p>{{ $t('dappsMaker.currently-deposited') }}</p>
+                <p>{{ $t('dappsMCDMaker.currently-deposited') }}</p>
                 <p>
                   <b>{{ displayFixedValue(collateralAmount(), 5) }}</b>
                   {{ currentCdpType }}
@@ -61,7 +63,7 @@
               <div class="grid-block">
                 <p>
                   {{
-                    $t('dappsMaker.projected-liquidation', {
+                    $t('dappsMCDMaker.projected-liquidation', {
                       currency: currentCdpType
                     })
                   }}
@@ -72,7 +74,7 @@
                 </p>
               </div>
               <div class="grid-block">
-                <p>{{ $t('dappsMaker.projected-collat-ratio') }}</p>
+                <p>{{ $t('dappsMCDMaker.projected-collat-ratio') }}</p>
                 <p>
                   <b>
                     {{
@@ -89,11 +91,19 @@
         </div>
         <div class="buttons">
           <standard-button
-            :options="cancelButton"
+            :options="{
+              title: $t('common.cancel'),
+              buttonStyle: 'green-border',
+              noMinWidth: true
+            }"
             :click-function="closeModal"
           />
           <standard-button
-            :options="submitButton"
+            :options="{
+              title: $t('common.submit'),
+              buttonStyle: 'green',
+              noMinWidth: true
+            }"
             :button-disabled="canProceed ? false : true"
             :click-function="submitBtn"
           />
@@ -189,16 +199,6 @@ export default {
       textValues: {},
       fiatCurrency: 'USD',
       digitalCurrency: 'ETH',
-      cancelButton: {
-        title: 'Cancel',
-        buttonStyle: 'green-border',
-        noMinWidth: true
-      },
-      submitButton: {
-        title: 'Submit',
-        buttonStyle: 'green',
-        noMinWidth: true
-      },
       selectedCurrency: { symbol: 'ETH', name: 'Ethereum' },
       currentCdpType: 'ETH'
     };

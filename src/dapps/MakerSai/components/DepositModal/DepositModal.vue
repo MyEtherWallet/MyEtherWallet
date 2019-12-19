@@ -88,11 +88,19 @@
         </div>
         <div class="buttons">
           <standard-button
-            :options="cancelButton"
+            :options="{
+              title: $t('dappsMaker.cancel'),
+              buttonStyle: 'green-border',
+              noMinWidth: true
+            }"
             :click-function="closeModal"
           />
           <standard-button
-            :options="submitButton"
+            :options="{
+              title: $t('dappsMaker.submit'),
+              buttonStyle: 'green',
+              noMinWidth: true
+            }"
             :button-disabled="canProceed ? false : true"
             :click-function="submitBtn"
           />
@@ -175,17 +183,7 @@ export default {
       modalDetailInformation: false,
       textValues: {},
       fiatCurrency: 'USD',
-      digitalCurrency: 'ETH',
-      cancelButton: {
-        title: 'Cancel',
-        buttonStyle: 'green-border',
-        noMinWidth: true
-      },
-      submitButton: {
-        title: 'Submit',
-        buttonStyle: 'green',
-        noMinWidth: true
-      }
+      digitalCurrency: 'ETH'
     };
   },
   computed: {

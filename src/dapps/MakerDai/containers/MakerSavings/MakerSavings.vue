@@ -7,23 +7,25 @@
       <div style="padding: 10px;">
         <p>
           {{
-            $t('dappsMaker.dai-savings-rate', {
+            $t('dappsMCDMaker.dai-savings-rate', {
               value: displayPercentValue(yearlyRate)
             })
           }}
         </p>
-        <p>{{ $t('dappsMaker.deposited-amount', { value: deposited }) }}</p>
+        <p>
+          {{ $t('dappsMCDMaker.deposited-amount', { value: depositedValue }) }}
+        </p>
       </div>
       <div class="currency-picker-container">
         <div class="interface__block-title">
-          {{ $t('dappsMaker.earn-with-dai') }}
+          {{ $t('dappsMCDMaker.earn-with-dai') }}
         </div>
         <div v-if="showSetupScreen">
           <div>
             <p>
-              <b> {{ $t('dappsMaker.create-vault-proxy') }}</b>
+              <b> {{ $t('dappsMCDMaker.create-vault-proxy') }}</b>
             </p>
-            <p>{{ $t('dappsMaker.create-proxy-info-message') }}</p>
+            <p>{{ $t('dappsMCDMaker.create-proxy-info-message') }}</p>
             <div class="buttons-container">
               <div
                 :class="[
@@ -32,14 +34,14 @@
                 ]"
                 @click="BuildProxy"
               >
-                {{ $t('dappsMaker.setup') }}
+                {{ $t('dappsMCDMaker.setup') }}
               </div>
             </div>
           </div>
           <p>
-            <b> {{ $t('dappsMaker.savings-set-allowance') }}</b>
+            <b> {{ $t('dappsMCDMaker.savings-set-allowance') }}</b>
           </p>
-          <p>{{ $t('dappsMaker.savings-set-allowance-info') }}</p>
+          <p>{{ $t('dappsMCDMaker.savings-set-allowance-info') }}</p>
           <div class="buttons-container">
             <div
               :class="[
@@ -48,7 +50,7 @@
               ]"
               @click="setAllowance"
             >
-              {{ $t('dappsMaker.set') }}
+              {{ $t('dappsMCDMaker.set') }}
             </div>
           </div>
         </div>
@@ -59,29 +61,29 @@
                 :class="['submit-btn', showDepositDisplay ? 'active' : '']"
                 @click="showDeposit(true)"
               >
-                <h4>{{ $t('dappsMaker.deposit') }}</h4>
+                <h4>{{ $t('dappsMCDMaker.deposit') }}</h4>
               </button>
               <button
                 :class="['submit-btn', !showDepositDisplay ? 'active' : '']"
                 @click="showDeposit(false)"
               >
-                <h4>{{ $t('dappsMaker.withdraw') }}</h4>
+                <h4>{{ $t('dappsMCDMaker.withdraw') }}</h4>
               </button>
             </div>
           </div>
           <div v-if="showDepositDisplay">
             <div class="interface__block-title">
-              <span> {{ $t('dappsMaker.deposit') }}</span>
+              <span> {{ $t('dappsMCDMaker.deposit') }}</span>
               <div class="top-buttons" @click="setMaxDeposit">
-                <p>{{ $t('dappsMaker.entire-dai-balance') }}</p>
+                <p>{{ $t('dappsMCDMaker.entire-dai-balance') }}</p>
               </div>
             </div>
             <div class="dropdown-text-container dropdown-container no-point">
               <p>
                 <img :src="DaiIcon" class="icon-size" />
-                {{ $t('dappsMaker.dai') }}
+                {{ $t('dappsMCDMaker.dai') }}
                 <span class="subname"
-                  >- {{ $t('dappsMaker.dai-stable-coin') }}
+                  >- {{ $t('dappsMCDMaker.dai-stable-coin') }}
                 </span>
               </p>
             </div>
@@ -107,23 +109,23 @@
                 ]"
                 @click="deposit"
               >
-                {{ $t('dappsMaker.deposit') }}
+                {{ $t('dappsMCDMaker.deposit') }}
               </div>
             </div>
           </div>
           <div v-if="!showDepositDisplay">
             <div class="interface__block-title">
-              <span> {{ $t('dappsMaker.withdraw') }}</span>
+              <span> {{ $t('dappsMCDMaker.withdraw') }}</span>
               <div class="top-buttons" @click="setMaxWithdraw">
-                <p>{{ $t('dappsMaker.entire-deposit-balance') }}</p>
+                <p>{{ $t('dappsMCDMaker.entire-deposit-balance') }}</p>
               </div>
             </div>
             <div class="dropdown-text-container dropdown-container no-point">
               <p>
                 <img :src="DaiIcon" class="icon-size" />
-                {{ $t('dappsMaker.dai') }}
+                {{ $t('dappsMCDMaker.dai') }}
                 <span class="subname"
-                  >- {{ $t('dappsMaker.dai-stable-coin') }}
+                  >- {{ $t('dappsMCDMaker.dai-stable-coin') }}
                 </span>
               </p>
             </div>
@@ -143,7 +145,7 @@
                 ]"
                 @click="withdraw"
               >
-                {{ $t('dappsMaker.withdraw') }}
+                {{ $t('dappsMCDMaker.withdraw') }}
               </div>
             </div>
           </div>
@@ -220,7 +222,8 @@ export default {
       allowance: 0,
       daiAllowance: 0,
       proxyChecked: false,
-      allowanceChecked: false
+      allowanceChecked: false,
+      depositedValue: 0
     };
   },
   computed: {
@@ -330,6 +333,8 @@ export default {
     async depositBalance() {
       if (this.setupComplete) {
         this.deposited = await this.makerSaver.balance();
+        this.depositedValue = this.deposited._amount.toFixed(2);
+        console.error('this', this.deposited);
         if (this.deposited) {
           this.maxWithdrawable = this.deposited.toBigNumber().toString();
         }
