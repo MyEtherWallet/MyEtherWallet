@@ -79,8 +79,8 @@
           <div class="the-form contract-name">
             <input
               v-if="getType(input.type).type !== 'radio'"
-              :type="getType(input.type).type"
               v-model="inputs[input.name]"
+              :type="getType(input.type).type"
             />
             <div
               v-if="getType(input.type).type === 'radio'"
@@ -241,6 +241,7 @@ export default {
       } catch (err) {
         return this.bytecode;
       }
+      return null;
     },
     isValidByte() {
       return (

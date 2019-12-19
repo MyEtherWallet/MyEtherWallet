@@ -59,15 +59,7 @@ const AddrResolver = {
         }
         return false;
       };
-
-      if (EthereumTokens[parentCurrency] && parentCurrency !== 'ETH') {
-        const addCheck = WAValidator.validate(e, 'ETH');
-        if (addCheck) {
-          _this.isValidAddress = addCheck;
-          _this.hexAddress = toChecksumAddress(e);
-          removeElements();
-        }
-      } else if (Misc.isValidENSorEtherAddress(e)) {
+      if (Misc.isValidENSorEtherAddress(e)) {
         if (Misc.isValidETHAddress(e)) {
           if (!checkDarklist(e)) {
             _this.isValidAddress = true;
@@ -97,7 +89,10 @@ const AddrResolver = {
                 }
               })
               .catch(() => {
-                if (parentCurrency === 'ETH') {
+                if (
+                  parentCurrency === 'ETH' ||
+                  EthereumTokens[parentCurrency]
+                ) {
                   ens
                     .resolver(normalise(e))
                     .addr()

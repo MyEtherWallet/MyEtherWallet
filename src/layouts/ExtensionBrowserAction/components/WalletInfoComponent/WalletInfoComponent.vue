@@ -100,7 +100,7 @@
             }
           "
         >
-          {{ $t('header.access') }}
+          {{ $t('mewcx.access') }}
         </div>
         <div
           v-show="walletType !== 'watchOnly'"

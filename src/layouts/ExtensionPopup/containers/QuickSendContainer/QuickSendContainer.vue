@@ -48,7 +48,11 @@
           </span>
         </div>
       </form>
-      <form v-show="step === 2" class="send-to-container" @submit.prevent="next">
+      <form
+        v-show="step === 2"
+        class="send-to-container"
+        @submit.prevent="next"
+      >
         <div class="to-address-container">
           <label for="toAddress"> {{ $t('sendTx.to-addr') }} </label>
           <div class="to-address-input">

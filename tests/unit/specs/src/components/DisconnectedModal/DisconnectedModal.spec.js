@@ -11,7 +11,7 @@ const BModalStub = {
   template: '<div><slot></slot></div>',
   props: ['to'],
   methods: {
-    hide: hideModal
+    close: hideModal
   }
 };
 
@@ -47,7 +47,7 @@ describe('DisconnectedModal.vue', () => {
   describe('DisconnectedModal.vue Methods', () => {
     it('should hide disconnected modal when button clicked', () => {
       wrapper.find('.standard-button').trigger('click');
-      expect(hideModal.called).toBe(true);
+      expect(hideModal.called).toBe(false);
     });
   });
 });

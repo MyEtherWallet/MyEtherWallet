@@ -13,8 +13,8 @@
 
         <div class="the-form">
           <textarea
-            v-validate="'required'"
             v-model="message"
+            v-validate="'required'"
             name="message"
             class="custom-textarea-1"
           />
