@@ -5,18 +5,18 @@
         <p @click="checkMigrateContractSaiBalance">
           <b>
             {{
-              $t('dappsMaker.current-sai-balance', {
+              $t('dappsMCDMaker.current-sai-balance', {
                 value: migrateContractBalance
               })
             }}</b
           >
         </p>
         <div v-show="noSaiAvailable && !needsAtLeast20">
-          {{ $t('dappsMaker.not-enough-sai') }}
+          {{ $t('dappsMCDMaker.not-enough-sai') }}
         </div>
         <div v-show="needsAtLeast20" style="padding: 10px">
           {{
-            $t('dappsMaker.needs-at-least-20', {
+            $t('dappsMCDMaker.needs-at-least-20', {
               value: migrateContractBalance
             })
           }}
@@ -25,10 +25,12 @@
 
       <div class="currency-picker-container">
         <div class="interface__block-title">
-          {{ $t('dappsMaker.migrate-single-collateral-to-multi-collateral') }}
+          {{
+            $t('dappsMCDMaker.migrate-single-collateral-to-multi-collateral')
+          }}
         </div>
         <h4 v-show="!cdpDetailsLoaded">
-          {{ $t('dappsMaker.loading-your-cdps') }}
+          {{ $t('dappsMCDMaker.loading-your-cdps') }}
         </h4>
         <div v-for="cdpId in cdps" :key="cdpId">
           <div
@@ -48,7 +50,7 @@
           </div>
         </div>
         <div v-show="noCdpsToMigrateFound">
-          {{ $t('dappsMaker.no-cdps-to-migrate-found') }}
+          {{ $t('dappsMCDMaker.no-cdps-to-migrate-found') }}
         </div>
         <div class="buttons-container">
           <div
@@ -58,7 +60,7 @@
             ]"
             @click="beginMigration"
           >
-            {{ $t('dappsMaker.migrate') }}
+            {{ $t('dappsMCDMaker.migrate') }}
           </div>
         </div>
       </div>

@@ -2,20 +2,20 @@
   <div>
     <div class="currency-ops-new">
       <div class="info-box">
-        {{ $t('dappsMaker.upgrade-informational') }}
+        {{ $t('dappsMCDMaker.upgrade-informational') }}
       </div>
       <div class="currency-picker-container">
         <div class="interface__block-title">
-          {{ $t('dappsMaker.upgrade-sai-to-dai') }}
+          {{ $t('dappsMCDMaker.upgrade-sai-to-dai') }}
           <img :src="DaiIcon" class="icon-size" />
         </div>
         <div class="top-buttons">
-          <p @click="setMax">{{ $t('dappsMaker.entire-sai-balance') }}</p>
+          <p @click="setMax">{{ $t('dappsMCDMaker.entire-sai-balance') }}</p>
         </div>
         <div class="dropdown-text-container dropdown-container no-point">
           <p>
             <span class="cc DAI cc-icon cc-icon-dai currency-symbol" />
-            {{ $t('dappsMaker.sai') }}
+            {{ $t('dappsMCDMaker.sai') }}
           </p>
         </div>
         <input
@@ -34,7 +34,7 @@
             ]"
             @click="submitTransaction"
           >
-            {{ $t('dappsMaker.upgrade') }}
+            {{ $t('dappsMCDMaker.upgrade') }}
           </div>
         </div>
       </div>

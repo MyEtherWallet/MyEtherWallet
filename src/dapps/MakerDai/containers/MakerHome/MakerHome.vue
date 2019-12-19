@@ -5,10 +5,10 @@
         <div class="flex-col-vertical-center">
           <div class="card-content">
             <h2 class="color-white">
-              {{ $t('dappsMaker.migrate-old-dai-to-new-dai') }}
+              {{ $t('dappsMCDMaker.migrate-old-dai-to-new-dai') }}
             </h2>
             <p class="button">
-              {{ $t('dappsMaker.sai-to-dai') }}
+              {{ $t('dappsMCDMaker.sai-to-dai') }}
               <img src="~@/assets/images/icons/right-arrow.png" />
             </p>
           </div>
@@ -20,11 +20,13 @@
           <div class="card-content">
             <h2 class="color-white">
               {{
-                $t('dappsMaker.migrate-single-collateral-to-multi-collateral')
+                $t(
+                  'dappsMCDMaker.migrate-single-collateral-to-multi-collateral'
+                )
               }}
             </h2>
             <p class="button">
-              {{ $t('dappsMaker.migrate') }}
+              {{ $t('dappsMCDMaker.migrate') }}
               <img src="~@/assets/images/icons/right-arrow.png" />
             </p>
           </div>
@@ -37,10 +39,10 @@
         <div v-show="makerActive" class="flex-col-vertical-center">
           <div class="card-content">
             <h2 class="color-white">
-              {{ $t('dappsMaker.manage-your-vault') }}
+              {{ $t('dappsMCDMaker.manage-your-vault') }}
             </h2>
             <p class="button">
-              {{ $t('dappsMaker.manage') }}
+              {{ $t('dappsMCDMaker.manage') }}
               <img src="~@/assets/images/icons/right-arrow.png" />
             </p>
           </div>
@@ -48,7 +50,7 @@
         <div v-show="!makerActive" class="flex-col-vertical-center">
           <loading-sign
             :loadingmessage1="loadingMessage"
-            :loadingmessage2="$t('dappsMaker.initial-loading-two')"
+            :loadingmessage2="$t('dappsMCDMaker.initial-loading-two')"
           />
         </div>
       </div>
@@ -56,9 +58,11 @@
       <div class="card-block unlock-wallet" @click="gotoCreate">
         <div v-show="makerActive" class="flex-col-vertical-center">
           <div class="card-content">
-            <h2 class="color-white">{{ $t('dappsMaker.create-a-vault') }}</h2>
+            <h2 class="color-white">
+              {{ $t('dappsMCDMaker.create-a-vault') }}
+            </h2>
             <p class="button">
-              {{ $t('dappsMaker.create') }}
+              {{ $t('dappsMCDMaker.create') }}
               <img src="~@/assets/images/icons/right-arrow.png" />
             </p>
           </div>
@@ -66,7 +70,7 @@
         <div v-show="!makerActive" class="flex-col-vertical-center">
           <loading-sign
             :loadingmessage1="loadingMessage"
-            :loadingmessage2="$t('dappsMaker.initial-loading-two')"
+            :loadingmessage2="$t('dappsMCDMaker.initial-loading-two')"
           />
         </div>
       </div>
@@ -77,10 +81,10 @@
         <div class="flex-col-vertical-center">
           <div class="card-content">
             <h2 class="color-white">
-              {{ $t('dappsMaker.dai-savings') }}
+              {{ $t('dappsMCDMaker.dai-savings') }}
             </h2>
             <p class="button">
-              {{ $t('dappsMaker.save') }}
+              {{ $t('dappsMCDMaker.save') }}
               <img src="~@/assets/images/icons/right-arrow.png" />
             </p>
           </div>

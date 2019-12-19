@@ -73,7 +73,7 @@
         <div v-if="showMoveOrClose" class="header-buttons-container">
           <div class="inner-container">
             <button class="move-btn" @click="showMove">
-              <h4>{{ $t('dappsMaker.move-vault') }}</h4>
+              <h4>{{ $t('dappsMCDMaker.move-vault') }}</h4>
             </button>
           </div>
         </div>
@@ -91,7 +91,7 @@
           ]"
         >
           <div @click="openManage(value)">
-            <h4>{{ $t('dappsMaker.vault-id') }} #{{ value }}</h4>
+            <h4>{{ $t('dappsMCDMaker.vault-id') }} #{{ value }}</h4>
           </div>
         </div>
       </div>
@@ -589,9 +589,9 @@ export default {
     },
     async setupMCD() {
       try {
-        this.currentlyLoading = 'dappsMaker.load-operations';
+        this.currentlyLoading = 'dappsMCDMaker.load-operations';
         this._typeService = this.maker.service(ServiceRoles.CDP_TYPE);
-        this.currentlyLoading = 'dappsMaker.load-types';
+        this.currentlyLoading = 'dappsMCDMaker.load-types';
         this.mcdCurrencies = this._typeService.cdpTypes.reduce((acc, entry) => {
           acc[entry.currency.symbol] = entry;
           acc[entry.currency.symbol].symbol = entry.currency.symbol;
@@ -616,7 +616,7 @@ export default {
       }
 
       try {
-        this.currentlyLoading = 'dappsMaker.loading-wallet';
+        this.currentlyLoading = 'dappsMCDMaker.loading-wallet';
         const MewMakerPlugin = MewPlugin(
           web3,
           _self.account.address,
@@ -656,7 +656,7 @@ export default {
       this.setupMCD();
       try {
         await this.maker.authenticate();
-        this.currentlyLoading = 'dappsMaker.loading-system';
+        this.currentlyLoading = 'dappsMCDMaker.loading-system';
 
         await setupServices(this, this.maker);
 
@@ -684,7 +684,7 @@ export default {
 
         this.currentProxy = await this.getProxy();
 
-        this.currentlyLoading = 'dappsMaker.loading-locating-vaults';
+        this.currentlyLoading = 'dappsMCDMaker.loading-locating-vaults';
         try {
           const { withType, withProxy, withoutProxy } = await locateCdps(
             this,
@@ -699,7 +699,7 @@ export default {
         }
 
         if (this.cdps.length > 0 || this.cdpsWithoutProxy.length > 0) {
-          this.currentlyLoading = 'dappsMaker.loading-vaults';
+          this.currentlyLoading = 'dappsMCDMaker.loading-vaults';
           await this.loadCdpDetails(this.cdps, this.cdpsWithoutProxy);
         }
       } catch (e) {

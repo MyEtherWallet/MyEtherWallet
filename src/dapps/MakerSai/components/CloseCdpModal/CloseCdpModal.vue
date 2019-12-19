@@ -75,24 +75,44 @@
         <div class="buttons">
           <div v-if="needsDaiApprove">
             <standard-button
-              :options="approveDaiButton"
+              :options="{
+                title: $t('dappsMaker.approve-dai'),
+                buttonStyle: 'green-border',
+                fullWidth: true,
+                noMinWidth: true
+              }"
               :click-function="approveDai"
             />
           </div>
           <div v-if="needsMkrApprove">
             <standard-button
-              :options="approveMkrButton"
+              :options="{
+                title: $t('dappsMaker.approve-maker'),
+                buttonStyle: 'green-border',
+                fullWidth: true,
+                noMinWidth: true
+              }"
               :click-function="approveMkr"
             />
           </div>
         </div>
         <div class="buttons">
           <standard-button
-            :options="cancelButton"
+            :options="{
+              title: $t('common.cancel'),
+              buttonStyle: 'green-border',
+              fullWidth: true,
+              noMinWidth: true
+            }"
             :click-function="closeModal"
           />
           <standard-button
-            :options="closeButton"
+            :options="{
+              title: $t('common.close'),
+              buttonStyle: 'green',
+              fullWidth: true,
+              noMinWidth: true
+            }"
             :button-disabled="canClose ? false : true"
             :click-function="closeCdp"
           />
@@ -164,18 +184,6 @@ export default {
       textValues: {},
       mkrToken: {},
       daiToken: {},
-      approveMkrButton: {
-        title: 'Approve Maker',
-        buttonStyle: 'green-border',
-        fullWidth: true,
-        noMinWidth: true
-      },
-      approveDaiButton: {
-        title: 'Approve Dai',
-        buttonStyle: 'green-border',
-        fullWidth: true,
-        noMinWidth: true
-      },
       cancelButton: {
         title: 'Cancel',
         buttonStyle: 'green-border',
