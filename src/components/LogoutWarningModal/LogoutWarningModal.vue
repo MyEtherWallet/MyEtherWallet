@@ -22,7 +22,7 @@
               fullWidth: true,
               noMinWidth: true
             }"
-            @click.native="cancel"
+            :click-function="cancel"
           />
           <standard-button
             :options="{
@@ -33,7 +33,7 @@
               fullWidth: true,
               noMinWidth: true
             }"
-            @click.native="logout"
+            :click-function="logout"
           />
         </div>
       </div>

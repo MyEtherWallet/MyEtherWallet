@@ -28,7 +28,7 @@
               title: $t('common.ok'),
               buttonStyle: 'green'
             }"
-            @click.native="close"
+            :click-function="close"
           />
         </div>
       </div>

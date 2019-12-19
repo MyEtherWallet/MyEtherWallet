@@ -88,7 +88,7 @@
             noMinWidth: true,
             fullWidth: false
           }"
-          @click.native="openCustomModal"
+          :click-function="openCustomModal"
         />
       </div>
       <span v-show="reLoading">{{ $t('nftManager.reloading') }}</span>

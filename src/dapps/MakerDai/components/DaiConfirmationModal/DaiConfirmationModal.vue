@@ -79,7 +79,7 @@
               buttonStyle: 'green',
               helpCenter: true
             }"
-            @click.native="confirmClicked"
+            :click-function="confirmClicked"
           />
         </div>
       </div>

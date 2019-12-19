@@ -28,7 +28,7 @@
         <div class="button-container">
           <standard-button
             :options="printButtonOptions"
-            @click.native="print"
+            :click-function="print"
           />
         </div>
       </div>

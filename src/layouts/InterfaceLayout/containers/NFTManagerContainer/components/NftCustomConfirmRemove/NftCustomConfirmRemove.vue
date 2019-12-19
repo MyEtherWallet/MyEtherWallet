@@ -16,7 +16,7 @@
             noMinWidth: true,
             fullWidth: false
           }"
-          @click.native="continueRemove"
+          :click-function="continueRemove"
         />
         <standard-button
           :options="{
@@ -26,7 +26,7 @@
             noMinWidth: true,
             fullWidth: false
           }"
-          @click.native="cancelRemove"
+          :click-function="cancelRemove"
         />
       </div>
     </b-modal>

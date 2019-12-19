@@ -82,7 +82,7 @@
               fullWidth: true
             }"
             :spinner="spinner"
-            @click.native="unlockWallet"
+            :click-function="unlockWallet"
           />
         </div>
       </form>

@@ -144,10 +144,12 @@
               noWalletTerms: true
             }"
             :button-disabled="!canSwap"
-            @click.native="
-              updateStep('');
-              stageComplete('step2');
-              createExitOrder();
+            :click-function="
+              () => {
+                updateStep('');
+                stageComplete('step2');
+                createExitOrder();
+              }
             "
           />
           <div
