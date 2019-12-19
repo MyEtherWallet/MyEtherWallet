@@ -11,7 +11,7 @@
     />
     <img
       :src="supported ? icon : iconDisabled"
-      :class="title === 'Ambrpay' ? 'ambrpay-icon' : ''"
+      :class="[title === 'Ambrpay' ? 'ambrpay-icon' : '', 'dapp-logo']"
       alt
     />
     <div>
@@ -63,6 +63,7 @@ export default {
       if (this.online) {
         return this.supportedNetworks.includes(this.network.type.name);
       }
+      return null;
     },
     isBeenTwoWeeks() {
       const today = new Date();

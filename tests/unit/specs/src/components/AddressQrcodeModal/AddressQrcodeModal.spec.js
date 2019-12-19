@@ -25,12 +25,13 @@ describe('AddressQrcodeModal.vue', () => {
       attachToDocument: true,
       stubs: {
         qrcode: VueQrcode
-      }
+      },
+      sync: false
     });
   });
 
   it('should render correct address props', () => {
-    const address = 'address';
+    const address = '';
     wrapper.setProps({ address });
     expect(wrapper.vm.$el.querySelector('textarea.address').value).toEqual(
       address

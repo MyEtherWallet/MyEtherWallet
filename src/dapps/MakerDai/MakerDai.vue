@@ -144,10 +144,6 @@
 <script>
 import { mapState } from 'vuex';
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
-import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
-import InterfaceBottomText from '@/components/InterfaceBottomText';
-import Blockie from '@/components/Blockie';
-import CloseCdpModal from './components/CloseCdpModal';
 import MoveCdpModal from './components/MoveCdpModal';
 import GenerateModal from './components/GenerateModal';
 import DepositModal from './components/DepositModal';
@@ -201,15 +197,11 @@ const ServiceRoles = {
 };
 export default {
   components: {
-    'interface-container-title': InterfaceContainerTitle,
-    'interface-bottom-text': InterfaceBottomText,
     'generate-modal': GenerateModal,
     'deposit-modal': DepositModal,
     'withdraw-modal': WithdrawModal,
     'payback-modal': PaybackModal,
-    blockie: Blockie,
     'back-button': BackButton,
-    'close-cdp-modal': CloseCdpModal,
     'move-cdp-modal': MoveCdpModal
   },
   props: {
@@ -779,8 +771,14 @@ export default {
     },
     async updateActiveCdp() {
       await updateActiveCdp(this);
-      if (this.cdps.length === 0 && this.cdpsWithoutProxy.length === 0) {
+      if (
+        this.cdps.length === 0 &&
+        this.cdpsWithoutProxy.length === 0 &&
+        !(this.$route.name === 'save')
+      ) {
         this.gotoCreate();
+      } else if (this.$route.name === 'save') {
+        this.goToSave();
       }
     },
     wipeDai(val) {
@@ -800,10 +798,14 @@ export default {
     },
     gotoCreate() {
       if (this.$route.path.includes('maker-dai')) {
-        this.activeValues = this.systemValues;
-        this.$router.push({
-          name: 'create'
-        });
+        if (this.$route.name === 'save') {
+          this.goToSave();
+        } else {
+          this.activeValues = this.systemValues;
+          this.$router.push({
+            name: 'create'
+          });
+        }
       }
     },
     goToSave() {
