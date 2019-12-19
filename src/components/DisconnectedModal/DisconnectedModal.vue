@@ -23,7 +23,10 @@
           {{ $t('interface.mewconnect-disconnected') }}
         </div>
         <div class="ok-button">
-          <standard-button :options="okayButtonOptions" @click.native="close" />
+          <standard-button
+            :options="okayButtonOptions"
+            :click-function="close"
+          />
         </div>
       </div>
     </b-modal>

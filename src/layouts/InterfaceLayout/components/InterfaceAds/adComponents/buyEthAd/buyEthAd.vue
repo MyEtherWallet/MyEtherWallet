@@ -6,7 +6,7 @@
         <div class="bottom-block">
           <standard-button
             :options="sendButton"
-            @click.native="showSwapWidget"
+            :click-function="showSwapWidget"
           />
           <img alt class="cc-cards" src="@/assets/images/etc/visamaster.png" />
         </div>
