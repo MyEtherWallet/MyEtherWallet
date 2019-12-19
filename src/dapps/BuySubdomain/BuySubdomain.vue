@@ -71,13 +71,11 @@ import normalise from '@/helpers/normalise';
 import BigNumber from 'bignumber.js';
 import web3 from 'web3';
 import { mapState } from 'vuex';
-import StandardButton from '@/components/Buttons/StandardButton';
 import { Toast } from '@/helpers';
 export default {
   components: {
     'interface-bottom-text': InterfaceBottomText,
-    'back-button': BackButton,
-    'standard-button': StandardButton
+    'back-button': BackButton
   },
   data() {
     return {

@@ -62,12 +62,12 @@
         :key="button.title + index"
         :func="button.func"
         :img="button.icon"
-        :title="button.title"
-        :recommend="button.warning"
+        :title="$t(button.title)"
+        :recommend="$t(button.warning)"
         :disabled="false"
         :classname="'extension-selection'"
         :img-padding="button.imgPadding"
-        :desc="button.desc"
+        :desc="$t(button.desc)"
       />
     </div>
   </div>
@@ -115,8 +115,8 @@ export default {
         {
           key: 'GEN',
           icon: generateImgHov,
-          title: this.$t('mewcx.generate-wallet'),
-          desc: this.$t('mewcx.generate-wallet-description'),
+          title: 'mewcx.generate-wallet',
+          desc: 'mewcx.generate-wallet-description',
           warning: '',
           imgPadding: '6px',
           func: () => {
@@ -126,8 +126,8 @@ export default {
         {
           key: mnemonicType,
           icon: byMnemImgHov,
-          title: this.$t('mewcx.mnemonic-phrase'),
-          desc: this.$t('mewcx.mnemonic-phrase-description'),
+          title: 'mewcx.mnemonic-phrase',
+          desc: 'mewcx.mnemonic-phrase-description',
           warning: '',
           func: () => {
             this.toggleImportMnemonicPhrase(true);
@@ -136,8 +136,8 @@ export default {
         {
           key: privateKeyType,
           icon: privateKeyImgHov,
-          title: this.$t('mewcx.private-key'),
-          desc: this.$t('mewcx.private-key-description'),
+          title: 'mewcx.private-key',
+          desc: 'mewcx.private-key-description',
           warning: '',
           func: () => {
             this.toggleImportPrivateKey(true);
@@ -146,9 +146,9 @@ export default {
         {
           key: keyStoreType,
           icon: byJsonImgHov,
-          title: this.$t('mewcx.keystore-file'),
+          title: 'mewcx.keystore-file',
           imgPadding: '15px',
-          desc: this.$t('mewcx.keystore-file-description'),
+          desc: 'mewcx.keystore-file-description',
           warning: '',
           func: () => {
             this.toggleImportKeystoreFile(true);
