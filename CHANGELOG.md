@@ -1,9 +1,5 @@
 ### Release v5.2.8
 
-### Feature
-
-- SotD on the v5 dapps interface [#1731](https://github.com/MyEtherWallet/MyEtherWallet/pull/1731)
-
 ### Bug
 
 - Receive function instead of attaching to parent on standard button [#1763](https://github.com/MyEtherWallet/MyEtherWallet/pull/1763)
