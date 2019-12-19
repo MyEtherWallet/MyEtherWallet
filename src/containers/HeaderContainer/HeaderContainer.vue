@@ -79,16 +79,6 @@
                     class="buy-eth"
                     rel="noopener noreferrer"
                   >
-<<<<<<< HEAD
-                </b-nav-item-dropdown>
-                <b-nav-item v-if="!isMewCx" to="/#faqs">{{
-                  $t('common.faqs')
-                }}</b-nav-item>
-                <div v-show="!isMewCx" class="language-menu-container">
-                  <div class="arrows">
-                    <i class="fa fa-angle-down" aria-hidden="true" />
-                  </div>
-=======
                     <img
                       alt
                       class="buy-eth-icon"
@@ -102,7 +92,6 @@
                   <b-nav-item v-if="isHomePage && !isMewCx" to="/#about-mew">
                     {{ $t('common.about') }}
                   </b-nav-item>
->>>>>>> 0e3dd685e42d064211bbf3b146389d68807fd6cf
                   <b-nav-item-dropdown
                     v-if="address !== null"
                     right
@@ -116,74 +105,6 @@
                       <p>{{ serviceUrl }} ({{ network.type.name }})</p>
                     </b-dropdown-item>
                     <b-dropdown-item
-<<<<<<< HEAD
-                      v-for="language in supportedLanguages"
-                      :key="language.key"
-                      :active="$root._i18n.locale === language.langCode"
-                      :data-language-code="language.langCode"
-                      :data-flag-name="language.flag"
-                      @click="languageItemClicked(language)"
-                      >{{ language.name }}</b-dropdown-item
-                    >
-                  </b-nav-item-dropdown>
-                </div>
-                <div class="notification-menu-container">
-                  <notification
-                    v-if="
-                      $route.fullPath.includes('view-wallet-info') ||
-                        $route.fullPath.includes('interface')
-                    "
-                    ref="notification"
-                  />
-                  <extension-notification
-                    v-if="
-                      isMewCx &&
-                        !$route.fullPath.includes('view-wallet-info') &&
-                        !$route.fullPath.includes('interface')
-                    "
-                    ref="extensionNotification"
-                  />
-                </div>
-                <b-nav-item
-                  v-if="showButtons && !isPageOnTop && !isMewCx"
-                  :class="[
-                    showGetFreeWallet ? 'show' : 'hide',
-                    'get-free-wallet first-button nopadding'
-                  ]"
-                  to="/create-wallet"
-                >
-                  <div class="get-free-wallet-button">
-                    {{ $t('header.new-wallet') }}
-                  </div>
-                </b-nav-item>
-                <b-nav-item
-                  v-if="showButtons && !isPageOnTop && !isMewCx"
-                  :class="[
-                    showGetFreeWallet ? 'show' : 'hide',
-                    'get-free-wallet nopadding'
-                  ]"
-                  to="/access-my-wallet"
-                >
-                  <div class="access-button">
-                    {{ $t('header.access') }}
-                  </div>
-                </b-nav-item>
-                <b-nav-item-dropdown
-                  v-if="address !== null"
-                  right
-                  no-caret
-                  extra-toggle-classes="identicon-dropdown"
-                  class="settings-menu"
-                >
-                  <template slot="button-content">
-                    <div class="settings-container">
-                      <blockie
-                        :address="address"
-                        width="35px"
-                        height="35px"
-                        class="blockie-image"
-                      />
-=======
                       v-show="network.type.name === 'ETH'"
                       :href="'https://ethplorer.io/address/' + address"
                       target="_blank"
@@ -196,10 +117,8 @@
                   <b-nav-item v-if="!isMewCx" to="/#faqs">{{
                     $t('common.faqs')
                   }}</b-nav-item>
-                  <!-- Commented for now waiting for all Translations to be done -->
-                  <!-- <div v-show="!isMewCx" class="language-menu-container">
+                  <div v-show="!isMewCx" class="language-menu-container">
                     <div class="arrows">
->>>>>>> 0e3dd685e42d064211bbf3b146389d68807fd6cf
                       <i class="fa fa-angle-down" aria-hidden="true" />
                     </div>
                     <b-nav-item-dropdown
@@ -230,7 +149,7 @@
                         >{{ language.name }}</b-dropdown-item
                       >
                     </b-nav-item-dropdown>
-                  </div> -->
+                  </div>
                   <div class="notification-menu-container">
                     <notification
                       v-if="
