@@ -10,9 +10,12 @@
       <div class="button-container">
         <standard-button
           :options="removeButton"
-          @click.native="continueRemove"
+          :click-function="continueRemove"
         />
-        <standard-button :options="cancelButton" @click.native="cancelRemove" />
+        <standard-button
+          :options="cancelButton"
+          :click-function="cancelRemove"
+        />
       </div>
     </b-modal>
   </div>

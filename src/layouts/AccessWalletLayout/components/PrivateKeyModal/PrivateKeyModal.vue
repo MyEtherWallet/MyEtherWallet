@@ -28,8 +28,8 @@
         <standard-button
           :button-disabled="notValid"
           :options="accessWalletButtonOptions"
+          :click-function="unlockWallet"
           class="submit-button"
-          @click.native.prevent="unlockWallet"
         />
       </form>
       <div class="customer-support-block">
