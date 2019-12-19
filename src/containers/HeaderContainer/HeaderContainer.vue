@@ -145,7 +145,7 @@
                         :active="$root._i18n.locale === language.langCode"
                         :data-language-code="language.langCode"
                         :data-flag-name="language.flag"
-                        @click="languageItemClicked"
+                        @click="languageItemClicked(language)"
                         >{{ language.name }}</b-dropdown-item
                       >
                     </b-nav-item-dropdown>
@@ -157,14 +157,6 @@
                           $route.fullPath.includes('interface')
                       "
                       ref="notification"
-                    />
-                    <extension-notification
-                      v-if="
-                        isMewCx &&
-                          !$route.fullPath.includes('view-wallet-info') &&
-                          !$route.fullPath.includes('interface')
-                      "
-                      ref="extensionNotification"
                     />
                   </div>
                   <b-nav-item
@@ -243,7 +235,6 @@ import IssueLogModal from '@/components/IssueLogModal';
 import BigNumber from 'bignumber.js';
 import MobileMenu from './components/MobileMenu';
 import DisconnectedModal from '@/components/DisconnectedModal';
-import ExtensionNotification from '@/layouts/ExtensionBrowserAction/containers/ExtensionNotification';
 import DecisionTree from '@/components/DecisionTree';
 import CxHeader from '@/layouts/ExtensionBrowserAction/components/CxHeader';
 
@@ -262,7 +253,6 @@ export default {
     'user-reminder-button': UserReminderButton,
     'mobile-menu': MobileMenu,
     'disconnected-modal': DisconnectedModal,
-    'extension-notification': ExtensionNotification,
     'decision-tree': DecisionTree,
     'cx-header': CxHeader
   },
@@ -381,7 +371,6 @@ export default {
 
     this.$eventHub.$on('issueModal', (error, resolve) => {
       // eslint-disable-next-line
-      console.log(error);
       let errorPop = store.get('errorPop') || 0;
       errorPop += 1;
       store.set('errorPop', errorPop);
