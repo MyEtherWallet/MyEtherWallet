@@ -19,6 +19,7 @@
 - Revert trezor version back to 7[#1737](https://github.com/MyEtherWallet/MyEtherWallet/pull/1772)
 - Refactor maker translations[#1737](https://github.com/MyEtherWallet/MyEtherWallet/pull/1737)
 - Add new MEW nodes[#1750](https://github.com/MyEtherWallet/MyEtherWallet/pull/1750)
+- Fix UI overflow [#1776](https://github.com/MyEtherWallet/MyEtherWallet/pull/1776)
 
 ### Release v5.2.7
 
