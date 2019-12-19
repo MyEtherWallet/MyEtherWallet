@@ -93,7 +93,7 @@
               helpCenter: true
             }"
             :button-disabled="signedTx !== '' ? false : true"
-            @click.native="sendTx"
+            :click-function="sendTx"
           />
         </div>
       </div>

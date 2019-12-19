@@ -13,7 +13,7 @@
               fullWidth: true,
               paddingSmall: true
             }"
-            @click.native="showSwapWidget"
+            :click-function="showSwapWidget"
           />
           <img alt class="cc-cards" src="@/assets/images/etc/visamaster.png" />
         </div>

@@ -24,7 +24,7 @@
                   noMinWidth: true,
                   fullWidth: true
                 }"
-                @click.native="transfer"
+                :click-function="transfer"
               />
             </div>
           </div>

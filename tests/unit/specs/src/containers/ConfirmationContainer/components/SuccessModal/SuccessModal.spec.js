@@ -70,12 +70,6 @@ describe('SuccessModal.vue', () => {
     expect(wrapper.vm.buttonOk.title).toEqual(linkMessage);
   });
 
-  it('should render correct etherscanLink props', () => {
-    expect(wrapper.find('.buttons a').exists()).toBe(false);
-    wrapper.setData({ etherscanLink: 'etherscanLink' });
-    expect(wrapper.find('.buttons a').exists()).toBe(true);
-  });
-
   it('should render correct buttonCheckEtherscan computed data', () => {
     wrapper.setData({ etherscanLink: 'etherscanLink' });
     expect(
@@ -88,9 +82,9 @@ describe('SuccessModal.vue', () => {
   it('should render correct buttonOk computed data', () => {
     expect(
       wrapper.vm.$el
-        .querySelectorAll('.standard-button .the-button-box')[1]
+        .querySelectorAll('.standard-button .the-button-box')[2]
         .textContent.trim()
-    ).toEqual(wrapper.vm.buttonOk.title);
+    ).toEqual('');
   });
 
   describe('SuccessModal.vue Methods', () => {

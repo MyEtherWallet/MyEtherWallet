@@ -49,7 +49,7 @@
             noMinWidth: true,
             fullWidth: true
           }"
-          @click.native="continueAccess"
+          :click-function="continueAccess"
         />
       </div>
       <customer-support />

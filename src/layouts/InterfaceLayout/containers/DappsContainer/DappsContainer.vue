@@ -15,35 +15,6 @@
           :release-date="dapp.releaseDate"
         />
       </div>
-      <div v-if="soDapps.length > 0">
-        <div class="line-container">
-          <div class="line"></div>
-          <a
-            href="https://www.stateofthedapps.com"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {{ $t('mewcx.powered-by') }}
-            <img
-              :alt="$t('mewcx.sotd')"
-              src="@/assets/images/icons/dapps/sotd.png"
-            />
-          </a>
-          <div class="line"></div>
-        </div>
-        <div class="buttons-container">
-          <dapp-buttons
-            v-for="dapp in soDapps"
-            :key="dapp.title"
-            :title="dapp.name"
-            :icon="dapp.iconUrl"
-            :desc="dapp.teaser"
-            :param="'/interface/dapps/' + dapp.slug"
-            :supported-networks="['ETH']"
-            :release-date="dapp.created"
-          />
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -62,12 +33,11 @@ export default {
   },
   data() {
     return {
-      dapps,
-      soDapps: []
+      dapps
     };
   },
   computed: {
-    ...mapState(['network', 'online']),
+    ...mapState(['network']),
     sortedObject() {
       const arrayedDapp = [];
       Object.keys(this.dapps).forEach(dapp => {
@@ -87,26 +57,7 @@ export default {
         });
     }
   },
-  mounted() {
-    if (this.online) {
-      this.fetchDapps();
-    }
-  },
-  methods: {
-    async fetchDapps() {
-      const dapps = await fetch(
-        'https://swap.mewapi.io/proxy?url=https://api.stateofthedapps.com/dapps?tags=mew'
-      )
-        .then(res => {
-          return res.json();
-        })
-        .catch(e => {
-          // eslint-disable-next-line
-        console.error(e);
-        });
-      this.soDapps = dapps.items.map(item => item);
-    }
-  }
+  mounted() {}
 };
 </script>
 

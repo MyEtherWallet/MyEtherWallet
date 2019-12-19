@@ -63,7 +63,7 @@
               noMinWidth: true,
               buttonDisabled: false
             }"
-            @click.native="mouseScrollUp"
+            :click-function="mouseScrollUp"
           />
           <standard-button
             v-if="cwwCurrent !== 5"
@@ -73,7 +73,7 @@
               rightArrow: true,
               noMinWidth: false
             }"
-            @click.native="mouseScrollDown"
+            :click-function="mouseScrollDown"
           />
           <standard-button
             v-if="cwwCurrent == 5"
@@ -84,7 +84,7 @@
               noMinWidth: true,
               buttonDisabled: false
             }"
-            @click.native="done"
+            :click-function="done"
           />
         </div>
         <div class="create-wallet-warnings__footer">
