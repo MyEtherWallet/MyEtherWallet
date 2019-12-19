@@ -1,3 +1,7 @@
+### Bug
+
+- Fix resolver when currency is ethereum token [#1774](https://github.com/MyEtherWallet/MyEtherWallet/pull/1774)
+
 ### Release v5.2.8
 
 ### Bug
