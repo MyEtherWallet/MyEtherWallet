@@ -171,12 +171,6 @@ export default {
   watch: {
     notifications() {
       this.countUnread();
-    },
-    network() {
-      this.pruneNotifications();
-    },
-    ['account.address']() {
-      this.pruneNotifications();
     }
   },
   mounted() {
@@ -188,45 +182,12 @@ export default {
     if (this.online) {
       this.fetchBalanceData();
       this.checkForUnResolvedTxNotifications();
-      this.pruneNotifications();
     }
   },
   methods: {
     hiddenModal() {
       this.shown = false;
       this.hideDetails();
-    },
-    pruneNotifications() {
-      const removeEntries = entries => {
-        const entry = entries.pop();
-        if (entry) {
-          this.$store
-            .dispatch('removeNotification', [this.account.address, entry])
-            .then(() => {
-              removeEntries(entries);
-            });
-        }
-      };
-      if (!this.notifications[this.account.address]) return;
-      const check = this.notifications[this.account.address]
-        .filter(entry => entry.network === this.network.type.name)
-        .sort((a, b) => {
-          a = a.timestamp;
-          b = b.timestamp;
-
-          return a > b ? -1 : a < b ? 1 : 0;
-        })
-        .slice(25)
-        .filter(entry => {
-          return (
-            (new Date().getTime() - new Date(entry.timestamp).getTime()) /
-              86400000 >
-            5
-          );
-        });
-      if (check.length > 0) {
-        removeEntries(check);
-      }
     },
     checkForUnResolvedTxNotifications() {
       if (!this.notifications[this.account.address]) return [];
