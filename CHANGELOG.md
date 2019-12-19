@@ -1,11 +1,8 @@
-### Bug
-
-- Catch error when cryptokitties api 500s [#1775](https://github.com/MyEtherWallet/MyEtherWallet/pull/1775)
-
 ### Release v5.2.8
 
 ### Bug
 
+- Catch error when cryptokitties api 500s [#1775](https://github.com/MyEtherWallet/MyEtherWallet/pull/1775)
 - Receive function instead of attaching to parent on standard button [#1763](https://github.com/MyEtherWallet/MyEtherWallet/pull/1763)
 - Fix offline send helper & out of memory error on local build [#1741](https://github.com/MyEtherWallet/MyEtherWallet/pull/1741)
 - Fix Schedule Transaction, Drop Down Bug [#1747](https://github.com/MyEtherWallet/MyEtherWallet/pull/1747)
