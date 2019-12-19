@@ -1,4 +1,4 @@
-@import '~@/scss/GlobalVariables';
+@import "~@/scss/GlobalVariables";
 
 .cx-menu {
   padding: 10px 20px 10px 10px;
@@ -19,6 +19,7 @@
   width: 100%;
   */
   //box-shadow: 0 2px 13px rgba(0, 0, 0, 0.1);
+  min-width: 960px;
   background-color: white;
   border-bottom: 1px solid #e8e8e8;
 }
