@@ -456,7 +456,7 @@ export default {
           ];
           const imageKey = this.nftData[contract].imageKey || 'image_url_png';
 
-          const list = getNestedObject(rawJson, metadataKeys).map(val => {
+          const list = getNestedObject(rawJson, metadataKeys) ? getNestedObject(rawJson, metadataKeys).map(val => {
             return {
               contract: contract,
               token: val.id,
@@ -464,11 +464,13 @@ export default {
                 ? `${URL_BASE}/image?path=${val[imageKey]}`
                 : ''
             };
-          });
-
-          this.nftData[contract].details = list.slice(0, 9);
-          this.$set(this.nftData[contract], 'details', list.slice(0, 9));
-          return this.nftData[contract].details;
+          }) : [];
+          if (list.length > 0) {
+            this.nftData[contract].details = list.slice(0, 9);
+            this.$set(this.nftData[contract], 'details', list.slice(0, 9));
+            return this.nftData[contract].details;
+          }
+          return []
         })
         .then(list => {
           if (!list) return;
