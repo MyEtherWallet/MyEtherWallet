@@ -81,7 +81,11 @@
             :title="$t(button.title)"
             :desc="$t(button.desc)"
             :recommend="$t(button.recommend)"
+<<<<<<< HEAD
             :tooltip="button.tooltip"
+=======
+            :tooltip="$t(button.tooltip)"
+>>>>>>> 0e3dd685e42d064211bbf3b146389d68807fd6cf
             :disabled="button.disabled"
             :classname="button.classname"
           />
@@ -164,7 +168,12 @@ export default {
         {
           func: this.hardwareModalOpen,
           title: 'accessWallet.hardware.option-title',
+<<<<<<< HEAD
           desc: 'accessWallet.hardware.examples',
+=======
+          desc:
+            'Ledger wallet, FINNEY, Trezor, BitBox, Secalot, KeepKey, XWallet',
+>>>>>>> 0e3dd685e42d064211bbf3b146389d68807fd6cf
           recommend: '',
           tooltip: '',
           img: hardwareImg,
