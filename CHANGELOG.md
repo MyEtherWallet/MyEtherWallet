@@ -1,3 +1,7 @@
+### Bug
+
+- Might be a fix to that intermittent error after logging out [#1773](https://github.com/MyEtherWallet/MyEtherWallet/pull/1773)
+
 ### Release v5.2.8
 
 ### Bug
