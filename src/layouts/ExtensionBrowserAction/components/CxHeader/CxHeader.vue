@@ -16,7 +16,7 @@
               alt
               height="50"
             />
-            <p>Chrome Extension</p>
+            <p>{{ $t('mewcx.chrome-cx') }}</p>
           </div>
         </b-nav-item>
         <div class="spacer"></div>

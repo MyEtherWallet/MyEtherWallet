@@ -63,7 +63,7 @@
         <div class="tx-contents">
           <div class="content-container mobile-hide">
             <interface-address
-              v-if="Object.keys(wallet).length > 1"
+              v-if="wallet"
               :address="address"
               :print="print"
               :switch-addr="switchAddress"
@@ -214,6 +214,7 @@ export default {
       if (this.wallet !== null) {
         return toChecksumAddress(this.account.address);
       }
+      return null;
     },
     ...mapState([
       'network',
