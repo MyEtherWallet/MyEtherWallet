@@ -34,5 +34,16 @@
     "should-update": "должен быть обновлен в течение минуты.",
     "in-wallet": "должен быть в вашем кошельке в течение минуты.",
     "withdraw-fund": "Фонд для вывода средств"
+  },
+  "errors": {
+    "amount-higher-zero": "Amoudsfadsnt must be higher than 0",
+    "amount-higher-balance": "Amount hasdfasdigher than balance",
+    "amount-higher-sub-balance": "Amounasdfat higher than subscription balance"
+  },
+  "sub-form": {
+    "min-greater": "The minimum amoasdfunt is 0.01 or greater",
+    "higher-than-bal": "Amount higheasdfr than balance (including 1% automation fee)",
+    "enter-correct-num": "Please enasdfter a correct number",
+    "cannot-exceed": "Number cannot asdfexceed 365 days"
   }
 }
