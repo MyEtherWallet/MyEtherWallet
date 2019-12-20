@@ -1,3 +1,7 @@
+### Release v5.2.8-hotfix.1
+
+- Fix Schedule View []()
+
 ### Release v5.2.8
 
 ### Bug
