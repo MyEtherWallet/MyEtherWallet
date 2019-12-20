@@ -27,7 +27,7 @@
     "unsubscribe": "Unsubscribe"
   },
   "manage-funds": {
-    "funds": "Funds",
+    "action-funds": "{action} Funds",
     "avail-balance": "Available Balance",
     "how-much-eth": "How much ETH do you want to",
     "subscription-fund": "Your subscription fund",
