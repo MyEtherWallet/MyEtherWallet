@@ -2,7 +2,9 @@
   <div class="modal-container">
     <b-modal
       ref="manageFundsModal"
-      :title="`${manageFundsText} ${$t('dappsAmbrpay.manage-funds.funds')}`"
+      :title="
+        $t('dappsAmbrpay.manage-funds.funds', { action: manageFundsText })
+      "
       centered
       hide-footer
       static
