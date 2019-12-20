@@ -152,6 +152,8 @@
 <script>
 import { mapState } from 'vuex';
 import BottomHelpLink from '@/components/BottomHelpLink';
+import Blockie from '@/components/Blockie';
+import MoveCdpModal from '../../components/MoveCdpModal';
 import {
   displayFixedPercent,
   displayFixedValue,
@@ -166,6 +168,10 @@ const toBigNumber = num => {
 
 export default {
   components: {
+    'interface-container-title': InterfaceContainerTitle,
+    'interface-bottom-text': InterfaceBottomText,
+    'move-cdp-modal': MoveCdpModal,
+    blockie: Blockie,
     'help-link': BottomHelpLink
   },
   props: {

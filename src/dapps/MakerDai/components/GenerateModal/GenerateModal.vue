@@ -18,8 +18,7 @@
             <p class="total">
               <span>{{ $t('dappsMaker.total') }}</span>
               {{ displayFixedValue(newTotal, 10) }}
-              <!--              {{ newTotal }}-->
-              DAI
+              {{ $t('dappsMaker.dai') }}
             </p>
             <p class="max" @click="maxDai">
               {{ $t('dappsMaker.max-balance') }}
@@ -47,9 +46,9 @@
             <div class="grid-block">
               <p>{{ $t('dappsMaker.max-generate-available') }}</p>
               <p>
-                <b>{{
-                  values.maxDai ? displayFixedValue(values.maxDai) : 0
-                }}</b>
+                <b>
+                  {{ displayFixedValue(maxDai) }}
+                </b>
                 {{ $t('dappsMaker.dai') }}
               </p>
             </div>
@@ -120,7 +119,6 @@
 
 <script>
 import { mapState } from 'vuex';
-import ethUnit from 'ethjs-unit';
 import ExpandingOption from '@/components/ExpandingOption';
 import StandardButton from '@/components/Buttons/StandardButton';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
@@ -144,51 +142,6 @@ export default {
     'standard-button': StandardButton
   },
   props: {
-    tokensWithBalance: {
-      type: Array,
-      default: function() {
-        return [];
-      }
-    },
-    action: {
-      type: String,
-      default: ''
-    },
-    values: {
-      type: Object,
-      default: function() {
-        return {
-          maxEthDraw: '',
-          maxUsdDraw: '',
-          ethCollateral: '',
-          usdCollateral: '',
-          debtValue: '',
-          maxDai: '',
-          collateralRatio: '',
-          cdpId: ''
-        };
-      }
-    },
-    calcCollatRatioEthChg: {
-      type: Function,
-      default: function() {}
-    },
-    calcLiquidationPriceEthChg: {
-      type: Function,
-      default: function() {}
-    },
-    calcCollatRatioDaiChg: {
-      type: Function,
-      default: function() {}
-    },
-    calcLiquidationPriceDaiChg: {
-      type: Function,
-      default: function() {}
-    },
-    activeCdpId: {
-      type: Number,
-      default: 0
-    },
     makerActive: {
       type: Boolean,
       default: false
@@ -201,14 +154,10 @@ export default {
   data() {
     return {
       amount: 0,
-      amountEth: 0,
-      amountDai: 0,
       riskyBypass: false,
-      modalDetailInformation: false,
-      textValues: {},
       fiatCurrency: 'USD',
-      digitalCurrency: 'ETH',
       currentCdpType: 'ETH',
+      currentCdpLoaded: false,
       cancelButton: {
         title: 'Cancel',
         buttonStyle: 'green-border',
@@ -229,7 +178,7 @@ export default {
       );
     },
     canCompute() {
-      return this.values && this.amountPresent;
+      return this.currentCdpLoaded && this.amountPresent;
     },
     allOk() {
       if (this.amountPresent) {
@@ -237,26 +186,19 @@ export default {
       }
       return true;
     },
-    showWarning() {
-      return (
-        !this.newCollateralRatioInvalid &&
-        this.canGenerateDaiAmount &&
-        this.riskyBypass
-      );
-    },
     newTotal() {
-      return toBigNumber(this.values.debtValue).plus(this.amount);
-    },
-    hasEnoughEth() {
-      if (this.canCompute) {
-        const asEth = ethUnit.fromWei(this.account.balance, 'ether');
-        return toBigNumber(this.amount).lte(toBigNumber(asEth));
+      if (this.currentCdp) {
+        return toBigNumber(this.currentCdp.debtValue).plus(this.amount);
       }
-      return true;
+      return '--';
     },
     canGenerateDaiAmount() {
       if (this.canCompute && !toBigNumber(this.amount).isNaN()) {
-        return toBigNumber(this.amount).lte(toBigNumber(this.values.maxDai));
+        if (this.currentCdp) {
+          return toBigNumber(this.amount).lte(
+            toBigNumber(this.currentCdp.maxDai)
+          );
+        }
       }
       return true;
     },
@@ -290,10 +232,14 @@ export default {
     }
   },
   methods: {
+    displayPercentValue,
+    displayFixedValue,
+    displayFixedPercent,
     getActiveCdp() {
       if (this.cdpId > 0) {
         this.currentCdp = this.getValueOrFunction('getCdp')(this.cdpId);
         this.currentCdpType = this.currentCdp.cdpCollateralType;
+        this.currentCdpLoaded = true;
         this.$forceUpdate();
       }
     },
@@ -304,20 +250,13 @@ export default {
     checkBoxClicked(checked) {
       this.riskyBypass = checked;
     },
-    displayPercentValue,
-    displayFixedValue,
-    displayFixedPercent,
     notZero(val) {
       return toBigNumber(val).gt(0);
     },
     maxDai() {
-      this.amount = toBigNumber(this.values.maxDai).minus(
-        toBigNumber(this.values.maxDai).times(0.01)
-      );
-      this.$forceUpdate();
-    },
-    currentDai() {
-      this.amount = this.values.debtValue;
+      if (this.currentCdp) {
+        this.amount = this.currentCdp.maxDai;
+      }
     },
     async drawDai() {
       if (toBigNumber(this.amount).gte(0)) {
@@ -336,11 +275,6 @@ export default {
       setTimeout(() => {
         this.closeModal();
       }, 200);
-    },
-    collateralAmount() {
-      if (this.currentCdp) {
-        return this.currentCdp.collateralAmount;
-      }
     },
     newCollateralRatio() {
       if (this.currentCdp && this.amount > 0) {

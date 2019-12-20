@@ -81,21 +81,6 @@ export default {
       type: String,
       default: ''
     },
-    values: {
-      type: Object,
-      default: function() {
-        return {
-          maxEthDraw: '',
-          maxUsdDraw: '',
-          ethCollateral: '',
-          usdCollateral: '',
-          debtValue: '',
-          maxDai: '',
-          collateralRatio: '',
-          cdpId: ''
-        };
-      }
-    },
     destAddressHasProxy: {
       type: Boolean,
       default: false
@@ -120,13 +105,7 @@ export default {
   data() {
     return {
       address: '',
-      amountEth: 0,
-      amountDai: 0,
-      govFee: 0,
-      modalDetailInformation: false,
       checkBoxChecked: false,
-      textValues: {},
-      mkrToken: {},
       cancelButton: {
         title: 'Cancel',
         buttonStyle: 'green-border',
@@ -177,19 +156,8 @@ export default {
         this.$forceUpdate();
       }
     },
-    closeCdp() {
-      this.activeCdp.closeCdp();
-    },
     checkBoxClicked() {
       this.checkBoxChecked = !this.checkBoxChecked;
-    },
-    displayPercentValue(raw) {
-      if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);
-      return raw.times(100).toString();
-    },
-    displayFixedValue(raw, decimals = 3) {
-      if (!BigNumber.isBigNumber(raw)) raw = new BigNumber(raw);
-      return raw.toFixed(decimals, BigNumber.ROUND_DOWN).toString();
     },
     async moveCdp() {
       if (this.currentCdp) {

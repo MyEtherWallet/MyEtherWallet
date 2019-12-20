@@ -34,6 +34,10 @@ $confirmation-modal-mobile-width: 500px;
       color: $mew-green;
       cursor: pointer;
     }
+
+    &.danger {
+      border: 1px solid red;
+    }
   }
 
   .top-buttons {

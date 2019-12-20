@@ -26,6 +26,9 @@ export default class MakerCdpBase {
     this.sysVars = sysVars; // todo make sure this doesn't bring in the issue with vue walking the tree and breaking things
     this.cdpType = this.cdpId ? sysVars.cdpsWithType[this.cdpId] : defaultIlk;
     this.services = services || null;
+    this._proxyAllowances = services.proxyAllowances;
+    this._tokens = sysVars.tokens;
+    this._balances = sysVars.balances;
     this.needsUpdate = false;
     this.closing = false;
     this.opening = false;
@@ -361,11 +364,11 @@ export default class MakerCdpBase {
   }
 
   get proxyAllowanceDai() {
-    return this.services.proxyAllowances['DAI'];
+    return this._proxyAllowances['DAI'];
   }
 
   get proxyAllowanceMkr() {
-    return this.services.proxyAllowances['MKR'];
+    return this._proxyAllowances['MKR'];
   }
 
   get pethMin() {
@@ -377,10 +380,16 @@ export default class MakerCdpBase {
   }
 
   get stabilityFee() {
-    if (this.cdp) {
+    if (this.cdp.type) {
       return toBigNumber(this.cdp.type.annualStabilityFee);
     }
-    return toBigNumber(0);
+    const rawType = this.mcdManager
+      .get('mcd:cdpType')
+      .getCdpType(null, this.cdpType);
+    if (rawType) {
+      return rawType.annualStabilityFee;
+    }
+    return '--';
   }
 
   get tokenService() {

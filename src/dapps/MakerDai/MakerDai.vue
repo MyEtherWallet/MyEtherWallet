@@ -118,6 +118,7 @@
       :open-move-modal="openMoveModal"
       :values-updated="valuesUpdated"
       :values="activeValues"
+      :maker-created="makerCreated"
       :get-collateral-options="getCollateralOptions"
       :get-value-or-function="getValueOrFunction"
       :get-cdp="getCdp"
@@ -226,6 +227,7 @@ export default {
       curentlyLoading: '',
       destAddressProxy: '',
       destAddressHasProxy: false,
+      makerCreated: false,
       afterUpdate: [],
       allCdpIds: [],
       activeCdp: {},
@@ -271,6 +273,7 @@ export default {
       sysServices: {},
       targetPrice: 0,
       valuesUpdated: 0,
+      retryCount: 0,
       currentPath: '/interface/dapps/',
       afterLoadShow: 'HOME'
     };
@@ -589,9 +592,9 @@ export default {
     },
     async setupMCD() {
       try {
-        this.curentlyLoading = 'Loading: Multi Collateral Operations';
+        this.curentlyLoading = this.$t('dappsMaker.loading-mcd-operations');
         this._typeService = this.maker.service(ServiceRoles.CDP_TYPE);
-        this.curentlyLoading = 'Loading: Multi Collateral Types';
+        this.curentlyLoading = this.$t('dappsMaker.loading-collateral-types');
         this.mcdCurrencies = this._typeService.cdpTypes.reduce((acc, entry) => {
           acc[entry.currency.symbol] = entry;
           acc[entry.currency.symbol].symbol = entry.currency.symbol;
@@ -603,6 +606,43 @@ export default {
         // eslint-disable-next-line
         console.error(e);
       }
+    },
+    async setupMakerInstance() {
+      const web3 = this.web3;
+      const _self = this;
+      this.curentlyLoading = this.$t('dappsMaker.loading-wallet');
+      const MewMakerPlugin = MewPlugin(
+        web3,
+        _self.account.address,
+        async () => {
+          if (_self.$route.path.includes('maker-dai')) {
+            await _self.doUpdate();
+          }
+        }
+      );
+
+      this.maker = await Maker.create('inject', {
+        provider: { inject: web3.currentProvider },
+        plugins: [
+          [
+            McdPlugin,
+            {
+              network: this.network.type.name === 'KOV' ? 'kovan' : 'mainnet',
+              prefetch: true
+            }
+          ],
+          MewMakerPlugin,
+          MigrationPlugin
+        ],
+        log: false,
+        web3: {
+          pollingInterval: null
+        },
+        accounts: {
+          myLedger1: { type: 'mew' }
+        }
+      });
+      this.makerCreated = true;
     },
     async setup() {
       this.activeCdps = {};
@@ -616,39 +656,16 @@ export default {
       }
 
       try {
-        this.curentlyLoading = this.$t('dappsMaker.loading-wallet');
-        const MewMakerPlugin = MewPlugin(
-          web3,
-          _self.account.address,
-          async () => {
-            if (_self.$route.path.includes('maker-dai')) {
-              await _self.doUpdate();
-            }
-          }
-        );
-
-        this.maker = await Maker.create('inject', {
-          provider: { inject: web3.currentProvider },
-          plugins: [
-            [
-              McdPlugin,
-              {
-                network: this.network.type.name === 'KOV' ? 'kovan' : 'mainnet',
-                prefetch: true
-              }
-            ],
-            MewMakerPlugin,
-            MigrationPlugin
-          ],
-          log: false,
-          web3: {
-            pollingInterval: null
-          },
-          accounts: {
-            myLedger1: { type: 'mew' }
-          }
-        });
+        await this.setupMakerInstance();
       } catch (e) {
+        ++this.retryCount;
+        if (this.retryCount < 3) {
+          await this.setupMakerInstance();
+        }
+        Toast.responseHandler(
+          this.$t('dapps-maker.failed-to-load-maker'),
+          Toast.WARN
+        );
         // eslint-disable-next-line
         console.error(e);
       }
@@ -667,11 +684,6 @@ export default {
         await getDetailsForTokens(this, this._typeService.cdpTypes);
 
         await checkAllowances(this, this.account.address, this.proxyAddress);
-
-        this.daiToken = this.tokens['DAI'];
-        this.daiBalance = this.balances['DAI'];
-        this.mkrToken = this.tokens['MKR'];
-        this.mkrBalance = this.balances['MKR'];
 
         this.minEth = toBigNumber(0.05);
         this.systemValues = {

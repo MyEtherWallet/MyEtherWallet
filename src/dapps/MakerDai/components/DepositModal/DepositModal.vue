@@ -129,45 +129,6 @@ export default {
         return [];
       }
     },
-    action: {
-      type: String,
-      default: ''
-    },
-    values: {
-      type: Object,
-      default: function() {
-        return {
-          maxEthDraw: '',
-          maxUsdDraw: '',
-          ethCollateral: '',
-          usdCollateral: '',
-          debtValue: '',
-          maxDai: '',
-          collateralRatio: '',
-          cdpId: ''
-        };
-      }
-    },
-    calcCollatRatioEthChg: {
-      type: Function,
-      default: function() {}
-    },
-    calcLiquidationPriceEthChg: {
-      type: Function,
-      default: function() {}
-    },
-    calcCollatRatioDaiChg: {
-      type: Function,
-      default: function() {}
-    },
-    calcLiquidationPriceDaiChg: {
-      type: Function,
-      default: function() {}
-    },
-    activeCdpId: {
-      type: Number,
-      default: 0
-    },
     makerActive: {
       type: Boolean,
       default: false
@@ -225,9 +186,11 @@ export default {
     },
     canWithdrawEthAmount() {
       if (this.amount || this.amount !== '') {
-        return toBigNumber(this.amount).lte(
-          toBigNumber(this.values.ethCollateral)
-        );
+        if (this.currentCdp) {
+          return toBigNumber(this.amount).lte(
+            toBigNumber(this.currentCdp.ethCollateral)
+          );
+        }
       }
       return false;
     },
@@ -238,7 +201,6 @@ export default {
       return this.hasEnoughEth && (ratioOk || this.riskyBypass);
     }
   },
-  watch: {},
   mounted() {
     this.$refs.modal.$on('shown', () => {
       this.cdpId = this.$route.params.cdpId;
@@ -256,6 +218,8 @@ export default {
     }
   },
   methods: {
+    displayPercentValue,
+    displayFixedValue,
     collateralAmount() {
       if (this.currentCdp) {
         return this.currentCdp.collateralAmount;
@@ -270,30 +234,6 @@ export default {
         return this.currentCdp.collateralizationRatio;
       }
       return 0;
-    },
-    newCollateralRatioSafe() {
-      if (this.currentCdp && this.amount > 0) {
-        return this.currentCdp
-          .calcCollatRatioEthChg(
-            toBigNumber(this.currentCdp.collateralAmount).plus(this.amount)
-          )
-          .gte(2);
-      } else if (this.currentCdp) {
-        return toBigNumber(this.currentCdp.collateralizationRatio).gte(2);
-      }
-      return true;
-    },
-    newCollateralRatioInvalid() {
-      if (this.currentCdp && this.amount > 0) {
-        return this.currentCdp
-          .calcCollatRatioEthChg(
-            toBigNumber(this.currentCdp.collateralAmount).plus(this.amount)
-          )
-          .lte(1.5);
-      } else if (this.currentCdp) {
-        return toBigNumber(this.currentCdp.collateralizationRatio).lte(1.5);
-      }
-      return true;
     },
     newLiquidationPrice() {
       if (this.currentCdp && this.amount > 0) {
@@ -324,27 +264,9 @@ export default {
       }
       return true;
     },
-    getProxyAllowances() {
-      const allowances = this.getValueOrFunction('proxyAllowances');
-      if (allowances) {
-        return allowances;
-      }
-      return {};
-    },
     submitBtn() {
       if (!this.canProceed) return;
       this.lockEth();
-    },
-    checkBoxClicked() {
-      this.riskyBypass = !this.riskyBypass;
-    },
-    displayPercentValue,
-    displayFixedValue,
-    notZero(val) {
-      return toBigNumber(val).gt(0);
-    },
-    currentDai() {
-      this.amount = this.values.debtValue;
     },
     async lockEth() {
       if (toBigNumber(this.amount).gte(0)) {

@@ -29,7 +29,7 @@
               :class="['input-box', newCollateralRatioSafe() ? '' : 'danger']"
             >
               <input v-model="amount" />
-              <span class="input-unit">{{ digitalCurrency }}</span>
+              <span class="input-unit">{{ currentCdpType }}</span>
             </div>
             <div class="sub-text">
               <p v-if="canWithdrawEthNotice" class="above-max">
@@ -44,12 +44,8 @@
             <div class="grid-block">
               <p>{{ $t('dappsMaker.max-withdraw-available') }}</p>
               <p>
-                <b>
-                  {{
-                    values.maxDai ? displayFixedValue(values.maxEthDraw, 5) : 0
-                  }}
-                </b>
-                {{ digitalCurrency }}
+                <b>{{ displayFixedValue(maxEthDraw(), 5) }}</b>
+                {{ currentCdpType }}
               </p>
             </div>
 
@@ -143,51 +139,6 @@ export default {
     'standard-button': StandardButton
   },
   props: {
-    tokensWithBalance: {
-      type: Array,
-      default: function() {
-        return [];
-      }
-    },
-    action: {
-      type: String,
-      default: ''
-    },
-    values: {
-      type: Object,
-      default: function() {
-        return {
-          maxEthDraw: '',
-          maxUsdDraw: '',
-          ethCollateral: '',
-          usdCollateral: '',
-          debtValue: '',
-          maxDai: '',
-          collateralRatio: '',
-          cdpId: ''
-        };
-      }
-    },
-    calcCollatRatioEthChg: {
-      type: Function,
-      default: function() {}
-    },
-    calcLiquidationPriceEthChg: {
-      type: Function,
-      default: function() {}
-    },
-    calcCollatRatioDaiChg: {
-      type: Function,
-      default: function() {}
-    },
-    calcLiquidationPriceDaiChg: {
-      type: Function,
-      default: function() {}
-    },
-    activeCdpId: {
-      type: Number,
-      default: 0
-    },
     makerActive: {
       type: Boolean,
       default: false
@@ -228,7 +179,7 @@ export default {
       );
     },
     canCompute() {
-      return this.values && this.amountPresent && this.currentCdp;
+      return this.amountPresent && this.currentCdp;
     },
     canWithdrawEthNotice() {
       if (this.amountPresent && this.currentCdp) {
@@ -241,7 +192,7 @@ export default {
     canWithdrawEthAmount() {
       if (this.amountPresent && this.currentCdp) {
         return toBigNumber(this.amount).lte(
-          toBigNumber(this.currentCdp.collateralValue)
+          toBigNumber(this.currentCdp.collateralAmount)
         );
       }
       return false;
@@ -260,14 +211,10 @@ export default {
     },
     calcCollateralRatio() {
       if (this.canCompute && this.currentCdp) {
-        return this.calcCollatRatioEthChg(
+        return this.currentCdp.calcCollatRatioEthChg(
           toBigNumber(this.currentCdp.debtValue).plus(this.amount)
         );
       }
-      if (this.values) {
-        return this.values.collateralRatio;
-      }
-      return null;
     }
   },
   watch: {},
@@ -361,6 +308,12 @@ export default {
         return this.currentCdp.liquidationPrice;
       }
       return 0;
+    },
+    maxEthDraw() {
+      if (this.currentCdp) {
+        console.log(this.currentCdp.maxEthDraw); // todo remove dev item
+        return this.currentCdp.maxEthDraw;
+      }
     },
     getProxyAllowances() {
       const allowances = this.getValueOrFunction('proxyAllowances');

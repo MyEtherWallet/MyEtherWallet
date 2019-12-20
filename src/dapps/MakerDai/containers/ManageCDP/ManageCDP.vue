@@ -196,113 +196,21 @@ export default {
     'help-link': BottomHelpLink
   },
   props: {
-    openCloseModal: {
-      type: Boolean,
-      default: false
-    },
-    openMoveModal: {
-      type: Boolean,
-      default: false
-    },
-    tokensWithBalance: {
-      type: Array,
-      default: function() {
-        return [];
-      }
-    },
-    getBalance: {
-      type: Function,
-      default: function() {}
-    },
     makerActive: {
       type: Boolean,
       default: false
-    },
-    cdps: {
-      type: Array,
-      default: function() {
-        return [];
-      }
-    },
-    availableCdps: {
-      type: Object,
-      default: function() {
-        return {};
-      }
     },
     valuesUpdated: {
       type: Number,
       default: 0
     },
-    getCdp: {
-      type: Function,
-      default: function() {}
-    },
-    hasCdp: {
-      type: Function,
-      default: function() {}
-    },
     getValueOrFunction: {
       type: Function,
       default: function() {}
     },
-    values: {
-      type: Object,
-      default: function() {
-        return {
-          maxEthDraw: '',
-          maxUsdDraw: '',
-          ethCollateral: '',
-          usdCollateral: '',
-          debtValue: '',
-          maxDai: '',
-          collateralRatio: '',
-          cdpId: '',
-          stabilityFee: '',
-          minEth: '',
-          liquidationRatio: '',
-          liquidationPenalty: '',
-          targetPrice: ''
-        };
-      }
-    },
     ethPrice: {
       type: BigNumber,
       default: toBigNumber(0)
-    },
-    liquidationPenalty: {
-      type: BigNumber,
-      default: toBigNumber(0)
-    },
-    stabilityFee: {
-      type: BigNumber,
-      default: toBigNumber(0)
-    },
-    liquidationRatio: {
-      type: BigNumber,
-      default: toBigNumber(0)
-    },
-    priceService: {
-      type: Object,
-      default: function() {
-        return {};
-      }
-    },
-    cdpService: {
-      type: Object,
-      default: function() {
-        return {};
-      }
-    },
-    proxyService: {
-      type: Object,
-      default: function() {
-        return {};
-      }
-    },
-    updated: {
-      type: Number,
-      default: 0
     }
   },
   data() {
@@ -345,7 +253,13 @@ export default {
     },
     liquidationPriceDisplay() {
       if (this.currentCdpLoaded && this.updatedValue > -1) {
-        const value = displayFixedValue(this.currentCdp.liquidationPrice, 2);
+        const value = displayFixedValue(
+          this.currentCdp.liquidationPrice,
+          3,
+          undefined,
+          undefined,
+          true
+        );
         if (new BigNumber(value).gt(0)) {
           return value;
         }
@@ -360,8 +274,8 @@ export default {
       return '--';
     },
     cdpIdDisplay() {
-      if (this.values) {
-        return this.values.cdpId;
+      if (this.currentCdpLoaded && this.updatedValue > -1) {
+        return this.currentCdp.cdpId;
       }
       return '--';
     },
@@ -391,12 +305,9 @@ export default {
     },
     ethPriceDisplay() {
       if (this.currentCdpLoaded && this.updatedValue > -1) {
-        return displayFixedValue(this.currentCdp.currentPrice, 2);
+        return displayFixedValue(this.currentCdp.currentPrice, 3);
       }
       return '--';
-    },
-    zeroDebt() {
-      return toBigNumber(this.values.debtValue).eq(0);
     },
     maxEthDrawDisplay() {
       if (this.currentCdpLoaded && this.updatedValue > -1) {
@@ -405,8 +316,8 @@ export default {
       return '--';
     },
     maxUsdDrawDisplay() {
-      if (this.values) {
-        return displayFixedValue(this.values.maxUsdDraw, 2);
+      if (this.currentCdpLoaded && this.updatedValue > -1) {
+        return displayFixedValue(this.currentCdp.maxDaiDraw, 5);
       }
       return '--';
     },
@@ -466,16 +377,6 @@ export default {
     valuesUpdated() {
       this.updatedValue++;
     },
-    openCloseModal(val) {
-      if (val) {
-        this.showClose();
-      }
-    },
-    openMoveModal(val) {
-      if (val) {
-        this.showMove();
-      }
-    },
     makerActive(newVal) {
       if (newVal) {
         this.getActiveCdp();
@@ -503,6 +404,8 @@ export default {
     }
   },
   methods: {
+    displayPercentValue,
+    displayFixedValue,
     getActiveCdp() {
       this.cdpId = this.$route.params.cdpId;
       const cdpId = typeof this.cdpId === 'number' ? this.cdpId : this.cdpId.id;
@@ -524,11 +427,6 @@ export default {
       if (!this.currentCdp) return 0;
       return this.currentCdp.collateralAmount;
     },
-    getCollateralValue() {
-      if (this.currentCdp) this.currentCdpLoaded = true;
-      if (!this.currentCdp) return toBigNumber(0);
-      return this.currentCdp.getCollateralValue;
-    },
     getCollateralizationRatio() {
       if (this.currentCdp) this.currentCdpLoaded = true;
       if (!this.currentCdp) return toBigNumber(0);
@@ -545,10 +443,7 @@ export default {
     },
     showGenerate() {
       this.$emit('showGenerate');
-    },
-    displayPercentValue,
-    displayFixedValue,
-    async isReady() {}
+    }
   }
 };
 </script>

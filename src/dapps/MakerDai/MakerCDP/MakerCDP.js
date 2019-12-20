@@ -6,9 +6,11 @@ import {
   addresses,
   ERC20,
   toBigNumber,
-  bnOver
+  bnOver,
+  nameConvert,
+  reverseNameConvert
 } from '../makerHelpers';
-import { MDAI } from '@makerdao/dai-plugin-mcd';
+import { MDAI, MKR } from '@makerdao/dai-plugin-mcd';
 import ethUnit from 'ethjs-unit';
 import MakerCdpBase from './MakerCdpBase';
 import { getUrns } from './chainCalls';
@@ -27,14 +29,17 @@ export default class MakerCDP extends MakerCdpBase {
   // See MakerCdpBase
 
   // Setup Methods =====================================================================================================
+  async emptyInit() {
+    for (const token in this.getTokens) {
+      await this.retrieveAllowanceFor(token);
+    }
+    return this;
+  }
+
   async init(cdpId = this.cdpId) {
     await this.updateValues(cdpId);
-    try {
-      // TODO why is this returning undefined
-      this._governanceFee = (await this.cdp.getGovernanceFee()).toBigNumber();
-    } catch (e) {
-      this._governanceFee = false;
-    }
+    this.retrieveAllowanceFor(this.cdpCollateralType);
+    this.retrieveDetailsFor(this.cdpCollateralType);
     this.ready = true;
     return this;
   }
@@ -112,12 +117,12 @@ export default class MakerCDP extends MakerCdpBase {
   }
 
   async approveDai() {
-    await this.daiToken.approveUnlimited(this.proxyAddress);
+    await this.getTokens['DAI'].approveUnlimited(this.proxyAddress);
   }
 
   async approveMkr() {
     if (!this.proxyAddress) return;
-    await this.mkrToken.approveUnlimited(this.proxyAddress);
+    await this.getTokens['MKR'].approveUnlimited(this.proxyAddress);
   }
 
   calcCollatRatio(ethQty, daiQty) {
@@ -210,7 +215,10 @@ export default class MakerCDP extends MakerCdpBase {
   }
 
   getProxyAllowancefor(currency) {
-    return this.services.proxyAllowances[currency];
+    if (this._proxyAllowances[currency]) {
+      return this._proxyAllowances[currency];
+    }
+    return toBigNumber(0);
   }
 
   async getRawProxyAllowanceforMkr() {
@@ -221,7 +229,7 @@ export default class MakerCDP extends MakerCdpBase {
   }
 
   getTokenObjectFor(currency) {
-    return this.services.tokens[currency];
+    return this._tokens[currency];
   }
 
   getCurrentPriceFor(symbol) {
@@ -292,6 +300,44 @@ export default class MakerCDP extends MakerCdpBase {
     return toBigNumber(minEth)
       .times(this.getCurrentPriceFor('ETH'))
       .div(this.getCurrentPriceFor(symbol));
+  }
+
+  async retrieveAllowanceFor(currency, update = false) {
+    if (this._proxyAllowances[currency] && !update) {
+      return this._proxyAllowances[currency];
+    }
+    try {
+      const tokenObject = this.getTokenObjectFor(currency);
+      if (
+        typeof tokenObject !== 'undefined' &&
+        typeof tokenObject._contract !== 'undefined' &&
+        typeof tokenObject._contract.allowance === 'function'
+      ) {
+        const res = await tokenObject._contract.allowance(
+          this.currentAddress,
+          this.proxyAddress
+        );
+        this._proxyAllowances[currency] = toBigNumber(res);
+      } else {
+        this._proxyAllowances[currency] = toBigNumber(0);
+      }
+
+      if (this._proxyAllowances[currency].isNaN()) {
+        this._proxyAllowances[currency] = toBigNumber(0);
+      }
+    } catch (e) {
+      this._proxyAllowances[currency] = toBigNumber(0);
+    }
+    return this._proxyAllowances[currency];
+  }
+
+  async retrieveDetailsFor(currency, update = false) {
+    if (this._balances[currency] && !update) {
+      return this._balances[currency];
+    }
+    const result = await this._tokens[currency].balance();
+    this._balances[currency] = result.toBigNumber();
+    return result.toBigNumber();
   }
 
   setType(type) {

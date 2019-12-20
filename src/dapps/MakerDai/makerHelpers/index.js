@@ -14,7 +14,8 @@ import {
   loadCdpDetails,
   buildEmpty,
   getDustValues,
-  doUpdate
+  doUpdate,
+  ServiceRoles
 } from './setups';
 import { getMakerCurrencies } from './currencyHelper';
 import {
@@ -28,7 +29,9 @@ import {
   displayPercentValue,
   CdpNum,
   toBigNumber,
-  bnOver
+  bnOver,
+  nameConvert,
+  reverseNameConvert
 } from './helpers';
 import {
   migrateABI,
@@ -44,6 +47,8 @@ import {
 } from './ABIs';
 
 export {
+  nameConvert,
+  reverseNameConvert,
   loadCdpDetail,
   locateCdps,
   locateOldCdps,
@@ -71,6 +76,7 @@ export {
   doUpdate,
   toBigNumber,
   bnOver,
+  ServiceRoles,
   addresses,
   // ABIs
   migrateABI,

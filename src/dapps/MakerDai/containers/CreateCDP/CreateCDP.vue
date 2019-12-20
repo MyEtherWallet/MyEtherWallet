@@ -40,13 +40,20 @@
             ]"
           />
           <div class="input-block-message">
-            <p v-if="!hasEnoughEth" class="red-text">
-              {{ $t('dappsMaker.not-enough-funds') }}
-            </p>
             <p>
               {{ $t('dappsMaker.min-collat') }}
               <b>{{ displayFixedValue(minDeposit, 6) }}</b>
               {{ selectedCurrency.symbol }}
+            </p>
+            <p v-show="belowValue(ethQty, minDeposit) && valuePresent">
+              {{
+                $t('dappsMaker.below-min-currency', {
+                  currency: selectedCurrency.symbol
+                })
+              }}
+            </p>
+            <p v-if="!hasEnoughEth && valuePresent" class="red-text">
+              {{ $t('dappsMaker.not-enough-funds') }}
             </p>
           </div>
         </div>
@@ -80,7 +87,7 @@
               <b>{{ displayFixedValue(minCreate, 6) }}</b>
               {{ $t('dappsMaker.dai') }}
             </p>
-            <p>
+            <p v-show="ethQty > 0">
               {{ $t('dappsMaker.max-generate') }}
               <b>{{ displayFixedValue(maxDaiDraw, 6) }}</b>
               {{ $t('dappsMaker.dai') }}
@@ -151,6 +158,14 @@
             </p>
           </li>
         </ul>
+      </div>
+      <div v-if="!hasProxy" class="buttons-container">
+        <div
+          class="submit-button large-round-button-green-filled"
+          @click="BuildProxy"
+        >
+          Create Proxy
+        </div>
       </div>
       <div
         v-if="selectedCurrency.symbol !== 'ETH' && !hasEnoughAllowance()"
@@ -228,10 +243,6 @@ export default {
       type: BigNumber,
       default: toBigNumber(0)
     },
-    stabilityFee: {
-      type: BigNumber,
-      default: toBigNumber(0)
-    },
     priceService: {
       type: Object,
       default: function() {
@@ -303,16 +314,16 @@ export default {
   computed: {
     ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
     validInputs() {
+      if (!this.hasProxy) return false;
       if (toBigNumber(this.ethQty).isNaN() || toBigNumber(this.daiQty).isNaN())
         return false;
       if (toBigNumber(this.ethQty).gt(0)) {
         if (toBigNumber(this.ethQty).lte(this.values.minEth)) return false;
         if (this.emptyMakerCreated) {
-          if (toBigNumber(this.makerCDP.minDai).lt(this.daiQty)) return false;
-        } else if (toBigNumber(20).lt(this.daiQty)) return false;
+          if (toBigNumber(this.makerCDP.minDai).gt(this.daiQty)) return false;
+        } else if (toBigNumber(20).gt(this.daiQty)) return false;
         if (toBigNumber(this.maxDaiDraw).lte(toBigNumber(this.daiQty)))
           return false;
-
         if (this.emptyMakerCreated) {
           if (toBigNumber(this.collatRatio).lte(this.makerCDP.liquidationRatio))
             return false;
@@ -321,18 +332,17 @@ export default {
       }
       return false;
     },
+    valuePresent() {
+      return toBigNumber(this.ethQty).gt(0);
+    },
+    hasProxy() {
+      return this.getValueOrFunction('proxyAddress');
+    },
     hasEnoughEth() {
       if (this.emptyMakerCreated) {
         return this.hasEnough();
       }
       return true;
-    },
-    minInSelectedCurrency() {
-      return this.minDeposit;
-    },
-    atSetFloor() {
-      if (this.priceFloor <= 0) return 0;
-      return bnOver(this.ethPrice, this.liquidationRatio, this.priceFloor);
     },
     collatRatio() {
       if (this.daiQty <= 0 || this.ethQty <= 0) return 0;
@@ -359,6 +369,12 @@ export default {
         return toBigNumber(collRatio).lte(2);
       }
       return false;
+    },
+    stabilityFee() {
+      if (this.emptyMakerCreated) {
+        return this.makerCDP.stabilityFee;
+      }
+      return '--';
     },
     veryRisky() {
       const collRatio = this.collatRatio;
@@ -437,26 +453,31 @@ export default {
       }
       return 0;
     },
-    getAllowanceFor(symbol) {
-      if (!symbol) return 0;
-      const allowances = this.getValueOrFunction('proxyAllowances');
-      if (allowances) {
-        return allowances[symbol];
-      }
-      return 0;
-    },
-    getBalanceFor(symbol) {
-      if (!symbol) return 0;
-      const balances = this.getValueOrFunction('balances');
-      if (balances) {
-        return balances[symbol];
-      }
-      return 0;
+    belowValue(val1, val2) {
+      return toBigNumber(val1).lte(val2);
     },
     async buildEmptyInstance() {
       this.makerCDP = await this.buildEmpty();
       this.$forceUpdate();
       this.emptyMakerCreated = true;
+    },
+    BuildProxy() {
+      console.log(this.emptyMakerCreated); // todo remove dev item
+      if (this.emptyMakerCreated) {
+        this.getValueOrFunction('getProxy')().then(proxy => {
+          this.proxyAddress = proxy;
+          if (!this.proxyAddress) {
+            this.getValueOrFunction('_proxyService')
+              .build()
+              .then(() => {
+                return this.getValueOrFunction('_proxyService').currentProxy();
+              })
+              .then(res => {
+                this.proxyAddress = res;
+              });
+          }
+        });
+      }
     },
     displayPercentValue,
     displayFixedValue,
@@ -488,14 +509,6 @@ export default {
     openDaiConfirmation() {
       this.$refs.daiconfirmation.$refs.modal.show();
     },
-    toUSD(eth) {
-      if (eth === undefined || eth === null) return toBigNumber(0);
-      const toUsd = toBigNumber(this.getCurrentPrice).times(toBigNumber(eth));
-      if (toUsd.lt(0)) {
-        return toBigNumber(0);
-      }
-      return toUsd;
-    },
     hasEnough() {
       if (this.makerCDP) {
         return this.makerCDP.hasEnough(
@@ -513,9 +526,6 @@ export default {
           this.selectedCurrency.symbol
         );
       }
-    },
-    calcMinCollatRatio(priceFloor) {
-      return bnOver(this.ethPrice, this.liquidationRatio, priceFloor);
     },
     calcDaiDraw(
       ethQty,

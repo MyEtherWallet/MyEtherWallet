@@ -2,6 +2,7 @@ import BigNumber from 'bignumber.js';
 import { MDAI, MKR } from '@makerdao/dai-plugin-mcd';
 import Maker from '@makerdao/dai';
 import { locateCdps } from './locateCdps';
+import { nameConvert } from './helpers';
 import MakerCDP from '../MakerCDP';
 import { getDustValue } from '@/dapps/MakerDai/MakerCDP/chainCalls';
 const { DAI } = Maker;
@@ -9,7 +10,7 @@ const toBigNumber = num => {
   return new BigNumber(num);
 };
 
-const ServiceRoles = {
+export const ServiceRoles = {
   PRICE: 'price',
   CDP: 'cdp',
   PROXY: 'proxy',
@@ -59,35 +60,48 @@ export async function setupPriceAndRatios(self, _priceService, _cdpService) {
   self.wethToPethRatio = toBigNumber(result[6]);
   return self;
 }
+export async function getDetailsForSingleCollateralTokens(self) {
+  let _tokenService;
+  if (!self._tokenService) {
+    _tokenService = self._tokenService;
+  } else {
+    _tokenService = self.getValueOrFunction('_tokenService');
+  }
+  self.tokens['SAI'] = _tokenService.getToken(DAI);
+  self.tokens['SAI'].balance().then(res => {
+    self.daiBalance = res.toBigNumber();
+  });
+
+  self.tokens['MKR'] = _tokenService.getToken(MKR);
+  self.tokens['MKR'].balance().then(res => {
+    self.mkrBalance = res.toBigNumber();
+  });
+
+  self.mkrToken = self.tokens['MKR'];
+  self.daiToken = self.tokens['SAI'];
+  self.daiBalance = self.balances['SAI'];
+  self.mkrBalance = self.balances['MKR'];
+}
 
 export async function getDetailsForTokens(self, collateralTokens) {
   self.balances = {};
   self.tokens = {};
-  self.daiToken = self._tokenService.getToken(DAI);
-  self.daiToken.balance().then(res => {
-    self.daiBalance = res.toBigNumber();
-  });
-
-  self.mkrToken = self._tokenService.getToken(MKR);
-  self.mkrToken.balance().then(res => {
-    self.mkrBalance = res.toBigNumber();
-  });
 
   for (let i = 0; i < collateralTokens.length; i++) {
     const token = self._tokenService.getToken(collateralTokens[i].currency);
-    self.tokens[collateralTokens[i].currency.symbol] = token;
+    self.tokens[nameConvert(collateralTokens[i].currency.symbol)] = token;
     token.balance().then(res => {
-      self.balances[collateralTokens[i].currency.symbol] = res.toBigNumber();
+      self.balances[
+        nameConvert(collateralTokens[i].currency.symbol)
+      ] = res.toBigNumber();
     });
   }
   const token = self._tokenService.getToken(MDAI);
-  self.tokens[token.symbol] = token;
-  self.balances[token.symbol] = (await token.balance()).toBigNumber();
+  self.tokens[nameConvert(token.symbol)] = token;
+  self.balances[nameConvert(token.symbol)] = (
+    await token.balance()
+  ).toBigNumber();
 
-  self.tokens['MKR'] = self.mkrToken;
-  self.tokens['DAI'] = self.daiToken;
-  self.balances['DAI'] = self.daiBalance;
-  self.balances['MKR'] = self.mkrBalance;
   await getDustValues(self, collateralTokens);
 }
 
@@ -103,31 +117,32 @@ export async function getDustValues(self, collateralTokens) {
 export async function checkAllowances(self, address, proxyAddress) {
   self.proxyAllowances = {};
   if (proxyAddress) {
-    const keys = Object.keys(self.tokens);
+    const keys = [];
     keys.push('MKR');
     keys.push('DAI');
     keys.push('MDAI');
     for (let i = 0; i < keys.length; i++) {
       try {
         if (
-          typeof self.tokens[keys[i]] !== 'undefined' &&
-          typeof self.tokens[keys[i]]._contract !== 'undefined' &&
-          typeof self.tokens[keys[i]]._contract.allowance === 'function'
+          typeof self.tokens[nameConvert(keys[i])] !== 'undefined' &&
+          typeof self.tokens[nameConvert(keys[i])]._contract !== 'undefined' &&
+          typeof self.tokens[nameConvert(keys[i])]._contract.allowance ===
+            'function'
         ) {
-          self.tokens[keys[i]]._contract
+          self.tokens[nameConvert(keys[i])]._contract
             .allowance(address, proxyAddress)
             .then(res => {
-              self.proxyAllowances[keys[i]] = toBigNumber(res);
+              self.proxyAllowances[nameConvert(keys[i])] = toBigNumber(res);
             });
         } else {
-          self.proxyAllowances[keys[i]] = toBigNumber(0);
+          self.proxyAllowances[nameConvert(keys[i])] = toBigNumber(0);
         }
 
-        if (self.proxyAllowances[keys[i]].isNaN()) {
-          self.proxyAllowances[keys[i]] = toBigNumber(0);
+        if (self.proxyAllowances[nameConvert(keys[i])].isNaN()) {
+          self.proxyAllowances[nameConvert(keys[i])] = toBigNumber(0);
         }
       } catch (e) {
-        self.proxyAllowances[keys[i]] = toBigNumber(0);
+        self.proxyAllowances[nameConvert(keys[i])] = toBigNumber(0);
       }
     }
   }
@@ -142,8 +157,8 @@ export async function checkAllowanceFor(
   currency
 ) {
   if (proxyAddress) {
-    proxyAllowances[currency] = toBigNumber(
-      await tokens[currency].allowance(address, proxyAddress)
+    proxyAllowances[nameConvert(currency)] = toBigNumber(
+      await tokens[nameConvert(currency)].allowance(address, proxyAddress)
     );
   }
   return proxyAllowances;
@@ -326,10 +341,6 @@ export async function buildCdpObject(cdpId, options = {}, useOld = false) {
     ethPrice: this.ethPrice,
     _targetPrice: this._targetPrice,
     liquidationRatio: this.liquidationRatio,
-    _daiToken: this._daiToken,
-    daiBalance: this.daiBalance,
-    _mkrToken: this._mkrToken,
-    mkrBalance: this.mkrBalance,
     minEth: this.minEth,
     tokens: this.tokens,
     balances: this.balances,
@@ -346,7 +357,7 @@ export async function buildCdpObject(cdpId, options = {}, useOld = false) {
       }
       return await makerCDP.init(cdpId);
     }
-    return makerCDP;
+    return await makerCDP.emptyInit();
   } catch (e) {
     // eslint-disable-next-line
     console.log(e);

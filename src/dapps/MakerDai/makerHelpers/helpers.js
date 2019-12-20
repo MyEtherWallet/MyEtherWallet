@@ -1,6 +1,28 @@
 import BigNumber from 'bignumber.js';
 import { ERC20 } from './ABIs';
 
+export function nameConvert(name) {
+  switch (name) {
+    case 'MDAI':
+      return 'DAI';
+    case 'DAI':
+      return 'SAI';
+    default:
+      return name;
+  }
+}
+
+export function reverseNameConvert(name) {
+  switch (name) {
+    case 'DAI':
+      return 'MDAI';
+    case 'SAI':
+      return 'DAI';
+    default:
+      return name;
+  }
+}
+
 export function toBigNumber(num) {
   const bignumber = new BigNumber(num);
   bignumber.displayFixed = displayFixedValue.bind(this, bignumber);

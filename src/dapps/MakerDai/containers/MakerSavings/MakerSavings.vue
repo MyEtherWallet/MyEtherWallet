@@ -160,7 +160,8 @@ import {
   addresses,
   ERC20,
   ProxyRegistry,
-  toBigNumber
+  toBigNumber,
+  ServiceRoles
 } from '../../makerHelpers';
 import LoadingSign from '@/components/LoadingSign';
 import DaiIcon from '@/assets/images/currency/coins/AllImages/DAI.svg';
@@ -195,6 +196,10 @@ export default {
       }
     },
     cdpDetailsLoaded: {
+      type: Boolean,
+      default: false
+    },
+    makerCreated: {
       type: Boolean,
       default: false
     },
@@ -262,7 +267,7 @@ export default {
     }
   },
   watch: {
-    makerActive(newVal) {
+    makerCreated(newVal) {
       if (newVal) {
         this.setup();
       }
@@ -284,11 +289,15 @@ export default {
       this.proxyAddress = null;
     }
     this.proxyChecked = true;
-    this.setup();
+    if (this.makerCreated) {
+      this.setup();
+    }
   },
   methods: {
     async setup() {
-      this.makerSaver = this.getValueOrFunction('_mcdSaving');
+      this.makerSaver = this.getValueOrFunction('maker').service(
+        ServiceRoles.SAVINGS
+      );
       this.setupComplete = this.makerSaver !== undefined;
       await this.getValues();
     },
@@ -339,7 +348,7 @@ export default {
       if (this.setupComplete) {
         const balance = this.getValueOrFunction('balances');
         if (balance) {
-          const daiBalance = balance['MDAI'];
+          const daiBalance = balance['DAI'];
           if (!daiBalance) return toBigNumber(0);
           this.daiBalance = daiBalance.toString();
           if (this.proxyAddress) {
@@ -387,7 +396,7 @@ export default {
       if (this.proxyAddress) {
         if (this.setupComplete && this.getValueOrFunction('tokens')) {
           const val = await this.getValueOrFunction('tokens')[
-            'MDAI'
+            'DAI'
           ]._contract.allowance(
             this.getValueOrFunction('account').address,
             this.proxyAddress
@@ -411,7 +420,7 @@ export default {
     },
     async setAllowance() {
       if (this.setupComplete && this.getValueOrFunction('tokens')) {
-        this.getValueOrFunction('tokens')['MDAI'].approveUnlimited(
+        this.getValueOrFunction('tokens')['DAI'].approveUnlimited(
           this.proxyAddress
         );
       }
