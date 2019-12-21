@@ -1338,6 +1338,10 @@
 // *********************************************************************
 // Global disabled button style
 // *********************************************************************
+.btn {
+  color: white !important;
+}
+
 .btn-secondary.disabled {
   color: $white;
   background-color: $dark-grey-11;
@@ -1616,4 +1620,8 @@
     background-color: transparent !important;
     border: none !important;
   }
+}
+
+.height--full {
+  height: 100%;
 }

@@ -1,5 +1,10 @@
 @import '~@/scss/GlobalVariables';
 
+.card-body {
+  display: flex;
+  flex-direction: column;
+}
+
 $dapp-button-mobile-width: 650px;
 $dapps-container-mobile-width: 650px;
 
