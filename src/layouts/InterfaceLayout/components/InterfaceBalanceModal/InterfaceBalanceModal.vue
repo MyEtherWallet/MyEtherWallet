@@ -96,7 +96,7 @@ export default {
   methods: {
     async fetchBalanceData() {
       const newArr = [];
-      const url = 'https://www.alphaex.net/convert/XDC';
+      const url = 'https://api2.alphaex.net/convert/XDC';
       const fetchValues = await fetch(url);
       const values = await fetchValues.json();
       delete values['lastCalled'];
