@@ -2,161 +2,65 @@
   <div>
     <div class="new-container p-4">
       <b-row align-content="stretch">
-        <b-col cols="4" class="mb-4">
-          <b-card title="Upgrade old DAI to new DAI" class="height--full">
-            <b-card-text class="mb-3">
-              Some quick example text to build on the card title and make up the
-              bulk of the card's content.
-            </b-card-text>
-            <div class="flex-grow-1" />
-            <b-button href="#" variant="primary" block>Go</b-button>
-          </b-card>
+        <b-col cols="12" xl="6" lg="6" md="6" class="mb-4">
+          <card
+            :title="$t('dappsMaker.migrate-old-dai-to-new-dai')"
+            text="Some quick example text to build on the card title and make up the
+              bulk of the card's content."
+            button="Go"
+            :click="migrateDai"
+          />
         </b-col>
-        <b-col cols="4" class="mb-4">
-          <b-card
-            title="Migrate Single Collateral CDP to Multi-Collateral Vault"
-            class="height--full"
-          >
-            <div class="d-flex flex-column">
-              <b-card-text class="mb-3">
-                Some quick example text to build on the card title and make up
-                the bulk of the card's content.
-              </b-card-text>
-              <div class="flex-grow-1" />
-              <b-button href="#" variant="primary" block>Go</b-button>
-            </div>
-          </b-card></b-col
-        >
-        <b-col cols="4" class="mb-4">
-          <b-card title="Manage Your Vault" class="height--full">
-            <b-card-text class="mb-3">
-              Some quick example text to build on the card title and make up the
-              bulk of the card's content.
-            </b-card-text>
-            <div class="flex-grow-1" />
-            <b-button href="#" variant="primary" block>Go</b-button>
-          </b-card></b-col
-        >
-        <b-col cols="4" class="mb-4">
-          <b-card title="Manage Your Vault" class="height--full">
-            <b-card-text class="mb-3">
-              Some quick example text to build on the card title and make up the
-              bulk of the card's content.
-            </b-card-text>
-            <div class="flex-grow-1" />
-            <b-button href="#" variant="primary" block>Go</b-button>
-          </b-card></b-col
-        >
-        <b-col cols="4" class="mb-4">
-          <b-card title="Manage Your Vault" class="height--full">
-            <b-card-text class="mb-3">
-              Some quick example text to build on the card title and make up the
-              bulk of the card's content.
-            </b-card-text>
-            <div class="flex-grow-1" />
-            <b-button href="#" variant="primary" block>Go</b-button>
-          </b-card></b-col
-        >
+        <b-col cols="12" xl="6" lg="6" md="6" class="mb-4">
+          <card
+            :title="
+              $t('dappsMaker.migrate-single-collateral-to-multi-collateral')
+            "
+            text="Some quick example text to build on the card title and make up the
+              bulk of the card's content."
+            button="Go"
+            :click="migrateCDP"
+          />
+        </b-col>
+        <b-col cols="12" xl="6" lg="6" md="6" class="mb-4">
+          <card
+            :title="$t('dappsMaker.manage-your-vault')"
+            text="Some quick example text to build on the card title and make up the
+              bulk of the card's content."
+            button="Go"
+            :click="goToManage"
+            :loading="!makerActive ? true : false"
+            :loading-msg="loadingMessage"
+        /></b-col>
+        <b-col cols="12" xl="6" lg="6" md="6" class="mb-4">
+          <card
+            :title="$t('dappsMaker.create-a-vault')"
+            text="Some quick example text to build on the card title and make up the
+              bulk of the card's content."
+            button="Go"
+            :click="gotoCreate"
+            :loading="!makerActive ? true : false"
+            :loading-msg="loadingMessage"
+        /></b-col>
+        <b-col cols="12" xl="6" lg="6" md="6" class="mb-4">
+          <card
+            :title="$t('dappsMaker.dai-savings')"
+            text="Some quick example text to build on the card title and make up the
+              bulk of the card's content."
+            button="Go"
+            :click="goToSave"
+        /></b-col>
       </b-row>
-    </div>
-    <div class="boundary">
-      <div class="grid-col-2 promo-cards">
-        <div class="card-block create-wallet" @click="migrateDai">
-          <div class="flex-col-vertical-center">
-            <div class="card-content">
-              <h2 class="color-white">
-                {{ $t('dappsMaker.migrate-old-dai-to-new-dai') }}
-              </h2>
-              <p class="button">
-                {{ $t('dappsMaker.sai-to-dai') }}
-                <img src="~@/assets/images/icons/right-arrow.png" />
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="card-block unlock-wallet" @click="migrateCDP">
-          <div class="flex-col-vertical-center">
-            <div class="card-content">
-              <h2 class="color-white">
-                {{
-                  $t('dappsMaker.migrate-single-collateral-to-multi-collateral')
-                }}
-              </h2>
-              <p class="button">
-                {{ $t('dappsMaker.migrate') }}
-                <img src="~@/assets/images/icons/right-arrow.png" />
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="grid-col-2 promo-cards">
-        <div class="card-block create-wallet" @click="goToManage">
-          <div v-show="makerActive" class="flex-col-vertical-center">
-            <div class="card-content">
-              <h2 class="color-white">
-                {{ $t('dappsMaker.manage-your-vault') }}
-              </h2>
-              <p class="button">
-                {{ $t('dappsMaker.manage') }}
-                <img src="~@/assets/images/icons/right-arrow.png" />
-              </p>
-            </div>
-          </div>
-          <div v-show="!makerActive" class="flex-col-vertical-center">
-            <loading-sign
-              :loadingmessage1="loadingMessage"
-              :loadingmessage2="$t('dappsMaker.initial-loading-two')"
-            />
-          </div>
-        </div>
-
-        <div class="card-block unlock-wallet" @click="gotoCreate">
-          <div v-show="makerActive" class="flex-col-vertical-center">
-            <div class="card-content">
-              <h2 class="color-white">{{ $t('dappsMaker.create-a-vault') }}</h2>
-              <p class="button">
-                {{ $t('dappsMaker.create') }}
-                <img src="~@/assets/images/icons/right-arrow.png" />
-              </p>
-            </div>
-          </div>
-          <div v-show="!makerActive" class="flex-col-vertical-center">
-            <loading-sign
-              :loadingmessage1="loadingMessage"
-              :loadingmessage2="$t('dappsMaker.initial-loading-two')"
-            />
-          </div>
-        </div>
-      </div>
-
-      <div class="grid-col-2 promo-cards">
-        <div class="card-block unlock-wallet" @click="goToSave">
-          <div class="flex-col-vertical-center">
-            <div class="card-content">
-              <h2 class="color-white">
-                {{ $t('dappsMaker.dai-savings') }}
-              </h2>
-              <p class="button">
-                {{ $t('dappsMaker.save') }}
-                <img src="~@/assets/images/icons/right-arrow.png" />
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </template>
 
 <script>
-import LoadingSign from '@/components/LoadingSign';
+import Card1 from '@/components/Card1';
 // IDEA is to place all the functionality and links to 'what is this?', 'how do I...?' in one place.
 export default {
   components: {
-    'loading-sign': LoadingSign
+    card: Card1
   },
   props: {
     cdps: {

@@ -1,9 +1,4 @@
-@import '~@/scss/GlobalVariables';
-
-.card-body {
-  display: flex;
-  flex-direction: column;
-}
+@import "~@/scss/GlobalVariables";
 
 $dapp-button-mobile-width: 650px;
 $dapps-container-mobile-width: 650px;
