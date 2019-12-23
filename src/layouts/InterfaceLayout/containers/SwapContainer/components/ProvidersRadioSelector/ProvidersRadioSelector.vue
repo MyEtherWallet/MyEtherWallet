@@ -62,6 +62,7 @@
             <p :class="[maxCheck(provider) ? 'error-message-container' : '']">
               {{ maxNote(provider) }}
             </p>
+            {{provider.additional.display}}
           </div>
         </li>
       </ul>
