@@ -190,7 +190,10 @@
                       {{ contact.nickname }}
                     </td>
                     <td>
-                      <span class="edit-txt" @click="openAddrBookModal('edit', index)">
+                      <span
+                        class="edit-txt"
+                        @click="openAddrBookModal('edit', index)"
+                      >
                         {{ $t('interface.address-book.edit') }}
                       </span>
                     </td>
@@ -198,46 +201,23 @@
                 </tbody>
               </table>
             </div>
-
-            <!-- <span v-if="addrBookErrMsg" class="err">{{ addrBookErrMsg }}</span> -->
-
-            <!-- <div class="address-inputs">
-              <blockie
-                v-show="isValidAddress"
-                :address="contactAddress"
-                width="32px"
-                height="32px"
-                class="blockie-image"
-              />
-              <input
-                v-model="contactAddress"
-                v-addr-resolver="'contactAddress'"
-                :class="isValidAddress ? 'blockie-input' : ''"
-                :placeholder="$t('common.addr')"
-                type="text"
-              />
-            </div> -->
             <div class="addr-btn-container">
-              <button @click="openAddrBookModal('add')">+{{ $t('interface.address-book.add') }}</button>
-              <!-- <input
-                v-model="contactNickname"
-                :placeholder="$t('interface.address-book.nickname')"
-                class="nickname-input"
-                type="text"
-              />
-              <standard-button
-                :options="buttonAddress"
-                :button-disabled="
-                  !contactAddress || !isValidAddress || addrBookErrMsg !== null
-                "
-                :click-function="openAddrBookModal"
-              /> -->
+              <button
+                :class="addressBook.length >= 10 ? 'disabled' : ''"
+                @click="openAddrBookModal('add')"
+              >
+                +{{ $t('interface.address-book.add') }}
+              </button>
             </div>
           </full-width-dropdown>
         </div>
       </b-modal>
     </div>
-    <address-book-modal ref="addressBook" :title="addrBookModalTitle"/>
+    <address-book-modal
+      ref="addressBook"
+      :current-address="currentAddress"
+      :title="addrBookModalTitle"
+    />
   </div>
 </template>
 
@@ -300,14 +280,6 @@ export default {
         fullWidth: true,
         noMinWidth: false
       },
-      buttonAddress: {
-        title: 'Add Contact',
-        buttonStyle: 'green',
-        rightArrow: false,
-        leftArrow: false,
-        fullWidth: true,
-        noMinWidth: false
-      },
       inputFileName: '',
       selectedGasType: 'regular',
       customGas: 0,
@@ -317,10 +289,8 @@ export default {
       file: '',
       importedFile: '',
       popup: false,
-      isValidAddress: false,
-      contactAddress: '',
-      contactNickname: '',
-      addrBookModalTitle: null
+      currentAddress: {},
+      addrBookModalTitle: ''
     };
   },
   computed: {
@@ -552,10 +522,12 @@ export default {
       this.ethPrice = price.data.ETH.quotes.USD.price;
     },
     openAddrBookModal(action, idx) {
+      this.currentAddress = idx ? this.addressBook[idx] : {};
+      console.error('current', this.currentAddress)
       this.addrBookModalTitle =
         action === 'add'
           ? this.$t('interface.address-book.add-new')
-          : this.$t('interface.address-book.save-addr');
+          : this.$t('interface.address-book.edit-addr');
       this.$refs.addressBook.$refs.addressBookModal.show();
     }
   }

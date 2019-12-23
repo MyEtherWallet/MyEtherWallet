@@ -215,42 +215,6 @@ $mobile-width: 530px;
       }
     }
   }
-  .address-inputs {
-    align-items: center;
-    display: flex;
-    margin-bottom: 10px;
-    margin-top: 15px;
-
-    .nickname-input {
-      margin-left: 10px;
-      width: 30%;
-    }
-
-    .blockie-image {
-      position: absolute;
-      margin-left: 10px;
-    }
-
-    .blockie-input {
-      padding-left: 50px;
-    }
-  }
-
-  input {
-    background-color: $light-grey-1;
-    border: 0;
-    border-radius: 4px 0 0 4px;
-    height: 52px;
-    padding-left: 20px;
-    padding-right: 20px;
-    width: 100%;
-  }
-
-  .disabled {
-    background-color: $dark-grey-11;
-    pointer-events: none;
-  }
-
   .addr-btn-container {
     display: flex;
 
@@ -262,13 +226,12 @@ $mobile-width: 530px;
       margin-top: 10px;
       width: 100%;
     }
-    // input {
-    //   margin-right: 5px;
-    // }
-  }
-
-  .err {
-    color: $red-1;
+    .disabled {
+      background-color: $dark-grey-11;
+      border: none;
+      color: $white;
+      pointer-events: none;
+    }
   }
 
   .numbered-col {

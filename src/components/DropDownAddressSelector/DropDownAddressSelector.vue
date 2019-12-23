@@ -3,6 +3,7 @@
     <div class="dropdown--title">
       <h4>{{ title }}</h4>
       <button
+        v-show="!hideCopy"
         class="title-button prevent-user-select"
         @click="copyToClipboard($refs.addressInput)"
       >
@@ -136,6 +137,10 @@ export default {
       default: 'ETH'
     },
     clearAddress: {
+      type: Boolean,
+      default: false
+    },
+    hideCopy: {
       type: Boolean,
       default: false
     }
