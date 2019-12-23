@@ -232,7 +232,7 @@ export default class Kyber {
       .toNumber();
   }
 
-  async ethEquivalentQty(fromCurrency, toCurrency, fromValue) {
+  async ethEquivalentQty(fromCurrency) {
     return await this.getExpactedRateInTokens('ETH', fromCurrency, 0.5);
   }
 
@@ -243,7 +243,6 @@ export default class Kyber {
       toCurrency,
       fromValue
     );
-    console.log('equivalent', val); // todo remove dev item
 
     const equivalentRate = await this.getExpactedRateInTokens(
       fromCurrency,
@@ -252,23 +251,9 @@ export default class Kyber {
       true
     );
 
-
-    console.log('trueRate', rate); // todo remove dev item
-    console.log('equivalentRate', equivalentRate); // todo remove dev item
-    console.log(
-      'equivalentRate - trueRate',
-      toBigNumber(rate)
-        .minus(toBigNumber(equivalentRate))
-        .toString()
-    ); // todo remove dev item
     const diffRate = toBigNumber(equivalentRate).minus(toBigNumber(rate));
-    const rateDiffers = diffRate.gt(0);
     const difference = toBigNumber(rate).div(equivalentRate);
     const value = toBigNumber(1).minus(difference);
-    console.log('slippage 0:', difference.times(100).toString()); // todo remove dev item
-    console.log('slippage 1:', difference.toString()); // todo remove dev item
-    console.log('slippage 2:', value.toString()); // todo remove dev item
-    console.log('slippage 3:', value.times(100).toFixed(2).toString()); // todo remove dev item
     if (value.gt(0)) {
       return value;
     }
@@ -330,7 +315,6 @@ export default class Kyber {
     if (new BigNumber(inWei).gt(-1)) {
       return this.convertToTokenBase(kyberBaseCurrency, inWei);
     }
-    // return -1;
     return 0;
   }
 
