@@ -85,14 +85,9 @@
 
 <script>
 import { mapState } from 'vuex';
-import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
-import CurrencyPicker from '../../components/CurrencyPicker';
-import InterfaceBottomText from '@/components/InterfaceBottomText';
-import Blockie from '@/components/Blockie';
 import tabsConfig from '../../components/InterfaceSideMenu/InterfaceSideMenu.config';
 import DappButtons from '../../components/DappButtons';
 import dapps from '@/dapps';
-import SwapWidget from '@/components/SwapWidget';
 import ButtonNftManager from './components/ButtonNftManager';
 import ButtonSendTx from './components/ButtonSendTx';
 
@@ -105,12 +100,7 @@ const toBigNumber = num => {
 
 export default {
   components: {
-    'interface-container-title': InterfaceContainerTitle,
-    'interface-bottom-text': InterfaceBottomText,
-    blockie: Blockie,
-    'currency-picker': CurrencyPicker,
     'dapp-buttons': DappButtons,
-    'swap-widget': SwapWidget,
     'button-nft-manager': ButtonNftManager,
     'button-send-tx': ButtonSendTx
   },

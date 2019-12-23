@@ -12,7 +12,6 @@
       </div>
       <div class="the-form signature">
         <textarea
-          v-validate="'required'"
           ref="signature"
           v-model="message"
           :placeholder="verifyMessageLabel"

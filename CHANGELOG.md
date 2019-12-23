@@ -1,3 +1,30 @@
+### Release v5.2.8-hotfix.1
+
+- Fix Schedule View [#1781](https://github.com/MyEtherWallet/MyEtherWallet/pull/1781)
+
+### Release v5.2.8
+
+### Bug
+
+- Catch error when cryptokitties api 500s [#1775](https://github.com/MyEtherWallet/MyEtherWallet/pull/1775)
+- Fix resolver when currency is ethereum token [#1774](https://github.com/MyEtherWallet/MyEtherWallet/pull/1774)
+- Might be a fix to that intermittent error after logging out [#1773](https://github.com/MyEtherWallet/MyEtherWallet/pull/1773)
+- Receive function instead of attaching to parent on standard button [#1763](https://github.com/MyEtherWallet/MyEtherWallet/pull/1763)
+- Fix offline send helper & out of memory error on local build [#1741](https://github.com/MyEtherWallet/MyEtherWallet/pull/1741)
+- Fix Schedule Transaction, Drop Down Bug [#1747](https://github.com/MyEtherWallet/MyEtherWallet/pull/1747)
+- Unable to unzip message on Windows and Mac OSX because of two files with same name but different case [#1757](https://github.com/MyEtherWallet/MyEtherWallet/pull/1757)
+- Fix leftover issue with token search [#1749](https://github.com/MyEtherWallet/MyEtherWallet/pull/1749)
+- Check correct balance when determining ability to withdraw[#1754](https://github.com/MyEtherWallet/MyEtherWallet/pull/1754)
+- Fix offline send helper & out of memory error on local build [#1741](https://github.com/MyEtherWallet/MyEtherWallet/pull/1741)
+- Fix Chrome ex medium size layout for every components [#1730](https://github.com/MyEtherWallet/MyEtherWallet/pull/1730)
+
+### Devop
+
+- Revert trezor version back to 7[#1737](https://github.com/MyEtherWallet/MyEtherWallet/pull/1772)
+- Refactor maker translations[#1737](https://github.com/MyEtherWallet/MyEtherWallet/pull/1737)
+- Add new MEW nodes[#1750](https://github.com/MyEtherWallet/MyEtherWallet/pull/1750)
+- Fix UI overflow [#1776](https://github.com/MyEtherWallet/MyEtherWallet/pull/1776)
+
 ### Release v5.2.7
 
 ### Bug
