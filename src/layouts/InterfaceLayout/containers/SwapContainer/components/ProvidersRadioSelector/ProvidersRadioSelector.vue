@@ -377,6 +377,8 @@ export default {
       });
     },
     listActiveProviders() {
+      console.log('this.providerData', this.providerData); // todo remove dev item
+
       this.$nextTick(() => {
         if (this.providerData.length === 1) {
           this.setSelectedProvider(this.providerData[0].provider);
