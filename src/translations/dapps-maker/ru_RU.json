@@ -13,7 +13,7 @@
   "stability-fee": "Комиссия за стабильность",
   "eth-collateral": "Залог ETH",
   "deposited": "Внесено",
-  "deposit": "Депозит",
+  "deposit": "Внести",
   "max-withdraw": "Максимум, доступный для вывода",
   "withdraw": "Вывести",
   "dai-position": "Позиция DAI",
