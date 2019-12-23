@@ -195,7 +195,6 @@
                       @click="selectedMode = mode"
                       >{{ mode.name }}</b-button
                     >
-                    {{ $t(mode.name) }}
                   </b-button-group>
                 </div>
               </b-col>
