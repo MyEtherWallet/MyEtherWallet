@@ -1,3 +1,7 @@
+### Release v5.2.8-hotfix.1
+
+- Fix Schedule View [#1781](https://github.com/MyEtherWallet/MyEtherWallet/pull/1781)
+
 ### Bug
 
 - Fix error with send-offline-helper page load [#1790](https://github.com/MyEtherWallet/MyEtherWallet/pull/1790)
