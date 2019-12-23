@@ -1,3 +1,7 @@
+### Devop
+
+- Display information related to kyber slippage for high values [#1794](https://github.com/MyEtherWallet/MyEtherWallet/pull/1794)
+
 ### Release v5.2.8-hotfix.2
 
 ### Bug

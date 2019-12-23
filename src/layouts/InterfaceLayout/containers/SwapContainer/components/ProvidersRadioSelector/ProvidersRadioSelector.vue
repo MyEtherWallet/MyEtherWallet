@@ -62,7 +62,7 @@
             <p :class="[maxCheck(provider) ? 'error-message-container' : '']">
               {{ maxNote(provider) }}
             </p>
-            {{otherTextDisplay(provider.additional.display)}}
+            {{ otherTextDisplay(provider.additional.display) }}
           </div>
         </li>
       </ul>
@@ -450,10 +450,12 @@ export default {
       const toValue = this.valueForRate(this.fromValue, source.rate);
       return `${source.fromValue} ${source.fromCurrency} = ${toValue} ${source.toCurrency}`;
     },
-    otherTextDisplay(contentDetails){
-      if(!contentDetails) return ;
-      if(contentDetails.txtKey){
-        return this.$t(`swap.providers.${contentDetails.txtKey}`, {value: contentDetails.value})
+    otherTextDisplay(contentDetails) {
+      if (!contentDetails) return;
+      if (contentDetails.txtKey) {
+        return this.$t(`swap.providers.${contentDetails.txtKey}`, {
+          value: contentDetails.value
+        });
       }
     },
     valueForRate(rate, value) {
