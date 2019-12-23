@@ -19,7 +19,7 @@
         <div v-show="title === 'Edit Address'" class="edit-address">
           <div class="addr-container">
             <blockie
-              :address="currentAddress.address"
+              :address="contactAddress"
               width="34px"
               height="34px"
               class="blockie-image mr-3"
@@ -28,11 +28,11 @@
               <p class="title-header">
                 {{ $t('interface.address-book.address') }}
               </p>
-              <p class="address">{{ currentAddress.address }}</p>
+              <p class="address">{{ contactAddress }}</p>
             </div>
           </div>
         </div>
-        <div class="nickname-container mt-3">
+        <div class="nickname-container">
           <p class="title-header">
             {{ $t('interface.address-book.nickname') }}
           </p>
@@ -42,12 +42,12 @@
             <input
               v-model="contactNickname"
               :placeholder="$t('interface.address-book.nickname')"
-              class="nickname-input mt-3 mb-3"
+              class="nickname-input mt-3 mb-4"
               type="text"
             />
             <div class="button-container">
               <button
-                :class="!contactAddress || !isValidAddress ? 'disabled' : ''"
+                :class="isBtnDisabled ? 'disabled' : ''"
                 @click="updateAddrBook()"
               >
                 {{
@@ -59,7 +59,11 @@
             </div>
           </div>
         </div>
-        <p v-show="title === 'Edit Address'" class="remove-txt" @click="removeContact()">
+        <p
+          v-show="title === 'Edit Address'"
+          class="remove-txt"
+          @click="removeContact()"
+        >
           {{ $t('interface.address-book.remove-addr') }}
         </p>
       </div>
@@ -83,37 +87,67 @@ export default {
       type: String,
       default: ''
     },
-    currentAddress: {
-      type: Object,
-      default: function() {
-        return {};
-      }
+    currentIdx: {
+      type: Number,
+      default: 0
     }
   },
   data() {
     return {
-      contactNickname: this.currentAddress.nickname || '',
+      contactNickname: '',
       contactAddress: '',
       isValidAddress: false
     };
   },
   computed: {
-    ...mapState(['addressBook'])
+    ...mapState(['addressBook']),
+    isBtnDisabled() {
+      if (this.title === 'Edit Address') {
+        return (
+          this.contactNickname === this.addressBook[this.currentIdx].nickname
+        );
+      }
+      return !this.contactAddress || !this.isValidAddress;
+    }
+  },
+  watch: {
+    currentIdx() {
+      console.error('this', this.currentIdx, this.addressBook);
+      if (this.title === 'Edit Address') {
+        this.contactAddress = this.addressBook[this.currentIdx].address;
+        this.contactNickname = this.addressBook[this.currentIdx].nickname;
+      } else {
+        this.contactAddress = '';
+        this.contactNickname = '';
+      }
+    }
   },
   methods: {
-    removeContact(idx) {
-      this.addressBook.splice(this.currentAddress, 1);
+    removeContact() {
+      this.addressBook.splice(this.currentIdx, 1);
       this.$store.dispatch('setAddressBook', this.addressBook);
+      this.$refs.addressBookModal.hide();
     },
     getToAddress(obj) {
       this.contactAddress = obj.address;
       this.isValidAddress = obj.valid;
     },
-    updateAddrBook(action) {
-      action === 'add' ? this.addContact() : this.updateContact();
+    updateAddrBook() {
+      this.title === 'Edit Address' ? this.updateContact() : this.addContact();
     },
     updateContact() {
-      console.error('this', this.currentAddress);
+      this.addressBook[this.currentIdx].nickname = this.contactNickname;
+
+      this.$store.dispatch('setAddressBook', this.addressBook);
+
+      Toast.responseHandler(
+        this.$t('interface.address-book.success-update'),
+        Toast.SUCCESS
+      );
+
+      this.contactAddress = '';
+      this.contactNickname = '';
+      this.$refs.addressBookModal.hide();
     },
     addContact() {
       const alreadyExists = Object.keys(this.addressBook).some(key => {

@@ -8,7 +8,7 @@
   }
 
   .add-new-container {
-    padding: 20px;
+    padding: 20px 20px 0 20px;
   }
 
   .nickname-container {
@@ -61,12 +61,21 @@
       border-radius: 4px;
       color: $white;
       height: 52px;
+      margin: 0;
+      min-width: 100%;
+    }
+    button.disabled {
+      background-color: $dark-grey-11;
+      border: none;
+      color: $white;
+      pointer-events: none;
     }
   }
 }
 
 .remove-txt {
   color: $red-1;
+  cursor: pointer;
   font-weight: 600;
   font-size: 15px;
   padding-bottom: 30px;

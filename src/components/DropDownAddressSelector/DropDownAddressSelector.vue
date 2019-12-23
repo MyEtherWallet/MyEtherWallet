@@ -26,7 +26,9 @@
             @input="debouncedInput"
           />
         </div>
-
+        <span class="save-addr-txt">{{
+          $t('interface.address-book.save-addr')
+        }}</span>
         <i
           :class="[
             isValidAddress && hexAddress.length !== 0 ? '' : 'not-good',
@@ -100,13 +102,6 @@
               aria-hidden="true"
               class="fa fa-check-circle good-button"
             />
-          </li>
-          <li
-            v-show="addressBook.length < 10"
-            class="add-addr"
-            @click="addAddress()"
-          >
-            + {{ $t('interface.address-book.add-addr') }}
           </li>
         </ul>
       </div>
