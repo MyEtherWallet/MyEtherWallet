@@ -233,11 +233,11 @@ export default class Kyber {
   }
 
   async ethEquivalentQty(fromCurrency, toCurrency, fromValue) {
-    return await this.getExpactedRateInTokens('ETH', fromCurrency, 1);
+    return await this.getExpactedRateInTokens('ETH', fromCurrency, 0.5);
   }
 
-  async rateDivergence(rate, fromCurrency, toCurrency, fromValue){
-
+  async rateDivergence(rate, fromCurrency, toCurrency, fromValue) {
+    if(toBigNumber(rate).lte(0)) return toBigNumber(0);
     const val = await this.ethEquivalentQty(
       fromCurrency,
       toCurrency,
@@ -248,54 +248,31 @@ export default class Kyber {
     const equivalentRate = await this.getExpactedRateInTokens(
       fromCurrency,
       toCurrency,
-      val
+      val || 0.5,
+      true
     );
+
 
     console.log('trueRate', rate); // todo remove dev item
     console.log('equivalentRate', equivalentRate); // todo remove dev item
-    console.log('equivalentRate - trueRate', toBigNumber(equivalentRate).minus(toBigNumber(rate)).toString()); // todo remove dev item
-    const diffRate = toBigNumber(equivalentRate).div(toBigNumber(rate).minus(toBigNumber(equivalentRate)))
-
     console.log(
-      'slippage 1',
-      diffRate
+      'equivalentRate - trueRate',
+      toBigNumber(rate)
+        .minus(toBigNumber(equivalentRate))
         .toString()
     ); // todo remove dev item
-
-    // console.log(
-    //   'slippage 1',
-    //   toBigNumber(equivalentRate).div(toBigNumber(rate)).times(100)
-    //     .toString()
-    // ); // todo remove dev item
-    //
-    // console.log(
-    //   'slippage 11',
-    //   toBigNumber(equivalentRate).div(toBigNumber(rate))
-    //     .toString()
-    // ); // todo remove dev item
-    //
-    //
-    //
-    // console.log(
-    //   'slippage 2',
-    //   toBigNumber(1)
-    //     .minus(toBigNumber(equivalentRate).div(toBigNumber(rate))).times(100)
-    //     .toString()
-    // ); // todo remove dev item
-    //
-    // console.log(
-    //   'slippage 22',
-    //   toBigNumber(1)
-    //     .minus(toBigNumber(equivalentRate).div(toBigNumber(rate)))
-    //     .toString()
-    // ); // todo remove dev item
-    //
-    // console.log(
-    //   'slippage 222',
-    //   (toBigNumber(equivalentRate).div(toBigNumber(rate)))
-    //     .minus(1)
-    //     .toString()
-    // ); // todo remove dev item
+    const diffRate = toBigNumber(equivalentRate).minus(toBigNumber(rate));
+    const rateDiffers = diffRate.gt(0);
+    const difference = toBigNumber(rate).div(equivalentRate);
+    const value = toBigNumber(1).minus(difference);
+    console.log('slippage 0:', difference.times(100).toString()); // todo remove dev item
+    console.log('slippage 1:', difference.toString()); // todo remove dev item
+    console.log('slippage 2:', value.toString()); // todo remove dev item
+    console.log('slippage 3:', value.times(100).toFixed(2).toString()); // todo remove dev item
+    if (value.gt(0)) {
+      return value;
+    }
+    return toBigNumber(0);
   }
 
   async getRate(fromCurrency, toCurrency, fromValue) {
@@ -305,14 +282,23 @@ export default class Kyber {
       this.getRateForUnit ? 1 : fromValue
     );
 
-    await this.rateDivergence(rate, fromCurrency, toCurrency, fromValue);
+    const diff = await this.rateDivergence(
+      rate,
+      fromCurrency,
+      toCurrency,
+      fromValue
+    );
+    const additional = {};
+    if (diff.gt(0.001)) {
 
+      additional['display'] = `Slippage of ${diff.times(100).toFixed(2, BigNumber.ROUND_HALF_UP)}% possible`;
+    }
     return {
       fromCurrency,
       toCurrency,
       provider: this.name,
       rate: this.calculateTrueRate(rate),
-      additional: {}
+      additional: additional
     };
   }
 
