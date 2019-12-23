@@ -99,7 +99,9 @@
     "add-new": "Add a New Contact",
     "edit-addr": "Edit Address",
     "address": "Address",
-    "update": "Update"
+    "update": "Update",
+    "success-update": "Successfully updated",
+    "save-addr": "Save Address"
   },
   "import-error": "Something went wrong while importing file, please make sure it is a valid file",
   "account-content": {

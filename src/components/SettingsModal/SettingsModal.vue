@@ -215,7 +215,7 @@
     </div>
     <address-book-modal
       ref="addressBook"
-      :current-address="currentAddress"
+      :current-idx="currentAddressIdx"
       :title="addrBookModalTitle"
     />
   </div>
@@ -289,7 +289,7 @@ export default {
       file: '',
       importedFile: '',
       popup: false,
-      currentAddress: {},
+      currentAddressIdx: null,
       addrBookModalTitle: ''
     };
   },
@@ -522,8 +522,8 @@ export default {
       this.ethPrice = price.data.ETH.quotes.USD.price;
     },
     openAddrBookModal(action, idx) {
-      this.currentAddress = idx ? this.addressBook[idx] : {};
-      console.error('current', this.currentAddress)
+      this.currentAddressIdx = action === 'edit' ? idx : null;
+      console.error('current', action, idx, this.currentAddressIdx);
       this.addrBookModalTitle =
         action === 'add'
           ? this.$t('interface.address-book.add-new')
