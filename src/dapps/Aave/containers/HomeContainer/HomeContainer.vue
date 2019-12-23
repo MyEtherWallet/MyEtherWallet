@@ -60,15 +60,15 @@
 import SummaryTable from '@/dapps/Aave/components/SummaryTable';
 import BalanceDisplay from '@/dapps/Aave/components/BalanceDisplay';
 import ActionModal from '@/dapps/Aave/components/ActionModal';
-import LendingPoolAbi from '@/dapps/Aave/abi/LendingPoolAbi.js';
-import ActionContainer from '@/dapps/Aave/containers/ActionContainer';
+// import LendingPoolAbi from '@/dapps/Aave/abi/LendingPoolAbi.js';
+// import ActionContainer from '@/dapps/Aave/containers/ActionContainer';
 
 export default {
   components: {
     'balance-display': BalanceDisplay,
-    'lending-pool-abi': LendingPoolAbi,
+    // 'lending-pool-abi': LendingPoolAbi,
     'action-modal': ActionModal,
-    'action-container': ActionContainer,
+    // 'action-container': ActionContainer,
     'summary-table': SummaryTable
   },
   props: {
