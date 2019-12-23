@@ -91,7 +91,7 @@
                   }}</b-nav-item>
                   <b-nav-item-dropdown
                     id="my-nav-dropdown"
-                    text="Info"
+                    :text="$t('common.info')"
                     toggle-class="nav-link-custom"
                     right
                   >
