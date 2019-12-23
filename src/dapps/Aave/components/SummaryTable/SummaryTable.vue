@@ -48,13 +48,13 @@
         <th></th>
       </thead>
       <tbody>
-        <tr v-for="(token, index) in reserves" :key="token.key">
+        <tr v-for="(reserve, index) in reserves" :key="reserve.key">
           <!-- need to change icon -->
           <td class="token-name">
             <img
               class="token-icon mr-2"
               src="@/assets/images/currency/eth.svg"
-            />{{ token.name }}
+            />{{ reserve.name }}
           </td>
           <td class="pt-3">
             <!-- placeholder -->
@@ -83,15 +83,15 @@
               <div class="sliding-switch-white">
                 <label class="switch">
                   <input
-                    :checked="token.isStable"
+                    :checked="reserve.isStable"
                     type="checkbox"
                     @click="changeType(index)"
                   />
                   <span class="slider borrow-slider round" />
                 </label>
               </div>
-              <span :class="token.isStable ? 'stable-txt' : 'variable-txt'">{{
-                token.isStable
+              <span :class="reserve.isStable ? 'stable-txt' : 'variable-txt'">{{
+                reserve.isStable
                   ? $t('dappsAave.stable')
                   : $t('dappsAave.variable')
               }}</span>
