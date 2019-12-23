@@ -232,17 +232,87 @@ export default class Kyber {
       .toNumber();
   }
 
+  async ethEquivalentQty(fromCurrency, toCurrency, fromValue) {
+    return await this.getExpactedRateInTokens('ETH', fromCurrency, 1);
+  }
+
+  async rateDivergence(rate, fromCurrency, toCurrency, fromValue){
+
+    const val = await this.ethEquivalentQty(
+      fromCurrency,
+      toCurrency,
+      fromValue
+    );
+    console.log('equivalent', val); // todo remove dev item
+
+    const equivalentRate = await this.getExpactedRateInTokens(
+      fromCurrency,
+      toCurrency,
+      val
+    );
+
+    console.log('trueRate', rate); // todo remove dev item
+    console.log('equivalentRate', equivalentRate); // todo remove dev item
+    console.log('equivalentRate - trueRate', toBigNumber(equivalentRate).minus(toBigNumber(rate)).toString()); // todo remove dev item
+    const diffRate = toBigNumber(equivalentRate).div(toBigNumber(rate).minus(toBigNumber(equivalentRate)))
+
+    console.log(
+      'slippage 1',
+      diffRate
+        .toString()
+    ); // todo remove dev item
+
+    // console.log(
+    //   'slippage 1',
+    //   toBigNumber(equivalentRate).div(toBigNumber(rate)).times(100)
+    //     .toString()
+    // ); // todo remove dev item
+    //
+    // console.log(
+    //   'slippage 11',
+    //   toBigNumber(equivalentRate).div(toBigNumber(rate))
+    //     .toString()
+    // ); // todo remove dev item
+    //
+    //
+    //
+    // console.log(
+    //   'slippage 2',
+    //   toBigNumber(1)
+    //     .minus(toBigNumber(equivalentRate).div(toBigNumber(rate))).times(100)
+    //     .toString()
+    // ); // todo remove dev item
+    //
+    // console.log(
+    //   'slippage 22',
+    //   toBigNumber(1)
+    //     .minus(toBigNumber(equivalentRate).div(toBigNumber(rate)))
+    //     .toString()
+    // ); // todo remove dev item
+    //
+    // console.log(
+    //   'slippage 222',
+    //   (toBigNumber(equivalentRate).div(toBigNumber(rate)))
+    //     .minus(1)
+    //     .toString()
+    // ); // todo remove dev item
+  }
+
   async getRate(fromCurrency, toCurrency, fromValue) {
     const rate = await this.getExpactedRateInTokens(
       fromCurrency,
       toCurrency,
       this.getRateForUnit ? 1 : fromValue
     );
+
+    await this.rateDivergence(rate, fromCurrency, toCurrency, fromValue);
+
     return {
       fromCurrency,
       toCurrency,
       provider: this.name,
-      rate: this.calculateTrueRate(rate)
+      rate: this.calculateTrueRate(rate),
+      additional: {}
     };
   }
 
@@ -274,7 +344,8 @@ export default class Kyber {
     if (new BigNumber(inWei).gt(-1)) {
       return this.convertToTokenBase(kyberBaseCurrency, inWei);
     }
-    return -1;
+    // return -1;
+    return 0;
   }
 
   getInitialCurrencyEntries(collectMapFrom, collectMapTo) {
