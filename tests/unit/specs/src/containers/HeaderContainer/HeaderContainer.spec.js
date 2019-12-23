@@ -47,7 +47,7 @@ describe('HeaderContainer.vue', () => {
     i18n = baseSetup.i18n;
     store = baseSetup.store;
 
-    Vue.config.warnHandler = () => { };
+    Vue.config.warnHandler = () => {};
 
     const actions = {
       clearWallet: jest.fn(),
@@ -114,7 +114,7 @@ describe('HeaderContainer.vue', () => {
         $root: {
           _i18n: i18n,
           $el: {
-            getBoundingClientRect: function () {
+            getBoundingClientRect: function() {
               return 100;
             }
           }
