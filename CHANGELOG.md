@@ -1,6 +1,7 @@
 ### Release v5.2.8-hotfix.1
 
 ### Bug
+
 - Fix header items for other languages [#1791](https://github.com/MyEtherWallet/MyEtherWallet/pull/1791)
 - Fix Schedule View [#1781](https://github.com/MyEtherWallet/MyEtherWallet/pull/1781)
 
