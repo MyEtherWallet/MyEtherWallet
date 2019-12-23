@@ -90,18 +90,16 @@
                     $t('common.home')
                   }}</b-nav-item>
                   <b-nav-item-dropdown
+                    v-if="!isMewCx"
                     id="my-nav-dropdown"
                     :text="$t('common.info')"
                     toggle-class="nav-link-custom"
                     right
                   >
-                    <b-dropdown-item
-                      v-if="isHomePage && !isMewCx"
-                      to="/#about-mew"
-                    >
+                    <b-dropdown-item v-if="isHomePage" to="/#about-mew">
                       {{ $t('common.about') }}
                     </b-dropdown-item>
-                    <b-dropdown-item v-if="!isMewCx" to="/#faqs">{{
+                    <b-dropdown-item to="/#faqs">{{
                       $t('common.faqs')
                     }}</b-dropdown-item>
                   </b-nav-item-dropdown>
