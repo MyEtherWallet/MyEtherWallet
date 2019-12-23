@@ -190,6 +190,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-@import 'MakerHome';
-</style>
+<style lang="scss" scoped></style>
