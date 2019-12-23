@@ -41,7 +41,7 @@
     },
     "other-wallets": {
       "title": "Может ли MEW работать с другими кошельками?",
-      "text": "MEW supports many different wallet types including hardware wallets, such as the Ledger Nano S or Trezor, and third-party wallets like MetaMask. We are also open for anyone to use their Ethereum wallets with the appropriate information. Read more"
+      "text": "MEW поддерживает много различных типов кошельков, включая аппаратные кошельки, такие как Ledger Nano S или Trezor, а также кошельки третьей стороны, такие как MetaMask. Также мы открыты всем для использования своих кошельков эфириума с соответствующей информацией. Подробнее"
     },
     "send-txs": {
       "title": "Как я могу отправить транзакцию?",
