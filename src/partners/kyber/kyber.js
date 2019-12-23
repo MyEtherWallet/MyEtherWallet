@@ -237,7 +237,7 @@ export default class Kyber {
   }
 
   async rateDivergence(rate, fromCurrency, toCurrency, fromValue) {
-    if(toBigNumber(rate).lte(0)) return toBigNumber(0);
+    if (toBigNumber(rate).lte(0)) return toBigNumber(0);
     const val = await this.ethEquivalentQty(
       fromCurrency,
       toCurrency,
@@ -275,8 +275,10 @@ export default class Kyber {
     );
     const additional = {};
     if (diff.gt(0.001)) {
-
-      additional['display'] = `Slippage of ${diff.times(100).toFixed(2, BigNumber.ROUND_HALF_UP)}% possible`;
+      additional['display'] = {
+        txtKey: 'kyber-slippage',
+        value: diff.times(100).toFixed(2, BigNumber.ROUND_HALF_UP)
+      };
     }
     return {
       fromCurrency,
