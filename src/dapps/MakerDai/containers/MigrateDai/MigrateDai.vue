@@ -1,5 +1,10 @@
 <template>
   <div>
+    <div class="new-container p-4">
+      <div style="max-width: 500px;">
+        {{ $t('dappsMaker.upgrade-informational') }}
+      </div>
+    </div>
     <div class="currency-ops-new">
       <div class="info-box">
         {{ $t('dappsMaker.upgrade-informational') }}

@@ -1,57 +1,55 @@
 <template>
-  <div>
-    <div class="new-container p-4">
-      <b-row align-content="stretch">
-        <b-col cols="12" xl="6" lg="6" md="6" class="mb-4">
-          <card
-            :title="$t('dappsMaker.migrate-old-dai-to-new-dai')"
-            text="Some quick example text to build on the card title and make up the
+  <div class="p-4">
+    <b-row align-content="stretch">
+      <b-col cols="12" xl="6" lg="6" md="6" class="mb-4">
+        <card
+          :title="$t('dappsMaker.migrate-old-dai-to-new-dai')"
+          text="Some quick example text to build on the card title and make up the
               bulk of the card's content."
-            button="Go"
-            :click="migrateDai"
-          />
-        </b-col>
-        <b-col cols="12" xl="6" lg="6" md="6" class="mb-4">
-          <card
-            :title="
-              $t('dappsMaker.migrate-single-collateral-to-multi-collateral')
-            "
-            text="Some quick example text to build on the card title and make up the
+          button="Go"
+          :click="migrateDai"
+        />
+      </b-col>
+      <b-col cols="12" xl="6" lg="6" md="6" class="mb-4">
+        <card
+          :title="
+            $t('dappsMaker.migrate-single-collateral-to-multi-collateral')
+          "
+          text="Some quick example text to build on the card title and make up the
               bulk of the card's content."
-            button="Go"
-            :click="migrateCDP"
-          />
-        </b-col>
-        <b-col cols="12" xl="6" lg="6" md="6" class="mb-4">
-          <card
-            :title="$t('dappsMaker.manage-your-vault')"
-            text="Some quick example text to build on the card title and make up the
+          button="Go"
+          :click="migrateCDP"
+        />
+      </b-col>
+      <b-col cols="12" xl="6" lg="6" md="6" class="mb-4">
+        <card
+          :title="$t('dappsMaker.manage-your-vault')"
+          text="Some quick example text to build on the card title and make up the
               bulk of the card's content."
-            button="Go"
-            :click="goToManage"
-            :loading="!makerActive ? true : false"
-            :loading-msg="loadingMessage"
-        /></b-col>
-        <b-col cols="12" xl="6" lg="6" md="6" class="mb-4">
-          <card
-            :title="$t('dappsMaker.create-a-vault')"
-            text="Some quick example text to build on the card title and make up the
+          button="Go"
+          :click="goToManage"
+          :loading="!makerActive ? true : false"
+          :loading-msg="loadingMessage"
+      /></b-col>
+      <b-col cols="12" xl="6" lg="6" md="6" class="mb-4">
+        <card
+          :title="$t('dappsMaker.create-a-vault')"
+          text="Some quick example text to build on the card title and make up the
               bulk of the card's content."
-            button="Go"
-            :click="gotoCreate"
-            :loading="!makerActive ? true : false"
-            :loading-msg="loadingMessage"
-        /></b-col>
-        <b-col cols="12" xl="6" lg="6" md="6" class="mb-4">
-          <card
-            :title="$t('dappsMaker.dai-savings')"
-            text="Some quick example text to build on the card title and make up the
+          button="Go"
+          :click="gotoCreate"
+          :loading="!makerActive ? true : false"
+          :loading-msg="loadingMessage"
+      /></b-col>
+      <b-col cols="12" xl="6" lg="6" md="6" class="mb-4">
+        <card
+          :title="$t('dappsMaker.dai-savings')"
+          text="Some quick example text to build on the card title and make up the
               bulk of the card's content."
-            button="Go"
-            :click="goToSave"
-        /></b-col>
-      </b-row>
-    </div>
+          button="Go"
+          :click="goToSave"
+      /></b-col>
+    </b-row>
   </div>
 </template>
 
@@ -104,7 +102,6 @@ export default {
       return this.cdps.length > 1 || this.cdpsWithoutProxy.length > 1;
     }
   },
-  mounted() {},
   methods: {
     gotoCreate() {
       if (this.$route.path.includes('maker-dai')) {
