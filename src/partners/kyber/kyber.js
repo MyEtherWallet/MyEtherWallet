@@ -251,7 +251,6 @@ export default class Kyber {
       true
     );
 
-    const diffRate = toBigNumber(equivalentRate).minus(toBigNumber(rate));
     const difference = toBigNumber(rate).div(equivalentRate);
     const value = toBigNumber(1).minus(difference);
     if (value.gt(0)) {
