@@ -44,8 +44,8 @@
             <li v-for="index in mnemonicSize" :key="index">
               <span>{{ index }}.</span>
               <input
-                v-model="mnemonicPhrase[index - 1]"
                 :ref="`mnemonicInput${index - 1}`"
+                v-model="mnemonicPhrase[index - 1]"
                 type="text"
                 name=""
               />
@@ -77,7 +77,7 @@
           <standard-button
             :options="continueButtonOptions"
             :spinner="spinner"
-            @click.native="unlockWallet"
+            :click-function="unlockWallet"
           />
         </div>
       </form>

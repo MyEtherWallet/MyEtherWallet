@@ -1,4 +1,4 @@
-FROM node:10.16.2-jessie
+FROM node:10.17.0-stretch
 
 ENV NODE_OPTIONS --max-old-space-size=4092
 RUN npm install npm@6.10 -g

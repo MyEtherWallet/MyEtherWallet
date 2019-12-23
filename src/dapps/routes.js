@@ -5,15 +5,17 @@ import makerDaiRoutes from './MakerDai/routes';
 import makerSaiRoutes from './MakerSai/routes';
 import ambrpayRoutes from './Ambrpay/routes';
 import aaveRoutes from './Aave/routes';
+// import soDapp from './SOTDapps/routes';
 
 const routes = {
   manageENS: manageENSRoutes,
   buySubDomain: buySubDomainRoutes,
   scheduleTransaction: scheduleTransactionRoutes,
   makerDaiRoutes: makerDaiRoutes,
-  ambrpay: ambrpayRoutes,
   aaveDLP: aaveRoutes,
-  makerSaiRoutes: makerSaiRoutes
+  makerSaiRoutes: makerSaiRoutes,
+  amberpay: ambrpayRoutes
+  // soDapp: soDapp
 };
 
 export default routes;
