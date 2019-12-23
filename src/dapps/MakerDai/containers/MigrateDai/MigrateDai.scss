@@ -1,4 +1,4 @@
-@import '~@/scss/GlobalVariables';
+@import "~@/scss/GlobalVariables";
 
 $this-page-mobile-width: 700px;
 
@@ -155,7 +155,7 @@ $this-page-mobile-width: 700px;
         top: 0;
         left: 0;
         right: 0;
-        content: '';
+        content: "";
         width: 100%;
         border-top: 1px solid $light-grey-3;
       }
