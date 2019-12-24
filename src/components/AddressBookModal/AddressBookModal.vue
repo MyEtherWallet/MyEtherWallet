@@ -11,10 +11,22 @@
       <div class="modal-contents">
         <div v-show="title === 'Add a New Contact'" class="add-new-container">
           <p class="title-header">{{ $t('interface.address-book.address') }}</p>
-          <dropdown-address-selector
-            :hide-copy="true"
-            @toAddress="getToAddress($event)"
-          />
+          <div class="address-inputs">
+            <blockie
+              v-show="isValidAddress"
+              :address="contactAddress"
+              width="32px"
+              height="32px"
+              class="blockie-image"
+            />
+            <input
+              v-model="contactAddress"
+              v-addr-resolver="'contactAddress'"
+              :class="isValidAddress ? 'blockie-input' : ''"
+              :placeholder="$t('common.addr')"
+              type="text"
+            />
+          </div>
         </div>
         <div v-show="title === 'Edit Address'" class="edit-address">
           <div class="addr-container">
@@ -73,13 +85,11 @@
 
 <script>
 import { Toast } from '@/helpers';
-import DropDownAddressSelector from '@/components/DropDownAddressSelector';
 import { mapState } from 'vuex';
 import Blockie from '@/components/Blockie';
 
 export default {
   components: {
-    'dropdown-address-selector': DropDownAddressSelector,
     blockie: Blockie
   },
   props: {
@@ -90,6 +100,10 @@ export default {
     currentIdx: {
       type: Number,
       default: 0
+    },
+    selectedAddress: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -102,7 +116,7 @@ export default {
   computed: {
     ...mapState(['addressBook']),
     isBtnDisabled() {
-      if (this.title === 'Edit Address') {
+      if (this.title === 'Edit Address' && this.addressBook[this.currentIdx]) {
         return (
           this.contactNickname === this.addressBook[this.currentIdx].nickname
         );
@@ -112,7 +126,6 @@ export default {
   },
   watch: {
     currentIdx() {
-      console.error('this', this.currentIdx, this.addressBook);
       if (this.title === 'Edit Address') {
         this.contactAddress = this.addressBook[this.currentIdx].address;
         this.contactNickname = this.addressBook[this.currentIdx].nickname;
@@ -121,6 +134,13 @@ export default {
         this.contactNickname = '';
       }
     }
+  },
+  mounted() {
+    this.$refs.addressBookModal.$on('shown', () => {
+      if (this.selectedAddress) {
+        this.contactAddress = this.selectedAddress;
+      }
+    });
   },
   methods: {
     removeContact() {

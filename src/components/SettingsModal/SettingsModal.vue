@@ -523,7 +523,6 @@ export default {
     },
     openAddrBookModal(action, idx) {
       this.currentAddressIdx = action === 'edit' ? idx : null;
-      console.error('current', action, idx, this.currentAddressIdx);
       this.addrBookModalTitle =
         action === 'add'
           ? this.$t('interface.address-book.add-new')

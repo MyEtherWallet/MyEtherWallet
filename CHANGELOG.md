@@ -1,3 +1,7 @@
+### Feature
+
+- Update address book [#1795](https://github.com/MyEtherWallet/MyEtherWallet/pull/1795)
+
 ### Release v5.2.8-hotfix.1
 
 - Fix Schedule View [#1781](https://github.com/MyEtherWallet/MyEtherWallet/pull/1781)
