@@ -28,7 +28,7 @@
         </div>
         <span
           v-show="!hideCopy"
-          class="save-addr-txt"
+          :class="['save-addr-txt', !selectedAddress ? 'disabled-txt' : '']"
           @click="openAddrModal()"
           >{{ $t('interface.address-book.save-addr') }}</span
         >
