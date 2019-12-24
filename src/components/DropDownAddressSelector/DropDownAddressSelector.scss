@@ -150,11 +150,6 @@
   color: $mew-green;
 }
 
-.good-button {
-  background-color: transparent;
-  text-align: right;
-}
-
 .title-button {
   color: $mew-green;
 }
@@ -166,7 +161,9 @@
 
 .save-addr-txt {
   color: $mew-green;
-  margin-right: 91px;
+  cursor: pointer;
+  font-weight: 500;
+  margin-right: 65px;
   position: absolute;
   right: 0;
   top: 17px;
