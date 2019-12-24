@@ -79,11 +79,16 @@
         </div>
       </div>
     </back-button>
+
     <div
       v-show="makerActive && listCdps && showManageable"
       class="buttons-container"
     >
       <div v-for="(value, idx) in cdps" :key="idx + value">
+        <b-button variant="primary">
+          {{ $t('dappsMaker.vault-id') }}
+          <b-badge variant="light">{{ value }}</b-badge>
+        </b-button>
         <div
           :class="[
             'dapps-button',
@@ -97,7 +102,7 @@
       </div>
     </div>
 
-    <div class="px-4 py-3">
+    <div class="px-5 py-3">
       <router-view
         :active-cdp-id="activeCdpId"
         :loading-state="curentlyLoading"
