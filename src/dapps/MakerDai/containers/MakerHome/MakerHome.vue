@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4">
+  <div>
     <b-row align-content="stretch">
       <b-col cols="12" xl="6" lg="6" md="6" class="mb-4">
         <card
