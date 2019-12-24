@@ -138,12 +138,14 @@
       @setAfterLoadPage="setAfterLoadPage"
     >
     </router-view>
+    <interface-footer />
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
+import InterfaceContainerFooter from '@/layouts/InterfaceLayout/components/InterfaceContainerFooter';
 import MoveCdpModal from './components/MoveCdpModal';
 import GenerateModal from './components/GenerateModal';
 import DepositModal from './components/DepositModal';
@@ -202,6 +204,7 @@ export default {
     'withdraw-modal': WithdrawModal,
     'payback-modal': PaybackModal,
     'back-button': BackButton,
+    'interface-footer': InterfaceContainerFooter,
     'move-cdp-modal': MoveCdpModal
   },
   props: {
