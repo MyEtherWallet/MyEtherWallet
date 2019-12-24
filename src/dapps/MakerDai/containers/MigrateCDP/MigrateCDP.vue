@@ -20,11 +20,9 @@
           placeholder="Enter your name"
           class="mb-1"
         ></b-form-input>
-        <b-button
-          variant="outline-secondary"
-          @click="checkMigrateContractSaiBalance"
-          >{{ $t('dappsMaker.check-balance') }}</b-button
-        >
+        <b-button variant="secondary" @click="checkMigrateContractSaiBalance">{{
+          $t('dappsMaker.check-balance')
+        }}</b-button>
       </div>
 
       <div v-show="noSaiAvailable && !needsAtLeast20">
