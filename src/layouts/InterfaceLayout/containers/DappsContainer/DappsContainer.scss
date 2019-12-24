@@ -1,4 +1,4 @@
-@import '../InterfaceContainer';
+@import "../InterfaceContainer";
 
 $dapps-container-mobile-width: 650px;
 
@@ -9,6 +9,7 @@ $dapps-container-mobile-width: 650px;
 }
 
 .buttons-container {
+  background-color: white;
   display: grid;
   grid-column-gap: 20px;
   grid-row-gap: 20px;
