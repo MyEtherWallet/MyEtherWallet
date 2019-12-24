@@ -168,3 +168,8 @@
   right: 0;
   top: 17px;
 }
+
+.save-addr-txt.disabled-txt {
+  color: $dark-grey-11;
+  pointer-events: none;
+}
