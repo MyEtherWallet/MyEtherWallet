@@ -1,3 +1,7 @@
+### Bug
+
+- Hide blockexplorrer link on irrelevant pages []()
+
 ### Release v5.2.8-hotfix.1
 
 - Fix Schedule View [#1781](https://github.com/MyEtherWallet/MyEtherWallet/pull/1781)
