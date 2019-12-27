@@ -265,13 +265,13 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      web3: state => state.main.web3,
-      network: state => state.main.network,
-      notifications: state => state.main.notifications,
-      wallet: state => state.main.wallet,
-      gasPrice: state => state.main.gasPrice
-    }),
+    ...mapState('main', [
+      'web3',
+      'network',
+      'notifications',
+      'wallet',
+      'gasPrice'
+    ]),
     errorMessage() {
       return this.errorMessageString(this.notice);
     },

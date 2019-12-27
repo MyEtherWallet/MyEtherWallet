@@ -10,8 +10,8 @@
       <ul>
         <li
           v-for="(tab, idx) in tabData"
-          :class="tab.onlineOnly && !online ? 'disabled-item' : ''"
           :key="tab.name + idx"
+          :class="tab.onlineOnly && !online ? 'disabled-item' : ''"
         >
           <div v-if="tab.onlineOnly && !online" class="dash" />
           <div
@@ -73,7 +73,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({ online: state => state.main.online })
+    ...mapState('main', ['online'])
   },
   methods: {
     toggleSideMenu() {

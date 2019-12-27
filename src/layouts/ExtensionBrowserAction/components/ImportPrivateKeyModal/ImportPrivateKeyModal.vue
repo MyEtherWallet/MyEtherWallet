@@ -23,8 +23,8 @@
             <label for="privateKeyInput">{{ $t('mewcx.password') }}</label>
             <div class="password-input">
               <input
-                :type="show ? 'text' : 'password'"
                 v-model="locPassword"
+                :type="show ? 'text' : 'password'"
                 :placeholder="$t('mewcx.enter-pw-hash')"
                 name="privateKeyInput"
               />

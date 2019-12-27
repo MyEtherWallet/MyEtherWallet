@@ -100,12 +100,12 @@
               </li>
             </ul>
             <div v-else class="notification-no-item">
-              {{ $t('common.no-notifications') }}
+              {{ $t('common.notifications.no-notifications') }}
             </div>
           </li>
         </ul>
         <div v-else class="notification-no-item">
-          {{ $t('common.no-notifications') }}
+          {{ $t('common.notifications.no-notifications') }}
         </div>
       </div>
       <div v-if="detailsShown" class="notification-item-container">
@@ -133,7 +133,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import unit from 'ethjs-unit';
 import BigNumber from 'bignumber.js';
 import { isAddress } from '@/helpers/addressUtils';
@@ -178,11 +178,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      web3: state => state.main.web3,
-      network: state => state.main.network,
-      notifications: state => state.main.notifications
-    }),
+    ...mapState('main', ['web3', 'network', 'notifications']),
     sortedNotifications() {
       const notificationCopy = {};
 
@@ -225,6 +221,7 @@ export default {
     window.chrome.storage.onChanged.removeListener(this.notificationsSetup);
   },
   methods: {
+    ...mapActions('main', ['updateNotification']),
     notificationsSetup() {
       ExtensionHelpers.getAccounts(items => {
         Object.keys(items).forEach(item => {
@@ -291,11 +288,7 @@ export default {
                       : notificationStatuses.FAILED;
                     entry.body.timeRemaining = -1;
                   }
-                  this.$store.dispatch('updateNotification', [
-                    item,
-                    noticeIdx,
-                    entry
-                  ]);
+                  this.updateNotification([item, noticeIdx, entry]);
                 }
               });
             });
@@ -356,11 +349,7 @@ export default {
           updatedNotif.expanded = false;
         }
 
-        this.$store.dispatch('updateNotification', [
-          address,
-          idx,
-          updatedNotif
-        ]);
+        this.updateNotification([address, idx, updatedNotif]);
       };
     },
     hasExpanded(address) {
@@ -378,32 +367,20 @@ export default {
           updatedNotif.read = true;
           updatedNotif.expanded = true;
         }
-        this.$store.dispatch('updateNotification', [
-          address,
-          idx,
-          updatedNotif
-        ]);
+        this.updateNotification([address, idx, updatedNotif]);
       });
     },
     collapseAll(address) {
       this.notifications[address].forEach((notice, idx) => {
         const updatedNotif = notice;
         updatedNotif.expanded = false;
-        this.$store.dispatch('updateNotification', [
-          address,
-          idx,
-          updatedNotif
-        ]);
+        this.updateNotification([address, idx, updatedNotif]);
       });
     },
     childUpdateNotification(idx) {
       if (typeof idx === 'undefined') return () => {};
       return updatedNotif => {
-        this.$store.dispatch('updateNotification', [
-          this.account.address,
-          idx,
-          updatedNotif
-        ]);
+        this.updateNotification([this.account.address, idx, updatedNotif]);
       };
     },
     processStatus(rawStatus) {

@@ -22,14 +22,16 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 export default {
   name: 'Logout',
   data() {
     return {};
   },
   methods: {
+    ...mapActions('main', ['clearWallet']),
     logout() {
-      this.$store.dispatch('clearWallet');
+      this.clearWallet('clearWallet');
       this.$refs.logout.hide();
     },
     cancel() {

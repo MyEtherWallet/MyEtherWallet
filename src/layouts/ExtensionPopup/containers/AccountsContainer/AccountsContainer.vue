@@ -23,9 +23,9 @@
             <wallet-view-component
               v-for="item in myWallets"
               v-show="myWallets.length > 0"
+              :key="item.address"
               :address="item.address"
               :name="item.nick"
-              :key="item.address"
               :balance="item.balance"
               :usd="usd"
             />
@@ -46,15 +46,15 @@
             <wallet-view-component
               v-for="item in watchOnlyWallets"
               v-show="watchOnlyWallets.length > 0"
+              :key="item.address"
               :address="item.address"
               :name="item.nick"
-              :key="item.address"
               :balance="item.balance"
               :usd="usd"
             />
             <div
               v-if="watchOnlyWallets.length === 0"
-              class="no-wallet-container"
+              class="no-wallet-container user-select--none"
             >
               <h3>
                 {{ $t('mewcx.no-wallets-found') }}
@@ -173,10 +173,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      web3: state => state.main.web3,
-      network: state => state.main.network
-    }),
+    ...mapState('main', ['web3', 'network']),
     concatBalance() {
       const balance = new BigNumber(this.totalBalance).toFixed(5);
       return this.totalBalance > 0 ? balance : this.totalBalance;

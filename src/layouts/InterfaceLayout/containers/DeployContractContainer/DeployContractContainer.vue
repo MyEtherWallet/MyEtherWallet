@@ -79,8 +79,8 @@
           <div class="the-form contract-name">
             <input
               v-if="getType(input.type).type !== 'radio'"
-              :type="getType(input.type).type"
               v-model="inputs[input.name]"
+              :type="getType(input.type).type"
             />
             <div
               v-if="getType(input.type).type === 'radio'"
@@ -202,11 +202,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      gasPrice: state => state.main.gasPrice,
-      web3: state => state.main.web3,
-      network: state => state.main.network
-    }),
+    ...mapState('main', ['gasPrice', 'web3', 'network']),
     isValidAbi() {
       return Misc.isJson(this.abi) && Array.isArray(JSON.parse(this.abi));
     },
@@ -245,6 +241,7 @@ export default {
       } catch (err) {
         return this.bytecode;
       }
+      return null;
     },
     isValidByte() {
       return (

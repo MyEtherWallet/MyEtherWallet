@@ -189,7 +189,6 @@
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import CurrencyPicker from '@/layouts/InterfaceLayout/components/CurrencyPicker';
 import SignedTxModal from './components/SignedTxModal';
-import Blockie from '@/components/Blockie';
 import BigNumber from 'bignumber.js';
 import * as unit from 'ethjs-unit';
 import { mapState } from 'vuex';
@@ -200,7 +199,6 @@ import DropDownAddressSelector from '@/components/DropDownAddressSelector';
 
 export default {
   components: {
-    blockie: Blockie,
     'signed-tx-modal': SignedTxModal,
     'currency-picker': CurrencyPicker,
     'interface-container-title': InterfaceContainerTitle,
@@ -274,12 +272,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      wallet: state => state.main.wallet,
-      network: state => state.main.network,
-      web3: state => state.main.web3,
-      linkQuery: state => state.main.linkQuery
-    }),
+    ...mapState('main', ['wallet', 'network', 'web3', 'linkQuery']),
     txSpeedMsg() {
       const net = this.network.type.name;
       // eslint-disable-next-line

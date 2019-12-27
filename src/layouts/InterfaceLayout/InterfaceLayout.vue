@@ -39,6 +39,7 @@
     <!-- Modals ******************************************************** -->
     <!-- Modals ******************************************************** -->
     <!-- Modals ******************************************************** -->
+
     <div class="mobile-interface-address-block">
       <mobile-interface-address
         :address="address"
@@ -62,7 +63,7 @@
         <div class="tx-contents">
           <div class="content-container mobile-hide">
             <interface-address
-              v-if="Object.keys(wallet).length > 1"
+              v-if="wallet"
               :address="address"
               :print="print"
               :switch-addr="switchAddress"
@@ -108,7 +109,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import ENS from 'ethereum-ens';
 import WalletPasswordModal from '@/components/WalletPasswordModal';
 import EnterPinNumberModal from '@/components/EnterPinNumberModal';
@@ -213,17 +214,18 @@ export default {
       if (this.wallet !== null) {
         return toChecksumAddress(this.account.address);
       }
+      return null;
     },
-    ...mapState({
-      network: state => state.main.network,
-      account: state => state.main.account,
-      online: state => state.main.online,
-      web3: state => state.main.web3,
-      Networks: state => state.main.Networks,
-      sidemenuOpen: state => state.main.sidemenuOpen,
-      wallet: state => state.main.wallet,
-      linkQuery: state => state.main.linkQuery
-    })
+    ...mapState('main', [
+      'network',
+      'account',
+      'online',
+      'web3',
+      'Networks',
+      'sidemenuOpen',
+      'wallet',
+      'linkQuery'
+    ])
   },
   watch: {
     web3() {
@@ -240,6 +242,16 @@ export default {
     this.clearIntervals();
   },
   methods: {
+    ...mapActions('main', [
+      'switchNetwork',
+      'setWeb3Instance',
+      'saveQueryVal',
+      'updateBlockNumber',
+      'setAccountBalance',
+      'switchNetwork',
+      'setENS',
+      'decryptWallet'
+    ]),
     checkPrefilled() {
       const _self = this;
       const hasLinkQuery = Object.keys(_self.linkQuery).length;
@@ -268,12 +280,12 @@ export default {
           const foundNetwork = _self.Networks[network.toUpperCase()];
           // eslint-disable-next-line
           if (!!foundNetwork) {
-            _self.$store.dispatch('switchNetwork', foundNetwork[0]).then(() => {
-              _self.$store.dispatch('setWeb3Instance');
+            _self.switchNetwork(foundNetwork[0]).then(() => {
+              _self.setWeb3Instance();
             });
           }
         }
-        _self.$store.dispatch('saveQueryVal', {});
+        _self.saveQueryVal({});
       }
     },
     clearPrefilled() {
@@ -516,7 +528,7 @@ export default {
         .getBlockNumber()
         .then(res => {
           this.blockNumber = res;
-          this.$store.dispatch('updateBlockNumber', res);
+          this.updateBlockNumber(res);
         })
         .catch(e => {
           Toast.responseHandler(e, Toast.ERROR);
@@ -528,7 +540,7 @@ export default {
         .getBalance(this.address.toLowerCase())
         .then(res => {
           this.balance = web3.utils.fromWei(res, 'ether');
-          this.$store.dispatch('setAccountBalance', res);
+          this.setAccountBalance(res);
         })
         .catch(e => {
           Toast.responseHandler(e, Toast.ERROR);
@@ -539,7 +551,7 @@ export default {
       window.ethereum.on('accountsChanged', account => {
         if (account.length > 1) {
           const wallet = new Web3Wallet(account[0]);
-          this.$store.dispatch('decryptWallet', [wallet, web3]);
+          this.decryptWallet([wallet, web3]);
         }
       });
     },
@@ -550,7 +562,7 @@ export default {
             networkTypes[net].chainID.toString() === `${id}` &&
             this.Networks[net]
           ) {
-            this.$store.dispatch('switchNetwork', this.Networks[net][0]);
+            this.switchNetwork(this.Networks[net][0]);
             return true;
           }
         });
@@ -624,12 +636,11 @@ export default {
     },
     setENS() {
       if (this.network.type.ens) {
-        this.$store.dispatch(
-          'setENS',
+        this.setENS(
           new ENS(this.web3.currentProvider, this.network.type.ens.registry)
         );
       } else {
-        this.$store.dispatch('setENS', null);
+        this.setENS(null);
       }
     },
     clearIntervals() {
@@ -651,7 +662,7 @@ export default {
             if (this.network.type.chainID.toString() !== id) {
               Object.keys(networkTypes).some(net => {
                 if (networkTypes[net].chainID === id && this.Networks[net]) {
-                  this.$store.dispatch('switchNetwork', this.Networks[net]);
+                  this.switchNetwork(this.Networks[net]);
                   clearInterval(this.pollNetwork);
                   return true;
                 }
@@ -692,10 +703,7 @@ export default {
             address.toLowerCase() !== this.account.address.toLowerCase()
           ) {
             const wallet = new Web3Wallet(address);
-            this.$store.dispatch('decryptWallet', [
-              wallet,
-              window.web3.currentProvider
-            ]);
+            this.decryptWallet([wallet, window.web3.currentProvider]);
             clearInterval(this.pollAddress);
           }
         });

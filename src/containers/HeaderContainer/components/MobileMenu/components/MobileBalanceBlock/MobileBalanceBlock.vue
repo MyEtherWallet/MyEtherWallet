@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import { Toast } from '@/helpers';
 import BigNumber from 'bignumber.js';
 import InterfaceBalanceModal from '@/layouts/InterfaceLayout/components/InterfaceBalanceModal';
@@ -29,11 +29,7 @@ export default {
     'interface-balance-modal': InterfaceBalanceModal
   },
   computed: {
-    ...mapState({
-      network: state => state.main.network,
-      web3: state => state.main.web3,
-      account: state => state.main.account
-    }),
+    ...mapState('main', ['network', 'web3', 'account']),
     accountBalance() {
       return this.web3.utils.fromWei(
         new BigNumber(this.account.balance).toFixed(),
@@ -42,6 +38,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions('main', ['setAccountBalance']),
     showBalanceModal() {
       this.getBalance();
       this.$refs.balanceModal.$refs.balance.show();
@@ -51,7 +48,7 @@ export default {
         this.web3.eth
           .getBalance(this.account.address.toLowerCase())
           .then(res => {
-            this.$store.dispatch('setAccountBalance', res);
+            this.setAccountBalance(res);
           })
           .catch(err => {
             Toast.responseHandler(err, Toast.ERROR);
