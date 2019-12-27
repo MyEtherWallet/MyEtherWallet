@@ -16,8 +16,8 @@
       >
         <div>
           <input
-            v-addr-resolver="'selectedAddress'"
             ref="addressInput"
+            v-addr-resolver="'selectedAddress'"
             :placeholder="$t('common.enter-addr')"
             type="text"
             autocomplete="off"

@@ -226,6 +226,7 @@ const setWeb3Instance = function({ dispatch, commit, state }, provider) {
   if (BUILD_TYPE !== MEW_CX) {
     web3Instance['mew'] = {};
     web3Instance['mew'].sendBatchTransactions = arr => {
+      // eslint-disable-next-line no-async-promise-executor
       return new Promise(async resolve => {
         for (let i = 0; i < arr.length; i++) {
           const localTx = {

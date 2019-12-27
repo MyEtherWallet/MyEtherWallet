@@ -75,7 +75,7 @@
         <div class="button-container">
           <standard-button
             :options="confirmButton"
-            @click.native="confirmClicked"
+            :click-function="confirmClicked"
           />
         </div>
       </div>
