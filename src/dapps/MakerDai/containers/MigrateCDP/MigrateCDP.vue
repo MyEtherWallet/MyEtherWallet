@@ -7,7 +7,7 @@
       <img :src="DaiIcon" class="icon-size" />
     </div>
     <div v-if="false" style="max-width: 500px;" class="mb-5">
-      Description
+      (*** Description Hidden ***)
     </div>
     <div>
       <div class="mb-5">
@@ -17,7 +17,6 @@
         <b-form-input
           v-model="migrateContractBalance"
           readonly
-          placeholder="Enter your name"
           class="mb-1"
         ></b-form-input>
         <b-button variant="secondary" @click="checkMigrateContractSaiBalance">{{
