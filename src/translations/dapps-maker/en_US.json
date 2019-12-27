@@ -152,5 +152,10 @@
   "dai-stable-coin": "DAI Stablecoin",
   "what-is-dashes-vault": "A value of -- indicates this Vault has no DAI so these calculations are only meaningful if this Vault has created DAI",
   "check-balance": "Check Balance",
-  "your-cdps": "Your CDPs"
+  "your-cdps": "Your CDPs",
+  "migrate-description": "Exchange your old DAI (aka SAI) for the new DAI.",
+  "transfer-cdp-description": "Transfer your old CDP to a Multi-Collateral Vault.",
+  "manage-your-vault-description": "Make changes to your Vault or close it out.",
+  "create-vault-description": "Open a Multi-Collateral Vault to generate DAI based on your collateral.",
+  "dai-savings-description": "Check on your DAI holdings, set an allowance for your collateral, and deploy a proxy to save on transaction time and gas."
 }
