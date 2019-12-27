@@ -53,7 +53,7 @@
         <div
           :class="isSidemenuOpen && 'side-nav-open'"
           class="side-nav-background"
-          @click="toggleSideMenu;"
+          @click="startToggleSideMenu;"
         />
         <div :class="isSidemenuOpen && 'side-nav-open'" class="side-nav">
           <interface-side-menu />
@@ -250,7 +250,8 @@ export default {
       'setAccountBalance',
       'switchNetwork',
       'setENS',
-      'decryptWallet'
+      'decryptWallet',
+      'toggleSideMenu'
     ]),
     checkPrefilled() {
       const _self = this;
@@ -359,8 +360,8 @@ export default {
     print() {
       this.$refs.printModal.$refs.print.show();
     },
-    toggleSideMenu() {
-      this.$store.commit('TOGGLE_SIDEMENU');
+    startToggleSideMenu() {
+      this.toggleSideMenu();
     },
     async fetchTokens() {
       this.receivedTokens = false;
