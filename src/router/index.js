@@ -52,13 +52,13 @@ router.beforeResolve((to, from, next) => {
           }
         });
       } else {
-        store.dispatch('setLastPath', to.path);
+        store.dispatch('main/setLastPath', to.path);
         next({ name: 'AccessWalletLayout' });
       }
     } else {
       if (store.state.main.path !== '') {
         const localPath = store.state.main.path;
-        store.dispatch('setLastPath', '');
+        store.dispatch('main/setLastPath', '');
         next({ path: localPath });
       } else {
         next();
