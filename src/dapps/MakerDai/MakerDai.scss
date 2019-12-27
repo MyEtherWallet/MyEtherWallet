@@ -1,4 +1,4 @@
-@import '~@/scss/GlobalVariables';
+@import "~@/scss/GlobalVariables";
 
 $dapp-button-mobile-width: 650px;
 $dapps-container-mobile-width: 650px;
@@ -21,12 +21,7 @@ $confirmation-modal-mobile-width: 500px;
     align-items: center;
     position: absolute;
     top: 16px;
-    right: 100px;
-
-    @media all and (max-width: 600px) {
-      top: 79px;
-      left: 8px;
-    }
+    right: 16px;
 
     .inner-container {
       display: flex;
