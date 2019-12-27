@@ -470,7 +470,6 @@ export default {
       this.emptyMakerCreated = true;
     },
     BuildProxy() {
-      console.log(this.setupComplete); // todo remove dev item
       if (this.setupComplete) {
         this.getValueOrFunction('getProxy')().then(proxy => {
           this.proxyAddress = proxy;
