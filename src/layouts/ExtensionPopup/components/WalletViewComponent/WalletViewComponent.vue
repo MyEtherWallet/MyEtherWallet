@@ -61,7 +61,7 @@ export default {
     return {};
   },
   computed: {
-    ...mapState({ network: state => state.main.network }),
+    ...mapState('main', ['network']),
     concatName() {
       return `${this.name.substring(0, 14)}...`;
     },

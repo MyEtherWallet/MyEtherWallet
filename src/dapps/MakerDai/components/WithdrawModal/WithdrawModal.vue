@@ -12,16 +12,14 @@
       <div class="modal-content-container">
         <div class="inputs-container">
           <div class="input-container">
-            <p class="message">
-              {{ $t('dappsMaker.withdraw-notice') }}
-            </p>
+            <p class="message">{{ $t('dappsMaker.withdraw-notice') }}</p>
             <label>
               {{
                 $t('dappsMaker.withdraw-question-mcd', {
                   currency: currentCdpType
                 })
-              }}</label
-            >
+              }}
+            </label>
             <div class="top-buttons">
               <p class="max-withdraw" @click="maxWithdraw">
                 {{ $t('dappsMaker.max-withdraw') }}
@@ -46,9 +44,11 @@
             <div class="grid-block">
               <p>{{ $t('dappsMaker.max-withdraw-available') }}</p>
               <p>
-                <b>{{
-                  values.maxDai ? displayFixedValue(values.maxEthDraw, 5) : 0
-                }}</b>
+                <b>
+                  {{
+                    values.maxDai ? displayFixedValue(values.maxEthDraw, 5) : 0
+                  }}
+                </b>
                 {{ digitalCurrency }}
               </p>
             </div>
@@ -63,14 +63,14 @@
             <div class="grid-block">
               <p>{{ $t('dappsMaker.projected-collat-ratio') }}</p>
               <p>
-                <b
-                  >{{
+                <b>
+                  {{
                     displayFixedValue(
                       displayPercentValue(newCollateralRatio()),
                       3
                     )
-                  }}%</b
-                >
+                  }}%
+                </b>
               </p>
             </div>
           </div>
@@ -221,13 +221,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      account: state => state.main.account,
-      gasPrice: state => state.main.gasPrice,
-      web3: state => state.main.web3,
-      network: state => state.main.network,
-      ens: state => state.main.ens
-    }),
+    ...mapState('main', ['account', 'gasPrice', 'web3', 'network', 'ens']),
     amountPresent() {
       return (
         (this.amount || this.amount !== '') && !toBigNumber(this.amount).lte(0)
@@ -273,6 +267,7 @@ export default {
       if (this.values) {
         return this.values.collateralRatio;
       }
+      return null;
     }
   },
   watch: {},

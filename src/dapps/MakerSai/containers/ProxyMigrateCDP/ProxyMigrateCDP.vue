@@ -151,12 +151,7 @@
 
 <script>
 import { mapState } from 'vuex';
-import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
-import InterfaceBottomText from '@/components/InterfaceBottomText';
 import BottomHelpLink from '@/components/BottomHelpLink';
-import Blockie from '@/components/Blockie';
-import CloseCdpModal from '../../components/CloseCdpModal';
-import MoveCdpModal from '../../components/MoveCdpModal';
 import {
   displayFixedPercent,
   displayFixedValue,
@@ -171,11 +166,6 @@ const toBigNumber = num => {
 
 export default {
   components: {
-    'interface-container-title': InterfaceContainerTitle,
-    'interface-bottom-text': InterfaceBottomText,
-    'close-cdp-modal': CloseCdpModal,
-    'move-cdp-modal': MoveCdpModal,
-    blockie: Blockie,
     'help-link': BottomHelpLink
   },
   props: {
@@ -308,13 +298,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      account: state => state.main.account,
-      gasPrice: state => state.main.gasPrice,
-      web3: state => state.main.web3,
-      network: state => state.main.network,
-      ens: state => state.main.ens
-    }),
+    ...mapState('main', ['account', 'gasPrice', 'web3', 'network', 'ens']),
     collateralRatioColoring() {
       if (this.values) {
         if (this.values.collateralRatio >= 2) {

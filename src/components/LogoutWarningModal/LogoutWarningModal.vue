@@ -13,8 +13,8 @@
         <h2>{{ $t('interface.oops') }}</h2>
         <p>{{ $t('interface.logout-warning') }}</p>
         <div class="buttons">
-          <standard-button :options="buttonNo" @click.native="cancel" />
-          <standard-button :options="buttonYes" @click.native="logout" />
+          <standard-button :options="buttonNo" :click-function="cancel" />
+          <standard-button :options="buttonYes" :click-function="logout" />
         </div>
       </div>
     </b-modal>
@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 export default {
   name: 'LogoutWarning',
   data() {
@@ -45,13 +46,14 @@ export default {
     };
   },
   methods: {
+    ...mapActions('main', ['setLastPath', 'clearWallet']),
     logout() {
       const path = this.$route.fullPath;
       if (path !== '/interface') {
-        this.$store.dispatch('setLastPath', path);
+        this.setLastPath(path);
       }
-      this.$store.dispatch('clearWallet');
-      this.$store.dispatch('setLastPath', '');
+      this.clearWallet();
+      this.setLastPath('');
       this.$refs.logoutWarningModal.hide();
     },
     cancel() {

@@ -171,7 +171,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({ wallet: state => state.main.wallet })
+    ...mapState('main', ['wallet'])
   }
 };
 </script>

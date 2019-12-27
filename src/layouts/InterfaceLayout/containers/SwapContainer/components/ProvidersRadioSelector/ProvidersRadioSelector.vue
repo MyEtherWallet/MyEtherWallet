@@ -13,8 +13,8 @@
           <div class="mew-custom-form__radio-button">
             <input
               v-show="providerData.length > 0"
-              v-model="providerChosen"
               :id="provider.provider"
+              v-model="providerChosen"
               :value="provider.provider"
               type="radio"
               name="provider"
@@ -79,7 +79,8 @@
       <ul>
         <li v-for="provider in providersFound" :key="provider">
           <div class="mew-custom-form__radio-button">
-            <input type="radio" name="provider" /> <label :for="provider" />
+            <input type="radio" name="provider" />
+            <label :for="provider" />
           </div>
           <div class="provider-image">
             <img :src="providerLogo(provider)" alt />
@@ -96,7 +97,8 @@
       <ul>
         <li v-for="provider in providersFound" :key="provider">
           <div class="mew-custom-form__radio-button">
-            <input type="radio" name="provider" /> <label :for="provider" />
+            <input type="radio" name="provider" />
+            <label :for="provider" />
           </div>
           <div class="provider-image">
             <img :src="providerLogo(provider)" alt />
@@ -294,10 +296,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      online: state => state.main.online,
-      network: state => state.main.network
-    }),
+    ...mapState('main', ['online', 'network']),
     displayToShow() {
       if (!this.online) {
         return 'offline';
@@ -346,6 +345,7 @@ export default {
       } else if (this.noAvailableProviders) {
         return this.allSupportedProviders;
       }
+      return null;
     }
   },
   watch: {

@@ -109,7 +109,6 @@ import { mapState } from 'vuex';
 import ethUnit from 'ethjs-unit';
 import StandardButton from '@/components/Buttons/StandardButton';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
-import CheckBox from '../CheckBox';
 import BigNumber from 'bignumber.js/bignumber.js';
 import { displayFixedValue, displayPercentValue } from '../../helpers';
 
@@ -120,7 +119,6 @@ const toBigNumber = num => {
 export default {
   components: {
     'help-center-button': HelpCenterButton,
-    'check-box': CheckBox,
     'standard-button': StandardButton
   },
   props: {
@@ -191,13 +189,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      account: state => state.main.account,
-      gasPrice: state => state.main.gasPrice,
-      web3: state => state.main.web3,
-      network: state => state.main.network,
-      ens: state => state.main.ens
-    }),
+    ...mapState('main', ['account', 'gasPrice', 'web3', 'network', 'ens']),
     amountPresent() {
       return (
         (this.amount || this.amount !== '') && !toBigNumber(this.amount).lte(0)

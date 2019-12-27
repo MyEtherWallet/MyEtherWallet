@@ -84,12 +84,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      web3: state => state.main.web3,
-      account: state => state.main.account,
-      network: state => state.main.network,
-      online: state => state.main.online
-    })
+    ...mapState('main', ['web3', 'network', 'notifications', 'online'])
   },
   mounted() {
     this.init();

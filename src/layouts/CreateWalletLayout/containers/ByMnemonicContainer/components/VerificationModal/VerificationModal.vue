@@ -18,12 +18,13 @@
             :data-index="index"
             class="word"
           >
-            {{ index + 1 }}.<span>{{ value }}</span>
+            {{ index + 1 }}.
+            <span>{{ value }}</span>
             <input
               v-model="inputs[index]"
               class="hidden"
               type="text"
-              name=""
+              name
               autocomplete="off"
             />
           </li>
@@ -31,12 +32,12 @@
       </div>
       <div v-if="password.length > 0" class="mt-5 extra-word-container">
         <form>
-          <label for="extraWordInput">{{
-            $t('createWallet.mnemonic.extra-word')
-          }}</label>
+          <label for="extraWordInput">
+            {{ $t('createWallet.mnemonic.extra-word') }}
+          </label>
           <input
-            :placeholder="$t('createWallet.mnemonic.type-in')"
             v-model="inputPassword"
+            :placeholder="$t('createWallet.mnemonic.type-in')"
             type="password"
             name="extraWordInput"
             autocomplete="off"
@@ -54,7 +55,7 @@
           ]"
           @click="verifyMnemonic"
         >
-          <span v-show="!loading"> {{ $t('common.verify') }} </span>
+          <span v-show="!loading">{{ $t('common.verify') }}</span>
           <i v-show="loading" class="fa fa-lg fa-spin fa-spinner" />
         </div>
       </div>

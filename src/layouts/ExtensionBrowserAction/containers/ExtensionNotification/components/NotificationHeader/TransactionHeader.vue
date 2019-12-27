@@ -50,12 +50,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      web3: state => state.main.web3,
-      network: state => state.main.network,
-      notifications: state => state.main.notifications,
-      wallet: state => state.main.wallet
-    }),
+    ...mapState('main', ['web3', 'network', 'notifications', 'wallet']),
     typeString() {
       if (notificationHeaderLabels[this.notice.type]) {
         return this.$t(notificationHeaderLabels[this.notice.type]);

@@ -33,7 +33,7 @@
 
 <script>
 import store from 'store';
-
+import { mapActions } from 'vuex';
 export default {
   props: {
     progressBarValue: {
@@ -45,10 +45,11 @@ export default {
     return {};
   },
   methods: {
+    ...mapActions('main', ['gettingStartedDone']),
     done() {
       store.set('skipTutorial', 'done');
       this.$router.push({ path: 'create-wallet' });
-      this.$store.dispatch('gettingStartedDone');
+      this.gettingStartedDone();
     }
   }
 };

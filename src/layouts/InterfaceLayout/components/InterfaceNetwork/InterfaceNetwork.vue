@@ -68,11 +68,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      network: state => state.main.network,
-      account: state => state.main.account,
-      web3: state => state.main.web3
-    })
+    ...mapState('main', ['network', 'account', 'web3'])
   },
   watch: {
     blockNumber(newVal) {

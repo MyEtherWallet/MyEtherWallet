@@ -123,11 +123,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      linkQuery: state => state.main.linkQuery,
-      network: state => state.main.network,
-      web3: state => state.main.web3
-    }),
+    ...mapState('main', ['linkQuery', 'web3', 'network']),
     txParams() {
       const {
         nonce,

@@ -3,6 +3,7 @@ import Mutations from './mutations';
 import Actions from './actions';
 
 const main = {
+  namespaced: true,
   state: State,
   mutations: Mutations,
   actions: Actions,
