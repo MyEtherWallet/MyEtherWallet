@@ -82,23 +82,19 @@
 
     <div
       v-show="makerActive && listCdps && showManageable"
-      class="buttons-container"
+      class="buttons-container p-5"
     >
       <div v-for="(value, idx) in cdps" :key="idx + value">
-        <b-button variant="primary">
-          {{ $t('dappsMaker.vault-id') }}
-          <b-badge variant="light">{{ value }}</b-badge>
-        </b-button>
-        <div
-          :class="[
-            'dapps-button',
-            activeValues.cdpId === value ? 'active' : ''
-          ]"
+        <b-button
+          variant="primary"
+          class="mr-1 mb-1"
+          @click="openManage(value)"
         >
-          <div @click="openManage(value)">
-            <h4>{{ $t('dappsMaker.vault-id') }} #{{ value }}</h4>
-          </div>
-        </div>
+          <b>{{ $t('dappsMaker.vault-id') }}</b>
+          <b-badge variant="light" class="ml-2" style="font-size: 15px;"
+            ># {{ value }}</b-badge
+          >
+        </b-button>
       </div>
     </div>
 
