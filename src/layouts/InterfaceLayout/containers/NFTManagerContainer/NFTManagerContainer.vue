@@ -5,8 +5,10 @@
       v-if="!isReady && isOnlineAndEth"
       class="inner-side-menu content-container"
     >
-      <nft-side-menu :supported-nft-obj="sideMenuData" :nft-config="nftConfig">
-      </nft-side-menu>
+      <nft-side-menu
+        :supported-nft-obj="sideMenuData"
+        :nft-config="nftConfig"
+      ></nft-side-menu>
       <loading-sign :loadingmessage1="$t('common.loading')" />
     </div>
     <div v-if="isReady && hasNfts" class="inner-side-menu content-container">
@@ -19,8 +21,7 @@
         @selected="changeSelectedContract"
         @openCustomModal="openCustomModal"
         @removeCustomNft="openRemovalConfirmModal"
-      >
-      </nft-side-menu>
+      ></nft-side-menu>
       <div v-if="showDetails">
         <nft-details
           :nft="detailsFor"
@@ -81,7 +82,7 @@
         <h3 class="no-nft-notice">{{ $t('nftManager.no-nft') }}</h3>
         <standard-button
           :options="onlyCustom"
-          @click.native="openCustomModal"
+          :click-function="openCustomModal"
         />
       </div>
       <span v-show="reLoading">{{ $t('nftManager.reloading') }}</span>
@@ -105,8 +106,7 @@
       ref="customRemoveModal"
       :for-removal="forRemoval"
       @remove="removeCustomNft"
-    >
-    </nft-custom-confirm-remove-modal>
+    ></nft-custom-confirm-remove-modal>
   </div>
 </template>
 
@@ -188,6 +188,7 @@ export default {
           ids_retrieved > this.countPerPage ? this.countPerPage : ids_retrieved;
         return this.nftData[this.selectedContract].currentIndex + increment;
       }
+      return null;
     },
     nftTitle() {
       if (this.nftData[this.selectedContract]) {
@@ -232,6 +233,7 @@ export default {
           this.endIndex !== ids_retrieved && this.endIndex <= ids_retrieved
         );
       }
+      return null;
     },
     sideMenuData() {
       return this.nftData;
@@ -455,20 +457,23 @@ export default {
             ];
             const imageKey = this.nftData[contract].imageKey || 'image_url_png';
 
-            const list = getNestedObject(rawJson, metadataKeys).map(val => {
-              return {
-                contract: contract,
-                token: val.id,
-                image: val[imageKey]
-                  ? `${URL_BASE}/image?path=${val[imageKey]}`
-                  : ''
-              };
-            });
-
+          const list = getNestedObject(rawJson, metadataKeys)
+            ? getNestedObject(rawJson, metadataKeys).map(val => {
+                return {
+                  contract: contract,
+                  token: val.id,
+                  image: val[imageKey]
+                    ? `${URL_BASE}/image?path=${val[imageKey]}`
+                    : ''
+                };
+              })
+            : [];
+          if (list.length > 0) {
             this.nftData[contract].details = list.slice(0, 9);
             this.$set(this.nftData[contract], 'details', list.slice(0, 9));
             return this.nftData[contract].details;
           }
+          return [];
         })
         .then(list => {
           if (!list) return;

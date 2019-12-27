@@ -1,7 +1,7 @@
 <template>
   <div ref="networkComponent" class="network-selection-container">
-    <p class="network">{{ $t('mewcx.network') }}</p>
-    <p class="network-name" @click="openSelection">
+    <p class="network user-select--none">{{ $t('mewcx.network') }}</p>
+    <p class="network-name user-select--none" @click="openSelection">
       {{ network.type.name }} - {{ network.service }}
       <i :class="['fa fa-lg', !isOpen ? 'fa-angle-down' : 'fa-angle-up']" />
     </p>
@@ -24,8 +24,8 @@
         <h3>{{ title }}</h3>
         <div class="node-container">
           <div
-            v-for="(node, idx) in Networks[title]"
-            :key="node.service + idx"
+            v-for="(node, index) in Networks[title]"
+            :key="node.service + index"
             class="node"
             @click="selectNetwork(node)"
           >
