@@ -1,6 +1,6 @@
 ### Bug
 
-- Hide blockexplorrer link on irrelevant pages []()
+- Hide blockexplorrer link on irrelevant pages [#1800](https://github.com/MyEtherWallet/MyEtherWallet/pull/1800)
 
 ### Release v5.2.8-hotfix.1
 
