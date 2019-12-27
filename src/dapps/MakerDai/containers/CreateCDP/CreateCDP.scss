@@ -1,4 +1,4 @@
-@import '~@/scss/GlobalVariables';
+@import "~@/scss/GlobalVariables";
 
 $this-page-mobile-width: 700px;
 
@@ -104,11 +104,6 @@ $this-page-mobile-width: 700px;
   overflow: hidden;
 
   .manage-container {
-    padding: 40px;
-    @media all and (max-width: $this-page-mobile-width) {
-      padding: 20px;
-    }
-
     .currency-label {
       margin-bottom: 15px;
     }
@@ -130,7 +125,7 @@ $this-page-mobile-width: 700px;
         top: 0;
         left: 0;
         right: 0;
-        content: '';
+        content: "";
         width: 100%;
         border-top: 1px solid $light-grey-3;
       }

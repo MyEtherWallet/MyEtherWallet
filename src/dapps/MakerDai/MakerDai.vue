@@ -68,6 +68,7 @@
       @checkForProxy="checkIfDestAddressHasProxy"
     >
     </move-cdp-modal>
+
     <back-button :path="backPath()">
       <div class="back-bar-container">
         <div v-if="showMoveOrClose" class="header-buttons-container">
@@ -81,20 +82,23 @@
     </back-button>
 
     <div
-      v-show="makerActive && listCdps && showManageable"
-      class="buttons-container p-5"
+      v-if="makerActive && listCdps && showManageable"
+      class="px-5 pt-3 pb-5"
     >
-      <div v-for="(value, idx) in cdps" :key="idx + value">
-        <b-button
-          variant="primary"
-          class="mr-1 mb-1"
-          @click="openManage(value)"
-        >
-          <b>{{ $t('dappsMaker.vault-id') }}</b>
-          <b-badge variant="light" class="ml-2" style="font-size: 15px;"
-            ># {{ value }}</b-badge
+      <h3 class="mb-3">Select your vault to see details.</h3>
+      <div class="buttons-container">
+        <div v-for="(value, idx) in cdps" :key="idx + value">
+          <b-button
+            variant="primary"
+            class="mr-2 mb-1"
+            @click="openManage(value)"
           >
-        </b-button>
+            <b>{{ $t('dappsMaker.vault-id') }}</b>
+            <b-badge variant="light" class="ml-2" style="font-size: 15px;"
+              ># {{ value }}</b-badge
+            >
+          </b-button>
+        </div>
       </div>
     </div>
 

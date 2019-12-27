@@ -4,8 +4,7 @@
       <b-col cols="12" xl="6" lg="6" md="6" class="mb-4">
         <card
           :title="$t('dappsMaker.migrate-old-dai-to-new-dai')"
-          text="Some quick example text to build on the card title and make up the
-              bulk of the card's content."
+          :text="$t('dappsMaker.migrate-description')"
           button="Go"
           :click="migrateDai"
         />
@@ -15,8 +14,7 @@
           :title="
             $t('dappsMaker.migrate-single-collateral-to-multi-collateral')
           "
-          text="Some quick example text to build on the card title and make up the
-              bulk of the card's content."
+          :text="$t('dappsMaker.transfer-cdp-description')"
           button="Go"
           :click="migrateCDP"
         />
@@ -24,8 +22,7 @@
       <b-col cols="12" xl="6" lg="6" md="6" class="mb-4">
         <card
           :title="$t('dappsMaker.manage-your-vault')"
-          text="Some quick example text to build on the card title and make up the
-              bulk of the card's content."
+          :text="$t('dappsMaker.transfer-cdp-description')"
           button="Go"
           :click="goToManage"
           :loading="!makerActive ? true : false"
@@ -34,8 +31,7 @@
       <b-col cols="12" xl="6" lg="6" md="6" class="mb-4">
         <card
           :title="$t('dappsMaker.create-a-vault')"
-          text="Some quick example text to build on the card title and make up the
-              bulk of the card's content."
+          :text="$t('dappsMaker.create-vault-description')"
           button="Go"
           :click="gotoCreate"
           :loading="!makerActive ? true : false"
@@ -44,8 +40,7 @@
       <b-col cols="12" xl="6" lg="6" md="6" class="mb-4">
         <card
           :title="$t('dappsMaker.dai-savings')"
-          text="Some quick example text to build on the card title and make up the
-              bulk of the card's content."
+          :text="$t('dappsMaker.create-vault-description')"
           button="Go"
           :click="goToSave"
       /></b-col>
