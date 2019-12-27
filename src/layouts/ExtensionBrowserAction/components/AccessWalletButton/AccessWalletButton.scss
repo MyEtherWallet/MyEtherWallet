@@ -1,0 +1,101 @@
+@import '~@/scss/GlobalVariables';
+
+.button-block {
+  user-select: none;
+  background-color: $background-color-white;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 10px 25px 25px;
+  position: relative;
+  top: 0;
+  transition: all 0.3s ease;
+  border: 0;
+
+  p {
+    font-size: 13px;
+    line-height: 18px;
+  }
+
+  .small-note {
+    color: $red-7;
+    font-size: 11px;
+    margin-top: 5px;
+  }
+
+  h3 {
+    margin-bottom: 10px;
+    font-size: 18px;
+    line-height: 25px;
+    font-weight: 500;
+  }
+
+  .tooltip-box {
+    display: none;
+    position: absolute;
+    right: 15px;
+    top: 10px;
+
+    .btn {
+      background-color: transparent;
+      border: 0;
+      color: $text-white;
+      font-size: 18px;
+      line-height: 100%;
+      padding: 0;
+    }
+  }
+
+  &:hover {
+    background-color: $background-color-2;
+    box-shadow: 0 5px 20px $box-shadow-color-1;
+    top: -8px;
+    transform: scale(1.1);
+
+    @media all and (max-width: $tablet-width) {
+      top: 0;
+    }
+
+    h3,
+    p {
+      color: $text-white;
+    }
+
+    .tooltip-box {
+      color: $link-text-color-2;
+      display: block;
+    }
+  }
+}
+
+.button-software {
+  &:hover {
+    background-color: $red-7;
+    color: $text-white;
+  }
+}
+
+.disabled {
+  color: $light-grey-10;
+  pointer-events: none;
+
+  p {
+    color: $light-grey-10;
+  }
+}
+
+.button-image-block {
+  width: 95px;
+  height: 95px;
+  margin: 25px auto 15px auto;
+}
+
+.button-image {
+  width: 100%;
+  height: 100%;
+}
+
+@media all and (max-width: $tablet-width) {
+  .hide {
+    display: none;
+  }
+}

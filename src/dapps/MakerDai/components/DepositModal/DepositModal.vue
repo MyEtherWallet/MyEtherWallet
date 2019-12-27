@@ -74,14 +74,14 @@
               <div class="grid-block">
                 <p>{{ $t('dappsMaker.projected-collat-ratio') }}</p>
                 <p>
-                  <b
-                    >{{
+                  <b>
+                    {{
                       displayFixedValue(
                         displayPercentValue(newCollateralRatio()),
                         3
                       )
-                    }}%</b
-                  >
+                    }}%
+                  </b>
                 </p>
               </div>
             </div>
@@ -109,9 +109,7 @@
 import { mapState } from 'vuex';
 import StandardButton from '@/components/Buttons/StandardButton';
 import HelpCenterButton from '@/components/Buttons/HelpCenterButton';
-import CheckBox from '../CheckBox';
 import BigNumber from 'bignumber.js/bignumber.js';
-import CurrencyPicker from '../../components/CurrencyPicker';
 
 import { displayFixedValue, displayPercentValue } from '../../helpers';
 
@@ -122,9 +120,7 @@ const toBigNumber = num => {
 export default {
   components: {
     'help-center-button': HelpCenterButton,
-    'check-box': CheckBox,
-    'standard-button': StandardButton,
-    'currency-picker': CurrencyPicker
+    'standard-button': StandardButton
   },
   props: {
     tokensWithBalance: {
@@ -208,13 +204,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      account: state => state.main.account,
-      gasPrice: state => state.main.gasPrice,
-      web3: state => state.main.web3,
-      network: state => state.main.network,
-      ens: state => state.main.ens
-    }),
+    ...mapState('main', ['account', 'gasPrice', 'web3', 'network', 'ens']),
     amountPresent() {
       return (
         (this.amount || this.amount !== '') && !toBigNumber(this.amount).lte(0)

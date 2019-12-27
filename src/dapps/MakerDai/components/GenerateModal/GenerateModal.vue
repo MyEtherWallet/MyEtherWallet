@@ -47,9 +47,9 @@
             <div class="grid-block">
               <p>{{ $t('dappsMaker.max-generate-available') }}</p>
               <p>
-                <b>
-                  {{ values.maxDai ? displayFixedValue(values.maxDai) : 0 }}
-                </b>
+                <b>{{
+                  values.maxDai ? displayFixedValue(values.maxDai) : 0
+                }}</b>
                 {{ $t('dappsMaker.dai') }}
               </p>
             </div>
@@ -91,11 +91,11 @@
                 }}
               </p>
               <check-box @changeStatus="checkBoxClicked">
-                <template v-slot:terms
-                  ><p class="checkbox-label">
+                <template v-slot:terms>
+                  <p class="checkbox-label">
                     {{ $t('dappsMaker.understand-and-agree') }}
-                  </p></template
-                >
+                  </p>
+                </template>
               </check-box>
             </div>
           </div>
@@ -222,13 +222,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      account: state => state.main.account,
-      gasPrice: state => state.main.gasPrice,
-      web3: state => state.main.web3,
-      network: state => state.main.network,
-      ens: state => state.main.ens
-    }),
+    ...mapState('main', ['account', 'gasPrice', 'web3', 'network', 'ens']),
     amountPresent() {
       return (
         (this.amount || this.amount !== '') && !toBigNumber(this.amount).lte(0)

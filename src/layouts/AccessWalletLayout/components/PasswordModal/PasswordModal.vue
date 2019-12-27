@@ -17,8 +17,8 @@
         <div class="input-container">
           <input
             ref="passwordInput"
-            :type="show ? 'text' : 'password'"
             v-model="password"
+            :type="show ? 'text' : 'password'"
             :placeholder="$t('common.password.enter')"
             name="Password"
             autocomplete="off"
@@ -54,7 +54,7 @@
 import { WalletInterface } from '@/wallets';
 import { KEYSTORE as keyStoreType } from '@/wallets/bip44/walletTypes';
 import walletWorker from 'worker-loader!@/workers/wallet.worker.js';
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import { Toast, Wallet } from '@/helpers';
 import WarningMessage from '@/components/WarningMessage';
 
@@ -78,10 +78,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      path: state => state.main.path,
-      online: state => state.main.online
-    }),
+    ...mapState('main', ['path', 'online']),
     inputValid() {
       return (
         this.walletRequirePass(this.file) &&
@@ -95,6 +92,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions('main', ['decryptWallet']),
     walletRequirePass(ethjson) {
       if (ethjson.encseed != null) return true;
       else if (ethjson.Crypto != null || ethjson.crypto != null) return true;
@@ -150,7 +148,7 @@ export default {
       }
     },
     setUnlockedWallet(wallet) {
-      this.$store.dispatch('decryptWallet', [wallet]).then(() => {
+      this.decryptWallet([wallet]).then(() => {
         this.spinner = false;
         this.password = '';
         this.$router.push({

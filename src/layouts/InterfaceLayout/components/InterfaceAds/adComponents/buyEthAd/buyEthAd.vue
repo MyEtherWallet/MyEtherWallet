@@ -6,7 +6,7 @@
         <div class="bottom-block">
           <standard-button
             :options="sendButton"
-            @click.native="showSwapWidget"
+            :click-function="showSwapWidget"
           />
           <img alt class="cc-cards" src="@/assets/images/etc/visamaster.png" />
         </div>
@@ -17,12 +17,8 @@
 
 <script>
 import { mapState } from 'vuex';
-import SwapWidget from '@/components/SwapWidget';
 
 export default {
-  components: {
-    'swap-widget': SwapWidget
-  },
   props: {},
   data() {
     return {
@@ -47,12 +43,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      account: state => state.main.account,
-      network: state => state.main.network,
-      web3: state => state.main.web3,
-      online: state => state.main.online
-    })
+    ...mapState('main', ['account', 'online'])
   },
   watch: {},
   mounted() {},

@@ -28,8 +28,8 @@
         <standard-button
           :button-disabled="notValid"
           :options="accessWalletButtonOptions"
+          :click-function="unlockWallet"
           class="submit-button"
-          @click.native.prevent="unlockWallet"
         />
       </form>
       <div class="customer-support-block">
@@ -65,7 +65,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({ path: state => state.main.path }),
+    ...mapState('main', ['path']),
     notValid() {
       const _priv = this.privateKey.replace('0x', '');
       return !isHexString('0x' + _priv, 32);

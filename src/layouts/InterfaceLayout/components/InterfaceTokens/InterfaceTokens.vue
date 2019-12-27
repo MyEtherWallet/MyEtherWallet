@@ -152,11 +152,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      network: state => state.main.network,
-      web3: state => state.main.web3,
-      online: state => state.main.online
-    })
+    ...mapState('main', ['network', 'web3', 'online'])
   },
   watch: {
     receivedTokens() {

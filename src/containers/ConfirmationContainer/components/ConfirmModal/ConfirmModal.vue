@@ -88,7 +88,7 @@
           <standard-button
             :options="buttonSendTx"
             :button-disabled="signedTx !== '' ? false : true"
-            @click.native="sendTx"
+            :click-function="sendTx"
           />
         </div>
       </div>
@@ -169,10 +169,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      web3: state => state.main.web3,
-      network: state => state.main.network
-    }),
+    ...mapState('main', ['web3', 'network']),
     signedTransaction() {
       if (this.signedMessage) {
         return this.signedMessage;

@@ -78,7 +78,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({ account: state => state.main.account }),
+    ...mapState('main', ['account']),
     fullDomainName() {
       return `${this.hostName}.${this.tld}`;
     },

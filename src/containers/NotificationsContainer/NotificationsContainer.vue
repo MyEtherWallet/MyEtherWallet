@@ -111,7 +111,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import store from 'store';
 import unit from 'ethjs-unit';
 import BigNumber from 'bignumber.js';
@@ -154,13 +154,14 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      web3: state => state.main.web3,
-      network: state => state.main.network,
-      notifications: state => state.main.notifications,
-      account: state => state.main.account,
-      online: state => state.main.online
-    }),
+    ...mapState('main', [
+      'web3',
+      'network',
+      'notifications',
+      'wallet',
+      'account',
+      'online'
+    ]),
     sortedNotifications() {
       if (!this.notifications[this.account.address]) return [];
       const notifications = this.notifications[this.account.address];
@@ -191,6 +192,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions('main', ['updateNotification']),
     hiddenModal() {
       this.shown = false;
       this.hideDetails();
@@ -235,11 +237,7 @@ export default {
                 : notificationStatuses.FAILED;
               entry.body.timeRemaining = -1;
             }
-            this.$store.dispatch('updateNotification', [
-              this.account.address,
-              noticeIdx,
-              entry
-            ]);
+            this.updateNotification([this.account.address, noticeIdx, entry]);
           }
         });
       });
@@ -292,11 +290,7 @@ export default {
           updatedNotif.expanded = false;
         }
 
-        this.$store.dispatch('updateNotification', [
-          this.account.address,
-          idx,
-          updatedNotif
-        ]);
+        this.updateNotification([this.account.address, idx, updatedNotif]);
       };
     },
     expandAll() {
@@ -306,32 +300,20 @@ export default {
           updatedNotif.read = true;
           updatedNotif.expanded = true;
         }
-        this.$store.dispatch('updateNotification', [
-          this.account.address,
-          idx,
-          updatedNotif
-        ]);
+        this.updateNotification([this.account.address, idx, updatedNotif]);
       });
     },
     CallapseAll() {
       this.notifications[this.account.address].forEach((notice, idx) => {
         const updatedNotif = notice;
         updatedNotif.expanded = false;
-        this.$store.dispatch('updateNotification', [
-          this.account.address,
-          idx,
-          updatedNotif
-        ]);
+        this.updateNotification([this.account.address, idx, updatedNotif]);
       });
     },
     childUpdateNotification(idx) {
       if (typeof idx === 'undefined') return () => {};
       return updatedNotif => {
-        this.$store.dispatch('updateNotification', [
-          this.account.address,
-          idx,
-          updatedNotif
-        ]);
+        this.updateNotification([this.account.address, idx, updatedNotif]);
       };
     },
     processStatus(rawStatus) {

@@ -111,9 +111,8 @@
                     :key="index"
                     :class="['btn-group', bounty === timeBounty && 'selected']"
                     @click="timeBounty = bounty"
+                    >{{ bounty }}</b-button
                   >
-                    {{ bounty }}
-                  </b-button>
                 </b-button-group>
                 <div class="timebounty-gasprice-coverage">
                   {{
@@ -175,9 +174,8 @@
                       :key="index"
                       :class="['mode-btn', mode === selectedMode && 'selected']"
                       @click="selectedMode = mode"
+                      >{{ mode.name }}</b-button
                     >
-                      {{ $t(mode.name) }}
-                    </b-button>
                   </b-button-group>
                 </div>
               </b-col>
@@ -299,11 +297,9 @@ import 'moment-timezone';
 import * as unit from 'ethjs-unit';
 import { Toast } from '@/helpers';
 import DropDownAddressSelector from '@/components/DropDownAddressSelector';
-import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
 import CurrencyPicker from '../../../layouts/InterfaceLayout/components/CurrencyPicker';
 import StandardInput from '@/components/StandardInput';
 import StandardDropdown from '@/components/StandardDropdown';
-import Blockie from '@/components/Blockie';
 import { ERC20 } from '@/partners';
 import {
   calcSchedulingTotalCost,
@@ -315,12 +311,10 @@ import {
 export default {
   name: 'ScheduleView',
   components: {
-    'back-button': BackButton,
     'currency-picker': CurrencyPicker,
     'standard-input': StandardInput,
     'standard-dropdown': StandardDropdown,
     'datetime-picker': Datetime,
-    blockie: Blockie,
     'dropdown-address-selector': DropDownAddressSelector
   },
   props: {
@@ -445,14 +439,14 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      web3: state => state.main.web3,
-      networK: state => state.main.network,
-      gasPrice: state => state.main.gasPrice,
-      notifications: state => state.main.notifications,
-      account: state => state.main.account,
-      online: state => state.main.online
-    }),
+    ...mapState('main', [
+      'web3',
+      'network',
+      'gasPrice',
+      'notifications',
+      'account',
+      'online'
+    ]),
     isTokenTransfer() {
       return this.selectedCurrency.symbol !== this.network.type.name;
     },

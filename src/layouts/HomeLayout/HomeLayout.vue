@@ -29,7 +29,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({ online: state => state.main.online })
+    ...mapState('main', ['online'])
   }
 };
 </script>

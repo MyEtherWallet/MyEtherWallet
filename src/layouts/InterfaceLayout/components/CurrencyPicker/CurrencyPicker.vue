@@ -25,6 +25,11 @@
           <div
             v-for="(curr, idx) in localCurrency"
             v-show="localCurrency.length > 0"
+            :key="
+              token
+                ? curr.name + idx + curr.symbol + page
+                : curr.name + page + idx
+            "
             :class="[
               token
                 ? selectedCurrency.symbol === curr.symbol
@@ -35,11 +40,6 @@
                 : '',
               'item'
             ]"
-            :key="
-              token
-                ? curr.name + idx + curr.symbol + page
-                : curr.name + page + idx
-            "
             @click="selectCurrency(curr)"
           >
             <p v-show="token">
@@ -97,7 +97,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({ network: state => state.main.network }),
+    ...mapState('main', ['network']),
     networkToken() {
       return {
         name: this.network.type.name_long,

@@ -4,23 +4,13 @@
 
 <script>
 import { mapState } from 'vuex';
-import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
-import InterfaceBottomText from '@/components/InterfaceBottomText';
-import Blockie from '@/components/Blockie';
 import BigNumber from 'bignumber.js';
-import SelectCdpEntry from '../../components/SelectCdpEntry';
 
 const toBigNumber = num => {
   return new BigNumber(num);
 };
 
 export default {
-  components: {
-    'interface-container-title': InterfaceContainerTitle,
-    'interface-bottom-text': InterfaceBottomText,
-    blockie: Blockie,
-    'select-cdp-entry': SelectCdpEntry
-  },
   props: {
     ethPrice: {
       type: BigNumber,
@@ -74,13 +64,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      account: state => state.main.account,
-      gasPrice: state => state.main.gasPrice,
-      web3: state => state.main.web3,
-      network: state => state.main.network,
-      ens: state => state.main.ens
-    }),
+    ...mapState('main', ['account', 'gasPrice', 'web3', 'network', 'ens']),
     cdpOptions() {
       return this.availableCdps;
     }

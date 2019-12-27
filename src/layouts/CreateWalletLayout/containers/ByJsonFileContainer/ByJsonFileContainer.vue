@@ -19,10 +19,10 @@
             <div class="contents">
               <by-json-block
                 v-for="content in contents"
+                :key="content.title"
                 :img="content.img"
                 :title="content.title"
                 :desc="content.desc"
-                :key="content.title"
               />
             </div>
             <div class="user-input-container">
@@ -106,7 +106,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({ online: state => state.main.online })
+    ...mapState('main', ['online'])
   },
   mounted() {
     if (this.online && window.Worker && window.origin !== 'null') {

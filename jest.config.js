@@ -33,7 +33,7 @@ module.exports = {
     '\\.md': '<rootDir>/tests/unit/__mocks__/mdMockup.js'
   },
   transformIgnorePatterns: [
-    'node_modules/(?!(vue-router|bootstrap|register-service-worker|vue-tel-input))'
+    'node_modules/(?!(vue-router|bootstrap|register-service-worker|vue-tel-input|@ledgerhq/hw-transport-u2f))'
   ],
   moduleDirectories: ['node_modules'],
   snapshotSerializers: ['jest-serializer-vue'],
@@ -42,5 +42,6 @@ module.exports = {
   ],
   testEnvironmentOptions: {},
   testURL: 'http://localhost/',
-  setupTestFrameworkScriptFile: '<rootDir>/tests/unit/__mocks__/mocks.js'
+  setupFiles: ['jest-canvas-mock'],
+  setupFilesAfterEnv: ['<rootDir>/tests/unit/__mocks__/mocks.js']
 };
