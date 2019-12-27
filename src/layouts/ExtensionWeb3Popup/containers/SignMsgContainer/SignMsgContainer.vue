@@ -65,7 +65,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({ linkQuery: state => state.main.linkQuery })
+    ...mapState('main', ['linkQuery'])
   },
   mounted() {
     const _self = this;

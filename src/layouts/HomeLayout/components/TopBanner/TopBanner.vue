@@ -89,7 +89,7 @@ export default {
     return {};
   },
   computed: {
-    ...mapState({ wallet: state => state.main.wallet })
+    ...mapState('main', ['wallet'])
   }
 };
 </script>

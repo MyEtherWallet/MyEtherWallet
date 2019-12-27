@@ -32,7 +32,7 @@ class WSProvider {
           '{"jsonrpc":"2.0","method":"net_version","params":[],"id":1}'
         );
       if (
-        !Object.is(this.wsProvider, store.state.main.web3.currentProvider) &&
+        !Object.is(this.wsProvider, store.state.web3.currentProvider) &&
         this.lastMessage + 10 * 60 * 1000 < new Date().getTime() //wait extra 10 minutes
       ) {
         this.wsProvider.disconnect();

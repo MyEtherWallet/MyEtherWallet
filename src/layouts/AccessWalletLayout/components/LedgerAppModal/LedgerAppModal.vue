@@ -125,7 +125,7 @@ import apps from '@/wallets/hardware/ledger/appPaths.js';
 import cust from '@/assets/images/icons/network.svg';
 import { Toast, pathHelpers } from '@/helpers';
 import { LedgerWallet } from '@/wallets';
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import { ethereum } from '@/wallets/bip44/paths';
 export default {
   props: {
@@ -166,7 +166,7 @@ export default {
     dropDownDefaultText() {
       return `${this.selectedPath.label} - ${this.selectedPath.path}`;
     },
-    ...mapState({ customPaths: state => state.main.customPaths })
+    ...mapState('main', ['customPaths'])
   },
   watch: {
     selectedApp: {
@@ -189,11 +189,12 @@ export default {
     });
   },
   methods: {
+    ...mapActions('main', ['removeCustomPath']),
     remove(path, idx) {
       const mappedPaths = this.selectedApp.paths.filter((item, itemIdx) => {
         if (itemIdx !== idx) return item;
       });
-      this.$store.dispatch('removeCustomPath', path);
+      this.removeCustomPath(path);
       this.setupCustomPaths();
       this.selectedApp.paths = mappedPaths;
       this.selectedPath =

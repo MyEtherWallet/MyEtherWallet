@@ -28,15 +28,15 @@ export default async (
 ) => {
   if (payload.method !== 'eth_sendTransaction') return next();
   const tx = Object.assign({}, payload.params[0]);
-  tx.gasPrice = unit.toWei(store.state.main.gasPrice, 'gwei').toString();
+  tx.gasPrice = unit.toWei(store.state.gasPrice, 'gwei').toString();
   const localTx = Object.assign({}, tx);
   delete localTx['gas'];
   delete localTx['nonce'];
   const ethCalls = new EthCalls(requestManager);
   try {
     tx.nonce = !tx.nonce
-      ? await store.state.main.web3.eth.getTransactionCount(
-          store.state.main.wallet.getAddressString()
+      ? await store.state.web3.eth.getTransactionCount(
+          store.state.wallet.getAddressString()
         )
       : tx.nonce;
     tx.gas = !tx.gas ? await ethCalls.estimateGas(localTx) : tx.gas;
@@ -44,10 +44,10 @@ export default async (
     res(e);
     return;
   }
-  tx.chainId = !tx.chainId ? store.state.main.network.type.chainID : tx.chainId;
+  tx.chainId = !tx.chainId ? store.state.network.type.chainID : tx.chainId;
   getSanitizedTx(tx)
     .then(_tx => {
-      if (store.state.main.wallet.identifier === WEB3_WALLET) {
+      if (store.state.wallet.identifier === WEB3_WALLET) {
         eventHub.$emit(EventNames.SHOW_WEB3_CONFIRM_MODAL, _tx, _promiObj => {
           setEvents(_promiObj, _tx, store.dispatch);
           _promiObj
@@ -60,20 +60,18 @@ export default async (
         });
       } else {
         eventHub.$emit(EventNames.SHOW_TX_CONFIRM_MODAL, _tx, _response => {
-          const _promiObj = store.state.main.web3.eth.sendSignedTransaction(
+          const _promiObj = store.state.web3.eth.sendSignedTransaction(
             _response.rawTransaction
           );
 
           _promiObj
             .once('transactionHash', hash => {
-              if (store.state.main.wallet !== null) {
+              if (store.state.wallet !== null) {
                 const localStoredObj = locStore.get(
-                  utils.sha3(store.state.main.wallet.getChecksumAddressString())
+                  utils.sha3(store.state.wallet.getChecksumAddressString())
                 );
                 locStore.set(
-                  utils.sha3(
-                    store.state.main.wallet.getChecksumAddressString()
-                  ),
+                  utils.sha3(store.state.wallet.getChecksumAddressString()),
                   {
                     nonce: Misc.sanitizeHex(
                       new BigNumber(localStoredObj.nonce).plus(1).toString(16)

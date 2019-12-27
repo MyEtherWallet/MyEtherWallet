@@ -100,7 +100,7 @@
             }
           "
         >
-          {{ $t('common.header.access') }}
+          {{ $t('mewcx.access') }}
         </div>
         <div
           v-show="walletType !== 'watchOnly'"
@@ -297,10 +297,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      web3: state => state.main.web3,
-      network: state => state.main.network
-    }),
+    ...mapState('main', ['network', 'web3']),
     parsedWallet() {
       return JSON.parse(this.wallet);
     },

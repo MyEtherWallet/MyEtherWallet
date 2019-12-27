@@ -16,8 +16,8 @@
       >
         <div>
           <input
-            v-addr-resolver="'selectedAddress'"
             ref="addressInput"
+            v-addr-resolver="'selectedAddress'"
             :placeholder="$t('common.enter-addr')"
             type="text"
             autocomplete="off"
@@ -118,7 +118,7 @@ import '@/assets/images/currency/coins/asFont/cryptocoins.css';
 import '@/assets/images/currency/coins/asFont/cryptocoins-colors.css';
 import Blockie from '@/components/Blockie';
 import { EthereumTokens, BASE_CURRENCY } from '@/partners';
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import { Toast } from '@/helpers';
 import utils from 'web3-utils';
 
@@ -152,10 +152,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      addressBook: state => state.main.addressBook,
-      account: state => state.main.account
-    }),
+    ...mapState('main', ['addressBook', 'account']),
     hasMessage() {
       return (
         (!this.isValidAddress && this.selectedAddress.length > 0) ||
@@ -190,6 +187,7 @@ export default {
     this.currentAddress = this.account.address;
   },
   methods: {
+    ...mapActions('main', ['setAddressBook']),
     debouncedInput: utils._.debounce(function(e) {
       this.selectedAddress = e.target.value;
     }, 300),
@@ -224,7 +222,7 @@ export default {
         nickname: this.addressBook.length + 1
       });
 
-      this.$store.dispatch('setAddressBook', this.addressBook);
+      this.setAddressBook(this.addressBook);
 
       Toast.responseHandler(
         this.$t('interface.address-book.successfully-added'),

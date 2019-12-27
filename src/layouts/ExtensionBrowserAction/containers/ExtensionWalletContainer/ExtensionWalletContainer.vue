@@ -1,8 +1,5 @@
 <template>
   <div class="extension-wallets-container">
-    <div class="wallet-side-menu-container">
-      <wallet-side-menu />
-    </div>
     <div class="wallets-container">
       <interface-network-modal ref="network" />
       <watch-only-modal
@@ -38,7 +35,6 @@
 
 <script>
 import { KEYSTORE as keyStoreType } from '@/wallets/bip44/walletTypes';
-import WalletSideMenu from '../../components/WalletSideMenu';
 import WatchOnlyModal from '../../components/WatchOnlyModal';
 import PasswordOnlyModal from '../../components/PasswordOnlyModal';
 import { WATCH_ONLY } from '@/wallets/bip44/walletTypes';
@@ -47,12 +43,11 @@ import web3utils from 'web3-utils';
 import BigNumber from 'bignumber.js';
 import { WalletInterface } from '@/wallets';
 import walletWorker from 'worker-loader!@/workers/wallet.worker.js';
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import { isAddress, toChecksumAddress } from '@/helpers/addressUtils';
 import InterfaceNetworkModal from '@/layouts/InterfaceLayout/components/InterfaceNetworkModal';
 export default {
   components: {
-    'wallet-side-menu': WalletSideMenu,
     'watch-only-modal': WatchOnlyModal,
     'password-only-modal': PasswordOnlyModal,
     'interface-network-modal': InterfaceNetworkModal
@@ -73,10 +68,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      web3: state => state.main.web3,
-      network: state => state.main.network
-    }),
+    ...mapState('main', ['web3', 'network']),
     validInput() {
       return (
         (this.password !== '' || this.password.length > 0) &&
@@ -98,6 +90,11 @@ export default {
     window.chrome.storage.onChanged.removeListener(this.getAccounts);
   },
   methods: {
+    ...mapActions('main', [
+      'switchNetwork',
+      'setWeb3Instance',
+      'decryptWallet'
+    ]),
     openNetworkModal() {
       this.$refs.network.$refs.network.show();
     },
@@ -150,11 +147,11 @@ export default {
             return actualNetwork.url === networkProps.url;
           }
         );
-        this.$store.dispatch('switchNetwork', network).then(() => {
-          this.$store.dispatch('setWeb3Instance');
+        this.switchNetwork(network).then(() => {
+          this.setWeb3Instance();
         });
       } else {
-        this.$store.dispatch('setWeb3Instance');
+        this.setWeb3Instance();
       }
       ExtensionHelpers.getAccounts(this.getAccountsCb);
     },
@@ -202,7 +199,7 @@ export default {
     },
     setWallet(wallet) {
       const navTo = this.path !== 'access' ? 'view-wallet-info' : 'interface';
-      this.$store.dispatch('decryptWallet', [wallet]);
+      this.decryptWallet([wallet]);
       this.loading = false;
       this.password = '';
       this.file = '';

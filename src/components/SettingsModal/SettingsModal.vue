@@ -82,7 +82,7 @@
               <standard-button
                 :options="buttonSave"
                 :button-disabled="selectedGasType === 'other' && customGas < 1"
-                @click.native="saveGasChanges"
+                :click-function="saveGasChanges"
               />
             </div>
           </full-width-dropdown>
@@ -109,14 +109,14 @@
               />
               <standard-button
                 :options="buttonUploadFile"
-                @click.native="uploadFile"
+                :click-function="uploadFile"
               />
             </div>
             <div class="button-block">
               <standard-button
                 :options="buttonImport"
                 :button-disabled="importedFile === ''"
-                @click.native="setDataFromImportedFile"
+                :click-function="setDataFromImportedFile"
               />
             </div>
           </full-width-dropdown>
@@ -210,9 +210,9 @@
                 class="blockie-image"
               />
               <input
+                v-model="contactAddress"
                 v-addr-resolver="'contactAddress'"
                 :class="isValidAddress ? 'blockie-input' : ''"
-                v-model="contactAddress"
                 :placeholder="$t('common.addr')"
                 type="text"
               />
@@ -229,7 +229,7 @@
                 :button-disabled="
                   !contactAddress || !isValidAddress || addrBookErrMsg !== null
                 "
-                @click.native="addContact"
+                :click-function="addContact"
               />
             </div>
           </full-width-dropdown>
@@ -245,7 +245,7 @@ import BigNumber from 'bignumber.js';
 import utils from 'web3-utils';
 import store from 'store';
 import { Toast } from '@/helpers';
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import Blockie from '@/components/Blockie';
 
 export default {
@@ -320,11 +320,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      network: state => state.main.network,
-      online: state => state.main.online,
-      addressBook: state => state.main.addressBook
-    }),
+    ...mapState('main', ['network', 'online', 'addressBook']),
     gasPriceInputs() {
       return {
         economy: {
@@ -399,6 +395,7 @@ export default {
     this.getGasType();
   },
   methods: {
+    ...mapActions('main', ['setGasPrice', 'setAddressBook']),
     setDataFromImportedFile() {
       const reader = new FileReader();
       const notifObj = {};
@@ -448,13 +445,12 @@ export default {
 
       if (amt) {
         if (this.gasPriceInputs[type] !== undefined) {
-          this.$store.dispatch(
-            'setGasPrice',
+          this.setGasPrice(
             new BigNumber(this.gasPriceInputs[type].gwei).toNumber()
           );
         } else {
           this.customGas = amt;
-          this.$store.dispatch('setGasPrice', new BigNumber(amt).toNumber());
+          this.setGasPrice(new BigNumber(amt).toNumber());
         }
       }
     },
@@ -465,17 +461,13 @@ export default {
     },
     saveGasChanges() {
       if (this.gasPriceInputs[this.selectedGasType] !== undefined) {
-        this.$store.dispatch(
-          'setGasPrice',
+        this.setGasPrice(
           new BigNumber(
             this.gasPriceInputs[this.selectedGasType].gwei
           ).toNumber()
         );
       } else {
-        this.$store.dispatch(
-          'setGasPrice',
-          new BigNumber(this.customGas).toNumber()
-        );
+        this.setGasPrice(new BigNumber(this.customGas).toNumber());
       }
       if (this.$refs.gasDropdown) {
         this.$refs.gasDropdown.dropdownOpen = false;
@@ -553,7 +545,7 @@ export default {
     },
     removeContact(idx) {
       this.addressBook.splice(idx, 1);
-      this.$store.dispatch('setAddressBook', this.addressBook);
+      this.setAddressBook(this.addressBook);
       this.addrBookErrMsg = null;
     },
     addContact() {
@@ -584,7 +576,7 @@ export default {
         nickname: this.contactNickname || this.addressBook.length + 1
       });
 
-      this.$store.dispatch('setAddressBook', this.addressBook);
+      this.setAddressBook(this.addressBook);
 
       this.contactAddress = '';
       this.contactNickname = '';

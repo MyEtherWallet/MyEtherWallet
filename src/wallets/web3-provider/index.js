@@ -6,10 +6,7 @@ import PocketProvider from './providers/pocket-provider';
 import { WEB3_WALLET } from '../bip44/walletTypes';
 class MEWProvider {
   constructor(host, options, store, eventHub) {
-    if (
-      store.state.main.wallet &&
-      store.state.main.wallet.identifier == WEB3_WALLET
-    ) {
+    if (store.state.wallet && store.state.wallet.identifier == WEB3_WALLET) {
       return new GivenProvider(host, options, store, eventHub);
     } else if (host && typeof host === 'string') {
       if (host.includes('etherscan')) {

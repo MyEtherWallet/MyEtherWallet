@@ -36,9 +36,7 @@
                 <div>
                   <p>
                     - {{ web3.utils.hexToNumberString(item.value) }}
-                    <span>
-                      {{ network.type.currencyName }}
-                    </span>
+                    <span>{{ network.type.currencyName }}</span>
                   </p>
                   <div>
                     <span>{{ $t('swap.from') }}</span>
@@ -57,9 +55,7 @@
                 <div>
                   <p>
                     + {{ web3.utils.hexToNumberString(item.value) }}
-                    <span>
-                      {{ network.type.currencyName }}
-                    </span>
+                    <span>{{ network.type.currencyName }}</span>
                   </p>
                   <div>
                     <span>{{ $t('common.to') }}</span>
@@ -142,13 +138,9 @@
   </div>
 </template>
 <script>
-import AddressBlock from '../AddressBlock';
 import { mapState } from 'vuex';
 
 export default {
-  components: {
-    'address-block': AddressBlock
-  },
   props: {
     unSignedArray: {
       type: Array,
@@ -172,11 +164,7 @@ export default {
     }
   },
   computed: {
-    ...mapState({
-      web3: state => state.main.web3,
-      network: state => state.main.network,
-      account: state => state.main.account
-    }),
+    ...mapState('main', ['web3', 'network', 'account']),
     buttonText() {
       if (!this.allSigned && this.isHardwareWallet) {
         return this.$t('confirmation.approve-on-device');

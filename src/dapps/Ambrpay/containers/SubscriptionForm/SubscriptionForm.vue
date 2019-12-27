@@ -88,14 +88,12 @@
 </template>
 
 <script>
-import Blockie from '@/components/Blockie';
 import { mapState } from 'vuex';
 import BigNumber from 'bignumber.js';
 import DropDownAddressSelector from '@/components/DropDownAddressSelector';
 
 export default {
   components: {
-    blockie: Blockie,
     'dropdown-address-selector': DropDownAddressSelector
   },
   props: {
@@ -119,11 +117,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      web3: state => state.main.web3,
-      network: state => state.main.network,
-      account: state => state.main.account
-    }),
+    ...mapState('main', ['web3', 'network', 'account']),
     isValidInput() {
       return (
         this.isValidAddress &&

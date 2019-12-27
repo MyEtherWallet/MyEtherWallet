@@ -8,8 +8,8 @@
           <div
             v-for="(item, index) in footerContent"
             :ref="item.class"
-            :class="item.class"
             :key="item.title + index"
+            :class="item.class"
           >
             <div class="content-title" @click="toggler(item.class)">
               <h3 class="lite">{{ item.title }}</h3>
@@ -23,8 +23,8 @@
             <div class="content-links">
               <div class="content-links-animation-block">
                 <div
-                  v-for="(content, index) in item.contents"
-                  :key="content.text + index"
+                  v-for="(content, idx) in item.contents"
+                  :key="content.text + idx"
                   class="content"
                 >
                   <div v-if="content.text === $t('common.customerSupport')">
@@ -126,8 +126,8 @@
           <div class="social">
             <a
               v-for="link in links"
-              :href="link.to"
               :key="link.class"
+              :href="link.to"
               :aria-label="link.to"
               rel="noopener noreferrer"
               target="_blank"
@@ -285,7 +285,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({ ethDonationAddress: state => state.main.ethDonationAddress })
+    ...mapState('main', ['ethDonationAddress'])
   },
   mounted() {
     if (Misc.isMewCx()) {

@@ -93,8 +93,8 @@
                     >
                       <b-dropdown-item
                         v-for="(val, key) in availablePaths"
-                        :class="selectedPath === val.path ? 'active' : ''"
                         :key="'base' + key"
+                        :class="selectedPath === val.path ? 'active' : ''"
                         @click="changePath(key)"
                         >{{ val.label }}</b-dropdown-item
                       >
@@ -104,8 +104,8 @@
                       </b-dropdown-item>
                       <b-dropdown-item
                         v-for="(val, key) in customPaths"
-                        :class="selectedPath === val.path ? 'active' : ''"
                         :key="key"
+                        :class="selectedPath === val.path ? 'active' : ''"
                         class="custom-networks"
                       >
                         <div @click="changePath(key)">{{ val.label }}</div>
@@ -178,8 +178,8 @@
 
                   <ul
                     v-for="account in HDAccounts"
-                    :data-address="'address' + account.index"
                     :key="account.index"
+                    :data-address="'address' + account.index"
                     :class="[
                       selectedId === 'address' + account.index
                         ? 'selected'
@@ -272,7 +272,7 @@
 
 <script>
 import CustomerSupport from '@/components/CustomerSupport';
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import { Misc, Toast } from '@/helpers';
 import web3utils from 'web3-utils';
 import BigNumber from 'bignumber.js';
@@ -326,14 +326,14 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      network: state => state.main.network,
-      Networks: state => state.main.Networks,
-      customPaths: state => state.main.customPaths,
-      path: state => state.main.path,
-      web3: state => state.main.web3,
-      wallet: state => state.main.wallet
-    }),
+    ...mapState('main', [
+      'network',
+      'Networks',
+      'customPaths',
+      'path',
+      'web3',
+      'wallet'
+    ]),
     selectedNetwork() {
       return this.network;
     },
@@ -371,9 +371,14 @@ export default {
     });
   },
   methods: {
+    ...mapActions('main', [
+      'switchNetwork',
+      'setWeb3Instance',
+      'removeCustomPath'
+    ]),
     switchNetwork(network) {
-      this.$store.dispatch('switchNetwork', network).then(() => {
-        this.$store.dispatch('setWeb3Instance');
+      this.switchNetwork(network).then(() => {
+        this.setWeb3Instance();
         this.currentIndex = 0;
         this.setHDAccounts();
       });
@@ -406,7 +411,7 @@ export default {
       return new BigNumber(web3utils.fromWei(bal, 'ether')).toFixed(3);
     },
     removeCustomPath(path) {
-      this.$store.dispatch('removeCustomPath', path).then(() => {
+      this.removeCustomPath(path).then(() => {
         this.getPaths();
       });
     },
@@ -506,7 +511,7 @@ export default {
       });
     }, 1000),
     async setHDAccounts() {
-      if (!this.web3.eth) this.$store.dispatch('setWeb3Instance');
+      if (!this.web3.eth) this.setWeb3Instance();
       this.HDAccounts = [];
       for (
         let i = this.currentIndex;

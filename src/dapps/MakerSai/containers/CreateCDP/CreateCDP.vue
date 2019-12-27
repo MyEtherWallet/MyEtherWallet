@@ -171,9 +171,6 @@
 <script>
 import { mapState } from 'vuex';
 import ethUnit from 'ethjs-unit';
-import InterfaceContainerTitle from '@/layouts/InterfaceLayout/components/InterfaceContainerTitle';
-import InterfaceBottomText from '@/components/InterfaceBottomText';
-import Blockie from '@/components/Blockie';
 import DaiConfirmationModal from '../../components/DaiConfirmationModal';
 import LoadingOverlay from '@/components/LoadingOverlay';
 import {
@@ -197,9 +194,6 @@ const bnOver = (one, two, three) => {
 
 export default {
   components: {
-    'interface-container-title': InterfaceContainerTitle,
-    'interface-bottom-text': InterfaceBottomText,
-    blockie: Blockie,
     'dai-confirmation-modal': DaiConfirmationModal,
     'loading-overlay': LoadingOverlay
   },
@@ -305,13 +299,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      account: state => state.main.account,
-      gasPrice: state => state.main.gasPrice,
-      web3: state => state.main.web3,
-      network: state => state.main.network,
-      ens: state => state.main.ens
-    }),
+    ...mapState('main', ['account', 'gasPrice', 'web3', 'network', 'ens']),
     validInputs() {
       if (toBigNumber(this.ethQty).isNaN() || toBigNumber(this.daiQty).isNaN())
         return false;

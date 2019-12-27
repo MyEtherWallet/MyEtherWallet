@@ -76,18 +76,21 @@
           <div v-if="needsDaiApprove">
             <standard-button
               :options="approveDaiButton"
-              @click.native="approveDai"
+              :click-function="approveDai"
             />
           </div>
           <div v-if="needsMkrApprove">
             <standard-button
               :options="approveMkrButton"
-              @click.native="approveMkr"
+              :click-function="approveMkr"
             />
           </div>
         </div>
         <div class="buttons">
-          <standard-button :options="cancelButton" @click.native="closeModal" />
+          <standard-button
+            :options="cancelButton"
+            :click-function="closeModal"
+          />
           <standard-button
             :options="closeButton"
             :button-disabled="canClose ? false : true"
@@ -198,13 +201,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      account: state => state.main.account,
-      gasPrice: state => state.main.gasPrice,
-      web3: state => state.main.web3,
-      network: state => state.main.network,
-      ens: state => state.main.ens
-    }),
+    ...mapState('main', ['account', 'gasPrice', 'web3', 'network', 'ens']),
     getfeeOwed() {
       const result = this.values.governanceFeeOwed;
       return this.displayFixedValue(result, 8);

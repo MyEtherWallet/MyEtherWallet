@@ -28,7 +28,6 @@
             </div>
             <div class="the-form amount-number">
               <input
-                v-validate="'min_value:0'"
                 v-model="toValue"
                 :placeholder="$t('sendTx.amount')"
                 type="number"
@@ -163,7 +162,6 @@
 import { mapState } from 'vuex';
 import InterfaceContainerTitle from '../../components/InterfaceContainerTitle';
 import CurrencyPicker from '../../components/CurrencyPicker';
-import Blockie from '@/components/Blockie';
 import { Transaction } from 'ethereumjs-tx';
 import { Misc, Toast } from '@/helpers';
 import BigNumber from 'bignumber.js';
@@ -175,7 +173,6 @@ import DropDownAddressSelector from '@/components/DropDownAddressSelector';
 export default {
   components: {
     'interface-container-title': InterfaceContainerTitle,
-    blockie: Blockie,
     'currency-picker': CurrencyPicker,
     'dropdown-address-selector': DropDownAddressSelector
   },
@@ -247,14 +244,14 @@ export default {
   },
 
   computed: {
-    ...mapState({
-      account: state => state.main.account,
-      gasPrice: state => state.main.gasPrice,
-      web3: state => state.main.web3,
-      network: state => state.main.network,
-      linkQuery: state => state.main.linkQuery,
-      online: state => state.main.online
-    }),
+    ...mapState('main', [
+      'account',
+      'gasPrice',
+      'web3',
+      'network',
+      'linkQuery',
+      'online'
+    ]),
     txFee() {
       return new BigNumber(ethUnit.toWei(this.gasPrice, 'gwei')).times(
         this.gasLimit || 0

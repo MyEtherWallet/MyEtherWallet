@@ -204,13 +204,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      account: state => state.main.account,
-      gasPrice: state => state.main.gasPrice,
-      web3: state => state.main.web3,
-      network: state => state.main.network,
-      ens: state => state.main.ens
-    }),
+    ...mapState('main', ['account', 'gasPrice', 'web3', 'network', 'ens']),
     amountPresent() {
       return (
         (this.amount || this.amount !== '') && !toBigNumber(this.amount).lte(0)
@@ -269,6 +263,7 @@ export default {
       if (this.values) {
         return this.values.collateralRatio;
       }
+      return 0;
     },
     newCollateralRatio() {
       if (this.canCompute || this.values) {

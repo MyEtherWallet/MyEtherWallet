@@ -209,10 +209,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      web3: state => state.main.web3,
-      network: state => state.main.network
-    }),
+    ...mapState('main', ['web3', 'network']),
     txLinkAndHash() {
       return this.txLink.replace('[[txHash]]', this.txHash);
     },

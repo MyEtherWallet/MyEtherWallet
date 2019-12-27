@@ -26,7 +26,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({ linkQuery: state => state.main.linkQuery })
+    ...mapState('main', ['linkQuery'])
   },
   mounted() {
     if (this.linkQuery.hasOwnProperty('url')) {
