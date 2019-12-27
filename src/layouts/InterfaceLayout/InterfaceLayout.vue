@@ -596,7 +596,7 @@ export default {
               this.web3WalletPollAddress();
             }
           }
-          this.setENS();
+          this.callSetENS();
           this.getBlock();
           this.getBalance();
           this.setTokens();
@@ -634,11 +634,13 @@ export default {
           Toast.responseHandler(e, Toast.ERROR);
         });
     },
-    setENS() {
+    callSetENS() {
       if (this.network.type.ens) {
-        this.setENS(
-          new ENS(this.web3.currentProvider, this.network.type.ens.registry)
+        const newEns = new ENS(
+          this.web3.currentProvider,
+          this.network.type.ens.registry
         );
+        this.setENS(newEns);
       } else {
         this.setENS(null);
       }
