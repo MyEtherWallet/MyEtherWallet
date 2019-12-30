@@ -169,14 +169,14 @@ export default class MakerCDP {
           this.debtValue,
           this.ethPrice,
           this.minEth.times(0)
-        );
+        ).minus(toBigNumber("0.000000000000000001")).toFixed(18);
       }
       return maxEthDraw(
         this.ethCollateral,
         this.liquidationRatio,
         this.debtValue,
         this.ethPrice
-      );
+      ).minus(toBigNumber("0.000000000000000001")).toFixed(18);
     }
     return toBigNumber(0);
   }
@@ -354,6 +354,8 @@ export default class MakerCDP {
           return;
         }
         this.needsUpdate = true;
+        // Source location
+        // packages/dai/src/eth/EthereumCdpService.js:425
         await this.cdpService.freeEthProxy(
           this._proxyAddress,
           this.cdpId,
