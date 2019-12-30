@@ -1,161 +1,155 @@
 @import '~@/scss/GlobalVariables';
-.view-wallet-info-layout {
-  background-color: $light-grey-2;
-  display: grid;
-  grid-template-columns: 200px 50px auto 50px 200px;
-  grid-template-rows: 100px 125px auto 100px;
 
-  .title {
-    grid-column-start: 3;
-    grid-column-end: 3;
-    grid-row-start: 2;
-    grid-row-end: 2;
-    text-align: center;
+.page-container-block {
+  background-color: $light-grey-2;
+}
+
+.view-wallet-info-layout-container {
+  background-color: $light-grey-2;
+  padding: 80px 20px;
+  max-width: 1055px;
+  min-width: 960px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
+
+.page-title-block {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.wallet-info {
+  background-color: $white;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  margin-right: 10px;
+  flex-grow: 1;
+
+  .wallet-info-header {
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    align-items: center;
+    background-color: $dark-blue-12;
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 10px;
+
+    h3 {
+      color: $white;
+    }
+
+    a {
+      color: $white !important;
+    }
   }
 
-  .wallet-info-container {
-    display: flex;
-    grid-column-start: 2;
-    grid-column-end: 5;
-    grid-row-start: 3;
-    grid-row-end: 3;
-    justify-content: space-between;
+  .balance-container {
+    padding: 10px;
 
-    .wallet-info {
-      background-color: $white;
-      border-bottom-left-radius: 5px;
-      border-bottom-right-radius: 5px;
-      display: flex;
-      flex-direction: column;
-      margin-right: 10px;
-      max-height: 540px;
-      width: 75%;
-
-      .wallet-info-header {
-        border-top-left-radius: 5px;
-        border-top-right-radius: 5px;
-        align-items: center;
-        background-color: $dark-blue-12;
-        display: flex;
-        justify-content: space-between;
-        padding: 5px 10px;
-
-        h3 {
-          color: $white;
-        }
-
-        a {
-          color: $white !important;
-        }
-      }
-
-      .balance-container {
-        padding: 10px;
-
-        .balance-main-container {
-          align-items: center;
-          background-color: $light-green-1;
-          border-radius: 5px;
-          display: flex;
-          justify-content: space-between;
-          padding: 10px 30px;
-          width: 100%;
-
-          .balance-and-buttons {
-            display: flex;
-          }
-
-          .balance-button-container {
-            i {
-              cursor: pointer;
-              margin: 0 20px;
-            }
-
-            img {
-              cursor: pointer;
-            }
-          }
-        }
-      }
-    }
-
-    .blockie-container {
-      align-items: center;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .account-details {
-      padding-top: 50px;
-    }
-
-    .wallet-tokens {
-      min-width: 300px;
-      width: 25%;
-    }
-
-    .address-copy-container {
+    .balance-main-container {
       align-items: center;
       background-color: $light-green-1;
       border-radius: 5px;
       display: flex;
-      margin: 10px 0;
-      max-width: 300px;
-      padding: 20px 30px;
-      position: relative;
+      justify-content: space-between;
+      padding: 10px 30px;
+      width: 100%;
 
-      p {
-        margin: 0;
-      }
-
-      input {
-        position: absolute;
-        opacity: 0;
-      }
-
-      img {
-        cursor: pointer;
-        height: 22px;
-        margin-left: 5px;
-      }
-    }
-
-    .other-options {
-      align-items: center;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-around;
-      margin: 0 auto;
-      position: relative;
-      width: 380px;
-
-      a {
-        position: absolute;
-        opacity: 0;
-        z-index: -1;
-      }
-      .option-item {
-        align-items: center;
-        cursor: pointer;
+      .balance-and-buttons {
         display: flex;
-        justify-content: flex-start;
-        padding: 30px;
+      }
+
+      .balance-button-container {
+        i {
+          cursor: pointer;
+          margin: 0 20px;
+        }
 
         img {
-          margin-right: 10px;
-          width: 32px;
+          cursor: pointer;
         }
       }
+    }
+  }
+}
 
-      .item-disabled {
-        cursor: none;
-        pointer-events: none;
+.blockie-container {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 
-        p {
-          color: $light-grey-11 !important;
-        }
-      }
+.account-details {
+  padding-top: 50px;
+}
+
+.wallet-tokens {
+  width: 340px;
+}
+
+.address-copy-container {
+  align-items: center;
+  background-color: $light-green-1;
+  border-radius: 5px;
+  display: flex;
+  margin: 10px 0;
+  max-width: 300px;
+  padding: 20px 30px;
+  position: relative;
+
+  p {
+    margin: 0;
+  }
+
+  input {
+    position: absolute;
+    opacity: 0;
+  }
+
+  img {
+    cursor: pointer;
+    height: 22px;
+    margin-left: 5px;
+  }
+}
+
+.other-options {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin: 0 auto;
+  position: relative;
+  width: 380px;
+
+  a {
+    position: absolute;
+    opacity: 0;
+    z-index: -1;
+  }
+
+  .option-item {
+    align-items: center;
+    cursor: pointer;
+    display: flex;
+    justify-content: flex-start;
+    padding: 30px;
+
+    img {
+      margin-right: 10px;
+      width: 32px;
+    }
+  }
+
+  .item-disabled {
+    cursor: none;
+    pointer-events: none;
+
+    p {
+      color: $light-grey-11 !important;
     }
   }
 }

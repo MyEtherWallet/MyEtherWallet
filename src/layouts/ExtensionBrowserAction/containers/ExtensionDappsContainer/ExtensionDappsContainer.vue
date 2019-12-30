@@ -63,7 +63,7 @@ export default {
   methods: {
     async fetchDapps() {
       const dapps = await fetch(
-        'https://api.stateofthedapps.com/dapps?tags=mew'
+        'https://swap.mewapi.io/proxy?url=https://api.stateofthedapps.com/dapps?tags=mew'
       )
         .then(res => {
           return res.json();

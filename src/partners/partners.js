@@ -326,30 +326,24 @@ export default class SwapProviders {
     fromAddress,
     refundAddress
   }) {
-    try {
-      const swapDetails = {
-        provider: providerDetails.provider,
-        fromCurrency: providerDetails.fromCurrency,
-        fromValue: fromValue,
-        toValue: toValue,
-        toCurrency: providerDetails.toCurrency,
-        rate: providerDetails.rate,
-        minValue: providerDetails.minValue,
-        maxValue: providerDetails.maxValue,
-        toAddress: toAddress,
-        fromAddress: fromAddress,
-        timestamp: new Date().toISOString(),
-        refundAddress: refundAddress
-      };
-      if (this.providers.has(swapDetails.provider)) {
-        const provider = this.providers.get(swapDetails.provider);
-        swapDetails.maybeToken = SwapProviders.isToken(
-          swapDetails.fromCurrency
-        );
-        return provider.startSwap(swapDetails);
-      }
-    } catch (e) {
-      throw e;
+    const swapDetails = {
+      provider: providerDetails.provider,
+      fromCurrency: providerDetails.fromCurrency,
+      fromValue: fromValue,
+      toValue: toValue,
+      toCurrency: providerDetails.toCurrency,
+      rate: providerDetails.rate,
+      minValue: providerDetails.minValue,
+      maxValue: providerDetails.maxValue,
+      toAddress: toAddress,
+      fromAddress: fromAddress,
+      timestamp: new Date().toISOString(),
+      refundAddress: refundAddress
+    };
+    if (this.providers.has(swapDetails.provider)) {
+      const provider = this.providers.get(swapDetails.provider);
+      swapDetails.maybeToken = SwapProviders.isToken(swapDetails.fromCurrency);
+      return provider.startSwap(swapDetails);
     }
   }
 
