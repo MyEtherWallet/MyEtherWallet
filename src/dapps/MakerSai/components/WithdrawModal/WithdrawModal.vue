@@ -259,6 +259,7 @@ export default {
       if (this.values) {
         return this.values.collateralRatio;
       }
+      return 0;
     },
     newCollateralRatio() {
       if (this.canCompute) {

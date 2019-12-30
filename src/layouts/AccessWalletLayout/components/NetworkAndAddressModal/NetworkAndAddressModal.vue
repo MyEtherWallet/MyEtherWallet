@@ -98,11 +98,11 @@
                 >
                   <b-dropdown-item
                     v-for="(val, key) in availablePaths"
+                    :key="'base' + key"
                     :class="[
                       selectedPath === val.path ? 'active' : '',
                       'dropdown-paths'
                     ]"
-                    :key="'base' + key"
                     @click="changePath(key)"
                   >
                     {{ val.label }}
@@ -114,8 +114,8 @@
                   }}</b-dropdown-item>
                   <b-dropdown-item
                     v-for="(val, key) in customPaths"
-                    :class="selectedPath === val.path ? 'active' : ''"
                     :key="key"
+                    :class="selectedPath === val.path ? 'active' : ''"
                   >
                     <div class="custom-networks">
                       <div @click="changePath(key)">
@@ -186,8 +186,8 @@
 
               <ul
                 v-for="account in HDAccounts"
-                :data-address="'address' + account.index"
                 :key="account.index"
+                :data-address="'address' + account.index"
                 :class="[
                   selectedId === 'address' + account.index ? 'selected' : '',
                   'address-block address-data fours'
