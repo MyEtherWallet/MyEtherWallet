@@ -301,7 +301,11 @@ export default {
     },
     storeWalletCb() {
       this.loading = false;
-      this.$eventHub.$emit('showSuccessModal', 'Successfully added a wallet!', null);
+      this.$eventHub.$emit(
+        'showSuccessModal',
+        'Successfully added a wallet!',
+        null
+      );
       this.$router.push('/');
       this.reset();
       this.toggleVerifyDetails(false, '');
