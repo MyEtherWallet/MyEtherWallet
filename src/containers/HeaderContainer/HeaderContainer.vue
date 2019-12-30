@@ -89,9 +89,21 @@
                   <b-nav-item v-if="isHomePage" to="/" exact>{{
                     $t('common.home')
                   }}</b-nav-item>
-                  <b-nav-item v-if="isHomePage && !isMewCx" to="/#about-mew">
-                    {{ $t('common.about') }}
-                  </b-nav-item>
+                  <b-nav-item-dropdown
+                    v-if="!isMewCx"
+                    id="my-nav-dropdown"
+                    :text="$t('common.info')"
+                    toggle-class="nav-link-custom"
+                    right
+                  >
+                    <b-dropdown-item v-if="isHomePage" to="/#about-mew">
+                      {{ $t('common.about') }}
+                    </b-dropdown-item>
+                    <b-dropdown-item to="/#faqs">{{
+                      $t('common.faqs')
+                    }}</b-dropdown-item>
+                  </b-nav-item-dropdown>
+
                   <b-nav-item-dropdown
                     v-if="address !== null"
                     right
@@ -114,9 +126,7 @@
                       }})</b-dropdown-item
                     >
                   </b-nav-item-dropdown>
-                  <b-nav-item v-if="!isMewCx" to="/#faqs">{{
-                    $t('common.faqs')
-                  }}</b-nav-item>
+
                   <!-- Commented for now waiting for all Translations to be done -->
                   <!-- <div v-show="!isMewCx" class="language-menu-container">
                     <div class="arrows">
