@@ -334,7 +334,6 @@ export default {
       if (this.setupComplete) {
         this.deposited = await this.makerSaver.balance();
         this.depositedValue = this.deposited._amount.toFixed(2);
-        console.error('this', this.deposited);
         if (this.deposited) {
           this.maxWithdrawable = this.deposited.toBigNumber().toString();
         }
