@@ -1,7 +1,28 @@
 <template>
   <div class="nft-side-menu">
     <div class="desktop-menu">
-      <ul class="listing-container">
+      <div>
+        <b-card
+          v-for="i in sortByCount"
+          :key="i.key"
+          title="Card Title"
+          img-src="https://picsum.photos/600/300/?image=25"
+          img-alt="Image"
+          img-top
+          tag="article"
+          style="max-width: 20rem;"
+          class="mb-2"
+          :class="i.contract === selected ? 'selected' : ''"
+        >
+          <b-card-text>
+            Some quick example text to build on the card title and make up the
+            bulk of the card's content.
+          </b-card-text>
+
+          <b-button href="#" variant="primary">Go somewhere</b-button>
+        </b-card>
+      </div>
+      <ul v-if="false" class="listing-container">
         <li
           v-for="i in sortByCount"
           :key="i.key"
@@ -85,6 +106,7 @@ export default {
   },
   mounted() {
     this.selected = this.initialHighlighted;
+    console.log(this.supportedNftObj);
   },
   methods: {
     openCustomModal() {
