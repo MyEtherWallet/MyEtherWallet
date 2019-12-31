@@ -1,16 +1,15 @@
 <template>
-  <div>1111111111</div>
+  <div>
+    <div>{{ data.title }}</div>
+    <div>{{ data.itemName }}</div>
+  </div>
 </template>
 
 <script>
 export default {
   components: {},
   props: {
-    selectedTitle: {
-      type: String,
-      default: 'Error'
-    },
-    nft: {
+    data: {
       type: Object,
       default: function() {
         return {};
