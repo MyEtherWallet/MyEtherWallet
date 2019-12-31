@@ -11,7 +11,7 @@
       ></nft-side-menu>
       <loading-sign :loadingmessage1="$t('common.loading')" />
     </div>
-    <div v-if="isReady && hasNfts" class="inner-side-menu content-container">
+    <div v-if="isReady && hasNfts" class="content-container">
       <nft-side-menu
         :supported-nft-obj="sideMenuData"
         :nft-config="nftConfig"
