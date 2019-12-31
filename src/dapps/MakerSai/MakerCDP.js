@@ -7,7 +7,9 @@ import {
   maxEthDraw,
   maxDai
 } from './helpers';
-const { MKR, DAI } = Maker;
+import {padZeros, hexlify} from './ethersHelpers';
+import {createCurrency, createGetCurrency, Currency} from '@makerdao/currency'
+const { MKR, DAI, ETH } = Maker;
 
 const toBigNumber = num => {
   return new BigNumber(num);
@@ -225,6 +227,15 @@ export default class MakerCDP {
   }
 
   async updateValues(cdpId = this.cdpId) {
+    console.log(this.web3.utils.numberToHex(this.cdpId)); // todo remove dev item
+       try{
+         this.byte32Id = hexlify(padZeros(this.web3.utils.numberToHex(this.cdpId), 32))
+         console.log(this.byte32Id); // todo remove dev item
+        // console.log(padZeros(new this.web3.utils.BN(this.cdpId), 32)); // todo remove dev item
+           } catch(e){
+               // eslint-disable-next-line
+               console.error(e);
+           }
     this._proxyAddress = await this.services.getProxy();
     this.noProxy = this._proxyAddress === null;
     if (this._proxyAddress) {
@@ -350,17 +361,61 @@ export default class MakerCDP {
       acknowledgeBypass
     ) {
       try {
+        function addSlice(array) {
+          if (array.slice) { return array; }
+
+          array.slice = function() {
+            var args = Array.prototype.slice.call(arguments);
+            return new Uint8Array(Array.prototype.slice.apply(array, args));
+          }
+
+          return array;
+        }
+
+        function padZeros(value, length) {
+          value = arrayify(value);
+
+          if (length < value.length) { throw new Error('cannot pad'); }
+
+          var result = new Uint8Array(length);
+          result.set(value, length - value.length);
+          return addSlice(result);
+        }
+
         if (this.noProxy) {
           return;
         }
         this.needsUpdate = true;
         // Source location
         // packages/dai/src/eth/EthereumCdpService.js:425
-        await this.cdpService.freeEthProxy(
-          this._proxyAddress,
-          this.cdpId,
-          amount
+        console.log(this.cdpService._saiProxyTubContract()); // todo remove dev item
+        const currencies = {};
+        currencies.ETH = createCurrency('ETH');
+        const getCurrency = createGetCurrency(currencies);
+        console.log(getCurrency(amount, ETH).toFixed('wei')); // todo remove dev item
+        // const value = hexlify(padZeros(this.web3.utils.numberToHex(this.cdpId), 32))
+        // console.log(value); // todo remove dev item
+        await this.cdpService._saiProxyTubContract().free(
+          this.cdpService._tubContract().address,
+          this.byte32Id,
+          getCurrency(amount, ETH).toFixed('wei'),
+          {
+            dsProxy: this._proxyAddress,
+            metadata: {
+              action: {
+                name: 'free',
+                id: this.cdpId,
+                amount: getCurrency(amount, ETH),
+                proxy: this._proxyAddress
+              }
+            }
+          }
         );
+        // await this.cdpService.freeEthProxy(
+        //   this._proxyAddress,
+        //   this.cdpId,
+        //   amount
+        // );
       } catch (e) {
         // eslint-disable-next-line
         console.error(e);
