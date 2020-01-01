@@ -1,12 +1,12 @@
 <template>
-  <div class="nft-card p-3">
-    <div class="card-image">
+  <b-card class="text-center" :class="data.count > 0 ? 'active' : 'inactive'">
+    <div class="card-image mb-2">
       <img v-if="data.itemName" :src="getImgUrl(data.itemName)" />
       <img v-else :src="getImgUrl(data.title)" />
     </div>
-    <p>{{ data.itemName }}</p>
-    <p>{{ data.title }}</p>
-  </div>
+    <div class="count text-dark">{{ data.count }}</div>
+    <p class="font-weight-bold text-dark">{{ data.title }}</p>
+  </b-card>
 </template>
 
 <script>
@@ -45,13 +45,31 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.nft-card {
-  border: 1px solid black;
-  border-radius: 10px;
+.count {
+  font-size: 30px;
+  font-weight: 500;
 }
 
 .card-image img {
   width: 100px;
   height: 100px;
+}
+
+.card {
+  height: 100%;
+}
+
+.card-body {
+  background-color: #f1f1f1;
+  border-radius: 0.25rem;
+}
+
+.inactive {
+  opacity: 0.4;
+}
+
+.active {
+  opacity: 1;
+  cursor: pointer;
 }
 </style>
