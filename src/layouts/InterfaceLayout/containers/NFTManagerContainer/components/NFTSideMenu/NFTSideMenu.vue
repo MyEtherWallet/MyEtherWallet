@@ -1,37 +1,24 @@
 <template>
   <div class="nft-side-menu">
     <div class="desktop-menu">
-      <div>
-        <NftProductCard
-          v-for="i in sortByCount"
-          :key="i.key"
-          :data="i"
-          :class="i.contract === selected ? 'selected' : ''"
-          @click="selectNft(i)"
-        />
-      </div>
-      <ul v-if="true" class="listing-container">
-        <li
-          v-for="i in sortByCount"
-          :key="i.key"
-          :class="i.contract === selected ? 'selected' : ''"
-          @click="selectNft(i)"
-        >
-          <span class="title">{{ i.title }}</span>
-
-          <span class="count">({{ i.count }})</span>
-          <i
-            v-show="i.customNft"
-            class="fa fa-times-circle clickable remove"
-            @click="removeCustomEntry(i)"
-          />
-        </li>
-        <li>
-          <span class="add-custom" @click="openCustomModal"
-            >+{{ $t('nftManager.custom') }}</span
+      <span class="add-custom" @click="openCustomModal"
+        >+{{ $t('nftManager.custom') }}</span
+      >
+      <b-row>
+        <b-col v-for="i in sortByCount" :key="i.key" cols="3" class="mb-4">
+          <NftProductCard
+            :data="i"
+            :class="i.contract === selected ? 'selected' : ''"
+            @click.native="selectNft(i)"
           >
-        </li>
-      </ul>
+            <i
+              v-show="i.customNft"
+              class="fa fa-times-circle clickable remove"
+              @click="removeCustomEntry(i)"
+            />
+          </NftProductCard>
+        </b-col>
+      </b-row>
     </div>
     <div class="mobile-menu">
       <b-dropdown text="CryptoKitties (5)">
