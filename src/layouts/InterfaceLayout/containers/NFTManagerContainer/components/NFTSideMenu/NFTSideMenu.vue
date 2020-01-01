@@ -10,7 +10,7 @@
           @click="selectNft(i)"
         />
       </div>
-      <ul v-if="false" class="listing-container">
+      <ul v-if="true" class="listing-container">
         <li
           v-for="i in sortByCount"
           :key="i.key"
@@ -97,7 +97,6 @@ export default {
   },
   mounted() {
     this.selected = this.initialHighlighted;
-    console.log(this.supportedNftObj);
   },
   methods: {
     openCustomModal() {
