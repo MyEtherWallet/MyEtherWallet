@@ -1,15 +1,6 @@
-// import normalise from '@/helpers/normalise';
-// import { Misc } from '@/helpers';
 import { toChecksumAddress } from '@/helpers/addressUtils';
-// import utils from 'web3-utils';
-// import WAValidator from 'wallet-address-validator';
-// import { EthereumTokens } from '@/partners';
-// import { canValidate } from '@/partners/helpers';
-// import MAValidator from 'multicoin-address-validator';
-// import getMultiCoinAddress from '@/helpers/ENSMultiCoin.js';
 import Resolution, {
   ResolutionError
-  // ResolutionErrorCode
 } from '@unstoppabledomains/resolution';
 const resolution = new Resolution();
 
@@ -51,6 +42,7 @@ const AddrResolver = {
       const domain = e;
       const messagePar = document.createElement('p');
       const _this = vnode.context;
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
       const ens = _this.$store.state.ens;
@@ -164,6 +156,8 @@ const AddrResolver = {
             el.parentNode.parentNode.appendChild(messagePar);
           }
 =======
+=======
+>>>>>>> cleaning after rebase
       const checkDarklist = function(addr) {
         const isDarklisted = Misc.isDarklisted(addr);
         if (isDarklisted.error) {
@@ -195,7 +189,6 @@ const AddrResolver = {
               el.parentNode.parentNode.appendChild(messagePar);
             }
           }
->>>>>>> a9606339d... updates
         }
       } catch (err) {
         messagePar.classList.add('resolver-error');
