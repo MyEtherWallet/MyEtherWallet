@@ -1,33 +1,35 @@
 import { toChecksumAddress } from '@/helpers/addressUtils';
+import WAValidator from 'wallet-address-validator';
+import { Misc } from '@/helpers';
 import Resolution, {
   ResolutionError
 } from '@unstoppabledomains/resolution';
 const resolution = new Resolution();
 
 const AddrResolver = {
-  bind: function(el, binding, vnode) {
+  bind: function (el, binding, vnode) {
     let network = vnode.context.$store.state.network;
     let parentCurrency = vnode.context.$parent.currency
       ? vnode.context.$parent.currency
       : network.type.name;
     let address = '';
-    vnode.context.$parent.$watch('$store.state.network', function(e) {
+    vnode.context.$parent.$watch('$store.state.network', function (e) {
       network = e;
       parentCurrency = e.type.name;
       removeElements();
       actualProcess(address);
     });
-    vnode.context.$parent.$watch('currency', function(e) {
+    vnode.context.$parent.$watch('currency', function (e) {
       parentCurrency = e;
       removeElements();
       actualProcess(address);
     });
-    vnode.context.$watch(binding.value, function(e) {
+    vnode.context.$watch(binding.value, function (e) {
       address = e;
       removeElements();
       actualProcess(e);
     });
-    const removeElements = function() {
+    const removeElements = function () {
       const child = el.parentNode.parentNode.lastChild;
       Object.keys(child.classList).forEach(item => {
         if (
@@ -38,11 +40,11 @@ const AddrResolver = {
         }
       });
     };
-    const actualProcess = async function(e) {
+    const actualProcess = async function (e) {
       const domain = e;
       const messagePar = document.createElement('p');
       const _this = vnode.context;
-      const checkDarklist = function(addr) {
+      const checkDarklist = function (addr) {
         const isDarklisted = Misc.isDarklisted(addr);
         if (isDarklisted.error) {
           removeElements();
@@ -59,32 +61,32 @@ const AddrResolver = {
       };
       try {
         const address = await resolution.addressOrThrow(domain, parentCurrency);
-        if (address) {
-          if (!checkDarklist(address)) {
-            const addCheck = WAValidator.validate(e, parentCurrency);
-            if (addCheck) {
-              _this.isValidAddress = addCheck;
-              _this.hexAddress = toChecksumAddress(e);
-              removeElements();
-              messagePar.classList.add('resolver-addr');
-              _this.isValidAddress = true;
-              _this.hexAddress = toChecksumAddress(address);
-              messagePar.innerText = _this.hexAddress;
-              el.parentNode.parentNode.appendChild(messagePar);
-            }
+        if (!checkDarklist(address)) {
+          const addCheck = WAValidator.validate(address, parentCurrency);
+          if (addCheck) {
+            _this.isValidAddress = addCheck;
+            _this.hexAddress = toChecksumAddress(address);
+            removeElements();
+            messagePar.classList.add('resolver-addr');
+            messagePar.innerText = _this.hexAddress;
+            el.parentNode.parentNode.appendChild(messagePar);
           }
         }
       } catch (err) {
+        console.log("catched err", err);
         messagePar.classList.add('resolver-error');
         if (err instanceof ResolutionError) {
+          console.log("this is a resolutionError with code ", err.code)
           messagePar.innerText = _this.$t(
             `ens.unstoppableResolution.${err.code}`,
             {
               domain,
-              method: resolution.serviceName(domain),
+              method: err.code != "UnsupportedDomain" ? resolution.serviceName(domain) : '',
               currencyticker: parentCurrency
             }
           );
+          console.log("messagePar");
+          console.log(messagePar);
           el.parentNode.parentNode.appendChild(messagePar);
         } else throw err;
       }
