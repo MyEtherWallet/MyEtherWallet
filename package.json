@@ -1,10 +1,6 @@
 {
   "name": "myetherwallet",
-<<<<<<< HEAD
   "version": "5.2.7",
-=======
-  "version": "5.2.6",
->>>>>>> a9606339d... updates
   "description": "Client side ethereum wallet",
   "license": "MIT",
   "repository": "https://github.com/myetherwallet/myetherwallet",
@@ -15,11 +11,7 @@
     "build:mewcx": "ROUTER_MODE=hash BUILD_TYPE=mewcx npm run build",
     "start:mewcx": "ROUTER_MODE=hash BUILD_TYPE=mewcx npm run buildwatch",
     "buildwatch": "npm run update && vue-cli-service build --watch",
-<<<<<<< HEAD
     "build": "npm run update && vue-cli-service build",
-=======
-    "build": "npm run update' vue-cli-service build",
->>>>>>> a9606339d... updates
     "test": "npm run update:lists && jest --clearCache && npm run test:unit",
     "lint": "npm run lint:styles && npm run lint:code && npm run lint:md",
     "codecov": "npm run test && codecov",
