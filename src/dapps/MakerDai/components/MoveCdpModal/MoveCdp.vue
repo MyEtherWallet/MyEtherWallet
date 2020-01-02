@@ -39,7 +39,10 @@
           </div>
         </div>
         <div class="buttons">
-          <standard-button :options="cancelButton" @click.native="closeModal" />
+          <standard-button
+            :options="cancelButton"
+            :click-function="closeModal"
+          />
           <standard-button
             :options="submitButton"
             :button-disabled="btnActive ? false : true"

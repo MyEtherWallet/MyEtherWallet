@@ -13,8 +13,7 @@
             name="name"
             type="text"
             @update="updateName"
-          >
-          </b-form-input>
+          ></b-form-input>
           <span>*</span>
         </div>
         <p v-if="errors.has('name')" class="error">
@@ -30,8 +29,8 @@
             <b-form-select
               v-validate="'required'"
               id="dappCategory"
-              :options="dappCategories"
               v-model="form.category"
+              :options="dappCategories"
               name="category"
               @change="updateCategory"
             ></b-form-select>
@@ -54,12 +53,12 @@
           <div class="tag-wrapper">
             <div ref="tagHolder" class="tag-holder">
               <tag-component
-                v-for="(tag, idx) in displayTags"
+                v-for="(_tag, idx) in displayTags"
                 ref="tagContainer"
-                :name="tag"
+                :key="_tag + idx"
+                :name="_tag"
                 :delete-func="deleteTag"
                 :idx="idx"
-                :key="tag + idx"
               />
             </div>
             <div class="dapp-input">
@@ -110,7 +109,6 @@
         </b-form-invalid-feedback>
         <div class="dapp-input">
           <b-form-textarea
-            v-validate="'max:800|required'"
             v-model="form.description"
             :placeholder="
               $t('dappsSubmission.about-your-dapp.description-placeholder')
@@ -136,8 +134,8 @@
             <b-form-select
               v-validate="'required'"
               id="dappUsMarket"
-              :options="dappUsMarketOptions"
               v-model="form.usMarket"
+              :options="dappUsMarketOptions"
               name="field"
               @change="updateUsMarket"
             ></b-form-select>
@@ -157,8 +155,8 @@
             <b-form-select
               v-validate="'required'"
               id="dappStatus"
-              :options="dappStatusOptions"
               v-model="form.dappStatus"
+              :options="dappStatusOptions"
               name="status"
               @change="updateDappStatus"
             ></b-form-select>
@@ -198,9 +196,7 @@
           />
           <span>*</span>
         </div>
-        <p v-show="mockFileError" class="error">
-          {{ mockFileError }}
-        </p>
+        <p v-show="mockFileError" class="error">{{ mockFileError }}</p>
       </b-form-group>
       <b-form-group>
         <label class="dapp-label"
@@ -278,9 +274,7 @@
             >*</span
           >
         </div>
-        <p v-show="dappIconError" class="error">
-          {{ dappIconError }}
-        </p>
+        <p v-show="dappIconError" class="error">{{ dappIconError }}</p>
       </b-form-group>
       <b-form-group>
         <label class="dapp-label"
@@ -326,8 +320,7 @@
                 accept="image/*"
                 type="file"
                 @change="onBannerChange"
-              >
-              </b-form-file>
+              ></b-form-file>
             </label>
           </div>
           <span
@@ -336,16 +329,13 @@
             >*</span
           >
         </div>
-        <p v-show="bannerError" class="error">
-          {{ bannerError }}
-        </p>
+        <p v-show="bannerError" class="error">{{ bannerError }}</p>
       </b-form-group>
       <b-form-group>
         <label class="dapp-label">{{
           $t('dappsSubmission.about-your-dapp.dapp-website')
         }}</label>
         <b-form-input
-          v-validate="'url:require_protocol'"
           id="dappWebsite"
           v-model="form.dappWebsite"
           :placeholder="$t('dappsSubmission.url-placeholder')"

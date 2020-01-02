@@ -10,21 +10,22 @@
       <div class="button-container">
         <standard-button
           :options="removeButton"
-          @click.native="continueRemove"
+          :click-function="continueRemove"
         />
-        <standard-button :options="cancelButton" @click.native="cancelRemove" />
+        <standard-button
+          :options="cancelButton"
+          :click-function="cancelRemove"
+        />
       </div>
     </b-modal>
   </div>
 </template>
 
 <script>
-import InterfaceBottomText from '@/components/InterfaceBottomText';
 import StandardButton from '@/components/Buttons/StandardButton';
 
 export default {
   components: {
-    'interface-bottom-text': InterfaceBottomText,
     'standard-button': StandardButton
   },
   props: {
