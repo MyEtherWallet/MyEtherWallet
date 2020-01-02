@@ -849,19 +849,17 @@ export default {
     },
     freeEth(val) {
       if (val[1] === null) {
-        this.currentCdp.freeEth(val[0])
-        .then(() =>{
+        this.currentCdp.freeEth(val[0]).then(() => {
           if (this.$route.path.includes('maker-sai')) {
             this.doUpdate();
           }
-        })
+        });
       } else {
-        this.currentCdp.freeEth(val[0], val[1])
-          .then(() =>{
-            if (this.$route.path.includes('maker-sai')) {
-              this.doUpdate();
-            }
-          })
+        this.currentCdp.freeEth(val[0], val[1]).then(() => {
+          if (this.$route.path.includes('maker-sai')) {
+            this.doUpdate();
+          }
+        });
       }
     },
     drawDai(val) {

@@ -4,23 +4,29 @@
  */
 
 function addSlice(array) {
-  if (array.slice) { return array; }
+  if (array.slice) {
+    return array;
+  }
 
   array.slice = function() {
-    var args = Array.prototype.slice.call(arguments);
+    const args = Array.prototype.slice.call(arguments);
     return new Uint8Array(Array.prototype.slice.apply(array, args));
-  }
+  };
 
   return array;
 }
 
 function isArrayish(value) {
-  if (!value || parseInt(value.length) != value.length || typeof(value) === 'string') {
+  if (
+    !value ||
+    parseInt(value.length) != value.length ||
+    typeof value === 'string'
+  ) {
     return false;
   }
 
-  for (var i = 0; i < value.length; i++) {
-    var v = value[i];
+  for (let i = 0; i < value.length; i++) {
+    const v = value[i];
     if (v < 0 || v >= 256 || parseInt(v) != v) {
       return false;
     }
@@ -30,58 +36,58 @@ function isArrayish(value) {
 }
 
 export function arrayify(value) {
-
   if (value && value.toHexString) {
     value = value.toHexString();
   }
 
   if (isHexString(value)) {
     value = value.substring(2);
-    if (value.length % 2) { value = '0' + value; }
+    if (value.length % 2) {
+      value = '0' + value;
+    }
 
-    var result = [];
-    for (var i = 0; i < value.length; i += 2) {
+    const result = [];
+    for (let i = 0; i < value.length; i += 2) {
       result.push(parseInt(value.substr(i, 2), 16));
     }
 
     return addSlice(new Uint8Array(result));
-
   }
   if (isArrayish(value)) {
     return addSlice(new Uint8Array(value));
   }
 }
 
-
 export function padZeros(value, length) {
   value = arrayify(value);
 
-  if (length < value.length) { throw new Error('cannot pad'); }
+  if (length < value.length) {
+    throw new Error('cannot pad');
+  }
 
-  var result = new Uint8Array(length);
+  const result = new Uint8Array(length);
   result.set(value, length - value.length);
   return addSlice(result);
 }
 
-
 function isHexString(value, length) {
-  if (typeof(value) !== 'string' || !value.match(/^0x[0-9A-Fa-f]*$/)) {
-    return false
+  if (typeof value !== 'string' || !value.match(/^0x[0-9A-Fa-f]*$/)) {
+    return false;
   }
-  if (length && value.length !== 2 + 2 * length) { return false; }
+  if (length && value.length !== 2 + 2 * length) {
+    return false;
+  }
   return true;
 }
 
-var HexCharacters = '0123456789abcdef';
+const HexCharacters = '0123456789abcdef';
 
 export function hexlify(value) {
-
   if (value && value.toHexString) {
     return value.toHexString();
   }
 
-  if (typeof(value) === 'number') {
-
+  if (typeof value === 'number') {
     let hex = '';
     while (value) {
       hex = HexCharacters[value & 0x0f] + hex;
@@ -89,7 +95,9 @@ export function hexlify(value) {
     }
 
     if (hex.length) {
-      if (hex.length % 2) { hex = '0' + hex; }
+      if (hex.length % 2) {
+        hex = '0' + hex;
+      }
       return '0x' + hex;
     }
 
@@ -104,12 +112,11 @@ export function hexlify(value) {
   }
 
   if (isArrayish(value)) {
-    var result = [];
-    for (var i = 0; i < value.length; i++) {
-      var v = value[i];
+    const result = [];
+    for (let i = 0; i < value.length; i++) {
+      const v = value[i];
       result.push(HexCharacters[(v & 0xf0) >> 4] + HexCharacters[v & 0x0f]);
     }
     return '0x' + result.join('');
   }
 }
-
