@@ -7,6 +7,9 @@ import {
   maxEthDraw,
   maxDai
 } from './helpers';
+import SaiProxy from './SaiProxyCreateAndExecute'
+import DSProxy from '@/dapps/MakerDai/makerHelpers/ABIs/DSProxy';
+import SaiTub from './SaiTub'
 import {padZeros, hexlify} from './ethersHelpers';
 import {createCurrency, createGetCurrency, Currency} from '@makerdao/currency'
 const { MKR, DAI, ETH } = Maker;
@@ -395,6 +398,15 @@ export default class MakerCDP {
         console.log(getCurrency(amount, ETH).toFixed('wei')); // todo remove dev item
         // const value = hexlify(padZeros(this.web3.utils.numberToHex(this.cdpId), 32))
         // console.log(value); // todo remove dev item
+
+        // SaiProxyCreateAndExecute (tub, cup, jam)
+        const contract = new this.web3.eth.Contract(SaiProxy, this.cdpService._saiProxyTubContract().address);
+        const data1 = contract.methods.free(this.cdpService._tubContract().address, this.byte32Id, getCurrency(amount, ETH).toFixed('wei')).encodeABI();
+        const proxyContract = new this.web3.eth.Contract(DSProxy, this._proxyAddress);
+        const data = proxyContract.methods.execute(this.cdpService._saiProxyTubContract().address, data1).encodeABI();;
+        console.log('data', data); // todo remove dev item
+        console.log(this.cdpService._saiProxyTubContract().address); // todo remove dev item
+        console.log('tub ', this.cdpService._tubContract().address); // todo remove dev item
         await this.cdpService._saiProxyTubContract().free(
           this.cdpService._tubContract().address,
           this.byte32Id,
