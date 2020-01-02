@@ -9,13 +9,8 @@ import {
 } from './helpers';
 import SaiProxy from './SaiProxyCreateAndExecute';
 import DSProxy from '@/dapps/MakerDai/makerHelpers/ABIs/DSProxy';
-import SaiTub from './SaiTub';
 import { padZeros, hexlify } from './ethersHelpers';
-import {
-  createCurrency,
-  createGetCurrency,
-  Currency
-} from '@makerdao/currency';
+import { createCurrency, createGetCurrency } from '@makerdao/currency';
 import { Toast } from '@/helpers';
 
 const { MKR, DAI, ETH } = Maker;
@@ -180,18 +175,14 @@ export default class MakerCDP {
           this.debtValue,
           this.ethPrice,
           this.minEth.times(0)
-        )
-          .minus(toBigNumber('0.000000000000000001'))
-          .toFixed(18);
+        ).toFixed(18);
       }
       return maxEthDraw(
         this.ethCollateral,
         this.liquidationRatio,
         this.debtValue,
         this.ethPrice
-      )
-        .minus(toBigNumber('0.000000000000000001'))
-        .toFixed(18);
+      ).toFixed(18);
     }
     return toBigNumber(0);
   }
@@ -373,7 +364,6 @@ export default class MakerCDP {
       acknowledgeBypass
     ) {
       try {
-
         if (this.noProxy) {
           return;
         }
@@ -397,7 +387,7 @@ export default class MakerCDP {
         const data = proxyContract.methods
           .execute(contractAddress, data1)
           .encodeABI();
-       return this.web3.eth
+        return this.web3.eth
           .sendTransaction({
             to: this._proxyAddress,
             from: this.currentAddress,

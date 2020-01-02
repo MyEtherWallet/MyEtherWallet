@@ -1,3 +1,7 @@
+### Bug
+
+- Fix issue with withdrawing ETH from CDP [#1811](https://github.com/MyEtherWallet/MyEtherWallet/pull/1811)
+
 ### Release v5.2.8-hotfix.1
 
 - Fix Schedule View [#1781](https://github.com/MyEtherWallet/MyEtherWallet/pull/1781)
