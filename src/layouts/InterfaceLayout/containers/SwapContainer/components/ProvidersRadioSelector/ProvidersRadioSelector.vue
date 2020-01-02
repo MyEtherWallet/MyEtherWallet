@@ -62,7 +62,9 @@
             <p :class="[maxCheck(provider) ? 'error-message-container' : '']">
               {{ maxNote(provider) }}
             </p>
-            {{ otherTextDisplay(provider.additional.display) }}
+            <span class="slippage-text">{{
+              otherTextDisplay(provider.additional.display)
+            }}</span>
           </div>
         </li>
       </ul>

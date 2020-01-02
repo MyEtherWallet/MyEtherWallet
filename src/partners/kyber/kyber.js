@@ -237,7 +237,7 @@ export default class Kyber {
   }
 
   async rateDivergence(rate, fromCurrency, toCurrency, fromValue) {
-    if (toBigNumber(rate).lte(0)) return toBigNumber(0);
+    if (toBigNumber(rate).lte(0)) return toBigNumber(-1);
     const val = await this.ethEquivalentQty(
       fromCurrency,
       toCurrency,
