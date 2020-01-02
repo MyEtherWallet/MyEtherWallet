@@ -1,3 +1,6 @@
+### Devop
+- Enable translations dropdown and add in the other languages [#1703] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1703)
+
 ### Bug
 
 - Fix header items for other languages [#1791](https://github.com/MyEtherWallet/MyEtherWallet/pull/1791)
