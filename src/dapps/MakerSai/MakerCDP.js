@@ -7,11 +7,17 @@ import {
   maxEthDraw,
   maxDai
 } from './helpers';
-import SaiProxy from './SaiProxyCreateAndExecute'
+import SaiProxy from './SaiProxyCreateAndExecute';
 import DSProxy from '@/dapps/MakerDai/makerHelpers/ABIs/DSProxy';
-import SaiTub from './SaiTub'
-import {padZeros, hexlify} from './ethersHelpers';
-import {createCurrency, createGetCurrency, Currency} from '@makerdao/currency'
+import SaiTub from './SaiTub';
+import { padZeros, hexlify } from './ethersHelpers';
+import {
+  createCurrency,
+  createGetCurrency,
+  Currency
+} from '@makerdao/currency';
+import { Toast } from '@/helpers';
+
 const { MKR, DAI, ETH } = Maker;
 
 const toBigNumber = num => {
@@ -174,14 +180,18 @@ export default class MakerCDP {
           this.debtValue,
           this.ethPrice,
           this.minEth.times(0)
-        ).minus(toBigNumber("0.000000000000000001")).toFixed(18);
+        )
+          .minus(toBigNumber('0.000000000000000001'))
+          .toFixed(18);
       }
       return maxEthDraw(
         this.ethCollateral,
         this.liquidationRatio,
         this.debtValue,
         this.ethPrice
-      ).minus(toBigNumber("0.000000000000000001")).toFixed(18);
+      )
+        .minus(toBigNumber('0.000000000000000001'))
+        .toFixed(18);
     }
     return toBigNumber(0);
   }
@@ -230,15 +240,14 @@ export default class MakerCDP {
   }
 
   async updateValues(cdpId = this.cdpId) {
-    console.log(this.web3.utils.numberToHex(this.cdpId)); // todo remove dev item
-       try{
-         this.byte32Id = hexlify(padZeros(this.web3.utils.numberToHex(this.cdpId), 32))
-         console.log(this.byte32Id); // todo remove dev item
-        // console.log(padZeros(new this.web3.utils.BN(this.cdpId), 32)); // todo remove dev item
-           } catch(e){
-               // eslint-disable-next-line
-               console.error(e);
-           }
+    try {
+      this.byte32Id = hexlify(
+        padZeros(this.web3.utils.numberToHex(this.cdpId), 32)
+      );
+    } catch (e) {
+      // eslint-disable-next-line
+      console.error(e);
+    }
     this._proxyAddress = await this.services.getProxy();
     this.noProxy = this._proxyAddress === null;
     if (this._proxyAddress) {
@@ -364,70 +373,40 @@ export default class MakerCDP {
       acknowledgeBypass
     ) {
       try {
-        function addSlice(array) {
-          if (array.slice) { return array; }
-
-          array.slice = function() {
-            var args = Array.prototype.slice.call(arguments);
-            return new Uint8Array(Array.prototype.slice.apply(array, args));
-          }
-
-          return array;
-        }
-
-        function padZeros(value, length) {
-          value = arrayify(value);
-
-          if (length < value.length) { throw new Error('cannot pad'); }
-
-          var result = new Uint8Array(length);
-          result.set(value, length - value.length);
-          return addSlice(result);
-        }
 
         if (this.noProxy) {
           return;
         }
         this.needsUpdate = true;
-        // Source location
-        // packages/dai/src/eth/EthereumCdpService.js:425
-        console.log(this.cdpService._saiProxyTubContract()); // todo remove dev item
         const currencies = {};
         currencies.ETH = createCurrency('ETH');
         const getCurrency = createGetCurrency(currencies);
-        console.log(getCurrency(amount, ETH).toFixed('wei')); // todo remove dev item
-        // const value = hexlify(padZeros(this.web3.utils.numberToHex(this.cdpId), 32))
-        // console.log(value); // todo remove dev item
-
-        // SaiProxyCreateAndExecute (tub, cup, jam)
-        const contract = new this.web3.eth.Contract(SaiProxy, this.cdpService._saiProxyTubContract().address);
-        const data1 = contract.methods.free(this.cdpService._tubContract().address, this.byte32Id, getCurrency(amount, ETH).toFixed('wei')).encodeABI();
-        const proxyContract = new this.web3.eth.Contract(DSProxy, this._proxyAddress);
-        const data = proxyContract.methods.execute(this.cdpService._saiProxyTubContract().address, data1).encodeABI();;
-        console.log('data', data); // todo remove dev item
-        console.log(this.cdpService._saiProxyTubContract().address); // todo remove dev item
-        console.log('tub ', this.cdpService._tubContract().address); // todo remove dev item
-        await this.cdpService._saiProxyTubContract().free(
-          this.cdpService._tubContract().address,
-          this.byte32Id,
-          getCurrency(amount, ETH).toFixed('wei'),
-          {
-            dsProxy: this._proxyAddress,
-            metadata: {
-              action: {
-                name: 'free',
-                id: this.cdpId,
-                amount: getCurrency(amount, ETH),
-                proxy: this._proxyAddress
-              }
-            }
-          }
+        const contractAddress = '0x526af336d614ade5cc252a407062b8861af998f5';
+        const contract = new this.web3.eth.Contract(SaiProxy, contractAddress);
+        const data1 = contract.methods
+          .free(
+            this.cdpService._tubContract().address,
+            this.byte32Id,
+            getCurrency(amount, ETH).toFixed('wei')
+          )
+          .encodeABI();
+        const proxyContract = new this.web3.eth.Contract(
+          DSProxy,
+          this._proxyAddress
         );
-        // await this.cdpService.freeEthProxy(
-        //   this._proxyAddress,
-        //   this.cdpId,
-        //   amount
-        // );
+        const data = proxyContract.methods
+          .execute(contractAddress, data1)
+          .encodeABI();
+       return this.web3.eth
+          .sendTransaction({
+            to: this._proxyAddress,
+            from: this.currentAddress,
+            data: data,
+            gas: 2000000
+          })
+          .catch(err => {
+            Toast.responseHandler(err, Toast.ERROR);
+          });
       } catch (e) {
         // eslint-disable-next-line
         console.error(e);
