@@ -9,7 +9,10 @@
       lazy
     >
       <div class="modal-contents">
-        <div v-show="title === 'Add a New Contact'" class="add-new-container">
+        <div
+          v-show="title === addressBookActions.ADD"
+          class="add-new-container"
+        >
           <p class="title-header">{{ $t('interface.address-book.address') }}</p>
           <div class="address-inputs">
             <blockie
@@ -28,7 +31,7 @@
             />
           </div>
         </div>
-        <div v-show="title === 'Edit Address'" class="edit-address">
+        <div v-show="title === addressBookActions.EDIT" class="edit-address">
           <div class="addr-container">
             <blockie
               :address="contactAddress"
@@ -49,7 +52,11 @@
             {{ $t('interface.address-book.nickname') }}
           </p>
           <div
-            :class="title === 'Edit Address' ? 'nickname-input-container' : ''"
+            :class="
+              title === addressBookActions.EDIT
+                ? 'nickname-input-container'
+                : ''
+            "
           >
             <input
               v-model="contactNickname"
@@ -63,7 +70,7 @@
                 @click="updateAddrBook()"
               >
                 {{
-                  title === 'Edit Address'
+                  title === addressBookActions.EDIT
                     ? $t('interface.address-book.update')
                     : $t('interface.address-book.add')
                 }}
@@ -72,7 +79,7 @@
           </div>
         </div>
         <p
-          v-show="title === 'Edit Address'"
+          v-show="title === addressBookActions.EDIT"
           class="remove-txt"
           @click="removeContact()"
         >
@@ -110,13 +117,20 @@ export default {
     return {
       contactNickname: '',
       contactAddress: '',
-      isValidAddress: false
+      isValidAddress: false,
+      addressBookActions: {
+        EDIT: 'Edit Address',
+        ADD: 'Add a New Contact'
+      }
     };
   },
   computed: {
     ...mapState(['addressBook']),
     isBtnDisabled() {
-      if (this.title === 'Edit Address' && this.addressBook[this.currentIdx]) {
+      if (
+        this.title === this.addressBookActions.EDIT &&
+        this.addressBook[this.currentIdx]
+      ) {
         return (
           this.contactNickname === this.addressBook[this.currentIdx].nickname
         );
@@ -126,7 +140,7 @@ export default {
   },
   watch: {
     currentIdx() {
-      if (this.title === 'Edit Address') {
+      if (this.title === this.addressBookActions.EDIT) {
         this.contactAddress = this.addressBook[this.currentIdx].address;
         this.contactNickname = this.addressBook[this.currentIdx].nickname;
       } else {
@@ -153,7 +167,9 @@ export default {
       this.isValidAddress = obj.valid;
     },
     updateAddrBook() {
-      this.title === 'Edit Address' ? this.updateContact() : this.addContact();
+      this.title === this.addressBookActions.EDIT
+        ? this.updateContact()
+        : this.addContact();
     },
     updateContact() {
       this.addressBook[this.currentIdx].nickname = this.contactNickname;
