@@ -51,6 +51,7 @@ const AddrResolver = {
       const domain = e;
       const messagePar = document.createElement('p');
       const _this = vnode.context;
+<<<<<<< HEAD
       if (resolution.isSupportedDomain(domain)) {
         try {
           const address = await resolution.addressOrThrow(
@@ -78,7 +79,53 @@ const AddrResolver = {
             );
             el.parentNode.parentNode.appendChild(messagePar);
           }
+=======
+      const checkDarklist = function(addr) {
+        const isDarklisted = Misc.isDarklisted(addr);
+        if (isDarklisted.error) {
+          removeElements();
+          _this.isValidAddress = false;
+          _this.hexAddress = '';
+          messagePar.innerText =
+            isDarklisted.msg.length > 0
+              ? isDarklisted.msg
+              : _this.$t('ens.unstoppableResolution.address-reported-error');
+          el.parentNode.parentNode.appendChild(messagePar);
+          return true;
         }
+        return false;
+      };
+      try {
+        const address = await resolution.addressOrThrow(domain, parentCurrency);
+        if (address) {
+          if (!checkDarklist(address)) {
+            const addCheck = WAValidator.validate(e, parentCurrency);
+            if (addCheck) {
+              _this.isValidAddress = addCheck;
+              _this.hexAddress = toChecksumAddress(e);
+              removeElements();
+              messagePar.classList.add('resolver-addr');
+              _this.isValidAddress = true;
+              _this.hexAddress = toChecksumAddress(address);
+              messagePar.innerText = _this.hexAddress;
+              el.parentNode.parentNode.appendChild(messagePar);
+            }
+          }
+>>>>>>> a9606339d... updates
+        }
+      } catch (err) {
+        messagePar.classList.add('resolver-error');
+        if (err instanceof ResolutionError) {
+          messagePar.innerText = _this.$t(
+            `ens.unstoppableResolution.${err.code}`,
+            {
+              domain,
+              method: resolution.serviceName(domain),
+              currencyticker: parentCurrency
+            }
+          );
+          el.parentNode.parentNode.appendChild(messagePar);
+        } else throw err;
       }
     };
   }
