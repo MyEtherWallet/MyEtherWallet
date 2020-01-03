@@ -31,21 +31,36 @@
           @back="comeBack"
         ></nft-details>
       </div>
-      <div v-if="!showDetails">
+
+      <div v-if="!showDetails" class="product-list-container">
         <content-block-title :button-text="ntfCount" :title="nftTitle" />
-        <!-- TODO Clean Up Design and Improve Mobile -->
-        <div class="grid-container">
-          <div v-for="nft in nftToShow" :key="nft.key" class="kitty">
-            <div class="kitty-img" @click="showNftDetails(nft)">
-              <div v-show="!hasImage(nft)" class="placeholder">
-                <div class="animated-background"></div>
+
+        <b-row>
+          <b-col v-for="nft in nftToShow" :key="nft.key" cols="4" class="mb-4">
+            <div
+              class="text-center cursor-pointer"
+              @click="showNftDetails(nft)"
+            >
+              <div
+                v-if="!hasImage(nft)"
+                class="spinner-box d-flex justify-content-center align-items-center"
+              >
+                <b-spinner
+                  label="Large Spinner"
+                  variant="secondary"
+                  style="width: 50px; height: 50px;"
+                ></b-spinner>
               </div>
-              <div v-show="hasImage(nft)">
+              <div v-show="hasImage(nft)" class="product-img">
                 <img :src="getImage(nft)" alt @load="hasLoaded(nft)" />
               </div>
-              <p>#{{ nft.token | ConcatToken }}</p>
+              <p class="text-monospace">#{{ nft.token | ConcatToken }}</p>
             </div>
-          </div>
+          </b-col>
+        </b-row>
+
+        <!-- TODO Clean Up Design and Improve Mobile -->
+        <div class="grid-container">
           <div v-show="selectedNtf.count > 9" class="internal-nav-container">
             <span
               v-show="startIndex > 0"
