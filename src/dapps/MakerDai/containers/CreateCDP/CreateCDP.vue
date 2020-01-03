@@ -152,6 +152,14 @@
           </li>
         </ul>
       </div>
+      <div v-if="!hasProxy" class="buttons-container">
+        <div
+          class="submit-button large-round-button-green-filled"
+          @click="BuildProxy()"
+        >
+          Create Proxy
+        </div>
+      </div>
       <div
         v-if="selectedCurrency.symbol !== 'ETH' && !hasEnoughAllowance()"
         class="buttons-container"
@@ -303,16 +311,16 @@ export default {
   computed: {
     ...mapState(['account', 'gasPrice', 'web3', 'network', 'ens']),
     validInputs() {
+      if (!this.hasProxy) return false;
       if (toBigNumber(this.ethQty).isNaN() || toBigNumber(this.daiQty).isNaN())
         return false;
       if (toBigNumber(this.ethQty).gt(0)) {
         if (toBigNumber(this.ethQty).lte(this.values.minEth)) return false;
         if (this.emptyMakerCreated) {
-          if (toBigNumber(this.makerCDP.minDai).lt(this.daiQty)) return false;
-        } else if (toBigNumber(20).lt(this.daiQty)) return false;
+          if (toBigNumber(this.makerCDP.minDai).gt(this.daiQty)) return false;
+        } else if (toBigNumber(20).gt(this.daiQty)) return false;
         if (toBigNumber(this.maxDaiDraw).lte(toBigNumber(this.daiQty)))
           return false;
-
         if (this.emptyMakerCreated) {
           if (toBigNumber(this.collatRatio).lte(this.makerCDP.liquidationRatio))
             return false;
@@ -320,6 +328,9 @@ export default {
         return this.hasEnoughEth;
       }
       return false;
+    },
+    hasProxy() {
+      return this.getValueOrFunction('proxyAddress');
     },
     hasEnoughEth() {
       if (this.emptyMakerCreated) {
@@ -457,6 +468,23 @@ export default {
       this.makerCDP = await this.buildEmpty();
       this.$forceUpdate();
       this.emptyMakerCreated = true;
+    },
+    BuildProxy() {
+      if (this.setupComplete) {
+        this.getValueOrFunction('getProxy')().then(proxy => {
+          this.proxyAddress = proxy;
+          if (!this.proxyAddress) {
+            this.getValueOrFunction('_proxyService')
+              .build()
+              .then(() => {
+                return this.getValueOrFunction('_proxyService').currentProxy();
+              })
+              .then(res => {
+                this.proxyAddress = res;
+              });
+          }
+        });
+      }
     },
     displayPercentValue,
     displayFixedValue,
