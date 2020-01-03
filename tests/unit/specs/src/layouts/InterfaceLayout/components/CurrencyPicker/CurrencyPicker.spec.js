@@ -56,13 +56,13 @@ describe('CurrencyPicker.vue', () => {
         .findAll('.dropdown-container p')
         .at(0)
         .isVisible()
-    ).toBe(true);
+    ).toBe(false);
     expect(
       wrapper
         .findAll('.dropdown-container p')
         .at(1)
         .isVisible()
-    ).toBe(false);
+    ).toBe(true);
     wrapper.setProps({ token: false });
     expect(
       wrapper
@@ -75,7 +75,7 @@ describe('CurrencyPicker.vue', () => {
         .findAll('.dropdown-container p')
         .at(1)
         .isVisible()
-    ).toBe(true);
+    ).toBe(false);
   });
 
   xit('should render correct search data', () => {
