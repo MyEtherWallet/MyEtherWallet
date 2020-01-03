@@ -1,14 +1,33 @@
 <template>
   <div class="nft-side-menu">
     <div class="desktop-menu">
-      <span class="add-custom" @click="openCustomModal"
-        >+{{ $t('nftManager.custom') }}</span
-      >
+      <div class="d-flex align-items-center">
+        <div>
+          <h2 class="mr-4 mb-0">Available NFT</h2>
+        </div>
+        <b-button
+          size="sm"
+          variant="outline-primary"
+          @click="openCustomModal"
+          >{{ $t('nftManager.custom') }}</b-button
+        >
+      </div>
+      <p class="mb-4">
+        Select an item to see details or add your custom NFT.
+      </p>
+
       <b-row>
-        <b-col v-for="i in sortByCount" :key="i.key" cols="3" class="mb-4">
+        <b-col
+          v-for="i in sortByCount"
+          :key="i.key"
+          cols="4"
+          md="4"
+          lg="3"
+          class="mb-4"
+        >
           <NftProductCard
             :data="i"
-            :class="i.contract === selected ? 'selected' : ''"
+            :selected="i.contract === selected ? true : false"
             @click.native="selectNft(i)"
           >
             <i

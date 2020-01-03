@@ -1,11 +1,18 @@
 <template>
-  <b-card class="text-center" :class="data.count > 0 ? 'active' : 'inactive'">
+  <b-card
+    class="text-center"
+    :class="[
+      data.count > 0 ? 'active' : 'inactive',
+      selected ? 'selected' : ''
+    ]"
+  >
+    <pre v-if="false">{{ data }}</pre>
     <div class="card-image mb-2">
       <img v-if="data.itemName" :src="getImgUrl(data.itemName)" />
       <img v-else :src="getImgUrl(data.title)" />
     </div>
     <div class="count text-dark">{{ data.count }}</div>
-    <p class="font-weight-bold text-dark">{{ data.title }}</p>
+    <p class="nft-name font-weight-bold text-dark">{{ data.title }}</p>
   </b-card>
 </template>
 
@@ -18,6 +25,10 @@ export default {
       default: function() {
         return {};
       }
+    },
+    selected: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -46,17 +57,22 @@ export default {
 
 <style lang="scss" scoped>
 .count {
-  font-size: 30px;
-  font-weight: 500;
+  font-size: 25px;
+  font-weight: 700;
+}
+
+.nft-name {
+  font-size: 10px;
 }
 
 .card-image img {
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
 }
 
 .card {
   height: 100%;
+  border-color: transparent;
 }
 
 .card-body {
@@ -65,11 +81,18 @@ export default {
 }
 
 .inactive {
-  opacity: 0.4;
+  opacity: 0.3;
 }
 
 .active {
   opacity: 1;
   cursor: pointer;
+}
+
+.selected {
+  border-color: black;
+  .card-body {
+    background-color: #e0e0e0;
+  }
 }
 </style>
