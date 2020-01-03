@@ -1,8 +1,5 @@
 <template>
   <div class="extension-wallets-container">
-    <div class="wallet-side-menu-container">
-      <wallet-side-menu />
-    </div>
     <div class="wallets-container">
       <interface-network-modal ref="network" />
       <watch-only-modal
@@ -38,7 +35,6 @@
 
 <script>
 import { KEYSTORE as keyStoreType } from '@/wallets/bip44/walletTypes';
-import WalletSideMenu from '../../components/WalletSideMenu';
 import WatchOnlyModal from '../../components/WatchOnlyModal';
 import PasswordOnlyModal from '../../components/PasswordOnlyModal';
 import { WATCH_ONLY } from '@/wallets/bip44/walletTypes';
@@ -52,7 +48,6 @@ import { isAddress, toChecksumAddress } from '@/helpers/addressUtils';
 import InterfaceNetworkModal from '@/layouts/InterfaceLayout/components/InterfaceNetworkModal';
 export default {
   components: {
-    'wallet-side-menu': WalletSideMenu,
     'watch-only-modal': WatchOnlyModal,
     'password-only-modal': PasswordOnlyModal,
     'interface-network-modal': InterfaceNetworkModal
@@ -144,12 +139,17 @@ export default {
         const networkProps = JSON.parse(changed['defNetwork'].newValue);
         const network = this.$store.state.Networks[networkProps.key].find(
           actualNetwork => {
-            return actualNetwork.url === networkProps.url;
+            return actualNetwork.service === networkProps.service;
           }
         );
-        this.$store.dispatch('switchNetwork', network).then(() => {
-          this.$store.dispatch('setWeb3Instance');
-        });
+        this.$store
+          .dispatch(
+            'switchNetwork',
+            !network ? this.$store.state.Networks[networkProps.key][0] : network
+          )
+          .then(() => {
+            this.$store.dispatch('setWeb3Instance');
+          });
       } else {
         this.$store.dispatch('setWeb3Instance');
       }

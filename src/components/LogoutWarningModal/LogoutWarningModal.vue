@@ -13,8 +13,8 @@
         <h2>{{ $t('interface.oops') }}</h2>
         <p>{{ $t('interface.logout-warning') }}</p>
         <div class="buttons">
-          <standard-button :options="buttonNo" @click.native="cancel" />
-          <standard-button :options="buttonYes" @click.native="logout" />
+          <standard-button :options="buttonNo" :click-function="cancel" />
+          <standard-button :options="buttonYes" :click-function="logout" />
         </div>
       </div>
     </b-modal>
