@@ -1,5 +1,11 @@
 ### Release v5.2.9
 
+### Feature
+
+- Update address book [#1795](https://github.com/MyEtherWallet/MyEtherWallet/pull/1795)
+
+### Devop
+
 ### Devop
 - Notification pruning[#1755](https://github.com/MyEtherWallet/MyEtherWallet/pull/1755)
 - Enable translations dropdown and add in the other languages [#1703] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1703)
