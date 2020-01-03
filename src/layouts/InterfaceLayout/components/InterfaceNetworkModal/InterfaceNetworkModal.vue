@@ -423,7 +423,7 @@ export default {
                 defChainID: network.type.chainID,
                 defNetVersion: id,
                 defNetwork: JSON.stringify({
-                  url: network.url,
+                  service: network.service,
                   key: network.type.name
                 })
               });
