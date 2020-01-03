@@ -1,3 +1,7 @@
+### Devop
+
+- Notification pruning[#1755](https://github.com/MyEtherWallet/MyEtherWallet/pull/1755)
+
 ### Bug
 
 - Hide blockexplorrer link on irrelevant pages and add back tx history for cx header [#1800](https://github.com/MyEtherWallet/MyEtherWallet/pull/1800)
@@ -40,6 +44,7 @@
 ### Devop
 
 - Revert trezor version back to 7[#1737](https://github.com/MyEtherWallet/MyEtherWallet/pull/1772)
+- Notification pruning[#1755](https://github.com/MyEtherWallet/MyEtherWallet/pull/1755)
 - Refactor maker translations[#1737](https://github.com/MyEtherWallet/MyEtherWallet/pull/1737)
 - Add new MEW nodes[#1750](https://github.com/MyEtherWallet/MyEtherWallet/pull/1750)
 - Fix UI overflow [#1776](https://github.com/MyEtherWallet/MyEtherWallet/pull/1776)
