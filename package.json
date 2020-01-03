@@ -1,18 +1,6 @@
 {
   "name": "myetherwallet",
-<<<<<<< HEAD
-<<<<<<< HEAD
   "version": "5.2.8-hotfix.2",
-=======
-<<<<<<< HEAD
-  "version": "5.2.7",
-=======
-  "version": "5.2.6",
->>>>>>> a9606339d... updates
->>>>>>> updates
-=======
-  "version": "5.2.7",
->>>>>>> cleaning up after rebase
   "description": "Client side ethereum wallet",
   "scripts": {
     "build:offline": "WEBPACK_INTEGRITY=false npm run build:hash",
@@ -24,18 +12,6 @@
     "build:mewcx": "ROUTER_MODE=hash BUILD_TYPE=mewcx npm run build",
     "start:mewcx": "ROUTER_MODE=hash BUILD_TYPE=mewcx npm run start",
     "buildwatch": "npm run update && vue-cli-service build --watch",
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-    "build": "npm run update && vue-cli-service build",
-=======
-    "build": "npm run update' vue-cli-service build",
->>>>>>> a9606339d... updates
->>>>>>> updates
-=======
-    "build": "npm run update && vue-cli-service build",
->>>>>>> cleaning up after rebase
     "test": "npm run update:lists && jest --clearCache && npm run test:unit",
     "codecov": "npm run test && codecov",
     "dev": "npm run update && npm run update:mainlists && vue-cli-service serve",
@@ -54,11 +30,8 @@
   "dependencies": {
     "@sentry/browser": "5.10.2",
     "@sentry/integrations": "5.10.2",
-<<<<<<< HEAD
-    "core-js": "3.1.2",
-=======
+    "core-js": "3.6.1",
     "@unstoppabledomains/resolution": "1.0.15",
->>>>>>> hot-fix
     "html2canvas": "1.0.0-rc.5",
     "idna-uts46": "1.1.0",
     "js-sha1": "0.6.0",
@@ -90,16 +63,6 @@
     "@ensdomains/dnsregistrar": "0.3.9",
     "@ethereum-alarm-clock/lib": "0.3.5",
     "@keepkey/keepkey.js": "1.2.3",
-<<<<<<< HEAD
-    "@ledgerhq/hw-app-eth": "5.0.0",
-    "@ledgerhq/hw-transport-u2f": "5.0.0",
-    "@ledgerhq/hw-transport-webusb": "5.0.0",
-    "@makerdao/currency": "0.9.6",
-    "@makerdao/dai": "0.23.0-rc.5",
-    "@makerdao/dai-plugin-config": "0.2.14-rc.1",
-    "@makerdao/dai-plugin-mcd": "1.0.4",
-    "@makerdao/dai-plugin-migrations": "1.0.9",
-=======
     "@ledgerhq/hw-app-eth": "5.2.0",
     "@ledgerhq/hw-transport-u2f": "5.2.0",
     "@ledgerhq/hw-transport-webusb": "5.2.0",
@@ -108,7 +71,6 @@
     "@makerdao/dai-plugin-config": "0.2.14-rc.1",
     "@makerdao/dai-plugin-mcd": "1.0.5",
     "@makerdao/dai-plugin-migrations": "1.0.10",
->>>>>>> hot-fix
     "@myetherwallet/eth-token-balance": "0.1.6",
     "@myetherwallet/mewconnect-web-client": "2.0.0-beta.23",
     "@vue/cli-plugin-babel": "4.1.1",
@@ -129,21 +91,14 @@
     "codecov": "3.6.1",
     "copy-webpack-plugin": "5.1.1",
     "detectrtc": "1.3.9",
-<<<<<<< HEAD
-    "eslint": "6.7.2",
-=======
->>>>>>> hot-fix
+    "eslint": "6.8.0",
     "eslint-plugin-prettier": "3.1.2",
     "eslint-plugin-security": "1.4.0",
     "eslint-plugin-vue": "6.0.1",
     "eth-ens-namehash": "2.0.8",
     "ethereum-ens": "0.7.7",
     "ethereumjs-common": "1.5.0",
-<<<<<<< HEAD
-    "ethereumjs-tx": "2.1.1",
-=======
     "ethereumjs-tx": "2.1.2",
->>>>>>> hot-fix
     "ethereumjs-util": "6.2.0",
     "ethereumjs-wallet": "0.6.3",
     "ethjs-unit": "0.1.6",
@@ -181,11 +136,7 @@
     "u2f-api": "1.1.1",
     "uglify-es": "3.3.9",
     "uuid": "3.3.3",
-<<<<<<< HEAD
-    "vue-i18n": "8.15.2",
-=======
     "vue-i18n": "8.15.3",
->>>>>>> hot-fix
     "vue-template-compiler": "2.6.11",
     "vue-worker": "1.2.1",
     "wallet-address-validator": "0.2.4",

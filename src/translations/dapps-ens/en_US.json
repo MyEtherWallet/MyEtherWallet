@@ -63,6 +63,7 @@
   "multi-coin": "Multi-coin",
   "txt-record": "Text Records",
   "unstoppableResolution": {
+    "address-reported-error": "Address has been reported. Please make sure you are sending funds to the correct address.",
     "UnregisteredDomain": "Domain {domain} is not registered",
     "UnspecifiedResolver": "Domain {domain} is not configured",
     "UnsupportedDomain": "Domain {domain} is not supported",
