@@ -1,68 +1,80 @@
 <template>
-  <div>
-    <div class="currency-ops-new">
-      <div style="padding: 10px">
-        <p @click="checkMigrateContractSaiBalance">
-          <b>
-            {{
-              $t('dappsMaker.current-sai-balance', {
-                value: migrateContractBalance
-              })
-            }}</b
-          >
-        </p>
-        <div v-show="noSaiAvailable && !needsAtLeast20">
-          {{ $t('dappsMaker.not-enough-sai') }}
+  <div style="max-width: 500px;">
+    <div class="d-flex align-items-center mb-5">
+      <h3 class="mr-2 ">
+        {{ $t('dappsMaker.migrate-single-collateral-to-multi-collateral') }}
+      </h3>
+      <img :src="DaiIcon" class="icon-size" />
+    </div>
+    <div>
+      <div class="mb-5">
+        <div class="mb-2">
+          <b>{{ $t('dappsMaker.current-balance') }}</b>
         </div>
-        <div v-show="needsAtLeast20" style="padding: 10px">
-          {{
-            $t('dappsMaker.needs-at-least-20', {
-              value: migrateContractBalance
-            })
-          }}
-        </div>
+        <b-form-input
+          v-model="migrateContractBalance"
+          readonly
+          class="mb-1"
+        ></b-form-input>
+        <b-button variant="secondary" @click="checkMigrateContractSaiBalance">{{
+          $t('dappsMaker.check-balance')
+        }}</b-button>
       </div>
 
-      <div class="currency-picker-container">
-        <div class="interface__block-title">
-          {{ $t('dappsMaker.migrate-single-collateral-to-multi-collateral') }}
-        </div>
-        <h4 v-show="!cdpDetailsLoaded">
+      <div v-show="noSaiAvailable && !needsAtLeast20">
+        {{ $t('dappsMaker.not-enough-sai') }}
+      </div>
+      <div v-show="needsAtLeast20" style="padding: 10px">
+        {{
+          $t('dappsMaker.needs-at-least-20', {
+            value: migrateContractBalance
+          })
+        }}
+      </div>
+    </div>
+
+    <div class="currency-picker-container">
+      <div class="mb-2">
+        <b>{{ $t('dappsMaker.your-cdps') }}</b>
+      </div>
+
+      <div v-if="!cdpDetailsLoaded" class="d-flex align-items-center">
+        <b-spinner class="mr-3" variant="primary" label="Spinning"></b-spinner>
+        <div>
           {{ $t('dappsMaker.loading-your-cdps') }}
-        </h4>
-        <div v-for="cdpId in cdps" :key="cdpId">
-          <div
-            :class="[
-              'dropdown-text-container',
-              'dropdown-container',
-              'no-point',
-              cdpId === selectedCdp ? 'selectedCDP' : ''
-            ]"
-            @click="selectCDP(cdpId)"
-          >
-            <p>
-              <span class="cc DAI cc-icon cc-icon-dai currency-symbol" />
-              {{ cdpId }}
-              <span class="subname">- CDP </span>
-            </p>
-          </div>
-        </div>
-        <div v-show="noCdpsToMigrateFound">
-          {{ $t('dappsMaker.no-cdps-to-migrate-found') }}
-        </div>
-        <div class="buttons-container">
-          <div
-            :class="[
-              validInputs ? '' : 'disabled',
-              'submit-button large-round-button-green-filled'
-            ]"
-            @click="beginMigration"
-          >
-            {{ $t('dappsMaker.migrate') }}
-          </div>
         </div>
       </div>
-      <div></div>
+      <div v-for="cdpId in cdps" :key="cdpId">
+        <div
+          :class="[
+            'dropdown-text-container',
+            'dropdown-container',
+            'no-point',
+            cdpId === selectedCdp ? 'selectedCDP' : ''
+          ]"
+          @click="selectCDP(cdpId)"
+        >
+          <p>
+            <span class="cc DAI cc-icon cc-icon-dai currency-symbol" />
+            {{ cdpId }}
+            <span class="subname">- {{ $t('dappsMaker.cdp') }} </span>
+          </p>
+        </div>
+      </div>
+      <div v-show="noCdpsToMigrateFound">
+        {{ $t('dappsMaker.no-cdps-to-migrate-found') }}
+      </div>
+      <div class="buttons-container">
+        <div
+          :class="[
+            validInputs ? '' : 'disabled',
+            'submit-button large-round-button-green-filled'
+          ]"
+          @click="beginMigration"
+        >
+          {{ $t('dappsMaker.migrate') }}
+        </div>
+      </div>
     </div>
   </div>
 </template>
