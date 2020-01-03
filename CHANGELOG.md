@@ -1,3 +1,7 @@
+### Feature
+
+- Update address book [#1795](https://github.com/MyEtherWallet/MyEtherWallet/pull/1795)
+
 ### Devop
 
 - Reduce injected web3 file size to less than 1mb [#1813](https://github.com/MyEtherWallet/MyEtherWallet/pull/1813)
