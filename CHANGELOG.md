@@ -2,6 +2,11 @@
 
 - Notification pruning[#1755](https://github.com/MyEtherWallet/MyEtherWallet/pull/1755)
 
+### Bug
+
+- Fix issue with withdrawing ETH from CDP [#1811](https://github.com/MyEtherWallet/MyEtherWallet/pull/1811)
+- Fix header items for other languages [#1791](https://github.com/MyEtherWallet/MyEtherWallet/pull/1791)
+
 ### Release v5.2.8-hotfix.2
 
 ### Bug
@@ -9,6 +14,8 @@
 - Fix error with send-offline-helper page load [#1790](https://github.com/MyEtherWallet/MyEtherWallet/pull/1790)
 
 ### Release v5.2.8-hotfix.1
+
+### Bug
 
 - Fix Schedule View [#1781](https://github.com/MyEtherWallet/MyEtherWallet/pull/1781)
 
