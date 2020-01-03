@@ -18,8 +18,8 @@
       :loadingmessage="$t('dappsMaker.creating-message')"
     />
     <div class="manage-container">
-      <p class="top-title">{{ $t('dappsMaker.maker_title') }}</p>
-      <p class="top-title-sub">{{ $t('dappsMaker.create-instruct') }}</p>
+      <h3 class="mb-3 ">{{ $t('dappsMaker.maker_title') }}</h3>
+      <div class="mb-5">{{ $t('dappsMaker.create-instruct') }}</div>
 
       <div class="currency-ops-new">
         <div class="currency-picker-container">

@@ -20,6 +20,7 @@
 
 ### Bug
 
+- Ui fix maker dai [#1787](https://github.com/MyEtherWallet/MyEtherWallet/pull/1787)
 - Catch error when cryptokitties api 500s [#1775](https://github.com/MyEtherWallet/MyEtherWallet/pull/1775)
 - Fix resolver when currency is ethereum token [#1774](https://github.com/MyEtherWallet/MyEtherWallet/pull/1774)
 - Might be a fix to that intermittent error after logging out [#1773](https://github.com/MyEtherWallet/MyEtherWallet/pull/1773)
