@@ -23,7 +23,9 @@ import {
   thundercore,
   solidum,
   dexon,
-  lightstreamsNetwork
+  lightstreamsNetwork,
+  rskMainnet,
+  rskTestnet
 } from './paths';
 export default [
   keepkeyEthereum,
@@ -50,5 +52,7 @@ export default [
   thundercore,
   solidum,
   dexon,
-  lightstreamsNetwork
+  lightstreamsNetwork,
+  rskMainnet,
+  rskTestnet
 ];
