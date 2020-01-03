@@ -14,7 +14,7 @@
       <warning-message />
     </div>
     <div class="modal-content-block">
-      <form class="private-key-form">
+      <div class="private-key-form">
         <div class="input-container">
           <input
             ref="privateKeyInput"
@@ -23,6 +23,7 @@
             type="text"
             name="PrivateKey"
             autocomplete="off"
+            @keypress.enter="unlockWallet"
           />
         </div>
         <standard-button
@@ -35,7 +36,7 @@
           :click-function="unlockWallet"
           class="submit-button"
         />
-      </form>
+      </div>
       <div class="customer-support-block">
         <customer-support />
       </div>
