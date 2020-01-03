@@ -379,7 +379,7 @@ export default {
       if (customPath) {
         this.customPath.path = customPath;
         this.$store
-          .dispatch('addCustomPath', {
+          .dispatch('main/addCustomPath', {
             label: this.customPath.label,
             path: customPath
           })
@@ -435,7 +435,7 @@ export default {
     }, 1000),
     unlockWallet() {
       this.$store
-        .dispatch('decryptWallet', [this.currentWallet])
+        .dispatch('main/decryptWallet', [this.currentWallet])
         .then(() => {
           if (this.wallet !== null) {
             if (!this.$route.path.split('/').includes('interface')) {
