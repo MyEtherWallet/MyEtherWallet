@@ -1,16 +1,10 @@
 <template>
   <div class="crypto-kitties-manager">
     <interface-container-title :title="$t('nftManager.title')" />
-    <div
-      v-if="!isReady && isOnlineAndEth"
-      class="inner-side-menu content-container"
-    >
-      <nft-side-menu
-        :supported-nft-obj="sideMenuData"
-        :nft-config="nftConfig"
-      ></nft-side-menu>
+    <div v-if="!isReady && isOnlineAndEth">
       <loading-sign :loadingmessage1="$t('common.loading')" />
     </div>
+
     <div v-if="isReady && hasNfts" class="content-container">
       <nft-side-menu
         :supported-nft-obj="sideMenuData"
@@ -22,6 +16,9 @@
         @openCustomModal="openCustomModal"
         @removeCustomNft="openRemovalConfirmModal"
       ></nft-side-menu>
+
+      <div class="block-divider" />
+
       <div v-if="showDetails">
         <nft-details
           :nft="detailsFor"
@@ -32,11 +29,18 @@
         ></nft-details>
       </div>
 
-      <div v-if="!showDetails" class="product-list-container">
+      <div v-if="!showDetails">
         <content-block-title :button-text="ntfCount" :title="nftTitle" />
 
         <b-row>
-          <b-col v-for="nft in nftToShow" :key="nft.key" cols="4" class="mb-4">
+          <b-col
+            v-for="nft in nftToShow"
+            :key="nft.key"
+            cols="6"
+            lg="4"
+            md="4"
+            class="mb-4"
+          >
             <div
               class="text-center cursor-pointer"
               @click="showNftDetails(nft)"

@@ -1,14 +1,22 @@
 <template>
   <div class="crypto-kitties-details">
     <div class="crypto-kitties-details-content-container">
-      <back-button @click.native="goBack" />
+      <back-button style="display: inline;" @click.native="goBack" />
+
       <div class="grid-container">
+        <div class="product-title-mobile mt-4">
+          <h3>{{ $t('nftManager.send-my', { value: selectedTitle }) }}</h3>
+          <p>#{{ nft.token }}</p>
+        </div>
+
         <div class="kitty-image">
           <img :src="getImage(nft)" alt />
         </div>
         <div class="kitty-text">
-          <h3>{{ $t('nftManager.send-my', { value: selectedTitle }) }}</h3>
-          <p>#{{ nft.token }}</p>
+          <div class="product-title-desktop">
+            <h3>{{ $t('nftManager.send-my', { value: selectedTitle }) }}</h3>
+            <p>#{{ nft.token }}</p>
+          </div>
           <div class="address-input-container">
             <dropdown-address-selector
               :title="$t('sendTx.to-addr')"

@@ -16,24 +16,32 @@ $img-size: 190px;
 
 .pagination-container {
   margin-top: 50px;
+  margin-bottom: 20px;
 
   &.loading {
     opacity: 0.2;
   }
 }
 
-.product-list-container {
-  padding-top: 20px;
+.block-divider {
+  margin-top: 20px;
+  /*
   margin-top: 100px;
+  margin-bottom: 30px;
   border-top: 3px solid #f2f4fa;
+  */
 }
 
 .product-img {
   text-align: center;
 
   img {
+    max-width: 150px;
+    width: 100%;
+    /*
     width: $img-size;
     height: $img-size;
+    */
   }
 }
 
