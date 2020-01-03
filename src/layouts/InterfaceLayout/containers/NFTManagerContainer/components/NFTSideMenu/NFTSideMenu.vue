@@ -13,7 +13,7 @@
         >
       </div>
       <p class="mb-4">
-        Select an item to see details or add your custom NFT.
+        {{ $t('nftManager.select-item') }}
       </p>
 
       <b-row>

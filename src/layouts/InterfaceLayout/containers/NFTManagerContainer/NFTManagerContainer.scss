@@ -3,9 +3,28 @@
 $collepse-width: 1300px;
 $img-size: 190px;
 
+.prev-button,
+.next-button {
+  cursor: pointer;
+  color: initial;
+}
+
+.page-index-button {
+  background-color: white;
+  color: $dark-grey-1;
+}
+
+.pagination-container {
+  margin-top: 50px;
+
+  &.loading {
+    opacity: 0.2;
+  }
+}
+
 .product-list-container {
   padding-top: 20px;
-  margin-top: 40px;
+  margin-top: 100px;
   border-top: 3px solid #f2f4fa;
 }
 
@@ -105,6 +124,7 @@ button[disabled] {
 }
 
 .internal-nav-container {
+  margin-top: 60px;
   grid-column: span 3;
   text-align: center;
   //width: 300px;

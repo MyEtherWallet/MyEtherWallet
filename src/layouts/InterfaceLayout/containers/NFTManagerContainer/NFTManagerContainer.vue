@@ -59,36 +59,43 @@
           </b-col>
         </b-row>
 
-        <!-- TODO Clean Up Design and Improve Mobile -->
-        <div class="grid-container">
-          <div v-show="selectedNtf.count > 9" class="internal-nav-container">
-            <span
-              v-show="startIndex > 0"
-              class="internal-nav prev"
-              @click="getPrevious()"
-            >
-              <i class="fa fa-chevron-left"></i>
-            </span>
-            <span v-show="!collectionLoading">{{
-              $t('nftManager.showing-range', {
-                first: startIndex,
-                last: endIndex
-              })
-            }}</span>
-            <span v-show="collectionLoading">{{
-              $t('nftManager.loading-range', {
-                first: startIndex,
-                last: endIndex
-              })
-            }}</span>
-            <span
-              v-show="showNextButton"
-              class="internal-nav next"
-              @click="getNext()"
-            >
-              <i class="fa fa-chevron-right"></i>
-            </span>
-          </div>
+        <div
+          class="pagination-container"
+          :class="collectionLoading ? 'loading' : ''"
+        >
+          <nav
+            v-show="selectedNtf.count > 9"
+            aria-label="Page navigation example"
+          >
+            <ul class="pagination justify-content-center">
+              <li
+                v-show="startIndex > 0"
+                class="page-item"
+                @click="getPrevious()"
+              >
+                <div class="page-link prev-button">Previous</div>
+              </li>
+              <li class="page-item">
+                <div
+                  v-if="startIndex + 1 != endIndex"
+                  class="page-link page-index-button"
+                >
+                  {{ startIndex + 1 }} - {{ endIndex }} ({{ totalNtfCount }}
+                  items)
+                </div>
+                <div
+                  v-if="startIndex + 1 == endIndex"
+                  class="page-link page-index-button"
+                >
+                  {{ startIndex + 1 }}
+                  ({{ totalNtfCount }} items)
+                </div>
+              </li>
+              <li v-show="showNextButton" class="page-item" @click="getNext()">
+                <div class="page-link next-button">Next</div>
+              </li>
+            </ul>
+          </nav>
         </div>
       </div>
     </div>
@@ -224,6 +231,13 @@ export default {
           : this.nftData[this.selectedContract].details;
       }
       return [];
+    },
+    totalNtfCount() {
+      if (this.nftData[this.selectedContract]) {
+        return this.nftData[this.selectedContract].count;
+      }
+
+      return 0;
     },
     ntfCount() {
       if (this.nftData[this.selectedContract]) {
