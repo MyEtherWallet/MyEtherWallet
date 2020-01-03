@@ -40,23 +40,13 @@ const webpackConfig = {
                 if (Array.isArray(json[key])) {
                   if (typeof json[key][0] === 'object') {
                     json[key][0].js = json[key][0].js.map(item => {
-                      return `${
-                        process.env.NODE_ENV === 'production'
-                          ? '/js/' + item
-                          : item
-                      }`;
+                      return `/js/${item}`;
                     });
                   } else {
-                    json[key][0] =
-                      process.env.NODE_ENV === 'production'
-                        ? '/js/' + json[key][0]
-                        : json[key][0];
+                    json[key][0] = `/js/${json[key][0]}`;
                   }
                 } else {
-                  json[key].scripts[0] =
-                    process.env.NODE_ENV === 'production'
-                      ? '/js/' + json[key].scripts[0]
-                      : json[key].scripts[0];
+                  json[key].scripts[0] = `/js/${json[key].scripts[0]}`;
                 }
               }
             });
