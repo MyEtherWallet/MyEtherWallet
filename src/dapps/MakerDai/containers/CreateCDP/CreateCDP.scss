@@ -104,11 +104,6 @@ $this-page-mobile-width: 700px;
   overflow: hidden;
 
   .manage-container {
-    padding: 40px;
-    @media all and (max-width: $this-page-mobile-width) {
-      padding: 20px;
-    }
-
     .currency-label {
       margin-bottom: 15px;
     }
