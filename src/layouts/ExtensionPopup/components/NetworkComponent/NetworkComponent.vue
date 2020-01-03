@@ -84,7 +84,7 @@ export default {
       this.switchNetwork(network).then(() => {
         window.chrome.storage.sync.set({
           defNetwork: JSON.stringify({
-            url: network.url,
+            service: network.service,
             key: network.type.name
           })
         });

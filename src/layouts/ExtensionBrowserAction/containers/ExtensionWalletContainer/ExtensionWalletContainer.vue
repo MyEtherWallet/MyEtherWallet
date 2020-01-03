@@ -144,12 +144,17 @@ export default {
         const networkProps = JSON.parse(changed['defNetwork'].newValue);
         const network = this.$store.state.main.Networks[networkProps.key].find(
           actualNetwork => {
-            return actualNetwork.url === networkProps.url;
+            return actualNetwork.service === networkProps.service;
           }
         );
-        this.switchNetwork(network).then(() => {
-          this.setWeb3Instance();
-        });
+        this.$store
+          .dispatch(
+            'switchNetwork',
+            !network ? this.$store.state.Networks[networkProps.key][0] : network
+          )
+          .then(() => {
+            this.$store.dispatch('setWeb3Instance');
+          });
       } else {
         this.setWeb3Instance();
       }

@@ -33,6 +33,28 @@
                 <p>{{ $t('mewcx.buy-eth') }}</p>
               </div>
             </a>
+            <b-nav-item-dropdown
+              v-if="address !== null"
+              right
+              no-caret
+              class="tx-history-menu"
+            >
+              <template slot="button-content">
+                <p>{{ $t('interface.tx-history') }}</p>
+              </template>
+              <b-dropdown-item :href="explorerUrl" target="_blank">
+                <p>{{ serviceUrl }} ({{ network.type.name }})</p>
+              </b-dropdown-item>
+              <b-dropdown-item
+                v-show="network.type.name === 'ETH'"
+                :href="'https://ethplorer.io/address/' + address"
+                target="_blank"
+                rel="noopener noreferrer"
+                >{{ $t('header.ethplorer') }} ({{
+                  $tc('common.token', 2)
+                }})</b-dropdown-item
+              >
+            </b-nav-item-dropdown>
             <b-nav-item>
               <notification
                 v-if="
@@ -103,9 +125,18 @@ export default {
     return { isMewCx: isMewCx, gasPrice: '0' };
   },
   computed: {
-    ...mapState(['account', 'web3']),
+    ...mapState(['account', 'web3', 'network']),
     address() {
       return this.account.address;
+    },
+    explorerUrl() {
+      return this.network.type.blockExplorerAddr.replace(
+        '[[address]]',
+        this.address
+      );
+    },
+    serviceUrl() {
+      return Misc.getService(this.network.type.blockExplorerAddr);
     }
   },
   methods: {
