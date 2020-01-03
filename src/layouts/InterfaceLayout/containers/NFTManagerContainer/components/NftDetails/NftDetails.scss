@@ -2,7 +2,6 @@
 
 $collepse-width: 650px;
 
-
 .product-title-mobile {
   display: none;
 
@@ -13,7 +12,6 @@ $collepse-width: 650px;
   }
 }
 
-
 .product-title-desktop {
   display: block;
 
@@ -23,9 +21,6 @@ $collepse-width: 650px;
     }
   }
 }
-
-
-
 
 .crypto-kitties-details {
   @extend %interface-container;
@@ -71,7 +66,6 @@ $collepse-width: 650px;
       margin: 0 auto;
     }
   }
-
 }
 
 .kitty-text {
