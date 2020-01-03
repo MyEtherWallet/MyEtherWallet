@@ -2,6 +2,7 @@
 
 - Display information related to kyber slippage for high values [#1794](https://github.com/MyEtherWallet/MyEtherWallet/pull/1794)
 - Notification pruning[#1755](https://github.com/MyEtherWallet/MyEtherWallet/pull/1755)
+- Add gasLimit field to batch transactions[#1702](https://github.com/MyEtherWallet/MyEtherWallet/pull/1702)
 
 ### Bug
 
