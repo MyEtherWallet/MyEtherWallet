@@ -6,9 +6,6 @@
       </h3>
       <img :src="DaiIcon" class="icon-size" />
     </div>
-    <div v-if="false" style="max-width: 500px;" class="mb-5">
-      (*** Description Hidden ***)
-    </div>
     <div>
       <div class="mb-5">
         <div class="mb-2">
@@ -60,7 +57,7 @@
           <p>
             <span class="cc DAI cc-icon cc-icon-dai currency-symbol" />
             {{ cdpId }}
-            <span class="subname">- CDP </span>
+            <span class="subname">- {{ $t('dappsMaker.cdp') }} </span>
           </p>
         </div>
       </div>
