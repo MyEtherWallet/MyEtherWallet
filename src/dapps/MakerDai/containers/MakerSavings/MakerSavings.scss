@@ -6,7 +6,6 @@ $this-page-mobile-width: 700px;
   margin-bottom: 5px;
   min-width: 150px;
   position: relative;
-  grid-column-start: 2;
 }
 
 .top-title {
@@ -239,9 +238,6 @@ $this-page-mobile-width: 700px;
   margin-top: 20px;
   margin-bottom: 10px;
   display: flex;
-  flex-direction: row;
-  align-content: space-between;
-  justify-content: center;
 
   // Mobile
   @media all and (max-width: $mobile-width) {
@@ -296,12 +292,7 @@ $this-page-mobile-width: 700px;
 }
 
 .currency-ops-new {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
   margin-bottom: 20px;
-  @media all and (max-width: $this-page-mobile-width) {
-    display: block;
-  }
 }
 
 .arrow {

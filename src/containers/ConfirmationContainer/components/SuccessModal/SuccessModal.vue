@@ -20,6 +20,7 @@
 
       <div class="buttons">
         <standard-button
+          v-show="txHashExlporrer"
           :options="buttonCheckEtherscan"
           :click-function="goToLink"
         />
