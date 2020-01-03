@@ -26,7 +26,8 @@
       "title": "Access by Hardware",
       "button-buy": "Buy Now",
       "button-choose": "Continue"
-    }
+    },
+    "examples": "Ledger wallet, FINNEY, Trezor, BitBox, Secalot, KeepKey, XWallet"
   },
   "software": {
     "option-title": "Software",

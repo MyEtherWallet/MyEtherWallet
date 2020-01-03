@@ -7,7 +7,9 @@
             <div class="block-item">
               <div class="block-title">
                 <div class="select-label">
-                  <p>{{ $t('dappsMaker.position-label', { value: cdpId }) }}</p>
+                  <p>
+                    {{ $t('dappsMCDMaker.position-label', { value: cdpId }) }}
+                  </p>
 
                   <p>
                     <span class="standard-button__green-border">
@@ -16,14 +18,14 @@
                         class="the-button-box"
                         @click="openManage(cdpId)"
                       >
-                        {{ $t('dappsMaker.manage') }}
+                        {{ $t('dappsMCDMaker.manage') }}
                       </button>
                       <button
                         v-if="!hasProxy"
                         class="the-button-box"
                         @click="openMigrate(cdpId)"
                       >
-                        {{ $t('dappsMaker.view') }}
+                        {{ $t('dappsMCDMaker.view') }}
                       </button>
                     </span>
                   </p>
@@ -34,7 +36,7 @@
                 <div class="block-content">
                   <div class="item">
                     <div>
-                      <p>{{ $t('dappsMaker.deposited') }}</p>
+                      <p>{{ $t('dappsMCDMaker.deposited') }}</p>
                     </div>
                     <div>
                       {{ displayFixedValue(aCdp.ethCollateral, 5, false) }}
@@ -49,7 +51,7 @@
                     <div>
                       <br />
                       <div>
-                        {{ $t('dappsMaker.liquid-price') }} ({{
+                        {{ $t('dappsMCDMaker.liquid-price') }} ({{
                           $t('common.currency.eth')
                         }}/{{ $t('common.currency.usd') }})
                       </div>
@@ -65,11 +67,11 @@
                 <div class="block-content">
                   <div class="item">
                     <div>
-                      <p>{{ $t('dappsMaker.generated') }}</p>
+                      <p>{{ $t('dappsMCDMaker.generated') }}</p>
                     </div>
                     <div>
                       {{ aCdp.debtValue }}
-                      <span>{{ $t('dappsMaker.dai') }}</span>
+                      <span>{{ $t('dappsMCDMaker.dai') }}</span>
                     </div>
                     <div>
                       {{ displayFixedValue(aCdp.debtValue, 2) }}
@@ -77,7 +79,7 @@
                     </div>
                     <div>
                       <br />
-                      <div>{{ $t('dappsMaker.collateral-ratio') }}</div>
+                      <div>{{ $t('dappsMCDMaker.collateral-ratio') }}</div>
                       <span :class="safeRank(aCdp.collatRatio)">
                         {{
                           aCdp

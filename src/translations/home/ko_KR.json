@@ -14,7 +14,7 @@
   },
   "about-mew": {
     "title": "About MEW",
-    "text": "MyEtherWallet - please, call us MEW - puts the Ethereum blockchain at your fingertips. We are a team of crypto-enthusiasts dedicated to bring you the most secure, most intuitive, and dare we say prettiest way to manage your ETH and ERC-20 tokens. We're always here to help, and we're never giving away ETH. Cheers!"
+    "text": "MyEtherWallet - please, call us MEW - puts the Ethereum blockchain at your fingertips. We are a team of crypto-enthusiasts dedicated to bring you the most secure, most intuitive, and dare we say prettiest way to manage your ETH and ERC20 tokens. We're always here to help, and we're never giving away ETH. Cheers!"
   },
   "join-mew": {
     "title": "Join MEW",
@@ -25,7 +25,7 @@
     "text": "MEW offers support for all major hardware wallets including Ledger, Trezor, and many more."
   },
   "swap": {
-    "text": "MEW has partnered with Bity, Kyber Network, Changelly, and Simplex to allow users to swap fiat to crypto, ETH and BTC, ETH and ERC-20."
+    "text": "MEW has partnered with Bity, Kyber Network, Changelly, and Simplex to allow users to swap fiat to crypto, ETH and BTC, ETH and ERC20."
   },
   "faqs": {
     "subtitle": "Have not found the question that you are looking for?",

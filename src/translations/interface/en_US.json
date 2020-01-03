@@ -79,10 +79,11 @@
     "import-short": "Import",
     "export": "Export Configurations",
     "export-desc": "Please click the button below to download your configuration file into your local computer.",
-    "upload-f": "Upload File..."
+    "upload-f": "Upload File...",
+    "add-contact": "Add Contact"
   },
   "no-avail": "This function is not available.",
-  "dashboard-swap": "MEW has partnered with Bity, Kyber Network, Changelly, and Simplex to allow users to swap fiat to crypto, ETH and BTC, ETH and ERC-20.",
+  "dashboard-swap": "MEW has partnered with Bity, Kyber Network, Changelly, and Simplex to allow users to swap fiat to crypto, ETH and BTC, ETH and ERC20.",
   "etherscan-tx-url": "https://etherscan.io/tx/[[txHash]]",
   "etherscan-address-url": "https://etherscan.io/address/[[address]]",
   "address-book": {
@@ -113,6 +114,10 @@
     "warning": "Please Keep Your Paper Wallet at a {safe} Place! Please {do-not} Share Your Private Key With Anyone!",
     "safe": "SAFE",
     "do-not": "DO NOT"
-  }
+  },
+  "select-item": "Select an item",
+  "economy": "Economy",
+  "regular": "Regular",
+  "fast": "Fast"
 }
 
