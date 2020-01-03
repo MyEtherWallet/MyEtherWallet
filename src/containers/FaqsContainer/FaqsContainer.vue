@@ -32,12 +32,6 @@
                     <div class="bar bar1"></div>
                     <div class="bar bar2"></div>
                   </div>
-                  <span
-                    v-if="false"
-                    :class="faqs[prop].open ? 'show-less' : 'show-more'"
-                  >
-                    {{ faqs[prop].open ? '-' : '+' }}
-                  </span>
                 </div>
               </div>
               <div

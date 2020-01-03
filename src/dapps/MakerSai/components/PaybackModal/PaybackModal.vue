@@ -404,7 +404,7 @@ export default {
         return item.symbol === 'MKR';
       });
       this.daiToken = this.tokensWithBalance.find(item => {
-        return item.symbol === 'DAI';
+        return item.symbol === 'SAI';
       });
     },
     getMkr() {

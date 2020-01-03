@@ -1,9 +1,24 @@
+### Release v5.2.9
+
 ### Devop
 - Enable translations dropdown and add in the other languages [#1703] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1703)
+- Notification pruning[#1755](https://github.com/MyEtherWallet/MyEtherWallet/pull/1755)
 
 ### Bug
 
+- Hide blockexplorrer link on irrelevant pages and add back tx history for cx header [#1800](https://github.com/MyEtherWallet/MyEtherWallet/pull/1800)
+- Fix issue with withdrawing ETH from CDP [#1811](https://github.com/MyEtherWallet/MyEtherWallet/pull/1811)
 - Fix header items for other languages [#1791](https://github.com/MyEtherWallet/MyEtherWallet/pull/1791)
+
+### Devop
+
+- Manually update locally stored networks [#1810](https://github.com/MyEtherWallet/MyEtherWallet/pull/1810)
+
+### Release v5.2.8-hotfix.2
+
+### Bug
+
+- Fix error with send-offline-helper page load [#1790](https://github.com/MyEtherWallet/MyEtherWallet/pull/1790)
 
 ### Release v5.2.8-hotfix.1
 
@@ -15,6 +30,7 @@
 
 ### Bug
 
+- Ui fix maker dai [#1787](https://github.com/MyEtherWallet/MyEtherWallet/pull/1787)
 - Catch error when cryptokitties api 500s [#1775](https://github.com/MyEtherWallet/MyEtherWallet/pull/1775)
 - Fix resolver when currency is ethereum token [#1774](https://github.com/MyEtherWallet/MyEtherWallet/pull/1774)
 - Might be a fix to that intermittent error after logging out [#1773](https://github.com/MyEtherWallet/MyEtherWallet/pull/1773)
@@ -30,6 +46,7 @@
 ### Devop
 
 - Revert trezor version back to 7[#1737](https://github.com/MyEtherWallet/MyEtherWallet/pull/1772)
+- Notification pruning[#1755](https://github.com/MyEtherWallet/MyEtherWallet/pull/1755)
 - Refactor maker translations[#1737](https://github.com/MyEtherWallet/MyEtherWallet/pull/1737)
 - Add new MEW nodes[#1750](https://github.com/MyEtherWallet/MyEtherWallet/pull/1750)
 - Fix UI overflow [#1776](https://github.com/MyEtherWallet/MyEtherWallet/pull/1776)
