@@ -1,25 +1,21 @@
 <template>
-  <div>
+  <div style="max-width: 500px;">
     <div v-if="!ready">
       <loading-sign />
     </div>
     <div v-if="ready" class="currency-ops-new">
-      <div style="padding: 10px;">
-        <p>
-          {{
-            $t('dappsMCDMaker.dai-savings-rate', {
-              value: displayPercentValue(yearlyRate)
-            })
-          }}
-        </p>
-        <p>
-          {{ $t('dappsMCDMaker.deposited-amount', { value: depositedValue }) }}
-        </p>
+      <h3 class="mb-3">
+        {{ $t('dappsMaker.earn-with-dai') }}
+      </h3>
+      <div>
+        {{
+          $t('dappsMaker.dai-savings-rate', {
+            value: displayPercentValue(yearlyRate)
+          })
+        }}
       </div>
+      <div>{{ $t('dappsMaker.deposited-amount', { value: deposited }) }}</div>
       <div class="currency-picker-container">
-        <div class="interface__block-title">
-          {{ $t('dappsMCDMaker.earn-with-dai') }}
-        </div>
         <div v-if="showSetupScreen">
           <div>
             <p>
@@ -55,22 +51,21 @@
           </div>
         </div>
         <div v-if="!showSetupScreen">
-          <div class="buttons-container-alt">
-            <div>
-              <button
+          <div class="mt-3 mb-5">
+            <b-button-group size="lg">
+              <b-button
                 :class="['submit-btn', showDepositDisplay ? 'active' : '']"
                 @click="showDeposit(true)"
+                >{{ $t('dappsMaker.deposit') }}</b-button
               >
-                <h4>{{ $t('dappsMCDMaker.deposit') }}</h4>
-              </button>
-              <button
+              <b-button
                 :class="['submit-btn', !showDepositDisplay ? 'active' : '']"
                 @click="showDeposit(false)"
+                >{{ $t('dappsMaker.withdraw') }}</b-button
               >
-                <h4>{{ $t('dappsMCDMaker.withdraw') }}</h4>
-              </button>
-            </div>
+            </b-button-group>
           </div>
+
           <div v-if="showDepositDisplay">
             <div class="interface__block-title">
               <span> {{ $t('dappsMCDMaker.deposit') }}</span>
