@@ -231,7 +231,7 @@ export default {
     },
     redirectToPartner() {
       this.$store
-        .dispatch('addSwapNotification', [
+        .dispatch('main/addSwapNotification', [
           `Swap_Order`,
           this.currentAddress,
           this.swapDetails
@@ -249,7 +249,7 @@ export default {
     },
     sentTransaction() {
       this.$store
-        .dispatch('addSwapNotification', [
+        .dispatch('main/addSwapNotification', [
           `Swap_Order`,
           this.currentAddress,
           this.swapDetails
