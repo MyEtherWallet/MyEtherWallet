@@ -779,7 +779,8 @@ export default {
                       .times(this.rate)
                       .toFixed(6)
                       .toString(10);
-                  }
+                  },
+                  additional: entry.additional || {}
                 };
               } else if (entry.provider === this.providerNames.changelly) {
                 Toast.responseHandler(
