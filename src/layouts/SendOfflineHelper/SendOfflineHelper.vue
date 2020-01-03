@@ -194,7 +194,7 @@
                   noWalletTerms: true,
                   noMinWidth: true
                 }"
-                :click-function="uploadClick()"
+                :click-function="uploadClick"
               />
               <standard-button
                 :options="{
