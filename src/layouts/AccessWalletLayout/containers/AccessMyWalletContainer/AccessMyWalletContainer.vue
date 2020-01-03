@@ -78,10 +78,10 @@
             :func="button.func"
             :img="button.img"
             :img-disabled="button.imgDisabled"
-            :title="button.title"
-            :desc="button.desc"
-            :recommend="button.recommend"
-            :tooltip="button.tooltip"
+            :title="$t(button.title)"
+            :desc="$t(button.desc)"
+            :recommend="$t(button.recommend)"
+            :tooltip="$t(button.tooltip)"
             :disabled="button.disabled"
             :classname="button.classname"
           />
@@ -152,8 +152,8 @@ export default {
       buttons: [
         {
           func: this.mewConnectModalOpen,
-          title: this.$t('common.mewconnect.string'),
-          desc: this.$t('accessWallet.mewconnect.option-text'),
+          title: 'common.mewconnect.string',
+          desc: 'accessWallet.mewconnect.option-text',
           recommend: '',
           tooltip: '',
           img: mewConnectImg,
@@ -163,7 +163,7 @@ export default {
         },
         {
           func: this.hardwareModalOpen,
-          title: this.$t('accessWallet.hardware.option-title'),
+          title: 'accessWallet.hardware.option-title',
           desc:
             'Ledger wallet, FINNEY, Trezor, BitBox, Secalot, KeepKey, XWallet',
           recommend: '',
@@ -175,8 +175,8 @@ export default {
         },
         {
           func: this.web3WalletModal,
-          title: this.$t('accessWallet.web3-wallet'),
-          desc: this.$t('accessWallet.web3-wallet-desc'),
+          title: 'accessWallet.web3-wallet',
+          desc: 'accessWallet.web3-wallet-desc',
           recommend: '',
           tooltip: '',
           img: web3Img,
@@ -186,9 +186,9 @@ export default {
         },
         {
           func: this.softwareModalOpen,
-          title: this.$t('accessWallet.software.option-title'),
-          desc: this.$t('accessWallet.software.option-text'),
-          recommend: this.$t('common.not-recommended.string'),
+          title: 'accessWallet.software.option-title',
+          desc: 'accessWallet.software.option-text',
+          recommend: 'common.not-recommended.string',
           tooltip: '',
           img: softwareImg,
           imgDisabled: softwareImgDisabled,

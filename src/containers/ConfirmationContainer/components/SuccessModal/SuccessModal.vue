@@ -19,15 +19,12 @@
       </div>
 
       <div class="buttons">
-        <a
-          v-if="etherscanLink"
-          :href="etherscanLink"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <standard-button :options="buttonCheckEtherscan" />
-        </a>
-        <standard-button :options="buttonOk" @click.native="hideModal" />
+        <standard-button
+          v-show="txHashExlporrer"
+          :options="buttonCheckEtherscan"
+          :click-function="goToLink"
+        />
+        <standard-button :options="buttonOk" :click-function="hideModal" />
       </div>
     </div>
     <!-- .modal-content-block -->
@@ -56,7 +53,7 @@ export default {
       type: String,
       default: '/'
     },
-    etherscanLink: {
+    txHashExlporrer: {
       type: String,
       default: null
     },
@@ -87,6 +84,10 @@ export default {
     }
   },
   methods: {
+    goToLink() {
+      // eslint-disable-next-line
+      window.open(this.txHashExlporrer, '_blank');
+    },
     hideModal() {
       if (this.linkTo !== '/') {
         this.$router.push({ path: this.linkTo });

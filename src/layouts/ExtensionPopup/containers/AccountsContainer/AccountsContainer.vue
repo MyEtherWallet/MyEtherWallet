@@ -54,7 +54,7 @@
             />
             <div
               v-if="watchOnlyWallets.length === 0"
-              class="no-wallet-container"
+              class="no-wallet-container user-select--none"
             >
               <h3>
                 {{ $t('mewcx.no-wallets-found') }}

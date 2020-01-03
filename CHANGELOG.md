@@ -1,18 +1,54 @@
+### Devop
+
+- Notification pruning[#1755](https://github.com/MyEtherWallet/MyEtherWallet/pull/1755)
+- Add gasLimit field to batch transactions[#1702](https://github.com/MyEtherWallet/MyEtherWallet/pull/1702)
+
+### Bug
+
+- Hide blockexplorrer link on irrelevant pages and add back tx history for cx header [#1800](https://github.com/MyEtherWallet/MyEtherWallet/pull/1800)
+- Fix issue with withdrawing ETH from CDP [#1811](https://github.com/MyEtherWallet/MyEtherWallet/pull/1811)
+- Fix header items for other languages [#1791](https://github.com/MyEtherWallet/MyEtherWallet/pull/1791)
+
+### Devop
+
+- Manually update locally stored networks [#1810](https://github.com/MyEtherWallet/MyEtherWallet/pull/1810)
+
+### Release v5.2.8-hotfix.2
+
+### Bug
+
+- Fix error with send-offline-helper page load [#1790](https://github.com/MyEtherWallet/MyEtherWallet/pull/1790)
+
+### Release v5.2.8-hotfix.1
+
+### Bug
+
+- Fix Schedule View [#1781](https://github.com/MyEtherWallet/MyEtherWallet/pull/1781)
+
 ### Release v5.2.8
 
 ### Bug
 
+- Ui fix maker dai [#1787](https://github.com/MyEtherWallet/MyEtherWallet/pull/1787)
+- Catch error when cryptokitties api 500s [#1775](https://github.com/MyEtherWallet/MyEtherWallet/pull/1775)
+- Fix resolver when currency is ethereum token [#1774](https://github.com/MyEtherWallet/MyEtherWallet/pull/1774)
+- Might be a fix to that intermittent error after logging out [#1773](https://github.com/MyEtherWallet/MyEtherWallet/pull/1773)
+- Receive function instead of attaching to parent on standard button [#1763](https://github.com/MyEtherWallet/MyEtherWallet/pull/1763)
 - Fix offline send helper & out of memory error on local build [#1741](https://github.com/MyEtherWallet/MyEtherWallet/pull/1741)
 - Fix Schedule Transaction, Drop Down Bug [#1747](https://github.com/MyEtherWallet/MyEtherWallet/pull/1747)
 - Unable to unzip message on Windows and Mac OSX because of two files with same name but different case [#1757](https://github.com/MyEtherWallet/MyEtherWallet/pull/1757)
 - Fix leftover issue with token search [#1749](https://github.com/MyEtherWallet/MyEtherWallet/pull/1749)
 - Check correct balance when determining ability to withdraw[#1754](https://github.com/MyEtherWallet/MyEtherWallet/pull/1754)
+- Fix offline send helper & out of memory error on local build [#1741](https://github.com/MyEtherWallet/MyEtherWallet/pull/1741)
+- Fix Chrome ex medium size layout for every components [#1730](https://github.com/MyEtherWallet/MyEtherWallet/pull/1730)
 
 ### Devop
 
-- Add gasLimit field to batch transactions[#1702](https://github.com/MyEtherWallet/MyEtherWallet/pull/1702)
+- Revert trezor version back to 7[#1737](https://github.com/MyEtherWallet/MyEtherWallet/pull/1772)
+- Notification pruning[#1755](https://github.com/MyEtherWallet/MyEtherWallet/pull/1755)
 - Refactor maker translations[#1737](https://github.com/MyEtherWallet/MyEtherWallet/pull/1737)
 - Add new MEW nodes[#1750](https://github.com/MyEtherWallet/MyEtherWallet/pull/1750)
+- Fix UI overflow [#1776](https://github.com/MyEtherWallet/MyEtherWallet/pull/1776)
 
 ### Release v5.2.7
 
@@ -67,11 +103,7 @@
 - Add MEWconnect footer link [#1675](https://github.com/MyEtherWallet/MyEtherWallet/pull/1675)
 - Add clear btn to forms [#1673](https://github.com/MyEtherWallet/MyEtherWallet/pull/1673)
 - Add Mult-Collateral Dai support [#1575](https://github.com/MyEtherWallet/MyEtherWallet/pull/1575)
-<<<<<<< HEAD
-- Update TOS \[[#1685](https://github.com/MyEtherWallet/MyEtherWallet/pull/1685)
-=======
 - Update TOS [#1685](https://github.com/MyEtherWallet/MyEtherWallet/pull/1685)
->>>>>>> 93377e55255e0d0b50554f48e6e1bf982f1681ea
 
 ### Release v5.2.4
 

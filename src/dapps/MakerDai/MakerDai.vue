@@ -68,6 +68,7 @@
       @checkForProxy="checkIfDestAddressHasProxy"
     >
     </move-cdp-modal>
+
     <back-button :path="backPath()">
       <div class="back-bar-container">
         <div v-if="showMoveOrClose" class="header-buttons-container">
@@ -79,71 +80,79 @@
         </div>
       </div>
     </back-button>
+
     <div
-      v-show="makerActive && listCdps && showManageable"
-      class="buttons-container"
+      v-if="makerActive && listCdps && showManageable"
+      class="px-5 pt-3 pb-5"
     >
-      <div v-for="(value, idx) in cdps" :key="idx + value">
-        <div
-          :class="[
-            'dapps-button',
-            activeValues.cdpId === value ? 'active' : ''
-          ]"
-        >
-          <div @click="openManage(value)">
-            <h4>{{ $t('dappsMaker.vault-id') }} #{{ value }}</h4>
-          </div>
+      <h3 class="mb-3">Select your vault to see details.</h3>
+      <div class="buttons-container">
+        <div v-for="(value, idx) in cdps" :key="idx + value">
+          <b-button
+            variant="primary"
+            class="mr-2 mb-1"
+            @click="openManage(value)"
+          >
+            <b>{{ $t('dappsMaker.vault-id') }}</b>
+            <b-badge variant="light" class="ml-2" style="font-size: 15px;"
+              ># {{ value }}</b-badge
+            >
+          </b-button>
         </div>
       </div>
     </div>
 
-    <router-view
-      :active-cdp-id="activeCdpId"
-      :loading-state="curentlyLoading"
-      :build-empty="buildEmpty"
-      :maker-active="makerActive"
-      :eth-price="ethPrice"
-      :liquidation-penalty="liquidationPenalty"
-      :stability-fee="stabilityFee"
-      :liquidation-ratio="liquidationRatio"
-      :price-service="priceService"
-      :cdp-service="cdpService"
-      :proxy-service="proxyService"
-      :cdps="cdps"
-      :cdps-without-proxy="cdpsWithoutProxy"
-      :cdp-details-loaded="cdpDetailsLoaded"
-      :tokens-with-balance="tokensWithBalance"
-      :migration-in-progress="migrationInProgress"
-      :open-close-modal="openCloseModal"
-      :open-move-modal="openMoveModal"
-      :values-updated="valuesUpdated"
-      :values="activeValues"
-      :get-collateral-options="getCollateralOptions"
-      :get-value-or-function="getValueOrFunction"
-      :get-cdp="getCdp"
-      :has-cdp="hasCdp"
-      @activeCdpId="setupCdpManageFunc"
-      @cdpOpened="addCdp"
-      @cdpClosed="removeCdp"
-      @modalHidden="modalHidden"
-      @managerUpdate="doUpdate"
-      @showWithdraw="showWithdraw"
-      @showPayback="showPayback"
-      @showGenerate="showGenerate"
-      @showDeposit="showDeposit"
-      @migrateCdp="migrateCdpExternal"
-      @proceedtoCreateOrManage="proceedtoCreateOrManage"
-      @approveCurrency="approveCurrency"
-      @setActiveCdpId="setActiveCdpId"
-      @setAfterLoadPage="setAfterLoadPage"
-    >
-    </router-view>
+    <div class="px-5 py-3">
+      <router-view
+        :active-cdp-id="activeCdpId"
+        :loading-state="curentlyLoading"
+        :build-empty="buildEmpty"
+        :maker-active="makerActive"
+        :eth-price="ethPrice"
+        :liquidation-penalty="liquidationPenalty"
+        :stability-fee="stabilityFee"
+        :liquidation-ratio="liquidationRatio"
+        :price-service="priceService"
+        :cdp-service="cdpService"
+        :proxy-service="proxyService"
+        :cdps="cdps"
+        :cdps-without-proxy="cdpsWithoutProxy"
+        :cdp-details-loaded="cdpDetailsLoaded"
+        :tokens-with-balance="tokensWithBalance"
+        :migration-in-progress="migrationInProgress"
+        :open-close-modal="openCloseModal"
+        :open-move-modal="openMoveModal"
+        :values-updated="valuesUpdated"
+        :values="activeValues"
+        :get-collateral-options="getCollateralOptions"
+        :get-value-or-function="getValueOrFunction"
+        :get-cdp="getCdp"
+        :has-cdp="hasCdp"
+        @activeCdpId="setupCdpManageFunc"
+        @cdpOpened="addCdp"
+        @cdpClosed="removeCdp"
+        @modalHidden="modalHidden"
+        @managerUpdate="doUpdate"
+        @showWithdraw="showWithdraw"
+        @showPayback="showPayback"
+        @showGenerate="showGenerate"
+        @showDeposit="showDeposit"
+        @migrateCdp="migrateCdpExternal"
+        @proceedtoCreateOrManage="proceedtoCreateOrManage"
+        @approveCurrency="approveCurrency"
+        @setActiveCdpId="setActiveCdpId"
+        @setAfterLoadPage="setAfterLoadPage"
+      >
+      </router-view>
+    </div>
+    <interface-footer />
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex';
 import BackButton from '@/layouts/InterfaceLayout/components/BackButton';
+import InterfaceContainerFooter from '@/layouts/InterfaceLayout/components/InterfaceContainerFooter';
 import MoveCdpModal from './components/MoveCdpModal';
 import GenerateModal from './components/GenerateModal';
 import DepositModal from './components/DepositModal';
@@ -202,6 +211,7 @@ export default {
     'withdraw-modal': WithdrawModal,
     'payback-modal': PaybackModal,
     'back-button': BackButton,
+    'interface-footer': InterfaceContainerFooter,
     'move-cdp-modal': MoveCdpModal
   },
   props: {

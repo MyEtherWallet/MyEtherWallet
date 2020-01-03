@@ -82,7 +82,7 @@
               <standard-button
                 :options="buttonSave"
                 :button-disabled="selectedGasType === 'other' && customGas < 1"
-                @click.native="saveGasChanges"
+                :click-function="saveGasChanges"
               />
             </div>
           </full-width-dropdown>
@@ -109,14 +109,14 @@
               />
               <standard-button
                 :options="buttonUploadFile"
-                @click.native="uploadFile"
+                :click-function="uploadFile"
               />
             </div>
             <div class="button-block">
               <standard-button
                 :options="buttonImport"
                 :button-disabled="importedFile === ''"
-                @click.native="setDataFromImportedFile"
+                :click-function="setDataFromImportedFile"
               />
             </div>
           </full-width-dropdown>
@@ -229,7 +229,7 @@
                 :button-disabled="
                   !contactAddress || !isValidAddress || addrBookErrMsg !== null
                 "
-                @click.native="addContact"
+                :click-function="addContact"
               />
             </div>
           </full-width-dropdown>
