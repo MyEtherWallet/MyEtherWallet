@@ -29,7 +29,7 @@
             {{
               unreadCount > 1
                 ? $tc('common.notifications.title', 2)
-                : $t('common.notifications.title', 1)
+                : $tc('common.notifications.title', 1)
             }}
             <div v-show="unreadCount >= 0" class="notification-count">
               <span>{{ unreadCount }}</span>
@@ -139,16 +139,16 @@ import BigNumber from 'bignumber.js';
 import { isAddress } from '@/helpers/addressUtils';
 import { ExtensionHelpers } from '@/helpers';
 
-import SwapNotification from './components/NotificationTypes/SwapNotification/SwapNotification';
-import TransactionNotification from './components/NotificationTypes/TransactionNotification/TransactionNotification';
-import TransactionDetails from './components/NotificationTypes/NotificationDetails';
-import SwapDetails from './components/NotificationTypes/SwapDetails';
+import SwapNotification from '@/containers/NotificationsContainer/components/NotificationTypes/SwapNotification/SwapNotification';
+import TransactionNotification from '@/containers/NotificationsContainer/components/NotificationTypes/TransactionNotification/TransactionNotification';
+import TransactionDetails from '@/containers/NotificationsContainer/components/NotificationTypes/NotificationDetails';
+import SwapDetails from '@/containers/NotificationsContainer/components/NotificationTypes/SwapDetails';
 import store from 'store';
 import {
   statusTypes,
   listComponentMapping,
   detailComponentMapping
-} from './components/config';
+} from '@/containers/NotificationsContainer/components/config';
 
 import {
   INVESTIGATE_FAILURE_KEY,

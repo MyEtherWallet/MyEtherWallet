@@ -87,6 +87,9 @@ Vue.use(BootstrapVue);
 
 // // Define vue-i18n
 Vue.use(VueI18n);
+Vue.config.keyCodes = {
+  enter: [13]
+};
 const i18n = new VueI18n({
   locale: 'en_US',
   fallbackLocale: 'en_US',

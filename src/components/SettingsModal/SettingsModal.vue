@@ -33,7 +33,8 @@
                       @change="selectGasType(key)"
                     />
                     <label :for="key">
-                      {{ key | capitalize }} ({{ gasPriceInputs[key].gwei }}
+                      {{ $t('interface.' + key) }}
+                      ({{ gasPriceInputs[key].gwei }}
                       {{ $t('common.gas.gwei') }})
                     </label>
                   </div>
@@ -80,7 +81,13 @@
             </div>
             <div class="button-block">
               <standard-button
-                :options="buttonSave"
+                :options="{
+                  title: $t('common.save'),
+                  buttonStyle: 'green',
+                  rightArrow: false,
+                  leftArrow: false,
+                  mobileFullWidth: true
+                }"
                 :button-disabled="selectedGasType === 'other' && customGas < 1"
                 :click-function="saveGasChanges"
               />
@@ -108,13 +115,27 @@
                 @change="receiveUploadedFile"
               />
               <standard-button
-                :options="buttonUploadFile"
+                :options="{
+                  title: $t('interface.config.upload-f'),
+                  buttonStyle: 'green-border',
+                  rightArrow: false,
+                  leftArrow: false,
+                  fullWidth: true,
+                  noMinWidth: true
+                }"
                 :click-function="uploadFile"
               />
             </div>
             <div class="button-block">
               <standard-button
-                :options="buttonImport"
+                :options="{
+                  title: $t('interface.config.import-short'),
+                  buttonStyle: 'green',
+                  rightArrow: false,
+                  leftArrow: false,
+                  fullWidth: true,
+                  noMinWidth: false
+                }"
                 :button-disabled="importedFile === ''"
                 :click-function="setDataFromImportedFile"
               />
@@ -135,7 +156,15 @@
                 rel="noopener noreferrer"
                 class="export-button"
               >
-                <standard-button :options="buttonExport" />
+                <standard-button
+                  :options="{
+                    title: $t('interface.config.export-short'),
+                    buttonStyle: 'green',
+                    rightArrow: false,
+                    leftArrow: false,
+                    mobileFullWidth: true
+                  }"
+                />
               </a>
             </div>
           </full-width-dropdown>
@@ -201,6 +230,49 @@
                 </tbody>
               </table>
             </div>
+
+            <span v-if="addrBookErrMsg" class="err">{{
+              $t(addrBookErrMsg)
+            }}</span>
+
+            <div class="address-inputs">
+              <blockie
+                v-show="isValidAddress"
+                :address="contactAddress"
+                width="32px"
+                height="32px"
+                class="blockie-image"
+              />
+              <input
+                v-model="contactAddress"
+                v-addr-resolver="'contactAddress'"
+                :class="isValidAddress ? 'blockie-input' : ''"
+                :placeholder="$t('common.addr')"
+                type="text"
+              />
+            </div>
+            <div class="addr-btn-container">
+              <input
+                v-model="contactNickname"
+                :placeholder="$t('interface.address-book.nickname')"
+                class="nickname-input"
+                type="text"
+              />
+              <standard-button
+                :options="{
+                  title: $t('interface.config.add-contact'),
+                  buttonStyle: 'green',
+                  rightArrow: false,
+                  leftArrow: false,
+                  fullWidth: true,
+                  noMinWidth: false
+                }"
+                :button-disabled="
+                  !contactAddress || !isValidAddress || addrBookErrMsg !== null
+                "
+                :click-function="addContact"
+              />
+            </div>
             <div class="addr-btn-container">
               <button
                 :class="addressBook.length >= 10 ? 'disabled' : ''"
@@ -250,36 +322,6 @@ export default {
   },
   data() {
     return {
-      buttonSave: {
-        title: 'Save',
-        buttonStyle: 'green',
-        rightArrow: false,
-        leftArrow: false,
-        mobileFullWidth: true
-      },
-      buttonExport: {
-        title: 'Export',
-        buttonStyle: 'green',
-        rightArrow: false,
-        leftArrow: false,
-        mobileFullWidth: true
-      },
-      buttonUploadFile: {
-        title: 'Upload File...',
-        buttonStyle: 'green-border',
-        rightArrow: false,
-        leftArrow: false,
-        fullWidth: true,
-        noMinWidth: true
-      },
-      buttonImport: {
-        title: 'Import',
-        buttonStyle: 'green',
-        rightArrow: false,
-        leftArrow: false,
-        fullWidth: true,
-        noMinWidth: false
-      },
       inputFileName: '',
       selectedGasType: 'regular',
       customGas: 0,
@@ -520,6 +562,39 @@ export default {
         });
 
       this.ethPrice = price.data.ETH.quotes.USD.price;
+    },
+    addContact() {
+      const alreadyExists = Object.keys(this.addressBook).some(key => {
+        return this.addressBook[key].address === this.contactAddress;
+      });
+
+      if (this.addressBook.length > 9) {
+        this.addrBookErrMsg = 'interface.address-book.add-up-to';
+        this.contactAddress = '';
+        this.contactNickname = '';
+        return;
+      } else if (alreadyExists) {
+        Toast.responseHandler(
+          new Error(this.$t('interface.address-book.already-exists')),
+          Toast.ERROR
+        );
+        this.contactAddress = '';
+        this.contactNickname = '';
+        return;
+      }
+
+      this.addrBookErrMsg = null;
+
+      this.addressBook.push({
+        address: this.contactAddress,
+        currency: 'ETH',
+        nickname: this.contactNickname || this.addressBook.length + 1
+      });
+
+      this.$store.dispatch('setAddressBook', this.addressBook);
+
+      this.contactAddress = '';
+      this.contactNickname = '';
     },
     openAddrBookModal(action, idx) {
       this.currentAddressIdx = action === 'edit' ? idx : null;

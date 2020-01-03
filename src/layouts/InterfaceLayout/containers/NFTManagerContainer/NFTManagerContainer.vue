@@ -81,7 +81,13 @@
       <div v-show="!reLoading">
         <h3 class="no-nft-notice">{{ $t('nftManager.no-nft') }}</h3>
         <standard-button
-          :options="onlyCustom"
+          :options="{
+            title: $t('nftManager.add-custom'),
+            buttonStyle: 'green',
+            helpCenter: false,
+            noMinWidth: true,
+            fullWidth: false
+          }"
           :click-function="openCustomModal"
         />
       </div>
@@ -167,13 +173,6 @@ export default {
       customNFTs: [],
       forRemoval: {},
       collectionLoading: false,
-      onlyCustom: {
-        title: this.$t('nftManager.add-custom'),
-        buttonStyle: 'green',
-        helpCenter: false,
-        noMinWidth: true,
-        fullWidth: false
-      },
       nftObjectClone: {}
     };
   },

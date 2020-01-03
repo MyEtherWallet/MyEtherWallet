@@ -13,12 +13,15 @@
         <div class="btns-container">
           <b-button
             class="withdraw-btn"
-            @click="openManageFundsModal('Withdraw')"
+            @click="openManageFundsModal('dappsAmbrpay.withdraw')"
             >{{ $t('dappsAmbrpay.withdraw-funds') }}</b-button
           >
-          <b-button class="add-btn" @click="openManageFundsModal('Add')">{{
-            $t('dappsAmbrpay.add-funds')
-          }}</b-button>
+          <b-button
+            class="add-btn"
+            @click="openManageFundsModal('dappsAmbrpay.add')"
+          >
+            {{ $t('dappsAmbrpay.add-funds') }}
+          </b-button>
         </div>
       </div>
       <div class="funds-container">
@@ -131,7 +134,7 @@ export default {
       }
     },
     openManageFundsModal(str) {
-      this.manageFundsText = str;
+      this.manageFundsText = this.$t(str);
       this.$refs.manageFunds.$refs.manageFundsModal.show();
     },
     openManageSubModal() {
