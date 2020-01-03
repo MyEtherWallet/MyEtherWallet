@@ -1,9 +1,7 @@
 <template functional>
   <div class="flex--row--align-center content-block-title">
-    <h4>{{ props.title }}</h4>
-    <div class="margin--left--auto">
-      <p>{{ props.buttonText }}</p>
-    </div>
+    <h4 class="mr-2">{{ props.title }}</h4>
+    <p>{{ props.buttonText }}</p>
   </div>
 </template>
 

@@ -40,8 +40,12 @@
       </b-row>
     </div>
     <div class="mobile-menu">
-      <b-dropdown text="CryptoKitties (5)">
-        <b-dropdown-item v-for="i in sortByCount" :key="i.key" href="#">
+      <b-dropdown :text="currentProduct">
+        <b-dropdown-item
+          v-for="i in sortByCount"
+          :key="i.key"
+          @click.native="selectNft(i)"
+        >
           {{ i.title }} ({{ i.count }})
         </b-dropdown-item>
       </b-dropdown>
@@ -77,7 +81,8 @@ export default {
   data() {
     return {
       selected: '',
-      searchResults: []
+      searchResults: [],
+      currentProduct: ''
     };
   },
   computed: {
@@ -113,6 +118,7 @@ export default {
       this.$emit('selected', this.selected);
     },
     selectNft(nft) {
+      this.currentProduct = nft.title + ' (' + nft.count + ')';
       this.searchResults = [];
       if (nft.count > 0) {
         this.selected = nft.contract;
