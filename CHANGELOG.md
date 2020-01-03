@@ -1,7 +1,13 @@
+### Feature
+
+- Update address book [#1795](https://github.com/MyEtherWallet/MyEtherWallet/pull/1795)
+
 ### Devop
 
+- Reduce injected web3 file size to less than 1mb [#1813](https://github.com/MyEtherWallet/MyEtherWallet/pull/1813)
 - Display information related to kyber slippage for high values [#1794](https://github.com/MyEtherWallet/MyEtherWallet/pull/1794)
 - Notification pruning[#1755](https://github.com/MyEtherWallet/MyEtherWallet/pull/1755)
+- Add gasLimit field to batch transactions[#1702](https://github.com/MyEtherWallet/MyEtherWallet/pull/1702)
 
 ### Bug
 
