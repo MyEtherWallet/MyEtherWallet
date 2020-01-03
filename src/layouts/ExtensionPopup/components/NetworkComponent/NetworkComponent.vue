@@ -83,7 +83,7 @@ export default {
       this.$store.dispatch('switchNetwork', network).then(() => {
         window.chrome.storage.sync.set({
           defNetwork: JSON.stringify({
-            serice: network.service,
+            service: network.service,
             key: network.type.name
           })
         });
