@@ -1,0 +1,12 @@
+{
+  "your-transaction-amount": "Сумма транзакции",
+  "to-address": "на адрес",
+  "successfully-transferred": "успешно передана",
+  "swap-created": "Swap Created",
+  "processing": "Processing",
+  "success": "Success",
+  "failed": "Failed",
+  "cancelled": "Cancelled",
+  "error": "Error",
+  "status-error": "Status Error"
+}
