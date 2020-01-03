@@ -1,0 +1,23 @@
+{
+  "generate-info": "Generate Information",
+  "signed-tx": "Signed Transaction",
+  "nonce": "Nonce",
+  "select-network": "Select Network",
+  "tx-details": "Transaction Details",
+  "tx-status": "Transaction Status",
+  "offline-helper": "Send Offline Helper",
+  "export-json": "Export JSON File",
+  "upload-json": "Upload JSON File",
+  "block-hash": "Block Hash",
+  "block-number": "Block Number",
+  "contract-address": "Contract Address",
+  "cumulative-gas-used": "Cumulative Gas Used",
+  "from": "from",
+  "gas-used": "Gas Used",
+  "logs": "logs",
+  "logs-bloom": "Logs Bloom",
+  "status": "Status",
+  "to": "To",
+  "transaction-hash": "Transaction Hash",
+  "transaction-index": "Transaction Index"
+}
