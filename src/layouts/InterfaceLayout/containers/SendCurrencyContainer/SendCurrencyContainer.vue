@@ -1,158 +1,162 @@
 <template>
   <div class="send-currency-container">
     <interface-container-title :title="$t('sendTx.send-tx')" />
-    <div class="send-form">
-      <div class="form-block amount-to-address">
-        <div class="amount">
-          <div class="single-input-block">
-            <div class="title">
-              <h4>{{ $t('sendTx.type') }}</h4>
+    <div class="background-color--white border-bottom-radius--5px">
+      <div class="send-form">
+        <div class="form-block amount-to-address">
+          <div class="amount">
+            <div class="single-input-block">
+              <div class="title">
+                <h4>{{ $t('sendTx.type') }}</h4>
+              </div>
+              <currency-picker
+                :currency="tokensWithBalance"
+                :page="'sendEthAndTokens'"
+                :token="true"
+                :default="selectedCurrency !== '' ? selectedCurrency : {}"
+                @selectedCurrency="selectedCurrency = $event"
+              />
             </div>
-            <currency-picker
-              :currency="tokensWithBalance"
-              :page="'sendEthAndTokens'"
-              :token="true"
-              :default="selectedCurrency !== '' ? selectedCurrency : {}"
-              @selectedCurrency="selectedCurrency = $event"
+            <div class="single-input-block">
+              <div class="title">
+                <h4>{{ $t('sendTx.amount') }}</h4>
+                <p
+                  class="title-button prevent-user-select"
+                  @click="sendEntireBalance"
+                >
+                  {{ $t('sendTx.button-entire') }}
+                </p>
+              </div>
+              <div class="the-form amount-number">
+                <input
+                  v-model="toValue"
+                  :placeholder="$t('sendTx.amount')"
+                  type="number"
+                  min="0"
+                  name="value"
+                  step="any"
+                />
+                <i
+                  :class="[
+                    !isValidAmount.valid || errors.has('value')
+                      ? 'not-good'
+                      : '',
+                    'fa fa-check-circle good-button'
+                  ]"
+                  aria-hidden="true"
+                />
+              </div>
+              <div
+                v-if="!isValidAmount.valid || errors.has('value')"
+                class="error-message-container"
+              >
+                <p>{{ isValidAmount.msg }}</p>
+              </div>
+            </div>
+          </div>
+          <div class="to-address">
+            <dropdown-address-selector
+              :clear-address="clearAddress"
+              :title="$t('sendTx.to-addr')"
+              @toAddress="getToAddress($event)"
             />
           </div>
-          <div class="single-input-block">
+          <div class="tx-fee">
             <div class="title">
-              <h4>{{ $t('sendTx.amount') }}</h4>
-              <p
-                class="title-button prevent-user-select"
-                @click="sendEntireBalance"
-              >
-                {{ $t('sendTx.button-entire') }}
+              <h4>{{ $t('sendTx.tx-fee') }}</h4>
+              <p class="copy-button prevent-user-select" @click="openSettings">
+                {{ $t('common.edit') }}
               </p>
             </div>
-            <div class="the-form amount-number">
-              <input
-                v-model="toValue"
-                :placeholder="$t('sendTx.amount')"
-                type="number"
-                min="0"
-                name="value"
-                step="any"
-              />
-              <i
-                :class="[
-                  !isValidAmount.valid || errors.has('value') ? 'not-good' : '',
-                  'fa fa-check-circle good-button'
-                ]"
-                aria-hidden="true"
-              />
-            </div>
-            <div
-              v-if="!isValidAmount.valid || errors.has('value')"
-              class="error-message-container"
-            >
-              <p>{{ isValidAmount.msg }}</p>
-            </div>
-          </div>
-        </div>
-        <div class="to-address">
-          <dropdown-address-selector
-            :clear-address="clearAddress"
-            :title="$t('sendTx.to-addr')"
-            @toAddress="getToAddress($event)"
-          />
-        </div>
-        <div class="tx-fee">
-          <div class="title">
-            <h4>{{ $t('sendTx.tx-fee') }}</h4>
-            <p class="copy-button prevent-user-select" @click="openSettings">
-              {{ $t('common.edit') }}
-            </p>
-          </div>
-          <div class="fee-value">
-            <div class="gwei">
-              {{ gasPrice }} {{ $t('common.gas.gwei') }}
-              <!--(Economic)-->
-            </div>
-            <div v-show="network.type.name === 'ETH'" class="usd">
-              <i18n path="sendTx.cost-eth-convert" tag="div">
-                <span slot="txFeeEth">{{ txFeeEth }}</span>
-                <span slot="convert">{{ convert }}</span>
-              </i18n>
+            <div class="fee-value">
+              <div class="gwei">
+                {{ gasPrice }} {{ $t('common.gas.gwei') }}
+                <!--(Economic)-->
+              </div>
+              <div v-show="network.type.name === 'ETH'" class="usd">
+                <i18n path="sendTx.cost-eth-convert" tag="div">
+                  <span slot="txFeeEth">{{ txFeeEth }}</span>
+                  <span slot="convert">{{ convert }}</span>
+                </i18n>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="send-form advanced">
-      <div class="advanced-content">
-        <div class="toggle-button-container">
-          <h4>{{ $t('common.advanced') }}</h4>
-          <div class="toggle-button">
-            <span>{{ $t('sendTx.data-gas') }}</span>
-            <!-- Rounded switch -->
-            <div class="sliding-switch-white">
-              <label class="switch">
+      <div class="send-form advanced">
+        <div class="advanced-content">
+          <div class="toggle-button-container">
+            <h4>{{ $t('common.advanced') }}</h4>
+            <div class="toggle-button">
+              <span>{{ $t('sendTx.data-gas') }}</span>
+              <!-- Rounded switch -->
+              <div class="sliding-switch-white">
+                <label class="switch">
+                  <input
+                    type="checkbox"
+                    @click="advancedExpand = !advancedExpand"
+                  />
+                  <span class="slider round" />
+                </label>
+              </div>
+            </div>
+          </div>
+          <div
+            :class="advancedExpand && 'input-container-open'"
+            class="input-container"
+          >
+            <div class="margin-container">
+              <div v-show="!isToken" class="the-form user-input">
+                <p>{{ $t('sendTx.add-data') }}</p>
                 <input
-                  type="checkbox"
-                  @click="advancedExpand = !advancedExpand"
+                  v-model="toData"
+                  :placeholder="$t('sendTx.ph-add-data')"
+                  type="text"
+                  autocomplete="off"
                 />
-                <span class="slider round" />
-              </label>
+                <i
+                  :class="[
+                    isValidData ? '' : 'not-good',
+                    'fa fa-check-circle good-button'
+                  ]"
+                  aria-hidden="true"
+                />
+              </div>
+              <div class="the-form user-input">
+                <p>{{ $t('common.gas.limit') | capitalize }}</p>
+                <input
+                  v-model="gasLimit"
+                  :placeholder="$t('common.gas.limit')"
+                  type="number"
+                  min="0"
+                  name
+                />
+                <i
+                  :class="[
+                    isValidGasLimit ? '' : 'not-good',
+                    'fa fa-check-circle good-button'
+                  ]"
+                  aria-hidden="true"
+                />
+              </div>
             </div>
           </div>
         </div>
+      </div>
+      <div class="submit-button-container">
         <div
-          :class="advancedExpand && 'input-container-open'"
-          class="input-container"
+          :class="[
+            validInputs ? '' : 'disabled',
+            'submit-button large-round-button-green-filled'
+          ]"
+          @click="submitTransaction"
         >
-          <div class="margin-container">
-            <div v-show="!isToken" class="the-form user-input">
-              <p>{{ $t('sendTx.add-data') }}</p>
-              <input
-                v-model="toData"
-                :placeholder="$t('sendTx.ph-add-data')"
-                type="text"
-                autocomplete="off"
-              />
-              <i
-                :class="[
-                  isValidData ? '' : 'not-good',
-                  'fa fa-check-circle good-button'
-                ]"
-                aria-hidden="true"
-              />
-            </div>
-            <div class="the-form user-input">
-              <p>{{ $t('common.gas.limit') | capitalize }}</p>
-              <input
-                v-model="gasLimit"
-                :placeholder="$t('common.gas.limit')"
-                type="number"
-                min="0"
-                name
-              />
-              <i
-                :class="[
-                  isValidGasLimit ? '' : 'not-good',
-                  'fa fa-check-circle good-button'
-                ]"
-                aria-hidden="true"
-              />
-            </div>
-          </div>
+          {{ $t('sendTx.send-tx') }}
         </div>
-      </div>
-    </div>
-    <div class="submit-button-container">
-      <div
-        :class="[
-          validInputs ? '' : 'disabled',
-          'submit-button large-round-button-green-filled'
-        ]"
-        @click="submitTransaction"
-      >
-        {{ $t('sendTx.send-tx') }}
-      </div>
-      <div class="clear-all-btn" @click="clear()">
-        {{ $t('common.clear-all') }}
+        <div class="clear-all-btn" @click="clear()">
+          {{ $t('common.clear-all') }}
+        </div>
       </div>
     </div>
   </div>

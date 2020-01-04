@@ -43,6 +43,7 @@
 
 .mobile-title {
   display: none;
+
   @media all and (max-width: $interface--mobile-side-menu--width) {
     display: block;
   }
