@@ -2,6 +2,7 @@
 
 ### Feature
 
+- Update error log modal design [#1816](https://github.com/MyEtherWallet/MyEtherWallet/pull/1816)
 - Update address book [#1795](https://github.com/MyEtherWallet/MyEtherWallet/pull/1795)
 
 ### Devop
