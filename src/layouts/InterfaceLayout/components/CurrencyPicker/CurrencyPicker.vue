@@ -156,9 +156,6 @@ export default {
     },
     default(newVal) {
       if (newVal.hasOwnProperty('symbol')) this.selectedCurrency = newVal;
-    },
-    search(newVal) {
-      console.log(newVal);
     }
   },
   mounted() {
