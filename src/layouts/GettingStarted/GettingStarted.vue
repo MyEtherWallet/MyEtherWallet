@@ -56,17 +56,34 @@
         <div class="create-wallet-warnings__continue-button">
           <standard-button
             v-if="cwwCurrent != '0'"
-            :options="backButton"
+            :options="{
+              title: $t('common.back'),
+              buttonStyle: 'green-transparent',
+              rightArrow: false,
+              noMinWidth: true,
+              buttonDisabled: false
+            }"
             :click-function="mouseScrollUp"
           />
           <standard-button
             v-if="cwwCurrent !== 5"
-            :options="nextButton"
+            :options="{
+              title: $t('common.next'),
+              buttonStyle: 'green',
+              rightArrow: true,
+              noMinWidth: false
+            }"
             :click-function="mouseScrollDown"
           />
           <standard-button
             v-if="cwwCurrent == 5"
-            :options="getStartedButton"
+            :options="{
+              title: $t('common.get-started'),
+              buttonStyle: 'green',
+              rightArrow: false,
+              noMinWidth: true,
+              buttonDisabled: false
+            }"
             :click-function="done"
           />
         </div>
@@ -118,27 +135,7 @@ export default {
   data() {
     return {
       cwwCurrent: 0,
-      cwwRefs: ['cww1', 'cww2', 'cww3', 'cww4', 'cww5', 'cww6'],
-      nextButton: {
-        title: this.$t('common.next'),
-        buttonStyle: 'green',
-        rightArrow: true,
-        noMinWidth: false
-      },
-      backButton: {
-        title: this.$t('common.back'),
-        buttonStyle: 'green-transparent',
-        rightArrow: false,
-        noMinWidth: true,
-        buttonDisabled: false
-      },
-      getStartedButton: {
-        title: 'Get Started',
-        buttonStyle: 'green',
-        rightArrow: false,
-        noMinWidth: true,
-        buttonDisabled: false
-      }
+      cwwRefs: ['cww1', 'cww2', 'cww3', 'cww4', 'cww5', 'cww6']
     };
   },
   methods: {

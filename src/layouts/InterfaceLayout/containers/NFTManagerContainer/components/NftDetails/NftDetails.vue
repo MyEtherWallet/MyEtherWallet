@@ -17,7 +17,13 @@
             <div class="send-button-container">
               <standard-button
                 :button-disabled="!isValidAddress"
-                :options="sendButton"
+                :options="{
+                  title: $t('sendTx.send'),
+                  buttonStyle: 'green',
+                  helpCenter: true,
+                  noMinWidth: true,
+                  fullWidth: true
+                }"
                 :click-function="transfer"
               />
             </div>
@@ -71,13 +77,6 @@ export default {
       ERC721tokenContract: {},
       cryptoKittiesContract: {},
       cryptoKittiesConfig: '0x06012c8cf97bead5deae237070f9587f8e7a266d',
-      sendButton: {
-        title: this.$t('sendTx.send'),
-        buttonStyle: 'green',
-        helpCenter: true,
-        noMinWidth: true,
-        fullWidth: true
-      },
       isValidAddress: false
     };
   },

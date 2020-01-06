@@ -24,7 +24,10 @@
         </div>
         <div class="ok-button">
           <standard-button
-            :options="okayButtonOptions"
+            :options="{
+              title: $t('common.ok'),
+              buttonStyle: 'green'
+            }"
             :click-function="close"
           />
         </div>
@@ -42,14 +45,6 @@ export default {
     'standard-button': StandardButton
   },
   props: {},
-  data() {
-    return {
-      okayButtonOptions: {
-        title: this.$t('common.ok'),
-        buttonStyle: 'green'
-      }
-    };
-  },
   methods: {
     close() {
       this.$refs.disconnected.hide();

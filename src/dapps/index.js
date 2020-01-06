@@ -68,7 +68,7 @@ const dapps = {
     iconDisabled: ambrpayDisabled,
     title: 'dappsAmbrpay.title',
     desc: 'dappsAmbrpay.ambrpay-popover',
-    supportedNetworks: [ETH.name],
+    supportedNetworks: [ETH.name, KOV.name],
     lastUpdated: '11/05/2019',
     releaseDate: '11/05/2019'
   },

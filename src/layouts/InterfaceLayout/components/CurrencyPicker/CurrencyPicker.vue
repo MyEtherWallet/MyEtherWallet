@@ -9,11 +9,16 @@
         ]"
         @click="openDropdown"
       >
-        <p v-show="token">
+        <p v-show="selectedCurrency.needsTranslation">
+          {{ $t(selectedCurrency.name) }}
+        </p>
+        <p v-show="token && !selectedCurrency.needsTranslation">
           {{ selectedCurrency.symbol }}
           <span class="subname">- {{ selectedCurrency.name }}</span>
         </p>
-        <p v-show="!token">{{ selectedCurrency.name }}</p>
+        <p v-show="!token && !selectedCurrency.needsTranslation">
+          {{ selectedCurrency.name }}
+        </p>
         <i :class="['fa', open ? 'fa-angle-up' : 'fa-angle-down']" />
       </div>
       <div :class="[open ? 'open' : 'hide', 'dropdown-item-container']">
@@ -45,7 +50,8 @@
             <p v-show="token">
               {{ curr.symbol }}<span class="subname"> - {{ curr.name }}</span>
             </p>
-            <p v-show="!token">{{ curr.name }}</p>
+            <p v-show="!token && !curr.needsTranslation">{{ curr.name }}</p>
+            <p v-show="!token && curr.needsTranslation">{{ $t(curr.name) }}</p>
           </div>
           <div v-show="localCurrency.length === 0" class="item">
             <p>
@@ -89,7 +95,7 @@ export default {
   },
   data() {
     return {
-      selectedCurrency: { name: 'Select an item', abi: '', address: '' },
+      selectedCurrency: {},
       open: false,
       search: '',
       abi: '',
@@ -116,7 +122,12 @@ export default {
         return [this.networkToken, ...this.currency];
       }
       return [
-        { name: 'Select an item', abi: '', address: '' },
+        {
+          name: 'interface.select-item',
+          abi: '',
+          address: '',
+          needsTranslation: true
+        },
         ...this.currency
       ];
     }
@@ -143,7 +154,12 @@ export default {
       this.selectedCurrency =
         this.token === true
           ? this.networkToken
-          : { name: 'Select an item', abi: '', address: '' };
+          : {
+              name: 'interface.select-item',
+              abi: '',
+              address: '',
+              needsTranslation: true
+            };
     },
     openDropdown() {
       this.open = !this.open;

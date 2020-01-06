@@ -42,7 +42,8 @@
   "success": {
     "title": "Success",
     "sub-title": "Transaction sent!",
-    "button-check-status": "Check Status on Etherscan.io"
+    "button-check-status": "Check Status on Etherscan.io",
+    "button-check-explorer": "Check Status on {explorrerName}"
   },
   "via-contract": "Via Contract",
   "import-json": "Import JSON",
