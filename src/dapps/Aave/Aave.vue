@@ -263,7 +263,7 @@ export default {
         this.web3.eth
           .sendTransaction(data)
           .then(resp => {
-            console.log('resp', resp);
+            Toast.responseHandler(resp, Toast.SUCCESS);
           })
           .catch(err => {
             Toast.responseHandler(err, Toast.ERROR);
@@ -287,11 +287,10 @@ export default {
         this.web3.eth
           .sendTransaction(data)
           .then(resp => {
-            console.log('resp', resp);
+            Toast.responseHandler(resp, Toast.SUCCESS);
           })
           .catch(err => {
-            console.log('err', err);
-            Toast.responseHandler(err, Toast.ERROR);
+=            Toast.responseHandler(err, Toast.ERROR);
           });
       } catch (err) {
         Toast.responseHandler(err, Toast.ERROR);
