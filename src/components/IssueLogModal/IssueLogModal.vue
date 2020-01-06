@@ -10,7 +10,39 @@
         static
         lazy
       >
-        <div class="new-issue-log">aaaa</div>
+        <div class="new-issue-log">
+          <div class="large-header">Oops!</div>
+          <div class="sub-header">
+            We have found an error!<br />
+            It will be helpful for us to fix this issue, if you submit us a
+            report about this error.
+          </div>
+          <div class="buttons mt-5">
+            <div class="button-block-text">
+              {{ $t('common.issue-log.inform-error') }}
+            </div>
+            <div class="mt-3 d-flex">
+              <b-btn class="mr-1">Send error report to MEW</b-btn>
+              <b-btn variant="outline-secondary">No thanks</b-btn>
+            </div>
+            <div
+              v-b-toggle.collapse-error-detail
+              class="mt-4 show-error-detail"
+            >
+              Show error detail
+            </div>
+          </div>
+
+          <b-collapse id="collapse-error-detail" class="mt-2">
+            <b-card>
+              <pre class="error-detail"
+                >{{ JSON.stringify(error) }}
+</pre
+              >
+            </b-card>
+          </b-collapse>
+        </div>
+
         <div v-if="false" class="modal-contents">
           <div class="modal-header-block">
             <h2 class="title">{{ $t('common.issue-log.error-text') }}</h2>
