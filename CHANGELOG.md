@@ -34,6 +34,10 @@
 
 - Fix Schedule View [#1781](https://github.com/MyEtherWallet/MyEtherWallet/pull/1781)
 
+### Devop
+
+- Update NFT manager UI [#1808](https://github.com/MyEtherWallet/MyEtherWallet/pull/1808)
+
 ### Release v5.2.8
 
 ### Bug
