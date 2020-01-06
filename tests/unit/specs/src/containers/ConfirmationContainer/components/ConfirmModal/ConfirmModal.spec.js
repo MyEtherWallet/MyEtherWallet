@@ -136,13 +136,13 @@ describe('ConfirmModal.vue', () => {
     ).toEqual(String(value));
   });
 
-  it('should render correct isHardwareWallet props', () => {
-    expect(wrapper.vm.signedTransaction).toEqual('');
-    wrapper.setProps({ isHardwareWallet: true });
-    expect(wrapper.vm.signedTransaction).toEqual(
-      'Please Approve on Hardware Wallet'
-    );
-  });
+  // it('should render correct isHardwareWallet props', () => {
+  //   expect(wrapper.vm.signedTransaction).toEqual('');
+  //   wrapper.setProps({ isHardwareWallet: true });
+  //   expect(wrapper.vm.signedTransaction).toEqual(
+  //     'Please Approve on Hardware Wallet'
+  //   );
+  // });
 
   describe('ConfirmModal.vue Methods', () => {
     it('should confirm sendtx when click submit button', () => {

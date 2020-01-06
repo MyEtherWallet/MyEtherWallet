@@ -152,16 +152,18 @@ export default {
         updatedArray.splice(item, 1, this.inputs[item]);
       });
       if (!this.hasEmpty()) {
-        this.errorMsg = `Some fields are still missing!`;
+        this.errorMsg = this.$t('createWallet.mnemonic.fields-missing');
       } else if (
         this.password.length > 0 &&
         this.password !== this.inputPassword
       ) {
-        this.errorMsg = `Mnemonic and extra word doesn't match! Please check your input!`;
+        this.errorMsg = this.$t(
+          'createWallet.mnemonic.does-not-match-extra-word'
+        );
       } else if (updatedArray.join() === this.mnemonicValues.join()) {
         this.$emit('verifiedMnemonic');
       } else {
-        this.errorMsg = `Mnemonic doesn't match! Please write it down correctly!`;
+        this.errorMsg = this.$t('createWallet.mnemonic.input-does-not-match');
       }
       this.loading = false;
     }

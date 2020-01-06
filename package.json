@@ -1,6 +1,6 @@
 {
   "name": "myetherwallet",
-  "version": "5.2.8-hotfix.1",
+  "version": "5.2.9",
   "description": "Client side ethereum wallet",
   "scripts": {
     "build:offline": "WEBPACK_INTEGRITY=false npm run build:hash",
@@ -10,7 +10,7 @@
     "build:hash": "ROUTER_MODE=hash npm run build",
     "build:history": "ROUTER_MODE=history npm run build",
     "build:mewcx": "ROUTER_MODE=hash BUILD_TYPE=mewcx npm run build",
-    "start:mewcx": "ROUTER_MODE=hash BUILD_TYPE=mewcx npm run start",
+    "start:mewcx": "ROUTER_MODE=hash BUILD_TYPE=mewcx npm run buildwatch",
     "buildwatch": "npm run update && vue-cli-service build --watch",
     "test": "npm run update:lists && jest --clearCache && npm run test:unit",
     "codecov": "npm run test && codecov",

@@ -2,7 +2,7 @@
   <div class="modal-container">
     <b-modal
       ref="modal"
-      :title="$t('dappsMaker.close-title')"
+      :title="$t('dappsMCDMaker.close-title')"
       centered
       class="bootstrap-modal nopadding"
       static
@@ -11,54 +11,54 @@
     >
       <div class="contents">
         <div v-if="!enoughMkr" class="message-container">
-          {{ $t('dappsMaker.not-enough-mkr-close') }}
+          {{ $t('dappsMCDMaker.not-enough-mkr-close') }}
         </div>
         <div v-if="!enoughDai" class="message-container">
-          {{ $t('dappsMaker.not-enough-dai-close') }}
+          {{ $t('dappsMCDMaker.not-enough-dai-close') }}
         </div>
         <p class="top-text">
-          {{ $t('dappsMaker.closing-notice') }}
+          {{ $t('dappsMCDMaker.closing-notice') }}
         </p>
 
         <div class="value-table-container">
           <div class="value-table mkr-balance">
             <div class="value-block">
               <p>
-                <b>{{ $t('dappsMaker.mkr-balance') }}</b>
+                <b>{{ $t('dappsMCDMaker.mkr-balance') }}</b>
               </p>
               <p>
-                <b>{{ mkrBalance }} {{ $t('dappsMaker.mkr') }}</b>
+                <b>{{ mkrBalance }} {{ $t('dappsMCDMaker.mkr') }}</b>
               </p>
             </div>
             <p v-show="!enoughMkr" class="get-mkr" @click="getMkr()">
-              {{ $t('dappsMaker.get-mkr') }}
+              {{ $t('dappsMCDMaker.get-mkr') }}
             </p>
           </div>
 
           <div class="value-table mkr-balance">
             <div class="value-block">
               <p>
-                <b>{{ $t('dappsMaker.dai-balance') }}</b>
+                <b>{{ $t('dappsMCDMaker.dai-balance') }}</b>
               </p>
               <p>
-                <b>{{ daiBalance }} {{ $t('dappsMaker.dai') }}</b>
+                <b>{{ daiBalance }} {{ $t('dappsMCDMaker.dai') }}</b>
               </p>
             </div>
             <p v-show="!enoughDai" class="get-mkr" @click="getDai()">
-              {{ $t('dappsMaker.get-dai') }}
+              {{ $t('dappsMCDMaker.get-dai') }}
             </p>
           </div>
           <div class="value-table other-values">
             <div class="value-block">
-              <p>{{ $t('dappsMaker.outstanding-dai') }}</p>
+              <p>{{ $t('dappsMCDMaker.outstanding-dai') }}</p>
               <p>
-                <b>{{ values.debtValue }} {{ $t('dappsMaker.dai') }}</b>
+                <b>{{ values.debtValue }} {{ $t('dappsMCDMaker.dai') }}</b>
               </p>
             </div>
             <div class="value-block">
               <p>
                 {{
-                  $t('dappsMaker.stability-fee-in-mkr', {
+                  $t('dappsMCDMaker.stability-fee-in-mkr', {
                     value: displayFixedValue(
                       displayPercentValue(values.stabilityFee)
                     )
@@ -66,7 +66,7 @@
                 }}
               </p>
               <p>
-                <b>{{ getfeeOwed }} {{ $t('dappsMaker.mkr') }}</b>
+                <b>{{ getfeeOwed }} {{ $t('dappsMCDMaker.mkr') }}</b>
               </p>
             </div>
           </div>
@@ -75,24 +75,44 @@
         <div class="buttons">
           <div v-if="needsDaiApprove">
             <standard-button
-              :options="approveDaiButton"
+              :options="{
+                title: $t('dappsMCDMaker.approve-dai'),
+                buttonStyle: 'green-border',
+                fullWidth: true,
+                noMinWidth: true
+              }"
               :click-function="approveDai"
             />
           </div>
           <div v-if="needsMkrApprove">
             <standard-button
-              :options="approveMkrButton"
+              :options="{
+                title: $t('dappsMCDMaker.approve-maker'),
+                buttonStyle: 'green-border',
+                fullWidth: true,
+                noMinWidth: true
+              }"
               :click-function="approveMkr"
             />
           </div>
         </div>
         <div class="buttons">
           <standard-button
-            :options="cancelButton"
+            :options="{
+              title: $('common.cancel'),
+              buttonStyle: 'green-border',
+              fullWidth: true,
+              noMinWidth: true
+            }"
             :click-function="closeModal"
           />
           <standard-button
-            :options="closeButton"
+            :options="{
+              title: $t('common.close'),
+              buttonStyle: 'green',
+              fullWidth: true,
+              noMinWidth: true
+            }"
             :button-disabled="canClose ? false : true"
             :click-function="closeCdp"
           />
@@ -174,30 +194,6 @@ export default {
       textValues: {},
       mkrToken: {},
       daiToken: {},
-      approveMkrButton: {
-        title: 'Approve Maker',
-        buttonStyle: 'green-border',
-        fullWidth: true,
-        noMinWidth: true
-      },
-      approveDaiButton: {
-        title: 'Approve Dai',
-        buttonStyle: 'green-border',
-        fullWidth: true,
-        noMinWidth: true
-      },
-      cancelButton: {
-        title: 'Cancel',
-        buttonStyle: 'green-border',
-        fullWidth: true,
-        noMinWidth: true
-      },
-      closeButton: {
-        title: 'Close',
-        buttonStyle: 'green',
-        fullWidth: true,
-        noMinWidth: true
-      },
       suppliedFrom: {
         symbol: 'ETH',
         name: 'Ethereum'
