@@ -43,7 +43,7 @@
     "title": "Готово",
     "sub-title": "Транзакция отправлена!",
     "button-check-status": "Проверить статус на Etherscan.io",
-    "button-check-explorer": "Check Status on {explorrerName}"
+    "button-check-explorer": "Проверить статус на {explorrerName}"
   },
   "via-contract": "Через контракт",
   "import-json": "Импорт JSON",
