@@ -232,7 +232,7 @@ export default {
         this.reservesData.push(reserveInfo);
       }
       // change this when I get real information
-      console.error('this', this.reservesData);
+      // console.error('this', this.reservesData);
       this.loadingReserves = false;
       // console.error('hello')
       // console.error('hellooooo', this.reservesData[0])
@@ -263,7 +263,7 @@ export default {
         this.web3.eth
           .sendTransaction(data)
           .then(resp => {
-            console.error('resp', resp);
+            console.log('resp', resp);
           })
           .catch(err => {
             Toast.responseHandler(err, Toast.ERROR);
@@ -287,10 +287,10 @@ export default {
         this.web3.eth
           .sendTransaction(data)
           .then(resp => {
-            console.error('resp', resp);
+            console.log('resp', resp);
           })
           .catch(err => {
-            console.error('err', err);
+            console.log('err', err);
             Toast.responseHandler(err, Toast.ERROR);
           });
       } catch (err) {

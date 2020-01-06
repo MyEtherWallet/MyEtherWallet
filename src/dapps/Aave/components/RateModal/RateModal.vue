@@ -106,7 +106,6 @@ export default {
       this.$refs.confirmationModal.$refs.confirmationModal.show();
     },
     emitTakeAction(param) {
-      console.error('in rate modal', param);
       this.$emit('emitTakeAction', param);
     }
   }
