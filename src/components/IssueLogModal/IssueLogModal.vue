@@ -88,17 +88,6 @@ export default {
   },
   data() {
     return {
-      cancelButtonOptions: {
-        title: 'Cancel',
-        buttonStyle: 'green-border',
-        noMinWidth: true,
-        fullWidth: true
-      },
-      sendButtonOptions: {
-        title: 'Send',
-        buttonStyle: 'green',
-        noMinWidth: true
-      },
       errorCount: 0,
       showSkipper: false,
       neverShow: false
