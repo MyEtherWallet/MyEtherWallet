@@ -65,7 +65,7 @@
     "never-show": "Never show again",
     "send-button": "Send error report to MEW",
     "no-thanks": "No thanks",
-    "show-error-detail": "Show error detail"
+    "show-error-details": "Show error details"
   },
   "wallet": {
     "create-new": "Create A New Wallet",
