@@ -6,8 +6,7 @@
 
 ### Devop
 
-### Devop
-
+- Release cleanup [#1817](https://github.com/MyEtherWallet/MyEtherWallet/pull/1817)
 - Notification pruning[#1755](https://github.com/MyEtherWallet/MyEtherWallet/pull/1755)
 - Enable translations dropdown and add in the other languages [#1703](https://github.com/MyEtherWallet/MyEtherWallet/pull/1703)
 - Reduce injected web3 file size to less than 1mb [#1813](https://github.com/MyEtherWallet/MyEtherWallet/pull/1813)
