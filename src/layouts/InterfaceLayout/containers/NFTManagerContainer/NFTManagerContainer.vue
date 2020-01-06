@@ -30,7 +30,7 @@
       </div>
 
       <div v-if="!showDetails">
-        <content-block-title :button-text="totalNtfCount" :title="nftTitle" />
+        <content-block-title :button-text="ntfCount" :title="nftTitle" />
 
         <b-row>
           <b-col
