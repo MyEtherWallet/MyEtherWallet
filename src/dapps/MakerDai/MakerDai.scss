@@ -21,12 +21,7 @@ $confirmation-modal-mobile-width: 500px;
     align-items: center;
     position: absolute;
     top: 16px;
-    right: 100px;
-
-    @media all and (max-width: 600px) {
-      top: 79px;
-      left: 8px;
-    }
+    right: 16px;
 
     .inner-container {
       display: flex;
@@ -42,8 +37,8 @@ $confirmation-modal-mobile-width: 500px;
 
       .move-btn {
         background-color: $white;
-        width: 120px;
-        height: 34px;
+        min-width: 120px;
+        min-height: 34px;
         border-radius: 4px;
         border: solid 1px #05c0a5;
         color: #05c0a5;
@@ -145,31 +140,9 @@ $confirmation-modal-mobile-width: 500px;
 }
 
 .buttons-container {
-  display: grid;
-  grid-column-gap: 5px;
-  grid-row-gap: 5px;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  padding: 10px;
-
-  @media all and (max-width: $dapps-container-mobile-width) {
-    > * {
-      margin-bottom: 10px;
-    }
-  }
-
-  > *:last-child {
-    margin-bottom: 0;
-  }
-
-  // Tablet
-  @media all and (min-width: calc(#{$mobile-width} + 1px)) and (max-width: $tablet-width) {
-    padding: 20px;
-  }
-
-  @media all and (max-width: $dapps-container-mobile-width) {
-    display: block;
-    padding: 10px;
-  }
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 %send-form-base {

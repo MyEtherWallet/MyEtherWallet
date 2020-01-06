@@ -21,7 +21,7 @@
               {{ $t('dappsMaker.dai') }}
             </p>
             <p class="max" @click="maxDai">
-              {{ $t('dappsMaker.max-balance') }}
+              {{ $t('dappsMaker.max-available') }}
             </p>
           </div>
           <div :class="['input-box', allOk ? '' : 'danger']">
@@ -96,11 +96,19 @@
 
         <div class="buttons">
           <standard-button
-            :options="cancelButton"
+            :options="{
+              title: $t('common.cancel'),
+              buttonStyle: 'green-border',
+              noMinWidth: true
+            }"
             :click-function="closeModal"
           />
           <standard-button
-            :options="generateButton"
+            :options="{
+              title: $t('dappsMaker.generate'),
+              buttonStyle: 'green',
+              noMinWidth: true
+            }"
             :button-disabled="canProceed ? false : true"
             :click-function="submitBtn"
           />
@@ -190,17 +198,7 @@ export default {
       modalDetailInformation: false,
       textValues: {},
       fiatCurrency: 'USD',
-      digitalCurrency: 'ETH',
-      cancelButton: {
-        title: 'Cancel',
-        buttonStyle: 'green-border',
-        noMinWidth: true
-      },
-      generateButton: {
-        title: 'Generate',
-        buttonStyle: 'green',
-        noMinWidth: true
-      }
+      digitalCurrency: 'ETH'
     };
   },
   computed: {

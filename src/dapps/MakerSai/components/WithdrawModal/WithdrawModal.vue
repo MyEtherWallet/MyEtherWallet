@@ -18,7 +18,7 @@
             <label> {{ $t('dappsMaker.withdraw-question') }}</label>
             <div class="top-buttons">
               <p class="max-withdraw" @click="maxWithdraw">
-                {{ $t('dappsMaker.max-withdraw') }}
+                {{ $t('dappsMaker.max-available') }}
               </p>
             </div>
             <div :class="['input-box', newCollateralRatioSafe ? '' : 'danger']">
@@ -47,7 +47,7 @@
         <expanding-option title="Detail Information">
           <div class="padding-container">
             <div class="grid-block">
-              <p>{{ $t('dappsMaker.max-withdraw-available') }}</p>
+              <p>{{ $t('dappsMaker.max-available') }}</p>
               <p>
                 <b>{{
                   values.maxDai ? displayFixedValue(values.maxEthDraw, 5) : 0
@@ -109,11 +109,19 @@
 
         <div class="buttons">
           <standard-button
-            :options="cancelButton"
+            :options="{
+              title: $t('common.cancel'),
+              buttonStyle: 'green-border',
+              noMinWidth: true
+            }"
             :click-function="closeModal"
           />
           <standard-button
-            :options="submitButton"
+            :options="{
+              title: $t('common.submit'),
+              buttonStyle: 'green',
+              noMinWidth: true
+            }"
             :button-disabled="canProceed ? false : true"
             :click-function="submitBtn"
           />
@@ -199,17 +207,7 @@ export default {
       modalDetailInformation: false,
       textValues: {},
       fiatCurrency: 'USD',
-      digitalCurrency: 'ETH',
-      cancelButton: {
-        title: 'Cancel',
-        buttonStyle: 'green-border',
-        noMinWidth: true
-      },
-      submitButton: {
-        title: 'Submit',
-        buttonStyle: 'green',
-        noMinWidth: true
-      }
+      digitalCurrency: 'ETH'
     };
   },
   computed: {

@@ -103,7 +103,7 @@
             </div>
             <div class="block-content">
               <div class="item">
-                <p>{{ $t('dappsMaker.max-withdraw') }}</p>
+                <p>{{ $t('dappsMaker.max-available') }}</p>
                 <div>
                   {{ maxEthDrawDisplay }}
                   <span>{{ $t('common.currency.eth') }}</span>
@@ -150,7 +150,7 @@
             </div>
             <div class="block-content">
               <div class="item">
-                <p>{{ $t('dappsMaker.max-available') }}</p>
+                <p>{{ $t('dappsMaker.max-available-gen') }}</p>
                 <div>
                   {{ maxDai }}
                   <span>{{ $t('dappsMaker.dai') }}</span>
