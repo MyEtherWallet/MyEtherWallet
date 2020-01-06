@@ -1,6 +1,8 @@
 @import '~@/scss/GlobalVariables';
 
 .form-content-container {
+  background-color: white;
+
   // Desktop
   @media all and (min-width: calc(#{$tablet-width} + 1px)) {
     padding: 40px;
@@ -29,6 +31,7 @@
 }
 
 %send-form-base {
+  background-color: white;
   padding: 40px 40px;
 
   // Tablet
