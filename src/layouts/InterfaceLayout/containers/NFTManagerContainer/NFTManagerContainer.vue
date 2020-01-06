@@ -30,7 +30,7 @@
       </div>
 
       <div v-if="!showDetails">
-        <content-block-title :button-text="ntfCount" :title="nftTitle" />
+        <content-block-title :button-text="totalNtfCount" :title="nftTitle" />
 
         <b-row>
           <b-col
@@ -84,7 +84,7 @@
                   v-if="startIndex + 1 != endIndex"
                   class="page-link page-index-button"
                 >
-                  {{ startIndex + 1 }} - {{ endIndex }} ({{ totalNtfCount }}
+                  {{ startIndex + 1 }} - {{ endIndex }} ({{ endIndex - startIndex }}
                   items)
                 </div>
                 <div
@@ -92,7 +92,7 @@
                   class="page-link page-index-button"
                 >
                   {{ startIndex + 1 }}
-                  ({{ totalNtfCount }} items)
+                  ({{ endIndex - startIndex }} items)
                 </div>
               </li>
               <li v-show="showNextButton" class="page-item" @click="getNext()">
@@ -107,7 +107,13 @@
       <div v-show="!reLoading">
         <h3 class="no-nft-notice">{{ $t('nftManager.no-nft') }}</h3>
         <standard-button
-          :options="onlyCustom"
+          :options="{
+            title: $t('nftManager.add-custom'),
+            buttonStyle: 'green',
+            helpCenter: false,
+            noMinWidth: true,
+            fullWidth: false
+          }"
           :click-function="openCustomModal"
         />
       </div>
@@ -193,13 +199,6 @@ export default {
       customNFTs: [],
       forRemoval: {},
       collectionLoading: false,
-      onlyCustom: {
-        title: this.$t('nftManager.add-custom'),
-        buttonStyle: 'green',
-        helpCenter: false,
-        noMinWidth: true,
-        fullWidth: false
-      },
       nftObjectClone: {}
     };
   },
@@ -527,6 +526,7 @@ export default {
                   });
               }
             }
+            this.collectionLoading = false;
           }
           setTimeout(() => {
             this.reLoading = false;
