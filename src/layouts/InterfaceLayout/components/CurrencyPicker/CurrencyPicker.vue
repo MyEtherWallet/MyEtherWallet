@@ -111,10 +111,22 @@ export default {
       };
     },
     localCurrency() {
-      if (this.search !== '') {
+      if (this.search.substr(0, 2) === '0x') {
         return this.currency.filter(curr => {
-          if (curr.symbol.toLowerCase().includes(this.search.toLowerCase())) {
+          if (curr.address.toLowerCase().includes(this.search.toLowerCase())) {
             return curr;
+          }
+        });
+      } else if (this.search !== '') {
+        return this.currency.filter(curr => {
+          if (curr.hasOwnProperty('symbol')) {
+            if (curr.symbol.toLowerCase().includes(this.search.toLowerCase())) {
+              return curr;
+            }
+          } else {
+            if (curr.name.toLowerCase().includes(this.search.toLowerCase())) {
+              return curr;
+            }
           }
         });
       }
@@ -144,6 +156,9 @@ export default {
     },
     default(newVal) {
       if (newVal.hasOwnProperty('symbol')) this.selectedCurrency = newVal;
+    },
+    search(newVal) {
+      console.log(newVal);
     }
   },
   mounted() {
