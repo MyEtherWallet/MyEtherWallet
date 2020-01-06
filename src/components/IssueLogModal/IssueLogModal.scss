@@ -1,4 +1,4 @@
-@import "~@/scss/GlobalVariables";
+@import '~@/scss/GlobalVariables';
 
 //***************************************************
 // .modal-contents
@@ -6,10 +6,10 @@
 
 .new-issue-log {
   background-color: #7acbcc;
-  background-image: url("~@/assets/images/home/spaceman-r.png");
+  background-image: url('~@/assets/images/home/spaceman-r.png');
   background-repeat: no-repeat;
   background-size: 350px;
-  background-position: right 0px bottom -140px;
+  background-position: right 0 bottom -140px;
   padding: 20px 40px 40px 40px;
   & div,
   & label {
