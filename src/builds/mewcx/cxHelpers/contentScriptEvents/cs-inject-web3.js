@@ -14,9 +14,7 @@ export default async ({ event, id }, res, next) => {
     idScript.setAttribute('async', false);
     idScript.setAttribute('id', 'mew-extensionId');
     idScript.textContent = '(' + fn + ')("' + id + '")';
-    script.src = chrome.extension.getURL(
-      `${process.env.NODE_ENV === 'production' ? '/js/' : ''}cxWeb3.js`
-    );
+    script.src = chrome.extension.getURL(`/js/cxWeb3.js`);
     if (!elementExists('mew-web3script')) container.appendChild(script);
     if (!elementExists('mew-extensionId')) container.appendChild(idScript);
   };

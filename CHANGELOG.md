@@ -5,8 +5,6 @@
 - Update address book [#1795](https://github.com/MyEtherWallet/MyEtherWallet/pull/1795)
 
 ### Devop
-
-### Devop
 - Notification pruning[#1755](https://github.com/MyEtherWallet/MyEtherWallet/pull/1755)
 - Enable translations dropdown and add in the other languages [#1703] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1703)
 - Reduce injected web3 file size to less than 1mb [#1813](https://github.com/MyEtherWallet/MyEtherWallet/pull/1813)
@@ -17,6 +15,7 @@
 
 ### Bug
 
+- Release cleanup [#1817](https://github.com/MyEtherWallet/MyEtherWallet/pull/1817)
 - Ui fix maker dai [#1787](https://github.com/MyEtherWallet/MyEtherWallet/pull/1787)
 - Hide blockexplorrer link on irrelevant pages and add back tx history for cx header [#1800](https://github.com/MyEtherWallet/MyEtherWallet/pull/1800)
 - Fix issue with withdrawing ETH from CDP [#1811](https://github.com/MyEtherWallet/MyEtherWallet/pull/1811)
