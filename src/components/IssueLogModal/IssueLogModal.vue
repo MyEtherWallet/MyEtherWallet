@@ -46,7 +46,7 @@
               v-b-toggle.collapse-error-detail
               class="mt-5 show-error-detail"
             >
-              {{ $t('common.issue-log.show-error-detail') }}
+              {{ $t('common.issue-log.show-error-details') }}
             </div>
           </div>
 
