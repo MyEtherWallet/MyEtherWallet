@@ -1,8 +1,12 @@
-@import '~@/scss/GlobalVariables';
+@import "~@/scss/GlobalVariables";
 
 //***************************************************
 // .modal-contents
 //***************************************************
+
+.new-issue-log {
+  background-color: #7acbcc;
+}
 
 .dev-only-button {
   position: fixed;
@@ -15,10 +19,6 @@
   padding: 5px 10px;
   cursor: pointer;
   user-select: none;
-}
-
-.modal-contents {
-  padding: 40px;
 }
 
 .modal-header-block {

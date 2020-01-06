@@ -10,7 +10,8 @@
         static
         lazy
       >
-        <div class="modal-contents">
+        <div class="new-issue-log">aaaa</div>
+        <div v-if="false" class="modal-contents">
           <div class="modal-header-block">
             <h2 class="title">{{ $t('common.issue-log.error-text') }}</h2>
             <p class="sub-text">
@@ -98,6 +99,7 @@ export default {
     }
   },
   mounted() {
+    this.$refs.issuelog.show();
     const popUpCount = store.get('errorPop') || 0;
     this.errorCount = popUpCount;
     if (this.errorCount >= 10) {
