@@ -11,6 +11,7 @@
 
 ### Bug
 
+- Fix background color for interfaces [#1818](https://github.com/MyEtherWallet/MyEtherWallet/pull/1818)
 - Hide blockexplorrer link on irrelevant pages and add back tx history for cx header [#1800](https://github.com/MyEtherWallet/MyEtherWallet/pull/1800)
 - Fix issue with withdrawing ETH from CDP [#1811](https://github.com/MyEtherWallet/MyEtherWallet/pull/1811)
 - Fix header items for other languages [#1791](https://github.com/MyEtherWallet/MyEtherWallet/pull/1791)
