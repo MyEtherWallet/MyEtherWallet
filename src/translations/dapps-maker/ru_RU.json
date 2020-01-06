@@ -105,6 +105,7 @@
   "migrate-single-collateral-to-multi-collateral": "Миграция CDP однотипного залога в Vault разнотипного залога",
   "not-enough-sai": "Недостаточно SAI для миграции CDP в данный момент. Пожалуйста, повторите попытку позже.",
   "needs-at-least-20": "Только CDP с более 20 и менее {value} SAI могут быть обновлены на данный момент.",
+  "current-balance": "Текущий баланс",
   "current-sai-balance": "Текущая сумма: {value}",
   "upgrade-sai-to-dai": "Обновите SAI на DAI",
   "min-required": "Требуется минимум {value}",
@@ -149,5 +150,12 @@
   "set": "Установить",
   "earn-with-dai": "Заработайте процент на вашем DAI",
   "dai-stable-coin": "DAI Stablecoin",
-  "what-is-dashes-vault": "Значение -- показывает, что этот Vault не имеет DAI, поэтому эти расчеты имеют значение только тогда, когда этот Vault создал DAI"
+  "what-is-dashes-vault": "Значение -- показывает, что этот Vault не имеет DAI, поэтому эти расчеты имеют значение только тогда, когда этот Vault создал DAI",
+  "check-balance": "Проверить баланс",
+  "your-cdps": "Ваши CDP",
+  "migrate-description": "Exchange your old DAI (aka SAI) for the new DAI.",
+  "transfer-cdp-description": "Transfer your old CDP to a Multi-Collateral Vault.",
+  "manage-your-vault-description": "Make changes to your Vault or close it out.",
+  "create-vault-description": "Open a Multi-Collateral Vault to generate DAI based on your collateral.",
+  "dai-savings-description": "Check on your DAI holdings, set an allowance for your collateral, and deploy a proxy to save on transaction time and gas."
 }
