@@ -22,12 +22,29 @@
               {{ $t('common.issue-log.inform-error') }}
             </div>
             <div class="mt-3 d-flex">
-              <b-btn class="mr-1">Send error report to MEW</b-btn>
-              <b-btn variant="outline-secondary">No thanks</b-btn>
+              <b-btn class="mr-1" @click="() => sendError(true)"
+                >Send error report to MEW</b-btn
+              >
+              <b-btn variant="outline-secondary" @click="() => sendError(false)"
+                >No thanks</b-btn
+              >
             </div>
+
+            <div v-if="showSkipper" class="button-block mt-3">
+              <div class="checkbox-container">
+                <label for="terms" @click="neverShow = !neverShow">
+                  <span :class="[neverShow ? 'enable' : '', 'custom-marker']">
+                    <i v-if="neverShow" class="fa fa-check" />
+                  </span>
+                  <input name="terms" type="checkbox" />
+                  {{ $t('common.issue-log.never-show') }}
+                </label>
+              </div>
+            </div>
+
             <div
               v-b-toggle.collapse-error-detail
-              class="mt-4 show-error-detail"
+              class="mt-5 show-error-detail"
             >
               Show error detail
             </div>
