@@ -6,6 +6,58 @@
 
 .new-issue-log {
   background-color: #7acbcc;
+  background-image: url("~@/assets/images/home/spaceman-r.png");
+  background-repeat: no-repeat;
+  background-size: 350px;
+  background-position: right 0px bottom -140px;
+  padding: 20px 40px 40px 40px;
+  & * {
+    font-family: Sans-Serif;
+  }
+}
+
+.large-header {
+  font-size: 110px;
+  color: white;
+  font-weight: 700;
+  text-shadow: 5px 5px 5px #0000000f;
+  letter-spacing: -4px;
+}
+
+.sub-header {
+  color: #4a4a4a;
+  font-size: 27px;
+  font-weight: 600;
+  max-width: 350px;
+  line-height: 32px;
+  margin-top: -10px;
+}
+
+.buttons {
+  margin-top: 10px;
+  .button-block-text {
+    color: #4a4a4a;
+    font-size: 14px;
+    font-weight: 600;
+    //max-width: 300px;
+    line-height: 18px;
+  }
+
+  .show-error-detail {
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-block;
+  }
+}
+
+.error-detail {
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: 100px;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 .dev-only-button {
