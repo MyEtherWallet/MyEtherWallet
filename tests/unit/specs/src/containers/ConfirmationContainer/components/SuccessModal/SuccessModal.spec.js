@@ -65,7 +65,7 @@ describe('SuccessModal.vue', () => {
   });
 
   it('should render correct linkMessage props', () => {
-    expect(wrapper.vm.buttonOk.title).toEqual('Ok');
+    expect(wrapper.vm.buttonOk.title).toEqual('OK');
     wrapper.setProps({ linkMessage });
     expect(wrapper.vm.buttonOk.title).toEqual(linkMessage);
   });

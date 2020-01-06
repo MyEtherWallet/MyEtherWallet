@@ -28,7 +28,7 @@
         </div>
         <div class="input-container">
           <div class="top-buttons">
-            <p @click="currentDai">{{ $t('dappsMaker.set-max') }}</p>
+            <p @click="currentDai">{{ $t('dappsMaker.max-available') }}</p>
           </div>
           <div :class="['dai-amount', hasEnoughDai ? '' : 'danger']">
             <input v-model="amount" />
@@ -78,24 +78,44 @@
         <div class="buttons">
           <div v-if="needsDaiApprove">
             <standard-button
-              :options="approveDaiButton"
+              :options="{
+                title: $t('dappsMaker.approve-dai'),
+                buttonStyle: 'green-border',
+                fullWidth: true,
+                noMinWidth: true
+              }"
               :click-function="approveDai"
             />
           </div>
           <div v-if="needsMkrApprove">
             <standard-button
-              :options="approveMkrButton"
+              :options="{
+                title: $t('dappsMaker.approve-maker'),
+                buttonStyle: 'green-border',
+                fullWidth: true,
+                noMinWidth: true
+              }"
               :click-function="approveMkr"
             />
           </div>
         </div>
         <div class="buttons">
           <standard-button
-            :options="cancelButton"
+            :options="{
+              title: $t('common.cancel'),
+              buttonStyle: 'green-border',
+              noMinWidth: true,
+              fullWidth: true
+            }"
             :click-function="closeModal"
           />
           <standard-button
-            :options="submitButton"
+            :options="{
+              title: $t('common.submit'),
+              buttonStyle: 'green',
+              noMinWidth: true,
+              fullWidth: true
+            }"
             :button-disabled="canProceed ? false : true"
             :click-function="submitBtn"
           />
@@ -182,30 +202,6 @@ export default {
       textValues: {},
       fiatCurrency: 'USD',
       digitalCurrency: 'ETH',
-      cancelButton: {
-        title: 'Cancel',
-        buttonStyle: 'green-border',
-        noMinWidth: true,
-        fullWidth: true
-      },
-      submitButton: {
-        title: 'Submit',
-        buttonStyle: 'green',
-        noMinWidth: true,
-        fullWidth: true
-      },
-      approveMkrButton: {
-        title: 'Approve Maker',
-        buttonStyle: 'green-border',
-        fullWidth: true,
-        noMinWidth: true
-      },
-      approveDaiButton: {
-        title: 'Approve Dai',
-        buttonStyle: 'green-border',
-        fullWidth: true,
-        noMinWidth: true
-      },
       suppliedFrom: {
         symbol: 'ETH',
         name: 'Ethereum'

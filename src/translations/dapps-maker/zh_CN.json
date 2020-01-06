@@ -19,7 +19,7 @@
   "dai-position": "DAI Position",
   "generated": "Generated",
   "payback": "Pay back",
-  "max-available": "Max. available to generate",
+  "max-available-gen": "Max. available to generate",
   "generate": "Generate",
   "min-collat": "Minimum collateralize to",
   "max-generate": "Maximum generate to",

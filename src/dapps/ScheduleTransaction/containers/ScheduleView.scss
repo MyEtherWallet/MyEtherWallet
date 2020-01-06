@@ -91,6 +91,7 @@ $mew-green-light: #05c7aa;
 
 .toggle-button-container {
   display: flex;
+  max-width: 180px;
   // Mobile
   @media all and (max-width: $mobile-width) {
     display: block;

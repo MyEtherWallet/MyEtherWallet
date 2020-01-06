@@ -2,7 +2,11 @@
   <div class="modal-container">
     <b-modal
       ref="manageFundsModal"
-      :title="`${manageFundsText} ${$t('dappsAmbrpay.manage-funds.funds')}`"
+      :title="
+        $t('dappsAmbrpay.manage-funds.action-funds', {
+          action: manageFundsText
+        })
+      "
       centered
       hide-footer
       static
@@ -22,10 +26,13 @@
         </div>
         <hr />
         <div v-if="actionStep" class="action-container">
-          <p class="funds-txt">
-            {{ $t('dappsAmbrpay.manage-funds.how-much-eth') }}
-            <span class="action-txt"> {{ manageFundsText }}? </span>
-          </p>
+          <i18n
+            class="funds-txt"
+            tag="p"
+            path="dappsAmbrpay.manage-funds.how-much-eth"
+          >
+            <span slot="action" class="action-txt">{{ manageFundsText }}</span>
+          </i18n>
           <span class="eth-text">{{ $t('common.currency.eth') }}</span>
           <input v-model="ethAmount" class="mt-3" type="number" />
           <p v-show="errMsg" class="err-msg pl-2">{{ errMsg }}</p>
@@ -102,14 +109,14 @@ export default {
       const subAccountBalance = new BigNumber(this.availableBalanceEth);
 
       if (newVal <= 0) {
-        this.errMsg = 'Amount must be higher than 0';
+        this.errMsg = this.$t('dappsAmbrpay.errors.amount-higher-zero');
       } else if (this.manageFundsText === 'Add' && value.gt(accountBalance)) {
-        this.errMsg = 'Amount higher than balance';
+        this.errMsg = this.$t('dappsAmbrpay.errors.amount-higher-balance');
       } else if (
         this.manageFundsText === 'Withdraw' &&
         value.gt(subAccountBalance)
       ) {
-        this.errMsg = 'Amount higher than subscription balance';
+        this.errMsg = this.$t('dappsAmbrpay.errors.amount-higher-sub-balance');
       } else {
         this.errMsg = '';
       }

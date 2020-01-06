@@ -2,7 +2,9 @@
   <b-modal
     ref="metamask"
     :title="
-      isMetaMask ? $t('accessWallet.metamask.modal.title') : 'Access via MEWCX'
+      isMetaMask
+        ? $t('accessWallet.metamask.modal.title')
+        : $t('mewcx.access-view-mew')
     "
     hide-footer
     static
