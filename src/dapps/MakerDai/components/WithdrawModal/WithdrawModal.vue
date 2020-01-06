@@ -2,7 +2,7 @@
   <div class="modal-container">
     <b-modal
       ref="modal"
-      :title="$t('dappsMaker.withdraw-title')"
+      :title="$t('dappsMCDMaker.withdraw-title')"
       centered
       class="bootstrap-modal nopadding"
       hide-footer
@@ -12,17 +12,17 @@
       <div class="modal-content-container">
         <div class="inputs-container">
           <div class="input-container">
-            <p class="message">{{ $t('dappsMaker.withdraw-notice') }}</p>
+            <p class="message">{{ $t('dappsMCDMaker.withdraw-notice') }}</p>
             <label>
               {{
-                $t('dappsMaker.withdraw-question-mcd', {
+                $t('dappsMCDMaker.withdraw-question-mcd', {
                   currency: currentCdpType
                 })
               }}
             </label>
             <div class="top-buttons">
               <p class="max-withdraw" @click="maxWithdraw">
-                {{ $t('dappsMaker.max-withdraw') }}
+                {{ $t('dappsMCDMaker.max-available') }}
               </p>
             </div>
             <div
@@ -33,16 +33,16 @@
             </div>
             <div class="sub-text">
               <p v-if="canWithdrawEthNotice" class="above-max">
-                {{ $t('dappsMaker.over-max-withdraw') }}
+                {{ $t('dappsMCDMaker.over-max-withdraw') }}
               </p>
             </div>
           </div>
         </div>
 
-        <expanding-option title="Detail Information">
+        <expanding-option :title="$t('dappsMCDMaker.detail-information')">
           <div class="padding-container">
             <div class="grid-block">
-              <p>{{ $t('dappsMaker.max-withdraw-available') }}</p>
+              <p>{{ $t('dappsMCDMaker.max-available') }}</p>
               <p>
                 <b>
                   {{
@@ -54,14 +54,14 @@
             </div>
 
             <div class="grid-block">
-              <p>{{ $t('dappsMaker.projected-liquidation') }}</p>
+              <p>{{ $t('dappsMCDMaker.projected-liquidation') }}</p>
               <p>
                 <b>{{ displayFixedValue(newLiquidationPrice(), 2) }}</b>
                 {{ fiatCurrency }}
               </p>
             </div>
             <div class="grid-block">
-              <p>{{ $t('dappsMaker.projected-collat-ratio') }}</p>
+              <p>{{ $t('dappsMCDMaker.projected-collat-ratio') }}</p>
               <p>
                 <b>
                   {{
@@ -83,10 +83,10 @@
           <div class="grid-block">
             <div class="sign">⚠️</div>
             <div class="text-content">
-              <p class="title">{{ $t('dappsMaker.caution') }}</p>
+              <p class="title">{{ $t('dappsMCDMaker.caution') }}</p>
               <p class="warning-details">
                 {{
-                  $t('dappsMaker.liquidation-risk', {
+                  $t('dappsMCDMaker.liquidation-risk-multi', {
                     value: displayFixedValue(
                       displayPercentValue(newCollateralRatio())
                     )
@@ -96,7 +96,7 @@
               <check-box @changeStatus="checkBoxClicked">
                 <template v-slot:terms>
                   <p class="checkbox-label">
-                    {{ $t('dappsMaker.understand-and-agree') }}
+                    {{ $t('dappsMCDMaker.understand-and-agree') }}
                   </p>
                 </template>
               </check-box>
@@ -106,11 +106,19 @@
 
         <div class="buttons">
           <standard-button
-            :options="cancelButton"
+            :options="{
+              title: $t('common.cancel'),
+              buttonStyle: 'green-border',
+              noMinWidth: true
+            }"
             :click-function="closeModal"
           />
           <standard-button
-            :options="submitButton"
+            :options="{
+              title: $t('common.submit'),
+              buttonStyle: 'green',
+              noMinWidth: true
+            }"
             :button-disabled="canProceed ? false : true"
             :click-function="submitBtn"
           />
@@ -207,17 +215,7 @@ export default {
       textValues: {},
       fiatCurrency: 'USD',
       digitalCurrency: 'ETH',
-      currentCdpType: 'ETH',
-      cancelButton: {
-        title: 'Cancel',
-        buttonStyle: 'green-border',
-        noMinWidth: true
-      },
-      submitButton: {
-        title: 'Submit',
-        buttonStyle: 'green',
-        noMinWidth: true
-      }
+      currentCdpType: 'ETH'
     };
   },
   computed: {

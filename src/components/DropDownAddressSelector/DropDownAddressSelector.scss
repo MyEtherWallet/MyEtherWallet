@@ -23,6 +23,7 @@
   }
 
   .address-check {
+    background: $white;
     bottom: 17px;
     position: absolute;
     right: 71px;
@@ -149,11 +150,6 @@
   color: $mew-green;
 }
 
-.good-button {
-  background-color: transparent;
-  text-align: right;
-}
-
 .title-button {
   color: $mew-green;
 }
@@ -161,4 +157,19 @@
 .add-addr {
   color: $mew-green;
   grid-template-columns: none !important;
+}
+
+.save-addr-txt {
+  color: $mew-green;
+  cursor: pointer;
+  font-weight: 500;
+  margin-right: 65px;
+  position: absolute;
+  right: 0;
+  top: 17px;
+}
+
+.save-addr-txt.disabled-txt {
+  color: $dark-grey-11;
+  pointer-events: none;
 }

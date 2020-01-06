@@ -10,14 +10,6 @@ $mobile-width: 700px;
   }
 }
 
-.manage-container {
-  padding: 40px;
-
-  @media all and (max-width: $mobile-width) {
-    padding: 40px 20px 10px 20px;
-  }
-}
-
 .title-content-container {
   display: flex;
   align-items: flex-start;
@@ -61,7 +53,6 @@ $mobile-width: 700px;
     }
 
     .block-title {
-      padding: 0 20px;
       margin-bottom: 5px;
       p {
         font-size: 14px;
@@ -135,7 +126,6 @@ $mobile-width: 700px;
 
   .block-item {
     .block-title {
-      padding: 0 20px;
       margin-bottom: 10px;
       p {
         font-size: 14px;

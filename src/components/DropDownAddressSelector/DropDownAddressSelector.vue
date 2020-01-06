@@ -3,6 +3,7 @@
     <div class="dropdown--title">
       <h4>{{ title }}</h4>
       <button
+        v-show="!hideCopy"
         class="title-button prevent-user-select"
         @click="copyToClipboard($refs.addressInput)"
       >
@@ -25,15 +26,12 @@
             @input="debouncedInput"
           />
         </div>
-
-        <i
-          :class="[
-            isValidAddress && hexAddress.length !== 0 ? '' : 'not-good',
-            hasMessage ? 'resolver-err-icon' : '',
-            'fa fa-check-circle good-button address-check'
-          ]"
-          aria-hidden="true"
-        />
+        <span
+          v-show="!hideCopy"
+          :class="['save-addr-txt', !selectedAddress ? 'disabled-txt' : '']"
+          @click="openAddrModal()"
+          >{{ $t('interface.address-book.save-addr') }}</span
+        >
         <div v-if="!isValidAddress" class="blockie-place-holder-image" />
         <div v-if="isValidAddress" class="selected-address-blockie">
           <blockie :address="hexAddress" width="30px" height="30px" />
@@ -94,22 +92,15 @@
             <p v-if="addr.address !== currentAddress" class="address-note">
               {{ addr.nickname }}
             </p>
-            <i
-              v-if="toAddressCheckMark"
-              aria-hidden="true"
-              class="fa fa-check-circle good-button"
-            />
-          </li>
-          <li
-            v-show="addressBook.length < 10"
-            class="add-addr"
-            @click="addAddress()"
-          >
-            + {{ $t('interface.address-book.add-addr') }}
           </li>
         </ul>
       </div>
     </div>
+    <address-book-modal
+      ref="addressBook"
+      :selected-address="selectedAddress"
+      :title="$t('interface.address-book.add-new')"
+    />
   </div>
 </template>
 
@@ -121,10 +112,12 @@ import { EthereumTokens, BASE_CURRENCY } from '@/partners';
 import { mapState } from 'vuex';
 import { Toast } from '@/helpers';
 import utils from 'web3-utils';
+import AddressBookModal from '@/components/AddressBookModal';
 
 export default {
   components: {
-    blockie: Blockie
+    blockie: Blockie,
+    'address-book-modal': AddressBookModal
   },
   props: {
     title: {
@@ -136,6 +129,10 @@ export default {
       default: 'ETH'
     },
     clearAddress: {
+      type: Boolean,
+      default: false
+    },
+    hideCopy: {
       type: Boolean,
       default: false
     }
@@ -187,6 +184,9 @@ export default {
     this.currentAddress = this.account.address;
   },
   methods: {
+    openAddrModal() {
+      this.$refs.addressBook.$refs.addressBookModal.show();
+    },
     debouncedInput: utils._.debounce(function(e) {
       this.selectedAddress = e.target.value;
     }, 300),
@@ -203,7 +203,7 @@ export default {
         return;
       } else if (!this.isValidAddress) {
         Toast.responseHandler(
-          this.$t('ens.addr-resolver.invalid-eth-addr'),
+          this.$t('ens.ens-resolver.invalid-eth-addr'),
           Toast.ERROR
         );
         return;

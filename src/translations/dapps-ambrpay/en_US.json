@@ -3,6 +3,8 @@
   "title": "Ambrpay",
   "withdraw-funds": "Withdraw Funds",
   "add-funds": "Add Funds",
+  "add": "Add",
+  "withdraw": "Withdraw",
   "balance": "Subscriptions Balance",
   "my-subscriptions": "My Subscriptions",
   "automation-fee": "1% automation-fee will be added on top",
@@ -27,12 +29,23 @@
     "unsubscribe": "Unsubscribe"
   },
   "manage-funds": {
-    "funds": "Funds",
+    "action-funds": "{action} Funds",
     "avail-balance": "Available Balance",
-    "how-much-eth": "How much ETH do you want to",
+    "how-much-eth": "How much ETH do you want to {action} ?",
     "subscription-fund": "Your subscription fund",
     "should-update": "should be updated within the next minute.",
     "in-wallet": "should be in your wallet within the next minute.",
     "withdraw-fund": "Your withdraw fund"
+  },
+  "errors": {
+    "amount-higher-zero": "Amount must be higher than 0",
+    "amount-higher-balance": "Amount higher than balance",
+    "amount-higher-sub-balance": "Amount higher than subscription balance"
+  },
+  "sub-form": {
+    "min-greater": "The minimum amount is 0.01 or greater",
+    "higher-than-bal": "Amount higher than balance (including 1% automation fee)",
+    "enter-correct-num": "Please enter a correct number",
+    "cannot-exceed": "Number cannot exceed 365 days"
   }
 }

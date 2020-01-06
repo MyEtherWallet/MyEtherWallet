@@ -5,7 +5,7 @@
         {{ typeString }}
       </p>
       <p :class="['status', notice.read ? 'read' : 'un-read', txStatus.class]">
-        ({{ txStatus.text }})
+        ({{ $t(txStatus.text) }})
       </p>
     </div>
     <div class="time-date">

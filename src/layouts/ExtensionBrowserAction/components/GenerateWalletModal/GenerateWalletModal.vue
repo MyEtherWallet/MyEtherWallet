@@ -2,7 +2,7 @@
   <div>
     <b-modal
       ref="generateNewWallet"
-      :title="$t('mewcx.generateWallet')"
+      :title="$t('mewcx.generate-wallet')"
       hide-footer
       centered
     >

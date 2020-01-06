@@ -12,12 +12,15 @@
   "previous": "Previous",
   "thank-you": "Thank you",
   "back": "Back",
+  "okay": "Okay",
   "next": "Next",
   "copy": "Copy",
   "copied": "Copied",
   "clear": "Clear",
   "edit": "Edit",
   "cancel": "Cancel",
+  "close": "Close",
+  "submit": "Submit",
   "more": "More",
   "yes": "Yes",
   "no": "No",
@@ -159,5 +162,6 @@
   "spaceman": "Spaceman",
   "disconnected": "Disconnected",
   "mew-icon": "Mew Icon",
-  "kitties": "kitties"
+  "kitties": "kitties",
+  "mewtopia": "MEWtopia"
 }
