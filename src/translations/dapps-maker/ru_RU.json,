@@ -154,15 +154,15 @@
   "what-is-dashes-vault": "Значение -- показывает, что этот Vault не имеет DAI, поэтому эти расчеты имеют значение только тогда, когда этот Vault создал DAI",
   "load-operations": "Загрузка: Операции Разнотипного Залога",
   "load-types": "Загрузка: Варианты разнотипного залога",
-  "approve-dai": "Approve Dai",
-  "approve-maker": "Approve Maker",
+  "approve-dai": "Утвердить Dai",
+  "approve-maker": "Утвердить Maker",
   "submit-max": "Отправить Макс.",
   "detail-information": "Подробная Информация",
   "check-balance": "Проверить баланс",
   "your-cdps": "Ваши CDP",
   "migrate-description": "Обменяйте свой старый DAI (теперь SAI) на новый DAI.",
-  "transfer-cdp-description": "Transfer your old CDP to a Multi-Collateral Vault.",
-  "manage-your-vault-description": "Make changes to your Vault or close it out.",
-  "create-vault-description": "Open a Multi-Collateral Vault to generate DAI based on your collateral.",
-  "dai-savings-description": "Check on your DAI holdings, set an allowance for your collateral, and deploy a proxy to save on transaction time and gas."
+  "transfer-cdp-description": "Перевести старый CDP в Vault разнотипного залога.",
+  "manage-your-vault-description": "Внесите изменения в Vault или закройте его.",
+  "create-vault-description": "Откройте Vault разнотипного залога, чтобы генерировать DAI на основе вашего залога.",
+  "dai-savings-description": "Проверьте свои вклады DAI, установите допуск для обеспечения залога, и установите прокси для экономии времени и газа."
 }
