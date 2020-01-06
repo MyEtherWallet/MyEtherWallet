@@ -59,6 +59,7 @@
             </b-card>
           </b-collapse>
         </div>
+
         <!-- .modal-contents -->
       </b-modal>
     </div>
