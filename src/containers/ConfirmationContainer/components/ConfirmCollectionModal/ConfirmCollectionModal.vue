@@ -2,7 +2,11 @@
   <div>
     <b-modal
       ref="confirmCollection"
-      :title="`Confirmation (Total of ${unSignedArray.length} transactions)`"
+      :title="
+        $t('confirmation.confirm-transactions', {
+          unSignedArray: unSignedArray.length
+        })
+      "
       hide-footer
       centered
       class="bootstrap-modal-wide confirmation-modal nopadding"

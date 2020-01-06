@@ -3,9 +3,9 @@
     <b-modal
       ref="manageFundsModal"
       :title="
-        $t('dappsAmbrpay.manage-funds.action-funds', {
-          action: manageFundsText
-        })
+        manageFundsText === 'Add'
+          ? $t('dappsAmbrpay.manage-funds.add-funds')
+          : $t('dappsAmbrpay.manage-funds.withdraw-funds')
       "
       centered
       hide-footer
@@ -26,13 +26,13 @@
         </div>
         <hr />
         <div v-if="actionStep" class="action-container">
-          <i18n
-            class="funds-txt"
-            tag="p"
-            path="dappsAmbrpay.manage-funds.how-much-eth"
-          >
-            <span slot="action" class="action-txt">{{ manageFundsText }}</span>
-          </i18n>
+          <p class="funds-txt">
+            {{
+              manageFundsText === 'Add'
+                ? $t('dappsAmbrpay.manage-funds.how-much-eth-add')
+                : $t('dappsAmbrpay.manage-funds.how-much-eth-withdraw')
+            }}
+          </p>
           <span class="eth-text">{{ $t('common.currency.eth') }}</span>
           <input v-model="ethAmount" class="mt-3" type="number" />
           <p v-show="errMsg" class="err-msg pl-2">{{ errMsg }}</p>
