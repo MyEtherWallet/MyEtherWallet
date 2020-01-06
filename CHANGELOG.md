@@ -8,6 +8,7 @@
 ### Devop
 
 - Release cleanup [#1817](https://github.com/MyEtherWallet/MyEtherWallet/pull/1817)
+- Update NFT manager UI [#1808](https://github.com/MyEtherWallet/MyEtherWallet/pull/1808)
 - Notification pruning[#1755](https://github.com/MyEtherWallet/MyEtherWallet/pull/1755)
 - Enable translations dropdown and add in the other languages [#1703](https://github.com/MyEtherWallet/MyEtherWallet/pull/1703)
 - Reduce injected web3 file size to less than 1mb [#1813](https://github.com/MyEtherWallet/MyEtherWallet/pull/1813)
@@ -34,10 +35,6 @@
 ### Bug
 
 - Fix Schedule View [#1781](https://github.com/MyEtherWallet/MyEtherWallet/pull/1781)
-
-### Devop
-
-- Update NFT manager UI [#1808](https://github.com/MyEtherWallet/MyEtherWallet/pull/1808)
 
 ### Release v5.2.8
 
