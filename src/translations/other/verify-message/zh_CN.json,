@@ -1,0 +1,7 @@
+{
+  "title": "Verify Message",
+  "message": {
+    "validation-fail": "The signature field is required",
+    "address-signed": "did sign the message"
+  }
+}
