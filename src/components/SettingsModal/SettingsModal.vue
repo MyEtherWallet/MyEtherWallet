@@ -332,7 +332,11 @@ export default {
       importedFile: '',
       popup: false,
       currentAddressIdx: null,
-      addrBookModalTitle: ''
+      addrBookModalTitle: '',
+      isValidAddress: false,
+      contactAddress: '',
+      contactNickname: '',
+      addrBookErrMsg: null
     };
   },
   computed: {
