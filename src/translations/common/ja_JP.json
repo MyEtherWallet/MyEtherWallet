@@ -59,9 +59,13 @@
     "description": "Describe the issue"
   },
   "issue-log": {
-    "error-text": "Something went wrong",
+    "oops": "Oops",
+    "error-text": "Something went wrong. You can help us fix it by submitting a report about this error.",
     "inform-error": "Do you want to inform MEW about this error?",
-    "never-show": "Never show again"
+    "never-show": "Never show again",
+    "send-button": "Send error report to MEW",
+    "no-thanks": "No thanks",
+    "show-error-details": "Show error details"
   },
   "wallet": {
     "create-new": "Create A New Wallet",
