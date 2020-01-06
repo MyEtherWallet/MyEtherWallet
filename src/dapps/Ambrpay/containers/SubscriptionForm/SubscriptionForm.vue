@@ -143,19 +143,20 @@ export default {
       }
 
       if (value.lt(0.01)) {
-        this.amountErrMsg = 'The minimum amount is 0.01 or greater';
+        this.amountErrMsg = this.$t('dappsAmbrpay.sub-form.min-greater');
       } else if (totalVal.gt(accountBalance)) {
-        this.amountErrMsg =
-          'Amount higher than balance (including 1% automation fee)';
+        this.amountErrMsg = this.$t('dappsAmbrpay.sub-form.higher-than-bal');
       } else {
         this.amountErrMsg = '';
       }
     },
     intervalDays(newVal) {
       if (newVal.startsWith('0') && newVal.length > 1) {
-        this.intervalErrMsg = 'Please enter a correct number';
+        this.intervalErrMsg = this.$t(
+          'dappsAmbrpay.sub-form.enter-correct-num'
+        );
       } else if (newVal > 365) {
-        this.intervalErrMsg = 'Number cannot exceed 365 days';
+        this.intervalErrMsg = this.$t('dappsAmbrpay.sub-form.cannot-exceed');
       } else {
         this.intervalErrMsg = '';
       }

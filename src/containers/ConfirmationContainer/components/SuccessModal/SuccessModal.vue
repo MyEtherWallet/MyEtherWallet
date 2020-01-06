@@ -20,6 +20,7 @@
 
       <div class="buttons">
         <standard-button
+          v-show="txHashExlporrer"
           :options="buttonCheckEtherscan"
           :click-function="goToLink"
         />
@@ -66,14 +67,15 @@ export default {
     buttonCheckEtherscan() {
       return {
         // eslint-disable-next-line
-        title: `Check Status on ${this.explorrerName}`,
+        title:  this.$t('sendTx.success.button-check-explorer', { explorrerName: this.explorrerName }),
         buttonStyle: 'green-border',
         fullWidth: true
       };
     },
     buttonOk() {
       return {
-        title: this.linkMessage === '' ? 'Ok' : this.linkMessage,
+        title:
+          this.linkMessage === '' ? this.$t('common.ok') : this.linkMessage,
         buttonStyle: 'green',
         fullWidth: true
       };

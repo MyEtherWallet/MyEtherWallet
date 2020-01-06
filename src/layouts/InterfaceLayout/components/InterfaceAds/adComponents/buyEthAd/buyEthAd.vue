@@ -5,7 +5,14 @@
         <div class="top-block">{{ $t('interface.ads.buy-with-credit') }}</div>
         <div class="bottom-block">
           <standard-button
-            :options="sendButton"
+            :options="{
+              title: $t('accessWallet.hardware.modal.button-buy'),
+              buttonStyle: 'green-border',
+              helpCenter: false,
+              noMinWidth: true,
+              fullWidth: true,
+              paddingSmall: true
+            }"
             :click-function="showSwapWidget"
           />
           <img alt class="cc-cards" src="@/assets/images/etc/visamaster.png" />
@@ -31,14 +38,6 @@ export default {
       suppliedFrom: {
         symbol: 'USD',
         name: ''
-      },
-      sendButton: {
-        title: `${this.$t('accessWallet.hardware.modal.button-buy')}`,
-        buttonStyle: 'green-border',
-        helpCenter: false,
-        noMinWidth: true,
-        fullWidth: true,
-        paddingSmall: true
       }
     };
   },

@@ -82,13 +82,13 @@
     "upload-f": "Загрузить файл..."
   },
   "no-avail": "Эта функция недоступна.",
-  "dashboard-swap": "MEW сотрудничает с Bity, Kyber Network, Changelly и Simplex, чтобы дать пользователям возможность обменивать фиат на крипто, ETH на BTC, ETH на ERC-20.",
+  "dashboard-swap": "MEW сотрудничает с Bity, Kyber Network, Changelly и Simplex, чтобы дать пользователям возможность обменивать фиат на крипто, ETH на BTC, ETH на ERC20.",
   "etherscan-tx-url": "https://etherscan.io/tx/[[txHash]]",
   "etherscan-address-url": "https://etherscan.io/address/[[address]]",
   "address-book": {
     "title": "Управление адресами контактов",
     "add-up-to": "Вы можете добавить максимум до 10 контактных адресов.",
-    "nickname": "Название",
+    "nickname": "Имя",
     "remove": "Удалить",
     "add-addr": "Добавить адрес в книгу контактов",
     "cannot-add": "Невозможно добавить без адреса",

@@ -26,7 +26,11 @@
       <template slot="modal-title">
         <div>
           <div v-if="!detailsShown" class="modal-title">
-            {{ unreadCount > 1 ? 'Notifications' : 'Notification' }}
+            {{
+              unreadCount > 1
+                ? $tc('common.notifications.title', 2)
+                : $tc('common.notifications.title', 1)
+            }}
             <div v-show="unreadCount >= 0" class="notification-count">
               <span>{{ unreadCount }}</span>
             </div>

@@ -62,6 +62,9 @@
             <p :class="[maxCheck(provider) ? 'error-message-container' : '']">
               {{ maxNote(provider) }}
             </p>
+            <span class="slippage-text">{{
+              otherTextDisplay(provider.additional.display)
+            }}</span>
           </div>
         </li>
       </ul>
@@ -425,7 +428,7 @@ export default {
         return [
           `${toBigNumber(details.minValue).toFixed(6)} ${
             details.fromCurrency
-          } (From Min.)`
+          } (${this.$t('swap.from-min')}.)`
         ];
       }
       return '';
@@ -434,7 +437,7 @@ export default {
       if (details.maxValue > 0) {
         return `${toBigNumber(details.maxValue).toFixed(6)} ${
           details.fromCurrency
-        } (Max.)`;
+        } (${this.$t('swap.max')}.)`;
       }
       return '';
     },
@@ -446,6 +449,14 @@ export default {
     normalizedRateDisplay(source) {
       const toValue = this.valueForRate(this.fromValue, source.rate);
       return `${source.fromValue} ${source.fromCurrency} = ${toValue} ${source.toCurrency}`;
+    },
+    otherTextDisplay(contentDetails) {
+      if (!contentDetails) return;
+      if (contentDetails.txtKey) {
+        return this.$t(`swap.providers.${contentDetails.txtKey}`, {
+          value: contentDetails.value
+        });
+      }
     },
     valueForRate(rate, value) {
       return toBigNumber(value)
