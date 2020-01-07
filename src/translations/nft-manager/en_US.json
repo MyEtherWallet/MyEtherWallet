@@ -19,5 +19,6 @@
   "invalid-addr": "Invalid address given.",
   "nft": "NFT",
   "manager": "Manager",
-  "select-item": "Select an item to see details or add your custom NFT."
+  "select-item": "Select an item to see details or add your custom NFT.",
+  "avail-nft": "Available NFT"
 }

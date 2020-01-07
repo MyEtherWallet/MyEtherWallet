@@ -3,7 +3,7 @@
     <div class="desktop-menu">
       <div class="d-flex align-items-center">
         <div>
-          <h2 class="mr-4 mb-0">Available NFT</h2>
+          <h2 class="mr-4 mb-0">{{ $t('nftManager.avail-nft') }}</h2>
         </div>
         <b-button
           size="sm"
