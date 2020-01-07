@@ -105,7 +105,7 @@
     <div class="px-5 py-3">
       <router-view
         :active-cdp-id="activeCdpId"
-        :loading-state="curentlyLoading"
+        :loading-state="currentlyLoading"
         :build-empty="buildEmpty"
         :maker-active="makerActive"
         :eth-price="ethPrice"
@@ -233,7 +233,7 @@ export default {
   data() {
     return {
       activeCdpId: 0,
-      curentlyLoading: '',
+      currentlyLoading: '',
       destAddressProxy: '',
       destAddressHasProxy: false,
       makerCreated: false,
