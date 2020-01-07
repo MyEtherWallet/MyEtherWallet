@@ -26,6 +26,7 @@
 - Hide blockexplorrer link on irrelevant pages and add back tx history for cx header [#1800](https://github.com/MyEtherWallet/MyEtherWallet/pull/1800)
 - Fix issue with withdrawing ETH from CDP [#1811](https://github.com/MyEtherWallet/MyEtherWallet/pull/1811)
 - Fix header items for other languages [#1791](https://github.com/MyEtherWallet/MyEtherWallet/pull/1791)
+- Fix NFT Loading [#1831] (https://github.com/MyEtherWallet/MyEtherWallet/pull/1831)
 
 ### Release v5.2.8-hotfix.2
 
