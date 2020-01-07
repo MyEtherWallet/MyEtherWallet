@@ -62,10 +62,7 @@ const addWalletToStore = (
     try {
       chrome.storage.sync.set(obj, callback);
     } catch (e) {
-      Toast.responseHandler(
-        this.$t('mewcx.something-went-wrong'),
-        Toast.ERROR
-      );
+      Toast.responseHandler(this.$t('mewcx.something-went-wrong'), Toast.ERROR);
     }
   });
 };
