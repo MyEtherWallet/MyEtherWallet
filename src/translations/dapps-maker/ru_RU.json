@@ -154,7 +154,7 @@
   "what-is-dashes-vault": "Значение -- показывает, что этот Vault не имеет DAI, поэтому эти расчеты имеют значение только тогда, когда этот Vault создал DAI",
   "load-operations": "Загрузка: Операции Разнотипного Залога",
   "load-types": "Загрузка: Варианты разнотипного залога",
-  "approve-dai": "Approve DAI",
+  "approve-dai": "Утвердить DAI",
   "approve-maker": "Утвердить Maker",
   "submit-max": "Отправить Макс.",
   "detail-information": "Подробная Информация",
