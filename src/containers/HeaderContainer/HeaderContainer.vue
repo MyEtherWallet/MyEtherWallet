@@ -86,9 +86,7 @@
                     />
                     {{ $t('common.buy-eth') }}
                   </b-nav-item>
-                  <b-nav-item v-if="isHomePage" to="/" exact>{{
-                    $t('common.home')
-                  }}</b-nav-item>
+
                   <b-nav-item-dropdown
                     v-if="!isMewCx"
                     id="my-nav-dropdown"
@@ -126,13 +124,8 @@
                       }})</b-dropdown-item
                     >
                   </b-nav-item-dropdown>
-                  <b-nav-item v-if="!isMewCx" to="/#faqs">{{
-                    $t('common.faqs')
-                  }}</b-nav-item>
                   <div v-show="!isMewCx" class="language-menu-container">
-                    <div class="arrows">
-                      <i class="fa fa-angle-down" aria-hidden="true" />
-                    </div>
+                    <div class="down-arrow"></div>
                     <b-nav-item-dropdown
                       class="language-menu"
                       extra-toggle-classes="nav-link-custom"
