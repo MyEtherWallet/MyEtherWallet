@@ -6,5 +6,6 @@
   "approve-on-device": "Пожалуйста, подтвердите на аппаратном кошельке",
   "success": "Готово",
   "error": "Ошибка",
-  "waiting-for-hash": "Ожидание хеша транзакции"
+  "waiting-for-hash": "Ожидание хеша транзакции",
+  "confirm-transactions": "Confirmation (Total of {unSignedArray} transactions)`"
 }
